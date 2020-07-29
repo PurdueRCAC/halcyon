@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+@package      hubzero-cms
+@copyright    Copyright 2019 Purdue University.
+@license      http://opensource.org/licenses/MIT MIT
+-->
+
+<config>
+	<fieldset name="module">
+		<field
+			name="upload_extensions"
+			type="text"
+			size="50"
+			default="bmp,csv,doc,docx,epg,eps,gif,ico,jpg,jpeg,key,keynote,mp4,mp3,m4a,m4v,odg,odp,ods,odt,pdf,png,ppt,pptx,swf,txt,xcf,xls,xlsx,svg"
+			label="media::config.FIELD_LEGAL_EXTENSIONS_LABEL"
+			description="media::config.FIELD_LEGAL_EXTENSIONS_DESC" />
+
+		<field
+			name="upload_maxsize"
+			type="text"
+			size="50"
+			default="10"
+			label="media::config.FIELD_MAXIMUM_SIZE_LABEL"
+			description="media::config.FIELD_MAXIMUM_SIZE_DESC" />
+
+		<field name="spacer1" type="spacer"
+			hr="true"
+		/>
+
+		<field name="spacer2" type="spacer" class="text"
+			label="media::config.FOLDERS_PATH_LABEL"
+		/>
+
+		<field
+			name="file_path"
+			type="text"
+			size="50"
+			default="images"
+			label="media::config.FIELD_PATH_FILE_FOLDER_LABEL"
+			description="media::config.FIELD_PATH_FILE_FOLDER_DESC" />
+
+		<field
+			name="image_path"
+			type="text"
+			size="50"
+			default="images"
+			label="media::config.FIELD_PATH_IMAGE_FOLDER_LABEL"
+			description="media::config.FIELD_PATH_IMAGE_FOLDER_DESC" />
+
+		<field name="spacer3" type="spacer"
+			hr="true"
+		/>
+
+		<field
+			name="restrict_uploads"
+			type="radio"
+			default="1"
+			label="media::config.FIELD_RESTRICT_UPLOADS_LABEL"
+			description="media::config.FIELD_RESTRICT_UPLOADS_DESC">
+			<option
+				value="0">global.no</option>
+			<option
+				value="1">global.yes</option>
+		</field>
+
+		<field
+			name="check_mime"
+			type="radio"
+			default="1"
+			label="media::config.FIELD_CHECK_MIME_LABEL"
+			description="media::config.FIELD_CHECK_MIME_DESC">
+			<option
+				value="0">global.no</option>
+			<option
+				value="1">global.yes</option>
+		</field>
+
+		<field
+			name="image_extensions"
+			type="text"
+			size="50"
+			default="bmp,gif,jpg,png"
+			label="media::config.FIELD_LEGAL_IMAGE_EXTENSIONS_LABEL"
+			description="media::config.FIELD_LEGAL_IMAGE_EXTENSIONS_DESC" />
+
+		<field
+			name="ignore_extensions"
+			type="text"
+			size="50"
+			label="media::config.FIELD_IGNORED_EXTENSIONS_LABEL"
+			description="media::config.FIELD_IGNORED_EXTENSIONS_DESC" />
+
+		<field
+			name="upload_mime"
+			type="text"
+			size="50"
+			default="image/jpeg,image/gif,image/png,image/bmp,application/x-shockwave-flash,application/msword,application/excel,application/pdf,application/powerpoint,text/plain,application/x-zip"
+			label="media::config.FIELD_LEGAL_MIME_TYPES_LABEL"
+			description="media::config.FIELD_LEGAL_MIME_TYPES_DESC" />
+
+		<field
+			name="upload_mime_illegal"
+			type="text"
+			size="50"
+			default="text/html"
+			label="media::config.FIELD_ILLEGAL_MIME_TYPES_LABEL"
+			description="media::config.FIELD_ILLEGAL_MIME_TYPES_DESC" />
+	</fieldset>
+
+	<fieldset
+		name="permissions"
+		label="access.permissions"
+		description="access.permissions desc"
+		>
+
+		<field
+			name="rules"
+			type="rules"
+			label="access.permissions"
+			filter="rules"
+			validate="rules"
+			module="media"
+			section="module" />
+	</fieldset>
+</config>

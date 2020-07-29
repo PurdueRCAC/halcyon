@@ -1,0 +1,3 @@
+@section('content')
+	{!! $content; !!}
+@stop

@@ -1,0 +1,167 @@
+<?php
+
+namespace App\Modules\Queues\Http\Controllers\Admin;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
+use App\Modules\Queues\Models\SchedulerPolicy;
+use App\Halcyon\Http\StatefulRequest;
+
+class SchedulerPoliciesController extends Controller
+{
+	/**
+	 * Display a listing of the queue.
+	 * @return Response
+	 */
+	public function index(StatefulRequest $request)
+	{
+		// Get filters
+		$filters = array(
+			'search'   => null,
+			// Paging
+			'limit'    => config('list_limit', 20),
+			'page'     => 1,
+			//'start'    => $request->input('limitstart', 0),
+			// Sorting
+			'order'     => SchedulerPolicy::$orderBy,
+			'order_dir' => SchedulerPolicy::$orderDir,
+		);
+
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->state('queues.schedulerpolicies.filter_' . $key, $key, $default);
+		}
+
+		if (!in_array($filters['order'], ['id', 'name']))
+		{
+			$filters['order'] = SchedulerPolicy::$orderBy;
+		}
+
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
+		{
+			$filters['order_dir'] = SchedulerPolicy::$orderDir;
+		}
+
+		// Build query
+		$query = SchedulerPolicy::query();
+
+		if ($filters['search'])
+		{
+			$query->where('name', 'like', '%' . $filters['name'] . '%');
+		}
+
+		$rows = $query
+			->withCount('schedulers')
+			->orderBy($filters['order'], $filters['order_dir'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+
+		return view('queues::admin.schedulerpolicies.index', [
+			'rows'    => $rows,
+			'filters' => $filters
+		]);
+	}
+
+	/**
+	 * Show the form for creating a new queue.
+	 * @return Response
+	 */
+	public function create()
+	{
+		$row = new SchedulerPolicy();
+
+		return view('queues::admin.schedulerpolicies.edit', [
+			'row' => $row
+		]);
+	}
+
+	/**
+	 * Show the form for editing the specified queue.
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		$row = SchedulerPolicy::find($id);
+
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
+		return view('queues::admin.schedulerpolicies.edit', [
+			'row' => $row
+		]);
+	}
+
+	/**
+	 * Update the specified queue in storage.
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function store(Request $request)
+	{
+		$request->validate([
+			'fields.name' => 'required|max:20'
+		]);
+
+		$id = $request->input('id');
+
+		$row = $id ? Type::findOrFail($id) : new Type();
+
+		//$row->fill($request->input('fields'));
+		$row->set([
+			'name' => $request->input('name')
+		]);
+
+		if (!$row->save())
+		{
+			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+
+			return redirect()->back()->withError($error);
+		}
+
+		return $this->cancel()->withSuccess(trans('messages.update success'));
+	}
+
+	/**
+	 * Remove the specified queue from storage.
+	 * @return Response
+	 */
+	public function delete(Request $request)
+	{
+		$ids = $request->input('id', array());
+		$ids = (!is_array($ids) ? array($ids) : $ids);
+
+		$success = 0;
+
+		foreach ($ids as $id)
+		{
+			$row = Type::findOrFail($id);
+
+			if (!$row->delete())
+			{
+				$request->session()->flash('error', $row->getError());
+				continue;
+			}
+
+			$success++;
+		}
+
+		if ($success)
+		{
+			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
+		}
+
+		return $this->cancel();
+	}
+
+	/**
+	 * Return to default page
+	 *
+	 * @return  Response
+	 */
+	public function cancel()
+	{
+		return redirect(route('admin.queues.schedulerpolicies'));
+	}
+}

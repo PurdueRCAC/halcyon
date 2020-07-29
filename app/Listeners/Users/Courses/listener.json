@@ -1,0 +1,11 @@
+{
+    "name": "Users - Courses",
+    "alias": "users_courses",
+    "description": "This displays course accounts related to a specific user.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

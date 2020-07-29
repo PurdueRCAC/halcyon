@@ -1,0 +1,39 @@
+tagtype: resource
+name: Scholar User Guide
+tags:
+  - faq
+  - linuxcluster
+  - mpislurm
+  - gpuslurm
+  - slurm
+  - jupyter
+  - rstudioserver
+  - gateway
+vars:
+  name: Scholar
+  type: compute
+  hostname: scholar
+  frontend: scholar
+  dir: scholar
+  nodecores: 20
+  nodegpus: 1
+  naccesspolicy: singlejob
+  compiler: Intel 17.0.1.132
+  mathlib: MKL
+  mesglib: Intel MPI
+  gpuname: Nvidia Tesla V100
+  cudaver: Cuda 10.0
+  computecap: "7.0"
+  nvccarch: 70
+  os: cent7
+  scratch: /scratch/scholar
+  letteredscratch: false
+  queue: scholar
+  debug: true
+  batchsystem: slurm
+  frontends: 7
+  active: true
+  published: true
+  seq: 129
+  gpu: gpu.scholar.rcac
+  teaser: "The Scholar cluster is open to Purdue instructors from any field whose classes include assignments that could make use of supercomputing: from high-end graphics rendering and weather modeling, to simulating millions of molecules and exploring masses of data, to understanding the dynamics of social networks."

@@ -1,0 +1,16 @@
+tagtype: resource
+name: Brutus User Guide
+tags:
+vars:
+  name: Brutus
+  type: compute
+  dir: brutus
+  active: false
+  published: true
+  seq: 102
+  teaser: "Brutus was an experimental FPGA resource provided by the Northwest Indiana Compuational Grid (NWICG) through ITaP. Brutus consisted of an SGI Altix 450 with two SGI RC100 blades with two FPGAs each, for a total of 4 FPGAs. Using Brutus effectively required careful code development in either VHDL or Mitrion-C, but did result in significant performance increases. BLAST was benchmarked on Brutus at 70x typical general-purpose CPU performance."
+  dateInstalled: "01/30/2008"
+  dateRetired: "01/04/2010"
+  statsUsers: "6"
+  statsJobs: "610"
+  statsHours: "520"

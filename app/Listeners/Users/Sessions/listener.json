@@ -1,0 +1,11 @@
+{
+    "name": "Users - DBM LDAP",
+    "alias": "none",
+    "description": "This connects to the DBM Ldap to retrieve user info.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

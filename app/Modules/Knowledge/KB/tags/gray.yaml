@@ -1,0 +1,13 @@
+tagtype: resource
+name: Gray User Guide
+tags:
+vars:
+  name: Gray
+  type: compute
+  dir: gray
+  active: false
+  published: true
+  seq: 101
+  teaser: "The Gray cluster was solely a development platform to be used alongside the Indiana Economic Development Corporation (IEDC) machine Black. Gray was a place to compile code (mostly serial Condor applications) that were to be run on Black. Black is housed with Indiana University's \"Big Red\" system in Bloomington, Indiana. However, Gray was located on Purdue's West Lafayette campus. Gray included a front-end server, several worker-node blades, and extra front-end hosts for campus and TeraGrid Condor users."
+  dateInstalled: "11/01/2007"
+  dateRetired: "01/04/2010"

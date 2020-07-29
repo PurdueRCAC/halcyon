@@ -1,0 +1,22 @@
+tagtype: resource
+name: Hathi User Guide
+tags:
+vars:
+  name: Hathi
+  type: compute
+  hostname: hathi
+  frontend: hathi
+  dir: hathi
+  nodecores: 16
+  naccesspolicy: shared
+  compiler: Intel 16.0.1.150
+  mathlib: MKL
+  mesglib: Intel MPI
+  scratch: /user
+  queue: workq
+  batchsystem: hadoop
+  frontends: 2
+  seq: 119
+  active: false
+  published: true
+  teaser: "Hathi was a shared Hadoop cluster operated by ITaP, and was a shared resource available to partners in Purdue's Community Cluster Program. Hathi went into production on September 8, 2014. Hathi consisted of 6 Dell compute nodes with two 8-core Intel E5-2650v2 CPUs, 32 GB of memory, and 48TB of local storage per node for a total cluster capacity of 288TB. All nodes had 40 Gigabit Ethernet interconnects and a 5-year warranty."

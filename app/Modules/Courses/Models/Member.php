@@ -1,0 +1,134 @@
+<?php
+/**
+ * @package    halcyon
+ * @copyright  Copyright 2020 Purdue University.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+namespace App\Modules\Courses\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\History\Traits\Historable;
+use App\Modules\Courses\Events\MemberCreating;
+use App\Modules\Courses\Events\MemberCreated;
+use App\Modules\Courses\Events\MemberUpdating;
+use App\Modules\Courses\Events\MemberUpdated;
+use App\Modules\Courses\Events\MemberDeleted;
+use Carbon\Carbon;
+
+/**
+ * Course member
+ */
+class Member extends Model
+{
+	use SoftDeletes, Historable;
+
+	/**
+	 * The name of the "created at" column.
+	 *
+	 * @var string
+	 */
+	const CREATED_AT = 'datetimecreated';
+
+	/**
+	 * The name of the "updated at" column.
+	 *
+	 * @var  string
+	 */
+	const UPDATED_AT = null;
+
+	/**
+	 * The name of the "deleted at" column.
+	 *
+	 * @var  string
+	 */
+	const DELETED_AT = 'datetimeremoved';
+
+	/**
+	 * The table to which the class pertains
+	 *
+	 * @var  string
+	 **/
+	protected $table = 'classusers';
+
+	/**
+	 * Default order by for model
+	 *
+	 * @var string
+	 */
+	public static $orderBy = 'datetimestart';
+
+	/**
+	 * Default order direction for select queries
+	 *
+	 * @var  string
+	 */
+	public static $orderDir = 'asc';
+
+	/**
+	 * Fields and their validation criteria
+	 *
+	 * @var array
+	 */
+	protected $rules = array(
+		'classaccountid' => 'required|integer|min:1',
+		'userid' => 'required|integer|min:1',
+	);
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var array
+	 */
+	protected $dispatchesEvents = [
+		'creating' => MemberCreating::class,
+		'created'  => MemberCreated::class,
+		'updating' => MemberUpdating::class,
+		'updated'  => MemberUpdated::class,
+		'deleted'  => MemberDeleted::class,
+	];
+
+	/**
+	 * Get the modifier of this entry
+	 *
+	 * @return  object
+	 */
+	public function user()
+	{
+		return $this->belongsTo('App\Modules\Users\Models\User', 'userid')->withTrashed();
+	}
+
+	/**
+	 * Get the modifier of this entry
+	 *
+	 * @return  object
+	 */
+	public function account()
+	{
+		return $this->belongsTo(Account::class, 'classaccountid');
+	}
+
+	/**
+	 * Get member type
+	 *
+	 * @return  object
+	 */
+	public function type()
+	{
+		return $this->belongsTo(Type::class, 'membertype');
+	}
+
+	/**
+	 * Delete entry and associated data
+	 *
+	 * @return  bool
+	 */
+	public function delete()
+	{
+		$query = $this->setKeysForSaveQuery($this->newModelQuery());
+		$query->update(['notice' => 2]);
+
+		return parent::delete();
+	}
+}

@@ -1,0 +1,4 @@
+tagtype: access
+name: rstudioserver
+vars:
+ type: rstudioserver

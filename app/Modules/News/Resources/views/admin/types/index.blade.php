@@ -1,0 +1,176 @@
+@extends('layouts.master')
+
+@php
+app('pathway')
+	->append(
+		trans('news::news.module name'),
+		route('admin.news.index')
+	)
+	->append(
+		trans('news::news.types')
+	);
+@endphp
+
+@section('toolbar')
+	@if (auth()->user()->can('create news.types'))
+		{!! Toolbar::addNew(route('admin.news.types.create')) !!}
+	@endif
+
+	@if (auth()->user()->can('delete news.types'))
+		{!! Toolbar::deleteList('', route('admin.news.types.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('admin news'))
+		{!!
+			Toolbar::spacer();
+			Toolbar::preferences('news')
+		!!}
+	@endif
+
+	{!! Toolbar::render() !!}
+@stop
+
+@section('title')
+{!! config('news.name') !!}: {{ trans('news::news.types') }}
+@stop
+
+@section('content')
+
+@component('news::admin.submenu')
+	types
+@endcomponent
+
+<form action="{{ route('admin.news.types') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+
+	<fieldset id="filter-bar" class="container-fluid">
+		<div class="row">
+			<div class="col col-md-12 filter-search">
+				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+
+				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+			</div>
+		</div>
+	</fieldset>
+
+	<table class="table table-hover adminlist">
+		<thead>
+			<tr>
+				<th>
+					<?php echo App\Halcyon\Html\Builder\Grid::checkall(); ?>
+				</th>
+				<th scope="col" class="priority-5">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.id'), 'id', $filters['order_dir'], $filters['order']); ?>
+				</th>
+				<th scope="col">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.name'), 'name', $filters['order_dir'], $filters['order']); ?>
+				</th>
+				<th scope="col">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.location'), 'location', $filters['order_dir'], $filters['order']); ?>
+				</th>
+				<th scope="col" class="priority-4">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.future'), 'future', $filters['order_dir'], $filters['order']); ?>
+				</th>
+				<th scope="col" class="priority-4">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.ongoing'), 'ongoing', $filters['order_dir'], $filters['order']); ?>
+				</th>
+				<th scope="col" class="priority-2">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.tag resources'), 'tagresources', $filters['order_dir'], $filters['order']); ?>
+				</th>
+				<th scope="col" class="priority-2">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.url'), 'url', $filters['order_dir'], $filters['order']); ?>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+		@foreach ($rows as $i => $row)
+			<tr>
+				<td>
+					@if (auth()->user()->can('edit news.types'))
+						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
+					@endif
+				</td>
+				<td class="priority-5">
+					{{ $row->id }}
+				</td>
+				<td>
+					@if (auth()->user()->can('edit news.types'))
+						<a href="{{ route('admin.news.types.edit', ['id' => $row->id]) }}">
+							{{ $row->name }}
+						</a>
+					@else
+						<span>
+							{{ $row->name }}
+						</span>
+					@endif
+				</td>
+				<td>
+					@if ($row->location)
+						<span class="badge state yes">
+							<i class="icon-check"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+						</span>
+					@else
+						<span class="badge state no">
+							<i class="icon-minus"></i><span class="sr-only">{{ trans('global.no') }}</span>
+						</span>
+					@endif
+				</td>
+				<td class="priority-4">
+					@if ($row->future)
+						<span class="badge state yes">
+							<i class="icon-check"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+						</span>
+					@else
+						<span class="badge state no">
+							<i class="icon-minus"></i><span class="sr-only">{{ trans('global.no') }}</span>
+						</span>
+					@endif
+				</td>
+				<td class="priority-4">
+					@if ($row->ongoing)
+						<span class="badge state yes">
+							<i class="icon-check"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+						</span>
+					@else
+						<span class="badge state no">
+							<i class="icon-minus"></i><span class="sr-only">{{ trans('global.no') }}</span>
+						</span>
+					@endif
+				</td>
+				<td class="priority-4">
+					@if ($row->tagresources)
+						<span class="badge state yes">
+							<i class="icon-check"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+						</span>
+					@else
+						<span class="badge state no">
+							<i class="icon-minus"></i><span class="sr-only">{{ trans('global.no') }}</span>
+						</span>
+					@endif
+				</td>
+				<td class="priority-4">
+					@if ($row->url)
+						<span class="badge state yes">
+							<i class="icon-check"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+						</span>
+					@else
+						<span class="badge state no">
+							<i class="icon-minus"></i><span class="sr-only">{{ trans('global.no') }}</span>
+						</span>
+					@endif
+				</td>
+			</tr>
+		@endforeach
+		</tbody>
+	</table>
+
+	{{ $rows->render() }}
+
+	<input type="hidden" name="boxchecked" value="0" />
+	<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+	<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+	@csrf
+</form>
+
+@stop

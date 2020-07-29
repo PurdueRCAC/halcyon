@@ -1,0 +1,96 @@
+<?php
+/**
+ * @package    halcyon
+ * @copyright  Copyright 2020 Purdue University
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+namespace App\Listeners\Users\Groups;
+
+use App\Modules\Users\Events\UserDisplay;
+use App\Modules\Groups\Models\Group;
+
+/**
+ * User listener for sessions
+ */
+class Groups
+{
+	/**
+	 * Register the listeners for the subscriber.
+	 *
+	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @return void
+	 */
+	public function subscribe($events)
+	{
+		$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
+	}
+
+	/**
+	 * Plugin that loads module positions within content
+	 *
+	 * @param   string   $context  The context of the content being passed to the plugin.
+	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @return  void
+	 */
+	public function handleUserDisplay(UserDisplay $event)
+	{
+		$content = null;
+		$user = $event->getUser();
+
+		$r = ['section' => 'groups'];
+		if (auth()->user()->id != $user->id)
+		{
+			$r['u'] = $user->id;
+		}
+
+		$total = $user->groups()
+			->whereIsManager()
+			->where('groupid', '>', 0)
+			->count();
+
+		if ($event->getActive() == 'groups')
+		{
+			app('pathway')
+				->append(
+					trans('groups::groups.my groups'),
+					route('site.users.account.section', $r)
+				);
+
+			if ($id = request()->segment(3))
+			{
+				$group = Group::findOrFail($id);
+
+				app('pathway')
+					->append(
+						$group->name,
+						route('site.users.account.section.show', array_merge($r, ['id' => $id]))
+					);
+
+				$content = view('groups::site.group', [
+					'user'  => $user,
+					'group' => $group,
+				]);
+			}
+			else
+			{
+				$groups = $user->groups()
+					->whereIsManager()
+					->where('groupid', '>', 0)
+					->get();
+
+				$content = view('groups::site.groups', [
+					'user'   => $user,
+					'groups' => $groups
+				]);
+			}
+		}
+
+		$event->addSection(
+			route('site.users.account.section', $r),
+			trans('groups::groups.my groups') . ' <span class="badge">' . $total . '</span>',
+			($event->getActive() == 'groups'),
+			$content
+		);
+	}
+}

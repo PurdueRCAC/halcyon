@@ -1,0 +1,8 @@
+{
+    "name": "Admin Sub-menu",
+    "alias": "submenu",
+    "description": "Display a sub-menu",
+    "keywords": [],
+    "active": 1,
+    "requires": []
+}

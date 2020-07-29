@@ -1,0 +1,351 @@
+<?php
+/**
+ * @package    halcyon
+ * @copyright  Copyright 2020 Purdue University.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+namespace App\Halcyon\Modules;
+
+use Illuminate\Database\Eloquent\Model;
+use App\Halcyon\Config\Registry;
+use App\Halcyon\Traits\ErrorBag;
+use App\Halcyon\Traits\Validatable;
+use App\Halcyon\Traits\Checkable;
+use App\Halcyon\Form\Form;
+use Carbon\Carbon;
+
+/**
+ * Module extension model
+ */
+class Extension extends Model
+{
+	use ErrorBag, Validatable, Checkable;
+
+	/**
+	 * Indicates if the model should be timestamped.
+	 *
+	 * @var bool
+	 */
+	public $timestamps = false;
+
+	//const CREATED_AT = 'created';
+	//const UPDATED_AT = 'modified';
+
+	/**
+	 * The table to which the class pertains
+	 *
+	 * This will default to #__{namespace}_{modelName} unless otherwise
+	 * overwritten by a given subclass. Definition of this property likely
+	 * indicates some derivation from standard naming conventions.
+	 *
+	 * @var  string
+	 **/
+	protected $table = 'extensions';
+
+	/**
+	 * Default order by for model
+	 *
+	 * @var  string
+	 */
+	public $orderBy = 'ordering';
+
+	/**
+	 * Default order direction for select queries
+	 *
+	 * @var  string
+	 */
+	public $orderDir = 'asc';
+
+	/**
+	 * Fields and their validation criteria
+	 *
+	 * @var  array
+	 */
+	protected $rules = array(
+		'title'    => 'required',
+		'position' => 'required'
+	);
+
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $guarded = [
+		'id'
+	];
+
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'published' => 'integer',
+		'access' => 'integer',
+		'params' => 'object',
+	];
+
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array
+	 */
+	protected $dates = [
+		'publish_up',
+		'publish_down',
+	];
+
+	/**
+	 * Configuration registry
+	 *
+	 * @var  object
+	 */
+	protected $paramsRegistry = null;
+
+	/**
+	 * The path to the installed files
+	 *
+	 * @var  string
+	 */
+	protected $path = null;
+
+	/**
+	 * Get params as a Registry object
+	 *
+	 * @return  object
+	 */
+	//public function getParamsAttribute()
+	public function params()
+	{
+		if (!($this->paramsRegistry instanceof Registry))
+		{
+			$this->paramsRegistry = new Registry($this->getOriginal('params'));
+		}
+		return $this->paramsRegistry;
+	}
+
+	/**
+	 * Determine if record is published
+	 * 
+	 * @return  boolean
+	 */
+	public function isPublished()
+	{
+		if ($this->published != 1)
+		{
+			return false;
+		}
+
+		if ($this->publish_up
+		 && $this->publish_up != '0000-00-00 00:00:00'
+		 && $this->publish_up > Carbon::now()->toDateTimeString())
+		{
+			return false;
+		}
+
+		if ($this->publish_down
+		 && $this->publish_down != '0000-00-00 00:00:00'
+		 && $this->publish_down <= Carbon::now()->toDateTimeString())
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Method to change the title.
+	 *
+	 * @param   string   $title        The title.
+	 * @param   string   $position     The position.
+	 * @return  array    Contains the modified title.
+	 */
+	public function generateNewTitle($title, $position)
+	{
+		// Alter the title & alias
+		$models = self::query()
+			->where('position', '=', $position)
+			->where('title', '=', $title)
+			->count();
+
+		for ($i = 0; $i < $models; $i++)
+		{
+			$title = self::incrementString($title);
+		}
+
+		return array($title);
+	}
+
+	/**
+	 * Increments a trailing number in a string.
+	 *
+	 * Used to easily create distinct labels when copying objects. The method has the following styles:
+	 *
+	 * default: "Label" becomes "Label (2)"
+	 * dash:    "Label" becomes "Label-2"
+	 *
+	 * @param   string   $string  The source string.
+	 * @param   string   $style   The the style (default|dash).
+	 * @param   integer  $n       If supplied, this number is used for the copy, otherwise it is the 'next' number.
+	 * @return  string   The incremented string.
+	 */
+	protected static function incrementString($string, $style = 'default', $n = 0)
+	{
+		$incrementStyles = array(
+			'dash' => array(
+				'#-(\d+)$#',
+				'-%d'
+			),
+			'default' => array(
+				array('#\((\d+)\)$#', '#\(\d+\)$#'),
+				array(' (%d)', '(%d)'),
+			),
+		);
+
+		$styleSpec = isset($incrementStyles[$style]) ? $incrementStyles[$style] : $incrementStyles['default'];
+
+		// Regular expression search and replace patterns.
+		if (is_array($styleSpec[0]))
+		{
+			$rxSearch  = $styleSpec[0][0];
+			$rxReplace = $styleSpec[0][1];
+		}
+		else
+		{
+			$rxSearch = $rxReplace = $styleSpec[0];
+		}
+
+		// New and old (existing) sprintf formats.
+		if (is_array($styleSpec[1]))
+		{
+			$newFormat = $styleSpec[1][0];
+			$oldFormat = $styleSpec[1][1];
+		}
+		else
+		{
+			$newFormat = $oldFormat = $styleSpec[1];
+		}
+
+		// Check if we are incrementing an existing pattern, or appending a new one.
+		if (preg_match($rxSearch, $string, $matches))
+		{
+			$n = empty($n) ? ($matches[1] + 1) : $n;
+			$string = preg_replace($rxReplace, sprintf($oldFormat, $n), $string);
+		}
+		else
+		{
+			$n = empty($n) ? 2 : $n;
+			$string .= sprintf($newFormat, $n);
+		}
+
+		return $string;
+	}
+
+	/**
+	 * Get the installed path
+	 *
+	 * @return  string
+	 */
+	public function path()
+	{
+		if (is_null($this->path))
+		{
+			$this->path = '';
+
+			if ($widget = $this->module)
+			{
+				if (substr($widget, 0, 4) == 'mod_')
+				{
+					$widget = substr($widget, 4);
+				}
+				$widget = ucfirst($widget);
+
+				$path = app_path() . '/Widgets/' . $widget . '/' . $widget . '.php';
+
+				if (file_exists($path))
+				{
+					$this->path = dirname($path);
+				}
+			}
+		}
+
+		return $this->path;
+	}
+
+	/**
+	 * Get a form
+	 *
+	 * @return  object
+	 */
+	public function getForm()
+	{
+		$file = __DIR__ . '/Forms/Widget.xml';
+
+		Form::addFieldPath(__DIR__ . '/Fields');
+
+		$form = new Form('module', array('control' => 'fields'));
+
+		if (!$form->loadFile($file, false, '//form'))
+		{
+			$this->addError(trans('global.load file failed'));
+		}
+
+		$paths = array();
+		$paths[] = $this->path() . '/Config/Params.xml';
+
+		/*if (substr($this->module, 0, 4) == 'mod_')
+		{
+			$paths[] = $this->path() . '/' . substr($this->module, 4) . '.xml';
+		}
+
+		$paths[] = $this->path() . '/' . $this->module . '.xml';*/
+
+		foreach ($paths as $file)
+		{
+			if (file_exists($file))
+			{
+				// Get the plugin form.
+				if (!$form->loadFile($file, false, '//config'))
+				{
+					$this->addError(trans('global.load file failed'));
+				}
+				break;
+			}
+		}
+
+		$data = $this->toArray();
+		$data['params'] = $this->params()->toArray();
+
+		$form->bind($data);
+
+		return $form;
+	}
+
+	public function registerLanguage()
+	{
+		$name = $this->module;
+		if (substr($name, 0, 4) == 'mod_')
+		{
+			$name = substr($name, 4);
+		}
+
+		app('translator')->addNamespace('widget.' . $name, $this->path() . '/lang');
+	}
+
+	/**
+	 * Save the record
+	 *
+	 * @return  boolean  False if error, True on success
+	 */
+	/*public function save(array $options = array())
+	{
+		if (!is_string($this->params))
+		{
+			$this->params = json_encode($this->params);
+		}
+
+		return parent::save($options);
+	}*/
+}

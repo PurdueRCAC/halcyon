@@ -1,0 +1,18 @@
+tagtype: resource
+name: Miner User Guide
+tags:
+vars:
+  name: Miner
+  type: compute
+  dir: miner
+  active: false
+  published: true
+  seq: 105
+  teaser: "Miner was a compute cluster installed Miner at the Purdue Calumet campus on December 25, 2009 and operated by ITaP. It was the first major research cluster on the Calumet campus and represented a great step forward in Purdue Calumet's ongoing plan to foster more local, cutting-edge research. Miner consisted of 512 2-core Intel Xeon systems with either 4 or 6 GB RAM, 50 GB of disk, and 1 Gigabit Ethernet (1GigE) local to each node."
+  dateInstalled: "12/25/2009"
+  dateRetired: "06/26/2012"
+  statsHours: "8,831,617"
+  statsJobs: "3,354,834"
+  statsUsers: "207"
+  statsGroups: "47"
+  statsTopGroups: "ITaP, Chenn Qian Zhou Group, Michael W Pelter Group"

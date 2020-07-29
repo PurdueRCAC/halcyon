@@ -1,0 +1,15 @@
+{
+    "name": "Storage",
+    "alias": "storage",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "App\\Modules\\Storage\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Storage\\Providers\\RouteServiceProvider",
+        "App\\Modules\\Storage\\Providers\\ScheduleServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

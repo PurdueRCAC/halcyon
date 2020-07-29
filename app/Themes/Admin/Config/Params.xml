@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="advanced">
+			<field name="mode" type="list" default="light" label="theme.admin::admin.mode" description="theme.admin::admin.mode description">
+				<option value="light">theme.admin::admin.light</option>
+				<option value="dark">theme.admin::admin.dark</option>
+			</field>
+		</fieldset>
+	</fields>
+</config>

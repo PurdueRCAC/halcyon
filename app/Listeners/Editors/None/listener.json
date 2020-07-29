@@ -1,0 +1,11 @@
+{
+    "name": "Editor - None",
+    "alias": "none",
+    "description": "This loads a basic text entry field.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

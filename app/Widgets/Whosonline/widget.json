@@ -1,0 +1,8 @@
+{
+    "name": "Who is online",
+    "alias": "whosonline",
+    "description": "Display who is online",
+    "keywords": [],
+    "active": 1,
+    "requires": []
+}

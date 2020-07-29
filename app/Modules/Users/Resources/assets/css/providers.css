@@ -1,0 +1,74 @@
+/**
+ * @package    halcyon
+ * @copyright  Copyright 2020 Purdue University.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+/*.auth .options {
+	padding: 0 2em;
+}*/
+.auth .account {
+	display: block;
+	margin: 1em auto;
+	position: relative;
+	height: 50px;
+	line-height: 50px;
+	-webkit-border-radius: 0.25em;
+	-moz-border-radius: 0.25em;
+	border-radius: 0.25em;
+	background: #333;
+	color: #FFFFFF;
+}
+.auth .account:hover,
+.primary:hover {
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+.auth .account:active,
+.primary:active {
+	box-shadow: inset 3px 3px #555555;
+}
+.auth .account:before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 40px;
+	text-align: center;
+	font-weight: normal;
+	color: #fff;
+	margin-left: 5px;
+}
+.auth .account:after {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 1em;
+	text-align: center;
+	font-family: fontcons;
+	font-size: 14px;
+	font-weight: normal;
+	color: #FFFFFF;
+	margin-right: 5px;
+	content: "\203a";
+}
+.auth .account .signin {
+	margin-left: 50px;
+	color: #FFFFFF;
+	font-weight: 400;
+	font-size: 1.2em;
+}
+
+.alt-account {
+	display: inline-block;
+	background: transparent;
+	border-bottom: none;
+	font-size: 2em;
+	margin-right: 5px;
+}
+
+.primary .upper:before {
+	font-size: 4em;
+	text-align: center;
+	color: #FFFFFF;
+}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+@package      hubzero-cms
+@copyright    Copyright 2019 Purdue University.
+@license      http://opensource.org/licenses/MIT MIT
+-->
+
+<form>
+	<fieldset>
+		<field
+			id="id"
+			name="id"
+			type="hidden"
+			default="0"
+			filter="int"
+			readonly="true"/>
+
+		<field
+			id="menutype"
+			name="menutype"
+			type="text"
+			label="menus::menus.MENU_MENUTYPE_LABEL"
+			description="menus::menus.MENU_MENUTYPE_DESC"
+			class="inputbox"
+			size="30"
+			maxlength="24"
+			required="true" />
+
+		<field
+			id="title"
+			name="title"
+			type="text"
+			label="JGLOBAL_TITLE"
+			description="menus::menus.MENU_TITLE_DESC"
+			class="inputbox"
+			size="30"
+			maxlength="48"
+			required="true" />
+
+		<field
+			id="menudescription"
+			name="description"
+			type="text"
+			label="JGLOBAL_DESCRIPTION"
+			description="menus::menus.MENU_DESCRIPTION_DESC"
+			class="inputbox"
+			size="30"
+			maxlength="255" />
+
+	</fieldset>
+</form>

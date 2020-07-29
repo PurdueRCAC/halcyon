@@ -1,0 +1,19 @@
+tagtype: resource
+name: Coates User Guide
+tags:
+vars:
+  name: Coates
+  type: compute
+  dir: coates
+  namesake: "Clarence L. Coates"
+  active: false
+  published: true
+  seq: 110
+  teaser: "Coates was a compute cluster operated by ITaP and was a member of Purdue's Community Cluster Program. ITaP installed Coates on July 21, 2009, and at the time it was the largest entirely 10 Gigabit Ethernet (10GigE) academic cluster in the world. Coates consisted of 982 64-bit, 8-core Hewlett-Packard Proliant and 11 64-bit, 16-core Hewlett-Packard Proliant DL585 G5 systems with between 16 GB and 128 GB of memory. All nodes had 10 Gigabit Ethernet interconnects and a 5-year warranty. Coates was decommissioned on September 30, 2014."
+  dateInstalled: "07/21/2009"
+  dateRetired: "09/30/2014"
+  statsHours: "254,241,098"
+  statsJobs: "26,512,102"
+  statsUsers: "864"
+  statsGroups: "142"
+  statsTopGroups: "NCN, Merkle Group, Matthew Huber Group"

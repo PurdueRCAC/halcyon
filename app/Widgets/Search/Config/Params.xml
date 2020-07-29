@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="label" type="label" label="widget.search::search.FIELD_LABEL_TEXT_LABEL" description="widget.search::search.FIELD_LABEL_TEXT_DESC" />
+			<field name="width" type="text" default="20" label="widget.search::search.FIELD_BOXWIDTH_LABEL" description="widget.search::search.FIELD_BOXWIDTH_DESC" />
+			<field name="text" type="text" label="widget.search::search.FIELD_TEXT_LABEL" description="widget.search::search.FIELD_TEXT_DESC" />
+			<field name="button" type="list" label="widget.search::search.FIELD_BUTTON_LABEL" description="widget.search::search.FIELD_BUTTON_DESC">
+				<option value="">global.no</option>
+				<option value="1">global.yes</option>
+			</field>
+			<field name="button_pos" type="list" default="right" label="widget.search::search.FIELD_BUTTONPOS_LABEL" description="widget.search::search.FIELD_BUTTONPOS_DESC">
+				<option value="right">widget.search::search.FIELD_VALUE_RIGHT</option>
+				<option value="left">widget.search::search.FIELD_VALUE_LEFT</option>
+				<option value="top">widget.search::search.FIELD_VALUE_TOP</option>
+				<option value="bottom">widget.search::search.FIELD_VALUE_BOTTOM</option>
+			</field>
+			<field name="button_text" type="text" label="widget.search::search.FIELD_BUTTONTEXT_LABEL" description="widget.search::search.FIELD_BUTTONTEXT_DESC" />
+			<field name="opensearch_title" type="text" label="widget.search::search.FIELD_OPENSEARCH_TEXT_LABEL" description="widget.search::search.FIELD_OPENSEARCH_TEXT_DESC" />
+		</fieldset>
+		<fieldset name="advanced">
+			<field name="layout" type="modulelayout" label="widgets::widgets.ALT_LAYOUT_LABEL" description="widgets::widgets.ALT_MODULE_LAYOUT_DESC" />
+			<field name="moduleclass_sfx" type="text" label="widgets::widgets.FIELD_MODULECLASS_SFX_LABEL" description="widgets::widgets.FIELD_MODULECLASS_SFX_DESC" />
+			<field name="cache" type="list" default="1" label="widgets::widgets.FIELD_CACHING_LABEL" description="widgets::widgets.FIELD_CACHING_DESC">
+				<option value="1">widgets::widgets.use global</option>
+				<option value="0">widgets::widgets.FIELD_VALUE_NOCACHING</option>
+			</field>
+			<field name="cache_time" type="text" default="900" label="widgets::widgets.FIELD_CACHE_TIME_LABEL" description="widgets::widgets.FIELD_CACHE_TIME_DESC" />
+			<field name="cachemode" type="hidden" default="itemid">
+				<option value="itemid"></option>
+			</field>
+		</fieldset>
+	</fields>
+</config>

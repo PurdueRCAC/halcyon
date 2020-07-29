@@ -1,0 +1,35 @@
+tagtype: resource
+name: Carter User Guide
+tags:
+vars:
+  name: Carter
+  type: compute
+  hostname: carter
+  frontend: carter
+  dir: carter
+  nodecores: 16
+  naccesspolicy: shared
+  namesake: "Dennis Lee Carter"
+  namesakesex: m
+  namesakeimpact: ', Purdue alumnus and creator of the "Intel Inside" campaign'
+  compiler: Intel 16.0.1.150
+  mathlib: MKL
+  mesglib: Intel MPI
+  scratch: /scratch/rice
+  queue: standby
+  queuemodel: dedicated
+  debug: true
+  standby: true
+  batchsystem: pbs
+  frontends: 4
+  active: false
+  published: true
+  seq: 115
+  teaser: "Carter was launched through an ITaP partnership with Intel in November 2011 and was a member of Purdue's Community Cluster Program. Carter consisted of HP compute nodes with two 8-core Intel Xeon-E5 processors (16 cores per node) and between 32 GB and 256 GB of memory. A few NVIDIA GPU-accelerated nodes were also available. All nodes had 56 Gbps FDR Infiniband connections. Carter was decommissioned on April 30, 2017."
+  dateInstalled: "04/02/2012"
+  dateRetired: "04/30/2017"
+  statsHours: "350,892,852"
+  statsJobs: "14,946,686"
+  statsUsers: "1,321"
+  statsGroups: "148"
+  statsTopGroups: "Greeley Group, CMS, CEPL"

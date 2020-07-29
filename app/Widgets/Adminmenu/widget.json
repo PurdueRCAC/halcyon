@@ -1,0 +1,7 @@
+{
+	"name": "Admin Menu",
+	"alias": "adminmenu",
+	"description": "Menu for admin interface",
+	"type": "admin",
+	"version": "1.0.0"
+}

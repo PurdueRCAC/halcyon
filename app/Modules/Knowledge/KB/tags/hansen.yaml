@@ -1,0 +1,35 @@
+tagtype: resource
+name: Hansen User Guide
+tags:
+vars:
+  name: Hansen
+  type: compute
+  hostname: hansen
+  frontend: hansen
+  dir: hansen
+  nodecores: 16
+  naccesspolicy: shared
+  namesake: "Arthur G. Hansen"
+  namesakesex: m
+  namesakeimpact: ',  former Purdue president and alumnus and supercomputing proponent'
+  compiler: PGI 11.8-0
+  mathlib: ACML
+  mesglib: OpenMPI 1.6.3
+  scratch: /scratch/hansen
+  queue: standby
+  queuemodel: dedicated
+  debug: true
+  standby: true
+  batchsystem: pbs
+  frontends: 4
+  seq: 112
+  active: false
+  published: true
+  teaser: "Hansen was a compute cluster operated by ITaP and a member of Purdue's Community Cluster Program. Hansen went into production on September 15, 2011. Hansen consisted of Dell compute nodes with four 12-core AMD Opteron 6176 processors (48 cores per node) and either 96 GB, 192 GB, or 512 GB of memory. All nodes had 10 Gigabit Ethernet interconnects and a 5-year warranty. Hansen was decommissioned on October 1, 2016"
+  dateInstalled: "09/15/2011"
+  dateRetired: "10/01/2016"
+  statsHours: "276,417,916"
+  statsJobs: "33,463,451"
+  statsUsers: "683"
+  statsGroups: "87"
+  statsTopGroups: "PRISM, CMS, NCN"

@@ -1,0 +1,14 @@
+{
+    "name": "Themes",
+    "alias": "themes",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "App\\Modules\\Themes\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Themes\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

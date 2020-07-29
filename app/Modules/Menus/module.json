@@ -1,0 +1,14 @@
+{
+    "name": "Menus",
+    "alias": "menus",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "App\\Modules\\Menus\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Menus\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

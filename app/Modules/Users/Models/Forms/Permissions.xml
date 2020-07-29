@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+@package      halcyon
+@copyright    Copyright 2005-2020 Purdue University
+@license      http://opensource.org/licenses/MIT MIT
+-->
+
+<form>
+	<fieldset
+		name="permissions"
+		label="access.permissions">
+
+		<field
+			name="rules"
+			type="rules"
+			label="access.permissions"
+			translate_label="false"
+			validate="rules"
+			asset_id="1"
+			filter="rules">
+			<action
+				name="login.site"
+				title="access.action.login"
+				description="access.action.login description" />
+			<action
+				name="admin"
+				title="access.action.admin"
+				description="access.action.admin description" />
+			<action
+				name="manage"
+				title="access.action.manage"
+				description="access.action.manage description" />
+			<action
+				name="create"
+				title="access.action.create"
+				description="access.action.create description" />
+			<action
+				name="delete"
+				title="access.action.delete"
+				description="access.action.delete description" />
+			<action
+				name="edit"
+				title="access.action.edit"
+				description="access.action.edit description" />
+			<action
+				name="edit.state"
+				title="access.action.edit state"
+				description="access.action.edit state description" />
+			<action
+				name="edit.own"
+				title="access.action.edit own"
+				description="access.action.edit own description" />
+		</field>
+	</fieldset>
+</form>

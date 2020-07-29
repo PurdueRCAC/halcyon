@@ -1,0 +1,8 @@
+{
+    "name": "Admin Module Title",
+    "alias": "title",
+    "description": "Shows the active module title",
+    "keywords": [],
+    "active": 1,
+    "requires": []
+}

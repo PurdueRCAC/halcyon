@@ -1,0 +1,14 @@
+{
+    "name": "Courses",
+    "alias": "courses",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "App\\Modules\\Courses\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Courses\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

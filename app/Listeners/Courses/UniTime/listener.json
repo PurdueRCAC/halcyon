@@ -1,0 +1,11 @@
+{
+    "name": "Courses - University Time",
+    "alias": "none",
+    "description": "Service connector for Purdue University's courses.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

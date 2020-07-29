@@ -1,0 +1,11 @@
+{
+    "name": "Users - Role Provision",
+    "alias": "none",
+    "description": "Service connector for Purdue University's Central Accounts.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

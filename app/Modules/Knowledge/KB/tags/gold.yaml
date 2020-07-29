@@ -1,0 +1,18 @@
+tagtype: resource
+name: Gold User Guide
+tags:
+vars:
+  name: Gold
+  type: compute
+  dir: gold
+  active: false
+  published: true
+  seq: 103
+  teaser: "Gold was a small IBM Power5 system consisting of one front-end node and one compute node. The compute node was a Dual-Processor 1.5 GHz Dual-Core Power5 520 with 8 GB of RAM. This system was designed to be used only by users with legacy IBM architecture-optimized or AIX-specific code. Gold was intended to help facilitate the porting of any code designed for the IBM SP system at Purdue, which was retired in 2008."
+  dateInstalled: "04/11/2008"
+  dateRetired: "10/11/2010"
+  statsHours: "1,645"
+  statsJobs: "213"
+  statsUsers: "11"
+  statsGroups: "3"
+  statsTopGroups: "Rossmann Group, ITaP"

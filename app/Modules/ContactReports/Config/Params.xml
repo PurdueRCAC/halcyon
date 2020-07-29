@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fieldset
+		name="permissions"
+		label="access.permissions"
+		description="access.permissions desc"
+		>
+
+		<field
+			name="rules"
+			type="rules"
+			label="access.permissions"
+			filter="rules"
+			validate="rules"
+			module="contactreports"
+			section="module" />
+	</fieldset>
+</config>

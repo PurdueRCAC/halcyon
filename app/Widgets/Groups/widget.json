@@ -1,0 +1,8 @@
+{
+    "name": "Groups",
+    "alias": "groups",
+    "description": "This widget shows on the Admin area Home Page and displays items that administrator needs to watch for",
+    "keywords": [],
+    "active": 1,
+    "requires": []
+}

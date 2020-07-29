@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="menutype" type="App\Modules\Menus\Models\Fields\Menu" label="widget.menu::config.menutype" description="widget.menu::config.menutype desc" />
+			<field name="startLevel" type="list" default="1" label="widget.menu::config.startlevel" description="widget.menu::config.startlevel desc">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+			</field>
+			<field name="endLevel" type="list" default="0" label="widget.menu::config.endlevel" description="widget.menu::config.endlevel desc">
+				<option value="0">global.all</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+			</field>
+			<field name="showAllChildren" type="radio" default="1" label="widget.menu::config.allchildren" description="widget.menu::config.allchildren desc">
+				<option value="0">global.no</option>
+				<option value="1">global.yes</option>
+			</field>
+		</fieldset>
+		<fieldset name="advanced">
+			<field name="tag_id" type="text" label="widget.menu::config.tag id" description="widget.menu::config.tag id desc" />
+			<field name="window_open" type="text" label="widget.menu::config.target" description="widget.menu::config.target desc" />
+			<field name="layout" type="modulelayout" label="widgets::widgets.field.alt layout" description="widgets::widgets.field.alt layout description" />
+			<field name="class_sfx" type="text" label="widgets::widgets.field.class suffix" description="widgets::widgets.field.class suffix description" />
+			<field name="cache" type="list" default="1" label="widgets::widgets.field.caching" description="widgets::widgets.field.caching description">
+				<option value="1">widgets::widgets.use global</option>
+				<option value="0">widgets::widgets.no caching</option>
+			</field>
+			<field name="cache_time" type="text" default="900" label="widgets::widgets.field.cache time" description="widgets::widgets.field.cache time description" />
+			<field name="cachemode" type="hidden" default="itemid">
+				<option value="itemid"></option>
+			</field>
+		</fieldset>
+	</fields>
+</config>

@@ -1,0 +1,7 @@
+{
+	"name": "Search",
+	"alias": "search",
+	"description": "This displays a search box.",
+	"type": "site",
+	"version": "1.0.0"
+}

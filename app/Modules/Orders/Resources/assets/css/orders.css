@@ -1,0 +1,20 @@
+/**
+ * @package    halcyon
+ * @copyright  Copyright 2020 Purdue University.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+.never,
+.unknown {
+	color: #ccc;
+}
+
+.order-status {
+	color: #f00;
+}
+.canceled {
+	color: #999;
+}
+.pending-payment {
+	color: #DF7401;
+}

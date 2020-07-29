@@ -1,0 +1,13 @@
+/**
+ * @package    halcyon
+ * @copyright  Copyright 2020 Purdue University
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+/* Show macros text */
+.cke_button__hubzeromacro_label {
+	display: inline-block !important;
+}
+.cke {
+	visibility: visible !important;
+}

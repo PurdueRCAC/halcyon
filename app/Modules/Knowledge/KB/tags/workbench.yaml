@@ -1,0 +1,28 @@
+tagtype: resource
+name: Data Workbench User Guide
+tags:
+  - paidbutnonpbs
+  - faq
+  - linuxcluster
+  - communitycluster
+  - jupyter
+  - rstudioserver
+vars:
+  name: Data Workbench
+  type: compute
+  hostname: workbench
+  frontend: workbench
+  dir: workbench
+  nodecores: 24
+  naccesspolicy: shared
+  compiler: Intel 17.0.1.132
+  mathlib: MKL
+  scratch: ""
+  letteredscratch: true
+  queue: ""
+  batchsystem: none
+  seq: 128
+  active: true
+  published: true
+  teaser: "The Data Workbench is an interactive compute environment for non-batch big data analysis and simulation, and is a part of Purdue's Community Cluster Program. The Data Workbench consists of HP compute nodes with two 8-core Intel Xeon processors (16 cores per node), and 128 GB of memory. All nodes are interconnected with 10 Gigabit Ethernet. The Data Workbench entered production on October 1, 2017."
+  regmaint: "the first Thursday of every month, 8:00am to 5:00pm"

@@ -1,0 +1,53 @@
+<?php
+/**
+ * @package    halcyon
+ * @copyright  Copyright 2020 Purdue University.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+namespace App\Modules\Storage\Models\Notification;
+
+use Illuminate\Database\Eloquent\Model;
+use App\Modules\History\Traits\Historable;
+use App\Halcyon\Models\Timeperiod;
+
+/**
+ * Model for news type
+ */
+class Type extends Model
+{
+	use Historable;
+
+	/**
+	 * Uses timestamps
+	 *
+	 * @var bool
+	 */
+	public $timestamps = false;
+
+	/**
+	 * The table to which the class pertains
+	 *
+	 * @var  string
+	 **/
+	protected $table = 'storagedirquotanotificationtypes';
+
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $guarded = [
+		'id',
+	];
+
+	/**
+	 * Defines a relationship to creator
+	 *
+	 * @return  object
+	 */
+	public function timeperiod()
+	{
+		return $this->belongsTo(Timeperiod::class, 'defaulttimeperiodid')->withDefault();
+	}
+}

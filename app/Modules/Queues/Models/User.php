@@ -1,0 +1,206 @@
+<?php
+/**
+ * @package    halcyon
+ * @copyright  Copyright 2020 Purdue University.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+namespace App\Modules\Queues\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Halcyon\Traits\ErrorBag;
+use App\Halcyon\Traits\Validatable;
+use App\Modules\History\Traits\Historable;
+use App\Modules\Queues\Events\UserCreating;
+use App\Modules\Queues\Events\UserCreated;
+use App\Modules\Queues\Events\UserUpdating;
+use App\Modules\Queues\Events\UserUpdated;
+use App\Modules\Queues\Events\UserDeleted;
+
+/**
+ * Model for a queue/user association
+ */
+class User extends Model
+{
+	use ErrorBag, Validatable, Historable, SoftDeletes;
+
+	/**
+	 * The name of the "created at" column.
+	 *
+	 * @var string
+	 */
+	const CREATED_AT = 'datetimecreated';
+
+	/**
+	 * The name of the "updated at" column.
+	 *
+	 * @var  string
+	 */
+	const UPDATED_AT = null;
+
+	/**
+	 * The name of the "deleted at" column.
+	 *
+	 * @var string
+	 */
+	const DELETED_AT = 'datetimeremoved';
+
+	/**
+	 * The table to which the class pertains
+	 *
+	 * @var  string
+	 **/
+	protected $table = 'queueusers';
+
+	/**
+	 * Fields and their validation criteria
+	 *
+	 * @var array
+	 */
+	protected $rules = array(
+		'name' => 'notempty'
+	);
+
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $guarded = [
+		'id'
+	];
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var array
+	 */
+	protected $dispatchesEvents = [
+		'creating' => UserCreating::class,
+		'created'  => UserCreated::class,
+		'updating' => UserUpdating::class,
+		'updated'  => UserUpdated::class,
+		'deleted'  => UserDeleted::class,
+	];
+
+	/**
+	 * Defines a relationship to notification type
+	 *
+	 * @return  object
+	 */
+	public function queue()
+	{
+		return $this->belongsTo(Queue::class, 'queueid');
+	}
+
+	/**
+	 * Defines a relationship to creator
+	 *
+	 * @return  object
+	 */
+	public function user()
+	{
+		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
+	}
+
+	/**
+	 * Defines a relationship to membertype
+	 *
+	 * @return  object
+	 */
+	public function type()
+	{
+		return $this->belongsTo(MemberType::class, 'membertype');
+	}
+
+	/**
+	 * Defines a relationship to userrequest
+	 *
+	 * @return  object
+	 */
+	public function request()
+	{
+		return $this->hasOne(UserRequest::class, 'userrequestid');
+	}
+
+	/**
+	 * Defines a relationship to creator
+	 *
+	 * @return  object
+	 */
+	public function scopeWherePendingRequest($query)
+	{
+		return $query->where($this->getTable() . '.membertype', '=', 4);
+	}
+
+	/**
+	 * Defines a relationship to userrequest
+	 *
+	 * @return  void
+	 */
+	public function setAsMember()
+	{
+		$this->membertype = 1;
+	}
+
+	/**
+	 * Defines a relationship to userrequest
+	 *
+	 * @return  void
+	 */
+	public function setAsManager()
+	{
+		$this->membertype = 2;
+	}
+
+	/**
+	 * Defines a relationship to userrequest
+	 *
+	 * @return  void
+	 */
+	public function setAsViewer()
+	{
+		$this->membertype = 3;
+	}
+
+	/**
+	 * Defines a relationship to userrequest
+	 *
+	 * @return  void
+	 */
+	public function setAsPending()
+	{
+		$this->membertype = 4;
+	}
+
+	/**
+	 * Defines a relationship to creator
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereIsMember($query)
+	{
+		return $query->where('membertype', '=', 1);
+	}
+
+	/**
+	 * Defines a relationship to creator
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereIsManager($query)
+	{
+		return $query->where('membertype', '=', 2);
+	}
+
+	/**
+	 * Defines a relationship to creator
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereIsViewer($query)
+	{
+		return $query->where('membertype', '=', 3);
+	}
+}

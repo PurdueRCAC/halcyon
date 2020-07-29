@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="key" type="text" default="" label="widget.googleanalytics::googleanalytics.api key" description="widget.googleanalytics::googleanalytics.api key description" />
+		</fieldset>
+	</fields>
+</config>

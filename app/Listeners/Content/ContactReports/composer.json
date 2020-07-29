@@ -1,0 +1,24 @@
+{
+	"name": "halcyon/lst_content_contactreports",
+	"description": "Listener for converting references to Contact Reports to links",
+	"type": "halcyon-listener",
+	"keywords": ["Purdue University", "ITaP", "RCAC"],
+	"homepage": "https://www.rcac.purdue.edu",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Research Computing at Purdue",
+			"email": "support@rcac.purdue.edu"
+		}
+	],
+	"support": {
+		"email": "support@hubzero.org",
+		"issues": "https://www.rcac.purdue.edu/help"
+	},
+	"require": {
+		"php" : "^5.4"
+	},
+	"extra": {
+		"install-directory": "/Listeners/Content/ContactReports/"
+	}
+}

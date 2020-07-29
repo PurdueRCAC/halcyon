@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="catid" type="App\Modules\News\Models\Fields\Types" extension="news" default="" size="10" label="widget.news::news.params.category" description="widget.news::news.params.category desc" >
+				<option value="">widget.news::news.params.all categories</option>
+			</field>
+			<field name="location" type="text" default="" label="widget.news::news.params.location" description="widget.news::news.params.location desc" />
+			<field name="item_title" type="radio" default="0" label="widget.news::news.params.show title" description="widget.news::news.params.show title desc">
+				<option value="1">global.yes</option>
+				<option value="0">global.no</option>
+			</field>
+			<field name="link_titles" type="list" label="widget.news::news.params.link title" description="widget.news::news.params.link title desc">
+				<option value="">global.use global</option>
+				<option value="0">global.no</option>
+				<option value="1">global.yes</option>
+			</field>
+			<field name="item_heading" type="list" default="h4" label="widget.news::news.params.header level" description="widget.news::news.params.header level desc">
+				<option value="h1">H1</option>
+				<option value="h2">H2</option>
+				<option value="h3">H3</option>
+				<option value="h4">H4</option>
+				<option value="h5">H5</option>
+			</field>
+			<field name="showLastSeparator" type="radio" default="1" label="widget.news::news.params.separator" description="widget.news::news.params.separator desc">
+				<option value="1">global.yes</option>
+				<option value="0">global.no</option>
+			</field>
+			<field name="readmore" type="radio" default="0" label="widget.news::news.params.readmore" description="widget.news::news.params.readmore desc">
+				<option value="0">global.hide</option>
+				<option value="1">global.show</option>
+			</field>
+			<field name="limit" type="text" default="5" label="widget.news::news.params.number of items" description="widget.news::news.params.number of items desc" />
+			<field name="ordering" type="list" default="a.publish_up" label="widget.news::news.params.ordering" description="widget.news::news.params.ordering desc">
+				<option value="published">widget.news::news.params.order by published date</option>
+				<option value="created">widget.news::news.params.order by created date</option>
+				<option value="title">widget.news::news.params.order by title</option>
+			</field>
+			<field name="direction" type="list" default="DESC" label="widget.news::news.params.direction" description="widget.news::news.params.direction desc">
+				<option value="DESC">widget.news::news.params.direction new to old</option>
+				<option value="ASC">widget.news::news.params.direction old to new</option>
+			</field>
+		</fieldset>
+		<fieldset name="advanced">
+			<field name="layout" type="modulelayout" label="widgets::widgets.field.alt layout" description="widgets::widgets.field.alt layout description" />
+			<field name="class_sfx" type="text" label="widgets::widgets.field.class suffix" description="widgets::widgets.field.class suffix description" />
+			<field name="cache" type="list" default="1" label="widgets::widgets.field.caching" description="widgets::widgets.field.caching description">
+				<option value="1">widgets::widgets.use global</option>
+				<option value="0">widgets::widgets.no caching</option>
+			</field>
+			<field name="cache_time" type="text" default="900" label="widgets::widgets.field.cache time" description="widgets::widgets.field.cache time description" />
+			<field name="cachemode" type="hidden" default="itemid">
+				<option value="itemid"></option>
+			</field>
+		</fieldset>
+	</fields>
+</config>

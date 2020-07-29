@@ -1,0 +1,281 @@
+<?php
+
+namespace App\Modules\Users\Http\Controllers\Admin;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
+use App\Halcyon\Access\Role;
+use App\Halcyon\Access\Gate;
+
+class RolesController extends Controller
+{
+	/**
+	 * Display a listing of roles.
+	 *
+	 * @return Response
+	 */
+	public function index(Request $request)
+	{
+		// Get filters
+		/*$filters = array(
+			'search'   => null,
+			// Paging
+			'limit'     => config('list_limit', 20),
+			'page' => 1,
+			// Sorting
+			'order'     => Role::$orderBy,
+			'order_dir' => Role::$orderDir,
+		);
+
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->state('users.roles.filter_' . $key, $val);
+		}
+
+		if (!in_array($filters['order'], ['id', 'title', 'lft']))
+		{
+			$filters['order'] = Role::$orderBy;
+		}
+
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
+		{
+			$filters['order_dir'] = Role::$orderDir;
+		}
+
+		$query = Role::query();
+
+		if ($filters['search'])
+		{
+			if (is_numeric($filters['search']))
+			{
+				$query->where('id', '=', (int)$filters['search']);
+			}
+			else
+			{
+				$query->where('title', 'like', '%' . $filters['search'] . '%');
+			}
+		}
+
+		$rows = $query
+			->withCount('maps')
+			->orderBy($filters['order'], $filters['order_dir'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+
+		return view('users::admin.roles.index', [
+			'rows'    => $rows,
+			'filters' => $filters
+		]);*/
+
+		//$model = new Permissions;
+		//$form = $model->getForm();
+
+		// Initialise some field attributes.
+		$section = 'core';
+		$actions = null;
+
+		// Get the actions for the asset.
+		//$comfile = module_path('core') . '/Config/permissions.php';
+		$comfile = module_path('users') . '/Config/defaultpermissions.php';
+		if (is_file($comfile))
+		{
+			$actions = include $comfile;
+		}
+
+		if (!$actions)
+		{
+			$actions = array($section => array());
+		}
+
+		$assetId = 1;
+
+		// Get the rules for just this asset (non-recursive).
+		$assetRules = Gate::getAssetRules($assetId);
+
+		// Get the available user roles.
+		$roles = Role::tree();
+
+		return view('users::admin.roles.index', [
+			//'form' => $form,
+			'section' => $section,
+			'module' => '',
+			'roles' => $roles,
+			'assetId' => $assetId,
+			'assetRules' => $assetRules,
+			'actions' => $actions,
+		]);
+	}
+
+	/**
+	 * Show the form for creating a new resource.
+	 * @return Response
+	 */
+	public function create()
+	{
+		app('request')->merge(['hidemainmenu' => 1]);
+
+		$row = new Role;
+
+		$options = Role::query()
+			->orderBy('lft', 'asc')
+			->get();
+
+		return view('users::admin.roles.edit', [
+			'row' => $row,
+			'options' => $options
+		]);
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function store(Request $request)
+	{
+		$request->validate([
+			'fields.title' => 'required'
+		]);
+
+		$id = $request->input('id');
+
+		$row = $id ? Role::findOrFail($id) : new Role();
+		$row->fill($request->input('fields'));
+
+		// Check the super admin permissions for group
+		// We get the parent group permissions and then check the group permissions manually
+		// We have to calculate the group permissions manually because we haven't saved the group yet
+		$parentSuperAdmin = Gate::checkRole($row->parent_id, 'admin');
+
+		// Get admin rules from the root asset
+		$rules = Gate::getAssetRules('root.1')->getData();
+
+		// Get the value for the current group (will be true (allowed), false (denied), or null (inherit)
+		$roleSuperAdmin = $rules['admin']->allow($row->id);
+
+		// We only need to change the $roleSuperAdmin if the parent is true or false. Otherwise, the value set in the rule takes effect.
+		if ($parentSuperAdmin === false)
+		{
+			// If parent is false (Denied), effective value will always be false
+			$roleSuperAdmin = false;
+		}
+		elseif ($parentSuperAdmin === true)
+		{
+			// If parent is true (allowed), group is true unless explicitly set to false
+			$roleSuperAdmin = ($roleSuperAdmin === false) ? false : true;
+		}
+
+		// Check for non-super admin trying to save with super admin group
+		$iAmSuperAdmin = auth()->user()->can('admin');
+
+		if (!$iAmSuperAdmin && $roleSuperAdmin)
+		{
+			return redirect()->back()->withError(trans('users::users.ERROR_NOT_SUPERADMIN'));
+		}
+
+		// Check for super-admin changing self to be non-super-admin
+		// First, are we a super admin>
+		/*if ($iAmSuperAdmin)
+		{
+			// Next, are we a member of the current group?
+			$myRoles = Gate::getRolesByUser(auth()->user()->id, false);
+
+			if (in_array($fields['id'], $myRoles))
+			{
+				// Now, would we have super admin permissions without the current group?
+				$otherGroups = array_diff($myRoles, array($fields['id']));
+				$otherSuperAdmin = false;
+				foreach ($otherGroups as $otherGroup)
+				{
+					$otherSuperAdmin = ($otherSuperAdmin) ? $otherSuperAdmin : Gate::checkRole($otherGroup, 'admin');
+				}
+
+				// If we would not otherwise have super admin permissions
+				// and the current group does not have super admin permissions, throw an exception
+				if (!$otherSuperAdmin && !$groupSuperAdmin)
+				{
+					Notify::error(Lang::txt('JLIB_USER_ERROR_CANNOT_DEMOTE_SELF'));
+					return $this->editTask($row);
+				}
+			}
+		}*/
+
+		if (!$row->save())
+		{
+			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+
+			return redirect()->back()->withError($error);
+		}
+
+		return $this->cancel()->with('success', trans('messages.item saved'));
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		app('request')->merge(['hidemainmenu' => 1]);
+
+		$row = Role::findOrFail($id);
+
+		$options = Role::query()
+			->where('id', '!=', $row->id)
+			->orderBy('lft', 'asc')
+			->get();
+
+		return view('users::admin.roles.edit', [
+			'row' => $row,
+			'options' => $options
+		]);
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 * @return Response
+	 */
+	public function delete(Request $request)
+	{
+		$ids = $request->input('id', array());
+		$ids = (!is_array($ids) ? array($ids) : $ids);
+
+		$success = 0;
+		$errors = [];
+
+		foreach ($ids as $id)
+		{
+			$row = Role::findOrFail($id);
+
+			if (!$row->delete())
+			{
+				$errors[] = $row->getError();
+				continue;
+			}
+
+			$success++;
+		}
+
+		if ($errors)
+		{
+			$request->session()->flash('error', collect($errors));
+		}
+
+		if ($success)
+		{
+			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
+		}
+
+		return $this->cancel();
+	}
+
+	/**
+	 * Return to the main view
+	 *
+	 * @return  Response
+	 */
+	public function cancel()
+	{
+		return redirect(route('admin.users.roles'));
+	}
+}

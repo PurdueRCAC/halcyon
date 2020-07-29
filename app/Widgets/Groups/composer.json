@@ -1,0 +1,22 @@
+{
+	"name": "halcyon/wdg_groups",
+	"description": "This module shows on the Admin area Home Page and displays items that administrator needs to watch for in the HUBzero CMS",
+	"type": "halcyon-widget",
+	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
+	"homepage": "https://www.rcac.purdue.edu",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Purdue University",
+			"email": "support@rcac.purdue.edu"
+		}
+	],
+	"support": {
+		"email": "support@hubzero.org",
+		"issues": "https://help.hubzero.org"
+	},
+	"require": {
+		"php" : "^5.4",
+		"hubzero/com_members": "dev-master"
+	}
+}

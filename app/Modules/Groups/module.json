@@ -1,0 +1,15 @@
+{
+    "name": "Groups",
+    "alias": "groups",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "App\\Modules\\Groups\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Groups\\Providers\\RouteServiceProvider",
+        "App\\Modules\\Groups\\Providers\\ScheduleServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

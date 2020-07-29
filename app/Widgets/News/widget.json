@@ -1,0 +1,7 @@
+{
+	"name": "News",
+	"alias": "news",
+	"description": "This displays a list of news articles",
+	"type": "site",
+	"version": "1.0.0"
+}

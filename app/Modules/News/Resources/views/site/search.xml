@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+@package      halcyon
+@copyright    Copyright 2019 Purdue University.
+@license      http://opensource.org/licenses/MIT MIT
+-->
+
+<metadata>
+	<layout title="News: Search" route="site.news.search">
+		<message>
+			<![CDATA[search description]]>
+		</message>
+	</layout>
+
+	<!-- Add fields to the parameters object for the layout. -->
+	<fields name="params">
+
+		<!-- Basic options. -->
+		<fieldset name="basic"
+			label="COM_CONTENT_ATTRIBS_ARTICLE_SETTINGS_LABEL">
+
+		<field
+			name="keyword"
+			type="text"
+			label="keyword"
+			description="JGLOBAL_SHOW_TITLE_DESC" />
+		</fieldset>
+	</fields>
+</metadata>

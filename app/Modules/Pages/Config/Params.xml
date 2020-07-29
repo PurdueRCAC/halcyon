@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fieldset
+		name="articles"
+		label="pages::config.articles"
+		description="pages::config.articles desc">
+
+		<field
+			name="show_title"
+			type="radio"
+			default="1"
+			label="pages::config.SHOW_TITLE_LABEL"
+			description="pages::config.SHOW_TITLE_DESC">
+			<option value="0">global.hide</option>
+			<option value="1">global.show</option>
+		</field>
+
+		<field
+			name="show_author"
+			type="radio"
+			label="pages::config.SHOW_AUTHOR_LABEL"
+			description="pages::config.SHOW_AUTHOR_DESC">
+			<option	value="0">global.hide</option>
+			<option	value="1">global.show</option>
+		</field>
+
+		<field
+			name="show_create_date"
+			type="radio"
+			label="pages::config.SHOW_CREATE_DATE_LABEL"
+			description="pages::config.SHOW_CREATE_DATE_DESC">
+			<option	value="0">global.hide</option>
+			<option	value="1">global.show</option>
+		</field>
+
+		<field
+			name="show_modify_date"
+			type="radio"
+			label="pages::config.SHOW_MODIFY_DATE_LABEL"
+			description="pages::config.SHOW_MODIFY_DATE_DESC">
+			<option	value="0">global.hide</option>
+			<option	value="1">global.show</option>
+		</field>
+
+		<field
+			name="show_publish_date"
+			type="radio"
+			label="pages::config.SHOW_PUBLISH_DATE_LABEL"
+			description="pages::config.SHOW_PUBLISH_DATE_DESC">
+			<option	value="0">global.hide</option>
+			<option	value="1">global.show</option>
+		</field>
+
+		<field
+			name="show_hits"
+			type="radio"
+			label="pages::config.SHOW_HITS_LABEL"
+			description="pages::config.SHOW_HITS_DESC"
+			default="1">
+			<option	value="0">global.hide</option>
+			<option	value="1">global.show</option>
+		</field>
+	</fieldset>
+	<fieldset
+		name="permissions"
+		label="access.permissions"
+		description="access.permissions desc"
+		>
+
+		<field
+			name="rules"
+			type="rules"
+			label="access.permissions"
+			filter="rules"
+			validate="rules"
+			module="pages"
+			section="module" />
+	</fieldset>
+</config>

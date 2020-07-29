@@ -1,0 +1,28 @@
+<?php
+return [
+	'history manager' => 'History Manager',
+	'id' => 'ID',
+	'item id' => 'Item ID',
+	'item type' => 'Item Type',
+	'item table' => 'Item Table',
+	'timestamp' => 'Timestamp',
+	'action' => 'Action',
+	'actor' => 'Actor',
+	'created' => 'Created',
+	'creator' => 'Creator',
+	'modified' => 'Last Modified',
+	'modifier' => 'Modifier',
+	'all actions' => '- All Actions -',
+	'all types' => '- All Types -',
+	'old' => 'Old',
+	'new' => 'New',
+	'changes' => 'Changes',
+	'history' => 'History',
+	'none found' => 'No history found.',
+	'action by' => ':user on :datetime',
+	// Actions
+	'action updated' => ':user updated this entry',
+	'action created' => ':user created this entry',
+	'action deleted' => ':user trashed this entry',
+	'history' => 'History',
+];

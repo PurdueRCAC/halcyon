@@ -1,0 +1,37 @@
+tagtype: resource
+name: Halstead User Guide
+tags:
+  - faq
+  - linuxcluster
+  - slurm
+  - mpislurm
+  - communitycluster
+  - jupyter
+  - gateway
+vars:
+  name: Halstead
+  type: compute
+  hostname: halstead
+  frontend: halstead
+  dir: halstead
+  nodecores: 20
+  naccesspolicy: shared
+  namesake: "Maurice H. Halstead"
+  namesakesex: m
+  namesakeimpact: ", Professor of Computer Science and Software Science pioneer"
+  compiler: Intel 17.0.1.132
+  mathlib: MKL
+  mesglib: Intel MPI
+  os: cent7
+  scratch: /scratch/halstead
+  letteredscratch: true
+  queue: standby
+  queuemodel: dedicated
+  debug: true
+  standby: true
+  batchsystem: slurm
+  frontends: 4
+  active: true
+  published: true
+  seq: 125
+  teaser: "Halstead is optimized for Purdue's communities running traditional, tightly-coupled science and engineering applications. Halstead was built through a partnership with HP and Intel in November 2016. Halstead consists of HP compute nodes with two 10-core Intel Xeon-E5 processors (20 cores per node) and 128 GB of memory. All nodes have 100 Gbps EDR Infiniband interconnect and a 5-year warranty."

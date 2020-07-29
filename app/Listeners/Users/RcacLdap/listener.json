@@ -1,0 +1,11 @@
+{
+    "name": "Users - RCAC Ldap",
+    "alias": "none",
+    "description": "This connects to the RCAC Ldap to retrieve user info.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

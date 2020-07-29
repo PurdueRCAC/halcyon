@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="app_id"       type="text" size="20" label="PLG_AUTHENTICATION_CILOGON_PARAM_KEY_LABEL"    description="PLG_AUTHENTICATION_CILOGON_PARAM_KEY_DESC" />
+			<field name="app_secret"   type="text" size="32" label="PLG_AUTHENTICATION_CILOGON_PARAM_SECRET_LABEL" description="PLG_AUTHENTICATION_CILOGON_PARAM_SECRET_DESC" />
+			<field name="display_name" type="text" size="32" label="PLG_AUTHENTICATION_CILOGON_PARAM_NAME_LABEL"   description="PLG_AUTHENTICATION_CILOGON_PARAM_NAME_DESC" default="CILogon" />
+			<field name="site_login"  type="radio" label="PLG_AUTHENTICATION_CILOGON_PARAM_SITELOGIN_LABEL" default="1" description="PLG_AUTHENTICATION_CILOGON_PARAM_SITELOGIN_DESC">
+				<option value="0">JNo</option>
+				<option value="1">JYes</option>
+			</field>
+			<field name="admin_login"  type="radio" label="PLG_AUTHENTICATION_CILOGON_PARAM_ADMINLOGIN_LABEL" default="0" description="PLG_AUTHENTICATION_CILOGON_PARAM_ADMINLOGIN_DESC">
+				<option value="0">JNo</option>
+				<option value="1">JYes</option>
+			</field>
+		</fieldset>
+	</fields>
+</config>

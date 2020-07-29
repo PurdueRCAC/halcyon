@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+@package      hubzero-cms
+@copyright    Copyright 2019 Purdue University.
+@license      http://opensource.org/licenses/MIT MIT
+-->
+
+<form>
+	<fieldset>
+		<field
+			name="id"
+			type="hidden"
+			class="readonly"
+			label="menus::menus.id"
+			description ="menus::menus.id description"
+			default="0"
+			filter="int"
+			readonly="true"/>
+
+		<field
+			name="title"
+			type="text"
+			label="menus::menus.item.title"
+			description="menus::menus.item.title description"
+			required="true"/>
+
+		<field
+			name="alias"
+			type="hidden"
+			label="menus::menus.item.alias"
+			description="menus::menus.item.alias description"
+			/>
+
+		<field name="aliastip"
+			type="spacer"
+			label="menus::menus.item.alias hint"/>
+
+		<!-- <field
+			name="note"
+			type="text"
+			label="menus::menus.item.note"
+			description="menus::menus.item.note description"
+			/> -->
+
+		<field
+			name="link"
+			type="link"
+			label="menus::menus.item.link"
+			description="menus::menus.item.link description"
+			/>
+
+		<field
+			name="menutype"
+			type="App\Modules\Menus\Models\Fields\Menu"
+			label="menus::menus.item.assigned"
+			description="menus::menus.item.assigned description"
+			required="true"
+			size="1" />
+
+		<!-- <field
+			name="type"
+			type="App\Modules\Menus\Models\Fields\MenuType"
+			label="menus::menus.item.type"
+			description="menus::menus.item.type description"
+			required="true" /> -->
+
+		<field
+			name="type"
+			type="radio"
+			label="menus::menus.item.type"
+			description="menus::menus.item.type description"
+			required="true">
+			<option
+				value="module">page</option>
+			<option
+				value="url">url</option>
+			<option
+				value="separator">separator</option>
+		</field>
+
+		<field
+			name="page_id"
+			type="App\Modules\Pages\Models\Fields\Page"
+			label="menus::menus.item.page"
+			description="menus::menus.item.page description" />
+
+		<field
+			name="published"
+			type="list"
+			id="published"
+			class="inputbox"
+			label="menus::menus.state"
+			description="menus::menus.state description"
+			size="1"
+			default="1"
+			filter="integer">
+			<option
+				value="1">
+				global.published</option>
+			<option
+				value="0">
+				global.unpublished</option>
+
+			<option
+				value="-2">
+				global.trashed</option>
+		</field>
+
+		<field
+			name="parent_id"
+			type="App\Modules\Menus\Models\Fields\MenuParent"
+			label="menus::menus.item.parent"
+			description="menus::menus.item.parent description"
+			default="1"
+			filter="int"
+			class="inputbox"
+			size="1">
+			<option
+				value="1">menus::menus.root</option>
+		</field>
+
+		<field
+			name="menuordering"
+			type="App\Modules\Menus\Models\Fields\MenuOrdering"
+			label="menus::menus.item.ordering"
+			description="menus::menus.item.ordering description"
+			filter="int"
+			class="inputbox"
+			size="1">
+		</field>
+
+		<field
+			name="module_id"
+			type="hidden"
+			filter="int" />
+
+		<field
+			name="ordering"
+			type="ordering"
+			label="menus::menus.ordering"
+			description="menus::menus.ordering description"
+			filter="int"
+			class="inputbox"/>
+
+		<field
+			name="target"
+			type="list"
+			label="menus::menus.item.target"
+			description="menus::menus.item.target description"
+			default="0">
+				<option value="0">menus::menus.item.target parent</option>
+				<option value="1">menus::menus.item.target new</option>
+		</field>
+
+		<field
+			name="class"
+			type="text"
+			label="menus::menus.item.css"
+			description="menus::menus.item.css description"/>
+
+		<field
+			name="access"
+			type="accesslevel"
+			id="access"
+			class="inputbox"
+			label="menus::menus.access"
+			description="menus::menus.access description"
+			default="1"
+			filter="integer"/>
+
+		<field
+			name="home"
+			type="radio"
+			label="menus::menus.item.home"
+			description="menus::menus.item.home description"
+			default="0"
+			class="inputbox"
+			filter="integer">
+			<option
+				value="0">global.no</option>
+			<option
+				value="1">global.yes</option>
+		</field>
+
+		<field
+			name="language"
+			type="contentlanguage"
+			label="menus::menus.item.language"
+			description="menus::menus.item.language description">
+			<option value="*">global.all</option>
+		</field>
+
+		<field
+			name="path"
+			type="hidden"
+			filter="unset"/>
+
+		<field
+			name="level"
+			type="hidden"
+			filter="unset"/>
+
+		<field
+			name="checked_out"
+			type="hidden"
+			filter="unset"/>
+
+		<field
+			name="checked_out_time"
+			type="hidden"
+			filter="unset"/>
+
+		<field
+			name="lft"
+			type="hidden"
+			filter="unset"/>
+
+		<field
+			name="rgt"
+			type="hidden"
+			filter="unset"/>
+	</fieldset>
+
+	<fields name="params">
+	</fields>
+</form>

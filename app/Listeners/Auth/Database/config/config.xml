@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="remember_me_default" type="list" default="0" label="PLG_AUTHENTICATION_HUBZERO_PARAM_REMEMBER_LABEL" description="PLG_AUTHENTICATION_HUBZERO_PARAM_REMEMBER_DESC">
+				<option value="0">PLG_AUTHENTICATION_HUBZERO_PARAM_REMEMBER_UNCHECKED</option>
+				<option value="1">PLG_AUTHENTICATION_HUBZERO_PARAM_REMEMBER_CHECKED</option>
+			</field>
+			<field name="display_name" type="text" size="32" label="PLG_AUTHENTICATION_HUBZERO_PARAM_NAME_LABEL" description="PLG_AUTHENTICATION_HUBZERO_PARAM_NAME_DESC" default="" />
+			<field name="site_login"  type="radio" label="PLG_AUTHENTICATION_HUBZERO_PARAM_SITELOGIN_LABEL" default="1" description="PLG_AUTHENTICATION_HUBZERO_PARAM_SITELOGIN_DESC">
+				<option value="0">JNo</option>
+				<option value="1">JYes</option>
+			</field>
+			<field name="admin_login"  type="radio" label="PLG_AUTHENTICATION_HUBZERO_PARAM_ADMINLOGIN_LABEL" default="1" description="PLG_AUTHENTICATION_HUBZERO_PARAM_ADMINLOGIN_DESC">
+				<option value="0">JNo</option>
+				<option value="1">JYes</option>
+			</field>
+		</fieldset>
+	</fields>
+</config>

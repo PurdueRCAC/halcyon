@@ -1,0 +1,15 @@
+{
+    "name": "Orders",
+    "alias": "orders",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "App\\Modules\\Orders\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Orders\\Providers\\RouteServiceProvider",
+        "App\\Modules\\Orders\\Providers\\ScheduleServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

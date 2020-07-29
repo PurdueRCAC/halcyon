@@ -1,0 +1,7 @@
+{
+	"name": "CookiePolicy",
+	"alias": "cookiepolicy",
+	"description": "This shows a notice about the site's e-Privacy directive (aka cookie policy)",
+	"type": "site",
+	"version": "1.0.0"
+}

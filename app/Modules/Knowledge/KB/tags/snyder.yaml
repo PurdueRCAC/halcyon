@@ -1,0 +1,35 @@
+tagtype: resource
+name: Snyder User Guide
+tags:
+  - faq
+  - linuxcluster
+  - mpislurm
+  - slurm
+  - communitycluster
+vars:
+  name: Snyder
+  type: compute
+  hostname: snyder
+  frontend: snyder
+  dir: snyder
+  nodecores: 20
+  naccesspolicy: shared
+  namesake: "James C. Snyder"
+  namesakesex: m
+  namesakeimpact: ", a Professor of Agricultural Economics and a pioneer in applying computer models to agribusiness"
+  compiler: Intel 17.0.1.132
+  mathlib: MKL
+  mesglib: Intel MPI
+  os: cent7
+  scratch: /scratch/snyder
+  letteredscratch: true
+  queue: standby
+  queuemodel: dedicated
+  debug: true
+  standby: true
+  batchsystem: slurm
+  frontends: 2
+  active: true
+  published: true
+  seq: 122
+  teaser: "Snyder is a Purdue Community Cluster which is continually expanded and refreshed, optimized for data intensive applications requiring large amounts of shared memory per node, such as life sciences. Snyder was originally built through a partnership with HP and Intel in April 2015, though it has been most recently expanded with nodes from Dell. Snyder consists of a variety of compute node configurations as shown in the table below. All nodes have 40 Gbps Ethernet connections and a 5-year warranty. Snyder is expanded annually, with each year's purchase of nodes to remain in production for 5 years from their initial purchase."

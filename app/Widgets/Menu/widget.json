@@ -1,0 +1,8 @@
+{
+    "name": "Site Menu",
+    "alias": "menu",
+    "description": "Display a menu",
+    "keywords": [],
+    "active": 1,
+    "requires": []
+}

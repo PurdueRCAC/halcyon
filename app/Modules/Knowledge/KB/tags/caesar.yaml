@@ -1,0 +1,16 @@
+tagtype: resource
+name: Caesar User Guide
+tags:
+vars:
+  name: Caesar
+  type: compute
+  dir: caesar
+  active: false
+  published: true
+  seq: 100
+  teaser: "Caesar was an SGI Altix 4700 system. This large memory SMP design featured 128 processors and 512 GB of RAM connected via SGI's high-bandwidth, low-latency NUMAlink shared-memory interface. The extremely large amount of shared memory in this system made it ideal for jobs where many processors must all share a large amount of in-memory data, and for large parallel jobs, using shared memory for fast communication between processors."
+  dateInstalled: "04/11/2007"
+  dateRetired: "01/04/2010"
+  statsUsers: "55"
+  statsJobs: "9446"
+  statsHours: "767387"

@@ -1,0 +1,19 @@
+tagtype: resource
+name: Rossmann User Guide
+tags:
+vars:
+  name: Rossmann
+  type: compute
+  dir: rossmann
+  namesake: "Michael Rossmann"
+  active: false
+  published: true
+  seq: 111
+  teaser: "Rossmann was a compute cluster operated by ITaP and was a member of Purdue's Community Cluster Program. Rossmann went into production on September 1, 2010. It consisted of HP (Hewlett Packard) ProLiant DL165 G7 nodes with 64-bit, dual 12-core AMD Opteron 6172 processors (24 cores per node) and 48 GB, 96 GB, or 192 GB of memory. All nodes had 10 Gigabit Ethernet interconnects and a 5-year warranty. Rossmann was decommissioned on November 2nd, 2015."
+  dateInstalled: "09/01/2010"
+  dateRetired: "11/02/2015"
+  statsHours: "230,947,454"
+  statsJobs: "28,929,674"
+  statsUsers: "567"
+  statsGroups: "76"
+  statsTopGroups: "NCN, CMS, Merkle Group"

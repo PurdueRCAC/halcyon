@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="cache" type="list" default="1" label="widgets::widgets.field.caching" description="widgets::widgets.field.caching description">
+				<option value="1">widgets::widgets.use global</option>
+				<option value="0">widgets::widgets.no caching</option>
+			</field>
+		</fieldset>
+	</fields>
+</config>

@@ -1,0 +1,161 @@
+@extends('layouts.master')
+
+@section('scripts')
+<script src="{{ asset('modules/news/js/admin.js') }}"></script>
+@stop
+
+@php
+app('pathway')
+	->append(
+		trans('news::news.module name'),
+		route('admin.news.index')
+	)
+	->append(
+		'Article # ' . $article->id,
+		route('admin.news.index')
+	)
+	->append(
+		trans('news::news.updates')
+	);
+@endphp
+
+@section('toolbar')
+	@if (auth()->user()->can('create news'))
+		{!! Toolbar::addNew(route('admin.news.updates.create', ['article' => $article->id])) !!}
+	@endif
+
+	@if (auth()->user()->can('delete news'))
+		{!! Toolbar::deleteList('', route('admin.news.updates.delete', ['article' => $article->id])) !!}
+	@endif
+
+	@if (auth()->user()->can('admin news'))
+		{!!
+			Toolbar::spacer();
+			Toolbar::preferences('news')
+		!!}
+	@endif
+
+	{!! Toolbar::render() !!}
+@stop
+
+@section('title')
+{!! config('news.name') !!}
+@stop
+
+@section('content')
+
+@component('news::admin.submenu')
+	@if (request()->segment(3) == 'templates')
+		templates
+	@else
+		articles
+	@endif
+@endcomponent
+
+<form action="{{ route('admin.news.updates', ['article' => $article->id]) }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+
+	<fieldset id="filter-bar" class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 filter-search">
+				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+				<input type="text" name="search" id="filter_search" class="filter form-control" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+
+				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+			</div>
+			<div class="col-md-8 filter-select text-right">
+				<label class="sr-only" for="filter_state">{{ trans('news::news.state') }}</label>
+				<select name="state" class="filter filter-submit form-control">
+					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.state_all') }}</option>
+					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.published') }}</option>
+					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.trashed') }}</option>
+				</select>
+			</div>
+		</div>
+	</fieldset>
+
+	<table class="table table-hover adminlist">
+		<caption>#{{ $article->id }} - {{ $article->headline }}</caption>
+		<thead>
+			<tr>
+				<th>
+					<?php echo App\Halcyon\Html\Builder\Grid::checkall(); ?>
+				</th>
+				<th scope="col" class="priority-5">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.id'), 'id', $filters['order_dir'], $filters['order']); ?>
+				</th>
+				<th scope="col">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.body'), 'body', $filters['order_dir'], $filters['order']); ?>
+				</th>
+				<th scope="col">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.state'), 'published', $filters['order_dir'], $filters['order']); ?>
+				</th>
+				<th scope="col" class="priority-4">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.created'), 'datetimenews', $filters['order_dir'], $filters['order']); ?>
+				</th>
+				<th scope="col" class="priority-4">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.creator'), 'userid', $filters['order_dir'], $filters['order']); ?>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+		@foreach ($rows as $i => $row)
+			<tr>
+				<td>
+					@if (auth()->user()->can('edit news'))
+						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
+					@endif
+				</td>
+				<td class="priority-5">
+					{{ $row->id }}
+				</td>
+				<td>
+					@if (auth()->user()->can('edit news'))
+						<a href="{{ route('admin.news.updates.edit', ['article' => $article->id, 'id' => $row->id]) }}">
+							{{ Illuminate\Support\Str::limit(strip_tags($row->body), 70) }}
+						</a>
+					@else
+						<span>
+							{{ Illuminate\Support\Str::limit(strip_tags($row->body), 70) }}
+						</span>
+					@endif
+				</td>
+				<td>
+					@if (auth()->user()->can('edit.state news'))
+						@if ($row->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
+							<span class="state published">
+								<span>{{ trans('global.published') }}</span>
+							</span>
+						@else
+							<span class="state trashed">
+								<span>{{ trans('global.trashed') }}</span>
+							</span>
+						@endif
+					@endif
+				</td>
+				<td class="priority-4">
+					<span class="datetime">
+						@if ($row->getOriginal('datetimecreated') && $row->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
+							<time datetime="{{ $row->datetimecreated }}">{{ $row->datetimecreated }}</time>
+						@else
+							<span class="never">{{ trans('global.unknown') }}</span>
+						@endif
+					</span>
+				</td>
+				<td class="priority-4">
+					{{ ($row->creator ? $row->creator->name : trans('global.unknown')) }}
+				</td>
+			</tr>
+		@endforeach
+		</tbody>
+	</table>
+
+	{{ $rows->render() }}
+
+	<input type="hidden" name="boxchecked" value="0" />
+	<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+	<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+	@csrf
+</form>
+
+@stop

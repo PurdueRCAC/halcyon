@@ -1,0 +1,22 @@
+{
+	"name": "halcyon/mod_search",
+	"description": "This module will display a search box in the HUBzero CMS",
+	"type": "hubzero-module",
+	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
+	"homepage": "https://www.rcac.purdue.edu",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Purdue University",
+			"email": "support@rcac.purdue.edu"
+		}
+	],
+	"support": {
+		"email": "support@hubzero.org",
+		"issues": "https://help.hubzero.org"
+	},
+	"require": {
+		"php" : "^5.4",
+		"hubzero/com_search": "dev-master"
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"name": "halcyon/lst_authentication_pucas",
+	"description": "Purdue University CAS authentication plugin for the HUBzero CMS",
+	"type": "halcyon-plugin",
+	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
+	"homepage": "https://www.rcac.purdue.edu",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Purdue University",
+			"email": "support@rcac.purdue.edu"
+		}
+	],
+	"support": {
+		"email": "rcac-help@purdue.edu",
+		"issues": "https://www.rcac.purdue.edu/help"
+	},
+	"require": {
+		"php" : "^5.4",
+		"jasig/phpcas": "1.3.5"
+	},
+	"extra": {
+		"install-directory": "/Listeners/Authentication/Pucas/"
+	}
+}

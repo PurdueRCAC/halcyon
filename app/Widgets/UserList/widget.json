@@ -1,0 +1,7 @@
+{
+	"name": "User List",
+	"alias": "userlist",
+	"description": "This displays a list of users",
+	"type": "site",
+	"version": "1.0.0"
+}

@@ -1,0 +1,4 @@
+tagtype: resource
+name: Default
+vars:
+ name: my resource

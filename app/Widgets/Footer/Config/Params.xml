@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="advanced">
+			<field name="layout" type="widgetlayout" label="widgets::widgets.layout" description="widgets::widgets.layout description" />
+			<field name="moduleclass_sfx" type="text" label="widgets::widgets.class suffix" description="widgets::widgets.class suffix description" />
+			<field name="cache" type="list" default="1" label="widgets::widgets.caching" description="widgets::widgets.caching description">
+				<option value="1">widgets::widgets.use global</option>
+				<option value="0">widgets::widgets.no caching</option>
+			</field>
+			<field name="cache_time" type="text" default="900" label="widgets::widgets.cache time" description="widgets::widgets.cache time description" />
+			<field name="cachemode" type="hidden" default="static">
+				<option value="static"></option>
+			</field>
+		</fieldset>
+	</fields>
+</config>

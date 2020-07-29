@@ -1,0 +1,14 @@
+{
+    "name": "Widgets",
+    "alias": "widgets",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "App\\Modules\\Widgets\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Widgets\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

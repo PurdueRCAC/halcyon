@@ -1,0 +1,11 @@
+tagtype: resource
+name: BoilerGrid User Guide
+tags:
+vars:
+  name: BoilerGrid
+  type: compute
+  dir: boilergrid
+  active: false
+  published: true
+  seq: 118
+  teaser: "BoilerGrid was a large, high-throughput, distributed computing system operated by ITaP, and using the HTCondor system developed by the HTCondor Project at the University of Wisconsin. BoilerGrid provided a way for you to run programs on large numbers of otherwise idle computers in various locations, including any temporarily under-utilized high-performance cluster resources as well as some desktop machines not currently in use."

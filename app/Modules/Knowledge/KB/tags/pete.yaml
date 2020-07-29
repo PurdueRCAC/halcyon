@@ -1,0 +1,16 @@
+tagtype: resource
+name: Pete User Guide
+tags:
+vars:
+  name: Pete
+  type: compute
+  dir: pete
+  active: false
+  published: true
+  seq: 99
+  teaser: "The Pete cluster was composed of two parts, one owned by Earth, Atmospheric, and Planetary Science (EAPS) and the other by the Network for Computational Nanotechnology (NCN). Pete consisted of 166 HP Dual-Processor Dual-Core DL40 systems with either 8 or 16 GB RAM and Gigabit Ethernet. The large amount of memory in this system for its time made it well suited for larger-memory parallel jobs."
+  dateInstalled: "02/22/2007"
+  dateRetired: "12/22/2009"
+  statsUsers: "218"
+  statsJobs: "2835552"
+  statsHours: "1079001"

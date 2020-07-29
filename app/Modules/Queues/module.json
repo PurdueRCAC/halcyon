@@ -1,0 +1,15 @@
+{
+    "name": "Queues",
+    "alias": "queues",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "App\\Modules\\Queues\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Queues\\Providers\\RouteServiceProvider",
+        "App\\Modules\\Queues\\Providers\\ScheduleServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

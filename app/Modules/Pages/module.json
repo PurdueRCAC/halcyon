@@ -1,0 +1,14 @@
+{
+    "name": "Pages",
+    "alias": "pages",
+    "description": "",
+    "keywords": [],
+    "order": 9999,
+    "providers": [
+        "App\\Modules\\Pages\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Pages\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

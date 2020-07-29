@@ -1,0 +1,17 @@
+tagtype: resource
+name: REED GovCloud User Guide
+tags:
+vars:
+  name: REED GovCloud
+  type: compute
+  dir: reed
+  seq: 120
+  compiler: ""
+  mathlib: ""
+  mesglib: ""
+  queue: ""
+  batchsystem: none
+  active: false
+  published: true
+  teaser: "REED GovCloud was designed for working with data encumbered with federal security regulations.  It was implemented as an expandable set of instances within Amazon's AWS GovCloud facility, with access portals in the Purdue academic domain."
+

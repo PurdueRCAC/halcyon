@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="id" type="text" default="eprivacy" label="widget.cookiepolicy::cookiepolicy.params.id" description="widget.cookiepolicy::cookiepolicy.params.id desc" />
+			<field name="message" type="textarea" rows="5" cols="40" default="" label="widget.cookiepolicy::cookiepolicy.params.message" description="widget.cookiepolicy::cookiepolicy.params.message desc" />
+			<field name="duration" type="text" default="365" label="widget.cookiepolicy::cookiepolicy.params.duration" description="widget.cookiepolicy::cookiepolicy.params.duration desc" />
+		</fieldset>
+	</fields>
+</config>

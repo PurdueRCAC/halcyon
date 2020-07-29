@@ -1,0 +1,7 @@
+{
+	"name": "Feed",
+	"alias": "feed",
+	"description": "This allows the displaying of a syndicated feed",
+	"type": "site",
+	"version": "1.0.0"
+}

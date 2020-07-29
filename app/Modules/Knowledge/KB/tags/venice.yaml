@@ -1,0 +1,18 @@
+tagtype: resource
+name: Venice User Guide
+tags:
+vars:
+  name: Venice
+  type: compute
+  dir: venice
+  active: false
+  published: true
+  seq: 107
+  teaser: "Venice was a small cluster of Sun x4600 systems consisting of two front-end nodes and three compute nodes. The front-end nodes were both a Quad-Processor Dual-Core AMD Opteron 2216. The compute nodes were each an Eight-Processor Dual-Core AMD Opteron 8220 with 128 GB of RAM. The large amount of shared memory in this system made it ideal for large parallel jobs, using shared memory for fast communication between processor cores."
+  dateInstalled: "12/21/2007"
+  dateRetired: "10/09/2013"
+  statsHours: "490,875"
+  statsJobs: "311,264"
+  statsUsers: "148"
+  statsGroups: "40"
+  statsTopGroups: "Wagstaff Group, Wen Jiang Group"

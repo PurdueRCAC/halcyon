@@ -1,0 +1,13 @@
+tagtype: resource
+name: Persistent Group Storage User Guide
+tags:
+  - diskstorage
+vars:
+  name: Persistent Group Storage
+  type: storage
+  hostname: data
+  dir: group
+  active: false
+  seq: 109
+  published: true
+  teaser: ITaP Research Computing offered shared research group storage available from all research clusters or directly usable from labs at a competitive price. It was retired in 2014.

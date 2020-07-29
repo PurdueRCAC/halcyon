@@ -1,0 +1,4 @@
+tagtype: access
+name: jupyter
+vars:
+ type: jupyter

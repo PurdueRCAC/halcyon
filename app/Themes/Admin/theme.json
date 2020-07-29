@@ -1,0 +1,6 @@
+{
+  "name": "Admin",
+  "description": "This is the default admin theme",
+  "type": "admin",
+  "version": "1.0.0"
+}

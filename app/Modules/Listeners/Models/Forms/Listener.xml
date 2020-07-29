@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+@package      halcyon
+@copyright    Copyright 2019 Purdue University.
+@license      http://opensource.org/licenses/MIT MIT
+-->
+
+<form>
+	<fieldset>
+		<field
+			name="extension_id"
+			label="global.id"
+			description ="global.id desc"
+			type="text"
+			default="0"
+			readonly="true" />
+
+		<field
+			name="name"
+			type="text"
+			label="listeners::listeners.name"
+			description="listeners::listeners.name desc"
+			class="form-control-plaintext"
+			readonly="true" />
+
+		<field
+			name="enabled"
+			type="list"
+			label="global.state"
+			description="listeners::listeners.field.enabled desc"
+			class="inputbox"
+			size="1"
+			default="1">
+			<option
+				value="1">
+				global.enabled</option>
+			<option
+				value="0">
+				global.disabled</option>
+		</field>
+
+		<field
+			name="folder"
+			type="text"
+			class="form-control-plaintext"
+			size="20"
+			label="listeners::listeners.folder"
+			description="listeners::listeners.folder desc"
+			readonly="true" />
+
+		<field
+			name="element"
+			type="text"
+			class="form-control-plaintext"
+			size="20"
+			label="listeners::listeners.element"
+			description="listeners::listeners.element desc"
+			readonly="true" />
+
+		<field
+			name="access"
+			type="accesslevel"
+			label="global.access"
+			description="global.access desc"
+			class="inputbox"
+			size="1" />
+
+		<field
+			name="ordering"
+			type="ordering"
+			class="inputbox"
+			label="global.ordering"
+			description="global.ordering desc" />
+
+	</fieldset>
+</form>

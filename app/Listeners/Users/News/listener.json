@@ -1,0 +1,11 @@
+{
+    "name": "Users - News",
+    "alias": "users_news",
+    "description": "This displays news articles related to a specific user.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

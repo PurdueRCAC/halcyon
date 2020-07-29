@@ -1,0 +1,4 @@
+tagtype: access
+name: Paid, Non-PBS Cluster
+vars:
+ type: paidbutnonpbs

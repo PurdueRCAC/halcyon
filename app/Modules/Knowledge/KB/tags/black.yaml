@@ -1,0 +1,16 @@
+tagtype: resource
+name: Black User Guide
+tags:
+vars:
+  name: Black
+  type: compute
+  dir: black
+  active: false
+  published: true
+  seq: 104
+  teaser: "The Black cluster was Purdue's portion of the Indiana Economic Development Corporation (IEDC) machine at Indiana University, the IU portion of which was known as 'Big Red'. Black consisted of 256 IBM JS21 Blades, each a Dual-Processor 2.5 GHz Dual-Core PowerPC 970 MP with 8 GB of RAM and PCI-X Myrinet 2000 interconnects. The large amount of shared memory in this system provided very fast communication between processor cores via shared memory and made the system ideal for large parallel jobs."
+  statsHours: "10,947"
+  statsJobs: "13,917"
+  statsUsers: "4"
+  statsGroups: "2"
+  statsTopGroups: "Wen Jiang Group"

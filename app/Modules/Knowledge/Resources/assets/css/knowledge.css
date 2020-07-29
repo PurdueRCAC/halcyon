@@ -1,0 +1,84 @@
+.contentInner ol li {
+	list-style: decimal;
+	margin-left: 1em;
+}
+.contentInner ol.breadcrumb li {
+	margin-left: 0.2em;
+}
+.flat {
+	border-top: 1px solid #ccc;
+	margin-bottom: 1em;
+}
+.flat .breadcrumb {
+	padding: 0;
+	margin: 0 0 1em 0;
+}
+#wrapper-2col-w #col1 img {
+	margin-bottom: 2px !important;
+	margin-left: 3px !important;
+}
+#col1 h3 {
+	margin-top: 0em !important;
+	padding-top: 0em !important;
+	border-top: 0px;
+}
+#col1 p {
+	margin-bottom: 1em;
+}
+#col1 pre {
+	margin-top: 0em;
+	font-size: 1em;
+}
+#wrapper-2col-w #col2 .qlinks {
+	margin-top: 0px;
+	margin-bottom: 21px;
+}
+#col2 {
+	padding-right: 12px;
+}
+
+.contentInner h3.kb1 {
+	font-size: 1.7em;
+}
+.contentInner h3.kb2 {
+	font-size: 1.3em;
+}
+.contentInner h3 {
+	font-size: 1.2em;
+	font-weight: 600;
+}
+
+.kbsearch label {
+	border: 0;
+	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+	clip: rect(1px, 1px, 1px, 1px);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+.sidenav .tree li {
+	padding: 0 0 0.5em 0;
+}
+.sidenav .tree li a {
+	font-weight: normal;
+}
+.sidenav .tree li:before {
+	content: '\f054';
+	font-family: 'FontAwesome';
+	font-size: 60%;
+	color: #aaa;
+	width: 1em;
+	margin-right: 0.5em;
+}
+.sidenav .tree li.active>span {
+	font-weight: bold;
+}
+.sidenav .tree li.active:before {
+	color: #222;
+}
+.sidenav .tree li.active.parent:before {
+	content: '\f078';
+}

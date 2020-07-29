@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+@package      halcyon
+@copyright    Copyright 2019 Purdue University.
+@license      http://opensource.org/licenses/MIT MIT
+-->
+
+<form>
+	<fieldset>
+		<field name="id" type="text"
+			label="widgets::widgets.id"
+			description="widgets::widgets.id description"
+			default="0"
+			readonly="true"
+		/>
+
+		<field name="title" type="text"
+			description="widgets::widgets.title description"
+			label="widgets::widgets.title"
+			maxlength="100"
+			required="true"
+		/>
+
+		<field name="note" type="text"
+			description="widgets::widgets.note description"
+			label="widgets::widgets.note"
+			maxlength="100"
+		/>
+
+		<field name="module" type="hidden"
+			description="widgets::widgets.module description"
+			label="widgets::widgets.module"
+			readonly="readonly"
+		/>
+
+		<field name="showtitle" type="radio"
+			default="1"
+			description="widgets::widgets.show title description"
+			label="widgets::widgets.show title"
+		>
+			<option value="1">global.show</option>
+			<option value="0">global.hide</option>
+		</field>
+
+		<field name="published" type="list"
+			default="1"
+			description="widgets::widgets.published description"
+			label="widgets::widgets.published"
+		>
+			<option value="1">global.published</option>
+			<option value="0">global.unpublished</option>
+			<option value="-2">global.trashed</option>
+		</field>
+
+		<field name="publish_up" type="calendar"
+			description="widgets::widgets.publish up description"
+			filter="user_utc"
+			format="%Y-%m-%d %H:%M:%S"
+			label="widgets::widgets.publish up"
+		/>
+
+		<field name="publish_down" type="calendar"
+			description="widgets::widgets.publish down description"
+			filter="user_utc"
+			format="%Y-%m-%d %H:%M:%S"
+			label="widgets::widgets.publish down"
+		/>
+
+		<field name="client_id" type="hidden"
+			description="widgets::widgets.client id description"
+			label="widgets::widgets.client id"
+			readonly="true"
+		/>
+
+		<field name="position" type="App\Modules\Widgets\Models\Fields\WidgetPosition"
+			default=""
+			description="widgets::widgets.position description"
+			label="widgets::widgets.position"
+			maxlength="50"
+		/>
+
+		<field name="access" type="accesslevel"
+			description="widgets::widgets.access description"
+			label="widgets::widgets.access"
+		/>
+
+		<field name="ordering" type="App\Modules\Widgets\Models\Fields\WidgetOrder"
+			description="widgets::widgets.ordering description"
+			label="widgets::widgets.ordering"
+		/>
+
+		<field name="content" type="editor"
+			description="widgets::widgets.field.content description"
+			label="widgets::widgets.field.content"
+			hide="readmore,pagebreak"
+			rows="15"
+			cols="40"
+		/>
+
+		<field name="language" type="contentlanguage"
+			description="widgets::widgets.field.language description"
+			label="widgets::widgets.field.language"
+		>
+			<option value="*">global.all</option>
+		</field>
+
+		<field name="assignment" type="hidden" />
+
+		<field name="assigned" type="hidden" />
+	</fieldset>
+</form>

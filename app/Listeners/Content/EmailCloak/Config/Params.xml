@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="mode" type="list" default="1" description="listeners.content.emailcloak::emailcloak.MODE_DESC" label="listeners.content.emailcloak::emailcloak.MODE_LABEL">
+				<option value="0">listeners.content.emailcloak::emailcloak.NONLINKABLE</option>
+				<option value="1">listeners.content.emailcloak::emailcloak.LINKABLE</option>
+			</field>
+		</fieldset>
+	</fields>
+</config>
