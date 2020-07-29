@@ -1,9 +1,10 @@
 {
-    "name": "laravel/laravel",
+    "name": "purdue/halcyon",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "The Halcyon cluster resource management application.",
     "keywords": [
-        "framework",
+        "cms",
+        "halcyon",
         "laravel"
     ],
     "license": "MIT",
@@ -39,8 +40,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
-            "Modules\\": "Modules/"
+            "App\\": "app/"
         },
         "classmap": [
             "database/seeds",
