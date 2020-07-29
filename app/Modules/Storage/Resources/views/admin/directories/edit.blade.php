@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
 @section('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('vendor/fancytree/skin-xp/ui.fancytree.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/fancytree/skin-xp/ui.fancytree.css') }}" />
 @stop
 
 @section('scripts')
-<script src="{{ asset('vendor/fancytree/jquery.fancytree-all.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/fancytree/jquery.fancytree-all.js') }}"></script>
 <script src="{{ asset('modules/storage/js/admin.js?v=' . filemtime(public_path() . '/modules/storage/js/admin.js')) }}"></script>
 @stop
 

@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ asset('js/validate.js?v=' . filemtime(public_path() . '/js/validate.js')) }}"></script>
-<script src="{{ asset('modules/History/js/admin.js?v=' . filemtime(public_path() . '/modules/History/js/admin.js')) }}"></script>
+<script src="{{ asset('modules/core/js/validate.js?v=' . filemtime(public_path() . '/modules/core/js/validate.js')) }}"></script>
+<script src="{{ asset('modules/history/js/admin.js?v=' . filemtime(public_path() . '/modules/history/js/admin.js')) }}"></script>
 @endpush
 
 @php

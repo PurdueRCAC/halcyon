@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('scripts')
-<script src="{{ asset('modules/History/js/admin.js?v=' . filemtime(public_path() . '/modules/History/js/admin.js')) }}"></script>
+<script src="{{ asset('modules/history/js/admin.js?v=' . filemtime(public_path() . '/modules/history/js/admin.js')) }}"></script>
 @stop
 
 @section('toolbar')
