@@ -77,7 +77,7 @@ class Item extends Model
 	 */
 	public function order()
 	{
-		return $this->hasOne(Order::class, 'orderid');
+		return $this->belongsTo(Order::class, 'orderid')->withTrashed();
 	}
 
 	/**
@@ -87,7 +87,7 @@ class Item extends Model
 	 */
 	public function product()
 	{
-		return $this->hasOne(Product::class, 'id', 'orderproductid');
+		return $this->hasOne(Product::class, 'id', 'orderproductid')->withTrashed();
 	}
 
 	/**
@@ -97,7 +97,17 @@ class Item extends Model
 	 **/
 	public function isFulfilled()
 	{
-		return ($this->datetimefulfilled && $this->datetimefulfilled != '0000-00-00 00:00:00');
+		return ($this->datetimefulfilled && $this->datetimefulfilled != '0000-00-00 00:00:00' && $this->datetimefulfilled != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * If item is trashed
+	 *
+	 * @return  bool
+	 **/
+	public function isTrashed()
+	{
+		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
 	}
 
 	/**
@@ -107,12 +117,33 @@ class Item extends Model
 	 **/
 	public function until()
 	{
-		$datebilleduntil = '0000-00-00 00:00:00';
-		$datepaiduntil   = '0000-00-00 00:00:00';
+		$datebilleduntil = null; //'0000-00-00 00:00:00';
+		$datepaiduntil   = null; //'0000-00-00 00:00:00';
+		$paidperiods   = 0;
+		$billedperiods = 0;
 
 		$datestart = $this->datetimefulfilled;
 
-		if ($datestart != '0000-00-00 00:00:00')
+		$data = self::query()
+			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->where('origorderitemid', '=', $this->origorderitemid)
+			->orderBy('datetimecreated', 'asc')
+			->get();
+
+		foreach ($data as $row)
+		{
+			if ($row->isFulfilled())
+			{
+				$paidperiods += $row->timeperiodcount;
+			}
+
+			if (!$row->isTrashed() && !$row->order->isTrashed())
+			{
+				$billedperiods += $row->timeperiodcount;
+			}
+		}
+
+		if ($datestart && $datestart != '0000-00-00 00:00:00')
 		{
 			// Get the timeperiod
 			$timeperiod = $this->product->timeperiod;
@@ -146,6 +177,28 @@ class Item extends Model
 	}
 
 	/**
+	 * If item is trashed
+	 *
+	 * @return  bool
+	 **/
+	public function getPaiduntilAttribute()
+	{
+		$until = $this->until();
+		return $until['paid'] ? Carbon::parse($until['paid']) : null;
+	}
+
+	/**
+	 * If item is trashed
+	 *
+	 * @return  bool
+	 **/
+	public function getBilleduntilAttribute()
+	{
+		$until = $this->until();
+		return $until['billed'] ? Carbon::parse($until['billed']) : null;
+	}
+
+	/**
 	 * If account is fulfilled
 	 *
 	 * @return  bool
@@ -164,6 +217,8 @@ class Item extends Model
 			->get();
 
 		$items = array();
+		$users = array();
+		$groups = array();
 
 		foreach ($data as $row)
 		{
@@ -174,13 +229,21 @@ class Item extends Model
 
 			$item = $row->toArray();
 
-			if ($row->datetimeremoved->toDateTimeString() == '-0001-11-30 00:00:00')// == '0000-00-00 00:00:00')
+			$users[] = $row->order->userid;
+			$users[] = $row->order->submitteruserid;
+			$groups[] = $row->order->groupid;
+
+			if (!$row->isTrashed())
 			{
 				$item['start'] = $datestart;
 
 				$start = Carbon::parse($item['start']);
-				$start->modify('+' . ($recur_months * $item['timeperiodcount']) . ' months')
-					->modify('+' . ($recur_seconds * $item['timeperiodcount']) . ' seconds');
+
+				if ($recur_months || $recur_seconds)
+				{
+					$start->modify('+' . ($recur_months * $item['timeperiodcount']) . ' months')
+						->modify('+' . ($recur_seconds * $item['timeperiodcount']) . ' seconds');
+				}
 
 				$item['end'] = $start->toDateTimeString();
 
@@ -194,6 +257,9 @@ class Item extends Model
 
 			$items[] = $item;
 		}
+
+		$this->orderusers = array_values(array_unique($users));
+		$this->ordergroups = array_values(array_unique($groups));
 
 		return $items;
 	}

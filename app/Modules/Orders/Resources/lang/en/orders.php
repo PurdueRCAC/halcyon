@@ -63,4 +63,9 @@ return [
 	'my orders' => 'Orders',
 	'orders placed' => 'Orders placed',
 	'approved on date' => 'Approved :date',
+	'product' => 'Product',
+	'all products' => '- All Products -',
+	'recurring' => 'Recurring Items',
+	'paid until' => 'Paid Until',
+	'billed until' => '(Billed To)',
 ];

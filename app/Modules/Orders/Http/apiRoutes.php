@@ -86,4 +86,31 @@ $router->group(['prefix' => 'orders'], function (Router $router)
 			'middleware' => 'can:delete orders.products',
 		])->where('id', '[0-9]+');
 	});
+
+	$router->group(['prefix' => '/items'], function (Router $router)
+	{
+		$router->get('/', [
+			'as'   => 'api.orders.items',
+			'uses' => 'ItemsController@index',
+		]);
+		$router->post('/', [
+			'as' => 'api.orders.items.create',
+			'uses' => 'ItemsController@create',
+			'middleware' => 'can:create orders.items',
+		]);
+		$router->get('{id}', [
+			'as' => 'api.orders.items.read',
+			'uses' => 'ItemsController@read',
+		])->where('id', '[0-9]+');
+		$router->put('{id}', [
+			'as' => 'api.orders.items.update',
+			'uses' => 'ItemsController@update',
+			'middleware' => 'can:edit orders.items',
+		])->where('id', '[0-9]+');
+		$router->delete('{id}', [
+			'as' => 'api.orders.items.delete',
+			'uses' => 'ItemsController@delete',
+			'middleware' => 'can:delete orders.items',
+		])->where('id', '[0-9]+');
+	});
 });

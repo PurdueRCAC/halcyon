@@ -261,6 +261,99 @@ class OrdersController extends Controller
 	}
 
 	/**
+	 * Show the specified resource.
+	 * @return Response
+	 */
+	public function recurring(Request $request)
+	{
+		// Get filters
+		$filters = array(
+			'search'    => null,
+			'product'   => 0,
+			'userid'    => 0,
+			// Paging
+			'limit'     => config('list_limit', 20),
+			'page'      => 1,
+			// Sorting
+			'order'     => 'id',
+			'order_dir' => 'asc',
+		);
+
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->input($key, $default);
+		}
+
+		$o = (new Order)->getTable();
+		$i = (new Item())->getTable();
+		$p = (new Product)->getTable();
+
+		$query = Item::query()
+			->select($i . '.*')
+			->where($i . '.origorderitemid', '<>', 0)
+			->join($o, $o . '.id', $i . '.orderid')
+			->join($p, $p . '.id', $i . '.orderproductid')
+			->withTrashed()
+			->where(function($where) use ($i)
+				{
+					$where->whereNull($i . '.datetimeremoved')
+						->orWhere($i . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+			->where(function($where) use ($o)
+				{
+					$where->whereNull($o . '.datetimeremoved')
+						->orWhere($o . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+			->where(function($where) use ($p)
+				{
+					$where->whereNull($p . '.datetimeremoved')
+						->orWhere($p . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				});
+
+		if (!auth()->user()->can('manage orders'))
+		{
+			$query->where(function($where) use ($o)
+				{
+					$where->where($o . '.userid', '=', auth()->user()->id)
+						->orWhere($o . '.submitteruserid', '=', auth()->user()->id);
+				});
+		}
+
+		if ($filters['product'])
+		{
+			$query->where($i . '.orderproductid', '=', $filters['product']);
+		}
+
+		if ($filters['order'] == 'product')
+		{
+			$query->orderBy($p . '.name', $filters['order_dir']);
+		}
+		else
+		{
+			$query->orderBy($filters['order'], $filters['order_dir']);
+		}
+
+		$rows = $query
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
+			->appends(array_filter($filters));
+
+		$products = Product::query()
+			->where(function($where)
+				{
+					$where->whereNull('datetimeremoved')
+						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+			->orderBy('name', 'asc')
+			->get();
+
+		return view('orders::site.orders.recur', [
+			'rows'    => $rows,
+			'filters' => $filters,
+			'products' => $products
+		]);
+	}
+
+	/**
 	 * Show the form for creating a new resource.
 	 * @return Response
 	 */
@@ -277,36 +370,6 @@ class OrdersController extends Controller
 			);
 
 		return view('resources::site.create');
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 * @param  Request $request
-	 * @return Response
-	 */
-	public function store(Request $request)
-	{
-	}
-
-	/**
-	 * Show the specified resource.
-	 * @return Response
-	 */
-	public function read()
-	{
-		$id = 1;
-
-		app('pathway')
-			->append(
-				config('resources.name'),
-				url('/resources')
-			)
-			->append(
-				__('resources::assets.show'),
-				url('/resources/:id', $id)
-			);
-
-		return view('resources::site.show');
 	}
 
 	/**
@@ -330,6 +393,15 @@ class OrdersController extends Controller
 		return view('orders::site.orders.edit', [
 			'order' => $order
 		]);
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function store(Request $request)
+	{
 	}
 
 	/**

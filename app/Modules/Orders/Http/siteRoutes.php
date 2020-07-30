@@ -36,6 +36,12 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth.admin'], function (R
 		//'middleware' => 'can:tag.tags.edit',
 	])->where('id', '[0-9]+');*/
 
+	$router->get('recur', [
+		'as' => 'site.orders.recurring',
+		'uses' => 'OrdersController@recurring',
+		'middleware' => 'can:manage orders',
+	]);
+
 	$router->get('delete/{id}', [
 		'as' => 'site.orders.delete',
 		'uses' => 'OrdersController@delete',

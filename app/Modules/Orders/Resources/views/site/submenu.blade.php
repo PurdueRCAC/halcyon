@@ -11,6 +11,9 @@
 		<li class="nav-item @if (trim($slot) == 'categories') active @endif">
 			<a class="nav-link" href="{{ route('site.orders.categories') }}">{{ trans('orders::orders.categories') }}</a>
 		</li>
+		<li class="nav-item @if (trim($slot) == 'recur') active @endif">
+			<a class="nav-link" href="{{ route('site.orders.recurring') }}">{{ trans('orders::orders.recurring') }}</a>
+		</li>
 		@endif
 	</ul>
 </nav><!-- / .sub-navigation -->
