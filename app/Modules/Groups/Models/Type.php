@@ -19,6 +19,11 @@ class Type extends Model
 {
 	use ErrorBag, Validatable, Historable;
 
+	const MEMBER  = 1;
+	const MANAGER = 2;
+	const VIEWER  = 3;
+	const PENDING = 4;
+
 	/**
 	 * The table to which the class pertains
 	 *

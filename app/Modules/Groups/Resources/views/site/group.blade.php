@@ -1,13 +1,13 @@
 @section('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('vendor/datatables/datatables.bootstrap.min.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/datatables/datatables.bootstrap.min.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
 @stop
 
 @section('scripts')
-<script src="{{ asset('vendor/handlebars/handlebars.min-v4.7.6.js') }}"></script>
-<script src="{{ asset('vendor/datatables/datatables.min.js') }}"></script>
-<script src="{{ asset('vendor/datatables/datatables.bootstrap.min.js') }}"></script>
-<script src="{{ asset('vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/datatables/datatables.min.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/datatables/datatables.bootstrap.min.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script>
 var _DEBUG = true;
 /**
@@ -291,17 +291,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 @php
-$canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own groups') && $group->ownerid == $user->id);
+$canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own groups') && $group->ownerid == $user->id);
 @endphp
 
 	<div class="contentInner">
-		@if (auth()->user()->can('create groups'))
-			<a class="btn btn-default right" href="{{ route('site.users.account.section', ['section' => 'groups']) }}">
-				<i class="fa fa-plus-circle"></i> {{ trans('global.create') }}
-			</a>
-		@endif
-
-		<h2>{{ $group->name }}</h2>
+		<div class="row">
+			<div class="col-md-9">
+				<h2>{{ $group->name }}</h2>
+			</div>
+			<div class="col-md-3 text-right">
+				@if ($membership)
+					@if ($membership->datetimeremoved && $membership->datetimeremoved != '0000-00-00 00:00:00' && $membership->datetimeremoved != '-0001-11-30 00:00:00')
+						<span class="badge badge-danger">{{ trans('users::users.removed') }}</span>
+					@elseif ($membership->membertype == 4)
+						<span class="badge badge-warning">{{ $membership->type->name }}</span>
+					@else
+						<span class="badge{{ $membership->isManager() ? ' badge-success' : '' }}">{{ $membership->type->name }}</span>
+					@endif
+				@endif
+			</div>
+		</div>
+		
 
 		<!-- 
 		@if (auth()->user()->can('manage users'))
@@ -345,11 +355,6 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 					</a>
 				</li>
 				<li class="nav-item">
-					<a href="#DIV_group-motd" id="group-motd" class="nav-link tab">
-						Notices
-					</a>
-				</li>
-				<li class="nav-item">
 					<a href="#DIV_group-queues" id="group-queues" class="nav-link tab">
 						Queues
 					</a>
@@ -359,9 +364,15 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 						Storage
 					</a>
 				</li>
+			@if ($canManage)
 				<li class="nav-item">
 					<a href="#DIV_group-members" id="group-members" class="nav-link tab">
 						Members
+					</a>
+				</li>
+				<li class="nav-item">
+					<a href="#DIV_group-motd" id="group-motd" class="nav-link tab">
+						Notices
 					</a>
 				</li>
 				<li class="nav-item">
@@ -369,6 +380,7 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 						History
 					</a>
 				</li>
+			@endif
 			</ul>
 
 			<!-- <div class="tabMain" id="tabMain"> -->
@@ -394,7 +406,7 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 									<input type="text" class="stash edit-property-input" id="INPUT_name_<?php echo $group->id; ?>" data-prop="name" data-value="<?php echo $group->id; ?>" />
 								</div>
 								<div class="col-md-2 text-right">
-									@if ($canEdit)
+									@if ($canManage)
 									<a href="{{ route('site.users.account.section', ['section' => 'groups', 'edit' => 'name']) }}" class="edit-property tip" data-prop="name" data-value="<?php echo $group->id; ?>" title="{{ trans('global.edit') }}"><!--
 										--><i class="fa fa-pencil" id="IMG_name_<?php echo $group->id; ?>"></i><span class="sr-only">{{ trans('global.edit') }}</span><!--
 									--></a>
@@ -465,6 +477,7 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 							Departments
 						</div>
 						<ul class="list-group list-group-flush">
+					@if ($group->departments()->count())
 						@foreach ($group->departments as $dept)
 							<li class="list-group-item" id="department-{{ $dept->id }}" data-id="{{ $dept->id }}">
 								<div class="row">
@@ -476,14 +489,17 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 										{{ $dept->department->name }}
 									</div>
 									<div class="col-md-1 text-right">
-										@if ($canEdit)
+										@if ($canManage)
 											<a href="#department-{{ $dept->id }}" class="delete delete-department delete-row" data-api="{{ url('/') }}/api/groups/departments/{{ $dept->id }}"><i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span></a>
 										@endif
 									</div>
 								</div>
 							</li>
 						@endforeach
-						@if ($canEdit)
+					@elseif (!$canManage)
+						<li class="list-group-item"><span class="none">{{ trans('global.none') }}</span></li>
+					@endif
+						@if ($canManage)
 							<li class="list-group-item">
 								<div class="row">
 									<div class="col-md-11">
@@ -528,6 +544,7 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 							Field of Science
 						</div>
 						<ul class="list-group list-group-flush">
+					@if ($group->fieldsOfScience()->count())
 						@foreach ($group->fieldsOfScience as $field)
 							<li class="list-group-item" id="fieldofscience-{{ $field->id }}" data-id="{{ $field->id }}">
 								<div class="row">
@@ -539,14 +556,17 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 										{{ $field->field->name }}
 									</div>
 									<div class="col-md-1 text-right">
-										@if ($canEdit)
+										@if ($canManage)
 											<a href="#fieldofscience-{{ $field->id }}" class="delete delete-fieldofscience delete-row" data-api="{{ url('/') }}/api/groups/fieldofscience/{{ $field->id }}"><i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span></a>
 										@endif
 									</div>
 								</div>
 							</li>
 						@endforeach
-						@if ($canEdit)
+					@elseif (!$canManage)
+						<li class="list-group-item"><span class="none">{{ trans('global.none') }}</span></li>
+					@endif
+						@if ($canManage)
 							<li class="list-group-item">
 								<div class="row">
 									<div class="col-md-11">
@@ -594,7 +614,7 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 									<a href="#box2_<?php echo $group->id; ?>" class="help tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a>
 								</div>
 								<div class="col col-md-6 text-right">
-									@if ($canEdit)
+									@if ($canManage)
 										<?php if (count($group->unixgroups) > 0) { ?>
 											<button class="add-property btn btn-default btn-sm" data-prop="unixgroup" data-value="<?php echo $group->id; ?>"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add New Unix Group</button>
 										<?php } elseif ($group->unixgroup != '') { ?>
@@ -617,9 +637,11 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 												<input type="text" class="hide form-control edit-property-input" id="INPUT_unixgroup_<?php echo $group->id; ?>" data-prop="unixgroup" data-value="<?php echo $group->id; ?>" placeholder="{{ trans('global.none') }}" value="" />
 											</div>
 											<div class="col-md-4 text-right">
+												@if ($canManage)
 												<a href="{{ route('site.users.account.section', ['section' => 'groups']) }}#edit-property" class="edit-property tip" data-prop="unixgroup" data-value="<?php echo $group->id; ?>" title="{{ trans('global.edit') }}"><!--
 													--><i class="fa fa-pencil" id="IMG_unixgroup_<?php echo $group->id; ?>"></i><span class="sr-only">{{ trans('global.edit') }}</span><!--
 												--></a>
+												@endif
 											</div>
 										</div>
 									<?php } else { ?>
@@ -670,7 +692,7 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 												<td class="extendedinfo hide">{{ $unixgroup->shortname }}</td>
 												<td class="extendedinfo hide text-right">{{ $unixgroup->unixgid }}</td>
 												<td class="text-right">
-													@if ($canEdit && !preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname))
+													@if ($canManage && !preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname))
 														<a href="{{ route('site.users.account.section', ['section' => 'groups', 'delete' => $unixgroup->id]) }}" class="delete delete-unix-group tip" data-unixgroup="<?php echo $unixgroup->id; ?>" data-value="<?php echo $group->id; ?>" id="deletegroup_<?php echo $unixgroup->id; ?>" title="Delete"><!--
 															--><i class="fa fa-trash" id="IMG_deletegroup_<?php echo $unixgroup->id; ?>"></i><span class="sr-only">Delete</span><!--
 														--></a>
@@ -735,6 +757,10 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 									{
 										foreach ($queues as $q)
 										{
+											if (!$canManage && !$q->users()->where('userid', '=', $user->id)->count())
+											{
+												continue;
+											}
 											?>
 											<tr>
 												<?php
@@ -893,11 +919,13 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 									?>
 									</tbody>
 								</table>
+							@else
+								<p><span class="none">{{ trans('global.none') }}</span></p>
 							@endif
 						</div>
 					</div>
 				</div><!-- / #group-storage -->
-
+			@if ($canManage)
 				<div id="DIV_group-motd" class="stash">
 
 					<div class="card panel panel-default">
@@ -905,7 +933,7 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 							Group Notice
 						</div>
 						<div class="card-body panel-body">
-							@if ($canEdit)
+							@if ($canManage)
 								<form method="post" action="{{ route('site.users.account.section', ['section' => 'groups']) }}">
 									<fieldset>
 										<legend class="sr-only">Set Group Notice</legend>
@@ -977,7 +1005,7 @@ $canEdit = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own 
 					?>
 
 				</div><!-- / #group-motd -->
-			@if ($canEdit)
+
 				<div id="DIV_group-history" class="stash">
 
 					<!--<div class="card panel panel-default">

@@ -100,6 +100,16 @@ class Member extends Model
 	];
 
 	/**
+	 * If entry is trashed
+	 *
+	 * @return  bool
+	 **/
+	public function isTrashed()
+	{
+		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Get parent group
 	 *
 	 * @return  object
@@ -144,63 +154,123 @@ class Member extends Model
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Is regular member?
 	 *
 	 * @return  bool
 	 */
 	public function isMember()
 	{
-		return $this->membertype == 1;
+		return ($this->membertype == Type::MEMBER);
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Is manager?
 	 *
 	 * @return  bool
 	 */
 	public function isManager()
 	{
-		return $this->membertype == 2;
+		return ($this->membertype == Type::MANAGER);
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Is viewer?
 	 *
 	 * @return  bool
 	 */
 	public function isViewer()
 	{
-		return $this->membertype == 3;
+		return ($this->membertype == Type::VIEWER);
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Is memebership pending?
+	 *
+	 * @return  bool
+	 */
+	public function isPending()
+	{
+		return ($this->membertype == Type::PENDING);
+	}
+
+	/**
+	 * Set as a member
+	 *
+	 * @return  void
+	 */
+	public function setAsMember()
+	{
+		$this->membertype = Type::MEMBER;
+	}
+
+	/**
+	 * Set as a manager
+	 *
+	 * @return  void
+	 */
+	public function setAsManager()
+	{
+		$this->membertype = Type::MANAGER;
+	}
+
+	/**
+	 * Set as a viewer
+	 *
+	 * @return  void
+	 */
+	public function setAsViewer()
+	{
+		$this->membertype = Type::VIEWER;
+	}
+
+	/**
+	 * Set as a pending member
+	 *
+	 * @return  void
+	 */
+	public function setAsPending()
+	{
+		$this->membertype = Type::PENDING;
+	}
+
+	/**
+	 * Query scope where is member
 	 *
 	 * @return  object
 	 */
 	public function scopeWhereIsMember($query)
 	{
-		return $query->where('membertype', '=', 1);
+		return $query->where('membertype', '=', Type::MEMBER);
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Query scope where membership is manager
 	 *
 	 * @return  object
 	 */
 	public function scopeWhereIsManager($query)
 	{
-		return $query->where('membertype', '=', 2);
+		return $query->where('membertype', '=', Type::MANAGER);
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Query scope where membership is viewer
 	 *
 	 * @return  object
 	 */
 	public function scopeWhereIsViewer($query)
 	{
-		return $query->where('membertype', '=', 3);
+		return $query->where('membertype', '=', Type::VIEWER);
+	}
+
+	/**
+	 * Query scope where membership is pending
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereIsPending($query)
+	{
+		return $query->where('membertype', '=', Type::PENDING);
 	}
 
 	/**

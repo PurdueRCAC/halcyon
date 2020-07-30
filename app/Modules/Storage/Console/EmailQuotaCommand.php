@@ -23,17 +23,17 @@ class EmailQuotaCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Email latest Contact Report comments to subscribers.';
+	protected $description = 'Email storage quota.';
 
 	/**
 	 * Execute the console command.
 	 */
 	public function handle()
 	{
-		$directory = new Directory;
+		//$directory = new Directory;
 		// Prepare and send actual email
 		//Mail::to($user->email)->send(new Quota($comment));
-		echo (new Quota($directory))->render();
+		//echo (new Quota($directory))->render();
 
 		$this->info("Emailing quota...");
 	}

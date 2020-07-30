@@ -1,9 +1,9 @@
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script>
 $(document).ready(function() {
 	$('.searchuser').select2({

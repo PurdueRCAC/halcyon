@@ -85,6 +85,16 @@ class User extends Model
 	];
 
 	/**
+	 * If entry is trashed
+	 *
+	 * @return  bool
+	 **/
+	public function isTrashed()
+	{
+		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Defines a relationship to notification type
 	 *
 	 * @return  object
@@ -135,43 +145,43 @@ class User extends Model
 	}
 
 	/**
-	 * Defines a relationship to userrequest
+	 * Set as a member
 	 *
 	 * @return  void
 	 */
 	public function setAsMember()
 	{
-		$this->membertype = 1;
+		$this->membertype = MemberType::MEMBER;
 	}
 
 	/**
-	 * Defines a relationship to userrequest
+	 * Set as a manager
 	 *
 	 * @return  void
 	 */
 	public function setAsManager()
 	{
-		$this->membertype = 2;
+		$this->membertype = MemberType::MANAGER;
 	}
 
 	/**
-	 * Defines a relationship to userrequest
+	 * Set as a viewer
 	 *
 	 * @return  void
 	 */
 	public function setAsViewer()
 	{
-		$this->membertype = 3;
+		$this->membertype = MemberType::VIEWER;
 	}
 
 	/**
-	 * Defines a relationship to userrequest
+	 * Set as a pending member
 	 *
 	 * @return  void
 	 */
 	public function setAsPending()
 	{
-		$this->membertype = 4;
+		$this->membertype = MemberType::PENDING;
 	}
 
 	/**
@@ -181,7 +191,7 @@ class User extends Model
 	 */
 	public function scopeWhereIsMember($query)
 	{
-		return $query->where('membertype', '=', 1);
+		return $query->where('membertype', '=', MemberType::MEMBER);
 	}
 
 	/**
@@ -191,7 +201,7 @@ class User extends Model
 	 */
 	public function scopeWhereIsManager($query)
 	{
-		return $query->where('membertype', '=', 2);
+		return $query->where('membertype', '=', MemberType::MANAGER);
 	}
 
 	/**
@@ -201,6 +211,56 @@ class User extends Model
 	 */
 	public function scopeWhereIsViewer($query)
 	{
-		return $query->where('membertype', '=', 3);
+		return $query->where('membertype', '=', MemberType::VIEWER);
+	}
+
+	/**
+	 * Defines a relationship to creator
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereIsPending($query)
+	{
+		return $query->where('membertype', '=', MemberType::PENDING);
+	}
+
+	/**
+	 * Is regular member?
+	 *
+	 * @return  bool
+	 */
+	public function isMember()
+	{
+		return ($this->membertype == MemberType::MEMBER);
+	}
+
+	/**
+	 * Is manager?
+	 *
+	 * @return  bool
+	 */
+	public function isManager()
+	{
+		return ($this->membertype == MemberType::MANAGER);
+	}
+
+	/**
+	 * Is viewer?
+	 *
+	 * @return  bool
+	 */
+	public function isViewer()
+	{
+		return ($this->membertype == MemberType::VIEWER);
+	}
+
+	/**
+	 * Is memebership pending?
+	 *
+	 * @return  bool
+	 */
+	public function isPending()
+	{
+		return ($this->membertype == MemberType::PENDING);
 	}
 }

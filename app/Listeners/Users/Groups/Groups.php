@@ -44,10 +44,60 @@ class Groups
 			$r['u'] = $user->id;
 		}
 
-		$total = $user->groups()
-			->whereIsManager()
+		$groups = $user->groups()
+			->where('groupid', '>', 0)
+			->get()
+			->pluck('groupid')
+			->toArray();
+		$groups = array_unique($groups);
+
+		$total = count($groups);
+
+		/*$total = $user->groups()
+			//->whereIsManager()
 			->where('groupid', '>', 0)
 			->count();
+
+		foreach ($user->groups as $g)
+		{
+			$queues = $g->group->queues()
+						//->withTrashed()
+						->get();
+			foreach ($queues as $queue)
+			{
+				$total += $queue->users()->where('userid', '=', $user->id)->count();
+			}
+		}*/
+		foreach ($user->queues()->whereIn('membertype', [1, 4])->get() as $qu)
+		{
+			if ($qu->membertype == 1
+			 && $qu->isTrashed())//$qu->trashed())
+			{
+				continue;
+			}
+
+			$queue = $qu->queue;
+
+			if (!$queue || ($queue->datetimeremoved
+			 && $queue->datetimeremoved != '0000-00-00 00:00:00'
+			 && $queue->datetimeremoved != '-0001-11-30 00:00:00'))
+			{
+				continue;
+			}
+
+			if (!$queue->scheduler
+			 || ($queue->scheduler->datetimeremoved
+			 && $queue->scheduler->datetimeremoved != '0000-00-00 00:00:00'
+			 && $queue->scheduler->datetimeremoved != '-0001-11-30 00:00:00'))
+			{
+				continue;
+			}
+
+			if (!in_array($queue->groupid, $groups))
+			{
+				$total++;
+			}
+		}
 
 		if ($event->getActive() == 'groups')
 		{
@@ -61,6 +111,33 @@ class Groups
 			{
 				$group = Group::findOrFail($id);
 
+				$membership = $group->members()->where('userid', '=', $user->id)->get()->first();
+
+				//if (!in_array($user->id, $group->members->pluck('userid')->toArray()))
+				if (!$membership)
+				{
+					$found = false;
+					$queues = $group->queues()
+						//->withTrashed()
+						->get();
+
+					foreach ($queues as $queue)
+					{
+						$membership = $queue->users()->where('userid', '=', $user->id)->get()->first();
+
+						if ($membership) //$queue->users()->where('userid', '=', $user->id)->count())
+						{
+							$found = true;
+							break;
+						}
+					}
+
+					if (!$found)
+					{
+						abort(404);
+					}
+				}
+
 				app('pathway')
 					->append(
 						$group->name,
@@ -70,6 +147,7 @@ class Groups
 				$content = view('groups::site.group', [
 					'user'  => $user,
 					'group' => $group,
+					'membership' => $membership,
 				]);
 			}
 			else

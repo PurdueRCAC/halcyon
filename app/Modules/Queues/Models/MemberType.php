@@ -22,6 +22,11 @@ class MemberType extends Model
 {
 	use Historable;
 
+	const MEMBER  = 1;
+	const MANAGER = 2;
+	const VIEWER  = 3;
+	const PENDING = 4;
+
 	/**
 	 * The table to which the class pertains
 	 *

@@ -39,11 +39,29 @@ class EmailReportsCommand extends Command
 			return;
 		}
 
+		$users = [];
+
+		if ($role = config('module.contactreports.admin_role'))
+		{
+			$users = User::findByRole($role)->pluck('id')->toArray();
+		}
+
 		foreach ($reports as $report)
 		{
+			$emailed = array();
+
+			$subscribers = $report->subscribers();
+			$subscribers = array_merge($subscribers, $users);
+			array_filter($subscribers);
+
 			// Send email to each subscriber
-			foreach ($report->subscribers() as $subscriber)
+			foreach ($subscribers as $subscriber)
 			{
+				if (in_array($subscriber, $emailed))
+				{
+					continue;
+				}
+
 				$user = User::find($subscriber);
 
 				if (!$user)
@@ -53,7 +71,9 @@ class EmailReportsCommand extends Command
 
 				// Prepare and send actual email
 				//Mail::to($user->email)->send(new NewReport($report));
-				//echo (new NewReport($report))->render();
+				echo (new NewReport($report))->render();
+
+				$emailed[] = $user->id;
 
 				$this->info("Emailed report #{$report->id} to {$user->email}.");
 			}

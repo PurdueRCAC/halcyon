@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Storage\Listeners\Messages;
 use App\Modules\Storage\Listeners\Resources;
+//use App\Modules\Storage\Console\EmailQuotaCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -34,6 +35,7 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
@@ -56,6 +58,18 @@ class ModuleServiceProvider extends ServiceProvider
 	public function register()
 	{
 		//
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	protected function registerConsoleCommands()
+	{
+		/*$this->commands([
+			EmailQuotaCommand::class,
+		]);*/
 	}
 
 	/**

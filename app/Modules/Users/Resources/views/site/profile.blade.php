@@ -240,7 +240,7 @@ $active = $sections->firstWhere('active', '=', true);
 						<div class="card-title panel-head">
 							<div class="row">
 								<div class="col-md-6">
-									<strong>{{ $group->name }}</strong>
+									<strong><a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $group->id]) }}">{{ $group->name }}</a></strong>
 								</div>
 								<div class="col-md-6 text-right">
 									<span class="badge badge-success">{{ $membership->type->name }}</span>
@@ -317,7 +317,7 @@ $active = $sections->firstWhere('active', '=', true);
 					<li class="list-group-item">
 						<div class="row">
 							<div class="col-md-6">
-								<strong>{{ $group->name }}</strong>
+								<strong><a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $group->id]) }}">{{ $group->name }}</a></strong>
 							</div>
 							<div class="col-md-6 text-right">
 								@if ($qu->datetimeremoved && $qu->datetimeremoved != '0000-00-00 00:00:00' && $qu->datetimeremoved != '-0001-11-30 00:00:00')
