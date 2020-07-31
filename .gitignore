@@ -7,6 +7,7 @@
 /public/widgets
 /public/storage
 /storage/*.key
+/storage/mysql/*
 /app/Modules/*/node_modules
 /vendor
 .env
