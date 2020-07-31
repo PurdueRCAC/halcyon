@@ -70,17 +70,14 @@ class Groups
 		}*/
 		foreach ($user->queues()->whereIn('membertype', [1, 4])->get() as $qu)
 		{
-			if ($qu->membertype == 1
-			 && $qu->isTrashed())//$qu->trashed())
+			if ($qu->isMember() && $qu->isTrashed())//$qu->trashed())
 			{
 				continue;
 			}
 
 			$queue = $qu->queue;
 
-			if (!$queue || ($queue->datetimeremoved
-			 && $queue->datetimeremoved != '0000-00-00 00:00:00'
-			 && $queue->datetimeremoved != '-0001-11-30 00:00:00'))
+			if (!$queue || $queue->isTrashed())
 			{
 				continue;
 			}
