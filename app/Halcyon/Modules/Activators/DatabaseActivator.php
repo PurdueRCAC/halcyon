@@ -7,6 +7,7 @@ use Illuminate\Config\Repository as Config;
 use Illuminate\Container\Container;
 use Nwidart\Modules\Contracts\ActivatorInterface;
 use Nwidart\Modules\Module;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseActivator implements ActivatorInterface
 {
@@ -155,6 +156,18 @@ class DatabaseActivator implements ActivatorInterface
 	private function readDatabase(): array
 	{
 		$modules = [];
+
+		if (!Schema::hasTable('extensions'))
+		{
+			$modules['core'] = true;
+
+			/*foreach (app('files')->directories(app_path('Modules')) as $dir)
+			{
+				$modules[strtolower(basename($dir))] = true;
+			}*/
+
+			return $modules;
+		}
 
 		$rows = $this->db->table('extensions')
 			->select(['element', 'enabled'])
