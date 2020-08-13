@@ -6,6 +6,7 @@
 /public/listeners
 /public/widgets
 /public/storage
+/public/files
 /storage/*.key
 /storage/mysql/*
 /app/Modules/*/node_modules
