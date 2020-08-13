@@ -5,10 +5,10 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace Hubzero\Config\Tests\Processor;
+namespace App\Halcyon\Config\Tests\Processor;
 
-use Hubzero\Test\Basic;
-use Hubzero\Config\Processor\Json;
+use App\Halcyon\Test\Basic;
+use App\Halcyon\Config\Processor\Json;
 use stdClass;
 
 /**
@@ -89,7 +89,7 @@ class JsonTest extends Basic
 	/**
 	 * Tests the getSupportedExtensions() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Json::getSupportedExtensions
+	 * @covers  \App\Halcyon\Config\Processor\Json::getSupportedExtensions
 	 * @return  void
 	 **/
 	public function testGetSupportedExtensions()
@@ -104,7 +104,7 @@ class JsonTest extends Basic
 	/**
 	 * Tests the canParse() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Json::canParse
+	 * @covers  \App\Halcyon\Config\Processor\Json::canParse
 	 * @return  void
 	 **/
 	public function testCanParse()
@@ -118,7 +118,7 @@ class JsonTest extends Basic
 	/**
 	 * Tests the parse() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Json::parse
+	 * @covers  \App\Halcyon\Config\Processor\Json::parse
 	 * @return  void
 	 **/
 	public function testParse()
@@ -127,7 +127,7 @@ class JsonTest extends Basic
 
 		$this->assertEquals($this->arr, $result);
 
-		$this->setExpectedException('Hubzero\Config\Exception\ParseException');
+		$this->setExpectedException('App\Halcyon\Config\Exception\ParseException');
 
 		$result = $this->processor->parse(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Files' . DIRECTORY_SEPARATOR . 'test.xml');
 	}
@@ -135,7 +135,7 @@ class JsonTest extends Basic
 	/**
 	 * Tests the objectToString() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Json::objectToString
+	 * @covers  \App\Halcyon\Config\Processor\Json::objectToString
 	 * @return  void
 	 **/
 	public function testObjectToString()
@@ -154,7 +154,7 @@ class JsonTest extends Basic
 	/**
 	 * Tests the stringToObject() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Json::stringToObject
+	 * @covers  \App\Halcyon\Config\Processor\Json::stringToObject
 	 * @return  void
 	 **/
 	public function testStringToObject()

@@ -5,12 +5,12 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace Hubzero\Config\Tests\Processor;
+namespace App\Halcyon\Config\Tests\Processor;
 
-use Hubzero\Test\Basic;
-use Hubzero\Config\Processor\Php;
-use Hubzero\Config\Exception\ParseException;
-use Hubzero\Config\Exception\UnsupportedFormatException;
+use App\Halcyon\Test\Basic;
+use App\Halcyon\Config\Processor\Php;
+use App\Halcyon\Config\Exception\ParseException;
+use App\Halcyon\Config\Exception\UnsupportedFormatException;
 use stdClass;
 
 /**
@@ -116,7 +116,7 @@ class Config
 	/**
 	 * Tests the getSupportedExtensions() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Php::getSupportedExtensions
+	 * @covers  \App\Halcyon\Config\Processor\Php::getSupportedExtensions
 	 * @return  void
 	 **/
 	public function testGetSupportedExtensions()
@@ -131,7 +131,7 @@ class Config
 	/**
 	 * Tests the canParse() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Php::canParse
+	 * @covers  \App\Halcyon\Config\Processor\Php::canParse
 	 * @return  void
 	 **/
 	public function testCanParse()
@@ -142,7 +142,7 @@ class Config
 	/**
 	 * Tests the parse() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Php::parse
+	 * @covers  \App\Halcyon\Config\Processor\Php::parse
 	 * @return  void
 	 **/
 	public function testParse()
@@ -154,7 +154,7 @@ class Config
 	/**
 	 * Test a PHP file containing a callable
 	 *
-	 * @covers  \Hubzero\Config\Processor\Php::parse
+	 * @covers  \App\Halcyon\Config\Processor\Php::parse
 	 * @return  void
 	 **/
 	public function testParseCallable()
@@ -166,7 +166,7 @@ class Config
 	/**
 	 * Test that an exception is thrown and caught
 	 *
-	 * @covers  \Hubzero\Config\Processor\Php::parse
+	 * @covers  \App\Halcyon\Config\Processor\Php::parse
 	 * @return  void
 	 **/
 	public function testParseException()
@@ -178,7 +178,7 @@ class Config
 	/**
 	 * Tests the parse() method throws an Exception for a bad PHP file.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Php::parse
+	 * @covers  \App\Halcyon\Config\Processor\Php::parse
 	 * @return  void
 	 **/
 	public function testParseEmptyFile()
@@ -190,8 +190,8 @@ class Config
 	/**
 	 * Tests the objectToString() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Php::objectToString
-	 * @covers  \Hubzero\Config\Processor\Php::getArrayString
+	 * @covers  \App\Halcyon\Config\Processor\Php::objectToString
+	 * @covers  \App\Halcyon\Config\Processor\Php::getArrayString
 	 * @return  void
 	 **/
 	public function testObjectToString()
@@ -219,7 +219,7 @@ class Config
 	/**
 	 * Tests the stringToObject() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Php::stringToObject
+	 * @covers  \App\Halcyon\Config\Processor\Php::stringToObject
 	 * @return  void
 	 **/
 	public function testStringToObject()

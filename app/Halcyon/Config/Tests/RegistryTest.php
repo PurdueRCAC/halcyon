@@ -5,11 +5,11 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace Hubzero\Config\Tests;
+namespace App\Halcyon\Config\Tests;
 
-use Hubzero\Test\Basic;
-use Hubzero\Config\Registry;
-use Hubzero\Config\Processor;
+use App\Halcyon\Test\Basic;
+use App\Halcyon\Config\Registry;
+use App\Halcyon\Config\Processor;
 use stdClass;
 
 /**
@@ -20,10 +20,10 @@ class RegistryTest extends Basic
 	/**
 	 * Tests set() and get()
 	 *
-	 * @covers  \Hubzero\Config\Registry::set
-	 * @covers  \Hubzero\Config\Registry::get
-	 * @covers  \Hubzero\Config\Registry::offsetSet
-	 * @covers  \Hubzero\Config\Registry::offsetGet
+	 * @covers  \App\Halcyon\Config\Registry::set
+	 * @covers  \App\Halcyon\Config\Registry::get
+	 * @covers  \App\Halcyon\Config\Registry::offsetSet
+	 * @covers  \App\Halcyon\Config\Registry::offsetGet
 	 * @return  void
 	 **/
 	public function testSetAndGet()
@@ -84,8 +84,8 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the has() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::has
-	 * @covers  \Hubzero\Config\Registry::offsetExists
+	 * @covers  \App\Halcyon\Config\Registry::has
+	 * @covers  \App\Halcyon\Config\Registry::offsetExists
 	 * @return  void
 	 **/
 	public function testHas()
@@ -104,7 +104,7 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the def() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::def
+	 * @covers  \App\Halcyon\Config\Registry::def
 	 * @return  void
 	 **/
 	public function testDef()
@@ -124,7 +124,7 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the reset() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::reset
+	 * @covers  \App\Halcyon\Config\Registry::reset
 	 * @return  void
 	 **/
 	public function testReset()
@@ -143,7 +143,7 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the offsetUnset() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::offsetUnset
+	 * @covers  \App\Halcyon\Config\Registry::offsetUnset
 	 * @return  void
 	 **/
 	public function testOffsetUnset()
@@ -160,7 +160,7 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the count() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::count
+	 * @covers  \App\Halcyon\Config\Registry::count
 	 * @return  void
 	 **/
 	public function testCount()
@@ -184,8 +184,8 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the toString() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::toString
-	 * @covers  \Hubzero\Config\Registry::__toString
+	 * @covers  \App\Halcyon\Config\Registry::toString
+	 * @covers  \App\Halcyon\Config\Registry::__toString
 	 * @return  void
 	 **/
 	public function testToString()
@@ -209,7 +209,7 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the toObject() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::toObject
+	 * @covers  \App\Halcyon\Config\Registry::toObject
 	 * @return  void
 	 **/
 	public function testToObject()
@@ -232,8 +232,8 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the toArray() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::toArray
-	 * @covers  \Hubzero\Config\Registry::asArray
+	 * @covers  \App\Halcyon\Config\Registry::toArray
+	 * @covers  \App\Halcyon\Config\Registry::asArray
 	 * @return  void
 	 **/
 	public function testToArray()
@@ -256,8 +256,8 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the flatten() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::flatten
-	 * @covers  \Hubzero\Config\Registry::toFlatten
+	 * @covers  \App\Halcyon\Config\Registry::flatten
+	 * @covers  \App\Halcyon\Config\Registry::toFlatten
 	 * @return  void
 	 **/
 	public function testFlatten()
@@ -280,7 +280,7 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the jsonSerialize() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::jsonSerialize
+	 * @covers  \App\Halcyon\Config\Registry::jsonSerialize
 	 * @return  void
 	 **/
 	public function testJsonSerialize()
@@ -304,7 +304,7 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the getIterator() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::getIterator
+	 * @covers  \App\Halcyon\Config\Registry::getIterator
 	 * @return  void
 	 **/
 	public function testGetIterator()
@@ -322,7 +322,7 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the processors() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::processors
+	 * @covers  \App\Halcyon\Config\Registry::processors
 	 * @return  void
 	 **/
 	public function testProcessors()
@@ -343,7 +343,7 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the processor() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::processor
+	 * @covers  \App\Halcyon\Config\Registry::processor
 	 * @return  void
 	 **/
 	public function testProcessor()
@@ -360,14 +360,14 @@ class RegistryTest extends Basic
 
 			$this->assertTrue(in_array($type, $supported));
 
-			$this->assertInstanceOf('\\Hubzero\\Config\\Processor\\' . ucfirst($type), $result);
+			$this->assertInstanceOf('\\App\Halcyon\\Config\\Processor\\' . ucfirst($type), $result);
 		}
 	}
 
 	/**
 	 * Tests the extract() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::extract
+	 * @covers  \App\Halcyon\Config\Registry::extract
 	 * @return  void
 	 **/
 	public function testExtract()
@@ -394,8 +394,8 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the merge() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::merge
-	 * @covers  \Hubzero\Config\Registry::bind
+	 * @covers  \App\Halcyon\Config\Registry::merge
+	 * @covers  \App\Halcyon\Config\Registry::bind
 	 * @return  void
 	 **/
 	public function testMerge()
@@ -451,9 +451,9 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the parse() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::__construct
-	 * @covers  \Hubzero\Config\Registry::parse
-	 * @covers  \Hubzero\Config\Registry::read
+	 * @covers  \App\Halcyon\Config\Registry::__construct
+	 * @covers  \App\Halcyon\Config\Registry::parse
+	 * @covers  \App\Halcyon\Config\Registry::read
 	 * @return  void
 	 **/
 	public function testParse()
@@ -525,7 +525,7 @@ class RegistryTest extends Basic
 		// Try reading a nonexistant file
 		$data = new Registry();
 
-		$this->setExpectedException('Hubzero\\Error\\Exception\\InvalidArgumentException');
+		$this->setExpectedException('App\Halcyon\\Error\\Exception\\InvalidArgumentException');
 
 		$data->read(__DIR__ . '/Fles/test.md');
 	}
@@ -533,7 +533,7 @@ class RegistryTest extends Basic
 	/**
 	 * Tests the __clone() method
 	 *
-	 * @covers  \Hubzero\Config\Registry::__clone
+	 * @covers  \App\Halcyon\Config\Registry::__clone
 	 * @return  void
 	 **/
 	public function testClone()

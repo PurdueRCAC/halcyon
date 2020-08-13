@@ -5,10 +5,10 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace Hubzero\Config\Tests;
+namespace App\Halcyon\Config\Tests;
 
-use Hubzero\Test\Basic;
-use Hubzero\Config\Legacy;
+use App\Halcyon\Test\Basic;
+use App\Halcyon\Config\Legacy;
 
 /**
  * Legacy tests
@@ -18,7 +18,7 @@ class LegacyTest extends Basic
 	/**
 	 * Tests reading an invalid file path
 	 *
-	 * @covers  \Hubzero\Config\Legacy::read
+	 * @covers  \App\Halcyon\Config\Legacy::read
 	 * @return  void
 	 **/
 	public function testReadErrorsWithInvalidFilePath()
@@ -27,7 +27,7 @@ class LegacyTest extends Basic
 
 		$loader = new Legacy($path);
 
-		$this->setExpectedException('Hubzero\\Config\\Exception\\FileNotFoundException');
+		$this->setExpectedException('App\Halcyon\\Config\\Exception\\FileNotFoundException');
 
 		$loader->read($path . '/configuration.php');
 	}
@@ -35,7 +35,7 @@ class LegacyTest extends Basic
 	/**
 	 * Tests reading an invalid file
 	 *
-	 * @covers  \Hubzero\Config\Legacy::read
+	 * @covers  \App\Halcyon\Config\Legacy::read
 	 * @return  void
 	 **/
 	public function testReadErrorsWithInvalidFile()
@@ -44,7 +44,7 @@ class LegacyTest extends Basic
 
 		$loader = new Legacy($path);
 
-		$this->setExpectedException('Hubzero\\Config\\Exception\\UnsupportedFormatException');
+		$this->setExpectedException('App\Halcyon\\Config\\Exception\\UnsupportedFormatException');
 
 		$loader->read($path . '/Legacy/Invalid/configuration.php');
 	}
@@ -52,8 +52,8 @@ class LegacyTest extends Basic
 	/**
 	 * Tests constructor
 	 *
-	 * @covers  \Hubzero\Config\Legacy::__construct
-	 * @covers  \Hubzero\Config\Legacy::exists
+	 * @covers  \App\Halcyon\Config\Legacy::__construct
+	 * @covers  \App\Halcyon\Config\Legacy::exists
 	 * @return  void
 	 **/
 	public function testExists()
@@ -74,7 +74,7 @@ class LegacyTest extends Basic
 	/**
 	 * Tests reading an invalid file
 	 *
-	 * @covers  \Hubzero\Config\Legacy::read
+	 * @covers  \App\Halcyon\Config\Legacy::read
 	 * @return  void
 	 **/
 	public function testRead()

@@ -5,10 +5,10 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace Hubzero\Config\Tests;
+namespace App\Halcyon\Config\Tests;
 
-use Hubzero\Test\Basic;
-use Hubzero\Config\Processor;
+use App\Halcyon\Test\Basic;
+use App\Halcyon\Config\Processor;
 
 /**
  * Processor tests
@@ -18,7 +18,7 @@ class ProcessorTest extends Basic
 	/**
 	 * Tests all()
 	 *
-	 * @covers  \Hubzero\Config\Processor::all
+	 * @covers  \App\Halcyon\Config\Processor::all
 	 * @return  void
 	 **/
 	public function testAll()
@@ -36,7 +36,7 @@ class ProcessorTest extends Basic
 	/**
 	 * Tests the instance() method
 	 *
-	 * @covers  \Hubzero\Config\Processor::instance
+	 * @covers  \App\Halcyon\Config\Processor::instance
 	 * @return  void
 	 **/
 	public function testInstance()
@@ -48,7 +48,7 @@ class ProcessorTest extends Basic
 			$this->assertInstanceOf(Processor::class, $result);
 		}
 
-		$this->setExpectedException('Hubzero\\Error\\Exception\\InvalidArgumentException');
+		$this->setExpectedException('App\Halcyon\\Error\\Exception\\InvalidArgumentException');
 
 		$result = Processor::instance('py');
 	}
@@ -56,12 +56,12 @@ class ProcessorTest extends Basic
 	/**
 	 * Tests getSupportedExtensions()
 	 *
-	 * @covers  \Hubzero\Config\Processor::getSupportedExtensions
+	 * @covers  \App\Halcyon\Config\Processor::getSupportedExtensions
 	 * @return  void
 	 **/
 	public function testGetSupportedExtensions()
 	{
-		$stub = $this->getMockForAbstractClass('Hubzero\Config\Processor');
+		$stub = $this->getMockForAbstractClass('App\Halcyon\Config\Processor');
 		$stub->expects($this->any())
 			->method('getSupportedExtensions')
 			->will($this->returnValue(array()));
@@ -72,12 +72,12 @@ class ProcessorTest extends Basic
 	/**
 	 * Tests parse()
 	 *
-	 * @covers  \Hubzero\Config\Processor::parse
+	 * @covers  \App\Halcyon\Config\Processor::parse
 	 * @return  void
 	 **/
 	public function testParse()
 	{
-		$stub = $this->getMockForAbstractClass('Hubzero\Config\Processor');
+		$stub = $this->getMockForAbstractClass('App\Halcyon\Config\Processor');
 		$stub->expects($this->any())
 			->method('parse')
 			->with($this->isType('string'))

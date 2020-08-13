@@ -5,11 +5,11 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace Hubzero\Config\Tests;
+namespace App\Halcyon\Config\Tests;
 
-use Hubzero\Test\Basic;
-use Hubzero\Config\Repository;
-use Hubzero\Config\FileLoader;
+use App\Halcyon\Test\Basic;
+use App\Halcyon\Config\Repository;
+use App\Halcyon\Config\FileLoader;
 use stdClass;
 
 /**
@@ -20,11 +20,11 @@ class RepositoryTest extends Basic
 	/**
 	 * Tests the constructor sets loader and client
 	 *
-	 * @covers  \Hubzero\Config\Repository::__construct
-	 * @covers  \Hubzero\Config\Repository::setLoader
-	 * @covers  \Hubzero\Config\Repository::getLoader
-	 * @covers  \Hubzero\Config\Repository::setClient
-	 * @covers  \Hubzero\Config\Repository::getClient
+	 * @covers  \App\Halcyon\Config\Repository::__construct
+	 * @covers  \App\Halcyon\Config\Repository::setLoader
+	 * @covers  \App\Halcyon\Config\Repository::getLoader
+	 * @covers  \App\Halcyon\Config\Repository::setClient
+	 * @covers  \App\Halcyon\Config\Repository::getClient
 	 * @return  void
 	 **/
 	public function testConstructor()
@@ -39,7 +39,7 @@ class RepositoryTest extends Basic
 		$this->assertEquals($data->getClient(), 'api');
 
 		// Test that a default loader was set
-		$this->assertInstanceOf('Hubzero\Config\FileLoader', $data->getLoader());
+		$this->assertInstanceOf('App\Halcyon\Config\FileLoader', $data->getLoader());
 
 		// Test setting a loader
 		$path = __DIR__ . '/Files/Repository';
@@ -48,21 +48,21 @@ class RepositoryTest extends Basic
 		// Set by method
 		$data->setLoader($loader);
 
-		$this->assertInstanceOf('Hubzero\Config\FileLoader', $data->getLoader());
+		$this->assertInstanceOf('App\Halcyon\Config\FileLoader', $data->getLoader());
 		$this->assertEquals($path, $data->getLoader()->getDefaultPath());
 
 		// Set by constructor
 		$data = new Repository('files', $loader);
 
-		$this->assertInstanceOf('Hubzero\Config\FileLoader', $data->getLoader());
+		$this->assertInstanceOf('App\Halcyon\Config\FileLoader', $data->getLoader());
 		$this->assertEquals($path, $data->getLoader()->getDefaultPath());
 	}
 
 	/**
 	 * Tests get()
 	 *
-	 * @covers  \Hubzero\Config\Repository::load
-	 * @covers  \Hubzero\Config\Repository::get
+	 * @covers  \App\Halcyon\Config\Repository::load
+	 * @covers  \App\Halcyon\Config\Repository::get
 	 * @return  void
 	 **/
 	public function testSetAndGet()

@@ -5,10 +5,10 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace Hubzero\Config\Tests\Processor;
+namespace App\Halcyon\Config\Tests\Processor;
 
-use Hubzero\Test\Basic;
-use Hubzero\Config\Processor\Ini;
+use App\Halcyon\Test\Basic;
+use App\Halcyon\Config\Processor\Ini;
 use stdClass;
 
 /**
@@ -116,7 +116,7 @@ sitename_pagetitles=0';
 	/**
 	 * Tests the getSupportedExtensions() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Ini::getSupportedExtensions
+	 * @covers  \App\Halcyon\Config\Processor\Ini::getSupportedExtensions
 	 * @return  void
 	 **/
 	public function testGetSupportedExtensions()
@@ -131,7 +131,7 @@ sitename_pagetitles=0';
 	/**
 	 * Tests the canParse() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Ini::canParse
+	 * @covers  \App\Halcyon\Config\Processor\Ini::canParse
 	 * @return  void
 	 **/
 	public function testCanParse()
@@ -145,7 +145,7 @@ sitename_pagetitles=0';
 	/**
 	 * Tests the parse() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Ini::parse
+	 * @covers  \App\Halcyon\Config\Processor\Ini::parse
 	 * @return  void
 	 **/
 	public function testParse()
@@ -154,7 +154,7 @@ sitename_pagetitles=0';
 
 		$this->assertEquals($this->arr, $result);
 
-		$this->setExpectedException('Hubzero\Config\Exception\ParseException');
+		$this->setExpectedException('App\Halcyon\Config\Exception\ParseException');
 
 		$result = $this->processor->parse(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Files' . DIRECTORY_SEPARATOR . 'test.xml');
 	}
@@ -162,8 +162,8 @@ sitename_pagetitles=0';
 	/**
 	 * Tests the objectToString() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Ini::objectToString
-	 * @covers  \Hubzero\Config\Processor\Ini::getValueAsINI
+	 * @covers  \App\Halcyon\Config\Processor\Ini::objectToString
+	 * @covers  \App\Halcyon\Config\Processor\Ini::getValueAsINI
 	 * @return  void
 	 **/
 	public function testObjectToString()
@@ -182,7 +182,7 @@ sitename_pagetitles=0';
 	/**
 	 * Tests the stringToObject() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Ini::stringToObject
+	 * @covers  \App\Halcyon\Config\Processor\Ini::stringToObject
 	 * @return  void
 	 **/
 	public function testStringToObject()

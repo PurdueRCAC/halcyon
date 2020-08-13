@@ -5,10 +5,10 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace Hubzero\Config\Tests\Processor;
+namespace App\Halcyon\Config\Tests\Processor;
 
-use Hubzero\Test\Basic;
-use Hubzero\Config\Processor\Yaml;
+use App\Halcyon\Test\Basic;
+use App\Halcyon\Config\Processor\Yaml;
 use stdClass;
 
 /**
@@ -102,7 +102,7 @@ seo:
 	/**
 	 * Tests the getSupportedExtensions() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Yaml::getSupportedExtensions
+	 * @covers  \App\Halcyon\Config\Processor\Yaml::getSupportedExtensions
 	 * @return  void
 	 **/
 	public function testGetSupportedExtensions()
@@ -118,7 +118,7 @@ seo:
 	/**
 	 * Tests the canParse() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Yaml::canParse
+	 * @covers  \App\Halcyon\Config\Processor\Yaml::canParse
 	 * @return  void
 	 **/
 	public function testCanParse()
@@ -130,7 +130,7 @@ seo:
 	/**
 	 * Tests the parse() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Yaml::parse
+	 * @covers  \App\Halcyon\Config\Processor\Yaml::parse
 	 * @return  void
 	 **/
 	public function testParse()
@@ -139,7 +139,7 @@ seo:
 
 		$this->assertEquals($this->arr, $result);
 
-		$this->setExpectedException('Hubzero\Config\Exception\ParseException');
+		$this->setExpectedException('App\Halcyon\Config\Exception\ParseException');
 
 		$result = $this->processor->parse(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Files' . DIRECTORY_SEPARATOR . 'test.xml');
 	}
@@ -147,8 +147,8 @@ seo:
 	/**
 	 * Tests the objectToString() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Yaml::objectToString
-	 * @covers  \Hubzero\Config\Processor\Yaml::asArray
+	 * @covers  \App\Halcyon\Config\Processor\Yaml::objectToString
+	 * @covers  \App\Halcyon\Config\Processor\Yaml::asArray
 	 * @return  void
 	 **/
 	public function testObjectToString()
@@ -167,8 +167,8 @@ seo:
 	/**
 	 * Tests the stringToObject() method.
 	 *
-	 * @covers  \Hubzero\Config\Processor\Yaml::stringToObject
-	 * @covers  \Hubzero\Config\Processor\Yaml::toObject
+	 * @covers  \App\Halcyon\Config\Processor\Yaml::stringToObject
+	 * @covers  \App\Halcyon\Config\Processor\Yaml::toObject
 	 * @return  void
 	 **/
 	public function testStringToObject()
@@ -184,7 +184,7 @@ seo:
 		$this->assertEquals($this->obj, $result);
 
 		// Test that an unparsable string throws an exception
-		$this->setExpectedException('Hubzero\Config\Exception\ParseException');
+		$this->setExpectedException('App\Halcyon\Config\Exception\ParseException');
 
 		$result = $this->processor->stringToObject("foo:\n	bar");
 	}

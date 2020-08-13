@@ -5,10 +5,10 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace Hubzero\Config\Tests;
+namespace App\Halcyon\Config\Tests;
 
-use Hubzero\Test\Basic;
-use Hubzero\Config\FileLoader;
+use App\Halcyon\Test\Basic;
+use App\Halcyon\Config\FileLoader;
 
 /**
  * FileLoader tests
@@ -18,11 +18,11 @@ class FileLoaderTest extends Basic
 	/**
 	 * Tests constructor
 	 *
-	 * @covers  \Hubzero\Config\FileLoader::__construct
-	 * @covers  \Hubzero\Config\FileLoader::getDefaultPath
-	 * @covers  \Hubzero\Config\FileLoader::getPaths
-	 * @covers  \Hubzero\Config\FileLoader::getParser
-	 * @covers  \Hubzero\Config\FileLoader::load
+	 * @covers  \App\Halcyon\Config\FileLoader::__construct
+	 * @covers  \App\Halcyon\Config\FileLoader::getDefaultPath
+	 * @covers  \App\Halcyon\Config\FileLoader::getPaths
+	 * @covers  \App\Halcyon\Config\FileLoader::getParser
+	 * @covers  \App\Halcyon\Config\FileLoader::load
 	 * @return  void
 	 **/
 	public function testLoad()
