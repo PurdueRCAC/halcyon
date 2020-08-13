@@ -105,7 +105,7 @@
 					$linktype .= '<span class="caret"></span>';
 				endif;
 				$flink = $item->flink;
-				//$flink = \Hubzero\Utility\Str::ampReplace(htmlspecialchars($flink));
+				//$flink = \App\Halcyon\Utility\Str::ampReplace(htmlspecialchars($flink));
 
 				switch ($item->target) :
 					default:
@@ -198,7 +198,7 @@
 					$linktype .= '<span class="caret"></span>';
 				endif;
 				$flink = $item->flink;
-				//$flink = \Hubzero\Utility\Str::ampReplace(htmlspecialchars($flink));
+				//$flink = \App\Halcyon\Utility\Str::ampReplace(htmlspecialchars($flink));
 
 				switch ($item->target) :
 					default:
