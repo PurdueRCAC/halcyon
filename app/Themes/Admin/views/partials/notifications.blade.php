@@ -10,9 +10,9 @@
 	<div class="alert alert-danger" role="alert">
 		<!-- <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button> -->
 		<ul>
-			@foreach (Session::get('error')->all() as $error)
-				<li>{{ $error }}</li>
-			@endforeach
+
+				<li>{{ Session::get('error') }}</li>
+
 		</ul>
 	</div>
 @endif
