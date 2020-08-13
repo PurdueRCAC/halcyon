@@ -101,7 +101,7 @@ class Generator
 		$cacheExpiration = config()->get('module.core.doc_expiration', 720);
 
 		// cache file
-		$cacheFile = storage_path('api.json');
+		$cacheFile = storage_path('app/public/openapi.json');
 
 		// check if we have a cache file 
 		if (file_exists($cacheFile))
@@ -138,7 +138,7 @@ class Generator
 		$this->output['versions']['max'] = end($this->output['versions']['available']);
 
 		// create cache folder
-		$cacheFile = storage_path('openapi.json');
+		$cacheFile = storage_path('app/public/openapi.json');
 
 		/*if (!app('filesystem')->exists(dirname($cacheFile)))
 		{
