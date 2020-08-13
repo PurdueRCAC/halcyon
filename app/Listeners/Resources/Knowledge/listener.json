@@ -1,0 +1,11 @@
+{
+    "name": "Users - History",
+    "alias": "users_history",
+    "description": "This displays history related to a specific user.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
