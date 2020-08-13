@@ -9,13 +9,32 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Halcyon\Models\FieldOfScience;
 
+/**
+ * Fields of science
+ *
+ * @apiUri    /api/groups/fieldsofscience
+ */
 class FieldsOfScienceController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /groups/departments
+	 * @apiUri    /api/groups/fieldsofscience
+	 * @apiParameter {
+	 * 		"name":          "parentid",
+	 * 		"description":   "Parent department ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
@@ -29,20 +48,6 @@ class FieldsOfScienceController extends Controller
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       1
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "group_id",
-	 * 		"description":   "Group ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "search",
-	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       ""
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order",
@@ -107,7 +112,7 @@ class FieldsOfScienceController extends Controller
 
 		$rows->each(function ($item, $key)
 		{
-			$item->api = route('api.groups.departments.read', ['id' => $item->id]);
+			$item->api = route('api.groups.fieldsofscience.read', ['id' => $item->id]);
 		});
 
 		return new ResourceCollection($rows);
@@ -117,27 +122,20 @@ class FieldsOfScienceController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /groups/departments
+	 * @apiUri    /api/groups/fieldsofscience
 	 * @apiParameter {
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
-	 * 		"required":      true,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "message",
-	 * 		"description":   "Message of the day",
+	 * 		"name":          "name",
+	 * 		"description":   "Field of science name",
 	 * 		"type":          "string",
 	 * 		"required":      true,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "group_id",
-	 * 		"description":   "Group ID",
+	 * 		"name":          "parentid",
+	 * 		"description":   "Parent field of science ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"default":       null
 	 * }
 	 * @return Response
 	 */
@@ -169,7 +167,7 @@ class FieldsOfScienceController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /groups/departments/{id}
+	 * @apiUri    /api/groups/fieldsofscience/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -191,7 +189,7 @@ class FieldsOfScienceController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /groups/departments/{id}
+	 * @apiUri    /api/groups/fieldsofscience/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -200,18 +198,18 @@ class FieldsOfScienceController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "message",
-	 * 		"description":   "Message of the day",
+	 * 		"name":          "name",
+	 * 		"description":   "Field of science name",
 	 * 		"type":          "string",
-	 * 		"required":      true,
+	 * 		"required":      false,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "group_id",
-	 * 		"description":   "Group ID",
+	 * 		"name":          "parentid",
+	 * 		"description":   "Parent field of science ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"default":       null
 	 * }
 	 * @param   Request $request
 	 * @return  Response
@@ -249,7 +247,7 @@ class FieldsOfScienceController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /groups/motd/{id}
+	 * @apiUri    /api/groups/fieldsofscience/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",

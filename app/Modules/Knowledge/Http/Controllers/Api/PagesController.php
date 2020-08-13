@@ -12,7 +12,12 @@ use App\Modules\Knowledge\Http\Resources\ReportResource as ApiReportResource;
 use App\Modules\Knowledge\Http\Resources\ReportResourceCollection;
 use Carbon\Carbon;
 
-class ReportsController extends Controller
+/**
+ * Pages
+ *
+ * @apiUri    /api/knowledge
+ */
+class PagesController extends Controller
 {
 	/**
 	 * Display a listing of articles

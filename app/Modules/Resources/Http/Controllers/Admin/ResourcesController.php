@@ -39,7 +39,7 @@ class ResourcesController extends Controller
 		}
 		$filters['start'] = ($filters['limit'] * $filters['page']) - $filters['limit'];
 
-		if (!in_array($filters['order'], ['id', 'name', 'state', 'type', 'parent']))
+		if (!in_array($filters['order'], ['id', 'name', 'state', 'type', 'parent', 'display']))
 		{
 			$filters['order'] = 'name';
 		}
@@ -93,6 +93,11 @@ class ResourcesController extends Controller
 			{
 				$query->where('name', 'like', '%' . $filters['search'] . '%');
 			}
+		}
+
+		if ($filters['order'] == 'display')
+		{
+			$query->orderBy('parentid', 'asc');
 		}
 
 		/*$rows = $query

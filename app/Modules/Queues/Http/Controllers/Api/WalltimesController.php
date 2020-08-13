@@ -9,13 +9,19 @@ use App\Modules\Queues\Models\Walltime;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/**
+ * Queue Walltimes
+ *
+ * @apiUri    /api/queues/walltimes
+ */
 class WalltimesController extends Controller
 {
 	/**
 	 * Display a listing of queue walltimes.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /queues/walltimes
+	 * @apiUri    /api/queues/walltimes
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "limit",
 	 *      "description":   "Number of result to return.",
@@ -38,7 +44,7 @@ class WalltimesController extends Controller
 	 *      "default":       ""
 	 * }
 	 * @apiParameter {
-	 *      "name":          "sort",
+	 *      "name":          "order",
 	 *      "description":   "Field to sort results by.",
 	 *      "type":          "string",
 	 *      "required":      false,
@@ -46,7 +52,7 @@ class WalltimesController extends Controller
 	 *      "allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
 	 * }
 	 * @apiParameter {
-	 *      "name":          "sort_dir",
+	 *      "name":          "order_dir",
 	 *      "description":   "Direction to sort results by.",
 	 *      "type":          "string",
 	 *      "required":      false,
@@ -66,13 +72,13 @@ class WalltimesController extends Controller
 			'limit'    => $request->input('limit', config('list_limit', 20)),
 			//'start' => $request->input('limitstart', 0),
 			// Sorting
-			'sort'     => $request->input('sort', 'id'),
-			'sort_dir' => $request->input('sort_dir', 'desc')
+			'order'     => $request->input('order', 'id'),
+			'order_dir' => $request->input('order_dir', 'desc')
 		);
 
-		if (!in_array($filters['sort_dir'], ['asc', 'desc']))
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['sort_dir'] = 'asc';
+			$filters['order_dir'] = 'asc';
 		}
 
 		$query = Walltime::query();
@@ -93,7 +99,7 @@ class WalltimesController extends Controller
 		}
 
 		$rows = $query
-			->orderBy($filters['sort'], $filters['sort_dir'])
+			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
@@ -104,7 +110,8 @@ class WalltimesController extends Controller
 	 * Create a queue walltime
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /queues/walltimes
+	 * @apiUri    /api/queues/walltimes
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "queueid",
 	 *      "description":   "The ID of owning queue",
@@ -153,8 +160,9 @@ class WalltimesController extends Controller
 	/**
 	 * Read a queue walltime
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /queues/walltimes/{id}
+	 * @apiMethod GET
+	 * @apiUri    /api/queues/walltimes/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue walltime",
@@ -176,7 +184,8 @@ class WalltimesController extends Controller
 	 * Update a queue walltime
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /queues/walltimes/{id}
+	 * @apiUri    /api/queues/walltimes/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue walltime",
@@ -221,7 +230,8 @@ class WalltimesController extends Controller
 	 * Delete a queue walltime
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /queues/walltimes/{id}
+	 * @apiUri    /api/queues/walltimes/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue walltime",

@@ -108,6 +108,9 @@ app('pathway')
 				<th scope="col" class="priority-4 text-right">
 					{{ trans('resources::assets.subresources') }}
 				</th>
+				<th scope="col">
+					{!! Html::grid('sort', trans('global.ordering'), 'display', $filters['order_dir'], $filters['order']) !!}
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -175,6 +178,21 @@ app('pathway')
 					<a href="{{ route('admin.resources.subresources', ['resource' => $row->id]) }}">
 						{{ $row->children_count }}
 					</a>
+				</td>
+				<td class="order">
+					<?php /*$orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
+					<?php if ($canChange): ?>
+
+							<span>{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.menus.items.orderup', ['id' => $row->id])) !!}</span>
+							<span>{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), isset($ordering[$row->parent_id][$orderkey + 1]), route('admin.menus.items.orderdown', ['id' => $row->id])) !!}</span>
+
+						<?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
+						<input type="text" name="order[]" size="5" value="<?php echo $orderkey + 1;?>" <?php echo $disabled ?> class="text-area-order" />
+						<?php $originalOrders[] = $orderkey + 1; ?>
+					<?php else : ?>
+						<?php echo $orderkey + 1;?>
+					<?php endif;*/ ?>
+					{{ $row->display }}
 				</td>
 			</tr>
 		@endforeach

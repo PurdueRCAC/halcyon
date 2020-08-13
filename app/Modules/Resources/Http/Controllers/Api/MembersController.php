@@ -9,14 +9,20 @@ use App\Modules\Resources\Entities\Asset;
 use App\Modules\Resources\Http\Resources\AssetResourceCollection;
 use App\Modules\Resources\Http\Resources\AssetResource;
 
+/**
+ * Members
+ *
+ * @apiUri    /api/resources/members
+ */
 class MembersController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /resources/members
+	 * @apiUri    /api/resources/members
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
 	 * 		"type":          "integer",
@@ -24,6 +30,7 @@ class MembersController extends Controller
 	 * 		"default":       25
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"type":          "integer",
@@ -31,13 +38,15 @@ class MembersController extends Controller
 	 * 		"default":       0
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to order results by.",
 	 * 		"type":          "string",
@@ -46,6 +55,7 @@ class MembersController extends Controller
 	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to order results by.",
 	 * 		"type":          "string",
@@ -112,13 +122,14 @@ class MembersController extends Controller
 	 * Create a resource
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /resources
+	 * @apiUri    /api/resources/members
 	 * @apiParameter {
+	 *      "in":            "body",
 	 *      "name":          "name",
 	 *      "description":   "The name of the resource type",
 	 *      "type":          "string",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @return Response
 	 */
@@ -158,14 +169,15 @@ class MembersController extends Controller
 	/**
 	 * Read a resource
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /resources/members/{id}
+	 * @apiMethod GET
+	 * @apiUri    /api/resources/members/{id}
 	 * @apiParameter {
+	 *      "in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the resource type",
 	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @return  Response
 	 */
@@ -207,20 +219,22 @@ class MembersController extends Controller
 	 * Update a resource
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /resources/{id}
+	 * @apiUri    /api/resources/members/{id}
 	 * @apiParameter {
+	 *      "in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the resource type",
 	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @apiParameter {
+	 *      "in":            "body",
 	 *      "name":          "name",
 	 *      "description":   "The name of the resource type",
 	 *      "type":          "string",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @return  Response
 	 */
@@ -255,13 +269,14 @@ class MembersController extends Controller
 	 * Delete a resource
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /resources/{id}
+	 * @apiUri    /api/resources/members/{id}
 	 * @apiParameter {
+	 *      "in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the resource type",
 	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @return  Response
 	 */

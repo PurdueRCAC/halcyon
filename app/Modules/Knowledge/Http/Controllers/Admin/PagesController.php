@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Knowledge\Models\Page;
+use App\Modules\Knowledge\Models\Association;
 use App\Modules\Knowledge\Models\Associations;
 
 class PagesController extends Controller
@@ -31,9 +32,19 @@ class PagesController extends Controller
 		);
 		//$filters['start'] = ($filters['limit'] * $filters['page']) - $filters['limit'];
 
+		$refresh = false;
 		foreach ($filters as $key => $default)
 		{
+			if (!$refresh && $key != 'page')
+			{
+				$refresh = (session()->get($key, $default) != $request->input('search', $default));
+			}
 			$filters[$key] = $request->state('kb.filter_' . $key, $key, $default);
+		}
+
+		if ($refresh)
+		{
+			$filters['page'] = 1;
 		}
 
 		if (!in_array($filters['order'], array_keys((new Page)->getAttributes())))
@@ -56,7 +67,7 @@ class PagesController extends Controller
 
 		if ($filters['search'])
 		{
-			$query->where(function($query) use ($filters)
+			$query->where(function($query) use ($filters, $p)
 			{
 				$query->where($p . '.title', 'like', '%' . $filters['search'] . '%')
 					->orWhere($p . '.content', 'like', '%' . $filters['search'] . '%');
@@ -165,7 +176,8 @@ class PagesController extends Controller
 
 		return view('knowledge::admin.pages.edit', [
 			'row'     => $row,
-			'tree' => $parents
+			'tree' => $parents,
+			'page' => $row->page,
 		]);
 	}
 
@@ -193,7 +205,7 @@ class PagesController extends Controller
 		$row->page_id = $request->input('fields.page_id');
 		$row->parent_id = $parent_id;
 
-		$page = $request->page;
+		$page = Page::find($row->page_id);
 		if (!$row->page_id)
 		{
 			$page = new Page;
@@ -203,8 +215,8 @@ class PagesController extends Controller
 		$page->alias = $request->input('page.alias');
 		$page->alias = $page->alias ?: $page->title;
 		$page->content = $request->input('page.content');
-		$page->snippet = $request->input('page.snippet', 0);
-		$page->params = json_encode($request->input('params', []));
+		//$page->snippet = $request->input('page.snippet', 0);
+		//$page->params = json_encode($request->input('params', []));
 
 		if (!$page->save())
 		{
@@ -212,6 +224,9 @@ class PagesController extends Controller
 
 			return redirect()->back()->withError($error);
 		}
+
+		$row->page_id = $page->id;
+		$row->path = trim($row->parent->path . '/' . $page->alias, '/');
 
 		if (!$row->save())
 		{
@@ -229,10 +244,10 @@ class PagesController extends Controller
 		}
 
 		// Rebuild the paths of the entry's path
-		if (!$row->rebuildPath())
+		/*if (!$row->rebuildPath())
 		{
 			return redirect()->back()->withError($row->getError());
-		}
+		}*/
 
 		// Rebuild the paths of the entry's children
 		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
@@ -240,7 +255,40 @@ class PagesController extends Controller
 			return redirect()->back()->withError($row->getError());
 		}
 
-		return redirect(route('admin.pages.index'))->withSuccess(trans('messages.update success'));
+		$assoc = Association::query()
+			->where('parent_id', '=', $row->parent->page_id)
+			->where('child_id', '=', $page->id)
+			->get()
+			->first();
+
+		if (!$assoc)
+		{
+			$assoc = new Association;
+			$assoc->parent_id = $row->parent->page_id;
+			$assoc->child_id = $page->id;
+			$assoc->save();
+		}
+
+		return redirect(route('admin.knowledge.index'))->withSuccess(trans('messages.update success'));
+	}
+
+	public function rebuild()
+	{
+		$row = Associations::findOrFail(1);
+
+		// Rebuild the paths of the entry's path
+		/*if (!$row->rebuildPath())
+		{
+			return redirect()->back()->withError($row->getError());
+		}*/
+
+		// Rebuild the paths of the entry's children
+		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
+		{
+			return redirect()->back()->withError($row->getError());
+		}
+
+		return redirect(route('admin.knowledge.index'))->withSuccess(trans('messages.update success'));
 	}
 
 	/**

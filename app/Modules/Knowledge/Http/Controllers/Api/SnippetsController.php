@@ -9,7 +9,12 @@ use App\Modules\Knowledge\Models\Comment;
 use App\Modules\Knowledge\Http\Resources\CommentResource;
 use Carbon\Carbon;
 
-class CommentsController extends Controller
+/**
+ * Snippets
+ *
+ * @apiUri    /api/knowledge/snippets
+ */
+class SnippetsController extends Controller
 {
 	/**
 	 * Display a listing of the resource.

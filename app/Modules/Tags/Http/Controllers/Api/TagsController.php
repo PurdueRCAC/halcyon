@@ -9,14 +9,20 @@ use App\Modules\Tags\Models\Tag;
 use App\Modules\Tags\Http\Resources\TagsResourceCollection;
 use App\Modules\Tags\Http\Resources\TagsResource;
 
+/**
+ * Tags
+ *
+ * @apiUri    /api/tags
+ */
 class TagsController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /tags
+	 * @apiUri    /api/tags
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
@@ -24,6 +30,7 @@ class TagsController extends Controller
 	 * 		"default":       25
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"type":          "integer",
@@ -31,6 +38,7 @@ class TagsController extends Controller
 	 * 		"default":       0
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "state",
 	 * 		"description":   "Tag state.",
 	 * 		"type":          "string",
@@ -39,13 +47,15 @@ class TagsController extends Controller
 	 * 		"allowedValues": "active, trashed"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"type":          "string",
@@ -54,6 +64,7 @@ class TagsController extends Controller
 	 * 		"allowedValues": "id, name, slug, created_at"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
 	 * 		"type":          "string",
@@ -119,15 +130,17 @@ class TagsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /tags
+	 * @apiUri    /api/tags
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Tag to be created.",
 	 * 		"type":          "string",
 	 * 		"required":      true,
-	 * 		"default":       ""
+	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "description",
 	 * 		"description":   "Longer description of a tag",
 	 * 		"type":          "string",
@@ -135,6 +148,7 @@ class TagsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "namespace",
 	 * 		"description":   "Namespace for tag",
 	 * 		"type":          "string",
@@ -158,8 +172,9 @@ class TagsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /tags/{id}
+	 * @apiUri    /api/tags/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
 	 * 		"type":          "integer",
@@ -179,8 +194,9 @@ class TagsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /tags/{id}
+	 * @apiUri    /api/tags/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
 	 * 		"type":          "integer",
@@ -188,6 +204,7 @@ class TagsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Tag text",
 	 * 		"type":          "string",
@@ -195,6 +212,7 @@ class TagsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "slug",
 	 * 		"description":   "Normalized text (alpha-numeric, no punctuation)",
 	 * 		"type":          "string",
@@ -202,6 +220,7 @@ class TagsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "description",
 	 * 		"description":   "Longer description of a tag",
 	 * 		"type":          "string",
@@ -209,6 +228,7 @@ class TagsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "namespace",
 	 * 		"description":   "Namespace for tag",
 	 * 		"type":          "string",
@@ -216,6 +236,7 @@ class TagsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "substitutes",
 	 * 		"description":   "Comma-separated list of aliases or alternatives",
 	 * 		"type":          "string",
@@ -248,8 +269,9 @@ class TagsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /tags/{id}
+	 * @apiUri    /api/tags/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
 	 * 		"type":          "integer",

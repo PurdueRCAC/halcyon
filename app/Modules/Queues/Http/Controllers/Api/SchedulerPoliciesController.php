@@ -9,13 +9,18 @@ use App\Modules\Queues\Models\SchedulerPolicy;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/**
+ * Scheduler Policies
+ *
+ * @apiUri    /api/queues/schedulerpolicies
+ */
 class SchedulerPoliciesController extends Controller
 {
 	/**
 	 * Display a listing of queue schedulers
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /queues/schedulerpolicies
+	 * @apiUri    /api/queues/schedulerpolicies
 	 * @apiParameter {
 	 *      "name":          "limit",
 	 *      "description":   "Number of result to return.",
@@ -91,7 +96,7 @@ class SchedulerPoliciesController extends Controller
 	 * Create a queue scheduler policy
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /queues/schedulerpolicies
+	 * @apiUri    /api/queues/schedulerpolicies
 	 * @apiParameter {
 	 *      "name":          "name",
 	 *      "description":   "The policy name",
@@ -116,8 +121,8 @@ class SchedulerPoliciesController extends Controller
 	/**
 	 * Read a queue scheduler policy
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /queues/schedulerpolicies/{id}
+	 * @apiMethod GET
+	 * @apiUri    /api/queues/schedulerpolicies/{id}
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the scheduler policy",
@@ -139,7 +144,7 @@ class SchedulerPoliciesController extends Controller
 	 * Update a queue scheduler policy
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /queues/schedulerpolicies/{id}
+	 * @apiUri    /api/queues/schedulerpolicies/{id}
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the scheduler policy",
@@ -175,7 +180,7 @@ class SchedulerPoliciesController extends Controller
 	 * Delete a queue scheduler policy
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /queues/schedulerpolicies/{id}
+	 * @apiUri    /api/queues/schedulerpolicies/{id}
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the scheduler policy",

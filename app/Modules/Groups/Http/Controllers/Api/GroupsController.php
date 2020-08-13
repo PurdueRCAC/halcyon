@@ -12,27 +12,18 @@ use App\Modules\Groups\Http\Resources\GroupResourceCollection;
 use App\Modules\Users\Models\User;
 use Carbon\Carbon;
 
+/**
+ * Groups
+ *
+ * @apiUri    /api/groups
+ */
 class GroupsController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /groups
-	 * @apiParameter {
-	 * 		"name":          "limit",
-	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       25
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "page",
-	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       1
-	 * }
+	 * @apiUri    /api/groups
 	 * @apiParameter {
 	 * 		"name":          "owneruserid",
 	 * 		"description":   "Owner user ID",
@@ -67,6 +58,20 @@ class GroupsController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       25
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       1
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order",
@@ -182,7 +187,7 @@ class GroupsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /groups
+	 * @apiUri    /api/groups
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -310,7 +315,7 @@ class GroupsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /groups/{id}
+	 * @apiUri    /api/groups/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -331,7 +336,7 @@ class GroupsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /groups/{id}
+	 * @apiUri    /api/groups/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -466,7 +471,7 @@ class GroupsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /groups/{id}
+	 * @apiUri    /api/groups/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",

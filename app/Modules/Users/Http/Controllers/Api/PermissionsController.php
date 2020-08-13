@@ -8,11 +8,55 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Halcyon\Access\Viewlevel as Level;
 
+/**
+ * Permissions
+ *
+ * @apiUri    /api/users/permissions
+ */
 class PermissionsController extends Controller
 {
 	/**
-	 * Display a listing of articles
+	 * Display a listing of entries
 	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/users/permissions
+	 * @apiParameter {
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       25
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       1
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "datetimecreated",
+	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "desc",
+	 * 		"allowedValues": "asc, desc"
+	 * }
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -71,9 +115,38 @@ class PermissionsController extends Controller
 	}
 
 	/**
-	 * Store config changes
+	 * Create a new entry
 	 *
-	 * @param  Request $request
+	 * @apiMethod POST
+	 * @apiUri    /api/users/permissions
+	 * @apiParameter {
+	 * 		"name":          "title",
+	 * 		"description":   "Menu title",
+	 * 		"type":          "string",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "description",
+	 * 		"description":   "A description of the menu",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "client_id",
+	 * 		"description":   "Client (admin = 1|site = 0) ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "menutype",
+	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
 	 * @return Response
 	 */
 	public function update($module, Request $request)
@@ -166,8 +239,18 @@ class PermissionsController extends Controller
 	}
 
 	/**
-	 * Remove the specified entry
+	 * Delete an entry
 	 *
+	 * @apiMethod DELETE
+	 * @apiUri    /api/users/permissions/{id}
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

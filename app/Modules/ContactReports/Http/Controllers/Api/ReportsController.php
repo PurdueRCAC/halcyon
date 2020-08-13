@@ -12,11 +12,60 @@ use App\Modules\ContactReports\Http\Resources\ReportResource as ApiReportResourc
 use App\Modules\ContactReports\Http\Resources\ReportResourceCollection;
 use Carbon\Carbon;
 
+/**
+ * Contact Reports
+ *
+ * @apiUri    /api/contactreports
+ */
 class ReportsController extends Controller
 {
 	/**
-	 * Display a listing of articles
+	 * Display a listing of contact reports
 	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/contactreports
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       25
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       1
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "datetimecreated",
+	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "desc",
+	 * 		"allowedValues": "asc, desc"
+	 * }
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -24,12 +73,12 @@ class ReportsController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
-			'group'    => null,
-			'start'    => null,
-			'stop'     => null,
-			'people'   => null,
-			'resource' => null,
-			'notice'   => '*',
+			'group'     => null,
+			'start'     => null,
+			'stop'      => null,
+			'people'    => null,
+			'resource'  => null,
+			'notice'    => '*',
 			'limit'     => config('list_limit', 20),
 			'order'     => Report::$orderBy,
 			'order_dir' => Report::$orderDir,
@@ -112,36 +161,39 @@ class ReportsController extends Controller
 			->orderBy($cr . '.' . $filters['order'], $filters['order_dir'])
 			->paginate($filters['limit']);
 
-		/*$rows->each(function ($item, $key)
-		{
-			$row->url = route('site.contactreports.show', ['id' => $row->id]);
-			//$row->formatteddate = $row->formatDate($row->getOriginal('datetimenews'), $row->getOriginal('datetimenewsend'));
-			$row->formattedreport = $row->formattedReport();
-			$row->comments;
-			$row->users;
-			$row->resources;
-			$row->canEdit   = false;
-			$row->canDelete = false;
-
-			if (auth()->user())
-			{
-				if (auth()->user()->can('edit contactreports'))
-				{
-					$row->canEdit   = true;
-				}
-				if (auth()->user()->can('delete contactreports'))
-				{
-					$row->canDelete = true;
-				}
-			}
-		});*/
-
-		return new ReportResourceCollection($rows); //$rows;
+		return new ReportResourceCollection($rows);
 	}
 
 	/**
-	 * Store a newly created entry
+	 * Create a contact report
 	 *
+	 * @apiMethod POST
+	 * @apiUri    /api/contactreports
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimecontact",
+	 * 		"description":   "Timestamp (YYYY-MM-DD or YYYY-MM-DD hh:mm:ss) of the contact",
+	 * 		"type":          "string",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "groupid",
+	 * 		"description":   "ID of the associated group",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "userid",
+	 * 		"description":   "ID of the user creating the entry",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
 	 * @param   Request  $request
 	 * @return  Response
 	 */
@@ -226,39 +278,23 @@ class ReportsController extends Controller
 
 		$row->errors = $errors;
 
-		/*$row->formattedreport = $row->formattedReport();
-		$row->comments;
-		$row->users;
-		$row->resources;
-
-		$row->url = route('site.contactreports.show', ['id' => $row->id]);
-
-		$can = array(
-			'edit'   => false,
-			'delete' => false,
-		);
-
-		if (auth()->user())
-		{
-			if (auth()->user()->can('edit contactreports'))
-			{
-				$can['edit'] = true;
-			}
-			if (auth()->user()->can('delete contactreports'))
-			{
-				$can['delete'] = true;
-			}
-		}
-
-		$row->can = $can;*/
-
 		return new ApiReportResource($row);
 	}
 
 	/**
-	 * Retrieve a specified entry
+	 * Parse submitted text to see the final result
 	 *
-	 * @param   Request $request
+	 * @apiMethod POST
+	 * @apiUri    /api/contactreports/preview
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "body",
+	 * 		"description":   "Unformatted text",
+	 * 		"type":          "string",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function preview(Request $request)
@@ -276,10 +312,20 @@ class ReportsController extends Controller
 	}
 
 	/**
-	 * Retrieve a specified entry
+	 * Retrieve a contact report
 	 *
-	 * @param   Request $request
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/contactreports/{id}
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param  integer  $id
+	 * @return Response
 	 */
 	public function read($id)
 	{
@@ -289,9 +335,37 @@ class ReportsController extends Controller
 	}
 
 	/**
-	 * Report the specified entry
+	 * Update a contact report
 	 *
-	 * @param   Request $request
+	 * @apiMethod PUT
+	 * @apiUri    /api/contactreports/{id}
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimecontact",
+	 * 		"description":   "Timestamp (YYYY-MM-DD or YYYY-MM-DD hh:mm:ss) of the contact",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "groupid",
+	 * 		"description":   "ID of the associated group",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @param   Request  $request
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -501,8 +575,20 @@ class ReportsController extends Controller
 	}
 
 	/**
-	 * Remove the specified entry
+	 * Delete a contact report
 	 *
+	 * @apiMethod DELETE
+	 * @apiUri    /api/contactreports/{id}
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

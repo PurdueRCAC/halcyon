@@ -15,13 +15,19 @@ use App\Modules\Queues\Http\Resources\UserRequestResourceCollection;
 //use Illuminate\Http\Resources\Json\JsonResource;
 //use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/**
+ * Queue User Requests
+ *
+ * @apiUri    /api/queues/requests
+ */
 class UserRequestsController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /queues/requests
+	 * @apiUri    /api/queues/requests
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
@@ -137,7 +143,8 @@ class UserRequestsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /queues/requests
+	 * @apiUri    /api/queues/requests
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -340,7 +347,8 @@ class UserRequestsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /queues/requests/{id}
+	 * @apiUri    /api/queues/requests/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -362,7 +370,8 @@ class UserRequestsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /queues/requests/{id}
+	 * @apiUri    /api/queues/requests/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -463,7 +472,8 @@ class UserRequestsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /queues/requests/{id}
+	 * @apiUri    /api/queues/requests/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",

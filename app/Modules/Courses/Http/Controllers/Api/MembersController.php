@@ -9,6 +9,11 @@ use App\Modules\Courses\Models\Member;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * Account Members
+ *
+ * @apiUri    /api/courses/members
+ */
 class MembersController extends Controller
 {
 	/**
@@ -16,6 +21,41 @@ class MembersController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /courses/members
+	 * @apiParameter {
+	 * 		"name":          "classaccountid",
+	 * 		"description":   "Class account ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "membertype",
+	 * 		"description":   "Member type ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "notice",
+	 * 		"description":   "Notice status",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
@@ -29,41 +69,6 @@ class MembersController extends Controller
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       1
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "owneruserid",
-	 * 		"description":   "Owner user ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       ""
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "search",
-	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       ""
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order",
@@ -139,44 +144,44 @@ class MembersController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /courses/members
 	 * @apiParameter {
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
+	 * 		"name":          "classaccountid",
+	 * 		"description":   "Class account ID",
 	 * 		"type":          "integer",
 	 * 		"required":      true,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "name",
-	 * 		"description":   "Group name",
-	 * 		"type":          "string",
+	 * 		"name":          "membertype",
+	 * 		"description":   "Member type ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
+	 * 		"type":          "integer",
 	 * 		"required":      true,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Datetime (YYYY-MM-DD hh:mm:ss) user enrollment starts",
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Datetime (YYYY-MM-DD hh:mm:ss) user enrollment stops",
 	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "notice",
+	 * 		"description":   "Notice state",
+	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       null
 	 * }
@@ -241,7 +246,7 @@ class MembersController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /courses/{id}
+	 * @apiUri    /courses/members/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -250,37 +255,44 @@ class MembersController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "name",
-	 * 		"description":   "Group name",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
+	 * 		"name":          "classaccountid",
+	 * 		"description":   "Class account ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
+	 * 		"name":          "membertype",
+	 * 		"description":   "Member type ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Datetime (YYYY-MM-DD hh:mm:ss) user enrollment starts",
 	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Datetime (YYYY-MM-DD hh:mm:ss) user enrollment stops",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "notice",
+	 * 		"description":   "Notice state",
+	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       null
 	 * }
@@ -293,6 +305,9 @@ class MembersController extends Controller
 			'classaccountid' => 'nullable|integer',
 			'userid' => 'nullable|integer',
 			'membertype' => 'nullable|integer',
+			'notice' => 'nullable|integer',
+			'datetimestart' => 'nullable|date',
+			'datetimestop' => 'nullable|date',
 		]);
 
 		$row = Member::findOrFail($id);
@@ -324,7 +339,7 @@ class MembersController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /courses/{id}
+	 * @apiUri    /courses/members/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",

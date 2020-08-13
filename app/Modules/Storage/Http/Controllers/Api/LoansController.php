@@ -9,6 +9,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Storage\Models\Loan;
 
+/**
+ * Loans
+ *
+ * @apiUri    /api/storage/loans
+ */
 class LoansController extends Controller
 {
 	/**

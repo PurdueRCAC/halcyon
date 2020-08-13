@@ -9,13 +9,63 @@ use App\Modules\Menus\Models\Type;
 use App\Modules\Menus\Models\Item;
 use App\Halcyon\Access\Viewlevel;
 
+/**
+ * Menus
+ *
+ * @apiUri    /api/menus
+ */
 class MenusController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of entries
 	 *
-	 * @param   Request $request
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/menus
+	 * @apiParameter {
+	 * 		"name":          "client_id",
+	 * 		"description":   "Client (admin = 1|site = 0) ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       25
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       1
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "datetimecreated",
+	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "desc",
+	 * 		"allowedValues": "asc, desc"
+	 * }
+	 * @return Response
 	 */
 	public function index(Request $request)
 	{
@@ -70,10 +120,39 @@ class MenusController extends Controller
 	}
 
 	/**
-	 * Show the form for creating a new resource.
+	 * Create a new entry
 	 *
-	 * @param   Request $request
-	 * @return  Response
+	 * @apiMethod POST
+	 * @apiUri    /api/menus
+	 * @apiParameter {
+	 * 		"name":          "title",
+	 * 		"description":   "Menu title",
+	 * 		"type":          "string",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "description",
+	 * 		"description":   "A description of the menu",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "client_id",
+	 * 		"description":   "Client (admin = 1|site = 0) ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "menutype",
+	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
+	 * @return Response
 	 */
 	public function create(Request $request)
 	{
@@ -93,10 +172,18 @@ class MenusController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Retrieve an entry
 	 *
-	 * @param   integer $id
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/menus/{id}
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @return Response
 	 */
 	public function read($id)
 	{
@@ -106,10 +193,46 @@ class MenusController extends Controller
 	}
 
 	/**
-	 * Article the specified entry
+	 * Update an entry
 	 *
+	 * @apiMethod PUT
+	 * @apiUri    /api/menus/{id}
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "title",
+	 * 		"description":   "Menu title",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "description",
+	 * 		"description":   "A description of the menu",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "client_id",
+	 * 		"description":   "Client (admin = 1|site = 0) ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "menutype",
+	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
 	 * @param   Request $request
-	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -126,9 +249,18 @@ class MenusController extends Controller
 	}
 
 	/**
-	 * Remove the specified entry
+	 * Delete an entry
 	 *
-	 * @param   integer $id
+	 * @apiMethod DELETE
+	 * @apiUri    /api/menus/{id}
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)
@@ -137,7 +269,7 @@ class MenusController extends Controller
 
 		if (!$row->delete())
 		{
-			throw new \Exception(trans('global.messages.delete failed', ['id' => $id]), 409);
+			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
 		}
 
 		return response()->json(null, 204);

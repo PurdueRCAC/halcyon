@@ -8,13 +8,18 @@ use Illuminate\Routing\Controller;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
 
+/**
+ * Members
+ *
+ * @apiUri    /api/groups/members
+ */
 class MembersController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /groups/members
+	 * @apiUri    /api/groups/members
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
@@ -151,7 +156,7 @@ class MembersController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /groups/members
+	 * @apiUri    /api/groups/members
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -233,7 +238,7 @@ class MembersController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /groups/members/{id}
+	 * @apiUri    /api/groups/members/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -256,7 +261,7 @@ class MembersController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /groups/{id}
+	 * @apiUri    /api/groups/members/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -325,7 +330,7 @@ class MembersController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /groups/{id}
+	 * @apiUri    /api/groups/members/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",

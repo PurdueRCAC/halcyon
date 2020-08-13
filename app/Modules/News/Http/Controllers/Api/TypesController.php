@@ -8,11 +8,100 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\News\Models\Type;
 
+/**
+ * Types
+ *
+ * @apiUri    /api/news/types
+ */
 class TypesController extends Controller
 {
 	/**
-	 * Display a listing of articles
+	 * Display a listing of news article types
 	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/news/types
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "tagresources",
+	 * 		"description":   "Filter by types that allow articles to tag resources",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "location",
+	 * 		"description":   "Filter by types that allow articles to set location",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "location",
+	 * 		"description":   "Filter by types that allow articles to set location",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "future",
+	 * 		"description":   "Filter by types that allow articles to set future",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "ongoing",
+	 * 		"description":   "Filter by types that allow articles to set ongoing",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       25
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       1
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "datetimecreated",
+	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "desc",
+	 * 		"allowedValues": "asc, desc"
+	 * }
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -88,15 +177,67 @@ class TypesController extends Controller
 	}
 
 	/**
-	 * Store a newly created entry
+	 * Create a news article type
 	 *
+	 * @apiMethod POST
+	 * @apiUri    /api/news/types
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "comment",
+	 * 		"description":   "The comment being made",
+	 * 		"type":          "string",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "name",
+	 * 		"description":   "The name of the type",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "tagresources",
+	 * 		"description":   "Allow articles to tag resources",
+	 * 		"type":          "boolean",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "url",
+	 * 		"description":   "A URL associated with the news article",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiResponse {
+	 * 		"id":            "1",
+	 * 		"name":          "Examples",
+	 * 		"tagresources":  0,
+	 * 		"tagusers":      1,
+	 * 		"location":      1,
+	 * 		"future":        1,
+	 * 		"calendar":      1,
+	 * 		"url":           "https://example.com"
+	 * }
 	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function create(Request $request)
 	{
 		$request->validate([
-			'name' => 'required'
+			'name' => 'required|string|max:32',
+			'tagresources' => 'nullable|boolean',
+			'location' => 'nullable|boolean',
+			'future' => 'nullable|boolean',
+			'ongoing' => 'nullable|boolean',
+			'tagusers' => 'nullable|boolean',
+			'calendar' => 'nullable|boolean',
+			'url' => 'nullable|url',
 		]);
 
 		$row = new Type($request->all());
@@ -112,10 +253,20 @@ class TypesController extends Controller
 	}
 
 	/**
-	 * Retrieve a specified entry
+	 * Read a news article type
 	 *
-	 * @param   Request $request
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/news/types/{id}
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param  integer  $id
+	 * @return Response
 	 */
 	public function read($id)
 	{
@@ -127,15 +278,50 @@ class TypesController extends Controller
 	}
 
 	/**
-	 * Type the specified entry
+	 * Update a news article type
 	 *
-	 * @param   Request $request
+	 * @apiMethod PUT
+	 * @apiUri    /api/news/types/{id}
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "name",
+	 * 		"description":   "The name of the type",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "url",
+	 * 		"description":   "A URL associated with the news article",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @param   Request  $request
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'name' => 'required'
+			'name' => 'nullable|string|max:32',
+			'tagresources' => 'nullable|boolean',
+			'location' => 'nullable|boolean',
+			'future' => 'nullable|boolean',
+			'ongoing' => 'nullable|boolean',
+			'tagusers' => 'nullable|boolean',
+			'calendar' => 'nullable|boolean',
+			'url' => 'nullable|url',
 		]);
 
 		$row = Type::findOrFail($id);
@@ -152,8 +338,20 @@ class TypesController extends Controller
 	}
 
 	/**
-	 * Remove the specified entry
+	 * Delete a news article type
 	 *
+	 * @apiMethod DELETE
+	 * @apiUri    /api/news/types/{id}
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

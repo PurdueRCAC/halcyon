@@ -13,6 +13,11 @@ use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Groups\Models\UnixGroup;
 use App\Modules\Users\Models\User;
 
+/**
+ * Quotas
+ *
+ * @apiUri    /api/storage/quotas
+ */
 class QuotasController extends Controller
 {
 	/**

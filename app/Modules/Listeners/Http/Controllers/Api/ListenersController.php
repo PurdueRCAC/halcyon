@@ -11,10 +11,62 @@ use App\Modules\Listeners\Models\Menu;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Access\Viewlevel;
 
+/**
+ * Listeners
+ *
+ * @apiUri    /api/listeners
+ */
 class ListenersController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of entries
+	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/listeners
+	 * @apiParameter {
+	 * 		"name":          "state",
+	 * 		"description":   "Listener enabled/disabled state",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "published"
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       25
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       1
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "datetimecreated",
+	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "desc",
+	 * 		"allowedValues": "asc, desc"
+	 * }
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -211,10 +263,53 @@ class ListenersController extends Controller
 	}
 
 	/**
-	 * Store a newly created entry
+	 * Create a new entry
 	 *
-	 * @param   Request  $request
-	 * @return  Response
+	 * @apiMethod POST
+	 * @apiUri    /api/listeners
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "name",
+	 * 		"description":   "Group name",
+	 * 		"type":          "string",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "unixgroup",
+	 * 		"description":   "Unix group name",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "unixid",
+	 * 		"description":   "Unix ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "deptnumber",
+	 * 		"description":   "Organization department ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "githuborgname",
+	 * 		"description":   "Github organization name",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @return Response
 	 */
 	public function create(Request $request)
 	{
@@ -233,10 +328,18 @@ class ListenersController extends Controller
 	}
 
 	/**
-	 * Retrieve a specified entry
+	 * Retrieve an entry
 	 *
-	 * @param   Request $request
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/listeners/{id}
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @return Response
 	 */
 	public function read($id)
 	{
@@ -261,8 +364,52 @@ class ListenersController extends Controller
 	}
 
 	/**
-	 * Article the specified entry
+	 * Update an entry
 	 *
+	 * @apiMethod PUT
+	 * @apiUri    /api/listeners/{id}
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "title",
+	 * 		"description":   "Listener title",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "unixgroup",
+	 * 		"description":   "Unix group name",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "unixid",
+	 * 		"description":   "Unix ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "deptnumber",
+	 * 		"description":   "Organization department ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "githuborgname",
+	 * 		"description":   "Github organization name",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
 	 * @param   Request $request
 	 * @return  Response
 	 */
@@ -285,11 +432,21 @@ class ListenersController extends Controller
 	}
 
 	/**
-	 * Remove the specified entry
+	 * Delete an entry
 	 *
+	 * @apiMethod DELETE
+	 * @apiUri    /api/listeners/{id}
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function destroy($id)
+	public function delete($id)
 	{
 		$row = Listener::findOrFail($id);
 

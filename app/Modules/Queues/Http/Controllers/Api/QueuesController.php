@@ -15,14 +15,20 @@ use App\Modules\Queues\Models\Queue;
 use App\Modules\Resources\Entities\Child;
 use App\Modules\Resources\Entities\Asset;
 
+/**
+ * Queues
+ *
+ * @apiUri    /api/queues
+ */
 class QueuesController extends Controller
 {
 	/**
 	 * Display a listing of the queue.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /queues
+	 * @apiUri    /api/queues
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
 	 * 		"type":          "integer",
@@ -30,6 +36,7 @@ class QueuesController extends Controller
 	 * 		"default":       25
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"type":          "integer",
@@ -37,6 +44,7 @@ class QueuesController extends Controller
 	 * 		"default":       0
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"type":          "string",
@@ -44,15 +52,17 @@ class QueuesController extends Controller
 	 * 		"default":       ""
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "sort",
+	 * 		"in":            "query",
+	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 *      "default":       "created",
+	 * 		"default":       "created",
 	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "sort_dir",
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
@@ -75,8 +85,8 @@ class QueuesController extends Controller
 			'limit'    => $request->input('limit', config('list_limit', 20)),
 			//'start' => $request->input('limitstart', 0),
 			// Sorting
-			'order'     => $request->input('sort', Queue::$orderBy),
-			'order_dir' => $request->input('sort_dir', Queue::$orderDir)
+			'order'     => $request->input('order', Queue::$orderBy),
+			'order_dir' => $request->input('order_dir', Queue::$orderDir)
 		);
 
 		if (!in_array($filters['order'], ['id', 'name', 'state', 'type', 'parent']))
@@ -152,8 +162,9 @@ class QueuesController extends Controller
 	 * Create a queue
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /queues
+	 * @apiUri    /api/queues
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 *      "name":          "name",
 	 *      "description":   "The name of the queue type",
 	 *      "type":          "string",
@@ -205,9 +216,10 @@ class QueuesController extends Controller
 	/**
 	 * Read a queue
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /queues/{id}
+	 * @apiMethod GET
+	 * @apiUri    /api/queues/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue type",
 	 *      "type":          "integer",
@@ -228,8 +240,9 @@ class QueuesController extends Controller
 	 * Update a queue
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /queues/{id}
+	 * @apiUri    /api/queues/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue type",
 	 *      "type":          "integer",
@@ -237,6 +250,7 @@ class QueuesController extends Controller
 	 *      "default":       ""
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 *      "name":          "name",
 	 *      "description":   "The name of the queue type",
 	 *      "type":          "string",
@@ -278,8 +292,9 @@ class QueuesController extends Controller
 	 * Delete a queue
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /queues/{id}
+	 * @apiUri    /api/queues/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue type",
 	 *      "type":          "integer",

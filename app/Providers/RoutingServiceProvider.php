@@ -124,10 +124,15 @@ abstract class RoutingServiceProvider extends ServiceProvider
 				[
 					'namespace'  => 'Api',
 					'prefix'     => config('locale') . '/api',
+					'middleware' => ['api'],
 					//'middleware' => config('api.middleware', ['auth:api']),
 				],
 				function (Router $router) use ($api)
 				{
+					/*if ($request->is('api/*') && stristr($request->headers->get('accept'), 'text/html') !== false)
+					{
+						return App::make('App\Modules\Core\Http\Controllers\Site\DocsController')->index($request);
+					}*/
 					require $api;
 				}
 			);

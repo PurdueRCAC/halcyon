@@ -65,7 +65,7 @@ class PagesController extends Controller
 			{
 				app('pathway')->append(
 					$page->title,
-					url($page->path)
+					route('page', ['uri' => $page->path])
 				);
 			}
 		}

@@ -246,9 +246,9 @@ class Associations extends Model
 		$children = self::query()
 			->select($a . '.id', $p . '.alias')
 			->join($p, $p . '.id', $a . '.page_id')
-			->where($a . 'parent_id', '=', (int) $parentId)
-			->orderBy($a . 'parent_id', 'asc')
-			->orderBy($a . 'lft', 'asc')
+			->where($a . '.parent_id', '=', (int) $parentId)
+			->orderBy($a . '.parent_id', 'asc')
+			->orderBy($a . '.lft', 'asc')
 			->get();
 
 		// The right value of this node is the left value + 1
@@ -270,13 +270,14 @@ class Associations extends Model
 			// If there is an update failure, return false to break out of the recursion.
 			if ($rightId === false)
 			{
+				var_dump($rightId); die();
 				return false;
 			}
 		}
 
 		// We've got the left value, and now that we've processed
 		// the children of this node we also know the right value.
-		$query = DB::table($this->getTable())
+		DB::table($this->getTable())
 			->where('id', '=', (int) $parentId)
 			->update(array(
 				'lft'   => (int) $leftId,
@@ -286,10 +287,11 @@ class Associations extends Model
 			));
 
 		// If there is an update failure, return false to break out of the recursion.
-		if (!$query)
+		/*if (!$query)
 		{
+			print_r('Update failed'); die();
 			return false;
-		}
+		}*/
 
 		// Return the right value of this node + 1.
 		return $rightId + 1;
@@ -515,7 +517,7 @@ class Associations extends Model
 			}
 
 			// Get the reposition data for shifting the tree and re-inserting the node.
-			if (!$repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), $position))
+			if (!($repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), $position)))
 			{
 				$this->addError(trans('global.ERROR_MOVE_FAILED') . ': Reposition data');
 				return false;
@@ -533,7 +535,7 @@ class Associations extends Model
 				->first();
 
 			// Get the reposition data for re-inserting the node after the found root.
-			if (!$repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), 'last-child'))
+			if (!($repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), 'last-child')))
 			{
 				$this->addError(trans('global.ERROR_MOVE_FAILED') . ': Reposition data');
 				return false;

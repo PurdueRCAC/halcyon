@@ -9,13 +9,19 @@ use App\Modules\Queues\Models\Scheduler;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/**
+ * Schedulers
+ *
+ * @apiUri    /api/queues/schedulers
+ */
 class SchedulersController extends Controller
 {
 	/**
 	 * Display a listing of queue schedulers
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /queues/schedulers
+	 * @apiUri    /api/queues/schedulers
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "queuesubresourceid",
 	 *      "description":   "Filter by queue subresource ID",
@@ -59,7 +65,7 @@ class SchedulersController extends Controller
 	 *      "default":       ""
 	 * }
 	 * @apiParameter {
-	 *      "name":          "sort",
+	 *      "name":          "order",
 	 *      "description":   "Field to sort results by.",
 	 *      "type":          "string",
 	 *      "required":      false,
@@ -67,7 +73,7 @@ class SchedulersController extends Controller
 	 *      "allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
 	 * }
 	 * @apiParameter {
-	 *      "name":          "sort_dir",
+	 *      "name":          "order_dir",
 	 *      "description":   "Direction to sort results by.",
 	 *      "type":          "string",
 	 *      "required":      false,
@@ -87,13 +93,13 @@ class SchedulersController extends Controller
 			'limit'    => $request->input('limit', config('list_limit', 20)),
 			//'start' => $request->input('limitstart', 0),
 			// Sorting
-			'sort'     => $request->input('sort', 'id'),
-			'sort_dir' => $request->input('sort_dir', 'desc')
+			'order'     => $request->input('order', 'id'),
+			'order_dir' => $request->input('order_dir', 'desc')
 		);
 
-		if (!in_array($filters['sort_dir'], ['asc', 'desc']))
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['sort_dir'] = 'asc';
+			$filters['order_dir'] = 'asc';
 		}
 
 		$query = Scheduler::query();
@@ -114,7 +120,7 @@ class SchedulersController extends Controller
 		}
 
 		$rows = $query
-			->orderBy($filters['sort'], $filters['sort_dir'])
+			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
@@ -125,7 +131,8 @@ class SchedulersController extends Controller
 	 * Create a scheduler
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /queues/schedulers
+	 * @apiUri    /api/queues/schedulers
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "hostname",
 	 *      "description":   "Hostname",
@@ -205,8 +212,9 @@ class SchedulersController extends Controller
 	/**
 	 * Read a scheduler
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /queues/schedulers/{id}
+	 * @apiMethod GET
+	 * @apiUri    /api/queues/schedulers/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue walltime",
@@ -228,7 +236,8 @@ class SchedulersController extends Controller
 	 * Update a scheduler
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /queues/schedulers/{id}
+	 * @apiUri    /api/queues/schedulers/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue walltime",
@@ -273,7 +282,8 @@ class SchedulersController extends Controller
 	 * Delete a scheduler
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /queues/schedulers/{id}
+	 * @apiUri    /api/queues/schedulers/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue walltime",

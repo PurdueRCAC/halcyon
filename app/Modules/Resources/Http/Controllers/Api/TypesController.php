@@ -9,14 +9,20 @@ use App\Modules\Resources\Entities\Type;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/**
+ * Types
+ *
+ * @apiUri    /api/resources/types
+ */
 class TypesController extends Controller
 {
 	/**
 	 * Display a listing of resource types.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /resources/types
+	 * @apiUri    /api/resources/types
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "limit",
 	 *      "description":   "Number of result to return.",
 	 *      "type":          "integer",
@@ -24,6 +30,7 @@ class TypesController extends Controller
 	 *      "default":       25
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "page",
 	 *      "description":   "Number of where to start returning results.",
 	 *      "type":          "integer",
@@ -31,13 +38,15 @@ class TypesController extends Controller
 	 *      "default":       0
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "search",
 	 *      "description":   "A word or phrase to search for.",
 	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "sort",
 	 *      "description":   "Field to sort results by.",
 	 *      "type":          "string",
@@ -46,6 +55,7 @@ class TypesController extends Controller
 	 *      "allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "sort_dir",
 	 *      "description":   "Direction to sort results by.",
 	 *      "type":          "string",
@@ -97,13 +107,22 @@ class TypesController extends Controller
 	 * Create a resource type
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /resources/types
+	 * @apiUri    /api/resources/types
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 *      "name":          "name",
 	 *      "description":   "The name of the resource type",
 	 *      "type":          "string",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
+	 * }
+	 * @apiResponse {
+	 *     "data": {
+	 *         "id": 3,
+	 *         "name": "New type",
+	 *         "resources_count": 34,
+	 *         "api": "https://yourhost/api/resources/types/3"
+	 *     }
 	 * }
 	 * @return Response
 	 */
@@ -123,20 +142,29 @@ class TypesController extends Controller
 		$row->resources_count = $row->resources()->count();
 		$row->api = route('api.resources.types.read', ['id' => $row->id]);
 
-		return new JsonCollection($row);
+		return new JsonResource($row);
 	}
 
 	/**
 	 * Read a resource type
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /resources/types/{id}
+	 * @apiMethod GET
+	 * @apiUri    /api/resources/types/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the resource type",
 	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
+	 * }
+	 * @apiResponse {
+	 *     "data": {
+	 *         "id": 1,
+	 *         "name": "Compute",
+	 *         "resources_count": 34,
+	 *         "api": "https://yourhost/api/resources/types/1"
+	 *     }
 	 * }
 	 * @return  Response
 	 */
@@ -146,15 +174,16 @@ class TypesController extends Controller
 		$row->resources_count = $row->resources()->count();
 		$row->api = route('api.resources.types.read', ['id' => $row->id]);
 
-		return new JsonCollection($row);
+		return new JsonResource($row);
 	}
 
 	/**
 	 * Update a resource type
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /resources/types/{id}
+	 * @apiUri    /api/resources/types/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the resource type",
 	 *      "type":          "integer",
@@ -162,11 +191,20 @@ class TypesController extends Controller
 	 *      "default":       ""
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 *      "name":          "name",
 	 *      "description":   "The name of the resource type",
 	 *      "type":          "string",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
+	 * }
+	 * @apiResponse {
+	 *     "data": {
+	 *         "id": 3,
+	 *         "name": "Updated type",
+	 *         "resources_count": 34,
+	 *         "api": "https://yourhost/api/resources/types/3"
+	 *     }
 	 * }
 	 * @return  Response
 	 */
@@ -186,20 +224,21 @@ class TypesController extends Controller
 		$row->resources_count = $row->resources()->count();
 		$row->api = route('api.resources.types.read', ['id' => $row->id]);
 
-		return new JsonCollection($row);
+		return new JsonResource($row);
 	}
 
 	/**
 	 * Delete a resource type
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /resources/types/{id}
+	 * @apiUri    /api/resources/types/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the resource type",
 	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @return  Response
 	 */

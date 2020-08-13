@@ -9,13 +9,18 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Messages\Models\Type;
 
+/**
+ * Message Types
+ *
+ * @apiUri    /api/messages/types
+ */
 class TypesController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /messages/types
+	 * @apiUri    /api/messages/types
 	 * @apiParameter {
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
@@ -131,7 +136,7 @@ class TypesController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /messages/types
+	 * @apiUri    /api/messages/types
 	 * @apiParameter {
 	 * 		"name":          "name",
 	 * 		"description":   "Name",
@@ -186,7 +191,7 @@ class TypesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /messages/types/{id}
+	 * @apiUri    /api/messages/types/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -210,7 +215,7 @@ class TypesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /messages/types/{id}
+	 * @apiUri    /api/messages/types/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -273,7 +278,7 @@ class TypesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /messages/types/{id}
+	 * @apiUri    /api/messages/types/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",

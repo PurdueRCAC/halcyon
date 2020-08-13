@@ -9,10 +9,62 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\Menus\Models\Type;
 use App\Modules\Menus\Models\Item;
 
+/**
+ * Menu items
+ *
+ * @apiUri    /api/menus/items
+ */
 class ItemsController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of entries
+	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/menus/items
+	 * @apiParameter {
+	 * 		"name":          "state",
+	 * 		"description":   "Listener enabled/disabled state",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "published"
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       25
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       1
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "datetimecreated",
+	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "desc",
+	 * 		"allowedValues": "asc, desc"
+	 * }
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -313,7 +365,52 @@ class ItemsController extends Controller
 	}
 
 	/**
-	 * Show the form for creating a new resource.
+	 * Create a new entry
+	 *
+	 * @apiMethod POST
+	 * @apiUri    /api/menus/items
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "name",
+	 * 		"description":   "Group name",
+	 * 		"type":          "string",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "unixgroup",
+	 * 		"description":   "Unix group name",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "unixid",
+	 * 		"description":   "Unix ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "deptnumber",
+	 * 		"description":   "Organization department ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "githuborgname",
+	 * 		"description":   "Github organization name",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -341,10 +438,18 @@ class ItemsController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Retrieve an entry
 	 *
-	 * @param   integer $id
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/menus/items/{id}
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @return Response
 	 */
 	public function read($id)
 	{
@@ -373,10 +478,53 @@ class ItemsController extends Controller
 	}
 
 	/**
-	 * Article the specified entry
+	 * Update an entry
 	 *
+	 * @apiMethod PUT
+	 * @apiUri    /api/menus/items/{id}
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "title",
+	 * 		"description":   "Listener title",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "unixgroup",
+	 * 		"description":   "Unix group name",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "unixid",
+	 * 		"description":   "Unix ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "deptnumber",
+	 * 		"description":   "Organization department ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "githuborgname",
+	 * 		"description":   "Github organization name",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
 	 * @param   Request $request
-	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -404,9 +552,18 @@ class ItemsController extends Controller
 	}
 
 	/**
-	 * Remove the specified entry
+	 * Delete an entry
 	 *
-	 * @param   integer $id
+	 * @apiMethod DELETE
+	 * @apiUri    /api/menus/items/{id}
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)
@@ -424,7 +581,17 @@ class ItemsController extends Controller
 	/**
 	 * Save the order for items
 	 *
-	 * @return  void
+	 * @apiMethod POST
+	 * @apiUri    /api/menus/items/reorder
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param   Request  $request
+	 * @return  Response
 	 */
 	public function reorder(Request $request)
 	{
@@ -452,7 +619,7 @@ class ItemsController extends Controller
 		if ($return === false)
 		{
 			// Reorder failed
-			return response()->json(['message' => trans('global.messages.reorder failed', ['id' => $id])], 500);
+			return response()->json(['message' => trans('global.messages.reorder failed')], 500);
 		}
 
 		return response()->json(null, 204);

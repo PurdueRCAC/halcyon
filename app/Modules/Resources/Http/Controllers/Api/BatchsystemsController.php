@@ -9,14 +9,20 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Resources\Entities\Batchsystem;
 
+/**
+ * Batch systems
+ *
+ * @apiUri    /api/resources/batchsystems
+ */
 class BatchsystemsController extends Controller
 {
 	/**
 	 * Display a listing of batchsystems.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /resources/batchsystems
+	 * @apiUri    /api/resources/batchsystems
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "limit",
 	 *      "description":   "Number of result to return.",
 	 *      "type":          "integer",
@@ -24,6 +30,7 @@ class BatchsystemsController extends Controller
 	 *      "default":       25
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "page",
 	 *      "description":   "Number of where to start returning results.",
 	 *      "type":          "integer",
@@ -31,13 +38,15 @@ class BatchsystemsController extends Controller
 	 *      "default":       0
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "search",
 	 *      "description":   "A word or phrase to search for.",
 	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "sort",
 	 *      "description":   "Field to sort results by.",
 	 *      "type":          "string",
@@ -46,6 +55,7 @@ class BatchsystemsController extends Controller
 	 *      "allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "sort_dir",
 	 *      "description":   "Direction to sort results by.",
 	 *      "type":          "string",
@@ -97,13 +107,14 @@ class BatchsystemsController extends Controller
 	 * Create a batchsystem
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /resources/batchsystems
+	 * @apiUri    /api/resources/batchsystems
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 *      "name":          "name",
 	 *      "description":   "The name of the batchsystem",
 	 *      "type":          "string",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @return Response
 	 */
@@ -129,14 +140,15 @@ class BatchsystemsController extends Controller
 	/**
 	 * Read a batchsystem
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /resources/batchsystems/{id}
+	 * @apiMethod GET
+	 * @apiUri    /api/resources/batchsystems/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the batchsystem",
 	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @return  Response
 	 */
@@ -154,20 +166,22 @@ class BatchsystemsController extends Controller
 	 * Update a batchsystem
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /resources/batchsystems/{id}
+	 * @apiUri    /api/resources/batchsystems/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the batchsystem",
 	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 *      "name":          "name",
 	 *      "description":   "The name of the batchsystem",
 	 *      "type":          "string",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @return  Response
 	 */
@@ -194,13 +208,14 @@ class BatchsystemsController extends Controller
 	 * Delete a batchsystem
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /resources/batchsystems/{id}
+	 * @apiUri    /api/resources/batchsystems/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the batchsystem",
 	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @return  Response
 	 */

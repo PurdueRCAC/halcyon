@@ -553,13 +553,13 @@ class Page extends Model
 		foreach ($segments as $segment)
 		{
 			$child = $parent->children()
-				->where('alias', '=', $segment)
+				->where($parent->getTable() . '.alias', '=', $segment)
 				//->where('snippet', '=', 0)
 				->get()
 				->first();
 
 			if (!$child)
-			{
+			{print_r($parent->children->toArray());die();
 				return false;
 			}
 
@@ -605,7 +605,7 @@ class Page extends Model
 
 		$results = self::query()
 			->join($a, $a . '.page_id', $p . '.id')
-			->select($p . '.title', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id')
+			->select($p . '.title', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id', $a . '.path')
 			->orderBy('lft', 'asc')
 			->get();
 
@@ -739,7 +739,18 @@ class Page extends Model
 	 */
 	public function children()
 	{
+		/*$a = (new Associations)->getTable();
+		$p = $this->getTable();
+
+		// Assemble the query to find all children of this node.
+		return self::query()
+			->select($p . '.*')
+			->join($a, $a . '.page_id', $p . '.id')
+			->where($a . '.parent_id', '=', (int) $this->id)
+			->orderBy($a . '.parent_id', 'asc')
+			->orderBy($a . '.lft', 'asc');*/
 		return $this->hasManyThrough(self::class, Association::class, 'parent_id', 'id', 'id', 'child_id');
+		//return $this->hasManyThrough(self::class, Associations::class, 'parent_id', 'id', 'id', 'page_id');
 	}
 
 	/**
@@ -749,6 +760,7 @@ class Page extends Model
 	 */
 	public function parents()
 	{
-		return $this->hasManyThrough(self::class, Association::class, 'child_id', 'id', 'id', 'parent_id');
+		//return $this->hasManyThrough(self::class, Association::class, 'child_id', 'id', 'id', 'parent_id');
+		return $this->hasManyThrough(self::class, Associations::class, 'page_id', 'id', 'id', 'parent_id');
 	}
 }

@@ -10,14 +10,21 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Queues\Models\Loan;
 use Carbon\Carbon;
 
+/**
+ * Queue Loans
+ *
+ * @apiUri    /api/queues/loans
+ */
 class LoansController extends Controller
 {
 	/**
 	 * Display a listing of purchases for a queue
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /queues/loans
+	 * @apiUri    /api/queues/loans
+	 * @apiAuthorization  true
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
 	 * 		"type":          "integer",
@@ -25,6 +32,7 @@ class LoansController extends Controller
 	 * 		"default":       25
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"type":          "integer",
@@ -32,6 +40,7 @@ class LoansController extends Controller
 	 * 		"default":       0
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"type":          "string",
@@ -39,15 +48,17 @@ class LoansController extends Controller
 	 * 		"default":       ""
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "sort",
+	 * 		"in":            "query",
+	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 *      "default":       "created",
-	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
+	 * 		"default":       "datetimestart",
+	 * 		"allowedValues": "id, queueid, lenderqueueid, datetimestart, datetimestop"
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "sort_dir",
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
@@ -117,11 +128,53 @@ class LoansController extends Controller
 	 * Create a queue purchase
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /queues/loans
+	 * @apiUri    /api/queues/loans
+	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the queue type",
+	 * 		"in":            "body",
+	 *      "name":          "queueid",
+	 *      "description":   "ID of the queue being loaned to",
+	 *      "type":          "integer",
+	 *      "required":      true,
+	 *      "default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "lenderqueueid",
+	 *      "description":   "ID of the queue being loaned",
+	 *      "type":          "integer",
+	 *      "required":      true,
+	 *      "default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "datetimestart",
+	 *      "description":   "Date/time (YYYY-MM-DD hh:mm:ss) of when the loan starts",
 	 *      "type":          "string",
+	 *      "required":      true,
+	 *      "default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "datetimestop",
+	 *      "description":   "Date/time (YYYY-MM-DD hh:mm:ss) of when the loan stops",
+	 *      "type":          "string",
+	 *      "required":      false,
+	 *      "default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "nodecount",
+	 *      "description":   "Node count",
+	 *      "type":          "integer",
+	 *      "required":      true,
+	 *      "default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "corecount",
+	 *      "description":   "Core count",
+	 *      "type":          "integer",
 	 *      "required":      true,
 	 *      "default":       ""
 	 * }
@@ -206,9 +259,11 @@ class LoansController extends Controller
 	/**
 	 * Read a queue
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /queues/loans/{id}
+	 * @apiMethod GET
+	 * @apiUri    /api/queues/loans/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
+	 *      "in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue type",
 	 *      "type":          "integer",
@@ -228,8 +283,10 @@ class LoansController extends Controller
 	 * Update a queue
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /queues/loans/{id}
+	 * @apiUri    /api/queues/loans/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
+	 *      "in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue type",
 	 *      "type":          "integer",
@@ -237,10 +294,51 @@ class LoansController extends Controller
 	 *      "default":       ""
 	 * }
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the queue type",
+	 * 		"in":            "body",
+	 *      "name":          "queueid",
+	 *      "description":   "ID of the queue being loaned to",
+	 *      "type":          "integer",
+	 *      "required":      false,
+	 *      "default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "lenderqueueid",
+	 *      "description":   "ID of the queue being loaned",
+	 *      "type":          "integer",
+	 *      "required":      false,
+	 *      "default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "datetimestart",
+	 *      "description":   "Date/time (YYYY-MM-DD hh:mm:ss) of when the loan starts",
 	 *      "type":          "string",
-	 *      "required":      true,
+	 *      "required":      false,
+	 *      "default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "datetimestop",
+	 *      "description":   "Date/time (YYYY-MM-DD hh:mm:ss) of when the loan stops",
+	 *      "type":          "string",
+	 *      "required":      false,
+	 *      "default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "nodecount",
+	 *      "description":   "Node count",
+	 *      "type":          "integer",
+	 *      "required":      false,
+	 *      "default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "corecount",
+	 *      "description":   "Core count",
+	 *      "type":          "integer",
+	 *      "required":      false,
 	 *      "default":       ""
 	 * }
 	 * @return  Response
@@ -270,8 +368,10 @@ class LoansController extends Controller
 	 * Delete a queue
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /queues/loans/{id}
+	 * @apiUri    /api/queues/loans/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue type",
 	 *      "type":          "integer",

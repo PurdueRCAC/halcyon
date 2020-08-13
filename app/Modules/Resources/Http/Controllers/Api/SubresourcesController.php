@@ -10,14 +10,20 @@ use App\Modules\Resources\Entities\Subresource;
 use App\Modules\Resources\Http\Resources\SubresourceResourceCollection;
 use App\Modules\Resources\Http\Resources\SubresourceResource;
 
+/**
+ * Sub-resources
+ *
+ * @apiUri    /api/resources/subresources
+ */
 class SubresourcesController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /resources/subresources/
+	 * @apiUri    /api/resources/subresources/
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
 	 * 		"type":          "integer",
@@ -25,6 +31,7 @@ class SubresourcesController extends Controller
 	 * 		"default":       25
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"type":          "integer",
@@ -32,6 +39,7 @@ class SubresourcesController extends Controller
 	 * 		"default":       0
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"type":          "string",
@@ -39,6 +47,7 @@ class SubresourcesController extends Controller
 	 * 		"default":       ""
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "sort",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"type":          "string",
@@ -47,6 +56,7 @@ class SubresourcesController extends Controller
 	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "sort_dir",
 	 * 		"description":   "Direction to sort results by.",
 	 * 		"type":          "string",
@@ -121,13 +131,78 @@ class SubresourcesController extends Controller
 	 * Create a resource
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /resources/subresources/
+	 * @apiUri    /api/resources/subresources/
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
+	 *      "description":   "The name of the sub-resource",
 	 *      "type":          "string",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "cluster",
+	 *      "description":   "Cluster name",
+	 *      "type":          "string",
+	 *      "required":      true,
+	 *      "default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "nodecores",
+	 *      "description":   "Number of node cores",
+	 *      "type":          "integer",
+	 *      "required":      false,
+	 *      "default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "nodemem",
+	 *      "description":   "Memory per node",
+	 *      "type":          "string",
+	 *      "required":      false,
+	 *      "default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "nodegpus",
+	 *      "description":   "Number of GPUs per node",
+	 *      "type":          "integer",
+	 *      "required":      false,
+	 *      "default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "nodeattributes",
+	 *      "description":   "Node attributes",
+	 *      "type":          "string",
+	 *      "required":      false,
+	 *      "default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "description",
+	 *      "description":   "Short description of the sub-resource",
+	 *      "type":          "string",
+	 *      "required":      false,
+	 *      "default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "notice",
+	 *      "description":   "Notification status",
+	 *      "type":          "integer",
+	 *      "required":      false,
+	 *      "default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "queuestatus",
+	 *      "description":   "Queue status",
+	 *      "type":          "integer",
+	 *      "required":      false,
+	 *      "default":       0
 	 * }
 	 * @return Response
 	 */
@@ -152,9 +227,10 @@ class SubresourcesController extends Controller
 	/**
 	 * Read a resource
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /resources/subresources/{id}
+	 * @apiMethod GET
+	 * @apiUri    /api/resources/subresources/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the resource type",
 	 *      "type":          "integer",
@@ -174,20 +250,86 @@ class SubresourcesController extends Controller
 	 * Update a resource
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /resources/subresources/{id}
+	 * @apiUri    /api/resources/subresources/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the resource type",
 	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
+	 *      "description":   "The name of the sub-resource",
 	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       ""
+	 *      "required":      false,
+	 *      "default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "cluster",
+	 *      "description":   "Cluster name",
+	 *      "type":          "string",
+	 *      "required":      false,
+	 *      "default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "nodecores",
+	 *      "description":   "Number of node cores",
+	 *      "type":          "integer",
+	 *      "required":      false,
+	 *      "default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "nodemem",
+	 *      "description":   "Memory per node",
+	 *      "type":          "string",
+	 *      "required":      false,
+	 *      "default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "nodegpus",
+	 *      "description":   "Number of GPUs per node",
+	 *      "type":          "integer",
+	 *      "required":      false,
+	 *      "default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "nodeattributes",
+	 *      "description":   "Node attributes",
+	 *      "type":          "string",
+	 *      "required":      false,
+	 *      "default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "description",
+	 *      "description":   "Short description of the sub-resource",
+	 *      "type":          "string",
+	 *      "required":      false,
+	 *      "default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "notice",
+	 *      "description":   "Notification status",
+	 *      "type":          "integer",
+	 *      "required":      false,
+	 *      "default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "queuestatus",
+	 *      "description":   "Queue status",
+	 *      "type":          "integer",
+	 *      "required":      false,
+	 *      "default":       null
 	 * }
 	 * @return  Response
 	 */
@@ -237,13 +379,14 @@ class SubresourcesController extends Controller
 	 * Delete a resource
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /resources/subresources/{id}
+	 * @apiUri    /api/resources/subresources/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 *      "name":          "id",
 	 *      "description":   "The ID of the resource type",
 	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *      "default":       null
 	 * }
 	 * @return  Response
 	 */

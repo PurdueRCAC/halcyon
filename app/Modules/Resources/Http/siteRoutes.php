@@ -42,14 +42,14 @@ foreach ($types as $type)
 		'as' => 'site.resources.type.' . $type->alias,
 		'uses' => 'ResourcesController@type',
 	]);
-	$router->get($type->alias . '/{name}', [
-		'as' => 'site.resources.' . $type->alias . '.show',
-		'uses' => 'ResourcesController@show',
-	]);
 	$router->get($type->alias . '/retired', [
 		'as' => 'site.resources.' . $type->alias . '.retired',
 		'uses' => 'ResourcesController@retired',
 	]);
+	$router->get($type->alias . '/{name}', [
+		'as' => 'site.resources.' . $type->alias . '.show',
+		'uses' => 'ResourcesController@show',
+	])->where('name', '[a-z0-9\-_]+');
 }
 
 $router->get('resources', 'ResourcesController@index');

@@ -9,14 +9,20 @@ use App\Modules\Orders\Http\Resources\CategoryResource;
 use App\Modules\Orders\Http\Resources\CategoryResourceCollection;
 use Carbon\Carbon;
 
+/**
+ * Product Categories
+ *
+ * @apiUri    /api/orders/categories
+ */
 class CategoriesController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /orders/categories
+	 * @apiUri    /api/orders/categories
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "state",
 	 * 		"description":   "Order category state.",
 	 * 		"type":          "string",
@@ -25,6 +31,7 @@ class CategoriesController extends Controller
 	 * 		"allowedValues": "all, published, trashed"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "parent",
 	 * 		"description":   "Parent category ID.",
 	 * 		"type":          "integer",
@@ -50,7 +57,7 @@ class CategoriesController extends Controller
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"default":       1
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order",
@@ -140,7 +147,7 @@ class CategoriesController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /orders/categories
+	 * @apiUri    /api/orders/categories
 	 * @apiParameter {
 	 * 		"name":          "name",
 	 * 		"description":   "Category name.",
@@ -210,7 +217,7 @@ class CategoriesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /orders/categories/{id}
+	 * @apiUri    /api/orders/categories/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -232,7 +239,7 @@ class CategoriesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /orders/categories/{id}
+	 * @apiUri    /api/orders/categories/{id}
 	 * @apiParameter {
 	 * 		"name":          "name",
 	 * 		"description":   "Category name.",
@@ -306,8 +313,9 @@ class CategoriesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /orders/categories/{id}
+	 * @apiUri    /api/orders/categories/{id}
 	 * @apiParameter {
+	 * 		"id":            "query",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
 	 * 		"type":          "integer",

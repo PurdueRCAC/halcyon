@@ -1,7 +1,12 @@
 @extends('layouts.master')
 
+@section('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+@stop
+
 @section('scripts')
 <script src="{{ asset('modules/core/js/validate.js?v=' . filemtime(public_path() . '/modules/core/js/validate.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/knowledge/js/admin.js?v=' . filemtime(public_path() . '/modules/knowledge/js/admin.js')) }}"></script>
 @stop
 
@@ -52,12 +57,12 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="fields_parent_id">{{ trans('knowledge::knowledge.parent') }}:</label>
-					<select name="fields[parent_id]" id="fields_parent_id" class="form-control">
+					<label for="field-parent_id">{{ trans('knowledge::knowledge.parent') }}:</label>
+					<select name="fields[parent_id]" id="field-parent_id" class="form-control searchable-select">
 						<option value="0">{{ trans('knowledge::knowledge.parent') }}</option>
-						<?php foreach ($tree as $page): ?>
-							<?php $selected = ($page->id == $row->parent_id ? ' selected="selected"' : ''); ?>
-							<option value="{{ $page->id }}"<?php echo $selected; ?> data-path="{{ $page->path }}"><?php echo str_repeat('|&mdash; ', $page->level) . e(Illuminate\Support\Str::limit($page->title, 70)); ?></option>
+						<?php foreach ($tree as $pa): ?>
+							<?php $selected = ($pa->id == $row->parent_id ? ' selected="selected"' : ''); ?>
+							<option value="{{ $pa->id }}"<?php echo $selected; ?> data-path="{{ $pa->path }}"><?php echo str_repeat('|&mdash; ', $pa->level) . e(Illuminate\Support\Str::limit($pa->title, 70)); ?></option>
 						<?php endforeach; ?>
 					</select>
 				</div>
@@ -68,17 +73,17 @@ app('pathway')
 						<div class="input-group-prepend">
 							<div class="input-group-text">{{ route('site.knowledge.index') }}/<span id="parent-path">{{ dirname($row->path) }}</span>/</div>
 						</div>
-						<input type="text" name="page[alias]" id="field-alias" class="form-control" maxlength="250" value="{{ $row->page->alias }}" />
+						<input type="text" name="page[alias]" id="field-alias" class="form-control" maxlength="250" value="{{ $page->alias }}" />
 					</div>
 					<span class="form-text text-muted hint">{{ trans('knowledge::knowledge.path hint') }}</span>
 				</div>
 
 				<div class="form-group">
 					<label for="field-title">{{ trans('knowledge::knowledge.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="page[title]" id="field-title" class="form-control required" maxlength="250" value="{{ $row->page->title }}" />
+					<input type="text" name="page[title]" id="field-title" class="form-control required" maxlength="250" value="{{ $page->title }}" />
 				</div>
 
-				@if (!$row->page->snippet)
+				@if (!$page->snippet)
 					<div class="form-group form-check">
 						<input type="checkbox" name="page[snippet]" id="field-snippet" class="form-check-input" value="1" />
 						<label class="form-check-label" for="field-snippet">{{ trans('knowledge::knowledge.this is a snippet') }}</label>
@@ -87,12 +92,12 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="page--content">{{ trans('knowledge::knowledge.content') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					@if ($row->page->snippet)
+					@if ($page->snippet)
 						<div class="alert alert-warning">
 							{{ trans('knowledge::knowledge.warning page is reusable') }}
 						</div>
 					@endif
-					{!! editor('page[content]', $row->page->content, ['rows' => 35, 'class' => 'required']) !!}
+					{!! editor('page[content]', $page->content, ['rows' => 35, 'class' => 'required']) !!}
 				</div>
 			</fieldset>
 		</div>
@@ -119,7 +124,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-publish_up">{{ trans('knowledge::knowledge.publish up') }}:</label><br />
-					{!! Html::input('calendar', 'fields[publish_up]', Carbon\Carbon::parse($row->publish_up ? $row->publish_up : $row->page->created_at)) !!}
+					{!! Html::input('calendar', 'fields[publish_up]', Carbon\Carbon::parse($row->publish_up ? $row->publish_up : $page->created_at)) !!}
 				</div>
 
 				<div class="form-group">
@@ -140,14 +145,14 @@ app('pathway')
 					<div class="row">
 						<div class="col col-md-6 form-group">
 							<div class="form-check">
-								<input type="radio" name="params[show_title]" id="params-show_title_no" class="form-check-input" value="0"<?php if (!$row->page->options->get('show_title')) { echo ' checked="checked"'; } ?> />
+								<input type="radio" name="params[show_title]" id="params-show_title_no" class="form-check-input" value="0"<?php if (!$page->options->get('show_title')) { echo ' checked="checked"'; } ?> />
 								<label class="form-check-label" for="params-show_title_no">{{ trans('global.no') }}</label>
 							</div>
 						</div>
 
 						<div class="col col-md-6 form-group">
 							<div class="form-check">
-								<input type="radio" name="params[show_title]" id="params-show_title_yes" class="form-check-input" value="1"<?php if ($row->page->options->get('show_title')) { echo ' checked="checked"'; } ?> />
+								<input type="radio" name="params[show_title]" id="params-show_title_yes" class="form-check-input" value="1"<?php if ($page->options->get('show_title')) { echo ' checked="checked"'; } ?> />
 								<label class="form-check-label" for="params-show_title_yes">{{ trans('global.yes') }}</label>
 							</div>
 						</div>
@@ -160,14 +165,14 @@ app('pathway')
 					<div class="row">
 						<div class="col col-md-6 form-group">
 							<div class="form-check">
-								<input type="radio" name="params[show_toc]" id="params-show_toc_no" class="form-check-input" value="0"<?php if (!$row->page->options->get('show_toc')) { echo ' checked="checked"'; } ?> />
+								<input type="radio" name="params[show_toc]" id="params-show_toc_no" class="form-check-input" value="0"<?php if (!$page->options->get('show_toc')) { echo ' checked="checked"'; } ?> />
 								<label class="form-check-label" for="params-show_toc_no">{{ trans('global.no') }}</label>
 							</div>
 						</div>
 
 						<div class="col col-md-6 form-group">
 							<div class="form-check">
-								<input type="radio" name="params[show_toc]" id="params-show_toc_yes" class="form-check-input" value="1"<?php if ($row->page->options->get('show_toc')) { echo ' checked="checked"'; } ?> />
+								<input type="radio" name="params[show_toc]" id="params-show_toc_yes" class="form-check-input" value="1"<?php if ($page->options->get('show_toc')) { echo ' checked="checked"'; } ?> />
 								<label class="form-check-label" for="params-show_toc_yes">{{ trans('global.yes') }}</label>
 							</div>
 						</div>
@@ -177,16 +182,16 @@ app('pathway')
 				<!-- <div class="form-group">
 					<label for="params-show_title">{{ trans('knowledge::knowledge.show title') }}:</label><br />
 					<select class="form-control" name="params[show_title]" id="params-show_title">
-						<option value="0"<?php if (!$row->page->options->get('show_title')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
-						<option value="1"<?php if ($row->page->options->get('show_title')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
+						<option value="0"<?php if (!$page->options->get('show_title')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
+						<option value="1"<?php if ($page->options->get('show_title')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 					</select>
 				</div>
 
 				<div class="form-group">
 					<label for="params-show_toc">{{ trans('knowledge::knowledge.show toc') }}:</label><br />
 					<select class="form-control" name="params[show_toc]" id="params-show_toc">
-						<option value="0"<?php if (!$row->page->options->get('show_toc')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
-						<option value="1"<?php if ($row->page->options->get('show_toc')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
+						<option value="0"<?php if (!$page->options->get('show_toc')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
+						<option value="1"<?php if ($page->options->get('show_toc')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 					</select>
 				</div> -->
 			</fieldset>
@@ -204,7 +209,7 @@ app('pathway')
 							<tbody>
 							<?php
 							$i = 0;
-							foreach ($row->page->options->get('variables', []) as $key => $val)
+							foreach ($page->options->get('variables', []) as $key => $val)
 							{
 								?>
 								<tr id="params_variables_{{ $i }}">
@@ -269,6 +274,9 @@ app('pathway')
 			@sliders('end')
 		</div>
 	</div>
+
+	<input type="hidden" name="fields[page_id]" value="{{ $page->id }}" />
+	<input type="hidden" name="id" value="{{ $row->id }}" />
 
 	@csrf
 </form>

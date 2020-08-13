@@ -24,6 +24,11 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 		'uses' => 'PagesController@store',
 		'middleware' => 'can:create knowledge,edit knowledge',
 	]);
+	$router->get('/rebuild', [
+		'as' => 'admin.knowledge.rebuild',
+		'uses' => 'PagesController@rebuild',
+		'middleware' => 'can:edit knowledge',
+	])->where('id', '[0-9]+');
 	$router->get('/{id}', [
 		'as' => 'admin.knowledge.edit',
 		'uses' => 'PagesController@edit',

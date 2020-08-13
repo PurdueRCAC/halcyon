@@ -19,12 +19,24 @@ use App\Modules\Media\Events\DirectoryDeleting;
 use App\Modules\Media\Events\DirectoryDeleted;
 
 /**
- * Media controller
+ * Folder
+ *
+ * @apiUri    /api/media/folder
  */
 class FolderController extends Controller
 {
 	/**
 	 * Display a listing of files
+	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/media
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
 	 * @return Response
 	 */
 	public function read(Request $request)
@@ -45,7 +57,16 @@ class FolderController extends Controller
 	/**
 	 * Create a directory
 	 *
-	 * @return  void
+	 * @apiMethod POST
+	 * @apiUri    /api/media
+	 * @apiParameter {
+	 * 		"name":          "name",
+	 * 		"description":   "Group name",
+	 * 		"type":          "string",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @return Response
 	 */
 	public function create(Request $request)
 	{
@@ -135,7 +156,16 @@ class FolderController extends Controller
 	/**
 	 * Delete a file
 	 *
-	 * @return  void
+	 * @apiMethod DELETE
+	 * @apiUri    /api/media/{file}
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @return  Response
 	 */
 	public function delete(Request $request)
 	{

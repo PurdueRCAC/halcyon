@@ -1,5 +1,6 @@
 <?php
 return [
+	'module name' => 'History Manager',
 	'history manager' => 'History Manager',
 	'id' => 'ID',
 	'item id' => 'Item ID',

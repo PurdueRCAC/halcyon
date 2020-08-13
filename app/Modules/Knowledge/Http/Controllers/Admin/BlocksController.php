@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Knowledge\Models\Page;
-use App\Modules\Knowledge\Models\Association;
+use App\Modules\Knowledge\Models\Associations;
 
 class BlocksController extends Controller
 {
@@ -28,11 +28,20 @@ class BlocksController extends Controller
 			'order'     => Page::$orderBy,
 			'order_dir' => Page::$orderDir,
 		);
-		//$filters['start'] = ($filters['limit'] * $filters['page']) - $filters['limit'];
 
+		$refresh = false;
 		foreach ($filters as $key => $default)
 		{
-			$filters[$key] = $request->state('kb.filter_' . $key, $key, $default);
+			if (!$refresh && $key != 'page')
+			{
+				$refresh = (session()->get($key, $default) != $request->input('search', $default));
+			}
+			$filters[$key] = $request->state('kb.snippets.filter_' . $key, $key, $default);
+		}
+
+		if ($refresh)
+		{
+			$filters['page'] = 1;
 		}
 
 		if (!in_array($filters['order'], array_keys((new Page)->getAttributes())))
@@ -48,11 +57,11 @@ class BlocksController extends Controller
 		$query = Page::query()->where('snippet', '=', 1);
 
 		$p = (new Page)->getTable();
-		$a = (new Association)->getTable();
+		$a = (new Associations)->getTable();
 
 		if ($filters['search'])
 		{
-			$query->where(function($query) use ($filters)
+			$query->where(function($query) use ($filters, $p)
 			{
 				$query->where($p . '.title', 'like', '%' . $filters['search'] . '%')
 					->orWhere($p . '.content', 'like', '%' . $filters['search'] . '%');
@@ -108,27 +117,77 @@ class BlocksController extends Controller
 	}
 
 	/**
-	 * Store a newly created entry
+	 * Update the specified resource in storage.
 	 *
-	 * @param   Request  $request
+	 * @param   Request $request
 	 * @return  Response
 	 */
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.headline' => 'required',
-			'fields.body' => 'required'
+			'page.title'   => 'required',
+			'page.content' => 'required',
+			'fields.access' => 'nullable|min:1',
+			'fields.state'  => 'nullable|min:1',
 		]);
 
-		$row = new Page();
-		$row->fill($request->input('fields'));
+		$id = $request->input('id');
+		$parent_id = $request->input('fields.parent_id');
+
+		$row = $id ? Associations::findOrFail($id) : new Associations;
+		$row->access = $request->input('fields.access');
+		$row->state  = $request->input('fields.state');
+		$row->page_id = $request->input('fields.page_id');
+		$row->parent_id = $parent_id;
+
+		$page = $request->page;
+		if (!$row->page_id)
+		{
+			$page = new Page;
+		}
+
+		$page->title = $request->input('page.title');
+		$page->alias = $request->input('page.alias');
+		$page->alias = $page->alias ?: $page->title;
+		$page->content = $request->input('page.content');
+		$page->snippet = $request->input('page.snippet', 0);
+		$page->params = json_encode($request->input('params', []));
+
+		if (!$page->save())
+		{
+			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+
+			return redirect()->back()->withError($error);
+		}
 
 		if (!$row->save())
 		{
-			return redirect()->back()->with('error', 'Failed to create item.');
+			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+
+			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->withSuccess('Item created!');
+		if ($id && $parent_id != $row->parent_id)
+		{
+			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
+			{
+				return redirect()->back()->withError($row->getError());
+			}
+		}
+
+		// Rebuild the paths of the entry's path
+		if (!$row->rebuildPath())
+		{
+			return redirect()->back()->withError($row->getError());
+		}
+
+		// Rebuild the paths of the entry's children
+		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
+		{
+			return redirect()->back()->withError($row->getError());
+		}
+
+		return redirect(route('admin.pages.index'))->withSuccess(trans('messages.update success'));
 	}
 
 	/**
@@ -137,22 +196,24 @@ class BlocksController extends Controller
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		app('request')->merge(['hidemainmenu' => 1]);
 
-		$row = Report::findOrFail($id);
+		$page = Page::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
-			$row->fill($fields);
+			$page->fill($fields);
 		}
 
-		$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();
+		$row = new Associations;
+		$parents = Page::tree();
 
-		return view('knowledge::admin.reports.edit', [
-			'row'   => $row,
-			'groups' => $groups
+		return view('knowledge::admin.pages.edit', [
+			'row'  => $row,
+			'tree' => $parents,
+			'page' => $page,
 		]);
 	}
 

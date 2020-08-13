@@ -12,11 +12,68 @@ use App\Modules\News\Models\Stemmedtext;
 use App\Modules\News\Http\Resources\ArticleResource;
 use App\Modules\News\Http\Resources\ArticleResourceCollection;
 
+/**
+ * Articles
+ *
+ * @apiUri    /api/news
+ */
 class ArticlesController extends Controller
 {
 	/**
-	 * Display a listing of articles
+	 * Display a listing of news articles
 	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/news
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "contactreportid",
+	 * 		"description":   "ID of contact report",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       25
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       1
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "datetimecreated",
+	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "desc",
+	 * 		"allowedValues": "asc, desc"
+	 * }
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -201,8 +258,27 @@ class ArticlesController extends Controller
 	}
 
 	/**
-	 * Store a newly created entry
+	 * Create a news article
 	 *
+	 * @apiMethod POST
+	 * @apiUri    /api/news
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "comment",
+	 * 		"description":   "The comment being made",
+	 * 		"type":          "string",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "contactreportid",
+	 * 		"description":   "ID of the contact report",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
 	 * @param   Request  $request
 	 * @return  Response
 	 */
@@ -235,10 +311,20 @@ class ArticlesController extends Controller
 	}
 
 	/**
-	 * Retrieve a specified entry
+	 * Read a news article
 	 *
-	 * @param   Request $request
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/news/{id}
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param  integer  $id
+	 * @return Response
 	 */
 	public function read($id)
 	{
@@ -248,9 +334,37 @@ class ArticlesController extends Controller
 	}
 
 	/**
-	 * Article the specified entry
+	 * Update a news article
 	 *
-	 * @param   Request $request
+	 * @apiMethod PUT
+	 * @apiUri    /api/news/{id}
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "comment",
+	 * 		"description":   "The comment being made",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "contactreportid",
+	 * 		"description":   "ID of the contact report",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @param   Request  $request
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -278,11 +392,23 @@ class ArticlesController extends Controller
 	}
 
 	/**
-	 * Remove the specified entry
+	 * Delete a news article
 	 *
+	 * @apiMethod DELETE
+	 * @apiUri    /api/news/{id}
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function destroy($id)
+	public function delete($id)
 	{
 		$row = Article::findOrFail($id);
 

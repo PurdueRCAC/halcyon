@@ -12,13 +12,18 @@ use App\Modules\Storage\Models\Notification;
 use App\Modules\Messages\Models\Type as MessageType;
 use Carbon\Carbon;
 
+/**
+ * Directories
+ *
+ * @apiUri    /api/storage/directories
+ */
 class DirectoriesController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /storage/directories
+	 * @apiUri    /api/storage/directories
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
@@ -140,7 +145,7 @@ class DirectoriesController extends Controller
 	 * Create a resource
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /storage/directories
+	 * @apiUri    /api/storage/directories
 	 * @apiParameter {
 	 *      "name":          "name",
 	 *      "description":   "The name of the resource type",
@@ -485,7 +490,7 @@ class DirectoriesController extends Controller
 	 * Read a resource
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /storage/directories/{id}
+	 * @apiUri    /api/storage/directories/{id}
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the resource type",
@@ -506,7 +511,7 @@ class DirectoriesController extends Controller
 	 * Update a resource
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /storage/directories/{id}
+	 * @apiUri    /api/storage/directories/{id}
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the resource type",
@@ -801,7 +806,7 @@ class DirectoriesController extends Controller
 	 * Delete a storage directory
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /storage/directories/{id}
+	 * @apiUri    /api/storage/directories/{id}
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the resource type",

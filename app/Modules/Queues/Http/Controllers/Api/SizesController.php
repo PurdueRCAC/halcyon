@@ -10,13 +10,19 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Queues\Models\Size;
 use Carbon\Carbon;
 
+/**
+ * Queue Sizes
+ *
+ * @apiUri    /api/queues/sizes
+ */
 class SizesController extends Controller
 {
 	/**
 	 * Display a listing of queue sizes
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /queues/sizes
+	 * @apiUri    /api/queues/sizes
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
@@ -39,7 +45,7 @@ class SizesController extends Controller
 	 * 		"default":       ""
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "sort",
+	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
@@ -47,7 +53,7 @@ class SizesController extends Controller
 	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "sort_dir",
+	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
@@ -116,7 +122,8 @@ class SizesController extends Controller
 	 * Create a queue size
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /queues/sizes
+	 * @apiUri    /api/queues/sizes
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "name",
 	 *      "description":   "The name of the queue type",
@@ -206,8 +213,9 @@ class SizesController extends Controller
 	/**
 	 * Read a queue size
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /queues/sizes/{id}
+	 * @apiMethod GET
+	 * @apiUri    /api/queues/sizes/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue type",
@@ -229,7 +237,8 @@ class SizesController extends Controller
 	 * Update a queue size
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /queues/sizes/{id}
+	 * @apiUri    /api/queues/sizes/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue type",
@@ -273,7 +282,8 @@ class SizesController extends Controller
 	 * Delete a queue size
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /queues/sizes/{id}
+	 * @apiUri    /api/queues/sizes/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue type",

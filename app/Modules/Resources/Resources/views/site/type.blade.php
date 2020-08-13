@@ -7,13 +7,13 @@
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	<ul class="dropdown-menu">
-		@foreach ($rows as $i => $row)
+		@foreach ($items as $i => $row)
 			<li>
 				<a href="{{ route('site.resources.' . $type->alias . '.show', ['name' => $row->listname]) }}">{{ $row->name }}</a>
 			</li>
 		@endforeach
 		<li><div class="separator"></div></li>
-		<li><a href="{{ route('site.resources.' . $type->alias . '.retired') }}">{{ trans('resources::resources.retired') }}</a></li>
+		<li<?php if ($retired) { echo ' class="active"'; } ?>><a href="{{ route('site.resources.' . $type->alias . '.retired') }}">{{ trans('resources::resources.retired') }}</a></li>
 	</ul>
 </div>
 
@@ -28,8 +28,8 @@
 					<h3>
 						<a href="{{ route('site.resources.' . $type->alias . '.show', ['name' => $row->listname]) }}">
 							{{ $row->name }}
-							@if (is_file(storage_path('app/public/resources/' . $row->listname . '/thumb.png')))
-								<img src="{{ url(Storage::url('resources/' . $row->listname . '/thumb.png')) }}" alt="{{ $row->name }} thumbnail" />
+							@if ($thumb = $row->thumb)
+								<img src="{{ $thumb }}" alt="{{ $row->name }} thumbnail" width="120" />
 							@endif
 						</a>
 					</h3>

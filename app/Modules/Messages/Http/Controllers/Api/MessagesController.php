@@ -11,13 +11,18 @@ use App\Modules\Messages\Http\Resources\MessagesResource;
 use App\Modules\Messages\Http\Resources\MessagesResourceCollection;
 use Carbon\Carbon;
 
+/**
+ * Message
+ *
+ * @apiUri    /api/messages
+ */
 class MessagesController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /messages
+	 * @apiUri    /api/messages
 	 * @apiParameter {
 	 * 		"name":          "state",
 	 * 		"description":   "Message state",
@@ -181,7 +186,7 @@ class MessagesController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /messages
+	 * @apiUri    /api/messages
 	 * @apiParameter {
 	 * 		"name":          "messagequeuetypeid",
 	 * 		"description":   "Message type ID.",
@@ -243,7 +248,7 @@ class MessagesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /messages/{id}
+	 * @apiUri    /api/messages/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -265,7 +270,7 @@ class MessagesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /messages/{id}
+	 * @apiUri    /api/messages/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -421,7 +426,7 @@ class MessagesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /messages/{id}
+	 * @apiUri    /api/messages/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",

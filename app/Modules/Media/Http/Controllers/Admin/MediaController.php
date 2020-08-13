@@ -28,7 +28,7 @@ class MediaController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$base = storage_path() . '/app';
+		$base = storage_path('app');
 		$filters = array();
 
 		$folder = $request->input('folder', '');

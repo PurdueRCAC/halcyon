@@ -11,13 +11,18 @@ use App\Modules\Orders\Models\Order;
 use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Models\Item;
 
+/**
+ * Order Items
+ *
+ * @apiUri    /api/orders/items
+ */
 class ItemsController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /orders/items
+	 * @apiUri    /api/orders/items
 	 * @apiParameter {
 	 * 		"name":          "state",
 	 * 		"description":   "Order state.",
@@ -68,7 +73,7 @@ class ItemsController extends Controller
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"default":       1
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order",
@@ -197,7 +202,7 @@ class ItemsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /orders/items
+	 * @apiUri    /api/orders/items
 	 * @apiParameter {
 	 * 		"name":          "usernotes",
 	 * 		"description":   "Submitter notes.",
@@ -237,7 +242,7 @@ class ItemsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /orders/items/{id}
+	 * @apiUri    /api/orders/items/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -259,7 +264,7 @@ class ItemsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /orders/items/{id}
+	 * @apiUri    /api/orders/items/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Tag entry identifier",
@@ -322,7 +327,7 @@ class ItemsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /orders/items/{id}
+	 * @apiUri    /api/orders/items/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Tag entry identifier",

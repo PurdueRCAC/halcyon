@@ -10,13 +10,18 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Motd;
 
+/**
+ * Message of the day
+ *
+ * @apiUri    /api/groups/motd
+ */
 class MotdController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /groups/members
+	 * @apiUri    /api/groups/motd
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
@@ -111,7 +116,7 @@ class MotdController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /groups/motd
+	 * @apiUri    /api/groups/motd
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -176,7 +181,7 @@ class MotdController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /groups/motd/{id}
+	 * @apiUri    /api/groups/motd/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -198,7 +203,7 @@ class MotdController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /groups/{id}
+	 * @apiUri    /api/groups/motd/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -258,7 +263,7 @@ class MotdController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /groups/motd/{id}
+	 * @apiUri    /api/groups/motd/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",

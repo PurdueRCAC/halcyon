@@ -9,13 +9,69 @@ use App\Modules\ContactReports\Models\Comment;
 use App\Modules\ContactReports\Http\Resources\CommentResource;
 use Carbon\Carbon;
 
+/**
+ * Comments
+ *
+ * @apiUri    /api/contactreports/comments
+ */
 class CommentsController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of contact reports comments
 	 *
-	 * @param   Request  $request
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/contactreports/comments
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "contactreportid",
+	 * 		"description":   "ID of contact report",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       25
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       1
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "datetimecreated",
+	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "desc",
+	 * 		"allowedValues": "asc, desc"
+	 * }
+	 * @return Response
 	 */
 	public function index(Request $request)
 	{
@@ -88,8 +144,28 @@ class CommentsController extends Controller
 	}
 
 	/**
-	 * Show the form for creating a new resource.
+	 * Create a contact report comment
 	 *
+	 * @apiMethod POST
+	 * @apiUri    /api/contactreports/comments
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "comment",
+	 * 		"description":   "The comment being made",
+	 * 		"type":          "string",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "contactreportid",
+	 * 		"description":   "ID of the contact report",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function create(Request $request)
@@ -130,10 +206,20 @@ class CommentsController extends Controller
 	}
 
 	/**
-	 * Retrieve a specified entry
+	 * Retrieve a contact report comment
 	 *
-	 * @param   Request $request
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/contactreports/comments/{id}
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param  integer  $id
+	 * @return Response
 	 */
 	public function read($comment)
 	{
@@ -143,9 +229,37 @@ class CommentsController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Update a contact report comment
 	 *
+	 * @apiMethod PUT
+	 * @apiUri    /api/contactreports/comments/{id}
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "comment",
+	 * 		"description":   "The comment being made",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "contactreportid",
+	 * 		"description":   "ID of the contact report",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
 	 * @param   Request  $request
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $comment)
@@ -202,9 +316,20 @@ class CommentsController extends Controller
 	}
 
 	/**
-	 * Remove the specified entry
+	 * Delete a contact report comment
 	 *
-	 * @param   integer   $id
+	 * @apiMethod DELETE
+	 * @apiUri    /api/contactreports/delete/{id}
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($comment)

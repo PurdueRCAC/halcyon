@@ -9,14 +9,20 @@ use App\Modules\Pages\Models\Version;
 use App\Modules\Pages\Http\Resources\PageResource;
 use App\Modules\Pages\Http\Resources\PageResourceCollection;
 
+/**
+ * Pages
+ *
+ * @apiUri    /api/pages
+ */
 class PagesController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /pages
+	 * @apiUri    /api/pages
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
@@ -24,6 +30,7 @@ class PagesController extends Controller
 	 * 		"default":       25
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"type":          "integer",
@@ -31,6 +38,7 @@ class PagesController extends Controller
 	 * 		"default":       0
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "state",
 	 * 		"description":   "Article state.",
 	 * 		"type":          "string",
@@ -39,6 +47,7 @@ class PagesController extends Controller
 	 * 		"allowedValues": "published, unpublished, trashed"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "access",
 	 * 		"description":   "Article access value.",
 	 * 		"type":          "integer",
@@ -46,6 +55,7 @@ class PagesController extends Controller
 	 * 		"default":       1,
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"type":          "string",
@@ -53,6 +63,7 @@ class PagesController extends Controller
 	 * 		"default":       ""
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"type":          "string",
@@ -61,6 +72,7 @@ class PagesController extends Controller
 	 * 		"allowedValues": "id, title, alias, created_at, updated_at"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
 	 * 		"type":          "string",
@@ -166,8 +178,10 @@ class PagesController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /pages
+	 * @apiUri    /api/pages
+	 * @apiAuthorization  true
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "title",
 	 * 		"description":   "Title",
 	 * 		"type":          "string",
@@ -175,6 +189,7 @@ class PagesController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "slug",
 	 * 		"description":   "URL slug",
 	 * 		"type":          "string",
@@ -182,6 +197,7 @@ class PagesController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "content",
 	 * 		"description":   "Content",
 	 * 		"type":          "string",
@@ -189,6 +205,7 @@ class PagesController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "state",
 	 * 		"description":   "Published state",
 	 * 		"type":          "integer",
@@ -197,6 +214,7 @@ class PagesController extends Controller
 	 * 		"allowedValues": "0, 1"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "access",
 	 * 		"description":   "Access level",
 	 * 		"type":          "integer",
@@ -205,6 +223,7 @@ class PagesController extends Controller
 	 * 		"allowedValues": "1, 2, ..."
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "publish_up",
 	 * 		"description":   "Start publishing (defaults to created time)",
 	 * 		"type":          "string",
@@ -212,6 +231,7 @@ class PagesController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "publish_down",
 	 * 		"description":   "Stop publishing",
 	 * 		"type":          "string",
@@ -219,6 +239,7 @@ class PagesController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "parent_id",
 	 * 		"description":   "Parent page ID",
 	 * 		"type":          "integer",
@@ -226,6 +247,7 @@ class PagesController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "publish_up",
 	 * 		"description":   "Start publishing (defaults to created time)",
 	 * 		"type":          "string",
@@ -259,8 +281,9 @@ class PagesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /pages/{id}
+	 * @apiUri    /api/pages/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
 	 * 		"type":          "integer",
@@ -300,8 +323,18 @@ class PagesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /pages/{id}
+	 * @apiUri    /api/pages/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "title",
 	 * 		"description":   "Title",
 	 * 		"type":          "string",
@@ -309,6 +342,7 @@ class PagesController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "slug",
 	 * 		"description":   "URL slug",
 	 * 		"type":          "string",
@@ -316,6 +350,7 @@ class PagesController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "content",
 	 * 		"description":   "Content",
 	 * 		"type":          "string",
@@ -323,6 +358,7 @@ class PagesController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "state",
 	 * 		"description":   "Published state",
 	 * 		"type":          "integer",
@@ -331,6 +367,7 @@ class PagesController extends Controller
 	 * 		"allowedValues": "0, 1"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "access",
 	 * 		"description":   "Access level",
 	 * 		"type":          "integer",
@@ -339,6 +376,7 @@ class PagesController extends Controller
 	 * 		"allowedValues": "1, 2, ..."
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "publish_up",
 	 * 		"description":   "Start publishing (defaults to created time)",
 	 * 		"type":          "string",
@@ -346,6 +384,7 @@ class PagesController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "publish_down",
 	 * 		"description":   "Stop publishing",
 	 * 		"type":          "string",
@@ -353,6 +392,7 @@ class PagesController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "parent_id",
 	 * 		"description":   "Parent page ID",
 	 * 		"type":          "integer",
@@ -360,6 +400,7 @@ class PagesController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "publish_up",
 	 * 		"description":   "Start publishing (defaults to created time)",
 	 * 		"type":          "string",
@@ -405,8 +446,10 @@ class PagesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /pages/{id}
+	 * @apiUri    /api/pages/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
 	 * 		"type":          "integer",

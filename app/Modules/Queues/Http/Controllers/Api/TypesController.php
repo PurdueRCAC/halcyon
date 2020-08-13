@@ -9,13 +9,19 @@ use App\Modules\Queues\Models\Type;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/**
+ * Queue Types
+ *
+ * @apiUri    /api/queues/types
+ */
 class TypesController extends Controller
 {
 	/**
 	 * Display a listing of queue types.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /queues/types
+	 * @apiUri    /api/queues/types
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "limit",
 	 *      "description":   "Number of result to return.",
@@ -38,7 +44,7 @@ class TypesController extends Controller
 	 *      "default":       ""
 	 * }
 	 * @apiParameter {
-	 *      "name":          "sort",
+	 *      "name":          "order",
 	 *      "description":   "Field to sort results by.",
 	 *      "type":          "string",
 	 *      "required":      false,
@@ -46,7 +52,7 @@ class TypesController extends Controller
 	 *      "allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
 	 * }
 	 * @apiParameter {
-	 *      "name":          "sort_dir",
+	 *      "name":          "order_dir",
 	 *      "description":   "Direction to sort results by.",
 	 *      "type":          "string",
 	 *      "required":      false,
@@ -64,13 +70,13 @@ class TypesController extends Controller
 			'limit'    => $request->input('limit', config('list_limit', 20)),
 			//'start' => $request->input('limitstart', 0),
 			// Sorting
-			'sort'     => $request->input('sort', 'name'),
-			'sort_dir' => $request->input('sort_dir', 'asc')
+			'order'     => $request->input('order', 'name'),
+			'order_dir' => $request->input('order_dir', 'asc')
 		);
 
-		if (!in_array($filters['sort_dir'], ['asc', 'desc']))
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['sort_dir'] = 'asc';
+			$filters['order_dir'] = 'asc';
 		}
 
 		$query = Type::query()
@@ -83,7 +89,7 @@ class TypesController extends Controller
 
 		$rows = $query
 			->withCount('queues')
-			->orderBy($filters['sort'], $filters['sort_dir'])
+			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
@@ -94,7 +100,8 @@ class TypesController extends Controller
 	 * Create a queue type
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /queues/types
+	 * @apiUri    /api/queues/types
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "name",
 	 *      "description":   "The name of the queue type",
@@ -119,8 +126,9 @@ class TypesController extends Controller
 	/**
 	 * Read a queue type
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /queues/types/{id}
+	 * @apiMethod GET
+	 * @apiUri    /api/queues/types/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue type",
@@ -142,7 +150,8 @@ class TypesController extends Controller
 	 * Update a queue type
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /queues/types/{id}
+	 * @apiUri    /api/queues/types/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue type",
@@ -178,7 +187,8 @@ class TypesController extends Controller
 	 * Delete a queue type
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /queues/types/{id}
+	 * @apiUri    /api/queues/types/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue type",

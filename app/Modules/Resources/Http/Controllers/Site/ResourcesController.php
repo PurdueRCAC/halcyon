@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Modules\Resources\Entities\Asset;
 use App\Modules\Resources\Entities\Type;
+use App\Modules\Resources\Events\AssetDisplaying;
 
 class ResourcesController extends Controller
 {
@@ -51,7 +52,50 @@ class ResourcesController extends Controller
 
 		return view('resources::site.type', [
 			'type' => $type,
-			'rows' => $rows
+			'items' => $rows,
+			'rows' => $rows,
+			'retired' => false,
+		]);
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 * @return Response
+	 */
+	public function retired(Request $request)
+	{
+		$type = Type::findByName($request->segment(1));
+
+		if (!$type)
+		{
+			abort(404);
+		}
+
+		app('pathway')->append(
+			$type->name,
+			url('/' . strtolower($type->name))
+		)->append(
+			trans('resources::resources.retired'),
+			route('site.resources.' . strtolower($type->name) . '.retired')
+		);
+
+		$items = $type->resources()
+			->where('display', '>', 0)
+			->orderBy('display', 'desc')
+			->get();
+
+		$rows = $type->resources()
+			->onlyTrashed()
+			->where('datetimeremoved', '!=', '0000-00-00 00:00:00')
+			->where('display', '>', 0)
+			->orderBy('display', 'desc')
+			->get();
+
+		return view('resources::site.type', [
+			'type'  => $type,
+			'items' => $items,
+			'rows'  => $rows,
+			'retired' => true,
 		]);
 	}
 
@@ -61,6 +105,11 @@ class ResourcesController extends Controller
 	 */
 	public function show(Request $request, $name)
 	{
+		if ($name == 'retired')
+		{
+			return $this->retired($request);
+		}
+
 		$type = Type::findByName($request->segment(1));
 
 		if (!$type)
@@ -74,6 +123,9 @@ class ResourcesController extends Controller
 		{
 			abort(404);
 		}
+
+		event($event = new AssetDisplaying($resource));
+		$sections = collect($event->getSections());
 
 		app('pathway')
 			->append(
@@ -93,28 +145,8 @@ class ResourcesController extends Controller
 		return view('resources::site.show', [
 			'type' => $type,
 			'rows' => $rows,
-			'resource' => $resource
+			'resource' => $resource,
+			'sections' => $sections,
 		]);
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 * @return Response
-	 */
-	public function retired(Request $request)
-	{
-		$id = 1;
-
-		app('pathway')
-			->append(
-				config('resources.name'),
-				url('/resources')
-			)
-			->append(
-				__('resources::assets.edit'),
-				url('/resources/edit/:id', $id)
-			);
-
-		return view('resources::site.edit');
 	}
 }

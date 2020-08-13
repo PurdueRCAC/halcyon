@@ -10,6 +10,7 @@ namespace App\Modules\Resources\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Modules\Resources\Events\AssetCreating;
 use App\Modules\Resources\Events\AssetCreated;
 use App\Modules\Resources\Events\AssetUpdating;
@@ -94,6 +95,37 @@ class Asset extends Model
 		'updated'  => AssetUpdated::class,
 		'deleted'  => AssetDeleted::class,
 	];
+
+	public function getAliasAttribute()
+	{
+		return preg_replace('/[^a-z0-9\-_]/', '', strtolower($this->name));
+	}
+
+	public function getPictureAttribute()
+	{
+		$alias = $this->listname ? $this->listname : $this->alias;
+		$path = storage_path('app/public/resources/' . $alias . '/resource.jpg');
+
+		if (is_file($path))
+		{
+			return Storage::disk('public')->url('resources/' . $alias . '/resource.jpg');
+		}
+
+		return '';
+	}
+
+	public function getThumbAttribute()
+	{
+		$alias = $this->listname ? $this->listname : $this->alias;
+		$path = storage_path('app/public/resources/' . $alias . '/thumb.png');
+
+		if (is_file($path))
+		{
+			return Storage::disk('public')->url('resources/' . $alias . '/thumb.png');
+		}
+
+		return '';
+	}
 
 	/**
 	 * Determine if in a trashed state
@@ -309,6 +341,7 @@ class Asset extends Model
 		$name = str_replace('-', ' ', $name);
 
 		return self::query()
+			->withTrashed()
 			->where('listname', '=', $name)
 			->orWhere('name', '=', $name)
 			->limit(1)

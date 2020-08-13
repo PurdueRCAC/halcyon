@@ -10,11 +10,218 @@ use App\Modules\Widgets\Models\Widget;
 use App\Modules\Widgets\Models\Menu;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Access\Viewlevel;
+use App\Modules\Widgets\Http\Resources\WidgetResource;
+use App\Modules\Widgets\Http\Resources\WidgetResourceCollection;
 
+/**
+ * Widgets
+ *
+ * Manage content widgets for the site.
+ *
+ * @apiUri    /api/widgets
+ */
 class WidgetsController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of entries
+	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/widgets
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "client_id",
+	 * 		"description":   "Client (admin = 1|site = 0) ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       25
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       1
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "datetimecreated",
+	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "desc",
+	 * 		"allowedValues": "asc, desc"
+	 * }
+	 * @apiResponse {
+	 *     "current_page": 1,
+	 *     "data": [
+	 *         {
+	 *             "id": 17,
+	 *             "title": "Breadcrumbs",
+	 *             "note": "",
+	 *             "content": "",
+	 *             "ordering": 1,
+	 *             "position": "breadcrumbs",
+	 *             "checked_out": 0,
+	 *             "checked_out_time": null,
+	 *             "publish_up": null,
+	 *             "publish_down": null,
+	 *             "published": 1,
+	 *             "module": "breadcrumbs",
+	 *             "access": 1,
+	 *             "showtitle": 1,
+	 *             "params": {
+	 *                 "showHere": "0",
+	 *                 "showHome": "1",
+	 *                 "homeText": "Home",
+	 *                 "showLast": "1",
+	 *                 "separator": "/",
+	 *                 "moduleclass_sfx": null,
+	 *                 "cache": "1",
+	 *                 "cache_time": "900",
+	 *                 "cachemode": "itemid"
+	 *             },
+	 *             "client_id": 0,
+	 *             "language": "*",
+	 *             "language_title": null,
+	 *             "editor": "Shawn M Rice",
+	 *             "access_level": "Public",
+	 *             "pages": 0,
+	 *             "name": "breadcrumbs",
+	 *             "api": "https://yourhost/api/widgets/17",
+	 *             "menu_assignment": 0,
+	 *             "can": {
+	 *                 "edit": false,
+	 *                 "delete": false
+	 *             }
+	 *         },
+	 *         {
+	 *             "id": 132,
+	 *             "title": "Science Highlights",
+	 *             "note": "",
+	 *             "content": "",
+	 *             "ordering": 1,
+	 *             "position": "featureLeft",
+	 *             "checked_out": 0,
+	 *             "checked_out_time": null,
+	 *             "publish_up": null,
+	 *             "publish_down": null,
+	 *             "published": 1,
+	 *             "module": "news",
+	 *             "access": 1,
+	 *             "showtitle": 0,
+	 *             "params": {
+	 *                 "catid": "3",
+	 *                 "item_title": "0",
+	 *                 "link_titles": null,
+	 *                 "item_heading": "h4",
+	 *                 "showLastSeparator": "1",
+	 *                 "readmore": "1",
+	 *                 "limit": "5",
+	 *                 "ordering": "published",
+	 *                 "direction": "DESC",
+	 *                 "layout": null,
+	 *                 "moduleclass_sfx": null,
+	 *                 "cache": "0",
+	 *                 "cache_time": "900",
+	 *                 "cachemode": "itemid"
+	 *             },
+	 *             "client_id": 0,
+	 *             "language": "*",
+	 *             "language_title": null,
+	 *             "editor": "Shawn M Rice",
+	 *             "access_level": "Public",
+	 *             "pages": 100,
+	 *             "name": "news",
+	 *             "api": "https://yourhost/api/widgets/132",
+	 *             "menu_assignment": 1,
+	 *             "can": {
+	 *                 "edit": false,
+	 *                 "delete": false
+	 *             }
+	 *         },
+	 *         {
+	 *             "id": 134,
+	 *             "title": "Announcements",
+	 *             "note": "",
+	 *             "content": "",
+	 *             "ordering": 1,
+	 *             "position": "featureRight",
+	 *             "checked_out": 0,
+	 *             "checked_out_time": null,
+	 *             "publish_up": null,
+	 *             "publish_down": null,
+	 *             "published": 1,
+	 *             "module": "news",
+	 *             "access": 1,
+	 *             "showtitle": 0,
+	 *             "params": {
+	 *                 "catid": "2",
+	 *                 "item_title": "0",
+	 *                 "link_titles": null,
+	 *                 "item_heading": "h4",
+	 *                 "showLastSeparator": "1",
+	 *                 "readmore": "1",
+	 *                 "limit": "5",
+	 *                 "ordering": "published",
+	 *                 "direction": "DESC",
+	 *                 "layout": null,
+	 *                 "moduleclass_sfx": null,
+	 *                 "cache": "0",
+	 *                 "cache_time": "900",
+	 *                 "cachemode": "itemid"
+	 *             },
+	 *             "client_id": 0,
+	 *             "language": "*",
+	 *             "language_title": null,
+	 *             "editor": null,
+	 *             "access_level": "Public",
+	 *             "pages": 0,
+	 *             "name": "news",
+	 *             "api": "https://yourhost/api/widgets/134",
+	 *             "menu_assignment": 1,
+	 *             "can": {
+	 *                 "edit": false,
+	 *                 "delete": false
+	 *             }
+	 *         }
+	 *     ],
+	 *     "first_page_url": "https://yourhost/api/widgets?page=1",
+	 *     "from": 1,
+	 *     "last_page": 2,
+	 *     "last_page_url": "https://yourhost/api/widgets?page=2",
+	 *     "next_page_url": "https://yourhost/api/widgets?page=2",
+	 *     "path": "https://yourhost/api/widgets",
+	 *     "per_page": 3,
+	 *     "prev_page_url": null,
+	 *     "to": 3,
+	 *     "total": 5
+	 * }
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -85,7 +292,7 @@ class WidgetsController extends Controller
 			//->select($a . '.title AS access_level')
 			->leftJoin($a, $a . '.id', $p . '.access');
 
-		// Join over the access groups.
+		// Join over menus
 		$query
 			//->select('MIN(' . $m . '.menuid) AS pages')
 			->leftJoin($m, $m . '.moduleid', $p . '.id');
@@ -93,7 +300,8 @@ class WidgetsController extends Controller
 		// Join over the extensions
 		$query
 			//->select($e . '.name AS name')
-			->join($e, $e . '.element', $p . '.module', 'left')
+			->leftJoin($e, $e . '.element', $p . '.module')
+			->where($e . '.type', '=', 'widget')
 			->groupBy(
 				$p . '.id',
 				$p . '.title',
@@ -206,14 +414,31 @@ class WidgetsController extends Controller
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
-		return $rows;
+		return new WidgetResourceCollection($rows);
 	}
 
 	/**
-	 * Store a newly created entry
+	 * Create a new entry
 	 *
-	 * @param   Request  $request
-	 * @return  Response
+	 * @apiMethod POST
+	 * @apiUri    /api/widgets
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "title",
+	 * 		"description":   "Menu title",
+	 * 		"type":          "string",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "description",
+	 * 		"description":   "A description of the menu",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @return Response
 	 */
 	public function create(Request $request)
 	{
@@ -228,40 +453,123 @@ class WidgetsController extends Controller
 			throw new \Exception($row->getError(), 409);
 		}
 
-		return $row;
+		return new WidgetResource($row);
 	}
 
 	/**
-	 * Retrieve a specified entry
+	 * Retrieve an entry
 	 *
-	 * @param   Request $request
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/widgets/{id}
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiResponse {
+	 * 		"data": {
+	 * 			"id": 134,
+	 * 			"title": "Announcements",
+	 * 			"note": "",
+	 * 			"content": "",
+	 * 			"ordering": 1,
+	 * 			"position": "featureRight",
+	 * 			"checked_out": 0,
+	 * 			"checked_out_time": null,
+	 * 			"publish_up": null,
+	 * 			"publish_down": null,
+	 * 			"published": 1,
+	 * 			"module": "news",
+	 * 			"access": 1,
+	 * 			"showtitle": 0,
+	 * 			"params": {
+	 * 				"catid": "2",
+	 * 				"item_title": "0",
+	 * 				"link_titles": null,
+	 * 				"item_heading": "h4",
+	 * 				"showLastSeparator": "1",
+	 * 				"readmore": "1",
+	 * 				"limit": "5",
+	 * 				"ordering": "published",
+	 * 				"direction": "DESC",
+	 * 				"layout": null,
+	 * 				"moduleclass_sfx": null,
+	 * 				"cache": "0",
+	 * 				"cache_time": "900",
+	 * 				"cachemode": "itemid"
+	 * 			},
+	 * 			"client_id": 0,
+	 * 			"language": "*",
+	 * 			"language_title": null,
+	 * 			"editor": null,
+	 * 			"access_level": "Public",
+	 * 			"pages": 0,
+	 * 			"name": "news",
+	 * 			"api": "https://yourhost/api/widgets/134",
+	 * 			"menu_assignment": 1,
+	 * 			"can": {
+	 * 				"edit": false,
+	 * 				"delete": false
+	 * 			}
+	 * 		}
+	 * }
+	 * @return Response
 	 */
 	public function read($id)
 	{
 		$row = Widget::findOrFail((int)$id);
 
-		$row->api = route('api.widgets.read', ['id' => $row->id]);
-		$row->menu_assignment = $row->menuAssignment();
-
-		// Permissions check
-		//$item->canCreate = false;
-		$row->canEdit   = false;
-		$row->canDelete = false;
-
-		if (auth()->user())
-		{
-			//$item->canCreate = auth()->user()->can('create widgets');
-			$row->canEdit   = auth()->user()->can('edit widgets');
-			$row->canDelete = auth()->user()->can('delete widgets');
-		}
-
-		return $row;
+		return new WidgetResource($row);
 	}
 
 	/**
-	 * Article the specified entry
+	 * Update an entry
 	 *
+	 * @apiMethod PUT
+	 * @apiUri    /api/widgets/{id}
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "title",
+	 * 		"description":   "Menu title",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "description",
+	 * 		"description":   "A description of the menu",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "client_id",
+	 * 		"description":   "Client (admin = 1|site = 0) ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "menutype",
+	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
 	 * @param   Request $request
 	 * @return  Response
 	 */
@@ -280,12 +588,23 @@ class WidgetsController extends Controller
 			throw new \Exception($row->getError(), 409);
 		}
 
-		return $row;
+		return new WidgetResource($row);
 	}
 
 	/**
-	 * Remove the specified entry
+	 * Delete an entry
 	 *
+	 * @apiMethod DELETE
+	 * @apiUri    /api/widgets/{id}
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function destroy($id)

@@ -44,6 +44,7 @@ class PagesController extends Controller
 		);
 
 		$uri = '';
+		$prev = null;
 		foreach ($pages as $page)
 		{
 			// Ensure we have an article
@@ -72,12 +73,19 @@ class PagesController extends Controller
 				continue;
 			}
 
+			if ($prev)
+			{
+				$page->variables->merge($prev->variables);
+			}
+
 			$uri .= ($uri ? '/' : '') . $page->alias;
 
 			app('pathway')->append(
-				$page->title,
+				$page->headline,
 				route('site.knowledge.page', ['uri' => $uri])
 			);
+
+			$prev = $page;
 		}
 
 		$root = Page::rootNode();

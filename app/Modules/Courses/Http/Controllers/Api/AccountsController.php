@@ -13,6 +13,11 @@ use App\Modules\Courses\Http\Resources\AccountResourceCollection;
 use App\Modules\Users\Models\User;
 use Carbon\Carbon;
 
+/**
+ * Accounts
+ *
+ * @apiUri    /api/courses
+ */
 class AccountsController extends Controller
 {
 	/**
@@ -21,36 +26,22 @@ class AccountsController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /courses
 	 * @apiParameter {
-	 * 		"name":          "limit",
-	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       25
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "page",
-	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       1
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "owneruserid",
+	 * 		"name":          "userid",
 	 * 		"description":   "Owner user ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       0
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
-	 * 		"type":          "string",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group ID",
+	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"default":       0
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
+	 * 		"name":          "resourceid",
+	 * 		"description":   "Resource ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       0
@@ -68,6 +59,20 @@ class AccountsController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       25
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       1
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order",
@@ -362,15 +367,29 @@ class AccountsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
+	 * 		"name":          "department",
+	 * 		"description":   "Class department",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
+	 * 		"name":          "classname",
+	 * 		"description":   "Name of the class",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Datetime (YYYY-MM-DD hh:mm:ss) the class starts",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Datetime (YYYY-MM-DD hh:mm:ss) the class stops",
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       null
@@ -444,17 +463,10 @@ class AccountsController extends Controller
 	}
 
 	/**
-	 * Delete an entry
+	 * Sync users with account info
 	 *
-	 * @apiMethod DELETE
-	 * @apiUri    /courses/{id}
-	 * @apiParameter {
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
-	 * 		"required":      true,
-	 * 		"default":       null
-	 * }
+	 * @apiMethod GET
+	 * @apiUri    /courses/sync
 	 * @return  Response
 	 */
 	public function sync()

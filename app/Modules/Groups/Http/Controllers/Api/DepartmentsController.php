@@ -9,13 +9,25 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Groups\Models\Department;
 
+/**
+ * Departments
+ *
+ * @apiUri    /api/groups/departments
+ */
 class DepartmentsController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /groups/departments
+	 * @apiUri    /api/groups/departments
+	 * @apiParameter {
+	 * 		"name":          "parentid",
+	 * 		"description":   "Parent department ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       0
+	 * }
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
@@ -29,13 +41,6 @@ class DepartmentsController extends Controller
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       1
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "group_id",
-	 * 		"description":   "Group ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "search",
@@ -117,27 +122,20 @@ class DepartmentsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /groups/departments
+	 * @apiUri    /api/groups/departments
 	 * @apiParameter {
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
-	 * 		"required":      true,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "message",
-	 * 		"description":   "Message of the day",
+	 * 		"name":          "name",
+	 * 		"description":   "Department name",
 	 * 		"type":          "string",
 	 * 		"required":      true,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "group_id",
-	 * 		"description":   "Group ID",
+	 * 		"name":          "parentid",
+	 * 		"description":   "Parent department ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"default":       null
 	 * }
 	 * @return Response
 	 */
@@ -169,7 +167,7 @@ class DepartmentsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /groups/departments/{id}
+	 * @apiUri    /api/groups/departments/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -191,7 +189,7 @@ class DepartmentsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /groups/departments/{id}
+	 * @apiUri    /api/groups/departments/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -200,18 +198,18 @@ class DepartmentsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "message",
-	 * 		"description":   "Message of the day",
+	 * 		"name":          "name",
+	 * 		"description":   "Department name",
 	 * 		"type":          "string",
-	 * 		"required":      true,
+	 * 		"required":      false,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "group_id",
-	 * 		"description":   "Group ID",
+	 * 		"name":          "parentid",
+	 * 		"description":   "Parent department ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"default":       null
 	 * }
 	 * @param   Request $request
 	 * @return  Response
@@ -249,7 +247,7 @@ class DepartmentsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /groups/motd/{id}
+	 * @apiUri    /api/groups/departments/{id}
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",

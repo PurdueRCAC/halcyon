@@ -9,13 +9,19 @@ use App\Modules\Queues\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/**
+ * Queue Users
+ *
+ * @apiUri    /api/queues/users
+ */
 class UsersController extends Controller
 {
 	/**
 	 * Display a listing of queue users.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /queues/users
+	 * @apiUri    /api/queues/users
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "limit",
 	 *      "description":   "Number of result to return.",
@@ -38,7 +44,7 @@ class UsersController extends Controller
 	 *      "default":       ""
 	 * }
 	 * @apiParameter {
-	 *      "name":          "sort",
+	 *      "name":          "order",
 	 *      "description":   "Field to sort results by.",
 	 *      "type":          "string",
 	 *      "required":      false,
@@ -46,7 +52,7 @@ class UsersController extends Controller
 	 *      "allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
 	 * }
 	 * @apiParameter {
-	 *      "name":          "sort_dir",
+	 *      "name":          "order_dir",
 	 *      "description":   "Direction to sort results by.",
 	 *      "type":          "string",
 	 *      "required":      false,
@@ -67,13 +73,13 @@ class UsersController extends Controller
 			'limit'    => $request->input('limit', config('list_limit', 20)),
 			//'start' => $request->input('limitstart', 0),
 			// Sorting
-			'sort'     => $request->input('sort', 'datetimecreated'),
-			'sort_dir' => $request->input('sort_dir', 'asc')
+			'order'     => $request->input('order', 'datetimecreated'),
+			'order_dir' => $request->input('order_dir', 'asc')
 		);
 
-		if (!in_array($filters['sort_dir'], ['asc', 'desc']))
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['sort_dir'] = 'asc';
+			$filters['order_dir'] = 'asc';
 		}
 
 		$query = User::query();
@@ -99,7 +105,7 @@ class UsersController extends Controller
 		}
 
 		$rows = $query
-			->orderBy($filters['sort'], $filters['sort_dir'])
+			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
@@ -110,7 +116,8 @@ class UsersController extends Controller
 	 * Create a queue user
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /queues/users
+	 * @apiUri    /api/queues/users
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "name",
 	 *      "description":   "The name of the queue user",
@@ -135,8 +142,9 @@ class UsersController extends Controller
 	/**
 	 * Read a queue user
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /queues/users/{id}
+	 * @apiMethod GET
+	 * @apiUri    /api/queues/users/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue user",
@@ -158,7 +166,8 @@ class UsersController extends Controller
 	 * Update a queue user
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /queues/users/{id}
+	 * @apiUri    /api/queues/users/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue user",
@@ -259,7 +268,8 @@ class UsersController extends Controller
 	 * Delete a queue user
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /queues/users/{id}
+	 * @apiUri    /api/queues/users/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "id",
 	 *      "description":   "The ID of the queue user",

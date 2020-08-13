@@ -134,7 +134,7 @@ app('pathway')
 					@endif
 				</td>
 				<td>
-					/{{ $row->path }}
+					/{{ trim($row->path, '/') }}
 				</td>
 				<td>
 					@if ($row->snippet)

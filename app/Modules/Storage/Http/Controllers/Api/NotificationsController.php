@@ -9,6 +9,11 @@ use App\Modules\Storage\Models\Notification;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/**
+ * Notifications
+ *
+ * @apiUri    /api/storage/notifications
+ */
 class NotificationsController extends Controller
 {
 	/**

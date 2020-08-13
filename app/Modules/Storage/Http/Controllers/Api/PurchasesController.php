@@ -9,6 +9,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Storage\Models\Purchase;
 
+/**
+ * Purchases
+ *
+ * @apiUri    /api/storage/purchases
+ */
 class PurchasesController extends Controller
 {
 	/**

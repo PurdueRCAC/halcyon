@@ -6,27 +6,27 @@ use Illuminate\Routing\Router;
 $router->group(['prefix' => 'orders'], function (Router $router)
 {
 	$router->get('/', [
-		'as' => 'admin.orders.index',
+		'as' => 'api.orders.index',
 		'uses' => 'OrdersController@index',
 		//'middleware' => 'can:tag.orders.index',
 	]);
 	$router->post('/', [
-		'as' => 'admin.orders.create',
+		'as' => 'api.orders.create',
 		'uses' => 'OrdersController@create',
 		'middleware' => 'can:create orders',
 	]);
 	$router->get('{id}', [
-		'as' => 'admin.orders.read',
+		'as' => 'api.orders.read',
 		'uses' => 'OrdersController@read',
 		//'middleware' => 'can:tag.orders.edit',
 	])->where('id', '[0-9]+');
 	$router->put('{id}', [
-		'as' => 'admin.orders.update',
+		'as' => 'api.orders.update',
 		'uses' => 'OrdersController@update',
 		'middleware' => 'can:edit orders',
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
-		'as' => 'admin.orders.delete',
+		'as' => 'api.orders.delete',
 		'uses' => 'OrdersController@delete',
 		'middleware' => 'can:delete orders',
 	])->where('id', '[0-9]+');

@@ -19,12 +19,17 @@ use App\Modules\Media\Events\FilesUploading;
 use App\Modules\Media\Events\FilesUploaded;
 
 /**
- * Media controller
+ * Media
+ *
+ * @apiUri    /api/media
  */
 class MediaController extends Controller
 {
 	/**
 	 * Display a listing of files
+	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/media
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -45,7 +50,9 @@ class MediaController extends Controller
 	/**
 	 * Get directory tree
 	 *
-	 * @return  void
+	 * @apiMethod GET
+	 * @apiUri    /api/media/tree
+	 * @return Response
 	 */
 	public function tree(Request $request)
 	{

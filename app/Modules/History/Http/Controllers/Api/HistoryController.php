@@ -5,14 +5,75 @@ namespace App\Modules\History\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Modules\History\Models\History;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/**
+ * Change History
+ *
+ * @apiUri    /api/history
+ */
 class HistoryController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of entries
 	 *
-	 * @param   Request  $request
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/history
+	 * @apiParameter {
+	 * 		"name":          "action",
+	 * 		"description":   "Action taken.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * 		"allowedValues": "create, update, delete"
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "type",
+	 * 		"description":   "The type of item (model name) that the action was taken on.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       25
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       1
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "name",
+	 * 		"allowedValues": "id, created_at"
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "asc",
+	 * 		"allowedValues": "asc, desc"
+	 * }
+	 * @param  Request $request
+	 * @return Response
 	 */
 	public function index(Request $request)
 	{
@@ -62,42 +123,27 @@ class HistoryController extends Controller
 			$row->formattedreport = $row->report;
 		});*/
 
-		return $rows;
+		return new ResourceCollection($rows);
 	}
 
 	/**
-	 * Retrieve a specified entry
+	 * Retrieve an entry
 	 *
-	 * @param   Request $request
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/history/{id}
+	 * @apiParameter {
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @return Response
 	 */
 	public function read($id)
 	{
 		$row = History::findOrFail((int)$id);
 
-		return $row;
+		return new JsonResource($row);
 	}
-
-	/**
-	 * Remove the specified entry
-	 *
-	 * @return  Response
-	 */
-	/*public function destroy(History $row)
-	{
-		//$row = History::findOrFail($id);
-
-		if (!$row->delete())
-		{
-			return response()->json([
-				'errors'  => false,
-				'message' => trans('histiory::messages.page deleted'),
-			]);
-		}
-
-		return response()->json([
-			'errors'  => true,
-			'message' => trans('histiory::messages.page deleted'),
-		]);
-	}*/
 }

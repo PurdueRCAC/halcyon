@@ -12,14 +12,20 @@ use App\Modules\Orders\Http\Resources\ProductResourceCollection;
 use App\Modules\Users\Models\User;
 use Carbon\Carbon;
 
+/**
+ * Products
+ *
+ * @apiUri    /api/orders/products
+ */
 class ProductsController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /orders/products
+	 * @apiUri    /api/orders/products
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "state",
 	 * 		"description":   "Order category state.",
 	 * 		"type":          "string",
@@ -28,6 +34,7 @@ class ProductsController extends Controller
 	 * 		"allowedValues": "all, published, trashed"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "parent",
 	 * 		"description":   "Parent category ID.",
 	 * 		"type":          "integer",
@@ -35,6 +42,7 @@ class ProductsController extends Controller
 	 * 		"default":       1
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"type":          "string",
@@ -42,6 +50,7 @@ class ProductsController extends Controller
 	 * 		"default":       ""
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
@@ -49,13 +58,15 @@ class ProductsController extends Controller
 	 * 		"default":       25
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"default":       1
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"type":          "string",
@@ -64,6 +75,7 @@ class ProductsController extends Controller
 	 * 		"allowedValues": "id, created_at"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
 	 * 		"type":          "string",
@@ -155,8 +167,9 @@ class ProductsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /orders/products
+	 * @apiUri    /api/orders/products
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Product name.",
 	 * 		"type":          "string",
@@ -164,6 +177,7 @@ class ProductsController extends Controller
 	 * 		"default":       ""
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "description",
 	 * 		"description":   "Longer description of the category",
 	 * 		"type":          "string",
@@ -171,6 +185,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "mou",
 	 * 		"description":   "Memorandum of Undertsanding",
 	 * 		"type":          "string",
@@ -178,6 +193,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "unit",
 	 * 		"description":   "Product unit",
 	 * 		"type":          "string",
@@ -185,6 +201,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "unitprice",
 	 * 		"description":   "Price per unit",
 	 * 		"type":          "integer",
@@ -192,6 +209,7 @@ class ProductsController extends Controller
 	 * 		"default":       0
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "sequence",
 	 * 		"description":   "Product order",
 	 * 		"type":          "integer",
@@ -199,6 +217,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "ordercategoryid",
 	 * 		"description":   "Category ID",
 	 * 		"type":          "integer",
@@ -206,6 +225,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "recurringtimeperiodid",
 	 * 		"description":   "Recurring time period ID",
 	 * 		"type":          "integer",
@@ -213,6 +233,7 @@ class ProductsController extends Controller
 	 * 		"default":       0
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "restricteddata",
 	 * 		"description":   "Restricted data",
 	 * 		"type":          "integer",
@@ -220,6 +241,7 @@ class ProductsController extends Controller
 	 * 		"default":       0
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "resourceid",
 	 * 		"description":   "Resource ID",
 	 * 		"type":          "integer",
@@ -227,6 +249,7 @@ class ProductsController extends Controller
 	 * 		"default":       0
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "terms",
 	 * 		"description":   "Terms",
 	 * 		"type":          "string",
@@ -298,8 +321,9 @@ class ProductsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /orders/products/{id}
+	 * @apiUri    /api/orders/products/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
 	 * 		"type":          "integer",
@@ -320,8 +344,17 @@ class ProductsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /orders/products/{id}
+	 * @apiUri    /api/orders/products/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Product name.",
 	 * 		"type":          "string",
@@ -329,6 +362,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "description",
 	 * 		"description":   "Longer description of the category",
 	 * 		"type":          "string",
@@ -336,6 +370,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "mou",
 	 * 		"description":   "Memorandum of Undertsanding",
 	 * 		"type":          "string",
@@ -343,6 +378,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "unit",
 	 * 		"description":   "Product unit",
 	 * 		"type":          "string",
@@ -350,6 +386,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "unitprice",
 	 * 		"description":   "Price per unit",
 	 * 		"type":          "integer",
@@ -357,6 +394,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "sequence",
 	 * 		"description":   "Product order",
 	 * 		"type":          "integer",
@@ -364,6 +402,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "ordercategoryid",
 	 * 		"description":   "Category ID",
 	 * 		"type":          "integer",
@@ -371,6 +410,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "recurringtimeperiodid",
 	 * 		"description":   "Recurring time period ID",
 	 * 		"type":          "integer",
@@ -378,6 +418,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "restricteddata",
 	 * 		"description":   "Restricted data",
 	 * 		"type":          "integer",
@@ -385,6 +426,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "resourceid",
 	 * 		"description":   "Resource ID",
 	 * 		"type":          "integer",
@@ -392,6 +434,7 @@ class ProductsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "terms",
 	 * 		"description":   "Terms",
 	 * 		"type":          "string",
@@ -458,8 +501,9 @@ class ProductsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /orders/products/{id}
+	 * @apiUri    /api/orders/products/{id}
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
 	 * 		"type":          "integer",

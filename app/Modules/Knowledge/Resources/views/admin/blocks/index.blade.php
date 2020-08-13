@@ -18,11 +18,11 @@ app('pathway')
 
 @section('toolbar')
 	@if (auth()->user()->can('create knowledge'))
-		{!! Toolbar::addNew(route('admin.knowledge.create')) !!}
+		{!! Toolbar::addNew(route('admin.knowledge.blocks.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('delete knowledge'))
-		{!! Toolbar::deleteList('', route('admin.knowledge.delete')) !!}
+		{!! Toolbar::deleteList('', route('admin.knowledge.blocks.delete')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin knowledge'))
@@ -45,7 +45,7 @@ app('pathway')
 	blocks
 @endcomponent
 
-<form action="{{ route('admin.knowledge.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.knowledge.blocks') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -94,7 +94,7 @@ app('pathway')
 				</td>
 				<td>
 					@if (auth()->user()->can('edit knowledge'))
-						<a href="{{ route('admin.knowledge.edit', ['id' => $row->id]) }}">
+						<a href="{{ route('admin.knowledge.blocks.edit', ['id' => $row->id]) }}">
 							{{ Illuminate\Support\Str::limit($row->title, 70) }}
 						</a>
 					@else
