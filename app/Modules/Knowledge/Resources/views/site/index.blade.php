@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/knowledge/vendor/prism/prism.css') }}?v={{ filemtime(public_path('modules/knowledge/vendor/prism/prism.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/prism/prism.css') }}?v={{ filemtime(public_path('modules/core/vendor/prism/prism.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/knowledge/css/knowledge.css') }}?v={{ filemtime(public_path('modules/knowledge/css/knowledge.css')) }}" />
 @stop
 

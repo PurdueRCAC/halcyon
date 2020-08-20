@@ -21,6 +21,19 @@ if ($isActive)
 {
 	$cls .= ' active';
 }
+if (!empty($current) && $current[0] == $node->alias)
+{
+	$children = $node->children()
+		->orderBy('ordering', 'asc')
+		->where('state', '=', 1)
+		->whereIn('access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
+		->get();
+
+	if (count($children))
+	{
+		$cls .= ' active';
+	}
+}
 @endphp
 <li<?php if ($cls) { echo ' class="' . trim($cls) . '"'; } ?>>
 	<!--
@@ -45,13 +58,6 @@ if ($isActive)
 	@if (!empty($current) && $current[0] == $node->alias)
 		@php
 		array_shift($current);
-
-		$children = $node->children()
-					->orderBy('ordering', 'asc')
-					->where('state', '=', 1)
-					->whereIn('access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
-					->get();
-
 		@endphp
 		@if (count($children))
 			@include('knowledge::site.list', ['nodes' => $children, 'path' => $path, 'current' => $current, 'variables' => $node->variables])
