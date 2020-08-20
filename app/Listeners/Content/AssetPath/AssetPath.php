@@ -40,7 +40,8 @@ class AssetPath
 	 */
 	public function handlePageContentIsRendering(PageContentIsRendering $event)
 	{
-		$content = preg_replace('/src="(.*?)"/i', 'src="' . asset("storage/$1") . '"', $event->getBody());
+		$content = preg_replace('/src="(.*?)"/i', 'src="' . asset("files/$1") . '"', $event->getBody());
+		$content = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $content);
 		$event->setBody($content);
 	}
 
