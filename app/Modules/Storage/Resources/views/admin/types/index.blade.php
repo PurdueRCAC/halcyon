@@ -1,0 +1,132 @@
+@extends('layouts.master')
+
+@php
+app('pathway')
+	->append(
+		trans('storage::storage.module name'),
+		route('admin.storage.index')
+	)
+	->append(
+		trans('storage::storage.notification types'),
+		route('admin.storage.types')
+	);
+@endphp
+
+@section('toolbar')
+	@if (auth()->user()->can('create storage'))
+		{!! Toolbar::addNew(route('admin.storage.types.create')) !!}
+	@endif
+
+	@if (auth()->user()->can('delete storage'))
+		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.storage.types.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('admin storage'))
+		{!!
+			Toolbar::spacer();
+			Toolbar::preferences('storage')
+		!!}
+	@endif
+
+	{!! Toolbar::render() !!}
+@stop
+
+@section('title')
+{!! config('storage.name') !!}
+@stop
+
+@section('content')
+
+@component('storage::admin.submenu')
+	@if (request()->segment(3) == 'types')
+		types
+	@else
+		storage
+	@endif
+@endcomponent
+<form action="{{ route('admin.storage.types') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+	<div class="container-fluid">
+		<fieldset id="filter-bar" class="row">
+			<div class="col filter-search col-md-12">
+				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+
+				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+			</div>
+		</fieldset>
+
+		<div class="row">
+			<div class="col-md-12">
+				<table class="table table-hover adminlist">
+					<caption class="sr-only">{{ trans('storage::storage.module name') }}</caption>
+					<thead>
+						<tr>
+							<th>
+								{!! Html::grid('checkall') !!}
+							</th>
+							<th scope="col" class="priority-5">
+								{!! Html::grid('sort', trans('storage::storage.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							<th scope="col">
+								{!! Html::grid('sort', trans('storage::storage.name'), 'name', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							<th scope="col">
+								{!! Html::grid('sort', trans('storage::storage.time period'), 'defaulttimeperiodid', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							<th scope="col" class="priority-4 numeric">
+								{{ trans('storage::storage.notifications') }}
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+					@foreach ($rows as $i => $row)
+						<tr>
+							<td>
+								@if (auth()->user()->can('edit storage'))
+								<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
+								@endif
+							</td>
+							<td class="priority-5">
+								{{ $row->id }}
+							</td>
+							<td>
+								@if (auth()->user()->can('edit storage'))
+								<a href="{{ route('admin.storage.types.edit', ['id' => $row->id]) }}">
+								@endif
+									{{ $row->name }}
+								@if (auth()->user()->can('edit storage'))
+								</a>
+								@endif
+							</td>
+							<td class="priority-4">
+								@if ($row->defaulttimeperiodid)
+									{{ $row->timeperiod->name }}
+								@else
+									<span class="none">{{ trans('global.none') }}</span>
+								@endif
+							</td>
+							<td class="priority-4 text-right">
+								@if ($row->notifications_count)
+									{{ number_format($row->notifications_count) }}
+								@else
+									<span class="none">{{ number_format($row->notifications_count) }}</span>
+								@endif
+							</td>
+						</tr>
+					@endforeach
+					</tbody>
+				</table>
+
+				{{ $rows->render() }}
+			</div>
+		</div>
+	</div>
+
+	<input type="hidden" name="task" value="" autocomplete="off" />
+	<input type="hidden" name="boxchecked" value="0" />
+	<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+	<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+	@csrf
+</form>
+@stop

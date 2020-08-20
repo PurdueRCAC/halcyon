@@ -36,6 +36,14 @@ app('pathway')
 @stop
 
 @section('content')
+@component('storage::admin.submenu')
+	@if (request()->segment(3) == 'types')
+		types
+	@else
+		storage
+	@endif
+@endcomponent
+
 <form action="{{ route('admin.storage.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">

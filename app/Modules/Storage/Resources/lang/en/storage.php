@@ -26,6 +26,13 @@ return [
 	'get quota type' => '"get quota" message',
 	'create type' => '"make directory" message',
 	'message queue' => 'Message Queue',
+	'notification types' => 'Notification Types',
+	'notifications' => 'Notifications',
+	'time period' => 'Default time period',
+	'value type' => 'Value type',
+	'percent' => 'Percentage',
+	'number' => 'Number',
+	'bytes' => 'Bytes',
 
 	// Misc.
 	'active' => 'Active',

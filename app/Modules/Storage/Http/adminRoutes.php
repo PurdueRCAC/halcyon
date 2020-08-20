@@ -67,4 +67,37 @@ $router->group(['prefix' => 'storage'], function (Router $router)
 			'uses' => 'DirectoriesController@cancel',
 		]);
 	});
+
+	$router->group(['prefix' => 'types', 'middleware' => 'can:manage storage'], function (Router $router)
+	{
+		$router->match(['get', 'post'], '/', [
+			'as' => 'admin.storage.types',
+			'uses' => 'NotificationTypesController@index',
+			//'middleware' => 'can:manage storage',
+		]);
+		$router->get('create', [
+			'as' => 'admin.storage.types.create',
+			'uses' => 'NotificationTypesController@create',
+			//'middleware' => 'can:create storage',
+		]);
+		$router->post('store', [
+			'as' => 'admin.storage.types.store',
+			'uses' => 'NotificationTypesController@store',
+			//'middleware' => 'can:create storage,edit storage',
+		]);
+		$router->get('{id}', [
+			'as' => 'admin.storage.types.edit',
+			'uses' => 'NotificationTypesController@edit',
+			//'middleware' => 'can:edit storage',
+		])->where('id', '[0-9]+');
+		$router->match(['get', 'post'], '/delete/{id?}', [
+			'as'   => 'admin.storage.types.delete',
+			'uses' => 'NotificationTypesController@delete',
+			//'middleware' => 'can:delete storage',
+		]);
+		$router->match(['get', 'post'], 'cancel', [
+			'as' => 'admin.storage.types.cancel',
+			'uses' => 'NotificationTypesController@cancel',
+		]);
+	});
 });

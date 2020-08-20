@@ -7,6 +7,7 @@
 
 namespace App\Modules\Storage\Models\Notification;
 
+use App\Modules\Storage\Models\Notification as Notify;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Models\Timeperiod;
@@ -49,5 +50,15 @@ class Type extends Model
 	public function timeperiod()
 	{
 		return $this->belongsTo(Timeperiod::class, 'defaulttimeperiodid')->withDefault();
+	}
+
+	/**
+	 * Defines a relationship to notifications
+	 *
+	 * @return  object
+	 */
+	public function notifications()
+	{
+		return $this->hasMany(Notify::class, 'storagedirquotanotificationtypeid');
 	}
 }

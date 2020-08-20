@@ -54,42 +54,4 @@ class StorageController extends Controller
 			'row' => $row
 		]);
 	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 * @return Response
-	 */
-	public function edit()
-	{
-		$id = 1;
-
-		app('pathway')
-			->append(
-				config('resources.name'),
-				url('/resources')
-			)
-			->append(
-				__('resources::assets.edit'),
-				url('/resources/edit/:id', $id)
-			);
-
-		return view('resources::site.edit');
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 * @param  Request $request
-	 * @return Response
-	 */
-	public function update(Request $request)
-	{
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 * @return Response
-	 */
-	public function destroy()
-	{
-	}
 }
