@@ -190,6 +190,46 @@ class Article extends Model
 	}
 
 	/**
+	 * Determine if entry was edited
+	 *
+	 * @return  bool
+	 */
+	public function isModified()
+	{
+		return ($this->datetimeedited && $this->datetimeedited != '0000-00-00 00:00:00' && $this->datetimeedited != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * Determine if entry was edited
+	 *
+	 * @return  bool
+	 */
+	public function isMailed()
+	{
+		return ($this->datetimemailed && $this->datetimemailed != '0000-00-00 00:00:00' && $this->datetimemailed != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * Determine if entry has a start time
+	 *
+	 * @return  bool
+	 */
+	public function hasStart()
+	{
+		return ($this->datetimenews && $this->datetimenews != '0000-00-00 00:00:00' && $this->datetimenews != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * Determine if entry has an end time
+	 *
+	 * @return  bool
+	 */
+	public function hasEnd()
+	{
+		return ($this->datetimenewsend && $this->datetimenewsend != '0000-00-00 00:00:00' && $this->datetimenewsend != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Check if the job is available
 	 *
 	 * @return  boolean
@@ -209,6 +249,56 @@ class Article extends Model
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if the job is available
+	 *
+	 * @return  boolean
+	 */
+	public function isToday()
+	{
+		$now = Carbon::now()->format('Y-m-d');
+		$start = Carbon::parse($this->datetimenews)->format('Y-m-d');
+
+		return ($now == $start);
+	}
+
+	/**
+	 * Check if the job is available
+	 *
+	 * @return  boolean
+	 */
+	public function isNow()
+	{
+		if (!$this->isToday())
+		{
+			return false;
+		}
+
+		$now = Carbon::now()->format('Y-m-d h:i:s');
+
+		if ($this->hasEnd()
+		 && $now > $this->datetimenews
+		 && $now < $this->datetimenewsend)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if the job is available
+	 *
+	 * @return  boolean
+	 */
+	public function isTomorrow()
+	{
+		$now = Carbon::now()->modify('+1 day')->format('Y-m-d');
+		$start = Carbon::parse($this->datetimenews)->format('Y-m-d');
+
+		return ($now == $start);
 	}
 
 	/**
@@ -277,20 +367,32 @@ class Article extends Model
 	/**
 	 * Set a query's WHERE clause to include published state
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWherePublished($query)
 	{
-		$now = Carbon::now()->toDateTimeString();
+		return $query->where('published', '=', 1);
+		/*$now = Carbon::now()->toDateTimeString();
 
 		return $query->where('published', '=', 1)
-			->where('datetimenewsend', '!=', '0000-00-00 00:00:00')
-			->where('datetimenewsend', '<=', $now);
+			->where(function($where) use ($now)
+			{
+				$where->whereNull('datetimenewsend')
+					->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00')
+					->orWhere(function($w) use ($now)
+					{
+						$w->where('datetimenewsend', '!=', '0000-00-00 00:00:00')
+							->where('datetimenewsend', '>', $now);
+					});
+			});*/
 	}
 
 	/**
 	 * Set a query's WHERE clause to include published state
 	 *
+	 * @param   object  $query
+	 * @param   array   $ids
 	 * @return  object
 	 */
 	public function scopeWhereResourceIn($query, $ids)
@@ -388,6 +490,7 @@ class Article extends Model
 		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
 
 		$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
+		$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
 
 		return $text;
 	}
@@ -583,6 +686,10 @@ class Article extends Model
 	 */
 	public function formatDate($startdate, $enddate='0000-00-00 00:00:00')
 	{
+		if (!$startdate || $startdate == '0000-00-00 00:00:00')
+		{
+			return '';
+		}
 		$datestring = '';
 
 		$starttime = explode(' ', $startdate);
@@ -599,7 +706,7 @@ class Article extends Model
 		$endmonth   = date("F", strtotime($enddate));
 		$endday     = date("j", strtotime($enddate));
 
-		if ($enddate == '0000-00-00 00:00:00' || $startdate == $enddate)
+		if ($enddate == '-0001-11-30 00:00:00' || $enddate == '0000-00-00 00:00:00' || $startdate == $enddate)
 		{
 			$datestring = date("F j, Y", strtotime($startdate));
 			if ($starttime != '00:00:00')

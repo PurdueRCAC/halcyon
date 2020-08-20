@@ -18,7 +18,10 @@ class ArticlesController extends Controller
 	 */
 	public function index()
 	{
-		$types = Type::query()->orderBy('name', 'asc')->get();
+		$types = Type::query()
+			->where('name', 'NOT LIKE', 'coffee%')
+			->orderBy('name', 'asc')
+			->get();
 
 		app('pathway')->append(
 			config('news.name'),
@@ -36,7 +39,7 @@ class ArticlesController extends Controller
 	 */
 	public function search()
 	{
-		$types = Type::all();
+		$types = Type::query()->orderBy('name', 'asc')->get();
 
 		app('pathway')
 			->append(
@@ -191,15 +194,6 @@ class ArticlesController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
-	 * @param  Request $request
-	 * @return Response
-	 */
-	public function store(Request $request)
-	{
-	}
-
-	/**
 	 * Show the specified entry
 	 *
 	 * @param   string  $name
@@ -214,7 +208,10 @@ class ArticlesController extends Controller
 			abort(404);
 		}
 
-		$types = Type::all();
+		$types = Type::query()
+			->where('name', 'NOT LIKE', 'coffee%')
+			->orderBy('name', 'asc')
+			->get();
 
 		app('pathway')
 			->append(
@@ -247,8 +244,6 @@ class ArticlesController extends Controller
 			abort(404);
 		}
 
-		$types = Type::all();
-
 		app('pathway')
 			->append(
 				config('news.name'),
@@ -260,8 +255,7 @@ class ArticlesController extends Controller
 			);
 
 		return view('news::site.coffee', [
-			'type' => $row,
-			'types' => $types
+			'type' => $row
 		]);
 	}
 
@@ -275,12 +269,12 @@ class ArticlesController extends Controller
 	{
 		$row = Article::findOrFail($id);
 
-		$types = Type::all();
+		$types = Type::query()->orderBy('name', 'asc')->get();
 
 		app('pathway')
 			->append(
-				config('resources.name'),
-				url('/resources')
+				config('news.name'),
+				route('site.news.index')
 			)
 			->append(
 				$row->headline,
@@ -312,22 +306,5 @@ class ArticlesController extends Controller
 			);
 
 		return view('news::site.edit');
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 * @param  Request $request
-	 * @return Response
-	 */
-	public function update(Request $request)
-	{
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 * @return Response
-	 */
-	public function destroy()
-	{
 	}
 }

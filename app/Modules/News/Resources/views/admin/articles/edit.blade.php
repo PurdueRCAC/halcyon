@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
 @section('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 @stop
 
 @push('scripts')
@@ -74,7 +74,13 @@ app('pathway')
 					<label for="field-newstypeid">{{ trans('news::news.type') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<select name="fields[newstypeid]" id="field-newstypeid" class="form-control required">
 						<?php foreach ($types as $type): ?>
-							<option value="<?php echo $type->id; ?>"<?php if ($row->newstypeid == $type->id): echo ' selected="selected"'; endif;?>><?php echo e($type->name); ?></option>
+							<option value="<?php echo $type->id; ?>"<?php if ($row->newstypeid == $type->id): echo ' selected="selected"'; endif;?>
+								data-tagresources="{{ $type->tagresources }}"
+								data-tagusers="{{ $type->tagusers }}"
+								data-location="{{ $type->location }}"
+								data-url="{{ $type->url }}"
+								data-future="{{ $type->future }}"
+								data-ongoing="{{ $type->ongoing }}">{{ $type->name }}</option>
 						<?php endforeach; ?>
 					</select>
 				</div>
@@ -84,12 +90,12 @@ app('pathway')
 					<input type="text" name="fields[headline]" id="field-headline" class="form-control required" value="{{ $row->headline }}" />
 				</div>
 
-				<div class="form-group<?php if (!$row->type->location) { echo ' d-none'; } ?>">
+				<div class="form-group type-option type-location <?php if (!$row->type->location) { echo ' d-none'; } ?>">
 					<label for="field-location">{{ trans('news::news.location') }}:</label>
 					<input type="text" name="fields[location]" id="field-location" class="form-control" value="{{ $row->location }}" />
 				</div>
 
-				<div class="form-group<?php if (!$row->type->tagresources) { echo ' d-none'; } ?>">
+				<div class="form-group type-option type-tagresources <?php if (!$row->type->tagresources) { echo ' d-none'; } ?>">
 					<?php
 					$r = array();
 					foreach ($row->resources as $resource)
@@ -112,7 +118,7 @@ app('pathway')
 					</select>
 				</div>
 
-				<div class="form-group<?php if (!$row->type->tagusers) { echo ' d-none'; } ?>">
+				<div class="form-group type-option type-tagusers <?php if (!$row->type->tagusers) { echo ' d-none'; } ?>">
 					<?php
 					$r = array();
 					foreach ($row->associations()->where('assoctype', '=', 'user')->get() as $assoc)

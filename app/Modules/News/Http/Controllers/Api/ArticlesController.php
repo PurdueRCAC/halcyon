@@ -11,6 +11,7 @@ use App\Modules\News\Models\Type;
 use App\Modules\News\Models\Stemmedtext;
 use App\Modules\News\Http\Resources\ArticleResource;
 use App\Modules\News\Http\Resources\ArticleResourceCollection;
+use App\Modules\History\Models\Log;
 
 /**
  * Articles
@@ -331,6 +332,35 @@ class ArticlesController extends Controller
 		$row = Article::findOrFail((int)$id);
 
 		return new ArticleResource($row);
+	}
+
+	/**
+	 * Read a news article
+	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/news/{id}/views
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param  integer  $id
+	 * @return Response
+	 */
+	public function views($id)
+	{
+		$row = Log::query()
+			->select(DB::raw('COUNT(id) as viewcount'), DB::raw('COUNT(DISTINCT ip) as uniquecount'))
+			->where('transportmethod', '=', 'GET')
+			->where('status', '=', 200)
+			->where('uri', '=', route('site.news.show', ['id' => $id]))
+			->get()
+			->first();
+
+		return $row;
 	}
 
 	/**

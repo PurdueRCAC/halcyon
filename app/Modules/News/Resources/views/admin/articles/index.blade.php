@@ -4,10 +4,6 @@
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css') }}" />
 @stop
 
-@section('scripts')
-<script src="{{ asset('modules/news/js/admin.js') }}"></script>
-@stop
-
 @php
 app('pathway')
 	->append(
@@ -96,6 +92,13 @@ else
 		</div>
 	</fieldset>
 
+	
+	<div id="app">
+		<table-component></table-component>
+	</div>
+	<script src="{{ asset('modules/news/js/app-admin.js?v=3') }}"></script>
+	<!--
+
 	<table class="table table-hover adminlist">
 		<thead>
 			<tr>
@@ -168,20 +171,8 @@ else
 				<td class="priority-4">
 					{{ $row->type->name }}
 				</td>
-				<td class="priority-4 text-nowrap"><!--
-					@if ($row->getOriginal('datetimecreated') && $row->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
-						<time datetime="{{ Carbon\Carbon::parse($row->datetimecreated)->format('Y-m-d\TH:i:s\Z') }}">
-							@if ($row->getOriginal('datetimecreated') > Carbon\Carbon::now()->toDateTimeString())
-								{{ $row->datetimecreated->diffForHumans() }}
-							@else
-								{{ $row->datetimecreated }}
-							@endif
-						</time>
-					@else
-						<span class="never">{{ trans('global.unknown') }}</span>
-					@endif
--->
-					@if ($row->getOriginal('datetimenews') && $row->getOriginal('datetimenews') != '0000-00-00 00:00:00')
+				<td class="priority-4 text-nowrap">
+					@if ($row->hasStart())
 						<time datetime="{{ $row->datetimenews->format('Y-m-d\TH:i:s\Z') }}">
 							{{ $row->datetimenews->format('F j, Y g:ia') }}
 						</time>
@@ -190,8 +181,8 @@ else
 					@endif
 				</td>
 				<td class="priority-4 text-nowrap">
-					@if ($row->getOriginal('datetimenews') && $row->getOriginal('datetimenews') != '0000-00-00 00:00:00')
-						@if ($row->getOriginal('datetimenewsend') && $row->getOriginal('datetimenewsend') != '0000-00-00 00:00:00' && $row->getOriginal('datetimenewsend') != '-0001-11-30 00:00:00')
+					@if ($row->hasStart())
+						@if ($row->hasEnd())
 							<time datetime="{{ $row->datetimenewsend->format('Y-m-d\TH:i:s\Z') }}">
 								{{ $row->datetimenewsend->format('F j, Y g:ia') }}
 							</time>
@@ -215,6 +206,7 @@ else
 	</table>
 
 	{{ $rows->render() }}
+	-->
 
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="order" value="{{ $filters['order'] }}" />

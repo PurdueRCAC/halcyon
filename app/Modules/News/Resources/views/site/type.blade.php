@@ -1,26 +1,89 @@
 @extends('layouts.master')
 
 @section('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css?v=' . filemtime(public_path() . '/modules/news/css/news.css')) }}" />
 @stop
 
 @section('scripts')
-<script src="{{ asset('modules/news/js/site.js') }}"></script>
+<script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script>
 @stop
 
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-	@include('news::site.menu', ['types' => $types])
+	@include('news::site.menu', ['types' => $types, 'active' => $type->id])
+
+	<!--
+	<form method="get" action="{{ route('site.news.type', ['name' => $type->name]) }}">
+	<fieldset class="filters">
+		<legend class="sr-only">Filter</legend>
+
+		<fieldset>
+			<legend>Category</legend>
+
+			@foreach ($types as $t)
+				<div class="form-check">
+					<input type="checkbox" name="typeid[]" id="typeid-{{ $t->id }}" class="form-check-input" value="{{ $t->id }}" <?php if ($type->id == $t->id) { echo ' checked="checked"'; } ?> />
+					<label for="typeid-{{ $t->id }}" class="form-check-label">{{ $t->name }}</label>
+				</div>
+			@endforeach
+		</fieldset>
+
+		<div class="form-group">
+			<label for="keywords">Search</label>
+			<input type="search" name="keyword" id="keywords" class="form-control" value="" />
+		</div>
+		<div class="form-group">
+			<label for="resource">Resource</label>
+			<input type="text" name="resource" id="resource" class="form-control" value="" />
+		</div>
+		<div class="form-group">
+			<label for="datetimenews">Date from</label>
+			<span class="input-group">
+				<span class="input-group-addon"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
+				<input type="text" class="date-pick form-control" name="start" id="datetimenews" placeholder="YYYY-MM-DD" value="" />
+			</span>
+		</div>
+		<div class="form-group">
+			<label for="datetimenewsend">Date to</label>
+			<span class="input-group">
+				<span class="input-group-addon"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
+				<input type="text" class="date-pick form-control" name="stop" id="datetimenewsend" placeholder="YYYY-MM-DD" value="" />
+			</span>
+		</div>
+		@csrf
+	</fieldset>
+	</form>
+-->
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 
-	<h2 class="newsheader">
-		<a class="icn tip" href="{{ route('site.news.rss', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}">
+	@if ($type->calendar)
+		<div class="row">
+			<div class="col-md-8">
+	@endif
+
+	<h2>
+		<a class="icn tip" href="{{ route('site.news.feed', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}">
 			<i class="fa fa-rss-square" aria-hidden="true"></i> {{ trans('news::news.rss feed') }}
 		</a>
 		{{ $type->name }}
 	</h2>
+
+	@if ($type->calendar)
+			</div>
+			<div class="col-md-4 text-right">
+				<div class="btn-group" role="group" aria-label="Calendar options">
+					<a target="_blank" class="btn btn-default btn-secondary calendar calendar-subscribe tip" href="{{ preg_replace('/^https?:\/\//', 'webcal://', route('site.news.calendar', ['name' => strtolower($type->name)])) }}" title="Subscribe to calendar"><!--
+						--><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Subscribe<!--
+					--></a>
+					<a target="_blank" class="btn btn-default btn-secondary calendar calendar-download tip" href="{{ route('site.news.calendar', ['name' => strtolower($type->name)]) }}" title="Download calendar"><!--
+						--><i class="fa fa-fw fa-download" aria-hidden="true"></i> Download<!--
+					--></a>
+				</div>
+			</div>
+		</div>
+	@endif
 
 	<?php /*if (!$type->future) { ?>
 		<p>Here are <?php echo strtolower($type->name); ?> from this week. Older <?php echo strtolower($type->name); ?> are listed at the bottom.</p>
@@ -122,63 +185,61 @@
 
 	$articles = $type->articles()
 		->wherePublished()
+		->where('template', '=', 0)
 		->orderBy('datetimenews', 'desc')
 		->limit(20)
 		->paginate();
 
 	if ($articles->count() > 0): ?>
 		<ul class="news-list">
-			<?php foreach ($articles as $article): ?>
+			@foreach ($articles as $article)
 				<li>
-					<article>
-					<p>
-						<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
+					<article id="article-{{ $article->id }}">
+						<h3 class="news-title">
+							<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
+						</h3>
+						<p class="news-metadata text-muted">
+							@if ($article->isToday())
+								@if ($article->isNow())
+									<span class="badge badge-success">Happening now</span>
+								@else
+									<span class="badge badge-info">Today</span>
+								@endif
+							@elseif ($article->isTomorrow())
+								<span class="badge">Tomorrow</span>
+							@endif
+							<i class="fa fa-fw fa-clock-o" aria-hidde="true"></i>
+							<time datetime="{{ $article->datetimenews }}">
+								{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
+							</time>
+							<?php
+							$lastupdate = $article->updates()
+								->orderBy('datetimecreated', 'desc')
+								->limit(1)
+								->first();
+							?>
+							@if ($lastupdate)
+								<span class="badge badge-warning"><i class="fa fa-exclamation-circle" aria-hidde="true"></i> Updated {{ $lastupdate->datetimecreated->format('h:m') }} {{ $lastupdate->datetimecreated->format('M d, Y') }}</span>
+							@endif
 
-					<?php
-					$now = new Carbon\Carbon();
-					$news_start = new Carbon\Carbon($article->datetimenews);
-					$news_end = new Carbon\Carbon($article->datetimenewsend);
-
-					if ($now->format('Y-m-d') == $news_start->format('Y-m-d'))
-					{
-						if ($article->datetimenewsend
-						 && $article->datetimenewsend != '0000-00-00 00:00:00'
-						 && $now->format('Y-m-d h:i:s') > $article->datetimenewsend
-						 && $now->format('Y-m-d h:i:s') < $news_end)
-						{
-							echo ' <span class="badge badge-success">Happening now</span>';
-						}
-						else
-						{
-							echo ' <span class="badge badge-info">Today</span>';
-						}
-					}
-					elseif ($now->modify('+1 day')->format('Y-m-d') == $news_start->format('Y-m-d'))
-					{
-						echo ' <span class="badge">Tomorrow</span>';
-					}
-
-					$lastupdate = $article->updates()
-						->orderBy('datetimecreated', 'desc')
-						->limit(1)
-						->first();
-					?>
-						<br />
-						<i class="fa fa-clock-o" aria-hidde="true"></i>
-						<time datetime="{{ $article->datetimenews }}">
-							<span class="date">{{ $article->datetimenews->format('M d, Y') }}</span>
-							<span class="time">{{ $article->datetimenews->format('h:m') }}</span>
-						</time>
-						@if ($lastupdate)
-							<span class="badge badge-warning"><i class="fa fa-exclamation-circle" aria-hidde="true"></i> Updated {{ $lastupdate->datetimecreated->format('h:m') }} {{ $lastupdate->datetimecreated->format('M d, Y') }}</span>
-						@endif
-					</p>
-					<!-- <p>
-						{{ Illuminate\Support\Str::limit(strip_tags($article->formattedBody), 150) }}
-					</p> -->
+							<?php
+							/*if (count($article->resources) > 0)
+							{
+								$resourceArray = array();
+								foreach ($article->resources as $resource)
+								{
+									$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->resource->name)]) . '">' . $resource->resource->name . '</a>';
+								}
+								echo '<br /><i class="fa fa-fw fa-tags" aria-hidden="true"></i> ' .  implode(', ', $resourceArray);
+							}*/
+							?>
+						</p>
+						<p>
+							{{ Illuminate\Support\Str::limit(strip_tags($article->formattedBody), 150) }}
+						</p>
 					</article>
 				</li>
-			<?php endforeach; ?>
+			@endforeach
 		</ul>
 		<?php echo $articles->render(); ?>
 	<?php else: ?>

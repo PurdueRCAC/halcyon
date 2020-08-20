@@ -75,7 +75,7 @@ app('pathway')
 						<div class="form-group form-check">
 							<input type="checkbox" name="fields[future]" id="field-future" class="form-check-input" value="1" <?php if ($row->future): ?>checked="checked"<?php endif; ?> />
 							<label for="field-future" class="form-check-label">{{ trans('news::news.future') }}</label>
-							<span class="form-text">Allow for specifying a location on articles in this category?</span>
+							<span class="form-text">Display future events in listings?</span>
 						</div>
 						</div>
 					</div>

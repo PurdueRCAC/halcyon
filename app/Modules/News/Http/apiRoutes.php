@@ -14,6 +14,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 		'uses' => 'ArticlesController@create',
 		'middleware' => 'auth:api',
 	]);
+
 	$router->get('{id}', [
 		'as'   => 'api.news.read',
 		'uses' => 'ArticlesController@read',
@@ -84,4 +85,9 @@ $router->group(['prefix' => 'news'], function (Router $router)
 			'middleware' => 'auth:api',
 		])->where('id', '[0-9]+');
 	});
+
+	$router->get('{id}/views', [
+		'as'   => 'api.news.views',
+		'uses' => 'ArticlesController@views',
+	])->where('id', '[0-9]+');
 });

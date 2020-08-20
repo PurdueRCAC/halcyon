@@ -17,7 +17,7 @@
 
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-	@include('news::site.menu', ['types' => $types])
+	Education menu here?
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">

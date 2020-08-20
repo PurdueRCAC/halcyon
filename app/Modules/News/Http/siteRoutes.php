@@ -21,6 +21,10 @@ $router->group(['prefix' => 'news'], function (Router $router)
 		'as' => 'site.news.search',
 		'uses' => 'ArticlesController@search',
 	]);
+	$router->get('calendar/{name}', [
+		'as' => 'site.news.calendar',
+		'uses' => 'ArticlesController@calendar',
+	])->where('name', '[a-zA-Z\-_ ]+');
 
 	$router->get('manage', [
 		'as' => 'site.news.manage',

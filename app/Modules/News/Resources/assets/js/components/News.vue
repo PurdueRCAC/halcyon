@@ -28,7 +28,7 @@
 					<div class="col-sm-10">
 						<select id="newstype" name="newstype" class="form-control">
 							<option id="OPTION_all" name="all" value="-1">All</option>
-							<option value="<?php echo $type; ?>" data-tagresources="<?php echo $newstype['tagresources']; ?>" data-taglocation="<?php echo $newstype['location']; ?>"><?php echo $newstype['name']; ?></option>
+							<option value="<?php echo $type; ?>" data-tagresources="<?php echo $newstype['tagresources']; ?>" data-taglocation=""><?php echo $newstype['name']; ?></option>
 						</select>
 					</div>
 				</div>
@@ -109,6 +109,7 @@
 				});
 			},
 			read() {
+				console.log('here');
 				this.mute = true;
 				window.axios.get(this.ROOT_URL + '/api/news', {
 					params: {
@@ -149,6 +150,9 @@
 			NewsArticle
 		},
 		created() {
+			this.read();
+		},
+		mounted() {
 			this.read();
 		}
 	}

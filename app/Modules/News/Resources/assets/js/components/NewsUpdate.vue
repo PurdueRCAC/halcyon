@@ -11,7 +11,7 @@
 			<div class="panel-body crmcomment crmcommenttext" v-html="formattedbody">
 			</div>
 			<div class="panel-footer">
-				<div class="crmcommentpostedby">Posted by PErson on {{ datetimecreated }}</div>
+				<div class="crmcommentpostedby">Posted by Person on {{ datetimecreated }}</div>
 			</div>
 		</div>
 	</li>
