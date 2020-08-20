@@ -21,7 +21,8 @@
 		<!-- Styles -->
 		<?php
 		$styles = array(
-			'themes/Rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.css',
+			'themes/Rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.min.css',
+			'themes/Rcac/css/jquerytimepicker_min.css',
 			'themes/Rcac/css/font-awesome-css.min.css',
 			'themes/Rcac/css/college.css',
 			'themes/Rcac/css/content.css',
