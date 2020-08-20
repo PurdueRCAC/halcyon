@@ -13,6 +13,7 @@ class TypesController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -23,7 +24,6 @@ class TypesController extends Controller
 			// Paging
 			'limit'    => config('list_limit', 20),
 			'page'     => 1,
-			//'start'    => $request->input('limitstart', 0),
 			// Sorting
 			'order'     => Type::$orderBy,
 			'order_dir' => Type::$orderDir,
@@ -70,6 +70,7 @@ class TypesController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 *
 	 * @return Response
 	 */
 	public function create()
@@ -83,6 +84,8 @@ class TypesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 *
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -103,6 +106,7 @@ class TypesController extends Controller
 
 	/**
 	 * Update the specified resource in storage.
+	 *
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -112,14 +116,10 @@ class TypesController extends Controller
 			'fields.name' => 'required|max:20'
 		]);
 
-		$id = $request->input('id');
+		$id = (int)$request->input('id');
 
 		$row = $id ? Type::findOrFail($id) : new Type();
-
-		//$row->fill($request->input('fields'));
-		$row->set([
-			'name' => $request->input('name')
-		]);
+		$row->name = $request->input('fields.name');
 
 		if (!$row->save())
 		{
@@ -133,6 +133,8 @@ class TypesController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function delete(Request $request)
@@ -145,6 +147,12 @@ class TypesController extends Controller
 		foreach ($ids as $id)
 		{
 			$row = Type::findOrFail($id);
+
+			if ($row->resources()->count())
+			{
+				$request->session()->flash('error', trans('resources::resources.errors.type has resources', ['count' => $row->resources()->count()]));
+				continue;
+			}
 
 			if (!$row->delete())
 			{

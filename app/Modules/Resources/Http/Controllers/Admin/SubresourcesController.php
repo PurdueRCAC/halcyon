@@ -116,6 +116,8 @@ class SubresourcesController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -135,6 +137,8 @@ class SubresourcesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 *
+	 * @param  integer $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -159,6 +163,7 @@ class SubresourcesController extends Controller
 
 	/**
 	 * Update the specified resource in storage.
+	 *
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -203,6 +208,8 @@ class SubresourcesController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function delete(Request $request)
@@ -247,6 +254,8 @@ class SubresourcesController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function restore(Request $request)

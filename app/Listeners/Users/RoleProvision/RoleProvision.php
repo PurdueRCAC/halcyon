@@ -86,6 +86,64 @@ class RoleProvision
 	}
 
 	/**
+	 * Search for users
+	 *
+	 * @param   object  $event
+	 * @return  void
+	 */
+	public function handleResourceMemberDeleted(ResourceMemberDeleted $event)
+	{
+		//$config = parse_ini_string_m(file_get_contents(conf_file('roleprovision')));
+		$config = config('listener.roleprovision', []);
+
+		if (empty($config))
+		{
+			return;
+		}
+
+		try
+		{
+			$client = new Client();
+
+			$res = $client->request('GET', $config['url'], [
+				'auth' => [
+					$config['user'],
+					$config['password']
+				]
+			]);
+
+			$res = $client->request('POST', $config['url'] . $url, [
+				'auth' => [
+					$config['user'],
+					$config['password']
+				],
+				'body' => $body,
+				'json' => ['body' => $body]
+			]);
+
+			$status = $res->getStatusCode();
+			$body   = $res->getBody();
+		}
+		catch (\Exception $e)
+		{
+			//Log::error($e->getMessage());
+			$status = 500;
+			$body   = ['error' => $e->getMessage()];
+		}
+
+		Log::create([
+			'ip'              => request()->ip(),
+			'user'            => auth()->user()->id,
+			'status'          => $status,
+			'transportmethod' => 'GET',
+			'servername'      => request()->getHttpHost(),
+			'uri'             => $config['url'] . $url,
+			'app'             => 'role',
+			'payload'         => json_encode($body),
+		]);
+	}
+
+	/**
 	 * Get status for a user
 	 *
 	 * @param   object   $event

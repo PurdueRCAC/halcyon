@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use App\Modules\Resources\Entities\Asset;
 use App\Modules\Resources\Http\Resources\AssetResourceCollection;
 use App\Modules\Resources\Http\Resources\AssetResource;
+use App\Modules\Users\Models\User;
 
 /**
  * Members
@@ -63,6 +64,7 @@ class MembersController extends Controller
 	 * 		"default":       "desc",
 	 * 		"allowedValues": "asc, desc"
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -131,6 +133,7 @@ class MembersController extends Controller
 	 *      "required":      true,
 	 *      "default":       null
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -179,6 +182,7 @@ class MembersController extends Controller
 	 *      "required":      true,
 	 *      "default":       null
 	 * }
+	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function read($id)
@@ -236,7 +240,8 @@ class MembersController extends Controller
 	 *      "required":      true,
 	 *      "default":       null
 	 * }
-	 * @return  Response
+	 * @param  Request $request
+	 * @return Response
 	 */
 	public function update(Asset $asset, Request $request)
 	{
@@ -273,21 +278,64 @@ class MembersController extends Controller
 	 * @apiParameter {
 	 *      "in":            "query",
 	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
+	 *      "description":   "Resource ID and user ID separated by a period. Example: 1234.5678",
+	 *      "type":          "string",
 	 *      "required":      true,
 	 *      "default":       null
 	 * }
-	 * @return  Response
+	 * @param  string $id
+	 * @return Response
 	 */
-	public function delete(Asset $asset)
+	public function delete($id)
 	{
-		$row = Report::findOrFail($id);
+		$parts = explode('.', $id);
 
-		if (!$row->delete())
+		if (count($parts) != 2)
 		{
-			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			return response()->json(['message' => trans('Missing or invalid value. Must be of format `resourceid.userid`')], 412);
 		}
+
+		$resource = $parts[0];
+		$user = $parts[1];
+
+		if (!is_numeric($resource)
+		 || !is_numeric($user))
+		{
+			return response()->json(['message' => trans('Missing or invalid value. Must be of format `resourceid.userid`')], 415);
+		}
+
+		// Ensure the client is authorized to manage a group with queues on the resource in question.
+		if (!auth()->user()->can('manage resources')
+		 && $user != auth()->user()->id)
+		{
+			$sql = "SELECT queues.id FROM resources, resourcesubresources, queues WHERE resources.id = '" . $this->db->escape_string($resource) . "' AND queues.groupid " . $this->myownedgroupssql . " AND resources.id = resourcesubresources.resourceid AND resourcesubresources.subresourceid = queues.subresourceid AND queues.datetimeremoved = '0000-00-00 00:00:00'";
+			$data = array();
+			$rows = $this->db->query($sql, $data);
+
+			if ($rows < 1 && !in_array($resource, array('48', '2', '12', '66')))
+			{
+				return response()->json(null, 403);
+			}
+		}
+
+		// Check for other queue memberships on this resource that might conflict with removing the role
+		$sql = "SELECT queues.id, queues.groupid FROM resources, resourcesubresources, queues, queueusers WHERE resources.id = '" . $this->db->escape_string($resource) . "' AND resources.id = resourcesubresources.resourceid AND resourcesubresources.subresourceid = queues.subresourceid AND queueusers.queueid = queues.id AND queues.datetimeremoved = '0000-00-00 00:00:00' AND queueusers.datetimeremoved = '0000-00-00 00:00:00' AND resources.datetimeremoved = '0000-00-00 00:00:00' AND queueusers.membertype = '1' AND queueusers.userid = '" . $this->db->escape_string($user) . "' UNION SELECT groupusers.groupid AS id, groupusers.groupid FROM groupusers, queues, resourcesubresources WHERE groupusers.userid = '" . $this->db->escape_string($user) . "' and groupusers.membertype = '2' AND groupusers.groupid <> '0' and groupusers.dateremoved = '0000-00-00 00:00:00' AND groupusers.groupid = queues.groupid AND resourcesubresources.subresourceid = queues.subresourceid AND resourcesubresources.resourceid = '" . $this->db->escape_string($resource) . "' AND queues.datetimeremoved = '0000-00-00 00:00:00'";
+		$data = array();
+		$rows = $this->db->query($sql, $data);
+
+		if ($rows > 0)
+		{
+			return 202;
+		}
+
+		// Look up the current username of the user being removed
+		$user = User::findOrFail($user);
+
+		// Look up the ACMaint role name of the resource to which access is being granted.
+		$resource = Asset::findOrFail($resource);
+
+		// Call central accounting service to remove ACMaint role from this user's account.
+		event(new ResourceMemberDeleted($resource, $user));
 
 		return response()->json(null, 204);
 	}

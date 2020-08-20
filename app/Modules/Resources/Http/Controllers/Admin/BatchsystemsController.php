@@ -12,6 +12,8 @@ class BatchsystemsController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -69,6 +71,7 @@ class BatchsystemsController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 *
 	 * @return Response
 	 */
 	public function create()
@@ -82,6 +85,8 @@ class BatchsystemsController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 *
+	 * @param  integer $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -102,23 +107,20 @@ class BatchsystemsController extends Controller
 
 	/**
 	 * Update the specified resource in storage.
+	 *
 	 * @param  Request $request
 	 * @return Response
 	 */
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required|max:16'
+			'fields.name' => 'required|string|max:16'
 		]);
 
-		$id = $request->input('id');
+		$id = (int)$request->input('id');
 
-		$row = $id ? Batchsystem::findOrFail($id) : new Batchsystem();
-
-		//$row->fill($request->input('fields'));
-		$row->set([
-			'name' => $request->input('name')
-		]);
+		$row = $id ? Batchsystem::findOrFail($id) : new Batchsystem;
+		$row->name = $request->input('fields.name');
 
 		if (!$row->save())
 		{
@@ -132,6 +134,8 @@ class BatchsystemsController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function delete(Request $request)
@@ -144,6 +148,12 @@ class BatchsystemsController extends Controller
 		foreach ($ids as $id)
 		{
 			$row = Batchsystem::findOrFail($id);
+
+			if ($row->resources()->count())
+			{
+				$request->session()->flash('error', trans('resources::resources.errors.batchsystem has resources', ['count' => $row->resources()->count()]));
+				continue;
+			}
 
 			if (!$row->delete())
 			{

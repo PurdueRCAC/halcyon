@@ -223,6 +223,11 @@ class BatchsystemsController extends Controller
 	{
 		$row = Batchsystem::findOrFail($id);
 
+		if ($row->resources()->count())
+		{
+			return response()->json(['message' => trans('resources::resources.errors.batchsystem has resources', ['count' => $row->resources()->count()])], 415);
+		}
+
 		if (!$row->delete())
 		{
 			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);

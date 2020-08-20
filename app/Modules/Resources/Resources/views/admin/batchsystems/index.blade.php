@@ -7,21 +7,21 @@ app('pathway')
 		route('admin.resources.index')
 	)
 	->append(
-		trans('resources::resources.types'),
-		route('admin.resources.types')
+		trans('resources::resources.batchsystems'),
+		route('admin.resources.batchsystems')
 	);
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create resources.types'))
-		{!! Toolbar::addNew(route('admin.resources.types.create')) !!}
+	@if (auth()->user()->can('create resources.batchsystems'))
+		{!! Toolbar::addNew(route('admin.resources.batchsystems.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('delete resources'))
-		{!! Toolbar::deleteList('', route('admin.resources.types.delete')) !!}
+		{!! Toolbar::deleteList('', route('admin.resources.batchsystems.delete')) !!}
 	@endif
 
-	@if (auth()->user()->can('admin resources.types'))
+	@if (auth()->user()->can('admin resources.batchsystems'))
 		{!!
 			Toolbar::spacer();
 			Toolbar::preferences('resources');
@@ -32,7 +32,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('resources.name') !!}: {{ trans('resources::resources.types') }}
+{!! config('resources.name') !!}: {{ trans('resources::resources.batchsystems') }}
 @stop
 
 @section('content')
@@ -40,7 +40,7 @@ app('pathway')
 	<?php echo request()->segment(3); ?>
 @endcomponent
 
-<form action="{{ route('admin.resources.types') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.resources.batchsystems') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar">
 			<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>

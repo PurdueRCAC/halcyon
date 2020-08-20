@@ -129,7 +129,7 @@ class TypesController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'name' => 'required|max:20'
+			'name' => 'required|string|max:20'
 		]);
 
 		$row = Type::create($request->all());
@@ -211,7 +211,7 @@ class TypesController extends Controller
 	public function update($id, Request $request)
 	{
 		$request->validate([
-			'name' => 'required|max:20'
+			'name' => 'required|string|max:20'
 		]);
 
 		$row = Type::findOrFail($id);
@@ -245,6 +245,11 @@ class TypesController extends Controller
 	public function delete($id)
 	{
 		$row = Type::findOrFail($id);
+
+		if ($row->resources()->count())
+		{
+			return response()->json(['message' => trans('resources::resources.errors.type has resources', ['count' => $row->resources()->count()])], 415);
+		}
 
 		if (!$row->delete())
 		{

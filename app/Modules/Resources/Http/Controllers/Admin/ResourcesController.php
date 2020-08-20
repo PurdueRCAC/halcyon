@@ -14,6 +14,8 @@ class ResourcesController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -179,25 +181,7 @@ class ResourcesController extends Controller
 				$id = $v->id;
 
 				$spacer = '&nbsp;&nbsp;';
-				/*if ($type)
-				{
-					$pre    = '<span class="treenode">&#8970;</span>&nbsp;';
-					$spacer = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-				}
-				else
-				{
-					$pre    = '- ';
-					$spacer = '&nbsp;&nbsp;';
-				}
 
-				if ($v->parentid == 0)
-				{
-					$txt = '';
-				}
-				else
-				{
-					$txt = $pre;
-				}*/
 				$pt = $v->parentid;
 
 				$list[$id] = $v;
@@ -212,6 +196,7 @@ class ResourcesController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 *
 	 * @return Response
 	 */
 	public function create()
@@ -234,6 +219,8 @@ class ResourcesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 *
+	 * @param  integer $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -261,13 +248,14 @@ class ResourcesController extends Controller
 
 	/**
 	 * Update the specified resource in storage.
+	 *
 	 * @param  Request $request
 	 * @return Response
 	 */
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required|max:32',
+			'fields.name'         => 'required|max:32',
 			'fields.parentid'     => 'nullable|integer',
 			'fields.rolename'     => 'nullable|string|max:32',
 			'fields.listname'     => 'nullable|string|max:32',
@@ -294,6 +282,8 @@ class ResourcesController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function delete(Request $request)
@@ -338,6 +328,8 @@ class ResourcesController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function restore(Request $request)

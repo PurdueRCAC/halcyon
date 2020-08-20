@@ -1,9 +1,5 @@
 @extends('layouts.master')
 
-@section('scripts')
-<script src="./js/resource.js"></script>
-@stop
-
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	<ul class="dropdown-menu">

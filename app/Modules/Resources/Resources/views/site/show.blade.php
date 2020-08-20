@@ -1,9 +1,5 @@
 @extends('layouts.master')
 
-@section('scripts')
-<script src="./js/resource.js"></script>
-@stop
-
 @php
 $content = '';
 @endphp

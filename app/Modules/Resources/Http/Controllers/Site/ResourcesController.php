@@ -15,16 +15,42 @@ class ResourcesController extends Controller
 	 * Display a listing of the resource.
 	 * @return Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
-		$rows = Asset::paginate(20);
+		// Get filters
+		$filters = array(
+			'search'   => null,
+			'type'     => 0,
+			// Paging
+			'limit'    => config('list_limit', 20),
+			'page'     => 1,
+			// Sorting
+			'order'     => 'name',
+			'order_dir' => 'asc',
+		);
+
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->input($key, $default);
+		}
+
+		$rows = Asset::query()
+			->where('listname', '!=', '')
+			->orderBy($filters['order'], $filters['order_dir'])
+			->paginate(20);
 
 		app('pathway')->append(
 			config('resources.name'),
-			url('/resources')
+			route('site.resources.index')
 		);
 
-		return view('resources::site.index', ['rows' => $rows]);
+		$types = Type::orderBy('name', 'asc')->get();
+
+		return view('resources::site.index', [
+			'rows' => $rows,
+			'types' => $types,
+			'filters' => $filters
+		]);
 	}
 
 	/**
@@ -71,13 +97,15 @@ class ResourcesController extends Controller
 			abort(404);
 		}
 
-		app('pathway')->append(
-			$type->name,
-			url('/' . strtolower($type->name))
-		)->append(
-			trans('resources::resources.retired'),
-			route('site.resources.' . strtolower($type->name) . '.retired')
-		);
+		app('pathway')
+			->append(
+				$type->name,
+				url('/' . strtolower($type->name))
+			)
+			->append(
+				trans('resources::resources.retired'),
+				route('site.resources.' . strtolower($type->name) . '.retired')
+			);
 
 		$items = $type->resources()
 			->where('display', '>', 0)
@@ -87,7 +115,8 @@ class ResourcesController extends Controller
 		$rows = $type->resources()
 			->onlyTrashed()
 			->where('datetimeremoved', '!=', '0000-00-00 00:00:00')
-			->where('display', '>', 0)
+			//->where('display', '>', 0)
+			->where('listname', '!=', '')
 			->orderBy('display', 'desc')
 			->get();
 
