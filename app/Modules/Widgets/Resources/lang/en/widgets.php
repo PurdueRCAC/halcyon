@@ -74,6 +74,7 @@ return [
 		'alt layout' => 'Alternative Layout',
 		'alt layout description' => 'Use a different layout from the supplied widget or overrides in the templates.',
 	),
+	'caching fieldset' => 'Caching Options',
 	'no caching' => 'No caching',
 	'use global' => 'Use Global',
 	'client type' => 'Client Type',

@@ -362,7 +362,7 @@ class WidgetsController extends Controller
 		$row->fill($request->input('fields'));
 		$row->note = '';
 
-		if ($params = $request->input('params'))
+		if ($params = $request->input('fields.params'))
 		{
 			foreach ($params as $key => $val)
 			{
