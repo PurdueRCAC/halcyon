@@ -199,7 +199,7 @@
 						</button>
 					</div>
 					<div class="collapse navbar-collapse black">
-						@widget('user3')
+						@widget('mainmenu')
 					</div>
 				</div>
 			</nav><!-- / .blackbar -->
