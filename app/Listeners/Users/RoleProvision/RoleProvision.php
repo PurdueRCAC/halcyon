@@ -7,8 +7,10 @@
 
 namespace App\Listeners\Users\RoleProvision;
 
-//use App\Modules\Resources\Events\ResourceMemberCreated;
-use App\Modules\History\Models\Log;
+use App\Modules\Resources\Events\ResourceMemberCreated;
+use App\Modules\Resources\Events\ResourceMemberStatus;
+use App\Modules\Resources\Events\ResourceMemberDeleted;
+use App\Modules\History\Traits\Loggable;
 use GuzzleHttp\Client;
 
 /**
@@ -16,6 +18,8 @@ use GuzzleHttp\Client;
  */
 class RoleProvision
 {
+	use Loggable;
+
 	/**
 	 * Register the listeners for the subscriber.
 	 *
@@ -24,7 +28,9 @@ class RoleProvision
 	 */
 	public function subscribe($events)
 	{
-		//$events->listen(ResourceMemberCreated::class, self::class . '@handleResourceMemberCreated');
+		$events->listen(ResourceMemberCreated::class, self::class . '@handleResourceMemberCreated');
+		$events->listen(ResourceMemberStatus::class, self::class . '@handleResourceMemberStatus');
+		$events->listen(ResourceMemberDeleted::class, self::class . '@handleResourceMemberDeleted');
 	}
 
 	/**
@@ -35,24 +41,32 @@ class RoleProvision
 	 */
 	public function handleResourceMemberCreated(ResourceMemberCreated $event)
 	{
-		//$config = parse_ini_string_m(file_get_contents(conf_file('roleprovision')));
-		$config = config('listener.roleprovision', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
 			return;
 		}
 
+		$url = $config['url'] . 'createOrUpdateRole';
+
+		// Make call to resourcemember to generate role
+		$body = array(
+			'createOrUpdateRoleRequest' => array(
+				'organization'   => 'rcs',
+				'role'           => $event->resource->rolename,
+				'requestorLogin' => auth()->user()->username,
+				'customerLogin'  => $event->user->username,
+				'primaryGroup'   => $event->user->primarygroup,
+				'loginShell'     => $event->user->loginshell,
+				'quota'          => '1',
+				'piLogin'        => $event->user->pilogin
+			)
+		);
+
 		try
 		{
 			$client = new Client();
-
-			$res = $client->request('GET', $config['url'], [
-				'auth' => [
-					$config['user'],
-					$config['password']
-				]
-			]);
 
 			$res = $client->request('POST', $config['url'] . $url, [
 				'auth' => [
@@ -73,16 +87,7 @@ class RoleProvision
 			$body   = ['error' => $e->getMessage()];
 		}
 
-		Log::create([
-			'ip'              => request()->ip(),
-			'user'            => auth()->user()->id,
-			'status'          => $status,
-			'transportmethod' => 'GET',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $config['url'] . $url,
-			'app'             => 'role',
-			'payload'         => json_encode($body),
-		]);
+		$this->log('role', 'POST', $status, $results, $url);
 	}
 
 	/**
@@ -93,26 +98,22 @@ class RoleProvision
 	 */
 	public function handleResourceMemberDeleted(ResourceMemberDeleted $event)
 	{
-		//$config = parse_ini_string_m(file_get_contents(conf_file('roleprovision')));
-		$config = config('listener.roleprovision', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
 			return;
 		}
 
+		$url = $config['url'] . 'removeRole/rcs/' . $event->resource->rolename . '/' . auth()->user()->username . '/' . $event->user->username;
+
 		try
 		{
 			$client = new Client();
 
-			$res = $client->request('GET', $config['url'], [
-				'auth' => [
-					$config['user'],
-					$config['password']
-				]
-			]);
+			$body = $event->resource->rolename;
 
-			$res = $client->request('POST', $config['url'] . $url, [
+			$res = $client->request('DELETE', $config['url'] . $url, [
 				'auth' => [
 					$config['user'],
 					$config['password']
@@ -126,21 +127,11 @@ class RoleProvision
 		}
 		catch (\Exception $e)
 		{
-			//Log::error($e->getMessage());
 			$status = 500;
 			$body   = ['error' => $e->getMessage()];
 		}
 
-		Log::create([
-			'ip'              => request()->ip(),
-			'user'            => auth()->user()->id,
-			'status'          => $status,
-			'transportmethod' => 'GET',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $config['url'] . $url,
-			'app'             => 'role',
-			'payload'         => json_encode($body),
-		]);
+		$this->log('role', 'DELETE', $status, $results, $url);
 	}
 
 	/**
@@ -151,27 +142,27 @@ class RoleProvision
 	 */
 	public function handleResourceMemberStatus(ResourceMemberStatus $event)
 	{
-		$config = config('listener.roleprovision', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
 			return;
 		}
 
-		$url = 'getRoleStatus/rcs/' . $event->resource->rolename . '/' . $event->user->username;
+		$url = $config['url'] . 'getRoleStatus/rcs/' . $event->resource->rolename . '/' . $event->user->username;
 
 		try
 		{
 			$client = new Client();
 
-			$res = $client->request('GET', $config['url'] . $url, [
+			$res = $client->request('GET', $url, [
 				'auth' => [
 					$config['user'],
 					$config['password']
 				]
 			]);
 
-			$status = $res->getStatusCode();
+			$status  = $res->getStatusCode();
 			$results = $res->getBody();
 
 			if ($status >= 400)
@@ -221,16 +212,7 @@ class RoleProvision
 			$results = ['error' => $e->getMessage()];
 		}
 
-		Log::create([
-			'ip'              => request()->ip(),
-			'user'            => auth()->user()->id,
-			'status'          => $status,
-			'transportmethod' => 'GET',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $config['url'] . $url,
-			'app'             => 'role',
-			'payload'         => json_encode($results),
-		]);
+		$this->log('role', 'GET', $status, $results, $url);
 	}
 
 	/**
@@ -241,7 +223,7 @@ class RoleProvision
 	 */
 	public function handleQueueCreated(QueueCreated $event)
 	{
-		$config = config('listener.roleprovision', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
@@ -263,6 +245,7 @@ class RoleProvision
 		}
 
 		$client = new Client();
+		$url = $config['url'] . 'createOrUpdateRole';
 
 		foreach ($queue->group->managers as $user)
 		{
@@ -288,7 +271,7 @@ class RoleProvision
 					)
 				);
 
-				$res = $client->request('POST', $config['url'] . 'createOrUpdateRole', [
+				$res = $client->request('POST', $url, [
 					'auth' => [
 						$config['user'],
 						$config['password']
@@ -303,7 +286,21 @@ class RoleProvision
 				{
 					throw new \Exception(__METHOD__ . '(): Failed to create `resourcemember` entry for ' . $user->id);
 				}
+
+				$this->log('role', 'POST', $status, $res, $url);
 			}
 		}
+	}
+
+	/**
+	 * Get status for a user
+	 *
+	 * @param   object   $event
+	 * @return  void
+	 */
+	private function config()
+	{
+		//$config = parse_ini_string_m(file_get_contents(conf_file('roleprovision')));
+		return config('listener.roleprovision', []);
 	}
 }
