@@ -72,7 +72,9 @@ class ResourcesController extends Controller
 		);
 
 		$rows = $type->resources()
-			->where('display', '>', 0)
+			//->where('display', '>', 0)
+			->where('listname', '>', '')
+			->whereNotNull('description')
 			->orderBy('display', 'desc')
 			->get();
 

@@ -88,6 +88,33 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 		])->where('id', '[0-9]+');
 	});
 
+	$router->group(['prefix' => 'members', 'middleware' => 'auth:api'], function (Router $router)
+	{
+		$router->get('/', [
+			'as' => 'api.resources.members',
+			'uses' => 'MembersController@index',
+		]);
+		$router->post('/', [
+			'as' => 'api.resources.members.create',
+			'uses' => 'MembersController@create',
+			'middleware' => 'can:create resources.members',
+		]);
+		$router->get('{id}', [
+			'as' => 'api.resources.members.read',
+			'uses' => 'MembersController@read',
+		])->where('id', '[0-9]+\.[0-9]+');
+		$router->put('{id}', [
+			'as' => 'api.resources.members.update',
+			'uses' => 'MembersController@update',
+			'middleware' => 'can:edit resources.members',
+		])->where('id', '[0-9]+');
+		$router->delete('{id}', [
+			'as' => 'api.resources.members.delete',
+			'uses' => 'MembersController@delete',
+			'middleware' => 'can:delete resources.members',
+		])->where('id', '[0-9]+');
+	});
+
 	$router->get('/', [
 		'as' => 'api.resources.index',
 		'uses' => 'ResourcesController@index',

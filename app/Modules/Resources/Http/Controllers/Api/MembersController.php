@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Modules\Resources\Entities\Asset;
-use App\Modules\Resources\Http\Resources\AssetResourceCollection;
-use App\Modules\Resources\Http\Resources\AssetResource;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Resources\Events\ResourceMemberStatus;
+use App\Modules\Resources\Events\ResourceMemberCreated;
+use App\Modules\Resources\Events\ResourceMemberDeleted;
 use App\Modules\Users\Models\User;
 
 /**
@@ -17,109 +20,6 @@ use App\Modules\Users\Models\User;
  */
 class MembersController extends Controller
 {
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @apiMethod GET
-	 * @apiUri    /api/resources/members
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "limit",
-	 * 		"description":   "Number of result to return.",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       25
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "page",
-	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "search",
-	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "order",
-	 * 		"description":   "Field to order results by.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 *      "default":       "created",
-	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "order_dir",
-	 * 		"description":   "Direction to order results by.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       "desc",
-	 * 		"allowedValues": "asc, desc"
-	 * }
-	 * @param  Request $request
-	 * @return Response
-	 */
-	public function index(Request $request)
-	{
-		$filters = array(
-			'search'   => $request->input('search', ''),
-			'state'    => $request->input('state', 'active'),
-			'type'     => $request->input('type', null),
-			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
-			//'start' => $request->input('limitstart', 0),
-			// Sorting
-			'order'     => $request->input('order', 'name'),
-			'order_dir' => $request->input('order_dir', 'asc')
-		);
-
-		if (!in_array($filters['order_dir'], ['asc', 'desc']))
-		{
-			$filters['order_dir'] = 'asc';
-		}
-
-		$query = Asset::query();
-
-		if ($filters['search'])
-		{
-			$query->where('name', 'like', '%' . $filters['search'] . '%');
-		}
-
-		if ($filters['state'])
-		{
-			if ($filters['state'] == 'all')
-			{
-				$query->withTrashed();
-				//$query->where('datetimeremoved', '=', '0000-00-00 00:00:00');
-			}
-			elseif ($filters['state'] == 'inactive')
-			{
-				$query->onlyTrashed();
-				//$query->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
-			}
-		}
-
-		if (is_numeric($filters['type']))
-		{
-			$query->where('resourcetype', '=', $filters['type']);
-		}
-
-		$rows = $query
-			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
-			->appends(array_filter($filters));
-
-		return new AssetResourceCollection($rows);
-	}
-
 	/**
 	 * Create a resource
 	 *
@@ -139,32 +39,82 @@ class MembersController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'name' => 'required'
+			'user' => 'required|integer',
+			'resource' => 'required|integer',
+			'primarygroup' => 'nullable|string',
+			'loginshell' => 'nullable|string',
+			'pilogin' => 'nullable|string',
+			'piid' => 'nullable|string',
 		]);
 
-		$asset = Asset::create($request->all());
-		/*$asset = new Asset([
-			'name'         => $request->input('name'),
-			'parentid'     => $request->input('parentid'),
-			'rolename'     => $request->input('rolename'),
-			'listname'     => $request->input('listname'),
-			'resourcetype' => $request->input('resourcetype'),
-			'producttype'  => $request->input('producttype')
-		]);
+		$userid = $request->input('user');
+		$resourceid = $request->input('resource');
+		$loginshell = $request->input('loginshell');
 
-		$parent = $asset->parent();
+		// Look up the current username of the user 
+		$user = User::findOrFail($userid);
 
-		if (!$parent || !$parent->id)
+		if (!$user || $user->trashed())
 		{
-			abort(415, trans('Invalid parent ID'));
+			return response()->json(['message' => trans('Failed to find user for ID :id', ['id' => $userid])], 404);
 		}
 
-		if (!$asset->save())
-		{
-			abort(415, $asset->getError());
-		}*/
+		$asset = Asset::findOrFail($resourceid);
 
-		event('onAfterSaveResource', $asset);
+		if (!$asset || $asset->isTrashed())
+		{
+			return response()->json(['message' => trans('Failed to find resource for ID :id', ['id' => $resourceid])], 404);
+		}
+
+		// Ensure the client is authorized to manage a group with queues on the resource in question.
+		if (!auth()->user()->can('manage resources')
+		 && $user->id != auth()->user()->id)
+		{
+			$owned = auth()->user()->groups->pluck('id')->toArray();
+
+			$queues = array();
+			foreach ($resource->subresources as $sub)
+			{
+				$queues += $sub->queues()
+					->whereIn('groupid', $owned)
+					->pluck('queuid')
+					->toArray();
+			}
+			array_filter($queues);
+
+			// If no queues found
+			if (count($queues) < 1) // && !in_array($resource->id, array(48, 2, 12, 66)))
+			{
+				return response()->json(null, 403);
+			}
+		}
+
+		// Is the shell valid?
+		if (!file_exists($loginshell) && $loginshell != 'nologin')
+		{
+			return response()->json(['message' => trans('Invalid loginshell')], 409);
+		}
+
+		// Look up the current username of the PI if ID was specified
+		if ($piid = $request->input('piid'))
+		{
+			$pi = User::findOrFail($piid);
+
+			$pilogin = $pi->username;
+		}
+		// Verify PI login is valid if that was specified
+		elseif ($pilogin = $request->input('pilogin'))
+		{
+			$pi = User::findByUsername($pilogin);
+
+			if (!$pi)
+			{
+				return response()->json(['message' => trans('Invalid pilogin')], 409);
+			}
+		}
+
+		event($event = new ResourceMemberCreated($asset, $user));
+
 
 		return new AssetResource($asset);
 	}
@@ -211,12 +161,37 @@ class MembersController extends Controller
 
 		if (!$user || $user->trashed())
 		{
-			return response()->json(['message' => trans('Failed to find username for user', ['id' => $userid])], 400);
+			return response()->json(['message' => trans('Failed to find user for ID :id', ['id' => $userid])], 404);
 		}
 
-		$asset = Asset::findOrFail($id);
+		$asset = Asset::findOrFail($resource);
 
-		return new AssetResource($asset);
+		if (!$asset || $asset->isTrashed())
+		{
+			return response()->json(['message' => trans('Failed to find resource for ID :id', ['id' => $resource])], 404);
+		}
+
+		// Look up the ACMaint role name of the resource
+		if (!$asset->rolename)
+		{
+			return response()->json(null, 404);
+		}
+
+		// Call central accounting service to request status
+		event($event = new ResourceMemberStatus($asset, $user));
+
+		$data = array(
+			'resource' => array(
+				'id' => $asset->id,
+				'name' => $asset->name,
+			),
+			'status' => $event->status,
+			'loginshell' => $event->user->loginshell,
+			'primarygroup' => $event->user->primarygroup = 'student',
+			'pilogin' => $event->user->pilogin,
+		);
+
+		return new JsonResource($data);
 	}
 
 	/**
@@ -295,31 +270,53 @@ class MembersController extends Controller
 			return response()->json(['message' => trans('Missing or invalid value. Must be of format `resourceid.userid`')], 412);
 		}
 
-		$resource = $parts[0];
-		$user = $parts[1];
+		$resourceid = $parts[0];
+		$userid = $parts[1];
 
-		if (!is_numeric($resource)
-		 || !is_numeric($user))
+		if (!is_numeric($resourceid)
+		 || !is_numeric($userid))
 		{
 			return response()->json(['message' => trans('Missing or invalid value. Must be of format `resourceid.userid`')], 415);
 		}
 
+		// Look up the current username of the user being removed
+		$user = User::findOrFail($userid);
+
+		// Look up the ACMaint role name of the resource to which access is being granted.
+		$resource = Asset::findOrFail($resourceid);
+
 		// Ensure the client is authorized to manage a group with queues on the resource in question.
 		if (!auth()->user()->can('manage resources')
-		 && $user != auth()->user()->id)
+		 && $user->id != auth()->user()->id)
 		{
-			$sql = "SELECT queues.id FROM resources, resourcesubresources, queues WHERE resources.id = '" . $this->db->escape_string($resource) . "' AND queues.groupid " . $this->myownedgroupssql . " AND resources.id = resourcesubresources.resourceid AND resourcesubresources.subresourceid = queues.subresourceid AND queues.datetimeremoved = '0000-00-00 00:00:00'";
-			$data = array();
-			$rows = $this->db->query($sql, $data);
+			$owned = auth()->user()->groups->pluck('id')->toArray();
 
-			if ($rows < 1 && !in_array($resource, array('48', '2', '12', '66')))
+			$queues = array();
+			foreach ($resource->subresources as $sub)
+			{
+				$queues += $sub->queues()
+					->whereIn('groupid', $owned)
+					->pluck('queuid')
+					->toArray();
+			}
+			array_filter($queues);
+
+			/*$sql = "SELECT queues.id FROM resources, resourcesubresources, queues WHERE resources.id = '" . $this->db->escape_string($resource) . "' AND queues.groupid " . $this->myownedgroupssql . " AND resources.id = resourcesubresources.resourceid AND resourcesubresources.subresourceid = queues.subresourceid AND queues.datetimeremoved = '0000-00-00 00:00:00'";
+			$data = array();
+			$rows = $this->db->query($sql, $data);*/
+
+			// If no queues found
+			if (count($queues) < 1) // && !in_array($resource->id, array(48, 2, 12, 66)))
 			{
 				return response()->json(null, 403);
 			}
 		}
 
 		// Check for other queue memberships on this resource that might conflict with removing the role
-		$sql = "SELECT queues.id, queues.groupid FROM resources, resourcesubresources, queues, queueusers WHERE resources.id = '" . $this->db->escape_string($resource) . "' AND resources.id = resourcesubresources.resourceid AND resourcesubresources.subresourceid = queues.subresourceid AND queueusers.queueid = queues.id AND queues.datetimeremoved = '0000-00-00 00:00:00' AND queueusers.datetimeremoved = '0000-00-00 00:00:00' AND resources.datetimeremoved = '0000-00-00 00:00:00' AND queueusers.membertype = '1' AND queueusers.userid = '" . $this->db->escape_string($user) . "' UNION SELECT groupusers.groupid AS id, groupusers.groupid FROM groupusers, queues, resourcesubresources WHERE groupusers.userid = '" . $this->db->escape_string($user) . "' and groupusers.membertype = '2' AND groupusers.groupid <> '0' and groupusers.dateremoved = '0000-00-00 00:00:00' AND groupusers.groupid = queues.groupid AND resourcesubresources.subresourceid = queues.subresourceid AND resourcesubresources.resourceid = '" . $this->db->escape_string($resource) . "' AND queues.datetimeremoved = '0000-00-00 00:00:00'";
+		$sql = "SELECT queues.id, queues.groupid FROM resources, resourcesubresources, queues, queueusers
+		WHERE resources.id = '" . $this->db->escape_string($resource) . "' AND resources.id = resourcesubresources.resourceid AND resourcesubresources.subresourceid = queues.subresourceid AND queueusers.queueid = queues.id AND queues.datetimeremoved = '0000-00-00 00:00:00' AND queueusers.datetimeremoved = '0000-00-00 00:00:00' AND resources.datetimeremoved = '0000-00-00 00:00:00' AND queueusers.membertype = '1' AND queueusers.userid = '" . $this->db->escape_string($user) . "'
+		UNION
+		SELECT groupusers.groupid AS id, groupusers.groupid FROM groupusers, queues, resourcesubresources WHERE groupusers.userid = '" . $this->db->escape_string($user) . "' and groupusers.membertype = '2' AND groupusers.groupid <> '0' and groupusers.dateremoved = '0000-00-00 00:00:00' AND groupusers.groupid = queues.groupid AND resourcesubresources.subresourceid = queues.subresourceid AND resourcesubresources.resourceid = '" . $this->db->escape_string($resource) . "' AND queues.datetimeremoved = '0000-00-00 00:00:00'";
 		$data = array();
 		$rows = $this->db->query($sql, $data);
 
@@ -327,12 +324,6 @@ class MembersController extends Controller
 		{
 			return 202;
 		}
-
-		// Look up the current username of the user being removed
-		$user = User::findOrFail($user);
-
-		// Look up the ACMaint role name of the resource to which access is being granted.
-		$resource = Asset::findOrFail($resource);
 
 		// Call central accounting service to remove ACMaint role from this user's account.
 		event(new ResourceMemberDeleted($resource, $user));

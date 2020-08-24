@@ -107,6 +107,11 @@ app('pathway')
 					<label for="field-importhostname">{{ trans('resources::assets.list name') }}:</label>
 					<input type="text" name="fields[listname]" id="field-listname" class="form-control" maxlength="32" value="{{ $row->listname }}" />
 				</div>
+
+				<div class="form-group">
+					<label for="field-description">{{ trans('resources::assets.description') }}:</label>
+					<textarea name="fields[description]" id="field-description" cols="35" rows="5" class="form-control">{{ $row->description }}</textarea>
+				</div>
 			</fieldset>
 		</div>
 		<div class="col col-md-5 span5">
