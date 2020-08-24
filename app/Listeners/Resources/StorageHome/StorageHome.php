@@ -1,0 +1,76 @@
+<?php
+namespace App\Listeners\Resources\Storage;
+
+use App\Modules\Resources\Events\ResourceMemberCreated;
+use App\Modules\Storage\Models\StorageResource;
+
+/**
+ * Storage listener for resources
+ */
+class StorageHome
+{
+	/**
+	 * Register the listeners for the subscriber.
+	 *
+	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @return void
+	 */
+	public function subscribe($events)
+	{
+		$events->listen(ResourceMemberCreated::class, self::class . '@handleResourceMemberCreated');
+	}
+
+	/**
+	 * Plugin that loads module positions within content
+	 *
+	 * @param   object   $event
+	 * @return  void
+	 */
+	public function handleResourceMemberCreated(ResourceMemberCreated $event)
+	{
+		// Need to check for Home dir and create if necessary
+		// First check if we have a storage dir already
+		$home = Asset::query()
+			->where('name', '=', 'Home')
+			->first();
+
+		if (!$home)
+		{
+			return;
+		}
+
+		$dir = Directory::query()
+			->where('name', '=', $event->user->username)
+			->where('resourceid', '=', $home->id)
+			->first();
+
+		if ($dir)
+		{
+			return;
+		}
+
+		// Get values
+		$storage = StorageResource::query()
+			->where('parentresourceid', '=', $home->id)
+			->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->first();
+
+		// Prepare storagedir entry
+		$dir = Directory::create([
+			'resourceid' = $home->id,
+			'name' => $event->user->username,
+			'path' => $event->user->username,
+			'bytes' => $storage->defaultquotaspace,
+			'files' => $storage->defaultquotafile,
+			'owneruserid' => $event->user->id,
+			'storageresourceid' => $storage->id,
+		]);
+
+		// Prepare job to create directory in reality
+		$dir->addMessageToQueue(11); //$storage->createtypeid);
+	}
+}

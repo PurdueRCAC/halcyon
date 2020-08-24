@@ -1,0 +1,11 @@
+{
+    "name": "Resources - Storage > Scratch",
+    "alias": "none",
+    "description": "This performs any necessary setup or other functions of scratch space for a resource.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
