@@ -13,14 +13,21 @@ use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Users\Models\User as SiteUser;
 
-class EmailWelcomeMessageFreeCommand extends Command
+class EmailWelcomeFreeCommand extends Command
 {
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'queues:emailwelcomefree';
+	//protected $name = 'queues:emailwelcomefree';
+
+	/**
+	 * The name and signature of the console command.
+	 *
+	 * @var string
+	 */
+	protected $signature = 'queues:emailwelcomefree {--debug : Output emails rather than sending}';
 
 	/**
 	 * The console command description.
@@ -34,6 +41,8 @@ class EmailWelcomeMessageFreeCommand extends Command
 	 */
 	public function handle()
 	{
+		$debug = $this->option('debug') ? true : false;
+
 		$u = (new User)->getTable();
 		$q = (new Queue)->getTable();
 		$r = (new Child)->getTable();

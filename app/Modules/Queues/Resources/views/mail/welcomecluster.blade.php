@@ -1,7 +1,7 @@
 @component('mail::message')
-Hello {$student->name},
+Hello {{ $user->name }},
 
-Your account on {$resources} has been created and are ready for use. Details about using these and other ITaP Research Computing resources are included below.
+Your account on {{ $resources }} has been created and are ready for use. Details about using these and other ITaP Research Computing resources are included below.
 
 ---
 
@@ -9,10 +9,9 @@ Your account on {$resources} has been created and are ready for use. Details abo
 
 **You can access the clusters through the front-ends ({{ $frontends }}) with your Purdue Career Account credentials using [SSH](https://www.rcac.purdue.edu/knowledge/) or [Thinlinc](https://www.rcac.purdue.edu/knowledge/)**. You've been granted access to the following queues:
 
-@php
+<?php
 $partner = false;
-@endphp
-@foreach ($activity as $cluster => $data)
+foreach ($activity as $cluster => $data): ?>
 ### {{ $cluster }}:
 
 @foreach ($data as $queue)
@@ -27,7 +26,9 @@ if (preg_match("/^partner/", $standby->name))
 @endphp
 * {{ $standby->name }} - {{ $standby->walltime }} hours
 @endforeach
-@endforeach
+<?php
+endforeach;
+?>
 
 You can also see this list by running the `qlist` command.
 

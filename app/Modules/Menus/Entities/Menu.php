@@ -334,7 +334,7 @@ class Menu extends Fluent
 			->select('m.parent_id')
 			->select('e.element', 'component')
 			->from('#__menu', 'm')
-			->join('#__extensions AS e', 'e.extension_id', 'm.module_id', 'left')
+			->join('#__extensions AS e', 'e.id', 'm.module_id', 'left')
 			->whereEquals('m.published', 1)
 			->where('m.parent_id', '>', 0)
 			->whereEquals('m.client_id', 0)
@@ -347,7 +347,7 @@ class Menu extends Fluent
 		$w = (new Item)->getTable();
 
 		$items = DB::table($w)
-			->leftJoin('extensions', $w . '.module_id', '=', 'extensions.extension_id')
+			->leftJoin('extensions', $w . '.module_id', '=', 'extensions.id')
 			->select([$w . '.*', 'extensions.element AS module'])
 			->where($w . '.published', '=', 1)
 			->where($w . '.parent_id', '>', 0)

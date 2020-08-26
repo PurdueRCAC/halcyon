@@ -2,13 +2,16 @@
 
 namespace App\Modules\Queues\Console;
 
-use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Queues\Models\Queue;
-use App\Modules\ContactReports\Models\Report;
-use App\Modules\ContactReports\Mail\NewComment;
+use App\Modules\Queues\Models\User as QueueUser;
+use App\Modules\Queues\Mail\QueueAuthorized;
+use App\Modules\Queues\Mail\QueueAuthorizedManager;
 use App\Modules\Users\Models\User;
+use App\Modules\Groups\Models\Group;
+use App\Modules\Resources\Events\ResourceMemberstatus;
 
 class EmailQueueAuthorizedCommand extends Command
 {
@@ -17,7 +20,14 @@ class EmailQueueAuthorizedCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $name = 'queues:emailauthorized';
+	//protected $name = 'queues:emailauthorized';
+
+	/**
+	 * The name and signature of the console command.
+	 *
+	 * @var string
+	 */
+	protected $signature = 'queues:emailqueueauthorized {--debug : Output emails rather than sending}';
 
 	/**
 	 * The console command description.
@@ -31,14 +41,17 @@ class EmailQueueAuthorizedCommand extends Command
 	 */
 	public function handle()
 	{
-		$u = (new User)->getTable();
+		$debug = $this->option('debug') ? true : false;
+
+		$qu = (new QueueUser)->getTable();
 		$q = (new Queue)->getTable();
 
-		$users = User::query()
-			->select($u . '.*', $q . '.groupid')
-			->join($q, $q . '.id', $u . '.queueid')
-			->whereIn($u . '.membertype', [1, 4])
-			->where($u . '.notice', '=', 2)
+		$users = QueueUser::query()
+			->select($qu . '.*', $q . '.groupid')
+			->join($q, $q . '.id', $qu . '.queueid')
+			->whereIn($qu . '.membertype', [1, 4])
+			->where($qu . '.notice', '=', 0)//2)
+			->limit(20)
 			->get();
 
 		if (!count($users))
@@ -61,12 +74,15 @@ class EmailQueueAuthorizedCommand extends Command
 		}
 
 		$now = date("U");
+		$threshold = 300; // threshold for when considering activity "done"
 
-		foreach ($group_activity as $group)
+		foreach ($group_activity as $groupid => $groupqueueusers)
 		{
+			$this->info("Starting processing group ID #{$groupid}.");
+
 			// Find the latest activity
 			$latest = 0;
-			foreach ($group as $g)
+			foreach ($groupqueueusers as $g)
 			{
 				if ($g->datetimecreated->format('U') > $latest)
 				{
@@ -76,12 +92,18 @@ class EmailQueueAuthorizedCommand extends Command
 
 			if ($now - $latest >= $threshold)
 			{
-				// Email everyone involved in this group
+				$group = Group::find($groupid);
+
+				if (!$group)
+				{
+					$this->error('Could not find group #' . $groupid);
+					continue;
+				}
 
 				// Condense students
 				$student_activity = array();
 
-				foreach ($group as $student)
+				foreach ($groupqueueusers as $student)
 				{
 					if (!isset($student_activity[$student->userid]))
 					{
@@ -93,55 +115,86 @@ class EmailQueueAuthorizedCommand extends Command
 
 				// Send email to each student
 				$roles = array();
-				foreach ($student_activity as $student)
+				foreach ($student_activity as $userid => $queueusers)
 				{
-					$roles[$student[0]->userid] = array();
+					$user = User::find($userid);
+
+					$roles[$userid] = array();
 					$last_role = '';
 
-					foreach ($student as $queue)
+					foreach ($queueusers as $queueuser)
 					{
-						if (!isset($queue->unixgroupid))
+						$role = $queueuser->queue->resource->rolename;
+
+						if ($role == $last_role)
 						{
-							$role = $db->getQueueRole($queue->queueid);
+							continue; // skip, we already checked this role
+						}
 
-							if ($role == $last_role)
-							{
-								continue; // skip, we already checked this role
-							}
+						$last_role = $role;
 
-							$last_role = $role;
+						// Contact role provision service
+						event($event = new ResourceMemberstatus($queueuser->queue->resource, $user));
 
-							// Contact role provision service
-							$role_output = "";
-							$role = new roleprovision();
-							$url = "getRoleStatus/rcs/" . $last_role . "/" . $vars['student']->username;
-							/*$return = $role->get($url, $role_output);
-
-							if ($return >= 401) {
-								die("An error occurred while assembling email.\n");
-							}*/
-
-							$role_output = json_decode($role_output);
-
-							if ($role_output->roleStatus != "ROLE_ACCOUNTS_READY") {
-								array_push($roles[$student[0]->userid], $last_role);
-							}
+						if ($event->status != 3) // ROLE_ACCOUNTS_READY
+						{
+							array_push($roles[$userid], $queueuser->queue->resource); //$last_role);
 						}
 					}
-					// Prepare and send actual email
-					//Mail::to($user->email)->send(new QueueAuthorized($user));
-					echo (new QueueAuthorized($user))->render();
 
-					$this->info("Emailed queueauthorized to {$user->email}.");
+					// Prepare and send actual email
+					$message = new QueueAuthorized($user, $queueusers, $roles);
+
+					if ($debug)
+					{
+						echo $message->render();
+						continue;
+					}
+
+					Mail::to($user->email)->send($message);
+
+					$this->info("Emailed freeauthorized to {$user->email}.");
+
+					$r = collect($roles[$userid])->pluck('rolename')->toArray();
+
+					// Change states
+					foreach ($queueusers as $queueuser)
+					{
+						// Determine which state to go to, depending on whether a new role was created
+						$rolename = $queueuser->queue->resource->rolename;
+
+						if (in_array($rolename, $r))
+						{
+							$queueuser->notice = 8;
+						}
+						else
+						{
+							$queueuser->notice = 0;
+						}
+
+						$queueuser->save();
+					}
+				}
+
+				// Assemble list of managers to email
+				foreach ($group->managers as $manager)
+				{
+					// Prepare and send actual email
+					$message = new QueueAuthorizedManager($manager->user, $data);
+
+					if ($debug)
+					{
+						echo $message->render();
+						continue;
+					}
+
+					Mail::to($manager->user->email)->send($message);
+
+					$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
 				}
 			}
 
-			// Change states
-			foreach ($comments as $comment)
-			{
-				$comment->notice = 0;
-				$comment->save();
-			}
+			$this->info("Finished processing group ID #{$group}.");
 		}
 	}
 }

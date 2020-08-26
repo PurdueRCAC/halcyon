@@ -137,7 +137,7 @@ abstract class Admin
 		$m = (new Widget)->getTable();
 
 		$widgets = DB::table('extensions AS e')
-			->select('e.element', 'e.name', 'e.extension_id')
+			->select('e.element', 'e.name', 'e.id')
 			->where('e.client_id', '=', (int)$clientId)
 			->where('e.type', '=', 'widget')
 			->leftJoin($m . ' AS m', function($join)
@@ -146,7 +146,7 @@ abstract class Admin
 						->on('m.client_id', '=', 'e.client_id');
 				})
 			->whereNotNull('m.module')
-			->groupBy('e.element', 'e.name', 'e.extension_id')
+			->groupBy('e.element', 'e.name', 'e.id')
 			->get();
 
 		foreach ($widgets as $widget)

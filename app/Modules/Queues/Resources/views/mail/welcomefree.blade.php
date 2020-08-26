@@ -1,7 +1,7 @@
 @component('mail::message')
-Hello {$student->name},
+Hello {{ $user->name }},
 
-Your account on {$resources} has been created and are ready for use. Details about using these and other ITaP Research Computing resources are included below.
+Your account on {{ $resources }} has been created and are ready for use. Details about using these and other ITaP Research Computing resources are included below.
 
 ---
 

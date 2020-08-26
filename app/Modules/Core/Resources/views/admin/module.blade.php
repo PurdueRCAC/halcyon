@@ -63,7 +63,7 @@
 	echo Html::tabs('end');
 	?>
 
-	<input type="hidden" name="id" value="{{ $module->extension_id }}" />
+	<input type="hidden" name="id" value="{{ $module->id }}" />
 	<input type="hidden" name="module" value="{{ $module->element }}" />
 
 	@csrf

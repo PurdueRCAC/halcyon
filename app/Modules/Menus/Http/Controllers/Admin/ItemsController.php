@@ -117,7 +117,7 @@ class ItemsController extends Controller
 		$query->leftJoin('users AS u', 'u.id', $a . '.checked_out');
 
 		// Join over components
-		$query->leftJoin('extensions AS c', 'c.extension_id', $a . '.module_id');
+		$query->leftJoin('extensions AS c', 'c.id', $a . '.module_id');
 
 		// Join over the asset groups.
 		$query->leftJoin('viewlevels AS ag', 'ag.id', $a . '.access');
@@ -133,7 +133,7 @@ class ItemsController extends Controller
 		}*/
 
 		// Join over the extensions
-		$query->leftJoin('extensions AS e', 'e.extension_id', $a . '.module_id');
+		$query->leftJoin('extensions AS e', 'e.id', $a . '.module_id');
 
 		// Exclude the root category.
 		$query->where($a . '.id', '>', 1);
@@ -470,9 +470,9 @@ class ItemsController extends Controller
 						$module->registerLanguage();
 
 						// Determine the module id.
-						if ($module->extension_id)
+						if ($module->id)
 						{
-							$row->module_id = $module->extension_id;
+							$row->module_id = $module->id;
 						}
 					}
 				}

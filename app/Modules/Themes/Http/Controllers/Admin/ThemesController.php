@@ -54,7 +54,7 @@ class ThemesController extends Controller
 
 		$query
 			/*->select([
-				$s . '.extension_id AS id',
+				$s . '.id AS id',
 				$s . '.element',
 				$s . '.name',
 				$s . '.enabled',
@@ -87,7 +87,7 @@ class ThemesController extends Controller
 
 			if (stripos($filters['search'], 'id:') === 0)
 			{
-				$query->where($s . '.extension_id', '=', (int) substr($filters['search'], 3));
+				$query->where($s . '.id', '=', (int) substr($filters['search'], 3));
 			}
 			else
 			{
@@ -111,14 +111,14 @@ class ThemesController extends Controller
 
 		$query
 			->groupBy([
-				$s . '.extension_id',
+				$s . '.id',
 				//$s . '.element',
 				$s . '.name',
 				$s . '.enabled',
 				$s . '.client_id',
 				//$l . '.title',
 				//$l . '.image',
-				//$e . '.extension_id'
+				//$e . '.id'
 			]);
 
 		// Get records

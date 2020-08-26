@@ -15,7 +15,14 @@ class EmailReportsCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $name = 'crm:emailreports';
+	//protected $name = 'crm:emailreports';
+
+	/**
+	 * The name and signature of the console command.
+	 *
+	 * @var string
+	 */
+	protected $signature = 'crm:emailreports {--debug : Output emails rather than sending}';
 
 	/**
 	 * The console command description.
@@ -29,9 +36,11 @@ class EmailReportsCommand extends Command
 	 */
 	public function handle()
 	{
+		$debug = $this->option('debug') ? true : false;
+
 		// Get all new comments
-		//$reports = Report::where('notice', '=', 23)->get();
 		$reports = Report::where('notice', '!=', 0)->get();
+		//$reports = Report::where('notice', '=', 0)->orderBy('id', 'desc')->limit(20)->get();
 
 		if (!count($reports))
 		{
@@ -70,12 +79,24 @@ class EmailReportsCommand extends Command
 				}
 
 				// Prepare and send actual email
-				//Mail::to($user->email)->send(new NewReport($report));
-				echo (new NewReport($report))->render();
-
 				$emailed[] = $user->id;
 
+				$message = new NewReport($report);
+
+				if ($debug)
+				{
+					echo $message->render();
+					continue;
+				}
+
+				Mail::to($user->email)->send($message);
+
 				$this->info("Emailed report #{$report->id} to {$user->email}.");
+			}
+
+			if ($debug)
+			{
+				continue;
 			}
 
 			// Change states

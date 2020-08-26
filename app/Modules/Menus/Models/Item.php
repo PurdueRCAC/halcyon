@@ -221,7 +221,7 @@ class Item extends Model
 
 				$module = Extension::findByModule('pages');
 
-				$this->module_id = $module->extension_id;
+				$this->module_id = $module->id;
 				$this->params()->set('page_id', $this->page_id);
 			}
 		}

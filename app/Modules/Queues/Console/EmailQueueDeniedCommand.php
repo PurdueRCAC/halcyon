@@ -2,14 +2,18 @@
 
 namespace App\Modules\Queues\Console;
 
-use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use App\Modules\Queues\Mail\QueueDenied;
 use App\Modules\Queues\Models\Queue;
-use App\Modules\ContactReports\Models\Report;
-use App\Modules\ContactReports\Mail\NewComment;
+use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Users\Models\User;
 
+/**
+ * This script proccess all newly denied queueuser entries
+ * Notice State 12 => 0
+ */
 class EmailQueueDeniedCommand extends Command
 {
 	/**
@@ -17,7 +21,14 @@ class EmailQueueDeniedCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $name = 'queues:emaildenied';
+	//protected $name = 'queues:emaildenied';
+
+	/**
+	 * The name and signature of the console command.
+	 *
+	 * @var string
+	 */
+	protected $signature = 'queues:emailqueuedenied {--debug : Output emails rather than sending}';
 
 	/**
 	 * The console command description.
@@ -31,14 +42,16 @@ class EmailQueueDeniedCommand extends Command
 	 */
 	public function handle()
 	{
-		$u = (new User)->getTable();
+		$debug = $this->option('debug') ? true : false;
+
+		$qu = (new QueueUser)->getTable();
 		$q = (new Queue)->getTable();
 
-		$users = User::query()
-			->select($u . '.*', $q . '.groupid')
-			->join($q, $q . '.id', $u . '.queueid')
-			->whereIn($u . '.membertype', [1, 4])
-			->where($u . '.notice', '=', 2)
+		$users = QueueUser::query()
+			->select($qu . '.*', $q . '.groupid')
+			->join($q, $q . '.id', $qu . '.queueid')
+			->whereIn($qu . '.membertype', [1, 4])
+			->where($qu . '.notice', '=', 12)
 			->get();
 
 		if (!count($users))
@@ -61,86 +74,90 @@ class EmailQueueDeniedCommand extends Command
 		}
 
 		$now = date("U");
+		$threshold = 300; // threshold for when considering activity "done"
 
-		foreach ($group_activity as $group)
+		foreach ($group_activity as $groupid => $users)
 		{
 			// Find the latest activity
 			$latest = 0;
-			foreach ($group as $g)
+			foreach ($users as $user)
 			{
-				if ($g->datetimecreated->format('U') > $latest)
+				if ($user->datetimecreated->format('U') > $latest)
 				{
-					$latest = $g->datetimecreated->format('U');
+					$latest = $user->datetimecreated->format('U');
 				}
 			}
 
 			if ($now - $latest >= $threshold)
 			{
-				// Email everyone involved in this group
+				$group = Group::find($groupid);
+
+				if (!$group)
+				{
+					$this->error('Could not find group #' . $groupid);
+					continue;
+				}
 
 				// Condense students
-				$student_activity = array();
+				$user_activity = array();
 
-				foreach ($group as $student)
+				foreach ($users as $student)
 				{
-					if (!isset($student_activity[$student->userid]))
+					if (!isset($user_activity[$student->userid]))
 					{
-						$student_activity[$student->userid] = array();
+						$user_activity[$student->userid] = array();
 					}
 
-					array_push($student_activity[$student->userid], $student);
+					array_push($user_activity[$student->userid], $student);
 				}
 
 				// Send email to each student
-				$roles = array();
-				foreach ($student_activity as $student)
+				$data = array();
+				foreach ($user_activity as $userid => $queueusers)
 				{
-					$roles[$student[0]->userid] = array();
-					$last_role = '';
+					$user = User::find($userid);
 
-					foreach ($student as $queue)
+					$data[$userid] = array(
+						'user'       => $user,
+						'queueusers' => $queueusers,
+					);
+
+					$message = new QueueDenied($user, $queueusers);
+
+					if ($debug)
 					{
-						if (!isset($queue->unixgroupid))
-						{
-							$role = $db->getQueueRole($queue->queueid);
-
-							if ($role == $last_role)
-							{
-								continue; // skip, we already checked this role
-							}
-
-							$last_role = $role;
-
-							// Contact role provision service
-							$role_output = "";
-							$role = new roleprovision();
-							$url = "getRoleStatus/rcs/" . $last_role . "/" . $vars['student']->username;
-							/*$return = $role->get($url, $role_output);
-
-							if ($return >= 401) {
-								die("An error occurred while assembling email.\n");
-							}*/
-
-							$role_output = json_decode($role_output);
-
-							if ($role_output->roleStatus != "ROLE_ACCOUNTS_READY") {
-								array_push($roles[$student[0]->userid], $last_role);
-							}
-						}
+						echo $message->render();
+						continue;
 					}
-					// Prepare and send actual email
-					//Mail::to($user->email)->send(new QueueAuthorized($user));
-					echo (new QueueAuthorized($user))->render();
 
-					$this->info("Emailed queueauthorized to {$user->email}.");
+					Mail::to($user->email)->send($message);
+
+					$this->info("Emailed queuedenied to {$user->email}.");
+
+					// Change states
+					foreach ($queueusers as $queueuser)
+					{
+						$queueuser->notice = 0;
+						$queueuser->save();
+					}
 				}
-			}
 
-			// Change states
-			foreach ($comments as $comment)
-			{
-				$comment->notice = 0;
-				$comment->save();
+				// Assemble list of managers to email
+				foreach ($group->managers as $manager)
+				{
+					// Prepare and send actual email
+					$message = new QueueDeniedManager($manager->user, $data);
+
+					if ($debug)
+					{
+						echo $message->render();
+						continue;
+					}
+
+					Mail::to($manager->user->email)->send($message);
+
+					$this->info("Emailed queuedenied to manager {$manager->user->email}.");
+				}
 			}
 		}
 	}

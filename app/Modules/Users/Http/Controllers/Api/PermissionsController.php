@@ -156,7 +156,7 @@ class PermissionsController extends Controller
 
 		$module = Extension::findOrFail($id);
 
-		if (!$module || !$module->extension_id)
+		if (!$module || !$module->id)
 		{
 			abort(404);
 		}

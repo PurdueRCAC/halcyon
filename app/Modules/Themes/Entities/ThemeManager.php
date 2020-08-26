@@ -136,7 +136,7 @@ class ThemeManager implements \Countable
 		$query = $this->getDatabase()
 			->table($s)
 			->select([
-				$s . '.extension_id AS id',
+				$s . '.id AS id',
 				$s . '.enabled AS home',
 				$s . '.name',
 				$s . '.params',

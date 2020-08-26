@@ -103,7 +103,7 @@ class Adminmenu extends Widget
 				'extensions.element',
 				'extensions.protected'
 			)
-			->leftJoin('extensions', 'extensions.extension_id', '=', $items . '.module_id')
+			->leftJoin('extensions', 'extensions.id', '=', $items . '.module_id')
 			->where($items . '.client_id', '=', '1')
 			->where('extensions.enabled', '=', '1')
 			->where($items . '.id', '>', '1')

@@ -164,11 +164,11 @@ class Group extends Model
 			->join($u, $u . '.id', $m . '.userid')
 			->where(function($where) use ($u)
 			{
-				$where->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-					->orWhereNull($u . '.datetimeremoved');
+				$where->whereNull($u . '.deleted_at')
+					->orWhere($u . '.deleted_at', '=', '0000-00-00 00:00:00');
 			})
 			->where($m . '.membertype', '=', 2)
-			->orderBy($m . '.datetimecreated', 'desc')
+			->orderBy($m . '.datecreated', 'desc')
 			->get();
 
 		return $managers;

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Models\Timeperiod;
 use App\Modules\Storage\Models\Notification\Type;
+use Carbon\Carbon;
 
 /**
  * Storage model for a notification
@@ -170,5 +171,29 @@ class Notification extends Model
 	public function type()
 	{
 		return $this->belongsTo(Type::class, 'storagedirquotanotificationtypeid');
+	}
+
+	/**
+	 * Set value in bytes
+	 *
+	 * @param   mixed
+	 * @return  void
+	 */
+	public function getNextnotifyAttribute()
+	{
+		$months  = $this->periods * $this->timeperiod->months;
+		$seconds = $this->periods * $this->timeperiod->unixtime;
+
+		$dt = Carbon::parse($this->datetimelastnotify);
+		if ($months)
+		{
+			$dt->modify('+ ' . $months . ' months');
+		}
+		if ($seconds)
+		{
+			$dt->modify('+ ' . $seconds . ' seconds');
+		}
+
+		return $dt->toDateTimeString();
 	}
 }

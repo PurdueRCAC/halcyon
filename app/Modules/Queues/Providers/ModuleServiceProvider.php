@@ -3,6 +3,16 @@
 namespace App\Modules\Queues\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Modules\Queues\Console\EmailFreeAuthorizedCommand;
+use App\Modules\Queues\Console\EmailFreeDeniedCommand;
+use App\Modules\Queues\Console\EmailFreeRemovedCommand;
+use App\Modules\Queues\Console\EmailFreeRequestedCommand;
+use App\Modules\Queues\Console\EmailQueueAuthorizedCommand;
+use App\Modules\Queues\Console\EmailQueueDeniedCommand;
+use App\Modules\Queues\Console\EmailQueueRemovedCommand;
+use App\Modules\Queues\Console\EmailQueueRequestedCommand;
+use App\Modules\Queues\Console\EmailWelcomeClusterCommand;
+use App\Modules\Queues\Console\EmailWelcomeFreeCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -31,8 +41,30 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	protected function registerConsoleCommands()
+	{
+		$this->commands([
+			EmailFreeAuthorizedCommand::class,
+			EmailFreeDeniedCommand::class,
+			EmailFreeRemovedCommand::class,
+			EmailFreeRequestedCommand::class,
+			EmailQueueAuthorizedCommand::class,
+			EmailQueueDeniedCommand::class,
+			EmailQueueRemovedCommand::class,
+			EmailQueueRequestedCommand::class,
+			EmailWelcomeClusterCommand::class,
+			EmailWelcomeFreeCommand::class,
+		]);
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Queues\Mail;
 
-use App\Modules\Queues\Models\Queue;
+use App\Modules\Users\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -12,20 +12,36 @@ class QueueAuthorized extends Mailable
 	use Queueable, SerializesModels;
 
 	/**
-	 * The Queue
+	 * The User
 	 *
-	 * @var Queue
+	 * @var User
 	 */
-	protected $queue;
+	protected $user;
+
+	/**
+	 * The User
+	 *
+	 * @var array
+	 */
+	protected $queueusers;
+
+	/**
+	 * The User
+	 *
+	 * @var array
+	 */
+	protected $roles;
 
 	/**
 	 * Create a new message instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(Queue $queue)
+	public function __construct(User $user, $queueusers, $roles)
 	{
-		$this->queue = $queue;
+		$this->user = $user;
+		$this->queueusers = $queueusers;
+		$this->roles = $roles;
 	}
 
 	/**
@@ -35,10 +51,12 @@ class QueueAuthorized extends Mailable
 	 */
 	public function build()
 	{
-		return $this->markdown('queues::mail.queueauthorized')
-					->subject(trans('queues::mail.queueauthorized'))
+		return $this->markdown('queues::mail.queueauthorized.user')
+					->subject(trans('queues::mail.queueauthorized.user'))
 					->with([
-						'queue' => $this->queue,
+						'user' => $this->user,
+						'queueusers' => $this->queueusers,
+						'roles' => $this->roles,
 					]);
 	}
 }

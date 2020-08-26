@@ -1,17 +1,19 @@
 @component('mail::message')
-Hello {$manager->name},
+Hello {{ $user->name }},
 
 The following people have been requested access for the following ITaP Research Computing resources and queues that you manage.
 
-@foreach ($user_activity as $user_id => $userqueues)
+@foreach ($requests as $user_id => $data)
 ---
 
-{{ $userqueues[0]->user->name }} ({{ $userqueues[0]->user->email }}):
+{{ $data['user']->name }} ({{ $data['user']->email }}):
 
-@foreach ($userqueues as $userqueue)
-* {{ $$userqueue->queue->resource->name }}: '{{ $userqueue->queue->name }}' queue
-@if ($userqueue->request->comment)
+@foreach ($data['queueusers'] as $userqueue)
+@if ($userqueue->queue)
+* {{ $userqueue->queue->resource->name }}: '{{ $userqueue->queue->name }}' queue
+@if ($userqueue->request && $userqueue->request->comment)
     * Comment: {{ $userqueue->request->comment }}
+@endif
 @endif
 @endforeach
 

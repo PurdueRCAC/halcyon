@@ -23,7 +23,7 @@ class CreateBaseTables extends Migration
 		{
 			Schema::create('extensions', function (Blueprint $table)
 			{
-				$table->increments('extension_id');
+				$table->increments('id');
 				$table->string('name', 100);
 				$table->string('type', 20);
 				$table->string('element', 100);
@@ -41,7 +41,7 @@ class CreateBaseTables extends Migration
 				$table->integer('updated_by')->unsigned()->default(0);
 				$table->index(['element', 'client_id']);
 				$table->index(['element', 'folder', 'client_id']);
-				$table->index('extension');
+				$table->index(['type', 'element', 'folder', 'client_id']);
 			});
 			$this->info('Created `extensions` table.');
 		}

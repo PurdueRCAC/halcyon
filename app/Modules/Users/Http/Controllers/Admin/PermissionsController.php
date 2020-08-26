@@ -76,7 +76,7 @@ class PermissionsController extends Controller
 		//$form = $module->getForm();
 		$module = Extension::findModuleByName($module);
 
-		if (!$module || !$module->extension_id)
+		if (!$module || !$module->id)
 		{
 			abort(404);
 		}
@@ -110,7 +110,7 @@ class PermissionsController extends Controller
 
 		$module = Extension::findOrFail($id);
 
-		if (!$module || !$module->extension_id)
+		if (!$module || !$module->id)
 		{
 			abort(404);
 		}

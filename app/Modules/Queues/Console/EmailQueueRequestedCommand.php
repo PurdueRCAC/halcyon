@@ -6,9 +6,10 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Queues\Models\Queue;
-use App\Modules\ContactReports\Models\Report;
-use App\Modules\ContactReports\Mail\NewComment;
+use App\Modules\Queues\Models\User as QueueUser;
+use App\Modules\Queues\Mail\QueueRequested;
 use App\Modules\Users\Models\User;
+use App\Modules\Groups\Models\Group;
 
 class EmailQueueRequestedCommand extends Command
 {
@@ -17,7 +18,14 @@ class EmailQueueRequestedCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $name = 'queues:emailrequested';
+	//protected $name = 'queues:emailrequested';
+
+	/**
+	 * The name and signature of the console command.
+	 *
+	 * @var string
+	 */
+	protected $signature = 'queues:emailqueuerequested {--debug : Output emails rather than sending}';
 
 	/**
 	 * The console command description.
@@ -31,14 +39,16 @@ class EmailQueueRequestedCommand extends Command
 	 */
 	public function handle()
 	{
-		$u = (new User)->getTable();
+		$debug = $this->option('debug') ? true : false;
+
+		$qu = (new QueueUser)->getTable();
 		$q = (new Queue)->getTable();
 
-		$users = User::query()
-			->select($u . '.*', $q . '.groupid')
-			->join($q, $q . '.id', $u . '.queueid')
-			->whereIn($u . '.membertype', [1, 4])
-			->where($u . '.notice', '=', 0)
+		$users = QueueUser::query()
+			->select($qu . '.*', $q . '.groupid')
+			->join($q, $q . '.id', $qu . '.queueid')
+			->whereIn($qu . '.membertype', [1, 4])
+			->where($qu . '.notice', '=', 6)
 			->get();
 
 		if (!count($users))
@@ -61,9 +71,18 @@ class EmailQueueRequestedCommand extends Command
 		}
 
 		$now = date("U");
+		$threshold = 300; // threshold for when considering activity "done"
 
 		foreach ($group_activity as $groupid => $users)
 		{
+			$group = Group::find($groupid);
+
+			if (!$group)
+			{
+				$this->error('Could not find group #' . $groupid);
+				continue;
+			}
+
 			// Find the latest activity
 			$latest = 0;
 			foreach ($users as $user)
@@ -76,27 +95,53 @@ class EmailQueueRequestedCommand extends Command
 
 			if ($now - $latest >= $threshold)
 			{
-				$student_activity = array();
+				$user_activity = array();
 				foreach ($users as $user)
 				{
 					if (!isset($user_activity[$user->userid]))
 					{
 						$user_activity[$user->userid] = array();
 					}
-					array_push($user_activity[$usert->userid], $user);
+					array_push($user_activity[$user->userid], $user);
+				}
+
+				foreach ($user_activity as $userid => $activity)
+				{
+					// Change states
+					foreach ($activity as $queueuser)
+					{
+						$queueuser->notice = 0;
+						$queueuser->save();
+					}
+
+					$user = User::find($userid);
+
+					if (!$user)
+					{
+						unset($user_activity[$userid]);
+						$this->error('Could not find account for user #' . $userid);
+						continue;
+					}
+
+					$user_activity[$userid] = array(
+						'user' => $user,
+						'queueusers' => $activity,
+					);
 				}
 
 				// Assemble list of managers to email
-				$managers = User::query()
-					->where('membertype', '=', 2)
-					->where('groupid', '=', $groupid)
-					->get();
-
-				foreach ($managers as $manager)
+				foreach ($group->managers as $manager)
 				{
 					// Prepare and send actual email
-					//Mail::to($manager->user->email)->send(new QueueRequested($user_activity));
-					echo (new QueueRequested($user_activity))->render();
+					$message = new QueueRequested($manager->user, $user_activity);
+
+					if ($debug)
+					{
+						echo $message->render();
+						continue;
+					}
+
+					//Mail::to($manager->user->email)->send($message);
 
 					$this->info("Emailed queuerequested to {$manager->user->email}.");
 				}

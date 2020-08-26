@@ -9,7 +9,7 @@
 <form>
 	<fieldset>
 		<field
-			name="extension_id"
+			name="id"
 			label="global.id"
 			description ="global.id desc"
 			type="text"

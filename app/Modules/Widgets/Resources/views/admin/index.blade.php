@@ -272,7 +272,7 @@ app('pathway')
 			@foreach ($widgets as $item)
 				<tr>
 					<td>
-						<span class="editlinktip hasTip" title="{{ $item->name }} :: {{ $item->desc }}"><a href="{{ route('admin.widgets.create', ['eid' => $item->extension_id]) }}">{{ $item->name }}</a></span>
+						<span class="editlinktip hasTip" title="{{ $item->name }} :: {{ $item->desc }}"><a href="{{ route('admin.widgets.create', ['eid' => $item->id]) }}">{{ $item->name }}</a></span>
 					</td>
 					<td>
 						{{ $item->element }}

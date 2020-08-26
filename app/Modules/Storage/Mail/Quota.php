@@ -2,30 +2,56 @@
 
 namespace App\Modules\Storage\Mail;
 
-use App\Modules\Storage\Models\Directory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use App\Modules\Storage\Models\Notification;
+use App\Modules\Storage\Models\Usage;
+use App\Modules\Users\Models\User;
 
 class Quota extends Mailable
 {
 	use Queueable, SerializesModels;
 
 	/**
-	 * The order instance.
+	 * The email type
+	 *
+	 * @var string
+	 */
+	protected $type;
+
+	/**
+	 * The user
+	 *
+	 * @var User
+	 */
+	protected $user;
+
+	/**
+	 * The Notification
 	 *
 	 * @var Order
 	 */
-	protected $directory;
+	protected $notification;
+
+	/**
+	 * The Notification
+	 *
+	 * @var Order
+	 */
+	protected $latest;
 
 	/**
 	 * Create a new message instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(Directory $directory)
+	public function __construct($type, User $user, Notification $notification, Usage $latest)
 	{
-		$this->directory = $directory;
+		$this->type = $type;
+		$this->user = $user;
+		$this->notification = $notification;
+		$this->latest = $latest;
 	}
 
 	/**
@@ -35,10 +61,12 @@ class Quota extends Mailable
 	 */
 	public function build()
 	{
-		return $this->markdown('storage::mail.quota')
-					->subject('Storage Quota')
+		return $this->markdown('storage::mail.quota.' . $this->type)
+					->subject(trans('storage::mail.quota.' . $this->type))
 					->with([
-						'directory' => $this->directory,
+						'user' => $this->user,
+						'latest' => $this->latest,
+						'notification' => $this->notification,
 					]);
 	}
 }

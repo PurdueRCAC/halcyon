@@ -42,12 +42,12 @@ class Ordering extends Field
 		$attr .= $this->element['onchange'] ? ' onchange="' . (string) $this->element['onchange'] . '"' : '';
 
 		// Get some field values from the form.
-		$pluginId = (int) $this->form->getValue('extension_id');
+		$pluginId = (int) $this->form->getValue('id');
 		$folder = $this->form->getValue('folder');
 
 		$listeners = app('db')
 			->table('extensions')
-			->select(['extension_id', 'ordering AS value', 'name AS text', 'type', 'folder'])
+			->select(['id', 'ordering AS value', 'name AS text', 'type', 'folder'])
 			->where('type', 'plugin')
 			->where('folder', $folder)
 			->orderBy('ordering', 'asc')
@@ -100,7 +100,7 @@ class Ordering extends Field
 
 			$options[] = Select::option($items[$i]->value, $items[$i]->value . '. ' . $text);
 		}
-		$options[] = Select::option($items[$i - 1]->value + 1, ($items[$i - 1]->value + 1) . ' ' . trans('JOPTION_ORDER_LAST'));
+		$options[] = Select::option($items[$i - 1]->value + 1, ($items[$i - 1]->value + 1) . ' ' . trans('global.option.ORDER_LAST'));
 
 		return $options;
 	}

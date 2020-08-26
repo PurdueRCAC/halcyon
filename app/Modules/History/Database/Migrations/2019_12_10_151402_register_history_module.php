@@ -28,7 +28,7 @@ class RegisterHistoryModule extends Migration
 				->get()
 				->first();
 
-			if (!$found || !$found->extension_id)
+			if (!$found || !$found->id)
 			{
 				$id = DB::table('extensions')
 					->insertGetId([

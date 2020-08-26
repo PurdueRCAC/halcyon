@@ -40,13 +40,6 @@ class Listener extends Model
 	protected $table = 'extensions';
 
 	/**
-	 * The primary key for the model.
-	 *
-	 * @var string
-	 */
-	protected $primaryKey = 'extension_id';
-
-	/**
 	 * Default order by for model
 	 *
 	 * @var  string
@@ -77,7 +70,7 @@ class Listener extends Model
 	 * @var array
 	 */
 	protected $guarded = [
-		'extension_id'
+		'id'
 	];
 
 	/**
@@ -135,7 +128,7 @@ class Listener extends Model
 	public static function all($columns = ['*'])
 	{
 		return static::query()
-			->where('type', '=', 'plugin')
+			->where('type', '=', 'listener')
 			->get(is_array($columns) ? $columns : func_get_args());
 	}
 

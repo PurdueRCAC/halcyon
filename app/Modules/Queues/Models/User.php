@@ -131,7 +131,7 @@ class User extends Model
 	 */
 	public function request()
 	{
-		return $this->hasOne(UserRequest::class, 'userrequestid');
+		return $this->hasOne(UserRequest::class, 'id', 'userrequestid');
 	}
 
 	/**

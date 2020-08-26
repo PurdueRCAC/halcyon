@@ -17,7 +17,14 @@ class EmailCommentsCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $name = 'crm:emailcomments';
+	//protected $name = 'crm:emailcomments';
+
+	/**
+	 * The name and signature of the console command.
+	 *
+	 * @var string
+	 */
+	protected $signature = 'crm:emailcomments {--debug : Output emails rather than sending}';
 
 	/**
 	 * The console command description.
@@ -31,9 +38,11 @@ class EmailCommentsCommand extends Command
 	 */
 	public function handle()
 	{
+		$debug = $this->option('debug') ? true : false;
+
 		// Get all new comments
 		$comments = Comment::where('notice', '!=', 0)->get();
-		//$comments = Comment::where('notice', '=', 22)->get();
+		//$comments = Comment::where('notice', '=', 0)->orderBy('id', 'desc')->limit(20)->get();
 
 		if (!count($comments))
 		{
@@ -81,11 +90,23 @@ class EmailCommentsCommand extends Command
 					}
 
 					// Prepare and send actual email
-					//Mail::to($user->email)->send(new NewComment($comment));
-					//echo (new NewComment($comment))->render();
+					$message = new NewComment($comment);
+
+					if ($debug)
+					{
+						echo $message->render();
+						continue;
+					}
+
+					Mail::to($user->email)->send($message);
 
 					$this->info("Emailed comment #{$comment->id} to {$user->email}.");
 				}
+			}
+
+			if ($debug)
+			{
+				continue;
 			}
 
 			// Change states

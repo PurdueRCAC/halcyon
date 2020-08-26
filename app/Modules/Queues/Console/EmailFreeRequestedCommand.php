@@ -2,12 +2,20 @@
 
 namespace App\Modules\Queues\Console;
 
-use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use App\Modules\Queues\Mail\FreeRequested;
 use App\Modules\Queues\Models\Queue;
+use App\Modules\Queues\Models\GroupUser;
+use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Users\Models\User;
+use App\Modules\Groups\Models\Group;
 
+/**
+ * This script proccess all new requested groupqueueuser entries
+ * Notice State 6 => 0
+ */
 class EmailFreeRequestedCommand extends Command
 {
 	/**
@@ -15,28 +23,39 @@ class EmailFreeRequestedCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $name = 'queues:emailfreerequested';
+	//protected $name = 'queues:emailfreerequested';
+
+	/**
+	 * The name and signature of the console command.
+	 *
+	 * @var string
+	 */
+	protected $signature = 'queues:emailfreerequested {--debug : Output emails rather than sending}';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Email latest queue requests.';
+	protected $description = 'Email latest groupqueueuser requests.';
 
 	/**
 	 * Execute the console command.
 	 */
 	public function handle()
 	{
-		$u = (new User)->getTable();
+		$debug = $this->option('debug') ? true : false;
+
+		$gu = (new GroupUser)->getTable();
+		$qu = (new QueueUser)->getTable();
 		$q = (new Queue)->getTable();
 
-		$users = User::query()
-			->select($u . '.*', $q . '.groupid')
-			->join($q, $q . '.id', $u . '.queueid')
-			->whereIn($u . '.membertype', [1, 4])
-			->where($u . '.notice', '=', 0)
+		$users = GroupUser::query()
+			->select($gu . '.*', $qu . '.queueid')
+			->join($qu, $qu . '.id', $gu . '.queueuserid')
+			->join($q, $q . '.id', $qu . '.queueid')
+			->whereIn($qu . '.membertype', [1, 4])
+			->where($qu . '.notice', '=', 6)
 			->get();
 
 		if (!count($users))
@@ -59,6 +78,7 @@ class EmailFreeRequestedCommand extends Command
 		}
 
 		$now = date("U");
+		$threshold = 300; // threshold for when considering activity "done"
 
 		foreach ($group_activity as $groupid => $users)
 		{
@@ -74,6 +94,14 @@ class EmailFreeRequestedCommand extends Command
 
 			if ($now - $latest >= $threshold)
 			{
+				$group = Group::find($groupid);
+
+				if (!$group)
+				{
+					$this->error('Could not find group #' . $groupid);
+					continue;
+				}
+
 				$student_activity = array();
 				foreach ($users as $user)
 				{
@@ -84,19 +112,31 @@ class EmailFreeRequestedCommand extends Command
 					array_push($user_activity[$usert->userid], $user);
 				}
 
-				// Assemble list of managers to email
-				$managers = User::query()
-					->where('membertype', '=', 2)
-					->where('groupid', '=', $groupid)
-					->get();
+				foreach ($user_activity as $userid => $activity)
+				{
+					// Change states
+					foreach ($activity as $queueuser)
+					{
+						$queueuser->notice = 0;
+						$queueuser->save();
+					}
+				}
 
-				foreach ($managers as $manager)
+				// Assemble list of managers to email
+				foreach ($group->managers as $manager)
 				{
 					// Prepare and send actual email
-					//Mail::to($manager->user->email)->send(new QueueRequested($user_activity));
-					echo (new QueueRequested($user_activity))->render();
+					$message = new FreeRequested($manager->user, $user_activity);
 
-					$this->info("Emailed queuerequested to {$manager->user->email}.");
+					if ($debug)
+					{
+						echo $message->render();
+						continue;
+					}
+
+					Mail::to($manager->user->email)->send($message);
+
+					$this->info("Emailed freerequested to manager {$manager->user->email}.");
 				}
 			}
 		}

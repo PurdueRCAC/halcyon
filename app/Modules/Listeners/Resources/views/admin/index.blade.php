@@ -113,20 +113,20 @@ app('pathway')
 			<tr>
 				<td class="text-center">
 					@if ($path && $canEdit)
-						{!! App\Halcyon\Html\Builder\Grid::id($i, $row->extension_id) !!}
+						{!! App\Halcyon\Html\Builder\Grid::id($i, $row->id) !!}
 					@elseif (!$path)
 						<span class="glyph icon-alert-triangle warning"></span>
 					@endif
 				</td>
 				<td class="priority-5">
-					{{ $row->extension_id }}
+					{{ $row->id }}
 				</td>
 				<td>
 					@if ($row->checked_out)
 						<?php echo App\Halcyon\Html\Builder\Grid::checkedout($i, $row->editor, $row->checked_out_time, '', $canCheckin); ?>
 					@else
 						@if ($canEdit)
-							<a href="{{ route('admin.listeners.edit', ['id' => $row->extension_id]) }}">
+							<a href="{{ route('admin.listeners.edit', ['id' => $row->id]) }}">
 								{{ trans('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener name') }}
 							</a>
 						@else
@@ -140,11 +140,11 @@ app('pathway')
 				<td>
 					@if ($canEdit)
 						@if ($row->enabled == 1)
-							<a class="btn btn-sm published" href="{{ route('admin.listeners.unpublish', ['id' => $row->extension_id]) }}">
+							<a class="btn btn-sm published" href="{{ route('admin.listeners.unpublish', ['id' => $row->id]) }}">
 								{{ trans('listeners::listeners.published') }}
 							</a>
 						@else
-							<a class="btn btn-sm unpublished" href="{{ route('admin.listeners.publish', ['id' => $row->extension_id]) }}">
+							<a class="btn btn-sm unpublished" href="{{ route('admin.listeners.publish', ['id' => $row->id]) }}">
 								{{ trans('listeners::listeners.unpublished') }}
 							</a>
 						@endif

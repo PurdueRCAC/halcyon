@@ -64,7 +64,7 @@ class InstallModule
 				'published'         => 1,
 				'parent_id'         => 1,
 				'level'             => 1,
-				'component_id'      => $module->extension_id,
+				'component_id'      => $module->id,
 				'language'          => '*',
 				'client_id'         => 1
 			]);

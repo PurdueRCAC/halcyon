@@ -7,7 +7,7 @@ app('pathway')
 		route('admin.listeners.index')
 	)
 	->append(
-		($row->extension_id ? trans('global.edit') . ' #' . $row->extension_id : trans('global.create'))
+		($row->extension_id ? trans('global.edit') . ' #' . $row->id : trans('global.create'))
 	);
 @endphp
 
@@ -21,7 +21,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('listeners.name') !!}: {{ $row->extension_id ? 'Edit: #' . $row->extension_id : 'Create' }}
+{!! config('listeners.name') !!}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
 @stop
 
 @section('content')
@@ -31,7 +31,7 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
-				<input type="hidden" name="id" id="field-id" value="{{ $row->extension_id }}" />
+				<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 
 				<div class="row">
 					<div class="col col-xs-12 col-sm-6">
@@ -85,8 +85,8 @@ app('pathway')
 
 				<?php /*if ($row->extension_id) : ?>
 					<div class="form-group">
-						<?php echo $form->getLabel('extension_id'); ?><br />
-						<?php echo $form->getInput('extension_id'); ?>
+						<?php echo $form->getLabel('id'); ?><br />
+						<?php echo $form->getInput('id'); ?>
 					</div>
 				<?php endif;*/ ?>
 			</fieldset>

@@ -112,7 +112,7 @@ class ThemesController extends Controller
 				$m . '.template_style_id AS assigned',
 				$l . '.title AS language_title',
 				$l . '.image',
-				$e . '.extension_id AS e_id'
+				$e . '.id AS e_id'
 			]);
 
 		// Join on menus.
@@ -167,7 +167,7 @@ class ThemesController extends Controller
 				$s . '.client_id',
 				$l . '.title',
 				$l . '.image',
-				$e . '.extension_id'
+				$e . '.id AS extension_id'
 			]);
 
 		// Get records

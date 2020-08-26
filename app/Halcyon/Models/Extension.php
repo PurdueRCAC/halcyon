@@ -21,6 +21,13 @@ class Extension extends Model
 	use ErrorBag, Validatable, Historable;
 
 	/**
+	 * Indicates if the model should be timestamped.
+	 *
+	 * @var bool
+	 */
+	public $timestamps = false;
+
+	/**
 	 * The table to which the class pertains
 	 *
 	 * @var  string
@@ -28,18 +35,11 @@ class Extension extends Model
 	protected $table = 'extensions';
 
 	/**
-	 * The primary key for the model.
-	 *
-	 * @var string
-	 */
-	protected $primaryKey = 'extension_id';
-
-	/**
 	 * Default order by for model
 	 *
 	 * @var string
 	 */
-	public static $orderBy = 'extension_id';
+	public static $orderBy = 'id';
 
 	/**
 	 * Default order direction for select queries
@@ -54,7 +54,7 @@ class Extension extends Model
 	 * @var array
 	 */
 	protected $guarded = [
-		'extension_id'
+		'id'
 	];
 
 	/**
@@ -65,16 +65,6 @@ class Extension extends Model
 	protected $rules = array(
 		'name' => 'required'
 	);
-
-	/**
-	 * Field of science
-	 *
-	 * @return  object
-	 */
-	public function warningTime()
-	{
-		return $this->belongsTo(self::class, 'warningtimeperiodid');
-	}
 
 	/**
 	 * Get a module by name

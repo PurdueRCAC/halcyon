@@ -214,7 +214,7 @@ class WidgetsController extends Controller
 
 		// Select the required fields from the table.
 		$items = app('db')->table('extensions')
-			->select(['extension_id', 'name', 'element'])
+			->select(['id', 'name', 'element'])
 			->where('type', '=', 'widget')
 			->where('client_id', '=', (int) $filters['client_id'])
 			->where('enabled', '=', 1)
@@ -257,7 +257,7 @@ class WidgetsController extends Controller
 
 			$ext = $db->table('extensions')
 				->select(['element', 'client_id'])
-				->where('extension_id', '=', $eid)
+				->where('id', '=', $eid)
 				//->where('element', '=', $eid)
 				->where('type', '=', 'widget')
 				->get()
@@ -314,7 +314,7 @@ class WidgetsController extends Controller
 
 			$ext = $db->table('extensions')
 				->select('element, client_id')
-				->where('extension_id', '=', $eid)
+				->where('id', '=', $eid)
 				->where('type', '=', 'module')
 				->first();
 
@@ -432,7 +432,7 @@ class WidgetsController extends Controller
 
 		// Select the required fields from the table.
 		$items = app('db')->table('extensions')
-			->select(['extension_id', 'name', 'element'])
+			->select(['id', 'name', 'element'])
 			->where('type', '=', 'widget')
 			->where('client_id', '=', (int) $filters['client_id'])
 			->where('enabled', '=', 1)

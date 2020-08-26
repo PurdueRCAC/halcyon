@@ -17,7 +17,7 @@ class CreateHistoryTable extends Migration
 		{
 			Schema::create('history', function (Blueprint $table)
 			{
-				$table->engine = 'InnoDB';
+				//$table->engine = 'InnoDB';
 				$table->increments('id');
 				$table->integer('user_id')->unsigned()->nullable();
 				$table->integer('historable_id')->unsigned();
@@ -37,7 +37,7 @@ class CreateHistoryTable extends Migration
 		{
 			Schema::create('log', function (Blueprint $table)
 			{
-				$table->engine = 'InnoDB';
+				//$table->engine = 'InnoDB';
 				$table->increments('id');
 				$table->timestamp('datetime');
 				$table->string('ip', 39);

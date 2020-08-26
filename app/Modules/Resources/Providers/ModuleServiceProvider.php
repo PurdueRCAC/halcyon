@@ -4,6 +4,7 @@ namespace App\Modules\Resources\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use App\Modules\Resources\Console\EmailSchedulingCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -32,8 +33,21 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	protected function registerConsoleCommands()
+	{
+		$this->commands([
+			EmailSchedulingCommand::class,
+		]);
 	}
 
 	/**

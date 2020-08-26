@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Storage\Listeners\Messages;
 use App\Modules\Storage\Listeners\Resources;
-//use App\Modules\Storage\Console\EmailQuotaCommand;
+use App\Modules\Storage\Console\EmailQuotaCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -67,9 +67,9 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	protected function registerConsoleCommands()
 	{
-		/*$this->commands([
+		$this->commands([
 			EmailQuotaCommand::class,
-		]);*/
+		]);
 	}
 
 	/**

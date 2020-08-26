@@ -13,14 +13,21 @@ use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Users\Models\User as SiteUser;
 
-class EmailWelcomeMessageClusterCommand extends Command
+class EmailWelcomeClusterCommand extends Command
 {
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'queues:emailwelcomecluster';
+	//protected $name = 'queues:emailwelcomecluster';
+
+	/**
+	 * The name and signature of the console command.
+	 *
+	 * @var string
+	 */
+	protected $signature = 'queues:emailwelcomecluster {--debug}';
 
 	/**
 	 * The console command description.
@@ -34,6 +41,8 @@ class EmailWelcomeMessageClusterCommand extends Command
 	 */
 	public function handle()
 	{
+		$debug = $this->option('debug') ? true : false;
+
 		$u = (new User)->getTable();
 		$q = (new Queue)->getTable();
 		$r = (new Child)->getTable();
@@ -152,13 +161,18 @@ class EmailWelcomeMessageClusterCommand extends Command
 				$storages[$resource->name] = $storage;
 			}*/
 
-			$u = SiteUser::find($userid);
+			$user = SiteUser::find($userid);
 
 			// Prepare and send actual email
-			//Mail::to($user->email)->send(new QueueAuthorized($user));
-			echo (new WelcomeMessage($u, $activity))->render();
+			if ($debug)
+			{
+				echo (new WelcomeMessage($user, $activity))->render();
+				continue;
+			}
 
-			$this->info("Emailed queueauthorized to {$user->email}.");
+			Mail::to($user->email)->send(new QueueAuthorized($user));
+
+			$this->info("Emailed welcome (cluster) to {$user->email}.");
 		}
 	}
 }

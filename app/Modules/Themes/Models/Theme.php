@@ -36,13 +36,6 @@ class Theme extends Model
 	protected $table = 'extensions';
 
 	/**
-	 * The primary key for the model.
-	 *
-	 * @var string
-	 */
-	protected $primaryKey = 'extension_id';
-
-	/**
 	 * Default order by for model
 	 *
 	 * @var  string
@@ -85,7 +78,7 @@ class Theme extends Model
 	 * @var array
 	 */
 	protected $guarded = [
-		'extension_id'
+		'id'
 	];
 
 	/**
@@ -132,7 +125,7 @@ class Theme extends Model
 	public function duplicate()
 	{
 		// Reset the id to create a new record.
-		$this->extension_id = 0;
+		$this->id = 0;
 
 		// Reset the home (don't want dupes of that field).
 		$this->enabled = 0;
@@ -181,16 +174,6 @@ class Theme extends Model
 		}
 
 		return $name;
-	}
-
-	/**
-	 * Get params as a Registry object
-	 *
-	 * @return  object
-	 */
-	public function getIdAttribute()
-	{
-		return $this->extension_id;
 	}
 
 	/**

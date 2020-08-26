@@ -29,7 +29,7 @@
 	@foreach ($items as $item)
 		<tr>
 			<td>
-				<a href="{{ route('admin.widgets.create') . '?eid=' . $item->extension_id }}" class="editlinktip hasTip" title="{{ $item->name . ' :: ' . $item->desc }}" target="_top">{{ $item->name }}</a>
+				<a href="{{ route('admin.widgets.create') . '?eid=' . $item->id }}" class="editlinktip hasTip" title="{{ $item->name . ' :: ' . $item->desc }}" target="_top">{{ $item->name }}</a>
 			</td>
 			<td>
 				{{ $item->element }}

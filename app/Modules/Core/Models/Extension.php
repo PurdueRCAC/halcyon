@@ -45,20 +45,11 @@ class Extension extends Model
 	protected $table = 'extensions';
 
 	/**
-	 * The table primary key name
-	 *
-	 * It defaults to 'id', but can be overwritten by a subclass.
-	 *
-	 * @var  string
-	 **/
-	protected $primaryKey = 'extension_id';
-
-	/**
 	 * Default order by for model
 	 *
 	 * @var  string
 	 */
-	public $orderBy = 'extension_id';
+	public $orderBy = 'id';
 
 	/**
 	 * Default order direction for select queries
