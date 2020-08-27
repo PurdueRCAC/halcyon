@@ -39,6 +39,9 @@
         }
     },
     "autoload": {
+        "files": [
+            "app/Halcyon/helpers.php"
+        ],
         "psr-4": {
             "App\\": "app/"
         },
