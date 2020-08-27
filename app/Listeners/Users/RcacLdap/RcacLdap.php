@@ -34,6 +34,34 @@ class RcacLdap
 	}
 
 	/**
+	 * Get LDAP config
+	 *
+	 * @return  array
+	 */
+	private function config()
+	{
+		if (!app()->has('ldap'))
+		{
+			return array();
+		}
+
+		return config('ldap.rcac', []);
+	}
+
+	/**
+	 * Establish LDAP connection
+	 *
+	 * @param   array  $config
+	 * @return  object
+	 */
+	private function connect($config)
+	{
+		return app('ldap')
+				->addProvider($config, 'rcac')
+				->connect('rcac');
+	}
+
+	/**
 	 * Search for users
 	 *
 	 * @param   object  $event
@@ -41,12 +69,7 @@ class RcacLdap
 	 */
 	public function handleUserSearching(UserSearching $event)
 	{
-		if (!app()->has('ldap'))
-		{
-			return;
-		}
-
-		$config = config('ldap.rcac', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
@@ -67,9 +90,7 @@ class RcacLdap
 
 		try
 		{
-			$ldap = app('ldap')
-				->addProvider($config, 'rcac')
-				->connect('rcac');
+			$ldap = $this->connect($config);
 
 			// Performing a query.
 			$results = $ldap->search()
@@ -133,12 +154,7 @@ class RcacLdap
 	 */
 	public function handleUserBeforeDisplay(UserBeforeDisplay $event)
 	{
-		if (!app()->has('ldap'))
-		{
-			return;
-		}
-
-		$config = config('ldap.rcac', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
@@ -149,9 +165,7 @@ class RcacLdap
 
 		try
 		{
-			$ldap = app('ldap')
-				->addProvider($config, 'rcac')
-				->connect('rcac');
+			$ldap = $this->connect($config);
 
 			// Performing a query.
 			$results = $ldap->search()
@@ -183,12 +197,7 @@ class RcacLdap
 		$system_users  = array();
 		$scholar_users = $event->users;
 
-		if (!app()->has('ldap'))
-		{
-			return;
-		}
-
-		$config = config('ldap.rcac', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
@@ -197,9 +206,7 @@ class RcacLdap
 
 		try
 		{
-			$ldap = app('ldap')
-				->addProvider($config, 'rcac')
-				->connect('rcac');
+			$ldap = $this->connect($config);
 
 			// Performing a query.
 			$results = $ldap->search()
@@ -263,12 +270,7 @@ class RcacLdap
 
 	public function handleResourceMemberStatus(ResourceMemberStatus $event)
 	{
-		if (!app()->has('ldap'))
-		{
-			return;
-		}
-
-		$config = config('ldap.rcac', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
@@ -291,9 +293,7 @@ class RcacLdap
 
 		try
 		{
-			$ldap = app('ldap')
-				->addProvider($config, 'rcac')
-				->connect('rcac');
+			$ldap = $this->connect($config);
 
 			// Performing a query.
 			$results = $ldap->search()

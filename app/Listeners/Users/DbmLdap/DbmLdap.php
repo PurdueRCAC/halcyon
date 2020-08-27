@@ -30,22 +30,51 @@ class DbmLdap
 	}
 
 	/**
+	 * Get LDAP config
+	 *
+	 * @return  array
+	 */
+	private function config()
+	{
+		if (!app()->has('ldap'))
+		{
+			return array();
+		}
+
+		return config('ldap.dbm', []);
+	}
+
+	/**
+	 * Establish LDAP connection
+	 *
+	 * @param   array  $config
+	 * @return  object
+	 */
+	private function connect($config)
+	{
+		return app('ldap')
+				->addProvider($config, 'dbm')
+				->connect('dbm');
+	}
+
+	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   object   $event
 	 * @return  void
 	 */
 	public function handleUserSearching(UserSearching $event)
 	{
-		if (!app()->has('ldap'))
+		$config = $this->config();
+
+		if (empty($config))
 		{
 			return;
 		}
 
 		/*try
 		{
-			$ldap = app('ldap')->connect('dbm');
+			$ldap = $this->connect($config);
 
 			// Performing a query.
 			$results = $ldap->search()
@@ -74,20 +103,21 @@ class DbmLdap
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   object   $event
 	 * @return  void
 	 */
 	public function handleUserLookup(UserLookup $event)
 	{
-		if (!app()->has('ldap'))
+		$config = $this->config();
+
+		if (empty($config))
 		{
 			return;
 		}
 
 		try
 		{
-			$ldap = app('ldap')->connect('dbm');
+			$ldap = $this->connect($config);
 
 			$criteria = $event->criteria;
 			$query = [];
@@ -145,18 +175,12 @@ class DbmLdap
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   object   $event
 	 * @return  void
 	 */
 	public function handleUserCreated(UserCreated $event)
 	{
-		if (!app()->has('ldap'))
-		{
-			return;
-		}
-
-		$config = config('ldap.dbm', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
@@ -171,9 +195,7 @@ class DbmLdap
 
 		try
 		{
-			$ldap = app('ldap')
-				->addProvider($config, 'dbm')
-				->connect('dbm');
+			$ldap = $this->connect($config);
 
 			// Look for user record in LDAP
 			$result = $ldap->search()

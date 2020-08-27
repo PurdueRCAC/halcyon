@@ -32,6 +32,34 @@ class PedLdap
 	}
 
 	/**
+	 * Get LDAP config
+	 *
+	 * @return  array
+	 */
+	private function config()
+	{
+		if (!app()->has('ldap'))
+		{
+			return array();
+		}
+
+		return config('ldap.ped', []);
+	}
+
+	/**
+	 * Establish LDAP connection
+	 *
+	 * @param   array  $config
+	 * @return  object
+	 */
+	private function connect($config)
+	{
+		return app('ldap')
+				->addProvider($config, 'ped')
+				->connect('ped');
+	}
+
+	/**
 	 * Search for users
 	 *
 	 * @param   object  $event
@@ -39,12 +67,7 @@ class PedLdap
 	 */
 	public function handleUserSearching(UserSearching $event)
 	{
-		if (!app()->has('ldap'))
-		{
-			return;
-		}
-
-		$config = config('ldap.ped', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
@@ -59,9 +82,7 @@ class PedLdap
 
 		try
 		{
-			$ldap = app('ldap')
-				->addProvider($config, 'ped')
-				->connect('ped');
+			$ldap = $this->connect($config);
 
 			// We already found a match, so kip this lookup
 			if (!in_array($event->search, $usernames))
@@ -160,12 +181,7 @@ class PedLdap
 	 */
 	public function handleUserBeforeDisplay($event)
 	{
-		if (!app()->has('ldap'))
-		{
-			return;
-		}
-
-		$config = config('ldap.ped', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
@@ -174,9 +190,7 @@ class PedLdap
 
 		try
 		{
-			$ldap = app('ldap')
-				->addProvider($config, 'ped')
-				->connect('ped');
+			$ldap = $this->connect($config);
 
 			$user = $event->getUser();
 
