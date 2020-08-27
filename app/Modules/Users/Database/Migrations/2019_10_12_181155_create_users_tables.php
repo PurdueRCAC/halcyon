@@ -42,7 +42,7 @@ class CreateUsersTables extends Migration
 				$table->index('block');
 				$table->index('email');
 			});
-			$this->info('Created `users` table.');
+			//$this->info('Created `users` table.');
 		}
 
 		if (!Schema::hasTable('user_notes'))
@@ -69,7 +69,7 @@ class CreateUsersTables extends Migration
 
 				$table->foreign('user_id')->references('id')->on('users');
 			});
-			$this->info('Created `user_notes` table.');
+			//$this->info('Created `user_notes` table.');
 		}
 
 		if (!Schema::hasTable('user_roles'))
@@ -86,7 +86,7 @@ class CreateUsersTables extends Migration
 				$table->index('title');
 				$table->index(['lft', 'rgt']);
 			});
-			$this->info('Created `user_roles` table.');
+			//$this->info('Created `user_roles` table.');
 		}
 
 		if (!Schema::hasTable('user_role_map'))
@@ -99,7 +99,7 @@ class CreateUsersTables extends Migration
 
 				$table->foreign('user_id')->references('id')->on('users');
 			});
-			$this->info('Created `user_role_map` table.');
+			//$this->info('Created `user_role_map` table.');
 		}
 
 		if (!Schema::hasTable('permissions'))
@@ -118,7 +118,7 @@ class CreateUsersTables extends Migration
 				$table->index(['lft', 'rgt']);
 				$table->index('parent_id');
 			});
-			$this->info('Created `permissions` table.');
+			//$this->info('Created `permissions` table.');
 		}
 	}
 
@@ -139,7 +139,7 @@ class CreateUsersTables extends Migration
 		foreach ($tables as $table)
 		{
 			Schema::dropIfExists($table);
-			$this->info('Dropped `' . $table . '` table.');
+			//$this->info('Dropped `' . $table . '` table.');
 		}
 	}
 }

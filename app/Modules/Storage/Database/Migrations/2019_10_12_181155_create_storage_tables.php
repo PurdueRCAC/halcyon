@@ -43,7 +43,7 @@ class CreateStorageTables extends Migration
 				$table->index('resourceid');
 				$table->index('groupid');
 			});
-			$this->info('Created `storagedirs` table.');
+			//$this->info('Created `storagedirs` table.');
 		}
 
 		if (!Schema::hasTable('storagedirquotanotificationtypes'))
@@ -55,7 +55,7 @@ class CreateStorageTables extends Migration
 				$table->smallInteger('defaulttimeperiodid')->unsigned()->default(0);
 				$table->tinyInteger('valuetype')->default(0);
 			});
-			$this->info('Created `storagedirquotanotificationtypes` table.');
+			//$this->info('Created `storagedirquotanotificationtypes` table.');
 		}
 
 		if (!Schema::hasTable('storagedirquotanotifications'))
@@ -78,7 +78,7 @@ class CreateStorageTables extends Migration
 				$table->index('storagedirquotanotificationtypeid');
 				$table->index('storagedirid');
 			});
-			$this->info('Created `storagedirquotanotification` table.');
+			//$this->info('Created `storagedirquotanotification` table.');
 		}
 
 		if (!Schema::hasTable('storagedirpurchases'))
@@ -95,7 +95,7 @@ class CreateStorageTables extends Migration
 				$table->char('comment', 2000);
 				$table->index(['resourceid', 'groupid', 'datetimestop', 'datetimestart']);
 			});
-			$this->info('Created `storagedirpurchases` table.');
+			//$this->info('Created `storagedirpurchases` table.');
 		}
 
 		if (!Schema::hasTable('storagedirloans'))
@@ -112,7 +112,7 @@ class CreateStorageTables extends Migration
 				$table->char('comment', 2000);
 				$table->index(['resourceid', 'groupid', 'datetimestop', 'datetimestart']);
 			});
-			$this->info('Created `storagedirloans` table.');
+			//$this->info('Created `storagedirloans` table.');
 		}
 
 		if (!Schema::hasTable('storagedirusage'))
@@ -130,7 +130,7 @@ class CreateStorageTables extends Migration
 				$table->index('storagedirid');
 				$table->index(['storagedirusage', 'datetimerecorded']);
 			});
-			$this->info('Created `storagedirusage` table.');
+			//$this->info('Created `storagedirusage` table.');
 		}
 
 		if (!Schema::hasTable('storageresources'))
@@ -152,7 +152,7 @@ class CreateStorageTables extends Migration
 				$table->integer('createtypeid')->unsigned()->default(0);
 				$table->index('parentresourceid');
 			});
-			$this->info('Created `storageresources` table.');
+			//$this->info('Created `storageresources` table.');
 		}
 	}
 
@@ -176,7 +176,7 @@ class CreateStorageTables extends Migration
 		{
 			Schema::dropIfExists($table);
 
-			$this->info('Dropped `' . $table . '` table.');
+			//$this->info('Dropped `' . $table . '` table.');
 		}
 	}
 }

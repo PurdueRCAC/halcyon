@@ -5,7 +5,7 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace Ballast\Menu;
+namespace App\Modules\Menus\Entities\Menu;
 
 /**
  * Menu manager class

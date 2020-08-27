@@ -27,23 +27,23 @@ class CreateBaseTables extends Migration
 				$table->string('name', 100);
 				$table->string('type', 20);
 				$table->string('element', 100);
-				$table->string('folder', 100);
+				$table->string('folder', 100)->nullable();
 				$table->tinyInteger('client_id')->unsigned()->default(0);
 				$table->tinyInteger('enabled')->unsigned()->default(0);
 				$table->integer('access')->unsigned()->default(0);
 				$table->tinyInteger('protected')->unsigned()->default(0);
-				$table->text('params');
+				$table->text('params')->nullable();
 				$table->integer('checked_out')->unsigned()->default(0);
-				$table->timestamp('checked_out_time');
+				$table->timestamp('checked_out_time')->nullable();
 				$table->integer('ordering')->unsigned()->default(0);
 				$table->integer('state')->unsigned()->default(0);
-				$table->timestamp('updated_at');
+				$table->timestamp('updated_at')->nullable();
 				$table->integer('updated_by')->unsigned()->default(0);
 				$table->index(['element', 'client_id']);
 				$table->index(['element', 'folder', 'client_id']);
 				$table->index(['type', 'element', 'folder', 'client_id']);
 			});
-			$this->info('Created `extensions` table.');
+			//$this->command->info('Created `extensions` table.');
 		}
 
 		if (!Schema::hasTable('timeperiods'))
@@ -58,7 +58,7 @@ class CreateBaseTables extends Migration
 				$table->tinyInteger('months')->unsigned()->default(0);
 				$table->tinyInteger('warningtimeperiodid')->unsigned()->default(0);
 			});
-			$this->info('Created `timeperiods` table.');
+			//$this->command->info('Created `timeperiods` table.');
 		}
 	}
 
@@ -75,7 +75,7 @@ class CreateBaseTables extends Migration
 		foreach ($tables as $table)
 		{
 			Schema::dropIfExists($table);
-			$this->info('Dropped `' . $table . '` table.');
+			//$this->command->info('Dropped `' . $table . '` table.');
 		}
 	}
 }

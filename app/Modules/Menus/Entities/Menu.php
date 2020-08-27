@@ -51,7 +51,7 @@ class Menu extends Fluent
 	 * @param   array  $options  An array of configuration options.
 	 * @return  void
 	 */
-	public function __construct($options = array())
+	/*public function __construct($options = array())
 	{
 		parent::__construct($options);
 
@@ -68,7 +68,7 @@ class Menu extends Fluent
 			// Decode the item params
 			$item->params = new Registry($item->params);
 		}
-	}
+	}*/
 
 	/**
 	 * Get menu item by id
@@ -298,52 +298,13 @@ class Menu extends Fluent
 		return true;
 	}
 
-		/**
+	/**
 	 * Loads the entire menu table into memory.
 	 *
 	 * @return  array
 	 */
 	public function load()
 	{
-		/*if (!($this->get('db') instanceof \Hubzero\Database\Driver))
-		{
-			return;
-		}
-
-		// Initialise variables.
-		$db = $this->get('db');
-
-		$query = $db->getQuery()
-			->select('m.id')
-			->select('m.menutype')
-			->select('m.title')
-			->select('m.alias')
-			->select('m.note')
-			->select('m.path', 'route')
-			->select('m.link')
-			->select('m.type')
-			->select('m.level')
-			->select('m.language')
-			->select('m.browserNav')
-			->select('m.access')
-			->select('m.params')
-			->select('m.home')
-			->select('m.img')
-			->select('m.template_style_id')
-			->select('m.module_id')
-			->select('m.parent_id')
-			->select('e.element', 'component')
-			->from('#__menu', 'm')
-			->join('#__extensions AS e', 'e.id', 'm.module_id', 'left')
-			->whereEquals('m.published', 1)
-			->where('m.parent_id', '>', 0)
-			->whereEquals('m.client_id', 0)
-			->order('m.lft', 'asc');
-
-		// Set the query
-		$db->setQuery($query->toString());
-
-		$this->_items = $db->loadObjectList('id');*/
 		$w = (new Item)->getTable();
 
 		$items = DB::table($w)
@@ -352,6 +313,7 @@ class Menu extends Fluent
 			->where($w . '.published', '=', 1)
 			->where($w . '.parent_id', '>', 0)
 			->where($w . '.client_id', '=', 0)
+			->whereIn($w . '.access', $this->get('access', [1]))
 			->orderBy($w . '.lft', 'asc')
 			->get();
 
@@ -378,6 +340,14 @@ class Menu extends Fluent
 			$url = str_replace('&amp;', '&', $url);
 
 			parse_str($url, $item->query);
+
+			if ($item->home)
+			{
+				$this->_default[trim($item->language)] = $item->id;
+			}
+
+			// Decode the item params
+			$item->params = new Registry($item->params);
 		}
 	}
 }

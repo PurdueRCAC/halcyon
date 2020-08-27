@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 use App\Modules\Core\Models\Extension;
 
-class RegisterQueuesModule extends Migration
+class RegisterModule extends Migration
 {
 	public $module = 'queues';
 
@@ -29,7 +29,7 @@ class RegisterQueuesModule extends Migration
 					'name' => trans('queues::queues.module name')
 				]);
 
-				$this->info(sprintf('Added extension entry for module "%s"', $this->module));
+				//$this->info(sprintf('Added extension entry for module "%s"', $this->module));
 			}
 		}
 
@@ -62,7 +62,7 @@ class RegisterQueuesModule extends Migration
 				$asset->title = $this->module;
 				$asset->save(); //AsChildOf(1);
 
-				$this->info(sprintf('Added permissions entry for module "%s"', $this->module));
+				//$this->info(sprintf('Added permissions entry for module "%s"', $this->module));
 			}
 		}
 	}
@@ -78,7 +78,7 @@ class RegisterQueuesModule extends Migration
 		if ($exist)
 		{
 			$exist->delete();
-			$this->info(sprintf('Deleted extensions entry for module "%s"', $this->module));
+			//$this->info(sprintf('Deleted extensions entry for module "%s"', $this->module));
 		}
 
 		$exist = Asset::findByName($this->module);
@@ -86,7 +86,7 @@ class RegisterQueuesModule extends Migration
 		if ($exist)
 		{
 			$exist->delete();
-			$this->info(sprintf('Deleted permissions entry for module "%s"', $this->module));
+			//$this->info(sprintf('Deleted permissions entry for module "%s"', $this->module));
 		}
 	}
 }

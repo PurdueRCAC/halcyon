@@ -3,7 +3,7 @@
     "alias": "history",
     "description": "",
     "keywords": [],
-    "order": 0,
+    "order": 2,
     "providers": [
         "App\\Modules\\History\\Providers\\ModuleServiceProvider",
         "App\\Modules\\History\\Providers\\RouteServiceProvider"

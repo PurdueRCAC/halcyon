@@ -26,7 +26,7 @@ class CreateOrdersTables extends Migration
 				$table->smallInteger('sequence');
 			});
 
-			$this->info('Created `ordercategories` table.');
+			//$this->info('Created `ordercategories` table.');
 
 			DB::table('ordercategories')->insert([
 				'name' => 'ROOT',
@@ -35,7 +35,7 @@ class CreateOrdersTables extends Migration
 				'sequence' => 1
 			]);
 
-			$this->info('Created root entry in `ordercategories` table.');
+			//$this->info('Created root entry in `ordercategories` table.');
 		}
 
 		if (!Schema::hasTable('orders'))
@@ -54,7 +54,7 @@ class CreateOrdersTables extends Migration
 				$table->tinyInteger('notice')->unsigned()->default(0);
 				$table->index('groupid');
 			});
-			$this->info('Created `orders` table.');
+			//$this->info('Created `orders` table.');
 		}
 
 		if (!Schema::hasTable('orderitems'))
@@ -78,7 +78,7 @@ class CreateOrdersTables extends Migration
 
 				$table->foreign('orderid')->references('id')->on('orders');
 			});
-			$this->info('Created `orderitems` table.');
+			//$this->info('Created `orderitems` table.');
 		}
 
 		if (!Schema::hasTable('orderproducts'))
@@ -106,7 +106,7 @@ class CreateOrdersTables extends Migration
 
 				$table->foreign('ordercategoryid')->references('id')->on('ordercategories');
 			});
-			$this->info('Created `orderproducts` table.');
+			//$this->info('Created `orderproducts` table.');
 		}
 
 		if (!Schema::hasTable('orderpurchaseaccounts'))
@@ -134,7 +134,7 @@ class CreateOrdersTables extends Migration
 
 				$table->foreign('orderid')->references('id')->on('orders');
 			});
-			$this->info('Created `orderpurchaseaccounts` table.');
+			//$this->info('Created `orderpurchaseaccounts` table.');
 		}
 	}
 
@@ -156,7 +156,7 @@ class CreateOrdersTables extends Migration
 		{
 			Schema::dropIfExists($table);
 
-			$this->info('Dropped `' . $table . '` table.');
+			//$this->info('Dropped `' . $table . '` table.');
 		}
 	}
 }

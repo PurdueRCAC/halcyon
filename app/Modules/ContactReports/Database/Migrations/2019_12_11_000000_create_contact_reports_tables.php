@@ -36,7 +36,7 @@ class CreateContactReportsTables extends Migration
 				$table->index(['userid', 'datetimecontact']);
 				$table->index(['groupid', 'datetimecontact']);
 			});
-			$this->info('Created `contactreports` table.');
+			//$this->info('Created `contactreports` table.');
 		}
 
 		if (!Schema::hasTable('contactreportstems'))
@@ -46,7 +46,7 @@ class CreateContactReportsTables extends Migration
 				$table->increments('id');
 				$table->text('stemmedtext');
 			});
-			$this->info('Created `contactreportstems` table.');
+			//$this->info('Created `contactreportstems` table.');
 		}
 
 		if (!Schema::hasTable('contactreportusers'))
@@ -60,7 +60,7 @@ class CreateContactReportsTables extends Migration
 				$table->index(['contactreportid', 'userid']);
 				$table->index('userid');
 			});
-			$this->info('Created `contactreportusers` table.');
+			//$this->info('Created `contactreportusers` table.');
 		}
 
 		if (!Schema::hasTable('contactreportcomments'))
@@ -76,7 +76,7 @@ class CreateContactReportsTables extends Migration
 				$table->integer('notice')->unsigned()->default(0);
 				$table->index('contactreportid');
 			});
-			$this->info('Created `contactreportcomments` table.');
+			//$this->info('Created `contactreportcomments` table.');
 		}
 
 		if (!Schema::hasTable('contactreportresources'))
@@ -89,7 +89,7 @@ class CreateContactReportsTables extends Migration
 				$table->index('resourceid');
 				$table->index('contactreportid');
 			});
-			$this->info('Created `contactreportresources` table.');
+			//$this->info('Created `contactreportresources` table.');
 		}
 
 		if (!Schema::hasTable('linkusers'))
@@ -106,7 +106,7 @@ class CreateContactReportsTables extends Migration
 				$table->index(['userid', 'membertype', 'dateremoved', 'datecreated']);
 				$table->index(['targetuserid', 'membertype', 'dateremoved', 'datecreated']);
 			});
-			$this->info('Created `linkusers` table.');
+			//$this->info('Created `linkusers` table.');
 		}
 	}
 
@@ -128,7 +128,7 @@ class CreateContactReportsTables extends Migration
 		{
 			Schema::dropIfExists($table);
 
-			$this->info('Dropped `' . $table . '` table.');
+			//$this->info('Dropped `' . $table . '` table.');
 		}
 	}
 }

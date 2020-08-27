@@ -16,6 +16,11 @@ class SetActiveMenu
 	 */
 	public function handle($request, Closure $next, $guard = null)
 	{
+		if (!app()->had('menu') || app()->runningInConsole())
+		{
+			return $next($request);
+		}
+
 		$route = $request->path(); //app('router')->current();
 		$route = trim($route, '/');
 

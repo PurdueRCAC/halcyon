@@ -28,22 +28,22 @@ class CreateCronJobsTable extends Migration
 				$table->integer('state')->default(0);
 				$table->string('plugin', 255);
 				$table->string('event', 255);
-				$table->timestamp('last_run');
-				$table->timestamp('next_run');
+				$table->timestamp('last_run')->nullable();
+				$table->timestamp('next_run')->nullable();
 				$table->string('recurrence', 255);
-				$table->timestamp('created_at');
+				$table->timestamp('created_at')->nullable();
 				$table->integer('created_by')->unsigned()->default(0);
-				$table->timestamp('updated_at');
+				$table->timestamp('updated_at')->nullable();
 				$table->integer('updated_by')->unsigned()->default(0);
 				$table->integer('active')->unsigned()->default(0);
 				$table->integer('ordering')->unsigned()->default(0);
-				$table->text('params');
-				$table->timestamp('publish_up');
-				$table->timestamp('publish_down');
+				$table->text('params')->nullable();
+				$table->timestamp('publish_up')->nullable();
+				$table->timestamp('publish_down')->nullable();
 				$table->index('state');
 				$table->index('created_by');
 			});
-			$this->info('Created `cron_jobs` table.');
+			//$this->info('Created `cron_jobs` table.');
 		}
 	}
 
@@ -54,6 +54,6 @@ class CreateCronJobsTable extends Migration
 	{
 		Schema::dropIfExists('cron_jobs');
 
-		$this->info('Dropped `cron_jobs` table.');
+		//$this->info('Dropped `cron_jobs` table.');
 	}
 }

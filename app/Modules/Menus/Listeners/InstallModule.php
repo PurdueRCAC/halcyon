@@ -25,7 +25,7 @@ class InstallModule
 	 */
 	public function subscribe($events)
 	{
-		$events->listen(MigrationEnded::class, self::class . '@handleMigrationEnded');
+		//$events->listen(MigrationEnded::class, self::class . '@handleMigrationEnded');
 	}
 
 	/**

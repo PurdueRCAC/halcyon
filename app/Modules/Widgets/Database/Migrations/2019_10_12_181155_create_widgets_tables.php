@@ -25,9 +25,9 @@ class CreateWidgetsTables extends Migration
 				$table->integer('ordering')->unsigned()->default(0);
 				$table->string('position', 50)->default('');
 				$table->integer('checked_out')->unsigned()->default(0);
-				$table->timestamp('checked_out_time');
-				$table->timestamp('publish_up');
-				$table->timestamp('publish_down');
+				$table->timestamp('checked_out_time')->nullable();
+				$table->timestamp('publish_up')->nullable();
+				$table->timestamp('publish_down')->nullable();
 				$table->tinyInteger('published')->unsigned()->default(0);
 				$table->string('module', 50)->default('');
 				$table->integer('access')->unsigned()->default(0);

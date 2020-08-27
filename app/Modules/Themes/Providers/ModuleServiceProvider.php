@@ -43,24 +43,27 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
 
-		$manager = $this->app['themes'];
-
-		//$themePaths = $manager->all();
-		$client = $this->app['isAdmin'] ? 'admin' : 'site';
-
-		$theme = $this->app['config']->get('app.' . $client . '-theme', null);
-
-		if (!is_null($theme))
+		if (!app()->runningInConsole())
 		{
-			$theme = $manager->find($theme);
+			$manager = $this->app['themes'];
 
-			$manager->activate($theme);
+			//$themePaths = $manager->all();
+			$client = $this->app['isAdmin'] ? 'admin' : 'site';
 
-			$this->publish($theme->getPath() . '/assets', $manager->getAssetPath($theme->getName()));
+			$theme = $this->app['config']->get('app.' . $client . '-theme', null);
 
-			/*$this->publishes([
-				$theme->getPath() . '/assets' => $manager->getAssetPath($theme->getName()),
-			], 'public');*/
+			if (!is_null($theme))
+			{
+				$theme = $manager->find($theme);
+
+				$manager->activate($theme);
+
+				$this->publish($theme->getPath() . '/assets', $manager->getAssetPath($theme->getName()));
+
+				/*$this->publishes([
+					$theme->getPath() . '/assets' => $manager->getAssetPath($theme->getName()),
+				], 'public');*/
+			}
 		}
 	}
 

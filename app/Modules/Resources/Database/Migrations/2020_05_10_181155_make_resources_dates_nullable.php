@@ -34,12 +34,12 @@ class MakeResourcesDatesNullable extends Migration
 				->update([
 					'datetimeremoved' => null
 				]);
-			*/
+			
 
 			DB::statement("ALTER TABLE `resources` CHANGE `datetimecreated` `datetimecreated` DATETIME  NULL  DEFAULT NULL");
 			//DB::statement("UPDATE `resources` SET `datetimecreated`=NULL WHERE `datetimecreated`='0000-00-00 00:00:00';");
 			DB::statement("ALTER TABLE `resources` CHANGE `datetimeremoved` `datetimeremoved` DATETIME  NULL  DEFAULT NULL");
-			//DB::statement("UPDATE `resources` SET `datetimeremoved`=NULL WHERE `datetimeremoved`='0000-00-00 00:00:00';");
+			//DB::statement("UPDATE `resources` SET `datetimeremoved`=NULL WHERE `datetimeremoved`='0000-00-00 00:00:00';");*/
 		}
 
 		if (Schema::hasTable('subresources'))
@@ -64,7 +64,7 @@ class MakeResourcesDatesNullable extends Migration
 				->update([
 					'datetimeremoved' => null
 				]);
-			*/
+			
 
 			DB::statement("UPDATE `subresources` SET `datetimecreated`='1980-01-01 00:00:00' WHERE `datetimecreated`='0000-00-00 00:00:00';");
 			//DB::statement("ALTER TABLE subresources ALTER COLUMN `datetimecreated` SET DEFAULT NULL");
@@ -75,7 +75,7 @@ class MakeResourcesDatesNullable extends Migration
 			//DB::statement("ALTER TABLE subresources ALTER COLUMN `datetimeremoved` SET DEFAULT NULL");
 			DB::statement("ALTER TABLE `subresources` CHANGE `datetimeremoved` `datetimeremoved` DATETIME  NULL  DEFAULT NULL");
 			DB::statement("UPDATE `subresources` SET `datetimeremoved`=NULL WHERE `datetimeremoved`='1980-01-01 00:00:00';");
-			//DB::statement("UPDATE `subresources` SET `datetimeremoved`=NULL WHERE `datetimeremoved`='0000-00-00 00:00:00';");
+			//DB::statement("UPDATE `subresources` SET `datetimeremoved`=NULL WHERE `datetimeremoved`='0000-00-00 00:00:00';");*/
 		}
 	}
 

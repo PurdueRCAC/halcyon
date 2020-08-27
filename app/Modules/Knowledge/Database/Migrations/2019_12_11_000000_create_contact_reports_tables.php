@@ -26,20 +26,20 @@ class CreateKnowledgeTables extends Migration
 				$table->increments('id');
 				$table->string('title');
 				$table->string('alias');
-				$table->timestamp('created_at');
-				$table->timestamp('updated_at');
-				$table->timestamp('deleted_at');
+				$table->timestamp('created_at')->nullable();
+				$table->timestamp('updated_at')->nullable();
+				$table->timestamp('deleted_at')->nullable();
 				$table->integer('state')->unsigned()->default(0);
 				$table->integer('access')->unsigned()->default(0);
 				$table->text('content');
-				$table->text('params');
+				$table->text('params')->nullable();
 				$table->integer('main')->unsigned()->default(0);
 				$table->integer('snippet')->unsigned()->default(0);
 				$table->index('state');
 				$table->index('access');
 				$table->index('snippet');
 			});
-			$this->info('Created `kb_pages` table.');
+			//$this->info('Created `kb_pages` table.');
 		}
 
 		if (!Schema::hasTable('kb_page_associations'))
@@ -56,7 +56,7 @@ class CreateKnowledgeTables extends Migration
 				$table->index('parent_id');
 				$table->index('child_id');
 			});
-			$this->info('Created `kb_page_associations` table.');
+			//$this->info('Created `kb_page_associations` table.');
 		}
 	}
 
@@ -73,7 +73,7 @@ class CreateKnowledgeTables extends Migration
 		foreach ($tables as $table)
 		{
 			Schema::dropIfExists($table);
-			$this->info('Dropped `' . $table . '` table.');
+			//$this->info('Dropped `' . $table . '` table.');
 		}
 	}
 }

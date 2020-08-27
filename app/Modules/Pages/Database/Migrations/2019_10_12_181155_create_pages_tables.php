@@ -23,14 +23,14 @@ class CreatePagesTables extends Migration
 				$table->text('content');
 				$table->integer('state')->default(0);
 				$table->integer('access')->unsigned()->default(0);
-				$table->timestamp('created_at');
+				$table->timestamp('created_at')->nullable();
 				$table->integer('created_by')->unsigned()->default(0);
-				$table->timestamp('deleted_at');
+				$table->timestamp('deleted_at')->nullable();
 				$table->integer('deleted_by')->unsigned()->default(0);
-				$table->timestamp('checked_out');
+				$table->timestamp('checked_out')->nullable();
 				$table->integer('checked_out_by')->unsigned()->default(0);
-				$table->timestamp('publish_up');
-				$table->timestamp('publish_down');
+				$table->timestamp('publish_up')->nullable();
+				$table->timestamp('publish_down')->nullable();
 				$table->integer('parent_id')->unsigned()->default(0);
 				$table->integer('lft')->unsigned()->default(0);
 				$table->integer('rgt')->unsigned()->default(0);
@@ -41,10 +41,10 @@ class CreatePagesTables extends Migration
 				//$table->integer('version_id')->unsigned()->default(0);
 				$table->integer('hits')->unsigned()->default(0);
 				$table->integer('length')->unsigned()->default(0);
-				$table->text('params');
-				$table->text('metakey');
-				$table->text('metadesc');
-				$table->text('metadata');
+				$table->text('params')->nullable();
+				$table->text('metakey')->nullable();
+				$table->text('metadesc')->nullable();
+				$table->text('metadata')->nullable();
 			});
 
 			/*Schema::create('page_versions', function (Blueprint $table)
@@ -54,14 +54,14 @@ class CreatePagesTables extends Migration
 				$table->integer('version')->unsigned()->default(0);
 				$table->string('title', 255);
 				$table->text('content');
-				$table->timestamp('created_at');
+				$table->timestamp('created_at')->nullable();
 				$table->integer('created_by')->unsigned()->default(0);
-				$table->timestamp('removed');
+				$table->timestamp('removed')->nullable();
 				$table->integer('removed_by')->unsigned()->default(0);
 				$table->integer('length')->unsigned()->default(0);
-				$table->text('metakey');
-				$table->text('metadesc');
-				$table->text('metadata');
+				$table->text('metakey')->nullable();
+				$table->text('metadesc')->nullable();
+				$table->text('metadata')->nullable();
 			});*/
 
 			$home = DB::table('pages')->where('parent_id', 0)->first();
@@ -79,7 +79,8 @@ class CreatePagesTables extends Migration
 					'lft'        => 1,
 					'rgt'        => 2,
 					'level'      => 0,
-					'params'     => '{}'
+					'params'     => '[]',
+					'language'   => '*',
 					//'version_id' => 1
 				]);
 

@@ -95,7 +95,7 @@ class ModuleServiceProvider extends ServiceProvider
 
 		$this->app->singleton('menu', function($app)
 		{
-			$options = [
+			/*$options = [
 				'language_filter' => null,
 				'language'        => null,
 				'access'          => auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array()
@@ -103,13 +103,14 @@ class ModuleServiceProvider extends ServiceProvider
 
 			$options['db'] = $app['db'];
 
-			/*if ($app->has('language.filter'))
+			if ($app->has('language.filter'))
 			{
 				$options['language_filter'] = $app->get('language.filter');
 				$options['language']        = $app->get('language')->getTag();
 			}*/
+			$app['menu.manager']->set('access', auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array());
 
-			return $app['menu.manager']->menu($app['isAdmin'] ? 'admin' : 'site', $options);
+			return $app['menu.manager']; //->menu($app['isAdmin'] ? 'admin' : 'site', $options);
 		});
 
 		$this->app->singleton('menu.params', function($app)

@@ -31,12 +31,12 @@ class CreateMenusTables extends Migration
 				$table->integer('module_id')->unsigned()->default(0);
 				$table->integer('ordering')->unsigned()->default(0);
 				$table->integer('checked_out')->unsigned()->default(0);
-				$table->timestamp('checked_out_time');
+				$table->timestamp('checked_out_time')->nullable();
 				$table->tinyInteger('browserNav')->unsigned()->default(0);
 				$table->integer('access')->unsigned()->default(0);
 				$table->string('img', 255);
 				$table->integer('template_style_id')->unsigned()->default(0);
-				$table->text('params');
+				$table->text('params')->nullable();
 				$table->integer('lft')->unsigned()->default(0);
 				$table->integer('rgt')->unsigned()->default(0);
 				$table->tinyInteger('home')->unsigned()->default(0);
@@ -46,7 +46,7 @@ class CreateMenusTables extends Migration
 				$table->index('menutype');
 				$table->index(['lft', 'rgt']);
 				$table->index('alias');
-				$table->index('path');
+				//$table->index('path');
 				$table->index('language');
 				$table->index(['client_id', 'parent_id', 'alias', 'language']);
 			});

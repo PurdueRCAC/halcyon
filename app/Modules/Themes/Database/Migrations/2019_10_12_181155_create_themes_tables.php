@@ -27,7 +27,7 @@ class CreateThemesTables extends Migration
 				$table->index('template');
 				$table->index('home');
 			});
-			$this->info('Created `themes` table.');
+			//$this->info('Created `themes` table.');
 		}
 	}
 
@@ -38,6 +38,6 @@ class CreateThemesTables extends Migration
 	public function down()
 	{
 		Schema::dropIfExists('themes');
-		$this->info('Dropped `themes` table.');
+		//$this->info('Dropped `themes` table.');
 	}
 }

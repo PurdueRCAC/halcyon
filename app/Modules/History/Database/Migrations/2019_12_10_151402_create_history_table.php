@@ -30,7 +30,7 @@ class CreateHistoryTable extends Migration
 				$table->index(['historable_type', 'historable_id']);
 				$table->index('action');
 			});
-			$this->info('Created `history` table.');
+			//$this->info('Created `history` table.');
 		}
 
 		if (!Schema::hasTable('log'))
@@ -59,7 +59,7 @@ class CreateHistoryTable extends Migration
 				$table->index('groupid');
 				$table->index(['app', 'classname', 'groupid', 'datetime']);
 			});
-			$this->info('Created `log` table.');
+			//$this->info('Created `log` table.');
 		}
 	}
 
@@ -71,9 +71,9 @@ class CreateHistoryTable extends Migration
 	public function down()
 	{
 		Schema::dropIfExists('history');
-		$this->info('Dropped `history` table.');
+		//$this->info('Dropped `history` table.');
 
 		Schema::dropIfExists('log');
-		$this->info('Dropped `log` table.');
+		//$this->info('Dropped `log` table.');
 	}
 }

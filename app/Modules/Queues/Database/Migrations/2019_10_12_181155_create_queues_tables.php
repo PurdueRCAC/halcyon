@@ -53,7 +53,7 @@ class CreateQueuesTables extends Migration
 				$table->index('schedulerpolicyid');
 				$table->index('schedulerid');
 			});
-			$this->info('Created `queues` table.');
+			//$this->info('Created `queues` table.');
 		}
 
 		if (!Schema::hasTable('queuetypes'))
@@ -63,7 +63,7 @@ class CreateQueuesTables extends Migration
 				$table->increments('id');
 				$table->char('name', 20);
 			});
-			$this->info('Created `queuetypes` table.');
+			//$this->info('Created `queuetypes` table.');
 		}
 
 		if (!Schema::hasTable('queuesizes'))
@@ -81,7 +81,7 @@ class CreateQueuesTables extends Migration
 				$table->index(['queueid', 'datetimestart', 'datetimestop']);
 				$table->index('sellerqueueid');
 			});
-			$this->info('Created `queuesizes` table.');
+			//$this->info('Created `queuesizes` table.');
 		}
 
 		if (!Schema::hasTable('queueloans'))
@@ -99,7 +99,7 @@ class CreateQueuesTables extends Migration
 				$table->index(['queueid', 'datetimestart', 'datetimestop']);
 				$table->index('lenderqueueid');
 			});
-			$this->info('Created `queueloans` table.');
+			//$this->info('Created `queueloans` table.');
 		}
 
 		if (!Schema::hasTable('queueusers'))
@@ -119,7 +119,7 @@ class CreateQueuesTables extends Migration
 				$table->index('userrequestid');
 				$table->index('notice');
 			});
-			$this->info('Created `queueusers` table.');
+			//$this->info('Created `queueusers` table.');
 		}
 
 		if (!Schema::hasTable('queuewalltimes'))
@@ -133,7 +133,7 @@ class CreateQueuesTables extends Migration
 				$table->integer('walltime')->unsigned()->default(0);
 				$table->index(['queueid', 'datetimestart', 'datetimestop']);
 			});
-			$this->info('Created `queuewalltimes` table.');
+			//$this->info('Created `queuewalltimes` table.');
 		}
 
 		if (!Schema::hasTable('schedulerpolicies'))
@@ -144,7 +144,7 @@ class CreateQueuesTables extends Migration
 				$table->string('code', 16);
 				$table->string('name', 64);
 			});
-			$this->info('Created `schedulerpolicies` table.');
+			//$this->info('Created `schedulerpolicies` table.');
 		}
 
 		if (!Schema::hasTable('schedulers'))
@@ -168,7 +168,7 @@ class CreateQueuesTables extends Migration
 				$table->index('batchsystem');
 				$table->index('schedulerpolicyid');
 			});
-			$this->info('Created `schedulers` table.');
+			//$this->info('Created `schedulers` table.');
 		}
 
 		if (!Schema::hasTable('schedulerreservations'))
@@ -184,7 +184,7 @@ class CreateQueuesTables extends Migration
 				$table->index(['schedulerid', 'datetimestop']);
 				$table->index(['schedulerid', 'datetimestart', 'datetimestop']);
 			});
-			$this->info('Created `schedulerreservations` table.');
+			//$this->info('Created `schedulerreservations` table.');
 		}
 	}
 
@@ -209,7 +209,7 @@ class CreateQueuesTables extends Migration
 		foreach ($tables as $table)
 		{
 			Schema::dropIfExists($table);
-			$this->info('Deleted `' . $table . '` table.');
+			//$this->info('Deleted `' . $table . '` table.');
 		}
 	}
 }

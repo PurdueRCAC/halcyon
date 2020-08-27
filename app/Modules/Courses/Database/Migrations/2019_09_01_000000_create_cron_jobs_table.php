@@ -42,7 +42,7 @@ class CreateCronJobsTable extends Migration
 				$table->index('resourceid');
 				$table->index('userid');
 			});
-			$this->info('Created `classaccounts` table.');
+			//$this->info('Created `classaccounts` table.');
 		}
 
 		if (!Schema::hasTable('classusers'))
@@ -61,7 +61,7 @@ class CreateCronJobsTable extends Migration
 				$table->index('classaccountid');
 				$table->index(['userid', 'membertype', 'datetimecreated', 'datetimeremoved']);
 			});
-			$this->info('Created `classusers` table.');
+			//$this->info('Created `classusers` table.');
 		}
 	}
 
@@ -71,9 +71,9 @@ class CreateCronJobsTable extends Migration
 	public function down()
 	{
 		Schema::dropIfExists('classaccounts');
-		$this->info('Created `classaccounts` table.');
+		//$this->info('Created `classaccounts` table.');
 
 		Schema::dropIfExists('classusers');
-		$this->info('Created `classusers` table.');
+		//$this->info('Created `classusers` table.');
 	}
 }

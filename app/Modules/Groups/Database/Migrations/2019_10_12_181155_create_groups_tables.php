@@ -29,7 +29,7 @@ class CreateGroupsTables extends Migration
 				$table->index('unixid');
 				$table->index('owneruserid');
 			});
-			$this->info('Created `groups` table.');
+			//$this->info('Created `groups` table.');
 		}
 
 		if (!Schema::hasTable('groupusers'))
@@ -56,7 +56,7 @@ class CreateGroupsTables extends Migration
 				$table->index(['notice','groupid']);
 				$table->index(['groupid','membertype','owner','datecreated','dateremoved']);
 			});
-			$this->info('Created `groupusers` table.');
+			//$this->info('Created `groupusers` table.');
 		}
 
 		if (!Schema::hasTable('groupmotds'))
@@ -70,7 +70,7 @@ class CreateGroupsTables extends Migration
 				$table->timestamp('datetimeremoved');
 				$table->index('groupid');
 			});
-			$this->info('Created `groupmotds` table.');
+			//$this->info('Created `groupmotds` table.');
 		}
 
 		if (!Schema::hasTable('groupcollegedept'))
@@ -84,7 +84,7 @@ class CreateGroupsTables extends Migration
 				$table->index('groupid');
 				$table->index('collegedeptid');
 			});
-			$this->info('Created `groupcollegedept` table.');
+			//$this->info('Created `groupcollegedept` table.');
 		}
 
 		if (!Schema::hasTable('groupfieldofscience'))
@@ -99,7 +99,7 @@ class CreateGroupsTables extends Migration
 				$table->index('groupid');
 				$table->index(['fieldofscienceid', 'groupid']);
 			});
-			$this->info('Created `groupfieldofscience` table.');
+			//$this->info('Created `groupfieldofscience` table.');
 		}
 
 		if (!Schema::hasTable('unixgroups'))
@@ -116,7 +116,7 @@ class CreateGroupsTables extends Migration
 				$table->index(['groupid', 'datetimecreated', 'datetimeremoved']);
 				$table->index(['longname', 'datetimecreated', 'datetimeremoved']);
 			});
-			$this->info('Created `unixgroups` table.');
+			//$this->info('Created `unixgroups` table.');
 		}
 
 		if (!Schema::hasTable('unixgroupusers'))
@@ -134,7 +134,7 @@ class CreateGroupsTables extends Migration
 				$table->index(['userid', 'datetimecreated', 'datetimeremoved']);
 				$table->index(['notice', 'unixgroupid']);
 			});
-			$this->info('Created `unixgroupusers` table.');
+			//$this->info('Created `unixgroupusers` table.');
 		}
 
 		if (!Schema::hasTable('membertypes'))
@@ -144,7 +144,7 @@ class CreateGroupsTables extends Migration
 				$table->increments('id');
 				$table->string('name');
 			});
-			$this->info('Created `membertypes` table.');
+			//$this->info('Created `membertypes` table.');
 
 			// Populate defaults
 			$membertypes = array(
@@ -198,7 +198,7 @@ class CreateGroupsTables extends Migration
 		{
 			Schema::dropIfExists($table);
 
-			$this->info('Dropped `' . $table . '` table.');
+			//$this->info('Dropped `' . $table . '` table.');
 		}
 	}
 }
