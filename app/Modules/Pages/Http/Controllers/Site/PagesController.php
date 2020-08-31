@@ -10,6 +10,7 @@ use App\Modules\Pages\Models\Page;
 //use App\Modules\Pages\Events\PageContentIsRendering;
 //use App\Modules\Pages\Events\PageContentBeforeDisplay;
 //use App\Modules\Pages\Events\PageContentAfterDisplay;
+use App\Modules\Pages\Events\PageMetadata;
 use App\Modules\Pages\Events\PageTitleAfterDisplay;
 
 class PagesController extends Controller
@@ -81,6 +82,7 @@ class PagesController extends Controller
 		//$page->content = $event->getBody();
 
 		//$results = event('onContentPrepare', array('pages.article', &$page));
+		event($event = new PageMetadata($page));
 
 		$page->event = new \stdClass();
 
