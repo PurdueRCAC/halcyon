@@ -96,17 +96,15 @@ class ModuleServiceProvider extends ServiceProvider
 				if ($name == 'subscribe')
 				{
 					$this->app['events']->subscribe(new $cls);
-					break;
 				}
-
-				if (substr(strtolower($name), 0, 6) == 'handle')
+				elseif (substr(strtolower($name), 0, 6) == 'handle')
 				{
 					$event = lcfirst(substr($name, 6));
 
 					$this->app['events']->listen($event, $cls . '@' . $name);
 				}
 
-				$this->app['config']->set('listeners.' . $listener->folder . '.' . $listener->element, $listener->options);
+				$this->app['config']->set('listeners.' . $listener->folder . '.' . $listener->element, $listener->params->all()); //$listener->options->toArray()
 			}
 		//}
 		//catch (\Exception $e)
@@ -119,7 +117,7 @@ class ModuleServiceProvider extends ServiceProvider
 	{
 		$files = $this->app['files']->glob(app_path() . '/Listeners/*/*/*.php');
 
-		/*foreach ($files as $file)
+		foreach ($files as $file)
 		{
 			$cls = substr($file, strlen(app_path()));
 			$cls = str_replace(array('/', '.php'), array('\\', ''), $cls);
@@ -133,18 +131,18 @@ class ModuleServiceProvider extends ServiceProvider
 
 				if ($name == 'subscribe')
 				{
-					Event::subscribe(new $cls);
-					break;
+					$this->app['events']->subscribe(new $cls);
 				}
-
-				if (substr(strtolower($name), 0, 6) == 'handle')
+				elseif (substr(strtolower($name), 0, 6) == 'handle')
 				{
 					$event = lcfirst(substr($name, 6));
 
-					Event::listen($event, $cls . '@' . $name);
+					$this->app['events']->listen($event, $cls . '@' . $name);
 				}
+
+				$this->app['config']->set('listeners.' . $listener->folder . '.' . $listener->element, $listener->params->all());
 			}
-		}*/
+		}
 	}
 
 	/**

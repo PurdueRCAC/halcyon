@@ -56,8 +56,10 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					{{ trans('listeners::listeners.description') }}<br />
-					{{ trans('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener desc') }}
+					<label>{{ trans('listeners::listeners.description') }}</label><br />
+					<p>
+					{!! trans('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener desc') !!}</p>
+				</div>
 			</fieldset>
 
 			<fieldset class="adminform">
@@ -114,6 +116,9 @@ app('pathway')
 								<div class="form-group">
 									<?php echo $field->label; ?>
 									<?php echo $field->input; ?>
+									<?php if ($field->description) { ?>
+										<span class="form-text text-muted"><?php echo trans($field->description); ?></span>
+									<?php } ?>
 								</div>
 							<?php else : $hidden_fields .= $field->input; ?>
 							<?php endif; ?>

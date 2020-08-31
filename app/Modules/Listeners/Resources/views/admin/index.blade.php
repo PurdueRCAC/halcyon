@@ -107,7 +107,7 @@ app('pathway')
 
 			$ordering   = ($filters['order'] == 'ordering');
 			$canEdit    = $path ? auth()->user()->can('edit listeners') : false;
-			$canCheckin = auth()->user()->can('manage checkin') || $row->checked_out == auth()->user()->id || $row->checked_out == 0;
+			$canCheckin = auth()->user()->can('manage listeners') || $row->checked_out == auth()->user()->id || $row->checked_out == 0;
 			$canChange  = auth()->user()->can('edit.state listeners') && $canCheckin;
 			?>
 			<tr>
@@ -122,7 +122,7 @@ app('pathway')
 					{{ $row->id }}
 				</td>
 				<td>
-					@if ($row->checked_out)
+					@if ($row->checked_out && !$canCheckin)
 						<?php echo App\Halcyon\Html\Builder\Grid::checkedout($i, $row->editor, $row->checked_out_time, '', $canCheckin); ?>
 					@else
 						@if ($canEdit)

@@ -110,6 +110,28 @@ class ListenerManager
 			return $listeners;
 		}
 
+		$files = app('files')->glob(app_path('Listeners') . '/*/*/listener.json');
+
+		foreach ($files as $file)
+		{
+			//$cls = substr($file, strlen(app_path()));
+			//$cls = str_replace(array('/', '.php'), array('\\', ''), $cls);
+			//$cls = 'App' . $cls;
+			$data = json_decode(file_get_contents($file));
+
+			$listener = new Listener;
+			$listener->type     = 'listener';
+			$listener->name     = $data->name;
+			$listener->element  = strtolower(basename(dirname($file)));
+			$listener->folder   = strtolower(basename(dirname(dirname($file))));
+			$listener->enabled  = $data->active;
+			$listener->ordering = $data->order;
+
+			$listeners[] = $listener;
+		}
+
+		return collect($listeners);
+
 		$query = Listener::where('enabled', 1)
 			->where('type', '=', 'listener');
 

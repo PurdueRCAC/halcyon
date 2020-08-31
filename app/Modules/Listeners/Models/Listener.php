@@ -16,6 +16,7 @@ use App\Halcyon\Traits\Checkable;
 use App\Halcyon\Form\Form;
 use App\Modules\Listeners\Events\ListenerUpdating;
 use App\Modules\Listeners\Events\ListenerUpdated;
+use App\Halcyon\Models\Casts\Params;
 use Carbon\Carbon;
 
 /**
@@ -83,7 +84,7 @@ class Listener extends Model
 		'enabled' => 'integer',
 		'access' => 'integer',
 		'protected' => 'integer',
-		//'params' => 'object',
+		'params' => Params::class,
 	];
 
 	/**
@@ -138,14 +139,14 @@ class Listener extends Model
 	 * @return  object
 	 */
 	//public function getParamsAttribute()
-	public function getOptionsAttribute()
+	/*public function getOptionsAttribute()
 	{
 		if (!($this->paramsRegistry instanceof Registry))
 		{
 			$this->paramsRegistry = new Registry($this->params, 'json');
 		}
 		return $this->paramsRegistry;
-	}
+	}*/
 
 	/**
 	 * Get the installed path
@@ -217,7 +218,7 @@ class Listener extends Model
 		}
 
 		$data = $this->toArray();
-		$data['params'] = $this->options->toArray();
+		$data['params'] = $this->params->all(); //$this->options->toArray();
 
 		$form->bind($data);
 

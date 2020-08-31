@@ -38,7 +38,7 @@ class ListenersController extends Controller
 			$filters[$key] = $request->state('listeners.filter_' . $key, $key, $default);
 		}
 
-		if (!in_array($filters['order'], array_keys((new Listener)->getAttributes())))
+		if (!in_array($filters['order'], ['id', 'name', 'element', 'folder', 'state', 'access', 'ordering']))
 		{
 			$filters['order'] = Listener::$orderBy;
 		}
@@ -178,7 +178,7 @@ class ListenersController extends Controller
 		if ($row->id)
 		{
 			// Checkout the record
-			if (!$row->checkout())
+			if (!$row->checkOut())
 			{
 				// Check-out failed, display a notice but allow the user to see the record.
 				return $this->cancel()->with('warning', trans('global.check out failed'));
@@ -211,7 +211,7 @@ class ListenersController extends Controller
 
 		$row->fill($request->input('fields'));
 
-		$row->params = json_encode($request->input('params', []));
+		//$row->params = json_encode($request->input('params', []));
 
 		if (!$row->save())
 		{
@@ -219,6 +219,8 @@ class ListenersController extends Controller
 
 			return redirect()->back()->withError($error);
 		}
+
+		$row->checkIn();
 
 		return $this->cancel()->withSuccess(trans('messages.update success'));
 	}
@@ -238,7 +240,6 @@ class ListenersController extends Controller
 		foreach ($ids as $id)
 		{
 			// Delete the entry
-			// Note: This is recursive and will also remove all descendents
 			$row = Listener::findOrFail($id);
 
 			if (!$row->delete())

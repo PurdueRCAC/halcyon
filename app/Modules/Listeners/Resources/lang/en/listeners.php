@@ -5,6 +5,7 @@ return [
 	'listener' => 'Listener',
 	'id' => 'ID',
 	'created' => 'Created',
+	'description' => 'Description',
 	'name' => 'Name',
 	'state' => 'State',
 	'state all' => '- State -',
