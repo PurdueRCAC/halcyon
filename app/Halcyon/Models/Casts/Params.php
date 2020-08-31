@@ -18,9 +18,15 @@ class Params implements CastsAttributes
 	 */
 	public function get($model, $key, $value, $attributes)
 	{
-		$value = $value ?: '[]';
+		$value = $value ? json_decode($value, true) : array();
 
-		return new Repository(json_decode($value, true));
+		if (!is_array($value))
+		{
+			$value = array();
+		}
+		$value = array_filter($value);
+
+		return new Repository($value);
 	}
 
 	/**
@@ -34,6 +40,10 @@ class Params implements CastsAttributes
 	 */
 	public function set($model, $key, $value, $attributes)
 	{
-		return json_encode($value->all()); //toString('json');
+		if ($value instanceof Repository)
+		{
+			$value = $value->all();
+		}
+		return json_encode($value); //toString('json');
 	}
 }
