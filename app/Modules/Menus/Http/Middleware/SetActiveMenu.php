@@ -16,7 +16,7 @@ class SetActiveMenu
 	 */
 	public function handle($request, Closure $next, $guard = null)
 	{
-		if (!app()->had('menu') || app()->runningInConsole())
+		if (!app()->has('menu') || app()->runningInConsole())
 		{
 			return $next($request);
 		}

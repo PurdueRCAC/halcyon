@@ -51,7 +51,7 @@ class Menu extends Fluent
 	 * @param   array  $options  An array of configuration options.
 	 * @return  void
 	 */
-	/*public function __construct($options = array())
+	public function __construct($options = array())
 	{
 		parent::__construct($options);
 
@@ -68,7 +68,7 @@ class Menu extends Fluent
 			// Decode the item params
 			$item->params = new Registry($item->params);
 		}
-	}*/
+	}
 
 	/**
 	 * Get menu item by id

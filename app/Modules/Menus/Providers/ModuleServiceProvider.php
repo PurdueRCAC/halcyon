@@ -88,10 +88,10 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		$this->app->singleton('menu.manager', function ($app)
+		/*$this->app->singleton('menu.manager', function ($app)
 		{
 			return new Menu();
-		});
+		});*/
 
 		$this->app->singleton('menu', function($app)
 		{
@@ -108,7 +108,11 @@ class ModuleServiceProvider extends ServiceProvider
 				$options['language_filter'] = $app->get('language.filter');
 				$options['language']        = $app->get('language')->getTag();
 			}*/
-			$app['menu.manager']->set('access', auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array());
+			//$app['menu.manager']->set('access', auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array());
+			$menu = new Menu();
+			$menu->set('access', auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array());
+			//$menu->load();
+			return $menu;
 
 			return $app['menu.manager']; //->menu($app['isAdmin'] ? 'admin' : 'site', $options);
 		});
