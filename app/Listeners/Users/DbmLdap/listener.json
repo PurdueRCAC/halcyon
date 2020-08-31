@@ -1,6 +1,6 @@
 {
     "name": "Users - DBM LDAP",
-    "alias": "none",
+    "alias": "listener_users_dbmldap",
     "description": "This connects to the DBM Ldap to retrieve user info.",
     "keywords": [],
     "active": 1,

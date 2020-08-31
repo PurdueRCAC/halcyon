@@ -1,6 +1,6 @@
 {
     "name": "Users - RCAC Ldap",
-    "alias": "none",
+    "alias": "listener_users_rcacldap",
     "description": "This connects to the RCAC Ldap to retrieve user info.",
     "keywords": [],
     "active": 1,

@@ -1,6 +1,6 @@
 {
     "name": "Resources - Storage > Home",
-    "alias": "none",
+    "alias": "listener_resources_storagehome",
     "description": "This performs any necessary setup or other functions of home directories for a resource.",
     "keywords": [],
     "active": 1,

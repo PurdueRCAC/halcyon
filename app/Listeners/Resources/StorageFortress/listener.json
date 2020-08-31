@@ -1,6 +1,6 @@
 {
     "name": "Resources - Storage > Fortress",
-    "alias": "none",
+    "alias": "listener_resources_storagefortress",
     "description": "This performs any necessary setup or other functions of Fortress space for a resource.",
     "keywords": [],
     "active": 1,

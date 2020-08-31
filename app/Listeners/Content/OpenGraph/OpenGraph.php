@@ -8,6 +8,7 @@
 namespace App\Listeners\Content\OpenGraph;
 
 use App\Modules\Pages\Events\PageMetadata;
+use Illuminate\Config\Repository;
 
 /**
  * Content Plugin class for OpenGraph meta tags
@@ -33,7 +34,7 @@ class OpenGraph
 	 * @param   object  $page  The article object. Note $page->text is also available
 	 * @return  string
 	 */
-	public function handlePageMetadata($page)
+	public function handlePageMetadata(PageMetadata $event)
 	{
 		if (!app()->has('isAdmin')
 		 || app()->get('isAdmin'))
@@ -41,23 +42,24 @@ class OpenGraph
 			return;
 		}
 
+		$page = $event->page;
+		$params = new Repository(config('listeners.content.opengraph', []));
+
 		// We need help variables as we cannot change the $page variable - such then will influence global settings
-		$suffix    = '';
 		$thisDesc  = $page->metadesc;
-		$thisTitle = $page->title;
 		$tags = array();
 
 		// Title
-		if ($title = $page->params->get('title' . $suffix, $thisTitle))
+		if ($title = $params->get('title', $page->title))
 		{
 			$tags['og:title'] = htmlspecialchars($title);
 		}
 
 		// Type
-		$tags['og:type'] = $page->params->get('type' . $suffix, 'article');
+		$tags['og:type'] = $params->get('type', 'article');
 
 		// Image
-		if ($img = $page->params->get('image' . $suffix, ''))
+		if ($img = $params->get('image'))
 		{
 			$tags['og:image'] = url('/') . htmlspecialchars($img);
 		}
@@ -65,43 +67,33 @@ class OpenGraph
 		{
 			// Try to find image in article
 			$img = 0;
-			$fulltext = '';
-			if (isset($page->fulltext) && $page->fulltext != '')
-			{
-				$fulltext = $page->fulltext;
-			}
-			$introtext = '';
-			if (isset($page->introtext) && $page->introtext != '')
-			{
-				$fulltext = $page->introtext;
-			}
-			$content = $introtext . $fulltext;
+			$content = $page->content;
 
 			preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $content, $src);
 			if (isset($src[1]) && $src[1] != '')
 			{
-				$tags['og:image'] = url('/') . htmlspecialchars($src[1]);
+				$tags['og:image'] = url('/') . '/' .  htmlspecialchars($src[1]);
 				$img = 1;
 			}
 
 			// Try to find image in images/opengraph folder
-			if ($img == 0)
+			if (!$img)
 			{
-				if (isset($page->id) && (int)$page->id > 0)
+				if ($page->id)
 				{
 					$imgPath = '';
-					$path = storage_path() . '/images/opengraph/';
+					$path = storage_path() . '/opengraph/';
 					if (file_exists($path . '/' . (int)$page->id . '.jpg'))
 					{
-						$imgPath = asset('images/opengraph/' . (int)$page->id . '.jpg');
+						$imgPath = asset('files/opengraph/' . (int)$page->id . '.jpg');
 					}
 					else if (file_exists($path . '/' . (int)$page->id . '.png'))
 					{
-						$imgPath = asset('images/opengraph/' . (int)$page->id . '.png');
+						$imgPath = asset('files/opengraph/' . (int)$page->id . '.png');
 					}
 					else if (file_exists($path . '/' . (int)$page->id . '.gif'))
 					{
-						$imgPath = asset('images/opengraph/' . (int)$page->id . '.gif');
+						$imgPath = asset('files/opengraph/' . (int)$page->id . '.gif');
 					}
 
 					if ($imgPath != '')
@@ -113,35 +105,32 @@ class OpenGraph
 		}
 
 		// URL
-		if ($url = $page->params->get('url' . $suffix, Request::current()))
+		if ($url = $params->get('url', url()->current()))
 		{
 			$tags['og:url'] = htmlspecialchars($url);
 		}
 
 		// Site Name
-		if ($sitename = $page->params->get('site_name' . $suffix, config('app.sitename')))
+		if ($sitename = $params->get('site_name', config('app.name')))
 		{
 			$tags['og:site_name'] = htmlspecialchars($sitename);
 		}
 
 		// Description
-		if ($desc = $page->params->get('description' . $suffix, $thisDesc))
-		{
-			$tags['og:description'] = htmlspecialchars($desc);
-		}
-		else if ($desc = config('app.MetaDesc'))
+		$thisDesc ?: $params->get('description');
+		if ($thisDesc)
 		{
 			$tags['og:description'] = htmlspecialchars($desc);
 		}
 
 		// FB App ID - COMMON
-		if ($app_id = $page->params->get('app_id', ''))
+		if ($app_id = $params->get('app_id'))
 		{
 			$tags['fb:app_id'] = htmlspecialchars($app_id);
 		}
 
 		// Other
-		if ($other = $page->params->get('other', ''))
+		if ($other = $params->get('other'))
 		{
 			$other = explode (';', $other);
 			if (!empty($other))
@@ -163,6 +152,13 @@ class OpenGraph
 			}
 		}
 
-		return View::make('listeners.content.opengraph::metadata', ['tags' => $tags])->render();
+		foreach ($tags as $key => $val)
+		{
+			$page->metadata->set($key, $val);
+		}
+
+		$event->page = $page;
+
+		//return View::make('listeners.content.opengraph::metadata', ['tags' => $tags])->render();
 	}
 }

@@ -1,6 +1,6 @@
 {
-    "name": "Users - History",
-    "alias": "users_history",
+    "name": "Resources - Pages",
+    "alias": "listener_resources_pages",
     "description": "This displays history related to a specific user.",
     "keywords": [],
     "active": 1,

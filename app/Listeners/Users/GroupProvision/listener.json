@@ -1,6 +1,6 @@
 {
     "name": "Users - Group Provision",
-    "alias": "none",
+    "alias": "listener_users_groupprovision",
     "description": "Service connector for Purdue University's Central Accounts.",
     "keywords": [],
     "active": 1,

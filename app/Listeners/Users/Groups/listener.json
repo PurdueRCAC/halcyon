@@ -1,6 +1,6 @@
 {
     "name": "Users - Groups",
-    "alias": "users_groups",
+    "alias": "listener_users_groups",
     "description": "This displays groups related to a specific user.",
     "keywords": [],
     "active": 1,

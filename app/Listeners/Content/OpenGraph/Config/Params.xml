@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
 	<fields name="params">
-		<fieldset name="article" label="listeners.content.opengraph::opengraph.ARTICLE_OPTIONS">
-			<field name="title" type="text" default="" label="listeners.content.opengraph::opengraph.TITLE_LABEL" description="listeners.content.opengraph::opengraph.TITLE_DESC" />
-			<field name="type" type="list" default="article" label="listeners.content.opengraph::opengraph.TYPE_LABEL" description="listeners.content.opengraph::opengraph.TYPE_DESC">
+		<fieldset name="article" label="listener.content.opengraph::opengraph.article options">
+			<field name="title" type="text" default="" label="listener.content.opengraph::opengraph.title label" description="listener.content.opengraph::opengraph.title desc" />
+			<field name="type" type="list" default="article" label="listener.content.opengraph::opengraph.type label" description="listener.content.opengraph::opengraph.type desc">
 				<option value="activity">activity</option>
 				<option value="sport">sport</option>
 				<option value="bar">bar</option>
@@ -43,14 +43,14 @@
 				<option value="website">website</option>
 				<option value="article">article</option>
 			</field>
-			<field name="image" type="media" default="" label="listeners.content.opengraph::opengraph.IMAGE_LABEL" description="listeners.content.opengraph::opengraph.IMAGE_DESC" />
-			<field name="url" type="text" default="" label="listeners.content.opengraph::opengraph.URL_LABEL" description="listeners.content.opengraph::opengraph.URL_DESC" />
-			<field name="site_name" type="text" default="" label="listeners.content.opengraph::opengraph.SITE_NAME_LABEL" description="listeners.content.opengraph::opengraph.SITE_NAME_DESC" />
-			<field name="description" type="textarea" default="" label="listeners.content.opengraph::opengraph.DESCRIPTION_LABEL" description="listeners.content.opengraph::opengraph.DESCRIPTION_DESC" />
+			<field name="image" type="media" default="" label="listener.content.opengraph::opengraph.image label" description="listener.content.opengraph::opengraph.image desc" />
+			<field name="url" type="text" default="" label="listener.content.opengraph::opengraph.url label" description="listener.content.opengraph::opengraph.url desc" />
+			<field name="site_name" type="text" default="" label="listener.content.opengraph::opengraph.site name label" description="listener.content.opengraph::opengraph.site name desc" />
+			<field name="description" type="textarea" default="" label="listener.content.opengraph::opengraph.description label" description="listener.content.opengraph::opengraph.description desc" />
 		</fieldset>
-		<fieldset name="common" label="listeners.content.opengraph::opengraph.COMMON_OPTIONS">
-			<field name="app_id" type="text" default="" label="listeners.content.opengraph::opengraph.APP_ID_LABEL" description="listeners.content.opengraph::opengraph.APP_ID_DESC" />
-			<field name="other" type="textarea" default="" label="listeners.content.opengraph::opengraph.OTHER_PROPERTIES_LABEL" description="listeners.content.opengraph::opengraph.OTHER_PROPERTIES_DESC" />
+		<fieldset name="common" label="listener.content.opengraph::opengraph.common options">
+			<field name="app_id" type="text" default="" label="listener.content.opengraph::opengraph.app id label" description="listener.content.opengraph::opengraph.app id desc" />
+			<field name="other" type="textarea" default="" label="listener.content.opengraph::opengraph.other properties label" description="listener.content.opengraph::opengraph.other properties desc" />
 		</fieldset>
 	</fields>
 </config>

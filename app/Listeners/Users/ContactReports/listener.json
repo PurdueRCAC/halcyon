@@ -1,6 +1,6 @@
 {
-    "name": "Users - Courses",
-    "alias": "users_courses",
+    "name": "Users - Contact Reports",
+    "alias": "listener_users_contactreports",
     "description": "This displays course accounts related to a specific user.",
     "keywords": [],
     "active": 1,

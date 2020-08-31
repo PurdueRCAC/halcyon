@@ -1,6 +1,6 @@
 {
     "name": "Users - Role Provision",
-    "alias": "none",
+    "alias": "listener_users_roleprovision",
     "description": "Service connector for Purdue University's Central Accounts.",
     "keywords": [],
     "active": 1,

@@ -1,6 +1,6 @@
 {
     "name": "Resources - Storage > Scratch",
-    "alias": "none",
+    "alias": "listener_resources_storagescratch",
     "description": "This performs any necessary setup or other functions of scratch space for a resource.",
     "keywords": [],
     "active": 1,

@@ -1,7 +1,7 @@
 {
-    "name": "Users - DBM LDAP",
-    "alias": "none",
-    "description": "This connects to the DBM Ldap to retrieve user info.",
+    "name": "Resources - Queues",
+    "alias": "lst_resources_queues",
+    "description": "This performs various actions on Queues when an action is performed on a related resource.",
     "keywords": [],
     "active": 1,
     "order": 0,

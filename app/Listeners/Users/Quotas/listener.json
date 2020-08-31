@@ -1,6 +1,6 @@
 {
     "name": "Users - Quotas",
-    "alias": "quotas",
+    "alias": "listener_users_quotas",
     "description": "This connects to the DBM Ldap to retrieve user info.",
     "keywords": [],
     "active": 1,

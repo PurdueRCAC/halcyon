@@ -1,6 +1,6 @@
 {
     "name": "Users - News",
-    "alias": "users_news",
+    "alias": "listener_users_news",
     "description": "This displays news articles related to a specific user.",
     "keywords": [],
     "active": 1,

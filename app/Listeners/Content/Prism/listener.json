@@ -1,0 +1,11 @@
+{
+    "name": "Content - Syntax Highlighter",
+    "alias": "listener_content_prism",
+    "description": "Syntax highlihter for code blocks.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
