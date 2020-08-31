@@ -12,11 +12,12 @@
 		<title>ITaP Research Computing @hasSection('title') - @yield('title') @endif</title>
 
 		@hasSection('meta')
-			@stack('meta')
+			@yield('meta')
 		@else
 			<meta name="description" content="Information Technology at Purdue (ITaP) Research Computing provides advanced computational resources and services to support Purdue faculty and staff researchers." />
 			<meta name="keywords" content="Purdue University, RCAC, Research Computing, Information Technology at Purdue, ITaP" />
 		@endif
+		@stack('meta')
 
 		<!-- Styles -->
 		<?php
