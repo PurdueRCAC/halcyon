@@ -97,7 +97,7 @@ class Page extends Model
 		'asset_id' => 'integer',
 		'version_id' => 'integer',
 		'params' => Params::class,
-		//'metadata' => Params::class,
+		'metadata' => Params::class,
 	];
 
 	/**
