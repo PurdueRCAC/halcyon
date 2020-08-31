@@ -113,10 +113,8 @@ class Media extends Field
 		$attr .= $this->element['onchange'] ? ' onchange="' . (string) $this->element['onchange'] . '"' : '';
 
 		// The text field.
-		$html[] = '<div class="input-modal">';
-		$html[] = '	<span class="input-cell">';
-		$html[] = '	<input type="text" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . ' readonly="readonly"' . $attr . ' />';
-		$html[] = '	</span>';
+		$html[] = '<div class="input-group">';
+		$html[] = '	<input type="text" class="form-control" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . ' readonly="readonly"' . $attr . ' />';
 
 		$directory = (string) $this->element['directory'];
 		if ($this->value && file_exists(storage_path() . '/' . $this->value))
@@ -136,23 +134,22 @@ class Media extends Field
 		}
 
 		// The button.
-		$html[] = '	<span class="input-cell">';
-		$html[] = '		<a class="button modal" title="' . trans('JLIB_FORM_BUTTON_SELECT') . '"' . ' href="'
+		$html[] = '	<span class="input-group-append">';
+		$html[] = '		<a class="btn btn-outline-secondary" href="'
 			. ($this->element['readonly'] ? ''
 			: ($link ? $link
-				: '/media?tmpl=component&amp;asset=' . implode('/',$asset) . '&amp;author='
-				. $this->form->getValue($authorField)) . '&amp;fieldid=' . $this->id . '&amp;folder=' . $folder) . '"'
-			. ' rel="{handler: \'iframe\', size: {x: 800, y: 500}}">';
-		$html[] = trans('JLIB_FORM_BUTTON_SELECT') . '</a>';
+				: route('admin.media.index', ['asset' => implode('/', $asset), 'author' => $this->form->getValue($authorField), 'fieldid' => $this->id, 'folder' => $folder]))) . '"'
+			. ' data-modal="{handler: \'iframe\', size: {x: 800, y: 500}}">';
+		$html[] = trans('global.select') . '</a>';
 		$html[] = '	</span>';
 
-		$html[] = '	<span class="input-cell">';
-		$html[] = '		<a class="button" title="' . trans('JLIB_FORM_BUTTON_CLEAR') . '"' . ' href="#" onclick="';
+		/*$html[] = '	<span class="input-cell">';
+		$html[] = '		<a class="btn btn-secondary" title="' . trans('JLIB_FORM_BUTTON_CLEAR') . '"' . ' href="#" onclick="';
 		$html[] = 'jInsertFieldValue(\'\', \'' . $this->id . '\');';
 		$html[] = 'return false;';
 		$html[] = '">';
 		$html[] = trans('JLIB_FORM_BUTTON_CLEAR') . '</a>';
-		$html[] = '	</span>';
+		$html[] = '	</span>';*/
 
 		$html[] = '</div>';
 
@@ -206,7 +203,7 @@ class Media extends Field
 				$options = array(
 					'title' => htmlspecialchars(trans('JLIB_FORM_MEDIA_PREVIEW_SELECTED_IMAGE'), ENT_COMPAT, 'UTF-8'),
 					'text'  => htmlspecialchars(trans('JLIB_FORM_MEDIA_PREVIEW_TIP_TITLE'), ENT_COMPAT, 'UTF-8'),
-					'class' => 'hasTipPreview'
+					'class' => 'form-text hasTip'
 				);
 				$html[] = '<span class="' . $options['class'] . '" title="' . $options['title'] . '::' . htmlspecialchars($tooltip, ENT_COMPAT, 'UTF-8') . '">' . $options['text'] . '</span>';
 

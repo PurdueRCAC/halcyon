@@ -377,11 +377,11 @@ class Grid
 		$date = addslashes(htmlspecialchars(with(new Carbon($time))->format(trans('DATE_FORMAT_LC')), ENT_COMPAT, 'UTF-8'));
 		$time = addslashes(htmlspecialchars(with(new Carbon($time))->format('H:i'), ENT_COMPAT, 'UTF-8'));
 
-		$active_title   = trans('JLIB_HTML_CHECKIN') . '::' . $text . '<br />' . $date . '<br />' . $time;
-		$inactive_title = trans('JLIB_HTML_CHECKED_OUT') . '::' . $text . '<br />' . $date . '<br />' . $time;
+		$active_title   = trans('global.check in') . '::' . $text . '<br />' . $date . '<br />' . $time;
+		$inactive_title = trans('global.checked out') . '::' . $text . '<br />' . $date . '<br />' . $time;
 
 		return self::action(
-			$i, 'checkin', $prefix, trans('JLIB_HTML_CHECKED_OUT'), $active_title, $inactive_title, true, 'checkedout',
+			$i, 'checkin', $prefix, trans('global.checked out'), $active_title, $inactive_title, true, 'checkedout',
 			'checkedout', $enabled, false, $checkbox
 		);
 	}
