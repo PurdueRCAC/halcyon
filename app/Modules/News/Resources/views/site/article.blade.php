@@ -104,7 +104,7 @@
 
 				@if ($article->isMailed())
 					<br />Last mailing: {{ $article->formatDate($article->datetimemailed) }}
-					by {{ $article->mailer->name }}
+					by {{ $article->mailer ? $article->mailer->name : trans('global.unknown') }}
 				@endif
 			@endif
 		</p>

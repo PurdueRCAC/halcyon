@@ -9,6 +9,7 @@ use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
 use App\Modules\Resources\Entities\Asset;
 use Carbon\Carbon;
+use App\Modules\Users\Models\User;
 
 class ArticlesController extends Controller
 {
@@ -226,6 +227,203 @@ class ArticlesController extends Controller
 		return view('news::site.type', [
 			'type' => $row,
 			'types' => $types
+		]);
+	}
+
+	/**
+	 * iCal requires lines be no longer than 75 characters
+	 *
+	 * @param   string  $preamble
+	 * @param   string  $value
+	 * @return  string
+	 */
+	private function icalSplit($preamble, $value)
+	{
+		$value = trim($value);
+		$value = strip_tags($value);
+		$value = preg_replace('/\n+/', ' ', $value);
+		$value = preg_replace('/\s{2,}/', ' ', $value);
+
+		$preamble_len = strlen($preamble);
+		$lines = array();
+
+		while (strlen($value) > (75-$preamble_len))
+		{
+			$space = (75-$preamble_len);
+			$mbcc = $space;
+			while ($mbcc)
+			{
+				$line = mb_substr($value, 0, $mbcc);
+				$oct = strlen($line);
+				if ($oct > $space)
+				{
+					$mbcc -= $oct-$space;
+				}
+				else
+				{
+					$lines[] = $line;
+					$preamble_len = 1; // Still take the tab into account
+					$value = mb_substr($value, $mbcc);
+					break;
+				}
+			}
+		}
+
+		if (!empty($value))
+		{
+			$lines[] = $value;
+		}
+
+		return join($lines, "\n\t");
+	}
+
+	/**
+	 * Show the form for creating a new resource.
+	 * @return Response
+	 */
+	public function calendar($search)
+	{
+		$search = urldecode($search);
+
+		$n = Carbon::now();
+		$org = 'ITaP';
+		$name = 'Research Computing';
+
+		if (is_numeric($search))
+		{
+			$news = Article::find($search);
+
+			if (!$news)
+			{
+				abort(404);
+			}
+
+			$name .= ' - ' . $search;
+
+			$events = array((array)$news);
+
+			$file = str_replace(' ', '_', $org . ' ' . $name);
+		}
+		else
+		{
+			$type = Type::findByName($search);
+
+			if (!$type)
+			{
+				abort(404);
+			}
+
+			$name .= ' ' . $type->name;
+
+			$events = $type->articles()
+				->wherePublished()
+				->where('datetimenews', '>=', $n->modify('-1 year')->format('Y-m-d') . ' 00:00:00')
+				->get();
+
+			$file = str_replace(' ', '_', $org . ' ' . $name);
+		}
+
+		$now = $n->format('Ymd\THis\Z');
+
+		// Create output
+		$output  = "BEGIN:VCALENDAR\r\n";
+		$output .= "VERSION:2.0\r\n";
+		$output .= "PRODID:-//$org//$name//EN\r\n";
+		$output .= "METHOD:PUBLISH\r\n";
+		$output .= "X-WR-CALNAME;VALUE=TEXT:$org $name\r\n";
+		$output .= "X-PUBLISHED-TTL:PT15M\r\n";
+		$output .= "X-ORIGINAL-URL:" . route('site.news.calendar', ['name' => $search]) . "\r\n";
+		$output .= "CALSCALE:GREGORIAN\r\n";
+
+		foreach ($events as $event)
+		{
+			$sequence = 0;
+			$id       = $event->id;
+			$uid      = $id . '@' . route('site.news.index');
+			$title    = $event->headline;
+			$content  = str_replace("\r\n", '\n', $event->news);
+			$content  = str_replace("\n", '\n', $content);
+			$location = $event->location;
+			$url      = route('site.news.show', ['id' => $id]);
+			$allDay   = 0;
+
+			// Get event timezone setting
+			// use this in "DTSTART;TZID="
+			$tzName = date_default_timezone_get();
+
+			// Get publish up/down dates
+			$dtStart = "DTSTART;TZID={$tzName}:" . $event->datetimenews->format('Ymd\THis');
+			$created = $event->datetimecreated->format('Ymd\THis\Z');
+
+			// Start output
+			$output .= "BEGIN:VEVENT\r\n";
+			$output .= "UID:{$uid}\r\n";
+			//$output .= "SEQUENCE:{$sequence}\r\n";
+			$output .= "DTSTAMP:{$now}\r\n";
+			$output .= $dtStart  . "\r\n";
+			if ($event->datetimenewsend && $event->datetimenewsend->toDateTimeString() != '0000-00-00 00:00:00')
+			{
+				$dtEnd   = "DTEND;TZID={$tzName}:" . $event->datetimenewsend->format('Ymd\THis');
+				$output .= $dtEnd . "\r\n";
+			}
+			else
+			{
+				$output .= "DTEND;TZID={$tzName}:" . $event->datetimenews->format('Ymd\THis') . "\r\n";
+			}
+
+			$output .= "CREATED:{$created}\r\n";
+			if ($event->datetimeedited && $event->datetimeedited->toDateTimeString() != '0000-00-00 00:00:00')
+			{
+				$modified = $event->datetimeedited->format('Ymd\THis\Z');
+
+				$output .= "LAST-MODIFIED:{$modified}\r\n";
+			}
+			else
+			{
+				$output .= "LAST-MODIFIED:{$created}\r\n";
+			}
+
+			$output .= 'SUMMARY:' . $this->icalSplit('SUMMARY:', $title) . "\r\n";
+			$output .= 'DESCRIPTION:' . $this->icalSplit('DESCRIPTION:', $content) . "\r\n";
+
+			// Do we have url?
+			if ($url && filter_var($url, FILTER_VALIDATE_URL))
+			{
+				$output .= "URL;VALUE=URI:{$url}\r\n";
+			}
+
+			// Do we have a location?
+			if ($location)
+			{
+				$output .= "LOCATION:{$location}\r\n";
+			}
+
+			// Do we have associated users?
+			if (count($row->associations))
+			{
+				foreach ($row->associations as $association)
+				{
+					if ($association->assoctype == 'user')
+					{
+						$user = User::find($association->associd);
+
+						$output .= "ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=TENTATIVE;CN=" . $user->name . "\r\n";
+						$output .= "\t:MAILTO:" . $user->mail . "\r\n";
+					}
+				}
+			}
+
+			$output .= "END:VEVENT\r\n";
+		}
+
+		// Close calendar
+		$output .= "END:VCALENDAR\r\n";
+
+		// Set headers and output
+		return new Response($output, 200, [
+			'Content-Type' => 'text/calendar;charset=UTF-8',
+			'Content-Disposition' => 'attachment; filename="' . $file . '.ics"',
+			'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
 		]);
 	}
 

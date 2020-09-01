@@ -160,6 +160,16 @@ class Article extends Model
 	}
 
 	/**
+	 * Defines a relationship to modifier
+	 *
+	 * @return  object
+	 */
+	public function mailer()
+	{
+		return $this->belongsTo('App\Modules\Users\Models\User', 'lastmailuserid');
+	}
+
+	/**
 	 * Defines a relationship to type
 	 *
 	 * @return  object
