@@ -3,12 +3,12 @@
 @section('title'){{ $page->title }}@stop
 
 @section('meta')
-@if ($page->metadesc)
-	<meta name="description" content="{{ $page->metadesc }}" />
-@endif
-@if ($page->metakey)
-	<meta name="keywords" content="{{ $page->metakey }}" />
-@endif
+	@if ($page->metadesc)
+		<meta name="description" content="{{ $page->metadesc }}" />
+	@endif
+	@if ($page->metakey)
+		<meta name="keywords" content="{{ $page->metakey }}" />
+	@endif
 @stop
 
 @if ($page->metadata)
@@ -24,7 +24,15 @@
 @if (count($page->styles))
 	@foreach ($page->styles as $v)
 		@push('styles')
-		<link rel="stylesheet" type="text/css" href="{{ $v }}" />
+			<link rel="stylesheet" type="text/css" href="{{ $v }}" />
+		@endpush
+	@endforeach
+@endif
+
+@if (count($page->scripts))
+	@foreach ($page->scripts as $v)
+		@push('scripts')
+			<script src="{{ $v }}"></script>
 		@endpush
 	@endforeach
 @endif
