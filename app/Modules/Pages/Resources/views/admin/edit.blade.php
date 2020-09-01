@@ -265,7 +265,7 @@ app('pathway')
 
 						<div class="form-group">
 							<label for="field-metadata">{{ trans('pages::pages.metadata') }}:</label>
-							<textarea class="form-control" name="fields[metadata]" id="field-metadata" rows="3" cols="40">{{ $row->metadata }}</textarea>
+							<textarea class="form-control" name="fields[metadata]" id="field-metadata" rows="3" cols="40">{{ json_encode($row->metadata->all()) }}</textarea>
 						</div>
 					</fieldset>
 			@sliders('end')
