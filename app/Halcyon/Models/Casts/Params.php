@@ -24,7 +24,10 @@ class Params implements CastsAttributes
 		{
 			$value = array();
 		}
-		$value = array_filter($value);
+		$value = array_filter($value, function($v, $k)
+			{
+				return $v !== null;
+			}, ARRAY_FILTER_USE_BOTH);
 
 		return new Repository($value);
 	}
