@@ -16,7 +16,6 @@ body {
 }
 body > header {
 	position: relative;
-	/*font-size: 1.05em;*/
 }
 ul,
 li {
@@ -25,7 +24,6 @@ li {
 }
 p,
 li {
-	/*font-size: 0.95em;*/
 	line-height: 1.6;
 }
 
@@ -2257,7 +2255,7 @@ div.launch:after {
 a.fa-rss-square,
 .fa-rss-square:link,
 .fa-rss-square {
-	color: #f88d23;
+	color: #B75E06;
 }
 a.fa-rss-square:hover,
 a.fa-rss-square:active,

@@ -34,9 +34,6 @@
 			<?php
 		endforeach;
 		?>
-		@if (Request::is('/'))
-			<link rel="stylesheet" type="text/css" media="all" href="{{ asset('themes/Rcac/css/homepage.css?v=' . filemtime(public_path() . '/themes/Rcac/css/homepage.css')) }}" />
-		@endif
 		@yield('styles')
 		@stack('styles')
 
@@ -61,6 +58,12 @@
 			'themes/Rcac/js/bootstrap.min.js',
 			//'themes/Rcac/js/common/jquery-ui-1.12.1/jquery-ui.min.js',
 			'themes/Rcac/js/google_jquery_link_tracking.js',
+			'themes/Rcac/js/common/common.js',
+			'themes/Rcac/js/common/date.js',
+			'themes/Rcac/js/common/jquery_cookie.js',
+			'themes/Rcac/js/common/jquerytimepicker_min.js',
+			'themes/Rcac/js/common/json2.js',
+			'themes/Rcac/js/common/text.js',
 		);
 		foreach ($scripts as $script):
 			?>
@@ -68,13 +71,13 @@
 			<?php
 		endforeach;
 
-		foreach (scandir(public_path() . '/themes/Rcac/js/common/') as $file)
+		/*foreach (scandir(public_path() . '/themes/Rcac/js/common/') as $file)
 		{
 			if (preg_match("/^.*?\.js$/", $file))
 			{
 				echo "\t\t" . '<script type="text/javascript" src="' . asset('themes/Rcac/js/common/' . $file . '?v=' . filemtime(public_path() . '/themes/Rcac/js/common/' . $file)) . '"></script>' . "\n";
 			}
-		}
+		}*/
 		?>
 		@yield('scripts')
 		@stack('scripts')

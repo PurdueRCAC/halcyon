@@ -1,24 +1,25 @@
+/* Home page specific styles */
 
-.content {
-	/* margin: 20px 20px 0 20px; */
+.contentInner {
+	padding-top: 40px;
 }
 
-.row {
-	margin-right: 0px !important;
+.content .container {
+	padding-left: 35px;
+	padding-right: 35px;
 }
-@media (max-width: 767px) {
-	.row {
-		margin-left: 0px !important;
-	}
-}
-
 .contentRcacIndex {
 	float: none;
-	margin: 20px 20px 0 0px; 
+	padding: 20px 0 0 0;
+	margin: 0;
+}
+.contentInner ul.newslist li {
+	list-style: none;
+	margin-left: 0;
 }
 
 .panel-body {
-	padding: 5px;
+	padding: 0 1em 1em 1em;
 }
 .mainpanel-body {
 	background-color: rgba(255,255,255,0.85);
@@ -70,6 +71,7 @@
 	width: 734px !important;
 	height: 246px !important;
 	border: none;
+	overflow: hidden;
 }
 .RiSnHa {
 	width: 31%;
@@ -172,7 +174,6 @@
 	height: 100%;
 	width: 100%;
 	background-color: #000;
-	background-image: url("../images/stripes-tile.png");
 	font-family: 'archivoNarrow', "Helvetica Neue", Helvetica, Arial, sans-serif;
 	line-height: 1.09091em
 }
@@ -198,24 +199,9 @@
 	height: 35px
 }
 
-.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer a.tile:link {
-	color: #fff;
-	font-weight: 400;
-	text-decoration: none
-}
-
-.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer a.tile:visited {
-	color: #fff;
-	font-weight: 400;
-	text-decoration: none
-}
-
-.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer a.tile:hover {
-	color: #fff;
-	font-weight: 400;
-	text-decoration: none
-}
-
+.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer a.tile:link,
+.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer a.tile:visited,
+.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer a.tile:hover,
 .deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer a.tile:active {
 	color: #fff;
 	font-weight: 400;
@@ -248,13 +234,7 @@
 	font-weight: 300
 }
 
-.deptOfficeContent .container .bannerRow .tabsContainer ul.nav li a:link {
-	background-color: #555;
-	color: #fff;
-	font-weight: 400;
-	text-decoration: none
-}
-
+.deptOfficeContent .container .bannerRow .tabsContainer ul.nav li a:link,
 .deptOfficeContent .container .bannerRow .tabsContainer ul.nav li a:visited {
 	background-color: #555;
 	color: #fff;
@@ -262,13 +242,7 @@
 	text-decoration: none
 }
 
-.deptOfficeContent .container .bannerRow .tabsContainer ul.nav li a:hover {
-	background-color: #222;
-	color: #fff;
-	font-weight: 400;
-	text-decoration: none
-}
-
+.deptOfficeContent .container .bannerRow .tabsContainer ul.nav li a:hover,
 .deptOfficeContent .container .bannerRow .tabsContainer ul.nav li a:active {
 	background-color: #222;
 	color: #fff;
@@ -350,6 +324,16 @@
 	padding-top: 0;
 	padding-left: 20px
 }
+.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer ul,
+.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer ul li,
+.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer ul a,
+.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer ul li a {
+	color: #fff;
+}
+.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer .tile {
+	margin-top: 0;
+	padding-top: 0;
+}
 
 @media (min-width: 992px) {
 	.deptOfficeContent .container .bannerRow .tabsContainer .tab-content {
@@ -371,11 +355,11 @@
 
 @media (min-width: 768px) {
 	.deptOfficeContent .container .bannerRow {
-		padding: 30px 0 7.5px
+		padding: 30px 0 7.5px 0;
 	}
 	.deptOfficeContent .container .bannerRow .bannerContainer {
 		padding-right: 0;
-		padding-left: 0;
+		padding-left: 7px;
 	}
 	.deptOfficeContent .container .bannerRow .audienceTiles {
 		padding: 20px 15px 0 7.5px
@@ -401,8 +385,6 @@
 	}
 	.deptOfficeContent .container .bannerRow {
 		height: 340px;
-		padding-left: 48px;
-		display: table;
 	}
 }
 
@@ -417,22 +399,14 @@
 }
 
 @media (min-width: 768px) and (min-width: 992px) {
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer {
+	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer {
 		padding: 15px;
 		background-color: black;
-		background-image: url("../images/stripes-tile.png");
 		overflow: auto;
-		width: 343px;
 		margin-bottom: 30px;
 		color: #fff;
 	}
 
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer ul,
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer ul li,
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer ul a,
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer ul li a {
-		color: #fff;
-	}
 	.deptOfficeContent .container .audienceTiles.tiles-2 .tileRow .tileContainer a.tile {
 		font-size: 1.625em
 	}
@@ -445,10 +419,9 @@
 }
 
 @media (min-width: 768px) and (min-width: 768px) and (max-width: 991px) {
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer {
+	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer {
 		padding: 15px;
 		background-color: black;
-		background-image: url("../images/stripes-tile.png");
 		overflow: auto;
 		width: 335px;
 	}
@@ -490,25 +463,20 @@
 		left: 24%;
 		margin: 0
 	}
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer ul,
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer ul li,
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer ul a,
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer ul li a {
+	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer ul,
+	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer ul li,
+	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer ul a,
+	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer ul li a {
 		color: white;
 	}
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer ul li a{
-		font-size: 13px;
-	}
-	 .deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer ul li p.date {
+	 .deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer ul li p.date {
 		color: white;
-		font-size: 13px;
 	}
-
 }
 
 @media (max-width: 767px) {
 	.deptOfficeContent .container .bannerRow {
-		padding: 15px 0 7.5px
+		padding: 15px 0 0 0;
 	}
 	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow {
 		margin: 0 -7.5px;
@@ -535,10 +503,9 @@
 	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer {
 		min-height: 240px;
 	}
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer {
+	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer {
 		padding: 20px;
 		background-color: black;
-		background-image: url("../images/stripes-tile.png");
 		overflow: auto;
 		margin-bottom: 30px;
 	}
@@ -551,7 +518,6 @@
 	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer {
 		padding: 10px;
 		background-color: black;
-		background-image: url("../images/stripes-tile.png");
 	}
 }
 
@@ -562,22 +528,24 @@
 
 @media (min-width: 488px) {
 	.deptOfficeContent .container .bannerRow .audienceTiles {
-		padding: 0 10px 20px 7.5px;
+		padding: 0;
+	}
+	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow {
+		padding: 0 7px;
 	}
 }
 
 @media (max-width: 400px) {
 	.deptOfficeContent .container .bannerRow .audienceTiles {
-		padding: 0 15px 20px 7.5px;
+		padding: 0 0 20px 0;
 		width: 100%;
 	}
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContaineri .newslist ul li a {
-		font-size: 12px;
+	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow {
+		padding: 0 7px;
 	}
-	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer {
+	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer {
 		padding: 10px;
 		background-color: black;
-		background-image: url("../images/stripes-tile.png");
 		overflow: auto;
 	}
 }
@@ -598,7 +566,8 @@ h2.tile {
 	color: #98700d !important;
 }
 
-.deptOfficeContent .container .bannerRow .audienceTiles .tileRow:first-child .tileContainer ul li a:hover {
+.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer ul li a:focus,
+.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer ul li a:hover {
 	color: #dddddd;
 }
 
@@ -607,7 +576,7 @@ h2.tile {
 	padding-left: 20px;
 	margin-top:30px;
 }
-#content {
+main {
 	background-image: url(../images/background-summer.jpg);
 	background-size: cover;
 	background-position: center center;
