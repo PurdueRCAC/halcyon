@@ -299,7 +299,7 @@ class Page extends Model
 	 */
 	public function getStylesAttribute()
 	{
-		return (array)$this->params->get('styles', []);
+		return array_filter((array)$this->params->get('styles', []));
 	}
 
 	/**
@@ -309,7 +309,7 @@ class Page extends Model
 	 */
 	public function getScriptsAttribute()
 	{
-		return (array)$this->params->get('scripts', []);
+		return array_filter((array)$this->params->get('scripts', []));
 	}
 
 	/**

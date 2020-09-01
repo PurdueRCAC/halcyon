@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use App\Modules\Pages\Models\Page;
 use App\Modules\Pages\Models\Version;
 use App\Halcyon\Http\StatefulRequest;
+use Illuminate\Config\Repository;
 
 class PagesController extends Controller
 {
@@ -190,8 +191,10 @@ class PagesController extends Controller
 		{
 			foreach ($params as $key => $val)
 			{
-				$row->params->set($key, $val);
+				$params[$key] = is_array($val) ? array_filter($val) : $val;
 			}
+
+			$row->params = new Repository($params);
 		}
 
 		if (!$row->save())
