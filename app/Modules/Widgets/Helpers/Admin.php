@@ -47,7 +47,7 @@ abstract class Admin
 	}
 
 	/**
-	 * Get a list of filter options for the state of a module.
+	 * Get a list of filter options for the state of a widget.
 	 *
 	 * @return  array  An array of option elements.
 	 */
@@ -127,7 +127,7 @@ abstract class Admin
 	}
 
 	/**
-	 * Get a list of the unique modules installed in the client application.
+	 * Get a list of the unique widgets installed in the client application.
 	 *
 	 * @param   integer  $clientId  The client id.
 	 * @return  array
@@ -142,10 +142,10 @@ abstract class Admin
 			->where('e.type', '=', 'widget')
 			->leftJoin($m . ' AS m', function($join)
 				{
-					$join->on('m.module', '=', 'e.element')
+					$join->on('m.widget', '=', 'e.element')
 						->on('m.client_id', '=', 'e.client_id');
 				})
-			->whereNotNull('m.module')
+			->whereNotNull('m.widget')
 			->groupBy('e.element', 'e.name', 'e.id')
 			->get();
 
@@ -167,7 +167,7 @@ abstract class Admin
 	}
 
 	/**
-	 * Get a list of the assignment options for modules to menus.
+	 * Get a list of the assignment options for widgets to menus.
 	 *
 	 * @param   integer  $clientId  The client id.
 	 * @return  array
@@ -289,7 +289,7 @@ abstract class Admin
 	}
 
 	/**
-	 * Display a batch widget for the module position selector.
+	 * Display a batch widget for the widget position selector.
 	 *
 	 * @param   integer  $clientId  The client ID
 	 * @return  string   The necessary HTML for the widget.
@@ -298,8 +298,8 @@ abstract class Admin
 	{
 		// Create the copy/move options.
 		$options = array(
-			Select::option( 'c', trans('JLIB_HTML_BATCH_COPY')),
-			Select::option( 'm', trans('JLIB_HTML_BATCH_MOVE'))
+			Select::option( 'c', trans('global.batch.copy')),
+			Select::option( 'm', trans('global.batch.move'))
 		);
 
 		// Create the batch selector to change select the category by which to move or copy.

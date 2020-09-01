@@ -42,7 +42,7 @@ class Widget
 	 */
 	public function __construct($model)
 	{
-		$name = $model->module;
+		$name = $model->widget;
 		if (substr($name, 0, 4) == 'mod_')
 		{
 			$name = substr($name, 4);
@@ -75,7 +75,7 @@ class Widget
 	}
 
 	/**
-	 * Get the path of a layout for this module
+	 * Get the path of a layout for this widget
 	 *
 	 * @param   string  $layout  The layout name
 	 * @return  string

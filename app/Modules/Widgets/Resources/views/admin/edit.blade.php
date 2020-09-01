@@ -146,7 +146,7 @@ $.widget( "custom.combobox", {
 		}
 
 		// Remove invalid value
-		this.input
+		/*this.input
 			.val( "" )
 			.attr( "title", value + " didn't match any item" )
 			.tooltip( "open" );
@@ -154,7 +154,7 @@ $.widget( "custom.combobox", {
 		this._delay(function() {
 			this.input.tooltip( "close" ).attr( "title", "" );
 		}, 2500 );
-		this.input.autocomplete( "instance" ).term = "";
+		this.input.autocomplete( "instance" ).term = "";*/
 	},
 
 	_destroy: function() {
@@ -173,8 +173,8 @@ $( document ).ready(function() {
 
 	$("#fields_position").combobox();
 
-	if ($('#moduleorder').length) {
-		data = $('#moduleorder');
+	if ($('#widgetorder').length) {
+		data = $('#widgetorder');
 
 		if (data.length) {
 			modorders = JSON.parse(data.html());
@@ -197,7 +197,7 @@ $( document ).ready(function() {
 			}
 			html += '\n	</select>';
 
-			$('#moduleorder').after(html);
+			$('#widgetorder').after(html);
 		}
 	}
 
@@ -325,10 +325,10 @@ app('pathway')
 					</div>
 				<?php endif;*/ ?>
 				<input type="hidden" name="id" value="{{ $row->id }}" />
-				<input type="hidden" name="fields[module]" value="{{ $row->module }}" />
+				<input type="hidden" name="fields[widget]" value="{{ $row->widget }}" />
 			</fieldset>
 
-			<?php if (empty($row->module) || $row->module == 'custom' || $row->module == 'mod_custom') : ?>
+			<?php if (empty($row->widget) || $row->widget == 'custom' || $row->widget == 'mod_custom') : ?>
 				<fieldset class="adminform">
 					<legend>{{ trans('widgets::widgets.custom content') }}</legend>
 
@@ -374,7 +374,7 @@ app('pathway')
 
 						<div id="menu-assignment">
 							<?php $menuTypes = App\Modules\Menus\Helpers\Menus::getMenuLinks(); ?>
-							<?php //echo App\Halcyon\Html\Builder\Tabs::start('module-menu-assignment-tabs', array('useCookie' => 1)); ?>
+							<?php //echo App\Halcyon\Html\Builder\Tabs::start('widget-menu-assignment-tabs', array('useCookie' => 1)); ?>
 							<div class="tabs">
 								<ul class="nav tav-tabs">
 									<?php foreach ($menuTypes as &$type) : ?>
@@ -447,7 +447,7 @@ app('pathway')
 			<?php endif; ?>
 		</div>
 		<div class="col col-xs-12 col-sm-5">
-			@sliders('start', 'module-sliders')
+			@sliders('start', 'widget-sliders')
 			<?php
 			$fieldSets = $form->getFieldsets('params');
 

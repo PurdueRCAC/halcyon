@@ -28,7 +28,7 @@ class WidgetManager
 	}
 
 	/**
-	 * Make sure module name follows naming conventions
+	 * Make sure widget name follows naming conventions
 	 *
 	 * @param   string  $name  The element value for the extension
 	 * @return  string
@@ -85,10 +85,10 @@ class WidgetManager
 	}
 
 	/**
-	 * Count the modules based on the given condition
+	 * Count the widgets based on the given condition
 	 *
 	 * @param   string   $condition  The condition to use
-	 * @return  integer  Number of modules found
+	 * @return  integer  Number of widgets found
 	 */
 	public function count($condition)
 	{
@@ -119,7 +119,7 @@ class WidgetManager
 	 * Get by position
 	 *
 	 * @param   string  $position  The position of the widgets
-	 * @return  array   An array of module objects
+	 * @return  array   An array of widget objects
 	 */
 	public function byPosition($position)
 	{
@@ -163,9 +163,9 @@ class WidgetManager
 		$widgets = $this->all()
 			->filter(function($value, $key) use ($name, $title)
 			{
-				if ($value->module == $name)
+				if ($value->widget == $name)
 				{
-					// Match the title if we're looking for a specific instance of the module
+					// Match the title if we're looking for a specific instance of the widget
 					return (!$title || $value->title == $title);
 				}
 
@@ -198,13 +198,13 @@ class WidgetManager
 	 */
 	protected function instantiateWidget($widget)
 	{
-		if (!$widget->module)
+		if (!$widget->widget)
 		{
 			return false;
 		}
 
 		// Get just the file name
-		$name = $widget->module;
+		$name = $widget->widget;
 		/*if (substr($name, 0, 4) == 'mod_')
 		{
 			$name = substr($name, 4);
@@ -325,7 +325,7 @@ class WidgetManager
 			{
 				$widget = &$widgets[$i];
 
-				// The module is excluded if there is an explicit prohibition
+				// The widget is excluded if there is an explicit prohibition
 				$negHit = ($negId === (int) $widget->menuid);
 
 				if (isset($dupes[$widget->id]))
@@ -341,10 +341,10 @@ class WidgetManager
 
 				$dupes[$widget->id] = true;
 
-				// Only accept modules without explicit exclusions.
+				// Only accept widgets without explicit exclusions.
 				if (!$negHit)
 				{
-					$widget->name     = substr($widget->module, 4);
+					$widget->name     = substr($widget->widget, 4);
 					$widget->style    = null;
 					$widget->position = strtolower($widget->position);
 

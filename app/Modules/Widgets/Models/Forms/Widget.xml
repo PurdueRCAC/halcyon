@@ -28,9 +28,9 @@
 			maxlength="100"
 		/>
 
-		<field name="module" type="hidden"
-			description="widgets::widgets.module description"
-			label="widgets::widgets.module"
+		<field name="widget" type="hidden"
+			description="widgets::widgets.widget description"
+			label="widgets::widgets.widget"
 			readonly="readonly"
 		/>
 

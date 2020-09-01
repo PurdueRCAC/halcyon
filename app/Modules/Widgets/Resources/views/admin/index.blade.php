@@ -205,13 +205,13 @@ app('pathway')
 				</td>
 				<td class="priority-4">
 					<?php
-					if (substr($row->name, 0, 4) == 'mod_')
+					if (substr($row->widget, 0, 4) == 'mod_')
 					{
-						echo substr($row->name, 4);
+						echo substr($row->widget, 4);
 					}
 					else
 					{
-						echo $row->name;
+						echo $row->widget;
 					}
 					?>
 				</td>
@@ -246,7 +246,7 @@ app('pathway')
 					<?php elseif ($row->language == '*'): ?>
 						{{ trans('global.all') }}
 					<?php else: ?>
-						<?php echo $row->language_title ? e($row->language_title) : trans('JUNDEFINED'); ?>
+						<?php echo $row->language_title ? e($row->language_title) : trans('global.undefined'); ?>
 					<?php endif; ?>
 				</td>
 			</tr>

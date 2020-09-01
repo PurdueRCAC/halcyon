@@ -288,7 +288,7 @@ class Widget extends Model
 		{
 			$this->path = '';
 
-			if ($widget = $this->module)
+			if ($widget = $this->widget)
 			{
 				if (substr($widget, 0, 4) == 'mod_')
 				{
@@ -319,7 +319,7 @@ class Widget extends Model
 
 		Form::addFieldPath(__DIR__ . '/Fields');
 
-		$form = new Form('module', array('control' => 'fields'));
+		$form = new Form('widget', array('control' => 'fields'));
 
 		if (!$form->loadFile($file, false, '//form'))
 		{
@@ -329,12 +329,12 @@ class Widget extends Model
 		$paths = array();
 		$paths[] = $this->path() . '/Config/Params.xml';
 
-		/*if (substr($this->module, 0, 4) == 'mod_')
+		/*if (substr($this->widget, 0, 4) == 'mod_')
 		{
-			$paths[] = $this->path() . '/' . substr($this->module, 4) . '.xml';
+			$paths[] = $this->path() . '/' . substr($this->widget, 4) . '.xml';
 		}
 
-		$paths[] = $this->path() . '/' . $this->module . '.xml';*/
+		$paths[] = $this->path() . '/' . $this->widget . '.xml';*/
 
 		foreach ($paths as $file)
 		{
@@ -359,7 +359,7 @@ class Widget extends Model
 
 	public function registerLanguage()
 	{
-		$name = $this->module;
+		$name = $this->widget;
 		if (substr($name, 0, 4) == 'mod_')
 		{
 			$name = substr($name, 4);
@@ -393,7 +393,7 @@ class Widget extends Model
 		/*$db = App::get('db');
 		$db->setQuery(
 			'SELECT menuid' .
-			' FROM #__modules_menu' .
+			' FROM widget_menus' .
 			' WHERE moduleid = '.$this->get('id')
 		);
 		return $db->loadColumn();*/
@@ -417,12 +417,12 @@ class Widget extends Model
 
 		if (!$this->id)
 		{
-			// If this is a new module, assign to all pages.
+			// If this is a new widget, assign to all pages.
 			$assignment = 0;
 		}
 		elseif (empty($assigned))
 		{
-			// For an existing module it is assigned to none.
+			// For an existing widget it is assigned to none.
 			$assignment = '-';
 		}
 		else
@@ -445,7 +445,7 @@ class Widget extends Model
 	}
 
 	/**
-	 * Save menu assignments for a module
+	 * Save menu assignments for a widget
 	 *
 	 * @param   integer  $assignment
 	 * @param   array    $assigned
@@ -455,7 +455,7 @@ class Widget extends Model
 	{
 		$assignment = $assignment ? $assignment : 0;
 
-		// Delete old module to menu item associations
+		// Delete old widget to menu item associations
 		if (!Menu::deleteByWidget($this->id))
 		{
 			$this->addError('Failed to remove previous menu assignments.');
@@ -468,17 +468,17 @@ class Widget extends Model
 			// Variable is numeric, but could be a string.
 			$assignment = (int) $assignment;
 
-			// Logic check: if no module excluded then convert to display on all.
+			// Logic check: if no widget excluded then convert to display on all.
 			if ($assignment == -1 && empty($assigned))
 			{
 				$assignment = 0;
 			}
 
-			// Check needed to stop a module being assigned to `All`
-			// and other menu items resulting in a module being displayed twice.
+			// Check needed to stop a widget being assigned to `All`
+			// and other menu items resulting in a widget being displayed twice.
 			if ($assignment === 0)
 			{
-				// assign new module to `all` menu item associations
+				// assign new widget to `all` menu item associations
 				$menu = new Menu(array(
 					'moduleid' => $this->id,
 					'menuid'   => 0
@@ -556,7 +556,7 @@ class Widget extends Model
 	 */
 	public function delete(array $options = [])
 	{
-		// Delete old module to menu item associations
+		// Delete old widget to menu item associations
 		if (!Menu::deleteByWidget($this->id))
 		{
 			$this->addError('Failed to remove previous menu assignments.');

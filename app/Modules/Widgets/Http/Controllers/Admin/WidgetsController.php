@@ -41,7 +41,7 @@ class WidgetsController extends Controller
 			$filters[$key] = $request->state('widgets.filter_' . $key, $key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'title', 'position', 'state', 'access']))
+		if (!in_array($filters['order'], ['id', 'title', 'position', 'state', 'widget', 'access']))
 		{
 			$filters['order'] = Widget::$orderBy;
 		}
@@ -96,13 +96,13 @@ class WidgetsController extends Controller
 		// Join over the extensions
 		$query
 			//->select($e . '.name AS name')
-			->join($e, $e . '.element', $p . '.module', 'left')
+			->join($e, $e . '.element', $p . '.widget', 'left')
 			->groupBy(
 				$p . '.id',
 				$p . '.title',
 				$p . '.note',
 				$p . '.position',
-				$p . '.module',
+				$p . '.widget',
 				$p . '.language',
 				$p . '.checked_out',
 				$p . '.checked_out_time',
@@ -164,7 +164,7 @@ class WidgetsController extends Controller
 		// Filter by module.
 		if ($filters['widget'])
 		{
-			$query->where($p . '.module', '=', $filters['widget']);
+			$query->where($p . '.widget', '=', $filters['widget']);
 		}
 
 		// Filter by search
@@ -265,7 +265,7 @@ class WidgetsController extends Controller
 
 			if ($ext)
 			{
-				$row->module = $ext->element;
+				$row->widget = $ext->element;
 				$row->client_id = $ext->client_id;
 			}
 		}
@@ -354,7 +354,7 @@ class WidgetsController extends Controller
 			'fields.title' => 'required',
 			'fields.position' => 'required'
 		]);
- 
+
 		$id = $request->input('id');
 
 		$row = $id ? Widget::findOrFail($id) : new Widget();
