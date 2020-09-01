@@ -1,0 +1,7 @@
+{
+	"name": "Banner",
+	"alias": "banner",
+	"description": "This displays a slideshow unless there are outages",
+	"type": "site",
+	"version": "1.0.0"
+}
