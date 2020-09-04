@@ -1564,7 +1564,7 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 													{{ $member->user ? $member->user->name : trans('global.unknown') }}
 												@endif
 											</td>
-											<td>{{ $member->user->deleted_at }}</td>
+											<td>{{ $member->user ? $member->user->deleted_at : trans('global.unknown') }}</td>
 											<td>{{ $member->datetimeremoved }}</td>
 											<td></td>
 										</tr>

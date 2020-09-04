@@ -95,7 +95,7 @@
 			<ul>
 				@foreach ($groups as $g)
 				<li>
-					<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid]) }}">
+					<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">
 						{{ $g->group->name }}
 					</a>
 				</li>
