@@ -121,6 +121,16 @@ class Queue extends Model
 	];
 
 	/**
+	 * Determine if in a trashed state
+	 *
+	 * @return  bool
+	 */
+	public function isTrashed()
+	{
+		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Set defaultwalltime. Incoming value is expected to be # hours.
 	 *
 	 * @param   integer  $value
