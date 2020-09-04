@@ -774,10 +774,21 @@ pre {
 	line-height: 1.42857;
 	word-break: break-all;
 	word-wrap: break-word;
+	white-space: pre;
+	white-space: -moz-pre-wrap;
+	white-space: -o-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: pre-wrap;
 	color: #333;
 	background-color: #f5f5f5;
 	border: 1px solid #ccc;
 	border-radius:4px
+}
+
+code, kbd, pre, tt {
+	/* background-color: #eae4d9; */
+	background-color: #2b2b2b;
+	color: #c5c8c6;
 }
 
 pre code {
@@ -2549,14 +2560,7 @@ fieldset[disabled] .btn-default.active {
 	color: #fff;
 	background-color:#333
 }
-.btn-outline {
-	color: #333;
-	background-color: transparent;
-	border-color:#ccc
-}
-.input-group .btn-outline {
-	border-color: transparent;
-}
+
 .btn-primary {
 	color: #fff;
 	background-color: #337ab7;
@@ -3300,13 +3304,9 @@ tbody.collapse.in {
 	text-align: center;
 	background-color: #eee;
 	border: 1px solid #ccc;
-	border-radius:4px;
+	border-radius:4px
+}
 
-	padding: 0;
-}
-.input-group-text {
-	padding: 6px 12px;
-}
 .input-group-addon.input-sm,
 .input-group-sm > .input-group-addon,
 .input-group-sm > .input-group-btn > .input-group-addon.btn {
@@ -6602,7 +6602,7 @@ u {
 	background-color: #cfb991; /* <-- color as of 2020;*/
 	color: #000;
 	box-shadow: 0px 2px 10px #1e1e1e;
-	z-index: 10001 !important;
+	/*z-index: 10001 !important; This interferes with some jQuery UI dialog styles and doesn't seem to be necessary */
 }
 .goldbar a:link {
 	background-color: transparent !important;
@@ -7063,7 +7063,7 @@ table.gsc-search-box .gsc-search-button {
 .top .department a:visited,
 .top .department a:hover,
 .top .department a:active {
-	color: inherit;
+	color: #fff;
 	font-weight: 600;
 	text-decoration:none
 }
@@ -7456,7 +7456,7 @@ table.gsc-search-box .gsc-search-button {
 	.blackbar .black .dropdown-menu .dropdown-submenu > .dropdown-menu > li > a:focus {
 		width: auto;
 		height: auto;
-		background:#000
+		/*background:#000*/
 	}
 	.blackbar .black .dropdown-menu .dropdown-submenu:hover > .dropdown-toggle {
 		color:#000
@@ -7487,7 +7487,7 @@ table.gsc-search-box .gsc-search-button {
 	.blackbar .black .dropdown-menu .dropdown-submenu a.dropdown-toggle:focus + ul.dropdown-menu > li > a {
 		width: auto;
 		height: auto;
-		background:#000
+		/*background:#000*/
 	}
 	.blackbar .black .dropdown-menu .dropdown-submenu:after {
 		display: block;

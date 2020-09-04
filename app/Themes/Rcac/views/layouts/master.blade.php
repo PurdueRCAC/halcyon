@@ -208,11 +208,11 @@
 				</div>
 			</nav><!-- / .blackbar -->
 
-
-		@if (!Request::is('/'))
-			@widget('breadcrumbs')
-		@endif
+			@if (!Request::is('/'))
+				@widget('breadcrumbs')
+			@endif
 		</header>
+
 		<main id="content">
 			@include('partials.notifications')
 

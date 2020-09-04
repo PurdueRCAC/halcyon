@@ -2102,9 +2102,9 @@ main .select2-container--default .select2-selection--single {
 	min-width: 0;
 	word-wrap: break-word;
 
-	border: solid 1px rgba(3,27,78,.1);
+	/*border: solid 1px rgba(3,27,78,.1);
 	border-radius: 0;
-	box-shadow: 0 2px 4px 0 rgba(3,27,78,.06);
+	box-shadow: 0 2px 4px 0 rgba(3,27,78,.06);*/
 }
 a.card-content,
 .card-content {
