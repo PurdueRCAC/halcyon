@@ -305,7 +305,7 @@ class WidgetsController extends Controller
 		if ($row->checked_out
 		 && $row->checked_out <> auth()->user()->id)
 		{
-			return $this->cancel()->with('warning', trans('global.checked out'));
+			return $this->cancel()->with('warning', trans('global.messages.checked out'));
 		}
 
 		if ($eid = $request->input('eid', 0))
@@ -328,10 +328,10 @@ class WidgetsController extends Controller
 		if ($row->id)
 		{
 			// Checkout the record
-			if (!$row->checkout())
+			if (!$row->checkOut())
 			{
 				// Check-out failed, display a notice but allow the user to see the record.
-				return $this->cancel()->with('warning', trans('global.check out failed'));
+				return $this->cancel()->with('warning', trans('global.messages.check out failed'));
 			}
 		}
 
@@ -372,7 +372,7 @@ class WidgetsController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
@@ -384,14 +384,14 @@ class WidgetsController extends Controller
 
 		if (!$row->saveAssignment($assignment, $assigned))
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
 
 		$row->checkin();
 
-		return $this->cancel()->withSuccess(trans('messages.update success'));
+		return $this->cancel()->withSuccess(trans('global.messages.update success'));
 	}
 
 	/**
@@ -474,7 +474,6 @@ class WidgetsController extends Controller
 
 		$success = 0;
 
-
 		foreach ($ids as $id)
 		{
 			// Delete the entry
@@ -492,34 +491,12 @@ class WidgetsController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();
 	}
 
-	/**
-	 * Method to publish a list of items
-	 *
-	 * @return  void
-	 */
-	/*public function publish(Request $request)
-	{
-		return $this->state($request, 'publish');
-	}
-
-	public function unpublish(Request $request)
-	{
-		return $this->state($request, 'unpublish');
-	}
-
-	public function trash(Request $request)
-	{
-		return $this->state($request, 'trash');
-	}
-
-	public function state(Request $request, $task)
-	{*/
 	/**
 	 * Sets the state of one or more entries
 	 * 
@@ -533,16 +510,6 @@ class WidgetsController extends Controller
 		// Incoming
 		$ids = $request->input('id', array($id));
 		$ids = (!is_array($ids) ? array($ids) : $ids);
-		// Get items to publish from the request.
-		/*$cid   = $request->input('cid');
-		$data  = array(
-			'publish'   => 1,
-			'unpublish' => 0,
-			'archive'   => 2,
-			'trash'     => -2,
-			'report'    => -3
-		);
-		$value = \App\Halcyon\Utility\Arr::getValue($data, $task, 0, 'int');*/
 
 		$success = 0;
 
@@ -564,37 +531,12 @@ class WidgetsController extends Controller
 			$success++;
 		}
 
-		/*if ($success)
-		{
-			// Clean the cache.
-			//$this->cleanCache();
-
-			// Set the success message
-			if ($value == 1)
-			{
-				$ntext = 'widgets::widgets.N_ITEMS_PUBLISHED';
-			}
-			elseif ($value == 0)
-			{
-				$ntext = 'widgets::widgets.N_ITEMS_UNPUBLISHED';
-			}
-			elseif ($value == 2)
-			{
-				$ntext = 'widgets::widgets.N_ITEMS_ARCHIVED';
-			}
-			else
-			{
-				$ntext = 'widgets::widgets.N_ITEMS_TRASHED';
-			}
-
-			$request->session()->flash('success', trans($ntext, ['count' => $success]));
-		}*/
 		// Set message
 		if ($success)
 		{
 			$msg = $value
-				? 'widgets::widgets.items published'
-				: 'widgets::widgets.items unpublished';
+				? 'global.messages.items published'
+				: 'global.messages.items unpublished';
 
 			$request->session()->flash('success', trans($msg, ['count' => $success]));
 		}
@@ -623,7 +565,7 @@ class WidgetsController extends Controller
 
 			if (!$model->move($inc))
 			{
-				$request->session()->flash('error', trans('JLIB_APPLICATION_ERROR_REORDER_FAILED', ['error' => $model->getError()]));
+				$request->session()->flash('error', trans('global.messages.items reordering failed'));
 				continue;
 			}
 
@@ -633,7 +575,7 @@ class WidgetsController extends Controller
 		if ($success)
 		{
 			// Set the success message
-			$request->session()->flash('success', trans('JLIB_APPLICATION_SUCCESS_ITEM_REORDERED'));
+			$request->session()->flash('success', trans('global.messages.items reordered'));
 		}
 
 		// Redirect back to the listing
@@ -648,8 +590,8 @@ class WidgetsController extends Controller
 	public function saveorder(Request $request)
 	{
 		// Get the input
-		$pks   = $request->input('cid');
-		$order = $request->input('order');
+		$pks   = $request->input('cid', []);
+		$order = $request->input('order', []);
 
 		// Sanitize the input
 		\App\Halcyon\Utility\Arr::toInteger($pks);
@@ -661,12 +603,12 @@ class WidgetsController extends Controller
 		if ($return === false)
 		{
 			// Reorder failed
-			$request->session()->flash('success', trans('JLIB_APPLICATION_ERROR_REORDER_FAILED'));
+			$request->session()->flash('success', trans('global.messages.items reordering failed'));
 		}
 		else
 		{
 			// Reorder succeeded.
-			$request->session()->flash('success', trans('JLIB_APPLICATION_SUCCESS_ORDERING_SAVED'));
+			$request->session()->flash('success', trans('global.messages.items reordered'));
 		}
 
 		// Redirect back to the listing
@@ -674,7 +616,7 @@ class WidgetsController extends Controller
 	}
 
 	/**
-	 * Check in of one or more records.
+	 * Check in one or more records.
 	 *
 	 * @param   Request $request
 	 * @return  Response
@@ -688,264 +630,42 @@ class WidgetsController extends Controller
 		{
 			$model = Widget::findOrFail(intval($id));
 
-			if (!$model->checkin())
+			if (!$model->checkIn())
 			{
-				$request->session()->flash('error', trans('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', ['error' => $model->getError()]));
+				$request->session()->flash('error', trans('global.messages.checkin failed'));
 				continue;
 			}
 		}
 
-		// Redirect back to the listing
 		return redirect(route('admin.widgets.index'));
 	}
 
 	/**
 	 * Return to the main view
 	 *
-	 * @param   Request $request
 	 * @return  Response
 	 */
-	public function cancel()
+	public function cancel(Request $request)
 	{
-		/*if ($id = app('request')->input('id'))
+		if ($ids = $request->input('id'))
 		{
-			$model = Widget::find($id);
+			$ids = is_array($ids) ?: array($ids);
 
-			if ($model && $model->isCheckedOut())
+			foreach ($ids as $id)
 			{
-				// Check-in failed, go back to the record and display a notice.
-				if (!$model->checkIn())
+				$model = Widget::find((int)$id);
+
+				if ($model && $model->isCheckedOut())
 				{
-					app('request')->session()->flash('error', trans('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', ['error' => $model->getError()]));
+					// Check-in failed, go back to the record and display a notice.
+					if (!$model->checkIn())
+					{
+						app('request')->session()->flash('error', trans('global.messages.checkin failed'));
+					}
 				}
 			}
-		}*/
+		}
 
 		return redirect(route('admin.widgets.index'));
-	}
-
-	/**
-	 * Batch process records
-	 *
-	 * @param   Request $request
-	 * @return  Response
-	 */
-	public function batch(Request $request)
-	{
-		$commands = $request->post('batch');
-
-		// Sanitize user ids.
-		$pks = array_unique($pks);
-		\App\Halcyon\Utility\Arr::toInteger($pks);
-
-		// Remove any values of zero.
-		if (array_search(0, $pks, true))
-		{
-			unset($pks[array_search(0, $pks, true)]);
-		}
-
-		if (empty($pks))
-		{
-			return $this->cancel()->with('error', trans('global.no item selected'));
-		}
-
-		$done = false;
-
-		if (!empty($commands['position_id']))
-		{
-			$cmd = \App\Halcyon\Utility\Arr::getValue($commands, 'move_copy', 'c');
-
-			if (!empty($commands['position_id']))
-			{
-				if ($cmd == 'c')
-				{
-					$result = $this->batchCopy($commands['position_id'], $pks, $contexts);
-
-					if (is_array($result))
-					{
-						$pks = $result;
-					}
-					else
-					{
-						return $this->cancel();
-					}
-				}
-				elseif ($cmd == 'm' && !$this->batchMove($commands['position_id'], $pks, $contexts))
-				{
-					return $this->cancel();
-				}
-
-				$done = true;
-			}
-		}
-
-		if (!empty($commands['assetgroup_id']))
-		{
-			if (!$this->batchAccess($commands['assetgroup_id'], $pks, $contexts))
-			{
-				return $this->cancel();
-			}
-
-			$done = true;
-		}
-
-		if (!empty($commands['language_id']))
-		{
-			if (!$this->batchLanguage($commands['language_id'], $pks, $contexts))
-			{
-				return $this->cancel();
-			}
-
-			$done = true;
-		}
-
-		if (!$done)
-		{
-			return $this->cancel()->with('error', trans('global.insufficient batch information'));
-		}
-
-		return $this->cancel();
-	}
-
-	/**
-	 * Batch copy modules to a new position or current.
-	 *
-	 * @param   integer  $value      The new value matching a module position.
-	 * @param   array    $pks        An array of row IDs.
-	 * @param   array    $contexts   An array of item contexts.
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 */
-	protected function batchCopy($value, $pks, $contexts)
-	{
-		// Set the variables
-		$table = $this->getTable();
-		$i = 0;
-
-		foreach ($pks as $pk)
-		{
-			if (auth()->user()->can('create widgets'))
-			{
-				$model = Widget::find($pk);
-
-				// Set the new position
-				if ($value == 'noposition')
-				{
-					$position = '';
-				}
-				elseif ($value == 'nochange')
-				{
-					$position = $model->position;
-				}
-				else
-				{
-					$position = $value;
-				}
-				$model->position = $position;
-
-				// Alter the title if necessary
-				$data = $model->generateNewTitle($model->title, $model->position);
-				$model->title = $data[0];
-
-				// Reset the ID because we are making a copy
-				$model->id = 0;
-
-				// Unpublish the new module
-				$model->published = 0;
-
-				if (!$model->save())
-				{
-					$this->setError($model->getError());
-					return false;
-				}
-
-				// Get the new item ID
-				$newId = $model->id;
-
-				// Add the new ID to the array
-				$newIds[$i]	= $newId;
-				$i++;
-
-				// Now we need to handle the module assignments
-				$db = app('db');
-				$menus = $db->table('widgets_menu')
-					->select('menuid')
-					->where('moduleid', '=', $pk)
-					->get();
-
-				// Insert the new records into the table
-				foreach ($menus as $menu)
-				{
-					$db->table('widgets_menu')
-						->insert(array(
-							'moduleid' => $newId,
-							'menuid'   => $menu
-						));
-				}
-			}
-			else
-			{
-				$this->setError(trans('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
-				return false;
-			}
-		}
-
-		return $newIds;
-	}
-
-	/**
-	 * Batch move modules to a new position or current.
-	 *
-	 * @param   integer  $value     The new value matching a module position.
-	 * @param   array    $pks       An array of row IDs.
-	 * @param   array    $contexts  An array of item contexts.
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 */
-	protected function batchMove($value, $pks, $contexts)
-	{
-		// Set the variables
-		$i = 0;
-
-		foreach ($pks as $pk)
-		{
-			if (auth()->user()->can('edit widgets'))
-			{
-				$model = Widget::find($pk);
-
-				// Set the new position
-				if ($value == 'noposition')
-				{
-					$position = '';
-				}
-				elseif ($value == 'nochange')
-				{
-					$position = $model->position;
-				}
-				else
-				{
-					$position = $value;
-				}
-				$model->position = $position;
-
-				// Alter the title if necessary
-				$data = $model->generateNewTitle($model->title, $model->position);
-				$model->title = $data[0];
-
-				// Unpublish the moved module
-				$model->published = 0;
-
-				if (!$model->save())
-				{
-					$this->setError($model->getError());
-					return false;
-				}
-			}
-			else
-			{
-				$this->setError(trans('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-				return false;
-			}
-		}
-
-		return true;
 	}
 }

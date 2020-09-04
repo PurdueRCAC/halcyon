@@ -40,7 +40,7 @@ class WidgetOrder extends Field
 		// Initialize JavaScript field attributes.
 		$attr .= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'"' : '';
 
-		$html[] = '<script type="application/json" id="moduleorder">';
+		$html[] = '<script type="application/json" id="widgetorder">';
 
 		$ordering = $this->form->getValue('ordering');
 		$position = $this->form->getValue('position');

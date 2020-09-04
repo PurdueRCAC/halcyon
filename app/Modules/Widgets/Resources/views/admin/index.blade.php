@@ -133,9 +133,9 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('widgets::widgets.access'), 'access', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col">
+				<?php /*<th scope="col">
 					{{ trans('widgets::widgets.language') }}
-				</th>
+				</th>*/ ?>
 			</tr>
 		</thead>
 		<tbody>
@@ -150,6 +150,11 @@ app('pathway')
 					{{ $row->id }}
 				</td>
 				<td>
+					@if ($row->checked_out)
+						<a class="glyph icon-check-square warning" data-tip="Checked out">
+							Checked out
+						</a>
+					@endif
 					@if (auth()->user()->can('edit widgets'))
 						<a href="{{ route('admin.widgets.edit', ['id' => $row->id]) }}">
 					@endif
@@ -204,16 +209,7 @@ app('pathway')
 					{{ $row->ordering }}
 				</td>
 				<td class="priority-4">
-					<?php
-					if (substr($row->widget, 0, 4) == 'mod_')
-					{
-						echo substr($row->widget, 4);
-					}
-					else
-					{
-						echo $row->widget;
-					}
-					?>
+					{{ $row->widget }}
 				</td>
 				<td class="priority-4">
 					<?php
@@ -240,7 +236,7 @@ app('pathway')
 				<td class="priority-4">
 					<span class="badge access {{ str_replace(' ', '', strtolower($row->access_level)) }}">{{ $row->access_level }}</span>
 				</td>
-				<td class="priority-5 center">
+				<?php /*<td class="priority-5 center">
 					<?php if ($row->language == ''): ?>
 						{{ trans('global.default') }}
 					<?php elseif ($row->language == '*'): ?>
@@ -248,7 +244,7 @@ app('pathway')
 					<?php else: ?>
 						<?php echo $row->language_title ? e($row->language_title) : trans('global.undefined'); ?>
 					<?php endif; ?>
-				</td>
+				</td>*/ ?>
 			</tr>
 		@endforeach
 		</tbody>

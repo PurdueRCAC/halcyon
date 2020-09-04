@@ -241,7 +241,7 @@ app('pathway')
 
 	{!!
 		Toolbar::spacer();
-		Toolbar::cancel(route('admin.widgets.cancel'));
+		Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 	!!}
 
 	{!! Toolbar::render() !!}
@@ -252,7 +252,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.widgets.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.VALIDATION_FORM_FAILED') }}">
+<form action="{{ route('admin.widgets.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 	<div class="row">
 		<div class="col col-xs-12 col-sm-7">
 			<fieldset class="adminform">
