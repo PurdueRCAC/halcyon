@@ -35,7 +35,7 @@ $(document).ready(function() {
 	});
 	$('.searchuser').on('select2:select', function (e) {
 		var data = e.params.data;
-		window.location = "<?php echo request()->url(); ?>?id=" + data.id;
+		window.location = "<?php echo request()->url(); ?>?u=" + data.id;
 	});
 	$('.searchuser').on('select2:unselect', function (e) {
 		var data = e.params.data;
