@@ -22,7 +22,7 @@ trait Checkable
 	 **/
 	public function isCheckedOut()
 	{
-		return ($this->checked_out && $this->checked_out != auth()->user()->id);
+		return ($this->checked_out || $this->checked_out_time != null);//&& $this->checked_out != auth()->user()->id);
 	}
 
 	/**
@@ -30,7 +30,7 @@ trait Checkable
 	 *
 	 * @return  boolean
 	 **/
-	public function checkout()
+	public function checkOut()
 	{
 		if ($this->{$this->primaryKey})
 		{
@@ -69,7 +69,7 @@ trait Checkable
 	 *
 	 * @return  boolean
 	 **/
-	public function checkin()
+	public function checkIn()
 	{
 		if ($this->{$this->primaryKey})
 		{
