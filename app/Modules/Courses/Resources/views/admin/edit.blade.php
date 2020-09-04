@@ -2,6 +2,33 @@
 
 @section('scripts')
 <script src="{{ asset('modules/courses/js/admin.js?v=' . filemtime(public_path() . '/modules/courses/js/admin.js')) }}"></script>
+<script>
+$( document ).ready(function() {
+	$('.type-dependant').hide();
+	//$('.type-'+$('[name="type"]').val()).show();
+	//$('.menu-page').fadeIn();
+	$('[name="type"]')
+		.on('change', function(){
+			$('.type-dependant').hide();
+			$('.type-'+$(this).val()).show();
+
+			/*if ($(this).val() == 'separator') {
+				if (!$('#fields_title').val()) {
+					$('#fields_title').val('[ separator ]');
+				}
+			}*/
+		})
+		.each(function(i, el){
+			$('.type-'+$(el).val()).show();
+		});
+
+	$('#fields_page_id').on('change', function(e){
+		if ($('#fields_title').val() == '') {
+			$('#fields_title').val($(this).children("option:selected").text().replace(/\|\— /g, ''));
+		}
+	});
+});
+</script>
 @stop
 
 @php
@@ -40,7 +67,7 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-type">{{ trans('courses::courses.course name') }}:</label>
+					<label for="field-type">{{ trans('courses::courses.type') }}:</label>
 					<select name="type" id="field-type" class="form-control">
 						<option value="course">{{ trans('courses::courses.course') }}</option>
 						<option value="workshop">{{ trans('courses::courses.workshop') }}</option>
@@ -49,32 +76,32 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-classname">{{ trans('courses::courses.course name') }}:</label>
-					<input type="text" name="fields[classname]" id="field-classname" class="form-control" maxlength="250" value="{{ $row->classname }}" placeholder="" />
+					<input type="text" name="fields[classname]" id="field-classname" class="form-control" maxlength="250" value="{{ $row->classname }}" />
 				</div>
 
-				<div class="form-group course">
+				<div class="form-group type-course type-dependant">
 					<label for="field-semester">{{ trans('courses::courses.semester') }}:</label>
-					<input type="text" name="fields[semester]" id="field-semester" class="form-control" maxlength="250" value="{{ $row->semester }}" placeholder="" />
+					<input type="text" name="fields[semester]" id="field-semester" class="form-control" maxlength="250" value="{{ $row->semester }}" />
 				</div>
 
-				<div class="form-group course">
+				<div class="form-group type-course type-dependant">
 					<label for="field-crn">{{ trans('courses::courses.crn') }}:</label>
-					<input type="text" name="fields[crn]" id="field-crn" class="form-control" maxlength="250" value="{{ $row->crn }}" placeholder="" />
+					<input type="text" name="fields[crn]" id="field-crn" class="form-control" maxlength="250" value="{{ $row->crn }}" />
 				</div>
 
-				<div class="form-group course">
+				<div class="form-group type-course type-dependant">
 					<label for="field-coursenumber">{{ trans('courses::courses.course number') }}:</label>
-					<input type="text" name="fields[coursenumber]" id="field-coursenumber" class="form-control" maxlength="250" value="{{ $row->coursenumber }}" placeholder="" />
+					<input type="text" name="fields[coursenumber]" id="field-coursenumber" class="form-control" maxlength="250" value="{{ $row->coursenumber }}" />
 				</div>
 
-				<div class="form-group course">
+				<div class="form-group type-course type-dependant">
 					<label for="field-department">{{ trans('courses::courses.department') }}:</label>
-					<input type="text" name="fields[department]" id="field-department" class="form-control" maxlength="250" value="{{ $row->department }}" placeholder="" />
+					<input type="text" name="fields[department]" id="field-department" class="form-control" maxlength="250" value="{{ $row->department }}" />
 				</div>
 
-				<div class="form-group course">
+				<div class="form-group type-course type-dependant">
 					<label for="field-reference">{{ trans('courses::courses.reference') }}:</label>
-					<input type="text" name="fields[reference]" id="field-reference" class="form-control" maxlength="250" value="{{ $row->reference }}" placeholder="" />
+					<input type="text" name="fields[reference]" id="field-reference" class="form-control" maxlength="250" value="{{ $row->reference }}" />
 				</div>
 
 				<div class="form-group">
@@ -102,6 +129,8 @@ app('pathway')
 			</fieldset>
 		</div>
 	</div>
+
+	{!! Html::input('hidden', 'id', $row->id) !!}
 
 	@csrf
 </form>

@@ -3,6 +3,8 @@ return [
 	'module name' => 'Course Manager',
 
 	// Columns
+	'course' => 'Course',
+	'workshop' => 'Workshop',
 	'id' => 'ID',
 	'course name' => 'Name',
 	'department' => 'Department',
