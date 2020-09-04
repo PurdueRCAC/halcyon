@@ -63,7 +63,10 @@ class ArticlesController extends Controller
 	 */
 	public function rss()
 	{
-		$types = Type::query()->orderBy('name', 'asc')->get();
+		$types = Type::query()
+			->where('name', 'NOT LIKE', 'coffee%')
+			->orderBy('name', 'asc')
+			->get();
 
 		app('pathway')
 			->append(

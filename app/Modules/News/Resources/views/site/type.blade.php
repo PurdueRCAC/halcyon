@@ -64,9 +64,6 @@
 	@endif
 
 	<h2>
-		<a class="icn tip" href="{{ route('site.news.feed', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}">
-			<i class="fa fa-rss-square" aria-hidden="true"></i> {{ trans('news::news.rss feed') }}
-		</a>
 		{{ $type->name }}
 	</h2>
 
@@ -74,11 +71,14 @@
 			</div>
 			<div class="col-md-4 text-right">
 				<div class="btn-group" role="group" aria-label="Calendar options">
-					<a target="_blank" class="btn btn-default btn-secondary calendar calendar-subscribe tip" href="{{ preg_replace('/^https?:\/\//', 'webcal://', route('site.news.calendar', ['name' => strtolower($type->name)])) }}" title="Subscribe to calendar"><!--
-						--><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Subscribe<!--
+					<a class="btn btn-default tip" href="{{ route('site.news.feed', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}">
+						<i class="fa fa-rss-square" aria-hidden="true"></i><span class="sr-only">{{ trans('news::news.rss feed') }}</span>
+					</a>
+					<a target="_blank" class="btn btn-default calendar calendar-subscribe tip" href="{{ preg_replace('/^https?:\/\//', 'webcal://', route('site.news.calendar', ['name' => strtolower($type->name)])) }}" title="Subscribe to calendar"><!--
+						--><i class="fa fa-fw fa-calendar" aria-hidden="true"></i><span class="sr-only">Subscribe</span><!--
 					--></a>
-					<a target="_blank" class="btn btn-default btn-secondary calendar calendar-download tip" href="{{ route('site.news.calendar', ['name' => strtolower($type->name)]) }}" title="Download calendar"><!--
-						--><i class="fa fa-fw fa-download" aria-hidden="true"></i> Download<!--
+					<a target="_blank" class="btn btn-default calendar calendar-download tip" href="{{ route('site.news.calendar', ['name' => strtolower($type->name)]) }}" title="Download calendar"><!--
+						--><i class="fa fa-fw fa-download" aria-hidden="true"></i><span class="sr-only">Download</span><!--
 					--></a>
 				</div>
 			</div>
