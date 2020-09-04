@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Core\Providers;
 
+use App\Modules\Core\Http\Middleware\PublicPath;
 use Illuminate\Support\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -36,6 +37,10 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerViews();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		// adding global middleware
+		$kernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
+		$kernel->pushMiddleware(PublicPath::class);
 	}
 
 	/**
