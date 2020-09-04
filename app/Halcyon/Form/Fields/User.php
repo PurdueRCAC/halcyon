@@ -9,8 +9,7 @@ namespace App\Halcyon\Form\Fields;
 
 use App\Halcyon\Form\Field;
 use App\Modules\Users\Models\User as UserModel;
-use App\Halcyon\Html\Builder\Behavior;
-use App;
+//use App\Halcyon\Html\Builder\Behavior;
 
 /**
  * Field to select a user id from a modal list.
@@ -40,18 +39,18 @@ class User extends Field
 			. (isset($excluded) ? ('&amp;excluded=' . base64_encode(json_encode($excluded))) : '');
 
 		// Initialize some field attributes.
-		$attr  = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
+		$attr  = 'class="form-control' . ($this->element['class'] ? ' ' . (string) $this->element['class'] : '') . '"';
 		$attr .= $this->element['size'] ? ' size="' . (int) $this->element['size'] . '"' : '';
 
 		// Initialize JavaScript field attributes.
 		$onchange = (string) $this->element['onchange'];
 
 		// Load the modal behavior script.
-		Behavior::modal('a.modal_' . $this->id);
+		//Behavior::modal('a.modal_' . $this->id);
 
 		// Build the script.
 		$script = array();
-		$script[] = '	function jSelectUser_' . $this->id . '(id, title) {';
+		$script[] = '	function SelectUser_' . $this->id . '(id, title) {';
 		$script[] = '		var old_id = document.getElementById("' . $this->id . '_id").value;';
 		$script[] = '		if (old_id != id) {';
 		$script[] = '			document.getElementById("' . $this->id . '_id").value = id;';
@@ -62,35 +61,30 @@ class User extends Field
 		$script[] = '	}';
 
 		// Add the script to the document head.
-		app('document')->addScriptDeclaration(implode("\n", $script));
+		//app('document')->addScriptDeclaration(implode("\n", $script));
 
 		// Load the current username if available.
+		$name = '';
 		if ($this->value)
 		{
-			$model = UserModel::oneOrNew($this->value);
-		}
-		else
-		{
-			$model = UserModel::blank();
-			$model->set('name', trans('JLIB_FORM_SELECT_USER'));
+			$model = UserModel::find($this->value);
+			$name = $model ? $model->name : '';
 		}
 
 		// Create a dummy text field with the user name.
-		//$html[] = '<div class="fltlft">';
 		if ($this->element['readonly'] != 'true')
 		{
-			$html[] = '<div class="input-modal">';
-			$html[] = '<span class="input-cell">';
+			$html[] = '<span class="input-group">';
 		}
-		$html[] = '	<input type="text" id="' . $this->id . '_name"' . ' value="' . htmlspecialchars($model->get('name'), ENT_COMPAT, 'UTF-8') . '" disabled="disabled"' . $attr . ' />';
+		$html[] = '	<input type="text" id="' . $this->id . '_name" placeholder="' . trans('JLIB_FORM_SELECT_USER') . '" value="' . htmlspecialchars($name, ENT_COMPAT, 'UTF-8') . '" disabled="disabled"' . $attr . ' />';
 
 		// Create the user select button.
 		if ($this->element['readonly'] != 'true')
 		{
-			$html[] = '</span><span class="input-cell">';
-			$html[] = '		<a class="button modal_' . $this->id . '" title="' . trans('JLIB_FORM_CHANGE_USER') . '"' . ' href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 500}}">';
-			$html[] = '			' . trans('JLIB_FORM_CHANGE_USER') . '</a>';
-			$html[] = '</span></div>';
+			$html[] = '<span class="input-group-append">';
+			$html[] = '		<a class="btn modal_' . $this->id . '" title="' . trans('JLIB_FORM_CHANGE_USER') . '"' . ' href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 500}}"><span class="input-group-text icon-user"></span>' . trans('JLIB_FORM_CHANGE_USER') . '</a>';
+			$html[] = '</span>';
+			$html[] = '</span>';
 		}
 
 		// Create the real field, hidden, that stored the user id.
