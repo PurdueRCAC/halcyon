@@ -169,8 +169,8 @@
 						<div class="logo col-lg-2 col-md-3 col-sm-3 col-xs-12">
 							<h1 class="sr-only">Purdue University</h1>
 							<a class="svgLinkContainer" href="https://www.purdue.edu">
-								<object class="svgContainer" data="https://www.purdue.edu/purdue/images/PU-H.svg" type="image/svg+xml">
-									<img alt="Purdue University" src="https://www.purdue.edu/purdue/images/PU-H.png" />
+								<object class="svgContainer" data="{{ asset('themes/Rcac/images/PU-H.svg') }}" type="image/svg+xml">
+									<img alt="Purdue University" src="{{ asset('themes/Rcac/images/PU-H.svg') }}" />
 								</object>
 							</a>
 						</div>
