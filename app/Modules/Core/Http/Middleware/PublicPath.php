@@ -21,12 +21,15 @@ class PublicPath
 		//$dupRequest = $request->duplicate();
 
 		//get the language part
-		$first = $request->segment(1);
+		//$first = $request->segment(1);
+		$s = trim($request->server->get('REQUEST_URI'), '/');
+		$f = explode('/', $s);
+		$first = array_shift($f);
 
 		if ($first == 'public')
 		{
 			// Remove the part from the URI
-			$newpath = substr($request->path(), strlen($first . '/'));
+			$newpath = '/' . substr(ltrim($s, '/'), strlen($first . '/'));
 
 			//set the new URI
 			$request->server->set('REQUEST_URI', $newpath);
