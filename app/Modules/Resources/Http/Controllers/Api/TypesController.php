@@ -129,7 +129,8 @@ class TypesController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'name' => 'required|string|max:20'
+			'name' => 'required|string|max:20',
+			'description' => 'nullable|string|max:1000'
 		]);
 
 		$row = Type::create($request->all());
@@ -211,7 +212,8 @@ class TypesController extends Controller
 	public function update($id, Request $request)
 	{
 		$request->validate([
-			'name' => 'required|string|max:20'
+			'name' => 'required|string|max:20',
+			'description' => 'nullable|string|max:1000'
 		]);
 
 		$row = Type::findOrFail($id);

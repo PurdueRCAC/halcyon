@@ -120,6 +120,7 @@ class TypesController extends Controller
 
 		$row = $id ? Type::findOrFail($id) : new Type();
 		$row->name = $request->input('fields.name');
+		$row->description = $request->input('fields.description');
 
 		if (!$row->save())
 		{

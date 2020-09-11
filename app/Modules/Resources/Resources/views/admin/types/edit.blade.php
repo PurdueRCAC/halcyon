@@ -45,6 +45,11 @@ app('pathway')
 					<label for="field-name">{{ trans('resources::assets.FIELD_NAME') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control required" maxlength="20" value="{{ $row->name }}" />
 				</div>
+
+				<div class="form-group">
+					<label for="field-description">{{ trans('resources::assets.description') }}:</label>
+					<textarea name="fields[description]" id="field-description" rows="5" cols="45" class="form-control">{{ $row->description }}</textarea>
+				</div>
 			</fieldset>
 		</div>
 		<div class="col col-md-5 span5">
