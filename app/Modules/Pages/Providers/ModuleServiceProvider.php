@@ -30,15 +30,15 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		Blade::directive('file', function ($expression)
+		/*Blade::directive('file', function ($expression)
 		{
-			return "<?php echo asset($expression); ?>";
+			return "<?php echo asset('files/' . $expression); ?>";
 		});
 
 		Blade::directive('filesize', function ($expression)
 		{
 			return "<?php echo App\Halcyon\Utility\Number::formatBytes(filesize(storage_path($expression))); ?>";
-		});
+		});*/
 
 		$this->registerTranslations();
 		$this->registerConfig();

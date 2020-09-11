@@ -387,7 +387,7 @@ class Page extends Model
 				$path = strtolower(trim($match[1]));
 				$path = trim($path, '"\'');
 
-				$text = \asset('storage/' . $path);
+				$text = \asset('files/' . $path);
 
 				$content = str_replace($match[0], $text, $content);
 			}
