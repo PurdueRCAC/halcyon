@@ -494,7 +494,7 @@ class WidgetsController extends Controller
 			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
-		return $this->cancel();
+		return $this->cancel($request);
 	}
 
 	/**
@@ -542,7 +542,7 @@ class WidgetsController extends Controller
 		}
 
 		// Redirect back to the listing
-		return $this->cancel();
+		return $this->cancel($request);
 	}
 
 	/**
@@ -579,7 +579,7 @@ class WidgetsController extends Controller
 		}
 
 		// Redirect back to the listing
-		return $this->cancel();
+		return $this->cancel($request);
 	}
 
 	/**
@@ -612,7 +612,7 @@ class WidgetsController extends Controller
 		}
 
 		// Redirect back to the listing
-		return $this->cancel();
+		return $this->cancel($request);
 	}
 
 	/**
@@ -651,7 +651,7 @@ class WidgetsController extends Controller
 		{
 			$ids = is_array($ids) ?: array($ids);
 
-			foreach ($ids as $id)
+			foreach ((array)$ids as $id)
 			{
 				$model = Widget::find((int)$id);
 
