@@ -12,7 +12,7 @@ class ReportResourceCollection extends ResourceCollection
 	 * @param   \Illuminate\Http\Request  $request
 	 * @return  array
 	 */
-	public function toArray($request)
+	/*public function toArray($request)
 	{
 		$user = auth()->user();
 
@@ -21,7 +21,7 @@ class ReportResourceCollection extends ResourceCollection
 			$item->setAttribute('api', route('api.contactreports.read', ['id' => $item->id]));
 			$item->setAttribute('url', route('site.contactreports.show', ['id' => $item->id]));
 			//$row->formatteddate = $row->formatDate($row->getOriginal('datetimenews'), $row->getOriginal('datetimenewsend'));
-			$item->setAttribute('formattedreport', $item->formattedReport());
+			$item->setAttribute('formattedreport', $item->formattedReport);
 			$item->setAttribute('comments', $item->comments);
 			$item->setAttribute('users', $item->users);
 			$item->setAttribute('resources', $item->resources);
@@ -42,5 +42,5 @@ class ReportResourceCollection extends ResourceCollection
 		});
 
 		return parent::toArray($request);
-	}
+	}*/
 }

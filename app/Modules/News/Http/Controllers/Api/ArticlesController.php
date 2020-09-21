@@ -47,7 +47,14 @@ class ArticlesController extends Controller
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -73,7 +80,14 @@ class ArticlesController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "desc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -317,12 +331,13 @@ class ArticlesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/news/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param  integer  $id
 	 * @return Response
@@ -340,12 +355,13 @@ class ArticlesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/news/{id}/views
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param  integer  $id
 	 * @return Response
@@ -370,12 +386,13 @@ class ArticlesController extends Controller
 	 * @apiUri    /api/news/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -428,12 +445,13 @@ class ArticlesController extends Controller
 	 * @apiUri    /api/news/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response

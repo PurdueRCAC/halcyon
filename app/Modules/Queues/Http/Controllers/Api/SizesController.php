@@ -28,7 +28,10 @@ class SizesController extends Controller
 	 * 		"description":   "Number of result to return.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "page",
@@ -58,7 +61,14 @@ class SizesController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "desc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return  Response
@@ -217,11 +227,13 @@ class SizesController extends Controller
 	 * @apiUri    /api/queues/sizes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response
@@ -240,11 +252,13 @@ class SizesController extends Controller
 	 * @apiUri    /api/queues/sizes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 *      "name":          "name",
@@ -285,11 +299,13 @@ class SizesController extends Controller
 	 * @apiUri    /api/queues/sizes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response

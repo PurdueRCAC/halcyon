@@ -28,59 +28,77 @@ class AccountsController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "userid",
 	 * 		"description":   "Owner user ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "groupid",
 	 * 		"description":   "Group ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "resourceid",
 	 * 		"description":   "Resource ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "deptnumber",
 	 * 		"description":   "Organization department ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "name",
-	 * 		"allowedValues": "id, name, owneruserid, unixgroup, unixid, deptnumber"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "name",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"owneruserid",
+	 * 				"unixgroup",
+	 * 				"unixid",
+	 * 				"deptnumber"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order_dir",
@@ -88,7 +106,14 @@ class AccountsController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "asc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -159,46 +184,51 @@ class AccountsController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /courses
 	 * @apiParameter {
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
-	 * 		"required":      true,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Group name",
-	 * 		"type":          "string",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "unixgroup",
 	 * 		"description":   "Unix group name",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "unixid",
 	 * 		"description":   "Unix ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "deptnumber",
 	 * 		"description":   "Organization department ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "githuborgname",
 	 * 		"description":   "Github organization name",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -318,13 +348,16 @@ class AccountsController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /courses/{id}
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
-	 * @return Response
+	 * @param   integer $id
+	 * @return AccountResource
 	 */
 	public function read($id)
 	{
@@ -339,63 +372,83 @@ class AccountsController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /courses/{id}
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Group name",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "unixgroup",
 	 * 		"description":   "Unix group name",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "unixid",
 	 * 		"description":   "Unix ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "department",
 	 * 		"description":   "Class department",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "classname",
 	 * 		"description":   "Name of the class",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "datetimestart",
 	 * 		"description":   "Datetime (YYYY-MM-DD hh:mm:ss) the class starts",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "datetimestop",
 	 * 		"description":   "Datetime (YYYY-MM-DD hh:mm:ss) the class stops",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time"
+	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @return  Response
+	 * @param   integer $id
+	 * @return  AccountResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -433,12 +486,15 @@ class AccountsController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /courses/{id}
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
+	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function delete($id)

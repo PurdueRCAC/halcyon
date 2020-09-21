@@ -14,9 +14,12 @@ class CommentResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
+		//$this->makeHidden('report');
+
 		$data = parent::toArray($request);
 
-		$data['formattedcomment'] = $this->formattedComment();
+		$data['formatteddate'] = $this->formattedDate;
+		$data['formattedcomment'] = $this->formattedComment;
 
 		$data['api'] = route('api.contactreports.read', ['id' => $this->id]);
 		$data['url'] = route('site.contactreports.show', ['id' => $this->contactreportid]);

@@ -27,7 +27,7 @@ class CategoriesController extends Controller
 	 * 		"description":   "Order category state.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "published"
+	 * 		"default":       "published",
 	 * 		"allowedValues": "all, published, trashed"
 	 * }
 	 * @apiParameter {
@@ -50,7 +50,10 @@ class CategoriesController extends Controller
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "page",
@@ -73,7 +76,14 @@ class CategoriesController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "asc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @param  Request $request
 	 * @return CategoryResourcEcollection
@@ -219,11 +229,13 @@ class CategoriesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/orders/categories/{id}
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param  integer $id
 	 * @return CategoryResource
@@ -240,6 +252,15 @@ class CategoriesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/orders/categories/{id}
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
 	 * @apiParameter {
 	 * 		"name":          "name",
 	 * 		"description":   "Category name.",
@@ -315,12 +336,13 @@ class CategoriesController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /api/orders/categories/{id}
 	 * @apiParameter {
-	 * 		"id":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response

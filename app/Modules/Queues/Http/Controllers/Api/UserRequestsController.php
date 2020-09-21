@@ -33,7 +33,10 @@ class UserRequestsController extends Controller
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "page",
@@ -91,7 +94,14 @@ class UserRequestsController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "asc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -350,11 +360,13 @@ class UserRequestsController extends Controller
 	 * @apiUri    /api/queues/requests/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param  integer  $id
 	 * @return Response
@@ -373,11 +385,13 @@ class UserRequestsController extends Controller
 	 * @apiUri    /api/queues/requests/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "name",
@@ -475,11 +489,13 @@ class UserRequestsController extends Controller
 	 * @apiUri    /api/queues/requests/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response

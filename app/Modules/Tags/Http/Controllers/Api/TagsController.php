@@ -27,7 +27,10 @@ class TagsController extends Controller
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -43,7 +46,7 @@ class TagsController extends Controller
 	 * 		"description":   "Tag state.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "active"
+	 * 		"default":       "active",
 	 * 		"allowedValues": "active, trashed"
 	 * }
 	 * @apiParameter {
@@ -70,7 +73,14 @@ class TagsController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "asc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -174,12 +184,13 @@ class TagsController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/tags/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -196,12 +207,13 @@ class TagsController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /api/tags/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -271,12 +283,13 @@ class TagsController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /api/tags/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */

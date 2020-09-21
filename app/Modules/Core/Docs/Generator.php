@@ -320,12 +320,17 @@ class Generator
 				// json decode param input
 				if ($name == 'parameter')
 				{
-					$parameter = json_decode($content);
+					$parameter = json_decode($content, true);
 
 					if (json_last_error() != JSON_ERROR_NONE)
 					{
 						$this->output['errors'][] = sprintf('Unable to parse parameter info for method "%s" in "%s"', $method->getName(), $file);
 						continue;
+					}
+
+					if (!isset($parameter['schema']))
+					{
+						$parameter['schema'] = array('type' => 'string');
 					}
 
 					$endpoint['parameters'][] = (array) $parameter;

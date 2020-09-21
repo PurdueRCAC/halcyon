@@ -152,12 +152,13 @@ class TypesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/resources/types/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       null
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiResponse {
 	 *     "data": {
@@ -184,12 +185,13 @@ class TypesController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /api/resources/types/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -235,12 +237,13 @@ class TypesController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /api/resources/types/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       null
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */

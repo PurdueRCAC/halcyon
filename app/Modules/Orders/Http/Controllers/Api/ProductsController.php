@@ -30,7 +30,7 @@ class ProductsController extends Controller
 	 * 		"description":   "Order category state.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "published"
+	 * 		"default":       "published",
 	 * 		"allowedValues": "all, published, trashed"
 	 * }
 	 * @apiParameter {
@@ -55,7 +55,10 @@ class ProductsController extends Controller
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -81,7 +84,14 @@ class ProductsController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "asc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @param  Request $request
 	 * @return ProductResourcEcollection
@@ -323,12 +333,13 @@ class ProductsController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/orders/products/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param  integer $id
 	 * @return ProductResource
@@ -346,12 +357,13 @@ class ProductsController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /api/orders/products/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -503,12 +515,13 @@ class ProductsController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /api/orders/products/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response

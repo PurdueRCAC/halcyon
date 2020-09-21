@@ -532,7 +532,7 @@ Halcyon.removeClass = function(el, className) {
 															<th scope="col">{{ trans('core::docs.type') }}</th>
 															<th scope="col">{{ trans('core::docs.default') }}</th>
 															<th scope="col">{{ trans('core::docs.description') }}</th>
-															<!-- <th scope="col">{{ trans('core::docs.accepted values') }}</th>-->
+															<th scope="col">{{ trans('core::docs.accepted values') }}</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -547,12 +547,12 @@ Halcyon.removeClass = function(el, className) {
 																	@endif
 																</td>
 																<td>
-																	@if (isset($param['type']) && $param['type'])
-																		<span class="docs-api-tag docs-api-param-type">{{ $param['type'] }}</span>
+																	@if (isset($param['schema']['type']) && $param['schema']['type'])
+																		<span class="docs-api-tag docs-api-param-type">{{ $param['schema']['type'] }}</span>
 																	@endif
 																</td>
 																<td>
-																	<code class="nohighlight">{{ (!is_null($param['default'])) ? $param['default'] : 'null' }}</code>
+																	<code class="nohighlight">{{ (isset($param['schema']['default']) && !is_null($param['schema']['default'])) ? $param['schema']['default'] : 'null' }}</code>
 																</td>
 																<td>
 																	@if ($param['required'])
@@ -560,11 +560,11 @@ Halcyon.removeClass = function(el, className) {
 																	@endif
 																	{{ $param['description'] }}
 																</td>
-																<!-- <td>
-																	@if (isset($param['allowedValues']))
-																		<code class="nohighlight">{{ $param['allowedValues'] }}</code>
+																<td>
+																	@if (isset($param['schema']['enum']))
+																		<code class="nohighlight">{!! implode('</code>, <code class="nohighlight">', $param['schema']['enum']) !!}</code>
 																	@endif
-																</td> -->
+																</td>
 															</tr>
 														@endforeach
 													</tbody>
@@ -584,7 +584,30 @@ Halcyon.removeClass = function(el, className) {
 										</div>
 									</div>
 									<div class="response-container">
-										<pre><code class="language-json">{{ json_encode($endpoint['response'], JSON_PRETTY_PRINT) }}</code></pre>
+										<table class="table">
+											<caption class="sr-only">{{ trans('core::docs.response codes') }}</caption>
+											<thead>
+												<tr>
+													<th scope="col">{{ trans('core::docs.code') }}</th>
+													<th scope="col">{{ trans('core::docs.description') }}</th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach ($endpoint['response'] as $code => $response)
+													<tr>
+														<td>
+															<code><span class="docs-api-param-name">{{ $code }}</span></code>
+														</td>
+														<td>
+															{{ isset($response->description) ? $response->description : '' }}
+														</td>
+													</tr>
+												@endforeach
+											</tbody>
+										</table>
+										@if (isset($endpoint['example']))
+											<pre><code class="language-json">{{ json_encode($endpoint['response'], JSON_PRETTY_PRINT) }}</code></pre>
+										@endif
 									</div>
 								</div>
 								@endif

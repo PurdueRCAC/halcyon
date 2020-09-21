@@ -29,7 +29,10 @@ class DirectoriesController extends Controller
 	 * 		"description":   "Number of result to return.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "page",
@@ -59,7 +62,14 @@ class DirectoriesController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "desc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -492,11 +502,13 @@ class DirectoriesController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /api/storage/directories/{id}
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */
@@ -513,11 +525,13 @@ class DirectoriesController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /api/storage/directories/{id}
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 *      "name":          "name",
@@ -808,11 +822,13 @@ class DirectoriesController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /api/storage/directories/{id}
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */

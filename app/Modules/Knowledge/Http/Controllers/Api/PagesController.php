@@ -261,10 +261,21 @@ class PagesController extends Controller
 	}
 
 	/**
-	 * Retrieve a specified entry
+	 * Retrieve an entry
 	 *
-	 * @param   Request $request
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/knowledge/{id}
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @param  integer $id
+	 * @return Response
 	 */
 	public function read($id)
 	{
@@ -274,9 +285,30 @@ class PagesController extends Controller
 	}
 
 	/**
-	 * Report the specified entry
+	 * Update an entry
 	 *
+	 * @apiMethod PUT
+	 * @apiUri    /api/knowledge/{id}
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "name",
+	 * 		"description":   "Group name",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
 	 * @param   Request $request
+	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -486,9 +518,21 @@ class PagesController extends Controller
 	}
 
 	/**
-	 * Remove the specified entry
+	 * Retrieve an entry
 	 *
-	 * @return  Response
+	 * @apiMethod DELETE
+	 * @apiUri    /api/knowledge/{id}
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @param  integer $id
+	 * @return Response
 	 */
 	public function delete($id)
 	{

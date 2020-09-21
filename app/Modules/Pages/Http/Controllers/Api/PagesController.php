@@ -25,60 +25,87 @@ class PagesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
 	 * 		"description":   "Article state.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "published",
-	 * 		"allowedValues": "published, unpublished, trashed"
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   "published",
+	 * 			"enum": [
+	 * 				"published",
+	 * 				"unpublished",
+	 * 				"trashed"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "access",
 	 * 		"description":   "Article access value.",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       1,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		},
+	 * 		"required":      false
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null
+	 * 		},
+	 * 		"required":      false
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "name",
-	 * 		"allowedValues": "id, title, alias, created_at, updated_at"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "title",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"title",
+	 * 				"alias",
+	 * 				"created_at",
+	 * 				"updated_at",
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "asc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -184,75 +211,92 @@ class PagesController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "title",
 	 * 		"description":   "Title",
-	 * 		"type":          "string",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "slug",
 	 * 		"description":   "URL slug",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "content",
 	 * 		"description":   "Content",
-	 * 		"type":          "string",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "state",
 	 * 		"description":   "Published state",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
-	 * 		"allowedValues": "0, 1"
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "access",
 	 * 		"description":   "Access level",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
-	 * 		"allowedValues": "1, 2, ..."
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				1,
+	 * 				2
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "publish_up",
 	 * 		"description":   "Start publishing (defaults to created time)",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "publish_down",
 	 * 		"description":   "Stop publishing",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "parent_id",
 	 * 		"description":   "Parent page ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "publish_up",
 	 * 		"description":   "Start publishing (defaults to created time)",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @param  Request $request
 	 * @return Response
@@ -286,9 +330,10 @@ class PagesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param  integer $id
 	 * @return Response
@@ -329,83 +374,101 @@ class PagesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "title",
 	 * 		"description":   "Title",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "slug",
 	 * 		"description":   "URL slug",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "content",
 	 * 		"description":   "Content",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "state",
 	 * 		"description":   "Published state",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
-	 * 		"allowedValues": "0, 1"
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "access",
 	 * 		"description":   "Access level",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
-	 * 		"allowedValues": "1, 2, ..."
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				1,
+	 * 				2
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "publish_up",
 	 * 		"description":   "Start publishing (defaults to created time)",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "publish_down",
 	 * 		"description":   "Stop publishing",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "parent_id",
 	 * 		"description":   "Parent page ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "publish_up",
 	 * 		"description":   "Start publishing (defaults to created time)",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @param  Request $request
 	 * @param  integer $id
@@ -452,9 +515,10 @@ class PagesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer $id
 	 * @return  Response

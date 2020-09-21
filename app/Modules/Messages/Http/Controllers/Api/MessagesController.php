@@ -28,7 +28,7 @@ class MessagesController extends Controller
 	 * 		"description":   "Message state",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "pending"
+	 * 		"default":       "pending",
 	 * 		"allowedValues": "pending, complete, incomplete"
 	 * }
 	 * @apiParameter {
@@ -87,7 +87,14 @@ class MessagesController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "asc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @param  Request $request
 	 * @return Response
@@ -250,11 +257,13 @@ class MessagesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/messages/{id}
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param  integer $id
 	 * @return Response
@@ -272,11 +281,13 @@ class MessagesController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /api/messages/{id}
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "userid",
@@ -362,7 +373,7 @@ class MessagesController extends Controller
 	 * 		"description":   "Number of minutes to retry in",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null,
+	 * 		"default":       null
 	 * }
 	 * @param  Request $request
 	 * @param  integer $id
@@ -428,11 +439,13 @@ class MessagesController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /api/messages/{id}
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer $id
 	 * @return  Response

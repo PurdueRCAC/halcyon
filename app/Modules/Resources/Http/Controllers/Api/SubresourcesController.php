@@ -28,7 +28,10 @@ class SubresourcesController extends Controller
 	 * 		"description":   "Number of result to return.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -62,7 +65,14 @@ class SubresourcesController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "desc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -230,12 +240,13 @@ class SubresourcesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/resources/subresources/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */
@@ -252,12 +263,13 @@ class SubresourcesController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /api/resources/subresources/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       null
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -381,12 +393,13 @@ class SubresourcesController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /api/resources/subresources/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       null
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */

@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Comment;
 use App\Modules\ContactReports\Http\Resources\CommentResource;
+use App\Modules\ContactReports\Http\Resources\CommentResourceCollection;
 use Carbon\Carbon;
 
 /**
@@ -43,7 +44,10 @@ class CommentsController extends Controller
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -69,7 +73,14 @@ class CommentsController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "desc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -119,7 +130,7 @@ class CommentsController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit']);
 
-		$rows->each(function ($item, $key)
+		/*$rows->each(function ($item, $key)
 		{
 			$item->url = route('site.contactreports.show', ['id' => $item->contactreportid]);
 			//$item->formatteddate = $item->formatDate($item->getOriginal('datetimenews'), $item->getOriginal('datetimenewsend'));
@@ -138,9 +149,9 @@ class CommentsController extends Controller
 					$item->canDelete = true;
 				}
 			}
-		});
+		});*/
 
-		return $rows;
+		return new CommentResourceCollection($rows);
 	}
 
 	/**
@@ -211,12 +222,13 @@ class CommentsController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/contactreports/comments/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param  integer  $id
 	 * @return Response
@@ -235,12 +247,13 @@ class CommentsController extends Controller
 	 * @apiUri    /api/contactreports/comments/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -322,12 +335,13 @@ class CommentsController extends Controller
 	 * @apiUri    /api/contactreports/delete/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response

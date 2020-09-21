@@ -26,7 +26,10 @@ class NotificationTypesController extends Controller
 	 * 		"description":   "Number of result to return.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "page",
@@ -56,7 +59,14 @@ class NotificationTypesController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "desc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -125,11 +135,13 @@ class NotificationTypesController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /storage/notifications/types/{id}
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */
@@ -146,11 +158,13 @@ class NotificationTypesController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /storage/notifications/types/{id}
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 *      "name":          "name",
@@ -199,11 +213,13 @@ class NotificationTypesController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /storage/notifications/types/{id}
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */

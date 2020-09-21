@@ -1,5 +1,7 @@
 <?php
 return [
+	'api title' => ':title API',
+	'api server' => 'Production server',
 	'parameters' => 'Parameters',
 	'name' => 'Name',
 	'type' => 'Type',

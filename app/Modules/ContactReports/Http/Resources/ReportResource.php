@@ -16,7 +16,8 @@ class ReportResource extends JsonResource
 	{
 		$data = parent::toArray($request);
 
-		$data['formattedreport'] = $this->formattedReport();
+		$data['formatteddate'] = $this->formatDate($this->datetimecreated->toDateTimeString());
+		$data['formattedreport'] = $this->formattedReport;
 		$data['comments'] = $this->comments;
 		$data['users'] = $this->users;
 		$data['resources'] = $this->resources;

@@ -23,48 +23,75 @@ class MotdController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/groups/motd
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "group_id",
 	 * 		"description":   "Group ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"motd",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "desc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -118,13 +145,7 @@ class MotdController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /api/groups/motd
 	 * @apiParameter {
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
-	 * 		"required":      true,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "message",
 	 * 		"description":   "Message of the day",
 	 * 		"type":          "string",
@@ -132,7 +153,8 @@ class MotdController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "group_id",
+	 * 		"in":            "body",
+	 * 		"name":          "groupid",
 	 * 		"description":   "Group ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
@@ -183,11 +205,13 @@ class MotdController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/groups/motd/{id}
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -205,13 +229,16 @@ class MotdController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /api/groups/motd/{id}
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "message",
 	 * 		"description":   "Message of the day",
 	 * 		"type":          "string",
@@ -219,6 +246,7 @@ class MotdController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "group_id",
 	 * 		"description":   "Group ID",
 	 * 		"type":          "integer",
@@ -265,11 +293,13 @@ class MotdController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /api/groups/motd/{id}
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */

@@ -28,7 +28,7 @@ class OrdersController extends Controller
 	 * 		"description":   "Order state.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "active"
+	 * 		"default":       "active",
 	 * 		"allowedValues": "active [pending_payment, pending_boassignment, pending_collection, pending_approval, pending_fulfillment], canceled, complete"
 	 * }
 	 * @apiParameter {
@@ -43,7 +43,7 @@ class OrdersController extends Controller
 	 * 		"description":   "Orders created on or after this datetime.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"default":       "",
 	 * 		"allowedValues": "YYYY-MM-DD HH:mm:ss"
 	 * }
 	 * @apiParameter {
@@ -51,7 +51,7 @@ class OrdersController extends Controller
 	 * 		"description":   "Orders created before this datetime.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"default":       "",
 	 * 		"allowedValues": "YYYY-MM-DD HH:mm:ss"
 	 * }
 	 * @apiParameter {
@@ -66,7 +66,10 @@ class OrdersController extends Controller
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "page",
@@ -89,7 +92,14 @@ class OrdersController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "asc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiResponse {
 	 *     "current_page": 1,
@@ -318,11 +328,13 @@ class OrdersController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/orders/{id}
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -348,11 +360,13 @@ class OrdersController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /api/orders/{id}
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
-	 * 		"description":   "Tag entry identifier",
-	 * 		"type":          "integer",
+	 * 		"description":   "Entry identifier",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "name",
@@ -409,11 +423,13 @@ class OrdersController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /api/orders/{id}
 	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "id",
-	 * 		"description":   "Tag entry identifier",
-	 * 		"type":          "integer",
+	 * 		"description":   "Entry identifier",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */

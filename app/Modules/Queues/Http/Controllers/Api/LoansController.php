@@ -29,7 +29,10 @@ class LoansController extends Controller
 	 * 		"description":   "Number of result to return.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -63,7 +66,14 @@ class LoansController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "desc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -263,12 +273,13 @@ class LoansController extends Controller
 	 * @apiUri    /api/queues/loans/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */
@@ -286,12 +297,13 @@ class LoansController extends Controller
 	 * @apiUri    /api/queues/loans/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -371,12 +383,13 @@ class LoansController extends Controller
 	 * @apiUri    /api/queues/loans/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */

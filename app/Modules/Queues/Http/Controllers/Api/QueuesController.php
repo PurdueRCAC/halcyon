@@ -33,7 +33,10 @@ class QueuesController extends Controller
 	 * 		"description":   "Number of result to return.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -67,7 +70,14 @@ class QueuesController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "desc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -219,12 +229,13 @@ class QueuesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/queues/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response
@@ -242,12 +253,13 @@ class QueuesController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /api/queues/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -294,12 +306,13 @@ class QueuesController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /api/queues/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response

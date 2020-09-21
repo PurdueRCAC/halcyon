@@ -117,7 +117,7 @@ class Comment extends Model
 	 *
 	 * @return  string
 	 */
-	public function formattedDatetimecreated()
+	public function getFormattedDateAttribute()
 	{
 		$startdate = $this->getOriginal('datetimecreated');
 		$enddate = '0000-00-00 00:00:00';
@@ -190,7 +190,7 @@ class Comment extends Model
 	 *
 	 * @return string
 	 */
-	public function formattedComment()
+	public function getFormattedCommentAttribute()
 	{
 		$text = $this->comment;
 

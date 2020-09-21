@@ -12,7 +12,7 @@ class CommentResourceCollection extends ResourceCollection
 	 * @param   \Illuminate\Http\Request  $request
 	 * @return  array
 	 */
-	public function toArray($request)
+	/*public function toArray($request)
 	{
 		$user = auth()->user();
 
@@ -37,5 +37,5 @@ class CommentResourceCollection extends ResourceCollection
 		});
 
 		return parent::toArray($request);
-	}
+	}*/
 }

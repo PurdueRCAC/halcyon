@@ -21,43 +21,12 @@ class UpdatesController extends Controller
 	 * @apiUri    /api/news/updates
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "tagresources",
-	 * 		"description":   "Filter by types that allow articles to tag resources",
-	 * 		"type":          "integer",
+	 * 		"name":          "newsid",
+	 * 		"description":   "Filter by news article ID",
 	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "location",
-	 * 		"description":   "Filter by types that allow articles to set location",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "location",
-	 * 		"description":   "Filter by types that allow articles to set location",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "future",
-	 * 		"description":   "Filter by types that allow articles to set future",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "ongoing",
-	 * 		"description":   "Filter by types that allow articles to set ongoing",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -65,7 +34,9 @@ class UpdatesController extends Controller
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -73,7 +44,10 @@ class UpdatesController extends Controller
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       25
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -99,7 +73,14 @@ class UpdatesController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "desc",
-	 * 		"allowedValues": "asc, desc"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -161,35 +142,22 @@ class UpdatesController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "comment",
-	 * 		"description":   "The comment being made",
-	 * 		"type":          "string",
+	 * 		"name":          "body",
+	 * 		"description":   "The update being made",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "The name of the type",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "tagresources",
-	 * 		"description":   "Allow articles to tag resources",
-	 * 		"type":          "boolean",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "url",
-	 * 		"description":   "A URL associated with the news article",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"name":          "newsid",
+	 * 		"description":   "News article ID",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiResponse {
 	 * 		"id":            "1",
@@ -230,12 +198,13 @@ class UpdatesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/news/updates/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param  integer  $id
 	 * @return Response
@@ -256,28 +225,22 @@ class UpdatesController extends Controller
 	 * @apiUri    /api/news/updates/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "The name of the type",
-	 * 		"type":          "string",
+	 * 		"name":          "body",
+	 * 		"description":   "Contents of the update",
 	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "url",
-	 * 		"description":   "A URL associated with the news article",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
@@ -310,12 +273,13 @@ class UpdatesController extends Controller
 	 * @apiUri    /api/news/updates/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "query",
+	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response
