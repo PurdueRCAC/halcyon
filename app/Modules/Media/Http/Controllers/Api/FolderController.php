@@ -31,11 +31,13 @@ class FolderController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/media
 	 * @apiParameter {
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
+	 * 		"in":            "query",
+	 * 		"name":          "path",
+	 * 		"description":   "Path",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -159,11 +161,12 @@ class FolderController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /api/media/{file}
 	 * @apiParameter {
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
+	 * 		"name":          "path",
+	 * 		"description":   "File path",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */

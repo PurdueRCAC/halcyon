@@ -23,9 +23,15 @@ class ThemesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "client_id",
 	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -33,7 +39,9 @@ class ThemesController extends Controller
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -49,28 +57,34 @@ class ThemesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "name",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -203,17 +217,19 @@ class ThemesController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "title",
 	 * 		"description":   "Menu title",
-	 * 		"type":          "string",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "description",
 	 * 		"description":   "A description of the menu",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -221,7 +237,21 @@ class ThemesController extends Controller
 	 * 		"description":   "Client (admin = 1|site = 0) ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful creation"
+	 * 		},
+	 * 		"500": {
+	 * 			"description": "Failed to create record"
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -254,6 +284,14 @@ class ThemesController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful creation"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @return Response
@@ -297,33 +335,55 @@ class ThemesController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "title",
 	 * 		"description":   "Menu title",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "description",
 	 * 		"description":   "A description of the menu",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "client_id",
 	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "menutype",
 	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful creation"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"415": {
+	 * 			"description": "Invalid data"
+	 * 		},
+	 * 		"500": {
+	 * 			"description": "Failed to update record"
+	 * 		}
 	 * }
 	 * @param   Request $request
 	 * @return  Response

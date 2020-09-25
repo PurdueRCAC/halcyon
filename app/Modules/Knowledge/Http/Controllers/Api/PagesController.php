@@ -145,10 +145,104 @@ class PagesController extends Controller
 	}
 
 	/**
-	 * Store a newly created entry
+	 * Create an entry
 	 *
-	 * @param   Request  $request
-	 * @return  Response
+	 * @apiMethod POST
+	 * @apiUri    /api/knowledge
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "title",
+	 * 		"description":   "Title",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "slug",
+	 * 		"description":   "URL slug",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "content",
+	 * 		"description":   "Content",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "state",
+	 * 		"description":   "Published state",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "access",
+	 * 		"description":   "Access level",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				1,
+	 * 				2
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "publish_up",
+	 * 		"description":   "Start publishing (defaults to created time)",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "publish_down",
+	 * 		"description":   "Stop publishing",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "parent_id",
+	 * 		"description":   "Parent page ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "publish_up",
+	 * 		"description":   "Start publishing (defaults to created time)",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @param  Request $request
+	 * @return Response
 	 */
 	public function create(Request $request)
 	{
@@ -300,7 +394,7 @@ class PagesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
+	 * 		"name":          "report",
 	 * 		"description":   "Group name",
 	 * 		"required":      false,
 	 * 		"schema": {

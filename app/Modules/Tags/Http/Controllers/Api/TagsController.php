@@ -36,43 +36,56 @@ class TagsController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
 	 * 		"description":   "Tag state.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "active",
-	 * 		"allowedValues": "active, trashed"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "active",
+	 * 			"enum": [
+	 * 				"active",
+	 * 				"trashed"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "name",
-	 * 		"allowedValues": "id, name, slug, created_at"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "name",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"slug",
+	 * 				"created_at"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "asc",
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "asc",
@@ -145,25 +158,28 @@ class TagsController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Tag to be created.",
-	 * 		"type":          "string",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "description",
 	 * 		"description":   "Longer description of a tag",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "namespace",
 	 * 		"description":   "Namespace for tag",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -219,41 +235,46 @@ class TagsController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Tag text",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "slug",
 	 * 		"description":   "Normalized text (alpha-numeric, no punctuation)",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "description",
 	 * 		"description":   "Longer description of a tag",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "namespace",
 	 * 		"description":   "Namespace for tag",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "substitutes",
 	 * 		"description":   "Comma-separated list of aliases or alternatives",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @param   Request $request
 	 * @return  Response
@@ -289,6 +310,14 @@ class TagsController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @return  Response

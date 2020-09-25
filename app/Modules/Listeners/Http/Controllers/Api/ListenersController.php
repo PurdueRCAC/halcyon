@@ -24,16 +24,23 @@ class ListenersController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/listeners
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "state",
 	 * 		"description":   "Listener enabled/disabled state",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "published"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "published",
+	 * 			"enum": [
+	 * 				"published",
+	 * 				"unpublished"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -41,36 +48,51 @@ class ListenersController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "order_dir",
-	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "folder",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"element",
+	 * 				"folder",
+	 * 				"state",
+	 * 				"access",
+	 * 				"ordering"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -278,46 +300,60 @@ class ListenersController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /api/listeners
 	 * @apiParameter {
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
-	 * 		"required":      true,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "name",
-	 * 		"description":   "Group name",
-	 * 		"type":          "string",
+	 * 		"description":   "Name",
+	 * 		"required":      true
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "element",
+	 * 		"description":   "Element",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"in":            "body",
+	 * 		"name":          "folder",
+	 * 		"description":   "Folder (listener group)",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
-	 * 		"type":          "integer",
+	 * 		"in":            "body",
+	 * 		"name":          "enabled",
+	 * 		"description":   "Enabled",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
-	 * 		"type":          "integer",
+	 * 		"in":            "body",
+	 * 		"name":          "access",
+	 * 		"description":   "Access",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "params",
+	 * 		"description":   "List of params",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "array"
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -390,39 +426,58 @@ class ListenersController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "title",
-	 * 		"description":   "Listener title",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "name",
+	 * 		"description":   "Name",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "element",
+	 * 		"description":   "Element",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
-	 * 		"type":          "integer",
+	 * 		"in":            "body",
+	 * 		"name":          "folder",
+	 * 		"description":   "Folder (listener group)",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
-	 * 		"type":          "integer",
+	 * 		"in":            "body",
+	 * 		"name":          "enabled",
+	 * 		"description":   "Enabled",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "access",
+	 * 		"description":   "Access",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "params",
+	 * 		"description":   "List of params",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array"
+	 * 		}
 	 * }
 	 * @param   Request $request
 	 * @return  Response
@@ -430,8 +485,8 @@ class ListenersController extends Controller
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'title' => 'required',
-			'position' => 'required'
+			'title' => 'required|string',
+			'position' => 'required|string'
 		]);
 
 		$row = Listener::findOrFail($id);
@@ -439,7 +494,7 @@ class ListenersController extends Controller
 
 		if (!$row->save())
 		{
-			throw new \Exception($row->getError(), 409);
+			return response()->json(['message' => $row->getError()], 500);
 		}
 
 		return $row;
@@ -468,7 +523,7 @@ class ListenersController extends Controller
 
 		if (!$row->delete())
 		{
-			throw new \Exception(trans('global.messages.delete failed', ['id' => $id]), 409);
+			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
 		}
 
 		return response()->json(null, 204);

@@ -256,6 +256,24 @@ class MediaController extends Controller
 	/**
 	 * Download a file
 	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/media/download
+	 * @apiParameter {
+	 * 		"name":          "disk",
+	 * 		"description":   "Filesystem disk",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "path",
+	 * 		"description":   "File path",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
 	 * @param $request
 	 * @return  void
 	 */
@@ -283,6 +301,24 @@ class MediaController extends Controller
 	/**
 	 * Get file URL
 	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/media/url
+	 * @apiParameter {
+	 * 		"name":          "disk",
+	 * 		"description":   "Filesystem disk",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "path",
+	 * 		"description":   "File path",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
 	 * @param $request
 	 * @return array
 	 */
