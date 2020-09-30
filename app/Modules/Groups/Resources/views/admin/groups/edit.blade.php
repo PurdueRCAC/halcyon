@@ -1,5 +1,15 @@
 @extends('layouts.master')
 
+@section('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+@stop
+
+@section('scripts')
+<script src="{{ asset('modules/core/js/validate.js?v=' . filemtime(public_path() . '/modules/core/js/validate.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/groups/js/admin.js?v=' . filemtime(public_path() . '/modules/groups/js/admin.js')) }}"></script>
+@stop
+
 @php
 app('pathway')
 	->append(
@@ -29,13 +39,13 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.groups.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.VALIDATION_FORM_FAILED') }}">
+<form action="{{ route('admin.groups.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 	<div class="row">
 		<div class="col col-md-7">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
-				<div class="form-group" data-hint="{{ trans('groups::groups.name hint') }}">
+				<div class="form-group">
 					<label for="field-name">{{ trans('groups::groups.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control required" maxlength="250" value="{{ $row->name }}" />
 				</div>
@@ -59,7 +69,8 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('groups::groups.unix groups') }}</legend>
 
-				<table>
+				<table class="table table-hover">
+					<caption class="sr-only">{{ trans('groups::groups.unix groups') }}</caption>
 					<thead>
 						<tr>
 							<th scope="col">{{ trans('groups::groups.unix group') }}</th>
@@ -73,16 +84,19 @@ app('pathway')
 							<td>{{ $u->longname }}</td>
 							<td class="text-right">{{ $u->members()->count() }}</td>
 							<td class="text-right">
-								<a href="#" class="btn btn-secondary btn-danger"><span class="icon-trash glyph">{{ trans('global.trash') }}</span></a>
+								<a href="#unixgroup-{{ $u->id }}" class="btn btn-secondary btn-danger"><span class="icon-trash glyph">{{ trans('global.trash') }}</span></a>
 							</td>
 						</tr>
 					@endforeach
 					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="3" class="text-right">
+								<button class="btn btn-secondary btn-success"><span class="icon-plus glyph">{{ trans('global.add') }}</span></button>
+							</td>
+						</tr>
+					</tfoot>
 				</table>
-
-				<p class="text-right">
-					<button class="btn btn-secondary btn-success"><span class="icon-plus glyph">{{ trans('global.add') }}</span></button>
-				</p>
 			</fieldset>
 		</div>
 		<div class="col col-md-5">
@@ -90,12 +104,13 @@ app('pathway')
 				<legend>{{ trans('groups::groups.department') }}</legend>
 
 				<table>
+					<caption class="sr-only">{{ trans('groups::groups.department') }}</caption>
 					<tbody>
 					@foreach ($row->departments as $dept)
 						<tr id="department-{{ $dept->id }}" data-id="{{ $dept->id }}">
 							<td>{{ $dept->department->name }}</td>
 							<td class="text-right">
-								<a href="#" class="btn btn-secondary btn-danger"><span class="icon-trash glyph">{{ trans('global.trash') }}</span></a>
+								<a href="#department-{{ $dept->id }}" class="btn btn-secondary btn-danger"><span class="icon-trash glyph">{{ trans('global.trash') }}</span></a>
 							</td>
 						</tr>
 					@endforeach
@@ -103,7 +118,8 @@ app('pathway')
 					<tfoot>
 						<tr>
 							<td>
-								<select name="department" class="form-control">
+								<div class="form-group">
+								<select name="department" class="form-control searchable-select">
 									<option value="0">{{ trans('groups::groups.select department') }}</option>
 									@foreach ($departments as $d)
 										@php
@@ -114,6 +130,7 @@ app('pathway')
 										<option value="{{ $d->id }}">{{ str_repeat('- ', $d->level) . $d->name }}</option>
 									@endforeach
 								</select>
+								</div>
 							</td>
 							<td class="text-right">
 								<button class="btn btn-secondary btn-success"><span class="icon-plus glyph">{{ trans('global.add') }}</span></button>
@@ -140,7 +157,8 @@ app('pathway')
 					<tfoot>
 						<tr>
 							<td>
-								<select name="fieldofscience" class="form-control">
+								<div class="form-group">
+								<select name="fieldofscience" class="form-control searchable-select">
 									<option value="0">{{ trans('groups::groups.select field of science') }}</option>
 									@foreach ($fields as $f)
 										@php
@@ -151,6 +169,7 @@ app('pathway')
 										<option value="{{ $f->id }}">{{ str_repeat('- ', $f->level) . $f->name }}</option>
 									@endforeach
 								</select>
+								</div>
 							</td>
 							<td class="text-right">
 								<button class="btn btn-secondary btn-success"><span class="icon-plus glyph">{{ trans('global.add') }}</span></button>

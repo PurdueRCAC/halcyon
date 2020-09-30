@@ -8,6 +8,7 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
@@ -19,6 +20,11 @@ class Department extends Model
 {
 	use ErrorBag, Validatable, Historable;
 
+	/**
+	 * Timestamps
+	 *
+	 * @var  bool
+	 **/
 	public $timestamps = false;
 
 	/**
@@ -59,6 +65,25 @@ class Department extends Model
 	protected $rules = array(
 		'name' => 'required'
 	);
+
+		/**
+	 * The "booted" method of the model.
+	 *
+	 * @return void
+	 */
+	protected static function booted()
+	{
+		static::creating(function ($model)
+		{
+			$result = self::query()
+				->select(DB::raw('MAX(id) + 1 AS seq'))
+				->get()
+				->first()
+				->seq;
+
+			$model->setAttribute('id', (int)$result);
+		});
+	}
 
 	/**
 	 * Defines a relationship to parent
@@ -183,7 +208,7 @@ class Department extends Model
 	 */
 	public function groups()
 	{
-		return $this->hasMany(GroupDepartment::class, 'groupid');
+		return $this->hasMany(GroupDepartment::class, 'collegedeptid');
 		//return $this->hasOneThrough(GroupFieldOfScience::class, GroupDepartment::class, 'groupid', 'id', 'groupid', 'collegedeptid');
 	}
 

@@ -5,10 +5,10 @@ namespace App\Modules\Groups\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Halcyon\Http\StatefulRequest;
-use App\Halcyon\Models\FieldOfScience;
-//use App\Modules\Groups\Models\FieldOfScience;
+use App\Modules\Groups\Models\Department;
+use App\Modules\Groups\Models\GroupDepartment;
 
-class FieldsOfScienceController extends Controller
+class DepartmentsController extends Controller
 {
 	/**
 	 * Display a listing of tags
@@ -26,8 +26,8 @@ class FieldsOfScienceController extends Controller
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			// Sorting
-			'order'     => FieldOfScience::$orderBy,
-			'order_dir' => FieldOfScience::$orderDir,
+			'order'     => Department::$orderBy,
+			'order_dir' => Department::$orderDir,
 		);
 
 		foreach ($filters as $key => $default)
@@ -38,17 +38,17 @@ class FieldsOfScienceController extends Controller
 
 		if (!in_array($filters['order'], array('id', 'name')))
 		{
-			$filters['order'] = FieldOfScience::$orderBy;
+			$filters['order'] = Department::$orderBy;
 		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['order_dir'] = FieldOfScience::$orderDir;
+			$filters['order_dir'] = Department::$orderDir;
 		}
 
 		if ($filters['search'])
 		{
-			$query = FieldOfScience::query();
+			$query = Department::query();
 
 			if (is_numeric($filters['search']))
 			{
@@ -72,41 +72,18 @@ class FieldsOfScienceController extends Controller
 		}
 		else
 		{
-			$rows = FieldOfScience::tree($filters['order'], $filters['order_dir']);
+			$rows = Department::tree($filters['order'], $filters['order_dir']);
 			$root = array_shift($rows);
 		}
 
-		/*$rows = $query
-			->withCount('groups')
-			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'], ['*'], 'page', $filters['page']);*/
-
 		$total = count($rows);
-		/*$levellimit = ($filters['limit'] == 0) ? 500 : $filters['limit'];
-		$list       = array();
-		$children   = array();
-
-		if ($rows)
-		{
-			// First pass - collect children
-			foreach ($rows as $k)
-			{
-				$pt = $k->parentid;
-				$list = @$children[$pt] ? $children[$pt] : array();
-				array_push($list, $k);
-				$children[$pt] = $list;
-			}
-
-			// Second pass - get an indent list of the items
-			$list = $this->treeRecurse(0, '', array(), $children, max(0, $levellimit-1));
-		}*/
 
 		$rows = array_slice($rows, $filters['start'], $filters['limit']);
 
 		$paginator = new \Illuminate\Pagination\LengthAwarePaginator($rows, $total, $filters['limit'], $filters['page']);
-		$paginator->withPath(route('admin.groups.fieldsofscience'));
+		$paginator->withPath(route('admin.groups.departments'));
 
-		return view('groups::admin.fieldsofscience.index', [
+		return view('groups::admin.departments.index', [
 			'rows'    => $rows,
 			'filters' => $filters,
 			'paginator' => $paginator,
@@ -120,13 +97,13 @@ class FieldsOfScienceController extends Controller
 	 */
 	public function create()
 	{
-		$parents = FieldOfScience::tree();
+		$parents = Department::tree();
 
-		$row = new FieldOfScience();
+		$row = new Department();
 
-		return view('groups::admin.fieldsofscience.edit', [
+		return view('groups::admin.departments.edit', [
 			'row' => $row,
-			'parents' => $parents,
+			'parents' => $parents
 		]);
 	}
 
@@ -138,11 +115,11 @@ class FieldsOfScienceController extends Controller
 	 */
 	public function edit($id)
 	{
-		$parents = FieldOfScience::tree();
+		$parents = Department::tree();
 
-		$row = FieldOfScience::findOrFail($id);
+		$row = Department::findOrFail($id);
 
-		return view('groups::admin.fieldsofscience.edit', [
+		return view('groups::admin.departments.edit', [
 			'row' => $row,
 			'parents' => $parents,
 		]);
@@ -162,7 +139,7 @@ class FieldsOfScienceController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? FieldOfScience::findOrFail($id) : new FieldOfScience();
+		$row = $id ? Department::findOrFail($id) : new Department();
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())
@@ -190,7 +167,7 @@ class FieldsOfScienceController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = FieldOfScience::findOrFail($id);
+			$row = Department::findOrFail($id);
 
 			if (!$row->delete())
 			{
@@ -216,6 +193,6 @@ class FieldsOfScienceController extends Controller
 	 */
 	public function cancel()
 	{
-		return redirect(route('admin.groups.fieldsofscience'));
+		return redirect(route('admin.groups.departments'));
 	}
 }

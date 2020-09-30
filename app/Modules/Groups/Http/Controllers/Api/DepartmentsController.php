@@ -139,9 +139,10 @@ class DepartmentsController extends Controller
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
-		$rows->each(function ($item, $key)
+		$rows->each(function ($row, $key)
 		{
-			$item->api = route('api.groups.departments.read', ['id' => $item->id]);
+			$row->api = route('api.groups.departments.read', ['id' => $row->id]);
+			$row->groups_count = $row->groups()->count();
 		});
 
 		return new ResourceCollection($rows);
@@ -192,6 +193,7 @@ class DepartmentsController extends Controller
 		}
 
 		$row->api = route('api.groups.fieldsofscience.read', ['id' => $row->id]);
+		$row->groups_count = $row->groups()->count();
 
 		return new JsonResource($row);
 	}
@@ -216,6 +218,7 @@ class DepartmentsController extends Controller
 	{
 		$row = Department::findOrFail($id);
 		$row->api = route('api.groups.fieldsofscience.read', ['id' => $row->id]);
+		$row->groups_count = $row->groups()->count();
 
 		return new JsonResource($row);
 	}
@@ -280,6 +283,7 @@ class DepartmentsController extends Controller
 		}
 
 		$row->api = route('api.groups.fieldsofscience.read', ['id' => $row->id]);
+		$row->groups_count = $row->groups()->count();
 
 		return new JsonResource($row);
 	}

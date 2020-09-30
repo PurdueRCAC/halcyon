@@ -8,6 +8,7 @@
 namespace App\Halcyon\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
@@ -19,6 +20,13 @@ use App\Modules\Groups\Models\GroupFieldOfScience;
 class FieldOfScience extends Model
 {
 	use ErrorBag, Validatable, Historable;
+
+	/**
+	 * Timestamps
+	 *
+	 * @var  bool
+	 **/
+	public $timestamps = false;
 
 	/**
 	 * The table to which the class pertains
@@ -58,6 +66,25 @@ class FieldOfScience extends Model
 	protected $rules = array(
 		'name' => 'required'
 	);
+
+	/**
+	 * The "booted" method of the model.
+	 *
+	 * @return void
+	 */
+	protected static function booted()
+	{
+		static::creating(function ($model)
+		{
+			$result = self::query()
+				->select(DB::raw('MAX(id) + 1 AS seq'))
+				->get()
+				->first()
+				->seq;
+
+			$model->setAttribute('id', (int)$result);
+		});
+	}
 
 	/**
 	 * Field of science
@@ -173,7 +200,7 @@ class FieldOfScience extends Model
 	 */
 	public function groups()
 	{
-		return $this->hasMany(GroupFieldOfScience::class, 'groupid');
+		return $this->hasMany(GroupFieldOfScience::class, 'fieldofscienceid');
 		//return $this->hasOneThrough(GroupFieldOfScience::class, GroupDepartment::class, 'groupid', 'id', 'groupid', 'collegedeptid');
 	}
 

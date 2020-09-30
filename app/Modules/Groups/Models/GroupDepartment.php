@@ -17,6 +17,11 @@ class GroupDepartment extends Model
 {
 	use Historable;
 
+	/**
+	 * Timestamps
+	 *
+	 * @var  bool
+	 **/
 	public $timestamps = false;
 
 	/**

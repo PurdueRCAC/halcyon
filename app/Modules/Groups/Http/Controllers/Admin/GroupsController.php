@@ -9,6 +9,7 @@ use App\Halcyon\Models\FieldOfScience;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Department;
 use App\Modules\Groups\Models\GroupDepartment;
+use App\Modules\Groups\Models\GroupFieldOfScience;
 
 class GroupsController extends Controller
 {
@@ -24,6 +25,7 @@ class GroupsController extends Controller
 			'search'    => null,
 			'state'     => null,
 			'department' => 0,
+			'fieldofscience' => 0,
 			// Paging
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -76,17 +78,26 @@ class GroupsController extends Controller
 				->where($gd . '.collegedeptid', $filters['department']);
 		}
 
+		if ($filters['fieldofscience'])
+		{
+			$gf = (new GroupFieldOfScience)->getTable();
+			$query->join($gf, $gf . '.groupid', $g . '.id')
+				->where($gf . '.fieldofscienceid', $filters['fieldofscience']);
+		}
+
 		$rows = $query
 			->withCount('members')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
 		$departments = Department::tree();
+		$fields = FieldOfScience::tree();
 
 		return view('groups::admin.groups.index', [
 			'rows'    => $rows,
 			'filters' => $filters,
 			'departments' => $departments,
+			'fields' => $fields,
 		]);
 	}
 
@@ -107,6 +118,7 @@ class GroupsController extends Controller
 		return view('groups::admin.groups.edit', [
 			'row' => $row,
 			'departments' => $departments,
+			'fields' => $fields,
 		]);
 	}
 

@@ -30,4 +30,5 @@ return [
 	'field of science' => 'Field of Science',
 	'departments' => 'Departments',
 	'my groups' => 'Groups',
+	'parent' => 'Parent',
 ];

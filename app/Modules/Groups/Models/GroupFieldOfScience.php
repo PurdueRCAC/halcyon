@@ -17,6 +17,11 @@ class GroupFieldOfScience extends Model
 {
 	use Historable;
 
+	/**
+	 * Timestamps
+	 *
+	 * @var  bool
+	 **/
 	public $timestamps = false;
 
 	/**

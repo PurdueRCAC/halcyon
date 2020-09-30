@@ -18,8 +18,8 @@ app('pathway')
 		route('admin.groups.index')
 	)
 	->append(
-		trans('groups::groups.fields of science'),
-		route('admin.groups.fieldsofscience')
+		trans('groups::groups.departments'),
+		route('admin.groups.departments')
 	)
 	->append(
 		($row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create'))
@@ -28,12 +28,12 @@ app('pathway')
 
 @section('toolbar')
 	@if (auth()->user()->can('edit groups'))
-		{!! Toolbar::save(route('admin.groups.fieldsofscience.store')) !!}
+		{!! Toolbar::save(route('admin.groups.departments.store')) !!}
 	@endif
 
 	{!!
 		Toolbar::spacer();
-		Toolbar::cancel(route('admin.groups.fieldsofscience.cancel'));
+		Toolbar::cancel(route('admin.groups.departments.cancel'));
 	!!}
 
 	{!! Toolbar::render() !!}
@@ -44,7 +44,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.groups.fieldsofscience.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+<form action="{{ route('admin.groups.departments.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 	<div class="row">
 		<div class="col col-md-7">
 			<fieldset class="adminform">

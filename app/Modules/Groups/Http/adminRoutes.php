@@ -101,4 +101,37 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 			'uses' => 'FieldsOfScienceController@cancel',
 		]);
 	});
+
+	$router->group(['prefix' => 'departments'], function (Router $router)
+	{
+		$router->match(['get', 'post'], '/', [
+			'as'   => 'admin.groups.departments',
+			'uses' => 'DepartmentsController@index',
+			'middleware' => 'can:manage groups.departments',
+		]);
+		$router->get('/create', [
+			'as' => 'admin.groups.departments.create',
+			'uses' => 'DepartmentsController@create',
+			'middleware' => 'can:create groups.departments',
+		]);
+		$router->post('/store', [
+			'as' => 'admin.groups.departments.store',
+			'uses' => 'DepartmentsController@store',
+			'middleware' => 'can:create groups.departments,edit groups.departments',
+		]);
+		$router->get('/edit/{id}', [
+			'as' => 'admin.groups.departments.edit',
+			'uses' => 'DepartmentsController@edit',
+			'middleware' => 'can:edit groups.departments',
+		]);
+		$router->match(['get', 'post'], '/delete/{id?}', [
+			'as'   => 'admin.groups.departments.delete',
+			'uses' => 'DepartmentsController@delete',
+			'middleware' => 'can:delete groups.departments',
+		]);
+		$router->post('/cancel', [
+			'as' => 'admin.groups.departments.cancel',
+			'uses' => 'DepartmentsController@cancel',
+		]);
+	});
 });

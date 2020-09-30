@@ -7,18 +7,18 @@ app('pathway')
 		route('admin.groups.index')
 	)
 	->append(
-		trans('groups::groups.fields of science'),
-		route('admin.groups.fieldsofscience')
+		trans('groups::groups.departments'),
+		route('admin.groups.departments')
 	);
 @endphp
 
 @section('toolbar')
 	@if (auth()->user()->can('create groups'))
-		{!! Toolbar::addNew(route('admin.groups.fieldsofscience.create')) !!}
+		{!! Toolbar::addNew(route('admin.groups.departments.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('delete groups'))
-		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.groups.fieldsofscience.delete')) !!}
+		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.groups.departments.delete')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin groups'))
@@ -32,7 +32,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('groups.name') !!}
+{!! config('groups.name') !!}: {{ trans('groups::groups.departments') }}
 @stop
 
 @section('content')
@@ -40,7 +40,7 @@ app('pathway')
 	<?php echo request()->segment(3); ?>
 @endcomponent
 
-<form action="{{ route('admin.groups.fieldsofscience') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.groups.departments') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -62,7 +62,7 @@ app('pathway')
 	</fieldset>
 
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('groups::groups.groups') }}</caption>
+		<caption class="sr-only">{{ trans('groups::groups.departments') }}</caption>
 		<thead>
 			<tr>
 				<th>
@@ -89,7 +89,7 @@ app('pathway')
 				</td>
 				<td class="priority-5">
 					@if (auth()->user()->can('edit groups'))
-						<a href="{{ route('admin.groups.fieldsofscience.edit', ['id' => $row->id]) }}">
+						<a href="{{ route('admin.groups.departments.edit', ['id' => $row->id]) }}">
 					@endif
 					{{ $row->id }}
 					@if (auth()->user()->can('edit groups'))
@@ -99,7 +99,7 @@ app('pathway')
 				<td>
 					<span class="gi">{!! str_repeat('|&mdash;', $row->level - 1) !!}</span>
 					@if (auth()->user()->can('edit groups'))
-						<a href="{{ route('admin.groups.fieldsofscience.edit', ['id' => $row->id]) }}">
+						<a href="{{ route('admin.groups.departments.edit', ['id' => $row->id]) }}">
 					@endif
 						{{ $row->name }}
 					@if (auth()->user()->can('edit groups'))
@@ -107,7 +107,7 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-4 text-right">
-					<a href="{{ route('admin.groups.index', ['fieldofscience' => $row->id]) }}">
+					<a href="{{ route('admin.groups.index', ['department' => $row->id]) }}">
 						{{ $row->groups()->count() }}
 					</a>
 				</td>

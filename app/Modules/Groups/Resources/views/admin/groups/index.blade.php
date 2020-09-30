@@ -44,16 +44,29 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-4 filter-search">
+			<div class="col col-md-3 filter-search">
+				<div class="form-group">
 				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+				<span class="input-group">
+					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+					<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+				</span>
 			</div>
-			<div class="col col-md-8 text-right">
+
+				<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+			</div>
+			<div class="col col-md-9 text-right">
 				<label class="sr-only" for="filter_fieldofscience">{{ trans('groups::groups.field of science') }}</label>
 				<select name="fieldofscience" id="filter_fieldofscience" class="form-control filter-submit">
 					<option value="0">{{ trans('groups::groups.select field of science') }}</option>
+					@foreach ($fields as $field)
+						@php
+						if ($field->level == 0):
+							continue;
+						endif;
+						@endphp
+						<option value="{{ $field->id }}"<?php if ($filters['fieldofscience'] == $field->id) { echo ' selected="selected"'; } ?>>{{ str_repeat('|- ', ($field->level - 1)) . $field->name }} (<?php echo App\Modules\Groups\Models\GroupFieldOfScience::where('fieldofscienceid', '=', $field->id)->count(); ?>)</option>
+					@endforeach
 				</select>
 
 				<label class="sr-only" for="filter_department">{{ trans('groups::groups.department') }}</label>
@@ -76,6 +89,7 @@ app('pathway')
 	</fieldset>
 
 	<table class="table table-hover adminlist">
+		<caption class="sr-only">{{ trans('groups::groups.groups') }}</caption>
 		<thead>
 			<tr>
 				<th>
