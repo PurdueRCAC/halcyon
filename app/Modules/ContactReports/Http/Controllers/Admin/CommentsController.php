@@ -140,7 +140,7 @@ class CommentsController extends Controller
 	 *
 	 * @return  Response
 	 */
-	public function destroy(Request $request)
+	public function delete(Request $request)
 	{
 		// Incoming
 		$ids = $request->input('id', array());

@@ -110,7 +110,11 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-4">
-					{{ $row->group ? $row->group->name : trans('global.none') }}
+					@if ($row->group && $row->group->id)
+						{{ $row->group->name }}
+					@else
+						<span class="none">{{ trans('global.none') }}</span>
+					@endif
 				</td>
 				<td class="priority-4">
 					<span class="datetime">

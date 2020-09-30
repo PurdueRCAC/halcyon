@@ -1,14 +1,14 @@
 @extends('layouts.master')
 
 @section('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('css/jquery.tagsinput.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
 @stop
 
 @section('scripts')
-<script src="{{ asset('js/validate.js?v=' . filemtime(public_path() . '/js/validate.js')) }}"></script>
-<script src="{{ asset('js/jquery.tagsinput.js?v=' . filemtime(public_path() . '/js/jquery.tagsinput.js')) }}"></script>
-<script src="{{ asset('vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/core/js/validate.js?v=' . filemtime(public_path() . '/modules/core/js/validate.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/contactreports/js/admin.js?v=' . filemtime(public_path() . '/modules/contactreports/js/admin.js')) }}"></script>
 @stop
 
@@ -95,13 +95,13 @@ app('pathway')
 						$users[] = ($user->user ? $user->user->name : trans('global.unknown')) . ':' . $user->userid;
 					}
 					?>
-					<label for="field-users">{{ trans('contactreports::contactreports.users') }}:</label>
-					<input type="text" name="users" id="field-users" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" size="30" maxlength="250" value="{{ implode(',', $users) }}" />
+					<label for="field-people">{{ trans('contactreports::contactreports.users') }}:</label>
+					<input type="text" name="people" id="field-people" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" size="30" maxlength="250" value="{{ implode(',', $users) }}" />
 				</div>
 
 				<div class="form-group">
 					<label for="field-groupid">{{ trans('contactreports::contactreports.group') }}:</label>
-					<select name="fields[groupid]" id="field-groupid" class="form-control">
+					<select name="fields[groupid]" id="field-groupid" class="form-control searchable-select">
 						<option value="0"<?php if (!$row->groupid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
 						@foreach ($groups as $group)
 							<option value="{{ $group->id }}"<?php if ($row->groupid == $group->id) { echo ' selected="selected"'; } ?>>{{ $group->name }}</option>
@@ -173,6 +173,14 @@ app('pathway')
 					{
 						?>
 						<p>No comments found.</p>
+						<ul>
+							<li>
+								<div class="form-group">
+									<label for="comment">Comment</label>
+									<textarea name="comment" id="comment" class="form-control" cols="45" rows="1"></textarea>
+								</div>
+							</li>
+						</ul>
 						<?php
 					}
 					?>

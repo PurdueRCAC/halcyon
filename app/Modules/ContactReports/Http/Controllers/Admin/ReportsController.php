@@ -8,6 +8,9 @@ use Illuminate\Routing\Controller;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Comment;
+use App\Modules\ContactReports\Models\Reportresource;
+use App\Modules\ContactReports\Models\User as ReportUser;
+use Carbon\Carbon;
 
 class ReportsController extends Controller
 {
@@ -50,11 +53,12 @@ class ReportsController extends Controller
 
 		if ($filters['search'])
 		{
-			$query->where(function($query) use ($filters)
+			$query->where('report', 'like', '%' . $filters['search'] . '%');
+			/*$query->where(function($query) use ($filters)
 			{
 				$query->where('headline', 'like', '%' . $filters['search'] . '%')
 					->orWhere('body', 'like', '%' . $filters['search'] . '%');
-			});
+			});*/
 		}
 
 		if ($filters['notice'] != '*')
@@ -89,8 +93,11 @@ class ReportsController extends Controller
 
 		$row = new Report();
 
+		$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();
+
 		return view('contactreports::admin.reports.edit', [
-			'row'   => $row
+			'row'   => $row,
+			'groups' => $groups
 		]);
 	}
 
@@ -102,16 +109,168 @@ class ReportsController extends Controller
 	 */
 	public function store(Request $request)
 	{
+		$now = new Carbon();
+
 		$request->validate([
-			'fields.headline' => 'required',
-			'fields.body' => 'required'
+			'fields.report' => 'required',
+			'fields.datetimecontact' => 'required|date|before_or_equal:' . $now->toDateTimeString(),
+			'fields.userid' => 'nullable|integer',
+			'fields.groupid' => 'nullable|integer',
+			'fields.datetimegroupid' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
 		]);
 
-		$row = new Report($request->input('fields'));
+		$id = $request->input('id');
+
+		$row = $id ? Report::findOrFail($id) : new Report();
+		$row->fill($request->input('fields'));
 
 		if (!$row->save())
 		{
 			return redirect()->back()->with('error', 'Failed to create item.');
+		}
+
+		if ($resources = $request->input('resources'))
+		{
+			$resources = (array)$resources;
+
+			// Fetch current list of resources
+			$prior = $row->resources;
+
+			// Remove and add resource-contactreport mappings
+			// First calculate diff
+			$addresources = array();
+			$deleteresources = array();
+
+			foreach ($prior as $r)
+			{
+				$found = false;
+
+				foreach ($resources as $r2)
+				{
+					if ($r2 == $r->resourceid)
+					{
+						$found = true;
+					}
+				}
+
+				if (!$found)
+				{
+					array_push($deleteresources, $r);
+				}
+			}
+
+			foreach ($resources as $r)
+			{
+				$found = false;
+
+				foreach ($prior as $r2)
+				{
+					if ($r2->resourceid == $r)
+					{
+						$found = true;
+					}
+				}
+
+				if (!$found)
+				{
+					array_push($addresources, $r);
+				}
+			}
+
+			foreach ($deleteresources as $r)
+			{
+				if (!$r->delete())
+				{
+					$request->session()->flash('warning', 'Failed to delete `contactreportresources` entry #' . $r);
+				}
+			}
+
+			// Ensure unique-ness
+			$addresources = array_unique($addresources);
+
+			foreach ($addresources as $r)
+			{
+				$rr = new Reportresource;
+				$rr->contactreportid = $row->id;
+				$rr->resourceid = $r;
+
+				if (!$rr->save())
+				{
+					$request->session()->flash('warning', 'Failed to create `contactreportresources` entry #' . $r);
+				}
+			}
+		}
+
+		if ($people = $request->input('people'))
+		{
+			$people = (array)$people;
+
+			// Fetch current list of resources
+			$prior = $row->users;
+
+			// Remove and add resource-contactreport mappings
+			// First calculate diff
+			$addusers = array();
+			$deleteusers = array();
+
+			foreach ($prior as $r)
+			{
+				$found = false;
+
+				foreach ($people as $r2)
+				{
+					if ($r2 == $r->userid)
+					{
+						$found = true;
+					}
+				}
+
+				if (!$found)
+				{
+					array_push($deleteusers, $r);
+				}
+			}
+
+			foreach ($people as $r)
+			{
+				$found = false;
+
+				foreach ($prior as $r2)
+				{
+					if ($r2->userid == $r)
+					{
+						$found = true;
+					}
+				}
+
+				if (!$found)
+				{
+					array_push($addusers, $r);
+				}
+			}
+
+			foreach ($deleteusers as $r)
+			{
+				if (!$r->delete())
+				{
+					$request->session()->flash('warning', 'Failed to delete `contactreportusers` entry #' . $r);
+				}
+			}
+
+			// Ensure unique-ness
+			$addusers = array_unique($addusers);
+
+			foreach ($addusers as $r)
+			{
+				$rr = new ReportUser;
+				$rr->contactreportid = $row->id;
+				$rr->userid = $r;
+
+				if (!$rr->save())
+				{
+					$request->session()->flash('warning', 'Failed to create `contactreportusers` entry #' . $r);
+				}
+			}
 		}
 
 		return $this->cancel()->withSuccess('Item created!');
@@ -143,97 +302,11 @@ class ReportsController extends Controller
 	}
 
 	/**
-	 * Comment the specified entry
-	 *
-	 * @param   Request $request
-	 * @return  Response
-	 */
-	public function update(Request $request, $id)
-	{
-		$request->validate([
-			'fields.headline' => 'required'
-		]);
-
-		$fields = $request->input('fields');
-		$fields['location'] = (string)$fields['location'];
-
-		$row = Report::findOrFail($id);
-		$row->fill($fields);
-
-		if (!$row->save())
-		{
-			return redirect()->back()->withError(trans('messages.update failed'));
-		}
-
-		return $this->cancel()->withSuccess(trans('messages.update success'));
-	}
-
-	/**
-	 * Sets the state of one or more entries
-	 * 
-	 * @return  void
-	 */
-	public function state(Request $request, $id)
-	{
-		$action = $request->segment(count($request->segments()) - 1);
-		$state  = $action == 'publish' ? 1 : 0;
-
-		// Incoming
-		$ids = $request->input('id', array($id));
-		$ids = (!is_array($ids) ? array($ids) : $ids);
-
-		// Check for an ID
-		if (count($ids) < 1)
-		{
-			$request->session()->flash('warning', trans($state ? 'contactreports::contactreports.select to publish' : 'contactreports::contactreports.select to unpublish'));
-			return $this->cancel();
-		}
-
-		$success = 0;
-
-		// Comment record(s)
-		foreach ($ids as $id)
-		{
-			$row = Report::findOrFail(intval($id));
-
-			if ($row->published == $state)
-			{
-				continue;
-			}
-
-			// Don't update last modified timestamp for state changes
-			$row->timestamps = false;
-
-			$row->published = $state;
-
-			if (!$row->save())
-			{
-				$request->session()->flash('error', $row->getError());
-				continue;
-			}
-
-			$success++;
-		}
-
-		// Set message
-		if ($success)
-		{
-			$msg = $state
-				? 'contactreports::contactreports.items published'
-				: 'contactreports::contactreports.items unpublished';
-
-			$request->session()->flash('success', trans($msg, ['count' => $success]));
-		}
-
-		return $this->cancel();
-	}
-
-	/**
 	 * Remove the specified entry
 	 *
 	 * @return  Response
 	 */
-	public function destroy()
+	public function delete(Request $request)
 	{
 		// Incoming
 		$ids = $request->input('id', array());
@@ -244,7 +317,6 @@ class ReportsController extends Controller
 		foreach ($ids as $id)
 		{
 			// Delete the entry
-			// Note: This is recursive and will also remove all descendents
 			$row = Report::findOrFail($id);
 
 			if (!$row->delete())
@@ -258,7 +330,7 @@ class ReportsController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', $success));
+			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();
