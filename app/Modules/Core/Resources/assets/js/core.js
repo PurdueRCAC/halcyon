@@ -1,6 +1,6 @@
 /**
  * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
+ * @copyright  Copyright 2019 Purdue University.
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
@@ -141,12 +141,25 @@ Halcyon.checkAll = function(checkbox, stub) {
 				}
 			}
 		}
+		Halcyon.enableDisableBtn(c);
 		if (checkbox.form.boxchecked) {
 			checkbox.form.boxchecked.value = c;
 		}
 		return true;
 	}
 	return false;
+}
+
+Halcyon.enableDisableBtn = function(num) {
+	var toolbarbuttons = document.getElementsByClassName('toolbar-list');
+	for (i = 0; i < toolbarbuttons.length; i++)
+	{
+		if (!num) {
+			Halcyon.addClass(toolbarbuttons[i], 'disabled');
+		} else {
+			Halcyon.removeClass(toolbarbuttons[i], 'disabled');
+		}
+	}
 }
 
 /**
@@ -476,6 +489,9 @@ Halcyon.gridCheckboxToggle = function(event)
 	} else {
 		Halcyon.isChecked(this.checked);
 	}
+
+	var checkboxes = document.querySelectorAll('.checkbox-toggle:checked');
+	Halcyon.enableDisableBtn(checkboxes.length);
 }
 
 /**
@@ -567,6 +583,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	var toolbarbuttons = document.getElementsByClassName('toolbar-btn');
 	for (i = 0; i < toolbarbuttons.length; i++)
 	{
+		if (Halcyon.hasClass(toolbarbuttons[i], 'toolbar-list')) {
+			//toolbarbuttons[i].setAttribute('disabled', true);
+			Halcyon.addClass(toolbarbuttons[i], 'disabled');
+		}
 		toolbarbuttons[i].addEventListener('click', Halcyon.toolbarAction);
 	}
 

@@ -1500,10 +1500,8 @@ textarea {
   max-width: 100%;
   padding: 0.4045084975em;
   outline: none;
-  background-color: #F0F0F0;
-  background-color: rgba(0, 0, 0, 0.039);
+  background-color: #fff;
   border: 1px solid #D9D9D9;
-  border-color: rgba(0, 0, 0, 0.19) rgba(0, 0, 0, 0.13) rgba(0, 0, 0, 0.07);
   -webkit-border-radius: 0.25em;
   -moz-border-radius: 0.25em;
   border-radius: 0.25em;
@@ -1721,6 +1719,22 @@ input[type=submit]:focus {
   float: left;
   margin-right: 0.5em;
 }*/
+.form-group .select2-container--default .select2-selection--single {
+  display: block;
+  height: calc(1.5em + .75rem + 2px);
+  font-size: 1rem;
+  font-weight: 400;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+}
+.form-group .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 1.5;
+    padding: .375rem .75rem;
+}
+
 table.cke_dialog tbody tr td,
 table.cke_dialog tbody tr td:first-child,
 table.cke_dialog tbody tr td:last-child {
@@ -2122,7 +2136,7 @@ label .required {
   width: 1.25em;
   overflow: hidden;
   text-shadow: none;
-  float: right;
+  /*float: right;*/
   -webkit-transition: all ease-in-out 0.2s;
   -moz-transition: all ease-in-out 0.2s;
   -o-transition: all ease-in-out 0.2s;
@@ -2134,7 +2148,7 @@ label .required:before {
   content: "\273D";
   margin-right: 0.5em;
 }
-label .required:after {
+/*label .required:after {
   content: "";
   width: 0;
   height: 0;
@@ -2144,7 +2158,7 @@ label .required:after {
   bottom: -8px;
   left: 50%;
   margin-left: -4px;
-}
+}*/
 .form-group.focused label .required,
 .form-group label:focus .required,
 .form-group label:hover .required,
@@ -2154,9 +2168,9 @@ label .required:after {
   background: rgba(200, 0, 0, 0.7);
   color: #fff;
 }
-.form-group:hover label .required:after {
+/*.form-group:hover label .required:after {
   border-color: rgba(200, 0, 0, 0.7) transparent transparent transparent;
-}
+}*/
 .form-group .spinner-border {
   display: none;
 }
@@ -2263,15 +2277,15 @@ fieldset#filter-bar:after {
 fieldset#filter-bar label,
 fieldset#filter-bar legend {
   display: none;
-}
+}*/
 fieldset#filter-bar button,
 fieldset#filter-bar input,
 fieldset#filter-bar select {
   width: auto;
-  max-width: 11em;
+  max-width: 30em;
   margin-bottom: 0;
 }
-fieldset#filter-bar .selector {
+/*fieldset#filter-bar .selector {
   margin-top: 0.2em;
 }
 fieldset#filter-bar .selector select {
@@ -4305,6 +4319,10 @@ div.current li {
 .toolbar-box .button a:hover span:after {
   background-color: #666;
 }
+.toolbar-box .button a.disabled span {
+  opacity: 0.5;
+}
+
 .toolbar-box .button.first a {
   border-radius: 0.25em 0 0 0.25em;
 }
