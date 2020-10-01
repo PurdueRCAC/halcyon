@@ -3,7 +3,7 @@
 namespace App\Modules\History\Traits;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Modules\History\Models\History;
+use App\Modules\History\Models\Log;
 
 trait Loggable
 {
@@ -23,7 +23,7 @@ trait Loggable
 
 		Log::create([
 			'ip'              => request()->ip(),
-			'user'            => (auth()->user() ? auth()->user()->id : 0),
+			'userid'          => (auth()->user() ? auth()->user()->id : 0),
 			'status'          => (int)$status,
 			'transportmethod' => $method,
 			'servername'      => request()->getHttpHost(),
