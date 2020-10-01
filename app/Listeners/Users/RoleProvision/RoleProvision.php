@@ -87,7 +87,7 @@ class RoleProvision
 			$body   = ['error' => $e->getMessage()];
 		}
 
-		$this->log('role', 'POST', $status, $results, $url);
+		$this->log('role', 'POST', $status, $body, $url);
 	}
 
 	/**
@@ -131,7 +131,7 @@ class RoleProvision
 			$body   = ['error' => $e->getMessage()];
 		}
 
-		$this->log('role', 'DELETE', $status, $results, $url);
+		$this->log('role', 'DELETE', $status, $body, $url);
 	}
 
 	/**

@@ -13,6 +13,8 @@ use App\Modules\Users\Events\UserSearching;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Users\Models\User;
 use App\Modules\Resources\Events\ResourceMemberStatus;
+use App\Modules\Groups\Events\UnixGroupFetch;
+use App\Modules\History\Traits\Loggable;
 use App\Halcyon\Utility\Str;
 
 /**
@@ -20,6 +22,8 @@ use App\Halcyon\Utility\Str;
  */
 class RcacLdap
 {
+	use Loggable;
+
 	/**
 	 * Register the listeners for the subscriber.
 	 *
@@ -31,6 +35,7 @@ class RcacLdap
 		$events->listen(UserSearching::class, self::class . '@handleUserSearching');
 		$events->listen(UserBeforeDisplay::class, self::class . '@handleUserBeforeDisplay');
 		$events->listen(ResourceMemberStatus::class, self::class . '@handleResourceMemberStatus');
+		$events->listen(UnixGroupFetch::class, self::class . '@handleUnixGroupFetch');
 	}
 
 	/**
@@ -328,5 +333,67 @@ class RcacLdap
 		catch (\Exception $e)
 		{
 		}
+	}
+
+	/**
+	 * Search for unixgroup
+	 *
+	 * @param   object  $event
+	 * @return  void
+	 */
+	public function handleUnixGroupFetch(UnixGroupFetch $event)
+	{
+		if (!app()->has('ldap'))
+		{
+			return;
+		}
+
+		$config = config('ldap.rcac_group', []);
+
+		if (empty($config))
+		{
+			return;
+		}
+
+		try
+		{
+			$ldap = $this->connect($config);
+
+			// Performing a query.
+			$results = $ldap->search()
+				->where('cn', '=', $event->name)
+				->get();
+
+			$status = 404;
+
+			if (!empty($results))
+			{
+				$status = 200;
+
+				$event->results = $results;
+				// Gather information from LDAP
+				/*
+					$this->primarygroup = $rows[0]['cn'][0];
+
+					// Un-prefixed (lacking "rcac-") version of group name exists in LDAP
+					$rows = $ldap_group->query('cn=rcac-' . $base, array(), $data);
+
+					if ($rows == 0)
+					{
+						return 409;
+					}
+					// If the above was not found, then the prefixed ("rcac-") version of
+					// group name also exists in LDAP, so it should be safe to proceed, since
+					// any conflict must have already been resolved by manual intervention.
+				*/
+			}
+		}
+		catch (\Exception $e)
+		{
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
+		}
+
+		$this->log('rcac_group', 'GET', $status, $results, 'cn=' . $event->name);
 	}
 }

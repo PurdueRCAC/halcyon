@@ -8,7 +8,9 @@
 namespace App\Listeners\Users\GroupProvision
 
 use App\Modules\Users\Events\UserUpdated;
-use App\Modules\History\Models\Log;
+use App\Modules\Groups\Events\UnixGroupCreating;
+use App\Modules\Groups\Events\UnixGroupDeleted;
+use App\Modules\History\Traits\Loggable;
 use GuzzleHttp\Client;
 
 /**
@@ -16,6 +18,8 @@ use GuzzleHttp\Client;
  */
 class GroupProvision
 {
+	use Loggable;
+
 	/**
 	 * Register the listeners for the subscriber.
 	 *
@@ -25,6 +29,8 @@ class GroupProvision
 	public function subscribe($events)
 	{
 		$events->listen(UserUpdated::class, self::class . '@handleUserUpdated');
+		$events->listen(UnixGroupCreating::class, self::class . '@handleUnixGroupCreating');
+		$events->listen(UnixGroupDeleted::class, self::class . '@handleUnixGroupDeleted');
 	}
 
 	/**
@@ -33,8 +39,103 @@ class GroupProvision
 	 * @param   object  $event
 	 * @return  void
 	 */
-	public function handleUnixGroupCreating(UnixGroupCreating $event)
+	public function handleUnixGroupCreating(UnixGroupCreated $event)
 	{
+		$config = config('listener.groupprovision', []);
+
+		if (empty($config))
+		{
+			return;
+		}
+
+		try
+		{
+			// Call central accounting service to request status
+			$client = new Client();
+
+			$url = $config['url'] . 'createGroup/rcs';
+			$body = array(
+				'provisionGroupServiceCreateGroupRequest' => array(
+					'groupName'  => $this->unixgroup->shortname,
+					'lgroupName' => 'rcac-' . $this->unixgroup->longname
+				)
+			);
+
+			$res = $client->request('POST', $url, [
+				'auth' => [
+					$config['user'],
+					$config['password']
+				],
+				'body' => $body,
+				'json' => ['body' => $body]
+			]);
+
+			$status = $res->getStatusCode();
+			$body   = $res->getBody();
+
+			if ($status < 400)
+			{
+				if ($body)
+				{
+					$results = $body->provisionGroupServiceCreateGroupResponse;
+
+					if (isset($results->groupId) && is_numeric($results->groupId))
+					{
+						$this->unixgroup->unixgid = $results->groupId;
+					}
+				}
+			}
+		}
+		catch (\Exception $e)
+		{
+			//Log::error($e->getMessage());
+			$status = 500;
+			$body   = ['error' => $e->getMessage()];
+		}
+
+		$this->log('role', 'POST', $status, $body, $url);
+	}
+
+	/**
+	 * Handle a unix group being deleted
+	 *
+	 * @param   object  $event
+	 * @return  void
+	 */
+	public function handleUnixGroupDeleted(UnixGroupDeleted $event)
+	{
+		$config = config('listener.groupprovision', []);
+
+		if (empty($config))
+		{
+			return;
+		}
+
+		try
+		{
+			// Call central accounting service to request status
+			$client = new Client();
+
+			$url = $config['url'] . 'deleteGroup/rcs/' . $this->unixgroup->shortname;
+
+			$res = $client->request('DELETE', $url, [
+				'auth' => [
+					$config['user'],
+					$config['password']
+				]
+			]);
+
+			$status = $res->getStatusCode();
+			$body   = $res->getBody();
+		}
+		catch (\Exception $e)
+		{
+			//Log::error($e->getMessage());
+			$status = 500;
+			$body   = ['error' => $e->getMessage()];
+		}
+
+		$this->log('role', 'DELETE', $status, $body, $url);
 	}
 
 	/**
@@ -53,11 +154,13 @@ class GroupProvision
 			return;
 		}
 
+		$url = $config['url'];
+
 		try
 		{
 			$client = new Client();
 
-			$res = $client->request('GET', $config['url'], [
+			$res = $client->request('GET', $url, [
 				'auth' => [
 					$config['user'],
 					$config['password']
@@ -69,20 +172,10 @@ class GroupProvision
 		}
 		catch (\Exception $e)
 		{
-			//Log::error($e->getMessage());
 			$status = 500;
 			$body   = ['error' => $e->getMessage()];
 		}
 
-		Log::create([
-			'ip'              => request()->ip(),
-			'user'            => auth()->user()->id,
-			'status'          => $status,
-			'transportmethod' => 'GET',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $config['url'] . $url,
-			'app'             => 'role',
-			'payload'         => json_encode($body),
-		]);
+		$this->log('role', 'GET', $status, $body, $url);
 	}
 }
