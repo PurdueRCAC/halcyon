@@ -4,6 +4,7 @@ return [
 	'groups' => 'Groups',
 	'id' => 'ID',
 	'name' => 'Name',
+	'username' => 'Username',
 	'members' => 'Members',
 	'slug' => 'Slug',
 	'created' => 'Created',
@@ -21,6 +22,7 @@ return [
 	'membership type' => 'Membership Type',
 	'select membership type' => '- All Membership Types -',
 	'added' => 'Added',
+	'joined' => 'Joined',
 	'all states' => '- All States -',
 	'last visit' => 'Last Visit',
 	'unix groups' => 'Unix Groups',
@@ -31,4 +33,6 @@ return [
 	'departments' => 'Departments',
 	'my groups' => 'Groups',
 	'parent' => 'Parent',
+	'unix group base name hint' => 'Alpha-numeric & dashes, max 10 characters',
+	'unix group id' => 'Unix group system ID',
 ];

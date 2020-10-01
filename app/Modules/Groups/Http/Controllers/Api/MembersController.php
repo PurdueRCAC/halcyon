@@ -117,16 +117,16 @@ class MembersController extends Controller
 			'limit'    => $request->input('limit', config('list_limit', 20)),
 			//'start' => $request->input('limitstart', 0),
 			// Sorting
-			'order'     => $request->input('order', Group::$orderBy),
-			'order_dir' => $request->input('order_dir', Group::$orderDir)
+			'order'     => $request->input('order', Member::$orderBy),
+			'order_dir' => $request->input('order_dir', Member::$orderDir)
 		);
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['order_dir'] = Group::$orderDir;
+			$filters['order_dir'] = Member::$orderDir;
 		}
 
-		$query = Group::query();
+		$query = Member::query();
 
 		if ($filters['search'])
 		{
@@ -340,13 +340,24 @@ class MembersController extends Controller
 		]);
 
 		$row = Member::findOrFail($id);
-		$row->membertype = $request->input('membertype');
-		$row->userrequestid = $request->input('userrequestid');
+
+		if ($request->has('membertype'))
+		{
+			$row->membertype = $request->input('membertype');
+		}
+
+		if ($request->has('userrequestid'))
+		{
+			$row->userrequestid = $request->input('userrequestid');
+		}
 
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('messages.create failed')], 500);
 		}
+
+		$row->api = route('api.groups.members.read', ['id' => $row->id]);
+		$row->user;
 
 		return $row;
 	}

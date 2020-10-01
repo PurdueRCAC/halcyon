@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
+use App\Modules\Groups\Events\UnixGroupCreating;
+use App\Modules\Groups\Events\UnixGroupDeleted;
 
 /**
  * Unix Group model
@@ -77,7 +79,8 @@ class UnixGroup extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'longname' => 'required|string|max:32'
+		'longname' => 'required|string|max:32',
+		'shortname' => 'nullable|string|max:8'
 	);
 
 	/**
@@ -85,13 +88,13 @@ class UnixGroup extends Model
 	 *
 	 * @var array
 	 */
-	/*protected $dispatchesEvents = [
+	protected $dispatchesEvents = [
 		'creating' => UnixGroupCreating::class,
-		'created'  => UnixGroupCreated::class,
-		'updating' => UnixGroupUpdating::class,
-		'updated'  => UnixGroupUpdated::class,
+		//'created'  => UnixGroupCreated::class,
+		//'updating' => UnixGroupUpdating::class,
+		//'updated'  => UnixGroupUpdated::class,
 		'deleted'  => UnixGroupDeleted::class,
-	];*/
+	];
 
 	/**
 	 * Group
@@ -116,6 +119,7 @@ class UnixGroup extends Model
 	/**
 	 * Delete entry and associated data
 	 *
+	 * @param   array  $options
 	 * @return  bool
 	 */
 	public function delete(array $options = [])

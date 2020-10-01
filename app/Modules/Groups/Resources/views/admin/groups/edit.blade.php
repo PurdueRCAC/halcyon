@@ -11,6 +11,8 @@
 @stop
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('groups::groups.module name'),
@@ -54,13 +56,15 @@ app('pathway')
 					<div class="col col-md-6">
 						<div class="form-group">
 							<label for="field-unixgroup">{{ trans('groups::groups.unix group base name') }}:</label>
-							<input type="text" class="form-control" name="fields[unixgroup]" id="field-unixgroup" value="{{ $row->unixgroup }}" />
+							<input type="text" class="form-control input-unixgroup" name="fields[unixgroup]" id="field-unixgroup" maxlength="10" value="{{ $row->unixgroup }}" />
+							<span class="form-text text-muted">{{ trans('groups::groups.unix group base name hint') }}</span>
 						</div>
 					</div>
 					<div class="col col-md-6">
 						<div class="form-group">
 							<label for="field-unixid">{{ trans('groups::groups.unix id') }}:</label>
 							<input type="text" class="form-control" name="fields[unixid]" id="field-unixid" value="{{ $row->unixid }}" />
+							<span class="form-text text-muted">{{ trans('groups::groups.unix group id') }}</span>
 						</div>
 					</div>
 				</div>
@@ -73,7 +77,9 @@ app('pathway')
 					<caption class="sr-only">{{ trans('groups::groups.unix groups') }}</caption>
 					<thead>
 						<tr>
+							<th scope="col">{{ trans('groups::groups.id') }}</th>
 							<th scope="col">{{ trans('groups::groups.unix group') }}</th>
+							<th scope="col">{{ trans('groups::groups.short name') }}</th>
 							<th scope="col" class="text-right">{{ trans('groups::groups.members') }}</th>
 							<th scope="col" class="text-right"></th>
 						</tr>
@@ -81,18 +87,48 @@ app('pathway')
 					<tbody>
 					@foreach ($row->unixGroups as $i => $u)
 						<tr id="unixgroup-{{ $u->id }}" data-id="{{ $u->id }}">
+							<td>{{ $u->id }}</td>
 							<td>{{ $u->longname }}</td>
+							<td>{{ $u->shortname }}</td>
 							<td class="text-right">{{ $u->members()->count() }}</td>
 							<td class="text-right">
-								<a href="#unixgroup-{{ $u->id }}" class="btn btn-secondary btn-danger"><span class="icon-trash glyph">{{ trans('global.trash') }}</span></a>
+								<a href="#unixgroup-{{ $u->id }}" class="btn btn-secondary btn-danger remove-unixgroup"
+									data-api="{{ route('api.unixgroups.delete', ['id' => $u->id]) }}"
+									data-confirm="{{ trans('groups::groups.confirm delete') }}">
+									<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+								</a>
 							</td>
 						</tr>
 					@endforeach
+						<tr class="hidden" id="unixgroup-{id}" data-id="{id}">
+							<td>{id}</td>
+							<td>{longname}</td>
+							<td>{shortname}</td>
+							<td class="text-right">0</td>
+							<td class="text-right">
+								<a href="#unixgroup-{id}" class="btn btn-secondary btn-danger remove-unixgroup"
+									data-api="{{ route('api.unixgroups.create') }}/{id}"
+									data-confirm="{{ trans('groups::groups.confirm delete') }}">
+									<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+								</a>
+							</td>
+						</tr>
 					</tbody>
 					<tfoot>
 						<tr>
-							<td colspan="3" class="text-right">
-								<button class="btn btn-secondary btn-success"><span class="icon-plus glyph">{{ trans('global.add') }}</span></button>
+							<td></td>
+							<td colspan="3">
+								<span class="input-group">
+									<span class="input-group-prepend"><span class="input-group-text">{{ $row->unixgroup }}-</span>
+									<input type="text" name="longname" id="longname" class="form-control input-unixgroup" placeholder="{{ trans('groups::groups.name') }}" />
+								</span>
+							</td>
+							<td class="text-right">
+								<a href="#longname" class="btn btn-secondary btn-success add-unixgroup"
+									data-group="{{ $row->id }}"
+									data-api="{{ route('api.unixgroups.create') }}">
+									<span class="icon-plus glyph">{{ trans('global.add') }}</span>
+								</a>
 							</td>
 						</tr>
 					</tfoot>
@@ -108,32 +144,71 @@ app('pathway')
 					<tbody>
 					@foreach ($row->departments as $dept)
 						<tr id="department-{{ $dept->id }}" data-id="{{ $dept->id }}">
-							<td>{{ $dept->department->name }}</td>
+							<td>
+								<?php
+								$prf = '';
+								foreach ($dept->department->ancestors() as $ancestor):
+									if (!$ancestor->parentid):
+										continue;
+									endif;
+
+									$prf .= $ancestor->name . ' > ';
+								endforeach;
+								?>{{ $prf . $dept->department->name }}
+							</td>
 							<td class="text-right">
-								<a href="#department-{{ $dept->id }}" class="btn btn-secondary btn-danger"><span class="icon-trash glyph">{{ trans('global.trash') }}</span></a>
+								<a href="#department-{{ $dept->id }}" class="btn btn-secondary btn-danger remove-category"
+									data-api="{{ route('api.groups.groupdepartments.delete', ['group' => $row->id, 'id' => $dept->id]) }}"
+									data-confirm="{{ trans('groups::groups.confirm delete') }}">
+									<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+								</a>
 							</td>
 						</tr>
 					@endforeach
+						<tr class="hidden" id="department-{id}" data-id="{id}">
+							<td>{name}</td>
+							<td class="text-right">
+								<a href="#department-{id}" class="btn btn-secondary btn-danger remove-category"
+									data-api="{{ route('api.groups.groupdepartments.create', ['group' => $row->id]) }}/{id}"
+									data-confirm="{{ trans('groups::groups.confirm delete') }}">
+									<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+								</a>
+							</td>
+						</tr>
 					</tbody>
 					<tfoot>
 						<tr>
 							<td>
 								<div class="form-group">
-								<select name="department" class="form-control searchable-select">
+								<select name="department" id="department" data-category="collegedeptid" class="form-control searchable-select">
 									<option value="0">{{ trans('groups::groups.select department') }}</option>
 									@foreach ($departments as $d)
 										@php
 										if ($d->level == 0):
 											continue;
 										endif;
+
+										$prf = '';
+										foreach ($d->ancestors() as $ancestor):
+											if (!$ancestor->parentid):
+												continue;
+											endif;
+
+											$prf .= $ancestor->name . ' > ';
+										endforeach;
 										@endphp
-										<option value="{{ $d->id }}">{{ str_repeat('- ', $d->level) . $d->name }}</option>
+										<option value="{{ $d->id }}">{{ $prf . $d->name }}</option>
 									@endforeach
 								</select>
 								</div>
 							</td>
 							<td class="text-right">
-								<button class="btn btn-secondary btn-success"><span class="icon-plus glyph">{{ trans('global.add') }}</span></button>
+								<a href="#department"
+									class="btn btn-secondary btn-success add-category"
+									data-group="{{ $row->id }}"
+									data-api="{{ route('api.groups.groupdepartments.create', ['group' => $row->id]) }}">
+									<span class="icon-plus glyph">{{ trans('global.add') }}</span>
+								</a>
 							</td>
 						</tr>
 					</tfoot>
@@ -144,85 +219,84 @@ app('pathway')
 				<legend>{{ trans('groups::groups.field of science') }}</legend>
 
 				<table>
+					<caption class="sr-only">{{ trans('groups::groups.field of science') }}</caption>
 					<tbody>
 					@foreach ($row->fieldsOfScience as $field)
 						<tr id="fieldofscience-{{ $field->id }}" data-id="{{ $field->id }}">
-							<td>{{ $field->field->name }}</td>
+							<td>
+								<?php
+								$prf = '';
+								foreach ($field->field->ancestors() as $ancestor):
+									if (!$ancestor->parentid):
+										continue;
+									endif;
+
+									$prf .= $ancestor->name . ' > ';
+								endforeach;
+								?>{{ $prf . $field->field->name }}
+							</td>
 							<td class="text-right">
-								<a href="#" class="btn btn-secondary btn-danger"><span class="icon-trash glyph">{{ trans('global.trash') }}</span></a>
+								<a href="#fieldofscience-{{ $field->id }}" class="btn btn-secondary btn-danger remove-category"
+									data-api="{{ route('api.groups.groupfieldsofscience.delete', ['group' => $row->id, 'id' => $field->id]) }}"
+									data-confirm="{{ trans('groups::groups.confirm delete') }}">
+									<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+								</a>
 							</td>
 						</tr>
 					@endforeach
+						<tr class="hidden" id="fieldofscience-{id}" data-id="{id}">
+							<td>{name}</td>
+							<td class="text-right">
+								<a href="#fieldofscience-{id}" class="btn btn-secondary btn-danger remove-category"
+									data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $row->id]) }}/{id}"
+									data-confirm="{{ trans('groups::groups.confirm delete') }}">
+									<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+								</a>
+							</td>
+						</tr>
 					</tbody>
 					<tfoot>
 						<tr>
 							<td>
 								<div class="form-group">
-								<select name="fieldofscience" class="form-control searchable-select">
+								<select name="fieldofscience" id="fieldofscience" data-category="fieldofscienceid" class="form-control searchable-select">
 									<option value="0">{{ trans('groups::groups.select field of science') }}</option>
 									@foreach ($fields as $f)
 										@php
 										if ($f->level == 0):
 											continue;
 										endif;
+
+										$prf = '';
+										foreach ($f->ancestors() as $ancestor):
+											if (!$ancestor->parentid):
+												continue;
+											endif;
+
+											$prf .= $ancestor->name . ' > ';
+										endforeach;
 										@endphp
-										<option value="{{ $f->id }}">{{ str_repeat('- ', $f->level) . $f->name }}</option>
+										<option value="{{ $f->id }}">{{ $prf . $f->name }}</option>
 									@endforeach
 								</select>
 								</div>
 							</td>
 							<td class="text-right">
-								<button class="btn btn-secondary btn-success"><span class="icon-plus glyph">{{ trans('global.add') }}</span></button>
+								<a href="#fieldofscience"
+									class="btn btn-secondary btn-success add-category"
+									data-group="{{ $row->id }}"
+									data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $row->id]) }}">
+									<span class="icon-plus glyph">{{ trans('global.add') }}</span>
+								</a>
 							</td>
 						</tr>
 					</tfoot>
 				</table>
 			</fieldset>
 
-			@if ($row->id)
-				<div class="data-wrap">
-					<h4>{{ trans('pages::pages.history') }}</h4>
-					<ul class="entry-log">
-						<?php
-						$history = $row->history()->orderBy('created_at', 'desc')->get();
-						//$prev = 0;
-						if (count($history)):
-							foreach ($history as $action):
-								$actor = trans('global.unknown');
+			<input type="hidden" name="id" value="{{ $row->id }}" />
 
-								if ($action->user):
-									$actor = e($action->user->name);
-								endif;
-
-								$created = $action->created_at && $action->created_at != '0000-00-00 00:00:00' ? $action->created_at : trans('global.unknown');
-								//$length = $action->length - $prev;
-
-								$fields = array_keys(get_object_vars($action->new));
-								foreach ($fields as $i => $k)
-								{
-									if (in_array($k, ['created_at', 'updated_at', 'deleted_at']))
-									{
-										unset($fields[$i]);
-									}
-								}
-								?>
-								<li>
-									<span class="entry-log-data">{{ trans('groups::groups.history edited', ['user' => $actor, 'datetime' => $created]) }}</span><br />
-									<span class="entry-diff">Changed fields: <?php echo implode(', ', $fields); ?></span>
-								</li>
-								<?php
-							endforeach;
-						else:
-							?>
-							<li>
-								<span class="entry-diff">No history found.</span>
-							</li>
-							<?php
-						endif;
-						?>
-					</ul>
-				</div>
-			@endif
+			@include('history::admin.history')
 		</div>
 	</div>
 

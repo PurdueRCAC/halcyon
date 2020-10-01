@@ -338,7 +338,7 @@ class Group extends Model
 	/**
 	 * Get a list of "message of the day"
 	 *
-	 * @param   string  $name
+	 * @param   string  $unixgroup
 	 * @return  object
 	 */
 	public static function findByUnixgroup($unixgroup)
@@ -351,6 +351,7 @@ class Group extends Model
 	/**
 	 * Delete entry and associated data
 	 *
+	 * @param   array  $options
 	 * @return  bool
 	 */
 	public function delete(array $options = [])

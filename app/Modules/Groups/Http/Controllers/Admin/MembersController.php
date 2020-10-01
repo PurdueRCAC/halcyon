@@ -15,6 +15,7 @@ class MembersController extends Controller
 	/**
 	 * Display a listing of tags
 	 *
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index($group, StatefulRequest $request)
@@ -74,12 +75,26 @@ class MembersController extends Controller
 		if ($filters['state'] == 'active')
 		{
 			$query->withTrashed()
-				->whereNull($u . '.deleted_at') //, '=', '0000-00-00 00:00:00')
-				->where($m . '.dateremoved', '=', '0000-00-00 00:00:00');
+				->whereNull($u . '.deleted_at')
+				->where(function($where) use ($m)
+				{
+					$where->whereNull($m . '.dateremoved') //, '=', '0000-00-00 00:00:00')
+						->orWhere($m . '.dateremoved', '=', '0000-00-00 00:00:00');
+				});
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->onlyTrashed();
+			//$query->onlyTrashed();
+			$query->withTrashed()
+				->where(function($where) use ($u, $m)
+				{
+					$where->whereNotNull($u . '.deleted_at')
+						->orWhere(function($w) use ($m)
+						{
+							$w->whereNotNull($m . '.dateremoved')
+								->where($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
+						});
+				});
 		}
 		else
 		{
@@ -105,14 +120,27 @@ class MembersController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create($group)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
+		$row = new Member();
 
-		$row = new Group();
-
-		return view('groups::admin.edit', [
+		return view('groups::admin.members.edit', [
 			'row' => $row
+		]);
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  integer $id
+	 * @return Response
+	 */
+	public function edit($group, $id)
+	{
+		$row = Member::findOrFail($id);
+
+		return view('groups::admin.members.edit', [
+			'row' => $row,
 		]);
 	}
 
@@ -125,24 +153,15 @@ class MembersController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required'
+			'fields.name' => 'required',
+			'fields.unixid' => 'nullable|integer',
+			'fields.unixgroup' => 'nullable|string'
 		]);
 
 		$id = $request->input('id');
 
-		$row = $id ? Group::findOrFail($id) : new Group();
+		$row = $id ? Member::findOrFail($id) : new Member();
 		$row->fill($request->input('fields'));
-		$row->slug = $row->normalize($row->name);
-
-		if (!$row->created_by)
-		{
-			$row->created_by = auth()->user()->id;
-		}
-
-		if (!$row->updated_by)
-		{
-			$row->updated_by = auth()->user()->id;
-		}
 
 		if (!$row->save())
 		{
@@ -155,27 +174,12 @@ class MembersController extends Controller
 	}
 
 	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
-		$row = Member::findOrFail($id);
-
-		return view('groups::admin.members.edit', [
-			'row' => $row,
-		]);
-	}
-
-	/**
 	 * Remove the specified resource from storage.
 	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
-	public function delete(Request $request)
+	public function delete(Request $request, $group)
 	{
 		$ids = $request->input('id', array());
 		$ids = (!is_array($ids) ? array($ids) : $ids);
@@ -184,7 +188,7 @@ class MembersController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Group::findOrFail($id);
+			$row = Member::findOrFail($id);
 
 			if (!$row->delete())
 			{
@@ -200,7 +204,7 @@ class MembersController extends Controller
 			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
 		}
 
-		return $this->cancel();
+		return $this->cancel($group);
 	}
 
 	/**
@@ -208,8 +212,8 @@ class MembersController extends Controller
 	 *
 	 * @return  Response
 	 */
-	public function cancel()
+	public function cancel($group)
 	{
-		return redirect(route('admin.groups.members'));
+		return redirect(route('admin.groups.members', ['group' => $group]));
 	}
 }

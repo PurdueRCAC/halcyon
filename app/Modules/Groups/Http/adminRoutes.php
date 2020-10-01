@@ -43,27 +43,27 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 			'uses' => 'MembersController@index',
 			'middleware' => 'can:manage groups',
 		]);
-		$router->get('/create', [
+		$router->get('/{group}/create', [
 			'as' => 'admin.groups.members.create',
 			'uses' => 'MembersController@create',
 			'middleware' => 'can:create groups.members',
 		]);
-		$router->post('/store', [
+		$router->post('/{group}/store', [
 			'as' => 'admin.groups.members.store',
 			'uses' => 'MembersController@store',
 			'middleware' => 'can:create groups.members,edit groups.members',
 		]);
-		$router->get('/edit/{id}', [
+		$router->get('/{group}/edit/{id}', [
 			'as' => 'admin.groups.members.edit',
 			'uses' => 'MembersController@edit',
 			'middleware' => 'can:edit groups.members',
 		]);
-		$router->match(['get', 'post'], '/delete/{id?}', [
+		$router->match(['get', 'post'], '/{group}/delete/{id?}', [
 			'as'   => 'admin.groups.members.delete',
 			'uses' => 'MembersController@delete',
 			'middleware' => 'can:delete groups.members',
 		]);
-		$router->post('/cancel', [
+		$router->post('/{group}/cancel', [
 			'as' => 'admin.groups.members.cancel',
 			'uses' => 'MembersController@cancel',
 		]);

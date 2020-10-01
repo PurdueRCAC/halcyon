@@ -131,23 +131,31 @@ class GroupsController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required'
+			'fields.name' => 'required|max:255',
+			'fields.unixgroup' => 'nullable|max:10',
 		]);
 
 		$id = $request->input('id');
 
 		$row = $id ? Group::findOrFail($id) : new Group();
 		$row->fill($request->input('fields'));
-		$row->slug = $row->normalize($row->name);
 
-		if (!$row->created_by)
+		// Verify UNIX group is sane - this is just a first pass,
+		// would still need to make sure this is not a duplicate anywhere, etc
+		if ($row->unixgroup)
 		{
-			$row->created_by = auth()->user()->id;
-		}
+			if (!preg_match('/^[a-z][a-z0-9\-]{0,8}[a-z0-9]$/', $row->unixgroup))
+			{
+				return redirect()->back()->withError(trans('Field `unixgroup` not in valid format'));
+			}
 
-		if (!$row->updated_by)
-		{
-			$row->updated_by = auth()->user()->id;
+			$exists = Group::findByUnixgroup($row->unixgroup);
+
+			// Check for a duplicate
+			if ($exists)
+			{
+				return redirect()->back()->withError(trans('`unixgroup` ' . $dataobj->unixgroup . ' already exists'));
+			}
 		}
 
 		if (!$row->save())

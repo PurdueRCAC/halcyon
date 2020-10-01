@@ -1,5 +1,50 @@
 @extends('layouts.master')
 
+@section('scripts')
+<script>
+$(document).ready(function() {
+	var dialog = $(".dialog").dialog({
+		autoOpen: false,
+		height: 'auto',
+		width: 500,
+		modal: true
+	});
+
+	$('#toolbar-plus').on('click', function(e){
+		e.preventDefault();
+
+		dialog.dialog("open");
+	});
+
+	$('#add-group').on('click', function(e){
+		e.preventDefault();
+
+		var url = $(this).data('api');
+		var route = $(this).data('route');
+		var name = document.getElementById("field-name").value;
+
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: {
+				name: name
+			},
+			dataType: 'json',
+			async: false,
+			success: function(data) {
+				Halcyon.message('success', 'Created group ' + name);
+				window.location = route.replace('-id-', data.data.id);
+				//location.reload;
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				Halcyon.message('danger', 'Failed to create group ' + name);
+			}
+		});
+	});
+});
+</script>
+@stop
+
 @php
 app('pathway')
 	->append(
@@ -162,6 +207,19 @@ app('pathway')
 	</table>
 
 	{{ $rows->render() }}
+
+	<div class="dialog ui-front hide" title="{{ trans('groups::groups.create group') }}">
+		<h3 class="sr-only">{{ trans('groups::groups.create group') }}</h3>
+
+		<div class="form-group">
+			<label for="field-name">{{ trans('groups::groups.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+			<input type="text" name="fields[name]" id="field-name" class="form-control required" maxlength="250" value="" />
+		</div>
+
+		<div class="form-group text-center">
+			<button class="btn btn-primary" id="add-group" data-api="{{ route('api.groups.create') }}" data-route="{{ route('admin.groups.edit', ['id' => '-id-']) }}"><span class="icon-plus"></span> Add</button>
+		</div>
+	</div>
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
