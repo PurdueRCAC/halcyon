@@ -152,7 +152,7 @@ app('pathway')
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr<?php if ($row->getOriginal('datetimeremoved') && $row->getOriginal('datetimeremoved') != '0000-00-00 00:00:00' && $row->getOriginal('datetimeremoved') != '-0001-11-30 00:00:00') { echo ' class="trashed"'; } ?>>
+			<tr<?php if ($row->isTrashed()) { echo ' class="trashed"'; } ?>>
 				<td>
 					@if (auth()->user()->can('edit queues'))
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
