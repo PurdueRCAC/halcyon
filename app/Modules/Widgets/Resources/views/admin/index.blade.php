@@ -314,7 +314,7 @@ app('pathway')
 
 $(document).ready(function() {
 
-	dialog = $("#new-widget").dialog({
+	var dialog = $("#new-widget").dialog({
 		autoOpen: false,
 		height: 400,
 		width: 500,
