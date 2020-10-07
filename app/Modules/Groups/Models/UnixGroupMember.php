@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
+use App\Modules\Groups\Events\UnixGroupMemberCreated;
+use App\Modules\Groups\Events\UnixGroupMemberDeleted;
 
 /**
  * Unix Group member model
@@ -80,6 +82,19 @@ class UnixGroupMember extends Model
 		'unixgroupid' => 'required|integer',
 		'userid' => 'required|integer'
 	);
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var array
+	 */
+	protected $dispatchesEvents = [
+		'creating' => UnixGroupMemberCreated::class,
+		//'created'  => UnixGroupMemberCreated::class,
+		//'updating' => UnixGroupMemberUpdating::class,
+		//'updated'  => UnixGroupMemberUpdated::class,
+		'deleted'  => UnixGroupMemberDeleted::class,
+	];
 
 	/**
 	 * If entry is trashed

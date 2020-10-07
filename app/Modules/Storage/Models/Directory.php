@@ -175,6 +175,14 @@ class Directory extends Model
 		return $this->hasMany(Message::class, 'targetobjectid');
 	}
 
+	/**
+	 * Add a message to the message queue
+	 *
+	 * @param   integer  $typeid
+	 * @param   integer  $userid
+	 * @param   integer  $offset
+	 * @return  void
+	 */
 	public function addMessageToQueue($typeid = null, $userid = 0, $offset = 0)
 	{
 		$message = new Message;

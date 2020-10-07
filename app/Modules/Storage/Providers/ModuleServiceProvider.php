@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Storage\Listeners\Messages;
 use App\Modules\Storage\Listeners\Resources;
+use App\Modules\Storage\Listeners\UnixGroupMembers;
 use App\Modules\Storage\Console\EmailQuotaCommand;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -47,6 +48,11 @@ class ModuleServiceProvider extends ServiceProvider
 		if (is_dir(dirname(dirname(__DIR__))) . '/Resources')
 		{
 			$this->app['events']->subscribe(new Resources);
+		}
+
+		if (is_dir(dirname(dirname(__DIR__))) . '/Groups')
+		{
+			$this->app['events']->subscribe(new UnixGroupMembers);
 		}
 	}
 

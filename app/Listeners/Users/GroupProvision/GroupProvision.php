@@ -178,4 +178,46 @@ class GroupProvision
 
 		$this->log('role', 'GET', $status, $body, $url);
 	}
+
+	/**
+	 * Handle a unix group being deleted
+	 *
+	 * @param   object  $event
+	 * @return  void
+	 */
+	public function handleUnixGroupMemberDeleted(UnixGroupMemberDeleted $event)
+	{
+		$config = config('listener.groupprovision', []);
+
+		if (empty($config))
+		{
+			return;
+		}
+
+		try
+		{
+			// Call central accounting service to request status
+			$client = new Client();
+
+			$url = $config['url'] . 'removeGroupMember/rcs/pucc_rcd/' . $this->member->unixgroup->shortname . '/' . $this->member->user->username;
+
+			$res = $client->request('PUT', $url, [
+				'auth' => [
+					$config['user'],
+					$config['password']
+				]
+			]);
+
+			$status = $res->getStatusCode();
+			$body   = $res->getBody();
+		}
+		catch (\Exception $e)
+		{
+			//Log::error($e->getMessage());
+			$status = 500;
+			$body   = ['error' => $e->getMessage()];
+		}
+
+		$this->log('role', 'DELETE', $status, $body, $url);
+	}
 }
