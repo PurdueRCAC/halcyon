@@ -519,7 +519,7 @@ class Toolbar
 
 		$this->append(
 			'Popup',
-			'options',
+			'settings',//options
 			$alt,
 			route('admin.config.module', ['module' => $module]),
 			$width,
