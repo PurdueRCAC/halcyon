@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'orders'], function (Router $router)
+$router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Router $router)
 {
 	$router->get('/', [
 		'as' => 'api.orders.index',
@@ -111,6 +111,33 @@ $router->group(['prefix' => 'orders'], function (Router $router)
 			'as' => 'api.orders.items.delete',
 			'uses' => 'ItemsController@delete',
 			'middleware' => 'can:delete orders.items',
+		])->where('id', '[0-9]+');
+	});
+
+	$router->group(['prefix' => '/accounts'], function (Router $router)
+	{
+		$router->get('/', [
+			'as'   => 'api.orders.accounts',
+			'uses' => 'AccountsController@index',
+		]);
+		$router->post('/', [
+			'as' => 'api.orders.accounts.create',
+			'uses' => 'AccountsController@create',
+			'middleware' => 'can:create orders.accounts',
+		]);
+		$router->get('{id}', [
+			'as' => 'api.orders.accounts.read',
+			'uses' => 'AccountsController@read',
+		])->where('id', '[0-9]+');
+		$router->put('{id}', [
+			'as' => 'api.orders.accounts.update',
+			'uses' => 'AccountsController@update',
+			'middleware' => 'can:edit orders.accounts',
+		])->where('id', '[0-9]+');
+		$router->delete('{id}', [
+			'as' => 'api.orders.accounts.delete',
+			'uses' => 'AccountsController@delete',
+			'middleware' => 'can:delete orders.accounts',
 		])->where('id', '[0-9]+');
 	});
 });
