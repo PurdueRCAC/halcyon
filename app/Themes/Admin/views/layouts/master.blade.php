@@ -106,10 +106,9 @@
 							<h2 class="sr-only">@yield('title')</h2>
 
 							@widget('breadcrumbs')
-						</div>
-						<!-- <div class="toolbar-list" id="toolbar"> -->
+						
 							@yield('toolbar')
-						<!-- </div> -->
+						</div>
 					</div><!-- / #toolbar-box -->
 
 					<!-- Notifications begins -->
