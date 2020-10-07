@@ -1,7 +1,16 @@
 @extends('layouts.master')
 
 @section('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css') }}" />
+@stop
+
+@section('scripts')
+<script src="{{ asset('modules/core/js/validate.js?v=' . filemtime(public_path() . '/modules/core/js/validate.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/orders/js/admin.js?v=' . filemtime(public_path() . '/modules/orders/js/admin.js')) }}"></script>
 @stop
 
 @php
@@ -57,7 +66,10 @@ app('pathway')
 						<div class="form-group{{ $errors->has('userid') ? ' has-error' : '' }}">
 							<label for="field-userid">{{ trans('orders::orders.userid') }}:</label>
 							<span class="input-group input-user">
-								<input type="text" name="fields[userid]" id="field-userid" class="form-control" value="{{ $row->userid }}" />
+								<?php
+								$user = ($row->user ? $row->user->name : trans('global.unknown')) . ':' . $row->userid;
+								?>
+								<input type="text" name="fields[userid]" id="field-userid" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" size="30" maxlength="250" value="{{ $user }}" />
 								<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
 							</span>
 						</div>
@@ -66,13 +78,14 @@ app('pathway')
 						<div class="form-group{{ $errors->has('groupid') ? ' has-error' : '' }}">
 							<label for="field-groupid">{{ trans('orders::orders.groupid') }}:</label>
 							<span class="input-group input-user">
-								<input type="text" name="fields[groupid]" id="field-groupid" class="form-control" value="{{ $row->groupid }}" />
+								<input type="text" name="fields[groupid]" id="field-groupid" class="form-control" value="{{ $row->groupid ? $row->group->name . ':' . $row->groupid : '' }}" />
 								<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
 							</span>
 						</div>
 					</div>
 				</div>
 
+			@if ($row->id)
 				<div class="form-group">
 					<label for="field-state">{{ trans('global.state') }}:</label>
 					<select class="form-control" name="state" id="field-state">
@@ -86,15 +99,21 @@ app('pathway')
 						<option value="canceled"<?php if ($row->status == 'canceled'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.canceled') }}</option>
 					</select>
 				</div>
+			@endif
 
-				<div class="form-group{{ $errors->has('usernotes') ? ' has-error' : '' }}">
-					<label for="field-usernotes">{{ trans('orders::orders.user notes') }}:</label>
-					<textarea name="fields[usernotes]" id="field-usernotes" class="form-control" cols="30" rows="5">{{ $row->usernotes }}</textarea>
-				</div>
-
-				<div class="form-group{{ $errors->has('staffnotes') ? ' has-error' : '' }}">
-					<label for="field-staffnotes">{{ trans('orders::orders.staff notes') }}:</label>
-					<textarea name="fields[staffnotes]" id="field-staffnotes" class="form-control" cols="30" rows="5">{{ $row->staffnotes }}</textarea>
+				<div class="row">
+					<div class="col col-md-6">
+						<div class="form-group{{ $errors->has('usernotes') ? ' has-error' : '' }}">
+							<label for="field-usernotes">{{ trans('orders::orders.user notes') }}:</label>
+							<textarea name="fields[usernotes]" id="field-usernotes" class="form-control" cols="30" rows="5">{{ $row->usernotes }}</textarea>
+						</div>
+					</div>
+					<div class="col col-md-6">
+						<div class="form-group{{ $errors->has('staffnotes') ? ' has-error' : '' }}">
+							<label for="field-staffnotes">{{ trans('orders::orders.staff notes') }}:</label>
+							<textarea name="fields[staffnotes]" id="field-staffnotes" class="form-control" cols="30" rows="5">{{ $row->staffnotes }}</textarea>
+						</div>
+					</div>
 				</div>
 			</fieldset>
 
@@ -103,7 +122,7 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('orders::orders.items') }}</legend>
 
-				<table>
+				<table class="table table-hover">
 					<thead>
 						<tr>
 							<th scope="col" colspan="2">{{ trans('orders::orders.status') }}</th>
@@ -111,6 +130,7 @@ app('pathway')
 							<th scope="col" class="text-right">{{ trans('orders::orders.quantity') }}</th>
 							<th scope="col" class="text-right">{{ trans('orders::orders.price') }}</th>
 							<th scope="col" class="text-right">{{ trans('orders::orders.total') }}</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -120,7 +140,7 @@ app('pathway')
 							<tr>
 								<td>
 									@if (!$item->fulfilled || $item->fulfilled == '0000-00-00 00:00:00')
-										@if ($row->status != 'canceled' && $row->status == 'pending_fulfillment')
+										@if ($row->status == 'pending_fulfillment')
 											<input type="button" value="Fulfill" class="btn btn-sm btn-secondary order-fulfill" id="button_<?php echo $item->id; ?>" data-id="<?php echo $item->id; ?>" />
 										</td>
 										<td>
@@ -145,7 +165,7 @@ app('pathway')
 								</td>
 								<td>
 									{{ $item->product->name }}
-									<p class="form-text">
+									<p class="form-text text-muted">
 									<?php
 									if ($item->origorderitemid)
 									{
@@ -186,18 +206,63 @@ app('pathway')
 											{{ trans('orders::orders.quantity for', ['quantity' => $item->quantity, 'count' => $item->timeperiodcount, 'timeperiod' => $item->product->timeperiod->singular]) }}
 										@endif
 									@else
-										{{ $item->quantity }}
+										@if (!$item->fulfilled || $item->fulfilled == '0000-00-00 00:00:00')
+											<input type="number" class="form-control" name="quantity{{ $item->id }}" size="5" min="1" max="999" value="{{ $item->quantity }}" />
+										@else
+											{{ $item->quantity }}
+										@endif
 									@endif
 								</td>
-								<td class="text-right">{{ config('orders.currency', '$') }} {{ number_format($item->price) }} / {{ $item->product->unit }}</td>
-								<td class="text-right">{{ config('orders.currency', '$') }} {{ number_format($item->price * $item->quantity) }}</td>
+								<td class="text-right">
+									{{ config('orders.currency', '$') }} {{ number_format($item->price) }}<br /><span class="text-muted">per&nbsp;{{ $item->product->unit }}</span>
+								</td>
+								<td class="text-right text-nowrap">
+									{{ config('orders.currency', '$') }} <span name="itemtotal">{{ number_format($item->price * $item->quantity) }}</span>
+								</td>
+								<td>
+									@if ($row->status != 'canceled' && $row->status != 'complete')
+									<a href="#" class="btn btn-danger"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+									@endif
+								</td>
 							</tr>
 						<?php } ?>
+						@if ($row->status != 'canceled' && $row->status != 'complete')
+						<tr>
+							<td></td>
+							<td></td>
+							<td>
+								<select name="orderproductid" class="form-control basic-single">
+									<option value="">- Select product -</option>
+									@foreach ($categories as $category)
+										<optgroup label="{{ $category->name }}">
+											@foreach ($category->products()->orderBy('sequence', 'asc')->get() as $product)
+												<option value="{{ $product->id }}" data-unitprice="{{ $product->unitprice }}" data-unit="{{ $product->unit }}">{{ $product->name }}</option>
+											@endforeach
+										</optgroup>
+									@endforeach
+								</select>
+							</td>
+							<td>
+								<input type="number" class="form-control" name="quantity" size="5" min="1" max="999" value="0" />
+							</td>
+							<td class="text-right text-nowrap">
+								<!-- <input type="text" class="form-control-plaintext unitprice" value="{{ config('orders.currency', '$') }} 0.00" /> -->
+								{{ config('orders.currency', '$') }} <span class="unitprice">0.00</span><br /><span class="text-muted">per&nbsp;<span class="unit">--</span></span>
+							</td>
+							<td class="text-right text-nowrap">
+								<span class="order-total">{{ config('orders.currency', '$') }} 0.00</span>
+							</td>
+							<td>
+								<a href="#" class="btn btn-success"><span class="glyph icon-plus">{{ trans('global.add') }}</span></a>
+							</td>
+						</tr>
+						@endif
 					</tbody>
 					<tfoot>
 						<tr>
 							<td class="text-right" colspan="5">{{ trans('orders::orders.order total') }}</td>
-							<td class="text-right orderprice">{{ config('orders.currency', '$') }} <span id="ordertotal">{{ number_format($row->total) }}</span></td>
+							<td class="text-right text-nowrap orderprice">{{ config('orders.currency', '$') }} <span id="ordertotal">{{ number_format($row->total) }}</span></td>
+							<td></td>
 						</tr>
 					</tfoot>
 				</table>
@@ -205,14 +270,26 @@ app('pathway')
 
 			<fieldset class="adminform">
 				<legend>{{ trans('orders::orders.payment information') }}</legend>
-
-				<table>
+			<!-- <div class="card">
+				<div class="card-header">
+					<div class="row">
+						<div class="col-md-9">
+							<h3 class="card-title">{{ trans('orders::orders.payment information') }}</h3>
+						</div>
+						<div class="col-md-3 text-right">
+							<button class="btn btn-success"><span class="glyph icon-plus">{{ trans('global.add') }}</span></button>
+						</div>
+					</div>
+				</div>
+				<div class="card-body">-->
+				<table class="table table-hover">
+					<caption class="sr-only"></caption>
 					<thead>
 						<tr>
 							<th scope="col">{{ trans('orders::orders.status') }}</th>
 							<th scope="col">{{ trans('orders::orders.account') }}</th>
 							<th scope="col">{{ trans('orders::orders.account approver') }}</th>
-							<th scope="col" class="text-right">{{ trans('orders::orders.quantity') }}</th>
+							<th scope="col" class="text-right text-nowrap">{{ trans('orders::orders.amount') }}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -223,7 +300,7 @@ app('pathway')
 
 							$s = $account->status;
 
-							$text = trans('global.unknown');
+							$text = '<span class="unknown">' . trans('global.unknown') . '</span>';
 
 							if ($s == 'canceled')
 							{
@@ -260,17 +337,50 @@ app('pathway')
 							$total += $account->amount;
 							?>
 							<tr>
-								<td><span class="order-status {{ $s }}">{{ $text }}</span></td>
-								<td>{{ $account->purchaseio ? 'Internal order:' . $account->purchaseio : 'WBSE: ' . $account->purchasewbse }} {{ $account->budgetjustification }}</td>
+								<td><span class="order-status {{ $s }}">{!! $text !!}</span></td>
+								<td>
+									@if ($account->purchaseio)
+										<strong>Internal order:</strong> {{$account->purchaseio}}
+									@else
+										<strong>WBSE:</strong> {{ $account->purchasewbse }}
+									@endif
+									<p class="form-text text-muted">{{ $account->budgetjustification }}</p>
+								</td>
 								<td>{{ $account->approver ? $account->approver->name : trans('global.unknown') }}</td>
-								<td class="text-right">{{ config('orders.currency', '$') }} {{ number_format($account->amount) }}</td>
+								<td class="text-right text-nowrap">{{ config('orders.currency', '$') }} {{ number_format($account->amount) }}</td>
 							</tr>
 						<?php } ?>
+						@if ($row->status != 'canceled' && $row->status != 'complete')
+						<tr>
+							<td></td>
+							<td>
+								<div class="form-group">
+									<label for="" class="sr-only">Account</label>
+									<input type="text" class="form-control" />
+								</div>
+								<div class="form-group">
+									<label for="">
+									Budget justification:
+									<a href="#help2" class="help">
+										<span class="glyph icon-help">Budget justification required</span>
+									</a>
+								</label>
+								<textarea name="justification" rows="4" maxlength="2000" cols="40" class="form-control balance-update"></textarea>
+								</div>
+							</td>
+							<td>
+								<input type="text" class="form-control" value="" />
+							</td>
+							<td class="text-right">
+								<input type="text" class="form-control" value="0.00" size="9" />
+							</td>
+						</tr>
+						@endif
 					</tbody>
 					<tfoot>
 						<tr>
 							<td class="text-right" colspan="3">{{ trans('orders::orders.balance remaining') }}</td>
-							<td class="text-right orderprice">{{ config('orders.currency', '$') }} <span id="ordertotal">{{ number_format($row->total - $total) }}</span></td>
+							<td class="text-right text-nowrap orderprice">{{ config('orders.currency', '$') }} <span id="ordertotal">{{ number_format($row->total - $total) }}</span></td>
 						</tr>
 					</tfoot>
 				</table>

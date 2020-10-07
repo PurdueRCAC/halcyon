@@ -52,8 +52,6 @@ app('pathway')
 			<div class="col col-md-3 filter-search">
 				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
 			</div>
 			<div class="col col-md-9 filter-select text-right">
 				<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
@@ -84,20 +82,32 @@ app('pathway')
 				<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
 			</div>
 		</div>
-	</fieldset>
 
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+	</fieldset>
+<div class="card">
 	<table class="table table-hover adminlist">
 		<thead>
 			<tr>
 				<th>
-					<span class="form-check"><input type="checkbox" name="toggle" value="" id="toggle-all" class="form-check-input checkbox-toggle toggle-all" /><label for="toggle-all"></label></span>
+					{!! Html::grid('checkall') !!}
 				</th>
-				<th scope="col" class="priority-5">{{ trans('orders::orders.id') }}</th>
-				<th scope="col" class="priority-4">{{ trans('orders::orders.created') }}</th>
-				<th scope="col">{{ trans('orders::orders.notes') }}</th>
+				<th scope="col" class="priority-5">
+					{!! Html::grid('sort', trans('orders::orders.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<th scope="col" class="priority-4">
+					{!! Html::grid('sort', trans('orders::orders.created'), 'datetimecreated', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<th scope="col">
+					{!! Html::grid('sort', trans('orders::orders.notes'), 'usernotes', $filters['order_dir'], $filters['order']) !!}
+				</th>
 				<th scope="col">{{ trans('orders::orders.status') }}</th>
-				<th scope="col" class="priority-4">{{ trans('orders::orders.submitter') }}</th>
-				<th scope="col" class="priority-2 numeric">{{ trans('orders::orders.total') }}</th>
+				<th scope="col" class="priority-4">
+					{!! Html::grid('sort', trans('orders::orders.submitter'), 'userid', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<th scope="col" class="priority-2 numeric">
+					{!! Html::grid('sort', trans('orders::orders.total'), 'ordertotal', $filters['order_dir'], $filters['order']) !!}
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -154,7 +164,7 @@ app('pathway')
 					fulfilled {{ $row->itemsfulfilled }}<br /> -->
 				</td>
 				<td>
-					<span class="badge badge-sm order-status {{ str_replace(' ', '-', $row->status) }}">
+					<span class="badge badge-sm order-status {{ str_replace(' ', '-', $row->status) }}" data-tip="Accounts: {{ $row->accounts }}<br />Assigned: {{ $row->accountsassigned }}<br />Approved: {{ $row->accountsapproved }}<br />Denied: {{ $row->accountsdenied }}<br />Paid: {{ $row->accountspaid }}<br />---<br />Items: {{ $row->items }}<br />Fulfilled: {{ $row->itemsfulfilled }}">
 						{{ trans('orders::orders.' . $row->status) }}
 					</span>
 				</td>
@@ -184,7 +194,7 @@ app('pathway')
 		@endforeach
 		</tbody>
 	</table>
-
+</div>
 	{{ $rows->render() }}
 
 	<input type="hidden" name="task" value="" autocomplete="off" />

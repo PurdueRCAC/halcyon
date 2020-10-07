@@ -1,7 +1,269 @@
 @extends('layouts.master')
 
 @section('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css') }}" />
+@stop
+
+@section('scripts')
+<script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/orders/js/orders.js') }}"></script>
+<script>
+$(document).ready(function() {
+	/*$('.edit-property').on('click', function(e){
+		e.preventDefault();
+		EditProperty($(this).data('prop'), $(this).data('value'));
+	});
+	$('.edit-property-input').on('keyup', function(event){
+		if (event.keyCode == 13) {
+			EditProperty($(this).data('prop'), $(this).data('value'));
+		}
+	});
+	$('.cancel-edit-property').on('click', function(e){
+		e.preventDefault();
+		CancelEditProperty($(this).data('prop'), $(this).data('value'));
+	});
+
+	$('#order_group_save').on('click', function(e){
+		e.preventDefault();
+		SaveOrderGroup();
+	});
+	$('#order_user_save').on('click', function(e){
+		e.preventDefault();
+		SaveOrderUser();
+	});
+
+	$('.copy-doc').on('blur', function(e){
+		CopyDoc(this);
+	});
+	$('.copy-docdate').on('change', function(e){
+		CopyDocDate(this);
+	});
+
+	$('.order')
+		.on('keyup', '.balance-update', function(e){
+			UpdateBalance(true);
+		})
+		.on('blur', '.balance-update', function(e){
+			UpdateBalance();
+		});
+	$('.balance-divide').on('click', function(e){
+		e.preventDefault();
+		DivideBalance();
+	});
+	$('.total-update').on('blur', function(e){
+		if ($(this).data('override') == '1') {
+			UpdateTotal(true);
+		} else {
+			UpdateTotal();
+		}
+	});
+	$('.order-fulfill').on('click', function(e){
+		e.preventDefault();
+		FulfillItem($(this).data('id'), this);
+	});
+
+	$( '#orderheaderpopup' ).dialog({
+		modal: true,
+		width: '550px',
+		autoOpen: false,
+		buttons : {
+			OK: {
+				text: 'OK',
+				click: function() {
+					$(this).dialog('close'); 
+				}
+			}
+		}
+	});
+	$('.order-status').on('click', function(e){
+		e.preventDefault();
+		$( '#orderheaderpopup' ).dialog('open');
+	});
+
+	$('#save_quantities').on('click', function(e){
+		e.preventDefault();
+		EditQuantities();
+	});
+	$('#cancel_quantities').on('click', function(e){
+		e.preventDefault();
+		CancelEditAccounts();
+	});
+
+	$('#printorder').on('click', function(e){
+		e.preventDefault();
+		PrintOrder();
+	});
+	$('#remindorder').on('click', function(e){
+		e.preventDefault();
+		RemindOrder($(this).data('id'));
+	});
+	$('#cancelorder').on('click', function(e){
+		e.preventDefault();
+		CancelOrder();
+	});*/
+
+	$('.contentInner')
+		.on('click', '.account-remove', function(e){
+			e.preventDefault();
+			EditRemoveAccount($(this).data('id'), this);
+		});
+	$('.account-add').on('click', function(e){
+		e.preventDefault();
+		AddNewAccountRow();
+	});
+	/*$('.account-remove').on('click', function(e){
+		e.preventDefault();
+		EditRemoveAccount($(this).data('id'), this);
+	});*/
+	$('.account-approve').on('click', function(e){
+		e.preventDefault();
+		ApproveAccount($(this).data('id'), this);
+	});
+	$('.account-deny').on('click', function(e){
+		e.preventDefault();
+		DenyAccount($(this).data('id'), this);
+	});
+	$('.account-remind').on('click', function(e){
+		e.preventDefault();
+		RemindAccount($(this).data('id'), this);
+	});
+	$('.account-collect').on('click', function(e){
+		e.preventDefault();
+		CollectAccount($(this).data('id'), this);
+	});
+
+	$('.account-save').on('click', function(e){
+		e.preventDefault();
+		SaveAccounts();
+	});
+	$('.account-edit').on('click', function(e){
+		e.preventDefault();
+		EditAccounts();
+	});
+	$('.account-edit-cancel').on('click', function(e){
+		e.preventDefault();
+		CancelEditAccounts();
+	});
+
+	var dates = document.getElementsByName("docdate");
+
+	var autocompleteOrderPurchaseAccount = function(url) {
+		return function(request, response) {
+			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
+				response($.map(data.accounts, function (el) {
+					return {
+						label: el.purchaseorder,
+						purchaseorder: el.purchaseorder,
+						purchasefund: el.purchasefund,
+						order: el.order,
+						id: el.id
+					};
+				}));
+			});
+		};
+	};
+
+	var docids = document.getElementsByName("docid");
+	for (var x=0;x<docids.length;x++) {
+		$( docids[x] ).autocomplete({
+			source: autocompleteOrderPurchaseAccount('{{ route("api.orders.accounts") }}?docid=%s'),
+			dataName: 'accounts',
+			height: 150,
+			delay: 100,
+			minLength: 0,
+			prefix: 'docid:',
+			noResultsText: '',
+			autoText: false
+		});
+	}
+
+	var funds = document.getElementsByName("account");
+	for (var x=0;x<funds.length;x++) {
+		$( funds[x] ).autocomplete({
+			source: autocompleteOrderPurchaseAccount('{{ route("api.orders.accounts") }}?fund=%s'),
+			dataName: 'accounts',
+			height: 150,
+			delay: 100,
+			minLength: 0,
+			prefix: 'fund:',
+			filter: /^[a-zA-Z]?[0-9\.]*$/i, noResultsText: '',
+			autoText: false
+		});
+	}
+
+	var autocompleteGroup = function(url) {
+		return function(request, response) {
+			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
+				response($.map(data.groups, function (el) {
+					return {
+						label: el.name,
+						id: el.id
+					};
+				}));
+			});
+		};
+	};
+	$("#search_group").autocomplete({
+		source: autocompleteGroup('{{ route("api.groups.index") }}?search=%s'),
+		dataName: 'groups',
+		height: 150,
+		delay: 100,
+		minLength: 2,
+		filter: /^[a-z0-9\-_ \.,\'\(\)]+$/i
+	});
+
+	var autocompleteName = function(url) {
+		return function(request, response) {
+			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
+				response($.map(data.users, function (el) {
+					return {
+						label: el.name,
+						name: el.name,
+						id: el.id,
+						usernames: el.usernames,
+						priorusernames: el.priorusernames
+					};
+				}));
+			});
+		};
+	};
+	$("#search_user").autocomplete({
+		source: autocompleteName('{{ route("api.users.index") }}?search=%s'),
+		dataName: 'users',
+		height: 150,
+		delay: 100,
+		minLength: 2,
+		filter: /^[a-z0-9\-_ .,@+]+$/i,
+		select: function (event, ui) {
+			event.preventDefault();
+			var thing = ui['item'].label;
+			if (typeof(ui['item'].usernames) != 'undefined') {
+				thing = thing + " (" + ui['item'].usernames[0]['name'] + ")";
+			} else if (typeof(ui['item'].priorusernames) != 'undefined') {
+				thing = thing + " (" + ui['item'].priorusernames[0]['name'] + ")";
+			}
+			$("#search_user" ).val( thing );
+		},
+		create: function () {
+			$(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+				var thing = item.label;
+				if (typeof(item.usernames) != 'undefined') {
+					thing = thing + " (" + item.usernames[0]['name'] + ")";
+				} else if (typeof(item.priorusernames) != 'undefined') {
+					thing = thing + " (" + item.priorusernames[0]['name'] + ")";
+				}
+				return $( "<li>" )
+					.append( $( "<div>" ).text( thing ) )
+					.appendTo( ul );
+			};
+		}
+	});
+	$("#search_user").on("autocompleteselect", SearchEventHandler);
+});
+</script>
 @stop
 
 @php
@@ -146,7 +408,7 @@ $myorder = (auth()->user()->id == $order->submitteruserid);
 		</div>
 	@endif
 
-	<div class="orderstatusblock">
+	<div class="orderstatusblocks">
 		<div class="orderstatus">
 			<span class="orderstatus {{ $order->status }}">{{ trans('orders::orders.' . $order->status) }}</span>
 			<a href="#orderheaderpopup" class="order-status icn tip" title="Help">
@@ -197,25 +459,25 @@ $myorder = (auth()->user()->id == $order->submitteruserid);
 
 		<input type="hidden" name="id" id="order" value="{{ $order->id }}" />
 
-			<div class="panel panel-default card">
-				<div class="panel-heading card-header">
-					<h3 class="panel-title card-title">{{ trans('global.details') }}</h3>
-				</div>
-				<div class="panel-body card-body">
+		<div class="panel panel-default card">
+			<div class="panel-heading card-header">
+				<h3 class="panel-title card-title">{{ trans('global.details') }}</h3>
+			</div>
+			<div class="panel-body card-body">
 
 				<div class="row">
 					<div class="col col-md-6">
 						<div class="form-group{{ $errors->has('userid') ? ' has-error' : '' }}">
-							<label for="field-userid">{{ trans('orders::orders.submitter') }}:</label>
+							<label for="field-userid">{{ trans('orders::orders.user') }}:</label>
 							@if (auth()->user()->can('manage orders'))
 								<span class="input-group input-user">
-									<input type="text" name="submitteruserid" id="submitteruserid" class="form-control" value="{{ $order->submitteruserid }}" placeholder="{{ trans('global.none') }}" />
+									<input type="text" name="userid" id="userid" class="form-control" value="{{ ($order->user ? $order->user->name : trans('global.unknown')) . ':' . $order->userid }}" placeholder="{{ trans('global.none') }}" />
 									<span class="input-group-addon"><span class="input-group-text fa fa-user" aria-hidden="true"></span></span>
 								</span>
 							@else
 								<p class="form-text">
-								@if ($order->submitter)
-									{{ $order->submitter->name }} ({{ $order->submitter->username }})
+								@if ($order->user)
+									{{ $order->user->name }} ({{ $order->user->username }})
 								@else
 									<span class="none">{{ trans('global.none') }}</span>
 								@endif
@@ -227,7 +489,7 @@ $myorder = (auth()->user()->id == $order->submitteruserid);
 						<div class="form-group{{ $errors->has('groupid') ? ' has-error' : '' }}">
 							<label for="field-groupid">{{ trans('orders::orders.group') }}:</label>
 							<span class="input-group input-user">
-								<input type="text" name="fields[groupid]" id="field-groupid" class="form-control" value="{{ $order->groupid }}" placeholder="{{ trans('global.none') }}" />
+								<input type="text" name="fields[groupid]" id="field-groupid" class="form-control" value="{{ $order->group ? $order->group->name . ':' . $order->groupid : '' }}" placeholder="{{ trans('global.none') }}" />
 								<span class="input-group-addon"><span class="input-group-text fa fa-users" aria-hidden="true"></span></span>
 							</span>
 							@if ($order->groupid)
@@ -242,28 +504,33 @@ $myorder = (auth()->user()->id == $order->submitteruserid);
 				<div class="form-group">
 					<label for="field-state">{{ trans('global.state') }}:</label>
 					<select class="form-control" name="state" id="field-state">
-						<!-- <option value="pending_payment"<?php if ($order->status == 'pending payment'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.pending payment') }}</option>
+						<option value="pending_payment"<?php if ($order->status == 'pending payment'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.pending payment') }}</option>
 						<option value="pending_boassignment"<?php if ($order->status == 'pending boassignment'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.pending boassignment') }}</option>
 						<option value="pending_approval"<?php if ($order->status == 'pending approval'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.pending approval') }}</option>
 						<option value="pending_collection"<?php if ($order->status == 'pending collection'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.pending collection') }}</option>
-						<option value="pending_fulfillment"<?php if ($order->status == 'pending fulfillment'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.pending fulfillment') }}</option> -->
-						<option value="pending"<?php if ($order->status != 'complete' && $order->status != 'canceled'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.pending') }}</option>
+						<option value="pending_fulfillment"<?php if ($order->status == 'pending fulfillment'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.pending fulfillment') }}</option>
+						<!-- <option value="pending"<?php if ($order->status != 'complete' && $order->status != 'canceled'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.pending') }}</option> -->
 						<option value="complete"<?php if ($order->status == 'complete'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.complete') }}</option>
 						<option value="canceled"<?php if ($order->status == 'canceled'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.canceled') }}</option>
 					</select>
 				</div>
 
-				<div class="form-group{{ $errors->has('usernotes') ? ' has-error' : '' }}">
-					<label for="field-usernotes">{{ trans('orders::orders.user notes') }}:</label>
-					<textarea name="fields[usernotes]" id="field-usernotes" class="form-control" cols="30" rows="5">{{ $order->usernotes }}</textarea>
-				</div>
-
-				<div class="form-group{{ $errors->has('staffnotes') ? ' has-error' : '' }}">
-					<label for="field-staffnotes">{{ trans('orders::orders.staff notes') }}:</label>
-					<textarea name="fields[staffnotes]" id="field-staffnotes" class="form-control" cols="30" rows="5">{{ $order->staffnotes }}</textarea>
+				<div class="row">
+					<div class="col col-md-6">
+						<div class="form-group{{ $errors->has('usernotes') ? ' has-error' : '' }}">
+							<label for="field-usernotes">{{ trans('orders::orders.user notes') }}:</label>
+							<textarea name="fields[usernotes]" id="field-usernotes" class="form-control" cols="30" rows="5">{{ $order->usernotes }}</textarea>
+						</div>
+					</div>
+					<div class="col col-md-6">
+						<div class="form-group{{ $errors->has('staffnotes') ? ' has-error' : '' }}">
+							<label for="field-staffnotes">{{ trans('orders::orders.staff notes') }}:</label>
+							<textarea name="fields[staffnotes]" id="field-staffnotes" class="form-control" cols="30" rows="5">{{ $order->staffnotes }}</textarea>
+						</div>
+					</div>
 				</div>
 			</div>
-			</div>
+		</div>
 
 			<?php $history = $order->history()->orderBy('created_at', 'desc')->get(); ?>
 
@@ -387,7 +654,7 @@ $myorder = (auth()->user()->id == $order->submitteruserid);
 							<th scope="col">{{ trans('orders::orders.status') }}</th>
 							<th scope="col">{{ trans('orders::orders.account') }}</th>
 							<th scope="col">{{ trans('orders::orders.account approver') }}</th>
-							<th scope="col" class="text-right">{{ trans('orders::orders.quantity') }}</th>
+							<th scope="col" class="text-right">{{ trans('orders::orders.amount') }}</th>
 							@if ($canEdit)
 								<th></th>
 							@endif
@@ -473,11 +740,43 @@ $myorder = (auth()->user()->id == $order->submitteruserid);
 								@endif
 							</tr>
 						<?php } ?>
+						<tr>
+							<td>
+							</td>
+							<td>
+								<input type="text" maxlength="17" class="form-control num8 balance-update" name="account" />
+								<label for="new_justification">Budget justification</label>
+								<textarea name="justification" id="new_justification" rows="3" maxlength="2000" cols="35" class="form-control balance-update"></textarea>
+							</td>
+							<td>
+								<input type="text" name="account_approver" class="form-control" />
+							</td>
+							<td class="text-right text-nowrap">
+								<span class="input-group">
+									<span class="input-group-addon"><span class="input-group-text">$</span></span>
+									<input type="text" size="8" name="account_amount" class="form-control balance-update" value="0.00" />
+								</span>
+							</td>
+							@if ($canEdit)
+								<td>
+									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" title="Add account" class="btn btn-success account-add">
+										<i class="fa fa-plus" aria-hidden="true"></i><span class="sr-only">Add account</span>
+									</a>
+								</td>
+							@endif
+						</tr>
 					</tbody>
 					<tfoot>
 						<tr>
 							<td class="text-right" colspan="3">{{ trans('orders::orders.balance remaining') }}</td>
 							<td class="text-right orderprice">{{ config('orders.currency', '$') }} <span id="ordertotal">{{ number_format($order->total - $total) }}</span></td>
+							@if ($canEdit)
+								<td>
+									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" title="Add account" class="btn btn-success account-add">
+										<i class="fa fa-plus" aria-hidden="true"></i><span class="sr-only">Add account</span>
+									</a>
+								</td>
+							@endif
 						</tr>
 					</tfoot>
 				</table>

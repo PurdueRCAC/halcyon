@@ -43,7 +43,7 @@ class OrdersController extends Controller
 			$filters[$key] = $request->state('orders.filter_' . $key, $key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'datetimecreated', 'datetimeremoved']))
+		if (!in_array($filters['order'], ['id', 'datetimecreated', 'datetimeremoved', 'userid', 'ordertotal', 'usernotes']))
 		{
 			$filters['order'] = Order::$orderBy;
 		}
@@ -234,6 +234,10 @@ class OrdersController extends Controller
 				->join($p, $p . '.id', $i . '.orderproductid')
 				->where($p . '.ordercategoryid', '=', $filters['category']);
 		}*/
+		if ($filters['order'] == 'userid')
+		{
+			$query->orderBy('name', $filters['order_dir']);
+		}
 
 		$rows = $query
 			//->withCount('items')
@@ -262,8 +266,15 @@ class OrdersController extends Controller
 	{
 		$order = new Order();
 
+		$categories = Category::query()
+			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->where('parentordercategoryid', '>', 0)
+			->orderBy('name', 'asc')
+			->get();
+
 		return view('orders::admin.orders.edit', [
-			'row' => $order
+			'row' => $order,
+			'categories' => $categories
 		]);
 	}
 
@@ -275,8 +286,15 @@ class OrdersController extends Controller
 	{
 		$order = Order::find($id);
 
+		$categories = Category::query()
+			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->where('parentordercategoryid', '>', 0)
+			->orderBy('name', 'asc')
+			->get();
+
 		return view('orders::admin.orders.edit', [
-			'row'   => $order
+			'row'   => $order,
+			'categories' => $categories
 		]);
 	}
 
@@ -313,7 +331,7 @@ class OrdersController extends Controller
 	 *
 	 * @return  Response
 	 */
-	public function delete($id)
+	public function delete(Request $request)
 	{
 		// Incoming
 		$ids = $request->input('id', array());
@@ -338,7 +356,7 @@ class OrdersController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', $success));
+			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();

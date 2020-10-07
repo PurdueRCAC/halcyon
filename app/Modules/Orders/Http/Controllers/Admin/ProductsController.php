@@ -132,12 +132,10 @@ class ProductsController extends Controller
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Product::findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))
-		{
+		{print_r($fields);
 			$row->fill($fields);
 		}
 
@@ -165,8 +163,8 @@ class ProductsController extends Controller
 		//$request->validateWithBag('errors', [
 			'fields.name' => 'required|string|max:255',
 			'fields.ordercategoryid' => 'required|integer|min:1',
-			'fields.unitprice' => 'required|integer',
-			'fields.unit' => 'required|string|min:1',
+			'fields.unitprice' => 'required|string',
+			'fields.unit' => 'required|string|min:1,max:16',
 		]);
 
 		if ($validator->fails()) //!$request->validated())
@@ -180,6 +178,7 @@ class ProductsController extends Controller
 		$row = $id ? Product::findOrFail($id) : new Product();
 
 		$row->fill($request->input('fields'));
+		$row->mou = $row->mou ?: '';
 
 		if (!$row->save())
 		{
@@ -194,9 +193,10 @@ class ProductsController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
+	 * @param   Request $request
 	 * @return  Response
 	 */
-	public function delete($id)
+	public function delete(Request $request)
 	{
 		// Incoming
 		$ids = $request->input('id', array());
@@ -221,7 +221,7 @@ class ProductsController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', $success));
+			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();

@@ -10,6 +10,8 @@ use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Models\Item;
 use App\Modules\Users\Models\User;
+use App\Modules\Orders\Http\Resources\OrderResource;
+use App\Modules\Orders\Http\Resources\OrderResourceCollection;
 
 /**
  * Orders
@@ -24,44 +26,62 @@ class OrdersController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/orders
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "state",
 	 * 		"description":   "Order state.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "active",
-	 * 		"allowedValues": "active [pending_payment, pending_boassignment, pending_collection, pending_approval, pending_fulfillment], canceled, complete"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "active",
+	 * 			"enum": [
+	 * 				"active [pending_payment, pending_boassignment, pending_collection, pending_approval, pending_fulfillment]",
+	 * 				"caceled",
+	 * 				"complete"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "category",
-	 * 		"description":   "Orders that have products int he specified category.",
+	 * 		"description":   "Orders that have products in the specified category.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "start",
 	 * 		"description":   "Orders created on or after this datetime.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "",
-	 * 		"allowedValues": "YYYY-MM-DD HH:mm:ss"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date (YYYY-MM-DD HH:mm:ss)"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "end",
 	 * 		"description":   "Orders created before this datetime.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "",
-	 * 		"allowedValues": "YYYY-MM-DD HH:mm:ss"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date (YYYY-MM-DD HH:mm:ss)"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
@@ -72,26 +92,34 @@ class OrdersController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "name",
-	 * 		"allowedValues": "id, created_at"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "created_at",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"created_at"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "asc",
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "asc",
@@ -280,7 +308,7 @@ class OrdersController extends Controller
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
-		return $rows;
+		return new OrderResourceCollection($rows);
 	}
 
 	/**
@@ -289,37 +317,181 @@ class OrdersController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /api/orders
 	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "usernotes",
-	 * 		"description":   "Submitter notes.",
-	 * 		"type":          "string",
+	 * 		"description":   "User notes",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "description",
-	 * 		"description":   "Longer description of a tag",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "staffnotes",
+	 * 		"description":   "Staff notes",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "namespace",
-	 * 		"description":   "Namespace for tag",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "notices",
+	 * 		"description":   "Notice state",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return Response
 	 */
 	public function create(Request $request)
 	{
 		$request->validate([
-			'name' => 'required'
+			'userid' => 'required|integer',
+			'groupid' => 'nullable|integer',
+			'submitteruserid' => 'nullable|integer',
+			'usernotes' => 'nullable|string',
+			'staffnotes' => 'nullable|string',
+			'notice' => 'nullable|integer',
 		]);
 
-		$row = Order::create($request->all());
+		if (!$request->has('items'))
+		{
+			return response()->json(['message' => 'No items found'], 415);
+		}
 
-		return $row;
+		$items = (array)$request->input('items', []);
+		$orderid = 0;
+
+		// Create record
+		$row = new Order;
+		$row->userid = $request->input('userid', auth()->user() ? auth()->user()->id : 0);
+		$row->groupid = $request->input('groupid', 0);
+		$row->submitteruserid = $request->input('submitteruserid', $row->userid);
+		$row->usernotes = $request->input('usernotes', '');
+		$row->staffnotes = $request->input('staffnotes', '');
+		$row->notice = $request->input('notice', 1);
+
+		// If we sent an itemsequence we are copying another order. GO and fetch all this
+		if ($request->has('orderitemsequence'))
+		{
+			$sequences = (array)$request->input('orderitemsequence');
+
+			$items = array();
+			foreach ($sequences as $sequence)
+			{
+				// Fetch order information
+				$item = Item::query()
+					->where('origorderitemid', $sequence)
+					->where(function($where)
+					{
+						$where->whereNull('datetimeremoved')
+							->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+					})
+					->orderBy('datetimecreated', 'desc')
+					->limit(1)
+					->first();
+
+				if (!$orderitem)
+				{
+					return response()->json(['message' => 'Failed to find order information for orderitemid #' . $sequence], 404);
+				}
+
+				//create a new class.
+				$item->id = null;
+				$item->datetimecreated = null;
+
+				$items[] = (array)$item;
+
+				$orderid = $item->orderid;
+				$row->userid = $item->userid;
+				$row->groupid = $item->groupid;
+			}
+
+			// Fetch accounts information
+			$accounts = Account::query()
+				->where('orderid', '=', $orderid)
+				->get();
+		}
+
+		if ($row->groupid && !$row->group)
+		{
+			return response()->json(['message' => 'Invalid group ID'], 404);
+		}
+
+		$row->save();
+
+		// Create each item in order
+		foreach ($items as $i)
+		{
+			$item = new Item;
+			$item->orderid = $row->id;
+			$item->orderproductid = $i['product'];
+			$item->quantity = $i['quantity'];
+
+			$total = $item->product->unitprice * $item->quantity;
+
+			$item->price = $total;
+			if (isset($i['price']))
+			{
+				$item->price = $i['price'];
+			}
+			$item->origunitprice = $item->product->unitprice;
+
+			if ($total != $item->price && !auth()->user()->can('manage orders'))
+			{
+				return response()->json(['message' => 'Total and item price do not match'], 403);
+			}
+
+			$item->save();
+		}
+
+		// ADD FORLOOP ABOVE FOR THE ACCOUNTS: AND TRANSLATE IT
+		/*if ($request->has('orderitemsequence')
+		 && $accounts)
+		{
+			$numaccounts = count($accounts);
+			$remainder = $numaccounts ? $total % $numaccounts : 0;
+			$remainder_check = $remainder;
+
+			foreach ($accounts as $account)
+			{
+				$amount = ($total - $remainder) / $numaccounts;
+
+				if ($remainder_check != 0)
+				{
+					$amount = $amount + 1;
+					$remainder_check = $remainder_check - 1;
+				}
+
+				// set amount to each account
+				$account->amount = $amount;
+				$account->id = null;
+
+				$account->save();
+			}
+		}*/
+
+		return new OrderResource($row);
 	}
 
 	/**
@@ -342,16 +514,7 @@ class OrdersController extends Controller
 	{
 		$row = Order::findOrFail($id);
 
-		$row->state = $row->status;
-
-		$row->accounts;
-
-		$row->items->each(function ($item, $key)
-		{
-			$item->product;
-		});
-
-		return $row;
+		return new OrderResource($row);
 	}
 
 	/**
@@ -369,52 +532,96 @@ class OrdersController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "name",
-	 * 		"description":   "Tag text",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "slug",
-	 * 		"description":   "Normalized text (alpha-numeric, no punctuation)",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group ID",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "description",
-	 * 		"description":   "Longer description of a tag",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "usernotes",
+	 * 		"description":   "User notes",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "namespace",
-	 * 		"description":   "Namespace for tag",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "staffnotes",
+	 * 		"description":   "Staff notes",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "substitutes",
-	 * 		"description":   "Comma-separated list of aliases or alternatives",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "notices",
+	 * 		"description":   "Notice state",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
+	 * @param   integer $id
 	 * @param   Request $request
 	 * @return  Response
 	 */
-	public function update(Order $row, Request $request)
+	public function update($id, Request $request)
 	{
 		$request->validate([
-			'name' => 'required|max:255',
+			'userid' => 'nullable|integer',
+			'groupid' => 'nullable|integer',
+			'submitteruserid' => 'nullable|integer',
+			'usernotes' => 'nullable|string',
+			'staffnotes' => 'nullable|string',
+			'notice' => 'nullable|integer',
 		]);
 
-		$row->update($request->all());
+		$row = Order::findOrFail($id);
+		//$row->fill($request->all());
+		$row->userid = $request->input('userid', $row->userid);
+		$row->groupid = $request->input('groupid', $row->groupid);
+		$row->submitteruserid = $request->input('submitteruserid', $row->submitteruserid);
+		$row->usernotes = $request->input('usernotes', $row->usernotes);
+		$row->staffnotes = $request->input('staffnotes', $row->staffnotes);
+		$row->notice = $request->input('notice', $row->notice);
 
-		return $row;
+		if ($row->groupid && !$row->group)
+		{
+			return response()->json(['message' => 'Invalid group ID'], 404);
+		}
+
+		$row->save();
+
+		if ($request->has('accounts'))
+		{
+			// Create account records
+			$accounts = (array)$request->has('accounts');
+
+			foreach ($accounts as $a)
+			{
+				$account = new Account;
+				$account->fill($a);
+				$account->orderid = $id;
+				$account->save();
+			}
+		}
+
+		return new OrderResource($row);
 	}
 
 	/**
@@ -431,15 +638,21 @@ class OrdersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer $id
 	 * @return  Response
 	 */
-	public function destroy(Order $row)
+	public function destroy($id)
 	{
+		$row = Order::findOrFail($id);
+
 		if (!$row->trashed())
 		{
-			$row->delete();
+			if (!$row->delete())
+			{
+				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			}
 		}
 
-		return response()->json();
+		return response()->json(null, 204);
 	}
 }

@@ -73,8 +73,6 @@ app('pathway')
 			<div class="col col-md-4 filter-search">
 				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
 			</div>
 			<div class="col col-md-8 filter-select text-right">
 				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
@@ -93,12 +91,16 @@ app('pathway')
 				</select>
 			</div>
 		</div>
+
+		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
-	<!-- <div class="card w-100"> -->
-
-	<table class="table adminlist">
-		<thead class="thead-light">
+	<div class="card w-100">
+	<table class="table table-hover adminlist">
+		<thead>
 			<tr>
 				<th>
 					{!! Html::grid('checkall') !!}
@@ -173,14 +175,13 @@ app('pathway')
 		@endforeach
 		</tbody>
 	</table>
-<!-- </div> -->
+	</div>
+
 	{{ $rows->render() }}
 
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="order" value="{{ $filters['order'] }}" />
-	<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
 	@csrf
 </form>

@@ -148,9 +148,9 @@ class Product extends Model
 	 *
 	 * @return  string
 	 */
-	public function getPriceAttribute($unitprice)
+	public function getPriceAttribute()
 	{
-		$number = $unitprice;
+		$number = preg_replace('/[^0-9\-]/', '', $this->unitprice);
 
 		$neg = '';
 		if ($number < 0)
@@ -177,6 +177,16 @@ class Product extends Model
 		}
 
 		return '$' . $neg . $number;
+	}
+
+	/**
+	 * Set unit price
+	 *
+	 * @return  void
+	 */
+	public function setUnitpriceAttribute($value)
+	{
+		$this->attributes['unitprice'] = preg_replace('/[^0-9]+/', '', $value);
 	}
 
 	/**

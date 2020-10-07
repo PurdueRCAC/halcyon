@@ -44,8 +44,6 @@ $(document).ready(function() {
 			<div class="col col-md-4">
 				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<!-- <button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button> -->
 			</div>
 			<div class="col col-md-8 text-right">
 				<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
@@ -76,101 +74,103 @@ $(document).ready(function() {
 				<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
 			</div>
 		</div>
+
+		<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
+		<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
+
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
-	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('orders::orders.orders placed') }}</caption>
-		<thead>
-			<tr>
-				<th scope="col" class="priority-5">
-					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.id'), 'id', $filters['order_dir'], $filters['order']); ?>
-				</th>
-				<th scope="col" class="priority-4">
-					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.created'), 'created', $filters['order_dir'], $filters['order']); ?>
-				</th>
-				<th scope="col">
-					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.status'), 'state', $filters['order_dir'], $filters['order']); ?>
-				</th>
-				<th scope="col" class="priority-4">
-					{{ trans('orders::orders.submitter') }}
-				</th>
-				<th scope="col" class="priority-2 text-right">
-					{{ trans('orders::orders.total') }}
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-		@foreach ($rows as $i => $row)
-			<tr>
-				<td class="priority-5">
-					@if (auth()->user()->can('edit orders'))
-						<a href="{{ route('site.orders.read', ['id' => $row->id]) }}">
+		<table class="table table-hover adminlist">
+			<caption class="sr-only">{{ trans('orders::orders.orders placed') }}</caption>
+			<thead>
+				<tr>
+					<th scope="col" class="priority-5">
+						<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.id'), 'id', $filters['order_dir'], $filters['order']); ?>
+					</th>
+					<th scope="col" class="priority-4">
+						<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.created'), 'datetimecreated', $filters['order_dir'], $filters['order']); ?>
+					</th>
+					<th scope="col">
+						<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.status'), 'state', $filters['order_dir'], $filters['order']); ?>
+					</th>
+					<th scope="col" class="priority-4">
+						<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.submitter'), 'userid', $filters['order_dir'], $filters['order']); ?>
+					</th>
+					<th scope="col" class="priority-2 text-right">
+						{{ trans('orders::orders.total') }}
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			@foreach ($rows as $i => $row)
+				<tr>
+					<td class="priority-5">
+						@if (auth()->user()->can('edit orders'))
+							<a href="{{ route('site.orders.read', ['id' => $row->id]) }}">
+								{{ $row->id }}
+							</a>
+						@else
 							{{ $row->id }}
-						</a>
-					@else
-						{{ $row->id }}
-					@endif
-				</td>
-				<td class="priority-4">
-					@if ($row->getOriginal('datetimecreated') && $row->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
-						<time datetime="{{ $row->datetimecreated->toDateTimeString() }}">
-							@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
-								{{ $row->datetimecreated->diffForHumans() }}
+						@endif
+					</td>
+					<td class="priority-4">
+						@if ($row->getOriginal('datetimecreated') && $row->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
+							<time datetime="{{ $row->datetimecreated->toDateTimeString() }}">
+								@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
+									{{ $row->datetimecreated->diffForHumans() }}
+								@else
+									{{ $row->datetimecreated->format('Y-m-d') }}
+								@endif
+							</time>
+						@else
+							<span class="never">{{ trans('global.unknown') }}</span>
+						@endif
+					</td>
+					<td>
+						<span class="order-status {{ str_replace(' ', '-', $row->status) }}">
+							{{ trans('orders::orders.' . $row->status) }}
+						</span>
+					</td>
+					<td class="priority-4">
+						@if ($row->groupid)
+							@if (auth()->user()->can('manage groups'))
+								<a href="{{ route('site.groups.show', ['id' => $row->groupid]) }}">
+									<?php echo $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+								</a>
 							@else
-								{{ $row->datetimecreated->format('Y-m-d') }}
-							@endif
-						</time>
-					@else
-						<span class="never">{{ trans('global.unknown') }}</span>
-					@endif
-				</td>
-				<td>
-					<span class="order-status {{ str_replace(' ', '-', $row->status) }}">
-						{{ trans('orders::orders.' . $row->status) }}
-					</span>
-				</td>
-				<td class="priority-4">
-					@if ($row->groupid)
-						@if (auth()->user()->can('manage groups'))
-							<a href="{{ route('site.groups.show', ['id' => $row->groupid]) }}">
 								<?php echo $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
-							</a>
+							@endif
 						@else
-							<?php echo $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
-						@endif
-					@else
-						@if (auth()->user()->can('manage users'))
-							<a href="{{ route('site.users.account', ['u' => $row->userid]) }}">
+							@if (auth()->user()->can('manage users'))
+								<a href="{{ route('site.users.account', ['u' => $row->userid]) }}">
+									<?php echo $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+								</a>
+							@else
 								<?php echo $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
-							</a>
-						@else
-							<?php echo $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+							@endif
 						@endif
-					@endif
-				</td>
-				<td class="priority-2 text-right">
-					{{ config('orders.currency', '$') }} {{ number_format($row->ordertotal, 2) }}
-				</td>
-			</tr>
-		@endforeach
-		</tbody>
-	</table>
+					</td>
+					<td class="priority-2 text-right">
+						{{ config('orders.currency', '$') }} {{ number_format($row->ordertotal, 2) }}
+					</td>
+				</tr>
+			@endforeach
+			</tbody>
+		</table>
 
-	<div class="row">
-		<div class="col-sm-9">
-			{{ $rows->render() }}
+		<div class="row">
+			<div class="col-sm-9">
+				{{ $rows->render() }}
+			</div>
+			<div class="col-sm-3 text-right">
+				Results {{ ($rows->currentPage()-1)*$rows->perPage()+1 }}-{{ $rows->total() > $rows->perPage() ? $rows->currentPage()*$rows->perPage() : $rows->total() }} of {{ $rows->total() }}
+			</div>
 		</div>
-		<div class="col-sm-3 text-right">
-			Results {{ ($rows->currentPage()-1)*$rows->perPage()+1 }}-{{ $rows->total() > $rows->perPage() ? $rows->currentPage()*$rows->perPage() : $rows->total() }} of {{ $rows->total() }}
-		</div>
-	</div>
 	@else
 		<p class="alert alert-info">No orders found.</p>
 	@endif
-
-	<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
-	<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 
 	@csrf
 </form>

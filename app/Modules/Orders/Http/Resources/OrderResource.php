@@ -20,7 +20,7 @@ class OrderResource extends JsonResource
 		$data['items'] = $this->items;
 
 		$data['api'] = route('api.orders.read', ['id' => $this->id]);
-		$data['url'] = route('site.orders.show', ['id' => $this->id]);
+		$data['url'] = route('site.orders.read', ['id' => $this->id]);
 
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;

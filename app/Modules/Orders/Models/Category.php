@@ -124,11 +124,21 @@ class Category extends Model
 	}
 
 	/**
+	 * Defines a relationship to child categories
+	 *
+	 * @return  object
+	 */
+	public function children()
+	{
+		return $this->hasMany(self::class, 'parentordercategoryid');
+	}
+
+	/**
 	 * Determine if the model instance has been soft-deleted.
 	 *
 	 * @return bool
 	 */
-	public function istrashed()
+	public function isTrashed()
 	{
 		$result = $this->trashed();
 
@@ -142,5 +152,26 @@ class Category extends Model
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Delete entry and associated data
+	 *
+	 * @param   array  $options
+	 * @return  bool
+	 */
+	public function delete(array $options = [])
+	{
+		foreach ($this->products as $row)
+		{
+			$row->delete();
+		}
+
+		foreach ($this->children as $row)
+		{
+			$row->delete();
+		}
+
+		return parent::delete($options);
 	}
 }

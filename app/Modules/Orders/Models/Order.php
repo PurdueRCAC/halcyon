@@ -132,6 +132,26 @@ class Order extends Model
 	}
 
 	/**
+	 * Set user notes
+	 *
+	 * @return  void
+	 */
+	public function setUsernotesAttribute($value)
+	{
+		$this->attributes['usernotes'] = strip_tags($value);
+	}
+
+	/**
+	 * Set staff notes
+	 *
+	 * @return  void
+	 */
+	public function setStaffnotesAttribute($value)
+	{
+		$this->attributes['staffnotes'] = strip_tags($value);
+	}
+
+	/**
 	 * Get order total
 	 *
 	 * @return  integer
@@ -271,5 +291,26 @@ class Order extends Model
 		}
 
 		return $status;
+	}
+
+	/**
+	 * Delete entry and associated data
+	 *
+	 * @param   array  $options
+	 * @return  bool
+	 */
+	public function delete(array $options = [])
+	{
+		foreach ($this->accounts as $row)
+		{
+			$row->delete();
+		}
+
+		foreach ($this->items as $row)
+		{
+			$row->delete();
+		}
+
+		return parent::delete($options);
 	}
 }

@@ -25,12 +25,38 @@ class Account extends Model
 	protected $table = 'orderpurchaseaccounts';
 
 	/**
+	 * The name of the "created at" column.
+	 *
+	 * @var string
+	 */
+	const CREATED_AT = 'datetimecreated';
+
+	/**
+	 * The name of the "updated at" column.
+	 *
+	 * @var string
+	 */
+	const UPDATED_AT = null;
+
+	/**
+	 * The name of the "deleted at" column.
+	 *
+	 * @var  string
+	 */
+	const DELETED_AT = 'datetimeremoved';
+
+	/**
 	 * Automatic fields to populate every time a row is created
 	 *
 	 * @var  array
 	 */
 	protected $dates = array(
-		'datetimecreated'
+		'datetimecreated',
+		'datetimeremoved',
+		'datetimeapproved',
+		'datetimedenied',
+		'datetimepaid',
+		'datetimepaymentdoc'
 	);
 
 	/**
@@ -46,6 +72,16 @@ class Account extends Model
 	 * @var  string
 	 */
 	public static $orderDir = 'asc';
+
+	/**
+	 * If item is trashed
+	 *
+	 * @return  bool
+	 **/
+	public function isTrashed()
+	{
+		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
+	}
 
 	/**
 	 * If account is approved
@@ -107,9 +143,12 @@ class Account extends Model
 		$wbse = $purchasewbse;
 
 		// insert periods
-		$wbse = substr_replace($wbse, '.', 1, 0);
-		$wbse = substr_replace($wbse, '.', 10, 0);
-		$wbse = substr_replace($wbse, '.', 13, 0);
+		if ($wbse)
+		{
+			$wbse = substr_replace($wbse, '.', 1, 0);
+			$wbse = substr_replace($wbse, '.', 10, 0);
+			$wbse = substr_replace($wbse, '.', 13, 0);
+		}
 
 		return $wbse;
 	}

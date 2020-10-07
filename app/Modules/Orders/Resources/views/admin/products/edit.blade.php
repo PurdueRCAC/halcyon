@@ -1,6 +1,56 @@
 @extends('layouts.master')
 
+@section('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css') }}" />
+@stop
+
+@section('scripts')
+<script src="{{ asset('modules/orders/js/orders.js') }}"></script>
+<script>
+function formatCurrency(number, decPlaces, decSep, thouSep) {
+	decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+	decSep = typeof decSep === "undefined" ? "." : decSep;
+	thouSep = typeof thouSep === "undefined" ? "," : thouSep;
+	var sign = number < 0 ? "-" : "";
+	var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
+	var j = (j = i.length) > 3 ? j % 3 : 0;
+
+	return sign +
+		(j ? i.substr(0, j) + thouSep : "") +
+		i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
+		(decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
+}
+
+jQuery(document).ready(function ($) {
+	$('.form-currency')
+		.on('keyup', function (e){
+			var val = $(this).val();
+
+			val = val.replace(/[^0-9.,]+/g, '');
+
+			$(this).val(val);
+		})
+		.on('blur', function (e){
+			var val = $(this).val();
+
+			// Create our number formatter.
+			var formatter = new Intl.NumberFormat('en-US', {
+				style: 'currency',
+				currency: 'USD',
+				// These options are needed to round to whole numbers if that's what you want.
+				//minimumFractionDigits: 0,
+				//maximumFractionDigits: 0,
+			});
+
+			$(this).val(formatter.format(val).replace('$', '')); /* $2,500.00 */
+		});
+});
+</script>
+@stop
+
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('orders::orders.module name'),
@@ -33,7 +83,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.orders.products.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('JGLOBAL_VALIDATION_FORM_FAILED') }}">
+<form action="{{ route('admin.orders.products.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 	<div class="row">
 		<div class="col col-md-7">
@@ -64,13 +114,17 @@ app('pathway')
 					<div class="col col-md-6">
 						<div class="form-group{{ $errors->has('fields.unitprice') ? ' has-error' : '' }}">
 							<label for="field-unitprice">{{ trans('orders::orders.price') }} <span class="required">{{ trans('global.required') }}</span></label>
-							<input type="text" name="fields[unitprice]" id="field-unitprice" class="form-control required" maxlength="250" value="{{ $row->unitprice }}" />
+							<span class="input-group">
+								<span class="input-group-prepend"><span class="input-group-text">{{ config('module.orders.currency', '$') }}</span></span>
+								<input type="text" name="fields[unitprice]" id="field-unitprice" class="form-control form-currency required" maxlength="250" value="{{ str_replace('$', '', $row->price) }}" />
+							</span>
 						</div>
 					</div>
 					<div class="col col-md-6">
 						<div class="form-group{{ $errors->has('fields.unit') ? ' has-error' : '' }}">
 							<label for="field-unit">{{ trans('orders::orders.unit') }} <span class="required">{{ trans('global.required') }}</span></label>
-							<input type="text" name="fields[unit]" id="field-unit" class="form-control required" maxlength="250" value="{{ $row->unit }}" />
+							<input type="text" name="fields[unit]" id="field-unit" class="form-control required" maxlength="16" value="{{ $row->unit }}" />
+							<span class="form-text text-muted">{{ trans('orders::orders.unit hint') }}</span>
 						</div>
 					</div>
 				</div>
@@ -79,8 +133,10 @@ app('pathway')
 					<label for="field-resourceid">{{ trans('orders::orders.resource') }}</label>
 					<select class="form-control" name="fields[resourceid]" id="field-resourceid">
 						<option value="0"<?php if (!$row->resourceid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
-						<?php foreach (App\Modules\Resources\Entities\Asset::all() as $resource): ?>
-							<option value="{{ $resource->id }}"<?php if ($row->resourceid == $resource->id) { echo ' selected="selected"'; } ?>>{{ $resource->name }}</option>
+						<?php
+						$resources = (new App\Modules\Resources\Entities\Asset)->tree();
+						foreach ($resources as $resource): ?>
+							<option value="{{ $resource->id }}"<?php if ($row->resourceid == $resource->id) { echo ' selected="selected"'; } ?>>{!! str_repeat('|&mdash;', $resource->level) !!} {{ $resource->name }}</option>
 						<?php endforeach; ?>
 					</select>
 				</div>
@@ -90,25 +146,33 @@ app('pathway')
 					<input type="text" name="fields[mou]" id="field-mou" class="form-control" placeholder="http://" value="{{ $row->mou }}" />
 				</div>
 
+				<div class="form-group{{ $errors->has('recurringtimeperiodid') ? ' has-error' : '' }}">
+					<label for="field-recurringtimeperiodid">{{ trans('orders::orders.recurrence') }}</label>
+					<select class="form-control" name="fields[recurringtimeperiodid]" id="field-recurringtimeperiodid">
+						<option value="0"<?php if (!$row->recurringtimeperiodid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
+						<?php foreach (App\Halcyon\Models\Timeperiod::all() as $period): ?>
+							<option value="{{ $period->id }}"<?php if ($row->recurringtimeperiodid == $period->id) { echo ' selected="selected"'; } ?>>{{ $period->name }}</option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+
 				<div class="row">
 					<div class="col col-md-6">
-						<div class="form-group{{ $errors->has('recurringtimeperiodid') ? ' has-error' : '' }}">
-							<label for="field-recurringtimeperiodid">{{ trans('orders::orders.recurrence') }}</label>
-							<select class="form-control" name="fields[recurringtimeperiodid]" id="field-recurringtimeperiodid">
-								<option value="0"<?php if (!$row->recurringtimeperiodid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
-								<?php foreach (App\Halcyon\Models\Timeperiod::all() as $period): ?>
-									<option value="{{ $period->id }}"<?php if ($row->recurringtimeperiodid == $period->id) { echo ' selected="selected"'; } ?>>{{ $period->name }}</option>
-								<?php endforeach; ?>
-							</select>
+						<div class="form-group form-block">
+							<div class="form-check{{ $errors->has('restricteddata') ? ' has-error' : '' }}">
+								<input class="form-check-input" type="checkbox" id="field-restricteddata" name="fields[restricteddata]" value="1"<?php if ($row->restricteddata) { echo ' checked="checked"'; } ?> />
+								<label class="form-check-label" for="field-restricteddata">{{ trans('orders::orders.restricted data') }}</label>
+								<span class="form-text">{{ trans('orders::orders.restricted data explanation') }}</span>
+							</div>
 						</div>
 					</div>
 					<div class="col col-md-6">
 						<div class="form-group form-block">
-						<div class="form-check{{ $errors->has('restricteddata') ? ' has-error' : '' }}">
-							<input class="form-check-input" type="checkbox" id="field-restricteddata" name="fields[restricteddata]" value="1"<?php if ($row->restricteddata) { echo ' checked="checked"'; } ?> />
-							<label class="form-check-label" for="field-restricteddata">{{ trans('orders::orders.restricted data') }}</label>
-							<span class="form-text">{{ trans('orders::orders.restricted data explanation') }}</span>
-						</div>
+							<div class="form-check{{ $errors->has('ticket') ? ' has-error' : '' }}">
+								<input class="form-check-input" type="checkbox" id="field-ticket" name="fields[ticket]" value="1"<?php if ($row->ticket) { echo ' checked="checked"'; } ?> />
+								<label class="form-check-label" for="field-ticket">{{ trans('orders::orders.ticket') }}</label>
+								<span class="form-text">{{ trans('orders::orders.ticket explanation') }}</span>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -141,63 +205,11 @@ app('pathway')
 				</div>
 			</fieldset>
 
-			<?php if ($row->id): ?>
-				<div class="data-wrap">
-					<h4>{{ trans('global.history') }}</h4>
-					<ul class="entry-log">
-						<?php
-						$history = $row->history()->orderBy('created_at', 'desc')->get();
-
-						if (count($history)):
-							foreach ($history as $action):
-								$actor = trans('global.unknown');
-
-								if ($action->user):
-									$actor = e($action->user->name);
-								endif;
-
-								$created = $action->created_at && $action->created_at != '0000-00-00 00:00:00' ? $action->created_at : trans('global.unknown');
-
-								$fields = array_keys(get_object_vars($action->new));
-								foreach ($fields as $i => $k)
-								{
-									if (in_array($k, ['created_at', 'updated_at', 'deleted_at']))
-									{
-										unset($fields[$i]);
-									}
-								}
-								$old = Carbon\Carbon::now()->subDays(2); //->toDateTimeString();
-								?>
-								<li>
-									<span class="entry-log-action">{{ trans('history::history.action ' . $action->action, ['user' => $actor, 'entity' => 'menu']) }}</span><br />
-									<time datetime="{{ $action->created_at }}" class="entry-log-date">
-										@if ($action->created_at < $old)
-											{{ $action->created_at->format('d M Y') }}
-										@else
-											{{ $action->created_at->diffForHumans() }}
-										@endif
-									</time><br />
-									@if ($action->action == 'updated')
-										<span class="entry-diff">Changed fields: <?php echo implode(', ', $fields); ?></span>
-									@endif
-								</li>
-								<?php
-							endforeach;
-						else:
-							?>
-							<li>
-								<span class="entry-diff">{{ trans('history::history.none found') }}</span>
-							</li>
-							<?php
-						endif;
-						?>
-					</ul>
-				</div>
-			<?php endif; ?>
+			@include('history::admin.history')
 		</div>
 	</div>
 
-	<input type="hidden" name="id" id="field-id" value="<?php echo e($row->id); ?>" />
+	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 
 	@csrf
 </form>

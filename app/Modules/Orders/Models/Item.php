@@ -53,7 +53,9 @@ class Item extends Model
 	 * @var  array
 	 */
 	protected $dates = array(
-		'datetimecreated'
+		'datetimecreated',
+		'datetimeremoved',
+		'datetimefulfilled'
 	);
 
 	/**

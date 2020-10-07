@@ -24,6 +24,7 @@ class ItemsController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/orders/items
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "state",
 	 * 		"description":   "Order state.",
 	 * 		"type":          "string",
@@ -32,6 +33,7 @@ class ItemsController extends Controller
 	 * 		"allowedValues": "active [pending_payment, pending_boassignment, pending_collection, pending_approval, pending_fulfillment], canceled, complete"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "category",
 	 * 		"description":   "Orders that have products int he specified category.",
 	 * 		"type":          "integer",
@@ -39,6 +41,7 @@ class ItemsController extends Controller
 	 * 		"default":       0
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "start",
 	 * 		"description":   "Orders created on or after this datetime.",
 	 * 		"type":          "string",
@@ -47,6 +50,7 @@ class ItemsController extends Controller
 	 * 		"allowedValues": "YYYY-MM-DD HH:mm:ss"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "end",
 	 * 		"description":   "Orders created before this datetime.",
 	 * 		"type":          "string",
@@ -55,6 +59,7 @@ class ItemsController extends Controller
 	 * 		"allowedValues": "YYYY-MM-DD HH:mm:ss"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"type":          "string",
@@ -62,6 +67,7 @@ class ItemsController extends Controller
 	 * 		"default":       ""
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
 	 * 		"type":          "integer",
@@ -72,6 +78,7 @@ class ItemsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"type":          "integer",
@@ -79,6 +86,7 @@ class ItemsController extends Controller
 	 * 		"default":       1
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"type":          "string",
@@ -87,11 +95,10 @@ class ItemsController extends Controller
 	 * 		"allowedValues": "id, created_at"
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "asc",
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "asc",
@@ -214,25 +221,31 @@ class ItemsController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /api/orders/items
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "usernotes",
 	 * 		"description":   "Submitter notes.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "description",
 	 * 		"description":   "Longer description of a tag",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "namespace",
 	 * 		"description":   "Namespace for tag",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -287,39 +300,49 @@ class ItemsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Tag text",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "slug",
 	 * 		"description":   "Normalized text (alpha-numeric, no punctuation)",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "description",
 	 * 		"description":   "Longer description of a tag",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "namespace",
 	 * 		"description":   "Namespace for tag",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "substitutes",
 	 * 		"description":   "Comma-separated list of aliases or alternatives",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @param   Request $request
 	 * @return  Response

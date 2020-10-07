@@ -94,8 +94,9 @@ class ProductsController extends Controller
 
 		$rows = $query
 			->orderBy($p . '.' . $filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
-			->appends(array_filter($filters));
+			->get();
+			//->paginate($filters['limit'])
+			//->appends(array_filter($filters));
 
 		$categories = Category::query()
 			//->where('datetimeremoved', '=', '0000-00-00 00:00:00')
