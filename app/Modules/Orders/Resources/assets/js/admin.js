@@ -46,7 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				dataName: 'users',
 				height: 150,
 				delay: 100,
-				minLength: 1
+				minLength: 1,
+				limit: 1
 			}/*,
 			'onAddTag': function(input, value) {
 				NEWSSearch();
@@ -57,7 +58,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
-	$('.basic-multiple').select2({
-		placeholder: $(this).data('placeholder')
+	$('.basic-single').select2({
+		//placeholder: $(this).data('placeholder')
+	});
+	$('.basic-single').on('select2:select', function (e) {
+		var opt = $($(this).find('option:selected')[0]);
+		$(this).closest('tr').find('.unitprice').text(opt.data('unitprice'));
+		$(this).closest('tr').find('.unit').text(opt.data('unit'));
 	});
 });

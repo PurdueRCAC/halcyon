@@ -41,11 +41,10 @@ $(document).ready(function() {
 		<legend class="sr-only">Filter</legend>
 
 		<div class="row">
-			<div class="col col-md-4">
+			<div class="col-md-12">
 				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-			</div>
-			<div class="col col-md-8 text-right">
+
 				<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
 				<select name="category" id="filter_category" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
@@ -68,10 +67,10 @@ $(document).ready(function() {
 				</select>
 
 				<label class="sr-only" for="filter_start">{{ trans('orders::orders.start date') }}</label>
-				<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
+				<input type="text" name="start" id="filter_start" size="10" class="form-control date-pick filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
 
 				<label class="sr-only" for="filter_end">{{ trans('orders::orders.end date') }}</label>
-				<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
+				<input type="text" name="end" id="filter_end" size="10" class="form-control date-pick filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
 			</div>
 		</div>
 

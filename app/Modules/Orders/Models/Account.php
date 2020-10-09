@@ -90,7 +90,7 @@ class Account extends Model
 	 **/
 	public function isApproved()
 	{
-		return ($this->datetimeapproved && $this->datetimeapproved != '0000-00-00 00:00:00');
+		return ($this->datetimeapproved && $this->datetimeapproved != '0000-00-00 00:00:00' && $this->datetimeapproved != '-0001-11-30 00:00:00');
 	}
 
 	/**
@@ -100,7 +100,7 @@ class Account extends Model
 	 **/
 	public function isPaid()
 	{
-		return ($this->datetimepaid && $this->datetimepaid != '0000-00-00 00:00:00');
+		return ($this->datetimepaid && $this->datetimepaid != '0000-00-00 00:00:00' && $this->datetimepaid != '-0001-11-30 00:00:00');
 	}
 
 	/**
@@ -110,7 +110,7 @@ class Account extends Model
 	 **/
 	public function isDenied()
 	{
-		return ($this->datetimedenied && $this->datetimedenied != '0000-00-00 00:00:00');
+		return ($this->datetimedenied && $this->datetimedenied != '0000-00-00 00:00:00' && $this->datetimedenied != '-0001-11-30 00:00:00');
 	}
 
 	/**
@@ -160,11 +160,11 @@ class Account extends Model
 	 */
 	public function getStatusAttribute()
 	{
-		if ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00')
+		if ($this->isTrashed())
 		{
 			$status = 'deleted';
 		}
-		elseif ($this->datetimedenied && $this->datetimedenied != '0000-00-00 00:00:00')
+		elseif ($this->isDenied())
 		{
 			$status = 'denied';
 		}
@@ -172,11 +172,11 @@ class Account extends Model
 		{
 			$status = 'pending_assignment';
 		}
-		elseif (!$this->datetimeapproved || $this->datetimeapproved == '0000-00-00 00:00:00')
+		elseif (!$this->isApproved())
 		{
 			$status = 'pending_approval';
 		}
-		elseif (!$this->datetimepaid || $this->datetimepaid == '0000-00-00 00:00:00')
+		elseif (!$this->isPaid())
 		{
 			$status = 'pending_collection';
 		}
@@ -186,5 +186,41 @@ class Account extends Model
 		}
 
 		return $status;
+	}
+
+	/**
+	 * Format unit price
+	 *
+	 * @return  string
+	 */
+	public function getFormattedAmountAttribute()
+	{
+		$number = preg_replace('/[^0-9\-]/', '', $this->amount);
+
+		$neg = '';
+		if ($number < 0)
+		{
+			$neg = '-';
+			$number = -$number;
+		}
+
+		if ($number > 99)
+		{
+			$dollars = substr($number, 0, strlen($number) - 2);
+			$cents   = substr($number, strlen($number) - 2, 2);
+			$dollars = number_format($dollars);
+
+			$number = $dollars . '.' . $cents;
+		}
+		elseif ($number > 9 && $number < 100)
+		{
+			$number = '0.' . $number;
+		}
+		else
+		{
+			$number = '0.0' . $number;
+		}
+
+		return $neg . $number;
 	}
 }

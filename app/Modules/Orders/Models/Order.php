@@ -205,7 +205,7 @@ class Order extends Model
 		}
 
 		//if ($this->trashed())
-		if ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00')
+		if ($this->isTrashed())
 		{
 			$status = 'canceled';
 		}
@@ -312,5 +312,41 @@ class Order extends Model
 		}
 
 		return parent::delete($options);
+	}
+
+	/**
+	 * Format unit price
+	 *
+	 * @return  string
+	 */
+	public function getFormattedTotalAttribute()
+	{
+		$number = preg_replace('/[^0-9\-]/', '', $this->total);
+
+		$neg = '';
+		if ($number < 0)
+		{
+			$neg = '-';
+			$number = -$number;
+		}
+
+		if ($number > 99)
+		{
+			$dollars = substr($number, 0, strlen($number) - 2);
+			$cents   = substr($number, strlen($number) - 2, 2);
+			$dollars = number_format($dollars);
+
+			$number = $dollars . '.' . $cents;
+		}
+		elseif ($number > 9 && $number < 100)
+		{
+			$number = '0.' . $number;
+		}
+		else
+		{
+			$number = '0.0' . $number;
+		}
+
+		return $neg . $number;
 	}
 }

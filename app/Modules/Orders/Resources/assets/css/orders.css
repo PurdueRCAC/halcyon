@@ -1,6 +1,6 @@
 /**
  * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
+ * @copyright  Copyright 2019 Purdue University.
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
@@ -9,12 +9,114 @@
 	color: #ccc;
 }
 
-.order-status {
+/*.order-status {
 	color: #f00;
-}
+	text-decoration: none;
+	white-space: nowrap;
+	margin: 0;
+	padding: 0.5em;
+	display: inline-block;
+	font-size: 0.85em;
+	line-height: 1;
+	-webkit-border-radius: 0.25em;
+	-moz-border-radius: 0.25em;
+	border-radius: 0.25em;
+	color: #6b7897;
+	background-color: #f9f9f9;
+}*/
 .canceled {
 	color: #999;
 }
-.pending-payment {
+/*.pending-payment {
+	color: #5a7ef9;
+	background-color: #e7ebf9; blue
+}
+.pending-collection {
+	color: #0486f0;
+	background-color: #deedff;
+}
+.pending-approval {
+	color: #7f51f4;
+	background-color: #dfd5ff;
+}*/
+.pending_payment {
+	color: #5ed001;
+	/*background-color: rgba(216, 255, 184, 0.5);  bffe8a green */
+}
+.pending_collection,
+.pending_approval,
+.pending_boassignment {
+	color: #ffaa00;
 	color: #DF7401;
+	 /*background-color: rgba(255, 248, 222, 0.5); yellow */
+}
+.pending_fulfillment {
+	color: #ff3a33;
+	/*background-color: rgba(255, 221, 220, 0.5);  red */
+}
+.complete {
+	/*background-color: #e2f3e6;*/
+	color: #3db557;
+}
+
+
+.product-sequence,
+.product-delete {
+	/*float: left;*/
+	margin: 0;
+}
+a.product-move-up,
+a.product-move-down,
+a.product-move-up:visited,
+a.product-move-down:visited {
+	color: #20809D;
+}
+a.product-move-up:hover,
+a.product-move-down:hover,
+a.product-move-up:focus,
+a.product-move-down:focus {
+	color: blue;
+}
+.product-move-down .editicon {
+	width: auto;
+	height: auto;
+}
+.product-delete {
+	width: 18px;
+	height: 18px;
+}
+.product-edit-cancel img {
+	display: none;
+}
+.product-edit-controls {
+	white-space: nowrap;
+}
+.product-edit-disabled {
+	cursor: not-allowed;
+}
+.product-edit-input {
+	display: none;
+}
+.product-label {
+	font-weight: bold;
+}
+.product-mou {
+	width: 350px;
+	font-size: 0.7em;
+	word-wrap:break-word;
+}
+table.orderproduct td.product-category {
+	padding: 6px;
+}
+table.orderproduct td.product-manage {
+	padding-right: 20px;
+	padding-left: 12px;
+}
+
+table tbody tr.selected td,
+table tbody tr.selected {
+	background-color: #eaf6f6;
+}
+.checkout-step {
+	display: none;
 }

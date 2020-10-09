@@ -592,7 +592,7 @@ class OrdersController extends Controller
 		]);
 
 		$row = Order::findOrFail($id);
-		//$row->fill($request->all());
+
 		$row->userid = $request->input('userid', $row->userid);
 		$row->groupid = $request->input('groupid', $row->groupid);
 		$row->submitteruserid = $request->input('submitteruserid', $row->submitteruserid);
