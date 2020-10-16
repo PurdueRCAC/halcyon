@@ -5,6 +5,7 @@ return [
 	'save' => 'Save',
 	'cancel' => 'Cancel',
 	'confirm' => 'Confirm',
+	'confirm delete' => 'Are you sure you want to delete these?',
 	'button' => [
 		'edit' => 'Edit',
 		'cancel' => 'Cancel',
@@ -40,7 +41,7 @@ return [
 		'item not found' => ':name not found.',
 		'item updated' => ':name successfully updated.',
 		'update failed' => 'Failed to update record :id.',
-		'item deleted' => ':number successfully deleted.',
+		'item deleted' => ':count successfully deleted.',
 		'delete failed' => 'Failed to delete record :id.',
 		'item published' => ':count Item(s) successfully published.',
 		'item unpublished' => ':count Item(s) successfully unpublished.',
