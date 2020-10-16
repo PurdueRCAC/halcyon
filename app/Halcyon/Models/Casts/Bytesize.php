@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Halcyon\Model\Casts;
+namespace App\Halcyon\Models\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsInboundAttributes;
 
-class Filesize implements CastsInboundAttributes
+class Bytesize implements CastsInboundAttributes
 {
 	/**
 	 * Prepare the given value for storage.
