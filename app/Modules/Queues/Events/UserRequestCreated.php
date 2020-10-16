@@ -14,7 +14,7 @@ class UserRequestCreated
 	/**
 	 * Constructor
 	 *
-	 * @param User $user
+	 * @param  User $user
 	 * @return void
 	 */
 	public function __construct(UserRequest $user)

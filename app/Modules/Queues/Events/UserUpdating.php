@@ -9,18 +9,16 @@ class UserUpdating
 	/**
 	 * @var User
 	 */
-	private $user;
-
-	public function __construct(User $user)
-	{
-		$this->user = $user;
-	}
+	public $user;
 
 	/**
-	 * @return User
+	 * Constructor
+	 *
+	 * @param  User $user
+	 * @return void
 	 */
-	public function getUser()
+	public function __construct(User $user)
 	{
-		return $this->user;
+		$this->user = $user
 	}
 }

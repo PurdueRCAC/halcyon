@@ -42,7 +42,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.queues.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('JGLOBAL_VALIDATION_FORM_FAILED') }}">
+<form action="{{ route('admin.queues.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 	@if ($row->id)
 	<div class="tabs">

@@ -14,22 +14,11 @@ class UserUpdated
 	/**
 	 * Constructor
 	 *
-	 * @param User $user
-	 * @param array $data
+	 * @param  User $user
 	 * @return void
 	 */
 	public function __construct(User $user)
 	{
 		$this->user = $user
-	}
-
-	/**
-	 * Return the entity
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function getUser()
-	{
-		return $this->user;
 	}
 }

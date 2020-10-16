@@ -14,8 +14,7 @@ class UserRequestUpdated
 	/**
 	 * Constructor
 	 *
-	 * @param User $user
-	 * @param array $data
+	 * @param  User $user
 	 * @return void
 	 */
 	public function __construct(UserRequest $userrequest)

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
-use App\Halcyon\Models\Casts\Filesize;
+use App\Halcyon\Models\Casts\Bytesize;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Queues\Events\QueueCreating;
 use App\Modules\Queues\Events\QueueCreated;
@@ -83,8 +83,8 @@ class Queue extends Model
 	 * @var array
 	 */
 	protected $casts = [
-		'nodememmin' => Filesize::class,
-		'nodememmax' => Filesize::class,
+		'nodememmin' => Bytesize::class,
+		'nodememmax' => Bytesize::class,
 	];
 
 	/**

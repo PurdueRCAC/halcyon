@@ -9,18 +9,16 @@ class QueueUpdating
 	/**
 	 * @var Queue
 	 */
-	private $queue;
+	public $queue;
 
+	/**
+	 * Constructor
+	 *
+	 * @param  Queue $queue
+	 * @return void
+	 */
 	public function __construct(Queue $queue)
 	{
 		$this->queue = $queue;
-	}
-
-	/**
-	 * @return User
-	 */
-	public function getQueue()
-	{
-		return $this->queue;
 	}
 }

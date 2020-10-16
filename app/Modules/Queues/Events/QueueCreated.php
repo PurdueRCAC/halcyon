@@ -7,11 +7,6 @@ use App\Modules\Queues\Models\Queue;
 class QueueCreated
 {
 	/**
-	 * @var array
-	 */
-	public $data;
-
-	/**
 	 * @var Queue
 	 */
 	public $queue;
@@ -19,33 +14,11 @@ class QueueCreated
 	/**
 	 * Constructor
 	 *
-	 * @param Queue $queue
-	 * @param array $data
+	 * @param  Queue $queue
 	 * @return void
 	 */
-	public function __construct(Queue $queue, array $data)
+	public function __construct(Queue $queue)
 	{
-		$this->data = $data;
 		$this->queue = $queue;
-	}
-
-	/**
-	 * Return the entity
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function getQueue()
-	{
-		return $this->queue;
-	}
-
-	/**
-	 * Return ALL data sent
-	 *
-	 * @return array
-	 */
-	public function getSubmissionData()
-	{
-		return $this->data;
 	}
 }
