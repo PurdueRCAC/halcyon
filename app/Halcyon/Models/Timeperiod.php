@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
+use Carbon\Carbon;
 
 /**
  * Timeperiod
@@ -66,5 +67,21 @@ class Timeperiod extends Model
 	public function warningTime()
 	{
 		return $this->belongsTo(self::class, 'warningtimeperiodid');
+	}
+
+	/**
+	 * Calculate date from another date
+	 *
+	 * @param   string  $dt
+	 * @return  string
+	 */
+	public function calculateDateFrom($dt)
+	{
+		$dt = Carbon::parse($dt);
+
+		return $dt
+			->modify('- ' + $this->months)
+			->modify('- ' + $this->unixtime)
+			->toDateTimeString();
 	}
 }
