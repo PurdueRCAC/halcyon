@@ -48,30 +48,39 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col filter-search col-md-4">
+				<div class="form-group">
 				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+				<span class="input-group">
+					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+					<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+				</span>
+			</div>
 			</div>
 			<div class="col filter-select col-md-8 text-right">
 				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.all states') }}</option>
+					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
 					<option value="active"<?php if ($filters['state'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('global.active') }}</option>
 					<option value="inactive"<?php if ($filters['state'] == 'inactive'): echo ' selected="selected"'; endif;?>>{{ trans('global.inactive') }}</option>
 				</select>
 
 				<label class="sr-only" for="filter_state">{{ trans('storage::storage.parent') }}</label>
 				<select name="parent" class="form-control filter filter-submit">
-					<option value="0"<?php if (!$filters['parent']): echo ' selected="selected"'; endif;?>>{{ trans('global.ALL') }}</option>
+					<option value="0"<?php if (!$filters['parent']): echo ' selected="selected"'; endif;?>>{{ trans('global.all') }}</option>
 					@foreach ($storages as $s)
 						<option value="{{ $s->id }}"<?php if ($filters['parent'] == $s->id): echo ' selected="selected"'; endif;?>>{{ $s->name }}</option>
 					@endforeach
 				</select>
 			</div>
 		</div>
+
+		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('storage::storage.directories') }}</caption>
 		<thead>
@@ -193,13 +202,12 @@ app('pathway')
 		@endforeach
 		</tbody>
 	</table>
+</div>
 
 	{{ $rows->render() }}
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="order" value="{{ $filters['order'] }}" />
-	<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
 	@csrf
 </form>

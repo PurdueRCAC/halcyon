@@ -49,22 +49,31 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col filter-search col-md-4">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+				<div class="form-group">
+					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<span class="input-group">
+						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					</span>
+				</div>
 			</div>
 			<div class="col filter-select col-md-8 text-right">
 				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>><?php echo trans('global.all states');?></option>
-					<option value="active"<?php if ($filters['state'] == 'active'): echo ' selected="selected"'; endif;?>><?php echo trans('global.active');?></option>
-					<option value="inactive"<?php if ($filters['state'] == 'inactive'): echo ' selected="selected"'; endif;?>><?php echo trans('global.inactive');?></option>
+					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
+					<option value="active"<?php if ($filters['state'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('global.active') }}</option>
+					<option value="inactive"<?php if ($filters['state'] == 'inactive'): echo ' selected="selected"'; endif;?>>{{ trans('global.inactive') }}</option>
 				</select>
 			</div>
 		</div>
+
+		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('storage::storage.module name') }}</caption>
 		<thead>
@@ -100,7 +109,7 @@ app('pathway')
 			<tr>
 				<td>
 					@if (auth()->user()->can('edit storage'))
-					<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
+						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
 					@endif
 				</td>
 				<td class="priority-5">
@@ -175,20 +184,22 @@ app('pathway')
 							{{ number_format($row->directories_count) }}
 						</a>
 					@else
-						<span class="none">{{ number_format($row->directories_count) }}</span>
+						<a class="btn btn-sm btn-success" href="{{ route('admin.storage.directories.create', ['parent' => $row->id]) }}">
+							<span class="icon-plus"></span><span class="sr-only">{{ trans('global.add') }}</span>
+						</a>
+						<span class="none">0</span>
 					@endif
 				</td>
 			</tr>
 		@endforeach
 		</tbody>
 	</table>
+</div>
 
 	{{ $rows->render() }}
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="order" value="{{ $filters['order'] }}" />
-	<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
 	@csrf
 </form>

@@ -46,7 +46,7 @@ app('pathway')
 					<select name="fields[defaulttimeperiodid]" id="field-defaulttimeperiodid" class="form-control">
 						<option value="0">{{ trans('global.none') }}</option>
 						<?php foreach ($timeperiods as $timeperiod): ?>
-							<?php $selected = ($timeperiod->id == $row->timeperiodid ? ' selected="selected"' : ''); ?>
+							<?php $selected = ($timeperiod->id == $row->defaulttimeperiodid ? ' selected="selected"' : ''); ?>
 							<option value="{{ $timeperiod->id }}"<?php echo $selected; ?>>{{ $timeperiod->name }}</option>
 						<?php endforeach; ?>
 					</select>
@@ -69,8 +69,7 @@ app('pathway')
 			</fieldset>
 		</div>
 		<div class="col col-md-5">
-
-				<p>soemthingn here</p>
+			@include('history::admin.history')
 		</div>
 	</div>
 

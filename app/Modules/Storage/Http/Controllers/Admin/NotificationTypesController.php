@@ -111,12 +111,12 @@ class NotificationTypesController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->with('success', trans('messages.item saved'));
+		return $this->cancel()->with('success', trans('global.messages.item saved'));
 	}
 
 	/**
@@ -155,7 +155,7 @@ class NotificationTypesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', ['number' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['number' => $success]));
 		}
 
 		return redirect(route('admin.storage.types'));

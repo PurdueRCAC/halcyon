@@ -9,6 +9,7 @@ use App\Modules\Storage\Http\Resources\DirectoryResource;
 use App\Modules\Storage\Http\Resources\DirectoryResourceCollection;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\Notification;
+use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Messages\Models\Type as MessageType;
 use Carbon\Carbon;
 
@@ -169,9 +170,10 @@ class DirectoriesController extends Controller
 	{
 		$request->validate([
 			'name' => 'required|string|max:32',
-			'path' => 'required|string|max:255',
+			//'path' => 'nullable|string|max:255',
 			'resourceid' => 'required|integer|min:1',
 			'groupid' => 'required|integer|min:1',
+			'bytes' => 'required|string',
 			'parentstorageid' => 'nullable|integer',
 			'owneruserid' => 'nullable|integer',
 			'unixgroupid' => 'nullable|integer',
@@ -189,7 +191,7 @@ class DirectoriesController extends Controller
 		$data = empty($data) ? $request->all() : $data;
 
 		$bytesource = null;
-		if (isset($data['bytesource']))
+		if (array_key_exists('bytesource', $data))
 		{
 			$bytesource = $data['bytesource'];
 			unset($data['bytesource']);
@@ -204,7 +206,7 @@ class DirectoriesController extends Controller
 		$row->groupwrite  = 1;
 		$row->publicread  = 0;
 		$row->publicwrite = 0;
-
+		$row->storageresourceid = 0;
 		$row->fill($data);
 
 		if ($row->parent)
@@ -214,7 +216,7 @@ class DirectoriesController extends Controller
 			{
 				$return = $row->parent->update(['groupwrite' => 0]);
 
-				if ($return >= 400)
+				if (!$return)
 				{
 					return response()->json(['message' => trans('Failed to update `storagedir` for :id', ['id' => $row->parentstoragedirid])], 415);
 				}
@@ -246,7 +248,7 @@ class DirectoriesController extends Controller
 		$bucket = null;
 		foreach ($row->group->storagebuckets as $b)
 		{
-			if ($b->resourceid == $row->resourceid)
+			if ($b['resourceid'] == $row->resourceid)
 			{
 				$bucket = $b;
 				break;
@@ -360,11 +362,11 @@ class DirectoriesController extends Controller
 		if ($row->resourceid && !$row->storageresourceid)
 		{
 			$sr = StorageResource::query()
-				->where('resourceid', '=', $row->resourceid)
+				->where('parentresourceid', '=', $row->resourceid)
 				->get()
 				->first();
 
-			$row->storageresourceid = $sr->resourceid;
+			$row->storageresourceid = $sr->id;
 		}
 		elseif (!$row->resourceid && $row->storageresourceid)
 		{
@@ -372,38 +374,6 @@ class DirectoriesController extends Controller
 		}
 
 		$row->save();
-
-		//if ($row->resourceid == 64 && !$row->bytes && $row->parent)
-		if (!$row->bytes && $row->parent)
-		{
-			// Submit mkdir
-			$type = MessageType::query()
-				->where('resourceid', '=', $row->resourceid)
-				->where('name', 'like', 'mkdir %')
-				->get()
-				->first();
-
-			if ($type)
-			{
-				$row->addMessageToQueue($type->id, $row->userid, $offset);
-			}
-		}
-
-		//if ($row->resourceid == 64 && $row->bytes)
-		if ($row->bytes)
-		{
-			// Submit filset create/sync
-			$type = MessageType::query()
-				->where('resourceid', '=', $row->resourceid)
-				->where('name', 'like', 'fileset %')
-				->get()
-				->first();
-
-			if ($type)
-			{
-				$row->addMessageToQueue($type->id, $row->userid, $offset);
-			}
-		}
 
 		// If we have are requesting an autopopulate dir, then let's populate with the current list of users
 		if ($row->autouser > 0)
@@ -447,49 +417,6 @@ class DirectoriesController extends Controller
 				}
 
 				$this->create($request, $data, 10);
-			}
-		}
-
-		if ($row->bytes)
-		{
-			// Create 99% alert for existing users
-			$members = $row->unixgroup->members;
-
-			foreach ($members as $member)
-			{
-				$notifications = $row->notifications()
-					->where('userid', '=', $member->userid)
-					->count();
-
-				if (!$notifications)
-				{
-					Notification::create([
-						'storagedirid' => $row->id,
-						'storagedirquotanotificationtypeid' => 3,
-						'userid' => $member->userid,
-						'value' => 99,
-					]);
-				}
-			}
-
-			// Create 80% and 99% alert for existing managers
-			$managers = $row->group->managers;
-
-			foreach ($managers as $member)
-			{
-				$notifications = $row->notifications()
-					->where('userid', '=', $member->userid)
-					->count();
-
-				if (!$notifications)
-				{
-					Notification::create([
-						'storagedirid' => $row->id,
-						'storagedirquotanotificationtypeid' => 3,
-						'userid' => $member->userid,
-						'value' => 99,
-					]);
-				}
 			}
 		}
 
@@ -714,7 +641,7 @@ class DirectoriesController extends Controller
 			}*/
 		}
 
-		if ($row->autouserunixgroupid != $fow->getOriginal('autouserunixgroupid'))
+		if ($row->autouserunixgroupid != $row->getOriginal('autouserunixgroupid'))
 		{
 			if ($row->autouser > 0)
 			{
@@ -781,38 +708,6 @@ class DirectoriesController extends Controller
 
 		$row->save();
 
-		//if ($row->resourceid == 64 && !$row->bytes && $row->parent)
-		if (!$row->bytes && $row->parent)
-		{
-			// Submit mkdir
-			$type = MessageType::query()
-				->where('resourceid', '=', $row->resourceid)
-				->where('name', 'like', 'mkdir %')
-				->get()
-				->first();
-
-			if ($type)
-			{
-				$row->addMessageToQueue($type->id, $row->userid, $offset);
-			}
-		}
-
-		//if ($row->resourceid == 64 && $row->bytes)
-		if ($row->bytes)
-		{
-			// Submit filset create/sync
-			$type = MessageType::query()
-				->where('resourceid', '=', $row->resourceid)
-				->where('name', 'like', 'fileset %')
-				->get()
-				->first();
-
-			if ($type)
-			{
-				$row->addMessageToQueue($type->id, $row->userid, $offset);
-			}
-		}
-
 		return new DirectoryResource($row);
 	}
 
@@ -830,6 +725,7 @@ class DirectoriesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)
@@ -856,7 +752,7 @@ class DirectoriesController extends Controller
 			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
 		}
 
-		if ($row->bytes == 0 && $row->parent)
+		/*if ($row->bytes == 0 && $row->parent)
 		{
 			// Submit to rmdir
 			$row->addMessageToQueue(14, $row->userid);
@@ -866,7 +762,7 @@ class DirectoriesController extends Controller
 		{
 			// Submit filset create/sync
 			$row->addMessageToQueue(15, $row->userid);
-		}
+		}*/
 
 		return response()->json(null, 204);
 	}

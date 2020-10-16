@@ -143,7 +143,7 @@ class NotificationsController extends Controller
 			'storagedirquotanotificationtypeid' => 'required|integer|min:1',
 			'value' => 'nullable|integer',
 			'timeperiodid' => 'nullable|integer',
-			'periods' => 'nullable|integer|min:0',
+			'periods' => 'nullable|integer|min:1',
 			'notice'  => 'nullable|integer',
 			'enabled' => 'nullable|integer',
 			'datetimelastnotify' => 'nullable|date',
@@ -163,6 +163,11 @@ class NotificationsController extends Controller
 			return response()->json(['message' => trans('Invalid storagedirid')], 415);
 		}
 
+		if (!$row->directory->groupid)
+		{
+			return response()->json(['message' => trans('Failed to retrieve `groupid` for `storagedirid`')], 415);
+		}
+
 		if ($request->has('timeperiodid') && !$row->timeperiod)
 		{
 			return response()->json(['message' => trans('Invalid timeperiodid')], 415);
@@ -171,6 +176,11 @@ class NotificationsController extends Controller
 		if (!$row->type)
 		{
 			return response()->json(['message' => trans('Invalid storagedirquotanotificationtypeid')], 415);
+		}
+
+		if ($row->type->id == 1)
+		{
+			$row->datetimelastnotify = Carbon::now()->toDateTimeString();
 		}
 
 		$row->save();
@@ -236,6 +246,7 @@ class NotificationsController extends Controller
 			'notice'  => 'nullable|integer',
 			'enabled' => 'nullable|integer',
 			'datetimelastnotify' => 'nullable|date',
+			'nextreport' => 'nullable|date',
 		]);
 
 		$row = Notification::findOrFail($id);
@@ -254,6 +265,12 @@ class NotificationsController extends Controller
 		if ($request->has('storagedirquotanotificationtypeid') && !$row->type)
 		{
 			return response()->json(['message' => trans('Invalid storagedirquotanotificationtypeid')], 415);
+		}
+
+		if ($request->has('nextreport'))
+		{
+			$timeperiod = $row->timeperiod;
+			$row->datetimelastnotify = $timeperiod->calculateDateFrom($request->input('nextreport'));
 		}
 
 		$row->save();

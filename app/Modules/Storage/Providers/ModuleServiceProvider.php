@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Storage\Listeners\Messages;
 use App\Modules\Storage\Listeners\Resources;
 use App\Modules\Storage\Listeners\UnixGroupMembers;
+use App\Modules\Storage\Listeners\Notifications;
 use App\Modules\Storage\Console\EmailQuotaCommand;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -39,6 +40,8 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		$this->app['events']->subscribe(new Notifications);
 
 		if (is_dir(dirname(dirname(__DIR__))) . '/Messages')
 		{

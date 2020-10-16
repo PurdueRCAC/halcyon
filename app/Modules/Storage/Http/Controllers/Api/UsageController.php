@@ -190,6 +190,7 @@ class UsageController extends Controller
 		$request->validate([
 			'storagedirid' => 'required|integer|min:1',
 			'quota' => 'required',
+			//'filequota' => 'nullable|integer'
 			//'space' => 'nullable|integer',
 		]);
 

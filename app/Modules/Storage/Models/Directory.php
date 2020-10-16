@@ -16,6 +16,9 @@ use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Utility\Number;
+use App\Modules\Storage\Events\DirectoryCreated;
+use App\Modules\Storage\Events\DirectoryUpdated;
+use App\Modules\Storage\Events\DirectoryDeleted;
 use Carbon\Carbon;
 
 /**
@@ -73,6 +76,19 @@ class Directory extends Model
 		'id',
 		'datetimecreated',
 		'datetimeremoved',
+	];
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var array
+	 */
+	protected $dispatchesEvents = [
+		//'creating' => DirectoryCreating::class,
+		'created'  => DirectoryCreated::class,
+		//'updating' => DirectoryUpdating::class,
+		'updated'  => DirectoryUpdated::class,
+		'deleted'  => DirectoryDeleted::class,
 	];
 
 	/**
@@ -519,19 +535,40 @@ class Directory extends Model
 		return $futurequotas;
 	}
 
-	public function tree()
+	public function tree($expanded = true)
 	{
-		$item = $this->toArray();
-		$item['title'] = $item['name'];
+		$item = array(); //$this->toArray();
+		$item['id'] = $this->id;
+		$item['data'] = $this->toArray();
+		$item['title'] = $this->name;
 		$item['folder'] = true;
-		$item['expanded'] = true;
+		$item['expanded'] = $expanded;
 		$item['quota'] = $this->quota;
 
 		$children = array();
 		foreach ($this->children()->orderBy('name', 'asc')->get() as $child)
 		{
-			$children[] = $child->tree();
+			$children[] = $child->tree(false);
 		}
+
+		$new_quota = $this->quota;
+		if (!$this->bytes)
+		{
+			$new_quota = $this->parent->quota;
+		}
+
+		$children[] = array(
+			'title' => '(Add New Directory)',
+			'folder' => false,
+			'expanded' => false,
+			'id'   => 'new_dir',
+			'data'  => array(
+				'parentdir'       => $this->id,
+				'parentunixgroup' => $this->unixgroup->longname,
+				'path'            => $this->path,
+				'parentquota'     => $new_quota
+			)
+		);
 
 		$item['children'] = $children;
 
