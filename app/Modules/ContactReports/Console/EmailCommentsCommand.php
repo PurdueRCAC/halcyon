@@ -13,13 +13,6 @@ use App\Modules\Users\Models\User;
 class EmailCommentsCommand extends Command
 {
 	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	//protected $name = 'crm:emailcomments';
-
-	/**
 	 * The name and signature of the console command.
 	 *
 	 * @var string
@@ -41,7 +34,7 @@ class EmailCommentsCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 
 		// Get all new comments
-		$comments = Comment::where('notice', '!=', 0)->get();
+		$comments = Comment::where('notice', '!=', 0)->orderBy('id', 'desc')->get();
 		//$comments = Comment::where('notice', '=', 0)->orderBy('id', 'desc')->limit(20)->get();
 
 		if (!count($comments))
@@ -98,7 +91,7 @@ class EmailCommentsCommand extends Command
 						continue;
 					}
 
-					Mail::to($user->email)->send($message);
+					//Mail::to($user->email)->send($message);
 
 					$this->info("Emailed comment #{$comment->id} to {$user->email}.");
 				}
@@ -113,7 +106,7 @@ class EmailCommentsCommand extends Command
 			foreach ($comments as $comment)
 			{
 				$comment->notice = 0;
-				$comment->save();
+				//$comment->save();
 			}
 		}
 	}

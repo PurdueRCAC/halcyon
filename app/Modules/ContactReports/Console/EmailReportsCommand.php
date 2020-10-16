@@ -11,13 +11,6 @@ use Illuminate\Support\Facades\Mail;
 class EmailReportsCommand extends Command
 {
 	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	//protected $name = 'crm:emailreports';
-
-	/**
 	 * The name and signature of the console command.
 	 *
 	 * @var string
@@ -39,8 +32,7 @@ class EmailReportsCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 
 		// Get all new comments
-		$reports = Report::where('notice', '!=', 0)->get();
-		//$reports = Report::where('notice', '=', 0)->orderBy('id', 'desc')->limit(20)->get();
+		$reports = Report::where('notice', '!=', 0)->orderBy('id', 'asc')->get();
 
 		if (!count($reports))
 		{
