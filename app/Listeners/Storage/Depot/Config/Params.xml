@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="user" type="text" label="listener.storage.depot::depot.username" description="listener.storage.depot::depot.username desc" />
+			<field name="pass" type="passord" label="listener.storage.depot::depot.password" description="listener.storage.depot::depot.password desc" />
+			<field name="url" type="text" label="listener.storage.depot::depot.url" description="listener.storage.depot::depot.url desc" />
+			<field name="api_key" type="text" label="listener.storage.depot::depot.api key" description="listener.storage.depot::depot.api key desc" />
+		</fieldset>
+	</fields>
+</config>
