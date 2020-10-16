@@ -6,6 +6,7 @@ namespace App\Modules\History\Providers;
 use Illuminate\Support\ServiceProvider;
 //use App\Modules\History\Facades\History as HistoryFacade;
 //use App\Modules\History\Models\History;
+use App\Modules\History\Listeners\LogSentMessage;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,20 @@ class ModuleServiceProvider extends ServiceProvider
 	 * @var string
 	 */
 	public $name = 'history';
+
+	/**
+	 * The event listener mappings for the application.
+	 *
+	 * @var array
+	 */
+	protected $listen = [
+		/*'Illuminate\Mail\Events\MessageSending' => [
+			'App\Listeners\LogSendingMessage',
+		],*/
+		'Illuminate\Mail\Events\MessageSent' => [
+			LogSentMessage::class,
+		],
+	];
 
 	/**
 	 * Boot the application events.
