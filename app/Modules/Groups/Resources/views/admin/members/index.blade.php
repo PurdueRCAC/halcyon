@@ -203,6 +203,7 @@ app('pathway')
 		<input type="hidden" name="group" id="group" value="{{ $group->id }}" autocomplete="off" />
 	</fieldset>
 
+	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ $group->name }} &rsaquo; trans('groups::groups.members')</caption>
 		<thead>
@@ -324,6 +325,7 @@ app('pathway')
 		@endforeach
 		</tbody>
 	</table>
+</div>
 
 	<script id="new-fieldofscience-row" type="text/x-handlebars-template">
 		<tr class="list-group-item" <?php echo '{{ row.id }}'; ?>>

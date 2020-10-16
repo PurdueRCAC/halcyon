@@ -8,8 +8,10 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
+use App\Modules\Messages\Models\Message;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\Loan;
@@ -20,6 +22,7 @@ use App\Modules\Groups\Events\GroupCreated;
 use App\Modules\Groups\Events\GroupUpdating;
 use App\Modules\Groups\Events\GroupUpdated;
 use App\Modules\Groups\Events\GroupDeleted;
+use Carbon\Carbon;
 
 /**
  * Group model
@@ -192,6 +195,163 @@ class Group extends Model
 	public function directories()
 	{
 		return $this->hasMany(Directory::class, 'groupid');
+	}
+
+	/**
+	 * Get a list of messages
+	 *
+	 * @return  object
+	 */
+	public function getMessagesAttribute()
+	{
+		$ids = $this->directories->pluck('id')->toArray();
+
+		return Message::query()->whereIn('targetobjectid', $ids)->get();
+	}
+
+	/**
+	 * Get a list of messages
+	 *
+	 * @return  object
+	 */
+	public function getStorageBucketsAttribute()
+	{
+		$allocated = array();
+		$now = Carbon::now();
+
+		// Fetch allocated amounts
+		$data = Directory::query()
+			->select(DB::raw('SUM(bytes) AS allocated', 'resourceid'))
+			->where('groupid', '=', $this->id)
+			->where(function($where) use ($now)
+			{
+				$where->whereNull('datetimecreated')
+					->orWhere('datetimecreated', '=', '0000-00-00 00:00:00')
+					->orWhere('datetimecreated', '<', $now->toDateTimeString());
+			})
+			->where(function($where) use ($now)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00')
+					->orWhere('datetimeremoved', '>', $now->toDateTimeString());
+			})
+			->get();
+
+		foreach ($data as $row)
+		{
+			$allocated[$row->resourceid] = $row->allocated;
+		}
+
+		// Fetch storage buckets under this group
+		$storagebuckets = array();
+
+		$data = Purchase::query()
+			->select(DB::raw('SUM(bytes) AS soldbytes'), 'resourceid')
+			->where('groupid', '=', $this->id)
+			->where(function($where) use ($now)
+			{
+				$where->whereNull('datetimestop')
+					->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
+					->orWhere('datetimestop', '>', $now->toDateTimeString());
+			})
+			->where(function($where) use ($now)
+			{
+				$where->whereNull('datetimestart')
+					->orWhere('datetimestart', '=', '0000-00-00 00:00:00')
+					->orWhere('datetimestart', '<', $now->toDateTimeString());
+			})
+			->groupBy('resourceid')
+			->get();
+
+		foreach ($data as $row)
+		{
+			array_push($storagebuckets, array(
+				'resourceid'  => $row->resourceid,
+				'soldbytes'   => $row->soldbytes,
+				'loanedbytes' => 0,
+				'totalbytes'  => $row->soldbytes,
+				'unallocatedbytes' => 0,
+			));
+		}
+
+		$data = array();
+
+		$data = Loan::query()
+			->select(DB::raw('SUM(bytes) AS loanedbytes'), 'resourceid')
+			->where('groupid', '=', $this->id)
+			->where(function($where) use ($now)
+			{
+				$where->whereNull('datetimestop')
+					->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
+					->orWhere('datetimestop', '>', $now->toDateTimeString());
+			})
+			->where(function($where) use ($now)
+			{
+				$where->whereNull('datetimestart')
+					->orWhere('datetimestart', '=', '0000-00-00 00:00:00')
+					->orWhere('datetimestart', '<', $now->toDateTimeString());
+			})
+			->groupBy('resourceid')
+			->get();
+
+		foreach ($data as $row)
+		{
+			$found = false;
+			foreach ($storagebuckets as $bucket)
+			{
+				if ($bucket['resourceid'] == $row->resourceid)
+				{
+					$bucket['loanedbytes'] = $row->loanedbytes;
+					$bucket['totalbytes'] += $row->loanedbytes;
+					$found = true;
+					break;
+				}
+			}
+
+			if (!$found)
+			{
+				// TODO: calculate remainder quota
+				array_push($storagebuckets, array(
+					'resourceid'       => $row->resourceid,
+					'soldbytes'        => 0,
+					'unallocatedbytes' => 0,
+					'loanedbytes'      => $row->loanedbytes,
+					'totalbytes'       => $row->loanedbytes,
+				));
+			}
+		}
+
+		foreach ($storagebuckets as $bucket)
+		{
+			if (!isset($allocated[$bucket['resourceid']]))
+			{
+				$allocated[$bucket['resourceid']] = 0;
+			}
+
+			$b = Directory::query()
+				->select(DB::raw('SUM(bytes)'))
+				->where('groupid', '=', $this->id)
+				->where('resourceid', '=', $bucket['resourceid'])
+				->where(function($where)
+				{
+					$where->whereNull('datetimeremoved')
+						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+				->get()
+				->first();
+
+			$allocatedbytes = 0;
+
+			if ($b)
+			{
+				$allocatedbytes = $b->bytes;
+			}
+
+			$bucket['unallocatedbytes'] = ($bucket['totalbytes'] - $allocated[$bucket['resourceid']]);
+			$bucket['allocatedbytes'] = $allocatedbytes;
+		}
+
+		return $storagebuckets;
 	}
 
 	/**

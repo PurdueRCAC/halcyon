@@ -61,6 +61,7 @@ app('pathway')
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 	</fieldset>
 
+	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('groups::groups.departments') }}</caption>
 		<thead>
@@ -115,6 +116,7 @@ app('pathway')
 		@endforeach
 		</tbody>
 	</table>
+</div>
 
 	{{ $paginator->render() }}
 

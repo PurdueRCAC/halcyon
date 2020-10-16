@@ -26,13 +26,16 @@ class UnixGroupResource extends JsonResource
 
 			foreach ($this->members()->withTrashed()->get() as $m)
 			{
+				$ma = $m->toArray();
+				$ma['username'] = $m->user->name;
+
 				if ($m->isTrashed())
 				{
 					$data['priormembers'][] = $m;
 				}
 				else
 				{
-					$data['members'][] = $m;
+					$data['members'][] = $ma;
 				}
 			}
 			//$data['members'] = $this->members;
