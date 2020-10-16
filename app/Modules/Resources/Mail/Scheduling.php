@@ -50,8 +50,8 @@ class Scheduling extends Mailable
 	 */
 	public function build()
 	{
-		return $this->markdown('queues::mail.scheduling.' . $action)
-					->subject(trans('queues::mail.scheduling.' . $action))
+		return $this->markdown('resources::mail.scheduling.' . $this->action)
+					->subject(trans('resources::mail.scheduling.' . $this->action))
 					->with([
 						'started' => $this->started,
 						'stopped' => $this->stopped,

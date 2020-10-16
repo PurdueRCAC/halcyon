@@ -40,7 +40,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.resources.subresources.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('JGLOBAL_VALIDATION_FORM_FAILED') }}">
+<form action="{{ route('admin.resources.subresources.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 	<div class="grid row">
 		<div class="col col-md-7 span7">
 			<fieldset class="adminform">
@@ -108,6 +108,11 @@ app('pathway')
 							</div>
 						</div>
 					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="field-nodeattributes">{{ trans('resources::assets.node attributes') }}:</label>
+					<input type="text" name="fields[nodeattributes]" id="field-nodeattributes" class="form-control" maxlength="16" value="{{ $row->nodeattributes }}" />
 				</div>
 
 			</fieldset>

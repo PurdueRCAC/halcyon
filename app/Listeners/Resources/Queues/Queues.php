@@ -38,11 +38,11 @@ class Queues
 
 		$queue = new Queue;
 
-		$queue->name        = config()->get('queues.prefix', 'rcac-') . $subresource->cluster;
-		$queue->cluster     = $subresource->cluster;
-		$queue->groupid     = '-1';
-		$queue->subresource = $subresource->id;
-		$queue->queuetype   = 1;
+		$queue->name          = config()->get('queues.prefix', 'rcac-') . $subresource->cluster;
+		$queue->cluster       = $subresource->cluster;
+		$queue->groupid       = '-1';
+		$queue->subresourceid = $subresource->id;
+		$queue->queuetype     = 1;
 
 		$walltime = 0;
 
@@ -64,10 +64,10 @@ class Queues
 
 		if ($queue->save())
 		{
-			$walltime = new Walltime;
-			$walltime->queueid = $queue->id;
-			$walltime->walltime = $walltime;
-			$walltime->save();
+			$wtime = new Walltime;
+			$wtime->queueid = $queue->id;
+			$wtime->walltime = $walltime;
+			$wtime->save();
 		}
 	}
 }

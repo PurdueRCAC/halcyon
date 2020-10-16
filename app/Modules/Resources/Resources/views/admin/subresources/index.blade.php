@@ -21,7 +21,7 @@ app('pathway')
 		@if ($filters['state'] == 'trashed')
 			{!! Toolbar::custom(route('admin.resources.subresources.restore'), 'refresh', 'refresh', trans('global.restore'), false) !!}
 		@else
-			{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.resources.delete')) !!}
+			{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.resources.subresources.delete')) !!}
 		@endif
 	@endif
 
@@ -49,10 +49,13 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col filter-search col-md-4">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+				<div class="form-group">
+					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<span class="input-group">
+						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					</span>
+				</div>
 			</div>
 			<div class="col filter-select col-md-8 text-right">
 				<label class="sr-only" for="filter_state">{{ trans('resources::assets.state') }}</label>
@@ -74,8 +77,11 @@ app('pathway')
 
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('resources::resources.subresources') }}</caption>
 		<thead>
@@ -174,7 +180,7 @@ app('pathway')
 					{!! $row->nodeattributes ? $row->nodeattributes : '<span class="unknown">' . trans('global.none') . '</span>' !!}
 				</td>
 				<td class="priority-4 text-right">
-					<a href="{{ route('admin.queues.index', ['filter_resource' => $row->resourceid]) }}">
+					<a href="{{ route('admin.queues.index', ['resource' => $row->resourceid]) }}">
 						{{ $row->queues_count }}
 					</a>
 				</td>
@@ -182,6 +188,7 @@ app('pathway')
 		@endforeach
 		</tbody>
 	</table>
+	</div>
 
 	{{ $rows->render() }}
 

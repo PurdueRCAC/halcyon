@@ -123,6 +123,9 @@ class SubresourcesController extends Controller
 	public function create(Request $request)
 	{
 		$row = new Subresource();
+		$row->nodecores = 16;
+		$row->nodemem = '64G';
+		$row->nodegpus = 0;
 
 		$parents = (new Asset)->tree();
 
@@ -170,19 +173,25 @@ class SubresourcesController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required|max:32'
+			'fields.name' => 'required|string|max:32',
+			'fields.cluster' => 'required|string|max:12',
+			'fields.nodecores' => 'nullable|integer|max:999',
+			'fields.nodemem' => 'nullable|string|max:5',
+			'fields.nodegpus' => 'nullable|integer|max:9999',
+			'fields.nodeattributes' => 'nullable|string|max:16',
+			'fields.description' => 'nullable|string|max:255',
 		]);
 
 		$id = $request->input('id');
 
 		// Save Subresource
 		$row = $id ? Subresource::findOrFail($id) : new Subresource();
-
 		$row->fill($request->input('fields'));
+		$row->nodeattributes = (string)$row->nodeattributes;
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
@@ -203,7 +212,7 @@ class SubresourcesController extends Controller
 		$child->subresourceid = $row->id;
 		$child->save();
 
-		return redirect(route('admin.resources.subresources'))->withSuccess(trans('messages.update success'));
+		return redirect(route('admin.resources.subresources'))->withSuccess(trans('global.messages.update success'));
 	}
 
 	/**
@@ -217,12 +226,11 @@ class SubresourcesController extends Controller
 		$ids = $request->input('id', array());
 		$ids = (!is_array($ids) ? array($ids) : $ids);
 
-		//$success = Asset::destroy($ids);
 		$success = 0;
 
 		foreach ($ids as $id)
 		{
-			$row = Asset::findOrFail($id);
+			$row = Subresource::findOrFail($id);
 
 			if (!$row->trashed())
 			{
@@ -246,7 +254,7 @@ class SubresourcesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();
@@ -283,7 +291,7 @@ class SubresourcesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item restored', ['count' => $success]));
+			$request->session()->flash('success', trans('global.messages.item restored', ['count' => $success]));
 		}
 
 		return $this->cancel();

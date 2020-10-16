@@ -14,6 +14,7 @@ use App\Modules\Resources\Events\SubresourceCreated;
 use App\Modules\Resources\Events\SubresourceUpdating;
 use App\Modules\Resources\Events\SubresourceUpdated;
 use App\Modules\Resources\Events\SubresourceDeleted;
+use App\Modules\History\Traits\Historable;
 use App\Modules\Queues\Models\Queue;
 use Carbon\Carbon;
 
@@ -22,7 +23,7 @@ use Carbon\Carbon;
  */
 class Subresource extends Model
 {
-	use SoftDeletes;
+	use SoftDeletes, Historable;
 
 	/**
 	 * The name of the "created at" column.
@@ -96,14 +97,14 @@ class Subresource extends Model
 	 * @var array
 	 */
 	protected $rules = array(
-		'name' => 'required|unique:subresource|max:32',
-		'cluster'     => 'nullable|string|max:32',
-		'nodecores'     => 'nullable|integer',
-		'nodemem'     => 'nullable|string|max:5',
-		'nodegpus'     => 'nullable|integer',
+		'name'           => 'required|unique:subresource|max:32',
+		'cluster'        => 'nullable|string|max:32',
+		'nodecores'      => 'nullable|integer',
+		'nodemem'        => 'nullable|string|max:5',
+		'nodegpus'       => 'nullable|integer',
 		'nodeattributes' => 'nullable|string|max:16',
-		'description'     => 'nullable|string|max:255',
-		'notice'     => 'nullable|integer',
+		'description'    => 'nullable|string|max:255',
+		'notice'         => 'nullable|integer',
 	);
 
 	/**
@@ -369,5 +370,21 @@ class Subresource extends Model
 	public function setClusterAttribute($val)
 	{
 		$this->attributes['cluster'] = strtolower($val);
+	}
+
+	/**
+	 * Delete the record and all associated data
+	 *
+	 * @param   bool  $options
+	 * @return  bool  False if error, True on success
+	 */
+	public function delete(array $options = [])
+	{
+		foreach ($this->queues as $row)
+		{
+			$row->delete();
+		}
+
+		return parent::delete($options);
 	}
 }

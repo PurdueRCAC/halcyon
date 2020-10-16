@@ -96,11 +96,21 @@ class Asset extends Model
 		'deleted'  => AssetDeleted::class,
 	];
 
+	/**
+	 * Get alias
+	 *
+	 * @return  string
+	 */
 	public function getAliasAttribute()
 	{
 		return preg_replace('/[^a-z0-9\-_]/', '', strtolower($this->name));
 	}
 
+	/**
+	 * Get picture
+	 *
+	 * @return  string
+	 */
 	public function getPictureAttribute()
 	{
 		$alias = $this->listname ? $this->listname : $this->alias;
@@ -114,6 +124,11 @@ class Asset extends Model
 		return '';
 	}
 
+	/**
+	 * Get thumbnail
+	 *
+	 * @return  string
+	 */
 	public function getThumbAttribute()
 	{
 		$alias = $this->listname ? $this->listname : $this->alias;
@@ -212,6 +227,7 @@ class Asset extends Model
 				->get()
 				->first()
 				->ordering;
+			$result = $result ?: 1;
 
 			$model->setAttribute('display', (int)$result);
 		});
