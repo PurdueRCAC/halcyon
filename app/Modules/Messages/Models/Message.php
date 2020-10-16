@@ -11,13 +11,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-use Carbon\Carbon;
 use App\Modules\Messages\Events\MessageCreating;
 use App\Modules\Messages\Events\MessageCreated;
 use App\Modules\Messages\Events\MessageUpdating;
 use App\Modules\Messages\Events\MessageUpdated;
 use App\Modules\Messages\Events\MessageDeleted;
 use App\Modules\Messages\Events\MessageReading;
+use Carbon\Carbon;
 
 class Message extends Model
 {
@@ -289,5 +289,118 @@ class Message extends Model
 		}
 
 		return $name;*/
+	}
+
+	/**
+	 * Get message status
+	 *
+	 * @return  string
+	 */
+	public function getStatusAttribute()
+	{
+		$now = Carbon::now();
+
+		$status = trans('global.unknown');
+
+		if ($this->datetimesubmitted <= $now)
+		{
+			if (!$this->started() && !$this->completed())
+			{
+				$status = trans('messages::messages.queued');
+			}
+			else
+			{
+				if (!$this->completed())
+				{
+					$status = trans('messages::messages.running');
+				}
+				else
+				{
+					$status = trans('messages::messages.completed');
+
+					if ($this->returnstatus && date("U") - strtotime($mq->datetimecompleted) < 1209600)
+					{
+						$status = trans('messages::messages.error');
+					}
+					elseif ($this->returnstatus)
+					{
+						$status = trans('messages::messages.error');
+					}
+				}
+			}
+		}
+		else
+		{
+			$status = trans('messages::messages.deferred');
+		}
+
+		return $status;
+	}
+
+	public function getRuntimeAttribute()
+	{
+		if (!$this->completed())
+		{
+			// Get now
+			$end = Carbon::now();
+			$end = $end->format('Y-m-d H:i:s');
+		}
+
+		$end = strtotime($this->datetimecompleted);
+		$start = strtotime($this->datetimestarted);
+
+		// Get the difference in seconds between now and the time
+		$diff = $end - $start;
+
+		// Less than a minute
+		if ($diff < 60 || $unit == 'seconds')
+		{
+			return trans('global.seconds', ['num' => $diff]);// $diff . ' second' . ($diff == 1 ? '' : 's');
+		}
+
+		// Round to minutes
+		$diff = round($diff / 60);
+
+		// 1 to 59 minutes
+		if ($diff < 60 || $unit == 'minute')
+		{
+			return trans('global.minutes', ['num' => $diff]);//$diff . ' minute' . ($diff == 1 ? '' : 's');
+		}
+
+		// Round to hours
+		$diff = round($diff / 60);
+
+		// 1 to 23 hours
+		if ($diff < 24 || $unit == 'hour')
+		{
+			return trans('global.hours', ['num' => $diff]);//$diff . ' hour' . ($diff == 1 ? '' : 's');
+		}
+
+		// Round to days
+		$diff = round($diff / 24);
+
+		// 1 to 6 days
+		if ($diff < 7 || $unit == 'day')
+		{
+			return trans('global.days', ['num' => $diff]);//$diff . ' day' . ($diff == 1 ? '' : 's');
+		}
+
+		// Round to weeks
+		$diff = round($diff / 7);
+
+		// 1 to 4 weeks
+		if ($diff <= 4 || $unit == 'week')
+		{
+			return trans('global.weeks', ['num' => $diff]);//$diff . ' week' . ($diff == 1 ? '' : 's');
+		}
+
+		// Round to months
+		$diff = round($diff / 4);
+
+		// 1 to 12 months
+		if ($diff <= 12 || $unit == 'month')
+		{
+			return trans('global.months', ['num' => $diff]);//$diff . ' month' . ($diff == 1 ? '' : 's');
+		}
 	}
 }
