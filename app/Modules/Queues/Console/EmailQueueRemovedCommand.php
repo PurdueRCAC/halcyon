@@ -16,13 +16,6 @@ use App\Modules\Groups\Models\Group;
 class EmailQueueRemovedCommand extends Command
 {
 	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	//protected $name = 'queues:emailremoved';
-
-	/**
 	 * The name and signature of the console command.
 	 *
 	 * @var string

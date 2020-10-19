@@ -3,7 +3,6 @@
 namespace App\Modules\Queues\Console;
 
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\ContactReports\Models\Report;
@@ -15,13 +14,6 @@ use App\Modules\Users\Models\User as SiteUser;
 
 class EmailWelcomeFreeCommand extends Command
 {
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	//protected $name = 'queues:emailwelcomefree';
-
 	/**
 	 * The name and signature of the console command.
 	 *

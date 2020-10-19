@@ -16,7 +16,7 @@ Please note you **still have access** to the following queues and resources.
 @endif
 
 @if (count($roleremovals))
-Accounts on the following ITaP Research Computing resources will be removed during overnight processing.
+Accounts on the following {{ config('app.name') }} resources will be removed during overnight processing.
 
 @foreach ($roleremovals as $resource)
 * {{ $resource->name }}

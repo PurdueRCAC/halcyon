@@ -2,7 +2,7 @@
 
 namespace App\Modules\Queues\Console;
 
-use Symfony\Component\Console\Input\InputArgument;
+//use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Queues\Mail\FreeAuthorized;
@@ -12,7 +12,7 @@ use App\Modules\Queues\Models\GroupUser;
 use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Users\Models\User;
 use App\Modules\Groups\Models\Group;
-use App\Modules\Resources\Events\ResourceMemberstatus;
+use App\Modules\Resources\Events\ResourceMemberStatus;
 
 /**
  * This script proccess all new authorized groupqueueuser entries
@@ -20,13 +20,6 @@ use App\Modules\Resources\Events\ResourceMemberstatus;
  */
 class EmailFreeAuthorizedCommand extends Command
 {
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	//protected $name = 'queues:emailfreeauthorized';
-
 	/**
 	 * The name and signature of the console command.
 	 *
@@ -82,13 +75,13 @@ class EmailFreeAuthorizedCommand extends Command
 		$now = date("U");
 		$threshold = 300; // threshold for when considering activity "done"
 
-		foreach ($group_activity as $group)
+		foreach ($group_activity as $groupid => $users)
 		{
-			$this->info("Starting processing group ID #{$group}.");
+			$this->info("Starting processing group ID #{$groupid}.");
 
 			// Find the latest activity
 			$latest = 0;
-			foreach ($group as $g)
+			foreach ($users as $g)
 			{
 				if ($g->datetimecreated->format('U') > $latest)
 				{
@@ -103,7 +96,7 @@ class EmailFreeAuthorizedCommand extends Command
 				// Condense students
 				$student_activity = array();
 
-				foreach ($group as $student)
+				foreach ($users as $student)
 				{
 					if (!isset($student_activity[$student->userid]))
 					{
@@ -118,6 +111,12 @@ class EmailFreeAuthorizedCommand extends Command
 				foreach ($student_activity as $userid => $queueusers)
 				{
 					$user = User::find($userid);
+
+					if (!$user)
+					{
+						$this->error('Could not find account for user #' . $userid);
+						continue;
+					}
 
 					$roles[$userid] = array();
 					$last_role = '';
@@ -134,7 +133,7 @@ class EmailFreeAuthorizedCommand extends Command
 						$last_role = $role;
 
 						// Contact role provision service
-						event($event = new ResourceMemberstatus($queueuser->queue->resource, $user));
+						event($event = new ResourceMemberStatus($queueuser->queue->resource, $user));
 
 						if ($event->status != 3) // ROLE_ACCOUNTS_READY
 						{
@@ -151,7 +150,7 @@ class EmailFreeAuthorizedCommand extends Command
 						continue;
 					}
 
-					//Mail::to($user->email)->send($message);
+					Mail::to($user->email)->send($message);
 
 					$this->info("Emailed freeauthorized to {$user->email}.");
 
@@ -163,16 +162,13 @@ class EmailFreeAuthorizedCommand extends Command
 						// Determine which state to go to, depending on whether a new role was created
 						$rolename = $queueuser->queue->resource->rolename;
 
+						$notice = 0;
 						if (in_array($rolename, $r))
 						{
-							$queueuser->notice = 8;
-						}
-						else
-						{
-							$queueuser->notice = 0;
+							$notice = 8;
 						}
 
-						$queueuser->save();
+						$queueuser->update(['notice' => $notice]);
 					}
 				}
 
@@ -190,7 +186,7 @@ class EmailFreeAuthorizedCommand extends Command
 						continue;
 					}
 
-					//Mail::to($manager->user->email)->send($message);
+					Mail::to($manager->user->email)->send($message);
 
 					$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
 				}

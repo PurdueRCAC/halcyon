@@ -43,8 +43,8 @@ class WelcomeFree extends Mailable
 	 */
 	public function build()
 	{
-		return $this->markdown('queues::mail.welcomemessage')
-					->subject(trans('queues::mail.welcomemessage'))
+		return $this->markdown('queues::mail.welcome.free')
+					->subject(trans('queues::mail.welcome.free'))
 					->with([
 						'user' => $this->user,
 						'activity' => $this->activity,

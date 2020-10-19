@@ -1,8 +1,13 @@
 @component('mail::message')
 Hello {{ $user->name }},
 
-You have been granted access to ITaP Research Computing resources.
+You have been granted access to {{ config('app.name') }} resources.
 
+@php
+$itar = 0;
+$data = 0;
+$need_data_info = 0;
+@endphp
 @if (count($roles))
 ---
 
@@ -10,6 +15,16 @@ You have been granted **accounts** on the following resources.
 
 @foreach ($roles as $resource)
 * {{ $resource->name }}
+@php
+if ($resource->name == 'RCACIUSR' || $resource->name == 'exrc')
+{
+	$itar = 1;
+}
+if ($resource->name == 'HPSSUSER')
+{
+	$data = 1;
+}
+@endphp
 @endforeach
 
 <?php if ($itar): ?>
@@ -19,9 +34,9 @@ SSH key-pairs must be generated on the machine you intend to connect to the ITAR
 
 **You must choose a strong, unique, passphrase while generating the key-pair. The private key must remain secure and private. Do not send this file to anyone else or allow anyone else to access the file. This file is used to authenicate against the public key on the cluster. Anyone with access to this file could be able to compromise your account.**
 
-These accounts will be created during overnight processing. Accounts on non-ITAR systems are generally ready for use the morning of the next day ({$tomorrow}) if requested by midnight. You will receive another notification with information about logging in and getting started once your account is ready for use.
+These accounts will be created during overnight processing. Accounts on non-ITAR systems are generally ready for use the morning of the next day ({{ Carbon\Carbon::now()->modify('+1 day')->format('F jS') }}) if requested by midnight. You will receive another notification with information about logging in and getting started once your account is ready for use.
 <?php elseif ($data): ?>
-These accounts will be created during overnight processing. Accounts are generally ready for use the morning of the next day ({$tomorrow}) if requested by midnight.
+These accounts will be created during overnight processing. Accounts are generally ready for use the morning of the next day ({{ Carbon\Carbon::now()->modify('+1 day')->format('F jS') }}) if requested by midnight.
 <?php else: ?>
 These accounts will be created during overnight processing. Accounts are generally ready for use the morning of the next day ({{ Carbon\Carbon::now()->modify('+1 day')->format('F jS') }}) if requested by midnight. You will receive another notification with information about logging in and getting started once your account is ready for use.
 <?php endif; ?>
@@ -32,17 +47,44 @@ These accounts will be created during overnight processing. Accounts are general
 You have been granted **access** to the following job submission queues, Unix groups, and other resources.
 
 @foreach ($queueusers as $queueuser)
+@php
+if ($queueuser->unixgroupid)
+{
+	if ($data)
+	{
+		// If this is a Fortress-only addition, user won't be able to use it till tomorrow
+		$eta = 'tomorrow';
+	}
+	else 
+	{
+		$eta = 'within 4 hours';
+	}
+	$need_data_info = 1;
+}
+else
+{
+	$eta = 'now';
+
+	foreach ($roles as $resource)
+	{
+		if ($queueuser->queue->resource->name == $resource->name)
+		{
+			$eta = 'tomorrow';
+		}
+	}
+}
+@endphp
 @if (isset($queueuser->unixgroupid))
-* Unix group: {{ $queueuser->group->name }} (membership ready {{ $data ? 'tomorrow' : 'within 4 hours' }})
+* Unix group: {{ $queueuser->group->name }} (membership ready {{ $eta }})
 @else
-* {{ $queueuser->queue->resource->name }}: {{ $queueuser->queue->name }} (account ready {$eta})
+* {{ $queueuser->queue->resource->name }}: {{ $queueuser->queue->name }} (account ready {{ $eta }})
 @endif
 @endforeach
 
 @if ($need_data_info)
 You will be able to access the Data Depot (if applicable) within a few hours if you already have a Research Computing account, otherwise you will be able to access it tomorrow morning. You may transfer files to and from the Data Depot through [Globus](https://www.rcac.purdue.edu/storage/depot/guide/#storage_transfer_globus), by [mapping a network drive](https://www.rcac.purdue.edu/storage/depot/guide/#storage_transfer_cifs), or directly on other Research Computing resources. The [complete user guide](https://www.rcac.purdue.edu/storage/depot/guide/) also describes several other access methods, policies, and lost file recovery options.
 
-You will be able to access Fortress (if applicable) tomorrow morning. You may transfer files to and from Fortress through [Globus](https://www.rcac.purdue.edu/storage/fortress/guide/#storage_transfer_globus), by [SFTP](https://www.rcac.purdue.edu/knowledge/fortress/all#storage_transfer_fortress-sftp), or directly through other Research Computing resources via [HSI](https://www.rcac.purdue.edu/storage/fortress/guide/#storage_transfer_hsi) and [HTAR](https://www.rcac.purdue.edu/storage/fortress/guide/#storage_transfer_htar).  The [complete user guide](https://www.rcac.purdue.edu/storage/fortress/guide/) also describes several other access methods.
+You will be able to access Fortress (if applicable) tomorrow morning. You may transfer files to and from Fortress through [Globus](https://www.rcac.purdue.edu/storage/fortress/guide/#storage_transfer_globus), by [SFTP](https://www.rcac.purdue.edu/knowledge/fortress/all#storage_transfer_fortress-sftp), or directly through other Research Computing resources via [HSI](https://www.rcac.purdue.edu/storage/fortress/guide/#storage_transfer_hsi) and [HTAR](https://www.rcac.purdue.edu/storage/fortress/guide/#storage_transfer_htar). The [complete user guide](https://www.rcac.purdue.edu/storage/fortress/guide/) also describes several other access methods.
 @endif
 
 @endcomponent

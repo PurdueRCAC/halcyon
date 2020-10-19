@@ -3,7 +3,6 @@
 namespace App\Modules\Queues\Console;
 
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\ContactReports\Models\Report;
@@ -15,13 +14,6 @@ use App\Modules\Users\Models\User as SiteUser;
 
 class EmailWelcomeClusterCommand extends Command
 {
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	//protected $name = 'queues:emailwelcomecluster';
-
 	/**
 	 * The name and signature of the console command.
 	 *
@@ -51,7 +43,8 @@ class EmailWelcomeClusterCommand extends Command
 			->select($u . '.*', $q . '.groupid')
 			->join($q, $q . '.id', $u . '.queueid')
 			->whereIn($u . '.membertype', [1, 4])
-			->whereIn($u . '.notice', [8, 13])
+			->whereIn($u . '.notice', [0])//[8, 13])
+			->limit(5)
 			->get();
 
 		if (!count($users))

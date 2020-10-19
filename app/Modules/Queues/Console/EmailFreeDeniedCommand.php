@@ -20,13 +20,6 @@ use App\Modules\Groups\Models\Group;
 class EmailFreeDeniedCommand extends Command
 {
 	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	//protected $name = 'queues:emailfreedenied';
-
-	/**
 	 * The name and signature of the console command.
 	 *
 	 * @var string
@@ -120,6 +113,12 @@ class EmailFreeDeniedCommand extends Command
 				{
 					$user = User::find($userid);
 
+					if (!$user)
+					{
+						$this->error('Could not find account for user #' . $userid);
+						continue;
+					}
+
 					$data[$userid] = array(
 						'user'       => $user,
 						'queueusers' => $queueusers,
@@ -140,8 +139,7 @@ class EmailFreeDeniedCommand extends Command
 					// Change states
 					foreach ($queueusers as $queueuser)
 					{
-						$queueuser->notice = 0;
-						$queueuser->save();
+						$queueuser->update(['notice' => 0]);
 					}
 				}
 

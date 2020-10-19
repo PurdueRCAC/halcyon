@@ -2,7 +2,6 @@
 
 namespace App\Modules\Queues\Console;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Queues\Mail\FreeRequested;
@@ -18,13 +17,6 @@ use App\Modules\Groups\Models\Group;
  */
 class EmailFreeRequestedCommand extends Command
 {
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	//protected $name = 'queues:emailfreerequested';
-
 	/**
 	 * The name and signature of the console command.
 	 *
@@ -117,8 +109,7 @@ class EmailFreeRequestedCommand extends Command
 					// Change states
 					foreach ($activity as $queueuser)
 					{
-						$queueuser->notice = 0;
-						$queueuser->save();
+						$queueuser->update(['notice' => 0]);
 					}
 				}
 

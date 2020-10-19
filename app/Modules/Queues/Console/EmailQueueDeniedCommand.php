@@ -2,13 +2,14 @@
 
 namespace App\Modules\Queues\Console;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Queues\Mail\QueueDenied;
+use App\Modules\Queues\Mail\QueueDeniedManager;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Users\Models\User;
+use App\Modules\Groups\Models\Group;
 
 /**
  * This script proccess all newly denied queueuser entries
@@ -16,13 +17,6 @@ use App\Modules\Users\Models\User;
  */
 class EmailQueueDeniedCommand extends Command
 {
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	//protected $name = 'queues:emaildenied';
-
 	/**
 	 * The name and signature of the console command.
 	 *
@@ -117,6 +111,12 @@ class EmailQueueDeniedCommand extends Command
 				{
 					$user = User::find($userid);
 
+					if (!$user)
+					{
+						$this->error('Could not find account for user #' . $userid);
+						continue;
+					}
+
 					$data[$userid] = array(
 						'user'       => $user,
 						'queueusers' => $queueusers,
@@ -137,8 +137,7 @@ class EmailQueueDeniedCommand extends Command
 					// Change states
 					foreach ($queueusers as $queueuser)
 					{
-						$queueuser->notice = 0;
-						$queueuser->save();
+						$queueuser->update(['notice' => 0]);
 					}
 				}
 

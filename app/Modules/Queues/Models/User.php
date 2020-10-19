@@ -17,6 +17,7 @@ use App\Modules\Queues\Events\UserCreated;
 use App\Modules\Queues\Events\UserUpdating;
 use App\Modules\Queues\Events\UserUpdated;
 use App\Modules\Queues\Events\UserDeleted;
+use App\Modules\Groups\Models\Group;
 
 /**
  * Model for a queue/user association
@@ -112,6 +113,16 @@ class User extends Model
 	public function user()
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
+	}
+
+	/**
+	 * Defines a relationship to notification type
+	 *
+	 * @return  object
+	 */
+	public function group()
+	{
+		return $this->belongsTo(Group::class, 'groupid');
 	}
 
 	/**

@@ -19,13 +19,21 @@ class QueueDenied extends Mailable
 	protected $user;
 
 	/**
+	 * The User
+	 *
+	 * @var array
+	 */
+	protected $queueusers;
+
+	/**
 	 * Create a new message instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user)
+	public function __construct(User $user, $queueusers = array())
 	{
 		$this->user = $user;
+		$this->queueusers = $queueusers;
 	}
 
 	/**
@@ -39,6 +47,7 @@ class QueueDenied extends Mailable
 					->subject(trans('queues::mail.queuedenied'))
 					->with([
 						'user' => $this->user,
+						'queueusers' => $this->queueusers
 					]);
 	}
 }

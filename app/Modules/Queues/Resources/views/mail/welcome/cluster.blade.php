@@ -1,7 +1,7 @@
 @component('mail::message')
 Hello {{ $user->name }},
 
-Your account on {{ $resources }} has been created and are ready for use. Details about using these and other ITaP Research Computing resources are included below.
+Your account on {{ $resources }} has been created and are ready for use. Details about using these and other {{ config('app.name') }} resources are included below.
 
 ---
 
@@ -9,10 +9,9 @@ Your account on {{ $resources }} has been created and are ready for use. Details
 
 **You can access the clusters through the front-ends ({{ $frontends }}) with your Purdue Career Account credentials using [SSH](https://www.rcac.purdue.edu/knowledge/) or [Thinlinc](https://www.rcac.purdue.edu/knowledge/)**. You've been granted access to the following queues:
 
-@php
+<?php
 $partner = false;
-@endphp
-@foreach ($activity as $cluster => $data)
+foreach ($activity as $cluster => $data): ?>
 ### {{ $cluster }}:
 
 @foreach ($data as $queue)
@@ -27,12 +26,14 @@ if (preg_match("/^partner/", $standby->name))
 @endphp
 * {{ $standby->name }} - {{ $standby->walltime }} hours
 @endforeach
-@endforeach
+<?php
+endforeach;
+?>
 
 You can also see this list by running the `qlist` command.
 
 @if ($partner)
-One of the above resources provides partners and their researchers who have purchased shared access to the cluster through a shared 'partner' queue. If your research group has purchased dedicated access, there will also be a queue named after that partner or research group on this resource. 
+One of the above resources provides partners and their researchers who have purchased shared access to the cluster through a shared 'partner' queue. If your research group has purchased dedicated access, there will also be a queue named after that partner or research group on this resource.
 @endif
 
 You also have access to the "standby" queue. This queue utilizes idle cores from other queues. You can use this queue to run jobs of up to 4 hours. Wait times in standby will vary wildly (minutes to days) depending on cluster utilization and how many nodes your jobs request.

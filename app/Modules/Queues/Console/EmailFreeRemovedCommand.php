@@ -2,7 +2,6 @@
 
 namespace App\Modules\Queues\Console;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Queues\Mail\FreeRemoved;
@@ -13,6 +12,7 @@ use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Users\Models\User;
 use App\Modules\Groups\Models\Group;
+use App\Modules\Resources\Events\ResourceMemberStatus;
 
 /**
  * This script proccess all newly removed groupqueueuser entries
@@ -20,13 +20,6 @@ use App\Modules\Groups\Models\Group;
  */
 class EmailFreeRemovedCommand extends Command
 {
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	//protected $name = 'queues:emailfreeremoved';
-
 	/**
 	 * The name and signature of the console command.
 	 *
@@ -127,6 +120,12 @@ class EmailFreeRemovedCommand extends Command
 					// Start assembling email
 					$user = User::find($userid);
 
+					if (!$user)
+					{
+						$this->error('Could not find account for user #' . $userid);
+						continue;
+					}
+
 					$existing = QueueUser::query()
 						->withTrashed()
 						->join($q, $q . '.id', $qu . '.queueid')
@@ -176,7 +175,7 @@ class EmailFreeRemovedCommand extends Command
 						$last_role = $role;
 
 						// Contact role provision service
-						event($event = new ResourceMemberstatus($queueuser->queue->resource, $user));
+						event($event = new ResourceMemberStatus($queueuser->queue->resource, $user));
 
 						if ($event->status == 1  // ROLE_REMOVAL_PENDING
 						 || $event->status == 4) // NO_ROLE_EXISTS
@@ -211,15 +210,13 @@ class EmailFreeRemovedCommand extends Command
 						// Determine which state to go to, depending on whether a new role was created
 						$q = $queueuser->queue->subresource->resource;
 
+						$notice = 0;
 						if (in_array($q->rolename, $r))
 						{
-							$groupqueue->notice = 9;
+							$notice = 9;
 						}
-						else
-						{
-							$groupqueue->notice = 0;
-						}
-						$groupqueue->save();
+
+						$groupqueue->update(['notice' => $notice]);
 					}
 				}
 

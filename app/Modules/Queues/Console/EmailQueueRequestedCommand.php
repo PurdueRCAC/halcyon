@@ -14,13 +14,6 @@ use App\Modules\Groups\Models\Group;
 class EmailQueueRequestedCommand extends Command
 {
 	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	//protected $name = 'queues:emailrequested';
-
-	/**
 	 * The name and signature of the console command.
 	 *
 	 * @var string
@@ -141,7 +134,7 @@ class EmailQueueRequestedCommand extends Command
 						continue;
 					}
 
-					//Mail::to($manager->user->email)->send($message);
+					Mail::to($manager->user->email)->send($message);
 
 					$this->info("Emailed queuerequested to {$manager->user->email}.");
 				}

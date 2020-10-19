@@ -2,7 +2,6 @@
 
 namespace App\Modules\Queues\Console;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Queues\Models\Queue;
@@ -11,17 +10,10 @@ use App\Modules\Queues\Mail\QueueAuthorized;
 use App\Modules\Queues\Mail\QueueAuthorizedManager;
 use App\Modules\Users\Models\User;
 use App\Modules\Groups\Models\Group;
-use App\Modules\Resources\Events\ResourceMemberstatus;
+use App\Modules\Resources\Events\ResourceMemberStatus;
 
 class EmailQueueAuthorizedCommand extends Command
 {
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	//protected $name = 'queues:emailauthorized';
-
 	/**
 	 * The name and signature of the console command.
 	 *
@@ -50,8 +42,7 @@ class EmailQueueAuthorizedCommand extends Command
 			->select($qu . '.*', $q . '.groupid')
 			->join($q, $q . '.id', $qu . '.queueid')
 			->whereIn($qu . '.membertype', [1, 4])
-			->where($qu . '.notice', '=', 0)//2)
-			->limit(20)
+			->where($qu . '.notice', '=', 2)
 			->get();
 
 		if (!count($users))
@@ -115,9 +106,16 @@ class EmailQueueAuthorizedCommand extends Command
 
 				// Send email to each student
 				$roles = array();
+				$data = array();
 				foreach ($student_activity as $userid => $queueusers)
 				{
 					$user = User::find($userid);
+
+					if (!$user)
+					{
+						$this->error('Could not find account for user #' . $userid);
+						continue;
+					}
 
 					$roles[$userid] = array();
 					$last_role = '';
@@ -134,7 +132,7 @@ class EmailQueueAuthorizedCommand extends Command
 						$last_role = $role;
 
 						// Contact role provision service
-						event($event = new ResourceMemberstatus($queueuser->queue->resource, $user));
+						event($event = new ResourceMemberStatus($queueuser->queue->resource, $user));
 
 						if ($event->status != 3) // ROLE_ACCOUNTS_READY
 						{
@@ -142,8 +140,14 @@ class EmailQueueAuthorizedCommand extends Command
 						}
 					}
 
+					$data[$userid] = array(
+						'user'       => $user,
+						'queueusers' => $queueusers,
+						'roles'      => $roles[$userid]
+					);
+
 					// Prepare and send actual email
-					$message = new QueueAuthorized($user, $queueusers, $roles);
+					$message = new QueueAuthorized($user, $queueusers, $roles[$userid]);
 
 					if ($debug)
 					{
@@ -163,16 +167,13 @@ class EmailQueueAuthorizedCommand extends Command
 						// Determine which state to go to, depending on whether a new role was created
 						$rolename = $queueuser->queue->resource->rolename;
 
+						$notice = 0;
 						if (in_array($rolename, $r))
 						{
-							$queueuser->notice = 8;
-						}
-						else
-						{
-							$queueuser->notice = 0;
+							$notice = 8;
 						}
 
-						$queueuser->save();
+						$queueuser->save(['notice' => $notice]);
 					}
 				}
 
