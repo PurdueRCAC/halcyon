@@ -5,6 +5,7 @@ namespace App\Modules\Orders\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Orders\Console\RenewCommand;
+use App\Modules\Orders\Console\EmailStatusCommand;
 use App\Modules\Orders\Listeners\GroupOrders;
 use Illuminate\Support\Facades\View;
 use App\Modules\Orders\Composers\ProfileComposer;
@@ -65,6 +66,9 @@ class ModuleServiceProvider extends ServiceProvider
 	{
 		$this->commands([
 			RenewCommand::class,
+		]);
+		$this->commands([
+			EmailStatusCommand::class,
 		]);
 	}
 

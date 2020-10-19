@@ -170,6 +170,42 @@ class Order extends Model
 	}
 
 	/**
+	 * Format unit price
+	 *
+	 * @return  string
+	 */
+	public function formatNumber($val)
+	{
+		$number = preg_replace('/[^0-9\-]/', '', $val);
+
+		$neg = '';
+		if ($number < 0)
+		{
+			$neg = '-';
+			$number = -$number;
+		}
+
+		if ($number > 99)
+		{
+			$dollars = substr($number, 0, strlen($number) - 2);
+			$cents   = substr($number, strlen($number) - 2, 2);
+			$dollars = number_format($dollars);
+
+			$number = $dollars . '.' . $cents;
+		}
+		elseif ($number > 9 && $number < 100)
+		{
+			$number = '0.' . $number;
+		}
+		else
+		{
+			$number = '0.0' . $number;
+		}
+
+		return $neg . $number;
+	}
+
+	/**
 	 * Get order status
 	 *
 	 * @return  string

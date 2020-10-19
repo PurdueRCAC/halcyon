@@ -6,26 +6,35 @@ use App\Modules\Orders\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use App\Modules\Users\Models\User;
 
-class NewOrder extends Mailable
+class PendingApproval extends Mailable
 {
 	use Queueable, SerializesModels;
 
 	/**
-	 * The order
+	 * The order instance.
 	 *
 	 * @var Order
 	 */
 	protected $order;
 
 	/**
+	 * The user instance.
+	 *
+	 * @var User
+	 */
+	protected $user;
+
+	/**
 	 * Create a new message instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(Order $order)
+	public function __construct(Order $order, User $user)
 	{
 		$this->order = $order;
+		$this->user = $user;
 	}
 
 	/**
@@ -35,10 +44,11 @@ class NewOrder extends Mailable
 	 */
 	public function build()
 	{
-		return $this->markdown('contactorders::mail.neworder')
-					->subject('Contact Order')
+		return $this->markdown('orders::mail.pendingapproval')
+					->subject(config('app.name') . '- Order #' . $this->order->id . ' Account Approval Required')
 					->with([
 						'order' => $this->order,
+						'user' => $this->user,
 					]);
 	}
 }

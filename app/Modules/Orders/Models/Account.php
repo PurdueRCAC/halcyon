@@ -134,6 +134,25 @@ class Account extends Model
 	}
 
 	/**
+	 * Get account
+	 *
+	 * @return  string
+	 */
+	public function getAccountAttribute()
+	{
+		if ($this->purchaseio)
+		{
+			$account = $this->purchaseio;
+		}
+		else
+		{
+			$account = $this->purchasewbse;
+		}
+
+		return $account;
+	}
+
+	/**
 	 * Format WBSE
 	 *
 	 * @return  string

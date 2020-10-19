@@ -113,6 +113,26 @@ class Item extends Model
 	}
 
 	/**
+	 * If item is recurring
+	 *
+	 * @return  bool
+	 **/
+	public function isRecurring()
+	{
+		return ($this->origorderitemid > 0);
+	}
+
+	/**
+	 * If item is recurring
+	 *
+	 * @return  bool
+	 **/
+	public function isOriginal()
+	{
+		return ($this->origorderitemid == $this->id);
+	}
+
+	/**
 	 * Calculate billing and paid until...
 	 *
 	 * @return  array

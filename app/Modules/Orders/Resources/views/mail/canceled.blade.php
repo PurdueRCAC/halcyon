@@ -1,7 +1,7 @@
 @component('mail::message')
-Hello {$user->name},
+Hello {{ $user->name }},
 
-This is an automated message notifying that Order #{$order->id} has been **canceled**.
+This is an automated message notifying that Order #{{ $order->id }} has been **canceled**.
 
 ---
 
@@ -9,5 +9,5 @@ This is an automated message notifying that Order #{$order->id} has been **cance
 
 ---
 
-You may view this order in detail from the [Order Management](https://www.rcac.purdue.edu/order/{$order->id}) page. If you have any questions about this process please contact rcac-help@purdue.edu
+You may view this order in detail from the [Order Management]({{ route('site.orders.read', ['id' => $order->id]) }}) page. If you have any questions about this process please contact rcac-help@purdue.edu
 @endcomponent
