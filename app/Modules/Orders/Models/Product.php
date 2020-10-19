@@ -194,7 +194,7 @@ class Product extends Model
 	 *
 	 * @return bool
 	 */
-	public function istrashed()
+	public function isTrashed()
 	{
 		$result = $this->trashed();
 

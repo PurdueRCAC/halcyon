@@ -58,7 +58,7 @@ class RenewCommand extends Command
 			$until = $sequence->until();
 
 			// Skip orders that haven't even been paid for once
-			if ($until['paid'] == '0000-00-00 00:00:00')
+			if (!$until['paid'] || $until['paid'] == '0000-00-00 00:00:00')
 			{
 				continue;
 			}
@@ -72,8 +72,11 @@ class RenewCommand extends Command
 			$producttime = $product->timeperiod;
 			$warningtime = $producttime->warningtime;
 
-			$cutoff = Carbon::now()->addMonths($warningtime->months)->addSeconds($warningtime->unixtime)->timestamp;
-			//$cutoff = strtotime($db->getInterval(date("Y-m-d H:i:s", $now), $warningtime->months, $warningtime->unixtime));
+			$cutoff = Carbon::now()
+				->addMonths($warningtime->months)
+				->addSeconds($warningtime->unixtime)
+				->timestamp;
+
 			$renewthreshold = $cutoff - $now;
 
 			// eligible for renew?
@@ -104,7 +107,7 @@ class RenewCommand extends Command
 			}
 
 			// don't renew if product is removed
-			if ($renew && $product->isDeleted())
+			if ($renew && $product->isTrashed())
 			{
 				$renew = false;
 			}
@@ -121,13 +124,96 @@ class RenewCommand extends Command
 			}
 		}
 
-		foreach ($renews as $renew)
+		foreach ($renews as $sequences)
 		{
-			//$neworder = new stdClass();
+			//$neworder = new Order;
 			//$neworder->orderitemsequence = $renew;
 
-			//$neworder = Order::blank();
-			//$ws->post(ROOT_URI . "order", $neworder);
+			//Order::createFromSequence($renew);
+
+			$items = array();
+			$orderid = 0;
+
+			// If we sent an itemsequence we are copying another order. GO and fetch all this
+			$items = array();
+			foreach ($sequences as $sequence)
+			{
+				// Fetch order information
+				$item = Item::query()
+					->where('origorderitemid', $sequence)
+					->where(function($where)
+					{
+						$where->whereNull('datetimeremoved')
+							->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+					})
+					->orderBy('datetimecreated', 'desc')
+					->limit(1)
+					->first();
+
+				if (!$item)
+				{
+					$this->warning('Failed to find order information for orderitemid #' . $sequence);
+					continue;
+				}
+
+				//create a new class.
+				$item->id = null;
+				$item->datetimecreated = null;
+
+				$items[] = (array)$item;
+
+				$orderid = $item->orderid;
+
+				//$row->userid  = $item->userid;
+				//$row->groupid = $item->groupid;
+			}
+
+			// Fetch accounts information
+			/*$accounts = Account::query()
+				->where('orderid', '=', $orderid)
+				->get();*/
+
+			// Create record
+			$row = Order::find($orderid);
+			//$row->userid = $request->input('userid', auth()->user() ? auth()->user()->id : 0);
+			//$row->groupid = $request->input('groupid', 0);
+			//$row->submitteruserid = $request->input('submitteruserid', $row->userid);
+			//$row->usernotes = $request->input('usernotes', '');
+			//$row->staffnotes = $request->input('staffnotes', '');
+			$row->id = null;
+			$row->datetimecreated = null;
+			$row->notice = 1; //$request->input('notice', 1);
+			$row->save();
+
+			// Create each item in order
+			foreach ($items as $i)
+			{
+				$item = new Item;
+				$item->fill($i);
+				$item->orderid = $row->id;
+				//$item->orderproductid = $i['product'];
+				//$item->quantity = $i['quantity'];
+				//$item->origorderitemid = $i['origorderitemid'];
+				//$item->recurringtimeperiod
+				//$item->origunitprice = $i['origunitprice'];
+
+				$total = $item->product->unitprice * $item->quantity;
+
+				$item->price = $total;
+				if (isset($i['price']))
+				{
+					$item->price = $i['price'];
+				}
+				$item->origunitprice = $item->product->unitprice;
+
+				if ($total != $item->price)
+				{
+					$this->warning('Total and item price do not match');
+					continue;
+				}
+
+				$item->save();
+			}
 		}
 	}
 
@@ -140,7 +226,7 @@ class RenewCommand extends Command
 	{
 		$this->output
 			 ->getHelpOutput()
-			 ->addOverview('Email Updates')
+			 ->addOverview('Process auto-renewable orders')
 			 ->addTasks($this)
 			 ->render();
 	}

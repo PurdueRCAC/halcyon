@@ -30,7 +30,7 @@ class EmailStatusCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Email latest Contact Report comments to subscribers.';
+	protected $description = 'Email order status as it changes.';
 
 	/**
 	 * Order notice states
@@ -49,6 +49,20 @@ class EmailStatusCommand extends Command
 	const ACCOUNT_ASSIGNED = 3;
 	const ACCOUNT_APPROVED = 4;
 	const ACCOUNT_DENIED = 5;
+
+	/**
+	 * Output help documentation
+	 *
+	 * @return  void
+	 **/
+	public function help()
+	{
+		$this->output
+			 ->getHelpOutput()
+			 ->addOverview('Email order status')
+			 ->addTasks($this)
+			 ->render();
+	}
 
 	/**
 	 * Execute the console command.

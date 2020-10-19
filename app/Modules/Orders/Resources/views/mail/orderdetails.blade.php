@@ -2,7 +2,7 @@
 **Order:** [#{{ $order->id }}]({{ route('site.orders.read', ['id' => $order->id]) }})<br />
 **Order for:** {{ $order->user->name }}<br />
 **Submitted by:** {{ $order->submitter ? $order->submitter->name : $order->user->name }}<br />
-**Submitted:** {{ $order->datetimecreated->format('Y-m-d h:i:s') }}
+**Submitted:** {{ $order->datetimecreated->format('M d, Y H:i a') }}
 
 @component('mail::table')
 | Product | Quantity | Price | Notes |
