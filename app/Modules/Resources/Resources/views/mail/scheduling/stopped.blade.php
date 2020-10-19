@@ -7,5 +7,5 @@ Scheduling has been **<span style="color:red;">STOPPED</span>** on:
 
 See current scheduling status at:
 
-http://www.rcac.purdue.edu/admin/scheduling/
+{{ route('admin.resources.index') }}
 @endcomponent

@@ -2,7 +2,6 @@
 
 namespace App\Modules\Resources\Console;
 
-//use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Resources\Entities\Subresource;
@@ -49,16 +48,16 @@ class EmailSchedulingCommand extends Command
 				Mail::to($email)->send($message);
 
 				$this->info("Emailed stopped scheduling to {$email}.");
-			}
 
-			foreach ($stopped as $subresource)
-			{
-				$subresource->update(['notice' => 3]);
+				foreach ($stopped as $subresource)
+				{
+					$subresource->update(['notice' => 3]);
+				}
 			}
 		}
 		else
 		{
-			$this->info("No stopped queues found.");
+			$this->info('No stopped queues found.');
 		}
 
 		$started = Subresource::query()
@@ -82,16 +81,16 @@ class EmailSchedulingCommand extends Command
 				Mail::to($email)->send($message);
 
 				$this->info("Emailed started scheduling to {$email}.");
-			}
 
-			foreach ($started as $subresource)
-			{
-				$subresource->update(['notice' => 0]);
+				foreach ($started as $subresource)
+				{
+					$subresource->update(['notice' => 0]);
+				}
 			}
 		}
 		else
 		{
-			$this->info("No newly started queues found.");
+			$this->info('No newly started queues found.');
 		}
 	}
 }

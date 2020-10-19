@@ -1,6 +1,6 @@
 @component('mail::message')
 
-Scheduling has been <span style="color:green;">restarted</span> on:
+Scheduling has been <span style="color:green;">RESTARTED</span> on:
 
 @foreach ($started as $resource)
 * {{ $resource->name }}
@@ -18,5 +18,5 @@ Scheduling on these clusters remains **<span style="color:red;">STOPPED</span>**
 
 See current scheduling status at:
 
-http://www.rcac.purdue.edu/admin/scheduling/
+{{ route('admin.resources.index') }}
 @endcomponent
