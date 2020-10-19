@@ -28,7 +28,8 @@ blockquote {
 }
 blockquote {
     background-color: #e9f5fe;
-    padding: 16px;
+    padding: 10px 20px;
+    margin: 0;
 }
 
 a {
@@ -201,14 +202,19 @@ hr {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    margin: 30px auto;
+    margin: 1em auto;
     width: 100%;
+    font-size: 90%;
 }
 .content-cell th,
 .table th {
-    border-bottom: 1px solid #edeff2;
     margin: 0;
-    padding-bottom: 8px;
+    padding: 5px;
+    text-align: left;
+    border: 1px solid #eee;
+    vertical-align: top;
+    background-color: #f1f1f1;
+    border-bottom: 2px solid #eee;
 }
 .content-cell td,
 .table td {
@@ -216,7 +222,10 @@ hr {
     font-size: 13px;
     line-height: 1.2;
     margin: 0;
-    padding: 10px 0;
+    padding: 5px;
+    border: 1px solid #eee;
+    vertical-align: top;
+    text-align: left;
 }
 
 .content-cell {
