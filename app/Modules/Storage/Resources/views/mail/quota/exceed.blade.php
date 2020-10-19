@@ -1,7 +1,7 @@
 @component('mail::message')
-Hello {$user->name},
+Hello {{ $user->name }},
 
-Total usage has exceeded {{ $notification->threshold }} on `{{ $notification->directory->path }}`.
+Total usage has exceeded {{ $notification->threshold }} on `{{ $notification->directory->storageResource->path . '/' . $notification->directory->path }}`.
 
 Current usage:
 

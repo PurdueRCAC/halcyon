@@ -44,7 +44,7 @@ class EmailQuotaCommand extends Command
 
 		if (!count($users))
 		{
-			$this->info("No quotas found");
+			$this->info('No quotas found');
 			return;
 		}
 
@@ -57,7 +57,7 @@ class EmailQuotaCommand extends Command
 
 			if (!$user)
 			{
-				$this->error('Could not account for user #' . $userid);
+				$this->error('Could not find account for user #' . $userid);
 				continue;
 			}
 
@@ -178,7 +178,7 @@ class EmailQuotaCommand extends Command
 				}
 				else if ($not->type->id == 4)
 				{
-					$not->threshold = $not->value . " files";
+					$not->threshold = $not->value . ' files';
 				}
 				else if ($not->type->id == 5)
 				{
@@ -224,50 +224,53 @@ class EmailQuotaCommand extends Command
 				}
 				else
 				{
-					if ($not->type->id == 1)
+					if ($not->type->id != 1)
 					{
-						if (date("U") > strtotime($not->nextreport))
+						continue;
+					}
+
+					if (date("U") <= strtotime($not->nextreport))
+					{
+						continue;
+					}
+
+					$storagedir = $not->directory;
+
+					// Set notice
+					if (strtotime($last->datetimerecorded) != 0
+					 && $last->space != 0)
+					{
+						// Only mail if enabled
+						if ($not->enabled)
 						{
-							$storagedir = $not->directory;
+							$message = new Quota('report', $user, $not, $last);
 
-							// Set notice
-							if (strtotime($last->datetimerecorded) != 0
-							 && $last->space != 0)
+							if ($debug)
 							{
-								// Only mail if enabled
-								if ($not->enabled)
-								{
-									$message = new Quota('report', $user, $not, $last);
-
-									if ($debug)
-									{
-										echo $message->render();
-										$message = $message->build();
-										continue;
-									}
-
-									Mail::to($user->email)->send($message);
-
-									$this->info('Emailed report quota to ' . $user->email);
-								}
-
-								// Attempt to prevent weird situations of resetting report date.
-								if (strtotime($not->nextreport) > strtotime($not->datetimelastnotify))
-								{
-									$not->datetimelastnotify = $not->nextreport;
-									$not->save();
-								}
-								else
-								{
-									$this->error('An error occurred: Tried to go backwards in time with quota report.');
-								}
+								echo $message->render();
+								continue;
 							}
+
+							Mail::to($user->email)->send($message);
+
+							$this->info('Emailed report quota to ' . $user->email);
+						}
+
+						// Attempt to prevent weird situations of resetting report date.
+						if (strtotime($not->nextreport) > strtotime($not->datetimelastnotify))
+						{
+							$not->datetimelastnotify = $not->nextreport;
+							$not->save();
+						}
+						else
+						{
+							$this->error('An error occurred: Tried to go backwards in time with quota report.');
 						}
 					}
 				}
 			}
 		}
 
-		$this->info("Emailing quota...");
+		$this->info('Finished emailing quota.');
 	}
 }

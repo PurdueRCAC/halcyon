@@ -1,7 +1,7 @@
 @component('mail::message')
 Hello {{ $user->name }},
 
-Current `{{ $notification->directory->path }}` usage:
+Current `{{ $notification->directory->storageResource->path . '/' . $notification->directory->path }}` usage:
 
 @if ($latest->quota)
 {{ $latest->space }} / {{ $latest->quota }} ({{ round(($latest->space / $latest->quota) * 100, 1) }}%)
