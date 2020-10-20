@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Modules\Users\Models\User;
-use App\Modules\Users\Models\UserUsername;
 use App\Halcyon\Http\StatefulRequest;
 use App\Halcyon\Access\Map;
 use App\Halcyon\Access\Group as Role;
@@ -37,36 +36,53 @@ class UsersController extends Controller
 			// Paging
 			//'limit'     => config('list_limit', 20),
 			// Sorting
-			'order'     => 'name',
-			'order_dir' => 'asc',
+			'order'     => 'created_at',
+			'order_dir' => 'desc',
 		);
 
 		foreach ($filters as $key => $default)
 		{
+			// Check the session
+			/*$old = $request->session()->get('users.filter_' . $key, $default);
+
+			// Check request
+			$val = $request->input('filter_' . $key);
+
+			// Save the new value only if it was set in this request.
+			if ($request->exists('filter_' . $key)) //$val !== null)
+			{
+				// Save to session
+				$request->session()->put('users.filter_' . $key, $val);
+			}
+			else
+			{
+				$val = $old;
+			}
+
+			$filters[$key] = $val;*/
+
 			$filters[$key] = $request->state('users.filter_' . $key, $key, $default);
 		}
 
 		$filters['limit'] = $request->state('users.limit', 'limit', config('list_limit', 20));
 		$filters['page'] = $request->state('users.page', 'page', 1);
 
-		if (!in_array($filters['order'], ['id', 'name', 'username', 'email', 'access', 'datecreated', 'lastVisitDate']))
+		if (!in_array($filters['order'], ['id', 'name', 'username', 'email', 'access', 'created_at', 'lastVisitDate']))
 		{
-			$filters['order'] = 'name';
+			$filters['order'] = 'created_at';
 		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['order_dir'] = 'asc';
+			$filters['order_dir'] = 'desc';
 		}
 
 		$a = (new User)->getTable();
 		$b = (new Map)->getTable();
-		$u = (new UserUsername)->getTable();
 
 		$query = User::query()
 			->select($a . '.*')
-			->with('roles')
-			->leftJoin($u, $u . '.userid', $a . '.id');
+			->with('roles');
 			/*->including(['notes', function ($note){
 				$note
 					->select('id')
@@ -112,7 +128,7 @@ class UsersController extends Controller
 
 		if ($filters['created_at'])
 		{
-			$query->where($u . '.datecreated', '>=', $filters['created_at']);
+			$query->where($a . '.created_at', '>=', $filters['created_at']);
 		}
 
 		/*if ($filters['access'] > 0)
@@ -196,12 +212,12 @@ class UsersController extends Controller
 
 			if ($filters['range'] == 'post_year')
 			{
-				$query->where($u . '.datecreated', '<', $dStart->format('Y-m-d H:i:s'));
+				$query->where($a . '.created_at', '<', $dStart->format('Y-m-d H:i:s'));
 			}
 			else
 			{
-				$query->where($u . '.datecreated', '>=', $dStart->format('Y-m-d H:i:s'));
-				$query->where($u . '.datecreated', '<=', $dNow->format('Y-m-d H:i:s'));
+				$query->where($a . '.created_at', '>=', $dStart->format('Y-m-d H:i:s'));
+				$query->where($a . '.created_at', '<=', $dNow->format('Y-m-d H:i:s'));
 			}
 		}
 
@@ -361,7 +377,7 @@ class UsersController extends Controller
 	{
 		$request->validate([
 			'fields.surname' => 'required',
-			//'fields.email' => 'required',
+			'fields.email' => 'required',
 		]);
 
 		$id = $request->input('id');

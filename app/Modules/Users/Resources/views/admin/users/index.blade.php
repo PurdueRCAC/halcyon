@@ -57,10 +57,13 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-xs-12 col-sm-3 filter-search">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+				<div class="form-group">
+					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<span class="input-group">
+						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					</span>
+				</div>
 			</div>
 			<div class="col col-xs-12 col-sm-9 text-right filter-select">
 				<!-- <label class="sr-only" for="filter-emailConfirmed"></label>
@@ -113,8 +116,14 @@ app('pathway')
 				</select>
 			</div>
 		</div>
+
+		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('users::users.users') }}</caption>
 		<thead>
@@ -136,9 +145,6 @@ app('pathway')
 				</th>
 				<th scope="col" class="priority-3 nowrap">{{ trans('users::users.roles') }}</th>
 				<th scope="col" class="priority-3">{{ trans('users::users.status') }}</th>
-				<!-- <th scope="col" class="priority-3">
-					{!! Html::grid('sort', trans('users::users.registered'), 'registered_at', $filters['order_dir'], $filters['order']) !!}
-				</th> -->
 				<th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('users::users.last visit'), 'last_visit', $filters['order_dir'], $filters['order']) !!}
 				</th>
@@ -236,7 +242,7 @@ app('pathway')
 				</td>
 				<td class="center priority-3">
 					<?php if (substr_count($row->role_names, "\n") > 1) : ?>
-						<span class="hasTip" title="{{ trans('COM_MEMBERS_HEADING_GROUPS') . '::' . $row->role_names }}">{{ trans('COM_MEMBERS_MULTIPLE_GROUPS') }}</span>
+						<span class="hasTip" title="{{ trans('users::users.roles') . '::' . $row->role_names }}">{{ trans('users::users.roles') }}</span>
 					<?php else : ?>
 						{!! $row->role_names !!}
 					<?php endif; ?>
@@ -296,11 +302,8 @@ app('pathway')
 						<?php endif; ?>
 					<?php endif; ?>
 				</td>
-				<!-- <td class="priority-3">
-					<time datetime="<?php echo $row->created_at->format('Y-m-dTh:i:s'); ?>">{{ $row->created_at }}</time>
-				</td>-->
 				<td class="priority-6">
-					<?php if (!$row->last_visit || $row->last_visit == '0000-00-00 00:00:00') : ?>
+					<?php if (!$row->hasVisited()) : ?>
 						<span class="never">{{ trans('global.never') }}</span>
 					<?php else: ?>
 						<time datetime="<?php echo $row->last_visit->format('Y-m-dTh:i:s'); ?>">
@@ -316,6 +319,7 @@ app('pathway')
 		@endforeach
 		</tbody>
 	</table>
+	</div>
 
 	{{ $rows->render() }}
 

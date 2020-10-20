@@ -151,6 +151,17 @@ class User extends Model implements
 	}
 
 	/**
+	 * If item is trashed
+	 *
+	 * @return  bool
+	 **/
+	public function hasVisited()
+	{
+		$last = $this->last_visit;
+		return ($last && $last != '0000-00-00 00:00:00' && $last != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Determine if the entity has a given ability.
 	 *
 	 * @param  string  $ability

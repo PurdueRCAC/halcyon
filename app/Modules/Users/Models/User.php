@@ -43,7 +43,7 @@ class User extends Model implements
 	 *
 	 * @var  string
 	 **/
-	protected $table = 'users';//_old
+	protected $table = 'users_old';//_old
 
 	/**
 	 * The attributes that are mass assignable.
@@ -76,6 +76,8 @@ class User extends Model implements
 		'updated'  => UserUpdated::class,
 		'deleted'  => UserDeleted::class,
 	];
+
+	protected $userusername = null;
 
 	/**
 	 * Determine if the entity has a given ability.
@@ -132,16 +134,39 @@ class User extends Model implements
 	 **/
 	public function isTrashed()
 	{
-		$username = $this->usernames()
-			->where(function($where)
-			{
-				$where->whereNull('dateremoved')
-					->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
-			})
-			->orderBy('datecreated', 'asc')
-			->first();
+		$username = $this->getUserUsername();
 
 		return ($username->dateremoved && $username->dateremoved != '0000-00-00 00:00:00' && $username->dateremoved != '-0001-11-30 00:00:00');
+	}
+
+	public function getUserUsername()
+	{
+		if (is_null($this->userusername))
+		{
+			$this->userusername = $this->usernames()->withTrashed()
+				/*->where(function($where)
+				{
+					$where->whereNull('dateremoved')
+						->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
+				})*/
+				->orderBy('datecreated', 'desc')
+				->orderBy('dateremoved', 'asc')
+				->first();
+
+			if (!$this->userusername)
+			{
+				$this->userusername = new UserUsername;
+				$this->userusername->userid = $this->id;
+			}
+		}
+
+		return $this->userusername;
+	}
+
+	public function hasVisited()
+	{
+		$last = $this->getUserUsername()->datelastseen;
+		return ($last && $last != '0000-00-00 00:00:00' && $last != '-0001-11-30 00:00:00');
 	}
 
 	/**
@@ -151,15 +176,27 @@ class User extends Model implements
 	 */
 	public function getUsernameAttribute()
 	{
-		return $this->usernames()
-			->where(function($where)
-			{
-				$where->whereNull('dateremoved')
-					->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
-			})
-			->orderBy('datecreated', 'asc')
-			->first()
-			->username;
+		return $this->getUserUsername()->username;
+	}
+
+	/**
+	 * Gets an array of the authorised access levels for the user
+	 *
+	 * @return  array
+	 */
+	public function getCreatedAtAttribute()
+	{
+		return $this->getUserUsername()->datecreated;
+	}
+
+	/**
+	 * Gets an array of the authorised access levels for the user
+	 *
+	 * @return  array
+	 */
+	public function getLastVisitAttribute()
+	{
+		return $this->getUserUsername()->datelastseen;
 	}
 
 	/**

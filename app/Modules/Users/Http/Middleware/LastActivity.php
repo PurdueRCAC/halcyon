@@ -39,18 +39,9 @@ class LastActivity
 		 && $this->auth->user()->last_visit < Carbon::now()->subMinutes(5)->toDateTimeString())
 		{
 			$user = $this->auth->user();
-			/*$user->last_visit = Carbon::now()->toDateTimeString();
-			$user->timestamps = false;
-			$user->save();*/
-			$user->usernames()
-				->where(function($where)
-				{
-					$where->whereNull('dateremoved')
-						->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
-				})
-				->orderBy('datecreated', 'asc')
-				->first()
-				->update(['datelastseen' => Carbon::now()->toDateTimeString()]);
+			/*$user->update(['last_visit' => Carbon::now()->toDateTimeString()]);*/
+
+			$user->getUserUsername()->update(['datelastseen' => Carbon::now()->toDateTimeString()]);
 		}
 
 		return $next($request);
