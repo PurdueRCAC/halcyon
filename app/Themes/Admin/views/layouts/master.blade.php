@@ -16,7 +16,7 @@
 			'modules/core/vendor/jquery-ui/jquery.ui.min.css',
 			'modules/core/vendor/jquery-datepicker/jquery.datepicker.css',
 			'modules/core/vendor/jquery-timepicker/jquery.timepicker.css',
-			'themes/admin/css/index.css',
+			'themes/Admin/css/index.css',
 		);
 		foreach ($styles as $css):
 			?>
