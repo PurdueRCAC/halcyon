@@ -4,13 +4,15 @@ namespace App\Modules\Queues\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+//use Illuminate\Support\Fluent;
 use App\Modules\Queues\Models\Queue;
-use App\Modules\ContactReports\Models\Report;
-use App\Modules\ContactReports\Mail\NewComment;
 use App\Modules\Queues\Models\User;
+use App\Modules\Queues\Models\GroupUser;
 use App\Modules\Storage\Models\StorageResource;
-use App\Modules\Resources\Models\Child;
+use App\Modules\Resources\Entities\Child;
 use App\Modules\Users\Models\User as SiteUser;
+use App\Modules\Users\Events\UserBeforeDisplay;
+use App\Modules\Queues\Mail\WelcomeFree;
 
 class EmailWelcomeFreeCommand extends Command
 {
@@ -26,7 +28,7 @@ class EmailWelcomeFreeCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Email authorized queue access requests.';
+	protected $description = 'Email welcome message to new free resource users.';
 
 	/**
 	 * Execute the console command.
@@ -35,15 +37,17 @@ class EmailWelcomeFreeCommand extends Command
 	{
 		$debug = $this->option('debug') ? true : false;
 
+		$gu = (new GroupUser)->getTable();
 		$u = (new User)->getTable();
 		$q = (new Queue)->getTable();
 		$r = (new Child)->getTable();
 
 		$users = User::query()
-			->select($u . '.*', $q . '.groupid')
+			->select($gu . '.*', $u . '.queueid')
+			->join($gu, $gu . '.queueuserid', $u . '.id')
 			->join($q, $q . '.id', $u . '.queueid')
-			->whereIn($u . '.membertype', [1, 4])
-			->whereIn($u . '.notice', [8, 13])
+			->whereIn($gu . '.membertype', [1, 4])
+			->whereIn($gu . '.notice', [8, 13])
 			->get();
 
 		if (!count($users))
@@ -56,72 +60,75 @@ class EmailWelcomeFreeCommand extends Command
 		$user_activity = array();
 		foreach ($users as $user)
 		{
-			if (!isset($user_activity[$user->userid]))
+			if (!isset($user_activity[$user->queueuserid]))
 			{
-				$user_activity[$user->userid] = array();
+				$user_activity[$user->queueuserid] = array();
 			}
-			// convert time stamp to int
-			//$user->datetimecreated = strtotime($user->datetimecreated);
-			array_push($user_activity[$user->userid], $user);
-		}
 
-		$now = date("U");
+			array_push($user_activity[$user->queueuserid], $user);
+		}
 
 		foreach ($user_activity as $userid => $userqueues)
 		{
+			$u = SiteUser::find($userid);
+
+			if (!$u)
+			{
+				$this->error('Could not find account for user ID #' . $userid);
+				continue;
+			}
+
+			event($event = new UserBeforeDisplay($u));
+
+			$u = $event->getUser();
+
+			// Check login shell
+			if ($u->loginshell)
+			{
+				if (!file_exists($u->loginshell))
+				{
+					$this->error('Login Shell ' . $u->loginshell . ' is invalid.');
+					continue;
+				}
+			}
+			else
+			{
+				$this->error('Login Shell is not set for user ID #' . $userid);
+				continue;
+			}
+
+			// Check home directory
+			if ($u->homeDirectory)
+			{
+				if (!file_exists($u->homeDirectory))
+				{
+					$this->error('Home directory ' . $homeDirectory . ' does not exist.');
+					continue;
+				}
+			}
+			else
+			{
+				$this->error('Home directory is not set for user ID #' . $userid);
+				continue;
+			}
+
 			$activity  = array();
-			//$resources = array();
-			//$frontends = array();
 
-			//$last_cluster = '';
-
-			//for ($i=0; $i < count($user); $i++)
 			foreach ($userqueues as $userqueue)
 			{
 				$queue = $userqueue->queue;
 
-				/*if (!isset($activity[$queue->resource->name]))
-				{
-					$activity[$queue->resource->name] = array(
-						'queues' => array(),
-						'standby' => array()
-					);
-				}
-
-				$standby = Queue::query()
-					->select($q . '.*')
-					->join($r, $r . '.subresourceid', $q . '.subresourceid')
-					->where($r . '.resourceid', '=', $queue->resource->id)
-					->where(function($where)
-						{
-							$where->where($q . '.name', 'like', 'standby%')
-								->orWhere($q . '.name', 'like', 'partner%');
-						})
-					->get();
-
-				$activity[$queue->resource->name]['queues'][] = $queue;
-				$activity[$queue->resource->name]['standby'] = $standby;
-
-				if (isset($resources[$queue->resource->id]))
-				{
-					continue;
-				}
-
-				$resources[$queue->resource->id] = $queue->resource;*/
-
 				if (!isset($activity[$queue->resource->id]))
 				{
-					$activity[$queue->resource->id] = new Fluent;
+					$activity[$queue->resource->id] = new \stdClass; //new Fluent;
 					$activity[$queue->resource->id]->resource = $queue->resource;
 					$activity[$queue->resource->id]->queues   = array();
-					//$activity[$queue->resource->id]->standby  = array();
-					//$activity[$queue->resource->id]->storage  = array();
 
-					$activity[$queue->resource->id]->standby = Queue::query()
+					$activity[$queue->resource->id]->standbys = Queue::query()
 						->select($q . '.*')
 						->join($r, $r . '.subresourceid', $q . '.subresourceid')
 						->where($r . '.resourceid', '=', $queue->resource->id)
-						->where(function($where)
+						->where(function($where) use ($q)
 							{
 								$where->where($q . '.name', 'like', 'standby%')
 									->orWhere($q . '.name', 'like', 'partner%');
@@ -129,35 +136,29 @@ class EmailWelcomeFreeCommand extends Command
 						->get();
 
 					$activity[$queue->resource->id]->storage = StorageResource::query()
-						->where('parentresourceid', '=', $resource->id)
+						->where('parentresourceid', '=', $queue->resource->id)
 						->get()
 						->first();
 				}
 
-				$activity[$queue->resource->id]['queues'][] = $queue;
+				$activity[$queue->resource->id]->queues[] = $queue;
 			}
 
-			/*$storages = array();
-			foreach ($resources as $resource)
-			{
-				$storage = StorageResource::query()
-					->where('parentresourceid', '=', $resource->id)
-					->get()
-					->first();
-
-				if (!$storage)
-				{
-					continue;
-				}
-
-				$storages[$resource->name] = $storage;
-			}*/
-
-			$u = SiteUser::find($userid);
-
 			// Prepare and send actual email
-			//Mail::to($user->email)->send(new QueueAuthorized($user));
-			echo (new WelcomeMessage($u, $activity))->render();
+			$message = new WelcomeFree($u, $activity);
+
+			if ($debug)
+			{
+				echo $message->render();
+				continue;
+			}
+
+			Mail::to($u->email)->send($message);
+
+			foreach ($userqueues as $userqueue)
+			{
+				$userqueue->update(['notice' => 0]);
+			}
 
 			$this->info("Emailed queueauthorized to {$user->email}.");
 		}

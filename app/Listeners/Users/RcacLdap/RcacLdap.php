@@ -175,7 +175,7 @@ class RcacLdap
 			// Performing a query.
 			$results = $ldap->search()
 				->where('uid', '=', $event->username)
-				->select(['loginShell'])
+				->select(['loginShell', 'homeDirectory'])
 				->get();
 
 			foreach ($results as $data)
@@ -183,6 +183,11 @@ class RcacLdap
 				if (isset($data['loginShell']))
 				{
 					$user->loginshell = $data['loginShell'][0];
+				}
+
+				if (isset($data['homeDirectory']))
+				{
+					$user->homeDirectory = $data['homeDirectory'][0];
 				}
 			}
 		}

@@ -1,24 +1,27 @@
+@php
+$resources = array();
+foreach ($activity as $resourceid => $data):
+	$resources[] = $data->resource->name;
+endforeach;
+@endphp
+
 @component('mail::message')
 Hello {{ $user->name }},
 
-Your account on {{ $resources }} has been created and are ready for use. Details about using these and other {{ config('app.name') }} resources are included below.
+Your account on {{ implode(', ', $resources) }} has been created and are ready for use. Details about using these and other {{ config('app.name') }} resources are included below.
 
 ---
-
-**Work is done on the clusters by running jobs through PBS.** Further information about PBS and running jobs can be found in the [user guides](https://www.rcac.purdue.edu/knowledge/). Informal, one-on-one help is available from Research Computing staff at **[Coffee Break Consultations](https://www.rcac.purdue.edu/coffee)**, weekly gatherings held at coffee shops around campus. Check the [Coffee Break schedule](https://www.rcac.purdue.edu/coffee) each week for locations and times.
-
-**You can access the clusters through the front-ends ({{ $frontends }}) with your Purdue Career Account credentials using [SSH](https://www.rcac.purdue.edu/knowledge/) or [Thinlinc](https://www.rcac.purdue.edu/knowledge/)**. You've been granted access to the following queues:
 
 @php
 $partner = false;
 @endphp
-@foreach ($activity as $cluster => $data)
-### {{ $cluster }}:
+@foreach ($activity as $resourceid => $data)
+### {{ $data->resource->name }}:
 
-@foreach ($data as $queue)
-* {{ $queue->name }} - {{ $queue->cores }} cores, $queuewalltime hours
+@foreach ($data->queues as $queue)
+* {{ $queue->name }} - {{ $queue->cores }} cores, {{ $queue->walltime }} hours
 @endforeach
-@foreach ($queue->standbys as $standby)
+@foreach ($data->standbys as $standby)
 @php
 if (preg_match("/^partner/", $standby->name))
 {
@@ -29,7 +32,7 @@ if (preg_match("/^partner/", $standby->name))
 @endforeach
 @endforeach
 
-You can also see this list by running the `qlist` command.
+You can also see this list by running the `slist` command.
 
 @if ($partner)
 One of the above resources provides partners and their researchers who have purchased shared access to the cluster through a shared 'partner' queue. If your research group has purchased dedicated access, there will also be a queue named after that partner or research group on this resource. 
@@ -39,12 +42,14 @@ You also have access to the "standby" queue. This queue utilizes idle cores from
 
 ----
 
-You have a home directory that is shared across all ITaP Research Computing resources. This space has a quota of 25GB.
+You have a home directory that is shared across all {{ config('app.name') }} resources. This space has a quota of 25GB.
 
-Scratch space is also available for storing large input and output data during computations. This space offers both a much larger quota and better performance than your home directory. **There is no backup service for scratch directories and files not accessed or modified in the [last 60 days will be removed](https://www.rcac.purdue.edu/policies/scratchpurge/). Files in scratch directories are not recoverable if they are purged or accidentally deleted.** You will receive a warning email one week in advance of files being purged as a reminder to back up files. This space has the following quotas:
+Scratch space is also available for storing large input and output data during computations. This space offers both a much larger quota and better performance than your home directory. **There is no backup service for scratch directories and files not accessed or modified in the [last 60 days will be removed]({{ route('page', ['uri' => 'policies/scratchpurge']) }}). Files in scratch directories are not recoverable if they are purged or accidentally deleted.** You will receive a warning email one week in advance of files being purged as a reminder to back up files. This space has the following quotas:
 
-@foreach ($storages as $resource => $storage)
-* {{ $resource }}: {{ $storage->space }} space; {{ $storage->files }} files
+@foreach ($activity as $resourceid => $data)
+@if ($data->storage)
+* {{ $data->resource->name }}: {{ $data->storage->space }} space; {{ $data->storage->files }} files
+@endif
 @endforeach
 
 You can also see this list with the `myquota` command.
@@ -53,5 +58,5 @@ Long-term archival space is also offered via the Fortress HPSS Archival system. 
 
 ----
 
-Further information regarding PBS and running jobs on {{ $cluster->name }} can be found in the [user guide](https://www.rcac.purdue.edu/knowledge/{{ $cluster->website }}/run).
+Please also review the [acceptable use]({{ route('page', ['uri' => 'policies/resourceuse']) }}), [data]({{ route('page', ['uri' => 'policies/dataaccess']) }}), [quota]({{ route('page', ['uri' => 'policies/defaultquotas']) }}), [scratch purge policies]({{ route('page', ['uri' => 'policies/scratchpurge']) }}), and [other policies]({{ route('page', ['uri' => 'policies']) }}).
 @endcomponent
