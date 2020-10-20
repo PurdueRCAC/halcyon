@@ -11,7 +11,7 @@
 		<!-- Styles -->
 		<?php
 		$styles = array(
-			'themes/admin/vendor/font-awesome/font-awesome-css.min.css',
+			//'themes/admin/vendor/font-awesome/font-awesome-css.min.css',
 			'modules/core/vendor/bootstrap/bootstrap.min.css',
 			'modules/core/vendor/jquery-ui/jquery.ui.min.css',
 			'modules/core/vendor/jquery-datepicker/jquery.datepicker.css',
