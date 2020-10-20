@@ -83,7 +83,7 @@ $active = $sections->firstWhere('active', '=', true);
 				</div> -->
 
 			@if (auth()->user()->can('manage users'))
-				@if ($user->trashed())
+				@if ($user->isTrashed())
 					<p class="alert alert-warning">This account was removed on {{ $user->deleted_at }}.</p>
 				@endif
 

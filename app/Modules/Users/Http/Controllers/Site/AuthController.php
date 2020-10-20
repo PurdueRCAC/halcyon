@@ -123,9 +123,10 @@ class AuthController extends Controller
 				//session()->put('cas_user', $cas->user());
 				if (!auth()->user())
 				{
-					$user = \App\Modules\Users\Models\User::where('username', '=', $cas->user())->first();
+					//$user = \App\Modules\Users\Models\User::where('username', '=', $cas->user())->first();
+					$user = \App\Modules\Users\Models\User::findByUsername($cas->user());
 
-					if ($user)
+					if ($user && $user->id)
 					{
 						Auth::loginUsingId($user->id);
 					}

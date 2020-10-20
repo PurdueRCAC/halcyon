@@ -36,14 +36,14 @@ class User extends Model implements
 	AuthorizableContract,
 	CanResetPasswordContract
 {
-	use Authenticatable, CanResetPassword, MustVerifyEmail, Notifiable;
+	use Authenticatable, CanResetPassword, MustVerifyEmail, Notifiable, SoftDeletes;
 
 	/**
 	 * The table to which the class pertains
 	 *
 	 * @var  string
 	 **/
-	protected $table = 'users';//_old
+	protected $table = 'users';
 
 	/**
 	 * The attributes that are mass assignable.
@@ -52,7 +52,48 @@ class User extends Model implements
 	 */
 	protected $fillable = [
 		'name',
+		'surname',
+		'given_name',
+		'middle_name',
+		'email',
+		'block',
+		'activation',
+		//'password',
 		'newroles'
+	];
+
+	/**
+	 * The attributes that should be hidden for arrays.
+	 *
+	 * @var array
+	 */
+	protected $hidden = [
+		'password',
+		'remember_token',
+		'block'
+	];
+
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'block' => 'boolean',
+	];
+
+	/**
+	 * The attributes that should be mutated to dates.
+	 *
+	 * @var  array
+	 */
+	protected $dates = [
+		//'email_verified_at',
+		'created_at',
+		'updated_at',
+		'deleted_at',
+		'last_visit',
+		'email_verified_at'
 	];
 
 	/**
@@ -61,6 +102,7 @@ class User extends Model implements
 	 * @var  array
 	 */
 	protected $rules = array(
+		'email' => 'required|email',
 		'name'  => 'required|string|min:1'
 	);
 
@@ -76,6 +118,37 @@ class User extends Model implements
 		'updated'  => UserUpdated::class,
 		'deleted'  => UserDeleted::class,
 	];
+
+	/**
+	 * Configuration registry
+	 *
+	 * @var  object
+	 */
+	protected $paramsRegistry = null;
+
+	/**
+	 * Get params as a Registry object
+	 *
+	 * @return  object
+	 */
+	public function getOptionsAttribute()
+	{
+		if (!($this->paramsRegistry instanceof Registry))
+		{
+			$this->paramsRegistry = new Registry($this->getOriginal('params'));
+		}
+		return $this->paramsRegistry;
+	}
+
+	/**
+	 * If item is trashed
+	 *
+	 * @return  bool
+	 **/
+	public function isTrashed()
+	{
+		return ($this->deleted_at && $this->deleted_at != '0000-00-00 00:00:00' && $this->deleted_at != '-0001-11-30 00:00:00');
+	}
 
 	/**
 	 * Determine if the entity has a given ability.
@@ -123,43 +196,6 @@ class User extends Model implements
 		}
 
 		return $this->isRoot ? true : Gate::check($this->id, $ability, $arguments);
-	}
-
-	/**
-	 * If item is trashed
-	 *
-	 * @return  bool
-	 **/
-	public function isTrashed()
-	{
-		$username = $this->usernames()
-			->where(function($where)
-			{
-				$where->whereNull('dateremoved')
-					->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
-			})
-			->orderBy('datecreated', 'asc')
-			->first();
-
-		return ($username->dateremoved && $username->dateremoved != '0000-00-00 00:00:00' && $username->dateremoved != '-0001-11-30 00:00:00');
-	}
-
-	/**
-	 * Gets an array of the authorised access levels for the user
-	 *
-	 * @return  array
-	 */
-	public function getUsernameAttribute()
-	{
-		return $this->usernames()
-			->where(function($where)
-			{
-				$where->whereNull('dateremoved')
-					->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
-			})
-			->orderBy('datecreated', 'asc')
-			->first()
-			->username;
 	}
 
 	/**
@@ -277,16 +313,6 @@ class User extends Model implements
 	}
 
 	/**
-	 * Get access roles
-	 *
-	 * @return  object
-	 */
-	public function usernames()
-	{
-		return $this->hasMany(UserUsername::class, 'userid');
-	}
-
-	/**
 	 * Finds a user by username
 	 *
 	 * @param   string  $username
@@ -294,17 +320,11 @@ class User extends Model implements
 	 */
 	public static function findByUsername($username)
 	{
-		$username = UserUsername::query()
-			->where(function($where)
-			{
-				$where->whereNull('dateremoved')
-					->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
-			})
+		$user = self::query()
 			->where('username', '=', $username)
-			->orderBy('datecreated', 'asc')
 			->first();
 
-		return $username ? $username->user : new self;
+		return $user ?: new self;
 	}
 
 	/**
@@ -398,4 +418,48 @@ class User extends Model implements
 
 		return $result;
 	}
+
+	/**
+	 * Generate stemmed report
+	 *
+	 * @param   string  $value
+	 * @return  string
+	 */
+	public function setNameAttribute($value)
+	{
+		$this->attributes['name'] = $value;
+
+		if (strstr($value, ' '))
+		{
+			$parts = explode(' ', $value);
+
+			$this->attributes['given_name'] = array_shift($parts);
+			$this->attributes['surname'] = array_pop($parts);
+			$this->attributes['middle_name'] = implode(' ', $parts);
+		}
+	}
+
+	/*public function setRoles(array $roles = array())
+	{
+		$result = false;
+
+		try
+		{
+			// Update access groups
+			if ($roles && is_array($roles))
+			{
+				Map::destroyByUser($this->id);
+
+				Map::addUserToGroup($this->id, $roles);
+
+				$result = true;
+			}
+		}
+		catch (Exception $e)
+		{
+			$this->addError($e->getMessage());
+		}
+
+		return $result;
+	}*/
 }
