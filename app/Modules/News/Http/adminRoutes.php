@@ -3,12 +3,12 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'news'], function (Router $router)
+$router->group(['prefix' => 'news', 'middleware' => 'can:manage news'], function (Router $router)
 {
 	$router->match(['get', 'post'], '/', [
 		'as'   => 'admin.news.index',
 		'uses' => 'ArticlesController@index',
-		'middleware' => 'can:manage news',
+		//'middleware' => 'can:manage news',
 	]);
 	$router->match(['get', 'post'], '/cancel', [
 		'as'   => 'admin.news.cancel',

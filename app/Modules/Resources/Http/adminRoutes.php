@@ -3,12 +3,12 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'resources'], function (Router $router)
+$router->group(['prefix' => 'resources', 'middleware' => 'can:manage resources'], function (Router $router)
 {
 	$router->match(['get', 'post'], '/', [
 		'as'   => 'admin.resources.index',
 		'uses' => 'ResourcesController@index',
-		'middleware' => 'can:manage resources',
+		//'middleware' => 'can:manage resources',
 	]);
 	$router->match(['get', 'post'], '/cancel', [
 		'as'   => 'admin.resources.cancel',

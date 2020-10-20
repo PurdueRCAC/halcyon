@@ -3,12 +3,12 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'groups'], function (Router $router)
+$router->group(['prefix' => 'groups', 'middleware' => 'can:manage groups'], function (Router $router)
 {
 	$router->match(['get', 'post'], '/', [
 		'as' => 'admin.groups.index',
 		'uses' => 'GroupsController@index',
-		'middleware' => 'can:manage groups',
+		//'middleware' => 'can:manage groups',
 	]);
 	$router->get('create', [
 		'as' => 'admin.groups.create',

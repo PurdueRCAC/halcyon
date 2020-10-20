@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'orders'], function (Router $router)
+$router->group(['prefix' => 'orders', 'middleware' => 'can:manage orders'], function (Router $router)
 {
 	// Categories
 	$router->group(['prefix' => 'categories'], function (Router $router)
@@ -11,7 +11,7 @@ $router->group(['prefix' => 'orders'], function (Router $router)
 		$router->match(['get', 'post'], '/', [
 			'as'   => 'admin.orders.categories',
 			'uses' => 'CategoriesController@index',
-			'middleware' => 'can:manage orders',
+			//'middleware' => 'can:manage orders',
 		]);
 		$router->get('/create', [
 			'as' => 'admin.orders.categories.create',
