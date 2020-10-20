@@ -168,15 +168,17 @@ Halcyon.enableDisableBtn = function(num) {
  * @param   object  messages  JavaScript object containing the messages to render
  * @return  void
  */
-Halcyon.renderMessages = function(messages) {
-	Halcyon.removeMessages();
-	var container = $('#system-message-container');
+Halcyon.message = function(type, message) {
+	//Halcyon.removeMessages();
+	var container = $('#system-messages');
 
-	var dl = $('<dl>')
-				.attr('id', 'system-message')
-				.attr('role', 'alert');
+	var div = $('<div>')
+				.addClass('alert')
+				.addClass('alert-' + type)
+				.attr('role', 'alert')
+				.text(message);
 
-	$.each(messages, function (type, item) {
+	/*$.each(messages, function (type, item) {
 		var dt = $('<dt>')
 					.addClass(type)
 					.html(type)
@@ -194,8 +196,8 @@ Halcyon.renderMessages = function(messages) {
 		});
 		list.appendTo(dd);
 		dd.appendTo(dl);
-	});
-	dl.appendTo(container);
+	});*/
+	div.appendTo(container);
 
 	$(document).trigger('renderMessages');
 };
@@ -207,7 +209,7 @@ Halcyon.renderMessages = function(messages) {
  * @return  void
  */
 Halcyon.removeMessages = function() {
-	var children = $('#system-message-container > *');
+	var children = $('#system-messages > *');
 	children.remove();
 }
 
@@ -488,6 +490,12 @@ Halcyon.gridCheckboxToggle = function(event)
 		Halcyon.checkAll(this);
 	} else {
 		Halcyon.isChecked(this.checked);
+		var c = this.closest('tr');
+		if (this.checked) {
+			Halcyon.addClass(c, 'checked');
+		} else {
+			Halcyon.removeClass(c, 'checked');
+		}
 	}
 
 	var checkboxes = document.querySelectorAll('.checkbox-toggle:checked');
@@ -631,6 +639,15 @@ document.addEventListener('DOMContentLoaded', function() {
 	{
 		actions[i].addEventListener('click', Halcyon.gridAction);
 	}
+
+	/*
+	$('input[maxlength]').on('keyup', function(e){
+		$(this)
+			.parent()
+			.data($(this).length + ' / ' + $(this).attr('maxlength'));
+
+		$(this).after($('<span></span>').text($(this).length + ' / ' + $(this).attr('maxlength')));
+	});*/
 
 	// Attach pagination events
 	//Halcyon.paginate();
