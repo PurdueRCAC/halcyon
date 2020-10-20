@@ -178,20 +178,6 @@ class Access
 
 		$isSuperAdmin = auth()->user()->can('admin');
 
-		/*$db = App::get('db');
-		$query = $db->getQuery()
-			->select('a.*')
-			->select('COUNT(DISTINCT b.id)', 'level')
-			->from('#__usergroups', 'a')
-			->joinRaw('#__usergroups AS b', 'a.lft > b.lft AND a.rgt < b.rgt', 'left')
-			->group('a.id')
-			->group('a.title')
-			->group('a.lft')
-			->group('a.rgt')
-			->group('a.parent_id')
-			->order('a.lft', 'asc');
-		$db->setQuery($query->toString());
-		$groups = $db->loadObjectList();*/
 		$ug = new Role;
 
 		$options = Role::query()
@@ -202,7 +188,7 @@ class Access
 					$join->on('a.lft', '>', 'b.lft')
 						->on('a.rgt', '<', 'b.rgt');
 				})
-			->groupBy(['a.id', 'a.title', 'a.lft', 'a.rgt'])
+			->groupBy(['a.id', 'a.title', 'a.lft', 'a.rgt', 'a.parent_id'])
 			->orderBy('a.lft', 'asc')
 			->get();
 
@@ -212,8 +198,6 @@ class Access
 
 		foreach ($options as $i => $item)
 		{
-			//$item = &$groups[$i];
-
 			// If checkSuperAdmin is true, only add item if the user is superadmin or the group is not super admin
 			if ((!$checkSuperAdmin) || $isSuperAdmin || (!Gate::checkRole($item->id, 'admin')))
 			{
