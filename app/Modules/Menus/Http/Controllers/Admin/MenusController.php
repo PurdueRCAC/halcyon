@@ -59,7 +59,7 @@ class MenusController extends Controller
 			->table('widgets AS a')
 			->select(['a.id', 'a.title', 'a.params', 'a.position', 'ag.title AS access_title'])
 			->leftJoin((new Viewlevel)->getTable() . ' AS ag', 'ag.id', 'a.access')
-			->where('module', '=', 'menu')
+			->where('widget', '=', 'menu')
 			->get();
 
 		$widgets = array();
