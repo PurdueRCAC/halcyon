@@ -161,6 +161,8 @@ jQuery(document).ready(function($){
 		$(this).toggleClass('active');
 	});
 
+	$('.tabs').tabs();
+
 	$('.main-navigation li.node>a').on('click', function(e){
 		$(this).parent().toggleClass('active');
 	});
@@ -169,7 +171,7 @@ jQuery(document).ready(function($){
 	$(document).on("renderMessages", function() {
 		var msg = $('#system-messages');
 		if (msg.length && msg.html().replace(/\s+/, '') != '') {
-			if (msg.find('.alert-error,.alert-warning').length) {
+			if (msg.find('.alert-error,.alert-warning,.alert-danger').length) {
 				$.growl.settings.displayTimeout = 0;
 			} else {
 				msg.find('.alert-success').each(function(i, el) {
