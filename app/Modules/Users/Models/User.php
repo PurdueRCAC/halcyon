@@ -43,7 +43,7 @@ class User extends Model implements
 	 *
 	 * @var  string
 	 **/
-	protected $table = 'users_old';//_old
+	protected $table = 'users';//_old
 
 	/**
 	 * The attributes that are mass assignable.
