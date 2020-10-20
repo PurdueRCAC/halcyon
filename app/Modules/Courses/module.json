@@ -6,7 +6,8 @@
     "order": 0,
     "providers": [
         "App\\Modules\\Courses\\Providers\\ModuleServiceProvider",
-        "App\\Modules\\Courses\\Providers\\RouteServiceProvider"
+        "App\\Modules\\Courses\\Providers\\RouteServiceProvider",
+        "App\\Modules\\Courses\\Providers\\ScheduleServiceProvider"
     ],
     "aliases": {},
     "files": [],

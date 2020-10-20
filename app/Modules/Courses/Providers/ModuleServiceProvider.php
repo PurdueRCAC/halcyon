@@ -4,6 +4,8 @@ namespace App\Modules\Courses\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Modules\Courses\Composers\ProfileComposer;
+use App\Modules\Courses\Console\EmailAdditionsCommand;
+use App\Modules\Courses\Console\EmailRemovalsCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -32,8 +34,22 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	public function registerCommands()
+	{
+		$this->commands([
+			EmailAdditionsCommand::class,
+			EmailRemovalsCommand::class
+		]);
 	}
 
 	/**
