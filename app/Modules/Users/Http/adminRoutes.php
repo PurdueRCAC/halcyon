@@ -124,7 +124,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->post('update', [
 			'as' => 'admin.users.roles.update',
 			'uses' => 'RolesController@update',
-			'middleware' => 'can:manage users.roles',
+			'middleware' => 'can:admin',
 		]);
 		$router->get('{id}', [
 			'as' => 'admin.users.roles.edit',

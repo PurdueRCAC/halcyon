@@ -7,6 +7,8 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Halcyon\Access\Role;
 use App\Halcyon\Access\Gate;
+use App\Halcyon\Access\Rules;
+use App\Halcyon\Access\Asset;
 
 class RolesController extends Controller
 {
@@ -127,7 +129,7 @@ class RolesController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Store a newly created entry
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -267,6 +269,62 @@ class RolesController extends Controller
 		}
 
 		return $this->cancel();
+	}
+
+	/**
+	 * Store config changes
+	 *
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function update(Request $request)
+	{
+		$data = $request->input('permissions', array());
+
+		// Save the rules.
+		foreach ($data as $k => $v)
+		{
+			$data[$k] = array_filter($v);
+		}
+
+		$rules = new Rules($data);
+
+		// Check that we aren't removing our Super User permission
+		// Need to get roles from database, since they might have changed
+		$myRoles = Gate::getRolesByUser(auth()->user()->id);
+		$myRules = $rules->getData();
+
+		$hasSuperAdmin = $myRules['admin']->allow($myRoles);
+		/*$hasSuperAdmin = null;
+		foreach ($myRoles as $role)
+		{
+			$hasSuperAdmin = $myRules['admin']->allow($role);
+			if ($hasSuperAdmin)
+			{
+				break;
+			}
+		}*/
+
+		if (!$hasSuperAdmin)
+		{
+			return redirect()->back()->withInput()->withError(trans('users::roles.ERROR_REMOVING_SUPER_ADMIN'));
+		}
+
+		$asset = Asset::getRoot();
+
+		if (!$asset->id)
+		{
+			return redirect()->back()->withInput()->withError(trans('users::roles.ERROR_ROOT_ASSET_NOT_FOUND'));
+		}
+
+		$asset->rules = (string) $rules;
+
+		if (!$asset->save())
+		{
+			return redirect()->back()->withInput()->withError($asset->getError());
+		}
+
+		return $this->cancel()->with('success', trans('users::roles.configuration saved'));
 	}
 
 	/**
