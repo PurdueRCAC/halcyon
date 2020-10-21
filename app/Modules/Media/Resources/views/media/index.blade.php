@@ -3,17 +3,9 @@
 @section('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/media/css/media.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.css') }}" />
-<!-- <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/media/vendor/jquery-file-upload/css/jquery.fileupload.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/media/vendor/jquery-file-upload/css/jquery.fileupload-ui.css') }}" /> -->
 @stop
 
 @section('scripts')
-<!-- <script src="{{ asset('modules/media/js/jquery.fileuploader.js') }}"></script>
-<script src="{{ asset('modules/media/vendor/jquery-file-upload/js/jquery.iframe-transport.js') }}"></script>
-<script src="{{ asset('modules/media/vendor/jquery-file-upload/js/jquery.fileupload.js') }}"></script>
-<script src="{{ asset('modules/media/vendor/jquery-file-upload/js/jquery.fileupload-process.js') }}"></script>
-<script src="{{ asset('modules/media/vendor/jquery-file-upload/js/jquery.fileupload-validate.js') }}"></script>
-<script src="{{ asset('modules/media/vendor/jquery-file-upload/js/jquery.fileupload-ui.js') }}"></script> -->
 <script src="{{ asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.js') }}"></script>
 <script src="{{ asset('modules/media/vendor/jquery-treeview/jquery.treeview.js') }}"></script>
 <script src="{{ asset('modules/media/js/media.js') }}"></script>
@@ -46,7 +38,6 @@ app('pathway')
 @stop
 
 @section('content')
-
 <div class="media-container modl">
 	<div class="media-panels">
 		<div class="panel panel-tree">
@@ -69,11 +60,6 @@ app('pathway')
 							$fld = '';
 
 							foreach ($trail as $crumb):
-								// Skip the root directory
-								/*if ($crumb == $folders[0]['name']):
-									continue;
-								endif;*/
-
 								$fld .= '/' . $crumb;
 								?>
 								<span class="icon-chevron-right dir-separator">/</span>
@@ -85,49 +71,13 @@ app('pathway')
 					</div>
 					<div class="media-header-buttons">
 						<a class="media-files-view thumbs-view hasTip <?php if (!$layout || $layout == 'thumbs') { echo 'active'; } ?>" data-view="thumbs" href="<?php echo route('admin.media.index', ['layout' => 'thumbs']); ?>" data-tip="{{ trans('media::media.THUMBNAIL_VIEW') }}" title="{{ trans('media::media.THUMBNAIL_VIEW') }}">
-							<!-- <i class="fa fa-th"></i> -->
 							<span class="icon-grid"></span>
 							{{ trans('media::media.THUMBNAIL_VIEW') }}
 						</a>
 						<a class="media-files-view hasTip listing-view <?php if ($layout == 'list') { echo 'active'; } ?>" data-view="list" href="<?php echo route('admin.media.index', ['layout' => 'list']); ?>" data-tip="{{ trans('media::media.DETAIL_VIEW') }}" title="{{ trans('media::media.DETAIL_VIEW') }}">
-							<!-- <i class="fa fa-list"></i> -->
 							<span class="icon-list"></span>
 							{{ trans('media::media.DETAIL_VIEW') }}
 						</a>
-
-						<?php /*if (auth()->user()->can('create media')): ?>
-							<a class="media-files-action media-folder-new"
-								href="{{ route('admin.media.folder.create') }}"
-								data-prompt="{{ trans('media::media.folder name') }}"
-								data-tip="{{ trans('media::media.create folder') }}"
-								data-api="{{ route('api.media.folder.create') }}"
-								title="{{ trans('media::media.create folder') }}">
-								<!-- <i class="fa fa-folder"></i> -->
-								<span class="icon-folder-plus"></span>
-								{{ trans('media::media.CREATE_FOLDER') }}
-							</a>
-						<?php endif; ?>
-
-						<?php if (auth()->user()->can('create media')): ?>
-							<?php
-							//$this->js('jquery.fileuploader.js', 'system');
-							?>
-							<div id="ajax-uploader"
-								data-action="{{ route('admin.media.upload') }}"
-								data-list="{{ route('admin.media.medialist') }}"
-								data-instructions="{{ trans('media::media.UPLOAD_INSTRUCTIONS') }}"
-								data-instructions-btn="{{ trans('media::media.UPLOAD_INSTRUCTIONS_BTN') }}">
-								<noscript>
-									<div class="form-group">
-										<label for="upload">{{ trans('media::media.UPLOAD_FILE') }}:</label>
-										<input type="file" name="upload" id="upload" />
-									</div>
-								</noscript>
-							</div>
-							<!-- <div class="field-wrap file-list" id="ajax-uploader-list">
-								<ul></ul>
-							</div> -->
-						<?php endif;*/ ?>
 					</div>
 				</div>
 				<div class="media-view">
@@ -138,63 +88,6 @@ app('pathway')
 						@include('media::medialist.index')
 					</div>
 				</div>
-
-				<?php /*if (auth()->user()->can('create media')): ?>
-					<div class="dialoge dialog-upload" id="media-upload" title="{{ trans('media::media.upload') }}">
-						<div id="ajax-uploader" class="fileinput-button qq-uploader"
-							data-drop="#dropzone"
-							data-action="{{ route('api.media.upload', ['api_token' => auth()->user()->api_token]) }}"
-							data-list="{{ route('admin.media.medialist') }}"
-							data-instructions="{{ trans('media::media.UPLOAD_INSTRUCTIONS') }}"
-							data-instructions-btn="{{ trans('media::media.UPLOAD_INSTRUCTIONS_BTN') }}">
-
-							<div class="form-group">
-								<label for="files">{{ trans('media::media.UPLOAD_FILE') }}:</label>
-								<input type="file" name="files[]" id="files" data-url="{{ route('api.media.upload') }}" multiple="multiple" />
-							</div>
-							<!-- <div id="dropzone" class="dropzone">Drop files here</div> -->
-							<div id="file-uploader-list"></div>
-
-						</div>
-					</div>
-					<script id="template-upload" type="text/x-tmpl">
-					  {% for (var i=0, file; file=o.files[i]; i++) { %}
-						  <tr class="template-upload fade{%=o.options.loadImageFileTypes.test(file.type)?' image':''%}">
-							  <td>
-								  <span class="preview"></span>
-							  </td>
-							  <td>
-								  <p class="name">{%=file.name%}</p>
-								  <strong class="error text-danger"></strong>
-							  </td>
-							  <td>
-								  <p class="size">Processing...</p>
-								  <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
-							  </td>
-							  <td>
-								  {% if (!o.options.autoUpload && o.options.edit && o.options.loadImageFileTypes.test(file.type)) { %}
-									<button class="btn btn-success edit" data-index="{%=i%}" disabled>
-										<i class="glyphicon glyphicon-edit"></i>
-										<span>Edit</span>
-									</button>
-								  {% } %}
-								  {% if (!i && !o.options.autoUpload) { %}
-									  <button class="btn btn-primary start" disabled>
-										  <i class="glyphicon glyphicon-upload"></i>
-										  <span>Start</span>
-									  </button>
-								  {% } %}
-								  {% if (!i) { %}
-									  <button class="btn btn-warning cancel">
-										  <i class="glyphicon glyphicon-ban-circle"></i>
-										  <span>Cancel</span>
-									  </button>
-								  {% } %}
-							  </td>
-						  </tr>
-					  {% } %}
-					</script>
-				<?php endif;*/ ?>
 
 				<input type="hidden" name="task" value="" />
 				<input type="hidden" name="folder" id="folder" value="{{ $folder }}" />
@@ -207,16 +100,17 @@ app('pathway')
 				<?php endif; ?>
 				@csrf
 			</form>
-<?php if (auth()->user()->can('create media')): ?>
-		<div class="dialog dialog-upload" id="media-upload" title="{{ trans('media::media.upload') }}">
-			<form action="{{ route('api.media.upload', ['api_token' => auth()->user()->api_token]) }}" id="uploader" class="dropzone">
-				<div class="fallback">
-					<input type="file" name="files" multiple />
+
+			<?php if (auth()->user()->can('create media')): ?>
+				<div class="dialog dialog-upload" id="media-upload" title="{{ trans('media::media.upload') }}">
+					<form action="{{ route('api.media.upload', ['api_token' => auth()->user()->api_token]) }}" id="uploader" class="dropzone">
+						<div class="fallback">
+							<input type="file" name="files" multiple />
+						</div>
+						@csrf
+					</form>
 				</div>
-				@csrf
-			</form>
-		</div>
-<?php endif; ?>
+			<?php endif; ?>
 		</div><!-- / .panel-files -->
 	</div><!-- / .media-panels -->
 </div>
