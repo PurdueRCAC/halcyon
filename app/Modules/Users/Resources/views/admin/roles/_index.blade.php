@@ -39,9 +39,12 @@
 		<div class="filter-search">
 			<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 			<input type="text" name="filter_search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="" />
-
-			<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
 		</div>
+
+		<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
+		<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
+
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	<table class="table table-hover adminlist">
@@ -100,8 +103,6 @@
 	{{ $rows->render() }}
 
 	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
-	<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 
 	@csrf
 </form>

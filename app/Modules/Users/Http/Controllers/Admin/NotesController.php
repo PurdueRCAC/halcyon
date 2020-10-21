@@ -95,9 +95,20 @@ class NotesController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Note;
+
+		return view('users::admin.notes.edit', [
+			'row' => $row
+		]);
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		$row = Note::findOrFail($id);
 
 		return view('users::admin.notes.edit', [
 			'row' => $row
@@ -129,21 +140,6 @@ class NotesController extends Controller
 		}
 
 		return $this->cancel()->with('success', trans('messages.item saved'));
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
-		$row = Note::findOrFail($id);
-
-		return view('users::admin.notes.edit', [
-			'row' => $row
-		]);
 	}
 
 	/**

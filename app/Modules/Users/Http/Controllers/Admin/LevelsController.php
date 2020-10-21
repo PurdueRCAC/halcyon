@@ -73,9 +73,25 @@ class LevelsController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Level;
+
+		$roles = Role::query()
+			->orderBy('lft', 'asc')
+			->get();
+
+		return view('users::admin.levels.edit', [
+			'row' => $row,
+			'roles' => $roles
+		]);
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		$row = Level::findOrFail($id);
 
 		$roles = Role::query()
 			->orderBy('lft', 'asc')
@@ -111,26 +127,6 @@ class LevelsController extends Controller
 		}
 
 		return $this->cancel()->with('success', trans('messages.item saved'));
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
-		$row = Level::findOrFail($id);
-
-		$roles = Role::query()
-			->orderBy('lft', 'asc')
-			->get();
-
-		return view('users::admin.levels.edit', [
-			'row' => $row,
-			'roles' => $roles
-		]);
 	}
 
 	/**

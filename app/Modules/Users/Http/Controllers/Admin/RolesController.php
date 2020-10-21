@@ -114,8 +114,6 @@ class RolesController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Role;
 
 		$options = Role::query()
@@ -218,8 +216,6 @@ class RolesController extends Controller
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Role::findOrFail($id);
 
 		$options = Role::query()

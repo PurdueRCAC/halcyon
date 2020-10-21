@@ -1,6 +1,8 @@
 @extends('layouts.master')
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('users::users.module name'),

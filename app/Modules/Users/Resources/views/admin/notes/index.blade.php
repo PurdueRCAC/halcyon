@@ -44,26 +44,31 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-6">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="" />
-
-				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+			<div class="col col-md-6 filter-search">
+				<div class="form-group">
+					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<span class="input-group">
+						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					</span>
+				</div>
 			</div>
 			<div class="col col-md-6 text-right">
-				<?php /*<select name="filter_category_id" id="filter_category_id" class="inputbox filter filter-submit">
-					<option value=""><?php echo trans('JOPTION_SELECT_CATEGORY');?></option>
-					<?php echo App\Halcyon\Html\Builder::select('options', App\Halcyon\Html\Builder::category('options', 'com_users'), 'value', 'text', $filters['category_id']); ?>
-				</select>*/ ?>
 				<label class="sr-only" for="filter_published"></label>
 				<select name="published" id="filter_published" class="form-control filter filter-submit">
-					<option value="">{{ trans('JOPTION_SELECT_PUBLISHED') }}</option>
+					<option value="">{{ trans('global.option.published') }}</option>
 					<?php echo App\Halcyon\Html\Builder\Select::options(App\Halcyon\Html\Builder\Grid::publishedOptions(), 'value', 'text', $filters['state'], true); ?>
 				</select>
 			</div>
 		</div>
+
+		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	<div class="card md-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('users::users.notes') }}</caption>
 		<thead>
@@ -129,12 +134,11 @@ app('pathway')
 		@endforeach
 		</tbody>
 	</table>
+	</div>
 
 	{{ $rows->render() }}
 
 	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="order" value="{{ $filters['order'] }}" />
-	<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
 	@csrf
 </form>
