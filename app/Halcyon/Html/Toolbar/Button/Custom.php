@@ -11,8 +11,6 @@ use App\Halcyon\Html\Toolbar\Button;
 
 /**
  * Renders a custom button
- *
- * Inspired by Joomla's JButtonCustom class
  */
 class Custom extends Button
 {

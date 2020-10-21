@@ -65,7 +65,7 @@ class Toolbar
 
 		array_push($this->_bar, $btn);
 
-		return $this;
+		//return $this;
 	}
 
 	/**
