@@ -41,12 +41,12 @@ class Confirm extends Button
 		$class  = $this->fetchIconClass($name);
 		$message = $this->_getCommand($msg, $name, $task, $list);
 
-		$cls = 'toolbar-btn toolbar-confirm';
+		$cls = 'btn toolbar-btn toolbar-confirm btn-' . $name;
 
 		$attr   = array();
-		$attr[] = 'data-title="' . $text . '"';
 		$attr[] = 'href="' . $task . '"';
-		$attr[] = 'data-confirm="' . $msg . '"';
+		$attr[] = 'data-title="' . e($text) . '"';
+		$attr[] = 'data-confirm="' . e($msg) . '"';
 
 		if ($list)
 		{
@@ -55,11 +55,14 @@ class Confirm extends Button
 			$attr[] = ' data-message="' . $message . '"';
 		}
 
-		$html  = "<a class=\"$cls\" " . implode(' ', $attr) . ">\n";
-		$html .= "<span class=\"$class\">\n";
-		$html .= "$text\n";
-		$html .= "</span>\n";
-		$html .= "</a>\n";
+		$html   = array();
+		$html[] = '<a class="' . $cls . '" ' . implode(' ', $attr) . '>';
+		$html[] = '<span class="' . $class . '">';
+		$html[] = $text;
+		$html[] = '</span>';
+		$html[] = '</a>';
+
+		$html = implode("\n", $html);
 
 		return $html;
 	}
@@ -94,7 +97,7 @@ class Confirm extends Button
 		//Behavior::framework();
 
 		$message = trans('global.toolbar.PLEASE_MAKE_A_SELECTION_FROM_THE_LIST');
-		$message = str_replace('"', '&quot;', $message);
+		//$message = str_replace('"', '&quot;', $message);
 
 		return $message;
 	}

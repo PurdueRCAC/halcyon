@@ -34,7 +34,7 @@ class Help extends Button
 	{
 		$text  = \trans('global.toolbar.HELP');
 		$class = $this->fetchIconClass('help');
-		$msg   = \trans('JHELP', true);
+		$msg   = \trans('global.toolbar.HELP', true);
 
 		if (!strstr('?', $url)
 		 && !strstr('&', $url)
@@ -47,7 +47,7 @@ class Help extends Button
 			$url = $this->_getCommand($ref = $type, $com = false, $override = false, $module = app('request')->segemnt(1));
 		}
 
-		$html  = '<a href="' . $url . '" data-title="' . $text . '" data-message="' . $msg. '" data-width="' . $width . '" data-height="' . $height . '" rel="help" class="toolbar toolbar-popup">' . "\n";
+		$html  = '<a href="' . $url . '" data-title="' . $text . '" data-message="' . $msg. '" data-width="' . $width . '" data-height="' . $height . '" rel="help" class="btn btn-help toolbar toolbar-popup">' . "\n";
 		$html .= '<span class="' . $class . '">' . "\n";
 		$html .= $text . "\n";
 		$html .= '</span>' . "\n";

@@ -88,7 +88,7 @@ abstract class Button
 	 */
 	public function fetchIconClass($identifier)
 	{
-		return "icon-$identifier";
+		return 'icon-' . $identifier;
 	}
 
 	/**

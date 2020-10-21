@@ -429,9 +429,9 @@ class Toolbar
 	 * @param   string  $alt   An override for the alt text.
 	 * @return  void
 	 */
-	public function apply($task = 'apply', $alt = 'global.toolbar.save')
+	public function apply($task = 'apply', $alt = 'global.toolbar.apply')
 	{
-		$this->append('Standard', 'save', $alt, $task, false);
+		$this->append('Standard', 'apply', $alt, $task, false);
 	}
 
 	/**
@@ -442,9 +442,9 @@ class Toolbar
 	 * @param   string  $alt   An override for the alt text.
 	 * @return  void
 	 */
-	public function save($task = 'save', $alt = 'global.toolbar.save and close')
+	public function save($task = 'save', $alt = 'global.toolbar.save')
 	{
-		$this->append('Standard', 'save-close', $alt, $task, false);
+		$this->append('Standard', 'save', $alt, $task, false);//'save-close'
 	}
 
 	/**

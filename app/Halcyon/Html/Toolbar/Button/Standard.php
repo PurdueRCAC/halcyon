@@ -32,32 +32,33 @@ class Standard extends Button
 	 * @param   boolean  $list  True to allow lists
 	 * @return  string   HTML string for the button
 	 */
-	public function fetchButton($type = 'Standard', $name = '', $text = '', $task = '', $list = true)
+	public function fetchButton($type = 'Standard', $name = 'secondary', $text = '', $task = '', $list = true)
 	{
-		$i18n_text = trans($text);
+		$text = trans($text);
 		$class = $this->fetchIconClass($name);
 		$message = $this->_getCommand($text, $task, $list);
 
-		$cls = 'toolbar-btn toolbar-submit';
+		$cls = 'btn toolbar-btn toolbar-submit btn-' . $name;
 
 		$attr   = array();
-		$attr[] = 'data-title="' . $i18n_text . '"';
+		$attr[] = 'data-title="' . e($text) . '"';
 		$attr[] = 'href="' . $task . '"';
 
 		if ($list)
 		{
 			$cls .= ' toolbar-list';
 
-			$attr[] = ' data-message="' . $message . '"';
+			$attr[] = ' data-message="' . e($message) . '"';
 		}
 
-		//$html  = "<button class=\"$cls\" " . implode(' ', $attr) . ">\n";
-		$html  = "<a class=\"$cls\" " . implode(' ', $attr) . ">\n";
-		$html .= "<span class=\"$class\">\n";
-		$html .= "$i18n_text\n";
-		$html .= "</span>\n";
-		$html .= "</a>\n";
-		//$html .= "</button>\n";
+		$html   = array();
+		$html[] = '<a class="' . $cls . '" ' . implode(' ', $attr) . '>';
+		$html[] = '<span class="' . $class . '">';
+		$html[] = $text;
+		$html[] = '</span>';
+		$html[] = '</a>';
+
+		$html = implode("\n", $html);
 
 		return $html;
 	}
@@ -91,7 +92,7 @@ class Standard extends Button
 		//Behavior::framework();
 
 		$message = trans('global.please make a selection from the list');
-		$message = addslashes($message);
+		//$message = addslashes($message);
 
 		return $message;
 	}

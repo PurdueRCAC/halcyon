@@ -44,7 +44,7 @@ class Popup extends Button
 		$class = $this->fetchIconClass($name);
 		$url   = $this->_getCommand($name, $url, $width, $height, $top, $left);
 
-		$html  = "<a data-title=\"$text\" class=\"popup\" href=\"$url\" data-width=\"$width\" data-height=\"$height\" data-close=\"function() {" . $onClose . "}\">\n";
+		$html  = "<a data-title=\"$text\" class=\"btn popup btn-" . $name . "\" href=\"$url\" data-width=\"$width\" data-height=\"$height\" data-close=\"function() {" . $onClose . "}\">\n";
 		$html .= "<span class=\"$class\">\n";
 		$html .= "$text\n";
 		$html .= "</span>\n";

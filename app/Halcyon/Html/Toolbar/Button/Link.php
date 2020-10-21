@@ -34,13 +34,28 @@ class Link extends Button
 	{
 		$text   = trans($text);
 		$class  = $this->fetchIconClass($name);
-		$doTask = $this->_getCommand($url);
+		$task = $this->_getCommand($url);
 
-		$html  = "<a data-title=\"$text\" href=\"$doTask\" class=\"toolbar-btn\">\n";
+		/*$html  = "<a data-title=\"$text\" href=\"$task\" class=\"toolbar-btn\">\n";
 		$html .= "<span class=\"$class\">\n";
 		$html .= "$text\n";
 		$html .= "</span>\n";
-		$html .= "</a>\n";
+		$html .= "</a>\n";*/
+
+		$cls = 'btn toolbar-btn btn-' . $name;
+
+		$attr   = array();
+		$attr[] = 'href="' . $task . '"';
+		$attr[] = 'data-title="' . e($text) . '"';
+
+		$html   = array();
+		$html[] = '<a class="' . $cls . '" ' . implode(' ', $attr) . '>';
+		$html[] = '<span class="' . $class . '">';
+		$html[] = $text;
+		$html[] = '</span>';
+		$html[] = '</a>';
+
+		$html = implode("\n", $html);
 
 		return $html;
 	}
