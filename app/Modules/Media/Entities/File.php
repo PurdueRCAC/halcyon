@@ -8,6 +8,7 @@
 namespace App\Modules\Media\Entities;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Modules\Media\Helpers\MediaHelper;
 use Carbon\Carbon;
 
@@ -116,12 +117,18 @@ class File extends \SplFileInfo
 
 	public function getUrl()
 	{
-		return url('/') . Storage::url($this->getRelativePath());
+		$path = '/' . $this->getRelativePath();
+		if (Str::contains($path, '/public/'))
+		{
+			$path = Str::replaceFirst('/public/', '/', $path);
+		}
+		return config('filesystems.disks.public.url') . $path;
+		//return url('/') . Storage::url($this->getRelativePath());
 	}
 
 	public function getPublicPath()
 	{
-		$base = url('/') . '/storage';
+		$base = config('filesystems.disks.public.url'); //url('/') . '/storage';
 		return str_replace($base, '', $this->getUrl());
 	}
 }

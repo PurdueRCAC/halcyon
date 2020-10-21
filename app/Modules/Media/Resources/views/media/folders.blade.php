@@ -9,7 +9,7 @@ if (!isset($folderDepth)):
 	$folderDepth = 1;
 endif;
 ?>
-<ul <?php echo $folders_id; ?> class="<?php echo 'depth' . $folderDepth; ?>">
+<ul <?php echo $folders_id; ?> class="{{ 'depth' . $folderDepth }}">
 	<?php foreach ($folderTree as $fold) : ?>
 		<?php
 		$cls = '';
@@ -42,12 +42,12 @@ endif;
 			endif;
 		endif;
 		?>
-		<li id="<?php echo e($fold['name']); ?>"<?php echo $cls; ?>>
-			<a class="folder" data-folder="<?php echo e('/' . $fold['path']); ?>" href="{{ route('admin.media.medialist') . '?folder=/' . urlencode($fold['path']) }}">
+		<li id="{{ $fold['name'] }}"<?php echo $cls; ?>>
+			<a class="folder" data-folder="{{ '/' . $fold['path'] }}" href="{{ route('admin.media.medialist') . '?folder=/' . urlencode($fold['path']) }}">
 				<span class="folder-icon">
-					<img src="<?php echo $icon; ?>" alt="<?php echo e($fold['name']); ?>" />
+					<img src="<?php echo $icon; ?>" alt="{{ $fold['name'] }}" />
 				</span>
-				<?php echo e($fold['name']); ?>
+				{{ $fold['name'] }}
 			</a>
 			<?php
 			if (isset($fold['children']) && count($fold['children'])):
