@@ -42,7 +42,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.news.updates.store', ['article' => $article->id]) }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.validation failed') }}">
+<form action="{{ route('admin.news.updates.store', ['article' => $article->id]) }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 	@if ($errors->any())
 		<div class="alert alert-danger">
@@ -123,8 +123,8 @@ app('pathway')
 				<div class="input-wrap form-group">
 					<label for="field-published">{{ trans('pages::pages.state') }}:</label>
 					<select name="published" id="field-published" class="form-control">
-						<option value="published"<?php if (!$row->datetimeremoved || $row->datetimeremoved == '0000-00-00 00:00:00' || $row->datetimeremoved == '-0001-11-30 00:00:00') { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
-						<option value="trashed"<?php if ($row->datetimeremoved && $row->datetimeremoved != '0000-00-00 00:00:00' && $row->datetimeremoved != '-0001-11-30 00:00:00') { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
+						<option value="published"<?php if (!$row->isTrashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
+						<option value="trashed"<?php if ($row->isTrashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
 					</select>
 				</div>
 			</fieldset>

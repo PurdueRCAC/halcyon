@@ -63,7 +63,7 @@ app('pathway')
 					<input type="text" name="fields[title]" id="field-title" class="form-control required" maxlength="250" value="{{ $row->title }}" />
 				</div>
 
-				<div class="form-group" data-hint="{{ trans('pages::pages.path hint') }}">
+				<div class="form-group">
 					<label for="field-alias">{{ trans('pages::pages.path') }}:</label>
 					<div class="input-group mb-2 mr-sm-2">
 						<div class="input-group-prepend">
@@ -119,7 +119,7 @@ app('pathway')
 			@sliders('start', 'module-sliders')
 				@sliders('panel', trans('pages::pages.options'), 'params-options')
 					<fieldset class="panelform">
-						<div class="form-group" data-tip="{{ trans('pages::pages.params.show title desc') }}">
+						<div class="form-group">
 							<label for="params-show_title">{{ trans('pages::pages.params.show title') }}:</label>
 							<select class="form-control" name="params[show_title]" id="params-show_title">
 								<option value="0"<?php if (!$row->params->get('show_title', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
@@ -128,39 +128,40 @@ app('pathway')
 							<span class="form-text sr-only">{{ trans('pages::pages.params.show title desc') }}</span>
 						</div>
 
-						<div class="form-group" data-tip="{{ trans('pages::pages.params.show author desc') }}">
+						<div class="form-group">
 							<label for="params-show_author">{{ trans('pages::pages.params.show author') }}:</label>
 							<select class="form-control" name="params[show_author]" id="params-show_author">
 								<option value="0"<?php if (!$row->params->get('show_author')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_author')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 							</select>
-							<span class="form-text sr-only">{{ trans('pages::pages.params.show author desc') }}</span>
+							<span class="form-text text-muted">{{ trans('pages::pages.params.show author desc') }}</span>
 						</div>
 
-						<div class="form-group" data-tip="{{ trans('pages::pages.params.show create date desc') }}">
+						<div class="form-group">
 							<label for="params-show_create_date">{{ trans('pages::pages.params.show create date') }}:</label>
 							<select class="form-control" name="params[show_create_date]" id="params-show_create_date">
 								<option value="0"<?php if (!$row->params->get('show_create_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_create_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 							</select>
-							<span class="form-text sr-only">{{ trans('pages::pages.params.show create date desc') }}</span>
+							<span class="form-text text-muted">{{ trans('pages::pages.params.show create date desc') }}</span>
 						</div>
 
-						<div class="form-group" data-tip="{{ trans('pages::pages.params.show modify date desc') }}">
+						<div class="form-group">
 							<label for="params-show_modify_date">{{ trans('pages::pages.params.show modify date') }}:</label>
 							<select class="form-control" name="params[show_modify_date]" id="params-show_modify_date">
 								<option value="0"<?php if (!$row->params->get('show_modify_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_modify_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 							</select>
-							<span class="form-text sr-only">{{ trans('pages::pages.params.show modify date desc') }}</span>
+							<span class="form-text text-muted">{{ trans('pages::pages.params.show modify date desc') }}</span>
 						</div>
 
-						<div class="form-group" data-tip="{{ trans('pages::pages.params.show publish date desc') }}">
+						<div class="form-group">
 							<label for="params-show_publish_date">{{ trans('pages::pages.params.show publish date') }}:</label>
 							<select class="form-control" name="params[show_publish_date]" id="params-show_publish_date">
 								<option value="0"<?php if (!$row->params->get('show_publish_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_publish_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 							</select>
+							<span class="form-text text-muted">{{ trans('pages::pages.params.show publish date desc') }}</span>
 						</div>
 
 						<fieldset id="param-styles">
@@ -201,73 +202,73 @@ app('pathway')
 
 							<table>
 								<tbody>
-							@php
-							$i = 0;
-							@endphp
-							@foreach ($row->params->get('scripts', []) as $script)
+								@php
+								$i = 0;
+								@endphp
+								@foreach ($row->params->get('scripts', []) as $script)
+									<tr>
+									<!-- <div class="row param-item" id="params_scripts_{{ $i }}">
+										<div class="col-md-9 form-group"> -->
+										<td>
+											<label class="sr-only" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
+											<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="{{ $script }}" />
+										<!-- </div>
+										<div class="col-md-3"> -->
+										</td>
+										<td>
+											<a href="#params_scripts_{{ $i }}" class="btn btn-secondary"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+										<!-- </div>
+									</div> -->
+										</td>
+									</tr>
+									@php
+									$i++;
+									@endphp
+								@endforeach
 								<tr>
-								<!-- <div class="row param-item" id="params_scripts_{{ $i }}">
-									<div class="col-md-9 form-group"> -->
 									<td>
+								<!-- <div class="row">
+									<div class="col-md-10 form-group"> -->
 										<label class="sr-only" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
-										<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="{{ $script }}" />
+										<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="" />
 									<!-- </div>
-									<div class="col-md-3"> -->
+									<div class="col-md-2 text-right"> -->
 									</td>
 									<td>
-										<a href="#params_scripts_{{ $i }}" class="btn btn-secondary"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+										<a href="#params_scripts_{{ $i }}" class="btn btn-secondary disabled"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
 									<!-- </div>
 								</div> -->
 									</td>
 								</tr>
-								@php
-								$i++;
-								@endphp
-							@endforeach
-							<tr>
-								<td>
-							<!-- <div class="row">
-								<div class="col-md-10 form-group"> -->
-									<label class="sr-only" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
-									<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="" />
-								<!-- </div>
-								<div class="col-md-2 text-right"> -->
-								</td>
-								<td>
-									<a href="#params_scripts_{{ $i }}" class="btn btn-secondary disabled"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
-								<!-- </div>
-							</div> -->
-								</td>
-							</tr>
-						</tbody>
-						<tfoot>
-							<tr>
-								<td></td>
-								<td>
-									<a href="#params_scripts_{{ $i }}" data-type="script" data-container="param-scripts" class="add-row btn btn-secondary param-script-new"><span class="glyph icon-plus">{{ trans('global.add') }}</span></a>
-								</td>
-							</tr>
-						</tfoot>
-					</table>
-						</fieldset>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td></td>
+									<td>
+										<a href="#params_scripts_{{ $i }}" data-type="script" data-container="param-scripts" class="add-row btn btn-secondary param-script-new"><span class="glyph icon-plus">{{ trans('global.add') }}</span></a>
+									</td>
+								</tr>
+							</tfoot>
+						</table>
 					</fieldset>
+				</fieldset>
 			@sliders('panel', trans('pages::pages.metadata'), 'params-metadata')
-					<fieldset class="panelform">
-						<div class="form-group">
-							<label for="field-metakey">{{ trans('pages::pages.metakey') }}:</label>
-							<textarea class="form-control" name="fields[metakey]" id="field-metakey" rows="3" cols="40">{{ $row->metakey }}</textarea>
-						</div>
+				<fieldset class="panelform">
+					<div class="form-group">
+						<label for="field-metakey">{{ trans('pages::pages.metakey') }}:</label>
+						<textarea class="form-control" name="fields[metakey]" id="field-metakey" rows="3" cols="40">{{ $row->metakey }}</textarea>
+					</div>
 
-						<div class="form-group">
-							<label for="field-metadesc">{{ trans('pages::pages.metadesc') }}:</label>
-							<textarea class="form-control" name="fields[metadesc]" id="field-metadesc" rows="3" cols="40">{{ $row->metadesc }}</textarea>
-						</div>
+					<div class="form-group">
+						<label for="field-metadesc">{{ trans('pages::pages.metadesc') }}:</label>
+						<textarea class="form-control" name="fields[metadesc]" id="field-metadesc" rows="3" cols="40">{{ $row->metadesc }}</textarea>
+					</div>
 
-						<div class="form-group">
-							<label for="field-metadata">{{ trans('pages::pages.metadata') }}:</label>
-							<textarea class="form-control" name="fields[metadata]" id="field-metadata" rows="3" cols="40">{{ json_encode($row->metadata->all()) }}</textarea>
-						</div>
-					</fieldset>
+					<div class="form-group">
+						<label for="field-metadata">{{ trans('pages::pages.metadata') }}:</label>
+						<textarea class="form-control" name="fields[metadata]" id="field-metadata" rows="3" cols="40">{{ json_encode($row->metadata->all()) }}</textarea>
+					</div>
+				</fieldset>
 			@sliders('end')
 
 			@include('history::admin.history')
