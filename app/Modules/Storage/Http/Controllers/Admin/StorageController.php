@@ -35,17 +35,22 @@ class StorageController extends Controller
 		}
 
 		// Get records
-		$query = StorageResource::query();
+		$query = StorageResource::query()->withTrashed();
 
 		if ($filters['state'] != '*')
 		{
 			if ($filters['state'] == 'active')
 			{
-				$query->where('datetimeremoved', '=', '0000-00-00 00:00:00');
+				$query->where(function($where)
+				{
+					$where->whereNull('datetimeremoved')
+						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+				});
 			}
 			elseif ($filters['state'] == 'inactive')
 			{
-				$query->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+				$query->whereNotNull('datetimeremoved')
+					->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
 			}
 		}
 
