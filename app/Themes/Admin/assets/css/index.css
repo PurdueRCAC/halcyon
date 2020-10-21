@@ -2203,7 +2203,16 @@ label .required:before {
   border-color: transparent;
   background-color: transparent;
 }
-/*.input-combobox input {
+.input-group .input-group-prepend {
+  background-color: #f1f1f1;
+}
+/*.input-group .input-group-prepend .input-group-text {
+  border-right-color: #e9e9e9;
+}
+.input-group .input-group-append .input-group-text {
+  border-left-color: #e9e9e9;
+}
+.input-combobox input {
   border-right-color: transparent;
 }*/
 /*.input-color,
@@ -4190,7 +4199,7 @@ div.current li {
   display: none;
 }
 .toolbar-box #toolbar {
-  margin: 0.5em 0;
+  margin: 0.75em 0;
   padding: 0;
   /*position: absolute;
   top: 0;
@@ -4221,7 +4230,7 @@ border: 1px solid rgba(0,0,0,.125);
   overflow: hidden;
   white-space: nowrap;
 }
-.toolbar-box .pagetitle span,
+/*.toolbar-box .pagetitle span,
 .toolbar-box .pagetitle small {
   color: #999;
 }
@@ -4235,7 +4244,7 @@ border: 1px solid rgba(0,0,0,.125);
 .toolbar-box a:hover {
   color: #000;
   text-decoration: none;
-}
+}*/
 .toolbar-box ul,
 .toolbar-box ul li {
   background: transparent;
@@ -4243,7 +4252,18 @@ border: 1px solid rgba(0,0,0,.125);
   padding: 0;
   border: none;
 }
-.toolbar-box .button {
+.toolbar-box ul li {
+  margin: 0 0 0 0.5em;
+  padding: 0;
+  list-style: none;
+  float: left;
+}
+.toolbar-box .spacer,
+.toolbar-box .divider {
+  width: 1em;
+  border: 1px solid transparent;
+}
+/*.toolbar-box .button {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -4253,7 +4273,6 @@ border: 1px solid rgba(0,0,0,.125);
   display: block;
   text-decoration: none;
   margin-left: -1px;
-  /*border-left: none;*/
 }
 .toolbar-box .button:first-child {
   padding-right: 0em;
@@ -4264,11 +4283,7 @@ border: 1px solid rgba(0,0,0,.125);
   width: 3.2em;
   display: block;
   background-color: #fff;
-  border: none;
   border: 1px solid #d7d7d7;
-  /*box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-			color: transparent;*/
   position: relative;
   text-decoration: none;
 }
@@ -4293,8 +4308,6 @@ border: 1px solid rgba(0,0,0,.125);
   text-decoration: none;
   cursor: pointer;
   font-weight: 400;
-  /*color: #a9a9a9;
-					color: rgba(0, 0, 0, 0.6);*/
 }
 .toolbar-box .button a span:after {
   content: "";
@@ -4307,13 +4320,10 @@ border: 1px solid rgba(0,0,0,.125);
   right: 0;
   bottom: 0;
   text-decoration: none;
-  /*text-shadow:
-					     -1px -1px 0 #fff,
-					      1px -1px 0 #fff,
-					      -1px 1px 0 #fff,
-					       1px 1px 0 #fff;*/
   cursor: pointer;
-}
+}*/
+
+/* Toolbar button tip
 .toolbar-box .button a:after,
 .toolbar-box .button a:before {
   position: absolute;
@@ -4335,7 +4345,7 @@ border: 1px solid rgba(0,0,0,.125);
   color: #fff;
   text-shadow: 0 -1px 0px #000000;
   padding: 0.65em 0.85em;
-  font-size: 1.1em;
+  font-size: 0.85em;
   line-height: 1;
   white-space: nowrap;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
@@ -4359,15 +4369,6 @@ border: 1px solid rgba(0,0,0,.125);
   width: 0;
   margin-top: -0.65em;
 }
-.toolbar-box .button a:hover {
-  background-color: #666;
-  border-color: #666;
-  color: rgba(255, 255, 255, 0.8);
-  /*span:before,
-				span:after {
-					color: #000;
-				}*/
-}
 .toolbar-box .button a:hover:before,
 .toolbar-box .button a:hover:after {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
@@ -4376,8 +4377,9 @@ border: 1px solid rgba(0,0,0,.125);
   -moz-opacity: 1;
   opacity: 1;
   visibility: visible\9;
-}
-.toolbar-box .button a:hover span:after {
+}*/
+
+/*.toolbar-box .button a:hover span:after {
   background-color: #666;
 }
 .toolbar-box .button a.disabled span {
@@ -4407,21 +4409,21 @@ border: 1px solid rgba(0,0,0,.125);
   background-color: #f0765f;
   border-color: #f0765f;
   color: #ffdcc8;
-}
+}*/
 .toolbar-box a.toolbar-confirm {
   /*background-color: #ffd9e8;
 	border-color: #ffd9e8;
 	color: #ff1e76;*/
 }
-.toolbar-box a.toolbar-confirm:hover {
+/*.toolbar-box a.toolbar-confirm:hover {
   background-color: #ff1e76;
   border-color: #ff1e76;
   color: #ffd9e8;
 }
 #toolbar-save a {
-  /*background-color: #e2f3e6;
+  background-color: #e2f3e6;
 	border-color: #e2f3e6;
-	color: #3db557;*/
+	color: #3db557;
 }
 #toolbar-save a:hover {
   background-color: #3db557;
@@ -4463,15 +4465,79 @@ border: 1px solid rgba(0,0,0,.125);
   background-color: #d3ebff;
   border-color: #d3ebff;
   color: #018dff;
-  /*background-color: #018dff;
-	border-color: #018dff;
-	color: #fff;*/
 }
 #toolbar-help a:hover {
   background-color: #018dff;
   border-color: #018dff;
   color: #d3ebff;
+}*/
+.toolbar-box .btn {
+  background-color: #f8f9fa;
+  border-color: rgba(0, 0, 0, 0.15);
+  position: relative;
+  /*box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);*/
 }
+.toolbar-box .btn:hover {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+.toolbar-box .btn.disabled,
+.toolbar-box .btn:disabled {
+  opacity: 0.75;
+  box-shadow: none;
+}
+.toolbar-box .btn-publish,
+.toolbar-box .btn-save {
+  background-color: #e2f3e6;
+border-color: #e2f3e6;
+color: #297A3A;
+  /*color: #fff;
+  background-color: #28a745;
+  border-color: #28a745;*/
+}
+.toolbar-box .btn-publish:hover,
+.toolbar-box .btn-save:hover {
+  color: #fff;
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+.toolbar-box .btn-plus {
+  /*color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;*/
+  background-color: #eff4ff;
+  border-color: #eff4ff;
+  color: #6194ff;
+}
+.toolbar-box .btn-plus:hover {
+  color: #fff;
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+.toolbar-box .btn-plus.disabled,
+.toolbar-box .btn-plus:disabled {
+  background-color: #3db557;
+  border-color: #3db557;
+  color: #e2f3e6;
+}
+.toolbar-box .btn-cancel,
+.toolbar-box .btn-trash {
+  color: #dc3545;
+  background-color: #ffebeb;
+  border-color: #ffebeb;
+}
+.toolbar-box .btn-cancel:hover,
+.toolbar-box .btn-trash:hover {
+  color: #ffebeb;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+/*.toolbar-box .btn-trash.disabled,
+.toolbar-box .btn-trash:disabled {
+  color: #ffebeb;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}*/
+
 @media (min-width: 50em) and (min-height: 50em) {
   .toolbar-box.fixed {
     position: fixed;
