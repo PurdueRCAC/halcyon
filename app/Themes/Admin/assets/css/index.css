@@ -4487,12 +4487,12 @@ border: 1px solid rgba(0,0,0,.125);
 }
 .toolbar-box .btn-publish,
 .toolbar-box .btn-save {
-  background-color: #e2f3e6;
-border-color: #e2f3e6;
-color: #297A3A;
-  /*color: #fff;
+  /*background-color: #e2f3e6;
+  border-color: #e2f3e6;
+  color: #297A3A;*/
+  color: #fff;
   background-color: #28a745;
-  border-color: #28a745;*/
+  border-color: #28a745;
 }
 .toolbar-box .btn-publish:hover,
 .toolbar-box .btn-save:hover {
@@ -4501,12 +4501,12 @@ color: #297A3A;
   border-color: #1e7e34;
 }
 .toolbar-box .btn-plus {
-  /*color: #fff;
+  color: #fff;
   background-color: #007bff;
-  border-color: #007bff;*/
-  background-color: #eff4ff;
+  border-color: #007bff;
+  /*background-color: #eff4ff;
   border-color: #eff4ff;
-  color: #6194ff;
+  color: #6194ff;*/
 }
 .toolbar-box .btn-plus:hover {
   color: #fff;
@@ -4521,15 +4521,21 @@ color: #297A3A;
 }
 .toolbar-box .btn-cancel,
 .toolbar-box .btn-trash {
-  color: #dc3545;
+  /*color: #dc3545;
   background-color: #ffebeb;
-  border-color: #ffebeb;
+  border-color: #ffebeb;*/
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
 }
 .toolbar-box .btn-cancel:hover,
 .toolbar-box .btn-trash:hover {
-  color: #ffebeb;
+  /*color: #ffebeb;
   background-color: #dc3545;
-  border-color: #dc3545;
+  border-color: #dc3545;*/
+  color: #fff;
+  background-color: #ffebeb;
+  border-color: #ffebeb;
 }
 /*.toolbar-box .btn-trash.disabled,
 .toolbar-box .btn-trash:disabled {
@@ -5870,27 +5876,37 @@ a.menulist:hover:before {
 
 @media (prefers-color-scheme: dark) {
   body {
-    color: #eee;
-    background: #1c1a20;
+    color: #999;
+    /*background: #1c1a20;*/
+    background: #24242b;
   }
   #header {
     color: #777;
     background-color: #fff;
+    background-color: rgba(0, 0, 0, 0.8);
   }
-  #container-component {
-    background: #24242b;
+
+  #footer {
+    border-color: rgba(255, 255, 255, 0.1);
   }
   fieldset.adminform,
   .form-control,
   .input-group,
   .card,
   .toolbar-box .pagetitle {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.3);
     border-color: rgba(255, 255, 255, 0.1);
+    color: #eee;
+  }
+  .form-control-plaintext {
     color: #eee;
   }
   fieldset.adminform:hover {
     border-color: rgba(255, 255, 255, 0.2);
+  }
+  fieldset.adminform legend {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.05);
   }
   label {
     color: #ccc;
@@ -5925,29 +5941,14 @@ a.menulist:hover:before {
   .nav-tabs .nav-link.active {
     color: #fff;
   }
-  /*table thead th {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    border-left: 1px solid rgba(255, 255, 255, 0.05);
-  }
-  table.adminlist {
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-  table.adminlist tbody tr {
-    background-color: #19181d;
-  }
-  table.adminlist tbody td {
-    border-color: rgba(255, 255, 255, 0.05);
-  }
-  table.adminlist tbody tr:hover td {
-    background-color: #0d0e13;
-  }
-  fieldset#filter-bar {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
-  }*/
   a {
-    color: #f1f1f1;
+    color: #e1e1e1;
   }
-  #header .user-options li a:before,
+  a:focus,
+  a:hover {
+    color: #fff;
+  }
+  /*#header .user-options li a:before,
   .main-navigation ul#menu > li > a:before,
   .menu-open ul#menu > li > a,
   .menu-open #header .user-options li a {
@@ -5969,6 +5970,13 @@ a.menulist:hover:before {
   .main-navigation ul#menu > li > a:focus {
     background-color: rgba(0, 0, 0, 0.1);
   }
+  .main-navigation ul#menu.disabled li a:before,
+  .main-navigation ul#menu.disabled > li:hover > a:before,
+  .main-navigation ul#menu.disabled > li:focus > a:before,
+  .main-navigation ul#menu.disabled li > a:hover:before,
+  .main-navigation ul#menu.disabled li > a:focus:before {
+    color: rgba(0, 0, 0, 0.2);
+  }
   .main-navigation ul#menu ul a {
     color: rgba(0, 0, 0, 0.6);
   }
@@ -5984,9 +5992,9 @@ a.menulist:hover:before {
   .hamburger:hover .hamburger-inner:before,
   .hamburger:hover .hamburger-inner:after {
     background-color: rgba(41, 41, 48, 1);
-  }
+  }*/
   .table {
-    color: #aaa;
+    color: #999;
   }
   .table td, table tbody th, table tbody td {
     border-top-color: #282828;
@@ -6005,18 +6013,16 @@ a.menulist:hover:before {
     color: #fff;
     background-color: rgba(0,0,0,.2);
   }
-  /*.toolbar-box .pagetitle {
-    color: #fff;
-  }
+
   .form-check label:before {
     border-color: rgba(255, 255, 255, 0.2);
-    background-color: rgba(255, 255, 255, 0.039);
+    background-color: rgba(0, 0, 0, 0.2);
   }
   .form-check label:after {
     border-left: 2px solid #fff;
     border-bottom: 2px solid #fff;
   }
- .form-check input[type="checkbox"]:checked + label:before {
+  .form-check input[type="checkbox"]:checked + label:before {
     background-color: #fe7035;
     border-color: #fe7035;
 
@@ -6026,6 +6032,11 @@ a.menulist:hover:before {
   .badge {
     background-color: rgba(255, 255, 255, 0.1);
   }
+  .gi,
+  .unknown,
+  .none {
+    color: #555;
+  }
   .on,
   .yes,
   .true,
@@ -6034,26 +6045,4 @@ a.menulist:hover:before {
     color: #e2f3e6;
     background-color: #3db557;
   }
-  .form-control,
-  input[type=text],
-  input[type=password],
-  input[type=email],
-  input[type=date],
-  input[type=url],
-  input[type=color],
-  input[type=search],
-  input[type=tel],
-  input[type=month],
-  input[type=week],
-  input[type=time],
-  input[type=number],
-  textarea,
-  select {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-  select:focus {
-    background-color: #5bbed4;
-    border-color: #5bbed4;
-  }*/
 }
