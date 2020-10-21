@@ -2593,9 +2593,9 @@ table.adminlist thead th input[type=radio],
 table.adminlist thead th input[type=checkbox] {
   font-size: 1.15em;
 }
-table.adminlist tbody tr {
+/*table.adminlist tbody tr {
   background-color: #fff;
-}
+}*/
 table.adminlist tbody tr.checked {
     background-color: #eaf6f6;
   }
@@ -2612,9 +2612,9 @@ table.adminlist tbody tr.disabled .state:before,
 table.adminlist tbody tr.archived .state:before {
   color: #ccc;
 }
-table.adminlist tbody tr:hover td {
+/*table.adminlist tbody tr:hover td {
   background-color: #ffe;
-}
+}*/
 table thead tr:first-child th,
 table thead tr:first-child td {
   border-top: none;
@@ -5867,7 +5867,7 @@ a.menulist:hover:before {
   font-family: "Feather";
   color: orange;
 }
-/*
+
 @media (prefers-color-scheme: dark) {
   body {
     color: #eee;
@@ -5880,6 +5880,36 @@ a.menulist:hover:before {
   #container-component {
     background: #24242b;
   }
+  fieldset.adminform,
+  .form-control,
+  .input-group,
+  .card,
+  .toolbar-box .pagetitle {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #eee;
+  }
+  fieldset.adminform:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  label {
+    color: #ccc;
+  }
+  .input-group .input-group-prepend {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  .input-group-text {
+    color: #ccc;
+  }
+  .breadcrumb {
+    color: #eee;
+  }
+  .breadcrumb-item.active {
+    color: #fff;
+  }
+  body .cke_chrome {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
   .nav-tabs {
     border-bottom-color: rgba(255, 255, 255, 0.2);
   }
@@ -5888,7 +5918,14 @@ a.menulist:hover:before {
     background: #24242b;
     border-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.2) #24242b;
   }
-  table thead th {
+  .nav-tabs .nav-link {
+    color: #aaa;
+  }
+  .nav-tabs .nav-item.show .nav-link,
+  .nav-tabs .nav-link.active {
+    color: #fff;
+  }
+  /*table thead th {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     border-left: 1px solid rgba(255, 255, 255, 0.05);
   }
@@ -5906,7 +5943,7 @@ a.menulist:hover:before {
   }
   fieldset#filter-bar {
     border-bottom-color: rgba(255, 255, 255, 0.1);
-  }
+  }*/
   a {
     color: #f1f1f1;
   }
@@ -5932,6 +5969,12 @@ a.menulist:hover:before {
   .main-navigation ul#menu > li > a:focus {
     background-color: rgba(0, 0, 0, 0.1);
   }
+  .main-navigation ul#menu ul a {
+    color: rgba(0, 0, 0, 0.6);
+  }
+  .main-navigation ul#menu ul a:hover {
+    color: #222;
+  }
   .hamburger .hamburger-inner,
   .hamburger .hamburger-inner:before,
   .hamburger .hamburger-inner:after {
@@ -5942,7 +5985,27 @@ a.menulist:hover:before {
   .hamburger:hover .hamburger-inner:after {
     background-color: rgba(41, 41, 48, 1);
   }
-  .toolbar-box .pagetitle {
+  .table {
+    color: #aaa;
+  }
+  .table td, table tbody th, table tbody td {
+    border-top-color: #282828;
+  }
+  .table thead th,
+  table thead th {
+    border-color: #282828;
+  }
+  table thead th.active, table thead th a.active {
+    color: #fff;
+  }
+  table.adminlist tbody tr.checked {
+    background-color: #eaf6f6;
+  }
+  .table-hover tbody tr:hover {
+    color: #fff;
+    background-color: rgba(0,0,0,.2);
+  }
+  /*.toolbar-box .pagetitle {
     color: #fff;
   }
   .form-check label:before {
@@ -5992,6 +6055,5 @@ a.menulist:hover:before {
   select:focus {
     background-color: #5bbed4;
     border-color: #5bbed4;
-  }
+  }*/
 }
-*/
