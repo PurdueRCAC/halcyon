@@ -121,10 +121,13 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-md-3">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+				<div class="form-group">
+					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<span class="input-group">
+						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					</span>
+				</div>
 			</div>
 			<div class="col col-md-9 text-right filter-select">
 				<label class="sr-only" for="filter_menutype">{{ trans('menus::menus.menu type') }}</label>
@@ -159,12 +162,19 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 				</select> -->
 			</div>
 		</div>
+
+		<input type="hidden" name="menutype" value="{{ $filters['menutype'] }}" />
+		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if ($filters['state'] == 'trashed')
 		<div class="alert alert-warning">{{ trans('pages::pages.trashed must be restored') }}</div>
 	@endif
 
+	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('menus::menus.items') }}</caption>
 		<thead>
@@ -338,13 +348,11 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 		@endforeach
 		</tbody>
 	</table>
+	</div>
 
 	{{ $rows->render() }}
 
 	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="menutype" value="{{ $filters['menutype'] }}" />
-	<input type="hidden" name="order" value="{{ $filters['order'] }}" />
-	<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
 	@csrf
 </form>

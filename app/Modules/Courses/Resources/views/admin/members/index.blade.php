@@ -29,14 +29,13 @@
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-md-4 filter-search">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<button type="submit" class="btn btn-secondary">{{ trans('search.submit') }}</button>
-
-				<input type="hidden" name="group" value="{{ $filters['group'] }}" />
-				<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
-				<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
+				<div class="form-group">
+					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<span class="input-group">
+						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					</span>
+				</div>
 			</div>
 			<div class="col col-md-8 filter-select text-right">
 				<label class="sr-only" for="filter-state">{{ trans('groups::groups.state') }}</label>
@@ -57,8 +56,14 @@
 		</div>
 
 		<input type="hidden" name="group" value="{{ $group->id }}" autocomplete="off" />
+		<input type="hidden" name="group" value="{{ $filters['group'] }}" />
+		<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
+		<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
+
+		<button type="submit" class="btn btn-secondary sr-only">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('groups::groups.groups') }}</caption>
 		<thead>
@@ -148,6 +153,7 @@
 		@endforeach
 		</tbody>
 	</table>
+	</div>
 
 	{{ $rows->render() }}
 

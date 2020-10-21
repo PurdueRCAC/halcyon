@@ -4,6 +4,14 @@
 <script src="{{ asset('modules/history/js/admin.js?v=' . filemtime(public_path() . '/modules/history/js/admin.js')) }}"></script>
 @stop
 
+@php
+app('pathway')
+	->append(
+		trans('history::history.module name'),
+		route('admin.history.index')
+	);
+@endphp
+
 @section('toolbar')
 	@if (auth()->user()->can('admin history'))
 		{!!
@@ -25,10 +33,13 @@
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col filter-search col-md-4">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+				<div class="form-group">
+					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<span class="input-group">
+						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					</span>
+				</div>
 			</div>
 			<div class="col filter-select col-md-8 text-right">
 				<label class="sr-only" for="filter_action">{{ trans('history::history.action') }}</label>
@@ -48,9 +59,16 @@
 				</select>
 			</div>
 		</div>
+
+		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	<div class="card mb-4">
 	<table class="table table-hover adminlist">
+		<caption class="sr-only">{{ trans('history::history.history manager') }}</caption>
 		<thead>
 			<tr>
 				<th>
@@ -91,7 +109,11 @@
 					{{ $row->action }}
 				</td>
 				<td>
-					{{ ($row->user ? $row->user->name : trans('global.unknown')) }}
+					@if ($row->user)
+						{{ $row->user->name }}
+					@else
+						<span class="unknown">{{ trans('global.unknown') }}</span>
+					@endif
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
@@ -110,12 +132,11 @@
 		@endforeach
 		</tbody>
 	</table>
+	</div>
 
 	{{ $rows->render() }}
 
 	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="order" value="{{ $filters['order'] }}" />
-	<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
 	@csrf
 </form>

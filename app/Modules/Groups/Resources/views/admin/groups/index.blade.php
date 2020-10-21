@@ -89,16 +89,14 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-3 filter-search">
+			<div class="col-md-3 filter-search">
 				<div class="form-group">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-				<span class="input-group">
-					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-					<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
-				</span>
-			</div>
-
-				<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<span class="input-group">
+						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					</span>
+				</div>
 			</div>
 			<div class="col col-md-9 text-right">
 				<label class="sr-only" for="filter_fieldofscience">{{ trans('groups::groups.field of science') }}</label>
@@ -131,6 +129,8 @@ app('pathway')
 
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	<div class="card mb-4">

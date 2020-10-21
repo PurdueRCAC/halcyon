@@ -54,8 +54,6 @@ app('pathway')
 			<div class="col col-md-3 filter-search">
 				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
 			</div>
 			<div class="col col-md-9 text-right filter-select">
 				<label class="sr-only" for="filter_client_id">{{ trans('widgets::widgets.client type') }}</label>
@@ -100,8 +98,11 @@ app('pathway')
 
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('widgets::widgets.module name') }}</caption>
 		<thead>
@@ -249,6 +250,7 @@ app('pathway')
 		@endforeach
 		</tbody>
 	</table>
+	</div>
 
 	{{ $rows->render() }}
 

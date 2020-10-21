@@ -5,7 +5,7 @@ namespace App\Modules\Courses\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Halcyon\Http\StatefulRequest;
-use App\Modules\Courses\Models\account;
+use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Models\Member;
 use App\Modules\Users\Models\User;
 
@@ -16,11 +16,11 @@ class MembersController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function index($group, StatefulRequest $request)
+	public function index(StatefulRequest $request)
 	{
 		// Get filters
 		$filters = array(
-			'group'     => $group,
+			'account'   => 0,
 			'search'    => null,
 			'state'     => 'active',
 			'type'      => 0,
@@ -47,7 +47,7 @@ class MembersController extends Controller
 			$filters['order_dir'] = Member::$orderDir;
 		}
 
-		$group = Group::findOrFail($filters['group']);
+		$account = Account::findOrFail($filters['account']);
 
 		$u = (new User)->getTable();
 		$m = (new Member)->getTable();
@@ -56,7 +56,7 @@ class MembersController extends Controller
 			->join($u, $u . '.id', $m . '.userid')
 			->select($m . '.*', $u . '.name')
 			->with('type')
-			->where($m . '.groupid', '=', $group->id);
+			->where($m . '.classaccountid', '=', $account->id);
 
 		if ($filters['search'])
 		{
@@ -73,8 +73,8 @@ class MembersController extends Controller
 		if ($filters['state'] == 'active')
 		{
 			$query->withTrashed()
-				->whereNull($u . '.deleted_at') //, '=', '0000-00-00 00:00:00')
-				->where($m . '.dateremoved', '=', '0000-00-00 00:00:00');
+				->where($u . '.dateremoved', '=', '0000-00-00 00:00:00')
+				->where($m . '.datetimeremoved', '=', '0000-00-00 00:00:00');
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
@@ -94,7 +94,7 @@ class MembersController extends Controller
 		return view('groups::admin.members.index', [
 			'rows'    => $rows,
 			'filters' => $filters,
-			'group'   => $group,
+			'account'   => $account,
 			'types'   => $types,
 		]);
 	}
@@ -108,7 +108,7 @@ class MembersController extends Controller
 	{
 		app('request')->merge(['hidemainmenu' => 1]);
 
-		$row = new Group();
+		$row = new Account();
 
 		return view('groups::admin.edit', [
 			'row' => $row
@@ -129,7 +129,7 @@ class MembersController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Group::findOrFail($id) : new Group();
+		$row = $id ? Account::findOrFail($id) : new Account();
 		$row->fill($request->input('fields'));
 		$row->slug = $row->normalize($row->name);
 
@@ -183,7 +183,7 @@ class MembersController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Group::findOrFail($id);
+			$row = Account::findOrFail($id);
 
 			if (!$row->delete())
 			{

@@ -31,6 +31,7 @@ return [
 	'language' => 'Language',
 	'item type' => 'Menu Type',
 	'home' => 'Default',
+	'rebuild' => 'Rebuild',
 	'option select level' => '- Select Level -',
 	'EXTENSION_PUBLISHED_DISABLED' => 'Component disabled and menu item published',
 	'EXTENSION_PUBLISHED_ENABLED' => 'Component enabled and menu item published',

@@ -42,15 +42,23 @@ app('pathway')
 
 <form action="{{ route('admin.messages.types') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
 
-	<fieldset id="filter-bar">
-		<div class="filter-search">
-			<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-			<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-			<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+	<fieldset id="filter-bar" class="container-fluid">
+		<div class="row">
+			<div class="col-md-12 filter-search">
+				<div class="form-group">
+					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<span class="input-group">
+						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					</span>
+				</div>
+			</div>
 		</div>
+
+		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('messages::messages.types') }}</caption>
 		<thead>
@@ -124,6 +132,7 @@ app('pathway')
 		@endforeach
 		</tbody>
 	</table>
+	</div>
 
 	{{ $rows->render() }}
 

@@ -17,6 +17,7 @@
 
 @section('content')
 <form action="{{ route('admin.core.sysinfo') }}" method="post" name="adminForm" id="adminForm">
+	<div class="card">
 	<div class="tabs" id="config-document">
 		<ul>
 			<li><a href="#page-site">{{ trans('core::info.system information') }}</a></li>
@@ -66,7 +67,7 @@
 			</div>
 		</div>
 	</div>
-
+</div>
 	@csrf
 </form>
 @stop
