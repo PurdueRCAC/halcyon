@@ -305,7 +305,7 @@ class WidgetsController extends Controller
 		if ($row->checked_out
 		 && $row->checked_out <> auth()->user()->id)
 		{
-			return $this->cancel()->with('warning', trans('global.messages.checked out'));
+			return $this->cancel($request)->with('warning', trans('global.messages.checked out'));
 		}
 
 		if ($eid = $request->input('eid', 0))
@@ -331,7 +331,7 @@ class WidgetsController extends Controller
 			if (!$row->checkOut())
 			{
 				// Check-out failed, display a notice but allow the user to see the record.
-				return $this->cancel()->with('warning', trans('global.messages.check out failed'));
+				return $this->cancel($request)->with('warning', trans('global.messages.check out failed'));
 			}
 		}
 
@@ -391,7 +391,7 @@ class WidgetsController extends Controller
 
 		$row->checkin();
 
-		return $this->cancel()->withSuccess(trans('global.messages.update success'));
+		return $this->cancel($request)->withSuccess(trans('global.messages.update success'));
 	}
 
 	/**
