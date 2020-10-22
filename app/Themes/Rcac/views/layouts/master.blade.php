@@ -28,6 +28,10 @@
 			'themes/Rcac/css/college.css',
 			'themes/Rcac/css/content.css',
 		);
+		if (!app('isAdmin')):
+			$styles[] = 'themes/Rcac/css/admin.css';
+		endif;
+
 		foreach ($styles as $css):
 			?>
 			<link rel="stylesheet" type="text/css" media="all" href="{{ asset($css . '?v=' . filemtime(public_path() . '/' . $css)) }}" />
@@ -56,7 +60,6 @@
 			'themes/Rcac/js/css_browser_selector.js',
 			'themes/Rcac/js/modernizr-1.5.min.js',
 			'themes/Rcac/js/bootstrap.min.js',
-			//'themes/Rcac/js/common/jquery-ui-1.12.1/jquery-ui.min.js',
 			'themes/Rcac/js/google_jquery_link_tracking.js',
 			'themes/Rcac/js/common/common.js',
 			'themes/Rcac/js/common/date.js',
@@ -70,14 +73,6 @@
 			<script type="text/javascript" src="{{ asset($script . '?v=' . filemtime(public_path() . '/' . $script)) }}"></script>
 			<?php
 		endforeach;
-
-		/*foreach (scandir(public_path() . '/themes/Rcac/js/common/') as $file)
-		{
-			if (preg_match("/^.*?\.js$/", $file))
-			{
-				echo "\t\t" . '<script type="text/javascript" src="' . asset('themes/Rcac/js/common/' . $file . '?v=' . filemtime(public_path() . '/themes/Rcac/js/common/' . $file)) . '"></script>' . "\n";
-			}
-		}*/
 		?>
 		@yield('scripts')
 		@stack('scripts')
@@ -101,9 +96,7 @@
 		</script>
 	</head>
 	<body>
-		@if (Auth::check() && Auth::user()->can('manage'))
-			@include('partials.admin-bar')
-		@endif
+		@widget('top')
 		<header>
 			<div class="navbar navbar-inverse goldbar" role="navigation">
 				<div class="container">
@@ -240,5 +233,6 @@
 		<footer id="footer">
 			@widget('footer')
 		</footer>
+		@widget('bottom')
 	</body>
 </html>

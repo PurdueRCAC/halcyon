@@ -1,0 +1,147 @@
+#adminmenu {
+	margin: 0;
+	padding: 0;
+	background-color: #000;
+	color: #999;
+	font-family: "Source Sans Pro", "Lucida Grande", Verdana, sans-serif;
+	font-size: 0.8125rem;
+	-moz-tap-highlight-color: rgba(0, 0, 0, 0);
+	-o-tap-highlight-color: rgba(0, 0, 0, 0);
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	tap-highlight-color: rgba(0, 0, 0, 0);
+	-moz-touch-callout: none;
+	-o-touch-callout: none;
+	-webkit-touch-callout: none;
+	touch-callout: none;
+	z-index: 9999;
+}
+#adminmenu a {
+	display: block;
+	padding: 0.5em 1.25em 0.5em 2.25em;
+	line-height: 1;
+	cursor: pointer;
+	text-decoration: none;
+	color: #aaa;
+}
+#adminmenu a:hover,
+#adminmenu a:active,
+#adminmenu a:focus {
+	color: #fff;
+	text-decoration: underline;
+}
+#adminmenu>li {
+	position: relative;
+	display: block;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	float: left;
+	border-right: 1px solid #333;
+}
+#adminmenu>li>ul {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+  display: block;
+  width: auto;
+  background: #000;
+  width: 15em;
+  z-index: 99999;
+}
+#adminmenu ul li {
+  padding: 0.5em 1em;
+}
+#adminmenu li.separator {
+  padding: 0;
+}
+#adminmenu li.separator span {
+  display: block;
+  height: 1px;
+  margin: 0 1em;
+  background-color: #333;
+}
+#adminmenu > li:hover>ul {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  white-space: nowrap;
+  box-shadow: 0 0 0 0.0625rem rgba(0, 0, 0, 0.075), 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.25);
+  -webkit-transition: visibility 0s, opacity 0.3s;
+  -moz-transition: visibility 0s, opacity 0.3s;
+  transition: visibility 0s, opacity 0.3s;
+}
+#adminmenu ul a {
+	display: inline;
+	padding: 0;
+	font-weight: normal;
+}
+#adminmenu:before,
+#adminmenu:after {
+	content: '';
+	display: table;
+	line-height: 0;
+	clear: both;
+}
+#adminmenu .badge {
+	font-size: 0.75em;
+	padding: 0.3em 0.7em;
+}
+#adminmenu .icon-dashboard {
+	background-image: url('data:image/svg+xml;utf8,<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#aaa" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m3 3h7v7h-7z"/><path d="m14 3h7v7h-7z"/><path d="m14 14h7v7h-7z"/><path d="m3 14h7v7h-7z"/></g></svg>');
+	background-repeat: no-repeat;
+	background-position: 0.75em 0.5em;
+	background-size: 1.1em auto;
+}
+#adminmenu .icon-users {
+	background-image: url('data:image/svg+xml;utf8,<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#aaa" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m20 21v-2a4 4 0 0 0 -4-4h-8a4 4 0 0 0 -4 4v2"/><circle cx="12" cy="7" r="4"/></g></svg>');
+	background-repeat: no-repeat;
+	background-position: 0.75em 0.5em;
+	background-size: 1.1em auto;
+}
+#adminmenu .icon-menus {
+	background-image: url('data:image/svg+xml;utf8,<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#aaa" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"><path d="m8 6h13"/><path d="m8 12h13"/><path d="m8 18h13"/></g></svg>');
+	background-repeat: no-repeat;
+	background-position: 0.75em 0.5em;
+	background-size: 1.1em auto;
+}
+#adminmenu .icon-file-text {
+	background-image: url('data:image/svg+xml;utf8,<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#aaa" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m14 2h-8a2 2 0 0 0 -2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-12z"/><path d="m14 2v6h6"/><path d="m16 13h-8"/><path d="m16 17h-8"/><path d="m10 9h-1-1"/></g></svg>');
+	background-repeat: no-repeat;
+	background-position: 0.75em 0.5em;
+	background-size: 1.1em auto;
+}
+#adminmenu .icon-server {
+	background-image: url('data:image/svg+xml;utf8,<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#aaa" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect height="8" rx="2" width="20" x="2" y="2"/><rect height="8" rx="2" width="20" x="2" y="14"/></g></svg>');
+	background-repeat: no-repeat;
+	background-position: 0.75em 0.5em;
+	background-size: 1.1em auto;
+}
+#adminmenu .icon-shopping-cart {
+	background-image: url('data:image/svg+xml;utf8,<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#aaa" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="8" cy="21" r="2"/><circle cx="20" cy="21" r="2"/><path d="m5.67 6h17.33l-1.68 8.39a2 2 0 0 1 -2 1.61h-10.57a2 2 0 0 1 -2-1.74l-1.52-11.52a2 2 0 0 0 -1.98-1.74h-2.25"/></g></svg>');
+	background-repeat: no-repeat;
+	background-position: 0.75em 0.5em;
+	background-size: 1.1em auto;
+}
+#adminmenu .icon-modules {
+	background-image: url('data:image/svg+xml;utf8,<svg fill="none" height="24" stroke="#aaa" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><rect height="18" rx="2" width="18" x="3" y="3"/><path d="m3 9h18"/><path d="m9 21v-12"/></svg>');
+	background-repeat: no-repeat;
+	background-position: 0.75em 0.5em;
+	background-size: 1.1em auto;
+}
+#adminmenu .icon-extensions {
+	background-image: url('data:image/svg+xml;utf8,<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#aaa" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m12.89 1.45 8 4a2 2 0 0 1 1.11 1.79v9.53a2 2 0 0 1 -1.11 1.79l-8 4a2 2 0 0 1 -1.79 0l-8-4a2 2 0 0 1 -1.1-1.8v-9.52a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.78 0z"/><path d="m2.32 6.16 9.68 4.84 9.68-4.84"/><path d="m12 22.76v-11.76"/><path d="m7 3.5 10 5"/></g></svg>');
+	background-repeat: no-repeat;
+	background-position: 0.75em 0.5em;
+	background-size: 1.1em auto;
+}
+#adminmenu .icon-settings {
+	background-image: url('data:image/svg+xml;utf8,<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#aaa" stroke-width="2"><circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/><path d="m19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1 -2.83 0l-.06-.06a1.65 1.65 0 0 0 -1.82-.33 1.65 1.65 0 0 0 -1 1.51v.17a2 2 0 0 1 -2 2 2 2 0 0 1 -2-2v-.09a1.65 1.65 0 0 0 -1.08-1.51 1.65 1.65 0 0 0 -1.82.33l-.06.06a2 2 0 0 1 -2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0 -1.51-1h-.17a2 2 0 0 1 -2-2 2 2 0 0 1 2-2h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0 -.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33h.08a1.65 1.65 0 0 0 1-1.51v-.17a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0 -.33 1.82v.08a1.65 1.65 0 0 0 1.51 1h.17a2 2 0 0 1 2 2 2 2 0 0 1 -2 2h-.09a1.65 1.65 0 0 0 -1.51 1z" stroke-miterlimit="10"/></g></svg>');
+	background-repeat: no-repeat;
+	background-position: 0.75em 0.5em;
+	background-size: 1.1em auto;
+}
