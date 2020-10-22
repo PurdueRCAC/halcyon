@@ -8,7 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class OwnerRemoved extends Mailable
+class OwnerAuthorizedManager extends Mailable
 {
 	use Queueable, SerializesModels;
 
@@ -27,16 +27,25 @@ class OwnerRemoved extends Mailable
 	protected $group;
 
 	/**
+	 * List of people authorized
+	 *
+	 * @var array
+	 */
+	protected $people;
+
+	/**
 	 * Create a new message instance.
 	 *
 	 * @param  User $user
 	 * @param  Group $group
+	 * @param  array $people
 	 * @return void
 	 */
-	public function __construct(User $user, Group $group)
+	public function __construct(User $user, Group $group, $people = array())
 	{
 		$this->user = $user;
 		$this->group = $group;
+		$this->people = $people;
 	}
 
 	/**
@@ -46,11 +55,12 @@ class OwnerRemoved extends Mailable
 	 */
 	public function build()
 	{
-		return $this->markdown('groups::mail.ownerremoved.user')
-					->subject(trans('groups::mail.ownerremoved'))
+		return $this->markdown('groups::mail.ownerauthorized.manager')
+					->subject(trans('groups::mail.ownerauthorized'))
 					->with([
 						'user' => $this->user,
-						'group' => $this->group
+						'group' => $this->group,
+						'people' => $this->people
 					]);
 	}
 }

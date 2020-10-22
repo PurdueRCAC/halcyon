@@ -126,7 +126,7 @@ class Member extends Model
 	 */
 	public function user()
 	{
-		return $this->belongsTo('App\Modules\Users\Models\User', 'userid')->withTrashed();
+		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 			/*->withDefault([
 				'id' => 0,
 				'name' => trans('global.unknown')

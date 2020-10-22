@@ -2,96 +2,152 @@
 
 namespace App\Modules\Groups\Console;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
 use App\Modules\Users\Models\User;
+use App\Modules\Groups\Mail\OwnerRemoved;
+use App\Modules\Groups\Mail\OwnerRemovedManager;
+use App\Modules\History\Models\Log;
+use Carbon\Carbon;
 
 class EmailRemovedCommand extends Command
 {
 	/**
-	 * The console command name.
+	 * The name and signature of the console command.
 	 *
 	 * @var string
 	 */
-	protected $name = 'groups:emailremoved';
+	protected $signature = 'groups:emailremoved {--debug : Output emails rather than sending}';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Email latest Contact Report comments to subscribers.';
+	protected $description = 'Email latest group member removals.';
 
 	/**
 	 * Execute the console command.
 	 */
 	public function handle()
 	{
-		// Get all new comments
-		$comments = Comment::where('notice', '!=', 0)->get();
-		//$comments = Comment::where('notice', '=', 22)->get();
+		$debug = $this->option('debug') ? true : false;
 
-		if (!count($comments))
+		$users = Member::query()
+			->where('notice', '=', 22)
+			->get();
+
+		if (!count($users))
 		{
-			$this->comment('No new comments to email.');
+			$this->comment('No records to email.');
 			return;
 		}
 
-		// Group activity by report so we can determine when to send the report mail
-		$report_activity = array();
-		foreach ($comments as $comment)
+		$group_activity = array();
+		foreach ($users as $user)
 		{
-			if (!isset($report_activity[$comment->contactreportid]))
+			if (!isset($group_activity[$user->groupid]))
 			{
-				$report_activity[$comment->contactreportid] = array();
+				$group_activity[$user->groupid] = array();
 			}
 
-			array_push($report_activity[$comment->contactreportid], $comment);
+			array_push($group_activity[$user->groupid], $user);
 		}
 
-		foreach ($report_activity as $report_id => $comments)
+		$now = Carbon::now()->timestamp;
+		$threshold = 1200;
+
+		foreach ($group_activity as $groupid => $groupusers)
 		{
-			// Email everyone involved in this report
+			$group = Group::find($groupid);
 
-			// Assemble list of people to email
-			$report = Report::find($report_id);
-			$subscribers = $report->commentSubscribers();
-
-			// Send email to each subscriber
-			foreach ($subscribers as $subscriber)
+			if (!$group)
 			{
-				$user = User::find($subscriber);
+				continue;
+			}
+
+			// Find the latest activity
+			$latest = 0;
+			foreach ($groupusers as $g)
+			{
+				if ($g->datecreated->timestamp > $latest)
+				{
+					$latest = $g->datecreated->timestamp;
+				}
+			}
+
+			if ($now - $latest < $threshold)
+			{
+				continue;
+			}
+
+			// Condense people
+			$people = array();
+			foreach ($groupusers as $groupuser)
+			{
+				if (!isset($people[$groupuser->userid]))
+				{
+					$user = $groupuser->user;
+
+					$actor = Log::query()
+						->where('targetuserid', '=', $groupuser->userid)
+						->where('classname', '=', 'groupowner')
+						->where('classmethod', '=', 'delete')
+						->where('groupid', '=', $groupuser->groupid)
+						->limit(1)
+						->first();
+
+					if ($actor)
+					{
+						$user->actor = $actor->user;
+					}
+
+					$people[$groupuser->userid] = $user;
+				}
+			}
+
+			foreach ($people as $userid => $user)
+			{
+				if (!$user)
+				{
+					continue;
+				}
+
+				$message = new OwnerRemoved($user, $group);
+
+				if ($debug)
+				{
+					echo $message->render();
+					continue;
+				}
+
+				Mail::to($user->email)->send($message);
+
+				$this->info("Emailed ownerremoved to {$user->email}.");
+			}
+
+			foreach ($group->managers as $manager)
+			{
+				$user = $manager->user;
 
 				if (!$user)
 				{
 					continue;
 				}
 
-				// Start assembling email
-				foreach ($comments as $comment)
+				$message = new OwnerRemovedManager($user, $group, $people);
+
+				if ($debug)
 				{
-					// Ignore if the subscriber is the commenter
-					if ($comment->userid == $subscriber)
-					{
-						continue;
-					}
-
-					// Prepare and send actual email
-					//Mail::to($user->email)->send(new NewComment($comment));
-					//echo (new NewComment($comment))->render();
-
-					$this->info("Emailed comment #{$comment->id} to {$user->email}.");
+					echo $message->render();
+					continue;
 				}
-			}
 
-			// Change states
-			foreach ($comments as $comment)
-			{
-				$comment->notice = 0;
-				$comment->save();
+				Mail::to($user->email)->send($message);
+
+				$this->info("Emailed ownerremoved to {$user->email}.");
 			}
 		}
 	}

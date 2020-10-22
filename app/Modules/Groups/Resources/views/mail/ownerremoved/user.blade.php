@@ -1,6 +1,7 @@
 @component('mail::message')
-{$comment->comment}
+Hello {{ $user->name }},
 
----
-Posted {{ $comment->datetimecreated->format('F j, Y g:ia') }} by {{ $comment->creator ? $comment->creator->name : 'user ID #' . $comment->userid }} on [Contact Report #{{ $comment->contactreportid }}]({{ route('site.contactreports.show', ['id' => $comment->contactreportid])}}).
+You have been removed as a manager of {{ config('app.name') }} resources. You are no longer able to manage queues for {{ $group->name }}.
+
+You no longer have access to the {{ config('app.name') }} Group and Queue Management web application. Any accounts granted will be removed unless you have explicit authorization for specific queues.
 @endcomponent

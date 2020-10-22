@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Groups\Listeners\AddUserToUnixGroup;
 use Illuminate\Support\Facades\View;
 use App\Modules\Groups\Composers\ProfileComposer;
+use App\Modules\Groups\Console\EmailAuthorizedCommand;
+use App\Modules\Groups\Console\EmailRemovedCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -35,6 +37,7 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
@@ -42,6 +45,19 @@ class ModuleServiceProvider extends ServiceProvider
 		{
 			$this->app['events']->subscribe(new AddUserToUnixGroup);
 		}
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	protected function registerConsoleCommands()
+	{
+		$this->commands([
+			EmailAuthorizedCommand::class,
+			EmailRemovedCommand::class,
+		]);
 	}
 
 	/**

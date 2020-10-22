@@ -2,7 +2,8 @@
 
 namespace App\Modules\Groups\Mail;
 
-use App\Modules\Groups\Models\Member;
+use App\Modules\Groups\Models\Group;
+use App\Modules\Users\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -12,20 +13,30 @@ class OwnerAuthorized extends Mailable
 	use Queueable, SerializesModels;
 
 	/**
-	 * The order instance.
+	 * The User the mail is being sent to
 	 *
-	 * @var Order
+	 * @var User
 	 */
-	protected $member;
+	protected $user;
+
+	/**
+	 * The Group the user is now a manager of
+	 *
+	 * @var Group
+	 */
+	protected $group;
 
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param  User $user
+	 * @param  Group $group
 	 * @return void
 	 */
-	public function __construct(Member $member)
+	public function __construct(User $user, Group $group)
 	{
-		$this->member = $member;
+		$this->user = $user;
+		$this->group = $group;
 	}
 
 	/**
@@ -35,10 +46,11 @@ class OwnerAuthorized extends Mailable
 	 */
 	public function build()
 	{
-		return $this->markdown('groups::mail.ownerauthorized')
+		return $this->markdown('groups::mail.ownerauthorized.user')
 					->subject(trans('groups::mail.ownerauthorized'))
 					->with([
-						'member' => $this->member,
+						'user' => $this->user,
+						'group' => $this->group
 					]);
 	}
 }

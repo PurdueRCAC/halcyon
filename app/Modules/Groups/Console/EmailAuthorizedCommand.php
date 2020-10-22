@@ -2,48 +2,137 @@
 
 namespace App\Modules\Groups\Console;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
 use App\Modules\Users\Models\User;
+use App\Modules\Groups\Mail\OwnerAuthorized;
+use App\Modules\Groups\Mail\OwnerAuthorizedManager;
+use Carbon\Carbon;
 
 class EmailAuthorizedCommand extends Command
 {
 	/**
-	 * The console command name.
+	 * The name and signature of the console command.
 	 *
 	 * @var string
 	 */
-	protected $name = 'groups:emailauthorized';
+	protected $signature = 'groups:emailauthorized {--debug : Output emails rather than sending}';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Email latest Contact Report comments to subscribers.';
+	protected $description = 'Email latest group member authorizations.';
 
 	/**
 	 * Execute the console command.
 	 */
 	public function handle()
 	{
-		// Get all new comments
-		$comments = Comment::where('notice', '!=', 0)->get();
-		//$comments = Comment::where('notice', '=', 22)->get();
+		$debug = $this->option('debug') ? true : false;
 
-		if (!count($comments))
+		$users = Member::query()
+			->where('notice', '=', 21)
+			->get();
+
+		if (!count($users))
 		{
-			$this->comment('No new comments to email.');
+			$this->comment('No records to email.');
 			return;
 		}
 
-					// Prepare and send actual email
-					//Mail::to($user->email)->send(new NewComment($comment));
-					//echo (new NewComment($comment))->render();
+		$group_activity = array();
+		foreach ($users as $user)
+		{
+			if (!isset($group_activity[$user->groupid]))
+			{
+				$group_activity[$user->groupid] = array();
+			}
 
-					$this->info("Emailed comment #{$comment->id} to {$user->email}.");
+			array_push($group_activity[$user->groupid], $user);
+		}
+
+		$now = Carbon::now()->timestamp;
+		$threshold = 1200;
+
+		foreach ($group_activity as $groupid => $groupusers)
+		{
+			$group = Group::find($groupid);
+
+			if (!$group)
+			{
+				continue;
+			}
+
+			// Find the latest activity
+			$latest = 0;
+			foreach ($groupusers as $g)
+			{
+				if ($g->datecreated->timestamp > $latest)
+				{
+					$latest = $g->datecreated->timestamp;
+				}
+			}
+
+			if ($now - $latest < $threshold)
+			{
+				continue;
+			}
+
+			// Condense people
+			$people = array();
+			foreach ($groupusers as $groupuser)
+			{
+				if (!isset($people[$groupuser->userid]))
+				{
+					$people[$groupuser->userid] = $groupuser->user;
+				}
+			}
+
+			foreach ($people as $userid => $user)
+			{
+				if (!$user)
+				{
+					continue;
+				}
+
+				$message = new OwnerAuthorized($user, $group);
+
+				if ($debug)
+				{
+					echo $message->render();
+					continue;
+				}
+
+				Mail::to($user->email)->send($message);
+
+				$this->info("Emailed ownerauthorized to {$user->email}.");
+			}
+
+			foreach ($group->managers as $manager)
+			{
+				$user = $manager->user;
+
+				if (!$user)
+				{
+					continue;
+				}
+
+				$message = new OwnerAuthorizedManager($user, $group, $people);
+
+				if ($debug)
+				{
+					echo $message->render();
+					continue;
+				}
+
+				Mail::to($user->email)->send($message);
+
+				$this->info("Emailed ownerauthorized to {$user->email}.");
+			}
+		}
 	}
 }
