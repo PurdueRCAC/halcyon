@@ -13,6 +13,7 @@ use App\Modules\Queues\Console\EmailQueueRemovedCommand;
 use App\Modules\Queues\Console\EmailQueueRequestedCommand;
 use App\Modules\Queues\Console\EmailWelcomeClusterCommand;
 use App\Modules\Queues\Console\EmailWelcomeFreeCommand;
+use App\Modules\Queues\Console\EmailExpiredCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -64,6 +65,7 @@ class ModuleServiceProvider extends ServiceProvider
 			EmailQueueRequestedCommand::class,
 			EmailWelcomeClusterCommand::class,
 			EmailWelcomeFreeCommand::class,
+			EmailExpiredCommand::class,
 		]);
 	}
 
