@@ -80,4 +80,4 @@ if ($user->can('manage themes'))
 	$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.HELP'), null, 'class:help disabled'));
 }*/
 
-$menu->renderMenu('menu', 'disabled');
+$menu->renderMenu('adminmenu', 'disabled');

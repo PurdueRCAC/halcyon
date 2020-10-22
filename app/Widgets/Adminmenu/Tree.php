@@ -98,7 +98,7 @@ class Tree
 	 * @param   string  $class  Menu class
 	 * @return  void
 	 */
-	public function renderMenu($id = 'menu', $class = '')
+	public function renderMenu($id = 'adminmenu', $class = '')
 	{
 		$depth = 1;
 

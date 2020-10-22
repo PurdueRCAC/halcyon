@@ -490,4 +490,4 @@ if ($params->get('showhelp', 0) == 1)
 	$menu->getParent();
 }*/
 
-$menu->renderMenu('menu');
+$menu->renderMenu('adminmenu');

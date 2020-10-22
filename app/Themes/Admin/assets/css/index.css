@@ -3672,14 +3672,14 @@ div.current li {
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 	zoom: 1;
 
-	ul#menu,
-	ul#menu li,
-	ul#menu ul {
+	ul#adminmenu,
+	ul#adminmenu li,
+	ul#adminmenu ul {
 		list-style: none;
 		margin: 0;
 		padding: 0;
 	}
-	ul#menu {
+	ul#adminmenu {
 		position: relative;
 		padding: 0;
 		font-weight: normal;
@@ -3780,14 +3780,14 @@ div.current li {
 .main-navigation ul {
   list-style: none;
 }
-.main-navigation ul#menu {
+.main-navigation ul#adminmenu {
   z-index: 555;
   display: block;
   margin: 1em 0;
   padding: 0;
   text-align: left;
 }
-.main-navigation ul#menu>li>ul {
+.main-navigation ul#adminmenu>li>ul {
   margin: 0;
   padding: 0;
   position: absolute;
@@ -3804,25 +3804,25 @@ div.current li {
   background: #fff;
   width: 15em;
 }
-.main-navigation ul#menu ul li {
+.main-navigation ul#adminmenu ul li {
   padding: 0.5em 1em;
 }
-.main-navigation ul#menu > li {
+.main-navigation ul#adminmenu > li {
   display: block;
   position: relative;
   margin: 0;
   padding: 0.5em 1em;
 }
-.main-navigation ul#menu li.separator {
+.main-navigation ul#adminmenu li.separator {
   padding: 0;
 }
-.main-navigation ul#menu li.separator span {
+.main-navigation ul#adminmenu li.separator span {
   display: block;
   height: 1px;
   margin: 0 1em;
   background-color: #ddd;
 }
-.main-navigation ul#menu > li:hover>ul {
+.main-navigation ul#adminmenu > li:hover>ul {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -3832,12 +3832,12 @@ div.current li {
   -moz-transition: visibility 0s, opacity 0.3s;
   transition: visibility 0s, opacity 0.3s;
 }/*
-.main-navigation ul#menu > li.active ul {
+.main-navigation ul#adminmenu > li.active ul {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }*/
-.main-navigation ul#menu > li.deeper:after {
+.main-navigation ul#adminmenu > li.deeper:after {
   content: "\2304";
   font-family: Fontcons;
   position: absolute;
@@ -3846,7 +3846,7 @@ div.current li {
   color: rgba(255, 255, 255, 0.4);
   display: none;
 }
-.main-navigation ul#menu > li > a {
+.main-navigation ul#adminmenu > li > a {
   padding: 0.75em 0.9em;
   display: block;
   font-size: 1.2em;
@@ -3883,7 +3883,7 @@ div.current li {
 			content: "\2699";
 		}*/
 }
-.main-navigation ul#menu > li > a:before {
+.main-navigation ul#adminmenu > li > a:before {
   vertical-align: middle;
   margin-right: 1em;
   font-size: 1.2em;
@@ -3901,38 +3901,38 @@ div.current li {
   -o-transition: all 0.2s;
   transition: all 0.2s;
 }
-.main-navigation ul#menu > li > a:hover {
+.main-navigation ul#adminmenu > li > a:hover {
   border: none;
   text-decoration: none;
   background-color: rgba(255, 255, 255, 0.1);
 }
-.main-navigation ul#menu > li > a:hover:before {
+.main-navigation ul#adminmenu > li > a:hover:before {
   color: #fff;
 }
-.main-navigation ul#menu > li.active > a {
+.main-navigation ul#adminmenu > li.active > a {
   background-color: rgba(255, 255, 255, 0.1);
 }
-.main-navigation ul#menu > li.active > a:before {
+.main-navigation ul#adminmenu > li.active > a:before {
   color: #fff;
 }
-.main-navigation ul#menu.disabled li a:before,
-.main-navigation ul#menu.disabled > li:hover > a:before,
-.main-navigation ul#menu.disabled > li:focus > a:before,
-.main-navigation ul#menu.disabled li > a:hover:before,
-.main-navigation ul#menu.disabled li > a:focus:before {
+.main-navigation ul#adminmenu.disabled li a:before,
+.main-navigation ul#adminmenu.disabled > li:hover > a:before,
+.main-navigation ul#adminmenu.disabled > li:focus > a:before,
+.main-navigation ul#adminmenu.disabled li > a:hover:before,
+.main-navigation ul#adminmenu.disabled li > a:focus:before {
   color: rgba(255, 255, 255, 0.2);
 }
-.main-navigation ul#menu.disabled > li a:hover,
-.main-navigation ul#menu.disabled > li a:focus {
+.main-navigation ul#adminmenu.disabled > li a:hover,
+.main-navigation ul#adminmenu.disabled > li a:focus {
   background-color: transparent;
 }
-.menu-open ul#menu > li > a {
+.menu-open ul#adminmenu > li > a {
   color: rgba(255, 255, 255, 0.6);
 }
-.menu-open ul#menu > li > a:hover {
+.menu-open ul#adminmenu > li > a:hover {
   color: #fff;
 }
-.menu-open ul#menu > li.deeper:after {
+.menu-open ul#adminmenu > li.deeper:after {
   display: block;
 }
 .main-navigation .badge {
@@ -3953,7 +3953,7 @@ div.current li {
 		padding: 0 8em 0 2.23606798em;
 		.clearfix();
 
-		ul#menu {
+		ul#adminmenu {
 			min-height: 3.8em;
 			border-left: 1px solid rgba(0, 0, 0, 0.1);
 
@@ -4064,7 +4064,7 @@ div.current li {
 		z-index: 1000;
 		left: -200px;
 
-		ul#menu {
+		ul#adminmenu {
 			li.node>a:after {
 				content: "\2304";
 				font-family: "Fontcons";
@@ -5949,38 +5949,38 @@ a.menulist:hover:before {
     color: #fff;
   }
   /*#header .user-options li a:before,
-  .main-navigation ul#menu > li > a:before,
-  .menu-open ul#menu > li > a,
+  .main-navigation ul#adminmenu > li > a:before,
+  .menu-open ul#adminmenu > li > a,
   .menu-open #header .user-options li a {
     color: rgba(41, 41, 48, 0.5);
   }
   #header .user-options li:hover a:before,
   #header .user-options li a:hover:before,
-  .main-navigation ul#menu > li.active > a:before,
-  .main-navigation ul#menu > li:hover > a:before,
-  .main-navigation ul#menu > li > a:hover:before,
-  .menu-open ul#menu > li > a:hover {
+  .main-navigation ul#adminmenu > li.active > a:before,
+  .main-navigation ul#adminmenu > li:hover > a:before,
+  .main-navigation ul#adminmenu > li > a:hover:before,
+  .menu-open ul#adminmenu > li > a:hover {
     color: rgba(41, 41, 48, 1);
   }
   #header .user-options li:hover a,
   #header .user-options li a:hover,
-  .main-navigation ul#menu > li.active > a,
-  .main-navigation ul#menu > li > a:hover,
-  .main-navigation ul#menu > li > a:active,
-  .main-navigation ul#menu > li > a:focus {
+  .main-navigation ul#adminmenu > li.active > a,
+  .main-navigation ul#adminmenu > li > a:hover,
+  .main-navigation ul#adminmenu > li > a:active,
+  .main-navigation ul#adminmenu > li > a:focus {
     background-color: rgba(0, 0, 0, 0.1);
   }
-  .main-navigation ul#menu.disabled li a:before,
-  .main-navigation ul#menu.disabled > li:hover > a:before,
-  .main-navigation ul#menu.disabled > li:focus > a:before,
-  .main-navigation ul#menu.disabled li > a:hover:before,
-  .main-navigation ul#menu.disabled li > a:focus:before {
+  .main-navigation ul#adminmenu.disabled li a:before,
+  .main-navigation ul#adminmenu.disabled > li:hover > a:before,
+  .main-navigation ul#adminmenu.disabled > li:focus > a:before,
+  .main-navigation ul#adminmenu.disabled li > a:hover:before,
+  .main-navigation ul#adminmenu.disabled li > a:focus:before {
     color: rgba(0, 0, 0, 0.2);
   }
-  .main-navigation ul#menu ul a {
+  .main-navigation ul#adminmenu ul a {
     color: rgba(0, 0, 0, 0.6);
   }
-  .main-navigation ul#menu ul a:hover {
+  .main-navigation ul#adminmenu ul a:hover {
     color: #222;
   }
   .hamburger .hamburger-inner,
