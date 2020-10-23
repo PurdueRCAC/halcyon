@@ -1,0 +1,8 @@
+{
+    "name": "Activity",
+    "alias": "activity",
+    "description": "This widget shows on the Admin area Home Page and displays the most recent activity",
+    "keywords": [],
+    "active": 1,
+    "requires": []
+}

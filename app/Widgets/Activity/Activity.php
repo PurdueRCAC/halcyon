@@ -5,15 +5,15 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace App\Widgets\Groups;
+namespace App\Widgets\Activity;
 
 use App\Modules\Widgets\Entities\Widget;
-use App\Modules\Groups\Models\Group;
+use App\Modules\History\Models\Log;
 
 /**
- * Module class for user data
+ * Module class for user activity
  */
-class Groups extends Widget
+class Activity extends Widget
 {
 	/**
 	 * Display widget contents
@@ -27,15 +27,15 @@ class Groups extends Widget
 			return;
 		}
 
-		$groups = Group::query()
-			//->orderBy('datetimecreated', 'desc')
-			->withCount('members')
-			->limit($this->params->get('limit', 10))
+		$activity = Log::query()
+			->where('transportmethod', '!=', 'GET')
+			->limit($this->model->params->get('limit', 10))
+			->orderBy('datetime', 'desc')
 			->get();
 
 		return view($this->getViewName('index'), [
-			'groups' => $groups,
 			'widget' => $this->model,
+			'activity' => $activity
 		]);
 	}
 }

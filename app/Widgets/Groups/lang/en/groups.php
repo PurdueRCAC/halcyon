@@ -9,6 +9,12 @@ return [
 	'widget name' => 'Members',
 	'widget desc' => 'This module shows on the Admin area Home Page and displays items that administrator needs to watch for.',
 
+	'recent' => 'Recently created groups',
+	'view all' => 'View all',
+	'name' => 'Name',
+	'members' => 'Members',
+	'created' => 'Created',
+
 	'CACHE_DESC' => 'Select whether to cache the content of this module',
 	'CACHE_GLOBAL' => 'Use global',
 	'CACHE_NONE' => 'No caching',

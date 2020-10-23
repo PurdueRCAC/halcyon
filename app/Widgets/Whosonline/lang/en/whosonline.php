@@ -10,11 +10,11 @@ return [
 	'widget desc' => 'Admin: This module shows a list of the currently logged in users. Site: This module displays the number of Guests and Registered Users currently accessing the site.',
 
 	// Site
-	'GUESTS' => 'Guests',
-	'LOGGEDIN' => 'Logged In',
-	'LOGGEDIN_NAME' => 'Name',
-	'LOGGEDIN_VIEW_PROFILE' => 'view profile &rsaquo;',
-	'VIEW_ALL_ACTIVITIY' => 'View all activity',
+	'who is online' => 'Who is online',
+	'guests' => 'Guests',
+	'logged in' => 'Logged In',
+	'name' => 'Name',
+	'view profile' => 'view profile',
 
 	// Site Params
 	'SHOWMODE_DESC' => 'Select what shall be shown',
@@ -30,10 +30,10 @@ return [
 	'location' => 'Location',
 	'last activity' => 'Last Activity',
 	'logout' => 'Logout',
-	'EDIT_USER' => 'Edit User',
-	'HOURS_AGO' => ':time hours ago',
+	'edit user' => 'Edit User',
+	//'HOURS_AGO' => ':time hours ago',
 	'no results' => 'Currently there are no users online.',
-	'view all' => '&lsaquo; View all &rsaquo;',
+	'view all' => 'View all',
 
 	// Admin Params
 	'LIMIT_DESC' => 'Number of people to display in module.',

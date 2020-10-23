@@ -5,15 +5,16 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 ?>
-<div class="widget <?php echo $widget->module; ?>" id="<?php echo $widget->module . $widget->id; ?>">
-	<table class="adminlist whosonline-list">
+<div class="card widget {{ $widget->widget }}" id="{{ $widget->widget . $widget->id }}">
+	<table class="table table-hover whosonline-list">
+		<caption>{{ trans('widget.whosonline::whosonline.who is online') }}</caption>
 		<thead>
 			<tr>
-				<th scope="col"><?php echo trans('widget.whosonline::whosonline.user'); ?></td>
-				<th scope="col" class="priority-3"><?php echo trans('widget.whosonline::whosonline.last activity'); ?></th>
-				<?php if ($editAuthorized): ?>
-					<th scope="col"><?php echo trans('widget.whosonline::whosonline.logout'); ?></th>
-				<?php endif; ?>
+				<th scope="col">{{ trans('widget.whosonline::whosonline.user') }}</td>
+				<th scope="col" class="priority-3">{{ trans('widget.whosonline::whosonline.last activity') }}</th>
+				@if ($editAuthorized)
+					<th scope="col" class="text-right">{{ trans('widget.whosonline::whosonline.logout') }}</th>
+				@endif
 			</tr>
 		</thead>
 		<tbody>
@@ -29,10 +30,10 @@
 
 								// Display link if we are authorized
 								if ($editAuthorized && $user):
-									echo '<a href="' . url('index.php?option=com_members&task=edit&id='. $user->id) . '" title="' . trans('widget.whosonline::whosonline.EDIT_USER') . '">' . e($user->name) . ' [' . e($user->username) . ']' . '</a>';
+									echo '<a href="' . route('admin.users.edit', ['id' => $user->id]) . '" title="' . trans('widget.whosonline::whosonline.edit user') . '">' . e($user->name) . ' (' . e($user->username) . ')</a>';
 								else:
 									if ($user):
-										echo e($user->name) . ' [' . e($user->username) . ']';
+										echo e($user->name) . ' (' . e($user->username) . ')';
 									else:
 										echo trans('global.guest');
 									endif;
@@ -40,27 +41,29 @@
 								?>
 							</td>
 							<td class="priority-3">
-								<?php echo Carbon\Carbon::parse($row->last_activity)->diffForHumans(); ?>
+								{{ Carbon\Carbon::parse($row->last_activity)->diffForHumans() }}
 							</td>
-							<td>
-								<?php if ($editAuthorized && $user): ?>
-									<a class="btn btn-sm btn-danger force-logout" href="<?php echo route('admin.users.edit', ['id' => $row->user_id]); ?>">
-										<span><?php echo trans('widget.whosonline::whosonline.logout'); ?></span>
+							@if ($editAuthorized)
+							<td class="text-right">
+								@if ($user)
+									<a class="btn btn-sm btn-danger force-logout" href="{{ route('admin.users.edit', ['id' => $row->user_id]) }}">
+										{{ trans('widget.whosonline::whosonline.logout') }}
 									</a>
-								<?php endif; ?>
+								@endif
 							</td>
+							@endif
 						</tr>
 					<?php endif; ?>
 				<?php endforeach; ?>
 				<tr>
-					<td colspan="<?php echo ($editAuthorized) ? 3 : 2; ?>" class="view-all">
-						<a href="<?php echo route('admin.users.index'); ?>"><?php echo trans('widget.whosonline::whosonline.view all'); ?></a>
+					<td colspan="{{ ($editAuthorized ? 3 : 2) }}" class="view-all text-center">
+						<a class="btn btn-secondary" href="{{ route('admin.users.index') }}">{{ trans('widget.whosonline::whosonline.view all') }}</a>
 					</td>
 				</tr>
 			<?php else : ?>
 				<tr>
-					<td colspan="<?php echo ($editAuthorized) ? 3 : 2; ?>">
-						<?php echo trans('widget.whosonline::whosonline.no results'); ?>
+					<td colspan="{{ ($editAuthorized ? 3 : 2) }}">
+						{{ trans('widget.whosonline::whosonline.no results') }}
 					</td>
 				</tr>
 			<?php endif; ?>

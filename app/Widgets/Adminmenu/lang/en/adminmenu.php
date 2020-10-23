@@ -6,8 +6,8 @@
  */
 
 return [
-	'widget_name' => 'Administrator Menu',
-	'widget_desc' => 'This module shows the main admin navigation module',
+	'widget name' => 'Administrator Menu',
+	'widget desc' => 'This module shows the main admin navigation module',
 
 	// Site
 	'configuration' => 'Configuration',
