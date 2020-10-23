@@ -20,6 +20,7 @@ return [
 	'assigned roles' => 'Assigned Roles',
 	// Status
 	'status' => 'Status',
+	'status trashed' => 'Trashed',
 	'status blocked' => 'Disabled',
 	'status enabled' => 'Enabled',
 	'status pending' => 'Pending',
@@ -33,6 +34,7 @@ return [
 	'status incomplete' => 'Incomplete (%s)',
 	'status incomplete details' => 'Registration via 3rd-party authenticator but hasn\'t completed the process.',
 	// Actions
+	'trashed on' => 'Removed on :date',
 	'block this user' => 'Disable this account',
 	'block user' => 'Disable',
 	'unblock user' => 'Unblock',

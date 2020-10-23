@@ -20,12 +20,12 @@ app('pathway')
 		!!}
 	@endif
 
-	@if (auth()->user()->can('create queues'))
-		{!! Toolbar::addNew(route('admin.queues.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete queues'))
 		{!! Toolbar::deleteList('', route('admin.queues.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create queues'))
+		{!! Toolbar::addNew(route('admin.queues.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin queues'))

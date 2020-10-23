@@ -9,12 +9,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create tags'))
-		{!! Toolbar::addNew(route('admin.tags.delete')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete tags'))
 		{!! Toolbar::deleteList('', route('admin.tags.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create tags'))
+		{!! Toolbar::addNew(route('admin.tags.delete')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin tags'))

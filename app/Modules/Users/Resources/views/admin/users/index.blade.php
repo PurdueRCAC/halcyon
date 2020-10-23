@@ -16,20 +16,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('edit.state users'))
-		{!!
-			Toolbar::publishList(route('admin.users.confirm'), 'users::users.confirm');
-			Toolbar::unpublishList(route('admin.users.unconfirm'), 'users::users.unconfirm');
-			Toolbar::spacer();
-		!!}
+	@if (auth()->user()->can('delete users'))
+		{!! Toolbar::deleteList('', route('admin.users.delete')) !!}
 	@endif
 
 	@if (auth()->user()->can('create users'))
 		{!! Toolbar::addNew(route('admin.users.create')) !!}
-	@endif
-
-	@if (auth()->user()->can('delete users'))
-		{!! Toolbar::deleteList('', route('admin.users.delete')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin users'))
@@ -66,38 +58,12 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col col-xs-12 col-sm-9 text-right filter-select">
-				<!-- <label class="sr-only" for="filter-emailConfirmed"></label>
-				<select name="filter_activation" id="filter-emailConfirmed" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['activation'] == 0) { echo ' selected="selected"'; } ?>>{{ trans('users::users.select email confirmed') }}</option>
-					<option value="1"<?php if ($filters['activation'] == 1) { echo ' selected="selected"'; } ?>>{{ trans('users::users.email confirmed') }}</option>
-					<option value="-1"<?php if ($filters['activation'] == -1) { echo ' selected="selected"'; } ?>>{{ trans('users::users.email unconfirmed') }}</option>
-				</select>
-
-				<label class="sr-only" for="filter-access">{{ trans('global.access') }}:</label>
-				<select name="access" id="filter-access" class="form-control filter filter-submit">
-					<option value="">{{ trans('users::users.select access') }}</option>
-					<?php foreach (App\Halcyon\Access\Viewlevel::all() as $access): ?>
-						<option value="{{ $access->id }}"<?php if ($filters['access'] == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
-					<?php endforeach; ?>
-				</select> -->
-
 				<label class="sr-only" for="filter-state">{{ trans('users::users.state') }}:</label>
 				<select name="state" id="filter-state" class="form-control filter filter-submit">
 					<option value="*">{{ trans('users::users.select state') }}</option>
-					<option value="pending"<?php if ($filters['state'] == 'pending'): echo ' selected="selected"'; endif;?>>{{ trans('users::users.status pending') }}</option>
 					<option value="enabled"<?php if ($filters['state'] == 'enabled'): echo ' selected="selected"'; endif;?>>{{ trans('users::users.status enabled') }}</option>
-					<option value="disabled"<?php if ($filters['state'] == 'disabled'): echo ' selected="selected"'; endif;?>>{{ trans('users::users.status blocked') }}</option>
+					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('users::users.status trashed') }}</option>
 				</select>
-
-				<!--
-				<label class="sr-only" for="filter-approved">{{ trans('users::users.approved') }}:</label>
-				<select name="approved" id="filter-approved" class="form-control filter filter-submit">
-					<option value="*">{{ trans('users::users.select approved status') }}</option>
-					<?php foreach (App\Modules\Users\Helpers\Admin::getApprovedOptions() as $value => $text): ?>
-						<option value="{{ $value }}"<?php if ($filters['approved'] === $value): echo ' selected="selected"'; endif;?>>{{ $text }}</option>
-					<?php endforeach; ?>
-				</select>
-				`-->
 
 				<label class="sr-only" for="filter-role_id">{{ trans('users::users.usergroup') }}:</label>
 				<select name="role_id" id="filter-role_id" class="form-control filter filter-submit">
@@ -205,11 +171,6 @@ app('pathway')
 					{{ $row->id }}
 				</td>
 				<td>
-					<?php if ($canChange) : ?>
-						<a class="permissions glyph icon-settings tip" href="{{ route('admin.users.debug', ['id' => $row->id]) }}" title="{{ trans('users::users.debug user') }}">
-							{{ trans('users::users.debug user') }}
-						</a> &nbsp;
-					<?php endif; ?>
 					<?php if ($canEdit) : ?>
 						<a href="{{ route('admin.users.edit', ['id' => $row->id]) }}">
 							{{ $row->name }}
@@ -241,6 +202,11 @@ app('pathway')
 					<?php endif; ?>
 				</td>
 				<td class="center priority-3">
+					<?php if ($canChange) : ?>
+						<a class="permissions glyph icon-settings tip" href="{{ route('admin.users.debug', ['id' => $row->id]) }}" data-tip="{{ trans('users::users.debug user') }}">
+							{{ trans('users::users.debug user') }}
+						</a> &nbsp;
+					<?php endif; ?>
 					<?php if (substr_count($row->role_names, "\n") > 1) : ?>
 						<span class="hasTip" title="{{ trans('users::users.roles') . '::' . $row->role_names }}">{{ trans('users::users.roles') }}</span>
 					<?php else : ?>
@@ -248,7 +214,16 @@ app('pathway')
 					<?php endif; ?>
 				</td>
 				<td class="priority-4">
-					<?php if ($row->block): ?>
+					@if ($row->isTrashed())
+						<span class="badge state trashed">
+							{{ trans('users::users.status trashed') }}
+						</span>
+					@else
+						<span class="badge state on">
+							{{ trans('users::users.status enabled') }}
+						</span>
+					@endif
+					<?php /*if ($row->isTrashed()): ?>
 						<div class="btn-group btn-group-sm dropdown user-state blocked">
 							<button type="button" class="btn btn-secondary btn-danger dropdown-toggle" id="btnGroupDrop{{ $row->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								{{ trans('users::users.status blocked') }}
@@ -262,27 +237,6 @@ app('pathway')
 							<?php endif; ?>
 						</div>
 					<?php else : ?>
-						<?php if (!$row->email_verified_at): ?>
-							<div class="btn-group btn-group-sm dropdown user-state unconfrmed" role="group" aria-label="User state">
-								<button type="button" class="btn btn-secondary btn-warning dropdown-toggle" id="btnGroupDrop{{ $row->id }}" title="{{ trans('users::users.status unverified') }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									{{ trans('users::users.status pending') }}
-								</button>
-								<?php if ($canChange) : ?>
-									<ul class="dropdown-menu" aria-labelledby="btnGroupDrop{{ $row->id }}">
-										<li class="dropdown-item">
-											<a class="grid-action" data-id="cb<?php echo $i; ?>" data-task="confirm" href="#toggle"><i class="fa fa-check" aria-hidden="true"></i> {{ trans('users::users.confirm email') }}</a>
-										</li>
-										<li class="dropdown-item">
-											<a class="grid-action" data-id="cb<?php echo $i; ?>" data-task="resendConfirm" href="#toggle"><i class="fa fa-envelope" aria-hidden="true"></i> {{ trans('users::users.resend confirmation') }}</a>
-										</li>
-										<li class="divider"></li>
-										<li class="dropdown-item">
-											<a class="grid-action" data-id="cb<?php echo $i; ?>" data-task="disable" href="#toggle"><i class="fa fa-ban" aria-hidden="true"></i> {{ trans('users::users.block user') }}</a>
-										</li>
-									</ul>
-								<?php endif; ?>
-							</div>
-						<?php  else: ?>
 							<div class="btn-group btn-group-sm dropdown user-state confirmed approved enabled" role="group" aria-label="User state">
 								<button type="button" class="btn btn-secondary btn-success dropdown-toggle" title="{{ trans('users::users.status approved') }}" id="btnGroupDrop{{ $row->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									{{ trans('users::users.status enabled') }}
@@ -290,17 +244,12 @@ app('pathway')
 								<?php if ($canChange) : ?>
 									<ul class="dropdown-menu" aria-labelledby="btnGroupDrop{{ $row->id }}">
 										<li class="dropdown-item">
-											<a class="grid-action" data-id="cb<?php echo $i; ?>" data-task="disapprove" href="#toggle"><i class="fa fa-envelope" aria-hidden="true"></i> {{ trans('users::users.unconfirm email') }}</a>
-										</li>
-										<li class="divider"></li>
-										<li class="dropdown-item">
 											<a class="grid-action" data-id="cb<?php echo $i; ?>" data-task="block" href="{{ route('admin.users.block', ['id' => $row->id]) }}"><i class="fa fa-ban" aria-hidden="true"></i> {{ trans('users::users.block user') }}</a>
 										</li>
 									</ul>
 								<?php endif; ?>
 							</div>
-						<?php endif; ?>
-					<?php endif; ?>
+					<?php endif;*/ ?>
 				</td>
 				<td class="priority-6">
 					<?php if (!$row->hasVisited()) : ?>

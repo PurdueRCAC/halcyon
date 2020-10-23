@@ -37,7 +37,7 @@ app('pathway')
 @section('content')
 <form action="{{ route('admin.users.levels.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.validation failed') }}">
 	<div class="row">
-		<div class="col col-md-7">
+		<div class="col col-md-6">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
@@ -47,7 +47,8 @@ app('pathway')
 					<span class="form-text text-muted">{{ trans('users::access.title desc') }}</span>
 				</div>
 			</fieldset>
-
+		</div>
+		<div class="col col-md-6">
 			<fieldset class="adminform">
 				<legend>{{ trans('users::access.roles having access') }}</legend>
 
@@ -72,10 +73,12 @@ app('pathway')
 								$level = $role->countDescendents();
 								?>
 								<li>
-									<input type="checkbox" name="fields[rules][]" value="{{ $role->id }}" id="{{ $eid }}"<?php echo $checked . $rel; ?> />
-									<label for="{{ $eid }}">
-										<?php echo str_repeat('<span class="gi">|&mdash;</span>', $level) . $role->title; ?>
-									</label>
+									<div class="form-check">
+										<input type="checkbox" class="form-check-input" name="fields[rules][]" value="{{ $role->id }}" id="{{ $eid }}"<?php echo $checked . $rel; ?> />
+										<label class="form-check-label" for="{{ $eid }}">
+											<?php echo str_repeat('<span class="gi">|&mdash;</span>', $level) . $role->title; ?>
+										</label>
+									</div>
 								</li>
 								<?php
 							endif;
@@ -85,20 +88,9 @@ app('pathway')
 				</div>
 			</fieldset>
 		</div>
-		<div class="col col-md-5">
-			<table class="meta">
-				<tbody>
-					<tr>
-						<th scope="row">{{ trans('users::access.id') }}:</th>
-						<td>
-							{{ $row->id }}
-							<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
 	</div>
+
+	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 
 	@csrf
 </form>

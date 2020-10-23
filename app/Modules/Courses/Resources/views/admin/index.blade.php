@@ -13,12 +13,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create courses'))
-		{!! Toolbar::addNew(route('admin.courses.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete courses'))
 		{!! Toolbar::deleteList('', route('admin.courses.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create courses'))
+		{!! Toolbar::addNew(route('admin.courses.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin courses'))

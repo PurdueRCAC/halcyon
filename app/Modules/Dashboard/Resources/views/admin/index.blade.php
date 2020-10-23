@@ -12,7 +12,7 @@
 <div class="contianer-fluid width-100">
 	<div class="row">
 		<div class="col-md-12 hero">
-			@widget('cpanelhero')
+			@widget('hero')
 		</div>
 	</div>
 	<div class="row">
@@ -20,7 +20,7 @@
 			@widget('icon')
 		</div>
 		<div class="col-md-6">
-			@widget('cpanel')
+			@widget('dashboard')
 		</div>
 	</div>
 </div>

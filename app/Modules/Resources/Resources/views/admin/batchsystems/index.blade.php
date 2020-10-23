@@ -13,12 +13,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create resources.batchsystems'))
-		{!! Toolbar::addNew(route('admin.resources.batchsystems.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete resources'))
 		{!! Toolbar::deleteList('', route('admin.resources.batchsystems.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create resources.batchsystems'))
+		{!! Toolbar::addNew(route('admin.resources.batchsystems.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin resources.batchsystems'))

@@ -20,12 +20,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create news'))
-		{!! Toolbar::addNew(route('admin.news.updates.create', ['article' => $article->id])) !!}
-	@endif
-
 	@if (auth()->user()->can('delete news'))
 		{!! Toolbar::deleteList('', route('admin.news.updates.delete', ['article' => $article->id])) !!}
+	@endif
+
+	@if (auth()->user()->can('create news'))
+		{!! Toolbar::addNew(route('admin.news.updates.create', ['article' => $article->id])) !!}
 	@endif
 
 	@if (auth()->user()->can('admin news'))

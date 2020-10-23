@@ -12,12 +12,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create users.levels'))
-		{!! Toolbar::addNew(route('admin.users.levels.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete users.levels'))
 		{!! Toolbar::deleteList('', route('admin.users.levels.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create users.levels'))
+		{!! Toolbar::addNew(route('admin.users.levels.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin users'))

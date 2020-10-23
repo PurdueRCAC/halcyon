@@ -17,12 +17,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create knowledge'))
-		{!! Toolbar::addNew(route('admin.knowledge.blocks.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete knowledge'))
 		{!! Toolbar::deleteList('', route('admin.knowledge.blocks.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create knowledge'))
+		{!! Toolbar::addNew(route('admin.knowledge.blocks.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin knowledge'))

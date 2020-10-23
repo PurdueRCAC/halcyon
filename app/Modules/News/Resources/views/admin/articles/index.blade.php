@@ -21,12 +21,12 @@ else
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create news'))
-		{!! Toolbar::addNew(route('admin.news.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete news'))
 		{!! Toolbar::deleteList('', route('admin.news.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create news'))
+		{!! Toolbar::addNew(route('admin.news.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin news'))
@@ -184,7 +184,7 @@ else
 				<td class="priority-4 text-nowrap">
 					@if ($row->hasStart())
 						<time datetime="{{ $row->datetimenews->format('Y-m-d\TH:i:s\Z') }}">
-							{{ $row->datetimenews->format('F j, Y g:ia') }}
+							{{ $row->datetimenews->format('M j, Y g:ia') }}
 						</time>
 					@else
 						<span class="none">{{ trans('global.none') }}</span>
@@ -194,7 +194,7 @@ else
 					@if ($row->hasStart())
 						@if ($row->hasEnd())
 							<time datetime="{{ $row->datetimenewsend->format('Y-m-d\TH:i:s\Z') }}">
-								{{ $row->datetimenewsend->format('F j, Y g:ia') }}
+								{{ $row->isSameDay() ? $row->datetimenewsend->format('g:ia') : $row->datetimenewsend->format('M j, Y g:ia') }}
 							</time>
 						@else
 							<span class="never">{{ trans('global.never') }}</span>

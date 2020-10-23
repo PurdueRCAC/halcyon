@@ -91,11 +91,11 @@ app('pathway')
 				Toolbar::spacer();
 			!!}
 		@endif
-		@if (auth()->user()->can('create menus'))
-			{!! Toolbar::addNew(route('admin.menus.items.create', ['menutype' => $filters['menutype']])) !!}
-		@endif
 		@if (auth()->user()->can('delete menus'))
 			{!! Toolbar::deleteList('', route('admin.menus.items.delete')) !!}
+		@endif
+		@if (auth()->user()->can('create menus'))
+			{!! Toolbar::addNew(route('admin.menus.items.create', ['menutype' => $filters['menutype']])) !!}
 		@endif
 		@if (auth()->user()->can('admin menus'))
 			{!!
@@ -180,7 +180,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 		<thead>
 			<tr>
 				<th>
-					<span class="form-check"><input type="checkbox" name="toggle" value="" id="toggle-all" class="form-check-input checkbox-toggle toggle-all" /><label for="toggle-all"></label></span>
+					<span class="form-check"><input type="checkbox" name="toggle" value="" id="toggle-all" class="form-check-input checkbox-toggle toggle-all" /> <label for="toggle-all" class="sr-only">Check all</label></span>
 				</th>
 				<th scope="col" class="priority-5">{{ trans('menus::menus.id') }}</th>
 				<th scope="col">{{ trans('menus::menus.title') }}</th>
@@ -244,7 +244,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 					@endif
 					@if ($row->type != 'separator')
 						<p class="smallsub" title="{{ $row->path }}">
-							{!! str_repeat('<span class="gtr">|&mdash;</span>', $row->level - 1) !!}
+							{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level - 1) !!}
 							@if ($row->type != 'url')
 								@if (empty($row->note))
 									/{{ trim($row->link, '/') }}
@@ -295,7 +295,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 					@endif
 				</td>
 				<td class="center priority-4">
-					<span class="access {{ preg_replace('/[^a-z0-9\-_]+/', '', strtolower($row->access_level)) }}">{{ $row->access_level }}</span>
+					<span class="badge access {{ preg_replace('/[^a-z0-9\-_]+/', '', strtolower($row->access_level)) }}">{{ $row->access_level }}</span>
 				</td>
 				<td class="order">
 					<?php /*$orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>

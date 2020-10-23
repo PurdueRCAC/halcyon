@@ -13,8 +13,8 @@ app('pathway')
 
 @section('toolbar')
 	@if (auth()->user()->can('edit tags'))
-		{!! Toolbar::addNew(route('admin.tags.delete')) !!}
 		{!! Toolbar::deleteList('', route('admin.tags.delete')) !!}
+		{!! Toolbar::addNew(route('admin.tags.delete')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin tags'))

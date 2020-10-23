@@ -12,7 +12,7 @@
 
 */
 
-	/* Base styles for dropdown menu */
+	/* Base styles for dropdown menu 
 	#main .btn {
 		display: inline-block;
 		padding: 0.7em;
@@ -110,7 +110,7 @@
 		clear: both;
 	}
 
-	/* Account states */
+	/* Account states 
 	.user-state .dropdown-menu,
 	.user-state {
 		border: 1px solid rgba(0, 0, 0, 0.1);
@@ -162,7 +162,7 @@
 	}
 	.blocked span.dropdown-toggle:before {
 		border-top-color: #dd5555;
-	}
+	}*/
 	.icon-resend:before {
 		font-family: "Fontcons";
 		content: "\f03f";
@@ -209,9 +209,6 @@
 	.authenticator-status {
 		color: red;
 		border-color: red;
-	}
-	.never {
-		color: #bbb;
 	}
 	.unconfirmed {
 		display: block;

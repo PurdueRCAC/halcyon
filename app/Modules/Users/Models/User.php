@@ -27,6 +27,7 @@ use App\Modules\Users\Events\UserCreated;
 use App\Modules\Users\Events\UserUpdating;
 use App\Modules\Users\Events\UserUpdated;
 use App\Modules\Users\Events\UserDeleted;
+use Carbon\Carbon;
 
 /**
  * Module extension model
@@ -134,9 +135,9 @@ class User extends Model implements
 	 **/
 	public function isTrashed()
 	{
-		$username = $this->getUserUsername();
+		//$username = $this->getUserUsername();
 
-		return ($username->dateremoved && $username->dateremoved != '0000-00-00 00:00:00' && $username->dateremoved != '-0001-11-30 00:00:00');
+		return ($this->dateremoved && $this->dateremoved != '0000-00-00 00:00:00' && $this->dateremoved != '-0001-11-30 00:00:00');
 	}
 
 	public function getUserUsername()
@@ -165,37 +166,85 @@ class User extends Model implements
 
 	public function hasVisited()
 	{
-		$last = $this->getUserUsername()->datelastseen;
+		$last = $this->lastVisit;
 		return ($last && $last != '0000-00-00 00:00:00' && $last != '-0001-11-30 00:00:00');
 	}
 
 	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
-	 * @return  array
+	 * @return  string
+	 */
+	public function getUnixidAttribute()
+	{
+		return $this->getUserUsername()->unixid;
+	}
+
+	/**
+	 * Gets an array of the authorised access levels for the user
+	 *
+	 * @return  string
+	 */
+	public function getDateremovedAttribute()
+	{
+		if (isset($this->attributes['dateremoved']))
+		{
+			if (!($this->attributes['dateremoved'] instanceof Carbon))
+			{
+				$this->attributes['dateremoved'] = Carbon::parse($this->attributes['dateremoved']);
+			}
+			return $this->attributes['dateremoved'];
+		}
+		return $this->getUserUsername()->dateremoved;
+	}
+
+	/**
+	 * Gets an array of the authorised access levels for the user
+	 *
+	 * @return  string
 	 */
 	public function getUsernameAttribute()
 	{
+		if (isset($this->attributes['username']))
+		{
+			return $this->attributes['username'];
+		}
 		return $this->getUserUsername()->username;
 	}
 
 	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
-	 * @return  array
+	 * @return  string
 	 */
 	public function getCreatedAtAttribute()
 	{
+		if (isset($this->attributes['datecreated']))
+		{
+			if (!($this->attributes['datecreated'] instanceof Carbon))
+			{
+				$this->attributes['datecreated'] = Carbon::parse($this->attributes['datecreated']);
+			}
+			return $this->attributes['datecreated'];
+		}
 		return $this->getUserUsername()->datecreated;
 	}
 
 	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
-	 * @return  array
+	 * @return  string
 	 */
 	public function getLastVisitAttribute()
 	{
+		if (isset($this->attributes['lastseen']))
+		{
+			if (!($this->attributes['lastseen'] instanceof Carbon))
+			{
+				$this->attributes['lastseen'] = Carbon::parse($this->attributes['lastseen']);
+			}
+			return $this->attributes['lastseen'];
+		}
 		return $this->getUserUsername()->datelastseen;
 	}
 

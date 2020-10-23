@@ -24,12 +24,12 @@ app('pathway')
 		!!}
 	@endif
 
-	@if (auth()->user()->can('create widgets'))
-		{!! Toolbar::addNew(route('admin.widgets.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete widgets'))
 		{!! Toolbar::deleteList(trans('widgets::widgets.confirm delete'), route('admin.widgets.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create widgets'))
+		{!! Toolbar::addNew(route('admin.widgets.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin widgets'))
@@ -256,13 +256,15 @@ app('pathway')
 
 	<input type="hidden" name="boxchecked" value="0" />
 
-	<div id="new-widget" class="hide">
-		<h2 class="modal-title">{{ trans('widgets::widgets.TYPE_CHOOSE') }}</h2>
+	<div id="new-widget" class="hide" title="{{ trans('widgets::widgets.choose type') }}">
+		<h2 class="modal-title sr-only">{{ trans('widgets::widgets.choose type') }}</h2>
 
-		<table id="new-modules-list" class="adminlist">
+		<div class="card">
+		<table id="new-modules-list" class="table table-hover adminlist">
+			<caption class="sr-only">{{ trans('widgets::widgets.available widgets') }}</caption>
 			<thead>
 				<tr>
-					<th scope="col">{{ trans('globa.title') }}</th>
+					<th scope="col">{{ trans('widgets::widgets.title') }}</th>
 					<th scope="col">{{ trans('widgets::widgets.widget') }}</th>
 				</tr>
 			</thead>
@@ -279,6 +281,7 @@ app('pathway')
 			@endforeach
 			</tbody>
 		</table>
+		</div>
 	</div>
 
 	@csrf

@@ -140,12 +140,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create groups'))
-		{!! Toolbar::addNew(route('admin.groups.members.create', ['group' => $group->id])) !!}
-	@endif
-
 	@if (auth()->user()->can('delete groups'))
 		{!! Toolbar::deleteList('', route('admin.groups.members.delete', ['group' => $group->id])) !!}
+	@endif
+
+	@if (auth()->user()->can('create groups'))
+		{!! Toolbar::addNew(route('admin.groups.members.create', ['group' => $group->id])) !!}
 	@endif
 
 	@if (auth()->user()->can('admin groups'))

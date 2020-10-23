@@ -9,11 +9,11 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create menus'))
-		{!! Toolbar::addNew(route('admin.menus.create')) !!}
-	@endif
 	@if (auth()->user()->can('delete menus'))
 		{!! Toolbar::deleteList('', route('admin.menus.delete')) !!}
+	@endif
+	@if (auth()->user()->can('create menus'))
+		{!! Toolbar::addNew(route('admin.menus.create')) !!}
 	@endif
 	@if (auth()->user()->can('admin menus'))
 		{!!

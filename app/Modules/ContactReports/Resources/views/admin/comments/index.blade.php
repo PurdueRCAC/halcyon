@@ -5,12 +5,12 @@
 @stop
 
 @section('toolbar')
-	@if (auth()->user()->can('create contactreports'))
-		{!! Toolbar::addNew(route('admin.contactreports.comments.create', ['report' => $report->id])) !!}
-	@endif
-
 	@if (auth()->user()->can('delete contactreports'))
 		{!! Toolbar::deleteList('', route('admin.contactreports.comments.delete', ['report' => $report->id])) !!}
+	@endif
+
+	@if (auth()->user()->can('create contactreports'))
+		{!! Toolbar::addNew(route('admin.contactreports.comments.create', ['report' => $report->id])) !!}
 	@endif
 
 	@if (auth()->user()->can('admin contactreports'))

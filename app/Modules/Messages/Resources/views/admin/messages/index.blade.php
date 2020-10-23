@@ -16,12 +16,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create messages'))
-		{!! Toolbar::addNew(route('admin.messages.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete messages'))
 		{!! Toolbar::deleteList('', route('admin.messages.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create messages'))
+		{!! Toolbar::addNew(route('admin.messages.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin messages'))

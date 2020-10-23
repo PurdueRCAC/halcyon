@@ -38,12 +38,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create orders.products'))
-		{!! Toolbar::addNew(route('admin.orders.products.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete orders.products'))
 		{!! Toolbar::deleteList('', route('admin.orders.products.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create orders.products'))
+		{!! Toolbar::addNew(route('admin.orders.products.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin orders'))

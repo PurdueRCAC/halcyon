@@ -5,22 +5,22 @@
 @stop
 
 @php
-app('pathway')
-	->append(
-		trans('knowledge::knowledge.knowledge base'),
-		route('admin.knowledge.index')
-	)
-	->append(
-		trans('knowledge::knowledge.pages'),
-		route('admin.knowledge.index')
-	);
-
-	if (auth()->user()->can('create knowledge')):
-		Toolbar::addNew(route('admin.knowledge.create'));
-	endif;
+	app('pathway')
+		->append(
+			trans('knowledge::knowledge.knowledge base'),
+			route('admin.knowledge.index')
+		)
+		->append(
+			trans('knowledge::knowledge.pages'),
+			route('admin.knowledge.index')
+		);
 
 	if (auth()->user()->can('delete knowledge')):
 		Toolbar::deleteList(trans('knowledge::knowledge.verify delete'), route('admin.knowledge.delete'));
+	endif;
+
+	if (auth()->user()->can('create knowledge')):
+		Toolbar::addNew(route('admin.knowledge.create'));
 	endif;
 
 	if (auth()->user()->can('admin knowledge')):

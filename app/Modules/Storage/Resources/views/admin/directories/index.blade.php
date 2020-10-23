@@ -12,12 +12,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create storage.directories'))
-		{!! Toolbar::addNew(route('admin.storage.directories.create', ['parent' => $filters['parent']])) !!}
-	@endif
-
 	@if (auth()->user()->can('delete storage.directories'))
 		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.storage.directories.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create storage.directories'))
+		{!! Toolbar::addNew(route('admin.storage.directories.create', ['parent' => $filters['parent']])) !!}
 	@endif
 
 	@if (auth()->user()->can('admin storage'))

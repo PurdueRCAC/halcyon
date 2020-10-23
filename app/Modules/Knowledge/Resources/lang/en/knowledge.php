@@ -45,4 +45,5 @@ return [
 	'variables' => 'Variables',
 	'show title' => 'Show Title',
 	'show toc' => 'Show Table of Contents',
+	'used' => 'Pages used',
 ];

@@ -240,6 +240,16 @@ class Article extends Model
 	}
 
 	/**
+	 * Determine if entry has an end time
+	 *
+	 * @return  bool
+	 */
+	public function isSameDay()
+	{
+		return $this->hasStart() && $this->hasEnd() && ($this->datetimenewsend->format('Y-m-d') == $this->datetimenews->format('Y-m-d'));
+	}
+
+	/**
 	 * Check if the job is available
 	 *
 	 * @return  boolean

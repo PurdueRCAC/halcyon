@@ -13,12 +13,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create resources.types'))
-		{!! Toolbar::addNew(route('admin.resources.types.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete resources'))
 		{!! Toolbar::deleteList('', route('admin.resources.types.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create resources.types'))
+		{!! Toolbar::addNew(route('admin.resources.types.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin resources.types'))

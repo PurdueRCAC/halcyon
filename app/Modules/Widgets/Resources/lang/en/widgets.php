@@ -82,5 +82,6 @@ return [
 		'site' => 'Site',
 		'admin' => 'Admin'
 	),
+	'available widgets' => 'Available widgets',
 	'choose type' => 'Select a Widget Type:',
 ];

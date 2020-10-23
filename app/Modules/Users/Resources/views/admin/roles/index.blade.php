@@ -25,12 +25,12 @@ app('pathway')
 		Toolbar::spacer();
 	!!}
 
-	@if (auth()->user()->can('create users.roles'))
-		{!! Toolbar::addNew(route('admin.users.roles.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete users.roles'))
 		{!! Toolbar::deleteList('', route('admin.users.roles.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create users.roles'))
+		{!! Toolbar::addNew(route('admin.users.roles.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin users'))
@@ -75,7 +75,7 @@ app('pathway')
 						<span class="form-check stop-propagation"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $role->value }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
 					@endif
 
-					<span>{!! str_repeat('<span class="level">|&mdash;</span> ', $curLevel = $role->level) !!}</span>
+					<span class="level">{!! str_repeat('|&mdash; ', $curLevel = $role->level) !!}</span>
 
 					@if ($canEdit)
 						<a class="stop-propagation" href="{{ route('admin.users.roles.edit', ['id' => $role->value]) }}">
@@ -90,7 +90,8 @@ app('pathway')
 				<div class="pane-slider">
 					<div class="pane-slider content pane-hide">
 
-						<table class="table role-rules">
+						<table class="table table-hover role-rules">
+							<caption class="sr-only">{{ $role->text }}</caption>
 							<thead>
 								<tr>
 									<th class="actions" id="actions-th{{ $role->value }}" scope="col">

@@ -12,12 +12,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create users.notes'))
-		{!! Toolbar::addNew(route('admin.users.notes.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete users.notes'))
 		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.users.notes.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create users.notes'))
+		{!! Toolbar::addNew(route('admin.users.notes.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin users'))

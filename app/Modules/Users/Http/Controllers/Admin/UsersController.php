@@ -30,7 +30,7 @@ class UsersController extends Controller
 			'range'      => null,
 			'created_at' => null,
 			'activation' => 0,
-			'state'      => '*',
+			'state'      => 'enabled',
 			'access'     => 0,
 			'approved'   => '*',
 			'role_id'    => 0,
@@ -64,9 +64,9 @@ class UsersController extends Controller
 		$u = (new UserUsername)->getTable();
 
 		$query = User::query()
-			->select($a . '.*')
+			->select($a . '.*', $u . '.username', $u . '.datecreated', $u . '.dateremoved', $u . '.datelastseen')
 			->with('roles')
-			->leftJoin($u, $u . '.userid', $a . '.id');
+			->join($u, $u . '.userid', $a . '.id');
 			/*->including(['notes', function ($note){
 				$note
 					->select('id')
@@ -100,13 +100,12 @@ class UsersController extends Controller
 			}
 			else
 			{
-				$query->where($a . '.name', 'like', '%' . strtolower((string)$filters['search']) . '%');
-				/*$query->where(function($where) use ($filters, $a)
+				//$query->where($a . '.name', 'like', '%' . strtolower((string)$filters['search']) . '%');
+				$query->where(function($where) use ($filters, $a, $u)
 				{
 					$where->where($a . '.name', 'like', '%' . strtolower((string)$filters['search']) . '%')
-						->orWhere($a . '.username', 'like', '%' . strtolower((string)$filters['search']) . '%')
-						->orWhere($a . '.email', 'like', '%' . strtolower((string)$filters['search']) . '%');
-				});*/
+						->orWhere($u . '.username', 'like', '%' . strtolower((string)$filters['search']) . '%');
+				});
 			}
 		}
 
@@ -115,48 +114,22 @@ class UsersController extends Controller
 			$query->where($u . '.datecreated', '>=', $filters['created_at']);
 		}
 
-		/*if ($filters['access'] > 0)
-		{
-			$query->where($a . '.access', '=', (int)$filters['access']);
-		}*/
-
 		if ($filters['state'] == 'enabled')
 		{
-			$query->where($a . '.block', '=', 0)
-				->whereNotNull($a . '.email_verified_at');
-		}
-		elseif ($filters['state'] == 'pending')
-		{
-			$query->where($a . '.block', '=', 0)
-				->whereNull($a . '.email_verified_at');
-		}
-		elseif ($filters['state'] == 'disabled')
-		{
-			$query->where($a . '.block', '=', 1);
-			/*$query->where(function($where) use ($a)
+			$query->where(function($where) use ($u)
 			{
-				$where->where($a . '.block', '=', 1)
-					->orWhereNull($a . '.email_verified_at');
-			});*/
+				$where->whereNull($u . '.dateremoved')
+					->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+			});
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->onlyTrashed();
+			$query->where(function($where) use ($u)
+			{
+				$where->whereNotNull($u . '.dateremoved')
+					->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
+			});
 		}
-
-		if (is_numeric($filters['approved']))
-		{
-			$query->where($a . '.approved', '=', (int)$filters['approved']);
-		}
-
-		/*if ($filters['activation'] < 0)
-		{
-			$query->where($a . '.activation', '<', 0);
-		}
-		if ($filters['activation'] > 0)
-		{
-			$query->where($a . '.activation', '>', 0);
-		}*/
 
 		// Apply the range filter.
 		if ($filters['range'])

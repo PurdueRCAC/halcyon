@@ -13,12 +13,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create groups'))
-		{!! Toolbar::addNew(route('admin.groups.fieldsofscience.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete groups'))
 		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.groups.fieldsofscience.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create groups'))
+		{!! Toolbar::addNew(route('admin.groups.fieldsofscience.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin groups'))

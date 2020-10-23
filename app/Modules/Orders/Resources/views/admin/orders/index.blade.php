@@ -17,12 +17,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create orders'))
-		{!! Toolbar::addNew(route('admin.orders.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete orders'))
 		{!! Toolbar::deleteList('', route('admin.orders.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create orders'))
+		{!! Toolbar::addNew(route('admin.orders.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin orders'))

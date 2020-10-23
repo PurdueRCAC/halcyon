@@ -38,11 +38,11 @@ app('pathway')
 				Toolbar::spacer();
 			!!}
 		@endif
-		@if (auth()->user()->can('create pages'))
-			{!! Toolbar::addNew(route('admin.pages.create')) !!}
-		@endif
 		@if (auth()->user()->can('delete pages'))
 			{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.pages.delete')) !!}
+		@endif
+		@if (auth()->user()->can('create pages'))
+			{!! Toolbar::addNew(route('admin.pages.create')) !!}
 		@endif
 		@if (auth()->user()->can('admin pages'))
 			{!!

@@ -67,7 +67,7 @@ app('pathway')
 					</select>
 				</div>
 
-				<div class="form-group" data-hint="{{ trans('knowledge::knowledge.path hint') }}">
+				<div class="form-group">
 					<label for="field-alias">{{ trans('knowledge::knowledge.path') }}:</label>
 					<div class="input-group mb-2 mr-sm-2">
 						<div class="input-group-prepend">

@@ -12,12 +12,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create news.types'))
-		{!! Toolbar::addNew(route('admin.news.types.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete news.types'))
 		{!! Toolbar::deleteList('', route('admin.news.types.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create news.types'))
+		{!! Toolbar::addNew(route('admin.news.types.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin news'))

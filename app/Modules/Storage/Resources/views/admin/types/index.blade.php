@@ -13,12 +13,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create storage'))
-		{!! Toolbar::addNew(route('admin.storage.types.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete storage'))
 		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.storage.types.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create storage'))
+		{!! Toolbar::addNew(route('admin.storage.types.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin storage'))

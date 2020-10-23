@@ -13,12 +13,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create contactreports'))
-		{!! Toolbar::addNew(route('admin.contactreports.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete contactreports'))
 		{!! Toolbar::deleteList('', route('admin.contactreports.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create contactreports'))
+		{!! Toolbar::addNew(route('admin.contactreports.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin contactreports'))

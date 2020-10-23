@@ -12,12 +12,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create messages.types'))
-		{!! Toolbar::addNew(route('admin.messages.types.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete messages.types'))
 		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.messages.types.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create messages.types'))
+		{!! Toolbar::addNew(route('admin.messages.types.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin messages.types'))

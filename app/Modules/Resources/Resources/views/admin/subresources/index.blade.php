@@ -13,16 +13,16 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create resources'))
-		{!! Toolbar::addNew(route('admin.resources.subresources.create', ['resource' => $filters['resource']])) !!}
-	@endif
-
 	@if (auth()->user()->can('delete resources'))
 		@if ($filters['state'] == 'trashed')
 			{!! Toolbar::custom(route('admin.resources.subresources.restore'), 'refresh', 'refresh', trans('global.restore'), false) !!}
 		@else
 			{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.resources.subresources.delete')) !!}
 		@endif
+	@endif
+
+	@if (auth()->user()->can('create resources'))
+		{!! Toolbar::addNew(route('admin.resources.subresources.create', ['resource' => $filters['resource']])) !!}
 	@endif
 
 	@if (auth()->user()->can('admin resources'))

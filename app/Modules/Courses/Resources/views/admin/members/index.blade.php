@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
 @section('toolbar')
-	@if (auth()->user()->can('create groups'))
-		{!! Toolbar::addNew(route('admin.groups.members.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete groups'))
 		{!! Toolbar::deleteList('', route('admin.groups.members.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create groups'))
+		{!! Toolbar::addNew(route('admin.groups.members.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin groups'))

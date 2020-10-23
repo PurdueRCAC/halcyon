@@ -21,12 +21,12 @@ app('pathway')
 		!!}
 	@endif
 
-	@if (auth()->user()->can('create cron'))
-		{!! Toolbar::addNew(route('admin.cron.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete cron'))
 		{!! Toolbar::deleteList('', route('admin.cron.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create cron'))
+		{!! Toolbar::addNew(route('admin.cron.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin cron'))

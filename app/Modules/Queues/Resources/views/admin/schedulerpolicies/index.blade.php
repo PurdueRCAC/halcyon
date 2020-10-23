@@ -12,12 +12,12 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create queues.schedulerpolicies'))
-		{!! Toolbar::addNew(route('admin.queues.schedulerpolicies.create')) !!}
-	@endif
-
 	@if (auth()->user()->can('delete queues.schedulerpolicies'))
 		{!! Toolbar::deleteList('', route('admin.queues.schedulerpolicies.delete')) !!}
+	@endif
+
+	@if (auth()->user()->can('create queues.schedulerpolicies'))
+		{!! Toolbar::addNew(route('admin.queues.schedulerpolicies.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin queues'))
