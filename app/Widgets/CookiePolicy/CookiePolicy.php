@@ -5,14 +5,14 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace App\Widgets\CookiePolicy;
+namespace App\Widgets\Cookiepolicy;
 
 use App\Modules\Widgets\Entities\Widget;
 
 /**
- * Module class for displaying breadcrumbs
+ * Module class for displaying cookie policy
  */
-class CookiePolicy extends Widget
+class Cookiepolicy extends Widget
 {
 	/**
 	 * Display module

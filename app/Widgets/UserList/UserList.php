@@ -5,7 +5,7 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace App\Widgets\UserList;
+namespace App\Widgets\Userlist;
 
 use App\Halcyon\Access\Map;
 use App\Modules\Users\Models\User;
@@ -15,7 +15,7 @@ use Carbon\Carbon;
 /**
  * Module class for displaying a list of users
  */
-class UserList extends Widget
+class Userlist extends Widget
 {
 	/**
 	 * Display
