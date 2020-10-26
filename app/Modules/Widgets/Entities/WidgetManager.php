@@ -311,6 +311,10 @@ class WidgetManager
 		{
 			$query->whereIn($w . '.access', $user->getAuthorisedViewLevels());
 		}
+		else
+		{
+			$query->whereIn($w . '.access', [1]);
+		}
 
 		$clean = $query
 					->orderBy($w . '.position', 'asc')
