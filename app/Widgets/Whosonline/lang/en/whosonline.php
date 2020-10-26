@@ -17,11 +17,11 @@ return [
 	'view profile' => 'view profile',
 
 	// Site Params
-	'SHOWMODE_DESC' => 'Select what shall be shown',
-	'SHOWMODE_LABEL' => 'Display',
-	'FIELD_VALUE_BOTH' => 'Both',
-	'FIELD_VALUE_NAMES' => 'User names',
-	'FIELD_VALUE_NUMBER' => '# of Guests / Users',
+	'show mode desc' => 'Select what shall be shown',
+	'show mode' => 'Display',
+	'both' => 'Both',
+	'names' => 'User names',
+	'number' => '# of Guests / Users',
 
 	// Admin
 	'site' => 'Site',
@@ -31,13 +31,12 @@ return [
 	'last activity' => 'Last Activity',
 	'logout' => 'Logout',
 	'edit user' => 'Edit User',
-	//'HOURS_AGO' => ':time hours ago',
 	'no results' => 'Currently there are no users online.',
 	'view all' => 'View all',
 
 	// Admin Params
-	'LIMIT_DESC' => 'Number of people to display in module.',
-	'LIMIT_LABEL' => 'Display Limit',
+	'limit desc' => 'Number of people to display in module.',
+	'limit' => 'Display Limit',
 
 	'incompatible driver' => 'This widget only works with the "database" session driver.',
 ];

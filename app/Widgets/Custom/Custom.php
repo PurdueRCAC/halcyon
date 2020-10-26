@@ -21,8 +21,17 @@ class Custom extends Widget
 	 */
 	public function run()
 	{
+		$content = $this->model->content;
+
+		/*if ($this->params->get('prepare_content', 0))
+		{
+			event($event = new PrepareContent($content));
+
+			$content = $event->content;
+		}*/
+
 		return view($this->getViewName(), [
-			'content' => $this->model->content,
+			'content' => $content,
 			'model' => $this->model
 		]);
 	}

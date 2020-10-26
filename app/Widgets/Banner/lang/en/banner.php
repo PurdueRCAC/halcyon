@@ -19,6 +19,8 @@ return [
 	'params' => [
 		'category desc' => 'Select Articles from a specific Category. If no selection, it will show all categories by default.',
 		'category' => 'Category',
+		'category2 desc' => 'Select Articles from a specific Category. If no selection, it will show all categories by default.',
+		'category2' => 'Second Category',
 		'all categories' => '- All Categories -',
 		'link title desc' => 'Link the Article titles to Articles.',
 		'link title' => 'Linked Titles',

@@ -15,12 +15,12 @@ return [
 	'clear cache' => 'Clear Cache',
 	'modules' => 'Modules',
 	'global checkin' => 'Global Check-in',
-	'HOME_DEFAULT' => 'Home',
-	'HOME_MULTIPLE' => 'Warning! Multiple homes!',
+	'home default' => 'Home',
+	'home multiple' => 'Warning! Multiple homes!',
 	'logout' => 'Logout',
-	//'MASS_MAIL_USERS' => 'Mass Mail Users',
-	
-	//'NEW_PRIVATE_MESSAGE' => 'New Private Message',
+	//'mass mail users' => 'Mass Mail Users',
+
+	//'new private message' => 'New Private Message',
 	'PURGE_EXPIRED_CACHE' => 'Purge Expired Cache',
 	'READ_PRIVATE_MESSAGES' => 'Read Private Messages',
 	'site' => 'Site',
@@ -66,18 +66,12 @@ return [
 	'widget manager' => 'Widgets',
 	'listener manager' => 'Listeners',
 	'theme manager' => 'Themes',
-	'FIELD_FORUMURL_DESC' => 'You may enter here the URL to another forum than the default ones.',
-	'FIELD_FORUMURL_LABEL' => 'Custom Support Forum',
-	'FIELD_SHOWHELP' => 'Help Menu',
-	'FIELD_SHOWHELP_DESC' => 'Show or hide the Help menu which includes links to hubzero.org sites useful to users.',
-	'FIELD_SHOWNEW' => 'Add New Shortcuts',
-	'FIELD_SHOWNEW_DESC' => 'Show or hide various "Add New..." shortcuts against users, groups, access levels, articles and categories.',
-	//'SYS_ROUTES' => 'Routes',
-	//'SYS_SCRIPTS' => 'Scripts',
-	//'SYS_APC' => 'APC',
-	//'SYS_GEO' => 'Geo DB',
-	//'SYS_LDAP' => 'LDAP',
-	//'UPDATE' => 'Update',
+
+	// Params
+	'show help' => 'Help Menu',
+	'show help desc' => 'Show or hide the Help menu which includes links to hubzero.org sites useful to users.',
+	'show new' => '"Add New" Shortcuts',
+	'show new desc' => 'Show or hide various "Add New..." shortcuts against users, groups, access levels, pagess.',
 
 	// Help
 	'help' => 'Help',
@@ -91,7 +85,7 @@ return [
 	'security' => 'Security Center',
 
 	// the string below will be used if the localized sample data contains an URL for the desired community forum or if the 'Custom Support Forum' field parameter in the Admin Menu module contains an url
-	'HELP_SUPPORT_CUSTOM_FORUM' => 'Support Forum',
+	'support forum' => 'Support Forum',
 	// the string below will be used if 	'HELP_SUPPORT_OFFICIAL_LANGUAGE_FORUM_VALUE has a value, i.e the # of the specific language forum in help.hubzero.org 
 	'HELP_SUPPORT_OFFICIAL_LANGUAGE_FORUM' => 'Official [language] forum',
 	'HELP_SUPPORT_OFFICIAL_LANGUAGE_FORUM_VALUE' => '',

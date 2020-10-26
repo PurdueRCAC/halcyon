@@ -2,45 +2,41 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="catid" type="App\Modules\News\Models\Fields\Types" extension="news" default="" size="10" label="widget.news::news.params.category" description="widget.news::news.params.category desc" >
-				<option value="">widget.news::news.params.all categories</option>
+			<field name="catid" type="App\Modules\News\Models\Fields\Types" extension="banner" default="" size="10" label="widget.banner::banner.params.category" description="widget.banner::banner.params.category desc" >
+				<option value="">widget.banner::banner.params.all categories</option>
 			</field>
-			<field name="catid2" type="App\Modules\News\Models\Fields\Types" extension="news" default="" size="10" label="widget.news::news.params.category2" description="widget.news::news.params.category2 desc" >
-				<option value="">widget.news::news.params.all categories</option>
+			<field name="catid2" type="App\Modules\News\Models\Fields\Types" extension="banner" default="" size="10" label="widget.banner::banner.params.category2" description="widget.banner::banner.params.category2 desc" >
+				<option value="">widget.banner::banner.params.all categories</option>
 			</field>
-			<field name="item_title" type="radio" default="0" label="widget.news::news.params.show title" description="widget.news::news.params.show title desc">
+			<field name="item_title" type="radio" default="0" label="widget.banner::banner.params.show title" description="widget.banner::banner.params.show title desc">
 				<option value="1">global.yes</option>
 				<option value="0">global.no</option>
 			</field>
-			<field name="link_titles" type="list" label="widget.news::news.params.link title" description="widget.news::news.params.link title desc">
+			<field name="link_titles" type="list" label="widget.banner::banner.params.link title" description="widget.banner::banner.params.link title desc">
 				<option value="">global.use global</option>
 				<option value="0">global.no</option>
 				<option value="1">global.yes</option>
 			</field>
-			<field name="item_heading" type="list" default="h4" label="widget.news::news.params.header level" description="widget.news::news.params.header level desc">
+			<field name="item_heading" type="list" default="h4" label="widget.banner::banner.params.header level" description="widget.banner::banner.params.header level desc">
 				<option value="h1">H1</option>
 				<option value="h2">H2</option>
 				<option value="h3">H3</option>
 				<option value="h4">H4</option>
 				<option value="h5">H5</option>
 			</field>
-			<field name="readmore" type="radio" default="0" label="widget.news::news.params.readmore" description="widget.news::news.params.readmore desc">
+			<field name="readmore" type="radio" default="0" label="widget.banner::banner.params.readmore" description="widget.banner::banner.params.readmore desc">
 				<option value="0">global.hide</option>
 				<option value="1">global.show</option>
 			</field>
-			<field name="limit" type="text" default="1" label="widget.news::news.params.number of items" description="widget.news::news.params.number of items desc" />
+			<field name="limit" type="text" default="1" label="widget.banner::banner.params.number of items" description="widget.banner::banner.params.number of items desc" />
 		</fieldset>
 		<fieldset name="advanced">
-			<field name="layout" type="modulelayout" label="widgets::widgets.field.alt layout" description="widgets::widgets.field.alt layout description" />
-			<field name="class_sfx" type="text" label="widgets::widgets.field.class suffix" description="widgets::widgets.field.class suffix description" />
+			<field name="class" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.class name description" />
 			<field name="cache" type="list" default="1" label="widgets::widgets.field.caching" description="widgets::widgets.field.caching description">
 				<option value="1">widgets::widgets.use global</option>
 				<option value="0">widgets::widgets.no caching</option>
 			</field>
 			<field name="cache_time" type="text" default="900" label="widgets::widgets.field.cache time" description="widgets::widgets.field.cache time description" />
-			<field name="cachemode" type="hidden" default="itemid">
-				<option value="itemid"></option>
-			</field>
 		</fieldset>
 	</fields>
 </config>

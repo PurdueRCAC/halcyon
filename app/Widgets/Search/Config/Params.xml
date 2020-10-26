@@ -2,33 +2,28 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="label" type="label" label="widget.search::search.FIELD_LABEL_TEXT_LABEL" description="widget.search::search.FIELD_LABEL_TEXT_DESC" />
-			<field name="width" type="text" default="20" label="widget.search::search.FIELD_BOXWIDTH_LABEL" description="widget.search::search.FIELD_BOXWIDTH_DESC" />
-			<field name="text" type="text" label="widget.search::search.FIELD_TEXT_LABEL" description="widget.search::search.FIELD_TEXT_DESC" />
-			<field name="button" type="list" label="widget.search::search.FIELD_BUTTON_LABEL" description="widget.search::search.FIELD_BUTTON_DESC">
+			<field name="label" type="label" label="widget.search::search.label" description="widget.search::search.label desc" />
+			<field name="text" type="text" label="widget.search::search.text" description="widget.search::search.text desc" />
+			<field name="button" type="list" label="widget.search::search.button" description="widget.search::search.button desc">
 				<option value="">global.no</option>
 				<option value="1">global.yes</option>
 			</field>
-			<field name="button_pos" type="list" default="right" label="widget.search::search.FIELD_BUTTONPOS_LABEL" description="widget.search::search.FIELD_BUTTONPOS_DESC">
-				<option value="right">widget.search::search.FIELD_VALUE_RIGHT</option>
-				<option value="left">widget.search::search.FIELD_VALUE_LEFT</option>
-				<option value="top">widget.search::search.FIELD_VALUE_TOP</option>
-				<option value="bottom">widget.search::search.FIELD_VALUE_BOTTOM</option>
+			<field name="button_pos" type="list" default="right" label="widget.search::search.button position" description="widget.search::search.button position desc">
+				<option value="right">widget.search::search.right</option>
+				<option value="left">widget.search::search.left</option>
+				<option value="top">widget.search::search.top</option>
+				<option value="bottom">widget.search::search.bottom</option>
 			</field>
-			<field name="button_text" type="text" label="widget.search::search.FIELD_BUTTONTEXT_LABEL" description="widget.search::search.FIELD_BUTTONTEXT_DESC" />
-			<field name="opensearch_title" type="text" label="widget.search::search.FIELD_OPENSEARCH_TEXT_LABEL" description="widget.search::search.FIELD_OPENSEARCH_TEXT_DESC" />
+			<field name="button_text" type="text" label="widget.search::search.button text" description="widget.search::search.button text desc" />
+			<field name="opensearch_title" type="text" label="widget.search::search.open search text" description="widget.search::search.open search text desc" />
 		</fieldset>
 		<fieldset name="advanced">
-			<field name="layout" type="modulelayout" label="widgets::widgets.ALT_LAYOUT_LABEL" description="widgets::widgets.ALT_MODULE_LAYOUT_DESC" />
-			<field name="moduleclass_sfx" type="text" label="widgets::widgets.FIELD_MODULECLASS_SFX_LABEL" description="widgets::widgets.FIELD_MODULECLASS_SFX_DESC" />
-			<field name="cache" type="list" default="1" label="widgets::widgets.FIELD_CACHING_LABEL" description="widgets::widgets.FIELD_CACHING_DESC">
+			<field name="class" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.class name desc" />
+			<field name="cache" type="list" default="1" label="widgets::widgets.field.caching" description="widgets::widgets.field.caching description">
 				<option value="1">widgets::widgets.use global</option>
-				<option value="0">widgets::widgets.FIELD_VALUE_NOCACHING</option>
+				<option value="0">widgets::widgets.no caching</option>
 			</field>
-			<field name="cache_time" type="text" default="900" label="widgets::widgets.FIELD_CACHE_TIME_LABEL" description="widgets::widgets.FIELD_CACHE_TIME_DESC" />
-			<field name="cachemode" type="hidden" default="itemid">
-				<option value="itemid"></option>
-			</field>
+			<field name="cache_time" type="text" default="900" label="widgets::widgets.field.cache time" description="widgets::widgets.field.cache time description" />
 		</fieldset>
 	</fields>
 </config>

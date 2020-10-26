@@ -2,11 +2,12 @@
 <config>
 	<fields name="params">
 		<fieldset name="advanced">
-			<field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
-			<field name="moduleclass_sfx" type="text" label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL" description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
-			<field name="cache" type="list" default="0" label="COM_MODULES_FIELD_CACHING_LABEL" description="COM_MODULES_FIELD_CACHING_DESC">
-				<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+			<field name="class" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.class name description" />
+			<field name="cache" type="list" default="1" label="widgets::widgets.field.caching" description="widgets::widgets.field.caching description">
+				<option value="1">widgets::widgets.use global</option>
+				<option value="0">widgets::widgets.no caching</option>
 			</field>
+			<field name="cache_time" type="text" default="900" label="widgets::widgets.field.cache time" description="widgets::widgets.field.cache time description" />
 		</fieldset>
 	</fields>
 </config>

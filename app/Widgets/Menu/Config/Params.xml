@@ -36,7 +36,7 @@
 		<fieldset name="advanced">
 			<field name="tag_id" type="text" label="widget.menu::config.tag id" description="widget.menu::config.tag id desc" />
 			<field name="layout" type="modulelayout" label="widgets::widgets.field.alt layout" description="widgets::widgets.field.alt layout description" />
-			<field name="class_sfx" type="text" label="widgets::widgets.field.class suffix" description="widgets::widgets.field.class suffix description" />
+			<field name="class_sfx" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.class name description" />
 		</fieldset>
 		<fieldset name="caching">
 			<field name="cache" type="list" default="1" label="widgets::widgets.field.caching" description="widgets::widgets.field.caching description">

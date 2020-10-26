@@ -15,29 +15,26 @@ return [
 	'members' => 'Members',
 	'created' => 'Created',
 
-	'CACHE_DESC' => 'Select whether to cache the content of this module',
-	'CACHE_GLOBAL' => 'Use global',
-	'CACHE_NONE' => 'No caching',
-	'NONE' => 'No user data found.',
-	'NOTE' => '<strong>Note:</strong> Blocked accounts are excluded from data.',
+	'none' => 'No user data found.',
+	'note' => '<strong>Note:</strong> Blocked accounts are excluded from data.',
 
 	// Confirmed
-	'CONFIRMED' => 'Confirmed',
-	'CONFIRMED_TITLE' => 'View confirmed members',
-	'UNCONFIRMED' => 'Unconfirmed',
-	'UNCONFIRMED_TITLE' => 'View unconfirmed members',
-	'NEW' => '~24 hours',
-	'NEW_TITLE' => 'View newest members',
+	'confirmed' => 'Confirmed',
+	'confirmed title' => 'View confirmed members',
+	'unconfirmed' => 'Unconfirmed',
+	'unconfirmed title' => 'View unconfirmed members',
+	'new' => '~24 hours',
+	'new title' => 'View newest members',
 
 	// Domains
-	'OTHER' => '(other)',
-	'INCOMPLETE' => '(incomplete)',
-	'DOMAIN' => 'Domain',
-	'REGISTERED' => 'Registered',
+	'other' => '(other)',
+	'incomplete' => '(incomplete)',
+	'domain' => 'Domain',
+	'registered' => 'Registered',
 
 	// Approved
-	'APPROVED' => 'Approved',
-	'APPROVED_TITLE' => 'View approved members',
-	'UNAPPROVED' => 'Unapproved',
-	'UNAPPROVED_TITLE' => 'View unapproved members',
+	'approved' => 'Approved',
+	'approved title' => 'View approved members',
+	'unapproved' => 'Unapproved',
+	'unapproved title' => 'View unapproved members',
 ];

@@ -5,9 +5,10 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-$moduleclass_sfx = $model->params->get('moduleclass_sfx', '');
+$cls = $model->params->get('class', '');
+$cls = $cls ? ' ' . $cls : '';
 ?>
-<footer class="footer<?php echo $moduleclass_sfx; ?>">
-	<div class="footer-copyright<?php echo $moduleclass_sfx; ?>"><?php echo __('widget.footer::footer.copyright', ['date' => gmdate("Y"), 'name' => config('sitename')]); ?></div>
-	<div class="footer-license<?php echo $moduleclass_sfx; ?>"><?php echo __('widget.footer::footer.license'); ?></div>
+<footer class="footer{{ $cls }}">
+	<div class="footer-copyright{{ $cls }}">{{ trans('widget.footer::footer.copyright', ['date' => gmdate("Y"), 'name' => config('sitename')]) }}</div>
+	<div class="footer-license{{ $cls }}">{{ trans('widget.footer::footer.license') }}</div>
 </footer>
