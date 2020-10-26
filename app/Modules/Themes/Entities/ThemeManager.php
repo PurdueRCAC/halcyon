@@ -49,7 +49,7 @@ class ThemeManager implements \Countable
 	 */
 	public function find($name)
 	{
-		foreach ($this->all() as $theme)
+		foreach ($this->allEnabled() as $theme)
 		{
 			if ($theme->getLowerName() == strtolower($name))
 			{
@@ -64,7 +64,7 @@ class ThemeManager implements \Countable
 	 * Return all available themes
 	 * @return array
 	 */
-	public function all()
+	public function all($state = null)
 	{
 		$themes = [];
 
@@ -73,7 +73,7 @@ class ThemeManager implements \Countable
 			return $themes;
 		}
 
-		$directories = $this->getThemes();
+		$directories = $this->getThemes($state);
 
 		foreach ($directories as $theme)
 		{
@@ -91,6 +91,24 @@ class ThemeManager implements \Countable
 	}
 
 	/**
+	 * Return all available themes
+	 * @return array
+	 */
+	public function allEnabled()
+	{
+		return $this->all(1);
+	}
+
+	/**
+	 * Return all available themes
+	 * @return array
+	 */
+	public function allDisabled()
+	{
+		return $this->all(0);
+	}
+
+	/**
 	 * Get only the public themes
 	 * @return array
 	 */
@@ -103,7 +121,7 @@ class ThemeManager implements \Countable
 			return $themes;
 		}
 
-		$directories = $this->getThemes();
+		$directories = $this->getThemes(1);
 
 		foreach ($directories as $theme)
 		{
@@ -127,7 +145,7 @@ class ThemeManager implements \Countable
 	 * Get the theme directories
 	 * @return array
 	 */
-	private function getThemes()
+	private function getThemes($state = null)
 	{
 		//return $this->getFinder()->directories($this->path);
 		$s = (new Model)->getTable();
@@ -141,10 +159,14 @@ class ThemeManager implements \Countable
 				$s . '.name',
 				$s . '.params',
 				$s . '.protected'
-			])
+			]);
 			//->join($e, $e . '.element', $s . '.template')
 			//->where($s . '.client_id', '=', (int)$client_id)
-			->where($s . '.enabled', '=', 1)
+		if (!is_null($state))
+		{
+			$query->where($s . '.enabled', '=', $state);
+		}
+		$query
 			->where($s . '.type', '=', 'theme')
 			//->where($e . '.client_id', '=', $s . '.client_id')
 			->orderBy($s . '.enabled', 'desc');
@@ -180,7 +202,7 @@ class ThemeManager implements \Countable
 	 */
 	public function getAssetPath($theme)
 	{
-		return public_path($this->getConfig()->get('app.themes_assets_path', 'themes') . '/' . $theme);
+		return public_path($this->getConfig()->get('module.themes.path.assets', 'themes') . '/' . $theme);
 	}
 
 	/**

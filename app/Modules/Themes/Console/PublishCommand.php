@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Themes\Commands;
+namespace App\Modules\Themes\Console;
 
 use Illuminate\Console\Command;
 use App\Modules\Themes\Entities\Theme;
-use Nwidart\Modules\Publishing\AssetPublisher;
+//use App\Modules\Themes\Publishing\AssetPublisher;
 use Symfony\Component\Console\Input\InputArgument;
 
 class PublishCommand extends Command
@@ -65,12 +65,41 @@ class PublishCommand extends Command
 			$theme = $this->laravel['themes']->findOrFail($name);
 		}
 
-		with(new AssetPublisher($theme))
+		/*with(new AssetPublisher($theme))
 			->setRepository($this->laravel['themes'])
 			->setConsole($this)
-			->publish();
+			->publish();*/
 
-		$this->line("<info>Published</info>: {$theme->getStudlyName()}");
+		$sourcePath = $theme->getPath() . '/assets'; //config('module.themes.paths.themes', app_path('Themes'));
+		$destinationPath = $this->laravel['themes']->getAssetPath($theme->getLowerName());
+
+		if (!$this->getFilesystem()->isDirectory($sourcePath))
+		{
+			$this->error('Themes source path not found: ' . $sourcePath);
+			return;
+		}
+
+		if (!$this->getFilesystem()->isDirectory($destinationPath))
+		{
+			$this->getFilesystem()->makeDirectory($destinationPath, 0775, true);
+		}
+
+		if ($this->getFilesystem()->copyDirectory($sourcePath, $destinationPath))
+		{
+			$this->line("<info>Published</info>: {$theme->getStudlyName()}");
+		}
+		else
+		{
+			$this->error('Failed to copy assets for ' . $theme->getStudlyName());
+		}
+	}
+
+	/**
+	 * @return \Illuminate\Filesystem\Filesystem
+	 */
+	protected function getFilesystem()
+	{
+		return $this->laravel['files'];
 	}
 
 	/**

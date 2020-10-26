@@ -5,11 +5,11 @@ namespace App\Modules\Themes\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Themes\Entities\ThemeManager;
-use App\Modules\Themes\Commands\InstallCommand;
-use App\Modules\Themes\Commands\DisableCommand;
-use App\Modules\Themes\Commands\EnableCommand;
-use App\Modules\Themes\Commands\PublishCommand;
-use App\Modules\Themes\Commands\SetupCommand;
+use App\Modules\Themes\Console\InstallCommand;
+use App\Modules\Themes\Console\DisableCommand;
+use App\Modules\Themes\Console\EnableCommand;
+use App\Modules\Themes\Console\PublishCommand;
+use App\Modules\Themes\Console\SetupCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -58,7 +58,7 @@ class ModuleServiceProvider extends ServiceProvider
 
 				$manager->activate($theme);
 
-				$this->publish($theme->getPath() . '/assets', $manager->getAssetPath($theme->getName()));
+				$this->publish($theme->getPath() . '/assets', $manager->getAssetPath($theme->getLowerName()));
 
 				/*$this->publishes([
 					$theme->getPath() . '/assets' => $manager->getAssetPath($theme->getName()),

@@ -1,60 +1,60 @@
 <?php
 
-namespace Nwidart\Modules\Contracts;
+namespace App\Themes\Themes\Contracts;
 
-use Nwidart\Modules\Module;
+use App\Themes\Themes\Entities\Theme;
 
 interface ActivatorInterface
 {
-    /**
-     * Enables a module
-     *
-     * @param Module $module
-     */
-    public function enable(Module $module): void;
+	/**
+	 * Enables a module
+	 *
+	 * @param Theme $theme
+	 */
+	public function enable(Theme $theme): void;
 
-    /**
-     * Disables a module
-     *
-     * @param Module $module
-     */
-    public function disable(Module $module): void;
+	/**
+	 * Disables a module
+	 *
+	 * @param Theme $theme
+	 */
+	public function disable(Theme $theme): void;
 
-    /**
-     * Determine whether the given status same with a module status.
-     *
-     * @param Module $module
-     * @param bool $status
-     *
-     * @return bool
-     */
-    public function hasStatus(Module $module, bool $status): bool;
+	/**
+	 * Determine whether the given status same with a module status.
+	 *
+	 * @param Theme $theme
+	 * @param bool $status
+	 *
+	 * @return bool
+	 */
+	public function hasStatus(Theme $theme, bool $status): bool;
 
-    /**
-     * Set active state for a module.
-     *
-     * @param Module $module
-     * @param bool $active
-     */
-    public function setActive(Module $module, bool $active): void;
+	/**
+	 * Set active state for a module.
+	 *
+	 * @param Theme $theme
+	 * @param bool $active
+	 */
+	public function setActive(Theme $theme, bool $active): void;
 
-    /**
-     * Sets a module status by its name
-     *
-     * @param  string $name
-     * @param  bool $active
-     */
-    public function setActiveByName(string $name, bool $active): void;
+	/**
+	 * Sets a module status by its name
+	 *
+	 * @param  string $name
+	 * @param  bool $active
+	 */
+	public function setActiveByName(string $name, bool $active): void;
 
-    /**
-     * Deletes a module activation status
-     *
-     * @param  Module $module
-     */
-    public function delete(Module $module): void;
+	/**
+	 * Deletes a module activation status
+	 *
+	 * @param  Theme $theme
+	 */
+	public function delete(Theme $theme): void;
 
-    /**
-     * Deletes any module activation statuses created by this class.
-     */
-    public function reset(): void;
+	/**
+	 * Deletes any module activation statuses created by this class.
+	 */
+	public function reset(): void;
 }
