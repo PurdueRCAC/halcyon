@@ -16,7 +16,7 @@
 			'modules/core/vendor/jquery-ui/jquery.ui.min.css',
 			'modules/core/vendor/jquery-datepicker/jquery.datepicker.css',
 			'modules/core/vendor/jquery-timepicker/jquery.timepicker.css',
-			'themes/Admin/css/index.css',
+			'themes/admin/css/index.css',
 		);
 		foreach ($styles as $css):
 			?>
@@ -25,11 +25,11 @@
 		endforeach;
 		?>
 		<!--[if IE 9]>
-			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/Admin/css/browser/ie9.css') }}" />
+			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie9.css') }}" />
 		<![endif]-->
 		<!--[if lt IE 9]>
 			<script src="{{ asset('js/html5.js') }}"></script>
-			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/Admin/css/browser/ie8.css') }}" />
+			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie8.css') }}" />
 		<![endif]-->
 		@yield('styles')
 		@stack('styles')
@@ -42,7 +42,7 @@
 			'modules/core/vendor/jquery-timepicker/jquery.timepicker.js',
 			//'modules/core/vendor/bootstrap/bootstrap.bundle.min.js',
 			'modules/core/js/core.js',
-			'themes/Admin/js/index.js',
+			'themes/admin/js/index.js',
 		);
 		foreach ($scripts as $script):
 			?>
@@ -60,7 +60,7 @@
 					<a href="{{ url()->to('/') }}">
 						<span class="logo-container">
 							<span class="logo-shim"></span>
-							<?php echo file_get_contents(app_path() . '/Themes/Admin/assets/images/halcyon.svg'); ?>
+							<?php echo file_get_contents(app_path('Themes/Admin/assets/images/halcyon.svg')); ?>
 						</span>
 						{{ config('app.name') }}
 					</a>
@@ -106,7 +106,7 @@
 							<h2 class="sr-only">@yield('title')</h2>
 
 							@widget('breadcrumbs')
-						
+
 							@yield('toolbar')
 						</div>
 					</div><!-- / #toolbar-box -->
@@ -125,7 +125,7 @@
 						<!-- Content ends -->
 
 						<noscript>
-							<?php echo trans('global.warnjavascript') ?>
+							{{ trans('global.warnjavascript') }}
 						</noscript>
 					</section><!-- / #main -->
 				</main><!-- / #component-content -->

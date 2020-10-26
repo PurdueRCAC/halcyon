@@ -22,14 +22,14 @@
 		<!-- Styles -->
 		<?php
 		$styles = array(
-			'themes/Rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.min.css',
-			'themes/Rcac/css/jquerytimepicker_min.css',
-			'themes/Rcac/css/font-awesome-css.min.css',
-			'themes/Rcac/css/college.css',
-			'themes/Rcac/css/content.css',
+			'themes/rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.min.css',
+			'themes/rcac/css/jquerytimepicker_min.css',
+			'themes/rcac/css/font-awesome-css.min.css',
+			'themes/rcac/css/college.css',
+			'themes/rcac/css/content.css',
 		);
 		if (!app('isAdmin')):
-			$styles[] = 'themes/Rcac/css/admin.css';
+			$styles[] = 'themes/rcac/css/admin.css';
 		endif;
 
 		foreach ($styles as $css):
@@ -55,18 +55,18 @@
 		</script>
 		<?php
 		$scripts = array(
-			'themes/Rcac/js/jquery-3.3.1.min.js',
-			'themes/Rcac/js/common/jquery-ui-1.12.1/jquery-ui.min.js',
-			'themes/Rcac/js/css_browser_selector.js',
-			'themes/Rcac/js/modernizr-1.5.min.js',
-			'themes/Rcac/js/bootstrap.min.js',
-			'themes/Rcac/js/google_jquery_link_tracking.js',
-			'themes/Rcac/js/common/common.js',
-			'themes/Rcac/js/common/date.js',
-			'themes/Rcac/js/common/jquery_cookie.js',
-			'themes/Rcac/js/common/jquerytimepicker_min.js',
-			'themes/Rcac/js/common/json2.js',
-			'themes/Rcac/js/common/text.js',
+			'themes/rcac/js/jquery-3.3.1.min.js',
+			'themes/rcac/js/common/jquery-ui-1.12.1/jquery-ui.min.js',
+			'themes/rcac/js/css_browser_selector.js',
+			'themes/rcac/js/modernizr-1.5.min.js',
+			'themes/rcac/js/bootstrap.min.js',
+			'themes/rcac/js/google_jquery_link_tracking.js',
+			'themes/rcac/js/common/common.js',
+			'themes/rcac/js/common/date.js',
+			'themes/rcac/js/common/jquery_cookie.js',
+			'themes/rcac/js/common/jquerytimepicker_min.js',
+			'themes/rcac/js/common/json2.js',
+			'themes/rcac/js/common/text.js',
 		);
 		foreach ($scripts as $script):
 			?>
@@ -162,8 +162,8 @@
 						<div class="logo col-lg-2 col-md-3 col-sm-3 col-xs-12">
 							<h1 class="sr-only">Purdue University</h1>
 							<a class="svgLinkContainer" href="https://www.purdue.edu">
-								<object class="svgContainer" data="{{ asset('themes/Rcac/images/PU-H.svg') }}" type="image/svg+xml">
-									<img alt="Purdue University" src="{{ asset('themes/Rcac/images/PU-H.svg') }}" />
+								<object class="svgContainer" data="{{ asset('themes/rcac/images/PU-H.svg') }}" type="image/svg+xml">
+									<img alt="Purdue University" src="{{ asset('themes/rcac/images/PU-H.svg') }}" />
 								</object>
 							</a>
 						</div>
@@ -176,7 +176,7 @@
 					<div class="login">
 						<ul>
 							@if (Auth::check())
-								<li><a href="{{ url('/account/myinfo/') }}">{{ Auth::user()->name }}</a> &nbsp;|&nbsp; <a href="{{ route('logout') }}">{{ trans('theme::rcac.logout') }}</a></li>
+								<li><a href="{{ route('site.users.account') }}">{{ Auth::user()->name }}</a> &nbsp;|&nbsp; <a href="{{ route('logout') }}">{{ trans('theme::rcac.logout') }}</a></li>
 							@else
 								<li><a href="{{ route('login') }}" class="btn btn-default"><i class="fa fa-lock" aria-hidden="true"></i> {{ trans('theme::rcac.login') }}</a></li>
 							@endif
