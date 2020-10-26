@@ -9,7 +9,8 @@ namespace App\Halcyon\Form\Fields;
 
 use App\Halcyon\Html\Builder\Input;
 use App\Halcyon\Form\Field;
-use DateTimeZone;
+use Carbon\Carbon;
+//use DateTimeZone;
 
 /**
  * Provides a pop up date picker linked to a button.
@@ -73,20 +74,19 @@ class Calendar extends Field
 		}
 
 		// If a known filter is given use it.
-		switch (strtoupper((string) $this->element['filter']))
+		/*switch (strtoupper((string) $this->element['filter']))
 		{
-			case 'SERVER_UTC':
+			case 'SERVER_UTC':*/
 				// Convert a date to UTC based on the server timezone.
 				if (intval($this->value))
 				{
 					// Get a date object based on the correct timezone.
-					$date = new Date($this->value, 'UTC');
-					$date->setTimezone(new DateTimeZone(app('config')->get('offset')));
+					$date = Carbon::parse($this->value);
 
 					// Transform the date string.
-					$this->value = $date->format('Y-m-d H:i:s', true, false);
+					$this->value = $date->format('Y-m-d H:i:s');
 				}
-				break;
+				/*break;
 
 			case 'USER_UTC':
 				// Convert a date to UTC based on the user timezone.
@@ -97,10 +97,10 @@ class Calendar extends Field
 					$date->setTimezone(new DateTimeZone(app('user')->getParam('timezone', app('config')->get('offset'))));
 
 					// Transform the date string.
-					$this->value = $date->format('Y-m-d H:i:s', true, false);
+					$this->value = $date->format('Y-m-d H:i:s');
 				}
 				break;
-		}
+		}*/
 
 		$attributes['id'] = $this->id;
 		$attributes['format'] = $format;
