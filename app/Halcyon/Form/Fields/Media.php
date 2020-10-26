@@ -56,7 +56,7 @@ class Media extends Field
 
 			// Build the script.
 			$script = array();
-			$script[] = '	function jInsertFieldValue(value, id) {';
+			$script[] = '	function InsertFieldValue(value, id) {';
 			$script[] = '		var old_value = $("#" + id).val();';
 			$script[] = '		if (old_value != value) {';
 			$script[] = '			var elem = $("#" + id);';
@@ -65,11 +65,11 @@ class Media extends Field
 			$script[] = '			if (typeof(elem.onchange) === "function") {';
 			$script[] = '				elem.onchange();';
 			$script[] = '			}';
-			$script[] = '			jMediaRefreshPreview(id);';
+			$script[] = '			MediaRefreshPreview(id);';
 			$script[] = '		}';
 			$script[] = '	}';
 
-			$script[] = '	function jMediaRefreshPreview(id) {';
+			$script[] = '	function MediaRefreshPreview(id) {';
 			$script[] = '		id = "#" + id;';
 			$script[] = '		var value = $(id).val();';
 			$script[] = '		var img = $(id + "_preview");';
@@ -86,13 +86,13 @@ class Media extends Field
 			$script[] = '		} ';
 			$script[] = '	}';
 
-			$script[] = '	function jMediaRefreshPreviewTip(tip)';
+			$script[] = '	function MediaRefreshPreviewTip(tip)';
 			$script[] = '	{';
 			$script[] = '		$(tip).css("display", "block");';
 			$script[] = '		var img = tip.find("img.media-preview");';
 			$script[] = '		var id = $(img).attr("id");';
 			$script[] = '		id = id.substring(0, id.length - "_preview".length);';
-			$script[] = '		jMediaRefreshPreview(id);';
+			$script[] = '		MediaRefreshPreview(id);';
 			$script[] = '	}';
 
 			// Add the script to the document head.
@@ -135,7 +135,7 @@ class Media extends Field
 
 		// The button.
 		$html[] = '	<span class="input-group-append">';
-		$html[] = '		<a class="btn btn-outline-secondary" href="'
+		$html[] = '		<a class="btn btn-secondary" href="'
 			. ($this->element['readonly'] ? ''
 			: ($link ? $link
 				: route('admin.media.index', ['asset' => implode('/', $asset), 'author' => $this->form->getValue($authorField), 'fieldid' => $this->id, 'folder' => $folder]))) . '"'
@@ -192,17 +192,17 @@ class Media extends Field
 				'class' => 'media-preview',
 				'style' => 'max-width:160px; max-height:100px;'
 			);
-			$img = ''; //Asset::image($src, $lang->txt('JLIB_FORM_MEDIA_PREVIEW_ALT'), $attr);
+			$img = '';
 			$previewImg = '<div id="' . $this->id . '_preview_img"' . ($src ? '' : ' style="display:none"') . '>' . $img . '</div>';
-			$previewImgEmpty = '<div id="' . $this->id . '_preview_empty"' . ($src ? ' style="display:none"' : '') . '>' . trans('JLIB_FORM_MEDIA_PREVIEW_EMPTY') . '</div>';
+			$previewImgEmpty = '<div id="' . $this->id . '_preview_empty"' . ($src ? ' style="display:none"' : '') . '>' . trans('global.MEDIA_PREVIEW_EMPTY') . '</div>';
 
 			//$html[] = '<div class="media-preview fltlft">';
 			if ($showAsTooltip)
 			{
 				$tooltip = $previewImgEmpty . $previewImg;
 				$options = array(
-					'title' => htmlspecialchars(trans('JLIB_FORM_MEDIA_PREVIEW_SELECTED_IMAGE'), ENT_COMPAT, 'UTF-8'),
-					'text'  => htmlspecialchars(trans('JLIB_FORM_MEDIA_PREVIEW_TIP_TITLE'), ENT_COMPAT, 'UTF-8'),
+					'title' => htmlspecialchars(trans('global.MEDIA_PREVIEW_SELECTED_IMAGE'), ENT_COMPAT, 'UTF-8'),
+					'text'  => htmlspecialchars(trans('global.MEDIA_PREVIEW_TIP_TITLE'), ENT_COMPAT, 'UTF-8'),
 					'class' => 'form-text hasTip'
 				);
 				$html[] = '<span class="' . $options['class'] . '" title="' . $options['title'] . '::' . htmlspecialchars($tooltip, ENT_COMPAT, 'UTF-8') . '">' . $options['text'] . '</span>';
