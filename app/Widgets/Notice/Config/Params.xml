@@ -2,20 +2,20 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="alertlevel" type="list" default="low" label="MOD_NOTICES_PARAM_ALERTLEVEL_LABEL" description="MOD_NOTICES_PARAM_ALERTLEVEL_DESC">
-				<option value="low">MOD_NOTICES_PARAM_ALERTLEVEL_LOW</option>
-				<option value="medium">MOD_NOTICES_PARAM_ALERTLEVEL_MEDIUM</option>
-				<option value="high">MOD_NOTICES_PARAM_ALERTLEVEL_HIGH</option>
+			<field name="alertlevel" type="list" default="low" label="widget.notice::notice.alertlevel" description="widget.notice::notice.alertlevel desc">
+				<option value="low">widget.notice::notice.alertlevels.low</option>
+				<option value="medium">widget.notice::notice.alertlevels.medium</option>
+				<option value="high">widget.notice::notice.alertlevels.high</option>
 			</field>
-			<field name="moduleid" type="text" default="" label="MOD_NOTICES_PARAM_MODULEID_LABEL" description="MOD_NOTICES_PARAM_MODULEID_DESC" />
-			<field name="message" type="textarea" rows="5" cols="40" default="" label="MOD_NOTICES_PARAM_MESSAGE_LABEL" description="MOD_NOTICES_PARAM_MESSAGE_DESC" />
-			<field name="allowClose" type="radio" default="0" label="MOD_NOTICES_PARAM_ALLOWCLOSING_LABEL" description="MOD_NOTICES_PARAM_ALLOWCLOSING_DESC">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
+			<field name="hmtlid" type="text" default="" label="widget.notice::notice.htmlid" description="widget.notice::notice.htmlid desc" />
+			<field name="message" type="textarea" rows="5" cols="40" default="" label="widget.notice::notice.message" description="widget.notice::notice.message desc" />
+			<field name="allowClose" type="radio" default="0" label="widget.notice::notice.allow closing" description="widget.notice::notice.allow closing desc">
+				<option value="1">global.yes</option>
+				<option value="0">global.no</option>
 			</field>
-			<field name="autolink" type="radio" default="1" label="MOD_NOTICES_PARAM_AUTOLINK_LABEL" description="MOD_NOTICES_PARAM_AUTOLINK_DESC">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
+			<field name="autolink" type="radio" default="1" label="widget.notice::notice.auto link" description="widget.notice::notice.auto link desc">
+				<option value="1">global.yes</option>
+				<option value="0">global.no</option>
 			</field>
 		</fieldset>
 	</fields>
