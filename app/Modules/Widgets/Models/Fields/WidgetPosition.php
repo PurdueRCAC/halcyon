@@ -54,7 +54,7 @@ class WidgetPosition extends select
 
 		// Build the script.
 		$script = array();
-		$script[] = '	function jSelectPosition_'.$this->id.'(name) {';
+		$script[] = '	function selectPosition_'.$this->id.'(name) {';
 		$script[] = '		$("#'.$this->id.'").val(name);';
 		$script[] = '		$.fancybox.close();';
 		$script[] = '	}';
@@ -77,8 +77,38 @@ class WidgetPosition extends select
 		$html[] = '</div>';
 
 		$html[] = '</div>';*/
-		$html[] = parent::getInput();
-		$html[] = '<script>' . implode("\n", $script) . '</script>';
+		//$html[] = parent::getInput();
+		//$html[] = '<script>' . implode("\n", $script) . '</script>';
+
+		$attributes = array(
+			'name'         => $this->name,
+			'id'           => $this->id,
+			'size'         => ($this->element['size']      ? (int) $this->element['size']      : ''),
+			'multiple'     => ($this->element['multiple'] ? 'multiple' : ''),
+			'class'        => 'form-control' . ($this->element['class'] ? (string) ' ' . $this->element['class'] : ''),
+			'readonly'     => ((string) $this->element['readonly'] == 'true'    ? 'readonly' : ''),
+			'disabled'     => ((string) $this->element['disabled'] == 'true'    ? 'disabled' : ''),
+			'onchange'     => ($this->element['onchange']  ? (string) $this->element['onchange'] : '')
+		);
+
+		$attr = array();
+		foreach ($attributes as $key => $value)
+		{
+			if (!$value)
+			{
+				continue;
+			}
+			$attr[] = $key . '="' . $value . '"';
+		}
+		$attr = implode(' ', $attr);
+
+		$html[] = '<input type="text" ' . $attr . ' list="' . $this->id . 'list" value="' . $this->value . '" />';
+		$html[] = '<datalist id="' . $this->id . 'list">';
+		foreach ($this->getOptions() as $opt)
+		{
+			$html[] = '<option value="' . $opt['value'] . '">' . $opt['text'] . '</option>';
+		}
+		$html[] = '</datalist>';
 
 		return implode("\n", $html);
 	}

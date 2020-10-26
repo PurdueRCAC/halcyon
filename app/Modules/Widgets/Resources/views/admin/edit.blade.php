@@ -28,7 +28,7 @@
 		}
 	}
 
-$.widget( "custom.combobox", {
+/*$.widget( "custom.combobox", {
 	_create: function() {
 		this.wrapper = $( "<span>" )
 			.addClass( "input-group input-combobox" )
@@ -154,14 +154,14 @@ $.widget( "custom.combobox", {
 		this._delay(function() {
 			this.input.tooltip( "close" ).attr( "title", "" );
 		}, 2500 );
-		this.input.autocomplete( "instance" ).term = "";*/
+		this.input.autocomplete( "instance" ).term = "";
 	},
 
 	_destroy: function() {
 		this.wrapper.remove();
 		this.element.show();
 	}
-});
+});*/
 
 $( document ).ready(function() {
 	if ($('#item-form').length) {
@@ -171,7 +171,19 @@ $( document ).ready(function() {
 		});
 	}
 
-	$("#fields_position").combobox();
+	//$("#fields_position").combobox();
+
+	var nativedatalist = !!('list' in document.createElement('input')) && !!(document.createElement('datalist') && window.HTMLDataListElement);
+
+	if (!nativedatalist) {
+		$('input[list]').each(function () {
+			var availableTags = $('#' + $(this).attr("list")).find('option').map(function () {
+				return this.value;
+			}).get();
+
+			$(this).autocomplete({ source: availableTags });
+		});
+	}
 
 	if ($('#widgetorder').length) {
 		data = $('#widgetorder');
@@ -318,12 +330,6 @@ app('pathway')
 					<?php echo $form->getInput('note'); ?>
 				</div>
 
-				<?php /*if ($row->id) : ?>
-					<div class="form-group">
-						<?php echo $form->getLabel('id'); ?>
-						<?php echo $form->getInput('id'); ?>
-					</div>
-				<?php endif;*/ ?>
 				<input type="hidden" name="id" value="{{ $row->id }}" />
 				<input type="hidden" name="fields[widget]" value="{{ $row->widget }}" />
 			</fieldset>
