@@ -226,11 +226,11 @@ app('pathway')
 					}
 					elseif ($row->pages < 0)
 					{
-						$pages = trans('widgets::widgets.ASSIGNED_VARIES_EXCEPT');
+						$pages = trans('widgets::widgets.all except selected');
 					}
 					elseif ($row->pages > 0)
 					{
-						$pages = trans('widgets::widgets.ASSIGNED_VARIES_ONLY');
+						$pages = trans('widgets::widgets.selected only');
 					}
 					else
 					{

@@ -175,13 +175,13 @@ abstract class Admin
 	public static function getAssignmentOptions($clientId)
 	{
 		$options = array();
-		$options['0'] = trans('widgets::widgets.OPTION_MENU_ALL');
-		$options['-'] = trans('widgets::widgets.OPTION_MENU_NONE');
+		$options['0'] = trans('widgets::widgets.option.all');
+		$options['-'] = trans('widgets::widgets.option.none');
 
 		if ($clientId == 0)
 		{
-			$options['1'] = trans('widgets::widgets.OPTION_MENU_INCLUDE');
-			$options['-1'] = trans('widgets::widgets.OPTION_MENU_EXCLUDE');
+			$options['1'] = trans('widgets::widgets.option.include');
+			$options['-1'] = trans('widgets::widgets.option.exclude');
 		}
 
 		return $options;

@@ -348,10 +348,10 @@ app('pathway')
 			<?php if ($row->client_id == 0) :?>
 				<?php $assignment = $row->menuAssignment(); ?>
 				<fieldset class="adminform">
-					<legend>{{ trans('widgets::widgets.MENU_ASSIGNMENT') }}</legend>
+					<legend>{{ trans('widgets::widgets.menu assignment') }}</legend>
 
 					<div class="form-group">
-						<label for="menu_assignment">{{ trans('widgets::widgets.MODULE_ASSIGN') }}</label>
+						<label for="menu_assignment">{{ trans('widgets::widgets.widget assignment') }}</label>
 					<!-- <fieldset id="jform_menus" class="radio"> -->
 						<select class="form-control" name="menu[assignment]" id="menu_assignment">
 							<?php echo App\Halcyon\Html\Builder\Select::options(App\Modules\Widgets\Helpers\Admin::getAssignmentOptions($row->client_id), 'value', 'text', $assignment, true);?>
@@ -361,92 +361,99 @@ app('pathway')
 
 					<div id="menu_assignment-dependent">
 						<div class="form-group">
-							<label id="jform_menuselect-lbl" for="jform_menuselect"><?php echo trans('global.MENU_SELECTION'); ?></label>
+							<label id="field_menuselect-lbl" for="field_menuselect">{{ trans('widgets::widgets.menu selection') }}</label>
 
+							<!--
 							<button class="btn-assignments btn btn-default" onclick="$('.chkbox').each(function(i, el) { el.checked = !el.checked; });">
-								<?php echo trans('global.SELECTION_INVERT'); ?>
+								<?php echo trans('global.select toggle'); ?>
 							</button>
 
 							<button class="btn-assignments btn btn-default" onclick="$('.chkbox').each(function(i, el) { el.checked = false; });">
-								<?php echo trans('global.SELECTION_NONE'); ?>
+								<?php echo trans('global.select none'); ?>
 							</button>
 
 							<button class="btn-assignments btn btn-default" onclick="$('.chkbox').each(function(i, el) { el.checked = true; });">
-								<?php echo trans('global.SELECTION_ALL'); ?>
+								<?php echo trans('global.select all'); ?>
 							</button>
-						</div>
+							-->
 
-						<div class="clr"></div>
-
-						<div id="menu-assignment">
+						<div id="menu-assignment" class="accordian">
 							<?php $menuTypes = App\Modules\Menus\Helpers\Menus::getMenuLinks(); ?>
-							<?php //echo App\Halcyon\Html\Builder\Tabs::start('widget-menu-assignment-tabs', array('useCookie' => 1)); ?>
+							<?php /*
 							<div class="tabs">
 								<ul class="nav tav-tabs">
 									<?php foreach ($menuTypes as &$type) : ?>
-										<li class="nav-item"><a class="nav-link" href="#<?php echo $type->menutype; ?>-details"><?php echo $type->title ? $type->title : $type->menutype; ?></a></li>
+										<li class="nav-item">
+											<a class="nav-link" href="#<?php echo $type->menutype; ?>-details">
+												<?php echo $type->title ? $type->title : $type->menutype; ?>
+											</a>
+										</li>
 									<?php endforeach; ?>
-								</ul>
+								</ul>*/ ?>
 
-						<?php foreach ($menuTypes as &$type) : ?>
-							<div id="<?php echo $type->menutype; ?>-details">
-							<?php
-							//echo Html::tabs('panel', $type->title ? $type->title : $type->menutype, $type->menutype.'-details');
+								<?php foreach ($menuTypes as &$type) : ?>
+									<h3 data-ref="{{ $type->menutype }}-details">
+										<a href="#{{ $type->menutype }}-details">
+											{{ $type->title ? $type->title : $type->menutype }}
+										</a>
+									</h3>
+									<div id="{{ $type->menutype }}-details">
+										<?php
+										//echo Html::tabs('panel', $type->title ? $type->title : $type->menutype, $type->menutype.'-details');
 
-							$chkbox_class = 'chk-menulink-' . $type->id; ?>
+										$chkbox_class = 'chk-menulink-' . $type->id; ?>
 
-							<button class="btn-assignments btn btn-secondary" onclick="$('.<?php echo $chkbox_class; ?>').each(function(i, el) { el.checked = !el.checked; });">
-								<?php echo trans('global.SELECTION_INVERT'); ?>
-							</button>
+										<!--
+										<button class="btn-assignments btn btn-secondary" onclick="$('.<?php echo $chkbox_class; ?>').each(function(i, el) { el.checked = !el.checked; });">
+											<?php echo trans('global.SELECTION_INVERT'); ?>
+										</button>
 
-							<button class="btn-assignments btn btn-warning" onclick="$('.<?php echo $chkbox_class; ?>').each(function(i, el) { el.checked = false; });">
-								<?php echo trans('global.SELECTION_NONE'); ?>
-							</button>
+										<button class="btn-assignments btn btn-warning" onclick="$('.<?php echo $chkbox_class; ?>').each(function(i, el) { el.checked = false; });">
+											<?php echo trans('global.SELECTION_NONE'); ?>
+										</button>
 
-							<button class="btn-assignments btn btn-success" onclick="$('.<?php echo $chkbox_class; ?>').each(function(i, el) { el.checked = true; });">
-								<?php echo trans('global.SELECTION_ALL'); ?>
-							</button>
+										<button class="btn-assignments btn btn-success" onclick="$('.<?php echo $chkbox_class; ?>').each(function(i, el) { el.checked = true; });">
+											<?php echo trans('global.SELECTION_ALL'); ?>
+										</button>
 
-							<div class="clr"></div>
+										<div class="clr"></div>
+										-->
 
-							<?php
-							$count = count($type->links);
-							$i     = 0;
-							if ($count) :
-							?>
-							<ul class="menu-links">
-								<?php
-								foreach ($type->links as $link) :
-									if (trim($assignment) == '-'):
-										$checked = '';
-									elseif ($assignment == 0):
-										$checked = ' checked="checked"';
-									elseif ($assignment < 0):
-										$checked = in_array(-$link->value, $row->menuAssigned()) ? ' checked="checked"' : '';
-									elseif ($assignment > 0) :
-										$checked = in_array($link->value, $row->menuAssigned()) ? ' checked="checked"' : '';
-									endif;
-								?>
-								<li class="menu-link">
-									<div class="form-check">
-										<input type="checkbox" class="form-check-input chkbox <?php echo $chkbox_class; ?>" name="menu[assigned][]" value="<?php echo (int) $link->value;?>" id="link<?php echo (int) $link->value;?>"<?php echo $checked;?>/>
-										<label class="form-check-label" for="link<?php echo (int) $link->value;?>"><?php echo $link->text; ?></label>
-									</div>
-								</li>
-								<?php if ($count > 20 && ++$i == ceil($count/2)) :?>
-								</ul>
-								<ul class="menu-links">
-								<?php endif; ?>
+										<?php
+										$count = count($type->links);
+										$i     = 0;
+										if ($count):
+										?>
+										<ul class="menu-links">
+											<?php
+											foreach ($type->links as $link):
+												if (trim($assignment) == '-'):
+													$checked = '';
+												elseif ($assignment == 0):
+													$checked = ' checked="checked"';
+												elseif ($assignment < 0):
+													$checked = in_array(-$link->value, $row->menuAssigned()) ? ' checked="checked"' : '';
+												elseif ($assignment > 0) :
+													$checked = in_array($link->value, $row->menuAssigned()) ? ' checked="checked"' : '';
+												endif;
+												?>
+												<li class="menu-link">
+													<div class="form-check">
+														<input type="checkbox" class="form-check-input chkbox <?php echo $chkbox_class; ?>" name="menu[assigned][]" value="<?php echo (int) $link->value;?>" id="link<?php echo (int) $link->value;?>"<?php echo $checked;?>/>
+														<label class="form-check-label" for="link<?php echo (int) $link->value;?>"><?php echo $link->text; ?></label>
+													</div>
+												</li>
+												<?php if ($count > 20 && ++$i == ceil($count/2)): ?>
+											</ul>
+											<ul class="menu-links">
+												<?php endif; ?>
+											<?php endforeach; ?>
+										</ul>
+										<?php endif; ?>
+									</div><!-- / #{{ $type->menutype }}-details -->
 								<?php endforeach; ?>
-							</ul>
-							<div class="clr"></div>
-							<?php endif; ?>
-							</div>
-						<?php endforeach; ?>
+							<!--</div> / .tabs -->
 						</div>
-
-						<?php //echo Html::tabs('end');?>
-
 						</div><!-- / #menu-assignment -->
 					</div>
 				</fieldset>
@@ -472,6 +479,9 @@ app('pathway')
 							<div class="form-group">
 								<?php echo $field->label; ?><br />
 								<?php echo $field->input; ?>
+								@if ($field->description)
+									<span class="form-text text-muted">{{ trans($field->description) }}</span>
+								@endif
 							</div>
 						<?php else : $hidden_fields .= $field->input; ?>
 						<?php endif; ?>
