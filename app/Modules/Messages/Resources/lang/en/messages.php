@@ -33,4 +33,10 @@ return [
 	'processing' => 'Processing',
 	'user' => 'User',
 	'now' => '(now)',
+	// Status
+	'queued' => 'Queued',
+	'running' => 'Running',
+	'completed' => 'Completed',
+	'error' => 'Error',
+	'deferred' => 'Deferred',
 ];
