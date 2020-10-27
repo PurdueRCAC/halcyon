@@ -175,7 +175,7 @@ class Type extends Model
 	public function widgets()
 	{
 		$query = Widget::query()
-			->where('module', '=', 'mod_menu')
+			->where('widget', '=', 'menu')
 			->where('params', 'like', '%"menutype":' . json_encode($this->menutype) . '%');
 
 		return $query;
@@ -421,7 +421,7 @@ class Type extends Model
 		if ($checked_out)
 		{
 			$this->addError(
-				trans('JLIB_DATABASE_ERROR_DELETE_FAILED', get_class($this), trans('JLIB_DATABASE_ERROR_MENUTYPE_CHECKOUT'))
+				trans('global.error.delete failed', get_class($this), trans('menus::menus.error.checked out'))
 			);
 			return false;
 		}
@@ -435,7 +435,7 @@ class Type extends Model
 		if ($checked_out)
 		{
 			$this->addError(
-				trans('JLIB_DATABASE_ERROR_DELETE_FAILED', get_class($this), trans('JLIB_DATABASE_ERROR_MENUTYPE_CHECKOUT'))
+				trans('global.error.delete failed', get_class($this), trans('menus::menus.error.checked out'))
 			);
 			return false;
 		}

@@ -64,7 +64,7 @@ return [
 		'alias description' => 'Menu Item to link to...',
 		'alias' => 'Menu Item',
 		'css description' => 'An optional, custom style to apply to the menu hyperlink.',
-		'css' => 'Link CSS Style',
+		'css' => 'CSS Class Name',
 		'link title description' => 'An optional, custom description for the title attribute of the menu hyperlink.',
 		'link title' => 'Link Title Attribute',
 		'assigned description' => 'Shows which menu a link will appear in.',

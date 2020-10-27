@@ -112,13 +112,13 @@ app('pathway')
 				<div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
 					<?php echo $form->getLabel('type'); ?>
 					<?php echo $form->getInput('type'); ?>
-					{!! $errors->first('type', '<span class="help-block">:message</span>') !!}
+					{!! $errors->first('type', '<span class="form-text text-danger">:message</span>') !!}
 				</div>
 
 				<div class="form-group menutype-dependant menutype-url menutype-module{{ $errors->has('title') ? ' has-error' : '' }}">
 					<?php echo $form->getLabel('title'); ?>
 					<?php echo $form->getInput('title'); ?>
-					{!! $errors->first('title', '<span class="help-block">:message</span>') !!}
+					{!! $errors->first('title', '<span class="form-text text-danger">:message</span>') !!}
 				</div>
 
 				<?php if ($row->type == 'url'): ?>
@@ -132,7 +132,7 @@ app('pathway')
 						</div> -->
 						<?php echo $form->getInput('link'); ?>
 					<!-- </div> -->
-					{!! $errors->first('link', '<span class="help-block">:message</span>') !!}
+					{!! $errors->first('link', '<span class="form-text text-danger">:message</span>') !!}
 				</div>
 
 				<div class="form-group menutype-dependant menutype-module">
@@ -190,10 +190,10 @@ app('pathway')
 						</div>
 					</div>
 					<div class="col col-md-6">
-						<div class="form-group">
+						<div class="form-group{{ $errors->has('class') ? ' has-error' : '' }}">
 							<?php echo $form->getLabel('class'); ?>
 							<?php echo $form->getInput('class'); ?>
-							{!! $errors->first('class', '<span class="help-block">:message</span>') !!}
+							{!! $errors->first('class', '<span class="form-text text-danger">:message</span>') !!}
 						</div>
 					</div>
 				</div>
@@ -225,7 +225,8 @@ app('pathway')
 					<?php echo $form->getInput('id'); ?>
 				</div>*/ ?>
 			</fieldset>
-
+		</div>
+		<div class="col col-md-5">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.publishing') }}</legend>
 
@@ -244,23 +245,8 @@ app('pathway')
 					</div>
 				</div>
 			</fieldset>
-		</div>
-		<div class="col col-md-5">
-			<?php /*echo Html::sliders('start', 'menu-sliders-' . $row->id); ?>
-			<?php //Load  parameters.
-				echo $this->loadTemplate('options'); ?>
 
-				<div class="clr"></div>
-
-				<?php if (!empty($this->modules)): ?>
-					<?php echo Html::sliders('panel', Lang::txt('COM_MENUS_ITEM_MODULE_ASSIGNMENT'), 'module-options'); ?>
-					<fieldset>
-						<?php echo $this->loadTemplate('modules'); ?>
-					</fieldset>
-				<?php endif; ?>
-
-			<?php echo Html::sliders('end');*/ ?>
-			@sliders('start', 'menu-sliders')
+			<?php /*@sliders('start', 'menu-sliders')
 				<?php
 				$fieldSets = $form->getFieldsets('request');
 
@@ -341,7 +327,7 @@ app('pathway')
 						<?php echo $hidden_fields; ?>
 					</fieldset>
 				<?php endforeach; ?>
-			@sliders('end')
+			@sliders('end') */ ?>
 
 			<input type="hidden" name="task" value="" />
 			<input type="hidden" name="fields[language]" value="*" />
