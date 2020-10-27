@@ -45,7 +45,7 @@
 							</time>
 						</span>
 						@if ($action->action == 'updated')
-							<span class="entry-diff">Changed fields: <?php echo implode(', ', $fields); ?></span>
+							<span class="entry-diff">Changed fields: <code><?php echo implode('</code>, <code>', $fields); ?></code></span>
 						@endif
 					</li>
 					<?php
