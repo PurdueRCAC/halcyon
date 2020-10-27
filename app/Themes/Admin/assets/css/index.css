@@ -179,6 +179,7 @@ pre,
 code,
 kbd,
 samp {
+  font-size: 87.5%;
   font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
 }
 body,
@@ -2022,12 +2023,12 @@ th .form-check label {
   border-color: #999;
 }
 fieldset fieldset {
-  border: 1px solid #dddddd;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 0.61803399;
+  padding: 1em 1em 0 1em;
   -webkit-border-radius: 0.25em;
   -moz-border-radius: 0.25em;
   border-radius: 0.25em;
+  margin: 0 0 1rem 0;
 }
 fieldset.adminform fieldset legend,
 fieldset fieldset legend {
@@ -3184,6 +3185,10 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 .dialog {
   display: none;
 }
+.dialog-footer {
+  padding-top: 1.5em;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
 .ui-dialog {
   padding: 0;
 }
@@ -3399,6 +3404,7 @@ div.current li {
   left: 5px;
   bottom: 5px;
   border-radius: 0.5em;
+  z-index: 1;
 }
 #header .logo-container {
   display: inline-block;
@@ -5630,15 +5636,22 @@ a.menulist:hover:before {
   .input-group,
   .card,
   .toolbar-box .pagetitle {
-    background-color: rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.1);
-    color: #eee;
     background-color: rgba(255, 255, 255, 0.05);
     border-color: transparent;
     color: rgba(255, 255, 255, 0.75);
   }
   .form-control:placeholder {
     color: rgba(255, 255, 255, 0.2);
+  }
+  .form-control:disabled,
+  .form-control[readonly] {
+    background-color: rgba(255, 255, 255, 0.01);
+  }
+  fieldset fieldset {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  fieldset fieldset legend {
+    color: #fff;
   }
   fieldset.adminform fieldset legend {
     color: #fff;
@@ -5778,7 +5791,6 @@ a.menulist:hover:before {
     color: #555;
   }
 
-
   .off,
   .no,
   .false,
@@ -5801,6 +5813,10 @@ a.menulist:hover:before {
     color: #fff;
     background-color: rgba(48, 166, 73, 0.3);
     border-color: transparent;
+  }
+
+  .table-bordered {
+    border-color: rgba(255, 255, 255, 0.1);
   }
 
   .page-link {
@@ -5881,5 +5897,21 @@ a.menulist:hover:before {
   #header .user-options li:after {
     background-color: #f1f1f1;
     color: #333;
+  }
+  .dialog-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  html span.fancytree-title {
+    color: #ccc;
+  }
+  html span.fancytree-title:hover {
+    background-color: transparent;
+    color: #fff;
+  }
+  html table.fancytree-ext-table tbody tr.fancytree-focused {
+    background-color: rgba(75, 144, 162, 0.4);
+  }
+  label .required {
+    color: #dc3545;
   }
 }
