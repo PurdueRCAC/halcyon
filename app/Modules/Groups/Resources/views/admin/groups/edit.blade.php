@@ -119,7 +119,7 @@ app('pathway')
 							<td></td>
 							<td colspan="3">
 								<span class="input-group">
-									<span class="input-group-prepend"><span class="input-group-text">{{ $row->unixgroup }}-</span>
+									<span class="input-group-prepend"><span class="input-group-text">{{ $row->unixgroup }}-</span></span>
 									<input type="text" name="longname" id="longname" class="form-control input-unixgroup" placeholder="{{ trans('groups::groups.name') }}" />
 								</span>
 							</td>
@@ -139,7 +139,7 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('groups::groups.department') }}</legend>
 
-				<table>
+				<table class="table table-hover">
 					<caption class="sr-only">{{ trans('groups::groups.department') }}</caption>
 					<tbody>
 					@foreach ($row->departments as $dept)
@@ -218,7 +218,7 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('groups::groups.field of science') }}</legend>
 
-				<table>
+				<table class="table table-hover">
 					<caption class="sr-only">{{ trans('groups::groups.field of science') }}</caption>
 					<tbody>
 					@foreach ($row->fieldsOfScience as $field)

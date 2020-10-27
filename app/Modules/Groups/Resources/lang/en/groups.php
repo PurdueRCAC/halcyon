@@ -35,4 +35,5 @@ return [
 	'parent' => 'Parent',
 	'unix group base name hint' => 'Alpha-numeric & dashes, max 10 characters',
 	'unix group id' => 'Unix group system ID',
+	'short name' => 'Short name',
 ];
