@@ -658,7 +658,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	$('.accordian').accordion();
+	$('.accordian').accordion({heightStyle: "content"});
 
 	$('input.date').datepicker({
 		duration: '',
