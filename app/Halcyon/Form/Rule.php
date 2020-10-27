@@ -11,15 +11,13 @@ use Exception;
 use Lang;
 
 // Detect if we have full UTF-8 and unicode PCRE support.
-if (!defined('JCOMPAT_UNICODE_PROPERTIES'))
+if (!defined('COMPAT_UNICODE_PROPERTIES'))
 {
-	define('JCOMPAT_UNICODE_PROPERTIES', (bool) @preg_match('/\pL/u', 'a'));
+	define('COMPAT_UNICODE_PROPERTIES', (bool) @preg_match('/\pL/u', 'a'));
 }
 
 /**
  * Form Rule class.
- *
- * Inspired by Joomla's JFormRule class
  *
  * @todo  Rewrite all of this.
  */
@@ -57,7 +55,7 @@ class Rule
 		// Check for a valid regex.
 		if (empty($this->regex))
 		{
-			throw new Exception(trans('JLIB_FORM_INVALID_FORM_RULE', ['class' => get_class($this)]));
+			throw new Exception(trans('global.error.invalid form rule', ['class' => get_class($this)]));
 		}
 
 		// Add unicode property support if available.

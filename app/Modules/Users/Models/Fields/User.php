@@ -76,13 +76,13 @@ class User extends Field
 		{
 			$html[] = '<span class="input-group">';
 		}
-		$html[] = '	<input type="text" id="' . $this->id . '_name" placeholder="' . trans('JLIB_FORM_SELECT_USER') . '" value="' . htmlspecialchars($name, ENT_COMPAT, 'UTF-8') . '" disabled="disabled"' . $attr . ' />';
+		$html[] = '	<input type="text" id="' . $this->id . '_name" placeholder="' . trans('users::users.select user') . '" value="' . htmlspecialchars($name, ENT_COMPAT, 'UTF-8') . '" disabled="disabled"' . $attr . ' />';
 
 		// Create the user select button.
 		if ($this->element['readonly'] != 'true')
 		{
 			$html[] = '<span class="input-group-append">';
-			$html[] = '		<a class="btn modal_' . $this->id . '" title="' . trans('JLIB_FORM_CHANGE_USER') . '"' . ' href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 500}}"><span class="input-group-text icon-user"></span>' . trans('JLIB_FORM_CHANGE_USER') . '</a>';
+			$html[] = '		<a class="btn modal_' . $this->id . '" title="' . trans('users::users.change user') . '"' . ' href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 500}}"><span class="input-group-text icon-user"></span>' . trans('users::users.change user') . '</a>';
 			$html[] = '</span>';
 			$html[] = '</span>';
 		}

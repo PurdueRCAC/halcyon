@@ -41,17 +41,17 @@ class Folderlist extends Select
 		$path = (string) $this->element['directory'];
 		if (!is_dir($path))
 		{
-			$path = PATH_ROOT . '/' . $path;
+			$path = storage_path($path);
 		}
 
 		// Prepend some default options based on field attributes.
 		if (!$hideNone)
 		{
-			$options[] = Dropdown::option( '-1', app('translator')->alt('JOPTION_DO_NOT_USE', preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname)));
+			$options[] = Dropdown::option( '-1', app('translator')->alt('global.option.do not use', preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname)));
 		}
 		if (!$hideDefault)
 		{
-			$options[] = Dropdown::option('', app('translator')->alt('JOPTION_USE_DEFAULT', preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname)));
+			$options[] = Dropdown::option('', app('translator')->alt('global.option.use default', preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname)));
 		}
 
 		// Get a list of folders in the search path with the given filter.

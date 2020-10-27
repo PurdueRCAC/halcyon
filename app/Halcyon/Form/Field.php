@@ -14,8 +14,6 @@ use ReflectionClass;
 /**
  * Abstract Form Field class.
  *
- * Inspired by Joomla's JFormField class
- *
  * @todo  Rewrite all of this.
  */
 abstract class Field

@@ -11,8 +11,6 @@ namespace App\Halcyon\Form;
  * Provides a storage for filesystem's paths where Form's entities reside and methods for creating those entities.
  * Also stores objects with entities' prototypes for further reusing.
  *
- * Inspired by Joomla's JFormHelper class
- *
  * @todo  Rewrite all of this.
  */
 class Helper

@@ -70,7 +70,7 @@ class WidgetOrder extends Field
 			}
 			$orders2[$orders[$i]->position]++;
 			$ord = $orders2[$orders[$i]->position];
-			$title = trans('widgets::widgets.OPTION_ORDER_POSITION', ['order' => $ord, 'title' => addslashes($orders[$i]->title)]);
+			$title = trans('widgets::widgets.option.order position', ['order' => $ord, 'title' => addslashes($orders[$i]->title)]);
 
 			$data->orders[$i] = array($orders[$i]->position, $ord, $title);
 		}

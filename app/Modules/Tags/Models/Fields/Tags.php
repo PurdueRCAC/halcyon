@@ -44,8 +44,8 @@ class Tags extends Text
 
 		Behavior::framework(true);
 
-		$results = app('dispatcher')->trigger(
-			'hubzero.onGetMultiEntry',
+		$results = event(
+			'onGetMultiEntry',
 			array(
 				array('tags', $this->name, $this->id, $attributes['class'], $this->value, null, null, 'multi', ($attributes['disabled'] ? true : null))
 			)

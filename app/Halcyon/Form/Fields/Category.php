@@ -105,7 +105,7 @@ class Category extends Select
 		}
 		else
 		{
-			abort(500, trans('JLIB_FORM_ERROR_FIELDS_CATEGORY_ERROR_EXTENSION_EMPTY'));
+			abort(500, trans('global.error.category extension empty'));
 		}
 
 		// Merge any additional options in the XML definition.

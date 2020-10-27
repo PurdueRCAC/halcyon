@@ -108,7 +108,7 @@ class Checkboxes extends Field
 			}
 			$html[] = '<li>';
 			$html[] = '<input type="checkbox" id="' . $this->id . ($i + 1) . '" name="' . $this->name . '" value=""' . $checked . $class . $onclick . $disabled . '/>';
-			$html[] = '<label for="' . $this->id . ($i + 1) . '"' . $class . '>' . trans('JOTHER') . '</label>';
+			$html[] = '<label for="' . $this->id . ($i + 1) . '"' . $class . '>' . trans('global.other') . '</label>';
 			$html[] = '<input type="text" id="' . $this->id . '_other" name="' . substr($this->getName($this->fieldname . '_other'), 0, -2) . '" value="' . ($checked ? htmlspecialchars($values, ENT_COMPAT, 'UTF-8') : '') . '"' . $class . $onclick . $disabled . '/>';
 			$html[] = '</li>';
 		}

@@ -35,7 +35,7 @@ class Sessionhandler extends Select
 		// Get the options from Session.
 		foreach (Manager::getStores() as $store)
 		{
-			$options[] = Dropdown::option($store, trans('JLIB_FORM_VALUE_SESSION_' . $store), 'value', 'text');
+			$options[] = Dropdown::option($store, trans('global.other.session.' . $store), 'value', 'text');
 		}
 
 		// Merge any additional options in the XML definition.

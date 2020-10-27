@@ -90,7 +90,7 @@ class Widgetlayout extends Field
 			if ($template_style_id)
 			{
 				$query
-					->leftJoin('#__template_styles as s', 's.template', 'e.element')
+					->leftJoin('theme_styles as s', 's.template', 'e.element')
 					->where('s.id', '=', (int) $template_style_id);
 			}
 

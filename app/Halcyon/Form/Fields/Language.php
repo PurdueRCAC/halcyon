@@ -40,13 +40,7 @@ class Language extends Select
 			$client_id = 1;
 		}
 
-		/*$path = PATH_APP . DIRECTORY_SEPARATOR . 'bootstrap' . DIRECTORY_SEPARATOR . $client;
-		if (!is_dir($path))
-		{
-			$path = PATH_CORE . DIRECTORY_SEPARATOR . 'bootstrap' . DIRECTORY_SEPARATOR . $client;
-		}*/
-
-		// Merge any additional options in the XML definition.
+		// Merge any additional options
 		$options = array_merge(
 			parent::getOptions(),
 			//app('translator')->getList($this->value, $path, true, true, $client_id)

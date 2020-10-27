@@ -8,6 +8,7 @@
 namespace App\Halcyon\Form\Fields;
 
 use App\Halcyon\Html\Builder\Select as Dropdown;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Supports an custom SQL select list
@@ -38,18 +39,8 @@ class Sql extends Select
 		$translate = $this->element['translate']   ? (string) $this->element['translate']   : false;
 		$query     = (string) $this->element['query'];
 
-		// Get the database object.
-		$db = app('db');
-
 		// Set the query and get the result list.
-		$db->setQuery($query);
-		$items = $db->loadObjectlist();
-
-		// Check for an error.
-		if ($db->getErrorNum())
-		{
-			return $options;
-		}
+		$items = DB::select($query);
 
 		// Build the field options.
 		if (!empty($items))
@@ -58,11 +49,11 @@ class Sql extends Select
 			{
 				if ($translate == true)
 				{
-					$options[] = Dropdown::option($item->$key, trans($item->$value));
+					$options[] = Dropdown::option($item->{$key}, trans($item->{$value}));
 				}
 				else
 				{
-					$options[] = Dropdown::option($item->$key, $item->$value);
+					$options[] = Dropdown::option($item->{$key}, $item->{$value});
 				}
 			}
 		}

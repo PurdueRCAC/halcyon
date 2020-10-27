@@ -32,29 +32,15 @@ class Password extends Field
 		// Initialize some field attributes.
 		$size      = $this->element['size'] ? ' size="' . (int) $this->element['size'] . '"' : '';
 		$maxLength = $this->element['maxlength'] ? ' maxlength="' . (int) $this->element['maxlength'] . '"' : '';
-		$class     = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
+		$class     = $this->element['class'] ? ' class="form-control ' . (string) $this->element['class'] . '"' : 'class="form-control"';
 		$auto      = ((string) $this->element['autocomplete'] == 'off') ? ' autocomplete="off"' : '';
 		$readonly  = ((string) $this->element['readonly'] == 'true') ? ' readonly="readonly"' : '';
 		$disabled  = ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
-		$meter     = ((string) $this->element['strengthmeter'] == 'true');
+		$meter     = ((string) $this->element['strengthmeter'] == 'true' ? ' data-meter="true"' : '');
 		$threshold = $this->element['threshold'] ? (int) $this->element['threshold'] : 66;
-
-		$script = '';
-		if ($meter)
-		{
-			Asset::script('system/passwordstrength.js', true, true);
-			$script = '<script type="text/javascript">jQuery(document).ready(function ($) {
-				$("#' . $this->id . '").passwordstrength({
-					threshold: ' . $threshold . ',
-					onUpdate: function(element, strength, threshold) {
-						element.set("data-passwordstrength", strength);
-					}
-				});
-			});</script>';
-		}
 
 		return '<input type="password" name="' . $this->name . '" id="' . $this->id . '"' .
 			' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' .
-			$auto . $class . $readonly . $disabled . $size . $maxLength . ' autocomplete="off" />' . $script;
+			$auto . $class . $readonly . $disabled . $size . $maxLength . $meter . ' autocomplete="off" />';
 	}
 }

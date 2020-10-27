@@ -9,7 +9,6 @@ namespace App\Halcyon\Form\Fields;
 
 use App\Halcyon\Html\Builder\Select as Dropdown;
 use App\Halcyon\Cache\Manager;
-use App;
 
 /**
  * Provides a list of available cache handlers
@@ -36,7 +35,7 @@ class Cachehandler extends Select
 		// Convert to name => name array.
 		foreach (Manager::getStores() as $store)
 		{
-			$options[] = Dropdown::option($store, trans('JLIB_FORM_VALUE_CACHE_' . $store), 'value', 'text');
+			$options[] = Dropdown::option($store, trans('global.cache.' . $store), 'value', 'text');
 		}
 
 		$options = array_merge(parent::getOptions(), $options);

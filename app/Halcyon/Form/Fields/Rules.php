@@ -274,14 +274,6 @@ class Rules extends Field
 		$html[] = '</div>';
 		$html[] = '</div>';
 
-		/*$js = "jQuery(document).ready(function($){
-				$('#permissions-rules').accordion({
-					heightStyle: 'content'
-				});
-			});";
-
-		app('document')->addScriptDeclaration($js);*/ 
-
 		return implode("\n", $html);
 	}
 

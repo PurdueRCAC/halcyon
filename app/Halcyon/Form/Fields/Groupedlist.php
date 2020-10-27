@@ -109,7 +109,7 @@ class Groupedlist extends Field
 
 				// Unknown element type.
 				default:
-					App::abort(500, trans('JLIB_FORM_ERROR_FIELDS_GROUPEDLIST_ELEMENT_NAME', $element->getName()));
+					abort(500, trans('global.error.groupedlist element name', $element->getName()));
 				break;
 			}
 		}
