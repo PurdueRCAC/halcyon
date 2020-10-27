@@ -179,7 +179,7 @@
 					@endif
 				</td>
 				<td>
-					<span class="access {{ str_replace(' ', '', strtolower($row->viewlevel->title)) }}">{{ $row->viewlevel->title }}</span>
+					<span class="badge access {{ str_replace(' ', '', strtolower($row->viewlevel->title)) }}">{{ $row->viewlevel->title }}</span>
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
