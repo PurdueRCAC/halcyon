@@ -13,7 +13,7 @@ app('pathway')
 
 @section('toolbar')
 	@if (auth()->user()->can('edit listeners'))
-		{!! Toolbar::apply(route('admin.listeners.store')) !!}
+		{!! Toolbar::save(route('admin.listeners.store')) !!}
 	@endif
 	{!! Toolbar::cancel(route('admin.listeners.cancel')) !!}
 
@@ -25,7 +25,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.listeners.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.VALIDATION_FORM_FAILED') }}">
+<form action="{{ route('admin.listeners.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 	<div class="row">
 		<div class="col col-xs-12 col-sm-7">
 			<fieldset class="adminform">
