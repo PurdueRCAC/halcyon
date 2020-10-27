@@ -10,6 +10,8 @@
 @stop
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('storage::storage.module name'),
@@ -44,7 +46,7 @@ app('pathway')
 @section('content')
 <form action="{{ route('admin.storage.directories.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 	<div class="row">
-		<div class="col col-md-7">
+		<div class="col-md-7">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
@@ -97,104 +99,105 @@ app('pathway')
 				<button class="btn btn-sm btn-secondary"><span class="icon-plus"></span> {{ trans('global.button.create') }}</button>
 
 				<div id="new_dir_dialog" title="Add new directory" class="dialog">
+					<fieldset class="mb-1">
+						<div class="form-group">
+							<label for="new_dir_type">Name:</label>
+							<span class="input-group">
+								<span class="input-group-prepend"><span class="input-group-text">{{ $row->storageResource->path }}/<span id="new_dir_path"></span></span></span>
+								<input type="text" id="new_dir_input" class="form-control" />
+							</span>
+						</div>
+						<div class="form-group">
+							<label for="new_dir_type">Type:</label>
+							<select id="new_dir_type" class="form-control">
+								<option value="normal">Group Shared</option>
+								<option value="autouserread">Auto User - Group Readable</option>
+								<option value="autouserreadwrite">Auto User - Group Readable & Writeable</option>
+								<option value="autouserprivate">Auto User - Private</option>
+								<option value="user">User Owned - Group Readable</option>
+								<option value="userwrite">User Owned - Group Writeable</option>
+								<option value="userprivate">User Owned - Private</option>
+							</select>
+						</div>
+						<fieldset>
+							<legend>Quota:</legend>
 							<div class="form-group">
-								<label for="new_dir_type">Name:</label>
-								<span class="input-group">
-									<span class="input-group-prepend"><span class="input-group-text">{{ $row->storageResource->path }}/<span id="new_dir_path"></span></span></span>
-									<input type="text" id="new_dir_input" class="form-control" />
-								</span>
-							</div>
-							<div class="form-group">
-								<label for="new_dir_type">Type:</label>
-									<select id="new_dir_type" class="form-control">
-										<option value="normal">Group Shared</option>
-										<option value="autouserread">Auto User - Group Readable</option>
-										<option value="autouserreadwrite">Auto User - Group Readable & Writeable</option>
-										<option value="autouserprivate">Auto User - Private</option>
-										<option value="user">User Owned - Group Readable</option>
-										<option value="userwrite">User Owned - Group Writeable</option>
-										<option value="userprivate">User Owned - Private</option>
-									</select>
-							</div>
-							<fieldset>
-								<legend>Quota:</legend>
-								<div class="form-group">
-									<div class="form-check">
-										<input type="radio" name="usequota" value="parent" class="form-check-input" checked="true" id="share_radio" />
-										<label class="form-check-label" for="share_radio">Share with parent quota (<span id="new_dir_quota_available"></span>)</label>
-									</div>
+								<div class="form-check">
+									<input type="radio" name="usequota" value="parent" class="form-check-input" checked="true" id="share_radio" />
+									<label class="form-check-label" for="share_radio">Share with parent quota (<span id="new_dir_quota_available"></span>)</label>
 								</div>
-								<div class="form-group">
-									<div class="form-check">
-										<input type="radio" name="usequota" id="deduct_radio" class="form-check-input" value="deduct" />
-										<label class="form-check-label" for="deduct_radio">Deduct from parent quota (<span id="new_dir_quota_available2"></span>):</label>
+							</div>
+							<div class="form-group">
+								<div class="form-check form-inline">
+									<input type="radio" name="usequota" id="deduct_radio" class="form-check-input" value="deduct" />
+									<label class="form-check-label" for="deduct_radio">Deduct from parent quota (<span id="new_dir_quota_available2"></span>):</label>
 
-										<input type="text" id="new_dir_quota_deduct" class="form-control" size="3" />
-									<?php
-									$bucket = null;
-									foreach ($row->group->storageBuckets as $bucket)
+									<input type="text" id="new_dir_quota_deduct" class="form-control" size="3" />
+								<?php
+								$bucket = null;
+								foreach ($row->group->storageBuckets as $bucket)
+								{
+									if ($bucket['resourceid'] == $row->storageResource->parentresourceid)
 									{
-										if ($bucket['resourceid'] == $row->storageResource->parentresourceid)
-										{
-											break;
-										}
+										break;
 									}
+								}
 
-									$style = '';
-									$disabled = '';
-									if ($bucket['unallocatedbytes'] == 0)
-									{
-										$disabled = 'disabled="true"';
-										$style = 'color:gray';
-									}
-									?>
-									</div>
+								$style = '';
+								$disabled = '';
+								if ($bucket['unallocatedbytes'] == 0)
+								{
+									$disabled = 'disabled="true"';
+									$style = 'color:gray';
+								}
+								?>
 								</div>
-								<div class="form-group">
-									<div class="form-check">
-										<input <?php echo $disabled; ?> type="radio" name="usequota" value="unalloc" id="unalloc_radio" class="form-check-input" />
-										<label class="form-check-label" for="unalloc_radio">
-											<span style="<?php echo $style; ?>" id="unalloc_span">
-												Deduct from unallocated space (<span name="unallocated"><?php echo $bucket['unallocatedbytes']; ?></span>):
-											</span>
-										</label>
-										<input <?php echo $disabled; ?> type="text" id="new_dir_quota_unalloc" class="form-control" size="3" />
-									</div>
-								</div>
-							</fieldset>
+							</div>
 							<div class="form-group">
-								<label for="new_dir_unixgroup_select">Access Unix Group:</label>
-								<select id="new_dir_unixgroup_select" class="form-control">
-									<option value="">(Select Unix Group)</option>
-									<?php foreach ($row->group->unixgroups as $unixgroup) { ?>
-										<option value="<?php echo $unixgroup->id; ?>" data-api="{{ route('api.unixgroups.read', ['id' => $unixgroup->id]) }}"><?php echo $unixgroup->longname; ?></option>
-									<?php } ?>
-								</select>
-								<select id="new_dir_unixgroup_select_decoy" class="form-control d-none">
-								</select>
+								<div class="form-check form-inline">
+									<input <?php echo $disabled; ?> type="radio" name="usequota" value="unalloc" id="unalloc_radio" class="form-check-input" />
+									<label class="form-check-label" for="unalloc_radio">
+										<span style="<?php echo $style; ?>" id="unalloc_span">
+											Deduct from unallocated space (<span name="unallocated"><?php echo $bucket['unallocatedbytes']; ?></span>):
+										</span>
+									</label>
+									<input <?php echo $disabled; ?> type="text" id="new_dir_quota_unalloc" class="form-control" size="3" />
+								</div>
 							</div>
-							<div id="new_dir_autouserunixgroup_row" class="form-group d-none">
-								<label for="new_dir_autouserunixgroup_select">Populating Unix Group</label>
-								<select id="new_dir_autouserunixgroup_select" class="form-control">
-									<option value="">(Select Unix Group)</option>
-									<?php foreach ($row->group->unixgroups as $unixgroup) { ?>
-										<option value="<?php echo $unixgroup->id; ?>"><?php echo $unixgroup->longname; ?></option>
-									<?php } ?>
-								</select>
-							</div>
-							<div id="new_dir_user_row" class="form-group d-none">
-								<label for="new_dir_user_select">User:</label>
-								<select id="new_dir_user_select" class="form-control">
-									<option value="">(Select User)</option>
-								</select>
-							</div>
-							<div class="form-group text-right">
-								<button id="new_dir" class="btn btn-success" data-api="{{ route('api.storage.directories.create') }}">
-									<span id="new_dir_img" class="icon-plus"></span> Create directory
-								</button>
-							</div>
+						</fieldset>
+						<div class="form-group">
+							<label for="new_dir_unixgroup_select">Access Unix Group:</label>
+							<select id="new_dir_unixgroup_select" class="form-control">
+								<option value="">(Select Unix Group)</option>
+								<?php foreach ($row->group->unixgroups as $unixgroup) { ?>
+									<option value="<?php echo $unixgroup->id; ?>" data-api="{{ route('api.unixgroups.read', ['id' => $unixgroup->id]) }}"><?php echo $unixgroup->longname; ?></option>
+								<?php } ?>
+							</select>
+							<select id="new_dir_unixgroup_select_decoy" class="form-control d-none">
+							</select>
+						</div>
+						<div id="new_dir_autouserunixgroup_row" class="form-group d-none">
+							<label for="new_dir_autouserunixgroup_select">Populating Unix Group</label>
+							<select id="new_dir_autouserunixgroup_select" class="form-control">
+								<option value="">(Select Unix Group)</option>
+								<?php foreach ($row->group->unixgroups as $unixgroup) { ?>
+									<option value="<?php echo $unixgroup->id; ?>"><?php echo $unixgroup->longname; ?></option>
+								<?php } ?>
+							</select>
+						</div>
+						<div id="new_dir_user_row" class="form-group d-none">
+							<label for="new_dir_user_select">User:</label>
+							<select id="new_dir_user_select" class="form-control">
+								<option value="">(Select User)</option>
+							</select>
+						</div>
+					</fieldset>
 
-					<p><span id="new_dir_error"></span></p>
+					<div class="dialog-footer text-right">
+						<button id="new_dir" class="btn btn-success" data-api="{{ route('api.storage.directories.create') }}">
+							<span id="new_dir_img" class="icon-plus"></span> Create directory
+						</button>
+					</div>
 				</div>
 
 				<table id="tree" class="tree">
@@ -247,65 +250,81 @@ app('pathway')
 				foreach ($row->nested() as $dir)
 				{
 					$did = $dir->id;
-					?>
-					<div id="<?php echo $did; ?>_dialog" title="<?php echo $dir->storageResource->path . '/' . $dir->path; ?>" class="dialog">
-						<fieldset>
 
-							<table class="table editStorageTable">
-							<caption class="sr-only"><?php echo $dir->name; ?></caption>
-							<tbody>
-							<?php if ($dir['quotaproblem'] == 1 && $dir->bytes) { ?>
-								<th scope="row">Desired quota</th>
-								<td><?php echo App\Halcyon\Utility\Number::formatBytes($dir->bytes); ?></td>
-							</tr>
-							<tr>
-								<th scope="row" class="quotaProblem">
-									Actual quota <span class="icon-warning" data-tip="Storage space is over-allocated. Quotas reduced until allocation balanced."></span>
-								</th>
-								<td class="quotaProblem"><?php echo App\Halcyon\Utility\Number::formatBytes($dir->quota); ?></td>
-							<?php } else { ?>
-								<th scope="row">Quota</th>
-								<td>
+					$disabled = '';
+					if (in_array($dir->id, $removing))
+					{
+						$disabled = 'disabled="disabled"';
+					}
+					?>
+					<div id="{{ $did }}_dialog" data-id="{{ $did }}" title="{{ $dir->storageResource->path . '/' . $dir->path }}" class="dialog">
+
+						<?php if ($dir['quotaproblem'] == 1 && $dir->bytes) { ?>
+							<div class="row mb-3">
+								<div class="col-md-4">
+									Desired quota
+								</div>
+								<div class="col-md-8">
+									<?php echo App\Halcyon\Utility\Number::formatBytes($dir->bytes); ?>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-4">
+									Actual quota <span class="icon-warning" data-tip="Storage space is over-allocated. Quotas reduced until allocation balanced."><span class="sr-only">Storage space is over-allocated. Quotas reduced until allocation balanced.</span></span>
+								</div>
+								<div class="col-md-8">
+									<?php echo App\Halcyon\Utility\Number::formatBytes($dir->quota); ?>
+								</div>
+							</div><!--/ .row -->
+						<?php } else { ?>
+							<div class="row mb-3">
+								<div class="col-md-4">
+									<label for="{{ $dir->id }}_quota_input">{{ trans('storage::storage.quota') }}</label>
+								</div>
+								<div class="col-md-8">
 									<?php
 									$value = App\Halcyon\Utility\Number::formatBytes($dir->bytes, true);
-									if (!$dir->bytes)
+									/*if (!$dir->bytes)
 									{
 										$value = '-';
+									}*/
+									?>
+									<!-- <span id="{{ $dir->id }}_quota_span"><?php echo $value; ?></span> -->
+									<?php //if ($dir->bytes) { ?>
+										<input type="text" id="{{ $dir->id }}_quota_input" class="form-control" value="{{ $dir->bytes ? $value : '' }}" />
+									<?php //} ?>
+								</div>
+							</div><!--/ .row -->
+						<?php } ?>
+						<div class="row mb-3">
+							<div class="col-md-4">
+								<label for="{{ $dir->id }}_unixgroup_select">Access Unix Group</label>
+							</div>
+							<div class="col-md-8">
+								<select id="{{ $dir->id }}_unixgroup_select" class="form-control">
+									<option value="0">{{ trans('global.none') }}</option>
+									<?php
+									foreach ($dir->group->unixgroups as $unixgroup)
+									{
+										$selected = '';
+										if (isset($dir->unixgroup->id) && $unixgroup->id == $dir->unixgroup->id)
+										{
+											$selected = 'selected="selected"';
+										}
+
+										echo '<option ' . $selected . ' value="' . $unixgroup->id . '">' . $unixgroup->longname . '</option>';
 									}
 									?>
-									<span id="<?php echo $dir->id; ?>_quota_span"><?php echo $value; ?></span>
-									<?php if ($dir->bytes) { ?>
-										<input type="text" id="<?php echo $dir->id; ?>_quota_input" class="form-control" value="<?php echo $value; ?>" />
-									<?php } ?>
-								</td>
-							<?php } ?>
-							</tr>
-							<tr>
-								<th scope="row">Access Unix Group</th>
-								<td>
-									<select id="<?php echo $dir->id; ?>_unixgroup_select" class="form-control">
-										<option value="0">{{ trans('global.none') }}</option>
-										<?php
-										foreach ($dir->group->unixgroups as $unixgroup)
-										{
-											$selected = '';
-											if (isset($dir->unixgroup->id) && $unixgroup->id == $dir->unixgroup->id)
-											{
-												$selected = 'selected="selected"';
-											}
-
-											echo '<option ' . $selected . ' value="' . $unixgroup->id . '">' . $unixgroup->longname . '</option>';
-										}
-										?>
-									</select>
-								</td>
-							</tr>
+								</select>
+							</div>
+						</div><!--/ .row -->
 						<?php if ($dir->autouser) { ?>
-							<tr>
-								<th scope="row">Populating Unix Group</th>
-								<td>
-									<span id="<?php echo $dir->id; ?>_autouserunixgroup_span"><?php echo $dir->autouserunixgroup->longname; ?></span>
-									<select id="<?php echo $dir->id; ?>_autouserunixgroup_select" class="stash">
+							<div class="row mb-3">
+								<div class="col-md-4">
+									<label for="{{ $dir->id }}_autouserunixgroup_select">Populating Unix Group</label>
+								</div>
+								<div class="col-md-8">
+									<select id="{{ $dir->id }}_autouserunixgroup_select" class="form-control">
 										<?php foreach ($dir->group->unixgroups as $unixgroup) { ?>
 											<?php
 											$selected = '';
@@ -317,36 +336,25 @@ app('pathway')
 											<option <?php echo $selected; ?> value="<?php echo $unixgroup->id; ?>"><?php echo $unixgroup->longname; ?></option>
 										<?php } ?>
 									</select>
-								</td>
-							</tr>
+								</div>
+							</div><!--/ .row -->
 						<?php } ?>
 						<?php if ($dir->owner && $dir->owner->name != 'root') { ?>
-							<tr>
-								<th scope="row">Owner</th>
-								<td>
-									<?php echo $dir->owner->name; ?>
-								</td>
-							</tr>
-							<tr>
-								<th scope="row">Type</th>
-								<td>
-									<!-- <span id="<?php echo $dir->id; ?>_dir_type">
-										<?php
-										if ($dir->unixPermissions->group->write)
-										{
-											echo 'User Owned - Group Writable';
-										}
-										elseif ($dir->unixPermissions->group->read)
-										{
-											echo 'User Owned - Group Readable';
-										}
-										else
-										{
-											echo 'User Owned - Private';
-										}
-										?>
-									</span> -->
-									<select id="<?php echo $dir->id; ?>_dir_type_select" class="form-control">
+							<div class="row mb-3">
+								<div class="col-md-4">
+									<label for="{{ $dir->id }}_owner_name">Owner</label>
+								</div>
+								<div class="col-md-8">
+									<input type="text" id="{{ $dir->id }}_owner_name" class="form-control-plaintext" value="{{ $dir->owner->name }}" />
+								</div>
+							</div><!--/ .row -->
+
+							<div class="row mb-3">
+								<div class="col-md-4">
+									<label for="{{ $dir->id }}_dir_type_select">Type</label>
+								</div>
+								<div class="col-md-8">
+									<select id="{{ $dir->id }}_dir_type_select" class="form-control">
 										<?php if ($dir->unixPermissions->group->write) { ?>
 											<option selected="selected" value="userwrite">User Owned - Group Writable</option>
 											<option value="user">User Owned - Group Readable</option>
@@ -361,36 +369,22 @@ app('pathway')
 											<option selected="selected" value="userprivate">User Owned - Private</option>
 										<?php } ?>
 									</select>
-								</td>
-							</tr>
+								</div>
+							</div><!--/ .row -->
 						<?php } ?>
 						<?php if ($dir->autouser) { ?>
-							<tr>
-								<th scope="row">Auto Populate User Default</th>
-								<td>
-									<!-- <span id="<?php echo $dir->id; ?>_dir_type">
-										<?php
-										if ($dir->autouser == '1')
-										{
-											echo 'Group Readable';
-										}
-										else if ($dir->autouser == '2')
-										{
-											echo 'Private';
-										}
-										else if ($dir->autouser == '3')
-										{
-											echo 'Group Readable Writable';
-										}
-										?>
-									</span>-->
-									<select id="<?php echo $dir->id; ?>_dir_type_select" class="form-control">
+							<div class="row mb-3">
+								<div class="col-md-4">
+									<label for="{{ $dir->id }}_dir_type_select">Auto Populate User Default</label>
+								</div>
+								<div class="col-md-8">
+									<select id="{{ $dir->id }}_dir_type_select" class="form-control">
 										<option value="autouser"<?php if ($dir->autouser == '1') { ?> selected="selected"<?php } ?>>Auto User - Group Readable</
 										<option value="autouserreadwrite"<?php if ($dir->autouser == '3') { ?> selected="selected"<?php } ?>>Auto User - Group Readable Writable</option>
 										<option value="autouserprivate"<?php if ($dir->autouser == '2') { ?> selected="selected"<?php } ?>>Auto User - Private</option>
 									</select>
-								</td>
-							</tr>
+								</div>
+							</div><!--/ .row -->
 						<?php } ?>
 						<?php
 						$child_dirs = array();
@@ -454,189 +448,173 @@ app('pathway')
 						}
 
 						if (count($child_dirs) > 0 && $dir->parentstoragedirid) { ?>
-							<tr>
-								<th scope="row">Read access for <?php echo $bottle_dirs_string; ?></th>
-								<td>
+							<div class="row mb-3">
+								<div class="col-md-4">
+									<label for="<?php echo $dir->id; ?>_other_read_box">Read access for <?php echo $bottle_dirs_string; ?></label>
+								</div>
+								<div class="col-md-8">
 									<?php if ($dir->unixPermissions->other->read) { ?>
-										<input type="checkbox" id="<?php echo $dir->id; ?>_other_read_box" checked="checked" class="hide" />
+										<input type="checkbox" id="<?php echo $dir->id; ?>_other_read_box" class="form-check-input" checked="checked" />
 										<span id="<?php echo $dir->id; ?>_other_read_span">{{ trans('global.yes') }}</span>
 									<?php } else { ?>
-										<input type="checkbox" id="<?php echo $dir->id; ?>_other_read_box" class="hide" />
+										<input type="checkbox" id="<?php echo $dir->id; ?>_other_read_box" class="form-check-input" />
 										<span id="<?php echo $dir->id; ?>_other_read_span">{{ trans('global.no') }}</span>
 									<?php } ?>
 									to directories:
-								</td>
-							</tr>
-							<?php foreach ($child_dirs as $child) { ?>
-								<tr>
-									<td></td>
-									<td>{{ $child->path }}</td>
-								</tr>
-							<?php } ?>
+
+									<ul>
+									<?php foreach ($child_dirs as $child) { ?>
+										<li>{{ $child->path }}</li>
+									<?php } ?>
+									</ul>
+								</div>
+							</div>
 						<?php } else if (!$dir->parentstoragedirid) { ?>
-							<tr>
-								<th scope="row">Public read access?</th>
-								<td>
+							<div class="row mb-3">
+								<div class="col-md-4">
+									Public read access?
+								</div>
+								<div class="col-md-4">
 									<span class="form-check">
-										<input type="radio" name="<?php echo $dir->id; ?>_other_read_box" id="<?php echo $dir->id; ?>_other_read_box1" <?php if ($dir->unixPermissions->other->read) { ?>checked="checked"<?php } ?> class="form-check-input hide" />
-										<label class="form-check-label" for="<?php echo $dir->id; ?>_other_read_box" id="<?php echo $dir->id; ?>_other_read_span">{{ trans('global.yes') }}</label>
+										<input type="radio" name="{{ $dir->id }}_other_read_box" id="{{ $dir->id }}_other_read_box1" <?php if ($dir->unixPermissions->other->read) { ?>checked="checked"<?php } ?> class="form-check-input" />
+										<label class="form-check-label" for="{{ $dir->id }}_other_read_box" id="{{ $dir->id }}_other_read_span">{{ trans('global.yes') }}</label>
 									</span>
-
+								</div>
+								<div class="col-md-4">
 									<span class="form-check">
-										<input type="radio" name="<?php echo $dir->id; ?>_other_read_box" id="<?php echo $dir->id; ?>_other_read_box0" <?php if (!$dir->unixPermissions->other->read) { ?>checked="checked"<?php } ?> class="form-check-input hide" />
-										<label class="form-check-label" for="<?php echo $dir->id; ?>_other_read_box" id="<?php echo $dir->id; ?>_other_read_span">{{ trans('global.no') }}</label>
+										<input type="radio" name="{{ $dir->id }}_other_read_box" id="{{ $dir->id }}_other_read_box0" <?php if (!$dir->unixPermissions->other->read) { ?>checked="checked"<?php } ?> class="form-check-input" />
+										<label class="form-check-label" for="{{ $dir->id }}_other_read_box" id="{{ $dir->id }}_other_read_span">{{ trans('global.no') }}</label>
 									</span>
-								</td>
-							</tr>
+								</div>
+							</div>
 						<?php } ?>
-							<!-- <tr>
-								<td></td>
-								<td>
+
+						<div class="row mb-3">
+							<div class="col-md-4">
+								<p class="card-title">{{ trans('storage::storage.permissions') }}</p>
+							</div>
+							<div class="col-md-8">
+								<table class="table table-bordered">
+									<caption class="sr-only">{{ trans('storage::storage.permissions') }}</caption>
+									<thead>
+										<tr>
+											<th scope="col">{{ trans('storage::storage.group') }}</th>
+											<th scope="col" class="text-center">{{ trans('storage::storage.permission.read') }}</th>
+											<th scope="col" class="text-center">{{ trans('storage::storage.permission.write') }}</th>
+										</tr>
+									</thead>
+									<tbody>
 									<?php
-									$disabled = '';
-									if (in_array($dir->id, $removing))
+									$childs = array();
+
+									$highest_read = $dir->id;
+									$can_read = true;
+
+									if ($parent = get_dir($directories, $dirhash, $dir->id))
 									{
-										$disabled = 'disabled="true"';
+										$childs[] = $parent;
 									}
-									?>
-									<input <?php echo $disabled; ?> id="<?php echo $dir->id; ?>_edit_button" class="btn btn-secondary unixgroup-edit" data-dir="<?php echo $dir->id; ?>" type="button" value="Edit Directory" />
-								</td>
-							</tr> -->
-						</tbody>
-					</table>
 
-					<!-- <fieldset>
-						<legend>Permissions</legend>-->
-					<div class="card">
-						<div class="card-header">
-							<div class="row">
-							<div class="col-md-6">
-								<p class="card-title">Permissions</p>
-							</div>
-							<div class="col-md-6 text-right">
-								@if ($dir->children()->count() == 0)
-									<input <?php echo $disabled; ?> id="{{ $dir->id }}_edit_button" class="btn btn-sm btn-secondary permissions-reset" data-dir="{{ $dir->id }}" data-path="{{ $dir->path }}" type="button" value="Fix File Permissions" />
-								@endif
-							</div>
-							</div>
-						</div>
-
-						<table class="table table-hover">
-							<caption class="sr-only">Permissions</caption>
-							<thead>
-								<tr>
-									<th scope="col">Group</th>
-									<th scope="col" class="text-center">Read</th>
-									<th scope="col" class="text-center">Write</th>
-								</tr>
-							</thead>
-							<tbody>
-							<?php
-							$childs = array();
-
-							$highest_read = $dir->id;
-							$can_read = true;
-
-							if ($parent = get_dir($directories, $dirhash, $dir->id))
-							{
-								$childs[] = $parent;
-							}
-
-							if ($dir->parentstoragedirid)
-							{
-								do
-								{
-									if (!$parent)
+									if ($dir->parentstoragedirid)
 									{
-										break;
+										do
+										{
+											if (!$parent)
+											{
+												break;
+											}
+											$parent = get_dir($directories, $dirhash, $parent->parentstoragedirid);
+											//array_push($childs, $parent);
+
+											if ($parent->unixPermissions->other->read && $can_read)
+											{
+												$highest_read = $parent['id'];
+											}
+											else
+											{
+												$can_read = false;
+											}
+										}
+										while ($parent->parentstoragedirid);
 									}
-									$parent = get_dir($directories, $dirhash, $parent->parentstoragedirid);
-									//array_push($childs, $parent);
 
-									if ($parent->unixPermissions->other->read && $can_read)
+									$highest = array();
+									$highest['unixgroup'] = array('longname' => $bottle_dirs_string);
+									if ($dir->unixPermissions->other->read)
 									{
-										$highest_read = $parent['id'];
+										$highest['permissions'] = array('group' => array('write' => 0, 'read' => 1));
 									}
 									else
 									{
-										$can_read = false;
+										$highest['permissions'] = array('group' => array('write' => 0, 'read' => 0));
 									}
-								}
-								while ($parent->parentstoragedirid);
-							}
 
-							$highest = array();
-							$highest['unixgroup'] = array('longname' => $bottle_dirs_string);
-							if ($dir->unixPermissions->other->read)
-							{
-								$highest['permissions'] = array('group' => array('write' => 0, 'read' => 1));
-							}
-							else
-							{
-								$highest['permissions'] = array('group' => array('write' => 0, 'read' => 0));
-							}
+									$childs[] = $highest;
 
-							$childs[] = $highest;
+									if ($bottle_dirs_string != 'Public')
+									{
+										$public = array();
+										$public['unixgroup'] = array('longname' => 'Public');
 
-							if ($bottle_dirs_string != 'Public')
-							{
-								$public = array();
-								$public['unixgroup'] = array('longname' => 'Public');
+										if ($parent['id'] == $highest_read && $can_read)
+										{
+											$public['permissions'] = array('group' => array('write' => 0, 'read' => 1));
+										}
+										else
+										{
+											$public['permissions'] = array('group' => array('write' => 0, 'read' => 0));
+										}
 
-								if ($parent['id'] == $highest_read && $can_read)
-								{
-									$public['permissions'] = array('group' => array('write' => 0, 'read' => 1));
-								}
-								else
-								{
-									$public['permissions'] = array('group' => array('write' => 0, 'read' => 0));
-								}
+										$childs[] = $public;
+									}
 
-								$childs[] = $public;
-							}
-
-							foreach ($childs as $child)
-							{
-								?>
-								<tr>
-									<td>
-										{{ $child['unixgroup']['longname'] }}
-									</td>
-									<td class="text-center">
-										@if ($child['permissions']['group']['read'])
-											<span class="glyph icon-check success dirperm">{{ trans('global.yes') }}</span>
-										@else
-											<span class="glyph icon-x failed dirperm">{{ trans('global.no') }}</span>
-										@endif
-									</td>
-									<td class="text-center">
-										@if ($child['permissions']['group']['write'])
-											<span class="glyph icon-check success dirperm">{{ trans('global.yes') }}</span>
-										@else
-											<span class="glyph icon-x failed dirperm">{{ trans('global.no') }}</span>
-										@endif
-									</td>
-								</tr>
-								<?php
-							}
-							/*?>
-							@if ($dir->children()->count() == 0)
-						</tbody>
-						<tfoot>
-							<tr>
-									<td colspan="3">
-									<input <?php echo $disabled; ?> id="{{ $dir->id }}_edit_button" class="btn btn-sm btn-secondary permissions-reset" data-dir="{{ $dir->id }}" data-path="{{ $dir->path }}" type="button" value="Fix File Permissions" />
-								</td>
-							</tr>
-						</tfoot>
-								@endif*/?>
-						</tbody>
-					</table>
-					</div> <!--/ .card -->
+									foreach ($childs as $child)
+									{
+										?>
+										<tr>
+											<td>
+												{{ $child['unixgroup']['longname'] }}
+											</td>
+											<td class="text-center">
+												@if ($child['permissions']['group']['read'])
+													<span class="glyph icon-check success dirperm">{{ trans('global.yes') }}</span>
+												@else
+													<span class="glyph icon-x failed dirperm">{{ trans('global.no') }}</span>
+												@endif
+											</td>
+											<td class="text-center">
+												@if ($child['permissions']['group']['write'])
+													<span class="glyph icon-check success dirperm">{{ trans('global.yes') }}</span>
+												@else
+													<span class="glyph icon-x failed dirperm">{{ trans('global.no') }}</span>
+												@endif
+											</td>
+										</tr>
+										<?php
+									}
+									?>
+									</tbody>
+									@if ($dir->children()->count() == 0)
+										<tfoot>
+											<tr>
+												<td colspan="3" class="text-center">
+													<button <?php echo $disabled; ?> id="{{ $dir->id }}_edit_button"
+														class="btn btn-sm btn-secondary permissions-reset"
+														data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}"
+														data-confirm="This will reset permissions on all files within {{ $dir->path }}. This may take some time to complete. Proceed?"
+														data-dir="{{ $dir->id }}"
+														data-path="{{ $dir->path }}">{{ trans('storage::storage.fix permissions') }}</button>
+												</td>
+											</tr>
+										</tfoot>
+									@endif
+								</table>
+							</div>
+						</div><!--/ .row -->
 
 						<?php if (count($dir->futurequotas) > 0) { ?>
 							<table class="table table-hover">
-								<caption>Future Quota Changes</caption>
+								<caption>{{ trans('storage::storage.future quota') }}</caption>
 								<thead>
 								<!-- <tr>
 									<td></td>
@@ -646,7 +624,7 @@ app('pathway')
 								</tr> -->
 									<tr>
 										<th scope="col">Date</th>
-										<th scope="col">Quota</th>
+										<th scope="col">{{ trans('storage::storage.quota') }}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -660,43 +638,46 @@ app('pathway')
 							</table>
 						<?php } ?>
 
-						<span id="<?php echo $dir->id; ?>_error"></span>
-						<?php /*<p>
-							Unallocated space: <span name="unallocated"><?php echo formatBytes($bucket['unallocatedbytes']); ?></span> / <span name="totalbytes"><?php echo formatBytes($bucket['totalbytes']); ?></span>
-							<?php
-							if ($dir->bytes)
-							{
-								$cls = '';
-								if ($bucket['unallocatedbytes'] == 0)
+						<div class="row mb-3">
+							<div class="col-md-4">
+								{{ trans('storage::storage.unallocated space') }}
+							</div>
+							<div class="col-md-8">
+								<span name="unallocated"><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['unallocatedbytes']); ?></span> / <span name="totalbytes"><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['totalbytes']); ?></span>
+								<?php
+								if ($dir->bytes)
 								{
-									$cls = ' stash';
-								}
+									$cls = '';
+									if ($bucket['unallocatedbytes'] == 0)
+									{
+										$cls = ' hide';
+									}
 
-								if ($dir->quotaproblem == 1 && $dir->bytes && $dir->quota < $dir->bytes)
-								{
-									if (-$bucket['unallocatedbytes'] < $dir->bytes)
+									if ($dir->quotaproblem == 1 && $dir->bytes && $dir->quota < $dir->bytes)
+									{
+										if (-$bucket['unallocatedbytes'] < $dir->bytes)
+										{
+											?>
+											<button id="{{ $dir->id }}_quota_upa" class="btn btn-secondary quota_upa<?php echo $cls; ?>" data-dir="{{ $dir->id }}">
+												<span id="{{ $dir->id }}_quota_up" class="icon-arrow-down">{{ trans('storage::storage.remove overallocated') }}</span>
+											</button>
+											<?php
+										}
+									}
+									else
 									{
 										?>
-										<a href="/admin/storage/edit/?g=<?php echo escape($_GET['g']); ?>&amp;r=<?php echo escape($_GET['r']); ?>&amp;dir=<?php echo $dir['id']; ?>&amp;quota=up" id="<?php echo $dir['id']; ?>_quota_upa" class="quota_upa<?php echo $cls; ?>" data-dir="<?php echo $dir['id']; ?>">
-											<img id="<?php echo $dir['id']; ?>_quota_up" class="img editicon" src="/include/images/arrow_down.png" alt="Remove over-allocated space from this directory." />
-										</a>
+										<button id="{{ $dir->id }}_quota_upa" class="btn btn-secondary quota_upa<?php echo $cls; ?>" data-dir="{{ $dir->id }}">
+											<span id="{{ $dir->id }}_quota_up" class="icon-arrow-up">{{ trans('storage::storage.distribute remaining') }}</span>
+										</button>
 										<?php
 									}
 								}
-								else
-								{
-									?>
-									<a href="/admin/storage/edit/?g=<?php echo escape($_GET['g']); ?>&amp;r=<?php echo escape($_GET['r']); ?>&amp;dir=<?php echo $dir['id']; ?>&amp;quota=up" id="<?php echo $dir['id']; ?>_quota_upa" class="quota_upa<?php echo $cls; ?>" data-dir="<?php echo $dir['id']; ?>">
-										<img id="<?php echo $dir['id']; ?>_quota_up" class="img editicon" src="/include/images/arrow_up.png" alt="Distribute remaining space" />
-									</a>
-									<?php
-								}
-							}
-							?>
-						</p>
+								?>
+							</div>
+						</div>
 
 						<?php
-						*/
 						if ($dir->children()->count() == 0)
 						{
 							if (in_array($dir->id, $removing) || in_array($dir->id, $configuring))
@@ -706,15 +687,22 @@ app('pathway')
 							else
 							{
 								?>
-								<div class="dialog-footer text-right">
-								<p>
-									<a href="<?php route('api.storage.delete', ['id' => $dir->id]); ?>"
-										class="btn btn-danger dir-delete"
-										data-dir="<?php echo $dir->id; ?>"
-										data-path="<?php echo $dir->path; ?>">
-										{{ trans('global.button.delete') }}
-									</a>
-								</p></div>
+								<div class="dialog-footer">
+									<div class="row">
+										<div class="col-md-6">
+											<button data-api="{{ route('api.storage.directories.delete', ['id' => $dir->id]) }}"
+												class="btn btn-danger dir-delete"
+												data-confirm="Are you sure you want to delete {{ $dir->path }}? All contents will be deleted!"
+												data-dir="{{ $dir->id }}"
+												data-path="{{ $dir->path }}">
+												{{ trans('global.button.delete') }}
+											</button>
+										</div>
+										<div class="col-md-6 text-right">
+											<input disabled="disabled" id="{{ $dir->id }}_save_button" class="btn btn-success unixgroup-edit" data-dir="{{ $dir->id }}" type="button" value="{{ trans('global.button.save') }}" />
+										</div>
+									</div>
+								</div>
 								<?php
 							}
 						}
@@ -724,50 +712,59 @@ app('pathway')
 			</fieldset>
 @endif
 		</div>
-		<div class="col col-md-5">
-			<div class="card">
-			<table class="table table-hover">
-				<caption>{{ trans('storage::storage.messages') }}</caption>
-				<thead>
-					<tr>
-						<th scope="col">{{ trans('storage::storage.status') }}</th>
-						<th scope="col">{{ trans('storage::storage.path') }}</th>
-						<th scope="col">{{ trans('storage::storage.action') }}</th>
-						<th scope="col">{{ trans('storage::storage.submitted') }}</th>
-						<th scope="col">{{ trans('storage::storage.completed') }}</th>
-						<th scope="col">{{ trans('storage::storage.runtime') }}</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach ($row->group->messages as $message)
-						<tr>
-							<td>{{ $message->status }}</td>
-							<td>{{ $message->target->path }}</td>
-							<td>{{ $message->type->name }}</td>
-							<td>{{ $message->datetimesubmitted->format('Y-m-d') }}</td>
-							<td>
-								@if ($message->completed())
-									{{ $message->datetimecompleted->format('Y-m-d') }}
-								@else
-									-
-								@endif
-							</td>
-							<td>
-								@if (strtotime($message->datetimesubmitted) <= date("U"))
-									{{ $message->runtime }}
-								@else
-									-
-								@endif
-							</td>
-						</tr>
-					@endforeach
-				</tbody>
-			</table>
-			</div>
-
+		<div class="col-md-5">
 			@include('history::admin.history')
 		</div>
 	</div>
+
+	<fieldset class="adminform">
+		<legend>{{ trans('storage::storage.messages') }}</legend>
+
+		<table class="table table-hover">
+			<caption class="sr-only">{{ trans('storage::storage.messages') }}</caption>
+			<thead>
+				<tr>
+					<th scope="col">{{ trans('storage::storage.status') }}</th>
+					<th scope="col">{{ trans('storage::storage.path') }}</th>
+					<th scope="col">{{ trans('storage::storage.action') }}</th>
+					<th scope="col">{{ trans('storage::storage.submitted') }}</th>
+					<th scope="col">{{ trans('storage::storage.completed') }}</th>
+					<th scope="col">{{ trans('storage::storage.runtime') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php
+				if ($row->group && $row->group->id):
+					$messages = $row->group->messages;
+				else:
+					$messages = $row->messages;
+				endif;
+				?>
+				@foreach ($messages as $message)
+					<tr>
+						<td>{{ $message->status }}</td>
+						<td>{{ $message->target }}</td>
+						<td>{{ $message->type->name }}</td>
+						<td>{{ $message->datetimesubmitted->format('Y-m-d') }}</td>
+						<td>
+							@if ($message->completed())
+								{{ $message->datetimecompleted->format('Y-m-d') }}
+							@else
+								-
+							@endif
+						</td>
+						<td>
+							@if (strtotime($message->datetimesubmitted) <= date("U"))
+								{{ $message->runtime }}
+							@else
+								-
+							@endif
+						</td>
+					</tr>
+				@endforeach
+			</tbody>
+		</table>
+	</fieldset>
 
 	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 	<input type="hidden" name="resourceid" id="resourceid" value="{{ $row->storageResource ? $row->storageResource->parentresourceid : '' }}" />

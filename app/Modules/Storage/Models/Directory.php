@@ -564,7 +564,7 @@ class Directory extends Model
 			'id'   => 'new_dir',
 			'data'  => array(
 				'parentdir'       => $this->id,
-				'parentunixgroup' => $this->unixgroup->longname,
+				'parentunixgroup' => $this->unixgroup ? $this->unixgroup->longname : null,
 				'path'            => $this->path,
 				'parentquota'     => $new_quota
 			)

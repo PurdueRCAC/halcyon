@@ -255,7 +255,9 @@ class DirectoriesController extends Controller
 			}
 		}
 
+		$parent = null;
 		$bytes = $request->input('bytes');
+
 		if (preg_match_all("/^(\-?\d*\.?\d+)\s*(\w+)$/", $bytes, $matches))
 		{
 			if ($bucket == null)
@@ -270,7 +272,7 @@ class DirectoriesController extends Controller
 				$parent = $row->parent;
 
 				// Find the byte source, next ancestor with a quota
-				while ($parent->quota == 0 && $parent->parentstoragedirid != 0)
+				while ($parent->bytes == 0 && $parent->parentstoragedirid != 0)
 				{
 					$parent = $parent->parent;
 
@@ -280,14 +282,13 @@ class DirectoriesController extends Controller
 					}
 				}
 
-				if ($parent->quota <= $row->bytes)
+				if ($parent->bytes <= $row->bytes)
 				{
 					return response()->json(['message' => trans('Parent quota is less than value submitted')], 415);
 				}
 
 				// Reduce bytesource appropriately
-				$parent->bytes = ($parent->quota - $row->bytes) . ' B';
-				$parent->save();
+				$parent->bytes = ($parent->bytes - $row->bytes) . ' B';
 			}
 			elseif ($row->bytes > $bucket['unallocatedbytes'])
 			{
@@ -374,6 +375,11 @@ class DirectoriesController extends Controller
 		}
 
 		$row->save();
+
+		if ($parent)
+		{
+			$parent->save();
+		}
 
 		// If we have are requesting an autopopulate dir, then let's populate with the current list of users
 		if ($row->autouser > 0)
@@ -751,18 +757,6 @@ class DirectoriesController extends Controller
 		{
 			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
 		}
-
-		/*if ($row->bytes == 0 && $row->parent)
-		{
-			// Submit to rmdir
-			$row->addMessageToQueue(14, $row->userid);
-		}
-
-		if (!$row->bytes)
-		{
-			// Submit filset create/sync
-			$row->addMessageToQueue(15, $row->userid);
-		}*/
 
 		return response()->json(null, 204);
 	}

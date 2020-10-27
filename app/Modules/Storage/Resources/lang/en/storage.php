@@ -84,4 +84,22 @@ return [
 	'CONFIG_WHITELIST_DESC' => 'A comma-separated list of white-listed IP addresses',
 
 	'my quotas' => 'Quotas',
+	'messages' => 'Messages',
+	'status' => 'Status',
+	'action' => 'Action',
+	'submitted' => 'Submitted',
+	'completed' => 'Completed',
+	'runtime' => 'Runtime',
+	'group' => 'Group',
+	'permissions' => 'Permissions',
+	'fix permissions' => 'Fix File Permissions',
+	'permission' => [
+		'read' => 'Read',
+		'write' => 'Write',
+		'execute' => 'Execute',
+	],
+	'future quota' => 'Future Quota Changes',
+	'unallocated space' => 'Unallocated space',
+	'remove overallocated' => 'Remove over-allocated space from this directory',
+	'distribute remaining' => 'Distribute remaining space',
 ];

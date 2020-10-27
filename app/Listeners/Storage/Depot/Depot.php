@@ -8,6 +8,8 @@
 namespace App\Listeners\Storage\Depot;
 
 use App\Modules\Storage\Events\DirectoryCreated;
+use App\Modules\Storage\Events\DirectoryUpdated;
+use App\Modules\Storage\Events\DirectoryDeleted;
 use App\Modules\Groups\Models\UnixGroup;
 use App\Modules\Messages\Models\Type as MessageType;
 

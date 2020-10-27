@@ -75,7 +75,7 @@ class Messages
 
 			if ($type)
 			{
-				$row->addMessageToQueue($type->id, $row->userid, $offset);
+				$row->addMessageToQueue($type->id, $row->userid, 10);
 			}
 		}
 
@@ -91,7 +91,7 @@ class Messages
 
 			if ($type)
 			{
-				$row->addMessageToQueue($type->id, $row->userid, $offset);
+				$row->addMessageToQueue($type->id, $row->userid, 10);
 			}
 		}
 	}
