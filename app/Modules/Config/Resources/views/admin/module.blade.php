@@ -16,20 +16,32 @@ app('pathway')
 	);
 @endphp
 
+@section('toolbar')
+	@if (auth()->user()->can('edit storage'))
+		{!! Toolbar::save(route('admin.config.module.update', ['module' => $module->element])) !!}
+	@endif
+
+	{!!
+		Toolbar::spacer();
+		Toolbar::cancel(route('admin.' . $module->element . '.index'));
+	!!}
+
+	{!! Toolbar::render() !!}
+@stop
+
 @section('title')
 {{ trans($module->element . '::system.name') . ': ' . trans('config::config.module configuration') }}
 @stop
 
 @section('content')
-<form action="{{ route('admin.config.module.update', ['module' => $module->element]) }}" id="component-form" method="post" name="adminForm" autocomplete="off" class="form-validate" data-invalid-msg="{{ trans('global.validation failed') }}">
-	<fieldset>
-		<div class="configuration">
-			<div class="configuration-options">
-				<button class="btn btn-secondary" type="submit" id="btn-save">{{ trans('global.button.save') }}</button>
-				<button class="btn btn-outline-secondary" type="button" id="btn-cancel"<?php echo request('refresh', 0) ? ' data-refresh="1"' : ''; ?>>{{ trans('global.button.cancel') }}</button>
+<form action="{{ route('admin.config.module.update', ['module' => $module->element]) }}" id="module-form" method="post" name="configform" autocomplete="off" class="form-validate" data-invalid-msg="{{ trans('global.validation failed') }}">
+	@if (request()->ajax())
+		<div class="toolbar-box">
+			<div class="pagetitle text-right">
+			{!! Toolbar::render() !!}
 			</div>
 		</div>
-	</fieldset>
+	@endif
 
 	<?php
 	echo Html::tabs('start', 'config-tabs-' . $module->element . '_configuration', array('useCookie' => 1));

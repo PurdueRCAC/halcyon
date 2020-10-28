@@ -10,6 +10,7 @@ use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Department;
 use App\Modules\Groups\Models\GroupDepartment;
 use App\Modules\Groups\Models\GroupFieldOfScience;
+use App\Modules\Groups\Events\GroupDisplay;
 
 class GroupsController extends Controller
 {
@@ -182,10 +183,14 @@ class GroupsController extends Controller
 		$departments = Department::tree();
 		$fields = FieldOfScience::tree();
 
+		event($event = new GroupDisplay($row));
+		$sections = collect($event->getSections());
+
 		return view('groups::admin.groups.edit', [
 			'row' => $row,
 			'departments' => $departments,
 			'fields' => $fields,
+			'sections' => $sections,
 		]);
 	}
 

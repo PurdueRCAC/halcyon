@@ -42,6 +42,20 @@ app('pathway')
 
 @section('content')
 <form action="{{ route('admin.groups.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+
+	<div class="tabs">
+		<ul>
+			<li>
+				<a href="#group-details">{{ trans('global.details') }}</a>
+			</li>
+			@foreach ($sections as $section)
+			<li>
+				<a href="#group-{{ $section['route'] }}">{{ $section['name'] }}</a>
+			</li>
+			@endforeach
+		</ul>
+
+		<div id="group-details">
 	<div class="row">
 		<div class="col col-md-7">
 			<fieldset class="adminform">
@@ -299,6 +313,12 @@ app('pathway')
 			@include('history::admin.history')
 		</div>
 	</div>
+
+	@foreach ($sections as $section)
+	<div id="group-{{ $section['route'] }}">
+		{!! $section['content'] !!}
+	</div>
+	@endforeach
 
 	@csrf
 </form>
