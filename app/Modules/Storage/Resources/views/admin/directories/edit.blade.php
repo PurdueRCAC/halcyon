@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('styles')
+@push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/fancytree/skin-xp/ui.fancytree.css') }}" />
-@stop
+@endpush
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/core/vendor/fancytree/jquery.fancytree-all.js') }}"></script>
 <script src="{{ asset('modules/storage/js/admin.js?v=' . filemtime(public_path() . '/modules/storage/js/admin.js')) }}"></script>
 <script>
@@ -15,7 +15,7 @@ jQuery(document).ready(function ($) {
 		});
 });
 </script>
-@stop
+@endpush
 
 @php
 app('request')->merge(['hidemainmenu' => 1]);

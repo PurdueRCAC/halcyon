@@ -35,6 +35,7 @@ class Storage
 	{
 		$content = null;
 		$group = $event->getGroup();
+		$client = app('isAdmin') ? 'admin' : 'site';
 
 		$content = view('storage::' . $client . '.directories.group', [
 			'group' => $group

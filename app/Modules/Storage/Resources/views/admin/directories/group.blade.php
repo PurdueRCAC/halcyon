@@ -1,20 +1,45 @@
-@section('styles')
+@push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/fancytree/skin-xp/ui.fancytree.css') }}" />
-@stop
+@endpush
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/core/vendor/fancytree/jquery.fancytree-all.js') }}"></script>
 <script src="{{ asset('modules/storage/js/admin.js?v=' . filemtime(public_path() . '/modules/storage/js/admin.js')) }}"></script>
-@stop
+@endpush
 
+<div class="row">
+	<div class="col-md-5">
+		<?php
+		function get_dir($dirs, $dirhash, $id)
+		{
+			if (count($dirhash) == 0)
+			{
+				foreach ($dirs as $d)
+				{
+					$dirhash[$d->id] = $d;
+				}
+			}
 
-	<div class="row">
-		<div class="col-md-5">
+			if (isset($dirhash[$id]))
+			{
+				return $dirhash[$id];
+			}
 
+			return null;
+		}
+
+		$directories = $group->directories;
+
+		$rows = $directories->filter(function($item)
+		{
+			return $item->parentstoragedirid == 0;
+		});
+
+		foreach ($rows as $row)
+		{
+			?>
 			<fieldset class="adminform">
-				<legend>{{ trans('storage::storage.directories') }}</legend>
-
-				<button class="btn btn-sm btn-secondary"><span class="icon-plus"></span> {{ trans('global.button.create') }}</button>
+				<legend>{{ $row->storageResource->name }}</legend>
 
 				<div id="new_dir_dialog" title="Add new directory" class="dialog">
 					<fieldset class="mb-1">
@@ -53,7 +78,7 @@
 									<input type="text" id="new_dir_quota_deduct" class="form-control" size="3" />
 								<?php
 								$bucket = null;
-								foreach ($row->group->storageBuckets as $bucket)
+								foreach ($group->storageBuckets as $bucket)
 								{
 									if ($bucket['resourceid'] == $row->storageResource->parentresourceid)
 									{
@@ -63,7 +88,7 @@
 
 								$style = '';
 								$disabled = '';
-								if ($bucket['unallocatedbytes'] == 0)
+								if ($bucket && $bucket['unallocatedbytes'] == 0)
 								{
 									$disabled = 'disabled="true"';
 									$style = 'color:gray';
@@ -87,7 +112,7 @@
 							<label for="new_dir_unixgroup_select">Access Unix Group:</label>
 							<select id="new_dir_unixgroup_select" class="form-control">
 								<option value="">(Select Unix Group)</option>
-								<?php foreach ($row->group->unixgroups as $unixgroup) { ?>
+								<?php foreach ($group->unixgroups as $unixgroup) { ?>
 									<option value="<?php echo $unixgroup->id; ?>" data-api="{{ route('api.unixgroups.read', ['id' => $unixgroup->id]) }}"><?php echo $unixgroup->longname; ?></option>
 								<?php } ?>
 							</select>
@@ -98,7 +123,7 @@
 							<label for="new_dir_autouserunixgroup_select">Populating Unix Group</label>
 							<select id="new_dir_autouserunixgroup_select" class="form-control">
 								<option value="">(Select Unix Group)</option>
-								<?php foreach ($row->group->unixgroups as $unixgroup) { ?>
+								<?php foreach ($group->unixgroups as $unixgroup) { ?>
 									<option value="<?php echo $unixgroup->id; ?>"><?php echo $unixgroup->longname; ?></option>
 								<?php } ?>
 							</select>
@@ -118,7 +143,7 @@
 					</div>
 				</div>
 
-				<table id="tree" class="tree">
+				<table id="tree{{ $row->id }}" class="tree">
 					<thead>
 						<tr>
 							<th scope="col">Directory</th>
@@ -133,38 +158,28 @@
 							<td></td>
 						</tr>
 					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="3">
+								<button class="btn btn-sm btn-secondary"><span class="icon-plus"></span> {{ trans('global.button.create') }}</button>
+							</td>
+						</tr>
+					</tfoot>
 				</table>
 
 				<input type="hidden" id="selected_dir" />
 				<input type="hidden" id="selected_dir_unixgroup" />
 
-				<script type="application/json" id="tree-data"><?php
+				<script type="application/json" id="tree{{ $row->id }}-data"><?php
 				$data = array($row->tree());
 				echo json_encode($data);
 				?></script>
 
 				<?php
 				$dirhash = array();
-				function get_dir($dirs, $dirhash, $id)
-				{
-					if (count($dirhash) == 0)
-					{
-						foreach ($dirs as $d)
-						{
-							$dirhash[$d->id] = $d;
-						}
-					}
-
-					if (isset($dirhash[$id]))
-					{
-						return $dirhash[$id];
-					}
-
-					return null;
-				}
 				$configuring = array();
 				$removing = array();
-				$directories = $row->group->directories;
+				//$directories = $group->directories;
 				foreach ($row->nested() as $dir)
 				{
 					$did = $dir->id;
@@ -177,7 +192,7 @@
 					?>
 					<div id="{{ $did }}_dialog" data-id="{{ $did }}" title="{{ $dir->storageResource->path . '/' . $dir->path }}" class="dialog">
 
-						<?php if ($dir['quotaproblem'] == 1 && $dir->bytes) { ?>
+						<?php if ($dir->quotaproblem == 1 && $dir->bytes) { ?>
 							<div class="row mb-3">
 								<div class="col-md-4">
 									Desired quota
@@ -191,7 +206,7 @@
 									Actual quota <span class="icon-warning" data-tip="Storage space is over-allocated. Quotas reduced until allocation balanced."><span class="sr-only">Storage space is over-allocated. Quotas reduced until allocation balanced.</span></span>
 								</div>
 								<div class="col-md-8">
-									<?php echo App\Halcyon\Utility\Number::formatBytes($dir->quota); ?>
+									<?php echo App\Halcyon\Utility\Number::formatBytes($dir->bytes); ?>
 								</div>
 							</div><!--/ .row -->
 						<?php } else { ?>
@@ -202,15 +217,8 @@
 								<div class="col-md-8">
 									<?php
 									$value = App\Halcyon\Utility\Number::formatBytes($dir->bytes, true);
-									/*if (!$dir->bytes)
-									{
-										$value = '-';
-									}*/
 									?>
-									<!-- <span id="{{ $dir->id }}_quota_span"><?php echo $value; ?></span> -->
-									<?php //if ($dir->bytes) { ?>
-										<input type="text" id="{{ $dir->id }}_quota_input" class="form-control" value="{{ $dir->bytes ? $value : '' }}" />
-									<?php //} ?>
+									<input type="text" id="{{ $dir->id }}_quota_input" class="form-control" value="{{ $dir->bytes ? $value : '' }}" />
 								</div>
 							</div><!--/ .row -->
 						<?php } ?>
@@ -575,7 +583,7 @@
 										$cls = ' hide';
 									}
 
-									if ($dir->quotaproblem == 1 && $dir->bytes && $dir->quota < $dir->bytes)
+									if ($dir->quotaproblem == 1 && $dir->bytes && $dir->realquota < $dir->bytes)
 									{
 										if (-$bucket['unallocatedbytes'] < $dir->bytes)
 										{
@@ -633,9 +641,93 @@
 					</div><!-- / #<?php echo $did; ?>_dialog -->
 				<?php } ?>
 			</fieldset>
-
+			<?php
+}
+?>
 		</div>
 		<div class="col-md-7">
+			<fieldset class="adminform">
+				<legend>{{ trans('storage::storage.history') }}</legend>
+
+				<?php
+				$history = array();
+				foreach ($group->purchases as $purchase)
+				{
+					$history[$purchase->datetimestart->timestamp] = $purchase;
+				}
+				foreach ($group->loans as $loan)
+				{
+					$history[$loan->datetimestart->timestamp] = $loan;
+				}
+				ksort($history);
+
+				$total = 0;
+				foreach ($history as $item)
+				{
+					//$total = $item->type == 'loan' ? ($total - $item->bytes) : ($total + $item->bytes);
+					$total = ($item->bytes > 0 ? $total + $item->bytes : $total - abs($item->bytes)); 
+					$item->total = $total;
+				}
+				$history = array_reverse($history);
+				?>
+				<table class="table table-hover">
+					<caption class="sr-only">{{ trans('storage::storage.history') }}</caption>
+					<thead>
+						<tr>
+							<th scope="col">{{ trans('storage::storage.type') }}</th>
+							<th scope="col">{{ trans('storage::storage.source') }}</th>
+							<th scope="col">{{ trans('storage::storage.start') }}</th>
+							<th scope="col">{{ trans('storage::storage.end') }}</th>
+							<th scope="col" class="text-right">{{ trans('storage::storage.amount') }}</th>
+							<th scope="col" class="text-right">{{ trans('storage::storage.total') }}</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach ($history as $item)
+							<tr class="{{ $item->type }}">
+								<td>
+									@if ($item->bytes > 0)
+										<span class="badge badge-success">{{ $item->type }}</span>
+									@else
+										<span class="badge badge-danger">{{ $item->type }}</span>
+									@endif
+								</td>
+								<td>
+									@if ($item->type == 'loan')
+										@if ($item->lendergroupid >= 0)
+											{{ $item->lender ? $item->lender->name : trans('global.unknown') }}
+										@else
+											{{ config('app.name') }}
+										@endif
+									@else
+										@if ($item->sellergroupid >= 0)
+											{{ $item->seller ? $item->seller->name : trans('global.unknown') }}
+										@else
+											{{ config('app.name') }}
+										@endif
+									@endif
+								</td>
+								<td>
+									<time datetime="{{ $item->datetimestart }}">{{ $item->datetimestart->format('Y-m-d') }}</time>
+								</td>
+								<td>
+									@if ($item->hasEnded())
+										<time datetime="{{ $item->datetimestop }}">{{ $item->datetimestop->format('Y-m-d') }}</time>
+									@else
+										-
+									@endif
+								</td>
+								<td class="text-right">
+									{!! ($item->bytes > 0 ? '<span class="increase">+ ' : '<span class="decrease">- ') . App\Halcyon\Utility\Number::formatBytes(abs($item->bytes)) . '</span>' !!}
+								</td>
+								<td class="text-right">
+									{{ App\Halcyon\Utility\Number::formatBytes($item->total) }}
+								</td>
+							</tr>
+						@endforeach
+					</tbody>
+				</table>
+			</fieldset>
 
 	<fieldset class="adminform">
 		<legend>{{ trans('storage::storage.messages') }}</legend>
@@ -653,14 +745,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php
-				if ($row->group && $row->group->id):
-					$messages = $row->group->messages;
-				else:
-					$messages = $row->messages;
-				endif;
-				?>
-				@foreach ($messages as $message)
+				@foreach ($group->messages as $message)
 					<tr>
 						<td>{{ $message->status }}</td>
 						<td>{{ $message->target }}</td>

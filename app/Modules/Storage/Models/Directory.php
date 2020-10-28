@@ -601,7 +601,7 @@ class Directory extends Model
 		$new_quota = $this->quota;
 		if (!$this->bytes)
 		{
-			$new_quota = $this->parent->quota;
+			$new_quota = $this->parent ? $this->parent->quota : 0;
 		}
 
 		$children[] = array(

@@ -1,5 +1,5 @@
 
-@section('scripts')
+@push('scripts')
 <script>
 	$(document).ready(function() {
 		$('.time-pick').timepicker({
@@ -257,7 +257,7 @@
 		});
 	});
 </script>
-@stop
+@endpush
 
 <div class="contentInner">
 	<h2>{{ trans('users::users.quotas') }}</h2>

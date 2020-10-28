@@ -1,3 +1,4 @@
+@if (!request()->ajax())
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js {{ app('themes')->getActiveTheme()->getParams('mode', 'light') }}">
 	<head>
@@ -121,7 +122,9 @@
 
 					<section id="main">
 						<!-- Content begins -->
+@endif
 						@yield('content')
+@if (!request()->ajax())
 						<!-- Content ends -->
 
 						<noscript>
@@ -135,3 +138,4 @@
 		</div><!-- / #container-main -->
 	</body>
 </html>
+@endif

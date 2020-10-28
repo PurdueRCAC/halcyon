@@ -58,6 +58,26 @@ class Purchase extends Model
 	);
 
 	/**
+	 * Set a query's WHERE clause to include published state
+	 *
+	 * @return  object
+	 */
+	public function hasStarted()
+	{
+		return ($this->datetimestart && $this->datetimestart != '0000-00-00 00:00:00' && $this->datetimestart != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * Set a query's WHERE clause to include published state
+	 *
+	 * @return  object
+	 */
+	public function hasEnded()
+	{
+		return ($this->datetimestop && $this->datetimestop != '0000-00-00 00:00:00' && $this->datetimestop != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Defines a relationship to a resource
 	 *
 	 * @return  object
@@ -202,5 +222,15 @@ class Purchase extends Model
 			->where('sellergroupid', '=', $this->groupid)
 			->get()
 			->first();
+	}
+
+	/**
+	 * Defines a relationship to a resource
+	 *
+	 * @return  string
+	 */
+	public function getTypeAttribute()
+	{
+		return 'purchase';
 	}
 }

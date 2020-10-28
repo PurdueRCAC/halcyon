@@ -102,4 +102,13 @@ return [
 	'unallocated space' => 'Unallocated space',
 	'remove overallocated' => 'Remove over-allocated space from this directory',
 	'distribute remaining' => 'Distribute remaining space',
+
+	'type' => 'Type',
+	'comment' => 'Comment',
+	'start' => 'Starts',
+	'end' => 'Ends',
+	'amount' => 'Amount',
+	'total' => 'Total',
+	'history' => 'History',
+	'source' => 'From/To',
 ];
