@@ -19,6 +19,448 @@ Halcyon.submitbutton = function(task) {
 }
 
 /**
+ * New directory type
+ *
+ * @return  {void}
+ */
+function NewDirType() {
+	var selected = document.getElementById("new_dir_type");
+	selected = selected.options[selected.selectedIndex].value;
+
+	var user_row = document.getElementById("new_dir_user_row");
+	var user_select = document.getElementById("new_dir_user_select");
+	var input = document.getElementById("new_dir_input");
+	var unixgroup_select = document.getElementById("new_dir_unixgroup_select");
+	var autouserunixgroup_row = document.getElementById("new_dir_autouserunixgroup_row");
+	var unixgroup_select_decoy = document.getElementById("new_dir_unixgroup_select_decoy");
+	var parent_unixgroup = document.getElementById("selected_dir_unixgroup");
+	var x;
+
+	if (selected == "user") {
+		user_row.classList.remove('d-none');//.style.display = "table-row";
+		unixgroup_select.disabled = false;
+		unixgroup_select_decoy.classList.add('d-none');//.style.display = "none";
+		unixgroup_select.classList.remove('d-none');//.style.display = "inline";
+		autouserunixgroup_row.classList.add('d-none');//.style.display = "none";
+
+		input.value = " (Select User) ";
+
+		for (x=0;x<unixgroup_select.options.length;x++) {
+			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
+				unixgroup_select.options[x].selected = true;
+				$.get(unixgroup_select.options[x].getAttribute('data-api'), NewDirUserPopulate);
+			}
+		}
+	}
+
+	if (selected == "userwrite") {
+		user_row.classList.remove('d-none');//.style.display = "table-row";
+		unixgroup_select.disabled = false;
+		unixgroup_select_decoy.classList.add('d-none');//.style.display = "none";
+		unixgroup_select.classList.remove('d-none');//.style.display = "inline";
+		autouserunixgroup_row.classList.add('d-none');//.style.display = "none";
+
+		input.value = " (Select User) ";
+
+		for (x=0;x<unixgroup_select.options.length;x++) {
+			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
+				unixgroup_select.options[x].selected = true;
+				WSGetURL(unixgroup_select.options[x].value, NewDirUserPopulate);
+			}
+		}
+	} else if (selected == "userprivate") {
+		user_row.classList.remove('d-none'); //.style.display = "table-row";
+		user_select.options[0].selected = true;
+		input.value = " (Select User) ";
+
+		var opt = document.createElement("option");
+		opt.innerHTML = parent_unixgroup.value;
+
+		for (x=0;x<unixgroup_select.options.length;x++) {
+			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
+				opt.value = unixgroup_select.options[x].value;
+				WSGetURL(unixgroup_select.options[x].value, NewDirUserPopulate);
+			}
+		}
+
+		unixgroup_select_decoy.classList.remove('d-none');//.style.display = "inline";
+		unixgroup_select.classList.add('d-none'); //.style.display = "none";
+		autouserunixgroup_row.classList.add('d-none');//.style.display = "none";
+
+		$( unixgroup_select_decoy ).empty();
+		unixgroup_select_decoy.appendChild(opt);
+		unixgroup_select_decoy.disabled = true;
+	} else if (selected == "normal") {
+		input.value = "";
+
+		user_row.classList.add('d-none');//.style.display = "none";
+		user_select.options[0].selected = true;
+		unixgroup_select.disabled = false;
+		unixgroup_select_decoy.classList.add('d-none');//.style.display = "none";
+		unixgroup_select.classList.remove('d-none');//.style.display = "inline";
+		autouserunixgroup_row.classList.add('d-none');//.style.display = "none";
+	} else if (selected == "autouserprivate" || selected == "autouserread" || selected == "autouserreadwrite") {
+		input.value = "";
+
+		user_row.classList.add('d-none');//.style.display = "none";
+		user_select.options[0].selected = true;
+		unixgroup_select.disabled = false;
+		unixgroup_select_decoy.classList.add('d-none');//.style.display = "none";
+		unixgroup_select.classList.remove('d-none');//.style.display = "inline";
+		autouserunixgroup_row.classList.remove('d-none');//.style.display = "table-row";
+	}
+}
+
+/**
+ * Callback to populate new dir user
+ *
+ * @param   {object}  xml
+ * @return  {void}
+ */
+function NewDirUserPopulate(results) {
+	var user_select = document.getElementById("new_dir_user_select");
+	var opt = document.createElement("option");
+		opt.innerHTML = "(Select User)";
+		opt.value = "";
+
+	$(user_select).empty();
+	user_select.appendChild(opt);
+
+	//if (xml.status == 200) {
+		//var results = JSON.parse(xml.responseText);
+
+		for (var x=0;x<results.data['members'].length;x++) {
+			opt = document.createElement("option");
+			opt.value = results.data['members'][x]['userid'];
+			opt.innerHTML = results.data['members'][x]['username'];
+
+			user_select.appendChild(opt);
+		}
+	//}
+}
+
+/**
+ * Guess the directory's unix group
+ *
+ * @return  {void}
+ */
+function GuessDirUnixGroup() {
+	var input = document.getElementById("new_dir_input");
+	var unixgroup = document.getElementById("new_dir_unixgroup_select");
+
+	for (var x=0;x<unixgroup.options.length;x++) {
+		var opt = unixgroup.options[x];
+		var bits = opt.innerHTML.split("-");
+		if (bits.length > 1) {
+			if (bits[1] == input.value) {
+				unixgroup.selectedIndex = x;
+				break;
+			}
+		}
+	}
+}
+
+/**
+ * Create a new directory
+ *
+ * @return  {void}
+ */
+function NewDir(btn) {
+	var img = document.getElementById("new_dir_img");
+	var input = document.getElementById("new_dir_input");
+	var group = document.getElementById("groupid").value;
+	var resource = document.getElementById("resourceid").value;
+	var parentdir = document.getElementById("selected_dir").value;
+	//var storageresource = document.getElementById("storageresource").value;
+
+	var type = document.getElementById("new_dir_type");
+	type = type.options[type.selectedIndex].value;
+
+	//img.src = "/include/images/loading.gif";
+	//img.style.width = "20px";
+	//img.style.height = "20px";
+	img.className = 'spinner-border';
+
+	var share = document.getElementById("share_radio").checked;
+	var deduct = document.getElementById("deduct_radio").checked;
+	var unalloc = document.getElementById("unalloc_radio").checked;
+
+	var unalloc_input = document.getElementById("new_dir_quota_unalloc").value;
+	var deduct_input = document.getElementById("new_dir_quota_deduct").value;
+
+	var unixgroup = document.getElementById("new_dir_unixgroup_select");
+	unixgroup = unixgroup.options[unixgroup.selectedIndex].value;
+
+	var error;
+
+	if (type == "autouserread" || type == "autouserprivate" || type == "autouserreadwrite") {
+		var autouserunixgroup = document.getElementById("new_dir_autouserunixgroup_select");
+		autouserunixgroup = autouserunixgroup.options[autouserunixgroup.selectedIndex].value;
+
+		if (autouserunixgroup == "") {
+			error = document.getElementById("new_dir_error");
+			error.innerHTML = "Please select a unix group.";
+			//img.src = "/include/images/error.png";
+			img.className = 'icon-warning';
+			return;
+		}
+	}
+
+	if (unixgroup == "" && type != "userprivate") {
+		error = document.getElementById("new_dir_error");
+		error.innerHTML = "Please select a unix group.";
+		//img.src = "/include/images/error.png";
+		img.className = 'icon-warning';
+		return;
+	}
+
+	if (type == "userprivate") {
+		unixgroup = document.getElementById("new_dir_unixgroup_select_decoy");
+		unixgroup = unixgroup.options[unixgroup.selectedIndex].value;
+	}
+
+	var user = null;
+	if (type == "user" || type == "userprivate" || type == "userwrite") {
+		user = document.getElementById("new_dir_user_select");
+		user = user.options[user.selectedIndex].value;
+
+		if (user == "") {
+			error = document.getElementById("new_dir_error");
+			error.innerHTML = "Please select a user.";
+			//img.src = "/include/images/error.png";
+			img.className = 'icon-warning';
+			return;
+		}
+	}
+
+	var bytes;
+	var bytesource = "";
+	if (share) {
+		bytes = "-";
+	} else if (deduct) {
+		bytes = deduct_input;
+		bytesource = "p";
+	} else if (unalloc) {
+		bytes = unalloc_input;
+	}
+
+	var post = {
+		"name"       : input.value,
+		"parentstoragedirid"     : parentdir,
+		"groupid"      : group,
+		"resourceid"   : resource,
+		"bytes"      : bytes,
+		"bytesource" : bytesource,
+		"unixgroupid"  : unixgroup,
+		//"storageresource" : storageresource,
+	};
+
+	if (user != null) {
+		post['user'] = user;
+	}
+	if (type == "userprivate") {
+		post['groupread'] = "0";
+		post['groupwrite'] = "0";
+		post['otherread'] = "0";
+	}
+	if (type == "user") {
+		post['groupread'] = "1";
+		post['groupwrite'] = "0";
+		post['otherread'] = "0";
+	}
+	if (type == "userwrite") {
+		post['groupread'] = "1";
+		post['groupwrite'] = "1";
+		post['otherread'] = "0";
+	}
+	if (type == "autouserread") {
+		post['autouser'] = "1";
+		post['groupread'] = "1";
+		post['groupwrite'] = "0";
+		post['autouserunixgroup'] = autouserunixgroup;
+	}
+	if (type == "autouserprivate") {
+		post['autouser'] = "2";
+		post['groupread'] = "1";
+		post['groupwrite'] = "0";
+		post['autouserunixgroup'] = autouserunixgroup;
+	}
+	if (type == "autouserreadwrite") {
+		post['autouser'] = "3";
+		post['groupread'] = "1";
+		post['groupwrite'] = "0";
+		post['autouserunixgroup'] = autouserunixgroup;
+	} 
+	//post = JSON.stringify(post);
+//console.log(post);return;
+
+	$.ajax({
+		url: btn.getAttribute('data-api'),
+		type: 'post',
+		data: post,
+		dataType: 'json',
+		async: false,
+		success: function(data) {
+			Halcyon.message('success', 'Directory created!');
+			window.location.reload(true);
+		},
+		error: function(xhr, reason, thrownError) {
+			/*var error = document.getElementById("new_dir_error");
+			var img = document.getElementById("new_dir_img");
+bytes: "-"
+
+bytesource: ""
+
+groupid: "1166"
+
+name: "foo"
+
+parentstoragedirid: "23771"
+
+resourceid: "64"
+
+unixgroupid: "1233"
+			if (xml.status == 200) {
+				window.location.reload(true);
+			} else if (xml.status == 409) {
+				error.innerHTML = "Directory already exists.";
+				if (img) {
+					img.src = "/include/images/error.png";
+				}
+			} else if (xml.status == 414) {
+				error.innerHTML = "Invalid quota.";
+				if (img) {
+					img.src = "/include/images/error.png";
+				}
+			} else if (xml.status == 415) {
+				error.innerHTML = "Invalid directory name.";
+				if (img) {
+					img.src = "/include/images/error.png";
+				}
+			} else {
+				error.innerHTML = "An error has occurred.";
+				if (img) {
+					img.src = "/include/images/error.png";
+				}
+			}*/
+			if (xhr.responseJSON) {
+				Halcyon.message('danger', xhr.responseJSON.message);
+			} else {
+				Halcyon.message('danger', 'Failed to create directory.');
+			}
+			console.log(xhr.responseText);
+			
+		}
+	});
+
+	/*WSPostURL("/ws/storagedir", post, function(xml) {
+		var error = document.getElementById("new_dir_error");
+		var img = document.getElementById("new_dir_img");
+
+		if (xml.status == 200) {
+			window.location.reload(true);
+		} else if (xml.status == 409) {
+			error.innerHTML = "Directory already exists.";
+			if (img) {
+				img.src = "/include/images/error.png";
+			}
+		} else if (xml.status == 414) {
+			error.innerHTML = "Invalid quota.";
+			if (img) {
+				img.src = "/include/images/error.png";
+			}
+		} else if (xml.status == 415) {
+			error.innerHTML = "Invalid directory name.";
+			if (img) {
+				img.src = "/include/images/error.png";
+			}
+		} else {
+			error.innerHTML = "An error has occurred.";
+			if (img) {
+				img.src = "/include/images/error.png";
+			}
+		}
+	});*/
+}
+
+/**
+ * Delete a directory
+ *
+ * @param   {string}  dir
+ * @param   {string}  path
+ * @return  {void}
+ */
+function DeleteDir(btn) {
+	if (confirm(btn.getAttribute('data-confirm'))) {
+
+		$.ajax({
+			url: btn.getAttribute('data-api'),
+			type: 'delete',
+			dataType: 'json',
+			async: false,
+			success: function(data) {
+				Halcyon.message('success', 'Directory removed!');
+				window.location.reload(true);
+			},
+			error: function(xhr, reason, thrownError) {
+				if (xhr.responseJSON) {
+						Halcyon.message('danger', xhr.responseJSON.message);
+					} else {
+						Halcyon.message('danger', 'Failed to delete directory.');
+					}
+					console.log(xhr.responseText);
+				}
+			});
+
+		/*WSDeleteURL(dir, function(xml, dir) {
+			var error = document.getElementById(dir + "_error");
+
+			if (xml.status == 200) {
+				window.location.reload(true);
+			} else if (xml.status == 409) {
+				error.innerHTML = "Directory is not empty.";
+			} else {
+				error.innerHTML = "An error has occurred.";
+			}
+		}, dir);*/
+	}
+}
+
+/**
+ * Reset permissions
+ *
+ * @param   {string}  dir
+ * @param   {string}  path
+ * @return  {void}
+ */
+function ResetPermissions(btn) {
+	if (confirm(btn.getAttribute('data-confirm'))) {
+		var post = {
+			"fixpermissions" : "1"
+		};
+
+		$.ajax({
+			url: btn.getAttribute('data-api'),
+			type: 'put',
+			data: post,
+			dataType: 'json',
+			async: false,
+			success: function(data) {
+				window.location.reload(true);
+			},
+			error: function(xhr, reason, thrownError) {
+				if (xhr.responseJSON) {
+					Halcyon.message('danger', xhr.responseJSON.message);
+				} else {
+					Halcyon.message('danger', 'Failed to reset permissions.');
+				}
+				console.log(xhr.responseText);
+			}
+		});
+	}
+}
+
+/**
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -164,59 +606,163 @@ document.addEventListener('DOMContentLoaded', function() {
 		$(this).val(val);
 	});
 
-	var data = JSON.parse($('#tree-data').html());
+	$(".tree").each(function(i, el){
+		var data = JSON.parse($('#' + $(el).attr('id') + '-data').html());
 
-	$("#tree").fancytree({
-		activate: function(event, data) {
-			var node = data.node;
-			var did = node.data.id; //node.key.split("/");
-			//did = did[3];
-			$("#" + did + "_dialog").dialog({
-				modal: true,
-				width: '550px',
-				position: { my: "left top", at: "left top", of: $( "#tree" ) },
-				close: function(event) {
-					var node = $("#tree").fancytree("getActiveNode").setActive(false);
-				}
-			});
-			$( "#" + did + "_dialog" ).dialog('open');
-			$( '#selected_dir' ).attr('value', node.data.parentdir);
-			$( '#selected_dir_unixgroup' ).attr('value', node.data.parentunixgroup);
-			$( '#new_dir_path' ).html(node.data.path + "/");
-			$( '#new_dir_quota_available' ).html(node.data.parentquota);
-			$( '#new_dir_quota_available2' ).html(node.data.parentquota);
-		},
-		persist: true,
-		extensions: ["table"],
-		table: {
-			indentation: 20,      // indent 20px per node level
-			nodeColumnIdx: 0,     // render the node title into the 2nd column
-			checkboxColumnIdx: 0  // render the checkboxes into the 1st column
-		},
-		source: data,
-		renderColumns: function(event, data) {
-			var node = data.node,
-			$tdList = $(node.tr).find(">td");
+		$(el).fancytree({
+			activate: function(event, data) {
+				var node = data.node;
+				var did = node.data.id;
 
-			if ( node.data.quota == '0 B') {
-				$tdList.eq(1).text("-");
-			} else {
-				$tdList.eq(1).text(node.data.quota);
-				$tdList.eq(1).attr("id",node.key + "_quota_td");
-				if ( node.data.quotaproblem == "1" ) {
-					if ( node.data.quota != "-" ) {
-						$tdList.eq(1).addClass('quotaProblem');
-						$tdList.eq(1).html(node.data.quota + '<img style="float:right;" class="img editicon" alt="Storage space is over-allocated. Quotas reduced until allocation balanced." src="/include/images/error.png" />');
+				$("#" + did + "_dialog").dialog({
+					modal: true,
+					width: '550px',
+					//position: { my: "left top", at: "left top", of: $( "#tree" ) },
+					close: function(event) {
+						var node = $("#tree").fancytree("getActiveNode").setActive(false);
+					}
+				});
+				$("#" + did + "_dialog").dialog('open');
+				$('#selected_dir').attr('value', node.data.parentdir);
+				$('#selected_dir_unixgroup').attr('value', node.data.parentunixgroup);
+				$('#new_dir_path').html(node.data.path + "/");
+				$('#new_dir_quota_available').html(node.data.parentquota);
+				$('#new_dir_quota_available2').html(node.data.parentquota);
+			},
+			persist: true,
+			extensions: ["table"],
+			table: {
+				indentation: 20,      // indent 20px per node level
+				nodeColumnIdx: 0,     // render the node title into the 2nd column
+				checkboxColumnIdx: 0  // render the checkboxes into the 1st column
+			},
+			source: data,
+			renderColumns: function(event, data) {
+				var node = data.node,
+				$tdList = $(node.tr).find(">td");
+
+				if ( node.data.quota == '0 B') {
+					$tdList.eq(1).text("-");
+				} else {
+					$tdList.eq(1).text(node.data.quota);
+					$tdList.eq(1).attr("id", node.key + "_quota_td");
+					if ( node.data.quotaproblem == "1" ) {
+						if ( node.data.quota != "-" ) {
+							$tdList.eq(1).addClass('quotaProblem');
+							$tdList.eq(1).html(node.data.quota + '<span class="icon-error">Storage space is over-allocated. Quotas reduced until allocation balanced.</span>');
+						}
 					}
 				}
-			}
-			$tdList.eq(1).addClass('quota');
+				$tdList.eq(1).addClass('quota');
 
-			if (typeof (node.data.futurequota) != 'undefined') {
-				$tdList.eq(2).html(node.data.futurequota);
+				if (typeof (node.data.futurequota) != 'undefined') {
+					$tdList.eq(2).html(node.data.futurequota);
+				}
+				$tdList.eq(2).addClass('quota');
+				// (index #2 is rendered by fancytree)
 			}
-			$tdList.eq(2).addClass('quota');
-			// (index #2 is rendered by fancytree)
+		});
+	});
+
+	$('#new_dir_input').on('change', function (e){
+		GuessDirUnixGroup();
+	});
+	$('#new_dir_type').on('change', function (e){
+		NewDirType();
+	});
+	/*$('#new_dir_user_select').on('change', function (e){
+		NewDirUserSelected();
+	});
+	$('#new_dir_unixgroup_select').on('change', function (e){
+		NewDirUser();
+	});
+	$('#new_dir_autouserunixgroup_select').on('change', function (e){
+		NewDirUser();
+	});
+
+	$('#group').on('change', function (e){
+		NewDirGroup($(this).data('resource'));
+	});
+	$('#new_top_dir_input').on('change', function (e){
+		GuessTopDirUnixGroup();
+	});
+	$('#new_top_dir').on('click', function(e) {
+		e.preventDefault();
+		NewTopDir();
+	});*/
+
+	$('#new_dir').on('click', function(e) {
+		e.preventDefault();
+		NewDir(this);
+	});
+
+	$('#deduct_radio').on('click', function(e) {
+		document.getElementById('new_dir_quota_deduct').focus();
+	});
+	$('#new_dir_quota_deduct').on('focus', function(e) {
+		document.getElementById('deduct_radio').checked = true;
+	});
+
+	$('#unalloc_radio').on('click', function(e) {
+		document.getElementById('new_dir_quota_unalloc').focus();
+	});
+	$('#new_dir_quota_unalloc').on('focus', function(e) {
+		document.getElementById('unalloc_radio').checked = true;
+	});
+
+	/*$('.permissions-reset').on('click', function(e) {
+		e.preventDefault();
+		ResetPermissions($(this).data('dir'), $(this).data('path'));
+	});
+	$('.unixgroup-edit').on('click', function(e) {
+		e.preventDefault();
+		EditUnixGroup($(this).data('dir'));
+	});
+	$('.unixgroup-create').on('click', function(e) {
+		e.preventDefault();
+		CreateDefaultUnixGroups($(this).data('unixgroup'), $(this).data('id'));
+	});
+	$('.unixgroup-basename-set').on('click', function(e) {
+		e.preventDefault();
+		SetBaseName($(this).data('id'));
+	});*/
+	$('.dir-delete').on('click', function(e) {
+		e.preventDefault();
+		DeleteDir(this);
+	});
+	/*$('.dir-create-default').on('click', function(e) {
+		e.preventDefault();
+		CreateDefaultDirs(
+			$(this).data('id'),
+			$(this).data('unixgroup'),
+			$(this).data('resource'),
+			$(this).data('quota'),
+			$(this).data('base'),
+			$(this).data('apps'),
+			$(this).data('data')
+		);
+	});
+
+	$('.quota_upa').on('click', function(e){
+		e.preventDefault();
+		DistributeQuota($(this).data('dir'));
+	});*/
+
+	$('.permissions-reset').on('click', function(e) {
+		e.preventDefault();
+		ResetPermissions(this);
+	});
+
+	$('body').on('change', '.form-control', function(el){
+		var dialog = $(this).closest('.dialog');
+		if (dialog.length) {
+			$('#' + $(dialog).data('id') + '_save_button').prop('disabled', false);
 		}
+		/*var id = $(this).data('id');
+		console.log($(this).find('.form-control'));
+		$(this).find('.form-control').on('change', function(e){
+			console.log('this');
+			$('#' + id + '_save_button').prop('disabled', false);
+		});*/
 	});
 });

@@ -735,6 +735,55 @@ document.addEventListener('DOMContentLoaded', function() {
 		},
 		tooltipClass: 'tool-tip'
 	});*/
+	$('<div id="panel"></div>').appendTo('body');
+
+	$('.btn-settings').on('click', function(e){
+		e.preventDefault();
+
+		$.get($(this).attr('href'), function(response){
+			var panel = $('#panel');
+			panel
+				.html(response)
+				.show("slide", { direction: "right" }, 500);
+
+			panel.find('.btn-cancel').on('click', function(e){
+				e.preventDefault();
+				$('#panel').hide("slide", { direction: "right" }, 500);
+			});
+
+			panel.find('.btn-success').on('click', function(e){
+				e.preventDefault();
+				$.ajax({
+					url: btn.getAttribute('data-api'),
+					type: 'put',
+					data: post,
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						Halcyon.message('success', 'Settings updated.');
+						$('#panel').hide("slide", { direction: "right" }, 500);
+					},
+					error: function(xhr, reason, thrownError) {
+						if (xhr.responseJSON) {
+							Halcyon.message('danger', xhr.responseJSON.message);
+						} else {
+							Halcyon.message('danger', 'Failed to reset permissions.');
+						}
+						console.log(xhr.responseText);
+					}
+				});
+			});
+
+			$('#permissions-rules').accordion({
+				heightStyle: 'content',
+				collapsible: true,
+				active: false
+			});
+			$('#permissions-rules .stop-propagation').on('click', function(e) {
+				e.stopPropagation();
+			});
+		});
+	});
 
 	/*
 	$('.input-datetime input').datetimepicker({
