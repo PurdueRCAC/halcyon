@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('scripts')
+@push('scripts')
 <script>
 	function validate(){
 		var value = $('#menu_assignment').val(),
@@ -233,7 +233,7 @@ $( document ).ready(function() {
 	});
 });
 </script>
-@stop
+@endpush
 
 @php
 app('pathway')
