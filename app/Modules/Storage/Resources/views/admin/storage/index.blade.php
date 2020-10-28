@@ -99,7 +99,7 @@ app('pathway')
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('storage::storage.resource'), 'storageresourceid', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4 numeric">
+				<th scope="col" class="priority-4 text-right">
 					{{ trans('storage::storage.directories') }}
 				</th>
 			</tr>
@@ -178,13 +178,13 @@ app('pathway')
 						<span class="none">{{ trans('global.none') }}</span>
 					@endif
 				</td>
-				<td class="priority-4 numeric">
+				<td class="priority-4 text-right">
 					@if ($row->directories_count)
-						<a href="{{ route('admin.storage.directories', ['parent' => $row->id]) }}">
+						<a href="{{ route('admin.storage.directories', ['resource' => $row->id]) }}">
 							{{ number_format($row->directories_count) }}
 						</a>
 					@else
-						<a class="btn btn-sm btn-success" href="{{ route('admin.storage.directories.create', ['parent' => $row->id]) }}">
+						<a class="btn btn-sm btn-success" href="{{ route('admin.storage.directories.create', ['resource' => $row->id, 'parent' => 0]) }}">
 							<span class="icon-plus"></span><span class="sr-only">{{ trans('global.add') }}</span>
 						</a>
 						<span class="none">0</span>

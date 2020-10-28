@@ -7,8 +7,15 @@ app('pathway')
 		route('admin.storage.index')
 	)
 	->append(
-		trans('storage::storage.directories')
+		trans('storage::storage.directories'),
+		route('admin.storage.directories', ['parent' => $parent ? $parent->parentstoragedirid : 0])
 	);
+if ($parent)
+{
+	app('pathway')->append(
+		$parent->storageResource->path . '/' . $parent->path
+	);
+}
 @endphp
 
 @section('toolbar')
@@ -64,11 +71,11 @@ app('pathway')
 					<option value="inactive"<?php if ($filters['state'] == 'inactive'): echo ' selected="selected"'; endif;?>>{{ trans('global.inactive') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_state">{{ trans('storage::storage.parent') }}</label>
-				<select name="parent" class="form-control filter filter-submit">
-					<option value="0"<?php if (!$filters['parent']): echo ' selected="selected"'; endif;?>>{{ trans('global.all') }}</option>
+				<label class="sr-only" for="filter_state">{{ trans('storage::storage.resource') }}</label>
+				<select name="resource" class="form-control filter filter-submit">
+					<option value="0"<?php if (!$filters['resource']): echo ' selected="selected"'; endif;?>>{{ trans('global.all') }}</option>
 					@foreach ($storages as $s)
-						<option value="{{ $s->id }}"<?php if ($filters['parent'] == $s->id): echo ' selected="selected"'; endif;?>>{{ $s->name }}</option>
+						<option value="{{ $s->id }}"<?php if ($filters['resource'] == $s->id): echo ' selected="selected"'; endif;?>>{{ $s->name }}</option>
 					@endforeach
 				</select>
 			</div>
@@ -105,6 +112,9 @@ app('pathway')
 				</th>
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('storage::storage.storage'), 'storageresourceid', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<th scope="col" class="priority-4 text-right">
+					{{ trans('storage::storage.directories') }}
 				</th>
 				<!-- <th scope="col" class="priority-4">{{ trans('storage::storage.COL_CREATED') }}</th>
 				<th scope="col" class="priority-4">{{ trans('storage::storage.COL_REMOVED') }}</th>
@@ -163,11 +173,23 @@ app('pathway')
 						{!! $row->owner ? e($row->owner->name) : '<span class="unknown">' . trans('global.unknown') . '</span>' !!}
 					@endif
 				</td>
-				<td>
+				<td class="priority-4">
 					@if ($row->storageResource)
 						{{ $row->storageResource->name }}
 					@else
 						<span class="unknown">{{ trans('global.unknown') }}</span>
+					@endif
+				</td>
+				<td class="priority-4 text-right">
+					@if ($c = $row->children()->count())
+						<a href="{{ route('admin.storage.directories', ['parent' => $row->id]) }}">
+							{{ number_format($c) }}
+						</a>
+					@else
+						<a class="btn btn-sm btn-success" href="{{ route('admin.storage.directories.create', ['parent' => $row->id, 'resource' => $row->storageresourceid]) }}">
+							<span class="icon-plus"></span><span class="sr-only">{{ trans('global.add') }}</span>
+						</a>
+						<span class="none">0</span>
 					@endif
 				</td>
 				<!--<td>

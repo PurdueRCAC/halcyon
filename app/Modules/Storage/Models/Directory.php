@@ -84,9 +84,7 @@ class Directory extends Model
 	 * @var array
 	 */
 	protected $dispatchesEvents = [
-		//'creating' => DirectoryCreating::class,
 		'created'  => DirectoryCreated::class,
-		//'updating' => DirectoryUpdating::class,
 		'updated'  => DirectoryUpdated::class,
 		'deleted'  => DirectoryDeleted::class,
 	];
@@ -227,6 +225,25 @@ class Directory extends Model
 	 *
 	 * @return  object
 	 */
+	public function getFullPathAttribute()
+	{
+		$path = $this->storageResource ? $this->storageResource->path : '';
+
+		/*while ($parent)
+		{
+			$parent = $this->parentl;
+			$path .= '/' . 
+		}*/
+		$path .= $this->path ? '/' . $this->path : '';
+
+		return $path;
+	}
+
+	/**
+	 * Get permissions
+	 *
+	 * @return  object
+	 */
 	public function getUnixPermissionsAttribute()
 	{
 		/*$permissions = [
@@ -266,6 +283,11 @@ class Directory extends Model
 		return (object)$permissions;
 	}
 
+	/**
+	 * Get mode
+	 *
+	 * @return  string
+	 */
 	public function getModeAttribute()
 	{
 		$permissions = $this->unixPermissions;
@@ -322,6 +344,11 @@ class Directory extends Model
 		return $umode . $gmode . $omode;
 	}
 
+	/**
+	 * Get ACL
+	 *
+	 * @return  string
+	 */
 	public function getAclAttribute()
 	{
 		$permissions = $this->unixPermissions;
@@ -393,11 +420,21 @@ class Directory extends Model
 		return 'd:u::' . $uacl . ',d:g::' . $gacl . ',d:o::' . $oacl;
 	}
 
+	/**
+	 * Get formatted bytes
+	 *
+	 * @return  string
+	 */
 	public function getQuotaAttribute()
 	{
 		return Number::formatBytes($this->bytes);
 	}
 
+	/**
+	 * Get storage buckets
+	 *
+	 * @return  array
+	 */
 	public function getBucketsAttribute()
 	{
 		// Fetch storage buckets under this group
@@ -505,6 +542,11 @@ class Directory extends Model
 		return $storagedirtotals;
 	}
 
+	/**
+	 * Get future quotas
+	 *
+	 * @return  array
+	 */
 	public function getFuturequotasAttribute()
 	{
 		// Find appropriate bucket
@@ -535,6 +577,11 @@ class Directory extends Model
 		return $futurequotas;
 	}
 
+	/**
+	 * Get directory tree
+	 *
+	 * @return  array
+	 */
 	public function tree($expanded = true)
 	{
 		$item = array(); //$this->toArray();
@@ -575,6 +622,11 @@ class Directory extends Model
 		return $item;
 	}
 
+	/**
+	 * Get nested directory tree
+	 *
+	 * @return  array
+	 */
 	public function nested($items = array())
 	{
 		$items[] = $this;

@@ -24,7 +24,8 @@ class DirectoriesController extends Controller
 		$filters = array(
 			'search'   => null,
 			'state'    => 'active',
-			'parent'   => null,
+			'parent'   => 0,
+			'resource' => null,
 			// Paging
 			'limit'    => config('list_limit', 20),
 			'page'     => 1,
@@ -44,15 +45,21 @@ class DirectoriesController extends Controller
 		$d = (new Directory)->getTable();
 
 		$query->select($d . '.*')
-			->where($d . '.parentstoragedirid', '=', 0)
+			->where($d . '.parentstoragedirid', '=', $filters['parent'])
 			->withTrashed();
 
-		$storage = null;
+		$parent = null;
 		if ($filters['parent'])
 		{
-			$storage = StorageResource::find($filters['parent']);
+			$parent = Directory::find($filters['parent']);
+		}
 
-			$query->where($d . '.storageresourceid', '=', $filters['parent']);
+		$storage = null;
+		if ($filters['resource'])
+		{
+			$storage = StorageResource::find($filters['resource']);
+
+			$query->where($d . '.storageresourceid', '=', $filters['resource']);
 		}
 
 		if ($filters['state'] != '*')
@@ -114,6 +121,7 @@ class DirectoriesController extends Controller
 			'filters' => $filters,
 			'storage' => $storage,
 			'storages' => $storages,
+			'parent' => $parent,
 		]);
 	}
 
@@ -125,9 +133,14 @@ class DirectoriesController extends Controller
 	{
 		$row = new Directory;
 
+		if ($resource = $request->input('resource'))
+		{
+			$row->storageresourceid = $resource;
+		}
+
 		if ($parent = $request->input('parent'))
 		{
-			$row->storageresourceid = $parent;
+			$row->parentstoragedirid = $parent;
 		}
 
 		$storages = StorageResource::query()
