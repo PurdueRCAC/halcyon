@@ -1,14 +1,14 @@
 @extends('layouts.master')
 
-@section('styles')
+@push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
-@stop
+@endpush
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/core/js/validate.js?v=' . filemtime(public_path() . '/modules/core/js/validate.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/groups/js/admin.js?v=' . filemtime(public_path() . '/modules/groups/js/admin.js')) }}"></script>
-@stop
+@endpush
 
 @php
 app('request')->merge(['hidemainmenu' => 1]);
@@ -313,12 +313,14 @@ app('pathway')
 			@include('history::admin.history')
 		</div>
 	</div>
+	</div>
 
 	@foreach ($sections as $section)
 	<div id="group-{{ $section['route'] }}">
 		{!! $section['content'] !!}
 	</div>
 	@endforeach
+	</div>
 
 	@csrf
 </form>

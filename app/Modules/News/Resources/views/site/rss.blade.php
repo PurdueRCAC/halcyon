@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
-@section('scripts')
-<script type="text/javascript" src="{{ asset('modules/News/js/rss.js') }}"></script>
-@stop
+@push('scripts')
+<script type="text/javascript" src="{{ asset('modules/news/js/rss.js') }}"></script>
+@endpush
 
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">

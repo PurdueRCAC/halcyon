@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('scripts')
+@push('scripts')
 <script>
 	$.getJSON("<?php echo route('api.news.views', ['id' => $article->id]); ?>", function(data) {
 		if (data) {
@@ -9,7 +9,7 @@
 		}
 	});
 </script>
-@stop
+@endpush
 
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">

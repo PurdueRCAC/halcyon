@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
-@section('styles')
+@push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/Users/css/login.css') }}" />
-@stop
+@endpush
 
 @section('title')
 	{{ trans('users::auth.login') }} | @parent

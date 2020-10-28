@@ -4,9 +4,8 @@
  * @copyright  Copyright 2020 Purdue University
  * @license    http://opensource.org/licenses/MIT MIT
  */
-
-defined('_HZEXEC_') or die();
 ?>
+@push('scripts')
 <script type="text/javascript">
 	setmenutype = function(type)
 	{
@@ -14,8 +13,9 @@ defined('_HZEXEC_') or die();
 		window.parent.$.fancybox.close();
 	}
 </script>
+@endpush
 
-<h2 class="modal-title"><?php echo trans('COM_MENUS_TYPE_CHOOSE'); ?></h2>
+<h2 class="modal-title"><?php echo trans('menus::menus.TYPE_CHOOSE'); ?></h2>
 <ul class="menu_types">
 	<?php foreach ($this->types as $name => $list): ?>
 		<li>

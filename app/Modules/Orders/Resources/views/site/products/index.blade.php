@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('styles')
+@push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css') }}" />
-@stop
+@endpush
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/orders/js/orders.js') }}"></script>
 <script>
 	// Force update of totals in case browswer is caching values
@@ -121,7 +121,7 @@
 		});
 	});
 </script>
-@stop
+@endpush
 
 @section('title')
 {!! config('orders.name') !!}: {{ trans('orders::orders.products') }}

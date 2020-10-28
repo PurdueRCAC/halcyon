@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
-@section('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/News/css/news.css') }}" />
-@stop
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css') }}" />
+@endpush
 
-@section('scripts')
-<script type="text/javascript" src="{{ asset('modules/News/js/site.js') }}"></script>
-@stop
+@push('scripts')
+<script type="text/javascript" src="{{ asset('modules/news/js/site.js') }}"></script>
+@endpush
 
 @section('content')
 

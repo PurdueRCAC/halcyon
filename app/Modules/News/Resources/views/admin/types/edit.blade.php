@@ -1,9 +1,9 @@
 @extends('layouts.master')
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/core/js/validate.js?v=' . filemtime(public_path() . '/modules/core/js/validate.js')) }}"></script>
 <script src="{{ asset('modules/news/js/admin.js?v=' . filemtime(public_path() . '/modules/news/js/admin.js')) }}"></script>
-@stop
+@endpush
 
 @php
 app('pathway')

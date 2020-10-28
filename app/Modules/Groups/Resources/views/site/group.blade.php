@@ -1,9 +1,9 @@
-@section('styles')
+@push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/datatables/datatables.bootstrap.min.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
-@stop
+@endpush
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js') }}"></script>
 <script src="{{ asset('modules/core/vendor/datatables/datatables.min.js') }}"></script>
 <script src="{{ asset('modules/core/vendor/datatables/datatables.bootstrap.min.js') }}"></script>
@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		//$('.dataTables_filter input').addClass('form-control');
 	});
 </script>
-@stop
+@endpush
 
 
 @php

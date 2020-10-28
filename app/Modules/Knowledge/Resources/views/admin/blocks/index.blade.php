@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/knowledge/js/admin.js?v=' . filemtime(public_path() . '/modules/knowledge/js/admin.js')) }}"></script>
-@stop
+@endpush
 
 @php
 app('pathway')

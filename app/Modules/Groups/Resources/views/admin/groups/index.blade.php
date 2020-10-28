@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('scripts')
+@push('scripts')
 <script>
 $(document).ready(function() {
 	var dialog = $(".dialog").dialog({
@@ -43,7 +43,7 @@ $(document).ready(function() {
 	});
 });
 </script>
-@stop
+@endpush
 
 @php
 app('pathway')

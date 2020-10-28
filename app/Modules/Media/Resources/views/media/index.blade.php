@@ -1,15 +1,15 @@
 @extends('layouts.master')
 
-@section('styles')
+@push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/media/css/media.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.css') }}" />
-@stop
+@endpush
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.js') }}"></script>
 <script src="{{ asset('modules/media/vendor/jquery-treeview/jquery.treeview.js') }}"></script>
 <script src="{{ asset('modules/media/js/media.js') }}"></script>
-@stop
+@endpush
 
 @php
 app('pathway')

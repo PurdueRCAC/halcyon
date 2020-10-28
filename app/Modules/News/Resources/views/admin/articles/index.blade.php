@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
-@section('styles')
+@push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css') }}" />
-@stop
+@endpush
 
 @php
 app('pathway')

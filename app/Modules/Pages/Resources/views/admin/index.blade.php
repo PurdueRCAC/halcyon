@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
-@section('scripts')
+@push('scripts')
 <script src="{{ Module::asset('pages:js/pages.js') . '?v=' . filemtime(public_path() . '/modules/pages/js/pages.js') }}"></script>
-@stop
+@endpush
 
 @php
 app('pathway')

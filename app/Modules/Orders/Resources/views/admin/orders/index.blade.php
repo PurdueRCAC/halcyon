@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
-@section('styles')
+@push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css') }}" />
-@stop
+@endpush
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/orders/js/orders.js') }}"></script>
-@stop
+@endpush
 
 @php
 app('pathway')

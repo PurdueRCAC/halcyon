@@ -1,19 +1,19 @@
 @extends('layouts.master')
 
-@section('styles')
+@push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/core/main.min.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/daygrid/main.min.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/timegrid/main.min.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css') }}" />
-@stop
+@endpush
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/news/vendor/fullcalendar/core/main.min.js') }}"></script>
 <script src="{{ asset('modules/news/vendor/fullcalendar/interaction/main.min.js') }}"></script>
 <script src="{{ asset('modules/news/vendor/fullcalendar/daygrid/main.min.js') }}"></script>
 <script src="{{ asset('modules/news/vendor/fullcalendar/timegrid/main.min.js') }}"></script>
 <script src="{{ asset('modules/news/js/site.js') }}"></script>
-@stop
+@endpush
 
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">

@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/messages/js/admin.js') }}"></script>
-@stop
+@endpush
 
 @php
 app('pathway')

@@ -109,8 +109,6 @@ class GroupsController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Group();
 
 		$departments = Department::tree();
@@ -176,14 +174,12 @@ class GroupsController extends Controller
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Group::findOrFail($id);
 
 		$departments = Department::tree();
 		$fields = FieldOfScience::tree();
 
-		event($event = new GroupDisplay($row));
+		event($event = new GroupDisplay($row, 'details'));
 		$sections = collect($event->getSections());
 
 		return view('groups::admin.groups.edit', [

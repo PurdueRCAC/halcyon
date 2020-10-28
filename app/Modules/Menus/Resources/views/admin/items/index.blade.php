@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('scripts')
+@push('scripts')
 <script>
 jQuery(document).ready(function($){
 	var sortableHelper = function (e, ui) {
@@ -48,7 +48,7 @@ jQuery(document).ready(function($){
 	}).disableSelection();
 });
 </script>
-@stop
+@endpush
 
 @php
 app('pathway')

@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
-@section('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/News/css/news.css') }}" />
-@stop
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css') }}" />
+@endpush
 
-@section('scripts')
+@push('scripts')
 <!-- <script src="{{ asset('modules/news/js/site.js') }}"></script> -->
-@stop
+@endpush
 
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
