@@ -71,12 +71,10 @@ class Informant
 	{
 		if ($writable)
 		{
-			return '<span class="writable">' . trans('core::info.WRITABLE') . '</span>';
+			return '<span class="writable">' . trans('core::info.writable') . '</span>';
 		}
-		else
-		{
-			return '<span class="unwritable">' . trans('core::info.UNWRITABLE') . '</span>';
-		}
+
+		return '<span class="unwritable">' . trans('core::info.unwritable') . '</span>';
 	}
 
 	/**

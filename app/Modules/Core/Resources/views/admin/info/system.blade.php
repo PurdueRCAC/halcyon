@@ -1,14 +1,13 @@
-<!-- <fieldset class="adminform">
-	<legend>{{ trans('core::info.system information') }}</legend> -->
+
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('core::info.settings') }}</caption>
 		<thead>
 			<tr>
 				<th scope="col">
-					{{ trans('core::info.SETTING') }}
+					{{ trans('core::info.setting') }}
 				</th>
 				<th scope="col">
-					{{ trans('core::info.VALUE') }}
+					{{ trans('core::info.value') }}
 				</th>
 			</tr>
 		</thead>
@@ -23,14 +22,6 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					{{ trans('core::info.DATABASE_VERSION') }}
-				</th>
-				<td>
-					{{ $info['dbversion'] }}
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">
 					{{ trans('core::info.php version') }}
 				</th>
 				<td>
@@ -39,15 +30,23 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					{{ trans('core::info.WEB_SERVER') }}
+					{{ trans('core::info.database version') }}
 				</th>
 				<td>
-					<?php echo App\Modules\Core\Helpers\Informant::server($info['server']); ?>
+					{{ $info['dbversion'] }}
 				</td>
 			</tr>
 			<tr>
 				<th scope="row">
-					{{ trans('core::info.WEBSERVER_TO_PHP_INTERFACE') }}
+					{{ trans('core::info.web server') }}
+				</th>
+				<td>
+					{{ App\Modules\Core\Helpers\Informant::server($info['server']) }}
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					{{ trans('core::info.web server to php interface') }}
 				</th>
 				<td>
 					{{ $info['sapi_name'] }}
@@ -58,15 +57,7 @@
 					{{ trans('core::info.portal version') }}
 				</th>
 				<td>
-					{{ $info['version'] }}
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">
-					{{ trans('core::info.PLATFORM_VERSION') }}
-				</th>
-				<td>
-					{{ $info['platform'] }}
+					{{ $info['platform'] . ' ' . $info['version'] }}
 				</td>
 			</tr>
 			<tr>
@@ -79,4 +70,3 @@
 			</tr>
 		</tbody>
 	</table>
-<!-- </fieldset> -->

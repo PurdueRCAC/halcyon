@@ -8,3 +8,9 @@ $router->get('info', [
 	'uses' => 'InfoController@index',
 	'middleware' => 'can:admin',
 ]);
+
+$router->get('styleguide', [
+	'as'   => 'admin.core.styles',
+	'uses' => 'InfoController@styles',
+	'middleware' => 'can:admin',
+]);

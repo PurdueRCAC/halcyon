@@ -95,7 +95,7 @@ class KnowItall extends Fluent
 
 			foreach ($config as $section => $data)
 			{
-				/*if (is_array($data))
+				if (is_array($data))
 				{
 					foreach ($data as $key => $value)
 					{
@@ -116,10 +116,10 @@ class KnowItall extends Fluent
 					 || substr($data, -strlen('secret')) == 'secret')
 					{
 						$value = 'xxxxxx';
-					}*/
+					}
 
 					$this->config[$section] = $value;
-				//}
+				}
 			}
 		}
 		return $this->config;
@@ -200,44 +200,9 @@ class KnowItall extends Fluent
 		{
 			$this->directories = array();
 
-			$this->_addDirectory('/app/modules', app_path() . '/modules');
-			//$this->_addDirectory('/config', root_path() . '/config');
-
-			/*$this->_addDirectory($app . $cparams->get('image_path'), PATH_APP . '/' . $cparams->get('image_path'));
-
-			$image_folders = Filesystem::directories(PATH_APP . '/' . $cparams->get('image_path'));
-			// List all images folders
-			foreach ($image_folders as $folder)
-			{
-				$this->_addDirectory($app . $cparams->get('image_path') . $folder, PATH_APP . '/' . $cparams->get('image_path') . '/' . $folder);
-			}
-
-			$this->_addDirectory($app . 'language', PATH_APP . '/language');
-			// List all site languages
-			$site_langs = Filesystem::directories(PATH_APP . '/language');
-			foreach ($site_langs as $slang)
-			{
-				$this->_addDirectory($app . 'language/' . $slang, PATH_APP . '/language/' . $slang);
-			}
-
-			$this->_addDirectory($app . 'libraries', PATH_APP . '/libraries');
-
-			//$this->_addDirectory('media', PATH_APP . '/media');
-			$this->_addDirectory($app . 'modules', PATH_APP . '/modules');
-			$this->_addDirectory($app . 'plugins', PATH_APP . '/plugins');
-
-			$plugin_groups = Filesystem::directories(PATH_APP . '/plugins');
-			foreach ($plugin_groups as $folder)
-			{
-				$this->_addDirectory($app . 'plugins' . $folder, PATH_APP . '/plugins' . $folder);
-			}
-
-			$this->_addDirectory($app . 'templates', PATH_APP . '/templates');
-			$this->_addDirectory($app . 'cache/site', PATH_APP . '/app/cache/site', 'COM_SYSTEM_INFO_CACHE_DIRECTORY');
-			$this->_addDirectory($app . 'cache/admin', PATH_APP . '/app/cache/admin', 'COM_SYSTEM_INFO_CACHE_DIRECTORY');
-
-			$this->_addDirectory(Config::get('log_path', PATH_APP . '/app/log'), Config::get('log_path', PATH_APP . '/app/log'), 'COM_SYSTEM_INFO_LOG_DIRECTORY');
-			$this->_addDirectory(Config::get('tmp_path', PATH_APP . '/app/tmp'), Config::get('tmp_path', PATH_APP . '/app/tmp'), 'COM_SYSTEM_INFO_TEMP_DIRECTORY');*/
+			$this->_addDirectory(public_path('modules'), public_path('modules'));
+			$this->_addDirectory(public_path('themes'), public_path('themes'));
+			$this->_addDirectory(storage_path(), storage_path());
 		}
 		return $this->directories;
 	}
@@ -252,6 +217,8 @@ class KnowItall extends Fluent
 	 */
 	private function _addDirectory($name, $path, $message = '')
 	{
+		$name = str_replace(base_path(), '', $path);
+
 		$this->directories[$name] = array(
 			'writable' => is_writable($path),
 			'message'  => $message

@@ -1,13 +1,13 @@
 
 	<table class="table table-hover adminlist">
-		<caption><?php echo trans('core::info.CONFIGURATION_FILE'); ?></caption>
+		<caption class="sr-only"><?php echo trans('core::info.configuration file'); ?></caption>
 		<thead>
 			<tr>
 				<th scope="col">
-					<?php echo trans('core::info.SETTING'); ?>
+					<?php echo trans('core::info.setting'); ?>
 				</th>
 				<th scope="col">
-					<?php echo trans('core::info.VALUE'); ?>
+					<?php echo trans('core::info.value'); ?>
 				</th>
 			</tr>
 		</thead>

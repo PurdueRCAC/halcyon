@@ -4,17 +4,17 @@
 		<thead>
 			<tr>
 				<th scope="col">
-					<?php echo trans('core::info.SETTING'); ?>
+					{{ trans('core::info.setting') }}
 				</th>
 				<th scope="col">
-					<?php echo trans('core::info.VALUE'); ?>
+					{{ trans('core::info.value') }}
 				</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.SAFE_MODE'); ?>
+					{{ trans('core::info.safe mode') }}
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::boolean($info['safe_mode']); ?>
@@ -22,7 +22,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.OPEN_BASEDIR'); ?>
+					<?php echo trans('core::info.open basedir'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::string($info['open_basedir']); ?>
@@ -30,7 +30,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.DISPLAY_ERRORS'); ?>
+					<?php echo trans('core::info.display errors'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::boolean($info['display_errors']); ?>
@@ -38,7 +38,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.SHORT_OPEN_TAGS'); ?>
+					<?php echo trans('core::info.short open tags'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::boolean($info['short_open_tag']); ?>
@@ -46,7 +46,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.FILE_UPLOADS'); ?>
+					<?php echo trans('core::info.file uploads'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::boolean($info['file_uploads']); ?>
@@ -54,7 +54,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.MAGIC_QUOTES'); ?>
+					<?php echo trans('core::info.magic quotes'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::boolean($info['magic_quotes_gpc']); ?>
@@ -62,7 +62,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.REGISTER_GLOBALS'); ?>
+					<?php echo trans('core::info.register globals'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::boolean($info['register_globals']); ?>
@@ -70,7 +70,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.OUTPUT_BUFFERING'); ?>
+					<?php echo trans('core::info.output buffering'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::boolean($info['output_buffering']); ?>
@@ -78,7 +78,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.SESSION_SAVE_PATH'); ?>
+					<?php echo trans('core::info.session save path'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::string($info['session.save_path']); ?>
@@ -86,7 +86,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.SESSION_AUTO_START'); ?>
+					<?php echo trans('core::info.session auto start'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::integer($info['session.auto_start']); ?>
@@ -94,7 +94,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.XML_ENABLED'); ?>
+					<?php echo trans('core::info.xml enabled'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::set($info['xml']); ?>
@@ -102,7 +102,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.ZLIB_ENABLED'); ?>
+					<?php echo trans('core::info.zlib enabled'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::set($info['zlib']); ?>
@@ -110,7 +110,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.ZIP_ENABLED'); ?>
+					<?php echo trans('core::info.zip enabled'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::set($info['zip']); ?>
@@ -118,7 +118,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.DISABLED_FUNCTIONS'); ?>
+					<?php echo trans('core::info.disabled functions'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::string($info['disable_functions']); ?>
@@ -126,7 +126,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.MBSTRING_ENABLED'); ?>
+					<?php echo trans('core::info.mbstring enabled'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::set($info['mbstring']); ?>
@@ -134,7 +134,7 @@
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php echo trans('core::info.ICONV_AVAILABLE'); ?>
+					<?php echo trans('core::info.iconv enabled'); ?>
 				</th>
 				<td>
 					<?php echo App\Modules\Core\Helpers\Informant::set($info['iconv']); ?>
