@@ -12,6 +12,7 @@ use App\Halcyon\Models\Casts\Params;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Command\Command;
+use App\Modules\History\Traits\Historable;
 use Cron\CronExpression;
 use Carbon\Carbon;
 
@@ -20,6 +21,8 @@ use Carbon\Carbon;
  */
 class Job extends Model
 {
+	use Historable;
+
 	/**
 	 * The table to which the class pertains
 	 *
@@ -146,7 +149,8 @@ class Job extends Model
 	/**
 	 * Get the last run timestamp
 	 *
-	 * @return  void
+	 * @param   string  $format
+	 * @return  string
 	 */
 	public function lastRun($format = 'Y-m-d H:i:s')
 	{
@@ -156,7 +160,8 @@ class Job extends Model
 	/**
 	 * Get the next run timestamp
 	 *
-	 * @return  void
+	 * @param   string  $format
+	 * @return  string
 	 */
 	public function nextRun($format = 'Y-m-d H:i:s')
 	{
@@ -164,35 +169,60 @@ class Job extends Model
 	}
 
 	/**
-	 * Get params as a Registry object
+	 * Get minutes
 	 *
-	 * @return  object
+	 * @return string
 	 */
 	public function getMinuteAttribute()
 	{
 		return $this->parseExpression('minute');
 	}
 
+	/**
+	 * Get hour
+	 *
+	 * @return string
+	 */
 	public function getHourAttribute()
 	{
 		return $this->parseExpression('hour');
 	}
 
+	/**
+	 * Get day
+	 *
+	 * @return string
+	 */
 	public function getDayAttribute()
 	{
 		return $this->parseExpression('day');
 	}
 
+	/**
+	 * Get month
+	 *
+	 * @return string
+	 */
 	public function getMonthAttribute()
 	{
 		return $this->parseExpression('month');
 	}
 
+	/**
+	 * Get day of the week
+	 *
+	 * @return string
+	 */
 	public function getDayofweekAttribute()
 	{
 		return $this->parseExpression('dayofweek');
 	}
 
+	/**
+	 * Is this a custom cron statement?
+	 *
+	 * @return bool
+	 */
 	public function isCustomRecurrence()
 	{
 		$defaults = array(
@@ -207,6 +237,12 @@ class Job extends Model
 		return !in_array($this->recurrence, $defaults);
 	}
 
+	/**
+	 * Get a portion of a cron statement
+	 *
+	 * @param  string  $key
+	 * @return array
+	 */
 	private function parseExpression($key)
 	{
 		$parts = $this->parts;

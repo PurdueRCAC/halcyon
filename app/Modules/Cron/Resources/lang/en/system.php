@@ -1,4 +1,4 @@
 <?php
 return [
-	'cron' => 'Cron',
+	'cron' => 'Scheduled Tasks',
 ];
