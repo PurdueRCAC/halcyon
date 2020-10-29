@@ -66,9 +66,9 @@ app('pathway')
 				<label class="sr-only" for="filter_state">{{ trans('messages::messages.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all states') }}</option>
-					<option value="complete"<?php if ($filters['state'] == 'complete'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.complete') }}</option>
-					<option value="incomplete"<?php if ($filters['state'] == 'incomplete'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.incomplete') }}</option>
 					<option value="pending"<?php if ($filters['state'] == 'pending'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.pending') }}</option>
+					<option value="incomplete"<?php if ($filters['state'] == 'incomplete'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.incomplete') }}</option>
+					<option value="complete"<?php if ($filters['state'] == 'complete'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.complete') }}</option>
 				</select>
 
 				<label class="sr-only" for="filter_type">{{ trans('messages::messages.types') }}</label>
@@ -211,12 +211,12 @@ app('pathway')
 					?>
 					@if ($row->datetimestarted && $row->datetimestarted != '0000-00-00 00:00:00' && $row->datetimestarted != '-0001-11-30 00:00:00')
 						@if ($row->datetimecompleted && $row->datetimecompleted != '0000-00-00 00:00:00' && $row->datetimecompleted != '-0001-11-30 00:00:00')
-							<span class="state published has-tip" title="{!! $timetable !!}"><span class="glyph icon-check"></span> {{ $row->elapsed }}</span>
+							<span class="badge badge-success has-tip" title="{!! $timetable !!}"><span class="glyph icon-check"></span> {{ $row->elapsed }}</span>
 						@else
-							<span class="state warning has-tip" title="{!! $timetable !!}"><span class="glyph icon-rotate-ccw"></span> {{ trans('messages::messages.processing') }}</span>
+							<span class="badge badge-warning has-tip" title="{!! $timetable !!}"><span class="glyph icon-rotate-ccw"></span> {{ trans('messages::messages.processing') }}</span>
 						@endif
 					@else
-						<span class="state pending has-tip" title="{!! $timetable !!}"><span class="glyph icon-more-horizontal"></span> {{ trans('messages::messages.pending') }}</span>
+						<span class="badge badge-info has-tip" title="{!! $timetable !!}"><span class="glyph icon-more-horizontal"></span> {{ trans('messages::messages.pending') }}</span>
 					@endif
 				</td>
 				<td class="text-right">

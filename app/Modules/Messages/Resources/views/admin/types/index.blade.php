@@ -118,11 +118,11 @@ app('pathway')
 				<td class="priority-4">
 					@if ($row->resource)
 						@if ($row->resource->isTrashed())
-							<span class="icon-trash trash">
+							<del class="icon-trash text-danger">
 						@endif
 						{{ $row->resource->name }}
 						@if ($row->resource->isTrashed())
-							</span>
+							</del>
 						@endif
 					@else
 						<span class="none">{{ trans('global.none') }}</span>
