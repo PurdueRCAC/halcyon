@@ -16,14 +16,14 @@ use App\Halcyon\Filesystem\Util;
 /**
  * Form Field to display a list of the layouts for module display from the module or template overrides.
  */
-class Widgetlayout extends Field
+class WidgetLayout extends Field
 {
 	/**
 	 * The form field type.
 	 *
 	 * @var  string
 	 */
-	protected $type = 'Widgetlayout';
+	protected $type = 'WidgetLayout';
 
 	/**
 	 * Method to get the field input for module layouts.

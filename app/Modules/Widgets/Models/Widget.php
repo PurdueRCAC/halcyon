@@ -14,6 +14,7 @@ use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Traits\Checkable;
 use App\Halcyon\Form\Form;
+use App\Modules\History\Traits\Historable;
 use App\Modules\Widgets\Events\WidgetCreating;
 use App\Modules\Widgets\Events\WidgetCreated;
 use App\Modules\Widgets\Events\WidgetUpdating;
@@ -27,7 +28,7 @@ use App\Halcyon\Models\Casts\Params;
  */
 class Widget extends Model
 {
-	use ErrorBag, Validatable, Checkable;
+	use ErrorBag, Validatable, Checkable, Historable;
 
 	/**
 	 * Indicates if the model should be timestamped.

@@ -28,19 +28,12 @@ class WidgetOrder extends Field
 	 */
 	protected function getInput()
 	{
-		// Initialize variables.
-		$html = array();
-		$attr = '';
-
 		// Initialize some field attributes.
-		$attr .= $this->element['class'] ? ' class="'.(string) $this->element['class'].'"' : '';
+		$attr = '';
+		$attr .= $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
 		$attr .= ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
-		$attr .= $this->element['size'] ? ' size="'.(int) $this->element['size'].'"' : '';
-
-		// Initialize JavaScript field attributes.
-		$attr .= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'"' : '';
-
-		$html[] = '<script type="application/json" id="widgetorder">';
+		$attr .= $this->element['size'] ? ' size="' . (int) $this->element['size'] . '"' : '';
+		$attr .= $this->element['onchange'] ? ' data-onchange="' . (string) $this->element['onchange'] . '"' : '';
 
 		$ordering = $this->form->getValue('ordering');
 		$position = $this->form->getValue('position');
@@ -70,11 +63,16 @@ class WidgetOrder extends Field
 			}
 			$orders2[$orders[$i]->position]++;
 			$ord = $orders2[$orders[$i]->position];
-			$title = trans('widgets::widgets.option.order position', ['order' => $ord, 'title' => addslashes($orders[$i]->title)]);
+			$title = trans('widgets::widgets.option.order position', [
+				'order' => $ord,
+				'title' => addslashes($orders[$i]->title)
+			]);
 
 			$data->orders[$i] = array($orders[$i]->position, $ord, $title);
 		}
 
+		$html = array();
+		$html[] = '<script type="application/json" id="widgetorder">';
 		$html[] = json_encode($data);
 		$html[] = '</script>';
 
