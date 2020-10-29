@@ -124,11 +124,11 @@ class Member extends Model
 	 *
 	 * @return  bool
 	 */
-	public function delete()
+	public function delete(array $options = [])
 	{
 		$query = $this->setKeysForSaveQuery($this->newModelQuery());
 		$query->update(['notice' => 2]);
 
-		return parent::delete();
+		return parent::delete($options);
 	}
 }
