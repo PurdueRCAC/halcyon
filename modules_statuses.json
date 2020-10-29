@@ -3,7 +3,7 @@
     "ContactReports": true,
     "Core": true,
     "Courses": true,
-    "Cron": true,
+    "Cron": false,
     "Dashboard": true,
     "Groups": true,
     "History": true,
