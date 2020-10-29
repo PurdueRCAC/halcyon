@@ -30,20 +30,9 @@ class Type extends Model
 	/**
 	 * The table to which the class pertains
 	 *
-	 * This will default to #__{namespace}_{modelName} unless otherwise
-	 * overwritten by a given subclass. Definition of this property likely
-	 * indicates some derivation from standard naming conventions.
-	 *
 	 * @var  string
 	 **/
 	protected $table = 'menus';
-
-	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	//public $timestamps = false;
 
 	/**
 	 * Default order by for model
@@ -74,8 +63,8 @@ class Type extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'title'    => 'notempty',
-		'menutype' => 'notempty'
+		'title'    => 'required|string|max:255',
+		'menutype' => 'required|string|max:255'
 	);
 
 	/**
@@ -89,20 +78,20 @@ class Type extends Model
 		'updating' => TypeUpdating::class,
 		'updated'  => TypeUpdated::class,
 		'deleted'  => TypeDeleted::class,
-		//'restored' => TypeRestored::class,
 	];
 
 	/**
 	 * Generates automatic owned by field value
 	 *
-	 * @param   array   $data  the data being saved
-	 * @return  string
+	 * @param   string  $value
+	 * @return  void
 	 */
-	public function automaticMenutype($data)
+	public function setMenutypeAttribute($value)
 	{
-		$alias = (isset($data['menutype']) && $data['menutype'] ? $data['menutype'] : $data['title']);
-		$alias = str_replace(' ', '-', $alias);
-		return preg_replace("/[^a-zA-Z0-9\-]/", '', strtolower($alias));
+		$value = str_replace(' ', '-', $value);
+		$value = preg_replace("/[^a-zA-Z0-9\-]/", '', strtolower($value));
+
+		$this->attributes['menutype'] = $value;
 	}
 
 	/**
@@ -114,7 +103,7 @@ class Type extends Model
 	{
 		parent::boot();
 
-		static::saving(function ($model)
+		static::creating(function ($model)
 		{
 			$exist = self::query()
 				->where('menutype', '=', $model->menutype)
