@@ -17,17 +17,15 @@ class Node
 {
 	/**
 	 * Parent node
-	 * @var    object
-	 *
-	 * @since  2.1.13
+	 * 
+	 * @var  object
 	 */
 	protected $_parent = null;
 
 	/**
 	 * Array of Children
 	 *
-	 * @var    array
-	 * @since  2.1.13
+	 * @var  array
 	 */
 	protected $_children = array();
 
@@ -76,15 +74,17 @@ class Node
 	/**
 	 * Constructor
 	 *
+	 * @param   string  $title
+	 * @param   string  $link
+	 * @param   string  $class
+	 * @param   bool    $active
+	 * @param   string  $target
+	 * @param   string  $titleicon
 	 * @return  void
 	 */
 	public function __construct($title, $link = null, $class = null, $active = false, $target = null, $titleicon = null)
 	{
 		$this->title  = $titleicon ? $title . $titleicon : $title;
-		/*if ($link && substr($link, 0, strlen('index.php')) == 'index.php')
-		{
-			$link = \Route::url($link);
-		}*/
 		$this->link   = $link;
 		$this->class  = $class;
 		$this->active = $active;
@@ -92,16 +92,7 @@ class Node
 		$this->id = null;
 		if (!empty($link) && $link !== '#')
 		{
-			/*$params = with(new \Ballast\Utility\Uri($link))->getQuery(true);
-
-			$parts = array();
-			foreach ($params as $name => $value)
-			{
-				$parts[] = str_replace(array('.', '_'), '-', $value);
-			}
-
-			$this->id = implode('-', $parts);*/
-			$this->id = str_replace('/', '-', $link);
+			$this->id = str_replace(array('.', '/'), '-', $link);
 		}
 
 		$this->target = $target;
@@ -114,7 +105,6 @@ class Node
 	 *
 	 * @param   object  &$child  The child to be added
 	 * @return  void
-	 * @since   2.1.13
 	 */
 	public function addChild(&$child)
 	{
@@ -131,7 +121,6 @@ class Node
 	 *
 	 * @param   mixed  &$parent  The Node for parent to be set or null
 	 * @return  void
-	 * @since   2.1.13
 	 */
 	public function setParent(&$parent)
 	{
@@ -154,7 +143,6 @@ class Node
 	 * Get the children of this node
 	 *
 	 * @return  array    The children
-	 * @since   2.1.13
 	 */
 	public function &getChildren()
 	{
@@ -165,7 +153,6 @@ class Node
 	 * Get the parent of this node
 	 *
 	 * @return  mixed   Node object with the parent or null for no parent
-	 * @since   2.1.13
 	 */
 	public function &getParent()
 	{
@@ -176,7 +163,6 @@ class Node
 	 * Test if this node has children
 	 *
 	 * @return   boolean  True if there are children
-	 * @since    2.1.13
 	 */
 	public function hasChildren()
 	{
@@ -187,7 +173,6 @@ class Node
 	 * Test if this node has a parent
 	 *
 	 * @return  boolean  True if there is a parent
-	 * @since   2.1.13
 	 */
 	public function hasParent()
 	{

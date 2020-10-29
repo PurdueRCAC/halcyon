@@ -49,7 +49,7 @@ class Tree
 	 *
 	 * @param   array    &$node       The node to process
 	 * @param   boolean  $setCurrent  True to set as current working node
-	 * @return  mixed
+	 * @return  void
 	 */
 	public function addChild($node, $setCurrent = false)
 	{
@@ -122,12 +122,6 @@ class Tree
 				$this->renderLevel($depth++);
 			}
 			echo "</ul>\n";
-		}
-
-		if ($this->_css)
-		{
-			// Add style to document head
-			\Document::addStyleDeclaration($this->_css);
 		}
 	}
 

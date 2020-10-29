@@ -24,11 +24,11 @@ $menu->addChild(
 	new Node(trans('widget.adminmenu::adminmenu.configuration'), route('admin.config'), 'class:settings', in_array($active, ['info', 'core', 'config', 'checkin', 'cache', 'redirect', 'history'])), true
 );
 
-if ($user->can('admin'))
+/*if ($user->can('admin'))
 {
 	$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.configuration'), route('admin.config'), 'class:config', ($active == 'config')));
 	//$menu->addSeparator();
-}
+}*/
 
 $chm = $user->can('admin messages');
 $cam = $user->can('manage cache');
@@ -76,7 +76,7 @@ if ($user->can('admin'))
 	);
 	$menu->addSeparator();
 	$menu->addChild(
-		new Node(trans('widget.adminmenu::adminmenu.system info'), route('admin.core.sysinfo'), 'class:info', ($active == 'core'))
+		new Node(trans('widget.adminmenu::adminmenu.system info'), route('admin.core.sysinfo'), 'class:sysinfo', ($active == 'core'))
 	);
 }
 /*$menu->addChild(

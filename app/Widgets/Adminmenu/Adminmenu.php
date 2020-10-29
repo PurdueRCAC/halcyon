@@ -63,11 +63,15 @@ class Adminmenu extends Widget
 			)
 			->leftJoin($items, $items . '.menutype', '=', $menus . '.menutype')
 			->leftJoin('languages', 'languages.lang_code', '=', $items . '.language')
-			->where($items . '.home', '!=', 0)
-			->orWhere(function($query) use ($items)
+			->whereNull($menus . '.deleted_at')
+			->where(function($where) use ($items)
 			{
-				$query->where($items . '.client_id', '=', 0)
-					->orWhereNull($items . '.client_id');
+				$where->where($items . '.home', '!=', 0)
+					->orWhere(function($query) use ($items)
+					{
+						$query->where($items . '.client_id', '=', 0)
+							->orWhereNull($items . '.client_id');
+					});
 			})
 			->groupBy($menus . '.id')
 			->groupBy($menus . '.menutype')
