@@ -3,6 +3,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Route;
 use App\Modules\History\Models\Log as Logger;
 
 class HttpLogger
@@ -30,6 +31,16 @@ class HttpLogger
 			$app = 'api';
 		}
 
+		$action = Route::currentRouteAction();
+		$cls = $action;
+		$method = '';
+		if (strstr($action, '@'))
+		{
+			$action = explode('@', $action);
+			$cls = array_shift($action);
+			$method = array_pop($action);
+		}
+
 		$log = new Logger();
 		$log->userid = (auth()->user() ? auth()->user()->id : 0);
 		$log->transportmethod = $request->method();
@@ -40,8 +51,8 @@ class HttpLogger
 		$log->status = $response->status();
 		$log->uri = $request->fullUrl();
 		$log->app = $app;
-		$log->classname = '';
-		$log->classmethod = '';
+		$log->classname = $cls;
+		$log->classmethod = $method;
 		$log->objectid = '';
 		$log->save();
 
