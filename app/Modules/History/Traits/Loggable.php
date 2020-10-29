@@ -12,13 +12,22 @@ trait Loggable
 	 *
 	 * @return  null
 	 */
-	protected function log($app, $method = 'GET', $status = 200, $payload = array(), $uri = '')
+	protected function log($app, $func, $method = 'GET', $status = 200, $payload = array(), $uri = '')
 	{
 		$method = strtoupper($method);
 
 		if (!in_array($method, ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'DELETE']))
 		{
 			$method = 'GET';
+		}
+
+		$cls = $func;
+		$fnc = '';
+		if (strstr($func, '@'))
+		{
+			$func = explode('@', $func);
+			$cls = array_shift($func);
+			$fnc = array_pop($func);
 		}
 
 		Log::create([
@@ -30,6 +39,8 @@ trait Loggable
 			'uri'             => $uri,
 			'app'             => $app,
 			'payload'         => json_encode($payload),
+			'classname'       => $cls,
+			'classmethod'     => $fnc,
 		]);
 	}
 }

@@ -67,4 +67,14 @@ class Log extends Model
 	{
 		return $this->belongsTo(User::class, 'userid');
 	}
+
+	/**
+	 * User relationship
+	 *
+	 * @return  object
+	 */
+	public function setMethodAttribute($value)
+	{
+		$this->attributes['method'] = strtoupper($value);
+	}
 }

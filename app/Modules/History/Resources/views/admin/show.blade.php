@@ -7,6 +7,15 @@
 
 @php
 app('request')->merge(['hidemainmenu' => 1]);
+
+app('pathway')
+	->append(
+		trans('history::history.history manager'),
+		route('admin.history.index')
+	)
+	->append(
+		'#' . $row->id
+	);
 @endphp
 
 @section('toolbar')
@@ -23,70 +32,47 @@ app('request')->merge(['hidemainmenu' => 1]);
 @stop
 
 @section('content')
-<form action="{{ route('admin.history.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+<form action="{{ route('admin.history.store') }}" method="post" name="adminForm" id="item-form" class="editform">
 	<div class="grid row">
 		<div class="col col-md-6 span6">
 			<fieldset class="adminform">
-				<legend><?php echo trans('global.details'); ?></legend>
+				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-historable_id"><?php echo trans('history::history.item id'); ?>: <span class="required"><?php echo trans('global.required'); ?></span></label>
-					<input type="text" name="fields[historable_id]" id="field-historable_id" class="form-control required" disabled="disabled" size="30" maxlength="250" value="{{ $row->historable_id }}" />
+					<label for="field-historable_id">{{ trans('history::history.item id') }}:</label>
+					<input type="text" name="fields[historable_id]" id="field-historable_id" class="form-control" disabled="disabled" size="30" maxlength="250" value="{{ $row->historable_id }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-historable_type"><?php echo trans('history::history.item type'); ?>: <span class="required"><?php echo trans('global.required'); ?></span></label>
-					<input type="text" name="fields[historable_type]" id="field-historable_type" class="form-control required" disabled="disabled" size="30" maxlength="250" value="{{ $row->historable_type }}" />
+					<label for="field-historable_type">{{ trans('history::history.item type') }}:</label>
+					<input type="text" name="fields[historable_type]" id="field-historable_type" class="form-control" disabled="disabled" size="30" maxlength="250" value="{{ $row->historable_type }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-historable_table"><?php echo trans('history::history.item table'); ?>: <span class="required"><?php echo trans('global.required'); ?></span></label>
-					<input type="text" name="fields[historable_table]" id="field-historable_table" class="form-control required" disabled="disabled" size="30" maxlength="250" value="{{ $row->historable_table }}" />
+					<label for="field-historable_table">{{ trans('history::history.item table') }}:</label>
+					<input type="text" name="fields[historable_table]" id="field-historable_table" class="form-control" disabled="disabled" size="30" maxlength="250" value="{{ $row->historable_table }}" />
 				</div>
 			</fieldset>
 		</div>
 		<div class="col col-md-6 span6">
-			<table class="meta">
-				<tbody>
-					<tr>
-						<th scope="row"><?php echo trans('history::history.id'); ?>:</th>
-						<td>
-							{{ $row->id }}
-							<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
-						</td>
-					</tr>
-					<tr>
-						<th scope="row"><?php echo trans('history::history.created'); ?>:</th>
-						<td>
-							<?php if ($row->getOriginal('created_at') && $row->getOriginal('created_at') != '0000-00-00 00:00:00'): ?>
-								<time datetime="{{ $row->created }}">{{ $row->created_at }}</time>
-							<?php else: ?>
-								{{ trans('global.unknown') }}
-							<?php endif; ?>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row"><?php echo trans('history::history.actor'); ?>:</th>
-						<td>
-							{{ $row->user ? $row->user->name : trans('global.unknown') }}
-						</td>
-					</tr>
-					<tr>
-						<th scope="row"><?php echo trans('history::history.action'); ?>:</th>
-						<td>
-							{{ $row->action }}
-						</td>
-					</tr>
-					<?php if ($row->updated_at && $row->updated_at != '0000-00-00 00:00:00' && $row->updated_at != $row->created_at): ?>
-						<tr>
-							<th scope="row"><?php echo trans('history::history.modified'); ?>:</th>
-							<td>
-								<time datetime="<?php echo e($row->updated_at); ?>"><?php echo e($row->updated_at); ?></time>
-							</td>
-						</tr>
-					<?php endif; ?>
-				</tbody>
-			</table>
+			<fieldset class="adminform">
+				<legend>{{ trans('global.details') }}</legend>
+
+				<div class="form-group">
+					<label for="field-actor">{{ trans('history::history.actor') }}:</label>
+					<input type="text" name="fields[actor]" id="field-actor" class="form-control" disabled="disabled" value="{{ $row->user ? $row->user->name : trans('global.unknown') }}" />
+				</div>
+
+				<div class="form-group">
+					<label for="field-action">{{ trans('history::history.action') }}:</label>
+					<input type="text" name="fields[action]" id="field-action" class="form-control" disabled="disabled" value="{{ $row->action }}" />
+				</div>
+
+				<div class="form-group">
+					<label for="field-created_at">{{ trans('history::history.created') }}:</label>
+					<input type="text" name="fields[created_at]" id="field-created_at" class="form-control" disabled="disabled" value="{{ $row->created_at }}" />
+				</div>
+			</fieldset>
 		</div>
 	</div>
 
@@ -107,6 +93,8 @@ app('request')->merge(['hidemainmenu' => 1]);
 			</div>
 		</div>
 	</fieldset>
+
+	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 
 	@csrf
 </form>

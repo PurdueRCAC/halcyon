@@ -26,4 +26,9 @@ return [
 	'action created' => ':user created this entry',
 	'action deleted' => ':user trashed this entry',
 	'history' => 'History',
+	'activity' => 'Activity',
+	'ip' => 'IP',
+	'method' => 'Method',
+	'uri' => 'URI',
+	'transport' => 'Transport',
 ];

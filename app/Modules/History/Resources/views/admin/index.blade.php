@@ -28,8 +28,12 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.history.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
 
+@component('history::admin.submenu')
+	<?php echo request()->segment(3); ?>
+@endcomponent
+
+<form action="{{ route('admin.history.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col filter-search col-md-4">
@@ -106,11 +110,21 @@ app('pathway')
 					{{ $row->historable_table }}
 				</td>
 				<td>
-					{{ $row->action }}
+					@if ($row->action == 'deleted')
+						<span class="badge badge-danger">{{ $row->action }}</span>
+					@elseif ($row->action == 'created')
+						<span class="badge badge-success">{{ $row->action }}</span>
+					@elseif ($row->action == 'updated')
+						<span class="badge badge-info">{{ $row->action }}</span>
+					@elseif ($row->action == 'emailed')
+						<span class="badge badge-info">{{ $row->action }}</span>
+					@endif
 				</td>
 				<td>
 					@if ($row->user)
-						{{ $row->user->name }}
+						<a href="{{ route('admin.users.edit', ['id' => $row->user->id]) }}">
+							{{ $row->user->name }}
+						</a>
 					@else
 						<span class="unknown">{{ trans('global.unknown') }}</span>
 					@endif

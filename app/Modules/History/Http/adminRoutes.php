@@ -23,10 +23,30 @@ $router->group(['prefix' => 'history'], function (Router $router)
 		'as' => 'admin.history.show',
 		'uses' => 'HistoryController@show',
 		//'middleware' => 'can:edit history',
-	]);
+	])->where('id', '[0-9]+');
 	$router->match(['get', 'post'], '/delete/{id?}', [
 		'as'   => 'admin.history.delete',
 		'uses' => 'HistoryController@delete',
 		'middleware' => 'can:delete history',
 	]);
+
+	$router->group(['prefix' => 'activity', 'middleware' => 'can:admin'], function (Router $router)
+	{
+		$router->match(['get', 'post'], '/', [
+			'as' => 'admin.history.activity',
+			'uses' => 'ActivityController@index',
+		]);
+		$router->get('{id}', [
+			'as' => 'admin.history.activity.edit',
+			'uses' => 'ActivityController@edit',
+		])->where('id', '[0-9]+');
+		$router->match(['get', 'post'], '/delete/{id?}', [
+			'as'   => 'admin.history.activity.delete',
+			'uses' => 'RolesController@delete',
+		]);
+		$router->match(['get', 'post'], 'cancel', [
+			'as' => 'admin.history.activity.cancel',
+			'uses' => 'ActivityController@cancel',
+		]);
+	});
 });
