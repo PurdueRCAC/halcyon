@@ -17,13 +17,16 @@ class Stemmedtext extends Model
 	/**
 	 * The table to which the class pertains
 	 *
-	 * This will default to #__{namespace}_{modelName} unless otherwise
-	 * overwritten by a given subclass. Definition of this property likely
-	 * indicates some derivation from standard naming conventions.
-	 *
 	 * @var  string
 	 **/
 	protected $table = 'newsstemmedtext';
+
+	/**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
 	/**
 	 * Default order by for model

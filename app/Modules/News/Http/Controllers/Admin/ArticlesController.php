@@ -21,7 +21,8 @@ class ArticlesController extends Controller
 	/**
 	 * Display a listing of articles
 	 *
-	 * @return Response
+	 * @param   StatefulRequest  $request
+	 * @return  Response
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -106,7 +107,7 @@ class ArticlesController extends Controller
 	/**
 	 * Display a listing of templates
 	 *
-	 * @param   Request  $request
+	 * @param   StatefulRequest  $request
 	 * @return  Response
 	 */
 	public function templates(StatefulRequest $request)
@@ -123,8 +124,6 @@ class ArticlesController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Article();
 
 		$types = Type::orderBy('name', 'asc')->get();
@@ -156,7 +155,16 @@ class ArticlesController extends Controller
 			'fields.body' => 'required'
 		]);
 
-		$row = new Article($request->input('fields'));
+		$fields = $request->input('fields');
+		$fields['location'] = isset($fields['location']) ? (string)$fields['location'] : '';
+
+		if (array_key_exists('datetimenewsend', $fields) && !trim($fields['datetimenewsend']))
+		{
+			unset($fields['datetimenewsend']);
+		}
+
+		$row = new Article();
+		$row->fill($fields);
 
 		if (!$row->save())
 		{
@@ -174,8 +182,6 @@ class ArticlesController extends Controller
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Article::findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))
@@ -195,6 +201,7 @@ class ArticlesController extends Controller
 	 * Update the specified entry
 	 *
 	 * @param   Request $request
+	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -205,6 +212,11 @@ class ArticlesController extends Controller
 
 		$fields = $request->input('fields');
 		$fields['location'] = (string)$fields['location'];
+
+		if (array_key_exists('datetimenewsend', $fields) && !trim($fields['datetimenewsend']))
+		{
+			unset($fields['datetimenewsend']);
+		}
 
 		$row = Article::findOrFail($id);
 		$row->fill($fields);
@@ -282,7 +294,7 @@ class ArticlesController extends Controller
 	 *
 	 * @return  Response
 	 */
-	public function destroy()
+	public function delete(Request $request)
 	{
 		// Incoming
 		$ids = $request->input('id', array());
@@ -307,7 +319,7 @@ class ArticlesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', $success));
+			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();

@@ -14,6 +14,8 @@ class UpdatesController extends Controller
 	/**
 	 * Display a listing of entries
 	 *
+	 * @param   integer  $art  Article ID
+	 * @param   StatefulRequest $request
 	 * @return Response
 	 */
 	public function index($art, StatefulRequest $request)
@@ -46,7 +48,9 @@ class UpdatesController extends Controller
 
 		$article = Article::findOrFail($art);
 
-		$query = $article->updates();
+		$query = Update::query()
+			->withTrashed()
+			->where('newsid', $article->id);
 
 		if ($filters['search'])
 		{
@@ -55,11 +59,19 @@ class UpdatesController extends Controller
 
 		if ($filters['state'] == 'published')
 		{
-			$query->where('datetimeremoved', '=', '0000-00-00 00:00:00');
+			$query->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			});
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+			$query->where(function($where)
+			{
+				$where->whereNotNull('datetimeremoved')
+					->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+			});
 		}
 
 		$rows = $query
@@ -76,12 +88,11 @@ class UpdatesController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
+	 * @param   integer  $art  Article ID
 	 * @return  Response
 	 */
 	public function create($art)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$article = Article::findOrFail($art);
 
 		$row = new Update();
@@ -96,16 +107,15 @@ class UpdatesController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
-	 * @param   integer  $id
+	 * @param   integer  $art  Article ID
+	 * @param   integer  $id   Update ID
 	 * @return  Response
 	 */
 	public function edit($art, $id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$article = Article::findOrFail($art);
 
-		$row = Update::findOrFail($id);
+		$row = Update::withTrashed()->findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))
 		{
@@ -143,25 +153,26 @@ class UpdatesController extends Controller
 			$row = new Update($request->input('fields'));
 		}
 
-		/*if ($request->input('published') == 'trashed' && !$row->isDeleted())
+		/*if ($request->input('state') == 'published' && $row->isTrashed())
 		{
-			$row->datetimeremoved = Carbon\Carbon::now()->toDateTimeString();
+			$row->restore();
 		}*/
 
 		if (!$row->save())
 		{
-			return redirect()->back()->with('error', 'Failed to create item.');
+			return redirect()->back()->with('error', trans('global.messages.save failed'));
 		}
 
-		return redirect(route('admin.news.updates', ['article' => $row->newsid]))->withSuccess('Item created!');
+		return redirect(route('admin.news.updates', ['article' => $row->newsid]))->withSuccess(trans('global.messages.item saved'));
 	}
 
 	/**
 	 * Remove the specified entry
 	 *
+	 * @param   Request  $request
 	 * @return  Response
 	 */
-	public function destroy()
+	public function delete(Request $request)
 	{
 		// Incoming
 		$ids = $request->input('id', array());
@@ -186,10 +197,11 @@ class UpdatesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', $success));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
-		return $this->cancel();
+		//return $this->cancel($request);
+		return redirect(route('admin.news.updates', ['article' => $request->input('article')]));
 	}
 
 	/**

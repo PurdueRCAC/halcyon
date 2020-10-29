@@ -6,6 +6,8 @@
 @endpush
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('news::news.module name'),
@@ -69,55 +71,7 @@ app('pathway')
 			</fieldset>
 		</div>
 		<div class="col col-md-5">
-			<!-- <table class="meta">
-				<caption>Metadata</caption>
-				<tbody>
-					<tr>
-						<th scope="row">{{ trans('news::news.news id') }}:</th>
-						<td>
-							{{ $row->newsid }}
-							<input type="hidden" name="fields[newsid]" id="field-newsid" value="{{ $row->newsid }}" />
-						</td>
-					</tr>
-					<?php if ($row->id): ?>
-						<tr>
-							<th scope="row">{{ trans('news::news.id') }}:</th>
-							<td>
-								{{ $row->id }}
-								<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
-							</td>
-						</tr>
-						<tr>
-							<th scope="row">{{ trans('news::news.created') }}:</th>
-							<td>
-								<?php if ($row->getOriginal('datetimecreated') && $row->getOriginal('datetimecreated') != '0000-00-00 00:00:00'): ?>
-									{{ $row->datetimecreated }}
-								<?php else: ?>
-									{{ trans('global.unknown') }}
-								<?php endif; ?>
-							</td>
-						</tr>
-					<?php endif; ?>
-					<?php if ($row->getOriginal('datetimeedited') && $row->getOriginal('datetimeedited') != '0000-00-00 00:00:00'): ?>
-						<tr>
-							<th scope="row">{{ trans('news::news.modified') }}:</th>
-							<td>
-								{{ $row->datetimeedited }}
-							</td>
-						</tr>
-					<?php endif; ?>
-					<?php if ($row->getOriginal('datetimeremoved') && $row->getOriginal('datetimeremoved') != '0000-00-00 00:00:00'): ?>
-						<tr>
-							<th scope="row">{{ trans('news::news.removed') }}:</th>
-							<td>
-								{{ $row->datetimeremoved }}
-							</td>
-						</tr>
-					<?php endif; ?>
-				</tbody>
-			</table> -->
-
-			<fieldset class="adminform">
+			<?php /*<fieldset class="adminform">
 				<legend><span>{{ trans('global.publishing') }}</span></legend>
 
 				<div class="input-wrap form-group">
@@ -127,35 +81,9 @@ app('pathway')
 						<option value="trashed"<?php if ($row->isTrashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
 					</select>
 				</div>
-			</fieldset>
+			</fieldset>*/ ?>
 
-			<?php if ($row->id): ?>
-				<div class="data-wrap">
-					<h4><?php echo trans('pages::pages.history'); ?></h4>
-					<ul class="entry-log">
-						<?php
-						$prev = 0;
-						foreach ($row->history()->orderBy('id', 'desc')->get() as $history):
-							$actor = trans('global.unknown');
-
-							if ($history->user):
-								$actor = e($history->user->name);
-							endif;
-
-							$created = $history->created_at && $history->created_at != '0000-00-00 00:00:00'
-								? $history->created_at
-								: trans('global.unknown');
-							?>
-							<li>
-								<span class="entry-log-data">{{ trans('news::news.history edited', ['user' => $actor, 'timestamp' => $created]) }}</span>
-								<span class="entry-diff"></span>
-							</li>
-							<?php
-						endforeach;
-						?>
-					</ul>
-				</div>
-			<?php endif; ?>
+			@include('history::admin.history')
 		</div>
 	</div>
 

@@ -12,7 +12,7 @@ class TypesController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @param   Request  $request
+	 * @param   StatefulRequest  $request
 	 * @return  Response
 	 */
 	public function index(StatefulRequest $request)
@@ -65,8 +65,6 @@ class TypesController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Type();
 
 		return view('news::admin.types.edit', [
@@ -83,32 +81,30 @@ class TypesController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required'
+			'fields.name' => 'required|string|max:32',
 		]);
 
 		$id = $request->input('id');
 
 		$row = $id ? Type::findOrFail($id) : new Type();
-
-		/*$row = new Type($request->input('fields'));
-
-		if (!$row->save())
-		{
-			return redirect()->back()->withError(trans('messages.create failed'));
-		}
-
-		return $this->cancel()->with('success', trans('messages.item saved'));*/
-
 		$row->fill($request->input('fields'));
 
+		foreach (['tagusers', 'tagresources', 'future', 'location', 'ongoing', 'calendar', 'url'] as $key)
+		{
+			if (!$request->has('fields.' . $key))
+			{
+				$row->{$key} = 0;
+			}
+		}
+
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->with('success', trans('messages.item saved'));
+		return $this->cancel()->with('success', trans('global.messages.item saved'));
 	}
 
 	/**
@@ -119,8 +115,6 @@ class TypesController extends Controller
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Type::findOrFail($id);
 
 		return view('news::admin.types.edit', [
@@ -129,35 +123,9 @@ class TypesController extends Controller
 	}
 
 	/**
-	 * Update the specified entry
-	 *
-	 * @param   Request   $request
-	 * @param   integer   $id
-	 * @return  Response
-	 */
-	/*public function update(Request $request, $id)
-	{
-		$request->validate([
-			'name' => 'required'
-		]);
-
-		$row = Type::findOrFail($id);
-		$row->fill($request->input('fields'));
-
-		if (!$row->save())
-		{
-			$error = $row->getError() ? $row->getError() : trans('messages.update failed');
-
-			return redirect()->back()->withError($error);
-		}
-
-		return $this->cancel()->with('success', trans('messages.item updated'));
-	}*/
-
-	/**
 	 * Remove the specified entry
 	 *
-	 * @param   integer   $id
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)
@@ -182,7 +150,7 @@ class TypesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();

@@ -87,6 +87,9 @@ app('pathway')
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.tag resources'), 'tagresources', $filters['order_dir'], $filters['order']); ?>
 				</th>
 				<th scope="col" class="priority-2">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.tag users'), 'tagusers', $filters['order_dir'], $filters['order']); ?>
+				</th>
+				<th scope="col" class="priority-2">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.url'), 'url', $filters['order_dir'], $filters['order']); ?>
 				</th>
 			</tr>
@@ -116,55 +119,66 @@ app('pathway')
 				<td>
 					@if ($row->location)
 						<span class="badge state yes">
-							<i class="icon-check"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
 						<span class="badge state no">
-							<i class="icon-minus"></i><span class="sr-only">{{ trans('global.no') }}</span>
+							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4">
 					@if ($row->future)
 						<span class="badge state yes">
-							<i class="icon-check"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
 						<span class="badge state no">
-							<i class="icon-minus"></i><span class="sr-only">{{ trans('global.no') }}</span>
+							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4">
 					@if ($row->ongoing)
 						<span class="badge state yes">
-							<i class="icon-check"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
 						<span class="badge state no">
-							<i class="icon-minus"></i><span class="sr-only">{{ trans('global.no') }}</span>
+							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4">
 					@if ($row->tagresources)
 						<span class="badge state yes">
-							<i class="icon-check"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
 						<span class="badge state no">
-							<i class="icon-minus"></i><span class="sr-only">{{ trans('global.no') }}</span>
+							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
+						</span>
+					@endif
+				</td>
+				<td class="priority-4">
+					@if ($row->tagusers)
+						<span class="badge state yes">
+							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+						</span>
+					@else
+						<span class="badge state no">
+							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4">
 					@if ($row->url)
 						<span class="badge state yes">
-							<i class="icon-check"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
 						<span class="badge state no">
-							<i class="icon-minus"></i><span class="sr-only">{{ trans('global.no') }}</span>
+							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>

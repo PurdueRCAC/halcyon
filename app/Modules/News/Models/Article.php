@@ -584,6 +584,7 @@ class Article extends Model
 		static::created(function ($article)
 		{
 			$row = new Stemmedtext;
+			$row->id = $article->id;
 			$row->stemmedtext = $article->stemText();
 			$row->save();
 		});
@@ -594,8 +595,8 @@ class Article extends Model
 			if (!$row)
 			{
 				$row = new Stemmedtext;
-				$row->id = $article->id;
 			}
+			$row->id = $article->id;
 			$row->stemmedtext = $article->stemText();
 			$row->save();
 		});
@@ -685,12 +686,13 @@ class Article extends Model
 			}
 		}
 
-		$stemmedtext = $this->stemmedtext;
-
-		if (!$stemmedtext->delete($options))
+		if ($stemmedtext = $this->stemmedtext)
 		{
-			$this->addError($stemmedtext->getError());
-			return false;
+			if (!$stemmedtext->delete($options))
+			{
+				$this->addError($stemmedtext->getError());
+				return false;
+			}
 		}
 
 		// Attempt to delete the record

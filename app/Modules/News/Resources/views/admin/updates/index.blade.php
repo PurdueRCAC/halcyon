@@ -65,14 +65,14 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col-md-8 filter-select text-right">
+			<?php /*<div class="col-md-8 filter-select text-right">
 				<label class="sr-only" for="filter_state">{{ trans('news::news.state') }}</label>
 				<select name="state" class="filter filter-submit form-control">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.state_all') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.published') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.trashed') }}</option>
 				</select>
-			</div>
+			</div>*/ ?>
 		</div>
 
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
@@ -95,9 +95,9 @@ app('pathway')
 				<th scope="col">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.body'), 'body', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col">
+				<?php /*<th scope="col">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.state'), 'published', $filters['order_dir'], $filters['order']); ?>
-				</th>
+				</th>*/ ?>
 				<th scope="col" class="priority-4">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.created'), 'datetimenews', $filters['order_dir'], $filters['order']); ?>
 				</th>
@@ -128,9 +128,9 @@ app('pathway')
 						</span>
 					@endif
 				</td>
-				<td>
+				<?php /*<td>
 					@if (auth()->user()->can('edit.state news'))
-						@if ($row->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
+						@if (!$row->isTrashed())
 							<span class="state published">
 								<span>{{ trans('global.published') }}</span>
 							</span>
@@ -140,10 +140,10 @@ app('pathway')
 							</span>
 						@endif
 					@endif
-				</td>
+				</td>*/ ?>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->getOriginal('datetimecreated') && $row->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
+						@if ($row->datetimecreated && $row->datetimecreated != '0000-00-00 00:00:00')
 							<time datetime="{{ $row->datetimecreated }}">{{ $row->datetimecreated }}</time>
 						@else
 							<span class="never">{{ trans('global.unknown') }}</span>

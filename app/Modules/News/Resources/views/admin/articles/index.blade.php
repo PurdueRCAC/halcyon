@@ -22,7 +22,7 @@ else
 
 @section('toolbar')
 	@if (auth()->user()->can('delete news'))
-		{!! Toolbar::deleteList('', route('admin.news.delete')) !!}
+		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.news.delete')) !!}
 	@endif
 
 	@if (auth()->user()->can('create news'))
@@ -53,7 +53,7 @@ else
 	@endif
 @endcomponent
 
-<form action="{{ route('admin.news.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ $template ? route('admin.news.templates') : route('admin.news.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -74,7 +74,7 @@ else
 					<option value="unpublished"<?php if ($filters['state'] == 'unpublished'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.unpublished') }}</option>
 				</select>
 
-				@if (!$template)
+				<?php /*@if (!$template)
 				<label class="sr-only" for="filter-access">{{ trans('news::news.access level') }}</label>
 				<select name="access" id="filter-access" class="form-control filter filter-submit">
 					<option value="*">{{ trans('news::news.select access') }}</option>
@@ -82,7 +82,7 @@ else
 						<option value="<?php echo $access->id; ?>"<?php if ($filters['access'] == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
 					<?php endforeach; ?>
 				</select>
-				@endif
+				@endif*/ ?>
 
 				<label class="sr-only" for="filter-type">{{ trans('news::news.type') }}</label>
 				<select name="type" id="filter-type" class="form-control filter filter-submit">
@@ -113,22 +113,22 @@ else
 		<thead>
 			<tr>
 				<th>
-					<?php echo App\Halcyon\Html\Builder\Grid::checkall(); ?>
+					{!! Html::grid('checkall') !!}
 				</th>
 				<th scope="col" class="priority-5">
-					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.id'), 'id', $filters['order_dir'], $filters['order']); ?>
+					{!! Html::grid('sort', trans('news::news.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
-					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.headline'), 'headline', $filters['order_dir'], $filters['order']); ?>
+					{!! Html::grid('sort', trans('news::news.headline'), 'headline', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
-					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.state'), 'state', $filters['order_dir'], $filters['order']); ?>
+					{!! Html::grid('sort', trans('news::news.state'), 'state', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4">
-					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.type'), 'newstypeid', $filters['order_dir'], $filters['order']); ?>
+					{!! Html::grid('sort', trans('news::news.type'), 'newstypeid', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" colspan="2" class="priority-4">
-					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.publish window'), 'datetimenews', $filters['order_dir'], $filters['order']); ?>
+					{!! Html::grid('sort', trans('news::news.publish window'), 'datetimenews', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				@if (!$template)
 					<th scope="col" class="priority-4 text-right">{{ trans('news::news.updates') }}</th>
