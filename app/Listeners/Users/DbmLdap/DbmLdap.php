@@ -11,12 +11,15 @@ use App\Modules\Users\Events\UserCreated;
 use App\Modules\Users\Events\UserSearching;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Utility\Str;
+use App\Modules\History\Traits\Loggable;
 
 /**
  * User listener for Purdue Ldap
  */
 class DbmLdap
 {
+	use Loggable;
+
 	/**
 	 * Register the listeners for the subscriber.
 	 *
@@ -121,6 +124,7 @@ class DbmLdap
 
 			$criteria = $event->criteria;
 			$query = [];
+			$status = 404;
 
 			foreach ($criteria as $key => $val)
 			{
@@ -155,21 +159,30 @@ class DbmLdap
 				->select(['cn', 'uid', 'employeeNumber'])
 				->get();
 
-			foreach ($results as $result)
+			if (!empty($results))
 			{
-				$user = new User;
-				$user->name = $result['cn'][0];
-				$user->username = $result['uid'][0];
-				$user->email = $user->username . '@purdue.edu';
-				$user->organization_id = $result['employeeNumber'][0];
+				$status = 200;
 
-				$event->user = $user;
-				break;
+				foreach ($results as $result)
+				{
+					$user = new User;
+					$user->name = $result['cn'][0];
+					$user->username = $result['uid'][0];
+					$user->email = $user->username . '@purdue.edu';
+					$user->organization_id = $result['employeeNumber'][0];
+
+					$event->user = $user;
+					break;
+				}
 			}
 		}
-		catch (\Adldap\Auth\BindException $e)
+		catch (\Exception $e)
 		{
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
 		}
+
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, implode('', $query));
 	}
 
 	/**
@@ -196,6 +209,7 @@ class DbmLdap
 		try
 		{
 			$ldap = $this->connect($config);
+			$status = 404;
 
 			// Look for user record in LDAP
 			$result = $ldap->search()
@@ -203,8 +217,10 @@ class DbmLdap
 				->select(['cn', 'mail', 'employeeNumber'])
 				->first();
 
-			if ($result)
+			if (!empty($results))
 			{
+				$status = 200;
+
 				// Set user data
 				$event->user->name = Str::properCaseNoun($result['cn'][0]);
 				$event->user->organization_id = $result['employeeNumber'][0];
@@ -212,8 +228,12 @@ class DbmLdap
 				$event->user->save();
 			}
 		}
-		catch (\Adldap\Auth\BindException $e)
+		catch (\Exception $e)
 		{
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
 		}
+
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'cn=' . $event->user->username);
 	}
 }

@@ -11,7 +11,8 @@ namespace App\Listeners\Users\PedLdap;
 use App\Modules\Users\Events\UserSearching;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Users\Models\User;
-use Illuminate\Support\Facades\Log;
+//use Illuminate\Support\Facades\Log;
+use App\Modules\History\Traits\Loggable;
 use App\Halcyon\Utility\Str;
 
 /**
@@ -19,6 +20,8 @@ use App\Halcyon\Utility\Str;
  */
 class PedLdap
 {
+	use Loggable;
+
 	/**
 	 * Register the listeners for the subscriber.
 	 *
@@ -84,6 +87,8 @@ class PedLdap
 		{
 			$ldap = $this->connect($config);
 
+			$status = 404;
+
 			// We already found a match, so kip this lookup
 			if (!in_array($event->search, $usernames))
 			{
@@ -124,53 +129,61 @@ class PedLdap
 				->select(['cn', 'uid', 'title', 'sn', 'givenname', 'mail', 'purdueEduCampus'])
 				->get();
 
-			foreach ($results as $result)
+			if (!empty($results))
 			{
-				/*if ($event->results->getCollection()->count() >= $event->results->total())
-				{
-					break;
-				}*/
+				$status = 200;
 
-				// We have a local record for this user
-				if (in_array($result['uid'][0], $usernames))
+				foreach ($results as $result)
 				{
-					continue;
+					/*if ($event->results->getCollection()->count() >= $event->results->total())
+					{
+						break;
+					}*/
+
+					// We have a local record for this user
+					if (in_array($result['uid'][0], $usernames))
+					{
+						continue;
+					}
+
+					$user = new User;
+					$user->name = Str::properCaseNoun($result['cn'][0]);
+					$user->username = $result['uid'][0];
+					$user->email = $result['mail'][0]; //$user->username . '@purdue.edu';
+
+					$event->results->push($user);
 				}
 
-				$user = new User;
-				$user->name = Str::properCaseNoun($result['cn'][0]);
-				$user->username = $result['uid'][0];
-				$user->email = $result['mail'][0]; //$user->username . '@purdue.edu';
+				// Update pagination information
+				//$items = $event->results->getCollection()->toArray();
+				$data = $event->results->toArray();
 
-				$event->results->push($user);
+				$query = parse_url($data['first_page_url'], PHP_URL_QUERY);
+				parse_str($query, $output);
+
+				$itemsTransformedAndPaginated = new \Illuminate\Pagination\LengthAwarePaginator(
+					$event->results->getCollection(),
+					count($data['data']),
+					$event->results->perPage(),
+					$event->results->currentPage(),
+					[
+						'path' => \Request::url(),
+						'query' => $output/*[
+							'page' => $event->results->currentPage()
+						]*/
+					]
+				);
+
+				$event->results = $itemsTransformedAndPaginated;
 			}
-
-			// Update pagination information
-			//$items = $event->results->getCollection()->toArray();
-			$data = $event->results->toArray();
-
-			$query = parse_url($data['first_page_url'], PHP_URL_QUERY);
-			parse_str($query, $output);
-
-			$itemsTransformedAndPaginated = new \Illuminate\Pagination\LengthAwarePaginator(
-				$event->results->getCollection(),
-				count($data['data']),
-				$event->results->perPage(),
-				$event->results->currentPage(),
-				[
-					'path' => \Request::url(),
-					'query' => $output/*[
-						'page' => $event->results->currentPage()
-					]*/
-				]
-			);
-
-			$event->results = $itemsTransformedAndPaginated;
 		}
 		catch (\Exception $e)
 		{
-			Log::error($e->getMessage());
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
 		}
+
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'cn=' . $event->search);
 	}
 
 	/**
@@ -193,6 +206,7 @@ class PedLdap
 			$ldap = $this->connect($config);
 
 			$user = $event->getUser();
+			$status = 404;
 
 			$results = $ldap->search()
 				->orWhere('uid', '=', $user->username)
@@ -203,60 +217,68 @@ class PedLdap
 				])
 				->get();
 
-			foreach ($results as $data)
+			if (!empty($results))
 			{
-				if (isset($data['title']))
+				$status = 200;
+
+				foreach ($results as $data)
 				{
-					$user->title = $data['title'][0];
+					if (isset($data['title']))
+					{
+						$user->title = $data['title'][0];
+					}
+
+					if (isset($data['mail']))
+					{
+						$user->mail = $data['mail'][0];
+					}
+
+					if (isset($data['roomnumber']))
+					{
+						$user->roomnumber = $data['roomnumber'][0];
+					}
+
+					if (isset($data['purdueeducampus']))
+					{
+						$user->campus = $data['purdueeducampus'][0];
+					}
+
+					if (isset($data['purdueedudepartment']))
+					{
+						$user->department = $data['purdueedudepartment'][0];
+					}
+
+					if (isset($data['purdueedubuilding']))
+					{
+						$user->building = strtoupper($data['purdueedubuilding'][0]);
+					}
+
+					if (isset($data['purdueeduschool']))
+					{
+						$user->school = $data['purdueeduschool'][0];
+					}
+
+					if (isset($data['purdueeduofficephone']))
+					{
+						$user->phone = $data['purdueeduofficephone'][0];
+						$user->phone = preg_replace('/^\+1 /', '', $user->phone);
+					}
+					elseif (isset($data['purdueeduotherphone']))
+					{
+						$user->phone = $data['purdueeduotherphone'][0];
+						$user->phone = preg_replace('/^\+1 /', '', $user->phone);
+					}
 				}
 
-				if (isset($data['mail']))
-				{
-					$user->mail = $data['mail'][0];
-				}
-
-				if (isset($data['roomnumber']))
-				{
-					$user->roomnumber = $data['roomnumber'][0];
-				}
-
-				if (isset($data['purdueeducampus']))
-				{
-					$user->campus = $data['purdueeducampus'][0];
-				}
-
-				if (isset($data['purdueedudepartment']))
-				{
-					$user->department = $data['purdueedudepartment'][0];
-				}
-
-				if (isset($data['purdueedubuilding']))
-				{
-					$user->building = strtoupper($data['purdueedubuilding'][0]);
-				}
-
-				if (isset($data['purdueeduschool']))
-				{
-					$user->school = $data['purdueeduschool'][0];
-				}
-
-				if (isset($data['purdueeduofficephone']))
-				{
-					$user->phone = $data['purdueeduofficephone'][0];
-					$user->phone = preg_replace('/^\+1 /', '', $user->phone);
-				}
-				elseif (isset($data['purdueeduotherphone']))
-				{
-					$user->phone = $data['purdueeduotherphone'][0];
-					$user->phone = preg_replace('/^\+1 /', '', $user->phone);
-				}
+				$event->setUser($user);
 			}
-
-			$event->setUser($user);
 		}
 		catch (\Exception $e)
 		{
-			Log::error($e->getMessage());
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
 		}
+
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->getUser()->username);
 	}
 }

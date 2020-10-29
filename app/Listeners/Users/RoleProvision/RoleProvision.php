@@ -87,7 +87,7 @@ class RoleProvision
 			$body   = ['error' => $e->getMessage()];
 		}
 
-		$this->log('role', 'POST', $status, $body, $url);
+		$this->log('roleprovision', __METHOD__, 'POST', $status, $body, $url);
 	}
 
 	/**
@@ -131,7 +131,7 @@ class RoleProvision
 			$body   = ['error' => $e->getMessage()];
 		}
 
-		$this->log('role', 'DELETE', $status, $body, $url);
+		$this->log('rolerovision', __METHOD__, 'DELETE', $status, $body, $url);
 	}
 
 	/**
@@ -212,7 +212,7 @@ class RoleProvision
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('role', 'GET', $status, $results, $url);
+		$this->log('rolerovision', __METHOD__, 'GET', $status, $results, $url);
 	}
 
 	/**
@@ -287,7 +287,7 @@ class RoleProvision
 					throw new \Exception(__METHOD__ . '(): Failed to create `resourcemember` entry for ' . $user->id);
 				}
 
-				$this->log('role', 'POST', $status, $res, $url);
+				$this->log('rolerovision', __METHOD__, 'POST', $status, $res, $url);
 			}
 		}
 	}

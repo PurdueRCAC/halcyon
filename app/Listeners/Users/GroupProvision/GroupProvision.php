@@ -93,7 +93,7 @@ class GroupProvision
 			$body   = ['error' => $e->getMessage()];
 		}
 
-		$this->log('role', 'POST', $status, $body, $url);
+		$this->log('groupprovision', __METHOD__, 'POST', $status, $body, $url);
 	}
 
 	/**
@@ -135,7 +135,7 @@ class GroupProvision
 			$body   = ['error' => $e->getMessage()];
 		}
 
-		$this->log('role', 'DELETE', $status, $body, $url);
+		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, $url);
 	}
 
 	/**
@@ -176,7 +176,7 @@ class GroupProvision
 			$body   = ['error' => $e->getMessage()];
 		}
 
-		$this->log('role', 'GET', $status, $body, $url);
+		$this->log('groupprovision', __METHOD__, 'GET', $status, $body, $url);
 	}
 
 	/**
@@ -218,6 +218,6 @@ class GroupProvision
 			$body   = ['error' => $e->getMessage()];
 		}
 
-		$this->log('role', 'DELETE', $status, $body, $url);
+		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, $url);
 	}
 }

@@ -8,7 +8,7 @@
 namespace App\Listeners\Users\RcacLdap;
 
 //use App\Modules\Users\Events\UserSyncing;
-use Illuminate\Support\Facades\Log;
+//use Illuminate\Support\Facades\Log;
 use App\Modules\Users\Events\UserSearching;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Users\Models\User;
@@ -103,52 +103,62 @@ class RcacLdap
 				->select(['cn', 'uid'])
 				->get();
 
-			foreach ($results as $result)
-			{
-				/*if ($event->results->count() >= $event->results->total())
-				{
-					break;
-				}*/
+			$status = 404;
 
-				// We have a local record for this user
-				if (in_array($result['uid'][0], $usernames))
+			if (!empty($results))
+			{
+				$status = 200;
+
+				foreach ($results as $result)
 				{
-					continue;
+					/*if ($event->results->count() >= $event->results->total())
+					{
+						break;
+					}*/
+
+					// We have a local record for this user
+					if (in_array($result['uid'][0], $usernames))
+					{
+						continue;
+					}
+
+					$user = new User;
+					$user->name = Str::properCaseNoun($result['cn'][0]);
+					$user->username = $result['uid'][0];
+					$user->email = $user->username . '@purdue.edu';
+
+					$usernames[] = $user->username;
+
+					$event->results->push($user);
 				}
 
-				$user = new User;
-				$user->name = Str::properCaseNoun($result['cn'][0]);
-				$user->username = $result['uid'][0];
-				$user->email = $user->username . '@purdue.edu';
+				// Update pagination information
+				$data = $event->results->toArray();
 
-				$usernames[] = $user->username;
+				$query = parse_url($data['first_page_url'], PHP_URL_QUERY);
+				parse_str($query, $output);
 
-				$event->results->push($user);
+				$itemsTransformedAndPaginated = new \Illuminate\Pagination\LengthAwarePaginator(
+					$event->results->getCollection(),
+					count($data['data']),
+					$event->results->perPage(),
+					$event->results->currentPage(),
+					[
+						'path' => \Request::url(),
+						'query' => $output
+					]
+				);
+
+				$event->results = $itemsTransformedAndPaginated;
 			}
-
-			// Update pagination information
-			$data = $event->results->toArray();
-
-			$query = parse_url($data['first_page_url'], PHP_URL_QUERY);
-			parse_str($query, $output);
-
-			$itemsTransformedAndPaginated = new \Illuminate\Pagination\LengthAwarePaginator(
-				$event->results->getCollection(),
-				count($data['data']),
-				$event->results->perPage(),
-				$event->results->currentPage(),
-				[
-					'path' => \Request::url(),
-					'query' => $output
-				]
-			);
-
-			$event->results = $itemsTransformedAndPaginated;
 		}
 		catch (\Exception $e)
 		{
-			Log::error($e->getMessage());
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
 		}
+
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->search);
 	}
 
 	/**
@@ -178,16 +188,23 @@ class RcacLdap
 				->select(['loginShell', 'homeDirectory'])
 				->get();
 
-			foreach ($results as $data)
-			{
-				if (isset($data['loginShell']))
-				{
-					$user->loginshell = $data['loginShell'][0];
-				}
+			$status = 404;
 
-				if (isset($data['homeDirectory']))
+			if (!empty($results))
+			{
+				$status = 200;
+
+				foreach ($results as $data)
 				{
-					$user->homeDirectory = $data['homeDirectory'][0];
+					if (isset($data['loginShell']))
+					{
+						$user->loginshell = $data['loginShell'][0];
+					}
+
+					if (isset($data['homeDirectory']))
+					{
+						$user->homeDirectory = $data['homeDirectory'][0];
+					}
 				}
 			}
 		}
@@ -195,10 +212,15 @@ class RcacLdap
 		{
 			$user->loginshell = false;
 			//$user->setError($e->getMessage());
-			Log::error($e->getMessage());
+			//Log::error($e->getMessage());
+
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
 		}
 
 		$event->setUser($user);
+	
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->username);
 	}
 
 	/*public function handle($event)
@@ -311,8 +333,12 @@ class RcacLdap
 				->select(['loginShell', 'authorizedBy', 'gidNumber'])
 				->get();
 
+			$status = 404;
+
 			if (!empty($results))
 			{
+				$status = 200;
+
 				$this->loginshell = $results[0]['loginshell'][0];
 
 				if (isset($results[0]['authorizedby']))
@@ -337,7 +363,11 @@ class RcacLdap
 		}
 		catch (\Exception $e)
 		{
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
 		}
+
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->user->username);
 	}
 
 	/**
@@ -399,6 +429,6 @@ class RcacLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('rcac_group', 'GET', $status, $results, 'cn=' . $event->name);
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'cn=' . $event->name);
 	}
 }
