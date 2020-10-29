@@ -2,7 +2,7 @@
 
 ITaP Research Computing portal.
 
-This uses Laravel as the base.
+This is built on Laravel.
 
 ### About Laravel
 
@@ -20,7 +20,7 @@ Laravel is accessible, powerful, and provides tools required for large, robust a
 
 ### Minimum System Requirements
 
-To be able to run AsgardCMS you have to meet the following requirements:
+To be able to run Halcyon you have to meet the following requirements:
 * PHP >= 7.2.5 or higher
 * BCMath PHP Extension
 * Ctype PHP Extension
