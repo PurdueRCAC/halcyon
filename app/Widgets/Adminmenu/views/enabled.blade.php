@@ -24,48 +24,21 @@ $menu->addChild(
 	new Node(trans('widget.adminmenu::adminmenu.configuration'), route('admin.config'), 'class:settings', in_array($active, ['info', 'core', 'config', 'checkin', 'cache', 'redirect', 'history'])), true
 );
 
-/*if ($user->can('admin'))
-{
-	$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.configuration'), route('admin.config'), 'class:config', ($active == 'config')));
-	//$menu->addSeparator();
-}*/
-
 $chm = $user->can('admin messages');
 $cam = $user->can('manage cache');
 $cst = $user->can('manage cron');
 
 if ($chm || $cam || $cst)
 {
-	if ($chm)
+	if ($chm && Module::isEnabled('messages'))
 	{
 		$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.messages'), route('admin.messages.index'), 'class:maintenance', ($active == 'messages')));
 	}
 
-	if ($cst)
+	if ($cst && Module::isEnabled('cron'))
 	{
-		//$menu->getParent();
-		//$menu->addSeparator();
 		$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.scheduled tasks'), route('admin.cron.index'), 'class:scheduled', ($active == 'cron')));
 	}
-
-	/*if ($user->can('manage checkin'))
-	{
-		$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.GLOBAL_CHECKIN'), 'index.php?option=checkin', 'class:checkin', ($active == 'checkin')));
-		$menu->addSeparator();
-	}
-	if ($user->can('manage cache'))
-	{
-		$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.CLEAR_CACHE'), 'index.php?option=cache', 'class:clear', ($active == 'cache')));
-		$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.PURGE_EXPIRED_CACHE'), 'index.php?option=cache&view=purge', 'class:purge', ($active == 'cache')));
-		$menu->addSeparator();
-	}*/
-
-	//$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.SYS_LDAP'), 'index.php?option=system&controller=ldap', 'class:ldap', ($active == 'system')));
-	//$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.SYS_GEO'), 'index.php?option=system&controller=geodb', 'class:geo', ($active == 'system')));
-	//$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.SYS_APC'), 'index.php?option=system&controller=apc', 'class:apc', ($active == 'system')));
-	//$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.SYS_ROUTES'), 'index.php?option=redirect', 'class:routes', ($active == 'redirect')));
-
-	//$menu->getParent();
 }
 
 //$menu->addSeparator();
@@ -88,7 +61,9 @@ $menu->getParent();
 //
 // Users Submenu
 //
-if ($user->can('manage users') || $user->can('manage contactreports'))
+if ($user->can('manage users')
+ || $user->can('manage groups')
+ || $user->can('manage contactreports'))
 {
 	$menu->addChild(
 		new Node(trans('widget.adminmenu::adminmenu.users'), route('admin.users.index'), 'class:users', in_array($active, ['users', 'groups', 'contactreports'])), true
@@ -96,18 +71,15 @@ if ($user->can('manage users') || $user->can('manage contactreports'))
 	$createUser = $shownew && $user->can('create users');
 	$createGrp  = $user->can('create users.roles');
 
-	$menu->addChild(
-		new Node(trans('widget.adminmenu::adminmenu.users'), route('admin.users.index'), 'class:members', $active == 'users'), $createUser
-	);
-	/*if ($createUser)
+	if ($user->can('manage users'))
 	{
 		$menu->addChild(
-			new Node(trans('widget.adminmenu::adminmenu.add user'), route('admin.users.create'), 'class:newuser')
+			new Node(trans('widget.adminmenu::adminmenu.users'), route('admin.users.index'), 'class:members', $active == 'users'), $createUser
 		);
-	}*/
-	$menu->getParent();
+		$menu->getParent();
+	}
 
-	if ($user->can('manage groups'))
+	if ($user->can('manage groups') && Module::isEnabled('groups'))
 	{
 		$menu->addChild(
 			new Node(trans('widget.adminmenu::adminmenu.groups'), route('admin.groups.index'), 'class:groups', ($active == 'groups'))
@@ -117,46 +89,24 @@ if ($user->can('manage users') || $user->can('manage contactreports'))
 	if ($createGrp)
 	{
 		$menu->addSeparator();
+
 		$menu->addChild(
 			new Node(trans('widget.adminmenu::adminmenu.roles'), route('admin.users.roles'), 'class:roles', $active == 'users'), $createUser
 		);
-		/*if ($user->can('create users.roles'))
-		{
-			$menu->addChild(
-				new Node(trans('widget.adminmenu::adminmenu.add role'), route('admin.users.roles.create'), 'class:newrole')
-			);
-			$menu->getParent();
-		}*/
 		$menu->getParent();
 
 		$menu->addChild(
 			new Node(trans('widget.adminmenu::adminmenu.levels'), route('admin.users.levels'), 'class:levels', $active == 'users'), $createUser
 		);
-
-		/*if ($user->can('create users.accesslevels'))
-		{
-			$menu->addChild(
-				new Node(trans('widget.adminmenu::adminmenu.add level'), route('admin.users.levels.create'), 'class:newlevel')
-			);
-			$menu->getParent();
-		}*/
 		$menu->getParent();
 	}
 
 	$menu->addSeparator();
 	/*$menu->addChild(
 		new Node(trans('widget.adminmenu::adminmenu.notes'), route('admin.users.notes'), 'class:user-note'), $createUser
-	);
+	);*/
 
-	if ($createUser)
-	{
-		$menu->addChild(
-			new Node(trans('widget.adminmenu::adminmenu.add note'), route('admin.users.notes.create'), 'class:newarticle')
-		);
-		$menu->getParent();
-	}*/
-
-	if ($user->can('manage contactreports'))
+	if ($user->can('manage contactreports') && Module::isEnabled('contactreports'))
 	{
 		$menu->addChild(
 			new Node(trans('widget.adminmenu::adminmenu.contact reports'), route('admin.contactreports.index'), 'class:contactreport', ($active == 'contactreports'))
@@ -182,7 +132,7 @@ if ($user->can('manage users') || $user->can('manage contactreports'))
 //
 // Menus Submenu
 //
-if ($user->can('manage menus'))
+if ($user->can('manage menus') && Module::isEnabled('menus'))
 {
 	$menu->addChild(
 		new Node(trans('widget.adminmenu::adminmenu.menus'), route('admin.menus.index'), 'class:menus', ($active == 'menus')), true
@@ -241,12 +191,15 @@ if ($user->can('manage menus'))
 //
 // Content Submenu
 //
-if ($user->can('manage pages') || $user->can('manage media') || $user->can('manage knowledge') || $user->can('manage news'))
+if ($user->can('manage pages')
+ || $user->can('manage media')
+ || $user->can('manage knowledge')
+ || $user->can('manage news'))
 {
 	$menu->addChild(
 		new Node(trans('widget.adminmenu::adminmenu.content'), route('admin.pages.index'), 'class:file-text', in_array($active, ['pages', 'knowledge', 'media', 'news'])), true
 	);
-	if ($user->can('manage pages'))
+	if ($user->can('manage pages') && Module::isEnabled('pages'))
 	{
 		$createContent = $shownew && $user->can('create pages');
 		$menu->addChild(
@@ -273,19 +226,19 @@ if ($user->can('manage pages') || $user->can('manage media') || $user->can('mana
 		$menu->getParent();
 	}
 	*/
-	if ($user->can('manage news'))
+	if ($user->can('manage news') && Module::isEnabled('news'))
 	{
 		//$menu->addSeparator();
 		$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.news'), route('admin.news.index'), 'class:news', ($active == 'news')));
 	}
 
-	if ($user->can('manage knowledge'))
+	if ($user->can('manage knowledge') && Module::isEnabled('knowledge'))
 	{
 		//$menu->addSeparator();
 		$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.knowledge'), route('admin.knowledge.index'), 'class:knowledge', ($active == 'knowledge')));
 	}
 
-	if ($user->can('manage media'))
+	if ($user->can('manage media') && Module::isEnabled('media'))
 	{
 		$menu->addSeparator();
 		$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.media manager'), route('admin.media.index'), 'class:media', ($active == 'media')));
@@ -294,20 +247,22 @@ if ($user->can('manage pages') || $user->can('manage media') || $user->can('mana
 	$menu->getParent();
 }
 
-if ($user->can('manage resources') || $user->can('manage queues') || $user->can('manage storage'))
+if ($user->can('manage resources')
+ || $user->can('manage queues')
+ || $user->can('manage storage'))
 {
 	$menu->addChild(
 		new Node(trans('widget.adminmenu::adminmenu.resources'), route('admin.resources.index'), 'class:server', in_array($active, ['resources', 'queues', 'storage'])), true
 	);
 
-	if ($user->can('manage queues'))
+	if ($user->can('manage queues') && Module::isEnabled('contactreports'))
 	{
 		$menu->addChild(
 			new Node(trans('widget.adminmenu::adminmenu.queue manager'), route('admin.queues.index'), 'class:queues', ($active == 'queues'))
 		);
 	}
 
-	if ($user->can('manage queues'))
+	if ($user->can('manage resources') && Module::isEnabled('resources'))
 	{
 		//$menu->addSeparator();
 		$menu->addChild(
@@ -315,7 +270,7 @@ if ($user->can('manage resources') || $user->can('manage queues') || $user->can(
 		);
 	}
 
-	if ($user->can('manage storage'))
+	if ($user->can('manage storage') && Module::isEnabled('storage'))
 	{
 		//$menu->addSeparator();
 		$menu->addChild(
@@ -326,7 +281,7 @@ if ($user->can('manage resources') || $user->can('manage queues') || $user->can(
 	$menu->getParent();
 }
 
-if ($user->can('manage orders'))
+if ($user->can('manage orders') && Module::isEnabled('orders'))
 {
 	$pending = App\Modules\Orders\Models\Order::whereIn('notice', [1, 2])->count();
 	if ($pending)
@@ -431,7 +386,7 @@ if ($mm || $pm || count($modules))
 //$tm = $user->can('manage themes');
 //$lm = $user->can('manage languages');
 
-if ($user->can('manage themes'))
+if ($user->can('manage themes') && Module::isEnabled('themes'))
 {
 	$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.theme manager'), route('admin.themes.index'), 'class:modules', ($active == 'themes')), true);
 	$menu->getParent();
