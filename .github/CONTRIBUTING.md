@@ -8,7 +8,7 @@ Bug reports containing steps which can be used to reproduce the issue are highly
 
 ## Upstream Issues
 
-Since Halcon employs many packages installed via Composer, sometimes an issue will be caused by a bug in one of those packages and not in Halcyon itself. When appropriate, we will implement a work-around and direct you to the package's maintianers to file a bug with them.
+Since Halcyon employs many packages installed via Composer, sometimes an issue will be caused by a bug in one of those packages and not in Halcyon itself. When appropriate, we will implement a work-around and direct you to the package's maintianers to file a bug with them.
 
 # Contributing patches and new features
 
