@@ -149,14 +149,28 @@ class SizesController extends Controller
 		$request->validate([
 			'queueid' => 'required|integer',
 			'sellerqueueid' => 'required|integer',
-			'datetimestart' => 'nullable|datetime',
-			'datetimestop' => 'nullable|datetime',
+			'datetimestart' => 'nullable|date',
+			'datetimestop' => 'nullable|date',
 			'nodecount' => 'nullable|integer',
 			'corecount' => 'nullable|integer',
+			'comments' => 'nullable|string',
 		]);
 
 		$row = new Size;
-		$row->fill($request->all());
+		$row->queueid = $request->input('queueid');
+		$row->sellerqueueid = $request->input('sellerqueueid');
+		$row->datetimestart = $request->input('datetimestart');
+		if ($request->has('datetimestop'))
+		{
+			$request->input('datetimestop');
+		}
+		$row->nodecount = $request->input('nodecount');
+		$row->corecount = $request->input('corecount');
+		if ($request->has('comment'))
+		{
+			$request->input('comment');
+		}
+		//$row->fill($request->all());
 
 		if (!$row->datetimestart)
 		{
@@ -168,7 +182,7 @@ class SizesController extends Controller
 			return response()->json(['message' => trans('queues::queues.invalid queue id')], 415);
 		}
 
-		if (!$row->source)
+		if (!$row->seller)
 		{
 			return response()->json(['message' => trans('queues::queues.invalid seller queue id')], 415);
 		}

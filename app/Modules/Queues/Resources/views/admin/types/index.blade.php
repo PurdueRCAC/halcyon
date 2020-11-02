@@ -13,11 +13,11 @@ app('pathway')
 
 @section('toolbar')
 	@if (auth()->user()->can('delete queues.types'))
-		{!! Toolbar::deleteList('', route('admin.queues.delete')) !!}
+		{!! Toolbar::deleteList('', route('admin.queues.types.delete')) !!}
 	@endif
 
 	@if (auth()->user()->can('create queues.types'))
-		{!! Toolbar::addNew(route('admin.queues.create')) !!}
+		{!! Toolbar::addNew(route('admin.queues.types.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin queues'))

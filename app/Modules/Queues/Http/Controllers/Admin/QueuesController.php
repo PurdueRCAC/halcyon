@@ -10,6 +10,8 @@ use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\Type;
 use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Queues\Models\SchedulerPolicy;
+use App\Modules\Queues\Models\Walltime;
+use App\Modules\Queues\Models\Size;
 use App\Modules\Resources\Entities\Subresource;
 use App\Modules\Resources\Entities\Child;
 use App\Modules\Resources\Entities\Asset;
@@ -63,7 +65,12 @@ class QueuesController extends Controller
 			->select($q . '.*')
 			->join($c, $c . '.subresourceid', $q . '.subresourceid')
 			->join($r, $r . '.id', $c . '.resourceid')
-			->whereNull($r . '.datetimeremoved');
+			->where(function($where) use ($r)
+			{
+				$where->whereNull($r . '.datetimeremoved')
+					->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->withTrashed();
 
 		if ($filters['search'])
 		{
@@ -79,18 +86,40 @@ class QueuesController extends Controller
 
 		if ($filters['state'] == 'trashed')
 		{
-			$query->onlyTrashed();
-			//$query->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+			$query->where(function($where) use ($q)
+			{
+				$where->whereNotNull($q . '.datetimeremoved')
+					->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+			});
 		}
 		elseif ($filters['state'] == 'enabled')
 		{
-			$query//->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			$query
+				->where(function($where) use ($q)
+				{
+					$where->whereNull($q . '.datetimeremoved')
+						->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
 				->where($q . '.enabled', '=', 1);
+		}
+		elseif ($filters['state'] == 'disabled')
+		{
+			$query
+				->where(function($where) use ($q)
+				{
+					$where->whereNull($q . '.datetimeremoved')
+						->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+				->where($q . '.enabled', '=', 0);
 		}
 		else
 		{
-			$query//->where('datetimeremoved', '=', '0000-00-00 00:00:00')
-				->where($q . '.enabled', '=', 0);
+			$query
+				->where(function($where) use ($q)
+				{
+					$where->whereNull($q . '.datetimeremoved')
+						->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				});
 		}
 
 		if ($filters['type'] > 0)
@@ -143,13 +172,19 @@ class QueuesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Queue();
 		$row->queuetype = 1;
 		$row->maxjobsqueued = 12000;
 		$row->maxjobsqueueduser = 5000;
+		$row->maxjobsrun = 0;
+		$row->maxjobcores = 0;
+		$row->maxjobsrunuser = 0;
+		$row->maxijobfactor = 2;
+		$row->maxijobuserfactor = 1;
+		$row->nodecoresdefault = 0;
 		$row->priority = 1000;
+		$row->defaultwalltime = 0.5;
+		$row->enabled = 1;
 
 		$types = Type::orderBy('name', 'asc')->get();
 		$schedulers = Scheduler::orderBy('hostname', 'asc')->get();
@@ -168,38 +203,11 @@ class QueuesController extends Controller
 	}
 
 	/**
-	 * Store a newly created queue in storage.
-	 * @param  Request $request
-	 * @return Response
-	 */
-	/*public function store(Request $request)
-	{
-		$request->validate([
-			'name' => 'required'
-		]);
-
-		$queue = new Queue([
-			'name'         => $request->get('name'),
-			'parentid'     => $request->get('parentid'),
-			'rolename'     => $request->get('rolename'),
-			'listname'     => $request->get('listname'),
-			'queuetype' => $request->get('queuetype'),
-			'producttype'  => $request->get('producttype')
-		]);
-
-		$queue->save();
-
-		return $this->cancel()->with('success', 'Queue saved!');
-	}*/
-
-	/**
 	 * Show the form for editing the specified queue.
 	 * @return Response
 	 */
 	public function edit(Request $request, $id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Queue::find($id);
 
 		if ($fields = app('request')->old('fields'))
@@ -225,10 +233,11 @@ class QueuesController extends Controller
 
 	/**
 	 * Update the specified queue in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
-	public function store(Request $request, $id)
+	public function store(Request $request)
 	{
 		$request->validate([
 			'fields.name' => 'required|string|max:64',
@@ -241,35 +250,62 @@ class QueuesController extends Controller
 		$id = $request->input('id');
 
 		$row = $id ? Queue::findOrFail($id) : new Queue();
-
 		$row->fill($request->input('fields'));
+
+		$row->defaultwalltime = $row->defaultwalltime * 60 * 60;
+
+		if (!$request->has('fields.free'))
+		{
+			$row->free = 0;
+		}
+
+		if (!$request->has('fields.reservation'))
+		{
+			$row->reservation = 0;
+		}
+
+		if (!$row->aclgroups)
+		{
+			$row->aclgroups = '';
+		}
+		if (!$row->nodememmin)
+		{
+			$row->nodememmin = 0;
+		}
+		if (!$row->nodememmax)
+		{
+			$row->nodememmax = 0;
+		}
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
 
-		/*if ($row->scheduler->resource
-		 && $row->scheduler->resource->rolename)
+		$walltime = Walltime::query()
+			->where('queueid', '=', $row->id)
+			->orderBy('id', 'asc')
+			->first();
+		if (!$walltime)
 		{
-			foreach ($queue->group->managers as $user)
-			{
-				event($resourcemember = new ResourceMemberStatus($user, $queue->scheduler->resource));
+			$walltime = new Walltime;
+		}
+		$walltime->queueid = $row->id;
+		$walltime->walltime = intval($request->input('maxwalltime')) * 60 * 60;
+		$walltime->save();
 
-				if ($resourcemember->status <= 0)
-				{
-					throw new \Exception(__METHOD__ . '(): Bad status for `resourcemember` ' . $user->id);
-				}
-				elseif ($resourcemember->status == 1 || $resourcemember->status == 4)
-				{
-					event($resourcemember = new ResourceMemberCreated($user, $queue->scheduler->resource));
-				}
-			}
-		}*/
+		if (!$id && $request->input('queueclass') == 'standby')
+		{
+			$size = new Size;
+			$size->queueid = $row->id;
+			$size->corecount = 20000;
+			$size->datetimestart = $row->datetimecreated;
+			$size->save();
+		}
 
-		return $this->cancel()->withSuccess(trans('messages.update success'));
+		return $this->cancel()->withSuccess(trans('global.messages.update success'));
 	}
 
 	/**
@@ -277,13 +313,13 @@ class QueuesController extends Controller
 	 * 
 	 * @return  void
 	 */
-	public function state(Request $request, $id)
+	public function state(Request $request)
 	{
-		$action = app('request')->segment(count($request->segments()) - 1);
+		$action = app('request')->segment(count($request->segments()));
 		$state  = $action == 'enable' ? 1 : 0;
 
 		// Incoming
-		$ids = $request->input('id', array($id));
+		$ids = $request->input('id');
 		$ids = (!is_array($ids) ? array($ids) : $ids);
 
 		// Check for an ID
@@ -305,10 +341,7 @@ class QueuesController extends Controller
 				continue;
 			}
 
-			$row->timestamps = false;
-			$row->state = $state;
-
-			if (!$row->save())
+			if (!$row->update(['enabled' => $state]))
 			{
 				$request->session()->flash('error', $row->getError());
 				continue;
@@ -332,22 +365,36 @@ class QueuesController extends Controller
 
 	/**
 	 * Remove the specified queue from storage.
+	 * 
+	 * @param  Request  $request
 	 * @return Response
 	 */
-	public function delete($id)
+	public function delete(Request $request)
 	{
-		$queue = Queue::find($id);
+		$ids = $request->input('id', array());
+		$ids = (!is_array($ids) ? array($ids) : $ids);
 
-		if (!$queue->trashed())
+		$success = 0;
+
+		foreach ($ids as $id)
 		{
-			$queue->delete();
-		}
-		else
-		{
-			$queue->forceDelete();
+			$row = Queue::findOrFail($id);
+
+			if (!$row->delete())
+			{
+				$request->session()->flash('error', $row->getError());
+				continue;
+			}
+
+			$success++;
 		}
 
-		return $this->cancel()->with('success', 'Queue deleted!');
+		if ($success)
+		{
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
+		}
+
+		return $this->cancel();
 	}
 
 	/**

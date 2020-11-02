@@ -12,6 +12,8 @@ class SchedulerPoliciesController extends Controller
 {
 	/**
 	 * Display a listing of the queue.
+	 * 
+	 * @param  StatefulRequest  $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -22,7 +24,6 @@ class SchedulerPoliciesController extends Controller
 			// Paging
 			'limit'    => config('list_limit', 20),
 			'page'     => 1,
-			//'start'    => $request->input('limitstart', 0),
 			// Sorting
 			'order'     => SchedulerPolicy::$orderBy,
 			'order_dir' => SchedulerPolicy::$orderDir,
@@ -48,7 +49,14 @@ class SchedulerPoliciesController extends Controller
 
 		if ($filters['search'])
 		{
-			$query->where('name', 'like', '%' . $filters['name'] . '%');
+			if (is_numeric($filters['search']))
+			{
+				$query->where('id', '=', $filters['search']);
+			}
+			else
+			{
+				$query->where('name', 'like', '%' . $filters['search'] . '%');
+			}
 		}
 
 		$rows = $query
@@ -64,6 +72,7 @@ class SchedulerPoliciesController extends Controller
 
 	/**
 	 * Show the form for creating a new queue.
+	 * 
 	 * @return Response
 	 */
 	public function create()
@@ -77,6 +86,8 @@ class SchedulerPoliciesController extends Controller
 
 	/**
 	 * Show the form for editing the specified queue.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -95,36 +106,35 @@ class SchedulerPoliciesController extends Controller
 
 	/**
 	 * Update the specified queue in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required|max:20'
+			'fields.name' => 'required|string|max:20'
 		]);
 
 		$id = $request->input('id');
 
-		$row = $id ? Type::findOrFail($id) : new Type();
-
-		//$row->fill($request->input('fields'));
-		$row->set([
-			'name' => $request->input('name')
-		]);
+		$row = $id ? SchedulerPolicy::findOrFail($id) : new SchedulerPolicy();
+		$row->name = $request->input('fields.name');
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->withSuccess(trans('messages.update success'));
+		return $this->cancel()->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created'), ['name' => trans('queues::queues.scheduler policy')]));
 	}
 
 	/**
 	 * Remove the specified queue from storage.
+	 * 
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function delete(Request $request)
@@ -136,7 +146,7 @@ class SchedulerPoliciesController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Type::findOrFail($id);
+			$row = SchedulerPolicy::findOrFail($id);
 
 			if (!$row->delete())
 			{
@@ -149,7 +159,7 @@ class SchedulerPoliciesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();

@@ -21,7 +21,7 @@ app('pathway')
 	@endif
 
 	@if (auth()->user()->can('delete queues'))
-		{!! Toolbar::deleteList('', route('admin.queues.delete')) !!}
+		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.queues.delete')) !!}
 	@endif
 
 	@if (auth()->user()->can('create queues'))
@@ -63,7 +63,7 @@ app('pathway')
 			<div class="col col-md-8 filter-select text-right">
 				<label class="sr-only" for="filter_state">{{ trans('queues::queues.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.all states') }}</option>
+					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
 					<option value="enabled"<?php if ($filters['state'] == 'enabled'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.enabled') }}</option>
 					<option value="disabled"<?php if ($filters['state'] == 'disabled'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.disabled') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.trashed') }}</option>

@@ -290,6 +290,16 @@ class Queue extends Model
 	 *
 	 * @return  object
 	 */
+	public function sold()
+	{
+		return $this->hasMany(Size::class, 'sellerqueueid')->where('corecount', '>', 0);
+	}
+
+	/**
+	 * Defines a relationship to sizes
+	 *
+	 * @return  object
+	 */
 	public function loans()
 	{
 		return $this->hasMany(Loan::class, 'queueid');

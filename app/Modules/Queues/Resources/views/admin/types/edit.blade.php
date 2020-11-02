@@ -1,6 +1,8 @@
 @extends('layouts.master')
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('queues::queues.module name'),
@@ -29,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('queues.name') !!}: {{ trans('queues::queues.types') }}: {{ $row->id ? trans('queues::queues.edit') . ': #' . $row->id : trans('queues::queues.create') }}
+{!! config('queues.name') !!}: {{ trans('queues::queues.types') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

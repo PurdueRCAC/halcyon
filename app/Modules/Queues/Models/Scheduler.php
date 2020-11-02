@@ -179,17 +179,17 @@ class Scheduler extends Model
 		// Format and return
 		$timeParts = [];
 		$sections = [
-			'day'    => (int)$days,
-			'hour'   => (int)$hours,
-			'minute' => (int)$minutes,
-			'second' => (int)$seconds,
+			'days'    => (int)$days,
+			'hours'   => (int)$hours,
+			'minutes' => (int)$minutes,
+			'seconds' => (int)$seconds,
 		];
 
 		foreach ($sections as $name => $value)
 		{
 			if ($value > 0)
 			{
-				$timeParts[] = $value. ' '.$name.($value == 1 ? '' : 's');
+				$timeParts[] = $value . ' ' . trans_choice('global.time.' . $name, $value);
 			}
 		}
 
@@ -199,6 +199,7 @@ class Scheduler extends Model
 	/**
 	 * Find a record by hostname
 	 *
+	 * @param   string  $hostname
 	 * @return  object
 	 */
 	public static function findByHostname($hostname)

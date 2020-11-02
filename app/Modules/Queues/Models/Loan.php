@@ -48,6 +48,30 @@ class Loan extends Model
 	];
 
 	/**
+	 * Determine if in a trashed state
+	 *
+	 * @return  bool
+	 */
+	public function hasStarted()
+	{
+		if (!$this->datetimestart || $this->datetimestart == '0000-00-00 00:00:00' && $this->datetimestart == '-0001-11-30 00:00:00')
+		{
+			return true;
+		}
+		return ($this->datetimestart >= Carbon::now());
+	}
+
+	/**
+	 * Determine if in a trashed state
+	 *
+	 * @return  bool
+	 */
+	public function hasEnded()
+	{
+		return ($this->datetimestop && $this->datetimestop != '0000-00-00 00:00:00' && $this->datetimestop != '-0001-11-30 00:00:00' && $this->datetimestop < Carbon::now());
+	}
+
+	/**
 	 * Defines a relationship to a queue
 	 *
 	 * @return  object

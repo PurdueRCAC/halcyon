@@ -90,6 +90,8 @@ class QueuesController extends Controller
 			'type'     => $request->input('type', 0),
 			'scheduler' => $request->input('scheduler', 0),
 			'resource' => $request->input('resource', 0),
+			'subresource' => $request->input('subresource', 0),
+			'group' => $request->input('group', 0),
 			'class' => $request->input('class'),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
@@ -118,22 +120,49 @@ class QueuesController extends Controller
 			->select($q . '.*')
 			->join($c, $c . '.subresourceid', $q . '.subresourceid')
 			->join($r, $r . '.id', $c . '.resourceid')
-			->whereNull($r . '.datetimeremoved');
+			->where(function($where) use ($r)
+			{
+				$where->whereNull($r . '.datetimeremoved')
+					->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->withTrashed();
 
 		if ($filters['state'] == 'trashed')
 		{
-			$query->onlyTrashed();
-			//$query->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+			$query->where(function($where) use ($q)
+			{
+				$where->whereNotNull($q . '.datetimeremoved')
+					->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+			});
 		}
 		elseif ($filters['state'] == 'enabled')
 		{
-			$query//->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			$query
+				->where(function($where) use ($q)
+				{
+					$where->whereNull($q . '.datetimeremoved')
+						->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
 				->where($q . '.enabled', '=', 1);
+		}
+		elseif ($filters['state'] == 'disabled')
+		{
+			$query
+				->where(function($where) use ($q)
+				{
+					$where->whereNull($q . '.datetimeremoved')
+						->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+				->where($q . '.enabled', '=', 0);
 		}
 		else
 		{
-			$query//->where('datetimeremoved', '=', '0000-00-00 00:00:00')
-				->where($q . '.enabled', '=', 0);
+			$query
+				->where(function($where) use ($q)
+				{
+					$where->whereNull($q . '.datetimeremoved')
+						->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				});
 		}
 
 		if ($filters['type'] > 0)
@@ -149,6 +178,16 @@ class QueuesController extends Controller
 		if ($filters['resource'])
 		{
 			$query->where($r . '.id', '=', (int)$filters['resource']);
+		}
+
+		if ($filters['subresource'])
+		{
+			$query->where($q . '.subresourceid', '=', (int)$filters['subresource']);
+		}
+
+		if ($filters['group'])
+		{
+			$query->where($q . '.groupid', '=', (int)$filters['group']);
 		}
 
 		if ($filters['class'] == 'system')

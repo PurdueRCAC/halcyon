@@ -13,6 +13,8 @@ class TypesController extends Controller
 {
 	/**
 	 * Display a listing of the queue.
+	 * 
+	 * @param  StatefulRequest  $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -23,7 +25,6 @@ class TypesController extends Controller
 			// Paging
 			'limit'    => config('list_limit', 20),
 			'page'     => 1,
-			//'start'    => $request->input('limitstart', 0),
 			// Sorting
 			'order'     => Type::$orderBy,
 			'order_dir' => Type::$orderDir,
@@ -45,7 +46,21 @@ class TypesController extends Controller
 		}
 
 		// Build query
-		$rows = Type::query()
+		$query = Type::query();
+
+		if ($filters['search'])
+		{
+			if (is_numeric($filters['search']))
+			{
+				$query->where('id', '=', $filters['search']);
+			}
+			else
+			{
+				$query->where('name', 'like', '%' . $filters['search'] . '%');
+			}
+		}
+
+		$rows = $query
 			->withCount('queues')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
@@ -58,12 +73,11 @@ class TypesController extends Controller
 
 	/**
 	 * Show the form for creating a new queue.
+	 * 
 	 * @return Response
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Type();
 
 		return view('queues::admin.types.edit', [
@@ -73,12 +87,12 @@ class TypesController extends Controller
 
 	/**
 	 * Show the form for editing the specified queue.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Type::find($id);
 
 		if ($fields = app('request')->old('fields'))
@@ -93,36 +107,35 @@ class TypesController extends Controller
 
 	/**
 	 * Update the specified queue in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required|max:20'
+			'fields.name' => 'required|string|max:20'
 		]);
 
 		$id = $request->input('id');
 
 		$row = $id ? Type::findOrFail($id) : new Type();
-
-		//$row->fill($request->input('fields'));
-		$row->set([
-			'name' => $request->input('name')
-		]);
+		$row->name = $request->input('fields.name');
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->withSuccess(trans('messages.update success'));
+		return $this->cancel()->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created'), ['name' => trans('queues::queues.type')]));
 	}
 
 	/**
 	 * Remove the specified queue from storage.
+	 * 
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function delete(Request $request)
@@ -147,7 +160,7 @@ class TypesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();

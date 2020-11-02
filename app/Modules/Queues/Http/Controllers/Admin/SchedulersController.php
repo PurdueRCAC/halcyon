@@ -51,6 +51,18 @@ class SchedulersController extends Controller
 		// Build query
 		$query = Scheduler::query();
 
+		if ($filters['search'])
+		{
+			if (is_numeric($filters['search']))
+			{
+				$query->where('id', '=', $filters['search']);
+			}
+			else
+			{
+				$query->where('hostname', 'like', '%' . $filters['search'] . '%');
+			}
+		}
+
 		if ($filters['state'] == 'trashed')
 		{
 			$query->onlyTrashed();
@@ -95,8 +107,15 @@ class SchedulersController extends Controller
 	{
 		$row = new Scheduler();
 
+		$policies = SchedulerPolicy::orderBy('name', 'asc')->get();
+		$batchsystems = Batchsystem::orderBy('name', 'asc')->get();
+		$resources = (new Asset)->tree();
+
 		return view('queues::admin.schedulers.edit', [
-			'row' => $row
+			'row' => $row,
+			'policies' => $policies,
+			'batchsystems' => $batchsystems,
+			'resources' => $resources,
 		]);
 	}
 
@@ -127,32 +146,54 @@ class SchedulersController extends Controller
 
 	/**
 	 * Update the specified queue in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required|max:20'
+			'fields.hostname' => 'required|string|max:64',
+			'fields.queuesubresourceid' => 'required|integer|min:1',
+			'fields.batchsystem' => 'nullable|integer|min:1',
+			'fields.datetimedraindown' => 'nullable|string',
+			'fields.datetimelastimportstart' => 'nullable|string',
+			'fields.schedulerpolicyid' => 'nullable|integer',
+			//'fields.defaultmaxwalltime' => 'required|integer',
 		]);
 
 		$id = $request->input('id');
 
 		$row = $id ? Scheduler::findOrFail($id) : new Scheduler();
+		$row->fill($request->input('fields'));
 
-		//$row->fill($request->input('fields'));
-		$row->set([
-			'name' => $request->input('name')
-		]);
+		$walltime = $request->input('maxwalltime');
+
+		switch ($request->input('unit'))
+		{
+			case 'days':
+				$row->defaultmaxwalltime = $walltime * 60 * 60 * 60;
+			break;
+			case 'hours':
+				$row->defaultmaxwalltime = $walltime * 60 * 60;
+			break;
+			case 'minutes':
+				$row->defaultmaxwalltime = $walltime * 60;
+			break;
+			default:
+				$row->defaultmaxwalltime = $walltime;
+			break;
+		}
+		
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->withSuccess(trans('messages.update success'));
+		return $this->cancel()->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created'), ['name' => trans('queues::queues.scheduler')]));
 	}
 
 	/**
@@ -181,7 +222,7 @@ class SchedulersController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();

@@ -11,7 +11,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.types',
 			'uses' => 'TypesController@index',
 		]);
-		$router->post('create', [
+		$router->post('/', [
 			'as' => 'api.queues.types.create',
 			'uses' => 'TypesController@create',
 			'middleware' => 'can:create queues.types',
@@ -38,7 +38,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.walltimes',
 			'uses' => 'WalltimesController@index',
 		]);
-		$router->post('create', [
+		$router->post('/', [
 			'as' => 'api.queues.walltimes.create',
 			'uses' => 'WalltimesController@create',
 			'middleware' => 'can:create queues.walltimes',
@@ -65,7 +65,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.schedulers',
 			'uses' => 'SchedulersController@index',
 		]);
-		$router->post('create', [
+		$router->post('/', [
 			'as' => 'api.queues.schedulers.create',
 			'uses' => 'SchedulersController@create',
 			'middleware' => 'can:create queues.schedulers',
@@ -92,7 +92,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.schedulerpolicies',
 			'uses' => 'SchedulerPoliciesController@index',
 		]);
-		$router->post('create', [
+		$router->post('/', [
 			'as' => 'api.queues.schedulerpolicies.create',
 			'uses' => 'SchedulerPoliciesController@create',
 			'middleware' => 'can:create queues.schedulerpolicies',
@@ -113,13 +113,13 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		])->where('id', '[0-9]+');
 	});
 
-	$router->group(['prefix' => 'loans'], function (Router $router)
+	$router->group(['prefix' => 'loans', 'middleware' => 'auth:api'], function (Router $router)
 	{
 		$router->get('/', [
 			'as' => 'api.queues.loans',
 			'uses' => 'LoansController@index',
 		]);
-		$router->post('create', [
+		$router->post('/', [
 			'as' => 'api.queues.loans.create',
 			'uses' => 'LoansController@create',
 			'middleware' => 'can:create queues',
@@ -140,13 +140,13 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		])->where('id', '[0-9]+');
 	});
 
-	$router->group(['prefix' => 'sizes'], function (Router $router)
+	$router->group(['prefix' => 'sizes', 'middleware' => 'auth:api'], function (Router $router)
 	{
 		$router->get('/', [
 			'as' => 'api.queues.sizes',
 			'uses' => 'SizesController@index',
 		]);
-		$router->post('create', [
+		$router->post('/', [
 			'as' => 'api.queues.sizes.create',
 			'uses' => 'SizesController@create',
 			'middleware' => 'can:create queues',
@@ -173,7 +173,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.requests',
 			'uses' => 'UserRequestsController@index',
 		]);
-		$router->post('create', [
+		$router->post('/', [
 			'as' => 'api.queues.requests.create',
 			'uses' => 'UserRequestsController@create',
 			'middleware' => 'can:manage queues',
@@ -200,7 +200,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.users',
 			'uses' => 'UsersController@index',
 		]);
-		$router->post('create', [
+		$router->post('/', [
 			'as' => 'api.queues.users.create',
 			'uses' => 'UsersController@create',
 			'middleware' => 'can:manage queues',
@@ -225,7 +225,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		'as' => 'api.queues.index',
 		'uses' => 'QueuesController@index',
 	]);
-	$router->post('create', [
+	$router->post('/', [
 		'as' => 'api.queues.create',
 		'uses' => 'QueuesController@create',
 		'middleware' => 'can:create queues',
