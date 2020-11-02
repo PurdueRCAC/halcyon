@@ -56,7 +56,6 @@ app('pathway')
 			<div class="col col-md-6 text-right">
 				<label class="sr-only" for="filter_published"></label>
 				<select name="published" id="filter_published" class="form-control filter filter-submit">
-					<option value="">{{ trans('global.option.published') }}</option>
 					<?php echo App\Halcyon\Html\Builder\Select::options(App\Halcyon\Html\Builder\Grid::publishedOptions(), 'value', 'text', $filters['state'], true); ?>
 				</select>
 			</div>

@@ -88,6 +88,7 @@ return [
 	'enabled' => 'Enabled',
 	'unpublished' => 'Unpublished',
 	'disabled' => 'Disabled',
+	'archived' => 'Archived',
 	'publish item' => 'Publish Item',
 	'published expired' => 'Published, but has Expired',
 	'published finished' => 'Finish: :date',
