@@ -1,6 +1,6 @@
 {
 	"name": "halcyon/plg_content_opengraph",
-	"description": "OpenGraph metadata content plugin for the HUBzero CMS",
+	"description": "OpenGraph metadata content plugin for the Halcyon CMS",
 	"type": "halcyon-plugin",
 	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
 	"homepage": "https://www.rcac.purdue.edu",
@@ -12,8 +12,8 @@
 		}
 	],
 	"support": {
-		"email": "support@hubzero.org",
-		"issues": "https://help.hubzero.org"
+		"email": "support@halcyon.org",
+		"issues": "https://help.halcyon.org"
 	},
 	"require": {
 		"php" : "^5.4"

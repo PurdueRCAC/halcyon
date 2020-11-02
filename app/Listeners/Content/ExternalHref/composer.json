@@ -2,18 +2,18 @@
 	"name": "halcyon/lst_content_externalhref",
 	"description": "Apply specific actions or `rel` attributes to external links in content.",
 	"type": "halcyon-listener",
-	"keywords": ["hubzero"],
-	"homepage": "https://hubzero.org",
+	"keywords": ["halcyon"],
+	"homepage": "https://halcyon.org",
 	"license": "MIT",
 	"authors": [
 		{
-			"name": "HUBzero",
-			"email": "support@hubzero.org"
+			"name": "Halcyon",
+			"email": "support@halcyon.org"
 		}
 	],
 	"support": {
-		"email": "support@hubzero.org",
-		"issues": "https://help.hubzero.org"
+		"email": "support@halcyon.org",
+		"issues": "https://help.halcyon.org"
 	},
 	"require": {
 		"php" : "^5.4"

@@ -2,16 +2,16 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="app_id"       type="text" size="20" label="PLG_AUTHENTICATION_CILOGON_PARAM_KEY_LABEL"    description="PLG_AUTHENTICATION_CILOGON_PARAM_KEY_DESC" />
-			<field name="app_secret"   type="text" size="32" label="PLG_AUTHENTICATION_CILOGON_PARAM_SECRET_LABEL" description="PLG_AUTHENTICATION_CILOGON_PARAM_SECRET_DESC" />
-			<field name="display_name" type="text" size="32" label="PLG_AUTHENTICATION_CILOGON_PARAM_NAME_LABEL"   description="PLG_AUTHENTICATION_CILOGON_PARAM_NAME_DESC" default="CILogon" />
-			<field name="site_login"  type="radio" label="PLG_AUTHENTICATION_CILOGON_PARAM_SITELOGIN_LABEL" default="1" description="PLG_AUTHENTICATION_CILOGON_PARAM_SITELOGIN_DESC">
-				<option value="0">JNo</option>
-				<option value="1">JYes</option>
+			<field name="app_id" type="text" size="20" label="listener.auth.cilogin::cilogin.key" description="listener.auth.cilogin::cilogin.key desc" />
+			<field name="app_secret" type="text" size="32" label="listener.auth.cilogin::cilogin.secret" description="listener.auth.cilogin::cilogin.secret desc" />
+			<field name="display_name" type="text" size="32" label="listener.auth.cilogin::cilogin.display name" description="listener.auth.cilogin::cilogin.display name desc" default="" />
+			<field name="site_login" type="radio" label="listener.auth.cilogin::cilogin.site login" default="1" description="listener.auth.cilogin::cilogin.site login desc">
+				<option value="0">global.no</option>
+				<option value="1">global.yes</option>
 			</field>
-			<field name="admin_login"  type="radio" label="PLG_AUTHENTICATION_CILOGON_PARAM_ADMINLOGIN_LABEL" default="0" description="PLG_AUTHENTICATION_CILOGON_PARAM_ADMINLOGIN_DESC">
-				<option value="0">JNo</option>
-				<option value="1">JYes</option>
+			<field name="admin_login" type="radio" label="listener.auth.cilogin::cilogin.admin login" default="1" description="listener.auth.cilogin::cilogin.admin login desc">
+				<option value="0">global.no</option>
+				<option value="1">global.yes</option>
 			</field>
 		</fieldset>
 	</fields>

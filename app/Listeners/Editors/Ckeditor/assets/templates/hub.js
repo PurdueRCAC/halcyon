@@ -2,7 +2,7 @@
 	Copyright Info
 */
 
-CKEDITOR.addTemplates('hubzero',{
+CKEDITOR.addTemplates('halcyon',{
 	imagesPath: '/core/plugins/editors/ckeditor/assets/templates/template-images/',
 	templates: [
 		{

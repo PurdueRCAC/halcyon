@@ -1,6 +1,6 @@
 {
 	"name": "halcyon/lst_authentication_pucas",
-	"description": "Purdue University CAS authentication plugin for the HUBzero CMS",
+	"description": "Purdue University CAS authentication plugin for the Halcyon CMS",
 	"type": "halcyon-plugin",
 	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
 	"homepage": "https://www.rcac.purdue.edu",

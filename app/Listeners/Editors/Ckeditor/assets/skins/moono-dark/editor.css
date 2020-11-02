@@ -39,12 +39,12 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	background-image: linear-gradient(top,#595959,#404040);
 	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0,startColorstr='#595959',endColorstr='#404040');
 }
-.cke_top .cke_button .cke_button__hubzeromacro_icon {
-	background-image: url('images/hubzeromacro.png') !important;
+.cke_top .cke_button .cke_button__halcyonmacro_icon {
+	background-image: url('images/halcyonmacro.png') !important;
 }
-.cke_top .cke_button .cke_button__hubzerogrid_icon {
-	background-image: url('images/hubzerogrid.png') !important;
+.cke_top .cke_button .cke_button__halcyongrid_icon {
+	background-image: url('images/halcyongrid.png') !important;
 }
-.cke_top .cke_button .cke_button__hubzeroequation_icon {
-	background-image: url('images/hubzeroequation.png') !important;
+.cke_top .cke_button .cke_button__halcyonequation_icon {
+	background-image: url('images/halcyonequation.png') !important;
 }

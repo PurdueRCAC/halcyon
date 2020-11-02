@@ -2,10 +2,10 @@
 <extension version="2.5" type="plugin" group="editors">
 	<name>plg_editors_ckeditor</name>
 	<version>1.0</version>
-	<author>HUBzero</author>
-	<authorUrl>hubzero.org</authorUrl>
-	<authorEmail>support@hubzero.org</authorEmail>
-	<copyright>Copyright 2005-2019 HUBzero Foundation, LLC.</copyright>
+	<author>Halcyon</author>
+	<authorUrl>halcyon.org</authorUrl>
+	<authorEmail>support@halcyon.org</authorEmail>
+	<copyright>Copyright 2005-2019 Halcyon Foundation, LLC.</copyright>
 	<license>http://opensource.org/licenses/MIT MIT</license>
 	<description>WYSIWYG Editor built on CKEditor</description>
 	<files>

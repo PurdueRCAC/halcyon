@@ -132,7 +132,7 @@ class Ckeditor
 			asset('modules/core/vendor/bootstrap/bootstrap.min.css') . '?v=' . filemtime(public_path() . '/modules/core/vendor/bootstrap/bootstrap.min.css'),
 			asset('listeners/editors/ckeditor/css/contents.css') . '?v=' . filemtime(public_path() . '/listeners/editors/ckeditor/css/contents.css')
 		];
-		//$config->templates                     = array('hubzero');
+		//$config->templates                     = array('halcyon');
 		//$config->templates_files               = array(app_path() . '/core/plugins/editors/ckeditor/assets/templates/hub.js');
 		$config->templates_replaceContent      = false;
 		$config->filebrowserBrowseUrl          = '';
@@ -181,7 +181,7 @@ class Ckeditor
 
 			// [QUBES][#561] SPW: always show resize, even in minimal mode
 			//$config->resize_enabled = false;
-			//$config->hubzeroAutogrow_autoStart = false;
+			//$config->halcyonAutogrow_autoStart = false;
 		}
 
 		// Image plugin if in minimal mode
@@ -226,19 +226,19 @@ class Ckeditor
 		// // Autogrow auto-start
 		// if (is_bool($params->get('autoGrowAutoStart')))
 		// {
-		// 	$config->hubzeroAutogrow_autoStart = $params->get('autoGrowAutoStart');
+		// 	$config->halcyonAutogrow_autoStart = $params->get('autoGrowAutoStart');
 		// }
 
 		// // Auto grow min height
 		// if (is_numeric($params->get('autoGrowMinHeight')))
 		// {
-		// 	$config->hubzeroAutogrow_minHeight = $params->get('autoGrowMinHeight');
+		// 	$config->halcyonAutogrow_minHeight = $params->get('autoGrowMinHeight');
 		// }
 
 		// // Autogrow max height
 		// if (is_numeric($params->get('autoGrowMaxHeight')))
 		// {
-		// 	$config->hubzeroAutogrow_maxHeight = $params->get('autoGrowMaxHeight');
+		// 	$config->halcyonAutogrow_maxHeight = $params->get('autoGrowMaxHeight');
 		// }
 
 		// Auto start spell check

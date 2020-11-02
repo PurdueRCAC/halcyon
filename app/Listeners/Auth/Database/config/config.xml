@@ -2,18 +2,18 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="remember_me_default" type="list" default="0" label="PLG_AUTHENTICATION_HUBZERO_PARAM_REMEMBER_LABEL" description="PLG_AUTHENTICATION_HUBZERO_PARAM_REMEMBER_DESC">
-				<option value="0">PLG_AUTHENTICATION_HUBZERO_PARAM_REMEMBER_UNCHECKED</option>
-				<option value="1">PLG_AUTHENTICATION_HUBZERO_PARAM_REMEMBER_CHECKED</option>
+			<field name="remember_me_default" type="list" default="0" label="listener.auth.database::database.remember me" description="listener.auth.database::database.remember me desc">
+				<option value="0">listener.auth.database::database.remember me unchecked</option>
+				<option value="1">listener.auth.database::database.remember me checked</option>
 			</field>
-			<field name="display_name" type="text" size="32" label="PLG_AUTHENTICATION_HUBZERO_PARAM_NAME_LABEL" description="PLG_AUTHENTICATION_HUBZERO_PARAM_NAME_DESC" default="" />
-			<field name="site_login"  type="radio" label="PLG_AUTHENTICATION_HUBZERO_PARAM_SITELOGIN_LABEL" default="1" description="PLG_AUTHENTICATION_HUBZERO_PARAM_SITELOGIN_DESC">
-				<option value="0">JNo</option>
-				<option value="1">JYes</option>
+			<field name="display_name" type="text" size="32" label="listener.auth.database::database.display name" description="listener.auth.database::database.display name desc" default="" />
+			<field name="site_login"  type="radio" label="listener.auth.database::database.site login" default="1" description="listener.auth.database::database.site login desc">
+				<option value="0">global.no</option>
+				<option value="1">global.yes</option>
 			</field>
-			<field name="admin_login"  type="radio" label="PLG_AUTHENTICATION_HUBZERO_PARAM_ADMINLOGIN_LABEL" default="1" description="PLG_AUTHENTICATION_HUBZERO_PARAM_ADMINLOGIN_DESC">
-				<option value="0">JNo</option>
-				<option value="1">JYes</option>
+			<field name="admin_login"  type="radio" label="listener.auth.database::database.admin login" default="1" description="listener.auth.database::database.admin login desc">
+				<option value="0">global.no</option>
+				<option value="1">global.yes</option>
 			</field>
 		</fieldset>
 	</fields>

@@ -16,14 +16,6 @@ use Illumnitae\Support\Config;*/
 class CILogon //extends OauthClient
 {
 	/**
-	 * Affects constructor behavior.
-	 * If true, language files will be loaded automatically.
-	 *
-	 * @var  boolean
-	 */
-	protected $_autoloadLanguage = true;
-
-	/**
 	 * Stores the initialized CILogon object.
 	 *
 	 * @var  object  CILogon
@@ -175,7 +167,7 @@ class CILogon //extends OauthClient
 				$response->error_message = Lang::txt('PLG_AUTHENTICATION_CILOGON_ERROR_RETRIEVING_PROFILE', $e->getMessage());
 				return;
 			}
-			// Create the hubzero auth link
+			// Create the halcyon auth link
 			$method = (Component::params('com_members')->get('allowUserRegistration', false)) ? 'find_or_create' : 'find';
 			$hzal = Link::$method('authentication', 'cilogon', null, $id);
 			if ($hzal === false)

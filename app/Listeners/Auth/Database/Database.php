@@ -19,7 +19,7 @@ class Database
 		// For Log
 		$response->type = 'database';
 
-		// HUBzero does not like blank passwords
+		// Halcyon does not like blank passwords
 		if (empty($credentials['password']))
 		{
 			$response->status = \Halcyon\Auth\Status::FAILURE;
@@ -41,7 +41,7 @@ class Database
 		}
 
 		$query = 'SELECT `id`, `username`, `password`'
-				. ' FROM `#__users`'
+				. ' FROM `users`'
 				. $conditions
 				. ' AND `block` != 1';
 
@@ -52,7 +52,7 @@ class Database
 		if (is_array($result) && count($result) > 1)
 		{
 			$response->status = \Halcyon\Auth\Status::FAILURE;
-			$response->error_message = trans('PLG_AUTHENTICATION_HUBZERO_UNKNOWN_USER');
+			$response->error_message = trans('listener.auth.database::database.authentication failed');
 			return false;
 		}
 		elseif (is_array($result) && isset($result[0]))
@@ -62,12 +62,12 @@ class Database
 		else
 		{
 			$response->status = \Halcyon\Auth\Status::FAILURE;
-			$response->error_message = trans('PLG_AUTHENTICATION_HUBZERO_AUTHENTICATION_FAILED');
+			$response->error_message = trans('listener.auth.database::database.authentication failed');
 			return false;
 		}
 
 		// Remove old records
-		if ($duration = \Component::params('com_members')->get('login_log_timeframe'))
+		/*if ($duration = config('login_log_timeframe'))
 		{
 			$authlog = \Halcyon\User\Log\Auth::blank();
 			$authlog->delete($authlog->getTableName())
@@ -90,7 +90,7 @@ class Database
 			$response->status = \Halcyon\Auth\Status::FAILURE;
 			$response->error_message = trans('PLG_AUTHENTICATION_HUBZERO_TOO_MANY_ATTEMPTS');
 			return false;
-		}
+		}*/
 
 		if ($result)
 		{
@@ -122,7 +122,7 @@ class Database
 				$prefs = array(
 					'user_id'       => $user->get('id'),
 					'user_img'      => $user->picture(0, false),
-					'authenticator' => 'hubzero'
+					'authenticator' => 'halcyon'
 				);
 
 				$namespace = 'authenticator';
@@ -133,13 +133,13 @@ class Database
 			else
 			{
 				$response->status = \Halcyon\Auth\Status::FAILURE;
-				$response->error_message = trans('PLG_AUTHENTICATION_HUBZERO_AUTHENTICATION_FAILED');
+				$response->error_message = trans('listener.auth.database::database.authentication failed');
 			}
 		}
 		else
 		{
 			$response->status = \Halcyon\Auth\Status::FAILURE;
-			$response->error_message = trans('PLG_AUTHENTICATION_HUBZERO_AUTHENTICATION_FAILED');
+			$response->error_message = trans('listener.auth.database::database.authentication failed');
 		}
 	}
 }

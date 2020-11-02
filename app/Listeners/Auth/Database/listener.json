@@ -1,7 +1,7 @@
 {
-    "name": "Authentication - Pucas",
-    "alias": "pucas",
-    "description": "Handles user authentication against Purdue's CAS",
+    "name": "Authentication - Database",
+    "alias": "lst_auth_database",
+    "description": "Handles user authentication against the database",
     "keywords": [],
     "active": 1,
     "order": 0,
