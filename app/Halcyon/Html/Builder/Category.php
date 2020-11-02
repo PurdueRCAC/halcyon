@@ -128,7 +128,7 @@ class Category
 				self::$items[$hash][] = Select::option($item->id, $item->title);
 			}
 			// Special "Add to root" option:
-			self::$items[$hash][] = Select::option('1', trans('JLIB_HTML_ADD_TO_ROOT'));
+			self::$items[$hash][] = Select::option('1', trans('global.add to root'));
 		}
 
 		return self::$items[$hash];

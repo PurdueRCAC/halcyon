@@ -136,22 +136,6 @@ class Role extends Model
 	}
 
 	/**
-	 * Saves the current model to the database
-	 *
-	 * @return  bool
-	 */
-	/*public function save()
-	{
-		if ($result = parent::save())
-		{
-			// Rebuild the nested set tree.
-			$this->rebuild();
-		}
-
-		return $result;
-	}*/
-
-	 /**
 	 * Perform any actions that are necessary after the model is saved.
 	 *
 	 * @param  array  $options

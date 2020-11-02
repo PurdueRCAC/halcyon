@@ -8,7 +8,7 @@
 namespace App\Halcyon\Auth\Link;
 
 use App\Halcyon\Database\Relational;
-use App\Halcyon\Utility\Date;
+use Carbon\Carbon;
 
 /**
  * Authentication Link data
@@ -25,13 +25,9 @@ class Data extends Relational
 	/**
 	 * The table to which the class pertains
 	 *
-	 * This will default to #__{namespace}_{modelName} unless otherwise
-	 * overwritten by a given subclass. Definition of this property likely
-	 * indicates some derivation from standard naming conventions.
-	 *
 	 * @var  string
 	 */
-	protected $table = '#__auth_link_data';
+	protected $table = 'auth_link_data';
 
 	/**
 	 * Default order by for model
@@ -76,7 +72,7 @@ class Data extends Relational
 	{
 		if (!isset($data['modified']) || !$data['modified'])
 		{
-			$data['modified'] = with(new Date('now'))->toSql();
+			$data['modified'] = Carbon::now()->toDateTimeString();
 		}
 		return $data['modified'];
 	}

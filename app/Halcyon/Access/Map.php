@@ -17,10 +17,6 @@ class Map extends Model
 	/**
 	 * The table to which the class pertains
 	 *
-	 * This will default to #__{namespace}_{modelName} unless otherwise
-	 * overwritten by a given subclass. Definition of this property likely
-	 * indicates some derivation from standard naming conventions.
-	 *
 	 * @var  string
 	 */
 	protected $table = 'user_role_map';
@@ -180,7 +176,6 @@ class Map extends Model
 			}
 
 			$result = $blank->newQuery()
-				//->table($blank->getTable())
 				->insert(array(
 					'user_id'  => $user_id,
 					'role_id' => $role
@@ -209,7 +204,6 @@ class Map extends Model
 		$blank = new self();
 
 		$result = $blank->newQuery()
-			//->table($blank->getTable())
 			->where('user_id', '=', $user_id)
 			->whereIn('role_id', $role_id)
 			->delete();

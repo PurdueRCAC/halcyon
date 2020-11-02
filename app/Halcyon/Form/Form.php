@@ -13,7 +13,7 @@ use App\Halcyon\Config\Registry;
 use App\Halcyon\Utility\Date;
 use App\Halcyon\Utility\Arr;
 use App\Halcyon\Utility\Sanitize;
-use App\Halcyon\Base\Obj;
+use Illuminate\Support\Fluent;
 use SimpleXMLElement;
 use Exception;
 
@@ -23,8 +23,6 @@ use Exception;
  * This class implements a robust API for constructing, populating, filtering, and validating forms.
  * It uses XML definitions to construct form fields and a variety of field and rule classes to
  * render and validate the form.
- *
- * Inspired by Joomla's JForm class
  *
  * @todo  Rewrite all of this.
  */
@@ -119,9 +117,9 @@ class Form
 				// Handle a Registry.
 				$data = $data->toArray();
 			}
-			elseif ($data instanceof Obj)
+			elseif ($data instanceof Fluent)
 			{
-				// Handle a Object.
+				// Handle an object.
 				$data = $data->getProperties();
 			}
 			else

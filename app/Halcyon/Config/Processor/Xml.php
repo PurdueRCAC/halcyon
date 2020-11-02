@@ -12,7 +12,7 @@ use App\Halcyon\Config\Processor as Base;
 use stdClass;
 
 /**
- * XML Processor for Registry.
+ * XML Processor
  */
 class Xml extends Base
 {

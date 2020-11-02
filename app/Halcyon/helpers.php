@@ -100,7 +100,9 @@ if (! function_exists('conf'))
 	/**
 	 * Get the path to the public folder.
 	 *
-	 * @param  string  $path
+	 * @param  string  $service
+	 * @param  string  $key
+	 * @param  mixed   $default
 	 * @return string
 	 */
 	function conf($service, $key, $default = null)
@@ -112,11 +114,9 @@ if (! function_exists('conf'))
 			$params[$service] = array();
 
 			$path = '/usr/site/rcac/secure/' . $service . '.conf';
-			//$path = '/Users/shawnrice/Sites/rcac/conf/' . $service . '.conf';
 
 			if (is_file($path))
 			{
-				//$params[$service] = parse_ini_file($path);
 				$params[$service] = parse_ini_string_m(file_get_contents($path));
 			}
 		}
@@ -127,6 +127,5 @@ if (! function_exists('conf'))
 		}
 
 		return $default;
-		//return ConfigFile::value($service, $key, $default);
 	}
 }

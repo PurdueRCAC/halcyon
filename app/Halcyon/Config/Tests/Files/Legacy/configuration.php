@@ -14,7 +14,7 @@ class JConfig
 	var $feed_limit = '10';
 	var $force_ssl = '1';
 	var $gzip = '0';
-	var $helpurl = 'English (GB) - HUBzero help';
+	var $helpurl = 'English (GB) - Halcyon help';
 	var $list_limit = '20';
 	var $live_site = '';
 	var $log_path = '/var/www/hub/logs';
@@ -24,7 +24,7 @@ class JConfig
 	var $robots = '';
 	var $secret = '';
 	var $sitecode = 'hz';
-	var $sitename = 'hubzero.org';
+	var $sitename = 'halcyon.org';
 	var $tmp_path = '/var/www/hub/tmp';
 	var $xmlrpc_server = '0';
 	var $cache_handler = 'file';
@@ -45,9 +45,9 @@ class JConfig
 	var $ftp_port = '0';
 	var $ftp_root = '';
 	var $ftp_user = '';
-	var $fromname = 'HUBzero';
+	var $fromname = 'Halcyon';
 	var $mailer = 'mail';
-	var $mailfrom = 'support@hubzero.org';
+	var $mailfrom = 'support@halcyon.org';
 	var $sendmail = '/usr/sbin/sendmail';
 	var $smtpauth = '0';
 	var $smtphost = 'localhost';
@@ -57,7 +57,7 @@ class JConfig
 	var $smtpuser = '';
 	var $MetaAuthor = '0';
 	var $MetaDesc = 'a hub for doing things';
-	var $MetaKeys = 'hub, hubzero';
+	var $MetaKeys = 'hub, halcyon';
 	var $MetaRights = '';
 	var $MetaTitle = '0';
 	var $MetaVersion = '0';
@@ -84,6 +84,6 @@ class JConfig
 	var $solr_host = 'localhost';
 	var $solr_password = 'drowssaprlos';
 	var $solr_port = '2093';
-	var $solr_username = 'hubzerosolrworker';
+	var $solr_username = 'halcyonsolrworker';
 }
 // @codeCoverageIgnoreEnd

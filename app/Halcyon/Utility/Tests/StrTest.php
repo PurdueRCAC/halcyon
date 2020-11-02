@@ -24,9 +24,9 @@ class StrTest extends Basic
 	public function testParseAttributes()
 	{
 		$strings = array(
-			'a href="http://hubzero.org" title="HUBzero"' => array(
-				'href'  => 'http://hubzero.org',
-				'title' => 'HUBzero'
+			'a href="http://halcyon.org" title="Halcyon"' => array(
+				'href'  => 'http://halcyon.org',
+				'title' => 'Halcyon'
 			),
 			'<field description="Duis mollis, est non commodo luctus." default=0 height=55 width="35" type = "list">' => array(
 				'description' => 'Duis mollis, est non commodo luctus.',

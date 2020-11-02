@@ -42,7 +42,7 @@ class JsonTest extends Basic
 	 *
 	 * @var  string
 	 */
-	private $str = '{"app":{"application_env":"development","editor":"ckeditor","list_limit":25,"helpurl":"English (GB) - HUBzero help","debug":1,"debug_lang":0,"sef":1,"sef_rewrite":1,"sef_suffix":0,"sef_groups":0,"feed_limit":10,"feed_email":"author"},"seo":{"sef":1,"sef_groups":0,"sef_rewrite":1,"sef_suffix":0,"unicodeslugs":0,"sitename_pagetitles":0}}';
+	private $str = '{"app":{"application_env":"development","editor":"ckeditor","list_limit":25,"helpurl":"English (GB) - Halcyon help","debug":1,"debug_lang":0,"sef":1,"sef_rewrite":1,"sef_suffix":0,"sef_groups":0,"feed_limit":10,"feed_email":"author"},"seo":{"sef":1,"sef_groups":0,"sef_rewrite":1,"sef_suffix":0,"unicodeslugs":0,"sitename_pagetitles":0}}';
 
 	/**
 	 * Test setup
@@ -57,7 +57,7 @@ class JsonTest extends Basic
 		$data->app->application_env = "development";
 		$data->app->editor = "ckeditor";
 		$data->app->list_limit = 25;
-		$data->app->helpurl = "English (GB) - HUBzero help";
+		$data->app->helpurl = "English (GB) - Halcyon help";
 		$data->app->debug = 1;
 		$data->app->debug_lang = 0;
 		$data->app->sef = 1;
@@ -172,7 +172,7 @@ class JsonTest extends Basic
 application_env="development"
 editor="ckeditor"
 list_limit=25
-helpurl="English (GB) - HUBzero help"
+helpurl="English (GB) - Halcyon help"
 debug=1
 debug_lang=0
 sef=1

@@ -11,9 +11,6 @@ use App\Halcyon\Container\Container;
 
 /**
  * Authentication manager
- *
- * Login/logout initially based on Joomla
- * JApplication::login/logout methods.
  */
 class Manager
 {
@@ -73,7 +70,7 @@ class Manager
 				if (in_array($authorisation->status, $denied_states))
 				{
 					// Trigger onUserAuthorisationFailure Event.
-					$this->app['dispatcher']->trigger('user.onUserAuthorisationFailure', array((array) $authorisation));
+					event('onUserAuthorisationFailure', array((array) $authorisation));
 
 					// If silent is set, just return false.
 					if (isset($options['silent']) && $options['silent'])
@@ -85,20 +82,20 @@ class Manager
 					switch ($authorisation->status)
 					{
 						case Status::EXPIRED:
-							return new Exception($this->app['language']->txt('JLIB_LOGIN_EXPIRED'), 102002, E_WARNING);
+							return new Exception(trans('global.login expired'), 102002, E_WARNING);
 							break;
 						case Status::DENIED:
-							return new Exception($this->app['language']->txt('JLIB_LOGIN_DENIED'), 102003, E_WARNING);
+							return new Exception(trans('global.login denied'), 102003, E_WARNING);
 							break;
 						default:
-							return new Exception($this->app['language']->txt('JLIB_LOGIN_AUTHORISATION'), 102004, E_WARNING);
+							return new Exception(trans('global.login authorization'), 102004, E_WARNING);
 							break;
 					}
 				}
 			}
 
 			// OK, the credentials are authenticated and user is authorised.  Lets fire the onLogin event.
-			$results = $this->app['dispatcher']->trigger('user.onUserLogin', array((array) $response, $options));
+			$results = event('onUserLogin', array((array) $response, $options));
 
 			// If any of the user plugins did not successfully complete the login routine
 			// then the whole method fails.
@@ -126,7 +123,7 @@ class Manager
 					// Check for SSL connection
 					$secure = ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) || getenv('SSL_PROTOCOL_VERSION'));
 
-					setcookie($this->app->hash('JLOGIN_REMEMBER'), $rcookie, $lifetime, $cookie_path, $cookie_domain, $secure, true);
+					setcookie($this->app->hash('global.login remember'), $rcookie, $lifetime, $cookie_path, $cookie_domain, $secure, true);
 				}
 
 				return true;
@@ -134,7 +131,7 @@ class Manager
 		}
 
 		// Trigger onUserLoginFailure Event.
-		$this->app['dispatcher']->trigger('user.onUserLoginFailure', array((array) $response));
+		event('onUserLoginFailure', array((array) $response));
 
 		// If silent is set, just return false.
 		if (isset($options['silent']) && $options['silent'])
@@ -174,7 +171,7 @@ class Manager
 		}
 
 		// OK, the credentials are built. Lets fire the onLogout event.
-		$results = $this->app['dispatcher']->trigger('user.onUserLogout', array($parameters, $options));
+		$results = event('onUserLogout', array($parameters, $options));
 
 		// Check if any of the plugins failed. If none did, success.
 		if (!in_array(false, $results, true))
@@ -183,13 +180,13 @@ class Manager
 			$cookie_domain = $this->app['config']->get('cookie_domain', '');
 			$cookie_path   = $this->app['config']->get('cookie_path', '/');
 
-			setcookie($this->app->hash('JLOGIN_REMEMBER'), false, time() - 86400, $cookie_path, $cookie_domain);
+			setcookie($this->app->hash('global.login remember'), false, time() - 86400, $cookie_path, $cookie_domain);
 
 			return true;
 		}
 
 		// Trigger onUserLoginFailure Event.
-		$this->app['dispatcher']->trigger('user.onUserLogoutFailure', array($parameters));
+		event('onUserLogoutFailure', array($parameters));
 
 		return false;
 	}

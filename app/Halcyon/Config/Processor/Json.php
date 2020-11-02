@@ -11,7 +11,7 @@ use App\Halcyon\Config\Exception\ParseException;
 use App\Halcyon\Config\Processor as Base;
 
 /**
- * JSON processor for Registry.
+ * JSON processor
  */
 class Json extends Base
 {

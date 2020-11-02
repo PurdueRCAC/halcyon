@@ -7,6 +7,8 @@
 
 namespace App\Halcyon\Database\Traits;
 
+use Illuminate\Support\MessageBag;
+
 /**
  * Error message bag for shared error handling logic
  */
@@ -56,7 +58,7 @@ trait ErrorBag
 	/**
 	 * Determine if the default message bag has any messages.
 	 *
-	 * @return bool
+	 * @return  bool
 	 */
 	public function hasErrors()
 	{
@@ -66,7 +68,7 @@ trait ErrorBag
 	/**
 	 * Returns the first error
 	 *
-	 * @return  string
+	 * @return  array
 	 **/
 	public function errors()
 	{

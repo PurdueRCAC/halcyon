@@ -92,11 +92,6 @@ class Viewlevel extends Model
 	 */
 	public function save(array $options = [])
 	{
-		// Bind the rules as appropriate.
-		/*if (is_array($this->rules))
-		{
-			$this->rules = json_encode($this->rules);
-		}*/
 		if (!$this->id && !$this->ordering)
 		{
 			$this->ordering = $this->incrementOrdering();

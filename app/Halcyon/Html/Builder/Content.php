@@ -7,7 +7,7 @@
 
 namespace App\Halcyon\Html\Builder;
 
-use App\Halcyon\Base\Obj;
+use Illuminate\Support\Fluent;
 
 /**
  * Utility class to fire onContentPrepare for non-article based content.
@@ -26,13 +26,13 @@ class Content
 	{
 		if ($params === null)
 		{
-			$params = new Obj;
+			$params = new Fluent;
 		}
 
 		$article = new \stdClass;
 		$article->text = $text;
 
-		\App::get('dispatcher')->trigger('content.onContentPrepare', array($context, &$article, &$params, 0));
+		event('onContentPrepare', array($context, &$article, &$params, 0));
 
 		return $article->text;
 	}

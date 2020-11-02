@@ -13,9 +13,7 @@ use Exception;
 use stdClass;
 
 /**
- * INI format handler for Registry.
- *
- * Based, in part, on Joomla's JRegistry format classes
+ * INI format handler
  */
 class Ini extends Base
 {
@@ -206,7 +204,7 @@ class Ini extends Base
 			}
 
 			// Get the key and value for the line.
-			list ($key, $value) = explode('=', $line, 2);
+			list($key, $value) = explode('=', $line, 2);
 
 			// Validate the key.
 			if (preg_match('/[^A-Z0-9_]/i', $key))

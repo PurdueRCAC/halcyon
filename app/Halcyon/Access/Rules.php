@@ -205,16 +205,6 @@ class Rules implements Arrayable, Jsonable
 		}
 
 		return json_encode($temp, $options);
-
-		/*foreach ($this->data as $name => $rule)
-		{
-			if ($data = $rule->getData())
-			{
-				$temp[$name] = $data;
-			}
-		}
-
-		return json_encode($temp, JSON_FORCE_OBJECT);*/
 	}
 
 	/**

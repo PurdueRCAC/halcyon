@@ -28,7 +28,6 @@ class Nested extends Model
 	 * @param   int     $base  The base level after which values should be changed
 	 * @param   bool    $add   Whether or not we're adding or subtracted from existing
 	 * @return  $this
-	 * @since   2.1.0
 	 **/
 	private function updateTrailing($pos = 'lft', $base = 0, $add = true)
 	{
@@ -49,7 +48,6 @@ class Nested extends Model
 	 *
 	 * @param   int    $base  The base level after which values should be changed
 	 * @return  $this
-	 * @since   2.1.0
 	 **/
 	private function resolveTrailing($base, $add = true)
 	{
@@ -62,7 +60,6 @@ class Nested extends Model
 	 *
 	 * @param   object|int  $model  The model to resolve
 	 * @return  $this
-	 * @since   2.1.0
 	 **/
 	private function establishIsModel(&$model)
 	{
@@ -80,7 +77,6 @@ class Nested extends Model
 	 *
 	 * @param   object|int  $parent  The parent of the child being created
 	 * @return  $this
-	 * @since   2.1.0
 	 **/
 	private function establishBaseParametersFromParent($parent)
 	{
@@ -101,7 +97,6 @@ class Nested extends Model
 	 * @param   object|int  $parent  The parent from which to inherit
 	 * @param   string      $method  The way in which scopes are applied
 	 * @return  $this
-	 * @since   2.1.0
 	 **/
 	private function applyScopes($parent, $method = 'set')
 	{
@@ -119,7 +114,6 @@ class Nested extends Model
 	 *
 	 * @param   object|int  $parent  The parent from which to inherit
 	 * @return  $this
-	 * @since   2.1.0
 	 **/
 	private function applyScopesWhere($parent)
 	{
@@ -136,7 +130,6 @@ class Nested extends Model
 	 *
 	 * @param   object|int  $parent  The parent of the child being created
 	 * @return  bool
-	 * @since   2.1.0
 	 **/
 	public function saveAsChildOf($parent)
 	{
@@ -164,7 +157,6 @@ class Nested extends Model
 	 *
 	 * @param   object|int  $parent  The parent of the child being created
 	 * @return  bool
-	 * @since   2.1.0
 	 **/
 	public function saveAsFirstChildOf($parent)
 	{
@@ -192,7 +184,6 @@ class Nested extends Model
 	 *
 	 * @param   object|int  $parent  The parent of the child being created
 	 * @return  bool
-	 * @since   2.1.0
 	 **/
 	public function saveAsLastChildOf($parent)
 	{
@@ -203,7 +194,6 @@ class Nested extends Model
 	 * Saves a new root node element
 	 *
 	 * @return  bool
-	 * @since   2.1.0
 	 **/
 	public function saveAsRoot()
 	{
@@ -221,7 +211,6 @@ class Nested extends Model
 	 * Deletes a model, rearranging subordinate nodes as appropriate
 	 *
 	 * @return  bool
-	 * @since   2.1.0
 	 **/
 	public function delete()
 	{
@@ -251,7 +240,6 @@ class Nested extends Model
 	 * Establishes the query for the immediate children of the current model
 	 *
 	 * @return  array
-	 * @since   2.1.0
 	 **/
 	public function children()
 	{
@@ -262,7 +250,6 @@ class Nested extends Model
 	 * Grabs the immediate children of the current model
 	 *
 	 * @return  array
-	 * @since   2.1.0
 	 **/
 	public function getChildren()
 	{
@@ -274,7 +261,6 @@ class Nested extends Model
 	 *
 	 * @param   int  $level  The level to limit to
 	 * @return  array
-	 * @since   2.1.0
 	 **/
 	public function descendants($level = null)
 	{
@@ -297,7 +283,6 @@ class Nested extends Model
 	 *
 	 * @param   int  $level  The level to limit to
 	 * @return  array
-	 * @since   2.1.0
 	 **/
 	public function getDescendants($level = null)
 	{

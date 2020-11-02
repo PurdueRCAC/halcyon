@@ -7,7 +7,7 @@
 
 namespace App\Halcyon\Auth;
 
-use App\Halcyon\Container\Container;
+use Illuminate\Container\Container;
 
 /**
  * Authentication class, provides an interface for the authentication system
@@ -51,13 +51,6 @@ class Guard
 	public function __construct(Container $app)
 	{
 		$this->app = $app;
-
-		$isLoaded = $this->app['plugin']->import('authentication');
-
-		if (!$isLoaded)
-		{
-			$this->app['log']->logger('debug')->error($this->app['language']->txt('JLIB_USER_ERROR_AUTHENTICATION_LIBRARIES'));
-		}
 	}
 
 	/**
@@ -118,7 +111,7 @@ class Guard
 			}
 
 			$this->_observers[] = $observer;
-			$methods = array_diff(get_class_methods($observer), get_class_methods('App\Halcyon\\Plugin\\Plugin'));
+			$methods = array_diff(get_class_methods($observer), get_class_methods('App\\Halcyon\\Plugin\\Plugin'));
 		}
 
 		$key = key($this->_observers);
@@ -180,7 +173,7 @@ class Guard
 	public function authenticate($credentials, $options = array())
 	{
 		// Get plugins
-		$plugins = $this->app['plugin']->byType('authentication');
+		$plugins = $this->app['listeners']->byType('authentication');
 
 		// Create authentication response
 		$response = new Response;
@@ -208,7 +201,7 @@ class Guard
 			else
 			{
 				// Bail here if the plugin can't be created
-				$this->app['log']->logger('debug')->error($this->app['language']->txts('JLIB_USER_ERROR_AUTHENTICATION_FAILED_LOAD_PLUGIN', $className));
+				$this->app['log']->logger('debug')->error($this->app['language']->txts('global.error.authentication failed', $className));
 				continue;
 			}
 
@@ -270,10 +263,6 @@ class Guard
 	 */
 	public function authorise($response, $options = array())
 	{
-		// Get plugins in case they haven't been loaded already
-		$this->app['plugin']->byType('user');
-		$this->app['plugin']->byType('authentication');
-
-		return $this->app['dispatcher']->trigger('onUserAuthorisation', array($response, $options));
+		return event('onUserAuthorisation', array($response, $options));
 	}
 }

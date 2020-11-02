@@ -17,13 +17,9 @@ class Domain extends Model
 	/**
 	 * The table to which the class pertains
 	 *
-	 * This will default to #__{namespace}_{modelName} unless otherwise
-	 * overwritten by a given subclass. Definition of this property likely
-	 * indicates some derivation from standard naming conventions.
-	 *
 	 * @var  string
 	 */
-	protected $table = 'hal_auth_domain';
+	protected $table = 'auth_domain';
 
 	/**
 	 * Default order by for model
@@ -132,37 +128,6 @@ class Domain extends Model
 	}
 
 	/**
-	 * Create a record
-	 *
-	 * @return  boolean  True on success, False on failure
-	 */
-	/*public function create()
-	{
-		return $this->save();
-	}*/
-
-	/**
-	 * Update a record
-	 *
-	 * @param   boolean  $all  Update all properties?
-	 * @return  boolean
-	 */
-	/*public function update($all = false)
-	{
-		return $this->save();
-	}8/
-
-	/**
-	 * Delete a record
-	 *
-	 * @return  boolean
-	 */
-	/*public function delete()
-	{
-		return $this->destroy();
-	}*/
-
-	/**
 	 * Get a Domain instance
 	 *
 	 * @param   string  $type
@@ -261,7 +226,7 @@ class Domain extends Model
 
 		if (!$row || !$row->id)
 		{
-			$row = self::blank();
+			$row = new self();
 			$row->type = $type;
 			$row->authenticator = $authenticator;
 			if ($domain)

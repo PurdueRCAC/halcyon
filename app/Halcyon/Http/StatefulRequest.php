@@ -46,6 +46,11 @@ class StatefulRequest extends Request
 		return $val;
 	}
 
+	/**
+	 * Merge in incoming request
+	 *
+	 * @return  void
+	 */
 	protected function mergeWithBase()
 	{
 		static $merged = false;

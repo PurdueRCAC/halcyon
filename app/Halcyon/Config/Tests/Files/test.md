@@ -2,7 +2,7 @@
 `application_env` is "development"
 `editor` is "ckeditor"
 `list_limit` is 25
-`helpurl` is "English (GB) - HUBzero help"
+`helpurl` is "English (GB) - Halcyon help"
 `debug` is 1
 `debug_lang` is 0
 `sef` is 1

@@ -39,7 +39,7 @@ class YamlTest extends Basic
     application_env: development
     editor: ckeditor
     list_limit: 25
-    helpurl: 'English (GB) - HUBzero help'
+    helpurl: 'English (GB) - Halcyon help'
     debug: 1
     debug_lang: 0
     sef: 1
@@ -70,7 +70,7 @@ seo:
 		$data->app->application_env = "development";
 		$data->app->editor = "ckeditor";
 		$data->app->list_limit = 25;
-		$data->app->helpurl = "English (GB) - HUBzero help";
+		$data->app->helpurl = "English (GB) - Halcyon help";
 		$data->app->debug = 1;
 		$data->app->debug_lang = 0;
 		$data->app->sef = 1;

@@ -9,6 +9,7 @@ namespace App\Halcyon\Html\Builder;
 
 use Carbon\Carbon;
 use App\Halcyon\Utility\Arr;
+use App\Halcyon\Traits\Checkable;
 
 /**
  * Utility class for creating HTML Grids
@@ -42,7 +43,7 @@ class Grid
 
 		if ($toggle)
 		{
-			$title .= ' :: ' . trans('JGLOBAL_CLICK_TO_TOGGLE_STATE');
+			$title .= ' :: ' . trans('global.click to toggle state');
 
 			$html = '<a class="grid-action grid-boolean ' . $bool . ' hasTip" title="' . $title . '" data-id="cb' . $i . '" data-task="' . $task . '" href="#toggle" title="' . $title . '"><span>' . $txt . '</span></a>';
 		}
@@ -123,13 +124,9 @@ class Grid
 		$userid = auth()->user()->id;
 
 		$result = false;
-		if ($row instanceof \Base)
+		if ($row instanceof Checkable)
 		{
 			$result = $row->isCheckedOut($userid);
-		}
-		else
-		{
-			$result = \JTable::isCheckedOut($userid, $row->checked_out);
 		}
 
 		$checked = '';
@@ -184,8 +181,8 @@ class Grid
 		}
 
 		$task   = $value ? 'unpublish' : 'publish';
-		$alt    = $value ? trans('JPUBLISHED') : trans('JUNPUBLISHED');
-		$action = $value ? trans('JLIB_HTML_UNPUBLISH_ITEM') : trans('JLIB_HTML_PUBLISH_ITEM');
+		$alt    = $value ? trans('global.published') : trans('global.unpublished');
+		$action = $value ? trans('global.unpublish item') : trans('global.publish item');
 
 		$href = '<a href="#toggle" class="grid-action grid-state state ' . ($value ? 'publish' : 'unpublish') . '" data-id="' . $checkbox . $i . '" data-task="' . $prefix . $task . '" title="' . $action . '"><span>' . $alt . '</span></a>';
 
@@ -242,7 +239,7 @@ class Grid
 	public static function states($filter_state = '*', $published = 'Published', $unpublished = 'Unpublished', $archived = null, $trashed = null)
 	{
 		$state = array(
-			''  => '- ' . trans('JLIB_HTML_SELECT_STATE') . ' -',
+			''  => '- ' . trans('global.select state') . ' -',
 			'P' => trans($published),
 			'U' => trans($unpublished)
 		);
@@ -301,13 +298,13 @@ class Grid
 		{
 			$text = addslashes(htmlspecialchars($row->editor, ENT_COMPAT, 'UTF-8'));
 
-			$date = with(new Carbon($row->checked_out_time))->format(trans('DATE_FORMAT_LC1'));
+			$date = with(new Carbon($row->checked_out_time))->format('l, d F Y');
 			$time = with(new Carbon($row->checked_out_time))->format('H:i');
 
-			$hover = '<span class="editlinktip hasTip" title="' . trans('JLIB_HTML_CHECKED_OUT') . '::' . $text . '<br />' . $date . '<br />' . $time . '">';
+			$hover = '<span class="editlinktip hasTip" title="' . trans('global.check out') . '::' . $text . '<br />' . $date . '<br />' . $time . '">';
 		}
 
-		return $hover . trans('JLIB_HTML_CHECKED_OUT') . '</span>';
+		return $hover . trans('global.checked out') . '</span>';
 	}
 
 	/**
@@ -374,7 +371,7 @@ class Grid
 		}
 
 		$text = addslashes(htmlspecialchars($editorName, ENT_COMPAT, 'UTF-8'));
-		$date = addslashes(htmlspecialchars(with(new Carbon($time))->format(trans('DATE_FORMAT_LC')), ENT_COMPAT, 'UTF-8'));
+		$date = addslashes(htmlspecialchars(with(new Carbon($time))->format('l, d F Y'), ENT_COMPAT, 'UTF-8'));
 		$time = addslashes(htmlspecialchars(with(new Carbon($time))->format('H:i'), ENT_COMPAT, 'UTF-8'));
 
 		$active_title   = trans('global.check in') . '::' . $text . '<br />' . $date . '<br />' . $time;
@@ -453,10 +450,10 @@ class Grid
 		}
 
 		$states = array(
-			1  => array('unpublish', 'global.published',   'JLIB_HTML_UNPUBLISH_ITEM', 'global.published',   false, 'publish',   'publish'),
-			0  => array('publish',   'global.unpublished', 'JLIB_HTML_PUBLISH_ITEM',   'global.unpublished', false, 'unpublish', 'unpublish'),
-			2  => array('unpublish', 'global.archived',    'JLIB_HTML_UNPUBLISH_ITEM', 'global.archived',    false, 'archive',   'archive'),
-			-2 => array('publish',   'global.trashed',     'JLIB_HTML_PUBLISH_ITEM',   'global.trashed',     false, 'trash',     'trash')
+			1  => array('unpublish', 'global.published',   'global.unpublish item', 'global.published',   false, 'publish',   'publish'),
+			0  => array('publish',   'global.unpublished', 'global.publish item',   'global.unpublished', false, 'unpublish', 'unpublish'),
+			2  => array('unpublish', 'global.archived',    'global.unpublish item', 'global.archived',    false, 'archive',   'archive'),
+			-2 => array('publish',   'global.trashed',     'global.publish item',   'global.trashed',     false, 'trash',     'trash')
 		);
 
 		// Special state for dates
@@ -474,11 +471,11 @@ class Grid
 			$tips = array();
 			if ($publish_up)
 			{
-				$tips[] = trans('JLIB_HTML_PUBLISHED_START', $publish_up->format(Carbon::$format, true));
+				$tips[] = trans('global.start publishing', $publish_up->format(Carbon::$format, true));
 			}
 			if ($publish_down)
 			{
-				$tips[] = trans('JLIB_HTML_PUBLISHED_FINISHED', $publish_down->format(Carbon::$format, true));
+				$tips[] = trans('global.finish publishing', $publish_down->format(Carbon::$format, true));
 			}
 			$tip = empty($tips) ? false : implode('<br/>', $tips);
 
@@ -488,16 +485,16 @@ class Grid
 				// Create special titles for published items
 				if ($key == 1)
 				{
-					$states[$key][2] = $states[$key][3] = 'JLIB_HTML_PUBLISHED_ITEM';
+					$states[$key][2] = $states[$key][3] = 'global.published';
 
 					if ($publish_up > $nullDate && $nowDate < $publish_up->toUnix())
 					{
-						$states[$key][2] = $states[$key][3] = 'JLIB_HTML_PUBLISHED_PENDING_ITEM';
+						$states[$key][2] = $states[$key][3] = 'global.published but pending';
 						$states[$key][5] = $states[$key][6] = 'pending';
 					}
 					if ($publish_down > $nullDate && $nowDate > $publish_down->toUnix())
 					{
-						$states[$key][2] = $states[$key][3] = 'JLIB_HTML_PUBLISHED_EXPIRED_ITEM';
+						$states[$key][2] = $states[$key][3] = 'global.published but expired';
 						$states[$key][5] = $states[$key][6] = 'expired';
 					}
 				}

@@ -32,7 +32,7 @@ class FileLoaderTest extends Basic
 				'application_env' => 'development',
 				'editor' => 'ckeditor',
 				'list_limit' => '25',
-				'helpurl' => 'English (GB) - HUBzero help',
+				'helpurl' => 'English (GB) - Halcyon help',
 				'debug' => '1',
 				'debug_lang' => '0',
 				'sef' => '1',

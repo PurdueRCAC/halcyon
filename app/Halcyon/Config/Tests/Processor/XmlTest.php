@@ -48,7 +48,7 @@ class XmlTest extends Basic
 		<setting name="application_env" type="string">development</setting>
 		<setting name="editor" type="string">ckeditor</setting>
 		<setting name="list_limit" type="integer">25</setting>
-		<setting name="helpurl" type="string">English (GB) - HUBzero help</setting>
+		<setting name="helpurl" type="string">English (GB) - Halcyon help</setting>
 		<setting name="debug" type="integer">1</setting>
 		<setting name="debug_lang" type="integer">0</setting>
 		<setting name="sef" type="integer">1</setting>
@@ -85,7 +85,7 @@ class XmlTest extends Basic
 		$data->app->application_env = "development";
 		$data->app->editor = "ckeditor";
 		$data->app->list_limit = 25;
-		$data->app->helpurl = "English (GB) - HUBzero help";
+		$data->app->helpurl = "English (GB) - Halcyon help";
 		$data->app->debug = 1;
 		$data->app->debug_lang = 0;
 		$data->app->sef = 1;
