@@ -170,7 +170,7 @@ class RolesController extends Controller
 
 		if (!$iAmSuperAdmin && $roleSuperAdmin)
 		{
-			return redirect()->back()->withError(trans('users::users.ERROR_NOT_SUPERADMIN'));
+			return redirect()->back()->withError(trans('users::users.error.not super admin'));
 		}
 
 		// Check for super-admin changing self to be non-super-admin
@@ -194,7 +194,7 @@ class RolesController extends Controller
 				// and the current group does not have super admin permissions, throw an exception
 				if (!$otherSuperAdmin && !$groupSuperAdmin)
 				{
-					Notify::error(Lang::txt('JLIB_USER_ERROR_CANNOT_DEMOTE_SELF'));
+					Notify::error(Lang::txt('users::users.error.cannot demote self'));
 					return $this->editTask($row);
 				}
 			}
@@ -303,14 +303,14 @@ class RolesController extends Controller
 
 		if (!$hasSuperAdmin)
 		{
-			return redirect()->back()->withInput()->withError(trans('users::roles.ERROR_REMOVING_SUPER_ADMIN'));
+			return redirect()->back()->withInput()->withError(trans('users::roles.error.removing super admin'));
 		}
 
 		$asset = Asset::getRoot();
 
 		if (!$asset->id)
 		{
-			return redirect()->back()->withInput()->withError(trans('users::roles.ERROR_ROOT_ASSET_NOT_FOUND'));
+			return redirect()->back()->withInput()->withError(trans('users::roles.error.root asset not found'));
 		}
 
 		$asset->rules = (string) $rules;

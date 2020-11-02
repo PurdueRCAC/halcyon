@@ -311,7 +311,6 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 				@endif
 			</div>
 		</div>
-		
 
 		<!-- 
 		@if (auth()->user()->can('manage users'))
@@ -382,12 +381,8 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 				</li>
 			@endif
 			</ul>
-					<?php
-					//$group = $g->group;
-					$group = \App\Modules\Groups\Models\Group::find(1639); //1498
-					?>
 
-					<input type="hidden" id="HIDDEN_property_<?php echo $group->id; ?>" value="<?php echo $group->id; ?>" />
+			<input type="hidden" id="HIDDEN_property_<?php echo $group->id; ?>" value="<?php echo $group->id; ?>" />
 			<!-- <div class="tabMain" id="tabMain"> -->
 
 				<div id="DIV_group-overview">

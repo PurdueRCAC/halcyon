@@ -362,7 +362,7 @@ class UsersController extends Controller
 		{
 			return redirect()
 				->back()
-				->withError(trans('users::users.ERROR_CANNOT_BLOCK_SELF'));
+				->withError(trans('users::users.error.cannot block self'));
 		}
 
 		// Make sure that we are not removing ourself from Super Admin role
@@ -382,7 +382,7 @@ class UsersController extends Controller
 			{
 				return redirect()
 					->back()
-					->withError(trans('users::users.ERROR_CANNOT_DEMOTE_SELF'));
+					->withError(trans('users::users.error.cannot demote self'));
 			}
 		}
 
@@ -505,7 +505,7 @@ class UsersController extends Controller
 		// Do we have an ID?
 		if (empty($ids))
 		{
-			$request->session()->flash('warning', trans('COM_MEMBERS_NO_ID'));
+			$request->session()->flash('warning', trans('users::users.no id'));
 
 			return $this->cancel();
 		}
@@ -520,7 +520,7 @@ class UsersController extends Controller
 
 			if ($user->block && $user->id == auth()->user()->id)
 			{
-				$request->session()->flash('error', trans('users::users.ERROR_CANNOT_BLOCK_SELF'));
+				$request->session()->flash('error', trans('users::users.error.cannot block self'));
 				continue;
 			}
 
@@ -535,7 +535,7 @@ class UsersController extends Controller
 
 		if ($i)
 		{
-			$request->session()->flash('success', trans('COM_MEMBERS_BLOCK_STATUS_CHANGED'));
+			$request->session()->flash('success', trans('users::users.user blocked'));
 		}
 
 		return $this->cancel();
