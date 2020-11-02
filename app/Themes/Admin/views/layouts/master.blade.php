@@ -83,6 +83,9 @@
 
 				<ul class="user-options">
 					@if (Auth::check())
+						<!-- <li data-title="{{ trans('theme::admin.toggle theme') }}">
+							<a class="icon-sun" href="{{ request()->url() }}?theme=dark">{{ trans('theme::admin.toggle theme') }}</a>
+						</li> -->
 						<li data-title="{{ trans('theme::admin.logout') }}">
 							<a class="icon-power logout" href="{{ route('admin.logout') }}">{{ trans('theme::admin.logout') }}</a>
 						</li>

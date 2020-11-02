@@ -83,6 +83,7 @@ smaller area with "overflow: scroll" enabled?
 		instance.append(notice);
 		$('a[rel="close"]', notice).on('click', function() {
 			notice.remove();
+			console.log(instance);
 		});
 		if ($.growl.settings.displayTimeout > 0) {
 			$('a[rel="close"]', notice).hide();
@@ -182,6 +183,7 @@ jQuery(document).ready(function($){
 				});
 			}
 			$.growl('', msg.html());
+			msg.empty();
 		}
 	});
 
