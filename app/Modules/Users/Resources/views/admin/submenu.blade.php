@@ -4,9 +4,9 @@
 		<li class="nav-item">
 			<a class="nav-link @if (!trim($slot) || trim($slot) == 'edit') active @endif" href="{{ route('admin.users.index') }}">{{ trans('users::users.users') }}</a>
 		</li>
-		<li class="nav-item">
+		<!-- <li class="nav-item">
 			<a class="nav-link @if (trim($slot) == 'notes') active @endif" href="{{ route('admin.users.notes') }}">{{ trans('users::users.notes') }}</a>
-		</li>
+		</li> -->
 	@if (auth()->user()->can('admin'))
 		<li class="nav-item">
 			<a class="nav-link @if (trim($slot) == 'roles') active @endif" href="{{ route('admin.users.roles') }}">{{ trans('users::users.roles') }}</a>
