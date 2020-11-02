@@ -1,6 +1,6 @@
 {
 	"name": "halcyon/wgt_googleanalytics",
-	"description": "This module adds some Javascript to the page for Google Analytics reporting.",
+	"description": "This widget adds some Javascript to the page for Google Analytics reporting.",
 	"type": "halcyon-widget",
 	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
 	"homepage": "https://www.rcac.purdue.edu",

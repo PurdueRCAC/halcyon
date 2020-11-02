@@ -1,7 +1,7 @@
 {
 	"name": "halcyon/wgt_submenu",
 	"description": "This shows the sub-Menu in the admin interface",
-	"type": "halcyon-module",
+	"type": "halcyon-widget",
 	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
 	"homepage": "https://www.rcac.purdue.edu",
 	"license": "MIT",

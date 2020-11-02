@@ -1,7 +1,7 @@
 {
-	"name": "halcyon/mod_notices",
-	"description": "This module shows a notice (when site will be down, etc.) box for site visitors in the Halcyon CMS",
-	"type": "halcyon-module",
+	"name": "halcyon/wgt_notice",
+	"description": "This widget shows a notice (when site will be down, etc.) box for site visitors in the Halcyon CMS",
+	"type": "halcyon-widget",
 	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
 	"homepage": "https://www.rcac.purdue.edu",
 	"license": "MIT",

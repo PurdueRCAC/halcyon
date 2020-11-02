@@ -1,7 +1,7 @@
 {
 	"name": "halcyon/mod_members",
-	"description": "This module shows on the Admin area Home Page and displays items that administrator needs to watch for in the Halcyon CMS",
-	"type": "halcyon-module",
+	"description": "This widget shows on the Admin area Home Page and displays items that administrator needs to watch for in the Halcyon CMS",
+	"type": "halcyon-widget",
 	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
 	"homepage": "https://www.rcac.purdue.edu",
 	"license": "MIT",

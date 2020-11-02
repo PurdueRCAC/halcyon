@@ -4,21 +4,12 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-if (!jq) {
-	var jq = $;
-}
-
-//-------------------------------------------------------------
-// Add an event to close the notice
-//-------------------------------------------------------------
-jQuery(document).ready(function(jq){
-	var $ = jq;
-
+jQuery(document).ready(function($){
 	if (!$('html').hasClass('has-notice')) {
 		$('html').addClass('has-notice');
 	}
 
-	$('.modnotices .close').on('click', function(e) {
+	$('.notice .close').on('click', function(e) {
 		e.preventDefault();
 
 		var id = $($(this).parent().parent()).attr('id'),

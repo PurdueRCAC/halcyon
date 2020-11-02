@@ -1,5 +1,5 @@
 {
-	"name": "halcyon/wdgt_eprivacy",
+	"name": "halcyon/wgt_eprivacy",
 	"description": "This widget shows a notice about its e-Privacy directive (aka cookie policy).",
 	"type": "halcyon-widget",
 	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],

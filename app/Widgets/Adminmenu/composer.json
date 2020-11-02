@@ -1,7 +1,7 @@
 {
-	"name": "halcyon/mod_adminmenu",
+	"name": "halcyon/wgt_adminmenu",
 	"description": "Admin menu for the Halcyon CMS",
-	"type": "halcyon-module",
+	"type": "halcyon-widget",
 	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
 	"homepage": "https://www.rcac.purdue.edu",
 	"license": "MIT",

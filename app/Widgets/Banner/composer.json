@@ -1,5 +1,5 @@
 {
-	"name": "halcyon/widget_banner",
+	"name": "halcyon/wgt_banner",
 	"description": "Display news articles from selected category",
 	"type": "halcyon-widget",
 	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],

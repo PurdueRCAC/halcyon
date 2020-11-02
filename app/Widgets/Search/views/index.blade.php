@@ -5,6 +5,12 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 ?>
+@if (params->get('opensearch', 0))
+	@section('meta')
+		<link href="{{ url()->current() }}?format=opensearch" rel="search" type="application/opensearchdescription+xml" title="{{ $params->get('opensearch_title', trans('widget.search::search.button text') . ' ' . config('app.name')); }}" />
+	@stop
+@endif
+
 <form action="{{ route('site.pages.search') }}" method="get" id="searchform{{ $instance }}" class="{{ $class }} searchform">
 	<fieldset>
 		<legend>{{ $text }}</legend>

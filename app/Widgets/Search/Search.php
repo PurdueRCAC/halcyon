@@ -8,7 +8,6 @@
 namespace App\Widgets\Search;
 
 use App\Modules\Widgets\Entities\Widget;
-use stdClass;
 
 /**
  * Module class for displaying breadcrumbs
@@ -31,25 +30,13 @@ class Search extends Widget
 	{
 		self::$instances++;
 
-		/*if ($this->params->get('opensearch', 0))
-		{
-			$ostitle = $this->params->get('opensearch_title', trans('widget.search::search.SEARCHBUTTON_TEXT') . ' ' . config('sitename'));
-
-			Document::addHeadLink(
-				Request::base() . Route::url('&option=com_search&format=opensearch'),
-				'search',
-				'rel',
-				array('title' => htmlspecialchars($ostitle), 'type' => 'application/opensearchdescription+xml')
-			);
-		}*/
-
 		$params          = $this->params;
 		$button          = $this->params->get('button', '');
 		$button_pos      = $this->params->get('button_pos', 'right');
-		$button_text     = htmlspecialchars($this->params->get('button_text', trans('widget.search::search.SEARCHBUTTON_TEXT')));
+		$button_text     = htmlspecialchars($this->params->get('button_text', trans('widget.search::search.button text')));
 		$width           = intval($this->params->get('width', 20));
-		$text            = htmlspecialchars($this->params->get('text', trans('widget.search::search.SEARCHBOX_TEXT')));
-		$label           = htmlspecialchars($this->params->get('label', trans('widget.search::search.LABEL_TEXT')));
+		$text            = htmlspecialchars($this->params->get('text', trans('widget.search::search.box text')));
+		$label           = htmlspecialchars($this->params->get('label', trans('widget.search::search.label text')));
 		$class = htmlspecialchars($this->params->get('moduleclass_sfx'));
 
 		$layout = $this->params->get('layout');

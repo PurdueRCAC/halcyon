@@ -1,32 +1,16 @@
-<?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('widgets/notice/css/notice.css') }}" />
+@endpush
 
-if ($publish)
-{
-	//$this->css()
-	//     ->js();
-	?>
-	<div id="{{ $id }}" class="modnotices {{ $alertlevel }}">
+@if ($publish)
+	<div id="{{ $id }}" class="notice alert alert-{{ $alertlevel . ($params->get('allowClose', 1) ? ' alert-dismissible' : '') }}">
 		<p>
 			{{ $message) }}
-			<?php
-			$page = request()->url();
-			if ($page && $params->get('allowClose', 1))
-			{
-				$page .= (strstr($page, '?')) ? '&' : '?';
-				$page .= $id . '=close';
-				?>
-				<a class="close" href="{{ $page }}" data-duration="{{ $days_left }}" title="{{ trans('widget.notice::notice.CLOSE_TITLE') }}">
-					<span>{{ trans('widget.notice::notice.CLOSE') }}</span>
-				</a>
-				<?php
-			}
-			?>
+			@if ($params->get('allowClose', 1))
+				<button type="button" class="close" data-dismiss="alert" aria-label="{{ trans('widget.notice::notice.close) }}">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			@endif
 		</p>
 	</div>
-	<?php
-}
+@endif
