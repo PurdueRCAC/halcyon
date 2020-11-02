@@ -316,8 +316,6 @@ class UsersController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new User;
 
 		return view('news::admin.users.edit', [
@@ -415,9 +413,11 @@ class UsersController extends Controller
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$user = User::findOrFail($id);
+		if ($user->puid)
+		{
+			$user->sourced = 1;
+		}
 
 		if (!$user->surname)
 		{

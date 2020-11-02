@@ -6,6 +6,8 @@
 @endpush
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('users::users.module name'),
@@ -52,7 +54,7 @@ app('pathway')
 		@if (auth()->user()->can('view users.notes'))
 			<li><a href="#user-notes">Notes</a></li>
 		@endif
-			<li><a href="#user-history">History</a></li>
+			<!-- <li><a href="#user-history">History</a></li> -->
 		</ul>
 		<div id="user-account">
 	<div class="row">
@@ -70,37 +72,16 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label id="field_email-lbl" for="field_email">{{ trans('users::users.email') }} <span class="required star">{{ trans('global.required') }}</span></label>
-					<input type="email" name="fields[email]" class="form-control validate-email required<?php if ($user->sourced) { echo ' readonly" readonly="readonly'; } ?>" id="field_email" value="{{ $user->email }}" />
+					<label for="field-name">{{ trans('users::users.name') }}:</label><br />
+					<input type="text" class="form-control<?php if ($user->sourced) { echo ' readonly" readonly="readonly'; } ?>" name="fields[name]" id="field-name" value="{{ $user->name }}" />
 				</div>
-
-				<!-- <fieldset>
-					<legend>{{ trans('users::users.name') }}</legend> -->
-
-				<div class="row">
-					<div class="col col-md-4 form-group">
-						<label for="field-given_name">{{ trans('users::users.first name') }}:</label><br />
-						<input type="text" class="form-control<?php if ($user->sourced) { echo ' readonly" readonly="readonly'; } ?>" name="fields[given_name]" id="field-given_name" value="{{ $user->given_name }}" />
-					</div>
-
-					<div class="col col-md-4 form-group">
-						<label for="field-middle_name">{{ trans('users::users.middle name') }}:</label><br />
-						<input type="text" class="form-control<?php if ($user->sourced) { echo ' readonly" readonly="readonly'; } ?>" name="fields[middle_name]" id="field-middle_name" value="{{ $user->middle_name }}" />
-					</div>
-
-					<div class="col col-md-4 form-group">
-						<label for="field-surname">{{ trans('users::users.last name') }}:</label><br />
-						<input type="text" class="form-control<?php if ($user->sourced) { echo ' readonly" readonly="readonly'; } ?>" name="fields[surname]" id="field-surname" value="{{ $user->surname }}" />
-					</div>
-				</div>
-				<!-- </fieldset> -->
 
 				<div class="form-group">
 					<label for="field-organization_id">{{ trans('users::users.organization id') }}:</label>
-					<input type="text" class="form-control" name="fields[organization_id]" id="field-organization_id" value="{{ $user->organization_id }}" />
+					<input type="text" class="form-control" name="fields[puid]" id="field-organization_id" value="{{ $user->puid }}" />
 				</div>
 
-				<div class="form-group">
+				<?php /*<div class="form-group">
 					<label for="field-api_token">{{ trans('users::users.api token') }}:</label>
 					<div class="row">
 						<div class="col col-md-8">
@@ -111,7 +92,7 @@ app('pathway')
 						</div>
 					</div>
 					<span class="form-text text-muted">{{ trans('users::users.api token hint') }}</span>
-				</div>
+				</div>*/ ?>
 			</fieldset>
 
 			<fieldset id="user-groups" class="adminform">
@@ -131,27 +112,19 @@ app('pathway')
 			<table class="meta">
 				<tbody>
 					<tr>
-						<th>{{ trans('users::users.id') }}</th>
-						<td>
-							{{ $user->id }}
-						</td>
-					</tr>
-					<tr>
-						<th>{{ trans('users::users.register ip') }}</th>
-						<td>{{ $user->created_ip }}</td>
-					</tr>
-					<tr>
 						<th>{{ trans('users::users.register date') }}</th>
-						<td>{{ $user->created_at }}</td>
+						<td>{{ $user->datecreated }}</td>
 					</tr>
 					<tr>
 						<th>{{ trans('users::users.last visit date') }}</th>
 						<td><?php echo !$user->getOriginal('last_visit') || $user->getOriginal('last_visit') == '0000-00-00 00:00:00' ? trans('global.never') : $user->last_visit; ?></td>
 					</tr>
+					@if ($user->isTrashed())
 					<tr>
-						<th>{{ trans('users::users.last modified date') }}</th>
-						<td><?php echo !$user->getOriginal('modifiedDate') || $user->getOriginal('modifiedDate') == '0000-00-00 00:00:00' ? trans('global.never') : $user->modifiedDate; ?></td>
+						<th>{{ trans('users::users.removed date') }}</th>
+						<td>{{ $user->dateremoved }} ?></td>
 					</tr>
+					@endif
 				</tbody>
 			</table>
 
@@ -173,27 +146,6 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('users::users.status') }}</legend>
 
-				<!-- <div class="form-group" data-hint="{{ trans('users::users.approved user desc') }}">
-					<label id="field_approved-lbl" for="field-approved">{{ trans('users::users.approved user') }}</label>
-					<fieldset id="field-approved" class="radio">
-						<ul>
-							<li>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" id="field-approved0" name="fields[approved]" value="0"<?php if ($user->approved == 0) { echo ' checked="checked"'; } ?> />
-									<label class="form-check-label" for="field-approved0">{{ trans('global.no') }}</label>
-								</div>
-							</li>
-							<li>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" id="field-approved1" name="fields[approved]" value="1"<?php if ($user->approved == 1) { echo ' checked="checked"'; } ?> />
-									<label class="form-check-label" for="field-approved1">{{ trans('global.yes') }}</label>
-								</div>
-							</li>
-						</ul>
-					</fieldset>
-					<span class="hint">{{ trans('users::users.approved user desc') }}</span>
-				</div> -->
-
 				<div class="form-group">
 					<label id="field-block-lbl" for="field-block">{{ trans('users::users.block this user') }}</label>
 					<fieldset id="field-block" class="radio">
@@ -212,27 +164,6 @@ app('pathway')
 							</li>
 						</ul>
 					</fieldset>
-				</div>
-
-				<div class="form-check">
-					<?php if ($user->email): ?>
-						<?php if ($user->email_verified_at) { ?>
-							<input class="form-check-input<?php if ($user->sourced) { echo ' readonly" readonly="readonly" disabled="disabled'; } ?>" type="checkbox" name="fields[activation]" id="activation" value="1" checked="checked" />
-							<label class="form-check-label" for="activation">{{ trans('users::users.email verified at', ['datetime' => $user->email_verified_at]) }}</label>
-						<?php } else { ?>
-							<span class="form-text unconfirmed">{{ trans('users::users.email awaiting confirmation') }}</span>
-
-							<input class="form-check-input" type="checkbox" name="fields[activation]" id="activation" value="1" />
-							<label class="form-check-label" for="activation">{{ trans('users::users.confirm email') }}</label>
-
-							<button class="btn">{{ trans('users::users.resend confirmation') }}</button>
-						<?php } ?>
-					<?php else: ?>
-						<span class="form-text error">{{ trans('users::users.FIELD_EMAIL_NONE_ON_FILE') }}</span><br />
-
-						<input class="form-check-input" type="checkbox" name="fields[activation]" id="activation" value="1" />
-						<label class="form-check-label" for="activation">{{ trans('users::users.confirm email') }}</label>
-					<?php endif; ?>
 				</div>
 			</fieldset>
 				</div><!-- / .col -->
@@ -260,9 +191,9 @@ app('pathway')
 			?>
 		</div><!-- / #user-notes -->
 		@endif
-		<div id="user-history">
+		<!-- <div id="user-history">
 			History
-		</div><!-- / #user-history -->
+		</div>/ #user-history -->
 	</div><!-- / .tabs -->
 
 	<input type="hidden" name="id" value="{{ $user->id }}" />

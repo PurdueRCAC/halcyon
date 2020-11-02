@@ -106,9 +106,6 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('users::users.username'), 'username', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('users::users.email'), 'email', $filters['order_dir'], $filters['order']) !!}
-				</th>
 				<th scope="col" class="priority-3 nowrap">{{ trans('users::users.roles') }}</th>
 				<th scope="col" class="priority-3">{{ trans('users::users.status') }}</th>
 				<th scope="col" class="priority-6">
@@ -179,15 +176,6 @@ app('pathway')
 						{{ $row->name }}
 					<?php endif; ?>
 				</td>
-				<td>
-					<?php if ($canEdit) : ?>
-						<a href="{{ route('admin.users.edit', ['id' => $row->id]) }}">
-							{{ $row->username }}
-						</a>
-					<?php else : ?>
-						{{ $row->username }}
-					<?php endif; ?>
-				</td>
 				<td class="priority-4">
 					<?php if ($canChange) : ?>
 						<a href="{{ route('admin.users.edit', ['id' => $row->id]) }}">
@@ -223,33 +211,6 @@ app('pathway')
 							{{ trans('users::users.status enabled') }}
 						</span>
 					@endif
-					<?php /*if ($row->isTrashed()): ?>
-						<div class="btn-group btn-group-sm dropdown user-state blocked">
-							<button type="button" class="btn btn-secondary btn-danger dropdown-toggle" id="btnGroupDrop{{ $row->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								{{ trans('users::users.status blocked') }}
-							</span>
-							<?php if ($canChange) : ?>
-								<ul class="dropdown-menu" aria-labelledby="btnGroupDrop{{ $row->id }}">
-									<li class="dropdown-item">
-										<a class="grid-action" data-id="cb<?php echo $i; ?>" data-task="enable" href="{{ route('admin.users.unblock', ['id' => $row->id]) }}"><i class="fa fa-check"></i> {{ trans('users::users.unblock user') }}</a>
-									</li>
-								</ul>
-							<?php endif; ?>
-						</div>
-					<?php else : ?>
-							<div class="btn-group btn-group-sm dropdown user-state confirmed approved enabled" role="group" aria-label="User state">
-								<button type="button" class="btn btn-secondary btn-success dropdown-toggle" title="{{ trans('users::users.status approved') }}" id="btnGroupDrop{{ $row->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									{{ trans('users::users.status enabled') }}
-								</button>
-								<?php if ($canChange) : ?>
-									<ul class="dropdown-menu" aria-labelledby="btnGroupDrop{{ $row->id }}">
-										<li class="dropdown-item">
-											<a class="grid-action" data-id="cb<?php echo $i; ?>" data-task="block" href="{{ route('admin.users.block', ['id' => $row->id]) }}"><i class="fa fa-ban" aria-hidden="true"></i> {{ trans('users::users.block user') }}</a>
-										</li>
-									</ul>
-								<?php endif; ?>
-							</div>
-					<?php endif;*/ ?>
 				</td>
 				<td class="priority-6">
 					<?php if (!$row->hasVisited()) : ?>
