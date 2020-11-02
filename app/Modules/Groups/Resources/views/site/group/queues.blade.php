@@ -23,6 +23,10 @@
 									{
 										foreach ($queues as $q)
 										{
+											if (!$canManage && !$q->users()->where('userid', '=', $user->id)->count())
+											{
+												continue;
+											}
 											?>
 											<tr>
 												<?php

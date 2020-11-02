@@ -91,13 +91,13 @@ $active = $sections->firstWhere('active', '=', true);
 					<div class="col-md-6">
 						<p>
 							<span class="text-muted">Created</span><br />
-							<strong>{{ $user->created_at }}</strong>
+							<strong>{{ $user->datecreated && $user->datecreated != '-0001-11-30 00:00:00' ? $user->datecreated : trans('global.unknown') }}</strong>
 						</p>
 					</div>
 					<div class="col-md-6">
 						<p>
 							<span class="text-muted">Last Visit</span><br />
-							<strong>{{ $user->last_visit }}</strong>
+							<strong>{{ $user->datelastseen }}</strong>
 						</p>
 					</div>
 				</div>

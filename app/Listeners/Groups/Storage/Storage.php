@@ -33,6 +33,11 @@ class Storage
 	 */
 	public function handleGroupDisplay(GroupDisplay $event)
 	{
+		/*if (!auth()->user() || !auth()->user()->can('manage groups'))
+		{
+			return;
+		}*/
+
 		$content = null;
 		$group = $event->getGroup();
 		$client = app('isAdmin') ? 'admin' : 'site';

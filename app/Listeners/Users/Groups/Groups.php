@@ -9,6 +9,7 @@ namespace App\Listeners\Users\Groups;
 
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\Groups\Models\Group;
+use App\Modules\Groups\Events\GroupDisplay;
 
 /**
  * User listener for sessions
@@ -106,6 +107,7 @@ class Groups
 
 			if ($id = request()->segment(3))
 			{
+				$id = 1485;
 				$group = Group::findOrFail($id);
 
 				$membership = $group->members()->where('userid', '=', $user->id)->get()->first();
@@ -129,7 +131,7 @@ class Groups
 						}
 					}
 
-					if (!$found)
+					if (!$found && !(auth()->user() && auth()->user()->can('manage groups')))
 					{
 						abort(404);
 					}
@@ -141,10 +143,14 @@ class Groups
 						route('site.users.account.section.show', array_merge($r, ['id' => $id]))
 					);
 
+				event($e = new GroupDisplay($group, 'details'));
+				$sections = collect($e->getSections());
+
 				$content = view('groups::site.group', [
 					'user'  => $user,
 					'group' => $group,
 					'membership' => $membership,
+					'sections' => $sections,
 				]);
 			}
 			else
