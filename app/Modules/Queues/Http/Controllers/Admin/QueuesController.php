@@ -315,7 +315,7 @@ class QueuesController extends Controller
 	 */
 	public function state(Request $request)
 	{
-		$action = app('request')->segment(count($request->segments()));
+		$action = app('request')->segment(count($request->segments()) - 1);
 		$state  = $action == 'enable' ? 1 : 0;
 
 		// Incoming
@@ -356,6 +356,61 @@ class QueuesController extends Controller
 			$msg = $state
 				? 'queues::queues.items enabled'
 				: 'queues::queues.items disabled';
+
+			$request->session()->flash('success', trans($msg, ['count' => $success]));
+		}
+
+		return $this->cancel();
+	}
+
+	/**
+	 * Sets the state of one or more entries
+	 * 
+	 * @return  void
+	 */
+	public function scheduling(Request $request, $id = 0)
+	{
+		$action = app('request')->segment(count($request->segments()) - 1);
+		$state  = $action == 'start' ? 1 : 0;
+
+		// Incoming
+		$ids = $request->input('id', $id);
+		$ids = (!is_array($ids) ? array($ids) : $ids);
+
+		// Check for an ID
+		if (count($ids) < 1)
+		{
+			$request->session()->flash('warning', trans($state ? 'queues::queues.select to start' : 'queues::queues.select to stop'));
+			return $this->cancel();
+		}
+
+		$success = 0;
+
+		// Update record(s)
+		foreach ($ids as $id)
+		{
+			$row = Queue::findOrFail(intval($id));
+
+			if ($row->started == $state)
+			{
+				continue;
+			}
+
+			if (!$row->update(['started' => $state]))
+			{
+				$request->session()->flash('error', $row->getError());
+				continue;
+			}
+
+			$success++;
+		}
+
+		// Set message
+		if ($success)
+		{
+			$msg = $state
+				? 'queues::queues.items started'
+				: 'queues::queues.items stopped';
 
 			$request->session()->flash('success', trans($msg, ['count' => $success]));
 		}

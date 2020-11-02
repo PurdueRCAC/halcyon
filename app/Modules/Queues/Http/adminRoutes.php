@@ -5,61 +5,6 @@ use Illuminate\Routing\Router;
 /** @var Router $router */
 $router->group(['prefix' => 'queues'], function (Router $router)
 {
-	$router->match(['get', 'post'], '/', [
-		'as'   => 'admin.queues.index',
-		'uses' => 'QueuesController@index',
-		'middleware' => 'can:manage queues',
-	]);
-	$router->match(['get', 'post'], '/cancel', [
-		'as'   => 'admin.queues.cancel',
-		'uses' => 'QueuesController@cancel',
-	]);
-	$router->get('/create', [
-		'as'   => 'admin.queues.create',
-		'uses' => 'QueuesController@create',
-		'middleware' => 'can:create queues',
-	]);
-	$router->post('/store', [
-		'as'   => 'admin.queues.store',
-		'uses' => 'QueuesController@store',
-		'middleware' => 'can:create queues,edit queues',
-	]);
-	$router->get('/{id}', [
-		'as'   => 'admin.queues.edit',
-		'uses' => 'QueuesController@edit',
-		'middleware' => 'can:edit queues',
-	])->where('id', '[0-9]+');
-	$router->match(['get', 'post'], '/enable/{id?}', [
-		'as'   => 'admin.queues.enable',
-		'uses' => 'QueuesController@state',
-		'middleware' => 'can:edit.state queues',
-	])->where('id', '[0-9]+');
-	$router->match(['get', 'post'], '/disable/{id?}', [
-		'as'   => 'admin.queues.disable',
-		'uses' => 'QueuesController@state',
-		'middleware' => 'can:edit.state queues',
-	])->where('id', '[0-9]+');
-	$router->match(['get', 'post'], '/start/{id?}', [
-		'as'   => 'admin.queues.start',
-		'uses' => 'QueuesController@start',
-		'middleware' => 'can:edit.state queues',
-	])->where('id', '[0-9]+');
-	$router->match(['get', 'post'], '/stop/{id?}', [
-		'as'   => 'admin.queues.stop',
-		'uses' => 'QueuesController@stop',
-		'middleware' => 'can:edit.state queues',
-	])->where('id', '[0-9]+');
-	$router->match(['get', 'post'], '/restore/{id?}', [
-		'as'   => 'admin.queues.restore',
-		'uses' => 'QueuesController@restore',
-		'middleware' => 'can:edit.state queues',
-	])->where('id', '[0-9]+');
-	$router->match(['get', 'post'], '/delete/{id?}', [
-		'as'   => 'admin.queues.delete',
-		'uses' => 'QueuesController@delete',
-		'middleware' => 'can:delete queues',
-	]);
-
 	$router->group(['prefix' => 'types'], function (Router $router)
 	{
 		$router->match(['get', 'post'], '/', [
@@ -158,4 +103,59 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'uses' => 'SchedulerPoliciesController@cancel',
 		]);
 	});
+
+	$router->match(['get', 'post'], '/', [
+		'as'   => 'admin.queues.index',
+		'uses' => 'QueuesController@index',
+		'middleware' => 'can:manage queues',
+	]);
+	$router->match(['get', 'post'], '/cancel', [
+		'as'   => 'admin.queues.cancel',
+		'uses' => 'QueuesController@cancel',
+	]);
+	$router->get('/create', [
+		'as'   => 'admin.queues.create',
+		'uses' => 'QueuesController@create',
+		'middleware' => 'can:create queues',
+	]);
+	$router->post('/store', [
+		'as'   => 'admin.queues.store',
+		'uses' => 'QueuesController@store',
+		'middleware' => 'can:create queues,edit queues',
+	]);
+	$router->get('/{id}', [
+		'as'   => 'admin.queues.edit',
+		'uses' => 'QueuesController@edit',
+		'middleware' => 'can:edit queues',
+	])->where('id', '[0-9]+');
+	$router->match(['get', 'post'], '/enable/{id?}', [
+		'as'   => 'admin.queues.enable',
+		'uses' => 'QueuesController@state',
+		'middleware' => 'can:edit.state queues',
+	])->where('id', '[0-9]+');
+	$router->match(['get', 'post'], '/disable/{id?}', [
+		'as'   => 'admin.queues.disable',
+		'uses' => 'QueuesController@state',
+		'middleware' => 'can:edit.state queues',
+	])->where('id', '[0-9]+');
+	$router->match(['get', 'post'], '/start/{id?}', [
+		'as'   => 'admin.queues.start',
+		'uses' => 'QueuesController@scheduling',
+		'middleware' => 'can:edit.state queues',
+	])->where('id', '[0-9]+');
+	$router->match(['get', 'post'], '/stop/{id?}', [
+		'as'   => 'admin.queues.stop',
+		'uses' => 'QueuesController@scheduling',
+		'middleware' => 'can:edit.state queues',
+	])->where('id', '[0-9]+');
+	$router->match(['get', 'post'], '/restore/{id?}', [
+		'as'   => 'admin.queues.restore',
+		'uses' => 'QueuesController@restore',
+		'middleware' => 'can:edit.state queues',
+	])->where('id', '[0-9]+');
+	$router->match(['get', 'post'], '/delete/{id?}', [
+		'as'   => 'admin.queues.delete',
+		'uses' => 'QueuesController@delete',
+		'middleware' => 'can:delete queues',
+	]);
 });
