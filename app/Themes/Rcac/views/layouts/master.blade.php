@@ -9,7 +9,7 @@
 		<meta name="base-url" content="{{ rtrim(asset('/'), '/') }}">
 		<meta name="api-token" content="{{ (Auth::user() ? Auth::user()->api_token : '') }}">
 
-		<title>ITaP Research Computing @hasSection('title') - @yield('title') @endif</title>
+		<title>{{ config('app.name') }} @hasSection('title') - @yield('title') @endif</title>
 
 		@hasSection('meta')
 			@yield('meta')
@@ -40,13 +40,8 @@
 		?>
 		@yield('styles')
 		@stack('styles')
-
 		<!--[if IE 9]>
 			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/browser/ie9.css') }}" />
-		<![endif]-->
-		<!--[if lt IE 9]>
-			<script type="text/javascript" src="{{ asset('js/html5.js') }}"></script>
-			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/browser/ie8.css') }}" />
 		<![endif]-->
 
 		<!-- Scripts -->
