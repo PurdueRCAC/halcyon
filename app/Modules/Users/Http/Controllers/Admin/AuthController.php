@@ -32,7 +32,7 @@ class AuthController extends Controller
 			}
 
 			// If it's the default plugin, don't include it in the list (we'll include it separately)
-			if ($p->name == 'hubzero')
+			if ($p->name == 'halcyon')
 			{
 				$site_display = $pparams->get('display_name', \Config::get('sitename'));
 				$basic = true;
