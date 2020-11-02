@@ -399,9 +399,9 @@ Halcyon.toolbarAction = function(event) {
 			alert(el.getAttribute('data-message'));
 		} else {
 			if (el.getAttribute('data-action')) {
-				Halcyon.submitform(el.getAttribute('data-action'));
+				Halcyon.submitbutton(el.getAttribute('data-action'));
 			} else if (el.getAttribute('href')) {
-				Halcyon.submitform(el.getAttribute('href'));
+				Halcyon.submitbutton(el.getAttribute('href'));
 			} else {
 				console.log('Error: no task found.');
 			}
