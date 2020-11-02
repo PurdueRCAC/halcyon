@@ -41,6 +41,9 @@ class HttpLogger
 			$method = array_pop($action);
 		}
 
+		$cls = explode('\\', $cls);
+		$cls = end($cls);
+
 		$log = new Logger();
 		$log->userid = (auth()->user() ? auth()->user()->id : 0);
 		$log->transportmethod = $request->method();

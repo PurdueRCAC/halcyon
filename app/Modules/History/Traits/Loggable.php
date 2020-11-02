@@ -3,6 +3,7 @@
 namespace App\Modules\History\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use App\Modules\History\Models\Log;
 
 trait Loggable
@@ -23,12 +24,15 @@ trait Loggable
 
 		$cls = $func;
 		$fnc = '';
-		if (strstr($func, '@'))
+		if (strstr($func, '::'))
 		{
-			$func = explode('@', $func);
+			$func = explode('::', $func);
 			$cls = array_shift($func);
 			$fnc = array_pop($func);
 		}
+
+		$cls = explode('\\', $cls);
+		$cls = end($cls);
 
 		Log::create([
 			'ip'              => request()->ip(),
@@ -39,8 +43,8 @@ trait Loggable
 			'uri'             => $uri,
 			'app'             => $app,
 			'payload'         => json_encode($payload),
-			'classname'       => $cls,
-			'classmethod'     => $fnc,
+			'classname'       => Str::limit($cls, 32, ''),
+			'classmethod'     => Str::limit($fnc, 16, ''),
 		]);
 	}
 }
