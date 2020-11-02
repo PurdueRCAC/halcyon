@@ -440,7 +440,7 @@
 									{
 										$p = $parent->toArray();
 										$p['permissions'] = json_decode(json_encode($parent->unixPermissions), true);
-										$p['unixgroup'] = $parent->unixgroup->toArray();
+										$p['unixgroup'] = $parent->unixgroup ? $parent->unixgroup->toArray() : null;
 										$childs[] = $p;
 									}
 

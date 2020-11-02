@@ -36,4 +36,5 @@ return [
 	'unix group base name hint' => 'Alpha-numeric & dashes, max 10 characters',
 	'unix group id' => 'Unix group system ID',
 	'short name' => 'Short name',
+	'confirm delete' => 'Are you sure you want to remove this?',
 ];

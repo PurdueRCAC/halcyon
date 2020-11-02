@@ -199,7 +199,7 @@ class UnixgroupsController extends Controller
 	{
 		$request->validate([
 			'groupid' => 'required|integer',
-			'longname' => 'required|string|max:32',
+			'longname' => 'nullable|string|max:32',
 			'shortname' => 'nullable|string|max:8',
 			'unixgid' => 'nullable|integer'
 		]);
@@ -233,6 +233,11 @@ class UnixgroupsController extends Controller
 			{
 				return response()->json(['message' => trans('groups::groups.name is incorrectly formatted')], 415);
 			}
+
+			/*if ($group->unixgroup == $name)
+			{
+				$name = '';
+			}*/
 
 			event($event = new UnixGroupFetch($base));
 

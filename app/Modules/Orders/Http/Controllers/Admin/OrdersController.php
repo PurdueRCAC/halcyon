@@ -27,6 +27,7 @@ class OrdersController extends Controller
 			'search'    => null,
 			'status'    => 'active',
 			'category'  => '*',
+			'group'     => 0,
 			'start'     => null,
 			'end'       => null,
 			'type'      => 0,
@@ -186,6 +187,11 @@ class OrdersController extends Controller
 							->orWhere($u . '.name', 'like', '%' . $filters['search'] . '%');
 					});
 			}
+		}
+
+		if ($filters['group'])
+		{
+			$query->where($o . '.id', '=', $filters['group']);
 		}
 
 		if ($filters['status'] != '*')

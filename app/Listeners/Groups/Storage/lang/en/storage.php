@@ -1,5 +1,5 @@
 <?php
 return [
-	'listener name' => 'Users - Groups',
-	'listener desc' => 'This user\'s groups.',
+	'listener name' => 'Groups - Storage',
+	'listener desc' => 'This displays storage related to a specific group.',
 ];

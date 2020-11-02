@@ -1,7 +1,7 @@
 {
-    "name": "Users - Groups",
-    "alias": "listener_users_groups",
-    "description": "This displays groups related to a specific user.",
+    "name": "Groups - Storage",
+    "alias": "lst_groups_storage",
+    "description": "This displays storage related to a specific group.",
     "keywords": [],
     "active": 1,
     "order": 0,

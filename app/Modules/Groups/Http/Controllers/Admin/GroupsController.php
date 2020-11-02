@@ -153,7 +153,7 @@ class GroupsController extends Controller
 			// Check for a duplicate
 			if ($exists)
 			{
-				return redirect()->back()->withError(trans('`unixgroup` ' . $dataobj->unixgroup . ' already exists'));
+				return redirect()->back()->withError(trans('`unixgroup` ' . $row->unixgroup . ' already exists'));
 			}
 		}
 
