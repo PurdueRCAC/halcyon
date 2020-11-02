@@ -17,6 +17,6 @@
 	},
 	"require": {
 		"php" : "^5.4",
-		"hubzero/com_members": "dev-master"
+		"halcyon/com_members": "dev-master"
 	}
 }

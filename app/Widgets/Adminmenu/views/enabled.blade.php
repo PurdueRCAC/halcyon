@@ -437,7 +437,7 @@ if ($params->get('showhelp', 0) == 1)
 	);
 	$menu->addSeparator();
 	$menu->addChild(
-		new Node(trans('widget.adminmenu::adminmenu.documentation'), 'http://hubzero.org/documentation', 'class:help', false, '_blank')
+		new Node(trans('widget.adminmenu::adminmenu.documentation'), 'http://halcyon.org/documentation', 'class:help', false, '_blank')
 	);
 	$menu->addChild(
 		new Node(trans('widget.adminmenu::adminmenu.help'), 'http://www.rcac.purdue.edu/help', 'class:help-docs', false, '_blank')

@@ -69,7 +69,7 @@ return [
 
 	// Params
 	'show help' => 'Help Menu',
-	'show help desc' => 'Show or hide the Help menu which includes links to hubzero.org sites useful to users.',
+	'show help desc' => 'Show or hide the Help menu which includes links to halcyon.org sites useful to users.',
 	'show new' => '"Add New" Shortcuts',
 	'show new desc' => 'Show or hide various "Add New..." shortcuts against users, groups, access levels, pagess.',
 
@@ -86,7 +86,7 @@ return [
 
 	// the string below will be used if the localized sample data contains an URL for the desired community forum or if the 'Custom Support Forum' field parameter in the Admin Menu module contains an url
 	'support forum' => 'Support Forum',
-	// the string below will be used if 	'HELP_SUPPORT_OFFICIAL_LANGUAGE_FORUM_VALUE has a value, i.e the # of the specific language forum in help.hubzero.org 
+	// the string below will be used if 	'HELP_SUPPORT_OFFICIAL_LANGUAGE_FORUM_VALUE has a value, i.e the # of the specific language forum in help.halcyon.org 
 	'HELP_SUPPORT_OFFICIAL_LANGUAGE_FORUM' => 'Official [language] forum',
 	'HELP_SUPPORT_OFFICIAL_LANGUAGE_FORUM_VALUE' => '',
 	'translations' => 'Translations',

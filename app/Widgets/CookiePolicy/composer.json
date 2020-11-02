@@ -12,8 +12,8 @@
 		}
 	],
 	"support": {
-		"email": "support@hubzero.org",
-		"issues": "https://help.hubzero.org"
+		"email": "support@halcyon.org",
+		"issues": "https://help.halcyon.org"
 	},
 	"require": {
 		"php" : "^7.2"

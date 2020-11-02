@@ -1,7 +1,7 @@
 {
 	"name": "halcyon/mod_toolbar",
-	"description": "This Module shows the toolbar icons used to control actions throughout the administrator area in the HUBzero CMS",
-	"type": "hubzero-module",
+	"description": "This Module shows the toolbar icons used to control actions throughout the administrator area in the Halcyon CMS",
+	"type": "halcyon-module",
 	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
 	"homepage": "https://www.rcac.purdue.edu",
 	"license": "MIT",
@@ -12,8 +12,8 @@
 		}
 	],
 	"support": {
-		"email": "support@hubzero.org",
-		"issues": "https://help.hubzero.org"
+		"email": "support@halcyon.org",
+		"issues": "https://help.halcyon.org"
 	},
 	"require": {
 		"php" : "^5.4"

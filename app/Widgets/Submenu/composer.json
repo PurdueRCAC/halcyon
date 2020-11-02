@@ -1,7 +1,7 @@
 {
 	"name": "halcyon/wgt_submenu",
 	"description": "This shows the sub-Menu in the admin interface",
-	"type": "hubzero-module",
+	"type": "halcyon-module",
 	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
 	"homepage": "https://www.rcac.purdue.edu",
 	"license": "MIT",
@@ -12,8 +12,8 @@
 		}
 	],
 	"support": {
-		"email": "support@hubzero.org",
-		"issues": "https://help.hubzero.org"
+		"email": "support@halcyon.org",
+		"issues": "https://help.halcyon.org"
 	},
 	"require": {
 		"php" : "^5.4"
