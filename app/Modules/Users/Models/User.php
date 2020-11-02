@@ -181,6 +181,26 @@ class User extends Model implements
 	}
 
 	/**
+	 * Gets date created
+	 *
+	 * @return  string
+	 */
+	public function getDatelastseenAttribute()
+	{
+		return $this->getUserUsername()->datelastseen;
+	}
+
+	/**
+	 * Gets date created
+	 *
+	 * @return  string
+	 */
+	public function getDatecreatedAttribute()
+	{
+		return $this->getUserUsername()->datecreated;
+	}
+
+	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
 	 * @return  string
