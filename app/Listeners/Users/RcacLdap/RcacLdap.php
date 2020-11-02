@@ -184,7 +184,7 @@ class RcacLdap
 
 			// Performing a query.
 			$results = $ldap->search()
-				->where('uid', '=', $event->username)
+				->where('uid', '=', $user->username)
 				->select(['loginShell', 'homeDirectory'])
 				->get();
 
@@ -220,7 +220,7 @@ class RcacLdap
 
 		$event->setUser($user);
 	
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->username);
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $user->username);
 	}
 
 	/*public function handle($event)
