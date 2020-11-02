@@ -4960,6 +4960,9 @@ a.menulist:hover:before {
     background-color: var(--panel);
     color: #fff;
   }
+  html .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: rgba(230, 230, 230, 0.2);
+  }
   .form-control-plaintext {
     color: #eee;
   }
@@ -5147,6 +5150,9 @@ a.menulist:hover:before {
   }
   .ui-widget-header {
     border-color: rgba(255, 255, 255, 0.1);
+  }
+  .ui-widget.ui-widget-content {
+    border-color: transparent;
   }
 
   .ui-accordion .ui-accordion-header {

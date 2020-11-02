@@ -12,9 +12,9 @@ return [
 	'light' => 'Light (default)',
 	'dark' => 'Dark',
 	// Misc.
-	'CONTROL_PANEL' => 'Control Panel',
-	'HELP' => 'Help',
-	'ERROR_OCCURRED' => 'An error has occurred',
+	'dashboard' => 'Dashboard',
+	'help' => 'Help',
+	'error occurred' => 'An error has occurred',
 	'logout' => 'Logout',
 	'login' => 'Login',
 	'open-close menu' => 'Open/Close Menu',
