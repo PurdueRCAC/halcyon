@@ -129,7 +129,14 @@ class OrdersController extends Controller
 						->orWhereNull($a . '.datetimeremoved');
 				})
 				->groupBy($o . '.id')
-				->groupBy($o . '.userid');
+				->groupBy($o . '.userid')
+				->groupBy($o . '.datetimecreated')
+				->groupBy($o . '.datetimeremoved')
+				->groupBy($o . '.usernotes') 
+				->groupBy($o . '.staffnotes')
+				->groupBy($o . '.notice')
+				->groupBy($o . '.submitteruserid')
+				->groupBy($o . '.groupid');
 
 				/*if ($filters['search'])
 				{
