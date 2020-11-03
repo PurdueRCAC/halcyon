@@ -5024,7 +5024,9 @@ a.menulist:hover:before {
   .nav-tabs .nav-link {
     color: #aaa;
   }
-
+  .draghandle svg {
+    fill: currentColor;
+  }
   /*.nav-tabs {
     border: none;
     background-color: rgba(0, 0, 0, 0.2);
