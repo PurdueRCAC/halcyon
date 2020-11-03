@@ -204,7 +204,7 @@ class UsersController extends Controller
 
 		$users = User::query()
 			->whereNull('api_token')
-			->limit(0)
+			->limit(10000)
 			->offset(0)
 			->orderBy('id', 'asc')
 			->get();

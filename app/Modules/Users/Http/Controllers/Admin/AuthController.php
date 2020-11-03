@@ -136,9 +136,10 @@ class AuthController extends Controller
 	public function logout(Request $request)
 	{
 		Auth::logout();
+
 		if (app()->has('cas'))
 		{
-			app('cas')->logout('', route('admin.login'));
+			//app('cas')->logout('', route('admin.login'));
 		}
 
 		return redirect()->route('admin.login');
