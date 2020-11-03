@@ -282,6 +282,9 @@ class UsersController extends Controller
 	{
 		$user = auth()->user();
 
+		event($event = new UserBeforeDisplay($user));
+		$user = $event->getUser();
+
 		app('pathway')
 			->append(
 				$user->name,
@@ -292,8 +295,12 @@ class UsersController extends Controller
 				route('site.users.account.request')
 			);
 
+		event($event = new UserDisplay($user, $request->segment(2)));
+		$sections = collect($event->getSections());
+
 		return view('users::site.request', [
 			'user' => $user,
+			'sections' => $sections,
 		]);
 	}
 }

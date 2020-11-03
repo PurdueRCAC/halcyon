@@ -12,6 +12,8 @@ class AuthController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function login(Request $request)
@@ -65,6 +67,8 @@ class AuthController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function authenticate(Request $request)
@@ -131,16 +135,18 @@ class AuthController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function logout(Request $request)
 	{
 		Auth::logout();
 
-		if (app()->has('cas'))
+		/*if (app()->has('cas'))
 		{
-			//app('cas')->logout('', route('admin.login'));
-		}
+			app('cas')->logout('', route('admin.login'));
+		}*/
 
 		return redirect()->route('admin.login');
 	}

@@ -1,11 +1,15 @@
 @extends('layouts.master')
 
+@php
+$active = $sections->firstWhere('active', '=', true);
+@endphp
+
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('vendor/select2/css/select2.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/users/js/request.js?v=' . filemtime(public_path() . '/modules/users/js/request.js')) }}"></script>
 <script>
 $(document).ready(function() {
@@ -100,13 +104,21 @@ $(document).ready(function() {
 
 @section('content')
 
+@include('users::site.admin', ['user' => $user])
+
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
+	<h2>{{ $user->name }}</h2>
+
 	<div class="qlinks">
 		<ul class="dropdown-menu">
-			<li class="active"><a href="{{ route('site.users.account') }}">{{ trans('users::users.my accounts') }}</a></li>
-			<li><a href="{{ route('site.users.account.groups') }}">{{ trans('users::users.my groups') }}</a></li>
-			<li><a href="{{ route('site.users.account.quotas') }}">{{ trans('users::users.my quotas') }}</a></li>
-			<li><a href="{{ route('site.orders.index') }}">{{ trans('users::users.my orders') }}</a></li>
+			<li<?php if (!$active) { echo ' class="active"'; } ?>>
+				<a href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}">{{ trans('users::users.my accounts') }}</a>
+			</li>
+			@foreach ($sections as $section)
+				<li<?php if ($section['active']) { echo ' class="active"'; } ?>>
+					<a href="{{ $section['route'] }}">{!! $section['name'] !!}</a>
+				</li>
+			@endforeach
 		</ul>
 	</div>
 </div>
@@ -117,7 +129,7 @@ $(document).ready(function() {
 
 		<form method="get" action="{{ route('site.users.account.request') }}">
 			<div id="request_header">
-				<p>Purdue researchers collaborating with faculty, staff, or departments who have purchased access to cluster nodes or research storage through the <a href="/services/communityclusters/">Community Cluster Program</a> will be able to select one of the Community Clusters or storage resources on the request form.</p> 
+				<p>Purdue researchers collaborating with faculty, staff, or departments who have purchased access to cluster nodes or research storage through the <a href="{{ url('/services/communityclusters/') }}">Community Cluster Program</a> will be able to select one of the Community Clusters or storage resources on the request form.</p> 
 
 				<p>Once the request is submitted, an email notification will be sent to your faculty advisor requesting approval of your request. Account request approvals are left to the discretion of the faculty or appropriate Community Cluster partners. <strong>Please contact them directly regarding the status of your request.</strong></p>
 
