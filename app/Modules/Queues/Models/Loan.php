@@ -8,6 +8,7 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 /**
  * Model for a queue loan

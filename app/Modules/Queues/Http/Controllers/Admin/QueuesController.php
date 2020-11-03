@@ -313,13 +313,13 @@ class QueuesController extends Controller
 	 * 
 	 * @return  void
 	 */
-	public function state(Request $request)
+	public function state(Request $request, $id = 0)
 	{
-		$action = app('request')->segment(count($request->segments()) - 1);
+		$action = app('request')->segment(3);
 		$state  = $action == 'enable' ? 1 : 0;
 
 		// Incoming
-		$ids = $request->input('id');
+		$ids = $request->input('id', $id);
 		$ids = (!is_array($ids) ? array($ids) : $ids);
 
 		// Check for an ID
@@ -336,15 +336,13 @@ class QueuesController extends Controller
 		{
 			$row = Queue::findOrFail(intval($id));
 
-			if ($row->enabled == $state)
+			if ($row->enabled != $state)
 			{
-				continue;
-			}
-
-			if (!$row->update(['enabled' => $state]))
-			{
-				$request->session()->flash('error', $row->getError());
-				continue;
+				if (!$row->update(['enabled' => $state]))
+				{
+					$request->session()->flash('error', $row->getError());
+					continue;
+				}
 			}
 
 			$success++;
@@ -370,7 +368,7 @@ class QueuesController extends Controller
 	 */
 	public function scheduling(Request $request, $id = 0)
 	{
-		$action = app('request')->segment(count($request->segments()) - 1);
+		$action = app('request')->segment(3);
 		$state  = $action == 'start' ? 1 : 0;
 
 		// Incoming
@@ -391,15 +389,13 @@ class QueuesController extends Controller
 		{
 			$row = Queue::findOrFail(intval($id));
 
-			if ($row->started == $state)
+			if ($row->started != $state)
 			{
-				continue;
-			}
-
-			if (!$row->update(['started' => $state]))
-			{
-				$request->session()->flash('error', $row->getError());
-				continue;
+				if (!$row->update(['started' => $state]))
+				{
+					$request->session()->flash('error', $row->getError());
+					continue;
+				}
 			}
 
 			$success++;

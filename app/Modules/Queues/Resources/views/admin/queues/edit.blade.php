@@ -208,7 +208,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-groupid">{{ trans('queues::queues.group') }}:</label>
 					<span class="input-group">
-						<input type="text" name="fields[groupid]" id="field-groupid" class="form-control form-groups" data-uri="{{ url('/') }}/api/groups/?api_token={{ auth()->user()->api_token }}&search=%s" data-multiple="false" placeholder="Search for group..." value="{{ ($row->group ? $row->group->name . ':' . $row->groupid : '') }}" />
+						<input type="text" name="fields[groupid]" id="field-groupid" class="form-control form-groups" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" data-multiple="false" placeholder="Search for group..." value="{{ ($row->group ? $row->group->name . ':' . $row->groupid : '') }}" />
 						<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
 					</span>
 				</div>

@@ -80,6 +80,8 @@ return [
 	'nodes' => 'Nodes',
 	'cores' => 'Cores',
 	'start' => 'Start',
+	'stop' => 'Stop',
 	'end' => 'End',
+	'free' => 'Free',
 	'comment' => 'Comment',
 ];

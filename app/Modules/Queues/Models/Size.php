@@ -8,6 +8,7 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 /*use App\Modules\Queues\Events\SizeCreating;
 use App\Modules\Queues\Events\SizeCreated;
 use App\Modules\Queues\Events\SizeUpdating;

@@ -14,8 +14,8 @@ app('pathway')
 @section('toolbar')
 	@if (auth()->user()->can('edit.state queues'))
 		{!!
-			Toolbar::publishList(route('admin.queues.enable'));
-			Toolbar::unpublishList(route('admin.queues.disable'));
+			Toolbar::publishList(route('admin.queues.start'), trans('queues::queues.start'));
+			Toolbar::unpublishList(route('admin.queues.stop'), trans('queues::queues.stop'));
 			Toolbar::spacer();
 		!!}
 	@endif
@@ -130,9 +130,9 @@ app('pathway')
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('queues::queues.state'), 'enabled', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<!-- <th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('queues::queues.cluster'), 'cluster', $filters['order_dir'], $filters['order']) !!}
-				</th> -->
+				<th scope="col" class="priority-4">
+					{!! Html::grid('sort', trans('queues::queues.scheduling'), 'started', $filters['order_dir'], $filters['order']) !!}
+				</th>
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('queues::queues.group'), 'groupid', $filters['order_dir'], $filters['order']) !!}
 				</th>
@@ -163,7 +163,7 @@ app('pathway')
 		@foreach ($rows as $i => $row)
 			<tr<?php if ($row->isTrashed()) { echo ' class="trashed"'; } ?>>
 				<td>
-					@if (auth()->user()->can('edit queues'))
+					@if (auth()->user()->can('edit.state queues') || auth()->user()->can('delete queues'))
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
 					@endif
 				</td>
@@ -182,15 +182,6 @@ app('pathway')
 					<a href="{{ route('admin.queues.edit', ['id' => $row->id]) }}">
 					@endif
 						{{ $row->name }}
-					@if (auth()->user()->can('edit queues'))
-					</a>
-					@endif
-				</td>
-				<!-- <td class="text-right">
-					@if (auth()->user()->can('edit queues'))
-					<a href="{{ route('admin.queues.edit', ['id' => $row->id]) }}">
-					@endif
-						{{ number_format($row->defaultwalltime / 60) }} min
 					@if (auth()->user()->can('edit queues'))
 					</a>
 					@endif
@@ -227,7 +218,7 @@ app('pathway')
 							</span>
 						@endif
 					@endif
-				</td> -->
+				</td>
 				<td class="text-center">
 					@if ($row->datetimeremoved && $row->datetimeremoved != '0000-00-00 00:00:00' && $row->datetimeremoved != '-0001-11-30 00:00:00')
 						@if (auth()->user()->can('edit queues'))
@@ -261,9 +252,6 @@ app('pathway')
 						<?php } ?>
 					@endif
 				</td>
-				<!-- <td>
-					{{ $row->cluster }}
-				</td> -->
 				<td class="priority-4">
 					@if ($row->group)
 						<a href="{{ route('admin.groups.edit', ['id' => $row->groupid]) }}">
@@ -345,16 +333,7 @@ app('pathway')
 	</table>
 	</div>
 
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col col-md-8">
-				{{ $rows->render() }}
-			</div>
-			<div class="col col-md-4 text-right">
-				{{ $rows->total() }}
-			</div>
-		</div>
-	</div>
+	{{ $rows->render() }}
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
