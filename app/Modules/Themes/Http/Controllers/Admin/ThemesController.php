@@ -112,13 +112,20 @@ class ThemesController extends Controller
 		$query
 			->groupBy([
 				$s . '.id',
-				//$s . '.element',
+				$s . '.element',
+				$s . '.folder',
 				$s . '.name',
 				$s . '.enabled',
+				$s . '.access',
+				$s . '.protected',
 				$s . '.client_id',
-				//$l . '.title',
-				//$l . '.image',
-				$e . '.type'
+				$s . '.type',
+				$s . '.checked_out',
+				$s . '.checked_out_time',
+				$s . '.ordering',
+				$s . '.updated_at',
+				$s . '.updated_by',
+				$s . '.params'
 			]);
 
 		// Get records
