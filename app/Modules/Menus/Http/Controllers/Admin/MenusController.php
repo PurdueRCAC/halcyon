@@ -157,12 +157,12 @@ class MenusController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->with('success', trans('messages.item saved'));
+		return $this->cancel()->with('success', trans('global.messages.item saved'));
 	}
 
 	/**
@@ -196,7 +196,7 @@ class MenusController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();
@@ -225,12 +225,12 @@ class MenusController extends Controller
 		if ($model->rebuild(1))
 		{
 			// Reorder succeeded.
-			$request->session()->flash('success', trans('COM_MENUS_ITEMS_REBUILD_SUCCESS'));
+			$request->session()->flash('success', trans('menus::menus.rebuild succeeded'));
 		}
 		else
 		{
 			// Rebuild failed.
-			$request->session()->flash('error', trans('COM_MENUS_ITEMS_REBUILD_FAILED'));
+			$request->session()->flash('error', trans('menus::menus.rebuild failed'));
 		}
 
 		return redirect(route('admin.menus.items', ['menutype' => $menutype]));
