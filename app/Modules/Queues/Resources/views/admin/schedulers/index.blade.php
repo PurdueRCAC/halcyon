@@ -91,9 +91,11 @@ app('pathway')
 		<caption class="sr-only">{{ trans('queues::queues.schedulers') }}</caption>
 		<thead>
 			<tr>
-				<th>
-					{!! Html::grid('checkall') !!}
-				</th>
+				@if (auth()->user()->can('delete queues.schedulers'))	
+					<th>
+						{!! Html::grid('checkall') !!}
+					</th>
+				@endif
 				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('queues::queues.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
@@ -117,11 +119,12 @@ app('pathway')
 		<tbody>
 		@foreach ($rows as $i => $row)
 			<tr>
-				<td>
-					@if (auth()->user()->can('edit queues.schedulers'))
+				@if (auth()->user()->can('delete queues.schedulers'))
+					<td>
+					
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-					@endif
-				</td>
+					</td>
+				@endif
 				<td class="priority-5">
 					{{ $row->id }}
 				</td>

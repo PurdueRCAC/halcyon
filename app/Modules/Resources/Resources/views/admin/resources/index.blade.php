@@ -94,9 +94,11 @@ app('pathway')
 		<caption class="sr-only">{{ trans('resources::resources.resources') }}</caption>
 		<thead>
 			<tr>
-				<th>
-					{!! Html::grid('checkall') !!}
-				</th>
+				@if (!$disabled && auth()->user()->can('delete resources'))
+					<th>
+						{!! Html::grid('checkall') !!}
+					</th>
+				@endif
 				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('resources::assets.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
@@ -139,11 +141,11 @@ app('pathway')
 				}
 			?>
 			<tr class="{{ $cls }} @if ($disabled) disabled @endif">
-				<td>
-					@if (!$disabled && auth()->user()->can('edit resources'))
-					<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-					@endif
-				</td>
+				@if (!$disabled && auth()->user()->can('delete resources'))
+					<td>
+						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
+					</td>
+				@endif
 				<td class="priority-5">
 					{{ $row->id }}
 				</td>

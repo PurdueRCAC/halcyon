@@ -118,7 +118,7 @@ class ThemesController extends Controller
 				$s . '.client_id',
 				//$l . '.title',
 				//$l . '.image',
-				//$e . '.id'
+				$e . '.type'
 			]);
 
 		// Get records

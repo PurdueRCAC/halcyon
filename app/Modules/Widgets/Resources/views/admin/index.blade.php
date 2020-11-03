@@ -112,9 +112,11 @@ app('pathway')
 		<caption class="sr-only">{{ trans('widgets::widgets.module name') }}</caption>
 		<thead>
 			<tr>
-				<th>
-					<?php echo App\Halcyon\Html\Builder\Grid::checkall(); ?>
-				</th>
+				@if (auth()->user()->can('edit.state widgets') || auth()->user()->can('delete widgets'))
+					<th>
+						<?php echo App\Halcyon\Html\Builder\Grid::checkall(); ?>
+					</th>
+				@endif
 				<th scope="col" class="priority-5">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('widgets::widgets.id'), 'id', $filters['order_dir'], $filters['order']); ?>
 				</th>
@@ -147,11 +149,11 @@ app('pathway')
 		<tbody>
 		@foreach ($rows as $i => $row)
 			<tr>
-				<td>
-					@if (auth()->user()->can('edit widgets'))
+				@if (auth()->user()->can('edit.state widgets') || auth()->user()->can('delete widgets'))
+					<td>
 						{!! Html::grid('id', $i, $row->id) !!}
-					@endif
-				</td>
+					</td>
+				@endif
 				<td class="priority-5">
 					{{ $row->id }}
 				</td>

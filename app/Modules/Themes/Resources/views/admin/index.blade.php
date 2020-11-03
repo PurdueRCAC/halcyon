@@ -62,9 +62,11 @@ trans('themes::themes.module name')
 		<caption class="sr-only">{{ trans('themes::themes.themes') }}</caption>
 		<thead>
 			<tr>
-				<th>
-					{!! Html::grid('checkall') !!}
-				</th>
+				@if (auth()->user()->can('delete themes'))
+					<th>
+						{!! Html::grid('checkall') !!}
+					</th>
+				@endif
 				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('themes::themes.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
@@ -90,11 +92,11 @@ trans('themes::themes.module name')
 		?>
 		@foreach ($rows as $i => $row)
 			<tr>
-				<td>
-					@if ($canDelete)
+				@if ($canDelete)
+					<td>
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-					@endif
-				</td>
+					</td>
+				@endif
 				<td class="priority-5">
 					{{ $row->id }}
 				</td>
@@ -107,7 +109,7 @@ trans('themes::themes.module name')
 						{{ $row->name }}
 					@endif
 					@if (!$row->path())
-						<p class="smallsub">{{ trans('COM_TEMPLATES_ERROR_MISSING_FILES') }}</p>
+						<p class="smallsub">{{ trans('themes::themes.error.missing files') }}</p>
 					@endif
 				</td>
 				<td>
