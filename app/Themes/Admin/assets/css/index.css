@@ -4960,8 +4960,17 @@ a.menulist:hover:before {
     background-color: var(--panel);
     color: #fff;
   }
+  html .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #fff;
+  }
   html .select2-container--default .select2-selection--multiple .select2-selection__choice {
     background-color: rgba(230, 230, 230, 0.2);
+  }
+  html .select2-container--default .select2-selection--single,
+  html .select2-container--default .select2-selection--multiple {
+    background-color: var(--panel);
+    border-color: transparent;
+    color: var(--input-color);
   }
   .form-control-plaintext {
     color: #eee;
