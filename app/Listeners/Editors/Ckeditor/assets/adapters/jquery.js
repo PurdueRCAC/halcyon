@@ -78,11 +78,11 @@ if (typeof(jQuery) !== "undefined") {
 				$(el).ckeditor(function() {}, config);
 			});
 		});
-	jQuery(document)
+	/*jQuery(document)
 		.on("ajaxLoad", function(e) {
-			jInitEditors();
+			InitEditors();
 		})
 		.on("editorSave", function(e) {
-			jSaveEditorText();
-		});
+			SaveEditorText();
+		});*/
 }
