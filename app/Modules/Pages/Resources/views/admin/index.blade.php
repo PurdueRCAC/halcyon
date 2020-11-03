@@ -130,12 +130,12 @@ app('pathway')
 		<tbody>
 		@foreach ($rows as $i => $row)
 			<tr>
-				@if ($row->parent_id != 0)
-					@if (auth()->user()->can('delete pages'))
-						<td>
+				@if (auth()->user()->can('delete pages'))
+					<td>
+						@if ($row->parent_id != 0)
 							<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-						</td>
-					@endif
+						@endif
+					</td>
 				@endif
 				<td class="priority-5">
 					{{ $row->id }}
