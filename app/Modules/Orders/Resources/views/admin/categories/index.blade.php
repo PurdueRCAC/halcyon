@@ -15,7 +15,7 @@ app('pathway')
 		route('admin.orders.index')
 	)
 	->append(
-		trans('orders::orders.categories'),
+		trans('orders::orders.categories')
 	);
 @endphp
 

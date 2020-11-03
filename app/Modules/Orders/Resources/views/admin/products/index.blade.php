@@ -33,7 +33,7 @@ app('pathway')
 		route('admin.orders.index')
 	)
 	->append(
-		trans('orders::orders.products'),
+		trans('orders::orders.products')
 	);
 @endphp
 
