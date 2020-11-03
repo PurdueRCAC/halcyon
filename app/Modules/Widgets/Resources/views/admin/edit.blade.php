@@ -231,11 +231,32 @@ $( document ).ready(function() {
 			$('#menu_assignment-dependent').hide();
 		}
 	});
+
+	$('.btn-selectinvert').on('click', function(e) {
+		e.preventDefault();
+		$($(this).data('name')).each(function(i, el) {
+			el.checked = !el.checked;
+		});
+	});
+	$('.btn-selectnone').on('click', function(e) {
+		e.preventDefault();
+		$($(this).data('name')).each(function(i, el) {
+			el.checked = false;
+		});
+	});
+	$('.btn-selectall').on('click', function(e) {
+		e.preventDefault();
+		$($(this).data('name')).each(function(i, el) {
+			el.checked = true;
+		});
+	});
 });
 </script>
 @endpush
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('widgets::widgets.module name'),
@@ -352,11 +373,9 @@ app('pathway')
 
 					<div class="form-group">
 						<label for="menu_assignment">{{ trans('widgets::widgets.widget assignment') }}</label>
-					<!-- <fieldset id="jform_menus" class="radio"> -->
 						<select class="form-control" name="menu[assignment]" id="menu_assignment">
 							<?php echo App\Halcyon\Html\Builder\Select::options(App\Modules\Widgets\Helpers\Admin::getAssignmentOptions($row->client_id), 'value', 'text', $assignment, true);?>
 						</select>
-					<!-- </fieldset> -->
 					</div>
 
 					<div id="menu_assignment-dependent">
@@ -377,20 +396,8 @@ app('pathway')
 							</button>
 							-->
 
-						<div id="menu-assignment" class="accordian">
-							<?php $menuTypes = App\Modules\Menus\Helpers\Menus::getMenuLinks(); ?>
-							<?php /*
-							<div class="tabs">
-								<ul class="nav tav-tabs">
-									<?php foreach ($menuTypes as &$type) : ?>
-										<li class="nav-item">
-											<a class="nav-link" href="#<?php echo $type->menutype; ?>-details">
-												<?php echo $type->title ? $type->title : $type->menutype; ?>
-											</a>
-										</li>
-									<?php endforeach; ?>
-								</ul>*/ ?>
-
+							<div id="menu-assignment" class="accordian">
+								<?php $menuTypes = App\Modules\Menus\Helpers\Menus::getMenuLinks(); ?>
 								<?php foreach ($menuTypes as &$type) : ?>
 									<h3 data-ref="{{ $type->menutype }}-details">
 										<a href="#{{ $type->menutype }}-details">
@@ -398,26 +405,21 @@ app('pathway')
 										</a>
 									</h3>
 									<div id="{{ $type->menutype }}-details">
-										<?php
-										//echo Html::tabs('panel', $type->title ? $type->title : $type->menutype, $type->menutype.'-details');
+										<?php $chkbox_class = 'chk-menulink-' . $type->id; ?>
 
-										$chkbox_class = 'chk-menulink-' . $type->id; ?>
+										<div class="btn-group mb-3" role="group" aria-label="Selection options">
+											<button class="btn-assignments btn btn-secondary btn-selectinvert" data-name=".{{ $chkbox_class }}">
+												{{ trans('widgets::widgets.invert selection') }}
+											</button>
 
-										<!--
-										<button class="btn-assignments btn btn-secondary" onclick="$('.<?php echo $chkbox_class; ?>').each(function(i, el) { el.checked = !el.checked; });">
-											<?php echo trans('global.SELECTION_INVERT'); ?>
-										</button>
+											<button class="btn-assignments btn btn-warning btn-selectnone" data-name=".{{ $chkbox_class }}">
+												{{ trans('widgets::widgets.select none') }}
+											</button>
 
-										<button class="btn-assignments btn btn-warning" onclick="$('.<?php echo $chkbox_class; ?>').each(function(i, el) { el.checked = false; });">
-											<?php echo trans('global.SELECTION_NONE'); ?>
-										</button>
-
-										<button class="btn-assignments btn btn-success" onclick="$('.<?php echo $chkbox_class; ?>').each(function(i, el) { el.checked = true; });">
-											<?php echo trans('global.SELECTION_ALL'); ?>
-										</button>
-
-										<div class="clr"></div>
-										-->
+											<button class="btn-assignments btn btn-success btn-selectall" data-name=".{{ $chkbox_class }}">
+												{{ trans('widgets::widgets.select all') }}
+											</button>
+										</div>
 
 										<?php
 										$count = count($type->links);
@@ -452,8 +454,7 @@ app('pathway')
 										<?php endif; ?>
 									</div><!-- / #{{ $type->menutype }}-details -->
 								<?php endforeach; ?>
-							<!--</div> / .tabs -->
-						</div>
+							</div>
 						</div><!-- / #menu-assignment -->
 					</div>
 				</fieldset>

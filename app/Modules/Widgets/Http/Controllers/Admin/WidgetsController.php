@@ -249,8 +249,6 @@ class WidgetsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Widget;
 		$row->published = 1;
 		$row->access = 1;
@@ -296,8 +294,6 @@ class WidgetsController extends Controller
 	 */
 	public function edit($id, Request $request)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Widget::findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))

@@ -39,6 +39,7 @@ return [
 		'none' => 'No pages',
 		'order position' => ':order. :title',
 	],
+	'invert selection' => 'Invert Selection',
 	'select position' => 'Select position',
 	'change position' => 'Change position',
 	'layout' => 'Alternative Layout',
