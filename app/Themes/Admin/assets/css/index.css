@@ -4926,6 +4926,14 @@ a.menulist:hover:before {
     background-color: #1c1b21;
     border-color: #1c1b21;
   }
+  html .tagsinput {
+    background: var(--panel);
+    border-color: transparent;
+    color: var(--input-color);
+  }
+  html .tagsinput .tag {
+    background-color: rgba(230, 230, 230, 0.2);
+  }
   html .select2-container--default .select2-search--dropdown .select2-search__field,
   fieldset.adminform,
   .form-control,
