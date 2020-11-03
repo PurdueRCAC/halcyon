@@ -122,7 +122,7 @@
 						<?php } else { ?>
 							<?php if (auth()->user()) { ?>
 								<?php if (!$attending) { ?>
-									<a class="btn-attend btn btn-primary" href="/coffee?attend=1" data-newsid="<?php echo $news->id; ?>" data-assoc="<?php echo auth()->user()->id; ?>">Reserve this time</a>
+									<a class="btn-attend btn btn-primary" href="/coffee?attend=1" data-newsid="<?php echo $event->id; ?>" data-assoc="<?php echo auth()->user()->id; ?>">Reserve this time</a>
 								<?php } else { ?>
 									You reserved this time.<br />
 									<a class="btn-notattend btn btn-danger" href="/coffee?attend=0" data-id="<?php echo $attending; ?>">Cancel</a>
