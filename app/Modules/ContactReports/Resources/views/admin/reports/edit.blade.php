@@ -117,15 +117,8 @@ app('pathway')
 		</div>
 		<div class="col col-md-5 span5">
 			<table class="meta">
-				<caption>Metadata</caption>
+				<caption class="sr-only">Metadata</caption>
 				<tbody>
-					<tr>
-						<th scope="row">{{ trans('contactreports::contactreports.id') }}:</th>
-						<td>
-							{{ $row->id }}
-							<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
-						</td>
-					</tr>
 					<tr>
 						<th scope="row">{{ trans('contactreports::contactreports.created') }}:</th>
 						<td>
@@ -188,6 +181,8 @@ app('pathway')
 			</div>
 		</div>
 	@endif
+
+	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 
 	@csrf
 </form>
