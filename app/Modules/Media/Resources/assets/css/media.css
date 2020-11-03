@@ -1,50 +1,89 @@
 /**
  * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
+ * @copyright  Copyright 2019 Purdue University.
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
+/* Icon classes */
+/*main *[class^="icon-"]:before,
+main *[class*=" icon-"]:before {
+	font-family: "Fontcons";
+	margin-right: 0.2em;
+}
+.icon-chevron-left:before  { content: "\2039"; }
+.icon-chevron-right:before { content: "\203A"; }
+.icon-folder-close:before       { content: "\f07b"; }
+.icon-folder-close-alt:before   { content: "\f114"; }
+.icon-folder-open:before        { content: "\f07c"; }
+.icon-folder-open-alt:before    { content: "\f115"; }
+.icon-align-justify:before      { content: "\f039"; }
+.icon-th:before                 { content: "\f00a"; }
+.icon-download:before                 { content: "\f0ab"; }
+.icon-upload:before                 { content: "\f046"; }
+.icon-link:before                 { content: "\26D3"; }
+.icon-trash:before                 { content: "\f014"; }
+.icon-info:before                 { content: "\f05a"; }
+.icon-folder-new:before       { content: "\f07b"; }
+.icon-folder-new:after {
+	font-family: "Fontcons";
+	content: "\271A";
+}*/
+/*#component-content,
+#main,
+.media-container,
+.media-panels {
+	min-height: 100%;
+}
+#component-content {
+	position: relative;
+	min-height: 500px;
+}*/
 #main {
 	padding: 0 30px 30px 30px;
 	height: 100%;
 	align-self: stretch;
-	display: flex;
-	flex-grow: 1;
-	flex-flow: column;
+  display: flex;
+  /*position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;*/
+  flex-grow: 1;
+  flex-flow: column;
 }
 #main > * {
-	flex-grow: 1;
-	height: 100%;
+  flex-grow: 1;
+  height: 100%;
 }
 #main > h2 {
-	flex-grow: 0;
+  flex-grow: 0;
 }
 .spinner {
 	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: rgba(200, 200, 200, 0.5);
-	text-align: center;
-	padding: 10em;
+	  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(200, 200, 200, 0.5);
+  text-align: center;
+  padding: 10em;
 }
 .media-container {
 	display: flex;
-	flex-flow: column;
-	border: 1px solid rgba(0,0,0,0.1);
-	border-radius: 0.25em;
+  flex-flow: column;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 0.25em;
 }
-
 /* Panels */
 .media-panels {
 	flex-grow: 1;
 	align-self: stretch;
+	/*min-height: 500px;*/
 	height: 100%;
 	display: flex;
 	flex-flow: row wrap;
-	border-top: 1px solid rgba(0,0,0,0.1);
-	border-bottom: 1px solid rgba(0,0,0,0.1);
+	/*border-top: 1px solid rgba(0,0,0,0.1);
+	border-bottom: 1px solid rgba(0,0,0,0.1);*/
 }
 #component-body .media-panels {
 	margin-top: 3em;
@@ -68,7 +107,9 @@
 
 .media-header {
 	white-space: nowrap;
-	background-color: rgba(255, 255, 255, 0.05);
+	background-color: rgba(255, 255, 255, 0.05);/*#fff;*/
+	/*position: relative;
+	overflow: hidden;*/
 	border-bottom: 1px solid rgba(0,0,0,0.1);
 	display: flex;
 	width: 100%;
@@ -115,12 +156,13 @@
 .media-header-buttons {
 	padding: 1em 30px;
 }
-
+/*.media-files-action,*/
 .media-files-view {
 	display: block;
 	float: right;
 	overflow: hidden;
 	text-align: center;
+	/*text-indent: 55em;*/
 	width: 1em;
 	height: 1em;
 	margin: 0 0.2em;
@@ -137,7 +179,7 @@
 	-khtml-opacity: 0.4;
 	opacity: 0.4;
 }
-
+/*.media-files-action:hover,*/
 .media-files-view:hover,
 .media-files-view.active {
 	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=100);
@@ -145,7 +187,11 @@
 	-khtml-opacity:1;
 	opacity: 1;
 }
-
+/*.media-files-action {
+	margin-right: 1em;
+}
+.media-files-action:before,
+.media-files-action:after,*/
 .media-files-view:before {
 	text-indent: 0;
 	position: absolute;
@@ -154,7 +200,11 @@
 	right: 0;
 	bottom: 0;
 }
-
+/*.media-files-action:after {
+	color: #fff;
+	font-size: 0.5em;
+	line-height: 2.5;
+}*/
 .media-files {
 	display: none;
 }
@@ -245,12 +295,23 @@
 	width: 1.5em;
 	vertical-align: middle;
 }
-
+/*.treeview a:before {
+	font-family: "Fontcons";
+	content: "\f07b";
+	color: #fadd80;
+	font-size: 1.5em;
+	line-height: 1;
+	position: absolute;
+	top: 0.2em;
+	left: 1.4em;
+}*/
 .treeview .hitarea:hover {
 	color: #222;
 	border-color: #222;
 }
-
+/*.treeview .collapsable>a:before {
+	content: "\f07c";
+}*/
 .treeview .collapsable-hitarea {
 	top: 0.5em;
 }
@@ -339,6 +400,7 @@
 	-webkit-box-shadow: 0px 0px 0px 4px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
 	-moz-box-shadow: 0px 0px 0px 4px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
 	box-shadow: 0px 0px 0px 4px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
+	/*background-color: rgba(0,0,0,0.1);*/
 }
 .media-item-thumb.ui-selected .media-preview a {
 	background-color: #f0f0f0;
@@ -461,6 +523,10 @@
 	-webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.1);
 	-moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.1);
 	box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.1);
+	/*filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+	-khtml-opacity: 0;
+	-moz-opacity: 0;
+	opacity: 0;*/
 	display: none;
 }
 .media-thumbs .media-options {
@@ -569,5 +635,12 @@ form.dropzone,
 	}
 	.media-item:hover .media-preview a {
 		background-color: rgba(255, 255, 255, 0.1);
+	}
+	.media-preview .img-preview {
+		background-color: #222;
+		background-image: linear-gradient(45deg, #010101 25%, transparent 25%),
+					linear-gradient(-45deg, #010101 25%, transparent 25%),
+					linear-gradient(45deg, transparent 75%, #010101 75%),
+					linear-gradient(-45deg, transparent 75%, #010101 75%);
 	}
 }
