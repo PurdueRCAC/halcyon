@@ -12,8 +12,8 @@ app('pathway')
 	@if (auth()->user()->can('edit.state listeners'))
 		{!!
 			Toolbar::divider();
-			Toolbar::publish(route('admin.listeners.publish'), 'JTOOLBAR_ENABLE', true);
-			Toolbar::unpublish(route('admin.listeners.unpublish'), 'JTOOLBAR_DISABLE', true);
+			Toolbar::publish(route('admin.listeners.publish'), trans('listeners::listeners.enable'), true);
+			Toolbar::unpublish(route('admin.listeners.unpublish'), trans('listeners::listeners.disable'), true);
 			Toolbar::divider();
 			Toolbar::checkin(route('admin.listeners.checkin'));
 		!!}
@@ -79,9 +79,11 @@ app('pathway')
 		<caption class="sr-only">{!! trans('listeners::listeners.listener manager') !!}</caption>
 		<thead>
 			<tr>
+				@if (auth()->user()->can('edit listeners'))
 				<th class="text-center">
 					<?php echo App\Halcyon\Html\Builder\Grid::checkall(); ?>
 				</th>
+				@endif
 				<th scope="col" class="priority-5">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('listeners::listeners.id'), 'extension_id', $filters['order_dir'], $filters['order']); ?>
 				</th>
@@ -137,7 +139,7 @@ app('pathway')
 					@else
 						@if ($canEdit)
 							<a href="{{ route('admin.listeners.edit', ['id' => $row->id]) }}">
-								{{ trans('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener name') }}
+								{{ trans(strtolower('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener name')) }}
 							</a>
 						@else
 							{{ $row->name }}

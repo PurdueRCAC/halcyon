@@ -26,6 +26,8 @@ return [
 	'basic fieldset' => 'Basic Options',
 	'advanced fieldset' => 'Advanced Options',
 	'custom content' => 'Custom Content',
+	'enable' => 'Enable',
+	'disable' => 'Disable',
 	'field' => array(
 		'content description' => 'Text',
 		'content' => 'Text',
