@@ -705,7 +705,7 @@ class ItemsController extends Controller
 	 */
 	public function cancel()
 	{
-		return redirect(route('admin.menus.items', ['menutype' => request()->input('menutype')]));
+		return redirect(route('admin.menus.items', ['menutype' => request()->input('menutype', request()->input('fields.menutype'))]));
 	}
 
 	/**

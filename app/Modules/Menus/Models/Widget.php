@@ -61,9 +61,9 @@ class Widget extends Model
 				'a.published',
 				'map.menuid',
 				'ag.title AS access_title',
-				DB::raw('(SELECT COUNT(*) FROM widgets_menu WHERE widgetid = a.id AND menuid < 0) AS `except`')
+				DB::raw('(SELECT COUNT(*) FROM widgets_menu WHERE moduleid = a.id AND menuid < 0) AS `except`')
 			])
-			->leftJoin('widgets_menu AS map', 'map.widgetid', '=', DB::raw(sprintf('a.id AND map.menuid IN (0, %1$d, -%1$d)', $pk)))
+			->leftJoin('widgets_menu AS map', 'map.moduleid', '=', DB::raw(sprintf('a.id AND map.menuid IN (0, %1$d, -%1$d)', $pk)))
 			->leftJoin('viewlevels AS ag', 'ag.id', 'a.access')
 			->where('a.published', '>=', 0)
 			->where('a.client_id', '=', 0)

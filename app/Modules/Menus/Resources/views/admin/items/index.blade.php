@@ -298,47 +298,18 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 					<span class="badge access {{ preg_replace('/[^a-z0-9\-_]+/', '', strtolower($row->access_level)) }}">{{ $row->access_level }}</span>
 				</td>
 				<td class="order">
-					<?php /*$orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
-					<?php if ($canChange): ?>
-
-							<span>{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.menus.items.orderup', ['id' => $row->id])) !!}</span>
-							<span>{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), isset($ordering[$row->parent_id][$orderkey + 1]), route('admin.menus.items.orderdown', ['id' => $row->id])) !!}</span>
-
+					<?php $orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
+					<?php /*if ($canChange): ?>
+						<span>{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.menus.items.orderup', ['id' => $row->id])) !!}</span>
+						<span>{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), isset($ordering[$row->parent_id][$orderkey + 1]), route('admin.menus.items.orderdown', ['id' => $row->id])) !!}</span>
 						<?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
-						<input type="text" name="order[]" size="5" value="<?php echo $orderkey + 1;?>" <?php echo $disabled ?> class="text-area-order" />
+						<input type="text" name="order[]" size="5" value="<?php echo $orderkey + 1;?>" <?php echo $disabled ?> class="form-control text-area-order" />
 						<?php $originalOrders[] = $orderkey + 1; ?>
 					<?php else : ?>
 						<?php echo $orderkey + 1;?>
 					<?php endif;*/ ?>
 					{{ $row->ordering }}
 				</td>
-				<!-- <td class="nowrap priority-5">
-					<span title="<?php echo $row->item_type_desc ? htmlspecialchars($row->item_type_desc, ENT_COMPAT, 'UTF-8') : ''; ?>">
-						{{ $row->menutype }}
-					</span>
-				</td>
-				<td class="center priority-2">
-					<?php if ($row->type == 'module'): ?>
-						<?php if ($row->language == '*' || $row->home == '0'): ?>
-							<?php echo \App\Halcyon\Html\Builder\Grid::isDefault($row->home, $i, 'items.', ($row->language != '*' || !$row->home) && $canChange); ?>
-						<?php elseif ($canChange): ?>
-							<a href="{{ route('admin.menus.setdefault', ['id' => $row->get('id')]) }}">
-								{{ $row->language_title }}
-							</a>
-						<?php else: ?>
-							{{ $row->language_title }}
-						<?php endif; ?>
-					<?php endif; ?>
-				</td>
-				<td class="center priority-6">
-					@if ($row->language == '')
-						{{ trans('global.default') }}
-					@elseif ($row->language == '*')
-						{{ trans('global.all') }}
-					@else
-						{{ $row->language_title ? $row->language_title : trans('global.undefined') }}
-					@endif
-				</td> -->
 				<td>
 					<div class="draghandle" draggable="true">
 						<svg class="glyph draghandle-icon" viewBox="0 0 24 24"><path d="M10,4c0,1.1-0.9,2-2,2S6,5.1,6,4s0.9-2,2-2S10,2.9,10,4z M16,2c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,2,16,2z M8,10 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,10,8,10z M16,10c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,10,16,10z M8,18 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,18,8,18z M16,18c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,18,16,18z"></path></svg>
