@@ -112,9 +112,11 @@ else
 		<caption class="sr-only">{{ $template ? trans('news::news.articles') : trans('news::news.templates') }}</caption>
 		<thead>
 			<tr>
-				<th>
-					{!! Html::grid('checkall') !!}
-				</th>
+				@if (auth()->user()->can('delete news'))
+					<th>
+						{!! Html::grid('checkall') !!}
+					</th>
+				@endif
 				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('news::news.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
@@ -138,9 +140,11 @@ else
 		<tbody>
 		@foreach ($rows as $i => $row)
 			<tr>
-				<td>
-					<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-				</td>
+				@if (auth()->user()->can('delete news'))
+					<td>
+						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
+					</td>
+				@endif
 				<td class="priority-5">
 					{{ $row->id }}
 				</td>

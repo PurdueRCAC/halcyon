@@ -75,9 +75,11 @@ app('pathway')
 		<caption class="sr-only">{{ trans('history::history.history manager') }}</caption>
 		<thead>
 			<tr>
-				<th>
-					<span class="form-check"><input type="checkbox" name="toggle" value="" id="toggle-all" class="form-check-input checkbox-toggle toggle-all" /><label for="toggle-all"></label></span>
-				</th>
+				@if (auth()->user()->can('delete history'))
+					<th>
+						<span class="form-check"><input type="checkbox" name="toggle" value="" id="toggle-all" class="form-check-input checkbox-toggle toggle-all" /><label for="toggle-all"></label></span>
+					</th>
+				@endif
 				<th scope="col">{{ trans('history::history.id') }}</th>
 				<th scope="col">{{ trans('history::history.item id') }}</th>
 				<th scope="col">{{ trans('history::history.item type') }}</th>
@@ -90,9 +92,11 @@ app('pathway')
 		<tbody>
 		@foreach ($rows as $i => $row)
 			<tr>
-				<td>
-					<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-				</td>
+				@if (auth()->user()->can('delete history'))
+					<td>
+						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
+					</td>
+				@endif
 				<td class="priority-5">
 					{{ $row->id }}
 				</td>

@@ -55,8 +55,7 @@
 			</div>
 		</div>
 
-		<input type="hidden" name="group" value="{{ $group->id }}" autocomplete="off" />
-		<input type="hidden" name="group" value="{{ $filters['group'] }}" />
+		<input type="hidden" name="course" value="{{ $course->id }}" autocomplete="off" />
 		<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 
@@ -65,23 +64,23 @@
 
 	<div class="card mb-4">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('groups::groups.groups') }}</caption>
+		<caption class="sr-only">{{ trans('courses::courses.courses') }}</caption>
 		<thead>
 			<tr>
 				<th>
 					{!! Html::grid('checkall') !!}
 				</th>
 				<th scope="col" class="priority-5">
-					{!! Html::grid('sort', trans('groups::groups.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('courses::courses.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
-					{!! Html::grid('sort', trans('groups::groups.name'), 'name', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('courses::courses.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('groups::groups.last visit'), 'last_seen', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('courses::courses.last visit'), 'last_seen', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('groups::groups.type'), 'membertype', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('courses::courses.type'), 'membertype', $filters['order_dir'], $filters['order']) !!}
 				</th>
 			</tr>
 		</thead>
@@ -89,22 +88,22 @@
 		@foreach ($rows as $i => $row)
 			<tr<?php if ($row->user && $row->user->trashed()) { echo ' class="trashed"'; } ?>>
 				<td>
-					@if (auth()->user()->can('edit groups'))
+					@if (auth()->user()->can('edit courses'))
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
 					@endif
 				</td>
 				<td class="priority-5">
-					@if (auth()->user()->can('edit groups'))
-						<a href="{{ route('admin.groups.members.edit', ['id' => $row->id]) }}">
+					@if (auth()->user()->can('edit courses'))
+						<a href="{{ route('admin.courses.members.edit', ['id' => $row->id]) }}">
 					@endif
 							{{ $row->id }}
-					@if (auth()->user()->can('edit groups'))
+					@if (auth()->user()->can('edit courses'))
 						</a>
 					@endif
 				</td>
 				<td>
 					@if ($row->user && $row->user->trashed())
-						<span class="icon-alert-triangle glyph warning has-tip" title="{{ trans('groups::groups.user account removed') }}">{{ trans('groups::groups.user account removed') }}</span>
+						<span class="icon-alert-triangle glyph warning has-tip" title="{{ trans('courses::courses.user account removed') }}">{{ trans('groups::groups.user account removed') }}</span>
 					@endif
 					@if (auth()->user()->can('edit users'))
 						<a href="{{ route('admin.users.edit', ['id' => $row->userid]) }}">
@@ -131,16 +130,16 @@
 						$cls = ($row->membertype == 1) ? 'btn-success' : 'btn-warning';
 						$cls = ($row->membertype != 3) ? $cls : 'btn-danger';
 						?>
-					<div class="btn-group btn-group-sm dropdown" role="group" aria-label="Group membership type">
-						<button type="button" class="btn btn-secondary {{ $cls }} dropdown-toggle" id="btnGroupDrop{{ $row->id }}" title="{{ trans('groups::groups.membership type') }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<div class="btn-group btn-group-sm dropdown" role="group" aria-label="Course membership type">
+						<button type="button" class="btn btn-secondary {{ $cls }} dropdown-toggle" id="btnCourseDrop{{ $row->id }}" title="{{ trans('groups::groups.membership type') }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							{{ $row->type->name }}
 						</button>
-						@if (auth()->user()->can('edit groups'))
+						@if (auth()->user()->can('edit courses'))
 							<ul class="dropdown-menu" aria-labelledby="btnGroupDrop{{ $row->id }}">
 								@foreach ($types as $type)
 									@if ($type->id != $row->membertype && ($type->id == 1 || $type->id == 2))
 										<li class="dropdown-item">
-											<a class="grid-action" data-id="cb{{ $i }}" href="{{ route('admin.groups.members', ['group' => $row->groupid]) }}">{{ $type->name }}</a>
+											<a class="grid-action" data-id="cb{{ $i }}" href="{{ route('admin.courses.members', ['course' => $row->groupid]) }}">{{ $type->name }}</a>
 										</li>
 									@endif
 								@endforeach

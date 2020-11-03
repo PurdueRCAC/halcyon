@@ -208,9 +208,11 @@ app('pathway')
 		<caption class="sr-only">{{ $group->name }} &rsaquo; trans('groups::groups.members')</caption>
 		<thead>
 			<tr>
-				<th>
-					{!! Html::grid('checkall') !!}
-				</th>
+				@if (auth()->user()->can('edit groups'))
+					<th>
+						{!! Html::grid('checkall') !!}
+					</th>
+				@endif
 				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('groups::groups.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
@@ -234,11 +236,11 @@ app('pathway')
 		<tbody>
 		@foreach ($rows as $i => $row)
 			<tr<?php if (($row->user && $row->user->trashed()) || $row->isTrashed()) { echo ' class="trashed"'; } ?>>
-				<td>
-					@if (auth()->user()->can('edit groups'))
+				@if (auth()->user()->can('edit groups'))
+					<td>
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-					@endif
-				</td>
+					</td>
+				@endif
 				<td class="priority-5">
 					@if (($row->user && $row->user->trashed()) || $row->isTrashed())
 						<span class="icon-trash" aria-hidden="true"></span>

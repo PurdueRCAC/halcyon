@@ -35,6 +35,9 @@
 		<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 		<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 
+		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
 		<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
@@ -42,9 +45,11 @@
 		<caption>#{{ $report->id }} - {{ Illuminate\Support\Str::limit($report->report, 70) }}</caption>
 		<thead>
 			<tr>
-				<th>
-					{!! Html::grid('checkall') !!}
-				</th>
+				@if (auth()->user()->can('delete contactreports.comments'))
+					<th>
+						{!! Html::grid('checkall') !!}
+					</th>
+				@endif
 				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('contactreports::contactreports.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
@@ -62,11 +67,11 @@
 		<tbody>
 		@foreach ($rows as $i => $row)
 			<tr>
-				<td>
-					@if (auth()->user()->can('edit contactreports'))
+				@if (auth()->user()->can('delete contactreports.comments'))
+					<td>
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-					@endif
-				</td>
+					</td>
+				@endif
 				<td class="priority-5">
 					{{ $row->id }}
 				</td>
@@ -101,8 +106,6 @@
 	{{ $rows->render() }}
 
 	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="order" value="{{ $filters['order'] }}" />
-	<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
 	@csrf
 </form>

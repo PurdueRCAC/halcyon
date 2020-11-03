@@ -86,9 +86,11 @@ app('pathway')
 		<caption>#{{ $article->id }} - {{ $article->headline }}</caption>
 		<thead>
 			<tr>
-				<th>
-					<?php echo App\Halcyon\Html\Builder\Grid::checkall(); ?>
-				</th>
+				@if (auth()->user()->can('edit news'))
+					<th>
+						<?php echo App\Halcyon\Html\Builder\Grid::checkall(); ?>
+					</th>
+				@endif
 				<th scope="col" class="priority-5">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.id'), 'id', $filters['order_dir'], $filters['order']); ?>
 				</th>
@@ -109,11 +111,11 @@ app('pathway')
 		<tbody>
 		@foreach ($rows as $i => $row)
 			<tr>
-				<td>
-					@if (auth()->user()->can('edit news'))
+				@if (auth()->user()->can('edit news'))
+					<td>
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-					@endif
-				</td>
+					</td>
+				@endif
 				<td class="priority-5">
 					{{ $row->id }}
 				</td>
