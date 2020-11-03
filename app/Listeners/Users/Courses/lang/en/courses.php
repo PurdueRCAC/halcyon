@@ -1,5 +1,5 @@
 <?php
 return [
-	'listener name' => 'Users - Groups',
-	'listener desc' => 'This user\'s groups.',
+	'listener name' => 'Users - Courses',
+	'listener desc' => 'This displays course accounts related to a specific user.',
 ];
