@@ -102,9 +102,11 @@ app('pathway')
 	<table class="table table-hover adminlist">
 		<thead>
 			<tr>
-				<th>
-					{!! Html::grid('checkall') !!}
-				</th>
+				@if (auth()->user()->can('delete orders.products'))
+					<th>
+						{!! Html::grid('checkall') !!}
+					</th>
+				@endif
 				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('orders::orders.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
@@ -129,11 +131,11 @@ app('pathway')
 		<tbody class="sortable">
 		@foreach ($rows as $i => $row)
 			<tr<?php if ($row->istrashed()) { echo ' class="trashed"'; } ?>>
-				<td>
-					@if (auth()->user()->can('edit orders.products'))
+				@if (auth()->user()->can('delete orders.products'))
+					<td>
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-					@endif
-				</td>
+					</td>
+				@endif
 				<td class="priority-5">
 					{{ $row->id }}
 				</td>
@@ -178,7 +180,6 @@ app('pathway')
 	</div>
 
 	{{ $rows->render() }}
-
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />

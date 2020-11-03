@@ -43,7 +43,8 @@ class CategoriesController extends Controller
 			$filters['order_dir'] = Category::$orderDir;
 		}
 
-		$query = Category::query();
+		$query = Category::query()
+			->withTrashed();
 
 		if ($filters['parent'] > 1)
 		{
@@ -70,7 +71,7 @@ class CategoriesController extends Controller
 		elseif ($filters['state'] == 'trashed')
 		{
 			//$query->onlyTrashed();
-			$query->withTrashed()->where(function($where)
+			$query->where(function($where)
 			{
 				$where->whereNotNull('datetimeremoved')
 					->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
@@ -96,13 +97,15 @@ class CategoriesController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Category();
 
 		$categories = Category::query()
 			->where('id', '!=', 1)
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
 			->orderBy('name', 'asc')
 			->get();
 
@@ -166,14 +169,16 @@ class CategoriesController extends Controller
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Category::withTrashed()->find($id);
 
 		$categories = Category::query()
 			->where('id', '!=', $id)
 			->where('id', '!=', 1)
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
 			->orderBy('name', 'asc')
 			->get();
 

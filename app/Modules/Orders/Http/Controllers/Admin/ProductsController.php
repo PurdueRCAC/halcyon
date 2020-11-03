@@ -132,7 +132,11 @@ class ProductsController extends Controller
 		$row = new Product();
 
 		$categories = Category::query()
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
@@ -157,7 +161,11 @@ class ProductsController extends Controller
 		}
 
 		$categories = Category::query()
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
