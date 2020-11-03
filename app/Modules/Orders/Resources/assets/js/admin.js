@@ -4,16 +4,25 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-Halcyon.submitbutton = function(task) {
-	var frm = document.getElementById('item-form');
+Halcyon.submitbutton = function (task) {
+	var frm = document.getElementById('item-form'),
+		invalid = false;
 
 	if (frm) {
-		$(document).trigger('editorSave');
+		var elms = frm.querySelectorAll('input[required]');
+		elms.forEach(function (el) {
+			if (!el.value || !el.validity.valid) {
+				el.classList.add('is-invalid');
+				invalid = true;
+				return;
+			}
+			//patternMismatch || el.validity.tooLong || el.validity.tooShort
+		});
 
-		if (task == 'cancel' || document.formvalidator.isValid(frm)) {
+		if (task == 'cancel' || task.match(/cancel$/) || !invalid) {
 			Halcyon.submitform(task, frm);
 		} else {
-			alert(frm.getAttribute('data-invalid-msg'));
+			alert('Invalid data');
 		}
 	}
 }
