@@ -76,10 +76,21 @@ class MenusController extends Controller
 			$widgets[$menuType][] = $result;
 		}
 
+		$widget = app('db')
+			->table('extensions')
+			->select(['id', 'name', 'element'])
+			->where('type', '=', 'widget')
+			->where('client_id', '=', 0)
+			->where('enabled', '=', 1)
+			->where('element', '=', 'menu')
+			->orderBy('element', 'asc')
+			->first();
+
 		return view('menus::admin.menus.index', [
 			'rows'    => $rows,
 			'filters' => $filters,
-			'widgets' => $widgets
+			'widgets' => $widgets,
+			'menuwidget' => $widget
 		]);
 	}
 
