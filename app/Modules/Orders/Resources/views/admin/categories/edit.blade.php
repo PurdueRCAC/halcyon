@@ -54,7 +54,7 @@ app('pathway')
 
 				<div class="form-group{{ $errors->has('fields.name') ? ' has-error' : '' }}">
 					<label for="field-name">{{ trans('orders::orders.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control required" maxlength="250" value="{{ $row->name }}" />
+					<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="250" value="{{ $row->name }}" />
 				</div>
 
 				<div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
@@ -77,70 +77,7 @@ app('pathway')
 				</div>
 			</fieldset>
 
-			@if ($row->id)
-				<div class="data-wrap">
-					<h4>{{ trans('history::history.history') }}</h4>
-					<ul class="entry-log">
-						<?php
-						$history = $row->history()->orderBy('created_at', 'desc')->get();
-
-						if (count($history)):
-							foreach ($history as $action):
-								$actor = trans('global.unknown');
-
-								if ($action->user):
-									$actor = e($action->user->name);
-								endif;
-
-								$created = $action->created_at && $action->created_at != '0000-00-00 00:00:00' ? $action->created_at : trans('global.unknown');
-								$old = Carbon\Carbon::now()->subDays(2); //->toDateTimeString();
-
-								if ($action->action == 'updated')
-								{
-									if (is_object($action->new))
-									{
-										$fields = array_keys(get_object_vars($action->new));
-									}
-									else
-									{
-										$fields = array_keys($action->new);
-									}
-
-									foreach ($fields as $i => $k)
-									{
-										if (in_array($k, ['created_at', 'updated_at', 'deleted_at']))
-										{
-											unset($fields[$i]);
-										}
-									}
-								}
-								?>
-								<li>
-									<span class="entry-log-action">{{ trans('history::history.action ' . $action->action, ['user' => $actor, 'entity' => 'menu']) }}</span><br />
-									<time datetime="{{ $action->created_at }}" class="entry-log-date">
-										@if ($action->created_at < $old)
-											{{ $action->created_at->format('d M Y') }}
-										@else
-											{{ $action->created_at->diffForHumans() }}
-										@endif
-									</time><br />
-									@if ($action->action == 'updated')
-										<span class="entry-diff">Changed fields: <?php echo implode(', ', $fields); ?></span>
-									@endif
-								</li>
-								<?php
-							endforeach;
-						else:
-							?>
-							<li>
-								<span class="entry-diff">{{ trans('history::history.none found') }}</span>
-							</li>
-							<?php
-						endif;
-						?>
-					</ul>
-				</div>
-			@endif
+			@include('history::admin.history')
 		</div>
 	</div>
 	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
