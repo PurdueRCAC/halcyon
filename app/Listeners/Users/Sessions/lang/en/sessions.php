@@ -1,5 +1,5 @@
 <?php
 return [
-	'listener name' => 'Users - DBM LDAP',
-	'listener desc' => 'This connects to the DBM Ldap to retrieve user info.',
+	'listener name' => 'Users - Sessions',
+	'listener desc' => 'This lists the sessions associated with a specific user',
 ];
