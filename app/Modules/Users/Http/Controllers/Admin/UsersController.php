@@ -203,8 +203,9 @@ class UsersController extends Controller
 			->get();*/
 
 		$users = User::query()
-			->limit(10000)
-			->offset(50000)
+			->whereNull('api_token')
+			->limit(0)
+			->offset(0)
 			->orderBy('id', 'asc')
 			->get();
 
@@ -220,7 +221,8 @@ class UsersController extends Controller
 
 			if (!$user->api_token)
 			{
-				$user->update(['api_token' => Str::random(60)]);
+				$user->api_token = Str::random(60);
+				$user->save();
 			}
 
 			if (!$user->roles()->count())

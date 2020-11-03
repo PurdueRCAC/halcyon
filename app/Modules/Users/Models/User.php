@@ -14,9 +14,9 @@ use App\Halcyon\Config\Registry;
 use App\Halcyon\Access\Gate;
 use App\Halcyon\Access\Map;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Auth\MustVerifyEmail;
+//use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Auth\Passwords\CanResetPassword;
+//use Illuminate\Auth\Passwords\CanResetPassword;
 //use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -34,10 +34,16 @@ use Carbon\Carbon;
  */
 class User extends Model implements
 	AuthenticatableContract,
-	AuthorizableContract,
-	CanResetPasswordContract
+	AuthorizableContract
 {
-	use Authenticatable, CanResetPassword, MustVerifyEmail, Notifiable;
+	use Authenticatable, Notifiable;
+
+	/**
+	 * Indicates if the model should be timestamped.
+	 *
+	 * @var bool
+	 */
+	public $timestamps = false;
 
 	/**
 	 * The table to which the class pertains
@@ -53,7 +59,8 @@ class User extends Model implements
 	 */
 	protected $fillable = [
 		'name',
-		'newroles'
+		'newroles',
+		'api_token'
 	];
 
 	/**
@@ -62,7 +69,8 @@ class User extends Model implements
 	 * @var  array
 	 */
 	protected $rules = array(
-		'name'  => 'required|string|min:1'
+		'name'  => 'required|string|min:1',
+		'api_token' => 'nullable|string|max:100'
 	);
 
 	/**
