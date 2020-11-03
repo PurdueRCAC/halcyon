@@ -22,39 +22,75 @@ Halcyon.submitbutton = function(task) {
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function() {
-	var autocompleteUsers = function(url) {
-		return function(request, response) {
-			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-				response($.map(data.data, function (el) {
-					return {
-						label: el.name + ' (' + el.username + ')',
-						name: el.name,
-						id: el.id,
-					};
-				}));
+	var users = $(".form-users");
+	if (users.length) {
+		users.each(function (i, user) {
+			user = $(user);
+			var cl = user.clone()
+				.attr('type', 'hidden')
+				.val(user.val().replace(/([^:]+):/, ''));
+			user
+				.attr('name', 'userid' + i)
+				.attr('id', user.attr('id') + i)
+				.val(user.val().replace(/(:\d+)$/, ''))
+				.after(cl);
+			user.autocomplete({
+				minLength: 2,
+				source: function (request, response) {
+					return $.getJSON(user.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
+						response($.map(data.data, function (el) {
+							return {
+								label: el.name + ' (' + el.username + ')',
+								name: el.name,
+								id: el.id,
+							};
+						}));
+					});
+				},
+				select: function (event, ui) {
+					event.preventDefault();
+					// Set selection
+					user.val(ui.item.label); // display the selected text
+					cl.val(ui.item.id); // save selected id to input
+					return false;
+				}
 			});
-		};
-	};
+		});
+	}
 
-	var newsuser = $(".form-users");
-	if (newsuser.length) {
-		newsuser.tagsInput({
-			placeholder: 'Select user...',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteUsers(newsuser.attr('data-uri')),
-				dataName: 'users',
-				height: 150,
-				delay: 100,
-				minLength: 1,
-				limit: 1
-			}/*,
-			'onAddTag': function(input, value) {
-				NEWSSearch();
-			},
-			'onRemoveTag': function(input, value) {
-				NEWSSearch();
-			}*/
+	var groups = $(".form-groups");
+	if (groups.length) {
+		groups.each(function (i, group) {
+			group = $(group);
+			var cl = group.clone()
+				.attr('type', 'hidden')
+				.val(group.val().replace(/([^:]+):/, ''));
+			group
+				.attr('name', 'groupid' + i)
+				.attr('id', group.attr('id') + i)
+				.val(group.val().replace(/(:\d+)$/, ''))
+				.after(cl);
+			group.autocomplete({
+				minLength: 2,
+				source: function (request, response) {
+					return $.getJSON(group.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
+						response($.map(data.data, function (el) {
+							return {
+								label: el.name,
+								name: el.name,
+								id: el.id,
+							};
+						}));
+					});
+				},
+				select: function (event, ui) {
+					event.preventDefault();
+					// Set selection
+					group.val(ui.item.label); // display the selected text
+					cl.val(ui.item.id); // save selected id to input
+					return false;
+				}
+			});
 		});
 	}
 

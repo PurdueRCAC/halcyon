@@ -14,6 +14,8 @@
 @endpush
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('orders::orders.module name'),
@@ -53,7 +55,7 @@ app('pathway')
 		<div id="order-info">
 @endif
 	<div class="row">
-		<div class="col col-md-9">
+		<div class="col col-md-12">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
@@ -64,10 +66,10 @@ app('pathway')
 				<div class="row">
 					<div class="col col-md-6">
 						<div class="form-group{{ $errors->has('userid') ? ' has-error' : '' }}">
-							<label for="field-userid">{{ trans('orders::orders.userid') }}:</label>
+							<label for="field-userid">{{ trans('orders::orders.user') }}:</label>
 							<span class="input-group input-user">
 								<?php
-								$user = ($row->user ? $row->user->name : trans('global.unknown')) . ':' . $row->userid;
+								$user = ($row->user ? $row->user->name . ' (' . $row->user->username . ')' : trans('global.unknown')) . ':' . $row->userid;
 								?>
 								<input type="text" name="fields[userid]" id="field-userid" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" size="30" maxlength="250" value="{{ $user }}" />
 								<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
@@ -76,9 +78,9 @@ app('pathway')
 					</div>
 					<div class="col col-md-6">
 						<div class="form-group{{ $errors->has('groupid') ? ' has-error' : '' }}">
-							<label for="field-groupid">{{ trans('orders::orders.groupid') }}:</label>
+							<label for="field-groupid">{{ trans('orders::orders.group') }}:</label>
 							<span class="input-group input-user">
-								<input type="text" name="fields[groupid]" id="field-groupid" class="form-control" value="{{ $row->groupid ? $row->group->name . ':' . $row->groupid : '' }}" />
+								<input type="text" name="fields[groupid]" id="field-groupid" class="form-control form-groups" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" data-multiple="false" value="{{ $row->group ? $row->group->name . ':' . $row->groupid : '' }}" />
 								<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
 							</span>
 						</div>
@@ -385,7 +387,7 @@ app('pathway')
 					</tfoot>
 				</table>
 			</fieldset>
-		</div>
+		<!-- </div>
 		<div class="col col-md-3">
 			<table class="meta">
 				<tbody>
@@ -393,7 +395,6 @@ app('pathway')
 						<th scope="row"><?php echo trans('orders::orders.id'); ?>:</th>
 						<td>
 							<?php echo e($row->id); ?>
-							<input type="hidden" name="id" id="field-id" value="<?php echo e($row->id); ?>" />
 						</td>
 					</tr>
 					<tr>
@@ -406,16 +407,16 @@ app('pathway')
 							<?php endif; ?>
 						</td>
 					</tr>
-					<?php if ($row->getOriginal('datetimeremoved') && $row->getOriginal('datetimeremoved') != '0000-00-00 00:00:00'): ?>
+					@if ($row->isTrashed())
 						<tr>
-							<th scope="row"><?php echo trans('orders::orders.canceled'); ?>:</th>
+							<th scope="row">{{ trans('orders::orders.canceled') }}:</th>
 							<td>
-								<?php echo e($row->datetimeremoved); ?>
+								{{ $row->datetimeremoved }}
 							</td>
 						</tr>
-					<?php endif; ?>
+					@endif
 				</tbody>
-			</table>
+			</table> -->
 		</div>
 	</div>
 @if ($row->id)
@@ -477,6 +478,7 @@ app('pathway')
 	</div><!-- / .tabs -->
 	@endif
 
+	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 	@csrf
 </form>
 @stop
