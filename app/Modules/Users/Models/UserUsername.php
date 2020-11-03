@@ -72,6 +72,7 @@ class UserUsername extends Model
 		'username',
 		'unixid',
 		'userid',
+		'api_token'
 	];
 
 	/**

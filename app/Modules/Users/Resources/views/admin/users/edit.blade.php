@@ -68,7 +68,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label id="field_username-lbl" for="field_username">{{ trans('users::users.username') }} <span class="required star">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[username]" id="field_username" value="{{ $user->username }}" class="form-control required<?php if ($user->id) { echo ' readonly" readonly="readonly'; } ?>" />
+					<input type="text" name="ufields[username]" id="field_username" value="{{ $user->username }}" class="form-control required<?php if ($user->id) { echo ' readonly" readonly="readonly'; } ?>" />
 				</div>
 
 				<div class="form-group">
@@ -81,18 +81,18 @@ app('pathway')
 					<input type="text" class="form-control" name="fields[puid]" id="field-organization_id" value="{{ $user->puid }}" />
 				</div>
 
-				<?php /*<div class="form-group">
+				<div class="form-group">
 					<label for="field-api_token">{{ trans('users::users.api token') }}:</label>
 					<div class="row">
-						<div class="col col-md-8">
+						<div class="col col-md-10">
 							<input type="text" class="form-control readonly" readonly="readonly" name="fields[api_token]" id="field-api_token" value="{{ $user->api_token }}" />
 						</div>
 						<div class="col col-md-2">
-							<button class="btn btn-outline-secondary">{{ trans('users::users.regenerate') }}</button>
+							<button class="btn btn-secondary btn-apitoken">{{ trans('users::users.regenerate') }}</button>
 						</div>
 					</div>
 					<span class="form-text text-muted">{{ trans('users::users.api token hint') }}</span>
-				</div>*/ ?>
+				</div>
 			</fieldset>
 
 			<fieldset id="user-groups" class="adminform">

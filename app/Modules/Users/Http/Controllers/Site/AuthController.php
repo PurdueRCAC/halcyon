@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 //use App\User;
 
 class AuthController extends Controller
@@ -125,6 +126,20 @@ class AuthController extends Controller
 				{
 					//$user = \App\Modules\Users\Models\User::where('username', '=', $cas->user())->first();
 					$user = \App\Modules\Users\Models\User::findByUsername($cas->user());
+
+					if (!$user && config('users.create_on_login', 1))
+					{
+						$user = new \App\Modules\Users\Models\User;
+						$user->name = $cas->getAttribute('fullname');
+
+						if ($user->save())
+						{
+							$userusername = new \App\Modules\Users\Models\UserUsername;
+							$userusername->userid = $user->id;
+							$userusername->username = $cas->user();
+							$userusername->api_key = Str::random(60);
+						}
+					}
 
 					if ($user && $user->id)
 					{

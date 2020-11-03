@@ -1,6 +1,6 @@
 /**
  * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
+ * @copyright  Copyright 2019 Purdue University.
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
@@ -61,15 +61,6 @@ jQuery(document).ready(function($){
 	}
 
 	var isModal = (contents.attr('data-tmpl') == 'component');
-
-	$('.media-upload').on('click', function(e){
-		e.preventDefault();
-
-		if ($($(this).attr('href')).length) {
-			$('.media-item').removeClass('ui-activated');
-			$($(this).attr('href')).dialog('open');
-		}
-	});
 
 	var views = $('.media-files-view');
 	$('.media-files-view').on('click', function(e){
@@ -318,18 +309,38 @@ jQuery(document).ready(function($){
 		collapsed: true
 	});
 
+	$('.media-upload').on('click', function (e) {
+		e.preventDefault();
+
+		if ($($(this).attr('href')).length) {
+			$('.media-item').removeClass('ui-activated');
+			$($(this).attr('href')).dialog('open');
+		}
+	});
+
 	$('.dropzone').dropzone({
-		queuecomplete: function() {
-			$.get(contents.attr('data-list') + '?layout=' + layout.val() + '&folder=' + folder.val(), function(data){
+		/*params: {
+			path: $('#folder').val()
+		},*/
+		init: function () {
+			this.on("sending", function (file, xhr, formData) {
+				formData.append("path", folder.val());
+			});
+		},
+		queuecomplete: function () {
+			$.get(contents.attr('data-list') + '?layout=' + $('#layout').val() + '&folder=' + $('#folder').val(), function (data) {
 				contents.html(data);
 
 				bindContextModals();
 				Dropzone.forElement('.dropzone').removeAllFiles();
-				$('.media-upload').close();
+
+				$($('.media-upload').attr('href')).dialog('close');
 			});
+		},
+		error: function (errorMessage) {
+			alert(errorMessage);
 		}
 	});
-
 	/*var attach = $("#ajax-uploader");
 	if (attach.length) {
 

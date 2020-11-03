@@ -180,8 +180,8 @@ app('pathway')
 					<?php if ($canChange) : ?>
 						<a href="{{ route('admin.users.edit', ['id' => $row->id]) }}">
 					<?php endif; ?>
-						@if ($row->email)
-							{{ $row->email }}
+						@if ($row->username)
+							{{ $row->username }}
 						@else
 							<span class="unknown">{{ trans('global.none') }}</span>
 						@endif

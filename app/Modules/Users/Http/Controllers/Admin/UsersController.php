@@ -5,6 +5,7 @@ namespace App\Modules\Users\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Halcyon\Http\StatefulRequest;
@@ -194,7 +195,40 @@ class UsersController extends Controller
 	 */
 	public function ingest()
 	{
-		$staff = Member::query()
+		/*$users = app('db')
+			->table('users')
+			->limit(10000)
+			->offset(0)
+			->orderBy('id', 'asc')
+			->get();*/
+
+		$users = User::query()
+			->limit(10000)
+			->offset(50000)
+			->orderBy('id', 'asc')
+			->get();
+
+		$now = Carbon::now();
+		$processed = array();
+
+		foreach ($users as $user)
+		{
+			if ($user->id == 1001 || $user->id == 61344)
+			{
+				continue;
+			}
+
+			if (!$user->api_token)
+			{
+				$user->update(['api_token' => Str::random(60)]);
+			}
+
+			if (!$user->roles()->count())
+			{
+				Map::addUserToRole($user->id, 2);
+			}
+		}
+		/*$staff = Member::query()
 			->where('group_id', '=', 1)
 			->get()
 			->pluck('user_id')
@@ -281,17 +315,8 @@ class UsersController extends Controller
 				$u->surname = array_pop($bits);
 				$u->middle_name = (count($bits) ? implode(' ', $bits) : '');
 			}
-			/*if ($map)
-			{
-				echo $u->id . ' - ' . $u->username . '<br />';
-				continue;
-			}*/
-			$u->save();
 
-			/*$map = new Map;
-			$map->user_id = $u->id;
-			$map->role_id = in_array($user->id, $staff) ? 3 : 2;
-			$map->save();*/
+			$u->save();
 
 			if ($map)
 			{
@@ -299,14 +324,8 @@ class UsersController extends Controller
 			}
 
 			$processed[$u->username] = $u->id;
-		}
-		/*app('request')->merge(['hidemainmenu' => 1]);
+		}*/
 
-		$row = new User;
-
-		return view('news::admin.users.edit', [
-			'row' => $row
-		]);*/
 		return $this->cancel();
 	}
 
@@ -394,6 +413,13 @@ class UsersController extends Controller
 				->back()
 				->withError($error);
 		}
+
+		$ufields = $request->input('ufields');
+
+		$username = $id ? $user->getUserUsername() : new UserUsername();
+		$username->userid = $user->id;
+		$username->fill($ufields);
+		$username->save();
 
 		/*if (!$user->setRoles($fields['roles']))
 		{
