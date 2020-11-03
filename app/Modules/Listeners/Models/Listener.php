@@ -234,7 +234,7 @@ class Listener extends Model
 	{
 		if ($path = $this->getPathAttribute())
 		{
-			app('translator')->addNamespace('listener.' . $this->folder . '.' . $this->element, $path . '/lang');
+			app('translator')->addNamespace(strtolower('listener.' . $this->folder . '.' . $this->element), $path . '/lang');
 		}
 	}
 
