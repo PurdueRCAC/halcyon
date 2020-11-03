@@ -126,7 +126,12 @@ class ProductsController extends Controller
 		$query = Product::query()
 			->select($p . '.*')
 			->join($c, $c . '.id', $p . '.ordercategoryid')
-			->where($c . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			->where(function($where) use ($c)
+			{
+				$where->whereNull($c . '.datetimeremoved')
+					->orWhere($c . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->withTrashed();
 
 		if ($filters['search'])
 		{
@@ -142,16 +147,20 @@ class ProductsController extends Controller
 
 		if ($filters['state'] == 'published')
 		{
-			$query->where($p . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			$query->where(function($where) use ($p)
+			{
+				$where->whereNull($p . '.datetimeremoved')
+					->orWhere($p . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			});
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->withTrashed()->where($p . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-			//$query->onlyTrashed();
-		}
-		else
-		{
-			$query->withTrashed();
+			//$query->withTrashed()->where($p . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+			$query->where(function($where) use ($p)
+			{
+				$where->wherNoyeNull($p . '.datetimeremoved')
+					->where($p . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+			});
 		}
 
 		if ($filters['category'])

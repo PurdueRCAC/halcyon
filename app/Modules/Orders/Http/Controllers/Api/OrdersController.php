@@ -226,7 +226,15 @@ class OrdersController extends Controller
 					$where->where($a . '.datetimeremoved', '=', '0000-00-00 00:00:00')
 						->orWhereNull($a . '.datetimeremoved');
 				})
-				->groupBy($o . '.id');
+				->groupBy($o . '.id')
+				->groupBy($o . '.userid')
+				->groupBy($o . '.datetimecreated')
+				->groupBy($o . '.datetimeremoved')
+				->groupBy($o . '.usernotes') 
+				->groupBy($o . '.staffnotes')
+				->groupBy($o . '.notice')
+				->groupBy($o . '.submitteruserid')
+				->groupBy($o . '.groupid');
 
 				if ($filters['start'])
 				{

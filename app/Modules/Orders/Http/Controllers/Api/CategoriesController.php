@@ -125,7 +125,7 @@ class CategoriesController extends Controller
 			$filters['order_dir'] = Category::$orderDir;
 		}
 
-		$query = Category::query();
+		$query = Category::query()->withTrashed();
 
 		if ($filters['parent'] > 1)
 		{
@@ -150,11 +150,19 @@ class CategoriesController extends Controller
 
 		if ($filters['state'] == 'published')
 		{
-			$query->where('datetimeremoved', '=', '0000-00-00 00:00:00');
+			$query->where(function($where)
+			{
+				$where->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+					->orWhereNull('datetimeremoved');
+			});
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->withTrashed()->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+			$query->where(function($where)
+			{
+				$where->whereNotNull('datetimeremoved')
+					->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+			});
 		}
 
 		$rows = $query

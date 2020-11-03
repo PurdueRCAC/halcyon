@@ -84,17 +84,12 @@ class ProductsController extends Controller
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			//$query->withTrashed()->where($p . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
 			$query->where(function($where) use ($p)
 			{
 				$where->wherNoyeNull($p . '.datetimeremoved')
 					->where($p . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
 			});
 		}
-		/*else
-		{
-			$query->withTrashed();
-		}*/
 
 		if ($filters['category'])
 		{
