@@ -128,7 +128,8 @@ class OrdersController extends Controller
 					$where->where($a . '.datetimeremoved', '=', '0000-00-00 00:00:00')
 						->orWhereNull($a . '.datetimeremoved');
 				})
-				->groupBy($o . '.id');
+				->groupBy($o . '.id')
+				->groupBy($o . '.userid');
 
 				/*if ($filters['search'])
 				{
