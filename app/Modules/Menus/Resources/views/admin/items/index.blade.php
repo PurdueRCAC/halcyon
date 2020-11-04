@@ -67,20 +67,19 @@ app('pathway')
 
 @section('toolbar')
 	@if ($filters['state'] == 'trashed')
+		@if (auth()->user()->can('delete menus'))
+			{!! Toolbar::deleteList('', route('admin.menus.items.delete')) !!}
+		@endif
 		@if (auth()->user()->can('edit.state menus'))
 			{!!
 				Toolbar::custom(route('admin.menus.items.restore'), 'publish', 'publish', 'Restore', false);
 				Toolbar::spacer();
 			!!}
 		@endif
-		@if (auth()->user()->can('delete menus'))
-			{!! Toolbar::deleteList('', route('admin.menus.items.delete')) !!}
-		@endif
 	@else
 		@if (auth()->user()->can('manage menus'))
 			{!!
 				Toolbar::checkin('admin.menus.checkin');
-				Toolbar::custom(route('admin.menus.rebuild', ['menutype' => $filters['menutype']]), 'refresh', 'refresh_f2.png', 'menus::menus.rebuild', false);
 				Toolbar::spacer();
 			!!}
 		@endif
@@ -96,6 +95,12 @@ app('pathway')
 		@endif
 		@if (auth()->user()->can('create menus'))
 			{!! Toolbar::addNew(route('admin.menus.items.create', ['menutype' => $filters['menutype']])) !!}
+		@endif
+		@if (auth()->user()->can('manage menus'))
+			{!!
+				Toolbar::spacer();
+				Toolbar::link('refresh', 'menus::menus.rebuild', route('admin.menus.rebuild', ['menutype' => $filters['menutype']]));
+			!!}
 		@endif
 		@if (auth()->user()->can('admin menus'))
 			{!!
@@ -170,10 +175,6 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
-	@if ($filters['state'] == 'trashed')
-		<div class="alert alert-warning">{{ trans('pages::pages.trashed must be restored') }}</div>
-	@endif
-
 	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('menus::menus.items') }}</caption>
@@ -184,28 +185,16 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 				</th>
 				<th scope="col" class="priority-5">{{ trans('menus::menus.id') }}</th>
 				<th scope="col">{{ trans('menus::menus.title') }}</th>
-				<th class="priority-3">
+				<th scope="col" class="text-center priority-3">
 					<?php echo \App\Halcyon\Html\Builder\Grid::sort(trans('global.state'), 'state', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th class="priority-4">
+				<th scope="col" class="text-center priority-4">
 					<?php echo \App\Halcyon\Html\Builder\Grid::sort(trans('menus::menus.access'), 'access', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th>
+				<th scope="col" class="text-center">
 					<?php echo \App\Halcyon\Html\Builder\Grid::sort(trans('global.ordering'), 'lft', $filters['order_dir'], $filters['order']); ?>
-					<?php if (auth()->user()->can('edit.state menus') && $saveOrder) :?>
-						<?php echo \App\Halcyon\Html\Builder\Grid::order($rows, 'filesave', 'admin.menus.items.saveorder'); ?>
-					<?php endif; ?>
 				</th>
-				<!-- <th class="priority-5">
-					{{ trans('menus::menus.item type') }}
-				</th>
-				<th class="priority-2">
-					<?php echo \App\Halcyon\Html\Builder\Grid::sort(trans('menus::menus.home'), 'home', $filters['order_dir'], $filters['order']); ?>
-				</th>
-				<th class="priority-6">
-					<?php echo \App\Halcyon\Html\Builder\Grid::sort(trans('menus::menus.language'), 'language', $filters['order_dir'], $filters['order']); ?>
-				</th> -->
-				<th></th>
+				<!-- <th></th> -->
 			</tr>
 		</thead>
 		<?php
@@ -260,7 +249,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 						</p>
 					@endif
 				</td>
-				<td class="center priority-3">
+				<td class="text-center priority-3">
 					@if ($row->trashed())
 						@if ($canChange)
 							<a class="btn btn-secondary btn-sm trashed" href="{{ route('admin.menus.items.restore', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.restore" title="Restore menu item">
@@ -294,27 +283,26 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 						<?php //echo App\Modules\Menus\Helpers\Html::state($row->published, $i, $canChange, 'cb'); ?>
 					@endif
 				</td>
-				<td class="center priority-4">
+				<td class="text-center priority-4">
 					<span class="badge access {{ preg_replace('/[^a-z0-9\-_]+/', '', strtolower($row->access_level)) }}">{{ $row->access_level }}</span>
 				</td>
-				<td class="order">
+				<td class="text-center">
 					<?php $orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
-					<?php /*if ($canChange): ?>
+					<?php if ($canChange): ?>
 						<span>{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.menus.items.orderup', ['id' => $row->id])) !!}</span>
 						<span>{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), isset($ordering[$row->parent_id][$orderkey + 1]), route('admin.menus.items.orderdown', ['id' => $row->id])) !!}</span>
 						<?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
-						<input type="text" name="order[]" size="5" value="<?php echo $orderkey + 1;?>" <?php echo $disabled ?> class="form-control text-area-order" />
+						<!-- <input type="text" name="order[]" size="5" value="<?php echo $orderkey + 1;?>" <?php echo $disabled ?> class="form-control text-area-order" /> -->
 						<?php $originalOrders[] = $orderkey + 1; ?>
 					<?php else : ?>
 						<?php echo $orderkey + 1;?>
-					<?php endif;*/ ?>
-					{{ $row->ordering }}
+					<?php endif; ?>
 				</td>
-				<td>
+				<!-- <td>
 					<div class="draghandle" draggable="true">
 						<svg class="glyph draghandle-icon" viewBox="0 0 24 24"><path d="M10,4c0,1.1-0.9,2-2,2S6,5.1,6,4s0.9-2,2-2S10,2.9,10,4z M16,2c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,2,16,2z M8,10 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,10,8,10z M16,10c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,10,16,10z M8,18 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,18,8,18z M16,18c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,18,16,18z"></path></svg>
 					</div>
-				</td>
+				</td> -->
 			</tr>
 		@endforeach
 		</tbody>

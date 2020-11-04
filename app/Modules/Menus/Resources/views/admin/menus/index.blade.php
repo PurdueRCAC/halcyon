@@ -1,6 +1,8 @@
 @extends('layouts.master')
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('menus::menus.module name'),
@@ -10,7 +12,7 @@ app('pathway')
 
 @section('toolbar')
 	@if (auth()->user()->can('delete menus'))
-		{!! Toolbar::deleteList('', route('admin.menus.delete')) !!}
+		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.menus.delete')) !!}
 	@endif
 	@if (auth()->user()->can('create menus'))
 		{!! Toolbar::addNew(route('admin.menus.create')) !!}

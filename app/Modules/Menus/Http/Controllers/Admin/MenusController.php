@@ -101,8 +101,6 @@ class MenusController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Type();
 
 		if ($fields = app('request')->old('fields'))
@@ -123,8 +121,6 @@ class MenusController extends Controller
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Type::findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))

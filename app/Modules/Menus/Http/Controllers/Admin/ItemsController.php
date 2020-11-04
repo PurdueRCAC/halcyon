@@ -532,10 +532,10 @@ class ItemsController extends Controller
 	 * @param   Request  $request
 	 * @return  Response
 	 */
-	public function delete(Request $request)
+	public function delete(Request $request, $id = null)
 	{
 		// Incoming
-		$ids = $request->input('id', array());
+		$ids = $request->input('id', $id);
 		$ids = (!is_array($ids) ? array($ids) : $ids);
 
 		$success = 0;
@@ -544,7 +544,12 @@ class ItemsController extends Controller
 		{
 			// Delete the entry
 			// Note: This is recursive and will also remove all descendents
-			$row = Item::findOrFail($id);
+			$row = Item::withTrashed()->find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if ($row->trashed())
 			{
