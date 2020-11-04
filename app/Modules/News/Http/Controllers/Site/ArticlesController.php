@@ -232,7 +232,7 @@ class ArticlesController extends Controller
 		}
 		else
 		{
-			$query = $type->articles()
+			$query = $row->articles()
 				->wherePublished()
 				->where('template', '=', 0);
 		}
