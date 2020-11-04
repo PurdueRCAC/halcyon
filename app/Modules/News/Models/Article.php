@@ -463,10 +463,10 @@ class Article extends Model
 			'updatetime'     => date("g:ia", strtotime($this->datetimecreated))
 		);
 
-		$news = array_merge($this->getContentVars(), $this->getAttributes()); //$this->toArray();
-		$news['resources'] = $this->resources->toArray();
+		$news = array_merge($this->getAttributes(), $this->getContentVars()); //$this->toArray();
+		//$news['resources'] = $this->resources->toArray();
 
-		$resources = array();
+		/*$resources = array();
 		foreach ($news['resources'] as $resource)
 		{
 			$resource['resourcename'] = $resource['resourceid'];
@@ -493,7 +493,7 @@ class Article extends Model
 		else
 		{
 			$news['resources'] = implode('', $resources);
-		}
+		}*/
 
 		foreach ($news as $var => $value)
 		{
@@ -505,6 +505,8 @@ class Article extends Model
 			$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
 		}
 
+		$text = preg_replace_callback("/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/i", array($this, 'matchNews'), $text);
+
 		// Put code blocks back
 		$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
 		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
@@ -513,6 +515,33 @@ class Article extends Model
 		$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
 
 		return $text;
+	}
+
+	/**
+	 * Match news
+	 *
+	 * @param   array  $match
+	 * @return  string
+	 */
+	private function matchNews($match)
+	{
+		$title = 'News Story #' . $match[3];
+
+		$news = self::find($match[3]);
+
+		if (!$news)
+		{
+			return $match[0];
+		}
+
+		$title = $news->headline;
+
+		if (isset($match[4]))
+		{
+			$title = preg_replace("/[{}]+/", '', $match[4]);
+		}
+
+		return '<a href="' . route('site.news.show', ['id' => $match[3]]) . '">' . $title . '</a>';
 	}
 
 	/**
@@ -930,12 +959,10 @@ class Article extends Model
 			$vars['location'] = $this->location;
 		}
 
-		if (isset($this->resources))
-		{
 			$resources = array();
 			foreach ($this->resources as $resource)
 			{
-				array_push($resources, $resource['resourcename']);
+				array_push($resources, $resource->resource->name);
 			}
 
 			if (count($resources) > 1)
@@ -955,7 +982,6 @@ class Article extends Model
 			{
 				$vars['resources'] = $resources[0];
 			}
-		}
 
 		return $vars;
 	}
