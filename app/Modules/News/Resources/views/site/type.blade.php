@@ -183,13 +183,6 @@
 	<?php
 	$dt = Carbon\Carbon::now();
 
-	$articles = $type->articles()
-		->wherePublished()
-		->where('template', '=', 0)
-		->orderBy('datetimenews', 'desc')
-		->limit(20)
-		->paginate();
-
 	if ($articles->count() > 0): ?>
 		<ul class="news-list">
 			@foreach ($articles as $article)
@@ -223,15 +216,19 @@
 							@endif
 
 							<?php
-							/*if (count($article->resources) > 0)
+							if (count($article->resources) > 0)
 							{
 								$resourceArray = array();
 								foreach ($article->resources as $resource)
 								{
+									if (!$resource->resource)
+									{
+										continue;
+									}
 									$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->resource->name)]) . '">' . $resource->resource->name . '</a>';
 								}
 								echo '<br /><i class="fa fa-fw fa-tags" aria-hidden="true"></i> ' .  implode(', ', $resourceArray);
-							}*/
+							}
 							?>
 						</p>
 						<p>

@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
+use App\Modules\News\Models\Newsresource;
 use App\Modules\Resources\Entities\Asset;
 use Carbon\Carbon;
 use App\Modules\Users\Models\User;
@@ -209,8 +210,37 @@ class ArticlesController extends Controller
 
 		if (!$row)
 		{
-			abort(404);
+			$resource = Asset::findByName($name);
+
+			if (!$resource)
+			{
+				abort(404);
+			}
+
+			$row = new Type;
+			$row->name = $resource->name;
+
+			$r = (new Newsresource)->getTable();
+			$a = (new Article)->getTable();
+
+			$query = Article::query()
+				->select($a . '.*')
+				->wherePublished()
+				->join($r, $r . '.newsid', $a . '.id')
+				->where($r . '.resourceid', '=', $resource->id)
+				->where($a . '.template', '=', 0);
 		}
+		else
+		{
+			$query = $type->articles()
+				->wherePublished()
+				->where('template', '=', 0);
+		}
+
+		$articles = $query
+				->orderBy('datetimenews', 'desc')
+				->limit(20)
+				->paginate();
 
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
@@ -229,7 +259,8 @@ class ArticlesController extends Controller
 
 		return view('news::site.type', [
 			'type' => $row,
-			'types' => $types
+			'types' => $types,
+			'articles' => $articles
 		]);
 	}
 
@@ -502,8 +533,8 @@ class ArticlesController extends Controller
 				url('/resources')
 			)
 			->append(
-				__('resources::assets.edit'),
-				url('/resources/edit/:id', $id)
+				trans('resources::assets.edit'),
+				route('site.news.edit', ['id' => $id])
 			);
 
 		return view('news::site.edit');
