@@ -6,6 +6,8 @@
 @endpush
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('menus::menus.module name'),
@@ -25,11 +27,11 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('menus.name') !!}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{!! config('menus.name') !!}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')
-<form action="{{ route('admin.menus.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.validation failed') }}">
+<form action="{{ route('admin.menus.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 	<div class="row">
 		<div class="col col-md-7">
@@ -38,12 +40,14 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-title">{{ trans('menus::menus.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[title]" id="field-title" class="form-control required" maxlength="250" value="{{ $row->title }}" />
+					<input type="text" name="fields[title]" id="field-title" class="form-control required" required maxlength="250" value="{{ $row->title }}" />
+					<span class="invalid-feedback">{{ trans('menus::menus.invalid.title') }}</span>
 				</div>
 
 				<div class="form-group">
 					<label for="field-menutype">{{ trans('menus::menus.item type') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[menutype]" id="field-menutype" class="form-control" maxlength="250" value="{{ $row->menutype }}" />
+					<input type="text" name="fields[menutype]" id="field-menutype" class="form-control required" required maxlength="250" value="{{ $row->menutype }}" />
+					<span class="invalid-feedback">{{ trans('menus::menus.invalid.type') }}</span>
 				</div>
 
 				<div class="form-group">
