@@ -58,12 +58,13 @@ app('pathway')
 					<input type="hidden" name="fields[parent_id]" value="{{ $row->parent_id }}" />
 				<?php endif; ?>
 
-				<div class="form-group">
+				<div class="form-group{{ $errors->has('title') ? ' is-invalid' : '' }}">
 					<label for="field-title">{{ trans('pages::pages.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[title]" id="field-title" class="form-control required" maxlength="250" value="{{ $row->title }}" />
+					<input type="text" name="fields[title]" id="field-title" class="form-control required" required maxlength="250" value="{{ $row->title }}" />
+					<span class="invalid-feedback">{{ trans('pages::pages.invalid.title') }}</span>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group{{ $errors->has('alias') ? ' is-invalid' : '' }}">
 					<label for="field-alias">{{ trans('pages::pages.path') }}:</label>
 					<div class="input-group mb-2 mr-sm-2">
 						<div class="input-group-prepend">
@@ -74,10 +75,9 @@ app('pathway')
 					<span class="form-text text-muted">{{ trans('pages::pages.path hint') }}</span>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group{{ $errors->has('content') ? ' is-invalid' : '' }}">
 					<label for="field-content">{{ trans('pages::pages.content') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<!-- <textarea name="fields[content]" id="field-content" class="form-control" rows="35" cols="40">{{ $row->content }}</textarea> -->
-					{!! editor('fields[content]', $row->content, ['rows' => 35, 'class' => 'required']) !!}
+					{!! editor('fields[content]', $row->content, ['rows' => 35, 'class' => 'required', 'required' => 'required']) !!}
 				</div>
 			</fieldset>
 		</div>
@@ -167,91 +167,69 @@ app('pathway')
 						<fieldset id="param-styles">
 							<legend>{{ trans('pages::pages.params.styles') }}</legend>
 							<div class="px-3 py-3">
-							@php
-							$i = 0;
-							@endphp
-							@foreach ($row->params->get('styles', []) as $style)
-								<div class="input-group mb-3">
+								@php
+								$i = 0;
+								@endphp
+								@foreach ($row->params->get('styles', []) as $style)
+									<div class="input-group mb-3" id="params-styles-{{ $i }}-row">
+										<label class="sr-only" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
+										<input type="text" class="form-control" name="params[styles][{{ $i }}]" id="params-styles-{{ $i }}" value="{{ $style }}" />
+										<div class="input-group-append">
+											<a href="#params-styles-{{ $i }}-row" class="btn btn-danger delete-row" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+										</div>
+									</div>
+									@php
+									$i++;
+									@endphp
+								@endforeach
+
+								<div class="d-none input-group mb-3" id="params-styles-{{ $i }}">
 									<label class="sr-only" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
-									<input type="text" class="form-control" name="params[styles][{{ $i }}]" id="params-styles-{{ $i }}" value="{{ $style }}" />
+									<input type="text" class="form-control" name="params[styles][{{ $i }}]" id="params-styles-{{ $i }}" value="" />
 									<div class="input-group-append">
-										<button class="btn btn-outline-secondary btn-danger" type="button" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></button>
+										<a href="#params-styles-{{ $i }}" class="btn btn-danger delete-row disabled" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
 									</div>
 								</div>
-								@php
-								$i++;
-								@endphp
-							@endforeach
 
-							<div class="input-group mb-3">
-								<label class="sr-only" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
-								<input type="text" class="form-control" name="params[styles][{{ $i }}]" id="params-styles-{{ $i }}" value="" />
-								<div class="input-group-append">
-									<button class="btn btn-outline-secondary btn-danger disabled" type="button" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></button>
+								<div class="text-right">
+									<button data-type="style" data-container="param-styles" class="add-row btn btn-success param-style-new"><span class="glyph icon-plus">{{ trans('global.add') }}</span></button>
 								</div>
 							</div>
-
-							<div class="text-right">
-								<a href="#params_styles_{{ $i }}" data-type="style" data-container="param-styles" class="add-row btn btn-secondary param-style-new"><span class="glyph icon-plus">{{ trans('global.add') }}</span></a>
-							</div>
-						</div>
 						</fieldset>
 
 						<fieldset id="param-scripts">
 							<legend>{{ trans('pages::pages.params.scripts') }}</legend>
 
-							<table>
-								<tbody>
+							<div class="px-3 py-3">
 								@php
 								$i = 0;
 								@endphp
 								@foreach ($row->params->get('scripts', []) as $script)
-									<tr>
-									<!-- <div class="row param-item" id="params_scripts_{{ $i }}">
-										<div class="col-md-9 form-group"> -->
-										<td>
-											<label class="sr-only" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
-											<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="{{ $script }}" />
-										<!-- </div>
-										<div class="col-md-3"> -->
-										</td>
-										<td>
-											<a href="#params_scripts_{{ $i }}" class="btn btn-secondary"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
-										<!-- </div>
-									</div> -->
-										</td>
-									</tr>
+									<div class="input-group mb-3" id="params-scripts-{{ $i }}-row">
+										<label class="sr-only" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
+										<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="{{ $script }}" />
+										<div class="input-group-append">
+											<a href="#params-scripts-{{ $i }}-row" class="btn btn-danger delete-row" id="params-scripts-{{ $i }}-btn" data-id="params-scripts-{{ $i }}"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+										</div>
+									</div>
 									@php
 									$i++;
 									@endphp
 								@endforeach
-								<tr>
-									<td>
-								<!-- <div class="row">
-									<div class="col-md-10 form-group"> -->
-										<label class="sr-only" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
-										<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="" />
-									<!-- </div>
-									<div class="col-md-2 text-right"> -->
-									</td>
-									<td>
-										<a href="#params_scripts_{{ $i }}" class="btn btn-secondary disabled"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
-									<!-- </div>
-								</div> -->
-									</td>
-								</tr>
-							</tbody>
-							<tfoot>
-								<tr>
-									<td></td>
-									<td>
-										<a href="#params_scripts_{{ $i }}" data-type="script" data-container="param-scripts" class="add-row btn btn-secondary param-script-new"><span class="glyph icon-plus">{{ trans('global.add') }}</span></a>
-									</td>
-								</tr>
-							</tfoot>
-						</table>
+								<div class="d-none input-group mb-3" id="params-scripts-{{ $i }}-row">
+									<label class="sr-only" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
+									<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="" />
+									<div class="input-group-append">
+										<a href="#params-scripts-{{ $i }}-row" class="btn btn-danger delete-row disabled" id="params-scripts-{{ $i }}-btn" data-id="params-scripts-{{ $i }}"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+									</div>
+								</div>
+
+								<div class="text-right">
+									<button data-type="script" data-container="param-scripts" class="add-row btn btn-success param-script-new"><span class="glyph icon-plus">{{ trans('global.add') }}</span></button>
+								</div>
+							</div>
+						</fieldset>
 					</fieldset>
-				</fieldset>
 			@sliders('panel', trans('pages::pages.metadata'), 'params-metadata')
 				<fieldset class="panelform">
 					<div class="form-group">
