@@ -4,7 +4,7 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-Halcyon.submitbutton = function(task) {
+/*Halcyon.submitbutton = function(task) {
 	var frm = document.getElementById('adminForm');
 
 	if (frm) {
@@ -13,16 +13,34 @@ Halcyon.submitbutton = function(task) {
 
 	$(document).trigger('editorSave');
 
-	var frm = document.getElementById('item-form');
+	var frm = document.getElementById('item-form'),
+		invalid = false;
 
 	if (frm) {
-		if (task == 'cancel' || document.formvalidator.isValid(frm)) {
+		var elms = frm.querySelectorAll('input[required]');
+		elms.forEach(function (el) {
+			if (!el.value || !el.validity.valid) {
+				el.classList.add('is-invalid');
+				invalid = true;
+			} else {
+				el.classList.remove('is-invalid');
+			}
+		});
+		var elms = frm.querySelectorAll('select[required]');
+		elms.forEach(function (el) {
+			if (!el.value || el.value <= 0) {
+				el.classList.add('is-invalid');
+				invalid = true;
+			} else {
+				el.classList.remove('is-invalid');
+			}
+		});
+
+		if (task == 'cancel' || task.match(/cancel$/) || !invalid) {
 			Halcyon.submitform(task, frm);
-		} else {
-			alert(frm.getAttribute('data-invalid-msg'));
 		}
 	}
-}
+}*/
 
 jQuery(document).ready(function ($) {
 

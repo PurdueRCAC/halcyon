@@ -67,8 +67,52 @@ Halcyon.submitform = function(task, form) {
  * @param   string  pressbutton
  * @return  void
  */
-Halcyon.submitbutton = function(pressbutton) {
-	Halcyon.submitform(pressbutton);
+Halcyon.submitbutton = function(task) {
+	//Halcyon.submitform(task);
+	var frm = document.getElementById('adminForm');
+
+	if (frm) {
+		return Halcyon.submitform(task, frm);
+	}
+
+	$(document).trigger('editorSave');
+
+	var frm = document.getElementById('item-form'),
+		invalid = false;
+
+	if (frm) {
+		var elms = frm.querySelectorAll('input[required]');
+		elms.forEach(function (el) {
+			if (!el.value || !el.validity.valid) {
+				el.classList.add('is-invalid');
+				invalid = true;
+			} else {
+				el.classList.remove('is-invalid');
+			}
+		});
+		var elms = frm.querySelectorAll('select[required]');
+		elms.forEach(function (el) {
+			if (!el.value || el.value <= 0) {
+				el.classList.add('is-invalid');
+				invalid = true;
+			} else {
+				el.classList.remove('is-invalid');
+			}
+		});
+		var elms = frm.querySelectorAll('textarea[required]');
+		elms.forEach(function (el) {
+			if (!el.value || !el.validity.valid) {
+				el.classList.add('is-invalid');
+				invalid = true;
+			} else {
+				el.classList.remove('is-invalid');
+			}
+		});
+
+		if (task == 'cancel' || task.match(/cancel$/) || !invalid) {
+			Halcyon.submitform(task, frm);
+		}
+	}
 }
 
 /**

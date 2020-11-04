@@ -1,6 +1,6 @@
 /**
  * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
+ * @copyright  Copyright 2019 Purdue University.
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
@@ -17,7 +17,24 @@ Halcyon.submitbutton = function(task) {
 		}
 	}
 }
-
+/*
+function filterRecords() {
+	$.ajax({
+		url: my_url,
+		type: 'get',
+		dataType: 'json',
+		async: false,
+		success: function(data) {
+			if (data !== null) {
+				result = parseDirectoryListing(data);
+			}
+		},
+		error: function() {
+			console.log('error loading history');
+		}
+	});
+}
+*/
 /**
  * Initiate event hooks
  */
@@ -60,4 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	$('.basic-multiple').select2({
 		placeholder: $(this).data('placeholder')
 	});
+
+	$('.searchable-select').select2();
 });
