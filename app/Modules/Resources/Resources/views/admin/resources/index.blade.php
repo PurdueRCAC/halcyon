@@ -128,17 +128,17 @@ app('pathway')
 		<tbody>
 		@foreach ($rows as $i => $row)
 			<?php
-				$disabled = false;
-				$trashed = $row->isTrashed();
-				$cls = $trashed ? 'trashed' : 'active';
-				if ($filters['state'] == 'trashed')
+			$disabled = false;
+			$trashed = $row->isTrashed();
+			$cls = $trashed ? 'trashed' : 'active';
+			if ($filters['state'] == 'trashed')
+			{
+				$cls = '';
+				if (!$trashed)
 				{
-					$cls = '';
-					if (!$trashed)
-					{
-						$disabled = true;
-					}
+					$disabled = true;
 				}
+			}
 			?>
 			<tr class="{{ $cls }} @if ($disabled) disabled @endif">
 				@if (!$disabled && auth()->user()->can('delete resources'))

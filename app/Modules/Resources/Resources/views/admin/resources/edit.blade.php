@@ -96,16 +96,24 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-name">{{ trans('resources::assets.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="32" value="{{ $row->name }}" />
+					<span class="invalid-feedback">{{ trans('resources::assets.invalid.name') }}</span>
 				</div>
 
-				<div class="form-group">
-					<label for="field-rolename">{{ trans('resources::assets.role name') }}:</label>
-					<input type="text" name="fields[rolename]" id="field-rolename" class="form-control" maxlength="32" value="{{ $row->rolename }}" />
-				</div>
-
-				<div class="form-group">
-					<label for="field-importhostname">{{ trans('resources::assets.list name') }}:</label>
-					<input type="text" name="fields[listname]" id="field-listname" class="form-control" maxlength="32" value="{{ $row->listname }}" />
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="field-rolename">{{ trans('resources::assets.role name') }}:</label>
+							<input type="text" name="fields[rolename]" id="field-rolename" class="form-control" maxlength="32" value="{{ $row->rolename }}" />
+							<span class="form-text text-muted">{{ trans('resources::assets.role name desc') }}</span>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="field-importhostname">{{ trans('resources::assets.list name') }}:</label>
+							<input type="text" name="fields[listname]" id="field-listname" class="form-control" maxlength="32" value="{{ $row->listname }}" />
+							<span class="form-text text-muted">{{ trans('resources::assets.list name desc') }}</span>
+						</div>
+					</div>
 				</div>
 
 				<div class="form-group">
