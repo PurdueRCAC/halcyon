@@ -42,6 +42,9 @@ class AssetPath
 	{
 		$content = preg_replace('/src="(.*?)"/i', 'src="' . asset("files/$1") . '"', $event->getBody());
 		$content = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $content);
+
+		$content = preg_replace('/href="\/(.*?)"/i', 'href="' . url("$1") . '"', $event->getBody());
+
 		$event->setBody($content);
 	}
 
