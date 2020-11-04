@@ -544,4 +544,19 @@ class Toolbar
 	{
 		$this->append('Confirm', $msg, $name, $alt, $task, $list);
 	}
+
+	/**
+	 * Writes a button that prompts for confirmation before executing a task
+	 *
+	 * @param   string   $msg   Postscript for the 'are you sure' message.
+	 * @param   string   $name  Name to be used as apart of the id
+	 * @param   string   $task  An override for the task.
+	 * @param   string   $alt   An override for the alt text.
+	 * @param   boolean  $list  True to allow use of lists
+	 * @return  void
+	 */
+	public function link($name='', $alt = 'global.toolbar.link', $url)
+	{
+		$this->append('Link', $name, $alt, $url);
+	}
 }
