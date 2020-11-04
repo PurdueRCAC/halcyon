@@ -94,7 +94,7 @@ app('pathway')
 		<caption class="sr-only">{{ trans('resources::resources.resources') }}</caption>
 		<thead>
 			<tr>
-				@if (!$disabled && auth()->user()->can('delete resources'))
+				@if (auth()->user()->can('delete resources'))
 					<th>
 						{!! Html::grid('checkall') !!}
 					</th>

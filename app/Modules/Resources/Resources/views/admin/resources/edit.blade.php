@@ -36,11 +36,11 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('resources.name') !!}: <?php echo $row->id ? trans('resources::assets.edit') . ': #' . $row->id : trans('resources::assets.create'); ?>
+{!! config('resources.name') !!}: <?php echo $row->id ? trans('globak.edit') . ': #' . $row->id : trans('global.create'); ?>
 @stop
 
 @section('content')
-<form action="{{ route('admin.resources.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('JGLOBAL_VALIDATION_FORM_FAILED') }}">
+<form action="{{ route('admin.resources.store') }}" method="post" name="adminForm" id="item-form" class="editform">
 	<div class="grid row">
 		<div class="col col-md-7 span7">
 			<fieldset class="adminform">
@@ -72,7 +72,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-parentid">{{ trans('resources::assets.FIELD_PARENT') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-parentid">{{ trans('resources::assets.parent') }}:</label>
 					<select name="fields[parentid]" class="form-control">
 						<option value="0">{{ trans('global.none') }}</option>
 						<?php foreach ($parents as $parent): ?>
@@ -95,7 +95,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-name">{{ trans('resources::assets.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control required" maxlength="32" value="{{ $row->name }}" />
+					<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="32" value="{{ $row->name }}" />
 				</div>
 
 				<div class="form-group">
