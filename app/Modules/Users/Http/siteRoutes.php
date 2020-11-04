@@ -44,24 +44,6 @@ $router->group(['prefix' => 'account', 'middleware' => 'auth.admin'], function (
 		'as' => 'site.users.account.request',
 		'uses' => 'UsersController@request',
 	]);
-	/*$router->get('quotas', [
-		'as' => 'site.users.account.quotas',
-		'uses' => 'UsersController@quotas',
-	]);
-	$router->get('myquotas', [
-		'uses' => 'UsersController@quotas',
-	]);
-	$router->get('groups', [
-		'as' => 'site.users.account.groups',
-		'uses' => 'UsersController@groups',
-	]);
-	$router->get('group', [
-		'uses' => 'UsersController@groups',
-	]);
-	$router->get('group/{group}', [
-		'as' => 'site.users.account.group',
-		'uses' => 'UsersController@group',
-	]);*/
 	$router->get('{section}', [
 		'as' => 'site.users.account.section',
 		'uses' => 'UsersController@profile',
