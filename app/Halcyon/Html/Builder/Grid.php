@@ -544,7 +544,7 @@ class Grid
 			$html[] = '<a class="grid-actio"';
 			$html[] = ' href="' . $task . '" data-id="' . $checkbox . $i . '" data-task="' . $prefix . $task . '"';
 			$html[] = ' title="' . addslashes(htmlspecialchars(trans($text), ENT_COMPAT, 'UTF-8')) . '">';
-			$html[] = '<i class="fa fa-arrow-up"></i>';
+			$html[] = '<span class="icon-arrow-up" aria-hidden="true"></span>';
 			$html[] = '</a>';
 
 			return implode("\n", $html); //self::action($i, $task, $prefix, $text, $text, $text, false, 'uparrow', 'uparrow_disabled', $enabled, true, $checkbox);
@@ -581,7 +581,7 @@ class Grid
 			$html[] = '<a class="grid-actio"';
 			$html[] = ' href="' . $task . '" data-id="' . $checkbox . $i . '" data-task="' . $prefix . $task . '"';
 			$html[] = ' title="' . addslashes(htmlspecialchars(trans($text), ENT_COMPAT, 'UTF-8')) . '">';
-			$html[] = '<i class="fa fa-arrow-down"></i>';
+			$html[] = '<span class="icon-arrow-down" aria-hidden="true"></span>';
 			$html[] = '</a>';
 
 			return implode("\n", $html); //self::action($i, $task, $prefix, $text, $text, $text, false, 'downarrow', 'downarrow_disabled', $enabled, true, $checkbox);
