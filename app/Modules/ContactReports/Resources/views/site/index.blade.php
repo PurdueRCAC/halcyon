@@ -1,5 +1,14 @@
 @extends('layouts.master')
 
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.css')) }}" />
+@endpush
+
+@push('scripts')
+<script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
+<script src="{{ asset('modules/contactreports/js/site.js') }}"></script>
+@endpush
+
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	<a href="#">Something here</a>
@@ -26,7 +35,7 @@
 						<div class="col-sm-4">
 							<div class="input-group">
 								<span class="input-group-addon"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
-								<input id="datestartshort" type="text" class="date-pick form-control" name="start" placeholder="YYYY-MM-DD" value="{{ request()->input('start', '') }}" />
+								<input id="datestartshort" type="text" class="date-pick form-control" name="start" placeholder="YYYY-MM-DD" value="{{ $filters['start'] }}" />
 							</div>
 						</div>
 
@@ -34,7 +43,7 @@
 						<div class="col-sm-4 tab-search">
 							<div class="input-group" id="enddate">
 								<span class="input-group-addon"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
-								<input id="datestopshort" type="text" class="date-pick form-control" name="stop" placeholder="YYYY-MM-DD" value="{{ request()->input('stop', '') }}">
+								<input id="datestopshort" type="text" class="date-pick form-control" name="stop" placeholder="YYYY-MM-DD" value="{{ $filters['stop'] }}">
 							</div>
 						</div>
 					</div>
@@ -42,7 +51,7 @@
 					<div class="form-group row tab-search" id="TR_keywords">
 						<label for="keywords" class="col-sm-2 col-form-label">Keywords</label>
 						<div class="col-sm-10">
-							<input type="text" name="keyword" id="keywords" size="45" class="form-control" value="{{ request()->input('keywords', '') }}" />
+							<input type="text" name="keyword" id="keywords" size="45" class="form-control" value="{{ $filters['search'] }}" />
 						</div>
 					</div>
 
@@ -51,17 +60,17 @@
 						<div class="col-sm-10">
 							<?php
 							$grps = array();
-							if ($groups = request()->input('group'))
+							if ($groups = $filters['group'])
 							{
 								foreach (explode(',', $groups) as $g)
 								{
 									if (trim($g))
 									{
-										if (!strstr($g, '/'))
+										/*if (!strstr($g, '/'))
 										{
 											$g = ROOT_URI . 'group/' . $g;
-										}
-										$grp = $ws->get($g);
+										}*/
+										$grp = App\Modules\Groups\Models\Group::find($g);
 										$grps[] = $grp->name . ':' . $g . '';
 									}
 								}
@@ -76,13 +85,13 @@
 						<div class="col-sm-10">
 							<?php
 							$usrs = array();
-							if ($users = request()->input('people'))
+							if ($users = $filters['people'])
 							{
 								foreach (explode(',', $users) as $u)
 								{
 									if (trim($u))
 									{
-										if (!strstr($u, '/'))
+										/*if (!strstr($u, '/'))
 										{
 											if (is_numeric($u))
 											{
@@ -91,15 +100,13 @@
 											}
 											else
 											{
-												$us = $ws->get(ROOT_URI . 'name/' . $u)->users[0];
-												$usr = new stdClass;
-												$usr->name = $us['name'];
+												$usr = App\Modules\Users\Models\User::find($u);
 											}
 										}
 										else
-										{
-											$usr = $ws->get($u);
-										}
+										{*/
+											$usr = App\Modules\Users\Models\User::find($u);
+										//}
 										$usrs[] = $usr->name . ':' . $u;
 									}
 								}
@@ -114,14 +121,14 @@
 						<div class="col-sm-10">
 							<?php
 							$resources = array();
-							if ($rs = request()->input('resource'))
+							if ($rs = $filters['resource'])
 							{
 								foreach (explode(',', $rs) as $r)
 								{
 									if (trim($r))
 									{
-										$resource = $ws->get(ROOT_URI . 'resource/' . $r);
-										$resources[] = $resource->name . ':' . ROOT_URI . 'resource/' . $r;
+										$resource = App\Modules\Resources\Entities\Asset::find($r);
+										$resources[] = $resource->name . ':' . $r;
 									}
 								}
 							}
@@ -133,7 +140,7 @@
 					<div class="form-group row tab-search" id="TR_id">
 						<label for="id" class="col-sm-2 col-form-label">CR#</label>
 						<div class="col-sm-10">
-							<input name="id" type="text" id="id" size="45" class="form-control" value="{{ request()->input('id', '') }}" />
+							<input name="id" type="text" id="id" size="45" class="form-control" value="{{ $filters['id'] }}" />
 						</div>
 					</div>
 
@@ -173,8 +180,23 @@
 		</div>
 	</div>
 
+	<?php
+	$valid_args = array('start', 'stop', 'id', 'group', 'people', 'resource', 'search');
 
-	<div id="reports">
+	$string = array();
+
+	foreach ($valid_args as $key)
+	{
+		if (request()->has($key))
+		{
+			$string[] = $key . '=' . request()->input($key);
+		}
+	}
+
+	$string = implode('&', $string);
+	?>
+
+	<div id="reports" data-query="{{ $string }}">
 		@foreach ($rows as $i => $row)
 			<article id="{{ $row->id }}" class="crm-item newEntries">
 				<div class="panel panel-default">
@@ -216,6 +238,14 @@
 		@endforeach
 	</div>
 
+	<script type="application/json" id="crm-search-data">
+		{
+			"followerofgroups": <?php echo json_encode(auth()->user()->followerofgroups); ?>,
+			"followerofusers": <?php echo json_encode(auth()->user()->followerofusers); ?>,
+			"groups": <?php echo request()->has('groups') ? json_encode(explode(',', request()->input('groups'))) : '[]'; ?>,
+			"people": <?php echo request()->has('people') ? json_encode(explode(',', request()->input('people'))) : '[]'; ?>
+		}
+	</script>
 	<!-- <table class="table table-hover adminlist">
 		<thead>
 			<tr>

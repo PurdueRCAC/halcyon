@@ -3,18 +3,17 @@
 /* global WSGetURL */ // common.js
 /* global WSPostURL */ // common.js
 /* global WSDeleteURL */ // common.js
+/* global ClearSearch */ // search.js
+/* global ERRORS */ // common.js
 /* global SetError */ // common.js
-/* global PrepareText */ // common.js
+/* global search_path */ // crmsearch.js
+/* global ChangeSearch */ // search.js
 /* global HighlightMatches */ // text.js
 
 var keywords_pending = 0;
-var img_url = "/include/images/";
-var LASTEDIT = new Array();
-var root = base_url + "/api/";
-
-/**
- * Functions common to the user (queue management page)
- */
+var multi_group = false;
+var groupsearch = false;
+var usersearch = false;
 
 /**
  * Toggle UI tabs
@@ -23,162 +22,73 @@ var root = base_url + "/api/";
  * @param   {bool}    refresh
  * @return  {void}
  */
-function NEWSToggle(on, refresh) {
-	if (typeof(refresh) == 'undefined') {
+function CRMToggle(on, refresh) {
+	if (typeof (refresh) == 'undefined') {
 		refresh = true;
 	}
-	var option = document.getElementById("OPTION_all");
 
-	var times = document.getElementsByClassName('input-time');
-	for (var i = 0; i < times.length; i++)
-	{
-		if (!$(times[i]).hasClass('tab-' + on)) {
-			if (!$(times[i]).hasClass('hide')) {
-				$(times[i]).addClass('hide');
-			}
-		} else {
-			$(times[i]).removeClass('hide');
-		}
-	}
+	$(".tab-add").addClass('hide');
+	$(".tab-edit").addClass('hide');
+	$(".tab-follow").addClass('hide');
+	$(".tab-search").addClass('hide');
+	$(".tab-" + on).removeClass('hide');
 
-	// Set header
-	var header = document.getElementById('SPAN_header');
-	if (header) {
-		header.innerHTML = header.getAttribute('data-' + on);
-	}
+	$(".tab").removeClass('activeTab');
 
-	// Remove errors upon a toggle
-	document.getElementById("TAB_search_action").innerHTML = "";
 	if (on == 'search') {
-		// toggle the search fields on
-		document.getElementById("TR_date").style.display = "block";
-		document.getElementById("TR_keywords").style.display = "block";
-		document.getElementById("TR_newstype").style.display = "block";
-		document.getElementById("TR_resource").style.display = "block";
-		document.getElementById("TR_user").style.display = "none";
-		document.getElementById("TR_location").style.display = "block";
-		document.getElementById("TR_url").style.display = "none";
-		document.getElementById("TR_headline").style.display = "none";
-		document.getElementById("TR_notes").style.display = "none";
-		document.getElementById("TR_search").style.display = "block";
-		document.getElementById("TR_create").style.display = "none";
-		document.getElementById("TR_id").style.display = "block";
-		document.getElementById("TR_published").style.display = "none";
-		document.getElementById("TR_template").style.display = "block";
-		document.getElementById("TR_use_template").style.display = "none";
+		$("#TAB_" + on).addClass('activeTab');
 
-		document.getElementById("TAB_search").className = "tab activeTab";
-		document.getElementById("TAB_add").className = "tab";
+		document.getElementById("SPAN_header").innerHTML = "Search Reports";
 
-		document.getElementById("TAB_add").innerHTML = "Add News";
+		document.getElementById("TAB_add").innerHTML = "Add New";
 		document.getElementById("INPUT_clear").value = "Clear";
-		document.getElementById("INPUT_preview").style.display = "none";
-		document.getElementById("INPUT_add").value = "Add News";
-		document.getElementById("datestartshort").value = "";
-		document.getElementById("timestartshort").value = "";
-		document.getElementById("datestopshort").value = "";
-		document.getElementById("timestopshort").value = "";
-		document.getElementById("published").checked = false;
-		document.getElementById("template").checked = false;
+		document.getElementById("INPUT_add").value = "Add Report";
+		document.getElementById("datestartshort").disabled = false;
 
-		document.getElementById("location").value = "";
-		document.getElementById("id").value = "";
-
-		// Add all news type option
-		if (!option) {
-			option = document.createElement("option");
-			//option.name = "all";
-			option.value = "-1";
-			option.id = "OPTION_all";
-			option.innerHTML = "All";
-			var newstype = document.getElementById("newstype");
-			newstype.insertBefore(option, newstype.firstChild);
-			newstype.selectedIndex = 0;
-		}
-
+		multi_group = true;
 	} else if (on == 'add') {
-		// toggle the new entry fields on
-		document.getElementById("TR_date").style.display = "block";
-		document.getElementById("TR_keywords").style.display = "none";
-		document.getElementById("TR_resource").style.display = "block";
-		document.getElementById("TR_location").style.display = "block";
-		document.getElementById("TR_url").style.display = "block";
-		document.getElementById("TR_newstype").style.display = "block";
-		document.getElementById("TR_headline").style.display = "block";
-		document.getElementById("TR_notes").style.display = "block";
-		document.getElementById("TR_search").style.display = "none";
-		document.getElementById("TR_create").style.display = "block";
-		document.getElementById("TR_id").style.display = "none";
-		document.getElementById("TR_published").style.display = "block";
-		document.getElementById("TR_template").style.display = "none";
-		document.getElementById("TR_use_template").style.display = "block";
+		$("#TAB_" + on).addClass('activeTab');
 
-		document.getElementById("TAB_search").className = "tab";
-		document.getElementById("TAB_add").className = "tab activeTab";
+		document.getElementById("SPAN_header").innerHTML = "Add New Report";
 
-		document.getElementById("TAB_add").innerHTML = "Add News";
+		document.getElementById("TAB_add").innerHTML = "Add New";
 		document.getElementById("INPUT_clear").value = "Clear";
-		document.getElementById("INPUT_add").value = "Add News";
-		document.getElementById("INPUT_preview").style.display = "inline";
-		document.getElementById("INPUT_preview").onclick = function () { NEWSPreview('new'); };
+		document.getElementById("INPUT_add").value = "Add Report";
+		document.getElementById("datestartshort").disabled = false;
 
-		document.getElementById("location").value = "";
-		document.getElementById("NotesText").value = "";
-		document.getElementById("published").checked = false;
-		document.getElementById("template").checked = false;
-
-		// Remove all news type option
-		if (option) {
-			document.getElementById('newstype').removeChild(option);
-		}
-
-		if ($('#DIV_resource').length) {
-			document.getElementById("DIV_resourcesearch").style.display = "none";
-			document.getElementById("DIV_resource").innerHTML = "Click to add resource to post.";
-		}
+		multi_group = false;
 	} else if (on == 'edit') {
-		// toggle the new entry fields on
-		document.getElementById("TR_date").style.display = "block";
-		if (document.getElementById("template").checked) {
-			document.getElementById("TR_date").style.visibility = "hidden";
-		}
-		document.getElementById("TR_keywords").style.display = "none";
-		document.getElementById("TR_resource").style.display = "block";
-		//document.getElementById("TR_user").style.display = "block";
-		document.getElementById("TR_location").style.display = "block";
-		document.getElementById("TR_url").style.display = "block";
-		document.getElementById("TR_headline").style.display = "block";
-		document.getElementById("TR_notes").style.display = "block";
-		document.getElementById("TR_search").style.display = "none";
-		document.getElementById("TR_create").style.display = "block";
-		document.getElementById("TR_id").style.display = "none";
-		document.getElementById("TR_published").style.display = "block";
-		document.getElementById("TR_template").style.display = "none";
-		document.getElementById("TR_use_template").style.display = "none";
+		$("#TAB_add").addClass('activeTab');
 
-		document.getElementById("TAB_search").className = "tab";
-		document.getElementById("TAB_add").className = "tab activeTab";
-
-		document.getElementById("TAB_add").innerHTML = "Edit News";
-		document.getElementById("INPUT_clear").value = "Cancel";
+		document.getElementById("TAB_add").innerHTML = "Edit Report";
+		document.getElementById("SPAN_header").innerHTML = "Edit Report";
+		document.getElementById("INPUT_clear").value = "Cancel edit";
 		document.getElementById("INPUT_add").value = "Save Changes";
-		document.getElementById("INPUT_preview").style.display = "inline";
 
-		// Remove all news type option
-		if (option) {
-			document.getElementById('newstype').removeChild(option);
-		}
+		multi_group = false;
+	} else if (on == 'follow') {
+		$("#TAB_" + on).addClass('activeTab');
 
-		if ($('#DIV_resource').length) {
-			document.getElementById("DIV_resource").style.display = "block";
-			document.getElementById("DIV_resourcesearch").style.display = "none";
-			document.getElementById("DIV_resource").innerHTML = "Click to add resource to post.";
-		}
+		document.getElementById("SPAN_header").innerHTML = "Follow New Reports";
+
+		document.getElementById("TAB_add").innerHTML = "Add New";
+		document.getElementById("INPUT_clear").value = "Cancel changes";
+		document.getElementById("INPUT_add").value = "Save changes";
+		document.getElementById("datestartshort").disabled = false;
+
+		// resets users and groups when in follow context
+		CRMClearSearch();
+
+		multi_group = true;
+
+		document.getElementById("INPUT_add").disabled = true;
 	}
+
 	if (refresh) {
-		NEWSSearch();
+		CRMSearch();
 	}
-	NEWSTabURL(on);
+
+	CRMTabURL(on);
 }
 
 /**
@@ -187,16 +97,17 @@ function NEWSToggle(on, refresh) {
  * @param   {string}  tab
  * @return  {void}
  */
-function NEWSTabURL(tab) {
-	if (typeof(history.pushState) != 'undefined') {
+function CRMTabURL(tab) {
+	if (typeof (history.pushState) != 'undefined') {
 		var url = window.location.href.match(/\?.*/);
 		if (url != null) {
 			url = url[0];
-			if (url.match(/[&?](search|add|edit|all)/)) {
+			if (url.match(/(search|add|edit|follow)/)) {
 				url = url.replace(/edit/, tab);
 				url = url.replace(/search/, tab);
+				url = url.replace(/follow/, tab);
 				url = url.replace(/add/, tab);
-			} else if (!url.match(/&$/)) {
+			} else if (url.match(/&/)) {
 				url = url + "&" + tab;
 			} else {
 				url = url + tab;
@@ -210,199 +121,290 @@ function NEWSTabURL(tab) {
 }
 
 /**
- * Add a resource to the list of resources
+ * Result handler function when selecting a group
  *
- * @param   {array}  resource
+ * @param   {object}  xml
+ * @param   {array}   flags
  * @return  {void}
  */
-function NEWSAddResource(resource) {
-	var results;
-	if (typeof resource == 'string') {
-		results = JSON.parse(resource);
-	} else {
-		results = resource;
+function CRMSearchGroup(xml, flags) {
+	var pageload = false;
+	//var disabled = false;
+
+	if (typeof (flags) != 'undefined') {
+		pageload = flags['pageload'];
+		//disabled = flags['disabled'];
 	}
-	var resourceid = results['resourceid'];
+
+	if (xml.status == 200) {
+		var results = JSON.parse(xml.responseText);
+
+		if (!pageload) {
+			CRMSearch();
+			if (document.getElementById("TAB_follow").className.match(/active/)) {
+				document.getElementById("INPUT_add").disabled = false;
+			}
+		}
+
+		// reset search box
+		var group = $('#group');
+
+		if ($('.tagsinput').length) {
+			if (!group.tagExist(results['id'])) {
+				group.addTag({
+					'id': results['id'],
+					'label': results['name']
+				});
+			}
+		} else {
+			group.val(group.val() + (group.val() ? ', ' : '') + results['name'] + ':' + results['id']);
+		}
+	} else {
+		// error handling
+		switch (xml.status) {
+			case 401:
+			case 403:
+				SetError(ERRORS['403_generic'], null);
+				break;
+			case 500:
+				SetError(ERRORS['500'], null);
+				break;
+			default:
+				SetError(ERRORS['generic'], ERRORS['unknown']);
+				break;
+		}
+	}
+}
+
+/**
+ * Result handler when adding a new person
+ *
+ * @param   {object}  xml
+ * @param   {array}   flags
+ * @return  {void}
+ */
+function CRMSearchUser(xml, flags) {
+	var pageload = false;
+	//var disabled = false;
+
+	if (typeof (flags) != 'undefined') {
+		pageload = flags['pageload'];
+		//disabled = flags['disabled'];
+	}
+
+	if (xml.status == 200) {
+		var results = JSON.parse(xml.responseText);
+
+		if (!pageload) {
+			CRMSearch();
+			if (document.getElementById("TAB_follow").className.match(/active/)) {
+				document.getElementById("INPUT_add").disabled = false;
+			}
+		}
+
+		// reset search box
+		var people = $('#people');
+
+		if ($('.tagsinput').length) {
+			if (!people.tagExist(results['id'])) {
+				people.addTag({
+					'id': results['id'],
+					'label': results['name']
+				}, {
+					focus: false,
+					callback: false
+				});
+			}
+		} else {
+			people.val(people.val() + (people.val() ? ', ' : '') + results['name'] + ':' + results['id']);
+		}
+	} else {
+		// error handling
+		switch (xml.status) {
+			case 401:
+			case 403:
+				SetError(ERRORS['403_generic'], null);
+				break;
+			case 500:
+				SetError(ERRORS['500'], null);
+				break;
+			default:
+				SetError(ERRORS['generic'], ERRORS['unknown']);
+				break;
+		}
+	}
+}
+
+/**
+ * Result handler function when selecting a group
+ *
+ * @param   {object}  xml
+ * @param   {array}   flags
+ * @return  {void}
+ */
+function CRMSearchResource(xml, flags) {
+	var pageload = false;
+	//var disabled = false;
+
+	if (typeof (flags) != 'undefined') {
+		pageload = flags['pageload'];
+		//disabled = flags['disabled'];
+	}
+
+	if (xml.status == 200) {
+		var results = JSON.parse(xml.responseText);
+
+		if (!pageload) {
+			CRMSearch();
+			if (document.getElementById("TAB_follow").className.match(/active/)) {
+				document.getElementById("INPUT_add").disabled = false;
+			}
+		}
+
+		// reset search box
+		var resource = $('#crmresource');
+
+		if ($('.tagsinput').length) {
+			if (!resource.tagExist(results['id'])) {
+				resource.addTag({
+					'id': results['id'],
+					'label': results['name']
+				});
+			}
+		} else {
+			resource.val(resource.val() + (resource.val() ? ', ' : '') + results['name'] + ':' + results['id']);
+		}
+	} else {
+		// error handling
+		switch (xml.status) {
+			case 401:
+			case 403:
+				SetError(ERRORS['403_generic'], null);
+				break;
+			case 500:
+				SetError(ERRORS['500'], null);
+				break;
+			default:
+				SetError(ERRORS['generic'], ERRORS['unknown']);
+				break;
+		}
+	}
+}
+
+/**
+ * Remove a group
+ *
+ * @param   {string}  group
+ * @param   {bool}    refresh
+ * @return  {void}
+ */
+function CRMRemoveGroup(group, refresh) {
+	var input = $('#group');
 
 	if ($('.tagsinput').length) {
-		if (!$('#newsresource').tagExist(resourceid)) {
-			$('#newsresource').addTag({
-				'id': results['resourceid'],
-				'label': results['resourcename']
-			});
-		}
+		input.removeTag(group);
 	} else {
-		$('#newsresource').val($('#newsresource').val() + ($('#newsresource').val() ? ', ' : '') + results['resourcename'] + ':' + results['resourceid']);
+		var data = [];
+		var items = input.val().split(',');
+		var val;
+		for (var x = 0; x < items.length; x++) {
+			val = items[x];
+			if (items[x].includes(':')) {
+				val = items[x].split(':')[1];
+			}
+
+			if (val != group) {
+				data.push(items[x]);
+			}
+		}
+		input.val(data.join(', '));
+	}
+
+	if (document.getElementById("TAB_follow").className.match(/active/)) {
+		document.getElementById("INPUT_add").disabled = false;
+	}
+
+	if (refresh) {
+		CRMSearch();
 	}
 }
 
 /**
- * Add an association to the list of associations
+ * Remove a user
  *
- * @param   {array}  association
+ * @param   {string}  user
+ * @param   {bool}    refresh
  * @return  {void}
  */
-function NEWSAddAssociation(association) {
-	var results;
-	if (typeof association == 'string') {
-		results = JSON.parse(association);
-	} else {
-		results = association;
-	}
+function CRMRemoveUser(user, refresh) {
+	var input = $('#people');
 
 	if ($('.tagsinput').length) {
-		if (!$('#newsuser').tagExist(results['id'])) {
-			$('#newsuser').addTag({
-				'id': results['associd'],
-				'label': results['assocname']
-			});
-		}
+		input.removeTag(user);
 	} else {
-		$('#newsuser').val($('#newsuser').val() + ($('#newsuser').val() ? ', ' : '') + results['name'] + ':' + results['id']);
+		var data = [];
+		var items = input.val().split(',');
+		var val;
+		for (var x = 0; x < items.length; x++) {
+			val = items[x];
+			if (items[x].includes(':')) {
+				val = items[x].split(':')[1];
+			}
+
+			if (val != user) {
+				data.push(items[x]);
+			}
+		}
+		input.val(data.join(', '));
+	}
+
+	if (document.getElementById("TAB_follow").className.match(/active/)) {
+		document.getElementById("INPUT_add").disabled = false;
+	}
+
+	if (refresh) {
+		CRMSearch();
 	}
 }
 
 /**
- * Show/hide fields by selected newstype
+ * Search by date
  *
  * @return  {void}
  */
-function NEWSNewstypeSearch() {
-	var newstype = document.getElementById("newstype");
-	var index = newstype.selectedIndex;
-	//var newstypeid = newstype.item(index).value;
-	var tagresources = newstype.item(index).getAttribute("data-tagresources");
-	var taglocation = newstype.item(index).getAttribute("data-taglocation");
-	var tagurl = newstype.item(index).getAttribute("data-tagurl");
-	var tagusers = newstype.item(index).getAttribute("data-tagusers");
-	if (document.getElementById("TR_resource")) {
-		if (tagresources == "0") {
-			document.getElementById("TR_resource").style.display = "none";
-			document.getElementById("TR_resource").visible = false;
-		} else {
-			document.getElementById("TR_resource").style.display = "block";
-			document.getElementById("TR_resource").visible = true;
-		}
-	}
-	if (document.getElementById("TR_location")) {
-		if (taglocation == "0") {
-			document.getElementById("TR_location").style.display = "none";
-			document.getElementById("TR_location").visible = false;
-		} else {
-			document.getElementById("TR_location").style.display = "block";
-			document.getElementById("TR_location").visible = true;
-		}
-	}
-	if (document.getElementById("TR_url")) {
-		if (tagurl == "0") {
-			document.getElementById("TR_url").style.display = "none";
-			document.getElementById("TR_url").visible = false;
-		} else {
-			document.getElementById("TR_url").style.display = "block";
-			document.getElementById("TR_url").visible = true;
-		}
-	}
-	if (document.getElementById("TR_user")) {
-		if (tagusers == "0") {
-			document.getElementById("TR_user").style.display = "none";
-			document.getElementById("TR_user").visible = false;
-		} else {
-			document.getElementById("TR_user").style.display = "block";
-			document.getElementById("TR_user").visible = true;
-		}
-	}
-	NEWSSearch();
-}
-
-/**
- * Set appropriate start stop times for search
- *
- * @param   {string}  box
- * @return  {void}
- */
-function NEWSDateSearch(box) {
+function CRMDateSearch() {
 	var start = document.getElementById("datestartshort").value;
+	if (start.match(/^\d{4}-\d{2}-\d{2}$/) || start == "") {
+		CRMSearch();
+		return;
+	}
+
 	var stop = document.getElementById("datestopshort").value;
-	var starttime = document.getElementById("timestartshort").value;
-	var stoptime = document.getElementById("timestopshort").value;
-
-	var STARTBOX = document.getElementById("datestartshort").getAttribute('data-start');
-	var STOPBOX = document.getElementById("datestartshort").getAttribute('data-stop');
-	if (!STARTBOX || STARTBOX == '0000-00-00') {
-		STARTBOX = start;
-	}
-	if (!STOPBOX || STOPBOX == '0000-00-00') {
-		STOPBOX = start;
-	}
-
-	if ((start.match(/^\d{4}-\d{2}-\d{2}$/) || start == "") &&
-		(stop.match(/^\d{4}-\d{2}-\d{2}$/) || stop == "") &&
-		(starttime.match(/^\d{1,2}:\d{2} ?(AM|PM)$/) || starttime == "") &&
-		(stoptime.match(/^\d{1,2}:\d{2} ?(AM|PM)$/) || stoptime == "")) {
-
-		// Check if we should auto-populate the stop boxes with the start boxes
-		if (window.location.href.match(/(\?|&)edit/) ||
-			window.location.href.match(/(\?|&)add/)) {
-			if (stop == "" && start != "") {
-				document.getElementById("datestopshort").value = start;
-				STOPBOX = start;
-			}
-			if (stoptime == "" && starttime != "") {
-				document.getElementById("timestopshort").value = starttime;
-			}
-			if (stop != "" && start != "" && box == "start") {
-				var START = new Date(STARTBOX);
-				var STOP = new Date(STOPBOX);
-
-				var diff = ((Date.parse(STARTBOX) + START.getTimezoneOffset()*60*1000) - (Date.parse(STOPBOX) + STOP.getTimezoneOffset()*60*1000));
-				var now = new Date(start);
-				var d = new Date(Date.parse(start) - diff + (now.getTimezoneOffset()*60*1000));
-				var year = d.getFullYear();
-				var day = d.getDate();
-				var month = d.getMonth() + 1;
-
-				if (day < 10) {
-					day = "0" + day;
-				}
-				if (month < 10) {
-					month = "0" + month;
-				}
-
-				document.getElementById("datestopshort").value = year + "-" + month + "-" + day;
-				STOPBOX = year + "-" + month + "-" + day;
-			}
-		}
-
-		NEWSSearch();
-
-		if (box == "start") {
-			STARTBOX = start;
-		}
-		if (box == "stop") {
-			STOPBOX = stop;
-		}
+	if (stop.match(/^\d{4}-\d{2}-\d{2}$/) || stop == "") {
+		CRMSearch();
+		return;
 	}
 }
 
 /**
- * Search by keywords
+ * Search by keyword
  *
- * @param   {string}  key
+ * @param   {number}  key
  * @return  {void}
  */
-function NEWSKeywordSearch(key) {
-	var text = document.getElementById("keywords").value;
-	var keywords = text.split(/ /);
-
+function CRMKeywordSearch(key) {
 	// if someone hit enter
 	if (key == 13) {
-		NEWSSearch();
+		CRMSearch();
 		return;
 	}
 
 	// make sure all the keywords are long enough
 	var search = true;
-	for (var x=0;x<keywords.length;x++) {
+	var text = document.getElementById("keywords").value;
+	var keywords = text.split(/ /);
+
+	for (var x = 0; x < keywords.length; x++) {
 		if (keywords[x].length < 3) {
 			search = false;
 		}
@@ -410,369 +412,595 @@ function NEWSKeywordSearch(key) {
 
 	if (search || text == "") {
 		keywords_pending++;
-		setTimeout("keywords_pending--; if(keywords_pending == 0) { NEWSSearch(); }", 200);
+		setTimeout(function () {
+			keywords_pending--;
+			if (keywords_pending == 0) {
+				CRMSearch();
+			}
+		}, 200);
 	}
 }
 
 /**
- * post new entry to database
+ * Toggle search
+ *
+ * @param   {string}  on
+ * @return  {void}
+ */
+function CRMToggleSearch(on) {
+	// move search box for group
+	if (on == 'group') {
+		// reset box
+		document.getElementById("newuser").value = "";
+		ClearSearch();
+
+		// flip the flags so it acts a group search box
+		groupsearch = true;
+		usersearch = false;
+		search_path = "groupname";
+
+		document.getElementById("newuser").focus();
+	} else if (on == 'people') {
+		// move search box for people
+		document.getElementById("newuser").value = "";
+		ClearSearch();
+
+		// flip the flags so it acts a person search box
+		groupsearch = false;
+		usersearch = true;
+		search_path = "name";
+
+		document.getElementById("newuser").focus();
+	} else if (on == 'none') {
+		document.getElementById("newuser").blur();
+		// hide the search box
+		// onblur() event is a bit funky, need some safe guards to prevent unintended box hiding
+		// make sure the box really no longer has focus, and provide slight delay in hiding it
+		if (typeof (document.activeElement) != 'undefined') {
+			setTimeout(function () {
+				if (document.getElementById("newuser") != document.activeElement) {
+					document.getElementById("DIV_peoplesearch").style.display = "none";
+					document.getElementById("DIV_groupsearch").style.display = "none";
+					document.getElementById("DIV_people").style.display = "block";
+					// adjust group field
+					var group_count = 0;
+					var groupsdata = document.getElementById("TD_group").getElementsByTagName("div");
+					for (var i = 0; i < groupsdata.length; i++) {
+						if (groupsdata[i].id.search("GROUP_") == 0) {
+							group_count++;
+						}
+					}
+
+					if (group_count == 0 || multi_group) {
+						document.getElementById("DIV_group").style.display = "block";
+					}
+				}
+			}, 300);
+		}
+	}
+}
+
+/**
+ * Post new entry to database
  *
  * @return  {void}
  */
-function NEWSAddEntry() {
-	//var resourcedata = new Array();
-	var resource = new Array();
-	var associations = new Array();
-	var newstypeselect = document.getElementById("newstype");
-	var index = newstypeselect.selectedIndex;
-	var newstypeid = newstypeselect.item(index).value;
-	var tagresources = newstypeselect.item(index).getAttribute("data-tagresources");
-	var notes = PrepareText(document.getElementById("NotesText").value);
-	var newsdate = document.getElementById("datestartshort").value;
-	var newstime = document.getElementById("timestartshort").value;
-	var newsdateend = document.getElementById("datestopshort").value;
-	var newstimeend = document.getElementById("timestopshort").value;
-	var headline = document.getElementById("Headline").value;
-	var locale = document.getElementById("location").value;
-	var url = document.getElementById("url").value;
-	var published = document.getElementById("published").checked;
-	var template = document.getElementById("template").checked;
-	var match,
-		i = 0;
+function CRMAddEntry() {
+	var groupsdata = new Array();
+	var peopledata = new Array();
+	var resourcedata = new Array();
+	var notes;
+	var groups = new Array();
+	var people = new Array();
+	var resources = new Array();
+	var myuserid = document.getElementById("myuserid").value;
+	var contactdate = document.getElementById("datestartshort").value;
+	var i = 0,
+		x = 0,
+		y = 0;
 
 	// clear error boxes
 	document.getElementById("TAB_search_action").innerHTML = "";
 	document.getElementById("TAB_add_action").innerHTML = "";
 
-	if (!newsdate.match(/^\d{4}-\d{2}-\d{2}$/) && !template) {
-		SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
-		return;
+	if (!document.getElementById("TAB_follow").className.match(/active/)) {
+		if (!contactdate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+			SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+			return;
+		}
 	}
+	contactdate += " 00:00:00";
 
-	match = newstime.match(/^(\d{1,2}):(\d{2}) ?(AM|PM)$/);
-	if (match) {
-		var hour = parseInt(match[1]);
-		if (hour != 12 && match[3] == "PM") {
-			hour = hour + 12;
-		}
-		if (hour == 12 && match[3] == "AM") {
-			hour = 0;
-		}
-		if (hour < 10) {
-			hour = "0" + hour.toString(); // Pad with leading 0
-		}
-		newsdate += " " + hour + ":" + match[2] + ":00";
-	} else {
-		newsdate += " 00:00:00";
-	}
-
-	// newsdateend is optional, use default value if missing
-	if (newsdateend.match(/^\d{4}-\d{2}-\d{2}$/)) {
-		match = newstimeend.match(/^(\d{1,2}):(\d{2}) ?(AM|PM)$/);
-		if (match) {
-			var hour = parseInt(match[1]);
-			if (hour != 12 && match[3] == "PM") {
-				hour = hour + 12;
+	if ($('.tagsinput').length) {
+		groupsdata = document.getElementById("group").value.split(',');
+		for (i = 0; i < groupsdata.length; i++) {
+			if (groupsdata[i] != "") {
+				/*if (groupsdata[i].indexOf('/') !== -1) {
+					var res = groupsdata[i].split('/');
+					groups.push(res[res.length-1]);
+				} else {*/
+				groups.push(groupsdata[i]);
+				//}
 			}
-			if (hour == 12 && match[3] == "AM") {
-				hour = 0;
-			}
-			if (hour < 10) {
-				hour = "0" + hour.toString(); // Pad with leading 0
-			}
-			newsdateend += " " + hour + ":" + match[2] + ":00";
-		} else {
-			newsdateend += " 00:00:00";
 		}
-	} else {
-		newsdateend = "0000-00-00 00:00:00";
-	}
-
-	if (newsdateend != "0000-00-00 00:00:00" && newsdateend < newsdate) {
-		SetError('End date must come after start date', 'Please enter a valid end date');
-		return;
-	}
-
-	if (tagresources == "1") {
-		var resourcedata = document.getElementById("newsresource").value.split(',');
-		for (i=0; i<resourcedata.length; i++) {
+		peopledata = document.getElementById("people").value.split(',');
+		for (i = 0; i < peopledata.length; i++) {
+			if (peopledata[i] != "") {
+				/*if (usersdata[i].indexOf('/') !== -1) {
+					var res = usersdata[i].split('/');
+					people.push({
+						'userid' : res[res.length-1]
+					});
+				} else {*/
+				//people.push(usersdata[i]);
+				people.push({
+					'userid': peopledata[i]
+				});
+				//}
+			}
+		}
+		resourcedata = document.getElementById("crmresource").value.split(',');
+		for (i = 0; i < resourcedata.length; i++) {
 			if (resourcedata[i] != "") {
 				if (resourcedata[i].indexOf('/') !== -1) {
 					var res = resourcedata[i].split('/');
-					resource.push(res[res.length-1]);
+					resources.push(res[res.length - 1]);
 				} else {
-					resource.push(resourcedata[i]);
+					resources.push(resourcedata[i]);
 				}
 			}
 		}
-	}
-
-	var usersdata = document.getElementById("newsuser").value.split(',');
-	for (i=0; i<usersdata.length; i++) {
-		if (usersdata[i] != "") {
-			associations.push(usersdata[i]);
+	} else {
+		groupsdata = document.getElementById("TD_group").getElementsByTagName("div");
+		peopledata = document.getElementById("TD_people").getElementsByTagName("div");
+		resourcedata = document.getElementById("TD_resource").getElementsByTagName("div");
+		for (i = 0; i < groupsdata.length; i++) {
+			if (groupsdata[i].id.search("GROUP_") == 0) {
+				groups.push(groupsdata[i].id.substr(6));
+			}
+		}
+		for (i = 0; i < peopledata.length; i++) {
+			if (peopledata[i].id.search("USER_") == 0) {
+				var name = peopledata[i].innerHTML.substr(peopledata[i].innerHTML.lastIndexOf(">") + 1);
+				name.replace(/^ +/, "");
+				name.replace(/ +$/, "");
+				people.push({
+					'userid': peopledata[i].id.substr(5),
+					'name': name
+				});
+			}
+		}
+		for (i = 0; i < resourcedata.length; i++) {
+			if (resourcedata[i].id.search("RESOURCE_") == 0) {
+				resources.push(resourcedata[i].id.substr(6));
+			}
 		}
 	}
 
-	if (window.location.href.match(/(\?|&)edit/)) {
+	notes = document.getElementById("NotesText").value;
+
+	var searchdata = $('#crm-search-data');
+	var sdata = JSON.parse(searchdata.html());
+
+	var removeusers = Array();
+	var addusers = Array();
+	var post = {};
+	var remove = true,
+		add = true;
+
+	if (window.location.href.match(/edit/)) {
+		var data = $('#crm-data');
 		var original = {};
-		var data = $('#news-data');
+		var originalusers = [];
+		var originalcontactusers = [];
 		if (data.length) {
-			original = JSON.parse(data.html());
+			var orig = JSON.parse(data.html());
+			original = orig.original;
+			originalusers = orig.originalusers;
+			originalcontactusers = orig.originalcontactusers;
 		}
 
 		// update
-		var post = { };
-		if (newsdate != original['newsdate']) {
-			post['newsdate'] = newsdate;
+		if (contactdate != original['contactdate']) {
+			post['contactdate'] = contactdate;
 		}
-		if (headline != original['headline']) {
-			post['headline'] = headline;
+		if (groups.length > 0 && groups[0] != original['group']) {
+			post['group'] = groups[0];
 		}
-		if (locale != original['location']) {
-			post['location'] = locale;
-		}
-		if (url != original['url']) {
-			post['url'] = url;
-		}
-		if (newstypeid != original['newstype']) {
-			post['newstypeid'] = ROOT_URL + "newstype/" + newstypeid;
-		}
-		if (notes != original['news']) {
-			post['news'] = notes;
-		}
-		post['resources'] = resource;
-		post['associations'] = associations;
-		if (newsdateend != original['newsdateend']) {
-			if (newsdateend != newsdate) {
-				post['newsdateend'] = newsdateend;
-			} else {
-				post['newsdateend'] = '0000-00-00 00:00:00';
-			}
-		}
-		if (published == true && original['published'] != '1') {
-			post['published'] = "1";
-		}
-		if (published == false && original['published'] != '0') {
-			post['published'] = "0";
+		if (groups.length == 0 && original['group'] != '') {
+			post['group'] = ROOT_URL + "group/0";
 		}
 
-		post['lastedit'] = original['lastedit'];
+		post['resources'] = resources;
+
+		// first determine if any users have been deleted
+		for (x = 0; x < originalusers.length; x++) {
+			remove = true;
+			for (y = 0; y < people.length; y++) {
+				if (originalusers[x] == people[y]['userid']) {
+					remove = false;
+					break;
+				}
+			}
+			if (remove) {
+				removeusers.push(originalcontactusers[x]);
+			}
+		}
+		// then determine if any users have been added
+		for (x = 0; x < people.length; x++) {
+			add = true;
+			for (y = 0; y < originalusers.length; y++) {
+				if (originalusers[y] == people[x]['userid']) {
+					add = false;
+					break;
+				}
+			}
+			if (add) {
+				addusers.push(people[x]['userid']);
+			}
+		}
+
+		for (x = 0; x < removeusers.length; x++) {
+			WSDeleteURL(removeusers[x], CRMUpdatedReport);
+		}
+
+		for (x = 0; x < addusers.length; x++) {
+			post = JSON.stringify({
+				'contactreport': original['id'],
+				'user': addusers[x]
+			});
+			WSPostURL(ROOT_URL + "contactreportuser", post, CRMUpdatedReport);
+		}
 
 		post = JSON.stringify(post);
 		if (post != "{}") {
-			var id = original['id'].substr(original['id'].lastIndexOf("/")+1);
-			WSPostURL(original['id'], post, NEWSUpdatedNews, id);
+			WSPostURL(original['id'], post, CRMUpdatedReport);
+		}
+
+		if (typeof (history.pushState) != 'undefined') {
+			var querystring = "?id=" + original['id'];
+			history.pushState(null, null, encodeURI(querystring));
+		}
+
+		var id = original['id'].substr(original['id'].lastIndexOf("/") + 1);
+
+		setTimeout(function () {
+			CRMToggle('search');
+			CRMClearSearch();
+			document.getElementById("id").value = id;
+			CRMSearch();
+		}, 250);
+
+		return;
+	} else if (document.getElementById("TAB_follow").className.match(/active/)) {
+		// first determine if any users have been deleted
+		for (x = 0; x < sdata.followerofusers.length; x++) {
+			remove = true;
+			for (y = 0; y < people.length; y++) {
+				if (sdata.followerofusers[x]['id'] == people[y]['userid']) {
+					remove = false;
+					break;
+				}
+			}
+			if (remove) {
+				removeusers.push(sdata.followerofusers[x]['follow']);
+			}
+		}
+		// then determine if any users have been added
+		for (x = 0; x < people.length; x++) {
+			add = true;
+			for (y = 0; y < sdata.followerofusers.length; y++) {
+				if (people[x]['userid'] == sdata.followerofusers[y]['id']) {
+					add = false;
+					break;
+				}
+			}
+			if (add) {
+				addusers.push(people[x]['userid']);
+			}
+		}
+
+		var removegroups = Array();
+		var addgroups = Array();
+		// first determine if any groups have been deleted
+		for (x = 0; x < sdata.followerofgroups.length; x++) {
+			remove = true;
+			for (y = 0; y < groups.length; y++) {
+				if (sdata.followerofgroups[x]['id'] == groups[y]) {
+					remove = false;
+					break;
+				}
+			}
+			if (remove) {
+				removegroups.push(sdata.followerofgroups[x]['follow']);
+			}
+		}
+		// then determine if any groups have been added
+		for (x = 0; x < groups.length; x++) {
+			add = true;
+			for (y = 0; y < sdata.followerofgroups.length; y++) {
+				if (groups[x] == sdata.followerofgroups[y]['id']) {
+					add = false;
+					break;
+				}
+			}
+			if (add) {
+				addgroups.push(groups[x]);
+			}
+		}
+
+		for (x = 0; x < removeusers.length; x++) {
+			WSDeleteURL(removeusers[x], CRMUpdatedReport);
+			// delete from cache
+			for (y = 0; y < sdata.followerofusers.length; y++) {
+				if (removeusers[x] == sdata.followerofusers[y]['follow']) {
+					sdata.followerofusers.splice(y, 1);
+					break;
+				}
+			}
+		}
+
+		for (x = 0; x < addusers.length; x++) {
+			post = JSON.stringify({ 'following': addusers[x] });
+			WSPostURL(ROOT_URL + "contactreportfollowuser", post, CRMUpdatedFollowUser);
+		}
+
+		for (x = 0; x < removegroups.length; x++) {
+			WSDeleteURL(removegroups[x], CRMUpdatedReport);
+			// delete from cache
+			for (y = 0; y < sdata.followerofgroups.length; y++) {
+				if (removegroups[x] == sdata.followerofgroups[y]['follow']) {
+					sdata.followerofgroups.splice(y, 1);
+					break;
+				}
+			}
+		}
+
+		for (x = 0; x < addgroups.length; x++) {
+			post = JSON.stringify({ 'following': addgroups[x] });
+			WSPostURL(ROOT_URL + "contactreportfollowgroup", post, CRMUpdatedFollowGroup);
 		}
 
 		return;
-	} else {
-		if (notes == "") {
-			SetError('Required field missing', 'Please enter content for the body.');
+	}
+
+	if (people.length == 0) {
+		if (groups.length != 0) {
+			SetError('Required field missing', 'Please enter at least one person.');
 			return;
 		}
-		if (headline == "") {
-			SetError('Required field missing', 'Please enter a headline');
+		else if (groups.length == 0) {
+			SetError('Required field missing', 'Please enter at least one person and optionally a group.');
 			return;
 		}
+	}
+	else if (notes == "") {
+		SetError('Required field missing', 'Please enter some note text.');
+		return;
+	}
+	else {
 		// new post
-		var post = {
-			'news': notes,
-			'newstypeid': ROOT_URL + "newstype/" + newstypeid,
-			'headline': headline,
-			'newsdate': newsdate,
-			'newsdateend': newsdateend
+		post = {
+			'report': notes,
+			'contactdate': contactdate,
+			'user': myuserid
 		};
 
-		if (newsdateend == newsdate) {
-			post['newsdateend'] = '0000-00-00 00:00:00';
+		if (groups.length > 0) {
+			post['group'] = groups[0];
 		}
-		if (resource.length > 0) {
-			post['resources'] = resource;
-		}
-		if (associations.length > 0) {
-			post['associations'] = associations;
-		}
-		if (published == true) {
-			post['published'] = "1";
-		}
-		if (published == false) {
-			post['published'] = "0";
-		}
-		if (template == true) {
-			post['template'] = "1";
-		}
-		if (template == false) {
-			post['template'] = "0";
-		}
-		if (locale != "") {
-			post['location'] = locale;
-		}
-		if (url != "") {
-			post['url'] = url;
+
+		if (resources.length > 0) {
+			post['resources'] = resources;
 		}
 
 		post = JSON.stringify(post);
 		document.getElementById("INPUT_add").disabled = true;
 
-		WSPostURL(ROOT_URL + "news", post, NEWSNewNews);
+		WSPostURL(ROOT_URL + "contactreport", post, CRMNewReport, people);
 	}
 }
 
 /**
- * Update news search
+ * Callback after updating a report
  *
  * @param   {object}  xml
- * @param   {string}  id
  * @return  {void}
  */
-function NEWSUpdatedNews(xml, id) {
+function CRMUpdatedReport(xml) {
 	if (xml.status == 200) {
 		document.getElementById("INPUT_add").disabled = true;
-		document.getElementById("location").value = "";
-		NEWSToggle('search', false);
-		document.getElementById("id").value = id;
-		NEWSSearch();
-	} else if (xml.status == 409) {
-		document.getElementById("id").value = id;
-		WSGetURL(ROOT_URL + "news/" + id, function (xml) {
-			if (xml.status == 200) {
-				var results = JSON.parse(xml.responseText);
-				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
-			}
-		});
-	} else {
-		document.getElementById("INPUT_add").disabled = true;
-		NEWSToggle('search');
-		document.getElementById("id").value = id;
-		NEWSSearch();
-		alert("Unable to save changes.");
 	}
 }
 
 /**
- * Clear the form for adding a new News entry
+ * Callback after following a user
  *
  * @param   {object}  xml
  * @return  {void}
  */
-function NEWSNewNews(xml) {
+function CRMUpdatedFollowUser(xml) {
+	if (xml.status == 200) {
+		// add to cache
+		var results = JSON.parse(xml.responseText);
+
+		var data = $('#crm-search-data');
+		var sdata = JSON.parse(data.html());
+		sdata.followerofusers.push(results);
+
+		data.html(JSON.stringify(sdata));
+
+		document.getElementById("INPUT_add").disabled = true;
+	}
+}
+
+/**
+ * Callback after following a group
+ *
+ * @param   {object}  xml
+ * @return  {void}
+ */
+function CRMUpdatedFollowGroup(xml) {
+	if (xml.status == 200) {
+		// add to cache
+		var results = JSON.parse(xml.responseText);
+
+		var data = $('#crm-search-data');
+		var sdata = JSON.parse(data.html());
+		sdata.followerofgroups.push(results);
+
+		data.html(JSON.stringify(sdata));
+
+		document.getElementById("INPUT_add").disabled = true;
+	}
+}
+
+/**
+ * Callback for creating a new report
+ *
+ * @param   {object}  xml
+ * @param   {array}   people
+ * @return  {void}
+ */
+function CRMNewReport(xml, people) {
 	document.getElementById("INPUT_add").disabled = false;
 
 	if (xml.status == 200) {
 		var results = JSON.parse(xml.responseText);
 
-		// Clear the resource listing
-		if ($('.tagsinput').length) {
-			$('#newsresource').clearTags();
-		} else {
-			document.getElementById('newsresource').value = '';
+		for (var x = 0; x < people.length; x++) {
+			// insert placeholders to put people when posted
+			var post = JSON.stringify({
+				'contactreport': results['id'],
+				'user': people[x]['userid']
+			});
+			WSPostURL(ROOT_URL + "contactreportuser", post, CRMNewPeopleTag);
 		}
-		document.getElementById("Headline").value = "";
-		document.getElementById("location").value = "";
-		document.getElementById("url").value = "";
 		document.getElementById("NotesText").value = "";
-		document.getElementById("datestartshort").value = "";
-		document.getElementById("timestartshort").value = "";
-		document.getElementById("datestopshort").value = "";
-		document.getElementById("timestopshort").value = "";
 
-		var id = results['id'];
-		id = id.split('/');
-		id = id[id.length-1];
+		CRMClearSearch();
 
-		window.location.href = "/news/" + id;
+		document.getElementById("id").value = results['id'].replace(ROOT_URL + "contactreport/", '');
+
+		CRMToggle('search', true);
+		/*setTimeout(function () {
+			CRMSearch();
+		}, 250);*/
 	} else if (xml.status == 409) {
 		SetError('Invalid date.', 'Please pick the current date or a date in the past.');
 	} else {
-		SetError('Unable to create news story.', 'An error occurred during processing of news story.');
+		SetError('Unable to create report.', 'Your session may have timed out. Copy your text and reload page.');
 	}
 }
 
 /**
- * Search news
+ * Callback for adding new people
+ *
+ * @param   {object}  xml
+ * @return  {void}
+ */
+function CRMNewPeopleTag(xml) {
+	if (xml.status != 200) {
+		SetError('Unable to create report.', 'An error occurred during processing of new report.');
+	}
+}
+
+/**
+ * Search reports
  *
  * @return  {void}
  */
-function NEWSSearch() {
+function CRMSearch() {
+	var groupsdata = new Array();
+	var groups = new Array();
+	var group = null;
+
+	var peopledata = new Array();
+	var people = new Array();
+	var person = null;
+
+	var resourcedata = new Array();
 	var resources = new Array();
+	var resource = null;
+
 	var keywords = document.getElementById("keywords").value;
+	//var myuserid = document.getElementById("myuserid").value;
 	var start = document.getElementById("datestartshort").value;
 	var stop = document.getElementById("datestopshort").value;
 	var id = document.getElementById("id").value;
-	var published = false;
-	if (document.getElementById("published")) {
-		published = document.getElementById("published").checked;
-	}
-	var template = false;
-	if (document.getElementById("template")) {
-		template = document.getElementById("template").checked;
-	}
+	var i = 0,
+		x = 0;
 
-	var newstype = document.getElementById("newstype");
-	var index = newstype.selectedIndex;
-	var newstypeid = newstype.item(index).value;
-	var tagresources = newstype.item(index).getAttribute("data-tagresources");
-	var taglocation = newstype.item(index).getAttribute("data-taglocation");
-	var tagurl = newstype.item(index).getAttribute("data-tagurl");
-	var tagusers = newstype.item(index).getAttribute("data-tagusers");
-	var list = document.getElementById("TR_resource");
-	var locale = document.getElementById("TR_location");
-	var url = document.getElementById("TR_url");
-	var users = document.getElementById("TR_user");
-
-	if (tagresources == "0") {
-		list.style.display = "none";
-		list.visible = false;
-	} else {
-		list.style.display = "block";
-		list.visible = true;
-	}
-
-	if (taglocation == "0") {
-		locale.style.display = "none";
-		locale.visible = false;
-	} else {
-		locale.style.display = "block";
-		locale.visible = true;
-	}
-
-	if (tagurl == "0") {
-		url.style.display = "none";
-		url.visible = false;
-	} else {
-		url.style.display = "block";
-		url.visible = true;
-	}
-
-	if (users) {
-		if (tagusers == "1") {
-			users.style.display = "block";
-			users.visible = true;
-		} else {
-			users.style.display = "none";
-			users.visible = false;
+	if ($('.tagsinput').length) {
+		groupsdata = document.getElementById("group").value.split(',');
+		for (i = 0; i < groupsdata.length; i++) {
+			if (groupsdata[i] != "") {
+				if (groupsdata[i].indexOf('/') !== -1) {
+					group = groupsdata[i].split('/');
+					groups.push(group[group.length - 1]);
+				} else {
+					groups.push(groupsdata[i]);
+				}
+			}
 		}
-	}
 
-	locale = document.getElementById("location").value;
+		peopledata = document.getElementById("people").value.split(',');
+		for (i = 0; i < peopledata.length; i++) {
+			if (peopledata[i] != "") {
+				if (peopledata[i].indexOf('/') !== -1) {
+					person = peopledata[i].split('/');
+					people.push(person[person.length - 1]);
+				} else {
+					people.push(peopledata[i]);
+				}
+			}
+		}
 
-	// Fetch list of selected resources
-	var resourcedata = document.getElementById("newsresource").value.split(',');
-	for (var i=0; i<resourcedata.length; i++) {
-		if (resourcedata[i] != "") {
-			if (resourcedata[i].indexOf('/') !== -1) {
-				var resource = resourcedata[i].split('/');
-				resources.push(resource[resource.length-1]);
-			} else {
-				resources.push(resourcedata[i]);
+		// Fetch list of selected resources
+		resourcedata = document.getElementById("crmresource").value.split(',');
+		for (i = 0; i < resourcedata.length; i++) {
+			if (resourcedata[i] != "") {
+				if (resourcedata[i].indexOf('/') !== -1) {
+					resource = resourcedata[i].split('/');
+					resources.push(resource[resource.length - 1]);
+				} else {
+					resources.push(resourcedata[i]);
+				}
+			}
+		}
+	} else {
+		groupsdata = document.getElementById("TD_group").getElementsByTagName("div");
+		peopledata = document.getElementById("TD_people").getElementsByTagName("div");
+		resourcedata = document.getElementById("TD_resource").getElementsByTagName("div");
+
+		for (i = 0; i < groupsdata.length; i++) {
+			if (groupsdata[i].id.search("GROUP_") == 0) {
+				group = groupsdata[i].id.substr(6);
+				group = group.split('/');
+				groups.push(group[3]);
+			}
+		}
+
+		for (i = 0; i < peopledata.length; i++) {
+			if (peopledata[i].id.search("USER_") == 0) {
+				person = peopledata[i].id.substr(5);
+				person = person.split('/');
+				people.push(person[3]);
+			}
+		}
+
+		for (i = 0; i < resourcedata.length; i++) {
+			if (resourcedata[i].id.search("RESOURCE_") == 0) {
+				resource = resourcedata[i].id.substr(5);
+				resource = resource.split('/');
+				resources.push(resource[3]);
 			}
 		}
 	}
 
 	// sanity checks
 	if (start != "") {
-		if(!start.match(/^\d{4}-\d{2}-\d{2}$/)) {
+		if (!start.match(/^\d{4}-\d{2}-\d{2}$/)) {
 			SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 			return;
 		} else {
@@ -780,25 +1008,15 @@ function NEWSSearch() {
 			document.getElementById("TAB_search_action").innerHTML = "";
 			document.getElementById("TAB_add_action").innerHTML = "";
 		}
-		start = start + "!00:00:00";
 	}
-
 	if (stop != "") {
-		if(!stop.match(/^\d{4}-\d{2}-\d{2}$/)) {
+		if (!stop.match(/^\d{4}-\d{2}-\d{2}$/)) {
 			SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 			return;
 		} else {
 			// clear error boxes
 			document.getElementById("TAB_search_action").innerHTML = "";
 			document.getElementById("TAB_add_action").innerHTML = "";
-		}
-		stop = stop + "!23:59:59";
-	}
-
-	if (newstypeid != "") {
-		if (!newstypeid.match(/^(-)?[0-9]+$/)) {
-			SetError('Invalid news type', 'Please select a news type');
-			return;
 		}
 	}
 
@@ -806,685 +1024,503 @@ function NEWSSearch() {
 	var searchstring = "";
 	var querystring = "&";
 
-	var in_edit = false;
-	if (window.location.href.match(/[&?]edit/)) {
-		document.getElementById("INPUT_add").disabled = false;
-		in_edit = true;
-	} else {
-		NEWSToggleAddButton();
-	}
-
-	var in_add = false;
-	var tab = document.getElementById("TAB_add");
-	if (tab != null && tab.className.match(/active/)) {
-		in_add = true;
-	}
-
 	// if not add new
-	if (!in_add) {
+	if (!document.getElementById("TAB_add").className.match(/active/)) {
 		if (start != "") {
-			searchstring += " start:"  + start;
-			querystring += "&start="  + start;
+			searchstring += " start:" + start;
+			querystring += "&start=" + start;
 		}
 		if (stop != "") {
 			searchstring += " stop:" + stop;
 			querystring += "&stop=" + stop;
 		}
 	}
-
+	if (groups.length > 0) {
+		searchstring += " group:" + groups[0];
+		querystring += "&group=" + groups[0];
+		for (x = 1; x < groups.length; x++) {
+			searchstring += "," + groups[x];
+			querystring += "," + groups[x];
+		}
+	}
+	if (people.length > 0) {
+		searchstring += " people:" + people[0];
+		querystring += "&people=" + people[0];
+		for (x = 1; x < people.length; x++) {
+			searchstring += "," + people[x];
+			querystring += "," + people[x];
+		}
+	}
 	// Construct resource query
-	if (!in_edit && resources.length > 0) {
+	if (resources.length > 0) {
 		searchstring += " resource:" + resources[0];
 		querystring += "&resource=" + resources[0];
-		for (var x=1;x<resources.length;x++) {
+		for (x = 1; x < resources.length; x++) {
 			searchstring += "," + resources[x];
 			querystring += "," + resources[x];
 		}
 	}
-
-	if (!in_edit && newstypeid != "" && newstypeid != '-1') {
-		searchstring += " newstype:" + newstypeid;
-		querystring += "&newstype=" + newstypeid;
-	}
-
-	if (window.location.href.match(/[&?]all/)) {
-		searchstring += " limit:0";
-	}
-
 	// if not add new
-	if (!in_add) {
+	if (!document.getElementById("TAB_add").className.match(/active/)) {
 		if (keywords != "") {
-			// format news ticket queries correctly
-			keywords = keywords.replace(/NEWS#(\d+)/g, '$1 $2');
+			// format FP or CR ticket queries correctly
+			keywords = keywords.replace(/(FP|CR)#(\d+)/g, '$1 $2');
 
 			// filter out potentially dangerous garbage
 			keywords = keywords.replace(/[^a-zA-Z0-9_ ]/g, '');
 			searchstring += " " + keywords;
-			querystring += "&keywords=" + keywords;
+			querystring += "&search=" + keywords;
 		}
 	}
-	if (!in_add) {
-		if (locale != "") {
-			searchstring += " location:" + locale;
-			querystring += "&location=" + locale;
-		}
-	}
-	if (template) {
-		searchstring += " template:1";
-		querystring += "&template=1";
-	}
-
 	// if not add new
-	if (!in_add || in_edit) {
+	if (!document.getElementById("TAB_add").className.match(/active/)) {
 		if (id.match(/(\d)+/)) {
 			searchstring += " id:" + id;
 			querystring += "&id=" + id;
 		}
 	}
 
-	if (typeof(history.pushState) != 'undefined') {
-		var tb = window.location.href.match(/[&?](\w+)&?$/);
-		if (tb != null) {
-			querystring = querystring + "&" + tb[1];
+	if (window.location.href.match(/edit/)) {
+		document.getElementById("INPUT_add").disabled = false;
+		return;
+	} else {
+		CRMToggleAddButton();
+	}
+
+	if (typeof (history.pushState) != 'undefined') {
+		var tab = window.location.href.match(/[&?](\w+)$/);
+		if (tab != null) {
+			querystring = querystring + "&" + tab[1];
 		}
 		querystring = querystring.replace(/^&+/, '?');
 		history.pushState(null, null, encodeURI(querystring));
 	}
 
-	if (searchstring == "") {
-		searchstring = "start:0000-00-00";
-	}
+	//if (searchstring == "") {
+	//	searchstring = "start:0000-00-00";
+	//}
 
-	WSGetURL(ROOT_URL + "news/" + encodeURI(searchstring), NEWSSearched);
+	console.log('Searching... ' + ROOT_URL + "contactreports/" + encodeURI(querystring));
+	$("#reports").data('query', querystring.replace('?', ''));
+
+	WSGetURL(ROOT_URL + "contactreports/" + encodeURI(querystring), CRMSearched);
 }
 
 /**
- * enable or disable Add button
+ * Enable or disable Add button
  *
  * @return  {void}
  */
-function NEWSToggleAddButton() {
-	var start = document.getElementById("datestartshort").value;
-
+function CRMToggleAddButton() {
 	// if add new
-	var tab = document.getElementById("TAB_add");
-	if (tab != null && tab.className.match(/active/)) {
+	if (document.getElementById("TAB_add").className.match(/active/)) {
+		var start = document.getElementById("datestartshort").value;
+		var people = document.getElementById("people").value.split(',');
 		var notes = document.getElementById("NotesText").value;
-		var headline = document.getElementById("Headline").value;
-		var template = document.getElementById("template");
-		var template_select = document.getElementById("template_select");
 
-		if (template_select.options[template_select.selectedIndex].value == "savetemplate") {
-			template.checked = true;
-		} else if (template_select.options[template_select.selectedIndex].value != "0") {
-			if (document.getElementById("TR_use_template").style.display != "none") {
-				NEWSUseTemplate();
-			}
-		}
-		template = template.checked;
-
-		if ((template || start) && headline && notes) {
+		if (start != "" && people.length > 0 && notes != "") {
 			document.getElementById("INPUT_add").disabled = false;
-		} else  {
-			document.getElementById("INPUT_add").disabled = true;
-		}
-
-		if (template) {
-			document.getElementById("TR_date").style.display = "none";
-			document.getElementById("TR_published").style.display = "none";
 		} else {
-			document.getElementById("TR_date").style.display = "block";
-			document.getElementById("TR_published").style.display = "block";
+			document.getElementById("INPUT_add").disabled = true;
 		}
 	}
 }
 
 /**
- * Builds the news div with results returned from the WS
+ * Callback after searching
  *
  * @param   {object}  xml
  * @return  {void}
  */
-function NEWSSearched(xml) {
+function CRMSearched(xml) {
+	const DEFAULT_ENTRIES = 5;
+
 	if (xml.status == 200) {
-		var news = document.getElementById("news");
+		var reports = $("#reports");
+		var count = 0;
 
-		// clear out reports
-		news.innerHTML = "";
+		const results = JSON.parse(xml.responseText);
 
-		// parse results
-		var results = JSON.parse(xml.responseText);
-		var edit = results['canEdit']; //(results['authorized'] == 1) ? true : false;
-
-		document.getElementById("matchingnews").innerHTML = "Found " + results.total + " matching News Articles";
-		for (var x=0;x<results.data.length;x++) {
-			NEWSPrintRow(results.data[x], edit, results.updates);
-		}
-
-		// Re-initialize tooltips
-		$('.tip').tooltip({
-			position: {
-				my: 'center bottom',
-				at: 'center top'
-			},
-			hide: false
-		});
-
-		var footer = document.createElement("div");
-			footer.id = "newsfooter";
-			footer.innerHTML = "Displaying " + (results.from * results.per_page) + " of " + results.total + " News Articles...<br />";
-
-		if ((results.from * results.per_page) < results.total || window.location.href.match(/[\?&]all/)) {
-			var a = document.createElement("a");
-
-			if (!window.location.href.match(/[\?&]all/)) {
-				a.innerHTML = "Show All News";
-				var url = window.location.href.split("?");
-				if (typeof(url[1]) != 'undefined' || url[1] == '') {
-					a.href = url[0] + "?" + url[1] + "&all";
-				} else {
-					a.href = url[0] + "?all";
-				}
-			} else {
-				a.innerHTML = "Show Less News";
-				a.href = window.location.href.replace(/[&?]all/, '');
-			}
-			footer.appendChild(a);
-		}
-
-		news.appendChild(footer);
+		$("#matchingReports").html("Found " + results.data.length + " matching reports");
 
 		if (results.data.length == 0) {
-			var noresults = document.createElement("div");
-				noresults.id = "newnews";
-				noresults.innerHTML = "No matching news stories found.";
+			reports.html('<p class="alert alert-warning">No matching reports found.</p>');
+		} else {
+			reports.html('');
 
-			news.appendChild(noresults);
+			for (var x = 0; x < results.data.length; x++, count++) {
+				CRMPrintRow(
+					results.data[x],
+					//results.people,
+					//results.comments,
+					//results.userid,
+					(x < DEFAULT_ENTRIES ? "newEntries" : "newEntriesHidden")
+				);
+			}
+
+			// Re-initialize tooltips
+			$('.tip').tooltip({
+				position: {
+					my: 'center bottom',
+					at: 'center top'
+				},
+				hide: false
+			});
+
+			reports.find(".alert").hide();
+			$(".newEntriesHidden").hide();
+
+			/*var a = $("<a></a>")
+				.attr({
+					id: "showEntries",
+					href: "#"
+				})
+				.html("Show All Reports")
+				.on('click', function (e) {
+					e.preventDefault();
+					const flag = $(this).html().includes('Show All Reports');
+					$(this).html(flag ? "Show Less Reports" : "Show All Reports");
+					$(this).parent().text("Displaying all of CRM Reports...");
+					flag ? $(".newEntriesHidden").show() : $(".newEntriesHidden").hide();
+				});
+
+			var td = $("<p></p>")
+				.attr({
+					id: "displayEntries",
+				})
+				.html("Displaying " + Math.min(count, DEFAULT_ENTRIES) + " of " +
+					results.data.length + " CRM Reports...<br/>"
+				)
+				.append(a);
+
+			reports.append(td);*/
+
+			var q = reports.data('query');
+			var query = q.replace(' ', '&').replace(':', '=');
+			var lastpage = Math.ceil(results.meta.total > results.meta.per_page ? results.meta.total / results.meta.per_page : 1);
+
+			// Pagination
+			var ul = $('<ul class="pagination"></ul>');
+
+			var li = $('<li class="page-item page-first">');
+			var a = $('<a class="page-link" title="First page"><span aria-hidden="true">«</span></a>')
+				.attr('href', '?' + query + '&page=1')
+				.attr('data-page', 1);
+			if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
+				li.addClass('disabled');
+				a.attr('aria-disabled', 'true');
+			}
+			li.append(a);
+			ul.append(li);
+
+			li = $('<li class="page-item page-prev">');
+			a = $('<a class="page-link" title="Previous page"><span aria-hidden="true">‹</span></a>')
+				.attr('href', '?' + query + ' &page=' + (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1))
+				.attr('data-page', (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1));
+			if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
+				li.addClass('disabled');
+				a.attr('aria-disabled', 'true');
+			}
+			li.append(a);
+			ul.append(li);
+
+			if (results.meta.total <= results.meta.per_page) {
+				li = $('<li class="page-item">');
+				a = $('<a class="page-link"></a>')
+					.text('1')
+					.attr('href', '?' + query + '&page=1')
+					.attr('data-page', 1);
+				if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
+					li.addClass('disabled');
+					a.attr('aria-disabled', 'true');
+				}
+				li.append(a);
+				ul.append(li);
+			} else {
+				var c = 0;
+				for (var l = 1; l <= lastpage; l++) {
+					if (c >= 10) {
+						li = $('<li class="page-item">');
+						a = $('<span class="page-link"></span>')
+							.text('...')
+							.attr('aria-disabled', 'true');
+						li.append(a);
+						ul.append(li);
+						break;
+					}
+					li = $('<li class="page-item">');
+					a = $('<a class="page-link"></a>')
+						.text(l)
+						.attr('href', '?' + query + '&page=' + l)
+						.attr('data-page', l);
+					if (results.meta.current_page == l) {
+						li.addClass('active');
+						//a.attr('aria-disabled', 'true');
+					}
+					li.append(a);
+					ul.append(li);
+					c++;
+				}
+			}
+
+			li = $('<li class="page-item page-next">');
+			a = $('<a class="page-link" title="Next page"><span aria-hidden="true">›</span></a>')
+				.attr('href', '?' + query + '&page=' + (results.meta.current_page < lastpage ? lastpage - 1 : 1))
+				.attr('data-page', (results.meta.current_page > 1 ? lastpage - 1 : 1))
+				.attr('data-query', q.replace(/(page:\d+)/, 'page:' + (results.meta.current_page > 1 ? lastpage - 1 : 1)));
+			if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
+				li.addClass('disabled');
+				a.attr('aria-disabled', 'true');
+			}
+			li.append(a);
+			ul.append(li);
+
+			li = $('<li class="page-item page-last">');
+			a = $('<a class="page-link" title="Last page"><span aria-hidden="true">»</span></a>')
+				.attr('href', '?' + query + '&page=' + lastpage)
+				.attr('data-page', lastpage)
+				.attr('data-query', q.replace(/(page:\d+)/, 'page:' + lastpage));
+			if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
+				li.addClass('disabled');
+				a.attr('aria-disabled', 'true');
+			}
+			li.append(a);
+			ul.append(li);
+
+			reports.append(ul);
+
+			$('.page-link').on('click', function (e) {
+				e.preventDefault();
+				$('#page').val($(this).data('page'));
+				CRMSearch();
+			});
 		}
 	}
 }
 
 /**
- * Builds the news div with results returned from the WS
+ * Print a report entry
  *
- * @param   {object}  news
- * @param   {bool}    edit
- * @param   {array}   updates
+ * @param   {object}  report
+ * @param   {array}   people
+ * @param   {array}   comments
+ * @param   {string}  userid
+ * @param   {string}  cls
  * @return  {void}
  */
-function NEWSPrintRow(news, edit, updates) {
-	edit = news.canEdit;
+function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
+	var id = report['id'];//.split('/');
+	//id = id[id.length - 1];
 
-	var id = news.id; //.split('/');
-		//id = id[id.length - 1];
+	// determine if this entry can be edited
+	var edit = false;
+	//if (userid == report['userid'] && report['age'] <= 86400) {
+	if (report['can']['edit']) {
+		edit = true;
+	}
 
-	var resources = news.resources;
-	var headline = news.headline;
-	var locale = news.location;
-	var body = news.body;
-	var published = news.published;
-	var maildate = news.maildate;
-	var mailuser = news.mailuser;
-	var users = news.associations;
+	var tr, td, div, a, span, img, li, x;
 
-	LASTEDIT[id] = news.editdate;
-
-	var container = document.getElementById('news');
+	// create first row
+	var container = document.getElementById('reports');
 
 	var article = document.createElement("article");
 	article.id = id;
-	article.className = "news-item";
+	article.className = "crm-item " + cls;
 
 	var panel = document.createElement("div");
 	panel.className = "panel panel-default";
 
-	var tr, td, div, a, img, span, li, x;
-
 	// -- Admin header
+	tr = document.createElement("div");
+	tr.className = 'panel-heading news-admin';
+
+	// ID
+	td = document.createElement("span");
+	td.className = "crmid";
+
+	a = document.createElement("a");
+	a.href = "/contactreports/" + id;
+	a.innerHTML = "#" + id;
+
+	td.appendChild(a);
+
 	if (edit) {
-		tr = document.createElement("div");
-		tr.className = 'panel-heading news-admin';
-
-		// ID
-		td = document.createElement("span");
-		td.className = "newsid";
-
-		a = document.createElement("a");
-		a.href = "/news/" + id;
-		a.innerHTML = "#" + id;
-
-		td.appendChild(a);
-		tr.appendChild(td);
-
-		// Publication status
-		var td2 = document.createElement("span");
-		td2.className = "newspublication";
-
-		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
-
-		if (published == "1") {
-			a.onclick = function (e) {
-				e.preventDefault();
-
-				var post = {
-					'published' : '0',
-					'lastedit'  : LASTEDIT[id]
-				};
-				post = JSON.stringify(post);
-
-				WSPostURL(ROOT_URL + "news/" + id, post, function (xml) {
-					if (xml.status == 200) {
-						document.getElementById("id").value = id;
-						NEWSSearch();
-					} else if (xml.status == 409) {
-						WSGetURL(ROOT_URL + "news/" + id, function (xml) {
-							if (xml.status == 200) {
-								var results = JSON.parse(xml.responseText);
-								alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
-							}
-						});
-					}
-				});
-			};
-			a.appendChild(document.createTextNode("Published"));
-			a.className = 'badge badge-published';
-			a.title = "Recall news item.";
-		} else {
-			a.onclick = function (e) {
-				e.preventDefault();
-
-				var post = {
-					'published' : '1',
-					'lastedit'  : LASTEDIT[id]
-				};
-				post = JSON.stringify(post);
-
-				WSPostURL(ROOT_URL + "news/" + id, post, function (xml) {
-					if (xml.status == 200) {
-						document.getElementById("id").value = id;
-						NEWSSearch();
-					} else if (xml.status == 409) {
-						WSGetURL(ROOT_URL + "news/" + id, function (xml) {
-							if (xml.status == 200) {
-								var results = JSON.parse(xml.responseText);
-								alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
-							}
-						});
-					}
-				});
-			};
-			a.appendChild(document.createTextNode("Draft"));
-			a.className = 'badge badge-unpublished';
-			a.title = "Publish news item.";
-		}
-
-		td2.appendChild(a);
-		tr.appendChild(td2);
-
 		// Delete button
 		a = document.createElement("a");
-		a.href = "/news/manage?delete&id=" + id;
-		a.className = 'edit news-delete icn tip';
-		a.title = "Delete News Story.";
+		a.href = "/contactreports/" + id + "/delete";
+		a.className = 'edit news-delete tip';
 		a.onclick = function (e) {
 			e.preventDefault();
-			NEWSDeleteNews(id);
+			CRMDeleteReport(report['id']);
 		};
+		a.title = "Delete Contact Report.";
 
 		img = document.createElement("i");
-		img.className = "fa fa-trash";
+		img.className = "crmeditdelete fa fa-trash";
 		img.setAttribute('aria-hidden', true);
-		img.id = id + "_newsdeleteimg";
+		img.id = report['id'] + "_crmdeleteimg";
 
 		a.appendChild(img);
-		a.appendChild(document.createTextNode("Delete News Story."));
-		tr.appendChild(a);
-
-		// Mailing
-		if (resources.length > 0 && published == "1") {
-			a = document.createElement("a");
-			a.className = 'edit news-mail tip';
-			a.href = "/news/manage?mail&id=" + id;
-			a.onclick = function (e) {
-				e.preventDefault();
-				NEWSSendMail(id);
-			};
-			a.id = "A_mail_" + id;
-			a.title = "Preview mail to mailing lists.";
-
-			if (maildate != undefined) {
-				span = document.createElement("span");
-				span.innerHTML = "Last sent " + news.formattedmaildate + " by " + mailuser['name'] + " ";
-				span.className = "newspostedby";
-
-				a.appendChild(span);
-			}
-
-			img = document.createElement("i");
-			img.className = "newsedit fa fa-envelope";
-			img.setAttribute('aria-hidden', true);
-			img.id = "IMG_mail_" + id;
-
-			a.appendChild(img);
-			//a.appendChild(document.createTextNode("Preview mail to mailing lists."));
-			tr.appendChild(a);
-		}
-
-		panel.appendChild(tr);
+		td.appendChild(a);
 	}
+
+	tr.appendChild(td);
+
+	panel.appendChild(tr);
 
 	// -- Header
 	tr = document.createElement("div");
 	tr.className = 'panel-heading';
 
 	td = document.createElement("h3");
-	td.className = "panel-title newsheadline";
+	td.className = "panel-title crmcontactdate";
 
-	a = document.createElement("a");
-	a.href = "/news/" + id;
-	a.innerHTML = headline;
-	a.id = id + "_headline";
+	var bits = report['datetimecontact'].match(/\d+/g);
+	var d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
 
-	td.appendChild(a);
+	td.innerHTML = d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear();
 
 	if (edit) {
-		// Edit button
 		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
+		a.href = "/contactreports/" + report['id'] + "/edit";
+		a.className = "news-action tip";
 		a.onclick = function (e) {
 			e.preventDefault();
-			NEWSEditNewsHeadlineOpen(id);
+
+			CRMClearSearch();
+
+			if (!window.location.href.match(/crm/)) {
+				window.location = this.href;
+			} else {
+				var url = window.location.href.split("?");
+				url = url[0];
+				window.location = url + "?id=" + report['id'] + "&edit";
+			}
 		};
-		a.className = "news-action icn tip";
-		a.title = "Edit news headline";
+		a.title = "Edit contact report date.";
 
 		img = document.createElement("i");
-		img.id = id + "_headlineediticon";
-		img.className = "newsedit fa fa-pencil";
+		img.className = "crmedit fa fa-pencil";
 		img.setAttribute('aria-hidden', true);
 
 		a.appendChild(img);
 		td.appendChild(a);
 	}
 
-	var input = document.createElement("input");
-		input.id = id + "_headlineinput";
-		input.type = "text";
-		input.value = headline;
-		input.style.display = "none";
-		input.className = "form-control newsheadlineeditinput";
-
-	span = document.createElement("span");
-	span.appendChild(input);
-
-	td.appendChild(span);
-
-	if (edit) {
-		// Save button
-		a = document.createElement("a");
-		a.href = "/news/manage?save&id=" + id;
-		a.onclick = function (e) {
-			e.preventDefault();
-			NEWSSaveNewsHeadline(id);
-		};
-		a.id = id + "_headlinesaveicon";
-		a.className = "news-action icn tip";
-		a.style.display = "none";
-		a.title = "Edit news headline.";
-
-		img = document.createElement("i");
-		img.className = "newssaveheadline fa fa-save";
-		img.id = id + "_headlinesaveiconimg";
-		img.setAttribute('aria-hidden', true);
-
-		a.appendChild(img);
-		td.appendChild(a);
-
-		// Cancel button
-		a = document.createElement("a");
-		a.href = "/news/" + id;
-		a.onclick = function (e) {
-			e.preventDefault();
-			NEWSCancelNewsHeadline(id);
-		};
-		a.id = id + "_headlinecancelicon";
-		a.className = "news-action news-cancel icn tip";
-		a.style.display = "none";
-		a.title = "Cancel headline edits";
-
-		img = document.createElement("i");
-		img.className = "newssaveheadline fa fa-ban";
-		img.id = id + "_headlinecanceliconimg";
-		img.setAttribute('aria-hidden', true);
-
-		a.appendChild(img);
-		td.appendChild(a);
-	}
+	tr.appendChild(td);
 
 	var ul = document.createElement("ul");
-		ul.className = 'panel-meta news-meta';
+	ul.className = 'panel-meta news-meta';
 
 	// Date
 	li = document.createElement("li");
 	li.className = 'news-date';
 
+	bits = report['datetimecreated'].match(/\d+/g);
+	d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
+
 	span = document.createElement("span");
-	span.className = "newsdate";
-	span.innerHTML = news.formatteddate;
+	span.className = "crmpostdate";
+	span.innerHTML = "Posted on " + d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear();
 
 	li.appendChild(span);
-
-	if (edit) {
-		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
-		a.onclick = function (e) {
-			e.preventDefault();
-			NEWSClearSearch();
-			if (!window.location.href.match(/\/news/)) {
-				window.location = "/news/manage/?id=" + id + "&edit";
-			} else {
-				NEWSClearSearch();
-				var url = window.location.href.split("?");
-				url = url[0];
-				window.location = url + "?id=" + id + "&edit";
-			}
-		};
-		a.className = "news-action icn tip";
-		a.title = "Edit news date.";
-
-		img = document.createElement("i");
-		img.className = "newsedit fa fa-pencil";
-		img.setAttribute('aria-hidden', true);
-
-		a.appendChild(img);
-		li.appendChild(a);
-	}
 	ul.appendChild(li);
 
-	// Locale
-	if (news.location) {
+	// Creator
+	li = document.createElement("li");
+	li.className = 'news-author';
+
+	span = document.createElement("span");
+	span.className = "crmposter";
+	span.innerHTML = "Posted by " + report['username'];
+
+	li.appendChild(span);
+	ul.appendChild(li);
+
+	// Group
+	if (report['groupname'] != null && report['groupid'] > 0) {
 		li = document.createElement("li");
-		li.className = 'news-location';
+		li.className = 'news-group';
 
-		span = document.createElement("span");
-		span.innerHTML = locale;
-		span.id = id + "_location";
+		a = document.createElement("a");
+		a.href = "/admin/group/?g=" + report['groupid'];
+		a.innerHTML = report['groupname'];
 
-		li.appendChild(span);
-
-		if (edit) {
-			a = document.createElement("a");
-			a.href = "/news/manage?id=" + id + '&edit';
-			a.onclick = function (e) {
-				e.preventDefault();
-				NEWSEditNewsLocationOpen(id);
-			};
-			a.id = id + "_locationediticon";
-			a.className = "news-action icn tip";
-			a.title = "Edit news location";
-
-			img = document.createElement("i");
-			img.id = id + "_locationediticonimg";
-			img.className = "newsedit fa fa-pencil";
-			img.setAttribute('aria-hidden', true);
-
-			a.appendChild(img);
-			li.appendChild(a);
-		}
-
-		input = document.createElement("input");
-		input.id = id + "_locationinput";
-		input.type = "text";
-		input.value = locale;
-		input.style.display = "none";
-		input.className = "form-control newslocationeditinput";
-
-		span = document.createElement("span");
-		span.appendChild(input);
-
-		li.appendChild(span);
-
-		if (edit) {
-			a = document.createElement("a");
-			a.href = "/news/manage?id=" + id + '&edit';
-			a.onclick = function (e) {
-				e.preventDefault();
-				NEWSSaveNewsLocation(id);
-			};
-			a.className = "news-action icn tip";
-			a.id = id + "_locationsaveicon";
-			a.title = "Edit news location.";
-			a.style.display = "none";
-
-			img = document.createElement("i");
-			img.className = "newssavelocation fa fa-save";
-			img.id = id + "_locationsaveiconimg";
-			img.setAttribute('aria-hidden', true);
-
-			a.appendChild(img);
-			li.appendChild(a);
-
-			a = document.createElement("a");
-			a.href = "/news/" + id;
-			a.onclick = function (e) {
-				e.preventDefault();
-				NEWSCancelNewsLocation(id);
-			};
-			a.id = id + "_locationcancelicon";
-			a.className = "news-action news-cancel icn tip";
-			a.title = "Cancel location edits";
-			a.style.display = "none";
-
-			img = document.createElement("i");
-			img.id = id + "_locationcanceliconimg";
-			img.className = "newssaveheadline fa fa-ban";
-			img.setAttribute('aria-hidden', true);
-
-			a.appendChild(img);
-			li.appendChild(a);
-		}
-
+		li.appendChild(a);
 		ul.appendChild(li);
 	}
 
-	// URL
-	if (news.url) {
-		li = document.createElement("li");
-		li.className = 'news-url';
+	// People
+	if (people.length > 0) {
+		var p = Array();
+		for (x = 0; x < people.length; x++) {
+			if (people[x]['id'] == report['id']) {
+				a = document.createElement("a");
+				a.href = "/admin/user/?u=" + people[x]['userid'];
+				a.innerHTML = people[x]['name'];
 
-		span = document.createElement("span");
-		span.innerHTML = news.url;
-		span.id = id + "_url";
+				if (people[x]['admin'] == 1) {
+					a.className = 'crmadmin';
+				}
 
-		li.appendChild(span);
-
-		if (edit) {
-			a = document.createElement("a");
-			a.href = "/news/manage?id=" + id + '&edit';
-			a.onclick = function (e) {
-				e.preventDefault();
-				NEWSEditNewsUrlOpen(id);
-			};
-			a.className = "news-action icn tip";
-			a.title = "Edit news URL";
-
-			img = document.createElement("i");
-			img.id = id + "_urlediticon";
-			img.className = "newsedit fa fa-pencil";
-			img.setAttribute('aria-hidden', true);
-
-			a.appendChild(img);
-			li.appendChild(a);
+				p.push(a.outerHTML);
+			}
 		}
 
-		input = document.createElement("input");
-		input.id = id + "_urlinput";
-		input.type = "text";
-		input.value = locale;
-		input.style.display = "none";
-		input.className = "form-control newsurleditinput";
+		if (p.length) {
+			li = document.createElement("li");
+			li.className = 'news-users';
 
-		span = document.createElement("span");
-		span.appendChild(input);
+			span = document.createElement("span");
+			span.className = "crmpostpeople";
+			span.innerHTML = p.join(', ');
 
-		li.appendChild(span);
+			li.appendChild(span);
 
-		if (edit) {
-			a = document.createElement("a");
-			a.href = "/news/manage?id=" + id + '&edit';
-			a.onclick = function (e) {
-				e.preventDefault();
-				NEWSSaveNewsUrl(id);
-			};
-			a.className = "news-action icn tip";
-			a.id = id + "_urlsaveicon";
-			a.title = "Edit news URL.";
-			a.style.display = "none";
+			if (edit) {
+				a = document.createElement("a");
+				a.href = "/account/crm/?id=" + report['id'] + "&edit";
+				a.className = "news-action tip";
+				a.onclick = function (e) {
+					e.preventDefault();
 
-			img = document.createElement("i");
-			img.className = "newssaveurl fa fa-save";
-			img.id = id + "_urlsaveiconimg";
-			img.setAttribute('aria-hidden', true);
+					CRMClearSearch();
 
-			a.appendChild(img);
-			li.appendChild(a);
+					if (!window.location.href.match(/crm/)) {
+						window.location = "/account/crm/?id=" + report['id'] + "&edit";
+					} else {
+						var url = window.location.href.split("?");
+						url = url[0];
 
-			a = document.createElement("a");
-			a.href = "/news/" + id;
-			a.onclick = function (e) {
-				e.preventDefault();
-				NEWSCancelNewsUrl(id);
-			};
-			a.id = id + "_urlcancelicon";
-			a.className = "news-action news-cancel icn tip";
-			a.title = "Cancel url edits";
-			a.style.display = "none";
+						window.location = url + "?id=" + report['id'] + "&edit";
+					}
+				};
+				a.title = "Add or remove users and groups.";
 
-			img = document.createElement("i");
-			img.id = id + "_urlcanceliconimg";
-			img.className = "newssaveurl fa fa-ban";
-			img.setAttribute('aria-hidden', true);
+				img = document.createElement("i");
+				img.className = "crmedit fa fa-pencil";
+				img.setAttribute('aria-hidden', true);
 
-			a.appendChild(img);
-			li.appendChild(a);
+				a.appendChild(img);
+				li.appendChild(a);
+			}
+
+			ul.appendChild(li);
 		}
-
-		ul.appendChild(li);
 	}
 
 	// Resource list
-	var r;
-	if (resources.length > 0) {
+	if (report.resources.length > 0) {
 		li = document.createElement("li");
 		li.className = 'news-tags';
 
 		span = document.createElement("span");
-		span.className = "newspostresources";
+		span.className = "crmpostresources";
 
-		r = Array();
-		for (x = 0; x < resources.length; x++) {
-			r.push(resources[x].name);
+		var r = Array();
+		for (x = 0; x < report.resources.length; x++) {
+			r.push(report.resources[x].resourcename);
 		}
 		span.innerHTML = r.join(', ');
 
@@ -1492,12 +1528,12 @@ function NEWSPrintRow(news, edit, updates) {
 
 		if (edit) {
 			a = document.createElement("a");
-			a.href = "/news/manage?id=" + id + '&edit';
+			a.className = "news-action tip"
+			a.href = "/account/crm?id=" + id + '&edit';
 			a.title = "Edit tagged resources.";
-			a.className = "news-action icn tip";
 
 			img = document.createElement("i");
-			img.className = "newsedit fa fa-pencil";
+			img.className = "crmedit fa fa-pencil";
 			img.setAttribute('aria-hidden', true);
 
 			a.appendChild(img);
@@ -1509,66 +1545,7 @@ function NEWSPrintRow(news, edit, updates) {
 		ul.appendChild(li);
 	}
 
-	// Users list
-	if (users.length > 0) {
-		li = document.createElement("li");
-		li.className = 'news-users';
-
-		span = document.createElement("span");
-		span.className = "newspostusers";
-
-		r = Array();
-		for (x = 0; x < users.length; x++) {
-			r.push(users[x].assocname);
-		}
-		span.innerHTML = r.join(', ');
-
-		li.appendChild(span);
-
-		if (edit) {
-			a = document.createElement("a");
-			a.href = "/news/manage?id=" + id + '&edit';
-			a.title = "Edit associated users.";
-			a.className = "news-action icn tip";
-
-			img = document.createElement("i");
-			img.className = "newsedit fa fa-pencil";
-			img.setAttribute('aria-hidden', true);
-
-			a.appendChild(img);
-
-			span.appendChild(a);
-			li.appendChild(span);
-		}
-
-		ul.appendChild(li);
-	}
-
-	// News type
-	li = document.createElement("li");
-	li.className = 'news-type';
-
-	span = document.createElement("span");
-	span.className = "newstype";
-	span.appendChild(document.createTextNode(news.type.name));
-
-	if (edit) {
-		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
-		a.title = "Edit news story, change text, headline, or tagged resources.";
-		a.className = "news-action icn tip";
-
-		img = document.createElement("i");
-		img.className = "newsedit fa fa-pencil";
-		img.setAttribute('aria-hidden', true);
-
-		a.appendChild(img);
-		span.appendChild(a);
-	}
-	li.appendChild(span);
-	ul.appendChild(li);
-
-	tr.appendChild(td);
+	//tr.appendChild(td);
 	tr.appendChild(ul);
 	panel.appendChild(tr);
 
@@ -1579,1374 +1556,289 @@ function NEWSPrintRow(news, edit, updates) {
 	td = document.createElement("div");
 	td.className = "newsposttext";
 
-	tr.appendChild(td);
-
-	// format text
-	var rawtext = body;
-	body = news.formattedbody;
-
-	// determine the directory we are operating in
-	var page = document.location.href.split("/")[4];
-	// if we are in news, we are doing report searches, so we should highlight matches
-	if (page == 'news') {
-		body = HighlightMatches(body);
-	}
-
-	span = document.createElement("span");
-	span.id = id + "_text";
-	span.innerHTML = body;
-
-	td.appendChild(span);
-
-	var textarea = document.createElement("textarea");
-		textarea.id = id + "_textarea";
-		textarea.innerHTML = rawtext;
-		textarea.style.display = "none";
-		textarea.rows = 7;
-		textarea.cols = 45;
-		textarea.className = "form-control newspostedittextbox";
-
-	span = document.createElement("span");
-	span.appendChild(textarea);
-
-	td.appendChild(span);
-
 	if (edit) {
 		var opt = document.createElement("div");
 		opt.className = "panel-options";
 
+		// Edit button
 		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
+		a.href = "/account/crm?id=" + id + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
-			NEWSEditNewsTextOpen(id);
+			CRMEditReportTextOpen(report['id']);
 		};
-		a.className = "news-edit tip";
-		a.title = "Edit news text.";
-		a.id = id + "_textediticon";
+		a.className = "news-edit icn tip";
+		a.title = "Edit report text.";
+		a.id = report['id'] + "_textediticon";
 
 		img = document.createElement("i");
-		img.className = "newsedittext fa fa-pencil";
+		img.className = "crmedittext fa fa-pencil";
 		img.setAttribute('aria-hidden', true);
+		img.id = report['id'] + "_textediticonimg";
 
 		a.appendChild(img);
-		opt.appendChild(a);
-
-		// Preview button
-		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
-		a.onclick = function (e) {
-			e.preventDefault();
-			NEWSPreview(id);
-		};
-		a.className = "news-preview icn tip";
-		a.id = id + "_textpreviewicon";
-		a.title = "Preview news text";
-		a.style.display = "none";
-
-		img = document.createElement("i");
-		img.className = "newssavetext fa fa-eye";
-		img.setAttribute('aria-hidden', true);
-		img.id = id + "_textpreviewiconimg";
-
-		a.appendChild(img);
-		//a.appendChild(document.createTextNode("Preview news text"));
 		opt.appendChild(a);
 
 		// Save button
 		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
+		a.href = "/account/crm?id=" + id + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
-			NEWSSaveNewsText(id);
+			CRMSaveReportText(report['id']);
 		};
 		a.className = "news-save icn tip";
-		a.id = id + "_textsaveicon";
-		a.title = "Save news text";
+		a.id = report['id'] + "_textsaveicon";
+		a.title = "Save report text.";
 		a.style.display = "none";
 
 		img = document.createElement("i");
-		img.className = "newssavetext fa fa-save";
+		img.className = "crmsavetext fa fa-save";
 		img.setAttribute('aria-hidden', true);
-		img.id = id + "_textsaveiconimg";
+		img.id = report['id'] + "_textsaveiconimg";
+
 		a.appendChild(img);
-		//a.appendChild(document.createTextNode("Save news text"));
 		opt.appendChild(a);
 
 		// Cancel button
 		a = document.createElement("a");
-		a.href = "/news/" + id;
+		a.href = "/account/crm?id=" + id;
 		a.onclick = function (e) {
 			e.preventDefault();
-			NEWSCancelNewsText(id);
+			CRMCancelReportText(id);
 		};
 		a.className = "news-cancel icn tip";
-		a.id = id + "_textcancelicon";
 		a.title = "Cancel edits to text";
+		a.id = id + "_textcancelicon";
 		a.style.display = "none";
 
 		img = document.createElement("i");
-		img.className = "newssavetext fa fa-ban";
+		img.className = "crmsavetext fa fa-ban";
 		img.setAttribute('aria-hidden', true);
 		img.id = id + "_textcanceliconimg";
-		a.appendChild(img);
-		//a.appendChild(document.createTextNode("Cancel edits to text"));
-		opt.appendChild(a);
-
-		span = document.createElement("span");
-		span.innerHTML = "Mark as updated: ";
-		span.style.display = "none";
-		span.id = id + "_textsaveupdate";
-
-		var checkbox = document.createElement("input");
-			checkbox.type = "checkbox";
-			checkbox.id = id + "_textsaveupdatebox";
-		span.appendChild(checkbox);
-		td.appendChild(span);
-
-		// help button
-		a = document.createElement("a");
-		a.href = "#help1";
-		a.onclick = function (e) {
-			e.preventDefault();
-			$('#help1').dialog({ modal: true, width: '553px' });
-			$('#help1').dialog('open');
-		};
-		a.id = id + "_texthelpicon";
-		a.className = 'help icn tip';
-		a.style.display = "none";
-		a.title = 'Formatting news text';
-
-		img = document.createElement("i");
-		img.className = "fa fa-question-circle";
-		img.id = id + "_texthelpiconimg";
-		img.setAttribute('aria-hidden', true);
 
 		a.appendChild(img);
-		//a.appendChild(document.createTextNode("Formatting news text"));
 		opt.appendChild(a);
 
 		td.appendChild(opt);
 	}
 
-	panel.appendChild(tr);
+	// format text
+	var rawtext = report['report'];
+	report['report'] = report['formattedreport'];
 
-	// -- Footer
-	tr = document.createElement("div");
-	tr.className = 'panel-footer';
-
-	// Posted by
-	td = document.createElement("div");
-	td.className = "newspostedby";
-	td.id = "POSTED_" + id;
-
-	div = document.createElement("div");
-	div.className = "newspostuser";
-
-	var text = "Posted ";
-	if (news['username']) {
-		text = text + " by " + news['username'];
+	// determine the directory we are operating in
+	var page = document.location.href.split("/")[4];
+	// if we are in crm, we are doing report searches, so we should highlight matches
+	if (page == 'crm') {
+		report['report'] = HighlightMatches(report['report']);
 	}
-	div.innerHTML = text + " on " + news.formattedcreateddate;
 
-	td.appendChild(div);
+	span = document.createElement("span");
+	span.id = report['id'] + "_text";
+	span.innerHTML = report['report'];
 
-	// Edited by
-	if (news['editdate']
-	 && news['editdate'] != '0000-00-00 00:00:00'
-	 && news['editdate'] != news['createdate']) {
-		div = document.createElement("div");
-		div.className = "newspostedby newspostuser";
+	td.appendChild(span);
 
-		text = "Edited ";
-		if (news['editusername']) {
-			text = text + " by " + news['editusername'];
-		}
-		div.innerHTML = text + " on " + news.formattededitdate;
+	span = document.createElement("span");
 
-		td.appendChild(div);
-	}
+	var textarea = document.createElement("textarea");
+	textarea.id = report['id'] + "_textarea";
+	textarea.innerHTML = rawtext;
+	textarea.style.display = "none";
+	textarea.rows = 7;
+	textarea.cols = 45;
+	textarea.className = "form-control crmreportedittextbox";
+
+	span.appendChild(textarea);
+	td.appendChild(span);
+
 	tr.appendChild(td);
+
 	panel.appendChild(tr);
 
 	article.appendChild(panel);
 
-	ul = document.createElement("ul");
-	ul.id = news.id + '_updates';
-	ul.className = 'news-updates';
+	// -- New Comment
+	tr = document.createElement("div");
+	tr.className = 'crmnewcomment panel panel-default';
 
-	// -- New update
-	if (edit) {
-		tr = document.createElement("div");
-		tr.className = 'newsnewupdate panel panel-default';
+	// -- Footer
+	var footer = document.createElement("div");
+	footer.className = 'panel-heading';
 
-		td = document.createElement("div");
-		td.className = "panel-body";
+	// create subscribe row
+	td = document.createElement("div");
+	td.className = "crmcomment crmsubscribe";
+	td.id = report['id'] + "_subscribed";
 
-		div = document.createElement("div");
-		div.id = news['id'] + "_newupdate";
-
-		var tselect = document.getElementById("template_select");
-		if (tselect) {
-			var select = document.createElement("select");
-				select.id = news['id'] + "_newupdatetemplate";
-				select.className = 'form-control';
-				select.innerHTML = tselect.innerHTML;
-				select.options[1] = null;
-				select.onchange = function () {
-					WSGetURL(this.options[this.selectedIndex].value, function(xml, news) {
-						if (xml.status == 200) {
-							var n = JSON.parse(xml.responseText);
-							document.getElementById(news + "_newupdatebox").value = n.news;
-							document.getElementById(news + "_newupdatebox").rows = 7;
-							document.getElementById(news + "_newupdatebox").focus();
-						} else {
-							alert("Error fetching template");
-						}
-					}, news['id']);
-				};
-
-			div.appendChild(select);
-		}
-
-		textarea = document.createElement("textarea");
-		textarea.className = "form-control crmupdatebox";
-		textarea.placeholder = "Post an update...";
-		textarea.id = news['id'] + "_newupdatebox";
-		textarea.rows = 1;
-		textarea.cols = 45;
-		textarea.onfocus = function () {
-			NewsExpandNewUpdate(this.id);
-		};
-		textarea.onblur = function () {
-			NewsCollapseNewUpdate(this.id);
-		};
-
-		div.appendChild(textarea);
-
-		// Save button
+	if (report['subscribed'] == "0") {
 		a = document.createElement("a");
-		a.className = "news-save icn tip";
-		a.href = "/news/manage?update&id=" + id;
+		a.href = "/account/crm?id=" + id + "&subscribe";
+		a.className = 'btn btn-default btn-sm';
 		a.onclick = function (e) {
 			e.preventDefault();
-			NewsPostUpdate(news['id']);
+			CRMSubscribeComment(report['id']);
 		};
-		a.title = "Post an update.";
-		a.id = news['id'] + "_newupdateboxsave";
-		a.style.display = "none";
+		a.innerHTML = "Subscribe";
 
-		img = document.createElement("i");
-		img.className = "crmnewcommentsave fa fa-save";
-		img.setAttribute('aria-hidden', true);
-		//img.style.display = "none";
-		//img.id = news['id'] + "_newupdateboxsave";
+		td.appendChild(a);
+	} else if (report['subscribed'] == "1" || report['subscribed'] == '3') {
+		td.appendChild(document.createTextNode("Subscribed"));
+	} else if (report['subscribed'] == "2") {
+		a = document.createElement("a");
+		a.href = "/account/crm?id=" + id + "&unsubscribe";
+		a.className = 'btn btn-default btn-sm';
+		a.onclick = function (e) {
+			e.preventDefault();
+			CRMUnsubscribeComment(report['subscribedcommentid'], report['id']);
+		};
+		a.innerHTML = "Unsubscribe";
 
-		a.appendChild(img);
-		a.appendChild(document.createTextNode("Post an update."));
-		div.appendChild(a);
-
-		td.appendChild(div);
-		tr.appendChild(td);
-		article.appendChild(tr);
+		td.appendChild(a);
 	}
+
+	footer.appendChild(td);
+	tr.appendChild(footer);
+
+	td = document.createElement("div");
+	td.className = "panel-body";
+
+	div = document.createElement("div");
+	div.id = report['id'] + "_newupdate";
+
+	textarea = document.createElement("textarea");
+	textarea.className = "form-control crmcommentbox";
+	textarea.placeholder = "Write a comment...";
+	textarea.id = report['id'] + "_newcommentbox";
+	textarea.rows = 1;
+	textarea.cols = 45;
+	textarea.onfocus = function () {
+		CRMExpandNewComment(this.id);
+	};
+	textarea.onblur = function () {
+		CRMCollapseNewComment(this.id);
+	};
+
+	div.appendChild(textarea);
+
+	// Save button
+	a = document.createElement("a");
+	a.href = "/news/manage?update&id=" + id;
+	a.onclick = function (e) {
+		e.preventDefault();
+		CRMPostComment(report['id']);
+	};
+	a.title = "Add a new comment.";
+
+	img = document.createElement("i");
+	img.className = "fa fa-save";
+	img.setAttribute('aria-hidden', true);
+	img.id = report['id'] + "_newcommentboxsave";
+	img.style.display = "none";
+
+	a.appendChild(img);
+	div.appendChild(a);
+
+	td.appendChild(div);
+	tr.appendChild(td);
+
+	article.appendChild(tr);
+
+	// -- Comments
+	ul = document.createElement("ul");
+	ul.id = report['id'] + '_comments';
+	ul.className = 'crm-comments';
 
 	article.appendChild(ul);
 
 	container.appendChild(article);
 
-	var c = Array();
-	for (x = 0; x < news.updates.length; x++) {
-		//if (ROOT_URL + "news/" + news.updates[x]['newsid'] == news['id']) {
-			//c.push(news.updates[x]);
-			NewsPrintUpdate(news['id'], news.updates[x], edit);
-		//}
+	for (x = 0; x < report['comments'].length; x++) {
+		if (report['comments'][x]['comment'] != '') {
+			CRMPrintComment(report['id'], report['comments'][x]);//, userid);
+		}
 	}
-	/*for (x = 0; x < c.length; x++) {
-		if (c[x]['update'] != '') {
-			NewsPrintUpdate(news['id'], c[x], edit);
+	
+	/*var c = Array();
+	for (x = 0; x < comments.length; x++) {
+		if (comments[x]['contactreportid'] == report['id']) {
+			c.push(comments[x]);
+		}
+	}
+	for (x = 0; x < c.length; x++) {
+		if (c[x]['comment'] != '') {
+			CRMPrintComment(report['id'], c[x], userid);
 		}
 	}*/
 }
 
 /**
- * Delete a news entry
+ * Cancel updating report text
  *
- * @param   {string}  newsid
+ * @param   {string}  id
  * @return  {void}
  */
-function NEWSDeleteNews(newsid) {
-	if (confirm("Are you sure you want to delete this news story?")) {
-		WSDeleteURL(ROOT_URL + "news/" + newsid, function(xml, newsid) {
-			if (xml.status == 200) {
-				document.getElementById(newsid).style.display = "none";
-			} else {
-				var img = document.getElementById(newsid + "_newsdeleteimg");
-				if (img) {
-					if (xml.status == 403) {
-						img.className = "fa fa-exclamation-triangle";
-						img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-					} else {
-						img.className = "fa fa-exclamation-circle";
-						img.parentNode.title = "An error occurred while deleting story.";
-					}
-				}
-			}
-		}, newsid);
-	}
-}
-
-/**
- * Toggle controls open for editing news text
- *
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSEditNewsTextOpen(news) {
+function CRMCancelReportText(id) {
 	// hide text
-	var text = document.getElementById(news + "_text");
-		document.getElementById(news + "_textarea").style.height = (25+text.parentNode.offsetHeight)+"px";
-		text.style.display = "none";
-
-	// show textarea
-	var box = document.getElementById(news + "_textarea");
-		box.style.display = "block";
-
-	// hide edit icon
-	var eicon = document.getElementById(news + "_textediticon");
-		eicon.style.display = "none";
-
-	// show save icon
-	var sicon = document.getElementById(news + "_textsaveicon");
-		sicon.style.display = "inline";
-
-	var img = document.getElementById(news + "_textsaveiconimg");
-		img.className = "fa fa-save";
-
-	document.getElementById(news + "_textpreviewicon").style.display = "inline";
-	document.getElementById(news + "_textcancelicon").style.display = "inline";
-	document.getElementById(news + "_texthelpicon").style.display = "inline";
-
-	// show update
-	var update = document.getElementById(news + "_textsaveupdate");
-		update.style.display = "inline";
+	document.getElementById(id + "_text").style.display = "block";
+	document.getElementById(id + "_textarea").style.display = "none";
+	document.getElementById(id + "_textediticon").style.display = "inline";
+	document.getElementById(id + "_textsaveicon").style.display = "none";
+	document.getElementById(id + "_textcancelicon").style.display = "none";
 }
 
 /**
- * Toggle controls closed for editing news text
+ * Print a report comment
  *
- * @param   {string}  news
+ * @param   {string}  reportid
+ * @param   {array}   comments
+ * @param   {string}  userid
  * @return  {void}
  */
-function NEWSCancelNewsText(news) {
-	// hide text
-	var text = document.getElementById(news + "_text");
-		text.style.display = "block";
-
-	// show textarea
-	var box = document.getElementById(news + "_textarea");
-		box.style.display = "none";
-
-	// hide edit icon
-	var eicon = document.getElementById(news + "_textediticon");
-		eicon.style.display = "inline";
-
-	// show save icon
-	var sicon = document.getElementById(news + "_textsaveicon");
-		sicon.style.display = "none";
-
-	document.getElementById(news + "_textpreviewicon").style.display = "none";
-	document.getElementById(news + "_textcancelicon").style.display = "none";
-	document.getElementById(news + "_texthelpicon").style.display = "none";
-
-	// show update
-	var update = document.getElementById(news + "_textsaveupdate");
-		update.style.display = "none";
-}
-
-/**
- * Save news text
- *
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSSaveNewsText(news) {
-	// get text
-	var text = PrepareText(document.getElementById(news + "_textarea").value);
-	var update = document.getElementById(news + "_textsaveupdatebox").checked;
-
-	// change save icon
-	var icon = document.getElementById(news + "_textsaveicon");
-		icon.onclick = function () {};
-
-	var img = document.getElementById(news + "_textsaveiconimg");
-		img.className = "fa fa-spin fa-spinner";
-		img.parentNode.title = "Saving changes...";
-
-	var post = {
-		'news' : text,
-		'lastedit' : LASTEDIT[news]
-	};
-
-	if (update == true) {
-		post['update'] = "1";
-	}
-	post = JSON.stringify(post);
-
-	WSPostURL(ROOT_URL + "news/" + news, post, NEWSSavedNewsText, news);
-}
-
-/**
- * Callback after saving news text
- *
- * @param   {object}  xml
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSSavedNewsText(xml, news) {
-	var img = document.getElementById(news + "_textsaveiconimg");
-
-	if (xml.status == 200) {
-		var results = JSON.parse(xml.responseText);
-		LASTEDIT[news] = results['lastedit'];
-
-		var icon = document.getElementById(news + "_textsaveicon");
-			icon.onclick = function () {
-				NEWSSaveNewsText(news);
-			};
-			icon.style.display = "none";
-
-		document.getElementById(news + "_textarea").style.display = "none";
-		document.getElementById(news + "_textediticon").style.display = "block";
-		document.getElementById(news + "_textsaveupdate").style.display = "none";
-		document.getElementById(news + "_textsaveupdatebox").checked = false;
-		document.getElementById(news + "_textpreviewicon").style.display = "none";
-		document.getElementById(news + "_textcancelicon").style.display = "none";
-		document.getElementById(news + "_texthelpicon").style.display = "none";
-
-		var text = document.getElementById(news + "_text");
-			text.innerHTML = results['formattednews'];
-			text.style.display = "block";
-	} else if (xml.status == 403) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else if (xml.status == 409) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
-		WSGetURL(ROOT_URL + "news/" + news, function (xml) {
-			if (xml.status == 200) {
-				var results = JSON.parse(xml.responseText);
-				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
-			}
-		});
-	} else {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, reload the page and try again.";
-	}
-}
-
-/**
- * Toggle controls open for editing news headline
- *
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSEditNewsHeadlineOpen(news) {
-	// hide text
-	var text = document.getElementById(news + "_headline");
-		text.style.display = "none";
-
-	// show textarea
-	var box = document.getElementById(news + "_headlineinput");
-		box.style.display = "block";
-
-	// hide edit icon
-	var eicon = document.getElementById(news + "_headlineediticon");
-		eicon.style.display = "none";
-
-	var cicon = document.getElementById(news + "_headlinecancelicon");
-		cicon.style.display = "inline";
-
-	// show save icon
-	var sicon = document.getElementById(news + "_headlinesaveicon");
-		sicon.style.display = "inline";
-
-	var img = document.getElementById(news + "_headlinesaveiconimg");
-		img.className = "fa fa-save";
-		img.parentNode.title = "Click to save changes.";
-}
-
-/**
- * Toggle controls open for editing news location
- *
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSEditNewsLocationOpen(news) {
-	// hide text
-	var text = document.getElementById(news + "_location");
-		text.style.display = "none";
-
-	// show textarea
-	var box = document.getElementById(news + "_locationinput");
-		box.style.display = "block";
-
-	// hide edit icon
-	var eicon = document.getElementById(news + "_locationediticon");
-		eicon.style.display = "none";
-
-	var cicon = document.getElementById(news + "_locationcancelicon");
-		cicon.style.display = "inline";
-
-	// show save icon
-	var sicon = document.getElementById(news + "_locationsaveicon");
-		sicon.style.display = "inline";
-
-	var img = document.getElementById(news + "_locationsaveiconimg");
-		img.className = "fa fa-save";
-		img.parentNode.title = "Click to save changes.";
-}
-
-/**
- * Toggle controls closed for editing news headline
- *
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSCancelNewsHeadline(news) {
-	// hide text
-	var text = document.getElementById(news + "_headline");
-		text.style.display = "inline";
-
-	// show textarea
-	var box = document.getElementById(news + "_headlineinput");
-		box.style.display = "none";
-
-	// hide edit icon
-	var eicon = document.getElementById(news + "_headlineediticon");
-		eicon.style.display = "inline";
-
-	document.getElementById(news + "_headlinecancelicon").style.display = "none";
-
-	// show save icon
-	var sicon = document.getElementById(news + "_headlinesaveicon");
-		sicon.style.display = "none";
-}
-
-/**
- * Toggle controls closed for editing news location
- *
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSCancelNewsLocation(news) {
-	// hide text
-	var text = document.getElementById(news + "_location");
-		text.style.display = "inline";
-
-	// show textarea
-	var box = document.getElementById(news + "_locationinput");
-		box.style.display = "none";
-
-	// hide edit icon
-	var eicon = document.getElementById(news + "_locationediticon");
-		eicon.style.display = "inline";
-
-	document.getElementById(news + "_locationcancelicon").style.display = "none";
-
-	// show save icon
-	var sicon = document.getElementById(news + "_locationsaveicon");
-		sicon.style.display = "none";
-}
-
-/**
- * Save news headline
- *
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSSaveNewsHeadline(news) {
-	// get text
-	var text = document.getElementById(news + "_headlineinput").value;
-
-	// change save icon
-	var icon = document.getElementById(news + "_headlinesaveicon");
-		icon.onclick = function () {};
-
-	var img = document.getElementById(news + "_headlinesaveiconimg");
-		img.className = "fa fa-spinner fa-spin";
-		img.parentNode.title = "Saving changes...";
-
-	var post = {
-		'headline' : text,
-		'lastedit' : LASTEDIT[news]
-	};
-	post = JSON.stringify(post);
-
-	WSPostURL(ROOT_URL + "news/" + news, post, NEWSSavedNewsHeadline, news);
-}
-
-/**
- * Save news location
- *
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSSaveNewsLocation(news) {
-	// get text
-	var text = document.getElementById(news + "_locationinput").value;
-
-	// change save icon
-	var icon = document.getElementById(news + "_locationsaveicon");
-		icon.onclick = function () {};
-	var img = document.getElementById(news + "_locationsaveiconimg");
-		img.className = "fa fa-spinner fa-spin";
-		img.parentNode.title = "Saving changes...";
-
-	var post = {
-		'location' : text,
-		'lastedit' : LASTEDIT[news]
-	};
-	post = JSON.stringify(post);
-
-	WSPostURL(ROOT_URL + "news/" + news, post, NEWSSavedNewsLocation, news);
-}
-
-/**
- * Callback after saving news headline
- *
- * @param   {object}  xml
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSSavedNewsHeadline(xml, news) {
-	var img = document.getElementById(news + "_headlinesaveiconimg");
-
-	if (xml.status == 200) {
-		var editicon = document.getElementById(news + "_headlineediticon");
-		var icon = document.getElementById(news + "_headlinesaveicon");
-		var cancelicon = document.getElementById(news + "_headlinecancelicon");
-		var text = document.getElementById(news + "_headline");
-		var input = document.getElementById(news + "_headlineinput");
-		var results = JSON.parse(xml.responseText);
-		LASTEDIT[news] = results['lastedit'];
-
-		icon.onclick = function () { NEWSSaveNewsHeadline(news); };
-		icon.style.display = "none";
-
-		cancelicon.style.display = "none";
-		text.style.display = "inline";
-		input.style.display = "none";
-		editicon.style.display = "inline";
-		text.innerHTML = results['headline'];
-	} else if (xml.status == 403) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else if (xml.status == 409) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
-		WSGetURL(ROOT_URL + "news/" + news, function (xml) {
-			if (xml.status == 200) {
-				var results = JSON.parse(xml.responseText);
-				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
-			}
-		});
-	} else {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, reload the page and try again.";
-	}
-}
-
-/**
- * Callback after saving news location
- *
- * @param   {object}  xml
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSSavedNewsLocation(xml, news) {
-	var img = document.getElementById(news + "_locationsaveiconimg");
-
-	if (xml.status == 200) {
-		var editicon = document.getElementById(news + "_locationediticon");
-		var icon = document.getElementById(news + "_locationsaveicon");
-		var cancelicon = document.getElementById(news + "_locationcancelicon");
-		var text = document.getElementById(news + "_location");
-		var input = document.getElementById(news + "_locationinput");
-		var results = JSON.parse(xml.responseText);
-		LASTEDIT[news] = results['lastedit'];
-
-		icon.onclick = function () { NEWSSaveNewsLocation(news); };
-		icon.style.display = "none";
-
-		cancelicon.style.display = "none";
-		text.style.display = "inline";
-		input.style.display = "none";
-		editicon.style.display = "inline";
-		text.innerHTML = results['location'];
-	} else if (xml.status == 403) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else if (xml.status == 409) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
-		WSGetURL(ROOT_URL + "news/" + news, function (xml) {
-			if (xml.status == 200) {
-				var results = JSON.parse(xml.responseText);
-				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
-			}
-		});
-	} else {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, reload the page and try again.";
-	}
-}
-
-/**
- * Toggle controls open for editing news URL
- *
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSEditNewsUrlOpen(news) {
-	// hide text
-	var text = document.getElementById(news + "_url");
-		text.style.display = "none";
-
-	// show textarea
-	var box = document.getElementById(news + "_urlinput");
-		box.style.display = "block";
-
-	// hide edit icon
-	var eicon = document.getElementById(news + "_urlediticon");
-		eicon.style.display = "none";
-
-	var cicon = document.getElementById(news + "_urlcancelicon");
-		cicon.style.display = "inline";
-
-	// show save icon
-	var sicon = document.getElementById(news + "_urlsaveicon");
-		sicon.style.display = "inline";
-
-	var img = document.getElementById(news + "_urlsaveiconimg");
-		img.className = "fa fa-save";
-		img.parentNode.title = "Click to save changes.";
-}
-
-/**
- * Toggle controls closed for editing news URL
- *
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSCancelNewsUrl(news) {
-	// hide text
-	var text = document.getElementById(news + "_url");
-		text.style.display = "inline";
-
-	// show textarea
-	var box = document.getElementById(news + "_urlinput");
-		box.style.display = "none";
-
-	// hide edit icon
-	var eicon = document.getElementById(news + "_urlediticon");
-		eicon.style.display = "inline";
-
-	document.getElementById(news + "_urlcancelicon").style.display = "none";
-
-	// show save icon
-	var sicon = document.getElementById(news + "_urlsaveicon");
-		sicon.style.display = "none";
-}
-
-/**
- * Save news URL
- *
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSSaveNewsUrl(news) {
-	// get text
-	var text = document.getElementById(news + "_urlinput").value;
-
-	// change save icon
-	var icon = document.getElementById(news + "_urlsaveicon");
-		icon.onclick = function () {};
-	var img = document.getElementById(news + "_urlsaveiconimg");
-		img.className = "fa fa-spinner fa-spin";
-		img.parentNode.title = "Saving changes...";
-
-	var post = {
-		'url' : text,
-		'lastedit' : LASTEDIT[news]
-	};
-	post = JSON.stringify(post);
-
-	WSPostURL(ROOT_URL + "news/" + news, post, function(xml, news) {
-		var img = document.getElementById(news + "_urlsaveiconimg");
-
-		if (xml.status == 200) {
-			var editicon = document.getElementById(news + "_urlediticon");
-			var icon = document.getElementById(news + "_urlsaveicon");
-			var cancelicon = document.getElementById(news + "_urlcancelicon");
-			var text = document.getElementById(news + "_url");
-			var input = document.getElementById(news + "_urlinput");
-			var results = JSON.parse(xml.responseText);
-			LASTEDIT[news] = results['lastedit'];
-
-			icon.onclick = function () {
-				NEWSSaveNewsUrl(news);
-			};
-			icon.style.display = "none";
-
-			cancelicon.style.display = "none";
-			text.style.display = "inline";
-			input.style.display = "none";
-			editicon.style.display = "inline";
-			text.innerHTML = results['location'];
-		} else if (xml.status == 403) {
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-		} else if (xml.status == 409) {
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
-			WSGetURL(ROOT_URL + "news/" + news, function (xml) {
-				if (xml.status == 200) {
-					var results = JSON.parse(xml.responseText);
-					alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
-				}
-			});
-		} else {
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, reload the page and try again.";
-		}
-	}, news);
-}
-
-/**
- * Clear search input
- *
- * @return  {void}
- */
-function NEWSClearSearch() {
-	document.getElementById("keywords").value = "";
-	document.getElementById("datestartshort").value = "";
-	document.getElementById("timestartshort").value = "";
-	document.getElementById("datestopshort").value = "";
-	document.getElementById("timestopshort").value = "";
-	document.getElementById("id").value = "";
-	document.getElementById("newstype").selectedIndex = 0;
-	if (document.getElementById("NotesText")) {
-		document.getElementById("NotesText").value = "";
-	}
-	if (document.getElementById("Headline")) {
-		document.getElementById("Headline").value = "";
-	}
-	document.getElementById("location").value = "";
-	if (document.getElementById("template")) {
-		document.getElementById("template").checked = false;
-	}
-	if (document.getElementById("published")) {
-		document.getElementById("published").checked = false;
-	}
-
-	if (window.location.href.match(/[&?]add/)) {
-		document.getElementById("TR_use_template").style.display = "block";
-		document.getElementById("template_select").selectedIndex = 0;
-	}
-
-	var resources = document.getElementById("newsresource");
-	if (resources) {
-		resources.value = '';
-		if ($('.tagsinput').length) {
-			$(resources).clearTags();
-		}
-	}
-
-	if (window.location.href.match(/[&?]edit/)) {
-		window.location = window.location.href.replace(/&edit/, "&search");
-	}
-
-	NEWSSearch();
-}
-
-/**
- * Preview news text
- *
- * @param   {string}  example
- * @return  {void}
- */
-function PreviewExample(example) {
-	var example_vars = {};
-	example_vars["startDate"] = new Date();
-	example_vars["endDate"] = new Date();
-	example_vars["endDate"].addDays(1);
-	example_vars["resources"] = [{"resourcename": "Carter"}, {"resourcename": "Conte"}];
-	example_vars["location"] = "Envision Center";
-
-	WSPostURL(ROOT_URL + "formattext", JSON.stringify({ 'text' : document.getElementById('help1' + example + 'input').value, 'vars' : example_vars }), function (xml) {
-		if (xml.status == 200) {
-			var results = JSON.parse(xml.responseText);
-			document.getElementById('help1' + example + 'output').innerHTML = results['formattedtext'];
-		} else {
-			alert("An error occurred while generating preview.");
-		}
-	});
-}
-
-/**
- * Build vars for news preview
- *
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSPreviewVars(news) {
-	var preview_vars = {};
-	var startDate;
-	var endDate;
-
-	/* Grab the variables we need and populate the preview variables. */
-	if (document.getElementById("datestartshort").value != "") {
-		if (document.getElementById("timestartshort").value != "") {
-			startDate = document.getElementById("datestartshort").value + " " + document.getElementById("timestartshort").value;
-		} else {
-			startDate = document.getElementById("datestartshort").value + " 12:00 AM"
-		}
-		preview_vars["startDate"] = startDate;
-	}
-
-	if (document.getElementById("datestopshort").value != "") {
-		if (document.getElementById("timestopshort").value != "") {
-			endDate = document.getElementById("datestopshort").value + " " + document.getElementById("timestopshort").value;
-		} else {
-			endDate = document.getElementById("datestopshort").value + " 12:00 AM";
-		}
-		preview_vars["endDate"] = endDate;
-	}
-
-	if (document.getElementById("newstype").value <= 2) {
-		preview_vars["resources"] = [];
-
-		if ($('.tagsinput').length) {
-			var resources = $('.tagsinput').find('.tag-text');
-			resources.each(function(i, el){
-				preview_vars['resources'][i] = {"resourcename":  $(el).text() };
-			});
-		}
-	}
-	preview_vars['update'] = "0";
-
-	if (document.getElementById("newstype").value == 4) {
-		if (document.getElementById("location").value != "") {
-			preview_vars["location"] = document.getElementById("location").value;
-		}
-	}
-
-	return preview_vars;
-}
-
-/**
- * Preview news entry
- *
- * @param   {string}  news
- * @param   {bool}    edit
- * @return  {void}
- */
-function NEWSPreview(news, edit) {
-	if (typeof(edit) == 'undefined') {
-		edit = false;
-	}
-
-	var text = "";
-
-	if (news == "new" || edit) {
-		text = document.getElementById("NotesText").value;
-	} else {
-		text = document.getElementById(news + "_textarea").value;
-	}
-	if (text == "") {
-		return;
-	}
-	var post_string = { 'text': text };
-	if (news == "new") {
-		post_string['vars'] = NEWSPreviewVars(news);
-	} else {
-		if (edit) {
-			post_string['vars'] = NEWSPreviewVars(news);
-		}
-		post_string['news'] = "/api/news/" + news;
-	}
-
-	WSPostURL(ROOT_URL + "formattext", JSON.stringify(post_string), function (xml) {
-		if (xml.status == 200) {
-			var results = JSON.parse(xml.responseText);
-			document.getElementById("preview").innerHTML = results['formattedtext'];
-		} else {
-			alert("An error occurred while generating preview.");
-		}
-	});
-
-	$('#preview').dialog({ modal: true, width: '691px' });
-	$('#preview').dialog('open');
-}
-
-/**
- * Toggle 'more' news
- *
- * @return  {void}
- */
-function NEWSToggleMoreNews() {
-	var more = document.getElementById("morenews");
-	var moretext = document.getElementById("morenewstext");
-	if (more.style.display == "none") {
-		$( "#morenews" ).toggle( "blind", {'direction': 'up', 'easing': 'swing', 'duration': 1000} );
-		moretext.innerHTML = "Less";
-	} else {
-		$( "#morenews" ).toggle( "blind", {'direction': 'up', 'easing': 'swing', 'duration': 1000} );
-		moretext.innerHTML = "More";
-	}
-}
-
-/**
- * Send an email
- *
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSSendMail(news) {
-	if ($( '#' + news + '_textarea').css('display') == 'block') {
-		// We're still editing. Need to save first.
-		$("#dialog-confirm").dialog({
-			resizable: false,
-			modal: true,
-			height: 'auto',
-			width: 300,
-			buttons: {
-				"Yes": function () {
-					$(this).dialog('close');
-					NEWSSaveNewsText(news);
-					return;
-				},
-				"No": function () {
-					$(this).dialog('close');
-					return;
-				}
-			}
-		});
-		$("#dialog-confirm").dialog('open');
-
-		return;
-	}
-
-	// Get text and updates from WS
-	$.getJSON(ROOT_URL + "news/" + news, function(data) {
-		var text = document.getElementById(news + "_textarea").value;
-		if (text == "") {
-			return;
-		}
-
-		// Gather some  variables from DOM
-		var formatteddate = $( '#' + news ).find( ".newsdate" ).first().html().replace(/<a href.*/, '');
-		var subject = $( '#' + news + "_headline" ).text();
-		var locale = $( '#' + news + "_location").text();
-		if (locale != '') {
-			locale = locale + "<br/>";
-		}
-		var resources = $( '#' + news ).find( ".newspostresources" ).first().text().replace(/^Resources?: /,'');
-		var name = $( ".login").find( "a" ).first().text();
-
-		// set up header for email preview
-		var header = "To: " + resources + " Users<br />From: " + name + " via Research Computing<br/>Subject: " + subject + " - " + formatteddate + "<br/><hr />" + subject + "<br/>" + formatteddate + "<br/>" + locale + "<br/>";
-
-		// set up foot for email preview
-		var footer = '<hr/><a href="/news/' + news + '">ITaP Research Computing News</a> from ' + name + '<br/><br/>Please reply to <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a> with any questions or concerns.<br/><a href="/news/' + news + '">View this article on the web.</a>';
-
-		var body = "";
-		if (data['updates'].length > 0) {
-			for (var x=0; x<data['updates'].length; x++) {
-				body = body + "<span class = \"newsupdate\">UPDATE: " + data['updates'][x]['formattedcreateddate'] + "</span>" + data['updates'][x]['formattedbody'] + "<br/>";
-			}
-			body = body + "<span class=\"newsupdate\">ORIGINAL: " + data['formattedcreateddate'] + "</span>";
-		}
-		body = body + data['formattednews'];
-
-		document.getElementById("mailpreview").innerHTML = header + body + footer;
-
-		$('#mailpreview').dialog({ modal: true,
-			width: '691px',
-			buttons: {
-				"Cancel": function() {
-					$( this ).dialog("close");
-				},
-				"Send mail": function () {
-					$( this).dialog("close");
-					var post = JSON.stringify({
-						'mail'     : 1 ,
-						'lastedit' : LASTEDIT[news]
-					});
-					WSPostURL(ROOT_URL + "news/" + news, post, NEWSSentMail, news);
-				}
-			}
-		});
-		if ( $(".ui-dialog-buttonpane").find("div").length == 1) {
-			$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
-		}
-		$('#mailpreview').dialog('open');
-	});
-}
-
-/**
- * Callback after an email has been sent
- *
- * @param   {object}  xml
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSSentMail(xml, news) {
-	if (xml.status == 200) {
-		document.getElementById("IMG_mail_" + news).className = "fa fa-check";
-		document.getElementById("A_mail_" + news).onclick = function () {};
-
-		var results = JSON.parse(xml.responseText);
-		LASTEDIT[news] = results['lastedit'];
-
-		NEWSSearch();
-	} else {
-		document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
-		document.getElementById("A_mail_" + news).onclick = function () {};
-		if (xml.status == 409) {
-			WSGetURL(ROOT_URL + "news/" + news, function (xml) {
-				if (xml.status == 200) {
-					var results = JSON.parse(xml.responseText);
-					alert("Unable to save changes. This news item has been edited or mailed by " + results['editusername'] + " since you loaded this page. Please refresh the page and check for edits or mailing.");
-				}
-			});
-		} else {
-			alert("An error occurred while sending mail.");
-		}
-	}
-}
-
-/**
- * Use selected news template
- *
- * @param   {object}  xml
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSUseTemplate() {
-	var template = document.getElementById("template_select");
-	template = template.options[template.selectedIndex].value;
-
-	if (template != "0" && template != "savetemplate") {
-
-		var overwrite = false;
-		if (document.getElementById("Headline").value != "") {
-			overwrite = true;
-		}
-		if (document.getElementById("NotesText").value != "") {
-			overwrite = true;
-		}
-
-		if (overwrite) {
-			overwrite = ! confirm("Are you sure you wish to overwrite text with this template? Any work will be lost.");
-		}
-
-		if (!overwrite) {
-			document.getElementById("TR_use_template").style.display = "none";
-			document.getElementById("TR_template").style.display = "none";
-			document.getElementById("TR_date").style.visibility = "visible";
-			document.getElementById("template").checked = false;
-			document.getElementById("published").checked = true;
-
-			WSGetURL(template, NEWSPopulateTemplate);
-		} else {
-
-			document.getElementById("template_select").selectedIndex = 0;
-		}
-	}
-}
-
-/**
- * Populate the form with template contents
- *
- * @param   {object}  xml
- * @return  {void}
- */
-function NEWSPopulateTemplate(xml) {
-	if (xml.status == 200) {
-		var news = JSON.parse(xml.responseText);
-		document.getElementById("Headline").value = news.headline.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
-		document.getElementById("NotesText").value = news.news.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
-
-		var newstype = document.getElementById("newstype");
-		var x;
-
-		for (x=0;x<newstype.options.length;x++) {
-			if (newstype.options[x].value == news.newstypeid) {
-				newstype.selectedIndex = x;
-			}
-		}
-
-		for (x=0;x<news.resources.length;x++) {
-			if ($('.tagsinput').length) {
-				if (!$('#newsresource').tagExist(news.resources[x]['resourceid'])) {
-					$('#newsresource').addTag({
-						'id': news.resources[x]['resourceid'],
-						'label': news.resources[x]['resourcename']
-					});
-				}
-			} else {
-				var res = document.getElementById("TD_resource");
-				if (res) {
-					var resourcedata = res.getElementsByTagName("div");
-					var dup = false;
-					for (var i=0;i<resourcedata.length;i++) {
-						if (resourcedata[i].style.display != "none") {
-							if (resourcedata[i].id.search("RESOURCE_")==0) {
-								if (resourcedata[i].id.substr(9) == news.resources[x]['resourceid']) {
-									dup = true;
-								}
-							}
-						}
-					}
-
-					if (!dup) {
-						NEWSAddResource(JSON.stringify(news.resources[x]));
-					}
-				} else {
-					$('#newsresource').va($('#newsresource').va() + ', ' + news.resources[x]['resourcename'] + ':' + news.resources[x]['resourceid']);
-				}
-			}
-		}
-
-		NEWSSearch();
-	} else {
-		alert("An error ocurred while fetching template.");
-	}
-}
-
-/**
- * Expand the text area for a new update
- *
- * @param   {string}  comment
- * @return  {void}
- */
-function NewsExpandNewUpdate(comment) {
-	var textarea = document.getElementById(comment);
-		textarea.setAttribute('rows', 7);
-
-	var img = document.getElementById(comment + "save");
-	if (img) {
-		img.style.display = "inline-block";
-	}
-}
-
-/**
- * Collapse the text area for a new update
- *
- * @param   {string}  comment
- * @return  {void}
- */
-function NewsCollapseNewUpdate(comment) {
-	var textarea = document.getElementById(comment);
-	if (textarea.value == "") {
-		textarea.setAttribute('rows', 1);
-
-		var img = document.getElementById(comment + "save");
-		if (img) {
-			img.style.display = "none";
-		}
-	}
-}
-
-/**
- * Save a new update
- *
- * @param   {string}  postid
- * @return  {void}
- */
-function NewsPostUpdate(newsid) {
-	var body = document.getElementById(newsid + "_newupdatebox").value;
-
-	var post = JSON.stringify({
-		'news': newsid,
-		'body': body
-	});
-
-	WSPostURL(ROOT_URL + "newsupdate", post, NewsPostedUpdate, newsid);
-}
-
-/**
- * Call back after saving a new update
- *
- * @param   {object}  xml
- * @param   {string}  newsid
- * @return  {void}
- */
-function NewsPostedUpdate(xml, newsid) {
-	if (xml.status == 200) {
-		var results = JSON.parse(xml.responseText);
-		console.log(results);
-		NewsPrintUpdate(newsid, results);
-		document.getElementById(newsid + "_newupdatebox").value = "";
-		NewsCollapseNewUpdate(newsid + "_newupdatebox");
-	} else {
-		document.getElementById(newsid + "_newupdateboxsave").className = "fa fa-exclamation-circle";
-		document.getElementById(newsid + "_newupdateboxsave").parentNode.title = "An error occured while posting comment.";
-	}
-}
-
-/**
- * Call back after saving a new update
- *
- * @param   {string}  newsid
- * @param   {array}   update
- * @param   {bool}    edit
- * @return  {void}
- */
-function NewsPrintUpdate(newsid, update, edit) {
-	if (typeof(edit) == 'undefined') {
-		edit = false;
-	}
+function CRMPrintComment(reportid, comment) { //, userid) {
 	var page = document.location.href.split("/")[4];
-	if (page == 'news') {
-		update['body'] = HighlightMatches(update['body']);
+	if (page == 'crm') {
+		comment['comment'] = HighlightMatches(comment['comment']);
+	}
+	// determine if we should edit comment
+	var edit = false;
+	if (comment['can']['edit']) {//userid == comment['user'] && comment['age'] <= 86400) {
+		edit = true;
 	}
 
-	var container = document.getElementById(newsid + '_updates');
+	var container = document.getElementById(reportid + '_comments');
 
 	var li = document.createElement("li");
 
 	var panel = document.createElement("div");
-		panel.className = "panel panel-default";
+	panel.className = "panel panel-default";
 
-	var img, a, span;
+	var div, span, a, img;
 
 	if (edit) {
 		var tr = document.createElement("div");
-			tr.className = 'panel-heading news-admin';
+		tr.className = 'panel-heading crm-admin';
 
 		span = document.createElement("span");
-		span.className = 'newsid';
-		span.innerHTML = '#' + update['id'];
+		span.className = 'crmid';
+		span.innerHTML = '#' + comment['id'];
 
 		tr.appendChild(span);
 
 		a = document.createElement("a");
-		a.className = 'edit news-update-delete tip';
-		a.href = "/news/manage?delete&update=" + update['id'];
+		a.className = 'edit crm-comment-delete tip';
+		a.href = "/account/crm?comment=" + comment['id'] + "&delete";
 		a.onclick = function (e) {
 			e.preventDefault();
-			NewsDeleteUpdate(update['id'], newsid);
+			CRMDeleteComment(comment['id'], reportid);
 		};
-		a.id = update['id'] + "_deleteicon";
-		a.title = "Delete update.";
+		a.id = comment['id'] + "_commenticon";
+		a.title = "Delete comment.";
 
 		img = document.createElement("i");
 		img.className = "crmeditdeletecomment fa fa-trash";
 		img.setAttribute('aria-hidden', true);
-		img.id = update['id'] + "_updatedeleteimg";
+		img.id = comment['id'] + "_commentdeleteimg";
 
 		a.appendChild(img);
 		tr.appendChild(a);
@@ -2954,63 +1846,61 @@ function NewsPrintUpdate(newsid, update, edit) {
 		panel.appendChild(tr);
 	}
 
-	var div = document.createElement("div");
-		div.className = "panel-body crmcomment crmcommenttext";
+	div = document.createElement("div");
+	div.className = "panel-body crmcomment crmcommenttext";
 
 	span = document.createElement("span");
-	span.id = update['id'] + "_update";
-	span.innerHTML = update['formattedbody'];
+	span.id = comment['id'] + "_comment";
+	span.innerHTML = comment['formattedcomment'];
 
 	div.appendChild(span);
 
 	if (edit) {
 		// Edit button
 		a = document.createElement("a");
-		a.href = "/news/manage?update=" + update['id'] + '&edit';
+		a.href = "/account/crm?id=" + reportid + "#" + comment['id'];
 		a.onclick = function (e) {
 			e.preventDefault();
-			NewsEditUpdateTextOpen(update['id']);
+			CRMEditCommentTextOpen(comment['id']);
 		};
-		a.className = "news-update-edit tip";
-		a.title = "Edit update.";
-		a.id = update['id'] + "_updatetextediticon";
+		a.id = comment['id'] + "_commenttextediticon";
+		a.title = "Edit comment.";
 
 		img = document.createElement("i");
 		img.className = "crmedittextcomment fa fa-pencil";
 		img.setAttribute('aria-hidden', true);
-		img.id = update['id'] + "_updatetextediticonimg";
+		img.id = comment['id'] + "_commenttextediticonimg";
 
 		a.appendChild(img);
 		div.appendChild(a);
 
 		// Text box
-		var textarea = document.createElement("textarea");
-			textarea.id = update['id'] + "_updatetextarea";
-			textarea.innerHTML = update['body'];
-			textarea.style.display = "none";
-			textarea.className = "form-control newsupdateedittextbox";
-
 		span = document.createElement("span");
-		span.appendChild(textarea);
 
+		var textarea = document.createElement("textarea");
+		textarea.id = comment['id'] + "_commenttextarea";
+		textarea.innerHTML = comment['comment'];
+		textarea.style.display = "none";
+		textarea.className = "form-control crmcommentedittextbox";
+
+		span.appendChild(textarea);
 		div.appendChild(span);
 
 		// Save button
 		a = document.createElement("a");
-		a.href = "/news/manage?update=" + update['id'] + '&edit';
+		a.href = "/account/crm?id=" + reportid + "#" + comment['id'];
 		a.onclick = function (e) {
 			e.preventDefault();
-			NewsSaveUpdateText(update['id']);
+			CRMSaveCommentText(comment['id']);
 		};
-		a.className = "news-update-save tip";
-		a.id = update['id'] + "_updatetextsaveicon";
+		a.id = comment['id'] + "_commenttextsaveicon";
 		a.style.display = "none";
-		a.title = "Save update text.";
+		a.title = "Edit comment text.";
 
 		img = document.createElement("i");
 		img.className = "crmsavetext fa fa-save";
 		img.setAttribute('aria-hidden', true);
-		img.id = update['id'] + "_updatetextsaveiconimg";
+		img.id = comment['id'] + "_commenttextsaveiconimg";
 
 		a.appendChild(img);
 		div.appendChild(a);
@@ -3021,9 +1911,12 @@ function NewsPrintUpdate(newsid, update, edit) {
 	div = document.createElement("div");
 	div.className = "panel-footer";
 
+	var bits = comment['created'].match(/\d+/g);
+	var d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
+
 	var div2 = document.createElement("div");
-		div2.innerHTML += "Posted by " + update['username'] + " on " + update['formattedcreateddate'];
-		div2.className = "crmcommentpostedby";
+	div2.innerHTML += "Posted by " + comment['username'] + " on " + d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear();
+	div2.className = "crmcommentpostedby";
 
 	div.appendChild(div2);
 	panel.appendChild(div);
@@ -3033,75 +1926,337 @@ function NewsPrintUpdate(newsid, update, edit) {
 }
 
 /**
- * Toggle controls open for editing news update text
+ * Delete a report comment
  *
- * @param   {string}  update
+ * @param   {string}  commentid
+ * @param   {string}  reportid
  * @return  {void}
  */
-function NewsEditUpdateTextOpen(update) {
-	// hide text
-	var text = document.getElementById(update + "_update");
-		text.style.display = "none";
-
-	// show textarea
-	var box = document.getElementById(update + "_updatetextarea");
-		box.style.display = "block";
-
-	// hide edit icon
-	var eicon = document.getElementById(update + "_updatetextediticon");
-		eicon.style.display = "none";
-
-	// show save icon
-	var sicon = document.getElementById(update + "_updatetextsaveicon");
-		sicon.style.display = "block";
-
-	var img = document.getElementById(update + "_updatetextsaveiconimg");
-		img.className = "fa fa-save";
+function CRMDeleteComment(commentid, reportid) {
+	if (confirm("Are you sure you want to delete this comment?")) {
+		WSDeleteURL(ROOT_URL + "contactreportcomment/" + commentid, CRMDeletedComment, { 'commentid': commentid, 'reportid': reportid });
+	}
 }
 
 /**
- * Save news update text
+ * Callback after deleting a report comment
  *
- * @param   {string}  update
+ * @param   {object}  xml
+ * @param   {array}   arg
  * @return  {void}
  */
-function NewsSaveUpdateText(update) {
-	// get text
-	var text = document.getElementById(update + "_updatetextarea").value;
+function CRMDeletedComment(xml, arg) {
+	if (xml.status == 200) {
+		document.getElementById(arg['commentid'] + "_comment").parentNode.parentNode.parentNode.style.display = "none";
 
-	// change save icon
-	var icon = document.getElementById(update + "_updatetextsaveicon");
-		icon.onclick = function () {};
+		WSGetURL(ROOT_URL + "contactreport/" + arg['reportid'], function (xml) {
+			if (xml.status == 200) {
+				var results = JSON.parse(xml.responseText);
+				var div, a;
 
-	var img = document.getElementById(update + "_updatetextsaveiconimg");
-		img.className = "fa fa-spinner fa-spin";
+				if (results['subscribed'] == '0') {
+					div = document.getElementById(arg['reportid'] + "_subscribed");
 
-	var post = { 'body' : text };
-		post = JSON.stringify(post);
+					a = document.createElement("a");
+					a.href = "/account/crm?id=" + arg['reportid'] + "&subscribe";
+					a.className = 'btn btn-default btn-sm';
+					a.onclick = function (e) {
+						e.preventDefault();
+						CRMSubscribeComment(arg['reportid']);
+					};
+					a.innerHTML = "Subscribe";
 
-	WSPostURL(ROOT_URL + "newsupdate/" + update, post, NewsSavedUpdateText, update);
+					div.appendChild(a);
+				} else if (results['subscribed'] == '2') {
+					div = document.getElementById(arg['reportid'] + "_subscribed");
+
+					a = document.createElement("a");
+					a.href = "/account/crm?id=" + arg['reportid'] + "&unsubscribe";
+					a.className = 'btn btn-default btn-sm';
+					a.onclick = function (e) {
+						e.preventDefault();
+						CRMUnsubscribeComment(results['subscribedcommentid'], arg['reportid']);
+					};
+					a.innerHTML = "Unsubscribe";
+
+					div.appendChild(a);
+				}
+			}
+		});
+	} else if (xml.status == 403) {
+		document.getElementById(arg['reportid'] + "_commentdeleteimg").className = "fa fa-exclamation-circle";
+		document.getElementById(arg['reportid'] + "_commentdeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
+	} else {
+		document.getElementById(arg['commentid'] + "_commentdeleteimg").className = "fa fa-exclamation-circle";
+		document.getElementById(arg['commentid'] + "_commentdeleteimg").parentNode.title = "An error occurred while deleting comment.";
+	}
 }
 
 /**
- * Callback after saving news update text
+ * Delete a report
  *
- * @param   {string}  update
+ * @param   {string}  reportid
  * @return  {void}
  */
-function NewsSavedUpdateText(xml, update) {
-	var editicon = document.getElementById(update + "_updatetextediticon");
-	var icon = document.getElementById(update + "_updatetextsaveicon");
-	var img = document.getElementById(update + "_updatetextsaveiconimg");
-	var text = document.getElementById(update + "_update");
-	var box = document.getElementById(update + "_updatetextarea");
-	icon.onclick = function () { NewsSaveUpdateText(update); };
+function CRMDeleteReport(reportid) {
+	if (confirm("Are you sure you want to delete this report?")) {
+		WSDeleteURL(ROOT_URL + "contactreport/" + reportid, CRMDeletedReport, reportid);
+	}
+}
+
+/**
+ * Callback after deleting a report
+ *
+ * @param   {object}  xml
+ * @param   {string}  reportid
+ * @return  {void}
+ */
+function CRMDeletedReport(xml, reportid) {
+	if (xml.status == 200) {
+		document.getElementById(reportid).style.display = "none";
+	} else if (xml.status == 403) {
+		document.getElementById(reportid + "_crmdeleteimg").className = "fa fa-exclamation-circle";
+		document.getElementById(reportid + "_crmdeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
+	} else {
+		document.getElementById(reportid + "_crmdeleteimg").className = "fa fa-exclamation-circle";
+		document.getElementById(reportid + "_crmdeleteimg").parentNode.title = "An error occurred while deleting report.";
+	}
+}
+
+/**
+ * Post a report comment
+ *
+ * @param   {string}  reportid
+ * @return  {void}
+ */
+function CRMPostComment(reportid) {
+	var comment = document.getElementById(reportid + "_newcommentbox").value;
+
+	var post = JSON.stringify({
+		'contactreport': ROOT_URL + "contactreport/" + reportid,
+		'comment': comment
+	});
+
+	WSPostURL(ROOT_URL + "contactreportcomment", post, CRMPostedComment, reportid);
+}
+
+/**
+ * Callback after posting a report comment
+ *
+ * @param   {object}  xml
+ * @param   {string}  reportid
+ * @return  {void}
+ */
+function CRMPostedComment(xml, reportid) {
 	if (xml.status == 200) {
 		var results = JSON.parse(xml.responseText);
+		CRMPrintComment(reportid, results, results['user']);
+		document.getElementById(reportid + "_newcommentbox").value = "";
+		CRMCollapseNewComment(reportid + "_newcommentbox");
+
+		var div = document.getElementById(reportid + "_subscribed");
+		div.innerHTML = "Subscribed";
+	} else {
+		document.getElementById(reportid + "_newcommentboxsave").className = "fa fa-exclamation-circle";
+		document.getElementById(reportid + "_newcommentboxsave").parentNode.title = "An error occured while posting comment.";
+	}
+}
+
+/**
+ * Subscribe to report comments
+ *
+ * @param   {string}  reportid
+ * @return  {void}
+ */
+function CRMSubscribeComment(reportid) {
+	var post = JSON.stringify({
+		'contactreport': ROOT_URL + "contactreport/" + reportid,
+		'comment': ''
+	});
+
+	WSPostURL(ROOT_URL + "contactreportcomment", post, CRMSubscribedComment, reportid);
+}
+
+/**
+ * Unsubscribe to report comments
+ *
+ * @param   {string}  commentid
+ * @param   {string}  reportid
+ * @return  {void}
+ */
+function CRMUnsubscribeComment(commentid, reportid) {
+	WSDeleteURL(ROOT_URL + "contactreportcomment/" + commentid, CRMUnsubscribedComment, reportid);
+}
+
+/**
+ * Callback after subscribing to report comments
+ *
+ * @param   {object}  xml
+ * @param   {string}  reportid
+ * @return  {void}
+ */
+function CRMSubscribedComment(xml, reportid) {
+	if (xml.status == 200) {
+		var div = document.getElementById(reportid + "_subscribed");
+		var results = JSON.parse(xml.responseText);
+		var a = div.getElementsByTagName("a")[0];
+		a.onclick = function (e) {
+			e.preventDefault();
+			CRMUnsubscribeComment(results['id'], reportid);
+		};
+		a.innerHTML = "Unsubscribe";
+	}
+}
+
+/**
+ * Callback after unsubscribing to report comments
+ *
+ * @param   {object}  xml
+ * @param   {string}  reportid
+ * @return  {void}
+ */
+function CRMUnsubscribedComment(xml, reportid) {
+	if (xml.status == 200) {
+		var div = document.getElementById(reportid + "_subscribed");
+		var a = div.getElementsByTagName("a")[0];
+		a.onclick = function (e) {
+			e.preventDefault();
+			CRMSubscribeComment(reportid);
+		};
+		a.innerHTML = "Subscribe";
+	}
+}
+
+/**
+ * Toggle controls open for editing report text
+ *
+ * @param   {string}  report
+ * @return  {void}
+ */
+function CRMEditReportTextOpen(report) {
+	// hide text
+	var text = document.getElementById(report + "_text");
+	document.getElementById(report + "_textarea").style.height = (25 + text.parentNode.offsetHeight) + "px";
+	text.style.display = "none";
+
+	// show textarea
+	var box = document.getElementById(report + "_textarea");
+	box.style.display = "block";
+
+	// hide edit icon
+	var eicon = document.getElementById(report + "_textediticon");
+	eicon.style.display = "none";
+
+	// show save icon
+	var sicon = document.getElementById(report + "_textsaveicon");
+	sicon.style.display = "inline";
+
+	/*var img = document.getElementById(report + "_textsaveiconimg");
+		img.src = "/include/images/save.png";
+		img.alt = "Click to save changes.";*/
+
+	var cicon = document.getElementById(report + "_textcancelicon");
+	cicon.style.display = "inline";
+}
+
+/**
+ * Toggle controls open for editing comment text
+ *
+ * @param   {string}  comment
+ * @return  {void}
+ */
+function CRMEditCommentTextOpen(comment) {
+	// hide text
+	var text = document.getElementById(comment + "_comment");
+	text.style.display = "none";
+
+	// show textarea
+	var box = document.getElementById(comment + "_commenttextarea");
+	box.style.display = "block";
+
+	// hide edit icon
+	var eicon = document.getElementById(comment + "_commenttextediticon");
+	eicon.style.display = "none";
+
+	// show save icon
+	var sicon = document.getElementById(comment + "_commenttextsaveicon");
+	sicon.style.display = "block";
+
+	var img = document.getElementById(comment + "_commenttextsaveiconimg");
+	img.className = "fa fa-save";
+	img.parentNode.title = "Click to save changes.";
+}
+
+/**
+ * Save edited report text
+ *
+ * @param   {string}  report
+ * @return  {void}
+ */
+function CRMSaveReportText(report) {
+	// get text
+	var text = document.getElementById(report + "_textarea").value;
+
+	// change save icon
+	var icon = document.getElementById(report + "_textsaveicon");
+	icon.onclick = function () { };
+	var img = document.getElementById(report + "_textsaveiconimg");
+	img.className = "fa fa-spinner fa-spin";
+	img.parentNode.title = "Saving changes...";
+
+	var post = { 'report': text };
+	post = JSON.stringify(post);
+
+	WSPostURL(ROOT_URL + "contactreport/" + report, post, CRMSavedReportText, report);
+}
+
+/**
+ * Save edited comment text
+ *
+ * @param   {string}  comment
+ * @return  {void}
+ */
+function CRMSaveCommentText(comment) {
+	// get text
+	var text = document.getElementById(comment + "_commenttextarea").value;
+
+	// change save icon
+	var icon = document.getElementById(comment + "_commenttextsaveicon");
+	icon.onclick = function () { };
+	var img = document.getElementById(comment + "_commenttextsaveiconimg");
+	img.className = "fa fa-spinner fa-spin";
+	img.parentNode.title = "Saving changes...";
+
+	var post = { 'comment': text };
+	post = JSON.stringify(post);
+
+	WSPostURL(ROOT_URL + "contactreportcomment/" + comment, post, CRMSavedCommentText, comment);
+}
+
+/**
+ * Callback after saving edited report text
+ *
+ * @param   {object}  xml
+ * @param   {string}  report
+ * @return  {void}
+ */
+function CRMSavedReportText(xml, report) {
+	var img = document.getElementById(report + "_textsaveiconimg");
+
+	if (xml.status == 200) {
+		var results = JSON.parse(xml.responseText);
+
+		var icon = document.getElementById(report + "_textsaveicon");
+		icon.onclick = function () {
+			CRMSaveReportText(report);
+		};
 		icon.style.display = "none";
+		var text = document.getElementById(report + "_text");
 		text.style.display = "block";
-		box.style.display = "none";
-		editicon.style.display = "block";
-		text.innerHTML = results['formattedbody'];
+		text.innerHTML = results['formattedreport'];
+		document.getElementById(report + "_textarea").style.display = "none";
+		document.getElementById(report + "_textediticon").style.display = "block";
+		document.getElementById(report + "_textcancelicon").style.display = "none";
 	} else if (xml.status == 403) {
 		img.className = "fa fa-exclamation-circle";
 		img.parentNode.title = "Unable to save changes, grace editing window has passed.";
@@ -3112,72 +2267,200 @@ function NewsSavedUpdateText(xml, update) {
 }
 
 /**
- * Delete a news update
+ * Callback after saving edited comment text
  *
- * @param   {string}  updateid
- * @param   {string}  reportid
+ * @param   {object}  xml
+ * @param   {string}  report
  * @return  {void}
  */
-function NewsDeleteUpdate(updateid, reportid) {
-	if (confirm("Are you sure you want to delete this update?")) {
-		WSDeleteURL(ROOT_URL + "newsupdate/" + updateid, NewsDeletedUpdate, { 'updateid' : updateid, 'reportid' : reportid });
+function CRMSavedCommentText(xml, comment) {
+	var img = document.getElementById(comment + "_commenttextsaveiconimg");
+
+	if (xml.status == 200) {
+		var results = JSON.parse(xml.responseText);
+
+		var icon = document.getElementById(comment + "_commenttextsaveicon");
+		icon.style.display = "none";
+		icon.onclick = function () {
+			CRMSaveCommentText(comment);
+		};
+
+		var text = document.getElementById(comment + "_comment");
+		text.style.display = "block";
+		text.innerHTML = results['formattedcomment'];
+
+		var box = document.getElementById(comment + "_commenttextarea");
+		box.style.display = "none";
+
+		var editicon = document.getElementById(comment + "_commenttextediticon");
+		editicon.style.display = "block";
+	} else if (xml.status == 403) {
+		img.className = "fa fa-exclamation-circle";
+		img.parentNode.title = "Unable to save changes, grace editing window has passed.";
+	} else {
+		img.className = "fa fa-exclamation-circle";
+		img.parentNode.title = "Unable to save changes, reload the page and try again.";
 	}
 }
 
 /**
- * Call back after deleting an update
+ * Expand comment box
  *
- * @param   {object}  xml
- * @param   {array}   arg
+ * @param   {string}  comment
  * @return  {void}
  */
-function NewsDeletedUpdate(xml, arg) {
-	if (xml.status == 200) {
-		document.getElementById(arg['updateid'] + "_update").parentNode.style.display = "none";
+function CRMExpandNewComment(comment) {
+	var textarea = document.getElementById(comment);
+	textarea.className = "form-control crmcommentboxexpand";
+	var img = document.getElementById(comment + "save");
+	img.className = "crmnewcommentsave fa fa-save";
+	img.style.display = "block";
+	img.parentNode.title = "Add new comment.";
+}
 
-		WSGetURL(ROOT_URL + "contactreport/" + arg['reportid'], function (xml) {
-			if (xml.status == 200) {
-				var results = JSON.parse(xml.responseText);
-				var div, a;
-
-				if (results['subscribed'] == '0') {
-					div = document.getElementById(arg['reportid'] + "_subscribed");
-					div.innerHTML = "[ ";
-
-					a = document.createElement("a");
-					a.href = "javascript:";
-					a.onclick = function () { NewsSubscribeUpdate(arg['reportid']); };
-					a.innerHTML = "Subscribe";
-
-					div.appendChild(a);
-					div.appendChild(document.createTextNode(" ]"));
-				} else if (results['subscribed'] == '2') {
-					div = document.getElementById(arg['reportid'] + "_subscribed");
-					div.innerHTML = "[ ";
-
-					a = document.createElement("a");
-					a.href = "javascript:";
-					a.onclick = function () { NewsUnsubscribeUpdate(results['subscribedupdateid'], arg['reportid']); };
-					a.innerHTML = "Unsubscribe";
-
-					div.appendChild(a);
-					div.appendChild(document.createTextNode(" ]"));
-				}
-			}
-		});
-	} else if (xml.status == 403) {
-		document.getElementById(arg['reportid'] + "_updatedeleteimg").className = "fa fa-exclamation-circle";
-		document.getElementById(arg['reportid'] + "_updatedeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else {
-		document.getElementById(arg['updateid'] + "_updatedeleteimg").className = "fa fa-exclamation-circle";
-		document.getElementById(arg['updateid'] + "_updatedeleteimg").parentNode.title = "An error occurred while deleting update.";
+/**
+ * Collapse comment box
+ *
+ * @param   {string}  comment
+ * @return  {void}
+ */
+function CRMCollapseNewComment(comment) {
+	var textarea = document.getElementById(comment);
+	if (textarea.value == "") {
+		textarea.className = "form-control crmcommentbox";
+		var img = document.getElementById(comment + "save");
+		img.style.display = "none";
 	}
 }
 
-var autocompleteNews = function(url) {
-	return function(request, response) {
+/**
+ * Clear search values
+ *
+ * @return  {void}
+ */
+function CRMClearSearch() {
+	var x = 0,
+		y = 0;
+
+	document.getElementById("keywords").value = "";
+	document.getElementById("datestartshort").value = "";
+	document.getElementById("datestopshort").value = "";
+	document.getElementById("id").value = "";
+	document.getElementById("NotesText").value = "";
+
+	var data = $('#crm-search-data');
+	var sdata = JSON.parse(data.html());
+	var skip = false;
+
+	var groupsdata = document.getElementById("group").value.split(',');
+	for (x = 0; x < groupsdata.length; x++) {
+		if (groupsdata[x] != "") {
+			skip = false;
+
+			if (document.getElementById("TAB_follow").className.match(/active/)) {
+				for (y = 0; y < sdata.followerofgroups.length; y++) {
+					if (groupsdata[x] == sdata.followerofgroups[y]['id']) {
+						skip = true;
+					}
+				}
+			}
+
+			if (!skip) {
+				CRMRemoveGroup(groupsdata[x], false);
+			}
+		}
+	}
+
+	var people_divs = document.getElementById("people").value.split(',');
+	for (x = people_divs.length - 1; x >= 0; x--) {
+		if (people_divs[x] != "") {
+			skip = false;
+
+			if (document.getElementById("TAB_follow").className.match(/active/)) {
+				for (y = 0; y < sdata.followerofusers.length; y++) {
+					if (people_divs[x] == sdata.followerofusers[y]['id']) {
+						skip = true;
+					}
+				}
+			}
+
+			if (!skip) {
+				CRMRemoveUser(people_divs[x], false);
+			}
+		}
+	}
+
+	var resources = document.getElementById("crmresource");
+	if (resources) {
+		resources.value = '';
+		if ($('.tagsinput').length) {
+			$(resources).clearTags();
+		}
+	}
+
+	if (window.location.href.match(/edit/)) {
+		window.location = window.location.href.replace(/&edit/, "&search");
+	} else if (document.getElementById("TAB_follow").className.match(/active/)) {
+		var xml = null;
+
+		for (x = 0; x < sdata.followerofgroups.length; x++) {
+			skip = false;
+
+			for (y = 0; y < groupsdata.length; y++) {
+				if (groupsdata[y] == sdata.followerofgroups[x]['id']) {
+					skip = true;
+				}
+			}
+
+			if (!skip) {
+				// fake WS call
+				xml = new Object();
+				xml.responseText = JSON.stringify(sdata.followerofgroups[x]);
+				xml.status = 200;
+				CRMSearchGroup(xml, { 'pageload': true, 'disabled': false });
+			}
+		}
+
+		for (x = 0; x < sdata.followerofusers.length; x++) {
+			skip = false;
+
+			for (y = 0; y < people_divs.length; y++) {
+				if (people_divs[y] != "") {
+					if (people_divs[y] == sdata.followerofusers[x]['id']) {
+						skip = true;
+					}
+				}
+			}
+
+			if (!skip) {
+				// fake WS call
+				xml = new Object();
+				xml.responseText = JSON.stringify(sdata.followerofusers[x]);
+				xml.status = 200;
+				CRMSearchUser(xml, { 'pageload': true, 'disabled': false });
+			}
+		}
+
+		document.getElementById("INPUT_add").disabled = true;
+	}
+
+	setTimeout(function () {
+		CRMSearch();
+	}, 200);
+}
+
+/**
+ * Get and return array of objects
+ *
+ * @return  {array}
+ */
+var autocompleteList = function (url, key) {
+	return function (request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-			response($.map(data.resources, function (el) {
+			response($.map(data[key], function (el) {
+				if (typeof (el.id) == 'undefined' && typeof (el.usernames) != 'undefined') {
+					el.id = el.usernames[0]['name'];
+				}
 				return {
 					label: el.name,
 					name: el.name,
@@ -3188,10 +2471,15 @@ var autocompleteNews = function(url) {
 	};
 };
 
-var autocompleteUsers = function(url) {
-	return function(request, response) {
+/**
+ * Get and return array of resource objects
+ *
+ * @return  {array}
+ */
+var autocompleteResource = function (url) {
+	return function (request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-			response($.map(data.users, function (el) {
+			response($.map(data.resources, function (el) {
 				return {
 					label: el.name,
 					name: el.name,
@@ -3205,241 +2493,221 @@ var autocompleteUsers = function(url) {
 /**
  * Initiate event hooks
  */
-document.addEventListener('DOMContentLoaded', function() {
-	var tabs = document.querySelectorAll('.nav-tabs a');
+document.addEventListener('DOMContentLoaded', function () {
+	var frm = document.getElementById('DIV_crm');
+	if (frm) {
+		usersearch = false;
+		groupsearch = true;
+		multi_group = true;
 
-	for (i = 0; i < tabs.length; i++)
-	{
-		tabs[i].addEventListener('click', function (event) {
+		$('.date-pick').on('change', function () {
+			CRMDateSearch();
+		});
+		$('#keywords,#id').on('keyup', function (event) {
+			CRMKeywordSearch(event.keyCode);
+		});
+		$('#NotesText').on('keyup', function () {
+			CRMToggleAddButton();
+		});
+
+		$('.clickto').on('click', function (event) {
 			event.preventDefault();
-
-			NEWSToggle(this.getAttribute('href').replace('#', ''));
+			CRMToggleSearch($(this).data('subject'));
 		});
-	}
 
-	// Date/time
-	$('.date-pick,.time-pick').on('change', function(){
-		NEWSDateSearch($(this).attr('name'));
-	});
+		$('#btn-search').on('click', function (event) {
+			event.preventDefault();
+			CRMSearch();
+		});
+		$('.btn-clear').on('click', function (event) {
+			event.preventDefault();
+			CRMClearSearch();
+		});
 
-	$('.time-pick').timepicker({
-		timeFormat: "h:i A",
-		minTime: '8:00am',
-		maxTime: '5:00pm',
-		change: function() {
-			$(this).trigger('change');
+		$('#INPUT_add').on('click', function (event) {
+			event.preventDefault();
+			CRMAddEntry();
+		});
+
+		var group = $("#group");
+		if (group.length) {
+			group.tagsInput({
+				placeholder: 'Select group...',
+				importPattern: /([^:]+):(.+)/i,
+				limit: 1,
+				'autocomplete': {
+					source: autocompleteList(group.attr('data-uri'), 'groups'),
+					dataName: 'groups',
+					height: 150,
+					delay: 100,
+					minLength: 1,
+					//maxLength: 1
+				},
+				'onAddTag': function () { //input, value
+					CRMSearch();
+				},
+				'onRemoveTag': function () { //input, value
+					CRMSearch();
+				}
+			});
 		}
-	});
 
-	// Dialogs
-	if ($('.samplebox').length) {
-		$('.samplebox').on('keyup', function (){
-			PreviewExample($(this).data('sample'));
-		});
+		var people = $("#people");
+		if (people.length) {
+			people.tagsInput({
+				placeholder: 'Select user...',
+				importPattern: /([^:]+):(.+)/i,
+				'autocomplete': {
+					source: autocompleteList(people.attr('data-uri'), 'users'),
+					dataName: 'users',
+					height: 150,
+					delay: 100,
+					minLength: 1
+				},
+				'onAddTag': function () { //input, value
+					CRMSearch();
+				},
+				'onRemoveTag': function () { //input, value
+					CRMSearch();
+				}
+			});
+		}
 
-		$('#help1').tabs();
+		var crmresource = $("#crmresource");
+		if (crmresource.length) {
+			crmresource.tagsInput({
+				placeholder: 'Select resource...',
+				importPattern: /([^:]+):(.+)/i,
+				'autocomplete': {
+					source: autocompleteResource(crmresource.attr('data-uri')),
+					dataName: 'resources',
+					height: 150,
+					delay: 100,
+					minLength: 1
+				},
+				'onAddTag': function () {
+					CRMSearch();
+				},
+				'onRemoveTag': function () {
+					CRMSearch();
+				}
+			});
+		}
 
-		//Load the formatting guide example variables into the text box.
-		PreviewExample('h');
-	}
+		var data = $('#crm-search-data');
+		var sdata = JSON.parse(data.html());
+		var x;
 
-	$('#location').on('keyup', function(){
-		NEWSToggleAddButton();
-	});
-	$('#newstype').on('change', function(){
-		NEWSNewstypeSearch($(this).val());
-	});
-	$('#Headline').on('keyup', function(){
-		NEWSToggleAddButton();
-	});
-	$('#NotesText').on('keyup', function(){
-		NEWSToggleAddButton();
-	});
-
-	$('#keywords').on('keyup', function(event){
-		NEWSKeywordSearch(event.keyCode);
-	});
-	$('#id').on('keyup', function(event){
-		NEWSKeywordSearch(event.keyCode);
-	});
-	$('#template_select').on('change', function(){
-		NEWSSearch();
-	});
-	$('#datesegmented').on('change', function(){
-		$('#TR_date').toggle();
-		$('#TR_newstime').toggle();
-	});
-	$('#template').on('change', function(){
-		NEWSSearch();
-	});
-	$('#published').on('change', function(){
-		NEWSSearch();
-	});
-
-	// Buttons
-	$('#INPUT_search').on('click', function(event){
-		event.preventDefault();
-		NEWSSearch();
-	});
-	$('#INPUT_clear').on('click', function(event){
-		event.preventDefault();
-		NEWSClearSearch();
-	});
-	$('#INPUT_add').on('click', function(event){
-		event.preventDefault();
-		NEWSAddEntry();
-	});
-	$('#INPUT_preview').on('click', function(event){
-		event.preventDefault();
-		NEWSPreview($(this).data('id'), true);
-	});
-
-	$('#DIV_news form').on('submit', function(e){
-		e.preventDefault();
-		return false;
-	});
-
-	var newsresource = $("#newsresource");
-	if (newsresource.length) {
-		newsresource.tagsInput({
-			placeholder: 'Select resource...',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteNews(newsresource.attr('data-uri')),
-				dataName: 'resources',
-				height: 150,
-				delay: 100,
-				minLength: 1
-			},
-			'onAddTag': function() {
-				NEWSSearch();
-			},
-			'onRemoveTag': function() {
-				NEWSSearch();
+		if (sdata.length) {
+			if (sdata.groups.length) {
+				for (x = 0; x < sdata.groups.length; x++) {
+					WSGetURL(ROOT_URL + "group/" + sdata.groups[x], CRMSearchGroup, { 'pageload': true, 'disabled': false });
+				}
 			}
-		});
-	}
+			if (sdata.people.length) {
+				//CRMToggleSearch('people');
+				//CRMToggleSearch('none');
 
-	var newsuser = $("#newsuser");
-	if (newsuser.length) {
-		newsuser.tagsInput({
-			placeholder: 'Select user...',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteUsers(newsuser.attr('data-uri')),
-				dataName: 'users',
-				height: 150,
-				delay: 100,
-				minLength: 1
-			}/*,
-			'onAddTag': function(input, value) {
-				NEWSSearch();
-			},
-			'onRemoveTag': function(input, value) {
-				NEWSSearch();
-			}*/
-		});
-	}
-
-	var data = $('#news-data');
-	if (data.length) {
-		//var edit = true;
-		var original = JSON.parse(data.html());
-		var i = 0;
-
-		//NEWSToggleSearch('resource');
-		//NEWSToggleSearch('none');
-
-		$("#newstype > option").each(function() {
-			if (this.value == original['newstype']) {
-				$('#newstype > option:selected', 'select[name="options"]').removeAttr('selected');
-				$(this).attr('selected', true);
+				for (x = 0; x < sdata.people.length; x++) {
+					WSGetURL(ROOT_URL + "user/" + sdata.people[x], CRMSearchUser, { 'pageload': true, 'disabled': false });
+				}
 			}
-		});
-
-		document.getElementById('datestartshort').value = original.startdate;
-		if (original.newsdateend != '0000-00-00 00:00:00') {
-			document.getElementById('datestopshort').value = original.stopdate;
-		}
-		if (original.starttime != '') {
-			document.getElementById('timestartshort').value = original.starttime;
-		}
-		if (original.stoptime != '') {
-			document.getElementById('timestopshort').value = original.stoptime;
-		}
-
-		document.getElementById('Headline').value = original.headline;
-		document.getElementById('location').value = original.location;
-		document.getElementById('url').value = original.url;
-		document.getElementById('NotesText').innerHTML = original.news;
-		for (i = 0; i < original.resources.length; i++)
-		{
-			NEWSAddResource(original.resources[i]);
-		}
-		for (i = 0; i < original.associations.length; i++)
-		{
-			NEWSAddAssociation(original.associations[i]);
-		}
-		if (original.published == "1") {
-			document.getElementById('published').checked = true;
-		}
-		if (original.template == "1") {
-			document.getElementById('template').checked = true;
-		}
-		NEWSToggle('edit', false);
-	}
-
-	if ($('#news').length) {
-		WSGetURL(root + "news/" + encodeURI($('#news').data('query')), NEWSSearched);
-	}
-
-	var url = window.location.href.match(/[&?](\w+)$/);
-	if (url != null) {
-		NEWSToggle(url[1]);
-		//setTimeout("NEWSSearch();", 200);
-	}
-
-	$('.btn-attend').on('click', function(event){
-		event.preventDefault();
-
-		var el = $(this);
-
-		var newsid = el.data('newsid');
-		var id = newsid.substr(newsid.lastIndexOf("/")+1);
-
-		var parts = el.data('assoc').split('/');
-
-		var post = {
-			'associd': parts[parts.length-1],
-			'assoctype': parts[parts.length-2],
-			'newsid': id
-		};
-
-		post = JSON.stringify(post);
-
-		WSPostURL(root + "newsassociation/", post, function(xml){
-			if (xml.status == 200) {
-				el.parent().html('<span class="alert alert-success">Thank you for your interest!</span>');
-			} else if (xml.status == 403) {
-				el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');
-			} else {
-				el.parent().append('<span class="alert alert-error">An error occurred.</span>');
+			if (sdata.resources.length) {
+				for (x = 0; x < sdata.resources.length; x++) {
+					WSGetURL(ROOT_URL + "resource/" + sdata.resources[x], CRMSearchResource, { 'pageload': true, 'disabled': false });
+				}
 			}
-		});
-	});
-	$('.btn-notattend').on('click', function(event){
-		event.preventDefault();
+		}
 
-		var el = $(this);
+		data = $('#crm-data');
+		if (data.length) {
+			//var edit = true;
+			var orig = JSON.parse(data.html());
+			var original = orig.original;
 
-		WSDeleteURL(el.data('id'), function(xml, id){
-			if (xml.status == 200) {
-				el.parent().html('<span class="alert alert-success">Successfully cancelled.</span>');
-			} else if (xml.status == 403) {
-				el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');
-			} else {
-				el.parent().append('<span class="alert alert-error">An error occurred.</span>');
+			document.getElementById('datestartshort').value = original.contactdate.substring(0, 10);
+			document.getElementById('NotesText').value = original.note;
+
+			//CRMToggleSearch('people');
+			//CRMToggleSearch('none');
+
+			for (x = 0; x < original.people.length; x++) {
+				if (original.people[x]['age'] > 86400) {
+					WSGetURL(original.people[x]['user'], CRMSearchUser, { 'pageload': true, 'disabled': true });
+				}
+				else {
+					WSGetURL(original.people[x]['user'], CRMSearchUser, { 'pageload': true, 'disabled': false });
+				}
 			}
+
+			if (original.group) {
+				multi_group = false;
+
+				if (original.groupage > 86400) {
+					WSGetURL(original.group, CRMSearchGroup, { 'pageload': true, 'disabled': true });
+				}
+				else {
+					WSGetURL(original.group, CRMSearchGroup, { 'pageload': true, 'disabled': false });
+				}
+			}
+
+			for (x = 0; x < original.resources.length; x++) {
+				WSGetURL(original.resources[x]['resourceid'], CRMSearchResource, { 'pageload': true, 'disabled': false });
+			}
+
+			if (original.age > 86400) {
+				document.getElementById('datestartshort').disabled = true;
+			}
+
+			CRMToggle('edit', false);
+		}
+	}
+
+	var tabs = document.querySelectorAll('.crm-tabs a');
+
+	if (tabs.length) {
+		for (var i = 0; i < tabs.length; i++) {
+			tabs[i].addEventListener('click', function (event) {
+				event.preventDefault();
+
+				CRMToggle(this.getAttribute('href').replace('#', ''));
+			});
+		}
+
+		var url = window.location.href.match(/[&?](\w+)$/);
+		if (url != null) {
+			CRMToggle(url[1]);
+			setTimeout(function () {
+				CRMSearch();
+			}, 300);
+		}
+
+		$('.date-pick').on('change', function () {
+			CRMDateSearch();
 		});
-	});
+
+		$('#tabMain')
+			.on('paste', '.crmsearch', function () {
+				ChangeSearch(0);
+			})
+			.on('keyup', '.crmsearch', function (event) {
+				ChangeSearch(event.keyCode);
+			})
+			.on('focus', '.crmsearch', function () {
+				ChangeSearch(0);
+			})
+			.on('blur', '.crmsearch', function () {
+				CRMToggleSearch('none');
+			});
+
+		//WSGetURL(ROOT_URL + "contactreports/" + encodeURI("<?php echo $string; ?>"), CRMSearched);
+	}
+
+	if ($('#reports').length) {
+		var q = '';
+		if ($('#reports').data('query')) {
+			q = '?' + encodeURI($('#reports').data('query'));
+		}
+		WSGetURL(ROOT_URL + "contactreports/" + q, CRMSearched);
+	}
 });

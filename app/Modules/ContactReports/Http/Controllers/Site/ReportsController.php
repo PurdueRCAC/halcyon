@@ -5,6 +5,7 @@ namespace App\Modules\ContactReports\Http\Controllers\Site;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Modules\ContactReports\Models\Report;
 
 class ReportsController extends Controller
@@ -19,8 +20,11 @@ class ReportsController extends Controller
 		$filters = array(
 			'search'    => null,
 			'group'    => null,
+			'people'   => null,
+			'resource' => null,
 			'start'    => null,
 			'stop'     => null,
+			'id'       => null,
 			'notice'   => '*',
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -48,11 +52,22 @@ class ReportsController extends Controller
 
 		if ($filters['search'])
 		{
-			$query->where(function($query) use ($filters)
+			/*$query->where(function($query) use ($filters)
 			{
-				$query->where('headline', 'like', '%' . $filters['search'] . '%')
-					->orWhere('body', 'like', '%' . $filters['search'] . '%');
-			});
+				$query->where('report', 'like', '%' . $filters['search'] . '%')
+					->orWhere('stemmedreport', 'like', '%' . $filters['search'] . '%');
+			});*/
+
+			$searches = explode(',', $filters['search']);
+
+			$sql = "MATCH(stemmedreport) AGAINST ('";
+			foreach ($searches as $search)
+			{
+				$sql .= " +" . $search;
+			}
+			$sql .= "' IN BOOLEAN MODE)";
+
+			$query->where(DB::raw($sql));
 		}
 
 		if ($filters['notice'] != '*')

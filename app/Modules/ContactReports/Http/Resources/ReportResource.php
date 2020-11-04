@@ -3,6 +3,7 @@
 namespace App\Modules\ContactReports\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Carbon\Carbon;
 
 class ReportResource extends JsonResource
 {
@@ -21,6 +22,7 @@ class ReportResource extends JsonResource
 		$data['comments'] = $this->comments;
 		$data['users'] = $this->users;
 		$data['resources'] = $this->resources;
+		$data['age'] = Carbon::now()->timestamp - $this->datetimecreated->timestamp;
 
 		$data['api'] = route('api.contactreports.read', ['id' => $this->id]);
 		$data['url'] = route('site.contactreports.show', ['id' => $this->id]);
