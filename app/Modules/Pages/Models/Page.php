@@ -367,7 +367,7 @@ class Page extends Model
 				}
 				else
 				{
-					$text .= trans('pages::pages.file not found');
+					$text = trans('pages::pages.file not found') . ' (app/public/' . $path . ')';
 				}
 
 				$content = str_replace($match[0], $text, $content);

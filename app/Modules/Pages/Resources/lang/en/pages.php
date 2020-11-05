@@ -44,6 +44,7 @@ return [
 	'metadata' => 'Metadata',
 	'metakey' => 'Keywords',
 	'metadesc' => 'Description',
+	'file not found' => 'file not found',
 	// Site
 	'article not found' => 'Article not found',
 	'article hits' => 'Hits: :hits',
