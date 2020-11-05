@@ -356,7 +356,7 @@ class Page extends Model
 		{
 			foreach ($matches as $match)
 			{
-				$path = strtolower(trim($match[1]));
+				$path = trim($match[1]);
 				$path = trim($path, '"\'');
 
 				$text = \storage_path('app/public/' . $path);
