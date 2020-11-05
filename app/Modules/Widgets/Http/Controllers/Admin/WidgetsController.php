@@ -351,8 +351,9 @@ class WidgetsController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.title' => 'required',
-			'fields.position' => 'required'
+			'fields.title' => 'required|string|max:100',
+			'fields.position' => 'required|string|max:50',
+			'fields.widget' => 'required|string|max:50'
 		]);
 
 		$id = $request->input('id');

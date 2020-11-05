@@ -333,14 +333,18 @@ class WidgetsController extends Controller
 				$p . '.title',
 				$p . '.note',
 				$p . '.position',
-				$p . '.module',
+				$p . '.widget',
 				$p . '.language',
 				$p . '.checked_out',
 				$p . '.checked_out_time',
 				$p . '.published',
 				$p . '.access',
 				$p . '.ordering',
-				//$l . '.title',
+				$p . '.content',
+				$p . '.showtitle',
+				$p . '.params',
+				$p . '.client_id',
+				$l . '.title',
 				$u . '.name',
 				$a . '.title',
 				$e . '.name',
@@ -459,9 +463,18 @@ class WidgetsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "A description of the widget",
-	 * 		"required":      false,
+	 * 		"name":          "position",
+	 * 		"description":   "Widget position",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "widget",
+	 * 		"description":   "The type of widget",
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string"
 	 * 		}
@@ -471,14 +484,40 @@ class WidgetsController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'body' => 'required'
+			'title' => 'required|string|max:100',
+			'position' => 'required|string|max:50',
+			'widget' => 'required|string|max:50'
 		]);
 
-		$row = new Widget($request->all());
+		$row = new Widget();
+		$row->fill($request->all());
+
+		if ($params = $request->input('params'))
+		{
+			foreach ($params as $key => $val)
+			{
+				$row->params->set($key, $val);
+			}
+		}
 
 		if (!$row->save())
 		{
-			throw new \Exception($row->getError(), 409);
+			return response()->json(['message' => $row->getError()], 500);
+		}
+
+		// Save menu assignments
+		if ($request->has('menu'))
+		{
+			$menu = $request->input('menu', array());
+			$assignment = (isset($menu['assignment']) ? $menu['assignment'] : 0);
+			$assigned   = (isset($menu['assigned']) ? $menu['assigned'] : array());
+
+			if (!$row->saveAssignment($assignment, $assigned))
+			{
+				$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
+
+				return response()->json(['message' => $error], 500);
+			}
 		}
 
 		return new WidgetResource($row);
@@ -560,45 +599,31 @@ class WidgetsController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /api/widgets/{id}
 	 * @apiParameter {
-	 * 		"in":            "path",
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"required":      true,
+	 * 		"in":            "body",
+	 * 		"name":          "title",
+	 * 		"description":   "Widget title",
+	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer"
+	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "title",
-	 * 		"description":   "Menu title",
-	 * 		"type":          "string",
+	 * 		"name":          "position",
+	 * 		"description":   "Widget position",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "A description of the menu",
-	 * 		"type":          "string",
+	 * 		"name":          "widget",
+	 * 		"description":   "The type of widget",
 	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "client_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "menutype",
-	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @param   Request $request
 	 * @return  Response
@@ -606,16 +631,40 @@ class WidgetsController extends Controller
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'title' => 'required',
-			'position' => 'required'
+			'title' => 'nullable|string|max:100',
+			'position' => 'nullable|string|max:50',
+			'widget' => 'nullable|string|max:50'
 		]);
 
 		$row = Widget::findOrFail($id);
 		$row->fill($request->all());
 
+		if ($params = $request->input('params'))
+		{
+			foreach ($params as $key => $val)
+			{
+				$row->params->set($key, $val);
+			}
+		}
+
 		if (!$row->save())
 		{
-			throw new \Exception($row->getError(), 409);
+			return response()->json(['message' => $row->getError()], 500);
+		}
+
+		// Save menu assignments
+		if ($request->has('menu'))
+		{
+			$menu = $request->input('menu', array());
+			$assignment = (isset($menu['assignment']) ? $menu['assignment'] : 0);
+			$assigned   = (isset($menu['assigned']) ? $menu['assigned'] : array());
+
+			if (!$row->saveAssignment($assignment, $assigned))
+			{
+				$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
+
+				return response()->json(['message' => $error], 500);
+			}
 		}
 
 		return new WidgetResource($row);
@@ -652,7 +701,7 @@ class WidgetsController extends Controller
 
 		if (!$row->delete())
 		{
-			throw new \Exception(trans('global.messages.delete failed', ['id' => $id]), 409);
+			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 409);
 		}
 
 		return response()->json(null, 204);
