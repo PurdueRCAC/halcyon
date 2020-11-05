@@ -8,6 +8,10 @@
 return [
 	'widget name' => 'User List',
 	'widget desc' => 'This displays a list of users',
+
+	'staff' => 'Staff',
+	'staff directory' => 'Staff Directory',
+	'email' => 'Email',
 	// Misc.
 	'no articles found' => 'No articles found.',
 	'params' => [

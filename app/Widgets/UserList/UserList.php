@@ -9,6 +9,7 @@ namespace App\Widgets\Userlist;
 
 use App\Halcyon\Access\Map;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\UserUsername;
 use App\Modules\Widgets\Entities\Widget;
 use Carbon\Carbon;
 
@@ -25,10 +26,12 @@ class Userlist extends Widget
 	public function run()
 	{
 		$a = (new User)->getTable();
+		$u = (new UserUsername)->getTable();
 		$b = (new Map)->getTable();
 
 		$query = User::query()
 			->select($a . '.*')
+			->join($u, $u . '.userid', $a . '.id')
 			->with('roles');
 
 		$roles = $this->params->get('role_id');
@@ -41,38 +44,35 @@ class Userlist extends Widget
 
 		if ($search = $this->params->get('search'))
 		{
-			$query->where(function($where) use ($search, $a)
+			$query->where(function($where) use ($search, $a, $u)
 			{
 				$where->where($a . '.name', 'like', '%' . strtolower((string)$search) . '%')
-					->orWhere($a . '.username', 'like', '%' . strtolower((string)$search) . '%')
-					->orWhere($a . '.email', 'like', '%' . strtolower((string)$search) . '%');
+					->orWhere($u . '.username', 'like', '%' . strtolower((string)$search) . '%');
 			});
 		}
 
 		if ($created_at = $this->params->get('created_at'))
 		{
-			$query->where($a . '.created_at', '>=', $created_at);
+			$query->where($u . '.datecreated', '>=', $created_at);
 		}
 
 		$state = $this->params->get('state', 'enabled');
 
 		if ($state == 'enabled')
 		{
-			$query->where($a . '.block', '=', 0)
-				->whereNotNull($a . '.email_verified_at');
-		}
-		elseif ($state == 'pending')
-		{
-			$query->where($a . '.block', '=', 0)
-				->whereNull($a . '.email_verified_at');
+			$query->where(function($where) use ($u)
+			{
+				$where->whereNull($u . '.dateremoved')
+					->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+			});
 		}
 		elseif ($state == 'disabled')
 		{
-			$query->where($a . '.block', '=', 1);
-		}
-		elseif ($state == 'trashed')
-		{
-			$query->onlyTrashed();
+			$query->where(function($where) use ($u)
+			{
+				$where->whereNotNull($u . '.dateremoved')
+					->where($u . '.dateremoved', '!', '0000-00-00 00:00:00');
+			});
 		}
 
 		// Apply the range filter.
@@ -113,12 +113,12 @@ class Userlist extends Widget
 
 			if ($filters['range'] == 'post_year')
 			{
-				$query->where($a . '.created_at', '<', $dStart->format('Y-m-d H:i:s'));
+				$query->where($u . '.datecreated', '<', $dStart->format('Y-m-d H:i:s'));
 			}
 			else
 			{
-				$query->where($a . '.created_at', '>=', $dStart->format('Y-m-d H:i:s'));
-				$query->where($a . '.created_at', '<=', $dNow->format('Y-m-d H:i:s'));
+				$query->where($u . '.datecreated', '>=', $dStart->format('Y-m-d H:i:s'));
+				$query->where($u . '.datecreated', '<=', $dNow->format('Y-m-d H:i:s'));
 			}
 		}
 
