@@ -36,12 +36,6 @@ class WidgetManager
 	public function canonical($name)
 	{
 		$name = preg_replace('/[^A-Z0-9_\.-]/i', '', $name);
-
-		if (substr($name, 0, strlen('mod_')) != 'mod_')
-		{
-			$name = 'mod_' . $name;
-		}
-
 		return strtolower($name);
 	}
 
