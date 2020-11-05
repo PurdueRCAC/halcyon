@@ -2,10 +2,9 @@
 
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
-@sendpush
+@endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/js/validate.js?v=' . filemtime(public_path() . '/modules/core/js/validate.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/knowledge/js/admin.js?v=' . filemtime(public_path() . '/modules/knowledge/js/admin.js')) }}"></script>
 @endpush
@@ -19,6 +18,15 @@ app('pathway')
 	->append(
 		($row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create'))
 	);
+
+	$parentpath = '';
+	if ($page->path)
+	{
+		if (trim($row->path, '/') != $page->alias)
+		{
+			$parentpath = dirname($row->path);
+		}
+	}
 @endphp
 
 @section('toolbar')
@@ -39,7 +47,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.knowledge.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.validation failed') }}">
+<form action="{{ route('admin.knowledge.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 	@if ($errors->any())
 		<div class="alert alert-danger">
@@ -71,7 +79,7 @@ app('pathway')
 					<label for="field-alias">{{ trans('knowledge::knowledge.path') }}:</label>
 					<div class="input-group mb-2 mr-sm-2">
 						<div class="input-group-prepend">
-							<div class="input-group-text">{{ route('site.knowledge.index') }}/<span id="parent-path">{{ dirname($row->path) }}</span>/</div>
+							<div class="input-group-text">{{ route('site.knowledge.index') }}<span id="parent-path">{{ $parentpath }}</span>/</div>
 						</div>
 						<input type="text" name="page[alias]" id="field-alias" class="form-control" maxlength="250" value="{{ $page->alias }}" />
 					</div>
@@ -80,7 +88,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-title">{{ trans('knowledge::knowledge.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="page[title]" id="field-title" class="form-control required" maxlength="250" value="{{ $page->title }}" />
+					<input type="text" name="page[title]" id="field-title" class="form-control required" required maxlength="250" value="{{ $page->title }}" />
 				</div>
 
 				@if (!$page->snippet)
@@ -222,7 +230,7 @@ app('pathway')
 										</div>
 									</td>
 									<td><input type="text" name="params[variables][{{ $i }}][value]" id="params_variables_{{ $i }}_value" value="{{ $val }}" class="form-control" /></td>
-									<td><a href="#params_variables_{{ $i }}" class="glyph icon-trash">{{ trans('global.delete') }}</a></td>
+									<td><a href="#params_variables_{{ $i }}" class="btn btn-danger"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a></td>
 								</tr>
 								<?php
 								$i++;
@@ -238,7 +246,7 @@ app('pathway')
 										</div>
 									</td>
 									<td><input type="text" name="params[variables][{{ $i }}][value]" id="params_variables_{{ $i }}_value" value="" class="form-control" /></td>
-									<td><a href="#params_variables_{{ $i }}" class="btn btn-secondary"><span class="glyph icon-plus">{{ trans('global.add') }}</span></a></td>
+									<td><a href="#params_variables_{{ $i }}" class="btn btn-success"><span class="glyph icon-plus">{{ trans('global.add') }}</span></a></td>
 								</tr>
 							</tbody>
 						</table>
