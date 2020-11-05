@@ -116,8 +116,6 @@ class PagesController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Page;
 		$row->access = 1;
 		$row->state = 1;
@@ -136,12 +134,12 @@ class PagesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Page::findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))
@@ -199,7 +197,7 @@ class PagesController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
@@ -208,7 +206,7 @@ class PagesController extends Controller
 		$root = Page::rootNode();
 		$row->rebuild($root->id);
 
-		return redirect(route('admin.pages.index'))->withSuccess(trans('messages.update success'));
+		return redirect(route('admin.pages.index'))->withSuccess(trans('global.messages.update success'));
 	}
 
 	/**
@@ -249,7 +247,7 @@ class PagesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', ['number' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['number' => $success]));
 		}
 
 		return redirect(route('admin.pages.index'));
@@ -374,7 +372,7 @@ class PagesController extends Controller
 		// Ensure we have an ID to work with
 		if (!$id)
 		{
-			$request->session()->flash('warning', trans('pages::pages.ERROR_NO_ID'));
+			$request->session()->flash('warning', trans('pages::pages.error.no id'));
 			return $this->cancel();
 		}
 
@@ -429,7 +427,7 @@ class PagesController extends Controller
 
 		if (!$from || !$to)
 		{
-			$request->session()->flash('warning', trans('pages::pages.ERROR_NO_ID'));
+			$request->session()->flash('warning', trans('pages::pages.error.no id'));
 			return $this->cancel();
 		}
 
@@ -438,19 +436,19 @@ class PagesController extends Controller
 
 		if (!$from->id)
 		{
-			$request->session()->flash('warning', trans('pages::pages.ERROR_NO_ID'));
+			$request->session()->flash('warning', trans('pages::pages.error.no id'));
 			return $this->cancel();
 		}
 
 		// Copy article
 		if (!$from->duplicate($to->id, $recursive))
 		{
-			$request->session()->flash('error', trans('pages::pages.ERROR_COPY_FAILED') . ': ' . $from->getError());
+			$request->session()->flash('error', trans('pages::pages.error.copy failed') . ': ' . $from->getError());
 			return $this->cancel();
 		}
 
 		// Redirect back to the courses page
-		$request->session()->flash('success', trans('pages::pages.ITEM_COPIED'));
+		$request->session()->flash('success', trans('pages::pages.item copied'));
 
 		return $this->cancel();
 	}

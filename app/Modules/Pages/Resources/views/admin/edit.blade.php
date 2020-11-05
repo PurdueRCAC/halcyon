@@ -6,6 +6,8 @@
 @endpush
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('pages::pages.module name'),
