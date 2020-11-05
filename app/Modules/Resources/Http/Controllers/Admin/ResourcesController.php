@@ -52,22 +52,23 @@ class ResourcesController extends Controller
 		}
 
 		// Build query
-		$query = Asset::query();
+		$query = Asset::query()->withTrashed();
 
-		if ($filters['state'] == 'all')
+		if ($filters['state'] == 'active')
 		{
-			/*$query->where('datetimeremoved', '!=', '0000-00-00 00:00:00')
-				->whereNotNull('datetimeremoved');*/
-			$query->withTrashed();
+			$query->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			});
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->withTrashed();
-			/*$query->where(function($where)
+			$query->where(function($where)
 			{
-				$where->where('datetimeremoved', '=', '0000-00-00 00:00:00')
-					->orWhereNull('datetimeremoved');
-			});*/
+				$where->whereNotNull('datetimeremoved')
+					->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+			});
 		}
 
 		if ($filters['type'] > 0)
@@ -106,7 +107,7 @@ class ResourcesController extends Controller
 			->withCount('children')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit']);*/
-//echo $query->toSql(); die();
+
 		$rows = $query
 			->withCount('children')
 			->orderBy($filters['order'], $filters['order_dir'])
@@ -298,7 +299,7 @@ class ResourcesController extends Controller
 		{
 			$row = Asset::findOrFail($id);
 
-			if (!$row->trashed())
+			if (!$row->isTrashed())
 			{
 				if (!$row->delete())
 				{
