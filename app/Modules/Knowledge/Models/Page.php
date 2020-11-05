@@ -19,6 +19,7 @@ use App\Modules\Knowledge\Events\PageCreated;
 use App\Modules\Knowledge\Events\PageUpdating;
 use App\Modules\Knowledge\Events\PageUpdated;
 use App\Modules\Knowledge\Events\PageDeleted;
+use App\Halcyon\Models\Casts\Params;
 
 /**
  * Model class for a page
@@ -67,8 +68,9 @@ class Page extends Model
 	protected $casts = [
 		'state' => 'integer',
 		'access' => 'integer',
-		//'created_by' => 'integer',
-		//'updated_by' => 'integer',
+		'main' => 'integer',
+		'snippet' => 'integer',
+		'params' => Params::class,
 	];
 
 	/**
@@ -113,7 +115,7 @@ class Page extends Model
 	 *
 	 * @var  object
 	 */
-	protected $paramsRegistry = null;
+	//protected $paramsRegistry = null;
 
 	/**
 	 * Registry
@@ -157,7 +159,7 @@ class Page extends Model
 	 *
 	 * @return  object
 	 */
-	public function getOptionsAttribute()
+	/*public function getOptionsAttribute()
 	{
 		if (!($this->paramsRegistry instanceof Registry))
 		{
@@ -165,7 +167,7 @@ class Page extends Model
 		}
 
 		return $this->paramsRegistry;
-	}
+	}*/
 
 	/**
 	 * Get a params Registry object
@@ -176,7 +178,7 @@ class Page extends Model
 	{
 		if (!($this->varsRegistry instanceof Registry))
 		{
-			$this->varsRegistry = new Registry($this->options->get('variables', []));
+			$this->varsRegistry = new Registry($this->params->get('variables', []));
 		}
 
 		return $this->varsRegistry;
@@ -227,8 +229,8 @@ class Page extends Model
 		{
 			$vars['user']['username'] = auth()->user()->username;
 		}
-		$vars['resource'] = $this->variables->toArray(); //(array)$this->options->get('variables', []);
-		foreach ((array)$this->options->get('tags', []) as $tag)
+		$vars['resource'] = $this->variables->toArray(); //(array)$this->params->get('variables', []);
+		foreach ((array)$this->params->get('tags', []) as $tag)
 		{
 			if (in_array($tag, ['communitycluster', 'general', 'paidbutnonpbs']))
 			{
@@ -559,7 +561,7 @@ class Page extends Model
 				->first();
 
 			if (!$child)
-			{print_r($parent->children->toArray());die();
+			{
 				return false;
 			}
 
@@ -739,18 +741,58 @@ class Page extends Model
 	 */
 	public function children()
 	{
-		/*$a = (new Associations)->getTable();
+		//return $this->hasManyThrough(self::class, Association::class, 'parent_id', 'id', 'id', 'child_id');
+		$a = (new Associations)->getTable();
 		$p = $this->getTable();
+
+		/*return self::query()
+			->select($p . '.*')
+			->join($a, $a . '.page_id', $p . '.id')
+			->join($a . ' AS assoc2', 'assoc2.id', $a . '.parent_id')
+			->where($a . '.page_id', '=', (int) $this->id)
+			->where($a . '.lft', '>', 'assoc2.lft')
+			->where($a . '.rgt', '<', 'assoc2.rgt')
+			->orderBy($a . '.parent_id', 'asc')
+			->orderBy($a . '.lft', 'asc');
+		echo self::query()
+			->select($p . '.*')
+			->from($p)
+			->join($a . ' AS n', 'n.page_id', $p . '.id')
+			->join($a . ' AS p', 'p.level', '>', \Illuminate\Support\Facades\DB::raw(0))
+			->whereRaw('n.lft BETWEEN p.lft AND p.rgt')
+			->where('n.page_id', '=', (int) $this->id)
+			->orderBy('p.lft', 'asc')
+			->toSql(); die();
+		return self::query()
+			->select($p . '.*')
+			->from($p)
+			->join($a . ' AS n', 'n.page_id', $p . '.id')
+			->join($a . ' AS p', 'p.level', '>', \Illuminate\Support\Facades\DB::raw(0))
+			->whereRaw('n.lft BETWEEN p.lft AND p.rgt')
+			->where('n.page_id', '=', (int) $this->id)
+			->orderBy('p.lft', 'asc');*/
 
 		// Assemble the query to find all children of this node.
 		return self::query()
 			->select($p . '.*')
 			->join($a, $a . '.page_id', $p . '.id')
-			->where($a . '.parent_id', '=', (int) $this->id)
+			->join($a . ' AS assoc2', 'assoc2.id', $a . '.parent_id')
+			->where('assoc2.page_id', '=', (int) $this->id)
 			->orderBy($a . '.parent_id', 'asc')
-			->orderBy($a . '.lft', 'asc');*/
-		return $this->hasManyThrough(self::class, Association::class, 'parent_id', 'id', 'id', 'child_id');
+			->orderBy($a . '.lft', 'asc');
+
 		//return $this->hasManyThrough(self::class, Associations::class, 'parent_id', 'id', 'id', 'page_id');
+	}
+
+	public function publishedChildren()
+	{
+		$a = (new Associations)->getTable();
+
+		return $this->children()
+			//->orderBy($a . '.lft', 'asc')
+			->where('state', '=', 1)
+			->whereIn('access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
+			->get();
 	}
 
 	/**

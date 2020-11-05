@@ -97,6 +97,32 @@ class Associations extends Model
 		return $this->hasMany(self::class, 'parent_id');
 	}
 
+	public function publishedChildren()
+	{
+		$p = (new Page)->getTable();
+
+		return $this->children()
+			->select($this->getTable() . '.*')
+			->join($p, $p . '.id', $this->getTable() . '.page_id')
+			//->orderBy($a . '.lft', 'asc')
+			->where($p . '.state', '=', 1)
+			->whereIn($p . '.access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
+			->get();
+	}
+
+	/**
+	 * Defines a relationship to a parent page
+	 *
+	 * @return  object
+	 */
+	public function descendants()
+	{
+		return self::query()
+			->where('lft', '>', $this->lft)
+			->where('rgt', '<', $this->rgt)
+			->orderBy('lft', 'asc');
+	}
+
 	/**
 	 * Get the root node
 	 *
@@ -110,6 +136,74 @@ class Associations extends Model
 			->limit(1)
 			->get()
 			->first();
+	}
+
+	/**
+	 * Get the root node
+	 *
+	 * @return  object
+	 */
+	public static function findByPath($path)
+	{
+		$path = trim($path, '/');
+
+		return self::query()
+			->where('path', '=', $path)
+			->limit(1)
+			->first();
+	}
+
+	/**
+	 * Get the root node
+	 *
+	 * @return  object
+	 */
+	public static function stackByPath($path)
+	{
+		$path = trim($path, '/');
+
+		$parent = self::rootNode();
+		$stack = array();
+		$stack[] = $parent;
+
+		if (!$path)
+		{
+			return $stack;
+		}
+
+		$segments = explode('/', $path);
+		array_shift($segments);
+
+		if (empty($segments))
+		{
+			return $stack;
+		}
+
+		$p = '';
+		foreach ($segments as $segment)
+		{
+			$p .= $p ? '/' . $segment : $segment;
+
+			$child = self::findByPath($p);
+
+			if (!$child)
+			{
+				return false;
+			}
+
+			//$child->variables->merge($parent->variables);
+
+			$stack[] = $child;
+
+			$parent = $child;
+		}
+
+		if ((count($stack) - 1) != count($segments))
+		{
+			return false;
+		}
+
+		return $stack;
 	}
 
 	/**

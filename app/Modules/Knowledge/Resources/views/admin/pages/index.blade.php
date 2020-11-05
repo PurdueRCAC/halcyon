@@ -161,7 +161,7 @@
 				<td>
 					@if ($row->trashed())
 						@if (auth()->user()->can('edit knowledge'))
-							<a class="btn btn-secondary state trashed" href="{{ route('admin.knowledge.restore', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
+							<a class="btn btn-secondary state trashed" href="{{ route('admin.knowledge.restore', ['id' => $row->page_id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
 						@endif
 							{{ trans('knowledge::knowledge.trashed') }}
 						@if (auth()->user()->can('edit knowledge'))
@@ -169,7 +169,7 @@
 						@endif
 					@elseif ($row->state == 1)
 						@if (auth()->user()->can('edit knowledge'))
-							<a class="btn btn-secondary state published" href="{{ route('admin.knowledge.unpublish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.unpublished')]) }}">
+							<a class="btn btn-secondary state published" href="{{ route('admin.knowledge.unpublish', ['id' => $row->page_id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.unpublished')]) }}">
 						@endif
 							{{ trans('knowledge::knowledge.published') }}
 						@if (auth()->user()->can('edit knowledge'))
@@ -177,7 +177,7 @@
 						@endif
 					@else
 						@if (auth()->user()->can('edit knowledge'))
-							<a class="btn btn-secondary state unpublished" href="{{ route('admin.knowledge.publish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
+							<a class="btn btn-secondary state unpublished" href="{{ route('admin.knowledge.publish', ['id' => $row->page_id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
 						@endif
 							{{ trans('knowledge::knowledge.unpublished') }}
 						@if (auth()->user()->can('edit knowledge'))
@@ -186,7 +186,7 @@
 					@endif
 				</td>
 				<td>
-					<span class="badge access {{ str_replace(' ', '', strtolower($row->viewlevel->title)) }}">{{ $row->viewlevel->title }}</span>
+					<span class="badge access {{ str_replace(' ', '', strtolower($row->viewlevel ? $row->viewlevel->title : '')) }}">{{ $row->viewlevel ? $row->viewlevel->title : trans('global.unknown') }}</span>
 				</td>
 				<td class="priority-4">
 					<span class="datetime">

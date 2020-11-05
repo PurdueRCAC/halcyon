@@ -1,17 +1,11 @@
 @php
-$path .= $path ? '/' . $node->alias : $node->alias;
+$path .= $path ? '/' . $node->page->alias : $node->page->alias;
 
-/*if ($vars = $options->get('variables'))
-{
-	$node->options->merge(['variables' => $vars]);
-}*/
-$node->variables->merge($variables);
+$node->page->variables->merge($variables);
 
-$isActive = (count($current) == 1 && $current[0] == $node->alias);
-$hasChildren = $node->children()
-					->where('state', '=', 1)
-					->whereIn('access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
-					->count();
+$isActive = (count($current) == 1 && $current[0] == $node->page->alias);
+$hasChildren = $node->publishedChildren();
+
 $cls = '';
 if ($hasChildren)
 {
@@ -21,13 +15,9 @@ if ($isActive)
 {
 	$cls .= ' active';
 }
-if (!empty($current) && $current[0] == $node->alias)
+if (!empty($current) && $current[0] == $node->page->alias)
 {
-	$children = $node->children()
-		->orderBy('ordering', 'asc')
-		->where('state', '=', 1)
-		->whereIn('access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
-		->get();
+	$children = $node->publishedChildren();
 
 	if (count($children))
 	{
@@ -36,31 +26,20 @@ if (!empty($current) && $current[0] == $node->alias)
 }
 @endphp
 <li<?php if ($cls) { echo ' class="' . trim($cls) . '"'; } ?>>
-	<!--
-	@if ($hasChildren)
-		@if (!empty($current) && $current[0] == $node->alias)
-			<i class="fa fa-minus-square"></i>
-		@else
-			<i class="fa fa-plus-square"></i>
-		@endif
-	@else
-		<i class="fa"></i>
-	@endif
--->
-	@if ($node->access > 1)
+	@if ($node->page->access > 1)
 		<i class="fa fa-lock" aria-hidden="true"></i>
 	@endif
 	@if ($isActive)
-		<span>{{ $node->headline }}</span>
+		<span>{{ $node->page->headline }}</span>
 	@else
-		<a href="{{ route('site.knowledge.page', ['uri' => $path]) }}">{{ $node->headline }}</a>
+		<a href="{{ route('site.knowledge.page', ['uri' => $path]) }}">{{ $node->page->headline }}</a>
 	@endif
-	@if (!empty($current) && $current[0] == $node->alias)
+	@if (!empty($current) && $current[0] == $node->page->alias)
 		@php
 		array_shift($current);
 		@endphp
 		@if (count($children))
-			@include('knowledge::site.list', ['nodes' => $children, 'path' => $path, 'current' => $current, 'variables' => $node->variables])
+			@include('knowledge::site.list', ['nodes' => $children, 'path' => $path, 'current' => $current, 'variables' => $node->page->variables])
 		@endif
 	@endif
 </li>

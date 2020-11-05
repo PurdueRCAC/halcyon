@@ -63,7 +63,8 @@ class PagesController extends Controller
 		$a = (new Associations)->getTable();
 
 		$query->join($a, $a . '.page_id', $p . '.id')
-			->select($p . '.title', $p . '.snippet', $p . '.updated_at', $a . '.*');
+			->select($p . '.title', $p . '.state', $p . '.access', $p . '.snippet', $p . '.updated_at', $a . '.*');
+			//->select($p . '.title', $p . '.snippet', $p . '.updated_at', $a . '.*');
 
 		if ($filters['search'])
 		{
@@ -145,15 +146,14 @@ class PagesController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Associations();
 
 		$parents = Page::tree();
 
 		return view('knowledge::admin.pages.edit', [
-			'row'     => $row,
-			'tree' => $parents
+			'row'  => $row,
+			'tree' => $parents,
+			'page' => new Page
 		]);
 	}
 
@@ -163,8 +163,6 @@ class PagesController extends Controller
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Associations::findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))
@@ -175,7 +173,7 @@ class PagesController extends Controller
 		$parents = Page::tree();
 
 		return view('knowledge::admin.pages.edit', [
-			'row'     => $row,
+			'row'  => $row,
 			'tree' => $parents,
 			'page' => $row->page,
 		]);
@@ -200,8 +198,8 @@ class PagesController extends Controller
 		$parent_id = $request->input('fields.parent_id');
 
 		$row = $id ? Associations::findOrFail($id) : new Associations;
-		$row->access = $request->input('fields.access');
-		$row->state  = $request->input('fields.state');
+		//$row->access = $request->input('fields.access');
+		//$row->state  = $request->input('fields.state');
 		$row->page_id = $request->input('fields.page_id');
 		$row->parent_id = $parent_id;
 
@@ -210,11 +208,35 @@ class PagesController extends Controller
 		{
 			$page = new Page;
 		}
-
+		$page->access = $request->input('fields.access');
+		$page->state  = $request->input('fields.state');
 		$page->title = $request->input('page.title');
 		$page->alias = $request->input('page.alias');
 		$page->alias = $page->alias ?: $page->title;
 		$page->content = $request->input('page.content');
+		if ($params = $request->input('params', []))
+		{
+			foreach ($params as $key => $val)
+			{
+				//$params[$key] = is_array($val) ? array_filter($val) : $val;
+				if ($key == 'variables')
+				{
+					$vars = array();
+					foreach ($val as $opts)
+					{
+						if (!$opts['key'])
+						{
+							continue;
+						}
+						$vars[$opts['key']] = $opts['value'];
+					}
+					$val = $vars;
+				}
+				$page->params->set($key, $val);
+			}
+
+			//$page->params = new Repository($params);
+		}
 		//$page->snippet = $request->input('page.snippet', 0);
 		//$page->params = json_encode($request->input('params', []));
 
@@ -317,7 +339,8 @@ class PagesController extends Controller
 		// Comment record(s)
 		foreach ($ids as $id)
 		{
-			$row = Associations::findOrFail(intval($id));
+			//$row = Associations::findOrFail(intval($id));
+			$row = Page::findOrFail(intval($id));
 
 			if ($row->state == $state)
 			{

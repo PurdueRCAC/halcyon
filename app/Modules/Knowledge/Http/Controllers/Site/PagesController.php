@@ -24,7 +24,7 @@ class PagesController extends Controller
 		$path = trim($request->path(), '/');
 
 		// Load the entire path
-		$pages = Page::stackByPath($path);
+		$pages = Associations::stackByPath($path);
 
 		if (!$pages || count($pages) == 0)
 		{
@@ -45,10 +45,12 @@ class PagesController extends Controller
 
 		$uri = '';
 		$prev = null;
-		foreach ($pages as $page)
+		foreach ($pages as $node)
 		{
+			$page = $node->page;
+
 			// Ensure we have an article
-			if (!$page->id)
+			if (!$page)
 			{
 				abort(404, trans('knowledge::knowledge.article not found'));
 			}
@@ -78,17 +80,17 @@ class PagesController extends Controller
 				$page->variables->merge($prev->variables);
 			}
 
-			$uri .= ($uri ? '/' : '') . $page->alias;
+			//$uri .= ($uri ? '/' : '') . $page->alias;
 
 			app('pathway')->append(
 				$page->headline,
-				route('site.knowledge.page', ['uri' => $uri])
+				route('site.knowledge.page', ['uri' => $node->path])//$uri])
 			);
 
 			$prev = $page;
 		}
 
-		$root = Page::rootNode();
+		$root = Associations::rootNode();
 		$path = explode('/', $path);
 		array_shift($path);
 
@@ -101,7 +103,7 @@ class PagesController extends Controller
 		$this->nestedset($children, $root->path);*/
 
 		return view('knowledge::site.index', [
-			'page' => $page,
+			'node' => $node,
 			'pages' => $pages,
 			'path' => $path,
 			'root' => $root,

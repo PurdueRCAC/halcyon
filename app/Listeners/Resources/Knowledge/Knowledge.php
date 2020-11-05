@@ -9,6 +9,8 @@ namespace App\Listeners\Resources\Knowledge;
 
 use App\Modules\Resources\Events\AssetDisplaying;
 use App\Modules\Knowledge\Models\Page;
+use App\Modules\Knowledge\Models\Associations;
+use App\Modules\Knowledge\Models\Association;
 
 /**
  * Content listener for Resources
@@ -44,14 +46,27 @@ class Knowledge
 			$access = auth()->user()->getAuthorisedViewLevels();
 		}
 
-		$page = Page::query()
-			->where('alias', '=', $event->getAsset()->listname)
-			->where('state', '=', 1)
-			->where('snippet', '=', 0)
-			->whereIn('access', $access)
+		/*$page = Page::query()
+			->where($p . '.alias', '=', $event->getAsset()->listname)
+			->where($a . '.state', '=', 1)
+			->where($p . '.snippet', '=', 0)
+			->whereIn($a . '.access', $access)
 			->orderBy('id', 'asc')
 			->get()
+			->first();*/
+		$a = (new Associations)->getTable();
+		$p = (new Page)->getTable();
+
+		$assoc = Associations::query()
+			->select($a . '.*')
+			->join($p, $p . '.id', $a . '.page_id')
+			->where($a . '.path', '=', $event->getAsset()->listname)
+			->where($p . '.state', '=', 1)
+			->whereIn($p . '.access', $access)
+			->orderBy($a . '.id', 'asc')
+			->get()
 			->first();
+		$page = $assoc->page;
 
 		if (!$page)
 		{
@@ -60,7 +75,8 @@ class Knowledge
 
 		$overview = $page->children()
 			->where('alias', '=', 'overview')
-			->whereIn('access', $access)
+			->whereIn($p . '.access', $access)
+			//->whereIn($a . '.access', $access)
 			->get()
 			->first();
 
@@ -95,7 +111,8 @@ class Knowledge
 		// FAQ page
 		$faq = $page->children()
 			->where('alias', '=', 'faq')
-			->whereIn('access', $access)
+			//->whereIn($a . '.access', $access)
+			->whereIn($p . '.access', $access)
 			->get()
 			->first();
 
@@ -112,7 +129,8 @@ class Knowledge
 		// Bio
 		$bio = $page->children()
 			->where('alias', '=', 'bio')
-			->whereIn('access', $access)
+			->whereIn($p . '.access', $access)
+			//->whereIn($a . '.access', $access)
 			->get()
 			->first();
 

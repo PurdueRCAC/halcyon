@@ -8,15 +8,12 @@
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	@php
-	$children = $root->children()
-				->orderBy('ordering', 'asc')
-				->where('state', '=', 1)
-				->whereIn('access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
-				->get();
+	$children = $root->publishedChildren();
 
 	$p = implode('/', $path);
+	$page = $node->page;
 	@endphp
-	@include('knowledge::site.list', ['nodes' => $children, 'path' => '', 'current' => $path, 'variables' => $root->variables])
+	@include('knowledge::site.list', ['nodes' => $children, 'path' => '', 'current' => $path, 'variables' => $root->page->variables])
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
@@ -35,7 +32,7 @@
 		</div>
 	</div>
 
-	@if ($page->options->get('show_title', 1))
+	@if ($page->params->get('show_title', 1))
 		<h2>{{ $page->headline }}</h2>
 	@endif
 
@@ -43,20 +40,16 @@
 		{!! $page->body !!}
 	@endif
 
-	@if (!$page->content || $page->options->get('show_toc', 1) || request('all'))
+	@if (!$page->content || $page->params->get('show_toc', 1) || request('all'))
 		@php
-		$childs = $page->children()
-			->orderBy('ordering', 'asc')
-			->where('state', '=', 1)
-			->whereIn('access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
-			->get();
+		$childs = $node->publishedChildren();
 		@endphp
 		@if (count($childs))
 			@if (request('all'))
-				@foreach ($childs as $node)
+				@foreach ($childs as $n)
 					@php
-						$node->variables->merge($page->variables);
-						$pa = $p ? $p . '/' . $node->alias : $node->alias;
+						$n->page->variables->merge($page->variables);
+						$pa = $p ? $p . '/' . $n->page->alias : $n->page->alias;
 					@endphp
 					<h3>{{ $node->headline }}</h3>
 
@@ -64,23 +57,15 @@
 				@endforeach
 			@else
 				<ul class="kb-toc">
-				@foreach ($childs as $node)
+				@foreach ($childs as $n)
 					@php
-						$node->variables->merge($page->variables);
-						$pa = $p ? $p . '/' . $node->alias : $node->alias;
+						$n->page->variables->merge($page->variables);
+						$pa = $p ? $p . '/' . $n->page->alias : $n->page->alias;
 					@endphp
 					<li>
-						<a href="{{ route('site.knowledge.page', ['uri' => $pa]) }}">{{ $node->headline }}</a>
-						@if ($node->options->get('expandtoc'))
-							@php
-							$children = $node->children()
-										->orderBy('ordering', 'asc')
-										->where('state', '=', 1)
-										->whereIn('access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
-										->get();
-
-							@endphp
-							@include('knowledge::site.list', ['nodes' => $children, 'path' => $pa, 'current' => $path, 'variables' => $node->variables])
+						<a href="{{ route('site.knowledge.page', ['uri' => $pa]) }}">{{ $n->page->headline }}</a>
+						@if ($n->page->params->get('expandtoc'))
+							@include('knowledge::site.list', ['nodes' => $n->publishedChildren(), 'path' => $pa, 'current' => $path, 'variables' => $n->page->variables])
 						@endif
 					</li>
 				@endforeach
