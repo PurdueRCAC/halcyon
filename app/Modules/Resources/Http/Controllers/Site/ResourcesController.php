@@ -72,8 +72,14 @@ class ResourcesController extends Controller
 		);
 
 		$rows = $type->resources()
+			->withTrashed()
+			->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
 			//->where('display', '>', 0)
-			->where('listname', '>', '')
+			->where('listname', '!=', '')
 			->whereNotNull('description')
 			->orderBy('display', 'desc')
 			->get();
@@ -110,13 +116,23 @@ class ResourcesController extends Controller
 			);
 
 		$items = $type->resources()
+			->withTrashed()
+			->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
 			->where('display', '>', 0)
 			->orderBy('display', 'desc')
 			->get();
 
 		$rows = $type->resources()
-			->onlyTrashed()
-			->where('datetimeremoved', '!=', '0000-00-00 00:00:00')
+			->withTrashed()
+			->where(function($where)
+			{
+				$where->whereNotNull('datetimeremoved')
+					->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+			})
 			//->where('display', '>', 0)
 			->where('listname', '!=', '')
 			->orderBy('display', 'desc')
@@ -169,6 +185,12 @@ class ResourcesController extends Controller
 			);
 
 		$rows = $type->resources()
+			->withTrashed()
+			->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
 			->where('display', '>', 0)
 			->orderBy('display', 'desc')
 			->get();

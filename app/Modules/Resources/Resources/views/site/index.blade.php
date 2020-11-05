@@ -36,14 +36,14 @@
 				<th>
 					<span class="form-check"><input type="checkbox" name="toggle" value="" id="toggle-all" class="form-check-input checkbox-toggle toggle-all" /><label for="toggle-all"></label></span>
 				</th>
-				<th scope="col" class="priority-5"><?php echo trans('resources::assets.COL_ID'); ?></th>
-				<th scope="col"><?php echo trans('resources::assets.COL_NAME'); ?></th>
-				<th scope="col"><?php echo trans('resources::assets.COL_ROLENAME'); ?></th>
-				<th scope="col" class="priority-4">{{ trans('resources::assets.COL_LISTNAME') }}</th>
-				<th scope="col" class="priority-3">{{ trans('resources::assets.COL_TYPE') }}</th>
-				<th scope="col" class="priority-4">{{ trans('resources::assets.COL_CREATED') }}</th>
-				<th scope="col" class="priority-2">{{ trans('resources::assets.COL_REMOVED') }}</th>
-				<th scope="col"><?php echo trans('resources::assets.COL_RESOURCES'); ?></th>
+				<th scope="col" class="priority-5"><?php echo trans('resources::assets.id'); ?></th>
+				<th scope="col"><?php echo trans('resources::assets.name'); ?></th>
+				<th scope="col"><?php echo trans('resources::assets.role name'); ?></th>
+				<th scope="col" class="priority-4">{{ trans('resources::assets.list name') }}</th>
+				<th scope="col" class="priority-3">{{ trans('resources::assets.type') }}</th>
+				<th scope="col" class="priority-4">{{ trans('resources::assets.created') }}</th>
+				<th scope="col" class="priority-2">{{ trans('resources::assets.removed') }}</th>
+				<th scope="col"><?php echo trans('resources::assets.resources'); ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -78,16 +78,16 @@
 						@if ($row->datetimecreated && $row->datetimecreated != '0000-00-00 00:00:00')
 							<time datetime="{{ $row->datetimecreated }}">{{ $row->datetimecreated }}</time>
 						@else
-							<span class="never">{{ trans('resources::assets.UNKNOWN') }}</span>
+							<span class="never">{{ trans('global.unknown') }}</span>
 						@endif
 					</span>
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->datetimeremoved && $row->datetimeremoved != '0000-00-00 00:00:00')
+						@if ($row->isTrashed())
 							<time datetime="{{ $row->datetimeremoved }}">{{ $row->datetimeremoved }}</time>
 						@else
-							<span class="never">{{ trans('resources::assets.NEVER') }}</span>
+							<span class="never">{{ trans('global.never') }}</span>
 						@endif
 					</span>
 				</td>
