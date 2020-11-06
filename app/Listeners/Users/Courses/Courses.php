@@ -38,13 +38,13 @@ class Courses
 		$content = null;
 		$user = $event->getUser();
 
-		$r = ['section' => 'courses'];
+		$r = ['section' => 'class'];
 		if (auth()->user()->id != $user->id)
 		{
 			$r['u'] = $user->id;
 		}
 
-		if ($event->getActive() == 'courses')
+		if ($event->getActive() == 'class')
 		{
 			app('pathway')
 				->append(
@@ -83,7 +83,7 @@ class Courses
 		$event->addSection(
 			route('site.users.account.section', $r),
 			trans('courses::courses.my courses'),
-			($event->getActive() == 'courses'),
+			($event->getActive() == 'class'),
 			$content
 		);
 	}
