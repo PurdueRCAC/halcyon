@@ -13,7 +13,7 @@
 					<tr>
 						<th scope="col">{{ trans('orders::orders.id') }}</th>
 						<th scope="col">{{ trans('orders::orders.status') }}</th>
-						<th scope="col">{{ trans('orders::orders.date') }}</th>
+						<th scope="col">{{ trans('orders::orders.created') }}</th>
 						<th scope="col">{{ trans('orders::orders.items') }}</th>
 						<th scope="col" class="text-right">{{ trans('orders::orders.total') }}</th>
 					</tr>
@@ -25,6 +25,7 @@
 						->orderBy('datetimecreated', 'desc')
 						->paginate();
 					?>
+				@if (count($orders))
 					@foreach ($orders as $order)
 						<tr>
 							<td>
@@ -55,6 +56,11 @@
 							</td>
 						</tr>
 					@endforeach
+				@else
+					<tr>
+						<td colspan="5" class="text-center">{{ trans('global.none') }}</td>
+					</tr>
+				@endif
 				</tbody>
 			</table>
 

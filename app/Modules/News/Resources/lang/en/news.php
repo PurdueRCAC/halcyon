@@ -11,6 +11,7 @@ return [
 	'headline' => 'Headline',
 	'name' => 'Name',
 	'body' => 'Body',
+	'body formatting' => 'Text is formatted in MarkDown',
 	'state' => 'State',
 	'created' => 'Created',
 	'creator' => 'Creator',
@@ -58,4 +59,9 @@ return [
 	'custom feed' => 'Custom Feed',
 	'search' => 'Search',
 	'events' => 'Events',
+	'error' => [
+		'invalid type' => 'Please select a type.',
+		'invalid headline' => 'Please provide a headline.',
+		'invalid body' => 'Please provide some content',
+	],
 ];

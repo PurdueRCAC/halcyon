@@ -306,32 +306,32 @@ class Message extends Model
 		{
 			if (!$this->started() && !$this->completed())
 			{
-				$status = trans('messages::messages.queued');
+				$status = 'queued';
 			}
 			else
 			{
 				if (!$this->completed())
 				{
-					$status = trans('messages::messages.running');
+					$status = 'running';
 				}
 				else
 				{
-					$status = trans('messages::messages.completed');
+					$status = 'completed';
 
-					if ($this->returnstatus && date("U") - strtotime($mq->datetimecompleted) < 1209600)
+					if ($this->returnstatus && date("U") - $this->datetimecompleted->timestamp < 1209600)
 					{
-						$status = trans('messages::messages.error');
+						$status = 'error';
 					}
 					elseif ($this->returnstatus)
 					{
-						$status = trans('messages::messages.error');
+						$status = 'error';
 					}
 				}
 			}
 		}
 		else
 		{
-			$status = trans('messages::messages.deferred');
+			$status = 'deferred';
 		}
 
 		return $status;
@@ -355,7 +355,7 @@ class Message extends Model
 		// Less than a minute
 		if ($diff < 60 || $unit == 'seconds')
 		{
-			return trans('global.seconds', ['num' => $diff]);// $diff . ' second' . ($diff == 1 ? '' : 's');
+			return $diff . ' ' . trans_choice('global.time.seconds', $diff);// $diff . ' second' . ($diff == 1 ? '' : 's');
 		}
 
 		// Round to minutes
@@ -364,7 +364,7 @@ class Message extends Model
 		// 1 to 59 minutes
 		if ($diff < 60 || $unit == 'minute')
 		{
-			return trans('global.minutes', ['num' => $diff]);//$diff . ' minute' . ($diff == 1 ? '' : 's');
+			return $diff . ' ' . trans_choice('global.time.minutes', $diff);//$diff . ' minute' . ($diff == 1 ? '' : 's');
 		}
 
 		// Round to hours
@@ -373,7 +373,7 @@ class Message extends Model
 		// 1 to 23 hours
 		if ($diff < 24 || $unit == 'hour')
 		{
-			return trans('global.hours', ['num' => $diff]);//$diff . ' hour' . ($diff == 1 ? '' : 's');
+			return $diff . ' ' . trans_choice('global.time.hours', $diff);//$diff . ' hour' . ($diff == 1 ? '' : 's');
 		}
 
 		// Round to days
@@ -382,7 +382,7 @@ class Message extends Model
 		// 1 to 6 days
 		if ($diff < 7 || $unit == 'day')
 		{
-			return trans('global.days', ['num' => $diff]);//$diff . ' day' . ($diff == 1 ? '' : 's');
+			return $diff . ' ' . trans_choice('global.time.days', $diff);//$diff . ' day' . ($diff == 1 ? '' : 's');
 		}
 
 		// Round to weeks
@@ -391,7 +391,7 @@ class Message extends Model
 		// 1 to 4 weeks
 		if ($diff <= 4 || $unit == 'week')
 		{
-			return trans('global.weeks', ['num' => $diff]);//$diff . ' week' . ($diff == 1 ? '' : 's');
+			return $diff . ' ' . trans_choice('global.time.weeks', $diff);//$diff . ' week' . ($diff == 1 ? '' : 's');
 		}
 
 		// Round to months
@@ -400,7 +400,7 @@ class Message extends Model
 		// 1 to 12 months
 		if ($diff <= 12 || $unit == 'month')
 		{
-			return trans('global.months', ['num' => $diff]);//$diff . ' month' . ($diff == 1 ? '' : 's');
+			return $diff . ' ' . trans_choice('global.time.months', $diff);//$diff . ' month' . ($diff == 1 ? '' : 's');
 		}
 	}
 }

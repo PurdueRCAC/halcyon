@@ -125,6 +125,7 @@ class ArticlesController extends Controller
 	public function create()
 	{
 		$row = new Article();
+		$row->published = 1;
 
 		$types = Type::orderBy('name', 'asc')->get();
 

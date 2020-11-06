@@ -39,4 +39,9 @@ return [
 	'completed' => 'Completed',
 	'error' => 'Error',
 	'deferred' => 'Deferred',
+	'errors' => [
+		'invalid target object id' => 'Please enter a valid target object ID.',
+		'invalid message queue type id' => 'Please select a type.',
+		'invalid name' => 'Please provide a name.',
+	],
 ];

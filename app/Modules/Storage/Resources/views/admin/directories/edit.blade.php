@@ -59,22 +59,24 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="storageresourceid">{{ trans('storage::storage.FIELD_PARENT') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<select name="fields[storageresourceid]" id="storageresourceid" class="form-control">
-						<option value="0">{{ trans('global.none') }}</option>
+					<label for="storageresourceid">{{ trans('storage::storage.parent') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<select name="fields[storageresourceid]" id="storageresourceid" class="form-control required" required>
+						<option value="0" data-path="">{{ trans('global.none') }}</option>
 						<?php foreach ($storageresources as $s): ?>
 							<?php $selected = ($s->id == $row->storageresourceid ? ' selected="selected"' : ''); ?>
 							<option value="{{ $s->id }}" data-path="{{ rtrim($s->path, '/') }}"<?php echo $selected; ?>>{{ $s->name }}</option>
 						<?php endforeach; ?>
 					</select>
+					<span class="invalid-feedback">{{ trans('storage::storage.error.invalid parent') }}</span>
 				</div>
 
 				<div class="form-group">
 					<label for="field-name">{{ trans('storage::storage.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<span class="input-group">
 						<span class="input-group-prepend"><span class="input-group-text"><span id="storageresourceid_path">{{ $row->storageResource ? rtrim($row->storageResource->path, '/') : '' }}</span>{{ $row->parent ? '/' . trim($row->parent->path, '/') : '' }}/<span id="new_dir_path"></span></span></span>
-						<input type="text" name="fields[name]" id="field-name" class="form-control required" value="{{ $row->name }}" />
+						<input type="text" name="fields[name]" id="field-name" class="form-control required" pattern="^([a-zA-Z0-9]+\.?[\-_ ]*)*[a-zA-Z0-9]$" required value="{{ $row->name }}" />
 					</span>
+					<span class="form-text text-muted">{{ trans('storage::storage.name desc') }}</span>
 				</div>
 
 				<div class="row">
@@ -101,6 +103,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-bytes">{{ trans('storage::storage.quota') }}:</label>
 					<input type="text" name="fields[bytes]" id="field-bytes" class="form-control" value="{{ App\Halcyon\Utility\Number::formatBytes($row->bytes) }}" />
+					<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 				</div>
 
 
@@ -108,54 +111,54 @@ app('pathway')
 						<caption>{{ trans('storage::storage.permissions') }}</caption>
 						<thead>
 							<tr>
-								<th scope="col">Level</th>
-								<th scope="col" class="text-center">Read</th>
-								<th scope="col" class="text-center">Write</th>
+								<th scope="col">{{ trans('storage::storage.permission.level') }}</th>
+								<th scope="col" class="text-center">{{ trans('storage::storage.permission.read') }}</th>
+								<th scope="col" class="text-center">{{ trans('storage::storage.permission.write') }}</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
-								<th scope="row">Owner</th>
+								<th scope="row">{{ trans('storage::storage.permission.owner') }}</th>
 								<td class="text-center">
 									<div class="form-check">
 										<input type="checkbox" name="fields[ownerread]" id="field-ownerread" <?php if ($row->ownerread) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-										<label for="field-ownerread" class="form-check-label"><span class="sr-only">Read</span></label>
+										<label for="field-ownerread" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.read') }}</span></label>
 									</div>
 								</td>
 								<td class="text-center">
 									<div class="form-check">
 										<input type="checkbox" name="fields[ownerwrite]" id="field-ownerwrite" <?php if ($row->ownerwrite) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-										<label for="field-ownerwrite" class="form-check-label"><span class="sr-only">Write</span></label>
+										<label for="field-ownerwrite" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.write') }}</span></label>
 									</div>
 								</td>
 							</tr>
 							<tr>
-								<th scope="row">Group</th>
+								<th scope="row">{{ trans('storage::storage.permission.group') }}</th>
 								<td class="text-center">
 									<div class="form-check">
 										<input type="checkbox" name="fields[groupread]" id="field-groupread" <?php if ($row->groupread) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-										<label for="field-groupread" class="form-check-label"><span class="sr-only">Read</span></label>
+										<label for="field-groupread" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.read') }}</span></label>
 									</div>
 								</td>
 								<td class="text-center">
 									<div class="form-check">
 										<input type="checkbox" name="fields[groupwrite]" id="field-groupwrite" <?php if ($row->groupwrite) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-										<label for="field-groupwrite" class="form-check-label"><span class="sr-only">Write</span></label>
+										<label for="field-groupwrite" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.write') }}</span></label>
 									</div>
 								</td>
 							</tr>
 							<tr>
-								<th scope="row">Public</th>
+								<th scope="row">{{ trans('storage::storage.permission.public') }}</th>
 								<td class="text-center">
 									<div class="form-check">
 										<input type="checkbox" name="fields[publicread]" id="field-publicread" <?php if ($row->publicread) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-										<label for="field-publicread" class="form-check-label"><span class="sr-only">Read</span></label>
+										<label for="field-publicread" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.read') }}</span></label>
 									</div>
 								</td>
 								<td class="text-center">
 									<div class="form-check">
 										<input type="checkbox" name="fields[publicwrite]" id="field-publicwrite" <?php if ($row->publicwrite) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-										<label for="field-publicwrite" class="form-check-label"><span class="sr-only">Write</span></label>
+										<label for="field-publicwrite" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.write') }}</span></label>
 									</div>
 								</td>
 							</tr>
@@ -187,7 +190,7 @@ app('pathway')
 			<tbody>
 				@foreach ($row->messages as $message)
 					<tr>
-						<td>{{ $message->status }}</td>
+						<td><span class="badge badge-{{ $message->status == 'completed' ? 'success' : 'warning' }}">{{ trans('messages::messages.' . $message->status) }}</span></td>
 						<td>{{ $message->target }}</td>
 						<td>{{ $message->type->name }}</td>
 						<td>{{ $message->datetimesubmitted->format('Y-m-d') }}</td>

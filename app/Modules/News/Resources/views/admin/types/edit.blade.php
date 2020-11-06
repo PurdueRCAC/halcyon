@@ -35,7 +35,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.news.types.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.validation failed') }}">
+<form action="{{ route('admin.news.types.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 	@if ($errors->any())
 		<div class="alert alert-danger">
@@ -48,13 +48,14 @@ app('pathway')
 	@endif
 
 	<div class="row">
-		<div class="col col-md-7">
+		<div class="col-md-7">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
 					<label for="field-name">{{ trans('news::news.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control required" size="30" maxlength="250" value="{{ $row->name }}" />
+					<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="250" value="{{ $row->name }}" />
+					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
 				</div>
 
 				<div class="row">

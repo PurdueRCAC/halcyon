@@ -40,7 +40,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('news.name') !!} Update: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{!! config('news.name') !!} {{ trans('news::news.updates') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')
@@ -60,17 +60,18 @@ app('pathway')
 	<input type="hidden" name="fields[newsid]" value="{{ $article->id }}" />
 
 	<div class="row">
-		<div class="col col-md-7">
+		<div class="col-md-7">
 			<fieldset class="adminform">
-				<legend><span>{{ trans('global.details') }}</span></legend>
+				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
 					<label for="field-body">{{ trans('news::news.body') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<textarea name="fields[body]" id="field-body" class="form-control" rows="20" cols="40">{{ $row->body }}</textarea>
+					<textarea name="fields[body]" id="field-body" class="form-control required" required rows="20" cols="40">{{ $row->body }}</textarea>
+					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
 				</div>
 			</fieldset>
 		</div>
-		<div class="col col-md-5">
+		<div class="col-md-5">
 			<?php /*<fieldset class="adminform">
 				<legend><span>{{ trans('global.publishing') }}</span></legend>
 

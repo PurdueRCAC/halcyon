@@ -118,8 +118,8 @@ if ($parent)
 				<th scope="col" class="priority-4 text-right">
 					{{ trans('storage::storage.directories') }}
 				</th>
-				<!-- <th scope="col" class="priority-4">{{ trans('storage::storage.COL_CREATED') }}</th>
-				<th scope="col" class="priority-4">{{ trans('storage::storage.COL_REMOVED') }}</th>
+				<!-- <th scope="col" class="priority-4">{{ trans('storage::storage.created') }}</th>
+				<th scope="col" class="priority-4">{{ trans('storage::storage.removed') }}</th>
 				<th scope="col" colspan="4">{{ trans('storage::storage.permissions') }} r/w/x</th> -->
 			</tr>
 		</thead>

@@ -50,12 +50,14 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-name">{{ trans('storage::storage.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control required" value="{{ $row->name }}" />
+					<input type="text" name="fields[name]" id="field-name" class="form-control required" required value="{{ $row->name }}" />
+					<span class="invalid-feedback">{{ trans('storage::storage.error.invalid name') }}</span>
 				</div>
 
 				<div class="form-group">
 					<label for="field-path">{{ trans('storage::storage.path') }}:</label>
 					<input type="text" name="fields[path]" id="field-path" class="form-control" value="{{ $row->path }}" />
+					<span class="form-text text-muted">{{ trans('storage::storage.path desc') }}</span>
 				</div>
 
 				<div class="form-group">
@@ -72,6 +74,7 @@ app('pathway')
 						<div class="form-group">
 							<label for="field-defaultquotaspace">{{ trans('storage::storage.quota space') }}:</label>
 							<input type="text" name="fields[defaultquotaspace]" id="field-defaultquotaspace" class="form-control" value="{{ App\Halcyon\Utility\Number::formatBytes($row->defaultquotaspace) }}" />
+							<span class="form-text text-muted">{{ trans('storage::storage.quota space desc') }}</span>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -87,32 +90,29 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('storage::storage.message queue') }}</legend>
 
-				<!-- <div class="row">
-					<div class="col-md-6"> -->
-						<div class="form-group">
-							<label for="field-getquotatypeid">{{ trans('storage::storage.get quota type') }}:</label>
-							<select name="fields[getquotatypeid]" id="field-getquotatypeid" class="form-control">
-								<option value="0">{{ trans('global.none') }}</option>
-								<?php foreach ($messagetypes as $messagetype): ?>
-									<?php $selected = ($messagetype->id == $row->getquotatypeid ? ' selected="selected"' : ''); ?>
-									<option value="{{ $messagetype->id }}"<?php echo $selected; ?>>{{ $messagetype->name }}</option>
-								<?php endforeach; ?>
-							</select>
-						</div>
-					<!-- </div>
-					<div class="col-md-6"> -->
-						<div class="form-group">
-							<label for="field-createtypeid">{{ trans('storage::storage.create type') }}:</label>
-							<select name="fields[createtypeid]" id="field-createtypeid" class="form-control">
-								<option value="0">{{ trans('global.none') }}</option>
-								<?php foreach ($messagetypes as $messagetype): ?>
-									<?php $selected = ($messagetype->id == $row->createtypeid ? ' selected="selected"' : ''); ?>
-									<option value="{{ $messagetype->id }}"<?php echo $selected; ?>>{{ $messagetype->name }}</option>
-								<?php endforeach; ?>
-							</select>
-						</div>
-					<!-- </div>
-				</div> -->
+				<div class="form-group">
+					<label for="field-getquotatypeid">{{ trans('storage::storage.get quota type') }}:</label>
+					<select name="fields[getquotatypeid]" id="field-getquotatypeid" class="form-control">
+						<option value="0">{{ trans('global.none') }}</option>
+						<?php foreach ($messagetypes as $messagetype): ?>
+							<?php $selected = ($messagetype->id == $row->getquotatypeid ? ' selected="selected"' : ''); ?>
+							<option value="{{ $messagetype->id }}"<?php echo $selected; ?>>{{ $messagetype->name }}</option>
+						<?php endforeach; ?>
+					</select>
+					<span class="form-text text-muted">{{ trans('storage::storage.get quota type desc') }}</span>
+				</div>
+
+				<div class="form-group">
+					<label for="field-createtypeid">{{ trans('storage::storage.create type') }}:</label>
+					<select name="fields[createtypeid]" id="field-createtypeid" class="form-control">
+						<option value="0">{{ trans('global.none') }}</option>
+						<?php foreach ($messagetypes as $messagetype): ?>
+							<?php $selected = ($messagetype->id == $row->createtypeid ? ' selected="selected"' : ''); ?>
+							<option value="{{ $messagetype->id }}"<?php echo $selected; ?>>{{ $messagetype->name }}</option>
+						<?php endforeach; ?>
+					</select>
+					<span class="form-text text-muted">{{ trans('storage::storage.create type desc') }}</span>
+				</div>
 			</fieldset>
 		</div>
 	</div>

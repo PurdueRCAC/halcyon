@@ -1,7 +1,6 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ asset('modules/core/js/validate.js?v=' . filemtime(public_path() . '/modules/core/js/validate.js')) }}"></script>
 <script src="{{ asset('modules/messages/js/admin.js?v=' . filemtime(public_path() . '/modules/messages/js/admin.js')) }}"></script>
 @endpush
 
@@ -40,7 +39,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.messages.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.validation failed') }}">
+<form action="{{ route('admin.messages.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 	@if ($errors->any())
 		<div class="alert alert-danger">
@@ -58,17 +57,19 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-newstypeid">{{ trans('messages::messages.type') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<select name="fields[newstypeid]" id="field-newstypeid" class="form-control required">
+					<label for="field-messagequeuetypeid">{{ trans('messages::messages.type') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<select name="fields[messagequeuetypeid]" id="field-messagequeuetypeid" class="form-control required" required>
 						<?php foreach ($types as $type): ?>
 							<option value="{{ $type->id }}"<?php if ($row->messagequeuetypeid == $type->id): echo ' selected="selected"'; endif;?>>{{ $type->name }}</option>
 						<?php endforeach; ?>
 					</select>
+					<span class="invalid-feedback">{{ trans('messages::messages.errors.invalid message queue type id') }}</span>
 				</div>
 
 				<div class="form-group">
 					<label for="field-targetobjectid">{{ trans('messages::messages.target object id') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="number" name="fields[targetobjectid]" id="field-targetobjectid" class="form-control required" value="{{ $row->targetobjectid }}" />
+					<input type="number" name="fields[targetobjectid]" id="field-targetobjectid" class="form-control required" required value="{{ $row->targetobjectid }}" />
+					<span class="invalid-feedback">{{ trans('messages::messages.errors.invalid target object id') }}</span>
 				</div>
 
 				<div class="form-group">

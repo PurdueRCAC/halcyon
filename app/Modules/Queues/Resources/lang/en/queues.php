@@ -84,4 +84,10 @@ return [
 	'end' => 'End',
 	'free' => 'Free',
 	'comment' => 'Comment',
+	'error' => [
+		'invalid name' => 'Please provide a name.',
+		'invalid hostname' => 'Please provide a valid hostname.',
+		'invalid scheduler' => 'Please select a scheduler.',
+		'invalid subresource' => 'Please select a node type.',
+	],
 ];

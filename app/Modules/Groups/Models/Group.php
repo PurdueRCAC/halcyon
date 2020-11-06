@@ -206,7 +206,7 @@ class Group extends Model
 	{
 		$ids = $this->directories->pluck('id')->toArray();
 
-		return Message::query()->whereIn('targetobjectid', $ids)->get();
+		return Message::query()->whereIn('targetobjectid', $ids);
 	}
 
 	/**

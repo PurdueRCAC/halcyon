@@ -39,19 +39,20 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.queues.schedulerpolicies.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('JGLOBAL_VALIDATION_FORM_FAILED') }}">
-	<div class="grid row">
-		<div class="col col-md-7 span7">
+<form action="{{ route('admin.queues.schedulerpolicies.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+	<div class="row">
+		<div class="col-md-7">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
 					<label for="field-name">{{ trans('queues::queues.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control required" value="{{ $row->name }}" />
+					<input type="text" name="fields[name]" id="field-name" class="form-control required" required value="{{ $row->name }}" />
+					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
 				</div>
 			</fieldset>
 		</div>
-		<div class="col col-md-5 span5">
+		<div class="col-md-5">
 			@include('history::admin.history')
 		</div>
 	</div>

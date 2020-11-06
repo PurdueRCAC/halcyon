@@ -35,11 +35,11 @@ app('pathway')
 @stop
 
 @section('title')
-{{ trans('messages::messages.module name') }}: {{ trans('messages::messages.types') }}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('messages::messages.module name') }}: {{ trans('messages::messages.types') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')
-<form action="{{ route('admin.messages.types.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.validation failed') }}">
+<form action="{{ route('admin.messages.types.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 	<div class="row">
 		<div class="col-md-12">
 			<fieldset class="adminform">
@@ -47,7 +47,8 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-name">{{ trans('messages::messages.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control required" maxlength="250" value="{{ $row->name }}" />
+					<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="250" value="{{ $row->name }}" />
+					<span class="invalid-feedback">{{ trans('messages::messages.errors.invalid name') }}</span>
 				</div>
 
 				<div class="form-group">

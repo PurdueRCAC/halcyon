@@ -2,17 +2,14 @@
 return [
 	'module name' => 'Storage',
 	'storage' => 'Storage',
-	//'CONFIGURATION' => 'Cron Configuration',
-	//'RUN' => 'Run',
-	//'ARTICLES' => 'Articles',
-	//'TYPES' => 'Categories',
-	//'TEMPLATES' => 'Templates',
 	'resource' => 'Resource',
 
 	// Columns
 	'id' => 'ID',
 	'name' => 'Name',
+	'name desc' => 'Lowercase alpha-numeric characters, dashes, underscores. Ex: foo_bar',
 	'path' => 'Path',
+	'path desc' => 'The base file path where sub-directories will be created. Ex: /scratch/example',
 	'quota space' => 'Space Quota',
 	'quota file' => 'File Quota',
 	'active' => 'Active',
@@ -24,7 +21,9 @@ return [
 	'group' => 'Group',
 	'import hostname' => 'Import hostname',
 	'get quota type' => '"get quota" message',
+	'get quota type desc' => 'Select the Message Queue type for a "get quota" command.',
 	'create type' => '"make directory" message',
+	'create type desc' => 'Select the Message Queue type for a "make directory" command.',
 	'message queue' => 'Message Queue',
 	'notification types' => 'Notification Types',
 	'notifications' => 'Notifications',
@@ -33,56 +32,28 @@ return [
 	'percent' => 'Percentage',
 	'number' => 'Number',
 	'bytes' => 'Bytes',
+	'no storage found' => 'No storage items found for this group.',
 
 	// Misc.
 	'active' => 'Active',
 	'inactive' => 'Inactive',
-	'NO_DATE_SET' => '(no date set)',
-	//'NONE' => '(none)',
-	//'NEVER' => '(never)',
-	'SET_THIS_TO' => 'Set this to %s',
-	'STATE_UNPUBLISH' => 'unpublish',
-	'STATE_PUBLISH' => 'publish',
-	'SELECT' => 'Select...',
-	'DEACTIVATE' => 'Deactivate',
-	'HISTORY_EDITED' => '%s edited the page @ %s',
-	'HISTORY' => 'History',
 
 	// Errors
-	'ERROR_NO_ITEMS_SELECTED' => 'No entry selected',
-	'ERROR_SELECT_ITEMS' => 'Select an entry to %s',
-	'ERROR_MISSING_TITLE' => 'Entry must have a title',
-
-	// Messages
-	'ITEM_SAVED' => 'Item Successfully Saved',
-	'ITEMS_DELETED' => '%s Item(s) Successfully Removed',
-	'ITEMS_PUBLISHED' => '%s Item(s) successfully published',
-	'ITEMS_UNPUBLISHED' => '%s Item(s) successfully unpublished',
-	'ITEMS_DEACTIVATED' => '%s Item(s) successfully deactivated',
-	'CONFIRM_DELETE' => 'Are you sure you want to delete these items?',
+	'error' => [
+		'no items selected' => 'No entry selected',
+		'select items' => 'Select an entry to :action',
+		'invalid parent' => 'Please select a parent resource.',
+		'invalid name' => 'Please provide a name.',
+	],
 
 	// Fields
 	'role name' => 'Role Name',
 	'list name' => 'List Name',
 	'resource type' => 'Resource',
 	'product type' => 'Product',
-	'FIELD_PARENT' => 'Parent Resource',
-	'FIELD_CREATED' => 'Created',
-	'FIELD_ID' => 'ID',
-	'FIELD_REMOVED' => 'Removed',
-	'FIELD_DEFAULTQUOTASPACE' => 'Default Quota Space',
-	'FIELD_DEFAULTQUOTAFILE' => 'Default Quota File',
-	'FILESIZE' => 'Size in bytes. Use size abbreviations (PB, TB, KB, MB, B). Values with no abbreviation will be taken as bytes. Ex: 100000 = 100000 B',
-	'FIELD_IMPORTHOSTNAME' => 'Import Host Name',
-	'FIELD_IMPORT' => 'Import',
-	'FIELD_AUTOUSERDIR' => 'Auto User Dir',
-	'FIELD_GETQUOTATYPEID' => 'Get Quota Type ID',
-	'FIELD_CREATETYPEID' => 'Create Type ID',
-
-	// Config
-	'CONFIG_WHITELIST_LABEL' => 'IP Whitelist',
-	'CONFIG_WHITELIST_DESC' => 'A comma-separated list of white-listed IP addresses',
-
+	'parent' => 'Parent Resource',
+	'quota desc' => 'Size in bytes. Use size abbreviations (PB, TB, KB, MB, B). Values with no abbreviation will be taken as bytes (ex: 100000 = 100000 B).',
+	'quota space desc' => 'Size in bytes. Use size abbreviations (PB, TB, KB, MB, B). Values with no abbreviation will be taken as bytes (ex: 100000 = 100000 B).',
 	'my quotas' => 'Quotas',
 	'messages' => 'Messages',
 	'status' => 'Status',
@@ -94,6 +65,10 @@ return [
 	'permissions' => 'Permissions',
 	'fix permissions' => 'Fix File Permissions',
 	'permission' => [
+		'level' => 'Level',
+		'owner' => 'Owner',
+		'group' => 'Group',
+		'public' => 'Public',
 		'read' => 'Read',
 		'write' => 'Write',
 		'execute' => 'Execute',
@@ -103,6 +78,7 @@ return [
 	'remove overallocated' => 'Remove over-allocated space from this directory',
 	'distribute remaining' => 'Distribute remaining space',
 
+	// Purchases/Loans
 	'type' => 'Type',
 	'comment' => 'Comment',
 	'start' => 'Starts',

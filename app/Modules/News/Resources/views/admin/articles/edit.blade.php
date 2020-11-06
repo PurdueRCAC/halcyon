@@ -6,7 +6,6 @@
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/js/validate.js?v=' . filemtime(public_path() . '/modules/core/js/validate.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/news/js/admin.js?v=' . filemtime(public_path() . '/modules/news/js/admin.js')) }}"></script>
@@ -47,7 +46,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.news.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.validation failed') }}">
+<form action="{{ route('admin.news.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 	@if ($errors->any())
 		<div class="alert alert-danger">
@@ -74,7 +73,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-newstypeid">{{ trans('news::news.type') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<select name="fields[newstypeid]" id="field-newstypeid" class="form-control required">
+					<select name="fields[newstypeid]" id="field-newstypeid" class="form-control required" required>
 						<?php foreach ($types as $type): ?>
 							<option value="<?php echo $type->id; ?>"<?php if ($row->newstypeid == $type->id): echo ' selected="selected"'; endif;?>
 								data-tagresources="{{ $type->tagresources }}"
@@ -85,11 +84,13 @@ app('pathway')
 								data-ongoing="{{ $type->ongoing }}">{{ $type->name }}</option>
 						<?php endforeach; ?>
 					</select>
+					<span class="invalid-feedback">{{ trans('news::news.error.invalid type') }}</span>
 				</div>
 
 				<div class="form-group">
 					<label for="field-headline">{{ trans('news::news.headline') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[headline]" id="field-headline" class="form-control required" value="{{ $row->headline }}" />
+					<input type="text" name="fields[headline]" id="field-headline" class="form-control required" required value="{{ $row->headline }}" />
+					<span class="invalid-feedback">{{ trans('news::news.error.invalid headline') }}</span>
 				</div>
 
 				<div class="form-group type-option type-location <?php if (!$row->type->location) { echo ' d-none'; } ?>">
@@ -135,7 +136,9 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-body">{{ trans('news::news.body') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<textarea name="fields[body]" id="field-body" class="form-control" rows="35" cols="40">{{ $row->body }}</textarea>
+					<span class="form-text text-muted">{{ trans('news::news.body formatting') }}</span>
+					<textarea name="fields[body]" id="field-body" class="form-control required" required rows="35" cols="40">{{ $row->body }}</textarea>
+					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
 				</div>
 			</fieldset>
 		</div>

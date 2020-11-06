@@ -56,12 +56,12 @@ app('pathway')
 
 <form action="{{ route('admin.queues.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 	<div class="row">
-		<div class="col col-md-7">
+		<div class="col-md-7">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="row">
-					<div class="col col-md-6">
+					<div class="col-md-6">
 						<div class="form-group">
 							<label for="field-queuetype">{{ trans('queues::queues.type') }}:</label>
 							<select name="fields[queuetype]" id="field-queuetype" class="form-control">
@@ -72,7 +72,7 @@ app('pathway')
 							</select>
 						</div>
 					</div>
-					<div class="col col-md-6">
+					<div class="col-md-6">
 						<div class="form-group">
 							<label for="field-queueclass">{{ trans('queues::queues.class') }}</label>
 							<select name="queueclass" id="field-queueclass" class="form-control">
@@ -88,14 +88,15 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-name">{{ trans('queues::queues.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control required" required pattern="[a-zA-Z0-9_]{1,64}" maxlength="64" value="{{ $row->name }}" data-invalid-msg="The field 'Queue Name' is required." />
+					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
 				</div>
 
 				<div class="row">
-					<div class="col col-md-6">
+					<div class="col-md-6">
 						<div class="form-group">
-							<label for="field-schedulerid">{{ trans('queues::queues.scheduler') }}:</label>
+							<label for="field-schedulerid">{{ trans('queues::queues.scheduler') }}:  <span class="required">{{ trans('global.required') }}</span></label>
 							<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></span>
-							<select name="fields[schedulerid]" id="field-schedulerid" class="form-control">
+							<select name="fields[schedulerid]" id="field-schedulerid" class="form-control required" required>
 								<option value="0">{{ trans('global.none') }}</option>
 								@foreach ($schedulers as $scheduler)
 									<?php $selected = ($scheduler->id == $row->schedulerid ? ' selected="selected"' : ''); ?>
@@ -106,9 +107,10 @@ app('pathway')
 										data-api="{{ route('api.resources.read', ['id' => $scheduler->resource->id]) }}">{{ $scheduler->hostname }}</option>
 								@endforeach
 							</select>
+							<span class="invalid-feedback">{{ trans('queues::queues.error.invalid scheduler') }}</span>
 						</div>
 					</div>
-					<div class="col col-md-6">
+					<div class="col-md-6">
 						<div class="form-group">
 							<label for="field-schedulerpolicyid">{{ trans('queues::queues.scheduler policy') }}:</label>
 							<select name="fields[schedulerpolicyid]" id="field-schedulerpolicyid" class="form-control">
@@ -123,14 +125,14 @@ app('pathway')
 				</div>
 
 				<div class="row">
-					<div class="col col-md-6">
+					<div class="col-md-6">
 						<div class="form-group">
 							<?php
 							$cores = '-';
 							$mem   = '-';
 							?>
-							<label for="field-subresourceid">{{ trans('queues::queues.subresource') }}:</label>
-							<select name="fields[subresourceid]" id="field-subresourceid" class="form-control">
+							<label for="field-subresourceid">{{ trans('queues::queues.subresource') }}:  <span class="required">{{ trans('global.required') }}</span></label>
+							<select name="fields[subresourceid]" id="field-subresourceid" class="form-control required" required>
 								<option value="0">{{ trans('global.none') }}</option>
 								<?php foreach ($resources as $resource): ?>
 									<?php
@@ -155,13 +157,14 @@ app('pathway')
 									<?php } ?>
 								<?php endforeach; ?>
 							</select>
+							<span class="invalid-feedback">{{ trans('queues::queues.error.invalid subresource') }}</span>
 							<span class="form-text text-muted">
 								<span id="SPAN_nodecores">{{ $cores }}</span> cores,
 								<span id="SPAN_nodemem">{{ $mem }}</span> memory
 							</span>
 						</div>
 					</div>
-					<div class="col col-md-6">
+					<div class="col-md-6">
 						<div class="form-group">
 							<label for="field-cluster">{{ trans('queues::queues.cluster') }}:</label>
 							<input type="text" name="fields[cluster]" id="field-cluster" class="form-control" maxlength="32" value="{{ $row->cluster }}" />
@@ -329,7 +332,7 @@ app('pathway')
 			</fieldset>
 
 		</div>
-		<div class="col col-md-5">
+		<div class="col-md-5">
 			<fieldset class="adminform">
 				<legend>{{ trans('queues::queues.access') }}</legend>
 

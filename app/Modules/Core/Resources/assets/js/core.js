@@ -81,6 +81,10 @@ Halcyon.submitbutton = function(task) {
 		invalid = false;
 
 	if (frm) {
+		if (task == 'cancel' || task.match(/cancel$/)) {
+			Halcyon.submitform(task, frm);
+		}
+
 		var elms = frm.querySelectorAll('input[required]');
 		elms.forEach(function (el) {
 			if (!el.value || !el.validity.valid) {
@@ -109,7 +113,7 @@ Halcyon.submitbutton = function(task) {
 			}
 		});
 
-		if (task == 'cancel' || task.match(/cancel$/) || !invalid) {
+		if (!invalid) {
 			Halcyon.submitform(task, frm);
 		}
 	}

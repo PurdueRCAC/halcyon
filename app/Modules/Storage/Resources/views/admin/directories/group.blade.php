@@ -7,7 +7,21 @@
 <script src="{{ asset('modules/storage/js/admin.js?v=' . filemtime(public_path() . '/modules/storage/js/admin.js')) }}"></script>
 @endpush
 
+@php
+$directories = $group->directories;
+
+$rows = $directories->filter(function($item)
+{
+	return $item->parentstoragedirid == 0;
+});
+@endphp
+
 <div class="row">
+	@if (!count($rows))
+		<div class="col-md-12">
+			<div class="form-text text-muted text-center">{{ trans('storage::storage.no storage found') }}</div>
+		</div>
+	@else
 	<div class="col-md-5">
 		<?php
 		function get_dir($dirs, $dirhash, $id)
@@ -27,13 +41,6 @@
 
 			return null;
 		}
-
-		$directories = $group->directories;
-
-		$rows = $directories->filter(function($item)
-		{
-			return $item->parentstoragedirid == 0;
-		});
 
 		foreach ($rows as $row)
 		{
@@ -683,6 +690,7 @@
 						</tr>
 					</thead>
 					<tbody>
+					@if (count($history))
 						@foreach ($history as $item)
 							<tr class="{{ $item->type }}">
 								<td>
@@ -725,6 +733,11 @@
 								</td>
 							</tr>
 						@endforeach
+					@else
+						<tr>
+							<td colspan="6" class="text-center">{{ trans('global.none') }}</td>
+						</tr>
+					@endif
 					</tbody>
 				</table>
 			</fieldset>
@@ -745,9 +758,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				@foreach ($group->messages as $message)
+			<?php
+			$messages = $group->messages->limit(10)->orderBy('datetimesubmitted', 'desc')->get();
+			?>
+			@if (count($messages))
+				@foreach ($messages as $message)
 					<tr>
-						<td>{{ $message->status }}</td>
+						<td><span class="badge badge-{{ $message->status == 'completed' ? 'success' : 'warning' }}">{{ trans('messages::messages.' . $message->status) }}</span></td>
 						<td>{{ $message->target }}</td>
 						<td>{{ $message->type->name }}</td>
 						<td>{{ $message->datetimesubmitted->format('Y-m-d') }}</td>
@@ -767,8 +784,14 @@
 						</td>
 					</tr>
 				@endforeach
+			@else
+				<tr>
+					<td colspan="6" class="text-center">{{ trans('global.none') }}</td>
+				</tr>
+			@endif
 			</tbody>
 		</table>
 	</fieldset>
 	</div>
-	</div>
+	@endif
+</div>

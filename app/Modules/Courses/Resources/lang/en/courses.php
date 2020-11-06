@@ -20,4 +20,5 @@ return [
 	'my courses' => 'Accounts for Classes',
 	'all states' => '- All States -',
 	'owner' => 'Owner',
+	'type' => 'Type',
 ];

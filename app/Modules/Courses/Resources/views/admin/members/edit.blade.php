@@ -18,7 +18,7 @@
 @stop
 
 @section('content')
-<form action="{{ route('admin.groups.members.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.VALIDATION_FORM_FAILED') }}">
+<form action="{{ route('admin.groups.members.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 			<fieldset class="adminform">
 				<legend><span>{{ trans('global.details') }}</span></legend>

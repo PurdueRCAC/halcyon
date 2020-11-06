@@ -211,8 +211,8 @@ app('pathway')
 					$timetable .= '</td></tr>';
 					$timetable .= '</tbody></table>';
 					?>
-					@if ($row->datetimestarted && $row->datetimestarted != '0000-00-00 00:00:00' && $row->datetimestarted != '-0001-11-30 00:00:00')
-						@if ($row->datetimecompleted && $row->datetimecompleted != '0000-00-00 00:00:00' && $row->datetimecompleted != '-0001-11-30 00:00:00')
+					@if ($row->started())
+						@if ($row->completed())
 							<span class="badge badge-success has-tip" title="{!! $timetable !!}"><span class="glyph icon-check"></span> {{ $row->elapsed }}</span>
 						@else
 							<span class="badge badge-warning has-tip" title="{!! $timetable !!}"><span class="glyph icon-rotate-ccw"></span> {{ trans('messages::messages.processing') }}</span>

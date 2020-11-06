@@ -40,14 +40,32 @@ app('pathway')
 
 @section('content')
 <form action="{{ route('admin.queues.schedulers.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
-	<div class="grid row">
-		<div class="col col-md-7 span7">
+	<div class="row">
+		<div class="col-md-7">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
 					<label for="field-hostname">{{ trans('queues::queues.hostname') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[hostname]" id="field-hostname" class="form-control required" value="{{ $row->hostname }}" />
+					<input type="text" name="fields[hostname]" id="field-hostname" class="form-control required" required value="{{ $row->hostname }}" />
+					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid hostname') }}</span>
+				</div>
+
+				<div class="form-group">
+					<label for="field-queuesubresourceid">{{ trans('queues::queues.resource') }}:</label>
+					<select name="fields[queuesubresourceid]" id="field-queuesubresourceid" class="form-control">
+						<option value="0">{{ trans('global.none') }}</option>
+						<?php foreach ($resources as $resource): ?>
+							<?php $children = $resource->children()->get();
+							if (count($children)) { ?>
+								<optgroup label="{{ $resource->name }}">
+									<?php foreach ($children as $child): ?>
+										<option value="{{ $child->subresourceid }}"<?php if ($row->queuesubresourceid == $child->subresourceid): echo ' selected="selected"'; endif;?>>{{ $child->subresource ? $child->subresource->name : trans('global.unknown') }}</option>
+									<?php endforeach; ?>
+								</optgroup>
+							<?php } ?>
+						<?php endforeach; ?>
+					</select>
 				</div>
 
 				<div class="form-group">
@@ -95,23 +113,6 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-queuesubresourceid">{{ trans('queues::queues.resource') }}:</label>
-					<select name="fields[queuesubresourceid]" id="field-queuesubresourceid" class="form-control">
-						<option value="0">{{ trans('global.none') }}</option>
-						<?php foreach ($resources as $resource): ?>
-							<?php $children = $resource->children()->get();
-							if (count($children)) { ?>
-								<optgroup label="{{ $resource->name }}">
-									<?php foreach ($children as $child): ?>
-										<option value="{{ $child->subresourceid }}"<?php if ($row->queuesubresourceid == $child->subresourceid): echo ' selected="selected"'; endif;?>>{{ $child->subresource ? $child->subresource->name : trans('global.unknown') }}</option>
-									<?php endforeach; ?>
-								</optgroup>
-							<?php } ?>
-						<?php endforeach; ?>
-					</select>
-				</div>
-
-				<div class="form-group">
 					<label for="field-batchsystem">{{ trans('queues::queues.batch system') }}:</label>
 					<select name="fields[batchsystem]" id="field-batchsystem" class="form-control">
 						<option value="0">{{ trans('queues::queues.all batch systems') }}</option>
@@ -134,7 +135,7 @@ app('pathway')
 				</div>
 			</fieldset>
 		</div>
-		<div class="col col-md-5 span5">
+		<div class="col-md-5">
 			@include('history::admin.history')
 		</div>
 	</div>

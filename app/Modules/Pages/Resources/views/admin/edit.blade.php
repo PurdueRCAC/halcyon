@@ -127,7 +127,7 @@ app('pathway')
 								<option value="0"<?php if (!$row->params->get('show_title', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_title', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 							</select>
-							<span class="form-text sr-only">{{ trans('pages::pages.params.show title desc') }}</span>
+							<span class="form-text text-muted">{{ trans('pages::pages.params.show title desc') }}</span>
 						</div>
 
 						<div class="form-group">
