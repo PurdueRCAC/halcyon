@@ -213,6 +213,8 @@ class Page extends Model
 		$text = preg_replace("/<h2>(.*)<\/h2>/", "<h3 class=\"kb2\">$1</h3>", $text);
 		$text = preg_replace("/<h1>(.*)<\/h1>/", "<h2 class=\"kb1\">$1</h2>", $text);
 
+		$text = preg_replace('/href="\/(.*?)"/i', 'href="' . url("$1") . '"', $text);
+
 		return $text;
 	}
 
