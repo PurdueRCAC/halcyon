@@ -1725,6 +1725,10 @@ label .required:before {
 .input-group .input-group-prepend {
   background-color: #f1f1f1;
 }
+.input-group .form-control.is-invalid,
+.was-validated .input-group .form-control:invalid {
+  border-color: #dc3545;
+}
 .batch {
   margin: 0;
   padding: 0 0.618em;
