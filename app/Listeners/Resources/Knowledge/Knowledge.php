@@ -66,6 +66,11 @@ class Knowledge
 			->orderBy($a . '.id', 'asc')
 			->get()
 			->first();
+		if (!$assoc)
+		{
+			return;
+		}
+
 		$page = $assoc->page;
 
 		if (!$page)
