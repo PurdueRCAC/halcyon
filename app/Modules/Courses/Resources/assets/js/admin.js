@@ -4,20 +4,6 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-Halcyon.submitbutton = function(task) {
-	var frm = document.getElementById('item-form');
-
-	if (frm) {
-		$(document).trigger('editorSave');
-
-		if (task == 'cancel' || (typeof(document.formvalidator) != undefined && document.formvalidator.isValid(frm))) {
-			Halcyon.submitform(task, frm);
-		} else {
-			alert(frm.getAttribute('data-invalid-msg'));
-		}
-	}
-}
-
 /**
  * Initiate event hooks
  */
@@ -57,4 +43,28 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		});
 	}
+
+	$('.type-dependant').hide();
+	//$('.type-'+$('[name="type"]').val()).show();
+	//$('.menu-page').fadeIn();
+	$('[name="type"]')
+		.on('change', function () {
+			$('.type-dependant').hide();
+			$('.type-' + $(this).val()).show();
+
+			/*if ($(this).val() == 'separator') {
+				if (!$('#fields_title').val()) {
+					$('#fields_title').val('[ separator ]');
+				}
+			}*/
+		})
+		.each(function (i, el) {
+			$('.type-' + $(el).val()).show();
+		});
+
+	$('#fields_page_id').on('change', function (e) {
+		if ($('#fields_title').val() == '') {
+			$('#fields_title').val($(this).children("option:selected").text().replace(/\|\— /g, ''));
+		}
+	});
 });

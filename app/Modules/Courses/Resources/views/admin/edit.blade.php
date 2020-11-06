@@ -2,33 +2,6 @@
 
 @section('scripts')
 <script src="{{ asset('modules/courses/js/admin.js?v=' . filemtime(public_path() . '/modules/courses/js/admin.js')) }}"></script>
-<script>
-$( document ).ready(function() {
-	$('.type-dependant').hide();
-	//$('.type-'+$('[name="type"]').val()).show();
-	//$('.menu-page').fadeIn();
-	$('[name="type"]')
-		.on('change', function(){
-			$('.type-dependant').hide();
-			$('.type-'+$(this).val()).show();
-
-			/*if ($(this).val() == 'separator') {
-				if (!$('#fields_title').val()) {
-					$('#fields_title').val('[ separator ]');
-				}
-			}*/
-		})
-		.each(function(i, el){
-			$('.type-'+$(el).val()).show();
-		});
-
-	$('#fields_page_id').on('change', function(e){
-		if ($('#fields_title').val() == '') {
-			$('#fields_title').val($(this).children("option:selected").text().replace(/\|\— /g, ''));
-		}
-	});
-});
-</script>
 @stop
 
 @php
