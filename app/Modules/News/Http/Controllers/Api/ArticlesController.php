@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
 use App\Modules\News\Models\Stemmedtext;
+use App\Modules\News\Models\Newsresource;
 use App\Modules\News\Http\Resources\ArticleResource;
 use App\Modules\News\Http\Resources\ArticleResourceCollection;
 use App\Modules\History\Models\Log;
@@ -96,6 +97,10 @@ class ArticlesController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
+			'resource'  => null,
+			'location'  => null,
+			'start'     => null,
+			'stop'      => null,
 			'state'     => 'published',
 			'access'    => null,
 			'limit'     => config('list_limit', 20),
@@ -103,18 +108,22 @@ class ArticlesController extends Controller
 			'order_dir' => 'desc',
 			'type'      => null,
 			'template'  => 0,
+			'id'        => null,
 		);
 
 		foreach ($filters as $key => $default)
 		{
 			$val = $request->input($key);
 			$val = !is_null($val) ? $val : $default;
+			if ($key == 'start' || $key == 'stop')
+			{
+				$val = preg_replace('/!/', ' ', $val);
+			}
 
 			$filters[$key] = $val;
 		}
 
-
-		$query = null;
+		/*$query = null;
 		if ($query)
 		{
 			// Drop redundant, leading and trailing white space.
@@ -206,7 +215,7 @@ class ArticlesController extends Controller
 					array_push($filters['keywords'], $stem);
 				}
 			}
-		}
+		}*/
 
 		if (!in_array($filters['order'], ['id', 'headline', 'datetimecreated']))
 		{
@@ -221,6 +230,7 @@ class ArticlesController extends Controller
 		$n = (new Article)->getTable();
 
 		$query = Article::query()
+			->select($n . '.*')
 			->with('type')
 			->with('associations')
 			->where($n . '.template', '=', $filters['template']);
@@ -249,6 +259,30 @@ class ArticlesController extends Controller
 			$query->orderBy('score', 'desc');
 		}
 
+		if ($filters['start'])
+		{
+			$query->where($n . '.datetimenews', '>', $filters['start']);
+		}
+
+		if ($filters['stop'])
+		{
+			$query->where(function($where) use ($n, $filters)
+			{
+				$where->whereNull($n . '.datetimenewsend')
+					->orWhere($n . '.datetimenewsend', '=', '0000-00-00 00:00:00')
+					->orWhere($n . '.datetimenewsend', '<=', $filters['end']);
+			});
+		}
+
+		if ($filters['resource'])
+		{
+			$r = (new Newsresource)->getTable();
+			$filters['resource'] = explode(',', $filters['resource']);
+
+			$query->join($r, $r . '.newsid', $n . '.id')
+				->whereIn($r . '.resourceid', $filters['resource']);
+		}
+
 		if ($filters['state'] == 'published')
 		{
 			$query->where($n . '.published', '=', 1);
@@ -258,9 +292,19 @@ class ArticlesController extends Controller
 			$query->where($n . '.published', '=', 0);
 		}
 
+		if ($filters['location'])
+		{
+			$query->where($n . '.location', 'like', '%' . $filters['location'] . '%');
+		}
+
 		if ($filters['type'])
 		{
 			$query->where($n . '.newstypeid', '=', $filters['type']);
+		}
+
+		if ($filters['id'])
+		{
+			$query->where($n . '.id', '=', $filters['id']);
 		}
 
 		$rows = $query

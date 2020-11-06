@@ -1,6 +1,6 @@
 <template>
 	<div id="news">
-		<form method="get" action="/news/search">
+		<form method="get" action="">
 			<fieldset>
 				<legend>Search News</legend>
 

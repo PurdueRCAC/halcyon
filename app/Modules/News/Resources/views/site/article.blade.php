@@ -56,7 +56,10 @@
 				$users = array();
 				foreach ($article->associations as $i => $assoc)
 				{
-					$users[] = $assoc['assocname'];
+					if ($associated = $assoc->associated)
+					{
+						$users[] = $associated->name;
+					}
 				}
 				asort($users);
 

@@ -18,7 +18,7 @@ class ArticleResource extends JsonResource
 
 		$data['api'] = route('api.groups.read', ['id' => $this->id]);
 
-		$data['url'] = route('site.news.show', ['id' => $this->id]);
+		$data['uri'] = route('site.news.show', ['id' => $this->id]);
 		$data['formatteddate'] = $this->formatDate($this->getOriginal('datetimenews'), $this->getOriginal('datetimenewsend'));
 		$data['formattedbody'] = $this->formattedBody;
 		$data['formattededitdate']    = $this->formatDate($this->getOriginal('datetimeedited'));
@@ -35,6 +35,16 @@ class ArticleResource extends JsonResource
 		$data['resources'] = $this->resources->each(function ($res, $key)
 		{
 			$res->name = $res->resource->name;
+		});
+
+		$data['associations'] = $this->associations->each(function ($res, $key)
+		{
+			$res->name = null;
+			if ($associated = $res->associated)
+			{
+				$res->name = $associated->name;
+			}
+			
 		});
 
 		//$this->username = $this->creator ? $this->creator->name : trans('global.unknown');

@@ -39,8 +39,39 @@ class ArticlesController extends Controller
 	 * Display a listing of the resource.
 	 * @return Response
 	 */
-	public function search()
+	public function search(Request $request)
 	{
+		// Get filters
+		$filters = array(
+			'search'    => null,
+			'resource'  => null,
+			'keyword'   => null,
+			'newstype'  => null,
+			'start'     => null,
+			'stop'      => null,
+			'location'  => null,
+			'id'        => null,
+			'limit'     => config('list_limit', 20),
+			'page'      => 1,
+			//'order'     => 'datetimecreated',
+			//'order_dir' => 'desc',
+		);
+
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->input($key, $default);
+		}
+
+		/*if (!in_array($filters['order'], ['id', 'headline', 'datetimecreated']))
+		{
+			$filters['order'] = 'datetimecreated';
+		}
+
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
+		{
+			$filters['order_dir'] = 'desc';
+		}*/
+
 		$types = Type::query()->orderBy('name', 'asc')->get();
 
 		app('pathway')
@@ -54,7 +85,8 @@ class ArticlesController extends Controller
 			);
 
 		return view('news::site.search', [
-			'types' => $types
+			'types' => $types,
+			'filters' => $filters,
 		]);
 	}
 

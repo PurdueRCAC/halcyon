@@ -76,6 +76,6 @@ class Newsresource extends Model
 	 */
 	public function resource()
 	{
-		return $this->belongsTo(Asset::class, 'resourceid');
+		return $this->belongsTo(Asset::class, 'resourceid')->withTrashed();
 	}
 }

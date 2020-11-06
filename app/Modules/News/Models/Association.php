@@ -8,6 +8,7 @@
 namespace App\Modules\News\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Users\Models\User;
 
 /**
  * News model mapping to associations
@@ -16,11 +17,7 @@ class Association extends Model
 {
 	/**
 	 * The table to which the class pertains
-	 *
-	 * This will default to #__{namespace}_{modelName} unless otherwise
-	 * overwritten by a given subclass. Definition of this property likely
-	 * indicates some derivation from standard naming conventions.
-	 *
+	 * 
 	 * @var  string
 	 **/
 	protected $table = 'newsassociations';
@@ -54,8 +51,9 @@ class Association extends Model
 	 * @var array
 	 */
 	protected $rules = array(
-		'newsid'  => 'positive|nonzero',
-		'associd' => 'positive|nonzero'
+		'newsid'  => 'required|integer',
+		'associd' => 'required|integer',
+		'assoctype' => 'required|string',
 	);
 
 	/**
@@ -66,5 +64,20 @@ class Association extends Model
 	public function article()
 	{
 		return $this->belongsTo(Article::class, 'newsid');
+	}
+
+	/**
+	 * Defines a relationship to news article
+	 *
+	 * @return  object
+	 */
+	public function getAssociatedAttribute()
+	{
+		$item = null;
+		if ($this->assoctype == 'user')
+		{
+			$item = User::find($this->associd);
+		}
+		return $item;
 	}
 }

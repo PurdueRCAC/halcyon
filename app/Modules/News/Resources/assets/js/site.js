@@ -1,5 +1,5 @@
 /* global $ */ // jquery.js
-/* global ROOT_URL */ // common.js
+/* global root */ // common.js
 /* global WSGetURL */ // common.js
 /* global WSPostURL */ // common.js
 /* global WSDeleteURL */ // common.js
@@ -536,7 +536,7 @@ function NEWSAddEntry() {
 			post['url'] = url;
 		}
 		if (newstypeid != original['newstype']) {
-			post['newstypeid'] = ROOT_URL + "newstype/" + newstypeid;
+			post['newstypeid'] = newstypeid;
 		}
 		if (notes != original['news']) {
 			post['news'] = notes;
@@ -578,7 +578,7 @@ function NEWSAddEntry() {
 		// new post
 		var post = {
 			'news': notes,
-			'newstypeid': ROOT_URL + "newstype/" + newstypeid,
+			'newstypeid': newstypeid,
 			'headline': headline,
 			'newsdate': newsdate,
 			'newsdateend': newsdateend
@@ -615,7 +615,7 @@ function NEWSAddEntry() {
 		post = JSON.stringify(post);
 		document.getElementById("INPUT_add").disabled = true;
 
-		WSPostURL(ROOT_URL + "news", post, NEWSNewNews);
+		WSPostURL(root + "news", post, NEWSNewNews);
 	}
 }
 
@@ -635,7 +635,7 @@ function NEWSUpdatedNews(xml, id) {
 		NEWSSearch();
 	} else if (xml.status == 409) {
 		document.getElementById("id").value = id;
-		WSGetURL(ROOT_URL + "news/" + id, function (xml) {
+		WSGetURL(root + "news/" + id, function (xml) {
 			if (xml.status == 200) {
 				var results = JSON.parse(xml.responseText);
 				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
@@ -721,28 +721,34 @@ function NEWSSearch() {
 	var url = document.getElementById("TR_url");
 	var users = document.getElementById("TR_user");
 
-	if (tagresources == "0") {
-		list.style.display = "none";
-		list.visible = false;
-	} else {
-		list.style.display = "block";
-		list.visible = true;
+	if (list) {
+		if (tagresources == "0") {
+			list.style.display = "none";
+			list.visible = false;
+		} else {
+			list.style.display = "block";
+			list.visible = true;
+		}
 	}
 
-	if (taglocation == "0") {
-		locale.style.display = "none";
-		locale.visible = false;
-	} else {
-		locale.style.display = "block";
-		locale.visible = true;
+	if (locale) {
+		if (taglocation == "0") {
+			locale.style.display = "none";
+			locale.visible = false;
+		} else {
+			locale.style.display = "block";
+			locale.visible = true;
+		}
 	}
 
-	if (tagurl == "0") {
-		url.style.display = "none";
-		url.visible = false;
-	} else {
-		url.style.display = "block";
-		url.visible = true;
+	if (url) {
+		if (tagurl == "0") {
+			url.style.display = "none";
+			url.visible = false;
+		} else {
+			url.style.display = "block";
+			url.visible = true;
+		}
 	}
 
 	if (users) {
@@ -843,12 +849,13 @@ function NEWSSearch() {
 	}
 
 	if (!in_edit && newstypeid != "" && newstypeid != '-1') {
-		searchstring += " newstype:" + newstypeid;
-		querystring += "&newstype=" + newstypeid;
+		searchstring += " type:" + newstypeid;
+		querystring += "&type=" + newstypeid;
 	}
 
 	if (window.location.href.match(/[&?]all/)) {
 		searchstring += " limit:0";
+		querystring += "&limit=0";
 	}
 
 	// if not add new
@@ -891,11 +898,17 @@ function NEWSSearch() {
 		history.pushState(null, null, encodeURI(querystring));
 	}
 
-	if (searchstring == "") {
-		searchstring = "start:0000-00-00";
+	//if (searchstring == "") {
+	//	searchstring = "start:0000-00-00";
+	//}
+	var page = document.getElementById('page');
+	if (page) {
+		querystring += '&page=' + page.value;
 	}
+	querystring += '&api_token=' + $('meta[name="api-token"]').attr('content');
+	console.log(root + "news/" + encodeURI(querystring));
 
-	WSGetURL(ROOT_URL + "news/" + encodeURI(searchstring), NEWSSearched);
+	WSGetURL(root + "news/" + encodeURI(querystring), NEWSSearched);
 }
 
 /**
@@ -954,11 +967,11 @@ function NEWSSearched(xml) {
 
 		// parse results
 		var results = JSON.parse(xml.responseText);
-		var edit = results['canEdit']; //(results['authorized'] == 1) ? true : false;
+		var edit = false;//results['canEdit']; //(results['authorized'] == 1) ? true : false;
 
-		document.getElementById("matchingnews").innerHTML = "Found " + results.total + " matching News Articles";
+		document.getElementById("matchingnews").innerHTML = "Found " + results.meta.total + " matching News Articles";
 		for (var x=0;x<results.data.length;x++) {
-			NEWSPrintRow(results.data[x], edit, results.updates);
+			NEWSPrintRow(results.data[x], edit);//, results.updates);
 		}
 
 		// Re-initialize tooltips
@@ -970,7 +983,7 @@ function NEWSSearched(xml) {
 			hide: false
 		});
 
-		var footer = document.createElement("div");
+		/*var footer = document.createElement("div");
 			footer.id = "newsfooter";
 			footer.innerHTML = "Displaying " + (results.from * results.per_page) + " of " + results.total + " News Articles...<br />";
 
@@ -1000,7 +1013,106 @@ function NEWSSearched(xml) {
 				noresults.innerHTML = "No matching news stories found.";
 
 			news.appendChild(noresults);
+		}*/
+		var q = news.getAttribute('data-query');
+		var query = q.replace(' ', '&').replace(':', '=');
+		var lastpage = Math.ceil(results.meta.total > results.meta.per_page ? results.meta.total / results.meta.per_page : 1);
+
+		// Pagination
+		var ul = $('<ul class="pagination"></ul>');
+
+		var li = $('<li class="page-item page-first">');
+		var a = $('<a class="page-link" title="First page"><span aria-hidden="true">«</span></a>')
+			.attr('href', '?' + query + '&page=1')
+			.attr('data-page', 1);
+		if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
+			li.addClass('disabled');
+			a.attr('aria-disabled', 'true');
 		}
+		li.append(a);
+		ul.append(li);
+
+		li = $('<li class="page-item page-prev">');
+		a = $('<a class="page-link" title="Previous page"><span aria-hidden="true">‹</span></a>')
+			.attr('href', '?' + query + ' &page=' + (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1))
+			.attr('data-page', (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1));
+		if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
+			li.addClass('disabled');
+			a.attr('aria-disabled', 'true');
+		}
+		li.append(a);
+		ul.append(li);
+
+		if (results.meta.total <= results.meta.per_page) {
+			li = $('<li class="page-item">');
+			a = $('<a class="page-link"></a>')
+				.text('1')
+				.attr('href', '?' + query + '&page=1')
+				.attr('data-page', 1);
+			if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
+				li.addClass('disabled');
+				a.attr('aria-disabled', 'true');
+			}
+			li.append(a);
+			ul.append(li);
+		} else {
+			var c = 0;
+			for (var l = 1; l <= lastpage; l++) {
+				if (c >= 10) {
+					li = $('<li class="page-item">');
+					a = $('<span class="page-link"></span>')
+						.text('...')
+						.attr('aria-disabled', 'true');
+					li.append(a);
+					ul.append(li);
+					break;
+				}
+				li = $('<li class="page-item">');
+				a = $('<a class="page-link"></a>')
+					.text(l)
+					.attr('href', '?' + query + '&page=' + l)
+					.attr('data-page', l);
+				if (results.meta.current_page == l) {
+					li.addClass('active');
+					//a.attr('aria-disabled', 'true');
+				}
+				li.append(a);
+				ul.append(li);
+				c++;
+			}
+		}
+
+		li = $('<li class="page-item page-next">');
+		a = $('<a class="page-link" title="Next page"><span aria-hidden="true">›</span></a>')
+			.attr('href', '?' + query + '&page=' + (results.meta.current_page < lastpage ? lastpage - 1 : 1))
+			.attr('data-page', (results.meta.current_page > 1 ? lastpage - 1 : 1))
+			.attr('data-query', q.replace(/(page:\d+)/, 'page:' + (results.meta.current_page > 1 ? lastpage - 1 : 1)));
+		if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
+			li.addClass('disabled');
+			a.attr('aria-disabled', 'true');
+		}
+		li.append(a);
+		ul.append(li);
+
+		li = $('<li class="page-item page-last">');
+		a = $('<a class="page-link" title="Last page"><span aria-hidden="true">»</span></a>')
+			.attr('href', '?' + query + '&page=' + lastpage)
+			.attr('data-page', lastpage)
+			.attr('data-query', q.replace(/(page:\d+)/, 'page:' + lastpage));
+		if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
+			li.addClass('disabled');
+			a.attr('aria-disabled', 'true');
+		}
+		li.append(a);
+		ul.append(li);
+
+		$(news).append(ul);
+
+		$('.page-link').on('click', function (e) {
+			e.preventDefault();
+			$('#page').val($(this).data('page'));
+			NEWSSearch();
+		});
 	}
 }
 
@@ -1013,7 +1125,7 @@ function NEWSSearched(xml) {
  * @return  {void}
  */
 function NEWSPrintRow(news, edit, updates) {
-	edit = news.canEdit;
+	edit = news.can.edit;
 
 	var id = news.id; //.split('/');
 		//id = id[id.length - 1];
@@ -1050,7 +1162,7 @@ function NEWSPrintRow(news, edit, updates) {
 		td.className = "newsid";
 
 		a = document.createElement("a");
-		a.href = "/news/" + id;
+		a.href = news.uri;
 		a.innerHTML = "#" + id;
 
 		td.appendChild(a);
@@ -1073,12 +1185,12 @@ function NEWSPrintRow(news, edit, updates) {
 				};
 				post = JSON.stringify(post);
 
-				WSPostURL(ROOT_URL + "news/" + id, post, function (xml) {
+				WSPostURL(root + "news/" + id, post, function (xml) {
 					if (xml.status == 200) {
 						document.getElementById("id").value = id;
 						NEWSSearch();
 					} else if (xml.status == 409) {
-						WSGetURL(ROOT_URL + "news/" + id, function (xml) {
+						WSGetURL(root + "news/" + id, function (xml) {
 							if (xml.status == 200) {
 								var results = JSON.parse(xml.responseText);
 								alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
@@ -1100,12 +1212,12 @@ function NEWSPrintRow(news, edit, updates) {
 				};
 				post = JSON.stringify(post);
 
-				WSPostURL(ROOT_URL + "news/" + id, post, function (xml) {
+				WSPostURL(root + "news/" + id, post, function (xml) {
 					if (xml.status == 200) {
 						document.getElementById("id").value = id;
 						NEWSSearch();
 					} else if (xml.status == 409) {
-						WSGetURL(ROOT_URL + "news/" + id, function (xml) {
+						WSGetURL(root + "news/" + id, function (xml) {
 							if (xml.status == 200) {
 								var results = JSON.parse(xml.responseText);
 								alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
@@ -1182,7 +1294,7 @@ function NEWSPrintRow(news, edit, updates) {
 	td.className = "panel-title newsheadline";
 
 	a = document.createElement("a");
-	a.href = "/news/" + id;
+	a.href = news.uri;
 	a.innerHTML = headline;
 	a.id = id + "_headline";
 
@@ -1519,7 +1631,7 @@ function NEWSPrintRow(news, edit, updates) {
 
 		r = Array();
 		for (x = 0; x < users.length; x++) {
-			r.push(users[x].assocname);
+			r.push(users[x].name);
 		}
 		span.innerHTML = r.join(', ');
 
@@ -1857,7 +1969,7 @@ function NEWSPrintRow(news, edit, updates) {
 
 	var c = Array();
 	for (x = 0; x < news.updates.length; x++) {
-		//if (ROOT_URL + "news/" + news.updates[x]['newsid'] == news['id']) {
+		//if (root + "news/" + news.updates[x]['newsid'] == news['id']) {
 			//c.push(news.updates[x]);
 			NewsPrintUpdate(news['id'], news.updates[x], edit);
 		//}
@@ -1877,7 +1989,7 @@ function NEWSPrintRow(news, edit, updates) {
  */
 function NEWSDeleteNews(newsid) {
 	if (confirm("Are you sure you want to delete this news story?")) {
-		WSDeleteURL(ROOT_URL + "news/" + newsid, function(xml, newsid) {
+		WSDeleteURL(root + "news/" + newsid, function(xml, newsid) {
 			if (xml.status == 200) {
 				document.getElementById(newsid).style.display = "none";
 			} else {
@@ -1993,7 +2105,7 @@ function NEWSSaveNewsText(news) {
 	}
 	post = JSON.stringify(post);
 
-	WSPostURL(ROOT_URL + "news/" + news, post, NEWSSavedNewsText, news);
+	WSPostURL(root + "news/" + news, post, NEWSSavedNewsText, news);
 }
 
 /**
@@ -2033,7 +2145,7 @@ function NEWSSavedNewsText(xml, news) {
 	} else if (xml.status == 409) {
 		img.className = "fa fa-exclamation-circle";
 		img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
-		WSGetURL(ROOT_URL + "news/" + news, function (xml) {
+		WSGetURL(root + "news/" + news, function (xml) {
 			if (xml.status == 200) {
 				var results = JSON.parse(xml.responseText);
 				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
@@ -2183,7 +2295,7 @@ function NEWSSaveNewsHeadline(news) {
 	};
 	post = JSON.stringify(post);
 
-	WSPostURL(ROOT_URL + "news/" + news, post, NEWSSavedNewsHeadline, news);
+	WSPostURL(root + "news/" + news, post, NEWSSavedNewsHeadline, news);
 }
 
 /**
@@ -2209,7 +2321,7 @@ function NEWSSaveNewsLocation(news) {
 	};
 	post = JSON.stringify(post);
 
-	WSPostURL(ROOT_URL + "news/" + news, post, NEWSSavedNewsLocation, news);
+	WSPostURL(root + "news/" + news, post, NEWSSavedNewsLocation, news);
 }
 
 /**
@@ -2245,7 +2357,7 @@ function NEWSSavedNewsHeadline(xml, news) {
 	} else if (xml.status == 409) {
 		img.className = "fa fa-exclamation-circle";
 		img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
-		WSGetURL(ROOT_URL + "news/" + news, function (xml) {
+		WSGetURL(root + "news/" + news, function (xml) {
 			if (xml.status == 200) {
 				var results = JSON.parse(xml.responseText);
 				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
@@ -2290,7 +2402,7 @@ function NEWSSavedNewsLocation(xml, news) {
 	} else if (xml.status == 409) {
 		img.className = "fa fa-exclamation-circle";
 		img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
-		WSGetURL(ROOT_URL + "news/" + news, function (xml) {
+		WSGetURL(root + "news/" + news, function (xml) {
 			if (xml.status == 200) {
 				var results = JSON.parse(xml.responseText);
 				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
@@ -2382,7 +2494,7 @@ function NEWSSaveNewsUrl(news) {
 	};
 	post = JSON.stringify(post);
 
-	WSPostURL(ROOT_URL + "news/" + news, post, function(xml, news) {
+	WSPostURL(root + "news/" + news, post, function(xml, news) {
 		var img = document.getElementById(news + "_urlsaveiconimg");
 
 		if (xml.status == 200) {
@@ -2410,7 +2522,7 @@ function NEWSSaveNewsUrl(news) {
 		} else if (xml.status == 409) {
 			img.className = "fa fa-exclamation-circle";
 			img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
-			WSGetURL(ROOT_URL + "news/" + news, function (xml) {
+			WSGetURL(root + "news/" + news, function (xml) {
 				if (xml.status == 200) {
 					var results = JSON.parse(xml.responseText);
 					alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
@@ -2484,7 +2596,7 @@ function PreviewExample(example) {
 	example_vars["resources"] = [{"resourcename": "Carter"}, {"resourcename": "Conte"}];
 	example_vars["location"] = "Envision Center";
 
-	WSPostURL(ROOT_URL + "formattext", JSON.stringify({ 'text' : document.getElementById('help1' + example + 'input').value, 'vars' : example_vars }), function (xml) {
+	WSPostURL(root + "formattext", JSON.stringify({ 'text' : document.getElementById('help1' + example + 'input').value, 'vars' : example_vars }), function (xml) {
 		if (xml.status == 200) {
 			var results = JSON.parse(xml.responseText);
 			document.getElementById('help1' + example + 'output').innerHTML = results['formattedtext'];
@@ -2577,7 +2689,7 @@ function NEWSPreview(news, edit) {
 		post_string['news'] = "/api/news/" + news;
 	}
 
-	WSPostURL(ROOT_URL + "formattext", JSON.stringify(post_string), function (xml) {
+	WSPostURL(root + "formattext", JSON.stringify(post_string), function (xml) {
 		if (xml.status == 200) {
 			var results = JSON.parse(xml.responseText);
 			document.getElementById("preview").innerHTML = results['formattedtext'];
@@ -2639,7 +2751,7 @@ function NEWSSendMail(news) {
 	}
 
 	// Get text and updates from WS
-	$.getJSON(ROOT_URL + "news/" + news, function(data) {
+	$.getJSON(root + "news/" + news, function(data) {
 		var text = document.getElementById(news + "_textarea").value;
 		if (text == "") {
 			return;
@@ -2684,7 +2796,7 @@ function NEWSSendMail(news) {
 						'mail'     : 1 ,
 						'lastedit' : LASTEDIT[news]
 					});
-					WSPostURL(ROOT_URL + "news/" + news, post, NEWSSentMail, news);
+					WSPostURL(root + "news/" + news, post, NEWSSentMail, news);
 				}
 			}
 		});
@@ -2715,7 +2827,7 @@ function NEWSSentMail(xml, news) {
 		document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
 		document.getElementById("A_mail_" + news).onclick = function () {};
 		if (xml.status == 409) {
-			WSGetURL(ROOT_URL + "news/" + news, function (xml) {
+			WSGetURL(root + "news/" + news, function (xml) {
 				if (xml.status == 200) {
 					var results = JSON.parse(xml.responseText);
 					alert("Unable to save changes. This news item has been edited or mailed by " + results['editusername'] + " since you loaded this page. Please refresh the page and check for edits or mailing.");
@@ -2874,7 +2986,7 @@ function NewsPostUpdate(newsid) {
 		'body': body
 	});
 
-	WSPostURL(ROOT_URL + "newsupdate", post, NewsPostedUpdate, newsid);
+	WSPostURL(root + "newsupdate", post, NewsPostedUpdate, newsid);
 }
 
 /**
@@ -2887,7 +2999,7 @@ function NewsPostUpdate(newsid) {
 function NewsPostedUpdate(xml, newsid) {
 	if (xml.status == 200) {
 		var results = JSON.parse(xml.responseText);
-		console.log(results);
+
 		NewsPrintUpdate(newsid, results);
 		document.getElementById(newsid + "_newupdatebox").value = "";
 		NewsCollapseNewUpdate(newsid + "_newupdatebox");
@@ -3079,7 +3191,7 @@ function NewsSaveUpdateText(update) {
 	var post = { 'body' : text };
 		post = JSON.stringify(post);
 
-	WSPostURL(ROOT_URL + "newsupdate/" + update, post, NewsSavedUpdateText, update);
+	WSPostURL(root + "newsupdate/" + update, post, NewsSavedUpdateText, update);
 }
 
 /**
@@ -3120,7 +3232,7 @@ function NewsSavedUpdateText(xml, update) {
  */
 function NewsDeleteUpdate(updateid, reportid) {
 	if (confirm("Are you sure you want to delete this update?")) {
-		WSDeleteURL(ROOT_URL + "newsupdate/" + updateid, NewsDeletedUpdate, { 'updateid' : updateid, 'reportid' : reportid });
+		WSDeleteURL(root + "newsupdate/" + updateid, NewsDeletedUpdate, { 'updateid' : updateid, 'reportid' : reportid });
 	}
 }
 
@@ -3135,7 +3247,7 @@ function NewsDeletedUpdate(xml, arg) {
 	if (xml.status == 200) {
 		document.getElementById(arg['updateid'] + "_update").parentNode.style.display = "none";
 
-		WSGetURL(ROOT_URL + "contactreport/" + arg['reportid'], function (xml) {
+		WSGetURL(root + "contactreport/" + arg['reportid'], function (xml) {
 			if (xml.status == 200) {
 				var results = JSON.parse(xml.responseText);
 				var div, a;
@@ -3177,7 +3289,7 @@ function NewsDeletedUpdate(xml, arg) {
 var autocompleteNews = function(url) {
 	return function(request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-			response($.map(data.resources, function (el) {
+			response($.map(data.data, function (el) {
 				return {
 					label: el.name,
 					name: el.name,
@@ -3191,7 +3303,7 @@ var autocompleteNews = function(url) {
 var autocompleteUsers = function(url) {
 	return function(request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-			response($.map(data.users, function (el) {
+			response($.map(data.data, function (el) {
 				return {
 					label: el.name,
 					name: el.name,
@@ -3390,7 +3502,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	if ($('#news').length) {
-		WSGetURL(root + "news/" + encodeURI($('#news').data('query')), NEWSSearched);
+		//WSGetURL(root + "news/" + ($('#news').data('query') ? encodeURI($('#news').data('query')) : ''), NEWSSearched);
+		NEWSSearch();
 	}
 
 	var url = window.location.href.match(/[&?](\w+)$/);
@@ -3417,7 +3530,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		post = JSON.stringify(post);
 
-		WSPostURL(root + "newsassociation/", post, function(xml){
+		WSPostURL(root + "news/associations/", post, function(xml){
 			if (xml.status == 200) {
 				el.parent().html('<span class="alert alert-success">Thank you for your interest!</span>');
 			} else if (xml.status == 403) {
