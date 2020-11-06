@@ -123,7 +123,7 @@ abstract class RoutingServiceProvider extends ServiceProvider
 			$router->group(
 				[
 					'namespace'  => 'Api',
-					'prefix'     => config('locale') . '/api',
+					'prefix'     => 'api',
 					'middleware' => ['api'],
 					//'middleware' => config('api.middleware', ['auth:api']),
 				],

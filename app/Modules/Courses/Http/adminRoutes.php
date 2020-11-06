@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'courses'], function (Router $router)
+$router->group(['prefix' => 'courses', 'middleware' => 'can:manage courses'], function (Router $router)
 {
 	// Members
 	$router->group(['prefix' => 'members'], function (Router $router)
@@ -11,7 +11,6 @@ $router->group(['prefix' => 'courses'], function (Router $router)
 		$router->match(['get', 'post'], '/', [
 			'as'   => 'admin.courses.members',
 			'uses' => 'MembersController@index',
-			'middleware' => 'can:manage courses',
 		]);
 		$router->get('/create', [
 			'as' => 'admin.courses.members.create',
@@ -42,7 +41,6 @@ $router->group(['prefix' => 'courses'], function (Router $router)
 	$router->match(['get', 'post'], '/', [
 		'as' => 'admin.courses.index',
 		'uses' => 'AccountsController@index',
-		'middleware' => 'can:manage courses',
 	]);
 	$router->get('create', [
 		'as' => 'admin.courses.create',

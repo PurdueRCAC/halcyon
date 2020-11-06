@@ -3,12 +3,11 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'contactreports', 'middleware' => ['can:manage contactreports']], function (Router $router)
+$router->group(['prefix' => 'contactreports', 'middleware' => ['auth.admin', 'can:manage contactreports']], function (Router $router)
 {
 	$router->get('/', [
 		'as' => 'site.contactreports.index',
 		'uses' => 'ReportsController@index',
-		'middleware' => 'can:tag.tags.index',
 	]);
 
 	$router->get('create', [
@@ -19,7 +18,6 @@ $router->group(['prefix' => 'contactreports', 'middleware' => ['can:manage conta
 	$router->post('store', [
 		'as' => 'site.contactreports.store',
 		'uses' => 'ReportsController@store',
-		//'middleware' => 'can:tag.tags.create',
 	]);
 
 	$router->get('{id}', [
@@ -31,13 +29,13 @@ $router->group(['prefix' => 'contactreports', 'middleware' => ['can:manage conta
 	$router->get('{id}/edit', [
 		'as' => 'site.contactreports.edit',
 		'uses' => 'ReportsController@edit',
-		//'middleware' => 'can:tag.tags.edit',
+		'middleware' => 'can:edit contactreports',
 	])->where('id', '[0-9]+');
 
 	$router->put('{id}', [
 		'as' => 'site.contactreports.update',
 		'uses' => 'ReportsController@update',
-		//'middleware' => 'can:tag.tags.edit',
+		'middleware' => 'can:edit contactreports,can:create contactreports',
 	])->where('id', '[0-9]+');
 
 	$router->delete('{id}', [

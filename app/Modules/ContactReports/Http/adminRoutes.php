@@ -3,12 +3,12 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'contactreports'], function (Router $router)
+$router->group(['prefix' => 'contactreports', 'middleware' => 'can:manage contactreports'], function (Router $router)
 {
 	$router->match(['get', 'post'], '/', [
 		'as'   => 'admin.contactreports.index',
 		'uses' => 'ReportsController@index',
-		'middleware' => 'can:manage contactreports',
+		//'middleware' => 'can:manage contactreports',
 	]);
 	$router->match(['get', 'post'], '/cancel', [
 		'as'   => 'admin.contactreports.cancel',
@@ -41,7 +41,7 @@ $router->group(['prefix' => 'contactreports'], function (Router $router)
 		$router->match(['get', 'post'], '/', [
 			'as'   => 'admin.contactreports.comments',
 			'uses' => 'CommentsController@index',
-			'middleware' => 'can:manage contactreports',
+			//'middleware' => 'can:manage contactreports',
 		]);
 		$router->get('/create', [
 			'as' => 'admin.contactreports.comments.create',

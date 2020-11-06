@@ -8,7 +8,6 @@ $router->group(['prefix' => 'groups', 'middleware' => 'can:manage groups'], func
 	$router->match(['get', 'post'], '/', [
 		'as' => 'admin.groups.index',
 		'uses' => 'GroupsController@index',
-		//'middleware' => 'can:manage groups',
 	]);
 	$router->get('create', [
 		'as' => 'admin.groups.create',
@@ -41,7 +40,6 @@ $router->group(['prefix' => 'groups', 'middleware' => 'can:manage groups'], func
 		$router->match(['get', 'post'], '/{group}', [
 			'as'   => 'admin.groups.members',
 			'uses' => 'MembersController@index',
-			'middleware' => 'can:manage groups',
 		]);
 		$router->get('/{group}/create', [
 			'as' => 'admin.groups.members.create',

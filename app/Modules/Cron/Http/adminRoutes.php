@@ -3,12 +3,11 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'cron'], function (Router $router)
+$router->group(['prefix' => 'cron', 'middleware' => 'can:manage cron'], function (Router $router)
 {
 	$router->get('/', [
 		'as' => 'admin.cron.index',
 		'uses' => 'JobsController@index',
-		'middleware' => 'can:manage cron',
 	]);
 	$router->get('create', [
 		'as' => 'admin.cron.create',
