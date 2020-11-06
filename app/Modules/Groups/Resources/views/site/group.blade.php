@@ -640,12 +640,17 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 				<div id="DIV_group-members" class="stash">
 					<?php
 					$m = (new \App\Modules\Groups\Models\Member)->getTable();
-					$u = (new \App\Modules\Users\Models\User)->getTable();
+					$u = (new \App\Modules\Users\Models\UserUsername)->getTable();
 
 					$managers = $group->members()->withTrashed()
 						->select($m . '.*')
-						->join($u, $u . '.id', $m . '.userid')
-						->whereNull($u . '.deleted_at')
+						->join($u, $u . '.userid', $m . '.userid')
+						//->whereNull($u . '.deleted_at')
+						->where(function($where) use ($u)
+						{
+							$where->whereNull($u . '.dateremoved')
+								->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+						})
 						->where(function($where) use ($m)
 						{
 							$where->whereNull($m . '.dateremoved')
@@ -656,9 +661,14 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 						->get();
 
 					$members = $group->members()->withTrashed()
-						->select($m . '.*', $u . '.name')
-						->join($u, $u . '.id', $m . '.userid')
-						->whereNull($u . '.deleted_at')
+						->select($m . '.*')//, $u . '.name')
+						->join($u, $u . '.userid', $m . '.userid')
+						//->whereNull($u . '.deleted_at')
+						->where(function($where) use ($u)
+						{
+							$where->whereNull($u . '.dateremoved')
+								->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+						})
 						->where(function($where) use ($m)
 						{
 							$where->whereNull($m . '.dateremoved')
@@ -681,9 +691,14 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 						$resources[$queue->resource->name][] = $queue;
 
 						$users = $queue->users()->withTrashed()
-							->select($q . '.*', $u . '.name')
+							->select($q . '.*')//, $u . '.name')
 							->join($u, $u . '.id', $q . '.userid')
-							->whereNull($u . '.deleted_at')
+							//->whereNull($u . '.deleted_at')
+							->where(function($where) use ($u)
+							{
+								$where->whereNull($u . '.dateremoved')
+									->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+							})
 							->where(function($where) use ($q)
 							{
 								$where->whereNull($q . '.datetimeremoved')
@@ -707,12 +722,22 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 					}
 
 					$disabled = $group->members()->withTrashed()
-						->select($m . '.*', $u . '.name')
-						->join($u, $u . '.id', $m . '.userid')
+						->select($m . '.*')//, $u . '.name')
+						->join($u, $u . '.userid', $m . '.userid')
 						->where(function($where) use ($m, $u)
 						{
-							$where->whereNotNull($u . '.deleted_at')
+							/*$where->whereNotNull($u . '.deleted_at')
 								//->orWhere($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
+								->orWhere(function($wher) use ($m)
+								{
+									$wher->whereNotNull($m . '.dateremoved')
+										->where($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
+								});*/
+							$where->where(function($wher) use ($u)
+								{
+									$wher->whereNotNull($u . '.dateremoved')
+										->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
+								})
 								->orWhere(function($wher) use ($m)
 								{
 									$wher->whereNotNull($m . '.dateremoved')
@@ -727,17 +752,27 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 					foreach ($group->queues as $queue)
 					{
 						$users = $queue->users()->withTrashed()
-							->select($q . '.*', $u . '.name')
+							->select($q . '.*')//, $u . '.name')
 							->join($u, $u . '.id', $q . '.userid')
 							->where(function($where) use ($q, $u)
 							{
-								$where->whereNotNull($u . '.deleted_at')
+								/*$where->whereNotNull($u . '.deleted_at')
 									//->orWhere($m . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
 									->orWhere(function($wher) use ($q)
 									{
 										$wher->whereNotNull($q . '.datetimeremoved')
 											->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-									});
+									});*/
+								$where->where(function($wher) use ($u)
+								{
+									$wher->whereNotNull($u . '.dateremoved')
+										->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
+								})
+								->orWhere(function($wher) use ($q)
+								{
+									$wher->whereNotNull($q . '.datetimeremoved')
+										->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+								});
 							})
 							->whereIsMember()
 							->whereNotIn($q . '.userid', $members->pluck('userid')->toArray())

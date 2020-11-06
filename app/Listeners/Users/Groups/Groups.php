@@ -107,7 +107,6 @@ class Groups
 
 			if ($id = request()->segment(3))
 			{
-				$id = 1485;
 				$group = Group::findOrFail($id);
 
 				$membership = $group->members()->where('userid', '=', $user->id)->get()->first();

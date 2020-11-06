@@ -99,12 +99,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 					<?php
 					$m = (new \App\Modules\Groups\Models\Member)->getTable();
-					$u = (new \App\Modules\Users\Models\User)->getTable();
+					$u = (new \App\Modules\Users\Models\UserUsername)->getTable();
 
 					$managers = $group->members()->withTrashed()
 						->select($m . '.*')
-						->join($u, $u . '.id', $m . '.userid')
-						->whereNull($u . '.deleted_at')
+						->join($u, $u . '.userid', $m . '.userid')
+						//->whereNull($u . '.deleted_at')
+						->where(function($where) use ($u)
+						{
+							$where->whereNull($u . '.dateremoved')
+								->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+						})
 						->where(function($where) use ($m)
 						{
 							$where->whereNull($m . '.dateremoved')
@@ -116,8 +121,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 					$members = $group->members()->withTrashed()
 						->select($m . '.*', $u . '.name')
-						->join($u, $u . '.id', $m . '.userid')
-						->whereNull($u . '.deleted_at')
+						->join($u, $u . '.userid', $m . '.userid')
+						//->whereNull($u . '.deleted_at')
+						->where(function($where) use ($u)
+						{
+							$where->whereNull($u . '.dateremoved')
+								->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+						})
 						->where(function($where) use ($m)
 						{
 							$where->whereNull($m . '.dateremoved')
@@ -141,8 +151,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 						$users = $queue->users()->withTrashed()
 							->select($q . '.*', $u . '.name')
-							->join($u, $u . '.id', $q . '.userid')
-							->whereNull($u . '.deleted_at')
+							->join($u, $u . '.userid', $q . '.userid')
+							//->whereNull($u . '.deleted_at')
+							->where(function($where) use ($u)
+							{
+								$where->whereNull($u . '.dateremoved')
+									->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+							})
 							->where(function($where) use ($q)
 							{
 								$where->whereNull($q . '.datetimeremoved')
@@ -167,16 +182,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
 					$disabled = $group->members()->withTrashed()
 						->select($m . '.*', $u . '.name')
-						->join($u, $u . '.id', $m . '.userid')
-						->where(function($where) use ($m, $u)
+						->join($u, $u . '.userid', $m . '.userid')
+						/*->where(function($where) use ($m, $u)
 						{
-							$where->whereNotNull($u . '.deleted_at')
+							$where->whereNotNull($u . '.dateremoved')
+								->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00')
 								//->orWhere($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
 								->orWhere(function($wher) use ($m)
 								{
 									$wher->whereNotNull($m . '.dateremoved')
 										->where($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
 								});
+						})*/
+						->where(function($where) use ($m, $u)
+						{
+							->where(function($wher) use ($u)
+							{
+								$wher->whereNotNull($u . '.dateremoved')
+									->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
+							});
+							->orWhere(function($wher) use ($m)
+							{
+								$wher->whereNotNull($m . '.dateremoved')
+									->where($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
+							});
 						})
 						->whereIsMember()
 						->whereNotIn($m . '.userid', $members->pluck('userid')->toArray())
@@ -187,8 +216,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					{
 						$users = $queue->users()->withTrashed()
 							->select($q . '.*', $u . '.name')
-							->join($u, $u . '.id', $q . '.userid')
-							->where(function($where) use ($q, $u)
+							->join($u, $u . '.userid', $q . '.userid')
+							/*->where(function($where) use ($q, $u)
 							{
 								$where->whereNotNull($u . '.deleted_at')
 									//->orWhere($m . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
@@ -197,6 +226,19 @@ document.addEventListener('DOMContentLoaded', function() {
 										$wher->whereNotNull($q . '.datetimeremoved')
 											->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
 									});
+							})*/
+							->where(function($where) use ($q, $u)
+							{
+								->where(function($wher) use ($u)
+								{
+									$wher->whereNotNull($u . '.dateremoved')
+										->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
+								});
+								->orWhere(function($wher) use ($q)
+								{
+									$wher->whereNotNull($q . '.datetimeremoved')
+										->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+								});
 							})
 							->whereIsMember()
 							->whereNotIn($q . '.userid', $members->pluck('userid')->toArray())
@@ -497,7 +539,7 @@ document.addEventListener('DOMContentLoaded', function() {
 													{{ $member->user ? $member->user->name : trans('global.unknown') }}
 												@endif
 											</td>
-											<td>{{ $member->user->deleted_at }}</td>
+											<td>{{ $member->user->dateremoved }}</td>
 											<td>{{ $member->datetimeremoved }}</td>
 											<td></td>
 										</tr>

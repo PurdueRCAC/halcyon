@@ -736,7 +736,7 @@
 					{{ trans('storage::storage.messages') }}
 				</div>
 				<div class="card-body panel-body">
-					@if (count($group->messages))
+					@if ($group->messages->count())
 						<table class="table table-hover">
 							<caption class="sr-only">{{ trans('storage::storage.messages') }}</caption>
 							<thead>
@@ -750,7 +750,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								@foreach ($group->messages as $message)
+								@foreach ($group->messages->orderBy('datetimesubmitted', 'desc')->limit(10)->get() as $message)
 									<tr>
 										<td>{{ $message->status }}</td>
 										<td>{{ $message->target }}</td>
