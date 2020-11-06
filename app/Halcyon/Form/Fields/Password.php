@@ -37,10 +37,11 @@ class Password extends Field
 		$readonly  = ((string) $this->element['readonly'] == 'true') ? ' readonly="readonly"' : '';
 		$disabled  = ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
 		$meter     = ((string) $this->element['strengthmeter'] == 'true' ? ' data-meter="true"' : '');
+		$required  = ((string) $this->element['required'] == 'true'    ? ' required="required"' : '');
 		$threshold = $this->element['threshold'] ? (int) $this->element['threshold'] : 66;
 
 		return '<input type="password" name="' . $this->name . '" id="' . $this->id . '"' .
 			' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' .
-			$auto . $class . $readonly . $disabled . $size . $maxLength . $meter . ' autocomplete="off" />';
+			$auto . $class . $readonly . $disabled . $size . $maxLength . $meter . $required . ' autocomplete="off" />';
 	}
 }

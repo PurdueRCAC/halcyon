@@ -135,6 +135,7 @@ class Groupedlist extends Field
 		$attr .= $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
 		$attr .= ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
 		$attr .= $this->element['size'] ? ' size="' . (int) $this->element['size'] . '"' : '';
+		$attr .= $this->element['required'] ? ' required="required"' : '';
 		$attr .= $this->multiple ? ' multiple="multiple"' : '';
 
 		// Initialize JavaScript field attributes.

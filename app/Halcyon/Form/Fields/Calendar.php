@@ -57,6 +57,10 @@ class Calendar extends Field
 		{
 			$attributes['disabled'] = 'disabled';
 		}
+		if ((string) $this->element['required'] == 'true')
+		{
+			$attributes['required'] = 'required';
+		}
 		$attributes['time'] = false;
 		if ((string) $this->element['time'] == 'true')
 		{

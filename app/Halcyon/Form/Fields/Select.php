@@ -42,6 +42,7 @@ class Select extends Field
 			'class'        => 'form-control' . ($this->element['class'] ? (string) ' ' . $this->element['class'] : ''),
 			'readonly'     => ((string) $this->element['readonly'] == 'true'    ? 'readonly' : ''),
 			'disabled'     => ((string) $this->element['disabled'] == 'true'    ? 'disabled' : ''),
+			'required'     => ((string) $this->element['required'] == 'true'    ? 'required' : ''),
 			'onchange'     => ($this->element['onchange']  ? (string) $this->element['onchange'] : '')
 		);
 

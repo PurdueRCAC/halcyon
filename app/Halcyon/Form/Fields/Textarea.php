@@ -38,6 +38,8 @@ class Textarea extends Field
 			'cols'         => ($this->element['cols'] ? (int) $this->element['cols'] : ''),
 			'rows'         => ($this->element['rows'] ? (int) $this->element['rows'] : ''),
 			'disabled'     => ((string) $this->element['disabled'] == 'true'    ? 'disabled' : ''),
+			'readonly'     => ((string) $this->element['readonly'] == 'true'    ? 'readonly' : ''),
+			'required'     => ((string) $this->element['required'] == 'true'    ? 'required' : ''),
 			'onchange'     => ($this->element['onchange']  ? (string) $this->element['onchange'] : '')
 		);
 

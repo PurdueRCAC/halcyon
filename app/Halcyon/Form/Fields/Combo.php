@@ -36,6 +36,7 @@ class Combo extends Select
 		$attr .= $this->element['class'] ? ' class="form-control combobox ' . (string) $this->element['class'] . '"' : ' class="form-control combobox"';
 		$attr .= ((string) $this->element['readonly'] == 'true') ? ' readonly="readonly"' : '';
 		$attr .= ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
+		$attr .= ((string) $this->element['required'] == 'true') ? ' required="required"' : '';
 		$attr .= $this->element['size'] ? ' size="' . (int) $this->element['size'] . '"' : '';
 
 		// Initialize JavaScript field attributes.

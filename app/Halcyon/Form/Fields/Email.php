@@ -34,6 +34,7 @@ class Email extends Field
 		$class = $this->element['class'] ? ' ' . (string) $this->element['class'] : '';
 		$readonly = ((string) $this->element['readonly'] == 'true') ? ' readonly="readonly"' : '';
 		$disabled = ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
+		$required  = ((string) $this->element['required'] == 'true' ? ' required="required"' : '');
 
 		// " and \ are always forbidden in email unless escaped.
 		$this->value = str_replace(array('"','\\'), '', $this->value);
@@ -42,6 +43,6 @@ class Email extends Field
 		$onchange = $this->element['onchange'] ? ' onchange="' . (string) $this->element['onchange'] . '"' : '';
 
 		return '<input type="text" name="' . $this->name . '" class="validate-email' . $class . '" id="' . $this->id . '"' . ' value="'
-			. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $size . $disabled . $readonly . $onchange . $maxLength . '/>';
+			. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $size . $disabled . $readonly . $required . $onchange . $maxLength . '/>';
 	}
 }
