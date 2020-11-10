@@ -1989,6 +1989,12 @@ table.adminlist tbody tr.disabled .state:before,
 table.adminlist tbody tr.archived .state:before {
   color: #ccc;
 }
+.error-warning {
+  background-color: rgba(251, 192, 45, 0.3);
+}
+.error-danger {
+  background-color: rgba(218, 52, 71, 0.3);
+}
 /*table.adminlist tbody tr:hover td {
   background-color: #ffe;
 }*/
