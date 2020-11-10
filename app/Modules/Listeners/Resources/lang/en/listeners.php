@@ -54,4 +54,5 @@ return [
 	),
 	'no caching' => 'No caching',
 	'use global' => 'Use Global',
+	'no params' => 'No params found.',
 ];

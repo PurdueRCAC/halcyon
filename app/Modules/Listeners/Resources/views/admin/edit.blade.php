@@ -58,7 +58,7 @@ app('pathway')
 				<div class="form-group">
 					<label>{{ trans('listeners::listeners.description') }}</label><br />
 					<p>
-					{!! trans('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener desc') !!}</p>
+					{!! trans(strtolower('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener desc')) !!}</p>
 				</div>
 			</fieldset>
 
