@@ -39,11 +39,14 @@ document.addEventListener('DOMContentLoaded', function() {
 					user.val(ui.item.label); // display the selected text
 					cl.val(ui.item.id); // save selected id to input
 
-					window.location(window.location.href + '?userid=' + ui.item.id);
-					/*$.getJSON(user.attr('data-user-uri') + ui.item.id + '?api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-						$(user.data('list')).empty();
-						data.
-					});*/
+					if (user.hasClass('redirect')) {
+						window.location.href = user.data('location').replace('%s', ui.item.id);
+					}
+
+					if (user.hasClass('submit')) {
+						user.closest('form').submit();
+					}
+
 					return false;
 				}
 			});
@@ -51,26 +54,91 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	$('.type-dependant').hide();
-	//$('.type-'+$('[name="type"]').val()).show();
-	//$('.menu-page').fadeIn();
+
 	$('[name="type"]')
 		.on('change', function () {
 			$('.type-dependant').hide();
 			$('.type-' + $(this).val()).show();
-
-			/*if ($(this).val() == 'separator') {
-				if (!$('#fields_title').val()) {
-					$('#fields_title').val('[ separator ]');
-				}
-			}*/
 		})
 		.each(function (i, el) {
 			$('.type-' + $(el).val()).show();
 		});
 
-	$('#fields_page_id').on('change', function (e) {
-		if ($('#fields_title').val() == '') {
-			$('#fields_title').val($(this).children("option:selected").text().replace(/\|\— /g, ''));
+	$('#main').on('click', '.remove-member', function (e) {
+		e.preventDefault();
+
+		var result = confirm($(this).data('confirm'));
+
+		if (result) {
+			var field = $($(this).attr('href'));
+
+			// delete relationship
+			$.ajax({
+				url: $(this).data('api'),
+				type: 'delete',
+				dataType: 'json',
+				async: false,
+				success: function (data) {
+					Halcyon.message('success', 'Item removed');
+					field.remove();
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					Halcyon.message('danger', xhr.responseJSON.message);
+				}
+			});
 		}
+	});
+
+	$('.add-member').on('click', function (e) {
+		e.preventDefault();
+
+		var select = $($(this).data('field'));
+		var btn = $(this);
+
+		// create new relationship
+		$.ajax({
+			url: btn.data('api'),
+			type: 'post',
+			data: {
+				'userid': select.val(),
+				'classaccountid': btn.data('account')
+			},
+			dataType: 'json',
+			async: false,
+			success: function (response) {
+				Halcyon.message('success', 'User added');
+
+				var c = select.closest('table');
+				var li = c.find('tr.d-none');
+
+				if (typeof (li) !== 'undefined') {
+					var template = $(li)
+						.clone()
+						.removeClass('d-none');
+
+					template
+						.attr('id', template.attr('id').replace(/\{id\}/g, response.data.id))
+						.data('id', response.data.id);
+
+					template.find('a').each(function (i, el) {
+						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.data.id));
+					});
+
+					var content = template
+						.html()
+						.replace(/\{id\}/g, response.data.id)
+						.replace(/\{name\}/g, response.data.user.name)
+						.replace(/\{userid\}/g, response.data.userid);
+
+					template.html(content).insertBefore(li);
+				}
+
+				select.val();
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				//console.log(xhr);
+				Halcyon.message('danger', xhr.responseJSON.message);
+			}
+		});
 	});
 });
