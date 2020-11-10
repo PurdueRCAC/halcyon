@@ -5,9 +5,12 @@ namespace App\Modules\News\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
+use App\Modules\News\Models\Stemmedtext;
 use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Utility\PorterStemmer;
 
 class ArticlesController extends Controller
 {
@@ -60,31 +63,57 @@ class ArticlesController extends Controller
 			$filters['order_dir'] = 'desc';
 		}
 
+		$n = (new Article)->getTable();
+
 		$query = Article::query()
+			->select($n . '.*')
 			->with('type')
-			->where('template', '=', $this->template);
+			->with('associations')
+			->where($n . '.template', '=', $this->template);
 
 		if ($filters['search'])
 		{
-			$query->where(function($query) use ($filters)
+			/*$query->where(function($query) use ($filters)
 			{
 				$query->where('headline', 'like', '%' . $filters['search'] . '%')
 					->orWhere('body', 'like', '%' . $filters['search'] . '%');
-			});
+			});*/
+
+			$keywords = explode(' ', $filters['search']);
+
+			$from_sql = array();
+			foreach ($keywords as $keyword)
+			{
+				// Trim extra garbage
+				$keyword = preg_replace('/[^A-Za-z0-9]/', ' ', $keyword);
+
+				// Calculate stem for the word
+				$stem = PorterStemmer::Stem($keyword);
+				$stem = substr($stem, 0, 1) . $stem;
+
+				$from_sql[] = "+" . $stem;
+			}
+
+			$s = (new Stemmedtext)->getTable();
+
+			$query->join($s, $s . '.id', $n . '.id');
+			$query->select($n . '.*', DB::raw("(MATCH($s.stemmedtext) AGAINST ('" . implode(' ', $from_sql) . "') * 10 + 2 * (1 / (ABS(DATEDIFF(NOW(), $n.datetimenews)) + 1))) AS score"));
+			$query->whereRaw("MATCH($s.stemmedtext) AGAINST ('" . implode(' ', $from_sql) . "' IN BOOLEAN MODE)");
+			$query->orderBy('score', 'desc');
 		}
 
 		if ($filters['state'] == 'published')
 		{
-			$query->where('published', '=', 1);
+			$query->where($n . '.published', '=', 1);
 		}
 		elseif ($filters['state'] == 'unpublished')
 		{
-			$query->where('published', '=', 0);
+			$query->where($n . '.published', '=', 0);
 		}
 
 		if ($filters['type'])
 		{
-			$query->where('newstypeid', '=', $filters['type']);
+			$query->where($n . '.newstypeid', '=', $filters['type']);
 		}
 
 		$rows = $query

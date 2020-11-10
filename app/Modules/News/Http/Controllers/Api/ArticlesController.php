@@ -13,6 +13,7 @@ use App\Modules\News\Models\Newsresource;
 use App\Modules\News\Http\Resources\ArticleResource;
 use App\Modules\News\Http\Resources\ArticleResourceCollection;
 use App\Modules\History\Models\Log;
+use App\Halcyon\Utility\PorterStemmer;
 
 /**
  * Articles
@@ -248,13 +249,20 @@ class ArticlesController extends Controller
 			$from_sql = array();
 			foreach ($keywords as $keyword)
 			{
-				$from_sql[] = "+" . $keyword;
+				// Trim extra garbage
+				$keyword = preg_replace('/[^A-Za-z0-9]/', ' ', $keyword);
+
+				// Calculate stem for the word
+				$stem = PorterStemmer::Stem($keyword);
+				$stem = substr($stem, 0, 1) . $stem;
+
+				$from_sql[] = "+" . $stem;
 			}
 
 			$s = (new Stemmedtext)->getTable();
 
 			$query->join($s, $s . '.id', $n . '.id');
-			$query->select(DB::raw("(MATCH($s.stemmedtext) AGAINST ('" . implode(' ', $from_sql) . "') * 10 + 2 * (1 / (ABS(DATEDIFF(NOW(), $n.datetimenews)) + 1))) AS score"));
+			$query->select($n . '.*', DB::raw("(MATCH($s.stemmedtext) AGAINST ('" . implode(' ', $from_sql) . "') * 10 + 2 * (1 / (ABS(DATEDIFF(NOW(), $n.datetimenews)) + 1))) AS score"));
 			$query->whereRaw("MATCH($s.stemmedtext) AGAINST ('" . implode(' ', $from_sql) . "' IN BOOLEAN MODE)");
 			$query->orderBy('score', 'desc');
 		}
