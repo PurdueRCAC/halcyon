@@ -50,6 +50,17 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col filter-select col-md-8 text-right">
+				<label class="sr-only" for="filter_status">{{ trans('history::history.status') }}</label>
+				<select name="status" id="filter_status" class="form-control filter filter-submit">
+					<option value=""<?php if ($filters['status'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('history::history.all status') }}</option>
+					<option value="200"<?php if ($filters['status'] == '200'): echo ' selected="selected"'; endif;?>>200</option>
+					<option value="400"<?php if ($filters['status'] == '400'): echo ' selected="selected"'; endif;?>>400</option>
+					<option value="403"<?php if ($filters['status'] == '403'): echo ' selected="selected"'; endif;?>>403</option>
+					<option value="404"<?php if ($filters['status'] == '404'): echo ' selected="selected"'; endif;?>>404</option>
+					<option value="415"<?php if ($filters['status'] == '415'): echo ' selected="selected"'; endif;?>>415</option>
+					<option value="500"<?php if ($filters['status'] == '500'): echo ' selected="selected"'; endif;?>>500</option>
+				</select>
+
 				<label class="sr-only" for="filter_transport">{{ trans('history::history.transport') }}</label>
 				<select name="transport" id="filter_transport" class="form-control filter filter-submit">
 					<option value=""<?php if ($filters['transport'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('history::history.all transports') }}</option>
@@ -88,6 +99,9 @@ app('pathway')
 					{!! Html::grid('sort', trans('history::history.transport'), 'transportmethod', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
+					{!! Html::grid('sort', trans('history::history.status'), 'status', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<th scope="col">
 					{{ trans('history::history.actor') }}
 				</th>
 				<th scope="col" class="priority-4">
@@ -97,7 +111,18 @@ app('pathway')
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr>
+			<?php
+			$cls = '';
+			if ($row->status >= 400)
+			{
+				$cls = ' class="error-warning"';
+			}
+			if ($row->status >= 500)
+			{
+				$cls = ' class="error-danger"';
+			}
+			?>
+			<tr{!! $cls !!}>
 				<td class="priority-5">
 					{{ $row->id }}
 				</td>
@@ -135,6 +160,9 @@ app('pathway')
 					@elseif ($row->transportmethod == 'GET')
 						<span class="badge badge-info">{{ $row->transportmethod }}</span>
 					@endif
+				</td>
+				<td class="priority-4">
+					{{ $row->status }}
 				</td>
 				<td>
 					@if ($row->user)

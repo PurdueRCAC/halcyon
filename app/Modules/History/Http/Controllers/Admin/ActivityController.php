@@ -25,7 +25,8 @@ class ActivityController extends Controller
 			'order'     => Log::$orderBy,
 			'order_dir' => Log::$orderDir,
 			'action'    => '',
-			'transport' => ''
+			'transport' => '',
+			'status'    => '',
 		);
 
 		foreach ($filters as $key => $default)
@@ -58,6 +59,11 @@ class ActivityController extends Controller
 		if ($filters['transport'])
 		{
 			$query->where('transportmethod', '=', $filters['transport']);
+		}
+
+		if ($filters['status'])
+		{
+			$query->where('status', '=', $filters['status']);
 		}
 
 		$rows = $query

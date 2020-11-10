@@ -31,4 +31,7 @@ return [
 	'method' => 'Method',
 	'uri' => 'URI',
 	'transport' => 'Transport',
+	'all transports' => '- All Transport Methods -',
+	'status' => 'Status',
+	'all status' => '- All Statuses -',
 ];
