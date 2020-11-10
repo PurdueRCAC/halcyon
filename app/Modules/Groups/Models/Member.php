@@ -274,6 +274,34 @@ class Member extends Model
 	}
 
 	/**
+	 * Query scope where membership is pending
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereIsActive($query)
+	{
+		return $query->where(function($where)
+		{
+			$where->whereNull('dateremoved')
+					->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
+		});
+	}
+
+	/**
+	 * Query scope where membership is pending
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereIsTrashed($query)
+	{
+		return $query->where(function($where)
+		{
+			$where->whereNotNull('dateremoved')
+				->where('dateremoved', '!=', '0000-00-00 00:00:00');
+		});
+	}
+
+	/**
 	 * Get a record by group/user
 	 *
 	 * @param   integer  $groupid

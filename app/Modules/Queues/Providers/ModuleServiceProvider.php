@@ -14,6 +14,7 @@ use App\Modules\Queues\Console\EmailQueueRequestedCommand;
 use App\Modules\Queues\Console\EmailWelcomeClusterCommand;
 use App\Modules\Queues\Console\EmailWelcomeFreeCommand;
 use App\Modules\Queues\Console\EmailExpiredCommand;
+use App\Modules\Queues\Listeners\GetUserQueues;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -45,6 +46,11 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
+		{
+			$this->app['events']->subscribe(new GetUserQueues);
+		}
 	}
 
 	/**

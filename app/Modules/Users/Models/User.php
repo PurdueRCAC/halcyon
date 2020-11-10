@@ -60,8 +60,16 @@ class User extends Model implements
 	protected $fillable = [
 		'name',
 		'newroles',
-		'api_token'
+		'api_token',
+		'puid'
 	];
+
+	/**
+	 * The accessors to append to the model's array form.
+	 *
+	 * @var array
+	 */
+	protected $appends = ['username', 'unixid', 'datecreated', 'dateremoved'];
 
 	/**
 	 * Fields and their validation criteria
@@ -69,7 +77,7 @@ class User extends Model implements
 	 * @var  array
 	 */
 	protected $rules = array(
-		'name'  => 'required|string|min:1',
+		'name'  => 'required|string|min:1,max:128',
 		'api_token' => 'nullable|string|max:100'
 	);
 
@@ -86,6 +94,11 @@ class User extends Model implements
 		'deleted'  => UserDeleted::class,
 	];
 
+	/**
+	 * The current UserUsername instance
+	 *
+	 * @var object
+	 */
 	protected $userusername = null;
 
 	/**
@@ -137,17 +150,20 @@ class User extends Model implements
 	}
 
 	/**
-	 * If item is trashed
+	 * If user is trashed
 	 *
 	 * @return  bool
 	 **/
 	public function isTrashed()
 	{
-		//$username = $this->getUserUsername();
-
 		return ($this->dateremoved && $this->dateremoved != '0000-00-00 00:00:00' && $this->dateremoved != '-0001-11-30 00:00:00');
 	}
 
+	/**
+	 * Get the active UserUsername instance
+	 *
+	 * @return  object  UserUsername
+	 **/
 	public function getUserUsername()
 	{
 		if (is_null($this->userusername))
@@ -172,6 +188,11 @@ class User extends Model implements
 		return $this->userusername;
 	}
 
+	/**
+	 * If user has logged in before
+	 *
+	 * @return  bool
+	 **/
 	public function hasVisited()
 	{
 		$last = $this->lastVisit;
@@ -181,7 +202,7 @@ class User extends Model implements
 	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
-	 * @return  string
+	 * @return  integer
 	 */
 	public function getUnixidAttribute()
 	{
@@ -195,7 +216,7 @@ class User extends Model implements
 	 */
 	public function getDatelastseenAttribute()
 	{
-		return $this->getUserUsername()->datelastseen;
+		return $this->getLastVisitAttribute();
 	}
 
 	/**
@@ -205,7 +226,7 @@ class User extends Model implements
 	 */
 	public function getDatecreatedAttribute()
 	{
-		return $this->getUserUsername()->datecreated;
+		return $this->getCreatedAtAttribute();
 	}
 
 	/**
@@ -367,11 +388,11 @@ class User extends Model implements
 	 */
 	public function roles()
 	{
-		return $this->hasMany('App\Halcyon\Access\Map', 'user_id');
+		return $this->hasMany(Map::class, 'user_id');
 	}
 
 	/**
-	 * Get access roles
+	 * Get groups
 	 *
 	 * @return  object
 	 */
@@ -381,7 +402,7 @@ class User extends Model implements
 	}
 
 	/**
-	 * Get access roles
+	 * Get queues
 	 *
 	 * @return  object
 	 */
@@ -391,7 +412,7 @@ class User extends Model implements
 	}
 
 	/**
-	 * Get access roles
+	 * Get usernames
 	 *
 	 * @return  object
 	 */

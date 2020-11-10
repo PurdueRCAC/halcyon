@@ -3,6 +3,7 @@
 namespace App\Modules\Users\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Modules\Users\Events\UserBeforeDisplay;
 
 class UserResource extends JsonResource
 {
@@ -14,6 +15,38 @@ class UserResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		return parent::toArray($request);
+		event($event = new UserBeforeDisplay($this->resource));
+
+		$this->resource = $event->getUser();
+
+		$data = parent::toArray($request);
+
+		unset($data['api_token']);
+
+		$data['api'] = route('api.users.read', ['id' => $this->id]);
+		//$data['uri'] = route('site.users.account', ['id' => $this->id]);
+
+		$data['datecreated'] = $this->datecreated;
+		$data['datelastseen'] = $this->hasVisited() ? $this->datelastseen : null;
+		$data['dateremoved'] = $this->isTrashed() ? $this->dateremoved : null;
+		$data['unixid'] = $this->unixid;
+		$data['username'] = $this->username;
+
+		$data['notes'] = $this->notes;
+		$data['roles'] = $this->roles;
+
+		// Permissions check
+		$data['can']['edit']   = false;
+		$data['can']['delete'] = false;
+
+		$user = auth()->user();
+
+		if ($user)
+		{
+			$data['can']['edit']   = ($user->can('edit users') || ($user->can('edit.own users') && $this->id == $user->id));
+			$data['can']['delete'] = $user->can('delete users');
+		}
+
+		return $data;
 	}
 }

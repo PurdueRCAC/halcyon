@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use App\Modules\Users\Http\Resources\UserResourceCollection;
 use App\Modules\Users\Http\Resources\UserResource;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\UserUsername;
 use App\Modules\Users\Events\UserSearching;
 use App\Halcyon\Access\Map;
 
@@ -81,15 +82,15 @@ class UsersController extends Controller
 			'search'   => null,
 			'range' => null,
 			'created_at' => null,
-			'email_verified' => 1,
-			'block'    => 0,
+			//'email_verified' => 1,
+			//'block'    => 0,
 			//'access'   => 0,
 			//'approved' => 1,
 			'group_id' => 0,
 			// Paging
 			'limit'     => config('list_limit', 20),
 			// Sorting
-			'order'     => 'created_at',
+			'order'     => 'id',
 			'order_dir' => 'desc',
 		);
 
@@ -110,10 +111,17 @@ class UsersController extends Controller
 		}
 
 		$a = (new User)->getTable();
+		$u = (new UserUsername)->getTable();
 		$b = (new Map)->getTable();
 
 		$query = User::query()
-			->select($a . '.*');
+			->select($a . '.id', $a . '.name', $a . '.puid')
+			->join($u, $u . '.userid', $a . '.id')
+			->where(function($where) use ($u)
+			{
+				$where->whereNull($u . '.dateremoved')
+					->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+			});
 			//->with('accessgroups');
 			/*->including(['notes', function ($note){
 				$note
@@ -123,7 +131,7 @@ class UsersController extends Controller
 
 		if ($filters['group_id'])
 		{
-			$entries
+			$query
 				->leftJoin($b, $b . '.user_id', $a . '.id')
 				->where($b . '.group_id', '=', (int)$filters['group_id']);
 				/*->group($a . '.id')
@@ -148,26 +156,26 @@ class UsersController extends Controller
 			}
 			else
 			{
-				$query->where(function($where) use ($filters, $a)
+				$query->where(function($where) use ($filters, $a, $u)
 				{
 					$search = strtolower((string)$filters['search']);
 
 					$where->where($a . '.name', 'like', '%' . $search . '%')
-						->orWhere($a . '.username', 'like', '%' . $search . '%')
-						->orWhere($a . '.email', 'like', '%' . $search . '%');
+						->orWhere($u . '.username', 'like', '%' . $search . '%');
+						//->orWhere($a . '.email', 'like', '%' . $search . '%');
 				});
 			}
 		}
 
 		if ($filters['created_at'])
 		{
-			$query->where($a . '.created_at', '>=', $filters['created_at']);
+			$query->where($a . '.datecreated', '>=', $filters['created_at']);
 		}
 
 		/*if ($filters['access'] > 0)
 		{
 			$query->where($a . '.access', '=', (int)$filters['access']);
-		}*/
+		}
 
 		if (is_numeric($filters['block']))
 		{
@@ -181,7 +189,7 @@ class UsersController extends Controller
 		else
 		{
 			$query->whereNotNull($a . '.email_verified_at');
-		}
+		}*/
 
 		// Apply the range filter.
 		if ($filters['range'])
@@ -221,19 +229,34 @@ class UsersController extends Controller
 
 			if ($filters['range'] == 'post_year')
 			{
-				$query->where($a . '.created_at', '<', $dStart->format('Y-m-d H:i:s'));
+				$query->where($u . '.datecreated', '<', $dStart->format('Y-m-d H:i:s'));
 			}
 			else
 			{
-				$query->where($a . '.created_at', '>=', $dStart->format('Y-m-d H:i:s'));
-				$query->where($a . '.created_at', '<=', $dNow->format('Y-m-d H:i:s'));
+				$query->where($u . '.datecreated', '>=', $dStart->format('Y-m-d H:i:s'));
+				$query->where($u . '.datecreated', '<=', $dNow->format('Y-m-d H:i:s'));
 			}
 		}
 
+		if ($filters['order'] == 'created_at'
+		 || $filters['order'] == 'username')
+		{
+			$filters['order'] = $u . '.' . $filters['order'];
+		}
+		else
+		{
+			$filters['order'] = $a . '.' . $filters['order'];
+		}
+
 		$rows = $query
-			->orderBy($a . '.' . $filters['order'], $filters['order_dir'])
+			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
+		
+		foreach ($rows as $row)
+		{
+			$row->username;
+		}
 
 		if (count($rows) < $filters['limit'] && $filters['search'])
 		{
@@ -302,9 +325,6 @@ class UsersController extends Controller
 	{
 		$user = User::findOrFail($id);
 
-		$user->notes;
-		$user->roles;
-
 		return new UserResource($user);
 	}
 
@@ -328,65 +348,148 @@ class UsersController extends Controller
 	 * 		"description":   "User name",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 128
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "email",
-	 * 		"description":   "Email address",
-	 * 		"type":          "string",
+	 * 		"name":          "puid",
+	 * 		"description":   "Purdue ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "username",
+	 * 		"description":   "Username",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"format":    "email"
+	 * 			"maxLength": 16
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "unixid",
+	 * 		"description":   "Unix user ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "puid",
+	 * 		"description":   "Purdue ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datelastseen",
+	 * 		"description":   "Last time the user logged in",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "roles",
+	 * 		"description":   "A list of Role IDs to apply to the user",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array"
 	 * 		}
 	 * }
 	 * @param   Request $request
 	 * @return  Response
 	 */
-	public function update(Request $request, User $user): UserResource
+	public function update(Request $request, $id): UserResource
 	{
 		$request->validate([
-			'fields.surname' => 'required',
-			'fields.email' => 'required',
+			'name' => 'nullable|string|max:128',
+			'puid' => 'nullable|integer',
+			'username' => 'nullable|string|max:16',
+			'unixid' => 'nullable|integer',
+			'datelastseen' => 'nullable',
+			'roles' => 'nullable|array',
+			//'email' => 'required',
 		]);
 
-		//$id = $request->input('id');
-		$fields = $request->input('fields');
+		$user = User::findOrFail($id);
 
-		$user->fill($fields);
-
-		// Can't block yourself
-		if ($user->block && $user->id == auth()->user()->id)
+		if ($request->has('name')
+		 || $request->has('puid')
+		 || $request->has('roles'))
 		{
-			throw new \Exception(trans('users::users.ERROR_CANNOT_BLOCK_SELF'));
-		}
+			$user->name = $request->input('name', $user->name);
+			$user->puid = $request->input('puid', $user->puid);
 
-		// Make sure that we are not removing ourself from Super Admin role
-		$iAmSuperAdmin = auth()->user()->can('admin');
+			//$id = $request->input('id');
+			//$fields = $request->input('fields');
 
-		if ($iAmSuperAdmin && auth()->user()->id == $user->id)
-		{
-			// Check that at least one of our new roles is Super Admin
-			$stillSuperAdmin = false;
+			//$user->fill($fields);
 
-			foreach ($fields['newroles'] as $role)
+			// Can't block yourself
+			/*if ($user->block && $user->id == auth()->user()->id)
 			{
-				$stillSuperAdmin = ($stillSuperAdmin ? $stillSuperAdmin : Gate::checkRole($role, 'admin'));
+				throw new \Exception(trans('users::users.error.cannot block self'));
+			}*/
+
+			if ($request->has('roles'))
+			{
+				$roles = $request->input('roles', []);
+
+				// Make sure that we are not removing ourself from Super Admin role
+				$iAmSuperAdmin = auth()->user()->can('admin');
+
+				if ($iAmSuperAdmin && auth()->user()->id == $user->id)
+				{
+					// Check that at least one of our new roles is Super Admin
+					$stillSuperAdmin = false;
+
+					foreach ($roles as $role)
+					{
+						$stillSuperAdmin = ($stillSuperAdmin ? $stillSuperAdmin : Gate::checkRole($role, 'admin'));
+					}
+
+					if (!$stillSuperAdmin)
+					{
+						return response()->json(['message' => trans('users::users.error.cannot demote self')], 500);
+					}
+				}
+
+				$user->newroles = $roles;
 			}
 
-			if (!$stillSuperAdmin)
+			if (!$user->save())
 			{
-				throw new \Exception(trans('users::users.ERROR_CANNOT_DEMOTE_SELF'));
+				return response()->json(['message' => trans('global.messages.save failed', ['id' => $id])], 500);
 			}
 		}
 
-		if (!$user->save())
+		if ($request->has('unixid')
+		 || $request->has('username')
+		 || $request->has('datelastseen'))
 		{
-			$error = $user->getError() ? $user->getError() : trans('messages.save failed');
+			$username = $user->getUserUsername();
 
-			throw new \Exception($error);
+			$username->unixid = $request->input('unixid', $username->unixid);
+			$username->username = $request->input('datelastseen', $username->username);
+			$username->datelastseen = $request->input('datelastseen', $username->datelastseen);
+
+			if (!$username->save())
+			{
+				return response()->json(['message' => trans('global.messages.save failed', ['id' => $id])], 500);
+			}
 		}
 
 		return new UserResource($user);
@@ -412,8 +515,9 @@ class UsersController extends Controller
 	public function delete($id)
 	{
 		$user = User::findOrFail($id);
+		$username = $user->getUserUsername();
 
-		if (!$user->delete())
+		if (!$username->delete())
 		{
 			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
 		}

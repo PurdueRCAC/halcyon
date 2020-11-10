@@ -134,7 +134,7 @@ class UnixGroupMembersController extends Controller
 			$u = (new User)->getTableName();
 
 			$query->select($g . '.*');
-			$query->innerJoin($u, $u . '.id', $g . '.userid')
+			$query->innerJoin($u, $u . '.id', $g . '.userid');
 			$query->where(function($where) use ($u)
 			{
 				$where->where($u . '.name', 'like', '%' . $filters['search'] . '%')

@@ -236,6 +236,34 @@ class User extends Model
 	}
 
 	/**
+	 * Query scope where membership is pending
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereIsActive($query)
+	{
+		return $query->where(function($where)
+		{
+			$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+		});
+	}
+
+	/**
+	 * Query scope where membership is pending
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereIsTrashed($query)
+	{
+		return $query->where(function($where)
+		{
+			$where->whereNotNull('datetimeremoved')
+				->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+		});
+	}
+
+	/**
 	 * Is regular member?
 	 *
 	 * @return  bool

@@ -168,8 +168,8 @@ class DbmLdap
 					$user = new User;
 					$user->name = $result['cn'][0];
 					$user->username = $result['uid'][0];
-					$user->email = $user->username . '@purdue.edu';
-					$user->organization_id = $result['employeeNumber'][0];
+					//$user->email = $user->username . '@purdue.edu';
+					$user->puid = $result['employeeNumber'][0];
 
 					$event->user = $user;
 					break;
@@ -201,7 +201,7 @@ class DbmLdap
 		}
 
 		// We'll assume we already have all the user's info
-		if ($event->user->organization_id)
+		if ($event->user->puid)
 		{
 			return;
 		}
@@ -223,8 +223,8 @@ class DbmLdap
 
 				// Set user data
 				$event->user->name = Str::properCaseNoun($result['cn'][0]);
-				$event->user->organization_id = $result['employeeNumber'][0];
-				$event->user->email = $result['mail'][0];
+				$event->user->puid = $result['employeeNumber'][0];
+				//$event->user->email = $result['mail'][0];
 				$event->user->save();
 			}
 		}
