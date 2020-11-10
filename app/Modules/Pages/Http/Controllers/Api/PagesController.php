@@ -268,7 +268,9 @@ class PagesController extends Controller
 	 * 		"description":   "Start publishing (defaults to created time)",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -277,7 +279,9 @@ class PagesController extends Controller
 	 * 		"description":   "Stop publishing",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -287,15 +291,6 @@ class PagesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "publish_up",
-	 * 		"description":   "Start publishing (defaults to created time)",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @param  Request $request
