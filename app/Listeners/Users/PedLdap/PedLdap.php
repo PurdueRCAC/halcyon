@@ -175,6 +175,7 @@ class PedLdap
 				);
 
 				$event->results = $itemsTransformedAndPaginated;
+				$results = array();
 			}
 		}
 		catch (\Exception $e)

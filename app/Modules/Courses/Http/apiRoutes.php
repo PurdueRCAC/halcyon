@@ -30,7 +30,7 @@ $router->group(['prefix' => 'courses'], function (Router $router)
 		$router->delete('{id}', [
 			'as' => 'api.courses.members.delete',
 			'uses' => 'MembersController@delete',
-			'middleware' => 'auth:api|can:edit courses,edit.own courses',
+			'middleware' => ['auth:api', 'can:edit courses,edit.own courses'],
 		])->where('id', '[0-9]+');
 	});
 

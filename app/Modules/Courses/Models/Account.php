@@ -123,7 +123,7 @@ class Account extends Model
 	 */
 	public function resource()
 	{
-		return $this->belongsTo(Asset::class, 'resourceid')->withTrashed();
+		return $this->belongsTo(Asset::class, 'resourceid');
 	}
 
 	/**

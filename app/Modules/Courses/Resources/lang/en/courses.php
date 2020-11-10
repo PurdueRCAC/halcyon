@@ -21,4 +21,5 @@ return [
 	'all states' => '- All States -',
 	'owner' => 'Owner',
 	'type' => 'Type',
+	'choose user' => 'Choose owner',
 ];

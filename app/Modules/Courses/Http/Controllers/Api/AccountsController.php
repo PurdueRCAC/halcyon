@@ -245,6 +245,8 @@ class AccountsController extends Controller
 			'datetimestart' => 'required|datetime',
 		]);
 
+		$type = $request->input('type');
+
 		$row = new Account;
 		$row->crn = $request->input('crn');
 		$row->department = $request->input('department');
@@ -256,13 +258,13 @@ class AccountsController extends Controller
 		$row->datetimestart = $request->input('datetimestart');
 		//$row->fill($request->all());
 
-		if ($row->userid)
+		if (!$row->userid)
 		{
 			$row->userid = auth()->user()->id;
 		}
 
 		// Swith for class vs workshop
-		if ($row->crn == '-1')
+		if ($type == 'workshop')
 		{
 			if ($row->classname == '')
 			{
@@ -279,6 +281,10 @@ class AccountsController extends Controller
 			$row->datetimestart = Carbon::parse($row->datetimestart)->modify('-86400 seconds')->toDateTimeString();
 			$row->datetimestop  = Carbon::parse($row->datetimestop)->modify('+86400 seconds')->toDateTimeString();
 			$row->crn = uniqid();
+			$row->semester = 'Workshop';
+			$row->reference = $row->semester;
+			$row->department = '';
+			$row->coursenumber = '';
 		}
 		else
 		{

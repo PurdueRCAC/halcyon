@@ -77,6 +77,18 @@ class Member extends Model
 	);
 
 	/**
+	 * The attributes that should be mutated to dates.
+	 *
+	 * @var array
+	 */
+	public $dates = array(
+		'datetimestart',
+		'datetimestop',
+		'datetimecreated',
+		'datetimeremoved',
+	);
+
+	/**
 	 * The event map for the model.
 	 *
 	 * @var array
@@ -96,7 +108,7 @@ class Member extends Model
 	 */
 	public function user()
 	{
-		return $this->belongsTo('App\Modules\Users\Models\User', 'userid')->withTrashed();
+		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
 
 	/**
@@ -130,5 +142,26 @@ class Member extends Model
 		$query->update(['notice' => 2]);
 
 		return parent::delete($options);
+	}
+
+	/**
+	 * Delete entry and associated data
+	 *
+	 * @param   integer  $classaccountid
+	 * @param   integer  $userid
+	 * @return  bool
+	 */
+	public static function findByAccountAndUser($classaccountid, $userid)
+	{
+		return self::query()
+			->withTrashed()
+			->where('classaccountid', '=', $classaccountid)
+			->where('userid', '=', $userid)
+			->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->first();
 	}
 }

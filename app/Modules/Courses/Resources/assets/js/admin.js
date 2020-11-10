@@ -38,6 +38,12 @@ document.addEventListener('DOMContentLoaded', function() {
 					// Set selection
 					user.val(ui.item.label); // display the selected text
 					cl.val(ui.item.id); // save selected id to input
+
+					window.location(window.location.href + '?userid=' + ui.item.id);
+					/*$.getJSON(user.attr('data-user-uri') + ui.item.id + '?api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
+						$(user.data('list')).empty();
+						data.
+					});*/
 					return false;
 				}
 			});

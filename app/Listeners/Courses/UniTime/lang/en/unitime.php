@@ -1,5 +1,5 @@
 <?php
 return [
-	'listener name' => 'Users - Role Provision',
-	'listener desc' => 'Service connector for Purdue University\'s Central Accounts.',
+	'listener name' => 'Courses - University Time',
+	'listener desc' => 'Service connector for Purdue University\'s courses.',
 ];

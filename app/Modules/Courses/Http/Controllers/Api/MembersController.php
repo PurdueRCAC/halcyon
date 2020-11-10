@@ -126,7 +126,8 @@ class MembersController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param  Request  $request
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -239,7 +240,8 @@ class MembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param  Request  $request
+	 * @return JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -264,11 +266,16 @@ class MembersController extends Controller
 		$row->userid = $userid;
 		$row->membertype = $request->input('membertype', 1);
 		$row->notice = 1;
+		$row->datetimestart = $row->account->datetimestart;
+		$row->datetimestop = $row->account->datetimestop;
 
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('messages.create failed')], 500);
 		}
+
+		$row->api = route('api.courses.members.read', ['id' => $row->id]);
+		$row->user;
 
 		return new JsonResource($row);
 	}
@@ -287,7 +294,8 @@ class MembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param   integer  $id
+	 * @return  JsonResource
 	 */
 	public function read($id)
 	{
@@ -372,7 +380,8 @@ class MembersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @return  Response
+	 * @param   integer  $id
+	 * @return  JsonResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -402,10 +411,28 @@ class MembersController extends Controller
 			$row->membertype = $membertype;
 		}
 
+		if ($notice = $request->input('notice'))
+		{
+			$row->notice = $notice;
+		}
+
+		if ($datetimestart = $request->input('datetimestart'))
+		{
+			$row->datetimestart = $datetimestart;
+		}
+
+		if ($datetimestop = $request->input('datetimestop'))
+		{
+			$row->datetimestop = $datetimestop;
+		}
+
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('messages.create failed')], 500);
 		}
+
+		$row->api = route('api.courses.members.read', ['id' => $row->id]);
+		$row->user;
 
 		return new JsonResource($row);
 	}
@@ -424,6 +451,7 @@ class MembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

@@ -1,8 +1,24 @@
 @extends('layouts.master')
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/courses/js/admin.js') }}"></script>
-@stop
+<script>
+$(document).ready(function() {
+	var dialog = $("#new-account").dialog({
+		autoOpen: false,
+		height: 200,
+		width: 500,
+		modal: true
+	});
+
+	$('#toolbar-plus').on('click', function(e){
+		e.preventDefault();
+
+		dialog.dialog("open");
+	});
+});
+</script>
+@endpush
 
 @php
 app('pathway')
@@ -40,7 +56,7 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-4 filter-search">
+			<div class="col col-md-7 filter-search">
 				<div class="form-group">
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
@@ -49,7 +65,16 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-8 text-right filter-select">
+			<div class="col col-md-2 text-right">
+				<div class="form-group">
+					<label for="member-userid" class="sr-only">{{ trans('courses::courses.member') }}:</label>
+					<span class="input-group">
+						<input type="text" name="userid" id="filter-userid" class="form-control form-users submit" data-uri="{{ route('api.users.index') }}?search=%s" value="{{ $filters['userid'] ? App\Modules\Users\Models\User::find($filters['userid'])->name . ':' . $filters['userid'] : '' }}" />
+						<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
+					</span>
+				</div>
+			</div>
+			<div class="col col-md-3 text-right filter-select">
 				<label class="sr-only" for="filter_semester">{{ trans('courses::courses.semester') }}</label>
 				<select name="semester" id="filter_semester" class="form-control filter filter-submit">
 					<option value=""<?php if (!$filters['semester']): echo ' selected="selected"'; endif;?>>{{ trans('courses::courses.all semesters') }}</option>
@@ -242,6 +267,18 @@ app('pathway')
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
+
+	<div id="new-account" class="hide" title="{{ trans('courses::courses.choose user') }}">
+		<h2 class="modal-title sr-only">{{ trans('courses::courses.choose user') }}</h2>
+
+		<div class="form-group">
+			<label for="field-userid">{{ trans('courses::courses.owner') }}:</label>
+			<span class="input-group">
+				<input type="text" name="userid" id="field-userid" class="form-control form-users redirect" data-uri="{{ route('api.users.index') }}?search=%s" data-location="{{ route('admin.courses.create') }}?userid=%s" value="" />
+				<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
+			</span>
+		</div>
+	</div>
 
 	@csrf
 </form>
