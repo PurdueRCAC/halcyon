@@ -41,24 +41,26 @@
 
 								$users = $row->associations()->where('assoctype', '=', 'user')->get();
 								?>
+							@if (auth()->user()->can('manage news'))
 								@if ($users->count())
 									<?php
 									$names = array();
-									foreach ($users as $user):
-										$u = App\Modules\Users\Models\User::find($user->associd);
+									foreach ($users as $usr):
+										$u = App\Modules\Users\Models\User::find($usr->associd);
 										if (!$u)
 										{
 											continue;
 										}
-										$names[] = $u->name;
+										$names[] = '<a href="' . route('site.users.account', ['u' => $u->id]) . '">' . e($u->name) . '</a>';
 									endforeach;
 									?>
 									<li class="news-users">
 										<span id="newspostusers-{{ $row->id }}" class="newspostusers">
-											({{ $users->count() }}) - {{ implode(', ', $names) }}
+											({{ $users->count() }}) - {!! implode(', ', $names) !!}
 										</span>
 									</li>
 								@endif
+							@endif
 							</ul>
 						</div>
 						<div class="panel-body">
