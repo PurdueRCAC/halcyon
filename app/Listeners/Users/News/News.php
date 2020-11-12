@@ -52,58 +52,55 @@ class News
 
 		foreach ($types as $type)
 		{
-		$r = ['section' => $type->alias];
-		if (auth()->user()->id != $user->id)
-		{
-			$r['u'] = $user->id;
-		}
+			$r = ['section' => $type->alias];
+			if (auth()->user()->id != $user->id)
+			{
+				$r['u'] = $user->id;
+			}
 
-		$a = (new Article)->getTable();
-		$u = (new Association)->getTable();
+			$a = (new Article)->getTable();
+			$u = (new Association)->getTable();
 
-		$total = Article::query()
-			->select($a . '.*')
-			->join($u, $u . '.newsid', $a . '.id')
-			->where($u . '.associd', '=', $user->id)
-			->where($u . '.assoctype', '=', 'user')
-			->where($a . '.newstypeid', '=', $type->id)
-			->whereIn($a . '.published', $states)
-			->count();
-
-		if ($event->getActive() == $type->alias)
-		{
-			app('pathway')
-				->append(
-					$type->name, //trans('news::news.events'),
-					route('site.users.account.section', $r)
-				);
-
-			//$r = (new Article)->getTable();
-			//$u = (new Association)->getTable();
-
-			$rows = Article::query()
+			$total = Article::query()
 				->select($a . '.*')
 				->join($u, $u . '.newsid', $a . '.id')
 				->where($u . '.associd', '=', $user->id)
 				->where($u . '.assoctype', '=', 'user')
 				->where($a . '.newstypeid', '=', $type->id)
 				->whereIn($a . '.published', $states)
-				->orderBy($a . '.datetimecreated', 'desc')
-				->paginate(config('list_limit', 20));
+				->count();
 
-			$content = view('news::site.profile', [
-				'user' => $user,
-				'rows' => $rows,
-				'type' => $type,
-			]);
-		}
+			if ($event->getActive() == $type->alias)
+			{
+				app('pathway')
+					->append(
+						$type->name,
+						route('site.users.account.section', $r)
+					);
 
-		$event->addSection(
-			route('site.users.account.section', $r),
-			$type->name . ' <span class="badge">' . $total . '</span>',
-			($event->getActive() == $type->alias),
-			$content
-		);
+				$rows = Article::query()
+					->select($a . '.*')
+					->join($u, $u . '.newsid', $a . '.id')
+					->where($u . '.associd', '=', $user->id)
+					->where($u . '.assoctype', '=', 'user')
+					->where($a . '.newstypeid', '=', $type->id)
+					->whereIn($a . '.published', $states)
+					->orderBy($a . '.datetimecreated', 'desc')
+					->paginate(config('list_limit', 20));
+
+				$content = view('news::site.profile', [
+					'user' => $user,
+					'rows' => $rows,
+					'type' => $type,
+				]);
+			}
+
+			$event->addSection(
+				route('site.users.account.section', $r),
+				$type->name . ' <span class="badge">' . $total . '</span>',
+				($event->getActive() == $type->alias),
+				$content
+			);
 		}
 	}
 }
