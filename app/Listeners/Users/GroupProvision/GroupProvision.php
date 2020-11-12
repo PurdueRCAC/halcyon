@@ -5,7 +5,7 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace App\Listeners\Users\GroupProvision
+namespace App\Listeners\Users\GroupProvision;
 
 use App\Modules\Users\Events\UserUpdated;
 use App\Modules\Groups\Events\UnixGroupCreating;
