@@ -463,6 +463,19 @@ class User extends Model implements
 	}
 
 	/**
+	 * Finds a user by organization ID
+	 *
+	 * @param   integer  $organization_id
+	 * @return  object
+	 */
+	public static function findByOrganizationId($organization_id)
+	{
+		return self::query()
+			->where('puid', '=', $organization_id)
+			->first();
+	}
+
+	/**
 	 * Finds a user by activation token
 	 *
 	 * @param   string  $token
