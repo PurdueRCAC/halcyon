@@ -41,6 +41,10 @@ class ModuleServiceProvider extends ServiceProvider
 		{
 			$this->app['events']->subscribe(new GroupReports);
 		}
+		if (is_dir(dirname(dirname(__DIR__))) . '/Courses')
+		{
+			$this->app['events']->subscribe(new CourseReport);
+		}
 	}
 
 	/**
