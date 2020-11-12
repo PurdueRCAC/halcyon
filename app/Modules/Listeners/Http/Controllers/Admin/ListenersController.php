@@ -142,8 +142,6 @@ class ListenersController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Listener;
 		$row->registerLanguage();
 
@@ -159,8 +157,6 @@ class ListenersController extends Controller
 	 */
 	public function edit($id, Request $request)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Listener::findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))
@@ -215,14 +211,14 @@ class ListenersController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
 
 		$row->checkIn();
 
-		return $this->cancel()->withSuccess(trans('messages.update success'));
+		return $this->cancel()->withSuccess(trans('global.messages.update success'));
 	}
 
 	/**
@@ -253,7 +249,7 @@ class ListenersController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();
@@ -352,7 +348,7 @@ class ListenersController extends Controller
 
 			if (!$model->move($inc))
 			{
-				$request->session()->flash('error', trans('global.ERROR_REORDER_FAILED', ['error' => $model->getError()]));
+				$request->session()->flash('error', trans('global.error.reorder failed', ['error' => $model->getError()]));
 				continue;
 			}
 
@@ -362,7 +358,7 @@ class ListenersController extends Controller
 		if ($success)
 		{
 			// Set the success message
-			$request->session()->flash('success', trans('global.SUCCESS_ITEM_REORDERED'));
+			$request->session()->flash('success', trans('global.messages.items reordered'));
 		}
 
 		// Redirect back to the listing
@@ -391,12 +387,12 @@ class ListenersController extends Controller
 		if ($return === false)
 		{
 			// Reorder failed
-			$request->session()->flash('success', trans('global.ERROR_REORDER_FAILED'));
+			$request->session()->flash('success', trans('global.error.reorder failed'));
 		}
 		else
 		{
 			// Reorder succeeded.
-			$request->session()->flash('success', trans('global.SUCCESS_ORDERING_SAVED'));
+			$request->session()->flash('success', trans('global.messages.ordering saved'));
 		}
 
 		// Redirect back to the listing
@@ -420,7 +416,7 @@ class ListenersController extends Controller
 
 			if (!$model->checkin())
 			{
-				$request->session()->flash('error', trans('global.ERROR_CHECKIN_FAILED', ['error' => $model->getError()]));
+				$request->session()->flash('error', trans('global.error.checkin failed', ['error' => $model->getError()]));
 				continue;
 			}
 		}
@@ -449,151 +445,11 @@ class ListenersController extends Controller
 				// Check-in failed, go back to the record and display a notice.
 				if (!$model->checkin())
 				{
-					$request->session()->flash('error', trans('global.ERROR_CHECKIN_FAILED', ['error' => $model->getError()]));
+					$request->session()->flash('error', trans('global.error.checkin failed', ['error' => $model->getError()]));
 				}
 			}
 		}
 
 		return redirect(route('admin.listeners.index'));
-	}
-
-	/**
-	 * Batch process records
-	 *
-	 * @param   Request $request
-	 * @return  Response
-	 */
-	public function batch(Request $request)
-	{
-		$commands = $request->post('batch');
-
-		// Sanitize user ids.
-		$pks = array_unique($pks);
-		\App\Halcyon\Utility\Arr::toInteger($pks);
-
-		// Remove any values of zero.
-		if (array_search(0, $pks, true))
-		{
-			unset($pks[array_search(0, $pks, true)]);
-		}
-
-		if (empty($pks))
-		{
-			return $this->cancel()->with('error', trans('global.no item selected'));
-		}
-
-		$done = false;
-
-		if (!empty($commands['position_id']))
-		{
-			$cmd = \App\Halcyon\Utility\Arr::getValue($commands, 'move_copy', 'c');
-
-			if (!empty($commands['position_id']))
-			{
-				if ($cmd == 'c')
-				{
-					$result = $this->batchCopy($commands['position_id'], $pks, $contexts);
-
-					if (is_array($result))
-					{
-						$pks = $result;
-					}
-					else
-					{
-						return $this->cancel();
-					}
-				}
-				elseif ($cmd == 'm' && !$this->batchMove($commands['position_id'], $pks, $contexts))
-				{
-					return $this->cancel();
-				}
-
-				$done = true;
-			}
-		}
-
-		if (!empty($commands['assetgroup_id']))
-		{
-			if (!$this->batchAccess($commands['assetgroup_id'], $pks, $contexts))
-			{
-				return $this->cancel();
-			}
-
-			$done = true;
-		}
-
-		if (!empty($commands['language_id']))
-		{
-			if (!$this->batchLanguage($commands['language_id'], $pks, $contexts))
-			{
-				return $this->cancel();
-			}
-
-			$done = true;
-		}
-
-		if (!$done)
-		{
-			return $this->cancel()->with('error', trans('global.insufficient batch information'));
-		}
-
-		return $this->cancel();
-	}
-
-	/**
-	 * Batch move modules to a new position or current.
-	 *
-	 * @param   integer  $value     The new value matching a module position.
-	 * @param   array    $pks       An array of row IDs.
-	 * @param   array    $contexts  An array of item contexts.
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 */
-	protected function batchMove($value, $pks, $contexts)
-	{
-		// Set the variables
-		$i = 0;
-
-		foreach ($pks as $pk)
-		{
-			if (auth()->user()->can('edit listeners'))
-			{
-				$model = Listener::find($pk);
-
-				// Set the new position
-				if ($value == 'noposition')
-				{
-					$position = '';
-				}
-				elseif ($value == 'nochange')
-				{
-					$position = $model->position;
-				}
-				else
-				{
-					$position = $value;
-				}
-				$model->position = $position;
-
-				// Alter the title if necessary
-				$data = $model->generateNewTitle($model->title, $model->position);
-				$model->title = $data[0];
-
-				// Unpublish the moved module
-				$model->published = 0;
-
-				if (!$model->save())
-				{
-					$this->setError($model->getError());
-					return false;
-				}
-			}
-			else
-			{
-				$this->setError(trans('global.ERROR_BATCH_CANNOT_EDIT'));
-				return false;
-			}
-		}
-
-		return true;
 	}
 }
