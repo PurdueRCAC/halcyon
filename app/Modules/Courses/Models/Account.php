@@ -107,6 +107,13 @@ class Account extends Model
 	];
 
 	/**
+	 * A report
+	 *
+	 * @var string
+	 */
+	public $report = null;
+
+	/**
 	 * Get a list of users
 	 *
 	 * @return  object
@@ -123,7 +130,7 @@ class Account extends Model
 	 */
 	public function resource()
 	{
-		return $this->belongsTo(Asset::class, 'resourceid');
+		return $this->belongsTo(Asset::class, 'resourceid')->withTrashed();
 	}
 
 	/**

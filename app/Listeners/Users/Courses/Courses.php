@@ -9,6 +9,8 @@ namespace App\Listeners\Users\Courses;
 
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\Courses\Models\Account;
+use App\Modules\Courses\Events\InstructorLookup;
+use App\Modules\Resources\Entities\Asset;
 
 /**
  * User listener for sessions
@@ -44,6 +46,10 @@ class Courses
 			$r['u'] = $user->id;
 		}
 
+		$total = Account::query()
+			->where('userid', '=', $user->id)
+			->count();
+
 		if ($event->getActive() == 'class')
 		{
 			app('pathway')
@@ -52,37 +58,30 @@ class Courses
 					route('site.users.account.section', $r)
 				);
 
-			if ($id = request()->segment(3))
-			{
-				$group = Group::findOrFail($id);
+			event($e = new InstructorLookup($user));
 
-				app('pathway')
-					->append(
-						$group->name,
-						route('site.users.account.section', array_merge($r, ['id' => $id]))
-					);
+			$classes = $e->courses;
+			$resources = Asset::query()
+				->where('listname', '=', 'scholar')
+				->orderBy('name')
+				->get();
 
-				$content = view('courses::site.group', [
-					'user'  => $user,
-					'group' => $group,
-				]);
-			}
-			else
-			{
-				$courses = Account::query()
-					->where('userid', '=', $user->id)
-					->get();
+			$courses = Account::query()
+				->where('userid', '=', $user->id)
+				->orderBy('datetimestart', 'desc')
+				->get();
 
-				$content = view('courses::site.profile', [
-					'user'   => $user,
-					'courses' => $courses
-				]);
-			}
+			$content = view('courses::site.profile', [
+				'user'    => $user,
+				'courses' => $courses,
+				'classes' => $classes,
+				'resources' => $resources,
+			]);
 		}
 
 		$event->addSection(
 			route('site.users.account.section', $r),
-			trans('courses::courses.my courses'),
+			trans('courses::courses.my courses') . ' <span class="badge">' . $total . '</span>',
 			($event->getActive() == 'class'),
 			$content
 		);

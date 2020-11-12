@@ -219,12 +219,12 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-datetimestart">{{ trans('courses::courses.date start') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					{!! Html::input('calendar', 'fields[datetimestart]', $row->datetimestart, ['required' => 'required']) !!}
+					{!! Html::input('calendar', 'fields[datetimestart]', $row->datetimestart->format('Y-m-d'), ['required' => 'required', 'time' => false]) !!}
 				</div>
 
 				<div class="form-group">
 					<label for="field-datetimestop">{{ trans('courses::courses.date stop') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					{!! Html::input('calendar', 'fields[datetimestop]', $row->datetimestop, ['required' => 'required']) !!}
+					{!! Html::input('calendar', 'fields[datetimestop]', $row->datetimestop->format('Y-m-d'), ['required' => 'required', 'time' => false]) !!}
 				</div>
 			</fieldset>
 		</div>

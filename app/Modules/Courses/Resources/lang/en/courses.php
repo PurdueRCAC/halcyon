@@ -22,4 +22,10 @@ return [
 	'owner' => 'Owner',
 	'type' => 'Type',
 	'choose user' => 'Choose owner',
+	'user id' => 'User ID',
+	'name' => 'Name',
+	'members' => 'Members',
+	'filter by user' => 'Filter by user',
+	'create accounts' => 'Create Accounts for Class',
+	'add account' => 'Add Account',
 ];

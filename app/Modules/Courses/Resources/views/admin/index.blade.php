@@ -69,7 +69,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="member-userid" class="sr-only">{{ trans('courses::courses.member') }}:</label>
 					<span class="input-group">
-						<input type="text" name="userid" id="filter-userid" class="form-control form-users submit" data-uri="{{ route('api.users.index') }}?search=%s" value="{{ $filters['userid'] ? App\Modules\Users\Models\User::find($filters['userid'])->name . ':' . $filters['userid'] : '' }}" />
+						<input type="text" name="userid" id="filter-userid" class="form-control form-users submit" data-uri="{{ route('api.users.index') }}?search=%s" placeholder="{{ trans('courses::courses.filter by user') }}" value="{{ $filters['userid'] ? App\Modules\Users\Models\User::find($filters['userid'])->name . ':' . $filters['userid'] : '' }}" />
 						<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
 					</span>
 				</div>
