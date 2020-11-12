@@ -84,12 +84,19 @@
 
 	<div class="contentInner">
 		@if (auth()->user()->can('create groups'))
-			<a class="btn btn-default float-right" href="{{ route('site.users.account.section', ['section' => 'groups']) }}">
-				<i class="fa fa-plus-circle"></i> {{ trans('global.create') }}
-			</a>
+			<div class="row">
+				<div class="col-md-9">
+					<h2>{{ trans('users::users.groups') }}</h2>
+				</div>
+				<div class="col-md-3 text-right">
+					<a class="btn btn-default float-right" href="{{ route('site.users.account.section', ['section' => 'groups']) }}">
+						<i class="fa fa-plus-circle"></i> {{ trans('global.create') }}
+					</a>
+				</div>
+			</div>
+		@else
+			<h2>{{ trans('users::users.groups') }}</h2>
 		@endif
-
-		<h2>{{ trans('users::users.groups') }}</h2>
 
 		<div id="everything">
 			<ul>
