@@ -5,6 +5,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Modules\ContactReports\Console\EmailCommentsCommand;
 use App\Modules\ContactReports\Console\EmailReportsCommand;
 use App\Modules\ContactReports\Listeners\GroupReports;
+use App\Modules\ContactReports\Listeners\CourseReport;
 
 class ModuleServiceProvider extends ServiceProvider
 {
