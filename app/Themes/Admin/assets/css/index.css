@@ -2375,7 +2375,7 @@ fieldset.adminform fieldset {
   background-color: rgba(48, 166, 73, 0.2);
 }
 .access.registered {
-  color: blue;
+  color: #5cb4e4;
   background-color: rgba(30, 163, 183, 0.2);
 }
 .access.special {
