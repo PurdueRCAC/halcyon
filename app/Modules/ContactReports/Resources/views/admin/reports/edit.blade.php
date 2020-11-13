@@ -54,13 +54,14 @@ app('pathway')
 	@endif
 
 	<div class="row">
-		<div class="col col-md-7">
+		<div class="col-md-7">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-datetimecontact">{{ trans('contactreports::contactreports.contacted') }}:</label>
-					{!! Html::input('calendar', 'fields[datetimecontact]', $row->datetimecontact) !!}
+					<label for="field-datetimecontact">{{ trans('contactreports::contactreports.contacted') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					{!! Html::input('calendar', 'fields[datetimecontact]', $row->datetimecontact->format('Y-m-d'), ['required' => true, 'time' => false]) !!}
+					<span class="invalid-feedback">{{ trans('contactreports::contactreports.invalid.contacted') }}</span>
 				</div>
 
 				<div class="form-group">
@@ -111,40 +112,13 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-report">{{ trans('contactreports::contactreports.report') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<textarea name="fields[report]" id="field-report" class="form-control" rows="15" cols="40">{{ $row->report }}</textarea>
+					<textarea name="fields[report]" id="field-report" class="form-control" required rows="15" cols="40">{{ $row->report }}</textarea>
+					<span class="invalid-feedback">{{ trans('contactreports::contactreports.invalid.report') }}</span>
 				</div>
 			</fieldset>
 		</div>
-		<div class="col col-md-5 span5">
-			<table class="meta">
-				<caption class="sr-only">Metadata</caption>
-				<tbody>
-					<tr>
-						<th scope="row">{{ trans('contactreports::contactreports.created') }}:</th>
-						<td>
-							<?php if ($row->getOriginal('datetimecreated') && $row->getOriginal('datetimecreated') != '0000-00-00 00:00:00'): ?>
-								<?php echo e($row->datetimecreated); ?>
-							<?php else: ?>
-								<?php echo trans('global.unknown'); ?>
-							<?php endif; ?>
-						</td>
-					</tr>
-					<?php if ($row->getOriginal('datetimeremoved') && $row->getOriginal('datetimeremoved') != '0000-00-00 00:00:00'): ?>
-						<tr>
-							<th scope="row">{{ trans('contactreports::contactreports.removed') }}:</th>
-							<td>
-								{{ $row->datetimeremoved }}
-							</td>
-						</tr>
-					<?php endif; ?>
-				</tbody>
-			</table>
-		</div>
-	</div>
-
-	@if ($row->id)
-		<div class="row">
-			<div class="col col-md-7">
+		<div class="col-md-5">
+			@if ($row->id)
 				<fieldset class="adminform">
 					<legend>{{ trans('contactreports::contactreports.comments') }}</legend>
 					<?php
@@ -170,7 +144,7 @@ app('pathway')
 							<li>
 								<div class="form-group">
 									<label for="comment">Comment</label>
-									<textarea name="comment" id="comment" class="form-control" cols="45" rows="1"></textarea>
+									<textarea name="comment" id="comment" class="form-control" cols="45" rows="3"></textarea>
 								</div>
 							</li>
 						</ul>
@@ -178,9 +152,9 @@ app('pathway')
 					}
 					?>
 				</fieldset>
-			</div>
+			@endif
 		</div>
-	@endif
+	</div>
 
 	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 
