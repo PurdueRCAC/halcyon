@@ -278,30 +278,16 @@ class Associations extends Model
 				// Error message set in getNode method.
 				return false;
 			}
-//DB::enableQueryLog();
+
 			// Shift left values.
 			$query = DB::table($this->getTable())
 				->where($reposition->left_where['col'], $reposition->left_where['op'], $reposition->left_where['val'])
 				->update(['lft' => DB::raw('lft + 2')]);
-//print_r(DB::getQueryLog()); die();
-			/*if (!$query)
-			{
-				echo 'where ' . $reposition->right_where['col'] . ' '.  $reposition->right_where['op'] .' '.$reposition->right_where['val'];
-				$this->addError('Failed to update lft values');
-				return false;
-			}*/
 
 			// Shift right values.
 			$query = DB::table($this->getTable())
 				->where($reposition->right_where['col'], $reposition->right_where['op'], $reposition->right_where['val'])
 				->update(['rgt' => DB::raw('rgt + 2')]);
-
-			/*if (!$query)
-			{
-				echo 'where ' . $reposition->right_where['col'] . ' '.  $reposition->right_where['op'] .' '.$reposition->right_where['val'];
-				$this->addError('Failed to update rgt values');
-				return false;
-			}*/
 
 			// Set all the nested data
 			$path = array();
@@ -386,13 +372,6 @@ class Associations extends Model
 				'level' => (int) $level,
 				'path'  => $path
 			));
-
-		// If there is an update failure, return false to break out of the recursion.
-		/*if (!$query)
-		{
-			print_r('Update failed'); die();
-			return false;
-		}*/
 
 		// Return the right value of this node + 1.
 		return $rightId + 1;

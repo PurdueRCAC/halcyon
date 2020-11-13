@@ -115,13 +115,6 @@ class Page extends Model
 	 *
 	 * @var  object
 	 */
-	//protected $paramsRegistry = null;
-
-	/**
-	 * Registry
-	 *
-	 * @var  object
-	 */
 	protected $varsRegistry = null;
 
 	/**
@@ -153,21 +146,6 @@ class Page extends Model
 
 		$this->attributes['alias'] = preg_replace("/[^a-zA-Z0-9\-\_]/", '', strtolower($alias));
 	}
-
-	/**
-	 * Get a params Registry object
-	 *
-	 * @return  object
-	 */
-	/*public function getOptionsAttribute()
-	{
-		if (!($this->paramsRegistry instanceof Registry))
-		{
-			$this->paramsRegistry = new Registry($this->params);
-		}
-
-		return $this->paramsRegistry;
-	}*/
 
 	/**
 	 * Get a params Registry object
@@ -563,7 +541,6 @@ class Page extends Model
 		{
 			$child = $parent->children()
 				->where($parent->getTable() . '.alias', '=', $segment)
-				//->where('snippet', '=', 0)
 				->get()
 				->first();
 
@@ -595,20 +572,6 @@ class Page extends Model
 	 */
 	public static function tree($filters = array())
 	{
-		/*$model = new self();
-
-		$p = $model->getTable();
-		$a = (new Association)->getTable();
-
-		// Get the path from the node to the root.
-		$results = self::query()
-			->select('p.*')
-			->from($p . ' AS n')
-			->join($a . ' AS p', 'p.parent_id', '>', DB::raw('0'))
-			->whereRaw('n.lft BETWEEN p.lft AND p.rgt')
-			->where('n.path', '=', (string) $path)
-			->orderBy('p.lft', 'asc')
-			->get();*/
 		$p = (new self)->getTable();
 		$a = (new Associations)->getTable();
 
@@ -619,17 +582,6 @@ class Page extends Model
 			->get();
 
 		return $results;
-
-		/*$root = self::rootNode();
-		$root->level = 0;
-
-		$list = array();
-		$list[$root->id] = $root; //->id;
-
-		$levellimit = (!isset($filters['limit']) || $filters['limit'] == 0) ? 500 : $filters['limit'];
-		$list = self::treeRecurse($list, $root->children()->orderBy('ordering', 'asc')->get(), max(0, $levellimit-1), 1);
-
-		return $list;*/
 	}
 
 	/**
@@ -683,7 +635,7 @@ class Page extends Model
 	 */
 	public function creator()
 	{
-		return $this->belongsTo('App\Modules\Users\Models\User', 'created_by')->withDefault(); //app('request')->user()->toArray()
+		return $this->belongsTo('App\Modules\Users\Models\User', 'created_by');
 	}
 
 	/**
@@ -693,7 +645,7 @@ class Page extends Model
 	 */
 	public function modifier()
 	{
-		return $this->belongsTo('App\Modules\Users\Models\User', 'updated_by')->withDefault();
+		return $this->belongsTo('App\Modules\Users\Models\User', 'updated_by');
 	}
 
 	/**
@@ -804,7 +756,6 @@ class Page extends Model
 	 */
 	public function parents()
 	{
-		//return $this->hasManyThrough(self::class, Association::class, 'child_id', 'id', 'id', 'parent_id');
 		return $this->hasManyThrough(self::class, Associations::class, 'page_id', 'id', 'id', 'parent_id');
 	}
 
