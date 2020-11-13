@@ -1508,13 +1508,28 @@ border-color: #d7d7d7 #d7d7d7 #fff;
   background-color: transparent;
 }
 .form-block {
-  border: 1px solid #d7d7d7;
+  border: 1px solid var(--input-border);
   padding: 0.5em 1em;
   border-radius: 0.25em;
   margin: 0 0 1em 0;
+  display: block;
 }
 .form-block .form-text {
   margin-left: 1.5em;
+}
+a.form-block {
+  padding: 1em;
+  text-align: center;
+  text-decoration: none;
+}
+a.form-block:hover {
+  border-color: 
+}
+a.form-block span {
+  font-size: 3em;
+  display: block;
+  margin: 0 0 0.5em 0;
+  padding: 0.5em;
 }
 .form-check {
   display: inline-block;
@@ -4875,7 +4890,15 @@ a.menulist:hover:before {
   background-color: #333;
   border-color: #333;
 }
-
+.tree li {
+  margin: 0 0 0.5em 0;
+}
+.tree ul {
+  margin: 0.5em 0 0 0;
+}
+.tree ul li {
+  margin-left: 1.5em;
+}
 #main span.fancytree-icon {
   background: none;
 }
