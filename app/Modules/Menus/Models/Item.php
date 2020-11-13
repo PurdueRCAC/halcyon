@@ -799,7 +799,7 @@ class Item extends Model
 			return $this->moveByReference($referenceId, $position, $this->id);
 		}
 
-		$this->addError(trans('JLIB_DATABASE_ERROR_MOVE_FAILED') . ': Reference not found for delta ' . $delta);
+		$this->addError(trans('global.error.move failed') . ': Reference not found for delta ' . $delta);
 
 		return false;
 	}
@@ -823,7 +823,7 @@ class Item extends Model
 		if (!$node->id)
 		{
 			// Error message set in getNode method.
-			$this->addError(trans('JLIB_DATABASE_ERROR_MOVE_FAILED') . ': Node not found #' . $pk);
+			$this->addError(trans('global.error.move failed') . ': Node not found #' . $pk);
 			return false;
 		}
 
@@ -837,7 +837,7 @@ class Item extends Model
 		// Cannot move the node to be a child of itself.
 		if (in_array($referenceId, $children))
 		{
-			$this->addError(trans('JLIB_DATABASE_ERROR_INVALID_NODE_RECURSION'));
+			$this->addError(trans('global.error.invalid node recursion'));
 			return false;
 		}
 
@@ -873,14 +873,14 @@ class Item extends Model
 
 			if (!$reference)
 			{
-				$this->addError(trans('JLIB_DATABASE_ERROR_MOVE_FAILED') . ': Reference not found #' . $referenceId);
+				$this->addError(trans('global.error.move failed') . ': Reference not found #' . $referenceId);
 				return false;
 			}
 
 			// Get the reposition data for shifting the tree and re-inserting the node.
 			if (!$repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), $position))
 			{
-				$this->addError(trans('JLIB_DATABASE_ERROR_MOVE_FAILED') . ': Reposition data');
+				$this->addError(trans('global.error.move failed') . ': Reposition data');
 				return false;
 			}
 		}
@@ -898,12 +898,11 @@ class Item extends Model
 			// Get the reposition data for re-inserting the node after the found root.
 			if (!$repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), 'last-child'))
 			{
-				$this->addError(trans('JLIB_DATABASE_ERROR_MOVE_FAILED') . ': Reposition data');
+				$this->addError(trans('global.error.move failed') . ': Reposition data');
 				return false;
 			}
 		}
-//print_r($reference);
-//print_r($repositionData); die();
+
 		// Create space in the nested sets at the new location for the moved sub-tree.
 
 		// Shift left values.
