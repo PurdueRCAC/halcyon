@@ -27,6 +27,8 @@ app('pathway')
 		if (trim($row->path, '/') != $page->alias)
 		{
 			$parentpath = dirname($row->path);
+			$parentpath = trim($parentpath, '/');
+			$parentpath = $parentpath ? '/' . $parentpath : '';
 		}
 	}
 @endphp
@@ -100,12 +102,13 @@ app('pathway')
 					<span class="form-text text-muted hint">{{ trans('knowledge::knowledge.path hint') }}</span>
 				</div>
 
-				@if (!$page->snippet)
+				<?php /*@if (!$page->snippet)
 					<div class="form-group form-check">
 						<input type="checkbox" name="page[snippet]" id="field-snippet" class="form-check-input" value="1" />
 						<label class="form-check-label" for="field-snippet">{{ trans('knowledge::knowledge.this is a snippet') }}</label>
 					</div>
-				@endif
+				@endif*/?>
+				<input type="hidden" name="page[snippet]" id="field-snippet" class="form-check-input" value="{{ $page->snippet }}" />
 
 				<div class="form-group">
 					<label for="page--content">{{ trans('knowledge::knowledge.content') }}: <span class="required">{{ trans('global.required') }}</span></label>

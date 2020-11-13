@@ -316,8 +316,10 @@ class Associations extends Model
 			}
 
 			$path[] = $this->page->alias;
+			$path = implode('/', $path);
+			$path = trim($path, '/');
 
-			$this->setAttribute('path', implode('/', $path));
+			$this->setAttribute('path', $path);
 			$this->setAttribute('lft', $reposition->new_lft);
 			$this->setAttribute('rgt', $reposition->new_rgt);
 		}

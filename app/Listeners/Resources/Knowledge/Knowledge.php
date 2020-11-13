@@ -61,8 +61,8 @@ class Knowledge
 			->select($a . '.*')
 			->join($p, $p . '.id', $a . '.page_id')
 			->where($a . '.path', '=', $event->getAsset()->listname)
-			->where($p . '.state', '=', 1)
-			->whereIn($p . '.access', $access)
+			->where($a . '.state', '=', 1)
+			->whereIn($a . '.access', $access)
 			->orderBy($a . '.id', 'asc')
 			->get()
 			->first();
@@ -80,8 +80,9 @@ class Knowledge
 
 		$overview = $page->children()
 			->where('alias', '=', 'overview')
-			->whereIn($p . '.access', $access)
 			//->whereIn($a . '.access', $access)
+			->where($a . '.state', '=', 1)
+			->whereIn($a . '.access', $access)
 			->get()
 			->first();
 
