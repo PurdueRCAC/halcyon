@@ -7,11 +7,9 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Knowledge\Models\Page;
-use App\Modules\Knowledge\Models\Association;
-use App\Modules\Knowledge\Models\Associations;
 use App\Modules\Knowledge\Models\SnippetAssociation;
 
-class PagesController extends Controller
+class SnippetsController extends Controller
 {
 	/**
 	 * Display a listing of articles
@@ -25,13 +23,11 @@ class PagesController extends Controller
 			'search'    => null,
 			'parent'    => null,
 			'state'     => null,
-			'access'    => null,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
-			'order'     => Page::$orderBy,
+			'order'     => 'lft',
 			'order_dir' => Page::$orderDir,
 		);
-		//$filters['start'] = ($filters['limit'] * $filters['page']) - $filters['limit'];
 
 		$refresh = false;
 		foreach ($filters as $key => $default)
@@ -40,7 +36,7 @@ class PagesController extends Controller
 			{
 				$refresh = (session()->get($key, $default) != $request->input('search', $default));
 			}
-			$filters[$key] = $request->state('kb.filter_' . $key, $key, $default);
+			$filters[$key] = $request->state('kb.snippets.filter_' . $key, $key, $default);
 		}
 
 		if ($refresh)
@@ -48,24 +44,28 @@ class PagesController extends Controller
 			$filters['page'] = 1;
 		}
 
-		if (!in_array($filters['order'], array_keys((new Page)->getAttributes())))
+		if (!in_array($filters['order'], array('lft', 'id', 'title', 'updated_at')))
 		{
-			$filters['order'] = 'lft';
+			$filters['order'] = Page::$orderBy;
 		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['order_dir'] = 'asc';
+			$filters['order_dir'] = Page::$orderDir;
 		}
+
+		$root = SnippetAssociation::rootNode();
 
 		$query = Page::query();
 
 		$p = (new Page)->getTable();
-		$a = (new Associations)->getTable();
+		$a = (new SnippetAssociation)->getTable();
 
 		$query->join($a, $a . '.page_id', $p . '.id')
-			->select($p . '.title', $p . '.snippet', $p . '.updated_at', $a . '.*'); //$p . '.state', $p . '.access', 
-			//->select($p . '.title', $p . '.snippet', $p . '.updated_at', $a . '.*');
+			->select($p . '.title', $p . '.state', $p . '.access', $p . '.snippet', $p . '.updated_at', $a . '.*')
+			->where($p . '.snippet', '=', 1)
+			->where($a . '.lft', '>=', $root->lft)
+			->where($a . '.rgt', '<=', $root->rgt);
 
 		if ($filters['search'])
 		{
@@ -78,53 +78,15 @@ class PagesController extends Controller
 
 		if ($filters['parent'])
 		{
-			$parent = Associations::find($filters['parent']);
+			$parent = SnippetAssociation::find($filters['parent']);
 
 			$query->where($a . '.lft', '>=', $parent->lft)
 					->where($a . '.rgt', '<=', $parent->rgt);
 		}
 
-		if ($filters['state'] == 'published')
-		{
-			$query->where($p . '.state', '=', 1);
-		}
-		elseif ($filters['state'] == 'unpublished')
-		{
-			$query->where($p . '.state', '=', 0);
-		}
-		elseif ($filters['state'] == 'trashed')
-		{
-			$query->onlyTrashed(); //->whereNotNull($page . '.deleted_at');
-		}
-		else
-		{
-			$query->withTrashed();
-		}
-
-		if ($filters['access'] > 0)
-		{
-			$query->where($p . '.access', '=', (int)$filters['access']);
-		}
-
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
-
-		/*$list = Page::tree($filters);
-		$total = count($list);
-
-		if ($filters['state'])
-		{
-			$list = array_filter($list, function($k) use ($filters)
-			{
-				return ($k->state == $filters['state']);
-			});
-		}
-
-		$rows = array_slice($list, $filters['start'], $filters['limit']);
-
-		$paginator = new \Illuminate\Pagination\LengthAwarePaginator($rows, $total, $filters['limit'], $filters['current']);
-		$paginator->withPath(route('admin.knowledge.index'));*/
 
 		$list = Page::query()
 			->join($a, $a . '.page_id', $p . '.id')
@@ -132,12 +94,35 @@ class PagesController extends Controller
 			->where('level', '<', 2)
 			->orderBy('lft', 'asc')
 			->get();
+		/*$tree = Page::query()
+			->join($a, $a . '.page_id', $p . '.id')
+			->select($p . '.title', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id', $a . '.path')
+			->orderBy('lft', 'asc')
+			->get();
 
-		return view('knowledge::admin.pages.index', [
+
+		$rowids = Page::query()
+			->join($a, $a . '.page_id', $p . '.id')
+			->select($p . '.id')
+			->where($p . '.snippet', '=', 1)
+			->where($a . '.lft', '>=', $root->lft)
+			->where($a . '.rgt', '<=', $root->rgt)
+			->get()
+			->pluck('id')
+			->toArray();
+
+		$pages = Page::query()
+			->select($p . '.*')
+			->where($p . '.snippet', '=', 1)
+			->whereNotIn($p . '.id', $rowids)
+			->orderBy($p . '.alias', 'asc')
+			->orderBy($p . '.title', 'asc')
+			->get();*/
+
+		return view('knowledge::admin.snippets.index', [
 			'filters' => $filters,
-			'rows'    => $rows,
+			'rows' => $rows,
 			'tree' => $list,
-			//'paginator' => $paginator,
 		]);
 	}
 
@@ -147,97 +132,26 @@ class PagesController extends Controller
 	 */
 	public function create()
 	{
-		$row = new Associations();
+		$row = new SnippetAssociation();
 		$row->state = 1;
 
 		$page = new Page;
 		$page->state = 1;
 
-		$parents = Page::tree();
+		$p = (new Page)->getTable();
+		$a = (new SnippetAssociation)->getTable();
+		$parents = Page::query()
+			->join($a, $a . '.page_id', $p . '.id')
+			->select($p . '.title', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id', $a . '.path')
+			->where($p . '.snippet', '=', 1)
+			->orderBy('lft', 'asc')
+			->get();
 
-		return view('knowledge::admin.pages.edit', [
+		return view('knowledge::admin.snippets.edit', [
 			'row'  => $row,
 			'tree' => $parents,
 			'page' => $page
 		]);
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 * @return Response
-	 */
-	public function select(Request $request)
-	{
-		$parent_id = $request->input('parent');
-
-		$parents = Page::tree();
-
-		$p = (new Page)->getTable();
-		$a = (new SnippetAssociation)->getTable();
-		$snippets = Page::query()
-			->join($a, $a . '.page_id', $p . '.id')
-			->select($p . '.title', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id', $a . '.path', $a . '.parent_id', $a . '.page_id')
-			->where($p . '.snippet', '=', 1)
-			//->where($a . '.level', '=', 1)
-			->orderBy('lft', 'asc')
-			->get();
-
-		return view('knowledge::admin.pages.select', [
-			'parent_id' => $parent_id,
-			'parents' => $parents,
-			'snippets' => $snippets,
-		]);
-	}
-
-	/**
-	 * Comment the specified entry
-	 *
-	 * @param   Request $request
-	 * @return  Response
-	 */
-	public function attach(Request $request)
-	{
-		$request->validate([
-			'parent_id' => 'required|integer',
-			'snippets' => 'required|array'
-		]);
-
-		//var_dump($request->input('parent_id'));
-		//print_r($request->input('snippets')); die();
-
-		$parent_id = $request->input('parent_id');
-		$snippets = $request->input('snippets');
-		$parents = array();
-
-		foreach ($snippets as $parent => $snips)
-		{
-			foreach ($snips as $id => $snippet)
-			{
-				if (!isset($snippet['page_id']))
-				{
-					continue;
-				}
-
-				$row = new Associations;
-				$row->access    = $snippet['access'];
-				$row->state     = $snippet['state'];
-				$row->page_id   = $snippet['page_id'];
-				$row->parent_id = $parent_id;
-				if (isset($parents[$parent]))
-				{
-					$row->parent_id = $parents[$parent];//->id;
-				}
-				//print_r($row->toArray()); die();
-				if (!$row->save())
-				{
-					die('error!');
-				}
-
-				$parents[$id] = $row->id;
-			}
-		}
-
-		return $this->cancel()->withSuccess(trans('knowledge::knowledge.snippets attached'));
 	}
 
 	/**
@@ -246,16 +160,23 @@ class PagesController extends Controller
 	 */
 	public function edit($id)
 	{
-		$row = Associations::findOrFail($id);
+		$row = SnippetAssociation::findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))
 		{
 			$row->fill($fields);
 		}
 
-		$parents = Page::tree();
+		$p = (new Page)->getTable();
+		$a = (new SnippetAssociation)->getTable();
+		$parents = Page::query()
+			->join($a, $a . '.page_id', $p . '.id')
+			->select($p . '.title', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id', $a . '.path')
+			->where($p . '.snippet', '=', 1)
+			->orderBy('lft', 'asc')
+			->get();
 
-		return view('knowledge::admin.pages.edit', [
+		return view('knowledge::admin.snippets.edit', [
 			'row'  => $row,
 			'tree' => $parents,
 			'page' => $row->page,
@@ -280,7 +201,7 @@ class PagesController extends Controller
 		$id = $request->input('id');
 		$parent_id = $request->input('fields.parent_id');
 
-		$row = $id ? Associations::findOrFail($id) : new Associations;
+		$row = $id ? SnippetAssociation::findOrFail($id) : new SnippetAssociation;
 		//$row->access = $request->input('fields.access');
 		//$row->state  = $request->input('fields.state');
 		$row->page_id = $request->input('fields.page_id');
@@ -360,45 +281,34 @@ class PagesController extends Controller
 			return redirect()->back()->withError($row->getError());
 		}
 
-		$assoc = Association::query()
-			->where('parent_id', '=', $row->parent->page_id)
-			->where('child_id', '=', $page->id)
-			->get()
-			->first();
-
-		if (!$assoc)
-		{
-			$assoc = new Association;
-			$assoc->parent_id = $row->parent->page_id;
-			$assoc->child_id = $page->id;
-			$assoc->save();
-		}
-
-		return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.update success'));
+		return redirect(route('admin.knowledge.snippets'))->withSuccess(trans('global.messages.update success'));
 	}
 
 	/**
-	 * Rebuild the tree
-	 * 
-	 * @return  void
+	 * Comment the specified entry
+	 *
+	 * @param   Request $request
+	 * @return  Response
 	 */
-	public function rebuild()
+	public function attach(Request $request)
 	{
-		$row = Associations::findOrFail(1);
+		$request->validate([
+			'parent_id' => 'required',
+			'page_id' => 'required'
+		]);
 
-		// Rebuild the paths of the entry's path
-		/*if (!$row->rebuildPath())
-		{
-			return redirect()->back()->withError($row->getError());
-		}*/
+		$row = new SnippetAssociation;
+		$row->access = 1;
+		$row->state  = 1;
+		$row->page_id = $request->input('page_id');
+		$row->parent_id = $request->input('parent_id');
 
-		// Rebuild the paths of the entry's children
-		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
+		if (!$row->save())
 		{
-			return redirect()->back()->withError($row->getError());
+			return redirect()->back()->withError(trans('global.messages.update failed'));
 		}
 
-		return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.update success'));
+		return $this->cancel()->withSuccess(trans('global.messages.update success'));
 	}
 
 	/**
@@ -408,7 +318,7 @@ class PagesController extends Controller
 	 */
 	public function state(Request $request, $id)
 	{
-		$action = $request->segment(3);
+		$action = $request->segment(count($request->segments()) - 1);
 		$state  = $action == 'publish' ? 1 : 0;
 
 		// Incoming
@@ -427,15 +337,17 @@ class PagesController extends Controller
 		// Comment record(s)
 		foreach ($ids as $id)
 		{
-			$row = Associations::findOrFail(intval($id));
-			//$row = Page::findOrFail(intval($id));
+			$row = Report::findOrFail(intval($id));
 
-			if ($row->state == $state)
+			if ($row->published == $state)
 			{
 				continue;
 			}
 
-			$row->state = $state;
+			// Don't update last modified timestamp for state changes
+			$row->timestamps = false;
+
+			$row->published = $state;
 
 			if (!$row->save())
 			{
@@ -450,8 +362,8 @@ class PagesController extends Controller
 		if ($success)
 		{
 			$msg = $state
-				? 'global.messages.items published'
-				: 'global.messages.items unpublished';
+				? 'knowledge::knowledge.items published'
+				: 'knowledge::knowledge.items unpublished';
 
 			$request->session()->flash('success', trans($msg, ['count' => $success]));
 		}
@@ -464,7 +376,7 @@ class PagesController extends Controller
 	 *
 	 * @return  Response
 	 */
-	public function delete(Request $request)
+	public function destroy()
 	{
 		// Incoming
 		$ids = $request->input('id', array());
@@ -476,7 +388,7 @@ class PagesController extends Controller
 		{
 			// Delete the entry
 			// Note: This is recursive and will also remove all descendents
-			$row = Associations::findOrFail($id);
+			$row = Report::findOrFail($id);
 
 			if (!$row->delete())
 			{
@@ -489,7 +401,7 @@ class PagesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
+			$request->session()->flash('success', trans('messages.item deleted', $success));
 		}
 
 		return $this->cancel();
@@ -502,6 +414,6 @@ class PagesController extends Controller
 	 */
 	public function cancel()
 	{
-		return redirect(route('admin.knowledge.index'));
+		return redirect(route('admin.knowledge.snippets'));
 	}
 }

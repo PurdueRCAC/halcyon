@@ -215,6 +215,11 @@ class Page extends Model
 
 		$text = preg_replace('/href="\/(.*?)"/i', 'href="' . url("$1") . '"', $text);
 
+		// Fix file paths
+		$text = preg_replace('/src="(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
+		$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
+		$text = preg_replace('/href="\/(.*?)"/i', 'href="' . url("$1") . '"', $text);
+
 		return $text;
 	}
 
@@ -718,12 +723,7 @@ class Page extends Model
 	 */
 	public function isPublished()
 	{
-		if ($this->state != 1)
-		{
-			return false;
-		}
-
-		return true;
+		return ($this->state == 1);
 	}
 
 	/**
@@ -806,5 +806,17 @@ class Page extends Model
 	{
 		//return $this->hasManyThrough(self::class, Association::class, 'child_id', 'id', 'id', 'parent_id');
 		return $this->hasManyThrough(self::class, Associations::class, 'page_id', 'id', 'id', 'parent_id');
+	}
+
+	/**
+	 * Defines a relationship to a parent page
+	 *
+	 * @return  object
+	 */
+	public function getUsedAttribute()
+	{
+		return Associations::query()
+			->where('page_id', '=', $this->page_id)
+			->count();
 	}
 }

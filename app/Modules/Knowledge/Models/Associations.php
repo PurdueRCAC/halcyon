@@ -23,7 +23,7 @@ class Associations extends Model
 	 *
 	 * @var  string
 	 **/
-	protected $table = 'kb_page_associations2';
+	protected $table = 'kb_page_associations';
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -66,6 +66,22 @@ class Associations extends Model
 		}
 		return $rgt;
 	}*/
+
+	/**
+	 * Defines a relationship to a parent page
+	 *
+	 * @return  object
+	 */
+	public function getUsedAttribute()
+	{
+		$root = self::rootNode();
+
+		return self::query()
+			->where('page_id', '=', $this->page_id)
+			->where('lft', '>', $root->lft)
+			->where('rgt', '<', $root->rgt)
+			->count();
+	}
 
 	/**
 	 * Defines a relationship to a parent page
@@ -132,6 +148,7 @@ class Associations extends Model
 	{
 		return self::query()
 			->where('level', '=', 0)
+			//->where('path', '=', 'ROOT')
 			->orderBy('lft', 'asc')
 			->limit(1)
 			->get()
@@ -214,6 +231,16 @@ class Associations extends Model
 	public function isRoot()
 	{
 		return ($this->level == 0);
+	}
+
+	/**
+	 * Determine if record is published
+	 * 
+	 * @return  boolean
+	 */
+	public function isPublished()
+	{
+		return ($this->state == 1);
 	}
 
 	/**
@@ -300,19 +327,23 @@ class Associations extends Model
 				echo 'where ' . $reposition->right_where['col'] . ' '.  $reposition->right_where['op'] .' '.$reposition->right_where['val'];
 				$this->addError('Failed to update rgt values');
 				return false;
-			}
+			}*/
 
 			// Set all the nested data
 			$path = array();
 
-			foreach ($this->ancestors() as $ancestor)
+			/*foreach ($this->ancestors() as $ancestor)
 			{
 				$path[] = $ancestor->page->alias;
+			}*/
+			if ($parent->path !== 'ROOT')
+			{
+				$path[] = $parent->path;
 			}
 
 			$path[] = $this->page->alias;
 
-			$this->setAttribute('path', implode('/', $path));*/
+			$this->setAttribute('path', implode('/', $path));
 			$this->setAttribute('lft', $reposition->new_lft);
 			$this->setAttribute('rgt', $reposition->new_rgt);
 		}
@@ -532,7 +563,7 @@ class Associations extends Model
 			return $this->moveByReference($referenceId, $position, $this->id);
 		}
 
-		$this->addError(trans('global.ERROR_MOVE_FAILED') . ': Reference not found for delta ' . $delta);
+		$this->addError(trans('global.error.move failed') . ': Reference not found for delta ' . $delta);
 
 		return false;
 	}
@@ -556,7 +587,7 @@ class Associations extends Model
 		if (!$node->id)
 		{
 			// Error message set in getNode method.
-			$this->addError(trans('global.ERROR_MOVE_FAILED') . ': Node not found #' . $pk);
+			$this->addError(trans('global.error.move failed') . ': Node not found #' . $pk);
 			return false;
 		}
 
@@ -570,7 +601,7 @@ class Associations extends Model
 		// Cannot move the node to be a child of itself.
 		if (in_array($referenceId, $children))
 		{
-			$this->addError(trans('global.ERROR_INVALID_NODE_RECURSION'));
+			$this->addError(trans('global.error.invalid node recursion'));
 			return false;
 		}
 
@@ -606,14 +637,14 @@ class Associations extends Model
 
 			if (!$reference)
 			{
-				$this->addError(trans('global.ERROR_MOVE_FAILED') . ': Reference not found #' . $referenceId);
+				$this->addError(trans('global.error.move failed') . ': Reference not found #' . $referenceId);
 				return false;
 			}
 
 			// Get the reposition data for shifting the tree and re-inserting the node.
 			if (!($repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), $position)))
 			{
-				$this->addError(trans('global.ERROR_MOVE_FAILED') . ': Reposition data');
+				$this->addError(trans('global.error.move failed') . ': Reposition data');
 				return false;
 			}
 		}
@@ -631,7 +662,7 @@ class Associations extends Model
 			// Get the reposition data for re-inserting the node after the found root.
 			if (!($repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), 'last-child')))
 			{
-				$this->addError(trans('global.ERROR_MOVE_FAILED') . ': Reposition data');
+				$this->addError(trans('global.error.move failed') . ': Reposition data');
 				return false;
 			}
 		}

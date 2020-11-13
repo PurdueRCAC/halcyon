@@ -7,6 +7,22 @@
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/knowledge/js/admin.js?v=' . filemtime(public_path() . '/modules/knowledge/js/admin.js')) }}"></script>
+<script>
+$(document).ready(function() {
+	var dialog = $("#new-page").dialog({
+		autoOpen: false,
+		height: 250,
+		width: 500,
+		modal: true
+	});
+
+	$('#toolbar-plus').on('click', function(e){
+		e.preventDefault();
+
+		dialog.dialog("open");
+	});
+});
+</script>
 @endpush
 
 @php
@@ -79,7 +95,7 @@
 				</select>
 
 				<label class="sr-only" for="filter_parent">{{ trans('knowledge::knowledge.parent') }}:</label>
-				<select name="parent" id="filter_parent" class="form-control filter filter-submit">
+				<select name="parent" id="filter_parent" class="form-control filter filter-submit searchable-select">
 					<option value="0">{{ trans('knowledge::knowledge.all pages') }}</option>
 					<?php foreach ($tree as $page): ?>
 						<?php $selected = ($page->assoc_id == $filters['parent'] ? ' selected="selected"' : ''); ?>
@@ -161,15 +177,15 @@
 				<td>
 					@if ($row->trashed())
 						@if (auth()->user()->can('edit knowledge'))
-							<a class="btn btn-secondary state trashed" href="{{ route('admin.knowledge.restore', ['id' => $row->page_id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
+							<a class="btn btn-secondary state trashed" href="{{ route('admin.knowledge.restore', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
 						@endif
 							{{ trans('knowledge::knowledge.trashed') }}
 						@if (auth()->user()->can('edit knowledge'))
 							</a>
 						@endif
-					@elseif ($row->state == 1)
+					@elseif ($row->isPublished())
 						@if (auth()->user()->can('edit knowledge'))
-							<a class="btn btn-secondary state published" href="{{ route('admin.knowledge.unpublish', ['id' => $row->page_id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.unpublished')]) }}">
+							<a class="btn btn-secondary state published" href="{{ route('admin.knowledge.unpublish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.unpublished')]) }}">
 						@endif
 							{{ trans('knowledge::knowledge.published') }}
 						@if (auth()->user()->can('edit knowledge'))
@@ -177,7 +193,7 @@
 						@endif
 					@else
 						@if (auth()->user()->can('edit knowledge'))
-							<a class="btn btn-secondary state unpublished" href="{{ route('admin.knowledge.publish', ['id' => $row->page_id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
+							<a class="btn btn-secondary state unpublished" href="{{ route('admin.knowledge.publish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
 						@endif
 							{{ trans('knowledge::knowledge.unpublished') }}
 						@if (auth()->user()->can('edit knowledge'))
@@ -217,6 +233,28 @@
 
 	<input type="hidden" name="boxchecked" value="0" />
 
+	<div id="new-page" class="hide" title="{{ trans('knowledge::knowledge.choose type') }}">
+		<h2 class="modal-title sr-only">{{ trans('knowledge::knowledge.choose type') }}</h2>
+
+		<div class="row">
+			<div class="col-md-6">
+
+					<a href="{{ route('admin.knowledge.create') }}" class="form-group form-block">
+						<span class="icon-edit"></span>
+						{{ trans('knowledge::knowledge.new page') }}
+					</a>
+
+			</div>
+			<div class="col-md-6">
+
+					<a href="{{ route('admin.knowledge.select') }}" class="form-group form-block">
+						<span class="icon-repeat"></span>
+						{{ trans('knowledge::knowledge.snippet') }}
+					</a>
+
+			</div>
+		</div>
+	</div>
 	@csrf
 </form>
 

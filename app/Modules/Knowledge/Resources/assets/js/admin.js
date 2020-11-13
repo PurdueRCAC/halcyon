@@ -26,15 +26,17 @@
 
 jQuery(document).ready(function ($) {
 	var alias = $('#field-alias');
-	if (alias.length && !alias.val()) {
+	if (alias.length) {
 		$('#field-title').on('keyup', function (e){
-			var val = $(this).val();
+			//if (alias.val() == '') {
+				var val = $(this).val();
 
-			val = val.toLowerCase()
-				.replace(/\s+/g, '_')
-				.replace(/[^a-z0-9\-_]+/g, '');
+				val = val.toLowerCase()
+					.replace(/\s+/g, '_')
+					.replace(/[^a-z0-9\-_]+/g, '');
 
-			alias.val(val);
+				alias.val(val);
+			//}
 		});
 	}
 

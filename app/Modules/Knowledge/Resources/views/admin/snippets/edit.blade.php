@@ -18,6 +18,10 @@ app('pathway')
 		route('admin.knowledge.index')
 	)
 	->append(
+		trans('knowledge::knowledge.snippets'),
+		route('admin.knowledge.snippets')
+	)
+	->append(
 		($row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create'))
 	);
 
@@ -27,18 +31,20 @@ app('pathway')
 		if (trim($row->path, '/') != $page->alias)
 		{
 			$parentpath = dirname($row->path);
+			$parentpath = trim($parentpath, '/');
+			$parentpath = $parentpath ? '/' . $parentpath : '';
 		}
 	}
 @endphp
 
 @section('toolbar')
 	@if (auth()->user()->can('edit knowledge'))
-		{!! Toolbar::save(route('admin.knowledge.store')) !!}
+		{!! Toolbar::save(route('admin.knowledge.snippets.store')) !!}
 	@endif
 
 	{!!
 		Toolbar::spacer();
-		Toolbar::cancel(route('admin.knowledge.cancel'));
+		Toolbar::cancel(route('admin.knowledge.snippets.cancel'));
 	!!}
 
 	{!! Toolbar::render() !!}
@@ -49,7 +55,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.knowledge.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+<form action="{{ route('admin.knowledge.snippets.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 	@if ($errors->any())
 		<div class="alert alert-danger">
@@ -66,22 +72,22 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
+				@if ($page->snippet)
+					<div class="alert alert-warning">
+						{{ trans('knowledge::knowledge.warning page is reusable') }}
+					</div>
+				@endif
+
 				<div class="form-group">
 					<label for="field-parent_id">{{ trans('knowledge::knowledge.parent') }}:</label>
 					<select name="fields[parent_id]" id="field-parent_id" class="form-control searchable-select">
 						<!--<option value="0">{{ trans('global.none') }}</option>-->
 						<?php foreach ($tree as $pa): ?>
 							<?php $selected = ($pa->id == $row->parent_id ? ' selected="selected"' : ''); ?>
-							<option value="{{ $pa->id }}"<?php echo $selected; ?> data-path="/{{ $pa->path }}"><?php echo str_repeat('|&mdash; ', $pa->level) . e(Illuminate\Support\Str::limit($pa->title, 70)); ?></option>
+							<option value="{{ $pa->id }}"<?php echo $selected; ?> data-path="/{{ $pa->path }}"><?php echo str_repeat('|&mdash; ', $pa->level - 1) . e(Illuminate\Support\Str::limit($pa->title, 70)); ?></option>
 						<?php endforeach; ?>
 					</select>
 				</div>
-
-				@if ($page->snippet)
-					<div class="alert alert-warning">
-						{{ trans('knowledge::knowledge.warning page is reusable') }}
-					</div>
-				@endif
 
 				<div class="form-group">
 					<label for="field-title">{{ trans('knowledge::knowledge.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
@@ -93,19 +99,14 @@ app('pathway')
 					<label for="field-alias">{{ trans('knowledge::knowledge.path') }}:</label>
 					<div class="input-group mb-2 mr-sm-2">
 						<div class="input-group-prepend">
-							<div class="input-group-text">{{ route('site.knowledge.index') }}<span id="parent-path">{{ $parentpath }}</span>/</div>
+							<div class="input-group-text"><span id="parent-path">{{ $parentpath }}</span>/</div>
 						</div>
 						<input type="text" name="page[alias]" id="field-alias" class="form-control" maxlength="250" value="{{ $page->alias }}" />
 					</div>
 					<span class="form-text text-muted hint">{{ trans('knowledge::knowledge.path hint') }}</span>
 				</div>
 
-				@if (!$page->snippet)
-					<div class="form-group form-check">
-						<input type="checkbox" name="page[snippet]" id="field-snippet" class="form-check-input" value="1" />
-						<label class="form-check-label" for="field-snippet">{{ trans('knowledge::knowledge.this is a snippet') }}</label>
-					</div>
-				@endif
+				<input type="hidden" name="page[snippet]" id="field-snippet" class="form-check-input" value="1" />
 
 				<div class="form-group">
 					<label for="page--content">{{ trans('knowledge::knowledge.content') }}: <span class="required">{{ trans('global.required') }}</span></label>
@@ -122,7 +123,7 @@ app('pathway')
 					<label for="field-access">{{ trans('knowledge::knowledge.access') }}:</label>
 					<select class="form-control" name="fields[access]" id="field-access"<?php if ($row->id && $row->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
 						<?php foreach (App\Halcyon\Access\Viewlevel::all() as $access): ?>
-							<option value="{{ $access->id }}"<?php if ($row->access == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
+							<option value="{{ $access->id }}"<?php if ($page->access == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
 						<?php endforeach; ?>
 					</select>
 				</div>
@@ -130,12 +131,11 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-state">{{ trans('knowledge::knowledge.state') }}:</label><br />
 					<select class="form-control" name="fields[state]" id="field-state"<?php if ($row->id && $row->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
-						<option value="1"<?php if ($row->state == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
-						<option value="0"<?php if ($row->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
+						<option value="1"<?php if ($page->state == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
+						<option value="0"<?php if ($page->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
 					</select>
 				</div>
 
-				<!--
 				<div class="form-group">
 					<label for="field-publish_up">{{ trans('knowledge::knowledge.publish up') }}:</label><br />
 					{!! Html::input('calendar', 'fields[publish_up]', Carbon\Carbon::parse($row->publish_up ? $row->publish_up : $page->created_at)) !!}
@@ -148,11 +148,10 @@ app('pathway')
 						<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
 					</span>
 				</div>
-				-->
 			</fieldset>
 
 			<fieldset class="adminform">
-				<legend>{{ trans('knowledge::knowledge.options') }}</legend>
+				<legend>{{ trans('global.options') }}</legend>
 
 				<fieldset>
 					<legend>{{ trans('knowledge::knowledge.show title') }}</legend>
@@ -306,7 +305,6 @@ app('pathway')
 	</div>
 
 	<input type="hidden" name="fields[page_id]" value="{{ $page->id }}" />
-	<input type="hidden" name="fields[snippet]" value="1" />
 	<input type="hidden" name="id" value="{{ $row->id }}" />
 
 	@csrf

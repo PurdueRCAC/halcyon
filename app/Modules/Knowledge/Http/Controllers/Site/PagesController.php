@@ -56,7 +56,7 @@ class PagesController extends Controller
 			}
 
 			// Does the user have access to the article?
-			if (!in_array($page->access, $levels))
+			if (!in_array($node->access, $levels))
 			{
 				abort(403, trans('knowledge::knowledge.permission denied'));
 			}
@@ -64,7 +64,7 @@ class PagesController extends Controller
 			// Can non-managers view this article?
 			if (!auth()->user() || !auth()->user()->can('manage knowledge'))
 			{
-				if (!$page->isPublished())
+				if (!$node->isPublished())
 				{
 					abort(404, trans('knowledge::knowledge.article not found'));
 				}
@@ -80,11 +80,9 @@ class PagesController extends Controller
 				$page->variables->merge($prev->variables);
 			}
 
-			//$uri .= ($uri ? '/' : '') . $page->alias;
-
 			app('pathway')->append(
 				$page->headline,
-				route('site.knowledge.page', ['uri' => $node->path])//$uri])
+				route('site.knowledge.page', ['uri' => $node->path])
 			);
 
 			$prev = $page;
@@ -110,6 +108,13 @@ class PagesController extends Controller
 		]);
 	}
 
+	/**
+	 * Display a listing of the resource.
+	 * 
+	 * @param  array  $nodes
+	 * @param  string $alias
+	 * @return void
+	 */
 	private function nestedset($nodes, $alias)
 	{
 		foreach ($nodes as $node)
@@ -144,127 +149,5 @@ class PagesController extends Controller
 		return view('news::site.search', [
 			'types' => $types
 		]);
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 * @return Response
-	 */
-	public function create()
-	{
-		app('pathway')
-			->append(
-				config('news.name'),
-				route('site.news.index')
-			)
-			->append(
-				__('resources::assets.create'),
-				url('/resources/new')
-			);
-
-		return view('news::site.create');
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 * @param  Request $request
-	 * @return Response
-	 */
-	public function store(Request $request)
-	{
-	}
-
-	/**
-	 * Show the specified entry
-	 *
-	 * @param   string  $name
-	 * @return  Response
-	 */
-	public function type($name)
-	{
-		$row = Type::findByName($name);
-
-		$types = Type::all();
-
-		app('pathway')
-			->append(
-				config('resources.name'),
-				url('/resources')
-			)
-			->append(
-				$row->name,
-				route('site.news.type', ['name' => $name])
-			);
-
-		return view('news::site.type', [
-			'type' => $row,
-			'types' => $types
-		]);
-	}
-
-	/**
-	 * Show the specified entry
-	 *
-	 * @param   integer  $id
-	 * @return  Response
-	 */
-	public function show($id)
-	{
-		$row = Report::findOrFail($id);
-
-		$types = Type::all();
-
-		app('pathway')
-			->append(
-				config('resources.name'),
-				url('/resources')
-			)
-			->append(
-				$row->headline,
-				route('site.news.show', ['id' => $id])
-			);
-
-		return view('news::site.article', [
-			'article' => $row,
-			'types' => $types
-		]);
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 * @return Response
-	 */
-	public function edit()
-	{
-		$id = 1;
-
-		app('pathway')
-			->append(
-				config('resources.name'),
-				url('/resources')
-			)
-			->append(
-				__('resources::assets.edit'),
-				url('/resources/edit/:id', $id)
-			);
-
-		return view('news::site.edit');
-	}
-
-	/**
-	 * Comment the specified resource in storage.
-	 * @param  Request $request
-	 * @return Response
-	 */
-	public function update(Request $request)
-	{
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 * @return Response
-	 */
-	public function destroy()
-	{
 	}
 }
