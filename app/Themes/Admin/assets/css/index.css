@@ -3459,7 +3459,7 @@ div.current li {
 .toolbar-box .breadcrumb-title {
   display: none;
 }
-.toolbar-box #toolbar {
+.toolbar-box .toolbar-btn-list {
   margin: 0.75em 0;
   padding: 0;
   /*position: absolute;
@@ -3513,11 +3513,17 @@ border: 1px solid rgba(0,0,0,.125);
   padding: 0;
   border: none;
 }
+.toolbar-box ul {
+  display: -ms-flexbox;
+  display: flex;
+  flex-flow: row;
+}
 .toolbar-box ul li {
   margin: 0 0 0 0.5em;
   padding: 0;
   list-style: none;
-  float: left;
+  flex: 0 1 auto;
+  /*float: left;*/
 }
 .toolbar-box .spacer,
 .toolbar-box .divider {
@@ -3834,7 +3840,7 @@ border: 1px solid rgba(0,0,0,.125);
   .toolbar-box.fixed .pagetitle {
     padding: 0;
   }
-  .toolbar-box.fixed #toolbar {
+  .toolbar-box.fixed .toolbar-btn-list {
     margin: 0.5em 2.41803399em 0 0;
   }
 }
@@ -4919,6 +4925,25 @@ a.menulist:hover:before {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   display: none;
 }
+#panel .toolbar-box .toolbar-btn-list {
+  width: 100%;
+}
+#panel .toolbar-box .pagetitle {
+  margin: 0 0 2em 0;
+  padding: 0 0.8em;
+}
+#panel .toolbar-box ul {
+  width: 100%;
+}
+#panel .toolbar-box ul li:first-child {
+  margin: 0;
+  align-self: stretch;
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 0 0 1;
+}
+#panel .toolbar-box ul li.last {
+}
 @media (prefers-color-scheme: dark) {
   :root {
     --panel: rgba(255, 255, 255, 0.05);
@@ -5192,6 +5217,24 @@ a.menulist:hover:before {
     border-color: #1c1b21;
   }
 
+  .ui-state-default,
+  .ui-widget-content .ui-state-default,
+  .ui-widget-header .ui-state-default,
+  .ui-button,
+  html .ui-button.ui-state-disabled:hover,
+  html .ui-button.ui-state-disabled:active {
+    color: var(--body-text);
+  }
+  .ui-state-hover,
+  .ui-widget-content .ui-state-hover,
+  .ui-widget-header .ui-state-hover,
+  .ui-state-focus,
+  .ui-widget-content .ui-state-focus,
+  .ui-widget-header .ui-state-focus,
+  .ui-button:hover,
+  .ui-button:focus {
+    color: #fff;
+  }
   .ui-widget-content {
     border-color: #1c1b21;
     background: #1c1b21;

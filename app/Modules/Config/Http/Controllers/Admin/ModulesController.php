@@ -141,13 +141,20 @@ class ModulesController extends Controller
 				$asset->name  = $module->element;
 				$asset->title = $module->element;
 				$asset->parent_id = $root->id;
-				$asset->saveAsLastChildOf($root);
+				$asset->rules = (string) $rules;
+				if (!$asset->saveAsLastChildOf($root))
+				{
+					return redirect()->back()->withInput()->withError($asset->getError());
+				}
 			}
-			$asset->rules = (string) $rules;
-
-			if (!$asset->save())
+			else
 			{
-				return redirect()->back()->withInput()->withError($asset->getError());
+				$asset->rules = (string) $rules;
+
+				if (!$asset->save())
+				{
+					return redirect()->back()->withInput()->withError($asset->getError());
+				}
 			}
 
 			// We don't need this anymore

@@ -112,7 +112,7 @@ class Toolbar
 		$html = array();
 
 		// Start toolbar div.
-		$html[] = '<div class="toolbar-btn-list" id="' . $this->_name . '">';
+		$html[] = '<div class="toolbar-btn-list">';
 		$html[] = '<ul>';
 
 		foreach ($this->_bar as $key => $button)

@@ -32,8 +32,8 @@ class Nested extends Model
 	private function updateTrailing($pos = 'lft', $base = 0, $add = true)
 	{
 		// Reposition new values of displaced items
-		$query = $this->newQuery();
-		$query->table($this->getTable())
+		$query = self::query();//$this->newQuery();
+		$query//->table($this->getTable())
 			->where($pos, '>=', $base)
 			->where('id', '!=', $this->id)
 			->update([

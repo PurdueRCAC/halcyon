@@ -34,7 +34,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.config.module.update', ['module' => $module->element]) }}" id="module-form" method="post" name="configform" autocomplete="off" class="form-validate" data-invalid-msg="{{ trans('global.validation failed') }}">
+<form action="{{ route('admin.config.module.update', ['module' => $module->element]) }}" id="adminForm{{ request()->ajax() ? '-ajax' : '' }}" method="post" name="adminform" autocomplete="off" class="form-validate">
 	@if (request()->ajax())
 		<div class="toolbar-box">
 			<div class="pagetitle text-right">
@@ -63,7 +63,7 @@ app('pathway')
 				//$label = empty($fieldSet->label) ? 'config::modules.' . $name . ' fieldset label' : $fieldSet->label;
 
 				//echo Html::tabs('panel', trans($label), 'publishing-details');
-				echo '<div id="tab-' . $name . '"><fieldset><div class="card"><div class="card-body">';
+				echo '<div id="tab-' . $name . '"><fieldset>';//<div class="card"><div class="card-body">';
 				if (isset($fieldSet->description) && !empty($fieldSet->description)) :
 					echo '<p class="tab-description">' . trans($fieldSet->description) . '</p>';
 				endif;
@@ -79,7 +79,7 @@ app('pathway')
 					<?php endforeach; ?>
 
 				<?php
-				echo '</div></div></div>';
+				echo '</div>';//</div></div>';
 			endforeach;
 		else:
 			?>

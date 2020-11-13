@@ -124,7 +124,8 @@ class Rules extends Field
 		{
 			$difLevel = $group->level - $curLevel;
 
-			$html[] = '<h3 class="pane-toggler title"><input type="checkbox" name="cb' . $group->value . '" value="' . $group->value . '" /> &nbsp;';
+			$html[] = '<h3 class="pane-toggler title">';
+			//$html[] = '<input type="checkbox" name="cb' . $group->value . '" value="' . $group->value . '" /> &nbsp;';
 			$html[] = str_repeat('<span class="level">|&mdash;</span> ', $curLevel = $group->level) . $group->text;
 			$html[] = ' <span class="badge badge-secondary">' . number_format($group->maps_count) . '</span></h3>';
 			$html[] = '<div class="pane-slider">';

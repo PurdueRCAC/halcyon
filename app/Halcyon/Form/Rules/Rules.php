@@ -81,17 +81,20 @@ class Rules extends Rule
 		$module  = $element['module'] ? (string) $element['module'] : '';
 
 		// Get the asset actions for the element.
-		$comfile   = $module ? app_path() . '/Modules/' . $module . '/Config/Access.xml' : '';
-		$section   = $section ? "/access/section[@name='" . $section . "']/" : '';
-		$elActions = Gate::getActionsFromFile($comfile, $section);
+		//$comfile   = $module ? app_path('/Modules/' . $module . '/Config/Access.xml') : '';
+		//$section   = $section ? "/access/section[@name='" . $section . "']/" : '';
+		//$elActions = Gate::getActionsFromFile($comfile, $section);
+
+		$elActions = include module_path('Core') . '/Config/permissions.php';
 
 		$comfile = $module ? module_path($module) . '/Config/permissions.php' : '';
 		$section = $element['section'] ? (string) $element['section'] : '';
 		if (is_file($comfile))
 		{
 			$elActions = include $comfile;
-			$elActions = isset($elActions[$section]) ? $elActions[$section] : $elActions;
 		}
+		$elActions = isset($elActions[$section]) ? $elActions[$section] : $elActions;
+
 
 		if (is_array($elActions))
 		{

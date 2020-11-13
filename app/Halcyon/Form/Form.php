@@ -1078,7 +1078,7 @@ class Form
 					$return[$action] = array();
 					foreach ($ids as $id => $p)
 					{
-						if ($p !== '')
+						if (!is_null($p) && $p !== '')
 						{
 							$return[$action][$id] = ($p == '1' || $p == 'true') ? true : false;
 						}

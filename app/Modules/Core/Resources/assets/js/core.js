@@ -783,33 +783,42 @@ document.addEventListener('DOMContentLoaded', function() {
 		},
 		tooltipClass: 'tool-tip'
 	});*/
-	$('<div id="panel"></div>').appendTo('body');
 
 	$('.btn-settings').on('click', function(e){
 		e.preventDefault();
 
+		$('<div class="ui-widget-overlay ui-front" style="z-index: 100;"></div>').appendTo('body');
+		$('<div id="panel" style="z-index: 101;"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>').appendTo('body');
+		var panel = $('#panel');
+		panel
+			.show("slide", { direction: "right" }, 500);
+
 		$.get($(this).attr('href'), function(response){
-			var panel = $('#panel');
 			panel
-				.html(response)
-				.show("slide", { direction: "right" }, 500);
+				.html(response);
 
 			panel.find('.btn-cancel').on('click', function(e){
 				e.preventDefault();
 				$('#panel').hide("slide", { direction: "right" }, 500);
+				$('.ui-widget-overlay').remove();
 			});
 
-			panel.find('.btn-success').on('click', function(e){
+			panel.find('.btn-save').on('click', function(e){
 				e.preventDefault();
+
+				var frm = $(this).closest('form');
+				//console.log($(this).attr('href'));
 				$.ajax({
-					url: btn.getAttribute('data-api'),
-					type: 'put',
-					data: post,
-					dataType: 'json',
+					url: $(this).attr('href'),
+					type: 'post',
+					data: frm.serialize(),
+					//dataType: 'json',
 					async: false,
 					success: function(data) {
-						Halcyon.message('success', 'Settings updated.');
+						console.log(data);
+						//Halcyon.message('success', 'Settings updated.');
 						$('#panel').hide("slide", { direction: "right" }, 500);
+						$('.ui-widget-overlay').remove();
 					},
 					error: function(xhr, reason, thrownError) {
 						if (xhr.responseJSON) {

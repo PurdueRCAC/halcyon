@@ -27,14 +27,14 @@ class Extension extends Model
 	 *
 	 * @var string
 	 */
-	const CREATED_AT = 'created';
+	const CREATED_AT = null;
 
 	/**
 	 * The name of the "updated at" column.
 	 *
 	 * @var  string
 	 */
-	const UPDATED_AT = 'modified';
+	//const UPDATED_AT = 'modified';
 
 	/**
 	 * The table associated with the model.
@@ -84,8 +84,8 @@ class Extension extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'element' => 'required|string',
-		'name'    => 'required|string'
+		'element' => 'required|string|max:100',
+		'name'    => 'required|string|max:100'
 	);
 
 	/**
