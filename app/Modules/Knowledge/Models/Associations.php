@@ -33,41 +33,6 @@ class Associations extends Model
 	public $timestamps = false;
 
 	/**
-	 * Generates automatic lft value
-	 *
-	 * @param   array   $data  the data being saved
-	 * @return  string
-	 */
-	/*public function setLftAttribute($lft)
-	{
-		if (!$this->getAttribute('parent_id'))
-		{
-			$lft = 0;
-		}
-		return $lft;
-	}*/
-
-	/**
-	 * Generates automatic lft value
-	 *
-	 * @param   array   $data  the data being saved
-	 * @return  string
-	 */
-	/*public function setRgtAttribute($rgt)
-	{
-		if (!isset($rgt))
-		{
-			if (!$this->hasAttribute('lft'))
-			{
-				$lft = 0;
-				$lft = $this->setLftAttribute($lft);
-			}
-			$rgt = $lft + 1;
-		}
-		return $rgt;
-	}*/
-
-	/**
 	 * Defines a relationship to a parent page
 	 *
 	 * @return  object
@@ -113,9 +78,18 @@ class Associations extends Model
 		return $this->hasMany(self::class, 'parent_id');
 	}
 
+	/**
+	 * Get published children
+	 *
+	 * @return  object
+	 */
 	public function publishedChildren()
 	{
-		$p = (new Page)->getTable();
+		return $this->children()
+			->where('state', '=', 1)
+			->whereIn('access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
+			->get();
+		/*$p = (new Page)->getTable();
 
 		return $this->children()
 			->select($this->getTable() . '.*')
@@ -123,7 +97,7 @@ class Associations extends Model
 			//->orderBy($a . '.lft', 'asc')
 			->where($p . '.state', '=', 1)
 			->whereIn($p . '.access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
-			->get();
+			->get();*/
 	}
 
 	/**
@@ -666,8 +640,7 @@ class Associations extends Model
 				return false;
 			}
 		}
-//print_r($reference);
-//print_r($repositionData); die();
+
 		// Create space in the nested sets at the new location for the moved sub-tree.
 
 		// Shift left values.

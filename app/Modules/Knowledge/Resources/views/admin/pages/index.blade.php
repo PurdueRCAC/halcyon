@@ -36,6 +36,11 @@ $(document).ready(function() {
 			route('admin.knowledge.index')
 		);
 
+	if (auth()->user()->can('edit.state menus')):
+		Toolbar::publishList(route('admin.knowledge.publish'));
+		Toolbar::unpublishList(route('admin.knowledge.unpublish'));
+		Toolbar::spacer();
+	endif;
 	if (auth()->user()->can('delete knowledge')):
 		Toolbar::deleteList(trans('knowledge::knowledge.verify delete'), route('admin.knowledge.delete'));
 	endif;
@@ -171,7 +176,7 @@ $(document).ready(function() {
 				</td>
 				<td>
 					@if ($row->snippet)
-						<span class="icon-repeat"></span>
+						<span class="icon-repeat" data-tip="{{ trans('knowledge::knowledge.snippet') }}"><span class="sr-only">{{ trans('knowledge::knowledge.snippet') }}</span></span>
 					@endif
 				</td>
 				<td>

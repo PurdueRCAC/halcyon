@@ -360,7 +360,7 @@ class PagesController extends Controller
 			return redirect()->back()->withError($row->getError());
 		}
 
-		$assoc = Association::query()
+		/*$assoc = Association::query()
 			->where('parent_id', '=', $row->parent->page_id)
 			->where('child_id', '=', $page->id)
 			->get()
@@ -372,7 +372,7 @@ class PagesController extends Controller
 			$assoc->parent_id = $row->parent->page_id;
 			$assoc->child_id = $page->id;
 			$assoc->save();
-		}
+		}*/
 
 		return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.update success'));
 	}

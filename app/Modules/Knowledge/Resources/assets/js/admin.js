@@ -47,7 +47,12 @@ jQuery(document).ready(function ($) {
 
 	$('.searchable-select').select2({
 		//placeholder: $(this).data('placeholder')
-	});
+		})
+		.on('select2:select', function (e) {
+			if ($(this).hasClass('filter-submit')) {
+				$(this).closest('form').submit();
+			}
+		});
 
 	$('body').on('click', '.delete-row', function (e) {
 		e.preventDefault();
