@@ -54,6 +54,16 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 		'uses' => 'PagesController@state',
 		'middleware' => 'can:edit.state knowledge',
 	])->where('id', '[0-9]+');
+	$router->match(['get', 'post'], '/orderup/{id}', [
+		'as'   => 'admin.knowledge.orderup',
+		'uses' => 'PagesController@reorder',
+		'middleware' => 'can:edit.state knowledge',
+	])->where('id', '[0-9]+');
+	$router->match(['get', 'post'], '/orderdown/{id?}', [
+		'as'   => 'admin.knowledge.orderdown',
+		'uses' => 'PagesController@reorder',
+		'middleware' => 'can:edit.state knowledge',
+	])->where('id', '[0-9]+');
 	$router->match(['get', 'post'], '/restore/{id?}', [
 		'as'   => 'admin.knowledge.restore',
 		'uses' => 'PagesController@restore',
@@ -88,6 +98,16 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 			'uses' => 'SnippetsController@attach',
 			'middleware' => 'can:create knowledge,edit knowledge',
 		]);
+		$router->match(['get', 'post'], '/orderup/{id}', [
+			'as'   => 'admin.knowledge.snippets.orderup',
+			'uses' => 'SnippetsController@reorder',
+			'middleware' => 'can:edit.state knowledge',
+		])->where('id', '[0-9]+');
+		$router->match(['get', 'post'], '/orderdown/{id?}', [
+			'as'   => 'admin.knowledge.snippets.orderdown',
+			'uses' => 'SnippetsController@reorder',
+			'middleware' => 'can:edit.state knowledge',
+		])->where('id', '[0-9]+');
 		$router->get('/edit/{id}', [
 			'as' => 'admin.knowledge.snippets.edit',
 			'uses' => 'SnippetsController@edit',

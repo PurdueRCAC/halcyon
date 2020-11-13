@@ -52,4 +52,5 @@ return [
 	'snippet' => 'Existing Snippet',
 	'attach' => 'Attach',
 	'options' => 'Options',
+	'ordering' => 'Ordering',
 ];

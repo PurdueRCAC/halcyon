@@ -118,11 +118,17 @@ class SnippetsController extends Controller
 			->orderBy($p . '.alias', 'asc')
 			->orderBy($p . '.title', 'asc')
 			->get();*/
+		// Preprocess the list of items to find ordering divisions.
+		foreach ($rows as $item)
+		{
+			$ordering[$item->parent_id][] = $item->id;
+		}
 
 		return view('knowledge::admin.snippets.index', [
 			'filters' => $filters,
 			'rows' => $rows,
 			'tree' => $list,
+			'ordering' => $ordering,
 		]);
 	}
 
@@ -368,6 +374,26 @@ class SnippetsController extends Controller
 			$request->session()->flash('success', trans($msg, ['count' => $success]));
 		}
 
+		return $this->cancel();
+	}
+
+	/**
+	 * Reorder entries
+	 * 
+	 * @return  void
+	 */
+	public function reorder($id, Request $request)
+	{
+		// Get the element being moved
+		$row = SnippetAssociation::findOrFail($id);
+		$move = ($request->segment(4) == 'orderup') ? -1 : +1;
+
+		if (!$row->move($move))
+		{
+			$request->session()->flash('error', $row->getError());
+		}
+
+		// Redirect
 		return $this->cancel();
 	}
 

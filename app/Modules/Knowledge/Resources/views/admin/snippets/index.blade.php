@@ -97,13 +97,21 @@ app('pathway')
 				<th scope="col" class="priority-2">
 					{!! Html::grid('sort', trans('knowledge::knowledge.last update'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
+				<th scope="col" class="priority-2">
+					{{ trans('knowledge::knowledge.ordering') }}
+				</th>
 				<th scope="col" class="text-right">
 					{{ trans('knowledge::knowledge.used') }}
 				</th>
 			</tr>
 		</thead>
 		<tbody>
+		<?php
+		$originalOrders = array();
+		$parent_id = 0;
+		?>
 		@foreach ($rows as $i => $row)
+			<?php $orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
 			<tr>
 				@if (auth()->user()->can('delete knowledge'))
 					<td>
@@ -146,6 +154,16 @@ app('pathway')
 							@endif
 						@endif
 					</span>
+				</td>
+				<td class="text-center">
+					<?php $orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
+					<?php if (auth()->user()->can('edit knowledge')): ?>
+						<span class="glyph">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.knowledge.snippets.orderup', ['id' => $row->id])) !!}</span>
+						<span class="glyph">{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), isset($ordering[$row->parent_id][$orderkey + 1]), route('admin.knowledge.snippets.orderdown', ['id' => $row->id])) !!}</span>
+						<?php $originalOrders[] = $orderkey + 1; ?>
+					<?php else : ?>
+						<?php echo $orderkey + 1;?>
+					<?php endif; ?>
 				</td>
 				<td class="text-right">
 					{{ $row->used }}

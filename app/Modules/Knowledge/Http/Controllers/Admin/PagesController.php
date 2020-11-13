@@ -133,10 +133,19 @@ class PagesController extends Controller
 			->orderBy('lft', 'asc')
 			->get();
 
+		$ordering = array();
+
+		// Preprocess the list of items to find ordering divisions.
+		foreach ($rows as $item)
+		{
+			$ordering[$item->parent_id][] = $item->id;
+		}
+
 		return view('knowledge::admin.pages.index', [
 			'filters' => $filters,
 			'rows'    => $rows,
 			'tree' => $list,
+			'ordering' => $ordering,
 			//'paginator' => $paginator,
 		]);
 	}
@@ -399,6 +408,26 @@ class PagesController extends Controller
 		}
 
 		return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.update success'));
+	}
+
+	/**
+	 * Reorder entries
+	 * 
+	 * @return  void
+	 */
+	public function reorder($id, Request $request)
+	{
+		// Get the element being moved
+		$row = Associations::findOrFail($id);
+		$move = ($request->segment(4) == 'orderup') ? -1 : +1;
+
+		if (!$row->move($move))
+		{
+			$request->session()->flash('error', $row->getError());
+		}
+
+		// Redirect
+		return $this->cancel();
 	}
 
 	/**
