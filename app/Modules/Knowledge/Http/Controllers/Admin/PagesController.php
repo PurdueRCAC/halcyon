@@ -435,7 +435,7 @@ class PagesController extends Controller
 	 * 
 	 * @return  void
 	 */
-	public function state(Request $request, $id)
+	public function state(Request $request, $id = null)
 	{
 		$action = $request->segment(3);
 		$state  = $action == 'publish' ? 1 : 0;
