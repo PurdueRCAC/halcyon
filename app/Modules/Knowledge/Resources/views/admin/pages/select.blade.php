@@ -88,7 +88,7 @@ app('pathway')
 						<!--<option value="0">{{ trans('global.none') }}</option>-->
 						<?php foreach ($parents as $pa): ?>
 							<?php $selected = ($pa->id == $parent_id ? ' selected="selected"' : ''); ?>
-							<option value="{{ $pa->id }}"<?php echo $selected; ?> data-path="/{{ $pa->path }}"><?php echo str_repeat('|&mdash; ', $pa->level) . e(Illuminate\Support\Str::limit($pa->title, 70)); ?></option>
+							<option value="{{ $pa->id }}"<?php echo $selected; ?> data-path="/{{ $pa->path }}"><?php echo '/' . ltrim($pa->path, '/')  . ' &mdash; ' . e(Illuminate\Support\Str::limit($pa->title, 70)); ?></option>
 						<?php endforeach; ?>
 					</select>
 				</div>
