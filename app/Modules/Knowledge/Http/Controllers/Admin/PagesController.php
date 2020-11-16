@@ -290,8 +290,8 @@ class PagesController extends Controller
 		$parent_id = $request->input('fields.parent_id');
 
 		$row = $id ? Associations::findOrFail($id) : new Associations;
-		//$row->access = $request->input('fields.access');
-		//$row->state  = $request->input('fields.state');
+		$row->access = $request->input('fields.access');
+		$row->state  = $request->input('fields.state');
 		$row->page_id = $request->input('fields.page_id');
 		$row->parent_id = $parent_id;
 
@@ -300,8 +300,8 @@ class PagesController extends Controller
 		{
 			$page = new Page;
 		}
-		$page->access = $request->input('fields.access');
-		$page->state  = $request->input('fields.state');
+		//$page->access = $request->input('fields.access');
+		//$page->state  = $request->input('fields.state');
 		$page->title = $request->input('page.title');
 		$page->alias = $request->input('page.alias');
 		$page->alias = $page->alias ?: $page->title;
