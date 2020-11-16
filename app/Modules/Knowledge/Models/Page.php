@@ -209,6 +209,7 @@ class Page extends Model
 	private function getVars()
 	{
 		$vars = array();
+		$vars['myusername'] = 'myusername';
 		$vars['user'] = ['username' => 'myusername'];
 		if (auth()->user())
 		{

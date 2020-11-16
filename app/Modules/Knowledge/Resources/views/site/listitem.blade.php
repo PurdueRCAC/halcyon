@@ -4,7 +4,8 @@ $path .= $path ? '/' . $node->page->alias : $node->page->alias;
 $node->page->variables->merge($variables);
 
 $isActive = (count($current) == 1 && $current[0] == $node->page->alias);
-$hasChildren = $node->publishedChildren();
+$children = $node->publishedChildren();
+$hasChildren = count($children);
 
 $cls = '';
 if ($hasChildren)
@@ -17,9 +18,7 @@ if ($isActive)
 }
 if (!empty($current) && $current[0] == $node->page->alias)
 {
-	$children = $node->publishedChildren();
-
-	if (count($children))
+	if ($hasChildren)
 	{
 		$cls .= ' active';
 	}
@@ -34,9 +33,12 @@ if (!empty($current) && $current[0] == $node->page->alias)
 	@else
 		<a href="{{ route('site.knowledge.page', ['uri' => $path]) }}">{{ $node->page->headline }}</a>
 	@endif
-	@if (!empty($current) && $current[0] == $node->page->alias)
+	@if (!empty($current) && ($current[0] == $node->page->alias || $current[0] == '__all__'))
 		@php
-		array_shift($current);
+		if ($current[0] != '__all__')
+		{
+			array_shift($current);
+		}
 		@endphp
 		@if (count($children))
 			@include('knowledge::site.list', ['nodes' => $children, 'path' => $path, 'current' => $current, 'variables' => $node->page->variables])

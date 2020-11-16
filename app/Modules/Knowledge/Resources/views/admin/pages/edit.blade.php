@@ -163,14 +163,14 @@ app('pathway')
 					<div class="row">
 						<div class="col col-md-6 form-group">
 							<div class="form-check">
-								<input type="radio" name="params[show_title]" id="params-show_title_no" class="form-check-input" value="0"<?php if (!$page->params->get('show_title')) { echo ' checked="checked"'; } ?> />
+								<input type="radio" name="params[show_title]" id="params-show_title_no" class="form-check-input" value="0"<?php if (!$page->params->get('show_title', 1)) { echo ' checked="checked"'; } ?> />
 								<label class="form-check-label" for="params-show_title_no">{{ trans('global.no') }}</label>
 							</div>
 						</div>
 
 						<div class="col col-md-6 form-group">
 							<div class="form-check">
-								<input type="radio" name="params[show_title]" id="params-show_title_yes" class="form-check-input" value="1"<?php if ($page->params->get('show_title')) { echo ' checked="checked"'; } ?> />
+								<input type="radio" name="params[show_title]" id="params-show_title_yes" class="form-check-input" value="1"<?php if ($page->params->get('show_title', 1)) { echo ' checked="checked"'; } ?> />
 								<label class="form-check-label" for="params-show_title_yes">{{ trans('global.yes') }}</label>
 							</div>
 						</div>

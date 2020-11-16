@@ -69,7 +69,7 @@
 					<li>
 						<a href="{{ route('site.knowledge.page', ['uri' => $pa]) }}">{{ $n->page->headline }}</a>
 						@if ($n->page->params->get('expandtoc'))
-							@include('knowledge::site.list', ['nodes' => $n->publishedChildren(), 'path' => $pa, 'current' => $path, 'variables' => $n->page->variables])
+							@include('knowledge::site.list', ['nodes' => $n->publishedChildren(), 'path' => $pa, 'current' => ['__all__'], 'variables' => $n->page->variables])
 						@endif
 					</li>
 				@endforeach
