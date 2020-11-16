@@ -88,6 +88,7 @@ class Associations extends Model
 		return $this->children()
 			->where('state', '=', 1)
 			->whereIn('access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
+			->orderBy('lft', 'asc')
 			->get();
 		/*$p = (new Page)->getTable();
 
@@ -488,8 +489,7 @@ class Associations extends Model
 	public function move($delta, $where = '')
 	{
 		$query = self::query()
-			->where('parent_id', '=', $this->parent_id)
-			->where('menutype', '=', $this->menutype);
+			->where('parent_id', '=', $this->parent_id);
 
 		/*if ($where)
 		{
@@ -501,13 +501,13 @@ class Associations extends Model
 		if ($delta > 0)
 		{
 			$query->where('rgt', '>', $this->rgt);
-			$query->orderBy('rgt', 'ASC');
+			$query->orderBy('rgt', 'asc');
 			$position = 'after';
 		}
 		else
 		{
 			$query->where('lft', '<', $this->lft);
-			$query->orderBy('lft', 'DESC');
+			$query->orderBy('lft', 'desc');
 			$position = 'before';
 		}
 

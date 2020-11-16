@@ -419,7 +419,7 @@ class PagesController extends Controller
 	{
 		// Get the element being moved
 		$row = Associations::findOrFail($id);
-		$move = ($request->segment(4) == 'orderup') ? -1 : +1;
+		$move = ($request->segment(3) == 'orderup') ? -1 : +1;
 
 		if (!$row->move($move))
 		{
