@@ -55,9 +55,11 @@
 						$n->page->variables->merge($page->variables);
 						$pa = $p ? $p . '/' . $n->page->alias : $n->page->alias;
 					@endphp
-					<h3>{{ $node->headline }}</h3>
+					<section id="{{ str_replace('/', '_', $pa) }}">
+						<h3>{{ $n->page->headline }}</h3>
 
-					{!! $node->body ||}
+						{!! $n->page->body !!}
+					</section>
 				@endforeach
 			@else
 				<ul class="kb-toc">
