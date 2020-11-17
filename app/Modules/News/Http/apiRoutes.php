@@ -27,7 +27,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 	$router->delete('{id}', [
 		'as' => 'api.news.delete',
 		'uses' => 'ArticlesController@delete',
-		'middleware' => 'auth:api',
+		'middleware' => 'auth:api|can:delete news',
 	])->where('id', '[0-9]+');
 
 	// Types
