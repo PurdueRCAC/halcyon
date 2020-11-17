@@ -268,19 +268,13 @@ class SnippetsController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		if ($id && $parent_id != $row->parent_id)
+		if ($id && $parent_id != $row->getOriginal('parent_id'))
 		{
 			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{
 				return redirect()->back()->withError($row->getError());
 			}
 		}
-
-		// Rebuild the paths of the entry's path
-		/*if (!$row->rebuildPath())
-		{
-			return redirect()->back()->withError($row->getError());
-		}*/
 
 		// Rebuild the paths of the entry's children
 		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
