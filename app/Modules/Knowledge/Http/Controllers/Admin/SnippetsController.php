@@ -218,6 +218,7 @@ class SnippetsController extends Controller
 		{
 			$page = new Page;
 		}
+		$page->snippet = 1;
 		$page->access = $request->input('fields.access');
 		$page->state  = $request->input('fields.state');
 		$page->title = $request->input('page.title');
