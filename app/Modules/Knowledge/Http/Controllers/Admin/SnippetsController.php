@@ -212,6 +212,7 @@ class SnippetsController extends Controller
 		//$row->access = $request->input('fields.access');
 		//$row->state  = $request->input('fields.state');
 		$row->page_id = $request->input('fields.page_id');
+		$orig_parent_id = $row->parent_id;
 		$row->parent_id = $parent_id;
 
 		$page = Page::find($row->page_id);
@@ -269,7 +270,7 @@ class SnippetsController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		if ($id && $parent_id != $row->getOriginal('parent_id'))
+		if ($id && $parent_id != $orig_parent_id)
 		{
 			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{
