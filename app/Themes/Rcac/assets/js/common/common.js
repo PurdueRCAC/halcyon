@@ -1,7 +1,10 @@
 // Common Javascript functions for all web app pages
 
 // define a couple global variables
-var ROOT_URL = "/ws/";
+if (base_url === undefined) {
+	base_url = '';
+}
+var ROOT_URL = base_url + "/api/";
 var tablist = '';
 var supergroup = null;
 var USER = null;
@@ -99,10 +102,13 @@ function BodyLoad(username, group, image_url) {
 }
 
 function WSGetURL(id, result_function, arg1) {
-	if (id.substring(0, 1) != '/') {
-		id = '/' + id;
+	if (id.substring(0, 4) != 'http') {
+		if (id.substring(0, 1) != '/') {
+			id = '/' + id;
+		}
+		id = 'https://' + window.location.hostname + id;
 	}
-	var url = "https://" + window.location.hostname + id;
+	var url = id;
 	var xml = GetXmlHttpObject();
 	xml.onreadystatechange = function () {
 		if (xml.readyState==4 || xml.readyState=="complete")
@@ -120,15 +126,19 @@ function WSGetURL(id, result_function, arg1) {
 			}
 		}
 	}
-	xml.open("GET",url,true);
+	xml.open('GET', url, true);
+	xml.setRequestHeader('Authorization', 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content'));
 	xml.send(null);
 }
 
 function WSPostURL(id, json, result_function, arg1) {
-	if (id.substring(0, 1) != '/') {
-		id = '/' + id;
+	if (id.substring(0, 4) != 'http') {
+		if (id.substring(0, 1) != '/') {
+			id = '/' + id;
+		}
+		id = 'https://' + window.location.hostname + id;
 	}
-	var url = "https://" + window.location.hostname + id;
+	var url = id;
 	var xml = GetXmlHttpObject();
 	xml.onreadystatechange = function () {
 		if (xml.readyState==4 || xml.readyState=="complete") {
@@ -145,14 +155,18 @@ function WSPostURL(id, json, result_function, arg1) {
 		}
 	}
 	xml.open("POST",url,true);
+	xml.setRequestHeader('Authorization', 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content'));
 	xml.send(json);
 }
 
 function WSDeleteURL(id, result_function, arg1) {
-	if (id.substring(0, 1) != '/') {
-		id = '/' + id;
+	if (id.substring(0, 4) != 'http') {
+		if (id.substring(0, 1) != '/') {
+			id = '/' + id;
+		}
+		id = 'https://' + window.location.hostname + id;
 	}
-	var url = "https://" + window.location.hostname + id;
+	var url = id;
 	var xml = GetXmlHttpObject();
 	xml.onreadystatechange = function () {
 		if (xml.readyState==4 || xml.readyState=="complete")
@@ -169,6 +183,7 @@ function WSDeleteURL(id, result_function, arg1) {
 		}
 	}
 	xml.open("DELETE",url,true);
+	xml.setRequestHeader('Authorization', 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content'));
 	xml.send(null);
 }
 
