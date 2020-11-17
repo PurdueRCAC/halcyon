@@ -123,7 +123,6 @@ class PagesController extends Controller
 
 			if (!$node->save())
 			{
-				print_r($assoc);
 				die('here');
 			}
 
@@ -137,17 +136,72 @@ class PagesController extends Controller
 	 * Display a listing of the resource.
 	 * @return Response
 	 */
-	public function search()
+	public function search(Request $request)
 	{
-		$types = Type::all();
-
-		app('pathway')->append(
-			config('news.name'),
-			route('site.news.index')
+		$filters = array(
+			'search'    => null,
+			'limit'     => config('list_limit', 20),
+			'page'      => 1,
+			'order'     => Page::$orderBy,
+			'order_dir' => Page::$orderDir,
 		);
 
-		return view('news::site.search', [
-			'types' => $types
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->input($key, $default);
+		}
+
+		if (!in_array($filters['order'], ['id', 'title', 'lft', 'rgt', 'path']))
+		{
+			$filters['order'] = 'lft';
+		}
+
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
+		{
+			$filters['order_dir'] = 'asc';
+		}
+
+		$query = Page::query();
+
+		$p = (new Page)->getTable();
+		$a = (new Associations)->getTable();
+
+		$query->join($a, $a . '.page_id', $p . '.id')
+			->select($p . '.title', $p . '.snippet', $p . '.updated_at', $a . '.*'); //$p . '.state', $p . '.access', 
+			//->select($p . '.title', $p . '.snippet', $p . '.updated_at', $a . '.*');
+
+		if ($filters['search'])
+		{
+			$query->where(function($query) use ($filters, $p)
+			{
+				$query->where($p . '.title', 'like', '%' . $filters['search'] . '%')
+					->orWhere($p . '.content', 'like', '%' . $filters['search'] . '%');
+			});
+		}
+
+		$query->where($p . '.state', '=', 1);
+		$query->where($p . '.access', '=', auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]);
+
+		$rows = $query
+			->orderBy($filters['order'], $filters['order_dir'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+
+		$root = Associations::rootNode();
+
+		app('pathway')
+			->append(
+				trans('knowledge::knowledge.knowledge base'),
+				route('site.knowledge.index')
+			)
+			->append(
+				trans('knowledge::knowledge.search'),
+				route('site.knowledge.search')
+			);
+
+		return view('knowledge::site.search', [
+			'filters' => $filters,
+			'root' => $root,
+			'rows' => $rows
 		]);
 	}
 }

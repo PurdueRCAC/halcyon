@@ -27,7 +27,6 @@
 				<div class="form-group">
 					<label class="sr-only" for="knowledge_search">{{ trans('knowledge::knowledge.search') }}</label>
 					<input type="search" name="search" id="knowledge_search" class="form-control" placeholder="{{ trans('knowledge::knowledge.search placeholder') }}" value="" />
-					<input type="hidden" name="id" value="" />
 				</div>
 			</form>
 		</div>
