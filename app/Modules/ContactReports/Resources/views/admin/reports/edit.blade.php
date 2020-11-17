@@ -6,7 +6,6 @@
 @stop
 
 @section('scripts')
-<script src="{{ asset('modules/core/js/validate.js?v=' . filemtime(public_path() . '/modules/core/js/validate.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/contactreports/js/admin.js?v=' . filemtime(public_path() . '/modules/contactreports/js/admin.js')) }}"></script>
@@ -41,7 +40,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.contactreports.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.validation failed') }}">
+<form action="{{ route('admin.contactreports.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 	@if ($errors->any())
 		<div class="alert alert-danger">
@@ -60,7 +59,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-datetimecontact">{{ trans('contactreports::contactreports.contacted') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					{!! Html::input('calendar', 'fields[datetimecontact]', $row->datetimecontact->format('Y-m-d'), ['required' => true, 'time' => false]) !!}
+					{!! Html::input('calendar', 'fields[datetimecontact]', $row->datetimecontact ? $row->datetimecontact->format('Y-m-d') : '', ['required' => true, 'time' => false]) !!}
 					<span class="invalid-feedback">{{ trans('contactreports::contactreports.invalid.contacted') }}</span>
 				</div>
 
@@ -73,8 +72,7 @@ app('pathway')
 					}
 					?>
 					<label for="field-resources">{{ trans('contactreports::contactreports.resources') }}:</label>
-					<!-- <input type="text" name="resources" id="field-resources" class="form-control form-resources" data-uri="{{ url('/') }}/api/resources/?api_token={{ auth()->user()->api_token }}&search=%s" size="30" maxlength="250" value="{{ implode(',', $resources) }}" />-->
-					<select class="form-control basic-multiple" name="resources[]" multiple="multiple" data-placeholder="Select resource...">
+					<select class="form-control basic-multiple" name="resources[]" multiple="multiple" data-placeholder="">
 						<?php
 						$r = $row->resources->pluck('resourceid')->toArray();
 						$resources = App\Modules\Resources\Entities\Asset::orderBy('name', 'asc')->get();
@@ -118,6 +116,10 @@ app('pathway')
 			</fieldset>
 		</div>
 		<div class="col-md-5">
+			<div class="help">
+				<p>{{ trans('contactreports::contactreports.formatting help') }}</p>
+			</div>
+
 			@if ($row->id)
 				<fieldset class="adminform">
 					<legend>{{ trans('contactreports::contactreports.comments') }}</legend>
@@ -127,24 +129,27 @@ app('pathway')
 					if (count($comments) > 0) {
 					?>
 					<ul>
-						<?php foreach ($comments as $comment) { ?>
+						@foreach ($comments as $comment)
 						<li>
 							{!! $comment->formattedComment() !!}
-							<p>Posted by {{ $comment->creator ? $comment->creator->name : trans('global.unknown') }} on {{ $comment->datetimecreated->toDateTimeString() }}</p>
+							<p>{{ trans('contactreports::contactreports.posted by', ['who' => ($comment->creator ? $comment->creator->name : trans('global.unknown')), 'when' => $comment->datetimecreated->toDateTimeString()]) }}</p>
 						</li>
-						<?php } ?>
+						@endforeach
 					</ul>
 					<?php
 					}
 					else
 					{
 						?>
-						<p>No comments found.</p>
+						<p>{{ trans('contactreports::contactreports.no comments found') }}</p>
 						<ul>
 							<li>
 								<div class="form-group">
-									<label for="comment">Comment</label>
+									<label for="comment">{{ trans('contactreports::contactreports.comment') }}</label>
 									<textarea name="comment" id="comment" class="form-control" cols="45" rows="3"></textarea>
+								</div>
+								<div class="form-group text-right">
+									<button class="btn btn-secondary">{{ trans('contactreports::contactreports.add') }}</button>
 								</div>
 							</li>
 						</ul>

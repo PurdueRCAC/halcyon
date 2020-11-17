@@ -138,7 +138,7 @@ class Report extends Model
 	 */
 	public function creator()
 	{
-		return $this->belongsTo('App\Modules\Users\Models\User', 'userid')->withDefault();
+		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
 
 	/**

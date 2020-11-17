@@ -27,4 +27,8 @@ return [
 	// Comment
 	'comment' => 'Comment',
 	'contactreport id' => 'Report ID',
+	'add' => 'Add',
+	'no comments found' => 'No comments found.',
+	'posted by' => 'Posted by :who on :when',
+	'formatting help' => 'Reports and comments support MarkDown for formatting.',
 ];

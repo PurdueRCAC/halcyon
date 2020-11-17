@@ -76,7 +76,7 @@
 								}
 							}
 							?>
-							<input name="group" id="group" size="45" class="form-control" value="{{ implode(',', $grps) }}" data-uri="{{ route('api.groups.index') }}/%s" />
+							<input name="group" id="group" size="45" class="form-control" value="{{ implode(',', $grps) }}" data-uri="{{ route('api.groups.index') }}?search=%s" data-api="{{ route('api.groups.index') }}" />
 						</div>
 					</div>
 
@@ -112,7 +112,7 @@
 								}
 							}
 							?>
-							<input name="people" id="people" size="45" class="form-control" value="{{ implode(',', $usrs) }}" data-uri="{{ route('api.users.index') }}/%s" />
+							<input name="people" id="people" size="45" class="form-control" value="{{ implode(',', $usrs) }}" data-uri="{{ route('api.users.index') }}?search=%s" data-api="{{ route('api.users.index') }}" />
 						</div>
 					</div>
 
@@ -133,7 +133,7 @@
 								}
 							}
 							?>
-							<input name="resource" id="crmresource" size="45" class="form-control" value="{{ implode(',', $resources) }}" data-uri="{{ route('api.resources.index') }}/%s" />
+							<input name="resource" id="crmresource" size="45" class="form-control" value="{{ implode(',', $resources) }}" data-uri="{{ route('api.resources.index') }}?search=%s" data-api="{{ route('api.resources.index') }}" />
 						</div>
 					</div>
 
@@ -196,7 +196,9 @@
 	$string = implode('&', $string);
 	?>
 
-	<div id="reports" data-query="{{ $string }}">
+	<div id="reports" data-query="{{ $string }}" data-api="{{ route('api.contactreports.index') }}">
+		<?php
+		/*
 		@foreach ($rows as $i => $row)
 			<article id="{{ $row->id }}" class="crm-item newEntries">
 				<div class="panel panel-default">
@@ -236,6 +238,8 @@
 				</ul>
 			</article>
 		@endforeach
+		*/
+		?>
 	</div>
 
 	<script type="application/json" id="crm-search-data">
@@ -317,9 +321,10 @@
 			</tr>
 		@endforeach
 		</tbody>
-	</table> -->
+	</table>
 
 		{{ $rows->render() }}
+		 -->
 	</div>
 </div>
 

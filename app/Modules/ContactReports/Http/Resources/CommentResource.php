@@ -20,6 +20,7 @@ class CommentResource extends JsonResource
 
 		$data['formatteddate'] = $this->formattedDate;
 		$data['formattedcomment'] = $this->formattedComment;
+		$data['username'] = $this->creator->name;
 
 		$data['api'] = route('api.contactreports.read', ['id' => $this->id]);
 		$data['url'] = route('site.contactreports.show', ['id' => $this->contactreportid]);
@@ -33,7 +34,7 @@ class CommentResource extends JsonResource
 
 		if ($user)
 		{
-			$data['can']['edit']   = ($user->can('edit contactreports') || ($user->can('edit.own contactreports') && $item->userid == $user->id));
+			$data['can']['edit']   = ($user->can('edit contactreports') || ($user->can('edit.own contactreports') && $this->userid == $user->id));
 			$data['can']['delete'] = $user->can('delete contactreports');
 		}
 

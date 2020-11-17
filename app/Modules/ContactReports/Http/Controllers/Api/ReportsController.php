@@ -149,7 +149,7 @@ class ReportsController extends Controller
 
 			$cru = (new User)->getTable();
 
-			$query->innerJoin($cru, $cru . '.contactreportid', $cr . '.userid');
+			$query->join($cru, $cru . '.contactreportid', $cr . '.userid');
 			$query->where(function ($where) use ($filters)
 				{
 					$where->whereIn($cru . '.userid', $filters['people'])
@@ -163,8 +163,10 @@ class ReportsController extends Controller
 
 			$crr = (new Reportresource)->getTable();
 
-			$query->innerJoin($crr, $crr . '.contactreportid', $cr . '.resourceid')
-				->whereIn($crr . '.id', $filters['resource']);
+			$query
+				->select($cr . '.*')
+				->join($crr, $crr . '.contactreportid', $cr . '.id')
+				->whereIn($crr . '.resourceid', $filters['resource']);
 		}
 
 		$rows = $query

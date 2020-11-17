@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'contactreports'], function (Router $router)
+$router->group(['prefix' => 'contactreports', 'middleware' => 'auth:api'], function (Router $router)
 {
 	$router->get('/', [
 		'as'   => 'api.contactreports.index',
@@ -12,7 +12,7 @@ $router->group(['prefix' => 'contactreports'], function (Router $router)
 	$router->post('/', [
 		'as' => 'api.contactreports.create',
 		'uses' => 'ReportsController@create',
-		'middleware' => 'auth:api',
+		'middleware' => 'can:create contactreports',
 	]);
 	$router->get('{id}', [
 		'as'   => 'api.contactreports.read',
@@ -21,16 +21,16 @@ $router->group(['prefix' => 'contactreports'], function (Router $router)
 	$router->put('{id}', [
 		'as'   => 'api.contactreports.update',
 		'uses' => 'ReportsController@update',
-		'middleware' => 'auth:api',
+		'middleware' => 'can:edit contactreports',
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
 		'as' => 'api.contactreports.delete',
 		'uses' => 'ReportsController@delete',
-		'middleware' => 'auth:api',
+		'middleware' => 'can:delete contactreports',
 	])->where('id', '[0-9]+');
 
 	// Comments
-	$router->group(['prefix' => '/comments'], function (Router $router)
+	$router->group(['prefix' => 'comments'], function (Router $router)
 	{
 		$router->get('/', [
 			'as'   => 'api.contactreports.comments',
@@ -39,7 +39,7 @@ $router->group(['prefix' => 'contactreports'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.contactreports.comments.create',
 			'uses' => 'CommentsController@create',
-			'middleware' => 'auth:api',
+			'middleware' => 'can:create contactreports',
 		]);
 		$router->get('{comment}', [
 			'as' => 'api.contactreports.comments.read',
@@ -48,12 +48,12 @@ $router->group(['prefix' => 'contactreports'], function (Router $router)
 		$router->put('{comment}', [
 			'as' => 'api.contactreports.comments.update',
 			'uses' => 'CommentsController@update',
-			'middleware' => 'auth:api',
+			'middleware' => 'can:edit contactreports',
 		])->where('comment', '[0-9]+');
 		$router->delete('{comment}', [
 			'as' => 'api.contactreports.comments.delete',
 			'uses' => 'CommentsController@delete',
-			'middleware' => 'auth:api',
+			'middleware' => 'can:delete contactreports',
 		])->where('comment', '[0-9]+');
 	});
 });

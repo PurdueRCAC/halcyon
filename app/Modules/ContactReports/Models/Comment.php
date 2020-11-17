@@ -248,6 +248,10 @@ class Comment extends Model
 
 		foreach ($vars as $var => $value)
 		{
+			if (is_array($value))
+			{
+				$value = implode(', ', $value);
+			}
 			$text = preg_replace("/%" . $var . "%/", $value, $text);
 		}
 
