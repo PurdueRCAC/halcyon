@@ -119,6 +119,7 @@ class SnippetsController extends Controller
 			->orderBy($p . '.title', 'asc')
 			->get();*/
 		// Preprocess the list of items to find ordering divisions.
+		$ordering = array();
 		foreach ($rows as $item)
 		{
 			$ordering[$item->parent_id][] = $item->id;
