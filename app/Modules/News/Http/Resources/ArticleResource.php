@@ -44,7 +44,6 @@ class ArticleResource extends JsonResource
 			{
 				$res->name = $associated->name;
 			}
-			
 		});
 
 		//$this->username = $this->creator ? $this->creator->name : trans('global.unknown');
