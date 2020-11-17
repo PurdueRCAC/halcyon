@@ -14,6 +14,7 @@ class SnippetsController extends Controller
 	/**
 	 * Display a listing of articles
 	 *
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -94,30 +95,7 @@ class SnippetsController extends Controller
 			->where('level', '<', 2)
 			->orderBy('lft', 'asc')
 			->get();
-		/*$tree = Page::query()
-			->join($a, $a . '.page_id', $p . '.id')
-			->select($p . '.title', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id', $a . '.path')
-			->orderBy('lft', 'asc')
-			->get();
 
-
-		$rowids = Page::query()
-			->join($a, $a . '.page_id', $p . '.id')
-			->select($p . '.id')
-			->where($p . '.snippet', '=', 1)
-			->where($a . '.lft', '>=', $root->lft)
-			->where($a . '.rgt', '<=', $root->rgt)
-			->get()
-			->pluck('id')
-			->toArray();
-
-		$pages = Page::query()
-			->select($p . '.*')
-			->where($p . '.snippet', '=', 1)
-			->whereNotIn($p . '.id', $rowids)
-			->orderBy($p . '.alias', 'asc')
-			->orderBy($p . '.title', 'asc')
-			->get();*/
 		// Preprocess the list of items to find ordering divisions.
 		$ordering = array();
 		foreach ($rows as $item)
@@ -135,6 +113,7 @@ class SnippetsController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
 	 * @return Response
 	 */
 	public function create()
@@ -163,6 +142,8 @@ class SnippetsController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -231,7 +212,6 @@ class SnippetsController extends Controller
 		{
 			foreach ($params as $key => $val)
 			{
-				//$params[$key] = is_array($val) ? array_filter($val) : $val;
 				if ($key == 'variables')
 				{
 					$vars = array();
@@ -247,11 +227,7 @@ class SnippetsController extends Controller
 				}
 				$page->params->set($key, $val);
 			}
-
-			//$page->params = new Repository($params);
 		}
-		//$page->snippet = $request->input('page.snippet', 0);
-		//$page->params = json_encode($request->input('params', []));
 
 		if (!$page->save())
 		{
@@ -317,6 +293,8 @@ class SnippetsController extends Controller
 	/**
 	 * Sets the state of one or more entries
 	 * 
+	 * @param   Request $request
+	 * @param   integer $id
 	 * @return  void
 	 */
 	public function state(Request $request, $id)
@@ -377,6 +355,8 @@ class SnippetsController extends Controller
 	/**
 	 * Reorder entries
 	 * 
+	 * @param   integer $id
+	 * @param   Request $request
 	 * @return  void
 	 */
 	public function reorder($id, Request $request)

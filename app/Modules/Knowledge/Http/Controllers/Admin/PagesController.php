@@ -16,6 +16,7 @@ class PagesController extends Controller
 	/**
 	 * Display a listing of articles
 	 *
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -31,7 +32,6 @@ class PagesController extends Controller
 			'order'     => Page::$orderBy,
 			'order_dir' => Page::$orderDir,
 		);
-		//$filters['start'] = ($filters['limit'] * $filters['page']) - $filters['limit'];
 
 		$refresh = false;
 		foreach ($filters as $key => $default)
@@ -110,21 +110,6 @@ class PagesController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		/*$list = Page::tree($filters);
-		$total = count($list);
-
-		if ($filters['state'])
-		{
-			$list = array_filter($list, function($k) use ($filters)
-			{
-				return ($k->state == $filters['state']);
-			});
-		}
-
-		$rows = array_slice($list, $filters['start'], $filters['limit']);
-
-		$paginator = new \Illuminate\Pagination\LengthAwarePaginator($rows, $total, $filters['limit'], $filters['current']);
-		$paginator->withPath(route('admin.knowledge.index'));*/
 
 		$list = Page::query()
 			->join($a, $a . '.page_id', $p . '.id')
@@ -152,6 +137,7 @@ class PagesController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
 	 * @return Response
 	 */
 	public function create()
@@ -173,6 +159,8 @@ class PagesController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function select(Request $request)
@@ -211,9 +199,6 @@ class PagesController extends Controller
 			'snippets' => 'required|array'
 		]);
 
-		//var_dump($request->input('parent_id'));
-		//print_r($request->input('snippets')); die();
-
 		$parent_id = $request->input('parent_id');
 		$snippets = $request->input('snippets');
 		$parents = array();
@@ -234,12 +219,12 @@ class PagesController extends Controller
 				$row->parent_id = $parent_id;
 				if (isset($parents[$parent]))
 				{
-					$row->parent_id = $parents[$parent];//->id;
+					$row->parent_id = $parents[$parent];
 				}
-				//print_r($row->toArray()); die();
+
 				if (!$row->save())
 				{
-					die('error!');
+					return redirect()->back()->withError(trans('knowledge::knowledge.failed to attach snippets'));
 				}
 
 				$parents[$id] = $row->id;
@@ -251,6 +236,8 @@ class PagesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -293,6 +280,7 @@ class PagesController extends Controller
 		$row->access = $request->input('fields.access');
 		$row->state  = $request->input('fields.state');
 		$row->page_id = $request->input('fields.page_id');
+		$orig_parent_id = $row->parent_id;
 		$row->parent_id = $parent_id;
 
 		$page = Page::find($row->page_id);
@@ -310,7 +298,6 @@ class PagesController extends Controller
 		{
 			foreach ($params as $key => $val)
 			{
-				//$params[$key] = is_array($val) ? array_filter($val) : $val;
 				if ($key == 'variables')
 				{
 					$vars = array();
@@ -326,11 +313,7 @@ class PagesController extends Controller
 				}
 				$page->params->set($key, $val);
 			}
-
-			//$page->params = new Repository($params);
 		}
-		//$page->snippet = $request->input('page.snippet', 0);
-		//$page->params = json_encode($request->input('params', []));
 
 		if (!$page->save())
 		{
@@ -349,7 +332,7 @@ class PagesController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		if ($id && $parent_id != $row->parent_id)
+		if ($id && $parent_id != $orig_parent_id)
 		{
 			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{
@@ -357,31 +340,11 @@ class PagesController extends Controller
 			}
 		}
 
-		// Rebuild the paths of the entry's path
-		/*if (!$row->rebuildPath())
-		{
-			return redirect()->back()->withError($row->getError());
-		}*/
-
 		// Rebuild the paths of the entry's children
 		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
 		{
 			return redirect()->back()->withError($row->getError());
 		}
-
-		/*$assoc = Association::query()
-			->where('parent_id', '=', $row->parent->page_id)
-			->where('child_id', '=', $page->id)
-			->get()
-			->first();
-
-		if (!$assoc)
-		{
-			$assoc = new Association;
-			$assoc->parent_id = $row->parent->page_id;
-			$assoc->child_id = $page->id;
-			$assoc->save();
-		}*/
 
 		return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.update success'));
 	}
@@ -393,13 +356,7 @@ class PagesController extends Controller
 	 */
 	public function rebuild()
 	{
-		$row = Associations::findOrFail(1);
-
-		// Rebuild the paths of the entry's path
-		/*if (!$row->rebuildPath())
-		{
-			return redirect()->back()->withError($row->getError());
-		}*/
+		$row = Associations::rootNode();
 
 		// Rebuild the paths of the entry's children
 		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
@@ -413,6 +370,8 @@ class PagesController extends Controller
 	/**
 	 * Reorder entries
 	 * 
+	 * @param   integer $id
+	 * @param   Request $request
 	 * @return  void
 	 */
 	public function reorder($id, Request $request)
@@ -433,6 +392,8 @@ class PagesController extends Controller
 	/**
 	 * Sets the state of one or more entries
 	 * 
+	 * @param   Request $request
+	 * @param   integer $id
 	 * @return  void
 	 */
 	public function state(Request $request, $id = null)
@@ -457,7 +418,6 @@ class PagesController extends Controller
 		foreach ($ids as $id)
 		{
 			$row = Associations::findOrFail(intval($id));
-			//$row = Page::findOrFail(intval($id));
 
 			if ($row->state == $state)
 			{
@@ -491,6 +451,7 @@ class PagesController extends Controller
 	/**
 	 * Remove the specified entry
 	 *
+	 * @param   Request $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)
