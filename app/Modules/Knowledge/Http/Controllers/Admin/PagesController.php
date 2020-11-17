@@ -31,6 +31,7 @@ class PagesController extends Controller
 			'page'      => 1,
 			'order'     => Page::$orderBy,
 			'order_dir' => Page::$orderDir,
+			'level'     => 0,
 		);
 
 		$refresh = false;
@@ -74,6 +75,11 @@ class PagesController extends Controller
 				$query->where($p . '.title', 'like', '%' . $filters['search'] . '%')
 					->orWhere($p . '.content', 'like', '%' . $filters['search'] . '%');
 			});
+		}
+
+		if ($filters['level'] > 0)
+		{
+			$query->where($a . '.level', '<=', $filters['level']);
 		}
 
 		if ($filters['parent'])

@@ -83,8 +83,23 @@ $(document).ready(function() {
 				</div>
 			</div>
 			<div class="col-md-8 text-right">
+				<label class="sr-only" for="filter_level">{{ trans('knowledge::knowledge.depth') }}</label>
+				<select name="level" id="filter_level" class="form-control filter filter-submit">
+					<option value="0"<?php if ($filters['level'] == '0'): echo ' selected="selected"'; endif;?>>{{ trans('knowledge::knowledge.all levels') }}</option>
+					<option value="1"<?php if ($filters['level'] == 1): echo ' selected="selected"'; endif;?>>1</option>
+					<option value="2"<?php if ($filters['level'] == 2): echo ' selected="selected"'; endif;?>>2</option>
+					<option value="3"<?php if ($filters['level'] == 3): echo ' selected="selected"'; endif;?>>3</option>
+					<option value="4"<?php if ($filters['level'] == 4): echo ' selected="selected"'; endif;?>>4</option>
+					<option value="5"<?php if ($filters['level'] == 5): echo ' selected="selected"'; endif;?>>5</option>
+					<option value="6"<?php if ($filters['level'] == 6): echo ' selected="selected"'; endif;?>>6</option>
+					<option value="7"<?php if ($filters['level'] == 7): echo ' selected="selected"'; endif;?>>7</option>
+					<option value="8"<?php if ($filters['level'] == 8): echo ' selected="selected"'; endif;?>>8</option>
+					<option value="9"<?php if ($filters['level'] == 9): echo ' selected="selected"'; endif;?>>9</option>
+					<option value="10"<?php if ($filters['level'] == 10): echo ' selected="selected"'; endif;?>>10</option>
+				</select>
+
 				<label class="sr-only" for="filter_state">{{ trans('knowledge::knowledge.state') }}</label>
-				<select name="state" class="form-control filter filter-submit">
+				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('knowledge::knowledge.state_all') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
 					<option value="unpublished"<?php if ($filters['state'] == 'unpublished'): echo ' selected="selected"'; endif;?>>{{ trans('global.unpublished') }}</option>

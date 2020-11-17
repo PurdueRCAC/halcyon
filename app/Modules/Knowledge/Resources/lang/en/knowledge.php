@@ -53,4 +53,5 @@ return [
 	'attach' => 'Attach',
 	'options' => 'Options',
 	'ordering' => 'Ordering',
+	'all levels' => '- All Levels -',
 ];
