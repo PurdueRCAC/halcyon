@@ -48,6 +48,7 @@ class ReportResource extends JsonResource
 		{
 			$res->name = $res->user->name;
 		});
+		$data['groupname'] = $this->group ? $this->group->name : null;
 		$data['resources'] = $this->resources->each(function ($res, $key)
 		{
 			$res->name = $res->resource->name;

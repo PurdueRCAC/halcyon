@@ -195,7 +195,6 @@
 
 	$string = implode('&', $string);
 	?>
-
 	<div id="reports" data-query="{{ $string }}" data-api="{{ route('api.contactreports.index') }}">
 		<?php
 		/*
@@ -242,6 +241,26 @@
 		?>
 	</div>
 
+	@if ($report)
+	<script type="application/json" id="crm-data">
+		{
+			"original": {
+				"id": "<?php echo $report->id; ?>",
+				"datetimecontact": "<?php echo $report->datetimecontact->format('Y-m-d'); ?>",
+				"groupid": "<?php echo $report->groupid; ?>",
+				"groupname": "<?php echo $report->group ? $report->group->name : ''; ?>",
+				"groupage": "<?php echo $report->groupage; ?>",
+				"age": "",
+				"users": <?php echo json_encode($report->users); ?>,
+				"resources": <?php echo json_encode($report->resources); ?>,
+				"note": <?php echo json_encode($report->report); ?>
+			},
+			"originalusers": [],
+			"originalcontactusers": []
+		}
+	</script>
+	@endif
+
 	<script type="application/json" id="crm-search-data">
 		{
 			"followerofgroups": <?php echo json_encode(auth()->user()->followerofgroups); ?>,
@@ -250,81 +269,81 @@
 			"people": <?php echo request()->has('people') ? json_encode(explode(',', request()->input('people'))) : '[]'; ?>
 		}
 	</script>
-	<!-- <table class="table table-hover adminlist">
-		<thead>
-			<tr>
-				<th>
-					{!! Html::grid('checkall') !!}
-				</th>
-				<th scope="col" class="priority-5">
-					{!! Html::grid('sort', trans('contactreports::contactreports.id'), 'id', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col">
-					{!! Html::grid('sort', trans('contactreports::contactreports.report'), 'report', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('contactreports::contactreports.group'), 'groupid', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('contactreports::contactreports.contacted'), 'datetimecontact', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-2">
-					{{ trans('contactreports::contactreports.comments') }}
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-		@foreach ($rows as $i => $row)
-			<tr>
-				<td>
-					@if (auth()->user()->can('edit contactreports'))
-						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-					@endif
-				</td>
-				<td class="priority-5">
-					{{ $row->id }}
-				</td>
-				<td>
-					@if (auth()->user()->can('edit contactreports'))
-						<a href="{{ route('admin.contactreports.edit', ['id' => $row->id]) }}">
-							{{ Illuminate\Support\Str::limit($row->report, 70) }}
-						</a>
-					@else
-						<span>
-							{{ Illuminate\Support\Str::limit($row->report, 70) }}
-						</span>
-					@endif
-				</td>
-				<td class="priority-4">
-					{{ $row->group ? $row->group->name : trans('global.none') }}
-				</td>
-				<td class="priority-4">
-					<span class="datetime">
-						@if ($row->getOriginal('datetimecontact') && $row->getOriginal('datetimecontact') != '0000-00-00 00:00:00')
-							<time datetime="{{ $row->datetimecontact }}">
-								@if ($row->datetimecontact->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
-									{{ $row->datetimecontact->diffForHumans() }}
-								@else
-									{{ $row->datetimecontact->format('Y-m-d') }}
-								@endif
-							</time>
-						@else
-							<span class="never">{{ trans('global.unknown') }}</span>
+		<?php /*<table class="table table-hover adminlist">
+			<thead>
+				<tr>
+					<th>
+						{!! Html::grid('checkall') !!}
+					</th>
+					<th scope="col" class="priority-5">
+						{!! Html::grid('sort', trans('contactreports::contactreports.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+					</th>
+					<th scope="col">
+						{!! Html::grid('sort', trans('contactreports::contactreports.report'), 'report', $filters['order_dir'], $filters['order']) !!}
+					</th>
+					<th scope="col" class="priority-4">
+						{!! Html::grid('sort', trans('contactreports::contactreports.group'), 'groupid', $filters['order_dir'], $filters['order']) !!}
+					</th>
+					<th scope="col" class="priority-4">
+						{!! Html::grid('sort', trans('contactreports::contactreports.contacted'), 'datetimecontact', $filters['order_dir'], $filters['order']) !!}
+					</th>
+					<th scope="col" class="priority-2">
+						{{ trans('contactreports::contactreports.comments') }}
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			@foreach ($rows as $i => $row)
+				<tr>
+					<td>
+						@if (auth()->user()->can('edit contactreports'))
+							<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
 						@endif
-					</span>
-				</td>
-				<td class="priority-4">
-					<a href="{{ route('admin.contactreports.comments', ['report' => $row->id]) }}">
-						{{ $row->comments_count }}
-					</a>
-				</td>
-			</tr>
-		@endforeach
-		</tbody>
-	</table>
+					</td>
+					<td class="priority-5">
+						{{ $row->id }}
+					</td>
+					<td>
+						@if (auth()->user()->can('edit contactreports'))
+							<a href="{{ route('admin.contactreports.edit', ['id' => $row->id]) }}">
+								{{ Illuminate\Support\Str::limit($row->report, 70) }}
+							</a>
+						@else
+							<span>
+								{{ Illuminate\Support\Str::limit($row->report, 70) }}
+							</span>
+						@endif
+					</td>
+					<td class="priority-4">
+						{{ $row->group ? $row->group->name : trans('global.none') }}
+					</td>
+					<td class="priority-4">
+						<span class="datetime">
+							@if ($row->getOriginal('datetimecontact') && $row->getOriginal('datetimecontact') != '0000-00-00 00:00:00')
+								<time datetime="{{ $row->datetimecontact }}">
+									@if ($row->datetimecontact->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
+										{{ $row->datetimecontact->diffForHumans() }}
+									@else
+										{{ $row->datetimecontact->format('Y-m-d') }}
+									@endif
+								</time>
+							@else
+								<span class="never">{{ trans('global.unknown') }}</span>
+							@endif
+						</span>
+					</td>
+					<td class="priority-4">
+						<a href="{{ route('admin.contactreports.comments', ['report' => $row->id]) }}">
+							{{ $row->comments_count }}
+						</a>
+					</td>
+				</tr>
+			@endforeach
+			</tbody>
+		</table>
 
 		{{ $rows->render() }}
-		 -->
+		*/ ?>
 	</div>
 </div>
 

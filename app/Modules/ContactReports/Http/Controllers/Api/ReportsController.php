@@ -83,6 +83,7 @@ class ReportsController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
+			'id'        => null,
 			'group'     => null,
 			'start'     => null,
 			'stop'      => null,
@@ -135,12 +136,17 @@ class ReportsController extends Controller
 
 		if ($filters['start'])
 		{
-			$query->where($cr . '.datetimecontact', '>=', $filters['start']);
+			$query->where($cr . '.datetimecontact', '>=', $filters['start'] . ' 00:00:00');
 		}
 
 		if ($filters['stop'])
 		{
 			$query->where($cr . '.datetimecontact', '<=', $filters['stop'] . ' 23:59:59');
+		}
+
+		if ($filters['id'])
+		{
+			$query->where($cr . '.id', '=', $filters['id']);
 		}
 
 		if ($filters['people'])
@@ -149,8 +155,8 @@ class ReportsController extends Controller
 
 			$cru = (new User)->getTable();
 
-			$query->join($cru, $cru . '.contactreportid', $cr . '.userid');
-			$query->where(function ($where) use ($filters)
+			$query->join($cru, $cru . '.contactreportid', $cr . '.id');
+			$query->where(function ($where) use ($filters, $cru, $cr)
 				{
 					$where->whereIn($cru . '.userid', $filters['people'])
 						->orWhereIn($cr . '.userid', $filters['people']);
@@ -163,11 +169,10 @@ class ReportsController extends Controller
 
 			$crr = (new Reportresource)->getTable();
 
-			$query
-				->select($cr . '.*')
-				->join($crr, $crr . '.contactreportid', $cr . '.id')
+			$query->join($crr, $crr . '.contactreportid', $cr . '.id')
 				->whereIn($crr . '.resourceid', $filters['resource']);
 		}
+		$query->select($cr . '.*');
 
 		$rows = $query
 			->orderBy($cr . '.' . $filters['order'], $filters['order_dir'])
@@ -510,7 +515,7 @@ class ReportsController extends Controller
 			}
 		}
 
-		if ($people = $request->input('people'))
+		if ($people = $request->input('users'))
 		{
 			$people = (array)$people;
 
