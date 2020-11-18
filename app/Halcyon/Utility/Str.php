@@ -194,7 +194,7 @@ class Str
 		}
 
 		$default = array(
-			'format' => '<span class="highlight">\1</span>',
+			'format' => '<strong class="highlight">\1</strong>',
 			'html'   => false,
 			'regex'  => "|%s|iu"
 		);
