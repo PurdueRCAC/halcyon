@@ -206,17 +206,17 @@ function CRMSearchUser(xml, flags) {
 		var people = $('#people');
 
 		if ($('.tagsinput').length) {
-			if (!people.tagExist(results['id'])) {
+			if (!people.tagExist(results.data['id'])) {
 				people.addTag({
-					'id': results['id'],
-					'label': results['name']
+					'id': results.data['id'],
+					'label': results.data['name']
 				}, {
 					focus: false,
 					callback: false
 				});
 			}
 		} else {
-			people.val(people.val() + (people.val() ? ', ' : '') + results['name'] + ':' + results['id']);
+			people.val(people.val() + (people.val() ? ', ' : '') + results.data['name'] + ':' + results.data['id']);
 		}
 	} else {
 		// error handling
@@ -550,7 +550,7 @@ function CRMAddEntry() {
 				}
 			}
 		}
-	} else {
+	} /*else {
 		groupsdata = document.getElementById("TD_group").getElementsByTagName("div");
 		peopledata = document.getElementById("TD_people").getElementsByTagName("div");
 		resourcedata = document.getElementById("TD_resource").getElementsByTagName("div");
@@ -575,7 +575,7 @@ function CRMAddEntry() {
 				resources.push(resourcedata[i].id.substr(6));
 			}
 		}
-	}
+	}*/
 
 	notes = document.getElementById("NotesText").value;
 
@@ -593,28 +593,29 @@ function CRMAddEntry() {
 		var original = {};
 		var originalusers = [];
 		var originalcontactusers = [];
-		if (data.length) {
+		/*if (data.length) {
 			var orig = JSON.parse(data.html());
 			original = orig.original;
 			originalusers = orig.originalusers;
 			originalcontactusers = orig.originalcontactusers;
-		}
+		}*/
 
 		// update
-		if (contactdate != original['contactdate']) {
-			post['contactdate'] = contactdate;
-		}
+		//if (contactdate != original['datetimecontact']) {
+			post['datetimecontact'] = contactdate;
+		//}
 		if (groups.length > 0 && groups[0] != original['group']) {
-			post['group'] = groups[0];
+			post['groupid'] = groups[0];
 		}
 		if (groups.length == 0 && original['group'] != '') {
-			post['group'] = ROOT_URL + "group/0";
+			post['groupid'] = 0;
 		}
 
 		post['resources'] = resources;
+		post['users'] = people;
 
 		// first determine if any users have been deleted
-		for (x = 0; x < originalusers.length; x++) {
+		/*for (x = 0; x < originalusers.length; x++) {
 			remove = true;
 			for (y = 0; y < people.length; y++) {
 				if (originalusers[x] == people[y]['userid']) {
@@ -646,15 +647,15 @@ function CRMAddEntry() {
 
 		for (x = 0; x < addusers.length; x++) {
 			post = JSON.stringify({
-				'contactreport': original['id'],
-				'user': addusers[x]
+				'contactreportid': original['id'],
+				'userid': addusers[x]
 			});
 			WSPostURL(ROOT_URL + "contactreportuser", post, CRMUpdatedReport);
-		}
-
+		}*/
+console.log(post); return;
 		post = JSON.stringify(post);
 		if (post != "{}") {
-			WSPostURL(original['id'], post, CRMUpdatedReport);
+			WSPutURL(original['id'], post, CRMUpdatedReport);
 		}
 
 		if (typeof (history.pushState) != 'undefined') {
@@ -1100,10 +1101,10 @@ function CRMSearch() {
 	//	searchstring = "start:0000-00-00";
 	//}
 
-	console.log('Searching... ' + ROOT_URL + "contactreports/" + encodeURI(querystring));
+	console.log('Searching... ' + $("#reports").data('api') + encodeURI(querystring));
 	$("#reports").data('query', querystring.replace('?', ''));
 
-	WSGetURL(ROOT_URL + "contactreports/" + encodeURI(querystring), CRMSearched);
+	WSGetURL($("#reports").data('api') + encodeURI(querystring), CRMSearched);
 }
 
 /**
@@ -1133,7 +1134,7 @@ function CRMToggleAddButton() {
  * @return  {void}
  */
 function CRMSearched(xml) {
-	const DEFAULT_ENTRIES = 5;
+	const DEFAULT_ENTRIES = 20;
 
 	if (xml.status == 200) {
 		var reports = $("#reports");
@@ -1154,7 +1155,7 @@ function CRMSearched(xml) {
 					//results.people,
 					//results.comments,
 					//results.userid,
-					(x < DEFAULT_ENTRIES ? "newEntries" : "newEntriesHidden")
+					'newEntries' //(x < DEFAULT_ENTRIES ? "newEntries" : "newEntriesHidden")
 				);
 			}
 
@@ -1314,7 +1315,6 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	// determine if this entry can be edited
 	var edit = false;
-	//if (userid == report['userid'] && report['age'] <= 86400) {
 	if (report['can']['edit']) {
 		edit = true;
 	}
@@ -1340,7 +1340,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	td.className = "crmid";
 
 	a = document.createElement("a");
-	a.href = "/contactreports/" + id;
+	a.href = "contactreports?id=" + id;
 	a.innerHTML = "#" + id;
 
 	td.appendChild(a);
@@ -1348,7 +1348,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	if (edit) {
 		// Delete button
 		a = document.createElement("a");
-		a.href = "/contactreports/" + id + "/delete";
+		a.href = "/contactreports?id=" + id + "&delete";
 		a.className = 'edit news-delete tip';
 		a.onclick = function (e) {
 			e.preventDefault();
@@ -1383,7 +1383,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	if (edit) {
 		a = document.createElement("a");
-		a.href = "/contactreports/" + report['id'] + "/edit";
+		a.href = "contactreports/?id=" + report['id'] + "&edit";
 		a.className = "news-action tip";
 		a.onclick = function (e) {
 			e.preventDefault();
@@ -1444,7 +1444,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		li.className = 'news-group';
 
 		a = document.createElement("a");
-		a.href = "/admin/group/?g=" + report['groupid'];
+		a.href = "admin/groups/" + report['groupid'];
 		a.innerHTML = report['groupname'];
 
 		li.appendChild(a);
@@ -1452,20 +1452,20 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	}
 
 	// People
-	if (people.length > 0) {
+	if (report.users.length > 0) {
 		var p = Array();
-		for (x = 0; x < people.length; x++) {
-			if (people[x]['id'] == report['id']) {
+		for (x = 0; x < report.users.length; x++) {
+			//if (report.users[x]['id'] == report['id']) {
 				a = document.createElement("a");
-				a.href = "/admin/user/?u=" + people[x]['userid'];
-				a.innerHTML = people[x]['name'];
+				a.href = "admin/users/" + report.users[x]['userid'];
+				a.innerHTML = report.users[x]['name'];
 
-				if (people[x]['admin'] == 1) {
+				/*if (report.users[x]['can']['edit']) {
 					a.className = 'crmadmin';
-				}
+				}*/
 
 				p.push(a.outerHTML);
-			}
+			//}
 		}
 
 		if (p.length) {
@@ -1480,7 +1480,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 			if (edit) {
 				a = document.createElement("a");
-				a.href = "/account/crm/?id=" + report['id'] + "&edit";
+				a.href = "contactreports/?id=" + report['id'] + "&edit";
 				a.className = "news-action tip";
 				a.onclick = function (e) {
 					e.preventDefault();
@@ -1488,7 +1488,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 					CRMClearSearch();
 
 					if (!window.location.href.match(/crm/)) {
-						window.location = "/account/crm/?id=" + report['id'] + "&edit";
+						window.location = "contactreports/?id=" + report['id'] + "&edit";
 					} else {
 						var url = window.location.href.split("?");
 						url = url[0];
@@ -1520,7 +1520,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 		var r = Array();
 		for (x = 0; x < report.resources.length; x++) {
-			r.push(report.resources[x].resourcename);
+			r.push(report.resources[x].name);
 		}
 		span.innerHTML = r.join(', ');
 
@@ -1529,7 +1529,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		if (edit) {
 			a = document.createElement("a");
 			a.className = "news-action tip"
-			a.href = "/account/crm?id=" + id + '&edit';
+			a.href = "contactreports?id=" + id + '&edit';
 			a.title = "Edit tagged resources.";
 
 			img = document.createElement("i");
@@ -1562,7 +1562,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 		// Edit button
 		a = document.createElement("a");
-		a.href = "/account/crm?id=" + id + '&edit';
+		a.href = "contactreports?id=" + id + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
 			CRMEditReportTextOpen(report['id']);
@@ -1581,7 +1581,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 		// Save button
 		a = document.createElement("a");
-		a.href = "/account/crm?id=" + id + '&edit';
+		a.href = "contactreports?id=" + id + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
 			CRMSaveReportText(report['id']);
@@ -1601,7 +1601,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 		// Cancel button
 		a = document.createElement("a");
-		a.href = "/account/crm?id=" + id;
+		a.href = "contactreports?id=" + id;
 		a.onclick = function (e) {
 			e.preventDefault();
 			CRMCancelReportText(id);
@@ -1802,7 +1802,7 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 	}
 	// determine if we should edit comment
 	var edit = false;
-	if (comment['can']['edit']) {//userid == comment['user'] && comment['age'] <= 86400) {
+	if (comment['can']['edit']) {
 		edit = true;
 	}
 
@@ -1908,10 +1908,11 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 
 	panel.appendChild(div);
 
+	// Add comment footer
 	div = document.createElement("div");
 	div.className = "panel-footer";
 
-	var bits = comment['created'].match(/\d+/g);
+	var bits = comment['datetimecreated'].match(/\d+/g);
 	var d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
 
 	var div2 = document.createElement("div");
@@ -1922,6 +1923,8 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 	panel.appendChild(div);
 
 	li.appendChild(panel);
+
+	// Attach comment to list
 	container.appendChild(li);
 }
 
@@ -2000,26 +2003,17 @@ function CRMDeletedComment(xml, arg) {
  */
 function CRMDeleteReport(reportid) {
 	if (confirm("Are you sure you want to delete this report?")) {
-		WSDeleteURL(ROOT_URL + "contactreport/" + reportid, CRMDeletedReport, reportid);
-	}
-}
-
-/**
- * Callback after deleting a report
- *
- * @param   {object}  xml
- * @param   {string}  reportid
- * @return  {void}
- */
-function CRMDeletedReport(xml, reportid) {
-	if (xml.status == 200) {
-		document.getElementById(reportid).style.display = "none";
-	} else if (xml.status == 403) {
-		document.getElementById(reportid + "_crmdeleteimg").className = "fa fa-exclamation-circle";
-		document.getElementById(reportid + "_crmdeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else {
-		document.getElementById(reportid + "_crmdeleteimg").className = "fa fa-exclamation-circle";
-		document.getElementById(reportid + "_crmdeleteimg").parentNode.title = "An error occurred while deleting report.";
+		WSDeleteURL(ROOT_URL + "contactreport/" + reportid, function(xml, reportid) {
+			if (xml.status == 200) {
+				document.getElementById(reportid).style.display = "none";
+			} else if (xml.status == 403) {
+				document.getElementById(reportid + "_crmdeleteimg").className = "fa fa-exclamation-circle";
+				document.getElementById(reportid + "_crmdeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
+			} else {
+				document.getElementById(reportid + "_crmdeleteimg").className = "fa fa-exclamation-circle";
+				document.getElementById(reportid + "_crmdeleteimg").parentNode.title = "An error occurred while deleting report.";
+			}
+		}, reportid);
 	}
 }
 
@@ -2030,36 +2024,27 @@ function CRMDeletedReport(xml, reportid) {
  * @return  {void}
  */
 function CRMPostComment(reportid) {
-	var comment = document.getElementById(reportid + "_newcommentbox").value;
+	var comment = document.getElementById(reportid + "_newcommentbox");
 
 	var post = JSON.stringify({
-		'contactreport': ROOT_URL + "contactreport/" + reportid,
-		'comment': comment
+		'contactreportid': reportid,
+		'comment': comment.value
 	});
 
-	WSPostURL(ROOT_URL + "contactreportcomment", post, CRMPostedComment, reportid);
-}
+	WSPostURL(comment.getAttribute('data-api'), post, function(xml, reportid) {
+		if (xml.status == 200) {
+			var results = JSON.parse(xml.responseText);
+			CRMPrintComment(reportid, results, results['user']);
+			document.getElementById(reportid + "_newcommentbox").value = "";
+			CRMCollapseNewComment(reportid + "_newcommentbox");
 
-/**
- * Callback after posting a report comment
- *
- * @param   {object}  xml
- * @param   {string}  reportid
- * @return  {void}
- */
-function CRMPostedComment(xml, reportid) {
-	if (xml.status == 200) {
-		var results = JSON.parse(xml.responseText);
-		CRMPrintComment(reportid, results, results['user']);
-		document.getElementById(reportid + "_newcommentbox").value = "";
-		CRMCollapseNewComment(reportid + "_newcommentbox");
-
-		var div = document.getElementById(reportid + "_subscribed");
-		div.innerHTML = "Subscribed";
-	} else {
-		document.getElementById(reportid + "_newcommentboxsave").className = "fa fa-exclamation-circle";
-		document.getElementById(reportid + "_newcommentboxsave").parentNode.title = "An error occured while posting comment.";
-	}
+			var div = document.getElementById(reportid + "_subscribed");
+			div.innerHTML = "Subscribed";
+		} else {
+			document.getElementById(reportid + "_newcommentboxsave").className = "fa fa-exclamation-circle";
+			document.getElementById(reportid + "_newcommentboxsave").parentNode.title = "An error occured while posting comment.";
+		}
+	}, reportid);
 }
 
 /**
@@ -2074,7 +2059,18 @@ function CRMSubscribeComment(reportid) {
 		'comment': ''
 	});
 
-	WSPostURL(ROOT_URL + "contactreportcomment", post, CRMSubscribedComment, reportid);
+	WSPostURL(ROOT_URL + "contactreportcomment", post, function(xml, reportid) {
+		if (xml.status == 200) {
+			var div = document.getElementById(reportid + "_subscribed");
+			var results = JSON.parse(xml.responseText);
+			var a = div.getElementsByTagName("a")[0];
+			a.onclick = function (e) {
+				e.preventDefault();
+				CRMUnsubscribeComment(results['id'], reportid);
+			};
+			a.innerHTML = "Unsubscribe";
+		}
+	}, reportid);
 }
 
 /**
@@ -2085,46 +2081,17 @@ function CRMSubscribeComment(reportid) {
  * @return  {void}
  */
 function CRMUnsubscribeComment(commentid, reportid) {
-	WSDeleteURL(ROOT_URL + "contactreportcomment/" + commentid, CRMUnsubscribedComment, reportid);
-}
-
-/**
- * Callback after subscribing to report comments
- *
- * @param   {object}  xml
- * @param   {string}  reportid
- * @return  {void}
- */
-function CRMSubscribedComment(xml, reportid) {
-	if (xml.status == 200) {
-		var div = document.getElementById(reportid + "_subscribed");
-		var results = JSON.parse(xml.responseText);
-		var a = div.getElementsByTagName("a")[0];
-		a.onclick = function (e) {
-			e.preventDefault();
-			CRMUnsubscribeComment(results['id'], reportid);
-		};
-		a.innerHTML = "Unsubscribe";
-	}
-}
-
-/**
- * Callback after unsubscribing to report comments
- *
- * @param   {object}  xml
- * @param   {string}  reportid
- * @return  {void}
- */
-function CRMUnsubscribedComment(xml, reportid) {
-	if (xml.status == 200) {
-		var div = document.getElementById(reportid + "_subscribed");
-		var a = div.getElementsByTagName("a")[0];
-		a.onclick = function (e) {
-			e.preventDefault();
-			CRMSubscribeComment(reportid);
-		};
-		a.innerHTML = "Subscribe";
-	}
+	WSDeleteURL(ROOT_URL + "contactreportcomment/" + commentid, function(xml, reportid) {
+		if (xml.status == 200) {
+			var div = document.getElementById(reportid + "_subscribed");
+			var a = div.getElementsByTagName("a")[0];
+			a.onclick = function (e) {
+				e.preventDefault();
+				CRMSubscribeComment(reportid);
+			};
+			a.innerHTML = "Subscribe";
+		}
+	}, reportid);
 }
 
 /**
@@ -2150,10 +2117,6 @@ function CRMEditReportTextOpen(report) {
 	// show save icon
 	var sicon = document.getElementById(report + "_textsaveicon");
 	sicon.style.display = "inline";
-
-	/*var img = document.getElementById(report + "_textsaveiconimg");
-		img.src = "/include/images/save.png";
-		img.alt = "Click to save changes.";*/
 
 	var cicon = document.getElementById(report + "_textcancelicon");
 	cicon.style.display = "inline";
@@ -2207,7 +2170,31 @@ function CRMSaveReportText(report) {
 	var post = { 'report': text };
 	post = JSON.stringify(post);
 
-	WSPostURL(ROOT_URL + "contactreport/" + report, post, CRMSavedReportText, report);
+	WSPostURL(ROOT_URL + "contactreport/" + report, post, function(xml, report) {
+		var img = document.getElementById(report + "_textsaveiconimg");
+
+		if (xml.status == 200) {
+			var results = JSON.parse(xml.responseText);
+
+			var icon = document.getElementById(report + "_textsaveicon");
+			icon.onclick = function () {
+				CRMSaveReportText(report);
+			};
+			icon.style.display = "none";
+			var text = document.getElementById(report + "_text");
+			text.style.display = "block";
+			text.innerHTML = results['formattedreport'];
+			document.getElementById(report + "_textarea").style.display = "none";
+			document.getElementById(report + "_textediticon").style.display = "block";
+			document.getElementById(report + "_textcancelicon").style.display = "none";
+		} else if (xml.status == 403) {
+			img.className = "fa fa-exclamation-circle";
+			img.parentNode.title = "Unable to save changes, grace editing window has passed.";
+		} else {
+			img.className = "fa fa-exclamation-circle";
+			img.parentNode.title = "Unable to save changes, reload the page and try again.";
+		}
+	}, report);
 }
 
 /**
@@ -2230,77 +2217,35 @@ function CRMSaveCommentText(comment) {
 	var post = { 'comment': text };
 	post = JSON.stringify(post);
 
-	WSPostURL(ROOT_URL + "contactreportcomment/" + comment, post, CRMSavedCommentText, comment);
-}
+	WSPostURL(ROOT_URL + "contactreportcomment/" + comment, post, function(xml, comment) {
+		var img = document.getElementById(comment + "_commenttextsaveiconimg");
 
-/**
- * Callback after saving edited report text
- *
- * @param   {object}  xml
- * @param   {string}  report
- * @return  {void}
- */
-function CRMSavedReportText(xml, report) {
-	var img = document.getElementById(report + "_textsaveiconimg");
+		if (xml.status == 200) {
+			var results = JSON.parse(xml.responseText);
 
-	if (xml.status == 200) {
-		var results = JSON.parse(xml.responseText);
+			var icon = document.getElementById(comment + "_commenttextsaveicon");
+			icon.style.display = "none";
+			icon.onclick = function () {
+				CRMSaveCommentText(comment);
+			};
 
-		var icon = document.getElementById(report + "_textsaveicon");
-		icon.onclick = function () {
-			CRMSaveReportText(report);
-		};
-		icon.style.display = "none";
-		var text = document.getElementById(report + "_text");
-		text.style.display = "block";
-		text.innerHTML = results['formattedreport'];
-		document.getElementById(report + "_textarea").style.display = "none";
-		document.getElementById(report + "_textediticon").style.display = "block";
-		document.getElementById(report + "_textcancelicon").style.display = "none";
-	} else if (xml.status == 403) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, reload the page and try again.";
-	}
-}
+			var text = document.getElementById(comment + "_comment");
+			text.style.display = "block";
+			text.innerHTML = results['formattedcomment'];
 
-/**
- * Callback after saving edited comment text
- *
- * @param   {object}  xml
- * @param   {string}  report
- * @return  {void}
- */
-function CRMSavedCommentText(xml, comment) {
-	var img = document.getElementById(comment + "_commenttextsaveiconimg");
+			var box = document.getElementById(comment + "_commenttextarea");
+			box.style.display = "none";
 
-	if (xml.status == 200) {
-		var results = JSON.parse(xml.responseText);
-
-		var icon = document.getElementById(comment + "_commenttextsaveicon");
-		icon.style.display = "none";
-		icon.onclick = function () {
-			CRMSaveCommentText(comment);
-		};
-
-		var text = document.getElementById(comment + "_comment");
-		text.style.display = "block";
-		text.innerHTML = results['formattedcomment'];
-
-		var box = document.getElementById(comment + "_commenttextarea");
-		box.style.display = "none";
-
-		var editicon = document.getElementById(comment + "_commenttextediticon");
-		editicon.style.display = "block";
-	} else if (xml.status == 403) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, reload the page and try again.";
-	}
+			var editicon = document.getElementById(comment + "_commenttextediticon");
+			editicon.style.display = "block";
+		} else if (xml.status == 403) {
+			img.className = "fa fa-exclamation-circle";
+			img.parentNode.title = "Unable to save changes, grace editing window has passed.";
+		} else {
+			img.className = "fa fa-exclamation-circle";
+			img.parentNode.title = "Unable to save changes, reload the page and try again.";
+		}
+	}, comment);
 }
 
 /**
@@ -2457,7 +2402,7 @@ function CRMClearSearch() {
 var autocompleteList = function (url, key) {
 	return function (request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-			response($.map(data[key], function (el) {
+			response($.map(data.data, function (el) {
 				if (typeof (el.id) == 'undefined' && typeof (el.usernames) != 'undefined') {
 					el.id = el.usernames[0]['name'];
 				}
@@ -2479,7 +2424,7 @@ var autocompleteList = function (url, key) {
 var autocompleteResource = function (url) {
 	return function (request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-			response($.map(data.resources, function (el) {
+			response($.map(data.data, function (el) {
 				return {
 					label: el.name,
 					name: el.name,
@@ -2536,7 +2481,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				importPattern: /([^:]+):(.+)/i,
 				limit: 1,
 				'autocomplete': {
-					source: autocompleteList(group.attr('data-uri'), 'groups'),
+					source: autocompleteList(group.attr('data-uri') + '&api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content'), 'groups'),
 					dataName: 'groups',
 					height: 150,
 					delay: 100,
@@ -2555,10 +2500,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		var people = $("#people");
 		if (people.length) {
 			people.tagsInput({
-				placeholder: 'Select user...',
+				placeholder: '',
 				importPattern: /([^:]+):(.+)/i,
 				'autocomplete': {
-					source: autocompleteList(people.attr('data-uri'), 'users'),
+					source: autocompleteList(people.attr('data-uri') + '&api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content'), 'users'),
 					dataName: 'users',
 					height: 150,
 					delay: 100,
@@ -2576,10 +2521,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		var crmresource = $("#crmresource");
 		if (crmresource.length) {
 			crmresource.tagsInput({
-				placeholder: 'Select resource...',
+				placeholder: '',
 				importPattern: /([^:]+):(.+)/i,
 				'autocomplete': {
-					source: autocompleteResource(crmresource.attr('data-uri')),
+					source: autocompleteResource(crmresource.attr('data-uri') + '&api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content')),
 					dataName: 'resources',
 					height: 150,
 					delay: 100,
@@ -2601,7 +2546,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (sdata.length) {
 			if (sdata.groups.length) {
 				for (x = 0; x < sdata.groups.length; x++) {
-					WSGetURL(ROOT_URL + "group/" + sdata.groups[x], CRMSearchGroup, { 'pageload': true, 'disabled': false });
+					WSGetURL(group.data('api') + '/' + sdata.groups[x], CRMSearchGroup, { 'pageload': true, 'disabled': false });
 				}
 			}
 			if (sdata.people.length) {
@@ -2609,12 +2554,12 @@ document.addEventListener('DOMContentLoaded', function () {
 				//CRMToggleSearch('none');
 
 				for (x = 0; x < sdata.people.length; x++) {
-					WSGetURL(ROOT_URL + "user/" + sdata.people[x], CRMSearchUser, { 'pageload': true, 'disabled': false });
+					WSGetURL(people.data('api') + '/' + sdata.people[x], CRMSearchUser, { 'pageload': true, 'disabled': false });
 				}
 			}
 			if (sdata.resources.length) {
 				for (x = 0; x < sdata.resources.length; x++) {
-					WSGetURL(ROOT_URL + "resource/" + sdata.resources[x], CRMSearchResource, { 'pageload': true, 'disabled': false });
+					WSGetURL(crmresource.data('api') + '/' + sdata.resources[x], CRMSearchResource, { 'pageload': true, 'disabled': false });
 				}
 			}
 		}
@@ -2625,30 +2570,30 @@ document.addEventListener('DOMContentLoaded', function () {
 			var orig = JSON.parse(data.html());
 			var original = orig.original;
 
-			document.getElementById('datestartshort').value = original.contactdate.substring(0, 10);
+			document.getElementById('datestartshort').value = original.datetimecontact;//.substring(0, 10);
 			document.getElementById('NotesText').value = original.note;
 
 			//CRMToggleSearch('people');
 			//CRMToggleSearch('none');
 
-			for (x = 0; x < original.people.length; x++) {
-				if (original.people[x]['age'] > 86400) {
-					WSGetURL(original.people[x]['user'], CRMSearchUser, { 'pageload': true, 'disabled': true });
+			for (x = 0; x < original.users.length; x++) {
+				/*if (original.users[x]['age'] > 86400) {
+					WSGetURL(original.users[x]['user'], CRMSearchUser, { 'pageload': true, 'disabled': true });
 				}
-				else {
-					WSGetURL(original.people[x]['user'], CRMSearchUser, { 'pageload': true, 'disabled': false });
-				}
+				else {*/
+				WSGetURL(people.data('api') + '/' + original.users[x]['userid'], CRMSearchUser, { 'pageload': true, 'disabled': false });
+				//}
 			}
 
-			if (original.group) {
+			if (original.groupid > 0) {
 				multi_group = false;
 
-				if (original.groupage > 86400) {
+				/*if (original.groupage > 86400) {
 					WSGetURL(original.group, CRMSearchGroup, { 'pageload': true, 'disabled': true });
 				}
-				else {
-					WSGetURL(original.group, CRMSearchGroup, { 'pageload': true, 'disabled': false });
-				}
+				else {*/
+				WSGetURL(group.data('api') + '/' + original.groupid, CRMSearchGroup, { 'pageload': true, 'disabled': false });
+				//}
 			}
 
 			for (x = 0; x < original.resources.length; x++) {
@@ -2699,15 +2644,15 @@ document.addEventListener('DOMContentLoaded', function () {
 			.on('blur', '.crmsearch', function () {
 				CRMToggleSearch('none');
 			});
-
-		//WSGetURL(ROOT_URL + "contactreports/" + encodeURI("<?php echo $string; ?>"), CRMSearched);
 	}
 
-	if ($('#reports').length) {
+	var container = $('#reports');
+	if (container.length) {
 		var q = '';
-		if ($('#reports').data('query')) {
+		if (container.data('query')) {
 			q = '?' + encodeURI($('#reports').data('query'));
 		}
-		WSGetURL(ROOT_URL + "contactreports/" + q, CRMSearched);
+
+		WSGetURL(container.data('api') + q, CRMSearched);
 	}
 });
