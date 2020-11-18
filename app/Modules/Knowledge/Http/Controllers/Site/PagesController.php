@@ -5,6 +5,7 @@ namespace App\Modules\Knowledge\Http\Controllers\Site;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Knowledge\Models\Page;
 use App\Modules\Knowledge\Models\Associations;
 
@@ -43,9 +44,12 @@ class PagesController extends Controller
 			route('site.knowledge.index')
 		);
 
+		$root = Associations::rootNode();
+
 		$uri = '';
 		$prev = null;
-		foreach ($pages as $node)
+		$parent = $root->id;
+		foreach ($pages as $i => $node)
 		{
 			$page = $node->page;
 
@@ -85,26 +89,23 @@ class PagesController extends Controller
 				route('site.knowledge.page', ['uri' => $node->path])
 			);
 
+			if ($i == 1)
+			{
+				$parent = $node->id;
+			}
+
 			$prev = $page;
 		}
 
-		$root = Associations::rootNode();
 		$path = explode('/', $path);
 		array_shift($path);
-
-		/*$root = Page::rootNode();
-		$children = $root->children()->orderBy('ordering', 'asc')->get();
-		$this->nestedset($children, 1);
-
-		$root = Associations::rootNode();
-		$children = $root->children()->orderBy('lft', 'asc')->get();
-		$this->nestedset($children, $root->path);*/
 
 		return view('knowledge::site.index', [
 			'node' => $node,
 			'pages' => $pages,
 			'path' => $path,
 			'root' => $root,
+			'parent' => $parent,
 		]);
 	}
 
@@ -140,6 +141,7 @@ class PagesController extends Controller
 	{
 		$filters = array(
 			'search'    => null,
+			'parent'    => 0,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			'order'     => Page::$orderBy,
@@ -161,30 +163,81 @@ class PagesController extends Controller
 			$filters['order_dir'] = 'asc';
 		}
 
+		$path = array();
+		$levels = auth()->user()
+			? auth()->user()->getAuthorisedViewLevels()
+			: array(1);
+
 		$query = Page::query();
 
 		$p = (new Page)->getTable();
 		$a = (new Associations)->getTable();
 
 		$query->join($a, $a . '.page_id', $p . '.id')
-			->select($p . '.title', $p . '.snippet', $p . '.updated_at', $a . '.*'); //$p . '.state', $p . '.access', 
-			//->select($p . '.title', $p . '.snippet', $p . '.updated_at', $a . '.*');
+			->select($p . '.title', $p . '.content', $p . '.params', $p . '.snippet', $p . '.updated_at', $a . '.*');
 
 		if ($filters['search'])
 		{
+			$filters['order'] = 'weight';
+
+			$query->select($p . '.title', $p . '.content', $p . '.params', $p . '.snippet', $p . '.updated_at', $a . '.*',
+				DB::raw("IF(" . $p . ".title LIKE '" . $filters['search'] . "%', 20, 
+						IF(" . $p . ".title LIKE '%" . $filters['search'] . "%', 10, 0)
+					)
+					+ IF(" . $p . ".content LIKE '%" . $filters['search'] . "%', 5, 0)
+				AS `weight`"));
+
 			$query->where(function($query) use ($filters, $p)
 			{
-				$query->where($p . '.title', 'like', '%' . $filters['search'] . '%')
+				$query->where($p . '.title', 'like', $filters['search'] . '%')
+					->orWhere($p . '.title', 'like', '%' . $filters['search'] . '%')
 					->orWhere($p . '.content', 'like', '%' . $filters['search'] . '%');
 			});
 		}
 
+		if ($filters['parent'])
+		{
+			$parent = Associations::find($filters['parent']);
+
+			// Ensure we have an article
+			if (!$parent)
+			{
+				abort(404, trans('knowledge::knowledge.article not found'));
+			}
+
+			// Does the user have access to the article?
+			if (!in_array($parent->access, $levels))
+			{
+				abort(403, trans('knowledge::knowledge.permission denied'));
+			}
+
+			// Can non-managers view this article?
+			if (!auth()->user() || !auth()->user()->can('manage knowledge'))
+			{
+				if (!$parent->isPublished())
+				{
+					abort(404, trans('knowledge::knowledge.article not found'));
+				}
+			}
+
+			$path = explode('/', $parent->path);
+
+			$query->where($a . '.lft', '>=', $parent->lft)
+					->where($a . '.rgt', '<=', $parent->rgt);
+		}
+
 		$query->where($p . '.state', '=', 1);
-		$query->where($p . '.access', '=', auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]);
+		$query->where($p . '.access', '=', $levels);
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+			/*->map(function ($row) use ($filters)
+			{
+				$row->title = preg_replace('/(' . $filters['search'] . ')/i', "<strong class=\"highlight\">$1</strong>", $row->title);
+				$row->content = preg_replace('/(' . $filters['search'] . ')/i', "<strong class=\"highlight\">$1</strong>", $row->title);
+				return $row;
+			});*/
 
 		$root = Associations::rootNode();
 
@@ -201,7 +254,8 @@ class PagesController extends Controller
 		return view('knowledge::site.search', [
 			'filters' => $filters,
 			'root' => $root,
-			'rows' => $rows
+			'rows' => $rows,
+			'path' => $path,
 		]);
 	}
 }

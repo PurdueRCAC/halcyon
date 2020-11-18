@@ -5,6 +5,49 @@
 .contentInner ol.breadcrumb li {
 	margin-left: 0.2em;
 }
+
+.highlight {
+	background-color: #FFFF99;
+}
+
+.article-list {
+	list-style: none;
+}
+.contentInner ul.article-list li,
+.article-list li {
+	list-style: none;
+	margin: 0;
+	padding: 1.5em 0;
+	/*margin: 0 0 1em 0;
+	padding: 1.5em;*/
+}
+.article-list li {
+	border-top: 1px solid #eee;
+	/*border: none;
+	box-shadow: 0 .5em 1em -.125em rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.02);
+	transition: all .3s cubic-bezier(.25,.8,.25,1);
+}
+.article-list li:hover {
+	box-shadow: 0 14px 28px rgba(0,0,0,.25),0 10px 10px rgba(0,0,0,.22);*/
+}
+.article-list li:first-child {
+	border-top: none;
+}
+.article-list article>*:first-child {
+	margin: 0 0 0.5em 0;
+	padding: 0;
+}
+.article-list article>*:last-child {
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+.article-list article h3 {
+	font-size: 1.2em;
+}
+.article-metadata {
+	font-size: 90%;
+}
+
 .flat {
 	border-top: 1px solid #ccc;
 	margin-bottom: 1em;
