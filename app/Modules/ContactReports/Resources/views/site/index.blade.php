@@ -195,7 +195,7 @@
 
 	$string = implode('&', $string);
 	?>
-	<div id="reports" data-query="{{ $string }}" data-api="{{ route('api.contactreports.index') }}">
+	<div id="reports" data-query="{{ $string }}" data-api="{{ route('api.contactreports.index') }}" data-comments="{{ route('api.contactreports.comments') }}">
 		<?php
 		/*
 		@foreach ($rows as $i => $row)
@@ -246,6 +246,7 @@
 		{
 			"original": {
 				"id": "<?php echo $report->id; ?>",
+				"api": "<?php echo route('api.contactreports.update', ['id' => $report->id]); ?>",
 				"datetimecontact": "<?php echo $report->datetimecontact->format('Y-m-d'); ?>",
 				"groupid": "<?php echo $report->groupid; ?>",
 				"groupname": "<?php echo $report->group ? $report->group->name : ''; ?>",
@@ -263,8 +264,8 @@
 
 	<script type="application/json" id="crm-search-data">
 		{
-			"followerofgroups": <?php echo json_encode(auth()->user()->followerofgroups); ?>,
-			"followerofusers": <?php echo json_encode(auth()->user()->followerofusers); ?>,
+			"followerofgroups": <?php echo json_encode($followinggroups); ?>,
+			"followerofusers": <?php echo json_encode($followingusers); ?>,
 			"groups": <?php echo request()->has('groups') ? json_encode(explode(',', request()->input('groups'))) : '[]'; ?>,
 			"people": <?php echo request()->has('people') ? json_encode(explode(',', request()->input('people'))) : '[]'; ?>
 		}

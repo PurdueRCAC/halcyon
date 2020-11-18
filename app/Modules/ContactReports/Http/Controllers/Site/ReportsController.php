@@ -7,6 +7,8 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Modules\ContactReports\Models\Report;
+use App\Modules\ContactReports\Models\Follow;
+use App\Modules\Groups\Models\Member as GroupUser;
 
 class ReportsController extends Controller
 {
@@ -96,10 +98,44 @@ class ReportsController extends Controller
 			$row = Report::find($filters['id']);
 		}
 
+		$followingusers = array();
+		$followinggroups = array();
+
+		if (auth()->user())
+		{
+			$data = Follow::query()
+				->where('membertype', '=', 10)
+				->where('userid', '=', auth()->user()->id)
+				->get();
+			foreach ($data as $d)
+			{
+				$followingusers[] = array(
+					'id' => $d->targetuserid,
+					'api' => route('api.contactreports.followusers.read', ['id' => $d->id]),
+					'name' => $d->following ? $d->following->name : trans('global.unknown')
+				);
+			}
+
+			$data = GroupUser::query()
+				->where('membertype', '=', 10)
+				->where('userid', '=', auth()->user()->id)
+				->get();
+			foreach ($data as $d)
+			{
+				$followinggroups[] = array(
+					'id' => $d->userid,
+					'api' => route('api.contactreports.followgroups.read', ['id' => $d->id]),
+					'name' => $d->group ? $d->group->name : trans('global.unknown')
+				);
+			}
+		}
+
 		return view('contactreports::site.index', [
 			'filters' => $filters,
 			'rows' => $rows,
 			'report' => $row,
+			'followingusers' => $followingusers,
+			'followinggroups' => $followinggroups,
 		]);
 	}
 }

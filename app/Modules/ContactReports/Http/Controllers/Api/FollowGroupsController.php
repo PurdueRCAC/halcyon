@@ -4,18 +4,17 @@ namespace App\Modules\ContactReports\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Modules\ContactReports\Models\Report;
-use App\Modules\ContactReports\Models\Comment;
-use App\Modules\ContactReports\Http\Resources\CommentResource;
-use App\Modules\ContactReports\Http\Resources\CommentResourceCollection;
+use App\Modules\Groups\Models\Member as GroupUser;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Carbon\Carbon;
 
 /**
  * Comments
  *
- * @apiUri    /api/contactreports/comments
+ * @apiUri    /api/contactreports/followusers
  */
-class CommentsController extends Controller
+class FollowGroupsController extends Controller
 {
 	/**
 	 * Display a listing of contact reports comments
@@ -88,14 +87,12 @@ class CommentsController extends Controller
 	{
 		// Get filters
 		$filters = array(
-			'contactreportid' => 0,
-			'search'    => null,
+			'groupid' => 0,
+			'userid' => 0,
 			'limit'     => config('list_limit', 20),
-			'start'     => null,
-			'stop'      => null,
 			'page'      => 1,
-			'order'     => Comment::$orderBy,
-			'order_dir' => Comment::$orderDir,
+			'order'     => GroupUser::$orderBy,
+			'order_dir' => GroupUser::$orderDir,
 		);
 
 		foreach ($filters as $key => $default)
@@ -106,60 +103,41 @@ class CommentsController extends Controller
 			$filters[$key] = $val;
 		}
 
-		if (!in_array($filters['order'], ['id', 'name']))
+		if (!in_array($filters['order'], ['id', 'userid', 'datecreated', 'targetuserid']))
 		{
-			$filters['order'] = Comment::$orderBy;
+			$filters['order'] = GroupUser::$orderBy;
 		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['order_dir'] = Comment::$orderDir;
+			$filters['order_dir'] = GroupUser::$orderDir;
 		}
 
-		//$report = Report::findOrFail($filters['id']);
+		$query = GroupUser::query()
+			->where('membertype', '=', 10);
 
-		$query = Comment::query()->where('contactreportid', $filters['contactreportid']);
-
-		$cr = (new Comment)->getTable();
-
-		if ($filters['search'])
+		if ($filters['userid'])
 		{
-			$query->where('commment', 'like', '%' . $filters['search'] . '%');
+			$query->where('userid', '=', $filters['userid']);
+		}
+
+		if ($filters['groupid'])
+		{
+			$query->where('groupid', '=', $filters['groupid']);
 		}
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		/*$rows->each(function ($item, $key)
-		{
-			$item->url = route('site.contactreports.show', ['id' => $item->contactreportid]);
-			//$item->formatteddate = $item->formatDate($item->getOriginal('datetimenews'), $item->getOriginal('datetimenewsend'));
-			$item->formattedcomment = $item->formattedComment();
-			$item->canEdit   = false;
-			$item->canDelete = false;
-
-			if (auth()->user())
-			{
-				if (auth()->user()->can('edit contactreports'))
-				{
-					$item->canEdit   = true;
-				}
-				if (auth()->user()->can('delete contactreports'))
-				{
-					$item->canDelete = true;
-				}
-			}
-		});*/
-
-		return new CommentResourceCollection($rows);
+		return new ResourceCollection($rows);
 	}
 
 	/**
 	 * Create a contact report comment
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/contactreports/comments
+	 * @apiUri    /api/contactreports/followusers
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -183,45 +161,29 @@ class CommentsController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'comment' => 'nullable|string',
-			'contactreportid' => 'required|integer|min:1',
+			'groupid' => 'required|integer|min:1',
+			'userid' => 'nullable|integer',
 		]);
 
-		$row = new Comment($request->all());
-		if (!$row->comment)
-		{
-			$row->comment = '';
-		}
-		$row->userid = auth()->user() ? auth()->user()->id : 0;
-
-		if (!$row->report)
-		{
-			return response()->json(['message' => __METHOD__ . '(): Invalid contactreport ID'], 415);
-		}
-
-		// Set notice state
-		$row->notice = 0;
-
-		if ($row->comment != '')
-		{
-			$row->notice = 22;
-		}
-
-		$row->datetimecreated = Carbon::now()->toDateTimeString();
+		$row = new Follow();
+		$row->groupid = $request->input('groupid');
+		$row->userid = $request->input('userid', auth()->user() ? auth()->user()->id : 0);
+		$row->membertype = 10;
+		$row->datecreated = Carbon::now()->toDateTimeString();
 
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('messages.create failed')], 500);
 		}
 
-		return new CommentResource($row);
+		return new JsonResource($row);
 	}
 
 	/**
 	 * Retrieve a contact report comment
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/contactreports/comments/{id}
+	 * @apiUri    /api/contactreports/followusers/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -234,18 +196,18 @@ class CommentsController extends Controller
 	 * @param  integer  $id
 	 * @return Response
 	 */
-	public function read($comment)
+	public function read($id)
 	{
-		$item = Comment::findOrFail((int)$comment);
+		$item = GroupUser::findOrFail((int)$id);
 
-		return new CommentResource($item);
+		return new JsonResource($item);
 	}
 
 	/**
 	 * Update a contact report comment
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/contactreports/comments/{id}
+	 * @apiUri    /api/contactreports/followusers/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -276,64 +238,29 @@ class CommentsController extends Controller
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function update(Request $request, $comment)
+	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'comment' => 'nullable|string',
-			'contactreportid' => 'nullable|integer',
+			'groupid' => 'nullable|integer',
 			'userid' => 'nullable|integer',
-			'notice' => 'nullable|integer',
 		]);
 
-		$data = $request->all();
-
-		if (isset($data['datetimecreated']))
-		{
-			unset($data['datetimecreated']);
-		}
-
-		if (!auth()->user() || !auth()->user()->can('admin contactreports'))
-		{
-			unset($data['userid']);
-		}
-
-		$row = Comment::findOrFail($comment);
+		$row = GroupUser::findOrFail($id);
 		$row->fill($data);
-
-		if ($row->contactreportid != $row->getOriginal('contactreportid'))
-		{
-			/*if (!$row->contactreportid)
-			{
-				return response()->json(['message' => __METHOD__ . '(): Missing contactreport ID'], 415);
-			}*/
-
-			if (!$row->report)
-			{
-				return response()->json(['message' => __METHOD__ . '(): Invalid contactreport ID'], 415);
-			}
-		}
-
-		/*if ($row->comment != $row->getOriginal('comment'))
-		{
-			if (!$row->comment)
-			{
-				return response()->json(['message' => __METHOD__ . '(): Invalid comment'], 415);
-			}
-		}*/
 
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('messages.update failed')], 500);
 		}
 
-		return new CommentResource($row);
+		return new JsonResource($row);
 	}
 
 	/**
 	 * Delete a contact report comment
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/contactreports/delete/{id}
+	 * @apiUri    /api/contactreports/followusers/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -347,9 +274,9 @@ class CommentsController extends Controller
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function delete($comment)
+	public function delete($id)
 	{
-		$row = Comment::findOrFail($comment);
+		$row = GroupUser::findOrFail($id);
 
 		if (!$row->delete())
 		{

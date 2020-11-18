@@ -532,7 +532,9 @@ class Report extends Model
 			$stemmedreport .= $stem . ' ';
 		}
 
-		return $stemmedreport;
+		$this->attributes['stemmedreport'] = $stemmedreport;
+
+		return $value;
 	}
 
 	/**

@@ -91,6 +91,7 @@ class ReportsController extends Controller
 			'resource'  => null,
 			'notice'    => '*',
 			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			'order'     => Report::$orderBy,
 			'order_dir' => Report::$orderDir,
 		);
@@ -176,7 +177,7 @@ class ReportsController extends Controller
 
 		$rows = $query
 			->orderBy($cr . '.' . $filters['order'], $filters['order_dir'])
-			->paginate($filters['limit']);
+			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
 		return new ReportResourceCollection($rows);
 	}
@@ -219,11 +220,12 @@ class ReportsController extends Controller
 		$now = new Carbon();
 
 		$request->validate([
-			'report' => 'required',
+			'report' => 'required|string',
 			'datetimecontact' => 'required|date|before_or_equal:' . $now->toDateTimeString(),
 			'userid' => 'nullable|integer',
 			'groupid' => 'nullable|integer',
 			'datetimegroupid' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
+			'notice' => 'nullable|integer',
 		]);
 
 		$row = new Report();
@@ -231,6 +233,7 @@ class ReportsController extends Controller
 		$row->report = $request->input('report');
 		$row->userid = $request->input('userid', auth()->user() ? auth()->user()->id : 0);
 		$row->groupid = $request->input('groupid', 0);
+		$row->notice = $request->input('notice', 23);
 
 		/*if (!preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $row->datetimecontact))
 		{
@@ -392,9 +395,10 @@ class ReportsController extends Controller
 		$now = new Carbon();
 
 		$request->validate([
-			'report' => 'nullable|min:1',
+			'report' => 'nullable|string',
 			'datetimecontact' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
 			'groupid' => 'nullable|integer',
+			'notice' => 'nullable|integer',
 			//'datetimegroupid' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
 		]);
 
@@ -404,6 +408,7 @@ class ReportsController extends Controller
 		$row->report = $request->input('report', $row->report);
 		$row->userid = $request->input('userid', $row->userid);
 		$row->groupid = $request->input('groupid', $row->groupid);
+		$row->notice = $request->input('notice', $row->notice);
 
 		/*if ($row->datetimecontact != $row->getOriginal('datetimecontact'))
 		{
@@ -442,6 +447,8 @@ class ReportsController extends Controller
 		{
 			return response()->json(['message' => trans('messages.update failed')], 500);
 		}
+
+		$errors = array();
 
 		if ($resources = $request->input('resources'))
 		{

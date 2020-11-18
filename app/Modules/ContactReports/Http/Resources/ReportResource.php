@@ -22,28 +22,41 @@ class ReportResource extends JsonResource
 		$data['formatteddate'] = $this->formatDate($this->datetimecreated->toDateTimeString());
 		$data['formattedreport'] = $this->formattedReport;
 		$data['comments'] = array();
+
+		$data['subscribed'] = 0;
+		$data['subscribedcommentid'] = 0;
 		foreach ($this->comments as $comment)
 		{
 			$c = $comment->toArray();
 
 			$c['formatteddate'] = $comment->formattedDate;
 			$c['formattedcomment'] = $comment->formattedComment;
-			$c['username'] = $comment->creator->name;
+			$c['username'] = $comment->creator ? $comment->creator->name : trans('global.unknown');
 
-			$c['api'] = route('api.contactreports.read', ['id' => $comment->id]);
-			$c['url'] = route('site.contactreports.show', ['id' => $comment->contactreportid]);
+			$c['api'] = route('api.contactreports.comments.read', ['comment' => $comment->id]);
 
 			$c['can']['edit']   = false;
 			$c['can']['delete'] = false;
 
 			if ($user)
 			{
+				if ($comment->userid == $user->id)
+				{
+					$data['subscribed'] = $comment->comment ? 1 : 2;
+					if (!$comment->comment)
+					{
+						$data['subscribedcommentid'] = $comment->id;
+						//continue;
+					}
+				}
+
 				$c['can']['edit']   = ($user->can('edit contactreports') || ($user->can('edit.own contactreports') && $comment->userid == $user->id));
 				$c['can']['delete'] = $user->can('delete contactreports');
 			}
+
 			$data['comments'][] = $c;
 		}
-		$data['username'] = $this->creator->name;
+		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
 		$data['users'] = $this->users->each(function ($res, $key)
 		{
 			$res->name = $res->user->name;
@@ -64,6 +77,11 @@ class ReportResource extends JsonResource
 
 		if ($user)
 		{
+			if (!$data['subscribed'] && $data['userid'] == $user->id)
+			{
+				$data['subscribed'] = 1;
+			}
+
 			//$data['canCreate'] = auth()->user()->can('create contactreports');
 			$data['can']['edit']   = ($user->can('edit contactreports') || ($user->can('edit.own contactreports') && $this->userid == $user->id));
 			$data['can']['delete'] = $user->can('delete contactreports');
