@@ -68,13 +68,13 @@ app('pathway')
 				<th scope="col" class="priority-4">
 					{{ trans('menus::menus.item type') }}
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-4 text-right">
 					{{ trans('menus::menus.published items') }}
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-4 text-right">
 					{{ trans('menus::menus.unpublished items') }}
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-4 text-right">
 					{{ trans('menus::menus.trashed items') }}
 				</th>
 				<th scope="col">
@@ -111,17 +111,17 @@ app('pathway')
 						{{ $row->menutype }}
 					@endif
 				</td>
-				<td class="priority-4">
+				<td class="priority-4 text-right">
 					<a href="{{ route('admin.menus.items', ['menutype' => $row->menutype]) }}">
 						{{ $row->countPublishedItems() }}
 					</a>
 				</td>
-				<td class="priority-4">
+				<td class="priority-4 text-right">
 					<a href="{{ route('admin.menus.items', ['menutype' => $row->menutype]) }}">
 						{{ $row->countUnpublishedItems() }}
 					</a>
 				</td>
-				<td class="priority-4">
+				<td class="priority-4 text-right">
 					<a href="{{ route('admin.menus.items', ['menutype' => $row->menutype]) }}">
 						{{ $row->countTrashedItems() }}
 					</a>
