@@ -222,7 +222,7 @@ function NEWSAddResource(resource) {
 	} else {
 		results = resource;
 	}
-	var resourceid = results['resourceid'];
+	/*var resourceid = results['resourceid'];
 
 	if ($('.tagsinput').length) {
 		if (!$('#newsresource').tagExist(resourceid)) {
@@ -233,7 +233,10 @@ function NEWSAddResource(resource) {
 		}
 	} else {
 		$('#newsresource').val($('#newsresource').val() + ($('#newsresource').val() ? ', ' : '') + results['resourcename'] + ':' + results['resourceid']);
-	}
+	}*/
+	$('#newsresource')
+		.val(results['resourceid'])
+		.trigger('change');
 }
 
 /**
@@ -410,7 +413,12 @@ function NEWSKeywordSearch(key) {
 
 	if (search || text == "") {
 		keywords_pending++;
-		setTimeout("keywords_pending--; if(keywords_pending == 0) { NEWSSearch(); }", 200);
+		setTimeout(function () {
+			keywords_pending--;
+			if (keywords_pending == 0) {
+				NEWSSearch();
+			}
+		}, 200);
 	}
 }
 
@@ -514,6 +522,7 @@ function NEWSAddEntry() {
 		}
 	}
 
+	var post = {};
 	if (window.location.href.match(/(\?|&)edit/)) {
 		var original = {};
 		var data = $('#news-data');
@@ -522,7 +531,6 @@ function NEWSAddEntry() {
 		}
 
 		// update
-		var post = { };
 		if (newsdate != original['newsdate']) {
 			post['newsdate'] = newsdate;
 		}
@@ -576,16 +584,16 @@ function NEWSAddEntry() {
 			return;
 		}
 		// new post
-		var post = {
-			'news': notes,
+		post = {
+			'body': notes,
 			'newstypeid': newstypeid,
 			'headline': headline,
-			'newsdate': newsdate,
-			'newsdateend': newsdateend
+			'datetimenews': newsdate,
+			'datetimenewsend': newsdateend
 		};
 
 		if (newsdateend == newsdate) {
-			post['newsdateend'] = '0000-00-00 00:00:00';
+			post['datetimenewsend'] = '0000-00-00 00:00:00';
 		}
 		if (resource.length > 0) {
 			post['resources'] = resource;
@@ -627,7 +635,7 @@ function NEWSAddEntry() {
  * @return  {void}
  */
 function NEWSUpdatedNews(xml, id) {
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		document.getElementById("INPUT_add").disabled = true;
 		document.getElementById("location").value = "";
 		NEWSToggle('search', false);
@@ -636,7 +644,7 @@ function NEWSUpdatedNews(xml, id) {
 	} else if (xml.status == 409) {
 		document.getElementById("id").value = id;
 		WSGetURL(root + "news/" + id, function (xml) {
-			if (xml.status == 200) {
+			if (xml.status < 400) {
 				var results = JSON.parse(xml.responseText);
 				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
 			}
@@ -659,7 +667,7 @@ function NEWSUpdatedNews(xml, id) {
 function NEWSNewNews(xml) {
 	document.getElementById("INPUT_add").disabled = false;
 
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		var results = JSON.parse(xml.responseText);
 
 		// Clear the resource listing
@@ -700,10 +708,12 @@ function NEWSSearch() {
 	var start = document.getElementById("datestartshort").value;
 	var stop = document.getElementById("datestopshort").value;
 	var id = document.getElementById("id").value;
-	var published = false;
+
+	/*var published = false;
 	if (document.getElementById("published")) {
 		published = document.getElementById("published").checked;
-	}
+	}*/
+
 	var template = false;
 	if (document.getElementById("template")) {
 		template = document.getElementById("template").checked;
@@ -764,7 +774,10 @@ function NEWSSearch() {
 	locale = document.getElementById("location").value;
 
 	// Fetch list of selected resources
-	var resourcedata = document.getElementById("newsresource").value.split(',');
+	//var resourcedata = document.getElementById("newsresource").value.split(',');
+	var resourcedata = Array.prototype.slice.call(document.querySelectorAll('#newsresource option:checked'), 0).map(function (v) {
+		return v.value;
+	});
 	for (var i=0; i<resourcedata.length; i++) {
 		if (resourcedata[i] != "") {
 			if (resourcedata[i].indexOf('/') !== -1) {
@@ -1186,12 +1199,12 @@ function NEWSPrintRow(news, edit, updates) {
 				post = JSON.stringify(post);
 
 				WSPostURL(root + "news/" + id, post, function (xml) {
-					if (xml.status == 200) {
+					if (xml.status < 400) {
 						document.getElementById("id").value = id;
 						NEWSSearch();
 					} else if (xml.status == 409) {
 						WSGetURL(root + "news/" + id, function (xml) {
-							if (xml.status == 200) {
+							if (xml.status < 400) {
 								var results = JSON.parse(xml.responseText);
 								alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
 							}
@@ -1213,12 +1226,12 @@ function NEWSPrintRow(news, edit, updates) {
 				post = JSON.stringify(post);
 
 				WSPostURL(root + "news/" + id, post, function (xml) {
-					if (xml.status == 200) {
+					if (xml.status < 400) {
 						document.getElementById("id").value = id;
 						NEWSSearch();
 					} else if (xml.status == 409) {
 						WSGetURL(root + "news/" + id, function (xml) {
-							if (xml.status == 200) {
+							if (xml.status < 400) {
 								var results = JSON.parse(xml.responseText);
 								alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
 							}
@@ -1990,7 +2003,7 @@ function NEWSPrintRow(news, edit, updates) {
 function NEWSDeleteNews(newsid) {
 	if (confirm("Are you sure you want to delete this news story?")) {
 		WSDeleteURL(root + "news/" + newsid, function(xml, newsid) {
-			if (xml.status == 200) {
+			if (xml.status < 400) {
 				document.getElementById(newsid).style.display = "none";
 			} else {
 				var img = document.getElementById(newsid + "_newsdeleteimg");
@@ -2096,7 +2109,7 @@ function NEWSSaveNewsText(news) {
 		img.parentNode.title = "Saving changes...";
 
 	var post = {
-		'news' : text,
+		'body' : text,
 		'lastedit' : LASTEDIT[news]
 	};
 
@@ -2118,7 +2131,7 @@ function NEWSSaveNewsText(news) {
 function NEWSSavedNewsText(xml, news) {
 	var img = document.getElementById(news + "_textsaveiconimg");
 
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		var results = JSON.parse(xml.responseText);
 		LASTEDIT[news] = results['lastedit'];
 
@@ -2146,7 +2159,7 @@ function NEWSSavedNewsText(xml, news) {
 		img.className = "fa fa-exclamation-circle";
 		img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
 		WSGetURL(root + "news/" + news, function (xml) {
-			if (xml.status == 200) {
+			if (xml.status < 400) {
 				var results = JSON.parse(xml.responseText);
 				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
 			}
@@ -2334,7 +2347,7 @@ function NEWSSaveNewsLocation(news) {
 function NEWSSavedNewsHeadline(xml, news) {
 	var img = document.getElementById(news + "_headlinesaveiconimg");
 
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		var editicon = document.getElementById(news + "_headlineediticon");
 		var icon = document.getElementById(news + "_headlinesaveicon");
 		var cancelicon = document.getElementById(news + "_headlinecancelicon");
@@ -2358,7 +2371,7 @@ function NEWSSavedNewsHeadline(xml, news) {
 		img.className = "fa fa-exclamation-circle";
 		img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
 		WSGetURL(root + "news/" + news, function (xml) {
-			if (xml.status == 200) {
+			if (xml.status < 400) {
 				var results = JSON.parse(xml.responseText);
 				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
 			}
@@ -2379,7 +2392,7 @@ function NEWSSavedNewsHeadline(xml, news) {
 function NEWSSavedNewsLocation(xml, news) {
 	var img = document.getElementById(news + "_locationsaveiconimg");
 
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		var editicon = document.getElementById(news + "_locationediticon");
 		var icon = document.getElementById(news + "_locationsaveicon");
 		var cancelicon = document.getElementById(news + "_locationcancelicon");
@@ -2403,7 +2416,7 @@ function NEWSSavedNewsLocation(xml, news) {
 		img.className = "fa fa-exclamation-circle";
 		img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
 		WSGetURL(root + "news/" + news, function (xml) {
-			if (xml.status == 200) {
+			if (xml.status < 400) {
 				var results = JSON.parse(xml.responseText);
 				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
 			}
@@ -2497,7 +2510,7 @@ function NEWSSaveNewsUrl(news) {
 	WSPostURL(root + "news/" + news, post, function(xml, news) {
 		var img = document.getElementById(news + "_urlsaveiconimg");
 
-		if (xml.status == 200) {
+		if (xml.status < 400) {
 			var editicon = document.getElementById(news + "_urlediticon");
 			var icon = document.getElementById(news + "_urlsaveicon");
 			var cancelicon = document.getElementById(news + "_urlcancelicon");
@@ -2523,7 +2536,7 @@ function NEWSSaveNewsUrl(news) {
 			img.className = "fa fa-exclamation-circle";
 			img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
 			WSGetURL(root + "news/" + news, function (xml) {
-				if (xml.status == 200) {
+				if (xml.status < 400) {
 					var results = JSON.parse(xml.responseText);
 					alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
 				}
@@ -2569,10 +2582,11 @@ function NEWSClearSearch() {
 
 	var resources = document.getElementById("newsresource");
 	if (resources) {
-		resources.value = '';
+		$("#newsresource").val(null).trigger('change');
+		/*resources.value = '';
 		if ($('.tagsinput').length) {
 			$(resources).clearTags();
-		}
+		}*/
 	}
 
 	if (window.location.href.match(/[&?]edit/)) {
@@ -2596,8 +2610,8 @@ function PreviewExample(example) {
 	example_vars["resources"] = [{"resourcename": "Carter"}, {"resourcename": "Conte"}];
 	example_vars["location"] = "Envision Center";
 
-	WSPostURL(root + "formattext", JSON.stringify({ 'text' : document.getElementById('help1' + example + 'input').value, 'vars' : example_vars }), function (xml) {
-		if (xml.status == 200) {
+	WSPostURL(root + "news/preview", JSON.stringify({ 'text' : document.getElementById('help1' + example + 'input').value, 'vars' : example_vars }), function (xml) {
+		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 			document.getElementById('help1' + example + 'output').innerHTML = results['formattedtext'];
 		} else {
@@ -2639,12 +2653,16 @@ function NEWSPreviewVars(news) {
 	if (document.getElementById("newstype").value <= 2) {
 		preview_vars["resources"] = [];
 
-		if ($('.tagsinput').length) {
-			var resources = $('.tagsinput').find('.tag-text');
-			resources.each(function(i, el){
-				preview_vars['resources'][i] = {"resourcename":  $(el).text() };
-			});
-		}
+		var resources = Array.prototype.slice.call(document.querySelectorAll('#newsresource option:checked'), 0).map(function (v) {
+			return v.innerHTML;
+		});
+
+		/*if ($('.tagsinput').length) {
+			var resources = $('.tagsinput').find('.tag-text');*/
+		$.each(resources, function (i, el) {
+			preview_vars['resources'][i] = { "resourcename": el };
+		});
+		//}
 	}
 	preview_vars['update'] = "0";
 
@@ -2689,8 +2707,8 @@ function NEWSPreview(news, edit) {
 		post_string['news'] = "/api/news/" + news;
 	}
 
-	WSPostURL(root + "formattext", JSON.stringify(post_string), function (xml) {
-		if (xml.status == 200) {
+	WSPostURL(root + "news/preview", JSON.stringify(post_string), function (xml) {
+		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 			document.getElementById("preview").innerHTML = results['formattedtext'];
 		} else {
@@ -2758,31 +2776,37 @@ function NEWSSendMail(news) {
 		}
 
 		// Gather some  variables from DOM
-		var formatteddate = $( '#' + news ).find( ".newsdate" ).first().html().replace(/<a href.*/, '');
-		var subject = $( '#' + news + "_headline" ).text();
-		var locale = $( '#' + news + "_location").text();
+		var formatteddate = $('#' + news).find(".newsdate").first().html().replace(/<a href.*/, '');
+		var subject = $('#' + news + "_headline").text();
+		var locale = $('#' + news + "_location").text();
 		if (locale != '') {
 			locale = locale + "<br/>";
 		}
-		var resources = $( '#' + news ).find( ".newspostresources" ).first().text().replace(/^Resources?: /,'');
-		var name = $( ".login").find( "a" ).first().text();
+		var resources = $('#' + news).find(".newspostresources").first().text().replace(/^Resources?: /, '');
+		var name = $(".login").find("a").first().text();
 
 		// set up header for email preview
-		var header = "To: " + resources + " Users<br />From: " + name + " via Research Computing<br/>Subject: " + subject + " - " + formatteddate + "<br/><hr />" + subject + "<br/>" + formatteddate + "<br/>" + locale + "<br/>";
+		var header = "To: " + resources + " Users<br />From: " + name + " via Research Computing<br/>Subject: " + subject + " - " + formatteddate + "<br/><hr /><strong>" + subject + "</strong><br/>" + formatteddate + "<br/>" + locale + "<br/>";
 
 		// set up foot for email preview
 		var footer = '<hr/><a href="/news/' + news + '">ITaP Research Computing News</a> from ' + name + '<br/><br/>Please reply to <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a> with any questions or concerns.<br/><a href="/news/' + news + '">View this article on the web.</a>';
 
 		var body = "";
 		if (data['updates'].length > 0) {
-			for (var x=0; x<data['updates'].length; x++) {
-				body = body + "<span class = \"newsupdate\">UPDATE: " + data['updates'][x]['formattedcreateddate'] + "</span>" + data['updates'][x]['formattedbody'] + "<br/>";
+			for (var x = 0; x < data['updates'].length; x++) {
+				body = body + '<span class="newsupdate">UPDATE: ' + data['updates'][x]['formattedcreateddate'] + '</span>' + data['updates'][x]['formattedbody'] + '<br/>';
 			}
-			body = body + "<span class=\"newsupdate\">ORIGINAL: " + data['formattedcreateddate'] + "</span>";
+			body = body + '<span class="newsupdate">ORIGINAL: ' + data['formattedcreateddate'] + "</span>";
 		}
 		body = body + data['formattednews'];
 
-		document.getElementById("mailpreview").innerHTML = header + body + footer;
+		if (data['resources'].length > 0) {
+			footer += '<hr /><p>Send to resource mailing lists:</p><div class="row">';
+			for (var x = 0; x < data['resources'].length; x++) {
+				footer += '<div class="col-md-3"><label><input type="checkbox" checked="checked" value="' + data['resources'][x]['resourceid'] + '" class="preview-resource" /> ' + data['resources'][x]['resourcename'] + '</label></div>';
+			}
+			footer += '</div>';
+		}
 
 		$('#mailpreview').dialog({ modal: true,
 			width: '691px',
@@ -2792,11 +2816,26 @@ function NEWSSendMail(news) {
 				},
 				"Send mail": function () {
 					$( this).dialog("close");
-					var post = JSON.stringify({
-						'mail'     : 1 ,
-						'lastedit' : LASTEDIT[news]
+
+					var post = {
+						'mail': 1,
+						'lastedit': LASTEDIT[news]
+					};
+
+					var resources = [];
+					$('.preview-resource').each(function (i, el) {
+						if ($(el).is(':checked')) {
+							resources.push($(el).val());
+						}
 					});
-					WSPostURL(root + "news/" + news, post, NEWSSentMail, news);
+
+					if ($('.preview-resource').length != resources.length) {
+						post.resources = resources;
+					}
+
+					post = JSON.stringify(post);
+
+					WSPostURL(ROOT_URL + "news/" + news, post, NEWSSentMail, news);
 				}
 			}
 		});
@@ -2804,6 +2843,92 @@ function NEWSSendMail(news) {
 			$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
 		}
 		$('#mailpreview').dialog('open');
+	});
+}
+
+/**
+ * Write an email
+ *
+ * @param   {string}  news
+ * @return  {void}
+ */
+function NEWSWriteMail(news) {
+	$.getJSON(ROOT_URL + "news/" + news, function (data) {
+		$('#mail-subject').val(data.headline);
+
+		var body = '**Date:** ' + data.formatteddate.replace(/(<([^>]+)>)/ig, '').replace(/&nbsp;/g, ' ').replace('&#8211;', '-') + "\n";
+
+		if (data.location) {
+			body += '**Location:** ' + data.location + "\n";
+		}
+		if (data.url) {
+			body += '**URL:** ' + data.url + "\n";
+		}
+
+		//var name = $( ".login").find( "a" ).first().text();
+
+		$('#mail-body').val(body + "\n\n");
+
+		var to = $('#mail-to');
+		to.val('');
+		to.tagsInput({
+			placeholder: 'Select user...',
+			importPattern: /([^:]+):(.+)/i,
+			'autocomplete': {
+				source: autocompleteUsers(to.attr('data-uri')),
+				dataName: 'users',
+				height: 150,
+				delay: 100,
+				minLength: 1
+			}
+		});
+		to.clearTags();
+
+		var x;
+		for (x = 0; x < data.associations.length; x++) {
+			if ($('.tagsinput').length) {
+				if (!to.tagExist(data.associations[x]['id'])) {
+					to.addTag({
+						'id': data.associations[x]['associd'],
+						'label': data.associations[x]['assocname']
+					});
+				}
+			}
+		}
+
+		$('#mailwrite').dialog({
+			modal: true,
+			width: '691px',
+			buttons: {
+				"Cancel": function () {
+					$(this).dialog("close");
+				},
+				"Send mail": function () {
+					var usersdata = document.getElementById("mail-to").value.split(',');
+					var associations = [],
+						i;
+					for (i = 0; i < usersdata.length; i++) {
+						if (usersdata[i] != "") {
+							associations.push(usersdata[i]);
+						}
+					}
+
+					$(this).dialog("close");
+					var post = JSON.stringify({
+						'mail': 1,
+						'lastedit': LASTEDIT[news],
+						'headline': $('#mail-subject').val(),
+						'news': $('#mail-body').val(),
+						'associations': associations
+					});
+					WSPostURL(ROOT_URL + "news/" + news, post, NEWSSentMail, news);
+				}
+			}
+		});
+		if ($(".ui-dialog-buttonpane").find("div").length == 1) {
+			$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
+		}
+		$('#mailwrite').dialog('open');
 	});
 }
 
@@ -2900,8 +3025,13 @@ function NEWSPopulateTemplate(xml) {
 			}
 		}
 
-		for (x=0;x<news.resources.length;x++) {
-			if ($('.tagsinput').length) {
+		var resources = Array.prototype.slice.call(document.querySelectorAll('#newsresource option:checked'), 0).map(function (v) {
+			return v.value;
+		});
+
+		for (x = 0; x < news.resources.length; x++) {
+			resources.push(news.resources[x]['resourceid']);
+			/*if ($('.tagsinput').length) {
 				if (!$('#newsresource').tagExist(news.resources[x]['resourceid'])) {
 					$('#newsresource').addTag({
 						'id': news.resources[x]['resourceid'],
@@ -2929,8 +3059,12 @@ function NEWSPopulateTemplate(xml) {
 				} else {
 					$('#newsresource').va($('#newsresource').va() + ', ' + news.resources[x]['resourcename'] + ':' + news.resources[x]['resourceid']);
 				}
-			}
+			}*/
 		}
+
+		$('#newsresource')
+			.val(resources)
+			.trigger('change');
 
 		NEWSSearch();
 	} else {
@@ -2982,31 +3116,22 @@ function NewsPostUpdate(newsid) {
 	var body = document.getElementById(newsid + "_newupdatebox").value;
 
 	var post = JSON.stringify({
-		'news': newsid,
+		'newsid': newsid,
 		'body': body
 	});
 
-	WSPostURL(root + "newsupdate", post, NewsPostedUpdate, newsid);
-}
+	WSPostURL(root + "news/updates", post, function(xml, newsid) {
+		if (xml.status == 200) {
+			var results = JSON.parse(xml.responseText);
 
-/**
- * Call back after saving a new update
- *
- * @param   {object}  xml
- * @param   {string}  newsid
- * @return  {void}
- */
-function NewsPostedUpdate(xml, newsid) {
-	if (xml.status == 200) {
-		var results = JSON.parse(xml.responseText);
-
-		NewsPrintUpdate(newsid, results);
-		document.getElementById(newsid + "_newupdatebox").value = "";
-		NewsCollapseNewUpdate(newsid + "_newupdatebox");
-	} else {
-		document.getElementById(newsid + "_newupdateboxsave").className = "fa fa-exclamation-circle";
-		document.getElementById(newsid + "_newupdateboxsave").parentNode.title = "An error occured while posting comment.";
-	}
+			NewsPrintUpdate(newsid, results);
+			document.getElementById(newsid + "_newupdatebox").value = "";
+			NewsCollapseNewUpdate(newsid + "_newupdatebox");
+		} else {
+			document.getElementById(newsid + "_newupdateboxsave").className = "fa fa-exclamation-circle";
+			document.getElementById(newsid + "_newupdateboxsave").parentNode.title = "An error occured while posting comment.";
+		}
+	}, newsid);
 }
 
 /**
@@ -3246,37 +3371,6 @@ function NewsDeleteUpdate(updateid, reportid) {
 function NewsDeletedUpdate(xml, arg) {
 	if (xml.status == 200) {
 		document.getElementById(arg['updateid'] + "_update").parentNode.style.display = "none";
-
-		WSGetURL(root + "contactreport/" + arg['reportid'], function (xml) {
-			if (xml.status == 200) {
-				var results = JSON.parse(xml.responseText);
-				var div, a;
-
-				if (results['subscribed'] == '0') {
-					div = document.getElementById(arg['reportid'] + "_subscribed");
-					div.innerHTML = "[ ";
-
-					a = document.createElement("a");
-					a.href = "javascript:";
-					a.onclick = function () { NewsSubscribeUpdate(arg['reportid']); };
-					a.innerHTML = "Subscribe";
-
-					div.appendChild(a);
-					div.appendChild(document.createTextNode(" ]"));
-				} else if (results['subscribed'] == '2') {
-					div = document.getElementById(arg['reportid'] + "_subscribed");
-					div.innerHTML = "[ ";
-
-					a = document.createElement("a");
-					a.href = "javascript:";
-					a.onclick = function () { NewsUnsubscribeUpdate(results['subscribedupdateid'], arg['reportid']); };
-					a.innerHTML = "Unsubscribe";
-
-					div.appendChild(a);
-					div.appendChild(document.createTextNode(" ]"));
-				}
-			}
-		});
 	} else if (xml.status == 403) {
 		document.getElementById(arg['reportid'] + "_updatedeleteimg").className = "fa fa-exclamation-circle";
 		document.getElementById(arg['reportid'] + "_updatedeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
@@ -3286,7 +3380,7 @@ function NewsDeletedUpdate(xml, arg) {
 	}
 }
 
-var autocompleteNews = function(url) {
+/*var autocompleteNews = function(url) {
 	return function(request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
 			response($.map(data.data, function (el) {
@@ -3298,7 +3392,7 @@ var autocompleteNews = function(url) {
 			}));
 		});
 	};
-};
+};*/
 
 var autocompleteUsers = function(url) {
 	return function(request, response) {
@@ -3411,7 +3505,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		return false;
 	});
 
-	var newsresource = $("#newsresource");
+	/*var newsresource = $("#newsresource");
 	if (newsresource.length) {
 		newsresource.tagsInput({
 			placeholder: 'Select resource...',
@@ -3429,6 +3523,46 @@ document.addEventListener('DOMContentLoaded', function() {
 			'onRemoveTag': function() {
 				NEWSSearch();
 			}
+		});
+	}*/
+	var rselects = $(".searchable-select-multi");
+	if (rselects.length) {
+		$(".searchable-select-multi").select2({
+			multiple: true,
+			closeOnSelect: false,
+			templateResult: function (item) {
+				if (typeof item.children != 'undefined') {
+					var s = $(item.element).find('option').length - $(item.element).find('option:selected').length;
+					var el = $('<button class="btn btn-sm btn_select2_optgroup" data-group="' + item.text + '">Select All</span>');
+
+					// Click event
+					el.on('click', function (e) {
+						e.preventDefault();
+						// Select all optgroup child if there aren't, else deselect all
+						rselects.find('optgroup[label="' + $(this).data('group') + '"] option').prop(
+							'selected',
+							$(item.element).find('option').length - $(item.element).find('option:selected').length
+						);
+
+						// Trigger change event + close dropdown
+						rselects.trigger('change.select2');
+						rselects.select2('close');
+						NEWSSearch();
+					});
+
+					var elp = $('<span class="my_select2_optgroup">' + item.text + '</span>');
+					elp.append(el);
+
+					return elp;
+				}
+				return item.text;
+			}
+		})
+		.on('select2:select', function () {
+			NEWSSearch();
+		})
+		.on('select2:unselect', function () {
+			NEWSSearch();
 		});
 	}
 
@@ -3554,5 +3688,13 @@ document.addEventListener('DOMContentLoaded', function() {
 				el.parent().append('<span class="alert alert-error">An error occurred.</span>');
 			}
 		});
+	});
+
+	$('#attendees-reveal').on('click', function (e) {
+		e.preventDefault();
+
+		$(this).addClass('stash');
+		$('#attendees-all').removeClass('stash');
+		$('#attendees').addClass('stash');
 	});
 });

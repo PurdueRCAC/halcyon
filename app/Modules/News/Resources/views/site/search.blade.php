@@ -2,11 +2,13 @@
 
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css') }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/news/js/site.js') }}"></script>
 @endpush
 
@@ -138,25 +140,75 @@
 					</div>
 				</div>
 				<div class="form-group row tab-search tab-add tab-edit" id="TR_resource">
-							<label for="newsresource" class="col-sm-2 col-form-label">Resource</label>
-							<div class="col-sm-10">
-								<?php
-								$resources = array();
-								if ($res = $filters['resource'])
+						<label for="newsresource" class="col-sm-2 col-form-label">Resource</label>
+						<div class="col-sm-10">
+							<?php
+							$selected = array();
+							if ($res = $filters['resource'])
+							{
+								$selected = explode(',', $res);
+								$selected = array_map('trim', $selected);
+								/*foreach (explode(',', $res) as $r)
 								{
-									foreach (explode(',', $res) as $r)
+									if (trim($r))
 									{
-										if (trim($r))
-										{
-											$resource = App\Modules\Resources\Entities\Asset::findOrFail($r);
-											$resources[] = $resource->name . ':' . $r . '';
-										}
+										$resource = App\Modules\Resources\Entities\Asset::findOrFail($r);
+										$selected[] = $resource->name . ':' . $r . '';
 									}
+								}*/
+							}
+							?>
+							<?php /*<input name="resource" id="newsresource" size="45" class="form-control" value="{{ implode(',', $resources) }}" data-uri="{{ route('api.resources.index') }}?search=%s" />*/ ?>
+							<select class="form-control searchable-select-multi" multiple="multiple" name="resource[]" id="newsresource">
+								<?php
+								$resources = App\Modules\Resources\Entities\Asset::query()
+									->withTrashed()
+									->where('listname', '!=', '')
+									->where('display', '>', 0)
+									->where(function($where)
+									{
+										$where->whereNull('datetimeremoved')
+											->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+									})
+									->orderBy('name')
+									->get();
+
+								$types = array();
+								foreach ($resources as $resource)
+								{
+									if (!isset($types[$resource->resourcetype]))
+									{
+										$types[$resource->resourcetype] = array();
+									}
+									$types[$resource->resourcetype][] = $resource;
+								}
+								ksort($types);
+
+								foreach ($types as $t => $res)
+								{
+									$type = App\Modules\Resources\Entities\Type::find($t);
+									if (!$type)
+									{
+										$type = new App\Modules\Resources\Entities\Type;
+										$type->name = 'Services';
+									}
+									?>
+									<optgroup label="{{ $type->name }}" class="select2-result-selectable">
+										<?php
+										foreach ($res as $resource)
+										{
+											?>
+											<option value="{{ $resource->id }}"<?php if (in_array($resource->id, $selected)) { echo ' selected="selected"'; } ?>>{{ $resource->name }}</option>
+											<?php
+										}
+										?>
+									</optgroup>
+									<?php
 								}
 								?>
-								<input name="resource" id="newsresource" size="45" class="form-control" value="{{ implode(',', $resources) }}" data-uri="{{ route('api.resources.index') }}?search=%s" />
-							</div>
+							</select>
 						</div>
+					</div>
 				<div class="form-group row" id="TR_location">
 					<label for="location" class="col-sm-2 col-form-label">Location</label>
 					<div class="col-sm-10">
