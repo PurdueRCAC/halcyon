@@ -3,7 +3,7 @@ return [
 	'module name' => 'Contact Reports Manager',
 	'contact reports' => 'Contact Reports',
 	'configuration' => 'Configuration',
-	// Sub-menu
+	// Admin sub-menu
 	'reports' => 'Reports',
 	'history' => 'History',
 	// Fields
@@ -20,7 +20,7 @@ return [
 	'group' => 'Group',
 	'report' => 'Report',
 	'resources' => 'Resources',
-	'users' => 'Users',
+	'users' => 'People',
 	'history edited' => 'Edited by :user @ :timestamp',
 	'search news' => 'Search ContactReports',
 	'contacted' => 'Contacted',
@@ -31,4 +31,17 @@ return [
 	'no comments found' => 'No comments found.',
 	'posted by' => 'Posted by :who on :when',
 	'formatting help' => 'Reports and comments support MarkDown for formatting.',
+	// Front-end
+	'add report' => 'Add Report',
+	'add new' => 'Add New',
+	'clear' => 'Clear',
+	'search' => 'Search',
+	'notes' => 'Notes',
+	'keywords' => 'Keywords',
+	'date from' => 'Date from',
+	'date to' => 'Date to',
+	'follow' => 'Follow',
+	'my reports' => 'My Reports',
+	'past week' => 'Past Week',
+	'past month' => 'Past Month',
 ];
