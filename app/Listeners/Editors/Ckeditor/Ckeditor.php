@@ -111,6 +111,7 @@ class Ckeditor
 
 		// Object to hold our final config
 		$config = new stdClass;
+		$config->autoParagraph = false;
 		$config->startupMode                   = 'wysiwyg';
 		$config->tabSpaces                     = 4;
 		$config->height                        = '200px';

@@ -73,9 +73,9 @@
 			// remove old mark tags
 			data = data.replace(/<mark class="macro">/g, '');
 			data = data.replace(/<\/mark>/g, '');
-			data = data.replace(/<mark class="group-include">/g, '');
+			data = data.replace(/<mark class="variable">/g, '');
 			data = data.replace(/<\/mark>/g, '');
-			data = data.replace(/<mark class="xhubtag">/g, '');
+			data = data.replace(/<mark class="widget">/g, '');
 			data = data.replace(/<\/mark>/g, '');
 
 			// add new mark tags
