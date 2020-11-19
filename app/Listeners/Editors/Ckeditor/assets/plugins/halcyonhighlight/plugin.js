@@ -53,7 +53,7 @@
 				var data  = editor.getData();
 
 				// remove old mark tags
-				data = data.replace(/<mark class="macro">/g, '');
+				data = data.replace(/<mark class="control">/g, '');
 				data = data.replace(/<\/mark>/g, '');
 				data = data.replace(/<mark class="variable">/g, '');
 				data = data.replace(/<\/mark>/g, '');
@@ -71,7 +71,7 @@
 			var data = editor.getData();
 
 			// remove old mark tags
-			data = data.replace(/<mark class="macro">/g, '');
+			data = data.replace(/<mark class="control">/g, '');
 			data = data.replace(/<\/mark>/g, '');
 			data = data.replace(/<mark class="variable">/g, '');
 			data = data.replace(/<\/mark>/g, '');
@@ -81,8 +81,8 @@
 			// add new mark tags
 			if (editor.mode == 'wysiwyg')
 			{
-				data = data.replace(/(\[\[[^\]]*]])/g, '<mark class="macro">$1</mark>');
-				data = data.replace(/(\$\{[^}]\})/g, '<mark class="variable">$1</mark>');
+				data = data.replace(/(\{::(if.*?|else|elseif.*?|\/)\})/g, '<mark class="control">$1</mark>');
+				data = data.replace(/(\$\{.*?\})/g, '<mark class="variable">$1</mark>');
 				data = data.replace(/(@widget\([^)]*\))/g, '<mark class="widget">$1</mark>');
 			}
 
