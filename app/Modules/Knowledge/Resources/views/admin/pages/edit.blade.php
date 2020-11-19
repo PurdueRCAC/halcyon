@@ -71,11 +71,14 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-parent_id">{{ trans('knowledge::knowledge.parent') }}:</label>
 					<select name="fields[parent_id]" id="field-parent_id" class="form-control searchable-select">
-						<!--<option value="0">{{ trans('global.none') }}</option>-->
+					@if ($row->id && $row->isRoot())
+						<option value="0">{{ trans('global.none') }}</option>
+					@else
 						<?php foreach ($tree as $pa): ?>
 							<?php $selected = ($pa->id == $row->parent_id ? ' selected="selected"' : ''); ?>
 							<option value="{{ $pa->id }}"<?php echo $selected; ?> data-path="/{{ $pa->path }}"><?php echo str_repeat('|&mdash; ', $pa->level) . e(Illuminate\Support\Str::limit($pa->title, 70)); ?></option>
 						<?php endforeach; ?>
+					@endif
 					</select>
 				</div>
 

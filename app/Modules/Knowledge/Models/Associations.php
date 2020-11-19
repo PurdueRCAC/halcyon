@@ -311,7 +311,14 @@ class Associations extends Model
 			$this->setAttribute('rgt', $reposition->new_rgt);
 		}
 
-		$this->level = $parent->level + 1;
+		if ($parent)
+		{
+			$this->level = $parent->level + 1;
+		}
+		else
+		{
+			$this->level = 0;
+		}
 
 		return parent::save($options);
 	}
