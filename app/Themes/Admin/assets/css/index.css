@@ -1775,6 +1775,9 @@ fieldset#filter-bar select {
   max-width: 30em;
   margin-bottom: 0;
 }
+fieldset#filter-bar .text-right .select2-container {
+  text-align: left;
+}
 
 html {
   min-height: 100%;
@@ -5235,7 +5238,7 @@ a.menulist:hover:before {
   .ui-button:focus {
     color: #fff;
   }
-  .ui-widget-content {
+  .ui-dialog.ui-widget-content {
     border-color: #1c1b21;
     background: #1c1b21;
   }
