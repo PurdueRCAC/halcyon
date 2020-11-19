@@ -9,6 +9,8 @@
         "App\\Modules\\Themes\\Providers\\RouteServiceProvider"
     ],
     "aliases": {},
-    "files": [],
+    "files": [
+        "Helpers/helpers.php"
+    ],
     "requires": []
 }

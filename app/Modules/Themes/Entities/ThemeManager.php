@@ -44,6 +44,16 @@ class ThemeManager implements \Countable
 	}
 
 	/**
+	 * Get path
+	 *
+	 * @return  string
+	 */
+	public function themePath($path): string
+	{
+		return $this->getActiveTheme()->getPath() . ($path ? '/' . trim($path, '/') : '');
+	}
+
+	/**
 	 * @param  string     $name
 	 * @return Theme|null
 	 */

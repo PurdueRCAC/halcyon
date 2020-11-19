@@ -2,9 +2,10 @@
 
 @section('content')
 	<div class="error-page">
-		<h2>500</h2>
-
-		<div class="error-content">
+		<div class="error-header">
+			<h2>500</h2>
+		</div>
+		<div class="error-body">
 			<h3><i class="fa fa-warning text-red"></i> {{ trans('global.error 500 title') }}</h3>
 			<p>{!! trans('global.error 500 description') !!}</p>
 		</div>

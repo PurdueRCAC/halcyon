@@ -4,6 +4,7 @@ namespace App\Modules\Themes\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\Facades\View;
 use App\Modules\Themes\Entities\ThemeManager;
 use App\Modules\Themes\Console\InstallCommand;
 use App\Modules\Themes\Console\DisableCommand;
@@ -65,6 +66,16 @@ class ModuleServiceProvider extends ServiceProvider
 				], 'public');*/
 			}
 		}
+
+		$paths = array_merge([theme_path('views')], config('view.paths'));
+
+		config()->set('view.paths', $paths);
+
+		/*$paths = collect($paths);
+
+		View::replaceNamespace('errors', $paths->map(function ($path) {
+			return "{$path}/errors";
+		})->push(base_path('vendor/laravel/framework/src/Illuminate/Foundation/Exceptions') . '/views')->all());*/
 	}
 
 	/**
