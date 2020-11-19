@@ -24,6 +24,11 @@ class ThemeManager implements \Countable
 	private $view;
 
 	/**
+	 * @var string Path to scan for themes
+	 */
+	private $activeTheme;
+
+	/**
 	 * @param Application $app
 	 * @param $path
 	 */
@@ -50,7 +55,11 @@ class ThemeManager implements \Countable
 	 */
 	public function themePath($path): string
 	{
-		return $this->getActiveTheme()->getPath() . ($path ? '/' . trim($path, '/') : '');
+		if ($theme = $this->getActiveTheme())
+		{
+			return $theme->getPath() . ($path ? '/' . trim($path, '/') : '');
+		}
+		return '';
 	}
 
 	/**

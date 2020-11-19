@@ -67,10 +67,11 @@ class ModuleServiceProvider extends ServiceProvider
 			}
 		}
 
-		$paths = array_merge([theme_path('views')], config('view.paths'));
-
-		config()->set('view.paths', $paths);
-
+		if ($path = theme_path('views'))
+		{
+			$paths = array_merge([$path], config('view.paths'));
+			config()->set('view.paths', $paths);
+		}
 		/*$paths = collect($paths);
 
 		View::replaceNamespace('errors', $paths->map(function ($path) {
