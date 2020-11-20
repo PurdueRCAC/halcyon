@@ -984,7 +984,7 @@ function NEWSSearched(xml) {
 
 		document.getElementById("matchingnews").innerHTML = "Found " + results.meta.total + " matching News Articles";
 		for (var x=0;x<results.data.length;x++) {
-			NEWSPrintRow(results.data[x], edit);//, results.updates);
+			NEWSPrintRow(results.data[x]);//, results.updates);
 		}
 
 		// Re-initialize tooltips
@@ -1137,8 +1137,8 @@ function NEWSSearched(xml) {
  * @param   {array}   updates
  * @return  {void}
  */
-function NEWSPrintRow(news, edit, updates) {
-	edit = news.can.edit;
+function NEWSPrintRow(news) {
+	var edit = news.can.edit;
 
 	var id = news.id; //.split('/');
 		//id = id[id.length - 1];
@@ -2607,10 +2607,10 @@ function PreviewExample(example) {
 	example_vars["startDate"] = new Date();
 	example_vars["endDate"] = new Date();
 	example_vars["endDate"].addDays(1);
-	example_vars["resources"] = [{"resourcename": "Carter"}, {"resourcename": "Conte"}];
+	example_vars["resources"] = ["Anvil", "Bell"];//[{"resourcename": "Carter"}, {"resourcename": "Conte"}];
 	example_vars["location"] = "Envision Center";
 
-	WSPostURL(root + "news/preview", JSON.stringify({ 'text' : document.getElementById('help1' + example + 'input').value, 'vars' : example_vars }), function (xml) {
+	WSPostURL(root + "news/preview", JSON.stringify({ 'body' : document.getElementById('help1' + example + 'input').value, 'vars' : example_vars }), function (xml) {
 		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 			document.getElementById('help1' + example + 'output').innerHTML = results['formattedtext'];
@@ -3120,11 +3120,11 @@ function NewsPostUpdate(newsid) {
 		'body': body
 	});
 
-	WSPostURL(root + "news/updates", post, function(xml, newsid) {
-		if (xml.status == 200) {
+	WSPostURL(root + "news/" + newsid + "/updates", post, function(xml, newsid) {
+		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 
-			NewsPrintUpdate(newsid, results);
+			NewsPrintUpdate(newsid, results.data);
 			document.getElementById(newsid + "_newupdatebox").value = "";
 			NewsCollapseNewUpdate(newsid + "_newupdatebox");
 		} else {
@@ -3143,9 +3143,11 @@ function NewsPostUpdate(newsid) {
  * @return  {void}
  */
 function NewsPrintUpdate(newsid, update, edit) {
-	if (typeof(edit) == 'undefined') {
+	/*if (typeof(edit) == 'undefined') {
 		edit = false;
-	}
+	}*/
+
+	edit = update.can.edit;
 	var page = document.location.href.split("/")[4];
 	if (page == 'news') {
 		update['body'] = HighlightMatches(update['body']);
@@ -3237,7 +3239,7 @@ function NewsPrintUpdate(newsid, update, edit) {
 		a.href = "/news/manage?update=" + update['id'] + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
-			NewsSaveUpdateText(update['id']);
+			NewsSaveUpdateText(newsid, update['id']);
 		};
 		a.className = "news-update-save tip";
 		a.id = update['id'] + "_updatetextsaveicon";
@@ -3302,7 +3304,7 @@ function NewsEditUpdateTextOpen(update) {
  * @param   {string}  update
  * @return  {void}
  */
-function NewsSaveUpdateText(update) {
+function NewsSaveUpdateText(newsid, update) {
 	// get text
 	var text = document.getElementById(update + "_updatetextarea").value;
 
@@ -3316,36 +3318,29 @@ function NewsSaveUpdateText(update) {
 	var post = { 'body' : text };
 		post = JSON.stringify(post);
 
-	WSPostURL(root + "newsupdate/" + update, post, NewsSavedUpdateText, update);
-}
+	WSPutURL(root + "news/" + newsid + "/updates/" + update, post, function(xml, update) {
+		var editicon = document.getElementById(update + "_updatetextediticon");
+		var icon = document.getElementById(update + "_updatetextsaveicon");
+		var img = document.getElementById(update + "_updatetextsaveiconimg");
+		var text = document.getElementById(update + "_update");
+		var box = document.getElementById(update + "_updatetextarea");
 
-/**
- * Callback after saving news update text
- *
- * @param   {string}  update
- * @return  {void}
- */
-function NewsSavedUpdateText(xml, update) {
-	var editicon = document.getElementById(update + "_updatetextediticon");
-	var icon = document.getElementById(update + "_updatetextsaveicon");
-	var img = document.getElementById(update + "_updatetextsaveiconimg");
-	var text = document.getElementById(update + "_update");
-	var box = document.getElementById(update + "_updatetextarea");
-	icon.onclick = function () { NewsSaveUpdateText(update); };
-	if (xml.status == 200) {
-		var results = JSON.parse(xml.responseText);
-		icon.style.display = "none";
-		text.style.display = "block";
-		box.style.display = "none";
-		editicon.style.display = "block";
-		text.innerHTML = results['formattedbody'];
-	} else if (xml.status == 403) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, reload the page and try again.";
-	}
+		if (xml.status < 400) {
+			var results = JSON.parse(xml.responseText);
+			icon.style.display = "none";
+			icon.onclick = function () { NewsSaveUpdateText(results.data.newsid, update); };
+			text.style.display = "block";
+			box.style.display = "none";
+			editicon.style.display = "block";
+			text.innerHTML = results.data['formattedbody'];
+		} else if (xml.status == 403) {
+			img.className = "fa fa-exclamation-circle";
+			img.parentNode.title = "Unable to save changes, grace editing window has passed.";
+		} else {
+			img.className = "fa fa-exclamation-circle";
+			img.parentNode.title = "Unable to save changes, reload the page and try again.";
+		}
+	}, update);
 }
 
 /**
@@ -3357,42 +3352,19 @@ function NewsSavedUpdateText(xml, update) {
  */
 function NewsDeleteUpdate(updateid, reportid) {
 	if (confirm("Are you sure you want to delete this update?")) {
-		WSDeleteURL(root + "newsupdate/" + updateid, NewsDeletedUpdate, { 'updateid' : updateid, 'reportid' : reportid });
+		WSDeleteURL(root + "news/" + reportid + "/updates/" + updateid, function(xml, arg) {
+			if (xml.status == 200) {
+				document.getElementById(arg['updateid'] + "_update").parentNode.style.display = "none";
+			} else if (xml.status == 403) {
+				document.getElementById(arg['reportid'] + "_updatedeleteimg").className = "fa fa-exclamation-circle";
+				document.getElementById(arg['reportid'] + "_updatedeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
+			} else {
+				document.getElementById(arg['updateid'] + "_updatedeleteimg").className = "fa fa-exclamation-circle";
+				document.getElementById(arg['updateid'] + "_updatedeleteimg").parentNode.title = "An error occurred while deleting update.";
+			}
+		}, { 'updateid' : updateid, 'reportid' : reportid });
 	}
 }
-
-/**
- * Call back after deleting an update
- *
- * @param   {object}  xml
- * @param   {array}   arg
- * @return  {void}
- */
-function NewsDeletedUpdate(xml, arg) {
-	if (xml.status == 200) {
-		document.getElementById(arg['updateid'] + "_update").parentNode.style.display = "none";
-	} else if (xml.status == 403) {
-		document.getElementById(arg['reportid'] + "_updatedeleteimg").className = "fa fa-exclamation-circle";
-		document.getElementById(arg['reportid'] + "_updatedeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else {
-		document.getElementById(arg['updateid'] + "_updatedeleteimg").className = "fa fa-exclamation-circle";
-		document.getElementById(arg['updateid'] + "_updatedeleteimg").parentNode.title = "An error occurred while deleting update.";
-	}
-}
-
-/*var autocompleteNews = function(url) {
-	return function(request, response) {
-		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-			response($.map(data.data, function (el) {
-				return {
-					label: el.name,
-					name: el.name,
-					id: el.id,
-				};
-			}));
-		});
-	};
-};*/
 
 var autocompleteUsers = function(url) {
 	return function(request, response) {

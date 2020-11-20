@@ -16,7 +16,7 @@ class UpdateResource extends JsonResource
 	{
 		$data = parent::toArray($request);
 
-		$data['api'] = route('api.groups.read', ['id' => $this->id]);
+		$data['api'] = route('api.news.updates.read', ['news_id' => $this->newsid, 'id' => $this->id]);
 
 		//$data['formatteddate'] = $this->formatDate($this->getOriginal('datetimenews'), $this->getOriginal('datetimenewsend'));
 		$data['formattedbody'] = $this->formattedBody;
@@ -25,11 +25,19 @@ class UpdateResource extends JsonResource
 		//$data['formattedupdatedate']  = $this->formatDate($this->getOriginal('datetimeupdate'));
 
 		//$this->username = $this->creator ? $this->creator->name : trans('global.unknown');
+		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
 
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
 
 		$user = auth()->user();
+		if (!$user)
+		{
+			if (auth()->guard('api')->check())
+			{
+				$user = auth()->guard('api')->user();
+			}
+		}
 
 		if ($user)
 		{

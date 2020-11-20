@@ -463,7 +463,7 @@ class Article extends Model
 			'updatetime'     => date("g:ia", strtotime($this->datetimecreated))
 		);
 
-		$news = array_merge($this->getAttributes(), $this->getContentVars()); //$this->toArray();
+		$news = array_merge($this->getContentVars(), $this->getAttributes()); //$this->toArray();
 		//$news['resources'] = $this->resources->toArray();
 
 		/*$resources = array();
@@ -497,6 +497,10 @@ class Article extends Model
 
 		foreach ($news as $var => $value)
 		{
+			if (is_array($value))
+			{
+				$value = implode(', ', $value);
+			}
 			$text = preg_replace("/%" . $var . "%/", $value, $text);
 		}
 
@@ -824,6 +828,12 @@ class Article extends Model
 			'endtime'        => "%endtime%",
 		);
 
+		if ($this->vars)
+		{
+			$vars = $this->vars;
+			$this->vars = null;
+		}
+
 		foreach ($vars as $var => $value)
 		{
 			if ($var == 'datetime' || $var == 'date')
@@ -959,29 +969,29 @@ class Article extends Model
 			$vars['location'] = $this->location;
 		}
 
-			$resources = array();
-			foreach ($this->resources as $resource)
-			{
-				array_push($resources, $resource->resource->name);
-			}
+		$resources = array();
+		foreach ($this->resources as $resource)
+		{
+			array_push($resources, $resource->resource->name);
+		}
 
-			if (count($resources) > 1)
-			{
-				$resources[count($resources)-1] = 'and ' . $resources[count($resources)-1];
-			}
+		if (count($resources) > 1)
+		{
+			$resources[count($resources)-1] = 'and ' . $resources[count($resources)-1];
+		}
 
-			if (count($resources) > 2)
-			{
-				$vars['resources'] = implode(', ', $resources);
-			}
-			else if (count($resources) == 2)
-			{
-				$vars['resources'] = $resources[0] . ' ' . $resources[1];
-			}
-			else if (count($resources) == 1)
-			{
-				$vars['resources'] = $resources[0];
-			}
+		if (count($resources) > 2)
+		{
+			$vars['resources'] = implode(', ', $resources);
+		}
+		else if (count($resources) == 2)
+		{
+			$vars['resources'] = $resources[0] . ' ' . $resources[1];
+		}
+		else if (count($resources) == 1)
+		{
+			$vars['resources'] = $resources[0];
+		}
 
 		return $vars;
 	}

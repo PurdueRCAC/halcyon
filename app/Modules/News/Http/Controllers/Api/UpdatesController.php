@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Update;
+use App\Modules\News\Http\Resources\UpdateResource;
+use App\Modules\News\Http\Resources\UpdateResourceCollection;
 
 /**
  * Article Updates
@@ -126,12 +128,12 @@ class UpdatesController extends Controller
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
-		$rows->each(function ($item, $key)
+		/*$rows->each(function ($item, $key)
 		{
 			$item->api = route('api.news.updates.read', ['id' => $item->id]);
-		});
+		});*/
 
-		return $rows;
+		return new UpdateResourceCollection($rows);
 	}
 
 	/**
@@ -172,24 +174,29 @@ class UpdatesController extends Controller
 	 * @param   Request  $request
 	 * @return  Response
 	 */
-	public function create()
+	public function create($news_id, Request $request)
 	{
 		$request->validate([
-			'body' => 'required|string',
-			'newsid' => 'required|integer|min:1',
+			'body' => 'required|string|max:15000',
+			//'newsid' => 'required|integer|min:1',
 		]);
 
 		$row = new Update;
-		$row->fill($request->all());
+		$row->newsid = $news_id;
+		$row->body = $request->input('body');
+		if (auth()->user())
+		{
+			$row->userid = auth()->user()->id;
+		}
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('page::messages.page created')], 500);
+			return response()->json(['message' => trans('news::news.error.failed to create record')], 500);
 		}
 
-		$row->api = route('api.news.updates.read', ['id' => $row->id]);
+		//$row->api = route('api.news.updates.read', ['id' => $row->id]);
 
-		return new JsonResource($row);
+		return new UpdateResource($row);
 	}
 
 	/**
@@ -213,9 +220,9 @@ class UpdatesController extends Controller
 	{
 		$row = Update::findOrFail((int)$id);
 
-		$row->api = route('api.news.updates.read', ['id' => $row->id]);
+		//$row->api = route('api.news.updates.read', ['id' => $row->id]);
 
-		return new JsonResource($row);
+		return new UpdateResource($row);
 	}
 
 	/**
@@ -249,21 +256,25 @@ class UpdatesController extends Controller
 	public function update($news_id, $id, Request $request)
 	{
 		$request->validate([
-			'body' => 'required',
-			'newsid' => 'required',
+			'body' => 'required|string|max:15000',
+			//'newsid' => 'required',
 		]);
 
 		$row = Update::findOrFail($id);
-		$row->fill($request->all());
+		$row->body = $request->input('body');
+		if (auth()->user())
+		{
+			$row->edituserid = auth()->user()->id;
+		}
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('page::messages.page created')], 500);
+			return response()->json(['message' => trans('news::news.error.failed to update record')], 500);
 		}
 
-		$row->api = route('api.news.updates.read', ['id' => $row->id]);
+		//$row->api = route('api.news.updates.read', ['id' => $row->id]);
 
-		return new JsonResource($row);
+		return new UpdateResource($row);
 	}
 
 	/**

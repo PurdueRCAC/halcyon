@@ -1,11 +1,15 @@
 @extends('layouts.master')
 
 @push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css') }}" />
 @endpush
 
 @push('scripts')
-<script type="text/javascript" src="{{ asset('modules/news/js/site.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/news/js/site.js') }}"></script>
 @endpush
 
 @section('content')
@@ -33,7 +37,7 @@
 								<?php
 								$startdate = '';
 								$starttime = '';
-								if ($value = request('start'))
+								if ($value = $filters['start'])
 								{
 									$value = explode('!', $value);
 									$startdate = $value[0];
@@ -67,7 +71,7 @@
 								$stopdate = '';
 								$stoptime = '';
 
-								$value = request('stop');
+								$value = $filters['stop'];
 								if ($value && $value != '0000-00-00 00:00:00')
 								{
 									$value = explode('!', $value);
@@ -132,24 +136,9 @@
 							<div class="col-sm-10">
 								<select id="newstype" name="newstype" class="form-control">
 									<option id="OPTION_all" value="-1">All</option>
-									<?php
-									$value = request('newstype');
-									//$newstypes = $ws->get(ROOT_URI . "newstype/");
-
-									foreach ($types as $newstype)
-									{
-										//$type = preg_replace('/^' . str_replace('/', '\/', ROOT_URI) . 'newstype\//', '', $newstype->id, 1, $count);
-
-										$selected = '';
-										if ($newstype == $value)
-										{
-											$selected = ' selected="selected"';
-										}
-										?>
-										<option value="<?php echo $newstype->id; ?>" data-tagresources="<?php echo $newstype->tagresources; ?>" data-taglocation="<?php echo $newstype->location; ?>" data-tagusers="<?php echo $newstype->tagusers; ?>" data-tagurl="<?php echo $newstype->url; ?>"<?php echo $selected; ?>><?php echo $newstype->name; ?></option>
-										<?php
-									}
-									?>
+									@foreach ($types as $type)
+										<option value="{{ $type->id }}"<?php if ($filters['newstype'] == $type->id) { echo ' selected="selected"'; } ?> data-tagresources="{{ $type->tagresources }}" data-taglocation="{{ $type->location }}">{{ $type->name }}</option>
+									@endforeach
 								</select>
 							</div>
 						</div>

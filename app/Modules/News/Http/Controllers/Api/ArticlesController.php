@@ -14,6 +14,7 @@ use App\Modules\News\Http\Resources\ArticleResource;
 use App\Modules\News\Http\Resources\ArticleResourceCollection;
 use App\Modules\History\Models\Log;
 use App\Halcyon\Utility\PorterStemmer;
+use Carbon\Carbon;
 
 /**
  * Articles
@@ -518,5 +519,53 @@ class ArticlesController extends Controller
 		}
 
 		return response()->json(null, 204);
+	}
+
+	/**
+	 * Create a news article
+	 *
+	 * @apiMethod POST
+	 * @apiUri    /api/news
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "comment",
+	 * 		"description":   "The comment being made",
+	 * 		"type":          "string",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "contactreportid",
+	 * 		"description":   "ID of the contact report",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
+	 * 		"default":       null
+	 * }
+	 * @param   Request  $request
+	 * @return  Response
+	 */
+	public function preview(Request $request)
+	{
+		$request->validate([
+			//'newstypeid' => 'required|integer|in:0,1',
+			'body' => 'required|string',
+			'vars' => 'nullable|array',
+			//'published' => 'nullable|integer|in:0,1',
+			//'template' => 'nullable|integer|in:0,1',
+			//'datetimenews' => 'required|date',
+			//'datetimenewsend' => 'nullable|date',
+			//'location' => 'nullable|string',
+			//'url' => 'nullable|url',
+		]);
+
+		$row = new Article();
+		$row->id = 0;
+		$row->body = $request->input('body');
+		$row->datetimecreated = Carbon::now();
+		$row->vars = $request->input('vars');
+
+		return new ArticleResource($row);
 	}
 }

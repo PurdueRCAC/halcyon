@@ -208,9 +208,29 @@ class ArticlesController extends Controller
 	 * Show the form for creating a new resource.
 	 * @return Response
 	 */
-	public function manage()
+	public function manage(Request $request)
 	{
-		$types = Type::all();
+		$filters = array(
+			'search'    => null,
+			'resource'  => null,
+			'keyword'   => null,
+			'newstype'  => null,
+			'start'     => null,
+			'stop'      => null,
+			'location'  => null,
+			'id'        => null,
+			'limit'     => config('list_limit', 20),
+			'page'      => 1,
+			//'order'     => 'datetimecreated',
+			//'order_dir' => 'desc',
+		);
+
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->input($key, $default);
+		}
+
+		$types = Type::query()->orderBy('name', 'asc')->get();
 
 		$templates = Article::where('template', '=', 1)->get();
 
@@ -226,7 +246,8 @@ class ArticlesController extends Controller
 
 		return view('news::site.manage', [
 			'types' => $types,
-			'templates' => $templates
+			'templates' => $templates,
+			'filters' => $filters,
 		]);
 	}
 

@@ -16,7 +16,7 @@ class ArticleResource extends JsonResource
 	{
 		$data = parent::toArray($request);
 
-		$data['api'] = route('api.groups.read', ['id' => $this->id]);
+		$data['api'] = route('api.news.read', ['id' => $this->id]);
 
 		$data['uri'] = route('site.news.show', ['id' => $this->id]);
 		$data['formatteddate'] = $this->formatDate($this->getOriginal('datetimenews'), $this->getOriginal('datetimenewsend'));
@@ -25,12 +25,26 @@ class ArticleResource extends JsonResource
 		$data['formattedcreateddate'] = $this->formatDate($this->getOriginal('datetimecreated'));
 		$data['formattedupdatedate']  = $this->formatDate($this->getOriginal('datetimeupdate'));
 
-		$data['updates'] = $this->updates->each(function ($update, $key)
+		/*$data['updates'] = $this->updates->each(function ($update, $key) use ($user)
 		{
+			$can['edit']   = false;
+			$can['delete'] = false;
+			if ($user)
+			{
+				$data['can']['edit']   = ($user->can('edit news') || ($user->can('edit.own news') && $this->userid == $user->id));
+				$data['can']['delete'] = $user->can('delete news');
+			}
+
 			$update->formattedbody = $update->formattedBody;
 			$update->formattedcreateddate = $update->formatDate($update->datetimecreated);
+			$update->can = $can;
 			//$update->username = $update->creator ? $update->creator->name : trans('global.unknown');
-		});
+		});*/
+		$data['updates'] = array();
+		foreach ($this->updates as $update)
+		{
+			$data['updates'][] = new UpdateResource($update);
+		}
 
 		$data['resources'] = $this->resources->each(function ($res, $key)
 		{
@@ -47,11 +61,17 @@ class ArticleResource extends JsonResource
 		});
 
 		//$this->username = $this->creator ? $this->creator->name : trans('global.unknown');
-
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
 
 		$user = auth()->user();
+		if (!$user)
+		{
+			if (auth()->guard('api')->check())
+			{
+				$user = auth()->guard('api')->user();
+			}
+		}
 
 		if ($user)
 		{
