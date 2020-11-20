@@ -2300,6 +2300,13 @@ fieldset.adminform fieldset {
   font-weight: 400;
   color: #333;
 }*/
+.show-when-editing,
+.is-editing .hide-when-editing {
+  display: none;
+}
+.is-editing .show-when-editing {
+  display: block;
+}
 
 .data-wrap {
   background-color: rgba(0, 0, 0, 0.075);

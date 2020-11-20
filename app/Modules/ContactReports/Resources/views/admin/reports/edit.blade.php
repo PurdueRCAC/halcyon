@@ -123,39 +123,75 @@ app('pathway')
 			@if ($row->id)
 				<fieldset class="adminform">
 					<legend>{{ trans('contactreports::contactreports.comments') }}</legend>
+
+					<ul id="comments">
 					<?php
 					$comments = $row->comments()->orderBy('datetimecreated', 'asc')->get();
 
 					if (count($comments) > 0) {
 					?>
-					<ul>
 						@foreach ($comments as $comment)
-						<li>
-							{!! $comment->formattedComment() !!}
+						<li id="comment_{{ $comment->id }}" data-api="{{ route('api.contactreports.comments.update', ['comment' => $comment->id]) }}">
+							<a href="#comment_{{ $comment->id }}_comment" class="btn btn-link comment-edit hide-when-editing">
+								<span class="icon-edit"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
+							</a>
+							<a href="#comment_{{ $comment->id }}" class="btn btn-link comment-delete" data-confirm="{{ trans('global.confirm delete') }}">
+								<span class="icon-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
+							</a>
+							<div id="comment_{{ $comment->id }}_text">
+								{!! $comment->formattedComment !!}
+							</div>
+							<div id="comment_{{ $comment->id }}_edit" class="show-when-editing">
+								<div class="form-group">
+									<label for="comment_{{ $comment->id }}_comment" class="sr-only">{{ trans('contactreports::contactreports.comment') }}</label>
+									<textarea name="comment" id="comment_{{ $comment->id }}_comment" class="form-control" cols="45" rows="3">{{ $comment->comment }}</textarea>
+								</div>
+								<div class="form-group text-right">
+									<button class="btn btn-secondary comment-save" data-parent="#comment_{{ $comment->id }}">{{ trans('global.button.save') }}</button>
+									<a href="#comment_{{ $comment->id }}" class="btn btn-link comment-cancel">
+										{{ trans('global.button.cancel') }}
+									</a>
+								</div>
+							</div>
 							<p>{{ trans('contactreports::contactreports.posted by', ['who' => ($comment->creator ? $comment->creator->name : trans('global.unknown')), 'when' => $comment->datetimecreated->toDateTimeString()]) }}</p>
 						</li>
 						@endforeach
-					</ul>
 					<?php
 					}
-					else
-					{
-						?>
-						<p>{{ trans('contactreports::contactreports.no comments found') }}</p>
-						<ul>
-							<li>
+					?>
+						<li id="comment_<?php echo '{id}'; ?>" class="d-none" data-api="{{ route('api.contactreports.comments') }}/<?php echo '{id}'; ?>">
+							<a href="#comment_<?php echo '{id}'; ?>_comment" class="btn btn-link comment-edit hide-when-editing">
+								<span class="icon-edit"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
+							</a>
+							<a href="#comment_<?php echo '{id}'; ?>" class="btn btn-link comment-delete" data-confirm="{{ trans('global.confirm delete') }}">
+								<span class="icon-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
+							</a>
+							<div id="comment_<?php echo '{id}'; ?>_text">
+							</div>
+							<div id="comment_<?php echo '{id}'; ?>_edit" class="show-when-editing">
 								<div class="form-group">
-									<label for="comment">{{ trans('contactreports::contactreports.comment') }}</label>
-									<textarea name="comment" id="comment" class="form-control" cols="45" rows="3"></textarea>
+									<label for="comment_<?php echo '{id}'; ?>_comment" class="sr-only">{{ trans('contactreports::contactreports.comment') }}</label>
+									<textarea name="comment" id="comment_<?php echo '{id}'; ?>_comment" class="form-control" cols="45" rows="3"></textarea>
 								</div>
 								<div class="form-group text-right">
-									<button class="btn btn-secondary">{{ trans('contactreports::contactreports.add') }}</button>
+									<button class="btn btn-secondary comment-save" data-parent="#comment_<?php echo '{id}'; ?>">{{ trans('global.button.save') }}</button>
+									<a href="#comment_<?php echo '{id}'; ?>" class="btn btn-link comment-cancel">
+										{{ trans('global.button.cancel') }}
+									</a>
 								</div>
-							</li>
-						</ul>
-						<?php
-					}
-					?>
+							</div>
+							<p>{{ trans('contactreports::contactreports.posted by', ['who' => '{who}', 'when' => '{when}']) }}</p>
+						</li>
+						<li id="comment_new" data-api="{{ route('api.contactreports.comments.create') }}">
+							<div class="form-group">
+								<label for="comment_new_comment" class="sr-only">{{ trans('contactreports::contactreports.comment') }}</label>
+								<textarea name="comment" id="comment_new_comment" class="form-control" cols="45" rows="3"></textarea>
+							</div>
+							<div class="form-group text-right">
+								<button class="btn btn-secondary comment-add" data-parent="#comment_new">{{ trans('contactreports::contactreports.add') }}</button>
+							</div>
+						</li>
+					</ul>
 				</fieldset>
 			@endif
 		</div>

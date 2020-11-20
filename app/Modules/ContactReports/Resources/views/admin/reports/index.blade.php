@@ -100,7 +100,7 @@ app('pathway')
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('contactreports::contactreports.contacted'), 'datetimecontact', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2">
+				<th scope="col" class="priority-2 text-right">
 					{{ trans('contactreports::contactreports.comments') }}
 				</th>
 			</tr>
@@ -149,10 +149,10 @@ app('pathway')
 						@endif
 					</span>
 				</td>
-				<td class="priority-4">
-					<a href="{{ route('admin.contactreports.comments', ['report' => $row->id]) }}">
+				<td class="priority-4 text-right">
+					<?php /*<a href="{{ route('admin.contactreports.comments', ['report' => $row->id]) }}">*/?>
 						{{ $row->comments_count }}
-					</a>
+					<?php /*</a>*/ ?>
 				</td>
 			</tr>
 		@endforeach

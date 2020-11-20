@@ -184,7 +184,7 @@ class CommentsController extends Controller
 	{
 		$request->validate([
 			'comment' => 'nullable|string',
-			'contactreportid' => 'required|integer|min:1',
+			'contactreportid' => 'required|integer',
 		]);
 
 		$row = new Comment($request->all());
