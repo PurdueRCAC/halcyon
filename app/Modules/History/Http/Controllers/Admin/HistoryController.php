@@ -69,39 +69,12 @@ class HistoryController extends Controller
 			->orderBy('historable_type', 'asc')
 			->get();
 
-		return view('history::admin.index', [
+		return view('history::admin.history.index', [
 			'filters' => $filters,
 			'rows'    => $rows,
 			'types'   => $types
 		]);
 	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param   Request  $request
-	 * @return  Response
-	 */
-	/*public function store(Request $request)
-	{
-		$request->validate([
-			'fields.name' => 'required'
-		]);
-
-		$id = $request->input('id');
-
-		$row = $id ? History::findOrFail($id) : new History();
-		$row->fill($request->input('fields'));
-
-		if (!$row->save())
-		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
-
-			return redirect()->back()->withError($error);
-		}
-
-		return $this->cancel()->with('success', trans('messages.item saved'));
-	}*/
 
 	/**
 	 * Show the form for editing the specified entry
@@ -111,11 +84,9 @@ class HistoryController extends Controller
 	 */
 	public function show($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = History::findOrFail($id);
 
-		return view('history::admin.show', [
+		return view('history::admin.history.show', [
 			'row' => $row
 		]);
 	}

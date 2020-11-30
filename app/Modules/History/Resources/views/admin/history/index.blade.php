@@ -107,7 +107,7 @@ app('pathway')
 				</td>
 				<td>
 					<a href="{{ route('admin.history.show', ['id' => $row->id]) }}">
-						{{ $row->historable_type }}
+						{{ $row->type }}
 					</a>
 				</td>
 				<td>
@@ -135,11 +135,11 @@ app('pathway')
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->getOriginal('updated_at') && $row->getOriginal('updated_at') != '0000-00-00 00:00:00')
-							<time datetime="{{ Carbon\Carbon::parse($row->updated_at)->format('Y-m-d\TH:i:s\Z') }}">{{ $row->updated_at }}</time>
+						@if ($row->updated_at && $row->updated_at != '0000-00-00 00:00:00' && $row->updated_at != '-0001-11-30 00:00:00')
+							<time datetime="{{ $row->updated_at->format('Y-m-d\TH:i:s\Z') }}">{{ $row->updated_at }}</time>
 						@else
 							@if ($row->getOriginal('created_at') && $row->getOriginal('created_at') != '0000-00-00 00:00:00')
-								<time datetime="{{ Carbon\Carbon::parse($row->created_at)->format('Y-m-d\TH:i:s\Z') }}">{{ $row->created_at }}</time>
+								<time datetime="{{ $row->created_at->format('Y-m-d\TH:i:s\Z') }}">{{ $row->created_at }}</time>
 							@else
 								<span class="never">{{ trans('global.unknown') }}</span>
 							@endif

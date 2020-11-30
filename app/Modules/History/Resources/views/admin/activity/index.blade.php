@@ -54,9 +54,12 @@ app('pathway')
 				<select name="status" id="filter_status" class="form-control filter filter-submit">
 					<option value=""<?php if ($filters['status'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('history::history.all status') }}</option>
 					<option value="200"<?php if ($filters['status'] == '200'): echo ' selected="selected"'; endif;?>>200</option>
+					<option value="201"<?php if ($filters['status'] == '201'): echo ' selected="selected"'; endif;?>>201</option>
 					<option value="400"<?php if ($filters['status'] == '400'): echo ' selected="selected"'; endif;?>>400</option>
 					<option value="403"<?php if ($filters['status'] == '403'): echo ' selected="selected"'; endif;?>>403</option>
 					<option value="404"<?php if ($filters['status'] == '404'): echo ' selected="selected"'; endif;?>>404</option>
+					<option value="409"<?php if ($filters['status'] == '409'): echo ' selected="selected"'; endif;?>>409</option>
+					<option value="412"<?php if ($filters['status'] == '412'): echo ' selected="selected"'; endif;?>>412</option>
 					<option value="415"<?php if ($filters['status'] == '415'): echo ' selected="selected"'; endif;?>>415</option>
 					<option value="500"<?php if ($filters['status'] == '500'): echo ' selected="selected"'; endif;?>>500</option>
 				</select>
@@ -127,6 +130,7 @@ app('pathway')
 					{{ $row->id }}
 				</td>
 				<td>
+					<a href="{{ route('admin.history.activity.show', ['id' => $row->id]) }}">
 					@if ($row->app == 'ws' || $row->app == 'api')
 						<span class="icon-code" data-tip="API"></span>
 					@elseif ($row->app == 'ui')
@@ -139,6 +143,7 @@ app('pathway')
 					@else
 						<span class="unknown">{{ trans('global.unknown') }}</span>
 					@endif
+					</a>
 				</td>
 				<td>
 					@if (!$row->ip || $row->ip == '::1')
@@ -174,7 +179,7 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-4">
-					@if ($row->datetime && $row->datetime != '0000-00-00 00:00:00')
+					@if ($row->datetime && $row->datetime != '0000-00-00 00:00:00' && $row->datetime != '-0001-11-30 00:00:00')
 						<time datetime="{{ $row->datetime->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetime }}</time>
 					@else
 						<span class="never">{{ trans('global.unknown') }}</span>

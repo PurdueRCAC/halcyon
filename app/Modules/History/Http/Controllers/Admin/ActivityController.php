@@ -12,7 +12,7 @@ class ActivityController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @param   Request  $request
+	 * @param   StatefulRequest  $request
 	 * @return  Response
 	 */
 	public function index(StatefulRequest $request)
@@ -76,7 +76,7 @@ class ActivityController extends Controller
 			->orderBy('classname', 'asc')
 			->get();
 
-		return view('history::admin.activity', [
+		return view('history::admin.activity.index', [
 			'filters' => $filters,
 			'rows'    => $rows,
 			'types'   => $types
@@ -101,7 +101,7 @@ class ActivityController extends Controller
 	/**
 	 * Remove the specified entry
 	 *
-	 * @param   integer   $id
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)

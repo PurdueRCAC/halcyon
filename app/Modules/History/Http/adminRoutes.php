@@ -37,8 +37,8 @@ $router->group(['prefix' => 'history'], function (Router $router)
 			'uses' => 'ActivityController@index',
 		]);
 		$router->get('{id}', [
-			'as' => 'admin.history.activity.edit',
-			'uses' => 'ActivityController@edit',
+			'as' => 'admin.history.activity.show',
+			'uses' => 'ActivityController@show',
 		])->where('id', '[0-9]+');
 		$router->match(['get', 'post'], '/delete/{id?}', [
 			'as'   => 'admin.history.activity.delete',

@@ -103,7 +103,7 @@ class History extends Model
 	 *
 	 * @return  string|null
 	 */
-	public function getHistorableTypeAttribute(): ?string
+	public function getTypeAttribute(): ?string
 	{
 		if (preg_match('/^App\\\Modules\\\([a-zA-Z\-_]+)\\\Models\\\([a-zA-Z\-_]+)$/i', $this->attributes['historable_type'], $matches))
 		{

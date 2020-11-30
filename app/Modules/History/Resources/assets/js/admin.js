@@ -4,7 +4,7 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-Halcyon.submitbutton = function(task) {
+/*Halcyon.submitbutton = function(task) {
 	$(document).trigger('editorSave');
 
 	var frm = document.getElementById('item-form');
@@ -16,4 +16,4 @@ Halcyon.submitbutton = function(task) {
 			alert(frm.getAttribute('data-invalid-msg'));
 		}
 	}
-}
+}*/
