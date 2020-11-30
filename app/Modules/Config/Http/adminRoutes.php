@@ -19,7 +19,6 @@ $router->group(['prefix' => 'config'], function (Router $router)
 	$router->get('module/{module}', [
 		'as'   => 'admin.config.module',
 		'uses' => 'ModulesController@index',
-		//'middleware' => 'can:tag.tags.edit',
 	]);
 	$router->post('module/{module}/update', [
 		'as'   => 'admin.config.module.update',
