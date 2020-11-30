@@ -231,7 +231,7 @@ class PedLdap
 
 					if (isset($data['mail']))
 					{
-						$user->mail = $data['mail'][0];
+						$user->email = $data['mail'][0];
 					}
 
 					if (isset($data['roomnumber']))
