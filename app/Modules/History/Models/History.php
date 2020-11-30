@@ -5,7 +5,6 @@ namespace App\Modules\History\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\Users\Models\User;
@@ -31,8 +30,11 @@ class History extends Model
 		'exit'
 	];
 
-	//protected $appends = ['href'];
-
+	/**
+	 * Cast attributes
+	 *
+	 * @var array
+	 */
 	protected $casts = [
 		'old' => 'object',
 		'new' => 'object',
@@ -94,5 +96,20 @@ class History extends Model
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get edit URL
+	 *
+	 * @return  string|null
+	 */
+	public function getHistorableTypeAttribute(): ?string
+	{
+		if (preg_match('/^App\\\Modules\\\([a-zA-Z\-_]+)\\\Models\\\([a-zA-Z\-_]+)$/i', $this->attributes['historable_type'], $matches))
+		{
+			return $matches[1] . ' - ' . $matches[2];
+		}
+
+		return $this->attributes['historable_type'];
 	}
 }

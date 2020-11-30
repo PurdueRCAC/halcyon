@@ -13,11 +13,18 @@ class Log extends Model
 	use ErrorBag, Validatable;
 
 	/**
-	 * Indicates if the model should be timestamped.
+	 * The name of the "created at" column.
 	 *
-	 * @var bool
+	 * @var string
 	 */
-	public $timestamps = false;
+	const CREATED_AT = 'datetime';
+
+	/**
+	 * The name of the "updated at" column.
+	 *
+	 * @var  string
+	 */
+	const UPDATED_AT = null;
 
 	/**
 	 * The table to which the class pertains
@@ -73,8 +80,19 @@ class Log extends Model
 	 *
 	 * @return  object
 	 */
-	public function setMethodAttribute($value)
+	public function targetuser(): BelongsTo
 	{
-		$this->attributes['method'] = strtoupper($value);
+		return $this->belongsTo(User::class, 'targetuserid');
+	}
+
+	/**
+	 * Set transport method
+	 *
+	 * @param   string  $value
+	 * @return  object
+	 */
+	public function setTransportmethodAttribute($value)
+	{
+		$this->attributes['transportmethod'] = strtoupper($value);
 	}
 }

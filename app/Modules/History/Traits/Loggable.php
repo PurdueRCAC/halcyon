@@ -11,6 +11,12 @@ trait Loggable
 	/**
 	 * boot method
 	 *
+	 * @param   string  $app
+	 * @param   string  $func
+	 * @param   string  $method
+	 * @param   integer $status
+	 * @param   mixed   $payload
+	 * @param   string  $uri
 	 * @return  null
 	 */
 	protected function log($app, $func, $method = 'GET', $status = 200, $payload = array(), $uri = '')
