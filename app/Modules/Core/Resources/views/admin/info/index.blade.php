@@ -30,7 +30,7 @@ app('pathway')
 			<ul>
 				<li><a href="#page-site">{{ trans('core::info.system information') }}</a></li>
 				<li><a href="#page-phpsettings">{{ trans('core::info.php settings') }}</a></li>
-				<li><a href="#page-config">{{ trans('core::info.configuration') }}</a></li>
+				<?php /*<li><a href="#page-config">{{ trans('core::info.configuration') }}</a></li>*/ ?>
 				<li><a href="#page-directory">{{ trans('core::info.directory permissions') }}</a></li>
 				<li><a href="#page-phpinfo">{{ trans('core::info.php info') }}</a></li>
 			</ul>
@@ -51,13 +51,13 @@ app('pathway')
 				</div>
 			</div>
 
-			<div id="page-config" class="tab">
+			<?php /*<div id="page-config" class="tab">
 				<div class="row noshow">
 					<div class="col-md-12">
 						@include('core::admin.info.config', ['info' => $model->getConfig()])
 					</div>
 				</div>
-			</div>
+			</div>*/ ?>
 
 			<div id="page-directory" class="tab">
 				<div class="row noshow">

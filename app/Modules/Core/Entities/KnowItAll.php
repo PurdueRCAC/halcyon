@@ -202,6 +202,8 @@ class KnowItall extends Fluent
 
 			$this->_addDirectory(public_path('modules'), public_path('modules'));
 			$this->_addDirectory(public_path('themes'), public_path('themes'));
+			$this->_addDirectory(public_path('listeners'), public_path('listeners'));
+			//$this->_addDirectory(public_path('widgets'), public_path('widgets'));
 			$this->_addDirectory(storage_path(), storage_path());
 		}
 		return $this->directories;
