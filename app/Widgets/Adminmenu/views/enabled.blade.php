@@ -21,7 +21,7 @@ $menu->getParent();
 // Site SubMenu
 //
 $menu->addChild(
-	new Node(trans('widget.adminmenu::adminmenu.configuration'), route('admin.config'), 'class:settings', in_array($active, ['info', 'core', 'config', 'checkin', 'cache', 'redirect', 'history'])), true
+	new Node(trans('widget.adminmenu::adminmenu.configuration'), route('admin.core.sysinfo'), 'class:settings', in_array($active, ['info', 'core', 'config', 'checkin', 'cache', 'redirect', 'history'])), true
 );
 
 $chm = $user->can('admin messages');
