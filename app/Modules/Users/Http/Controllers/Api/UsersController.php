@@ -86,11 +86,11 @@ class UsersController extends Controller
 			//'block'    => 0,
 			//'access'   => 0,
 			//'approved' => 1,
-			'group_id' => 0,
+			'role_id' => 0,
 			// Paging
 			'limit'     => config('list_limit', 20),
 			// Sorting
-			'order'     => 'id',
+			'order'     => 'datecreated',
 			'order_dir' => 'desc',
 		);
 
@@ -100,9 +100,9 @@ class UsersController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'name', 'username', 'email', 'access', 'created_at', 'lastVisitDate']))
+		if (!in_array($filters['order'], ['id', 'name', 'username', 'access', 'datecreated', 'datelastseen']))
 		{
-			$filters['order'] = 'created_at';
+			$filters['order'] = 'datecreated';
 		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
@@ -129,11 +129,11 @@ class UsersController extends Controller
 					->select('user_id');
 			}]);*/
 
-		if ($filters['group_id'])
+		if ($filters['role_id'])
 		{
 			$query
 				->leftJoin($b, $b . '.user_id', $a . '.id')
-				->where($b . '.group_id', '=', (int)$filters['group_id']);
+				->where($b . '.role_id', '=', (int)$filters['role_id']);
 				/*->group($a . '.id')
 				->group($a . '.name')
 				->group($a . '.username')
@@ -238,7 +238,7 @@ class UsersController extends Controller
 			}
 		}
 
-		if ($filters['order'] == 'created_at'
+		if ($filters['order'] == 'datecreated'
 		 || $filters['order'] == 'username')
 		{
 			$filters['order'] = $u . '.' . $filters['order'];
