@@ -37,7 +37,7 @@ class Orders
 		$group = $event->getGroup();
 		$client = app('isAdmin') ? 'admin' : 'site';
 
-		$content = view('orders::admin.orders.group', [
+		$content = view('orders::site.orders.group', [
 			'group' => $group
 		]);
 

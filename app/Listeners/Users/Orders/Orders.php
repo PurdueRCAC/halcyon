@@ -46,7 +46,7 @@ class Orders
 
 		if ($event->getActive() == 'orders')
 		{
-			$content = view('storage::site.profile', [
+			$content = view('orders::site.profile', [
 				'user'   => $user,
 				'orders' => $orders,
 			]);
