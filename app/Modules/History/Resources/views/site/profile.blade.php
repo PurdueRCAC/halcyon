@@ -20,10 +20,10 @@
 						?>
 						<tr>
 							<td>
-								{{ $group->type->name }}
+								{{ $group->type ? $group->type->name : trans('global.unknown') }}
 							</td>
 							<td>
-								{{ $group->group->name }}
+								{{ $group->group ? $group->group->name : trans('global.unknown') }}
 							</td>
 							<td>
 								{{ $group->datecreated->format('M d, Y') }}
@@ -120,10 +120,10 @@
 						?>
 						<tr>
 							<td>
-								{{ $queue->type->name }}
+								{{ $queue->type ? $queue->type->name : trans('global.unknown') }}
 							</td>
 							<td>
-								{{ $queue->queue->name }}
+								{{ $queue->queue ? $queue->queue->name : trans('global.unknown') }}
 							</td>
 							<td>
 								{{ $queue->datetimecreated->format('M d, Y') }}

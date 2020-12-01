@@ -11,6 +11,7 @@ use App\Modules\Users\Events\UserDisplay;
 use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Events\InstructorLookup;
 use App\Modules\Resources\Entities\Asset;
+use Carbon\Carbon;
 
 /**
  * User listener for sessions
@@ -48,6 +49,7 @@ class Courses
 
 		$total = Account::query()
 			->where('userid', '=', $user->id)
+			->where('datetimestop', '>', Carbon::now()->toDateTimeString())
 			->count();
 
 		if ($event->getActive() == 'class')

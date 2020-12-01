@@ -21,7 +21,7 @@ class UpdateResource extends JsonResource
 		//$data['formatteddate'] = $this->formatDate($this->getOriginal('datetimenews'), $this->getOriginal('datetimenewsend'));
 		$data['formattedbody'] = $this->formattedBody;
 		//$data['formattededitdate']    = $this->formatDate($this->getOriginal('datetimeedited'));
-		//$data['formattedcreateddate'] = $this->formatDate($this->getOriginal('datetimecreated'));
+		$data['formattedcreateddate'] = $this->formattedDatetimecreated($this->datetimecreated->toDateTimeString());
 		//$data['formattedupdatedate']  = $this->formatDate($this->getOriginal('datetimeupdate'));
 
 		//$this->username = $this->creator ? $this->creator->name : trans('global.unknown');

@@ -32,22 +32,25 @@
 
 		$rows = $directories->filter(function($item)
 		{
-			return $item->parentstoragedirid == 0;
+			return $item->parentstoragedirid == 0 && $item->storageresourceid == 4;
 		});
 
 		foreach ($rows as $row)
 		{
 			?>
-			<fieldset class="adminform">
-				<legend>{{ $row->storageResource->name }}</legend>
+			<div class="card panel panel-default">
+				<div class="card-header panel-heading">
+					{{ $row->storageResource->name }}
+				</div>
+				<div class="card-body panel-body">
 
 				<div id="new_dir_dialog" title="Add new directory" class="dialog">
 					<fieldset class="mb-1">
 						<div class="form-group">
 							<label for="new_dir_type">Name:</label>
 							<span class="input-group">
-								<span class="input-group-prepend"><span class="input-group-text">{{ $row->storageResource->path }}/<span id="new_dir_path"></span></span></span>
-								<input type="text" id="new_dir_input" class="form-control" />
+								<span class="input-group-addon input-group-prepend"><span class="input-group-text">{{ $row->storageResource->path }}/<span id="new_dir_path"></span></span></span>
+								<input type="text" id="new_dir_input" name="new_dir_input" class="form-control" />
 							</span>
 						</div>
 						<div class="form-group">
@@ -64,6 +67,7 @@
 						</div>
 						<fieldset>
 							<legend>Quota:</legend>
+
 							<div class="form-group">
 								<div class="form-check">
 									<input type="radio" name="usequota" value="parent" class="form-check-input" checked="true" id="share_radio" />
@@ -76,24 +80,24 @@
 									<label class="form-check-label" for="deduct_radio">Deduct from parent quota (<span id="new_dir_quota_available2"></span>):</label>
 
 									<input type="text" id="new_dir_quota_deduct" class="form-control" size="3" />
-								<?php
-								$bucket = null;
-								foreach ($group->storageBuckets as $bucket)
-								{
-									if ($bucket['resourceid'] == $row->storageResource->parentresourceid)
+									<?php
+									$bucket = null;
+									foreach ($group->storageBuckets as $bucket)
 									{
-										break;
+										if ($bucket['resourceid'] == $row->storageResource->parentresourceid)
+										{
+											break;
+										}
 									}
-								}
 
-								$style = '';
-								$disabled = '';
-								if ($bucket && $bucket['unallocatedbytes'] == 0)
-								{
-									$disabled = 'disabled="true"';
-									$style = 'color:gray';
-								}
-								?>
+									$style = '';
+									$disabled = '';
+									if ($bucket && $bucket['unallocatedbytes'] == 0)
+									{
+										$disabled = 'disabled="true"';
+										$style = 'color:gray';
+									}
+									?>
 								</div>
 							</div>
 							<div class="form-group">
@@ -116,10 +120,10 @@
 									<option value="<?php echo $unixgroup->id; ?>" data-api="{{ route('api.unixgroups.read', ['id' => $unixgroup->id]) }}"><?php echo $unixgroup->longname; ?></option>
 								<?php } ?>
 							</select>
-							<select id="new_dir_unixgroup_select_decoy" class="form-control d-none">
+							<select id="new_dir_unixgroup_select_decoy" class="form-control hidden">
 							</select>
 						</div>
-						<div id="new_dir_autouserunixgroup_row" class="form-group d-none">
+						<div id="new_dir_autouserunixgroup_row" class="form-group hidden">
 							<label for="new_dir_autouserunixgroup_select">Populating Unix Group</label>
 							<select id="new_dir_autouserunixgroup_select" class="form-control">
 								<option value="">(Select Unix Group)</option>
@@ -128,7 +132,7 @@
 								<?php } ?>
 							</select>
 						</div>
-						<div id="new_dir_user_row" class="form-group d-none">
+						<div id="new_dir_user_row" class="form-group hidden">
 							<label for="new_dir_user_select">User:</label>
 							<select id="new_dir_user_select" class="form-control">
 								<option value="">(Select User)</option>
@@ -158,13 +162,13 @@
 							<td></td>
 						</tr>
 					</tbody>
-					<tfoot>
+					<!-- <tfoot>
 						<tr>
 							<td colspan="3">
 								<button class="btn btn-sm btn-secondary"><span class="icon-plus"></span> {{ trans('global.button.create') }}</button>
 							</td>
 						</tr>
-					</tfoot>
+					</tfoot> -->
 				</table>
 
 				<input type="hidden" id="selected_dir" />
@@ -640,10 +644,11 @@
 
 					</div><!-- / #<?php echo $did; ?>_dialog -->
 				<?php } ?>
-			</fieldset>
+				</div>
+			</div>
 			<?php
-}
-?>
+			}
+			?>
 		</div>
 		<div class="col-md-12">
 			<div class="card panel panel-default">
@@ -752,7 +757,20 @@
 							<tbody>
 								@foreach ($group->messages->orderBy('datetimesubmitted', 'desc')->limit(10)->get() as $message)
 									<tr>
-										<td>{{ $message->status }}</td>
+										<td>
+											@if ($message->status == 'completed')
+												<i class="fa fa-check" aria-hidden="true"></i>
+											@elseif ($message->status == 'error')
+												<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+											@elseif ($message->status == 'deferred')
+												<i class="fa fa-clock" aria-hidden="true"></i>
+											@elseif ($message->status == 'running')
+												<i class="fa fa-heartbeat" aria-hidden="true"></i>
+											@elseif ($message->status == 'queued')
+												<i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+											@endif
+											<span class="sr-only">{{ trans('messages::messages.' . $message->status) }}</span>
+										</td>
 										<td>{{ $message->target }}</td>
 										<td>{{ $message->type->name }}</td>
 										<td>{{ $message->datetimesubmitted->format('Y-m-d') }}</td>

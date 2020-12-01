@@ -26,11 +26,11 @@ function NewDirType() {
 	var x;
 
 	if (selected == "user") {
-		user_row.classList.remove('d-none');//.style.display = "table-row";
+		user_row.classList.remove('hidden');//.style.display = "table-row";
 		unixgroup_select.disabled = false;
-		unixgroup_select_decoy.classList.add('d-none');//.style.display = "none";
-		unixgroup_select.classList.remove('d-none');//.style.display = "inline";
-		autouserunixgroup_row.classList.add('d-none');//.style.display = "none";
+		unixgroup_select_decoy.classList.add('hidden');//.style.display = "none";
+		unixgroup_select.classList.remove('hidden');//.style.display = "inline";
+		autouserunixgroup_row.classList.add('hidden');//.style.display = "none";
 
 		input.value = " (Select User) ";
 
@@ -43,11 +43,11 @@ function NewDirType() {
 	}
 
 	if (selected == "userwrite") {
-		user_row.classList.remove('d-none');//.style.display = "table-row";
+		user_row.classList.remove('hidden');//.style.display = "table-row";
 		unixgroup_select.disabled = false;
-		unixgroup_select_decoy.classList.add('d-none');//.style.display = "none";
-		unixgroup_select.classList.remove('d-none');//.style.display = "inline";
-		autouserunixgroup_row.classList.add('d-none');//.style.display = "none";
+		unixgroup_select_decoy.classList.add('hidden');//.style.display = "none";
+		unixgroup_select.classList.remove('hidden');//.style.display = "inline";
+		autouserunixgroup_row.classList.add('hidden');//.style.display = "none";
 
 		input.value = " (Select User) ";
 
@@ -58,7 +58,7 @@ function NewDirType() {
 			}
 		}
 	} else if (selected == "userprivate") {
-		user_row.classList.remove('d-none'); //.style.display = "table-row";
+		user_row.classList.remove('hidden'); //.style.display = "table-row";
 		user_select.options[0].selected = true;
 		input.value = " (Select User) ";
 
@@ -72,9 +72,9 @@ function NewDirType() {
 			}
 		}
 
-		unixgroup_select_decoy.classList.remove('d-none');//.style.display = "inline";
-		unixgroup_select.classList.add('d-none'); //.style.display = "none";
-		autouserunixgroup_row.classList.add('d-none');//.style.display = "none";
+		unixgroup_select_decoy.classList.remove('hidden');//.style.display = "inline";
+		unixgroup_select.classList.add('hidden'); //.style.display = "none";
+		autouserunixgroup_row.classList.add('hidden');//.style.display = "none";
 
 		$(unixgroup_select_decoy).empty();
 		unixgroup_select_decoy.appendChild(opt);
@@ -82,21 +82,21 @@ function NewDirType() {
 	} else if (selected == "normal") {
 		input.value = "";
 
-		user_row.classList.add('d-none');//.style.display = "none";
+		user_row.classList.add('hidden');//.style.display = "none";
 		user_select.options[0].selected = true;
 		unixgroup_select.disabled = false;
-		unixgroup_select_decoy.classList.add('d-none');//.style.display = "none";
-		unixgroup_select.classList.remove('d-none');//.style.display = "inline";
-		autouserunixgroup_row.classList.add('d-none');//.style.display = "none";
+		unixgroup_select_decoy.classList.add('hidden');//.style.display = "none";
+		unixgroup_select.classList.remove('hidden');//.style.display = "inline";
+		autouserunixgroup_row.classList.add('hidden');//.style.display = "none";
 	} else if (selected == "autouserprivate" || selected == "autouserread" || selected == "autouserreadwrite") {
 		input.value = "";
 
-		user_row.classList.add('d-none');//.style.display = "none";
+		user_row.classList.add('hidden');//.style.display = "none";
 		user_select.options[0].selected = true;
 		unixgroup_select.disabled = false;
-		unixgroup_select_decoy.classList.add('d-none');//.style.display = "none";
-		unixgroup_select.classList.remove('d-none');//.style.display = "inline";
-		autouserunixgroup_row.classList.remove('d-none');//.style.display = "table-row";
+		unixgroup_select_decoy.classList.add('hidden');//.style.display = "none";
+		unixgroup_select.classList.remove('hidden');//.style.display = "inline";
+		autouserunixgroup_row.classList.remove('hidden');//.style.display = "table-row";
 	}
 }
 
@@ -608,10 +608,10 @@ document.addEventListener('DOMContentLoaded', function () {
 					width: '550px',
 					//position: { my: "left top", at: "left top", of: $( "#tree" ) },
 					close: function (event) {
-						var node = $("#tree").fancytree("getActiveNode").setActive(false);
+						var node = $(".tree").fancytree("getActiveNode").setActive(false);
 					}
 				});
-				$("#" + did + "_dialog").dialog('open');
+				//$("#" + did + "_dialog").dialog('open');
 				$('#selected_dir').attr('value', node.data.parentdir);
 				$('#selected_dir_unixgroup').attr('value', node.data.parentunixgroup);
 				$('#new_dir_path').html(node.data.path + "/");

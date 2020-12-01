@@ -8,6 +8,7 @@
 <script src="{{ asset('modules/core/vendor/datatables/datatables.min.js') }}"></script>
 <script src="{{ asset('modules/core/vendor/datatables/datatables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/groups/js/site.js?v=' . filemtime(public_path() . '/modules/groups/js/site.js')) }}"></script>
 <script>
 var _DEBUG = true;
 /**
@@ -35,9 +36,9 @@ var motd = {
 
 		post = JSON.stringify(post);
 
-		_DEBUG ? console.log('post: ' + ROOT_URL + "groupmotd", post) : null;
+		_DEBUG ? console.log('post: ' + ROOT_URL + "groups/motd", post) : null;
 
-		WSPostURL(ROOT_URL + "groupmotd", post, function(xml) {
+		WSPostURL(ROOT_URL + "groups/motd", post, function(xml) {
 			// reload the page so the user can see the change to the group message
 			if (xml.status == 200) {
 				window.location.reload();
@@ -61,7 +62,7 @@ var motd = {
 			return false;
 		}
 
-		_DEBUG ? console.log('delete: ' + ROOT_URL + "groupmotd/" + /\d+$/.exec(group)) : null;
+		_DEBUG ? console.log('delete: ' + ROOT_URL + "groups/motd/" + /\d+$/.exec(group)) : null;
 
 		WSDeleteURL(ROOT_URL + "groups/motd/" + /\d+$/.exec(group), function(xml) {
 			// reload the page so the user can see the change to the group message
@@ -108,29 +109,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		//$('.tabbed').tabs();
 
-		$('.add-row').on('click', function(e){
+		/*$('.add-row').on('click', function(e){
 			e.preventDefault();
 
-			var val = $($(this).attr('href')).val();
+			var btn = $(this);
+
+			var val = $(btn.attr('href')).val();
 			if (!val) {
 				return;
 			}
 
-			var container = $(this).closest('ul');
+			var container = btn.closest('ul'),
+				data = {
+					collegedeptid: val
+				};
 
-			//$.post($(this).data('api'), data, function(e){
-				var source   = $($(this).data('row')).html(),
+			$.post(btn.data('api'), data, function(result){
+				var source   = $(btn.data('row')).html(),
 					template = Handlebars.compile(source),
 					context  = {
 						"index" : container.find('li').length,
-						"ancestors": [{name: 'foo'}, {name: 'bar'}],
+						"ancestors": result.data.ancestors, //[{name: 'foo'}, {name: 'bar'}],
 						"name": val
 					},
 					html = template(context);
 
 				$(html).insertBefore(container.find('li:last-child'));
-			//});
-		});
+			});
+		});*/
 		/*$('.add-fieldofscience-row').on('click', function(e){
 			e.preventDefault();
 

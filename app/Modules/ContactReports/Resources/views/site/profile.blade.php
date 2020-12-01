@@ -15,6 +15,29 @@
 							<ul class="panel-meta news-meta">
 								<li class="news-date"><span class="crmpostdate">Posted on {{ $row->datetimecreated->format('M d, Y') }}</span></li>
 								<li class="news-author"><span class="crmposter">Posted by {{ $row->creator->name }}</span></li>
+								@if ($row->group)
+								<li class="news-group">{{ $row->group->name }}</li>
+								@endif
+								@if (count($row->users))
+									<?php
+									$users = array();
+									foreach ($row->users as $u)
+									{
+										$users[] = '<a href="' . route('site.users.account', ['u' => $u->userid]). '">' . $u->user->name . '</a>';
+									}
+									?>
+								<li class="news-users"><span class="crmusers">{!! implode(', ', $users) !!}</span></li>
+								@endif
+								@if (count($row->resources))
+									<?php
+									$resources = array();
+									foreach ($row->resources as $r)
+									{
+										$resources[] = e($r->resource->name);
+									}
+									?>
+								<li class="news-tags"><span class="crmresources">{!! implode(', ', $resources) !!}</span></li>
+								@endif
 							</ul>
 						</div>
 						<div class="panel-body">

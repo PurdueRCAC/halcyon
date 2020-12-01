@@ -36,7 +36,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.users.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.VALIDATION_FORM_FAILED') }}">
+<form action="{{ route('admin.users.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 	@if ($errors->any())
 		<div class="alert alert-error">
@@ -110,18 +110,19 @@ app('pathway')
 		</div>
 		<div class="col col-md-5">
 			<table class="meta">
+				<caption class="sr-only">{{ trans('global.metadata') }}</caption>
 				<tbody>
 					<tr>
-						<th>{{ trans('users::users.register date') }}</th>
+						<th scope="row">{{ trans('users::users.register date') }}</th>
 						<td>{{ $user->datecreated }}</td>
 					</tr>
 					<tr>
-						<th>{{ trans('users::users.last visit date') }}</th>
-						<td><?php echo !$user->getOriginal('last_visit') || $user->getOriginal('last_visit') == '0000-00-00 00:00:00' ? trans('global.never') : $user->last_visit; ?></td>
+						<th scope="row">{{ trans('users::users.last visit date') }}</th>
+						<td>{{ $user->hasVisited() ? $user->last_visit : trans('global.never') }}</td>
 					</tr>
 					@if ($user->isTrashed())
 					<tr>
-						<th>{{ trans('users::users.removed date') }}</th>
+						<th scope="row">{{ trans('users::users.removed date') }}</th>
 						<td>{{ $user->dateremoved }} ?></td>
 					</tr>
 					@endif

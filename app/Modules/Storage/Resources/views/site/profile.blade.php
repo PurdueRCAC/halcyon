@@ -26,7 +26,7 @@
 					var id = $(this).data('id');
 
 					$.ajax({
-						url: '/api/storage/notification/' + id,
+						url: '/api/storage/notifications/' + id,
 						type: 'DELETE',
 						success: function(result) {
 							location.reload(true);
@@ -117,7 +117,7 @@
 						$(this).dialog('close');
 
 						postdata = {};
-						postdata['type'] = '/ws/storagedirquotanotificationtype/1';
+						postdata['type'] = '1';
 						postdata['user'] = $( '#HIDDEN_user' ).val();
 						postdata['timeperiod'] = $( '#newreportperiod' ).val();
 						postdata['periods'] = $( '#newreportnumperiods').val();
@@ -183,7 +183,7 @@
 
 						function check() {
 							setTimeout(function() {
-								$.get( "/ws/storagedir/" + did, function (data) {
+								$.get( "/api/storage/directories/" + did, function (data) {
 									if (typeof(data) === 'string') {
 										data = JSON.parse(data);
 									}

@@ -22,59 +22,6 @@
 									@endif
 								</div>
 							</div>
-							<?php
-							$departments = App\Modules\Groups\Models\Department::tree();
-							$fields = App\Halcyon\Models\FieldOfScience::tree();
-							?>
-						<!-- </div>
-					</div>
-
-					<div class="card panel panel-default">
-						<div class="card-header panel-heading">
-							Departments
-						</div> 
-							<div class="card panel panel-default">
-							
-							<table class="table">
-								<caption class="sr-only">{{ trans('groups::groups.department') }}</caption>
-								<thead>
-									<tr>
-										<th scope="col">{{ trans('groups::groups.department') }}</th>
-										<th scope="col"></th>
-									</tr>
-								</thead>
-								<tbody>
-								@foreach ($group->departments as $dept)
-									<tr id="department-{{ $dept->id }}" data-id="{{ $dept->id }}">
-										<td>{{ $dept->department->name }}</td>
-										<td class="text-right">
-											<a href="#" class="delete"><i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span></a>
-										</td>
-									</tr>
-								@endforeach
-								</tbody>
-								<tfoot>
-									<tr>
-										<td>
-											<select name="department" class="form-control">
-												<option value="0">{{ trans('groups::groups.select department') }}</option>
-												@foreach ($departments as $d)
-													@php
-													if ($d->level == 0):
-														continue;
-													endif;
-													@endphp
-													<option value="{{ $d->id }}">{{ str_repeat('- ', $d->level) . $d->name }}</option>
-												@endforeach
-											</select>
-										</td>
-										<td class="text-right">
-											<button class="btn btn-success"><i class="fa fa-plus-circle"></i> {{ trans('global.add') }}</button>
-										</td>
-									</tr>
-								</tfoot>
-							</table>
-							</div> -->
 						</div>
 					</div>
 
@@ -96,7 +43,12 @@
 									</div>
 									<div class="col-md-1 text-right">
 										@if ($canManage)
-											<a href="#department-{{ $dept->id }}" class="delete delete-department delete-row" data-api="{{ url('/') }}/api/groups/departments/{{ $dept->id }}"><i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span></a>
+											<a href="#department-{{ $dept->id }}"
+												class="delete delete-department remove-category"
+												data-confirm="{{ trans('groups::groups.confirm delete') }}"
+												data-api="{{ route('api.groups.groupdepartments.delete', ['group' => $group->id, 'id' => $dept->id]) }}">
+												<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
+											</a>
 										@endif
 									</div>
 								</div>
@@ -106,11 +58,29 @@
 						<li class="list-group-item"><span class="none">{{ trans('global.none') }}</span></li>
 					@endif
 						@if ($canManage)
+							<li class="list-group-item hidden" id="department-{id}" data-id="{id}">
+								<div class="row">
+									<div class="col-md-11">
+										{name}
+									</div>
+									<div class="text-right">
+										<a href="#department-{id}"
+											class="delete delete-department remove-category"
+											data-api="{{ route('api.groups.groupdepartments.create', ['group' => $group->id]) }}/{id}"
+											data-confirm="{{ trans('groups::groups.confirm delete') }}">
+											<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+										</a>
+									</div>
+								</div>
+							</li>
 							<li class="list-group-item">
 								<div class="row">
 									<div class="col-md-11">
-										<select name="department" id="new-department" class="form-control searchable-select">
+										<select name="department" id="new-department" data-category="collegedeptid" class="form-control searchable-select">
 											<option value="0">{{ trans('groups::groups.select department') }}</option>
+											<?php
+											$departments = App\Modules\Groups\Models\Department::tree();
+											?>
 											@foreach ($departments as $d)
 												@php
 												if ($d->level == 0):
@@ -122,13 +92,19 @@
 										</select>
 									</div>
 									<div class="col-md-1 text-right">
-										<a href="#new-department" class="add add-department-row add-row" data-row="#new-department-row" data-api="{{ url('/') }}/api/groups/departments"><i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.add') }}</span></a>
+										<a href="#new-department"
+											class="add add-category add-row"
+											data-row="#new-department-row"
+											data-group="{{ $group->id }}"
+											data-api="{{ route('api.groups.groupdepartments.create', ['group' => $group->id]) }}">
+											<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.add') }}</span>
+										</a>
 									</div>
 								</div>
 							</li>
 						@endif
 						</ul>
-						<script id="new-department-row" type="text/x-handlebars-template">
+						<!-- <script id="new-department-row" type="text/x-handlebars-template">
 							<li class="list-group-item" id="department-<?php echo '{{ id }}'; ?>" data-id="<?php echo '{{ id }}'; ?>">
 								<div class="row">
 									<div class="col-md-11">
@@ -138,11 +114,16 @@
 										<?php echo '{{ name }}'; ?>
 									</div>
 									<div class="col-md-1 text-right">
-										<a href="#department-<?php echo '{{ id }}'; ?>" class="delete delete-department delete-row"><i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span></a>
+										<a href="#department-<?php echo '{{ id }}'; ?>"
+											class="delete delete-department remove-category"
+											data-confirm="{{ trans('groups::groups.confirm delete') }}"
+											data-api="{{ route('api.groups.groupdepartments.create', ['group' => $group->id]) }}/{id}">
+											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
+										</a>
 									</div>
 								</div>
 							</li>
-						</script>
+						</script> -->
 					</div>
 
 					<div class="card panel panel-default">
@@ -163,7 +144,12 @@
 									</div>
 									<div class="col-md-1 text-right">
 										@if ($canManage)
-											<a href="#fieldofscience-{{ $field->id }}" class="delete delete-fieldofscience delete-row" data-api="{{ url('/') }}/api/groups/fieldofscience/{{ $field->id }}"><i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span></a>
+											<a href="#fieldofscience-{{ $field->id }}"
+												class="delete delete-fieldofscience remove-category"
+												data-confirm="{{ trans('groups::groups.confirm delete') }}"
+												data-api="{{ route('api.groups.groupfieldsofscience.delete', ['group' => $group->id, 'id' => $field->id]) }}">
+												<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
+											</a>
 										@endif
 									</div>
 								</div>
@@ -173,11 +159,27 @@
 						<li class="list-group-item"><span class="none">{{ trans('global.none') }}</span></li>
 					@endif
 						@if ($canManage)
+							<li class="list-group-item hidden" id="fieldofscience-{id}" data-id="{id}">
+								<div class="row">
+									<div class="col-md-11">
+										{name}
+									</div>
+									<div class="col-md-1 text-right">
+										<a href="#fieldofscience-{id}"
+											class="delete delete-fieldofscience remove-category"
+											data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $group->id]) }}/{id}"
+											data-confirm="{{ trans('groups::groups.confirm delete') }}">
+											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
+										</a>
+									</div>
+								</div>
+							</li>
 							<li class="list-group-item">
 								<div class="row">
 									<div class="col-md-11">
-										<select name="fieldofscience" id="new-fieldofscience" class="form-control searchable-select">
+										<select name="fieldofscience" id="new-fieldofscience" data-category="fieldofscienceid" class="form-control searchable-select">
 											<option value="0">{{ trans('groups::groups.select field of science') }}</option>
+											<?php $fields = App\Halcyon\Models\FieldOfScience::tree(); ?>
 											@foreach ($fields as $f)
 												@php
 												if ($f->level == 0):
@@ -189,7 +191,11 @@
 										</select>
 									</div>
 									<div class="col-md-1 text-right">
-										<a href="#new-fieldofscience" class="add add-fieldofscience-row add-row" data-row="#new-fieldofscience-row" data-api="{{ url('/') }}/api/groups/fieldofscience/"><i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.add') }}</span></a>
+										<a href="#new-fieldofscience" class="add add-fieldofscience-row add-category"
+											data-row="#new-fieldofscience-row"
+											data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $group->id]) }}">
+											<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.add') }}</span>
+										</a>
 									</div>
 								</div>
 							</li>
@@ -205,7 +211,11 @@
 										<?php echo '{{ name }}'; ?>
 									</div>
 									<div class="col-md-1 text-right">
-										<a href="#fieldofscience-<?php echo '{{ id }}'; ?>" class="delete delete-fieldofscience delete-row"><i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span></a>
+										<a href="#fieldofscience-<?php echo '{{ id }}'; ?>"
+											class="delete delete-fieldofscience remove-category"
+											data-confirm="{{ trans('groups::groups.confirm delete') }}"
+											data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $group->id]) }}/{id}">
+											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span></a>
 									</div>
 								</div>
 							</li>
@@ -222,9 +232,9 @@
 								<div class="col col-md-6 text-right">
 									@if ($canManage)
 										<?php if (count($group->unixgroups) > 0) { ?>
-											<button class="add-property btn btn-default btn-sm" data-prop="unixgroup" data-value="<?php echo $group->id; ?>"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add New Unix Group</button>
+											<a href="#new-unixgroup_{{ $group->id }}" class="btn btn-default btn-sm add-unix-group help"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add New Unix Group</a>
 										<?php } elseif ($group->unixgroup != '') { ?>
-											<button class="btn btn-default create-default-unix-groups" data-group="<?php echo $group->id; ?>" data-value="<?php echo $group->unixgroup; ?>" id="INPUT_groupsbutton_<?php echo $group->id; ?>"><i class="fa fa-plus-circle" aria-hidden="true"></i> Create Default Unix Groups</button>
+											<button class="btn btn-default btn-sm create-default-unix-groups" data-group="<?php echo $group->id; ?>" data-value="<?php echo $group->unixgroup; ?>" id="INPUT_groupsbutton_<?php echo $group->id; ?>"><i class="fa fa-plus-circle" aria-hidden="true"></i> Create Default Unix Groups</button>
 										<?php } ?>
 									@endif
 								</div>
@@ -235,9 +245,9 @@
 								<div class="card-body panel-body">
 									<?php if (count($group->unixgroups) == 0) { ?>
 										<div class="form-inline row">
-											<label class="col-md-2" for="INPUT_unixgroup_<?php echo $group->id; ?>">Base Name: <a href="#box1_<?php echo $group->id; ?>" class="help tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a></label>
+											<label class="col-md-3" for="INPUT_unixgroup_<?php echo $group->id; ?>">Base Name: <a href="#box1_<?php echo $group->id; ?>" class="help tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a></label>
 
-											<div class="col-md-6">
+											<div class="col-md-5">
 												<span id="SPAN_unixgroup_<?php echo $group->id; ?>">{{ trans('global.none') }}</span>
 
 												<input type="text" class="hide form-control edit-property-input" id="INPUT_unixgroup_<?php echo $group->id; ?>" data-prop="unixgroup" data-value="<?php echo $group->id; ?>" placeholder="{{ trans('global.none') }}" value="" />
@@ -252,8 +262,8 @@
 										</div>
 									<?php } else { ?>
 										<div class="form-inline row">
-											<label class="col-md-2" for="INPUT_unixgroup_<?php echo $group->id; ?>">Base Name: <a href="#box1_<?php echo $group->id; ?>" class="help tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a></label>
-											<div class="col-md-10">
+											<label class="col-md-3" for="INPUT_unixgroup_<?php echo $group->id; ?>">Base Name: <a href="#box1_<?php echo $group->id; ?>" class="help tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a></label>
+											<div class="col-md-9">
 												<?php echo $group->unixgroup ? $group->unixgroup : '<span class="text-muted">' . trans('global.none') . '</span>'; ?>
 											</div>
 										</div>
@@ -292,25 +302,63 @@
 									</tfoot>
 									<tbody>
 										@foreach ($group->unixgroups as $unixgroup)
-											<tr>
+											<tr id="unixgroup-{{ $unixgroup->id }}" data-id="{{ $unixgroup->id }}">
 												<td>{{ $unixgroup->longname }}</td>
 												<td class="extendedinfo hide">{{ config('modules.groups.unix_prefix', 'rcac-') . $unixgroup->longname }}</td>
 												<td class="extendedinfo hide">{{ $unixgroup->shortname }}</td>
 												<td class="extendedinfo hide text-right">{{ $unixgroup->unixgid }}</td>
 												<td class="text-right">
-													@if ($canManage && !preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname))
-														<a href="{{ route('site.users.account.section', ['section' => 'groups', 'delete' => $unixgroup->id]) }}" class="delete delete-unix-group tip" data-unixgroup="<?php echo $unixgroup->id; ?>" data-value="<?php echo $group->id; ?>" id="deletegroup_<?php echo $unixgroup->id; ?>" title="Delete"><!--
-															--><i class="fa fa-trash" id="IMG_deletegroup_<?php echo $unixgroup->id; ?>"></i><span class="sr-only">Delete</span><!--
+													<!--  && !preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname)) -->
+													@if ($canManage)
+														<a href="{{ route('site.users.account.section', ['section' => 'groups', 'delete' => $unixgroup->id]) }}"
+															class="delete delete-unix-group remove-unixgroup"
+															data-api="{{ route('api.unixgroups.delete', ['id' => $unixgroup->id]) }}"
+															data-confirm="{{ trans('groups::groups.confirm delete') }}"><!--
+															--><i class="fa fa-trash"></i><span class="sr-only">{{ trans('global.delete') }}</span><!--
 														--></a>
 													@endif
 												</td>
 											</tr>
 										@endforeach
+										@if ($canManage)
+										<tr class="hidden" id="unixgroup-{id}" data-id="{id}">
+											<td>{longname}</td>
+											<td class="extendedinfo hide">{{ config('modules.groups.unix_prefix', 'rcac-') }}{longname}</td>
+											<td class="extendedinfo hide">{shortname}</td>
+											<td class="extendedinfo hide text-right">0</td>
+											<td class="text-right">
+												<a href="#unixgroup-{id}"
+													class="delete delete-unix-group remove-unixgroup"
+													data-api="{{ route('api.unixgroups.create') }}/{id}"
+													data-confirm="{{ trans('groups::groups.confirm delete') }}"><!--
+													--><i class="fa fa-trash"></i><span class="sr-only">{{ trans('global.delete') }}</span><!--
+												--></a>
+											</td>
+										</tr>
+										@endif
 									</tbody>
 								</table>
 							<?php } ?>
 
-							<div class="dialog dialog-help" id="box2_<?php echo $group->id; ?>" title="Unix Groups">
+							<div class="dialog dialog-help" id="new-unixgroup_{{ $group->id }}" title="New Unix Group">
+								<div class="form-group">
+									<label for="longname" class="sr-only">{{ trans('groups::groups.name') }}</label>
+									<span class="input-group">
+										<span class="input-group-addon input-group-prepend"><span class="input-group-text">{{ $group->unixgroup }}-</span></span>
+										<input type="text" name="longname" id="longname" class="form-control input-unixgroup" placeholder="{{ trans('groups::groups.name') }}" />
+									</span>
+								</div>
+								<div class="text-right">
+									<a href="#longname" class="btn btn-secondary btn-success add-unixgroup"
+										data-group="{{ $group->id }}"
+										data-container="#actmaint_info"
+										data-api="{{ route('api.unixgroups.create') }}">
+										<span class="icon-plus glyph">{{ trans('global.create') }}</span>
+									</a>
+								</div>
+							</div>
+
+							<div class="dialog dialog-help" id="box2_{{ $group->id }}" title="Unix Groups">
 								<?php
 								$doc = '';
 								if (count($group->unixgroups) > 0)

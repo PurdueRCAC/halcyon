@@ -9,7 +9,7 @@
 				<article id="{{ $row->id }}" class="crm-item newEntries">
 					<div class="panel panel-default">
 						<div class="panel-heading news-admin">
-							<span class="newsid"><a href="{{ route('site.contactreports.show', ['id' => $row->id]) }}">#{{ $row->id }}</a></span>
+							<span class="newsid"><a href="{{ route('site.news.show', ['id' => $row->id]) }}">#{{ $row->id }}</a></span>
 							@if (auth()->user()->can('manage news'))
 								<span class="newspublication">
 									@if ($row->published)
@@ -23,9 +23,15 @@
 						<div class="panel-heading">
 							<h3 class="panel-title crmcontactdate">{{ $row->headline }}</h3>
 							<ul class="panel-meta news-meta">
-								<li class="news-date"><span class="crmpostdate">Posted on {{ $row->datetimecreated->format('M d, Y') }}</span></li>
-								<li class="news-author"><span class="crmposter">Posted by {{ $row->creator->name }}</span></li>
+								<li class="news-date"><span class="newspostdate">Posted on {{ $row->datetimecreated->format('M d, Y') }}</span></li>
+								<li class="news-author"><span class="newsposter">Posted by {{ $row->creator->name }}</span></li>
 								<li class="news-type"><span class="newstype">{{ $type->name }}</span></li>
+								@if ($row->location)
+								<li class="news-location">{{ $row->location }}</li>
+								@endif
+								@if ($row->url)
+								<li class="news-url"><a href="{{ $row->url }}">{{ $row->url }}</a></li>
+								@endif
 								<?php
 								if (count($row->resources) > 0)
 								{
@@ -69,10 +75,17 @@
 							</div>
 						</div>
 					</div>
-					<ul id="{{ $row->id }}_comments" class="crm-comments">
+					<ul id="{{ $row->id }}_updates" class="news-updates">
 						@foreach ($row->updates()->orderBy('datetimecreated', 'asc')->get() as $update)
 							<li>
-								{{ $comment->comment }}
+								<div class="panel panel-default">
+									<div class="panel-body">
+										{!! $update->formattedBody !!}
+									</div>
+									<div class="panel-footer">
+										<div class="crmcommentpostedby">Posted by {{ $update->creator ? $update->creator->name : trans('global.unknown') }} on {{ $update->formattedDatetimecreated($update->datetimecreated->toDateTimeString()) }}</div>
+									</div>
+								</div>
 							</li>
 						@endforeach
 					</ul>
