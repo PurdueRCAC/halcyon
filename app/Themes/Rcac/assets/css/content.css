@@ -1054,7 +1054,24 @@ ul.purchases li {
 	margin-bottom: -3px;
 	margin-left: 6px;
 }
-
+.edit-property {
+	opacity: 0.5;
+}
+.edit-property:hover {
+	opacity: 1;
+}
+a.delete {
+	color: #c00;
+}
+a.delete:hover {
+	color: red;
+}
+a.add {
+	color: #28a745;
+}
+a.add:hover {
+	color:green;
+}
 /* clearfix for adding spaces */
 .clearfix {
 	display: inline-block;
