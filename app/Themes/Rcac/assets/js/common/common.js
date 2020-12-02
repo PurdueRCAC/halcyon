@@ -230,6 +230,8 @@ function ShowTab(tabname, tablist)
 			history.pushState(null, null, encodeURI("#" + tabname));
 		}
 	}
+	//document.dispatchEvent(new Event('show.bs.tab'));
+	$('a.activeTab').trigger('shown.bs.tab');
 }
 
 function QShowTab(tabname, tablist1, tablist2) {

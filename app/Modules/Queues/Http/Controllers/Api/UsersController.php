@@ -131,10 +131,18 @@ class UsersController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'name' => 'required|string|max:20'
+			'queueid' => 'required|integer',
+			'userid' => 'required|integer',
+			'userrequestid' => 'nullable|integer',
+			'membertype' => 'nullable|integer',
 		]);
 
-		$row = Type::create($request->all());
+		$row = new User();
+		$row->fill($request->all());
+		$row->membertype = $row->membertype ?: 1;
+		$row->notice = 2;
+
+		$row->save();
 
 		return new JsonResource($row);
 	}
@@ -283,6 +291,50 @@ class UsersController extends Controller
 	public function delete($id)
 	{
 		$row = User::findOrFail($id);
+
+		// Determine notice level
+		if ($row->notice == 2)
+		{
+			$row->notice = 0;
+		}
+		elseif ($row->notice == 10)
+		{
+			$row->notice = 17;
+		}
+		else
+		{
+			$row->notice = 3;
+		}
+
+		if ($groupid == 0)
+		{
+			// Only allow delete if no groupqueueuser entries are present
+			$gqusers = GroupUser::query()
+				->where('queueuserid', '=', $row->id)
+				->whereIsMember()
+				->where(function($where)
+				{
+					$where->whereNull('datetimeremoved')
+						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+				->get();
+
+			if (count($gqusers) && auth()->user()->id != $row->userid)
+			{
+				return 403;
+			}
+			elseif (count($gqusers) && auth()->user()->id == $row->userid)
+			{
+				// Clean up all groupqueueuser entries
+				foreach ($gqusers as $gquser)
+				{
+					$gquser->delete();
+				}
+			}
+
+			// Set notice to 0 for now
+			$row->notice = 0;
+		}
 
 		if (!$row->delete())
 		{

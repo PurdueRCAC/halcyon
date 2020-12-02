@@ -6,8 +6,6 @@
 						<div class="card-body panel-body">
 							@if ($canManage)
 								<form method="post" action="{{ route('site.users.account.section', ['section' => 'groups']) }}">
-									<fieldset>
-										<legend class="sr-only">{{ trans('groups::groups.set notice') }}</legend>
 
 										<div class="form-group">
 											<label for="MotdText_{{ $group->id }}">Enter the notice your group will see at login</label>
@@ -20,7 +18,7 @@
 												<button class="motd-delete btn btn-danger" id="MotdText_delete_{{ $group->id }}" data-api="{{ route('api.groups.motd.delete', ['id' => $group->motd->id]) }}" data-group="{{ $group->id }}"><span class="icon-trash"></span> Delete Notice</button>
 											@endif
 										</div>
-									</fieldset>
+
 								</form>
 							@else
 								<p class="text-muted">
@@ -55,7 +53,6 @@
 							<ul class="list-group list-group-flush">
 								@foreach ($past as $motd)
 									<li class="list-group-item">
-										<a href="{{ route('site.users.account.section', ['section' => 'groups', 'group' => $group->id, 'deletemotd' => $motd->id]) }}" class="delete motd-delete"><i class="fa fa-trash"></i><span class="sr-only">{{ trans('global.delete') }}</span></a>
 										<p class="text-muted">
 											{{ $motd->datetimecreated }} to
 											@if ($motd->datetimeremoved && $motd->datetimeremoved != '0000-00-00 00:00:00')

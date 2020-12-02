@@ -1,0 +1,11 @@
+{
+    "name": "Groups - Queues",
+    "alias": "lst_groups_queues",
+    "description": "This displays queues related to a specific group.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

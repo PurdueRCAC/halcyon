@@ -8,7 +8,7 @@
 $(document).ready(function() {
 	$('.searchuser').select2({
 		ajax: {
-			url: "<?php echo url('/'); ?>/api/users/",
+			url: "<?php echo route('api.users.index'); ?>",
 			dataType: 'json',
 			maximumSelectionLength: 1,
 			//theme: "classic",
@@ -16,8 +16,8 @@ $(document).ready(function() {
 				var query = {
 					search: params.term,
 					order: 'surname',
-					order_dir: 'asc',
-					api_token: "<?php echo auth()->user()->api_token; ?>"
+					order_dir: 'asc'//,
+					//api_token: "<?php echo auth()->user()->api_token; ?>"
 				}
 
 				return query;
@@ -49,33 +49,24 @@ $(document).ready(function() {
 @if (auth()->user()->can('manage users'))
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	<div class="card panel panel-default card-admin">
-		<!-- <div class="card-header panel-heading">
-			Admin Options
-		</div> -->
 		<div class="card-body panel-body">
 			<form method="get" action="{{ route('site.users.account') }}" class="row">
-					<label for="newuser" class="col col-md-3">Show data for user:</label>
-					<div class="col col-md-9 input-group">
-						<!--<input type="text" name="newuser" id="newuser" class="form-control searchuser" placeholder="Search for someone..." autocorrect="off" autocapitalize="off" />
-						<div id="user_results" class="searchMain usersearch_results"></div> -->
-						<select name="newuser" id="newuser" class="form-control searchuser" multiple="multiple" data-placeholder="Select user...">
-							@if ($user->id != auth()->user()->id)
-							<option value="{{ $user->id }}" selected="selected">{{ $user->name }}</option>
-							@endif
-						</select>
-						<span class="input-group-addon">
-							<span class="input-group-text">
-								<i class="fa fa-search" aria-hidden="true" id="add_button_a"></i>
-							</span>
+				<label for="newuser" class="col col-md-3">Show data for user:</label>
+				<div class="col col-md-9">
+					<div class="input-group">
+					<!--<input type="text" name="newuser" id="newuser" class="form-control searchuser" placeholder="Search for someone..." autocorrect="off" autocapitalize="off" />
+					<div id="user_results" class="searchMain usersearch_results"></div> -->
+					<select name="newuser" id="newuser" class="form-control searchuser" multiple="multiple" data-placeholder="Select user...">
+						@if ($user->id != auth()->user()->id)
+						<option value="{{ $user->id }}" selected="selected">{{ $user->name }}</option>
+						@endif
+					</select>
+					<span class="input-group-addon">
+						<span class="input-group-text">
+							<i class="fa fa-search" aria-hidden="true" id="add_button_a"></i>
 						</span>
-					</div>
-					<!--
-					@if ($user->id != auth()->user()->id)
-						<p>
-							Showing information for "{{ $user->name }}":
-						</p>
-					@endif
-					-->
+					</span>
+				</div></div>
 			</form>
 		</div>
 	</div>

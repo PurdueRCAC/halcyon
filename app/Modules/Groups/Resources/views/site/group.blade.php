@@ -253,19 +253,16 @@ document.addEventListener('DOMContentLoaded', function() {
 			autoWidth: false,
 			language: {
 				searchPlaceholder: "Filter users..."
-			},/*
+			},
 			fixedColumns: {
 				leftColumns: 1//,
 				//rightColumns: 1
 			},
-			lengthMenu: [[10, 25, 50, -1], [10, 25, 50, 'All']],
-			fixedColumns: {
-				leftColumns: 1
-			},*/
+			/*lengthMenu: [[10, 25, 50, -1], [10, 25, 50, 'All']],*/
 			initComplete: function () {
 				//this.page(0).draw(true);
-				$($.fn.dataTable.tables( true ) ).css('width', '100%');
-				$($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+				$($.fn.dataTable.tables(true)).css('width', '100%');
+				//$($.fn.dataTable.tables( true ) ).DataTable().columns.adjust();//.draw();
 				/*this.api().columns().every(function (i) {
 					var column = this;
 					var select = $('<select data-index="' + i + '"><option value=""></option></select>')
@@ -290,6 +287,9 @@ document.addEventListener('DOMContentLoaded', function() {
 				});*/
 			}
 		});
+		$('a.tab').on('shown.bs.tab', function(e){
+			$($.fn.dataTable.tables(true)).DataTable().columns.adjust();//.draw();
+		});
 
 		$('.membership-edit').on('click', function(e){
 			e.preventDefault();
@@ -305,6 +305,83 @@ document.addEventListener('DOMContentLoaded', function() {
 		*/
 
 		//$('.dataTables_filter input').addClass('form-control');
+
+		var dialog = $(".membership-dialog").dialog({
+			autoOpen: false,
+			height: 'auto',
+			width: 500,
+			modal: true
+		});
+
+		$('.add_member').on('click', function(e){
+			e.preventDefault();
+
+			$($(this).attr('href')).dialog("open");
+			$('#new_membertype').val($(this).data('membertype'));
+
+			$('#addmembers').select2({
+				ajax: {
+					url: $('#addmembers').data('api'),
+					dataType: 'json',
+					//maximumSelectionLength: 1,
+					//theme: "classic",
+					data: function (params) {
+						var query = {
+							search: params.term,
+							order: 'surname',
+							order_dir: 'asc'
+						}
+
+						return query;
+					},
+					processResults: function (data) {
+						for (var i = 0; i < data.data.length; i++) {
+							data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+						}
+
+						return {
+							results: data.data
+						};
+					}
+				}
+			});
+			$('#addmembers').on('select2:select', function (e) {
+				$('#add_member_save').prop('disabled', false);
+			});
+		});
+
+		$('#add_member_save').on('click', function(e){
+			e.preventDefault();
+
+			var btn = $(this);
+			var users = $('#addmembers').val();
+			var post = {
+				'groupid': btn.data('group'),
+				'userid': 0,
+				'membertype': $('#new_membertype').val()
+			};
+			var queues = $('.add-queue-member:checked');
+			var unixgroups = $('.add-unixgroup-member:checked');
+console.log(queues);
+console.log(unixgroups);
+			$.each(users, function(i, userid) {
+				post['userid'] = userid;
+console.log(post);
+				/*$.ajax({
+					url: btn.getAttribute('data-api'),
+					type: 'post',
+					data: post,
+					dataType: 'json',
+					async: false,
+					success: function (data) {
+						//window.location.reload();
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						Halcyon.message('danger', xhr.response);
+					}
+				});*/
+			});
+		});
 	});
 </script>
 @endpush
@@ -374,8 +451,8 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 					</a>
 				</li>
 				<li class="nav-item">
-					<a href="#DIV_group-queues" id="group-queues" class="nav-link tab">
-						Queues
+					<a href="#DIV_group-members" id="group-members" class="nav-link tab">
+						Members
 					</a>
 				</li>
 			@foreach ($sections as $section)
@@ -384,11 +461,6 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 				</li>
 			@endforeach
 			@if ($canManage)
-				<li class="nav-item">
-					<a href="#DIV_group-members" id="group-members" class="nav-link tab">
-						Members
-					</a>
-				</li>
 				<li class="nav-item">
 					<a href="#DIV_group-motd" id="group-motd" class="nav-link tab">
 						Notices
@@ -409,9 +481,9 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 					@include('groups::site.group.overview', ['group' => $group])
 				</div><!-- / #group-overview -->
 
-				<div id="DIV_group-queues" class="stash">
-					@include('groups::site.group.queues', ['group' => $group])
-				</div><!-- / #group-queues -->
+				<div id="DIV_group-members" class="stash">
+					@include('groups::site.group.members', ['group' => $group])
+				</div><!-- / #group-members -->
 
 			@foreach ($sections as $section)
 				<div id="DIV_group-{{ $section['route'] }}" class="stash">
@@ -428,10 +500,6 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 					@include('groups::site.group.history', ['group' => $group])
 				</div><!-- / #group-history -->
 			@endif
-
-				<div id="DIV_group-members" class="stash">
-					@include('groups::site.group.members', ['group' => $group])
-				</div><!-- / #group-members -->
 
 			<!--</div>-->
 		</div><!-- / #everything -->

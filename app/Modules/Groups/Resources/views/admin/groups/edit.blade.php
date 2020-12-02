@@ -48,17 +48,17 @@ app('pathway')
 				<a href="#group-details">{{ trans('global.details') }}</a>
 			</li>
 			@if ($row->id)
-			<li>
-				<a href="#group-motd">{{ trans('groups::groups.motd') }}</a>
-			</li>
-			@foreach ($sections as $section)
-			<li>
-				<a href="#group-{{ $section['route'] }}">{{ $section['name'] }}</a>
-			</li>
-			@endforeach
-			<li>
-				<a href="#group-history">{{ trans('groups::groups.history.title') }}</a>
-			</li>
+				@foreach ($sections as $section)
+					<li>
+						<a href="#group-{{ $section['route'] }}">{{ $section['name'] }}</a>
+					</li>
+				@endforeach
+				<li>
+					<a href="#group-motd">{{ trans('groups::groups.motd') }}</a>
+				</li>
+				<li>
+					<a href="#group-history">{{ trans('groups::groups.history.title') }}</a>
+				</li>
 			@endif
 		</ul>
 
@@ -113,11 +113,13 @@ app('pathway')
 									<td>{{ $u->shortname }}</td>
 									<td class="text-right">{{ $u->members()->count() }}</td>
 									<td class="text-right">
+										@if (!preg_match("/rcs[0-9]{4}[0-9]/", $u->shortname))
 										<a href="#unixgroup-{{ $u->id }}" class="btn btn-secondary btn-danger remove-unixgroup"
 											data-api="{{ route('api.unixgroups.delete', ['id' => $u->id]) }}"
 											data-confirm="{{ trans('groups::groups.confirm delete') }}">
 											<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
 										</a>
+										@endif
 									</td>
 								</tr>
 							@endforeach
@@ -332,16 +334,15 @@ app('pathway')
 		</div>
 
 		@if ($row->id)
-			<div id="group-motd">
-				@include('groups::admin.groups.motd', ['group' => $row])
-			</div>
-
 			@foreach ($sections as $section)
 				<div id="group-{{ $section['route'] }}">
 					{!! $section['content'] !!}
 				</div>
 			@endforeach
 
+			<div id="group-motd">
+				@include('groups::admin.groups.motd', ['group' => $row])
+			</div>
 			<div id="group-history">
 				@include('groups::admin.groups.history', ['group' => $row])
 			</div>
