@@ -1,24 +1,24 @@
 
 					<div class="card panel panel-default">
 						<div class="card-header panel-heading">
-							Group Notice
+							{{ trans('groups::groups.motd') }}
 						</div>
 						<div class="card-body panel-body">
 							@if ($canManage)
 								<form method="post" action="{{ route('site.users.account.section', ['section' => 'groups']) }}">
 									<fieldset>
-										<legend class="sr-only">Set Group Notice</legend>
+										<legend class="sr-only">{{ trans('groups::groups.set notice') }}</legend>
 
 										<div class="form-group">
-											<label for="MotdText_<?php echo $group->id; ?>">Enter the notice your group will see at login</label>
-											<textarea id="MotdText_<?php echo $group->id; ?>" class="form-control" cols="38" rows="4"><?php echo $group->motd ? $group->motd->motd : ''; ?></textarea>
+											<label for="MotdText_{{ $group->id }}">Enter the notice your group will see at login</label>
+											<textarea id="MotdText_{{ $group->id }}" data-api="{{ route('api.groups.motd.create') }}" class="form-control" cols="38" rows="4">{{ $group->motd ? $group->motd->motd : '' }}</textarea>
 										</div>
 
 										<div class="form-group">
-											<input type="button" value="Set Notice" class="motd-set btn btn-success" data-group="<?php echo $group->id; ?>" />
-											<?php if ($group->motd) { ?>
-												<input type="button" value="Delete Notice" class="motd-delete btn btn-danger" data-group="<?php echo $group->id; ?>" />
-											<?php } ?>
+											<button class="motd-set btn btn-success" data-group="{{ $group->id }}">{{ trans('groups::groups.set notice') }}</button>
+											@if ($group->motd)
+												<button class="motd-delete btn btn-danger" id="MotdText_delete_{{ $group->id }}" data-api="{{ route('api.groups.motd.delete', ['id' => $group->motd->id]) }}" data-group="{{ $group->id }}"><span class="icon-trash"></span> Delete Notice</button>
+											@endif
 										</div>
 									</fieldset>
 								</form>
@@ -34,7 +34,7 @@
 					</div><!-- / .card -->
 
 					<?php
-					$motds = $group->motds();
+					$motds = $group->motds()->withTrashed();
 
 					if ($group->motd)
 					{
@@ -50,12 +50,12 @@
 						?>
 						<div class="card panel panel-default">
 							<div class="card-header panel-heading">
-								Past Notices
+								{{ trans('groups::groups.past notices') }}
 							</div>
 							<ul class="list-group list-group-flush">
 								@foreach ($past as $motd)
 									<li class="list-group-item">
-										<a href="{{ route('site.users.account.section', ['section' => 'groups', 'group' => $group->id, 'deletemotd' => $motd->id]) }}" class="delete motd-delete"><i class="fa fa-trash"></i><span class="sr-only">Delete</span></a>
+										<a href="{{ route('site.users.account.section', ['section' => 'groups', 'group' => $group->id, 'deletemotd' => $motd->id]) }}" class="delete motd-delete"><i class="fa fa-trash"></i><span class="sr-only">{{ trans('global.delete') }}</span></a>
 										<p class="text-muted">
 											{{ $motd->datetimecreated }} to
 											@if ($motd->datetimeremoved && $motd->datetimeremoved != '0000-00-00 00:00:00')

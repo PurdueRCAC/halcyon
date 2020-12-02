@@ -146,7 +146,7 @@ class MotdController extends Controller
 	 * @apiUri    /api/groups/motd
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "message",
+	 * 		"name":          "motd",
 	 * 		"description":   "Message of the day",
 	 * 		"type":          "string",
 	 * 		"required":      true,
@@ -166,7 +166,7 @@ class MotdController extends Controller
 	{
 		$request->validate([
 			'groupid' => 'required|integer|min:1',
-			'message' => 'required|string',
+			'motd' => 'required|string',
 		]);
 
 		$group_id = $request->input('groupid');
@@ -180,7 +180,7 @@ class MotdController extends Controller
 
 		$row = new Motd;
 		$row->groupid = $group_id;
-		$row->motd = $request->input('message');
+		$row->motd = $request->input('motd');
 
 		if (!$row->save())
 		{
@@ -188,7 +188,7 @@ class MotdController extends Controller
 		}
 
 		// Disable any old MOTD
-		$motds = $group->motds()->where('id', '!=', $row->id)->get();
+		$motds = $exists->motds()->where('id', '!=', $row->id)->get();
 		foreach ($motds as $motd)
 		{
 			$motd->delete();
@@ -239,7 +239,7 @@ class MotdController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "message",
+	 * 		"name":          "motd",
 	 * 		"description":   "Message of the day",
 	 * 		"type":          "string",
 	 * 		"required":      true,
@@ -247,7 +247,7 @@ class MotdController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "group_id",
+	 * 		"name":          "groupid",
 	 * 		"description":   "Group ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
@@ -259,22 +259,22 @@ class MotdController extends Controller
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'group_id' => 'required|integer',
-			'message' => 'required|string',
+			'groupid' => 'required|integer',
+			'motd' => 'required|string',
 		]);
 
 		$row = Motd::findOrFail($id);
 
-		if ($message = $request->input('message'))
+		if ($motd = $request->input('motd'))
 		{
-			$row->message = $message;
+			$row->motd = $motd;
 		}
 
-		if ($group_id = $request->input('group_id'))
+		if ($group_id = $request->input('groupid'))
 		{
 			$exists = Group::findOrFail($group_id);
 
-			$row->group_id = $group_id;
+			$row->groupid = $group_id;
 		}
 
 		if (!$row->save())
@@ -307,7 +307,7 @@ class MotdController extends Controller
 	{
 		$row = Motd::findOrFail($id);
 
-		if (!$row->trashed())
+		if (!$row->isTrashed())
 		{
 			if (!$row->delete())
 			{

@@ -21,31 +21,32 @@ var motd = {
 	 * @param   {string}  group
 	 * @return  {void}
 	 */
-	set: function(group) {
-		var message = document.getElementById("MotdText_" + group).value;
+	set: function (group) {
+		var message = document.getElementById("MotdText_" + group);
 
 		if (!group) {
-			alert('No group ID provided.');
+			Halcyon.message('danger', 'No group ID provided.');
 			return false;
 		}
 
 		var post = {
-			'group': group,
-			'motd' : message
+			'groupid': group,
+			'motd': message.value
 		};
 
-		post = JSON.stringify(post);
+		_DEBUG ? console.log('post: ' + message.getAttribute('data-api'), post) : null;
 
-		_DEBUG ? console.log('post: ' + ROOT_URL + "groups/motd", post) : null;
-
-		WSPostURL(ROOT_URL + "groups/motd", post, function(xml) {
-			// reload the page so the user can see the change to the group message
-			if (xml.status == 200) {
+		$.ajax({
+			url: message.getAttribute('data-api'),
+			type: 'post',
+			data: post,
+			dataType: 'json',
+			async: false,
+			success: function (data) {
 				window.location.reload();
-			} else {
-				_DEBUG ? console.log('xml.status: ' + xml.status) : null;
-
-				alert("An error occurred while creating MOTD. Please refresh page and try again or if problem persists contact rcac-help@purdue.edu.");
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				Halcyon.message('danger', xhr.response);
 			}
 		});
 	},
@@ -56,22 +57,25 @@ var motd = {
 	 * @param   {string}  group
 	 * @return  {void}
 	 */
-	delete: function(group) {
+	delete: function (group) {
 		if (!group) {
-			alert('No group ID provided.');
+			Halcyon.message('danger', 'No group ID provided.');
 			return false;
 		}
 
-		_DEBUG ? console.log('delete: ' + ROOT_URL + "groups/motd/" + /\d+$/.exec(group)) : null;
+		var btn = document.getElementById("MotdText_delete_" + group);
 
-		WSDeleteURL(ROOT_URL + "groups/motd/" + /\d+$/.exec(group), function(xml) {
-			// reload the page so the user can see the change to the group message
-			if (xml.status == 200) {
+		_DEBUG ? console.log('delete: ' + btn.getAttribute('data-api')) : null;
+
+		$.ajax({
+			url: btn.getAttribute('data-api'),
+			type: 'delete',
+			async: false,
+			success: function (data) {
 				window.location.reload();
-			} else {
-				_DEBUG ? console.log('xml.status: ' + xml.status) : null;
-
-				alert("An error occurred while deleting MOTD. Please refresh page and try again or if problem persists contact rcac-help@purdue.edu.");
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				Halcyon.message('danger', xhr.response);
 			}
 		});
 	}
@@ -105,6 +109,16 @@ document.addEventListener('DOMContentLoaded', function() {
 			var text = $(this).data('text');
 			$(this).data('text', $(this).html()); //.replace(/"/, /'/));
 			$(this).html(text);
+		});
+
+		$('.motd-delete').on('click', function(e){
+			e.preventDefault();
+			motd.delete(this.getAttribute('data-group'));
+		});
+
+		$('.motd-set').on('click', function(e){
+			e.preventDefault();
+			motd.set(this.getAttribute('data-group'));
 		});
 
 		//$('.tabbed').tabs();

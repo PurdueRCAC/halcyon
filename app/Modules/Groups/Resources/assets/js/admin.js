@@ -55,6 +55,77 @@ function CreateNewGroupVal(num, btn) {
 	});
 }
 
+var _DEBUG = true;
+/**
+ * Message of the Day
+ */
+var motd = {
+	/**
+	 * Set the MOTD for a group
+	 *
+	 * @param   {string}  group
+	 * @return  {void}
+	 */
+	set: function (group) {
+		var message = document.getElementById("MotdText_" + group);
+
+		if (!group) {
+			Halcyon.message('danger', 'No group ID provided.');
+			return false;
+		}
+
+		var post = {
+			'groupid': group,
+			'motd': message.value
+		};
+
+		_DEBUG ? console.log('post: ' + message.getAttribute('data-api'), post) : null;
+
+		$.ajax({
+			url: message.getAttribute('data-api'),
+			type: 'post',
+			data: post,
+			dataType: 'json',
+			async: false,
+			success: function (data) {
+				window.location.reload();
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				Halcyon.message('danger', xhr.response);
+			}
+		});
+	},
+
+	/**
+	 * Delete the MOTD for a group
+	 *
+	 * @param   {string}  group
+	 * @return  {void}
+	 */
+	delete: function (group) {
+		if (!group) {
+			Halcyon.message('danger', 'No group ID provided.');
+			return false;
+		}
+
+		var btn = document.getElementById("MotdText_delete_" + group);
+
+		_DEBUG ? console.log('delete: ' + btn.getAttribute('data-api')) : null;
+
+		$.ajax({
+			url: btn.getAttribute('data-api'),
+			type: 'delete',
+			async: false,
+			success: function (data) {
+				window.location.reload();
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				Halcyon.message('danger', xhr.response);
+			}
+		});
+	}
+}
+
 /**
  * Initiate event hooks
  */
@@ -62,6 +133,16 @@ document.addEventListener('DOMContentLoaded', function() {
 	if ($.fn.select2) {
 		$('.searchable-select').select2();
 	}
+
+	$('.motd-delete').on('click', function (e) {
+		e.preventDefault();
+		motd.delete(this.getAttribute('data-group'));
+	});
+
+	$('.motd-set').on('click', function (e) {
+		e.preventDefault();
+		motd.set(this.getAttribute('data-group'));
+	});
 
 	$('#main').on('change', '.membertype', function(){
 		$.ajax({
