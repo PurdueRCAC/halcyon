@@ -1,102 +1,3 @@
-@section('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('vendor/datatables/datatables.bootstrap.min.css') }}" />
-@stop
-
-@section('scripts')
-<script src="{{ asset('vendor/datatables/datatables.min.js') }}"></script>
-<script src="{{ asset('vendor/datatables/datatables.bootstrap.min.js') }}"></script>
-<script src="{{ asset('vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/vendor/select2/js/select2.min.js')) }}"></script>
-<script>
-/*
-document.addEventListener('DOMContentLoaded', function() {
-	var dels = document.getElementsByClassName('motd-delete');
-	var i;
-	for (i = 0; i < dels.length; i++)
-	{
-		dels[i].addEventListener('click', function(e){
-			e.preventDefault();
-			motd.delete(this.getAttribute('data-group'));
-		});
-	}
-
-	var sets = document.getElementsByClassName('motd-set');
-	for (i = 0; i < sets.length; i++)
-	{
-		sets[i].addEventListener('click', function(e){
-			e.preventDefault();
-			motd.set(this.getAttribute('data-group'));
-		});
-	}
-});*/
-
-	$(document).ready(function() {
-
-		$('.datatable').DataTable({
-			pageLength: 20,
-			pagingType: 'numbers',
-			info: false,
-			ordering: false,
-			lengthChange: false,
-			scrollX: true,
-			autoWidth: false,
-			language: {
-				searchPlaceholder: "Filter users..."
-			},/*
-			fixedColumns: {
-				leftColumns: 1//,
-				//rightColumns: 1
-			},
-			lengthMenu: [[10, 25, 50, -1], [10, 25, 50, 'All']],
-			fixedColumns: {
-				leftColumns: 1
-			},*/
-			initComplete: function () {
-				//this.page(0).draw(true);
-				$($.fn.dataTable.tables( true ) ).css('width', '100%');
-				$($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
-				/*this.api().columns().every(function (i) {
-					var column = this;
-					var select = $('<select data-index="' + i + '"><option value=""></option></select>')
-						.appendTo($(column.footer()).empty());
-
-					column.data().unique().sort().each(function (d, j) {
-						select.append('<option value="'+d+'">'+d+'</option>');
-					});
-				});
-
-				var table = this;
-
-				$(table.api().table().container()).on('change', 'tfoot select', function () {
-					var val = $.fn.dataTable.util.escapeRegex(
-						$(this).val()
-					);
-
-					table.api()
-						.column($(this).data('index'))
-						.search(val ? '^'+val+'$' : '', true, false)
-						.draw();
-				});*/
-			}
-		});
-
-		$('.membership-edit').on('click', function(e){
-			e.preventDefault();
-
-			$($(this).attr('href')).toggleClass('hidden');
-		});
-
-		/*
-		 $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
-			$($.fn.dataTable.tables( true ) ).css('width', '100%');
-			$($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
-		});
-		*/
-
-		//$('.dataTables_filter input').addClass('form-control');
-	});
-</script>
-@stop
-
 					<?php
 					$m = (new \App\Modules\Groups\Models\Member)->getTable();
 					$u = (new \App\Modules\Users\Models\UserUsername)->getTable();
@@ -120,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						->get();
 
 					$members = $group->members()->withTrashed()
-						->select($m . '.*', $u . '.name')
+						->select($m . '.*')//, $u . '.name')
 						->join($u, $u . '.userid', $m . '.userid')
 						//->whereNull($u . '.deleted_at')
 						->where(function($where) use ($u)
@@ -150,8 +51,8 @@ document.addEventListener('DOMContentLoaded', function() {
 						$resources[$queue->resource->name][] = $queue;
 
 						$users = $queue->users()->withTrashed()
-							->select($q . '.*', $u . '.name')
-							->join($u, $u . '.userid', $q . '.userid')
+							->select($q . '.*')//, $u . '.name')
+							->join($u, $u . '.id', $q . '.userid')
 							//->whereNull($u . '.deleted_at')
 							->where(function($where) use ($u)
 							{
@@ -181,31 +82,27 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 
 					$disabled = $group->members()->withTrashed()
-						->select($m . '.*', $u . '.name')
+						->select($m . '.*')//, $u . '.name')
 						->join($u, $u . '.userid', $m . '.userid')
-						/*->where(function($where) use ($m, $u)
+						->where(function($where) use ($m, $u)
 						{
-							$where->whereNotNull($u . '.dateremoved')
-								->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00')
+							/*$where->whereNotNull($u . '.deleted_at')
 								//->orWhere($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
 								->orWhere(function($wher) use ($m)
 								{
 									$wher->whereNotNull($m . '.dateremoved')
 										->where($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
+								});*/
+							$where->where(function($wher) use ($u)
+								{
+									$wher->whereNotNull($u . '.dateremoved')
+										->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
+								})
+								->orWhere(function($wher) use ($m)
+								{
+									$wher->whereNotNull($m . '.dateremoved')
+										->where($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
 								});
-						})*/
-						->where(function($where) use ($m, $u)
-						{
-							->where(function($wher) use ($u)
-							{
-								$wher->whereNotNull($u . '.dateremoved')
-									->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
-							});
-							->orWhere(function($wher) use ($m)
-							{
-								$wher->whereNotNull($m . '.dateremoved')
-									->where($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
-							});
 						})
 						->whereIsMember()
 						->whereNotIn($m . '.userid', $members->pluck('userid')->toArray())
@@ -215,25 +112,22 @@ document.addEventListener('DOMContentLoaded', function() {
 					foreach ($group->queues as $queue)
 					{
 						$users = $queue->users()->withTrashed()
-							->select($q . '.*', $u . '.name')
-							->join($u, $u . '.userid', $q . '.userid')
-							/*->where(function($where) use ($q, $u)
+							->select($q . '.*')//, $u . '.name')
+							->join($u, $u . '.id', $q . '.userid')
+							->where(function($where) use ($q, $u)
 							{
-								$where->whereNotNull($u . '.deleted_at')
+								/*$where->whereNotNull($u . '.deleted_at')
 									//->orWhere($m . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
 									->orWhere(function($wher) use ($q)
 									{
 										$wher->whereNotNull($q . '.datetimeremoved')
 											->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-									});
-							})*/
-							->where(function($where) use ($q, $u)
-							{
-								->where(function($wher) use ($u)
+									});*/
+								$where->where(function($wher) use ($u)
 								{
 									$wher->whereNotNull($u . '.dateremoved')
 										->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
-								});
+								})
 								->orWhere(function($wher) use ($q)
 								{
 									$wher->whereNotNull($q . '.datetimeremoved')
@@ -539,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
 													{{ $member->user ? $member->user->name : trans('global.unknown') }}
 												@endif
 											</td>
-											<td>{{ $member->user->dateremoved }}</td>
+											<td>{{ $member->user ? $member->user->deleted_at : trans('global.unknown') }}</td>
 											<td>{{ $member->datetimeremoved }}</td>
 											<td></td>
 										</tr>
