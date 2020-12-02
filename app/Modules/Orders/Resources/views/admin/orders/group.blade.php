@@ -30,7 +30,7 @@
 						<tr>
 							<td>
 								@if (auth()->user()->can('manage orders'))
-									<a href="{{ route('admin.orders.index', ['group' => $group->id]) }}">{{ $order->id }}</a>
+									<a href="{{ route('admin.orders.edit', ['id' => $order->id]) }}">{{ $order->id }}</a>
 								@else
 									{{ $order->id }}
 								@endif
