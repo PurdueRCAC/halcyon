@@ -4,7 +4,7 @@
 $active = $sections->firstWhere('active', '=', true);
 @endphp
 
-@section('title'){{ ($active ? $active['name'] : trans('users::users.my accounts')) }}@stop
+@section('title'){{ ($active ? str_replace(['<span class="badge">', '</span>'], ['(', ')'], $active['name']) : trans('users::users.my accounts')) }}@stop
 
 @section('content')
 
