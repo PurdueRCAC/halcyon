@@ -1,3 +1,5 @@
+@if (auth()->user()->can('manage users'))
+
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
 @endpush
@@ -45,30 +47,26 @@ $(document).ready(function() {
 </script>
 @endpush
 
-
-@if (auth()->user()->can('manage users'))
-<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<!-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	<div class="card panel panel-default card-admin">
-		<div class="card-body panel-body">
-			<form method="get" action="{{ route('site.users.account') }}" class="row">
-				<label for="newuser" class="col col-md-3">Show data for user:</label>
-				<div class="col col-md-9">
-					<div class="input-group">
-					<!--<input type="text" name="newuser" id="newuser" class="form-control searchuser" placeholder="Search for someone..." autocorrect="off" autocapitalize="off" />
-					<div id="user_results" class="searchMain usersearch_results"></div> -->
-					<select name="newuser" id="newuser" class="form-control searchuser" multiple="multiple" data-placeholder="Select user...">
+		<div class="card-body panel-body"> -->
+			<form method="get" action="{{ route('site.users.account') }}">
+				<label for="newuser" class="sr-only">Show data for user:</label>
+				<div class="input-group">
+					<select name="u" id="newuser" class="form-control searchuser" multiple="multiple" data-placeholder="Select user...">
 						@if ($user->id != auth()->user()->id)
 						<option value="{{ $user->id }}" selected="selected">{{ $user->name }}</option>
 						@endif
 					</select>
 					<span class="input-group-addon">
 						<span class="input-group-text">
-							<i class="fa fa-search" aria-hidden="true" id="add_button_a"></i>
+							<i class="fa fa-user" aria-hidden="true" id="add_button_a"></i>
+							<input type="submit" class="sr-only" value="Search" />
 						</span>
 					</span>
-				</div></div>
+				</div>
 			</form>
-		</div>
+		<!-- </div>
 	</div>
-</div>
+</div>-->
 @endif
