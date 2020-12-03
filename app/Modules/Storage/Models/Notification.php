@@ -196,4 +196,14 @@ class Notification extends Model
 
 		return $dt->toDateTimeString();
 	}
+
+	/**
+	 * Determine if was notified
+	 *
+	 * @return  bool
+	 */
+	public function wasNotified()
+	{
+		return ($this->datetimelastnotify && $this->datetimelastnotify != '0000-00-00 00:00:00' && $this->datetimelastnotify != '-0001-11-30 00:00:00');
+	}
 }

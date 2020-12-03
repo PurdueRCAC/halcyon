@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use App\Modules\Storage\Models\Notification;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Carbon\Carbon;
 
 /**
  * Notifications
@@ -239,7 +240,7 @@ class NotificationsController extends Controller
 		$request->validate([
 			'storagedirid' => 'nullable|integer|min:1',
 			'userid' => 'nullable|integer',
-			'storagedirquotanotificationtypeid' => 'required|integer|min:1',
+			'storagedirquotanotificationtypeid' => 'nullable|integer',
 			'value' => 'nullable|integer',
 			'timeperiodid' => 'nullable|integer',
 			'periods' => 'nullable|integer|min:0',

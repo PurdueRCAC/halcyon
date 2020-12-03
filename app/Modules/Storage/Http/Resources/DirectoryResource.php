@@ -34,6 +34,7 @@ class DirectoryResource extends JsonResource
 		$data['mode'] = $this->mode;
 		$data['acl'] = $this->acl;
 		$data['children'] = $this->children;
+		$data['latestusage'] = $this->usage()->orderBy('id', 'desc')->first();
 
 		return $data;
 	}

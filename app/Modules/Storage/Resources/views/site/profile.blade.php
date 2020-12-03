@@ -11,52 +11,31 @@
 			}
 		});
 
-		$("#dialog-confirm-delete").html("Are you sure you wish to delete this notification?");
-
-		// Define the Dialog and its properties.
-		$("#dialog-confirm-delete").dialog({
-			autoOpen: false,
-			resizable: false,
-			modal: true,
-			title: "Delete notification",
-			buttons: {
-				"Yes": function () {
-					$(this).dialog('close');
-
-					var id = $(this).data('id');
-
-					$.ajax({
-						url: '/api/storage/notifications/' + id,
-						type: 'DELETE',
-						success: function(result) {
-							location.reload(true);
-						},
-						error: function(result) {
-							alert("An error occurred. Please reload the page and try again");
-						}
-					});
-				},
-				"No": function () {
-					$(this).dialog('close');
-				}
-			}
-		});
 		$('.confirm-delete').on('click', function(e){
 			e.preventDefault();
 
-			$('#dialog-confirm-delete').dialog('open');
-			$('#dialog-confirm-delete').data('id', $(this).data('id'));
+			if (confirm($(this).data('confirm'))) {
+				$.ajax({
+					url: $(this).data('api'),
+					type: 'DELETE',
+					success: function(result) {
+						location.reload(true);
+					},
+					error: function (result) {
+						alert("An error occurred. Please reload the page and try again");
+					}
+				});
+			}
 		});
 
 		$('#newalert').dialog({
 			modal: true,
-			width: '350px',
+			width: '400px',
 			autoOpen: false,
 			buttons : {
 				OK: {
 					text: 'Create Alert',
 					'class': 'btn btn-success',
-					//icon: 'fa fa-plus',
 					autofocus: true,
 					click: function() {
 
@@ -68,14 +47,11 @@
 
 						var postdata = {};
 						postdata = { value: $( "#newalertvalue" ).val() }
+						postdata['storagedirquotanotificationtypeid'] = val;
+						postdata['userid'] = $( '#HIDDEN_user' ).val();
+						postdata['storagedirid'] = $('[name=newalertstorage]:selected').val();
 
-						postdata['type'] = val;
-						postdata['user'] = $( '#HIDDEN_user' ).val();
-						postdata['storagedir'] = $('[name=newalertstorage]:selected').val();
-
-						postdata = JSON.stringify(postdata);
-
-						$(this).dialog('close'); 
+						$(this).dialog('close');
 
 						$.ajax({
 							url: $('#newalert').data('api'),
@@ -92,6 +68,7 @@
 				},
 				Cancel: {
 					text: 'Cancel',
+					'class': 'btn btn-link',
 					click: function() {
 						$(this).dialog('close');
 					}
@@ -105,28 +82,25 @@
 			$('#newalert').dialog('open');
 		});
 
-
 		$('#newreport').dialog({
 			modal: true,
-			width: '350px',
+			width: '400px',
 			autoOpen: false,
 			buttons : {
 				OK: {
 					text: 'Create Report',
+					'class': 'btn btn-success',
 					click: function() {
 						$(this).dialog('close');
 
 						postdata = {};
-						postdata['type'] = '1';
-						postdata['user'] = $( '#HIDDEN_user' ).val();
-						postdata['timeperiod'] = $( '#newreportperiod' ).val();
+						postdata['storagedirquotanotificationtypeid'] = '1';
+						postdata['userid'] = $('#HIDDEN_user').val();
+						postdata['timeperiodid'] = $( '#newreportperiod' ).val();
 						postdata['periods'] = $( '#newreportnumperiods').val();
 						postdata['value'] = '0';
-						postdata['storagedir'] = $('[name=newreportstorage]:selected').val();
-						postdata['nextreportdate'] = $( '#newreportdate' ).val();
-						postdata['nextreporttime'] = $( '#newreporttime' ).val();
-
-						postdata = JSON.stringify(postdata);
+						postdata['storagedirid'] = $('[name=newreportstorage]:selected').val();
+						postdata['datetimelastnotify'] = $('#newreportdate').val();
 
 						$.ajax({
 							url: $('#newreport').data('api'),
@@ -143,6 +117,7 @@
 				},
 				Cancel: {
 					text: 'Cancel',
+					'class': 'btn btn-link',
 					click: function() {
 						$(this).dialog('close'); 
 					}
@@ -157,79 +132,79 @@
 		});
 
 		$('.updatequota').on('click', function(event) {
-			var did = event.currentTarget.id.split("_");
-			did = did[1];
+			var btn = $(this),
+				did = btn.data('id');
 
-			//$( '#update_' + did + '_img' ).attr('src', "/include/images/loading.gif");
-			$(this).addClass('processing');
-			$(this).find('i').addClass('hide');
+			btn.addClass('processing');
+			btn.find('i').addClass('hide');
+			btn.find('.spinner-border').removeClass('hide');
 
-			var postdata = JSON.stringify({'quotaupdate' : '1' });
-
-			$.get( "/ws/storagedir/" + did, function (data) {
-				if (typeof(data) === 'string') {
-					data = JSON.parse(data);
-				}
-
-				$.ajax({
-					url: '/ws/storagedir/' + did,
-					type: 'POST',
-					data: postdata,
-					success: function(result) {
-
-						var oldtime = data['latestusage']['time'];
-						var currtime = data['latestusage']['time'];
-						var checkcount = 0;
-
-						function check() {
-							setTimeout(function() {
-								$.get( "/api/storage/directories/" + did, function (data) {
-									if (typeof(data) === 'string') {
-										data = JSON.parse(data);
-									}
-									currtime = data['latestusage']['time'];
-								});
-
-								if (currtime != oldtime) {
-									location.reload(true);
-								}
-
-								checkcount++;
-
-								if (checkcount < 45 && currtime == oldtime) {
-									check();
-								}
-
-								if (checkcount >= 45) {
-									alert("Quota checking system is busy or filesystem is unavailable at the moment. Quota refresh has been scheduled so check back on this page later.");
-									location.reload(true);
-								}
-							}, 5000);
-						}
-
-						check();
-					},
-					error: function (result) {
-						alert("An error occurred. Please reload the page and try again");
+			$.ajax({
+				url: btn.data('api'),
+				type: 'GET',
+				success: function(data) {
+					if (typeof(data) === 'string') {
+						data = JSON.parse(data);
 					}
-				});
+
+					$.ajax({
+						url: btn.data('api'),
+						type: 'POST',
+						data: {'quotaupdate' : '1' },
+						success: function(result) {
+
+							var oldtime = data.data['latestusage']['datetimerecorded'];
+							var currtime = data.data['latestusage']['datetimerecorded'];
+							var checkcount = 0;
+
+							function check() {
+								setTimeout(function() {
+									$.get(btn.data('api'), function (data) {
+										if (typeof(data) === 'string') {
+											data = JSON.parse(data);
+										}
+										currtime = data.data['latestusage']['datetimerecorded'];
+									});
+
+									if (currtime != oldtime) {
+										location.reload(true);
+									}
+
+									checkcount++;
+
+									if (checkcount < 45 && currtime == oldtime) {
+										check();
+									}
+
+									if (checkcount >= 45) {
+										alert("Quota checking system is busy or filesystem is unavailable at the moment. Quota refresh has been scheduled so check back on this page later.");
+										location.reload(true);
+									}
+								}, 5000);
+							}
+
+							check();
+						},
+						error: function (result) {
+							alert("An error occurred. Please reload the page and try again");
+
+							btn.find('i').removeClass('hide');
+							btn.find('.spinner-border').addClass('hide');
+						}
+					});
+				},
+				error: function (result) {
+					alert("An error occurred. Please reload the page and try again");
+
+					btn.find('i').removeClass('hide');
+					btn.find('.spinner-border').addClass('hide');
+				}
 			});
 		});
 
 		$("input[name='newalert']").on('change', function() {
-			if (this.value == "/ws/storagedirquotanotificationtype/2") {
-				$( "#newalertvalue" ).val("500 GB")
-				$( "#newalertvalueunit" ).html("");
-			} else if (this.value == "/ws/storagedirquotanotificationtype/3") {
-				$( "#newalertvalue" ).val("80")
-				$( "#newalertvalueunit" ).html("%");
-			} else if (this.value == "/ws/storagedirquotanotificationtype/4") {
-				$( "#newalertvalue" ).val("50000")
-				$( "#newalertvalueunit" ).html(" files");
-			} else if (this.value == "/ws/storagedirquotanotificationtype/5") {
-				$( "#newalertvalue" ).val("80")
-				$( "#newalertvalueunit" ).html("%");
-			}
+			$( "#newalertvalue" ).val($(this).data('value'));
+			$( "#newalertvalueunit" ).html($(this).data('unit'));
 		});
 
 		// Details dialogs
@@ -247,8 +222,27 @@
 			}
 		});
 
-		$('.update-usage').on('click', function(e){
-			$($(this).attr('href') + ' .updatequota').trigger('click');
+		$('.details-save').on('click', function(e){
+			e.preventDefault();
+
+			var btn = $(this);
+
+			$.ajax({
+				url: btn.data('api'),
+				type: 'PUT',
+				data: {
+					'value': ($('#value_' + btn.data('id')).length ? $('#value_' + btn.data('id')).val() : 0),
+					'enabled': ($('#enabled_' + btn.data('id') + ':checked').length ? 1 : 0),
+					'periods': ($('#periods_' + btn.data('id')).length ? $('#periods_' + btn.data('id')).val() : 0),
+					'timeperiodid': ($('#timeperiod_' + btn.data('id')).length ? $('#timeperiod_' + btn.data('id')).val() : 0)
+				},
+				success: function(result) {
+					location.reload(true);
+				},
+				error: function (result) {
+					alert("An error occurred. Please reload the page and try again");
+				}
+			});
 		});
 
 		$('.property-multi-edit').on('click', function(e){
@@ -264,20 +258,18 @@
 
 	<input type="hidden" id="HIDDEN_user" value="{{ $user->id }}" />
 
-	<div class="card panel">
-		<div class="card-header">
+	<div class="card panel panel-default">
+		<div class="card-header panel-heading">
 			<div class="card-title">
 				Storage Spaces
 				<a href="#storagespacehelp" class="help tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a>
 			</div>
 		</div>
-		<div class="card-body">
+		<div class="card-body panel-body">
 			<div id="storagespacehelp" class="dialog dialog-help" title="Storage Spaces">
 				<p>This table shows the storage spaces you have access to and your usage of these spaces. The data shown may not be immediately up to date but is updated periodically when you load this page.</p>
 				<p>Wait a few minutes and refresh this page to see the updated numbers.</p>
 			</div>
-
-			<p>Please allow up to 15 minutes for these numbers to update.</p>
 
 			<?php
 			$storagedirs = array();
@@ -310,13 +302,11 @@
 							?>
 							<tr>
 								<td class="left">
-									<a href="#<?php echo $dir->id; ?>_dialog" class="details">
-										<?php echo $dir->resourcepath . '/' . $dir->path; ?>
-									</a>
+									{{ $dir->resourcepath . '/' . $dir->path }}
 								</td>
 								<td class="text-center">
 									<?php if (!$usage->quota) { ?>
-										<span class="none">- / -</span>
+										<span class="none text-muted">- / -</span>
 									<?php } else { ?>
 										<?php
 										$val = round(($usage->space / $usage->quota) * 100, 1);
@@ -335,7 +325,7 @@
 								</td>
 								<td class="text-center">
 									<?php if (!$usage->filequota || $usage->filequota == 1) { ?>
-										<span class="none">- / -</span>
+										<span class="none text-muted">- / -</span>
 									<?php } else { ?>
 										<?php
 										$val = round(($usage->files / $usage->filequota) * 100, 1);
@@ -355,12 +345,13 @@
 									@if ($usage->datetimerecorded)
 										{{ $usage->datetimerecorded->diffForHumans() }}
 									@else
-										<span class="none">-</span>
+										<span class="none text-muted">-</span>
 									@endif
 								</td>
 								<td class="text-center">
-									<a href="#<?php echo $dir->id; ?>_dialog" class="details update-usage tip" title="Update usage now"><!--
+									<a href="#{{ $dir->id }}_dialog" class="details updatequota tip" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}" data-id="{{ $dir->id }}" title="Update usage now"><!--
 									--><i class="fa fa-undo updater" aria-hidden="true"></i><!--
+									--><span class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only">Loading...</span></span><!--
 									--><span class="sr-only">Update usage now</span><!--
 								--></a>
 								</td>
@@ -373,6 +364,8 @@
 						?>
 					</tbody>
 				</table>
+
+				<p class="alert alert-info">Please allow up to 15 minutes for these numbers to update.</p>
 				<?php
 			}
 			else
@@ -385,8 +378,8 @@
 		</div>
 	</div><!-- / .card -->
 
-	<div class="card panel">
-		<div class="card-header">
+	<div class="card panel panel-default">
+		<div class="card-header panel-heading">
 			<div class="row">
 				<div class="col col-md-6 card-title">
 					Storage Alerts
@@ -397,7 +390,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="card-body">
+		<div class="card-body panel-body">
 			<div id="storagealerthelp" class="dialog dialog-help" title="Storage Spaces">
 				<p>You may define email alerts for your storage spaces. These alerts will send you email when your storage usage crosses the defined threshold. They may be set on an absolute value or on a percentage of your allocated space.</p>
 			</div>
@@ -432,18 +425,12 @@
 
 							if ($not->storagedirquotanotificationtypeid != 1 && $dir->resourceid == 64)
 							{
-								/*$usage = $dir->usage()->orderBy('datetimerecorded', 'desc')->first();
-							if (!$usage)
-							{
-								$usage = new App\Modules\Storage\Models\Usage;
-							}
-								$resource = $dir->resource;*/
 								?>
 								<tr>
-									<td class="left">
-										<a href="#<?php echo $not->id; ?>_not_dialog" class="details" title="Edit alert"><?php echo $dir->storageResource->path . '/' . $dir->path; ?></a>
+									<td>
+										<?php echo $dir->storageResource->path . '/' . $dir->path; ?>
 									</td>
-									<td class="left">
+									<td>
 										<?php echo $not->type->name; ?>
 									</td>
 									<td class="text-center">
@@ -464,6 +451,7 @@
 											echo number_format($not->value);
 										}
 										?>
+									</td>
 									<td class="text-center">
 										<?php if ($not->enabled == 1) { ?>
 											<span class="badge badge-success">{{ trans('global.yes') }}</span>
@@ -472,28 +460,28 @@
 										<?php } ?>
 									</td>
 									<td>
-										<?php if ($not->datetimelastnotify == '0000-00-00 00:00:00') { ?>
+										<?php if (!$not->wasNotified()) { ?>
 											<span class="none">-</span>
 										<?php } else { ?>
-											<time datetime="{{ $not->datetimelastnotify->format('Y-m-d\TH:i:s\Z') }}"><?php echo $not->datetimelastnotify->format("m/d/Y"); ?></time>
+											<time datetime="{{ $not->datetimelastnotify->format('Y-m-d\TH:i:s\Z') }}">{{ $not->datetimelastnotify->format("m/d/Y") }}</time>
 										<?php } ?>
 									</td>
 									<?php if ($user->id == auth()->user()->id || auth()->user()->can('manage users')) { ?>
-									<td class="text-right">
-										<a href="#<?php echo $not->id; ?>_not_dialog" class="details tip" title="{{ trans('global.button.edit') }}"><!--
-											--><i class="fa fa-pencil"></i><span class="sr-only">{{ trans('global.button.edit') }}</span><!--
-										--></a>
-									</td>
-									<td class="text-right">
-										<a href="#dialog-confirm-delete"
-											class="confirm-delete delete tip"
-											title="{{ trans('global.button.delete') }}"
-											data-id="{{ $not->id }}"
-											data-api="{{ route('api.storage.usage.delete', ['id' => $not->id]) }}"
-											data-confirm="Are you sure you wish to delete this notification?"><!--
-											--><i class="fa fa-trash"></i><span class="sr-only">{{ trans('global.button.delete') }}</span><!--
-										--></a>
-									</td>
+										<td class="text-right">
+											<a href="#<?php echo $not->id; ?>_not_dialog" class="details tip" title="{{ trans('global.button.edit') }}"><!--
+												--><i class="fa fa-pencil"></i><span class="sr-only">{{ trans('global.button.edit') }}</span><!--
+											--></a>
+										</td>
+										<td class="text-right">
+											<a href="#dialog-confirm-delete"
+												class="confirm-delete delete tip"
+												title="{{ trans('global.button.delete') }}"
+												data-id="{{ $not->id }}"
+												data-api="{{ route('api.storage.usage.delete', ['id' => $not->id]) }}"
+												data-confirm="Are you sure you wish to delete this notification?"><!--
+												--><i class="fa fa-trash"></i><span class="sr-only">{{ trans('global.button.delete') }}</span><!--
+											--></a>
+										</td>
 									<?php } ?>
 								</tr>
 								<?php
@@ -502,7 +490,93 @@
 						?>
 					</tbody>
 				</table>
+
 				<?php
+				foreach ($storagenotifications as $not)
+				{
+					if (!isset($storagedirs[$not->storagedirid]))
+					{
+						continue;
+					}
+
+					$dir = $storagedirs[$not->storagedirid];
+
+					if ($not->storagedirquotanotificationtypeid != 1 && $dir->resourceid == 64)
+					{
+					?>
+					<div id="{{ $not->id }}_not_dialog" title="Storage Alert Detail" class="dialog dialog-details">
+						<form method="post" action="{{ route('api.storage.notifications.update', ['id' => $not->id]) }}">
+						<input type="hidden" id="HIDDEN_property_{{ $not->id }}" value="{{ $not->id }}" />
+
+						<div class="form-group row">
+							<label for="path_{{ $not->id }}" class="col-sm-4">Path</label>
+							<div class="col-sm-8">
+								<input type="text" id="path_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ $dir->storageResource->path . '/' . $dir->path }}" />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="type_{{ $not->id }}" class="col-sm-4">Type</label>
+							<div class="col-sm-8">
+								<input type="text" id="type_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ $not->type->name }}" />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="value_{{ $not->id }}" class="col-sm-4">Threshold</label>
+							<div class="col-sm-8">
+								<?php
+								$unit = '';
+								$number = '';
+								if ($not->type->valuetype == 1)
+								{
+								}
+								else if ($not->type->valuetype == 2)
+								{
+									$number = App\Halcyon\Utility\Number::formatBytes($not->value);
+								}
+								else if ($not->type->valuetype == '3')
+								{
+									$number = $not->value;
+									$unit = '%';
+								}
+								else if ($not->type->valuetype == '4')
+								{
+									$number = number_format($not->value);
+								}
+								?>
+								@if ($unit)
+								<span class="input-group">
+								@endif
+									<input type="text" class="form-control" id="value_{{ $not->id }}" value="{{ $number }}" />
+								@if ($unit)
+									<span class="input-group-addon">
+										<span class="input-group-text">{{ $unit }}</span>
+									</span>
+								</span>
+								@endif
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="enabled_{{ $not->id }}" class="col-sm-4">Enabled</label>
+							<div class="col-sm-8">
+								<input type="checkbox" class="form-check-input" id="enabled_{{ $not->id }}" <?php echo ($not->enabled == '0') ? '' : ' checked="true"'; ?> />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="datetimelastnotify_{{ $not->id }}" class="col-sm-4">Last Notified</label>
+							<div class="col-sm-8">
+								<input type="text" id="datetimelastnotify_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ $not->wasNotified() ? $not->datetimelastnotify->format('m/d/Y') : trans('global.never') }}" />
+							</div>
+						</div>
+						<div class="ui-dialog-buttonpane ui-widget-content row">
+							<div class="col-sm-12 text-right">
+								<input type="submit" class="btn btn-success details-save" value="{{ trans('global.save') }}" data-api="{{ route('api.storage.notifications.update', ['id' => $not->id]) }}" id="save_{{ $not->id }}" data-id="{{ $not->id }}" />
+							</div>
+						</div>
+						</form>
+					</div>
+					<?php
+					}
+				}
 			}
 			else
 			{
@@ -527,7 +601,7 @@
 							//continue;
 						}
 						?>
-						<option name="newalertstorage" value="<?php echo $storagedir->id; ?>"/><?php echo $storagedir->resourcepath . '/' . $storagedir->path; ?></option>
+						<option name="newalertstorage" value="{{ $storagedir->id }}">{{ $storagedir->resourcepath . '/' . $storagedir->path }}</option>
 						<?php
 					}
 					?>
@@ -538,33 +612,57 @@
 				$types = App\Modules\Storage\Models\Notification\Type::where('id', '>', 1)->get();
 				foreach ($types as $type)
 				{
+					if ($type->id == 2)
+					{
+						$type->value = '500 GB';
+						$type->unit = '';
+					}
+					else if ($type->id == 3)
+					{
+						$type->value = '80';
+						$type->unit = '%';
+					}
+					else if ($type->id == 4)
+					{
+						$type->value = '50000';
+						$type->unit = ' files';
+					}
+					else if ($type->id == 5)
+					{
+						$type->value = '80';
+						$type->unit = '%';
+					}
 					?>
-					<input type="radio" name="newalert" value="{{ $type->id }}" id="newalert-{{ $type->id }}" />
-					<label for="newalert-{{ $type->id }}">{{ $type->name }}</label>
+					<span class="form-check">
+					<input type="radio" name="newalert" class="form-check-input" value="{{ $type->id }}" id="newalert-{{ $type->id }}" data-value="{{ $type->value }}" data-unit="{{ $type->unit }}" />
+					<label for="newalert-{{ $type->id }}" class="form-check-label">{{ $type->name }}</label>
+					</span>
 					<br/>
 					<?php
 				}
 				?>
 			</p>
 			<p>
-				<label for="newalertvalue">at</label> <input type="number" class="form-control" id="newalertvalue" placeholder="0" /><span id="newalertvalueunit"></span>
+				<label for="newalertvalue">at</label> <span class="input-group"><input type="number" class="form-control" id="newalertvalue" placeholder="0" /><span class="input-group-addon"><span class="input-group-text" id="newalertvalueunit"></span></span></span>
 			</p>
 		</form>
 	</div><!-- / #newalert -->
 
-	<div class="card">
-		<div class="card-header">
+	<div class="card panel panel-default">
+		<div class="card-header panel-heading">
 			<div class="row">
 				<div class="col col-md-6 card-title">
 					Storage Usage Reports
-					<a href="#storageusagehelp" class="help tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a>
+					<a href="#storageusagehelp" class="help tip" title="Help">
+						<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span>
+					</a>
 				</div>
 				<div class="col col-md-6 align-right">
 					<button class="btn btn-default btn-sm accountsbtn" id="create-newreport"><i class="fa fa-plus-circle" aria-hidden="true"></i> Create New Usage Report</button>
 				</div>
 			</div>
 		</div>
-		<div class="card-body">
+		<div class="card-body panel-body">
 			<div id="storageusagehelp" class="dialog dialog-help" title="Storage Spaces">
 				<p>You may request usage reports for a storage space be sent to you on regular basis. You may specify which space, when the first report be sent, and how often after that the report should be sent. For example, you may request a usage report be sent starting on Monday at 8am and then every Monday after that.</p>
 			</div>
@@ -587,7 +685,7 @@
 			if (count($storagedirquotanotifications) > 0)
 			{
 				?>
-				<table class="simpleTable storage">
+				<table class="table table-hover storage">
 					<caption class="sr-only">
 						Current Storage Usage Reports
 					</caption>
@@ -610,17 +708,13 @@
 							?>
 							<tr>
 								<td>
-									<a href="#<?php echo $not->id; ?>_not_dialog" class="details" title="Edit usage report">
-										<?php echo $storagedirs[$not->storagedirid]->path; ?>
-									</a>
+									{{ $storagedirs[$not->storagedirid]->path }}
 								</td>
 								<td>
-									<?php echo $not->type->name; ?>
+									{{ $not->type->name }}
 								</td>
 								<td>
 									<?php
-									//$timeperiod = $ws->get($not['timeperiod']);
-
 									echo 'Every ';
 									if ($not->periods > 1)
 									{
@@ -642,9 +736,8 @@
 								<td>
 									<?php echo date("m/d/Y", strtotime($not->nextreport)); ?>
 								</td>
-								<?php if ($user->id == auth()->user()->id || auth()->user()->can('manage users')) { ?>
-								<td class="text-right">
-									
+								<?php if ($user->id == auth()->user()->id || auth()->user()->can('manage storage')) { ?>
+									<td class="text-right">
 										<a href="#<?php echo $not->id; ?>_not_dialog" class="details tip" title="Edit usage report"><!--
 											--><i class="fa fa-pencil"></i><span class="sr-only">Edit</span><!--
 										--></a>
@@ -654,12 +747,11 @@
 											class="confirm-delete delete tip"
 											title="{{ trans('global.button.delete') }}"
 											data-id="<?php echo $not->id; ?>"
-											data-api="{{ route('api.storage.reports.delete', ['id' => $not->id]) }}"
+											data-api="{{ route('api.storage.notifications.delete', ['id' => $not->id]) }}"
 											data-confirm="Are you sure you wish to delete this report?"><!--
 											--><i class="fa fa-trash"></i><span class="sr-only">{{ trans('global.button.delete') }}</span><!--
 										--></a>
-									
-								</td>
+									</td>
 								<?php } ?>
 							</tr>
 							<?php
@@ -668,6 +760,67 @@
 					</tbody>
 				</table>
 				<?php
+				foreach ($storagedirquotanotifications as $not)
+				{
+					?>
+					<div id="{{ $not->id }}_not_dialog" title="Storage Usage Report Detail" class="dialog dialog-details">
+						<form method="post" action="{{ route('api.storage.notifications.update', ['id' => $not->id]) }}">
+						<input type="hidden" id="HIDDEN_property_{{ $not->id }}" value="{{ $not->id }}" />
+
+						<div class="form-group row">
+							<label for="path_{{ $not->id }}" class="col-sm-4">Path</label>
+							<div class="col-sm-8">
+								<input type="text" id="path_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ $dir->storageResource->path . '/' . $dir->path }}" />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="type_{{ $not->id }}" class="col-sm-4">Type</label>
+							<div class="col-sm-8">
+								<input type="text" id="type_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ $not->type->name }}" />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="value_{{ $not->id }}" class="col-sm-4">Every</label>
+							<div class="col-sm-4">
+								<input type="number" id="periods_{{ $not->id }}" class="form-control" value="{{ $not->periods }}" />
+							</div>
+							<div class="col-sm-4">
+								<select class="form-control" id="timeperiod_{{ $not->id }}">
+									<?php
+									foreach (App\Halcyon\Models\Timeperiod::all() as $period)
+									{
+										$selected = '';
+										if ($period->id == $not->timeperiodid)
+										{
+											$selected = 'selected="true"';
+										}
+										echo '<option ' . $selected . ' value="' . $period->id . '">' . $period->plural . '</option>';
+									}
+									?>
+								</select>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="enabled_{{ $not->id }}" class="col-sm-4">Enabled</label>
+							<div class="col-sm-8">
+								<input type="checkbox" class="form-check-input" id="enabled_{{ $not->id }}" <?php echo ($not->enabled == '0') ? '' : ' checked="true"'; ?> />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="datetimelastnotify_{{ $not->id }}" class="col-sm-4">Next Report</label>
+							<div class="col-sm-8">
+								<input type="text" id="datetimelastnotify_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ $not->nextnotify }}" />
+							</div>
+						</div>
+						<div class="ui-dialog-buttonpane ui-widget-content row">
+							<div class="col-sm-12 text-right">
+								<input type="submit" class="btn btn-success details-save" value="{{ trans('global.save') }}" data-api="{{ route('api.storage.notifications.update', ['id' => $not->id]) }}" id="save_{{ $not->id }}" data-id="{{ $not->id }}" />
+							</div>
+						</div>
+						</form>
+					</div>
+					<?php
+				}
 			}
 			else
 			{
@@ -677,53 +830,48 @@
 			}
 			?>
 
-			<div id="newreport" title="New Usage Report" class="dialog dialog-edit" role="dialog" data-api="{{ route('api.storage.usage.create') }}">
-				<!-- <div class="modal-dialog" role="document"><div class="modal-content"> -->
-				<form method="post" action="{{ route('site.users.account.section', ['section' => 'quotas']) }}" class="form-inline">
-					<!-- <div class="modal-body"> -->
-					<p>
-						<label for="newreportstorage">Report on</label>
-						<select id="newreportstorage" class="form-control">
-							<?php
-							foreach ($storagedirs as $storagedir)
-							{
-								echo '<option name="newreportstorage" value="' . $storagedir->id . '"/> ' . $storagedir->resourcepath . '/' . $storagedir->path . '</option>';
-							}
-							?>
-						</select>
-					</p>
+			<div id="newreport" title="New Usage Report" class="dialog dialog-edit" role="dialog" data-api="{{ route('api.storage.notifications.create') }}">
+				<form method="post" action="{{ route('site.users.account.section', ['section' => 'quotas']) }}" class="form">
+					<div class="form-group row">
+						<label for="newreportstorage" class="col-sm-5">Report on</label>
+						<div class="col-sm-7">
+							<select id="newreportstorage" class="form-control">
+								<?php
+								foreach ($storagedirs as $storagedir)
+								{
+									echo '<option name="newreportstorage" value="' . $storagedir->id . '"/> ' . $storagedir->resourcepath . '/' . $storagedir->path . '</option>';
+								}
+								?>
+							</select>
+						</div>
+					</div>
 
-					<p>
-						<label for="newreportdate">starting</label>
-						<input id="newreportdate" type="text" class="form-control date-pick" size="12" value="<?php echo Carbon\Carbon::now()->modify('+1 day')->format('Y-m-d'); ?>" placeholder="YYYY-MM-DD hh:mm:ss" />
-						<!-- <input id="newreporttime" type="text" class="form-control time-pick" size="10" value="12:00 AM" /> -->
-					</p>
+					<div class="form-group row">
+						<label for="newreportdate" class="col-sm-5">Starting</label>
+						<div class="col-sm-7">
+							<input id="newreportdate" type="text" class="form-control date-pick" size="12" value="{{ Carbon\Carbon::now()->modify('+1 day')->format('Y-m-d') }}" placeholder="YYYY-MM-DD hh:mm:ss" />
+						</div>
+					</div>
 
-					<p>
-						<label for="newreportnumperiods">then report every</label>
-						<input type="number" id="newreportnumperiods" size="3" min="1" value="1" class="form-control" />
-						<select id="newreportperiod" class="form-control">
-							<?php
-							foreach (App\Halcyon\Models\Timeperiod::all() as $period)
-							{
-								echo '<option value="' . $period->id . '">' . $period->plural . '</option>';
-							}
-							?>
-						</select>
-					</p>
-					<!--</div>
-					<div class="modal-footer">
-						<button class="btn btn-success accountsbtn" id="create-newreport"><i class="fa fa-plus-circle" aria-hidden="true"></i> Create Report</button>
-						<button class="btn">Cancel</button>
-					</div> -->
+					<div class="form-group row">
+						<label for="newreportnumperiods" class="col-sm-5">Report every</label>
+						<div class="col-sm-3">
+							<input type="number" id="newreportnumperiods" size="3" min="1" value="1" class="form-control" />
+						</div>
+						<div class="col-sm-4">
+							<select id="newreportperiod" class="form-control">
+								<?php
+								foreach (App\Halcyon\Models\Timeperiod::all() as $period)
+								{
+									echo '<option value="' . $period->id . '">' . $period->plural . '</option>';
+								}
+								?>
+							</select>
+						</div>
+					</div>
 				</form>
-					<!-- </div>
-				</div> -->
 			</div><!-- / #newreport -->
 
 		</div>
 	</div><!-- / .panel -->
-
-	<div id="dialog-confirm-delete"></div>
-
 </div><!-- / .contentInner -->
