@@ -1,7 +1,7 @@
 
 @push('scripts')
 <script>
-	$(document).ready(function() {
+	/*$(document).ready(function() {
 		$('.reveal').on('click', function(e){
 			$($(this).data('toggle')).toggleClass('hide');
 
@@ -78,7 +78,7 @@
 			e.preventDefault();
 			DeleteUnixGroup($(this).data('unixgroup'), $(this).data('value'));
 		});
-	});
+	});*/
 </script>
 @endpush
 
@@ -104,6 +104,7 @@
 				<li>
 					<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">
 						{{ $g->group->name }}
+						<span class="badge{{ $g->isManager() ? ' badge-success' : '' }}">{{ $g->type->name }}</span>
 					</a>
 				</li>
 				@endforeach

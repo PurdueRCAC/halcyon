@@ -336,14 +336,14 @@
 							<table class="table table-hover hover datatable">
 								<caption class="sr-only">Members</caption>
 								<thead>
-									<!-- <tr>
-										<th scope="col"></th>
+									<tr>
+										<th scope="col">&nbsp;</th>
 										<th scope="col" colspan="{{ count($group->queues) }}">Queues</th>
 										<th scope="col" colspan="{{ count($group->unixgroups) }}">Unix Groups</th>
 										<th scope="col"></th>
-									</tr> -->
+									</tr>
 									<tr>
-										<th class="text-nowrap" scope="col">User</th>
+										<th class="text-nowrap" scope="col">User<br />&nbsp;</th>
 										<?php
 										//$qu = array();
 										foreach ($group->queues as $queue):

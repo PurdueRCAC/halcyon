@@ -380,6 +380,24 @@ console.log(post);
 						Halcyon.message('danger', xhr.response);
 					}
 				});*/
+
+				queues.each(function(k, checkbox){
+					$.ajax({
+						url: checkbox.getAttribute('data-api'),
+						type: 'post',
+						data: {
+							'userid': userid,
+						},
+						dataType: 'json',
+						async: false,
+						success: function (data) {
+							//window.location.reload();
+						},
+						error: function (xhr, ajaxOptions, thrownError) {
+							Halcyon.message('danger', xhr.response);
+						}
+					});
+				});
 			});
 		});
 	});
@@ -398,7 +416,7 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 			</div>
 			<div class="col-md-3 text-right">
 				@if ($membership)
-					@if ($membership->datetimeremoved && $membership->datetimeremoved != '0000-00-00 00:00:00' && $membership->datetimeremoved != '-0001-11-30 00:00:00')
+					@if ($membership->isTrashed())
 						<span class="badge badge-danger">{{ trans('users::users.removed') }}</span>
 					@elseif ($membership->membertype == 4)
 						<span class="badge badge-warning">{{ $membership->type->name }}</span>
