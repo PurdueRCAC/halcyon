@@ -83,7 +83,7 @@ class Courses
 
 		$event->addSection(
 			route('site.users.account.section', $r),
-			trans('courses::courses.my courses') . ' <span class="badge">' . $total . '</span>',
+			trans('courses::courses.my courses') . ' <span class="badge pull-right">' . $total . '</span>',
 			($event->getActive() == 'class'),
 			$content
 		);

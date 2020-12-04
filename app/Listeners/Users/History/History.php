@@ -58,17 +58,36 @@ class History
 				->paginate(config('list_limit', 20));*/
 
 			$groups = $user->groups()
+				->withTrashed()
 				->orderBy('datecreated', 'desc')
 				->get();
 
-			$queues = \App\Modules\Queues\Models\User::query()
+			$unixgroups = \App\Modules\Groups\Models\UnixGroupMember::query()
+				->withTrashed()
 				->where('userid', '=', $user->id)
+				/*->where(function($where)
+				{
+					$where->whereNull('datetimeremoved')
+						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+				})*/
+				->orderBy('datetimecreated', 'desc')
+				->get();
+
+			$queues = \App\Modules\Queues\Models\User::query()
+				->withTrashed()
+				->where('userid', '=', $user->id)
+				/*->where(function($where)
+				{
+					$where->whereNull('datetimeremoved')
+						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+				})*/
 				->orderBy('datetimecreated', 'desc')
 				->get();
 
 			$content = view('history::site.profile', [
 				'user'    => $user,
 				'groups'  => $groups,
+				'unixgroups'  => $unixgroups,
 				'queues'  => $queues,
 				//'history' => $history,
 			]);

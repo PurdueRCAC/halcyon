@@ -178,7 +178,9 @@ class Groups
 				$total += $queue->users()->where('userid', '=', $user->id)->count();
 			}
 		}*/
-		foreach ($user->queues()->whereIn('membertype', [1, 4])->get() as $qu)
+		$queueusers = $user->queues()->whereIn('membertype', [1, 4])->get();
+
+		foreach ($queueusers as $qu)
 		{
 			if ($qu->isMember() && $qu->isTrashed())//$qu->trashed())
 			{
@@ -192,16 +194,14 @@ class Groups
 				continue;
 			}
 
-			if (!$queue->scheduler
-			 || ($queue->scheduler->datetimeremoved
-			 && $queue->scheduler->datetimeremoved != '0000-00-00 00:00:00'
-			 && $queue->scheduler->datetimeremoved != '-0001-11-30 00:00:00'))
+			if (!$queue->scheduler || $queue->scheduler->isTrashed())
 			{
 				continue;
 			}
 
 			if (!in_array($queue->groupid, $groups))
 			{
+				$groups[] = $queue->groupid;
 				$total++;
 			}
 		}
@@ -263,21 +263,50 @@ class Groups
 			}
 			else
 			{
-				$groups = $user->groups()
-					->whereIsManager()
+				$rows = $user->groups()
+					//->whereIsManager()
 					->where('groupid', '>', 0)
 					->get();
 
+				$groups = array_unique($rows->pluck('groupid')->toArray());
+
+				foreach ($queueusers as $qu)
+				{
+					if ($qu->isMember() && $qu->isTrashed())//$qu->trashed())
+					{
+						continue;
+					}
+
+					$queue = $qu->queue;
+
+					if (!$queue || $queue->isTrashed())
+					{
+						continue;
+					}
+
+					if (!$queue->scheduler || $queue->scheduler->isTrashed())
+					{
+						continue;
+					}
+
+					if (!in_array($queue->groupid, $groups))
+					{
+						$qu->groupid = $queue->groupid;
+						$rows->add($qu);
+						$groups[] = $queue->groupid;
+					}
+				}
+
 				$content = view('groups::site.groups', [
 					'user'   => $user,
-					'groups' => $groups
+					'groups' => $rows
 				]);
 			}
 		}
 
 		$event->addSection(
 			route('site.users.account.section', $r),
-			trans('groups::groups.my groups') . ' <span class="badge">' . $total . '</span>',
+			trans('groups::groups.my groups') . ' <span class="badge pull-right">' . $total . '</span>',
 			($event->getActive() == 'groups'),
 			$content
 		);

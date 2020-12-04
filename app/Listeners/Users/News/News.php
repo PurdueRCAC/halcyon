@@ -97,7 +97,7 @@ class News
 
 			$event->addSection(
 				route('site.users.account.section', $r),
-				$type->name . ' <span class="badge">' . $total . '</span>',
+				$type->name . ' <span class="badge pull-right">' . $total . '</span>',
 				($event->getActive() == $type->alias),
 				$content
 			);

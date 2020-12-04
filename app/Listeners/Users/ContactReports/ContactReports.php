@@ -80,7 +80,7 @@ class ContactReports
 
 		$event->addSection(
 			route('site.users.account.section', $r),
-			trans('contactreports::contactreports.contact reports') . ' <span class="badge">' . $total . '</span>',
+			trans('contactreports::contactreports.contact reports') . ' <span class="badge pull-right">' . $total . '</span>',
 			($event->getActive() == 'contactreports'),
 			$content
 		);
