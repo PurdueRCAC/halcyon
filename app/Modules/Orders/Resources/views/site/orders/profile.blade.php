@@ -1,5 +1,3 @@
-@extends('layouts.master')
-
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css') }}" />
 @endpush
@@ -16,23 +14,7 @@ $(document).ready(function() {
 </script>
 @endpush
 
-@php
-	app('pathway')
-		->append(
-			trans('orders::orders.orders'),
-			route('site.orders.index')
-		);
-@endphp
-
-@section('content')
-
-
-<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-@component('orders::site.submenu')
-	orders
-@endcomponent
-</div>
-<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+<div class="contentInner">
 <h2>{{ trans('orders::orders.orders') }}</h2>
 
 <form action="{{ route('site.orders.index') }}" method="get" class="form-inline">
@@ -136,18 +118,18 @@ $(document).ready(function() {
 						@if ($row->groupid)
 							@if (auth()->user()->can('manage groups'))
 								<a href="{{ route('site.groups.show', ['id' => $row->groupid]) }}">
-									<?php echo $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+									{!! $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span>' !!}
 								</a>
 							@else
-								<?php echo $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+								{!! $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span>' !!}
 							@endif
 						@else
 							@if (auth()->user()->can('manage users'))
 								<a href="{{ route('site.users.account', ['u' => $row->userid]) }}">
-									<?php echo $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+									{!! $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span>' !!}
 								</a>
 							@else
-								<?php echo $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+								{!! $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span>' !!}
 							@endif
 						@endif
 					</td>
@@ -159,14 +141,7 @@ $(document).ready(function() {
 			</tbody>
 		</table>
 
-		<div class="row">
-			<div class="col-sm-9">
-				{{ $rows->render() }}
-			</div>
-			<div class="col-sm-3 text-right">
-				Results {{ ($rows->currentPage()-1)*$rows->perPage()+1 }}-{{ $rows->total() > $rows->perPage() ? $rows->currentPage()*$rows->perPage() : $rows->total() }} of {{ $rows->total() }}
-			</div>
-		</div>
+		{{ $rows->render() }}
 	@else
 		<p class="alert alert-info">No orders found.</p>
 	@endif
@@ -174,4 +149,3 @@ $(document).ready(function() {
 	@csrf
 </form>
 </div>
-@stop
