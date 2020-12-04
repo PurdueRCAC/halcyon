@@ -545,7 +545,7 @@ class GroupsController extends Controller
 	{
 		$row = Group::findOrFail($id);
 
-		if (!$row->trashed())
+		if (!$row->isTrashed())
 		{
 			if (!$row->delete())
 			{

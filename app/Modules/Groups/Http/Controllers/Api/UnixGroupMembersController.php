@@ -248,7 +248,7 @@ class UnixGroupMembersController extends Controller
 		// Look up the current username of the user being granted access.
 		$user = User::findOrFail($row->userid);
 
-		if ($user->trashed())
+		if ($user->isTrashed())
 		{
 			return response()->json(['message' => trans('groups::groups.user not found')], 409);
 		}

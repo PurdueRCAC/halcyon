@@ -200,10 +200,10 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 
-		$('#create_gitorg_btn').on('click', function (event) {
+		/*$('#create_gitorg_btn').on('click', function (event) {
 			event.preventDefault();
 			CreateGitOrg($(this).data('value'));
-		});
+		});*/
 
 		$('.add-property').on('click', function(e){
 			e.preventDefault();
@@ -355,6 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			var btn = $(this);
 			var users = $('#addmembers').val();
+
 			var post = {
 				'groupid': btn.data('group'),
 				'userid': 0,
@@ -362,45 +363,143 @@ document.addEventListener('DOMContentLoaded', function() {
 			};
 			var queues = $('.add-queue-member:checked');
 			var unixgroups = $('.add-unixgroup-member:checked');
-console.log(queues);
-console.log(unixgroups);
+
+			var processed = {
+				users: 0,
+				queues: 0,
+				unixgroups: 0
+			};
+
+			var pending = {
+				users: users.length,
+				queues: queues.length,
+				unixgroups: unixgroups.length
+			};
+//console.log(queues);
+//console.log(unixgroups);
 			$.each(users, function(i, userid) {
 				post['userid'] = userid;
-console.log(post);
-				/*$.ajax({
-					url: btn.getAttribute('data-api'),
+//console.log(post);
+				$.ajax({
+					url: btn.data('api'),
 					type: 'post',
 					data: post,
 					dataType: 'json',
 					async: false,
 					success: function (data) {
-						//window.location.reload();
+						queues.each(function(k, checkbox){
+							$.ajax({
+								url: btn.data('api-queueusers'),
+								type: 'post',
+								data: {
+									'userid': userid,
+									//'groupid': btn.data('group'),
+									'queueid': checkbox.value,
+								},
+								dataType: 'json',
+								async: false,
+								success: function (data) {
+									processed['queues']++;
+									checkprocessed(processed, pending);
+								},
+								error: function (xhr, ajaxOptions, thrownError) {
+									//Halcyon.message('danger', xhr.response);
+									alert(xhr.response);
+									processed['queues']++;
+									checkprocessed(processed, pending);
+								}
+							});
+							console.log(btn.data('api-queueusers'));
+						});
+
+						unixgroups.each(function(k, checkbox){
+							$.ajax({
+								url: btn.data('api-unixgroupusers'),
+								type: 'post',
+								data: {
+									'userid': userid,
+									'groupid': btn.data('group'),
+									//'unixgroupid': checkbox.value,
+								},
+								dataType: 'json',
+								async: false,
+								success: function (data) {
+									processed['unixgroups']++;
+									checkprocessed(processed, pending);
+								},
+								error: function (xhr, ajaxOptions, thrownError) {
+									//Halcyon.message('danger', xhr.response);
+									alert(xhr.response);
+									processed['unixgroups']++;
+									checkprocessed(processed, pending);
+								}
+							});
+							console.log(btn.data('api-unixgroupusers'));
+						});
 					},
 					error: function (xhr, ajaxOptions, thrownError) {
-						Halcyon.message('danger', xhr.response);
+						//Halcyon.message('danger', xhr.response);
+						alert(xhr.response);
 					}
-				});*/
-
-				queues.each(function(k, checkbox){
-					$.ajax({
-						url: checkbox.getAttribute('data-api'),
-						type: 'post',
-						data: {
-							'userid': userid,
-						},
-						dataType: 'json',
-						async: false,
-						success: function (data) {
-							//window.location.reload();
-						},
-						error: function (xhr, ajaxOptions, thrownError) {
-							Halcyon.message('danger', xhr.response);
-						}
-					});
 				});
 			});
+			// Done?
 		});
+
+		// Remove user
+		$('.user-remove').on('click', function(e){
+			e.preventDefault();
+
+			var row = $($(this).attr('href'));
+			var boxes = row.find('input[type=checkbox]:checked');
+
+			boxes.each(function(i, el) {
+				$.ajax({
+					url: $(el).data('api'),
+					type: 'delete',
+					dataType: 'json',
+					async: false,
+					success: function (data) {
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						alert(xhr.response);
+					}
+				});
+			});
+
+			if ($(this).data('api')) {
+				$.ajax({
+					url: $(this).data('api'),
+					type: 'delete',
+					dataType: 'json',
+					async: false,
+					success: function (data) {
+						location.reload(true);
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						alert(xhr.response);
+					}
+				});
+			}
+		});
+
+		/*$('.user-move').on('click', function(e){
+			e.preventDefault();
+
+			MoveUser(
+				$(this).data('username'),
+				$(this).data('source'),
+				$(this).data('dest'),
+				($(this).data('noaction') == '1' ? true : false)
+			);
+		});*/
 	});
+
+	function checkprocessed(processed, pending) {
+		if (processed['users'] == pending.length) {
+			window.location.reload();
+		}
+	}
 </script>
 @endpush
 

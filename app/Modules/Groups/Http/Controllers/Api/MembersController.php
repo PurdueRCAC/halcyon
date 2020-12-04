@@ -382,7 +382,7 @@ class MembersController extends Controller
 	{
 		$row = Member::findOrFail($id);
 
-		if (!$row->trashed())
+		if (!$row->isTrashed())
 		{
 			if (!$row->delete())
 			{

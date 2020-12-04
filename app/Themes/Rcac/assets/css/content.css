@@ -2627,6 +2627,16 @@ html .select2-container--default.select2-container--focus .select2-selection--mu
 .panel-issuetodos .issue-todo-alert {
 	right: 5em;
 }
+body table.dataTable {
+	margin: 0 !important;
+}
+body table.dataTable tr.odd {
+	background-color: #fff;
+}
+body table.dataTable tr:first-child td {
+	border-top: none;
+}
+
 @media print {
 	.department a:after,
 	.login,
