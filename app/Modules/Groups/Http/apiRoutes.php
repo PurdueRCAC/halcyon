@@ -139,12 +139,12 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 	$router->put('{id}', [
 		'as' => 'api.groups.update',
 		'uses' => 'GroupsController@update',
-		'middleware' => 'auth:api|can:edit groups',
+		'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
 	]);
 	$router->delete('{id}', [
 		'as' => 'api.groups.delete',
 		'uses' => 'GroupsController@delete',
-		'middleware' => 'auth:api|can:delete groups',
+		'middleware' => ['auth:api', 'can:delete groups'],
 	]);
 
 	$router->group(['prefix' => '{group}/departments'], function (Router $router)

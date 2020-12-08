@@ -123,6 +123,6 @@ class UnixGroupMember extends Model
 	 */
 	public function user()
 	{
-		return $this->belongsTo('App\Modules\Users\Models\User', 'userid')->withTrashed();
+		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
 }

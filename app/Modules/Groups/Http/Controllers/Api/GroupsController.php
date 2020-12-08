@@ -10,6 +10,7 @@ use App\Modules\Groups\Models\Member;
 use App\Modules\Groups\Http\Resources\GroupResource;
 use App\Modules\Groups\Http\Resources\GroupResourceCollection;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\UserUsername;
 use Carbon\Carbon;
 
 /**
@@ -168,22 +169,25 @@ class GroupsController extends Controller
 		{
 			$gu = (new Member)->getTable();
 			$u = (new User)->getTable();
+			$uu = (new UserUsername)->getTable();
 
 			$filters['searchuser'] = strtolower((string)$filters['searchuser']);
 
 			$query->join($gu, $gu . '.groupid', $g . '.id');
 			$query->join($u, $u . '.id', $gu . '.userid');
+			$query->join($uu, $uu . '.userid', $u . '.id');
 
 			$query->where($gu . '.membertype', '=', 2);
-			$query->where(function($where) use ($g, $u, $filters)
+			$query->where(function($where) use ($g, $u, $uu, $filters)
 			{
 				$where->where($g . '.name', 'like', '%' . $filters['searchuser'] . '%')
-					->orWhere(function($users) use ($u, $filters)
+					->orWhere(function($users) use ($u, $uu, $filters)
 					{
 						$users->where($u . '.name', 'like', '%' . $filters['searchuser'] . '%')
 							->orWhere($u . '.name', 'like', $filters['searchuser'] . '%')
 							->orWhere($u . '.name', 'like', '%' . $filters['searchuser'])
-							->orWhere($u . '.username', 'like', $filters['searchuser'] . '%');
+							->orWhere($uu . '.username', 'like', $filters['searchuser'] . '%')
+							->orWhere($uu . '.username', 'like', '%' . $filters['searchuser'] . '%');
 					});
 			});
 		}
@@ -279,11 +283,13 @@ class GroupsController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'name' => 'required|max:255',
-			'unixgroup' => 'nullable|max:10',
+			'name' => 'required|string|max:255',
+			'unixgroup' => 'nullable|integer|max:10',
+			'userid' => 'nullable|integer'
 		]);
 
 		$name = $request->input('name');
+		$userid = $request->input('userid', auth()->user()->id);
 
 		$exists = Group::findByName($name);
 
@@ -293,13 +299,14 @@ class GroupsController extends Controller
 		}
 
 		$row = new Group;
-		$row->fill($request->all());
-		//$row->datetimecreated = Carbon::now()->toDateTimeString();
+		$row->name = $request->input('name');
 
 		// Verify UNIX group is sane - this is just a first pass,
 		// would still need to make sure this is not a duplicate anywhere, etc
-		if ($row->unixgroup)
+		if ($request->has('unixgroup'))
 		{
+			$row->unixgroup = $request->input('unixgroup');
+
 			if (!preg_match('/^[a-z][a-z0-9\-]{0,8}[a-z0-9]$/', $row->unixgroup))
 			{
 				return response()->json(['message' => trans('Field `unixgroup` not in valid format')], 415);
@@ -310,7 +317,7 @@ class GroupsController extends Controller
 			// Check for a duplicate
 			if ($exists)
 			{
-				return response()->json(['message' => trans('`unixgroup` ' . $dataobj->unixgroup . ' already exists')], 409);
+				return response()->json(['message' => trans('`unixgroup` :name already exists', ['name' => $row->unixgroup])], 409);
 			}
 
 			try
@@ -344,7 +351,7 @@ class GroupsController extends Controller
 
 		$member = new Member;
 		$member->groupid = $row->id;
-		$member->userid = auth()->user()->id;
+		$member->userid = $userid;
 		$member->membertype = 2;
 
 		if (!$member->save())
@@ -491,6 +498,8 @@ class GroupsController extends Controller
 			catch (\Exception $e)
 			{
 			}
+
+			$row->unixgroup = $unixgroup;
 		}
 
 		if ($request->has('name'))

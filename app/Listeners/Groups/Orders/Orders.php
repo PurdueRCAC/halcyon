@@ -33,8 +33,15 @@ class Orders
 	 */
 	public function handleGroupDisplay(GroupDisplay $event)
 	{
-		$content = null;
 		$group = $event->getGroup();
+		$user = auth()->user();
+
+		if (!$user || !($user->can('edit groups') || ($user->can('edit.own groups') && $group->isManager($user))))
+		{
+			return;
+		}
+
+		$content = null;
 		$client = app('isAdmin') ? 'admin' : 'site';
 
 		$content = view('orders::' . $client . '.orders.group', [

@@ -253,6 +253,12 @@ class UnixGroupMembersController extends Controller
 			return response()->json(['message' => trans('groups::groups.user not found')], 409);
 		}
 
+		if (!$unixgroup->group->isManager(auth()->user())
+		 && !auth()->user()->can('manage groups'))
+		{
+			return response()->json(['message' => trans('groups::groups.user not authorized')], 403);
+		}
+
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('messages.create failed')], 500);
@@ -318,7 +324,13 @@ class UnixGroupMembersController extends Controller
 			'notice' => 'nullable|integer'
 		]);
 
-		$row = UnixGroup::findOrFail($id);
+		$row = UnixGroupMember::findOrFail($id);
+
+		if (!$row->unixgroup->group->isManager(auth()->user())
+		 && !auth()->user()->can('manage groups'))
+		{
+			return response()->json(['message' => trans('groups::groups.user not authorized')], 403);
+		}
 
 		if ($request->has('notice'))
 		{

@@ -96,19 +96,14 @@ class Group extends Model
 	}
 
 	/**
-	 * Determine if record was modified
+	 * Determine if a user is a manager
 	 *
 	 * @return  boolean  True if modified, false if not
 	 */
-	public function isUpdated()
+	public function isManager($user)
 	{
-		if ($this->getOriginal('updated_at')
-		 && $this->getOriginal('updated_at') != '0000-00-00 00:00:00'
-		 && $this->getOriginal('updated_at') != $this->getOriginal('created_at'))
-		{
-			return true;
-		}
-		return false;
+		$managers = $this->managers->pluck('userid')->toArray();
+		return in_array($user->id, $managers);
 	}
 
 	/**
@@ -160,15 +155,15 @@ class Group extends Model
 	public function getManagersAttribute()
 	{
 		$m = (new Member)->getTable();
-		$u = (new \App\Modules\Users\Models\User)->getTable();
+		$u = (new \App\Modules\Users\Models\UserUsername)->getTable();
 
 		$managers = $this->members()
 			->select($m . '.*')
 			->join($u, $u . '.id', $m . '.userid')
 			->where(function($where) use ($u)
 			{
-				$where->whereNull($u . '.deleted_at')
-					->orWhere($u . '.deleted_at', '=', '0000-00-00 00:00:00');
+				$where->whereNull($u . '.dateremoved')
+					->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
 			})
 			->where($m . '.membertype', '=', 2)
 			->orderBy($m . '.datecreated', 'desc')

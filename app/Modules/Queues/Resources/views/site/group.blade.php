@@ -125,7 +125,7 @@
 										<?php } ?>
 									<?php } else { ?>
 										<tr>
-											<td colspan="6">(No queues found)</td>
+											<td colspan="6" class="text-center">(No queues found)</td>
 										</tr>
 									<?php } ?>
 								</tbody>

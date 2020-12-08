@@ -150,6 +150,46 @@ class GroupUser extends Model
 	}
 
 	/**
+	 * Query scope where is member
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereIsMember($query)
+	{
+		return $query->where('membertype', '=', MemberType::MEMBER);
+	}
+
+	/**
+	 * Query scope where membership is manager
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereIsManager($query)
+	{
+		return $query->where('membertype', '=', MemberType::MANAGER);
+	}
+
+	/**
+	 * Query scope where membership is viewer
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereIsViewer($query)
+	{
+		return $query->where('membertype', '=', MemberType::VIEWER);
+	}
+
+	/**
+	 * Query scope where membership is pending
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereIsPending($query)
+	{
+		return $query->where('membertype', '=', MemberType::PENDING);
+	}
+
+	/**
 	 * Defines a relationship to userrequest
 	 *
 	 * @return  void

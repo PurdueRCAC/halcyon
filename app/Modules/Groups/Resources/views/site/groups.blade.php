@@ -1,115 +1,131 @@
 
 @push('scripts')
+<script src="{{ asset('modules/groups/js/site.js?v=' . filemtime(public_path() . '/modules/groups/js/site.js')) }}"></script>
 <script>
-	/*$(document).ready(function() {
-		$('.reveal').on('click', function(e){
-			$($(this).data('toggle')).toggleClass('hide');
-
-			var text = $(this).data('text');
-			$(this).data('text', $(this).html()); //.replace(/"/, /'/));
-			$(this).html(text);
+	$(document).ready(function() {
+		var dialog = $(".new-group-dialog").dialog({
+			autoOpen: false,
+			height: 'auto',
+			width: 500,
+			modal: true
 		});
 
-		$('.add-department-row').on('click', function(e){
+		$('.add-group').on('click', function (e) {
 			e.preventDefault();
-
-			$.post($(this).data('api'), data, function(e){
-				var container = $(this).parent().parent();
-
-				var source   = $('#new-department').html(),
-					template = Handlebars.compile(source),
-					context  = {
-						"index" : container.find('li').length
-					},
-					html = template(context);
-				$(this).parent().appendBefore($(this));
-			});
+			$(".new-group-dialog").dialog('open');
 		});
 
-
-		$('#new_group_btn').on('click', function (event) {
-			event.preventDefault();
-
-			CreateNewGroup();
-		});
-		$('#new_group_input').on('keyup', function (event) {
-			if (event.keyCode == 13) {
+		$('#new_group_btn')
+			.on('click', function (e) {
+				e.preventDefault();
 				CreateNewGroup();
-			}
-		});
+			});
+		$('#new_group_input')
+			.on('keyup', function (e) {
+				if (e.keyCode == 13) {
+					CreateNewGroup();
+				}
+			});
+	});
+/**
+ * Create new group
+ *
+ * @return  {void}
+ */
+function CreateNewGroup() {
+	var input = document.getElementById("new_group_input"),
+		name = input.value;
 
-		$('#create_gitorg_btn').on('click', function (event) {
-			event.preventDefault();
-			CreateGitOrg($(this).data('value'));
-		});
+	if (!name) {
+		document.getElementById('new_group_action').innerHTML = 'Please enter a group name';
+		return;
+	}
 
-		$('.add-property').on('click', function(e){
-			e.preventDefault();
+	var post = JSON.stringify({
+		'name': name,
+		'userid': input.getAttribute('data-userid')
+	});
 
-			AddProperty($(this).data('prop'), $(this).data('value'));
-		});
-		$('.add-property-input').on('keyup', function(e){
-			e.preventDefault();
+	WSPostURL(input.getAttribute('data-api'), post, function(xml) {
+		if (xml.status < 400) {
+			var results = JSON.parse(xml.responseText);
 
-			if (event.keyCode==13){
-				AddProperty($(this).data('prop'), $(this).data('value'));
-			}
-		});
-		$('.edit-property').on('click', function(e){
-			e.preventDefault();
-
-			EditProperty($(this).data('prop'), $(this).data('value'));
-		});
-		$('.edit-property-input').on('keyup', function(event){
-			if (event.keyCode==13){
-				EditProperty($(this).data('prop'), $(this).data('value'));
-			}
-		});
-		$('.cancel-edit-property').on('click', function(e){
-			e.preventDefault();
-
-			CancelEditProperty($(this).data('prop'), $(this).data('value'));
-		});
-		$('.create-default-unix-groups').on('click', function(e){
-			e.preventDefault();
-			CreateDefaultUnixGroups($(this).data('value'), $(this).data('group'));
-		});
-		$('.delete-unix-group').on('click', function(e){
-			e.preventDefault();
-			DeleteUnixGroup($(this).data('unixgroup'), $(this).data('value'));
-		});
-	});*/
+			//location.reload(true);
+			window.location = input.getAttribute('data-uri') + '/' + results.data.id;
+		} else if (xml.status == 409) {
+			document.getElementById('new_group_action').innerHTML = ERRORS['creategroupduplicate'];
+		} else {
+			document.getElementById('new_group_action').innerHTML = ERRORS['creategroup'];
+		}
+	});
+}
 </script>
 @endpush
 
-	<div class="contentInner">
-		@if (auth()->user()->can('create groups'))
-			<div class="row">
-				<div class="col-md-9">
-					<h2>{{ trans('users::users.groups') }}</h2>
-				</div>
-				<div class="col-md-3 text-right">
-					<a class="btn btn-default float-right" href="{{ route('site.users.account.section', ['section' => 'groups']) }}">
-						<i class="fa fa-plus-circle"></i> {{ trans('global.create') }}
-					</a>
-				</div>
+<div class="contentInner">
+	@if (auth()->user()->can('create groups'))
+		<div class="row">
+			<div class="col-md-9">
+				<h2>{{ trans('users::users.groups') }}</h2>
 			</div>
-		@else
-			<h2>{{ trans('users::users.groups') }}</h2>
-		@endif
-
-		<div id="everything">
-			<ul>
-				@foreach ($groups as $g)
-				<li>
-					<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">
-						{{ $g->group->name }}
-						<span class="badge{{ $g->isManager() ? ' badge-success' : '' }}">{{ $g->type->name }}</span>
-					</a>
-				</li>
-				@endforeach
-			</ul>
-
+			<div class="col-md-3 text-right">
+				<a class="btn btn-default float-right add-group" href="{{ route('site.users.account.section', ['section' => 'groups']) }}">
+					<i class="fa fa-plus-circle"></i> {{ trans('global.create') }}
+				</a>
+			</div>
 		</div>
 
-	</div>
+		<div id="new_group_dialog" title="Create new group" class="new-group-dialog">
+			<form method="post" action="{{ route('site.users.account.section', ['section' => 'groups']) }}">
+				<div class="form-group">
+					<label for="new_group_input">Enter a name for a new group:</label>
+					<input type="text" id="new_group_input" class="form-control" data-userid="{{ $user->id }}" data-api="{{ route('api.groups.create') }}" data-uri="{{ route('site.users.account.section', ['section' => 'groups']) }}" value="" />
+					<div class="form-text text-muted">{{ $user->name }} will be added as a manager.</div>
+				</div>
+
+				<span id="new_group_action" class="alert alert-warning"></span>
+
+				<div class="dialog-footer">
+					<div class="row">
+						<div class="col-md-12 text-right">
+							<button type="submit" id="new_group_btn" class="btn btn-success">
+								<i class="fa fa-plus-circle" aria-hidden="true"></i> {{ trans('global.button.create') }}
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	@else
+		<h2>{{ trans('users::users.groups') }}</h2>
+	@endif
+
+	<div id="everything">
+		<div class="row">
+			@foreach ($groups as $g)
+			<div class="col-md-6">
+				<div class="card panel panel-default shadow-sm">
+					<div class="card-body panel-body">
+						<span class="badge{{ $g->isManager() ? ' badge-success' : '' }} pull-right">{{ $g->type->name }}</span>
+						<h3 class="card-title panel-title">
+							<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">
+								{{ $g->group->name }}
+							</a>
+						</h3>
+						<p class="card-text">Base Unix group: {!! $g->group->unixgroup ? $g->group->unixgroup : '<span class="none text-muted">' . trans('global.none') . '</span>' !!}</p>
+					</div>
+					@if ($g->isManager() || auth()->user()->can('manage groups'))
+						<div class="card-footer panel-footer">
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="btn-group">
+									<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}#members" class="btn btn-default btn-sm">Manage</a>
+								</div>
+							</div>
+						</div>
+					@endif
+				</div>
+			</div>
+			@endforeach
+		</div>
+	</div><!-- / #everything -->
+</div><!-- / .contentInner -->

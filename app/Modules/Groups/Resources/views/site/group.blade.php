@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 
 
-		$('#new_group_btn').on('click', function (event) {
+		/*$('#new_group_btn').on('click', function (event) {
 			event.preventDefault();
 
 			CreateNewGroup();
@@ -200,10 +200,10 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 
-		/*$('#create_gitorg_btn').on('click', function (event) {
+		$('#create_gitorg_btn').on('click', function (event) {
 			event.preventDefault();
 			CreateGitOrg($(this).data('value'));
-		});*/
+		});
 
 		$('.add-property').on('click', function(e){
 			e.preventDefault();
@@ -216,26 +216,115 @@ document.addEventListener('DOMContentLoaded', function() {
 			if (event.keyCode==13){
 				AddProperty($(this).data('prop'), $(this).data('value'));
 			}
-		});
+		});*/
+
 		$('.edit-property').on('click', function(e){
 			e.preventDefault();
 
-			EditProperty($(this).data('prop'), $(this).data('value'));
+			var items = ['SPAN', 'INPUT', 'CANCEL', 'SAVE', 'EDIT'], item;
+			for (var i = 0; i < items.length; i++)
+			{
+				item = $('#' + items[i] + '_' + $(this).data('prop') + '_' + $(this).data('value'));
+				if (item.length) {
+					item.toggleClass('hide');
+				}
+			}
+
+			//EditProperty($(this).data('prop'), $(this).data('value'));
+			/*$('#SPAN_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
+			$('#INPUT_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
+			$('#CANCEL_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
+			$('#SAVE_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
+			$('#EDIT_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');*/
 		});
+
 		$('.edit-property-input').on('keyup', function(event){
-			if (event.keyCode==13){
+			if (event.keyCode == 13) {
 				EditProperty($(this).data('prop'), $(this).data('value'));
 			}
 		});
+
 		$('.cancel-edit-property').on('click', function(e){
 			e.preventDefault();
 
-			CancelEditProperty($(this).data('prop'), $(this).data('value'));
+			var items = ['SPAN', 'INPUT', 'CANCEL', 'SAVE', 'EDIT'], item;
+			for (var i = 0; i < items.length; i++)
+			{
+				item = $('#' + items[i] + '_' + $(this).data('prop') + '_' + $(this).data('value'));
+				if (item.length) {
+					item.toggleClass('hide');
+				}
+			}
+
+			//CancelEditProperty($(this).data('prop'), $(this).data('value'));
+			/*$('#SPAN_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
+			$('#INPUT_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
+			$('#CANCEL_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
+			$('#SAVE_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
+			$('#EDIT_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');*/
 		});
-		$('.create-default-unix-groups').on('click', function(e){
+
+		$('.save-property').on('click', function(e){
+			e.preventDefault();
+
+			var btn = $(this),
+				input = $('#INPUT_' + btn.data('prop') + '_' + btn.data('value'));
+
+			btn.attr('data-loading', true);
+			//btn.find('.spinner-border').toggleClass('hide');
+			//btn.find('.fa').toggleClass('hide');
+
+			var post = {};
+			post[btn.data('prop')] = input.val();
+
+			$.ajax({
+				url: btn.data('api'),
+				type: 'put',
+				data: post,
+				dataType: 'json',
+				async: false,
+				success: function (data) {
+					if (btn.data('reload')) {
+						window.location.reload(true);
+						return;
+					}
+
+					var span = $('#SPAN_' + btn.data('prop') + '_' + btn.data('value'));
+					if (span.length) {
+						span.toggleClass('hide');
+						span.html(data.data[btn.data('prop')]);
+					}
+					input.toggleClass('hide');
+
+					//btn.find('.spinner-border').toggleClass('hide');
+					//btn.find('.fa').toggleClass('hide');
+					btn.attr('data-loading', false);
+					btn.toggleClass('hide');
+
+					var cancel = $('#CANCEL_' + btn.data('prop') + '_' + btn.data('value'));
+					if (cancel.length) {
+						cancel.toggleClass('hide');
+					}
+					var edit = $('#EDIT_' + btn.data('prop') + '_' + btn.data('value'));
+					if (edit.length) {
+						edit.toggleClass('hide');
+					}
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					//Halcyon.message('danger', xhr.response);
+					//btn.find('spinner-border').toggleClass('hide');
+					//btn.find('fa').toggleClass('hide');
+					btn.attr('data-loading', false);
+					alert(xhr.responseJSON.message);
+					//console.log(xhr);
+				}
+			});
+		});
+
+		/*$('.create-default-unix-groups').on('click', function(e){
 			e.preventDefault();
 			CreateDefaultUnixGroups($(this).data('value'), $(this).data('group'));
-		});
+		});*/
 		$('.delete-unix-group').on('click', function(e){
 			e.preventDefault();
 			DeleteUnixGroup($(this).data('unixgroup'), $(this).data('value'));
@@ -372,14 +461,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			var pending = {
 				users: users.length,
-				queues: queues.length,
-				unixgroups: unixgroups.length
+				queues: queues.length * users.length,
+				unixgroups: unixgroups.length * users.length
 			};
-//console.log(queues);
-//console.log(unixgroups);
+
 			$.each(users, function(i, userid) {
 				post['userid'] = userid;
-//console.log(post);
+
 				$.ajax({
 					url: btn.data('api'),
 					type: 'post',
@@ -387,6 +475,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					dataType: 'json',
 					async: false,
 					success: function (data) {
+						processed['users']++;
+
 						queues.each(function(k, checkbox){
 							$.ajax({
 								url: btn.data('api-queueusers'),
@@ -404,7 +494,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								},
 								error: function (xhr, ajaxOptions, thrownError) {
 									//Halcyon.message('danger', xhr.response);
-									alert(xhr.response);
+									alert(xhr.responseJSON.message);
 									processed['queues']++;
 									checkprocessed(processed, pending);
 								}
@@ -418,8 +508,8 @@ document.addEventListener('DOMContentLoaded', function() {
 								type: 'post',
 								data: {
 									'userid': userid,
-									'groupid': btn.data('group'),
-									//'unixgroupid': checkbox.value,
+									//'groupid': btn.data('group'),
+									'unixgroupid': checkbox.value
 								},
 								dataType: 'json',
 								async: false,
@@ -429,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								},
 								error: function (xhr, ajaxOptions, thrownError) {
 									//Halcyon.message('danger', xhr.response);
-									alert(xhr.response);
+									alert(xhr.responseJSON.message);
 									processed['unixgroups']++;
 									checkprocessed(processed, pending);
 								}
@@ -439,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					},
 					error: function (xhr, ajaxOptions, thrownError) {
 						//Halcyon.message('danger', xhr.response);
-						alert(xhr.response);
+						alert(xhr.responseJSON.message);
 					}
 				});
 			});
@@ -447,7 +537,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 
 		// Remove user
-		$('.user-remove').on('click', function(e){
+		$('body').on('click', '.membership-remove', function(e){
 			e.preventDefault();
 
 			var row = $($(this).attr('href'));
@@ -462,7 +552,10 @@ document.addEventListener('DOMContentLoaded', function() {
 					success: function (data) {
 					},
 					error: function (xhr, ajaxOptions, thrownError) {
-						alert(xhr.response);
+						if (xhr.status == 416) {
+							SetError("Queue disabled for system/guest account. ACMaint Role removal must be requested manually from accounts@purdue.edu", null);
+						}
+						//alert(xhr.response);
 					}
 				});
 			});
@@ -477,35 +570,116 @@ document.addEventListener('DOMContentLoaded', function() {
 						location.reload(true);
 					},
 					error: function (xhr, ajaxOptions, thrownError) {
-						alert(xhr.response);
+						alert(xhr.responseJSON.message);
 					}
 				});
 			}
 		});
 
-		/*$('.user-move').on('click', function(e){
+		$('body').on('click', '.membership-move', function(e){
 			e.preventDefault();
 
-			MoveUser(
-				$(this).data('username'),
-				$(this).data('source'),
-				$(this).data('dest'),
-				($(this).data('noaction') == '1' ? true : false)
-			);
-		});*/
+			var parent = $($(this).attr('href'));
+
+			parent.find('.membership-toggle').each(function(i, el){
+				if ($(el).is(':checked')) {
+					$(el).prop('checked', false).change();
+				}
+			});
+
+			if ($(this).data('api')) {
+				$.ajax({
+					url: $(this).data('api'),
+					type: 'put',
+					data: {
+						membertype: $(this).data('target')
+					},
+					dataType: 'json',
+					async: false,
+					success: function (data) {
+						location.reload(true);
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						alert(xhr.responseJSON.message);
+					}
+				});
+			}
+		});
+
+		$('body').on('change', '.membership-toggle', function(e){
+			e.preventDefault();
+
+			if ($(this).is(':checked')) {
+				var post = {
+					userid: $(this).data('userid')
+				};
+				if ($(this).hasClass('queue-toggle')) {
+					post['groupid'] = $('#groupid').val();
+					post['queueid'] = $(this).data('objectid');
+				} else {
+					post['unixgroupid'] = $(this).data('objectid');
+				}
+
+				$.ajax({
+					url: $(this).data('api'),
+					type: 'post',
+					data: post,
+					dataType: 'json',
+					async: false,
+					success: function (data) {
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						if (xhr.status == 416) {
+							alert("Queue enabled for system/guest account. ACMaint Role addition must be requested manually from accounts@purdue.edu", null);
+						} else {
+							alert(xhr.responseJSON.message);
+						}
+					}
+				});
+			} else {
+				$.ajax({
+					url: $(this).data('api'),
+					type: 'delete',
+					dataType: 'json',
+					async: false,
+					success: function (data) {
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						if (xhr.status == 416) {
+							alert("Queue disabled for system/guest account. ACMaint Role removal must be requested manually from accounts@purdue.edu", null);
+						} else {
+							alert(xhr.responseJSON.message);
+						}
+					}
+				});
+			}
+		});
+
+		$('body').on('click', '.membership-allqueues', function(e){
+			e.preventDefault();
+
+			var parent = $($(this).attr('href'));
+
+			parent.find('.membership-toggle').each(function(i, el){
+				if (!$(el).is(':checked')) {
+					$(el).prop('checked', true).change();
+				}
+			});
+		});
 	});
 
 	function checkprocessed(processed, pending) {
-		if (processed['users'] == pending.length) {
-			window.location.reload();
+		if (processed['users'] == pending['users']
+		 && processed['queues'] == pending['queues']
+		 && processed['unixgroups'] == pending['unixgroups']) {
+			window.location.reload(true);
 		}
 	}
 </script>
 @endpush
 
-
 @php
-$canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own groups') && $group->ownerid == $user->id);
+$canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own groups') && $group->isManager(auth()->user()));
 @endphp
 
 	<div class="contentInner">
@@ -526,40 +700,6 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 			</div>
 		</div>
 
-		<!-- 
-		@if (auth()->user()->can('manage users'))
-			<div class="card panel panel-default card-admin">
-				<div class="card-header panel-heading">
-					Admin Options
-				</div>
-				<div class="card-body panel-body">
-					<form method="get" action="{{ route('site.users.account.section', ['section' => 'groups']) }}">
-						<div class="form-group">
-							<label for="newuser">Search for someone:</label>
-							<div class="input-group">
-								<input type="text" name="newuser" id="newuser" class="form-control searchuser" autocorrect="off" autocapitalize="off" />
-								<div id="user_results" class="searchMain usersearch_results"></div>
-								<div class="input-group-addon">
-									<span class="input-group-text">
-										<i class="fa fa-search" aria-hidden="true" id="add_button_a"></i>
-										<img src="/include/images/loading.gif" width="14" id="search_loading" alt="Loading..." class="icon" />
-									</span>
-								</div>
-							</div>
-							<span id="add_errors"></span>
-						</div>
-					</form>
-
-					@if ($user->id != auth()->user()->id)
-						<p>
-							Showing information for "{{ $user->name }}":
-						</p>
-					@endif
-				</div>
-			</div>
-		@endif
-		 -->
-
 		<div id="everything">
 			<ul class="nav nav-tabs tabs">
 				<li class="nav-item">
@@ -567,11 +707,13 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 						Overview
 					</a>
 				</li>
+			@if ($canManage)
 				<li class="nav-item">
 					<a href="#DIV_group-members" id="group-members" class="nav-link tab">
 						Members
 					</a>
 				</li>
+			@endif
 			@foreach ($sections as $section)
 				<li class="nav-item">
 					<a href="#DIV_group-{{ $section['route'] }}" id="group-{{ $section['route'] }}" class="nav-link tab">{{ $section['name'] }}</a>
@@ -591,6 +733,7 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 			@endif
 			</ul>
 
+			<input type="hidden" id="groupid" value="{{ $group->id }}" />
 			<input type="hidden" id="HIDDEN_property_{{ $group->id }}" value="{{ $group->id }}" />
 			<!-- <div class="tabMain" id="tabMain"> -->
 

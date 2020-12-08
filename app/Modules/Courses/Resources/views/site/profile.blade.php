@@ -195,18 +195,6 @@
 									<?php echo $class->subjectArea . ' ' . $class->courseNumber . ' (' . $class->classExternalId . ') - ' . $class->semester; ?>
 								</option>
 							<?php } ?>
-																	<option id="option_class_65511" data-crn="65511" data-classid="939438188" data-userid="/ws/user/89578" data-semester="Fall 2020" data-start="2020-08-24" data-stop="2020-12-19" data-classname="Intermed Fluid Mech" data-count="33" data-reference="Fall2020PWL" data-instructors="[]" data-students="{ &quot;students&quot;: [&quot;acusator@purdue.edu&quot;,&quot;coolc@purdue.edu&quot;,&quot;damlen@purdue.edu&quot;,&quot;davi1381@purdue.edu&quot;,&quot;evans360@purdue.edu&quot;,&quot;ewestph@purdue.edu&quot;,&quot;guo468@purdue.edu&quot;,&quot;hess35@purdue.edu&quot;,&quot;ikatsamb@purdue.edu&quot;,&quot;jacks537@purdue.edu&quot;,&quot;jrivaspa@purdue.edu&quot;,&quot;jstibore@purdue.edu&quot;,&quot;kennelt@purdue.edu&quot;,&quot;leon28@purdue.edu&quot;,&quot;ltuite@purdue.edu&quot;,&quot;ma620@purdue.edu&quot;,&quot;nelso269@purdue.edu&quot;,&quot;nlucarel@purdue.edu&quot;,&quot;nsuriana@purdue.edu&quot;,&quot;obalican@purdue.edu&quot;,&quot;patel426@purdue.edu&quot;,&quot;pgarriso@purdue.edu&quot;,&quot;psardana@purdue.edu&quot;,&quot;quanz@purdue.edu&quot;,&quot;regan21@purdue.edu&quot;,&quot;smithe@purdue.edu&quot;,&quot;snyde172@purdue.edu&quot;,&quot;song692@purdue.edu&quot;,&quot;tomlin0@purdue.edu&quot;,&quot;ubajwa@purdue.edu&quot;,&quot;victor1@purdue.edu&quot;,&quot;yu864@purdue.edu&quot;,&quot;zdoerger@purdue.edu&quot;]}">
-									ME 50900 (65511) - Fall 2020										</option>
-																	<option id="option_class_26581" data-crn="26581" data-classid="1038038730" data-userid="/ws/user/89578" data-semester="Fall 2020" data-start="2020-08-24" data-stop="2020-12-19" data-classname="Intermed Fluid Mech" data-count="4" data-reference="Fall2020PWL" data-instructors="[]" data-students="{ &quot;students&quot;: [&quot;huan1483@purdue.edu&quot;,&quot;kulkar70@purdue.edu&quot;,&quot;mart1282@purdue.edu&quot;,&quot;wang2846@purdue.edu&quot;]}">
-									ME 50900OL (26581) - Fall 2020										</option>
-																	<option id="option_class_28221" data-crn="28221" data-classid="1053207956" data-userid="/ws/user/89578" data-semester="Fall 2020" data-start="2020-08-24" data-stop="2020-12-19" data-classname="Continuum Sim-Multiphase Flows" data-count="1" data-reference="Fall2020PWL" data-instructors="[]" data-students="{ &quot;students&quot;: [&quot;gupta598@purdue.edu&quot;]}">
-									ME 59700ZC (28221) - Fall 2020										</option>
-																	<option id="option_class_28605" data-crn="28605" data-classid="1058242693" data-userid="/ws/user/89578" data-semester="Fall 2020" data-start="2020-08-24" data-stop="2020-12-19" data-classname="Math Methods Fluid Mech" data-count="1" data-reference="Fall2020PWL" data-instructors="[]" data-students="{ &quot;students&quot;: [&quot;pandes@purdue.edu&quot;]}">
-									ME 49800ZD (28605) - Fall 2020										</option>
-																	<option id="option_class_65511" data-crn="65511" data-classid="1027859631" data-userid="/ws/user/89578" data-semester="Fall 2021" data-start="2021-08-23" data-stop="2021-12-18" data-classname="Intermed Fluid Mech" data-count="0" data-reference="Fall2021PWL" data-instructors="[]" data-students="{ &quot;students&quot;: []}">
-									ME 50900 (65511) - Fall 2021										</option>
-																	<option id="option_class_21488" data-crn="21488" data-classid="1064192006" data-userid="/ws/user/89578" data-semester="Spring 2022" data-start="2022-01-10" data-stop="2022-05-07" data-classname="Fluid Mechanics" data-count="0" data-reference="Spring2022PWL" data-instructors="[]" data-students="{ &quot;students&quot;: []}">
-									ME 30900 (21488) - Spring 2022										</option>
 						</select>
 					</div>
 				</div>
@@ -242,13 +230,13 @@
 
 						<div id="class_people"></div>
 
-						<?php if ($class->semester != 'Workshop') { ?>
+						<?php //if ($class->semester != 'Workshop') { ?>
 							<br/>
 							<div class="form-group">
 								<label for="searchuser">Add instructors, TAs, or others:</label><br/>
 								<input type="text" id="searchuser" class="form-control" size="30" value="" />
 							</div>
-						<?php } ?>
+						<?php //} ?>
 
 						<br/>
 					</div>

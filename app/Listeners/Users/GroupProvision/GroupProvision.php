@@ -10,6 +10,8 @@ namespace App\Listeners\Users\GroupProvision;
 use App\Modules\Users\Events\UserUpdated;
 use App\Modules\Groups\Events\UnixGroupCreating;
 use App\Modules\Groups\Events\UnixGroupDeleted;
+use App\Modules\Groups\Events\UnixGroupMemberCreated;
+use App\Modules\Groups\Events\UnixGroupMemberDeleted;
 use App\Modules\History\Traits\Loggable;
 use GuzzleHttp\Client;
 
@@ -31,6 +33,8 @@ class GroupProvision
 		$events->listen(UserUpdated::class, self::class . '@handleUserUpdated');
 		$events->listen(UnixGroupCreating::class, self::class . '@handleUnixGroupCreating');
 		$events->listen(UnixGroupDeleted::class, self::class . '@handleUnixGroupDeleted');
+		$events->listen(UnixGroupMemberCreated::class, self::class . '@handleUnixGroupMemberCreated');
+		$events->listen(UnixGroupMemberDeleted::class, self::class . '@handleUnixGroupMemberDeleted');
 	}
 
 	/**
@@ -180,6 +184,50 @@ class GroupProvision
 	}
 
 	/**
+	 * Handle a unix group being created
+	 *
+	 * @param   object  $event
+	 * @return  void
+	 */
+	public function handleUnixGroupMemberCreated(UnixGroupMemberCreated $event)
+	{
+		$config = config('listener.groupprovision', []);
+
+		if (empty($config))
+		{
+			return;
+		}
+
+		$member = $event->member;
+
+		try
+		{
+			// Call central accounting service to request status
+			$client = new Client();
+
+			$url = $config['url'] . 'addGroupMember/rcs/pucc_rcd/' . $member->unixgroup->shortname . '/' . $member->user->username;
+
+			$res = $client->request('PUT', $url, [
+				'auth' => [
+					$config['user'],
+					$config['password']
+				]
+			]);
+
+			$status = $res->getStatusCode();
+			$body   = $res->getBody();
+		}
+		catch (\Exception $e)
+		{
+			//Log::error($e->getMessage());
+			$status = 500;
+			$body   = ['error' => $e->getMessage()];
+		}
+
+		$this->log('groupprovision', __METHOD__, 'POST', $status, $body, $url);
+	}
+
+	/**
 	 * Handle a unix group being deleted
 	 *
 	 * @param   object  $event
@@ -194,12 +242,14 @@ class GroupProvision
 			return;
 		}
 
+		$member = $event->member;
+
 		try
 		{
 			// Call central accounting service to request status
 			$client = new Client();
 
-			$url = $config['url'] . 'removeGroupMember/rcs/pucc_rcd/' . $this->member->unixgroup->shortname . '/' . $this->member->user->username;
+			$url = $config['url'] . 'removeGroupMember/rcs/pucc_rcd/' . $member->unixgroup->shortname . '/' . $member->user->username;
 
 			$res = $client->request('PUT', $url, [
 				'auth' => [

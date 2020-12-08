@@ -28,8 +28,12 @@ function CreateNewGroupVal(num, btn) {
 
 	// The callback only accepts one argument, so we
 	// need to compact this
-	var args = [num, group];
-
+	//var args = [num, group];
+	var post = {
+		'longname': BASEGROUPS[num],
+		'groupid': group
+	};
+	console.log(post);
 	$.ajax({
 		url: btn.data('api'),
 		type: 'post',
@@ -46,14 +50,14 @@ function CreateNewGroupVal(num, btn) {
 					CreateNewGroupVal(num, btn);
 				}, 5000);
 			} else {
-				Halcyon.message('success', 'Item added');
+				//Halcyon.message('success', 'Item added');
 				window.location.reload(true);
 			}
 		},
 		error: function (xhr, ajaxOptions, thrownError) {
 			//console.log(xhr);
 			btn.find('.spinner-border').addClass('d-none');
-			Halcyon.message('danger', xhr.responseJSON.message);
+			alert(xhr.responseJSON.message);
 		}
 	});
 }
@@ -66,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		$('.searchable-select').select2();
 	}
 
-	$('#main').on('change', '.membertype', function () {
+	/*$('#main').on('change', '.membertype', function () {
 		$.ajax({
 			url: $(this).data('api'),
 			type: 'put',
@@ -80,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				Halcyon.message('danger', 'Failed to update member type.');
 			}
 		});
-	});
+	});*/
 
 	$('.input-unixgroup').on('keyup', function (e) {
 		var val = $(this).val();
@@ -95,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('.create-default-unix-groups').on('click', function (e) {
 		e.preventDefault();
 
-		$(this).find('.spinner-border').removeClass('d-none');
+		$(this).attr('data-loading', true);
 
 		CreateNewGroupVal(0, $(this));
 	});

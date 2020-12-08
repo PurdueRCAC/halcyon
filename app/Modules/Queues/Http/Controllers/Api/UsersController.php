@@ -5,7 +5,11 @@ namespace App\Modules\Queues\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Queues\Models\User;
+use App\Modules\Users\Models\User;
+use App\Modules\Queues\Models\User as QueueUser;
+use App\Modules\Queues\Models\Queue;
+use App\Modules\Queues\Models\GroupUser;
+use App\Modules\Group\Models\Group;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -82,7 +86,7 @@ class UsersController extends Controller
 			$filters['order_dir'] = 'asc';
 		}
 
-		$query = User::query();
+		$query = QueueUser::query();
 
 		if ($filters['queueid'])
 		{
@@ -137,10 +141,80 @@ class UsersController extends Controller
 			'membertype' => 'nullable|integer',
 		]);
 
-		$row = new User();
-		$row->fill($request->all());
-		$row->membertype = $row->membertype ?: 1;
-		$row->notice = 2;
+		$queue = Queue::findOrFail($request->input('queueid'));
+
+		$row = QueueUser::query()
+			->where('queueid', '=', $request->input('queueid'))
+			->where('userid', '=', $request->input('userid'))
+			->get()
+			->first();
+
+		// Set notice state
+		if ($row)
+		{
+			// Nothing to do, we are cancelling a removal
+			$row->notice = 0;
+		}
+		else
+		{
+			$row = new QueueUser();
+			$row->queueid = $request->input('queueid');
+			$row->userid = $request->input('userid');
+			if ($request->has('userrequestid'))
+			{
+				$row->userrequestid = $request->input('userrequestid');
+			}
+			$row->membertype = $request->input('membertype');
+			$row->membertype = $row->membertype ?: 1;
+			$row->notice = 2;
+		}
+
+		// Look up the current username of the user being granted access.
+		$user = User::findOrFail($row->userid);
+
+		if ($user->isTrashed())
+		{
+			return response()->json(['message' => trans('global.error.user not found')], 409);
+		}
+
+		if ($queue->groupid
+		 && !$queue->group->isManager(auth()->user())
+		 && !auth()->user()->can('manage groups'))
+		{
+			return response()->json(['message' => trans('global.error.user not authorized')], 403);
+		}
+
+		if (!$queue->groupid)
+		{
+			$groupid = $request->input('groupid');
+
+			if (!$groupid)
+			{
+				return response()->json(['message' => trans('Missing required field `group`')], 415);
+			}
+
+			$group = Group::findOrFail($groupid);
+
+			if (!$group->isManager(auth()->user())
+			 && !auth()->user()->can('manage groups'))
+			{
+				return response()->json(['message' => trans('global.error.user not authorized')], 403);
+			}
+
+			$groupuser = GroupUser::query()
+				->where('groupid', '=', $group->id)
+				->where('queueuserid', '=', $row->id)
+				->first();
+
+			if ($groupuser)
+			{
+				$groupuser->update(['notice' => 0]);
+			}
+			else
+			{
+				$row->notice = 2;
+			}
+		}
 
 		$row->save();
 
@@ -165,7 +239,7 @@ class UsersController extends Controller
 	 */
 	public function read($id)
 	{
-		$row = User::findOrFail($id);
+		$row = QueueUser::findOrFail($id);
 
 		return new JsonResource($row);
 	}
@@ -240,7 +314,7 @@ class UsersController extends Controller
 			'notice' => 'nullable|integer',
 		]);
 
-		$row = User::findOrFail($id);
+		$row = QueueUser::findOrFail($id);
 		$row->fill($request->all());
 
 		if ($request->has('queueid'))
@@ -290,7 +364,7 @@ class UsersController extends Controller
 	 */
 	public function delete($id)
 	{
-		$row = User::findOrFail($id);
+		$row = QueueUser::findOrFail($id);
 
 		// Determine notice level
 		if ($row->notice == 2)
@@ -306,7 +380,7 @@ class UsersController extends Controller
 			$row->notice = 3;
 		}
 
-		if ($groupid == 0)
+		if ($row->groupid == 0)
 		{
 			// Only allow delete if no groupqueueuser entries are present
 			$gqusers = GroupUser::query()
@@ -335,6 +409,19 @@ class UsersController extends Controller
 			// Set notice to 0 for now
 			$row->notice = 0;
 		}
+
+		$row->update(['notice' => $row->notice]);
+
+		// Skip actually deleting the database entry if there are pending requests for this queue (but continue with deleting accounts)
+		/*$gqusers = GroupUser::query()
+			->where('queueuserid', '=', $row->id)
+			->whereIsMember()
+			->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->get();*/
 
 		if (!$row->delete())
 		{

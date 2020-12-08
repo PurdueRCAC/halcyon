@@ -35,6 +35,8 @@
 			return $item->parentstoragedirid == 0 && $item->storageresourceid == 4;
 		});
 
+	if (count($rows))
+	{
 		foreach ($rows as $row)
 		{
 			?>
@@ -649,8 +651,8 @@
 			<?php
 			}
 			?>
-		</div>
-		<div class="col-md-12">
+		</div><!-- / .panel -->
+
 			<div class="card panel panel-default">
 				<div class="card-header panel-heading">
 					{{ trans('storage::storage.history') }}
@@ -677,6 +679,7 @@
 				}
 				$history = array_reverse($history);
 				?>
+				@if (count($history))
 				<table class="table table-hover">
 					<caption class="sr-only">{{ trans('storage::storage.history') }}</caption>
 					<thead>
@@ -734,7 +737,10 @@
 						@endforeach
 					</tbody>
 				</table>
-			</div></div>
+				@else
+					<p class="text-center text-muted">{{ trans('global.none') }}</p>
+				@endif
+			</div><!-- / .panel -->
 
 			<div class="card panel panel-default">
 				<div class="card-header panel-heading">
@@ -797,5 +803,15 @@
 					@endif
 				</div>
 			</div><!-- / .panel -->
+
+		<?php
+	}
+	else
+	{
+		?>
+		<p class="text-center text-muted">{{ trans('global.none') }}</p>
+		<?php
+	}
+	?>
 		</div><!-- / .col -->
 	</div><!-- / .row -->
