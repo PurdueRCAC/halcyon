@@ -103,10 +103,9 @@ $(document).ready(function() {
 @endpush
 
 @section('content')
-
-@include('users::site.admin', ['user' => $user])
-
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
+	@include('users::site.admin', ['user' => $user])
+
 	<h2>{{ $user->name }}</h2>
 
 	<div class="qlinks">
