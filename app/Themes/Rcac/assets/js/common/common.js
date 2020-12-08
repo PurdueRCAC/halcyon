@@ -155,6 +155,7 @@ function WSPostURL(id, json, result_function, arg1) {
 		}
 	}
 	xml.open("POST",url,true);
+	xml.setRequestHeader("Content-type", "application/json");
 	xml.setRequestHeader('Authorization', 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content'));
 	xml.send(json);
 }
@@ -183,6 +184,7 @@ function WSPutURL(id, json, result_function, arg1) {
 		}
 	}
 	xml.open("PUT", url, true);
+	xml.setRequestHeader("Content-type", "application/json");
 	xml.setRequestHeader('Authorization', 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content'));
 	xml.send(json);
 }
@@ -530,6 +532,17 @@ $(document).ready(function() {
 		content: function () {
 			return $(this).attr('alt');
 		}
+	});
+
+	$('.tip').tooltip({
+		position: {
+			my: 'center bottom',
+			at: 'center top'
+		},
+		// When moving between hovering over many elements quickly, the tooltip will jump around
+		// because it can't start animating the fade in of the new tip until the old tip is
+		// done. Solution is to disable one of the animations.
+		hide: false
 	});
 
 	$.ajaxSetup({
