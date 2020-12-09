@@ -341,7 +341,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			scrollX: true,
 			autoWidth: false,
 			language: {
-				searchPlaceholder: "Filter users..."
+				searchPlaceholder: "Filter users...",
+				search: "_INPUT_",
 			},
 			fixedColumns: {
 				leftColumns: 1//,
