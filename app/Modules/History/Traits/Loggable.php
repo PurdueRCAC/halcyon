@@ -48,7 +48,7 @@ trait Loggable
 			'servername'      => request()->getHttpHost(),
 			'uri'             => $uri,
 			'app'             => $app,
-			'payload'         => Str::limit(json_encode($payload), 255, ''),
+			'payload'         => Str::limit(json_encode($payload), 2000, ''),
 			'classname'       => Str::limit($cls, 32, ''),
 			'classmethod'     => Str::limit($fnc, 16, ''),
 		]);
