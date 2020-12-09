@@ -68,7 +68,11 @@ class ProductsController extends Controller
 		$query = Product::query()
 			->select($p . '.*', $c . '.name AS category_name')
 			->join($c, $c . '.id', $p . '.ordercategoryid')
-			->where($c . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			->where(function($where) use ($c)
+			{
+				$where->whereNull($c . '.datetimeremoved')
+					->orWhere($c . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			});
 
 		if ($filters['search'])
 		{

@@ -21,7 +21,7 @@
 @endphp
 
 @section('content')
-<form action="{{ route('admin.orders.products.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('JGLOBAL_VALIDATION_FORM_FAILED') }}">
+<form action="{{ route('admin.orders.products.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 	<div class="row">
 		<div class="col col-md-7">
 			<fieldset>
@@ -49,15 +49,19 @@
 
 				<div class="row">
 					<div class="col col-md-6">
-						<div class="form-group{{ $errors->has('unitprice') ? ' has-error' : '' }}">
-							<label for="field-unitprice">{{ trans('orders::orders.price') }}: <span class="required">{{ trans('global.required') }}</span></label>
-							<input type="text" name="fields[unitprice]" id="field-unitprice" class="form-control required" maxlength="250" value="{{ $row->unitprice }}" />
+						<div class="form-group{{ $errors->has('fields.unitprice') ? ' has-error' : '' }}">
+							<label for="field-unitprice">{{ trans('orders::orders.price') }} <span class="required">{{ trans('global.required') }}</span></label>
+							<span class="input-group">
+								<span class="input-group-addon"><span class="input-group-text">{{ config('module.orders.currency', '$') }}</span></span>
+								<input type="text" name="fields[unitprice]" id="field-unitprice" class="form-control form-currency required" maxlength="250" value="{{ str_replace('$', '', $row->price) }}" />
+							</span>
 						</div>
 					</div>
 					<div class="col col-md-6">
-						<div class="form-group{{ $errors->has('unit') ? ' has-error' : '' }}">
-							<label for="field-unit">{{ trans('orders::orders.unit') }}: <span class="required">{{ trans('global.required') }}</span></label>
-							<input type="text" name="fields[unit]" id="field-unit" class="form-control required" maxlength="250" value="{{ $row->unit }}" />
+						<div class="form-group{{ $errors->has('fields.unit') ? ' has-error' : '' }}">
+							<label for="field-unit">{{ trans('orders::orders.unit') }} <span class="required">{{ trans('global.required') }}</span></label>
+							<input type="text" name="fields[unit]" id="field-unit" class="form-control required" maxlength="16" value="{{ $row->unit }}" />
+							<span class="form-text text-muted">{{ trans('orders::orders.unit hint') }}</span>
 						</div>
 					</div>
 				</div>
@@ -104,17 +108,17 @@
 				</div>
 			</fieldset>
 		</div>
-		<div class="col col-md-5 span5">
-			<fieldset class="adminform">
+		<div class="col col-md-5">
+			<fieldset>
 				<legend>{{ trans('global.publishing') }}</legend>
 
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<label for="field-state">{{ trans('global.state') }}:</label>
 					<select class="form-control" name="fields[state]" id="field-state">
-						<option value="0"<?php if (!$row->trashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
-						<option value="1"<?php if ($row->trashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
+						<option value="0"<?php if (!$row->isTrashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
+						<option value="1"<?php if ($row->isTrashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
 					</select>
-				</div>
+				</div> -->
 
 				<div class="form-group">
 					<label for="field-access">{{ trans('global.access') }}:</label>
@@ -125,60 +129,6 @@
 					</select>
 				</div>
 			</fieldset>
-
-			<?php if ($row->id): ?>
-				<div class="data-wrap">
-					<h4>{{ trans('global.history') }}</h4>
-					<ul class="entry-log">
-						<?php
-						$history = $row->history()->orderBy('created_at', 'desc')->get();
-
-						if (count($history)):
-							foreach ($history as $action):
-								$actor = trans('global.unknown');
-
-								if ($action->user):
-									$actor = e($action->user->name);
-								endif;
-
-								$created = $action->created_at && $action->created_at != '0000-00-00 00:00:00' ? $action->created_at : trans('global.unknown');
-
-								$fields = array_keys(get_object_vars($action->new));
-								foreach ($fields as $i => $k)
-								{
-									if (in_array($k, ['created_at', 'updated_at', 'deleted_at']))
-									{
-										unset($fields[$i]);
-									}
-								}
-								$old = Carbon\Carbon::now()->subDays(2); //->toDateTimeString();
-								?>
-								<li>
-									<span class="entry-log-action">{{ trans('history::history.action ' . $action->action, ['user' => $actor, 'entity' => 'menu']) }}</span><br />
-									<time datetime="{{ $action->created_at }}" class="entry-log-date">
-										@if ($action->created_at < $old)
-											{{ $action->created_at->format('d M Y') }}
-										@else
-											{{ $action->created_at->diffForHumans() }}
-										@endif
-									</time><br />
-									@if ($action->action == 'updated')
-										<span class="entry-diff">Changed fields: <?php echo implode(', ', $fields); ?></span>
-									@endif
-								</li>
-								<?php
-							endforeach;
-						else:
-							?>
-							<li>
-								<span class="entry-diff">{{ trans('history::history.none found') }}</span>
-							</li>
-							<?php
-						endif;
-						?>
-					</ul>
-				</div>
-			<?php endif; ?>
 		</div>
 	</div>
 
