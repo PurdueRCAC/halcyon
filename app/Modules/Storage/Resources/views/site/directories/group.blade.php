@@ -3,7 +3,7 @@
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/fancytree/jquery.fancytree-all.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/fancytree/jquery.fancytree-all.js?v=' . filemtime(public_path() . '/modules/core/vendor/fancytree/jquery.fancytree-all.js')) }}"></script>
 <script src="{{ asset('modules/storage/js/site.js?v=' . filemtime(public_path() . '/modules/storage/js/site.js')) }}"></script>
 @endpush
 
@@ -40,11 +40,11 @@
 		foreach ($rows as $row)
 		{
 			?>
-			<div class="card panel panel-default">
-				<div class="card-header panel-heading">
-					{{ $row->storageResource->name }}
-				</div>
-				<div class="card-body panel-body">
+		<div class="card panel panel-default">
+			<div class="card-header panel-heading">
+				{{ $row->storageResource->name }}
+			</div>
+			<div class="card-body panel-body">
 
 				<div id="new_dir_dialog" title="Add new directory" class="dialog">
 					<fieldset class="mb-1">
@@ -571,7 +571,7 @@
 										</tbody>
 									</table>
 								</div>
-							</div>
+							</div><!--/ .row -->
 						<?php } ?>
 
 						<div class="row mb-3">
@@ -611,7 +611,7 @@
 								}
 								?>
 							</div>
-						</div>
+						</div><!--/ .row -->
 
 						<div class="dialog-footer">
 							<div class="row">
@@ -641,23 +641,22 @@
 								<div class="col-md-6 text-right">
 									<input disabled="disabled" id="{{ $dir->id }}_save_button" class="btn btn-success unixgroup-edit" data-dir="{{ $dir->id }}" type="button" value="{{ trans('global.button.save') }}" />
 								</div>
-							</div>
+							</div><!--/ .row -->
 						</div>
 
 					</div><!-- / #<?php echo $did; ?>_dialog -->
 				<?php } ?>
-				</div>
-			</div>
-			<?php
+				<?php
 			}
 			?>
+			</div><!-- / .panel-body -->
 		</div><!-- / .panel -->
 
-			<div class="card panel panel-default">
-				<div class="card-header panel-heading">
-					{{ trans('storage::storage.history') }}
-				</div>
-				<div class="card-body panel-body">
+		<div class="card panel panel-default">
+			<div class="card-header panel-heading">
+				{{ trans('storage::storage.history') }}
+			</div>
+			<div class="card-body panel-body">
 				<?php
 				$history = array();
 				foreach ($group->purchases as $purchase)
@@ -740,70 +739,70 @@
 				@else
 					<p class="text-center text-muted">{{ trans('global.none') }}</p>
 				@endif
-			</div><!-- / .panel -->
+			</div>
+		</div><!-- / .panel -->
 
-			<div class="card panel panel-default">
-				<div class="card-header panel-heading">
-					{{ trans('storage::storage.messages') }}
-				</div>
-				<div class="card-body panel-body">
-					@if ($group->messages->count())
-						<table class="table table-hover">
-							<caption class="sr-only">{{ trans('storage::storage.messages') }}</caption>
-							<thead>
+		<div class="card panel panel-default">
+			<div class="card-header panel-heading">
+				{{ trans('storage::storage.messages') }}
+			</div>
+			<div class="card-body panel-body">
+				@if ($group->messages->count())
+					<table class="table table-hover">
+						<caption class="sr-only">{{ trans('storage::storage.messages') }}</caption>
+						<thead>
+							<tr>
+								<th scope="col">{{ trans('storage::storage.status') }}</th>
+								<th scope="col">{{ trans('storage::storage.path') }}</th>
+								<th scope="col">{{ trans('storage::storage.action') }}</th>
+								<th scope="col">{{ trans('storage::storage.submitted') }}</th>
+								<th scope="col">{{ trans('storage::storage.completed') }}</th>
+								<th scope="col">{{ trans('storage::storage.runtime') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach ($group->messages->orderBy('datetimesubmitted', 'desc')->limit(10)->get() as $message)
 								<tr>
-									<th scope="col">{{ trans('storage::storage.status') }}</th>
-									<th scope="col">{{ trans('storage::storage.path') }}</th>
-									<th scope="col">{{ trans('storage::storage.action') }}</th>
-									<th scope="col">{{ trans('storage::storage.submitted') }}</th>
-									<th scope="col">{{ trans('storage::storage.completed') }}</th>
-									<th scope="col">{{ trans('storage::storage.runtime') }}</th>
+									<td>
+										@if ($message->status == 'completed')
+											<i class="fa fa-check" aria-hidden="true"></i>
+										@elseif ($message->status == 'error')
+											<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+										@elseif ($message->status == 'deferred')
+											<i class="fa fa-clock" aria-hidden="true"></i>
+										@elseif ($message->status == 'running')
+											<i class="fa fa-heartbeat" aria-hidden="true"></i>
+										@elseif ($message->status == 'queued')
+											<i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+										@endif
+										<span class="sr-only">{{ trans('messages::messages.' . $message->status) }}</span>
+									</td>
+									<td>{{ $message->target }}</td>
+									<td>{{ $message->type->name }}</td>
+									<td>{{ $message->datetimesubmitted->format('Y-m-d') }}</td>
+									<td>
+										@if ($message->completed())
+											{{ $message->datetimecompleted->format('Y-m-d') }}
+										@else
+											-
+										@endif
+									</td>
+									<td>
+										@if (strtotime($message->datetimesubmitted) <= date("U"))
+											{{ $message->runtime }}
+										@else
+											-
+										@endif
+									</td>
 								</tr>
-							</thead>
-							<tbody>
-								@foreach ($group->messages->orderBy('datetimesubmitted', 'desc')->limit(10)->get() as $message)
-									<tr>
-										<td>
-											@if ($message->status == 'completed')
-												<i class="fa fa-check" aria-hidden="true"></i>
-											@elseif ($message->status == 'error')
-												<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-											@elseif ($message->status == 'deferred')
-												<i class="fa fa-clock" aria-hidden="true"></i>
-											@elseif ($message->status == 'running')
-												<i class="fa fa-heartbeat" aria-hidden="true"></i>
-											@elseif ($message->status == 'queued')
-												<i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-											@endif
-											<span class="sr-only">{{ trans('messages::messages.' . $message->status) }}</span>
-										</td>
-										<td>{{ $message->target }}</td>
-										<td>{{ $message->type->name }}</td>
-										<td>{{ $message->datetimesubmitted->format('Y-m-d') }}</td>
-										<td>
-											@if ($message->completed())
-												{{ $message->datetimecompleted->format('Y-m-d') }}
-											@else
-												-
-											@endif
-										</td>
-										<td>
-											@if (strtotime($message->datetimesubmitted) <= date("U"))
-												{{ $message->runtime }}
-											@else
-												-
-											@endif
-										</td>
-									</tr>
-								@endforeach
-							</tbody>
-						</table>
-					@else
-						<p class="text-center text-muted">{{ trans('global.none') }}</p>
-					@endif
-				</div>
-			</div><!-- / .panel -->
-
+							@endforeach
+						</tbody>
+					</table>
+				@else
+					<p class="text-center text-muted">{{ trans('global.none') }}</p>
+				@endif
+			</div>
+		</div><!-- / .panel -->
 		<?php
 	}
 	else
@@ -813,5 +812,5 @@
 		<?php
 	}
 	?>
-		</div><!-- / .col -->
-	</div><!-- / .row -->
+	</div><!-- / .col -->
+</div><!-- / .row -->
