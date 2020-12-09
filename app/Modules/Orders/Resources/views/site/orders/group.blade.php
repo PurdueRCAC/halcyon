@@ -34,7 +34,7 @@
 								@endif
 							</td>
 							<td>
-								<span class="badge badge-sm order-status {{ str_replace(' ', '-', $order->status) }}" data-tip="Accounts: {{ $order->accounts }}<br />Assigned: {{ $order->accountsassigned }}<br />Approved: {{ $order->accountsapproved }}<br />Denied: {{ $order->accountsdenied }}<br />Paid: {{ $order->accountspaid }}<br />---<br />Items: {{ $order->items }}<br />Fulfilled: {{ $order->itemsfulfilled }}">
+								<span class="order-status {{ str_replace(' ', '-', $order->status) }}" data-tip="Accounts: {{ $order->accounts }}<br />Assigned: {{ $order->accountsassigned }}<br />Approved: {{ $order->accountsapproved }}<br />Denied: {{ $order->accountsdenied }}<br />Paid: {{ $order->accountspaid }}<br />---<br />Items: {{ $order->items }}<br />Fulfilled: {{ $order->itemsfulfilled }}">
 									{{ trans('orders::orders.' . $order->status) }}
 								</span>
 							</td>
