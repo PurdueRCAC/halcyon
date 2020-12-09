@@ -15,6 +15,7 @@ use App\Modules\Courses\Models\Account;
 //use App\Modules\History\Models\Log;
 use App\Modules\History\Traits\Loggable;
 use GuzzleHttp\Client;
+//use GuzzleHttp\Stream\PhpStreamRequestFactory;
 
 /**
  * Course listener
@@ -136,8 +137,15 @@ class UniTime
 	{
 		$results = $this->request('roles?id=' . $event->instructor->puid);
 
+		if ($results['status'] == 500)
+		{
+			return;
+		}
+
+		$body = $results['body'];
+
 		$semesters = array();
-		foreach ($results as $semester)
+		foreach ($body as $semester)
 		{
 			if (strtotime($semester->endDate) >= date("U"))
 			{
@@ -155,14 +163,21 @@ class UniTime
 			foreach ($semesters as $semester)
 			{
 				// Fetch instructor schedule
-				$result = $this->request('instructor-schedule?term=' . $semester->reference . '&id=' . $event->instructor->puid);
+				$returned = $this->request('instructor-schedule?term=' . $semester->reference . '&id=' . $event->instructor->puid);
 
+				if ($returned['status'] == 500)
+				{
+					continue;
+				}
+
+				$result = $returned['body'];
 				$instructors = array();
 
 				if (!isset($result->classes))
 				{
 					continue;
 				}
+
 				if (is_array($result))
 				{
 					foreach ($result->instructors as $instructor)
@@ -212,45 +227,53 @@ class UniTime
 
 						$result2 = $this->request("enrollments?classId=" . $class->classId);
 
-						foreach ($result2 as $student)
+						if ($result2['status'] == 200)
 						{
-							$name = '';
-
-							if (isset($student->firstName))
+							foreach ($result2['body'] as $student)
 							{
-								$name .= $student->firstName . ' ';
-							}
+								$name = '';
 
-							if (isset($student->middleName))
-							{
-								$name .= $student->middleName . ' ';
-							}
+								if (isset($student->firstName))
+								{
+									$name .= $student->firstName . ' ';
+								}
 
-							if (isset($student->lastName))
-							{
-								$name .= $student->lastName;
-							}
+								if (isset($student->middleName))
+								{
+									$name .= $student->middleName . ' ';
+								}
 
-							array_push($course->students, urlencode($name));
+								if (isset($student->lastName))
+								{
+									$name .= $student->lastName;
+								}
+
+								array_push($course->students, urlencode($name));
+							}
 						}
 
-						$course->enrollment = $this->request('enrollments?courseId=' . $course->courseId);
+						$enrollments = $this->request('enrollments?courseId=' . $course->courseId);
 
-						$course->student_list = array();
-
-						if (is_array($course->enrollment))
+						if ($enrollments['status'] == 200)
 						{
-							foreach ($course->enrollment as $student)
+							$course->enrollment = $enrollments['body'];
+
+							$course->student_list = array();
+
+							if (is_array($course->enrollment))
 							{
-								if (isset($student->email) && $student->email)
+								foreach ($course->enrollment as $student)
 								{
-									array_push($course->student_list, $student->email);
+									if (isset($student->email) && $student->email)
+									{
+										array_push($course->student_list, $student->email);
+									}
 								}
 							}
-						}
 
-						$course->student_list = array_unique($course->student_list);
-						sort($course->student_list);
+							$course->student_list = array_unique($course->student_list);
+							sort($course->student_list);
+						}
 
 						array_push($classes, $course);
 					}
@@ -294,7 +317,7 @@ class UniTime
 		// Is the service configured?
 		$config = config('listener.unitime', []);
 
-		if (empty($config))
+		if (empty($config) || empty($config['user']))
 		{
 			return [];
 		}
@@ -308,13 +331,23 @@ class UniTime
 
 			$result = $client->request($method, $base . $url, [
 				'auth' => [
-					$config['user'],
-					$config['password']
-				]
+					$config['dev'] ? $config['user_dev'] : $config['user'],
+					$config['dev'] ? $config['password_dev'] : $config['password']
+				],
+				'stream' => true
+				//'sink' => storage_path('unitime')//str_replace(['?', '='], '_', $url) . '.json')
 			]);
 
 			$status = $result->getStatusCode();
 			$body   = $result->getBody();
+
+			$json = '';
+			while (!$body->eof())
+			{
+				$json .= $body->read(1024);
+			}
+
+			$body = json_decode($json);
 		}
 		catch (\Exception $e)
 		{
