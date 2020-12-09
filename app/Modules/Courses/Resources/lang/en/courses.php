@@ -28,4 +28,9 @@ return [
 	'filter by user' => 'Filter by user',
 	'create accounts' => 'Create Accounts for Class',
 	'add account' => 'Add Account',
+	'invalid' => [
+		'name' => 'Invalid or empty name',
+		'start date' => 'Invalid or empty start date',
+		'end date' => 'Invalid or empty end date',
+	]
 ];

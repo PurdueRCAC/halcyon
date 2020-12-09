@@ -22,29 +22,28 @@ function CreateNewClassAccount(btn) {
 	var post = {
 		crn: selected_class.data('crn'),
 		classid: selected_class.data('classid'),
-		userid: $('#HIDDEN_property').val(),
+		userid: $('#userid').val(),
 		semester: selected_class.data('semester'),
 		datetimestart: selected_class.data('start'),
 		datetimestop: selected_class.data('stop'),
 		reference: selected_class.data('reference'),
-		resource: ROOT_URL + 'resource/70'
+		resourceid: $('#new_class_resource').val(),
 	};
 
-	post['report'] = "Scholar Class Account Request\n";
-	post['report'] += "\n";
-	// Note: The header lines are needed to get MarkDown parsers to render
-	//       the table properly.
-	post['report'] += "| Field | Value |\n";
-	post['report'] += "|-------|-------|\n";
-	post['report'] += "| **Class:** | [" + $('#new_class_select').val() + " - " + $('#new_class_name').text() + "](" + $('#new_class_name').data('href') + ") |\n";
-	post['report'] += "| **Estimated Number of Students:** | " + $('#estNum').val() + " |\n";
-	post['report'] += "| **Class Meeting Times:** | " + $('#classMeetings').val() + " |\n";
-	post['report'] += "| **Course applications, tools, and resources:** | " + $('#courseResources').val() + " |\n";
-	post['report'] += "| **Estimated Due Dates:** | " + $('#dueDates').val() + " |\n";
-	post['report'] += "| **Additional Information:** | " + $('#additional').val() + " |\n";
+	var source = $('#new-course-message').html(),
+		template = Handlebars.compile(source),
+		context = {
+			'class_name': $('#new_class_select').val() + " - " + $('#new_class_name').text(),
+			'class_name_href': $('#new_class_name').data('href'),
+			'estNum': $('#estNum').val(),
+			'courseResources': $('#courseResources').val(),
+			'dueDates': $('#dueDates').val(),
+			'additional': $('#additional').val()
+		};
+		post['report'] = template(context);
 
 	var users = [];
-	$("div[id^=USER_]").each(function () {
+	$("li[id^=USER_]").each(function () {
 		//var foo = this.id.split("_")[2];
 		if (this.id.split("_")[2] == undefined) {
 			users.push(this.id.split("_")[1]);
@@ -53,7 +52,7 @@ function CreateNewClassAccount(btn) {
 
 	post['users'] = users;
 
-	WSPostURL(btn.data(api), JSON.stringify(post), function (xml) {
+	WSPostURL(btn.data('api'), JSON.stringify(post), function (xml) {
 		if (xml.status == 200) {
 			document.location.reload(true);
 		} else if (xml.status == 403) {
@@ -296,48 +295,43 @@ function AddedManyUsers(xml, post_obj) {
  *
  * @return  {void}
  */
-function CreateNewWorkshop() {
+/*function CreateNewWorkshop() {
 	$('.create-form .alert').remove();
 	$('.create-form input').removeClass('is-invalid');
 
 	// Fetch input
-	var post = { 'crn': "-1" };
-	post['classid'] = "-1";
+	var post = { 'crn': $('#new_workshop_crn').val() };
+	post['classid'] = $('#new_workshop_classid').val();
 	post['user'] = $('#HIDDEN_property').val();
-	post['semester'] = "Workshop";
-	post['reference'] = "Workshop";
+	post['semester'] = $('#new_workshop_semester').val();
+	post['reference'] = $('#new_workshop_reference').val();
 	post['classname'] = $('#new_workshop_name').val();
 	post['department'] = "";
 	post['coursenumber'] = "";
-	post['start'] = $('#new_workshop_start').val();
-	post['stop'] = $('#new_workshop_end').val();
-	post['resource'] = ROOT_URL + 'resource/70';
+	post['datetimestart'] = $('#new_workshop_start').val();
+	post['datetimestop'] = $('#new_workshop_end').val();
+	post['resourceid'] = $('#new_workshop_resourceid').val();
 
-	post['report'] = "Scholar Workshop Account Request\n";
-	post['report'] += "\n";
-	// Note: The header lines are needed to get MarkDown parsers to render
-	//       the table properly.
-	post['report'] += "| Field | Value |\n";
-	post['report'] += "|-------|-------|\n";
-	post['report'] += "| **Workshop name:** | " + $('#new_workshop_name').val() + " |\n";
-	post['report'] += "| **Start:** | " + $('#new_workshop_start').val() + " |\n";
-	post['report'] += "| **End:** | " + $('#new_workshop_end').val() + " |\n";
+	post['report'] = $('#new-workshop-message').html()
+		.replace('{{ name }}', $('#new_workshop_name').val())
+		.replace('{{ start }}', $('#new_workshop_start').val())
+		.replace('{{ end }}', $('#new_workshop_end').val());
 
 	if (!post['classname'] || !post['start'] || !post['stop']) {
 		if (!post['classname']) {
 			$('#new_workshop_name')
-				.addClass('is-invalid')
-				.after('<p class="alert alert-error">Please provide a name.</p>');
+				.addClass('is-invalid');
+				//.after('<p class="alert alert-error">Please provide a name.</p>');
 		}
 		if (!post['start']) {
 			$('#new_workshop_start')
-				.addClass('is-invalid')
-				.after('<p class="alert alert-error">Please provide a start time.</p>');
+				.addClass('is-invalid');
+				//.after('<p class="alert alert-error">Please provide a start time.</p>');
 		}
 		if (!post['stop']) {
 			$('#new_workshop_end')
-				.addClass('is-invalid')
-				.after('<p class="alert alert-error">Please provide a stop time.</p>');
+				.addClass('is-invalid');
+				//.after('<p class="alert alert-error">Please provide a stop time.</p>');
 		}
 		return;
 	}
@@ -354,7 +348,7 @@ function CreateNewWorkshop() {
 			alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
 		}
 	});
-}
+}*/
 
 /**
  * Event handler for new_class_select onChange event
@@ -379,7 +373,7 @@ function NewClassSelect() {
 		$('#new_class_count').text(selected_class.data('count'));
 
 		for (var x = 0; x < instructors.length; x++) {
-			WSGetURL(ROOT_URL + "name/" + instructors[x]['email'], AddUserClass);
+			WSGetURL(ROOT_URL + "users/?search=" + instructors[x]['email'], AddUserClass);
 		}
 	}
 }
@@ -408,10 +402,9 @@ function ClassUserSearchEventHandler(event, ui, crn) {
 
 	if (typeof (id) == 'undefined') {
 		var post = JSON.stringify({ "name": username });
-		WSPostURL(ROOT_URL + "userusername", post, AddUserClass, crn);
+		WSPostURL(ROOT_URL + "users", post, AddUserClass, crn);
 	} else {
-		var basic_id = id.replace('/user/', '/userbasic/');
-		WSGetURL(basic_id, AddUserClass, crn);
+		WSGetURL(ROOT_URL + "users/" + id, AddUserClass, crn);
 	}
 }
 
@@ -431,18 +424,19 @@ function AddUserClass(xml, crn) {
 		if (crn != '0') {
 			s_crn = "_" + crn;
 		}
-		var results = JSON.parse(xml.responseText);
+		var response = JSON.parse(xml.responseText),
+			results = response.data;
 		var list = document.getElementById("class_people" + s_crn);
 
 		// if this was a name search
-		if (typeof (results['users']) != "undefined") {
+		/*if (typeof (results['users']) != "undefined") {
 			if (results['users'].length > 1) {
 				// Something's weird, bail out
 				return;
 			}
 
 			results = results['users'][0];
-		}
+		}*/
 
 		// skip this person if they already exist
 		if (document.getElementById("USER_" + results['id'] + s_crn) != null) {
@@ -450,36 +444,37 @@ function AddUserClass(xml, crn) {
 			return;
 		}
 
-		var span = document.createElement("div");
-		span.id = "USER_" + results['id'] + s_crn;
+		var span = document.createElement("li");
+			span.id = "USER_" + results['id'] + s_crn;
 
 		// make red X button image
-		var img = document.createElement("img");
-		img.src = "/include/images/delete.png";
-		img.alt = "Remove person.";
-		img.className = "crmdeleteuser";
+		var img = document.createElement("i");
+			img.setAttribute('aria-hidden', true);
+			img.className = "fa fa-trash crmdeleteuser";
 
 		// create link for button
 		var a = document.createElement("a");
-		a.href = "javascript:";
-		a.onclick = function () {
-			RemoveUser(results['id'], crn);
-		};
+			a.href = "#USER_" + results['id'] + s_crn;
+			a.setAttribute('data-api', results['api']);
+			a.onclick = function (e) {
+				e.preventDefault();
+				RemoveUser(this);//results['id'], crn);
+			};
 
 		// create hidden thing
 		var hidden = document.createElement("input");
-		hidden.type = "hidden";
-		hidden.id = "HIDDEN_" + results['id'] + s_crn;
-		hidden.value = "";
+			hidden.type = "hidden";
+			hidden.id = "HIDDEN_" + results['id'] + s_crn;
+			hidden.value = "";
 
 		// assemble the objects
 		a.appendChild(img);
 		span.appendChild(a);
-		if (results['fullname'] != undefined) {
+		/*if (results['fullname'] != undefined) {
 			span.appendChild(document.createTextNode(results['fullname']));
-		} else {
-			span.appendChild(document.createTextNode(results['name']));
-		}
+		} else {*/
+		span.appendChild(document.createTextNode(results['name'] + ' (' + results['username'] + ')'));
+		//}
 		list.appendChild(hidden);
 
 		// put the person at the top of the list
@@ -487,16 +482,17 @@ function AddUserClass(xml, crn) {
 
 		// If an existing class, then make a call
 		if (crn != '0') {
-			var post = {};
-			post['classaccount'] = $("#HIDDEN_" + crn).val();
-			post['user'] = results['id'];
+			var post = {
+				'classaccountid': $("#HIDDEN_" + crn).val(),
+				'userid': results['id']
+			};
 			WSPostURL(
-				ROOT_URL + "classuser",
+				ROOT_URL + "courses/members",
 				JSON.stringify(post),
 				function (xml, data) {
-					if (xml.status == 200) {
+					if (xml.status < 400) {
 						var results = JSON.parse(xml.responseText);
-						document.getElementById("HIDDEN_" + data['user'] + "_" + data['crn']).value = results['id'];
+						document.getElementById("HIDDEN_" + data['user'] + "_" + data['crn']).value = results.data['id'];
 					} else {
 						alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
 					}
@@ -531,8 +527,8 @@ function AddUserClass(xml, crn) {
  * @param   {string}  crn
  * @return  {void}
  */
-function RemoveUser(user, crn) {
-	var s_crn = "";
+function RemoveUser(btn) {//user, crn) {
+	/*var s_crn = "";
 	if (crn != '0') {
 		s_crn = "_" + crn;
 	}
@@ -541,10 +537,13 @@ function RemoveUser(user, crn) {
 	var user_div = document.getElementById("USER_" + user + s_crn);
 	list.removeChild(user_div);
 
-	var user_div_id = document.getElementById("HIDDEN_" + user + s_crn).value;
-	WSDeleteURL(user_div_id, function (xml) {
-		if (xml.status != 200) {
+	var user_div_id = document.getElementById("HIDDEN_" + user + s_crn).value;*/
+
+	WSDeleteURL(btn.getAttribute('data-api'), function (xml) {
+		if (xml.status < 400) {
 			alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
+		} else {
+			$(btn.getAttribute('href')).remove();
 		}
 	});
 }
@@ -555,7 +554,7 @@ function RemoveUser(user, crn) {
  * @param   {string}  id
  * @return  {void}
  */
-function DeleteClassAccount(id) {
+/*function DeleteClassAccount(id) {
 	if (confirm("Are you sure you wish to delete this class account?")) {
 		WSDeleteURL(id, function (xml) {
 			if (xml.status == 200) {
@@ -568,7 +567,7 @@ function DeleteClassAccount(id) {
 			}
 		});
 	}
-}
+}*/
 
 /**
  * Show students for a class
@@ -576,7 +575,7 @@ function DeleteClassAccount(id) {
  * @param   {string}  crn
  * @return  {void}
  */
-function ShowStudents(crn) {
+/*function ShowStudents(crn) {
 	var selected_class = '';
 	if (crn == 'new') {
 		selected_class = $('#new_class_select option:selected');
@@ -592,29 +591,29 @@ function ShowStudents(crn) {
 	}
 
 	$('<p>These students will automatically have an account created. Do not explicitly add each student.<br /><br />' + decodeURIComponent(students.replace(/\+/g, ' ')) + '</p>').dialog();
-}
+}*/
 
 /**
  * Redirect to the selected semester
  *
  * @return  {void}
  */
-function SemesterSelect() {
+/*function SemesterSelect() {
 	var selected_semester = $('#semester_select option:selected').val();
 
 	window.location = "/account/class/?semester=" + selected_semester;
-}
+}*/
 
 var autocompleteName = function (url) {
 	return function (request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-			response($.map(data.users, function (el) {
+			response($.map(data.data, function (el) {
 				return {
 					label: el.name,
 					name: el.name,
 					id: el.id,
-					usernames: el.usernames,
-					priorusernames: el.priorusernames
+					usernames: [{'name':el.username}]//,
+					//priorusernames: el.priorusernames
 				};
 			}));
 		});
@@ -631,35 +630,35 @@ $(document).ready(function () {
 
 	var user = $('.search-user');
 	if (user.length) {
-	user.autocomplete({
-		source: autocompleteName(user.attr('data-uri')),
-		dataName: 'users',
-		height: 150,
-		delay: 100,
-		minLength: 2,
-		filter: /^[a-z0-9\-_ .,@+]+$/i,
-		open: function () {
-			$(this).autocomplete("widget").zIndex($('#class_dialog_' + $(this).data('id')).zIndex() + 1);
-		},
-		select: function (event, ui) {
-			ClassUserSearchEventHandler(event, ui, $(this).data('id'));
-		},
-		create: function () {
-			$(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-				var thing = item.label;
+		user.autocomplete({
+			source: autocompleteName(user.attr('data-uri')),
+			dataName: 'users',
+			height: 150,
+			delay: 100,
+			minLength: 2,
+			filter: /^[a-z0-9\-_ .,@+]+$/i,
+			open: function () {
+				$(this).autocomplete("widget").zIndex($('#class_dialog_' + $(this).data('id')).zIndex() + 1);
+			},
+			select: function (event, ui) {
+				ClassUserSearchEventHandler(event, ui, $(this).data('id'));
+			},
+			create: function () {
+				$(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+					var thing = item.label;
 
-				if (typeof (item.usernames) != 'undefined') {
-					thing = thing + " (" + item.usernames[0]['name'] + ")";
-				} else if (typeof (item.priorusernames) != 'undefined') {
-					thing = thing + " (" + item.priorusernames[0]['name'] + ")";
-				}
+					if (typeof (item.usernames) != 'undefined') {
+						thing = thing + " (" + item.usernames[0]['name'] + ")";
+					} else if (typeof (item.priorusernames) != 'undefined') {
+						thing = thing + " (" + item.priorusernames[0]['name'] + ")";
+					}
 
-				return $("<li>")
-					.append($("<div>").text(thing))
-					.appendTo(ul);
-			};
-		}
-	});
+					return $("<li>")
+						.append($("<div>").text(thing))
+						.appendTo(ul);
+				};
+			}
+		});
 	}
 
 	$("#searchuser").autocomplete({
@@ -670,33 +669,113 @@ $(document).ready(function () {
 		minLength: 2,
 		filter: /^[a-z0-9\-_ .,@+]+$/i,
 		open: function () {
-			$(this).autocomplete("widget").zIndex($('#new_class_dialog').zIndex() + 1);
+			//$(this).autocomplete("widget").zIndex($('#new_class_dialog').zIndex() + 1);
 		},
 		select: function (event, ui) {
 			ClassUserSearchEventHandler(event, ui);
 		}
 	});
 
-	$('#semester_select').on('change', function (e) {
+	$('.type-dependant').hide();
+
+	$('[name="type"]')
+		.on('change', function () {
+			$('.type-dependant').hide();
+			$('.type-' + $(this).val()).show();
+		})
+		.each(function (i, el) {
+			$('.type-' + $(el).val()).show();
+		});
+
+	/*$('#semester_select').on('change', function (e) {
 		SemesterSelect();
 	});
 
 	$('.create-form').on('submit', function (e) {
 		e.preventDefault();
 		$(this).find('input[type=button]').trigger('click');
-	});
+	});*/
+
 	$('.btn-create-workshop').on('click', function (e) {
 		e.preventDefault();
-		CreateNewWorkshop();
+
+		var btn = $(this);
+
+		//CreateNewWorkshop();
+		//$('.create-form .alert').remove();
+		$('.create-form input').removeClass('is-invalid');
+
+		// Fetch input
+		var post = {
+			'crn': $('#new_workshop_crn').val(),
+			'classid': $('#new_workshop_classid').val(),
+			'userid': $('#userid').val(),
+			'semester': $('#new_workshop_semester').val(),
+			'reference': $('#new_workshop_reference').val(),
+			'classname': $('#new_workshop_name').val(),
+			'department': '',
+			'coursenumber': '',
+			'datetimestart': $('#new_workshop_start').val(),
+			'datetimestop': $('#new_workshop_end').val(),
+			'resourceid': $('#new_workshop_resource').val(),
+			'report': ''
+		};
+
+		post['report'] = $('#new-workshop-message').html()
+			.replace('{{ name }}', post['classname'])
+			.replace('{{ start }}', post['datetimestart'])
+			.replace('{{ end }}', post['datetimestop']);
+
+		if (!post['classname'] || !post['start'] || !post['stop']) {
+			if (!post['classname']) {
+				$('#new_workshop_name')
+					.addClass('is-invalid');
+			}
+			if (!post['start']) {
+				$('#new_workshop_start')
+					.addClass('is-invalid');
+			}
+			if (!post['stop']) {
+				$('#new_workshop_end')
+					.addClass('is-invalid');
+			}
+			return;
+		}
+
+		WSPostURL(btn.data('api'), JSON.stringify(post), function (xml) {
+			if (xml.status < 400) {
+				document.location.reload(true);
+			} else if (xml.status == 403) {
+				alert("Your session may have expired. Click OK to reload page.");
+				window.location.reload(true);
+			} else if (xml.status == 415) {
+				alert("Class already has accounts.");
+			} else {
+				alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
+			}
+		});
 	});
 
 	$('#new_class_select').on('change', function (e) {
 		NewClassSelect();
 	});
 
+	// Account
 	$('.account-delete').on('click', function (e) {
 		e.preventDefault();
-		DeleteClassAccount($(this).data('id'));
+		//DeleteClassAccount($(this).data('id'));
+		if (confirm($(this).data('confirm'))) {
+			WSDeleteURL($(this).data('api'), function (xml) {
+				if (xml.status == 200) {
+					document.location.reload(true);
+				} else if (xml.status == 403) {
+					alert("Your session may have expired. Click OK to reload page.");
+					window.location.reload(true);
+				} else {
+					alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
+				}
+			});
+		}
 	});
 	$('.account-add').on('click', function (e) {
 		e.preventDefault();
@@ -706,14 +785,41 @@ $(document).ready(function () {
 		e.preventDefault();
 		CreateNewClassAccount($(this));
 	});
+	$('.add-account').on('click', function (e) {
+		e.preventDefault();
+		$($(this).attr('href')).toggleClass('hide');
+		$($(this).data('hide')).toggleClass('hide');
+		var txt = $(this).html();
+		$(this).html($(this).data('text'));
+		$(this).data('text', txt);
+		//$(this).prop('disabled', true);
+	});
 
+	// Account users
 	$('.user-delete').on('click', function (e) {
 		e.preventDefault();
-		RemoveUser($(this).data('user'), $(this).data('crn'));
+		RemoveUser(this); //.data('user'), $(this).data('crn'));
 	});
 
 	$('.show-students').on('click', function (e) {
 		e.preventDefault();
-		ShowStudents($(this).data('crn'));
+		//ShowStudents($(this).data('crn'));
+		var crn = $(this).data('crn');
+
+		var selected_class = '';
+		if (crn == 'new') {
+			selected_class = $('#new_class_select option:selected');
+		} else {
+			selected_class = $('#new_class_select option[id="option_class_' + crn + '"]');
+		}
+
+		var students = '';
+		if (selected_class.val() != 'first') {
+			students = selected_class.data('students')['students'].join('<br/>');
+		} else {
+			students = "(Select class to see student list)";
+		}
+
+		$('<p>These students will automatically have an account created. Do not explicitly add each student.<br /><br />' + decodeURIComponent(students.replace(/\+/g, ' ')) + '</p>').dialog();
 	});
 });

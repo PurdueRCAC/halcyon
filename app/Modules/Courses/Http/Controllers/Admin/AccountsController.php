@@ -111,6 +111,8 @@ class AccountsController extends Controller
 	{
 		$row = new Account();
 		$row->userid = $request->input('userid');
+		$row->datetimestart = Carbon::now();
+		$row->datetimestop = Carbon::now()->modify('+5 months');
 
 		event($event = new InstructorLookup($row->user));
 

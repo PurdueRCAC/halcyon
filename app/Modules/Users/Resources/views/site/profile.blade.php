@@ -28,6 +28,7 @@ $active = $sections->firstWhere('active', '=', true);
 </div>
 
 <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+	<input type="hidden" name="userid" id="userid" value="{{ $user->id }}" />
 	<?php
 	if ($active)
 	{
