@@ -49,10 +49,11 @@
 						<div class="col-md-1 text-right">
 							@if ($canManage)
 								<a href="#department-{{ $dept->id }}"
-									class="delete delete-department remove-category"
+									class="delete delete-department remove-category tip"
+									title="{{ trans('global.button.delete') }}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}"
 									data-api="{{ route('api.groups.groupdepartments.delete', ['group' => $group->id, 'id' => $dept->id]) }}">
-									<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.delete') }}</span>
+									<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.delete') }}</span>
 								</a>
 							@endif
 						</div>
@@ -70,10 +71,11 @@
 					</div>
 					<div class="text-right">
 						<a href="#department-{id}"
-							class="delete delete-department remove-category"
+							class="delete delete-department remove-category tip"
+							title="{{ trans('global.button.delete') }}"
 							data-api="{{ route('api.groups.groupdepartments.create', ['group' => $group->id]) }}/{id}"
 							data-confirm="{{ trans('groups::groups.confirm delete') }}">
-							<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.delete') }}</span>
+							<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.delete') }}</span>
 						</a>
 					</div>
 				</div>
@@ -98,11 +100,12 @@
 					</div>
 					<div class="col-md-1 text-right">
 						<a href="#new-department"
-							class="add add-category add-row"
+							class="add add-category add-row tip"
+							title="{{ trans('global.button.add') }}"
 							data-row="#new-department-row"
 							data-group="{{ $group->id }}"
 							data-api="{{ route('api.groups.groupdepartments.create', ['group' => $group->id]) }}">
-							<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.add') }}</span>
+							<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.add') }}</span>
 						</a>
 					</div>
 				</div>
@@ -150,10 +153,11 @@
 						<div class="col-md-1 text-right">
 							@if ($canManage)
 								<a href="#fieldofscience-{{ $field->id }}"
-									class="delete delete-fieldofscience remove-category"
+									class="delete delete-fieldofscience remove-category tip"
+									title="{{ trans('global.button.delete') }}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}"
 									data-api="{{ route('api.groups.groupfieldsofscience.delete', ['group' => $group->id, 'id' => $field->id]) }}">
-									<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.delete') }}</span>
+									<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.delete') }}</span>
 								</a>
 							@endif
 						</div>
@@ -171,10 +175,11 @@
 					</div>
 					<div class="col-md-1 text-right">
 						<a href="#fieldofscience-{id}"
-							class="delete delete-fieldofscience remove-category"
+							class="delete delete-fieldofscience remove-category tip"
+							title="{{ trans('global.button.delete') }}"
 							data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $group->id]) }}/{id}"
 							data-confirm="{{ trans('groups::groups.confirm delete') }}">
-							<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
+							<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.delete') }}</span>
 						</a>
 					</div>
 				</div>
@@ -196,10 +201,12 @@
 						</select>
 					</div>
 					<div class="col-md-1 text-right">
-						<a href="#new-fieldofscience" class="add add-fieldofscience-row add-category"
+						<a href="#new-fieldofscience"
+							class="add add-fieldofscience-row add-category tip"
+							title="{{ trans('global.button.add') }}"
 							data-row="#new-fieldofscience-row"
 							data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $group->id]) }}">
-							<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.add') }}</span>
+							<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.add') }}</span>
 						</a>
 					</div>
 				</div>
