@@ -141,6 +141,10 @@ class DbmLdap
 						$query[] = ['uid', '=', $val];
 					break;
 
+					case 'host':
+						$query[] = [$key, '=', $val];
+					break;
+
 					case 'name':
 					default:
 						$query[] = ['cn', '=', $val];
@@ -168,7 +172,6 @@ class DbmLdap
 					$user = new User;
 					$user->name = $result['cn'][0];
 					$user->username = $result['uid'][0];
-					//$user->email = $user->username . '@purdue.edu';
 					$user->puid = $result['employeeNumber'][0];
 
 					$event->user = $user;
@@ -181,6 +184,8 @@ class DbmLdap
 			$status = 500;
 			$results = ['error' => $e->getMessage()];
 		}
+
+		$event->results = $results;
 
 		$this->log('ldap', __METHOD__, 'GET', $status, $results, implode('', $query));
 	}
