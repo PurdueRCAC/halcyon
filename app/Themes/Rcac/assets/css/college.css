@@ -5512,12 +5512,13 @@ button.close {
 	position: absolute;
 	z-index: 1070;
 	display: block;
+	width: auto !important;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-style: normal;
 	font-weight: normal;
 	letter-spacing: normal;
 	line-break: auto;
-	line-height: 1.42857;
+	line-height: 1.5;
 	text-align: left;
 	text-align: start;
 	text-decoration: none;
@@ -5540,22 +5541,22 @@ button.close {
 
 .tooltip.top {
 	margin-top: -3px;
-	padding:5px 0
+	/*padding:5px 0*/
 }
 
 .tooltip.right {
 	margin-left: 3px;
-	padding:0 5px
+	/*padding:0 5px*/
 }
 
 .tooltip.bottom {
 	margin-top: 3px;
-	padding:5px 0
+	/*padding:5px 0*/
 }
 
 .tooltip.left {
 	margin-left: -3px;
-	padding:0 5px
+	/*padding:0 5px*/
 }
 
 .tooltip-inner {
@@ -5576,7 +5577,7 @@ button.close {
 }
 
 .tooltip.top .tooltip-arrow {
-	bottom: 0;
+	top: 100%;
 	left: 50%;
 	margin-left: -5px;
 	border-width: 5px 5px 0;
@@ -5616,7 +5617,7 @@ button.close {
 }
 
 .tooltip.bottom .tooltip-arrow {
-	top: 0;
+	bottom: 100%;
 	left: 50%;
 	margin-left: -5px;
 	border-width: 0 5px 5px;
