@@ -262,7 +262,7 @@
 		<div class="card-header panel-heading">
 			<div class="card-title">
 				Storage Spaces
-				<a href="#storagespacehelp" class="help tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a>
+				<a href="#storagespacehelp" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a>
 			</div>
 		</div>
 		<div class="card-body panel-body">
@@ -383,7 +383,7 @@
 			<div class="row">
 				<div class="col col-md-6 card-title">
 					Storage Alerts
-					<a href="#storagealerthelp" class="help tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a>
+					<a href="#storagealerthelp" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a>
 				</div>
 				<div class="col col-md-6 align-right">
 					<button class="btn btn-default btn-sm accountsbtn" id="create-newalert"><i class="fa fa-plus-circle" aria-hidden="true"></i> Create New Alert</button>
@@ -653,7 +653,7 @@
 			<div class="row">
 				<div class="col col-md-6 card-title">
 					Storage Usage Reports
-					<a href="#storageusagehelp" class="help tip" title="Help">
+					<a href="#storageusagehelp" class="help icn tip" title="Help">
 						<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span>
 					</a>
 				</div>
