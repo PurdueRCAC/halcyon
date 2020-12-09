@@ -7,6 +7,7 @@ return [
 	'confirm' => 'Confirm',
 	'confirm delete' => 'Are you sure you want to delete these?',
 	'button' => [
+		'add' => 'Add',
 		'edit' => 'Edit',
 		'cancel' => 'Cancel',
 		'create' => 'Create',
