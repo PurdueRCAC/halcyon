@@ -253,25 +253,32 @@ class RcacLdap
 			{
 				$status = 200;
 
-				$this->loginshell = $results[0]['loginshell'][0];
+				$event->user->loginshell = $results[0]['loginshell'][0];
 
 				if (isset($results[0]['authorizedby']))
 				{
 					$event->user->pilogin = $results[0]['authorizedby'][0];
 				}
 
-				$gid = $data[0]['gidnumber'][0];
-
 				// Resolve group name
-				$data = array();
-				$data = $ldap_group->search()
-					->where('gidNumber', '=', $gid)
-					->select(['cn', 'gidNumber'])
-					->get();
+				$config = config('ldap.rcac_group', []);
 
-				if (!empty($data))
+				if (!empty($config))
 				{
-					$event->user->primarygroup = $data[0]['cn'][0];
+					$gid = $results[0]['gidnumber'][0];
+
+					$ldap_group = $this->connect($config);
+
+					$data = array();
+					$data = $ldap_group->search()
+						->where('gidNumber', '=', $gid)
+						->select(['cn', 'gidNumber'])
+						->get();
+
+					if (!empty($data))
+					{
+						$event->user->primarygroup = $data[0]['cn'][0];
+					}
 				}
 			}
 		}
