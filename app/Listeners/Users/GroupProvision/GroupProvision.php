@@ -69,7 +69,7 @@ class GroupProvision
 			]);
 
 			$status = $res->getStatusCode();
-			$body   = $res->getBody();
+			$body   = json_decode($res->getBody()->getContents());
 
 			if ($status < 400)
 			{
@@ -123,7 +123,7 @@ class GroupProvision
 			]);
 
 			$status = $res->getStatusCode();
-			$body   = $res->getBody();
+			$body   = json_decode($res->getBody()->getContents());
 		}
 		catch (\Exception $e)
 		{
@@ -163,7 +163,7 @@ class GroupProvision
 			]);
 
 			$status = $res->getStatusCode();
-			$body   = $res->getBody();
+			$body   = json_decode($res->getBody()->getContents());
 		}
 		catch (\Exception $e)
 		{
@@ -206,7 +206,7 @@ class GroupProvision
 			]);
 
 			$status = $res->getStatusCode();
-			$body   = $res->getBody();
+			$body   = json_decode($res->getBody()->getContents());
 		}
 		catch (\Exception $e)
 		{
@@ -249,7 +249,7 @@ class GroupProvision
 			]);
 
 			$status = $res->getStatusCode();
-			$body   = $res->getBody();
+			$body   = json_decode($res->getBody()->getContents());
 		}
 		catch (\Exception $e)
 		{

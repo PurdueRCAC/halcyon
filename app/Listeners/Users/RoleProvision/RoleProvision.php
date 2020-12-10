@@ -73,7 +73,7 @@ class RoleProvision
 			]);
 
 			$status = $res->getStatusCode();
-			$body   = $res->getBody();
+			$body   = json_decode($res->getBody()->getContents());
 		}
 		catch (\Exception $e)
 		{
@@ -118,7 +118,7 @@ class RoleProvision
 			]);
 
 			$status = $res->getStatusCode();
-			$body   = $res->getBody();
+			$body   = json_decode($res->getBody()->getContents());
 		}
 		catch (\Exception $e)
 		{
@@ -158,12 +158,13 @@ class RoleProvision
 			]);
 
 			$status  = $res->getStatusCode();
-			$results = $res->getBody();
 
 			if ($status >= 400)
 			{
 				throw new \Exception(__METHOD__ . '(): Failed to find user ' . $event->resource->id . '.' . $event->user->id, $status);
 			}
+
+			$results = json_decode($res->getBody()->getContents());
 
 			if (!isset($results->roleStatus))
 			{
