@@ -135,7 +135,7 @@ $(document).ready(function() {
 					<td class="priority-4">
 						@if ($row->groupid)
 							@if (auth()->user()->can('manage groups'))
-								<a href="{{ route('site.groups.show', ['id' => $row->groupid]) }}">
+								<a href="{{ route('admin.groups.edit', ['id' => $row->groupid]) }}">
 									<?php echo $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
 								</a>
 							@else
