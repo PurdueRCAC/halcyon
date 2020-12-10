@@ -141,7 +141,8 @@ class OrdersController extends Controller
 				->groupBy($o . '.staffnotes')
 				->groupBy($o . '.notice')
 				->groupBy($o . '.submitteruserid')
-				->groupBy($a . '.approveruserid');
+				->groupBy($a . '.approveruserid')
+				->groupBy($o . '.groupid');
 
 				if ($filters['start'])
 				{
