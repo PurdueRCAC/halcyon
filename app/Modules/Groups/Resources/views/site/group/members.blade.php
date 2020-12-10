@@ -7,125 +7,125 @@ $s = (new \App\Modules\Resources\Entities\Child)->getTable();
 $r = (new \App\Modules\Resources\Entities\Asset)->getTable();
 
 /*$managers = $group->members()
-->withTrashed()
-->select($m . '.*')
-->join($u, $u . '.userid', $m . '.userid')
-//->whereNull($u . '.deleted_at')
-->where(function($where) use ($u)
-{
-$where->whereNull($u . '.dateremoved')
-	->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-})
-->where(function($where) use ($m)
-{
-$where->whereNull($m . '.dateremoved')
-	->orWhere($m . '.dateremoved', '=', '0000-00-00 00:00:00');
-})
-->whereIsManager()
-->orderBy($m . '.datecreated', 'desc')
-->get();
+	->withTrashed()
+	->select($m . '.*')
+	->join($u, $u . '.userid', $m . '.userid')
+	//->whereNull($u . '.deleted_at')
+	->where(function($where) use ($u)
+	{
+		$where->whereNull($u . '.dateremoved')
+			->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+	})
+	->where(function($where) use ($m)
+	{
+		$where->whereNull($m . '.dateremoved')
+			->orWhere($m . '.dateremoved', '=', '0000-00-00 00:00:00');
+	})
+	->whereIsManager()
+	->orderBy($m . '.datecreated', 'desc')
+	->get();
 
 $managerids = $managers->pluck('userid')->toArray();
 
 $members = $group->members()
-->withTrashed()
-->select($m . '.*')//, $u . '.name')
-->join($u, $u . '.userid', $m . '.userid')
-//->whereNull($u . '.deleted_at')
-->where(function($where) use ($u)
-{
-$where->whereNull($u . '.dateremoved')
-	->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-})
-->where(function($where) use ($m)
-{
-$where->whereNull($m . '.dateremoved')
-	->orWhere($m . '.dateremoved', '=', '0000-00-00 00:00:00');
-})
-->whereIsMember()
-->whereNotIn($m . '.userid', $managerids)
-->orderBy($m . '.datecreated', 'desc')
-->get();
+	->withTrashed()
+	->select($m . '.*')//, $u . '.name')
+	->join($u, $u . '.userid', $m . '.userid')
+	//->whereNull($u . '.deleted_at')
+	->where(function($where) use ($u)
+	{
+		$where->whereNull($u . '.dateremoved')
+			->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+	})
+	->where(function($where) use ($m)
+	{
+		$where->whereNull($m . '.dateremoved')
+			->orWhere($m . '.dateremoved', '=', '0000-00-00 00:00:00');
+	})
+	->whereIsMember()
+	->whereNotIn($m . '.userid', $managerids)
+	->orderBy($m . '.datecreated', 'desc')
+	->get();
 
 $resources = array();
 
 $queues = $group->queues()
-->withTrashed()
-->select($q . '.*')
-->join($s, $s . '.subresourceid', $q . '.subresourceid')
-->join($r, $r . '.id', $s . '.resourceid')
-->where(function($wher) use ($q)
-{
-$wher->whereNull($q . '.datetimeremoved')
-	->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-})
-->where(function($wher) use ($r)
-{
-$wher->whereNull($r . '.datetimeremoved')
-	->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-})
-->get();
+	->withTrashed()
+	->select($q . '.*')
+	->join($s, $s . '.subresourceid', $q . '.subresourceid')
+	->join($r, $r . '.id', $s . '.resourceid')
+	->where(function($wher) use ($q)
+	{
+		$wher->whereNull($q . '.datetimeremoved')
+			->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+	})
+	->where(function($wher) use ($r)
+	{
+		$wher->whereNull($r . '.datetimeremoved')
+			->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+	})
+	->get();
 
 $q = (new \App\Modules\Queues\Models\User)->getTable();
 
 foreach ($queues as $queue)
 {
-if (!isset($resources[$queue->resource->name]))
-{
-$resources[$queue->resource->name] = array();
-}
-$resources[$queue->resource->name][] = $queue;
+	if (!isset($resources[$queue->resource->name]))
+	{
+		$resources[$queue->resource->name] = array();
+	}
+	$resources[$queue->resource->name][] = $queue;
 
-$users = $queue->users()
-->withTrashed()
-->select($q . '.*')//, $u . '.name')
-->join($u, $u . '.userid', $q . '.userid')
-//->whereNull($u . '.deleted_at')
-->where(function($where) use ($u)
-{
-	$where->whereNull($u . '.dateremoved')
-		->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-})
-->where(function($where) use ($q)
-{
-	$where->whereNull($q . '.datetimeremoved')
-		->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-})
-->whereIsMember()
-->whereNotIn($q . '.userid', $managerids)
-->orderBy($q . '.datetimecreated', 'desc')
-->get();
+	$users = $queue->users()
+		->withTrashed()
+		->select($q . '.*')//, $u . '.name')
+		->join($u, $u . '.userid', $q . '.userid')
+		//->whereNull($u . '.deleted_at')
+		->where(function($where) use ($u)
+		{
+			$where->whereNull($u . '.dateremoved')
+				->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+		})
+		->where(function($where) use ($q)
+		{
+			$where->whereNull($q . '.datetimeremoved')
+				->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+		})
+		->whereIsMember()
+		->whereNotIn($q . '.userid', $managerids)
+		->orderBy($q . '.datetimecreated', 'desc')
+		->get();
 
-foreach ($users as $me)
-{
-if (!($found = $members->firstWhere('userid', $me->userid)))
-{
-	$members->push($me);
-}
-}
+	foreach ($users as $me)
+	{
+		if (!($found = $members->firstWhere('userid', $me->userid)))
+		{
+			$members->push($me);
+		}
+	}
 }
 
 $disabled = $group->members()
-->withTrashed()
-->select($m . '.*')//, $u . '.name')
-->join($u, $u . '.userid', $m . '.userid')
-->where(function($where) use ($m, $u)
-{
-$where->where(function($wher) use ($u)
+	->withTrashed()
+	->select($m . '.*')//, $u . '.name')
+	->join($u, $u . '.userid', $m . '.userid')
+	->where(function($where) use ($m, $u)
 	{
-		$wher->whereNotNull($u . '.dateremoved')
-			->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
+		$where->where(function($wher) use ($u)
+			{
+				$wher->whereNotNull($u . '.dateremoved')
+					->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
+			})
+			->orWhere(function($wher) use ($m)
+			{
+				$wher->whereNotNull($m . '.dateremoved')
+					->where($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
+			});
 	})
-	->orWhere(function($wher) use ($m)
-	{
-		$wher->whereNotNull($m . '.dateremoved')
-			->where($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
-	});
-})
-//->whereIsMember()
-//->whereNotIn($m . '.userid', $members->pluck('userid')->toArray())
-->orderBy($m . '.datecreated', 'desc')
-->get();*/
+	//->whereIsMember()
+	//->whereNotIn($m . '.userid', $members->pluck('userid')->toArray())
+	->orderBy($m . '.datecreated', 'desc')
+	->get();*/
 
 $managers = collect([]);
 $members = collect([]);
@@ -134,304 +134,304 @@ $disabled = collect([]);
 $processed = array();
 
 $users = $group->members()
-->withTrashed()
-->where(function($where)
-{
-$where->whereNull('dateremoved')
-	->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
-})
-->orderBy('datecreated', 'desc')
-->get();
+	->withTrashed()
+	->where(function($where)
+	{
+		$where->whereNull('dateremoved')
+			->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
+	})
+	->orderBy('datecreated', 'desc')
+	->get();
 
 foreach ($users as $me)
 {
-if (in_array($me->userid, $processed))
-{
-continue;
-}
+	if (in_array($me->userid, $processed))
+	{
+		continue;
+	}
 
-if (!$me->user || $me->user->isTrashed())
-{
-/*if (!in_array($me->id, $disabledids))
-{
-	$disabledids[] = $me->id;
-	$disabled->push($me);
-}*/
-//echo $me->userid . '<br />';
-if (!($found = $disabled->firstWhere('userid', $me->userid)))
-{
-	$disabled->push($me);
-}
-}
-else
-{
-$me->username = $me->user->username;
-if ($me->isManager())
-{
-	if (!($found = $managers->firstWhere('userid', $me->userid)))
+	if (!$me->user || $me->user->isTrashed())
 	{
-		$managers->push($me);
+		/*if (!in_array($me->id, $disabledids))
+		{
+			$disabledids[] = $me->id;
+			$disabled->push($me);
+		}*/
+		//echo $me->userid . '<br />';
+		if (!($found = $disabled->firstWhere('userid', $me->userid)))
+		{
+			$disabled->push($me);
+		}
 	}
-}
-elseif ($me->isMember())
-{
-	if (!($found = $members->firstWhere('userid', $me->userid)))
+	else
 	{
-		$members->push($me);
+		$me->username = $me->user->username;
+		if ($me->isManager())
+		{
+			if (!($found = $managers->firstWhere('userid', $me->userid)))
+			{
+				$managers->push($me);
+			}
+		}
+		elseif ($me->isMember())
+		{
+			if (!($found = $members->firstWhere('userid', $me->userid)))
+			{
+				$members->push($me);
+			}
+		}
+		elseif ($me->isViewer())
+		{
+			if (!($found = $viewers->firstWhere('userid', $me->userid)))
+			{
+				$viewers->push($me);
+			}
+		}
 	}
-}
-elseif ($me->isViewer())
-{
-	if (!($found = $viewers->firstWhere('userid', $me->userid)))
-	{
-		$viewers->push($me);
-	}
-}
-}
 
-$processed[] = $me->userid;
+	$processed[] = $me->userid;
 }
 
 $resources = array();
 
 $queues = $group->queues()
-->withTrashed()
-->select($q . '.*')
-->join($s, $s . '.subresourceid', $q . '.subresourceid')
-->join($r, $r . '.id', $s . '.resourceid')
-->where(function($wher) use ($q)
-{
-$wher->whereNull($q . '.datetimeremoved')
-	->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-})
-->where(function($wher) use ($r)
-{
-$wher->whereNull($r . '.datetimeremoved')
-	->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-})
-->get();
+	->withTrashed()
+	->select($q . '.*')
+	->join($s, $s . '.subresourceid', $q . '.subresourceid')
+	->join($r, $r . '.id', $s . '.resourceid')
+	->where(function($wher) use ($q)
+	{
+		$wher->whereNull($q . '.datetimeremoved')
+			->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+	})
+	->where(function($wher) use ($r)
+	{
+		$wher->whereNull($r . '.datetimeremoved')
+			->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+	})
+	->get();
 
 $q = (new \App\Modules\Queues\Models\User)->getTable();
 
 foreach ($queues as $queue)
 {
-if (!isset($resources[$queue->resource->name]))
-{
-$resources[$queue->resource->name] = array();
-}
-$resources[$queue->resource->name][] = $queue;
-
-$users = $queue->users()
-->withTrashed()
-->select($q . '.*')//, $u . '.name')
-->join($u, $u . '.userid', $q . '.userid')
-->where(function($where) use ($q)
-{
-	$where->whereNull($q . '.datetimeremoved')
-		->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-})
-//->whereNotIn($q . '.userid', $processed)
-->orderBy($q . '.datetimecreated', 'desc')
-->get();
-
-foreach ($users as $me)
-{
-if (in_array($me->userid, $processed))
-{
-	continue;
-}
-
-if (!$me->user || $me->user->isTrashed())
-{
-	/*if (!in_array($me->id, $disabledids))
+	if (!isset($resources[$queue->resource->name]))
 	{
-		$disabledids[] = $me->id;
-		$disabled->push($me);
-	}*/
-	if (!($found = $disabled->firstWhere('userid', $me->userid)))
-	{
-		$disabled->push($me);
+		$resources[$queue->resource->name] = array();
 	}
-}
-else
-{
-	$me->username = $me->user->username;
-	if ($me->isManager())
-	{
-		if (!($found = $managers->firstWhere('userid', $me->userid)))
+	$resources[$queue->resource->name][] = $queue;
+
+	$users = $queue->users()
+		->withTrashed()
+		->select($q . '.*')//, $u . '.name')
+		->join($u, $u . '.userid', $q . '.userid')
+		->where(function($where) use ($q)
 		{
-			$managers->push($me);
-		}
-	}
-	elseif ($me->isMember())
-	{
-		if (!($found = $members->firstWhere('userid', $me->userid)))
-		{
-			$members->push($me);
-		}
-	}
-	elseif ($me->isViewer())
-	{
-		if (!($found = $viewers->firstWhere('userid', $me->userid)))
-		{
-			$viewers->push($me);
-		}
-	}
-}
+			$where->whereNull($q . '.datetimeremoved')
+				->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+		})
+		//->whereNotIn($q . '.userid', $processed)
+		->orderBy($q . '.datetimecreated', 'desc')
+		->get();
 
-$processed[] = $me->userid;
-}
+	foreach ($users as $me)
+	{
+		if (in_array($me->userid, $processed))
+		{
+			continue;
+		}
+
+		if (!$me->user || $me->user->isTrashed())
+		{
+			/*if (!in_array($me->id, $disabledids))
+			{
+				$disabledids[] = $me->id;
+				$disabled->push($me);
+			}*/
+			if (!($found = $disabled->firstWhere('userid', $me->userid)))
+			{
+				$disabled->push($me);
+			}
+		}
+		else
+		{
+			$me->username = $me->user->username;
+			if ($me->isManager())
+			{
+				if (!($found = $managers->firstWhere('userid', $me->userid)))
+				{
+					$managers->push($me);
+				}
+			}
+			elseif ($me->isMember())
+			{
+				if (!($found = $members->firstWhere('userid', $me->userid)))
+				{
+					$members->push($me);
+				}
+			}
+			elseif ($me->isViewer())
+			{
+				if (!($found = $viewers->firstWhere('userid', $me->userid)))
+				{
+					$viewers->push($me);
+				}
+			}
+		}
+
+		$processed[] = $me->userid;
+	}
 }
 
 $unixgroups = $group->unixgroups()
-->withTrashed()
-->where(function($where)
-{
-$where->whereNull('datetimeremoved')
-	->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-})
-->orderBy('longname', 'asc')
-->get();
+	->withTrashed()
+	->where(function($where)
+	{
+		$where->whereNull('datetimeremoved')
+			->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+	})
+	->orderBy('longname', 'asc')
+	->get();
 
 $group_boxes = 0;
 foreach ($unixgroups as $unixgroup)
 {
-// Shortname is only defined when queue is actually a unix group
-// And we only want to add boxes for non-base groups (ones not ending in 0).
-if (!preg_match("/rcs[0-9]{4}0/", $unixgroup->shortname))
-{
-$group_boxes++;
-}
-
-$users = $unixgroup->members()
-->withTrashed()
-->where(function($where)
-{
-	$where->whereNull('datetimeremoved')
-		->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-})
-//->whereNotIn('userid', $processed)
-->get();
-
-$unixgroup->activemembers = $users;
-
-foreach ($users as $me)
-{
-if (in_array($me->userid, $processed))
-{
-	continue;
-}
-
-if (!$me->user || $me->user->isTrashed())
-{
-	//echo $me->userid . '<br />';
-	if (!($found = $disabled->firstWhere('userid', $me->userid)))
+	// Shortname is only defined when queue is actually a unix group
+	// And we only want to add boxes for non-base groups (ones not ending in 0).
+	if (!preg_match("/rcs[0-9]{4}0/", $unixgroup->shortname))
 	{
-		$disabled->push($me);
+		$group_boxes++;
 	}
-}
-else
-{
-	$me->username = $me->user->username;
-	/*if ($me->isManager())
-	{
-		if (!($found = $managers->firstWhere('userid', $me->userid)))
-		{
-			$managers->push($me);
-		}
-	}
-	elseif ($me->isMember())
-	{*/
-		if (!($found = $members->firstWhere('userid', $me->userid)))
-		{
-			$members->push($me);
-		}
-	/*}
-	elseif ($me->isViewer())
-	{
-		if (!($found = $viewers->firstWhere('userid', $me->userid)))
-		{
-			$viewers->push($me);
-		}
-	}*/
-}
 
-$processed[] = $me->userid;
-}
+	$users = $unixgroup->members()
+		->withTrashed()
+		->where(function($where)
+		{
+			$where->whereNull('datetimeremoved')
+				->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+		})
+		//->whereNotIn('userid', $processed)
+		->get();
+
+	$unixgroup->activemembers = $users;
+
+	foreach ($users as $me)
+	{
+		if (in_array($me->userid, $processed))
+		{
+			continue;
+		}
+
+		if (!$me->user || $me->user->isTrashed())
+		{
+			//echo $me->userid . '<br />';
+			if (!($found = $disabled->firstWhere('userid', $me->userid)))
+			{
+				$disabled->push($me);
+			}
+		}
+		else
+		{
+			$me->username = $me->user->username;
+			/*if ($me->isManager())
+			{
+				if (!($found = $managers->firstWhere('userid', $me->userid)))
+				{
+					$managers->push($me);
+				}
+			}
+			elseif ($me->isMember())
+			{*/
+				if (!($found = $members->firstWhere('userid', $me->userid)))
+				{
+					$members->push($me);
+				}
+			/*}
+			elseif ($me->isViewer())
+			{
+				if (!($found = $viewers->firstWhere('userid', $me->userid)))
+				{
+					$viewers->push($me);
+				}
+			}*/
+		}
+
+		$processed[] = $me->userid;
+	}
 }
 
 /*foreach ($queues as $queue)
 {
-$users = $queue->users()
-->withTrashed()
-->select($q . '.*', $u . '.dateremoved')//, $u . '.name')
-->join($u, $u . '.userid', $q . '.userid')
-//->join($s, $s . '.subresourceid', $q . '.subresourceid')
-//->join($r, $r . '.id', $s . '.resourceid')
-->where(function($where) use ($q, $u)
-{
-	$where->where(function($wher) use ($u)
-	{
-		$wher->whereNotNull($u . '.dateremoved')
-			->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
-	})
-	->orWhere(function($wher) use ($q)
-	{
-		$wher->whereNotNull($q . '.datetimeremoved')
-			->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-	});
-})
-//->whereIsMember()
-//->whereNotIn($q . '.userid', $members->pluck('userid')->toArray())
-->orderBy($q . '.datetimecreated', 'desc')
-->orderBy($u . '.datecreated', 'desc')
-->get();
+	$users = $queue->users()
+		->withTrashed()
+		->select($q . '.*', $u . '.dateremoved')//, $u . '.name')
+		->join($u, $u . '.userid', $q . '.userid')
+		//->join($s, $s . '.subresourceid', $q . '.subresourceid')
+		//->join($r, $r . '.id', $s . '.resourceid')
+		->where(function($where) use ($q, $u)
+		{
+			$where->where(function($wher) use ($u)
+			{
+				$wher->whereNotNull($u . '.dateremoved')
+					->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
+			})
+			->orWhere(function($wher) use ($q)
+			{
+				$wher->whereNotNull($q . '.datetimeremoved')
+					->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+			});
+		})
+		//->whereIsMember()
+		//->whereNotIn($q . '.userid', $members->pluck('userid')->toArray())
+		->orderBy($q . '.datetimecreated', 'desc')
+		->orderBy($u . '.datecreated', 'desc')
+		->get();
 
-foreach ($users as $me)
-{
-if (!($found = $disabled->firstWhere('userid', $me->userid)))
-{
-	$disabled->push($me);
-}
-}
+	foreach ($users as $me)
+	{
+		if (!($found = $disabled->firstWhere('userid', $me->userid)))
+		{
+			$disabled->push($me);
+		}
+	}
 }
 
 $unixgroups = $group->unixgroups()
-->withTrashed()
-->where(function($where)
-{
-$where->whereNull('datetimeremoved')
-	->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-})
-->orderBy('longname', 'asc')
-->get();
+	->withTrashed()
+	->where(function($where)
+	{
+		$where->whereNull('datetimeremoved')
+			->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+	})
+	->orderBy('longname', 'asc')
+	->get();
 
 foreach ($unixgroups as $unixgroup)
 {
-$users = $unixgroup->members()
-->withTrashed()
-->select($ug . '.*')
-->join($u, $u . '.userid', $ug . '.userid')
-->where(function($where) use ($ug)
-{
-	$where->whereNull($ug . '.datetimeremoved')
-		->orWhere($ug . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-})
-->where(function($where) use ($u)
-{
-	$where->whereNull($u . '.dateremoved')
-		->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-})
-->whereNotIn($ug . '.userid', $managerids)
-->get();
+	$users = $unixgroup->members()
+		->withTrashed()
+		->select($ug . '.*')
+		->join($u, $u . '.userid', $ug . '.userid')
+		->where(function($where) use ($ug)
+		{
+			$where->whereNull($ug . '.datetimeremoved')
+				->orWhere($ug . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+		})
+		->where(function($where) use ($u)
+		{
+			$where->whereNull($u . '.dateremoved')
+				->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+		})
+		->whereNotIn($ug . '.userid', $managerids)
+		->get();
 
-foreach ($users as $me)
-{
-if (!($found = $members->firstWhere('userid', $me->userid)))
-{
-	$members->push($me);
-}
-}
+	foreach ($users as $me)
+	{
+		if (!($found = $members->firstWhere('userid', $me->userid)))
+		{
+			$members->push($me);
+		}
+	}
 }*/
 
 $managers = $managers->sortBy('username');

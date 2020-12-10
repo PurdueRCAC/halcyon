@@ -332,40 +332,99 @@ $active = $sections->firstWhere('active', '=', true);
 		@if (auth()->user()->can('manage users'))
 			<div class="card panel panel-default session">
 				<div class="card-header panel-heading">
-					Roles
+					<div class="row">
+						<div class="col-md-9">
+							Roles
+						</div>
+						<div class="col-md-3 text-right">
+							<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-default btn-sm">
+								<i class="fa fa-pencil"></i> Manage Roles
+							</a>
+						</div>
+					</div>
 				</div>
 				<div class="card-body panel-body">
+					<?php
+					// Gather roles
+					$resources = App\Modules\Resources\Entities\Asset::query()
+						->where('rolename', '!=', '')
+						//->where('retired', '=', 0)
+						->where('listname', '!=', '')
+						->where(function($where)
+						{
+							$where->whereNull('datetimeremoved')
+								->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+						})
+						->orderBy('display', 'desc')
+						->get();
+					?>
+
 					<table class="table table-hover" id="roles" data-api="{{ route('api.resources.index', ['limit' => 100]) }}">
 						<caption class="sr-only">Roles</caption>
+						<thead>
+							<tr>
+								<th scope="col">Resource</th>
+								<th scope="col">Group</th>
+								<th scope="col">Shell</th>
+								<th scope="col">PI</th>
+								<th scope="col" class="text-right">Status</th>
+							</tr>
+						</thead>
 						<tbody>
-						<?php
-						// Gather roles
-						$resources = App\Modules\Resources\Entities\Asset::query()
-							->where('rolename', '!=', '')
-							//->where('retired', '=', 0)
-							->where('listname', '!=', '')
-							->where(function($where)
-							{
-								$where->whereNull('datetimeremoved')
-									->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-							})
-							->orderBy('display', 'desc')
-							->get();
-
-						foreach ($resources as $resource)
-						{
-							?>
+						@foreach ($resources as $resource)
 							<tr>
 								<th scope="row">{{ $resource->name }}</th>
+								<td id="resource{{ $resource->id }}_group">-</td>
+								<td id="resource{{ $resource->id }}_shell">-</td>
+								<td id="resource{{ $resource->id }}_pi">-</td>
 								<td class="text-right" id="resource{{ $resource->id }}" data-api="{{ route('api.resources.members') }}">
 									<span class="fa fa-exclamation-triangle"></span><span class="sr-only">Loading...</span>
 								</td>
 							</tr>
-							<?php
-						}
-						?>
+						@endforeach
 						</tbody>
 					</table>
+
+					<div id="manage_roles_dialog" data-id="{{ $user->id }}" title="Manage Roles" class="roles-dialog">
+						<form method="post" action="{{ route('site.users.account') }}">
+							<div class="form-group">
+								<label for="role" class="sr-only">New Role</label>
+								<select id="role" class="form-control" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
+									<option value="">(Select Role)</option>
+									@foreach ($resources as $resource)
+										<option value="{{ $resource->id }}">{{ $resource->name }}</option>
+									@endforeach
+								</select>
+							</div>
+
+							<div class="hide" id="role_table">
+								<div class="form-group">
+									<label for="role_status">Status</label>
+									<input type="text" disabled="disabled" class="form-control" id="role_status" />
+								</div>
+								<div class="form-group">
+									<label for="role_group">Group</label>
+									<input id="role_group" type="text" class="form-control" />
+								</div>
+								<div class="form-group">
+									<label for="role_shell">Shell</label>
+									<input id="role_shell" type="text" class="form-control" />
+								</div>
+								<div class="form-group">
+									<label for="role_pi">PI</label>
+									<input id="role_pi" type="text" class="form-control" />
+								</div>
+								<div class="form-group">
+									<button id="role_add" class="btn btn-success role-add hide" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">Add Role</button>
+									<button id="role_modify" class="btn btn-success role-add hide" data-id="{{ $user->id }}">Modify Role</button>
+									<button id="role_delete" class="btn btn-danger role-delete hide" data-id="{{ $user->id }}">Delete Role</button>
+								</div>
+
+								<span id="role_errors" class="alert alert-error"></span>
+							</div>
+
+						</form>
+					</div>
 				</div>
 			</div>
 		@endif

@@ -35,7 +35,9 @@ var Roles = {
 								cell.innerHTML = "";
 								cell.setAttribute('data-loading', true);
 								cell.appendChild(image);
+
 								console.log(cell.getAttribute('data-api') +  "/" + resource + "." + userid);
+
 								WSGetURL(cell.getAttribute('data-api') +  "/" + resource + "." + userid, Roles.PopulateRole, results.data[count]['id']);
 							}
 						}
@@ -72,6 +74,12 @@ var Roles = {
 			} else {
 				cell.innerHTML = "Error";
 			}
+
+			cell.setAttribute('data-api', results.data['api']);
+
+			document.getElementById('resource' + results.data['resource']['id'] + '_shell').innerHTML = results.data['loginshell'];
+			document.getElementById('resource' + results.data['resource']['id'] + '_group').innerHTML = results.data['primarygroup'];
+			document.getElementById('resource' + results.data['resource']['id'] + '_pi').innerHTML = results.data['pilogin'];
 		} else {
 			var img = document.getElementById('IMG_' + id);
 			if (img) {
@@ -93,69 +101,74 @@ var Roles = {
 	GetUserStatus: function(userid) {
 		var resource = document.getElementById("role");
 		resource = resource[resource.selectedIndex].value;
-		//userid = userid.split('/');
-		//userid = userid[3];
-		//resource = resource.split('/');
-		//resource = resource[3];
 
 		if (resource) {
-			WSGetURL(ROOT_URL + "resources/members/" + resource + "." + userid, Roles.GotUserStatus);
+			WSGetURL(resource.getAttribute('data-api') + "/" + resource + "." + userid, Roles.GotUserStatus);
 		}
 	},
 
 	GotUserStatus: function(xml) {
-				var stat = document.getElementById("role_status");
-				if (xml.status == 200) {
-					var results = JSON.parse(xml.responseText);
-					var table = document.getElementById("role_table");
-					var group = document.getElementById("role_group");
-					var shell = document.getElementById("role_shell");
-					var pi = document.getElementById("role_pi");
-					var add = document.getElementById("role_add");
-					var mod = document.getElementById("role_modify");
-					var del = document.getElementById("role_delete");
+		var stat = document.getElementById("role_status");
 
-					table.style.display = "table-row-group";
-					if (results['status'] == 0) {
-						stat.innerHTML = "Login Invalid";
-						add.style.display = "none";
-						mod.style.display = "none";
-						del.style.display = "none";
-					} else if (results['status'] == 1) {
-						stat.innerHTML = "No Role Exists";
-						add.style.display = "block";
-						mod.style.display = "none";
-						del.style.display = "none";
-					} else if (results['status'] == 2) {
-						stat.innerHTML = "Role Creation Pending";
-						add.style.display = "none";
-						mod.style.display = "block";
-						del.style.display = "block";
-					} else if (results['status'] == 3) {
-						stat.innerHTML = "Role Exists";
-						add.style.display = "none";
-						mod.style.display = "block";
-						del.style.display = "block";
-					} else if (results['status'] == 4) {
-						stat.innerHTML = "Role Removal Pending";
-						add.style.display = "block";
-						mod.style.display = "none";
-						del.style.display = "none";
-					} else {
-						stat.innerHTML = "Unknown";
-						add.style.display = "none";
-						mod.style.display = "none";
-						del.style.display = "none";
-					}
+		if (xml.status < 400) {
+			var results = JSON.parse(xml.responseText);
+			// Inputs
+			var container = document.getElementById("role_table");
+			var group = document.getElementById("role_group");
+			var shell = document.getElementById("role_shell");
+			var pi = document.getElementById("role_pi");
+			// Buttons
+			var add = $("#role_add");
+			var mod = $("#role_modify");
+			var del = $("#role_delete");
 
-					group.value = results['primarygroup'];
-					shell.value = results['loginshell'];
-					pi.value = results['pilogin'];
-				} else {
-					stat.innerHTML = "Unknown - Error";
-				}
-				document.getElementById("role_errors").innerHTML = "";
-			},
+			add.addClass('hide');
+			mod.addClass('hide');
+			del.addClass('hide');
+
+			//table.style.display = "table-row-group";
+			container.className = '';
+
+			if (results.data['status'] == 0) {
+				stat.value = "Login Invalid";
+				//add.style.display = "none";
+				//mod.style.display = "none";
+				//del.style.display = "none";
+			} else if (results.data['status'] == 1) {
+				stat.value = "No Role Exists";
+				add.removeClass('hide');
+				//mod.style.display = "none";
+				//del.style.display = "none";
+			} else if (results.data['status'] == 2) {
+				stat.value = "Role Creation Pending";
+				//add.style.display = "none";
+				mod.removeClass('hide');
+				del.removeClass('hide');
+			} else if (results.data['status'] == 3) {
+				stat.value = "Role Exists";
+				//add.style.display = "none";
+				mod.removeClass('hide');
+				del.removeClass('hide');
+			} else if (results.data['status'] == 4) {
+				stat.value = "Role Removal Pending";
+				add.removeClass('hide');
+				//mod.style.display = "none";
+				//del.style.display = "none";
+			} else {
+				stat.value = "Unknown";
+				//add.style.display = "none";
+				//mod.style.display = "none";
+				//del.style.display = "none";
+			}
+
+			group.value = results.data['primarygroup'];
+			shell.value = results.data['loginshell'];
+			pi.value    = results.data['pilogin'];
+		} else {
+			stat.value = "Unknown - Error";
+		}
+		document.getElementById("role_errors").innerHTML = "";
+	},
 
 	/**
 	 * Add a role
@@ -163,29 +176,26 @@ var Roles = {
 	 * @param   {string}  userid
 	 * @return  {void}
 	 */
-	AddRole: function(userid) {
+	Add: function(userid) {
 		var resource = document.getElementById("role");
 		resource = resource[resource.selectedIndex].value;
-		var group = document.getElementById("role_group").value;
-		var shell = document.getElementById("role_shell").value;
-		var pi = document.getElementById("role_pi").value;
 
 		var post = {
 			'user' : userid,
 			'resource' : resource,
-			'primarygroup' : group,
-			'loginshell' : shell,
-			'pilogin' : pi
+			'primarygroup': document.getElementById("role_group").value,
+			'loginshell': document.getElementById("role_shell").value,
+			'pilogin': document.getElementById("role_pi").value
 		};
 
-		WSPostURL(ROOT_URL + "resources/members", JSON.stringify(post), function(xml) {
-			if (xml.status == 200) {
-				var results = JSON.parse(xml.responseText);
-				var userid = results['user'].split('/');
-				userid = userid[3];
-				var resource = results['resource'].split('/');
-				resource = resource[3];
-				WSGetURL(ROOT_URL + "resourcemember/" + resource + "." + userid, Roles.GotUserRoleStatus);
+		WSPostURL(resource.getAttribute('data-api'), JSON.stringify(post), function(xml) {
+			if (xml.status < 400) {
+				/*var results = JSON.parse(xml.responseText);
+				var userid = results['user']['id'];
+				var resource = results.data['resource']['id'];
+
+				WSGetURL(ROOT_URL + "resources/members/" + resource + "." + userid, Roles.GotUserRoleStatus);*/
+				Roles.GotUserRoleStatus(xml);
 			} else if (xml.status == 409) {
 				document.getElementById("role_errors").innerHTML = "One of the arguments is not valid.";
 			} else {
@@ -200,17 +210,14 @@ var Roles = {
 	 * @param   {object}  xml
 	 * @return  {void}
 	 */
-	DeleteRole: function (userid) {
+	Delete: function (userid) {
 		var resource = document.getElementById("role");
 		resource = resource[resource.selectedIndex].value;
-		userid = userid.split('/');
-		userid = userid[3];
-		resource = resource.split('/');
-		resource = resource[3];
+
 		if (resource) {
-			WSDeleteURL(ROOT_URL + "resources/members/" + resource + "." + userid, function(xml, target) {
+			WSDeleteURL(resource.getAttribute('data-api') + "/" + resource + "." + userid, function(xml, target) {
 				if (xml.status == 200) {
-					WSGetURL(ROOT_URL + "resources/members/" + target, Roles.GotUserRoleStatus);
+					WSGetURL(resource.getAttribute('data-api') + "/" + target, Roles.GotUserStatus);
 				} else if (xml.status == 202) {
 					document.getElementById("role_errors").innerHTML = "Unable to delete role because of existing queue membership or group ownership.";
 				} else if (xml.status == 409) {
@@ -223,6 +230,29 @@ var Roles = {
 	}
 }
 
-$(document).ready(function() { 
+$(document).ready(function() {
 	Roles.Populate();
+
+	$('#role').on('change', function (e) {
+		Roles.GetUserStatus($(this).data('id'));
+	});
+	$('.role-add').on('change', function (e) {
+		Roles.Add($(this).data('id'));
+	});
+	$('.role-delete').on('change', function (e) {
+		Role.Delete($(this).data('id'));
+	});
+
+	var dialog = $(".roles-dialog").dialog({
+		autoOpen: false,
+		height: 'auto',
+		width: 500,
+		modal: true
+	});
+
+	$('#manage_roles').on('click', function (e) {
+		e.preventDefault();
+
+		$($(this).attr('href')).dialog("open");
+	});
 });

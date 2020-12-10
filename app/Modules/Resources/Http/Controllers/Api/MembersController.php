@@ -115,8 +115,24 @@ class MembersController extends Controller
 
 		event($event = new ResourceMemberCreated($asset, $user));
 
+		$data = array(
+			'resource' => array(
+				'id'   => $asset->id,
+				'name' => $asset->name,
+			),
+			'user' => array(
+				'id'   => $user->id,
+				'name' => $user->name
+			),
+			'status'       => $event->status,
+			'loginshell'   => $event->user->loginshell,
+			'primarygroup' => $event->user->primarygroup,
+			'pilogin'      => $event->user->pilogin,
+			'api'          => route('api.resources.members.read', $asset->id . '.' . $user->id)
+		);
 
-		return new AssetResource($asset);
+		return new JsonResource($data);
+		//return new AssetResource($asset);
 	}
 
 	/**
@@ -182,13 +198,18 @@ class MembersController extends Controller
 
 		$data = array(
 			'resource' => array(
-				'id' => $asset->id,
+				'id'   => $asset->id,
 				'name' => $asset->name,
 			),
-			'status' => $event->status,
-			'loginshell' => $event->user->loginshell,
-			'primarygroup' => $event->user->primarygroup = 'student',
-			'pilogin' => $event->user->pilogin,
+			'user' => array(
+				'id'   => $user->id,
+				'name' => $user->name
+			),
+			'status'       => $event->status,
+			'loginshell'   => $event->user->loginshell,
+			'primarygroup' => $event->user->primarygroup,
+			'pilogin'      => $event->user->pilogin,
+			'api'          => route('api.resources.members.read', $id)
 		);
 
 		return new JsonResource($data);
@@ -292,18 +313,26 @@ class MembersController extends Controller
 			$owned = auth()->user()->groups->pluck('id')->toArray();
 
 			$queues = array();
-			foreach ($resource->subresources as $sub)
+			$subresources = $resource->subresources()
+				->where(function($where)
+				{
+					$where->whereNull('datetimeremoved')
+						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+				->get();
+			foreach ($subresources as $sub)
 			{
 				$queues += $sub->queues()
 					->whereIn('groupid', $owned)
+					->where(function($where)
+					{
+						$where->whereNull('datetimeremoved')
+							->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+					})
 					->pluck('queuid')
 					->toArray();
 			}
 			array_filter($queues);
-
-			/*$sql = "SELECT queues.id FROM resources, resourcesubresources, queues WHERE resources.id = '" . $this->db->escape_string($resource) . "' AND queues.groupid " . $this->myownedgroupssql . " AND resources.id = resourcesubresources.resourceid AND resourcesubresources.subresourceid = queues.subresourceid AND queues.datetimeremoved = '0000-00-00 00:00:00'";
-			$data = array();
-			$rows = $this->db->query($sql, $data);*/
 
 			// If no queues found
 			if (count($queues) < 1) // && !in_array($resource->id, array(48, 2, 12, 66)))
@@ -313,12 +342,54 @@ class MembersController extends Controller
 		}
 
 		// Check for other queue memberships on this resource that might conflict with removing the role
-		$sql = "SELECT queues.id, queues.groupid FROM resources, resourcesubresources, queues, queueusers
-		WHERE resources.id = '" . $this->db->escape_string($resource) . "' AND resources.id = resourcesubresources.resourceid AND resourcesubresources.subresourceid = queues.subresourceid AND queueusers.queueid = queues.id AND queues.datetimeremoved = '0000-00-00 00:00:00' AND queueusers.datetimeremoved = '0000-00-00 00:00:00' AND resources.datetimeremoved = '0000-00-00 00:00:00' AND queueusers.membertype = '1' AND queueusers.userid = '" . $this->db->escape_string($user) . "'
-		UNION
-		SELECT groupusers.groupid AS id, groupusers.groupid FROM groupusers, queues, resourcesubresources WHERE groupusers.userid = '" . $this->db->escape_string($user) . "' and groupusers.membertype = '2' AND groupusers.groupid <> '0' and groupusers.dateremoved = '0000-00-00 00:00:00' AND groupusers.groupid = queues.groupid AND resourcesubresources.subresourceid = queues.subresourceid AND resourcesubresources.resourceid = '" . $this->db->escape_string($resource) . "' AND queues.datetimeremoved = '0000-00-00 00:00:00'";
-		$data = array();
-		$rows = $this->db->query($sql, $data);
+		$rows = 0;
+
+		$resources = Asset::query()
+			->where('rolename', '!=', '')
+			->where('listname', '!=', '')
+			->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->get();
+
+		foreach ($resources as $res)
+		{
+			$subresources = $res->subresources()
+				->where(function($where)
+				{
+					$where->whereNull('datetimeremoved')
+						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+				->get();
+
+			foreach ($subresources as $sub)
+			{
+				$queues = $sub->queues()
+					->whereIn('groupid', $owned)
+					->where(function($where)
+					{
+						$where->whereNull('datetimeremoved')
+							->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+					})
+					->pluck('queuid')
+					->toArray();
+
+				foreach ($queues as $queue)
+				{
+					$rows += $queue->users()
+						->whereIsMember()
+						->where('userid', '=', $user->id)
+						->count();
+
+					$rows += $queue->group->members()
+						->whereIsManager()
+						->where('userid', '=', $user->id)
+						->count();
+				}
+			}
+		}
 
 		if ($rows > 0)
 		{
