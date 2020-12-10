@@ -1,17 +1,11 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Users\History;
 
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\History\Models\Log;
 
 /**
- * User listener for sessions
+ * User listener for history
  */
 class History
 {
@@ -27,10 +21,9 @@ class History
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Display data for a user
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   UserDisplay  $event
 	 * @return  void
 	 */
 	public function handleUserDisplay(UserDisplay $event)

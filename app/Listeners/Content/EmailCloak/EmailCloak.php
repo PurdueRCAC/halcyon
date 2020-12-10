@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Listeners\Content\EmailCloak;
 
 use App\Modules\ContactReports\Events\ReportPrepareContent;

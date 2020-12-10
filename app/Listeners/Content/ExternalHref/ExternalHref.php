@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Listeners\Content\ExternalHref;
 
 use App\Modules\ContactReports\Events\ReportPrepareContent;
@@ -7,7 +6,8 @@ use App\Modules\ContactReports\Events\CommentPrepareContent;
 use App\Modules\News\Events\ArticlePrepareContent;
 use App\Modules\News\Events\UpdatePrepareContent;
 use App\Modules\Pages\Events\PageContentIsRendering;
-use App\Halcyon\Config\Registry;
+//use App\Halcyon\Config\Registry;
+use Illuminate\Support\Fluent;
 
 /**
  * External HREF processor
@@ -48,7 +48,7 @@ class ExternalHref
 			return;
 		}
 
-		$params = new Registry(config()->get('listeners.content.externalhref', []));
+		$params = new Fluent(config()->get('listener.externalhref', []));
 
 		$mode   = $params->get('mode');
 		$target = $params->get('target');

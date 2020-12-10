@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Users\Quotas;
 
 use App\Modules\Users\Events\UserDisplay;
@@ -33,8 +27,7 @@ class Quotas
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   UserDisplay  $event
 	 * @return  void
 	 */
 	public function handleUserDisplay(UserDisplay $event)

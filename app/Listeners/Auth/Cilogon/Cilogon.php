@@ -84,7 +84,7 @@ class CILogon //extends OauthClient
 			// User didn't authorize our app or clicked cancel
 			App::redirect(
 				url('users.' . $client . '.login') . '?return=' . $return,
-				Lang::txt('PLG_AUTHENTICATION_CILOGON_MUST_AUTHORIZE_TO_LOGIN', Config::get('sitename')),
+				Lang::txt('must authorize to login', Config::get('sitename')),
 				'error'
 			);
 		}*/
@@ -144,7 +144,7 @@ class CILogon //extends OauthClient
 		catch (\Exception $e)
 		{
 			$response->status = Status::FAILURE;
-			$response->error_message = Lang::txt('PLG_AUTHENTICATION_CILOGON_ERROR_RETRIEVING_PROFILE', $e->getMessage());
+			$response->error_message = Lang::txt('error retrieving profile', $e->getMessage());
 			return;
 		}
 		// Make sure we have a user_id (gc returns 0 for a non-logged in user)
@@ -164,7 +164,7 @@ class CILogon //extends OauthClient
 			{
 				// Error message?
 				$response->status = Status::FAILURE;
-				$response->error_message = Lang::txt('PLG_AUTHENTICATION_CILOGON_ERROR_RETRIEVING_PROFILE', $e->getMessage());
+				$response->error_message = Lang::txt('error retrieving profile', $e->getMessage());
 				return;
 			}
 			// Create the halcyon auth link
@@ -173,7 +173,7 @@ class CILogon //extends OauthClient
 			if ($hzal === false)
 			{
 				$response->status = Status::FAILURE;
-				$response->error_message = Lang::txt('PLG_AUTHENTICATION_CILOGON_UNKNOWN_USER');
+				$response->error_message = Lang::txt('unknown user');
 				return;
 			}
 
@@ -224,7 +224,7 @@ class CILogon //extends OauthClient
 		else
 		{
 			$response->status = Status::FAILURE;
-			$response->error_message = Lang::txt('PLG_AUTHENTICATION_CILOGON_AUTHENTICATION_FAILED');
+			$response->error_message = Lang::txt('authentication failed');
 		}*/
 	}
 
@@ -257,7 +257,7 @@ class CILogon //extends OauthClient
 			{
 				// Error message?
 				$response->status = Status::FAILURE;
-				$response->error_message = Lang::txt('PLG_AUTHENTICATION_CILOGON_ERROR_RETRIEVING_PROFILE', $e->getMessage());
+				$response->error_message = Lang::txt('error retrieving profile', $e->getMessage());
 				return;
 			}
 
@@ -269,7 +269,7 @@ class CILogon //extends OauthClient
 				// This cilogon account is already linked to another hub account
 				App::redirect(
 					Route::url('index.php?option=com_members&id=' . User::get('id') . '&active=account'),
-					Lang::txt('PLG_AUTHENTICATION_CILOGON_ACCOUNT_ALREADY_LINKED'),
+					Lang::txt('account already linked'),
 					'error'
 				);
 			}
@@ -298,7 +298,7 @@ class CILogon //extends OauthClient
 			// User didn't authorize our app, or, clicked cancel
 			App::redirect(
 				Route::url('index.php?option=com_members&id=' . User::get('id') . '&active=account'),
-				Lang::txt('PLG_AUTHENTICATION_CILOGON_MUST_AUTHORIZE_TO_LINK', Config::get('sitename')),
+				Lang::txt('must authorize to link', Config::get('sitename')),
 				'error'
 			);
 		}*/

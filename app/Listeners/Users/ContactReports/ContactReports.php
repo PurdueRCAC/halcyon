@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Users\ContactReports;
 
 use App\Modules\Users\Events\UserDisplay;
@@ -12,7 +6,7 @@ use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\User;
 
 /**
- * User listener for sessions
+ * Contact Reports listener for users
  */
 class ContactReports
 {
@@ -30,8 +24,7 @@ class ContactReports
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   UserDisplay  $event
 	 * @return  void
 	 */
 	public function handleUserDisplay(UserDisplay $event)
@@ -61,9 +54,6 @@ class ContactReports
 					trans('contactreports::contactreports.contact reports'),
 					route('site.users.account.section', $r)
 				);
-
-			//$r = (new Report)->getTable();
-			//$u = (new User)->getTable();
 
 			$reports = Report::query()
 				->select($p . '.*')

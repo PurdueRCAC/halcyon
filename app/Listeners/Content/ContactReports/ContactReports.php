@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Content\ContactReports;
 
 use App\Modules\ContactReports\Events\ReportPrepareContent;
@@ -18,6 +12,24 @@ use App\Modules\Pages\Events\PageContentIsRendering;
  */
 class ContactReports
 {
+	/**
+	 * Register the listeners for the subscriber.
+	 *
+	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @return void
+	 */
+	public function subscribe($events)
+	{
+		// Contact Reports
+		$events->listen(ReportPrepareContent::class, self::class . '@handle');
+		$events->listen(CommentPrepareContent::class, self::class . '@handle');
+		// News
+		$events->listen(ArticlePrepareContent::class, self::class . '@handle');
+		$events->listen(UpdatePrepareContent::class, self::class . '@handle');
+		// Pages
+		$events->listen(PageContentIsRendering::class, self::class . '@handle');
+	}
+
 	/**
 	 * Handle content rendering
 	 *
@@ -35,23 +47,5 @@ class ContactReports
 		$content = preg_replace("/$regex/i", $replc, $content);
 
 		$event->setBody($content);
-	}
-
-	/**
-	 * Register the listeners for the subscriber.
-	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
-	 * @return void
-	 */
-	public function subscribe($events)
-	{
-		// Contact Reports
-		$events->listen(ReportPrepareContent::class, self::class . '@handle');
-		$events->listen(CommentPrepareContent::class, self::class . '@handle');
-		// News
-		$events->listen(ArticlePrepareContent::class, self::class . '@handle');
-		$events->listen(UpdatePrepareContent::class, self::class . '@handle');
-		// Pages
-		$events->listen(PageContentIsRendering::class, self::class . '@handle');
 	}
 }

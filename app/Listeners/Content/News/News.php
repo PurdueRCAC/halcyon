@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Content\News;
 
 use App\Modules\Pages\Events\PageContentIsRendering;
@@ -15,6 +9,17 @@ use App\Modules\News\Models\Article;
  */
 class News
 {
+	/**
+	 * Register the listeners for the subscriber.
+	 *
+	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @return void
+	 */
+	public function subscribe($events)
+	{
+		$events->listen(PageContentIsRendering::class, self::class . '@handlePageContentIsRendering');
+	}
+
 	/**
 	 * Plugin that loads module positions within content
 	 *
@@ -53,16 +58,5 @@ class News
 		}
 
 		return '<a href="' . route('site.news.show', ['id' => $match[3]]) . '">' . $title . '</a>';
-	}
-
-	/**
-	 * Register the listeners for the subscriber.
-	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
-	 * @return void
-	 */
-	public function subscribe($events)
-	{
-		$events->listen(PageContentIsRendering::class, self::class . '@handlePageContentIsRendering');
 	}
 }

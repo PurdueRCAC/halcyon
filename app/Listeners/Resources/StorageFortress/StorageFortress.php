@@ -25,7 +25,7 @@ class StorageFortress
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   object   $event
+	 * @param   ResourceMemberCreated  $event
 	 * @return  void
 	 */
 	public function handleResourceMemberCreated(ResourceMemberCreated $event)

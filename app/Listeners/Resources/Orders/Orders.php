@@ -1,17 +1,11 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Resources\Orders;
 
 use App\Modules\Resources\Events\AssetDisplaying;
 use App\Modules\Orders\Models\Product;
 
 /**
- * Content listener for Resources
+ * ORders listener for Resources
  */
 class Orders
 {
@@ -29,8 +23,7 @@ class Orders
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   AssetDisplaying  $event
 	 * @return  void
 	 */
 	public function handleAssetDisplaying(AssetDisplaying $event)

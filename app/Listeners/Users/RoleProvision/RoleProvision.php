@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Listeners\Users\RoleProvision;
 
@@ -14,7 +9,7 @@ use App\Modules\History\Traits\Loggable;
 use GuzzleHttp\Client;
 
 /**
- * Resource listener
+ * Role Provision listener
  */
 class RoleProvision
 {
@@ -36,7 +31,7 @@ class RoleProvision
 	/**
 	 * Search for users
 	 *
-	 * @param   object  $event
+	 * @param   ResourceMemberCreated  $event
 	 * @return  void
 	 */
 	public function handleResourceMemberCreated(ResourceMemberCreated $event)
@@ -93,7 +88,7 @@ class RoleProvision
 	/**
 	 * Search for users
 	 *
-	 * @param   object  $event
+	 * @param   ResourceMemberDeleted  $event
 	 * @return  void
 	 */
 	public function handleResourceMemberDeleted(ResourceMemberDeleted $event)
@@ -137,7 +132,7 @@ class RoleProvision
 	/**
 	 * Get status for a user
 	 *
-	 * @param   object   $event
+	 * @param   ResourceMemberStatus   $event
 	 * @return  void
 	 */
 	public function handleResourceMemberStatus(ResourceMemberStatus $event)
@@ -218,7 +213,7 @@ class RoleProvision
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   object   $event
+	 * @param   QueueCreated   $event
 	 * @return  void
 	 */
 	public function handleQueueCreated(QueueCreated $event)
@@ -293,14 +288,12 @@ class RoleProvision
 	}
 
 	/**
-	 * Get status for a user
+	 * Get config values for listener
 	 *
-	 * @param   object   $event
-	 * @return  void
+	 * @return  array
 	 */
 	private function config()
 	{
-		//$config = parse_ini_string_m(file_get_contents(conf_file('roleprovision')));
 		return config('listener.roleprovision', []);
 	}
 }

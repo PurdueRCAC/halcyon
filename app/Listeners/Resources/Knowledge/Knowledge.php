@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Resources\Knowledge;
 
 use App\Modules\Resources\Events\AssetDisplaying;
@@ -13,7 +7,7 @@ use App\Modules\Knowledge\Models\Associations;
 use App\Modules\Knowledge\Models\Association;
 
 /**
- * Content listener for Resources
+ * Knowledge base listener for Resources
  */
 class Knowledge
 {
@@ -31,8 +25,7 @@ class Knowledge
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   AssetDisplaying  $event
 	 * @return  void
 	 */
 	public function handleAssetDisplaying(AssetDisplaying $event)
@@ -46,14 +39,6 @@ class Knowledge
 			$access = auth()->user()->getAuthorisedViewLevels();
 		}
 
-		/*$page = Page::query()
-			->where($p . '.alias', '=', $event->getAsset()->listname)
-			->where($a . '.state', '=', 1)
-			->where($p . '.snippet', '=', 0)
-			->whereIn($a . '.access', $access)
-			->orderBy('id', 'asc')
-			->get()
-			->first();*/
 		$a = (new Associations)->getTable();
 		$p = (new Page)->getTable();
 
@@ -80,7 +65,6 @@ class Knowledge
 
 		$overview = $page->children()
 			->where('alias', '=', 'overview')
-			//->whereIn($a . '.access', $access)
 			->where($a . '.state', '=', 1)
 			->whereIn($a . '.access', $access)
 			->get()
@@ -96,13 +80,6 @@ class Knowledge
 				true,
 				$overview->body
 			);
-
-			/*$event->addSection(
-				route('site.knowledge.page', ['uri' => $page->alias . '/' . $overview->alias]),
-				$overview->headline,
-				true,
-				$overview->body
-			);*/
 		}
 		else
 		{

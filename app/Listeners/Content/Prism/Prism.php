@@ -22,13 +22,8 @@ class Prism
 	/**
 	 * Display the editor area.
 	 *
-	 * @param   string   $name     The control name.
-	 * @param   string   $content  The contents of the text area.
-	 * @param   string   $id       An optional ID for the textarea (note: since 1.6). If not supplied the name is used.
-	 * @param   int      $col      The number of columns for the textarea.
-	 * @param   int      $row      The number of rows for the textarea.
-	 * @param   array    $params   Associative array of editor parameters.
-	 * @return  string
+	 * @param   PageContentIsRendering  $event
+	 * @return  void
 	 */
 	public function handle(PageContentIsRendering $event)
 	{
@@ -37,13 +32,9 @@ class Prism
 			__DIR__ . '/views'
 		);
 
-		$content = $event->getBody();
+		$content  = $event->getBody();
 		$content .= view('listener.content.prism::prism');
 
 		$event->setBody($content);
-
-		//$editor->addJs('ckeditor.js');
-		//$editor->setEditorClass('ckeditor');
-		//view()->share('activeEditor', 'ckeditor');
 	}
 }

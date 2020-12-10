@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Users\GroupProvision;
 
 use App\Modules\Users\Events\UserUpdated;
@@ -16,7 +10,7 @@ use App\Modules\History\Traits\Loggable;
 use GuzzleHttp\Client;
 
 /**
- * Resource listener
+ * Group Provision listener
  */
 class GroupProvision
 {
@@ -40,12 +34,12 @@ class GroupProvision
 	/**
 	 * Handle a unix group being created
 	 *
-	 * @param   object  $event
+	 * @param   UnixGroupCreated  $event
 	 * @return  void
 	 */
 	public function handleUnixGroupCreating(UnixGroupCreated $event)
 	{
-		$config = config('listener.groupprovision', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
@@ -92,7 +86,6 @@ class GroupProvision
 		}
 		catch (\Exception $e)
 		{
-			//Log::error($e->getMessage());
 			$status = 500;
 			$body   = ['error' => $e->getMessage()];
 		}
@@ -103,12 +96,12 @@ class GroupProvision
 	/**
 	 * Handle a unix group being deleted
 	 *
-	 * @param   object  $event
+	 * @param   UnixGroupDeleted  $event
 	 * @return  void
 	 */
 	public function handleUnixGroupDeleted(UnixGroupDeleted $event)
 	{
-		$config = config('listener.groupprovision', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
@@ -134,7 +127,6 @@ class GroupProvision
 		}
 		catch (\Exception $e)
 		{
-			//Log::error($e->getMessage());
 			$status = 500;
 			$body   = ['error' => $e->getMessage()];
 		}
@@ -145,13 +137,12 @@ class GroupProvision
 	/**
 	 * Search for users
 	 *
-	 * @param   object  $event
+	 * @param   UserUpdated  $event
 	 * @return  void
 	 */
 	public function handleUserUpdated(UserUpdated $event)
 	{
-		//$config = parse_ini_string_m(file_get_contents(conf_file('groupprovision')));
-		$config = config('listener.groupprovision', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
@@ -186,12 +177,12 @@ class GroupProvision
 	/**
 	 * Handle a unix group being created
 	 *
-	 * @param   object  $event
+	 * @param   UnixGroupMemberCreated  $event
 	 * @return  void
 	 */
 	public function handleUnixGroupMemberCreated(UnixGroupMemberCreated $event)
 	{
-		$config = config('listener.groupprovision', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
@@ -219,7 +210,6 @@ class GroupProvision
 		}
 		catch (\Exception $e)
 		{
-			//Log::error($e->getMessage());
 			$status = 500;
 			$body   = ['error' => $e->getMessage()];
 		}
@@ -230,12 +220,12 @@ class GroupProvision
 	/**
 	 * Handle a unix group being deleted
 	 *
-	 * @param   object  $event
+	 * @param   UnixGroupMemberDeleted  $event
 	 * @return  void
 	 */
 	public function handleUnixGroupMemberDeleted(UnixGroupMemberDeleted $event)
 	{
-		$config = config('listener.groupprovision', []);
+		$config = $this->config();
 
 		if (empty($config))
 		{
@@ -263,11 +253,20 @@ class GroupProvision
 		}
 		catch (\Exception $e)
 		{
-			//Log::error($e->getMessage());
 			$status = 500;
 			$body   = ['error' => $e->getMessage()];
 		}
 
 		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, $url);
+	}
+
+	/**
+	 * Get config values for listener
+	 *
+	 * @return  array
+	 */
+	private function config()
+	{
+		return config('listener.groupprovision', []);
 	}
 }

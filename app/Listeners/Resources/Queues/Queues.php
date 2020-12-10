@@ -24,7 +24,7 @@ class Queues
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   object   $event
+	 * @param   SubresourceCreated  $event
 	 * @return  void
 	 */
 	public function handleSubresourceCreated(SubresourceCreated $event)

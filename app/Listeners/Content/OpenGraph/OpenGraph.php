@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Content\OpenGraph;
 
 use App\Modules\Pages\Events\PageMetadata;
@@ -12,8 +6,6 @@ use Illuminate\Config\Repository;
 
 /**
  * Content Plugin class for OpenGraph meta tags
- *
- * Inspired by work from Jan Pavelka (www.phoca.cz)
  */
 class OpenGraph
 {
@@ -31,7 +23,7 @@ class OpenGraph
 	/**
 	 * Event after content has been displayed
 	 *
-	 * @param   object  $page  The article object. Note $page->text is also available
+	 * @param   PageMetadata  $event
 	 * @return  string
 	 */
 	public function handlePageMetadata(PageMetadata $event)

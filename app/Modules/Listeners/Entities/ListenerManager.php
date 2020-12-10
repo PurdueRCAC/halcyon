@@ -5,6 +5,7 @@ namespace App\Modules\Listeners\Entities;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Fluent;
 use App\Modules\Listeners\Models\Listener;
 //use App\Modules\Listeners\Entities\Listener as BaseListener;
 
@@ -79,6 +80,8 @@ class ListenerManager
 
 		foreach ($r->getMethods(\ReflectionMethod::IS_PUBLIC) as $method)
 		{
+			config()->set('listeners.' . $listener->folder . '.' . $listener->element, $listener->params->all());
+
 			$name = $method->getName();
 
 			if ($name == 'subscribe')
@@ -110,7 +113,7 @@ class ListenerManager
 			return $listeners;
 		}
 
-		$files = app('files')->glob(app_path('Listeners') . '/*/*/listener.json');
+		/*$files = app('files')->glob(app_path('Listeners') . '/*/*/listener.json');
 
 		foreach ($files as $file)
 		{
@@ -126,11 +129,12 @@ class ListenerManager
 			$listener->folder   = strtolower(basename(dirname(dirname($file))));
 			$listener->enabled  = $data->active;
 			$listener->ordering = $data->order;
+			$listener->params   = new Fluent();
 
 			$listeners[] = $listener;
 		}
 
-		return collect($listeners);
+		return collect($listeners);*/
 
 		$query = Listener::where('enabled', 1)
 			->where('type', '=', 'listener');

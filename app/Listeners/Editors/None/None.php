@@ -22,12 +22,7 @@ class None
 	/**
 	 * Display the editor area.
 	 *
-	 * @param   string   $name     The control name.
-	 * @param   string   $content  The contents of the text area.
-	 * @param   string   $id       An optional ID for the textarea (note: since 1.6). If not supplied the name is used.
-	 * @param   int      $col      The number of columns for the textarea.
-	 * @param   int      $row      The number of rows for the textarea.
-	 * @param   array    $params   Associative array of editor parameters.
+	 * @param   EditorIsRendering  $editor
 	 * @return  string
 	 */
 	public function handle(EditorIsRendering $editor)
@@ -68,10 +63,5 @@ class None
 		$editor->setContent("<textarea $attributes>$content</textarea>");
 
 		return false;
-		//return "<textarea $attributes>$content</textarea>";
-
-		//$editor->addJs('ckeditor.js');
-		//$editor->setEditorClass('ckeditor');
-		//view()->share('activeEditor', 'ckeditor');
 	}
 }

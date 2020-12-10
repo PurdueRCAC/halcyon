@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Groups\Github;
 
 use App\Modules\Groups\Models\Group;
@@ -31,7 +25,7 @@ class Github
 	/**
 	 * Create new github organization
 	 *
-	 * @param   object   $event  The article object.  Note $article->text is also available
+	 * @param   GroupUpdated  $event
 	 * @return  void
 	 */
 	public function handleGroupUpdated(GroupUpdated $event)

@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Users\DbmLdap;
 
 use App\Modules\Users\Events\UserCreated;
@@ -61,9 +55,12 @@ class DbmLdap
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Handle a user seach event
+	 * 
+	 * Look for users in the Purdue LDAP based on the specified
+	 * criteria and return a list of User objects.
 	 *
-	 * @param   object   $event
+	 * @param   UserSearching   $event
 	 * @return  void
 	 */
 	public function handleUserSearching(UserSearching $event)
@@ -85,28 +82,41 @@ class DbmLdap
 					['cn', '=', $search],
 					['cn', 'contains', $search]
 				)
-				->select(['cn', 'uid', 'title', 'purdueEduCampus'])
+				->select(['cn', 'uid', 'title', 'purdueEduCampus', 'employeeNumber'])
 				->get();
 
-			foreach ($results as $result)
+			if (!empty($results))
 			{
-				$user = new User;
-				$user->name = $result['cn'][0];
-				$user->username = $result['uid'][0];
-				$user->email = $user->username . '@purdue.edu';
+				$status = 200;
 
-				$event->results->add($user);
+				foreach ($results as $result)
+				{
+					$user = new User;
+					$user->name = $result['cn'][0];
+					$user->username = $result['uid'][0];
+					$user->puid = $result['employeeNumber'][0];
+					$user->email = $user->username . '@purdue.edu';
+
+					$event->results->add($user);
+				}
 			}
 		}
-		catch (\Adldap\Auth\BindException $e)
+		catch (\Exception $e)
 		{
-		}*/
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
+		}
+
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, implode('', $query));*/
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Handle a user lookup event
+	 * 
+	 * Look for a user in the Purdue LDAP based on the specified
+	 * criteria and return a User object based on the first match.
 	 *
-	 * @param   object   $event
+	 * @param   UserLookup  $event
 	 * @return  void
 	 */
 	public function handleUserLookup(UserLookup $event)
@@ -130,6 +140,7 @@ class DbmLdap
 			{
 				switch ($key)
 				{
+					case 'puid':
 					case 'organization_id':
 						// `employeeNumber` needs to be 10 digits in length for the query to work
 						//    ex: 12345678 -> 0012345678
@@ -191,9 +202,13 @@ class DbmLdap
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Handle a User creation event
+	 * 
+	 * This will look up information in the Purdue LDAP
+	 * for the specific user and add it to the local
+	 * account.
 	 *
-	 * @param   object   $event
+	 * @param   UserCreated  $event
 	 * @return  void
 	 */
 	public function handleUserCreated(UserCreated $event)

@@ -2,11 +2,11 @@
 namespace App\Listeners\Editors\Ckeditor;
 
 use App\Modules\Core\Events\EditorIsRendering;
-use App\Halcyon\Config\Registry;
+use Illuminate\Config\Repository;
 use stdClass;
 
 /**
- * CKEditor Plugin
+ * CKEditor
  */
 class Ckeditor
 {
@@ -24,12 +24,7 @@ class Ckeditor
 	/**
 	 * Display the editor area.
 	 *
-	 * @param   string   $name     The control name.
-	 * @param   string   $content  The contents of the text area.
-	 * @param   string   $id       An optional ID for the textarea (note: since 1.6). If not supplied the name is used.
-	 * @param   int      $col      The number of columns for the textarea.
-	 * @param   int      $row      The number of rows for the textarea.
-	 * @param   array    $params   Associative array of editor parameters.
+	 * @param   EditorIsRendering  $editor
 	 * @return  string
 	 */
 	public function handle(EditorIsRendering $editor)
@@ -69,7 +64,7 @@ class Ckeditor
 		$cls = explode(' ', $attr['class']);
 		$cls = array_map('trim', $cls);
 
-		$params = new Registry;
+		$params = new Repository(config('listeners.editors.ckeditor', []));
 		$params->set('class', $cls);
 		$params->set('height', (18 * intval($attr['rows'])) . 'px');
 
@@ -89,11 +84,6 @@ class Ckeditor
 		]));
 
 		return false;
-		//return "<textarea $attributes>$content</textarea>";
-
-		//$editor->addJs('ckeditor.js');
-		//$editor->setEditorClass('ckeditor');
-		//view()->share('activeEditor', 'ckeditor');
 	}
 
 	/**
@@ -104,11 +94,6 @@ class Ckeditor
 	 */
 	private function buildConfig($params)
 	{
-		//static $template;
-
-		// Merge incoming params with
-		//$params->merge($params);
-
 		// Object to hold our final config
 		$config = new stdClass;
 		$config->autoParagraph = false;
@@ -134,7 +119,7 @@ class Ckeditor
 			asset('listeners/editors/ckeditor/css/contents.css') . '?v=' . filemtime(public_path() . '/listeners/editors/ckeditor/css/contents.css')
 		];
 		//$config->templates                     = array('halcyon');
-		//$config->templates_files               = array(app_path() . '/core/plugins/editors/ckeditor/assets/templates/hub.js');
+		//$config->templates_files               = array(public_path() . '/listeners/editors/ckeditor/assets/templates/halcyon.js');
 		$config->templates_replaceContent      = false;
 		$config->filebrowserBrowseUrl          = '';
 		$config->filebrowserImageBrowseUrl     = '';
@@ -180,7 +165,6 @@ class Ckeditor
 			);
 			$config->toolbarCanCollapse = false;
 
-			// [QUBES][#561] SPW: always show resize, even in minimal mode
 			//$config->resize_enabled = false;
 			//$config->halcyonAutogrow_autoStart = false;
 		}

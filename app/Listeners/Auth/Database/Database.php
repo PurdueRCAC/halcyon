@@ -1,6 +1,8 @@
 <?php
 namespace App\Listeners\Auth\Database;
 
+use App\Modules\Users\Models\User;
+
 /**
  * Batabase-based authentication plugin
  */
@@ -31,23 +33,18 @@ class Database
 		$conditions = '';
 
 		// Determine if attempting to log in via username or email address
+		$query = User::query();
+
 		if (strpos($credentials['username'], '@'))
 		{
-			$conditions = ' WHERE email=' . $db->Quote($credentials['username']);
+			$query->where('email', '=', $credentials['username']);
 		}
 		else
 		{
-			$conditions = ' WHERE username=' . $db->Quote($credentials['username']);
+			$query->where('username', '=', $credentials['username']);
 		}
 
-		$query = 'SELECT `id`, `username`, `password`'
-				. ' FROM `users`'
-				. $conditions
-				. ' AND `block` != 1';
-
-		$db->setQuery($query);
-
-		$result = $db->loadObjectList();
+		$result = $query->first();
 
 		if (is_array($result) && count($result) > 1)
 		{
@@ -80,7 +77,7 @@ class Database
 		{
 			// Might be a moot point if Fail2Ban is triggered
 			$response->status = \Halcyon\Auth\Status::FAILURE;
-			$response->error_message = trans('PLG_AUTHENTICATION_HUBZERO_TOO_MANY_ATTEMPTS');
+			$response->error_message = trans('listener.auth.database::database.too many attempts');
 			return false;
 		}
 
@@ -88,7 +85,7 @@ class Database
 		if ($this->hasExceededLoginLimit(\Halcyon\User\User::oneOrFail($result->id)))
 		{
 			$response->status = \Halcyon\Auth\Status::FAILURE;
-			$response->error_message = trans('PLG_AUTHENTICATION_HUBZERO_TOO_MANY_ATTEMPTS');
+			$response->error_message = trans('listener.auth.database::database.too many attempts');
 			return false;
 		}*/
 

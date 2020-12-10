@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Content\Twitter;
 
 use App\Modules\Pages\Events\PageMetadata;
@@ -30,7 +24,7 @@ class Twitter
 	/**
 	 * Event after content has been displayed
 	 *
-	 * @param   object  $page  The article object. Note $page->text is also available
+	 * @param   PageMetadata  $event
 	 * @return  string
 	 */
 	public function handlePageMetadata(PageMetadata $event)

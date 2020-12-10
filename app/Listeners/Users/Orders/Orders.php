@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Users\Orders;
 
 use Illuminate\Support\Facades\DB;
@@ -33,10 +27,9 @@ class Orders
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Display data for a user
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   UserDisplay  $event
 	 * @return  void
 	 */
 	public function handleUserDisplay(UserDisplay $event)
@@ -253,17 +246,10 @@ class Orders
 				'filters' => $filters,
 				'categories' => $categories,
 			]);
-		}
+		}*/
 
 		$event->addSection(
-			route('site.users.account.section', $r),
-			trans('orders::orders.my orders') . ' <span class="badge">' . $total . '</span>',
-			($event->getActive() == 'orders'),
-			$content
-		);*/
-
-		$event->addSection(
-			$route,
+			$route, //route('site.users.account.section', $r),
 			trans('orders::orders.my orders') . ' <span class="badge pull-right">' . $total . '</span>',
 			($event->getActive() == 'orders'),
 			$content

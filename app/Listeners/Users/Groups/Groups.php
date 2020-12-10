@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Users\Groups;
 
 use App\Modules\Users\Events\UserDisplay;
@@ -14,7 +8,7 @@ use App\Modules\Groups\Models\Member;
 use App\Modules\Groups\Events\GroupDisplay;
 
 /**
- * User listener for sessions
+ * User listener for Groups
  */
 class Groups
 {
@@ -31,9 +25,9 @@ class Groups
 	}
 
 	/**
-	 * Display user profile info
+	 * Gather data for a user
 	 *
-	 * @param   object  $event
+	 * @param   UserBeforeDisplay  $event
 	 * @return  void
 	 */
 	public function handleUserBeforeDisplay(UserBeforeDisplay $event)
@@ -137,10 +131,9 @@ class Groups
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Display data for a user
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   UserDisplay  $event
 	 * @return  void
 	 */
 	public function handleUserDisplay(UserDisplay $event)
@@ -178,11 +171,13 @@ class Groups
 				$total += $queue->users()->where('userid', '=', $user->id)->count();
 			}
 		}*/
-		$queueusers = $user->queues()->whereIn('membertype', [1, 4])->get();
+		$queueusers = $user->queues()
+			->whereIn('membertype', [1, 4])
+			->get();
 
 		foreach ($queueusers as $qu)
 		{
-			if ($qu->isMember() && $qu->isTrashed())//$qu->trashed())
+			if ($qu->isMember() && $qu->isTrashed())
 			{
 				continue;
 			}
@@ -230,7 +225,10 @@ class Groups
 
 					foreach ($queues as $queue)
 					{
-						$membership = $queue->users()->where('userid', '=', $user->id)->get()->first();
+						$membership = $queue->users()
+							->where('userid', '=', $user->id)
+							->get()
+							->first();
 
 						if ($membership) //$queue->users()->where('userid', '=', $user->id)->count())
 						{
@@ -264,7 +262,6 @@ class Groups
 			else
 			{
 				$rows = $user->groups()
-					//->whereIsManager()
 					->where('groupid', '>', 0)
 					->get();
 
@@ -272,7 +269,7 @@ class Groups
 
 				foreach ($queueusers as $qu)
 				{
-					if ($qu->isMember() && $qu->isTrashed())//$qu->trashed())
+					if ($qu->isMember() && $qu->isTrashed())
 					{
 						continue;
 					}

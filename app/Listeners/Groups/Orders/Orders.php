@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Groups\Orders;
 
 use App\Modules\Groups\Events\GroupDisplay;
@@ -26,9 +20,9 @@ class Orders
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Load Orders data when displaying a Group
 	 *
-	 * @param   GroupDisplay $event
+	 * @param   GroupDisplay  $event
 	 * @return  void
 	 */
 	public function handleGroupDisplay(GroupDisplay $event)

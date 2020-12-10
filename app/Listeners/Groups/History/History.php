@@ -1,12 +1,12 @@
 <?php
-namespace App\Listeners\Groups\Storage;
+namespace App\Listeners\Groups\History;
 
 use App\Modules\Groups\Events\GroupDisplay;
 
 /**
- * Storage listener for group events
+ * History listener for group events
  */
-class Storage
+class History
 {
 	/**
 	 * Register the listeners for the subscriber.
@@ -20,7 +20,7 @@ class Storage
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Load history data when displaying a Group
 	 *
 	 * @param   GroupDisplay  $event
 	 * @return  void
@@ -31,14 +31,14 @@ class Storage
 		$group = $event->getGroup();
 		$client = app('isAdmin') ? 'admin' : 'site';
 
-		$content = view('storage::' . $client . '.directories.group', [
+		$content = view('groups::site.group.history', [
 			'group' => $group
 		]);
 
 		$event->addSection(
-			'storage',
-			trans('storage::storage.storage'),
-			($event->getActive() == 'storage'),
+			'history',
+			trans('groups::groups.history'),
+			($event->getActive() == 'history'),
 			$content
 		);
 	}

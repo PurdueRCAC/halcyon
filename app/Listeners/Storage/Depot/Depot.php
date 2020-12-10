@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Storage\Depot;
 
 use App\Modules\Storage\Events\DirectoryCreated;
@@ -34,7 +28,7 @@ class Depot
 	/**
 	 * Setup default notifications for new directory
 	 *
-	 * @param   object   $event
+	 * @param   DirectoryCreated   $event
 	 * @return  void
 	 */
 	public function handleDirectoryCreated(DirectoryCreated $event)
@@ -47,7 +41,7 @@ class Depot
 			return;
 		}
 
-		$this->addMessages($dir);
+		$this->addNewDirMessages($dir);
 
 		if (!$dir->bytes || $dir->parentstoragedirid)
 		{
@@ -120,7 +114,7 @@ class Depot
 	/**
 	 * Setup default notifications for new directory
 	 *
-	 * @param   object   $event
+	 * @param   DirectoryUpdated  $event
 	 * @return  void
 	 */
 	public function handleDirectoryUpdated(DirectoryUpdated $event)
@@ -132,16 +126,16 @@ class Depot
 			return;
 		}
 
-		$this->addMessages($dir);
+		$this->addNewDirMessages($dir);
 	}
 
 	/**
 	 * Setup default notifications for new directory
 	 *
-	 * @param   object   $dir
+	 * @param   object  $dir
 	 * @return  void
 	 */
-	private function addMessages($dir)
+	private function addNewDirMessages($dir)
 	{
 		if (!$dir->bytes && $dir->parent)
 		{
@@ -175,9 +169,9 @@ class Depot
 	}
 
 	/**
-	 * Setup default notifications for new directory
+	 * Setup default notifications for removed directory
 	 *
-	 * @param   object   $event
+	 * @param   DirectoryDeleted  $event
 	 * @return  void
 	 */
 	public function handleDirectoryDeleted(DirectoryDeleted $event)

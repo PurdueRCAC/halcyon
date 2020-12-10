@@ -1,14 +1,6 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Users\RcacLdap;
 
-//use App\Modules\Users\Events\UserSyncing;
-//use Illuminate\Support\Facades\Log;
 use App\Modules\Users\Events\UserSearching;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Users\Models\User;
@@ -69,7 +61,7 @@ class RcacLdap
 	/**
 	 * Search for users
 	 *
-	 * @param   object  $event
+	 * @param   UserSearching  $event
 	 * @return  void
 	 */
 	public function handleUserSearching(UserSearching $event)
@@ -111,11 +103,6 @@ class RcacLdap
 
 				foreach ($results as $result)
 				{
-					/*if ($event->results->count() >= $event->results->total())
-					{
-						break;
-					}*/
-
 					// We have a local record for this user
 					if (in_array($result['uid'][0], $usernames))
 					{
@@ -164,7 +151,7 @@ class RcacLdap
 	/**
 	 * Display user profile info
 	 *
-	 * @param   object  $event
+	 * @param   UserBeforeDisplay  $event
 	 * @return  void
 	 */
 	public function handleUserBeforeDisplay(UserBeforeDisplay $event)
@@ -211,8 +198,6 @@ class RcacLdap
 		catch (\Exception $e)
 		{
 			$user->loginshell = false;
-			//$user->setError($e->getMessage());
-			//Log::error($e->getMessage());
 
 			$status = 500;
 			$results = ['error' => $e->getMessage()];
@@ -223,83 +208,12 @@ class RcacLdap
 		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $user->username);
 	}
 
-	/*public function handle($event)
-	{
-		$ldap_users    = array();
-		$system_users  = array();
-		$scholar_users = $event->users;
-
-		$config = $this->config();
-
-		if (empty($config))
-		{
-			return;
-		}
-
-		try
-		{
-			$ldap = $this->connect($config);
-
-			// Performing a query.
-			$results = $ldap->search()
-				->where('host', '=', 'scholar.rcac.purdue.edu')
-				->select(['uid'])
-				->get();
-
-			foreach ($results as $row)
-			{
-				// Try to subtract staff users. Subtact anyone in xenon.
-				$rows = $ldap->search()
-					->where(
-						['uid', '=', $row['uid'][0]],
-						['host', '=', 'xenon.rcac.purdue.edu']
-					)
-					->select(['uid'])
-					->get();
-
-				if (empty($rows))
-				{
-					$ldap_users[$row['uid'][0]] = $row['uid'][0];
-				}
-				else
-				{
-					$system_users[$row['uid'][0]] = $row['uid'][0];
-				}
-
-				$rows = $ldap->search()
-					->where(
-						['uid', '=', $row['uid'][0]]
-					)
-					->select(['classification'])
-					->get();
-
-				if (!empty($rows))
-				{
-					if (isset($rows[0]['classification'][0])
-					 && ($rows[0]['classification'][0] == 'System Account' || $rows[0]['classification'][0] == 'Software Account'))
-					{
-						$system_users[$row['uid'][0]] = $row['uid'][0];
-					}
-				}
-			}
-		}
-		catch (\Exception $e)
-		{
-			
-		}
-
-		//$event->setUsers($ldap_users);
-		//$event->setSystemUsers($system_users);
-
-		$create_users = array_diff($scholar_users, $ldap_users);
-		$create_users = array_diff($create_users, $system_users);
-		$remove_users = array_diff($ldap_users, $scholar_users);
-		$remove_users = array_diff($remove_users, $system_users);
-
-		$event->setCreateUsers($create_users);
-		$event->setRemoveUsers($remove_users);
-	}*/
-
+	/**
+	 * Display user profile info
+	 *
+	 * @param   ResourceMemberStatus  $event
+	 * @return  void
+	 */
 	public function handleResourceMemberStatus(ResourceMemberStatus $event)
 	{
 		$config = $this->config();
@@ -373,7 +287,7 @@ class RcacLdap
 	/**
 	 * Search for unixgroup
 	 *
-	 * @param   object  $event
+	 * @param   UnixGroupFetch  $event
 	 * @return  void
 	 */
 	public function handleUnixGroupFetch(UnixGroupFetch $event)
@@ -435,7 +349,7 @@ class RcacLdap
 	/**
 	 * Search for unixgroup
 	 *
-	 * @param   object  $event
+	 * @param   UnixGroupMemberCreating  $event
 	 * @return  void
 	 */
 	public function handleUnixGroupMemberCreating(UnixGroupMemberCreating $event)

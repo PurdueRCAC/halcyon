@@ -1,17 +1,9 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Listeners\Users\PedLdap;
 
-//use App\Modules\Users\Events\UserSyncing;
 use App\Modules\Users\Events\UserSearching;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Users\Models\User;
-//use Illuminate\Support\Facades\Log;
 use App\Modules\History\Traits\Loggable;
 use App\Halcyon\Utility\Str;
 
@@ -65,7 +57,7 @@ class PedLdap
 	/**
 	 * Search for users
 	 *
-	 * @param   object  $event
+	 * @param   UserSearching  $event
 	 * @return  void
 	 */
 	public function handleUserSearching(UserSearching $event)
@@ -135,11 +127,6 @@ class PedLdap
 
 				foreach ($results as $result)
 				{
-					/*if ($event->results->getCollection()->count() >= $event->results->total())
-					{
-						break;
-					}*/
-
 					// We have a local record for this user
 					if (in_array($result['uid'][0], $usernames))
 					{
@@ -149,13 +136,12 @@ class PedLdap
 					$user = new User;
 					$user->name = Str::properCaseNoun($result['cn'][0]);
 					$user->username = $result['uid'][0];
-					$user->email = $result['mail'][0]; //$user->username . '@purdue.edu';
+					$user->email = $result['mail'][0];
 
 					$event->results->push($user);
 				}
 
 				// Update pagination information
-				//$items = $event->results->getCollection()->toArray();
 				$data = $event->results->toArray();
 
 				$query = parse_url($data['first_page_url'], PHP_URL_QUERY);
@@ -190,10 +176,10 @@ class PedLdap
 	/**
 	 * Display user profile info
 	 *
-	 * @param   object  $event
+	 * @param   UserBeforeDisplay  $event
 	 * @return  void
 	 */
-	public function handleUserBeforeDisplay($event)
+	public function handleUserBeforeDisplay(UserBeforeDisplay $event)
 	{
 		$config = $this->config();
 

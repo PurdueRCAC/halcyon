@@ -104,7 +104,7 @@ class ModuleServiceProvider extends ServiceProvider
 					$this->app['events']->listen($event, $cls . '@' . $name);
 				}
 
-				$this->app['config']->set('listeners.' . $listener->folder . '.' . $listener->element, $listener->params->all()); //$listener->options->toArray()
+				$this->app['config']->set('listeners.' . $listener->folder . '.' . $listener->element, $listener->params->all());
 			}
 		//}
 		//catch (\Exception $e)

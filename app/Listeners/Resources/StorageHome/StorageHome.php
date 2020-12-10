@@ -23,7 +23,7 @@ class StorageHome
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   object   $event
+	 * @param   ResourceMemberCreated  $event
 	 * @return  void
 	 */
 	public function handleResourceMemberCreated(ResourceMemberCreated $event)
@@ -71,6 +71,6 @@ class StorageHome
 		]);
 
 		// Prepare job to create directory in reality
-		$dir->addMessageToQueue(11); //$storage->createtypeid);
+		$dir->addMessageToQueue(11);
 	}
 }
