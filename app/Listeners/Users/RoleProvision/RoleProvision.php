@@ -200,6 +200,8 @@ class RoleProvision
 			}
 
 			$event->status = $status;
+
+			$status = $status == 0 ? 404 : ($status > 0 ? 200 : 500);
 		}
 		catch (\Exception $e)
 		{
