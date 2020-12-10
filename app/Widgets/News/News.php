@@ -48,6 +48,9 @@ class News extends Widget
 		$layout = $this->params->get('layout');
 		$layout = $layout ?: 'index';
 
+		$this->params->set('show_title', $this->model->showtitle);
+		$this->params->set('title', $this->model->title);
+
 		return view($this->getViewName($layout), [
 			'articles' => $articles,
 			'params'   => $this->params,

@@ -11,7 +11,7 @@
 			<?php if ($params->get('newstypeid')): ?>
 				{{ $type->name }}
 			<?php else: ?>
-				{{ trans('widget.news::news.news') }}
+				{{ $params->get('title') ? $params->get('title') : trans('widget.news::news.news') }}
 			<?php endif; ?>
 		</h3>
 	<?php endif; ?>
@@ -31,7 +31,9 @@
 			<?php endforeach; ?>
 		</ul>
 	<?php else: ?>
-		<p>{{ trans('widget.news::news.no articles found') }}</p>
+		<ul class="newslist">
+			<li>{{ trans('widget.news::news.no articles found') }}</li>
+		</ul>
 	<?php endif; ?>
 	<?php if ($params->get('more')): ?>
 		<div class="more">
