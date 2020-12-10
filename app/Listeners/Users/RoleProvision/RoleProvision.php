@@ -247,7 +247,7 @@ class RoleProvision
 
 		foreach ($queue->group->managers as $user)
 		{
-			$this->handleResourceMemberStatus($resourcemember = new ResourceMemberStatus($user, $queue->scheduler->resource));
+			$this->handleResourceMemberStatus($resourcemember = new ResourceMemberStatus($queue->scheduler->resource, $user));
 
 			if ($resourcemember->status <= 0)
 			{
