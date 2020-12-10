@@ -44,8 +44,7 @@ class Productlist extends Widget
 						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
 				});
 
-			if (auth()->user()
-			 && auth()->user()->can('manage orders'))
+			if (!auth()->user() || !auth()->user()->can('manage orders'))
 			{
 				$query->where('public', '=', 1);
 			}
