@@ -137,6 +137,14 @@ class Orders
 							->orWhereNull($a . '.datetimeremoved');
 					})
 					->groupBy($o . '.id')
+					->groupBy($o . '.userid')
+					->groupBy($o . '.submitteruserid')
+					->groupBy($o . '.groupid')
+					->groupBy($o . '.datetimecreated')
+					->groupBy($o . '.datetimeremoved')
+					->groupBy($o . '.usernotes')
+					->groupBy($o . '.staffnotes')
+					->groupBy($o . '.notice')
 					->groupBy($a . '.approveruserid');
 
 					if ($filters['start'])
