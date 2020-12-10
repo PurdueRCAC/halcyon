@@ -203,7 +203,7 @@ class RoleProvision
 		}
 		catch (\Exception $e)
 		{
-			$status  = $e->getStatus();
+			$status  = 500;
 			$results = ['error' => $e->getMessage()];
 		}
 

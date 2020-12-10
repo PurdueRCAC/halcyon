@@ -4,6 +4,16 @@
 $active = $sections->firstWhere('active', '=', true);
 @endphp
 
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/users/css/site.css') }}" />
+@endpush
+
+@if (auth()->user()->can('manage users'))
+@push('scripts')
+<script src="{{ asset('modules/resources/js/roles.js?v=' . filemtime(public_path() . '/modules/resources/js/roles.js')) }}"></script>
+@endpush
+@endif
+
 @section('title'){{ ($active ? str_replace(['<span class="badge pull-right">', '</span>'], ['(', ')'], $active['name']) : trans('users::users.my accounts')) }}@stop
 
 @section('content')
@@ -325,7 +335,7 @@ $active = $sections->firstWhere('active', '=', true);
 					Roles
 				</div>
 				<div class="card-body panel-body">
-					<table>
+					<table class="table table-hover" id="roles" data-api="{{ route('api.resources.index', ['limit' => 100]) }}">
 						<caption class="sr-only">Roles</caption>
 						<tbody>
 						<?php
@@ -347,7 +357,9 @@ $active = $sections->firstWhere('active', '=', true);
 							?>
 							<tr>
 								<th scope="row">{{ $resource->name }}</th>
-								<td class="text-right"><span class="fa fa-exclamation-triangle"></span><span class="sr-only">Loading...</span></td>
+								<td class="text-right" id="resource{{ $resource->id }}" data-api="{{ route('api.resources.members') }}">
+									<span class="fa fa-exclamation-triangle"></span><span class="sr-only">Loading...</span>
+								</td>
 							</tr>
 							<?php
 						}
