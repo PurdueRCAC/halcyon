@@ -367,17 +367,17 @@ $active = $sections->firstWhere('active', '=', true);
 								<th scope="col">Group</th>
 								<th scope="col">Shell</th>
 								<th scope="col">PI</th>
-								<th scope="col" class="text-right">Status</th>
+								<th scope="col">Status</th>
 							</tr>
 						</thead>
 						<tbody>
 						@foreach ($resources as $resource)
 							<tr>
-								<th scope="row">{{ $resource->name }}</th>
+								<td>{{ $resource->name }}</td>
 								<td id="resource{{ $resource->id }}_group">-</td>
 								<td id="resource{{ $resource->id }}_shell">-</td>
 								<td id="resource{{ $resource->id }}_pi">-</td>
-								<td class="text-right" id="resource{{ $resource->id }}" data-api="{{ route('api.resources.members') }}">
+								<td id="resource{{ $resource->id }}" data-api="{{ route('api.resources.members') }}">
 									<span class="fa fa-exclamation-triangle"></span><span class="sr-only">Loading...</span>
 								</td>
 							</tr>
