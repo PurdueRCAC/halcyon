@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -133,6 +127,40 @@ class Item extends Model
 	}
 
 	/**
+	 * Query scope where record isn't trashed
+	 *
+	 * @param   object  $query
+	 * @return  object
+	 */
+	public function scopeWhereIsActive($query)
+	{
+		$t = $this->getTable();
+
+		return $query->where(function($where) use ($t)
+		{
+			$where->whereNull($t . '.datetimeremoved')
+					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+		});
+	}
+
+	/**
+	 * Query scope where record is trashed
+	 *
+	 * @param   object  $query
+	 * @return  object
+	 */
+	public function scopeWhereIsTrashed($query)
+	{
+		$t = $this->getTable();
+
+		return $query->where(function($where) use ($t)
+		{
+			$where->whereNotNull($t . '.datetimeremoved')
+				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+		});
+	}
+
+	/**
 	 * Calculate billing and paid until...
 	 *
 	 * @return  array
@@ -147,7 +175,7 @@ class Item extends Model
 		$datestart = $this->datetimefulfilled;
 
 		$data = self::query()
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->whereIsActive()
 			->where('origorderitemid', '=', $this->origorderitemid)
 			->orderBy('datetimecreated', 'asc')
 			->get();
@@ -165,7 +193,7 @@ class Item extends Model
 			}
 		}
 
-		if ($datestart && $datestart != '0000-00-00 00:00:00')
+		if ($datestart && $datestart != '0000-00-00 00:00:00' && $datestart != '-0001-11-30 00:00:00')
 		{
 			// Get the timeperiod
 			$timeperiod = $this->product->timeperiod;
@@ -233,7 +261,7 @@ class Item extends Model
 		$datestart = '0000-00-00 00:00:00';
 
 		$data = self::query()
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->whereIsActive()
 			->where('origorderitemid', '=', $this->origorderitemid)
 			->orderBy('datetimecreated', 'asc')
 			->get();

@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -241,5 +235,39 @@ class Account extends Model
 		}
 
 		return $neg . $number;
+	}
+
+	/**
+	 * Query scope where record isn't trashed
+	 *
+	 * @param   object  $query
+	 * @return  object
+	 */
+	public function scopeWhereIsActive($query)
+	{
+		$t = $this->getTable();
+
+		return $query->where(function($where) use ($t)
+		{
+			$where->whereNull($t . '.datetimeremoved')
+					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+		});
+	}
+
+	/**
+	 * Query scope where record is trashed
+	 *
+	 * @param   object  $query
+	 * @return  object
+	 */
+	public function scopeWhereIsTrashed($query)
+	{
+		$t = $this->getTable();
+
+		return $query->where(function($where) use ($t)
+		{
+			$where->whereNotNull($t . '.datetimeremoved')
+				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+		});
 	}
 }

@@ -17,6 +17,7 @@ class UserSearching
 	 * Constructor
 	 *
 	 * @param  string $search
+	 * @param  mixed  $results
 	 * @return void
 	 */
 	public function __construct($search, $results)
@@ -29,21 +30,4 @@ class UserSearching
 	{
 		return $this->results;
 	}
-
-	/*public function getSearchString()
-	{
-		return $this->search;
-	}
-
-	public function getResults()
-	{
-		return $this->results;
-	}
-
-	public function setResults($results)
-	{
-		$this->results = $results;
-
-		return $this;
-	}*/
 }

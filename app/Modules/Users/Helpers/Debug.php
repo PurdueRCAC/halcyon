@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Modules\Users\Helpers;
 
 use App\Halcyon\Facades\Html;
@@ -140,9 +134,9 @@ class Debug
 	{
 		// Build the filter options.
 		$options = array();
-		$options[] = Html::select('option', '1', trans('users::access.OPTION_LEVEL_MODULE', ['level' => 1]));
-		$options[] = Html::select('option', '2', trans('users::access.OPTION_LEVEL_CATEGORY', ['level' => 2]));
-		$options[] = Html::select('option', '3', trans('users::access.OPTION_LEVEL_DEEPER', ['level' => 3]));
+		$options[] = Html::select('option', '1', trans('users::access.option.level module', ['level' => 1]));
+		$options[] = Html::select('option', '2', trans('users::access.option.level category', ['level' => 2]));
+		$options[] = Html::select('option', '3', trans('users::access.option.level deeper', ['level' => 3]));
 		$options[] = Html::select('option', '4', '4');
 		$options[] = Html::select('option', '5', '5');
 		$options[] = Html::select('option', '6', '6');

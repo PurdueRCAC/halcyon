@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Modules\Users\Models;
 
 use App\Halcyon\Config\Registry;
@@ -12,7 +6,7 @@ use App\Halcyon\Form\Form;
 use Illuminate\Support\Fluent;
 
 /**
- * Model class for Application config
+ * Permissions model
  */
 class Permissions extends Fluent
 {

@@ -1,13 +1,14 @@
 <?php
-
 namespace App\Modules\Users\Events;
+
+use App\Modules\Users\Models\User;
 
 class UserDisplay
 {
 	/**
 	 * The user
 	 *
-	 * @var string
+	 * @var User
 	 */
 	private $user;
 
@@ -31,7 +32,7 @@ class UserDisplay
 	 * @param  object $user
 	 * @return void
 	 */
-	public function __construct($user, $active)
+	public function __construct(User $user, $active)
 	{
 		$this->user = $user;
 		$this->active = $active;
@@ -76,7 +77,7 @@ class UserDisplay
 	/**
 	 * Get the user
 	 *
-	 * @return string
+	 * @return User
 	 */
 	public function getUser()
 	{
@@ -86,10 +87,10 @@ class UserDisplay
 	/**
 	 * Set the body
 	 *
-	 * @param string $body
+	 * @param  User  $user
 	 * @return void
 	 */
-	public function setUser($user)
+	public function setUser(User $user)
 	{
 		$this->user = $user;
 	}

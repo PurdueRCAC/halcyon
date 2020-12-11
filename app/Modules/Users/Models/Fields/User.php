@@ -1,15 +1,8 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Halcyon\Form\Fields;
 
 use App\Halcyon\Form\Field;
 use App\Modules\Users\Models\User as UserModel;
-//use App\Halcyon\Html\Builder\Behavior;
 
 /**
  * Field to select a user id from a modal list.

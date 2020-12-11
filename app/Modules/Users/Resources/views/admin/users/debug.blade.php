@@ -56,11 +56,11 @@
 
 	<table class="table table-hover adminlist">
 		<caption>
-			<?php echo trans('users::access.DEBUG_LEGEND'); ?>
-			<span class="swatch"><?php echo trans('users::access.DEBUG_NO_CHECK', ['minus' => '-']);?></span>
-			<span class="check-0 swatch"><?php echo trans('users::access.DEBUG_IMPLICIT_DENY', ['minus' => '-']);?></span>
-			<span class="check-a swatch"><?php echo trans('users::access.DEBUG_EXPLICIT_ALLOW', ['plus' => '&#10003;']);?></span>
-			<span class="check-d swatch"><?php echo trans('users::access.DEBUG_EXPLICIT_DENY', ['minus' => '&#10007;']);?></span>
+			{{ trans('users::access.debug.legend') }}
+			<span class="swatch">{!! trans('users::access.debug.no check', ['minus' => '-']) !!}</span>
+			<span class="check-0 swatch">{!! trans('users::access.debug.implicit deny', ['minus' => '-']) !!}</span>
+			<span class="check-a swatch">{!! trans('users::access.debug.explicit allow', ['plus' => '&#10003;']) !!}</span>
+			<span class="check-d swatch">{!! trans('users::access.debug.explicit deny', ['minus' => '&#10007;']) !!}</span>
 		</caption>
 		<thead>
 			<tr>
@@ -113,8 +113,8 @@
 						$text  = '&#160;';
 					endif;
 					?>
-					<td class="center <?php echo $class; ?>">
-						<?php echo $text; ?>
+					<td class="center {{ $class }}">
+						{!! $text !!}
 					</td>
 				<?php endforeach; ?>
 			</tr>

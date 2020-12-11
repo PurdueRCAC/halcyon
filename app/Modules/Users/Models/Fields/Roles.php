@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Modules\Users\Models\Fields;
 
 use App\Halcyon\Access\Role;
@@ -49,14 +43,6 @@ class Roles extends Select
 			$item->value = $item->id;
 			$item->text = str_repeat('|&mdash;', $item->level) . $item->title;
 		});
-		/*$options = array();
-		foreach ($items as $item)
-		{
-			$options[] = $item;
-		}
-
-		// Merge any additional options in the XML definition.
-		$options = array_merge(parent::getOptions(), $menus);*/
 
 		return $options->toArray();
 	}

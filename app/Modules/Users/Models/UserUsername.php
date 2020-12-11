@@ -1,35 +1,14 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Modules\Users\Models;
 
-use Illuminate\Notifications\Notifiable;
-//use Illuminate\Contracts\Auth\MustVerifyEmail;
-//use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Halcyon\Config\Registry;
-use App\Halcyon\Access\Gate;
-use App\Halcyon\Access\Map;
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Auth\Passwords\CanResetPassword;
-//use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Users\Events\UserCreating;
 use App\Modules\Users\Events\UserCreated;
-use App\Modules\Users\Events\UserUpdating;
-use App\Modules\Users\Events\UserUpdated;
 use App\Modules\Users\Events\UserDeleted;
 
 /**
- * Module extension model
+ * User Usernames
  */
 class UserUsername extends Model
 {
@@ -71,8 +50,7 @@ class UserUsername extends Model
 	protected $fillable = [
 		'username',
 		'unixid',
-		'userid',
-		'api_token'
+		'userid'
 	];
 
 	/**
@@ -92,7 +70,8 @@ class UserUsername extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'username' => 'required|string|min:1'
+		'username' => 'required|string|min:1,max:16',
+		'userid' => 'required|integer'
 	);
 
 	/**

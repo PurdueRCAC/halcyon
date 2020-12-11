@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -202,7 +196,7 @@ class User extends Model
 	 */
 	public function scopeWhereIsMember($query)
 	{
-		return $query->where('membertype', '=', MemberType::MEMBER);
+		return $query->where($this->getTable() . '.membertype', '=', MemberType::MEMBER);
 	}
 
 	/**
@@ -212,7 +206,7 @@ class User extends Model
 	 */
 	public function scopeWhereIsManager($query)
 	{
-		return $query->where('membertype', '=', MemberType::MANAGER);
+		return $query->where($this->getTable() . '.membertype', '=', MemberType::MANAGER);
 	}
 
 	/**
@@ -222,7 +216,7 @@ class User extends Model
 	 */
 	public function scopeWhereIsViewer($query)
 	{
-		return $query->where('membertype', '=', MemberType::VIEWER);
+		return $query->where($this->getTable() . '.membertype', '=', MemberType::VIEWER);
 	}
 
 	/**
@@ -232,34 +226,40 @@ class User extends Model
 	 */
 	public function scopeWhereIsPending($query)
 	{
-		return $query->where('membertype', '=', MemberType::PENDING);
+		return $query->where($this->getTable() . '.membertype', '=', MemberType::PENDING);
 	}
 
 	/**
-	 * Query scope where membership is pending
+	 * Query scope where record isn't trashed
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereIsActive($query)
 	{
-		return $query->where(function($where)
+		$t = $this->getTable();
+
+		return $query->where(function($where) use ($t)
 		{
-			$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			$where->whereNull($t . '.datetimeremoved')
+					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
 		});
 	}
 
 	/**
-	 * Query scope where membership is pending
+	 * Query scope where record is trashed
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereIsTrashed($query)
 	{
-		return $query->where(function($where)
+		$t = $this->getTable();
+
+		return $query->where(function($where) use ($t)
 		{
-			$where->whereNotNull('datetimeremoved')
-				->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+			$where->whereNotNull($t . '.datetimeremoved')
+				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
 		});
 	}
 

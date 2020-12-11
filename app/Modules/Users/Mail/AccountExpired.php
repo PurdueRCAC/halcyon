@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Modules\Users\Mail;
 
 use App\Modules\Users\Models\User;
@@ -21,6 +20,7 @@ class AccountExpired extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param  User  $user
 	 * @return void
 	 */
 	public function __construct(User $user)

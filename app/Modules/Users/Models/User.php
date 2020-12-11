@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Modules\Users\Models;
 
 use Illuminate\Notifications\Notifiable;
@@ -30,7 +24,7 @@ use App\Modules\Users\Events\UserDeleted;
 use Carbon\Carbon;
 
 /**
- * Module extension model
+ * User model
  */
 class User extends Model implements
 	AuthenticatableContract,

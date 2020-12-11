@@ -274,30 +274,36 @@ class Member extends Model
 	}
 
 	/**
-	 * Query scope where membership is pending
+	 * Query scope where record isn't trashed
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereIsActive($query)
 	{
-		return $query->where(function($where)
+		$t = $this->getTable();
+
+		return $query->where(function($where) use ($t)
 		{
-			$where->whereNull('dateremoved')
-					->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
+			$where->whereNull($t . '.dateremoved')
+					->orWhere($t . '.dateremoved', '=', '0000-00-00 00:00:00');
 		});
 	}
 
 	/**
-	 * Query scope where membership is pending
+	 * Query scope where record is trashed
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereIsTrashed($query)
 	{
-		return $query->where(function($where)
+		$t = $this->getTable();
+
+		return $query->where(function($where) use ($t)
 		{
-			$where->whereNotNull('dateremoved')
-				->where('dateremoved', '!=', '0000-00-00 00:00:00');
+			$where->whereNotNull($t . '.dateremoved')
+				->where($t . '.dateremoved', '!=', '0000-00-00 00:00:00');
 		});
 	}
 

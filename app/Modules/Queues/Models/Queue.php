@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -524,5 +518,39 @@ class Queue extends Model
 		}
 
 		return $this->attributes['loanednodes'];
+	}
+
+	/**
+	 * Query scope where record isn't trashed
+	 *
+	 * @param   object  $query
+	 * @return  object
+	 */
+	public function scopeWhereIsActive($query)
+	{
+		$t = $this->getTable();
+
+		return $query->where(function($where) use ($t)
+		{
+			$where->whereNull($t . '.datetimeremoved')
+					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+		});
+	}
+
+	/**
+	 * Query scope where record is trashed
+	 *
+	 * @param   object  $query
+	 * @return  object
+	 */
+	public function scopeWhereIsTrashed($query)
+	{
+		$t = $this->getTable();
+
+		return $query->where(function($where) use ($t)
+		{
+			$where->whereNotNull($t . '.datetimeremoved')
+				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+		});
 	}
 }

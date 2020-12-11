@@ -1,16 +1,10 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Module extension model
+ * Session model
  */
 class Session extends Model
 {

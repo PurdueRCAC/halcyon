@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Modules\Users\Helpers;
 
 use Illuminate\Support\Fluent;
@@ -14,7 +8,7 @@ use App\Halcyon\Facades\Submenu;
 use App\Halcyon\Access\Role;
 
 /**
- * Members admin helper
+ * Helper for some admin tasks
  */
 class Admin
 {
@@ -29,7 +23,7 @@ class Admin
 		$controllerName = request()->segment(2, $vName);
 
 		Submenu::addEntry(
-			trans('COM_MEMBERS'),
+			trans('users::users.users'),
 			route('admin.users.index'),
 			$controllerName == 'users'
 		);
@@ -38,42 +32,11 @@ class Admin
 			route('admin.users.notes'),
 			($controllerName == 'notes' || $vName == 'categories')
 		);
-		/*if ($controllerName == 'notes' || $vName == 'categories')
-		{
-			App::set('subsubmenu', function($app)
-			{
-				return new Ballast\Html\Toolbar('subsubmenu');
-			});
-
-			App::get('subsubmenu')->appendButton(
-				trans('COM_MEMBERS_SUBMENU_NOTES'),
-				route('index.php?option=com_members&controller=notes'),
-				$controllerName == 'notes'
-			);
-			App::get('subsubmenu')->appendButton(
-				trans('COM_MEMBERS_SUBMENU_NOTE_CATEGORIES'),
-				route('index.php?option=com_categories&extension=com_members'),
-				$vName == 'categories'
-			);
-		}*/
 		Submenu::addEntry(
 			trans('users::users.access'),
 			route('admin.users.acessgroups'),
 			($controllerName == 'accessgroups' || $controllerName == 'accesslevels')
 		);
-		/*Submenu::addEntry(
-			trans('COM_MEMBERS_MENU_MESSAGING'),
-			route('index.php?option=com_members&controller=messages'),
-			$controllerName == 'messages'
-		);*/
-		if (auth()->user()->can('admin'))
-		{
-			Submenu::addEntry(
-				trans('users::users.passwords'),
-				route('index.php?option=com_members&controller=passwordrules'),
-				($controllerName == 'passwordrules' || $controllerName == 'passwordblacklist')
-			);
-		}
 	}
 
 	/**

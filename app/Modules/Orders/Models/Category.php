@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -152,6 +146,42 @@ class Category extends Model
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Query scope where record isn't trashed
+	 *
+	 * @param   object  $query
+	 * @return  object
+	 */
+	public function scopeWhereIsActive($query)
+	{
+		$t = $this->getTable();
+		$c = $this->getDeletedAtColumn();
+
+		return $query->where(function($where) use ($t, $c)
+		{
+			$where->whereNull($t . '.' . $c)
+					->orWhere($t . '.' . $c, '=', '0000-00-00 00:00:00');
+		});
+	}
+
+	/**
+	 * Query scope where record is trashed
+	 *
+	 * @param   object  $query
+	 * @return  object
+	 */
+	public function scopeWhereIsTrashed($query)
+	{
+		$t = $this->getTable();
+		$c = $this->getDeletedAtColumn();
+
+		return $query->where(function($where) use ($t, $c)
+		{
+			$where->whereNotNull($t . '.' . $c)
+				->where($t . '.' . $c, '!=', '0000-00-00 00:00:00');
+		});
 	}
 
 	/**

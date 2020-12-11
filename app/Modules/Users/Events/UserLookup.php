@@ -4,7 +4,7 @@ namespace App\Modules\Users\Events;
 class UserLookup
 {
 	/**
-	 * @var string
+	 * @var array
 	 */
 	public $criteria;
 
@@ -16,10 +16,10 @@ class UserLookup
 	/**
 	 * Constructor
 	 *
-	 * @param  string $search
+	 * @param  array  $citeria
 	 * @return void
 	 */
-	public function __construct($criteria)
+	public function __construct(array $criteria)
 	{
 		$this->criteria = $criteria;
 		$this->results = array();

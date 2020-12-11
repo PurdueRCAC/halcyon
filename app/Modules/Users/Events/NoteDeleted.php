@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Modules\Users\Events;
 
 use App\Modules\Users\Models\Note;

@@ -1,16 +1,10 @@
 <?php
-
 namespace App\Modules\Users\Events;
 
 use App\Modules\Users\Models\Note;
 
 class NoteCreated
 {
-	/**
-	 * @var array
-	 */
-	public $data;
-
 	/**
 	 * @var Note
 	 */
@@ -19,33 +13,11 @@ class NoteCreated
 	/**
 	 * Constructor
 	 *
-	 * @param Note $note
-	 * @param array $data
+	 * @param  Note $note
 	 * @return void
 	 */
-	public function __construct(Note $note, array $data)
+	public function __construct(Note $note)
 	{
-		$this->data = $data;
 		$this->note = $note;
-	}
-
-	/**
-	 * Return the entity
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function getNote()
-	{
-		return $this->note;
-	}
-
-	/**
-	 * Return ALL data sent
-	 *
-	 * @return array
-	 */
-	public function getSubmissionData()
-	{
-		return $this->data;
 	}
 }

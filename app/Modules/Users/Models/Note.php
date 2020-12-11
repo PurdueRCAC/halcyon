@@ -1,16 +1,8 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Modules\Users\Events\NoteCreating;
 use App\Modules\Users\Events\NoteCreated;
-use App\Modules\Users\Events\NoteUpdating;
 use App\Modules\Users\Events\NoteUpdated;
 use App\Modules\Users\Events\NoteDeleted;
 
@@ -69,9 +61,7 @@ class Note extends Model
 	 * @var array
 	 */
 	protected $dispatchesEvents = [
-		'creating' => NoteCreating::class,
 		'created'  => NoteCreated::class,
-		'updating' => NoteUpdating::class,
 		'updated'  => NoteUpdated::class,
 		'deleted'  => NoteDeleted::class,
 	];
