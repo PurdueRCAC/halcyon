@@ -6,17 +6,99 @@
 
 @push('scripts')
 <script src="{{ asset('modules/orders/js/orders.js') }}"></script>
+@push('scripts')
+<script>
+jQuery(document).ready(function($){
+	var sortableHelper = function (e, ui) {
+		ui.children().each(function () {
+			$(this).width($(this).width());
+		});
+		return ui;
+	};
+	//var corresponding;
+	$('.sortable').sortable({
+		handle: '.draghandle',
+		cursor: 'move',
+		helper: sortableHelper,
+		/*containment: 'parent',
+		start: function (e, ui) {
+			//corresponding = [];
+			var height = ui.helper.outerHeight();
+			$(this).find('> tr[data-parent=' + $(ui.item).data('id') + ']').each(function (idx, row) {
+
+				height += $(row).outerHeight();
+
+			});
+			ui.placeholder.height(height);
+		},
+		update: function (e, ui) {
+			//var tableHasUnsortableRows = $(this).find('> tbody > tr:not(.sortable)').length;
+
+			$(this).find('> tr').each(function (idx, row) {
+				var uniqID = $(row).attr('data-id'),
+					correspondingFixedRow = $('tr[data-parent=' + uniqID + ']');
+				correspondingFixedRow.detach().insertAfter($(this));
+			});
+		},*/
+		stop: function (e, ui) {
+			//corresponding.detach().insertAfter($(ui.item));
+
+			$(".sortable tr").each(function(i, el){
+				var url = $(el).data('api');
+				
+				$.ajax({
+					url: url,
+					type: 'put',
+					data: {
+						'sequence': (i + 1)
+					},
+					dataType: 'json',
+					async: false,
+					success: function (response) {
+						
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						console.log(xhr.responseJSON.message);
+						//btn.find('.spinner-border').addClass('d-none');
+						//alert(xhr.responseJSON.message);
+					}
+				});
+			});
+		}
+	}).disableSelection();
+});
+</script>
+@endpush
 @endpush
 
 @section('title')
 {!! config('orders.name') !!}
 @stop
 
-@section('content')
+@php
+app('pathway')
+	->append(
+		trans('orders::orders.module name'),
+		route('site.orders.index')
+	)
+	->append(
+		trans('orders::orders.categories')
+	);
+@endphp
 
-<form action="{{ route('admin.orders.categories') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+@section('content')
+<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
+@component('orders::site.submenu')
+	categories
+@endcomponent
+</div>
+<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+<h2>{{ trans('orders::orders.categories') }}</h2>
+<form action="{{ route('site.orders.categories') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
+		<legend>Filter</legend>
+
 		<div class="row">
 			<div class="col col-md-4 filter-search">
 				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
@@ -35,32 +117,37 @@
 		</div>
 	</fieldset>
 
-	<table class="table table-hover adminlist">
+	<table class="table table-hover">
 		<thead>
 			<tr>
-				<th>
-					{!! Html::grid('checkall') !!}
-				</th>
+				@if (auth()->user()->can('delete orders.categories'))
+					<th scope="col">
+						Options
+					</th>
+				@endif
 				<th scope="col" class="priority-5">
-					{!! Html::grid('sort', 'orders::orders.id', 'id', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('orders::orders.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
-					{!! Html::grid('sort', 'orders::orders.name', 'name', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('orders::orders.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-2 numeric">
 					{{ trans('orders::orders.products') }}
 				</th>
-				<th scope="col" class="priority-2 text-center" colspan="2">
-					{!! Html::grid('sort', 'orders::orders.sequence', 'sequence', $filters['order_dir'], $filters['order']) !!}
+				<th scope="col" class="priority-2 text-right" colspan="2">
+					{!! Html::grid('sort', trans('orders::orders.sequence'), 'sequence', $filters['order_dir'], $filters['order']) !!}
 				</th>
 			</tr>
 		</thead>
 		<tbody class="sortable">
 		@foreach ($rows as $i => $row)
-			<tr>
+			<tr data-id="{{ $row->id }}" data-api="{{ route('api.orders.categories.update', ['id' => $row->id]) }}">
 				<td>
-					@if (auth()->user()->can('edit orders.categories'))
-						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
+					@if (auth()->user()->can('delete orders.categories'))
+						<a class="btn btn-danger btn-sm" href="{{ route('site.orders.categories.delete', ['id' => $row->id]) }}" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.orders.categories.delete', ['id' => $row->id]) }}">
+							<i class="fa fa-trash" aria-hidden="true"></i>
+							<span class="sr-only">{{ trans('global.button.delete') }}</span>
+						</a>
 					@endif
 				</td>
 				<td class="priority-5">
@@ -68,7 +155,7 @@
 				</td>
 				<td>
 					@if (auth()->user()->can('edit orders.categories'))
-						<a href="{{ route('admin.orders.categories.edit', ['id' => $row->id]) }}">
+						<a href="{{ route('site.orders.categories.edit', ['id' => $row->id]) }}">
 							{{ $row->name }}
 						</a>
 					@else
@@ -79,12 +166,14 @@
 					{{ $row->products_count }}
 				</td>
 				<td class="priority-2 text-right">
-					{{ $row->sequence }}
+					<!-- {{ $row->sequence }} -->
 				</td>
 				<td class="text-right">
 					@if ($filters['order'] == 'sequence')
-						<span class="drag-handle" draggable="true">
-							<svg class="MiniIcon DragMiniIcon DragHandle-icon" viewBox="0 0 24 24"><path d="M10,4c0,1.1-0.9,2-2,2S6,5.1,6,4s0.9-2,2-2S10,2.9,10,4z M16,2c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,2,16,2z M8,10 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,10,8,10z M16,10c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,10,16,10z M8,18 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,18,8,18z M16,18c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,18,16,18z"></path></svg>
+						<span class="draghandle" draggable="true">
+							<i class="fa fa-ellipsis-v" aria-hidde="true"></i>
+							<i class="fa fa-ellipsis-v" aria-hidde="true"></i>
+							<span class="sr-only">Move</span>
 						</span>
 					@endif
 				</td>
@@ -102,5 +191,5 @@
 
 	@csrf
 </form>
-
+</div>
 @stop

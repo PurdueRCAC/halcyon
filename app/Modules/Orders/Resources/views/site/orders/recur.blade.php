@@ -42,7 +42,7 @@ app('pathway')
 	<form action="{{ route('site.orders.recurring') }}" method="get" class="form-inline">
 
 		<fieldset id="filter-bar">
-			<legend class="sr-only">Filter</legend>
+			<legend>Filter</legend>
 
 			<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
 			<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
@@ -140,14 +140,7 @@ app('pathway')
 			</tbody>
 		</table>
 
-		<div class="row">
-			<div class="col-sm-9">
-				{{ $rows->render() }}
-			</div>
-			<div class="col-sm-3 text-right">
-				Results {{ ($rows->currentPage()-1)*$rows->perPage()+1 }}-{{ $rows->total() > $rows->perPage() ? $rows->currentPage()*$rows->perPage() : $rows->total() }} of {{ $rows->total() }}
-			</div>
-		</div>
+		{{ $rows->render() }}
 		@else
 			<p class="alert alert-info">No orders found.</p>
 		@endif

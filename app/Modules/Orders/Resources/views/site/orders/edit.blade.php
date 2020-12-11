@@ -68,7 +68,7 @@ $(document).ready(function() {
 	$( '#orderheaderpopup' ).dialog({
 		modal: true,
 		width: '550px',
-		autoOpen: false,
+		autoOpen: false/*,
 		buttons : {
 			OK: {
 				text: 'OK',
@@ -76,7 +76,7 @@ $(document).ready(function() {
 					$(this).dialog('close'); 
 				}
 			}
-		}
+		}*/
 	});
 	$('.order-status').on('click', function(e){
 		e.preventDefault();

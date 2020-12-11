@@ -70,9 +70,9 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-state">{{ trans('global.state') }}:</label>
 					<select class="form-control" name="state" id="field-state">
-						<option value="unpublished"<?php if (!$row->istrashed() && $row->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
-						<option value="published"<?php if (!$row->istrashed() && $row->state = 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
-						<option value="trashed"<?php if ($row->istrashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
+						<option value="unpublished"<?php if (!$row->isTrashed() && $row->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
+						<option value="published"<?php if (!$row->isTrashed() && $row->state = 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
+						<option value="trashed"<?php if ($row->isTrashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
 					</select>
 				</div>
 			</fieldset>

@@ -19,7 +19,7 @@ class CategoryResource extends JsonResource
 		$data['products_count'] = $this->products()->count();
 
 		$data['api'] = route('api.orders.categories.read', ['id' => $this->id]);
-		$data['url'] = route('site.orders.categories.read', ['id' => $this->id]);
+		$data['url'] = route('site.orders.categories.edit', ['id' => $this->id]);
 
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
