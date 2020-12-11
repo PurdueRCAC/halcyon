@@ -42,6 +42,12 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
+					<label for="field-name">{{ trans('storage::storage.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<input type="text" name="fields[name]" id="field-name" class="form-control required" required value="{{ $row->name }}" />
+					<span class="invalid-feedback">{{ trans('storage::storage.error.invalid name') }}</span>
+				</div>
+
+				<div class="form-group">
 					<label for="field-defaulttimeperiodid">{{ trans('storage::storage.time period') }}:</label>
 					<select name="fields[defaulttimeperiodid]" id="field-defaulttimeperiodid" class="form-control">
 						<option value="0">{{ trans('global.none') }}</option>
@@ -50,12 +56,6 @@ app('pathway')
 							<option value="{{ $timeperiod->id }}"<?php echo $selected; ?>>{{ $timeperiod->name }}</option>
 						<?php endforeach; ?>
 					</select>
-				</div>
-
-				<div class="form-group">
-					<label for="field-name">{{ trans('storage::storage.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control required" required value="{{ $row->name }}" />
-					<span class="invalid-feedback">{{ trans('storage::storage.error.invalid name') }}</span>
 				</div>
 
 				<div class="form-group">

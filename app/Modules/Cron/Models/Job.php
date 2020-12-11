@@ -1,13 +1,7 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Modules\Cron\Models;
 
-//use App\Halcyon\Config\Registry;
 use App\Halcyon\Models\Casts\Params;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
@@ -69,10 +63,14 @@ class Job extends Model
 	 *
 	 * @var array
 	 */
-	protected $rules = array(
-		'command'    => 'required|string',
+	protected $rules = [
+		'name' => 'required|string|max:255',
+		'command' => 'required|string|max:255',
+		'parameters' => 'nullable|string|max:255',
+		'state' => 'nullable|in:0,1',
+		'dont_overlap' => 'nullable|in:0,1',
 		'recurrence' => 'required|string',
-	);
+	];
 
 	/**
 	 * Runs extra setup code when creating a new model

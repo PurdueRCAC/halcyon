@@ -183,7 +183,7 @@ app('pathway')
 				</td>
 				<td class="priority-4 text-right">
 					@if ($row->queuestatus > 1)
-						<span class="icon-alert-triangle warning tip" aria-hidden="true" data-tip="{{ trans('One or more stopped queues') }}"></span>
+						<span class="glyph icon-alert-triangle text-warning tip" aria-hidden="true" data-tip="{{ trans('One or more stopped queues') }}">{{ trans('One or more stopped queues') }}</span>
 					@endif
 					<a href="{{ route('admin.queues.index', ['resource' => $row->resourceid]) }}">
 						{{ $row->queues_count }}

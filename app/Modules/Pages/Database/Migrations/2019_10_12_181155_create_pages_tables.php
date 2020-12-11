@@ -38,7 +38,6 @@ class CreatePagesTables extends Migration
 				$table->string('path', 255);
 				$table->string('language', 7);
 				$table->integer('asset_id')->unsigned()->default(0);
-				//$table->integer('version_id')->unsigned()->default(0);
 				$table->integer('hits')->unsigned()->default(0);
 				$table->integer('length')->unsigned()->default(0);
 				$table->text('params')->nullable();
@@ -46,23 +45,6 @@ class CreatePagesTables extends Migration
 				$table->text('metadesc')->nullable();
 				$table->text('metadata')->nullable();
 			});
-
-			/*Schema::create('page_versions', function (Blueprint $table)
-			{
-				$table->increments('id');
-				$table->integer('page_id')->unsigned()->default(0);
-				$table->integer('version')->unsigned()->default(0);
-				$table->string('title', 255);
-				$table->text('content');
-				$table->timestamp('created_at')->nullable();
-				$table->integer('created_by')->unsigned()->default(0);
-				$table->timestamp('removed')->nullable();
-				$table->integer('removed_by')->unsigned()->default(0);
-				$table->integer('length')->unsigned()->default(0);
-				$table->text('metakey')->nullable();
-				$table->text('metadesc')->nullable();
-				$table->text('metadata')->nullable();
-			});*/
 
 			$home = DB::table('pages')->where('parent_id', 0)->first();
 
@@ -81,15 +63,7 @@ class CreatePagesTables extends Migration
 					'level'      => 0,
 					'params'     => '[]',
 					'language'   => '*',
-					//'version_id' => 1
 				]);
-
-				/*DB::table('page_versionss')->insert([
-					'page_id' => 1,
-					'version' => 1,
-					'title'   => 'Home',
-					'content' => 'Welcome!'
-				]);*/
 			}
 		}
 	}
@@ -101,6 +75,5 @@ class CreatePagesTables extends Migration
 	public function down()
 	{
 		Schema::dropIfExists('pages');
-		//Schema::dropIfExists('page_versions');
 	}
 }

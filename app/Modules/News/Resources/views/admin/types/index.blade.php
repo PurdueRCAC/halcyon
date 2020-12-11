@@ -120,66 +120,66 @@ app('pathway')
 				</td>
 				<td>
 					@if ($row->location)
-						<span class="badge state yes">
+						<span class="badge badge-success">
 							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
-						<span class="badge state no">
+						<span class="badge badge-danger">
 							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4">
 					@if ($row->future)
-						<span class="badge state yes">
+						<span class="badge badge-success">
 							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
-						<span class="badge state no">
+						<span class="badge badge-danger">
 							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4">
 					@if ($row->ongoing)
-						<span class="badge state yes">
+						<span class="badge badge-success">
 							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
-						<span class="badge state no">
+						<span class="badge badge-danger">
 							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4">
 					@if ($row->tagresources)
-						<span class="badge state yes">
+						<span class="badge badge-success">
 							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
-						<span class="badge state no">
+						<span class="badge badge-danger">
 							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4">
 					@if ($row->tagusers)
-						<span class="badge state yes">
+						<span class="badge badge-success">
 							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
-						<span class="badge state no">
+						<span class="badge badge-danger">
 							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4">
 					@if ($row->url)
-						<span class="badge state yes">
+						<span class="badge badge-success">
 							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
-						<span class="badge state no">
+						<span class="badge badge-danger">
 							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif

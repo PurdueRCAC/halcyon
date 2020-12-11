@@ -7,14 +7,14 @@ use App\Modules\Groups\Models\UnixGroupMember;
 class UnixGroupMemberDeleted
 {
 	/**
-	 * @var Member
+	 * @var UnixGroupMember
 	 */
 	public $member;
 
 	/**
 	 * Constructor
 	 *
-	 * @param  Group $group
+	 * @param  UnixGroupMember $member
 	 * @return void
 	 */
 	public function __construct(UnixGroupMember $member)

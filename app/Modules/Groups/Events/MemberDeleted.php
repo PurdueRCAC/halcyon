@@ -14,7 +14,7 @@ class MemberDeleted
 	/**
 	 * Constructor
 	 *
-	 * @param  Group $group
+	 * @param  Member  $member
 	 * @return void
 	 */
 	public function __construct(Member $member)

@@ -14,7 +14,7 @@ class UnixGroupMemberCreated
 	/**
 	 * Constructor
 	 *
-	 * @param Member $member
+	 * @param UnixGroupMember $member
 	 * @return void
 	 */
 	public function __construct(UnixGroupMember $member)
