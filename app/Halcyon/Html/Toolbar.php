@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Halcyon\Html;
 
@@ -208,7 +203,7 @@ class Toolbar
 			}
 			else
 			{
-				throw new \InvalidArgumentException(trans('JLIB_HTML_BUTTON_NO_LOAD', $buttonClass, $buttonFile), 500);
+				throw new \InvalidArgumentException(trans('core::core.error.button not loaded', $buttonClass, $buttonFile), 500);
 			}
 		}*/
 

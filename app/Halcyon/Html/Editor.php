@@ -1,16 +1,8 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Halcyon\Html;
 
-//use App\Halcyon\Base\Obj;
 use App\Halcyon\Config\Registry;
-//use Plugin;
-//use Lang;
 
 /**
  * Editor class to handle WYSIWYG editors
@@ -333,15 +325,10 @@ class Editor
 		/*$name = (string) preg_replace('/[^A-Z0-9_\.-]/i', '', $this->name);
 		$name = ltrim($name, '.');
 
-		$path = PATH_APP . '/plugins/editors/' . $name . '/' . $name . '.php';
+		$path = app_path() . '/Listeners/Editors/' . $name . '/' . $name . '.php';
 		if (!is_file($path))
 		{
-			$path = PATH_CORE . '/plugins/editors/' . $name . '/' . $name . '.php';
-			if (!is_file($path))
-			{
-				\Notify::error(trans('JLIB_HTML_EDITOR_CANNOT_LOAD'));
-				return false;
-			}
+			return false;
 		}
 
 		// Require plugin file

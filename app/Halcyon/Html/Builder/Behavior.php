@@ -935,17 +935,17 @@ class Behavior
 				. trans('MAY_SHORT', true) . '", "' . trans('JUNE_SHORT', true) . '", "' . trans('JULY_SHORT', true) . '", "'
 				. trans('AUGUST_SHORT', true) . '", "' . trans('SEPTEMBER_SHORT', true) . '", "' . trans('OCTOBER_SHORT', true) . '", "'
 				. trans('NOVEMBER_SHORT', true) . '", "' . trans('DECEMBER_SHORT', true) . '");'
-				. ' Calendar._TT = {};Calendar._TT["INFO"] = "' . trans('JLIB_HTML_BEHAVIOR_ABOUT_THE_CALENDAR', true) . '";'
+				. ' Calendar._TT = {};Calendar._TT["INFO"] = "' . trans('core::html.BEHAVIOR_ABOUT_THE_CALENDAR', true) . '";'
 				. ' Calendar._TT["ABOUT"] =
  "DHTML Date/Time Selector\n" +
  "(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" +
 "For latest version visit: http://www.dynarch.com/projects/calendar/\n" +
 "Distributed under GNU LGPL.  See http://gnu.org/licenses/lgpl.html for details." +
 "\n\n" +
-"' . trans('JLIB_HTML_BEHAVIOR_DATE_SELECTION', false, false) . '" +
-"' . trans('JLIB_HTML_BEHAVIOR_YEAR_SELECT', false, false) . '" +
-"' . trans('JLIB_HTML_BEHAVIOR_MONTH_SELECT', false, false) . '" +
-"' . trans('JLIB_HTML_BEHAVIOR_HOLD_MOUSE', false, false)
+"' . trans('core::html.BEHAVIOR_DATE_SELECTION', false, false) . '" +
+"' . trans('core::html.BEHAVIOR_YEAR_SELECT', false, false) . '" +
+"' . trans('core::html.BEHAVIOR_MONTH_SELECT', false, false) . '" +
+"' . trans('core::html.BEHAVIOR_HOLD_MOUSE', false, false)
 				. '";
 Calendar._TT["ABOUT_TIME"] = "\n\n" +
 "Time selection:\n" +
@@ -953,20 +953,20 @@ Calendar._TT["ABOUT_TIME"] = "\n\n" +
 "- or Shift-click to decrease it\n" +
 "- or click and drag for faster selection.";
 
-		Calendar._TT["PREV_YEAR"] = "' . trans('JLIB_HTML_BEHAVIOR_PREV_YEAR_HOLD_FOR_MENU', true) . '";' . ' Calendar._TT["PREV_MONTH"] = "'
-				. trans('JLIB_HTML_BEHAVIOR_PREV_MONTH_HOLD_FOR_MENU', true) . '";' . ' Calendar._TT["GO_TODAY"] = "'
-				. trans('JLIB_HTML_BEHAVIOR_GO_TODAY', true) . '";' . ' Calendar._TT["NEXT_MONTH"] = "'
-				. trans('JLIB_HTML_BEHAVIOR_NEXT_MONTH_HOLD_FOR_MENU', true) . '";' . ' Calendar._TT["NEXT_YEAR"] = "'
-				. trans('JLIB_HTML_BEHAVIOR_NEXT_YEAR_HOLD_FOR_MENU', true) . '";' . ' Calendar._TT["SEL_DATE"] = "'
-				. trans('JLIB_HTML_BEHAVIOR_SELECT_DATE', true) . '";' . ' Calendar._TT["DRAG_TO_MOVE"] = "'
-				. trans('JLIB_HTML_BEHAVIOR_DRAG_TO_MOVE', true) . '";' . ' Calendar._TT["PART_TODAY"] = "'
-				. trans('JLIB_HTML_BEHAVIOR_TODAY', true) . '";' . ' Calendar._TT["DAY_FIRST"] = "'
-				. trans('JLIB_HTML_BEHAVIOR_DISPLAY_S_FIRST', true) . '";' . ' Calendar._TT["WEEKEND"] = "0,6";' . ' Calendar._TT["CLOSE"] = "'
-				. trans('JLIB_HTML_BEHAVIOR_CLOSE', true) . '";' . ' Calendar._TT["TODAY"] = "' . trans('JLIB_HTML_BEHAVIOR_TODAY', true)
-				. '";' . ' Calendar._TT["TIME_PART"] = "' . trans('JLIB_HTML_BEHAVIOR_SHIFT_CLICK_OR_DRAG_TO_CHANGE_VALUE', true) . '";'
+		Calendar._TT["PREV_YEAR"] = "' . trans('core::html.BEHAVIOR_PREV_YEAR_HOLD_FOR_MENU', true) . '";' . ' Calendar._TT["PREV_MONTH"] = "'
+				. trans('core::html.BEHAVIOR_PREV_MONTH_HOLD_FOR_MENU', true) . '";' . ' Calendar._TT["GO_TODAY"] = "'
+				. trans('core::html.BEHAVIOR_GO_TODAY', true) . '";' . ' Calendar._TT["NEXT_MONTH"] = "'
+				. trans('core::html.BEHAVIOR_NEXT_MONTH_HOLD_FOR_MENU', true) . '";' . ' Calendar._TT["NEXT_YEAR"] = "'
+				. trans('core::html.BEHAVIOR_NEXT_YEAR_HOLD_FOR_MENU', true) . '";' . ' Calendar._TT["SEL_DATE"] = "'
+				. trans('core::html.BEHAVIOR_SELECT_DATE', true) . '";' . ' Calendar._TT["DRAG_TO_MOVE"] = "'
+				. trans('core::html.BEHAVIOR_DRAG_TO_MOVE', true) . '";' . ' Calendar._TT["PART_TODAY"] = "'
+				. trans('core::html.BEHAVIOR_TODAY', true) . '";' . ' Calendar._TT["DAY_FIRST"] = "'
+				. trans('core::html.BEHAVIOR_DISPLAY_S_FIRST', true) . '";' . ' Calendar._TT["WEEKEND"] = "0,6";' . ' Calendar._TT["CLOSE"] = "'
+				. trans('core::html.BEHAVIOR_CLOSE', true) . '";' . ' Calendar._TT["TODAY"] = "' . trans('core::html.BEHAVIOR_TODAY', true)
+				. '";' . ' Calendar._TT["TIME_PART"] = "' . trans('core::html.BEHAVIOR_SHIFT_CLICK_OR_DRAG_TO_CHANGE_VALUE', true) . '";'
 				. ' Calendar._TT["DEF_DATE_FORMAT"] = "%Y-%m-%d";' . ' Calendar._TT["TT_DATE_FORMAT"] = "'
-				. trans('JLIB_HTML_BEHAVIOR_TT_DATE_FORMAT', true) . '";' . ' Calendar._TT["WK"] = "' . trans('JLIB_HTML_BEHAVIOR_WK', true) . '";'
-				. ' Calendar._TT["TIME"] = "' . trans('JLIB_HTML_BEHAVIOR_TIME', true) . '";';
+				. trans('core::html.BEHAVIOR_TT_DATE_FORMAT', true) . '";' . ' Calendar._TT["WK"] = "' . trans('core::html.BEHAVIOR_WK', true) . '";'
+				. ' Calendar._TT["TIME"] = "' . trans('core::html.BEHAVIOR_TIME', true) . '";';
 			$jsscript = 1;
 			return $return;
 		}

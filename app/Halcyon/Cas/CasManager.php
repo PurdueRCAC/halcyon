@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Halcyon\Cas;
 
 use phpCAS;
@@ -218,6 +219,11 @@ class CasManager
 		return phpCAS::getUser();
 	}
 
+	/**
+	 * Retrieve current user.
+	 *
+	 * @return string
+	 */
 	public function getCurrentUser()
 	{
 		return $this->user();

@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Halcyon\Modules;
 
@@ -34,10 +29,6 @@ class Extension extends Model
 
 	/**
 	 * The table to which the class pertains
-	 *
-	 * This will default to #__{namespace}_{modelName} unless otherwise
-	 * overwritten by a given subclass. Definition of this property likely
-	 * indicates some derivation from standard naming conventions.
 	 *
 	 * @var  string
 	 **/
@@ -323,6 +314,11 @@ class Extension extends Model
 		return $form;
 	}
 
+	/**
+	 * Register language
+	 *
+	 * @return  void
+	 */
 	public function registerLanguage()
 	{
 		$name = $this->module;
@@ -333,19 +329,4 @@ class Extension extends Model
 
 		app('translator')->addNamespace('widget.' . $name, $this->path() . '/lang');
 	}
-
-	/**
-	 * Save the record
-	 *
-	 * @return  boolean  False if error, True on success
-	 */
-	/*public function save(array $options = array())
-	{
-		if (!is_string($this->params))
-		{
-			$this->params = json_encode($this->params);
-		}
-
-		return parent::save($options);
-	}*/
 }

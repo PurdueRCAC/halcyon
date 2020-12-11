@@ -748,7 +748,7 @@ class Item extends Model
 		// Check for a database error.
 		if (!$result)
 		{
-			$this->addError(trans('JLIB_DATABASE_ERROR_REBUILDPATH_FAILED'));
+			$this->addError(trans('core::core.error.path rebuild failed'));
 			return false;
 		}
 

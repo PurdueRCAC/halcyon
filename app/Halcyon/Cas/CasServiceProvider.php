@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Halcyon\Cas;
 
 use Illuminate\Support\ServiceProvider;

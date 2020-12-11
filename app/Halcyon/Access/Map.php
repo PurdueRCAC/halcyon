@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Halcyon\Access;
 
@@ -21,6 +16,11 @@ class Map extends Model
 	 */
 	protected $table = 'user_role_map';
 
+	/**
+	 * Using timestamps?
+	 *
+	 * @var  bool
+	 */
 	public $timestamps = false;
 
 	/**

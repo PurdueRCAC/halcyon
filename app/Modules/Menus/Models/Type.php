@@ -338,7 +338,7 @@ class Type extends Model
 				if ($checked_out)
 				{
 					$this->addError(
-						trans('JLIB_DATABASE_ERROR_STORE_FAILED', get_class($this), trans('JLIB_DATABASE_ERROR_MENUTYPE_CHECKOUT'))
+						trans('core::core.error.save failed', get_class($this), trans('core::core.error.failed to checkout menu'))
 					);
 					return false;
 				}
@@ -352,7 +352,7 @@ class Type extends Model
 				if ($checked_out)
 				{
 					$this->addError(
-						trans('JLIB_DATABASE_ERROR_STORE_FAILED', get_class($this), trans('JLIB_DATABASE_ERROR_MENUTYPE_CHECKOUT'))
+						trans('core::core.error.save failed', get_class($this), trans('core::core.error.failed to checkout menu'))
 					);
 					return false;
 				}
@@ -368,7 +368,7 @@ class Type extends Model
 
 					if (!$item->save())
 					{
-						$this->addError(trans('JLIB_DATABASE_ERROR_STORE_FAILED', get_class($this), $item->getError()));
+						$this->addError(trans('core::core.error.save failed', get_class($this), $item->getError()));
 						return false;
 					}
 				}*/
@@ -381,7 +381,7 @@ class Type extends Model
 
 					if (!$widget->save())
 					{
-						$this->addError(trans('JLIB_DATABASE_ERROR_STORE_FAILED', get_class($this), $widget->getError()));
+						$this->addError(trans('core::core.error.save failed', get_class($this), $widget->getError()));
 						return false;
 					}
 				}

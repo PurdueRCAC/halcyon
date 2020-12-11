@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Halcyon\Form\Fields;
 
@@ -63,7 +58,7 @@ class Databaseconnection extends Select
 		// a database that is not available on the server.
 		if (empty($options))
 		{
-			$options[''] = trans('JNONE');
+			$options[''] = trans('global.none');
 		}
 		return $options;
 	}

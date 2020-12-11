@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Halcyon\Access;
 
@@ -51,28 +46,6 @@ class Asset extends Nested
 		'title' => 'required|string|max:50',
 		'name'  => 'required|string|max:100'
 	);
-
-	/**
-	 * Sets up additional custom rules
-	 *
-	 * @return  void
-	 */
-	/*public function setup()
-	{
-		$this->addRule('parent_id', function($data)
-		{
-			if (isset($data['parent_id']) && $data['parent_id'])
-			{
-				$parent = self::oneOrNew($data['parent_id']);
-
-				return $parent->id ? false : 'The set parent does not exist.';
-			}
-			else
-			{
-				return false;
-			}
-		});
-	}*/
 
 	/**
 	 * Generates automatic rules field value

@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Halcyon\Html\Builder;
 
@@ -38,7 +33,7 @@ class Category
 			$config = (array) $config;
 			$db = app('db');
 
-			$query = $db->table('hal_categories AS a')
+			$query = $db->table('categories AS a')
 				->select(['a.id', 'a.title', 'a.level'])
 				->where('a.parent_id', '>', '0');
 
@@ -93,7 +88,7 @@ class Category
 			$config = (array) $config;
 			$db = app('db');
 
-			$query = $db->table('hal_categories AS a')
+			$query = $db->table('categories AS a')
 				->select(['a.id', 'a.title', 'a.level', 'a.parent_id', 'a.title', 'a.level', 'a.parent_id'])
 				->where('a.parent_id', '>', '0');
 

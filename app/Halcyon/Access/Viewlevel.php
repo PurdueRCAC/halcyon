@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Halcyon\Access;
 
@@ -41,15 +36,6 @@ class Viewlevel extends Model
 	 * @var  string
 	 */
 	public static $orderDir = 'asc';
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array
-	 */
-	/*protected $rules = array(
-		'title' => 'notempty'
-	);*/
 
 	/**
 	 * The attributes that should be cast to native types.

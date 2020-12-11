@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Halcyon\Html\Builder;
 
@@ -276,22 +271,6 @@ class Input
 		}
 
 		return self::text($name . 'disabled', $value, $options) . self::hidden($name, $value, $options);
-	}
-
-	/**
-	 * Displays an input field that should be left empty by the
-	 * real users of the application but will most likely be
-	 * filled out by spam bots.
-	 *
-	 * Use in conjunction with Request::checkHoneypot()
-	 *
-	 * @param   string   $name
-	 * @param   integer  $delay
-	 * @return  string
-	 */
-	public static function honeypot($name = null)
-	{
-		return \Halcyon\Spam\Honeypot::generate($name);
 	}
 
 	/**

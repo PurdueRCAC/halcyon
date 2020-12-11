@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Halcyon\Form\Rules;
 
@@ -36,13 +31,13 @@ class Equals extends Rule
 		// Check that a validation field is set.
 		if (!$field)
 		{
-			return new Exception('JLIB_FORM_INVALID_FORM_RULE' . get_class($this));
+			return new Exception('core::core.error.invalid form rule' . get_class($this));
 		}
 
 		// Check that a valid Form object is given for retrieving the validation field value.
 		if (!($form instanceof Form))
 		{
-			return new Exception('JLIB_FORM_INVALID_FORM_OBJECT' . get_class($this));
+			return new Exception('core::core.error.invalid form object' . get_class($this));
 		}
 
 		// Test the two values against each other.

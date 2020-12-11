@@ -1,4 +1,7 @@
 <?php
+
+namespace App\Halcyon\Traits;
+
 trait Sluggable
 {
 	/**

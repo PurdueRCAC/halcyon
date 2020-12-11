@@ -1239,7 +1239,7 @@ class Page extends Model
 		// Make sure the location is valid.
 		if (!in_array($position, array('before', 'after', 'first-child', 'last-child')))
 		{
-			$this->addError(trans('JLIB_DATABASE_ERROR_INVALID_LOCATION', get_class($this)));
+			$this->addError(trans('core::core.error.invalid location', get_class($this)));
 			return false;
 		}
 

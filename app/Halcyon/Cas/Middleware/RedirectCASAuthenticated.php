@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Halcyon\Cas\Middleware;
 
 use Closure;

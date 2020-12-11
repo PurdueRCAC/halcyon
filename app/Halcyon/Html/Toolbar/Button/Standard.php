@@ -1,14 +1,8 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Halcyon\Html\Toolbar\Button;
 
 use App\Halcyon\Html\Toolbar\Button;
-//use App\Halcyon\Html\Builder\Behavior;
 
 /**
  * Renders a standard button
@@ -89,11 +83,6 @@ class Standard extends Button
 	 */
 	protected function _getCommand($name, $task, $list)
 	{
-		//Behavior::framework();
-
-		$message = trans('global.please make a selection from the list');
-		//$message = addslashes($message);
-
-		return $message;
+		return trans('global.please make a selection from the list');
 	}
 }

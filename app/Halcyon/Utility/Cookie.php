@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Halcyon\Utility;
 
@@ -17,9 +12,9 @@ class Cookie
 	/**
 	 * Drop a cookie
 	 *
-	 * @param  (string) $namespace - make sure the cookie name is unique
-	 * @param  (time)   $lifetime  - how long the cookie should last
-	 * @param  (array)  $data      - data to be saved in cookie
+	 * @param  string $namespace  make sure the cookie name is unique
+	 * @param  string $lifetime   how long the cookie should last
+	 * @param  array  $data       data to be saved in cookie
 	 * @return void
 	 **/
 	public static function bake($namespace, $lifetime, $data=array())
@@ -27,21 +22,21 @@ class Cookie
 		$hash   = \App::hash(\App::get('client')->name . ':' . $namespace);
 
 		$key = \App::hash('');
-		$crypt = new \Halcyon\Encryption\Encrypter(
-			new \Halcyon\Encryption\Cipher\Simple,
-			new \Halcyon\Encryption\Key('simple', $key, $key)
+		$crypt = new \App\Halcyon\Encryption\Encrypter(
+			new \App\Halcyon\Encryption\Cipher\Simple,
+			new \App\Halcyon\Encryption\Key('simple', $key, $key)
 		);
 		$cookie = $crypt->encrypt(serialize($data));
 
 		// Determine whether cookie should be 'secure' or not
 		$secure   = false;
-		$forceSsl = \Config::get('force_ssl', false);
+		$forceSsl =config('force_ssl', false);
 
-		if (\App::isAdmin() && $forceSsl >= 1)
+		if (\App::get('isAdmin') && $forceSsl >= 1)
 		{
 			$secure = true;
 		}
-		else if (\App::isSite() && $forceSsl == 2)
+		else if (!\App::get('isAdmin') && $forceSsl == 2)
 		{
 			$secure = true;
 		}
@@ -61,9 +56,9 @@ class Cookie
 		$hash  = \App::hash(\App::get('client')->name . ':' . $namespace);
 
 		$key = \App::hash('');
-		$crypt = new \Halcyon\Encryption\Encrypter(
-			new \Halcyon\Encryption\Cipher\Simple,
-			new \Halcyon\Encryption\Key('simple', $key, $key)
+		$crypt = new \App\Halcyon\Encryption\Encrypter(
+			new \App\Halcyon\Encryption\Cipher\Simple,
+			new \App\Halcyon\Encryption\Key('simple', $key, $key)
 		);
 
 		if ($str = \App::get('request')->getString($hash, '', 'cookie'))

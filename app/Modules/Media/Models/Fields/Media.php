@@ -144,11 +144,11 @@ class Media extends Field
 		$html[] = '	</span>';
 
 		/*$html[] = '	<span class="input-cell">';
-		$html[] = '		<a class="btn btn-secondary" title="' . trans('JLIB_FORM_BUTTON_CLEAR') . '"' . ' href="#" onclick="';
+		$html[] = '		<a class="btn btn-secondary" title="' . trans('global.button.clear') . '"' . ' href="#" onclick="';
 		$html[] = 'jInsertFieldValue(\'\', \'' . $this->id . '\');';
 		$html[] = 'return false;';
 		$html[] = '">';
-		$html[] = trans('JLIB_FORM_BUTTON_CLEAR') . '</a>';
+		$html[] = trans('global.button.clear') . '</a>';
 		$html[] = '	</span>';*/
 
 		$html[] = '</div>';
@@ -170,7 +170,7 @@ class Media extends Field
 			default:
 				$showAsTooltip = true;
 				$options = array(
-					'onShow' => 'jMediaRefreshPreviewTip',
+					'onShow' => 'MediaRefreshPreviewTip',
 				);
 				//Behavior::tooltip('.hasTipPreview', $options);
 				break;
