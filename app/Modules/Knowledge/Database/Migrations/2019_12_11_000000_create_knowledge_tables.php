@@ -48,13 +48,36 @@ class CreateKnowledgeTables extends Migration
 			{
 				$table->increments('id');
 				$table->integer('parent_id')->unsigned()->default(0);
-				$table->integer('child_id')->unsigned()->default(0);
-				$table->integer('ordering')->unsigned()->default(0);
+				$table->integer('page_id')->unsigned()->default(0);
 				$table->integer('lft')->unsigned()->default(0);
 				$table->integer('rgt')->unsigned()->default(0);
 				$table->integer('level')->unsigned()->default(0);
-				$table->index('parent_id');
-				$table->index('child_id');
+				$table->string('path');
+				$table->integer('state')->unsigned()->default(0);
+				$table->integer('access')->unsigned()->default(0);
+				$table->index(['parent_id', 'page_id']);
+				$table->index('state');
+				$table->index('access');
+			});
+			//$this->info('Created `kb_page_associations` table.');
+		}
+
+		if (!Schema::hasTable('kb_snippet_associations'))
+		{
+			Schema::create('kb_snippet_associations', function (Blueprint $table)
+			{
+				$table->increments('id');
+				$table->integer('parent_id')->unsigned()->default(0);
+				$table->integer('page_id')->unsigned()->default(0);
+				$table->integer('lft')->unsigned()->default(0);
+				$table->integer('rgt')->unsigned()->default(0);
+				$table->integer('level')->unsigned()->default(0);
+				$table->string('path');
+				$table->integer('state')->unsigned()->default(0);
+				$table->integer('access')->unsigned()->default(0);
+				$table->index(['parent_id', 'page_id']);
+				$table->index('state');
+				$table->index('access');
 			});
 			//$this->info('Created `kb_page_associations` table.');
 		}
