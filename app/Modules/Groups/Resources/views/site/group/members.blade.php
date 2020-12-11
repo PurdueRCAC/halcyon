@@ -130,6 +130,8 @@ $disabled = $group->members()
 $managers = collect([]);
 $members = collect([]);
 $viewers = collect([]);
+$pending = collect([]);
+$user_requests = array();
 $disabled = collect([]);
 $processed = array();
 
@@ -256,7 +258,21 @@ foreach ($queues as $queue)
 		else
 		{
 			$me->username = $me->user->username;
-			if ($me->isManager())
+
+			if ($me->isPending())
+			{
+				if (!isset($user_requests[$me->userid]))
+				{
+					$user_requests[$me->userid] = array();
+				}
+				$user_requests[$me->userid][] = $me->userrequestid;
+
+				if (!($found = $pending->firstWhere('userid', $me->userid)))
+				{
+					$pending->push($me);
+				}
+			}
+			elseif ($me->isManager())
 			{
 				if (!($found = $managers->firstWhere('userid', $me->userid)))
 				{
@@ -437,6 +453,74 @@ foreach ($unixgroups as $unixgroup)
 $managers = $managers->sortBy('username');
 $members = $members->sortBy('username');
 ?>
+<p>
+	<button id="export_to_csv_button" class="btn btn-default btn-sm"><i class="fa fa-table" ara-hidden="true"></i> Export to CSV</button>
+</p>
+
+@if (count($pending))
+<div class="card panel panel-default panel-warning">
+	<div class="card-header panel-heading">
+		New membership requests
+	</div>
+	<div class="card-body panel-body">
+		<form  id="FORM_{{ $group->id }}">
+			<table class="table table-hover fitToPanel">
+				<thead>
+					<tr>
+						<th scope="col">Name(s)</th>
+						<th scope="col" class="text-center">Accept</th>
+						<th scope="col" class="text-center">Deny</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach ($pending as $i => $req)
+						<tr id="entry{{ $i }}" data-id="{{ $req->id }}">
+							<td>
+								{{ $req->user->name }}
+							</td>
+							<td class="text-center">
+								<?php
+								$approves = array();
+								$denies = array();
+								if (isset($user_requests[$req->userid]))
+								{
+									foreach ($user_requests[$req->userid] as $reqid)
+									{
+										$approves[] = route('api.queues.requests.update', ['id' => $reqid]);
+										$denies[] = route('api.queues.requests.delete', ['id' => $reqid]);
+									}
+								}
+								?>
+								<input type="radio" name="approve{{ $i }}" class="approve-request approve-value0" data-api="{{ implode(',', $approves) }}" value="{{ $req->userid }},0" />
+							</td>
+							<td class="text-center">
+								<input type="radio" name="approve{{ $i }}" class="approve-request approve-value1" data-api="{{ implode(',', $denies) }}" value="{{ $req->userid }},1" />
+							</td>
+						</tr>
+					@endforeach
+					<tr id="selectAll">
+						<td><strong>Select All</strong></td>
+						<td class="text-center"><input type="radio" id="acceptAll" class="radio-toggle" value="0" /></td>
+						<td class="text-center"><input type="radio" id="denyAll" class="radio-toggle" value="1" /></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td></td>
+						<td colspan="2" class="text-center">
+							<button id="submit-requests" class="btn btn-success" disabled>{{ trans('global.button.save') }}</button>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+
+			<!-- <div class="form-group text-right">
+				<button class="btn btn-success">Save</button>
+			</div> -->
+		</form>
+	</div>
+</div>
+@endif
 
 <div class="card panel panel-default">
 	<div class="card-header panel-heading">

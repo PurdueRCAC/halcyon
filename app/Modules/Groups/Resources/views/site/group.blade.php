@@ -80,6 +80,89 @@ var motd = {
 		});
 	}
 }
+
+var UserRequests = {
+	/**
+	 * Pending approved requests
+	 *
+	 * @var  {number}
+	 */
+	approvepending: 0,
+
+	/**
+	 * Pending rejected requests
+	 *
+	 * @var  {number}
+	 */
+	rejectpending: 0,
+
+	/**
+	 * Approvet a user request
+	 *
+	 * @param   {array}  requests
+	 * @return  {void}
+	 */
+	Approve: function(requests) {
+		for (var request in requests) {
+			UserRequests.approvepending++;
+
+			WSPutURL(request, '{}', function(xml) {
+				if (xml.status < 400) {
+					UserRequests.approvepending--;
+
+					if (UserRequests.approvepending == 0) {
+						window.location.reload(true);
+					}
+				} else {
+					SetError(ERRORS['generic'], ERRORS['500']);
+				}
+			});
+		}
+	},
+
+	/**
+	 * Reject a user request
+	 *
+	 * @param   {array}  requests
+	 * @return  {void}
+	 */
+	Reject: function(requests) {
+		for (var request in requests) {
+			UserRequests.approvepending++;
+
+			WSDeleteURL(request, function(xml) {
+				if (xml.status < 400) {
+					UserRequests.rejectpending--;
+
+					if (UserRequests.rejectpending == 0) {
+						window.location.reload(true);
+					}
+				} else {
+					SetError(ERRORS['generic'], ERRORS['500']);
+				}
+			});
+		}
+	}
+}
+
+/**
+ * toggle accept all radio buttons
+ *
+ * @param   {string}  btn
+ * @return  {void}
+ */
+function ToggleAllRadio(btn) {
+	if (btn == 0) {
+		$('#denyAll').prop('checked', false);
+		$('.approve-value1').prop('checked', false);
+	}
+	else if (btn == 1) {
+		$('#acceptAll').prop('checked', false);
+		$('.approve-value0').prop('checked', false);
+	}
+
+	$('.approve-value' + btn).prop('checked', true);
+}
 /*
 document.addEventListener('DOMContentLoaded', function() {
 	var dels = document.getElementsByClassName('motd-delete');
@@ -119,6 +202,40 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('.motd-set').on('click', function(e){
 			e.preventDefault();
 			motd.set(this.getAttribute('data-group'));
+		});
+
+		// Pending user requests
+		$('.radio-toggle').on('change', function(e){
+			ToggleAllRadio(parseInt($(this).val()));
+			$('#submit-requests').prop('disabled', false);
+		});
+		$('.approve-request').on('change', function(e){
+			$('#submit-requests').prop('disabled', false);
+		});
+		$('#submit-requests').on('click', function(e){
+			var inputs = $('.approve-request:checked');
+
+			if (!inputs.length) {
+				alert("Must select an option for all users before continuing.");
+				return;
+			}
+
+			UserRequests.approvepending = 0;
+
+			// Loop through list and approve users. -2 so it doesnt hit the approve/deny all buttons
+			for (var i = 0; i < inputs.length - 2; i++) {
+				var user = inputs[i].value.split(",")[0];
+				var approve = inputs[i].value.split(",")[1];
+
+				if (approve == 0 && inputs[i].checked == true) {
+					// Approve the user
+					UserRequests.Approve(inputs[i].getAttribute('data-api').split(','));
+				}
+				else if (inputs[i].value.split(",")[1] == 1 && inputs[i].checked == true) {
+					// Delete the request
+					UserRequests.Reject(inputs[i].getAttribute('data-api').split(','));
+				}
+			}
 		});
 
 		//$('.tabbed').tabs();
