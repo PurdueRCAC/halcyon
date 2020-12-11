@@ -148,7 +148,7 @@ app('pathway')
 			$row->role_names = implode('<br />', $groups);
 
 			$incomplete = false;
-			$authenticator = 'hub';
+			$authenticator = 'database';
 			/*if (substr($row->email, -8) == '@invalid'):
 				$authenticator = trans('global.unknown');
 				if ($lnk = App\Halcyon\Auth\Link::find_by_id(abs($row->username))):

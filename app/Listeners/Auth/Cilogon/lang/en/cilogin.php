@@ -14,7 +14,7 @@ return [
 	'key' => 'Client ID',
 	'key desc' => 'Your site\'s CILogon App ID',
 	'secret' => 'Client Secret',
-	'secret desc' => 'Client Secret provided when your hub is registered on CILogon',
+	'secret desc' => 'Client Secret provided when your site is registered on CILogon',
 	'name' => 'Display name',
 	'name desc' => 'Text to display on the site when referencing this plugin',
 	'site login' => 'Site login',

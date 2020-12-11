@@ -9,7 +9,7 @@
 <script type="text/javascript">
 	setmenutype = function(type)
 	{
-		window.parent.Hubzero.submitbutton('items.setType', type);
+		window.parent.Halcyon.submitbutton('items.setType', type);
 		window.parent.$.fancybox.close();
 	}
 </script>

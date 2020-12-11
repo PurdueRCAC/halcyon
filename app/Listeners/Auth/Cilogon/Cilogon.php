@@ -197,7 +197,7 @@ class CILogon //extends OauthClient
 			{
 				$response->username = '-' . $hzal->id;
 				$response->email    = $response->username . '@invalid';
-				// Also set a suggested username for their hub account
+				// Also set a suggested username for their account
 				$sub_email    = explode('@', $email, 2);
 				$tmp_username = $sub_email[0];
 
@@ -266,7 +266,7 @@ class CILogon //extends OauthClient
 			// Create the link
 			if (Link::getInstance($hzad->id, $id))
 			{
-				// This cilogon account is already linked to another hub account
+				// This cilogon account is already linked to another account
 				App::redirect(
 					Route::url('index.php?option=com_members&id=' . User::get('id') . '&active=account'),
 					Lang::txt('account already linked'),
@@ -313,7 +313,7 @@ class CILogon //extends OauthClient
 	 */
 	private static function getReturnUrl($return=null, $encode=false)
 	{
-		// Get the hub url
+		// Get the url
 		/*$service = trim(Request::base(), '/');
 
 		if (empty($service))

@@ -1,8 +1,13 @@
 <?php
 namespace App\Modules\Users\Models;
 
+use App\Halcyon\Utility\Arr;
+use App\Halcyon\Access\Asset;
+use App\Halcyon\Access\Gate;
+use App\Halcyon\Access\Rules;
 use App\Halcyon\Config\Registry;
 use App\Halcyon\Form\Form;
+use App\Modules\Users\Models\User;
 use Illuminate\Support\Fluent;
 
 /**
@@ -66,14 +71,12 @@ class Permissions extends Fluent
 		$data['asset_id'] = 1;
 
 		// Get the text filter data
-		$params = \Component::params('com_config');
-		$data['filters'] = \Hubzero\Utility\Arr::fromObject($params->get('filters'));
+		$data['filters'] = Arr::fromObject(config('modules.config.filters'));
 
 		// If no filter data found, get from com_content (update of 1.6/1.7 site)
 		if (empty($data['filters']))
 		{
-			$contentParams = \Component::params('com_content');
-			$data['filters'] = \Hubzero\Utility\Arr::fromObject($contentParams->get('filters'));
+			$data['filters'] = Arr::fromObject(config('modules.pages.filters'));
 		}
 
 		// Check for data in the session.
@@ -115,7 +118,7 @@ class Permissions extends Fluent
 			// Get the validation messages from the form.
 			foreach ($form->getErrors() as $message)
 			{
-				$this->setError(Lang::txt($message));
+				$this->setError(trans($message));
 			}
 
 			return false;
@@ -135,20 +138,20 @@ class Permissions extends Fluent
 		// Save the rules
 		if (isset($data['rules']))
 		{
-			$rules = new \App\Halcyon\Access\Rules($data['rules']);
+			$rules = new Rules($data['rules']);
 
 			// Check that we aren't removing our Super User permission
 			// Need to get groups from database, since they might have changed
-			$myGroups = \App\Halcyon\Access\Access::getGroupsByUser(\User::get('id'));
+			$myGroups = Access::getGroupsByUser(User::find('id'));
 			$myRules = $rules->getData();
 			$hasSuperAdmin = $myRules['admin']->allow($myGroups);
 			if (!$hasSuperAdmin)
 			{
-				$this->setError(trans('COM_CONFIG_ERROR_REMOVING_SUPER_ADMIN'));
+				$this->setError(trans('config::config.error.removing super admin'));
 				return false;
 			}
 
-			$asset = \Hubzero\Access\Asset::oneByName('root.1');
+			$asset = Asset::oneByName('root.1');
 			if ($asset->get('id'))
 			{
 				$asset->set('rules', (string) $rules);
@@ -160,7 +163,7 @@ class Permissions extends Fluent
 			}
 			else
 			{
-				$this->setError(trans('COM_CONFIG_ERROR_ROOT_ASSET_NOT_FOUND'));
+				$this->setError(trans('config::config.error.root asset not found'));
 				return false;
 			}
 			unset($data['rules']);
@@ -171,7 +174,7 @@ class Permissions extends Fluent
 		{
 			$registry = new Registry(array('filters' => $data['filters']));
 
-			$extension = Extension::oneByElement('com_config');
+			$extension = Extension::findByElement('config');
 
 			if (!$extension->isNew())
 			{
@@ -183,14 +186,14 @@ class Permissions extends Fluent
 			}
 			else
 			{
-				$this->setError(Lang::txt('COM_CONFIG_ERROR_CONFIG_EXTENSION_NOT_FOUND'));
+				$this->setError(trans('config::config.error.extension not found'));
 				return false;
 			}
 			unset($data['filters']);
 		}
 
 		// Get the previous configuration.
-		$config = new \Hubzero\Config\Repository('site');
+		$config = new \App\Halcyon\Config\Repository('site');
 
 		$prev = $config->toArray();
 
@@ -239,7 +242,7 @@ class Permissions extends Fluent
 		// Escape the offline message if present.
 		if (isset($data['offline']['offline_message']))
 		{
-			$data['offline']['offline_message'] = \Hubzero\Utility\Str::ampReplace($data['offline']['offline_message']);
+			$data['offline']['offline_message'] = \App\Halcyon\Utility\Str::ampReplace($data['offline']['offline_message']);
 		}
 
 		// Purge the database session table if we are changing to the database handler.
@@ -288,7 +291,7 @@ class Permissions extends Fluent
 				unset($data['ftp']['ftp_enabled']);
 			}
 
-			$temp = Config::getRoot();
+			$temp = config();
 			$temp->set('ftp.ftp_enable', isset($data['ftp']['ftp_enable']) ? $data['ftp']['ftp_enable'] : 0);
 			$temp->set('ftp.ftp_host', isset($data['ftp']['ftp_host']) ? $data['ftp']['ftp_host'] : '');
 			$temp->set('ftp.ftp_port', isset($data['ftp']['ftp_port']) ? $data['ftp']['ftp_port'] : '');
@@ -305,14 +308,14 @@ class Permissions extends Fluent
 		// Store the data.
 		if (in_array(false, $result, true))
 		{
-			throw new \RuntimeException(Lang::txt('COM_CONFIG_ERROR_UNKNOWN_BEFORE_SAVING'));
+			throw new \RuntimeException(trans('config::config.error.unknown before saving'));
 		}
 
 		// Write the configuration file.
 		$return = $this->writeConfigFile($data);
 
 		// Trigger the after save event.
-		Event::trigger('onApplicationAfterSave', array($data));
+		event('onApplicationAfterSave', array($data));
 
 		return $result;
 	}
@@ -329,7 +332,7 @@ class Permissions extends Fluent
 	public function removeroot()
 	{
 		// Get the previous configuration.
-		$prev = Config::getRoot()->toArray();
+		$prev = config()->all();
 
 		// Create the new configuration object, and unset the root_user property
 		unset($prev['root_user']);
@@ -349,15 +352,15 @@ class Permissions extends Fluent
 	 */
 	private function writeConfigFile($data)
 	{
-		if ($data instanceof \Hubzero\Config\Repository)
+		if ($data instanceof \App\Halcyon\Config\Repository)
 		{
 			$data = $data->toArray();
 		}
 
 		// Attempt to write the configuration files
-		$writer = new \Hubzero\Config\FileWriter(
+		$writer = new \App\Halcyon\Config\FileWriter(
 			'php',
-			PATH_APP . DS . 'config'
+			base_path('config')
 		);
 
 		$client = null;
@@ -366,7 +369,7 @@ class Permissions extends Fluent
 		{
 			if (!$writer->write($values, $group, $client))
 			{
-				$this->setError(trans('COM_CONFIG_ERROR_WRITE_FAILED'));
+				$this->setError(trans('config::config.error.write failed'));
 				return false;
 			}
 		}

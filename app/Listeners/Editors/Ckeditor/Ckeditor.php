@@ -153,7 +153,7 @@ class Ckeditor
 			$config->toolbar[] = $tlbr;
 		}
 
-		//$config->toolbar[] = array('HubzeroMacro');
+		//$config->toolbar[] = array('HalcyonMacro');
 
 		// If minimal toolbar
 		if (in_array('minimal', $params->get('class')))

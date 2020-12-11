@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Halcyon\Config\Processor;
 
@@ -143,7 +138,7 @@ class Yaml extends Base
 		}
 		catch (Exception $e)
 		{
-			// Throw an exception Hubzero knows how to catch
+			// Throw an exception the app knows how to catch
 			throw new ParseException(
 				array(
 					'message'   => 'Error parsing YAML',
