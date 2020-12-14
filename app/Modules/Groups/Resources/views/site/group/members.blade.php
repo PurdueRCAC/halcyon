@@ -453,9 +453,16 @@ foreach ($unixgroups as $unixgroup)
 $managers = $managers->sortBy('username');
 $members = $members->sortBy('username');
 ?>
-<p>
-	<button id="export_to_csv_button" class="btn btn-default btn-sm"><i class="fa fa-table" ara-hidden="true"></i> Export to CSV</button>
-</p>
+<div class="row mb-3">
+	<div class="col-md-6">
+		<button id="export_to_csv_button" class="btn btn-default btn-sm"><i class="fa fa-table" ara-hidden="true"></i> Export to CSV</button>
+	</div>
+	<div class="col-md-6 text-right">
+		<a href="#add_member_dialog" class="add_member btn btn-default btn-secondary btn-sm" data-membertype="1">
+			<i class="fa fa-plus-circle"></i> Add Member
+		</a>
+	</div>
+</div>
 
 @if (count($pending))
 <div class="card panel panel-default panel-warning">
@@ -524,8 +531,8 @@ $members = $members->sortBy('username');
 
 <div class="card panel panel-default">
 	<div class="card-header panel-heading">
-		<div class="row">
-			<div class="col-md-9">
+		<!-- <div class="row">
+			<div class="col-md-9"> -->
 				Managers
 				<a href="#help_managers_span_{{ $group->id }}" class="help icn tip" title="Help">
 					<i class="fa fa-question-circle" aria-hidden="true"></i> Help
@@ -533,13 +540,13 @@ $members = $members->sortBy('username');
 				<div class="dialog dialog-help" id="help_managers_span_{{ $group->id }}" title="Managers">
 					<p>Managers are the owners or <abbr title="Principle Investigators">PIs</abbr> of this group and any others they may choose to delegate to manage access to this group. Only Managers can access this interface and are able to grant queue access for other people in the group. Managers can also grant and remove Group Management privileges to and from others, although you cannot remove your own Group Management privileges.</p>
 				</div>
-			</div>
+			<!-- </div>
 			<div class="col-md-3 text-right">
 				<a href="#add_member_dialog" class="add_member btn btn-default btn-sm" data-membertype="2">
 					<i class="fa fa-plus-circle"></i> Add Manager
 				</a>
 			</div>
-		</div>
+		</div> -->
 	</div>
 	<div class="card-body panel-body">
 		<table class="table table-hover datatable">
@@ -666,8 +673,8 @@ $members = $members->sortBy('username');
 
 <div class="card panel panel-default">
 	<div class="card-header panel-heading">
-		<div class="row">
-			<div class="col-md-9">
+		<!-- <div class="row">
+			<div class="col-md-9"> -->
 				Members
 				<a href="#help_members_span_{{ $group->id }}" class="help icn tip" title="Help">
 					<i class="fa fa-question-circle" aria-hidden="true"></i> Help
@@ -675,13 +682,13 @@ $members = $members->sortBy('username');
 				<div class="dialog dialog-help" id="help_members_span_{{ $group->id }}" title="Members">
 					<p>Members are people that have access to some or all of this group's queues but have no other special privileges such as Group Usage Reporting privileges or Group Managment privileges. Enabling a queue for someone will also create an account for them on the appropriate resource if they do not already have one. New accounts on a cluster will be processed overnight and be ready use the next morning. The person will receive an email notification once their account is ready.</p>
 				</div>
-			</div>
+			<!-- </div>
 			<div class="col-md-3 text-right">
 				<a href="#add_member_dialog" data-membertype="1" class="add_member btn btn-default btn-sm">
 					<i class="fa fa-plus-circle"></i> Add Member
 				</a>
 			</div>
-		</div>
+		</div> -->
 	</div>
 	<div class="card-body panel-body">
 		@if (count($members) > 0)
@@ -1131,7 +1138,7 @@ $members = $members->sortBy('username');
 <div id="add_member_dialog" data-id="{{ $group->id }}" title="Add users to {{ $group->name }}" class="membership-dialog">
 	<form id="form_{{ $group->id }}" method="post">
 		<div class="form-group">
-			<label for="addmembers">Enter usernames or email addresses</label>
+			<label for="addmembers">Enter names, usernames, or email addresses</label>
 			<div class="input-group">
 				<select class="form-control" name="members" id="addmembers" multiple="multiple" data-api="{{ route('api.users.index') }}" data-group="{{ $group->id }}" placeholder="Username, email address, etc.">
 				</select>
