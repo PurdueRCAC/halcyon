@@ -7,6 +7,7 @@
     "Dashboard": true,
     "Groups": true,
     "History": true,
+    "Issues": true,
     "Knowledge": true,
     "Listeners": true,
     "Media": true,
