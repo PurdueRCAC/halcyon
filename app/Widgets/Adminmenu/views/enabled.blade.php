@@ -278,6 +278,14 @@ if ($user->can('manage resources')
 		);
 	}
 
+	if ($user->can('manage issues') && Module::isEnabled('issues'))
+	{
+		//$menu->addSeparator();
+		$menu->addChild(
+			new Node(trans('widget.adminmenu::adminmenu.issues manager'), route('admin.issues.index'), 'class:issues', $active == 'issues')
+		);
+	}
+
 	$menu->getParent();
 }
 
@@ -423,25 +431,28 @@ if ($im || $mm || $pm || $tm || $lm)
 	}
 	$menu->getParent();
 }
-
+*/
 //
 // Help Submenu
 //
-if ($params->get('showhelp', 0) == 1)
+/*if (Module::isEnabled('issues'))
 {
 	$menu->addChild(
-		new Node(trans('widget.adminmenu::adminmenu.help'), '#', 'class:help-circle', ($active == 'help')), true
+		new Node(trans('widget.adminmenu::adminmenu.help'), route('admin.issues.index'), 'class:help-circle', ($active == 'issues')), true
 	);
-	$menu->addChild(
-		new Node(trans('widget.adminmenu::adminmenu.help pages'), 'index.php?option=help', 'class:help')
-	);
-	$menu->addSeparator();
-	$menu->addChild(
-		new Node(trans('widget.adminmenu::adminmenu.documentation'), 'http://halcyon.org/documentation', 'class:help', false, '_blank')
-	);
-	$menu->addChild(
-		new Node(trans('widget.adminmenu::adminmenu.help'), 'http://www.rcac.purdue.edu/help', 'class:help-docs', false, '_blank')
-	);
+	if ($params->get('showhelp', 0) == 1)
+	{
+		$menu->addChild(
+			new Node(trans('widget.adminmenu::adminmenu.help pages'), route('admin.help.index'), 'class:help')
+		);
+		$menu->addSeparator();
+		$menu->addChild(
+			new Node(trans('widget.adminmenu::adminmenu.documentation'), 'http://halcyon.org/documentation', 'class:help', false, '_blank')
+		);
+		$menu->addChild(
+			new Node(trans('widget.adminmenu::adminmenu.help'), 'http://www.rcac.purdue.edu/help', 'class:help-docs', false, '_blank')
+		);
+	}
 	$menu->getParent();
 }*/
 

@@ -54,6 +54,7 @@ return [
 	'resource manager' => 'Resources',
 	'storage manager' => 'Storage',
 	'queue manager' => 'Queues',
+	'issues manager' => 'Issues Tracker',
 
 	// Orders
 	'order manager' => 'Orders',
