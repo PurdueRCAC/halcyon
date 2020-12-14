@@ -28,7 +28,14 @@ class AssetPath
 	 */
 	public function handlePageContentIsRendering(PageContentIsRendering $event)
 	{
-		$content = preg_replace('/src="(.*?)"/i', 'src="' . asset("files/$1") . '"', $event->getBody());
+		$content = preg_replace_callback('/src="(.*?)"/i', function($matches)
+		{
+			if (substr($matches[1], 0, 4) == 'http')
+			{
+				return 'src="' . $matches[1] . '"';
+			}
+			return 'src="' . asset("files/" . $matches[1]) . '"';
+		}, $event->getBody());
 		$content = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $content);
 
 		$content = preg_replace('/href="\/(.*?)"/i', 'href="' . url("$1") . '"', $content);
