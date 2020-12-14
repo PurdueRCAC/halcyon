@@ -5002,6 +5002,11 @@ a.menulist:hover:before {
   html .tagsinput .tag {
     background-color: rgba(230, 230, 230, 0.2);
   }
+  .list-group-item {
+    background-color: transparent;
+    border-color: #1d1d24;
+    color: var(--input-color);
+  }
   html .select2-container--default .select2-search--dropdown .select2-search__field,
   fieldset.adminform,
   .form-control,
