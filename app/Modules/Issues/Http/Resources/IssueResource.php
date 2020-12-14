@@ -47,6 +47,7 @@ class IssueResource extends JsonResource
 		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
 		$data['resources'] = $this->resources->each(function ($res, $key)
 		{
+			$res->api = route('api.resources.read', ['id' => $res->id]);
 			$res->name = $res->resource->name;
 		});
 		$data['age'] = Carbon::now()->timestamp - $this->datetimecreated->timestamp;

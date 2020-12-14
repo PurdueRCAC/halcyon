@@ -3,17 +3,12 @@
 /* global WSGetURL */ // common.js
 /* global WSPostURL */ // common.js
 /* global WSDeleteURL */ // common.js
-/* global ClearSearch */ // search.js
 /* global ERRORS */ // common.js
 /* global SetError */ // common.js
-/* global search_path */ // crmsearch.js
-/* global ChangeSearch */ // search.js
 /* global HighlightMatches */ // text.js
 
 var keywords_pending = 0;
-var multi_group = false;
-var groupsearch = false;
-var usersearch = false;
+var path = base_url + '/issues';
 
 /**
  * Toggle UI tabs
@@ -22,14 +17,13 @@ var usersearch = false;
  * @param   {bool}    refresh
  * @return  {void}
  */
-function CRMToggle(on, refresh) {
+function IssuesToggle(on, refresh) {
 	if (typeof (refresh) == 'undefined') {
 		refresh = true;
 	}
 
 	$(".tab-add").addClass('hide');
 	$(".tab-edit").addClass('hide');
-	$(".tab-follow").addClass('hide');
 	$(".tab-search").addClass('hide');
 	$(".tab-" + on).removeClass('hide');
 
@@ -39,24 +33,40 @@ function CRMToggle(on, refresh) {
 		$("#TAB_" + on).addClass('activeTab');
 
 		document.getElementById("SPAN_header").innerHTML = "Search Reports";
-
 		document.getElementById("TAB_add").innerHTML = "Add New";
 		document.getElementById("INPUT_clear").value = "Clear";
 		document.getElementById("INPUT_add").value = "Add Report";
-		document.getElementById("datestartshort").disabled = false;
 
-		multi_group = true;
+		document.getElementById("datestartshort").value = document.getElementById("datestartshort").getAttribute('data-value');
+		document.getElementById("timestartshort").value = document.getElementById("timestartshort").getAttribute('data-value');
 	} else if (on == 'add') {
 		$("#TAB_" + on).addClass('activeTab');
 
 		document.getElementById("SPAN_header").innerHTML = "Add New Report";
-
 		document.getElementById("TAB_add").innerHTML = "Add New";
 		document.getElementById("INPUT_clear").value = "Clear";
 		document.getElementById("INPUT_add").value = "Add Report";
-		document.getElementById("datestartshort").disabled = false;
 
-		multi_group = false;
+		var dt = document.getElementById("datestartshort");
+		dt.setAttribute('data-value', dt.value);
+
+		var d = new Date();
+		dt.value = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+
+		dt = document.getElementById("timestartshort");
+		dt.setAttribute('data-value', dt.value);
+
+		var hr = ('0' + d.getHours()).slice(-2);
+		var min = ('0' + d.getMinutes()).slice(-2);
+		var ampm = "AM";
+		if (hr >= 12) {
+			if (hr > 12) {
+				hr -= 12;
+			}
+			ampm = "PM";
+		}
+
+		dt.value = hr + ':' + min + ' ' + ampm;
 	} else if (on == 'edit') {
 		$("#TAB_add").addClass('activeTab');
 
@@ -64,31 +74,13 @@ function CRMToggle(on, refresh) {
 		document.getElementById("SPAN_header").innerHTML = "Edit Report";
 		document.getElementById("INPUT_clear").value = "Cancel edit";
 		document.getElementById("INPUT_add").value = "Save Changes";
-
-		multi_group = false;
-	} else if (on == 'follow') {
-		$("#TAB_" + on).addClass('activeTab');
-
-		document.getElementById("SPAN_header").innerHTML = "Follow New Reports";
-
-		document.getElementById("TAB_add").innerHTML = "Add New";
-		document.getElementById("INPUT_clear").value = "Cancel changes";
-		document.getElementById("INPUT_add").value = "Save changes";
-		document.getElementById("datestartshort").disabled = false;
-
-		// resets users and groups when in follow context
-		CRMClearSearch();
-
-		multi_group = true;
-
-		document.getElementById("INPUT_add").disabled = true;
 	}
 
 	if (refresh) {
-		CRMSearch();
+		IssuesSearch();
 	}
 
-	CRMTabURL(on);
+	IssuesTabURL(on);
 }
 
 /**
@@ -97,7 +89,7 @@ function CRMToggle(on, refresh) {
  * @param   {string}  tab
  * @return  {void}
  */
-function CRMTabURL(tab) {
+function IssuesTabURL(tab) {
 	if (typeof (history.pushState) != 'undefined') {
 		var url = window.location.href.match(/\?.*/);
 		if (url != null) {
@@ -107,10 +99,10 @@ function CRMTabURL(tab) {
 				url = url.replace(/search/, tab);
 				url = url.replace(/follow/, tab);
 				url = url.replace(/add/, tab);
-			} else if (url.match(/&/)) {
-				url = url + "&" + tab;
+				//} else if (url.match(/&/)) {
+				//	url = url + "&" + tab;
 			} else {
-				url = url + tab;
+				url = url + "&" + tab;
 			}
 			history.pushState(null, null, encodeURI(url));
 		} else {
@@ -127,7 +119,7 @@ function CRMTabURL(tab) {
  * @param   {array}   flags
  * @return  {void}
  */
-function CRMSearchGroup(xml, flags) {
+function IssuesSearchResource(xml, flags) {
 	var pageload = false;
 	//var disabled = false;
 
@@ -140,129 +132,14 @@ function CRMSearchGroup(xml, flags) {
 		var results = JSON.parse(xml.responseText);
 
 		if (!pageload) {
-			CRMSearch();
+			IssuesSearch();
 			if (document.getElementById("TAB_follow").className.match(/active/)) {
 				document.getElementById("INPUT_add").disabled = false;
 			}
 		}
 
 		// reset search box
-		var group = $('#group');
-
-		if ($('.tagsinput').length) {
-			if (!group.tagExist(results['id'])) {
-				group.addTag({
-					'id': results['id'],
-					'label': results['name']
-				});
-			}
-		} else {
-			group.val(group.val() + (group.val() ? ', ' : '') + results['name'] + ':' + results['id']);
-		}
-	} else {
-		// error handling
-		switch (xml.status) {
-			case 401:
-			case 403:
-				SetError(ERRORS['403_generic'], null);
-				break;
-			case 500:
-				SetError(ERRORS['500'], null);
-				break;
-			default:
-				SetError(ERRORS['generic'], ERRORS['unknown']);
-				break;
-		}
-	}
-}
-
-/**
- * Result handler when adding a new person
- *
- * @param   {object}  xml
- * @param   {array}   flags
- * @return  {void}
- */
-function CRMSearchUser(xml, flags) {
-	var pageload = false;
-	//var disabled = false;
-
-	if (typeof (flags) != 'undefined') {
-		pageload = flags['pageload'];
-		//disabled = flags['disabled'];
-	}
-
-	if (xml.status == 200) {
-		var results = JSON.parse(xml.responseText);
-
-		if (!pageload) {
-			CRMSearch();
-			if (document.getElementById("TAB_follow").className.match(/active/)) {
-				document.getElementById("INPUT_add").disabled = false;
-			}
-		}
-
-		// reset search box
-		var people = $('#people');
-
-		if ($('.tagsinput').length) {
-			if (!people.tagExist(results.data['id'])) {
-				people.addTag({
-					'id': results.data['id'],
-					'label': results.data['name']
-				}, {
-					focus: false,
-					callback: false
-				});
-			}
-		} else {
-			people.val(people.val() + (people.val() ? ', ' : '') + results.data['name'] + ':' + results.data['id']);
-		}
-	} else {
-		// error handling
-		switch (xml.status) {
-			case 401:
-			case 403:
-				SetError(ERRORS['403_generic'], null);
-				break;
-			case 500:
-				SetError(ERRORS['500'], null);
-				break;
-			default:
-				SetError(ERRORS['generic'], ERRORS['unknown']);
-				break;
-		}
-	}
-}
-
-/**
- * Result handler function when selecting a group
- *
- * @param   {object}  xml
- * @param   {array}   flags
- * @return  {void}
- */
-function CRMSearchResource(xml, flags) {
-	var pageload = false;
-	//var disabled = false;
-
-	if (typeof (flags) != 'undefined') {
-		pageload = flags['pageload'];
-		//disabled = flags['disabled'];
-	}
-
-	if (xml.status == 200) {
-		var results = JSON.parse(xml.responseText);
-
-		if (!pageload) {
-			CRMSearch();
-			if (document.getElementById("TAB_follow").className.match(/active/)) {
-				document.getElementById("INPUT_add").disabled = false;
-			}
-		}
-
-		// reset search box
-		var resource = $('#crmresource');
+		var resource = $('#resource');
 
 		if ($('.tagsinput').length) {
 			if (!resource.tagExist(results.data['id'])) {
@@ -292,96 +169,20 @@ function CRMSearchResource(xml, flags) {
 }
 
 /**
- * Remove a group
- *
- * @param   {string}  group
- * @param   {bool}    refresh
- * @return  {void}
- */
-function CRMRemoveGroup(group, refresh) {
-	var input = $('#group');
-
-	if ($('.tagsinput').length) {
-		input.removeTag(group);
-	} else {
-		var data = [];
-		var items = input.val().split(',');
-		var val;
-		for (var x = 0; x < items.length; x++) {
-			val = items[x];
-			if (items[x].includes(':')) {
-				val = items[x].split(':')[1];
-			}
-
-			if (val != group) {
-				data.push(items[x]);
-			}
-		}
-		input.val(data.join(', '));
-	}
-
-	if (document.getElementById("TAB_follow").className.match(/active/)) {
-		document.getElementById("INPUT_add").disabled = false;
-	}
-
-	if (refresh) {
-		CRMSearch();
-	}
-}
-
-/**
- * Remove a user
- *
- * @param   {string}  user
- * @param   {bool}    refresh
- * @return  {void}
- */
-function CRMRemoveUser(user, refresh) {
-	var input = $('#people');
-
-	if ($('.tagsinput').length) {
-		input.removeTag(user);
-	} else {
-		var data = [];
-		var items = input.val().split(',');
-		var val;
-		for (var x = 0; x < items.length; x++) {
-			val = items[x];
-			if (items[x].includes(':')) {
-				val = items[x].split(':')[1];
-			}
-
-			if (val != user) {
-				data.push(items[x]);
-			}
-		}
-		input.val(data.join(', '));
-	}
-
-	if (document.getElementById("TAB_follow").className.match(/active/)) {
-		document.getElementById("INPUT_add").disabled = false;
-	}
-
-	if (refresh) {
-		CRMSearch();
-	}
-}
-
-/**
  * Search by date
  *
  * @return  {void}
  */
-function CRMDateSearch() {
+function IssuesDateSearch() {
 	var start = document.getElementById("datestartshort").value;
 	if (start.match(/^\d{4}-\d{2}-\d{2}$/) || start == "") {
-		CRMSearch();
+		IssuesSearch();
 		return;
 	}
 
 	var stop = document.getElementById("datestopshort").value;
 	if (stop.match(/^\d{4}-\d{2}-\d{2}$/) || stop == "") {
-		CRMSearch();
+		IssuesSearch();
 		return;
 	}
 }
@@ -392,10 +193,10 @@ function CRMDateSearch() {
  * @param   {number}  key
  * @return  {void}
  */
-function CRMKeywordSearch(key) {
+function IssuesKeywordSearch(key) {
 	// if someone hit enter
 	if (key == 13) {
-		CRMSearch();
+		IssuesSearch();
 		return;
 	}
 
@@ -415,68 +216,9 @@ function CRMKeywordSearch(key) {
 		setTimeout(function () {
 			keywords_pending--;
 			if (keywords_pending == 0) {
-				CRMSearch();
+				IssuesSearch();
 			}
 		}, 200);
-	}
-}
-
-/**
- * Toggle search
- *
- * @param   {string}  on
- * @return  {void}
- */
-function CRMToggleSearch(on) {
-	// move search box for group
-	if (on == 'group') {
-		// reset box
-		document.getElementById("newuser").value = "";
-		ClearSearch();
-
-		// flip the flags so it acts a group search box
-		groupsearch = true;
-		usersearch = false;
-		search_path = "groupname";
-
-		document.getElementById("newuser").focus();
-	} else if (on == 'people') {
-		// move search box for people
-		document.getElementById("newuser").value = "";
-		ClearSearch();
-
-		// flip the flags so it acts a person search box
-		groupsearch = false;
-		usersearch = true;
-		search_path = "name";
-
-		document.getElementById("newuser").focus();
-	} else if (on == 'none') {
-		document.getElementById("newuser").blur();
-		// hide the search box
-		// onblur() event is a bit funky, need some safe guards to prevent unintended box hiding
-		// make sure the box really no longer has focus, and provide slight delay in hiding it
-		if (typeof (document.activeElement) != 'undefined') {
-			setTimeout(function () {
-				if (document.getElementById("newuser") != document.activeElement) {
-					document.getElementById("DIV_peoplesearch").style.display = "none";
-					document.getElementById("DIV_groupsearch").style.display = "none";
-					document.getElementById("DIV_people").style.display = "block";
-					// adjust group field
-					var group_count = 0;
-					var groupsdata = document.getElementById("TD_group").getElementsByTagName("div");
-					for (var i = 0; i < groupsdata.length; i++) {
-						if (groupsdata[i].id.search("GROUP_") == 0) {
-							group_count++;
-						}
-					}
-
-					if (group_count == 0 || multi_group) {
-						document.getElementById("DIV_group").style.display = "block";
-					}
-				}
-			}, 300);
-		}
 	}
 }
 
@@ -485,61 +227,45 @@ function CRMToggleSearch(on) {
  *
  * @return  {void}
  */
-function CRMAddEntry() {
-	var groupsdata = new Array();
-	var peopledata = new Array();
+function IssuesAddEntry() {
 	var resourcedata = new Array();
 	var notes;
-	var groups = new Array();
-	var people = new Array();
 	var resources = new Array();
 	var myuserid = document.getElementById("myuserid").value;
-	var contactdate = document.getElementById("datestartshort").value;
-	var i = 0,
-		x = 0,
-		y = 0;
+	var createddate = document.getElementById("datestartshort").value;
+	var createdtime = document.getElementById("timestartshort").value;
+	var i = 0;
 
 	// clear error boxes
 	document.getElementById("TAB_search_action").innerHTML = "";
 	document.getElementById("TAB_add_action").innerHTML = "";
 
-	if (!document.getElementById("TAB_follow").className.match(/active/)) {
-		if (!contactdate.match(/^\d{4}-\d{2}-\d{2}$/)) {
-			SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
-			return;
-		}
+	if (!createddate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+		SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+		return;
 	}
-	contactdate += " 00:00:00";
+	//createddate += " 00:00:00";
+
+	var match = createdtime.match(/^(\d{1,2}):(\d{2}) ?(AM|PM)$/);
+	if (match) {
+		var hour = parseInt(match[1]);
+		if (hour != 12 && match[3] == "PM") {
+			hour = hour + 12;
+		}
+		if (hour == 12 && match[3] == "AM") {
+			hour = 0;
+		}
+		if (hour < 10) {
+			hour = "0" + hour.toString(); // Pad with leading 0
+		}
+		createddate += " " + hour + ":" + match[2] + ":00";
+	} else {
+		createddate += " 00:00:00";
+	}
 
 	if ($('.tagsinput').length) {
-		groupsdata = document.getElementById("group").value.split(',');
-		for (i = 0; i < groupsdata.length; i++) {
-			if (groupsdata[i] != "") {
-				/*if (groupsdata[i].indexOf('/') !== -1) {
-					var res = groupsdata[i].split('/');
-					groups.push(res[res.length-1]);
-				} else {*/
-				groups.push(groupsdata[i]);
-				//}
-			}
-		}
-		peopledata = document.getElementById("people").value.split(',');
-		for (i = 0; i < peopledata.length; i++) {
-			if (peopledata[i] != "") {
-				/*if (usersdata[i].indexOf('/') !== -1) {
-					var res = usersdata[i].split('/');
-					people.push({
-						'userid' : res[res.length-1]
-					});
-				} else {*/
-				people.push(peopledata[i]);
-				/*people.push({
-					'userid': peopledata[i]
-				});*/
-				//}
-			}
-		}
-		resourcedata = document.getElementById("crmresource").value.split(',');
+		resourcedata = document.getElementById("resource").value.split(',');
+
 		for (i = 0; i < resourcedata.length; i++) {
 			if (resourcedata[i] != "") {
 				if (resourcedata[i].indexOf('/') !== -1) {
@@ -550,113 +276,42 @@ function CRMAddEntry() {
 				}
 			}
 		}
-	} /*else {
-		groupsdata = document.getElementById("TD_group").getElementsByTagName("div");
-		peopledata = document.getElementById("TD_people").getElementsByTagName("div");
+	} else {
 		resourcedata = document.getElementById("TD_resource").getElementsByTagName("div");
-		for (i = 0; i < groupsdata.length; i++) {
-			if (groupsdata[i].id.search("GROUP_") == 0) {
-				groups.push(groupsdata[i].id.substr(6));
-			}
-		}
-		for (i = 0; i < peopledata.length; i++) {
-			if (peopledata[i].id.search("USER_") == 0) {
-				var name = peopledata[i].innerHTML.substr(peopledata[i].innerHTML.lastIndexOf(">") + 1);
-				name.replace(/^ +/, "");
-				name.replace(/ +$/, "");
-				people.push({
-					'userid': peopledata[i].id.substr(5),
-					'name': name
-				});
-			}
-		}
+
 		for (i = 0; i < resourcedata.length; i++) {
 			if (resourcedata[i].id.search("RESOURCE_") == 0) {
 				resources.push(resourcedata[i].id.substr(6));
 			}
 		}
-	}*/
+	}
 
 	notes = document.getElementById("NotesText").value;
 
-	var searchdata = $('#crm-search-data');
-	var sdata = JSON.parse(searchdata.html());
-
-	var removeusers = Array();
-	var addusers = Array();
 	var post = {};
-	var remove = true,
-		add = true;
 
 	if (window.location.href.match(/edit/)) {
-		var data = $('#crm-data');
+		var data = $('#report-data');
 		var original = {};
-		var originalusers = [];
-		var originalcontactusers = [];
+
 		if (data.length) {
 			var orig = JSON.parse(data.html());
 			original = orig.original;
-			//originalusers = orig.originalusers;
-			//originalcontactusers = orig.originalcontactusers;
 		}
 
+		post['report'] = notes;
+
 		// update
-		//if (contactdate != original['datetimecontact']) {
-			post['datetimecontact'] = contactdate;
-		//}
-		if (groups.length > 0 && groups[0] != original['group']) {
-			post['groupid'] = groups[0];
-		}
-		if (groups.length == 0 && original['group'] != '') {
-			post['groupid'] = 0;
+		if (createddate != original['createddate']) {
+			post['datetimecreated'] = createddate;
 		}
 
 		post['resources'] = resources;
-		post['users'] = people;
 
-		// first determine if any users have been deleted
-		/*for (x = 0; x < originalusers.length; x++) {
-			remove = true;
-			for (y = 0; y < people.length; y++) {
-				if (originalusers[x] == people[y]['userid']) {
-					remove = false;
-					break;
-				}
-			}
-			if (remove) {
-				removeusers.push(originalcontactusers[x]);
-			}
-		}
-		// then determine if any users have been added
-		for (x = 0; x < people.length; x++) {
-			add = true;
-			for (y = 0; y < originalusers.length; y++) {
-				if (originalusers[y] == people[x]['userid']) {
-					add = false;
-					break;
-				}
-			}
-			if (add) {
-				addusers.push(people[x]['userid']);
-			}
-		}
-
-		for (x = 0; x < removeusers.length; x++) {
-			WSDeleteURL(removeusers[x], CRMUpdatedReport);
-		}
-
-		for (x = 0; x < addusers.length; x++) {
-			post = JSON.stringify({
-				'contactreportid': original['id'],
-				'userid': addusers[x]
-			});
-			WSPostURL(ROOT_URL + "contactreportuser", post, CRMUpdatedReport);
-		}*/
-
-		post['report'] = notes;
 		post = JSON.stringify(post);
+
 		if (post != "{}") {
-			WSPutURL(original['api'], post, CRMUpdatedReport);
+			WSPutURL(original['api'], post, IssuesUpdatedReport);
 		}
 
 		if (typeof (history.pushState) != 'undefined') {
@@ -667,116 +322,16 @@ function CRMAddEntry() {
 		var id = original['id'].substr(original['id'].lastIndexOf("/") + 1);
 
 		setTimeout(function () {
-			CRMToggle('search');
-			CRMClearSearch();
+			IssuesToggle('search');
+			IssuesClearSearch();
 			document.getElementById("id").value = id;
-			CRMSearch();
+			IssuesSearch();
 		}, 250);
 
 		return;
-	} else if (document.getElementById("TAB_follow").className.match(/active/)) {
-		// first determine if any users have been deleted
-		for (x = 0; x < sdata.followerofusers.length; x++) {
-			remove = true;
-			for (y = 0; y < people.length; y++) {
-				if (sdata.followerofusers[x]['id'] == people[y]['userid']) {
-					remove = false;
-					break;
-				}
-			}
-			if (remove) {
-				removeusers.push(sdata.followerofusers[x]['follow']);
-			}
-		}
-		// then determine if any users have been added
-		for (x = 0; x < people.length; x++) {
-			add = true;
-			for (y = 0; y < sdata.followerofusers.length; y++) {
-				if (people[x]['userid'] == sdata.followerofusers[y]['id']) {
-					add = false;
-					break;
-				}
-			}
-			if (add) {
-				addusers.push(people[x]['userid']);
-			}
-		}
-
-		var removegroups = Array();
-		var addgroups = Array();
-		// first determine if any groups have been deleted
-		for (x = 0; x < sdata.followerofgroups.length; x++) {
-			remove = true;
-			for (y = 0; y < groups.length; y++) {
-				if (sdata.followerofgroups[x]['id'] == groups[y]) {
-					remove = false;
-					break;
-				}
-			}
-			if (remove) {
-				removegroups.push(sdata.followerofgroups[x]['follow']);
-			}
-		}
-		// then determine if any groups have been added
-		for (x = 0; x < groups.length; x++) {
-			add = true;
-			for (y = 0; y < sdata.followerofgroups.length; y++) {
-				if (groups[x] == sdata.followerofgroups[y]['id']) {
-					add = false;
-					break;
-				}
-			}
-			if (add) {
-				addgroups.push(groups[x]);
-			}
-		}
-
-		for (x = 0; x < removeusers.length; x++) {
-			WSDeleteURL(removeusers[x], CRMUpdatedReport);
-			// delete from cache
-			for (y = 0; y < sdata.followerofusers.length; y++) {
-				if (removeusers[x] == sdata.followerofusers[y]['follow']) {
-					sdata.followerofusers.splice(y, 1);
-					break;
-				}
-			}
-		}
-
-		for (x = 0; x < addusers.length; x++) {
-			post = JSON.stringify({ 'following': addusers[x] });
-			WSPostURL(ROOT_URL + "contactreportfollowuser", post, CRMUpdatedFollowUser);
-		}
-
-		for (x = 0; x < removegroups.length; x++) {
-			WSDeleteURL(removegroups[x], CRMUpdatedReport);
-			// delete from cache
-			for (y = 0; y < sdata.followerofgroups.length; y++) {
-				if (removegroups[x] == sdata.followerofgroups[y]['follow']) {
-					sdata.followerofgroups.splice(y, 1);
-					break;
-				}
-			}
-		}
-
-		for (x = 0; x < addgroups.length; x++) {
-			post = JSON.stringify({ 'following': addgroups[x] });
-			WSPostURL(ROOT_URL + "contactreportfollowgroup", post, CRMUpdatedFollowGroup);
-		}
-
-		return;
 	}
 
-	if (people.length == 0) {
-		if (groups.length != 0) {
-			SetError('Required field missing', 'Please enter at least one person.');
-			return;
-		}
-		else if (groups.length == 0) {
-			SetError('Required field missing', 'Please enter at least one person and optionally a group.');
-			return;
-		}
-	}
-	else if (notes == "") {
+	if (notes == "") {
 		SetError('Required field missing', 'Please enter some note text.');
 		return;
 	}
@@ -784,13 +339,9 @@ function CRMAddEntry() {
 		// new post
 		post = {
 			'report': notes,
-			'datetimecontact': contactdate,
+			'datetimecreated': createddate,
 			'userid': myuserid
 		};
-
-		if (groups.length > 0) {
-			post['groupid'] = groups[0];
-		}
 
 		if (resources.length > 0) {
 			post['resources'] = resources;
@@ -799,7 +350,7 @@ function CRMAddEntry() {
 		post = JSON.stringify(post);
 		document.getElementById("INPUT_add").disabled = true;
 
-		WSPostURL(document.getElementById("reports").getAttribute('data-api'), post, CRMNewReport, people);
+		WSPostURL(ROOT_URL + "issues", post, IssuesNewReport);
 	}
 }
 
@@ -809,50 +360,8 @@ function CRMAddEntry() {
  * @param   {object}  xml
  * @return  {void}
  */
-function CRMUpdatedReport(xml) {
+function IssuesUpdatedReport(xml) {
 	if (xml.status == 200) {
-		document.getElementById("INPUT_add").disabled = true;
-	}
-}
-
-/**
- * Callback after following a user
- *
- * @param   {object}  xml
- * @return  {void}
- */
-function CRMUpdatedFollowUser(xml) {
-	if (xml.status == 200) {
-		// add to cache
-		var results = JSON.parse(xml.responseText);
-
-		var data = $('#crm-search-data');
-		var sdata = JSON.parse(data.html());
-		sdata.followerofusers.push(results);
-
-		data.html(JSON.stringify(sdata));
-
-		document.getElementById("INPUT_add").disabled = true;
-	}
-}
-
-/**
- * Callback after following a group
- *
- * @param   {object}  xml
- * @return  {void}
- */
-function CRMUpdatedFollowGroup(xml) {
-	if (xml.status == 200) {
-		// add to cache
-		var results = JSON.parse(xml.responseText);
-
-		var data = $('#crm-search-data');
-		var sdata = JSON.parse(data.html());
-		sdata.followerofgroups.push(results);
-
-		data.html(JSON.stringify(sdata));
-
 		document.getElementById("INPUT_add").disabled = true;
 	}
 }
@@ -864,29 +373,21 @@ function CRMUpdatedFollowGroup(xml) {
  * @param   {array}   people
  * @return  {void}
  */
-function CRMNewReport(xml, people) {
+function IssuesNewReport(xml) {
 	document.getElementById("INPUT_add").disabled = false;
 
 	if (xml.status == 200) {
 		var results = JSON.parse(xml.responseText);
 
-		/*for (var x = 0; x < people.length; x++) {
-			// insert placeholders to put people when posted
-			var post = JSON.stringify({
-				'contactreport': results['id'],
-				'user': people[x]['userid']
-			});
-			WSPostURL(ROOT_URL + "contactreportuser", post, CRMNewPeopleTag);
-		}*/
 		document.getElementById("NotesText").value = "";
 
-		CRMClearSearch();
+		IssuesClearSearch();
 
-		document.getElementById("id").value = results.data['id'];
+		document.getElementById("id").value = results['id'].replace(ROOT_URL + "issues/", '');
 
-		CRMToggle('search', true);
+		IssuesToggle('search', true);
 		/*setTimeout(function () {
-			CRMSearch();
+			IssuesSearch();
 		}, 250);*/
 	} else if (xml.status == 409) {
 		SetError('Invalid date.', 'Please pick the current date or a date in the past.');
@@ -896,31 +397,11 @@ function CRMNewReport(xml, people) {
 }
 
 /**
- * Callback for adding new people
- *
- * @param   {object}  xml
- * @return  {void}
- */
-function CRMNewPeopleTag(xml) {
-	if (xml.status != 200) {
-		SetError('Unable to create report.', 'An error occurred during processing of new report.');
-	}
-}
-
-/**
  * Search reports
  *
  * @return  {void}
  */
-function CRMSearch() {
-	var groupsdata = new Array();
-	var groups = new Array();
-	var group = null;
-
-	var peopledata = new Array();
-	var people = new Array();
-	var person = null;
-
+function IssuesSearch() {
 	var resourcedata = new Array();
 	var resources = new Array();
 	var resource = null;
@@ -930,36 +411,14 @@ function CRMSearch() {
 	var start = document.getElementById("datestartshort").value;
 	var stop = document.getElementById("datestopshort").value;
 	var id = document.getElementById("id").value;
+	var page = document.getElementById("page").value;
+	var resolved = document.getElementById("resolved").value;
 	var i = 0,
 		x = 0;
 
 	if ($('.tagsinput').length) {
-		groupsdata = document.getElementById("group").value.split(',');
-		for (i = 0; i < groupsdata.length; i++) {
-			if (groupsdata[i] != "") {
-				if (groupsdata[i].indexOf('/') !== -1) {
-					group = groupsdata[i].split('/');
-					groups.push(group[group.length - 1]);
-				} else {
-					groups.push(groupsdata[i]);
-				}
-			}
-		}
-
-		peopledata = document.getElementById("people").value.split(',');
-		for (i = 0; i < peopledata.length; i++) {
-			if (peopledata[i] != "") {
-				if (peopledata[i].indexOf('/') !== -1) {
-					person = peopledata[i].split('/');
-					people.push(person[person.length - 1]);
-				} else {
-					people.push(peopledata[i]);
-				}
-			}
-		}
-
 		// Fetch list of selected resources
-		resourcedata = document.getElementById("crmresource").value.split(',');
+		resourcedata = document.getElementById("resource").value.split(',');
 		for (i = 0; i < resourcedata.length; i++) {
 			if (resourcedata[i] != "") {
 				if (resourcedata[i].indexOf('/') !== -1) {
@@ -968,34 +427,6 @@ function CRMSearch() {
 				} else {
 					resources.push(resourcedata[i]);
 				}
-			}
-		}
-	} else {
-		groupsdata = document.getElementById("TD_group").getElementsByTagName("div");
-		peopledata = document.getElementById("TD_people").getElementsByTagName("div");
-		resourcedata = document.getElementById("TD_resource").getElementsByTagName("div");
-
-		for (i = 0; i < groupsdata.length; i++) {
-			if (groupsdata[i].id.search("GROUP_") == 0) {
-				group = groupsdata[i].id.substr(6);
-				group = group.split('/');
-				groups.push(group[3]);
-			}
-		}
-
-		for (i = 0; i < peopledata.length; i++) {
-			if (peopledata[i].id.search("USER_") == 0) {
-				person = peopledata[i].id.substr(5);
-				person = person.split('/');
-				people.push(person[3]);
-			}
-		}
-
-		for (i = 0; i < resourcedata.length; i++) {
-			if (resourcedata[i].id.search("RESOURCE_") == 0) {
-				resource = resourcedata[i].id.substr(5);
-				resource = resource.split('/');
-				resources.push(resource[3]);
 			}
 		}
 	}
@@ -1023,9 +454,13 @@ function CRMSearch() {
 	}
 
 	// start assembling string
-	var searchstring = "";
-	var querystring = "&";
+	var searchstring = "page:" + page;
+	var querystring = "&page=" + page;
 
+	if (resolved) {
+		searchstring += " resolved:" + resolved;
+		querystring += "&resolved=" + resolved;
+	}
 	// if not add new
 	if (!document.getElementById("TAB_add").className.match(/active/)) {
 		if (start != "") {
@@ -1035,22 +470,6 @@ function CRMSearch() {
 		if (stop != "") {
 			searchstring += " stop:" + stop;
 			querystring += "&stop=" + stop;
-		}
-	}
-	if (groups.length > 0) {
-		searchstring += " group:" + groups[0];
-		querystring += "&group=" + groups[0];
-		for (x = 1; x < groups.length; x++) {
-			searchstring += "," + groups[x];
-			querystring += "," + groups[x];
-		}
-	}
-	if (people.length > 0) {
-		searchstring += " people:" + people[0];
-		querystring += "&people=" + people[0];
-		for (x = 1; x < people.length; x++) {
-			searchstring += "," + people[x];
-			querystring += "," + people[x];
 		}
 	}
 	// Construct resource query
@@ -1071,7 +490,7 @@ function CRMSearch() {
 			// filter out potentially dangerous garbage
 			keywords = keywords.replace(/[^a-zA-Z0-9_ ]/g, '');
 			searchstring += " " + keywords;
-			querystring += "&search=" + keywords;
+			querystring += "&keywords=" + keywords;
 		}
 	}
 	// if not add new
@@ -1086,7 +505,7 @@ function CRMSearch() {
 		document.getElementById("INPUT_add").disabled = false;
 		return;
 	} else {
-		CRMToggleAddButton();
+		IssuesToggleAddButton();
 	}
 
 	if (typeof (history.pushState) != 'undefined') {
@@ -1098,14 +517,14 @@ function CRMSearch() {
 		history.pushState(null, null, encodeURI(querystring));
 	}
 
-	//if (searchstring == "") {
-	//	searchstring = "start:0000-00-00";
-	//}
+	if (searchstring == "") {
+		searchstring = "page=1"; //"start:0000-00-00";
+	}
 
-	console.log('Searching... ' + $("#reports").data('api') + encodeURI(querystring));
-	$("#reports").data('query', querystring.replace('?', ''));
+	//console.log('Searching... ' + encodeURI(searchstring));
+	$("#reports").data('query', searchstring);
 
-	WSGetURL($("#reports").data('api') + encodeURI(querystring), CRMSearched);
+	WSGetURL(ROOT_URL + "issues?" + encodeURI(querystring), IssuesSearched);
 }
 
 /**
@@ -1113,14 +532,13 @@ function CRMSearch() {
  *
  * @return  {void}
  */
-function CRMToggleAddButton() {
+function IssuesToggleAddButton() {
 	// if add new
 	if (document.getElementById("TAB_add").className.match(/active/)) {
 		var start = document.getElementById("datestartshort").value;
-		var people = document.getElementById("people").value.split(',');
 		var notes = document.getElementById("NotesText").value;
 
-		if (start != "" && people.length > 0 && notes != "") {
+		if (start != "" && notes != "") {
 			document.getElementById("INPUT_add").disabled = false;
 		} else {
 			document.getElementById("INPUT_add").disabled = true;
@@ -1134,14 +552,12 @@ function CRMToggleAddButton() {
  * @param   {object}  xml
  * @return  {void}
  */
-function CRMSearched(xml) {
-	const DEFAULT_ENTRIES = 20;
-
+function IssuesSearched(xml) {
 	if (xml.status == 200) {
 		var reports = $("#reports");
 		var count = 0;
 
-		const results = JSON.parse(xml.responseText);
+		var results = JSON.parse(xml.responseText);
 
 		$("#matchingReports").html("Found " + results.data.length + " matching reports");
 
@@ -1151,12 +567,10 @@ function CRMSearched(xml) {
 			reports.html('');
 
 			for (var x = 0; x < results.data.length; x++, count++) {
-				CRMPrintRow(
+				IssuesPrintRow(
 					results.data[x],
-					//results.people,
-					//results.comments,
-					//results.userid,
-					'newEntries' //(x < DEFAULT_ENTRIES ? "newEntries" : "newEntriesHidden")
+					results.userid,
+					"newEntries" //(x < DEFAULT_ENTRIES ? "newEntries" : "newEntriesHidden")
 				);
 			}
 
@@ -1172,43 +586,18 @@ function CRMSearched(xml) {
 			reports.find(".alert").hide();
 			$(".newEntriesHidden").hide();
 
-			/*var a = $("<a></a>")
-				.attr({
-					id: "showEntries",
-					href: "#"
-				})
-				.html("Show All Reports")
-				.on('click', function (e) {
-					e.preventDefault();
-					const flag = $(this).html().includes('Show All Reports');
-					$(this).html(flag ? "Show Less Reports" : "Show All Reports");
-					$(this).parent().text("Displaying all of CRM Reports...");
-					flag ? $(".newEntriesHidden").show() : $(".newEntriesHidden").hide();
-				});
-
-			var td = $("<p></p>")
-				.attr({
-					id: "displayEntries",
-				})
-				.html("Displaying " + Math.min(count, DEFAULT_ENTRIES) + " of " +
-					results.data.length + " CRM Reports...<br/>"
-				)
-				.append(a);
-
-			reports.append(td);*/
-
 			var q = reports.data('query');
 			var query = q.replace(' ', '&').replace(':', '=');
-			var lastpage = Math.ceil(results.meta.total > results.meta.per_page ? results.meta.total / results.meta.per_page : 1);
+			var lastpage = Math.ceil(results.total > results.limit ? results.total / results.limit : 1);
 
 			// Pagination
 			var ul = $('<ul class="pagination"></ul>');
 
 			var li = $('<li class="page-item page-first">');
 			var a = $('<a class="page-link" title="First page"><span aria-hidden="true">«</span></a>')
-				.attr('href', '?' + query + '&page=1')
+				.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=1'))
 				.attr('data-page', 1);
-			if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
+			if (results.total <= (results.limit * results.page) || results.page == 1) {
 				li.addClass('disabled');
 				a.attr('aria-disabled', 'true');
 			}
@@ -1217,60 +606,49 @@ function CRMSearched(xml) {
 
 			li = $('<li class="page-item page-prev">');
 			a = $('<a class="page-link" title="Previous page"><span aria-hidden="true">‹</span></a>')
-				.attr('href', '?' + query + ' &page=' + (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1))
-				.attr('data-page', (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1));
-			if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
+				.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=' + (results.page > 1 ? results.page - 1 : 1)))
+				.attr('data-page', (results.page > 1 ? results.page - 1 : 1));
+			if (results.total <= (results.limit * results.page) || results.page == 1) {
 				li.addClass('disabled');
 				a.attr('aria-disabled', 'true');
 			}
 			li.append(a);
 			ul.append(li);
 
-			if (results.meta.total <= results.meta.per_page) {
+			if (results.total <= results.limit) {
 				li = $('<li class="page-item">');
 				a = $('<a class="page-link"></a>')
 					.text('1')
-					.attr('href', '?' + query + '&page=1')
+					.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=1'))
 					.attr('data-page', 1);
-				if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
+				if (results.total <= (results.limit * results.page)) {
 					li.addClass('disabled');
 					a.attr('aria-disabled', 'true');
 				}
 				li.append(a);
 				ul.append(li);
 			} else {
-				var c = 0;
 				for (var l = 1; l <= lastpage; l++) {
-					if (c >= 10) {
-						li = $('<li class="page-item">');
-						a = $('<span class="page-link"></span>')
-							.text('...')
-							.attr('aria-disabled', 'true');
-						li.append(a);
-						ul.append(li);
-						break;
-					}
 					li = $('<li class="page-item">');
 					a = $('<a class="page-link"></a>')
 						.text(l)
-						.attr('href', '?' + query + '&page=' + l)
+						.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=' + l))
 						.attr('data-page', l);
-					if (results.meta.current_page == l) {
+					if (results.page == l) {
 						li.addClass('active');
 						//a.attr('aria-disabled', 'true');
 					}
 					li.append(a);
 					ul.append(li);
-					c++;
 				}
 			}
 
 			li = $('<li class="page-item page-next">');
 			a = $('<a class="page-link" title="Next page"><span aria-hidden="true">›</span></a>')
-				.attr('href', '?' + query + '&page=' + (results.meta.current_page < lastpage ? lastpage - 1 : 1))
-				.attr('data-page', (results.meta.current_page > 1 ? lastpage - 1 : 1))
-				.attr('data-query', q.replace(/(page:\d+)/, 'page:' + (results.meta.current_page > 1 ? lastpage - 1 : 1)));
-			if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
+				.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=' + (results.page > 1 ? lastpage - 1 : 1)))
+				.attr('data-page', (results.page > 1 ? lastpage - 1 : 1))
+				.attr('data-query', q.replace(/(page:\d+)/, 'page:' + (results.page > 1 ? lastpage - 1 : 1)));
+			if (results.total <= (results.limit * results.page)) {
 				li.addClass('disabled');
 				a.attr('aria-disabled', 'true');
 			}
@@ -1279,10 +657,10 @@ function CRMSearched(xml) {
 
 			li = $('<li class="page-item page-last">');
 			a = $('<a class="page-link" title="Last page"><span aria-hidden="true">»</span></a>')
-				.attr('href', '?' + query + '&page=' + lastpage)
+				.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=' + lastpage))
 				.attr('data-page', lastpage)
 				.attr('data-query', q.replace(/(page:\d+)/, 'page:' + lastpage));
-			if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
+			if (results.total <= (results.limit * results.page)) {
 				li.addClass('disabled');
 				a.attr('aria-disabled', 'true');
 			}
@@ -1294,7 +672,7 @@ function CRMSearched(xml) {
 			$('.page-link').on('click', function (e) {
 				e.preventDefault();
 				$('#page').val($(this).data('page'));
-				CRMSearch();
+				IssuesSearch();
 			});
 		}
 	}
@@ -1304,18 +682,16 @@ function CRMSearched(xml) {
  * Print a report entry
  *
  * @param   {object}  report
- * @param   {array}   people
- * @param   {array}   comments
  * @param   {string}  userid
  * @param   {string}  cls
  * @return  {void}
  */
-function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
-	var id = report['id'];//.split('/');
-	//id = id[id.length - 1];
+function IssuesPrintRow(report, userid, cls) {
+	var id = report['id'];
 
 	// determine if this entry can be edited
 	var edit = false;
+	//if (userid == report['userid'] && report['age'] <= 86400) {
 	if (report['can']['edit']) {
 		edit = true;
 	}
@@ -1328,40 +704,74 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	var article = document.createElement("article");
 	article.id = id;
 	article.className = "crm-item " + cls;
-	article.setAttribute('data-api', report['api']);
 
 	var panel = document.createElement("div");
 	panel.className = "panel panel-default";
 
 	// -- Admin header
 	tr = document.createElement("div");
-	tr.className = 'panel-heading news-admin';
+	tr.className = 'panel-heading crm-admin';
 
 	// ID
 	td = document.createElement("span");
-	td.className = "crmid";
+	td.className = "issuesid";
 
-	a = document.createElement("a");
-	a.href = "contactreports?id=" + id;
-	a.innerHTML = "#" + id;
+	var bits = report['datetimecreated'].match(/\d+/g);
+	var d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
 
-	td.appendChild(a);
+	var hr = d.getHours();
+	var min = d.getMinutes();
+	if (min < 10) {
+		min = "0" + min;
+	}
+	var ampm = "am";
+	if (hr >= 12) {
+		if (hr > 12) {
+			hr -= 12;
+		}
+		ampm = "PM";
+	}
+
+	span = document.createElement("a");
+	span.href = path + "?id=" + id + '&edit';
+	span.className = "issuespostdate";
+	span.innerHTML = d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear() + " @ " + hr + ":" + min + ampm;
+
+	var t = document.createTextNode(" by " + report['username']);
+
+	td.appendChild(span);
+	td.appendChild(t);
 
 	if (edit) {
 		// Delete button
 		a = document.createElement("a");
-		a.href = "/contactreports?id=" + id + "&delete";
-		a.className = 'edit news-delete tip';
+		a.href = path + "?id=" + id + "&delete";
+		a.className = 'edit news-delete tip'; //btn btn-outline-secondary
 		a.onclick = function (e) {
 			e.preventDefault();
-			CRMDeleteReport(report['id']);
+			IssuesDeleteReport(report['id']);
 		};
-		a.title = "Delete Contact Report.";
+		a.title = "Delete Report.";
 
 		img = document.createElement("i");
-		img.className = "crmeditdelete fa fa-trash";
+		img.className = "issueseditdelete fa fa-trash";
 		img.setAttribute('aria-hidden', true);
-		img.id = report['id'] + "_crmdeleteimg";
+		img.id = report['id'] + "_issuesdeleteimg";
+
+		a.appendChild(img);
+		td.appendChild(a);
+
+		// Edit button
+		a = document.createElement("a");
+		a.href = path + "?id=" + id + '&edit';
+		a.className = "edit news-edit tip";
+		a.title = "Edit report text.";
+		a.id = report['id'] + "_textediticon";
+
+		img = document.createElement("i");
+		img.className = "issuesedittext fa fa-pencil";
+		img.setAttribute('aria-hidden', true);
+		img.id = report['id'] + "_textediticonimg";
 
 		a.appendChild(img);
 		td.appendChild(a);
@@ -1372,183 +782,32 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	panel.appendChild(tr);
 
 	// -- Header
-	tr = document.createElement("div");
-	tr.className = 'panel-heading';
-
-	td = document.createElement("h3");
-	td.className = "panel-title crmcontactdate";
-
-	var bits = report['datetimecontact'].match(/\d+/g);
-	var d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
-
-	td.innerHTML = d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear();
-
-	if (edit) {
-		a = document.createElement("a");
-		a.href = "contactreports/?id=" + report['id'] + "&edit";
-		a.className = "news-action tip";
-		a.onclick = function (e) {
-			e.preventDefault();
-
-			CRMClearSearch();
-
-			if (!window.location.href.match(/crm/)) {
-				window.location = this.href;
-			} else {
-				var url = window.location.href.split("?");
-				url = url[0];
-				window.location = url + "?id=" + report['id'] + "&edit";
-			}
-		};
-		a.title = "Edit contact report date.";
-
-		img = document.createElement("i");
-		img.className = "crmedit fa fa-pencil";
-		img.setAttribute('aria-hidden', true);
-
-		a.appendChild(img);
-		td.appendChild(a);
-	}
-
-	tr.appendChild(td);
-
 	var ul = document.createElement("ul");
 	ul.className = 'panel-meta news-meta';
 
-	// Date
-	li = document.createElement("li");
-	li.className = 'news-date';
-
-	bits = report['datetimecreated'].match(/\d+/g);
-	d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
-
-	span = document.createElement("span");
-	span.className = "crmpostdate";
-	span.innerHTML = "Posted on " + d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear();
-
-	li.appendChild(span);
-	ul.appendChild(li);
-
-	// Creator
-	li = document.createElement("li");
-	li.className = 'news-author';
-
-	span = document.createElement("span");
-	span.className = "crmposter";
-	span.innerHTML = "Posted by " + report['username'];
-
-	li.appendChild(span);
-	ul.appendChild(li);
-
-	// Group
-	if (report['groupname'] != null && report['groupid'] > 0) {
-		li = document.createElement("li");
-		li.className = 'news-group';
-
-		a = document.createElement("a");
-		a.href = "admin/groups/" + report['groupid'];
-		a.innerHTML = report['groupname'];
-
-		li.appendChild(a);
-		ul.appendChild(li);
-	}
-
-	// People
-	if (report.users.length > 0) {
-		var p = Array();
-		for (x = 0; x < report.users.length; x++) {
-			//if (report.users[x]['id'] == report['id']) {
-				a = document.createElement("a");
-				a.href = "admin/users/" + report.users[x]['userid'];
-				a.innerHTML = report.users[x]['name'];
-
-				/*if (report.users[x]['can']['edit']) {
-					a.className = 'crmadmin';
-				}*/
-
-				p.push(a.outerHTML);
-			//}
-		}
-
-		if (p.length) {
-			li = document.createElement("li");
-			li.className = 'news-users';
-
-			span = document.createElement("span");
-			span.className = "crmpostpeople";
-			span.innerHTML = p.join(', ');
-
-			li.appendChild(span);
-
-			if (edit) {
-				a = document.createElement("a");
-				a.href = "contactreports/?id=" + report['id'] + "&edit";
-				a.className = "news-action tip";
-				a.onclick = function (e) {
-					e.preventDefault();
-
-					CRMClearSearch();
-
-					if (!window.location.href.match(/crm/)) {
-						window.location = "contactreports/?id=" + report['id'] + "&edit";
-					} else {
-						var url = window.location.href.split("?");
-						url = url[0];
-
-						window.location = url + "?id=" + report['id'] + "&edit";
-					}
-				};
-				a.title = "Add or remove users and groups.";
-
-				img = document.createElement("i");
-				img.className = "crmedit fa fa-pencil";
-				img.setAttribute('aria-hidden', true);
-
-				a.appendChild(img);
-				li.appendChild(a);
-			}
-
-			ul.appendChild(li);
-		}
-	}
-
 	// Resource list
 	if (report.resources.length > 0) {
+		ul = document.createElement("ul");
+		ul.className = 'panel-meta news-meta';
+
 		li = document.createElement("li");
 		li.className = 'news-tags';
 
 		span = document.createElement("span");
-		span.className = "crmpostresources";
+		span.className = "issuespostresources";
 
 		var r = Array();
 		for (x = 0; x < report.resources.length; x++) {
 			r.push(report.resources[x].name);
 		}
-		span.innerHTML = r.join(', ');
+		span.innerHTML = '<span class="badge badge-secondary">' + r.join('</span> <span class="badge badge-secondary">') + '</span>';
 
 		li.appendChild(span);
 
-		if (edit) {
-			a = document.createElement("a");
-			a.className = "news-action tip"
-			a.href = "contactreports?id=" + id + '&edit';
-			a.title = "Edit tagged resources.";
-
-			img = document.createElement("i");
-			img.className = "crmedit fa fa-pencil";
-			img.setAttribute('aria-hidden', true);
-
-			a.appendChild(img);
-
-			span.appendChild(a);
-			li.appendChild(span);
-		}
-
 		ul.appendChild(li);
+		tr.appendChild(ul);
 	}
 
-	//tr.appendChild(td);
-	tr.appendChild(ul);
 	panel.appendChild(tr);
 
 	// --Body
@@ -1558,84 +817,18 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	td = document.createElement("div");
 	td.className = "newsposttext";
 
-	if (edit) {
-		var opt = document.createElement("div");
-		opt.className = "panel-options";
-
-		// Edit button
-		a = document.createElement("a");
-		a.href = "contactreports?id=" + id + '&edit';
-		a.onclick = function (e) {
-			e.preventDefault();
-			CRMEditReportTextOpen(report['id']);
-		};
-		a.className = "news-edit icn tip";
-		a.title = "Edit report text.";
-		a.id = report['id'] + "_textediticon";
-
-		img = document.createElement("i");
-		img.className = "crmedittext fa fa-pencil";
-		img.setAttribute('aria-hidden', true);
-		img.id = report['id'] + "_textediticonimg";
-
-		a.appendChild(img);
-		opt.appendChild(a);
-
-		// Save button
-		a = document.createElement("a");
-		a.href = "contactreports?id=" + id + '&edit';
-		a.onclick = function (e) {
-			e.preventDefault();
-			CRMSaveReportText(report['id'], report['api']);
-		};
-		a.className = "news-save icn tip";
-		a.id = report['id'] + "_textsaveicon";
-		a.title = "Save report text.";
-		a.style.display = "none";
-
-		img = document.createElement("i");
-		img.className = "crmsavetext fa fa-save";
-		img.setAttribute('aria-hidden', true);
-		img.id = report['id'] + "_textsaveiconimg";
-
-		a.appendChild(img);
-		opt.appendChild(a);
-
-		// Cancel button
-		a = document.createElement("a");
-		a.href = "contactreports?id=" + id;
-		a.onclick = function (e) {
-			e.preventDefault();
-			CRMCancelReportText(id);
-		};
-		a.className = "news-cancel icn tip";
-		a.title = "Cancel edits to text";
-		a.id = id + "_textcancelicon";
-		a.style.display = "none";
-
-		img = document.createElement("i");
-		img.className = "crmsavetext fa fa-ban";
-		img.setAttribute('aria-hidden', true);
-		img.id = id + "_textcanceliconimg";
-
-		a.appendChild(img);
-		opt.appendChild(a);
-
-		td.appendChild(opt);
-	}
-
 	// format text
 	var rawtext = report['report'];
 	report['report'] = report['formattedreport'];
 
 	// determine the directory we are operating in
 	var page = document.location.href.split("/")[4];
-	// if we are in crm, we are doing report searches, so we should highlight matches
-	if (page == 'crm') {
+	// if we are in issues, we are doing report searches, so we should highlight matches
+	if (page == 'issues') {
 		report['report'] = HighlightMatches(report['report']);
 	}
 
-	span = document.createElement("span");
+	span = document.createElement("div");
 	span.id = report['id'] + "_text";
 	span.innerHTML = report['report'];
 
@@ -1643,13 +836,20 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	span = document.createElement("span");
 
+	var label = document.createElement("label");
+	label.className = "sr-only";
+	label.innerHTML = "Report";
+	label.setAttribute('for', report['id'] + "_textarea");
+
+	span.appendChild(label);
+
 	var textarea = document.createElement("textarea");
 	textarea.id = report['id'] + "_textarea";
 	textarea.innerHTML = rawtext;
 	textarea.style.display = "none";
 	textarea.rows = 7;
 	textarea.cols = 45;
-	textarea.className = "form-control crmreportedittextbox";
+	textarea.className = "form-control issuesreportedittextbox";
 
 	span.appendChild(textarea);
 	td.appendChild(span);
@@ -1662,45 +862,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	// -- New Comment
 	tr = document.createElement("div");
-	tr.className = 'crmnewcomment panel panel-default';
-
-	// -- Footer
-	var footer = document.createElement("div");
-	footer.className = 'panel-heading';
-
-	// create subscribe row
-	td = document.createElement("div");
-	td.className = "crmcomment crmsubscribe";
-	td.id = report['id'] + "_subscribed";
-
-	if (!report['subscribed']) {
-		a = document.createElement("a");
-		a.href = "/contactreports?id=" + id + "&subscribe";
-		a.className = 'btn btn-default btn-sm';
-		a.onclick = function (e) {
-			e.preventDefault();
-			CRMSubscribeComment(report['id']);
-		};
-		a.innerHTML = "Subscribe";
-
-		td.appendChild(a);
-	} else if (report['subscribed'] == "1" || report['subscribed'] == '3') {
-		td.appendChild(document.createTextNode("Subscribed"));
-	} else if (report['subscribed'] == "2") {
-		a = document.createElement("a");
-		a.href = "/contactreports?id=" + id + "&unsubscribe";
-		a.className = 'btn btn-default btn-sm';
-		a.onclick = function (e) {
-			e.preventDefault();
-			CRMUnsubscribeComment(report['subscribedcommentid'], report['id']);
-		};
-		a.innerHTML = "Unsubscribe";
-
-		td.appendChild(a);
-	}
-
-	footer.appendChild(td);
-	tr.appendChild(footer);
+	tr.className = 'newcomment panel panel-default';
 
 	td = document.createElement("div");
 	td.className = "panel-body";
@@ -1708,39 +870,55 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	div = document.createElement("div");
 	div.id = report['id'] + "_newupdate";
 
+	label = document.createElement("label");
+	label.className = "sr-only";
+	label.innerHTML = "Comment";
+	label.setAttribute('for', report['id'] + "_newcommentbox");
+
+	div.appendChild(label);
+
 	textarea = document.createElement("textarea");
-	textarea.className = "form-control crmcommentbox";
+	textarea.className = "form-control issuescommentbox";
 	textarea.placeholder = "Write a comment...";
 	textarea.id = report['id'] + "_newcommentbox";
-	textarea.setAttribute('data-api', reports.getAttribute('data-comments'));
 	textarea.rows = 1;
 	textarea.cols = 45;
 	textarea.onfocus = function () {
-		CRMExpandNewComment(this.id);
+		IssuesExpandNewComment(this.id);
 	};
 	textarea.onblur = function () {
-		CRMCollapseNewComment(this.id);
+		IssuesCollapseNewComment(this.id);
 	};
 
 	div.appendChild(textarea);
 
-	// Save button
-	a = document.createElement("a");
-	a.href = "/news/manage?update&id=" + id;
-	a.onclick = function (e) {
+	var rdiv = document.createElement("div");
+	rdiv.id = report['id'] + "_newcommentboxcontrols";
+	rdiv.className = 'row comment-controls hide';
+
+	var cdiv = document.createElement("div");
+	cdiv.className = 'col-md-3';
+	cdiv.innerHTML = '<label for="' + report['id'] + '_newcommentresolution"><input type="checkbox" name="resolution" id="' + report['id'] + '_newcommentresolution" value="1" /> Mark as resolution</label>';
+
+	rdiv.appendChild(cdiv);
+
+	cdiv = document.createElement("div");
+	cdiv.className = 'col-md-9 text-right';
+
+	var b = document.createElement("button");
+	b.className = 'btn btn-primary';
+	b.id = report['id'] + "_newcommentboxsave";
+	b.innerHTML = 'Save';
+	b.onclick = function (e) {
 		e.preventDefault();
-		CRMPostComment(report['id']);
+		IssuesPostComment(report['id']);
 	};
-	a.title = "Add a new comment.";
 
-	img = document.createElement("i");
-	img.className = "fa fa-save";
-	img.setAttribute('aria-hidden', true);
-	img.id = report['id'] + "_newcommentboxsave";
-	img.style.display = "none";
+	cdiv.appendChild(b);
 
-	a.appendChild(img);
-	div.appendChild(a);
+	rdiv.appendChild(cdiv);
+	div.appendChild(rdiv);
+
 
 	td.appendChild(div);
 	tr.appendChild(td);
@@ -1756,103 +934,142 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	container.appendChild(article);
 
-	for (x = 0; x < report['comments'].length; x++) {
-		if (report['comments'][x]['comment'] != '') {
-			CRMPrintComment(report['id'], report['comments'][x]);//, userid);
-		}
+	if (report.resolution) {
+		IssuesPrintComment(report['id'], report.resolution, userid);
 	}
-	
-	/*var c = Array();
-	for (x = 0; x < comments.length; x++) {
-		if (comments[x]['contactreportid'] == report['id']) {
-			c.push(comments[x]);
-		}
+
+	var c = Array();
+	for (x = 0; x < report.comments.length; x++) {
+		c.push(report.comments[x]);
 	}
 	for (x = 0; x < c.length; x++) {
 		if (c[x]['comment'] != '') {
-			CRMPrintComment(report['id'], c[x], userid);
+			IssuesPrintComment(report['id'], c[x], userid);
 		}
-	}*/
-}
-
-/**
- * Cancel updating report text
- *
- * @param   {string}  id
- * @return  {void}
- */
-function CRMCancelReportText(id) {
-	// hide text
-	document.getElementById(id + "_text").style.display = "block";
-	document.getElementById(id + "_textarea").style.display = "none";
-	document.getElementById(id + "_textediticon").style.display = "inline";
-	document.getElementById(id + "_textsaveicon").style.display = "none";
-	document.getElementById(id + "_textcancelicon").style.display = "none";
+	}
 }
 
 /**
  * Print a report comment
  *
- * @param   {string}  reportid
+ * @param   {string}  issueid
  * @param   {array}   comments
  * @param   {string}  userid
  * @return  {void}
  */
-function CRMPrintComment(reportid, comment) { //, userid) {
+function IssuesPrintComment(issueid, comment, userid) {
 	var page = document.location.href.split("/")[4];
-	if (page == 'crm') {
-		comment['comment'] = HighlightMatches(comment['comment']);
+	if (page == 'issues') {
+		comment['formattedcomment'] = HighlightMatches(comment['formattedcomment']);
 	}
 	// determine if we should edit comment
 	var edit = false;
-	if (comment['can']['edit']) {
+	if (userid == comment['user'] && comment['age'] <= 86400) {
 		edit = true;
 	}
 
-	var container = document.getElementById(reportid + '_comments');
+	var container = document.getElementById(issueid + '_comments');
 
 	var li = document.createElement("li");
-		li.setAttribute('id', 'comment_' + comment['id']);
-		li.setAttribute('data-api', comment['api']);
 
 	var panel = document.createElement("div");
-	panel.className = "panel panel-default";
+	panel.id = 'comment' + comment['id'];
+	if (comment.resolution == 1) {
+		panel.className = "panel panel-default issue-resolution";
+	} else {
+		panel.className = "panel panel-default";
+	}
 
 	var div, span, a, img;
 
+	var tr = document.createElement("div");
+	tr.className = 'panel-heading crm-admin';
+
+	var bits = comment['datetimecreated'].match(/\d+/g);
+	var d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
+
+	var hr = d.getHours();
+	var min = d.getMinutes();
+	if (min < 10) {
+		min = "0" + min;
+	}
+	var ampm = "am";
+	if (hr >= 12) {
+		if (hr > 12) {
+			hr -= 12;
+		}
+		ampm = "PM";
+	}
+
+	span = document.createElement("span");
+	span.className = "issuescommentpostedby";
+	span.innerHTML = d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear() + " @ " + hr + ":" + min + ampm + " by " + comment['username'];
+
+	tr.appendChild(span);
+
 	if (edit) {
-		var tr = document.createElement("div");
-		tr.className = 'panel-heading crm-admin';
-
-		span = document.createElement("span");
-		span.className = 'crmid';
-		span.innerHTML = '#' + comment['id'];
-
-		tr.appendChild(span);
-
 		a = document.createElement("a");
-		a.className = 'edit crm-comment-delete tip';
-		a.href = "/account/crm?comment=" + comment['id'] + "&delete";
+		a.className = 'edit issues-comment-delete tip';
+		a.href = path + "?comment=" + comment['id'] + "&delete";
 		a.onclick = function (e) {
 			e.preventDefault();
-			CRMDeleteComment(comment['id'], reportid);
+			IssuesDeleteComment(comment['id'], issueid);
 		};
 		a.id = comment['id'] + "_commenticon";
 		a.title = "Delete comment.";
 
 		img = document.createElement("i");
-		img.className = "crmeditdeletecomment fa fa-trash";
+		img.className = "issueseditdeletecomment fa fa-trash";
 		img.setAttribute('aria-hidden', true);
 		img.id = comment['id'] + "_commentdeleteimg";
 
 		a.appendChild(img);
 		tr.appendChild(a);
 
-		panel.appendChild(tr);
+		a = document.createElement("a");
+		a.href = path + "?id=" + issueid + "#" + comment['id'];
+		a.className = 'edit issues-comment-edit tip';
+		a.onclick = function (e) {
+			e.preventDefault();
+			IssuesEditCommentTextOpen(comment['id']);
+		};
+		a.id = comment['id'] + "_commenttextediticon";
+		a.title = "Edit comment.";
+
+		img = document.createElement("i");
+		img.className = "issuesedittextcomment fa fa-pencil";
+		img.setAttribute('aria-hidden', true);
+		img.id = comment['id'] + "_commenttextediticonimg";
+
+		a.appendChild(img);
+		tr.appendChild(a);
+
+		// Cancel button
+		a = document.createElement("a");
+		a.href = path + "?id=" + issueid;
+		a.className = 'edit issues-comment-cancel tip';
+		a.onclick = function (e) {
+			e.preventDefault();
+			IssuesCancelCommentText(comment['id']);
+		};
+		a.title = "Cancel edits to text";
+		a.id = comment['id'] + "_commenttextcancelicon";
+		a.style.display = "none";
+
+		img = document.createElement("i");
+		img.className = "issuessavetext fa fa-ban";
+		img.setAttribute('aria-hidden', true);
+		img.id = comment['id'] + "_commenttextcanceliconimg";
+
+		a.appendChild(img);
+		tr.appendChild(a);
 	}
 
+	panel.appendChild(tr);
+
+
 	div = document.createElement("div");
-	div.className = "panel-body crmcomment crmcommenttext";
+	div.className = "panel-body issuescomment issuescommenttext";
 
 	span = document.createElement("span");
 	span.id = comment['id'] + "_comment";
@@ -1861,75 +1078,58 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 	div.appendChild(span);
 
 	if (edit) {
-		// Edit button
-		a = document.createElement("a");
-		a.href = "/account/crm?id=" + reportid + "#" + comment['id'];
-		a.onclick = function (e) {
-			e.preventDefault();
-			CRMEditCommentTextOpen(comment['id']);
-		};
-		a.id = comment['id'] + "_commenttextediticon";
-		a.title = "Edit comment.";
-
-		img = document.createElement("i");
-		img.className = "crmedittextcomment fa fa-pencil";
-		img.setAttribute('aria-hidden', true);
-		img.id = comment['id'] + "_commenttextediticonimg";
-
-		a.appendChild(img);
-		div.appendChild(a);
-
 		// Text box
 		span = document.createElement("span");
+
+		var label = document.createElement("label");
+		label.className = "sr-only";
+		label.innerHTML = "Comment";
+		label.setAttribute('for', comment['id'] + "_commenttextarea");
+
+		span.appendChild(label);
 
 		var textarea = document.createElement("textarea");
 		textarea.id = comment['id'] + "_commenttextarea";
 		textarea.innerHTML = comment['comment'];
 		textarea.style.display = "none";
-		textarea.className = "form-control crmcommentedittextbox";
+		textarea.rows = 3;
+		textarea.className = "form-control issuescommentedittextbox";
 
 		span.appendChild(textarea);
 		div.appendChild(span);
 
-		// Save button
-		a = document.createElement("a");
-		a.href = "/account/crm?id=" + reportid + "#" + comment['id'];
-		a.onclick = function (e) {
+		var rdiv = document.createElement("div");
+		rdiv.id = comment['id'] + "_commenttextareacontrols";
+		rdiv.className = 'row hide comment-controls';
+
+		var cdiv = document.createElement("div");
+		cdiv.className = 'col-md-3';
+		cdiv.innerHTML = '<label for="' + comment['id'] + '_resolved"><input type="checkbox" name="resolved" id="' + comment['id'] + '_commentresolution" value="1"' + (comment['resolution'] == 1 ? ' checked="checked"' : '') + ' /> Mark as resolution</label>';
+		//cdiv.innerHTML = '<select class="form-control" name="resolved" id="' + report['id'] + '_resolved"><option value="0">Note</option><option value="1">Resolution</option></select>';
+
+		rdiv.appendChild(cdiv);
+
+		cdiv = document.createElement("div");
+		cdiv.className = 'col-md-9 text-right';
+
+		var b = document.createElement("button");
+		b.className = 'btn btn-primary';
+		b.id = comment['id'] + "_commenttextsaveicon";
+		b.innerHTML = '<i class="fa fa-save" id="' + comment['id'] + '_commenttextsaveiconimg"></i> Save';
+		b.onclick = function (e) {
 			e.preventDefault();
-			CRMSaveCommentText(comment['id']);
+			//IssuesPostComment(comment['id']);
+			IssuesSaveCommentText(comment['id']);
 		};
-		a.id = comment['id'] + "_commenttextsaveicon";
-		a.style.display = "none";
-		a.title = "Edit comment text.";
 
-		img = document.createElement("i");
-		img.className = "crmsavetext fa fa-save";
-		img.setAttribute('aria-hidden', true);
-		img.id = comment['id'] + "_commenttextsaveiconimg";
-
-		a.appendChild(img);
-		div.appendChild(a);
+		cdiv.appendChild(b);
+		rdiv.appendChild(cdiv);
+		div.appendChild(rdiv);
 	}
 
 	panel.appendChild(div);
 
-	// Add comment footer
-	div = document.createElement("div");
-	div.className = "panel-footer";
-
-	var bits = comment['datetimecreated'].match(/\d+/g);
-	var d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
-
-	var div2 = document.createElement("div");
-	div2.innerHTML += "Posted by " + comment['username'] + " on " + d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear();
-	div2.className = "crmcommentpostedby";
-
-	div.appendChild(div2);
-	panel.appendChild(div);
-
 	li.appendChild(panel);
-
-	// Attach comment to list
 	container.appendChild(li);
 }
 
@@ -1937,198 +1137,80 @@ function CRMPrintComment(reportid, comment) { //, userid) {
  * Delete a report comment
  *
  * @param   {string}  commentid
- * @param   {string}  reportid
+ * @param   {string}  issueid
  * @return  {void}
  */
-function CRMDeleteComment(commentid, reportid) {
+function IssuesDeleteComment(commentid, issueid) {
 	if (confirm("Are you sure you want to delete this comment?")) {
-		WSDeleteURL(document.getElementById('comment_' + commentid).getAttribute('data-api'), CRMDeletedComment, { 'commentid': commentid, 'reportid': reportid });
-	}
-}
+		WSDeleteURL(ROOT_URL + "issues/comments/" + commentid, function IssuesDeletedComment(xml, arg) {
+			if (xml.status == 200) {
+				document.getElementById(arg['commentid'] + "_comment").parentNode.parentNode.parentNode.style.display = "none";
 
-/**
- * Callback after deleting a report comment
- *
- * @param   {object}  xml
- * @param   {array}   arg
- * @return  {void}
- */
-function CRMDeletedComment(xml, arg) {
-	if (xml.status < 400) {
-		document.getElementById('comment_' + arg['commentid']).style.display = "none";
-
-		WSGetURL(document.getElementById(arg['reportid']).getAttribute('data-api'), function (xml) {
-			if (xml.status < 400) {
-				var results = JSON.parse(xml.responseText);
-				var div, a;
-
-				if (results['subscribed'] == '0') {
-					div = document.getElementById(arg['reportid'] + "_subscribed");
-
-					a = document.createElement("a");
-					a.href = "?id=" + arg['reportid'] + "&subscribe";
-					a.className = 'btn btn-default btn-sm';
-					a.onclick = function (e) {
-						e.preventDefault();
-						CRMSubscribeComment(arg['reportid']);
-					};
-					a.innerHTML = "Subscribe";
-
-					div.appendChild(a);
-				} else if (results['subscribed'] == '2') {
-					div = document.getElementById(arg['reportid'] + "_subscribed");
-
-					a = document.createElement("a");
-					a.href = "?id=" + arg['reportid'] + "&unsubscribe";
-					a.className = 'btn btn-default btn-sm';
-					a.onclick = function (e) {
-						e.preventDefault();
-						CRMUnsubscribeComment(results['subscribedcommentid'], arg['reportid']);
-					};
-					a.innerHTML = "Unsubscribe";
-
-					div.appendChild(a);
-				}
+				/*WSGetURL(ROOT_URL + "issues/" + arg['issueid'], function (xml) {
+					if (xml.status == 200) {
+						var results = JSON.parse(xml.responseText);
+					}
+				});*/
+			} else if (xml.status == 403) {
+				document.getElementById(arg['issueid'] + "_commentdeleteimg").className = "fa fa-exclamation-circle";
+				document.getElementById(arg['issueid'] + "_commentdeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
+			} else {
+				document.getElementById(arg['commentid'] + "_commentdeleteimg").className = "fa fa-exclamation-circle";
+				document.getElementById(arg['commentid'] + "_commentdeleteimg").parentNode.title = "An error occurred while deleting comment.";
 			}
-		});
-	} else if (xml.status == 403) {
-		document.getElementById(arg['reportid'] + "_commentdeleteimg").className = "fa fa-exclamation-circle";
-		document.getElementById(arg['reportid'] + "_commentdeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else {
-		document.getElementById(arg['commentid'] + "_commentdeleteimg").className = "fa fa-exclamation-circle";
-		document.getElementById(arg['commentid'] + "_commentdeleteimg").parentNode.title = "An error occurred while deleting comment.";
+		}, { 'commentid': commentid, 'issueid': issueid });
 	}
 }
 
 /**
  * Delete a report
  *
- * @param   {string}  reportid
+ * @param   {string}  issueid
  * @return  {void}
  */
-function CRMDeleteReport(reportid) {
+function IssuesDeleteReport(issueid) {
 	if (confirm("Are you sure you want to delete this report?")) {
-		WSDeleteURL(document.getElementById(reportid).getAttribute('data-api'), function(xml, reportid) {
-			if (xml.status < 400) {
-				document.getElementById(reportid).style.display = "none";
+		WSDeleteURL(ROOT_URL + "issues/" + issueid, function (xml, issueid) {
+			if (xml.status == 200) {
+				document.getElementById(issueid).style.display = "none";
 			} else if (xml.status == 403) {
-				document.getElementById(reportid + "_crmdeleteimg").className = "fa fa-exclamation-circle";
-				document.getElementById(reportid + "_crmdeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
+				document.getElementById(issueid + "_issuesdeleteimg").className = "fa fa-exclamation-circle";
+				document.getElementById(issueid + "_issuesdeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
 			} else {
-				document.getElementById(reportid + "_crmdeleteimg").className = "fa fa-exclamation-circle";
-				document.getElementById(reportid + "_crmdeleteimg").parentNode.title = "An error occurred while deleting report.";
+				document.getElementById(issueid + "_issuesdeleteimg").className = "fa fa-exclamation-circle";
+				document.getElementById(issueid + "_issuesdeleteimg").parentNode.title = "An error occurred while deleting report.";
 			}
-		}, reportid);
+		}, issueid);
 	}
 }
 
 /**
  * Post a report comment
  *
- * @param   {string}  reportid
+ * @param   {string}  issueid
  * @return  {void}
  */
-function CRMPostComment(reportid) {
-	var comment = document.getElementById(reportid + "_newcommentbox");
+function IssuesPostComment(issueid) {
+	var comment = document.getElementById(issueid + "_newcommentbox").value;
+	var res = document.getElementById(issueid + "_newcommentresolution");
 
 	var post = JSON.stringify({
-		'contactreportid': reportid,
-		'comment': comment.value
+		'issueid': issueid,
+		'comment': comment,
+		'resolution': (res.checked ? 1 : 0)
 	});
 
-	WSPostURL(comment.getAttribute('data-api'), post, function(xml, reportid) {
-		if (xml.status < 400) {
+	WSPostURL(ROOT_URL + "issues/comments/", post, function (xml, issueid) {
+		if (xml.status == 200) {
 			var results = JSON.parse(xml.responseText);
-
-			CRMPrintComment(reportid, results.data);//, results['user']);
-			document.getElementById(reportid + "_newcommentbox").value = "";
-			CRMCollapseNewComment(reportid + "_newcommentbox");
-
-			var div = document.getElementById(reportid + "_subscribed");
-			div.innerHTML = "Subscribed";
+			IssuesPrintComment(issueid, results, results['user']);
+			document.getElementById(issueid + "_newcommentbox").value = "";
+			IssuesCollapseNewComment(issueid + "_newcommentbox");
 		} else {
-			document.getElementById(reportid + "_newcommentboxsave").className = "fa fa-exclamation-circle";
-			document.getElementById(reportid + "_newcommentboxsave").parentNode.title = "An error occured while posting comment.";
+			document.getElementById(issueid + "_newcommentboxsave").className = "fa fa-exclamation-circle";
+			document.getElementById(issueid + "_newcommentboxsave").parentNode.title = "An error occured while posting comment.";
 		}
-	}, reportid);
-}
-
-/**
- * Subscribe to report comments
- *
- * @param   {string}  reportid
- * @return  {void}
- */
-function CRMSubscribeComment(reportid) {
-	var post = JSON.stringify({
-		'contactreportid': reportid,
-		'comment': ''
-	});
-
-	WSPostURL(document.getElementById('reports').getAttribute('data-comments'), post, function(xml, reportid) {
-		if (xml.status < 400) {
-			var div = document.getElementById(reportid + "_subscribed");
-			var results = JSON.parse(xml.responseText);
-			var a = div.getElementsByTagName("a")[0];
-			a.onclick = function (e) {
-				e.preventDefault();
-				CRMUnsubscribeComment(results.data['id'], reportid);
-			};
-			a.innerHTML = "Unsubscribe";
-		} else {
-			var results = JSON.parse(xml.responseText);
-			alert(results.message);
-		}
-	}, reportid);
-}
-
-/**
- * Unsubscribe to report comments
- *
- * @param   {string}  commentid
- * @param   {string}  reportid
- * @return  {void}
- */
-function CRMUnsubscribeComment(commentid, reportid) {
-	WSDeleteURL(document.getElementById('reports').getAttribute('data-comments') + "/" + commentid, function(xml, reportid) {
-		if (xml.status < 400) {
-			var div = document.getElementById(reportid + "_subscribed");
-			var a = div.getElementsByTagName("a")[0];
-			a.onclick = function (e) {
-				e.preventDefault();
-				CRMSubscribeComment(reportid);
-			};
-			a.innerHTML = "Subscribe";
-		}
-	}, reportid);
-}
-
-/**
- * Toggle controls open for editing report text
- *
- * @param   {string}  report
- * @return  {void}
- */
-function CRMEditReportTextOpen(report) {
-	// hide text
-	var text = document.getElementById(report + "_text");
-	document.getElementById(report + "_textarea").style.height = (25 + text.parentNode.offsetHeight) + "px";
-	text.style.display = "none";
-
-	// show textarea
-	var box = document.getElementById(report + "_textarea");
-	box.style.display = "block";
-
-	// hide edit icon
-	var eicon = document.getElementById(report + "_textediticon");
-	eicon.style.display = "none";
-
-	// show save icon
-	var sicon = document.getElementById(report + "_textsaveicon");
-	sicon.style.display = "inline";
-
-	var cicon = document.getElementById(report + "_textcancelicon");
-	cicon.style.display = "inline";
+	}, issueid);
 }
 
 /**
@@ -2137,7 +1219,7 @@ function CRMEditReportTextOpen(report) {
  * @param   {string}  comment
  * @return  {void}
  */
-function CRMEditCommentTextOpen(comment) {
+function IssuesEditCommentTextOpen(comment) {
 	// hide text
 	var text = document.getElementById(comment + "_comment");
 	text.style.display = "none";
@@ -2150,60 +1232,34 @@ function CRMEditCommentTextOpen(comment) {
 	var eicon = document.getElementById(comment + "_commenttextediticon");
 	eicon.style.display = "none";
 
-	// show save icon
-	var sicon = document.getElementById(comment + "_commenttextsaveicon");
-	sicon.style.display = "block";
+	var cicon = document.getElementById(comment + "_commenttextcancelicon");
+	cicon.style.display = "block";
 
-	var img = document.getElementById(comment + "_commenttextsaveiconimg");
-	img.className = "fa fa-save";
-	img.parentNode.title = "Click to save changes.";
+	var d = document.getElementById(comment + "_commenttextareacontrols");
+	d.className = "row comment-controls";
 }
 
 /**
- * Save edited report text
+ * Callback after saving edited comment text
  *
- * @param   {string}  report
+ * @param   {string}  comment
  * @return  {void}
  */
-function CRMSaveReportText(report, api) {
-	// get text
-	var text = document.getElementById(report + "_textarea").value;
+function IssuesCancelCommentText(comment) {
+	var text = document.getElementById(comment + "_comment");
+	text.style.display = "block";
 
-	// change save icon
-	var icon = document.getElementById(report + "_textsaveicon");
-	icon.onclick = function () { };
-	var img = document.getElementById(report + "_textsaveiconimg");
-	img.className = "fa fa-spinner fa-spin";
-	img.parentNode.title = "Saving changes...";
+	var box = document.getElementById(comment + "_commenttextarea");
+	box.style.display = "none";
 
-	var post = { 'report': text };
-	post = JSON.stringify(post);
+	var eicon = document.getElementById(comment + "_commenttextediticon");
+	eicon.style.display = "block";
 
-	WSPutURL(api, post, function(xml, report) {
-		var img = document.getElementById(report + "_textsaveiconimg");
+	var cicon = document.getElementById(comment + "_commenttextcancelicon");
+	cicon.style.display = "none";
 
-		if (xml.status == 200) {
-			var results = JSON.parse(xml.responseText);
-
-			var icon = document.getElementById(report + "_textsaveicon");
-			icon.onclick = function () {
-				CRMSaveReportText(report, api);
-			};
-			icon.style.display = "none";
-			var text = document.getElementById(report + "_text");
-			text.style.display = "block";
-			text.innerHTML = results.data['formattedreport'];
-			document.getElementById(report + "_textarea").style.display = "none";
-			document.getElementById(report + "_textediticon").style.display = "block";
-			document.getElementById(report + "_textcancelicon").style.display = "none";
-		} else if (xml.status == 403) {
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-		} else {
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, reload the page and try again.";
-		}
-	}, report);
+	var d = document.getElementById(comment + "_commenttextareacontrols");
+	d.className = "row hide comment-controls";
 }
 
 /**
@@ -2212,41 +1268,57 @@ function CRMSaveReportText(report, api) {
  * @param   {string}  comment
  * @return  {void}
  */
-function CRMSaveCommentText(comment) {
+function IssuesSaveCommentText(comment) {
 	// get text
 	var text = document.getElementById(comment + "_commenttextarea").value;
+	var res = document.getElementById(comment + "_commentresolution");
 
 	// change save icon
 	var icon = document.getElementById(comment + "_commenttextsaveicon");
-	icon.onclick = function () { };
+	icon.disabled = true;
 	var img = document.getElementById(comment + "_commenttextsaveiconimg");
 	img.className = "fa fa-spinner fa-spin";
 	img.parentNode.title = "Saving changes...";
 
-	var post = { 'comment': text };
+	var post = {
+		'comment': text,
+		'resolution': (res.checked ? 1 : 0)
+	};
 	post = JSON.stringify(post);
 
-	WSPostURL(document.getElementById(comment).getAttribute('data-api'), post, function(xml, comment) {
+	WSPostURL(ROOT_URL + "issues/comments/" + comment, post, function (xml, comment) {
 		var img = document.getElementById(comment + "_commenttextsaveiconimg");
 
 		if (xml.status == 200) {
 			var results = JSON.parse(xml.responseText);
 
-			var icon = document.getElementById(comment + "_commenttextsaveicon");
-			icon.style.display = "none";
-			icon.onclick = function () {
-				CRMSaveCommentText(comment);
-			};
+			var panel = document.getElementById("comment" + comment);
+			if (results.resolution == 1) {
+				panel.className = "panel panel-default issue-resolution";
+			} else {
+				panel.className = "panel panel-default";
+			}
 
 			var text = document.getElementById(comment + "_comment");
 			text.style.display = "block";
-			text.innerHTML = results.data['formattedcomment'];
+			text.innerHTML = results['formattedcomment'];
 
 			var box = document.getElementById(comment + "_commenttextarea");
 			box.style.display = "none";
 
+			var cicon = document.getElementById(comment + "_commenttextcancelicon");
+			cicon.style.display = "none";
+
 			var editicon = document.getElementById(comment + "_commenttextediticon");
 			editicon.style.display = "block";
+
+			var icon = document.getElementById(comment + "_commenttextsaveicon");
+			icon.disabled = false;
+
+			img.className = "fa fa-save";
+
+			var d = document.getElementById(comment + "_commenttextareacontrols");
+			d.className = "row comment-controls hide";
 		} else if (xml.status == 403) {
 			img.className = "fa fa-exclamation-circle";
 			img.parentNode.title = "Unable to save changes, grace editing window has passed.";
@@ -2263,13 +1335,13 @@ function CRMSaveCommentText(comment) {
  * @param   {string}  comment
  * @return  {void}
  */
-function CRMExpandNewComment(comment) {
+function IssuesExpandNewComment(comment) {
 	var textarea = document.getElementById(comment);
-	textarea.className = "form-control crmcommentboxexpand";
-	var img = document.getElementById(comment + "save");
-	img.className = "crmnewcommentsave fa fa-save";
-	img.style.display = "block";
-	img.parentNode.title = "Add new comment.";
+	textarea.className = "form-control issuescommentboxexpand";
+	textarea.rows = 3;
+
+	var img = document.getElementById(comment + "controls");
+	img.className = 'row comment-controls';
 }
 
 /**
@@ -2278,12 +1350,14 @@ function CRMExpandNewComment(comment) {
  * @param   {string}  comment
  * @return  {void}
  */
-function CRMCollapseNewComment(comment) {
+function IssuesCollapseNewComment(comment) {
 	var textarea = document.getElementById(comment);
 	if (textarea.value == "") {
-		textarea.className = "form-control crmcommentbox";
-		var img = document.getElementById(comment + "save");
-		img.style.display = "none";
+		textarea.className = "form-control issuescommentbox";
+		textarea.rows = 1;
+
+		var img = document.getElementById(comment + "controls");
+		img.className = 'row comment-controls hide';
 	}
 }
 
@@ -2292,59 +1366,14 @@ function CRMCollapseNewComment(comment) {
  *
  * @return  {void}
  */
-function CRMClearSearch() {
-	var x = 0,
-		y = 0;
-
+function IssuesClearSearch() {
 	document.getElementById("keywords").value = "";
 	document.getElementById("datestartshort").value = "";
 	document.getElementById("datestopshort").value = "";
 	document.getElementById("id").value = "";
 	document.getElementById("NotesText").value = "";
 
-	var data = $('#crm-search-data');
-	var sdata = JSON.parse(data.html());
-	var skip = false;
-
-	var groupsdata = document.getElementById("group").value.split(',');
-	for (x = 0; x < groupsdata.length; x++) {
-		if (groupsdata[x] != "") {
-			skip = false;
-
-			if (document.getElementById("TAB_follow").className.match(/active/)) {
-				for (y = 0; y < sdata.followerofgroups.length; y++) {
-					if (groupsdata[x] == sdata.followerofgroups[y]['id']) {
-						skip = true;
-					}
-				}
-			}
-
-			if (!skip) {
-				CRMRemoveGroup(groupsdata[x], false);
-			}
-		}
-	}
-
-	var people_divs = document.getElementById("people").value.split(',');
-	for (x = people_divs.length - 1; x >= 0; x--) {
-		if (people_divs[x] != "") {
-			skip = false;
-
-			if (document.getElementById("TAB_follow").className.match(/active/)) {
-				for (y = 0; y < sdata.followerofusers.length; y++) {
-					if (people_divs[x] == sdata.followerofusers[y]['id']) {
-						skip = true;
-					}
-				}
-			}
-
-			if (!skip) {
-				CRMRemoveUser(people_divs[x], false);
-			}
-		}
-	}
-
-	var resources = document.getElementById("crmresource");
+	var resources = document.getElementById("resource");
 	if (resources) {
 		resources.value = '';
 		if ($('.tagsinput').length) {
@@ -2354,80 +1383,18 @@ function CRMClearSearch() {
 
 	if (window.location.href.match(/edit/)) {
 		window.location = window.location.href.replace(/&edit/, "&search");
-	} else if (document.getElementById("TAB_follow").className.match(/active/)) {
-		var xml = null;
-
-		for (x = 0; x < sdata.followerofgroups.length; x++) {
-			skip = false;
-
-			for (y = 0; y < groupsdata.length; y++) {
-				if (groupsdata[y] == sdata.followerofgroups[x]['id']) {
-					skip = true;
-				}
-			}
-
-			if (!skip) {
-				// fake WS call
-				xml = new Object();
-				xml.responseText = JSON.stringify({data: sdata.followerofgroups[x]});
-				xml.status = 200;
-				CRMSearchGroup(xml, { 'pageload': true, 'disabled': false });
-			}
-		}
-
-		for (x = 0; x < sdata.followerofusers.length; x++) {
-			skip = false;
-
-			for (y = 0; y < people_divs.length; y++) {
-				if (people_divs[y] != "") {
-					if (people_divs[y] == sdata.followerofusers[x]['id']) {
-						skip = true;
-					}
-				}
-			}
-
-			if (!skip) {
-				// fake WS call
-				xml = new Object();
-				xml.responseText = JSON.stringify({data: sdata.followerofusers[x]});
-				xml.status = 200;
-				CRMSearchUser(xml, { 'pageload': true, 'disabled': false });
-			}
-		}
-
-		document.getElementById("INPUT_add").disabled = true;
+		return;
 	}
 
 	setTimeout(function () {
-		CRMSearch();
+		IssuesSearch();
 	}, 200);
 }
 
 /**
- * Get and return array of objects
- *
- * @return  {array}
- */
-var autocompleteList = function (url, key) {
-	return function (request, response) {
-		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-			response($.map(data.data, function (el) {
-				if (typeof (el.id) == 'undefined' && typeof (el.usernames) != 'undefined') {
-					el.id = el.usernames[0]['name'];
-				}
-				return {
-					label: el.name,
-					name: el.name,
-					id: el.id,
-				};
-			}));
-		});
-	};
-};
-
-/**
  * Get and return array of resource objects
  *
+ * @param   {string}  url
  * @return  {array}
  */
 var autocompleteResource = function (url) {
@@ -2448,220 +1415,230 @@ var autocompleteResource = function (url) {
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
-	var frm = document.getElementById('DIV_crm');
+	var frm = document.getElementById('DIV_search');
 	if (frm) {
-		usersearch = false;
-		groupsearch = true;
-		multi_group = true;
-
 		$('.date-pick').on('change', function () {
-			CRMDateSearch();
+			IssuesDateSearch();
 		});
+		$('.time-pick').timepicker({
+			timeFormat: "h:i A",
+			minTime: '8:00am',
+			maxTime: '5:00pm',
+			change: function () {
+				$(this).trigger('change');
+			}
+		});
+
 		$('#keywords,#id').on('keyup', function (event) {
-			CRMKeywordSearch(event.keyCode);
+			IssuesKeywordSearch(event.keyCode);
 		});
 		$('#NotesText').on('keyup', function () {
-			CRMToggleAddButton();
+			IssuesToggleAddButton();
 		});
-
-		$('.clickto').on('click', function (event) {
+		$('#resolved').on('change', function (event) {
 			event.preventDefault();
-			CRMToggleSearch($(this).data('subject'));
+			IssuesSearch();
 		});
 
 		$('#btn-search').on('click', function (event) {
 			event.preventDefault();
-			CRMSearch();
+			IssuesSearch();
 		});
 		$('.btn-clear').on('click', function (event) {
 			event.preventDefault();
-			CRMClearSearch();
+			IssuesClearSearch();
 		});
 
 		$('#INPUT_add').on('click', function (event) {
 			event.preventDefault();
-			CRMAddEntry();
+			IssuesAddEntry();
 		});
 
-		var group = $("#group");
-		if (group.length) {
-			group.tagsInput({
-				placeholder: 'Select group...',
-				importPattern: /([^:]+):(.+)/i,
-				limit: 1,
-				'autocomplete': {
-					source: autocompleteList(group.attr('data-uri') + '&api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content'), 'groups'),
-					dataName: 'groups',
-					height: 150,
-					delay: 100,
-					minLength: 1,
-					//maxLength: 1
-				},
-				'onAddTag': function () { //input, value
-					CRMSearch();
-				},
-				'onRemoveTag': function () { //input, value
-					CRMSearch();
-				}
-			});
-		}
+		var issuesresource = $("#resource");
 
-		var people = $("#people");
-		if (people.length) {
-			people.tagsInput({
-				placeholder: '',
+		if (issuesresource.length) {
+			issuesresource.tagsInput({
+				placeholder: 'Select resource...',
 				importPattern: /([^:]+):(.+)/i,
 				'autocomplete': {
-					source: autocompleteList(people.attr('data-uri') + '&api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content'), 'users'),
-					dataName: 'users',
-					height: 150,
-					delay: 100,
-					minLength: 1
-				},
-				'onAddTag': function () { //input, value
-					CRMSearch();
-				},
-				'onRemoveTag': function () { //input, value
-					CRMSearch();
-				}
-			});
-		}
-
-		var crmresource = $("#crmresource");
-		if (crmresource.length) {
-			crmresource.tagsInput({
-				placeholder: '',
-				importPattern: /([^:]+):(.+)/i,
-				'autocomplete': {
-					source: autocompleteResource(crmresource.attr('data-uri') + '&api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content')),
+					source: autocompleteResource(issuesresource.attr('data-uri')),
 					dataName: 'resources',
 					height: 150,
 					delay: 100,
 					minLength: 1
 				},
 				'onAddTag': function () {
-					CRMSearch();
+					IssuesSearch();
 				},
 				'onRemoveTag': function () {
-					CRMSearch();
+					IssuesSearch();
 				}
 			});
 		}
 
-		var data = $('#crm-search-data');
-		var sdata = JSON.parse(data.html());
-		var x;
-
-		if (sdata.length) {
-			if (sdata.groups.length) {
-				for (x = 0; x < sdata.groups.length; x++) {
-					WSGetURL(group.data('api') + '/' + sdata.groups[x], CRMSearchGroup, { 'pageload': true, 'disabled': false });
-				}
-			}
-			if (sdata.people.length) {
-				//CRMToggleSearch('people');
-				//CRMToggleSearch('none');
-
-				for (x = 0; x < sdata.people.length; x++) {
-					WSGetURL(people.data('api') + '/' + sdata.people[x], CRMSearchUser, { 'pageload': true, 'disabled': false });
-				}
-			}
-			if (sdata.resources.length) {
-				for (x = 0; x < sdata.resources.length; x++) {
-					WSGetURL(crmresource.data('api') + '/' + sdata.resources[x], CRMSearchResource, { 'pageload': true, 'disabled': false });
-				}
-			}
-		}
-
-		data = $('#crm-data');
+		var data = $('#report-data');
 		if (data.length) {
-			//var edit = true;
 			var orig = JSON.parse(data.html());
 			var original = orig.original;
 
-			document.getElementById('datestartshort').value = original.datetimecontact;//.substring(0, 10);
-			document.getElementById('NotesText').value = original.note;
+			document.getElementById('datestartshort').value = original.createddate.substring(0, 10);
+			document.getElementById('NotesText').value = original.report;
 
-			//CRMToggleSearch('people');
-			//CRMToggleSearch('none');
-
-			for (x = 0; x < original.users.length; x++) {
-				/*if (original.users[x]['age'] > 86400) {
-					WSGetURL(original.users[x]['user'], CRMSearchUser, { 'pageload': true, 'disabled': true });
-				}
-				else {*/
-				WSGetURL(people.data('api') + '/' + original.users[x]['userid'], CRMSearchUser, { 'pageload': true, 'disabled': false });
-				//}
+			if (original.starttime != '') {
+				document.getElementById('timestartshort').value = original.starttime;
 			}
 
-			if (original.groupid > 0) {
-				multi_group = false;
-
-				/*if (original.groupage > 86400) {
-					WSGetURL(original.group, CRMSearchGroup, { 'pageload': true, 'disabled': true });
-				}
-				else {*/
-				WSGetURL(group.data('api') + '/' + original.groupid, CRMSearchGroup, { 'pageload': true, 'disabled': false });
-				//}
-			}
-
+			//IssuesToggleSearch('none');
+			var x;
 			for (x = 0; x < original.resources.length; x++) {
-				WSGetURL(crmresource.data('api') + '/' + original.resources[x]['resourceid'], CRMSearchResource, { 'pageload': true, 'disabled': false });
+				WSGetURL(original.resources[x]['api'], IssuesSearchResource, { 'pageload': true, 'disabled': false });
 			}
 
-			if (original.age > 86400) {
-				document.getElementById('datestartshort').disabled = true;
-			}
-
-			CRMToggle('edit', false);
+			IssuesToggle('edit', false);
 		}
 	}
 
-	var tabs = document.querySelectorAll('.crm-tabs a');
+	var tabs = document.querySelectorAll('.issues-tabs a');
 
 	if (tabs.length) {
 		for (var i = 0; i < tabs.length; i++) {
 			tabs[i].addEventListener('click', function (event) {
 				event.preventDefault();
 
-				CRMToggle(this.getAttribute('href').replace('#', ''));
+				IssuesToggle(this.getAttribute('href').replace('#', ''));
 			});
 		}
 
 		var url = window.location.href.match(/[&?](\w+)$/);
 		if (url != null) {
-			CRMToggle(url[1]);
+			IssuesToggle(url[1]);
 			setTimeout(function () {
-				CRMSearch();
+				IssuesSearch();
 			}, 300);
 		}
 
 		$('.date-pick').on('change', function () {
-			CRMDateSearch();
+			IssuesDateSearch();
 		});
-
-		$('#tabMain')
-			.on('paste', '.crmsearch', function () {
-				ChangeSearch(0);
-			})
-			.on('keyup', '.crmsearch', function (event) {
-				ChangeSearch(event.keyCode);
-			})
-			.on('focus', '.crmsearch', function () {
-				ChangeSearch(0);
-			})
-			.on('blur', '.crmsearch', function () {
-				CRMToggleSearch('none');
-			});
 	}
 
-	var container = $('#reports');
-	if (container.length) {
+	if ($('#reports').length) {
 		var q = '';
-		if (container.data('query')) {
-			q = '?' + encodeURI($('#reports').data('query'));
+		if ($('#reports').data('query')) {
+			q = encodeURI($('#reports').data('query'));
+		}
+		WSGetURL(ROOT_URL + "issues" + (q ? '?' + q : ''), IssuesSearched);
+	}
+
+	$('.issue-todo').on('change', function (e) {
+		var myuserid = document.getElementById("myuserid").value;
+
+		var post = {
+			'report': $(this).data('name'),
+			'userid': myuserid,
+			'issuetodoid': $(this).data('id')
+		};
+
+		var that = $(this);
+
+		post = JSON.stringify(post);
+
+		WSPostURL(ROOT_URL + "issues/", post, function (xml) {
+			if (xml.status == 200) {
+				$(that.closest('li')).fadeOut();
+			} else {
+				var img = $(that.closest('li')).find('.fa')[0];
+				img.className = "fa fa-exclamation-triangle";
+				img.parentNode.title = "Unable to save changes, reload the page and try again.";
+			}
+		});
+	});
+
+	$('.issuetodo-edit').on('click', function (e) {
+		e.preventDefault();
+
+		var frm = document.getElementById($(this).attr('href').replace('#', ''));
+		frm.style.display = 'block';
+
+		var vals = document.getElementById($(this).attr('href').replace('#', '').replace('-form', '-values'));
+		vals.style.display = 'none';
+
+		var frm = document.getElementById($(this).attr('href').replace('#', '').replace('-form', '-cancel'));
+		frm.style.display = 'inline-block';
+
+		document.getElementById('issuetodo-new').style.display = 'none';
+
+		this.style.display = 'none';
+	});
+
+	$('.issuetodo-cancel').on('click', function (e) {
+		e.preventDefault();
+
+		var frm = document.getElementById($(this).attr('href').replace('#', '') + '-form');
+		frm.style.display = 'none';
+
+		var vals = document.getElementById($(this).attr('href').replace('#', '') + '-values');
+		vals.style.display = 'block';
+
+		var frm = document.getElementById($(this).attr('href').replace('#', '') + '-edit');
+		frm.style.display = 'inline-block';
+
+		document.getElementById('issuetodo-new').style.display = 'block';
+
+		this.style.display = 'none';
+	});
+
+	$('.issuetodo-delete').on('click', function (e) {
+		e.preventDefault();
+
+		if (!confirm('Are you sure you want to delete this item?')) {
+			return;
 		}
 
-		WSGetURL(container.data('api') + q, CRMSearched);
-	}
+		var that = $(this);
+
+		WSDeleteURL(that.data('id'), function (xml) {
+			if (xml.status == 200) {
+				$(that.closest('li')).fadeOut();
+			} else {
+				var img = $(that.closest('li')).find('.fa')[0];
+				img.className = "fa fa-exclamation-triangle";
+				img.parentNode.title = "Unable to save changes, reload the page and try again.";
+			}
+		});
+	});
+
+	$('.issuetodo-save').on('click', function (e) {
+		e.preventDefault();
+
+		var id = $(this).data('id');
+		var frm = document.getElementById('issuetodo' + id + '-form');
+		//var id = original['id'].substr(original['id'].lastIndexOf("/")+1);
+
+		var post = {
+			'name': document.getElementById('issuetodo' + id + '-name').value,
+			'description': document.getElementById('issuetodo' + id + '-description').value,
+			'recurringtimeperiod': document.getElementById('issuetodo' + id + '-recurringtimeperiod').value,
+			'userid': document.getElementById("myuserid").value
+		};
+
+		var url = id;
+		if (id == 'new') {
+			url = ROOT_URL + "issues/todos";
+		}
+
+		var that = $(this);
+
+		post = JSON.stringify(post);
+
+		WSPostURL(url, post, function (xml) {
+			if (xml.status == 200) {
+				location.reload();
+			} else {
+				var img = $(that.closest('li')).find('.fa')[0];
+				img.className = "fa fa-exclamation-triangle";
+				img.parentNode.title = "Unable to save changes, reload the page and try again.";
+			}
+		});
+	});
 });

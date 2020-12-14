@@ -5,30 +5,6 @@ use Illuminate\Routing\Router;
 /** @var Router $router */
 $router->group(['prefix' => 'issues', 'middleware' => ['auth:api', 'can:manage issues']], function (Router $router)
 {
-	$router->get('/', [
-		'as'   => 'api.issues.index',
-		'uses' => 'IssuesController@index',
-	]);
-	$router->post('/', [
-		'as' => 'api.issues.create',
-		'uses' => 'IssuesController@create',
-		'middleware' => 'can:create issues',
-	]);
-	$router->get('{id}', [
-		'as'   => 'api.issues.read',
-		'uses' => 'IssuesController@read',
-	])->where('id', '[0-9]+');
-	$router->put('{id}', [
-		'as'   => 'api.issues.update',
-		'uses' => 'IssuesController@update',
-		'middleware' => 'can:edit issues',
-	])->where('id', '[0-9]+');
-	$router->delete('{id}', [
-		'as' => 'api.issues.delete',
-		'uses' => 'IssuesController@delete',
-		'middleware' => 'can:delete issues',
-	])->where('id', '[0-9]+');
-
 	// Comments
 	$router->group(['prefix' => 'comments'], function (Router $router)
 	{
@@ -56,4 +32,28 @@ $router->group(['prefix' => 'issues', 'middleware' => ['auth:api', 'can:manage i
 			'middleware' => 'can:delete issues',
 		])->where('comment', '[0-9]+');
 	});
+
+	$router->get('/', [
+		'as'   => 'api.issues.index',
+		'uses' => 'IssuesController@index',
+	]);
+	$router->post('/', [
+		'as' => 'api.issues.create',
+		'uses' => 'IssuesController@create',
+		'middleware' => 'can:create issues',
+	]);
+	$router->get('{id}', [
+		'as'   => 'api.issues.read',
+		'uses' => 'IssuesController@read',
+	])->where('id', '[0-9]+');
+	$router->put('{id}', [
+		'as'   => 'api.issues.update',
+		'uses' => 'IssuesController@update',
+		'middleware' => 'can:edit issues',
+	])->where('id', '[0-9]+');
+	$router->delete('{id}', [
+		'as' => 'api.issues.delete',
+		'uses' => 'IssuesController@delete',
+		'middleware' => 'can:delete issues',
+	])->where('id', '[0-9]+');
 });

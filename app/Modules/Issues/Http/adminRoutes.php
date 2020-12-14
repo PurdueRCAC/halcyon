@@ -69,7 +69,7 @@ $router->group(['prefix' => 'issues', 'middleware' => 'can:manage issues'], func
 		]);
 	});
 
-	// Comments
+	// To Dos
 	$router->group(['prefix' => 'todos'], function (Router $router)
 	{
 		$router->match(['get', 'post'], '/', [

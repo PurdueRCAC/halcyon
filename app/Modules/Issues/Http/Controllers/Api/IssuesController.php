@@ -89,7 +89,7 @@ class IssuesController extends Controller
 			'stop'      => null,
 			'people'    => null,
 			'resource'  => null,
-			'notice'    => '*',
+			'issuetodoid' => 0,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			'order'     => Issue::$orderBy,
@@ -144,7 +144,7 @@ class IssuesController extends Controller
 			$query->orderBy('score', 'desc');
 		}
 
-		if ($filters['issuetodoid'] != '*')
+		if ($filters['issuetodoid'] >= 0)
 		{
 			$query->where($cr . '.issuetodoid', '=', $filters['issuetodoid']);
 		}
@@ -327,14 +327,14 @@ class IssuesController extends Controller
 		$request->validate([
 			'report' => 'nullable|string',
 			'datetimecreated' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
-			'issuetodo' => 'nullable|integer',
+			'issuetodoid' => 'nullable|integer',
 		]);
 
 		$row = Issue::findOrFail($id);
 		//$row->fill($request->all());
 		$row->datetimecreated = $request->input('datetimecreated', $row->datetimecreated);
 		$row->report = $request->input('report', $row->report);
-		$row->issuetodo = $request->input('issuetodo', $row->issuetodo);
+		$row->issuetodoid = $request->input('issuetodoid', $row->issuetodoid);
 
 		if (!$row->report)
 		{
