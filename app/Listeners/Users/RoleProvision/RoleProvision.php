@@ -36,6 +36,7 @@ class RoleProvision
 	 */
 	public function handleResourceMemberCreated(ResourceMemberCreated $event)
 	{
+		return;
 		$config = $this->config();
 
 		if (empty($config))
@@ -93,6 +94,7 @@ class RoleProvision
 	 */
 	public function handleResourceMemberDeleted(ResourceMemberDeleted $event)
 	{
+		return;
 		$config = $this->config();
 
 		if (empty($config))
@@ -221,6 +223,7 @@ class RoleProvision
 	 */
 	public function handleQueueCreated(QueueCreated $event)
 	{
+		return;
 		$config = $this->config();
 
 		if (empty($config))
