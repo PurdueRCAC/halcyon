@@ -41,6 +41,23 @@ app('pathway')
 
 @section('content')
 <form action="{{ route('admin.resources.store') }}" method="post" name="adminForm" id="item-form" class="editform">
+
+	<div class="tabs">
+		<ul>
+			<li>
+				<a href="#resource-details">{{ trans('global.details') }}</a>
+			</li>
+			@if ($row->id)
+				@foreach ($sections as $section)
+					<li>
+						<a href="#resource-{{ $section['route'] }}">{{ $section['name'] }}</a>
+					</li>
+				@endforeach
+			@endif
+		</ul>
+
+		<div id="resource-details">
+
 	<div class="grid row">
 		<div class="col col-md-7 span7">
 			<fieldset class="adminform">
@@ -126,6 +143,16 @@ app('pathway')
 			@include('history::admin.history')
 		</div>
 	</div>
+
+	</div>
+	@if ($row->id)
+		@foreach ($sections as $section)
+			<div id="resource-{{ $section['route'] }}">
+				{!! $section['content'] !!}
+			</div>
+		@endforeach
+	@endif
+						</div>
 
 	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 

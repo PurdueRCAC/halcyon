@@ -28,6 +28,11 @@ class Orders
 	 */
 	public function handleAssetDisplaying(AssetDisplaying $event)
 	{
+		if (app()->has('isAdmin') && app()->get('isAdmin'))
+		{
+			return;
+		}
+
 		$product = Product::query()
 			->where('resourceid', '=', $event->getAsset()->id)
 			->get()

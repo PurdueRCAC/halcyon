@@ -41,21 +41,25 @@ class ResourceIssues
 
 		$issues = Issue::query()
 			->select($i . '.*')
+			->withCount('comments')
 			->join($r, $r . '.issueid', $i . '.id')
 			->withTrashed()
 			->whereIsActive()
 			->where($r . '.resourceid', '=', $event->getAsset()->id)
-			->get();
+			->orderBy('id', 'desc')
+			->paginate();
 
 		//$event->getAsset()->issues = $issues;
 
 		if (count($issues))
 		{
 			$event->addSection(
-				route('admin.resources.edit', ['id' => $event->getAsset()->id]),
+				'issues',//route('admin.resources.edit', ['id' => $event->getAsset()->id]),
 				trans('issues::issues.issues'),
 				false,
-				''
+				view('issues::admin.issues.asset', [
+					'rows' => $issues
+				])
 			);
 		}
 	}

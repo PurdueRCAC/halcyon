@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use App\Modules\Resources\Entities\Asset;
 use App\Modules\Resources\Entities\Type;
 use App\Modules\Resources\Entities\Batchsystem;
+use App\Modules\Resources\Events\AssetDisplaying;
 use App\Halcyon\Http\StatefulRequest;
 
 class ResourcesController extends Controller
@@ -238,12 +239,16 @@ class ResourcesController extends Controller
 		$parents  = $row->tree();
 		$products = array();
 
+		event($event = new AssetDisplaying($row, 'details'));
+		$sections = collect($event->getSections());
+
 		return view('resources::admin.resources.edit', [
 			'row'   => $row,
 			'types' => $types,
 			'parents' => $parents,
 			'products' => $products,
-			'batchsystems' => $batchsystems
+			'batchsystems' => $batchsystems,
+			'sections' => $sections,
 		]);
 	}
 

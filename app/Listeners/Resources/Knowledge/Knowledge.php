@@ -30,6 +30,11 @@ class Knowledge
 	 */
 	public function handleAssetDisplaying(AssetDisplaying $event)
 	{
+		if (app()->has('isAdmin') && app()->get('isAdmin'))
+		{
+			return;
+		}
+
 		//$content = $event->getBody();
 
 		$access = [1];

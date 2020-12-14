@@ -28,6 +28,11 @@ class News
 	 */
 	public function handleAssetDisplaying(AssetDisplaying $event)
 	{
+		if (app()->has('isAdmin') && app()->get('isAdmin'))
+		{
+			return;
+		}
+
 		app('translator')->addNamespace('listener.resources.news', __DIR__ . '/lang');
 
 		$event->addSection(

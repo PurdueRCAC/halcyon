@@ -28,6 +28,11 @@ class Pages
 	 */
 	public function handleAssetDisplaying(AssetDisplaying $event)
 	{
+		if (app()->has('isAdmin') && app()->get('isAdmin'))
+		{
+			return;
+		}
+
 		$ids = config()->get('listener.resources.pages.display', [8]);
 
 		if (empty($ids))
