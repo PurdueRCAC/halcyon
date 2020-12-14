@@ -1,0 +1,14 @@
+{
+    "name": "Issues",
+    "alias": "issues",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "App\\Modules\\Issues\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Issues\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
