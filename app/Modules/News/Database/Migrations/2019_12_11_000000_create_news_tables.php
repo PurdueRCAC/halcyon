@@ -54,6 +54,8 @@ class CreateNewsTables extends Migration
 				$table->increments('id');
 				$table->text('stemmedtext');
 			});
+
+			DB::statement('ALTER TABLE newsstemmedtext ADD FULLTEXT search(stemmedtext)');
 		}
 
 		if (!Schema::hasTable('newstypes'))
