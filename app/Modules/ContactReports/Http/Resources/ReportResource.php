@@ -59,7 +59,7 @@ class ReportResource extends JsonResource
 		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
 		$data['users'] = $this->users->each(function ($res, $key)
 		{
-			$res->name = $res->user->name;
+			$res->name = $res->user ? $res->user->name : trans('global.unknown');
 		});
 		$data['groupname'] = $this->group ? $this->group->name : null;
 		$data['resources'] = $this->resources->each(function ($res, $key)
