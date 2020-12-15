@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Users\Models\User;
+use Carbon\Carbon;
 
 /**
  * Model for an order
@@ -72,7 +73,10 @@ class Order extends Model
 	 **/
 	public function isTrashed()
 	{
-		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
+		return ($this->datetimeremoved
+			&& $this->datetimeremoved != '0000-00-00 00:00:00'
+			&& $this->datetimeremoved != '-0001-11-30 00:00:00'
+			&& $this->datetimeremoved < Carbon::now()->toDateTimeString());
 	}
 
 	/**

@@ -103,7 +103,10 @@ class Item extends Model
 	 **/
 	public function isTrashed()
 	{
-		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
+		return ($this->datetimeremoved
+			&& $this->datetimeremoved != '0000-00-00 00:00:00'
+			&& $this->datetimeremoved != '-0001-11-30 00:00:00'
+			&& $this->datetimeremoved < Carbon::now()->toDateTimeString());
 	}
 
 	/**

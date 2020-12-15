@@ -4,6 +4,7 @@ namespace App\Modules\Orders\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
+use Carbon\Carbon;
 
 /**
  * Model for order product
@@ -195,7 +196,8 @@ class Product extends Model
 		if ($result)
 		{
 			if ($this->{$this->getDeletedAtColumn()} == '0000-00-00 00:00:00'
-			 || $this->{$this->getDeletedAtColumn()} == '-0001-11-30 00:00:00')
+			 || $this->{$this->getDeletedAtColumn()} == '-0001-11-30 00:00:00'
+			 || $this->{$this->getDeletedAtColumn()} >= Carbon::now()->toDateTimeString())
 			{
 				$result = false;
 			}

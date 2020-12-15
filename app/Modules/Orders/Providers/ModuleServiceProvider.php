@@ -3,11 +3,12 @@
 namespace App\Modules\Orders\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
 use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Orders\Console\RenewCommand;
 use App\Modules\Orders\Console\EmailStatusCommand;
 use App\Modules\Orders\Listeners\GroupOrders;
-use Illuminate\Support\Facades\View;
+use App\Modules\Orders\Listeners\UserOrders;
 use App\Modules\Orders\Composers\ProfileComposer;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -44,6 +45,11 @@ class ModuleServiceProvider extends ServiceProvider
 		if (is_dir(dirname(dirname(__DIR__))) . '/Groups')
 		{
 			$this->app['events']->subscribe(new GroupOrders);
+		}
+
+		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
+		{
+			$this->app['events']->subscribe(new UserOrders);
 		}
 	}
 
