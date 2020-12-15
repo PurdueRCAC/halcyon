@@ -10,6 +10,7 @@ use App\Modules\Resources\Entities\Batchsystem;
 use App\Modules\Resources\Entities\Subresource;
 use App\Modules\Resources\Entities\Asset;
 use App\Modules\Resources\Entities\Child;
+use Carbon\Carbon;
 
 /**
  * Model for a scheduler
@@ -83,13 +84,16 @@ class Scheduler extends Model
 	];
 
 	/**
-	 * Determine if in a trashed state
+	 * If entry is trashed
 	 *
 	 * @return  bool
-	 */
+	 **/
 	public function isTrashed()
 	{
-		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
+		return ($this->datetimeremoved
+			&& $this->datetimeremoved != '0000-00-00 00:00:00'
+			&& $this->datetimeremoved != '-0001-11-30 00:00:00'
+			&& $this->datetimeremoved < Carbon::now()->toDateTimeString());
 	}
 
 	/**

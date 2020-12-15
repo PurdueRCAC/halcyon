@@ -35,7 +35,7 @@ app('pathway')
 @endphp
 
 @section('title')
-{!! config('queues.name') !!}: {{ trans('queues::queues.schedulers') }}: {{ $row->id ? trans('queues::queues.edit') . ': #' . $row->id : trans('queues::queues.create') }}
+{!! config('queues.name') !!}: {{ trans('queues::queues.schedulers') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

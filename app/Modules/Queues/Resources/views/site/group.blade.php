@@ -3,11 +3,11 @@
 								<caption class="sr-only">Below is a list of all queues:</caption>
 								<thead class="resource">
 									<tr>
-										<th scope="col">Resource</th>
-										<th scope="col">Name</th>
-										<th scope="col" class="text-right">Cores</th>
-										<th scope="col" class="text-right">Nodes</th>
-										<th scope="col" class="text-right">Walltime</th>
+										<th scope="col">{{ trans('queues::queues.resource') }}</th>
+										<th scope="col">{{ trans('queues::queues.name') }}</th>
+										<th scope="col" class="text-right">{{ trans('queues::queues.cores') }}</th>
+										<th scope="col" class="text-right">{{ trans('queues::queues.nodes') }}</th>
+										<th scope="col" class="text-right">{{ trans('queues::queues.walltime') }}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -46,8 +46,8 @@
 													$title .= '-- memory';
 												}
 												?>
-												<td title="<?php echo $title; ?>">
-													<?php echo $q->subresource->name; ?>
+												<td title="{{ $title }}">
+													{{ $q->subresource->name }}
 												</td>
 												<td>
 													@if (auth()->user()->can('manage queues'))
@@ -85,12 +85,12 @@
 												$title = rtrim($title, ', ');*/
 												?>
 												<td class="text-right">
-													<?php echo $q->totalcores; ?>
+													{{ $q->totalcores }}
 												</td>
 												<td class="text-right">
-													<?php if ($q->subresource->nodecores > 0) { ?>
-														<?php echo round($q->totalcores/$q->subresource->nodecores, 1); ?>
-													<?php } ?>
+													@if ($q->subresource->nodecores > 0)
+														{{ round($q->totalcores/$q->subresource->nodecores, 1) }}
+													@endif
 												</td>
 												<td class="text-right">
 													<?php

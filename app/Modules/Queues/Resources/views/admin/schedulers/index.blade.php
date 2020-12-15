@@ -36,7 +36,7 @@ app('pathway')
 
 @section('content')
 @component('queues::admin.submenu')
-	<?php echo request()->segment(3); ?>
+	{{ request()->segment(3) }}
 @endcomponent
 
 <form action="{{ route('admin.queues.schedulers') }}" method="post" name="adminForm" id="adminForm" class="form-inline">

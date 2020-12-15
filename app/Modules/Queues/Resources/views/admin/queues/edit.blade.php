@@ -40,7 +40,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('queues.name') !!}: <?php echo $row->id ? trans('queues::queues.edit') . ': #' . $row->id : trans('queues::queues.create'); ?>
+{!! config('queues.name') !!}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')
@@ -49,7 +49,7 @@ app('pathway')
 	<div class="tabs">
 		<ul>
 			<li><a href="#queue-details">{{ trans('queues::queues.queue') }}</a></li>
-			<li><a href="#queue-nodes">Purchases & Loans</a></li>
+			<li><a href="#queue-nodes">{{ trans('queues::queues.purchases and loans') }}</a></li>
 		</ul>
 		<div id="queue-details">
 	@endif
@@ -95,7 +95,7 @@ app('pathway')
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="field-schedulerid">{{ trans('queues::queues.scheduler') }}:  <span class="required">{{ trans('global.required') }}</span></label>
-							<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></span>
+							<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
 							<select name="fields[schedulerid]" id="field-schedulerid" class="form-control required" required>
 								<option value="0">{{ trans('global.none') }}</option>
 								@foreach ($schedulers as $scheduler)
@@ -159,8 +159,8 @@ app('pathway')
 							</select>
 							<span class="invalid-feedback">{{ trans('queues::queues.error.invalid subresource') }}</span>
 							<span class="form-text text-muted">
-								<span id="SPAN_nodecores">{{ $cores }}</span> cores,
-								<span id="SPAN_nodemem">{{ $mem }}</span> memory
+								{!! trans('queues::queues.number cores', ['num' => '<span id="SPAN_nodecores">' . $cores . '</span>']) !!},
+								{!! trans('queues::queues.number memory', ['num' => '<span id="SPAN_nodemem">' . $mem . '</span>']) !!}
 							</span>
 						</div>
 					</div>
@@ -178,7 +178,7 @@ app('pathway')
 							<label for="field-defaultwalltime">{{ trans('queues::queues.default walltime') }}:</label>
 							<span class="input-group">
 								<input type="number" name="fields[defaultwalltime]" id="field-defaultwalltime" class="form-control" min="0" step="0.25" value="{{ ($row->defaultwalltime/60/60) }}" />
-								<span class="input-group-append"><span class="input-group-text">hours</span></span>
+								<span class="input-group-append"><span class="input-group-text">{{ trans_choice('global.time.hours', 2) }}</span></span>
 							</span>
 						</div>
 					</div>
@@ -197,7 +197,7 @@ app('pathway')
 							<label for="field-maxwalltime">{{ trans('queues::queues.max walltime') }}:</label>
 							<span class="input-group">
 								<input type="number" name="maxwalltime" id="field-maxwalltime" class="form-control" min="0" step="0.25" value="{{ $val }}" />
-								<span class="input-group-append"><span class="input-group-text">hours</span></span>
+								<span class="input-group-append"><span class="input-group-text">{{ trans_choice('global.time.hours', 2) }}</span></span>
 							</span>
 						</div>
 					</div>
@@ -386,16 +386,17 @@ app('pathway')
 
 		<div class="card">
 			<table class="table table-hover adminlist">
+				<caption class="sr-only">{{ trans('queues::queues.purchases and loans') }}</caption>
 				<thead>
 					<tr>
-						<th scope="col">Start</th>
-						<th scope="col">End</th>
-						<th scope="col">Action</th>
-						<th scope="col">Source</th>
-						<th scope="col">Resource</th>
-						<th scope="col">Queue</th>
-						<th scope="col" class="text-right">Nodes</th>
-						<th scope="col" class="text-right">Total</th>
+						<th scope="col">{{ trans('queues::queues.start') }}</th>
+						<th scope="col">{{ trans('queues::queues.end') }}</th>
+						<th scope="col">{{ trans('queues::queues.action') }}</th>
+						<th scope="col">{{ trans('queues::queues.source') }}</th>
+						<th scope="col">{{ trans('queues::queues.resource') }}</th>
+						<th scope="col">{{ trans('queues::queues.queue') }}</th>
+						<th scope="col" class="text-right">{{ trans('queues::queues.nodes') }}</th>
+						<th scope="col" class="text-right">{{ trans('queues::queues.total') }}</th>
 						<th scope="col"></th>
 					</tr>
 				</thead>
@@ -508,7 +509,13 @@ app('pathway')
 							{{ $item->total }}
 						</td>
 						<td>
-							<button class="btn btn-sm btn-danger delete" data-confirm="{{ trans('global.confirm delete') }}" data-success="{{ trans('queues::queues.item deleted') }}" data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes'). '.delete', ['id' => $item->id]) }}" data-id="{{ $item->id }}"><span class="icon-trash"></span><span class="sr-only">{{ trans('global.button.delete') }}</span></button>
+							<button class="btn btn-sm btn-danger delete"
+								data-confirm="{{ trans('global.confirm delete') }}"
+								data-success="{{ trans('queues::queues.item deleted') }}"
+								data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes'). '.delete', ['id' => $item->id]) }}"
+								data-id="{{ $item->id }}">
+								<span class="icon-trash"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
+							</button>
 						</td>
 					</tr>
 					<?php
@@ -550,7 +557,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="sell-group">Sell to</label>
+					<label for="sell-group">{{ trans('queues::queues.sell to') }}</label>
 					<span class="input-group">
 						<input type="text" name="groupid" id="sell-group"
 							class="form-control form-group-queues"
@@ -566,7 +573,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="sell-queue">{{ trans('queues::queues.queue') }}</label>
 					<select id="sell-queue" name="queueid" class="form-control" disabled="true">
-						<option>- Select Queue -</option>
+						<option>{{ trans('queues::queues.select queue') }}</option>
 					</select>
 				</div>
 
@@ -612,7 +619,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="loan-group">Loan to</label>
+					<label for="loan-group">{{ trans('queues::queues.loan to') }}</label>
 					<span class="input-group">
 						<input type="text" name="groupid" id="loan-group"
 							class="form-control form-group-queues"
@@ -628,7 +635,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="loan-queue">{{ trans('queues::queues.queue') }}</label>
 					<select id="loan-queue" name="queueid" class="form-control" disabled="true">
-						<option>- Select Queue -</option>
+						<option>{{ trans('queues::queues.select queue') }}</option>
 					</select>
 				</div>
 

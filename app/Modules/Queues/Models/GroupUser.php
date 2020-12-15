@@ -12,6 +12,7 @@ use App\Modules\Queues\Events\UserUpdating;
 use App\Modules\Queues\Events\UserUpdated;
 use App\Modules\Queues\Events\UserDeleted;
 use App\Modules\Groups\Models\Group;
+use Carbon\Carbon;
 
 /**
  * Model for a queue/user association
@@ -82,6 +83,19 @@ class GroupUser extends Model
 		'updated'  => UserUpdated::class,
 		'deleted'  => UserDeleted::class,
 	];
+
+	/**
+	 * If entry is trashed
+	 *
+	 * @return  bool
+	 **/
+	public function isTrashed()
+	{
+		return ($this->datetimeremoved
+			&& $this->datetimeremoved != '0000-00-00 00:00:00'
+			&& $this->datetimeremoved != '-0001-11-30 00:00:00'
+			&& $this->datetimeremoved < Carbon::now()->toDateTimeString());
+	}
 
 	/**
 	 * Defines a relationship to notification type

@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Modules\Queues\Listeners;
 
@@ -38,72 +33,132 @@ class GetUserQueues
 	{
 		$user = $event->getUser();
 
-		// Member
+		$memberofqueues = collect([]);
+		$pendingqueues = collect([]);
+		$priormemberofqueues = collect([]);
+		$priorpendingmemberofqueues = collect([]);
+
 		$memberships = QueueUser::query()
 			->withTrashed()
 			->where('userid', '=', $user->id)
-			->whereIsMember()
-			->whereIsActive()
+			//->whereIsMember()
+			//->whereIsActive()
 			->orderBy('datetimecreated', 'asc')
 			->get();
 
 		foreach ($memberships as $membership)
 		{
-			$membership->api = route('api.queues.read', ['id' => $membership->queueid]);
+			$membership->api = route('api.queues.users.read', ['id' => $membership->id]);
+			$membership->queueapi = route('api.queues.read', ['id' => $membership->queueid]);
+
+			$queue = $membership->queue()->withTrashed()->first();
+			$scheduler = $queue->scheduler()->withTrashed()->first();
+
+			if (!$queue->groupid)
+			{
+				$groupqueueusers = $membership->groupUser()
+					->withTrashed()
+					->get();
+
+				foreach ($groupqueueusers as $groupqueueuser)
+				{
+					$membership->groupid = $groupqueueuser->groupid;
+					$membership->datetimecreated = $groupqueueuser->datetimecreated;
+					$membership->datetimeremoved = $groupqueueuser->datetimeremoved;
+
+					if (!$membership->isTrashed()
+					&& !$queue->isTrashed()
+					&& !$scheduler->isTrashed())
+					{
+						if ($membership->isMember() || $membership->isManager())
+						{
+							$memberofqueues->add($membership);
+						}
+						elseif ($membership->isPending())
+						{
+							$pendingqueues->add($membership);
+						}
+					}
+					else
+					{
+						if (!$membership->isTrashed())
+						{
+							if ($queue->isTrashed())
+							{
+								$membership->datetimeremoved = $queue->datetimeremoved;
+							}
+							elseif ($scheduler->isTrashed())
+							{
+								$membership->datetimeremoved = $scheduler->datetimeremoved;
+							}
+						}
+
+						if ($membership->isMember() || $membership->isManager())
+						{
+							$priormemberofqueues->add($membership);
+						}
+						elseif ($membership->isPending())
+						{
+							$priorpendingmemberofqueues->add($membership);
+						}
+					}
+				}
+
+				continue;
+			}
+
+			if (!$membership->isTrashed()
+			 && !$queue->isTrashed()
+			 && !$scheduler->isTrashed())
+			{
+				if ($membership->isMember() || $membership->isManager())
+				{
+					$memberofqueues->add($membership);
+				}
+				elseif ($membership->isPending())
+				{
+					$pendingqueues->add($membership);
+				}
+			}
+			else
+			{
+				if (!$membership->isTrashed())
+				{
+					if ($queue->isTrashed())
+					{
+						$membership->datetimeremoved = $queue->datetimeremoved;
+					}
+					elseif ($scheduler->isTrashed())
+					{
+						$membership->datetimeremoved = $scheduler->datetimeremoved;
+					}
+				}
+
+				if ($membership->isMember() || $membership->isManager())
+				{
+					$priormemberofqueues->add($membership);
+				}
+				elseif ($membership->isPending())
+				{
+					$priorpendingmemberofqueues->add($membership);
+				}
+			}
 		}
 
-		$user->memberofqueues = $memberships;
+		// Member
+		$user->memberofqueues = $memberofqueues;
 
 		// Pending member
-		$memberships = QueueUser::query()
-			->withTrashed()
-			->where('userid', '=', $user->id)
-			->whereIsPending()
-			->whereIsActive()
-			->orderBy('datetimecreated', 'asc')
-			->get();
-
-		foreach ($memberships as $membership)
-		{
-			$membership->api = route('api.queues.read', ['id' => $membership->queueid]);
-		}
-
-		$user->pendingmemberofqueues = $memberships;
+		$user->pendingmemberofqueues = $pendingqueues;
 
 		// Prior member
-		$memberships = QueueUser::query()
-			->withTrashed()
-			->where('userid', '=', $user->id)
-			->whereIsMember()
-			->whereIsTrashed()
-			->orderBy('datetimecreated', 'asc')
-			->get();
-
-		foreach ($memberships as $membership)
-		{
-			$membership->api = route('api.queues.read', ['id' => $membership->queueid]);
-		}
-
-		$user->priormemberofqueues = $memberships;
+		$user->priormemberofqueues = $priormemberofqueues;
 
 		// Prior pending member
-		$memberships = QueueUser::query()
-			->withTrashed()
-			->where('userid', '=', $user->id)
-			->whereIsPending()
-			->whereIsTrashed()
-			->orderBy('datetimecreated', 'asc')
-			->get();
-
-		foreach ($memberships as $membership)
-		{
-			$membership->api = route('api.queues.read', ['id' => $membership->queueid]);
-		}
-
-		$user->priorpendingmemberofqueues = $memberships;
+		$user->priorpendingmemberofqueues = $priorpendingmemberofqueues;
 
 		// Viewers
-		$memberships = QueueUser::query()
+		/*$memberships = QueueUser::query()
 			->withTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsViewer()
@@ -131,7 +186,7 @@ class GetUserQueues
 			$membership->api = route('api.queues.read', ['id' => $membership->queueid]);
 		}
 
-		$user->priorviewerofgroups = $memberships;
+		$user->priorviewerofgroups = $memberships;*/
 
 		$event->setUser($user);
 	}
