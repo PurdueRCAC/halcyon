@@ -8,6 +8,7 @@ use App\Modules\Storage\Listeners\Messages;
 use App\Modules\Storage\Listeners\Resources;
 use App\Modules\Storage\Listeners\UnixGroupMembers;
 use App\Modules\Storage\Listeners\Notifications;
+use App\Modules\Storage\Listeners\UserStorage;
 use App\Modules\Storage\Console\EmailQuotaCommand;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -56,6 +57,11 @@ class ModuleServiceProvider extends ServiceProvider
 		if (is_dir(dirname(dirname(__DIR__))) . '/Groups')
 		{
 			$this->app['events']->subscribe(new UnixGroupMembers);
+		}
+
+		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
+		{
+			$this->app['events']->subscribe(new UserStorage);
 		}
 	}
 
