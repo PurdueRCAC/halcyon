@@ -30,8 +30,14 @@
 
 		$directories = $group->directories;
 
-		$rows = $directories->filter(function($item)
+		$canManage = auth()->user() && auth()->user()->can('manage groups');
+
+		$rows = $directories->filter(function($item) use ($canManage)
 		{
+			if ($canManage)
+			{
+				return $item->parentstoragedirid == 0;
+			}
 			return $item->parentstoragedirid == 0 && $item->storageresourceid == 4;
 		});
 
@@ -646,11 +652,11 @@
 
 					</div><!-- / #<?php echo $did; ?>_dialog -->
 				<?php } ?>
+				</div><!-- / .panel-body -->
+			</div><!-- / .panel -->
 				<?php
 			}
 			?>
-			</div><!-- / .panel-body -->
-		</div><!-- / .panel -->
 
 		<div class="card panel panel-default">
 			<div class="card-header panel-heading">
@@ -679,63 +685,63 @@
 				$history = array_reverse($history);
 				?>
 				@if (count($history))
-				<table class="table table-hover">
-					<caption class="sr-only">{{ trans('storage::storage.history') }}</caption>
-					<thead>
-						<tr>
-							<th scope="col">{{ trans('storage::storage.type') }}</th>
-							<th scope="col">{{ trans('storage::storage.source') }}</th>
-							<th scope="col">{{ trans('storage::storage.start') }}</th>
-							<th scope="col">{{ trans('storage::storage.end') }}</th>
-							<th scope="col" class="text-right">{{ trans('storage::storage.amount') }}</th>
-							<th scope="col" class="text-right">{{ trans('storage::storage.total') }}</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach ($history as $item)
-							<tr class="{{ $item->type }}">
-								<td>
-									@if ($item->bytes > 0)
-										<span class="badge badge-success">{{ $item->type }}</span>
-									@else
-										<span class="badge badge-danger">{{ $item->type }}</span>
-									@endif
-								</td>
-								<td>
-									@if ($item->type == 'loan')
-										@if ($item->lendergroupid >= 0)
-											{{ $item->lender ? $item->lender->name : trans('global.unknown') }}
-										@else
-											{{ config('app.name') }}
-										@endif
-									@else
-										@if ($item->sellergroupid >= 0)
-											{{ $item->seller ? $item->seller->name : trans('global.unknown') }}
-										@else
-											{{ config('app.name') }}
-										@endif
-									@endif
-								</td>
-								<td>
-									<time datetime="{{ $item->datetimestart }}">{{ $item->datetimestart->format('Y-m-d') }}</time>
-								</td>
-								<td>
-									@if ($item->hasEnded())
-										<time datetime="{{ $item->datetimestop }}">{{ $item->datetimestop->format('Y-m-d') }}</time>
-									@else
-										-
-									@endif
-								</td>
-								<td class="text-right">
-									{!! ($item->bytes > 0 ? '<span class="increase">+ ' : '<span class="decrease">- ') . App\Halcyon\Utility\Number::formatBytes(abs($item->bytes)) . '</span>' !!}
-								</td>
-								<td class="text-right">
-									{{ App\Halcyon\Utility\Number::formatBytes($item->total) }}
-								</td>
+					<table class="table table-hover">
+						<caption class="sr-only">{{ trans('storage::storage.history') }}</caption>
+						<thead>
+							<tr>
+								<th scope="col">{{ trans('storage::storage.type') }}</th>
+								<th scope="col">{{ trans('storage::storage.source') }}</th>
+								<th scope="col">{{ trans('storage::storage.start') }}</th>
+								<th scope="col">{{ trans('storage::storage.end') }}</th>
+								<th scope="col" class="text-right">{{ trans('storage::storage.amount') }}</th>
+								<th scope="col" class="text-right">{{ trans('storage::storage.total') }}</th>
 							</tr>
-						@endforeach
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							@foreach ($history as $item)
+								<tr class="{{ $item->type }}">
+									<td>
+										@if ($item->bytes > 0)
+											<span class="badge badge-success">{{ $item->type }}</span>
+										@else
+											<span class="badge badge-danger">{{ $item->type }}</span>
+										@endif
+									</td>
+									<td>
+										@if ($item->type == 'loan')
+											@if ($item->lendergroupid >= 0)
+												{{ $item->lender ? $item->lender->name : trans('global.unknown') }}
+											@else
+												{{ config('app.name') }}
+											@endif
+										@else
+											@if ($item->sellergroupid >= 0)
+												{{ $item->seller ? $item->seller->name : trans('global.unknown') }}
+											@else
+												{{ config('app.name') }}
+											@endif
+										@endif
+									</td>
+									<td>
+										<time datetime="{{ $item->datetimestart }}">{{ $item->datetimestart->format('Y-m-d') }}</time>
+									</td>
+									<td>
+										@if ($item->hasEnded())
+											<time datetime="{{ $item->datetimestop }}">{{ $item->datetimestop->format('Y-m-d') }}</time>
+										@else
+											-
+										@endif
+									</td>
+									<td class="text-right">
+										{!! ($item->bytes > 0 ? '<span class="increase">+ ' : '<span class="decrease">- ') . App\Halcyon\Utility\Number::formatBytes(abs($item->bytes)) . '</span>' !!}
+									</td>
+									<td class="text-right">
+										{{ App\Halcyon\Utility\Number::formatBytes($item->total) }}
+									</td>
+								</tr>
+							@endforeach
+						</tbody>
+					</table>
 				@else
 					<p class="text-center text-muted">{{ trans('global.none') }}</p>
 				@endif

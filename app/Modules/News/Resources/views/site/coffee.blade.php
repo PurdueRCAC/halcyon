@@ -114,7 +114,7 @@
 		<div id="coffee<?php echo $event->id; ?>" class="dialog dialog-event" title="<?php echo $event->headline; ?>">
 			<p class="newsattend">
 				<?php if ($event['url']) { ?>
-					<?php if (auth()->user() && in_array(config()->get('module.news.ignore_role', 4), $u->getAuthorisedRoles())) { ?>
+					<?php if (auth()->user() && in_array(config()->get('module.news.ignore_role', 4), auth()->user()->getAuthorisedRoles())) { ?>
 						<?php echo $reserved ? 'Reserved by ' . $reserved : 'Not reserved'; ?>
 					<?php } else { ?>
 						<?php if ($reserved) { ?>

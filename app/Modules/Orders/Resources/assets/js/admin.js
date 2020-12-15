@@ -1,8 +1,3 @@
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 Halcyon.submitbutton = function (task) {
 	var frm = document.getElementById('item-form'),

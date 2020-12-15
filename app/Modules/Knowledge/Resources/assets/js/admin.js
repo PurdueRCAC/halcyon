@@ -1,28 +1,3 @@
-/**
- * @package    halcyon
- * @copyright  Copyright 2019 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
-/*Halcyon.submitbutton = function(task) {
-	var frm = document.getElementById('adminForm');
-
-	if (frm) {
-		return Halcyon.submitform(task, frm);
-	}
-
-	$(document).trigger('editorSave');
-
-	var frm = document.getElementById('item-form');
-
-	if (frm) {
-		if (task == 'cancel' || document.formvalidator.isValid(frm)) {
-			Halcyon.submitform(task, frm);
-		} else {
-			alert(frm.getAttribute('data-invalid-msg'));
-		}
-	}
-}*/
 
 jQuery(document).ready(function ($) {
 	var alias = $('#field-alias');

@@ -345,7 +345,7 @@ console.log(post);
 			success: function(response) {
 				//Halcyon.message('success', 'Item added');
 
-				EditedProperty(response.data, item + "_" + field);
+				EditedProperty(response, item + "_" + field);
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				//alert(thrownError);
@@ -994,7 +994,7 @@ function TotalOrder() {
 			//Halcyon.message('success', 'Item added');
 
 			// Don't really need to do anything here, we are just ensuring the selected user has a database entry
-			window.location = response.data['url'];
+			window.location = respone['url'];
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
 			console.log(xhr);

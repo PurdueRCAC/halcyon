@@ -1,8 +1,3 @@
-/**
- * @package    halcyon
- * @copyright  Copyright 2019 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 /**
  * New queue group
@@ -320,10 +315,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			select.appendChild(opt);
 
-			for (var x in results.data['subresources']) {
+			for (var x in results['subresources']) {
 				opt = document.createElement("option");
-				opt.value = results.data['subresources'][x]['id'];
-				opt.innerHTML = results.data['subresources'][x]['name'];
+				opt.value = results['subresources'][x]['id'];
+				opt.innerHTML = results['subresources'][x]['name'];
 
 				select.appendChild(opt);
 			}

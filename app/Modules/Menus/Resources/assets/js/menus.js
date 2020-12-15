@@ -1,8 +1,3 @@
-/**
- * @package    halcyon
- * @copyright  Copyright 2019 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 jQuery(document).ready(function ($) {
 	var alias = $('#field-alias');

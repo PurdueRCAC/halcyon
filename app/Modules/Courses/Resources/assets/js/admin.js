@@ -1,10 +1,4 @@
 /**
- * @package    halcyon
- * @copyright  Copyright 2019 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
-/**
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -117,18 +111,18 @@ document.addEventListener('DOMContentLoaded', function() {
 						.removeClass('d-none');
 
 					template
-						.attr('id', template.attr('id').replace(/\{id\}/g, response.data.id))
-						.data('id', response.data.id);
+						.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
+						.data('id', response.id);
 
 					template.find('a').each(function (i, el) {
-						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.data.id));
+						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
 					});
 
 					var content = template
 						.html()
-						.replace(/\{id\}/g, response.data.id)
-						.replace(/\{name\}/g, response.data.user.name)
-						.replace(/\{userid\}/g, response.data.userid);
+						.replace(/\{id\}/g, response.id)
+						.replace(/\{name\}/g, response.user.name)
+						.replace(/\{userid\}/g, response.userid);
 
 					template.html(content).insertBefore(li);
 				}

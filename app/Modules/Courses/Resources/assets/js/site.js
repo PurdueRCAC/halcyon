@@ -492,7 +492,7 @@ function AddUserClass(xml, crn) {
 				function (xml, data) {
 					if (xml.status < 400) {
 						var results = JSON.parse(xml.responseText);
-						document.getElementById("HIDDEN_" + data['user'] + "_" + data['crn']).value = results.data['id'];
+						document.getElementById("HIDDEN_" + data['user'] + "_" + data['crn']).value = results['id'];
 					} else {
 						alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
 					}

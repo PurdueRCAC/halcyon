@@ -57,29 +57,29 @@ var Roles = {
 	PopulateRole: function (xml, id) {
 		if (xml.status == 200) {
 			var results = JSON.parse(xml.responseText);
-			var cell = document.getElementById('resource' + results.data['resource']['id']);
+			var cell = document.getElementById('resource' + results['resource']['id']);
 
-			if (results.data['status'] == '1') {
+			if (results['status'] == '1') {
 				cell.innerHTML = "No Role";
 				cell.style.color = "#B20000";
-			} else if (results.data['status'] == '2') {
+			} else if (results['status'] == '2') {
 				cell.innerHTML = "Role Pending";
 				cell.style.color = "#A06020";
-			} else if (results.data['status'] == '3') {
+			} else if (results['status'] == '3') {
 				cell.innerHTML = "Role Ready";
 				cell.style.color = "#006600";
-			} else if (results.data['status'] == '4') {
+			} else if (results['status'] == '4') {
 				cell.innerHTML = "Removal Pending";
 				cell.style.color = "#A06020";
 			} else {
 				cell.innerHTML = "Error";
 			}
 
-			cell.setAttribute('data-api', results.data['api']);
+			cell.setAttribute('data-api', results['api']);
 
-			document.getElementById('resource' + results.data['resource']['id'] + '_shell').innerHTML = results.data['loginshell'];
-			document.getElementById('resource' + results.data['resource']['id'] + '_group').innerHTML = results.data['primarygroup'];
-			document.getElementById('resource' + results.data['resource']['id'] + '_pi').innerHTML = results.data['pilogin'];
+			document.getElementById('resource' + results['resource']['id'] + '_shell').innerHTML = results['loginshell'];
+			document.getElementById('resource' + results['resource']['id'] + '_group').innerHTML = results['primarygroup'];
+			document.getElementById('resource' + results['resource']['id'] + '_pi').innerHTML = results['pilogin'];
 		} else {
 			var img = document.getElementById('IMG_' + id);
 			if (img) {
@@ -129,27 +129,27 @@ var Roles = {
 			//table.style.display = "table-row-group";
 			container.className = '';
 
-			if (results.data['status'] == 0) {
+			if (results['status'] == 0) {
 				stat.value = "Login Invalid";
 				//add.style.display = "none";
 				//mod.style.display = "none";
 				//del.style.display = "none";
-			} else if (results.data['status'] == 1) {
+			} else if (results['status'] == 1) {
 				stat.value = "No Role Exists";
 				add.removeClass('hide');
 				//mod.style.display = "none";
 				//del.style.display = "none";
-			} else if (results.data['status'] == 2) {
+			} else if (results['status'] == 2) {
 				stat.value = "Role Creation Pending";
 				//add.style.display = "none";
 				mod.removeClass('hide');
 				del.removeClass('hide');
-			} else if (results.data['status'] == 3) {
+			} else if (results['status'] == 3) {
 				stat.value = "Role Exists";
 				//add.style.display = "none";
 				mod.removeClass('hide');
 				del.removeClass('hide');
-			} else if (results.data['status'] == 4) {
+			} else if (results['status'] == 4) {
 				stat.value = "Role Removal Pending";
 				add.removeClass('hide');
 				//mod.style.display = "none";
@@ -161,9 +161,9 @@ var Roles = {
 				//del.style.display = "none";
 			}
 
-			group.value = results.data['primarygroup'];
-			shell.value = results.data['loginshell'];
-			pi.value    = results.data['pilogin'];
+			group.value = results['primarygroup'];
+			shell.value = results['loginshell'];
+			pi.value    = results['pilogin'];
 		} else {
 			stat.value = "Unknown - Error";
 		}
@@ -192,7 +192,7 @@ var Roles = {
 			if (xml.status < 400) {
 				/*var results = JSON.parse(xml.responseText);
 				var userid = results['user']['id'];
-				var resource = results.data['resource']['id'];
+				var resource = results['resource']['id'];
 
 				WSGetURL(ROOT_URL + "resources/members/" + resource + "." + userid, Roles.GotUserRoleStatus);*/
 				Roles.GotUserRoleStatus(xml);

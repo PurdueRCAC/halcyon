@@ -142,14 +142,14 @@ function IssuesSearchResource(xml, flags) {
 		var resource = $('#resource');
 
 		if ($('.tagsinput').length) {
-			if (!resource.tagExist(results.data['id'])) {
+			if (!resource.tagExist(results['id'])) {
 				resource.addTag({
-					'id': results.data['id'],
-					'label': results.data['name']
+					'id': results['id'],
+					'label': results['name']
 				});
 			}
 		} else {
-			resource.val(resource.val() + (resource.val() ? ', ' : '') + results.data['name'] + ':' + results.data['id']);
+			resource.val(resource.val() + (resource.val() ? ', ' : '') + results['name'] + ':' + results['id']);
 		}
 	} else {
 		// error handling

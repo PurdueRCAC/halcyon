@@ -1,10 +1,5 @@
-/**
- * @package    halcyon
- * @copyright  Copyright 2019 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
-Halcyon.submitbutton = function(task) {
+/*Halcyon.submitbutton = function(task) {
 	var frm = document.getElementById('item-form');
 
 	if (frm) {
@@ -17,7 +12,7 @@ Halcyon.submitbutton = function(task) {
 		}
 	}
 }
-/*
+
 function filterRecords() {
 	$.ajax({
 		url: my_url,
@@ -64,13 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				height: 150,
 				delay: 100,
 				minLength: 1
-			}/*,
-			'onAddTag': function(input, value) {
-				NEWSSearch();
-			},
-			'onRemoveTag': function(input, value) {
-				NEWSSearch();
-			}*/
+			}
 		});
 	}
 

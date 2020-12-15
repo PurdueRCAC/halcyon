@@ -3124,7 +3124,7 @@ function NewsPostUpdate(newsid) {
 		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 
-			NewsPrintUpdate(newsid, results.data);
+			NewsPrintUpdate(newsid, results);
 			document.getElementById(newsid + "_newupdatebox").value = "";
 			NewsCollapseNewUpdate(newsid + "_newupdatebox");
 		} else {
@@ -3328,11 +3328,11 @@ function NewsSaveUpdateText(newsid, update) {
 		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 			icon.style.display = "none";
-			icon.onclick = function () { NewsSaveUpdateText(results.data.newsid, update); };
+			icon.onclick = function () { NewsSaveUpdateText(results.newsid, update); };
 			text.style.display = "block";
 			box.style.display = "none";
 			editicon.style.display = "block";
-			text.innerHTML = results.data['formattedbody'];
+			text.innerHTML = results['formattedbody'];
 		} else if (xml.status == 403) {
 			img.className = "fa fa-exclamation-circle";
 			img.parentNode.title = "Unable to save changes, grace editing window has passed.";

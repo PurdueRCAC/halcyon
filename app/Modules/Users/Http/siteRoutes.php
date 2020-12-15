@@ -52,6 +52,10 @@ $router->group(['prefix' => 'account', 'middleware' => 'auth.admin'], function (
 		'as' => 'site.users.account.section.show',
 		'uses' => 'UsersController@profile',
 	])->where('section', '[a-zA-Z0-9]+')->where('id', '[0-9]+');
+	$router->get('{section}/{id}/{subsection}', [
+		'as' => 'site.users.account.section.show.subsection',
+		'uses' => 'UsersController@profile',
+	])->where('section', '[a-zA-Z0-9]+')->where('id', '[0-9]+')->where('subsection', '[a-zA-Z0-9]+');
 });
 
 $router->get('reset', [

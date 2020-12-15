@@ -4,10 +4,6 @@
 $active = $sections->firstWhere('active', '=', true);
 @endphp
 
-@push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/users/css/site.css') }}" />
-@endpush
-
 @if (auth()->user()->can('manage users'))
 @push('scripts')
 <script src="{{ asset('modules/resources/js/roles.js?v=' . filemtime(public_path() . '/modules/resources/js/roles.js')) }}"></script>

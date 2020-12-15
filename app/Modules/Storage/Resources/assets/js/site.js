@@ -118,10 +118,10 @@ function NewDirUserPopulate(results) {
 	//if (xml.status == 200) {
 	//var results = JSON.parse(xml.responseText);
 
-	for (var x = 0; x < results.data['members'].length; x++) {
+	for (var x = 0; x < results['members'].length; x++) {
 		opt = document.createElement("option");
-		opt.value = results.data['members'][x]['userid'];
-		opt.innerHTML = results.data['members'][x]['username'];
+		opt.value = results['members'][x]['userid'];
+		opt.innerHTML = results['members'][x]['username'];
 
 		user_select.appendChild(opt);
 	}

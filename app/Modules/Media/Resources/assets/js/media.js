@@ -1,12 +1,3 @@
-/**
- * @package    halcyon
- * @copyright  Copyright 2019 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
-String.prototype.nohtml = function () {
-	return this + (this.indexOf('?') == -1 ? '?' : '&') + 'no_html=1';
-};
 
 var _DEBUG = 0;
 

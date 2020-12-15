@@ -11,6 +11,7 @@ use App\Modules\Courses\Events\AccountLookup;
 use App\Modules\Courses\Http\Resources\AccountResource;
 use App\Modules\Courses\Http\Resources\AccountResourceCollection;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Events\UserLookup;
 use Carbon\Carbon;
 
 /**
@@ -120,17 +121,17 @@ class AccountsController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'search'   => $request->input('search', ''),
-			'userid'   => $request->input('userid', 0),
-			'groupid'   => $request->input('groupid', 0),
-			'resourceid'   => $request->input('resourceid', 0),
-			'deptnumber'   => $request->input('deptnumber', 0),
+			'search'     => $request->input('search', ''),
+			'userid'     => $request->input('userid', 0),
+			'groupid'    => $request->input('groupid', 0),
+			'resourceid' => $request->input('resourceid', 0),
+			'deptnumber' => $request->input('deptnumber', 0),
 			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
+			'limit'      => $request->input('limit', config('list_limit', 20)),
 			//'start' => $request->input('limitstart', 0),
 			// Sorting
-			'order'     => $request->input('order', Account::$orderBy),
-			'order_dir' => $request->input('order_dir', Account::$orderDir)
+			'order'      => $request->input('order', Account::$orderBy),
+			'order_dir'  => $request->input('order_dir', Account::$orderDir)
 		);
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
@@ -573,7 +574,7 @@ class AccountsController extends Controller
 				if (!$user)
 				{
 					// Nope, sorry. Look them up and post.
-					event($event = new UserLookup($student->externalId));
+					event($event = new UserLookup(['puid' => $student->externalId]));
 
 					$user = $event->user;
 
