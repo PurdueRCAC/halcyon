@@ -206,16 +206,16 @@ document.addEventListener('DOMContentLoaded', function() {
 						.removeClass('hidden');
 
 					template
-						.attr('id', template.attr('id').replace(/\{id\}/g, response.data.id))
-						.data('id', response.data.id);
+						.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
+						.data('id', response.id);
 
 					template.find('a').each(function(i, el){
-						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.data.id));
+						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
 					});
 
 					var content = template
 						.html()
-						.replace(/\{id\}/g, response.data.id)
+						.replace(/\{id\}/g, response.id)
 						.replace(/\{name\}/g, select.find('option:selected').text());
 
 					template.html(content).insertBefore(li);
@@ -283,18 +283,18 @@ document.addEventListener('DOMContentLoaded', function() {
 						.removeClass('hidden');
 
 					template
-						.attr('id', template.attr('id').replace(/\{id\}/g, response.data.id))
-						.data('id', response.data.id);
+						.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
+						.data('id', response.id);
 
 					template.find('a').each(function(i, el){
-						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.data.id));
+						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
 					});
 
 					var content = template
 						.html()
-						.replace(/\{id\}/g, response.data.id)
-						.replace(/\{longname\}/g, response.data.longname)
-						.replace(/\{shortname\}/g, response.data.shortname);
+						.replace(/\{id\}/g, response.id)
+						.replace(/\{longname\}/g, response.longname)
+						.replace(/\{shortname\}/g, response.shortname);
 
 					template.html(content).insertBefore(li);
 				}

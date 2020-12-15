@@ -2,6 +2,7 @@
 
 namespace App\Modules\Groups\Http\Controllers\Site;
 
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Halcyon\Http\StatefulRequest;
@@ -193,6 +194,43 @@ class GroupsController extends Controller
 		}
 
 		return $this->cancel();
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function export(Request $request)
+	{
+		$filename = $request->input('filename', 'data') . '.csv';
+
+		$headers = array(
+			'Content-type' => 'text/csv',
+			'Content-Disposition' => 'attachment; filename=' . $filename,
+			'Pragma' => 'no-cache',
+			'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+			'Expires' => '0'
+		);
+
+		if ($data = $request->input('data', '[]'))
+		{
+			$data = json_decode($data);
+		}
+
+		$callback = function() use ($data)
+		{
+			$file = fopen('php://output', 'w');
+
+			foreach ($data as $datum)
+			{
+				fputcsv($file, $datum);
+			}
+			fclose($file);
+		};
+
+		return response()->streamDownload($callback, $filename, $headers);
 	}
 
 	/**

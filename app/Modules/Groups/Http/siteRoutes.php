@@ -14,5 +14,9 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		'as' => 'site.groups.show',
 		'uses' => 'GroupsController@show',
 		'middleware' => 'can:view groups',
+	])->where('id', '[0-9]+');
+	$router->post('/export', [
+		'as' => 'site.groups.export',
+		'uses' => 'GroupsController@export',
 	]);
 });
