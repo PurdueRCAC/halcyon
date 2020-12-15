@@ -409,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					var span = $('#SPAN_' + btn.data('prop') + '_' + btn.data('value'));
 					if (span.length) {
 						span.toggleClass('hide');
-						span.html(data.data[btn.data('prop')]);
+						span.html(data[btn.data('prop')]);
 					}
 					input.toggleClass('hide');
 
@@ -783,6 +783,21 @@ document.addEventListener('DOMContentLoaded', function() {
 					$(el).prop('checked', true).change();
 				}
 			});
+		});
+
+		$('#export_to_csv').on('click', function (e) {
+			e.preventDefault();
+			// Get the form unique to the current tab group using its id
+			var form_id = "#csv_form_" + $(this).data('id');
+			var form = $(form_id);
+			/*var data = form.find('input:hidden[name=data]').val();
+			// Data is json_parsed and uri decoded so convert it back
+			data = JSON.parse(decodeURIComponent(data));
+			// csvEscapeJSON is found in common.js and used to make the html render correctly
+			data = csvEscapeJSON(JSON.stringify(data));
+			// Insert data back into the form and make it submit to the php csv page. 
+			form.find('input:hidden[name=data]').val(data)*/
+			form.submit();
 		});
 	});
 

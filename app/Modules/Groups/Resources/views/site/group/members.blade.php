@@ -455,7 +455,7 @@ $members = $members->sortBy('username');
 ?>
 <div class="row mb-3">
 	<div class="col-md-6">
-		<button id="export_to_csv_button" class="btn btn-default btn-sm"><i class="fa fa-table" ara-hidden="true"></i> Export to CSV</button>
+		<button id="export_to_csv" data-id="{{ $group->id }}" class="btn btn-default btn-sm"><i class="fa fa-table" ara-hidden="true"></i> Export to CSV</button>
 	</div>
 	<div class="col-md-6 text-right">
 		<a href="#add_member_dialog" class="add_member btn btn-default btn-secondary btn-sm" data-membertype="1">
@@ -556,21 +556,27 @@ $members = $members->sortBy('username');
 					<th scope="col">User</th>
 					<th scope="col">Username</th>
 					<?php
-					//$qu = array();
+					$csv_headers = array(
+						'Name',
+						'Username',
+						'Table'
+					);
 					foreach ($queues as $queue):
-						//$qu[$queue->id] = $queue->users->pluck('userid')->toArray();
+						$csv_headers[] = $queue->name . ' (' . $queue->resource->name . ')';
 						?>
 						<th scope="col" class="text-nowrap text-center">{{ $queue->name }} ({{ $queue->resource->name }})</th>
 						<?php
 					endforeach;
 
-					//$uu = array();
 					foreach ($unixgroups as $unix):
-						//$uu[$unix->id] = $unix->members->pluck('userid')->toArray();
+						$csv_headers[] = $unix->longname;
 						?>
 						<th scope="col" class="text-nowrap text-center">{{ $unix->longname }}</th>
 						<?php
 					endforeach;
+
+					$csv_data = array();
+					$csv_data[] = $csv_headers;
 					?>
 					<th scope="col" class="text-right">Options</th>
 				</tr>
@@ -593,6 +599,11 @@ $members = $members->sortBy('username');
 						<?php
 						$in = array();
 						$qu = array();
+						$csv = array(
+								($member->user ? $member->user->name : trans('global.unknown')),
+								($member->user ? $member->username : trans('global.unknown')),
+								'Managers'
+							);
 						foreach ($queues as $queue):
 							//$qu[$queue->id] = $queue->users->pluck('userid')->toArray();
 							$checked = '';
@@ -612,6 +623,7 @@ $members = $members->sortBy('username');
 									endif;
 								endforeach;
 							endif;
+							$csv[] = $checked ? 'yes' : 'no';
 							?>
 							<td class="text-nowrap text-center">
 								<input type="checkbox"
@@ -638,6 +650,8 @@ $members = $members->sortBy('username');
 									break;
 								endif;
 							endforeach;
+							$csv[] = $checked ? 'yes' : 'no';
+
 							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
 								if ($group_boxes > 0 && $checked):
 									$checked .= ' disabled="disabled"';
@@ -655,7 +669,8 @@ $members = $members->sortBy('username');
 							</td>
 							<?php
 						endforeach;
-							?>
+						$csv_data[] = $csv;
+						?>
 						<!-- </td> -->
 						<td class="text-right text-nowrap">
 							<!-- <a href="#manager-{{ $member->userid }}-edit" class="btn membership-edit tip" title="Edit memberships"><i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit memberships</span></a> -->
@@ -744,41 +759,39 @@ $members = $members->sortBy('username');
 							<td class="text-nowrap">
 								{{ $member->user ? $member->user->username : trans('global.unknown') }}
 							</td>
-							<!-- <td> -->
 							<?php
-							//$in = array();
+							$csv = array(
+								($member->user ? $member->user->name : trans('global.unknown')),
+								($member->user ? $member->username : trans('global.unknown')),
+								'Members'
+							);
 							foreach ($queues as $queue):
 								$checked = '';
 								$m = null;
 
-									foreach ($queue->users as $m):
-										//if ($m->userid == $member->userid):
-										if ($member->userid == $m->userid):
-										//if (in_array($member->userid, $qu[$queue->id])):
-											//$in[] = $queue->name;
-											$checked = ' checked="checked"';
-											break;
-										endif;
-									endforeach;
-										?>
-										<td class="text-center col-queue">
-											<input type="checkbox"
-												class="membership-toggle queue-toggle"
-												name="queue[{{ $queue->id }}]"{{ $checked }}
-												data-userid="{{ $member->userid }}"
-												data-objectid="{{ $queue->id }}"
-												data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
-												value="1" />
-										</td>
-										<?php
-									//endif;
+								foreach ($queue->users as $m):
+									//if ($m->userid == $member->userid):
+									if ($member->userid == $m->userid):
+									//if (in_array($member->userid, $qu[$queue->id])):
+										//$in[] = $queue->name;
+										$checked = ' checked="checked"';
+										break;
+									endif;
+								endforeach;
+								$csv[] = $checked ? 'yes' : 'no';
+								?>
+								<td class="text-center col-queue">
+									<input type="checkbox"
+										class="membership-toggle queue-toggle"
+										name="queue[{{ $queue->id }}]"{{ $checked }}
+										data-userid="{{ $member->userid }}"
+										data-objectid="{{ $queue->id }}"
+										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
+										value="1" />
+								</td>
+								<?php
 							endforeach;
-							/*echo implode(', ', $in);
-							?>
-							</td>
-							<td>
-								<?php*/
-							//$in = array();
+
 							foreach ($unixgroups as $unix):
 								$checked = '';
 								$m = null;
@@ -790,27 +803,27 @@ $members = $members->sortBy('username');
 										break;
 									endif;
 								endforeach;
+								$csv[] = $checked ? 'yes' : 'no';
+
 								if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
 									if ($group_boxes > 0 && $checked):
 										$checked .= ' disabled="disabled"';
 									endif;
 								endif;
-										?>
-										<td class="text-center col-unixgroup">
-											<input type="checkbox"
-												class="membership-toggle unixgroup-toggle"
-												name="unix[{{ $unix->id }}]"{{ $checked }}
-												data-userid="{{ $member->userid }}"
-												data-objectid="{{ $unix->id }}"
-												data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
-												value="1" />
-										</td>
-										<?php
-									//endif;
+								?>
+								<td class="text-center col-unixgroup">
+									<input type="checkbox"
+										class="membership-toggle unixgroup-toggle"
+										name="unix[{{ $unix->id }}]"{{ $checked }}
+										data-userid="{{ $member->userid }}"
+										data-objectid="{{ $unix->id }}"
+										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
+										value="1" />
+								</td>
+								<?php
 							endforeach;
-							//echo implode(', ', $in);
+							$csv_data[] = $csv;
 							?>
-							<!-- </td> -->
 							<td class="text-right text-nowrap">
 								<a href="#member{{ $member->id }}" class="membership-allqueues allqueues tip" title="Enable all queues for this user"><i class="fa fa-check-square" aria-hidden="true"></i><span class="sr-only">Enable all queues</span></a>
 								<a href="#member{{ $member->id }}" class="membership-move change tip" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="3" title="Grant usage viewer privleges"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="sr-only">Grant usage viewer privleges</span></a>
@@ -897,6 +910,11 @@ $members = $members->sortBy('username');
 							{{ $member->user ? $member->user->username : trans('global.unknown') }}
 						</td>
 						<?php
+						$csv = array(
+							($member->user ? $member->user->name : trans('global.unknown')),
+							($member->user ? $member->username : trans('global.unknown')),
+							'Usage Reporting Viewers'
+						);
 						foreach ($queues as $queue):
 							$checked = '';
 							$m = null;
@@ -907,6 +925,7 @@ $members = $members->sortBy('username');
 									break;
 								endif;
 							endforeach;
+							$csv[] = $checked ? 'yes' : 'no';
 							?>
 							<td class="text-center col-queue">
 								<input type="checkbox"
@@ -929,6 +948,8 @@ $members = $members->sortBy('username');
 									break;
 								endif;
 							endforeach;
+							$csv[] = $checked ? 'yes' : 'no';
+
 							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
 								if ($group_boxes > 0 && $checked):
 									$checked .= ' disabled="disabled"';
@@ -946,6 +967,7 @@ $members = $members->sortBy('username');
 							</td>
 							<?php
 						endforeach;
+						$csv_data[] = $csv;
 						?>
 						<td class="text-right text-nowrap">
 							<a href="#member{{ $member->id }}" class="membership-allqueues allqueues tip" data-container="#member{{ $member->id }}" title="Enable all queues for this user"><i class="fa fa-check-square" aria-hidden="true"></i><span class="sr-only">Enable all queues</span></a>
@@ -1058,12 +1080,16 @@ $members = $members->sortBy('username');
 							<td class="text-nowrap">
 								{{ $member->user ? $member->user->username : trans('global.unknown') }}
 							</td>
-							<!-- <td> -->
 							<?php
-							//$in = array();
+							$csv = array(
+								($member->user ? $member->user->name : trans('global.unknown')),
+								($member->user ? $member->username : trans('global.unknown')),
+								'Disabled'
+							);
 							foreach ($queues as $queue):
 								$checked = '';
 								$m = null;
+
 								foreach ($queue->users()->withTrashed()->get() as $m):
 									//if ($m->userid == $member->userid):
 									if ($member->userid == $m->userid):
@@ -1073,6 +1099,7 @@ $members = $members->sortBy('username');
 										break;
 									endif;
 								endforeach;
+								$csv[] = $checked ? 'yes' : 'no';
 								?>
 								<td class="text-center col-queue">
 									<input type="checkbox"
@@ -1085,14 +1112,8 @@ $members = $members->sortBy('username');
 										value="1" />
 								</td>
 								<?php
-									//endif;
 							endforeach;
-							/*echo implode(', ', $in);
-							?>
-							</td>
-							<td>
-								<?php*/
-							//$in = array();
+
 							foreach ($unixgroups as $unix):
 								$checked = '';
 								$m = null;
@@ -1104,6 +1125,7 @@ $members = $members->sortBy('username');
 										break;
 									endif;
 								endforeach;
+								$csv[] = $checked ? 'yes' : 'no';
 								?>
 								<td class="text-center col-unixgroup">
 									<input type="checkbox"
@@ -1116,11 +1138,9 @@ $members = $members->sortBy('username');
 										value="1" />
 								</td>
 								<?php
-									//endif;
 							endforeach;
-							//echo implode(', ', $in);
+							$csv_data[] = $csv;
 							?>
-							<!-- </td> -->
 							<td class="text-right text-nowrap">
 								<a href="#member{{ $member->id }}" class="membership-remove delete tip" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group"><i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">Remove from group</span></a>
 							</td>
@@ -1220,3 +1240,11 @@ $members = $members->sortBy('username');
 		</div>
 	</form>
 </div>
+
+<form id="csv_form_{{ $group->id }}" class="csv_form" method="post" action="{{ route('site.groups.export') }}">
+	<input type="hidden" name="data" value='<?php echo json_encode($csv_data); ?>' />
+	<input type="hidden" name="id" value="{{ $group->id }}" />
+	<input type="hidden" name="filename" value="group_{{ $group->id }}_members" />
+	<!-- Allow form submission with keyboard without duplicating the dialog button -->
+	<input type="submit" tabindex="-1" />
+</form>
