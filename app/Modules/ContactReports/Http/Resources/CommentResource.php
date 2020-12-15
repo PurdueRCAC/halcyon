@@ -14,8 +14,6 @@ class CommentResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		//$this->makeHidden('report');
-
 		$data = parent::toArray($request);
 
 		$data['formatteddate'] = $this->formattedDate;
@@ -37,6 +35,6 @@ class CommentResource extends JsonResource
 			$data['can']['delete'] = $user->can('delete contactreports');
 		}
 
-		return $data; //parent::toArray($request);
+		return $data;
 	}
 }
