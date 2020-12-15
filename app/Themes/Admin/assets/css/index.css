@@ -1838,6 +1838,9 @@ body.menu-open {
   flex-grow: 0 0 1;
   width: 100%;
 }
+#container-component > #error-content {
+  flex-direction: row;
+}
 #container-component > #footer {
   flex-grow: 0;
 }

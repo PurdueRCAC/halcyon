@@ -22,4 +22,11 @@ return [
 	'copyright' => '<a href=":url">:name</a> &copy; :date. All Rights Reserved.',
 	'powered by' => 'Powered by <a rel="external" href="http://www.rcac.purdue.edu.org">Halcyon&reg;</a>, version :v',
 	'admin login' => 'Administration Login',
+	// Error pages
+	'error 403 title' => 'Not Authorized',
+	'error 403 description' => 'You are not authorized to make this request.',
+	'error 404 title' => 'Not Found',
+	'error 404 description' => 'The requested page was not found.',
+	'error 500 title' => 'Error',
+	'error 500 description' => 'A server error occurred.',
 ];
