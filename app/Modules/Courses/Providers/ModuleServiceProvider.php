@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\View;
 use App\Modules\Courses\Composers\ProfileComposer;
 use App\Modules\Courses\Console\EmailAdditionsCommand;
 use App\Modules\Courses\Console\EmailRemovalsCommand;
+use App\Modules\Courses\Listeners\UserCourses;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -37,6 +38,11 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
+		{
+			$this->app['events']->subscribe(new UserCourses);
+		}
 	}
 
 	/**

@@ -102,6 +102,16 @@ class Member extends Model
 	];
 
 	/**
+	 * If entry is trashed
+	 *
+	 * @return  bool
+	 **/
+	public function isTrashed()
+	{
+		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Get the modifier of this entry
 	 *
 	 * @return  object
@@ -163,5 +173,39 @@ class Member extends Model
 					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
 			})
 			->first();
+	}
+
+	/**
+	 * Query scope where record isn't trashed
+	 *
+	 * @param   object  $query
+	 * @return  object
+	 */
+	public function scopeWhereIsActive($query)
+	{
+		$t = $this->getTable();
+
+		return $query->where(function($where) use ($t)
+		{
+			$where->whereNull($t . '.datetimeremoved')
+					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+		});
+	}
+
+	/**
+	 * Query scope where record is trashed
+	 *
+	 * @param   object  $query
+	 * @return  object
+	 */
+	public function scopeWhereIsTrashed($query)
+	{
+		$t = $this->getTable();
+
+		return $query->where(function($where) use ($t)
+		{
+			$where->whereNotNull($t . '.datetimeremoved')
+				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+		});
 	}
 }
