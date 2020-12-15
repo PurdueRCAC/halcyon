@@ -339,7 +339,7 @@ class UniTime
 			]);
 
 			$status = $result->getStatusCode();
-			$body   = json_decode($res->getBody()->getContents());
+			$body   = json_decode($result->getBody()->getContents());
 		}
 		catch (\Exception $e)
 		{
