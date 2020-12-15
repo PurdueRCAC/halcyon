@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Http\Request;
 use Adldap\Adldap;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class HalcyonServiceProvider extends ServiceProvider
 {
@@ -65,6 +66,7 @@ class HalcyonServiceProvider extends ServiceProvider
 				$theme->getPath() . '/assets' => $manager->getAssetPath($theme->getName()),
 			], 'public');
 		}*/
+		JsonResource::withoutWrapping();
 
 		Blade::directive('sliders', function ($expression) {
 			return "<?php echo app('html.builder')->sliders($expression); ?>";
