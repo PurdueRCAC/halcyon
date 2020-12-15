@@ -100,6 +100,7 @@ return [
 	'move down' => 'Move down',
 	'LIST_ALIAS' => '(<span>Alias</span>: :alias)',
 	'LIST_ALIAS_NOTE' => '(<span>Alias</span>: :alias, <span>Note</span>: :note)',
+	'loading' => 'Loading...',
 	'state' => 'State',
 	'access' => 'Access',
 	'option' => array(
