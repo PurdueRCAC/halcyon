@@ -111,6 +111,11 @@ class PurchasesController extends Controller
 			->paginate($filters['limit'])
 			->appends($filters);
 
+		$rows->each(function($item, $key)
+		{
+			$item->api = route('api.storage.purchases.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -231,6 +236,8 @@ class PurchasesController extends Controller
 				return response()->json(['message' => trans('Failed to update `storagedirpurchases` entry for :id', ['id' => $counter->id])], 500);
 			}
 
+			$row->api = route('api.storage.purchases.read', ['id' => $row->id]);
+
 			return new JsonResource($row);
 		}
 
@@ -258,6 +265,8 @@ class PurchasesController extends Controller
 			$counter->sellergroupid = $row->groupid;
 			$counter->save();
 		}
+
+		$row->api = route('api.storage.purchases.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -294,6 +303,8 @@ class PurchasesController extends Controller
 
 		$row->seller;
 		$row->counter;
+
+		$row->api = route('api.storage.purchases.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -468,6 +479,8 @@ class PurchasesController extends Controller
 
 			$counter->save();
 		}
+
+		$row->api = route('api.storage.purchases.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}

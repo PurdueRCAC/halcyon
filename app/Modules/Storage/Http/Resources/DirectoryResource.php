@@ -16,6 +16,7 @@ class DirectoryResource extends JsonResource
 	{
 		$data = parent::toArray($request);
 
+		$data['api'] = route('api.storage.directories.read', ['id' => $this->id]);
 		$data['group'] = $this->group;
 		$data['unixgroup'] = $this->unixgroup;
 		$data['autounixgroup'] = $this->autounixgroup;

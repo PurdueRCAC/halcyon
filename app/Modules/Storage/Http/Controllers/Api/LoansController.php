@@ -24,7 +24,6 @@ class LoansController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -34,24 +33,35 @@ class LoansController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "sort",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 *      "default":       "created",
-	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved",
+	 * 				"parentid"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "sort_dir",
@@ -68,7 +78,8 @@ class LoansController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param  Request $request
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -111,6 +122,11 @@ class LoansController extends Controller
 			->paginate($filters['limit'])
 			->appends($filters);
 
+		$rows->each(function($item, $key)
+		{
+			$item->api = route('api.storage.loans.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -120,13 +136,51 @@ class LoansController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /storage/loans
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
-	 *      "type":          "string",
+	 *      "name":          "resourceid",
+	 *      "description":   "Resource ID",
 	 *      "required":      true,
-	 *      "default":       ""
+	 *     "schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
-	 * @return Response
+	 * @apiParameter {
+	 *      "name":          "groupid",
+	 *      "description":   "Group id",
+	 *      "required":      true,
+	 *     "schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 *      "name":          "lendergroupid",
+	 *      "description":   "Lender Group id",
+	 *      "required":      false,
+	 *     "schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 *     "name":          "datetimestart",
+	 *     "description":   "Start date",
+	 *     "required":      true,
+	 *     "schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 *     "name":          "datetimestop",
+	 *     "description":   "Stop date",
+	 *     "required":      false,
+	 *     "schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @param  Request  $request
+	 * @return JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -259,6 +313,8 @@ class LoansController extends Controller
 			$counter->save();
 		}
 
+		$row->api = route('api.storage.loans.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
@@ -276,7 +332,8 @@ class LoansController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @return  Response
+	 * @param   integer  $id
+	 * @return  JsonResource
 	 */
 	public function read($id)
 	{
@@ -294,6 +351,8 @@ class LoansController extends Controller
 
 		$row->lender;
 		$row->counter;
+
+		$row->api = route('api.storage.loans.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -313,13 +372,52 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       ""
+	 *      "name":          "resourceid",
+	 *      "description":   "Resource ID",
+	 *      "required":      false,
+	 *     "schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
-	 * @return  Response
+	 * @apiParameter {
+	 *      "name":          "groupid",
+	 *      "description":   "Group id",
+	 *      "required":      false,
+	 *     "schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 *      "name":          "lendergroupid",
+	 *      "description":   "Lender Group id",
+	 *      "required":      false,
+	 *     "schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 *     "name":          "datetimestart",
+	 *     "description":   "Start date",
+	 *     "required":      false,
+	 *     "schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 *     "name":          "datetimestop",
+	 *     "description":   "Stop date",
+	 *     "required":      false,
+	 *     "schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @param   integer  $id
+	 * @param   Request  $request
+	 * @return  JsonResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -328,7 +426,7 @@ class LoansController extends Controller
 			'groupid' => 'required|integer',
 			//'bytes' => 'nullable|integer',
 			'lendergroupid' => 'nullable|integer',
-			'datetimestart' => 'required|date',
+			'datetimestart' => 'nullable|date',
 			'datetimestop' => 'nullable|date',
 		]);
 
@@ -469,6 +567,8 @@ class LoansController extends Controller
 			$counter->save();
 		}
 
+		$row->api = route('api.storage.loans.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
@@ -486,6 +586,7 @@ class LoansController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

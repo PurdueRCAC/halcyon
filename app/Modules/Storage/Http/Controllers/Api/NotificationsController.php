@@ -119,6 +119,11 @@ class NotificationsController extends Controller
 			->paginate($filters['limit'])
 			->appends($filters);
 
+		$rows->each(function($item, $key)
+		{
+			$item->api = route('api.storage.notifications.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -134,6 +139,7 @@ class NotificationsController extends Controller
 	 *      "required":      true,
 	 *      "default":       ""
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -185,6 +191,7 @@ class NotificationsController extends Controller
 		}
 
 		$row->save();
+		$row->api = route('api.storage.notifications.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -203,11 +210,13 @@ class NotificationsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function read($id)
 	{
 		$row = Notification::findOrFail($id);
+		$row->api = route('api.storage.notifications.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -275,6 +284,7 @@ class NotificationsController extends Controller
 		}
 
 		$row->save();
+		$row->api = route('api.storage.notifications.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}

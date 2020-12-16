@@ -139,6 +139,7 @@ class UsageController extends Controller
 			}
 
 			$row->lastinterval = $lastinterval;
+			$row->api = route('api.storage.usage.read', ['id' => $row->id]);
 		}
 
 		/*$query = Usage::query();
@@ -215,6 +216,8 @@ class UsageController extends Controller
 
 		$row->save();
 
+		$row->api = route('api.storage.usage.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
@@ -237,6 +240,8 @@ class UsageController extends Controller
 	public function read($id)
 	{
 		$row = Usage::findOrFail($id);
+
+		$row->api = route('api.storage.usage.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -275,6 +280,8 @@ class UsageController extends Controller
 		$row = Usage::findOrFail($id);
 		$row->fill($request->all());
 		$row->save();
+
+		$row->api = route('api.storage.usage.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}

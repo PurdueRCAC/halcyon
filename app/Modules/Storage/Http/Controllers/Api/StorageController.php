@@ -110,6 +110,11 @@ class StorageController extends Controller
 			->paginate($filters['limit'])
 			->appends($filters);
 
+		$rows->each(function($item, $key)
+		{
+			$item->api = route('api.storage.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -177,6 +182,7 @@ class StorageController extends Controller
 
 		$row->save();
 		$row->directories_count = $row->directories()->count();
+		$row->api = route('api.storage.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -201,6 +207,7 @@ class StorageController extends Controller
 	{
 		$row = StorageResource::findOrFail($id);
 		$row->directories_count = $row->directories()->count();
+		$row->api = route('api.storage.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -273,6 +280,7 @@ class StorageController extends Controller
 
 		$row->save();
 		$row->directories_count = $row->directories()->count();
+		$row->api = route('api.storage.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}

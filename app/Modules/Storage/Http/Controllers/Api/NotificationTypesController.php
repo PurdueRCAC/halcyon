@@ -94,6 +94,11 @@ class NotificationTypesController extends Controller
 			->paginate($filters['limit'])
 			->appends($filters);
 
+		$rows->each(function($item, $key)
+		{
+			$item->api = route('api.storage.notifications.types.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -126,6 +131,8 @@ class NotificationTypesController extends Controller
 		$row->valuetype = $request->input('valuetype');
 		$row->save();
 
+		$row->api = route('api.storage.notifications.types.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
@@ -148,6 +155,7 @@ class NotificationTypesController extends Controller
 	public function read($id)
 	{
 		$row = Type::findOrFail($id);
+		$row->api = route('api.storage.notifications.types.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -202,7 +210,7 @@ class NotificationTypesController extends Controller
 
 		$row->save();
 
-		//$row->update($request->all());
+		$row->api = route('api.storage.notifications.types.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
