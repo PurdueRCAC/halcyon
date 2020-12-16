@@ -25,21 +25,6 @@ class ArticleResource extends JsonResource
 		$data['formattedcreateddate'] = $this->formatDate($this->getOriginal('datetimecreated'));
 		$data['formattedupdatedate']  = $this->formatDate($this->getOriginal('datetimeupdate'));
 
-		/*$data['updates'] = $this->updates->each(function ($update, $key) use ($user)
-		{
-			$can['edit']   = false;
-			$can['delete'] = false;
-			if ($user)
-			{
-				$data['can']['edit']   = ($user->can('edit news') || ($user->can('edit.own news') && $this->userid == $user->id));
-				$data['can']['delete'] = $user->can('delete news');
-			}
-
-			$update->formattedbody = $update->formattedBody;
-			$update->formattedcreateddate = $update->formatDate($update->datetimecreated);
-			$update->can = $can;
-			//$update->username = $update->creator ? $update->creator->name : trans('global.unknown');
-		});*/
 		$data['updates'] = array();
 		foreach ($this->updates as $update)
 		{
