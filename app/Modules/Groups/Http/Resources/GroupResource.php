@@ -26,71 +26,125 @@ class GroupResource extends JsonResource
 		if (auth()->user() && auth()->user()->can('manage groups'))
 		{
 			$data['managers'] = array();
-			$data['members'] = array();
-			$data['viewers'] = array();
+			$data['members']  = array();
+			$data['viewers']  = array();
 
 			$data['priormanagers'] = array();
-			$data['priormembers'] = array();
-			$data['priorviewers'] = array();
+			$data['priormembers']  = array();
+			$data['priorviewers']  = array();
 
 			foreach ($this->members()->withTrashed()->get() as $m)
 			{
+				$m->api = route('api.groups.members.read', ['id' => $m->id]);
+
+				$ma = $m->toArray();
+
+				if (!$m->isTrashed() && $m->user->isTrashed())
+				{
+					$ma['dateremoved'] = $m->user->dateremoved;
+				}
+
 				if ($m->isManager())
 				{
-					if ($m->dateremoved
-					 && $m->dateremoved != '-0001-11-30 00:00:00'
-					 && $m->dateremoved != '0000-00-00 00:00:00')
+					if ($m->isTrashed() || $m->user->isTrashed())
 					{
-						$data['priormanagers'][] = $m;
+						$data['priormanagers'][] = $ma;
 					}
 					else
 					{
-						$data['managers'][] = $m;
+						$data['managers'][] = $ma;
 					}
 					continue;
 				}
 
 				if ($m->isViewer())
 				{
-					if ($m->trashed()
-					 && $m->dateremoved != '-0001-11-30 00:00:00'
-					 && $m->dateremoved != '0000-00-00 00:00:00')
+					if ($m->isTrashed() || $m->user->isTrashed())
 					{
-						$data['priorviewers'][] = $m;
+						$data['priorviewers'][] = $ma;
 					}
 					else
 					{
-						$data['viewers'][] = $m;
+						$data['viewers'][] = $ma;
 					}
 					continue;
 				}
 
-				if ($m->trashed()
-				 && $m->dateremoved != '-0001-11-30 00:00:00'
-				 && $m->dateremoved != '0000-00-00 00:00:00')
+				if ($m->isTrashed() || $m->user->isTrashed())
 				{
-					$data['priormembers'][] = $m;
+					$data['priormembers'][] = $ma;
 				}
 				else
 				{
-					$data['members'][] = $m;
+					$data['members'][] = $ma;
 				}
 			}
-			//$data['members'] = $this->members;
 		}
-		$data['department'] = $this->departmentList;
-		$data['motd'] = $this->motd;
-		$data['loans'] = $this->loans()->whenAvailable()->where('groupid', '=', $this->id)->get();
-		$data['priorloans'] = $this->loans()->whenNotAvailable()->where('groupid', '=', $this->id)->get();
-		$data['purchases'] = $this->purchases()->whenAvailable()->where('groupid', '=', $this->id)->get();
-		$data['priorpurchases'] = $this->purchases()->whenNotAvailable()->where('groupid', '=', $this->id)->get();
-		$data['directories'] = $this->directories->each(function ($item, $key)
+
+		$data['department'] = $this->departments->each(function($item, $key)
 		{
-			$item->messages;
-			//$item->permissions = $item->unixPermissions;
+			$item->api = route('api.groups.departments.read', ['id' => $item->id]);
 		});
 
-		$data['resources'] = $this->resources;
+		$data['motd'] = $this->motd;
+		if ($data['motd'])
+		{
+			$data['motd']['api'] = route('api.groups.notifications.read', ['id' => $data['motd']['id']]);
+		}
+
+		$data['loans'] = $this->loans()
+			->whenAvailable()
+			->where('groupid', '=', $this->id)
+			->get()
+			->each(function($item, $key)
+			{
+				$item->api = route('api.storage.loans.read', ['id' => $item->id]);
+			});
+
+		$data['priorloans'] = $this->loans()
+			->whenNotAvailable()
+			->where('groupid', '=', $this->id)
+			->get()
+			->each(function($item, $key)
+			{
+				$item->api = route('api.storage.loans.read', ['id' => $item->id]);
+			});
+
+		$data['purchases'] = $this->purchases()
+			->whenAvailable()
+			->where('groupid', '=', $this->id)
+			->get()
+			->each(function($item, $key)
+			{
+				$item->api = route('api.storage.purchases.read', ['id' => $item->id]);
+			});
+
+		$data['priorpurchases'] = $this->purchases()
+			->whenNotAvailable()
+			->where('groupid', '=', $this->id)
+			->get()
+			->each(function($item, $key)
+			{
+				$item->api = route('api.storage.purchases.read', ['id' => $item->id]);
+			});
+
+		$data['directories'] = $this->directories->each(function ($item, $key)
+		{
+			$item->api = route('api.storage.directories.read', ['id' => $item->id]);
+			$item->messages = $item->messages()
+				->where('userid', '<>', 0)
+				->orderBy('datetimesubmitted', 'desc')
+				->get()
+				->each(function($item, $key)
+				{
+					$item->api = route('api.messages.read', ['id' => $item->id]);
+				});
+		});
+
+		/*$data['resources'] = $this->resources->each(function ($item, $key)
+		{
+			$item->api = route('api.resources.read', ['id' => $item->id]);
+		});*/
 
 		$buckets = array();
 		foreach ($this->loans as $dir)
@@ -110,6 +164,7 @@ class GroupResource extends JsonResource
 			$buckets[$dir->resourceid]['loanedbytes'] += $dir->bytes;
 			$buckets[$dir->resourceid]['totalbytes'] += $dir->bytes;
 		}
+
 		foreach ($this->purchases as $dir)
 		{
 			if (!isset($buckets[$dir->resourceid]))
@@ -127,6 +182,7 @@ class GroupResource extends JsonResource
 			$buckets[$dir->resourceid]['soldbytes'] += $dir->bytes;
 			$buckets[$dir->resourceid]['totalbytes'] += $dir->bytes;
 		}
+
 		foreach ($this->directories as $dir)
 		{
 			if (!isset($buckets[$dir->resourceid]))
@@ -135,6 +191,7 @@ class GroupResource extends JsonResource
 			}
 			$buckets[$dir->resourceid]['allocatedbytes'] += $dir->bytes;
 		}
+
 		foreach ($buckets as $k => $v)
 		{
 			$buckets[$k]['unallocatedbytes'] = ($buckets[$k]['allocatedbytes'] - $buckets[$k]['totalbytes']);
@@ -148,19 +205,30 @@ class GroupResource extends JsonResource
 			->get()
 			->each(function ($item, $key)
 			{
-				$item->messages;
-				//$item->permissions = $item->unixPermissions;
+				$item->api = route('api.storage.directories.read', ['id' => $item->id]);
+				$item->messages = $item->messages()
+					->where('userid', '<>', 0)
+					->orderBy('datetimesubmitted', 'desc')
+					->get()
+					->each(function($item, $key)
+					{
+						$item->api = route('api.messages.read', ['id' => $item->id]);
+					});
 			});
+
 		$data['unixgroups'] = $this->unixgroups->each(function ($item, $key)
 		{
+			$item->api = route('api.unixgroups.read', ['id' => $item->id]);
 			$item->members;
 		});
+
 		$data['priorunixgroups'] = $this->unixgroups()
 			->onlyTrashed()
 			->where('datetimeremoved', '!=', '0000-00-00 00:00:00')
 			->get()
 			->each(function ($item, $key)
 			{
+				$item->api = route('api.unixgroups.read', ['id' => $item->id]);
 				$item->members;
 			});
 
