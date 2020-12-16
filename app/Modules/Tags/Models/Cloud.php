@@ -177,7 +177,7 @@ class Cloud extends Fluent
 
 		$results = Tag::all()->purgeCache();
 
-		if (isset($filters['sort']) && $filters['sort'] == 'taggedon')
+		if (isset($filters['order']) && $filters['order'] == 'taggedon')
 		{
 			$results
 				->select($tbl . '.taggedon')
@@ -273,15 +273,15 @@ class Cloud extends Fluent
 						$results->limit($filters['limit']);
 						$results->start($filters['start']);
 					}
-					if (isset($filters['sort']) && $filters['sort'] != '')
+					if (isset($filters['order']) && $filters['order'] != '')
 					{
-						if ($filters['sort'] == 'total')
+						if ($filters['order'] == 'total')
 						{
-							$filters['sort'] = 'objects';
+							$filters['order'] = 'objects';
 						}
 
-						$filters['sort_Dir'] = (isset($filters['sort_Dir']) && $filters['sort_Dir']) ? $filters['sort_Dir'] : "ASC";
-						$results->orderBy($filters['sort'], $filters['sort_Dir']);
+						$filters['order_dir'] = (isset($filters['order_dir']) && $filters['order_dir']) ? $filters['order_dir'] : "ASC";
+						$results->orderBy($filters['order'], $filters['order_dir']);
 					}
 
 					$this->_cache['tags.list'] = $results->get();

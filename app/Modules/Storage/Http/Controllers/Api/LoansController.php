@@ -48,7 +48,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "sort",
+	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"required":      false,
 	 * 		"schema": {
@@ -64,7 +64,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "sort_dir",
+	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
 	 * 		"type":          "string",
 	 * 		"required":      false,

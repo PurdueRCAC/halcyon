@@ -44,7 +44,7 @@ class UsageController extends Controller
 	 * 		"default":       ""
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "sort",
+	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
@@ -52,7 +52,7 @@ class UsageController extends Controller
 	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "sort_dir",
+	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
