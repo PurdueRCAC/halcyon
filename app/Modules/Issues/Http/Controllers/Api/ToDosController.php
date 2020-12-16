@@ -203,7 +203,9 @@ class ToDosController extends Controller
 			return response()->json(['message' => trans('messages.create failed')], 500);
 		}
 
-		return new ApiIssueResource($row);
+		$row->api = route('api.issues.todos.read', ['id' => $row->id]);
+
+		return new JsonResource($row);
 	}
 
 	/**
@@ -226,6 +228,8 @@ class ToDosController extends Controller
 	public function read($id)
 	{
 		$row = ToDo::findOrFail((int)$id);
+
+		$row->api = route('api.issues.todos.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -292,6 +296,8 @@ class ToDosController extends Controller
 		{
 			return response()->json(['message' => trans('messages.update failed')], 500);
 		}
+
+		$row->api = route('api.issues.todos.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
