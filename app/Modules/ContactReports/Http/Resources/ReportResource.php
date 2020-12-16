@@ -27,7 +27,7 @@ class ReportResource extends JsonResource
 		$data['subscribedcommentid'] = 0;
 		foreach ($this->comments as $comment)
 		{
-			$c = $comment->toArray();
+			/*$c = $comment->toArray();
 
 			$c['formatteddate'] = $comment->formattedDate;
 			$c['formattedcomment'] = $comment->formattedComment;
@@ -52,18 +52,23 @@ class ReportResource extends JsonResource
 
 				$c['can']['edit']   = ($user->can('edit contactreports') || ($user->can('edit.own contactreports') && $comment->userid == $user->id));
 				$c['can']['delete'] = $user->can('delete contactreports');
-			}
+			}*/
 
-			$data['comments'][] = $c;
+			$data['comments'][] = new CommentResource($comment);
 		}
 		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
 		$data['users'] = $this->users->each(function ($res, $key)
 		{
+			if ($res->user)
+			{
+				$res->user->api = route('api.users.read', ['id' => $res->id]);
+			}
 			$res->name = $res->user ? $res->user->name : trans('global.unknown');
 		});
 		$data['groupname'] = $this->group ? $this->group->name : null;
 		$data['resources'] = $this->resources->each(function ($res, $key)
 		{
+			$res->resource->api = route('api.resources.read', ['id' => $res->resource->id]);
 			$res->name = $res->resource->name;
 		});
 		$data['age'] = Carbon::now()->timestamp - $this->datetimecreated->timestamp;
@@ -71,7 +76,6 @@ class ReportResource extends JsonResource
 		$data['api'] = route('api.contactreports.read', ['id' => $this->id]);
 		$data['url'] = route('site.contactreports.show', ['id' => $this->id]);
 
-		//$data['canCreate'] = false;
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
 
@@ -82,11 +86,10 @@ class ReportResource extends JsonResource
 				$data['subscribed'] = 1;
 			}
 
-			//$data['canCreate'] = auth()->user()->can('create contactreports');
 			$data['can']['edit']   = ($user->can('edit contactreports') || ($user->can('edit.own contactreports') && $this->userid == $user->id));
 			$data['can']['delete'] = $user->can('delete contactreports');
 		}
 
-		return $data; //parent::toArray($request);
+		return $data;
 	}
 }
