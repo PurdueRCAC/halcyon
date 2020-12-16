@@ -47,7 +47,7 @@ class TypesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 *      "name":          "sort",
+	 *      "name":          "order",
 	 *      "description":   "Field to sort results by.",
 	 *      "type":          "string",
 	 *      "required":      false,
@@ -56,7 +56,7 @@ class TypesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 *      "name":          "sort_dir",
+	 *      "name":          "order_dir",
 	 *      "description":   "Direction to sort results by.",
 	 *      "type":          "string",
 	 *      "required":      false,
@@ -73,13 +73,13 @@ class TypesController extends Controller
 			'limit'    => $request->input('limit', config('list_limit', 20)),
 			//'start' => $request->input('limitstart', 0),
 			// Sorting
-			'sort'     => $request->input('sort', 'name'),
-			'sort_dir' => $request->input('sort_dir', 'asc')
+			'order'     => $request->input('order', 'name'),
+			'order_dir' => $request->input('order_dir', 'asc')
 		);
 
-		if (!in_array($filters['sort_dir'], ['asc', 'desc']))
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['sort_dir'] = 'asc';
+			$filters['order_dir'] = 'asc';
 		}
 
 		$query = Type::query()
@@ -91,7 +91,7 @@ class TypesController extends Controller
 		}
 
 		$rows = $query
-			->orderBy($filters['sort'], $filters['sort_dir'])
+			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
