@@ -235,6 +235,8 @@ class Subresource extends Model
 			$query->where('cluster', 'like', 'standby%');
 		}
 
+		//$sql = "SELECT if (SUM(queueloans.corecount) IS NULL, 0, SUM(queueloans.corecount)) AS loanedcores FROM queues, queueloans, subresources WHERE queues.subresourceid = subresources.id AND queueloans.queueid = queues.id AND (queueloans.datetimestop = '0000-00-00 00:00:00' OR queueloans.datetimestop > NOW()) AND (queueloans.datetimestart = '0000-00-00 00:00:00' OR queueloans.datetimestart <= NOW()) AND queues.datetimeremoved = '0000-00-00 00:00:00' AND queues.subresourceid = '" . $this->db->escape_string($id) . "' AND (subresources.nodecores <> 0 OR queues.cluster LIKE 'standby%') AND queues.groupid > '0'";
+
 		$queues = $query->get();
 
 		foreach ($queues as $queue)
@@ -279,7 +281,7 @@ class Subresource extends Model
 					{
 						$where->whereNull('datetimestart')
 							->orWhere('datetimestart', '=', '0000-00-00 00:00:00')
-							->orWhere('datetimestop', '<=', $now->toDateTimeString());
+							->orWhere('datetimestart', '<=', $now->toDateTimeString());
 					})
 					//->where('groupid', '>', 0)
 					->get();

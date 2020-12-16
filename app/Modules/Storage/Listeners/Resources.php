@@ -7,9 +7,13 @@
 
 namespace App\Modules\Storage\Listeners;
 
+use Illuminate\Support\Facades\DB;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\StorageResource;
+use App\Modules\Storage\Models\Purchase;
+use App\Modules\Storage\Models\Loan;
 use App\Modules\Resources\Events\ResourceMemberCreated;
+use App\Modules\Resources\Events\AssetBeforeDisplay;
 
 /**
  * Resources listener
@@ -25,6 +29,93 @@ class Resources
 	public function subscribe($events)
 	{
 		$events->listen(ResourceMemberCreated::class, self::class . '@handleResourceMemberCreated');
+		$events->listen(AssetBeforeDisplay::class, self::class . '@handleAssetBeforeDisplay');
+	}
+
+	/**
+	 * Display user profile info
+	 *
+	 * @param   object  $event  AssetBeforeDisplay
+	 * @return  void
+	 */
+	public function handleAssetBeforeDisplay(AssetBeforeDisplay $event)
+	{
+		$asset = $event->getAsset();
+
+		$storagebuckets = array();
+
+		if ($asset->resourcetype == 2)
+		{
+			$rows = Purchase::query()
+				->select(DB::raw('SUM(bytes) AS soldbytes'), 'groupid')
+				->whenAvailable()
+				->where('resourceid', '=', $asset->id)
+				->groupBy('groupid')
+				->get();
+
+			foreach ($rows as $row)
+			{
+				$directory = Directory::query()
+					->whereIsActive()
+					->where('groupid', '=', $row->groupid)
+					->where('resourceid', '=', $asset->id)
+					->where('bytes', '!=', 0)
+					->first();
+
+				$storagebuckets[] = array(
+					'soldbytes'   => (int)$row->soldbytes,
+					'loanedbytes' => 0,
+					'totalbytes'  => (int)$row->soldbytes,
+					'path'        => $directory ? $directory->name : null,
+					'group'       => $row->group
+				);
+			}
+
+			$rows = Loan::query()
+				->select(DB::raw('SUM(bytes) AS loanedbytes'), 'groupid')
+				->whenAvailable()
+				->where('resourceid', '=', $asset->id)
+				->groupBy('groupid')
+				->get();
+
+			foreach ($rows as $row)
+			{
+				$found = false;
+
+				foreach ($storagebuckets as &$bucket)
+				{
+					if ($bucket['group']['id'] == $row->groupid)
+					{
+						$bucket['loanedbytes'] = (int)$row->loanedbytes;
+						$bucket['totalbytes'] += (int)$row->loanedbytes;
+						$found = true;
+						break;
+					}
+				}
+
+				if (!$found)
+				{
+					$directory = Directory::query()
+						->whereIsActive()
+						->where('groupid', '=', $row->groupid)
+						->where('resourceid', '=', $asset->id)
+						->where('bytes', '!=', 0)
+						->first();
+
+					$storagebuckets[] = array(
+						'soldbytes'   => $row->loanedbytes,
+						'loanedbytes' => 0,
+						'totalbytes'  => $row->loanedbytes,
+						'path'        => $directory ? $directory->name : null,
+						'group'       => $row->group
+					);
+				}
+			}
+		}
+
+		$asset->storagebuckets = $storagebuckets;
+
+		$event->setAsset($asset);
 	}
 
 	/**

@@ -14,6 +14,11 @@ class AssetResourceCollection extends ResourceCollection
 	 */
 	public function toArray($request)
 	{
+		$this->collection->each(function($item, $key)
+		{
+			$item->extended = false;
+		});
+
 		return parent::toArray($request);
 	}
 }

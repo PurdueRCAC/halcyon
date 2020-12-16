@@ -14,7 +14,10 @@ class SubresourceResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$this->queues;
+		$this->queues->each(function($item, $key)
+		{
+			$item->api = route('api.queues.read', ['id' => $this->id]);
+		});
 
 		$data = parent::toArray($request);
 
