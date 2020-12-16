@@ -14,10 +14,6 @@ class AccountResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		//event($event = new AccountReading($this->resource));
-
-		//$this->resource = $event->account;
-
 		$data = parent::toArray($request);
 
 		$data['api'] = route('api.courses.read', ['id' => $this->id]);

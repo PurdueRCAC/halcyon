@@ -174,6 +174,7 @@ class MembersController extends Controller
 		{
 			$item->api = route('api.courses.members.read', ['id' => $item->id]);
 			$item->user;
+			$item->user->api = route('api.users.read', ['id' => $item->userid]);
 		});
 
 		return new ResourceCollection($rows);
@@ -276,6 +277,7 @@ class MembersController extends Controller
 
 		$row->api = route('api.courses.members.read', ['id' => $row->id]);
 		$row->user;
+		$row->user->api = route('api.users.read', ['id' => $row->userid]);
 
 		return new JsonResource($row);
 	}
@@ -302,6 +304,7 @@ class MembersController extends Controller
 		$row = Member::findOrFail($id);
 		$row->api = route('api.courses.members.read', ['id' => $row->id]);
 		$row->user;
+		$row->user->api = route('api.users.read', ['id' => $row->userid]);
 
 		return new JsonResource($row);
 	}
@@ -433,6 +436,7 @@ class MembersController extends Controller
 
 		$row->api = route('api.courses.members.read', ['id' => $row->id]);
 		$row->user;
+		$row->user->api = route('api.users.read', ['id' => $row->userid]);
 
 		return new JsonResource($row);
 	}
