@@ -8,6 +8,8 @@ use Illuminate\Routing\Controller;
 use App\Modules\Menus\Models\Type;
 use App\Modules\Menus\Models\Item;
 use App\Halcyon\Access\Viewlevel;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 /**
  * Menus
@@ -122,11 +124,14 @@ class MenusController extends Controller
 		$rows = $query
 			->withCount('items')
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit']);
+			->paginate($filters['limit'])
+			->appends(array_filter($filters))
+			->each(function($item, $key)
+			{
+				$item->api = route('api.menus.read', ['id' => $item->id]);
+			});
 
-		$rows->appends(array_filter($filters));
-
-		return $rows;
+		return new ResourceCollection($rows);
 	}
 
 	/**
@@ -167,18 +172,24 @@ class MenusController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'title' => 'required',
-			'menutype' => 'required',
+			'title' => 'required|string|max:48',
+			'menutype' => 'required|string|max:24',
+			'description' => 'nullable|string|max:255',
 		]);
 
-		$row = new Type($request->all());
+		$row = new Type();
+		$row->title = $request->input('title');
+		$row->menutype = $request->input('menutype');
+		$row->description = $request->input('description');
 
 		if (!$row->save())
 		{
-			throw new \Exception($row->getError(), 409);
+			return response()->json(['message' => trans('global.messages.save failed')], 500);
 		}
 
-		return $row;
+		$row->api = route('api.menus.read', ['id' => $row->id]);
+
+		return new JsonResource($row);
 	}
 
 	/**
@@ -201,7 +212,9 @@ class MenusController extends Controller
 	{
 		$row = Type::findOrFail((int)$id);
 
-		return $row;
+		$row->api = route('api.menus.read', ['id' => $row->id]);
+
+		return new JsonResource($row);
 	}
 
 	/**
@@ -251,15 +264,25 @@ class MenusController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
+		$request->validate([
+			'title' => 'nullable|string|max:48',
+			'menutype' => 'nullable|string|max:24',
+			'description' => 'nullable|string|max:255',
+		]);
+
 		$row = Type::findOrFail($id);
-		$row->fill($request->all());
+		$row->title = $request->input('title', $row->title);
+		$row->menutype = $request->input('menutype', $row->menutype);
+		$row->description = $request->input('description', $row->description);
 
 		if (!$row->save())
 		{
-			throw new \Exception($row->getError(), 409);
+			return response()->json(['message' => trans('global.messages.save failed')], 500);
 		}
 
-		return $row;
+		$row->api = route('api.menus.read', ['id' => $row->id]);
+
+		return new JsonResource($row);
 	}
 
 	/**

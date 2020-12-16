@@ -1,10 +1,3 @@
-<?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
- */
-?>
 @push('scripts')
 <script type="text/javascript">
 	setmenutype = function(type)
@@ -15,46 +8,48 @@
 </script>
 @endpush
 
-<h2 class="modal-title"><?php echo trans('menus::menus.TYPE_CHOOSE'); ?></h2>
+<h2 class="modal-title">{{ trans('menus::menus.TYPE_CHOOSE') }}</h2>
 <ul class="menu_types">
-	<?php foreach ($this->types as $name => $list): ?>
+	@foreach ($this->types as $name => $list)
 		<li>
 			<dl class="menu_type">
-				<dt><?php echo trans($name);?></dt>
-				<dd><ul>
-						<?php foreach ($list as $item): ?>
-						<li><a class="choose_type" href="#" title="<?php echo trans($item->description); ?>"
+				<dt>{{ trans($name) }}</dt>
+				<dd>
+					<ul>
+						@foreach ($list as $item)
+						<li>
+							<a class="choose_type" href="#" title="{{ trans($item->description) }}"
 								onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $this->recordId, 'title' => $item->title, 'request' => $item->request))); ?>')">
-								<?php echo trans($item->title);?>
+								{{ trans($item->title) }}
 							</a>
 						</li>
-						<?php endforeach; ?>
+						@endforeach
 					</ul>
 				</dd>
 			</dl>
 		</li>
-	<?php endforeach; ?>
+	@endforeach
 	<li>
 		<dl class="menu_type">
-			<dt><?php echo trans('COM_MENUS_TYPE_SYSTEM'); ?></dt>
+			<dt>{{ trans('menus::menus.TYPE_SYSTEM') }}</dt>
 			<dd>
 				<ul>
 					<li>
-						<a class="choose_type" href="#" title="<?php echo trans('COM_MENUS_TYPE_EXTERNAL_URL_DESC'); ?>"
+						<a class="choose_type" href="#" title="{{ trans('menus::menus.TYPE_EXTERNAL_URL_DESC') }}"
 							onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $this->recordId, 'title'=>'url'))); ?>')">
-							<?php echo trans('COM_MENUS_TYPE_EXTERNAL_URL'); ?>
+							{{ trans('menus::menus.TYPE_EXTERNAL_URL') }}
 						</a>
 					</li>
 					<li>
-						<a class="choose_type" href="#" title="<?php echo trans('COM_MENUS_TYPE_ALIAS_DESC'); ?>"
+						<a class="choose_type" href="#" title="{{ trans('menus::menus.TYPE_ALIAS_DESC') }}"
 							onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $this->recordId, 'title'=>'alias'))); ?>')">
-							<?php echo trans('COM_MENUS_TYPE_ALIAS'); ?>
+							{{ trans('menus::menus.TYPE_ALIAS') }}
 						</a>
 					</li>
 					<li>
-						<a class="choose_type" href="#"  title="<?php echo trans('COM_MENUS_TYPE_SEPARATOR_DESC'); ?>"
+						<a class="choose_type" href="#" title="{{ trans('menus::menus.TYPE_SEPARATOR_DESC') }}"
 							onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $this->recordId, 'title'=>'separator'))); ?>')">
-							<?php echo trans('COM_MENUS_TYPE_SEPARATOR'); ?>
+							{{ trans('menus::menus.TYPE_SEPARATOR') }}
 						</a>
 					</li>
 				</ul>

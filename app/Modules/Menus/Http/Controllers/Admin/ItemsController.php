@@ -16,6 +16,9 @@ class ItemsController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  StatefulRequest $request
+	 * @param  string  $menutype
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request, $menutype = null)
@@ -250,15 +253,15 @@ class ItemsController extends Controller
 			switch ($item->type)
 			{
 				case 'url':
-					$value = trans('COM_MENUS_TYPE_EXTERNAL_URL');
+					$value = trans('menus::menus.TYPE_EXTERNAL_URL');
 					break;
 
 				case 'alias':
-					$value = trans('COM_MENUS_TYPE_ALIAS');
+					$value = trans('menus::menus.TYPE_ALIAS');
 					break;
 
 				case 'separator':
-					$value = trans('COM_MENUS_TYPE_SEPARATOR');
+					$value = trans('menus::menus.TYPE_SEPARATOR');
 					break;
 
 				case 'module':
@@ -321,7 +324,7 @@ class ItemsController extends Controller
 							else
 							{
 								// Special case for absent views
-								$value .= ' » ' . trans($item->componentname . ' ' . $vars['view'] . ' VIEW_DEFAULT_TITLE');
+								$value .= ' » ' . trans($item->componentname . '::' . $item->componentname . '.' . $vars['view'] . '.VIEW_DEFAULT_TITLE');
 							}
 						}
 					}
@@ -329,11 +332,11 @@ class ItemsController extends Controller
 					{
 						if (preg_match("/^index.php\?option=([a-zA-Z\-0-9_]*)/", $item->link, $result))
 						{
-							$value = trans('COM_MENUS_TYPE_UNEXISTING', ['type' => $result[1]]);
+							$value = trans('menus::menus.TYPE_UNEXISTING', ['type' => $result[1]]);
 						}
 						else
 						{
-							$value = trans('COM_MENUS_TYPE_UNKNOWN');
+							$value = trans('menus::menus.TYPE_UNKNOWN');
 						}
 					}
 					break;
@@ -366,12 +369,11 @@ class ItemsController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
+	 * @param   Request $request
 	 * @return  Response
 	 */
 	public function create(Request $request)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Item;
 		$row->type = 'module';
 		$row->menutype = $request->input('menutype');
@@ -416,8 +418,6 @@ class ItemsController extends Controller
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Item::withTrashed()->findOrFail($id);
 
 		// Fail if checked out not by 'me'
@@ -530,6 +530,7 @@ class ItemsController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param   Request  $request
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete(Request $request, $id = null)
@@ -582,6 +583,8 @@ class ItemsController extends Controller
 	/**
 	 * Sets the state of one or more entries
 	 * 
+	 * @param   Request $request
+	 * @param   integer $id
 	 * @return  void
 	 */
 	public function state(Request $request, $id)
@@ -640,6 +643,7 @@ class ItemsController extends Controller
 	/**
 	 * Sets the state of one or more entries
 	 * 
+	 * @param   Request $request
 	 * @return  void
 	 */
 	public function restore(Request $request)
@@ -683,6 +687,8 @@ class ItemsController extends Controller
 	/**
 	 * Reorder entries
 	 * 
+	 * @param   integer  $id
+	 * @param   Request $request
 	 * @return  void
 	 */
 	public function reorder($id, Request $request)
@@ -716,6 +722,7 @@ class ItemsController extends Controller
 	/**
 	 * Temporary method. This should go into the 1.5 to 1.6 upgrade routines.
 	 *
+	 * @param   Request $request
 	 * @return  void
 	 */
 	public function types(Request $request)

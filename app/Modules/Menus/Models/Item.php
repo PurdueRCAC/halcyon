@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Modules\Menus\Models;
 
@@ -15,13 +10,13 @@ use App\Modules\Menus\Events\ItemCreated;
 use App\Modules\Menus\Events\ItemUpdating;
 use App\Modules\Menus\Events\ItemUpdated;
 use App\Modules\Menus\Events\ItemDeleted;
-use App\Halcyon\Config\Registry;
+use App\Modules\History\Traits\Historable;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Traits\Checkable;
 use App\Halcyon\Models\Extension;
-use App\Modules\History\Traits\Historable;
 use App\Halcyon\Form\Form;
+use App\Halcyon\Models\Casts\Params;
 use Carbon\Carbon;
 use Exception;
 
@@ -73,6 +68,17 @@ class Item extends Model
 	);
 
 	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'published' => 'integer',
+		'access' => 'integer',
+		'params' => Params::class,
+	];
+
+	/**
 	 * The attributes that should be mutated to dates.
 	 *
 	 * @var  array
@@ -100,21 +106,21 @@ class Item extends Model
 	 *
 	 * @var  object
 	 */
-	protected $paramsRegistry = null;
+	//protected $paramsRegistry = null;
 
 	/**
 	 * Get params as a Registry object
 	 *
 	 * @return  object
 	 */
-	public function params()
+	/*public function params()
 	{
 		if (!($this->paramsRegistry instanceof Registry))
 		{
 			$this->paramsRegistry = new Registry($this->getOriginal('params'));
 		}
 		return $this->paramsRegistry;
-	}
+	}*/
 
 	/**
 	 * Set alias field value
@@ -222,7 +228,7 @@ class Item extends Model
 				$module = Extension::findByModule('pages');
 
 				$this->module_id = $module->id;
-				$this->params()->set('page_id', $this->page_id);
+				$this->params->page_id = $this->page_id;
 			}
 		}
 		$this->module_id = (int)$this->module_id;
@@ -233,7 +239,7 @@ class Item extends Model
 		{
 			$this->access = (int) config('access', 1);
 		}
-		$this->params = $this->params()->toString();
+		//$this->params = $this->params->toString();
 
 		$isNew = !$this->id;
 
@@ -496,9 +502,9 @@ class Item extends Model
 
 		if ($this->type == 'module')
 		{
-			$data['page_id'] = $this->params()->get('page_id');
+			$data['page_id'] = $this->params->get('page_id');
 		}
-		$data['params'] = $this->params()->toArray();
+		$data['params'] = $this->params->all();
 
 		$form = $this->preprocessForm($form, $data);
 		$form->bind($data);

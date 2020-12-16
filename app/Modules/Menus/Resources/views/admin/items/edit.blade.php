@@ -76,6 +76,8 @@ $( document ).ready(function() {
 @endpush
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('menus::menus.module name'),

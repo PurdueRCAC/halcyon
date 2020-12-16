@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Modules\Menus\Models;
 
@@ -376,8 +371,8 @@ class Type extends Model
 				// Update the module items
 				foreach ($prev->widgets()->get() as $widget)
 				{
-					$widget->params->set('menutype', $this->menutype);
-					$widget->params = $widget->params->toString();
+					$widget->params->menutype = $this->menutype;
+					//$widget->params = $widget->params->toString();
 
 					if (!$widget->save())
 					{
@@ -440,7 +435,7 @@ class Type extends Model
 		}
 
 		// Delete the module items
-		foreach ($this->widgets()->get() as $module)
+		foreach ($this->widgets as $module)
 		{
 			if (!$module->delete())
 			{

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Menus\Models\Type;
 use App\Modules\Menus\Models\Item;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 /**
  * Menu items
@@ -133,10 +135,10 @@ class ItemsController extends Controller
 			$a . '.ordering',
 			$a . '.checked_out',
 			$a . '.checked_out_time',
-			$a . '.browserNav',
+			//$a . '.browserNav',
 			$a . '.access',
-			$a . '.img',
-			$a . '.template_style_id',
+			//$a . '.img',
+			//$a . '.template_style_id',
 			$a . '.params',
 			$a . '.lft',
 			$a . '.rgt',
@@ -370,8 +372,12 @@ class ItemsController extends Controller
 		}
 
 		$rows->appends(array_filter($filters));
+		$rows->each(function($row, $key)
+		{
+			$row->api = route('api.menus.items.read', ['id' => $row->id]);
+		});
 
-		return $rows;
+		return new ResourceCollection($rows);
 	}
 
 	/**
@@ -441,10 +447,12 @@ class ItemsController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('pages::messages.page failed')], 500);
+			return response()->json(['message' => trans('global.messages.save failed')], 500);
 		}
 
-		return $row;
+		$row->api = route('api.menus.items.read', ['id' => $row->id]);
+
+		return new JsonResource($row);
 	}
 
 	/**
@@ -474,7 +482,7 @@ class ItemsController extends Controller
 		{
 			if (!$row->isPublished())
 			{
-				abort(404, trans('menus::menus.item not found'));
+				return response()->json(['message' => trans('menus::menus.item not found')], 404);
 			}
 		}
 
@@ -483,10 +491,12 @@ class ItemsController extends Controller
 
 		if (!in_array($row->access, $levels))
 		{
-			abort(403, trans('global.permission denied'));
+			return response()->json(['message' => trans('global.permission denied')], 403);
 		}
 
-		return $row;
+		$row->api = route('api.menus.items.read', ['id' => $row->id]);
+
+		return new JsonResource($row);
 	}
 
 	/**
@@ -562,7 +572,9 @@ class ItemsController extends Controller
 			return response()->json(['message' => trans('pages::messages.page failed')], 500);
 		}
 
-		return $row;
+		$row->api = route('api.menus.items.read', ['id' => $row->id]);
+
+		return new JsonResource($row);
 	}
 
 	/**

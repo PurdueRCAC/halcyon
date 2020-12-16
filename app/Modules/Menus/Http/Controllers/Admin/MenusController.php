@@ -14,6 +14,8 @@ class MenusController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -211,6 +213,8 @@ class MenusController extends Controller
 	/**
 	 * Rebuild the nested set tree.
 	 *
+	 * @param   Request $request
+	 * @param   string  $menutype
 	 * @return  bool  False on failure or error, true on success.
 	 */
 	public function rebuild(Request $request, $menutype)

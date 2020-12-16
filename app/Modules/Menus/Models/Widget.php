@@ -1,14 +1,10 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Modules\Menus\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Halcyon\Models\Casts\Params;
 
 /**
  * News model mapping to resources
@@ -43,6 +39,17 @@ class Widget extends Model
 	 */
 	protected $guarded = [
 		'id'
+	];
+
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'published' => 'integer',
+		'access' => 'integer',
+		'params' => Params::class,
 	];
 
 	/**
