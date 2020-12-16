@@ -139,7 +139,9 @@ class Purchase extends Model
 	{
 		$now = Carbon::now()->toDateTimeString();
 
-		return $query->where('datetimestop', '<=', $now);
+		return $query->whereNotNull('datetimestop')
+			->where('datetimestop', '!=', '0000-00-00 00:00:00')
+			->where('datetimestop', '<=', $now);
 	}
 
 	/**
