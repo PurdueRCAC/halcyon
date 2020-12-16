@@ -3,10 +3,13 @@
 namespace App\Modules\Knowledge\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Knowledge\Models\Report;
-use App\Modules\Knowledge\Models\Comment;
-use App\Modules\Knowledge\Http\Resources\CommentResource;
+use App\Modules\Knowledge\Models\Page;
+use App\Modules\Knowledge\Models\Associations;
+use App\Modules\Knowledge\Models\SnippetAssociation;
+use App\Modules\Knowledge\Http\Resources\PageResource;
+use App\Modules\Knowledge\Http\Resources\PageResourceCollection;
 use Carbon\Carbon;
 
 /**
@@ -17,208 +20,441 @@ use Carbon\Carbon;
 class SnippetsController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of articles
 	 *
-	 * @param   Request  $request
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/knowledge/snippets
+	 * @apiAuthorization  false
+	 * @return Response
 	 */
 	public function index(Request $request)
 	{
 		// Get filters
 		$filters = array(
-			'contactreportid' => 0,
 			'search'    => null,
+			'parent'    => null,
 			'limit'     => config('list_limit', 20),
-			'start'     => null,
-			'stop'      => null,
-			'order'     => Comment::$orderBy,
-			'order_dir' => Comment::$orderDir,
+			'page'      => 1,
+			'order'     => Page::$orderBy,
+			'order_dir' => Page::$orderDir,
+			'level'     => 0,
 		);
 
+		$refresh = false;
 		foreach ($filters as $key => $default)
 		{
-			$val = $request->input($key);
-			$val = !is_null($val) ? $val : $default;
-
-			$filters[$key] = $val;
+			$filters[$key] = $request->input($key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'name']))
+		if ($refresh)
 		{
-			$filters['order'] = Comment::$orderBy;
+			$filters['page'] = 1;
+		}
+
+		if (!in_array($filters['order'], array_keys((new Page)->getAttributes())))
+		{
+			$filters['order'] = 'lft';
 		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['order_dir'] = Comment::$orderDir;
+			$filters['order_dir'] = 'asc';
 		}
 
-		//$report = Report::findOrFail($filters['id']);
+		$query = SnippetAssociation::query();
 
-		$query = Comment::query()->where('contactreportid', $filters['contactreportid']);
+		$p = (new Page)->getTable();
+		$a = (new SnippetAssociation)->getTable();
 
-		$cr = (new Comment)->getTable();
+		$query->join($p, $p . '.id', $a . '.page_id')
+			->select($a . '.*')
+			->where($p . '.snippet', '=', 1);
 
 		if ($filters['search'])
 		{
-			$query->where('commment', 'like', '%' . $filters['search'] . '%');
+			$query->where(function($query) use ($filters, $p)
+			{
+				$query->where($p . '.title', 'like', '%' . $filters['search'] . '%')
+					->orWhere($p . '.content', 'like', '%' . $filters['search'] . '%');
+			});
+		}
+
+		if ($filters['level'] > 0)
+		{
+			$query->where($a . '.level', '<=', $filters['level']);
+		}
+
+		if ($filters['parent'])
+		{
+			$parent = SnippetAssociation::find($filters['parent']);
+
+			$query->where($a . '.lft', '>=', $parent->lft)
+					->where($a . '.rgt', '<=', $parent->rgt);
 		}
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit']);
+			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		$rows->each(function ($item, $key)
-		{
-			$item->url = route('site.knowledge.show', ['id' => $item->contactreportid]);
-			//$item->formatteddate = $item->formatDate($item->getOriginal('datetimenews'), $item->getOriginal('datetimenewsend'));
-			$item->formattedcomment = $item->formattedComment();
-			$item->canEdit   = false;
-			$item->canDelete = false;
-
-			if (auth()->user())
-			{
-				if (auth()->user()->can('edit knowledge'))
-				{
-					$item->canEdit   = true;
-				}
-				if (auth()->user()->can('delete knowledge'))
-				{
-					$item->canDelete = true;
-				}
-			}
-		});
-
-		return $rows;
+		return new PageResourceCollection($rows);
 	}
 
 	/**
-	 * Show the form for creating a new resource.
+	 * Create an entry
 	 *
-	 * @return  Response
+	 * @apiMethod POST
+	 * @apiUri    /api/knowledge/snippets
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "title",
+	 * 		"description":   "Title",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "slug",
+	 * 		"description":   "URL slug",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "content",
+	 * 		"description":   "Content",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "state",
+	 * 		"description":   "Published state",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "access",
+	 * 		"description":   "Access level",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				1,
+	 * 				2
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "publish_up",
+	 * 		"description":   "Start publishing (defaults to created time)",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "publish_down",
+	 * 		"description":   "Stop publishing",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "parent_id",
+	 * 		"description":   "Parent page ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "publish_up",
+	 * 		"description":   "Start publishing (defaults to created time)",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @param  Request $request
+	 * @return Response
 	 */
 	public function create(Request $request)
 	{
 		$request->validate([
-			'comment' => 'required|string',
-			'contactreportid' => 'required|integer|min:1',
+			'title' => 'required|string|max:255',
+			'alias' => 'nullable|string|max:255',
+			'content' => 'required|string',
+			'access' => 'nullable|integer|min:1',
+			'state'  => 'nullable|integer',
+			'parent_id' => 'required|integer',
 		]);
 
-		$row = new Comment($request->all());
+		$parent_id = $request->input('parent_id');
 
-		/*if (!$row->contactreportid)
-		{
-			return response()->json(['message' => __METHOD__ . '(): Missing contactreport ID'], 415);
-		}*/
+		$row = new SnippetAssociation;
+		$row->page_id = $request->input('page_id');
+		$row->parent_id = $parent_id;
 
-		if (!$row->report)
+		$page = Page::find($row->page_id);
+		if (!$row->page_id)
 		{
-			return response()->json(['message' => __METHOD__ . '(): Invalid contactreport ID'], 415);
+			$page = new Page;
+		}
+		$page->snippet = 1;
+		$page->title = $request->input('title');
+		$page->alias = $request->input('alias');
+		$page->alias = $page->alias ?: $page->title;
+		$page->content = $request->input('content');
+
+		if ($params = $request->input('params', []))
+		{
+			foreach ($params as $key => $val)
+			{
+				if ($key == 'variables')
+				{
+					$vars = array();
+					foreach ($val as $opts)
+					{
+						if (!$opts['key'])
+						{
+							continue;
+						}
+						$vars[$opts['key']] = $opts['value'];
+					}
+					$val = $vars;
+				}
+				$page->params->set($key, $val);
+			}
 		}
 
-		// Set notice state
-		$row->notice = 0;
-
-		if ($row->comment != '')
+		if (!$page->save())
 		{
-			$row->notice = 22;
+			return response()->json(['message' => trans('global.messages.save failed')], 409);
 		}
 
-		$row->datetimecreated = Carbon::now()->toDateTimeString();
+		$row->page_id = $page->id;
+		if ($row->parent)
+		{
+			$row->path = trim($row->parent->path . '/' . $page->alias, '/');
+		}
+		else
+		{
+			$row->path = '';
+		}
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.save failed')], 409);
 		}
 
-		return new CommentResource($row);
+		if ($id && $parent_id != $orig_parent_id)
+		{
+			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
+			{
+				return redirect()->back()->withError($row->getError());
+			}
+		}
+
+		// Rebuild the paths of the entry's children
+		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
+		{
+			return response()->json(['message' => trans('knowledge::knowledge.messages.rebuild failed')], 409);
+		}
+
+		return new PageResource($row);
 	}
 
 	/**
-	 * Retrieve a specified entry
+	 * Retrieve an entry
 	 *
-	 * @param   Request $request
-	 * @return  Response
+	 * @apiMethod GET
+	 * @apiUri    /api/knowledge/snippets/{id}
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @param  integer $id
+	 * @return Response
 	 */
-	public function read($comment)
+	public function read($id)
 	{
-		$item = Comment::findOrFail((int)$comment);
+		$row = SnippetAssociation::findOrFail((int)$id);
 
-		return new CommentResource($item);
+		return new PageResource($row);
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Update an entry
 	 *
-	 * @param   Request  $request
+	 * @apiMethod PUT
+	 * @apiUri    /api/knowledge/snippets/{id}
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "report",
+	 * 		"description":   "Group name",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @param   Request $request
+	 * @param   integer $id
 	 * @return  Response
 	 */
-	public function update(Request $request, $comment)
+	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'comment' => 'nullable|string|min:1',
-			'contactreportid' => 'nullable|integer|min:1',
-			'userid' => 'nullable|integer|min:1',
-			'notice' => 'nullable|integer',
+			'title' => 'nullable|string|max:255',
+			'alias' => 'nullable|string|max:255',
+			'content' => 'nullable|string',
+			'access' => 'nullable|integer|min:1',
+			'state'  => 'nullable|integer',
+			'parent_id' => 'nullable|integer',
 		]);
 
-		$data = $request->all();
+		$parent_id = $request->input('parent_id', $row->parent_id);
 
-		if (isset($data['datetimecreated']))
+		$row = SnippetAssociation::findOrFail($id);
+		$row->page_id = $request->input('page_id', $row->page_id);
+		$row->parent_id = $parent_id;
+
+		$page = Page::find($row->page_id);
+		$page->title = $request->input('title', $page->title);
+		$page->alias = $request->input('alias', $page->alias);
+		$page->alias = $page->alias ?: $page->title;
+		$page->content = $request->input('content', $page->content);
+
+		if ($params = $request->input('params', []))
 		{
-			unset($data['datetimecreated']);
-		}
-
-		if (!auth()->user() || !auth()->user()->can('admin knowledge'))
-		{
-			unset($data['userid']);
-		}
-
-		$row = Comment::findOrFail($comment);
-		$row->fill($data);
-
-		if ($row->contactreportid != $row->getOriginal('contactreportid'))
-		{
-			/*if (!$row->contactreportid)
+			foreach ($params as $key => $val)
 			{
-				return response()->json(['message' => __METHOD__ . '(): Missing contactreport ID'], 415);
-			}*/
-
-			if (!$row->report)
-			{
-				return response()->json(['message' => __METHOD__ . '(): Invalid contactreport ID'], 415);
+				if ($key == 'variables')
+				{
+					$vars = array();
+					foreach ($val as $opts)
+					{
+						if (!$opts['key'])
+						{
+							continue;
+						}
+						$vars[$opts['key']] = $opts['value'];
+					}
+					$val = $vars;
+				}
+				$page->params->set($key, $val);
 			}
 		}
 
-		/*if ($row->comment != $row->getOriginal('comment'))
+		if (!$page->save())
 		{
-			if (!$row->comment)
-			{
-				return response()->json(['message' => __METHOD__ . '(): Invalid comment'], 415);
-			}
-		}*/
+			return response()->json(['message' => trans('global.messages.save failed')], 409);
+		}
+
+		$row->page_id = $page->id;
+		if ($row->parent)
+		{
+			$row->path = trim($row->parent->path . '/' . $page->alias, '/');
+		}
+		else
+		{
+			$row->path = '';
+		}
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.update failed')], 500);
+			return response()->json(['message' => trans('global.messages.save failed')], 409);
 		}
 
-		return new CommentResource($row);
+		if ($id && $parent_id != $orig_parent_id)
+		{
+			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
+			{
+				return redirect()->back()->withError($row->getError());
+			}
+		}
+
+		// Rebuild the paths of the entry's children
+		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
+		{
+			return response()->json(['message' => trans('knowledge::knowledge.messages.rebuild failed')], 409);
+		}
+
+		return new PageResource($row);
 	}
 
 	/**
-	 * Remove the specified entry
+	 * Retrieve an entry
 	 *
-	 * @param   integer   $id
-	 * @return  Response
+	 * @apiMethod DELETE
+	 * @apiUri    /api/knowledge/snippets/{id}
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @param  integer $id
+	 * @return Response
 	 */
-	public function delete($comment)
+	public function delete($id)
 	{
-		$row = Comment::findOrFail($comment);
+		$row = SnippetAssociation::findOrFail($id);
+
+		if (!$row->page->delete())
+		{
+			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+		}
+
+		$associations = Associations::query()
+			->where('page_id', '=', $row->page_id)
+			->get();
+
+		foreach ($associations as $association)
+		{
+			$association->delete();
+		}
 
 		if (!$row->delete())
 		{
-			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $row->id])], 500);
+			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
 		}
 
 		return response()->json(null, 204);

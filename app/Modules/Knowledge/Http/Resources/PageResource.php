@@ -4,7 +4,7 @@ namespace App\Modules\Knowledge\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CommentResource extends JsonResource
+class PageResource extends JsonResource
 {
 	/**
 	 * Transform the resource collection into an array.
@@ -16,12 +16,17 @@ class CommentResource extends JsonResource
 	{
 		$data = parent::toArray($request);
 
-		$data['formattedcomment'] = $this->formattedComment();
+		$data['page'] = $this->page;
 
 		$data['api'] = route('api.knowledge.read', ['id' => $this->id]);
-		$data['url'] = route('site.knowledge.show', ['id' => $this->contactreportid]);
-
-		unset($data['report']);
+		if (!$this->path)
+		{
+			$data['url'] = route('site.knowledge.index');
+		}
+		else
+		{
+			$data['url'] = route('site.knowledge.page', ['uri' => $this->path]);
+		}
 
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
@@ -34,6 +39,6 @@ class CommentResource extends JsonResource
 			$data['can']['delete'] = $user->can('delete knowledge');
 		}
 
-		return $data; //parent::toArray($request);
+		return $data;
 	}
 }

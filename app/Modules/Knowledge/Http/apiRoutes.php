@@ -7,25 +7,25 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 {
 	$router->get('/', [
 		'as'   => 'api.knowledge.index',
-		'uses' => 'ReportsController@index',
+		'uses' => 'PagesController@index',
 	]);
 	$router->post('/', [
 		'as' => 'api.knowledge.create',
-		'uses' => 'ReportsController@create',
+		'uses' => 'PagesController@create',
 		'middleware' => 'auth:api|can:create knowledge',
 	]);
 	$router->get('{id}', [
 		'as'   => 'api.knowledge.read',
-		'uses' => 'ReportsController@read',
+		'uses' => 'PagesController@read',
 	])->where('id', '[0-9]+');
 	$router->put('{id}', [
 		'as'   => 'api.knowledge.update',
-		'uses' => 'ReportsController@update',
+		'uses' => 'PagesController@update',
 		'middleware' => 'auth:api|can:edit knowledge',
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
 		'as' => 'api.knowledge.delete',
-		'uses' => 'ReportsController@delete',
+		'uses' => 'PagesController@delete',
 		'middleware' => 'auth:api|can:delete knowledge',
 	])->where('id', '[0-9]+');
 

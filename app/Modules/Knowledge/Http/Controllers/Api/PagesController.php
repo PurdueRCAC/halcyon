@@ -5,11 +5,10 @@ namespace App\Modules\Knowledge\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Knowledge\Models\Report;
-use App\Modules\Knowledge\Models\Reportresource;
-use App\Modules\Knowledge\Models\User;
-use App\Modules\Knowledge\Http\Resources\ReportResource as ApiReportResource;
-use App\Modules\Knowledge\Http\Resources\ReportResourceCollection;
+use App\Modules\Knowledge\Models\Page;
+use App\Modules\Knowledge\Models\Associations;
+use App\Modules\Knowledge\Http\Resources\PageResource;
+use App\Modules\Knowledge\Http\Resources\PageResourceCollection;
 use Carbon\Carbon;
 
 /**
@@ -29,119 +28,101 @@ class PagesController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
-			'group'    => null,
-			'start'    => null,
-			'stop'     => null,
-			'people'   => null,
-			'resource' => null,
-			'notice'   => '*',
+			'parent'    => null,
+			'state'     => 'published',
+			'access'    => 1,
 			'limit'     => config('list_limit', 20),
-			'order'     => Report::$orderBy,
-			'order_dir' => Report::$orderDir,
+			'page'      => 1,
+			'order'     => Page::$orderBy,
+			'order_dir' => Page::$orderDir,
+			'level'     => 0,
 		);
 
+		$refresh = false;
 		foreach ($filters as $key => $default)
 		{
-			$val = $request->input($key);
-			$val = !is_null($val) ? $val : $default;
-
-			$filters[$key] = $val;
+			$filters[$key] = $request->input($key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'report', 'datetimecreated']))
+		if ($refresh)
 		{
-			$filters['order'] = Report::$orderBy;
+			$filters['page'] = 1;
+		}
+
+		if (!in_array($filters['order'], array_keys((new Page)->getAttributes())))
+		{
+			$filters['order'] = 'lft';
 		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['order_dir'] = Report::$orderDir;
+			$filters['order_dir'] = 'asc';
 		}
 
-		$query = Report::query();
+		$query = Associations::query();
 
-		$cr = (new Report)->getTable();
+		$p = (new Page)->getTable();
+		$a = (new Associations)->getTable();
+
+		$query->join($p, $p . '.id', $a . '.page_id')
+			->select($a . '.*'); //$p . '.state', $p . '.access', 
+			//->select($p . '.title', $p . '.snippet', $p . '.updated_at', $a . '.*');
 
 		if ($filters['search'])
 		{
-			$query->where($cr . '.report', 'like', '%' . $filters['search'] . '%');
+			$query->where(function($query) use ($filters, $p)
+			{
+				$query->where($p . '.title', 'like', '%' . $filters['search'] . '%')
+					->orWhere($p . '.content', 'like', '%' . $filters['search'] . '%');
+			});
 		}
 
-		if ($filters['notice'] != '*')
+		if ($filters['level'] > 0)
 		{
-			$query->where($cr . '.notice', '=', $filters['notice']);
+			$query->where($a . '.level', '<=', $filters['level']);
 		}
 
-		if ($filters['group'])
+		if ($filters['parent'])
 		{
-			$filters['group'] = explode(',', $filters['group']);
+			$parent = Associations::find($filters['parent']);
 
-			$query->whereIn($cr . '.groupid', $filters['group']);
+			$query->where($a . '.lft', '>=', $parent->lft)
+					->where($a . '.rgt', '<=', $parent->rgt);
 		}
 
-		if ($filters['start'])
+		if (!auth()->user() || !auth()->user()->can('manage knowledge'))
 		{
-			$query->where($cr . '.datetimecontact', '>=', $filters['start']);
+			$filters['state'] = 'published';
+			$filters['access'] = 1;
 		}
 
-		if ($filters['stop'])
+		if ($filters['state'] == 'published')
 		{
-			$query->where($cr . '.datetimecontact', '<=', $filters['stop'] . ' 23:59:59');
+			$query->where($a . '.state', '=', 1);
+		}
+		elseif ($filters['state'] == 'unpublished')
+		{
+			$query->where($a . '.state', '=', 0);
+		}
+		elseif ($filters['state'] == 'trashed')
+		{
+			$query->onlyTrashed(); //->whereNotNull($page . '.deleted_at');
+		}
+		else
+		{
+			$query->withTrashed();
 		}
 
-		if ($filters['people'])
+		if ($filters['access'] > 0)
 		{
-			$filters['people'] = explode(',', $filters['people']);
-
-			$cru = (new User)->getTable();
-
-			$query->innerJoin($cru, $cru . '.contactreportid', $cr . '.userid');
-			$query->where(function ($where) use ($filters)
-				{
-					$where->whereIn($cru . '.userid', $filters['people'])
-						->orWhereIn($cr . '.userid', $filters['people']);
-				});
-		}
-
-		if ($filters['resource'])
-		{
-			$filters['resource'] = explode(',', $filters['resource']);
-
-			$crr = (new Reportresource)->getTable();
-
-			$query->innerJoin($crr, $crr . '.contactreportid', $cr . '.resourceid')
-				->whereIn($crr . '.id', $filters['resource']);
+			$query->where($p . '.access', '=', (int)$filters['access']);
 		}
 
 		$rows = $query
-			->orderBy($cr . '.' . $filters['order'], $filters['order_dir'])
-			->paginate($filters['limit']);
+			->orderBy($filters['order'], $filters['order_dir'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		/*$rows->each(function ($item, $key)
-		{
-			$row->url = route('site.knowledge.show', ['id' => $row->id]);
-			//$row->formatteddate = $row->formatDate($row->getOriginal('datetimenews'), $row->getOriginal('datetimenewsend'));
-			$row->formattedreport = $row->formattedReport();
-			$row->comments;
-			$row->users;
-			$row->resources;
-			$row->canEdit   = false;
-			$row->canDelete = false;
-
-			if (auth()->user())
-			{
-				if (auth()->user()->can('edit knowledge'))
-				{
-					$row->canEdit   = true;
-				}
-				if (auth()->user()->can('delete knowledge'))
-				{
-					$row->canDelete = true;
-				}
-			}
-		});*/
-
-		return new ReportResourceCollection($rows); //$rows;
+		return new PageResourceCollection($rows);
 	}
 
 	/**
@@ -246,112 +227,95 @@ class PagesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$now = new Carbon();
-
 		$request->validate([
-			'report' => 'required',
-			'datetimecontact' => 'required|date|before_or_equal:' . $now->toDateTimeString(),
-			'userid' => 'nullable|integer',
-			'groupid' => 'nullable|integer',
-			'datetimegroupid' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
+			'title' => 'required|string|max:255',
+			'alias' => 'nullable|string|max:255',
+			'content' => 'required|string',
+			'access' => 'nullable|integer|min:1',
+			'state'  => 'nullable|integer',
+			'parent_id' => 'required|integer',
 		]);
 
-		$row = new Report();
-		$row->datetimecontact = $request->input('datetimecontact');
-		$row->report = $request->input('report');
-		$row->userid = $request->input('userid', auth()->user() ? auth()->user()->id : 0);
-		$row->groupid = $request->input('groupid', 0);
+		$parent_id = $request->input('parent_id');
 
-		/*if (!preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $row->datetimecontact))
+		$row = new Associations;
+		if ($request->has('access'))
 		{
-			return response()->json(['message' => __METHOD__ . '(): Invalid value for field `contactdate`'], 409);
+			$row->access = $request->input('access');
 		}
-
-		if ($row->datetimecontact > $now)
+		if ($request->has('state'))
 		{
-			return response()->json(['message' => __METHOD__ . '(): `contactdate` cannot be in the future'], 409);
-		}*/
+			$row->state = $request->input('state');
+		}
+		$row->page_id = $request->input('page_id');
+		$row->parent_id = $parent_id;
 
-		if ($row->groupid)
+		$page = Page::find($row->page_id);
+		if (!$row->page_id)
 		{
-			if (!$row->group)
+			$page = new Page;
+		}
+		$page->title = $request->input('title');
+		$page->alias = $request->input('alias');
+		$page->alias = $page->alias ?: $page->title;
+		$page->content = $request->input('content');
+
+		if ($params = $request->input('params', []))
+		{
+			foreach ($params as $key => $val)
 			{
-				return response()->json(['message' => __METHOD__ . '(): Group not found for provided `groupid`'], 409);
+				if ($key == 'variables')
+				{
+					$vars = array();
+					foreach ($val as $opts)
+					{
+						if (!$opts['key'])
+						{
+							continue;
+						}
+						$vars[$opts['key']] = $opts['value'];
+					}
+					$val = $vars;
+				}
+				$page->params->set($key, $val);
 			}
-
-			$row->datetimegroupid = $now->toDateTimeString();
 		}
 
-		$row->datetimecreated = $now->toDateTimeString();
+		if (!$page->save())
+		{
+			return response()->json(['message' => trans('global.messages.save failed')], 409);
+		}
 
-		//$row->stemmedreport = $row->generateStemmedReport();
+		$row->page_id = $page->id;
+		if ($row->parent)
+		{
+			$row->path = trim($row->parent->path . '/' . $page->alias, '/');
+		}
+		else
+		{
+			$row->path = '';
+		}
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.save failed')], 409);
 		}
 
-		$errors = array();
-
-		if ($users = $request->input('people'))
+		if ($id && $parent_id != $orig_parent_id)
 		{
-			foreach ((array)$users as $user)
+			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{
-				$u = new User;
-				$u->contactreportid = $row->id;
-				$u->userid = $user;
-
-				if (!$u->save())
-				{
-					$errors[] = __METHOD__ . '(): Failed to create `contactreportuser` entry for userid #' . $user;
-				}
+				return redirect()->back()->withError($row->getError());
 			}
 		}
 
-		if ($resources = $request->input('resources'))
+		// Rebuild the paths of the entry's children
+		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
 		{
-			foreach ((array)$resources as $resource)
-			{
-				$rr = new Reportresource;
-				$rr->contactreportid = $row->id;
-				$rr->resourceid = $resource;
-
-				if (!$rr->save())
-				{
-					$errors[] = __METHOD__ . '(): Failed to create `contactreportresources` entry for resourceid #' . $resource;
-				}
-			}
+			return response()->json(['message' => trans('knowledge::knowledge.messages.rebuild failed')], 409);
 		}
 
-		$row->errors = $errors;
-
-		/*$row->formattedreport = $row->formattedReport();
-		$row->comments;
-		$row->users;
-		$row->resources;
-
-		$row->url = route('site.knowledge.show', ['id' => $row->id]);
-
-		$can = array(
-			'edit'   => false,
-			'delete' => false,
-		);
-
-		if (auth()->user())
-		{
-			if (auth()->user()->can('edit knowledge'))
-			{
-				$can['edit'] = true;
-			}
-			if (auth()->user()->can('delete knowledge'))
-			{
-				$can['delete'] = true;
-			}
-		}
-
-		$row->can = $can;*/
-
-		return new ApiReportResource($row);
+		return new PageResource($row);
 	}
 
 	/**
@@ -373,9 +337,9 @@ class PagesController extends Controller
 	 */
 	public function read($id)
 	{
-		$row = Report::findOrFail((int)$id);
+		$row = Associations::findOrFail((int)$id);
 
-		return new ApiReportResource($row);
+		return new PageResource($row);
 	}
 
 	/**
@@ -407,208 +371,91 @@ class PagesController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$now = new Carbon();
-
 		$request->validate([
-			'report' => 'nullable|min:1',
-			'datetimecontact' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
-			'groupid' => 'nullable|integer',
-			//'datetimegroupid' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
+			'title' => 'nullable|string|max:255',
+			'alias' => 'nullable|string|max:255',
+			'content' => 'nullable|string',
+			'access' => 'nullable|integer|min:1',
+			'state'  => 'nullable|integer',
+			'parent_id' => 'nullable|integer',
 		]);
 
-		$row = Report::findOrFail($id);
-		//$row->fill($request->all());
-		$row->datetimecontact = $request->input('datetimecontact', $row->datetimecontact);
-		$row->report = $request->input('report', $row->report);
-		$row->userid = $request->input('userid', $row->userid);
-		$row->groupid = $request->input('groupid', $row->groupid);
+		$parent_id = $request->input('parent_id', $row->parent_id);
 
-		/*if ($row->datetimecontact != $row->getOriginal('datetimecontact'))
+		$row = Associations::findOrFail($id);
+		if ($request->has('access'))
 		{
-			if (!preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $row->datetimecontact))
-			{
-				return response()->json(['message' => 'Invalid value for field `datetimecontact`'], 415);
-			}
+			$row->access = $request->input('access');
+		}
+		if ($request->has('state'))
+		{
+			$row->state = $request->input('state');
+		}
+		$row->page_id = $request->input('page_id', $row->page_id);
+		$row->parent_id = $parent_id;
 
-			if ($row->datetimecontact > $now)
+		$page = Page::find($row->page_id);
+		$page->title = $request->input('title', $page->title);
+		$page->alias = $request->input('alias', $page->alias);
+		$page->alias = $page->alias ?: $page->title;
+		$page->content = $request->input('content', $page->content);
+
+		if ($params = $request->input('params', []))
+		{
+			foreach ($params as $key => $val)
 			{
-				return response()->json(['message' => '`datetimecontact` cannot be in the future'], 415);
+				if ($key == 'variables')
+				{
+					$vars = array();
+					foreach ($val as $opts)
+					{
+						if (!$opts['key'])
+						{
+							continue;
+						}
+						$vars[$opts['key']] = $opts['value'];
+					}
+					$val = $vars;
+				}
+				$page->params->set($key, $val);
 			}
 		}
 
-		if ($row->report != $row->getOriginal('report'))
+		if (!$page->save())
 		{
-			if (!$row->report)
-			{
-				return response()->json(['message' =>  '`report` cannot be empty'], 415);
-			}
-		}*/
-
-		if ($row->groupid != $row->getOriginal('groupid'))
-		{
-			if ($row->groupid && !$row->group)
-			{
-				return response()->json(['message' => 'Group not found for provided `groupid`'], 409);
-			}
-
-			$row->datetimegroupid = $now->toDateTimeString();
+			return response()->json(['message' => trans('global.messages.save failed')], 409);
 		}
 
-		//$row->stemmedreport = $row->generateStemmedReport();
+		$row->page_id = $page->id;
+		if ($row->parent)
+		{
+			$row->path = trim($row->parent->path . '/' . $page->alias, '/');
+		}
+		else
+		{
+			$row->path = '';
+		}
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.update failed')], 500);
+			return response()->json(['message' => trans('global.messages.save failed')], 409);
 		}
 
-		if ($resources = $request->input('resources'))
+		if ($id && $parent_id != $orig_parent_id)
 		{
-			$resources = (array)$resources;
-
-			// Fetch current list of resources
-			$prior = $row->resources;
-
-			// Remove and add resource-contactreport mappings
-			// First calculate diff
-			$addresources = array();
-			$deleteresources = array();
-
-			foreach ($prior as $r)
+			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{
-				$found = false;
-
-				foreach ($resources as $r2)
-				{
-					if ($r2 == $r->resourceid)
-					{
-						$found = true;
-					}
-				}
-
-				if (!$found)
-				{
-					array_push($deleteresources, $r);
-				}
-			}
-
-			foreach ($resources as $r)
-			{
-				$found = false;
-
-				foreach ($prior as $r2)
-				{
-					if ($r2->resourceid == $r)
-					{
-						$found = true;
-					}
-				}
-
-				if (!$found)
-				{
-					array_push($addresources, $r);
-				}
-			}
-
-			foreach ($deleteresources as $r)
-			{
-				if (!$r->delete())
-				{
-					$errors[] = 'Failed to delete `contactreportresources` entry #' . $r;
-				}
-			}
-
-			// Ensure unique-ness
-			$addresources = array_unique($addresources);
-
-			foreach ($addresources as $r)
-			{
-				$rr = new Reportresource;
-				$rr->contactreportid = $row->id;
-				$rr->resourceid = $r;
-
-				if (!$rr->save())
-				{
-					$errors[] = 'Failed to create `contactreportresources` entry for resourceid #' . $r;
-				}
+				return redirect()->back()->withError($row->getError());
 			}
 		}
 
-		if ($people = $request->input('people'))
+		// Rebuild the paths of the entry's children
+		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
 		{
-			$people = (array)$people;
-
-			// Fetch current list of resources
-			$prior = $row->users;
-
-			// Remove and add resource-contactreport mappings
-			// First calculate diff
-			$addusers = array();
-			$deleteusers = array();
-
-			foreach ($prior as $r)
-			{
-				$found = false;
-
-				foreach ($people as $r2)
-				{
-					if ($r2 == $r->userid)
-					{
-						$found = true;
-					}
-				}
-
-				if (!$found)
-				{
-					array_push($deleteusers, $r);
-				}
-			}
-
-			foreach ($people as $r)
-			{
-				$found = false;
-
-				foreach ($prior as $r2)
-				{
-					if ($r2->userid == $r)
-					{
-						$found = true;
-					}
-				}
-
-				if (!$found)
-				{
-					array_push($addusers, $r);
-				}
-			}
-
-			foreach ($deleteusers as $r)
-			{
-				if (!$r->delete())
-				{
-					$errors[] = 'Failed to delete `contactreportresources` entry #' . $r;
-				}
-			}
-
-			// Ensure unique-ness
-			$addusers = array_unique($addusers);
-
-			foreach ($addusers as $r)
-			{
-				$rr = new User;
-				$rr->contactreportid = $row->id;
-				$rr->userid = $r;
-
-				if (!$rr->save())
-				{
-					$errors[] = 'Failed to create `contactreportuser` entry for userid #' . $r;
-				}
-			}
+			return response()->json(['message' => trans('knowledge::knowledge.messages.rebuild failed')], 409);
 		}
 
-		$row = $row->fresh();
-		$row->errors = $errors;
-
-		return new ApiReportResource($row);
+		return new PageResource($row);
 	}
 
 	/**
@@ -630,7 +477,15 @@ class PagesController extends Controller
 	 */
 	public function delete($id)
 	{
-		$row = Report::findOrFail($id);
+		$row = Associations::findOrFail($id);
+
+		if (!$row->page->snippet)
+		{
+			if (!$row->page->delete())
+			{
+				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			}
+		}
 
 		if (!$row->delete())
 		{

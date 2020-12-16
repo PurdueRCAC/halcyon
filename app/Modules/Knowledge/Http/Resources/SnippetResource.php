@@ -4,7 +4,7 @@ namespace App\Modules\Knowledge\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ReportResource extends JsonResource
+class SnippetResource extends JsonResource
 {
 	/**
 	 * Transform the resource collection into an array.
@@ -16,15 +16,8 @@ class ReportResource extends JsonResource
 	{
 		$data = parent::toArray($request);
 
-		$data['formattedreport'] = $this->formattedReport();
-		$data['comments'] = $this->comments;
-		$data['users'] = $this->users;
-		$data['resources'] = $this->resources;
-
 		$data['api'] = route('api.knowledge.read', ['id' => $this->id]);
-		$data['url'] = route('site.knowledge.show', ['id' => $this->id]);
 
-		//$data['canCreate'] = false;
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
 
@@ -32,7 +25,6 @@ class ReportResource extends JsonResource
 
 		if ($user)
 		{
-			//$data['canCreate'] = auth()->user()->can('create knowledge');
 			$data['can']['edit']   = ($user->can('edit knowledge') || ($user->can('edit.own knowledge') && $item->userid == $user->id));
 			$data['can']['delete'] = $user->can('delete knowledge');
 		}

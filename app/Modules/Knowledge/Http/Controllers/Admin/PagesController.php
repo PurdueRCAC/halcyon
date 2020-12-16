@@ -273,10 +273,10 @@ class PagesController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'page.title'   => 'required',
-			'page.content' => 'required',
+			'page.title'   => 'required|string|max:255',
+			'page.content' => 'required|string',
 			'fields.access' => 'nullable|min:1',
-			'fields.state'  => 'nullable|min:1',
+			'fields.state'  => 'nullable',
 		]);
 
 		$id = $request->input('id');
