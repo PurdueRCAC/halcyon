@@ -35,25 +35,7 @@ class Page extends Model
 	use ErrorBag, Validatable, Historable, SoftDeletes;
 
 	/**
-	 * The name of the "created at" column.
-	 *
-	 * @var string
-	 */
-	//const CREATED_AT = 'created_at';
-
-	/**
-	 * The name of the "updated at" column.
-	 *
-	 * @var  string
-	 */
-	//const UPDATED_AT = 'updated_at';
-
-	/**
 	 * The table to which the class pertains
-	 *
-	 * This will default to #__{namespace}_{modelName} unless otherwise
-	 * overwritten by a given subclass. Definition of this property likely
-	 * indicates some derivation from standard naming conventions.
 	 *
 	 * @var  string
 	 **/
