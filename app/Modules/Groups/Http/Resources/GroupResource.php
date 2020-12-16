@@ -219,7 +219,10 @@ class GroupResource extends JsonResource
 		$data['unixgroups'] = $this->unixgroups->each(function ($item, $key)
 		{
 			$item->api = route('api.unixgroups.read', ['id' => $item->id]);
-			$item->members;
+			$item->members->each(function($item, $key)
+			{
+				$item->api = route('api.unixgroups.members.read', ['id' => $item->id]);
+			});
 		});
 
 		$data['priorunixgroups'] = $this->unixgroups()
@@ -229,7 +232,10 @@ class GroupResource extends JsonResource
 			->each(function ($item, $key)
 			{
 				$item->api = route('api.unixgroups.read', ['id' => $item->id]);
-				$item->members;
+				$item->members->each(function($item, $key)
+				{
+					$item->api = route('api.unixgroups.members.read', ['id' => $item->id]);
+				});
 			});
 
 		$data['can']['edit']   = false;
