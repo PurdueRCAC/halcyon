@@ -592,7 +592,9 @@ class AccountsController extends Controller
 
 					if (!$user)
 					{
-						$errors[] = __METHOD__ . '(): Failed to retrieve user ID for organization_id ' . $student->externalId;
+						$msg = __METHOD__ . '(): Failed to retrieve user ID for organization_id ' . $student->externalId;
+						error_log($msg);
+						$errors[] = $msg;
 						continue;
 					}
 				}
@@ -650,7 +652,9 @@ class AccountsController extends Controller
 		if ((count($remove_users) - count($create_users)) > count($users))
 		{
 			// TODO: how can we detect and allow normal wipeage during semester turnover?
-			$errors[] = __METHOD__ . '(): Deleting more users than we will have left. This seems wrong!';
+			$msg = __METHOD__ . '(): Deleting more users than we will have left. This seems wrong!';
+			error_log($msg);
+			$errors[] = $msg;
 		}
 
 		$fortress = Asset::findByName('HPSSUSER');
@@ -670,7 +674,9 @@ class AccountsController extends Controller
 
 			if ($event->status >= 400)
 			{
-				$errors[] = __METHOD__ . '(): Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
+				$msg = __METHOD__ . '(): Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
+				error_log($msg);
+				$errors[] = $msg;
 				continue;
 			}
 
@@ -683,7 +689,9 @@ class AccountsController extends Controller
 
 				if ($event->status >= 400)
 				{
-					$errors[] = __METHOD__ . '(): Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
+					$msg = __METHOD__ . '(): Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
+					error_log($msg);
+					$errors[] = $msg;
 					continue;
 				}
 			}
@@ -695,7 +703,9 @@ class AccountsController extends Controller
 
 				if ($event->status >= 400)
 				{
-					$errors[] = __METHOD__ . '(): Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
+					$msg = __METHOD__ . '(): Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
+					error_log($msg);
+					$errors[] = $msg;
 					continue;
 				}
 
@@ -708,13 +718,17 @@ class AccountsController extends Controller
 
 					if ($event->status >= 400)
 					{
-						$errors[] = __METHOD__ . '(): Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
+						$msg = __METHOD__ . '(): Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
+						error_log($msg);
+						$errors[] = $msg;
 						continue;
 					}
 				}
 				else
 				{
-					$errors[] = __METHOD__ . '(): EXISTS ' . $user . ': ' . $event->status;
+					$msg = __METHOD__ . '(): EXISTS ' . $user . ': ' . $event->status;
+					error_log($msg);
+					$errors[] = $msg;
 				}
 			}
 
@@ -732,7 +746,9 @@ class AccountsController extends Controller
 
 			if ($event->status >= 400)
 			{
-				$errors[] = __METHOD__ . '(): Could not delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
+				$msg = __METHOD__ . '(): Could not delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
+				error_log($msg);
+				$errors[] = $msg;
 				continue;
 			}
 
