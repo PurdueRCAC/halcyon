@@ -8,6 +8,13 @@ use Illuminate\Routing\Controller;
 use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Models\Member;
 use App\Modules\Courses\Events\AccountLookup;
+use App\Modules\Courses\Events\AccountInstructorLookup;
+use App\Modules\Courses\Events\AccountEnrollment;
+use App\Modules\Courses\Events\CourseEnrollment;
+use App\Modules\Resources\Events\ResourceMemberCreated;
+use App\Modules\Resources\Events\ResourceMemberDeleted;
+use App\Modules\Resources\Events\ResourceMemberStatus;
+use App\Modules\Resources\Entities\Asset;
 use App\Modules\Courses\Http\Resources\AccountResource;
 use App\Modules\Courses\Http\Resources\AccountResourceCollection;
 use App\Modules\Users\Models\User;
@@ -538,8 +545,11 @@ class AccountsController extends Controller
 	{
 		// Fetch a list of all classaccount IDs from the database.
 		$courses = array();
+		$errors = array();
 
 		$classdata = Account::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('datetimestop', '>', Carbon::now()->toDateTimeString())
 			->where('userid', '>', 0)
 			->get();
@@ -547,7 +557,7 @@ class AccountsController extends Controller
 		foreach ($classdata as $row)
 		{
 			// Fetch registerants
-			event($event = new AccountLookupInstructor($row, $row->user));
+			event($event = new AccountInstructorLookup($row, $row->user));
 
 			$row = $event->account;
 
@@ -582,7 +592,7 @@ class AccountsController extends Controller
 
 					if (!$user)
 					{
-						error_log(__METHOD__ . '(): Failed to retrieve user ID for organization_id ' . $student->externalId);
+						$errors[] = __METHOD__ . '(): Failed to retrieve user ID for organization_id ' . $student->externalId;
 						continue;
 					}
 				}
@@ -619,13 +629,15 @@ class AccountsController extends Controller
 		foreach ($classdata as $row)
 		{
 			// Add instructor starting now
-			$users[] = $row->user->username;
+			$users[] = $row->user ? $row->user->username : $row->userid;
 
-			foreach ($row->members as $extra)
+			foreach ($row->members()->withTrashed()->whereIsActive()->get() as $extra)
 			{
-				$users[] = $extra->user->username;
+				$users[] = $extra->user ? $extra->user->username : $extra->userid;
 			}
 		}
+
+		$users = array_unique($users);
 
 		// Get list of current scholar users
 		event($event = new CourseEnrollment($users));
@@ -638,13 +650,73 @@ class AccountsController extends Controller
 		if ((count($remove_users) - count($create_users)) > count($users))
 		{
 			// TODO: how can we detect and allow normal wipeage during semester turnover?
-			error_log(__METHOD__ . '(): Deleting more users than we will have left. This seems wrong!');
+			$errors[] = __METHOD__ . '(): Deleting more users than we will have left. This seems wrong!';
 		}
+
+		$fortress = Asset::findByName('HPSSUSER');
 
 		$created = array();
 		foreach ($create_users as $user)
 		{
-			event($event = new MemberAdd($user));
+			$u = new User;
+			$u->username = $user;
+			$u->primarygroup = 'student';
+			$u->loginshell = '/bin/bash';
+			$u->quota = 1;
+			$u->pilogin = $user;
+
+			// Get current status
+			event($event = new ResourceMemberStatus($row->resource, $u));
+
+			if ($event->status >= 400)
+			{
+				$errors[] = __METHOD__ . '(): Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
+				continue;
+			}
+
+			// Is status is pending or ready
+			if ($event->status != 2
+			 && $event->status != 3)
+			{
+				// Create account
+				event($event = new ResourceMemberCreated($row->resource, $u));
+
+				if ($event->status >= 400)
+				{
+					$errors[] = __METHOD__ . '(): Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
+					continue;
+				}
+			}
+
+			// Create Fortress
+			if ($fortress)
+			{
+				event($event = new ResourceMemberStatus($fortress, $u));
+
+				if ($event->status >= 400)
+				{
+					$errors[] = __METHOD__ . '(): Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
+					continue;
+				}
+
+				// Is status is pending or ready
+				if ($event->status != 2
+				&& $event->status != 3)
+				{
+					// Create account
+					event($event = new ResourceMemberCreated($fortress, $u));
+
+					if ($event->status >= 400)
+					{
+						$errors[] = __METHOD__ . '(): Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
+						continue;
+					}
+				}
+				else
+				{
+					$errors[] = __METHOD__ . '(): EXISTS ' . $user . ': ' . $event->status;
+				}
+			}
 
 			if ($event->status)
 			{
@@ -655,7 +727,14 @@ class AccountsController extends Controller
 		$removed = array();
 		foreach ($remove_users as $user)
 		{
-			event($event = new MemberRemove($user));
+			// Remove scholar
+			event($event = new ResourceMemberDeleted($row->resource, $user));
+
+			if ($event->status >= 400)
+			{
+				$errors[] = __METHOD__ . '(): Could not delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
+				continue;
+			}
 
 			if ($event->status)
 			{
@@ -668,7 +747,8 @@ class AccountsController extends Controller
 			'created'  => $created,
 			'removing' => $remove_users,
 			'removed'  => $removed,
-			'total'    => $users
+			'total'    => count($users),
+			'errors'   => $errors
 		);
 
 		return response()->json($data);

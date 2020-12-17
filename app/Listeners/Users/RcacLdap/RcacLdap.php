@@ -4,6 +4,7 @@ namespace App\Listeners\Users\RcacLdap;
 use App\Modules\Users\Events\UserSearching;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Users\Models\User;
+use App\Modules\Courses\Events\CourseEnrollment;
 use App\Modules\Resources\Events\ResourceMemberStatus;
 use App\Modules\Groups\Events\UnixGroupFetch;
 use App\Modules\History\Traits\Loggable;
@@ -404,6 +405,100 @@ class RcacLdap
 					// group name also exists in LDAP, so it should be safe to proceed, since
 					// any conflict must have already been resolved by manual intervention.
 				*/
+			}
+		}
+		catch (\Exception $e)
+		{
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
+		}
+
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'cn=' . $event->name);
+	}
+
+	/**
+	 * Lookup enrollment for an account
+	 *
+	 * @param   CourseEnrollment  $event
+	 * @return  void
+	 */
+	public function handleCourseEnrollment(CourseEnrollment $event)
+	{
+		if (!app()->has('ldap'))
+		{
+			return;
+		}
+
+		$config = config('ldap.rcac_group', []);
+
+		if (empty($config))
+		{
+			return;
+		}
+
+		try
+		{
+			$ldap = $this->connect($config);
+
+			// Performing a query.
+			$ldapdata = $ldap->search()
+				->where('host', '=', 'scholar.rcac.purdue.edu') //$event->account->resource->listname
+				->get();
+
+			$status = 404;
+
+			if (!empty($results))
+			{
+				$status = 200;
+
+				$users = $event->users;
+				$ldap_users   = array();
+				$system_users = array();
+
+				foreach ($ldapdata as $row)
+				{
+					$foo = array();
+
+					// Try to subtract staff users. Subtact anyone in xenon.
+					$rows = $ldap->search()
+						->where('uid', '=', $row['uid'][0])
+						->where('host', '=', 'xenon.rcac.purdue.edu')
+						->get();
+
+					if (count($rows) == 0)
+					{
+						$ldap_users[$row['uid'][0]] = $row['uid'][0];
+					}
+					else
+					{
+						$system_users[$row['uid'][0]] = $row['uid'][0];
+					}
+
+					$rows = $ldap->search()
+						->select(array('classification'))
+						->where('uid', '=', $row['uid'][0])
+						->get();
+
+					if (count($rows) > 0)
+					{
+						if (isset($rows[0]['classification'][0]) && $rows[0]['classification'][0] == "System Account")
+						{
+							$system_users[$row['uid'][0]] = $row['uid'][0];
+						}
+						if (isset($rows[0]['classification'][0]) && $rows[0]['classification'][0] == "Software Account")
+						{
+							$system_users[$row['uid'][0]] = $row['uid'][0];
+						}
+					}
+				}
+
+				$create_users = array_diff($users, $ldap_users);
+				$create_users = array_diff($create_users, $system_users);
+				$remove_users = array_diff($users, $scholar_users);
+				$remove_users = array_diff($remove_users, $system_users);
+
+				$event->create_users = $create_users;
+				$event->remove_users = $remove_users;
 			}
 		}
 		catch (\Exception $e)

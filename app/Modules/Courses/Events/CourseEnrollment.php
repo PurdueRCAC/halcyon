@@ -7,9 +7,9 @@ use App\Modules\Courses\Models\Account;
 class CourseEnrollment
 {
 	/**
-	 * @var Account
+	 * @var array
 	 */
-	public $account;
+	public $users;
 
 	/**
 	 * @var array
@@ -22,9 +22,10 @@ class CourseEnrollment
 	 * @param  $account
 	 * @return void
 	 */
-	public function __construct(Account $account)
+	public function __construct(array $users)
 	{
-		$this->account = $account;
-		$this->enrollments = array();
+		$this->users = $users;
+		$this->create_users = array();
+		$this->remove_users = array();
 	}
 }

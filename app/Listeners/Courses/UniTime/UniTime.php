@@ -107,15 +107,18 @@ class UniTime
 		{
 			$body = $results['body'];
 
-			foreach ($body->classes as $class)
+			if ($body)
 			{
-				foreach ($class->course as $course)
+				foreach ($body->classes as $class)
 				{
-					if ($course->classExternalId == $event->account->crn)
+					foreach ($class->course as $course)
 					{
-						$matched = true;
+						if ($course->classExternalId == $event->account->crn)
+						{
+							$matched = true;
 
-						$event->account->classid = $course->courseId;
+							$event->account->classid = $course->courseId;
+						}
 					}
 				}
 			}
@@ -143,6 +146,11 @@ class UniTime
 		}
 
 		$body = $results['body'];
+
+		if (!$body)
+		{
+			return;
+		}
 
 		$semesters = array();
 		foreach ($body as $semester)
