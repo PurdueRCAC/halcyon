@@ -12,6 +12,8 @@ class DocsController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -47,9 +49,6 @@ class DocsController extends Controller
 		$generator = new Generator(config('module.core.api_chache', false));
 		$documentation = $generator->output('array');
 
-/*echo '<pre>';
-print_r($documentation);
-echo '</pre>';*/
 		return view('core::site.docs.index', [
 			'modules' => $modules,
 			'module' => $module,

@@ -12,6 +12,8 @@
 @stop
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('contactreports::contactreports.module name'),

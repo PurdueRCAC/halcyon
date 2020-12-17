@@ -13,6 +13,8 @@ class AuthController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function login(Request $request)
@@ -50,6 +52,8 @@ class AuthController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function authenticate(Request $request)
@@ -84,6 +88,12 @@ class AuthController extends Controller
 			//->withSuccess(trans('users::messages.successfully logged in'));
 	}
 
+	/**
+	 * Callback for third-party auth
+	 * 
+	 * @param  Request $request
+	 * @return Response
+	 */
 	public function callback(Request $request)
 	{
 		/*try
@@ -170,6 +180,8 @@ class AuthController extends Controller
 
 	/**
 	 * Logout
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function logout(Request $request)
@@ -186,6 +198,7 @@ class AuthController extends Controller
 
 	/**
 	 * Display a listing of the resource.
+	 * 
 	 * @return Response
 	 */
 	public function register()
@@ -202,6 +215,7 @@ class AuthController extends Controller
 
 	/**
 	 * Store a newly created resource in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */

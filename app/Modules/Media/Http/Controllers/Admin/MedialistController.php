@@ -21,7 +21,8 @@ class MedialistController extends Controller
 	/**
 	 * Display a list of files
 	 *
-	 * @return  void
+	 * @param   Request  $request
+	 * @return  Response
 	 */
 	public function index(Request $request)
 	{
@@ -61,21 +62,20 @@ class MedialistController extends Controller
 	/**
 	 * Display information about a file
 	 *
-	 * @return  void
+	 * @param   Request  $request
+	 * @return  Response
 	 */
-	public function infoTask()
+	public function info(Request $request)
 	{
-		Request::checkToken(['get', 'post']);
-
 		// Get some data from the request
-		$tmpl = Request::getCmd('tmpl');
+		$tmpl = $request->input('tmpl');
 
-		$file = urldecode(Request::getString('file', ''));
-		$folder = urldecode(Request::getString('folder', ''));
+		$file = urldecode($request->input('file', ''));
+		$folder = urldecode($request->input('folder', ''));
 
 		if ($file)
 		{
-			$file = \App\Halcyon\Filesystem\Util::checkPath(MEDIA_BASE . $file);
+			$file = \App\Halcyon\Filesystem\Util::checkPath(storage_path($file));
 			$path = $file;
 
 			if (!is_file($file))
@@ -85,7 +85,7 @@ class MedialistController extends Controller
 		}
 		elseif ($folder)
 		{
-			$folder = \App\Halcyon\Filesystem\Util::checkPath(MEDIA_BASE . $folder);
+			$folder = \App\Halcyon\Filesystem\Util::checkPath(storage_path($folder));
 			$path = $folder;
 
 			if (!is_dir($folder))
@@ -97,9 +97,8 @@ class MedialistController extends Controller
 		// Compile info
 		$data = array(
 			'type'          => ($file ? 'file' : 'folder'),
-			'path'          => substr($path, strlen(MEDIA_BASE)),
+			'path'          => substr($path, strlen(storage_path())),
 			'absolute_path' => $path,
-			'full_path'     => substr($path, strlen(PATH_ROOT)),
 			'name'          => basename($path),
 			'modified'      => filemtime($path),
 			'size'          => 0,
@@ -135,6 +134,8 @@ class MedialistController extends Controller
 
 	/**
 	 * Display a link to download a file
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function path(Request $request)
@@ -142,14 +143,13 @@ class MedialistController extends Controller
 		// Get some data from the request
 		$tmpl = $request->input('tmpl');
 		$file = urldecode($request->input('file', ''));
-		//$file = \App\Halcyon\Filesystem\Util::checkPath(COM_MEDIA_BASE . $file);
 
 		if (!is_file($file))
 		{
 			abort(404);
 		}
 
-		$file = MEDIA_BASEURL . substr($file, strlen(MEDIA_BASE));
+		$file = substr($file, strlen(storage_path()));
 
 		return view('media::admin.medialist.path', [
 			'file' => $file

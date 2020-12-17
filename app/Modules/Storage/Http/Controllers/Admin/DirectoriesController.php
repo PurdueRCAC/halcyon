@@ -17,6 +17,8 @@ class DirectoriesController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -89,6 +91,8 @@ class DirectoriesController extends Controller
 				$query->where(function($where) use ($filters, $d, $u)
 				{
 					$where->where($d . '.name', 'like', '%' . $filters['search'] . '%')
+						->orWhere($d . '.name', 'like', $filters['search'] . '%')
+						->orWhere($d . '.name', 'like', '%' . $filters['search'])
 						->orWhere($u . '.name', 'like', '%' . $filters['search'] . '%');
 				});
 			}
@@ -127,6 +131,8 @@ class DirectoriesController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -155,6 +161,8 @@ class DirectoriesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -173,7 +181,10 @@ class DirectoriesController extends Controller
 
 	/**
 	 * Store a newly created resource in storage.
-	 * @param  Request $request
+	 * 
+	 * @param  Request  $request
+	 * @param  array    $data
+	 * @param  integer  $offset
 	 * @return Response
 	 */
 	public function store(Request $request, $data = array(), $offset = 0)
@@ -439,6 +450,7 @@ class DirectoriesController extends Controller
 	/**
 	 * Remove the specified entry
 	 *
+	 * @param   Request $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)
@@ -475,6 +487,7 @@ class DirectoriesController extends Controller
 	/**
 	 * Return to default page
 	 *
+	 * @param   integer  $parent
 	 * @return  Response
 	 */
 	public function cancel($parent = 0)

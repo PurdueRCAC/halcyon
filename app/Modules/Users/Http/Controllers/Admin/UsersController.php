@@ -21,6 +21,8 @@ class UsersController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -191,6 +193,7 @@ class UsersController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
 	 * @return Response
 	 */
 	public function ingest()
@@ -333,6 +336,7 @@ class UsersController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
 	 * @return Response
 	 */
 	public function create()
@@ -346,6 +350,7 @@ class UsersController extends Controller
 
 	/**
 	 * Store a newly created resource in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -437,6 +442,8 @@ class UsersController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -469,6 +476,8 @@ class UsersController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function delete(Request $request)
@@ -512,6 +521,7 @@ class UsersController extends Controller
 	/**
 	 * Sets the account blocked state of a member
 	 *
+	 * @param  Request $request
 	 * @return  Response
 	 */
 	public function unblock(Request $request)
@@ -522,6 +532,8 @@ class UsersController extends Controller
 	/**
 	 * Sets the account blocked state of a member
 	 *
+	 * @param  Request $request
+	 * @param  integer $state
 	 * @return  Response
 	 */
 	public function block(Request $request, $state = 1)
@@ -572,7 +584,9 @@ class UsersController extends Controller
 	/**
 	 * Debug user permissions
 	 *
-	 * @return  void
+	 * @param  integer $id
+	 * @param  Request $request
+	 * @return Response
 	 */
 	public function debug($id, Request $request)
 	{

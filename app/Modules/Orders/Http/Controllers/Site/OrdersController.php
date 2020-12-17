@@ -17,6 +17,8 @@ class OrdersController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -270,6 +272,8 @@ class OrdersController extends Controller
 
 	/**
 	 * Show the specified resource.
+	 * 
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function recurring(Request $request)
@@ -363,6 +367,7 @@ class OrdersController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
 	 * @return Response
 	 */
 	public function create()
@@ -382,6 +387,8 @@ class OrdersController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -405,6 +412,7 @@ class OrdersController extends Controller
 
 	/**
 	 * Store a newly created resource in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -414,6 +422,7 @@ class OrdersController extends Controller
 
 	/**
 	 * Update the specified resource in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -423,6 +432,7 @@ class OrdersController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+	 * 
 	 * @return Response
 	 */
 	public function destroy()

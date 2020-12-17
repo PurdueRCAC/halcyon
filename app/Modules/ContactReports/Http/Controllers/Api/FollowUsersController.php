@@ -81,6 +81,7 @@ class FollowUsersController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function index(Request $request)

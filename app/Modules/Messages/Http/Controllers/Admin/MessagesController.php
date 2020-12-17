@@ -14,6 +14,7 @@ class MessagesController extends Controller
 	/**
 	 * Display a listing of articles
 	 *
+	 * @param  StatefulRequest  $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -174,6 +175,7 @@ class MessagesController extends Controller
 	 * Update the specified entry
 	 *
 	 * @param   Request $request
+	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -199,7 +201,9 @@ class MessagesController extends Controller
 	/**
 	 * Sets the state of one or more entries
 	 * 
-	 * @return  void
+	 * @param  Request  $request
+	 * @param  integer  $id
+	 * @return Response
 	 */
 	public function state(Request $request, $id)
 	{
@@ -259,6 +263,7 @@ class MessagesController extends Controller
 	/**
 	 * Remove the specified entry
 	 *
+	 * @param  Request  $request
 	 * @return  Response
 	 */
 	public function destroy(Request $request)

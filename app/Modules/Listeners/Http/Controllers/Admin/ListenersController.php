@@ -3,9 +3,8 @@
 namespace App\Modules\Listeners\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-//use Illuminate\Http\Response;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-//use Illuminate\Support\Facades\DB;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Listeners\Models\Listener;
 use App\Modules\Users\Models\User;
@@ -15,6 +14,8 @@ class ListenersController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -47,7 +48,6 @@ class ListenersController extends Controller
 		{
 			$filters['order_dir'] = Listener::$orderDir;
 		}
-
 
 		$query = Listener::query()
 			->where('type', '=', 'listener');
@@ -138,6 +138,7 @@ class ListenersController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
 	 * @return Response
 	 */
 	public function create()
@@ -153,6 +154,9 @@ class ListenersController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function edit($id, Request $request)
@@ -191,6 +195,7 @@ class ListenersController extends Controller
 
 	/**
 	 * Update the specified resource in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -223,6 +228,8 @@ class ListenersController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function delete(Request $request)
@@ -258,8 +265,9 @@ class ListenersController extends Controller
 	/**
 	 * Method to publish a list of items
 	 *
-	 * @param   object  $request
-	 * @return  void
+	 * @param   Request  $request
+	 * @param   integer  $id
+	 * @return  Response
 	 */
 	public function publish(Request $request, $id = 0)
 	{
@@ -269,8 +277,9 @@ class ListenersController extends Controller
 	/**
 	 * Method to unpublish a list of items
 	 *
-	 * @param   object  $request
-	 * @return  void
+	 * @param   Request  $request
+	 * @param   integer  $id
+	 * @return  Response
 	 */
 	public function unpublish(Request $request, $id = 0)
 	{
@@ -280,9 +289,10 @@ class ListenersController extends Controller
 	/**
 	 * Method to change the state of a list of items
 	 *
-	 * @param   object  $request
+	 * @param   Request  $request
+	 * @param   integer  $id
 	 * @param   integer  $value
-	 * @return  void
+	 * @return  Response
 	 */
 	public function state(Request $request, $id = 0, $value = 1)
 	{
@@ -330,7 +340,7 @@ class ListenersController extends Controller
 	/**
 	 * Changes the order of one or more records.
 	 *
-	 * @param   object  $request
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function reorder(Request $request)
@@ -368,7 +378,7 @@ class ListenersController extends Controller
 	/**
 	 * Method to save the submitted ordering values for records.
 	 *
-	 * @param   object  $request
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function saveorder(Request $request)
@@ -428,7 +438,6 @@ class ListenersController extends Controller
 	/**
 	 * Return to the main view
 	 *
-	 * @param   Request $request
 	 * @return  Response
 	 */
 	public function cancel()

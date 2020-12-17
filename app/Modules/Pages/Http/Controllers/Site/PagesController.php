@@ -18,6 +18,7 @@ class PagesController extends Controller
 	/**
 	 * Display a page
 	 *
+	 * @param   Request $request
 	 * @return  Response
 	 */
 	public function index(Request $request)
@@ -121,6 +122,8 @@ class PagesController extends Controller
 
 	/**
 	 * Show the specified resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function show(Request $request)
@@ -130,6 +133,7 @@ class PagesController extends Controller
 
 	/**
 	 * Show the form for creating a new page.
+	 * 
 	 * @return Response
 	 */
 	public function create()
@@ -141,7 +145,7 @@ class PagesController extends Controller
 			)
 			->append(
 				trans('pages::pages.create'),
-				route('site.pages.create')
+				route('global.create')
 			);
 
 		return view('pages::site.create');
@@ -149,6 +153,7 @@ class PagesController extends Controller
 
 	/**
 	 * Store a newly created resource in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -166,12 +171,12 @@ class PagesController extends Controller
 
 		app('pathway')
 			->append(
-				config('resources.name'),
-				url('/resources')
+				config('pages.name'),
+				route('site.pages.home')
 			)
 			->append(
-				trans('resources::assets.edit'),
-				url('/resources/edit/:id', $id)
+				trans('global.edit'),
+				route('site.pages.edit', ['id' => $id])
 			);
 
 		return view('resources::site.edit');
@@ -179,6 +184,7 @@ class PagesController extends Controller
 
 	/**
 	 * Update the specified resource in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -188,6 +194,7 @@ class PagesController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+	 * 
 	 * @return Response
 	 */
 	public function destroy()

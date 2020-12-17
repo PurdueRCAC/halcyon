@@ -262,7 +262,9 @@ class ArticlesController extends Controller
 	/**
 	 * Sets the state of one or more entries
 	 * 
-	 * @return  void
+	 * @param  Request  $request
+	 * @param  integer  $id
+	 * @return  Response
 	 */
 	public function state(Request $request, $id)
 	{
@@ -322,6 +324,7 @@ class ArticlesController extends Controller
 	/**
 	 * Remove the specified entry
 	 *
+	 * @param  Request  $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)

@@ -116,6 +116,7 @@ class AccountsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -231,6 +232,7 @@ class AccountsController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)

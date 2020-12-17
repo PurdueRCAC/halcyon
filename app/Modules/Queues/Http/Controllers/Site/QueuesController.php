@@ -11,6 +11,7 @@ class QueuesController extends Controller
 {
 	/**
 	 * Display a listing of the queue.
+	 * 
 	 * @return Response
 	 */
 	public function index()
@@ -18,8 +19,8 @@ class QueuesController extends Controller
 		$rows = Queue::paginate(20);
 
 		app('pathway')->append(
-			config('queues.name'),
-			url('/queues')
+			trans('queues::queues.queues'),
+			route('site.queues.index')
 		);
 
 		return view('queues::site.index', ['rows' => $rows]);
@@ -27,18 +28,19 @@ class QueuesController extends Controller
 
 	/**
 	 * Show the form for creating a new queue.
+	 * 
 	 * @return Response
 	 */
 	public function create()
 	{
 		app('pathway')
 			->append(
-				config('queues.name'),
-				url('/queues')
+				trans('queues::queues.queues'),
+				route('site.queues.index')
 			)
 			->append(
-				__('queues::queues.create'),
-				url('/queues/new')
+				trans('queues::queues.create'),
+				route('site.queues.create')
 			);
 
 		return view('queues::site.create');
@@ -46,6 +48,7 @@ class QueuesController extends Controller
 
 	/**
 	 * Store a newly created queue in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -55,6 +58,7 @@ class QueuesController extends Controller
 
 	/**
 	 * Show the specified queue.
+	 * 
 	 * @return Response
 	 */
 	public function show()
@@ -63,12 +67,12 @@ class QueuesController extends Controller
 
 		app('pathway')
 			->append(
-				config('queues.name'),
-				url('/queues')
+				trans('queues::queues.queues'),
+				route('site.queues.index')
 			)
 			->append(
-				__('queues::queues.show'),
-				url('/queues/:id', $id)
+				trans('queues::queues.show'),
+				route('site.queues.show', ['id' => $id])
 			);
 
 		return view('queues::site.show');
@@ -76,6 +80,7 @@ class QueuesController extends Controller
 
 	/**
 	 * Show the form for editing the specified queue.
+	 * 
 	 * @return Response
 	 */
 	public function edit()
@@ -85,11 +90,11 @@ class QueuesController extends Controller
 		app('pathway')
 			->append(
 				config('queues.name'),
-				url('/queues')
+				route('site.queues.index')
 			)
 			->append(
-				__('queues::queues.edit'),
-				url('/queues/edit/:id', $id)
+				trans('global.edit'),
+				route('site.queues.edit', ['id' => $id])
 			);
 
 		return view('queues::site.edit');
@@ -97,6 +102,7 @@ class QueuesController extends Controller
 
 	/**
 	 * Update the specified queue in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -106,6 +112,7 @@ class QueuesController extends Controller
 
 	/**
 	 * Remove the specified queue from storage.
+	 * 
 	 * @return Response
 	 */
 	public function destroy()

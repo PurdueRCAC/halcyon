@@ -17,6 +17,8 @@ class ProductsController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param   StatefulRequest  $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -120,6 +122,7 @@ class ProductsController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
 	 * @return Response
 	 */
 	public function create()
@@ -144,6 +147,8 @@ class ProductsController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)

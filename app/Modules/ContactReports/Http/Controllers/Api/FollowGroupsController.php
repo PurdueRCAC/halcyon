@@ -81,6 +81,7 @@ class FollowGroupsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function index(Request $request)

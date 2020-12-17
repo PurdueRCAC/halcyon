@@ -48,6 +48,7 @@ class ModulesController extends Controller
 	/**
 	 * Store config changes
 	 *
+	 * @param  string  $module
 	 * @param  Request $request
 	 * @return Response
 	 */

@@ -24,6 +24,8 @@ class MediaController extends Controller
 {
 	/**
 	 * Display a listing of files
+	 * 
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -70,9 +72,10 @@ class MediaController extends Controller
 	/**
 	 * New entry
 	 *
-	 * @return  void
+	 * @param  Request  $request
+	 * @return  Response
 	 */
-	public function newdir($request)
+	public function newdir(Request $request)
 	{
 		if ($request->ajax())
 		{
@@ -94,7 +97,7 @@ class MediaController extends Controller
 				return redirect($rtrn)->with('warning', trans('media::media.ERROR_UNABLE_TO_CREATE_FOLDER_WARNDIRNAME'));
 			}
 
-			$path = \App\Halcyon\Filesystem\Util::normalizePath(COM_MEDIA_BASE . $parent . DS . $folder);
+			$path = \App\Halcyon\Filesystem\Util::normalizePath(media::mediaBASE . $parent . DS . $folder);
 
 			if (!is_dir($path) && !is_file($path))
 			{
@@ -106,7 +109,7 @@ class MediaController extends Controller
 				if (in_array(false, $result, true))
 				{
 					// There are some errors in the plugins
-					Notify::warning(transs('COM_MEDIA_ERROR_BEFORE_SAVE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
+					Notify::warning(transs('media::mediaERROR_BEFORE_SAVE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
 					return redirect($rtrn);
 				}
 
@@ -117,7 +120,7 @@ class MediaController extends Controller
 				// Trigger the onContentAfterSave event.
 				event(new DirectoryCreated($request));
 
-				Notify::success(trans('COM_MEDIA_CREATE_COMPLETE', substr($path, strlen(COM_MEDIA_BASE))));
+				Notify::success(trans('media::mediaCREATE_COMPLETE', substr($path, strlen(media::mediaBASE))));
 			}
 
 			//Request::setVar('folder', ($parent) ? $parent . DS . $folder : $folder);
@@ -129,7 +132,8 @@ class MediaController extends Controller
 	/**
 	 * Upload
 	 *
-	 * @return  void
+	 * @param  Request  $request
+	 * @return Response
 	 */
 	public function upload(Request $request)
 	{
@@ -181,7 +185,7 @@ class MediaController extends Controller
 		{
 			if ($file['error'] == 1)
 			{
-				Notify::warning(trans('COM_MEDIA_ERROR_WARNFILETOOLARGE'));
+				Notify::warning(trans('media::mediaERROR_WARNFILETOOLARGE'));
 				continue;
 			}
 
@@ -190,21 +194,21 @@ class MediaController extends Controller
 			 || $file['size'] > (int)(ini_get('post_max_size'))* 1024 * 1024
 			 || (($file['size'] > (int) (ini_get('memory_limit')) * 1024 * 1024) && ((int) (ini_get('memory_limit')) != -1)))
 			{
-				Notify::warning(trans('COM_MEDIA_ERROR_WARNFILETOOLARGE'));
+				Notify::warning(trans('media::mediaERROR_WARNFILETOOLARGE'));
 				continue;
 			}
 
 			if (Filesystem::exists($file['filepath']))
 			{
 				// A file with this name already exists
-				Notify::warning(trans('COM_MEDIA_ERROR_FILE_EXISTS'));
+				Notify::warning(trans('media::mediaERROR_FILE_EXISTS'));
 				continue;
 			}
 
 			if (!isset($file['name']))
 			{
 				// No filename (after the name was cleaned by Filesystem::clean()
-				Notify::error(trans('COM_MEDIA_INVALID_REQUEST'));
+				Notify::error(trans('media::mediaINVALID_REQUEST'));
 				continue;
 			}
 		}
@@ -226,14 +230,14 @@ class MediaController extends Controller
 			if (in_array(false, $result, true))
 			{
 				// There are some errors in the plugins
-				Notify::warning(transs('COM_MEDIA_ERROR_BEFORE_SAVE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
+				Notify::warning(transs('media::mediaERROR_BEFORE_SAVE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
 				continue;
 			}
 
 			if (!Filesystem::upload($file['tmp_name'], $file['filepath']))
 			{
 				// Error in upload
-				Notify::warning(trans('COM_MEDIA_ERROR_UNABLE_TO_UPLOAD_FILE'));
+				Notify::warning(trans('media::mediaERROR_UNABLE_TO_UPLOAD_FILE'));
 				continue;
 			}
 			else
@@ -241,7 +245,7 @@ class MediaController extends Controller
 				// Trigger the onContentAfterSave event.
 				Event::trigger('content.onContentAfterSave', array('com_media.file', &$object_file, true));
 
-				Notify::success(trans('COM_MEDIA_UPLOAD_COMPLETE', substr($file['filepath'], strlen(COM_MEDIA_BASE))));
+				Notify::success(trans('media::mediaUPLOAD_COMPLETE', substr($file['filepath'], strlen(media::mediaBASE))));
 			}
 		}
 
@@ -253,7 +257,8 @@ class MediaController extends Controller
 	/**
 	 * Delete a file
 	 *
-	 * @return  void
+	 * @param  Request  $request
+	 * @return Response
 	 */
 	public function delete(Request $request)
 	{
@@ -265,7 +270,7 @@ class MediaController extends Controller
 		}
 
 		// Get some data from the request
-		$tmpl   = Request::getCmd('tmpl');
+		$tmpl   = $request->input('tmpl');
 		$paths  = Request::getArray('rm', array(), '', 'array');
 		$folder = Request::getString('folder', '');
 		$rm     = Request::getArray('rm', array());
@@ -281,13 +286,13 @@ class MediaController extends Controller
 		// Nothing to delete
 		if (empty($rm))
 		{
-			App::redirect(route('index.php?option=' . $this->_option . '&controller=' . $this->_controller . '&folder=' . $folder, false));
+			redirect(route('index.php?option=' . $this->_option . '&controller=' . $this->_controller . '&folder=' . $folder, false));
 		}
 
 		// Authorize the user
 		if (!User::authorise('delete', $this->_option))
 		{
-			App::redirect(route('index.php?option=' . $this->_option . '&controller=' . $this->_controller . '&folder=' . $folder, false));
+			redirect(route('admin.media.index', ['folder' => $folder]));
 		}
 
 		// Initialise variables.
@@ -300,11 +305,11 @@ class MediaController extends Controller
 			{
 				// filename is not safe
 				$filename = htmlspecialchars($path, ENT_COMPAT, 'UTF-8');
-				Notify::warning(trans('COM_MEDIA_ERROR_UNABLE_TO_DELETE_FILE_WARNFILENAME', substr($filename, strlen(COM_MEDIA_BASE))));
+				Notify::warning(trans('media::media.ERROR_UNABLE_TO_DELETE_FILE_WARNFILENAME', substr($filename, strlen(media::mediaBASE))));
 				continue;
 			}*/
 
-			$fullPath = Filesystem::cleanPath(implode(DIRECTORY_SEPARATOR, array(COM_MEDIA_BASE, $folder, $path)));
+			$fullPath = Filesystem::cleanPath(implode(DIRECTORY_SEPARATOR, array(media::mediaBASE, $folder, $path)));
 			$object_file = new \App\Halcyon\Base\Obj(array('filepath' => $fullPath));
 			if (is_file($fullPath))
 			{
@@ -313,7 +318,7 @@ class MediaController extends Controller
 				if (in_array(false, $result, true))
 				{
 					// There are some errors in the plugins
-					Notify::warning(transs('COM_MEDIA_ERROR_BEFORE_DELETE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
+					Notify::warning(transs('media::media.ERROR_BEFORE_DELETE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
 					continue;
 				}
 
@@ -321,43 +326,38 @@ class MediaController extends Controller
 
 				// Trigger the onContentAfterDelete event.
 				Event::trigger('content.onContentAfterDelete', array('com_media.file', &$object_file));
-				$this->setMessage(trans('COM_MEDIA_DELETE_COMPLETE', substr($fullPath, strlen(COM_MEDIA_BASE))));
+				$this->setMessage(trans('media::media.DELETE_COMPLETE', substr($fullPath, strlen(media::mediaBASE))));
 			}
 			elseif (is_dir($fullPath))
 			{
 				$contents = Filesystem::files($fullPath, '.', true, false, array('.svn', 'CVS', '.DS_Store', '__MACOSX', 'index.html'));
 				if (empty($contents))
 				{
-					// Trigger the onContentBeforeDelete event.
-					$result = Event::trigger('content.onContentBeforeDelete', array('com_media.folder', &$object_file));
-					if (in_array(false, $result, true))
-					{
-						// There are some errors in the plugins
-						Notify::warning(transs('COM_MEDIA_ERROR_BEFORE_DELETE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
-						continue;
-					}
-
 					$ret &= Filesystem::deleteDirectory($fullPath);
 
 					// Trigger the onContentAfterDelete event.
-					Event::trigger('content.onContentAfterDelete', array('com_media.folder', &$object_file));
-					$this->setMessage(trans('COM_MEDIA_DELETE_COMPLETE', substr($fullPath, strlen(COM_MEDIA_BASE))));
+					event(new Deleted($request));
+
+					$this->setMessage(trans('media::mediaDELETE_COMPLETE', substr($fullPath, strlen(media::mediaBASE))));
 				}
 				else
 				{
 					// This makes no sense...
-					Notify::warning(trans('COM_MEDIA_ERROR_UNABLE_TO_DELETE_FOLDER_NOT_EMPTY', substr($fullPath, strlen(COM_MEDIA_BASE))));
+					Notify::warning(trans('media::media.ERROR_UNABLE_TO_DELETE_FOLDER_NOT_EMPTY', substr($fullPath, strlen(media::mediaBASE))));
 				}
 			}
+
+			event(new Deleted($request));
 		}
 
-		App::redirect(route('index.php?option=' . $this->_option . '&controller=' . $this->_controller . '&folder=' . $folder, false));
+		redirect(route('admin.media.index', ['folder' => $folder]));
 	}
 
 	/**
 	 * Download a file
 	 *
-	 * @return  void
+	 * @param  Request  $request
+	 * @return Response
 	 */
 	public function downloadTask(Request $request)
 	{

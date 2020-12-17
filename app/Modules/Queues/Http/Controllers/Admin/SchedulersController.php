@@ -15,6 +15,8 @@ class SchedulersController extends Controller
 {
 	/**
 	 * Display a listing of the queue.
+	 * 
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -101,6 +103,7 @@ class SchedulersController extends Controller
 
 	/**
 	 * Show the form for creating a new queue.
+	 * 
 	 * @return Response
 	 */
 	public function create()
@@ -121,6 +124,7 @@ class SchedulersController extends Controller
 
 	/**
 	 * Show the form for editing the specified queue.
+	 * 
 	 * @return Response
 	 */
 	public function edit($id)
@@ -198,6 +202,7 @@ class SchedulersController extends Controller
 
 	/**
 	 * Remove the specified queue from storage.
+	 * 
 	 * @return Response
 	 */
 	public function delete(Request $request)

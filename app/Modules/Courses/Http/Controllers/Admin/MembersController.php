@@ -14,6 +14,7 @@ class MembersController extends Controller
 	/**
 	 * Display a listing of tags
 	 *
+	 * @param  StatefulRequest  $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -156,6 +157,7 @@ class MembersController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -172,6 +174,7 @@ class MembersController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function delete(Request $request)

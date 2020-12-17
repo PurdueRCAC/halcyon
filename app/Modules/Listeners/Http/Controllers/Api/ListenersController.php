@@ -5,11 +5,11 @@ namespace App\Modules\Listeners\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
 use App\Modules\Listeners\Models\Listener;
-use App\Modules\Listeners\Models\Menu;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Access\Viewlevel;
+use App\Modules\Listeners\Http\Resources\ListenerResource;
+use App\Modules\Listeners\Http\Resources\ListenerResourceCollection;
 
 /**
  * Listeners
@@ -99,21 +99,21 @@ class ListenersController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param   Request  $request
+	 * @return  Response
 	 */
 	public function index(Request $request)
 	{
 		// Get filters
 		$filters = array(
 			'search'    => null,
-			'state'     => 'published',
-			'access'    => null,
-			'position'  => null,
-			'listener'    => null,
-			'language'  => null,
-			'client_id' => 0,
+			'state'     => '',
+			'access'    => 0,
+			'folder'  => null,
+			'enabled'    => null,
 			// Pagination
 			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			'order'     => Listener::$orderBy,
 			'order_dir' => Listener::$orderDir,
 		);
@@ -133,76 +133,25 @@ class ListenersController extends Controller
 			$filters['order_dir'] = Listener::$orderDir;
 		}
 
-		$rows = Listener::paginate($filters['limit']);
-
-		$query = Listener::query();
+		$query = Listener::query()
+			->where('type', '=', 'listener');
+			//->where('state', '>=', 0);
 
 		$p = (new Listener)->getTable();
-		$u = (new User)->getTable();
-		$a = (new Viewlevel)->getTable();
-		$m = (new Menu)->getTable();
-		$e = 'extensions';
-		$l = 'languages';
+		$u = (new User)->getTable(); //'users';
+		$a = (new Viewlevel)->getTable();'viewlevels';
 
-		$query->select(
-				$p . '.*',
-				$l . '.title AS language_title',
-				$u . '.name AS editor',
-				$a . '.title AS access_level',
-				DB::raw('MIN(' . $m . '.menuid) AS pages'),
-				$e . '.name AS name'
-			)
-			->where($p . '.client_id', '=', $filters['client_id']);
-
-		// Join over the language
-		$query
-			//->select($l . '.title AS language_title')
-			->leftJoin($l, $l . '.lang_code', $p . '.language');
+		$query->select([$p . '.*', $u . '.name AS editor', $a . '.title AS access_level']);
 
 		// Join over the users for the checked out user.
 		$query
-			//->select($u . '.name AS editor')
+			//->select([$u . '.name AS editor'])
 			->leftJoin($u, $u . '.id', $p . '.checked_out');
 
 		// Join over the access groups.
 		$query
-			//->select($a . '.title AS access_level')
+			//->select([$a . '.title AS access_level'])
 			->leftJoin($a, $a . '.id', $p . '.access');
-
-		// Join over the access groups.
-		$query
-			//->select('MIN(' . $m . '.menuid) AS pages')
-			->leftJoin($m, $m . '.moduleid', $p . '.id');
-
-		// Join over the extensions
-		$query
-			//->select($e . '.name AS name')
-			->join($e, $e . '.element', $p . '.module', 'left')
-			->groupBy(
-				$p . '.id',
-				$p . '.title',
-				$p . '.note',
-				$p . '.position',
-				$p . '.module',
-				$p . '.language',
-				$p . '.checked_out',
-				$p . '.checked_out_time',
-				$p . '.published',
-				$p . '.access',
-				$p . '.ordering',
-				//$l . '.title',
-				$u . '.name',
-				$a . '.title',
-				$e . '.name',
-				//$l . '.lang_code',
-				$u . '.id',
-				$a . '.id',
-				$m . '.moduleid',
-				$e . '.element',
-				$p . '.publish_up',
-				$p . '.publish_down',
-				$e . '.enabled'
-			);
 
 		// Filter by access level.
 		if ($filters['access'])
@@ -211,63 +160,38 @@ class ListenersController extends Controller
 		}
 
 		// Filter by published state
-		/*if (is_numeric($filters['state']))
+		if (is_numeric($filters['state']))
 		{
-			$query->where($p . '.published', '=', (int) $filters['state']);
+			$query->where($p . '.enabled', '=', (int) $filters['state']);
 		}
 		elseif ($filters['state'] === '')
 		{
-			$query->whereIn($p . '.published', array(0, 1));
-		}*/
-		if ($filters['state'] == 'published')
-		{
-			$query->where($p . '.published', '=', 1);
-		}
-		elseif ($filters['state'] == 'unpublished')
-		{
-			$query->where($p . '.published', '=', 0);
+			$query->whereIn($p . '.enabled', array(0, 1));
 		}
 
-		// Filter by position.
-		if ($filters['position'])
+		// Filter by folder.
+		if ($filters['folder'])
 		{
-			if ($filters['position'] == 'none')
-			{
-				$filters['position'] = '';
-			}
-			$query->where($p . '.position', '=', $filters['position']);
+			$query->where($p . '.folder', '=', $filters['folder']);
 		}
 
-		// Filter by module.
-		if ($filters['listener'])
-		{
-			$query->where($p . '.module', '=', $filters['listener']);
-		}
-
-		// Filter by search
+		// Filter by search in id
 		if (!empty($filters['search']))
 		{
 			if (stripos($filters['search'], 'id:') === 0)
 			{
-				$query->where($p . '.id', '=', (int) substr($filters['search'], 3));
+				$query->where($p . '.extension_id', '=', (int) substr($filters['search'], 3));
 			}
 			else
 			{
-				$query->where(function($where) use ($p, $filters)
+				$query->where(function($where) use ($filters)
 				{
-					$where->where($p . '.title', 'like', '%' . $filters['search'] . '%')
-						->orWhere($p . '.note', 'like', '%' . $filters['search'] . '%');
+					$where->where($p . '.name', 'like', '%' . $filters['search'] . '%')
+						->orWhere($p . '.element', 'like', '%' . $filters['search'] . '%');
 				});
 			}
 		}
 
-		// Filter by module.
-		if ($filters['language'])
-		{
-			$query->where($p . '.language', '=', $filters['language']);
-		}
-
-		// Order records
 		if ($filters['order'] == 'name')
 		{
 			$query->orderBy('name', $filters['order_dir']);
@@ -275,7 +199,7 @@ class ListenersController extends Controller
 		}
 		else if ($filters['order'] == 'ordering')
 		{
-			$query->orderBy('position', 'asc');
+			$query->orderBy('folder', 'asc');
 			$query->orderBy('ordering', $filters['order_dir']);
 			$query->orderBy('name', 'asc');
 		}
@@ -287,11 +211,10 @@ class ListenersController extends Controller
 		}
 
 		$rows = $query
-			->paginate($filters['limit']);
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
+			->appends(array_filter($filters));
 
-		$rows->appends(array_filter($filters));
-
-		return $rows;
+		return new ListenerResourceCollection($rows);
 	}
 
 	/**
@@ -355,22 +278,24 @@ class ListenersController extends Controller
 	 * 			"type":      "array"
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param   Request  $request
+	 * @return  Response
 	 */
 	public function create(Request $request)
 	{
 		$request->validate([
-			'body' => 'required'
+			'name' => 'required|string',
+			'element' => 'required|string'
 		]);
 
 		$row = new Listener($request->all());
 
 		if (!$row->save())
 		{
-			throw new \Exception($row->getError(), 409);
+			return response()->json(['message' => $row->getError()], 500);
 		}
 
-		return $row;
+		return new ListenerResource($row);
 	}
 
 	/**
@@ -387,28 +312,14 @@ class ListenersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param   integer  $id
+	 * @return  Response
 	 */
 	public function read($id)
 	{
 		$row = Listener::findOrFail((int)$id);
 
-		$row->api = route('api.listeners.read', ['id' => $row->id]);
-		$row->menu_assignment = $row->menuAssignment();
-
-		// Permissions check
-		//$item->canCreate = false;
-		$row->canEdit   = false;
-		$row->canDelete = false;
-
-		if (auth()->user())
-		{
-			//$item->canCreate = auth()->user()->can('create listeners');
-			$row->canEdit   = auth()->user()->can('edit listeners');
-			$row->canDelete = auth()->user()->can('delete listeners');
-		}
-
-		return $row;
+		return new ListenerResource($row);
 	}
 
 	/**
@@ -497,7 +408,7 @@ class ListenersController extends Controller
 			return response()->json(['message' => $row->getError()], 500);
 		}
 
-		return $row;
+		return new ListenerResource($row);
 	}
 
 	/**

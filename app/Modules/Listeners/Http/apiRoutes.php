@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'listeners'], function (Router $router)
+$router->group(['prefix' => 'listeners', 'middleware' => ['auth:api', 'can:manage listeners']], function (Router $router)
 {
 	$router->get('/', [
 		'as'   => 'api.listeners.index',

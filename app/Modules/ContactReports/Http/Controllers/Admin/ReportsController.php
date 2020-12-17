@@ -17,6 +17,7 @@ class ReportsController extends Controller
 	/**
 	 * Display a listing of articles
 	 *
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -89,8 +90,6 @@ class ReportsController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Report();
 
 		$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();
@@ -284,8 +283,6 @@ class ReportsController extends Controller
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Report::findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))
@@ -304,6 +301,7 @@ class ReportsController extends Controller
 	/**
 	 * Remove the specified entry
 	 *
+	 * @param   Request $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)

@@ -39,6 +39,7 @@ class FolderController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function read(Request $request)
@@ -68,6 +69,7 @@ class FolderController extends Controller
 	 * 		"required":      true,
 	 * 		"default":       null
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -110,7 +112,8 @@ class FolderController extends Controller
 	/**
 	 * Create a directory
 	 *
-	 * @return  void
+	 * @param  Request $request
+	 * @return  Response
 	 */
 	public function update(Request $request)
 	{
@@ -168,6 +171,7 @@ class FolderController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)

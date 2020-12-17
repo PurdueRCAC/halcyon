@@ -73,6 +73,7 @@ class UsersController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function index(Request $request)//: UserResourceCollection
@@ -292,6 +293,7 @@ class UsersController extends Controller
 	 * 			"format":    "email"
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function create(Request $request): UserResource
@@ -319,6 +321,7 @@ class UsersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function read($id): UserResource
@@ -410,6 +413,7 @@ class UsersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
+	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id): UserResource

@@ -18,6 +18,8 @@ class UsersController extends Controller
 {
 	/**
 	 * Show the specified resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function profile(Request $request)
@@ -276,6 +278,8 @@ class UsersController extends Controller
 
 	/**
 	 * Show the specified resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function request(Request $request)

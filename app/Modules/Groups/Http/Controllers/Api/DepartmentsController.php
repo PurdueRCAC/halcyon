@@ -94,7 +94,8 @@ class DepartmentsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param   Request  $request
+	 * @return  Response
 	 */
 	public function index(Request $request)
 	{
@@ -171,6 +172,7 @@ class DepartmentsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -212,6 +214,7 @@ class DepartmentsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function read($id)
@@ -256,6 +259,7 @@ class DepartmentsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
+	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -302,6 +306,7 @@ class DepartmentsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

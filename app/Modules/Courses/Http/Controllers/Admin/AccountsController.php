@@ -16,6 +16,8 @@ class AccountsController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  StatefulRequest  $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -105,6 +107,8 @@ class AccountsController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -128,6 +132,8 @@ class AccountsController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -148,6 +154,7 @@ class AccountsController extends Controller
 
 	/**
 	 * Store a newly created resource in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -243,7 +250,7 @@ class AccountsController extends Controller
 	/**
 	 * Remove the specified entry
 	 *
-	 * @param   integer   $id
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)

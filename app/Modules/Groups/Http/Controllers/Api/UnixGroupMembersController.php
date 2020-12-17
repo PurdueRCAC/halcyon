@@ -105,6 +105,7 @@ class UnixGroupMembersController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -212,6 +213,7 @@ class UnixGroupMembersController extends Controller
 	 * 			"type":      "integer",
 	 * 		}
 	 * }
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)

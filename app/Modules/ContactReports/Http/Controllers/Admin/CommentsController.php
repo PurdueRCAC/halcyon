@@ -14,6 +14,8 @@ class CommentsController extends Controller
 	/**
 	 * Display a listing of entries
 	 *
+	 * @param  integer  $report
+	 * @param  StatefulRequest  $request
 	 * @return Response
 	 */
 	public function index($report, StatefulRequest $request)
@@ -66,12 +68,11 @@ class CommentsController extends Controller
 	/**
 	 * Show the form for creating a new report
 	 *
+	 * @param   integer  $report
 	 * @return  Response
 	 */
 	public function create($report)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$report = Report::findOrFail($report);
 
 		$row = new Comment();
@@ -86,13 +87,12 @@ class CommentsController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param   integer  $report
 	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function edit($report, $id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$report = Report::findOrFail($report);
 
 		$row = Comment::findOrFail($id);
@@ -138,6 +138,7 @@ class CommentsController extends Controller
 	/**
 	 * Remove the specified entry
 	 *
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)
@@ -174,13 +175,11 @@ class CommentsController extends Controller
 	/**
 	 * Return to default page
 	 *
+	 * @param   integer  $report
 	 * @return  Response
 	 */
 	public function cancel($report)
 	{
-		//$report = app('request')->input('fields.contactreportid');
-		//$report = $report ?: app('request')->input('report');
-
 		return redirect(route('admin.contactreports.comments', ['report' => $report]));
 	}
 }

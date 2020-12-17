@@ -103,6 +103,7 @@ class MembersController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -215,6 +216,7 @@ class MembersController extends Controller
 	 * 		"required":      false,
 	 * 		"default":       null
 	 * }
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -264,6 +266,7 @@ class MembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function read($id)
@@ -330,6 +333,7 @@ class MembersController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @param   Request $request
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -376,6 +380,7 @@ class MembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

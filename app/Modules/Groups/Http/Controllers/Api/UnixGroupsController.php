@@ -96,6 +96,7 @@ class UnixgroupsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -193,6 +194,7 @@ class UnixgroupsController extends Controller
 	 * 			"type":      "integer",
 	 * 		}
 	 * }
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)

@@ -15,6 +15,7 @@ class MembersController extends Controller
 	/**
 	 * Display a listing of tags
 	 *
+	 * @param  integer  $group
 	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
@@ -118,6 +119,7 @@ class MembersController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
+	 * @param  integer  $group
 	 * @return Response
 	 */
 	public function create($group)
@@ -132,6 +134,7 @@ class MembersController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
+	 * @param  integer $group
 	 * @param  integer $id
 	 * @return Response
 	 */
@@ -177,6 +180,7 @@ class MembersController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  Request $request
+	 * @param  integer $group
 	 * @return Response
 	 */
 	public function delete(Request $request, $group)
@@ -210,6 +214,7 @@ class MembersController extends Controller
 	/**
 	 * Return to the main view
 	 *
+	 * @param   integer  $group
 	 * @return  Response
 	 */
 	public function cancel($group)

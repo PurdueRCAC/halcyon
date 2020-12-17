@@ -129,6 +129,7 @@ class GroupsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -278,6 +279,7 @@ class GroupsController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -376,6 +378,7 @@ class GroupsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function read($id)
@@ -445,6 +448,7 @@ class GroupsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
+	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -548,6 +552,7 @@ class GroupsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

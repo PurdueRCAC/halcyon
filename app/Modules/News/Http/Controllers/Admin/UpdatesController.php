@@ -14,8 +14,8 @@ class UpdatesController extends Controller
 	/**
 	 * Display a listing of entries
 	 *
-	 * @param   integer  $art  Article ID
-	 * @param   StatefulRequest $request
+	 * @param  integer  $art  Article ID
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index($art, StatefulRequest $request)

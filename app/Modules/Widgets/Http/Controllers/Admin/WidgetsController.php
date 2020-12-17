@@ -16,6 +16,8 @@ class WidgetsController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -245,6 +247,8 @@ class WidgetsController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -290,6 +294,9 @@ class WidgetsController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function edit($id, Request $request)
@@ -345,6 +352,7 @@ class WidgetsController extends Controller
 
 	/**
 	 * Update the specified resource in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -400,7 +408,8 @@ class WidgetsController extends Controller
 	/**
 	 * Method to edit an existing record.
 	 *
-	 * @return  void
+	 * @param  Request $request
+	 * @return Response
 	 */
 	public function select(Request $request)
 	{
@@ -467,6 +476,8 @@ class WidgetsController extends Controller
 
 	/**
 	 * Remove the specified item
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function delete(Request $request)
@@ -503,7 +514,9 @@ class WidgetsController extends Controller
 	/**
 	 * Sets the state of one or more entries
 	 * 
-	 * @return  void
+	 * @param  Request $request
+	 * @param  integer $id
+	 * @return Response
 	 */
 	public function state(Request $request, $id)
 	{
@@ -551,6 +564,7 @@ class WidgetsController extends Controller
 	/**
 	 * Changes the order of one or more records.
 	 *
+	 * @param  Request $request
 	 * @return  boolean  True on success
 	 */
 	public function reorder(Request $request)
@@ -588,6 +602,7 @@ class WidgetsController extends Controller
 	/**
 	 * Method to save the submitted ordering values for records.
 	 *
+	 * @param  Request $request
 	 * @return  boolean  True on success
 	 */
 	public function saveorder(Request $request)
@@ -646,6 +661,7 @@ class WidgetsController extends Controller
 	/**
 	 * Return to the main view
 	 *
+	 * @param  Request $request
 	 * @return  Response
 	 */
 	public function cancel(Request $request)

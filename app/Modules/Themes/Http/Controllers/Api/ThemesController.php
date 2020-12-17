@@ -91,6 +91,7 @@ class ThemesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -253,6 +254,7 @@ class ThemesController extends Controller
 	 * 			"description": "Failed to create record"
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -294,6 +296,7 @@ class ThemesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function read($id)
@@ -386,6 +389,7 @@ class ThemesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
+	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)

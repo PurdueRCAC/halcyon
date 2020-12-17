@@ -13,6 +13,8 @@ class NotificationTypesController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -62,6 +64,7 @@ class NotificationTypesController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
 	 * @return Response
 	 */
 	public function create()
@@ -77,6 +80,8 @@ class NotificationTypesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -92,6 +97,7 @@ class NotificationTypesController extends Controller
 
 	/**
 	 * Store a newly created resource in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -122,6 +128,7 @@ class NotificationTypesController extends Controller
 	/**
 	 * Remove the specified items
 	 *
+	 * @param   Request $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)

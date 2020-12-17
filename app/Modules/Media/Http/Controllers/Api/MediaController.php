@@ -30,6 +30,7 @@ class MediaController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/media
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -52,6 +53,7 @@ class MediaController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/media/tree
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function tree(Request $request)
@@ -108,8 +110,8 @@ class MediaController extends Controller
 	/**
 	 * Get directory tree
 	 *
-	 * @param $request
-	 * @return  void
+	 * @param  Request $request
+	 * @return  Response
 	 */
 	public function layout(Request $request)
 	{
@@ -128,8 +130,8 @@ class MediaController extends Controller
 	/**
 	 * Upload
 	 *
-	 * @param $request
-	 * @return  void
+	 * @param  Request $request
+	 * @return Response
 	 */
 	public function upload(Request $request)
 	{
@@ -213,8 +215,8 @@ class MediaController extends Controller
 	/**
 	 * Delete a file
 	 *
-	 * @param $request
-	 * @return  void
+	 * @param  Request $request
+	 * @return Response
 	 */
 	public function delete(Request $request)
 	{
@@ -274,8 +276,8 @@ class MediaController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
-	 * @param $request
-	 * @return  void
+	 * @param  Request $request
+	 * @return Response
 	 */
 	public function download(Request $request)
 	{
@@ -319,8 +321,8 @@ class MediaController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
-	 * @param $request
-	 * @return array
+	 * @param  Request $request
+	 * @return Response
 	 */
 	public function url(Request $request)
 	{

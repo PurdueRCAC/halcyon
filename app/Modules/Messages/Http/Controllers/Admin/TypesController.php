@@ -13,7 +13,7 @@ class TypesController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @param   Request  $request
+	 * @param   StatefulRequest  $request
 	 * @return  Response
 	 */
 	public function index(StatefulRequest $request)

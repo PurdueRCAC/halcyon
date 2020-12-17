@@ -18,6 +18,8 @@ class OrdersController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param   StatefulRequest  $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -274,6 +276,7 @@ class OrdersController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
 	 * @return Response
 	 */
 	public function create()
@@ -294,6 +297,8 @@ class OrdersController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -343,6 +348,7 @@ class OrdersController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)

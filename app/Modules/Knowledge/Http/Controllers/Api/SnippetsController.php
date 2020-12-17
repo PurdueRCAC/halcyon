@@ -25,7 +25,8 @@ class SnippetsController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/knowledge/snippets
 	 * @apiAuthorization  false
-	 * @return Response
+	 * @param   Request  $request
+	 * @return  Response
 	 */
 	public function index(Request $request)
 	{

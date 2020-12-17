@@ -15,6 +15,7 @@ class RolesController extends Controller
 	/**
 	 * Display a listing of roles.
 	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -110,6 +111,7 @@ class RolesController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
 	 * @return Response
 	 */
 	public function create()
@@ -128,6 +130,7 @@ class RolesController extends Controller
 
 	/**
 	 * Store a newly created entry
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -212,6 +215,8 @@ class RolesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -231,6 +236,8 @@ class RolesController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function delete(Request $request)

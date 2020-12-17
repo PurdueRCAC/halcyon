@@ -12,6 +12,8 @@ class ThemesController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -142,6 +144,7 @@ class ThemesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
 	 * @param  integer $id
 	 * @param  Request $request
 	 * @return Response
@@ -167,6 +170,7 @@ class ThemesController extends Controller
 
 	/**
 	 * Update the specified resource in storage.
+	 * 
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -194,6 +198,8 @@ class ThemesController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function delete(Request $request)

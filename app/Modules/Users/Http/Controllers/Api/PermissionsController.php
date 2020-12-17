@@ -77,6 +77,7 @@ class PermissionsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -185,6 +186,8 @@ class PermissionsController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @param  string  $module
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function update($module, Request $request)

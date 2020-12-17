@@ -20,6 +20,7 @@ class DocsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)

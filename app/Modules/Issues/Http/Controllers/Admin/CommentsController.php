@@ -14,6 +14,7 @@ class CommentsController extends Controller
 	/**
 	 * Display a listing of entries
 	 *
+	 * @param  StatefulRequest  $request
 	 * @return Response
 	 */
 	public function index($report, StatefulRequest $request)
@@ -66,6 +67,7 @@ class CommentsController extends Controller
 	/**
 	 * Show the form for creating a new report
 	 *
+	 * @param   integer  $report
 	 * @return  Response
 	 */
 	public function create($report)
@@ -84,6 +86,7 @@ class CommentsController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param   integer  $report
 	 * @param   integer  $id
 	 * @return  Response
 	 */

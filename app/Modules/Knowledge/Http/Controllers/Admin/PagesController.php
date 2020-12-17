@@ -369,7 +369,7 @@ class PagesController extends Controller
 	/**
 	 * Rebuild the tree
 	 * 
-	 * @return  void
+	 * @return  Response
 	 */
 	public function rebuild()
 	{
@@ -389,7 +389,7 @@ class PagesController extends Controller
 	 * 
 	 * @param   integer $id
 	 * @param   Request $request
-	 * @return  void
+	 * @return  Response
 	 */
 	public function reorder($id, Request $request)
 	{
@@ -411,7 +411,7 @@ class PagesController extends Controller
 	 * 
 	 * @param   Request $request
 	 * @param   integer $id
-	 * @return  void
+	 * @return  Response
 	 */
 	public function state(Request $request, $id = null)
 	{

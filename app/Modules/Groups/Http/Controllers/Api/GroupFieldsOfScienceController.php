@@ -84,6 +84,8 @@ class GroupFieldsOfScienceController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param   Request  $request
+	 * @param   integer  $group
 	 * @return Response
 	 */
 	public function index(Request $request, $group)
@@ -145,6 +147,8 @@ class GroupFieldsOfScienceController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   Request  $request
+	 * @param   integer  $group
 	 * @return Response
 	 */
 	public function create(Request $request, $group)
@@ -183,6 +187,8 @@ class GroupFieldsOfScienceController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $group
+	 * @param   integer  $id
 	 * @return Response
 	 */
 	public function read($group, $id)
@@ -226,6 +232,8 @@ class GroupFieldsOfScienceController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
+	 * @param   integer $group
+	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $group, $id)
@@ -271,6 +279,8 @@ class GroupFieldsOfScienceController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $group
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($group, $id)

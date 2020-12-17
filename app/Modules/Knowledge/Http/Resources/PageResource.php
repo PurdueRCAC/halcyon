@@ -35,7 +35,7 @@ class PageResource extends JsonResource
 
 		if ($user)
 		{
-			$data['can']['edit']   = ($user->can('edit knowledge') || ($user->can('edit.own knowledge') && $item->userid == $user->id));
+			$data['can']['edit']   = ($user->can('edit knowledge') || ($user->can('edit.own knowledge') && $this->userid == $user->id));
 			$data['can']['delete'] = $user->can('delete knowledge');
 		}
 

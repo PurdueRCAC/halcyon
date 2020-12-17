@@ -102,8 +102,6 @@ class CategoriesController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Category();
 
 		$categories = Category::query()

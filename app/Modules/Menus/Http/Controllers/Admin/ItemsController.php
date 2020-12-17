@@ -644,7 +644,7 @@ class ItemsController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param   Request $request
-	 * @return  void
+	 * @return  Response
 	 */
 	public function restore(Request $request)
 	{
@@ -689,7 +689,7 @@ class ItemsController extends Controller
 	 * 
 	 * @param   integer  $id
 	 * @param   Request $request
-	 * @return  void
+	 * @return  Response
 	 */
 	public function reorder($id, Request $request)
 	{
@@ -723,7 +723,7 @@ class ItemsController extends Controller
 	 * Temporary method. This should go into the 1.5 to 1.6 upgrade routines.
 	 *
 	 * @param   Request $request
-	 * @return  void
+	 * @return  Response
 	 */
 	public function types(Request $request)
 	{

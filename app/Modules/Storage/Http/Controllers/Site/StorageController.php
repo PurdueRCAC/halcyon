@@ -11,6 +11,7 @@ class StorageController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
 	 * @return Response
 	 */
 	public function index()
@@ -29,6 +30,9 @@ class StorageController extends Controller
 
 	/**
 	 * Show the specified resource.
+	 * 
+	 * @param  Request $request
+	 * @param  string  $name
 	 * @return Response
 	 */
 	public function show(Request $request, $name)

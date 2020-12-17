@@ -215,7 +215,7 @@ class MenusController extends Controller
 	 *
 	 * @param   Request $request
 	 * @param   string  $menutype
-	 * @return  bool  False on failure or error, true on success.
+	 * @return  Response
 	 */
 	public function rebuild(Request $request, $menutype)
 	{

@@ -82,6 +82,7 @@ class CommentsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param   Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -312,7 +313,7 @@ class CommentsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   integer  $comment
 	 * @return  Response
 	 */
 	public function delete($comment)

@@ -5,6 +5,10 @@
 <script src="{{ asset('modules/contactreports/js/admin.js?v=' . filemtime(public_path() . '/modules/contactreports/js/admin.js')) }}"></script>
 @endpush
 
+@php
+app('request')->merge(['hidemainmenu' => 1]);
+@endphp
+
 @section('toolbar')
 	@if (auth()->user()->can('edit contactreports'))
 		{!! Toolbar::save(route('admin.contactreports.comments.store', ['report' => $report->id])) !!}

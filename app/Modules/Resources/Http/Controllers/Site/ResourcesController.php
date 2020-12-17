@@ -13,6 +13,8 @@ class ResourcesController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -94,6 +96,8 @@ class ResourcesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function retired(Request $request)
@@ -148,6 +152,9 @@ class ResourcesController extends Controller
 
 	/**
 	 * Show the specified resource.
+	 * 
+	 * @param  Request $request
+	 * @param  string  $name
 	 * @return Response
 	 */
 	public function show(Request $request, $name)

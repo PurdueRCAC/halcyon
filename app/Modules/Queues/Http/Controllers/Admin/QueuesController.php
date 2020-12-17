@@ -20,6 +20,8 @@ class QueuesController extends Controller
 {
 	/**
 	 * Display a listing of the queue.
+	 * 
+	 * @param  StatefulRequest $request
 	 * @return Response
 	 */
 	public function index(StatefulRequest $request)
@@ -168,6 +170,8 @@ class QueuesController extends Controller
 
 	/**
 	 * Show the form for creating a new queue.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -204,6 +208,9 @@ class QueuesController extends Controller
 
 	/**
 	 * Show the form for editing the specified queue.
+	 * 
+	 * @param  Request $request
+	 * @param  integer $id
 	 * @return Response
 	 */
 	public function edit(Request $request, $id)
@@ -311,7 +318,9 @@ class QueuesController extends Controller
 	/**
 	 * Sets the state of one or more entries
 	 * 
-	 * @return  void
+	 * @param  Request $request
+	 * @param  integer $id
+	 * @return  Response
 	 */
 	public function state(Request $request, $id = 0)
 	{
@@ -364,7 +373,9 @@ class QueuesController extends Controller
 	/**
 	 * Sets the state of one or more entries
 	 * 
-	 * @return  void
+	 * @param  Request $request
+	 * @param  integer $id
+	 * @return  Response
 	 */
 	public function scheduling(Request $request, $id = 0)
 	{

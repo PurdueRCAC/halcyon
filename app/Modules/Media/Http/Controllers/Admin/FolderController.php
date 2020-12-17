@@ -22,7 +22,8 @@ class FolderController extends Controller
 	/**
 	 * New entry
 	 *
-	 * @return  void
+	 * @param  Request  $request
+	 * @return Response
 	 */
 	public function create(Request $request)
 	{
@@ -61,7 +62,8 @@ class FolderController extends Controller
 	/**
 	 * Delete a file
 	 *
-	 * @return  void
+	 * @param  Request  $request
+	 * @return Response
 	 */
 	public function delete(Request $request)
 	{
@@ -101,7 +103,7 @@ class FolderController extends Controller
 			{
 				// filename is not safe
 				$filename = htmlspecialchars($path, ENT_COMPAT, 'UTF-8');
-				Notify::warning(trans('COM_MEDIA_ERROR_UNABLE_TO_DELETE_FILE_WARNFILENAME', substr($filename, strlen(COM_MEDIA_BASE))));
+				Notify::warning(trans('media::media.error.UNABLE_TO_DELETE_FILE_WARNFILENAME', ['file' => substr($filename, strlen(storage_path()))]));
 				continue;
 			}*/
 
@@ -117,7 +119,7 @@ class FolderController extends Controller
 					if (in_array(false, $result, true))
 					{
 						// There are some errors in the plugins
-						Notify::warning(transs('COM_MEDIA_ERROR_BEFORE_DELETE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
+						Notify::warning(transs('media::media.error.BEFORE_DELETE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
 						continue;
 					}
 
@@ -125,12 +127,12 @@ class FolderController extends Controller
 
 					// Trigger the onContentAfterDelete event.
 					Event::trigger('content.onContentAfterDelete', array('com_media.folder', &$object_file));
-					$this->setMessage(trans('COM_MEDIA_DELETE_COMPLETE', substr($fullPath, strlen(COM_MEDIA_BASE))));
+					$this->setMessage(trans('media::media.DELETE_COMPLETE', substr($fullPath, strlen(COM_MEDIA_BASE))));
 				}
 				else
 				{
 					// This makes no sense...
-					Notify::warning(trans('COM_MEDIA_ERROR_UNABLE_TO_DELETE_FOLDER_NOT_EMPTY', substr($fullPath, strlen(COM_MEDIA_BASE))));
+					Notify::warning(trans('media::media.error.UNABLE_TO_DELETE_FOLDER_NOT_EMPTY', substr($fullPath, strlen(COM_MEDIA_BASE))));
 				}
 			}
 		}

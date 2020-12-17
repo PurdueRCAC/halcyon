@@ -15,6 +15,8 @@ class ProductsController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -117,6 +119,8 @@ class ProductsController extends Controller
 
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function manage(Request $request)
@@ -231,6 +235,7 @@ class ProductsController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
 	 * @return Response
 	 */
 	public function create()
@@ -251,6 +256,8 @@ class ProductsController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -300,6 +307,7 @@ class ProductsController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

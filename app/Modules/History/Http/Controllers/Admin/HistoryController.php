@@ -12,7 +12,7 @@ class HistoryController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @param   Request  $request
+	 * @param   StatefulRequest  $request
 	 * @return  Response
 	 */
 	public function index(StatefulRequest $request)
@@ -94,7 +94,7 @@ class HistoryController extends Controller
 	/**
 	 * Remove the specified entry
 	 *
-	 * @param   integer   $id
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)
