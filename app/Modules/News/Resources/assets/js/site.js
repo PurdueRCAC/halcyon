@@ -222,21 +222,11 @@ function NEWSAddResource(resource) {
 	} else {
 		results = resource;
 	}
-	/*var resourceid = results['resourceid'];
 
-	if ($('.tagsinput').length) {
-		if (!$('#newsresource').tagExist(resourceid)) {
-			$('#newsresource').addTag({
-				'id': results['resourceid'],
-				'label': results['resourcename']
-			});
-		}
-	} else {
-		$('#newsresource').val($('#newsresource').val() + ($('#newsresource').val() ? ', ' : '') + results['resourcename'] + ':' + results['resourceid']);
-	}*/
-	$('#newsresource')
-		.val(results['resourceid'])
-		.trigger('change');
+	var val = $('#newsresource').val();
+	val.push(results['resourceid']);
+
+	$('#newsresource').val(val);
 }
 
 /**
@@ -502,7 +492,8 @@ function NEWSAddEntry() {
 	}
 
 	if (tagresources == "1") {
-		var resourcedata = document.getElementById("newsresource").value.split(',');
+		//var resourcedata = document.getElementById("newsresource").value.split(',');
+		var resourcedata = $("#newsresource").val();
 		for (i=0; i<resourcedata.length; i++) {
 			if (resourcedata[i] != "") {
 				if (resourcedata[i].indexOf('/') !== -1) {
