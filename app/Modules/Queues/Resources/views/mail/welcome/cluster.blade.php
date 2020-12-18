@@ -38,7 +38,7 @@ if (preg_match("/^partner/", $standby->name))
 @endforeach
 @endforeach
 
-You can also see this list by running the `qlist` command.
+You can also see this list by running the `slist` command.
 
 @if ($partner)
 One of the above resources provides partners and their researchers who have purchased shared access to the cluster through a shared 'partner' queue. If your research group has purchased dedicated access, there will also be a queue named after that partner or research group on this resource.
