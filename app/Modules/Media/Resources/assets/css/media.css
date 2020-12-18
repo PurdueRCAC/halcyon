@@ -564,6 +564,9 @@ main *[class*=" icon-"]:before {
 	-moz-border-radius: 0.25em;
 	border-radius: 0.25em;
 }
+.media-items .media-options a{
+	color: #444;
+}
 .media-options a:hover {
 	border: none;
 	text-decoration: none;
@@ -617,6 +620,14 @@ form.dropzone,
 }
 
 @media (prefers-color-scheme: dark) {
+	.treeview .expandable-hitarea:before {
+		border-color: transparent transparent transparent #ccc;
+	}
+	.treeview .hitarea:hover {
+		color: #fff;
+		border-color: #fff;
+	}
+
 	.media-container {
 		border-color: rgba(255, 255, 255, 0.1);
 	}

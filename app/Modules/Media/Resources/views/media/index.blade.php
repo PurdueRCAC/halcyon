@@ -81,7 +81,7 @@ app('pathway')
 					</div>
 				</div>
 				<div class="media-view">
-					<div class="media-items" id="media-items" data-tmpl="" data-confirm="{{ trans('media::media.confirm delete') }}" data-list="{{ route('admin.media.medialist') }}">
+					<div class="media-items" id="media-items" data-tmpl="" data-confirm="{{ trans('global.confirm delete') }}" data-list="{{ route('admin.media.medialist') }}">
 						<?php
 						$children = App\Modules\Media\Helpers\MediaHelper::getChildren(storage_path() . '/app', '');
 						?>
