@@ -7,7 +7,7 @@
 @include('media::medialist.thumbs')
 
 <div class="spinner d-none">
-<div class="spinner-border" role="status">
-	<span class="sr-only">Loading...</span>
-</div>
+	<div class="spinner-border" role="status">
+		<span class="sr-only">{{ trans('global.loading') }}</span>
+	</div>
 </div>

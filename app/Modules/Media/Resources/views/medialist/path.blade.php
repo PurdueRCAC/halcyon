@@ -1,11 +1,3 @@
-<?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
-?>
 
 <div class="dialog dialog-filepath" id="filepath-{{ $file->getId() }}" title="{{ trans('media::media.file path') }}">
 	<div class="form-group">

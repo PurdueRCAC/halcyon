@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 $cls = '';
 if (!empty($active)):
 	$cls = ' active';
@@ -14,15 +8,16 @@ endif;
 	<form action="{{ route('admin.media.medialist', ['folder' => $folder]) }}" method="post" id="media-form-list" name="media-form-list">
 		<div class="manager">
 			<table>
+				<caption class="sr-only">{{ trans('media::media.files') }}</caption>
 				<thead>
 					<tr>
 						<th scope="col">{{ trans('media::media.list.name') }}</th>
-						<th scope="col">{{ trans('media::media.list.size') }}</th>
+						<th scope="col" class="text-nowrap text-right">{{ trans('media::media.list.size') }}</th>
 						<th scope="col">{{ trans('media::media.list.type') }}</th>
 						<th scope="col">{{ trans('media::media.list.modified') }}</th>
-					<?php if (auth()->user()->can('manage media')): ?>
+					@if (auth()->user()->can('manage media'))
 						<th scope="col"></th>
-					<?php endif; ?>
+					@endif
 					</tr>
 				</thead>
 				<tbody>

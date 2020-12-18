@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Modules\Media\Http\Controllers\Admin;
 
@@ -70,27 +65,22 @@ class FolderController extends Controller
 		event($event = new DirectoryDeleting($request));
 
 		// Get some data from the request
-		$paths  = Request::getArray('rm', array(), '', 'array');
-		$folder = Request::getString('folder', '');
-		$rm     = Request::getArray('rm', array());
+		$paths  = $request->input('rm', array());
+		$folder = $request->input('folder', '');
+		$rm     = $request->input('rm', array());
 
-		$redirect = 'index.php?option=com_media&folder=' . $folder;
-		if ($tmpl == 'component')
-		{
-			// We are inside the iframe
-			$redirect .= '&view=medialist&tmpl=component';
-		}
+		$redirect = route('admin.media.index', ['folder' => $folder]);
 
 		// Nothing to delete
 		if (empty($rm))
 		{
-			App::redirect(route('index.php?option=' . $this->_option . '&controller=' . $this->_controller . '&folder=' . $folder, false));
+			return redirect($redirect);
 		}
 
 		// Authorize the user
-		if (!User::authorise('delete', $this->_option))
+		if (!auth()->user()->can('delete media'))
 		{
-			App::redirect(route('index.php?option=' . $this->_option . '&controller=' . $this->_controller . '&folder=' . $folder, false));
+			return redirect($redirect);
 		}
 
 		// Initialise variables.
@@ -99,27 +89,20 @@ class FolderController extends Controller
 		{
 			$path = urldecode($path);
 
-			/*if ($path !== Filesystem::clean($path))
-			{
-				// filename is not safe
-				$filename = htmlspecialchars($path, ENT_COMPAT, 'UTF-8');
-				Notify::warning(trans('media::media.error.UNABLE_TO_DELETE_FILE_WARNFILENAME', ['file' => substr($filename, strlen(storage_path()))]));
-				continue;
-			}*/
-
 			$fullPath = Filesystem::cleanPath(implode(DIRECTORY_SEPARATOR, array(COM_MEDIA_BASE, $folder, $path)));
 			//$object_file = new \App\Halcyon\Base\Obj(array('filepath' => $fullPath));
 			if (is_dir($fullPath))
 			{
 				$contents = Filesystem::files($fullPath, '.', true, false, array('.svn', 'CVS', '.DS_Store', '__MACOSX', 'index.html'));
+
 				if (empty($contents))
 				{
 					// Trigger the onContentBeforeDelete event.
-					$result = Event::trigger('content.onContentBeforeDelete', array('com_media.folder', &$object_file));
+					$result = event('content.onContentBeforeDelete', array('media.folder', &$object_file));
 					if (in_array(false, $result, true))
 					{
 						// There are some errors in the plugins
-						Notify::warning(transs('media::media.error.BEFORE_DELETE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
+						Notify::warning(transs('media::media.error.before delete', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
 						continue;
 					}
 
@@ -127,12 +110,12 @@ class FolderController extends Controller
 
 					// Trigger the onContentAfterDelete event.
 					Event::trigger('content.onContentAfterDelete', array('com_media.folder', &$object_file));
-					$this->setMessage(trans('media::media.DELETE_COMPLETE', substr($fullPath, strlen(COM_MEDIA_BASE))));
+					$this->setMessage(trans('media::media.delete complete', substr($fullPath, strlen(COM_MEDIA_BASE))));
 				}
 				else
 				{
 					// This makes no sense...
-					Notify::warning(trans('media::media.error.UNABLE_TO_DELETE_FOLDER_NOT_EMPTY', substr($fullPath, strlen(COM_MEDIA_BASE))));
+					Notify::warning(trans('media::media.error.unable to delete folder not empty', substr($fullPath, strlen(COM_MEDIA_BASE))));
 				}
 			}
 		}

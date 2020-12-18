@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Modules\Media\Http\Controllers\Api;
 
@@ -82,7 +77,7 @@ class FolderController extends Controller
 
 		if (!$folder)
 		{
-			return response()->json(['message' =>  'No directory name provided'], 415);
+			return response()->json(['message' => trans('media::media.error.missing directory name')], 415);
 		}
 
 		$path = ($parent ? $parent . '/' : '') . $folder;
@@ -90,7 +85,7 @@ class FolderController extends Controller
 
 		if (!$path)
 		{
-			return response()->json(['message' =>  'Invalid directory name'], 415);
+			return response()->json(['message' => trans('media::media.error.invalid directory name')], 415);
 		}
 
 		// Check if directory already exists
@@ -125,7 +120,7 @@ class FolderController extends Controller
 
 		if (!$before || !$after)
 		{
-			return response()->json(['message' =>  'No directory name provided'], 415);
+			return response()->json(['message' => trans('media::media.error.missing directory name')], 415);
 		}
 
 		$before = $this->sanitize($before);
@@ -133,17 +128,17 @@ class FolderController extends Controller
 
 		if (!$before || !$after)
 		{
-			return response()->json(['message' =>  'Invalid directory name'], 415);
+			return response()->json(['message' => trans('media::media.error.invalid directory name')], 415);
 		}
 
 		if (!Storage::disk($disk)->exists($before))
 		{
-			return response()->json(['message' =>  'Source directory not found'], 415);
+			return response()->json(['message' => trans('media::media.error.missing source directory')], 415);
 		}
 
 		if (Storage::disk($disk)->exists($after))
 		{
-			return response()->json(['message' =>  'Destination directory already exists'], 415);
+			return response()->json(['message' => trans('media::media.error.destination exists')], 415);
 		}
 
 		// Create new directory
@@ -189,7 +184,7 @@ class FolderController extends Controller
 		// Nothing to delete
 		if (empty($path))
 		{
-			return response()->json(['message' =>  'No Directory provided'], 415);
+			return response()->json(['message' => trans('media::media.error.missing directory name')], 415);
 		}
 
 		// Check if directory exists
@@ -203,12 +198,12 @@ class FolderController extends Controller
 
 			if (!empty($content))
 			{
-				return response()->json(['message' => 'Directory not empty'], 415);
+				return response()->json(['message' => trans('media::media.error.directory not empty')], 415);
 			}
 
 			if (!Storage::disk($disk)->deleteDirectory($path))
 			{
-				return response()->json(['message' => 'Failed to delete the directory'], 500);
+				return response()->json(['message' => trans('media::media.error.directory delete failed')], 500);
 			}
 
 			event($event = new DirectoryDeleted($disk, [$path]));

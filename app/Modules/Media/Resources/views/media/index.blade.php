@@ -17,23 +17,18 @@ app('pathway')
 		trans('media::media.module name'),
 		route('admin.media.index')
 	);
+
+	if (auth()->user()->can('create media')):
+		Toolbar::append('Custom', '<a class="btn toolbar-btn media-upload" data-title="' . trans('media::media.upload') . '" href="#media-upload" data-api="' . route('api.media.upload') . '"><span class="icon-upload">' . trans('media::media.upload') . '</span></a>', 'upload');
+		Toolbar::append('Custom', '<a class="btn toolbar-btn" data-title="' . trans('media::media.create folder') . '" href="' . route('admin.media.folder.create') . '" data-api="' . route('api.media.folder.create') . '" data-prompt="' . trans('media::media.folder name') . '"><span class="icon-folder-plus">' . trans('media::media.create folder') . '</span></a>', 'folder-new');
+	endif;
+	if (auth()->user()->can('admin media')):
+		Toolbar::spacer();
+		Toolbar::preferences('media');
+	endif;
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('create media'))
-		{!!
-			Toolbar::append('Custom', '<a class="btn toolbar-btn media-upload" data-title="' . trans('media::media.upload') . '" href="#media-upload" data-api="' . route('api.media.upload') . '"><span class="icon-upload">' . trans('media::media.upload') . '</span></a>', 'upload');
-
-			Toolbar::append('Custom', '<a class="btn toolbar-btn" data-title="' . trans('media::media.create folder') . '" href="' . route('admin.media.folder.create') . '" data-api="' . route('api.media.folder.create') . '" data-prompt="' . trans('media::media.folder name') . '"><span class="icon-folder-plus">' . trans('media::media.create folder') . '</span></a>', 'folder-new');
-		!!}
-	@endif
-	@if (auth()->user()->can('admin media'))
-		{!!
-			Toolbar::spacer();
-			Toolbar::preferences('media')
-		!!}
-	@endif
-
 	{!! Toolbar::render() !!}
 @stop
 
@@ -70,11 +65,11 @@ app('pathway')
 						</span>
 					</div>
 					<div class="media-header-buttons">
-						<a class="media-files-view thumbs-view hasTip <?php if (!$layout || $layout == 'thumbs') { echo 'active'; } ?>" data-view="thumbs" href="<?php echo route('admin.media.index', ['layout' => 'thumbs']); ?>" data-tip="{{ trans('media::media.THUMBNAIL_VIEW') }}" title="{{ trans('media::media.THUMBNAIL_VIEW') }}">
+						<a class="media-files-view thumbs-view hasTip <?php if (!$layout || $layout == 'thumbs') { echo 'active'; } ?>" data-view="thumbs" href="<?php echo route('admin.media.index', ['layout' => 'thumbs']); ?>" data-tip="{{ trans('media::media.thumbnail view') }}" title="{{ trans('media::media.thumbnail view') }}">
 							<span class="icon-grid"></span>
 							{{ trans('media::media.THUMBNAIL_VIEW') }}
 						</a>
-						<a class="media-files-view hasTip listing-view <?php if ($layout == 'list') { echo 'active'; } ?>" data-view="list" href="<?php echo route('admin.media.index', ['layout' => 'list']); ?>" data-tip="{{ trans('media::media.DETAIL_VIEW') }}" title="{{ trans('media::media.DETAIL_VIEW') }}">
+						<a class="media-files-view hasTip listing-view <?php if ($layout == 'list') { echo 'active'; } ?>" data-view="list" href="<?php echo route('admin.media.index', ['layout' => 'list']); ?>" data-tip="{{ trans('media::media.detail view') }}" title="{{ trans('media::media.detail view') }}">
 							<span class="icon-list"></span>
 							{{ trans('media::media.DETAIL_VIEW') }}
 						</a>

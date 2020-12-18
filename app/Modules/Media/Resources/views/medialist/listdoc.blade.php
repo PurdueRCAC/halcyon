@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 $path = ltrim($file->getRelativePath(), '/');
 $ext  = $file->getExtension();
 $href = route('admin.media.download') . '?file=' . $path;
@@ -13,8 +7,6 @@ $icon = asset('modules/media/filetypes/' . $ext . '.svg');
 if (!$icon):
 	$icon = asset('modules/media/filetypes/file.svg');
 endif;
-
-//event('onContentBeforeDisplay', array('media.file', $file, $params));
 ?>
 	<tr class="media-item media-item-list">
 		<td width="50%">
@@ -27,7 +19,7 @@ endif;
 				</span>
 			</a>
 		</td>
-		<td>
+		<td class="text-nowrap text-right">
 			<span class="media-size">{{ $file->getFormattedSize() }}</span>
 		</td>
 		<td>
@@ -53,18 +45,16 @@ endif;
 						<li>
 							<a class="icon-link media-opt-path" href="#filepath-{{ $file->getId() }}">{{ trans('media::media.file link') }}</a>
 						</li>
-					<?php if (auth()->user()->can('delete media')): ?>
+					@if (auth()->user()->can('delete media'))
 						<li>
 							<span class="separator"></span>
 						</li>
 						<li>
 							<a class="icon-trash media-opt-delete" href="{{ route('admin.media.delete', ['file' => $path]) }}" data-api="{{ route('api.media.delete', ['items[0][path]' => $path, 'items[0][type]' => 'file']) }}">{{ trans('global.button.delete') }}</a>
 						</li>
-					<?php endif; ?>
+					@endif
 					</ul>
 				</div>
 			</div>
 		</td>
 	</tr>
-<?php
-//event('onContentAfterDisplay', array('media.file', $file, $params));

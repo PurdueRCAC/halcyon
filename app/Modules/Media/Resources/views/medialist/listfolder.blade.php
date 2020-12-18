@@ -1,5 +1,4 @@
 <?php
-
 $name = $file->getShortName();
 $path = ltrim($file->getRelativePath(), '/');
 ?>
@@ -23,26 +22,24 @@ $path = ltrim($file->getRelativePath(), '/');
 		<td>
 			<time class="media-modified" datetime="{{ $file->getLastModified()->format('Y-m-d\TH:i:s\Z') }}">{{ $file->getLastModified()->format('Y-m-d H:i:s') }}</time>
 		</td>
-	<?php if (auth()->user()->can('delete media')): ?>
 		<td>
 			<div class="media-preview-inner">
 				<span class="media-options-btn"></span>
 				<div class="media-options">
 					<ul>
 							<li>
-								<a class="icon-info media-opt-info" href="#fileinfo-{{ $file->getId() }}">{{ trans('media::media.info') }}</a>
+								<a class="icon-info media-opt-info" href="#fileinfo-{{ $file->getId() }}">{{ trans('media::media.file info') }}</a>
 							</li>
-						<?php if (auth()->user()->can('delete media')): ?>
+						@if (auth()->user()->can('delete media'))
 							<li>
 								<span class="separator"></span>
 							</li>
 							<li>
 								<a class="icon-trash media-opt-delete" href="{{ route('admin.media.delete', ['file' => $path]) }}" data-api="{{ route('api.media.delete', ['items[0][path]' => $path, 'items[0][type]' => 'dir']) }}">{{ trans('global.button.delete') }}</a>
 							</li>
-						<?php endif; ?>
+						@endif
 					</ul>
 				</div>
 			</div>
 		</td>
-	<?php endif; ?>
 	</tr>

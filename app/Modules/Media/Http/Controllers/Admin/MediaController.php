@@ -1,9 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Modules\Media\Http\Controllers\Admin;
 
@@ -94,7 +89,7 @@ class MediaController extends Controller
 
 			if ($folderCheck !== null && $folder !== $folderCheck)
 			{
-				return redirect($rtrn)->with('warning', trans('media::media.ERROR_UNABLE_TO_CREATE_FOLDER_WARNDIRNAME'));
+				return redirect($rtrn)->with('warning', trans('media::media.error.invalid directory name'));
 			}
 
 			$path = \App\Halcyon\Filesystem\Util::normalizePath(media::mediaBASE . $parent . DS . $folder);
@@ -109,7 +104,7 @@ class MediaController extends Controller
 				if (in_array(false, $result, true))
 				{
 					// There are some errors in the plugins
-					Notify::warning(transs('media::mediaERROR_BEFORE_SAVE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
+					Notify::warning(transs('media::media.error.before save', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
 					return redirect($rtrn);
 				}
 
@@ -120,7 +115,7 @@ class MediaController extends Controller
 				// Trigger the onContentAfterSave event.
 				event(new DirectoryCreated($request));
 
-				Notify::success(trans('media::mediaCREATE_COMPLETE', substr($path, strlen(media::mediaBASE))));
+				Notify::success(trans('media::media.create complete', substr($path, strlen(media::mediaBASE))));
 			}
 
 			//Request::setVar('folder', ($parent) ? $parent . DS . $folder : $folder);
@@ -185,7 +180,7 @@ class MediaController extends Controller
 		{
 			if ($file['error'] == 1)
 			{
-				Notify::warning(trans('media::mediaERROR_WARNFILETOOLARGE'));
+				Notify::warning(trans('media::media.ERROR_WARNFILETOOLARGE'));
 				continue;
 			}
 
@@ -194,21 +189,21 @@ class MediaController extends Controller
 			 || $file['size'] > (int)(ini_get('post_max_size'))* 1024 * 1024
 			 || (($file['size'] > (int) (ini_get('memory_limit')) * 1024 * 1024) && ((int) (ini_get('memory_limit')) != -1)))
 			{
-				Notify::warning(trans('media::mediaERROR_WARNFILETOOLARGE'));
+				Notify::warning(trans('media::media.ERROR_WARNFILETOOLARGE'));
 				continue;
 			}
 
 			if (Filesystem::exists($file['filepath']))
 			{
 				// A file with this name already exists
-				Notify::warning(trans('media::mediaERROR_FILE_EXISTS'));
+				Notify::warning(trans('media::media.error.file exists'));
 				continue;
 			}
 
 			if (!isset($file['name']))
 			{
 				// No filename (after the name was cleaned by Filesystem::clean()
-				Notify::error(trans('media::mediaINVALID_REQUEST'));
+				Notify::error(trans('media::media.error.invalid request'));
 				continue;
 			}
 		}
@@ -226,26 +221,26 @@ class MediaController extends Controller
 
 			// Trigger the onContentBeforeSave event.
 			$object_file = new \App\Halcyon\Base\Obj($file);
-			$result = Event::trigger('content.onContentBeforeSave', array('com_media.file', &$object_file, true));
+			$result = Event::trigger('content.onContentBeforeSave', array('media.file', &$object_file, true));
 			if (in_array(false, $result, true))
 			{
 				// There are some errors in the plugins
-				Notify::warning(transs('media::mediaERROR_BEFORE_SAVE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
+				Notify::warning(transs('media::media.error.before save', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
 				continue;
 			}
 
 			if (!Filesystem::upload($file['tmp_name'], $file['filepath']))
 			{
 				// Error in upload
-				Notify::warning(trans('media::mediaERROR_UNABLE_TO_UPLOAD_FILE'));
+				Notify::warning(trans('media::media.error.unable to upload file'));
 				continue;
 			}
 			else
 			{
 				// Trigger the onContentAfterSave event.
-				Event::trigger('content.onContentAfterSave', array('com_media.file', &$object_file, true));
+				Event::trigger('content.onContentAfterSave', array('media.file', &$object_file, true));
 
-				Notify::success(trans('media::mediaUPLOAD_COMPLETE', substr($file['filepath'], strlen(media::mediaBASE))));
+				Notify::success(trans('media::media.upload complete', substr($file['filepath'], strlen(media::mediaBASE))));
 			}
 		}
 
@@ -275,7 +270,7 @@ class MediaController extends Controller
 		$folder = Request::getString('folder', '');
 		$rm     = Request::getArray('rm', array());
 
-		$redirect = 'index.php?option=com_media&folder=' . $folder;
+		$redirect = 'index.php?option=media&folder=' . $folder;
 		if ($tmpl == 'component')
 		{
 			// We are inside the iframe
@@ -305,7 +300,7 @@ class MediaController extends Controller
 			{
 				// filename is not safe
 				$filename = htmlspecialchars($path, ENT_COMPAT, 'UTF-8');
-				Notify::warning(trans('media::media.ERROR_UNABLE_TO_DELETE_FILE_WARNFILENAME', substr($filename, strlen(media::mediaBASE))));
+				Notify::warning(trans('media::media.error.invalid directory name', substr($filename, strlen(media::mediaBASE))));
 				continue;
 			}*/
 
@@ -314,19 +309,19 @@ class MediaController extends Controller
 			if (is_file($fullPath))
 			{
 				// Trigger the onContentBeforeDelete event.
-				$result = Event::trigger('content.onContentBeforeDelete', array('com_media.file', &$object_file));
+				$result = Event::trigger('content.onContentBeforeDelete', array('media.file', &$object_file));
 				if (in_array(false, $result, true))
 				{
 					// There are some errors in the plugins
-					Notify::warning(transs('media::media.ERROR_BEFORE_DELETE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
+					Notify::warning(transs('media::media.error.before delete', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
 					continue;
 				}
 
 				$ret &= Filesystem::delete($fullPath);
 
 				// Trigger the onContentAfterDelete event.
-				Event::trigger('content.onContentAfterDelete', array('com_media.file', &$object_file));
-				$this->setMessage(trans('media::media.DELETE_COMPLETE', substr($fullPath, strlen(media::mediaBASE))));
+				Event::trigger('content.onContentAfterDelete', array('media.file', &$object_file));
+				$this->setMessage(trans('media::media.delete complete', substr($fullPath, strlen(media::mediaBASE))));
 			}
 			elseif (is_dir($fullPath))
 			{
@@ -338,12 +333,12 @@ class MediaController extends Controller
 					// Trigger the onContentAfterDelete event.
 					event(new Deleted($request));
 
-					$this->setMessage(trans('media::mediaDELETE_COMPLETE', substr($fullPath, strlen(media::mediaBASE))));
+					$this->setMessage(trans('media::media.delete complete', substr($fullPath, strlen(media::mediaBASE))));
 				}
 				else
 				{
 					// This makes no sense...
-					Notify::warning(trans('media::media.ERROR_UNABLE_TO_DELETE_FOLDER_NOT_EMPTY', substr($fullPath, strlen(media::mediaBASE))));
+					Notify::warning(trans('media::media.error.directory not empty', substr($fullPath, strlen(media::mediaBASE))));
 				}
 			}
 

@@ -518,6 +518,7 @@
 /* Modal */
 .media-info-label {
 	display: block;
+	font-weight: bold;
 	color: #999;
 }
 .media-info-value {
@@ -555,6 +556,13 @@ form.dropzone,
 		border-color: #fff;
 	}
 
+	.media-list tbody tr:nth-child(odd) {
+		background-color: rgba(0, 0, 0, 0.1);
+	}
+	.media-list tbody tr:hover,
+	.media-list tbody tr:nth-child(odd):hover {
+		background-color: rgba(255, 255, 255, 0.1);
+	}
 	.media-container {
 		border-color: rgba(255, 255, 255, 0.1);
 	}
