@@ -1,10 +1,4 @@
 /**
- * @package    halcyon
- * @copyright  Copyright 2019 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
-/**
  * Unix base groups
  *
  * @const

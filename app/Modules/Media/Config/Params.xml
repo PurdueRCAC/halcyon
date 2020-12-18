@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--
-@package      halcyon-cms
-@copyright    Copyright 2019 Purdue University.
-@license      http://opensource.org/licenses/MIT MIT
--->
-
 <config>
 	<fieldset name="module">
 		<field
@@ -26,10 +19,6 @@
 
 		<field name="spacer1" type="spacer"
 			hr="true"
-		/>
-
-		<field name="spacer2" type="spacer" class="text"
-			label="media::config.FOLDERS_PATH_LABEL"
 		/>
 
 		<field

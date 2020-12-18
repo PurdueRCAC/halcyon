@@ -1,10 +1,4 @@
-/**
- * @package    halcyon
- * @copyright  Copyright 2019 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
-Halcyon.submitbutton = function(task, type = '') {
+/*Halcyon.submitbutton = function(task, type = '') {
 	var afrm = document.getElementById('adminForm');
 
 	if (afrm) {
@@ -22,7 +16,7 @@ Halcyon.submitbutton = function(task, type = '') {
 			alert(frm.getAttribute('data-invalid-msg'));
 		}
 	}
-}
+}*/
 
 jQuery(document).ready(function($){
 	/*$('#btn-batch-submit')

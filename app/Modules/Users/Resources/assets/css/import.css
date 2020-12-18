@@ -1,7 +1,5 @@
 /**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
+ * Import
  */
 
 /*
@@ -10,7 +8,7 @@
 |--------------------------------------------------------------------------
 */
 
-.com_members fieldset.import-results {
+fieldset.import-results {
 	padding: 2.236em;
 	border: none;
 	background: transparent;

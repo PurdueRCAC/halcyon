@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--
-@package      halcyon-cms
-@copyright    Copyright 2019 Purdue University.
-@license      http://opensource.org/licenses/MIT MIT
--->
-
 <form>
 	<fields name="params">
 		<fieldset name="menu-options"
