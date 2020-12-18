@@ -5,8 +5,8 @@ namespace App\Modules\Messages\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Messages\Http\Resources\TypeResource;
+use App\Modules\Messages\Http\Resources\TypeResourceCollection;
 use App\Modules\Messages\Models\Type;
 
 /**
@@ -131,12 +131,7 @@ class TypesController extends Controller
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
-		$rows->each(function ($item, $key)
-		{
-			$item->api = route('api.messages.types.read', ['id' => $item->id]);
-		});
-
-		return new ResourceCollection($rows);
+		return new TypeResourceCollection($rows);
 	}
 
 	/**
@@ -170,11 +165,21 @@ class TypesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$validator = Validator::make($request->all(), [
+		$rules = [
 			'resourceid' => 'nullable|integer|min:1',
 			'classname' => 'nullable|string|max:24',
 			'name' => 'required|string|max:24'
-		]);
+		];
+		// [!] Legacy compatibility
+		if ($request->segment(1) == 'ws')
+		{
+			$rules = [
+				'resource' => 'nullable|string',
+				'classname' => 'nullable|string|max:24',
+				'name' => 'required|string|max:24'
+			];
+		}
+		$validator = Validator::make($request->all(), $rules);
 
 		if ($validator->fails())
 		{
@@ -182,14 +187,20 @@ class TypesController extends Controller
 		}
 
 		$row = new Type;
-		$row->fill($request->all());
+		$row->name = $request->input('name');
+		if ($request->has('resourceid') || $request->has('resource'))
+		{
+			$row->resourceid = $request->input('resourceid', $request->input('resource'));
+		}
+		if ($request->has('classname'))
+		{
+			$row->classname = $request->input('classname');
+		}
 
 		if (!$row->save())
 		{
 			return response()->json(['message' => $row->getError()], 409);
 		}
-
-		$row->api = route('api.messages.types.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -215,9 +226,7 @@ class TypesController extends Controller
 	{
 		$row = Type::findOrFail((int)$id);
 
-		$row->api = route('api.messages.types.read', ['id' => $row->id]);
-
-		return new JsonResource($row);
+		return new TypeResource($row);
 	}
 
 	/**
@@ -261,11 +270,17 @@ class TypesController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$validator = Validator::make($request->all(), [
+		$rules = [
 			'resourceid' => 'nullable|integer|min:1',
 			'classname' => 'nullable|string|max:24',
 			'name' => 'nullable|string|max:24',
-		]);
+		];
+		// [!] Legacy compatibility
+		if ($request->segment(1) == 'ws')
+		{
+			$rules['resource'] = 'nullable|string';
+		}
+		$validator = Validator::make($request->all(), $rules);
 
 		if ($validator->fails())
 		{
@@ -273,16 +288,26 @@ class TypesController extends Controller
 		}
 
 		$row = Type::findOrFail($id);
-		$row->fill($request->all());
+
+		if ($request->has('name'))
+		{
+			$row->name = $request->input('name');
+		}
+		if ($request->has('resourceid') || $request->has('resource'))
+		{
+			$row->resourceid = $request->input('resourceid', $request->input('resource'));
+		}
+		if ($request->has('classname'))
+		{
+			$row->classname = $request->input('classname');
+		}
 
 		if (!$row->save())
 		{
 			return response()->json(['message' => $row->getError()], 409);
 		}
 
-		$row->api = route('api.messages.types.read', ['id' => $row->id]);
-
-		return new JsonResource($row);
+		return new TypeResource($row);
 	}
 
 	/**

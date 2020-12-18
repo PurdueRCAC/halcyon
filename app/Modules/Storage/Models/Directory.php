@@ -200,7 +200,7 @@ class Directory extends Model
 	public function addMessageToQueue($typeid = null, $userid = 0, $offset = 0)
 	{
 		$message = new Message;
-		$message->userid = $userid ?: auth()->user()->id;
+		$message->userid = $userid ?: (auth()->user() ? auth()->user()->id : 0);
 		$message->targetobjectid = $this->id;
 		$message->messagequeuetypeid = !is_null($typeid) ?: $row->storageResource->getquotatypeid;
 		if ($offset)

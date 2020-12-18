@@ -154,7 +154,7 @@ $router->group(['prefix' => 'storage', 'middleware' => 'auth:api'], function (Ro
 		])->where('id', '[0-9]+');
 	});
 
-	$router->get('quotas', [
+	$router->get('quotas/{username?}', [
 		'as' => 'api.storage.quotas',
 		'uses' => 'QuotasController@index',
 	]);

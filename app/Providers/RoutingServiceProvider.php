@@ -40,6 +40,16 @@ abstract class RoutingServiceProvider extends ServiceProvider
 	abstract protected function getApiRoute();
 
 	/**
+	 * // [!] Legacy compatibility
+	 * 
+	 * @return string
+	 */
+	protected function getWsRoute()
+	{
+		return '';
+	}
+
+	/**
 	 * Define the routes for the application.
 	 *
 	 * @param  \Illuminate\Routing\Router $router
@@ -129,11 +139,25 @@ abstract class RoutingServiceProvider extends ServiceProvider
 				],
 				function (Router $router) use ($api)
 				{
-					/*if ($request->is('api/*') && stristr($request->headers->get('accept'), 'text/html') !== false)
-					{
-						return App::make('App\Modules\Core\Http\Controllers\Site\DocsController')->index($request);
-					}*/
 					require $api;
+				}
+			);
+		}
+
+		// [!] Legacy compatibility
+		$ws = $this->getWsRoute();
+
+		if ($ws && file_exists($ws))
+		{
+			$router->group(
+				[
+					'namespace'  => 'Api',
+					'prefix'     => 'ws',
+					'middleware' => ['api'],
+				],
+				function (Router $router) use ($ws)
+				{
+					require $ws;
 				}
 			);
 		}

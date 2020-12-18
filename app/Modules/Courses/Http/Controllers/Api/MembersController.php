@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Modules\Courses\Models\Member;
-use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Modules\Courses\Http\Resources\MemberResource;
+use App\Modules\Courses\Http\Resources\MemberResourceCollection;
 
 /**
  * Account Members
@@ -170,14 +170,7 @@ class MembersController extends Controller
 
 		$rows->appends(array_filter($filters));
 
-		$rows->each(function ($item, $key)
-		{
-			$item->api = route('api.courses.members.read', ['id' => $item->id]);
-			$item->user;
-			$item->user->api = route('api.users.read', ['id' => $item->userid]);
-		});
-
-		return new ResourceCollection($rows);
+		return new MemberResourceCollection($rows);
 	}
 
 	/**
@@ -275,11 +268,7 @@ class MembersController extends Controller
 			return response()->json(['message' => trans('messages.create failed')], 500);
 		}
 
-		$row->api = route('api.courses.members.read', ['id' => $row->id]);
-		$row->user;
-		$row->user->api = route('api.users.read', ['id' => $row->userid]);
-
-		return new JsonResource($row);
+		return new MemberResource($row);
 	}
 
 	/**
@@ -302,11 +291,8 @@ class MembersController extends Controller
 	public function read($id)
 	{
 		$row = Member::findOrFail($id);
-		$row->api = route('api.courses.members.read', ['id' => $row->id]);
-		$row->user;
-		$row->user->api = route('api.users.read', ['id' => $row->userid]);
 
-		return new JsonResource($row);
+		return new MemberResource($row);
 	}
 
 	/**
@@ -434,11 +420,7 @@ class MembersController extends Controller
 			return response()->json(['message' => trans('messages.create failed')], 500);
 		}
 
-		$row->api = route('api.courses.members.read', ['id' => $row->id]);
-		$row->user;
-		$row->user->api = route('api.users.read', ['id' => $row->userid]);
-
-		return new JsonResource($row);
+		return new MemberResource($row);
 	}
 
 	/**

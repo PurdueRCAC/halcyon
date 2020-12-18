@@ -20,7 +20,7 @@ class PurchasesController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /storage/purchases
+	 * @apiUri    /api/storage/purchases
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
@@ -123,7 +123,7 @@ class PurchasesController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /storage/purchases
+	 * @apiUri    /api/storage/purchases
 	 * @apiParameter {
 	 *      "name":          "name",
 	 *      "description":   "The name of the resource type",
@@ -275,7 +275,7 @@ class PurchasesController extends Controller
 	 * Read an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /storage/purchases/{id}
+	 * @apiUri    /api/storage/purchases/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -313,7 +313,7 @@ class PurchasesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /storage/purchases/{id}
+	 * @apiUri    /api/storage/purchases/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -489,7 +489,7 @@ class PurchasesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /storage/purchases/{id}
+	 * @apiUri    /api/storage/purchases/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

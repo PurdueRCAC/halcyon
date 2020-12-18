@@ -112,6 +112,26 @@ class Member extends Model
 	}
 
 	/**
+	 * If entry has started
+	 *
+	 * @return  bool
+	 **/
+	public function hasStarted()
+	{
+		return ($this->datetimestart && $this->datetimestart != '0000-00-00 00:00:00' && $this->datetimestart != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * If entry has stopped
+	 *
+	 * @return  bool
+	 **/
+	public function hasStopped()
+	{
+		return ($this->datetimestop && $this->datetimestop != '0000-00-00 00:00:00' && $this->datetimestop != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Get the modifier of this entry
 	 *
 	 * @return  object

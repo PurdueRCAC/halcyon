@@ -4,7 +4,7 @@ namespace App\Modules\Messages\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MessagesResource extends JsonResource
+class TypeResource extends JsonResource
 {
 	/**
 	 * Transform the resource collection into an array.
@@ -18,16 +18,21 @@ class MessagesResource extends JsonResource
 
 		$data = parent::toArray($request);
 
-		$data['api'] = route('api.messages.read', ['id' => $this->id]);
-		$data['target'] = $this->target;
+		// [!] Legacy compatibility
+		if ($request->segment(1) == 'ws')
+		{
+			$data['id'] = '/ws/messagequeuetype/' . $data['id'];
+		}
+
+		$data['api'] = route('api.messages.types.read', ['id' => $this->id]);
 
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
 
 		if (auth()->user())
 		{
-			$data['can']['edit']   = auth()->user()->can('edit messages');
-			$data['can']['delete'] = auth()->user()->can('delete messages');
+			$data['can']['edit']   = auth()->user()->can('edit messages.types');
+			$data['can']['delete'] = auth()->user()->can('delete messages.types');
 		}
 
 		return $data;

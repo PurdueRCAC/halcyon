@@ -24,7 +24,7 @@ class QuotasController extends Controller
 	 * Display a listing of quotas for a user
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /storage/quotas
+	 * @apiUri    /api/storage/quotas
 	 * @apiParameter {
 	 * 		"name":          "username",
 	 * 		"description":   "User username to retrieve data for",
@@ -32,66 +32,26 @@ class QuotasController extends Controller
 	 * 		"required":      false,
 	 * 		"default":       "Current user's username"
 	 * }
-	 * @apiParameter {
-	 * 		"name":          "limit",
-	 * 		"description":   "Number of result to return.",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   25
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "page",
-	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "order",
-	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 *      "default":       "created",
-	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "order_dir",
-	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       "desc",
-	 * 		"schema": {
-	 * 			"type":      "string",
-	 * 			"default":   "asc",
-	 * 			"enum": [
-	 * 				"asc",
-	 * 				"desc"
-	 * 			]
-	 * 		}
-	 * }
 	 * @return Response
 	 */
-	public function index(Request $request)
+	public function index(Request $request, $username)
 	{
-		$filters = array(
-			'username'  => $request->input('username', auth()->user()->username),
-			// Paging
-			'limit'     => $request->input('limit', config('list_limit', 20)),
-			// Sorting
-			'order'     => $request->input('order', 'name'),
-			'order_dir' => $request->input('order_dir', 'ASC')
-		);
+		/*$filters = array(
+			'username'  => $request->input('username', auth()->user()->username)
+		);*/
 
-		if ($filters['username'])
+		if ($username)
 		{
-			$user = User::findByUsername($filters['username']);
+			$user = User::findByUsername($username); //$filters['username']);
 		}
 		else
 		{
 			$user = auth()->user();
+		}
+
+		if (!$user)
+		{
+			return new ResourceCollection(collect([]));
 		}
 
 		// Get records
@@ -171,8 +131,6 @@ class QuotasController extends Controller
 				{
 					// Assuming no pending requests
 					$message = $row->messages()
-					//$message = Message::query()
-						//->where('targetobjectid', '=', $row->id)
 						->where('messagequeuetypeid', '=', $row->getquotatypeid)
 						->where(function($where)
 						{
@@ -184,12 +142,7 @@ class QuotasController extends Controller
 
 					if (!$message)
 					{
-						$row->addMessageToQueue($row->getquotatypeid, auth()->user()->id);
-						/*$message = new Message;
-						$message->userid = auth()->user()->id;
-						$message->targetobjectid = $row->id;
-						$message->messagequeuetypeid = $row->getquotatypeid;
-						$message->save();*/
+						$row->addMessageToQueue($row->getquotatypeid, auth()->user() ? auth()->user()->id : 0);
 					}
 				}
 			}

@@ -110,6 +110,66 @@ class Message extends Model
 	];
 
 	/**
+	 * Set messagequeuetypeid
+	 *
+	 * @param   mixed  $value
+	 * @return  void
+	 */
+	public function setMessagequeuetypeidAttribute($value)
+	{
+		$this->attributes['messagequeuetypeid'] = (int)$value;
+	}
+
+	/**
+	 * Set targetobjectid
+	 *
+	 * @param   mixed  $value
+	 * @return  void
+	 */
+	public function setTargetobjectidAttribute($value)
+	{
+		$this->attributes['targetobjectid'] = $this->stringToInteger($value);
+	}
+
+	/**
+	 * Set userid
+	 *
+	 * @param   mixed  $value
+	 * @return  void
+	 */
+	public function setUseridAttribute($value)
+	{
+		$this->attributes['userid'] = $this->stringToInteger($value);
+	}
+
+	/**
+	 * Set messagequeueoptionsid
+	 *
+	 * @param   mixed  $value
+	 * @return  void
+	 */
+	public function setMessagequeueoptionsidAttribute($value)
+	{
+		$this->attributes['messagequeueoptionsid'] = $this->stringToInteger($value);
+	}
+
+	/**
+	 * Convert [!] Legacy string IDs to integers
+	 *
+	 * @param   mixed  $value
+	 * @return  integer
+	 */
+	private function stringToInteger($value)
+	{
+		if (is_string($value))
+		{
+			$value = preg_replace('/[a-zA-Z\/]+\/(\d+)/', "$1", $value);
+		}
+
+		return (int)$value;
+	}
+
+	/**
 	 * Determine if started
 	 *
 	 * @return  bool

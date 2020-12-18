@@ -7,8 +7,8 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Messages\Models\Message;
-use App\Modules\Messages\Http\Resources\MessagesResource;
-use App\Modules\Messages\Http\Resources\MessagesResourceCollection;
+use App\Modules\Messages\Http\Resources\MessageResource;
+use App\Modules\Messages\Http\Resources\MessageResourceCollection;
 use Carbon\Carbon;
 
 /**
@@ -186,7 +186,7 @@ class MessagesController extends Controller
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
-		return new MessagesResourceCollection($rows);
+		return new MessageResourceCollection($rows);
 	}
 
 	/**
@@ -227,12 +227,24 @@ class MessagesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$validator = Validator::make($request->all(), [
+		$rules = [
 			'messagequeuetypeid' => 'required|integer|min:1',
 			'targetobjectid' => 'required|integer|min:1',
 			'userid' => 'nullable|integer',
 			'messagequeueoptionsid' => 'nullable|integer',
-		]);
+		];
+		// [!] Legacy compatibility
+		if ($request->segment(1) == 'ws')
+		{
+			$rules = [
+				'messagequeuetype' => 'required|string',
+				'targetobject' => 'required|string',
+				'user' => 'nullable|integer',
+				'messagequeueoptions' => 'nullable|integer',
+			];
+		}
+
+		$validator = Validator::make($request->all(), $rules);
 
 		if ($validator->fails())
 		{
@@ -240,7 +252,32 @@ class MessagesController extends Controller
 		}
 
 		$row = new Message;
-		$row->fill($request->all());
+		$row->messagequeuetypeid = $request->input('messagequeuetypeid');
+		$row->targetobjectid = $request->input('targetobjectid');
+		if ($request->has('userid'))
+		{
+			$row->userid = $request->input('userid');
+		}
+		if ($request->has('messagequeueoptionsid'))
+		{
+			$row->messagequeueoptionsid = $request->input('messagequeueoptionsid');
+		}
+
+		// Legacy compatibility
+		if ($request->segment(1))
+		{
+			$row->messagequeuetypeid = $request->input('messagequeuetype');
+			$row->targetobjectid = $request->input('targetobject');
+			if ($request->has('userid'))
+			{
+				$row->userid = $request->input('user');
+			}
+			if ($request->has('messagequeueoptionsid'))
+			{
+				$row->messagequeueoptionsid = preg_replace('/[a-zA-Z\/]+\/(\d+)/', "$1", $request->input('messagequeueoptions'));
+			}
+		}
+
 		$row->datetimesubmitted = Carbon::now()->toDateTimeString();
 
 		if (!$row->save())
@@ -248,7 +285,7 @@ class MessagesController extends Controller
 			return response()->json(['message' => $row->getError()], 409);
 		}
 
-		return new MessagesResource($row);
+		return new MessageResource($row);
 	}
 
 	/**
@@ -268,11 +305,11 @@ class MessagesController extends Controller
 	 * @param  integer $id
 	 * @return Response
 	 */
-	public function read($id): MessagesResource
+	public function read($id): MessageResource
 	{
 		$row = Message::findOrFail((int)$id);
 
-		return new MessagesResource($row);
+		return new MessageResource($row);
 	}
 
 	/**
@@ -423,6 +460,27 @@ class MessagesController extends Controller
 			unset($fields['retry']);
 		}
 
+		// [!] Legacy compatibility
+		if ($request->segment(1) == 'ws')
+		{
+			if ($request->has('messagequeuetype'))
+			{
+				$fields['messagequeuetypeid'] = $request->input('messagequeuetype');
+			}
+			if ($request->has('targetobject'))
+			{
+				$fields['targetobjectid'] = $request->input('targetobject');
+			}
+			if ($request->has('userid'))
+			{
+				$fields['userid'] = $request->input('user');
+			}
+			if ($request->has('messagequeueoptionsid'))
+			{
+				$fields['messagequeueoptionsid'] = $request->input('messagequeueoptions');
+			}
+		}
+
 		$row->fill($fields);
 
 		if (!$row->save())
@@ -430,7 +488,7 @@ class MessagesController extends Controller
 			return response()->json(['message' => $row->getError()], 409);
 		}
 
-		return new MessagesResource($row);
+		return new MessageResource($row);
 	}
 
 	/**

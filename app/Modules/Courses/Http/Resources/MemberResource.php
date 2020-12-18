@@ -4,7 +4,7 @@ namespace App\Modules\Courses\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AccountResource extends JsonResource
+class MemberResource extends JsonResource
 {
 	/**
 	 * Transform the resource collection into an array.
@@ -16,20 +16,11 @@ class AccountResource extends JsonResource
 	{
 		$data = parent::toArray($request);
 
-		$data['api'] = route('api.courses.read', ['id' => $this->id]);
+		$data['api'] = route('api.courses.members.read', ['id' => $this->id]);
 
-		if (auth()->user() && auth()->user()->can('manage courses'))
+		if (!$this->isTrashed())
 		{
-			$members = $this->members()
-				->withTrashed()
-				->whereIsActive()
-				->get();
-
-			$data['members'] = array();
-			foreach ($members as $item)
-			{
-				$data['members'][] = new MemberResource($item);
-			}
+			$data['datetimeremoved'] = null;
 		}
 
 		$data['can'] = array(
@@ -48,9 +39,14 @@ class AccountResource extends JsonResource
 		// [!] Legacy compatibility
 		if ($request->segment(1) == 'ws')
 		{
-			$data['id'] = '/ws/classaccount/' . $data['id'];
-			$data['user'] = '/ws/user/' . $data['userid'];
-			$data['resource'] = '/ws/resource/' . $data['resourceid'];
+			$data['id'] = '/ws/classuser/' . $this->id;
+			$data['user'] = '/ws/user/' . $this->userid;
+			$data['start'] = $this->datetimestart;
+			$data['stop']  = $this->hasStopped() ? $this->datetimestop : '0000-00-00 00:00:00';
+			if (!$this->isTrashed())
+			{
+				$data['datetimeremoved'] = '0000-00-00 00:00:00';
+			}
 		}
 
 		return $data;

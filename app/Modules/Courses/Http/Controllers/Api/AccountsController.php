@@ -253,6 +253,7 @@ class AccountsController extends Controller
 			'groupid' => 'nullable|integer|min:1',
 			'userid' => 'nullable|integer|min:1',
 			'datetimestart' => 'required|datetime',
+			'datetimestop' => 'required|datetime',
 		]);
 
 		$type = $request->input('type');
@@ -265,7 +266,8 @@ class AccountsController extends Controller
 		$row->resourceid = $request->input('resourceid');
 		$row->groupid = $request->input('groupid');
 		$row->userid = $request->input('userid');
-		$row->datetimestart = $request->input('datetimestart');
+		$row->datetimestart = $request->input('datetimestart', $request->input('start'));
+		$row->datetimestop = $request->input('datetimestop', $request->input('stop'));
 		//$row->fill($request->all());
 
 		if (!$row->userid)

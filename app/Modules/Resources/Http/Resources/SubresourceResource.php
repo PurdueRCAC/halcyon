@@ -31,6 +31,13 @@ class SubresourceResource extends JsonResource
 
 		$data['api'] = route('api.resources.subresources.read', ['id' => $this->id]);
 
+		// [!] Legacy compatibility
+		if ($request->segment(1) == 'ws')
+		{
+			$data['id'] = '/ws/subresource/' . $data['id'];
+			$data['resource'] = '/ws/resource/' . $data['resourceid'];
+		}
+
 		return $data;
 	}
 }

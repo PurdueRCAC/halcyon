@@ -66,6 +66,13 @@ class AssetResource extends JsonResource
 			$data['scheduler'] = $scheduler;
 		}
 
+		// [!] Legacy compatibility
+		if ($request->segment(1) == 'ws')
+		{
+			$data['id'] = '/ws/resource/' . $data['id'];
+			$data['schedulerid'] = '/ws/scheduler/' . $data['schedulerid'];
+		}
+
 		return $data;
 	}
 }

@@ -41,7 +41,7 @@ class Usage extends Model
 	);
 
 	/**
-	 * Defines a relationship to a group
+	 * Defines a relationship to a directory
 	 *
 	 * @return  object
 	 */
@@ -50,11 +50,21 @@ class Usage extends Model
 		return $this->belongsTo(Directory::class, 'storagedirid');
 	}
 
+	/**
+	 * Get total block usage
+	 *
+	 * @return  integer
+	 */
 	public function getTotalBlockUsageAttribute()
 	{
 		return ($this->space / 1024);
 	}
 
+	/**
+	 * Get block limit
+	 *
+	 * @return  integer
+	 */
 	public function getBlockLimitAttribute()
 	{
 		return ($this->quota / 1024);
@@ -63,7 +73,7 @@ class Usage extends Model
 	/**
 	 * Set value in bytes
 	 *
-	 * @param   mixed
+	 * @param   mixed  $value
 	 * @return  void
 	 */
 	public function setQuotaAttribute($value)
@@ -83,6 +93,33 @@ class Usage extends Model
 		}
 
 		$this->attributes['quota'] = (int)$value;
+	}
+
+	/**
+	 * Set storagedirid
+	 *
+	 * @param   mixed  $value
+	 * @return  void
+	 */
+	public function setStoragediridAttribute($value)
+	{
+		$this->attributes['storagedirid'] = $this->stringToInteger($value);
+	}
+
+	/**
+	 * Convert [!] Legacy string IDs to integers
+	 *
+	 * @param   mixed  $value
+	 * @return  integer
+	 */
+	private function stringToInteger($value)
+	{
+		if (is_string($value))
+		{
+			$value = preg_replace('/[a-zA-Z\/]+\/(\d+)/', "$1", $value);
+		}
+
+		return (int)$value;
 	}
 
 	/**

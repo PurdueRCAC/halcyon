@@ -95,6 +95,33 @@ class Type extends Model
 	];
 
 	/**
+	 * Set targetobjectid
+	 *
+	 * @param   mixed  $value
+	 * @return  void
+	 */
+	public function setResourceidAttribute($value)
+	{
+		$this->attributes['resourceid'] = $this->stringToInteger($value);
+	}
+
+	/**
+	 * Convert [!] Legacy string IDs to integers
+	 *
+	 * @param   mixed  $value
+	 * @return  integer
+	 */
+	private function stringToInteger($value)
+	{
+		if (is_string($value))
+		{
+			$value = preg_replace('/[a-zA-Z\/]+\/(\d+)/', "$1", $value);
+		}
+
+		return (int)$value;
+	}
+
+	/**
 	 * Defines a relationship to creator
 	 *
 	 * @return  object

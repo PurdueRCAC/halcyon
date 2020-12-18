@@ -35,4 +35,14 @@ class RouteServiceProvider extends CoreRoutingServiceProvider
 	{
 		return dirname(__DIR__) . '/Http/apiRoutes.php';
 	}
+
+	/**
+	 * // [!] Legacy compatibility
+	 * 
+	 * @return string
+	 */
+	protected function getWsRoute()
+	{
+		return dirname(__DIR__) . '/Http/wsRoutes.php';
+	}
 }

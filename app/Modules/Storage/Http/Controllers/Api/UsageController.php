@@ -139,7 +139,14 @@ class UsageController extends Controller
 			}
 
 			$row->lastinterval = $lastinterval;
-			$row->api = route('api.storage.usage.read', ['id' => $row->id]);
+			//$row->api = route('api.storage.usage.read', ['id' => $row->id]);
+
+			// [!] Legacy compatibility
+			if (request()->segment(1) == 'ws')
+			{
+				$row->storage = '/ws/storagedir/' . $row->storagedirid;
+				$row->resource = '/ws/resource/' . $row->resourceid;
+			}
 		}
 
 		/*$query = Usage::query();
@@ -169,7 +176,7 @@ class UsageController extends Controller
 			->paginate($filters['limit'])
 			->appends($filters);*/
 
-		return new ResourceCollection($rows);
+		return $rows; //new ResourceCollection($rows);
 	}
 
 	/**
@@ -188,15 +195,47 @@ class UsageController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'storagedirid' => 'required|integer|min:1',
 			'quota' => 'required',
-			//'filequota' => 'nullable|integer'
-			//'space' => 'nullable|integer',
-		]);
+			'space' => 'nullable',
+			'filequota' => 'nullable',
+			'files' => 'nullable',
+		];
+		// [!] Legacy compatibility
+		if (request()->segment(1) == 'ws')
+		{
+			$rules = [
+				'storagedir' => 'required|string',
+				'quota' => 'required',
+				'space' => 'nullable',
+				'filequota' => 'nullable',
+				'files' => 'nullable',
+			];
+		}
+		$request->validate($rules);
 
 		$row = new Usage;
-		$row->fill($request->all());
+		if ($request->has('storagedirid') || $request->has('storagedir'))
+		{
+			$row->storagedirid = $request->input('storagedirid', $request->input('storagedir'));
+		}
+		if ($request->has('quota'))
+		{
+			$row->quota = $request->input('quota');
+		}
+		if ($request->has('space'))
+		{
+			$row->space = $request->input('space');
+		}
+		if ($request->has('filequota'))
+		{
+			$row->filequota = $request->input('filequota');
+		}
+		if ($request->has('files'))
+		{
+			$row->files = $request->input('files');
+		}
 
 		// Does the storagedir have any bytes yet?
 		$last = Usage::query()
@@ -217,6 +256,13 @@ class UsageController extends Controller
 		$row->save();
 
 		$row->api = route('api.storage.usage.read', ['id' => $row->id]);
+
+		// [!] Legacy compatibility
+		if (request()->segment(1) == 'ws')
+		{
+			$row->id = '/ws/storagedirusage/' . $row->id;
+			$row->recorded = $row->datetimerecorded;
+		}
 
 		return new JsonResource($row);
 	}
@@ -242,6 +288,13 @@ class UsageController extends Controller
 		$row = Usage::findOrFail($id);
 
 		$row->api = route('api.storage.usage.read', ['id' => $row->id]);
+
+		// [!] Legacy compatibility
+		if (request()->segment(1) == 'ws')
+		{
+			$row->id = '/ws/storagedirusage/' . $row->id;
+			$row->recorded = $row->datetimerecorded;
+		}
 
 		return new JsonResource($row);
 	}
@@ -273,15 +326,46 @@ class UsageController extends Controller
 	{
 		$request->validate([
 			'storagedirid' => 'nullable|integer|min:1',
+			'storagedir' => 'nullable|string',
 			'quota' => 'nullable',
 			'space' => 'nullable',
+			'filequota' => 'nullable',
+			'files' => 'nullable',
 		]);
 
 		$row = Usage::findOrFail($id);
-		$row->fill($request->all());
+
+		if ($request->has('storagedirid') || $request->has('storagedir'))
+		{
+			$row->storagedirid = $request->input('storagedirid', $request->input('storagedir'));
+		}
+		if ($request->has('quota'))
+		{
+			$row->quota = $request->input('quota');
+		}
+		if ($request->has('space'))
+		{
+			$row->space = $request->input('space');
+		}
+		if ($request->has('filequota'))
+		{
+			$row->filequota = $request->input('filequota');
+		}
+		if ($request->has('files'))
+		{
+			$row->files = $request->input('files');
+		}
+
 		$row->save();
 
 		$row->api = route('api.storage.usage.read', ['id' => $row->id]);
+
+		// [!] Legacy compatibility
+		if (request()->segment(1) == 'ws')
+		{
+			$row->id = '/ws/storagedirusage/' . $row->id;
+			$row->recorded = $row->datetimerecorded;
+		}
 
 		return new JsonResource($row);
 	}
