@@ -140,14 +140,18 @@ class OrdersController extends Controller
 				->groupBy($o . '.submitteruserid')
 				->groupBy($o . '.groupid');
 
-				/*if ($filters['search'])
+				if ($filters['search'] && (is_numeric($filters['search']) || preg_match('/^[a-z]\d+$/', $filters['search'])))
 				{
-					$sub->where(function($query) use ($filters, $o, $u)
+					$sub->where(function($query) use ($filters, $a, $o)
 					{
-						$query->where($o . '.usernotes', 'like', '%' . $filters['search'] . '%')
-							->orWhere($u . '.name', 'like', '%' . $filters['search'] . '%');
+						$query->where($a . '.purchaseio', '=', $filters['search'])
+							->orWhere($o . '.id', '=', $filters['search'])
+							->orWhere($a . '.purchasewbse', '=', $filters['search']);
+						//$query->where($o . '.usernotes', 'like', '%' . $filters['search'] . '%')
+						//	->orWhere($u . '.name', 'like', '%' . $filters['search'] . '%');
 					});
-				}*/
+				}
+
 				if ($filters['start'])
 				{
 					$sub->where($o . '.datetimecreated', '>=', $filters['start']);
@@ -179,11 +183,13 @@ class OrdersController extends Controller
 
 		if ($filters['search'])
 		{
-			if (is_numeric($filters['search']))
+			/*if (is_numeric($filters['search']))
 			{
 				$query->where('tbaccounts.id', '=', $filters['search']);
 			}
-			else
+			// We search by WSBE accounts above, so ignore them here
+			else*/
+			if (!is_numeric($filters['search']) && !preg_match('/^[a-z]\d+$/', $filters['search']))
 			{
 				$g = (new \App\Modules\Groups\Models\Group())->getTable();
 
