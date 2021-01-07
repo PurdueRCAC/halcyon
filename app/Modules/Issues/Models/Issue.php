@@ -490,7 +490,14 @@ class Issue extends Model
 
 		foreach ($this->resources as $res)
 		{
-			$names[] = $res->resource->name;
+			if ($res->resource)
+			{
+				$names[] = $res->resource->name;
+			}
+			else
+			{
+				$names[] = $res->resourceid;
+			}
 		}
 
 		asort($names);
