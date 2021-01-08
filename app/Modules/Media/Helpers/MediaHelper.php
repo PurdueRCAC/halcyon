@@ -163,6 +163,54 @@ class MediaHelper
 	}
 
 	/**
+	 * Sanitize file names
+	 *
+	 * @param   string  $name
+	 * @return  string
+	 */
+	public static function sanitize($name)
+	{
+		if (!preg_match('/^[\x20-\x7e]*$/', $name))
+		{
+			$name = \Illuminate\Support\Facades\Str::ascii($name);
+		}
+		$name = preg_replace(
+			'~
+			[<>:"/\\|?*]|            # file system reserved https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
+			[\x00-\x1F]|             # control characters http://msdn.microsoft.com/en-us/library/windows/desktop/aa365247%28v=vs.85%29.aspx
+			[\x7F\xA0\xAD]|          # non-printing characters DEL, NO-BREAK SPACE, SOFT HYPHEN
+			[#\[\]@!$&\'()+,;=]|     # URI reserved https://tools.ietf.org/html/rfc3986#section-2.2
+			[{}^\~`]                 # URL unsafe characters https://www.ietf.org/rfc/rfc1738.txt
+			~x',
+			'-', $name
+		);
+		// avoids ".", ".." or ".hiddenFiles"
+		$name = ltrim($name, '.-');
+
+		// reduce consecutive characters
+		$name = preg_replace(array(
+			// "file   name.zip" becomes "file-name.zip"
+			'/ +/',
+			// "file___name.zip" becomes "file-name.zip"
+			'/_+/',
+			// "file---name.zip" becomes "file-name.zip"
+			'/-+/'
+		), '-', $name);
+		$name = preg_replace(array(
+			// "file--.--.-.--name.zip" becomes "file.name.zip"
+			'/-*\.-*/',
+			// "file...name..zip" becomes "file.name.zip"
+			'/\.{2,}/'
+		), '.', $name);
+		// lowercase for windows/unix interoperability http://support.microsoft.com/kb/100625
+		$name = mb_strtolower($name, mb_detect_encoding($name));
+		// ".file-name.-" becomes "file-name"
+		$name = trim($name, '.-');
+
+		return $name;
+	}
+
+	/**
 	 * Returns a quantifier based on the argument
 	 *
 	 * @param   integer  $size  Numeric size of a file
@@ -363,7 +411,7 @@ class MediaHelper
 	 * @param   integer  $parent    Unique identifier of the parent folder, if any.
 	 * @return  array
 	 */
-	public static function getTree($path, $filter = '.', $maxLevel = 3, $level = 0, $parent = 0)
+	public static function getTree($path, $filter = '.', $maxLevel = 10, $level = 0, $parent = 0)
 	{
 		$dirs = array();
 
@@ -381,7 +429,7 @@ class MediaHelper
 			{
 				self::$index++;
 
-				$fullName = $name; //$this->filesystem->cleanPath($path . DIRECTORY_SEPARATOR . $name['path']);
+				$fullName = $name;
 				$short = basename($fullName);
 
 				$dirs[] = array(

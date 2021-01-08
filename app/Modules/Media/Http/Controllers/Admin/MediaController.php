@@ -5,10 +5,12 @@ namespace App\Modules\Media\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
 use App\Halcyon\Utility\Number;
-use App\Modules\Media\Models\Files;
+//use App\Modules\Media\Models\File;
 use App\Modules\Media\Helpers\MediaHelper;
 use App\Modules\Media\Events\Deleting;
+use App\Modules\Media\Events\Download;
 use App\Modules\Media\Events\FilesUploading;
 use App\Modules\Media\Events\FilesUploaded;
 
@@ -70,7 +72,7 @@ class MediaController extends Controller
 	 * @param  Request  $request
 	 * @return  Response
 	 */
-	public function newdir(Request $request)
+	/*public function newdir(Request $request)
 	{
 		if ($request->ajax())
 		{
@@ -92,7 +94,7 @@ class MediaController extends Controller
 				return redirect($rtrn)->with('warning', trans('media::media.error.invalid directory name'));
 			}
 
-			$path = \App\Halcyon\Filesystem\Util::normalizePath(media::mediaBASE . $parent . DS . $folder);
+			$path = \App\Halcyon\Filesystem\Util::normalizePath(media::mediaBASE . $parent . '/' . $folder);
 
 			if (!is_dir($path) && !is_file($path))
 			{
@@ -109,20 +111,16 @@ class MediaController extends Controller
 				}
 
 				Filesystem::makeDirectory($path);
-				//$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
-				//Filesystem::write($path . '/index.html', $data);
 
 				// Trigger the onContentAfterSave event.
 				event(new DirectoryCreated($request));
 
 				Notify::success(trans('media::media.create complete', substr($path, strlen(media::mediaBASE))));
 			}
-
-			//Request::setVar('folder', ($parent) ? $parent . DS . $folder : $folder);
 		}
 
 		return redirect($rtrn);
-	}
+	}*/
 
 	/**
 	 * Upload
@@ -130,7 +128,7 @@ class MediaController extends Controller
 	 * @param  Request  $request
 	 * @return Response
 	 */
-	public function upload(Request $request)
+	/*public function upload(Request $request)
 	{
 		event(new FilesUploading($request));
 
@@ -160,7 +158,7 @@ class MediaController extends Controller
 		// Authorize the user
 		if (!User::authorise('create', $this->_option))
 		{
-			App::redirect(route($return, false));
+			return redirect(route($return, false));
 		}
 
 		// Input is in the form of an associative array containing numerically indexed arrays
@@ -247,7 +245,7 @@ class MediaController extends Controller
 		event(new FilesUploaded($request));
 
 		App::redirect(route($return, false));
-	}
+	}*/
 
 	/**
 	 * Delete a file
@@ -255,7 +253,7 @@ class MediaController extends Controller
 	 * @param  Request  $request
 	 * @return Response
 	 */
-	public function delete(Request $request)
+	/*public function delete(Request $request)
 	{
 		event(new Deleting($request));
 
@@ -296,14 +294,6 @@ class MediaController extends Controller
 		{
 			$path = urldecode($path);
 
-			/*if ($path !== Filesystem::clean($path))
-			{
-				// filename is not safe
-				$filename = htmlspecialchars($path, ENT_COMPAT, 'UTF-8');
-				Notify::warning(trans('media::media.error.invalid directory name', substr($filename, strlen(media::mediaBASE))));
-				continue;
-			}*/
-
 			$fullPath = Filesystem::cleanPath(implode(DIRECTORY_SEPARATOR, array(media::mediaBASE, $folder, $path)));
 			$object_file = new \App\Halcyon\Base\Obj(array('filepath' => $fullPath));
 			if (is_file($fullPath))
@@ -320,7 +310,7 @@ class MediaController extends Controller
 				$ret &= Filesystem::delete($fullPath);
 
 				// Trigger the onContentAfterDelete event.
-				Event::trigger('content.onContentAfterDelete', array('media.file', &$object_file));
+				event('content.onContentAfterDelete', array('media.file', &$object_file));
 				$this->setMessage(trans('media::media.delete complete', substr($fullPath, strlen(media::mediaBASE))));
 			}
 			elseif (is_dir($fullPath))
@@ -346,7 +336,7 @@ class MediaController extends Controller
 		}
 
 		redirect(route('admin.media.index', ['folder' => $folder]));
-	}
+	}*/
 
 	/**
 	 * Download a file
@@ -354,11 +344,11 @@ class MediaController extends Controller
 	 * @param  Request  $request
 	 * @return Response
 	 */
-	public function downloadTask(Request $request)
+	public function download(Request $request)
 	{
 		event(new Download($request));
 
-		$disk = $request->input('disk', 'public');
+		$disk = $request->input('disk');
 		$path = $request->input('path', '');
 
 		// if file name not in ASCII format

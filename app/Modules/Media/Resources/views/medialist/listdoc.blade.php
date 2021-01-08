@@ -1,7 +1,7 @@
 <?php
 $path = ltrim($file->getRelativePath(), '/');
 $ext  = strtolower($file->getExtension());
-$href = route('admin.media.download') . '?file=' . $path;
+$href = route('admin.media.download', ['path' => $path]);
 
 $icon = 'modules/media/filetypes/' . $ext . '.svg';
 if (!file_exists(public_path($icon))):
@@ -45,12 +45,17 @@ endif;
 						<li>
 							<a class="icon-link media-opt-path" href="#filepath-{{ $file->getId() }}">{{ trans('media::media.file link') }}</a>
 						</li>
+					@if (auth()->user()->can('edit media'))
+						<li>
+							<a class="icon-edit media-opt-rename" href="{{ $href }}" data-api="{{ route('api.media.rename') }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}" data-prompt="New name">{{ trans('media::media.rename') }}</a>
+						</li>
+					@endif
 					@if (auth()->user()->can('delete media'))
 						<li>
 							<span class="separator"></span>
 						</li>
 						<li>
-							<a class="icon-trash media-opt-delete" href="{{ route('admin.media.delete', ['file' => $path]) }}" data-api="{{ route('api.media.delete', ['items[0][path]' => $path, 'items[0][type]' => 'file']) }}">{{ trans('global.button.delete') }}</a>
+							<a class="icon-trash media-opt-delete" href="{{ route('admin.media.delete', ['path' => $path]) }}" data-api="{{ route('api.media.delete', ['items[0][path]' => $path, 'items[0][type]' => 'file']) }}">{{ trans('global.button.delete') }}</a>
 						</li>
 					@endif
 					</ul>

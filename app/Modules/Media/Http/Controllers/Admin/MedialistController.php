@@ -21,21 +21,10 @@ class MedialistController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$base = storage_path() . '/app';
+		$base = storage_path('app');
 		$folder = $request->input('folder', '');
-		/*$tmpl   = Request::getCmd('tmpl');
 
-		$filters = array();
-
-		$redirect = 'index.php?option=com_media&folder=' . $folder;
-		if ($tmpl == 'component')
-		{
-			$redirect .= '&view=medialist&tmpl=component';
-		}
-		$this->setRedirect($redirect);*/
-
-		//$session = App::get('session');
-		$state = ''; //User::getState('folder');
+		$state = ''; //$request->session()->get('folder')
 		$folders = MediaHelper::getTree(app('files')->directories($base));
 		$folderTree = MediaHelper::_buildFolderTree($folders);
 
@@ -118,7 +107,7 @@ class MedialistController extends Controller
 			}
 			catch (\Exception $e)
 			{
-				$this->setError(trans('There was a problem reading the image dimensions.'));
+				$request->session()->flash('error', trans('There was a problem reading the image dimensions.'));
 			}
 		}
 

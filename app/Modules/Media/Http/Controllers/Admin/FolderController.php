@@ -55,7 +55,7 @@ class FolderController extends Controller
 	}
 
 	/**
-	 * Delete a file
+	 * Delete a folder
 	 *
 	 * @param  Request  $request
 	 * @return Response

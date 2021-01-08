@@ -1,7 +1,7 @@
 <?php
 $path = ltrim($file->getRelativePath(), '/');
 $ext  = strtolower($file->getExtension());
-$href = route('admin.media.download') . '?file=' . $file->getRelativePath();
+$href = route('admin.media.download', ['path' => $path]);
 ?>
 <div class="media-item media-item-thumb">
 	<div class="media-preview">
@@ -31,12 +31,17 @@ $href = route('admin.media.download') . '?file=' . $file->getRelativePath();
 				<li>
 					<a class="icon-link media-opt-path" href="#filepath-{{ $file->getId() }}">{{ trans('media::media.file link') }}</a>
 				</li>
+			@if (auth()->user()->can('edit media'))
+				<li>
+					<a class="icon-edit media-opt-rename" href="{{ $href }}" data-api="{{ route('api.media.rename') }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}" data-prompt="New name">{{ trans('media::media.rename') }}</a>
+				</li>
+			@endif
 			@if (auth()->user()->can('delete media'))
 				<li>
 					<span class="separator"></span>
 				</li>
 				<li>
-					<a class="icon-trash media-opt-delete" href="{{ route('admin.media.delete', ['file' => $file->getRelativePath()]) }}" data-api="{{ route('api.media.delete', ['items[0][path]' => $path, 'items[0][type]' => 'file']) }}">{{ trans('global.button.delete') }}</a>
+					<a class="icon-trash media-opt-delete" href="{{ route('admin.media.delete', ['path' => $file->getRelativePath()]) }}" data-api="{{ route('api.media.delete', ['items[0][path]' => $path, 'items[0][type]' => 'file']) }}">{{ trans('global.button.delete') }}</a>
 				</li>
 			@endif
 			</ul>

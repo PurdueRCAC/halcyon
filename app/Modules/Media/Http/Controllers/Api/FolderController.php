@@ -105,7 +105,7 @@ class FolderController extends Controller
 	}
 
 	/**
-	 * Create a directory
+	 * Update a directory
 	 *
 	 * @param  Request $request
 	 * @return  Response
@@ -141,7 +141,7 @@ class FolderController extends Controller
 			return response()->json(['message' => trans('media::media.error.destination exists')], 415);
 		}
 
-		// Create new directory
+		// Rename directory
 		Storage::disk($disk)->move($before, $after);
 
 		event(new DirectoryUpdated($request));

@@ -47,12 +47,17 @@ $router->group(['prefix' => 'media', 'middleware' => 'auth:api'], function (Rout
 		'as' => 'admin.media.download',
 		'uses' => 'MediaController@download',
 	]);
-	/*$router->put('/', [
-		'as'   => 'api.media.update',
+	$router->put('/rename', [
+		'as'   => 'api.media.rename',
 		'uses' => 'MediaController@update',
 		'middleware' => 'can:edit media',
 	]);
-	$router->get('{path}', [
+	$router->put('/move', [
+		'as'   => 'api.media.move',
+		'uses' => 'MediaController@update',
+		'middleware' => 'can:edit media',
+	]);
+	/*$router->get('{path}', [
 		'as'   => 'api.media.read',
 		'uses' => 'MediaController@read',
 	]);

@@ -226,6 +226,46 @@ jQuery(document).ready(function($){
 			}
 			item.toggleClass('ui-activated');
 		})
+		.on('click', '.media-opt-download', function (e) {
+			$('.media-item').removeClass('ui-activated');
+		})
+		.on('click', '.media-opt-rename', function (e) {
+			e.preventDefault();
+
+			var title = prompt($(this).data('prompt'), $(this).data('name'));
+			if (title) {
+				var href = $(this).data('api');
+
+				var data = {
+					'before': $(this).data('path') + '/' + $(this).data('name'),
+					'after': $(this).data('path') + '/' + title
+				};
+
+				if (_DEBUG) {
+					window.console && console.log(data);
+				}
+
+				$.ajax({
+					url: href,
+					type: 'PUT',
+					data: data,
+					success: function (response) {
+						if (_DEBUG) {
+							window.console && console.log(response);
+						}
+
+						$.get(contents.attr('data-list') + '?layout=' + layout.val() + '&folder=' + folder.val(), function (data) {
+							if (_DEBUG) {
+								window.console && console.log(data);
+							}
+							contents.html(data);
+
+							bindContextModals();
+						});
+					}
+				});
+			}
+		})
 		.on('click', '.media-opt-delete', function(e){
 			e.preventDefault();
 

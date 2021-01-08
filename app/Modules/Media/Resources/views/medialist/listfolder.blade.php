@@ -27,15 +27,20 @@ $path = ltrim($file->getRelativePath(), '/');
 				<span class="media-options-btn"></span>
 				<div class="media-options">
 					<ul>
+						<li>
+							<a class="icon-info media-opt-info" href="#fileinfo-{{ $file->getId() }}">{{ trans('media::media.file info') }}</a>
+						</li>
+						@if (auth()->user()->can('edit media'))
 							<li>
-								<a class="icon-info media-opt-info" href="#fileinfo-{{ $file->getId() }}">{{ trans('media::media.file info') }}</a>
+								<a class="icon-edit media-opt-rename" href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}" data-prompt="New name">{{ trans('media::media.rename') }}</a>
 							</li>
+						@endif
 						@if (auth()->user()->can('delete media'))
 							<li>
 								<span class="separator"></span>
 							</li>
 							<li>
-								<a class="icon-trash media-opt-delete" href="{{ route('admin.media.delete', ['file' => $path]) }}" data-api="{{ route('api.media.delete', ['items[0][path]' => $path, 'items[0][type]' => 'dir']) }}">{{ trans('global.button.delete') }}</a>
+								<a class="icon-trash media-opt-delete" href="{{ route('admin.media.delete', ['file' => $path]) }}" data-api="{{ route('api.media.rename') }}" data-api="{{ route('api.media.delete', ['items[0][path]' => $path, 'items[0][type]' => 'dir']) }}">{{ trans('global.button.delete') }}</a>
 							</li>
 						@endif
 					</ul>

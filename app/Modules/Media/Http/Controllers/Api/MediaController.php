@@ -7,6 +7,8 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Modules\Media\Helpers\MediaHelper;
+use App\Modules\Media\Events\Updating;
+use App\Modules\Media\Events\Updated;
 use App\Modules\Media\Events\Deleting;
 use App\Modules\Media\Events\Deleted;
 use App\Modules\Media\Events\Download;
@@ -53,7 +55,7 @@ class MediaController extends Controller
 	 */
 	public function tree(Request $request)
 	{
-		/*$disk = $request->input('disk', 'public');
+		/*$disk = $request->input('disk';
 
 		$content = Storage::disk($disk)->listContents('/');
 
@@ -82,7 +84,7 @@ class MediaController extends Controller
 			],
 			'data' => array_values($dirs) //MediaHelper::_buildFolderTree($folders, -1),
 		];*/
-		$base = storage_path() . '/app';
+		$base = storage_path('app');
 
 		$folder = $request->input('folder', '');
 		$folders = MediaHelper::getTree($base);
@@ -105,7 +107,7 @@ class MediaController extends Controller
 	/**
 	 * Get directory tree
 	 *
-	 * @param  Request $request
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function layout(Request $request)
@@ -125,8 +127,41 @@ class MediaController extends Controller
 	/**
 	 * Upload
 	 *
-	 * @param  Request $request
-	 * @return Response
+	 * @apiUri    /api/media/upload
+	 * @apiParameter {
+	 * 		"name":          "disk",
+	 * 		"description":   "Filesystem disk",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "path",
+	 * 		"description":   "File path to upload the file to",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "file",
+	 * 		"description":   "File to be uploaded",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "array"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "overwrite",
+	 * 		"description":   "Overwrite existing file of the same name",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "bool"
+	 * 		}
+	 * }
+	 * @param   Request  $request
+	 * @return  Response
 	 */
 	public function upload(Request $request)
 	{
@@ -208,10 +243,125 @@ class MediaController extends Controller
 	}
 
 	/**
+	 * Rename/move a file
+	 *
+	 * @apiUri    /api/media/rename
+	 * @apiUri    /api/media/move
+	 * @apiParameter {
+	 * 		"name":          "disk",
+	 * 		"description":   "Filesystem disk",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "before",
+	 * 		"description":   "Source file path",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "after",
+	 * 		"description":   "Destination file path",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @param   Request  $request
+	 * @return  Response
+	 */
+	public function update(Request $request)
+	{
+		/*$disk = $request->input('disk');
+		$path = $request->input('path');
+		$name = $request->input('name');
+
+		$name = $this->sanitize($name);
+
+		$source = $path;
+		$dest   = dirname($path) . '/' . $name;
+
+		// check all files and folders - exists or no
+		if (!Storage::disk($disk)->exists($source))
+		{
+			return response()->json('File not found', 404);
+		}
+
+		if (!Storage::disk($disk)->exists($dest))
+		{
+			return response()->json('Destination already exists', 404);
+		}
+
+		Storage::disk($disk)->move($source, $dest);
+
+		return response()->json(null, 204);*/
+
+		event($event = new Updating($request));
+
+		$disk   = $event->disk();
+		$before = trim($event->before(), '/');
+		$after  = trim($event->after(), '/');
+
+		if (!$before || !$after)
+		{
+			return response()->json(['message' => trans('media::media.error.missing name')], 415);
+		}
+
+		$before = $this->sanitize($before);
+		$after  = $this->sanitize($after);
+
+		if (!$before || !$after)
+		{
+			return response()->json(['message' => trans('media::media.error.invalid name')], 415);
+		}
+
+		if (!Storage::disk($disk)->exists($before))
+		{
+			return response()->json(['message' => trans('media::media.error.missing source' . $before)], 415);
+		}
+
+		if (Storage::disk($disk)->exists($after))
+		{
+			return response()->json(['message' => trans('media::media.error.destination exists')], 415);
+		}
+
+		// Rename directory
+		Storage::disk($disk)->move($before, $after);
+
+		event(new Updated($disk, $before, $after));
+
+		return response()->json([
+			'source' => $before,
+			'path' => $after
+		]);
+	}
+
+	/**
 	 * Delete a file
 	 *
-	 * @param  Request $request
-	 * @return Response
+	 * @apiUri    /api/media/delete
+	 * @apiParameter {
+	 * 		"name":          "disk",
+	 * 		"description":   "Filesystem disk",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "items",
+	 * 		"description":   "A list of file paths",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "array"
+	 * 		}
+	 * }
+	 * @param   Request  $request
+	 * @return  Response
 	 */
 	public function delete(Request $request)
 	{
@@ -271,8 +421,8 @@ class MediaController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
-	 * @param  Request $request
-	 * @return Response
+	 * @param   Request  $request
+	 * @return  Response
 	 */
 	public function download(Request $request)
 	{
@@ -316,8 +466,8 @@ class MediaController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
-	 * @param  Request $request
-	 * @return Response
+	 * @param   Request  $request
+	 * @return  Response
 	 */
 	public function url(Request $request)
 	{
@@ -331,5 +481,33 @@ class MediaController extends Controller
 			],
 			'url'    => Storage::disk($disk)->url($path),
 		]);
+	}
+
+	/**
+	 * Sanitize a path
+	 *
+	 * @param   string  $path
+	 * @return  string
+	 */
+	private function sanitize($path)
+	{
+		/*$paths = explode('/', $path);
+
+		foreach ($paths as $i => $path)
+		{*/
+			$path = str_replace(' ', '_', $path);
+			$path = preg_replace('/[^a-zA-Z0-9\-_\/\.]+/', '', $path);
+
+			if (!preg_match('/^[\x20-\x7e]*$/', $path))
+			{
+				$path = \Illuminate\Support\Facades\Str::ascii($path);
+			}
+
+			/*$paths[$i] = $path;
+		}
+
+		$path = implode('/', $path);*/
+
+		return $path;
 	}
 }
