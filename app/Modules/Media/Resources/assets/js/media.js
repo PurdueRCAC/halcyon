@@ -7,28 +7,13 @@ if (typeof('Dropzone') !== undefined) {
 
 function bindContextModals()
 {
-	/*$('.media-opt-path,.media-opt-info').fancybox({
-		type: 'ajax',
-		width: 700,
-		height: 'auto',
-		autoSize: false,
-		fitToView: false,
-		titleShow: false,
-		beforeLoad: function() {
-			if (_DEBUG) {
-				window.console && console.log('Calling: ' + $(this).attr('href'));
-			}
-			$(this).attr('href', $(this).attr('href'));
-		}
-	});*/
-
 	// Initialize dialogs
 	$('.dialog').dialog({
 		autoOpen: false,
 		modal: true,
-		width: 700//,
-		//effect:"slide", direction:"right"
+		width: 700
 	});
+
 	// Initialize context menus
 	$('.media-opt-info,.media-opt-path,.media-opt-rename').on('click', function(e){
 		e.preventDefault();
@@ -44,8 +29,6 @@ jQuery(document).ready(function($){
 	var contents = $('#media-items'),
 		layout = $('#layout'),
 		folder = $('#folder');
-
-	_DEBUG = 1; //$('#system-debug').length;
 
 	if (!contents.length) {
 		return;
@@ -66,13 +49,8 @@ jQuery(document).ready(function($){
 		$('#media-' + view).addClass('active');
 
 		layout.val(view);
-
-		/*$.post(layout.data('api'), { 'lauout': view }, function(response){
-			console.log(response);
-		});*/
 	});
 
-	//$('.media-folder-new').on('click', function(e){
 	$('#toolbar-folder-new a').off('click').on('click', function(e){
 		e.preventDefault();
 
@@ -81,8 +59,7 @@ jQuery(document).ready(function($){
 			//var href = $(this).attr('href');
 			var href = $(this).data('api');
 			if (_DEBUG) {
-				window.console && console.log('Creating folder: ' + href);
-				console.log({'path': folder.val(), 'name': title})
+				window.console && console.log({ 'path': folder.val(), 'name': title });
 			}
 
 			$.post(href, {'path': folder.val(), 'name': title}, function(response){
@@ -212,7 +189,7 @@ jQuery(document).ready(function($){
 					//window.parent.document.getElementById(id + '_preview_img').style.display = 'block';
 					//window.parent.document.getElementById(id + '_preview').src = url;
 				}
-				//window.parent.$.fancybox.close();
+
 				return false;
 			}
 		})
@@ -350,9 +327,6 @@ jQuery(document).ready(function($){
 	});
 
 	$('.dropzone').dropzone({
-		/*params: {
-			path: $('#folder').val()
-		},*/
 		init: function () {
 			this.on("sending", function (file, xhr, formData) {
 				formData.append("path", folder.val());
@@ -372,84 +346,4 @@ jQuery(document).ready(function($){
 			alert(errorMessage);
 		}
 	});
-	/*var attach = $("#ajax-uploader");
-	if (attach.length) {
-
-		attach.fileupload({
-			dropZone: attach, //$(attach.data('drop')),
-			url: attach.attr('data-action'),
-			//dataType: 'json',
-			//progressInterval: 500,
-			drop: function (e, data) {
-				$.each(data.files, function (index, file) {
-					alert('Dropped file: ' + file.name);
-				});
-			},
-			change: function (e, data) {
-        $.each(data.files, function (index, file) {
-            alert('Selected file: ' + file.name);
-        });
-    },
-			add: function(e, data) {
-				data.context = $('<p class="file"></p>')
-					.append($('<a target="_blank"></a>').text(data.files[0].name))
-					.appendTo(document.body);
-				//data.submit();
-			},
-			progress: function(e, data) {
-				var progress = parseInt((data.loaded / data.total) * 100, 10);
-				data.context.css("background-position-x", 100 - progress + "%");
-			},
-			done: function(e, data) {
-				data.context
-					.addClass("done")
-					.find("a")
-					.prop("href", data.result.files[0].url);
-			}
-		});
-
-		var running = 0;
-		if (_DEBUG) {
-			window.console && console.log('Uploading to: ' + attach.attr('data-action') + '?layout=' + layout.val() + '&folder=' + folder.val());
-		}
-
-		var uploader = new qq.FileUploader({
-			element: attach[0],
-			action: attach.attr('data-action'),
-			params: {
-				layout: function() {
-					return layout.val();
-				},
-				folder: function() {
-					return folder.val();
-				}
-			},
-			multiple: true,
-			debug: true,
-			template: '<div class="qq-uploader">' +
-							'<div class="qq-upload-button"><span>' + attach.attr('data-instructions') + '</span></div>' + 
-							'<div class="qq-upload-drop-area"><span>' + attach.attr('data-instructions') + '</span></div>' +
-							'<ul class="qq-upload-list"></ul>' + 
-						'</div>',
-			onSubmit: function(id, file) {
-				running++;
-			},
-			onComplete: function(id, file, response) {
-				running--;
-
-				if (running == 0) {
-					$('ul.qq-upload-list').empty();
-				}
-
-				if (_DEBUG) {
-					window.console && console.log('Calling: ' + contents.attr('data-list') + '?layout=' + layout.val() + '&folder=' + folder.val());
-				}
-				$.get(contents.attr('data-list') + '?layout=' + layout.val() + '&folder=' + folder.val(), function(data){
-					contents.html(data);
-
-					bindContextModals();
-				});
-			}
-		});
-	}*/
 });
