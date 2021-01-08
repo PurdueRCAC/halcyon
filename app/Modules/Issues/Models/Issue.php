@@ -505,7 +505,7 @@ class Issue extends Model
 		return implode(', ', $names);
 	}
 
-		/**
+	/**
 	 * Query scope where record isn't trashed
 	 *
 	 * @param   object  $query
