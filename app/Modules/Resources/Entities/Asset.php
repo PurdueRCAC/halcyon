@@ -12,6 +12,7 @@ use App\Modules\Resources\Events\AssetUpdating;
 use App\Modules\Resources\Events\AssetUpdated;
 use App\Modules\Resources\Events\AssetDeleted;
 use App\Modules\History\Traits\Historable;
+use App\Halcyon\Models\Casts\Params;
 
 /**
  * Resource asset
@@ -57,6 +58,19 @@ class Asset extends Model
 		'id',
 		'datetimecreated',
 		'datetimeremoved',
+	];
+
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'parentid' => 'integer',
+		'display' => 'integer',
+		'resourcetype' => 'integer',
+		'producttype' => 'integer',
+		'params' => Params::class,
 	];
 
 	/**

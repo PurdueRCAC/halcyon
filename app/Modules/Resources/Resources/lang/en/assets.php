@@ -79,4 +79,13 @@ return [
 	'service' => 'Service',
 	// Subresources
 	'description' => 'Description',
+	'options' => 'Options',
+	'params' => [
+		'desktop' => 'Desktop',
+		'desktop desc' => 'URL for launching interactive desktops',
+		'gateway' => 'Gateway (Open OnDemand)',
+		'gateway desc' => 'URL for launching Gateways',
+		'notebook' => 'Jupyter Hub',
+		'notebook desc' => 'URL for launching Jupyter Hub',
+	],
 ];

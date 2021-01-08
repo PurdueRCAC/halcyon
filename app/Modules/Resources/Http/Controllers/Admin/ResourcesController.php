@@ -276,6 +276,14 @@ class ResourcesController extends Controller
 
 		$row->fill($request->input('fields'));
 
+		if ($params = $request->input('params', []))
+		{
+			foreach ($params as $key => $val)
+			{
+				$row->params->set($key, $val);
+			}
+		}
+
 		if (!$row->save())
 		{
 			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');

@@ -139,20 +139,43 @@ app('pathway')
 				</div>
 			</fieldset>
 		</div>
-		<div class="col col-md-5 span5">
+		<div class="col col-md-5">
+			@sliders('start', 'asset-sliders')
+				@sliders('panel', trans('resources::assets.options'), 'params-options')
+					<fieldset class="panelform">
+						<div class="form-group">
+							<label for="params-desktop">{{ trans('resources::assets.params.desktop') }}:</label>
+							<input type="text" class="form-control" name="params[desktop]" id="params-desktop" value="{{ $row->params->get('desktop') }}" />
+							<span class="form-text text-muted">{{ trans('resources::assets.params.desktop desc') }}</span>
+						</div>
+
+						<div class="form-group">
+							<label for="params-gateway">{{ trans('resources::assets.params.gateway') }}:</label>
+							<input type="text" class="form-control" name="params[gateway]" id="params-gateway" value="{{ $row->params->get('gateway') }}" />
+							<span class="form-text text-muted">{{ trans('resources::assets.params.gateway desc') }}</span>
+						</div>
+
+						<div class="form-group">
+							<label for="params-notebook">{{ trans('resources::assets.params.notebook') }}:</label>
+							<input type="text" class="form-control" name="params[notebook]" id="params-notebook" value="{{ $row->params->get('notebook') }}" />
+							<span class="form-text text-muted">{{ trans('resources::assets.params.notebook desc') }}</span>
+						</div>
+					</fieldset>
+			@sliders('end')
+
 			@include('history::admin.history')
 		</div>
 	</div>
 
-	</div>
-	@if ($row->id)
-		@foreach ($sections as $section)
-			<div id="resource-{{ $section['route'] }}">
-				{!! $section['content'] !!}
-			</div>
-		@endforeach
-	@endif
-						</div>
+		</div><!-- / #resource-details -->
+		@if ($row->id)
+			@foreach ($sections as $section)
+				<div id="resource-{{ $section['route'] }}">
+					{!! $section['content'] !!}
+				</div><!-- / resource-{{ $section['route'] }} -->
+			@endforeach
+		@endif
+	</div><!-- / .tabs -->
 
 	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 
