@@ -87,5 +87,7 @@ return [
 		'gateway desc' => 'URL for launching Gateways',
 		'notebook' => 'Jupyter Hub',
 		'notebook desc' => 'URL for launching Jupyter Hub',
+		'rstudio' => 'RStudio',
+		'rstudio desc' => 'URL for launching RStudio',
 	],
 ];
