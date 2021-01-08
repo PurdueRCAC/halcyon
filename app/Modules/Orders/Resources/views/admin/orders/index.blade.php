@@ -199,7 +199,7 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-2 numeric">
-					{{ config('orders.currency', '$') }} {{ $row->formattedTotal }}
+					{{ config('orders.currency', '$') }} {{ $row->formatNumber($row->ordertotal) }}
 				</td>
 			</tr>
 		@endforeach
