@@ -171,11 +171,11 @@ app('pathway')
 					approved: {{ $row->accountsapproved }}<br />
 					denied: {{ $row->accountsdenied }}<br />
 					paid: {{ $row->accountspaid }}<br />
-					items: {{ $row->items }}<br />
+					items: {{ $row->items_count }}<br />
 					fulfilled {{ $row->itemsfulfilled }}<br /> -->
 				</td>
 				<td>
-					<span class="badge badge-sm order-status {{ str_replace(' ', '-', $row->status) }}" data-tip="Accounts: {{ $row->accounts }}<br />Assigned: {{ $row->accountsassigned }}<br />Approved: {{ $row->accountsapproved }}<br />Denied: {{ $row->accountsdenied }}<br />Paid: {{ $row->accountspaid }}<br />---<br />Items: {{ $row->items }}<br />Fulfilled: {{ $row->itemsfulfilled }}">
+					<span class="badge badge-sm order-status {{ str_replace(' ', '-', $row->status) }}" data-tip="Accounts: {{ $row->accounts }}<br />Assigned: {{ $row->accountsassigned }}<br />Approved: {{ $row->accountsapproved }}<br />Denied: {{ $row->accountsdenied }}<br />Paid: {{ $row->accountspaid }}<br />---<br />Items: {{ $row->items_count }}<br />Fulfilled: {{ $row->itemsfulfilled }}">
 						{{ trans('orders::orders.' . $row->status) }}
 					</span>
 				</td>
@@ -199,7 +199,7 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-2 numeric">
-					{{ config('orders.currency', '$') }} {{ number_format($row->ordertotal) }}
+					{{ config('orders.currency', '$') }} {{ $row->formattedTotal }}
 				</td>
 			</tr>
 		@endforeach

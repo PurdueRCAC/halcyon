@@ -76,8 +76,8 @@ class OrdersController extends Controller
 						) THEN 3
 					WHEN (accountsassigned < accounts) THEN 2
 					WHEN (accountsapproved < accounts) THEN 4
-					WHEN (accountsapproved = accounts AND itemsfulfilled < items) THEN 1
-					WHEN (itemsfulfilled = items AND accountspaid < accounts) THEN 5
+					WHEN (accountsapproved = accounts AND itemsfulfilled < items_count) THEN 1
+					WHEN (itemsfulfilled = items_count AND accountspaid < accounts) THEN 5
 					ELSE 6
 					END";
 
@@ -112,7 +112,7 @@ class OrdersController extends Controller
 					$o . '.*',
 					DB::raw('SUM(' . $i . '.price) AS ordertotal'),
 					DB::raw("COUNT(" . $a . ".id) AS accounts"),
-					DB::raw("COUNT(" . $i . ".id) AS items"),
+					DB::raw("COUNT(" . $i . ".id) AS items_count"),
 					DB::raw("SUM(CASE WHEN (" . $i . ".datetimefulfilled IS NULL) THEN 0 WHEN (" . $i . ".datetimefulfilled = '0000-00-00 00:00:00') THEN 0 WHEN (" . $i . ".datetimefulfilled <> '0000-00-00 00:00:00') THEN 1 END) AS itemsfulfilled"),
 					DB::raw('SUM(CASE WHEN (' . $a .'.approveruserid IS NULL) THEN 0 WHEN (' . $a .'.approveruserid = 0) THEN 0 WHEN (' . $a .'.approveruserid > 0) THEN 1 END) AS accountsassigned'),
 					DB::raw('SUM(' . $a .'.amount) AS amountassigned'),
