@@ -1,5 +1,10 @@
+/**
+ * @package    halcyon
+ * @copyright  Copyright 2020 Purdue University.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
 
-Halcyon.submitbutton = function (task) {
+/*Halcyon.submitbutton = function(task) {
 	var frm = document.getElementById('item-form'),
 		invalid = false;
 
@@ -20,6 +25,48 @@ Halcyon.submitbutton = function (task) {
 			alert('Invalid data');
 		}
 	}
+}*/
+
+/**
+ * Format number as currency
+ *
+ * @param   {number}  num
+ * @return  {string}
+ */
+function FormatNumber(num) {
+	var neg = "";
+	if (num < 0) {
+		num = -num;
+		neg = "-";
+	}
+
+	if (num > 99) {
+		num = num.toString();
+		var dollars = num.substr(0, num.length - 2);
+		var p = 1;
+		var end = dollars.length;
+
+		if (dollars.lastIndexOf(".") != -1) {
+			end = dollars.lastIndexOf(".");
+		}
+		for (var t = dollars; t > 999; t = t / 1000) {
+			dollars = dollars.substr(0, end - p * 3) + "," + dollars.substr(end - p * 3, dollars.length);
+			p++;
+		}
+
+		var cents = num.substr(num.length - 2, 2);
+		num = dollars + "." + cents;
+	} else if (num > 9 && num < 100) {
+		num = num.toString();
+		num = "0." + num;
+	} else if (num > 0) {
+		num = num.toString();
+		num = "0.0" + num;
+	} else {
+		num = "0.00";
+	}
+
+	return neg + num;
 }
 
 /**
@@ -101,9 +148,24 @@ document.addEventListener('DOMContentLoaded', function() {
 	$('.basic-single').select2({
 		//placeholder: $(this).data('placeholder')
 	});
+
+	$('body').on('change', 'input[name=quantity]', function(e){
+		var row = $(this).closest('tr');
+
+		row.find('.order-total').text(FormatNumber($(this).data('unitprice') * $(this).val()));
+	});
+
 	$('.basic-single').on('select2:select', function (e) {
 		var opt = $($(this).find('option:selected')[0]);
-		$(this).closest('tr').find('.unitprice').text(opt.data('unitprice'));
-		$(this).closest('tr').find('.unit').text(opt.data('unit'));
+
+		var row = $(this).closest('tr');
+
+		row.find('.quantity-control')
+			.val(1)
+			.data('unitprice', opt.data('unitprice'));
+
+		row.find('.unitprice').text(FormatNumber(opt.data('unitprice')));
+		row.find('.unit').text(opt.data('unit'));
+		row.find('.order-total').text(FormatNumber(opt.data('unitprice')));
 	});
 });

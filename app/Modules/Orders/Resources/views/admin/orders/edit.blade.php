@@ -37,7 +37,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('orders.name') !!}: {{ $row->id ? '#' . $row->id : 'Create' }}
+{{ trans('orders::orders.module name') }}: {{ $row->id ? '#' . $row->id : 'Create' }}
 @stop
 
 @section('content')
@@ -68,7 +68,7 @@ app('pathway')
 								<?php
 								$user = ($row->user ? $row->user->name . ' (' . $row->user->username . ')' : trans('global.unknown')) . ':' . $row->userid;
 								?>
-								<input type="text" name="fields[userid]" id="field-userid" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" size="30" maxlength="250" value="{{ $user }}" />
+								<input type="text" name="fields[userid]" id="field-userid" class="form-control form-users" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" value="{{ $user }}" />
 								<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
 							</span>
 						</div>
@@ -165,36 +165,35 @@ app('pathway')
 								<td>
 									{{ $item->product->name }}
 									<p class="form-text text-muted">
-									<?php
-									if ($item->origorderitemid)
-									{
-										if ($item->start() && $item->end())
+										<?php
+										if ($item->origorderitemid)
 										{
-											if ($item->id == $item->origorderitemid)
+											if ($item->start() && $item->end())
 											{
-												echo trans('orders::orders.new service', ['start' => $item->start()->format('M j, Y'), 'end' => $item->end()->format('M j, Y')]);
+												if ($item->id == $item->origorderitemid)
+												{
+													echo trans('orders::orders.new service', ['start' => $item->start()->format('M j, Y'), 'end' => $item->end()->format('M j, Y')]);
+												}
+												else
+												{
+													echo trans('orders::orders.service renewal', ['start' => $item->start()->format('M j, Y'), 'end' => $item->end()->format('M j, Y')]);
+												}
 											}
 											else
 											{
-												echo trans('orders::orders.service renewal', ['start' => $item->start()->format('M j, Y'), 'end' => $item->end()->format('M j, Y')]);
+												echo 'Service for ' . $item->timeperiodcount . ' ';
+												if ($item->timeperiodcount > 1)
+												{
+													echo $item->product->timeperiod->plural;
+													echo trans('orders::orders.service for', ['count' => $item->timeperiodcount, 'timeperiod' => $item->product->timeperiod->plural]);
+												}
+												else
+												{
+													echo trans('orders::orders.service for', ['count' => $item->timeperiodcount, 'timeperiod' => $item->product->timeperiod->singular]);
+												}
 											}
 										}
-										else
-										{
-
-											echo 'Service for ' . $item->timeperiodcount . ' ';
-											if ($item->timeperiodcount > 1)
-											{
-												echo $item->product->timeperiod->plural;
-												echo trans('orders::orders.service for', ['count' => $item->timeperiodcount, 'timeperiod' => $item->product->timeperiod->plural]);
-											}
-											else
-											{
-												echo trans('orders::orders.service for', ['count' => $item->timeperiodcount, 'timeperiod' => $item->product->timeperiod->singular]);
-											}
-										}
-									}
-									?>
+										?>
 									</p>
 								</td>
 								<td class="text-right">
@@ -206,21 +205,25 @@ app('pathway')
 										@endif
 									@else
 										@if (!$item->fulfilled || $item->fulfilled == '0000-00-00 00:00:00')
-											<input type="number" class="form-control" name="quantity{{ $item->id }}" size="5" min="1" max="999" value="{{ $item->quantity }}" />
+											<input type="number" class="form-control quantity-control" data-unitprice="{{ $item->price }}" name="quantity{{ $item->id }}" size="5" min="1" max="999" value="{{ $item->quantity }}" />
 										@else
 											{{ $item->quantity }}
 										@endif
 									@endif
 								</td>
 								<td class="text-right">
-									{{ config('orders.currency', '$') }} {{ number_format($item->price) }}<br /><span class="text-muted">per&nbsp;{{ $item->product->unit }}</span>
+									{{ config('orders.currency', '$') }} {{ $row->formatNumber($item->price) }}<br /><span class="text-muted">per&nbsp;{{ $item->product->unit }}</span>
 								</td>
 								<td class="text-right text-nowrap">
-									{{ config('orders.currency', '$') }} <span name="itemtotal">{{ number_format($item->price * $item->quantity) }}</span>
+									{{ config('orders.currency', '$') }} <span name="itemtotal">{{ $row->formatNumber($item->price * $item->quantity) }}</span>
 								</td>
 								<td>
 									@if ($row->status != 'canceled' && $row->status != 'complete')
-									<a href="#" class="btn btn-danger"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+									<a href="#item{{ $row->id }}" class="btn btn-secondary"><span class="glyph icon-edit">{{ trans('global.edit') }}</span></a>
+									<div id="item{{ $row->id }}" class="dialog hide" title="Item #{{ $row->id }}">
+										<div class="form-group">
+										</div>
+									</div>
 									@endif
 								</td>
 							</tr>
@@ -242,14 +245,14 @@ app('pathway')
 								</select>
 							</td>
 							<td>
-								<input type="number" class="form-control" name="quantity" size="5" min="1" max="999" value="0" />
+								<input type="number" class="form-control quantity-control" name="quantity" data-unitprice="" size="5" min="1" max="999" value="0" />
 							</td>
 							<td class="text-right text-nowrap">
 								<!-- <input type="text" class="form-control-plaintext unitprice" value="{{ config('orders.currency', '$') }} 0.00" /> -->
 								{{ config('orders.currency', '$') }} <span class="unitprice">0.00</span><br /><span class="text-muted">per&nbsp;<span class="unit">--</span></span>
 							</td>
 							<td class="text-right text-nowrap">
-								<span class="order-total">{{ config('orders.currency', '$') }} 0.00</span>
+								{{ config('orders.currency', '$') }} <span class="order-total">0.00</span>
 							</td>
 							<td>
 								<a href="#" class="btn btn-success"><span class="glyph icon-plus">{{ trans('global.add') }}</span></a>
@@ -260,7 +263,7 @@ app('pathway')
 					<tfoot>
 						<tr>
 							<td class="text-right" colspan="5">{{ trans('orders::orders.order total') }}</td>
-							<td class="text-right text-nowrap orderprice">{{ config('orders.currency', '$') }} <span id="ordertotal">{{ number_format($row->total) }}</span></td>
+							<td class="text-right text-nowrap orderprice">{{ config('orders.currency', '$') }} <span id="ordertotal">{{ $row->formatNumber($row->total) }}</span></td>
 							<td></td>
 						</tr>
 					</tfoot>
@@ -269,26 +272,16 @@ app('pathway')
 
 			<fieldset class="adminform">
 				<legend>{{ trans('orders::orders.payment information') }}</legend>
-			<!-- <div class="card">
-				<div class="card-header">
-					<div class="row">
-						<div class="col-md-9">
-							<h3 class="card-title">{{ trans('orders::orders.payment information') }}</h3>
-						</div>
-						<div class="col-md-3 text-right">
-							<button class="btn btn-success"><span class="glyph icon-plus">{{ trans('global.add') }}</span></button>
-						</div>
-					</div>
-				</div>
-				<div class="card-body">-->
+
 				<table class="table table-hover">
-					<caption class="sr-only"></caption>
+					<caption class="sr-only">{{ trans('orders::orders.payment information') }}</caption>
 					<thead>
 						<tr>
 							<th scope="col">{{ trans('orders::orders.status') }}</th>
 							<th scope="col">{{ trans('orders::orders.account') }}</th>
 							<th scope="col">{{ trans('orders::orders.account approver') }}</th>
 							<th scope="col" class="text-right text-nowrap">{{ trans('orders::orders.amount') }}</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -347,6 +340,11 @@ app('pathway')
 								</td>
 								<td>{{ $account->approver ? $account->approver->name : trans('global.unknown') }}</td>
 								<td class="text-right text-nowrap">{{ config('orders.currency', '$') }} {{ number_format($account->amount) }}</td>
+								<td>
+									@if ($row->status != 'canceled' && $row->status != 'complete')
+									<a href="#" class="btn btn-danger"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+									@endif
+								</td>
 							</tr>
 						<?php } ?>
 						@if ($row->status != 'canceled' && $row->status != 'complete')
@@ -368,10 +366,16 @@ app('pathway')
 								</div>
 							</td>
 							<td>
-								<input type="text" class="form-control" value="" />
+								<span class="input-group input-user">
+									<input type="text" name="approverid" id="approverid" class="form-control form-users" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
+									<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
+								</span>
 							</td>
 							<td class="text-right">
 								<input type="text" class="form-control" value="0.00" size="9" />
+							</td>
+							<td>
+								<a href="#" class="btn btn-success"><span class="glyph icon-plus">{{ trans('global.add') }}</span></a>
 							</td>
 						</tr>
 						@endif
@@ -379,7 +383,8 @@ app('pathway')
 					<tfoot>
 						<tr>
 							<td class="text-right" colspan="3">{{ trans('orders::orders.balance remaining') }}</td>
-							<td class="text-right text-nowrap orderprice">{{ config('orders.currency', '$') }} <span id="ordertotal">{{ number_format($row->total - $total) }}</span></td>
+							<td class="text-right text-nowrap orderprice">{{ config('orders.currency', '$') }} <span id="ordertotal">{{ $row->formatNumber($row->total - $total) }}</span></td>
+							<td></td>
 						</tr>
 					</tfoot>
 				</table>
