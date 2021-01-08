@@ -369,6 +369,7 @@ class Asset extends Model
 			->withTrashed()
 			->where('listname', '=', $name)
 			->orWhere('name', '=', $name)
+			->orderBy('datetimeremoved', 'asc') // look for non-trashed entries first
 			->limit(1)
 			->get()
 			->first();
