@@ -23,7 +23,7 @@ class File extends \SplFileInfo
 	 */
 	public function isImage(): bool
 	{
-		return in_array($this->getExtension(), $this->imageExtensions);
+		return in_array(strtolower($this->getExtension()), $this->imageExtensions);
 	}
 
 	public function getRelativePath(): string

@@ -1,11 +1,11 @@
 <?php
 $path = ltrim($file->getRelativePath(), '/');
-$ext  = $file->getExtension();
+$ext  = strtolower($file->getExtension());
 $href = route('admin.media.download') . '?file=' . $file->getRelativePath();
 
-$icon = asset('modules/media/filetypes/' . $ext . '.svg');
-if (!$icon):
-	$icon = asset('modules/media/filetypes/file.svg');
+$icon = 'modules/media/filetypes/' . $ext . '.svg';
+if (!file_exists(storage_path('public/' . $icon))):
+	$icon = 'modules/media/filetypes/file.svg';
 endif;
 ?>
 <div class="media-item media-item-thumb">
@@ -13,7 +13,7 @@ endif;
 		<div class="media-preview-inner">
 			<a href="{{ $file->getUrl() }}" class="media-thumb doc-item {{ $ext }}" title="{{ $file->getFilename() }}" >
 				<span class="media-preview-shim"></span><!--
-				--><img src="{{ $icon }}" alt="{{ trans('media::media.image title', ['name' => $file->getFilename(), 'size' => $file->getFormattedSize()]) }}" width="80" />
+				--><img src="{{ asset($icon) }}" alt="{{ trans('media::media.image title', ['name' => $file->getFilename(), 'size' => $file->getFormattedSize()]) }}" width="80" />
 			</a>
 			<span class="media-options-btn"></span>
 		</div>

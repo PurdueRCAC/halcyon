@@ -1,6 +1,6 @@
 <?php
 $path = ltrim($file->getRelativePath(), '/');
-$ext  = $file->getExtension();
+$ext  = strtolower($file->getExtension());
 $href = route('admin.media.download') . '?file=' . $file->getRelativePath();
 ?>
 <div class="media-item media-item-thumb">
