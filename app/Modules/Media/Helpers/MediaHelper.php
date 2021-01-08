@@ -18,17 +18,17 @@ class MediaHelper
 	 */
 	public static function canUpload($file, &$err)
 	{
-		$params = Component::params('com_media');
+		$params = config('module.media');
 
 		if (empty($file['name']))
 		{
-			$err = 'COM_MEDIA_ERROR_UPLOAD_INPUT';
+			$err = 'media::media.error.UPLOAD_INPUT';
 			return false;
 		}
 
 		if ($file['name'] !== Filesystem::clean($file['name']))
 		{
-			$err = 'COM_MEDIA_ERROR_WARNFILENAME';
+			$err = 'media::media.error.WARNFILENAME';
 			return false;
 		}
 
@@ -48,7 +48,7 @@ class MediaHelper
 			{
 				if (in_array($extensionName, $explodedFileName))
 				{
-					$err = 'COM_MEDIA_ERROR_WARNFILETYPE';
+					$err = 'media::media.error.WARNFILETYPE';
 					return false;
 				}
 			}
@@ -59,14 +59,14 @@ class MediaHelper
 
 		if ($format == '' || $format == false || (!in_array($format, $allowable) && !in_array($format, $ignored)))
 		{
-			$err = 'COM_MEDIA_ERROR_WARNFILETYPE';
+			$err = 'media::media.error.WARNFILETYPE';
 			return false;
 		}
 
 		$maxSize = (int) ($params->get('upload_maxsize', 0) * 1024 * 1024);
 		if ($maxSize > 0 && (int) $file['size'] > $maxSize)
 		{
-			$err = 'COM_MEDIA_ERROR_WARNFILETOOLARGE';
+			$err = 'media::media.error.WARNFILETOOLARGE';
 			return false;
 		}
 
@@ -83,13 +83,13 @@ class MediaHelper
 				{
 					if (($imginfo = getimagesize($file['tmp_name'])) === false)
 					{
-						$err = 'COM_MEDIA_ERROR_WARNINVALID_IMG';
+						$err = 'media::media.error.WARNINVALID_IMG';
 						return false;
 					}
 				}
 				else
 				{
-					$err = 'COM_MEDIA_ERROR_WARNFILETOOLARGE';
+					$err = 'media::media.error.WARNFILETOOLARGE';
 					return false;
 				}
 			}
@@ -106,7 +106,7 @@ class MediaHelper
 					$type = finfo_file($finfo, $file['tmp_name']);
 					if (strlen($type) && !in_array($type, $allowed_mime) && in_array($type, $illegal_mime))
 					{
-						$err = 'COM_MEDIA_ERROR_WARNINVALID_MIME';
+						$err = 'media::media.error.WARNINVALID_MIME';
 						return false;
 					}
 
@@ -119,13 +119,13 @@ class MediaHelper
 
 					if (strlen($type) && !in_array($type, $allowed_mime) && in_array($type, $illegal_mime))
 					{
-						$err = 'COM_MEDIA_ERROR_WARNINVALID_MIME';
+						$err = 'media::media.error.WARNINVALID_MIME';
 						return false;
 					}
 				}
 				elseif (!auth()->user() || !auth()->user()->can('manage'))
 				{
-					$err = 'COM_MEDIA_ERROR_WARNNOTADMIN';
+					$err = 'media::media.error.WARNNOTADMIN';
 					return false;
 				}
 			}
@@ -154,7 +154,7 @@ class MediaHelper
 				if (stristr($xss_check, '<' . $tag . ' ')
 				 || stristr($xss_check, '<' . $tag . '>'))
 				{
-					$err = 'COM_MEDIA_ERROR_WARNIEXSS';
+					$err = 'media::media.error.WARNIEXSS';
 					return false;
 				}
 			}
