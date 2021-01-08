@@ -71,7 +71,7 @@ $content = '';
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-	@if ($resource->params->get('gateway') || $resource->params->get('desktop') || $resource->params->get('notebook'))
+	@if ($resource->params->get('gateway') || $resource->params->get('desktop') || $resource->params->get('notebook') || $resource->params->get('rstudio'))
 		<div class="launch">
 			@if ($gateway = $resource->params->get('gateway'))
 				<div class="panel">
@@ -91,6 +91,13 @@ $content = '';
 				<div class="panel">
 					Jupyter Hub
 					<a class="btn btn-launch" href="{{ $notebook }}" title="Launch Jupyter Hub" target="_blank" rel="noopener">Launch</a>
+				</div>
+			@endif
+
+			@if ($rstudio = $resource->params->get('rstudio'))
+				<div class="panel">
+					Rstudio
+					<a class="btn btn-launch" href="{{ $rstudio }}" title="Launch Rstudio" target="_blank" rel="noopener">Launch</a>
 				</div>
 			@endif
 		</div>
