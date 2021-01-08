@@ -4,7 +4,7 @@ $ext  = strtolower($file->getExtension());
 $href = route('admin.media.download') . '?file=' . $file->getRelativePath();
 
 $icon = 'modules/media/filetypes/' . $ext . '.svg';
-if (!file_exists(storage_path('public/' . $icon))):
+if (!file_exists(public_path($icon))):
 	$icon = 'modules/media/filetypes/file.svg';
 endif;
 ?>

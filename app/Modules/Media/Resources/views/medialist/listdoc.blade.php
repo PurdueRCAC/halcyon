@@ -1,18 +1,18 @@
 <?php
 $path = ltrim($file->getRelativePath(), '/');
-$ext  = $file->getExtension();
+$ext  = strtolower($file->getExtension());
 $href = route('admin.media.download') . '?file=' . $path;
 
-$icon = asset('modules/media/filetypes/' . $ext . '.svg');
-if (!$icon):
-	$icon = asset('modules/media/filetypes/file.svg');
+$icon = 'modules/media/filetypes/' . $ext . '.svg';
+if (!file_exists(public_path($icon))):
+	$icon = 'modules/media/filetypes/file.svg';
 endif;
 ?>
 	<tr class="media-item media-item-list">
 		<td width="50%">
 			<a class="doc-item" href="{{ $path }}" title="{{ $file->getFilename() }}">
 				<span class="media-icon">
-					<img src="{{ $icon }}" alt="{{ trans('media::media.image title', ['name' => $file->getFilename(), 'size' => $file->getFormattedSize()]) }}" />
+					<img src="{{ asset($icon) }}" alt="{{ trans('media::media.image title', ['name' => $file->getFilename(), 'size' => $file->getFormattedSize()]) }}" />
 				</span>
 				<span class="media-name">
 					{{ $file->getShortName() }}
