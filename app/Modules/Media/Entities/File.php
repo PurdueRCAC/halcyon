@@ -12,8 +12,18 @@ use Carbon\Carbon;
  */
 class File extends \SplFileInfo
 {
-	private $imageExtensions = ['jpg', 'png', 'jpeg', 'gif', 'svg', 'bmp', 'jpe'];
+	/**
+	 * Image file types
+	 *
+	 * @var  array
+	 */
+	private $imageExtensions = ['jpg', 'jpeg', 'jpe', 'png', 'gif', 'svg', 'bmp'];
 
+	/**
+	 * Image pixel dimensions (width and height)
+	 *
+	 * @var  array
+	 */
 	private $dimensions = null;
 
 	/**
@@ -26,11 +36,23 @@ class File extends \SplFileInfo
 		return in_array(strtolower($this->getExtension()), $this->imageExtensions);
 	}
 
+	/**
+	 * Get file path, relative to public storage directory
+	 *
+	 * @return  string
+	 */
 	public function getRelativePath(): string
 	{
 		return str_replace(storage_path() . '/app/', '', $this->getPathname());
 	}
 
+	/**
+	 * Get a shortened file name
+	 * 
+	 * ex: "really_long_name ... .png"
+	 *
+	 * @return  string
+	 */
 	public function getShortName(): string
 	{
 		// Get a shortened name
@@ -49,6 +71,11 @@ class File extends \SplFileInfo
 		return $name;
 	}
 
+	/**
+	 * Generate an ID based on the full file path
+	 *
+	 * @return  string
+	 */
 	public function getId(): string
 	{
 		// Get a shortened name
@@ -59,7 +86,7 @@ class File extends \SplFileInfo
 	}
 
 	/**
-	 * Return file size
+	 * Return human-readable file size
 	 *
 	 * @return  string
 	 */
@@ -68,27 +95,48 @@ class File extends \SplFileInfo
 		return MediaHelper::parseSize($this->getSize());
 	}
 
+	/**
+	 * Get last modified time
+	 *
+	 * @return  object  Carbon
+	 */
 	public function getLastModified()
 	{
 		return new Carbon($this->getMTime());
 	}
 
-	public function getWidth()
+	/**
+	 * Get image width (if an image)
+	 *
+	 * @return  integer
+	 */
+	public function getWidth(): int
 	{
 		return $this->calculateDimension('width');
 	}
 
-	public function getHeight()
+	/**
+	 * Get image height (if an image)
+	 *
+	 * @return  integer
+	 */
+	public function getHeight(): int
 	{
 		return $this->calculateDimension('height');
 	}
 
-	private function calculateDimension($dim)
+	/**
+	 * Get image pixel dimension (width or height)
+	 *
+	 * @param   string  $dim
+	 * @return  integer
+	 */
+	private function calculateDimension($dim): int
 	{
 		if (empty($this->dimensions))
 		{
 			$this->dimensions = array(
-				'width' => 0,
+				'width'  => 0,
 				'height' => 0
 			);
 
@@ -98,7 +146,7 @@ class File extends \SplFileInfo
 				{
 					$dimensions = getimagesize($this->getPathname());
 
-					$this->dimensions['width'] = $dimensions[0];
+					$this->dimensions['width']  = $dimensions[0];
 					$this->dimensions['height'] = $dimensions[1];
 				}
 				catch (\Exception $e)
@@ -107,10 +155,15 @@ class File extends \SplFileInfo
 			}
 		}
 
-		return $this->dimensions['width'];
+		return $this->dimensions[$dim];
 	}
 
-	public function getUrl()
+	/**
+	 * Get file URL
+	 *
+	 * @return  string
+	 */
+	public function getUrl(): string
 	{
 		$path = '/' . $this->getRelativePath();
 		if (Str::contains($path, '/public/'))
@@ -121,7 +174,12 @@ class File extends \SplFileInfo
 		//return url('/') . Storage::url($this->getRelativePath());
 	}
 
-	public function getPublicPath()
+	/**
+	 * Get public file path (URL without host and base path)
+	 *
+	 * @return  string
+	 */
+	public function getPublicPath(): string
 	{
 		$base = config('filesystems.disks.public.url'); //url('/') . '/storage';
 		return str_replace($base, '', $this->getUrl());

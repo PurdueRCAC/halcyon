@@ -120,6 +120,7 @@ class Folder
 	 * Build a folder tree
 	 *
 	 * @param   array   $folders
+	 * @param   integer $parent_id
 	 * @param   string  $path
 	 * @return  void
 	 */
@@ -159,7 +160,11 @@ class Folder
 		}
 	}
 
-
+	/**
+	 * Folder level
+	 *
+	 * @var  int
+	 */
 	private static $index = 0;
 
 	/**
