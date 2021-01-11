@@ -205,6 +205,16 @@ class Article extends Model
 	}
 
 	/**
+	 * Determine if entry was updated
+	 *
+	 * @return  bool
+	 */
+	public function isUpdated()
+	{
+		return ($this->datetimeupdate && $this->datetimeupdate != '0000-00-00 00:00:00' && $this->datetimeupdate != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Determine if entry was edited
 	 *
 	 * @return  bool
