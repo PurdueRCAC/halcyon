@@ -72,6 +72,8 @@ return [
 	'check all' => 'Check All',
 	'no items selected' => 'No item(s) selected.',
 	// Error pages
+	'error 403 title' => 'Not Authorized',
+	'error 403 description' => 'You are not authorized to perform this action.',
 	'error 404 title' => 'Page Not Found',
 	'error 404 description' => 'The page you are looking for was not found.',
 	'error 500 title' => 'Something went wrong',
