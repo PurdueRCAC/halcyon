@@ -755,13 +755,108 @@ tr.floatingBoxHidden {
 }
 
 /* Staff */
-.profile_teaser {
-	text-align: center;
+/* Staff */
+.profiles {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
 }
-.profile_teaser_name {
+.profiles .profile {
+	perspective: 1000px;
+	height: 14.5em;
+	background-color: transparent;
+}
+.profile .profile_teaser {
+	height: 100%;
+	background-color: #f5f5f5;
+	-webkit-transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0s;
+	transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0s;
+}
+/*.profile .profile_teaser {
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+	text-decoration: none;
+}
+.profile .profile_teaser:focus,
+.profile .profile_teaser:hover {
+	-webkit-transform: translateY(-7px);
+	transform: translateY(-7px);
+}*/
+.profile .profile-inner {
+	text-align: center;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	text-decoration: none;
+	transition: transform 0.6s;
+	transform-style: preserve-3d;
+}
+.profile .profile-front,
+.profile .profile-back {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+.profile .profile-front {
+	background-color: #f5f5f5;
+}
+.profile .profile-back {
+	background-color: #333;
+	color: #ccc;
+	transform: rotateY(180deg);
+}
+.profile .profile-back a {
+	color: #fff;
+}
+.profile .profile-wrap {
+	padding: 1em;
+}
+.profile .profile-full {
+	font-weight: bold;
+}
+.profile:focus .profile-inner,
+.profile:hover .profile-inner {
+	transform: rotateY(180deg);
+}
+.profile_teaser_info {
+	margin: 1em 0 0 0;
 }
 .profile_teaser_title {
 	font-style: italic;
+	font-weight: normal;
+}
+body ul.profile_teaser_contact {
+	list-style: none;
+	margin: 1em 0;
+}
+body ul.profile_teaser_contact li {
+	display: inline-block;
+	display: block;
+	margin-left: 0
+}
+.profile_name {
+	font-size: 1.2em;
+}
+
+.avatar {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	overflow: hidden;
+	margin: 0 auto 1em auto;
+	border: 4px solid #fff;
+}
+.avatar img.vertical {
+	width: 100%;
+}
+.avatar img.horizontal {
+	height: 100%;
+}
+.dialog .avatar {
+	float: left;
 }
 
 .info-box {
