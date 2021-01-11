@@ -20,13 +20,13 @@
 			<?php foreach ($articles as $article): ?>
 				<li>
 					<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
-					<p class="date">{{ $article->formatDate($article->getOriginal('datetimenews'), $article->getOriginal('datetimenewsend')) }}</p>
-					<?php if ($article->location) { ?>
+					<p class="date">{{ $article->formatDate($article->datetimenews->toDateTimeString(), $article->hasEnd() ? $article->datetimenewsend->toDateTimeString() : '0000-00-00 00:00:00') }}</p>
+					@if ($article->location)
 						<p class="date">{{ $article->location }}</p>
-					<?php } ?>
-					<?php if ($article->getOriginal('datetimeupdate') != '0000-00-00 00:00:00' && $article->datetimeupdate != $article->datetimenewscreated) { ?>
-						<p class="newsupdated">{{ trans('widget.news::news.updated') }}: {{ $article->formatDate($article->getOriginal('datetimeupdate')) }}</p>
-					<?php } ?>
+					@endif
+					@if ($article->isUpdated() && $article->datetimeupdate != $article->datetimenewscreated)
+						<p class="newsupdated">{{ trans('widget.news::news.updated') }}: {{ $article->formatDate($article->datetimeupdate->toDateTimeString()) }}</p>
+					@endif
 				</li>
 			<?php endforeach; ?>
 		</ul>
