@@ -1,19 +1,17 @@
 <?php
 /**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
+ * News widget layout
  */
 ?>
 <div class="news">
 	<?php if ($params->get('show_title')): ?>
-		<h3>
+		<{{ $params->get('item_heading', 'h3') }}>
 			<?php if ($params->get('newstypeid')): ?>
 				{{ $type->name }}
 			<?php else: ?>
 				{{ $params->get('title') ? $params->get('title') : trans('widget.news::news.news') }}
 			<?php endif; ?>
-		</h3>
+		</{{ $params->get('item_heading', 'h3') }}>
 	<?php endif; ?>
 	<?php if (count($articles)): ?>
 		<ul class="newslist">
