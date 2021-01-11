@@ -1,0 +1,21 @@
+{
+	"name": "halcyon/wgt_coffeehours",
+	"description": "Display Coffee Hours news articles",
+	"type": "halcyon-widget",
+	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
+	"homepage": "https://www.rcac.purdue.edu",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Purdue University",
+			"email": "rcac-help@purdue.edu"
+		}
+	],
+	"support": {
+		"email": "rcac-help@purdue.edu",
+		"issues": "https://support.purdue.edu"
+	},
+	"require": {
+		"php" : "^7.0"
+	}
+}

@@ -1,0 +1,7 @@
+{
+	"name": "Coffee Hours",
+	"alias": "coffeehours",
+	"description": "This displays a list of Coffee Hours news articles",
+	"type": "site",
+	"version": "1.0.0"
+}

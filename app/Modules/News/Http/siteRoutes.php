@@ -65,7 +65,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 	])->where('name', '[a-zA-Z\-_ ]+');
 });
 
-$router->get('coffee', [
+/*$router->get('coffee', [
 	'as' => 'site.news.coffee',
 	'uses' => 'ArticlesController@coffee',
-]);
+]);*/
