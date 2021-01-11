@@ -3,13 +3,13 @@
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css?v=' . filemtime(public_path() . '/modules/news/css/news.css')) }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
-<script src="{{ asset('modules/news/js/site.js') }}"></script>
+<script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script>
 @endpush
 
 @section('content')
@@ -155,17 +155,17 @@
 								$resources = array();
 								if ($res = request('resource'))
 								{
-									foreach (explode(',',$res) as $r)
+									foreach (explode(',', $res) as $r)
 									{
 										if (trim($r))
 										{
-											$resource = App\Modules\Resources\Models\Asset::findOrFail($r);//$ws->get(ROOT_URI . 'resource/' . $r);
+											$resource = App\Modules\Resources\Models\Asset::findOrFail($r);
 											$resources[] = $resource->name . ':' . $r . '';
 										}
 									}
 								}
 								?>
-								<input name="resource" id="newsresource" size="45" class="form-control" value="{{ implode(',', $resources) }}" data-uri="<?php echo url('/'); ?>/api/resources/%s" />
+								<input name="resource" id="newsresource" size="45" class="form-control" value="{{ implode(',', $resources) }}" data-uri="{{ route('api.resources.index') }}/%s" />
 							</div>
 						</div>
 						<div class="form-group row tab-add tab-edit" id="TR_user">
@@ -179,16 +179,16 @@
 									{
 										if (trim($u))
 										{
-											$usr = $ws->get(ROOT_URI . 'user/' . $u);
+											$usr = App\Modules\Users\Models\User::find($u);
 											$usrs[] = $usr->name . ':' . $u . '';
 										}
 									}
 								}
 								?>
-								<input name="user" id="newsuser" size="45" class="form-control" value="{{ implode(',', $usrs) }}" data-uri="<?php echo url('/'); ?>/api/users/%s" />
+								<input name="user" id="newsuser" size="45" class="form-control" value="{{ implode(',', $usrs) }}" data-uri="{{ route('api.users.index') }}/%s" />
 							</div>
 						</div>
-						<div class="form-group row tab-add tab-edit<?php echo isset($_GET['edit']) ? '' : ' stash'; ?>" id="TR_published">
+						<div class="form-group row tab-add tab-edit<?php echo request()->has('edit') ? '' : ' stash'; ?>" id="TR_published">
 							<label for="published" class="col-sm-2 col-form-label">
 								Published
 								<a href="#help2" class="help icn tip" title="Help">
@@ -510,9 +510,9 @@ Additionally these variables are available inside updates and will be filled wit
 	{
 		$news = App\Modules\News\Models\Article::findOrFail($id);
 
-		if ($news->authorized)
+		if ($news && auth()->user()->can('edit news'))
 		{
-			$value = explode(' ', $news->newsdate);
+			$value = explode(' ', $news->datetimenews->toDateTimeString());
 			$startdate = $value[0];
 			$starttime = $value[1];
 			// Convert to human readable form
@@ -537,7 +537,14 @@ Additionally these variables are available inside updates and will be filled wit
 			}
 			$starttime = preg_replace('/^0/', '', $starttime);
 
-			$value = explode(' ', $news->newsdateend);
+			if ($news->hasEnd())
+			{
+				$value = explode(' ', $news->datetimenewsend->toDateTimeString());
+			}
+			else
+			{
+				$value = explode(' ', '0000-00-00 00:00:00');
+			}
 			$stopdate = $value[0];
 			$stoptime = $value[1];
 			// Convert to human readable form
@@ -575,26 +582,23 @@ Additionally these variables are available inside updates and will be filled wit
 			{
 				$starttime = '';
 			}
+
+			$data = $news;
+			$data->news = $news->body;
+			$data->startdate = $startdate;
+			$data->stopdate = $stopdate;
+			$data->starttime = $starttime;
+			$data->stoptime = $stoptime;
+			$data->resources = array();
+			foreach ($news->resources as $r)
+			{
+				$r->resourcename = $r->resource->name;
+				$data->resources[] = $r;
+			}
+			$data->associations;
 			?>
 			<script type="application/json" id="news-data">
-				{
-					"id": "<?php echo $news->id; ?>",
-					"newsdate": "<?php echo $news->newsdate; ?>",
-					"newsdateend": "<?php echo $news->newsdateend; ?>",
-					"news": "<?php echo preg_replace('/\n/', '\\n', $news->news); ?>",
-					"headline": "<?php echo e($news->headline); ?>",
-					"newstype": "<?php echo $news->newstypeid; ?>",
-					"published": "<?php echo $news->published; ?>",
-					"lastedit": "<?php echo $news->editdate; ?>",
-					"location": "<?php echo e($news->location); ?>",
-					"url": "<?php echo $news->url; ?>",
-					"startdate": "<?php echo $startdate; ?>",
-					"stopdate": "<?php echo $stopdate; ?>",
-					"starttime": "<?php echo $starttime; ?>",
-					"stoptime": "<?php echo $stoptime; ?>",
-					"resources": <?php echo json_encode($news->resources); ?>,
-					"associations": <?php echo json_encode($news->associations); ?>
-				}
+				<?php echo json_encode($data); ?>
 			</script>
 			<?php
 		}
