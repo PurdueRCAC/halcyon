@@ -139,7 +139,7 @@
 						<p class="hide">Quick Links</p>
 						<ul class="nav navbar-nav right quicklinks">
 							<li><a href="http://www.purdue.edu/purdue/admissions/">Apply</a></li>
-							<li><a href="http://www.purdue.edu/newsroom/">News</a></li>
+							<li><a href="http://www.purdue.edu/newsroom/" title="Purdue News">News</a></li>
 							<li><a href="http://www.purdue.edu/president/">President</a></li>
 							<li><a href="http://www.purdueofficialstore.com/">Shop</a></li>
 							<li><a href="http://www.purdue.edu/visit/">Visit</a></li>
@@ -157,7 +157,7 @@
 						<div class="logo col-lg-2 col-md-3 col-sm-3 col-xs-12">
 							<h1 class="sr-only">Purdue University</h1>
 							<a class="svgLinkContainer" href="https://www.purdue.edu">
-								<object class="svgContainer" data="{{ asset('themes/rcac/images/PU-H.svg') }}" type="image/svg+xml">
+								<object class="svgContainer" data="{{ asset('themes/rcac/images/PU-H.svg') }}" type="image/svg+xml" aria-label="Purdue University">
 									<img alt="Purdue University" src="{{ asset('themes/rcac/images/PU-H.svg') }}" />
 								</object>
 							</a>
