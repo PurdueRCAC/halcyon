@@ -18,7 +18,7 @@
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-	<h2>Search News & Events</h2>
+	<h2>Search News &amp; Events</h2>
 	<div id="everything">
 		<form method="get" action="{{ route('site.news.search') }}">
 			<fieldset>
