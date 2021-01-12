@@ -10,4 +10,6 @@ return [
 	'accepted values' => 'Accepted values',
 	'in' => 'In',
 	'response' => 'Response',
+	'code' => 'Code',
+	'example' => 'Example',
 ];

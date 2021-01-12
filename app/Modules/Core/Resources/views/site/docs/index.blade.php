@@ -604,6 +604,7 @@ Halcyon.removeClass = function(el, className) {
 												<tr>
 													<th scope="col">{{ trans('core::docs.code') }}</th>
 													<th scope="col">{{ trans('core::docs.description') }}</th>
+													<th scope="col">{{ trans('core::docs.example') }}</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -615,47 +616,23 @@ Halcyon.removeClass = function(el, className) {
 														<td>
 															{{ isset($response->description) ? $response->description : '' }}
 														</td>
+														<td>
+														@if (isset($response->content))
+															@foreach ($response->content as $mime => $example)
+																<code>{{ $mime }}</code>:
+																<pre><code class="language-json">{{ json_encode($example->example, JSON_PRETTY_PRINT) }}</code></pre>
+															@endforeach
+														@endif
+														</td>
 													</tr>
 												@endforeach
 											</tbody>
 										</table>
-										@if (isset($endpoint['example']))
-											<pre><code class="language-json">{{ json_encode($endpoint['response'], JSON_PRETTY_PRINT) }}</code></pre>
-										@endif
 									</div>
 								</div>
 								@endif
 							</div>
 						</div>
-
-						<?php /*if ($endpoint['description']) : ?>
-							<p><?php echo $endpoint['description']; ?></p>
-						<?php endif; ?>
-
-						<?php if ($endpoint['method'] && $endpoint['uri']) : ?>
-							<pre><code class="http"><?php echo $endpoint['method']; ?> <?php echo $endpoint['uri']; ?></code></pre>
-						<?php endif; ?>
-
-						<?php if (!empty($endpoint['replaces'])) : ?>
-							<p class="info"><?php echo trans('COM_DEVELOPER_API_DOC_REPLACES', $endpoint['replaces']); ?></p>
-						<?php endif; ?>
-
-						<?php if (!empty($endpoint['deprecated'])) : ?>
-							<p class="warning"><?php echo trans('COM_DEVELOPER_API_DOC_DEPRECATED', $endpoint['deprecated']); ?></p>
-						<?php endif;*/ ?>
-
-						<?php
-						/*foreach ($endpoint as $k => $v) :
-							if (in_array($k, array('name', 'method', 'description', 'replaces', 'deprecated', 'uri', 'parameters', 'return', '_metadata'))):
-								continue;
-							endif;
-							?>
-							<p><strong><?php echo $k; ?>:</strong> <?php echo $v; ?></p>
-							<?php
-						endforeach;*/
-						?>
-
-						
 					</div>
 				<?php
 				endforeach;
