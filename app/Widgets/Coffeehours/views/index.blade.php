@@ -99,17 +99,14 @@ foreach ($rows as $event)
 		<p class="newsheader">
 			<i class="fa fa-fw fa-clock-o" aria-hidden="true"></i> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
 			<?php
-			$news_start = new DateTime($event->datetimenews);
-			$news_end = new DateTime($event->datetimenewsend);
+			//$news_start = new DateTime($event->datetimenews);
+			//$news_end = new DateTime($event->datetimenewsend);
 
 			$now = new DateTime();
 
-			if ($now->format('Y-m-d') == $news_start->format('Y-m-d'))
+			if ($event->isToday())
 			{
-				if ($event->datetimenewsend
-					&& $event->datetimenewsend != '0000-00-00 00:00:00'
-					&& $now->format('Y-m-d h:i:s') > $event->datetimenews
-					&& $now->format('Y-m-d h:i:s') < $news_end)
+				if ($event->isNow())
 				{
 					echo ' <span class="badge badge-success">' . trans('news::news.happening now') . '</span>';
 				}
@@ -118,7 +115,7 @@ foreach ($rows as $event)
 					echo ' <span class="badge badge-info">' . trans('news::news.today') . '</span>';
 				}
 			}
-			elseif ($now->modify('+1 day')->format('Y-m-d') == $news_start->format('Y-m-d'))
+			elseif ($event->isTomorrow())
 			{
 				echo ' <span class="badge">' . trans('news::news.tomorrow') . '</span>';
 			}
