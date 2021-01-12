@@ -333,19 +333,102 @@ class ArticlesController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "comment",
-	 * 		"description":   "The comment being made",
-	 * 		"type":          "string",
+	 * 		"name":          "headline",
+	 * 		"description":   "The entry's headline",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "contactreportid",
-	 * 		"description":   "ID of the contact report",
-	 * 		"type":          "integer",
+	 * 		"name":          "body",
+	 * 		"description":   "The entry's body",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "newstypeid",
+	 * 		"description":   "ID of the news type",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "published",
+	 * 		"description":   "Published state",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "template",
+	 * 		"description":   "If entry is a template or not",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimenews",
+	 * 		"description":   "Start date and time",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimenewsend",
+	 * 		"description":   "Stop date and time",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "location",
+	 * 		"description":   "Entry location",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "url",
+	 * 		"description":   "URL for the entry",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return  Response
@@ -354,12 +437,13 @@ class ArticlesController extends Controller
 	{
 		$request->validate([
 			'newstypeid' => 'required|integer|in:0,1',
-			'body' => 'required|string',
+			'headline' => 'required|string|max:255',
+			'body' => 'required|string|max:15000',
 			'published' => 'nullable|integer|in:0,1',
 			'template' => 'nullable|integer|in:0,1',
 			'datetimenews' => 'required|date',
 			'datetimenewsend' => 'nullable|date',
-			'location' => 'nullable|string',
+			'location' => 'nullable|string|max:32',
 			'url' => 'nullable|url',
 		]);
 
@@ -403,7 +487,7 @@ class ArticlesController extends Controller
 	}
 
 	/**
-	 * Read a news article
+	 * Retrieve news article view stats
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/news/{id}/views
@@ -447,21 +531,104 @@ class ArticlesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @apiParameter {
+		 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "comment",
-	 * 		"description":   "The comment being made",
-	 * 		"type":          "string",
+	 * 		"name":          "headline",
+	 * 		"description":   "The entry's headline",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "contactreportid",
-	 * 		"description":   "ID of the contact report",
-	 * 		"type":          "integer",
+	 * 		"name":          "body",
+	 * 		"description":   "The entry's body",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "newstypeid",
+	 * 		"description":   "ID of the news type",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "published",
+	 * 		"description":   "Published state",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "template",
+	 * 		"description":   "If entry is a template or not",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimenews",
+	 * 		"description":   "Start date and time",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimenewsend",
+	 * 		"description":   "Stop date and time",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "location",
+	 * 		"description":   "Entry location",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "url",
+	 * 		"description":   "URL for the entry",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
@@ -522,26 +689,30 @@ class ArticlesController extends Controller
 	}
 
 	/**
-	 * Create a news article
+	 * Preview a news article
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/news
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "comment",
-	 * 		"description":   "The comment being made",
-	 * 		"type":          "string",
+	 * 		"name":          "body",
+	 * 		"description":   "The entry's body",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "contactreportid",
-	 * 		"description":   "ID of the contact report",
-	 * 		"type":          "integer",
-	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"name":          "vars",
+	 * 		"description":   "A list of key/value pairs for variable replacement in the body text",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array",
+	 * 			"default":   null
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return  Response
@@ -550,7 +721,7 @@ class ArticlesController extends Controller
 	{
 		$request->validate([
 			//'newstypeid' => 'required|integer|in:0,1',
-			'body' => 'required|string',
+			'body' => 'required|string|max:15000',
 			'vars' => 'nullable|array',
 			//'published' => 'nullable|integer|in:0,1',
 			//'template' => 'nullable|integer|in:0,1',

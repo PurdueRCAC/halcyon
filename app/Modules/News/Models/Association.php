@@ -20,7 +20,7 @@ class Association extends Model
 	/**
 	 * Default order by for model
 	 *
-	 * @var string
+	 * @var  string
 	 */
 	public $orderBy = 'id';
 
@@ -34,7 +34,7 @@ class Association extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var  array
 	 */
 	protected $guarded = [
 		'id'
@@ -43,12 +43,12 @@ class Association extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var  array
 	 */
 	protected $rules = array(
 		'newsid'  => 'required|integer',
 		'associd' => 'required|integer',
-		'assoctype' => 'required|string',
+		'assoctype' => 'required|string|max:255',
 	);
 
 	/**
@@ -62,7 +62,7 @@ class Association extends Model
 	}
 
 	/**
-	 * Defines a relationship to news article
+	 * Get the associated object
 	 *
 	 * @return  object
 	 */

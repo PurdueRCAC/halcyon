@@ -17,16 +17,16 @@ class Stemmedtext extends Model
 	protected $table = 'newsstemmedtext';
 
 	/**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
+	 * Indicates if the model should be timestamped.
+	 *
+	 * @var  bool
+	 */
+	public $timestamps = false;
 
 	/**
 	 * Default order by for model
 	 *
-	 * @var string
+	 * @var  string
 	 */
 	public $orderBy = 'id';
 
@@ -40,10 +40,10 @@ class Stemmedtext extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var  array
 	 */
 	protected $rules = array(
-		'stemmedtext' => 'required'
+		'stemmedtext' => 'required|string|max:20000'
 	);
 
 	/**

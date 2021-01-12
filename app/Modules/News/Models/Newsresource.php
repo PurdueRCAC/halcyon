@@ -13,10 +13,6 @@ class Newsresource extends Model
 	/**
 	 * The table to which the class pertains
 	 *
-	 * This will default to #__{namespace}_{modelName} unless otherwise
-	 * overwritten by a given subclass. Definition of this property likely
-	 * indicates some derivation from standard naming conventions.
-	 *
 	 * @var  string
 	 **/
 	protected $table = 'newsresources';
@@ -24,7 +20,7 @@ class Newsresource extends Model
 	/**
 	 * Default order by for model
 	 *
-	 * @var string
+	 * @var  string
 	 */
 	public $orderBy = 'id';
 
@@ -38,7 +34,7 @@ class Newsresource extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var  array
 	 */
 	protected $guarded = [
 		'id'
@@ -47,11 +43,11 @@ class Newsresource extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var  array
 	 */
 	protected $rules = array(
-		'newsid'     => 'positive|nonzero',
-		'resourceid' => 'positive|nonzero'
+		'newsid'     => 'required|integer',
+		'resourceid' => 'required|integer'
 	);
 
 	/**

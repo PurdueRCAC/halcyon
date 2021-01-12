@@ -86,8 +86,15 @@ class Article extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'headline' => 'required',
-		'body'     => 'required'
+		'newstypeid' => 'required|integer|in:0,1',
+		'headline' => 'required|string|max:255',
+		'body' => 'required|string|max:15000',
+		'published' => 'nullable|integer|in:0,1',
+		'template' => 'nullable|integer|in:0,1',
+		'datetimenews' => 'required|date',
+		'datetimenewsend' => 'nullable|date',
+		'location' => 'nullable|string|max:32',
+		'url' => 'nullable|url',
 	);
 
 	/**

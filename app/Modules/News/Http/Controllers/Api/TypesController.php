@@ -300,6 +300,16 @@ class TypesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"id":            "1",
+	 * 		"name":          "Examples",
+	 * 		"tagresources":  0,
+	 * 		"tagusers":      1,
+	 * 		"location":      1,
+	 * 		"future":        1,
+	 * 		"calendar":      1,
+	 * 		"url":           "https://example.com"
+	 * }
 	 * @param  integer  $id
 	 * @return Response
 	 */
@@ -344,6 +354,16 @@ class TypesController extends Controller
 	 * 		"schema": {
 	 * 			"type":      "string"
 	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"id":            "1",
+	 * 		"name":          "Examples",
+	 * 		"tagresources":  0,
+	 * 		"tagusers":      1,
+	 * 		"location":      1,
+	 * 		"future":        1,
+	 * 		"calendar":      1,
+	 * 		"url":           "https://example.com"
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
