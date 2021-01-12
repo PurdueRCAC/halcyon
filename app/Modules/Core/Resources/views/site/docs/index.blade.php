@@ -332,6 +332,14 @@ pre {
 	box-shadow: inset 0 -2px 0 -1px rgba(148,151,155,0.2);
 	color: white;
 }
+.required {
+	font-size: 85%;
+	display: inline-block;
+	background-color: #c00;
+	color: #fff;
+	border-radius: 0.25em;
+	padding: 0.2em 0.5em;
+}
 .twlo-code pre.line-numbers {
 padding-left: 4.5rem !important;
 counter-reset: linenumber;
@@ -549,6 +557,12 @@ Halcyon.removeClass = function(el, className) {
 																<td>
 																	@if (isset($param['schema']['type']) && $param['schema']['type'])
 																		<span class="docs-api-tag docs-api-param-type">{{ $param['schema']['type'] }}</span>
+																	@endif
+																	@if (isset($param['schema']['format']) && $param['schema']['format'])
+																		<br /><small>Format: {{ $param['schema']['format'] }}</small>
+																	@endif
+																	@if (isset($param['schema']['example']) && $param['schema']['example'])
+																		<br /><small>Example: {{ $param['schema']['example'] }}</small>
 																	@endif
 																</td>
 																<td>
