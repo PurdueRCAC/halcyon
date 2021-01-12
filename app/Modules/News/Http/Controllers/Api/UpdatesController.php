@@ -34,7 +34,6 @@ class UpdatesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
@@ -44,7 +43,6 @@ class UpdatesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -55,29 +53,35 @@ class UpdatesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -128,11 +132,6 @@ class UpdatesController extends Controller
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
-		/*$rows->each(function ($item, $key)
-		{
-			$item->api = route('api.news.updates.read', ['id' => $item->id]);
-		});*/
-
 		return new UpdateResourceCollection($rows);
 	}
 
@@ -162,15 +161,28 @@ class UpdatesController extends Controller
 	 * 		}
 	 * }
 	 * @apiResponse {
-	 * 		"id":            "1",
-	 * 		"name":          "Examples",
-	 * 		"tagresources":  0,
-	 * 		"tagusers":      1,
-	 * 		"location":      1,
-	 * 		"future":        1,
-	 * 		"calendar":      1,
-	 * 		"url":           "https://example.com"
+	 * 		"200": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"userid": 12344,
+	 * 						"edituserid": 12345,
+	 * 						"datetimecreated": "2021-01-27 20:03:51",
+	 * 						"datetimeedited": "0000-00-00 00:00:00",
+	 * 						"datetimeremoved": "0000-00-00 00:00:00",
+	 * 						"body": "Example text",
+	 * 						"newsid": 1
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
 	 * }
+	 * @param   integer  $news_id
 	 * @param   Request  $request
 	 * @return  Response
 	 */
@@ -178,7 +190,6 @@ class UpdatesController extends Controller
 	{
 		$request->validate([
 			'body' => 'required|string|max:15000',
-			//'newsid' => 'required|integer|min:1',
 		]);
 
 		$row = new Update;
@@ -193,8 +204,6 @@ class UpdatesController extends Controller
 		{
 			return response()->json(['message' => trans('news::news.error.failed to create record')], 500);
 		}
-
-		//$row->api = route('api.news.updates.read', ['id' => $row->id]);
 
 		return new UpdateResource($row);
 	}
@@ -213,14 +222,34 @@ class UpdatesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Entry found",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"userid": 12344,
+	 * 						"edituserid": 12345,
+	 * 						"datetimecreated": "2021-01-27 20:03:51",
+	 * 						"datetimeedited": "0000-00-00 00:00:00",
+	 * 						"datetimeremoved": "0000-00-00 00:00:00",
+	 * 						"body": "Example text",
+	 * 						"newsid": 1
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function read($news_id, $id)
 	{
 		$row = Update::findOrFail((int)$id);
-
-		//$row->api = route('api.news.updates.read', ['id' => $row->id]);
 
 		return new UpdateResource($row);
 	}
@@ -249,6 +278,28 @@ class UpdatesController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"userid": 12344,
+	 * 						"edituserid": 12345,
+	 * 						"datetimecreated": "2021-01-27 20:03:51",
+	 * 						"datetimeedited": "2021-01-28 13:40:01",
+	 * 						"datetimeremoved": "0000-00-00 00:00:00",
+	 * 						"body": "Example text that was edited",
+	 * 						"newsid": 1
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
 	 * @return  Response
@@ -257,7 +308,6 @@ class UpdatesController extends Controller
 	{
 		$request->validate([
 			'body' => 'required|string|max:15000',
-			//'newsid' => 'required',
 		]);
 
 		$row = Update::findOrFail($id);
@@ -271,8 +321,6 @@ class UpdatesController extends Controller
 		{
 			return response()->json(['message' => trans('news::news.error.failed to update record')], 500);
 		}
-
-		//$row->api = route('api.news.updates.read', ['id' => $row->id]);
 
 		return new UpdateResource($row);
 	}
@@ -290,6 +338,14 @@ class UpdatesController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $id

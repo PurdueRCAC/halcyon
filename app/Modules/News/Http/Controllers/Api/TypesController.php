@@ -78,7 +78,6 @@ class TypesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -115,12 +114,10 @@ class TypesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -249,14 +246,26 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @apiResponse {
-	 * 		"id":            "1",
-	 * 		"name":          "Examples",
-	 * 		"tagresources":  0,
-	 * 		"tagusers":      1,
-	 * 		"location":      1,
-	 * 		"future":        1,
-	 * 		"calendar":      1,
-	 * 		"url":           "https://example.com"
+	 * 		"200": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id":            "1",
+	 * 						"name":          "Examples",
+	 * 						"tagresources":  0,
+	 * 						"tagusers":      1,
+	 * 						"location":      1,
+	 * 						"future":        1,
+	 * 						"calendar":      1,
+	 * 						"url":           "https://example.com"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"415": {
+	 * 			"description": "Invalid data"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return  Response
@@ -301,14 +310,26 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @apiResponse {
-	 * 		"id":            "1",
-	 * 		"name":          "Examples",
-	 * 		"tagresources":  0,
-	 * 		"tagusers":      1,
-	 * 		"location":      1,
-	 * 		"future":        1,
-	 * 		"calendar":      1,
-	 * 		"url":           "https://example.com"
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id":            "1",
+	 * 						"name":          "Examples",
+	 * 						"tagresources":  0,
+	 * 						"tagusers":      1,
+	 * 						"location":      1,
+	 * 						"future":        1,
+	 * 						"calendar":      1,
+	 * 						"url":           "https://example.com"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
 	 * }
 	 * @param  integer  $id
 	 * @return Response
@@ -356,14 +377,26 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @apiResponse {
-	 * 		"id":            "1",
-	 * 		"name":          "Examples",
-	 * 		"tagresources":  0,
-	 * 		"tagusers":      1,
-	 * 		"location":      1,
-	 * 		"future":        1,
-	 * 		"calendar":      1,
-	 * 		"url":           "https://example.com"
+	 * 		"200": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id":            "1",
+	 * 						"name":          "Examples",
+	 * 						"tagresources":  0,
+	 * 						"tagusers":      1,
+	 * 						"location":      1,
+	 * 						"future":        1,
+	 * 						"calendar":      1,
+	 * 						"url":           "https://example.com"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
@@ -408,6 +441,14 @@ class TypesController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $id
