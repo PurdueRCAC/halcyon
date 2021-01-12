@@ -84,7 +84,7 @@ class ResourcesController extends Controller
 
 		if ($filters['batchsystem'])
 		{
-			//$query->where('batchsystem', '=', (int)$filters['batchsystem']);
+			$query->where('batchsystem', '=', (int)$filters['batchsystem']);
 		}
 
 		if ($filters['search'])
@@ -95,7 +95,12 @@ class ResourcesController extends Controller
 			}
 			else
 			{
-				$query->where('name', 'like', '%' . $filters['search'] . '%');
+				$query->where(function ($where) use ($filters)
+				{
+					$where->where('name', 'like', '%' . strtolower($filters['search']) . '%')
+						->orWhere('rolename', 'like', '%' . strtolower($filters['search']) . '%')
+						->orWhere('listname', 'like', '%' . strtolower($filters['search']) . '%');
+				});
 			}
 		}
 
@@ -109,45 +114,57 @@ class ResourcesController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit']);*/
 
-		$rows = $query
-			->withCount('children')
-			->orderBy($filters['order'], $filters['order_dir'])
-			->get();
-			//->paginate($filters['limit']);
-
-		$total      = count($rows);
-		$levellimit = ($filters['limit'] == 0) ? 500 : $filters['limit'];
-		$list       = array();
-		$children   = array();
-
-		if ($rows)
+		if ($filters['search'] || $filters['state'] == 'trashed')
 		{
-			// First pass - collect children
-			foreach ($rows as $k)
+			$rows = $query
+				->withCount('children')
+				->orderBy($filters['order'], $filters['order_dir'])
+				->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+
+			$paginator = $rows;
+		}
+		else
+		{
+			$rows = $query
+				->withCount('children')
+				->orderBy($filters['order'], $filters['order_dir'])
+				->get();
+				//->paginate($filters['limit']);
+
+			$total      = count($rows);
+			$levellimit = ($filters['limit'] == 0) ? 500 : $filters['limit'];
+			$list       = array();
+			$children   = array();
+
+			if ($rows)
 			{
-				$pt = $k->parentid;
-				$list = @$children[$pt] ? $children[$pt] : array();
-				array_push($list, $k);
-				$children[$pt] = $list;
+				// First pass - collect children
+				foreach ($rows as $k)
+				{
+					$pt = $k->parentid;
+					$list = @$children[$pt] ? $children[$pt] : array();
+					array_push($list, $k);
+					$children[$pt] = $list;
+				}
+
+				// Second pass - get an indent list of the items
+				$list = $this->treeRecurse(0, '', array(), $children, max(0, $levellimit-1));
 			}
 
-			// Second pass - get an indent list of the items
-			$list = $this->treeRecurse(0, '', array(), $children, max(0, $levellimit-1));
-		}
-
-		if ($filters['batchsystem'])
-		{
-			$list = array_filter($list, function($k) use ($filters)
+			if ($filters['batchsystem'])
 			{
-				return ($k->batchsystem == $filters['batchsystem']);
-			});
-			$total = count($list);
+				$list = array_filter($list, function($k) use ($filters)
+				{
+					return ($k->batchsystem == $filters['batchsystem']);
+				});
+				$total = count($list);
+			}
+
+			$rows = array_slice($list, $filters['start'], $filters['limit']);
+
+			$paginator = new \Illuminate\Pagination\LengthAwarePaginator($rows, $total, $filters['limit'], $filters['page']);
+			$paginator->withPath(route('admin.resources.index'));
 		}
-
-		$rows = array_slice($list, $filters['start'], $filters['limit']);
-
-		$paginator = new \Illuminate\Pagination\LengthAwarePaginator($rows, $total, $filters['limit'], $filters['page']);
-		$paginator->withPath(route('admin.resources.index'));
 
 		$types = Type::orderBy('name', 'asc')->get();
 
@@ -227,7 +244,7 @@ class ResourcesController extends Controller
 	 */
 	public function edit($id)
 	{
-		$row = Asset::find($id);
+		$row = Asset::query()->withTrashed()->where('id', '=', $id)->first();
 
 		if ($fields = app('request')->old('fields'))
 		{
