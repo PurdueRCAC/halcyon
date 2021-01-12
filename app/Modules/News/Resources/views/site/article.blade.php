@@ -1,11 +1,12 @@
 @extends('layouts.master')
 
 @push('scripts')
+<script src="{{ asset('modules/news/js/site.js') }}"></script>
 <script>
 	$.getJSON("<?php echo route('api.news.views', ['id' => $article->id]); ?>", function(data) {
 		if (data) {
 			$('#viewcount').html(data.viewcount);
-			$('#uniqueviewcount').html(data.uniqueviewcount);
+			$('#uniqueviewcount').html(data.uniquecount);
 		}
 	});
 </script>

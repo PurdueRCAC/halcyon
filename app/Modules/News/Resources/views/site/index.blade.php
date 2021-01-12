@@ -35,6 +35,15 @@
 								<p class="date">
 									<span>{{ $article->datetimenews->format('M d, Y') }}</span>
 									<span>{{ $article->datetimenews->format('h:m') }}</span>
+									@if ($article->isToday())
+										@if ($article->isNow())
+											<span class="badge badge-success">{{ trans('news::news.happening now') }}</span>
+										@else
+											<span class="badge badge-info">{{ trans('news::news.today') }}</span>
+										@endif
+									@elseif ($article->isTomorrow())
+										<span class="badge">{{ trans('news::news.tomorrow') }}</span>
+									@endif
 								</p>
 							</li>
 						<?php endforeach; ?>
