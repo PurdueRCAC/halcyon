@@ -201,7 +201,7 @@
 							@elseif ($article->isTomorrow())
 								<span class="badge">Tomorrow</span>
 							@endif
-							<i class="fa fa-fw fa-clock-o" aria-hidde="true"></i>
+							<i class="fa fa-fw fa-clock-o" aria-hidden="true"></i>
 							<time datetime="{{ $article->datetimenews }}">
 								{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
 							</time>
@@ -212,7 +212,7 @@
 								->first();
 							?>
 							@if ($lastupdate)
-								<span class="badge badge-warning"><i class="fa fa-exclamation-circle" aria-hidde="true"></i> Updated {{ $lastupdate->datetimecreated->format('h:m') }} {{ $lastupdate->datetimecreated->format('M d, Y') }}</span>
+								<span class="badge badge-warning"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Updated {{ $lastupdate->datetimecreated->format('h:m') }} {{ $lastupdate->datetimecreated->format('M d, Y') }}</span>
 							@endif
 
 							<?php
