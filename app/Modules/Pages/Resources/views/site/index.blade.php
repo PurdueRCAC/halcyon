@@ -76,6 +76,7 @@
 	{!! $page->body !!}
 	</article>
 
+<?php /*
 	@if (auth()->user() && (auth()->user()->can('create pages') || auth()->user()->can('edit pages') || auth()->user()->can('edit.state pages') || auth()->user()->can('delete pages')))
 		<!-- <div class="admin-controls">
 			@if (auth()->user()->can('create pages'))
@@ -210,7 +211,7 @@
 						$('#article-content' + id).toggleClass('hide');
 					});
 
-					/*frm
+					frm
 						.on('submit', function(e) {
 							e.preventDefault();
 
@@ -229,9 +230,10 @@
 									}
 								}
 							});
-						});*/
+						});
 			});
 		</script>
 		@endif
 	@endif
+*/ ?>
 @stop
