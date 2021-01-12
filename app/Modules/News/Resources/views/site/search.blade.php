@@ -18,10 +18,11 @@
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+	<h2>Search News & Events</h2>
 	<div id="everything">
 		<form method="get" action="{{ route('site.news.search') }}">
 			<fieldset>
-				<legend>Search News</legend>
+				<legend>Filters</legend>
 
 				<div class="form-group row tab-search tab-add tab-edit" id="TR_date">
 							<label for="datestartshort" class="col-sm-2 col-form-label">Date from</label>
