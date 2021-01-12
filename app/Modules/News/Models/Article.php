@@ -7,13 +7,13 @@ use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Modules\History\Traits\Historable;
-use Carbon\Carbon;
 use App\Modules\News\Events\ArticleCreating;
 use App\Modules\News\Events\ArticleCreated;
 use App\Modules\News\Events\ArticleUpdating;
 use App\Modules\News\Events\ArticleUpdated;
 use App\Modules\News\Events\ArticleDeleted;
 use App\Modules\News\Events\ArticlePrepareContent;
+use Carbon\Carbon;
 
 /**
  * NEws article
@@ -25,7 +25,7 @@ class Article extends Model
 	/**
 	 * The name of the "created at" column.
 	 *
-	 * @var string
+	 * @var  string
 	 */
 	const CREATED_AT = 'datetimecreated';
 
@@ -46,7 +46,7 @@ class Article extends Model
 	/**
 	 * Default order by for model
 	 *
-	 * @var string
+	 * @var  string
 	 */
 	public static $orderBy = 'id';
 
@@ -60,7 +60,7 @@ class Article extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var  array
 	 */
 	protected $guarded = [
 		'id'
@@ -83,7 +83,7 @@ class Article extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var  array
 	 */
 	protected $rules = array(
 		'headline' => 'required',
@@ -93,7 +93,7 @@ class Article extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var  array
 	 */
 	protected $dispatchesEvents = [
 		'creating' => ArticleCreating::class,
@@ -255,7 +255,7 @@ class Article extends Model
 	}
 
 	/**
-	 * Check if the job is available
+	 * Check if the event is available
 	 *
 	 * @return  boolean
 	 */
@@ -277,7 +277,7 @@ class Article extends Model
 	}
 
 	/**
-	 * Check if the job is available
+	 * Check if the event is happening today
 	 *
 	 * @return  boolean
 	 */
@@ -290,7 +290,7 @@ class Article extends Model
 	}
 
 	/**
-	 * Check if the job is available
+	 * Check if the event is happening now
 	 *
 	 * @return  boolean
 	 */
@@ -314,7 +314,7 @@ class Article extends Model
 	}
 
 	/**
-	 * Check if the job is available
+	 * Check if the event is tomorrow
 	 *
 	 * @return  boolean
 	 */
@@ -327,7 +327,7 @@ class Article extends Model
 	}
 
 	/**
-	 * Has the job started?
+	 * Has the event started?
 	 *
 	 * @return  boolean
 	 */
@@ -351,7 +351,7 @@ class Article extends Model
 	}
 
 	/**
-	 * Has the job ended?
+	 * Has the event ended?
 	 *
 	 * @return  boolean
 	 */
@@ -534,7 +534,7 @@ class Article extends Model
 	 */
 	private function matchNews($match)
 	{
-		$title = 'News Story #' . $match[3];
+		$title = trans('news::news.news story number', ['number' => $match[3]]);
 
 		$news = self::find($match[3]);
 
@@ -702,6 +702,7 @@ class Article extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
+	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
 	public function delete(array $options = [])
@@ -750,6 +751,10 @@ class Article extends Model
 		{
 			return '';
 		}
+		if (!$enddate)
+		{
+			$enddate = '0000-00-00 00:00:00';
+		}
 		$datestring = '';
 
 		$starttime = explode(' ', $startdate);
@@ -766,7 +771,9 @@ class Article extends Model
 		$endmonth   = date("F", strtotime($enddate));
 		$endday     = date("j", strtotime($enddate));
 
-		if ($enddate == '-0001-11-30 00:00:00' || $enddate == '0000-00-00 00:00:00' || $startdate == $enddate)
+		if ($enddate == '-0001-11-30 00:00:00'
+			|| $enddate == '0000-00-00 00:00:00'
+			|| $startdate == $enddate)
 		{
 			$datestring = date("F j, Y", strtotime($startdate));
 			if ($starttime != '00:00:00')
