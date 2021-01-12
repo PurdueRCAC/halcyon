@@ -9,6 +9,9 @@ return [
 	'updated' => 'Updated',
 	'more' => 'see more…',
 
+	'reserved by' => 'Reserved by :name',
+	'not reserved' => 'Not reserved',
+
 	// Params
 	'params' => [
 		'category desc' => 'Select Articles from a specific Category. If no selection, it will show all categories by default.',

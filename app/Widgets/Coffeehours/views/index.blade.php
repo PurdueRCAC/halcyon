@@ -18,13 +18,6 @@
 <script src="{{ asset('modules/news/js/site.js') }}"></script>
 @endpush
 
-<h2 class="newsheader">
-	<a class="icn tip" href="{{ route('site.news.rss', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}">
-		<i class="fa fa-rss-square" aria-hidden="true"></i> {{ trans('news::news.rss feed') }}
-	</a>
-	{{ $type->name }}
-</h2>
-
 <?php
 $events = array();
 
@@ -69,39 +62,39 @@ foreach ($rows as $event)
 
 	$events[] = $slot;
 	?>
-	<div id="coffee<?php echo $event->id; ?>" class="dialog dialog-event" title="<?php echo $event->headline; ?>">
+	<div id="coffee{{ $event->id }}" class="dialog dialog-event" title="{{ $event->headline }}">
 		<p class="newsattend">
-			<?php if ($event['url']) { ?>
-				<?php if (auth()->user() && in_array(config()->get('module.news.ignore_role', 4), auth()->user()->getAuthorisedRoles())) { ?>
-					<?php echo $reserved ? 'Reserved by ' . $reserved : 'Not reserved'; ?>
-				<?php } else { ?>
-					<?php if ($reserved) { ?>
+			@if ($event->url)
+				@if (auth()->user() && in_array(config()->get('module.news.ignore_role', 4), auth()->user()->getAuthorisedRoles()))
+					{{ $reserved ? trans('widget.coffeehours::coffeehours.reserved by', ['name' => $reserved]) : trans('widget.coffeehours::coffeehours.not reserved') }}
+				@else
+					@if ($reserved)
 						This time is reserved
-					<?php } else { ?>
-						<?php if (auth()->user()) { ?>
-							<?php if (!$attending) { ?>
-								<a class="btn-attend btn btn-primary" href="/coffee?attend=1" data-newsid="<?php echo $event->id; ?>" data-assoc="<?php echo auth()->user()->id; ?>">Reserve this time</a>
-							<?php } else { ?>
+					@else
+						@if (auth()->user())
+							@if (!$attending)
+								<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">Reserve this time</a>
+							@else
 								You reserved this time.<br />
-								<a class="btn-notattend btn btn-danger" href="/coffee?attend=0" data-id="<?php echo $attending; ?>">Cancel</a>
-							<?php } ?>
-						<?php } else { ?>
-							<a class="btn btn-primary" href="/login?loginrefer=<?php echo urlencode('/coffee?attend=1'); ?>" data-newsid="<?php echo $event->id; ?>" data-assoc="0">Reserve this time</a>
-						<?php } ?>
-					<?php } ?>
-				<?php } ?>
-			<?php } else { ?>
-				<?php if (auth()->user()) { ?>
-					<?php if (!$attending) { ?>
-						<a class="btn-attend btn btn-primary" href="/coffee?attend=1" data-newsid="<?php echo $event->id; ?>" data-assoc="<?php echo auth()->user()->id; ?>">I'm interested in attending</a>
-					<?php } else { ?>
+								<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel</a>
+							@endif
+						@else
+							<a class="btn btn-primary" href="/login?loginrefer=<?php echo urlencode(route('page', ['uri' => 'coffee', 'attend' => 1])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">Reserve this time</a>
+						@endif
+					@endif
+				@endif
+			@else
+				@if (auth()->user())
+					@if (!$attending)
+						<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">I'm interested in attending</a>
+					@else
 						You expressed interest in attemding.<br />
-						<a class="btn-notattend btn btn-danger" href="/coffee?attend=0" data-id="<?php echo $attending; ?>">Cancel</a>
-					<?php } ?>
-				<?php } else { ?>
-					<a class="btn btn-primary" href="/login?loginrefer=<?php echo urlencode('/coffee?attend=1'); ?>" data-newsid="<?php echo $event->id; ?>" data-assoc="0">I'm interested in attending</a>
-				<?php } ?>
-			<?php } ?>
+						<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel</a>
+					@endif
+				@else
+					<a class="btn btn-primary" href="/login?loginrefer=<?php echo urlencode(route('page', ['uri' => 'coffee', 'attend' => 1])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">I'm interested in attending</a>
+				@endif
+			@endif
 		</p>
 		<p class="newsheader">
 			<i class="fa fa-fw fa-clock-o" aria-hidden="true"></i> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
@@ -146,7 +139,7 @@ foreach ($rows as $event)
 				$resourceArray = array();
 				foreach ($event->resources as $resource)
 				{
-					$resourceArray[] = '<a href="/news/' . strtolower($resource->resource->name) . '/">' . $resource->resource->name . '</a>';
+					$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->resource->name)]) . '">' . $resource->resource->name . '</a>';
 				}
 				echo '<br /><i class="fa fa-fw fa-tags" aria-hidden="true"></i> ' .  implode(', ', $resourceArray);
 			}
@@ -156,16 +149,15 @@ foreach ($rows as $event)
 				$users = array();
 				foreach ($event->associations as $assoc)
 				{
-					if ($assoc->assoctype == 'user')
+					if ($assoc->associated)
 					{
-						$user = App\Modules\Users\Models\User::find($assoc->associd);
-						if ($user)
-						{
-							$users[] = $user->name;
-						}
+						$users[] = $assoc->associated->name;
 					}
 				}
-				echo '<br /><i class="fa fa-fw fa-user" aria-hidden="true"></i> ' . implode(', ', $users);
+				if (!empty($users))
+				{
+					echo '<br /><i class="fa fa-fw fa-user" aria-hidden="true"></i> ' . implode(', ', $users);
+				}
 			}
 
 			if (!$event->template
@@ -182,7 +174,7 @@ foreach ($rows as $event)
 					--></a>
 					&nbsp;|&nbsp;
 					<i class="fa fa-fw fa-download" aria-hidden="true"></i>
-					<a target="_blank" class="calendar calendar-download" href="/news/calendar/<?php echo $event->id; ?>" title="Download event"><!--
+					<a target="_blank" class="calendar calendar-download" href="<?php echo route('site.news.calendar', ['name' => $event->id]); ?>" title="Download event"><!--
 						-->Download<!--
 					--></a>
 					<?php
@@ -190,14 +182,16 @@ foreach ($rows as $event)
 			}
 			?>
 		</p>
-		<?php echo $event->body; ?>
+		{!! $event->body !!}
 	</div>
 	<?php
 }
 ?>
 <hr />
+
 <div id="calendar">
 </div>
+
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
 		var calendarEl = document.getElementById('calendar');
