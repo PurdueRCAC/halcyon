@@ -6,6 +6,9 @@ return [
 	'articles' => 'Articles',
 	'templates' => 'Templates',
 	'types' => 'Categories',
+	'today' => 'Today',
+	'tomorrow' => 'Tomorrow',
+	'happening now' => 'Happening now',
 	// Fields
 	'id' => 'ID',
 	'headline' => 'Headline',
