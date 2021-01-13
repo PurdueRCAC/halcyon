@@ -596,6 +596,7 @@ Additionally these variables are available inside updates and will be filled wit
 				$data->resources[] = $r;
 			}
 			$data->associations;
+			$data->lastedit = $news->datetimeedit->toDateTimeString();
 			?>
 			<script type="application/json" id="news-data">
 				<?php echo json_encode($data); ?>
