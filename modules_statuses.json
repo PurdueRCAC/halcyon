@@ -18,6 +18,7 @@
     "Pages": true,
     "Queues": true,
     "Resources": true,
+    "Status": true,
     "Storage": true,
     "Tags": true,
     "Themes": true,
