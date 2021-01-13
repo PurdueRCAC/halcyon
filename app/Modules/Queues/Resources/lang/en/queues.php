@@ -57,6 +57,12 @@ return [
 	'scheduling' => 'Scheduling',
 	'stopped' => 'Stopped',
 	'started' => 'Started',
+	'messages' => [
+		'items enabled' => 'Queue(s) enabled.',
+		'items disabled' => 'Queue(s) disabled.',
+		'items stopped' => 'Scheduling stopped on selected queues.',
+		'items started' => 'Scheduling started on selected queues.',
+	],
 	'reservation' => 'Dedicated Reservation',
 	'reservation desc' => 'Allow dedicated reservations?',
 	'max ijob factor' => 'Max Jobs per Iteration Factor',

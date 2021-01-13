@@ -136,7 +136,14 @@ class QueuesController extends Controller
 
 		if ($filters['resource'])
 		{
-			$query->where($r . '.id', '=', (int)$filters['resource']);
+			if (substr($filters['resource'], 0, 1) == 's')
+			{
+				$query->where($q . '.subresourceid', '=', (int)substr($filters['resource'], 1));
+			}
+			else
+			{
+				$query->where($r . '.id', '=', (int)$filters['resource']);
+			}
 		}
 
 		if ($filters['class'] == 'system')
@@ -152,11 +159,12 @@ class QueuesController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		$resources = (new Asset)->tree();
-		/*$resources = Asset::query()
-			->where('batchsystem', '>=', 0)
+		/*$resources = (new Asset)->tree();*/
+		$resources = Asset::query()
+			->where('batchsystem', '>', 0)
+			->where('listname', '!=', '')
 			->orderBy('name', 'asc')
-			->get();*/
+			->get();
 
 		$types = Type::orderBy('name', 'asc')->get();
 
@@ -361,8 +369,8 @@ class QueuesController extends Controller
 		if ($success)
 		{
 			$msg = $state
-				? 'queues::queues.items enabled'
-				: 'queues::queues.items disabled';
+				? 'queues::queues.messages.items enabled'
+				: 'queues::queues.messages.items disabled';
 
 			$request->session()->flash('success', trans($msg, ['count' => $success]));
 		}
@@ -416,8 +424,8 @@ class QueuesController extends Controller
 		if ($success)
 		{
 			$msg = $state
-				? 'queues::queues.items started'
-				: 'queues::queues.items stopped';
+				? 'queues::queues.messages.items started'
+				: 'queues::queues.messages.items stopped';
 
 			$request->session()->flash('success', trans($msg, ['count' => $success]));
 		}

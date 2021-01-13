@@ -12,14 +12,6 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('edit.state queues'))
-		{!!
-			Toolbar::publishList(route('admin.queues.start'), trans('queues::queues.start'));
-			Toolbar::unpublishList(route('admin.queues.stop'), trans('queues::queues.stop'));
-			Toolbar::spacer();
-		!!}
-	@endif
-
 	@if (auth()->user()->can('delete queues'))
 		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.queues.delete')) !!}
 	@endif
@@ -72,9 +64,9 @@ app('pathway')
 				<label class="sr-only" for="filter_type">{{ trans('queues::queues.type') }}</label>
 				<select name="type" id="filter_type" class="form-control filter filter-submit">
 					<option value="0">{{ trans('queues::queues.all types') }}</option>
-					<?php foreach ($types as $type): ?>
+					@foreach ($types as $type)
 						<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id): echo ' selected="selected"'; endif;?>>{{ $type->name }}</option>
-					<?php endforeach; ?>
+					@endforeach
 				</select>
 
 				<label class="sr-only" for="filter_resource">{{ trans('queues::queues.resource') }}:</label>
@@ -83,6 +75,15 @@ app('pathway')
 					<?php foreach ($resources as $resource): ?>
 						<?php $selected = ($resource->id == $filters['resource'] ? ' selected="selected"' : ''); ?>
 						<option value="{{ $resource->id }}"<?php echo $selected; ?>>{{ str_repeat('- ', $resource->level) . $resource->name }}</option>
+						<?php foreach ($resource->subresources()->orderBy('name', 'asc')->get() as $subresource): ?>
+							<?php
+							if ($subresource->isTrashed()):
+								continue;
+							endif;
+							$selected = ('s' . $subresource->id == $filters['resource'] ? ' selected="selected"' : '');
+							?>
+							<option value="s{{ $subresource->id }}"<?php echo $selected; ?>>{{ str_repeat('- ', 1) . $subresource->name }}</option>
+						<?php endforeach; ?>
 					<?php endforeach; ?>
 				</select>
 
@@ -237,16 +238,16 @@ app('pathway')
 									{{ trans('Queue has dedicated reservation.') }}
 								</a>
 							<?php } else { ?>
-								<a class="glyph icon-check-circle success" href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="Queue is running.">
+								<a class="glyph icon-check-circle text-success" href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="Queue is running.">
 									{{ trans('Queue is running.') }}
 								</a>
 							<?php } ?>
 						<?php } else if ($row->active) { ?>
-							<a class="glyph icon-minus-circle" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('Queue is stopped or disabled.') }}">
+							<a class="glyph icon-minus-circle text-danger" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('Queue is stopped or disabled.') }}">
 								{{ trans('Queue is stopped or disabled.') }}
 							</a>
 						<?php } else if (!$row->active) { ?>
-							<a class="glyph icon-alert-triangle warning" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('Queue has no active resources. Remove queue or sell/loan nodes.') }}">
+							<a class="glyph icon-alert-triangle text-warning" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('Queue has no active resources. Remove queue or sell/loan nodes.') }}">
 								{{ trans('Queue has no active resources. Remove queue or sell/loan nodes.') }}
 							</a>
 						<?php } ?>
