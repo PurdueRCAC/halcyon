@@ -505,6 +505,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
+	$('#field-aclusersenabled').on('change', function (e) {
+		$('#field-aclgroups').parent().toggleClass('hide');
+	});
+
 	/*$('#create_queue_btn').on('click', function (event) {
 		event.preventDefault();
 		CreateQueue(this);

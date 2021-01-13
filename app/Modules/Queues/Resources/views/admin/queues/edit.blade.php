@@ -336,12 +336,6 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('queues::queues.access') }}</legend>
 
-				<div class="form-group">
-					<label for="field-aclgroups">{{ trans('queues::queues.acl groups') }}:</label>
-					<input type="text" name="fields[aclgroups]" id="field-aclgroups" class="form-control" value="{{ $row->aclgroups }}" />
-					<span class="form-text text-muted">{{ trans('queues::queues.acl groups desc') }}</span>
-				</div>
-
 				<div class="form-group form-block">
 					<div class="form-check">
 						<input type="checkbox" name="fields[aclusersenabled]" id="field-aclusersenabled" class="form-check-input" value="1"<?php if ($row->aclusersenabled) { echo ' checked="checked"'; } ?> />
@@ -349,13 +343,19 @@ app('pathway')
 						<span class="form-text text-muted">acl users enabled</span>
 					</div>
 				</div>
+
+				<div class="form-group<?php if ($row->aclusersenabled) { echo ' hide'; } ?>">
+					<label for="field-aclgroups">{{ trans('queues::queues.acl groups') }}:</label>
+					<input type="text" name="fields[aclgroups]" id="field-aclgroups" class="form-control" value="{{ $row->aclgroups }}" />
+					<span class="form-text text-muted">{{ trans('queues::queues.acl groups desc') }}</span>
+				</div>
 			</fieldset>
 
 			<fieldset class="adminform">
 				<legend>{{ trans('global.publishing') }}</legend>
 
 				<div class="form-group">
-					<label for="field-enabled">{{ trans('queues::queues.submission state') }}:</label><br />
+					<label for="field-enabled">{{ trans('queues::queues.submission state') }}:</label>
 					<select class="form-control" name="fields[enabled]" id="field-enabled">
 						<option value="0"<?php if ($row->enabled == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.disabled') }}</option>
 						<option value="1"<?php if ($row->enabled == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.enabled') }}</option>
@@ -363,7 +363,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-started">{{ trans('queues::queues.scheduling') }}:</label><br />
+					<label for="field-started">{{ trans('queues::queues.scheduling') }}:</label>
 					<select class="form-control" name="fields[started]" id="field-started">
 						<option value="0"<?php if ($row->started == 0) { echo ' selected="selected"'; } ?>>{{ trans('queues::queues.stopped') }}</option>
 						<option value="1"<?php if ($row->started == 1) { echo ' selected="selected"'; } ?>>{{ trans('queues::queues.started') }}</option>
