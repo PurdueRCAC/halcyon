@@ -304,6 +304,7 @@ class ResourcesController extends Controller
 			'producttype' => 'nullable|integer',
 			'rolename' => 'nullable|string',
 			'listname' => 'nullable|string',
+			'status' => 'nullable|string',
 		]);
 
 		$row = Asset::findOrFail($id);
