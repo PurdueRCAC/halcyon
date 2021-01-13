@@ -99,6 +99,11 @@ hr {
 	left: 7em;
 }
 
+.status-legend li {
+	display: inline-block;
+	margin: 0 1em 0 0;
+}
+
 .card-header {
 	padding: 1.25rem 1.25rem 0 1.25rem;
 }
@@ -117,18 +122,22 @@ hr {
 .card .name {
 	color: #757575;
 }
+.text-success,
 .card .success {
 	color: #43a942;
 }
+.text-warning,
 .card .warning {
 	color: #ffc168;
 }
+.text-danger,
 .card .danger {
 	color: #ff6f60;
 }
 .card .offline {
 	color: #999;
 }
+.text-info,
 .card .info,
 .card .maint {
 	color: #20809D;
