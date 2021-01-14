@@ -20,7 +20,7 @@ app('pathway')->append(
 <ul class="status-legend">
 	<li><span class="text-success"><i class="fa fa-check" aria-hidden="true"></i></span> {{ trans('status::status.option.operational') }}</li>
 	<li><span class="text-info"><i class="fa fa-wrench" aria-hidden="true"></i></span> {{ trans('status::status.option.maintenance') }}</li>
-	<li><span class="text-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span> {{ trans('status::status.option.warning') }}</li>
+	<li><span class="text-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span> {{ trans('status::status.option.impaired') }}</li>
 	<li><span class="text-danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> {{ trans('status::status.option.down') }}</li>
 	<li><span class="text-secondary"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></span> {{ trans('status::status.option.offline') }}</li>
 </ul>
@@ -55,11 +55,11 @@ app('pathway')->append(
 			//$thisnews = array();
 			//$isHappening = false;
 			?>
-			<div class="col-md-4 pb-3 pl-3 pr-3 mb-5">
+			<div class="col-md-4 pb-3 pl-3 pr-3 mb-5 item">
 				<div class="card panel shadow-sm {{ $resource->status . ($resource->hasNews ? ' hasnews ' . ($resource->isHappening ? $resource->hasNews : '') : '') . ($resource->data ? ' has-services' : '') }}">
 					<div class="card-header p-3">
 						<div class="row">
-							<div class="card-title col-sm-9 col-md-9">{{ $resource->name }}</div>
+							<div class="card-title col-sm-9 col-md-9 item-name">{{ $resource->name }}</div>
 							<div class="card-status col-sm-3 col-md-3 text-right">
 								@if ($resource->hasNews)
 									<span class="tip <?php echo $resource->hasNews == 'outage' ? 'danger' : 'info'; ?>" title="{{ trans('status::status.has announcements') }}">
@@ -69,23 +69,23 @@ app('pathway')->append(
 								@endif
 
 								@if ($resource->status == 'warning')
-									<span class="warning tip" title="{{ trans('status::status.state.warning') }}">
-										<i id="{{ $resource->id }}_icon" class="fa fa-exclamation-triangle" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.warning') }}</span>
+									<span class="item-status text-warning tip" title="{{ trans('status::status.state.warning') }}">
+										<i id="{{ $resource->id }}_icon" class="fa fa-exclamation-triangle" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.impaired') }}</span>
 									</span>
 								@elseif ($resource->status == 'down')
-									<span class="danger tip" title="{{ trans('status::status.state.down') }}">
+									<span class="item-status text-danger tip" title="{{ trans('status::status.state.down') }}">
 										<i id="{{ $resource->id }}_icon" class="fa fa-exclamation-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.down') }}</span>
 									</span>
 								@elseif ($resource->status == 'maintenance')
-									<span class="maint tip" title="{{ trans('status::status.state.maintenance') }}">
+									<span class="item-status text-info tip" title="{{ trans('status::status.state.maintenance') }}">
 										<i id="{{ $resource->id }}_icon" class="fa fa-wrench" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.maintenance') }}</span>
 									</span>
 								@elseif ($resource->status == 'offline')
-									<span class="offline tip" title="{{ trans('status::status.state.offline') }}">
+									<span class="item-status text-secondary tip" title="{{ trans('status::status.state.offline') }}">
 										<i id="{{ $resource->id }}_icon" class="fa fa-ellipsis-h" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.offline') }}</span>
 									</span>
 								@else
-									<span class="success tip" title="{{ trans('status::status.state.operational') }}">
+									<span class="item-status text-success tip" title="{{ trans('status::status.state.operational') }}">
 										<i id="{{ $resource->id }}_icon" class="fa fa-check" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.operational') }}</span>
 									</span>
 								@endif
@@ -102,7 +102,7 @@ app('pathway')->append(
 								<select class="form-control resource-status" name="status" id="status-{{ $resource->id }}" data-id="{{ $resource->id }}" data-api="{{ route('api.resources.update', ['id' => $resource->id]) }}">
 									<option value=""<?php if (!$resource->status) { echo ' selected="selected"'; } ?> data-status="success tip" data-class="fa fa-check">{{ trans('status::status.option.automatic') }}</option>
 									<option value="success"<?php if ($resource->status == 'success') { echo ' selected="selected"'; } ?> data-status="success tip" data-class="fa fa-check">{{ trans('status::status.option.operational') }}</option>
-									<option value="warning"<?php if ($resource->status == 'warning') { echo ' selected="selected"'; } ?> data-status="warning tip" data-class="fa fa-exclamation-triangle">{{ trans('status::status.option.warning') }}</option>
+									<option value="warning"<?php if ($resource->status == 'warning') { echo ' selected="selected"'; } ?> data-status="warning tip" data-class="fa fa-exclamation-triangle">{{ trans('status::status.option.impaired') }}</option>
 									<option value="danger"<?php if ($resource->status == 'danger') { echo ' selected="selected"'; } ?> data-status="danger tip" data-class="fa fa-exclamation-circle">{{ trans('status::status.option.down') }}</option>
 									<option value="maintenance"<?php if ($resource->status == 'maint') { echo ' selected="selected"'; } ?> data-status="maint tip" data-class="fa fa-wrench">{{ trans('status::status.option.maintenance') }}</option>
 									<option value="offline"<?php if ($resource->status == 'offline') { echo ' selected="selected"'; } ?> data-status="offline tip" data-class="fa fa-ellipsis-h">{{ trans('status::status.option.offline') }}</option>
