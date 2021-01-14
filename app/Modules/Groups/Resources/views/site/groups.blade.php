@@ -69,7 +69,7 @@ function CreateNewGroup() {
 				<h2>{{ trans('users::users.groups') }}</h2>
 			</div>
 			<div class="col-md-3 text-right">
-				<a class="btn btn-default float-right add-group" href="{{ route('site.users.account.section', ['section' => 'groups']) }}">
+				<a class="btn btn-outline-secondary float-right add-group" href="{{ route('site.users.account.section', ['section' => 'groups']) }}">
 					<i class="fa fa-plus-circle"></i> {{ trans('global.create') }}
 				</a>
 			</div>

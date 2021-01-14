@@ -1,5 +1,7 @@
 /* Home page specific styles */
-
+.contentPage {
+	padding: 0;
+}
 .contentInner {
 	padding-top: 40px;
 }
@@ -393,7 +395,7 @@
 		height: auto;
 		padding-top: 20px;
 	}
-	.container {
+	.contentPage .container {
 		width: auto;
 	}
 }

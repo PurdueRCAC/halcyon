@@ -42,9 +42,9 @@
 
 	<div id="everything">
 		<ul class="nav nav-tabs crm-tabs">
-			<li data-toggle="tab"><a id="TAB_search" class="tab activeTab" href="#search">{{ trans('contactreports::contactreports.search') }}</a></li>
-			<li data-toggle="tab"><a id="TAB_add" class="tab" href="#add">{{ trans('contactreports::contactreports.add new') }}</a></li>
-			<li data-toggle="tab"><a id="TAB_follow" class="tab" href="#follow">{{ trans('contactreports::contactreports.follow') }}</a></li>
+			<li class="nav-item"><a id="TAB_search" class="nav-link active tab activeTab" href="#search">{{ trans('contactreports::contactreports.search') }}</a></li>
+			<li class="nav-item"><a id="TAB_add" class="nav-link tab" href="#add">{{ trans('contactreports::contactreports.add new') }}</a></li>
+			<li class="nav-item"><a id="TAB_follow" class="nav-link tab" href="#follow">{{ trans('contactreports::contactreports.follow') }}</a></li>
 		</ul>
 		<div class="tabMain" id="tabMain">
 			<div id="DIV_crm">
@@ -152,7 +152,7 @@
 							</div>
 						</div>
 
-						<div class="form-group row tab-add tab-edit hide" id="TR_notes">
+						<div class="form-group row tab-add tab-edit" id="TR_notes">
 							<label for="NotesText" class="col-sm-2 col-form-label">{{ trans('contactreports::contactreports.notes') }}</label>
 							<div class="col-sm-10">
 								<textarea id="NotesText" class="form-control" rows="10" cols="80"></textarea>
@@ -162,18 +162,18 @@
 						<div class="form-group row tab-search" id="TR_search">
 							<div class="col-sm-2">
 							</div>
-							<div class="col-sm-10 offset-sm-10">
+							<div class="col-sm-10">
 								<input type="submit" class="btn btn-primary" value="{{ trans('contactreports::contactreports.search') }}" id="INPUT_search" />
-								<input type="reset" class="btn btn-default btn-clear" value="{{ trans('contactreports::contactreports.clear') }}" id="INPUT_clearsearch" />
+								<input type="reset" class="btn btn-link btn-clear" value="{{ trans('contactreports::contactreports.clear') }}" id="INPUT_clearsearch" />
 							</div>
 						</div>
 
-						<div class="form-group row tab-add tab-edit hide" id="TR_create">
+						<div class="form-group row tab-add tab-edit" id="TR_create">
 							<div class="col-sm-2">
 							</div>
-							<div class="col-sm-10 offset-sm-10">
+							<div class="col-sm-10">
 								<input id="INPUT_add" type="submit" class="btn btn-primary" value="{{ trans('contactreports::contactreports.add report') }}" disabled="true" />
-								<input id="INPUT_clear" type="reset" class="btn btn-default btn-clear" value="{{ trans('contactreports::contactreports.clear') }}" />
+								<input id="INPUT_clear" type="reset" class="btn btn-link btn-clear" value="{{ trans('contactreports::contactreports.clear') }}" />
 							</div>
 						</div>
 

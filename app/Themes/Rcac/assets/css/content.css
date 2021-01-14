@@ -47,7 +47,7 @@ figcaption {
 }
 /* Alerts */
 .alert {
-	margin: 1em 0;
+	/*margin: 1em 0;
 	padding: 0.5em 1em 0.5em 2.4em;
 	color: #fff;
 	position: relative;
@@ -56,9 +56,10 @@ figcaption {
 	font-weight: 500;
 	border: none;
 	border-radius: 0.25em;
-	background-color: #222;
+	background-color: #222;*/
+	padding-left: 2.4em;
 }
-.alert *:first-child {
+/*.alert *:first-child {
 	margin-top: 0;
 	padding-top: 0;
 }
@@ -66,10 +67,10 @@ figcaption {
 	color: inherit;
 	font-weight: bold;
 }
-
+ */
 .alert:before {
 	position: absolute;
-	top: 0.5em;
+	top: 0.85em;
 	width: 1em;
 	height: 1em;
 	font-weight: 400;
@@ -78,7 +79,7 @@ figcaption {
 	content: "\f0a1";
 	font-family: "FontAwesome"
 }
-span.alert {
+/*span.alert {
 	display: inline-block;
 	margin: 0;
 	padding: 0 0.5em 0 1.7em;
@@ -106,7 +107,7 @@ span.alert:before {
 	color: #721c24;
 	background-color: #f8d7da;
 	border-color: #f5c6cb;
-}
+} */
 .alert.alert-success:before {
 	content: "\f058";
 }
@@ -123,9 +124,9 @@ span.alert:before {
 .panel-primary {
 	border-color: #ddd;
 }
-.panel .row {
+/*.panel .row {
 	margin-right: -15px !important;
-}
+}*/
 .panel .panel-body {
 	padding: 15px;
 }
@@ -139,12 +140,12 @@ span.alert:before {
 	margin-left: 0;
 }
 
- /* tabs */
+ /* tabs 
 .nav-tabs {
 	border-bottom: 2px solid #DDD;
 }
 .nav-tabs > li {
-	margin-bottom: -2px;
+
 }
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:focus,
@@ -199,12 +200,12 @@ span.alert:before {
 	transform: scale(1);
 }
 .tab-nav > li > a::after {
-	background: #21527d none repeat scroll 0% 0%; 
+	background: #21527d none repeat scroll 0% 0%;
 	color: #fff;
 }
 .nav-tabs > li > a > img {
 	margin-bottom:-5px;
-}
+}*/
 
 .btn,
 .btn:visited,
@@ -231,11 +232,17 @@ a.btn-info:active {
 	right: 15px;
 	font-size: 0.85em;
 }
+.login ul {
+	margin: 0;
+	padding: 0 0 10px 0;
+}
 .login li {
 	display: inline;
 	margin-left: 15px;
 }
-
+.login a.btn {
+	font-size: 0.85rem;
+}
 .login a:link,
 .login a:visited {
 	color: white;
@@ -247,11 +254,11 @@ a.btn-info:active {
 	font-weight: 400;
 	text-decoration: none;
 }
-.login a.btn-default,
+/*.login a.btn-d,
 .login a.btn-default:hover,
 .login a.btn-default:active {
 	color: #000;
-}
+}*/
 .login a.btn-info {
 	color: #fff;
 	background-color: #20809D;
@@ -357,7 +364,7 @@ div.sidemenu-news ul.newslist {
 	text-decoration: none;
 	font-weight: bold;
 	color: #555;
-	font-size: 1.2em;
+	font-size: 1.05em;
 }
 .sidenav ul.dropdown-menu a {
 	position: relative;
@@ -497,9 +504,6 @@ div.sidemenu-news ul.newslist li:focus {
 table {
 	border-spacing: 0px;
 	border-collapse: collapse;
-	/*background-color: #f0f0f0;
-	margin: 20px 0;
-	font-size: 13px;*/
 	font-size: 85%;
 	margin: 1em 0;
 	width: 100%;
@@ -508,10 +512,12 @@ table {
 table caption,
 table th,
 table td {
-	padding: 5px 10px;
+	/*padding: 5px 10px;*/
+	padding: 0.75em;
 	text-align: left;
 	vertical-align: top;
 }
+
 table caption {
 	color: #6B6B6B;
 	background: #ededed;
@@ -521,6 +527,7 @@ table caption {
 .thead th,
 thead th {
 	vertical-align: bottom;
+	font-weight: bold;
 	/*background: #ededed;*/
 }
 
@@ -872,7 +879,7 @@ body ul.profile_teaser_contact li {
 	padding: 5px 10px;
 	margin-left: 90px;
 }
-.mb-3 {
+/*.mb-3 {
 	margin-bottom: 1em;
 }
 
@@ -884,13 +891,16 @@ body ul.profile_teaser_contact li {
 	flex-direction: column;
 	min-width: 0;
 	word-wrap: break-word;
+}*/
+.card {
+	margin-bottom: 1.5em;
 }
 a.card-content,
 .card-content {
 	display: flex;
 	background-color: #fff;
 	background-clip: border-box;
-	border: 1px solid rgba(0,0,0,.1);
+	/*border: 1px solid rgba(0,0,0,.1);*/
 	box-shadow: 0 .5em 1em -.125em rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.02);
 	transition: all .3s cubic-bezier(.25,.8,.25,1);
 	text-decoration: none;
@@ -902,6 +912,7 @@ a.card-content,
 	padding: 1.5em;
 	background-color: #f5f5f5;
 	color: #666;
+	border-bottom: none;
 }
 .card-header svg {
 	fill: currentColor;
@@ -993,9 +1004,9 @@ ul.purchases li {
 	text-decoration: none;
 }
 
-.filter {
+/*.filter {
 	font-size: 0.8em;
-}
+}*/
 
 /* FAQ
 #faq {
@@ -2080,9 +2091,9 @@ fieldset legend:after {
 	line-height: 0;
 	clear: left;
 }
-fieldset .row {
+/*fieldset .row {
 	margin-right: -15px !important;
-}
+}*/
 
 input {
 	line-height: 125%;
@@ -2180,7 +2191,8 @@ div.launch:after {
 	adding up to about 1px over 100%. This corrects the issue.
 	*/
 	.services .card {
-		margin-left: -1px;
+		height: 100%;
+		/*margin-left: -1px;*/
 	}
 	div.launch div.panel {
 		float: left;

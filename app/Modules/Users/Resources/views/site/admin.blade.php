@@ -60,7 +60,7 @@ $(document).ready(function() {
 						<option value="{{ $user->id }}" selected="selected">{{ $user->name }}</option>
 					@endif
 				</select>
-				<span class="input-group-addon">
+				<span class="input-group-append">
 					<span class="input-group-text">
 						<i class="fa fa-user" aria-hidden="true" id="add_button_a"></i>
 						<input type="submit" class="sr-only" value="Search" />

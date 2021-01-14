@@ -5,7 +5,7 @@
 		@if (count($groups) > 0)
 			<table class="table table-hover">
 				<caption>Group History</caption>
-				<thead class="thead-dark">
+				<thead>
 					<tr>
 						<th scope="col">Role</th>
 						<th scope="col">Group</th>
@@ -48,7 +48,7 @@
 		@if (count($groups) > 0)
 			<table class="table table-hover">
 				<caption>Unix Group History</caption>
-				<thead class="thead-dark">
+				<thead>
 					<tr>
 						<th scope="col">Group</th>
 						<th scope="col">Unix Group</th>
@@ -92,7 +92,7 @@
 		@if (count($queues) > 0)
 			<table class="table table-hover">
 				<caption>Queue History</caption>
-				<thead class="thead-dark">
+				<thead>
 					<tr>
 						<th scope="col">Resource</th>
 						<th scope="col">Queue</th>

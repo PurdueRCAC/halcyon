@@ -33,11 +33,11 @@ function NEWSToggle(on, refresh) {
 	for (var i = 0; i < times.length; i++)
 	{
 		if (!$(times[i]).hasClass('tab-' + on)) {
-			if (!$(times[i]).hasClass('hide')) {
-				$(times[i]).addClass('hide');
+			if (!$(times[i]).hasClass('d-none')) {
+				$(times[i]).addClass('d-none');
 			}
 		} else {
-			$(times[i]).removeClass('hide');
+			$(times[i]).removeClass('d-none');
 		}
 	}
 
@@ -47,28 +47,33 @@ function NEWSToggle(on, refresh) {
 		header.innerHTML = header.getAttribute('data-' + on);
 	}
 
+	$(".tab-add").addClass('d-none');
+	$(".tab-edit").addClass('d-none');
+	$(".tab-search").addClass('d-none');
+	$(".tab-" + on).removeClass('d-none');
+
 	// Remove errors upon a toggle
 	document.getElementById("TAB_search_action").innerHTML = "";
 	if (on == 'search') {
 		// toggle the search fields on
-		document.getElementById("TR_date").style.display = "block";
-		document.getElementById("TR_keywords").style.display = "block";
-		document.getElementById("TR_newstype").style.display = "block";
-		document.getElementById("TR_resource").style.display = "block";
+		/*document.getElementById("TR_date").style.display = "block";
+		//document.getElementById("TR_keywords").style.display = "block";
+		//document.getElementById("TR_newstype").style.display = "block";
+		//document.getElementById("TR_resource").style.display = "block";
 		document.getElementById("TR_user").style.display = "none";
-		document.getElementById("TR_location").style.display = "block";
+		//document.getElementById("TR_location").style.display = "block";
 		document.getElementById("TR_url").style.display = "none";
-		document.getElementById("TR_headline").style.display = "none";
+		//document.getElementById("TR_headline").style.display = "none";
 		document.getElementById("TR_notes").style.display = "none";
-		document.getElementById("TR_search").style.display = "block";
+		//document.getElementById("TR_search").style.display = "block";
 		document.getElementById("TR_create").style.display = "none";
-		document.getElementById("TR_id").style.display = "block";
+		//document.getElementById("TR_id").style.display = "block";
 		document.getElementById("TR_published").style.display = "none";
-		document.getElementById("TR_template").style.display = "block";
-		document.getElementById("TR_use_template").style.display = "none";
+		//document.getElementById("TR_template").style.display = "block";
+		document.getElementById("TR_use_template").style.display = "none";*/
 
-		document.getElementById("TAB_search").className = "tab activeTab";
-		document.getElementById("TAB_add").className = "tab";
+		document.getElementById("TAB_search").className = "nav-link active tab activeTab";
+		document.getElementById("TAB_add").className = "nav-link tab";
 
 		document.getElementById("TAB_add").innerHTML = "Add News";
 		document.getElementById("INPUT_clear").value = "Clear";
@@ -98,23 +103,23 @@ function NEWSToggle(on, refresh) {
 
 	} else if (on == 'add') {
 		// toggle the new entry fields on
-		document.getElementById("TR_date").style.display = "block";
+		/*document.getElementById("TR_date").style.display = "block";
 		document.getElementById("TR_keywords").style.display = "none";
-		document.getElementById("TR_resource").style.display = "block";
-		document.getElementById("TR_location").style.display = "block";
-		document.getElementById("TR_url").style.display = "block";
-		document.getElementById("TR_newstype").style.display = "block";
-		document.getElementById("TR_headline").style.display = "block";
-		document.getElementById("TR_notes").style.display = "block";
+		//document.getElementById("TR_resource").style.display = "block";
+		//document.getElementById("TR_location").style.display = "block";
+		//document.getElementById("TR_url").style.display = "block";
+		//document.getElementById("TR_newstype").style.display = "block";
+		//document.getElementById("TR_headline").style.display = "block";
+		//document.getElementById("TR_notes").style.display = "block";
 		document.getElementById("TR_search").style.display = "none";
-		document.getElementById("TR_create").style.display = "block";
+		//document.getElementById("TR_create").style.display = "block";
 		document.getElementById("TR_id").style.display = "none";
-		document.getElementById("TR_published").style.display = "block";
+		//document.getElementById("TR_published").style.display = "block";
 		document.getElementById("TR_template").style.display = "none";
-		document.getElementById("TR_use_template").style.display = "block";
+		//document.getElementById("TR_use_template").style.display = "block";*/
 
-		document.getElementById("TAB_search").className = "tab";
-		document.getElementById("TAB_add").className = "tab activeTab";
+		document.getElementById("TAB_search").className = "nav-link tab";
+		document.getElementById("TAB_add").className = "nav-link active tab activeTab";
 
 		document.getElementById("TAB_add").innerHTML = "Add News";
 		document.getElementById("INPUT_clear").value = "Clear";
@@ -132,13 +137,13 @@ function NEWSToggle(on, refresh) {
 			document.getElementById('newstype').removeChild(option);
 		}
 
-		if ($('#DIV_resource').length) {
+		/*if ($('#DIV_resource').length) {
 			document.getElementById("DIV_resourcesearch").style.display = "none";
 			document.getElementById("DIV_resource").innerHTML = "Click to add resource to post.";
-		}
+		}*/
 	} else if (on == 'edit') {
 		// toggle the new entry fields on
-		document.getElementById("TR_date").style.display = "block";
+		/*document.getElementById("TR_date").style.display = "block";
 		if (document.getElementById("template").checked) {
 			document.getElementById("TR_date").style.visibility = "hidden";
 		}
@@ -154,10 +159,10 @@ function NEWSToggle(on, refresh) {
 		document.getElementById("TR_id").style.display = "none";
 		document.getElementById("TR_published").style.display = "block";
 		document.getElementById("TR_template").style.display = "none";
-		document.getElementById("TR_use_template").style.display = "none";
+		document.getElementById("TR_use_template").style.display = "none";*/
 
-		document.getElementById("TAB_search").className = "tab";
-		document.getElementById("TAB_add").className = "tab activeTab";
+		document.getElementById("TAB_search").className = "nav-link tab";
+		document.getElementById("TAB_add").className = "nav-link active tab activeTab";
 
 		document.getElementById("TAB_add").innerHTML = "Edit News";
 		document.getElementById("INPUT_clear").value = "Cancel";
@@ -169,12 +174,13 @@ function NEWSToggle(on, refresh) {
 			document.getElementById('newstype').removeChild(option);
 		}
 
-		if ($('#DIV_resource').length) {
+		/*if ($('#DIV_resource').length) {
 			document.getElementById("DIV_resource").style.display = "block";
 			document.getElementById("DIV_resourcesearch").style.display = "none";
 			document.getElementById("DIV_resource").innerHTML = "Click to add resource to post.";
-		}
+		}*/
 	}
+
 	if (refresh) {
 		NEWSSearch();
 	}
@@ -222,11 +228,21 @@ function NEWSAddResource(resource) {
 	} else {
 		results = resource;
 	}
+	/*var resourceid = results['resourceid'];
 
-	var val = $('#newsresource').val();
-	val.push(results['resourceid']);
-
-	$('#newsresource').val(val);
+	if ($('.tagsinput').length) {
+		if (!$('#newsresource').tagExist(resourceid)) {
+			$('#newsresource').addTag({
+				'id': results['resourceid'],
+				'label': results['resourcename']
+			});
+		}
+	} else {
+		$('#newsresource').val($('#newsresource').val() + ($('#newsresource').val() ? ', ' : '') + results['resourcename'] + ':' + results['resourceid']);
+	}*/
+	$('#newsresource')
+		.val(results['resourceid'])
+		.trigger('change');
 }
 
 /**
@@ -270,38 +286,46 @@ function NEWSNewstypeSearch() {
 	var tagusers = newstype.item(index).getAttribute("data-tagusers");
 	if (document.getElementById("TR_resource")) {
 		if (tagresources == "0") {
-			document.getElementById("TR_resource").style.display = "none";
-			document.getElementById("TR_resource").visible = false;
+			$('#TR_resource').addClass('d-none');
+			//document.getElementById("TR_resource").style.display = "none";
+			//document.getElementById("TR_resource").visible = false;
 		} else {
-			document.getElementById("TR_resource").style.display = "block";
-			document.getElementById("TR_resource").visible = true;
+			$('#TR_resource').removeClass('d-none');
+			//document.getElementById("TR_resource").style.display = "block";
+			//document.getElementById("TR_resource").visible = true;
 		}
 	}
 	if (document.getElementById("TR_location")) {
 		if (taglocation == "0") {
-			document.getElementById("TR_location").style.display = "none";
-			document.getElementById("TR_location").visible = false;
+			$('#TR_location').addClass('d-none');
+			//document.getElementById("TR_location").style.display = "none";
+			//document.getElementById("TR_location").visible = false;
 		} else {
-			document.getElementById("TR_location").style.display = "block";
-			document.getElementById("TR_location").visible = true;
+			$('#TR_location').removeClass('d-none');
+			//document.getElementById("TR_location").style.display = "block";
+			//document.getElementById("TR_location").visible = true;
 		}
 	}
 	if (document.getElementById("TR_url")) {
 		if (tagurl == "0") {
-			document.getElementById("TR_url").style.display = "none";
-			document.getElementById("TR_url").visible = false;
+			$('#TR_url').addClass('d-none');
+			//document.getElementById("TR_url").style.display = "none";
+			//document.getElementById("TR_url").visible = false;
 		} else {
-			document.getElementById("TR_url").style.display = "block";
-			document.getElementById("TR_url").visible = true;
+			$('#TR_url').removeClass('d-none');
+			//document.getElementById("TR_url").style.display = "block";
+			//document.getElementById("TR_url").visible = true;
 		}
 	}
 	if (document.getElementById("TR_user")) {
 		if (tagusers == "0") {
-			document.getElementById("TR_user").style.display = "none";
-			document.getElementById("TR_user").visible = false;
+			$('#TR_user').addClass('d-none');
+			//document.getElementById("TR_user").style.display = "none";
+			//document.getElementById("TR_user").visible = false;
 		} else {
-			document.getElementById("TR_user").style.display = "block";
-			document.getElementById("TR_user").visible = true;
+			$('#TR_user').removeClass('d-none');
+			//document.getElementById("TR_user").style.display = "block";
+			//document.getElementById("TR_user").visible = true;
 		}
 	}
 	NEWSSearch();
@@ -492,8 +516,7 @@ function NEWSAddEntry() {
 	}
 
 	if (tagresources == "1") {
-		//var resourcedata = document.getElementById("newsresource").value.split(',');
-		var resourcedata = $("#newsresource").val();
+		var resourcedata = document.getElementById("newsresource").value.split(',');
 		for (i=0; i<resourcedata.length; i++) {
 			if (resourcedata[i] != "") {
 				if (resourcedata[i].indexOf('/') !== -1) {
@@ -724,41 +747,49 @@ function NEWSSearch() {
 
 	if (list) {
 		if (tagresources == "0") {
-			list.style.display = "none";
-			list.visible = false;
+			$(list).addClass('d-none');
+			//list.style.display = "none";
+			//list.visible = false;
 		} else {
-			list.style.display = "block";
-			list.visible = true;
+			$(list).removeClass('d-none');
+			//list.style.display = "flex";
+			//list.visible = true;
 		}
 	}
 
 	if (locale) {
 		if (taglocation == "0") {
-			locale.style.display = "none";
-			locale.visible = false;
+			$(locale).addClass('d-none');
+			//locale.style.display = "flex";
+			//locale.visible = false;
 		} else {
-			locale.style.display = "block";
-			locale.visible = true;
+			$(locale).removeClass('d-none');
+			//locale.style.display = "block";
+			//locale.visible = true;
 		}
 	}
 
 	if (url) {
 		if (tagurl == "0") {
-			url.style.display = "none";
-			url.visible = false;
+			$(url).addClass('d-none');
+			//url.style.display = "none";
+			//url.visible = false;
 		} else {
-			url.style.display = "block";
-			url.visible = true;
+			$(url).removeClass('d-none');
+			//url.style.display = "flex";
+			//url.visible = true;
 		}
 	}
 
 	if (users) {
-		if (tagusers == "1") {
-			users.style.display = "block";
-			users.visible = true;
+		if (tagusers == "0") {
+			$(users).addClass('d-none');
+			//users.style.display = "block";
+			//users.visible = true;
 		} else {
-			users.style.display = "none";
-			users.visible = false;
+			$(users).removeClass('d-none');
+			//users.style.display = "flex";
+			//users.visible = false;
 		}
 	}
 
@@ -947,11 +978,15 @@ function NEWSToggleAddButton() {
 		}
 
 		if (template) {
-			document.getElementById("TR_date").style.display = "none";
-			document.getElementById("TR_published").style.display = "none";
+			$('#TR_date').addClass('d-none');
+			$('#TR_published').addClass('d-none');
+			//document.getElementById("TR_date").style.display = "none";
+			//document.getElementById("TR_published").style.display = "none";
 		} else {
-			document.getElementById("TR_date").style.display = "block";
-			document.getElementById("TR_published").style.display = "block";
+			//document.getElementById("TR_date").style.display = "block";
+			//document.getElementById("TR_published").style.display = "block";
+			$('#TR_date').removeClass('d-none');
+			$('#TR_published').removeClass('d-none');
 		}
 	}
 }
@@ -1152,14 +1187,14 @@ function NEWSPrintRow(news) {
 	article.className = "news-item";
 
 	var panel = document.createElement("div");
-	panel.className = "panel panel-default";
+	panel.className = "card panel panel-default mb-3";
 
 	var tr, td, div, a, img, span, li, x;
 
 	// -- Admin header
 	if (edit) {
 		tr = document.createElement("div");
-		tr.className = 'panel-heading news-admin';
+		tr.className = 'card-header panel-heading news-admin';
 
 		// ID
 		td = document.createElement("span");
@@ -1292,10 +1327,10 @@ function NEWSPrintRow(news) {
 
 	// -- Header
 	tr = document.createElement("div");
-	tr.className = 'panel-heading';
+	tr.className = 'card-header panel-heading';
 
 	td = document.createElement("h3");
-	td.className = "panel-title newsheadline";
+	td.className = "card-title panel-title newsheadline";
 
 	a = document.createElement("a");
 	a.href = news.uri;
@@ -1379,7 +1414,7 @@ function NEWSPrintRow(news) {
 	}
 
 	var ul = document.createElement("ul");
-		ul.className = 'panel-meta news-meta';
+		ul.className = 'card-meta panel-meta news-meta';
 
 	// Date
 	li = document.createElement("li");
@@ -1690,7 +1725,7 @@ function NEWSPrintRow(news) {
 
 	// --Body
 	tr = document.createElement("div");
-	tr.className = 'panel-body';
+	tr.className = 'card-body panel-body';
 
 	td = document.createElement("div");
 	td.className = "newsposttext";
@@ -1729,7 +1764,7 @@ function NEWSPrintRow(news) {
 
 	if (edit) {
 		var opt = document.createElement("div");
-		opt.className = "panel-options";
+		opt.className = "card-options panel-options";
 
 		a = document.createElement("a");
 		a.href = "/news/manage?id=" + id + '&edit';
@@ -1849,7 +1884,7 @@ function NEWSPrintRow(news) {
 
 	// -- Footer
 	tr = document.createElement("div");
-	tr.className = 'panel-footer';
+	tr.className = 'card-footer panel-footer';
 
 	// Posted by
 	td = document.createElement("div");
@@ -1894,10 +1929,10 @@ function NEWSPrintRow(news) {
 	// -- New update
 	if (edit) {
 		tr = document.createElement("div");
-		tr.className = 'newsnewupdate panel panel-default';
+		tr.className = 'newsnewupdate card panel panel-default mb-3';
 
 		td = document.createElement("div");
-		td.className = "panel-body";
+		td.className = "card-body panel-body";
 
 		div = document.createElement("div");
 		div.id = news['id'] + "_newupdate";
@@ -3115,7 +3150,7 @@ function NewsPostUpdate(newsid) {
 		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 
-			NewsPrintUpdate(newsid, results);
+			NewsPrintUpdate(newsid, results.data);
 			document.getElementById(newsid + "_newupdatebox").value = "";
 			NewsCollapseNewUpdate(newsid + "_newupdatebox");
 		} else {
@@ -3149,13 +3184,13 @@ function NewsPrintUpdate(newsid, update, edit) {
 	var li = document.createElement("li");
 
 	var panel = document.createElement("div");
-		panel.className = "panel panel-default";
+		panel.className = "card panel panel-default mb-3";
 
 	var img, a, span;
 
 	if (edit) {
 		var tr = document.createElement("div");
-			tr.className = 'panel-heading news-admin';
+			tr.className = 'card-header panel-heading news-admin';
 
 		span = document.createElement("span");
 		span.className = 'newsid';
@@ -3185,7 +3220,7 @@ function NewsPrintUpdate(newsid, update, edit) {
 	}
 
 	var div = document.createElement("div");
-		div.className = "panel-body crmcomment crmcommenttext";
+		div.className = "card-body panel-body crmcomment crmcommenttext";
 
 	span = document.createElement("span");
 	span.id = update['id'] + "_update";
@@ -3249,7 +3284,7 @@ function NewsPrintUpdate(newsid, update, edit) {
 	panel.appendChild(div);
 
 	div = document.createElement("div");
-	div.className = "panel-footer";
+	div.className = "card-footer panel-footer";
 
 	var div2 = document.createElement("div");
 		div2.innerHTML += "Posted by " + update['username'] + " on " + update['formattedcreateddate'];
@@ -3319,11 +3354,11 @@ function NewsSaveUpdateText(newsid, update) {
 		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 			icon.style.display = "none";
-			icon.onclick = function () { NewsSaveUpdateText(results.newsid, update); };
+			icon.onclick = function () { NewsSaveUpdateText(results.data.newsid, update); };
 			text.style.display = "block";
 			box.style.display = "none";
 			editicon.style.display = "block";
-			text.innerHTML = results['formattedbody'];
+			text.innerHTML = results.data['formattedbody'];
 		} else if (xml.status == 403) {
 			img.className = "fa fa-exclamation-circle";
 			img.parentNode.title = "Unable to save changes, grace editing window has passed.";

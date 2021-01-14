@@ -223,9 +223,9 @@ function ShowTab(tabname, tablist)
 	HideAll(tablist);
 	Show(tabname);
 	if (document.getElementById(tabname).className.match(/small/)) {
-		document.getElementById(tabname).className = "tab smallTab smallActiveTab"
+		document.getElementById(tabname).className = "nav-link active tab smallTab smallActiveTab"
 	} else {
-		document.getElementById(tabname).className = "tab activeTab"
+		document.getElementById(tabname).className = "nav-link active tab activeTab"
 	}
 	if(tabname.match(/resource/)) {
 		if (typeof(history.pushState) != 'undefined') {
@@ -243,9 +243,9 @@ function QShowTab(tabname, tablist1, tablist2) {
 	HideAll(tablist);
 	Show(tabname);
 	if (document.getElementById(tabname).className.match(/small/)) {
-		document.getElementById(tabname).className = "tab smallTab smallActiveTab"
+		document.getElementById(tabname).className = "nav-link active tab smallTab smallActiveTab"
 	} else {
-		document.getElementById(tabname).className = "tab activeTab"
+		document.getElementById(tabname).className = "nav-link active tab activeTab"
 	}
 	if(tabname.match(/resource/)) {
 		if (typeof(history.pushState) != 'undefined') {
@@ -259,9 +259,9 @@ function HideTab(tabname)
 	Hide(tabname);
 
 	if (document.getElementById(tabname).className.match(/small/)) {
-		document.getElementById(tabname).className = "tab smallTab"
+		document.getElementById(tabname).className = "nav-link tab smallTab"
 	} else {
-		document.getElementById(tabname).className = "tab"
+		document.getElementById(tabname).className = "nav-link tab"
 	}
 }
 

@@ -19,7 +19,7 @@
 	$current = trim(request()->path(), '/');
 
 	foreach ($list as $i => $item):
-		$class = 'item-' . $item->id;
+		$class = 'nav-item item-' . $item->id;
 		if ($item->id == $active_id)
 		{
 			$class .= ' current';
@@ -62,6 +62,8 @@
 		{
 			$item->data = array();
 		}
+
+		$item->anchor_css .= ' nav-link';
 
 		echo '<li' . $class . '>';
 

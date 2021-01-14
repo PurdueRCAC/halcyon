@@ -55,11 +55,11 @@ $active = $sections->firstWhere('active', '=', true);
 				</div>
 			</div>
 
-			<div class="panel panel-default">
-				<div class="panel-heading">
+			<div class="card panel panel-default mb-3">
+				<div class="card-header panel-heading">
 					Profile
 				</div>
-				<div class="panel-body">
+				<div class="card-body panel-body">
 					@if (auth()->user()->can('manage users'))
 						@if ($user->isTrashed())
 							<p class="alert alert-warning">This account was removed on {{ $user->dateremoved }}.</p>
@@ -150,7 +150,7 @@ $active = $sections->firstWhere('active', '=', true);
 			</div>
 
 			@if (auth()->user()->can('manage users'))
-				<div class="card panel panel-default session">
+				<div class="card panel panel-default session mb-3">
 					<div class="card-header panel-heading">
 						Sessions
 					</div>
@@ -326,7 +326,7 @@ $active = $sections->firstWhere('active', '=', true);
 			</div>*/ ?>
 
 		@if (auth()->user()->can('manage users'))
-			<div class="card panel panel-default session">
+			<div class="card panel panel-default session mb-3">
 				<div class="card-header panel-heading">
 					<div class="row">
 						<div class="col-md-9">

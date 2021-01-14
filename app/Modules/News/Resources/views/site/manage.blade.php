@@ -19,15 +19,17 @@
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+	<h2>Manage News &amp; Events</h2>
+
 	<div id="everything">
 		<ul class="nav nav-tabs">
-			<li data-toggle="tab"><a id="TAB_search" class="tab activeTab" href="#search">Search</a></li>
-			<li data-toggle="tab"><a id="TAB_add" class="tab" href="#add">Add New</a></li>
+			<li class="nav-item"><a id="TAB_search" class="nav-link active tab activeTab" href="#search">Search</a></li>
+			<li class="nav-item"><a id="TAB_add" class="nav-link tab" href="#add">Add New</a></li>
 		</ul>
 		<div class="tabMain" id="tabMain">
 			<div id="DIV_news">
 
-				<form method="get" action="/news/manage">
+				<form method="get" action="{{ route('site.news.manage') }}" class="mb-3">
 					<fieldset>
 						<legend><span id="SPAN_header" data-search="Search News" data-add="Add New News" data-edit="Edit News">Search News</span></legend>
 
@@ -109,11 +111,11 @@
 								}
 								?>
 								<div class="input-group">
-									<span class="input-group-addon"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
+									<span class="input-group-prepend"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
 									<input id="datestartshort" type="text" class="date-pick form-control" name="start" placeholder="YYYY-MM-DD" data-start="{{ $startdate }}" value="{{ $startdate }}" />
 								</div>
 								<div class="input-group input-time tab-add tab-edit hide">
-									<span class="input-group-addon"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
+									<span class="input-group-prepend"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
 									<input id="timestartshort" type="text" class="time-pick form-control" name="starttime" placeholder="h:mm AM/PM" value="{{ $starttime }}" />
 								</div>
 							</div>
@@ -121,11 +123,11 @@
 							<label for="datestopshort" class="col-sm-2 col-form-label align-right">Date to</label>
 							<div class="col-sm-4">
 								<div class="input-group" id="enddate">
-									<span class="input-group-addon"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
+									<span class="input-group-prepend"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
 									<input id="datestopshort" type="text" class="date-pick form-control" name="stop" placeholder="YYYY-MM-DD" data-stop="{{ $stopdate }}" value="{{ $stopdate }}">
 								</div>
 								<div class="input-group input-time tab-add tab-edit hide">
-									<span class="input-group-addon"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
+									<span class="input-group-prepend"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
 									<input id="timestopshort" type="text" class="time-pick form-control" name="stoptime" placeholder="h:mm AM/PM" value="{{ $stoptime }}" />
 								</div>
 							</div>
@@ -134,7 +136,7 @@
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_newstype">
 							<label for="newstype" class="col-sm-2 col-form-label">News Type</label>
 							<div class="col-sm-10">
-								<select id="newstype" name="newstype" class="form-control">
+								<select id="newstype" name="newstype" class="custom-select">
 									<option id="OPTION_all" value="-1">All</option>
 									@foreach ($types as $type)
 										<option value="{{ $type->id }}"<?php if ($filters['newstype'] == $type->id) { echo ' selected="selected"'; } ?> data-tagresources="{{ $type->tagresources }}" data-taglocation="{{ $type->location }}">{{ $type->name }}</option>
@@ -188,7 +190,7 @@
 								<input name="user" id="newsuser" size="45" class="form-control" value="{{ implode(',', $usrs) }}" data-uri="{{ route('api.users.index') }}/%s" />
 							</div>
 						</div>
-						<div class="form-group row tab-add tab-edit<?php echo request()->has('edit') ? '' : ' stash'; ?>" id="TR_published">
+						<div class="form-group row tab-add tab-edit" id="TR_published">
 							<label for="published" class="col-sm-2 col-form-label">
 								Published
 								<a href="#help2" class="help icn tip" title="Help">
@@ -205,7 +207,7 @@
 								<input type="checkbox" id="template" />
 							</div>
 						</div>
-						<div class="form-group row tab-add tab-edit stash" id="TR_use_template">
+						<div class="form-group row tab-add tab-edit" id="TR_use_template">
 							<label for="template_select" class="col-sm-2 col-form-label">
 								Template
 								<a href="#help4" class="help icn tip" title="Help">
@@ -227,7 +229,7 @@
 								</select>
 							</div>
 						</div>
-						<div class="form-group row tab-add tab-edit stash" id="TR_headline">
+						<div class="form-group row tab-add tab-edit" id="TR_headline">
 							<label for="Headline" class="col-sm-2 col-form-label">Headline</label>
 							<div class="col-sm-10">
 								<input id="Headline" name="headline" type="text" size="78" maxlength="255" class="form-control" />
@@ -239,13 +241,13 @@
 								<input name="location" id="location" type="text" size="45" maxlength="32" class="form-control" />
 							</div>
 						</div>
-						<div class="form-group row tab-add tab-edit stash" id="TR_url">
+						<div class="form-group row tab-add tab-edit" id="TR_url">
 							<label for="url" class="col-sm-2 col-form-label">URL</label>
 							<div class="col-sm-10">
 								<input name="url" id="url" type="text" size="45" class="form-control" />
 							</div>
 						</div>
-						<div class="form-group row tab-add tab-edit stash" id="TR_notes">
+						<div class="form-group row tab-add tab-edit" id="TR_notes">
 							<label for="NotesText" class="col-sm-2 col-form-label">
 								News Text
 								<a href="#help1" class="help icn tip" title="Help">
@@ -265,18 +267,18 @@
 						<div class="form-group row tab-search" id="TR_search">
 							<div class="col-sm-2">
 							</div>
-							<div class="col-sm-10 offset-sm-10">
+							<div class="col-sm-10">
 								<input type="submit" class="btn btn-primary" value="Search" id="INPUT_search" />
-								<input type="reset" class="btn btn-default" value="Clear" id="INPUT_clearsearch" />
+								<input type="reset" class="btn btn-link" value="Clear" id="INPUT_clearsearch" />
 							</div>
 						</div>
-						<div class="form-group row tab-add stash" id="TR_create">
+						<div class="form-group row tab-add" id="TR_create">
 							<div class="col-sm-2">
 							</div>
-							<div class="col-sm-10 offset-sm-10">
+							<div class="col-sm-10">
 								<input id="INPUT_add" type="submit" class="btn btn-primary" data-add="Add News" data-edit="Save Changes" value="Add News" disabled="true" />
-								<input id="INPUT_preview" type="button" class="btn btn-default" value="Preview" data-id="{{ request('id') }}" />
-								<input id="INPUT_clear" type="reset" class="btn btn-default" data-add="Add News" data-edit="Save Changes" value="Clear" />
+								<input id="INPUT_preview" type="button" class="btn btn-secondary" value="Preview" data-id="{{ request('id') }}" />
+								<input id="INPUT_clear" type="reset" class="btn btn-link" data-add="Add News" data-edit="Save Changes" value="Clear" />
 							</div>
 						</div>
 
@@ -596,7 +598,7 @@ Additionally these variables are available inside updates and will be filled wit
 				$data->resources[] = $r;
 			}
 			$data->associations;
-			$data->lastedit = $news->datetimeedit->toDateTimeString();
+			$data->lastedit = $news->datetimeedit ? $news->datetimeedit->toDateTimeString() : '0000-00-00 00:00:00';
 			?>
 			<script type="application/json" id="news-data">
 				<?php echo json_encode($data); ?>

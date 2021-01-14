@@ -21,22 +21,24 @@
 
 	<div class="row resources">
 		@foreach ($rows as $i => $row)
-			<div class="col-md-12 card">
-				<a href="{{ route('site.resources.' . $type->alias . '.show', ['name' => $row->listname]) }}" class="card-content mb-3">
-					<div class="card-header">
-						@if ($thumb = $row->thumb)
-							<img src="{{ $thumb }}" class="card-img" alt="{{ $row->name }} thumbnail" />
-						@endif
-					</div>
-					<div class="card-body">
-						<h3 class="card-title">
-							{{ $row->name }}
-						</h3>
-						<p class="card-text">
-							{{ $row->description }}
-						</p>
-					</div>
-				</a>
+			<div class="col-md-12">
+				<div class="card mb-3">
+					<a href="{{ route('site.resources.' . $type->alias . '.show', ['name' => $row->listname]) }}" class="card-content">
+						<div class="card-header">
+							@if ($thumb = $row->thumb)
+								<img src="{{ $thumb }}" class="card-img" alt="{{ $row->name }} thumbnail" />
+							@endif
+						</div>
+						<div class="card-body">
+							<h3 class="card-title">
+								{{ $row->name }}
+							</h3>
+							<p class="card-text">
+								{{ $row->description }}
+							</p>
+						</div>
+					</a>
+				</div>
 			</div>
 		@endforeach
 	</div>

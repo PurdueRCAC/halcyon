@@ -33,10 +33,10 @@ function CRMToggle(on, refresh) {
 	$(".tab-search").addClass('hide');
 	$(".tab-" + on).removeClass('hide');
 
-	$(".tab").removeClass('activeTab');
+	$(".tab").removeClass('activeTab').removeClass('active');
 
 	if (on == 'search') {
-		$("#TAB_" + on).addClass('activeTab');
+		$("#TAB_" + on).addClass('activeTab').addClass('active');
 
 		document.getElementById("SPAN_header").innerHTML = "Search Reports";
 
@@ -47,7 +47,7 @@ function CRMToggle(on, refresh) {
 
 		multi_group = true;
 	} else if (on == 'add') {
-		$("#TAB_" + on).addClass('activeTab');
+		$("#TAB_" + on).addClass('activeTab').addClass('active');
 
 		document.getElementById("SPAN_header").innerHTML = "Add New Report";
 
@@ -58,7 +58,7 @@ function CRMToggle(on, refresh) {
 
 		multi_group = false;
 	} else if (on == 'edit') {
-		$("#TAB_add").addClass('activeTab');
+		$("#TAB_add").addClass('activeTab').addClass('active');
 
 		document.getElementById("TAB_add").innerHTML = "Edit Report";
 		document.getElementById("SPAN_header").innerHTML = "Edit Report";
@@ -67,7 +67,7 @@ function CRMToggle(on, refresh) {
 
 		multi_group = false;
 	} else if (on == 'follow') {
-		$("#TAB_" + on).addClass('activeTab');
+		$("#TAB_" + on).addClass('activeTab').addClass('active');
 
 		document.getElementById("SPAN_header").innerHTML = "Follow New Reports";
 
@@ -206,17 +206,17 @@ function CRMSearchUser(xml, flags) {
 		var people = $('#people');
 
 		if ($('.tagsinput').length) {
-			if (!people.tagExist(results['id'])) {
+			if (!people.tagExist(results.data['id'])) {
 				people.addTag({
-					'id': results['id'],
-					'label': results['name']
+					'id': results.data['id'],
+					'label': results.data['name']
 				}, {
 					focus: false,
 					callback: false
 				});
 			}
 		} else {
-			people.val(people.val() + (people.val() ? ', ' : '') + results['name'] + ':' + results['id']);
+			people.val(people.val() + (people.val() ? ', ' : '') + results.data['name'] + ':' + results.data['id']);
 		}
 	} else {
 		// error handling
@@ -265,14 +265,14 @@ function CRMSearchResource(xml, flags) {
 		var resource = $('#crmresource');
 
 		if ($('.tagsinput').length) {
-			if (!resource.tagExist(results['id'])) {
+			if (!resource.tagExist(results.data['id'])) {
 				resource.addTag({
-					'id': results['id'],
-					'label': results['name']
+					'id': results.data['id'],
+					'label': results.data['name']
 				});
 			}
 		} else {
-			resource.val(resource.val() + (resource.val() ? ', ' : '') + results['name'] + ':' + results['id']);
+			resource.val(resource.val() + (resource.val() ? ', ' : '') + results.data['name'] + ':' + results.data['id']);
 		}
 	} else {
 		// error handling
@@ -882,7 +882,7 @@ function CRMNewReport(xml, people) {
 
 		CRMClearSearch();
 
-		document.getElementById("id").value = results['id'];
+		document.getElementById("id").value = results.data['id'];
 
 		CRMToggle('search', true);
 		/*setTimeout(function () {
@@ -1331,11 +1331,11 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	article.setAttribute('data-api', report['api']);
 
 	var panel = document.createElement("div");
-	panel.className = "panel panel-default";
+	panel.className = "card mb-3 panel panel-default";
 
 	// -- Admin header
 	tr = document.createElement("div");
-	tr.className = 'panel-heading news-admin';
+	tr.className = 'card-header panel-heading news-admin';
 
 	// ID
 	td = document.createElement("span");
@@ -1373,10 +1373,10 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	// -- Header
 	tr = document.createElement("div");
-	tr.className = 'panel-heading';
+	tr.className = 'card-header panel-heading';
 
 	td = document.createElement("h3");
-	td.className = "panel-title crmcontactdate";
+	td.className = "card-title panel-title crmcontactdate";
 
 	var bits = report['datetimecontact'].match(/\d+/g);
 	var d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
@@ -1413,7 +1413,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	tr.appendChild(td);
 
 	var ul = document.createElement("ul");
-	ul.className = 'panel-meta news-meta';
+	ul.className = 'card-meta panel-meta news-meta';
 
 	// Date
 	li = document.createElement("li");
@@ -1553,14 +1553,14 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	// --Body
 	tr = document.createElement("div");
-	tr.className = 'panel-body';
+	tr.className = 'card-body panel-body';
 
 	td = document.createElement("div");
 	td.className = "newsposttext";
 
 	if (edit) {
 		var opt = document.createElement("div");
-		opt.className = "panel-options";
+		opt.className = "card-options panel-options";
 
 		// Edit button
 		a = document.createElement("a");
@@ -1662,11 +1662,11 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	// -- New Comment
 	tr = document.createElement("div");
-	tr.className = 'crmnewcomment panel panel-default';
+	tr.className = 'crmnewcomment card mb-3 panel panel-default';
 
 	// -- Footer
 	var footer = document.createElement("div");
-	footer.className = 'panel-heading';
+	footer.className = 'card-header panel-heading';
 
 	// create subscribe row
 	td = document.createElement("div");
@@ -1703,7 +1703,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	tr.appendChild(footer);
 
 	td = document.createElement("div");
-	td.className = "panel-body";
+	td.className = "card-body panel-body";
 
 	div = document.createElement("div");
 	div.id = report['id'] + "_newupdate";
@@ -1816,13 +1816,13 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 		li.setAttribute('data-api', comment['api']);
 
 	var panel = document.createElement("div");
-	panel.className = "panel panel-default";
+	panel.className = "card mb-3 panel panel-default";
 
 	var div, span, a, img;
 
 	if (edit) {
 		var tr = document.createElement("div");
-		tr.className = 'panel-heading crm-admin';
+		tr.className = 'card-header panel-heading crm-admin';
 
 		span = document.createElement("span");
 		span.className = 'crmid';
@@ -1852,7 +1852,7 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 	}
 
 	div = document.createElement("div");
-	div.className = "panel-body crmcomment crmcommenttext";
+	div.className = "card-body panel-body crmcomment crmcommenttext";
 
 	span = document.createElement("span");
 	span.id = comment['id'] + "_comment";
@@ -1915,7 +1915,7 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 
 	// Add comment footer
 	div = document.createElement("div");
-	div.className = "panel-footer";
+	div.className = "card-footer panel-footer";
 
 	var bits = comment['datetimecreated'].match(/\d+/g);
 	var d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
@@ -2040,7 +2040,7 @@ function CRMPostComment(reportid) {
 		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 
-			CRMPrintComment(reportid, results);//, results['user']);
+			CRMPrintComment(reportid, results.data);//, results['user']);
 			document.getElementById(reportid + "_newcommentbox").value = "";
 			CRMCollapseNewComment(reportid + "_newcommentbox");
 
@@ -2072,7 +2072,7 @@ function CRMSubscribeComment(reportid) {
 			var a = div.getElementsByTagName("a")[0];
 			a.onclick = function (e) {
 				e.preventDefault();
-				CRMUnsubscribeComment(results['id'], reportid);
+				CRMUnsubscribeComment(results.data['id'], reportid);
 			};
 			a.innerHTML = "Unsubscribe";
 		} else {
@@ -2192,7 +2192,7 @@ function CRMSaveReportText(report, api) {
 			icon.style.display = "none";
 			var text = document.getElementById(report + "_text");
 			text.style.display = "block";
-			text.innerHTML = results['formattedreport'];
+			text.innerHTML = results.data['formattedreport'];
 			document.getElementById(report + "_textarea").style.display = "none";
 			document.getElementById(report + "_textediticon").style.display = "block";
 			document.getElementById(report + "_textcancelicon").style.display = "none";
@@ -2240,7 +2240,7 @@ function CRMSaveCommentText(comment) {
 
 			var text = document.getElementById(comment + "_comment");
 			text.style.display = "block";
-			text.innerHTML = results['formattedcomment'];
+			text.innerHTML = results.data['formattedcomment'];
 
 			var box = document.getElementById(comment + "_commenttextarea");
 			box.style.display = "none";
@@ -2657,11 +2657,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	var container = $('#reports');
 	if (container.length) {
-		var q = '';
+		/*var q = '';
 		if (container.data('query')) {
 			q = '?' + encodeURI($('#reports').data('query'));
 		}
 
-		WSGetURL(container.data('api') + q, CRMSearched);
+		WSGetURL(container.data('api') + q, CRMSearched);*/
+		CRMToggle('search');
 	}
 });
