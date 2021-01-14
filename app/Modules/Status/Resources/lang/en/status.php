@@ -7,7 +7,7 @@ return [
 	'status' => 'Status',
 	'name' => 'Name',
 	'state' => [
-		'warning' => 'One or more services may be experiencing issues',
+		'impaired' => 'One or more services may be experiencing issues',
 		'down' => 'One or more services are down',
 		'maintenance' => 'Service is undergoing maintenance',
 		'offline' => 'Service is offline',
@@ -17,7 +17,7 @@ return [
 	'option' => [
 		'automatic' => 'Automatic',
 		'operational' => 'Operational',
-		'warning' => 'Experiencing issues',
+		'impaired' => 'Experiencing issues',
 		'down' => 'Down',
 		'maintenance' => 'Maintenance',
 		'offline' => 'Offline',
