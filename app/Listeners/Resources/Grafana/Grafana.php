@@ -35,6 +35,9 @@ class Grafana
 
 		$url = $resource->params->get('monitor');
 		$url = $resource->rolename == 'hammer' ? 'http://grafana.hammer.rcac.purdue.edu:9090' : $url;
+		$url = $resource->rolename == 'bell' ? 'http://grafana.bell.rcac.purdue.edu:9090' : $url;
+
+		$url = 'http://grafana.' . $resource->rolename . '.rcac.purdue.edu:9090';
 
 		if (!$url)
 		{
@@ -79,15 +82,13 @@ class Grafana
 
 				foreach ($checks as $check => $endpoint)
 				{
-					$data[$check] = array();
-
 					$res = $client->request('GET', $url . $endpoint);
 
 					//$status = $res->getStatusCode();
 
 					if ($res->getStatusCode() >= 400)
 					{
-						echo $endpoint . ' - ' . $res->getStatusCode() . '<br />';
+						//echo $endpoint . ' - ' . $res->getStatusCode() . '<br />';
 						continue;
 					}
 
@@ -109,8 +110,9 @@ class Grafana
 					//     ]
 					//   }
 					// }
-					if ($response->status == 'success')
+					if ($response->status == 'success' && !empty($response->data->result))
 					{
+						$data[$check] = array();
 						$data[$check] = $response->data->result;
 
 						/*foreach ($response->data->result as $res)

@@ -104,8 +104,7 @@ app('pathway')->append(
 								</select>
 							</div>
 						</div>
-					@endif
-					
+
 						<?php
 						if (!($resource->hasNews == 'maintenance' && $resource->isHappening) && $resource->data)
 						{
@@ -194,7 +193,10 @@ app('pathway')->append(
 							</ul>
 							<?php
 						}
+						?>
+					@endif
 
+						<?php
 						if (count($resource->news) && $resource->isHappening)
 						{
 							?>
