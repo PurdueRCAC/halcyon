@@ -63,7 +63,7 @@ app('pathway')->append(
 									</span>
 								@endif
 
-								@if ($resource->status == 'warning')
+								@if ($resource->status == 'impaired')
 									<span class="item-status text-warning tip" title="{{ trans('status::status.state.warning') }}">
 										<i id="{{ $resource->id }}_icon" class="fa fa-exclamation-triangle" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.impaired') }}</span>
 									</span>

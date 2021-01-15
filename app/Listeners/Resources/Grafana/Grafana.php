@@ -160,6 +160,7 @@ class Grafana
 				}
 			}
 		}
+
 		if ($impaired)
 		{
 			$resource->status = 'impaired';
