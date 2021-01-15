@@ -16,7 +16,7 @@ app('pathway')->append(
 @endphp
 
 @section('content')
-
+<div class="contentInner col-lg-12 col-md-12 col-sm-12 col-xs-12">
 <ul class="status-legend">
 	<li><span class="text-success"><i class="fa fa-check" aria-hidden="true"></i></span> {{ trans('status::status.option.operational') }}</li>
 	<li><span class="text-info"><i class="fa fa-wrench" aria-hidden="true"></i></span> {{ trans('status::status.option.maintenance') }}</li>
@@ -55,7 +55,7 @@ app('pathway')->append(
 			//$thisnews = array();
 			//$isHappening = false;
 			?>
-			<div class="col-md-4 pb-3 pl-3 pr-3 mb-5 item">
+			<div class="col-md-4 pb-3 pl-3 pr-3 mb-3 item">
 				<div class="card panel shadow-sm {{ $resource->status . ($resource->hasNews ? ' hasnews ' . ($resource->isHappening ? $resource->hasNews : '') : '') . ($resource->data ? ' has-services' : '') }}">
 					<div class="card-header p-3">
 						<div class="row">
@@ -240,7 +240,7 @@ app('pathway')->append(
 								}
 								?>
 								<li class="list-group-item section-news open" id="section-{{ $k }}-news">
-									<ul class="list-unstyled pl-0 mt-4" id="section-{{ $k }}-news-details">
+									<ul class="list-unstyled pl-0" id="section-{{ $k }}-news-details">
 										@if ($typ == 'outage')
 											<li><!-- class="mt-2 d-flex align-items-center justify-content-between">-->
 												<i class="fa fa-link" aria-hidden="true"></i> <a href="#news{{ $ns->id }}">{!! $ns->headline !!}</a>
@@ -514,4 +514,5 @@ app('pathway')->append(
 		});
 	});
 </script>
+</div>
 @stop

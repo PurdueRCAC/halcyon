@@ -28,7 +28,7 @@
 	-ms-flex-pack: justify!important;
 	justify-content: space-between!important;
 }
-.p-3 {
+/*.p-3 {
 	padding: 1rem!important;
 }
 .mb-3 {
@@ -43,8 +43,16 @@
 .mt-2,
 .my-2 {
 	margin-top: .5rem!important;
+}*/
+.contentInner ul.list-group {
+	margin: 0;
 }
-
+.contentInner ul.list-unstyled {
+	margin: 0;
+}
+.contentInner ul.list-unstyled li {
+	list-style: none;
+}
 .card-header {
 	background-color: #fff;
 }
