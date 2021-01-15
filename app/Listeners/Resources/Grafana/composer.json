@@ -1,0 +1,24 @@
+{
+	"name": "halcyon/lst_resources_grafana",
+	"description": "Listener for retrieving data from a Grafana API for a specified resource.",
+	"type": "halcyon-listener",
+	"keywords": ["halcyon"],
+	"homepage": "https://halcyon.org",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Halcyon",
+			"email": "support@halcyon.org"
+		}
+	],
+	"support": {
+		"email": "support@halcyon.org",
+		"issues": "https://help.halcyon.org"
+	},
+	"require": {
+		"php" : "^7.0"
+	},
+	"extra": {
+		"install-directory": "/Listeners/Resources/Grafana/"
+	}
+}
