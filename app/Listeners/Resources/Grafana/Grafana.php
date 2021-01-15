@@ -34,17 +34,20 @@ class Grafana
 		$resource = $event->asset;
 
 		// If we have a manually set status
-		if ($resource->status)
+		if ($resource->status || !$resource->rolename)
 		{
 			// Stop here
 			return;
 		}
 
 		$url = $resource->params->get('monitor');
-		$url = $resource->rolename == 'hammer' ? 'http://grafana.hammer.rcac.purdue.edu:9090' : $url;
-		$url = $resource->rolename == 'bell' ? 'http://grafana.bell.rcac.purdue.edu:9090' : $url;
+		//$url = $resource->rolename == 'hammer' ? 'http://grafana.hammer.rcac.purdue.edu:9090' : $url;
+		//$url = $resource->rolename == 'bell' ? 'http://grafana.bell.rcac.purdue.edu:9090' : $url;
 
-		$url = 'http://grafana.' . $resource->rolename . '.rcac.purdue.edu:9090';
+		if ($resource->rolename == 'bell' || $resource->rolename == 'hammer')
+		{
+			$url = 'http://grafana.' . $resource->rolename . '.rcac.purdue.edu:9090';
+		}
 
 		if (!$url)
 		{
@@ -52,10 +55,11 @@ class Grafana
 		}
 
 		$retrieve = true;
-		$cache = storage_path('app/status_' . $resource->rolename . '.json');
+		$cache = 'status/grafana_' . $resource->rolename . '.json';
+		$path = storage_path('app/' . $cache);
 		$hourago = Carbon::now()->modify('-1 hour')->timestamp;
 
-		if (file_exists($cache))
+		if (file_exists($path))
 		{
 			$lastmodified = Storage::lastModified($cache);
 
@@ -63,7 +67,7 @@ class Grafana
 			{
 				$retrieve = false;
 
-				$data = json_decode(file_get_contents($path), true);
+				$data = json_decode(file_get_contents($path));
 				$resource->statusUpdate = Carbon::parse($lastmodified);
 			}
 		}
@@ -145,7 +149,7 @@ class Grafana
 
 				$resource->statusUpdate = Carbon::now();
 
-				//Storage::put($cache, json_encode($data));
+				Storage::put($cache, json_encode($data));
 			}
 			catch (\Exception $e)
 			{
@@ -156,6 +160,7 @@ class Grafana
 
 		$impaired = 0;
 		$total = 0;
+
 		foreach ($resource->data as $section => $items)
 		{
 			foreach ($items as $item)
