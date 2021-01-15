@@ -292,6 +292,9 @@ a.btn-info:active {
 .contentInner *:first-child {
 	margin-top: 0;
 }
+.contentInner .form-check-input:first-child {
+	margin-top: 0.3rem !important;
+}
 
 .contentInner ul {
 	margin-bottom: 1em;
@@ -761,7 +764,6 @@ tr.floatingBoxHidden {
 	line-height: 1.3em;
 }
 
-/* Staff */
 /* Staff */
 .profiles {
 	display: flex;
