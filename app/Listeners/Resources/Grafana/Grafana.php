@@ -33,6 +33,13 @@ class Grafana
 	{
 		$resource = $event->asset;
 
+		// If we have a manually set status
+		if ($resource->status)
+		{
+			// Stop here
+			return;
+		}
+
 		$url = $resource->params->get('monitor');
 		$url = $resource->rolename == 'hammer' ? 'http://grafana.hammer.rcac.purdue.edu:9090' : $url;
 		$url = $resource->rolename == 'bell' ? 'http://grafana.bell.rcac.purdue.edu:9090' : $url;

@@ -56,6 +56,15 @@ class News
 	{
 		$resource = $event->asset;
 
+		// If we have a manually set status
+		if ($resource->status)
+		{
+			// Stop here
+			$resource->news = array();
+			$event->asset = $resource;
+			return;
+		}
+
 		$a = (new Article)->getTable();
 		$r = (new Newsresource)->getTable();
 
