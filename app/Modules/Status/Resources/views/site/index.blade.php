@@ -17,7 +17,7 @@ app('pathway')->append(
 
 @section('content')
 <div class="contentInner col-lg-12 col-md-12 col-sm-12 col-xs-12">
-<ul class="status-legend">
+<ul class="status-legend mb-5">
 	<li><span class="text-success"><i class="fa fa-check" aria-hidden="true"></i></span> {{ trans('status::status.option.operational') }}</li>
 	<li><span class="text-info"><i class="fa fa-wrench" aria-hidden="true"></i></span> {{ trans('status::status.option.maintenance') }}</li>
 	<li><span class="text-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span> {{ trans('status::status.option.impaired') }}</li>
@@ -32,7 +32,7 @@ app('pathway')->append(
 	<div class="row">
 		<?php
 		$k = 0;
-		$now = new DateTime('now');
+		$now = Carbon\Carbon::now();
 		$start = $now->format('Y-m-d h:i:s');
 		$end = $now->modify('-1 day')->format('Y-m-d h:i:s');
 
@@ -45,27 +45,22 @@ app('pathway')->append(
 
 		foreach ($resources as $resource)
 		{
-			$resource->statusUpdate = $now;
+			$resource->statusUpdate = Carbon\Carbon::now();
 
 			event($event = new App\Modules\Status\Events\StatusRetrieval($resource));
 
 			$resource = $event->asset;
-
-			//$hasNews = '';
-			//$thisnews = array();
-			//$isHappening = false;
 			?>
 			<div class="col-md-4 pb-3 pl-3 pr-3 mb-3 item">
-				<div class="card panel shadow-sm {{ $resource->status . ($resource->hasNews ? ' hasnews ' . ($resource->isHappening ? $resource->hasNews : '') : '') . ($resource->data ? ' has-services' : '') }}">
+				<div class="card panel {{ $resource->status . ($resource->hasNews ? ' hasnews ' . ($resource->isHappening ? $resource->hasNews : '') : '') . ($resource->data ? ' has-services' : '') }}">
 					<div class="card-header p-3">
 						<div class="row">
 							<div class="card-title col-sm-9 col-md-9 item-name">{{ $resource->name }}</div>
 							<div class="card-status col-sm-3 col-md-3 text-right">
 								@if ($resource->hasNews)
-									<span class="tip <?php echo $resource->hasNews == 'outage' ? 'danger' : 'info'; ?>" title="{{ trans('status::status.has announcements') }}">
+									<span class="tip text-<?php echo $resource->hasNews == 'outage' ? 'danger' : 'info'; ?>" title="{{ trans('status::status.has announcements') }}">
 										<i class="fa fa-<?php echo $resource->hasNews == 'outage' ? 'exclamation-circle' : 'wrench'; ?>" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.has announcements') }}</span>
 									</span>
-									<!-- <span class="badge badge-<?php echo $resource->hasNews == 'outage' ? 'danger' : 'info'; ?> tip" title="{{ trans('status::status.has announcements') }}"><?php echo $resource->hasNews == 'outage' ? 'outage' : 'maintenance'; ?></span> -->
 								@endif
 
 								@if ($resource->status == 'warning')
@@ -91,20 +86,20 @@ app('pathway')->append(
 								@endif
 							</div>
 						</div>
-						<div class="text-muted"><small>Last Update: {{ $resource->statusUpdate->format('M d, h:i a') }}</small></div>
+						<div class="text-muted item-timestamp">Last Update: {{ $resource->statusUpdate->format('M d, h:i a') }}</div>
 					</div>
 					@if (auth()->user() && auth()->user()->can('manage resources'))
-						<div class="card-body">
+						<div class="card-footer">
 							<div class="input-group">
 								<span class="input-group-addon">
 									<span class="input-group-text"><label for="status-{{ $resource->id }}">{{ trans('status::status.status') }}</label></span>
 								</span>
 								<select class="form-control resource-status" name="status" id="status-{{ $resource->id }}" data-id="{{ $resource->id }}" data-api="{{ route('api.resources.update', ['id' => $resource->id]) }}">
 									<option value=""<?php if (!$resource->status) { echo ' selected="selected"'; } ?> data-status="success tip" data-class="fa fa-check">{{ trans('status::status.option.automatic') }}</option>
-									<option value="success"<?php if ($resource->status == 'success') { echo ' selected="selected"'; } ?> data-status="success tip" data-class="fa fa-check">{{ trans('status::status.option.operational') }}</option>
-									<option value="warning"<?php if ($resource->status == 'warning') { echo ' selected="selected"'; } ?> data-status="warning tip" data-class="fa fa-exclamation-triangle">{{ trans('status::status.option.impaired') }}</option>
-									<option value="danger"<?php if ($resource->status == 'danger') { echo ' selected="selected"'; } ?> data-status="danger tip" data-class="fa fa-exclamation-circle">{{ trans('status::status.option.down') }}</option>
-									<option value="maintenance"<?php if ($resource->status == 'maint') { echo ' selected="selected"'; } ?> data-status="maint tip" data-class="fa fa-wrench">{{ trans('status::status.option.maintenance') }}</option>
+									<option value="operational"<?php if ($resource->status == 'operational') { echo ' selected="selected"'; } ?> data-status="success tip" data-class="fa fa-check">{{ trans('status::status.option.operational') }}</option>
+									<option value="impaired"<?php if ($resource->status == 'impaired') { echo ' selected="selected"'; } ?> data-status="warning tip" data-class="fa fa-exclamation-triangle">{{ trans('status::status.option.impaired') }}</option>
+									<option value="down"<?php if ($resource->status == 'down') { echo ' selected="selected"'; } ?> data-status="danger tip" data-class="fa fa-exclamation-circle">{{ trans('status::status.option.down') }}</option>
+									<option value="maintenance"<?php if ($resource->status == 'maintenance') { echo ' selected="selected"'; } ?> data-status="maint tip" data-class="fa fa-wrench">{{ trans('status::status.option.maintenance') }}</option>
 									<option value="offline"<?php if ($resource->status == 'offline') { echo ' selected="selected"'; } ?> data-status="offline tip" data-class="fa fa-ellipsis-h">{{ trans('status::status.option.offline') }}</option>
 								</select>
 							</div>
@@ -112,117 +107,93 @@ app('pathway')->append(
 					@endif
 					
 						<?php
-						/*if (!($resource->hasNews == 'maintenance' && $resource->isHappening))
+						if (!($resource->hasNews == 'maintenance' && $resource->isHappening) && $resource->data)
 						{
+							?>
+							<ul class="list-group list-group-flush">
+								<?php
 							foreach ($resource->data as $section => $items)
 							{
-								if ($section == 'name' || $section == 'status')// || $section == 'queues' || $section == 'nodes' || $section == 'front-ends')
-								{
-									continue;
-								}
-
 								$status = 'success';
 								foreach ($items as $item)
 								{
-									if (strtolower($item['value']) == 'ok' || stristr($item['value'], ' ok '))
-									{
-										//$status = 'ok';
-									}
-									elseif (stristr($item['value'], 'offline') || stristr($item['value'], 'unresponsive'))
+									if ($item->value[1] == 1)
 									{
 										$status = 'danger';
 										break;
 									}
-									elseif (stristr($item['value'], 'deactivated'))
-									{
-										$status = 'warning';
-										//break;
-									}
-
-									if (stristr($item['label'], 'offline') && (int)$item['value'])
-									{
-										$status = 'warning';
-										//break;
-									}
 								}
 								?>
-								<li class="list-group-item section-<?php echo e($section); ?>" id="section-<?php echo $k . '-' . e($section); ?>">
+								<li class="list-group-item section-{{ $section }}" id="section-{{ $k . '-' . $section }}">
 									<div class="card-text">
 										<div class="row">
 											<div class="col-sm-10 col-md-10 section-header">
-												<a href="#section-<?php echo $k . '-' . e($section); ?>">
-													<?php echo e(ucfirst($section)); ?>
+												<a href="#section-{{ $k . '-' . $section }}">
+													{{ $section }}
 												</a>
 											</div>
 											<div class="col-sm-2 col-md-2 text-right">
-												<?php if ($status == 'warning') { ?>
-													<span class="warning tip" title="One or more services may be experiencing issues"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span class="sr-only">One or more services may be experiencing issues</span></span>
-												<?php } elseif ($status == 'danger') { ?>
-													<span class="danger tip" title="One or more services are offline"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><span class="sr-only">One or more services are offline</span></span>
-												<?php } else { ?>
-													<span class="success tip" title="All services operational"><i class="fa fa-check" aria-hidden="true"></i><span class="sr-only">All services operational</span></span>
-												<?php } ?>
+												@if ($status == 'warning')
+													<span class="text-warning tip" title="{{ trans('status::status.state.impaired') }}">
+														<i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.impaired') }}</span>
+													</span>
+												@elseif ($status == 'danger')
+													<span class="text-danger tip" title="{{ trans('status::status.state.down') }}">
+														<i class="fa fa-exclamation-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.down') }}</span>
+													</span>
+												@else
+													<span class="text-success tip" title="{{ trans('status::status.state.operational') }}">
+														<i class="fa fa-check" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.operational') }}</span>
+													</span>
+												@endif
 											</div>
 										</div>
 									</div>
-									<ul class="list-unstyled pl-0 mt-4 section-details" id="section-<?php echo $k . '-' . e($section); ?>-details">
+									<ul class="list-unstyled pl-0 mt-4 section-details" id="section-{{ $k . '-' . $section }}-details">
 										<?php
-										$displayed = array();
 										foreach ($items as $item)
 										{
-											if (in_array($item['label'], $displayed))
+											$stts = 0;
+											$hasSub = false;
+											foreach ((array)$item->metric as $key => $val)
 											{
-												continue;
+												if (is_numeric($val))
+												{
+													$hasSub = true;
+													$stts = $val <= $stts ?: $val;
+												}
 											}
-											$displayed[] = $item['label'];
+											if ($hasSub)
+											{
 											?>
 											<li class="mt-2 d-flex align-items-center justify-content-between">
-												<span class="name text-secondary text-nowrap text-truncate"><?php echo e(ucfirst($item['label'])); ?></span>
+												<span class="name text-secondary text-nowrap text-truncate">{{ isset($item->metric->frontend) ? $item->metric->frontend : 'unknown' }}</span>
 												<span class="value text-nowrap status-operational">
-													<?php if (strtolower($item['label']) == 'running' || stristr($item['label'], 'passed')) { ?>
-														<span class="success tip" title="<?php echo e($item['value']); ?>"><?php echo e($item['value']); ?></span>
-													<?php } elseif (stristr($item['label'], 'offline')) { ?>
-														<span class="warning tip" title="<?php echo e($item['value']); ?>"><?php echo e($item['value']); ?></span>
-													<?php } else { ?>
-														<?php if (strtolower($item['value']) == 'ok' || stristr($item['value'], ' ok ')) { ?>
-															<span class="success tip" title="Operational">
-																<i class="fa fa-check" aria-hidden="true"></i>
-																<span class="sr-only">Operational</span>
-															</span>
-														<?php } elseif (stristr($item['value'], 'offline')) { ?>
-															<span class="danger tip" title="<?php echo e($item['value']); ?>">
-																<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-																<span class="sr-only"><?php echo e($item['value']); ?></span>
-															</span>
-														<?php } elseif (stristr($item['value'], 'unresponsive')) { ?>
-															<span class="danger tip" title="<?php echo e($item['value']); ?>">
-																<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-																<span class="sr-only"><?php echo e($item['value']); ?></span>
-															</span>
-														<?php } elseif (stristr($item['value'], 'deactivated')) { ?>
-															<span class="warning tip" title="<?php echo e($item['value']); ?>">
-																<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-																<span class="sr-only"><?php echo e($item['value']); ?></span>
-															</span>
-														<?php } elseif (stristr($item['value'], 'undefined')) { ?>
-															<span class="undefined tip" title="<?php echo e($item['value']); ?>">
-																<i class="fa fa-question-circle" aria-hidden="true"></i>
-																<span class="sr-only"><?php echo e($item['value']); ?></span>
-															</span>
-														<?php } else { ?>
-															<?php echo e($item['value']); ?>
-														<?php } ?>
-													<?php } ?>
+													@if ($stts)
+														<span class="text-success tip" title="{{ trans('status::status.state.operational') }}">
+															<i class="fa fa-check" aria-hidden="true"></i>
+															<span class="sr-only">{{ trans('status::status.state.operational') }}</span>
+														</span>
+													@else
+														<span class="text-danger tip" title="{{ trans('status::status.state.down') }}">
+															<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+															<span class="sr-only">{{ trans('status::status.state.down') }}</span>
+														</span>
+													@endif
 												</span>
 											</li>
 											<?php
+											}
 										}
 										?>
 									</ul>
 								</li>
 								<?php
 							}
-						}*/
+							?>
+							</ul>
+							<?php
+						}
 
 						if (count($resource->news) && $resource->isHappening)
 						{
@@ -401,12 +372,12 @@ app('pathway')->append(
 				</div>
 				<div class="col-md-6 text-right">
 					<div class="btn-group" role="group" aria-label="Options">
-						<a target="_blank" class="btn " href="/news/rss/<?php echo urlencode($type->name); ?>" title="RSS Feed for <?php echo urlencode($type->name); ?>"><i class="fa fa-rss-square" aria-hidden="true"></i><span class="sr-only">RSS Feed</span></a>
+						<a target="_blank" class="btn" href="{{ route('site.news.feed', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}"><i class="fa fa-rss-square" aria-hidden="true"></i><span class="sr-only">RSS Feed</span></a>
 						@if ($type->calendar)
-							<a target="_blank" class="btn  calendar calendar-subscribe" href="webcal://{{ request()->getHttpHost() }}/news/calendar/<?php echo urlencode(strtolower($type->name)); ?>" title="Subscribe to calendar"><!--
+							<a target="_blank" class="btn calendar calendar-subscribe" href="{{ preg_replace('/^https?:\/\//', 'webcal://', route('site.news.calendar', ['name' => strtolower($type->name)])) }}" title="Subscribe to calendar"><!--
 								--><i class="fa fa-fw fa-calendar" aria-hidden="true"></i><span class="sr-only">Subscribe</span><!--
 							--></a>
-							<a target="_blank" class="btn  calendar calendar-download" href="/news/calendar/<?php echo urlencode(strtolower($type->name)); ?>" title="Download calendar"><!--
+							<a target="_blank" class="btn calendar calendar-download" href="{{ route('site.news.calendar', ['name' => strtolower($type->name)]) }}" title="Download calendar"><!--
 								--><i class="fa fa-fw fa-download" aria-hidden="true"></i><span class="sr-only">Download</span><!--
 							--></a>
 						@endif
@@ -446,7 +417,7 @@ app('pathway')->append(
 						<li>
 							<article id="news{{ $news->id }}" class="card">
 								<div class="card-header news-header">
-									<h4>
+									<h4 class="card-title">
 										{{ $news->headline }}
 										<!-- <span class="badge badge-{{ $typ == 'outage' ? 'danger' : 'info' }}">{{ $typ }}</span> -->
 									</h4>

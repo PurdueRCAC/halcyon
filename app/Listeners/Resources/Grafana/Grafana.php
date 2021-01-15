@@ -112,7 +112,7 @@ class Grafana
 					if ($response->status == 'success')
 					{
 						$data[$check] = $response->data->result;
-						continue;
+
 						/*foreach ($response->data->result as $res)
 						{
 							$metrics = array();
@@ -125,7 +125,7 @@ class Grafana
 							foreach ($res->value as $value)
 							{
 								$data[$check][] = array(
-									'name' => $check,
+									'label' => $check,
 									'value' => $value[1],
 									'metrics' => $metrics,
 								);
@@ -144,6 +144,28 @@ class Grafana
 		}
 		//echo '<pre>';print_r($data);echo '</pre>';
 		$resource->data = $data;
+
+		$impaired = 0;
+		$total = 0;
+		foreach ($resource->data as $section => $items)
+		{
+			foreach ($items as $item)
+			{
+				$total++;
+				if ($item->value[1] == 1)
+				{
+					$impaired++;
+				}
+			}
+		}
+		if ($impaired)
+		{
+			$resource->status = 'impaired';
+			if ($impaired == $total)
+			{
+				$resource->status = 'down';
+			}
+		}
 
 		$event->asset = $resource;
 	}
