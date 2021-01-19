@@ -1,12 +1,12 @@
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/datatables/datatables.bootstrap.min.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap.min.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js') }}"></script>
 <script src="{{ asset('modules/core/vendor/datatables/datatables.min.js') }}"></script>
-<script src="{{ asset('modules/core/vendor/datatables/datatables.bootstrap.min.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/groups/js/site.js?v=' . filemtime(public_path() . '/modules/groups/js/site.js')) }}"></script>
 <script>
