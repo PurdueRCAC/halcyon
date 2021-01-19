@@ -54,7 +54,7 @@
 			'themes/rcac/js/common/jquery-ui-1.12.1/jquery-ui.min.js',
 			'themes/rcac/js/css_browser_selector.js',
 			'themes/rcac/js/modernizr-1.5.min.js',
-			'themes/rcac/js/bootstrap.min.js',
+			'modules/core/vendor/bootstrap/bootstrap.bundle.min.js', //'themes/rcac/js/bootstrap.min.js',
 			'themes/rcac/js/google_jquery_link_tracking.js',
 			'themes/rcac/js/common/common.js',
 			'themes/rcac/js/common/date.js',
