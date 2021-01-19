@@ -85,7 +85,10 @@ return [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
-
+    'to' => [
+        'address' => 'zooley@purdue.edu',
+        'name' => 'Halcyon Test'
+    ],
     /*
     |--------------------------------------------------------------------------
     | Markdown Mail Settings
@@ -101,7 +104,8 @@ return [
         'theme' => 'default',
 
         'paths' => [
-            resource_path('views/vendor/mail'),
+            app_path('Themes/Rcac/views/mail'),
+            //resource_path('views/vendor/mail'),
         ],
     ],
 
