@@ -7,8 +7,8 @@
 		@else
 			@foreach ($rows as $row)
 				<article id="{{ $row->id }}" class="crm-item newEntries">
-					<div class="panel panel-default">
-						<div class="panel-heading news-admin">
+					<div class="card panel panel-default">
+						<div class="card-header panel-heading news-admin">
 							<span class="newsid"><a href="{{ route('site.news.show', ['id' => $row->id]) }}">#{{ $row->id }}</a></span>
 							@if (auth()->user()->can('manage news'))
 								<span class="newspublication">
@@ -20,9 +20,9 @@
 								</span>
 							@endif
 						</div>
-						<div class="panel-heading">
-							<h3 class="panel-title crmcontactdate">{{ $row->headline }}</h3>
-							<ul class="panel-meta news-meta">
+						<div class="card-header panel-heading">
+							<h3 class="card-title panel-title crmcontactdate">{{ $row->headline }}</h3>
+							<ul class="card-meta panel-meta news-meta">
 								<li class="news-date"><span class="newspostdate">Posted on {{ $row->datetimecreated->format('M d, Y') }}</span></li>
 								<li class="news-author"><span class="newsposter">Posted by {{ $row->creator->name }}</span></li>
 								<li class="news-type"><span class="newstype">{{ $type->name }}</span></li>
@@ -69,7 +69,7 @@
 							@endif
 							</ul>
 						</div>
-						<div class="panel-body">
+						<div class="card-body panel-body">
 							<div class="newsposttext">
 								<span id="{{ $row->id }}_text">{!! $row->formattedBody !!}</span>
 							</div>
@@ -78,11 +78,11 @@
 					<ul id="{{ $row->id }}_updates" class="news-updates">
 						@foreach ($row->updates()->orderBy('datetimecreated', 'asc')->get() as $update)
 							<li>
-								<div class="panel panel-default">
-									<div class="panel-body">
+								<div class="card panel panel-default">
+									<div class="card-body panel-body">
 										{!! $update->formattedBody !!}
 									</div>
-									<div class="panel-footer">
+									<div class="card-footer panel-footer">
 										<div class="crmcommentpostedby">Posted by {{ $update->creator ? $update->creator->name : trans('global.unknown') }} on {{ $update->formattedDatetimecreated($update->datetimecreated->toDateTimeString()) }}</div>
 									</div>
 								</div>
