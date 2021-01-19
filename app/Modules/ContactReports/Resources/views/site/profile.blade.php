@@ -6,13 +6,13 @@
 		@else
 			@foreach ($reports as $row)
 				<article id="{{ $row->id }}" class="crm-item newEntries">
-					<div class="panel panel-default">
-						<div class="panel-heading news-admin">
+					<div class="card panel panel-default">
+						<div class="card-header panel-heading news-admin">
 							<span class="crmid"><a href="{{ route('site.contactreports.show', ['id' => $row->id]) }}">#{{ $row->id }}</a></span>
 						</div>
-						<div class="panel-heading">
-							<h3 class="panel-title crmcontactdate">{{ $row->datetimecontact->format('M d, Y') }}</h3>
-							<ul class="panel-meta news-meta">
+						<div class="card-header panel-heading">
+							<h3 class="card-title panel-title crmcontactdate">{{ $row->datetimecontact->format('M d, Y') }}</h3>
+							<ul class="card-meta panel-meta news-meta">
 								<li class="news-date"><span class="crmpostdate">Posted on {{ $row->datetimecreated->format('M d, Y') }}</span></li>
 								<li class="news-author"><span class="crmposter">Posted by {{ $row->creator->name }}</span></li>
 								@if ($row->group)
@@ -40,7 +40,7 @@
 								@endif
 							</ul>
 						</div>
-						<div class="panel-body">
+						<div class="card-body panel-body">
 							<div class="newsposttext">
 								<span id="{{ $row->id }}_text">{!! $row->formattedReport !!}</span>
 							</div>
