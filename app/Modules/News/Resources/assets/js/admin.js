@@ -1,3 +1,90 @@
+/* global $ */ // jquery.js
+
+/**
+ * Build vars for news preview
+ *
+ * @param   {string}  news
+ * @return  {void}
+ */
+function NEWSPreviewVars() {
+	var preview_vars = {};
+	var type = document.querySelector("#field-newstypeid option:checked");
+
+	/* Grab the variables we need and populate the preview variables. */
+	if (document.getElementById("field-datetimenews").value != "") {
+		preview_vars["startDate"] = document.getElementById("field-datetimenews").value;
+	}
+
+	if (document.getElementById("field-datetimenewsend").value != "") {
+		preview_vars["endDate"] = document.getElementById("field-datetimenewsend").value;
+	}
+
+	if (type.getAttribute('data-tagresources') == 1) {
+		preview_vars["resources"] = [];
+
+		var resources = Array.prototype.slice.call(document.querySelectorAll('#field-resources option:checked'), 0).map(function (v) {
+			return v.innerHTML;
+		});
+
+		$.each(resources, function (i, el) {
+			preview_vars['resources'][i] = { "resourcename": el };
+		});
+	}
+	preview_vars['update'] = "0";
+
+	if (type.getAttribute('data-location') == 1) {
+		if (document.getElementById("field-location").value != "") {
+			preview_vars["location"] = document.getElementById("field-location").value;
+		}
+	}
+
+	return preview_vars;
+}
+
+/**
+ * Preview news entry
+ *
+ * @param   {object}  btn
+ * @return  {void}
+ */
+function NEWSPreview(btn) {
+	if (typeof (edit) == 'undefined') {
+		edit = false;
+	}
+
+	var text = document.getElementById("field-body").value;
+
+	if (text == "") {
+		return;
+	}
+
+	var post = {
+		'id': btn.data('id'),
+		'body': text
+	};
+
+	post['vars'] = NEWSPreviewVars();
+	post['news'] = btn.data('api');
+
+	$.ajax({
+		url: btn.data('api'),
+		type: 'post',
+		data: post,
+		dataType: 'json',
+		async: false,
+		success: function (response) {
+			console.log(response);
+			document.getElementById("preview").innerHTML = response['formattedbody'];
+			$('#preview').dialog({ modal: true, width: '691px' });
+			$('#preview').dialog('open');
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+			console.log(xhr);
+			Halcyon.message('danger', xhr.responseJSON.message);
+		}
+	});
+}
+
 /**
  * Initiate event hooks
  */
@@ -84,5 +171,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (selected.data('url')) {
 			$('.type-url').removeClass('d-none');
 		}
+	});
+
+	$('.preview').on('click', function (e) {
+		e.preventDefault();
+
+		NEWSPreview($(this));
 	});
 });

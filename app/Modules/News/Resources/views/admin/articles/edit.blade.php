@@ -108,7 +108,7 @@ app('pathway')
 					?>
 					<label for="field-resources">{{ trans('news::news.tag resources') }}:</label>
 					<!-- <input type="text" name="resources" id="field-resources" class="form-control form-resources" data-uri="{{ url('/') }}/api/resources/?api_token={{ auth()->user()->api_token }}&search=%s" value="{{ implode(', ', $r) }}" /> -->
-					<select class="form-control basic-multiple" name="resources[]" multiple="multiple" data-placeholder="Select resource...">
+					<select class="form-control basic-multiple" name="resources[]" id="field-resources" multiple="multiple" data-placeholder="Select resource...">
 						<?php
 						$resources = App\Modules\Resources\Entities\Asset::orderBy('name', 'asc')->get();
 						foreach ($resources as $resource)
@@ -136,7 +136,8 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-body">{{ trans('news::news.body') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<span class="form-text text-muted">{{ trans('news::news.body formatting') }}</span>
+					<span class="form-text text-muted">{{ trans('news::news.body formatting') }} <button class="btn btn-link preview float-right" data-id="{{ $row->id }}" data-api="{{ route('api.news.preview') }}">Preview</button></span>
+					
 					<textarea name="fields[body]" id="field-body" class="form-control required" required rows="35" cols="40">{{ $row->body }}</textarea>
 					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
 				</div>
@@ -147,27 +148,20 @@ app('pathway')
 				<caption>Metadata</caption>
 				<tbody>
 					<tr>
-						<th scope="row">{{ trans('news::news.id') }}:</th>
-						<td>
-							{{ $row->id }}
-							<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
-						</td>
-					</tr>
-					<tr>
 						<th scope="row">{{ trans('news::news.created') }}:</th>
 						<td>
-							<?php if ($row->getOriginal('datetimecreated') && $row->getOriginal('datetimecreated') != '0000-00-00 00:00:00'): ?>
+							<?php if ($row->datetimecreated && $row->datetimecreated != '0000-00-00 00:00:00'): ?>
 								{{ $row->datetimecreated }}
 							<?php else: ?>
 								{{ trans('global.unknown') }}
 							<?php endif; ?>
 						</td>
 					</tr>
-					<?php if ($row->getOriginal('datetimeremoved') && $row->getOriginal('datetimeremoved') != '0000-00-00 00:00:00'): ?>
+					<?php if ($row->isUpdated()): ?>
 						<tr>
 							<th scope="row"><?php echo trans('news::news.removed'); ?>:</th>
 							<td>
-								{{ $row->datetimeremoved }}
+								{{ $row->datetimeupdate }}
 							</td>
 						</tr>
 					<?php endif; ?>
@@ -202,8 +196,93 @@ app('pathway')
 				</div>
 			</fieldset>
 
-			@include('history::admin.history')
+			<table class="table table-bordered">
+				<caption>MarkDown Quick Reference</caption>
+				<tbody>
+					<tr>
+						<th scope="row"><em>italic</em></th>
+						<td>
+							__italic__
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><strong>bold</strong></th>
+						<td>
+							**bold**
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><strike>strikethrough</strike></th>
+						<td>
+							~~strikethrough~~
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><a href="#">link text</a></th>
+						<td>
+							[link text](url)
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">image</th>
+						<td>
+							![alt text](image url)
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><ul><li>bulleted list item</li><li>bulleted list item</li></ul></th>
+						<td>
+							* bulleted list item<br />
+							* bulleted list item
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><ol><li>ordered list item</li><li>ordered list item</li></ol></th>
+						<td>
+							1. ordered list item<br />
+							2. ordered list item
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><code>inline code</code></th>
+						<td>
+							`inline code`
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><pre>// This is an example of some code
+
+int main (int argc, char * argv[]) {
+	printf(\"hello world!\\n\");
+	return 0;
+}
+</pre></th>
+						<td><pre>```
+// This is an example of some code
+
+int main (int argc, char * argv[]) {
+	printf(\"hello world!\\n\");
+	return 0;
+}
+```</pre></td>
+				</tbody>
+			</table>
+
+			<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
+
+			<?php /*@include('history::admin.history')*/ ?>
 		</div>
+	</div>
+
+	<div id="preview" class="dialog" title="News Preview">
+	</div>
+
+	<div id="mailpreview" class="dialog" title="Mail Preview">
+	</div>
+
+	<div id="dialog-confirm" class="dialog" title="Unsaved Changes">
+		<p>You have unsaved changes that need to be saved before mailing news item.</p>
+		<p>Would you like to save the changes?</p>
 	</div>
 
 	@csrf
