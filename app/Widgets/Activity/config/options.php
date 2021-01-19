@@ -10,9 +10,9 @@ return [
 					'label'   => 'widget.members::options.show value',
 					'desc'    => 'widget.members::options.show value desc',
 					'options' => [
-						0 => 'widgets::whosonline.param show number',
-						1 => 'widgets::whosonline.param show name',
-						2 => 'widgets::whosonline.param show both'
+						0 => 'widgets::activity.param show number',
+						1 => 'widgets::activity.param show name',
+						2 => 'widgets::activity.param show both'
 					],
 				],
 			],
@@ -21,14 +21,14 @@ return [
 			'fields' => [
 				'moduleclass_sfx' => [
 					'type'    => 'text'
-					'label'   => 'widgets::whosonline.param display limit',
-					'desc'    => 'widgets::whosonline.param display limit desc',
+					'label'   => 'widgets::activity.param display limit',
+					'desc'    => 'widgets::activity.param display limit desc',
 					'default' => ''
 				],
 				'cache' => [
 					'type'    => 'list'
-					'label'   => 'widgets::whosonline.param display limit',
-					'desc'    => 'widgets::whosonline.param display limit desc',
+					'label'   => 'widgets::activity.param display limit',
+					'desc'    => 'widgets::activity.param display limit desc',
 					'default' => ''
 				],
 			],
@@ -37,8 +37,8 @@ return [
 			'fields' => [
 				'display_limit' => [
 					'type' => 'text'
-					'label' => 'widgets::whosonline.param display limit',
-					'desc' => 'widgets::whosonline.param display limit desc',
+					'label' => 'widgets::activity.param display limit',
+					'desc' => 'widgets::activity.param display limit desc',
 					'default' => 25
 				],
 			],
