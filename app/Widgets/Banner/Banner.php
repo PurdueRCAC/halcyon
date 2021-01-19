@@ -20,17 +20,31 @@ class Banner extends Widget
 	{
 		$now = Carbon::now();
 
+		$today     = Carbon::now()->format('Y-m-d') . ' 00:00:00'; //date("Y-m-d", strtotime($this->date)) . " 00:00:00";
+		$tomorrow  = Carbon::now()->modify('+1 day')->format('Y-m-d') . ' 00:00:00'; //date("Y-m-d", strtotime($this->date) + 86400) . " 00:00:00";
+		$plus12    = Carbon::now()->modify('+12 hours')->toDateTimeString(); //date("Y-m-d H:i:s", strtotime($this->date) + 43200);
+		$minus12   = Carbon::now()->modify('-12 hours')->toDateTimeString(); //date("Y-m-d H:i:s", strtotime($this->date) - 43200);
+
 		$query = Article::query()
 			->wherePublished()
-			->where('datetimenews', '>=', $now->format('Y-m-d') . ' 00:00:00')
-			->where(function($where) use ($now)
+			->where('template', '=', 0)
+			->where(function($where) use ($today, $plus12, $minus12, $tomorrow)
 			{
-				$where->whereNull('datetimenewsend')
-					->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00')
-					->orWhere(function($w) use ($now)
+				$where->where('datetimenews', '=', $today)
+					->orWhere('datetimenewsend', '=', $today)
+					->orWhere(function($w) use ($plus12, $minus12, $tomorrow)
 					{
-						$w->where('datetimenewsend', '!=', '0000-00-00 00:00:00')
-							->where('datetimenewsend', '>', $now->format('Y-m-d') . ' 00:00:00');
+						$w->where(function($wh) use ($plus12, $tomorrow)
+						{
+							$wh->where('datetimenews', '<=', $plus12)
+								->where('datetimenews', '<>', $tomorrow);
+						})
+						->where(function($wh) use ($minus12)
+						{
+							$wh->whereNull('datetimenewsend')
+								->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00')
+								->orWhere('datetimenewsend', '>=', $minus12);
+						});
 					});
 			});
 
@@ -57,6 +71,7 @@ class Banner extends Widget
 
 			$maintenance = Article::query()
 				->wherePublished()
+				->where('template', '=', 0)
 				->where('datetimenews', '>=', $now->toDateTimeString())
 				->where(function($where) use ($now)
 				{
@@ -70,7 +85,7 @@ class Banner extends Widget
 				})
 				->where('newstypeid', '=', $id)
 				->orderBy('datetimenews', 'desc')
-				->limit($this->params->get('limit2', 1))
+				->limit($this->params->get('limit', 2))
 				->get();
 		}
 

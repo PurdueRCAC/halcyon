@@ -134,7 +134,7 @@
 								<?php
 								$update = $item->updates()->orderBy('datetimecreated', 'desc')->first();
 								if ($update) { ?>
-									<p class="newsupdated">Updated: {{ $update->datetimecreated->format('') }}</p>
+									<p class="newsupdated">Updated: {{ $update->datetimecreated->format('M d, Y h:ia') }}</p>
 								<?php } ?>
 							</li>
 						<?php } ?>
