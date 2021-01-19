@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 use App\Widgets\Adminmenu\Node;
 
 $shownew = (boolean) $params->get('shownew', 1);
