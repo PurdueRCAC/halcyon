@@ -106,7 +106,7 @@ function CreateNewGroup() {
 			<div class="col-md-6">
 				<div class="card panel panel-default shadow-sm">
 					<div class="card-body panel-body">
-						<span class="badge{{ $g->isManager() ? ' badge-success' : '' }} pull-right">{{ $g->type->name }}</span>
+						<span class="badge {{ $g->isManager() ? 'badge-success' : 'badge-secondary' }} pull-right">{{ $g->type->name }}</span>
 						<h3 class="card-title panel-title">
 							<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">
 								{{ $g->group->name }}
@@ -118,7 +118,7 @@ function CreateNewGroup() {
 						<div class="card-footer panel-footer">
 							<div class="d-flex justify-content-between align-items-center">
 								<div class="btn-group">
-									<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}#members" class="btn btn-default btn-sm">Manage</a>
+									<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}#members" class="btn btn-secondary btn-sm">Manage</a>
 								</div>
 							</div>
 						</div>

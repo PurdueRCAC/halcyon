@@ -589,7 +589,7 @@
 	</div><!-- / .card -->
 
 	<div id="newalert" title="New Quota Alert" class="dialog dialog-edit" data-api="{{ route('api.storage.notifications.create') }}">
-		<form class="form-inline" method="post">
+		<form class="form-inlin" method="post">
 			<p>
 				<label for="newalertstorage">Monitor</label>
 				<select id="newalertstorage" class="form-control">
@@ -605,9 +605,10 @@
 						<?php
 					}
 					?>
-				</select> by a
+				</select>
 			</p>
 			<p>
+				by a<br />
 				<?php
 				$types = App\Modules\Storage\Models\Notification\Type::where('id', '>', 1)->get();
 				foreach ($types as $type)
@@ -634,16 +635,19 @@
 					}
 					?>
 					<span class="form-check">
-					<input type="radio" name="newalert" class="form-check-input" value="{{ $type->id }}" id="newalert-{{ $type->id }}" data-value="{{ $type->value }}" data-unit="{{ $type->unit }}" />
-					<label for="newalert-{{ $type->id }}" class="form-check-label">{{ $type->name }}</label>
+						<input type="radio" name="newalert" class="form-check-input" value="{{ $type->id }}" id="newalert-{{ $type->id }}" data-value="{{ $type->value }}" data-unit="{{ $type->unit }}" />
+						<label for="newalert-{{ $type->id }}" class="form-check-label">{{ $type->name }}</label>
 					</span>
-					<br/>
 					<?php
 				}
 				?>
 			</p>
 			<p>
-				<label for="newalertvalue">at</label> <span class="input-group"><input type="number" class="form-control" id="newalertvalue" placeholder="0" /><span class="input-group-addon"><span class="input-group-text" id="newalertvalueunit"></span></span></span>
+				<label for="newalertvalue">at</label>
+				<span class="input-group">
+					<input type="number" class="form-control" id="newalertvalue" placeholder="0" />
+					<span class="input-group-append"><span class="input-group-text" id="newalertvalueunit"></span></span>
+				</span>
 			</p>
 		</form>
 	</div><!-- / #newalert -->

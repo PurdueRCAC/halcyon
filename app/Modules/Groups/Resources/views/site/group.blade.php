@@ -827,7 +827,7 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 					@elseif ($membership->membertype == 4)
 						<span class="badge badge-warning">{{ $membership->type->name }}</span>
 					@else
-						<span class="badge{{ $membership->isManager() ? ' badge-success' : '' }}">{{ $membership->type->name }}</span>
+						<span class="badge {{ $membership->isManager() ? 'badge-success' : 'badge-secondary' }}">{{ $membership->type->name }}</span>
 					@endif
 				@endif
 			</div>
@@ -897,4 +897,4 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 			<!--</div>-->
 		</div><!-- / #everything -->
 
-	</div>
+	</div><!-- / .contentInner -->
