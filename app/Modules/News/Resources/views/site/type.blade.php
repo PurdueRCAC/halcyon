@@ -212,7 +212,7 @@
 								->first();
 							?>
 							@if ($lastupdate)
-								<span class="badge badge-warning"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Updated {{ $lastupdate->datetimecreated->format('h:m') }} {{ $lastupdate->datetimecreated->format('M d, Y') }}</span>
+								<span class="badge badge-warning"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Updated {{ $lastupdate->datetimecreated->format('M d, Y h:ia') }}</span>
 							@endif
 
 							<?php
