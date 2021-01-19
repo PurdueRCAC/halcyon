@@ -1,5 +1,5 @@
 <?php
-namespace App\Listeners\Resources\Storage;
+namespace App\Listeners\Resources\StorageFortress;
 
 use App\Modules\Resources\Entities\Asset;
 use App\Modules\Resources\Events\ResourceMemberCreated;

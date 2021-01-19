@@ -1,5 +1,5 @@
 <?php
-namespace App\Listeners\Resources\Storage;
+namespace App\Listeners\Resources\StorageHome;
 
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Storage\Models\StorageResource;
