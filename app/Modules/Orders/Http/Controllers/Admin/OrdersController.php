@@ -268,7 +268,12 @@ class OrdersController extends Controller
 			->appends(array_filter($filters));
 
 		$categories = Category::query()
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->withTrashed()
+			->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
