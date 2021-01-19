@@ -39,9 +39,9 @@ class LastActivity
 		 && $this->auth->user()->last_visit < Carbon::now()->subMinutes(5)->toDateTimeString())
 		{
 			$user = $this->auth->user();
-			/*$user->update(['last_visit' => Carbon::now()->toDateTimeString()]);*/
-
-			$user->getUserUsername()->update(['datelastseen' => Carbon::now()->toDateTimeString()]);
+			//$user->update(['last_visit' => Carbon::now()->toDateTimeString()]);
+			$user->getUserUsername()->datelastseen = Carbon::now()->toDateTimeString();
+			$user->getUserUsername()->save();
 		}
 
 		return $next($request);
