@@ -62,7 +62,7 @@ class StorageScratch
 
 			// Prepare storagedir entry
 			$dir = Directory::create([
-				'resourceid' = $event->resource->id,
+				'resourceid' => $event->resource->id,
 				'name' => $event->user->username,
 				'path' => $p,
 				'bytes' => $storage->defaultquotaspace,

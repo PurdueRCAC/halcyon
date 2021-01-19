@@ -61,7 +61,7 @@ class StorageHome
 
 		// Prepare storagedir entry
 		$dir = Directory::create([
-			'resourceid' = $home->id,
+			'resourceid' => $home->id,
 			'name' => $event->user->username,
 			'path' => $event->user->username,
 			'bytes' => $storage->defaultquotaspace,
