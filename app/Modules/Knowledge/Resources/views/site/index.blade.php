@@ -32,7 +32,11 @@
 			</form>
 		</div>
 		<div class="col-md-3 text-right">
-			<a class="btn btn-default btn-secondary" href="<?php if ($p) { echo route('site.knowledge.page', ['uri' => $p, 'all' => 'true']); } else { echo route('site.knowledge.index', ['all' => 'true']); } ?>">{{ trans('knowledge::knowledge.expand topics') }}</a>
+			@if (request('all'))
+				<a class="btn btn-secondary" href="<?php if ($p) { echo route('site.knowledge.page', ['uri' => $p]); } else { echo route('site.knowledge.index'); } ?>">{{ trans('knowledge::knowledge.collapse topics') }}</a>
+			@else
+				<a class="btn btn-secondary" href="<?php if ($p) { echo route('site.knowledge.page', ['uri' => $p, 'all' => 'true']); } else { echo route('site.knowledge.index', ['all' => 'true']); } ?>">{{ trans('knowledge::knowledge.expand topics') }}</a>
+			@endif
 		</div>
 	</div>
 
@@ -56,10 +60,13 @@
 						$pa = $p ? $p . '/' . $n->page->alias : $n->page->alias;
 					@endphp
 					<section id="{{ str_replace('/', '_', $pa) }}">
-						<h3>{{ $n->page->headline }}</h3>
+						@if ($n->page->params->get('show_title', 1))
+							<h3>{{ $n->page->headline }}</h3>
+						@endif
 
 						{!! $n->page->body !!}
 					</section>
+					@include('knowledge::site.articles', ['nodes' => $n->publishedChildren(), 'path' => $pa, 'variables' => $n->page->variables])
 				@endforeach
 			@else
 				<ul class="kb-toc">

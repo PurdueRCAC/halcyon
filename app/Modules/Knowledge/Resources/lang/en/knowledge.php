@@ -40,6 +40,7 @@ return [
 	'this is a snippet' => 'This is a re-usable page',
 	'path' => 'Path',
 	'path hint' => 'Lowercase alpha-numeric characters, dashes, underscores. If left blank, one will be auto-generated from the title. Ex: "My Title" -> my_title',
+	'collapse topics' => 'Collapse Topics',
 	'expand topics' => 'Expand Topics',
 	'search' => 'Search',
 	'search placeholder' => 'Search knowledge base...',

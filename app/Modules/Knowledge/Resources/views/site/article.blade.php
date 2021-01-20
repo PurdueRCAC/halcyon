@@ -1,36 +1,17 @@
-@extends('layouts.master')
+@php
+$path .= $path ? '/' . $node->page->alias : $node->page->alias;
 
-@push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/prism/prism.css') }}?v={{ filemtime(public_path('modules/core/vendor/prism/prism.css')) }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/knowledge/css/knowledge.css') }}?v={{ filemtime(public_path('modules/knowledge/css/knowledge.css')) }}" />
-@endpush
+$node->page->variables->merge($variables);
 
-@push('scripts')
-<script src="{{ asset('modules/core/vendor/prism/prism.js?v=' . filemtime(public_path() . '/modules/core/vendor/prism/prism.js')) }}"></script>
-@endpush
+$children = $node->publishedChildren();
+$hasChildren = count($children);
+@endphp
 
-@section('content')
-<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-	<ul class="dropdown-menu">
-		<li><a href="{{ route('site.news.search') }}">Search Knowledge</a></li>
-		<li><a href="{{ route('site.news.rss') }}">RSS Feeds</a></li>
-		<li><div class="separator"></div></li>
-		<?php foreach ($types as $type): ?>
-			<li>
-				<a href="{{ route('site.news.type', ['name' => $type->name]) }}">
-					{{ $type->name }}
-				</a>
-			</li>
-		<?php endforeach; ?>
-	</ul>
-</div>
+<section class="all-section" id="{{ str_replace('/', '_', $path) }}">
+	@if ($node->page->params->get('show_title', 1))
+		<h3>{{ $node->page->headline }}</h3>
+	@endif
 
-<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-	<h2>{{ $article->headline }}</h2>
-
-	<div class="wrapper-news">
-		{!! $article->body !!}
-	</div>
-</div>
-
-@stop
+	{!! $node->page->body !!}
+</section>
+@include('knowledge::site.articles', ['nodes' => $node->publishedChildren(), 'path' => $path, 'variables' => $node->page->variables])

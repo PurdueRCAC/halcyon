@@ -9,7 +9,11 @@
 .highlight {
 	background-color: #FFFF99;
 }
-
+.all-section {
+	margin: 1em 0;
+	padding: 1em 0;
+	border-top: 1px solid #ccc;
+}
 .article-list {
 	list-style: none;
 }
