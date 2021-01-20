@@ -1,8 +1,22 @@
 @extends('layouts.master')
 
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+@endpush
+
 @push('scripts')
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script>
 $(document).ready(function() {
+	$('.searchable-select').select2({
+		//placeholder: $(this).data('placeholder')
+		})
+		.on('select2:select', function (e) {
+			if ($(this).hasClass('filter-submit')) {
+				$(this).closest('form').submit();
+			}
+		});
+
 	var dialog = $(".dialog").dialog({
 		autoOpen: false,
 		height: 'auto',
@@ -100,7 +114,7 @@ app('pathway')
 			</div>
 			<div class="col col-md-9 text-right">
 				<label class="sr-only" for="filter_fieldofscience">{{ trans('groups::groups.field of science') }}</label>
-				<select name="fieldofscience" id="filter_fieldofscience" class="form-control filter-submit">
+				<select name="fieldofscience" id="filter_fieldofscience" class="form-control filter-submit searchable-select">
 					<option value="0">{{ trans('groups::groups.select field of science') }}</option>
 					@foreach ($fields as $field)
 						@php
@@ -113,7 +127,7 @@ app('pathway')
 				</select>
 
 				<label class="sr-only" for="filter_department">{{ trans('groups::groups.department') }}</label>
-				<select name="department" id="filter_department" class="form-control filter-submit">
+				<select name="department" id="filter_department" class="form-control filter-submit searchable-select">
 					<option value="0">{{ trans('groups::groups.select department') }}</option>
 					@foreach ($departments as $department)
 						@php
