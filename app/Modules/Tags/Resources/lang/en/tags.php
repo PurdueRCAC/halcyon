@@ -9,7 +9,7 @@ return [
 	'alias hint' => 'Enter a comma-separated list of alternate spellings, abbreviations, or synonyms for this tag.',
 	'slug' => 'Slug',
 	'slug placeholder' => 'This is a read-only field that will be filled in after saving.',
-	'slug hint' => 'To create the slug (used for URLs), all spaces, punctuation, and non-alpanumeric characters are stripped. &quot;N.Y.&quot;, &quot;NY&quot;, and &quot;ny&quot; will all have a normalized tag of &quot;ny&quot;.',
+	'slug hint' => 'To create the slug (used for URLs), all spaces, punctuation, and non-alpanumeric characters are stripped. "N.Y.", "NY", and "ny" will all have a normalized tag of "ny".',
 	'created' => 'Created',
 	'FIELD_CREATOR' => 'Creator',
 	'FIELD_MODIFIER' => 'Modifier',

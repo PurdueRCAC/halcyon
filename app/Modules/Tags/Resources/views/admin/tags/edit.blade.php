@@ -40,12 +40,12 @@ app('pathway')
 				<div class="form-group" data-hint="{{ trans('tags::tags.name hint') }}">
 					<label for="field-name">{{ trans('tags::tags.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control required" size="30" maxlength="250" value="{{ $row->name }}" />
-					<span class="hint form-text">{{ trans('tags::tags.name hint') }}</span>
 				</div>
 
 				<div class="form-group">
 					<label for="field-slug">{{ trans('tags::tags.slug') }}:</label>
 					<input type="text" name="fields[slug]" id="field-slug" class="form-control" placeholder="{{ trans('tags::tags.slug placeholder') }}" maxlength="250" value="{{ $row->slug }}" />
+					<span class="hint form-text text-muted">{{ trans('tags::tags.slug hint') }}</span>
 				</div>
 
 				<div class="form-group">
@@ -55,27 +55,7 @@ app('pathway')
 			</fieldset>
 		</div>
 		<div class="col col-md-5">
-			<div class="data-wrap">
-				<?php if ($row->id) { ?>
-					<h4>{{ trans('tags::tags.history') }}</h4>
-					<ul class="entry-log" id="entry-log">
-						<?php
-						foreach ($row->history()->limit(100)->get() as $log)
-						{
-							?>
-							<li data-id="<?php echo $log->id; ?>">
-								<span class="entry-log-data">
-									<time><?php echo $log->created_at; ?></time>
-									<?php echo $log->user->name; ?>
-									<?php echo $log->action; ?>
-								</span>
-							</li>
-							<?php
-						}
-						?>
-					</ul>
-				<?php } ?>
-			</div>
+			@include('history::admin.history')
 		</div>
 	</div>
 
