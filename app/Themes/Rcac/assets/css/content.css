@@ -308,8 +308,8 @@ li.resource_list {
 }
 .contentInner ul li {
 	list-style: circle outside none;
-	list-style: '\0203A\0020' outside none;
-	margin-left: 1em;
+	/*list-style: '\0203A\0020' outside none;*/
+	margin-left: 1.25em;
 }
 /*.contentInner ul li:before {
 	content: '\0203A';
