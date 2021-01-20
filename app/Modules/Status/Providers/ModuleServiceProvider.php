@@ -2,6 +2,7 @@
 namespace App\Modules\Status\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Modules\Status\Console\FetchCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -30,8 +31,21 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	protected function registerConsoleCommands()
+	{
+		$this->commands([
+			FetchCommand::class,
+		]);
 	}
 
 	/**
