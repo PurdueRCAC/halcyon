@@ -79,7 +79,7 @@ app('pathway')
 
 				<div class="form-group{{ $errors->has('content') ? ' is-invalid' : '' }}">
 					<label for="field-content">{{ trans('pages::pages.content') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					{!! editor('fields[content]', $row->content, ['rows' => 35, 'class' => 'required', 'required' => 'required']) !!}
+					{!! editor('fields[content]', $row->content, ['rows' => 45, 'class' => 'required', 'required' => 'required']) !!}
 				</div>
 			</fieldset>
 		</div>
