@@ -92,18 +92,18 @@ app('pathway')
 							<select class="form-control" id="new_class_select">
 								<option value="first">(Select Class)</option>
 								<?php foreach ($classes as $class) { ?>
-									<option id="option_class_<?php echo $class->classExternalId; ?>"
-										data-crn="<?php echo $class->classExternalId; ?>"
-										data-classid="<?php echo $class->classId; ?>"
-										data-userid="<?php echo $user->id; ?>"
-										data-semester="<?php echo escape($class->semester); ?>"
-										data-start="<?php echo $class->start; ?>"
-										data-stop="<?php echo $class->stop; ?>"
-										data-classname="<?php echo escape($class->courseTitle); ?>"
+									<option id="option_class_{{ $class->classExternalId }}"
+										data-crn="{{ $class->classExternalId }}"
+										data-classid="{{ $class->classId }}"
+										data-userid="{{ auth()->user()->id }}"
+										data-semester="{{ $class->semester }}"
+										data-start="{{ $class->start }}"
+										data-stop="{{ $class->stop }}"
+										data-classname="{{ $class->courseTitle }}"
 										data-count="<?php echo $class->enrollment ? count($class->enrollment) : 0; ?>"
 										data-reference="<?php echo $class->reference; ?>"
-										data-instructors="<?php echo escape(json_encode($class->instructors)); ?>"
-										data-students="<?php echo escape('{ "students": ' . json_encode($class->student_list) . '}'); ?>">
+										data-instructors="<?php echo e(json_encode($class->instructors)); ?>"
+										data-students="<?php echo e('{ "students": ' . json_encode($class->student_list) . '}'); ?>">
 										<?php echo $class->subjectArea . ' ' . $class->courseNumber . ' (' . $class->classExternalId . ') - ' . $class->semester; ?>
 									</option>
 								<?php } ?>
