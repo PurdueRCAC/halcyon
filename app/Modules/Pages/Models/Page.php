@@ -498,6 +498,7 @@ class Page extends Model
 			->join($model->getTable() . ' AS p', 'p.level', '>', DB::raw('0'))
 			->whereRaw('n.lft BETWEEN p.lft AND p.rgt')
 			->where('n.path', '=', (string) $path)
+			->whereNull('p.deleted_at')
 			->orderBy('p.lft', 'asc')
 			->get();
 
