@@ -1,0 +1,156 @@
+#content>.container {
+	width: auto;
+	max-width: 100%;
+}
+#content>.container>.row {
+	padding: 0;
+	display: block;
+}
+.breadcrumb {
+	display: none;
+}
+.hero {
+	background: url('../images/background-anvil.jpg') center right no-repeat;
+	background-size: 130% auto;
+	margin: 0 0 2em 0;
+}
+.hero .container {
+	position: relative;
+}
+.hero .hero-text {
+	margin: 5em 0 0 0;
+	background: #333;
+	color: #fff;
+	padding: 2em 2em 0 2em;
+	position: relative;
+}
+.hero .hero-text *:first-child {
+	margin-top: 0;
+	padding-top: 0;
+}
+.hero .hero-text *:last-child {
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+.hero .hero-text:after {
+	content: '';
+	height: 2em;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 100%;
+	background: #333;
+}
+.hero .hero-text h2 {
+	color: #cfb991;
+}
+.hero .tagline {
+	text-transform: uppercase;
+	color: #fff;
+	font-size: 3.16em;
+	font-weight: bold;
+	line-height: 1;
+	position: absolute;
+	bottom: -0.1em;
+	right: -0.1em;
+	margin: 0;
+	font-family: acumin-pro-condensed, "Franklin Gothic", sans-serif;
+}
+.contentPage section {
+	margin: 0 0 4em 0;
+}
+.contentPage section *:first-child {
+	margin-top: 0;
+	padding-top: 0;
+}
+.contentPage section *:last-child {
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+.contentPage .side-nav {
+	margin: 0;
+	min-width: 16em;
+	z-index: 1000;
+}
+.contentPage .side-nav li {
+	list-style: none;
+	margin: 0;
+	border-top: solid 1px #ccc;
+	background-color: #fff;
+}
+.side-nav a {
+	color: #000;
+	display: block;
+	padding: .7rem 0;
+	text-decoration: none;
+	font-weight: bold;
+	color: #555;
+}
+.side-nav .active a {
+	color: #000;
+	text-decoration: underline;
+}
+
+.sidenav-news {
+	margin: 4em 0 0 0;
+}
+.contentInner .sidenav-news ul li {
+	list-style: none;
+	margin: 0;
+}
+.sidenav-news .card-footer {
+	padding: 1em;
+	border-color: #fff;
+	background-color: transparent;
+}
+.sidenav-news .card-footer p {
+	margin: 0;
+}
+.sidenav-news .card-footer .btn {
+	display: block;
+}
+.sidenav-news .card-title {
+	margin: 0 0 1em 0;
+	font-size: 1em;
+}
+.card,
+a.card,
+a.card:link {
+	font-weight: normal;
+	text-decoration: none;
+	background-color: #f5f5f5;
+	transition: all 0.3s ease;
+	border: 2px solid transparent;
+}
+a.card:hover,
+a.card:focus {
+	-webkit-transform: translateY(-7px);
+	transform: translateY(-7px);
+	border-color: #cfb991;
+}
+
+.contentPage section .card {
+	margin: 0 0 2em 0;
+}
+.contentPage section .card-header {
+	background-color: transparent;
+	border: none;
+	padding: 2rem 1.25rem 0 1.25rem;
+}
+.contentPage section .card-body {
+	padding: 1.25rem;
+}
+.contentPage section .card-header .fa {
+	font-size: 2em;
+	color: #8e6f3e;
+}
+.contentPage section .card-title {
+	font-weight: bold;
+	margin-bottom: 0.5em;
+	font-size: 1em;
+	color: #333;
+}
+.contentPage section .card-body *:last-child {
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
