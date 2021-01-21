@@ -24,7 +24,7 @@
 @if (count($page->styles))
 	@foreach ($page->styles as $v)
 		@push('styles')
-			<link rel="stylesheet" type="text/css" href="{{ $v }}" />
+			<link rel="stylesheet" type="text/css" href="{{ asset($v) }}" />
 		@endpush
 	@endforeach
 @endif
