@@ -601,11 +601,37 @@ class AccountsController extends Controller
 					}
 				}
 
-				$count++;
+				// Create a local entry, if one doesn't already exist
+				$member = Member::query()
+					->where('classaccountid')
+					->where('userid', '=', $userid)
+					->where(function($where)
+					{
+						$where->whereNull('datetimeremoved')
+							->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+					})
+					->first();
 
-				/*$member = new Member;
-				$member->datetimestart = $course->datetimestart;
-				$member->datetimestop = $course->datetimestop;*/
+				if (!$member)
+				{
+					$classuser = new classuser();
+
+					$member = new Member();
+					$member->userid         = $user->id;
+					$member->datetimestart  = $course->datetimestart;
+					$member->datetimestop   = $course->datetimestop;
+					$member->classaccountid = $course->id;
+					$member->notice         = 0;
+					$member->membertype     = 0; // 0 = autocreated, 1 = explicit
+
+					if (!$member->save())
+					{
+						$errors[] = __METHOD__ . '(): Failed to create `classusers` entry for user #' . $user->id . ', class #' . $course->id;
+						continue;
+					}
+				}
+
+				$count++;
 
 				$students[] = $user;
 			}
