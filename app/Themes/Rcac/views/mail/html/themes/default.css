@@ -29,7 +29,11 @@ blockquote {
 blockquote {
     background-color: #e9f5fe;
     padding: 10px 20px;
-    margin: 0;
+    margin: 0 0 10px;
+}
+blockquote *:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 a {
