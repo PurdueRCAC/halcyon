@@ -57,4 +57,12 @@ $(document).ready(function() {
                     .end().filter("[href='#"+id+"']").parent().addClass("active");
             }
         });
+
+   $('.form-check-input').on('change', function(e){
+			if ($(this).is(':checked') && $(this).data('show')) {
+				$($(this).data('show')).removeClass('hide');
+			} else {
+				$(this).closest('fieldset').find('.form-dependent').addClass('hide');
+			}
+		});
 });

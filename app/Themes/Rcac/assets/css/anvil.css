@@ -12,6 +12,9 @@
 .hero {
 	background: url('../images/background-anvil.jpg') center right no-repeat;
 	background-size: 130% auto;
+	/*background: url('../images/IMG_3547a.jpg') right bottom no-repeat;
+	background: url('../images/IMG_3532c.jpg') right bottom no-repeat;
+	background-size: 100% auto;*/
 	margin: 0 0 2em 0;
 }
 .hero .container {
@@ -153,4 +156,19 @@ a.card:focus {
 .contentPage section .card-body *:last-child {
 	margin-bottom: 0;
 	padding-bottom: 0;
+}
+
+fieldset.form-group {
+	border: none;
+	padding: 0;
+}
+fieldset.form-group legend {
+	border: none;
+	font-size: 1em;
+	margin: 0 0 0.5em 0;
+	padding: 0;
+}
+
+.input-required {
+	color: #c00;
 }
