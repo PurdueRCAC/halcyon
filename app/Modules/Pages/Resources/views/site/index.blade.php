@@ -24,7 +24,7 @@
 @if (count($page->styles))
 	@foreach ($page->styles as $v)
 		@push('styles')
-			<link rel="stylesheet" type="text/css" href="{{ asset($v) }}" />
+			<link rel="stylesheet" type="text/css" href="{{ substr($v, 0, 1) == '/' ? $v : asset($v) }}" />
 		@endpush
 	@endforeach
 @endif
@@ -32,7 +32,7 @@
 @if (count($page->scripts))
 	@foreach ($page->scripts as $v)
 		@push('scripts')
-			<script src="{{ $v }}"></script>
+			<script src="{{ substr($v, 0, 1) == '/' ? $v : asset($v) }}"></script>
 		@endpush
 	@endforeach
 @endif
