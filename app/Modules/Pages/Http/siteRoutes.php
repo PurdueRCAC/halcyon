@@ -47,12 +47,12 @@ $router->group(['prefix' => 'pages'], function (Router $router)
 	]);
 });
 
-$router->get('{uri}', [
+$router->match(['get', 'post'],'{uri}', [
 	'uses' => 'PagesController@index',
 	'as' => 'page',
 ])->where('uri', '(.*)');
-$router->post('{uri}', [
+/*$router->post('{uri}', [
 	'uses' => 'PagesController@store',
 	'as' => 'site.pages.store',
 	'middleware' => 'can:edit pages,edit.state pages',
-])->where('uri', '(.*)');
+])->where('uri', '(.*)');*/
