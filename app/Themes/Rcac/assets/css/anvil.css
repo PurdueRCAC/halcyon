@@ -62,11 +62,11 @@
 .contentPage section {
 	margin: 0 0 4em 0;
 }
-.contentPage section *:first-child {
+.contentPage section>*:first-child {
 	margin-top: 0;
 	padding-top: 0;
 }
-.contentPage section *:last-child {
+.contentPage section>*:last-child {
 	margin-bottom: 0;
 	padding-bottom: 0;
 }
