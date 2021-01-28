@@ -81,13 +81,13 @@
 		<legend>Please describe the issue</legend>
 
 		<div class="form-group">
-			<label for="email">Email address</label>
-			<input type="text" name="email" id="email" class="form-control" value="{{ auth()->user() ? auth()->user()->username . '@purdue.edu' : '' }}" />
+			<label for="email">Email address <span class="required-field">*</span></label>
+			<input type="email" name="email" id="email" class="form-control" required value="{{ auth()->user() ? auth()->user()->username . '@purdue.edu' : '' }}" />
 		</div>
 
 		<div class="form-group">
-			<label for="subject">Subject</label>
-			<input type="text" name="subject" id="subject" class="form-control" value="" />
+			<label for="subject">Subject <span class="required-field">*</span></label>
+			<input type="text" name="subject" id="subject" class="form-control" required value="" />
 		</div>
 
 		<div class="form-group">
@@ -115,13 +115,13 @@
 
 		<div class="form-group">
 			<label for="report">Describe the issue <span class="required-field">*</span></label>
-			<textarea id="report" name="report" class="form-control" rows="15" cols="77"></textarea>
+			<textarea id="report" name="report" class="form-control" required rows="15" cols="77"></textarea>
 			<span class="form-text tex-muted">Please include job IDs (if applicable).</span>
 		</div>
 
 		@csrf
 
-		<input type="submit" class="btn btn-primary" value="Send" />
+		<input type="submit" class="btn btn-primary" id="submitticket" value="Send" />
 	</fieldset>
 </form>
 
@@ -179,5 +179,78 @@ $(document).ready(function() {
 			});
 		}
 	});
+
+	var invalid = false,
+		sbmt = $('#submitticket'),
+		frm = sbmt.closest('form')[0];
+	sbmt.prop('disabled', true);
+
+	var inputs = $('input[required],textarea[required]');
+	var needed = inputs.length, validated = 0;
+	inputs.on('change', function(e){
+		if (this.value) {
+			if (this.validity.valid) {
+				this.classList.add('is-valid');
+				validated++;
+			} else {
+				this.classList.add('is-invalid');
+			}
+		}
+		if (needed == validated) {
+			sbmt.prop('disabled', false);
+		}
+	});
+
+	sbmt.on('click', function(e){
+		e.preventDefault();
+
+		var elms = frm.querySelectorAll('input[required]');
+		elms.forEach(function (el) {
+            if (!el.value || !el.validity.valid) {
+                el.classList.add('is-invalid');
+                invalid = true;
+            } else {
+                el.classList.remove('is-invalid');
+            }
+        });
+        var elms = frm.querySelectorAll('select[required]');
+        elms.forEach(function (el) {
+            if (!el.value || el.value <= 0) {
+                el.classList.add('is-invalid');
+                invalid = true;
+            } else {
+                el.classList.remove('is-invalid');
+            }
+        });
+        var elms = frm.querySelectorAll('textarea[required]');
+        elms.forEach(function (el) {
+            if (!el.value || !el.validity.valid) {
+                el.classList.add('is-invalid');
+                invalid = true;
+            } else {
+                el.classList.remove('is-invalid');
+            }
+        });
+
+        if (!invalid) {
+            /*$.ajax({
+                url: $(frm).attr('action'),
+                //url: sbmt.data('api'),
+                type: 'post',
+                data: $(frm).serialize(),
+                dataType: 'json',
+                async: false,
+                success: function (response) {
+                    alert('Item added');
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                    sbmt.find('.spinner-border').addClass('d-none');
+                    //Halcyon.message('danger', xhr.responseJSON.message);
+                }
+            });*/
+            frm.submit();
+        }
+    });
 });
 </script>
