@@ -17,9 +17,10 @@ trait Loggable
 	 * @param   integer $status
 	 * @param   mixed   $payload
 	 * @param   string  $uri
+	 * @param   integer $targetuserid
 	 * @return  null
 	 */
-	protected function log($app, $func, $method = 'GET', $status = 200, $payload = array(), $uri = '')
+	protected function log($app, $func, $method = 'GET', $status = 200, $payload = array(), $uri = '', $targetuserid = 0)
 	{
 		$method = strtoupper($method);
 
@@ -51,6 +52,7 @@ trait Loggable
 			'payload'         => Str::limit(json_encode($payload), 2000, ''),
 			'classname'       => Str::limit($cls, 32, ''),
 			'classmethod'     => Str::limit($fnc, 16, ''),
+			'targetuserid'    => $targetuserid,
 		]);
 	}
 }
