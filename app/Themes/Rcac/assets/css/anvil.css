@@ -10,11 +10,8 @@
 	display: none;
 }
 .hero {
-	background: url('../images/background-anvil.jpg') center right no-repeat;
-	background-size: 130% auto;
-	/*background: url('../images/IMG_3547a.jpg') right bottom no-repeat;
-	background: url('../images/IMG_3532c.jpg') right bottom no-repeat;
-	background-size: 100% auto;*/
+	background: url('../images/IMG_3545f.jpg') top right no-repeat;
+	background-size: 100% auto;
 	margin: 0 0 2em 0;
 }
 .hero .container {

@@ -132,6 +132,22 @@ $(document).ready(function() {
         });
 
         if (!invalid) {
+            /*$.ajax({
+                url: $(frm).attr('action'),
+                //url: sbmt.data('api'),
+                type: 'post',
+                data: $(frm).serialize(),
+                dataType: 'json',
+                async: false,
+                success: function (response) {
+                    alert('Item added');
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                    sbmt.find('.spinner-border').addClass('d-none');
+                    //Halcyon.message('danger', xhr.responseJSON.message);
+                }
+            });*/
             frm.submit();
         }
     });
