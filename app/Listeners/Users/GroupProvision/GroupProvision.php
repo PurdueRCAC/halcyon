@@ -55,8 +55,8 @@ class GroupProvision
 			$url = $config['url'] . 'createGroup/rcs';
 			$body = array(
 				'provisionGroupServiceCreateGroupRequest' => array(
-					'groupName'  => $this->unixgroup->shortname,
-					'lgroupName' => 'rcac-' . $this->unixgroup->longname
+					'groupName'  => $event->unixgroup->shortname,
+					'lgroupName' => 'rcac-' . $event->unixgroup->longname
 				)
 			);
 
@@ -83,12 +83,20 @@ class GroupProvision
 						$this->unixgroup->unixgid = $results->groupId;
 					}
 				}
+
+				error_log(__METHOD__ . '(): Created AIMO ACMaint group ' . $event->unixgroup->shortname . ': ' . $res->getBody()->getContents());
+			}
+			else
+			{
+				error_log(__METHOD__ . '(): Failed to create AIMO ACMaint group ' . $event->unixgroup->shortname . ': ' . $res->getBody()->getContents());
 			}
 		}
 		catch (\Exception $e)
 		{
 			$status = 500;
 			$body   = ['error' => $e->getMessage()];
+
+			error_log(__METHOD__ . '(): Failed to create AIMO ACMaint group ' . $event->unixgroup->shortname . ': ' . $e->getMessage());
 		}
 
 		$this->log('groupprovision', __METHOD__, 'POST', $status, $body, $url);
@@ -115,7 +123,7 @@ class GroupProvision
 			// Call central accounting service to request status
 			$client = new Client();
 
-			$url = $config['url'] . 'deleteGroup/rcs/' . $this->unixgroup->shortname;
+			$url = $config['url'] . 'deleteGroup/rcs/' . $event->unixgroup->shortname;
 
 			$res = $client->request('DELETE', $url, [
 				'auth' => [
@@ -126,11 +134,22 @@ class GroupProvision
 
 			$status = $res->getStatusCode();
 			$body   = json_decode($res->getBody()->getContents());
+
+			if ($status < 400)
+			{
+				error_log(__METHOD__ . '(): Removed AIMO ACMaint group ' . $member->unixgroup->shortname . ': ' . $res->getBody()->getContents());
+			}
+			else
+			{
+				error_log(__METHOD__ . '(): Failed to remove AIMO ACMaint group ' . $member->unixgroup->shortname . ': ' . $res->getBody()->getContents());
+			}
 		}
 		catch (\Exception $e)
 		{
 			$status = 500;
 			$body   = ['error' => $e->getMessage()];
+
+			error_log(__METHOD__ . '(): Failed to remove AIMO ACMaint group ' . $member->unixgroup->shortname . ': ' . $e->getMessage());
 		}
 
 		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, $url);
@@ -210,11 +229,22 @@ class GroupProvision
 
 			$status = $res->getStatusCode();
 			$body   = json_decode($res->getBody()->getContents());
+
+			if ($status < 400)
+			{
+				error_log(__METHOD__ . '(): Added AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $res->getBody()->getContents());
+			}
+			else
+			{
+				error_log(__METHOD__ . '(): Failed to add AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $res->getBody()->getContents());
+			}
 		}
 		catch (\Exception $e)
 		{
 			$status = 500;
 			$body   = ['error' => $e->getMessage()];
+
+			error_log(__METHOD__ . '(): Failed to add AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $e->getMessage());
 		}
 
 		$this->log('groupprovision', __METHOD__, 'POST', $status, $body, $url);
@@ -254,11 +284,22 @@ class GroupProvision
 
 			$status = $res->getStatusCode();
 			$body   = json_decode($res->getBody()->getContents());
+
+			if ($status < 400)
+			{
+				error_log(__METHOD__ . '(): Removed AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $res->getBody()->getContents());
+			}
+			else
+			{
+				error_log(__METHOD__ . '(): Failed to remove AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $res->getBody()->getContents());
+			}
 		}
 		catch (\Exception $e)
 		{
 			$status = 500;
 			$body   = ['error' => $e->getMessage()];
+
+			error_log(__METHOD__ . '(): Failed to remove AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $e->getMessage());
 		}
 
 		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, $url);
