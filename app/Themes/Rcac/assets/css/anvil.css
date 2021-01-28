@@ -10,7 +10,7 @@
 	display: none;
 }
 .hero {
-	background: url('../images/background-anvil.jpg') top right no-repeat;
+	background: #666 url('../images/background-anvil.jpg') top right no-repeat;
 	background-size: 100% auto;
 	margin: 0 0 2em 0;
 }

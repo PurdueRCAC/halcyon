@@ -1,6 +1,6 @@
 $(document).ready(function() {
     // Cache selectors
-    var lastId,
+    /*var lastId,
     topMenu = $("#sidenav");
     if (topMenu.length) {
         var topMenuHeight = topMenu.outerHeight()+1,
@@ -60,7 +60,7 @@ $(document).ready(function() {
                         .end().filter("[href='#"+id+"']").parent().addClass("active");
                 }
             });
-    }
+    }*/
 
     $('.form-check-input').on('change', function(e){
         if ($(this).is(':checked') && $(this).data('show')) {
@@ -90,15 +90,6 @@ $(document).ready(function() {
             sbmt.prop('disabled', false);
         }
     });
-    /*$('textarea')
-        .on('focus', function (e) {
-            this.rows = 5;
-        })
-        .on('blur', function(e){
-            if (!this.value) {
-                this.rows = 2;
-            }
-        });*/
 
     sbmt.on('click', function(e){
         e.preventDefault();
