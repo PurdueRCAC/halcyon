@@ -52,7 +52,7 @@ app('pathway')->append(
 			$resource = $event->asset;
 			?>
 			<div class="col-md-4 pb-3 pl-3 pr-3 mb-3 item">
-				<div class="card panel {{ $resource->status . ($resource->hasNews ? ' hasnews ' . ($resource->isHappening ? $resource->hasNews : '') : '') . ($resource->data ? ' has-services' : '') }}">
+				<div class="card panel {{ $resource->status . ($resource->hasNews ? ' hasnews ' . ($resource->isNow ? $resource->hasNews : '') : '') . ($resource->data ? ' has-services' : '') }}">
 					<div class="card-header p-3">
 						<div class="row">
 							<div class="card-title col-sm-9 col-md-9 item-name">{{ $resource->name }}</div>
@@ -106,7 +106,7 @@ app('pathway')->append(
 						</div>
 
 						<?php
-						if (!($resource->hasNews == 'maintenance' && $resource->isHappening) && $resource->data)
+						if (!($resource->hasNews == 'maintenance' && $resource->isNow) && $resource->data)
 						{
 							?>
 							<ul class="list-group list-group-flush">
@@ -197,7 +197,7 @@ app('pathway')->append(
 					@endif
 
 						<?php
-						if (count($resource->news) && $resource->isHappening)
+						if (count($resource->news) && $resource->isNow)
 						{
 							?>
 							<ul class="list-group list-group-flush">
@@ -428,7 +428,7 @@ app('pathway')->append(
 									<i class="fa fa-fw fa-clock-o" aria-hidden="true"></i> <time datetime="{{ $news->datetimenews->format('Y-m-d h:i:s') }}">{{ $news->formatDate($news->datetimenews, $news->datetimenewsend) }}</time>
 
 									@if ($news->isToday())
-										@if ($news->isHappening())
+										@if ($news->isNow())
 											<span class="badge badge-success">Happening now</span>
 										@else
 											<span class="badge badge-info">Today</span>
