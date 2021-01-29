@@ -4,6 +4,7 @@ namespace App\Widgets\Helpform;
 use App\Modules\Widgets\Entities\Widget;
 use App\Widgets\Helpform\Mail\Ticket;
 use App\Modules\Resources\Entities\Asset;
+use App\Modules\Knowledge\Models\Associations;
 
 /**
  * Display a help form
@@ -22,7 +23,7 @@ class Helpform extends Widget
 			$data = array(
 				'email' => request()->input('email'),
 				'subject' => request()->input('subject'),
-				'resource' => request()->input('resource', [])
+				'resource' => request()->input('resource', []),
 				'report' => request()->input('report'),
 			);
 
@@ -59,7 +60,7 @@ class Helpform extends Widget
 					$rname = $resource ? $resource->name : $rname;
 				}
 
-				$message = new Ticket($data, $destination;
+				$message = new Ticket($data, $destination);
 
 				//Mail::to($destination)->send($message);
 
@@ -68,6 +69,20 @@ class Helpform extends Widget
 					'errors' => $errors,
 					'params' => $this->params,
 				]);
+			}
+		}
+
+		$topics = $this->params->get('topic', []);
+
+		foreach ($topics as $i => $topic)
+		{
+			$topics[$i]['name'] = preg_replace('/[^a-zA-Z0-9]+/', '', strtolower($topics[$i]['title']));
+			$topics[$i]['content'] = '';
+			$page = Associations::find($topics[$i]['article']);
+
+			if ($page)
+			{
+				$topics[$i]['content'] = $page->page->body;
 			}
 		}
 
@@ -100,6 +115,7 @@ class Helpform extends Widget
 
 		return view($this->getViewName($layout), [
 			'types' => $types,
+			'topics' => $topics,
 		]);
 	}
 }
