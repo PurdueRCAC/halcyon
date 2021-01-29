@@ -35,6 +35,10 @@ class Articles extends Select
 
 		$options = $this->getOptions();
 
+		if (!$topic)
+		{
+			$topic = array();
+		}
 		foreach ($topic as $k => $t)
 		{
 			$html[] = '<div class="topic-group">';
