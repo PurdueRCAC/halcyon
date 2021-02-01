@@ -25,26 +25,27 @@ class Helpform extends Widget
 				'subject' => request()->input('subject'),
 				'resource' => request()->input('resource', []),
 				'report' => request()->input('report'),
+				'user' => null,
 			);
 
 			if (!isset($data['name']))
 			{
-				$errors[] = trans('Please provide a name.');
+				$errors[] = trans('widget.helpform::helpform.error.name');
 			}
 
 			if (!isset($data['email']))
 			{
-				$errors[] = trans('Please provide a valid email.');
+				$errors[] = trans('widget.helpform::helpform.error.email');
 			}
 
 			if (!isset($data['report']))
 			{
-				$errors[] = trans('Please provide a report.');
+				$errors[] = trans('widget.helpform::helpform.error.report');
 			}
 
 			if (!isset($data['subject']))
 			{
-				$errors[] = trans('Please provide a subject.');
+				$errors[] = trans('widget.helpform::helpform.error.subject');
 			}
 
 			if (empty($errors))
@@ -52,16 +53,28 @@ class Helpform extends Widget
 				// Prepare and send actual email
 				$destination = $this->params->get('email');
 				$destination = 'zooley@purdue.edu';
-				$rname = trans('global.unknown');
 
-				if ($resourceid  = $this->params->get('resourceid'))
+				// Collect selected resource names
+				$res = explode(',', $data['resource']);
+				$resources = array();
+				foreach ($res as $resourceid)
 				{
 					$resource = Asset::find($resourceid);
-					$rname = $resource ? $resource->name : $rname;
+					if ($resource)
+					{
+						$resources[] = $resource->name;
+					}
 				}
+				$data['resources'] = implode(', ', $resources);
 
+				// Do they have an account?
+				$user = User::findByEmail($data['email']);
+
+				$data['user'] = $user;
+
+				// Build the message
 				$message = new Ticket($data, $destination);
-
+				echo $message;
 				//Mail::to($destination)->send($message);
 
 				return view($this->getViewName('success'), [
