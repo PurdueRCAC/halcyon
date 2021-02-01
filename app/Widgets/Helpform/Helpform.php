@@ -5,6 +5,7 @@ use App\Modules\Widgets\Entities\Widget;
 use App\Widgets\Helpform\Mail\Ticket;
 use App\Modules\Resources\Entities\Asset;
 use App\Modules\Knowledge\Models\Associations;
+use App\Modules\Users\Models\User;
 
 /**
  * Display a help form
