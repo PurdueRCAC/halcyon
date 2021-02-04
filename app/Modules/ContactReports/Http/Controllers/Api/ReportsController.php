@@ -37,6 +37,14 @@ class ReportsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "type",
+	 * 		"description":   "Contact Report type ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"type":          "integer",
@@ -90,6 +98,7 @@ class ReportsController extends Controller
 			'stop'      => null,
 			'people'    => null,
 			'resource'  => null,
+			'type'      => '*',
 			'notice'    => '*',
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -127,6 +136,11 @@ class ReportsController extends Controller
 		if ($filters['notice'] != '*')
 		{
 			$query->where($cr . '.notice', '=', $filters['notice']);
+		}
+
+		if ($filters['type'] != '*')
+		{
+			$query->where($cr . '.contactreporttypeid', '=', $filters['type']);
 		}
 
 		if ($filters['group'])

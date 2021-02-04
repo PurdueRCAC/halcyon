@@ -27,9 +27,11 @@ class CreateContactReportsTables extends Migration
 				$table->timestamp('datetimecontact');
 				$table->integer('notice')->unsigned()->default(0);
 				$table->timestamp('datetimegroupid');
+				$table->integer('contactreporttypeid')->unsigned()->default(0);
 				$table->index(['groupid', 'userid', 'datetimecontact']);
 				$table->index(['userid', 'datetimecontact']);
 				$table->index(['groupid', 'datetimecontact']);
+				$table->index('contactreporttypeid');
 			});
 			//$this->info('Created `contactreports` table.');
 		}
@@ -85,6 +87,15 @@ class CreateContactReportsTables extends Migration
 				$table->index('contactreportid');
 			});
 			//$this->info('Created `contactreportresources` table.');
+		}
+
+		if (!Schema::hasTable('contactreporttypes'))
+		{
+			Schema::create('contactreporttypes', function (Blueprint $table)
+			{
+				$table->increments('id');
+				$table->string('name');
+			});
 		}
 
 		if (!Schema::hasTable('linkusers'))

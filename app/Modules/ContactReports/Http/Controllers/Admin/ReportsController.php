@@ -10,6 +10,7 @@ use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Comment;
 use App\Modules\ContactReports\Models\Reportresource;
 use App\Modules\ContactReports\Models\User as ReportUser;
+use App\Modules\ContactReports\Models\Type;
 use Carbon\Carbon;
 
 class ReportsController extends Controller
@@ -28,6 +29,7 @@ class ReportsController extends Controller
 			'group'    => null,
 			'start'    => null,
 			'stop'     => null,
+			'type'     => '*',
 			'notice'   => '*',
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -72,14 +74,22 @@ class ReportsController extends Controller
 			$query->where('groupid', '=', $filters['group']);
 		}
 
+		if ($filters['type'] != '*')
+		{
+			$query->where('contactreporttypeid', '=', $filters['type']);
+		}
+
 		$rows = $query
 			->withCount('comments')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
+		$types = Type::all();
+
 		return view('contactreports::admin.reports.index', [
 			'filters' => $filters,
 			'rows'    => $rows,
+			'types' => $types,
 		]);
 	}
 
@@ -93,10 +103,12 @@ class ReportsController extends Controller
 		$row = new Report();
 
 		$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();
+		$types = Type::all();
 
 		return view('contactreports::admin.reports.edit', [
 			'row'   => $row,
-			'groups' => $groups
+			'groups' => $groups,
+			'types' => $types,
 		]);
 	}
 
@@ -291,10 +303,12 @@ class ReportsController extends Controller
 		}
 
 		$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();
+		$types = Type::all();
 
 		return view('contactreports::admin.reports.edit', [
 			'row'   => $row,
-			'groups' => $groups
+			'groups' => $groups,
+			'types' => $types,
 		]);
 	}
 

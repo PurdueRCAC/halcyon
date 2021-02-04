@@ -68,4 +68,37 @@ $router->group(['prefix' => 'contactreports', 'middleware' => 'can:manage contac
 			'uses' => 'CommentsController@cancel',
 		]);
 	});
+
+	// Types
+	$router->group(['prefix' => '/types'], function (Router $router)
+	{
+		$router->match(['get', 'post'], '/', [
+			'as'   => 'admin.contactreports.types',
+			'uses' => 'TypesController@index',
+		]);
+		$router->get('/create', [
+			'as' => 'admin.contactreports.types.create',
+			'uses' => 'TypesController@create',
+			'middleware' => 'can:create contactreports',
+		]);
+		$router->post('/store', [
+			'as' => 'admin.contactreports.types.store',
+			'uses' => 'TypesController@store',
+			'middleware' => 'can:create contactreports,edit contactreports',
+		]);
+		$router->get('/edit/{id}', [
+			'as' => 'admin.contactreports.types.edit',
+			'uses' => 'TypesController@edit',
+			'middleware' => 'can:edit contactreports',
+		]);
+		$router->match(['get', 'post'], '/delete/{id?}', [
+			'as'   => 'admin.contactreports.types.delete',
+			'uses' => 'TypesController@delete',
+			'middleware' => 'can:delete contactreports',
+		]);
+		$router->match(['get', 'post'], '/cancel', [
+			'as' => 'admin.contactreports.types.cancel',
+			'uses' => 'TypesController@cancel',
+		]);
+	});
 });

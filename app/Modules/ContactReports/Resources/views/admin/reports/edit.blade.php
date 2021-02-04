@@ -66,6 +66,16 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
+					<label for="field-contactreporttypeid">{{ trans('contactreports::contactreports.type') }}:</label>
+					<select name="fields[contactreporttypeid]" id="field-contactreporttypeid" class="form-control">
+						<option value="0"<?php if (!$row->contactreporttypeid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
+						@foreach ($types as $type)
+							<option value="{{ $type->id }}"<?php if ($row->contactreporttypeid == $type->id) { echo ' selected="selected"'; } ?>>{{ $type->name }}</option>
+						@endforeach
+					</select>
+				</div>
+
+				<div class="form-group">
 					<?php
 					$resources = array();
 					foreach ($row->resources as $resource)

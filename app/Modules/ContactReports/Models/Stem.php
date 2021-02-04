@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\contactReports\Models;
+namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

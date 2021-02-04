@@ -44,4 +44,7 @@ return [
 	'my reports' => 'My Reports',
 	'past week' => 'Past Week',
 	'past month' => 'Past Month',
+	'types' => 'Types',
+	'type' => 'Type',
+	'name' => 'Name',
 ];

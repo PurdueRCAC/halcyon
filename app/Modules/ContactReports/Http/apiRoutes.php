@@ -57,6 +57,34 @@ $router->group(['prefix' => 'contactreports', 'middleware' => 'auth:api'], funct
 		])->where('comment', '[0-9]+');
 	});
 
+	// Types
+	$router->group(['prefix' => 'types'], function (Router $router)
+	{
+		$router->get('/', [
+			'as'   => 'api.contactreports.types',
+			'uses' => 'TypesController@index',
+		]);
+		$router->post('/', [
+			'as' => 'api.contactreports.types.create',
+			'uses' => 'TypesController@create',
+			'middleware' => 'can:create contactreports',
+		]);
+		$router->get('{id}', [
+			'as' => 'api.contactreports.types.read',
+			'uses' => 'TypesController@read',
+		])->where('id', '[0-9]+');
+		$router->put('{id}', [
+			'as' => 'api.contactreports.types.update',
+			'uses' => 'TypesController@update',
+			'middleware' => 'can:edit contactreports',
+		])->where('id', '[0-9]+');
+		$router->delete('{id}', [
+			'as' => 'api.contactreports.types.delete',
+			'uses' => 'TypesController@delete',
+			'middleware' => 'can:delete contactreports',
+		])->where('id', '[0-9]+');
+	});
+
 	// Follow users
 	$router->group(['prefix' => 'followusers'], function (Router $router)
 	{
