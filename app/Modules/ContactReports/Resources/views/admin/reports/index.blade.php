@@ -50,7 +50,7 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-6">
+			<div class="col col-md-5">
 				<div class="form-group">
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
@@ -59,17 +59,15 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-2">
-				<div class="form-group">
-					<label class="sr-only" for="filter_contactreporttypeid">{{ trans('contactreports::contactreports.type') }}:</label>
-					<select name="type" id="filter_contactreporttypeid" class="form-control filter filter-submit">
-						<option value="*"<?php if ($filters['type'] == '*') { echo ' selected="selected"'; } ?>>{{ trans('global.all') }}</option>
-						<option value="0"<?php if (!$filters['type']) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
-						@foreach ($types as $type)
-							<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id) { echo ' selected="selected"'; } ?>>{{ $type->name }}</option>
-						@endforeach
-					</select>
-				</div>
+			<div class="col col-md-3">
+				<label class="sr-only" for="filter_contactreporttypeid">{{ trans('contactreports::contactreports.type') }}:</label>
+				<select name="type" id="filter_contactreporttypeid" class="form-control filter filter-submit">
+					<option value="*"<?php if ($filters['type'] == '*') { echo ' selected="selected"'; } ?>>{{ trans('global.all') }}</option>
+					<option value="0"<?php if (!$filters['type']) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
+					@foreach ($types as $type)
+						<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id) { echo ' selected="selected"'; } ?>>{{ $type->name }}</option>
+					@endforeach
+				</select>
 			</div>
 			<div class="col col-md-2">
 				<label class="sr-only" for="filter_start">{{ trans('contactreports::contactreports.start') }}</label>
@@ -113,6 +111,9 @@ app('pathway')
 					{!! Html::grid('sort', trans('contactreports::contactreports.group'), 'groupid', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4">
+					{{ trans('contactreports::contactreports.users') }}
+				</th>
+				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('contactreports::contactreports.contacted'), 'datetimecontact', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-2 text-right">
@@ -145,6 +146,20 @@ app('pathway')
 				<td class="priority-4">
 					@if ($row->group && $row->group->id)
 						{{ $row->group->name }}
+					@else
+						<span class="none">{{ trans('global.none') }}</span>
+					@endif
+				</td>
+				<td class="priority-4">
+					<?php
+					$users = array();
+					foreach ($row->users as $user)
+					{
+						$users[] = ($user->user ? $user->user->name : trans('global.unknown'));
+					}
+					?>
+					@if (count($users))
+						{!! implode('<br />', $users) !!}
 					@else
 						<span class="none">{{ trans('global.none') }}</span>
 					@endif
