@@ -28,7 +28,7 @@
 			'themes/rcac/css/college.css',
 			'themes/rcac/css/content.css',
 		);
-		if (!app('isAdmin')):
+		if (!app('isAdmin') && auth()->user):
 			$styles[] = 'themes/rcac/css/admin.css';
 		endif;
 
@@ -50,7 +50,7 @@
 		</script>
 		<?php
 		$scripts = array(
-			'themes/rcac/js/jquery-3.3.1.min.js',
+			'themes/rcac/js/jquery-3.5.1.min.js',
 			'themes/rcac/js/common/jquery-ui-1.12.1/jquery-ui.min.js',
 			'themes/rcac/js/css_browser_selector.js',
 			'themes/rcac/js/modernizr-1.5.min.js',
@@ -60,8 +60,8 @@
 			'themes/rcac/js/common/date.js',
 			'themes/rcac/js/common/jquery_cookie.js',
 			'themes/rcac/js/common/jquerytimepicker_min.js',
-			'themes/rcac/js/common/json2.js',
-			'themes/rcac/js/common/text.js',
+			//'themes/rcac/js/common/json2.js',
+			//'themes/rcac/js/common/text.js',
 		);
 		foreach ($scripts as $script):
 			?>
@@ -161,7 +161,7 @@
 							<h1 class="sr-only">Purdue University</h1>
 							<a class="svgLinkContainer" href="https://www.purdue.edu">
 								<object class="svgContainer" data="{{ asset('themes/rcac/images/PU-H.svg') }}" type="image/svg+xml" aria-label="Purdue University">
-									<img alt="Purdue University" src="{{ asset('themes/rcac/images/PU-H.svg') }}" />
+									<img alt="Purdue University" src="{{ asset('themes/rcac/images/PU-H.svg') }}" height="45" width="243" />
 								</object>
 							</a>
 						</div>
