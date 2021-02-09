@@ -152,12 +152,14 @@ class ReportsController extends Controller
 
 		if ($filters['start'])
 		{
-			$query->where($cr . '.datetimecontact', '>=', $filters['start'] . ' 00:00:00');
+			$start = Carbon::parse($filters['start']);
+			$query->where($cr . '.datetimecontact', '>=', $start->toDateTimeString());
 		}
 
 		if ($filters['stop'])
 		{
-			$query->where($cr . '.datetimecontact', '<=', $filters['stop'] . ' 23:59:59');
+			$stop = Carbon::parse($filters['stop']);
+			$query->where($cr . '.datetimecontact', '<=', $stop->toDateTimeString());
 		}
 
 		if ($filters['id'])
