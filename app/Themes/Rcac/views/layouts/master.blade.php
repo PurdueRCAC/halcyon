@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js">
 	<head>
+		<!--
+		                @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.
+		               @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		              @@@@&*////////////////////////////////////////////////,&@@@@*
+		             @@@@#*///////////////////////////////////////////////////*@@@@
+		            @@@@(*///////////////////////////////////////////////////*(@@@@
+		           @@@@@@@@@@@@,//////////////,@@@@@@@@@@@@@@@@(*////////////,@@@@
+		         .@@@@@@@@@@@@,//////////////,@@@@@@@@@@@@@@@@,/////////////,@@@@,
+		                #@@@@,////////////////////////////////////////////,&@@@@
+		               %@@@@,///////////////////////////////////////////,&@@@@@
+		              &@@@@,///////////////////////////////////////,,(@@@@@@@
+		     @@@@@@@@@@@@@,//////////////,@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		    @@@@@@@@@@@@@,//////////////,@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		   @@@@@,//////////////////////////////,@@@@
+		  @@@@@,//////////////////////////////,@@@@
+		 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		-->
+
 		<!-- Metadata -->
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -8,8 +27,9 @@
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta name="base-url" content="{{ rtrim(asset('/'), '/') }}">
 		<meta name="api-token" content="{{ (Auth::user() ? Auth::user()->api_token : '') }}">
+		<meta name="theme-color" content="#000000">
 
-		<title>{{ config('app.name') }} @hasSection('title') - @yield('title') @endif</title>
+		<title>{{ config('app.name') }}@hasSection('title') - @yield('title')@endif</title>
 
 		@hasSection('meta')
 			@yield('meta')
@@ -28,7 +48,7 @@
 			'themes/rcac/css/college.css',
 			'themes/rcac/css/content.css',
 		);
-		if (!app('isAdmin') && auth()->user):
+		if (!app('isAdmin') && Auth::check()):
 			$styles[] = 'themes/rcac/css/admin.css';
 		endif;
 
@@ -55,8 +75,8 @@
 			'themes/rcac/js/css_browser_selector.js',
 			'themes/rcac/js/modernizr-1.5.min.js',
 			'modules/core/vendor/bootstrap/bootstrap.bundle.min.js', //'themes/rcac/js/bootstrap.min.js',
-			'themes/rcac/js/google_jquery_link_tracking.js',
 			'themes/rcac/js/common/common.js',
+			'themes/rcac/js/google_jquery_link_tracking.js',
 			'themes/rcac/js/common/date.js',
 			'themes/rcac/js/common/jquery_cookie.js',
 			'themes/rcac/js/common/jquerytimepicker_min.js',
@@ -71,24 +91,6 @@
 		?>
 		@yield('scripts')
 		@stack('scripts')
-
-		<script>
-		// this makes the menu's first link clickable
-		jQuery(function($) {
-			$('.navbar .dropdown').hover(
-				function() {
-					$(this).find('.dropdown-menu').first().stop(true, true).delay(10).slideDown();
-				},
-				function() {
-					$(this).find('.dropdown-menu').first().stop(true, true).delay(10).slideUp();
-				}
-			);
-
-			$('.navbar .dropdown > a').on('click', function(e){
-				location.href = this.href;
-			});
-		});
-		</script>
 	</head>
 	<body>
 		@widget('top')
