@@ -475,6 +475,8 @@ function csvEscapeJSON(s) {
 }
 
 $(document).ready(function() {
+	$('html').removeClass('no-js').addClass('js');
+
 	var tabs = document.querySelectorAll('.tabs a');
 
 	if (tabs.length) {
