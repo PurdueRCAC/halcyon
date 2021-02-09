@@ -51,7 +51,19 @@ app('pathway')
 
 	<div class="card mb-3 tab-search">
 		<div class="card-header">
-			<div class="card-title">{{ trans('issues::issues.checklist') }}</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="card-title">{{ trans('issues::issues.checklist') }}</div>
+				</div>
+				<div class="col-md-6 text-right">
+					<label for="checklist_status" class="sr-only">Show</label>
+					<select name="checklist_status" id="checklist_status" class="form-control">
+						<option value="all">{{ trans('issues::issues.all') }}</option>
+						<option value="incomplete" selected="selected">{{ trans('issues::issues.incomplete') }}</option>
+						<option value="complete">{{ trans('issues::issues.complete') }}</option>
+					</select>
+				</div>
+			</div>
 		</div>
 		<?php
 		foreach ($todos as $i => $todo)
@@ -90,22 +102,38 @@ app('pathway')
 				break;
 			}
 
-			$issues = $todo->issues()->where('datetimecreated', '>=', $period)->count();
+			$issues = $todo->issues()
+				->withTrashed()
+				->whereIsActive()
+				->where('datetimecreated', '>=', $period)
+				->first();
 
+			$todos[$i]->status = 'incomplete';
 			// We found an item for this time period
 			if ($issues)
 			{
-				unset($todos[$i]);
+				$todos[$i]->status = 'complete';
+				$todos[$i]->issue = $issues->id;
+				//unset($todos[$i]);
 			}
 		}
 		?>
 		@if (count($todos))
 			<ul class="list-group checklist">
 				@foreach ($todos as $todo)
-					<li class="list-group-item">
+					<li class="list-group-item {{ $todo->status == 'complete' ? 'hide complete' : 'incomplete' }}">
 						<div class="form-group">
 							<div class="form-check">
-								<input type="checkbox" class="form-check-input issue-todo" data-name="{{ $todo->name }}" data-id="{{ $todo->id }}" data-api="{{ route('api.issues.create') }}" name="todo{{ $todo->id }}" id="todo{{ $todo->id }}" value="1" />
+								<input type="checkbox"
+									class="form-check-input issue-todo"
+									data-name="{{ $todo->name }}"
+									data-id="{{ $todo->id }}"
+									data-api="{{ route('api.issues.create') }}"
+									data-issue="{{ $todo->issue }}"
+									name="todo{{ $todo->id }}"
+									id="todo{{ $todo->id }}"
+									value="1"
+									{{ $todo->status == 'complete' ? 'checked="checked"' : '' }} />
 								<label class="form-check-label" for="todo{{ $todo->id }}"><span class="badge badge-{{ $badge }}">{{ $todo->timeperiod->name }}</span> {{ $todo->name }}</label>
 								@if ($todo->description)
 									<div class="form-text text-muted">{{ $todo->formattedDescription }}</div>

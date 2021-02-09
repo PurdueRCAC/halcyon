@@ -46,4 +46,7 @@ return [
 	'my reports' => 'My Reports',
 	'past week' => 'Past Week',
 	'past month' => 'Past Month',
+	'complete' => 'Complete',
+	'incomplete' => 'Incomplete',
+	'all' => 'All Statuses'
 ];
