@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js">
+<html dir="ltr" lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js">
 	<head>
 		<!--
 		                @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.
@@ -45,8 +45,9 @@
 			'themes/rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.min.css',
 			'themes/rcac/css/jquerytimepicker_min.css',
 			'themes/rcac/css/font-awesome-css.min.css',
-			'themes/rcac/css/college.css',
-			'themes/rcac/css/content.css',
+			//'themes/rcac/css/college.css',
+			//'themes/rcac/css/content.css',
+			'themes/rcac/css/site.css',
 		);
 		if (!app('isAdmin') && Auth::check()):
 			$styles[] = 'themes/rcac/css/admin.css';

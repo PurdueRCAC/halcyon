@@ -1,3 +1,9 @@
+
+@import 'reset';
+@import '../css/font-awesome-css.min';
+@import 'bootstrap';
+@import 'college';
+
 /* 
 gold: #98700d;
 antique gold: #eae4d9;
@@ -45,9 +51,18 @@ figcaption {
 	max-width: 40em;
 	margin: 0 auto;
 }
+
 /* Alerts */
 .alert {
 	padding-left: 2.4em;
+}
+.alert *:first-child {
+	margin-top: 0;
+	padding-top: 0;
+}
+.alert a {
+	color: inherit;
+	font-weight: bold;
 }
 .alert:before {
 	position: absolute;
@@ -76,18 +91,18 @@ figcaption {
 .panel-primary {
 	border-color: #ddd;
 }
-.panel .row {
+/*.panel .row {
 	margin-right: -15px !important;
-}
+}*/
 .panel .panel-body {
 	padding: 15px;
 }
-.panel-default .panel-heading {
+/*.panel-default .panel-heading {
 	background: #ededed;
 }
 .panel-default {
 	background: #fafafa;
-}
+}*/
 .panel > .list-group li {
 	margin-left: 0;
 }
@@ -206,6 +221,11 @@ a.btn-info:active {
 	font-weight: 400;
 	text-decoration: none;
 }
+/*.login a.btn-d,
+.login a.btn-default:hover,
+.login a.btn-default:active {
+	color: #000;
+}*/
 .login a.btn-info {
 	color: #fff;
 	background-color: #20809D;
@@ -218,6 +238,7 @@ a.btn-info:active {
 	border-color: #1D7995;
 }
 
+/* mobile */
 @media only screen and (max-width: 760px) {
 	.login {
 		text-align: center;
@@ -231,6 +252,7 @@ a.btn-info:active {
 	padding: 40px 0;
 	min-height: 500px;
 }
+
 .contentInner {
 	padding-bottom: 30px;
 }
@@ -249,9 +271,16 @@ li.resource_list {
 }
 .contentInner ul li {
 	list-style: circle outside none;
+	/*list-style: '\0203A\0020' outside none;*/
 	margin-left: 1.25em;
 }
-
+/*.contentInner ul li:before {
+	content: '\0203A';
+	color: #8e6f3e;
+	display: inline-block;
+	width: 0.7em;
+	margin-left: -0.7em;
+}*/
 .contentInner ul.nav-tabs li {
 	list-style: none;
 	margin-left: 0;
