@@ -327,7 +327,7 @@ class UniTime
 
 		if (empty($config) || empty($config['user']))
 		{
-			return [];
+			return ['status' => 500, 'body' => 'UniTime not configured'];
 		}
 
 		// Get base service URL
@@ -356,17 +356,6 @@ class UniTime
 		}
 
 		// Record the request
-		/*Log::create([
-			'ip'              => request()->ip(),
-			'user'            => auth()->user()->id,
-			'status'          => $status,
-			'transportmethod' => 'GET',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $base . $url,
-			'app'             => 'unitime',
-			'payload'         => json_encode($body),
-		]);*/
-
 		$this->log('unittime', __METHOD__, $method, $status, $body, $base . $url);
 
 		return [
