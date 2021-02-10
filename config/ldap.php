@@ -38,29 +38,31 @@ return [
 		'hosts'            => ['animus.rcac.purdue.edu'],
 		'base_dn'          => 'ou=People,dc=rcac,dc=purdue,dc=edu',
 		'use_ssl'          => true,
-		'username'         => '',
-		'password'         => '',
+		'username'         => env('LDAP_RCAC_USERNAME', conf('ldap_rcac', 'rdn', '')),
+		'password'         => env('LDAP_RCAC_PASSWORD', conf('ldap_rcac', 'pass', '')),
 	],
 
 	'rcac_group' => [
 		'hosts'            => ['animus.rcac.purdue.edu'],
 		'base_dn'          => 'ou=Group,dc=rcac,dc=purdue,dc=edu',
 		'use_ssl'          => true,
-		'username'         => '',
-		'password'         => '',
+		'username'         => env('LDAP_RCACGROUP_USERNAME', conf('ldap_rcac_group', 'rdn', '')),
+		'password'         => env('LDAP_RCACGROUP_PASSWORD', conf('ldap_rcac_group', 'pass', '')),
 	],
 
 	'ped' => [
 		'hosts'            => ['ped.purdue.edu'],
 		'base_dn'          => 'ou=ped,dc=purdue,dc=edu',
-		'username'         => '',
-		'password'         => '',
+		'username'         => env('LDAP_PED_USERNAME', conf('ldap_ped', 'rdn', '')),
+		'password'         => env('LDAP_PED_PASSWORD', conf('ldap_ped', 'pass', '')),
 	],
 
 	'dbm' => [
-		'hosts'            => ['webservices.itns.purdue.edu:10636'],
-		'base_dn'          => 'cn=users,cn=careeraccount,dc=purdue,dc=edu',
-		'username'         => 'uid=rcacservice,cn=nonperson,cn=administrators,dc=purdue,dc=edu',
-		'password'         => 'VopIanCigh',
+		'hosts'            => ['webservices.itns.purdue.edu'],
+		'port'             => 10636,
+		'use_ssl'          => true,
+		'base_dn'          => env('LDAP_DBM_BASEDN', conf('ldap_dbm', 'basedn', '')),
+		'username'         => env('LDAP_DBM_USERNAME', conf('ldap_dbm', 'rdn', '')),
+		'password'         => env('LDAP_DBM_PASSWORD', conf('ldap_dbm', 'pass', '')),
 	],
 ];
