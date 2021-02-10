@@ -1,9 +1,9 @@
-@component('mail::message')
+@component('mail::message', ['alert' => 'danger'])
 Hello {{ $user->name }},
 
-Your request to remove a Scholar Class has been received:
+Your request to remove a Class has been received:
 
-**Resource:** {{ $class->role }}
+**Resource:** {{ $class->resource->name }}<br/>
 **CRN:** {{ $class->crn }} - {{ $class->department }} {{ $class->coursenumber }} - {{ $class->classname }} - {{ $class->semester }}
 
 All registered students plus accounts for these additional users will be removed during overnight processing:

@@ -27,22 +27,20 @@ class EmailRemovalsCommand extends Command
 
 	/**
 	 * Execute the console command.
+	 * 
+	 * @return  void
 	 */
 	public function handle()
 	{
 		$debug = $this->option('debug') ? true : false;
 
 		$members = Member::query()
+			->withTrashed()
 			->where('notice', '=', 2)
 			->orderBy('id', 'asc')
 			->get();
 
-		/*$accounts = Account::query()
-			->where('notice', '=', 2)
-			->orderBy('id', 'asc')
-			->get();*/
-
-		if (!count($members))// && !count($accounts))
+		if (!count($members))
 		{
 			$this->comment('No new removals to email.');
 			return;
@@ -59,16 +57,6 @@ class EmailRemovalsCommand extends Command
 
 			array_push($class_activity[$user->classaccountid], $user);
 		}
-
-		/*foreach ($accounts as $account)
-		{
-			if (!isset($class_activity[$account->id]))
-			{
-				$class_activity[$account->id] = array();
-			}
-
-			array_push($class_activity[$account->id], $account);
-		}*/
 
 		$now = date("U");
 		$threshold = 1200; // threshold for when considering activity "done"

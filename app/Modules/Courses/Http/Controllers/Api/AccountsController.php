@@ -581,7 +581,7 @@ class AccountsController extends Controller
 			foreach ($enrollments as $student)
 			{
 				$user = User::query()
-					->where('organization_id', '=', $student->externalId)
+					->where('puid', '=', $student->externalId)
 					->limit(1)
 					->first();
 
@@ -603,18 +603,15 @@ class AccountsController extends Controller
 
 				// Create a local entry, if one doesn't already exist
 				$member = Member::query()
-					->where('classaccountid')
+					->withTrashed()
+					->whereIsActive()
+					->where('classaccountid', '=', $course->id)
 					->where('userid', '=', $userid)
-					->where(function($where)
-					{
-						$where->whereNull('datetimeremoved')
-							->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-					})
 					->first();
 
 				if (!$member)
 				{
-					$classuser = new classuser();
+					//$classuser = new classuser();
 
 					$member = new Member();
 					$member->userid         = $user->id;

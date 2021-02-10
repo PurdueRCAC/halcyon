@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\View;
 use App\Modules\Courses\Composers\ProfileComposer;
 use App\Modules\Courses\Console\EmailAdditionsCommand;
 use App\Modules\Courses\Console\EmailRemovalsCommand;
+use App\Modules\Courses\Console\SyncCommand;
 use App\Modules\Courses\Listeners\UserCourses;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -54,7 +55,8 @@ class ModuleServiceProvider extends ServiceProvider
 	{
 		$this->commands([
 			EmailAdditionsCommand::class,
-			EmailRemovalsCommand::class
+			EmailRemovalsCommand::class,
+			SyncCommand::class
 		]);
 	}
 

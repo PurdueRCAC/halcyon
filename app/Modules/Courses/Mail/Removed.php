@@ -33,6 +33,8 @@ class Removed extends Mailable
 	 */
 	protected $accounts;
 
+	//public $priority = 'high';
+
 	/**
 	 * Create a new message instance.
 	 *
@@ -58,6 +60,7 @@ class Removed extends Mailable
 						'user' => $this->user,
 						'class' => $this->course,
 						'accounts' => $this->accounts,
+						//'priority' => $this->priority,
 					]);
 	}
 }
