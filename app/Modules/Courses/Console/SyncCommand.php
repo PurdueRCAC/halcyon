@@ -13,6 +13,8 @@ use App\Modules\Resources\Events\ResourceMemberDeleted;
 use App\Modules\Resources\Events\ResourceMemberStatus;
 use App\Modules\Resources\Entities\Asset;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\UserUsername;
+use App\Modules\Users\Events\UserLookup;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
 
@@ -40,7 +42,7 @@ class SyncCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 		$log   = $this->option('log') ? true : false;
 
-		$msg = __METHOD__ . '(): Starting sync ...';
+		$msg = __METHOD__ . '(): Starting sync.';
 
 		$this->info($msg);
 		if ($log)
@@ -59,6 +61,8 @@ class SyncCommand extends Command
 			->where('userid', '>', 0)
 			->get();
 
+		$this->info(__METHOD__ . '(): Looking up instructor class info ...');
+
 		foreach ($classdata as $row)
 		{
 			// Fetch registerants
@@ -66,11 +70,13 @@ class SyncCommand extends Command
 
 			$row = $event->account;
 
-			if ($row->cn)
+			if ($row->classid)
 			{
 				$courses[] = $row;
 			}
 		}
+
+		$this->info(__METHOD__ . '(): Looking up enrollment info for each class ...');
 
 		// Fetch course enrollments
 		$students = array();
@@ -93,11 +99,11 @@ class SyncCommand extends Command
 					// Nope, sorry. Look them up and post.
 					event($event = new UserLookup(['puid' => $student->externalId]));
 
-					$user = $event->user;
+					$user = !empty($event->results) ? $event->results[0] : null;
 
 					if (!$user)
 					{
-						$msg = __METHOD__ . '(): Failed to retrieve user ID for organization_id ' . $student->externalId;
+						$msg = __METHOD__ . '(): Failed to retrieve user ID for puid ' . $student->externalId;
 
 						$this->error($msg);
 						if ($log)
@@ -106,6 +112,19 @@ class SyncCommand extends Command
 						}
 						continue;
 					}
+					else
+					{
+						$this->info(__METHOD__ . '(): Retrieved user ID for puid ' . $student->externalId);
+					}
+
+					// Create an account if none exist
+					if (!$user->id)
+					{
+						$user->save();
+
+						$user->userusername->userid = $user->id;
+						$user->userusername->save();
+					}
 				}
 
 				// Create a local entry, if one doesn't already exist
@@ -113,7 +132,7 @@ class SyncCommand extends Command
 					->withTrashed()
 					->whereIsActive()
 					->where('classaccountid', '=', $course->id)
-					->where('userid', '=', $userid)
+					->where('userid', '=', $user->id)
 					->first();
 
 				if (!$member)
@@ -184,7 +203,7 @@ class SyncCommand extends Command
 		$remove_users = $event->remove_users;
 
 
-		$fortress = Asset::findByName('HPSSUSER');
+		/*$fortress = Asset::findByName('HPSSUSER');
 
 		$created = array();
 		foreach ($create_users as $user)
@@ -283,7 +302,7 @@ class SyncCommand extends Command
 			{
 				$created[] = $user;
 			}
-		}
+		}*/
 
 		$data = array(
 			'Creating: ' . count($create_users),
@@ -297,7 +316,7 @@ class SyncCommand extends Command
 		{
 			error_log($msg);
 		}
-
+return;
 		// Do some sanity checking
 		// If our net loss here is greater than the new total, something is wrong
 		if ((count($remove_users) - count($create_users)) > count($users))
@@ -357,7 +376,7 @@ class SyncCommand extends Command
 			}
 		}
 
-		$msg = __METHOD__ . '(): Finished syncing.';
+		$msg = __METHOD__ . '(): Finished sync.';
 
 		$this->info($msg);
 		if ($log)

@@ -124,10 +124,10 @@ class UniTime
 			}
 		}
 
-		if (!$matched)
+		/*if (!$matched)
 		{
 			$event->account->cn = false;
-		}
+		}*/
 	}
 
 	/**

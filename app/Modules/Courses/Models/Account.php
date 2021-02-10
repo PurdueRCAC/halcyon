@@ -74,6 +74,18 @@ class Account extends Model
 	];
 
 	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var  array
+	 */
+	protected $guarded = [
+		'id',
+		'crn',
+		'coursenumber',
+		'classname'
+	];
+
+	/**
 	 * Fields and their validation criteria
 	 *
 	 * @var array

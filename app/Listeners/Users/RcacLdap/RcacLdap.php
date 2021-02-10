@@ -29,6 +29,7 @@ class RcacLdap
 		$events->listen(UserBeforeDisplay::class, self::class . '@handleUserBeforeDisplay');
 		$events->listen(ResourceMemberStatus::class, self::class . '@handleResourceMemberStatus');
 		$events->listen(UnixGroupFetch::class, self::class . '@handleUnixGroupFetch');
+		$events->listen(CourseEnrollment::class, self::class . '@handleCourseEnrollment');
 	}
 
 	/**
@@ -429,7 +430,7 @@ class RcacLdap
 			return;
 		}
 
-		$config = config('ldap.rcac_group', []);
+		$config = config('ldap.rcac', []);
 
 		if (empty($config))
 		{
@@ -442,12 +443,13 @@ class RcacLdap
 
 			// Performing a query.
 			$ldapdata = $ldap->search()
-				->where('host', '=', 'scholar.rcac.purdue.edu') //$event->account->resource->listname
+				->where('host', '=', 'scholar.rcac.purdue.edu') //$event->account->resource->rolename . '.rcac.purdue.edu'
 				->get();
 
 			$status = 404;
+			$results = array();
 
-			if (!empty($results))
+			if (!empty($ldapdata))
 			{
 				$status = 200;
 
@@ -481,11 +483,11 @@ class RcacLdap
 
 					if (count($rows) > 0)
 					{
-						if (isset($rows[0]['classification'][0]) && $rows[0]['classification'][0] == "System Account")
+						if (isset($rows[0]['classification'][0]) && $rows[0]['classification'][0] == 'System Account')
 						{
 							$system_users[$row['uid'][0]] = $row['uid'][0];
 						}
-						if (isset($rows[0]['classification'][0]) && $rows[0]['classification'][0] == "Software Account")
+						if (isset($rows[0]['classification'][0]) && $rows[0]['classification'][0] == 'Software Account')
 						{
 							$system_users[$row['uid'][0]] = $row['uid'][0];
 						}
@@ -499,6 +501,11 @@ class RcacLdap
 
 				$event->create_users = $create_users;
 				$event->remove_users = $remove_users;
+
+				$results = [
+					'create_users' => $create_users,
+					'remove_users' => $remove_users
+				];
 			}
 		}
 		catch (\Exception $e)
@@ -507,6 +514,6 @@ class RcacLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'cn=' . $event->name);
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'host=' . $event->account->resource->rolename . '.rcac.purdue.edu');
 	}
 }

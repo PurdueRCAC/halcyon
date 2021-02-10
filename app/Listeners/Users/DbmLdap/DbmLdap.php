@@ -3,7 +3,9 @@ namespace App\Listeners\Users\DbmLdap;
 
 use App\Modules\Users\Events\UserCreated;
 use App\Modules\Users\Events\UserSearching;
+use App\Modules\Users\Events\UserLookup;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\UserUsername;
 use App\Halcyon\Utility\Str;
 use App\Modules\History\Traits\Loggable;
 
@@ -24,6 +26,7 @@ class DbmLdap
 	{
 		$events->listen(UserSearching::class, self::class . '@handleUserSearching');
 		$events->listen(UserCreated::class, self::class . '@handleUserCreated');
+		$events->listen(UserLookup::class, self::class . '@handleUserLookup');
 	}
 
 	/**
@@ -128,67 +131,74 @@ class DbmLdap
 			return;
 		}
 
+		$criteria = $event->criteria;
+		$query = [];
+		$results = array();
+
+		foreach ($criteria as $key => $val)
+		{
+			switch ($key)
+			{
+				case 'puid':
+				case 'organization_id':
+					// `employeeNumber` needs to be 10 digits in length for the query to work
+					//    ex: 12345678 -> 0012345678
+					$val = str_pad($val, 10, '0', STR_PAD_LEFT);
+					$query[] = ['employeeNumber', '=', $val];
+				break;
+
+				case 'username':
+					$query[] = ['uid', '=', $val];
+				break;
+
+				case 'host':
+					$query[] = [$key, '=', $val];
+				break;
+
+				case 'name':
+				default:
+					$query[] = ['cn', '=', $val];
+				break;
+			}
+		}
+
+		if (empty($query))
+		{
+			return;
+		}
+
 		try
 		{
 			$ldap = $this->connect($config);
 
-			$criteria = $event->criteria;
-			$query = [];
 			$status = 404;
 
-			foreach ($criteria as $key => $val)
-			{
-				switch ($key)
-				{
-					case 'puid':
-					case 'organization_id':
-						// `employeeNumber` needs to be 10 digits in length for the query to work
-						//    ex: 12345678 -> 0012345678
-						$val = str_pad($val, 10, '0', STR_PAD_LEFT);
-						$query[] = ['employeeNumber', '=', $val];
-					break;
-
-					case 'username':
-						$query[] = ['uid', '=', $val];
-					break;
-
-					case 'host':
-						$query[] = [$key, '=', $val];
-					break;
-
-					case 'name':
-					default:
-						$query[] = ['cn', '=', $val];
-					break;
-				}
-			}
-
-			if (empty($query))
-			{
-				return;
-			}
-
 			// Performing a query.
-			$results = $ldap->search()
+			$data = $ldap->search()
 				->where($query)
 				->select(['cn', 'uid', 'employeeNumber'])
 				->get();
 
-			if (!empty($results))
+			if (!empty($data))
 			{
 				$status = 200;
 
-				foreach ($results as $result)
+				foreach ($data as $key => $result)
 				{
 					$user = new User;
 					$user->name = $result['cn'][0];
-					$user->username = $result['uid'][0];
+					$user->userusername = new UserUsername;
+					$user->userusername->username = $result['uid'][0];
+					//$user->username = $result['uid'][0];
 					$user->puid = $result['employeeNumber'][0];
 
-					$event->user = $user;
-					break;
+					//$event->user = $user;
+					//break;
+					$results[$key] = $user;
 				}
 			}
+
+			$event->results = $results;
 		}
 		catch (\Exception $e)
 		{
@@ -196,9 +206,7 @@ class DbmLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$event->results = $results;
-
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, implode('', $query));
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, json_encode($query));
 	}
 
 	/**
