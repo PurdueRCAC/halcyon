@@ -112,10 +112,6 @@ class SyncCommand extends Command
 						}
 						continue;
 					}
-					else
-					{
-						$this->info(__METHOD__ . '(): Retrieved user ID for puid ' . $student->externalId);
-					}
 
 					// Create an account if none exist
 					if (!$user->id)
@@ -203,7 +199,7 @@ class SyncCommand extends Command
 		$remove_users = $event->remove_users;
 
 
-		/*$fortress = Asset::findByName('HPSSUSER');
+		$fortress = Asset::findByName('HPSSUSER');
 
 		$created = array();
 		foreach ($create_users as $user)
@@ -302,7 +298,7 @@ class SyncCommand extends Command
 			{
 				$created[] = $user;
 			}
-		}*/
+		}
 
 		$data = array(
 			'Creating: ' . count($create_users),
@@ -316,7 +312,7 @@ class SyncCommand extends Command
 		{
 			error_log($msg);
 		}
-return;
+
 		// Do some sanity checking
 		// If our net loss here is greater than the new total, something is wrong
 		if ((count($remove_users) - count($create_users)) > count($users))
