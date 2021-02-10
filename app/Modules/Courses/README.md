@@ -38,14 +38,32 @@ The Sync command retrieves enrollment information for registered course accounts
 * Remove users from the 'remove users' list
   * Triggers `App\Modules\Resources\Events\ResourceMemberDeleted` event
 
+**Events triggered:**
+
+* `App\Modules\Courses\EventsAccountInstructorLookup`
+* `App\Modules\Courses\Events\AccountEnrollment`
+* `App\Modules\Users\Events\UserLookup`
+* `App\Modules\Courses\Events\CourseEnrollment`
+* `App\Modules\Resources\Events\ResourceMemberStatus`
+* `App\Modules\Resources\Events\ResourceMemberCreated`
+* `App\Modules\Resources\Events\ResourceMemberDeleted`
+
 #### Email Additions
 
 `artisan courses:emailadditions`
 
 This command looks for any new course users with `notice=1` and sends an email to the associated account's instructor, notifying them of the additions.
 
+**Events triggered:**
+
+(none)
+
 #### Email Removals
 
 `artisan courses:emailremovals`
 
 This command looks for any course user with `notice=2` and sends an email to the associated account's instructor, notifying them of the removals.
+
+**Events triggered:**
+
+(none)

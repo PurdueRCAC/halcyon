@@ -1,7 +1,7 @@
 {
     "name": "ContactReports",
     "alias": "contactreports",
-    "description": "",
+    "description": "Manage interactions (contact reports) with clients and potential clients.",
     "keywords": [],
     "order": 0,
     "providers": [
