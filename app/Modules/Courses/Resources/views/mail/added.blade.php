@@ -1,7 +1,7 @@
 @component('mail::message')
 Hello {{ $user->name }},
 
-Your request for a Scholar Class account has been received:
+Your request for a Class account has been received:
 
 **Resource:** {{ $class->resource->name }}<br/>
 **CRN:** {{ $class->crn }} - {{ $class->department }} {{ $class->coursenumber }} - {{ $class->classname }} - {{ $class->semester }}

@@ -23,7 +23,7 @@ class SyncCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'courses:sync {--debug : Output actions it would take}';
+	protected $signature = 'courses:sync {--debug : Output actions it would take} {--log : Output is logged to the PHP error log}';
 
 	/**
 	 * The console command description.
@@ -40,7 +40,7 @@ class SyncCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 		$log   = $this->option('log') ? true : false;
 
-		$msg = __METHOD__ . '(): Staarting syncing...';
+		$msg = __METHOD__ . '(): Starting sync ...';
 
 		$this->info($msg);
 		if ($log)
@@ -81,7 +81,7 @@ class SyncCommand extends Command
 			$course = $event->account;
 			$count  = 0;
 
-			foreach ($enrollments as $student)
+			foreach ($event->enrollments as $student)
 			{
 				$user = User::query()
 					->where('puid', '=', $student->externalId)

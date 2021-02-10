@@ -578,7 +578,7 @@ class AccountsController extends Controller
 			$course = $event->account;
 			$count  = 0;
 
-			foreach ($enrollments as $student)
+			foreach ($event->enrollments as $student)
 			{
 				$user = User::query()
 					->where('puid', '=', $student->externalId)
