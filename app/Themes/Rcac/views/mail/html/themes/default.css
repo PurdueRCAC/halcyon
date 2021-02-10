@@ -129,6 +129,22 @@ hr {
     text-decoration: none;
 }
 
+.alert {
+    padding: 5px 0;
+    text-align: center;
+    background: #fff;
+    color: #fff;
+}
+.alert-danger {
+    background: #c00;
+}
+.alert-warning {
+    background: orange;
+}
+.alert-success {
+    background: green;
+}
+
 /* Logo */
 
 .logo {

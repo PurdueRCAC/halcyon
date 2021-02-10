@@ -5,3 +5,9 @@
 		</a>
 	</td>
 </tr>
+@if ($alert)
+	<tr>
+		<td class="alert alert-{{ $alert }}">
+		</td>
+	</tr>
+@endif
