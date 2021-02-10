@@ -8,7 +8,7 @@ Every command has an optional `--debug` flag that will run the command in a non-
 
 #### Sync
 
-`artisan course:sync`
+`artisan courses:sync`
 
 This command has a `--log` option for logging informational/debug statements to PHP's error log.
 
@@ -40,12 +40,12 @@ The Sync command retrieves enrollment information for registered course accounts
 
 #### Email Additions
 
-`artisan course:emailadditions`
+`artisan courses:emailadditions`
 
 This command looks for any new course users with `notice=1` and sends an email to the associated account's instructor, notifying them of the additions.
 
 #### Email Removals
 
-`artisan course:emailremovals`
+`artisan courses:emailremovals`
 
 This command looks for any course user with `notice=2` and sends an email to the associated account's instructor, notifying them of the removals.
