@@ -2,21 +2,23 @@
 
 @section('title'){{ $page->title }}@stop
 
-@section('meta')
-	@if ($page->metadesc)
+@if ($page->metadesc)
+	@push('meta')
 		<meta name="description" content="{{ $page->metadesc }}" />
-	@endif
-	@if ($page->metakey)
+@endpush
+@endif
+@if ($page->metakey)
+	@push('meta')
 		<meta name="keywords" content="{{ $page->metakey }}" />
-	@endif
-@stop
+@endpush
+@endif
 
 @if ($page->metadata)
 	@foreach ($page->metadata->all() as $k => $v)
 		@if ($v)
 			@push('meta')
-				<meta name="{{ $k }}" content="{{ $v }}" />
-			@endpush
+		<meta name="{{ $k }}" content="{{ $v }}" />
+@endpush
 		@endif
 	@endforeach
 @endif

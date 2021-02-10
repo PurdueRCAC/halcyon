@@ -36,9 +36,9 @@
 		<!-- Styles -->
 		<?php
 		$styles = array(
-			'themes/rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.min.css',
-			'themes/rcac/css/jquerytimepicker_min.css',
+			//'themes/rcac/css/jquerytimepicker_min.css',
 			'themes/rcac/css/font-awesome-css.min.css',
+			'themes/rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.min.css',
 			//'themes/rcac/css/college.css',
 			//'themes/rcac/css/content.css',
 			'themes/rcac/css/site.css',
@@ -49,21 +49,22 @@
 
 		foreach ($styles as $css):
 			?>
-			<link rel="stylesheet" type="text/css" media="all" href="{{ asset($css . '?v=' . filemtime(public_path() . '/' . $css)) }}" />
-			<?php
+		<link rel="stylesheet" type="text/css" media="all" href="{{ asset($css . '?v=' . filemtime(public_path() . '/' . $css)) }}" />
+<?php
 		endforeach;
 		?>
-		@yield('styles')
 		@stack('styles')
+		@yield('styles')
+
 		<!--[if IE 9]>
 			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/browser/ie9.css') }}" />
 		<![endif]-->
 
-		<!-- Scripts -->
+		<!-- Scripts: Global -->
 		<script type="text/javascript">
 			var base_url = '{!! request()->getBaseUrl() !!}';
 		</script>
-		<?php
+<?php
 		$scripts = array(
 			'themes/rcac/js/jquery-3.5.1.min.js',
 			'themes/rcac/js/common/jquery-ui-1.12.1/jquery-ui.min.js',
@@ -72,20 +73,23 @@
 			'modules/core/vendor/bootstrap/bootstrap.bundle.min.js', //'themes/rcac/js/bootstrap.min.js',
 			'themes/rcac/js/common/common.js',
 			'themes/rcac/js/google_jquery_link_tracking.js',
-			'themes/rcac/js/common/date.js',
-			'themes/rcac/js/common/jquery_cookie.js',
-			'themes/rcac/js/common/jquerytimepicker_min.js',
+			//'themes/rcac/js/common/date.js',
+			//'themes/rcac/js/common/jquery_cookie.js',
+			//'themes/rcac/js/common/jquerytimepicker_min.js',
 			//'themes/rcac/js/common/json2.js',
 			//'themes/rcac/js/common/text.js',
 		);
 		foreach ($scripts as $script):
 			?>
-			<script type="text/javascript" src="{{ asset($script . '?v=' . filemtime(public_path() . '/' . $script)) }}"></script>
-			<?php
+		<script src="{{ asset($script . '?v=' . filemtime(public_path() . '/' . $script)) }}"></script>
+<?php
 		endforeach;
 		?>
-		@yield('scripts')
+
+		<!-- Scripts: Extension specific -->
 		@stack('scripts')
+		@yield('scripts')
+
 	</head>
 	<body>
 		@widget('top')
