@@ -60,7 +60,15 @@ class Twitter
 			preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $content, $src);
 			if (isset($src[1]) && $src[1] != '')
 			{
-				$tags['twitter:image'] = url('/') . '/' .  htmlspecialchars($src[1]);
+				if (substr($src[1], 0, 4) != 'http')
+				{
+					$tags['twitter:image'] = url('/') . '/' .  htmlspecialchars($src[1]);
+				}
+				else
+				{
+					$tags['twitter:image'] = htmlspecialchars($src[1]);
+				}
+
 				$img = 1;
 			}
 
@@ -105,9 +113,18 @@ class Twitter
 		}
 
 		// Description
-		$content = Str::limit(strip_tags($page->content), 140);
-		$content = str_replace(array("\n", "\t", "\r"), ' ', $content);
-		$content = trim($content);
+		$desc = $page->metadesc;
+		$desc ?: $params->get('description');
+		if ($desc)
+		{
+			$content = htmlspecialchars($desc);
+		}
+		else
+		{
+			$content = Str::limit(strip_tags($page->content), 140);
+			$content = str_replace(array("\n", "\t", "\r"), ' ', $content);
+			$content = trim($content);
+		}
 
 		$tags['twitter:description'] = htmlspecialchars($content);
 

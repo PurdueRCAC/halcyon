@@ -38,7 +38,7 @@ class OpenGraph
 		$params = new Repository(config('listeners.content.opengraph', []));
 
 		// We need help variables as we cannot change the $page variable - such then will influence global settings
-		$thisDesc  = $page->metadesc;
+		$desc = $page->metadesc;
 		$tags = array();
 
 		// Title
@@ -64,7 +64,14 @@ class OpenGraph
 			preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $content, $src);
 			if (isset($src[1]) && $src[1] != '')
 			{
-				$tags['og:image'] = url('/') . '/' .  htmlspecialchars($src[1]);
+				if (substr($src[1], 0, 4) != 'http')
+				{
+					$tags['og:image'] = url('/') . '/' .  htmlspecialchars($src[1]);
+				}
+				else
+				{
+					$tags['og:image'] = htmlspecialchars($src[1]);
+				}
 				$img = 1;
 			}
 
@@ -109,10 +116,16 @@ class OpenGraph
 		}
 
 		// Description
-		$thisDesc ?: $params->get('description');
-		if ($thisDesc)
+		$desc ?: $params->get('description');
+		if ($desc)
 		{
 			$tags['og:description'] = htmlspecialchars($desc);
+		}
+		else
+		{
+			$content = Str::limit(strip_tags($page->content), 140);
+			$content = str_replace(array("\n", "\t", "\r"), ' ', $content);
+			$tags['og:description'] = trim($content);
 		}
 
 		// FB App ID - COMMON
@@ -150,7 +163,5 @@ class OpenGraph
 		}
 
 		$event->page = $page;
-
-		//return View::make('listeners.content.opengraph::metadata', ['tags' => $tags])->render();
 	}
 }
