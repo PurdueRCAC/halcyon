@@ -16,11 +16,11 @@ The Sync command retrieves enrollment information for registered course accounts
 
 * Select all (non-trashed) course accounts with an end time > now
 * Look up class info for each instructor of an account
-  * This triggers an `AccountInstructorLookup` event for each instructor
+  * This triggers an `App\Modules\Courses\EventsAccountInstructorLookup` event for each instructor
     * `App\Listeners\Courses\UniTime` listens for this event and retrieves information from Purdue's Timetable service
   * Each account that finds an association instructor class is pushed to a new list
 * Loop though the list of matched accounts and look up enrollment information
-  * This triggers an `AccountEnrollment` event for each account
+  * This triggers an `App\Modules\Courses\Events\AccountEnrollment` event for each account
     * `App\Listeners\Courses\UniTime` listens for this event and retrieves enrollment information
 * For each enrolled student:
   * Look up a local account
