@@ -3,6 +3,7 @@ namespace App\Listeners\Content\OpenGraph;
 
 use App\Modules\Pages\Events\PageMetadata;
 use Illuminate\Config\Repository;
+use Illuminate\Support\Str;
 
 /**
  * Content Plugin class for OpenGraph meta tags
