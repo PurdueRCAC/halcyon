@@ -1,14 +1,15 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/media/css/media.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.css') . '?v=' . filemtime(public_path() . '/modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/media/css/media.css') . '?v=' . filemtime(public_path() . '/modules/media/css/media.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.js') }}"></script>
-<script src="{{ asset('modules/media/vendor/jquery-treeview/jquery.treeview.js') }}"></script>
-<script src="{{ asset('modules/media/js/media.js') }}"></script>
+<script src="{{ asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.js') . '?v=' . filemtime(public_path() . '/modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/jquery-cookie/jquery.cookie.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-cookie/jquery.cookie.js') }}"></script>
+<script src="{{ asset('modules/media/vendor/jquery-treeview/jquery.treeview.js') . '?v=' . filemtime(public_path() . '/modules/media/vendor/jquery-treeview/jquery.treeview.js') }}"></script>
+<script src="{{ asset('modules/media/js/media.js') . '?v=' . filemtime(public_path() . '/modules/media/js/media.js') }}"></script>
 @endpush
 
 @php
