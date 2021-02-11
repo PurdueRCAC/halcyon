@@ -268,16 +268,18 @@ class ArticlesController extends Controller
 
 		if ($filters['start'])
 		{
-			$query->where($n . '.datetimenews', '>', $filters['start']);
+			$start = Carbon::parse($filters['start']);
+			$query->where($n . '.datetimenews', '>', $start->toDateTimeString());
 		}
 
 		if ($filters['stop'])
 		{
 			$query->where(function($where) use ($n, $filters)
 			{
+				$stop = Carbon::parse($filters['stop']);
 				$where->whereNull($n . '.datetimenewsend')
 					->orWhere($n . '.datetimenewsend', '=', '0000-00-00 00:00:00')
-					->orWhere($n . '.datetimenewsend', '<=', $filters['end']);
+					->orWhere($n . '.datetimenewsend', '<=', $stop->toDateTimeString());
 			});
 		}
 
