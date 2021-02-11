@@ -1,3 +1,3 @@
-## Groups Module
+## Messages Module
 
-Handle management of groups.
+Handle management of messages in the message queue.

@@ -1,9 +1,3 @@
-## Contact Reports Module
+## Cron Module
 
-Manage interactions (contact reports) with clients and potential clients.
-
-### Dependencies
-
-* Users Module
-* Groups Module
-* Resources Module
+Manage cron task recurrences and anable/disabling of cront tasks.

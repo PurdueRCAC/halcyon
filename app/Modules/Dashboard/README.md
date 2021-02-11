@@ -1,9 +1,3 @@
-## Contact Reports Module
+## Dashboard Module
 
-Manage interactions (contact reports) with clients and potential clients.
-
-### Dependencies
-
-* Users Module
-* Groups Module
-* Resources Module
+Simple module for displaying a dashboard

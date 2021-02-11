@@ -1,9 +1,3 @@
-## Contact Reports Module
+## Config Module
 
-Manage interactions (contact reports) with clients and potential clients.
-
-### Dependencies
-
-* Users Module
-* Groups Module
-* Resources Module
+Manage site and module configurations.

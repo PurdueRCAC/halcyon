@@ -1,3 +1,3 @@
-## Groups Module
+## Tags Module
 
-Handle management of groups.
+This is a module for management of tags and acts as a generic tagging system for any other module.

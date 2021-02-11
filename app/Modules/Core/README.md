@@ -1,9 +1,3 @@
-## Contact Reports Module
+## Core Module
 
-Manage interactions (contact reports) with clients and potential clients.
-
-### Dependencies
-
-* Users Module
-* Groups Module
-* Resources Module
+This module contains core libraries, models, etc. used throughout the system.

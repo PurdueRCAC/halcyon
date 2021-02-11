@@ -1,3 +1,3 @@
-## Groups Module
+## Issues Module
 
-Handle management of groups.
+Handle tracking of RCAC resource issues.

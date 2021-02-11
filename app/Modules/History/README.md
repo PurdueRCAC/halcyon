@@ -1,3 +1,3 @@
-## Groups Module
+## History Module
 
-Handle management of groups.
+This module allows for browsing and inspecting site activity and the history of changes to data.

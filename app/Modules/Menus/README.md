@@ -1,3 +1,3 @@
-## Groups Module
+## Menus Module
 
-Handle management of groups.
+Handle management of site menus.

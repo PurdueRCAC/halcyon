@@ -1,3 +1,3 @@
-## Groups Module
+## Listeners Module
 
-Handle management of groups.
+Handle management of event listeners. This allows for enabling, disabling, and setting options on listeners.

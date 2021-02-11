@@ -1,3 +1,3 @@
-## Groups Module
+## Media Module
 
-Handle management of groups.
+Handle management of uploaded site media.
