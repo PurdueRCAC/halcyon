@@ -4,19 +4,19 @@ namespace App\Widgets\Search;
 use App\Modules\Widgets\Entities\Widget;
 
 /**
- * Module class for displaying breadcrumbs
+ * Widget for displaying a search box
  */
 class Search extends Widget
 {
 	/**
-	 * Number of instances of the module
+	 * Number of instances of the widget
 	 *
 	 * @var  integer
 	 */
 	public static $instances = 0;
 
 	/**
-	 * Display module
+	 * Display widget
 	 *
 	 * @return  void
 	 */

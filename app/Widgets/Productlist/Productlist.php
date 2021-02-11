@@ -6,7 +6,7 @@ use App\Modules\Widgets\Entities\Widget;
 use App\Modules\Resources\Entities\Asset;
 
 /**
- * Module class for displaying a list of users
+ * Widget for displaying products
  */
 class Productlist extends Widget
 {

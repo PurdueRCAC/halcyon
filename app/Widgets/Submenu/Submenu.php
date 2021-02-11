@@ -4,7 +4,7 @@ namespace App\Widgets\Submenu;
 use App\Modules\Widgets\Entities\Widget;
 
 /**
- * Module class for rendering a submenu
+ * Widget for rendering a submenu
  */
 class Submenu extends Widget
 {

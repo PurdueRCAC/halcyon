@@ -1,7 +1,7 @@
 {
     "name": "Members",
     "alias": "members",
-    "description": "This widget shows on the Admin area Home Page and displays items that administrator needs to watch for",
+    "description": "This widget shows on the Admin area dashboard and displays user data",
     "keywords": [],
     "active": 1,
     "requires": []

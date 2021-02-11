@@ -1,7 +1,7 @@
 {
 	"name": "User List",
 	"alias": "userlist",
-	"description": "This displays a list of users",
+	"description": "This displays a list users with a specified role",
 	"type": "site",
 	"version": "1.0.0"
 }

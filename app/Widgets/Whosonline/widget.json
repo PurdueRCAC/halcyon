@@ -1,7 +1,7 @@
 {
     "name": "Who is online",
     "alias": "whosonline",
-    "description": "Display who is online",
+    "description": "This shows a list of the currently logged in users",
     "keywords": [],
     "active": 1,
     "requires": []

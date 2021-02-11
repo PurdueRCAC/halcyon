@@ -1,7 +1,7 @@
 {
     "name": "Site Menu",
     "alias": "menu",
-    "description": "Display a menu",
+    "description": "This displays a menu on the frontend",
     "keywords": [],
     "active": 1,
     "requires": []

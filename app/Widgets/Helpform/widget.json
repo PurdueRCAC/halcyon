@@ -1,7 +1,7 @@
 {
 	"name": "Help Form",
 	"alias": "helpform",
-	"description": "This displays a help form",
+	"description": "This displays a help form for submitting support tickets.",
 	"type": "site",
 	"version": "1.0.0"
 }

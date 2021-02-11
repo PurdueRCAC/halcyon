@@ -5,7 +5,7 @@ use App\Modules\Widgets\Entities\Widget;
 use stdClass;
 
 /**
- * Module class for displaying breadcrumbs
+ * Widget for displaying a feed
  */
 class Feed extends Widget
 {

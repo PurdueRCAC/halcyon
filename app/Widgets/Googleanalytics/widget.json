@@ -1,7 +1,7 @@
 {
     "name": "Google Analytics",
     "alias": "googleanalytics",
-    "description": "Insert Google Analytics code",
+    "description": "This widget adds some Javascript to the page for Google Analytics reporting.",
     "keywords": [],
     "active": 1,
     "requires": []

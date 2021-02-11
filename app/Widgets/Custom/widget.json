@@ -1,7 +1,7 @@
 {
     "name": "Custom",
     "alias": "custom",
-    "description": "",
+    "description": "This allows you to create your own HTML Widget",
     "keywords": [],
     "active": 1,
     "requires": []
