@@ -1,7 +1,7 @@
 {
     "name": "Resources - Orders",
     "alias": "listener_resources_orders",
-    "description": "This displays history related to a specific user.",
+    "description": "This retrieves product information for a specified Resource.",
     "keywords": [],
     "active": 1,
     "order": 0,

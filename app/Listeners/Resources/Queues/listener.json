@@ -1,6 +1,6 @@
 {
     "name": "Resources - Queues",
-    "alias": "lst_resources_queues",
+    "alias": "listener_resources_queues",
     "description": "This performs various actions on Queues when an action is performed on a related resource.",
     "keywords": [],
     "active": 1,

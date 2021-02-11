@@ -1,7 +1,7 @@
 {
     "name": "Users - Orders",
     "alias": "listener_users_orders",
-    "description": "This retrieves order info for a user.",
+    "description": "This retrieves Order info for a user.",
     "keywords": [],
     "active": 1,
     "order": 0,

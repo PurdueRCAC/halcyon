@@ -1,7 +1,7 @@
 {
-    "name": "Users - Role Provision",
-    "alias": "none",
-    "description": "Service connector for Purdue University's Central Accounts.",
+    "name": "Groups - Github",
+    "alias": "listener_groups_github",
+    "description": "Service connector for github.itap.purdue.edu.",
     "keywords": [],
     "active": 1,
     "order": 0,

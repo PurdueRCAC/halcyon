@@ -1,0 +1,11 @@
+{
+    "name": "Content - Asset Path",
+    "alias": "listener_content_assetpath",
+    "description": "Listener for prepending file paths in content with the site base path.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

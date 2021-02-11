@@ -22,7 +22,7 @@ class Queues
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Set up a default Queue when a Subresource is created
 	 *
 	 * @param   SubresourceCreated  $event
 	 * @return  void

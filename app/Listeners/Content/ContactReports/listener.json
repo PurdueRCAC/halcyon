@@ -1,0 +1,11 @@
+{
+    "name": "Content - Contact Reports",
+    "alias": "listener_content_contactreports",
+    "description": "Expand references in content to Contact Reports to full links.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

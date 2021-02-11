@@ -10,7 +10,7 @@ use App\Halcyon\Utility\Str;
 use App\Halcyon\Config\Registry;
 
 /**
- * Email cloack plugin class.
+ * Email cloak listener
  */
 class EmailCloak
 {

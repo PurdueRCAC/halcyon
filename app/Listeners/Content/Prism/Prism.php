@@ -4,7 +4,7 @@ namespace App\Listeners\Content\Prism;
 use App\Modules\Pages\Events\PageContentIsRendering;
 
 /**
- * Prism Plugin
+ * Prism Syntax Highlighter
  */
 class Prism
 {

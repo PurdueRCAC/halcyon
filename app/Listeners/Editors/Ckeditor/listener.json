@@ -1,7 +1,7 @@
 {
-    "name": "Editor - None",
-    "alias": "none",
-    "description": "This loads a basic text entry field.",
+    "name": "Editor - CKEditor",
+    "alias": "listener_editors_ckeditor",
+    "description": "This loads a CKEditor v4 WYSIWYG editor when a content editor event is triggered.",
     "keywords": [],
     "active": 1,
     "order": 0,

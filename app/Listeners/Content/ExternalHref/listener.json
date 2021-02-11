@@ -1,0 +1,11 @@
+{
+    "name": "Content - External Href",
+    "alias": "listener_content_externalhref",
+    "description": "Apply specific actions or `rel` attributes to external links in content.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

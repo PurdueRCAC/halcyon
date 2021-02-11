@@ -1,7 +1,7 @@
 {
     "name": "Storage - Depot",
-    "alias": "none",
-    "description": "Create special directories for Depot.",
+    "alias": "listener_storage_depot",
+    "description": "Create special directories for Data Depot.",
     "keywords": [],
     "active": 1,
     "order": 0,

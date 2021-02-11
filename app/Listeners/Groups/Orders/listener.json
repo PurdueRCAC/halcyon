@@ -1,6 +1,6 @@
 {
     "name": "Groups - Orders",
-    "alias": "lst_groups_orders",
+    "alias": "listener_groups_orders",
     "description": "This displays orders related to a specific group.",
     "keywords": [],
     "active": 1,

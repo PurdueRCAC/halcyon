@@ -1,7 +1,7 @@
 {
     "name": "Groups - Queues",
-    "alias": "lst_groups_queues",
-    "description": "This displays queues related to a specific group.",
+    "alias": "listener_groups_queues",
+    "description": "This displays resource queues related to a specific group.",
     "keywords": [],
     "active": 1,
     "order": 0,

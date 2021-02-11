@@ -1,6 +1,6 @@
 {
     "name": "Groups - Storage",
-    "alias": "lst_groups_storage",
+    "alias": "listener_groups_storage",
     "description": "This displays storage related to a specific group.",
     "keywords": [],
     "active": 1,

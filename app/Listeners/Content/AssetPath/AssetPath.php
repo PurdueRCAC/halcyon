@@ -4,7 +4,7 @@ namespace App\Listeners\Content\AssetPath;
 use App\Modules\Pages\Events\PageContentIsRendering;
 
 /**
- * Content listener for Widgets
+ * Content listener for asset paths
  */
 class AssetPath
 {
@@ -20,10 +20,9 @@ class AssetPath
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Prepend file paths in content with the site's base path
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   object  $event  PageContentIsRendering
 	 * @return  void
 	 */
 	public function handlePageContentIsRendering(PageContentIsRendering $event)

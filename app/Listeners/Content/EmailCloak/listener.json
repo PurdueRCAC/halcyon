@@ -1,0 +1,11 @@
+{
+    "name": "Content - Email Cloak",
+    "alias": "listener_content_emailcloak",
+    "description": "Attempts to cloak emails in content from bots.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

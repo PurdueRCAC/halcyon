@@ -1,6 +1,6 @@
 {
     "name": "Courses - University Time",
-    "alias": "none",
+    "alias": "listener_courses_unitime",
     "description": "Service connector for Purdue University's courses.",
     "keywords": [],
     "active": 1,

@@ -1,6 +1,6 @@
 {
     "name": "Editor - None",
-    "alias": "none",
+    "alias": "listener_editors_none",
     "description": "This loads a basic text entry field.",
     "keywords": [],
     "active": 1,

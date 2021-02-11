@@ -1,0 +1,11 @@
+{
+    "name": "Content - Twitter",
+    "alias": "listener_content_twitter",
+    "description": "Listener for adding Twitter metadata to page headers.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

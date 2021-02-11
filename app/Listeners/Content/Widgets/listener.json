@@ -1,0 +1,11 @@
+{
+    "name": "Content - Widgets",
+    "alias": "listener_content_widgets",
+    "description": "Listener for converting `@widget` Blade directives in database content.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

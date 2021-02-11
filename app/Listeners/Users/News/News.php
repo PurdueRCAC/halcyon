@@ -7,7 +7,7 @@ use App\Modules\News\Models\Association;
 use App\Modules\News\Models\Type;
 
 /**
- * User listener for sessions
+ * User listener for News
  */
 class News
 {
