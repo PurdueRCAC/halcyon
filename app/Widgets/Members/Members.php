@@ -2,7 +2,8 @@
 namespace App\Widgets\Members;
 
 use App\Modules\Widgets\Entities\Widget;
-use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\UserUsername;
+use Carbon\Carbon;
 
 /**
  * Module class for user data
@@ -21,37 +22,33 @@ class Members extends Widget
 			return;
 		}
 
-		$data = [
-			'widget' => $this->model
-		];
+		$data = [];
+		$now = Carbon::now();
 
-		$data['unconfirmed'] = User::query()
-			->where('block', '=', 0)
-			->where('activation', '<', 1)
-			->count();
+		// Created in the past 30 days
+		for ($i = 30; $i > 0; $i--)
+		{
+			$de = $now->format('Y-m-d');
+			$dt = $now->modify('-1 day')->format('Y-m-d');
 
-		$data['confirmed'] = User::query()
-			->where('block', '=', 0)
-			->where('activation', '>', 0)
-			->count();
+			$total = UserUsername::query()
+				->where('datecreated', '>=', $dt . ' 00:00:00')
+				->where('datecreated', '<', $de . ' 00:00:00')
+				->count();
 
-		$data['pastDay'] = User::query()
-			->where('block', '=', 0)
-			->where('created_at', '>=', gmdate('Y-m-d', (time() - 24*3600)) . ' 00:00:00')
-			->count();
+			//$total = rand(0, 50);
 
-		$data['approved'] = User::query()
-			->where('block', '=', 0)
-			->where('activation', '>', 0)
-			//->where('approved', '>', 0)
-			->count();
+			$item = new \stdClass;
+			$item->x = $dt;
+			$item->y = $total;
 
-		$data['unapproved'] = User::query()
-			->where('block', '=', 0)
-			->where('activation', '>', 0)
-			//->where('approved', '=', 0)
-			->count();
+			$data[] = $item;
+		}
 
-		return view($this->getViewName('index'), $data);
+		return view($this->getViewName('index'), [
+			'widget' => $this->model,
+			'params' => $this->params,
+			'data'   => $data
+		]);
 	}
 }
