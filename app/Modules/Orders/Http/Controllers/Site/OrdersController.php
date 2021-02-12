@@ -28,6 +28,7 @@ class OrdersController extends Controller
 			'search'    => null,
 			'status'    => 'active',
 			'category'  => '*',
+			'product'   => '*',
 			'start'     => null,
 			'end'       => null,
 			'type'      => 0,
@@ -176,6 +177,10 @@ class OrdersController extends Controller
 					$sub->join($p, $p . '.id', $i . '.orderproductid')
 						->where($p . '.ordercategoryid', '=', $filters['category']);
 				}
+				if ($filters['product'] != '*')
+				{
+					$sub->where($i . '.orderproductid', '=', $filters['product']);
+				}
 			}, 'tbaccounts')
 			->leftJoin($u, $u . '.id', 'tbaccounts.userid');
 			//->leftJoin($a, $a . '.orderid', $o . '.id');
@@ -276,10 +281,28 @@ class OrdersController extends Controller
 			->orderBy('name', 'asc')
 			->get();
 
+		$query = Product::query()
+			->withTrashed()
+			->whereIsActive();
+
+		if (!auth()->user() || !auth()->user()->can('manage orders'))
+		{
+			$query->where('public', '=', 1);
+		}
+		if ($filters['category'] != '*')
+		{
+			$query->where('ordercategoryid', '=', $filters['category']);
+		}
+
+		$products = $query
+			->orderBy('name', 'asc')
+			->get();
+
 		return view('orders::site.orders.index', [
 			'rows'    => $rows,
 			'filters' => $filters,
-			'categories' => $categories
+			'categories' => $categories,
+			'products' => $products
 		]);
 	}
 

@@ -26,34 +26,26 @@ $(document).ready(function() {
 
 @section('content')
 
-
-<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 @component('orders::site.submenu')
 	orders
 @endcomponent
-</div>
-<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-<h2>{{ trans('orders::orders.orders') }}</h2>
 
-<form action="{{ route('site.orders.index') }}" method="get" class="form-inline">
 
-	<fieldset id="filter-bar">
-		<legend class="sr-only">Filter</legend>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-		<div class="row">
-			<div class="col-md-12">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+<h2 class="sr-only">{{ trans('orders::orders.orders') }}</h2>
 
-				<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
-				<select name="category" id="filter_category" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
-					<?php foreach ($categories as $category) { ?>
-						<option value="<?php echo $category->id; ?>"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
-					<?php } ?>
-				</select>
+<form action="{{ route('site.orders.index') }}" method="get" class="row">
+<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 
-				<label class="sr-only" for="filter_status">{{ trans('orders::orders.status') }}</label>
+		<fieldset class="filters">
+			<div class="form-group">
+				<label for="filter_search">{{ trans('search.label') }}</label>
+				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="Find orders by account or ID" value="{{ $filters['search'] }}" />
+			</div>
+
+			<div class="form-group">
+				<label for="filter_status">{{ trans('orders::orders.status') }}</label>
 				<select name="status" id="filter_status" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all statuses') }}</option>
 					<option value="active"<?php if ($filters['status'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.active') }}</option>
@@ -65,21 +57,42 @@ $(document).ready(function() {
 					<option value="complete"<?php if ($filters['status'] == 'complete'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.complete') }}</option>
 					<option value="canceled"<?php if ($filters['status'] == 'canceled'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.canceled') }}</option>
 				</select>
-
-				<label class="sr-only" for="filter_start">{{ trans('orders::orders.start date') }}</label>
+			</div>
+			<div class="form-group">
+				<label for="filter_category">{{ trans('orders::orders.category') }}</label>
+				<select name="category" id="filter_category" class="form-control filter filter-submit">
+					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
+					<?php foreach ($categories as $category) { ?>
+						<option value="<?php echo $category->id; ?>"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
+					<?php } ?>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="filter_product">{{ trans('orders::orders.product') }}</label>
+				<select name="product" id="filter_product" class="form-control filter filter-submit">
+					<option value="*"<?php if ($filters['product'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all products') }}</option>
+					@foreach ($products as $product)
+						<option value="<?php echo $product->id; ?>"<?php if ($filters['product'] == $product->id): echo ' selected="selected"'; endif;?>>{{ $product->name }}</option>
+					@endforeach
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="filter_start">{{ trans('orders::orders.start date') }}</label>
 				<input type="text" name="start" id="filter_start" size="10" class="form-control date-pick filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
-
-				<label class="sr-only" for="filter_end">{{ trans('orders::orders.end date') }}</label>
+			</div>
+			<div class="form-group">
+				<label for="filter_end">{{ trans('orders::orders.end date') }}</label>
 				<input type="text" name="end" id="filter_end" size="10" class="form-control date-pick filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
 			</div>
-		</div>
+
 
 		<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 
 		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
-
+</div>
+<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	@if (count($rows))
 		<table class="table table-hover adminlist">
 			<caption class="sr-only">{{ trans('orders::orders.orders placed') }}</caption>
@@ -97,7 +110,7 @@ $(document).ready(function() {
 					<th scope="col" class="priority-4">
 						<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.submitter'), 'userid', $filters['order_dir'], $filters['order']); ?>
 					</th>
-					<th scope="col" class="priority-2 text-right">
+					<th scope="col" class="priority-2 text-right text-nowrap">
 						{{ trans('orders::orders.total') }}
 					</th>
 				</tr>
@@ -128,7 +141,7 @@ $(document).ready(function() {
 						@endif
 					</td>
 					<td>
-						<span class="order-status {{ str_replace(' ', '-', $row->status) }}">
+						<span class="badge order-status {{ str_replace(' ', '-', $row->status) }}">
 							{{ trans('orders::orders.' . $row->status) }}
 						</span>
 					</td>
@@ -151,7 +164,7 @@ $(document).ready(function() {
 							@endif
 						@endif
 					</td>
-					<td class="priority-2 text-right">
+					<td class="priority-2 text-right text-nowrap">
 						{{ config('orders.currency', '$') }} {{ $row->formatNumber($row->ordertotal) }}
 					</td>
 				</tr>
@@ -159,7 +172,7 @@ $(document).ready(function() {
 			</tbody>
 		</table>
 
-		<div class="row">
+		<div class="row w-100">
 			<div class="col-sm-9">
 				{{ $rows->render() }}
 			</div>
@@ -172,6 +185,7 @@ $(document).ready(function() {
 	@endif
 
 	@csrf
+					</div>
 </form>
 </div>
 @stop

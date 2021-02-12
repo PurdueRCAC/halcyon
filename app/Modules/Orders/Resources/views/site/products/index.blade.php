@@ -140,15 +140,14 @@
 @endphp
 
 @section('content')
-<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
+
 @component('orders::site.submenu')
 	products
 @endcomponent
-</div>
-<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	<div class="row">
 		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-			<h2>{{ trans('orders::orders.products') }}</h2>
+			<h2 class="sr-only">{{ trans('orders::orders.products') }}</h2>
 		</div>
 		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
 			@if (auth()->user() && auth()->user()->can('manage orders'))
@@ -158,26 +157,25 @@
 			@endif
 		</div>
 	</div>
-
-	<form action="{{ route('site.orders.products') }}" method="get" name="adminForm" id="adminForm">
+	<div class="row">
+<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
+	<form action="{{ route('site.orders.products') }}" method="get" name="products" id="products">
 
 		<?php $cat = null; ?>
 
-		<div class="row">
-			<div class="col col-md-7">
+
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('orders::orders.search products') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-addon">
-							<i class="fa fa-search"></i>
+						<span class="input-group-append">
+							<span class="input-group-text"><i class="fa fa-search"></i></span>
 						</span>
 					</span>
 				</div>
-			</div>
-			<div class="col col-md-5 text-right">
+
 				<div class="form-group">
-					<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
+					<label for="filter_category">{{ trans('orders::orders.category') }}</label>
 					<select name="category" id="filter_category" class="form-control filter filter-submit">
 						<option value="0"<?php if (!$filters['category']): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
 						<?php foreach ($categories as $category) { ?>
@@ -191,13 +189,12 @@
 						<?php } ?>
 					</select>
 				</div>
-			</div>
-		</div>
 
 		<button class="sr-only" type="submit">{{ trans('global.filter') }}</button>
 	</form>
-
-<form action="{{ route('site.orders.products') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+</div>
+<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+<form action="{{ route('site.orders.products') }}" method="post" name="adminForm" id="adminForm" class="form-iline">
 	@if ($cat)
 		<h3>{{ $cat->name }}</h3>
 		<p>{{ $cat->description }}</p>
@@ -261,11 +258,8 @@
 						<input type="text" name="subtotal[{{ $product->id }}][]" id="{{ $product->id }}_linetotal" size="4" class="form-control total-input text-right" value="0.00" />
 					</span> -->
 					@if (auth()->user() && auth()->user()->can('manage orders'))
-						<!-- <span class="input-group">
-							<span class="input-group-addon"><span class="input-group-text">$</span></span> -->
-							$
-							<input type="text" name="subtotal[{{ $product->id }}][]" id="{{ $product->id }}_linetotal" size="6" class="form-control total-input text-right" value="0.00" />
-						<!-- </span> -->
+						$ <input type="text" name="subtotal[{{ $product->id }}][]" id="{{ $product->id }}_linetotal" size="6" class="form-control total-input text-right" value="0.00" />
+
 					@else
 						$ <span id="{{ $product->id }}_linetotal">0.00</span>
 					@endif
@@ -434,17 +428,21 @@
 
 		<div class="row">
 			<div class="col-md-6">
-				<div class="form-check form-block">
-					<input class="form-check-input" type="radio" id="formeyes" value="Yes" name="forme" />
-					<label class="form-check-label" for="formeyes">{{ trans('global.yes') }}</label>
-					<p class="form-text text-muted">If you are a graduate student please answer "Yes".</p>
+				<div class="form-block">
+					<div class="form-check">
+						<input class="form-check-input" type="radio" id="formeyes" value="Yes" name="forme" />
+						<label class="form-check-label" for="formeyes">{{ trans('global.yes') }}</label>
+						<span class="form-text text-muted">If you are a graduate student please answer "Yes".</span>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-6">
-				<div class="form-check form-block">
-					<input class="form-check-input" type="radio" id="formeno" value="No" name="forme" />
-					<label class="form-check-label" for="formeno">{{ trans('global.no') }}</label>
-					<p class="form-text text-muted">If you are placing this order for yourself select "No".</p>
+				<div class="form-block">
+					<div class="form-check">
+						<input class="form-check-input" type="radio" id="formeno" value="No" name="forme" />
+						<label class="form-check-label" for="formeno">{{ trans('global.no') }}</label>
+						<span class="form-text text-muted">If you are placing this order for yourself select "No".</span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -498,16 +496,18 @@
 				}
 				?>
 				<div id="<?php echo $product->id; ?>_mou" class="stash">
-					<div class="form-check form-block">
-						<input class="form-check-input mou-agree" type="checkbox" data-id="<?php echo $product->id; ?>" id="<?php echo $product->id; ?>_mouagree" />
-						<label class="form-check-label" for="<?php echo $product->id; ?>_mouagree">I have read and consent to the MOU Agreement.</label>
-						<p class="form-text text-muted">
-							<a href="<?php echo $product->mou; ?>" target="_blank"><?php echo $product->name; ?> - MOU Agreement</a>
+					<div class="form-block">
+						<div class="form-check">
+							<input class="form-check-input mou-agree" type="checkbox" data-id="<?php echo $product->id; ?>" id="<?php echo $product->id; ?>_mouagree" />
+							<label class="form-check-label" for="<?php echo $product->id; ?>_mouagree">I have read and consent to the MOU Agreement.</label>
+							<p class="form-text text-muted">
+								<a href="<?php echo $product->mou; ?>" target="_blank"><?php echo $product->name; ?> - MOU Agreement</a>
 
-							<a href="#help3" class="help icn tip" title="Help">
-								<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Please click checkbox after reading and consenting to MOU Agreement.</span>
-							</a>
-						</p>
+								<a href="#help3" class="help icn tip" title="Help">
+									<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Please click checkbox after reading and consenting to MOU Agreement.</span>
+								</a>
+							</p>
+						</div>
 					</div>
 				</div>
 				<?php
@@ -584,4 +584,6 @@
 	@csrf
 </form>
 </div>
+	</div>
+	</div>
 @stop
