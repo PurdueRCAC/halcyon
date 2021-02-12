@@ -3,31 +3,26 @@
 namespace App\Modules\Tags\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-use Carbon\Carbon;
-use App\Modules\Tags\Events\TagCreating;
 use App\Modules\Tags\Events\TagCreated;
-use App\Modules\Tags\Events\TagUpdating;
 use App\Modules\Tags\Events\TagUpdated;
 use App\Modules\Tags\Events\TagDeleted;
+use Carbon\Carbon;
 
 /**
  * Tag model
  */
 class Tag extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use ErrorBag, Validatable, Historable, SoftDeletes;
 
 	/**
 	 * The table to which the class pertains
 	 *
-	 * This will default to #__{namespace}_{modelName} unless otherwise
-	 * overwritten by a given subclass. Definition of this property likely
-	 * indicates some derivation from standard naming conventions.
-	 *
-	 * @var  string
+	 * @var string
 	 **/
 	protected $table = 'tags';
 
@@ -41,7 +36,7 @@ class Tag extends Model
 	/**
 	 * Default order direction for select queries
 	 *
-	 * @var  string
+	 * @var string
 	 */
 	public static $orderDir = 'asc';
 
@@ -57,7 +52,7 @@ class Tag extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var array
 	 */
 	protected $rules = array(
 		'name' => 'required'
@@ -69,9 +64,7 @@ class Tag extends Model
 	 * @var array
 	 */
 	protected $dispatchesEvents = [
-		'creating' => TagCreating::class,
 		'created'  => TagCreated::class,
-		'updating' => TagUpdating::class,
 		'updated'  => TagUpdated::class,
 		'deleted'  => TagDeleted::class,
 	];
@@ -154,9 +147,8 @@ class Tag extends Model
 	 */
 	public function isUpdated()
 	{
-		if ($this->getOriginal('updated_at')
-		 && $this->getOriginal('updated_at') != '0000-00-00 00:00:00'
-		 && $this->getOriginal('updated_at') != $this->getOriginal('created_at'))
+		if ($this->updated_at
+		 && $this->updated_at != $this->created_at)
 		{
 			return true;
 		}
@@ -174,21 +166,11 @@ class Tag extends Model
 	}
 
 	/**
-	 * Determine if record was trashed
-	 *
-	 * @return  boolean  True if modified, false if not
-	 */
-	public function isDeleted()
-	{
-		return ($this->getOriginal('deleted_at') && $this->getOriginal('deleted_at') != '0000-00-00 00:00:00');
-	}
-
-	/**
 	 * Creator profile
 	 *
 	 * @return  object
 	 */
-	public function deleter()
+	public function trasher()
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'deleted_by');
 	}
@@ -231,26 +213,12 @@ class Tag extends Model
 	}
 
 	/**
-	 * Get a list of logs
+	 * Delete the record and all associated data
 	 *
-	 * @return  object
+	 * @return  boolean  False if error, True on success
 	 */
-	/*public function logs()
+	public function delete(array $options = [])
 	{
-		return $this->hasMany(Log::class, 'tag_id');
-	}*/
-
-	/**
-	 * Delete entry and associated data
-	 *
-	 * @return  bool
-	 */
-	public function delete()
-	{
-		//$tag_id = $this->id;
-
-		//$comment = $this->toJson();
-
 		foreach ($this->aliases as $row)
 		{
 			$row->delete();
@@ -261,18 +229,7 @@ class Tag extends Model
 			$row->delete();
 		}
 
-		$result = parent::delete();
-
-		/*if ($result)
-		{
-			$log = new Log;
-			$log->tag_id   = $tag_id;
-			$log->action   = 'tag_deleted';
-			$log->comments = $comment;
-			$log->save();
-		}*/
-
-		return $result;
+		return parent::delete($options);
 	}
 
 	/**
