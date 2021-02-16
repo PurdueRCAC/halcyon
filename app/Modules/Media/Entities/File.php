@@ -140,7 +140,7 @@ class File extends \SplFileInfo
 				'height' => 0
 			);
 
-			if ($this->isImage())
+			if ($this->isImage() && $this->getExtension() != 'svg')
 			{
 				try
 				{
