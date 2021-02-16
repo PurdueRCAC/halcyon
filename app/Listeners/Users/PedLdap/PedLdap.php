@@ -79,16 +79,36 @@ class PedLdap
 		{
 			$ldap = $this->connect($config);
 
+			$search = $event->search;
 			$status = 404;
 
 			// We already found a match, so kip this lookup
-			if (!in_array($event->search, $usernames))
+			if (!in_array($search, $usernames))
 			{
-				// Look for a currently active username in I2A2 matching the request.
-				$results = $ldap->search()
-					->where('uid', '=', $event->search)
-					->select(['cn', 'uid', 'title', 'purdueEduCampus'])
-					->get();
+				$results = array();
+
+				// Try finding by email address
+				if (preg_match("/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/", $search))
+				{
+					$results = $ldap->search()
+						->where('email', '=', $search)
+						->select(['cn', 'uid', 'title', 'purdueEduCampus'])
+						->get();
+
+					if (empty($results))
+					{
+						$search = strstr($search, '@', true);
+					}
+				}
+
+				if (empty($results))
+				{
+					// Look for a currently active username in I2A2 matching the request.
+					$results = $ldap->search()
+						->where('uid', '=', $search . '*')
+						->select(['cn', 'uid', 'title', 'purdueEduCampus'])
+						->get();
+				}
 
 				foreach ($results as $result)
 				{
@@ -116,8 +136,8 @@ class PedLdap
 
 			// Look for all currently active users in I2A2 with a real name matching the request.
 			$results = $ldap->search()
-				->orWhere('cn', '=', $event->search)
-				->orWhere('cn', 'ends_with', ' ' . $event->search)
+				->orWhere('cn', '=', $search)
+				->orWhere('cn', 'ends_with', ' ' . $search)
 				->select(['cn', 'uid', 'title', 'sn', 'givenname', 'mail', 'purdueEduCampus'])
 				->get();
 

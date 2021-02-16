@@ -91,13 +91,32 @@ class RcacLdap
 		{
 			$ldap = $this->connect($config);
 
-			// Performing a query.
-			$results = $ldap->search()
-				->where('uid', '=', $event->search)
-				->select(['cn', 'uid'])
-				->get();
-
+			$search = $event->search;
+			$results = array();
 			$status = 404;
+
+			// Try finding by email address
+			if (preg_match("/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/", $search))
+			{
+				$results = $ldap->search()
+					->where('mailHost', '=', $search)
+					->select(['cn', 'uid'])
+					->get();
+
+				if (empty($results))
+				{
+					$search = strstr($search, '@', true);
+				}
+			}
+
+			// Performing a query.
+			if (empty($results))
+			{
+				$results = $ldap->search()
+					->where('uid', '=', $search . '*')
+					->select(['cn', 'uid'])
+					->get();
+			}
 
 			if (!empty($results))
 			{
