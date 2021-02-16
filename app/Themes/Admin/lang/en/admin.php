@@ -9,6 +9,8 @@ return [
 	// Params
 	'mode' => 'Mode',
 	'mode description' => 'Select between a light toolbar and colored menu or a dark menu and colored toolbar.',
+	'logo' => 'Logo',
+	'logo description' => 'File path for a logo.',
 	'light' => 'Light (default)',
 	'dark' => 'Dark',
 	// Misc.
@@ -20,7 +22,7 @@ return [
 	'open-close menu' => 'Open/Close Menu',
 	'menu' => 'Menu',
 	'copyright' => '<a href=":url">:name</a> &copy; :date. All Rights Reserved.',
-	'powered by' => 'Powered by <a rel="external" href="http://www.rcac.purdue.edu.org">Halcyon&reg;</a>, version :v',
+	'powered by' => 'Powered by <a rel="external" href="http://www.rcac.purdue.edu.org">Halcyon</a>, version :v',
 	'admin login' => 'Administration Login',
 	// Error pages
 	'error 403 title' => 'Not Authorized',

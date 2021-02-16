@@ -2831,7 +2831,7 @@ div.current li {
 }
 #header .logo-container img {
   width: 100%;
-  margin: 0 0 0 -5px;
+  margin: 0;
   padding: 0;
   vertical-align: middle;
 }

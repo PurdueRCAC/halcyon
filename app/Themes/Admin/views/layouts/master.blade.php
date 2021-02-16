@@ -61,7 +61,11 @@
 					<a href="{{ url()->to('/') }}">
 						<span class="logo-container">
 							<span class="logo-shim"></span>
-							<?php echo file_get_contents(app_path('Themes/Admin/assets/images/halcyon.svg')); ?>
+							@if ($file = app('themes')->getActiveTheme()->getParams('logo'))
+								<img src="{{ asset($file) }}" alt="{{ config('app.name') }}" width="47" />
+							@else
+								<?php echo file_get_contents(app_path('Themes/Admin/assets/images/halcyon.svg')); ?>
+							@endif
 						</span>
 						{{ config('app.name') }}
 					</a>

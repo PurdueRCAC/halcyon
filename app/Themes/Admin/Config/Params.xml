@@ -6,6 +6,7 @@
 				<option value="light">theme.admin::admin.light</option>
 				<option value="dark">theme.admin::admin.dark</option>
 			</field>
+			<field name="logo" type="text" default="" label="theme.admin::admin.logo" description="theme.admin::admin.logo description" />
 		</fieldset>
 	</fields>
 </config>
