@@ -72,6 +72,20 @@ class CreateUsersTables extends Migration
 			//$this->info('Created `user_notes` table.');
 		}
 
+		if (!Schema::hasTable('user_facets'))
+		{
+			Schema::create('user_facets', function (Blueprint $table)
+			{
+				$table->increments('id');
+				$table->integer('user_id')->unsigned()->default(0);
+				$table->string('key', 255);
+				$table->string('value', 8096);
+				$table->tinyInteger('locked')->unsigned()->default(0);
+				$table->tinyInteger('access')->unsigned()->default(0);
+				$table->index('user_id');
+			});
+		}
+
 		if (!Schema::hasTable('user_roles'))
 		{
 			Schema::create('user_roles', function (Blueprint $table)
@@ -131,6 +145,7 @@ class CreateUsersTables extends Migration
 		$tables = array(
 			'users',
 			'user_notes',
+			'user_facets',
 			'user_roles',
 			'user_role_map',
 			'permissions',
@@ -139,7 +154,6 @@ class CreateUsersTables extends Migration
 		foreach ($tables as $table)
 		{
 			Schema::dropIfExists($table);
-			//$this->info('Dropped `' . $table . '` table.');
 		}
 	}
 }

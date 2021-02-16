@@ -34,6 +34,7 @@ class UserResource extends JsonResource
 
 		$data['notes'] = $this->notes;
 		$data['roles'] = $this->roles;
+		$data['facets'] = $this->facets;
 
 		// Permissions check
 		$data['can']['edit']   = false;

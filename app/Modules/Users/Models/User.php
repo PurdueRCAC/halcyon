@@ -416,6 +416,16 @@ class User extends Model implements
 	}
 
 	/**
+	 * Get facets
+	 *
+	 * @return  object
+	 */
+	public function facets()
+	{
+		return $this->hasMany(Facet::class, 'user_id');
+	}
+
+	/**
 	 * Finds a user by username
 	 *
 	 * @param   string  $username

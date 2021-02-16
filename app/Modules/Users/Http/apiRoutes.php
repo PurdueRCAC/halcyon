@@ -89,4 +89,60 @@ $router->group(['prefix' => 'users'], function (Router $router)
 			'middleware' => 'can:delete users.roles',
 		]);
 	});
+
+	$router->group(['prefix' => 'facets', 'middleware' => 'auth:api'], function (Router $router)
+	{
+		$router->get('/', [
+			'as' => 'api.users.facets',
+			'uses' => 'FacetsController@index',
+			//'middleware' => 'can:users.facets',
+		]);
+		$router->post('/', [
+			'as' => 'api.users.facets.create',
+			'uses' => 'FacetsController@create',
+			'middleware' => 'can:create users.facets',
+		]);
+		$router->get('{id}', [
+			'as' => 'api.users.facets.read',
+			'uses' => 'FacetsController@read',
+		])->where('id', '[0-9]+');
+		$router->put('/', [
+			'as' => 'api.users.facets.update',
+			'uses' => 'FacetsController@update',
+			'middleware' => 'can:edit users.facets',
+		]);
+		$router->delete('{id}', [
+			'as'   => 'api.users.facets.delete',
+			'uses' => 'FacetsController@delete',
+			'middleware' => 'can:delete users.facets',
+		]);
+	});
+
+	$router->group(['prefix' => 'notes', 'middleware' => 'auth:api'], function (Router $router)
+	{
+		$router->get('/', [
+			'as' => 'api.users.notes',
+			'uses' => 'NotesController@index',
+			//'middleware' => 'can:users.notes',
+		]);
+		$router->post('/', [
+			'as' => 'api.users.notes.create',
+			'uses' => 'NotesController@create',
+			'middleware' => 'can:create users.notes',
+		]);
+		$router->get('{id}', [
+			'as' => 'api.users.notes.read',
+			'uses' => 'NotesController@read',
+		])->where('id', '[0-9]+');
+		$router->put('/', [
+			'as' => 'api.users.notes.update',
+			'uses' => 'NotesController@update',
+			'middleware' => 'can:edit users.notes',
+		]);
+		$router->delete('{id}', [
+			'as'   => 'api.users.notes.delete',
+			'uses' => 'NotesController@delete',
+			'middleware' => 'can:delete users.notes',
+		]);
+	});
 });
