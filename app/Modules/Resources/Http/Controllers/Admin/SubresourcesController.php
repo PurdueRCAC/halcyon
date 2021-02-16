@@ -261,7 +261,7 @@ class SubresourcesController extends Controller
 	}
 
 	/**
-	 * Remove the specified resource from storage.
+	 * Restore a removed item
 	 *
 	 * @param  Request $request
 	 * @return Response
