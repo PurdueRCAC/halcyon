@@ -426,6 +426,20 @@ class User extends Model implements
 	}
 
 	/**
+	 * Find a facet value
+	 *
+	 * @param   string  $key
+	 * @param   mixed   $default
+	 * @return  string
+	 */
+	public function facet($key, $default = null)
+	{
+		$facet = $this->facets->where('key', $key);
+
+		return count($facet) ? $facet->first()->value : $default;
+	}
+
+	/**
 	 * Finds a user by username
 	 *
 	 * @param   string  $username
