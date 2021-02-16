@@ -13,14 +13,6 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('edit.state queues'))
-		{!!
-			Toolbar::publishList(route('admin.resources.subresources.start'), trans('resources::resources.start'));
-			Toolbar::unpublishList(route('admin.resources.subresources.stop'), trans('resources::resources.stop'));
-			Toolbar::spacer();
-		!!}
-	@endif
-
 	@if (auth()->user()->can('delete resources'))
 		@if ($filters['state'] == 'trashed')
 			{!! Toolbar::custom(route('admin.resources.subresources.restore'), 'refresh', 'refresh', trans('global.restore'), false) !!}
