@@ -177,13 +177,13 @@ class ThemesController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.title' => 'required'
+			'fields.name' => 'required|string|max:255',
+			'fields.params' => 'nullable|array'
 		]);
 
 		$id = $request->input('id');
 
 		$row = $id ? Theme::findOrFail($id) : new Theme();
-
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())
