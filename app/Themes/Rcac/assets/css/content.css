@@ -984,6 +984,13 @@ ul.purchases li {
 #faq li {
 	list-style: '\0203A\0020' outside none;
 } */
+.form-block {
+  border: 1px solid #eee;
+  padding: 0.5em 1em;
+  border-radius: 0.25em;
+  margin: 0 0 1em 0;
+  display: block;
+}
 
 /* News */
 .newsleft,
