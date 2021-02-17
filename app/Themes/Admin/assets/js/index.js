@@ -168,6 +168,33 @@ jQuery(document).ready(function($){
 		$(this).parent().toggleClass('active');
 	});
 
+	$('#mode').on('click', function(e){
+		e.preventDefault();
+
+		var btn = $('#mode'),
+			mode = btn.data('mode');
+
+		$.ajax({
+			url: btn.data('api'),
+			type: 'put',
+			data: {
+				facets: {
+					'theme.admin.mode': mode
+				}
+			},
+			dataType: 'json',
+			async: false,
+			success: function (response) {
+				$('html').attr('data-mode', mode);
+				console.log($('html').attr('data-mode'));
+				btn.attr('data-mode', mode);
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				console.log(xhr);
+			}
+		});
+	});
+
 	// Display system messages in Growl-like way
 	$(document).on("renderMessages", function() {
 		var msg = $('#system-messages');

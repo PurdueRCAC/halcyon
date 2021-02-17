@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 return [
 	// Params
 	'mode' => 'Mode',
@@ -13,6 +7,7 @@ return [
 	'logo description' => 'File path for a logo.',
 	'light' => 'Light (default)',
 	'dark' => 'Dark',
+	'toggle theme' => 'Toggle color mode',
 	// Misc.
 	'dashboard' => 'Dashboard',
 	'help' => 'Help',

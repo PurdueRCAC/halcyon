@@ -1,6 +1,6 @@
 @if (!request()->ajax())
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js {{ app('themes')->getActiveTheme()->getParams('mode', 'light') }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js" data-mode="{{ auth()->user()->facet('theme.admin.mode', app('themes')->getActiveTheme()->getParams('mode', 'light')) }}">
 	<head>
 		<!-- Metadata -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -87,9 +87,12 @@
 
 				<ul class="user-options">
 					@if (Auth::check())
-						<!-- <li data-title="{{ trans('theme::admin.toggle theme') }}">
-							<a class="icon-sun" href="{{ request()->url() }}?theme=dark">{{ trans('theme::admin.toggle theme') }}</a>
-						</li> -->
+						<li data-title="{{ trans('theme::admin.toggle theme') }}">
+							<a id="mode"
+								data-api="{{ route('api.users.update', ['id' => auth()->user()->id]) }}"
+								data-mode="{{ auth()->user()->facet('theme.admin.mode', 'light') == 'light' ? 'dark' : 'light' }}"
+								href="{{ request()->url() }}?theme.admin.mode={{ auth()->user()->facet('theme.admin.mode', 'light') == 'light' ? 'dark' : 'light' }}">{{ trans('theme::admin.toggle theme') }}</a>
+						</li>
 						<li data-title="{{ trans('theme::admin.logout') }}">
 							<a class="icon-power logout" href="{{ route('admin.logout') }}">{{ trans('theme::admin.logout') }}</a>
 						</li>
@@ -107,8 +110,8 @@
 				</ul>
 			</header><!-- / #header -->
 
-			<div id="container-component">
-				<main id="component-content">
+			<div id="container-module">
+				<main id="module-content">
 					<div id="toolbar-box" class="toolbar-box">
 						<div class="pagetitle">
 							<h2 class="sr-only">@yield('title')</h2>
@@ -130,18 +133,18 @@
 					<section id="main">
 						<!-- Content begins -->
 @endif
-						@yield('content')
+@yield('content')
 @if (!request()->ajax())
 						<!-- Content ends -->
 
 						<noscript>
-							{{ trans('global.warnjavascript') }}
+							{{ trans('global.warn javascript required') }}
 						</noscript>
 					</section><!-- / #main -->
-				</main><!-- / #component-content -->
+				</main><!-- / #module-content -->
 
 				@include('partials.footer')
-			</div><!-- / #wrap -->
+			</div><!-- / #container-module -->
 		</div><!-- / #container-main -->
 	</body>
 </html>
