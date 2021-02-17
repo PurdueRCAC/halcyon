@@ -6,23 +6,23 @@ use Illuminate\Routing\Router;
 $router->group(['prefix' => 'messagequeue'], function (Router $router)
 {
 	$router->get('/', [
-		'as'   => 'api.messages.index',
+		'as'   => 'ws.messages.index',
 		'uses' => 'MessagesController@index',
 	]);
 	$router->post('/', [
-		'as' => 'api.messages.create',
+		'as' => 'ws.messages.create',
 		'uses' => 'MessagesController@create',
 	]);
 	$router->get('{id}', [
-		'as'   => 'api.messages.read',
+		'as'   => 'ws.messages.read',
 		'uses' => 'MessagesController@read',
 	])->where('id', '[0-9]+');
 	$router->put('{id}', [
-		'as'   => 'api.messages.update',
+		'as'   => 'ws.messages.update',
 		'uses' => 'MessagesController@update',
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
-		'as' => 'api.messages.delete',
+		'as' => 'ws.messages.delete',
 		'uses' => 'MessagesController@delete',
 	])->where('id', '[0-9]+');
 });
@@ -31,23 +31,23 @@ $router->group(['prefix' => 'messagequeue'], function (Router $router)
 $router->group(['prefix' => 'messagequeuetype'], function (Router $router)
 {
 	$router->get('/', [
-		'as'   => 'api.messages.types',
+		'as'   => 'ws.messages.types',
 		'uses' => 'TypesController@index',
 	]);
 	$router->post('/', [
-		'as' => 'api.messages.types.create',
+		'as' => 'ws.messages.types.create',
 		'uses' => 'TypesController@create',
 	]);
 	$router->get('{id}', [
-		'as' => 'api.messages.types.read',
+		'as' => 'ws.messages.types.read',
 		'uses' => 'TypesController@read',
 	])->where('id', '[0-9]+');
 	$router->put('{id}', [
-		'as' => 'api.messages.types.update',
+		'as' => 'ws.messages.types.update',
 		'uses' => 'TypesController@update',
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
-		'as' => 'api.messages.types.delete',
+		'as' => 'ws.messages.types.delete',
 		'uses' => 'TypesController@delete',
 	])->where('id', '[0-9]+');
 });
