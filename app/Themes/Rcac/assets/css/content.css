@@ -20,10 +20,10 @@ li {
 	list-style: none;
 	padding: 0;
 }
-p,
+/*p,
 li {
 	font-size: 0.95em;
-}
+}*/
 
 address {
 	margin-left: 2em;
