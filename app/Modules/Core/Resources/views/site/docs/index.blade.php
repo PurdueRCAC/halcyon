@@ -17,14 +17,14 @@
 		<!-- Styles -->
 		<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/bootstrap/bootstrap.min.css?v=' . filemtime(public_path() . '/modules/core/vendor/bootstrap/bootstrap.min.css')) }}" />
 		<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/prism/prism.css?v=' . filemtime(public_path() . '/modules/core/vendor/prism/prism.css')) }}" />
-		<!-- <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/swagger/swagger-ui.css?v=' . filemtime(public_path() . '/modules/core/vendor/swagger/swagger-ui.css')) }}" /> -->
+		<?php /*<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/swagger/swagger-ui.css?v=' . filemtime(public_path() . '/modules/core/vendor/swagger/swagger-ui.css')) }}" />*/ ?>
 		<style>
-			* {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
--webkit-overflow-scrolling: touch;
-}
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			-webkit-overflow-scrolling: touch;
+		}
 		html {
 			line-height: 1.15;
 			-ms-text-size-adjust: 100%;
