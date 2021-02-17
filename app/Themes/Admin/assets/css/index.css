@@ -4770,8 +4770,8 @@ a.fancybox-next,
   background-color: #e2f3e6;
   border-color: #e2f3e6;
   color: #297A3A;
-  color: #fff;
-    background-color: rgba(48, 166, 73, 0.3);
+  /*color: #fff;
+    background-color: rgba(48, 166, 73, 0.3);*/
     border-color: transparent;
 }
 .on:hover,
