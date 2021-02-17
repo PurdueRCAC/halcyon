@@ -21,13 +21,13 @@ class Notice extends Widget
 
 		//$database->setQuery("SELECT publish_up, publish_down FROM `#__modules` WHERE id=" . $this->module->id);
 		//$item = $database->loadObject();
-		$this->module->publish_up   = (isset($item->publish_up))   ? $item->publish_up   : null;
-		$this->module->publish_down = (isset($item->publish_down)) ? $item->publish_down : null;
+		//$this->module->publish_up   = (isset($item->publish_up))   ? $item->publish_up   : null;
+		//$this->module->publish_down = (isset($item->publish_down)) ? $item->publish_down : null;
 
 		// Get some initial parameters
-		$start = $this->params->get('start_publishing', $this->module->publish_up);
+		$start = $this->params->get('start_publishing', $this->model->publish_up);
 		//$start = Date::of($start)->toLocal(Lang::txt('DATE_FORMAT_HZ1'));
-		$stop  = $this->params->get('stop_publishing', $this->module->publish_down);
+		$stop  = $this->params->get('stop_publishing', $this->model->publish_down);
 		//$stop  = Date::of($stop)->toLocal(Lang::txt('DATE_FORMAT_HZ1'));
 
 		$this->publish = false;
@@ -152,8 +152,9 @@ class Notice extends Widget
 		return view($this->getViewName($layout), [
 			'params'  => $this->params,
 			'message' => $message,
-			'publish' => $publish,
-			'id' => $id,
+			'publish' => $this->publish,
+			'alertlevel' => $this->params->get('alertlevel', 'info'),
+			'id' => $this->params->get('htmlid', 'notices'),
 		]);
 	}
 

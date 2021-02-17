@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 return [
 	'widget name' => 'Site Notices',
 	'widget desc' => 'This module shows a notice (when site will be down, etc.) box for site visitors.',
@@ -27,8 +21,8 @@ return [
 		'medium' => 'Medium',
 		'high' => 'High',
 	],
-	'htmlid' => 'Module ID',
-	'htmlid desc' => 'An ID to be applied to the css of the module container, this allows individual module styling',
+	'htmlid' => 'Widget ID',
+	'htmlid desc' => 'An ID to be applied to the css of the widget container, this allows individual widget styling',
 	'message' => 'Message',
 	'message desc' => 'The message to be displayed.',
 	'allow closing' => 'Allow closing',
