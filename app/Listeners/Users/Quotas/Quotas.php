@@ -49,6 +49,7 @@ class Quotas
 			$g = (new Member)->getTable();
 
 			$dirs = Directory::query()
+				->withTrashed()
 				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
 				->join($r, $r . '.id', $d . '.storageresourceid')
 				->where($d . '.owneruserid', '=', $user->id)
@@ -62,6 +63,7 @@ class Quotas
 				->get();
 
 			$dirs2 = Directory::query()
+				->withTrashed()
 				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
 				->join($r, $r . '.id', $d . '.storageresourceid')
 				->join($u, $u . '.unixgroupid', $d . '.unixgroupid')
@@ -79,6 +81,7 @@ class Quotas
 			$storagedirquota = $dirs->merge($dirs2);
 
 			$dirs = Directory::query()
+				->withTrashed()
 				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
 				->join($r, $r . '.id', $d . '.storageresourceid')
 				->where($d . '.owneruserid', '=', $user->id)
@@ -88,6 +91,7 @@ class Quotas
 				->get();
 
 			$dirs2 = Directory::query()
+				->withTrashed()
 				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
 				->join($r, $r . '.id', $d . '.storageresourceid')
 				->join($u, $u . '.unixgroupid', $d . '.unixgroupid')
@@ -99,6 +103,7 @@ class Quotas
 				->get();
 
 			$dirs3 = Directory::query()
+				->withTrashed()
 				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
 				->join($r, $r . '.id', $d . '.storageresourceid')
 				->join($g, $g . '.groupid', $d . '.groupid')
