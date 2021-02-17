@@ -52,6 +52,10 @@ class GetUserQueues
 			$membership->queueapi = route('api.queues.read', ['id' => $membership->queueid]);
 
 			$queue = $membership->queue()->withTrashed()->first();
+			if (!$queue)
+			{
+				continue;
+			}
 			$scheduler = $queue->scheduler()->withTrashed()->first();
 
 			if (!$queue->groupid)
