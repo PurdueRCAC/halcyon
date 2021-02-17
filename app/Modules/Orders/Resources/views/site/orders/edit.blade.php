@@ -301,34 +301,23 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 @endphp
 
 @section('content')
-<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
+
 @component('orders::site.submenu')
 	orders
 @endcomponent
-</div>
-<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<h2 class="sr-only">{{ trans('orders::orders.orders') }}: {{ $order->id ? '#' . $order->id : 'Create' }}</h2>
 	<div class="row">
+		<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
+
+	<!-- <div class="row">
 		<div class="col-md-6">
 			<h2>{{ trans('orders::orders.orders') }}: {{ $order->id ? '#' . $order->id : 'Create' }}</h2>
 		</div>
 		<div class="col-md-6 text-right">
-			<?php
-			if ($order->status == 'pending_payment'
-			 || $order->status == 'pending_boassignment'
-			 || (($order->status == 'pending_approval' || $order->status == 'pending_fulfillment') && auth()->user()->can('manage orders'))
-			 || ($order->status == 'pending_approval' && !$myorder)) { ?>
-					<?php if ($order->status == 'pending_payment' && auth()->user()->can('manage orders')) { ?>
-						<button class="btn btn-secondary" id="remindorder" data-id="<?php echo $order->id; ?>">Remind Customer</button>
-						<span id="remindorderspan"></span>
-					<?php } ?>
-
-					<button class="btn btn-danger" id="cancelorder">Cancel Order</button>
-			<?php } else { ?>
-				<button class="btn btn-secondary" id="printorder">Print Order</button>
-			<?php } ?>
+			
 		</div>
-	</div>
+	</div> -->
 
 	@if ($order->status == 'pending_payment')
 		<div class="alert alert-success">
@@ -455,16 +444,33 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 		</div>
 	@endif
 
+	<?php
+			if ($order->status == 'pending_payment'
+			 || $order->status == 'pending_boassignment'
+			 || (($order->status == 'pending_approval' || $order->status == 'pending_fulfillment') && auth()->user()->can('manage orders'))
+			 || ($order->status == 'pending_approval' && !$myorder)) { ?>
+					<?php if ($order->status == 'pending_payment' && auth()->user()->can('manage orders')) { ?>
+						<button class="btn btn-secondary" id="remindorder" data-id="<?php echo $order->id; ?>">Remind Customer</button>
+						<span id="remindorderspan"></span>
+					<?php } ?>
+
+					<button class="btn btn-danger" id="cancelorder">Cancel Order</button>
+			<?php } else { ?>
+				<button class="btn btn-secondary" id="printorder">Print Order</button>
+			<?php } ?>
+		</div>
+		<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	<form action="{{ route('site.orders.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 		<input type="hidden" name="id" id="order" data-api="{{ route('api.orders.update', ['id' => $order->id]) }}" value="{{ $order->id }}" />
 
 		<div class="panel panel-default card">
 			<div class="panel-heading card-header">
-				<h3 class="panel-title card-title">{{ trans('global.details') }}</h3>
+				<div><strong>{{ '#' . $order->id }}</strong></div>
 			</div>
 			<div class="panel-body card-body">
 
+			@if (!auth()->user()->can('manage orders'))
 				<div class="orderstatusblocks">
 					<div class="orderstatus">
 						<span class="orderstatus {{ $order->status }}">{{ trans('orders::orders.' . $order->status) }}</span>
@@ -473,6 +479,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						</a>
 					</div><!-- / .orderstatus -->
 				</div><!-- / .orderstatusblock -->
+			@else
 				<div class="form-group">
 					<label for="field-state">{{ trans('global.state') }}:</label>
 					<select class="form-control" name="state" id="field-state">
@@ -486,6 +493,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						<option value="canceled"<?php if ($order->status == 'canceled'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.canceled') }}</option>
 					</select>
 				</div>
+			@endif
 
 				<div class="row">
 					<div class="col col-md-6">
@@ -583,7 +591,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 			<div class="panel-heading card-header">
 				<div class="row">
 					<div class="col col-md-6">
-						<h3 class="panel-title card-title">{{ trans('orders::orders.items') }}</h3>
+						<div>{{ trans('orders::orders.items') }}</div>
 					</div>
 					<div class="col col-md-6 text-right">
 						<?php
@@ -756,12 +764,12 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 			<div class="panel-heading card-header">
 				<div class="row">
 					<div class="col col-md-6">
-						<h3 class="panel-title card-title">
+						<div>
 							{{ trans('orders::orders.payment information') }}
 							<a href="#help2" class="help icn tip" title="Help">
 								<i class="fa fa-question-circle" aria-hidden="true"></i> Help
 							</a>
-						</h3>
+						</div>
 					</div>
 					<div class="col col-md-6 text-right">
 						<?php if ($order->status == 'pending_payment'
@@ -1115,4 +1123,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 		@csrf
 	</form>
 </div>
+
+					</div>
+					</div>
 @stop

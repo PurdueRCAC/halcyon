@@ -87,37 +87,35 @@ app('pathway')
 @endphp
 
 @section('content')
-<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 @component('orders::site.submenu')
 	categories
 @endcomponent
-</div>
-<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-<h2>{{ trans('orders::orders.categories') }}</h2>
-<form action="{{ route('site.orders.categories') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<h2 class="sr-only">{{ trans('orders::orders.categories') }}</h2>
+<form action="{{ route('site.orders.categories') }}" method="post" name="adminForm" id="adminForm" class="row">
+<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
+	<fieldset id="filter-bar" class="filters">
+		<legend class="sr-only">Filter</legend>
 
-	<fieldset id="filter-bar" class="container-fluid">
-		<legend>Filter</legend>
 
-		<div class="row">
-			<div class="col col-md-4 filter-search">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+			<div class="form-group">
+				<label for="filter_search">{{ trans('search.label') }}</label>
 				<input type="text" name="filter_search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
 			</div>
-			<div class="col col-md-8 filter-select text-right">
-				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
+			<div class="form-group">
+				<label for="filter_state">{{ trans('global.state') }}</label>
 				<select name="filter_state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 				</select>
 			</div>
-		</div>
-	</fieldset>
 
-	<table class="table table-hover">
+			<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+	</fieldset>
+</div>
+<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+	<table class="table table-hover mt-3">
 		<thead>
 			<tr>
 				@if (auth()->user()->can('delete orders.categories'))
@@ -190,6 +188,7 @@ app('pathway')
 	<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 
 	@csrf
+</div>
 </form>
 </div>
 @stop

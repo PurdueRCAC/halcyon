@@ -25,6 +25,7 @@ class ProductsController extends Controller
 		$filters = array(
 			'search'    => null,
 			'category'  => 0,
+			'public'    => 1,
 			// Paging
 			'limit'     => config('list_limit', 20),
 			// Sorting
@@ -96,6 +97,11 @@ class ProductsController extends Controller
 		if ($filters['category'])
 		{
 			$query->where($p . '.ordercategoryid', '=', $filters['category']);
+		}
+
+		if ($filters['public'] != '*')
+		{
+			$query->where($p . '.public', '=', $filters['public']);
 		}
 
 		$rows = $query

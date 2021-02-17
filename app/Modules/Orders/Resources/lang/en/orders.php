@@ -69,7 +69,7 @@ return [
 	'collect' => 'Collect',
 	'subtotal' => 'Sub-total',
 	'search products' => 'Search products...',
-	'hidden' => 'HIDDEN',
+	'hidden' => 'Hidden',
 	'create product' => 'New product',
 	'private' => 'Private',
 	'my orders' => 'Orders',
@@ -80,4 +80,9 @@ return [
 	'recurring' => 'Recurring Items',
 	'paid until' => 'Paid Until',
 	'billed until' => '(Billed To)',
+	'start date' => 'Start',
+	'end date' => 'End',
+	'visibility' => 'Visibility',
+	'public' => 'Public',
+	'all visibilities' => '- All Visibilities -',
 ];

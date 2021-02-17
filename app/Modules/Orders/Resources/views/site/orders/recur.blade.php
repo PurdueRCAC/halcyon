@@ -65,7 +65,7 @@ app('pathway')
 		</fieldset>
 
 		@if (count($rows))
-		<table class="table table-hover adminlist">
+		<table class="table table-hover mt-3">
 			<caption class="sr-only">{{ trans('orders::orders.recurring items') }}</caption>
 			<thead class="thead-dark">
 				<tr>

@@ -158,11 +158,13 @@
 		</div>
 	</div>
 	<div class="row">
+		
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	<form action="{{ route('site.orders.products') }}" method="get" name="products" id="products">
-
-		<?php $cat = null; ?>
-
+		<div>
+			<fieldset class="filters">
+				<legend class="sr-only">Filter Results</legend>
+				<?php $cat = null; ?>
 
 				<div class="form-group">
 					<label for="filter_search">{{ trans('search.label') }}</label>
@@ -190,7 +192,18 @@
 					</select>
 				</div>
 
-		<button class="sr-only" type="submit">{{ trans('global.filter') }}</button>
+				<div class="form-group">
+					<label for="filter_public">{{ trans('orders::orders.visibility') }}</label>
+					<select name="public" id="filter_public" class="form-control filter filter-submit">
+						<option value="*"<?php if ($filters['public'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all visibilities') }}</option>
+						<option value="1"<?php if ($filters['public'] == 1): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.public') }}</option>
+						<option value="0"<?php if (!$filters['public']): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.hidden') }}</option>
+					</select>
+				</div>
+
+				<button class="sr-only" type="submit">{{ trans('global.filter') }}</button>
+			</fieldset>
+		</div>
 	</form>
 </div>
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
@@ -200,7 +213,7 @@
 		<p>{{ $cat->description }}</p>
 	@endif
 
-	<table class="table table-hover order-products">
+	<table class="table table-hover order-products mt-3">
 		<thead>
 			<tr>
 				<th scope="col">

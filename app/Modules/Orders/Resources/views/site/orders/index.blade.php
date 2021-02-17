@@ -36,7 +36,7 @@ $(document).ready(function() {
 <h2 class="sr-only">{{ trans('orders::orders.orders') }}</h2>
 
 <form action="{{ route('site.orders.index') }}" method="get" class="row">
-<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
+	<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 
 		<fieldset class="filters">
 			<div class="form-group">
@@ -85,16 +85,15 @@ $(document).ready(function() {
 				<input type="text" name="end" id="filter_end" size="10" class="form-control date-pick filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
 			</div>
 
+			<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
+			<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
-		<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
-
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
-	</fieldset>
-</div>
-<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+			<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		</fieldset>
+	</div>
+	<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	@if (count($rows))
-		<table class="table table-hover adminlist">
+		<table class="table table-hover mt-3">
 			<caption class="sr-only">{{ trans('orders::orders.orders placed') }}</caption>
 			<thead>
 				<tr>

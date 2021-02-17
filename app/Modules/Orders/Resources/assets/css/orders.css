@@ -6,7 +6,9 @@
 .unknown {
 	color: #ccc;
 }
-
+.filters {
+	background-color: #f5f5f5;
+}
 .canceled {
 	color: #999;
 }
