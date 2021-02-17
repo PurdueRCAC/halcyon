@@ -37,7 +37,7 @@ class History
 
 		$event->addSection(
 			'history',
-			trans('groups::groups.history'),
+			trans('groups::groups.history.title'),
 			($event->getActive() == 'history'),
 			$content
 		);
