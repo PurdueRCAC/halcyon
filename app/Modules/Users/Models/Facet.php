@@ -71,4 +71,19 @@ class Facet extends Model
 	{
 		return $this->belongsTo(User::class, 'user_id');
 	}
+
+	/**
+	 * Find record by user ID and key
+	 *
+	 * @param   integer  $user_id
+	 * @param   string   $key
+	 * @return  mixed
+	 */
+	public static function findByUserAndKey($user_id, $key)
+	{
+		return self::query()
+			->where('user_id', '=', (int)$user_id)
+			->where('key', '=', (string)$key)
+			->first();
+	}
 }

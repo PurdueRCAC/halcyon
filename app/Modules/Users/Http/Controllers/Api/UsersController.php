@@ -9,6 +9,7 @@ use App\Modules\Users\Http\Resources\UserResourceCollection;
 use App\Modules\Users\Http\Resources\UserResource;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
+use App\Modules\Users\Models\Facet;
 use App\Modules\Users\Events\UserSearching;
 use App\Halcyon\Access\Map;
 
@@ -425,6 +426,7 @@ class UsersController extends Controller
 			'unixid' => 'nullable|integer',
 			'datelastseen' => 'nullable',
 			'roles' => 'nullable|array',
+			'facets' => 'nullable|array',
 			//'email' => 'required',
 		]);
 
@@ -493,6 +495,20 @@ class UsersController extends Controller
 			if (!$username->save())
 			{
 				return response()->json(['message' => trans('global.messages.save failed', ['id' => $id])], 500);
+			}
+		}
+
+		if ($request->has('facets'))
+		{
+			$facets = $request->input('facets');
+
+			foreach ($facets as $key => $value)
+			{
+				$facet = Facet::findByUserAndKey($user->id, $key);
+				$facet = $facet ?: new Facet;
+				$facet->key   = $key;
+				$facet->value = $value;
+				$facet->save();
 			}
 		}
 

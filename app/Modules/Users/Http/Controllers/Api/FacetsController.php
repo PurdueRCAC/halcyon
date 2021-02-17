@@ -229,10 +229,7 @@ class FacetsController extends Controller
 		}
 
 		// Does this facet for this user already exist?
-		$exists = Facet::query()
-			->where('user_id', '=', $request->input('user_id'))
-			->where('key', '=', $request->input('key'))
-			->first();
+		$exists = Facet::findByUserAndKey($request->input('user_id'), $request->input('key'));
 
 		if ($exists)
 		{
