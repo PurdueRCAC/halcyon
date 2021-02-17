@@ -9,6 +9,9 @@
 .filters {
 	background-color: #f5f5f5;
 }
+.draghandle {
+	cursor: move;
+}
 .canceled {
 	color: #999;
 }
