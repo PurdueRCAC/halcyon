@@ -175,7 +175,7 @@ app('pathway')
 					@endif
 					@if (!$row->path())
 						<p class="smallsub">
-							<span class="icon-alert-triangle warning">{{ trans('widgets::widgets.error missing files') }}</span>
+							<span class="icon-alert-triangle text-warning">{{ trans('widgets::widgets.error missing files') }}</span>
 						</p>
 					@endif
 					@if ($row->note)

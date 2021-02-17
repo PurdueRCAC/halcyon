@@ -127,7 +127,7 @@ app('pathway')
 					@if ($path && $canEdit)
 						{!! App\Halcyon\Html\Builder\Grid::id($i, $row->id) !!}
 					@elseif (!$path)
-						<span class="glyph icon-alert-triangle warning"></span>
+						<span class="glyph icon-alert-triangle text-warning"></span>
 					@endif
 				</td>
 				<td class="priority-5">
