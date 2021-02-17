@@ -149,6 +149,20 @@ class Category extends Model
 	}
 
 	/**
+	 * Query scope where record is trashed
+	 *
+	 * @param   object  $query
+	 * @return  object
+	 */
+	public function getAliasAttribute()
+	{
+		$alias = strtolower($this->name);
+		$alias = str_replace(' ', '-', $alias);
+		$alias = preg_replace('/[^a-z0-9\-_]+/', '', $alias);
+		return $alias;
+	}
+
+	/**
 	 * Query scope where record isn't trashed
 	 *
 	 * @param   object  $query
