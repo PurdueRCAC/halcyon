@@ -58,21 +58,33 @@ $router->group(['prefix' => 'widgets'], function (Router $router)
 		'uses' => 'WidgetsController@delete',
 		'middleware' => 'can:delete widgets',
 	]);
-	$router->post('/reorder', [
+
+	$router->match(['get', 'post'], '/orderup/{id}', [
+		'as'   => 'admin.widgets.orderup',
+		'uses' => 'WidgetsController@reorder',
+		'middleware' => 'can:edit.state widgets',
+	])->where('id', '[0-9]+');
+	$router->match(['get', 'post'], '/orderdown/{id?}', [
+		'as'   => 'admin.widgets.orderdown',
+		'uses' => 'WidgetsController@reorder',
+		'middleware' => 'can:edit.state widgets',
+	])->where('id', '[0-9]+');
+	/*$router->post('/reorder', [
 		'as'   => 'admin.widgets.reorder',
 		'uses' => 'WidgetsController@reorder',
-	]);
+	]);*/
 	$router->post('/saveorder', [
 		'as'   => 'admin.widgets.saveorder',
 		'uses' => 'WidgetsController@saveorder',
 	]);
+
 	$router->post('/checkin', [
 		'as'   => 'admin.widgets.checkin',
 		'uses' => 'WidgetsController@checkin',
 	]);
-	$router->post('/batch', [
+	/*$router->post('/batch', [
 		'as'   => 'admin.widgets.batch',
 		'uses' => 'WidgetsController@batch',
 		'middleware' => 'can:edit.state widgets',
-	]);
+	]);*/
 });

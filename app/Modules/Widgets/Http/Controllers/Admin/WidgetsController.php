@@ -567,7 +567,7 @@ class WidgetsController extends Controller
 	 * @param  Request $request
 	 * @return  boolean  True on success
 	 */
-	public function reorder(Request $request)
+	/*public function reorder(Request $request)
 	{
 		// Initialise variables.
 		$ids = $request->input('cid');
@@ -597,6 +597,31 @@ class WidgetsController extends Controller
 
 		// Redirect back to the listing
 		return $this->cancel($request);
+	}*/
+
+	/**
+	 * Reorder entries
+	 * 
+	 * @param   integer  $id
+	 * @param   Request $request
+	 * @return  Response
+	 */
+	public function reorder($id, Request $request)
+	{
+		// Incoming
+		//$id = $request->input('id');
+
+		// Get the element being moved
+		$row = Widget::findOrFail($id);
+		$move = ($request->segment(4) == 'orderup') ? -1 : +1;
+
+		if (!$row->move($move))
+		{
+			$request->session()->flash('error', $row->getError());
+		}
+
+		// Redirect
+		return $this->cancel();
 	}
 
 	/**

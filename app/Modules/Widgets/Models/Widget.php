@@ -512,7 +512,98 @@ class Widget extends Model
 		return true;
 	}
 
-		/**
+	/**
+	 * Method to move a row in the ordering sequence of a group of rows defined by an SQL WHERE clause.
+	 * Negative numbers move the row up in the sequence and positive numbers move it down.
+	 *
+	 * @param   integer  $delta  The direction and magnitude to move the row in the ordering sequence.
+	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
+	 * @return  bool     True on success.
+	 */
+	public function move($delta, $where = '')
+	{
+		// If the change is none, do nothing.
+		if (empty($delta))
+		{
+			return true;
+		}
+
+		// Select the primary key and ordering values from the table.
+		$query = self::query()
+			->where('position', '=', $this->position);
+
+		// If the movement delta is negative move the row up.
+		if ($delta < 0)
+		{
+			$query->where('ordering', '<', (int) $this->ordering);
+			$query->orderBy('ordering', 'desc');
+		}
+		// If the movement delta is positive move the row down.
+		elseif ($delta > 0)
+		{
+			$query->where('ordering', '>', (int) $this->ordering);
+			$query->orderBy('ordering', 'asc');
+		}
+
+		// Add the custom WHERE clause if set.
+		if ($where)
+		{
+			$query->where(\DB::raw($where));
+		}
+
+		// Select the first row with the criteria.
+		$row = $query->first();
+
+		// If a row is found, move the item.
+		if ($row)
+		{
+			$prev = $this->ordering;
+
+			// Update the ordering field for this instance to the row's ordering value.
+			//$this->ordering = (int) $row->ordering;
+
+			// Check for a database error.
+			if (!$this->update(['ordering' => (int) $row->ordering]))
+			{
+				return false;
+			}
+
+			// Update the ordering field for the row to this instance's ordering value.
+			//$row->ordering = (int) $prev;
+
+			// Check for a database error.
+			if (!$row->update(['ordering' => (int) $prev]))
+			{
+				return false;
+			}
+		}
+		/*else
+		{
+			// Update the ordering field for this instance.
+			$this->update(['ordering' => (int) $this->ordering]);
+
+			// Check for a database error.
+			if (!$this->save())
+			{
+				return false;
+			}
+		}*/
+
+		$all = self::query()
+			->where('position', '=', $this->position)
+			->orderBy('ordering', 'asc')
+			->get();
+
+		foreach ($all as $i => $row)
+		{
+			//$row->ordering = $i;
+			$row->update(['ordering' => $i]);
+		}
+
+		return true;
+	}
+
+	/**
 	 * Saves the manually set order of records.
 	 *
 	 * @param   array  $pks    An array of primary key ids.

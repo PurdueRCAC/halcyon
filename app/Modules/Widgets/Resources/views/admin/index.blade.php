@@ -147,6 +147,9 @@ app('pathway')
 			</tr>
 		</thead>
 		<tbody>
+			<?php
+			$positions = $rows->pluck('position')->toArray();
+			?>
 		@foreach ($rows as $i => $row)
 			<tr>
 				@if (auth()->user()->can('edit.state widgets') || auth()->user()->can('delete widgets'))
@@ -213,8 +216,18 @@ app('pathway')
 						</a>
 					@endif
 				</td>
-				<td class="priority-3">
-					{{ $row->ordering }}
+				<td class="priority-3 text-center">
+					@if (auth()->user()->can('edit widgets'))
+						@if ($filters['order_dir'] == 'asc')
+							<span>{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, (@$positions[$i-1] == $row->position), route('admin.menus.items.orderup', ['id' => $row->id])) !!}</span>
+							<span>{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), (@$positions[$i+1] == $row->position), route('admin.widgets.orderdown', ['id' => $row->id])) !!}</span>
+						@elseif ($filters['order_dir'] == 'desc')
+							<span>{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, (@$positions[$i-1] == $row->position), route('admin.menus.items.orderup', ['id' => $row->id])) !!}</span>
+							<span>{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), (@$positions[$i+1] == $row->position), route('admin.widgets.orderdown', ['id' => $row->id])) !!}</span>
+						@endif
+					@else
+						{{ $row->ordering }}
+					@endif
 				</td>
 				<td class="priority-4">
 					{{ $row->widget }}
