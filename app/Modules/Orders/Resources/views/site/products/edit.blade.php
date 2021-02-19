@@ -24,7 +24,7 @@
 <div class="contentInner col-md-12">
 	<h2>{{ trans('orders::orders.products') }}: {{ $row->id ? trans('global.edit') : trans('global.create') }}</h2>
 
-<form action="{{ route('admin.orders.products.store') }}" method="post" name="adminForm" id="item-form">
+<form action="{{ route('admin.orders.products.store') }}" method="post" name="adminForm" class="editform">
 	<div class="row">
 		<div class="col col-md-7">
 			<fieldset>

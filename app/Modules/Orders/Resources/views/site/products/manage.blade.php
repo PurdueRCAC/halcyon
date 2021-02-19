@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css?v=' . filemtime(public_path() . '/modules/orders/css/orders.css')) }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/orders/js/orders.js') }}"></script>
+<script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
 jQuery(document).ready(function($){
 	$(".sortable").sortable({
@@ -43,8 +43,6 @@ jQuery(document).ready(function($){
 			<div class="col col-md-4 filter-search">
 				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 				<input type="text" name="filter_search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-
-				<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
 			</div>
 			<div class="col col-md-8 filter-select text-right">
 				<label class="sr-only" for="filter_access">{{ trans('orders::orders.access') }}</label>
@@ -78,6 +76,8 @@ jQuery(document).ready(function($){
 				</select>
 			</div>
 		</div>
+
+		<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	<table class="table table-hover adminlist">

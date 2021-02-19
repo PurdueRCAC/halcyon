@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css?v=' . filemtime(public_path() . '/modules/orders/css/orders.css')) }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/orders/js/orders.js') }}"></script>
+<script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
 // Force update of totals in case browswer is caching values
 $(document).ready(function() { 
@@ -250,7 +250,7 @@ $(document).ready(function() {
 					<div class="cart-item row">
 						<div class="col-md-12">{{ $product->name }}</div>
 						<div class="col-md-7">
-							<span class="text-muted text-sm">{{ $item->qty }} &times; $ {{ $product->price }}</span>
+							<span class="text-muted text-sm">{{ $item->qty }} &times; $&nbsp;{{ $product->price }}</span>
 						</div>
 						<div class="col-md-5 text-right text-nowrap">
 							$&nbsp;{{ number_format($item->total, 2) }}
@@ -265,7 +265,7 @@ $(document).ready(function() {
 				<div class="row">
 					<div class="col-md-12">{name}</div>
 					<div class="col-md-7">
-						<span class="text-muted text-sm">{qty} &times; $ {price}</span>
+						<span class="text-muted text-sm">{qty} &times; $&nbsp;{price}</span>
 					</div>
 					<div class="col-md-5 text-right text-nowrap">
 						$&nbsp;{total}
@@ -437,7 +437,7 @@ $(document).ready(function() {
 					@endif
 				</td>
 				<td class="orderproductitem text-right text-nowrap">
-					{{ $product->price }}<br /> per {{ $product->unit }}
+					$&nbsp;{{ $product->price }}<br /> per {{ $product->unit }}
 					<input type="hidden" id="{{ $product->id }}_price" value="{{ $product->unitprice }}" />
 					<input type="hidden" id="{{ $product->id }}_category" value="{{ $product->ordercategoryid }}" />
 				</td>

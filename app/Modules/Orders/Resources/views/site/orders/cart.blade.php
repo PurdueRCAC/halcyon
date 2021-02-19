@@ -225,7 +225,7 @@
 							@endif
 						</td>
 						<td class="orderproductitem text-right text-nowrap">
-							{{ $product->price }}<br /> per {{ $product->unit }}
+							$&nbsp;{{ $product->price }}<br /> per {{ $product->unit }}
 							<input type="hidden" id="{{ $product->id }}_price" value="{{ $product->unitprice }}" />
 							<input type="hidden" id="{{ $product->id }}_category" value="{{ $product->ordercategoryid }}" />
 						</td>

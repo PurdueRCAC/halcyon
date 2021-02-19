@@ -171,7 +171,7 @@ class Product extends Model
 			$number = '0.0' . $number;
 		}
 
-		return '$' . $neg . $number;
+		return $neg . $number;
 	}
 
 	/**
