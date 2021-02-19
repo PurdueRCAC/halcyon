@@ -28,6 +28,8 @@ class ProductsController extends Controller
 			'search'    => null,
 			'state'    => 'published',
 			'category'  => 0,
+			'restricteddata' => '*',
+			'public'    => '*',
 			// Paging
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -88,7 +90,7 @@ class ProductsController extends Controller
 		{
 			$query->where(function($where) use ($p)
 			{
-				$where->wherNoyeNull($p . '.datetimeremoved')
+				$where->whereNotNull($p . '.datetimeremoved')
 					->where($p . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
 			});
 		}
@@ -98,17 +100,24 @@ class ProductsController extends Controller
 			$query->where($p . '.ordercategoryid', '=', $filters['category']);
 		}
 
+		if ($filters['public'] != '*')
+		{
+			$query->where($p . '.public', '=', $filters['public']);
+		}
+
+		if ($filters['restricteddata'] != '*')
+		{
+			$query->where($p . '.restricteddata', '=', $filters['restricteddata']);
+		}
+
 		$rows = $query
 			->orderBy($p . '.' . $filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		$categories = Category::query()
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->withTrashed()
+			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();

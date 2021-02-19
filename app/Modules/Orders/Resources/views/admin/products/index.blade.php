@@ -92,6 +92,20 @@ app('pathway')
 						<option value="<?php echo $category->id; ?>"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
 					<?php } ?>
 				</select>
+
+				<label class="sr-only" for="filter_restricteddata">{{ trans('orders::orders.restricted data') }}</label>
+				<select name="restricteddata" id="filter_restricteddata" class="form-control filter filter-submit">
+					<option value="*"<?php if ($filters['restricteddata'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all restricted data') }}</option>
+					<option value="0"<?php if (!$filters['restricteddata']): echo ' selected="selected"'; endif;?>>{{ trans('global.no') }}</option>
+					<option value="1"<?php if ($filters['restricteddata'] == 1): echo ' selected="selected"'; endif;?>>{{ trans('global.yes') }}</option>
+				</select>
+
+				<label class="sr-only" for="filter_public">{{ trans('orders::orders.visibility') }}</label>
+				<select name="public" id="filter_public" class="form-control filter filter-submit">
+					<option value="*"<?php if ($filters['public'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all visibilities') }}</option>
+					<option value="1"<?php if ($filters['public'] == 1): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.public') }}</option>
+					<option value="0"<?php if (!$filters['public']): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.hidden') }}</option>
+				</select>
 			</div>
 		</div>
 
@@ -101,7 +115,7 @@ app('pathway')
 		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
-	<div class="card w-100">
+	<div class="card w-100 mb-4">
 	<table class="table table-hover adminlist">
 		<thead>
 			<tr>
@@ -119,7 +133,10 @@ app('pathway')
 				<th scope="col" class="priority-2">
 					{!! Html::grid('sort', trans('orders::orders.category'), 'ordercategoryid', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2 numeric">
+				<th scope="col" class="priority-2 text-center">
+					{!! Html::grid('sort', trans('orders::orders.recurrence'), 'recurringtimeperiodid', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<th scope="col" class="priority-2 text-right">
 					{!! Html::grid('sort', trans('orders::orders.price'), 'unitprice', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="text-center">/</th>
@@ -144,7 +161,10 @@ app('pathway')
 				</td>
 				<td>
 					@if ($row->istrashed())
-						<span class="glyph icon-trash text-muted" aria-hidden="true"></span>
+						<span class="glyph icon-trash text-danger" aria-hidden="true" data-tip="{{ trans('global.trashed') }}"></span>
+					@endif
+					@if (!$row->public)
+						<span class="glyph icon-eye-off text-warning" aria-hidden="true" data-tip="{{ trans('orders::orders.hidden') }}"></span>
 					@endif
 					@if (auth()->user()->can('edit orders.products'))
 						<a href="{{ route('admin.orders.products.edit', ['id' => $row->id]) }}">
@@ -156,6 +176,9 @@ app('pathway')
 				</td>
 				<td class="priority-2">
 					{!! $row->category_name ? $row->category_name : '<span class="unknown">' . trans('global.unknown') . '</span>' !!}
+				</td>
+				<td class="priority-2 text-center">
+					{{ $row->timeperiod ? $row->timeperiod->name : '' }}
 				</td>
 				<td class="priority-2 text-right">
 					{{ number_format($row->unitprice / 100, 2) }}
