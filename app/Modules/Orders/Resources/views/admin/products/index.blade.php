@@ -88,9 +88,9 @@ app('pathway')
 				<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
 				<select name="category" id="filter_category" class="form-control filter filter-submit">
 					<option value="0"<?php if (!$filters['category']): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
-					<?php foreach ($categories as $category) { ?>
+					@foreach ($categories as $category)
 						<option value="<?php echo $category->id; ?>"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
-					<?php } ?>
+					@endforeach
 				</select>
 
 				<label class="sr-only" for="filter_restricteddata">{{ trans('orders::orders.restricted data') }}</label>
@@ -105,6 +105,14 @@ app('pathway')
 					<option value="*"<?php if ($filters['public'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all visibilities') }}</option>
 					<option value="1"<?php if ($filters['public'] == 1): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.public') }}</option>
 					<option value="0"<?php if (!$filters['public']): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.hidden') }}</option>
+				</select>
+
+				<label class="sr-only" for="filter_recurrence">{{ trans('orders::orders.recurrence') }}</label>
+				<select name="recurrence" id="filter_recurrence" class="form-control filter filter-submit">
+					<option value="*"<?php if ($filters['recurrence'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all recurrence') }}</option>
+					@foreach (App\Modules\Orders\Models\Timeperiod::all() as $timeperiod)
+						<option value="<?php echo $timeperiod->id; ?>"<?php if ($filters['recurrence'] == $timeperiod->id): echo ' selected="selected"'; endif;?>>{{ $timeperiod->name }}</option>
+					@endforeach
 				</select>
 			</div>
 		</div>

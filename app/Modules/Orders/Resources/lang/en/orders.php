@@ -87,5 +87,6 @@ return [
 	'all visibilities' => '- All Visibilities -',
 	'cart' => 'Cart',
 	'remove from cart' => 'Remove from cart',
-	'all restricted data' => '- All Un/Restricted -'
+	'all restricted data' => '- All Un/Restricted -',
+	'all recurrence' => '- All Recurrence -',
 ];

@@ -30,6 +30,7 @@ class ProductsController extends Controller
 			'category'  => 0,
 			'restricteddata' => '*',
 			'public'    => '*',
+			'recurrence' => '*',
 			// Paging
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -108,6 +109,11 @@ class ProductsController extends Controller
 		if ($filters['restricteddata'] != '*')
 		{
 			$query->where($p . '.restricteddata', '=', $filters['restricteddata']);
+		}
+
+		if ($filters['recurrence'] != '*')
+		{
+			$query->where($p . '.recurringtimeperiodid', '=', $filters['recurrence']);
 		}
 
 		$rows = $query
