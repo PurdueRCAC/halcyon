@@ -149,11 +149,11 @@ function UpdateOrderTotal(input, override) {
 
 			var t = document.getElementById(product + "_linetotal");
 
-			if (parseInt(quantity) > 0) {
+			/*if (parseInt(quantity) > 0) {
 				$('#' + product + "_product").addClass('selected');
 			} else {
 				$('#' + product + "_product").removeClass('selected');
-			}
+			}*/
 
 			if (!override) {
 				if (t.tagName == "INPUT") {
@@ -979,7 +979,7 @@ function TotalOrder() {
 	//console.log(post);
 	var btn = document.getElementById('continue');
 	//return;
-
+//console.log(order); return;
 	$.ajax({
 		url: btn.getAttribute('data-api'),
 		type: 'post',

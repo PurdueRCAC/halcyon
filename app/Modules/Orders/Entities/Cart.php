@@ -450,22 +450,26 @@ class Cart
 	 * Restore the cart with the given identifier.
 	 *
 	 * @param mixed $identifier
+	 * @param bool  $sessionOnly
 	 * @return void
 	 */
-	public function forget($identifier)
+	public function forget($identifier, $sessionOnly = false)
 	{
-		if (!$this->storedCartWithIdentifierExists($identifier))
-		{
-			return;
-		}
-
-		$this->getConnection()->table($this->getTableName())
-			->where('identifier', $identifier)
-			->delete();
-
 		$this->session->forget('cart');
 
-		$this->events->dispatch('cart.emptied');
+		if (!$sessionOnly)
+		{
+			if (!$this->storedCartWithIdentifierExists($identifier))
+			{
+				return;
+			}
+
+			$this->getConnection()->table($this->getTableName())
+				->where('identifier', $identifier)
+				->delete();
+
+			$this->events->dispatch('cart.emptied');
+		}
 	}
 
 	/**

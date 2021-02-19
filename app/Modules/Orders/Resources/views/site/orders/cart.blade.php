@@ -5,7 +5,7 @@
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/orders/js/orders.js') }}"></script>
+<script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
 	// Force update of totals in case browswer is caching values
 	$(document).ready(function() { 
@@ -64,7 +64,8 @@
 				} else if (typeof(ui['item'].priorusername) != 'undefined') {
 					thing = thing + " (" + ui['item'].priorusername + ")";
 				}
-				$("#search_user" ).val( thing );
+				$("#search_user").val( thing );
+				//$("#search_user").data('userid', ui['item'].id);
 			},
 			create: function () {
 				$(this).data('ui-autocomplete')._renderItem = function (ul, item) {
@@ -405,4 +406,13 @@
 		@csrf
 	</form>
 </div>
+@php
+// Clear out session data
+//
+// Database info will still be there if we need to restore
+// but the API doesn't have access to the session data, so
+// when the cart is cleared upon creating a new order, the
+// session info doesn't get cleared.
+$cart->forget(auth()->user()->username, true);
+@endphp
 @stop

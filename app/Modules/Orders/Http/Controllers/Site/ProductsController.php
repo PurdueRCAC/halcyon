@@ -72,6 +72,7 @@ class ProductsController extends Controller
 
 		$query = Product::query()
 			->withTrashed()
+			->whereIsActive()
 			->select($p . '.*', $c . '.name AS category_name')
 			->join($c, $c . '.id', $p . '.ordercategoryid')
 			->where(function($where) use ($c)

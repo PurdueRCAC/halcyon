@@ -101,6 +101,8 @@ $(document).ready(function() {
 				}
 
 				btn.removeClass('processing');
+
+				$('#' + btn.data('product') + "_product").addClass('selected');
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				console.log('Failed to add to cart.');

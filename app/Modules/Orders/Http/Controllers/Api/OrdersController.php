@@ -374,7 +374,7 @@ class OrdersController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'userid' => 'required|integer',
+			'userid' => 'nullable',
 			'groupid' => 'nullable|integer',
 			'submitteruserid' => 'nullable|integer',
 			'usernotes' => 'nullable|string',
@@ -387,17 +387,34 @@ class OrdersController extends Controller
 			return response()->json(['message' => 'No items found'], 415);
 		}
 
+		$userid = auth()->user() ? auth()->user()->id : 0;
+
+		if ($request->has('userid'))
+		{
+			$userid = $request->input('userid');
+			// Allow passing a username as $userid
+			if (is_string($userid))
+			{
+				$user = User::findByUsername($userid);
+				if (!$user)
+				{
+					return response()->json(['message' => 'Invalid userid'], 415);
+				}
+				$userid = $user->id;
+			}
+		}
+
 		$items = (array)$request->input('items', []);
 		$orderid = 0;
 
 		// Create record
 		$row = new Order;
-		$row->userid = $request->input('userid', auth()->user() ? auth()->user()->id : 0);
-		$row->groupid = $request->input('groupid', 0);
-		$row->submitteruserid = $request->input('submitteruserid', $row->userid);
+		$row->userid = (int)$userid;
+		$row->groupid = (int)$request->input('groupid', 0);
+		$row->submitteruserid = (int)$request->input('submitteruserid', auth()->user() ? auth()->user()->id : 0);
 		$row->usernotes = $request->input('usernotes', '');
 		$row->staffnotes = $request->input('staffnotes', '');
-		$row->notice = $request->input('notice', 1);
+		$row->notice = (int)$request->input('notice', 1);
 
 		// If we sent an itemsequence we are copying another order. GO and fetch all this
 		if ($request->has('orderitemsequence'))
@@ -472,6 +489,10 @@ class OrdersController extends Controller
 
 			$item->save();
 		}
+
+		// Clear the cart
+		$cart = app('cart');
+		$cart->forget(auth()->user()->username);
 
 		// ADD FORLOOP ABOVE FOR THE ACCOUNTS: AND TRANSLATE IT
 		/*if ($request->has('orderitemsequence')
