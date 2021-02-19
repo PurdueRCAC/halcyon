@@ -92,11 +92,11 @@ app('pathway')
 @endcomponent
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 <h2 class="sr-only">{{ trans('orders::orders.categories') }}</h2>
-<form action="{{ route('site.orders.categories') }}" method="post" name="adminForm" id="adminForm" class="row">
-<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-	<fieldset id="filter-bar" class="filters">
-		<legend class="sr-only">Filter</legend>
 
+<form action="{{ route('site.orders.categories') }}" method="post" name="adminForm" id="adminForm" class="row">
+	<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
+		<fieldset id="filter-bar" class="filters">
+			<legend class="sr-only">Filter</legend>
 
 			<div class="form-group">
 				<label for="filter_search">{{ trans('search.label') }}</label>
@@ -111,7 +111,10 @@ app('pathway')
 				</select>
 			</div>
 
-			<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
+			<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
+			<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
+
+			<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 </div>
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
@@ -129,10 +132,10 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('orders::orders.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2 numeric">
+				<th scope="col" class="priority-2 text-right">
 					{{ trans('orders::orders.products') }}
 				</th>
-				<th scope="col" class="priority-2 text-right" colspan="2">
+				<th scope="col" class="priority-2 text-right">
 					{!! Html::grid('sort', trans('orders::orders.sequence'), 'sequence', $filters['order_dir'], $filters['order']) !!}
 				</th>
 			</tr>
@@ -160,13 +163,11 @@ app('pathway')
 						{{ $row->name }}
 					@endif
 				</td>
-				<td class="priority-2 numeric">
+				<td class="priority-2 text-right">
 					{{ $row->products_count }}
 				</td>
 				<td class="priority-2 text-right">
 					<!-- {{ $row->sequence }} -->
-				</td>
-				<td class="text-right">
 					@if ($filters['order'] == 'sequence')
 						<span class="draghandle" draggable="true">
 							<i class="fa fa-ellipsis-v" aria-hidde="true"></i>
@@ -181,11 +182,6 @@ app('pathway')
 	</table>
 
 	{{ $rows->render() }}
-
-	<input type="hidden" name="task" value="" autocomplete="off" />
-	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
-	<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 
 	@csrf
 </div>
