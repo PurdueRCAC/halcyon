@@ -103,11 +103,17 @@ class UsersController extends Controller
 			}
 			else
 			{
-				//$query->where($a . '.name', 'like', '%' . strtolower((string)$filters['search']) . '%');
 				$query->where(function($where) use ($filters, $a, $u)
 				{
-					$where->where($a . '.name', 'like', '%' . strtolower((string)$filters['search']) . '%')
-						->orWhere($u . '.username', 'like', '%' . strtolower((string)$filters['search']) . '%');
+					$search = strtolower((string)$filters['search']);
+					$skipmiddlename = preg_replace('/ /', '% ', $search);
+
+					$where->where($a . '.name', 'like', '% ' . $search . '%')
+						->orWhere($a . '.name', 'like', $search . '%')
+						->orWhere($a . '.name', 'like', '% ' . $skipmiddlename . '%')
+						->orWhere($a . '.name', 'like', $skipmiddlename . '%')
+						->orWhere($u . '.username', 'like', '' . $search . '%')
+						->orWhere($u . '.username', 'like', '%' . $search . '%');
 				});
 			}
 		}
