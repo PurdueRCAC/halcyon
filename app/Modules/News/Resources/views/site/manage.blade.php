@@ -29,7 +29,7 @@
 		<div class="tabMain" id="tabMain">
 			<div id="DIV_news">
 
-				<form method="get" action="{{ route('site.news.manage') }}" class="mb-3">
+				<form method="get" action="{{ route('site.news.manage') }}" class="mb-3 editform">
 					<fieldset>
 						<legend><span id="SPAN_header" data-search="Search News" data-add="Add New News" data-edit="Edit News">Search News</span></legend>
 

@@ -2015,13 +2015,13 @@ legend {
 	padding: 0 1em;
 	font-weight: bold;
 }
-form>fieldset {
+.editform fieldset {
 	background-color: #fafafa;
 	padding: 50px 15px 15px 15px;
 	font-size: 0.85em;
 	position: relative;
 }
-form>fieldset>legend {
+.editform fieldset>legend {
 	background-color: #ededed;
 	padding: 0.5em 1em;
 	font-size: 100%;
@@ -2029,14 +2029,16 @@ form>fieldset>legend {
 	top: 0;
 	left: 0;
 	right: 0;
+	float: left;
 	width: 100%;
 	border-bottom: 1px solid #e0e0e0;
 }
-fieldset legend:after {
+.editform fieldset>legend:after {
 	content: "";
 	display: table;
 	line-height: 0;
 	clear: left;
+	margin: 0;
 }
 /*fieldset .row {
 	margin-right: -15px !important;

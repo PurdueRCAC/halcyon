@@ -49,7 +49,7 @@
 		<div class="tabMain" id="tabMain">
 			<div id="DIV_crm">
 
-				<form method="get" action="{{ route('site.contactreports.index') }}">
+				<form method="get" action="{{ route('site.contactreports.index') }}" class="editform">
 					<fieldset>
 						<legend><span id="SPAN_header" data-search="Search Reports" data-add="Add New Reports" data-edit="Edit Reports">Search Reports</span></legend>
 
