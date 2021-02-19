@@ -15,13 +15,16 @@
 			route('site.orders.products')
 		)
 		->append(
-			$row->name,
-			route('site.orders.products.edit', ['id' => $row->id])
+			$row->id ? $row->name : trans('global.create'),
+			$row->id ? route('site.orders.products.edit', ['id' => $row->id]) : route('site.orders.products.create')
 		);
 @endphp
 
 @section('content')
-<form action="{{ route('admin.orders.products.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+<div class="contentInner col-md-12">
+	<h2>{{ trans('orders::orders.products') }}: {{ $row->id ? trans('global.edit') : trans('global.create') }}</h2>
+
+<form action="{{ route('admin.orders.products.store') }}" method="post" name="adminForm" id="item-form">
 	<div class="row">
 		<div class="col col-md-7">
 			<fieldset>
@@ -123,9 +126,8 @@
 				<div class="form-group">
 					<label for="field-access">{{ trans('global.access') }}:</label>
 					<select class="form-control" name="fields[public]" id="field-public">
-						<?php foreach (App\Halcyon\Access\Viewlevel::all() as $access): ?>
-							<option value="<?php echo $access->id; ?>"<?php if ($row->public == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
-						<?php endforeach; ?>
+						<option value="1"<?php if ($row->public == 1) { echo ' selected="selected"'; } ?>>Public</option>
+						<option value="0"<?php if ($row->public == 0) { echo ' selected="selected"'; } ?>>Hidden</option>
 					</select>
 				</div>
 			</fieldset>
@@ -141,4 +143,5 @@
 
 	@csrf
 </form>
+</div>
 @stop

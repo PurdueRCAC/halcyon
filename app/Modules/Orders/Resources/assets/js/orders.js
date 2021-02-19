@@ -334,7 +334,7 @@ function EditProperty(field, item) {
 		post[field] = val;
 
 		//post = JSON.stringify(post);
-console.log(post);
+		//console.log(post);
 
 		$.ajax({
 			url: document.getElementById('order').getAttribute('data-api'),
@@ -345,7 +345,7 @@ console.log(post);
 			success: function(response) {
 				//Halcyon.message('success', 'Item added');
 
-				EditedProperty(response, item + "_" + field);
+				EditedProperty(response.data, item + "_" + field);
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				//alert(thrownError);
@@ -702,7 +702,7 @@ function ValidateForMe() {
  * @return  {void}
  */
 function OpenUserSearch() {
-	document.getElementById("forme_error").style.display = "none";
+	//document.getElementById("forme_error").style.display = "none";
 	if (document.getElementById("formeyes").checked == true) {
 		if (document.getElementById("usersearch").style.display == "none") {
 			$( "#usersearch" ).toggle( "blind", {'direction': 'up'} );
@@ -903,7 +903,7 @@ function CancelMou() {
  */
 function TotalOrder() {
 	// Ring it up
-	var order = Array();
+	var order = {};
 	var items = Array();
 
 	var name;
@@ -974,7 +974,7 @@ function TotalOrder() {
 	}
 	order['items'] = items; //JSON.stringify(items);
 	order['staffnotes'] = notes; //JSON.stringify(notes);
-
+	
 	//var post = '{"userid": "' + order['user'] + '", "items": ' + order['items'] + ', "staffnotes": ' + order['staffnotes'] + '}';
 	//console.log(post);
 	var btn = document.getElementById('continue');
@@ -994,7 +994,7 @@ function TotalOrder() {
 			//Halcyon.message('success', 'Item added');
 
 			// Don't really need to do anything here, we are just ensuring the selected user has a database entry
-			window.location = respone['url'];
+			window.location = response.url;
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
 			console.log(xhr);
@@ -2118,7 +2118,7 @@ function SaveOrderUser() {
 	} else {
 		var id = document.getElementById("order").getAttribute('data-api'); //value;
 		var name = document.getElementById("search_user").value;
-		console.log(name);
+		//console.log(name);
 		//var nm = name.match(/^.*?\(([a-z0-9]+)\)$/);
 		if (name) {
 			//if (nm[0] != document.getElementById("edit_user").innerHTML) {

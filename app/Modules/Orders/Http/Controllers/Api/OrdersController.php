@@ -649,7 +649,7 @@ class OrdersController extends Controller
 	 * @param   integer $id
 	 * @return  Response
 	 */
-	public function destroy($id)
+	public function delete($id)
 	{
 		$row = Order::findOrFail($id);
 

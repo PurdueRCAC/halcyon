@@ -26,8 +26,10 @@ class ProductsController extends Controller
 			'search'    => null,
 			'category'  => 0,
 			'public'    => 1,
+			'restricteddata' => '*',
 			// Paging
 			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			// Sorting
 			'order'     => 'sequence',
 			'order_dir' => Product::$orderDir,
@@ -69,6 +71,7 @@ class ProductsController extends Controller
 		$c = (new Category)->getTable();
 
 		$query = Product::query()
+			->withTrashed()
 			->select($p . '.*', $c . '.name AS category_name')
 			->join($c, $c . '.id', $p . '.ordercategoryid')
 			->where(function($where) use ($c)
@@ -89,9 +92,22 @@ class ProductsController extends Controller
 			}
 		}
 
-		if (!auth()->user() || !auth()->user()->can('manage orders'))
+		if (!auth()->user())
 		{
 			$query->where($p . '.public', '=', 1);
+		}
+		else
+		{
+			if ($filters['public'] != '*')
+			{
+				$query->where($p . '.public', '=', $filters['public']);
+			}
+			else
+			{
+				$access = auth()->user()->getAuthorisedViewLevels();
+				$access[] = 0;
+				$query->whereIn($p . '.public', $access);
+			}
 		}
 
 		if ($filters['category'])
@@ -99,9 +115,9 @@ class ProductsController extends Controller
 			$query->where($p . '.ordercategoryid', '=', $filters['category']);
 		}
 
-		if ($filters['public'] != '*')
+		if ($filters['restricteddata'] != '*')
 		{
-			$query->where($p . '.public', '=', $filters['public']);
+			$query->where($p . '.restricteddata', '=', $filters['restricteddata']);
 		}
 
 		$rows = $query
@@ -111,15 +127,20 @@ class ProductsController extends Controller
 			//->appends(array_filter($filters));
 
 		$categories = Category::query()
-			//->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->withTrashed()
+			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
 
+		$cart = app('cart');
+		$cart->restore(auth()->user()->username);
+
 		return view('orders::site.products.index', [
 			'rows'    => $rows,
 			'filters' => $filters,
-			'categories' => $categories
+			'categories' => $categories,
+			'cart' => $cart
 		]);
 	}
 
@@ -227,7 +248,8 @@ class ProductsController extends Controller
 			->appends(array_filter($filters));
 
 		$categories = Category::query()
-			//->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->withTrashed()
+			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
@@ -235,7 +257,7 @@ class ProductsController extends Controller
 		return view('orders::site.products.manage', [
 			'rows'    => $rows,
 			'filters' => $filters,
-			'categories' => $categories
+			'categories' => $categories,
 		]);
 	}
 
@@ -247,9 +269,11 @@ class ProductsController extends Controller
 	public function create()
 	{
 		$row = new Product();
+		$row->public = 1;
 
 		$categories = Category::query()
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->withTrashed()
+			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
@@ -271,7 +295,8 @@ class ProductsController extends Controller
 		$row = Product::findOrFail($id);
 
 		$categories = Category::query()
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->withTrashed()
+			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
@@ -291,23 +316,33 @@ class ProductsController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.userid' => 'required'
+			'name' => 'required|string|max:64',
+			'ordercategoryid' => 'required|integer|min:1',
+			'description' => 'nullable|string|max:2000',
+			'mou' => 'nullable|string|max:255',
+			'unit' => 'nullable|string|max:16',
+			'unitprice' => 'nullable|integer',
+			'recurringtimeperiodid' => 'nullable|integer',
+			'sequence' => 'nullable|integer|min:1',
+			'successororderproductid' => 'nullable|integer|min:1',
+			'terms' => 'nullable|string|max:2000',
+			'restricteddata' => 'nullable|integer',
+			'resourceid' => 'nullable|integer|min:1',
 		]);
 
 		$id = $request->input('id');
 
 		$row = $id ? Product::findOrFail($id) : new Product();
-
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->withSuccess(trans('messages.update success'));
+		return $this->cancel()->withSuccess(trans('global.messages.update success'));
 	}
 
 	/**
@@ -341,7 +376,7 @@ class ProductsController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', $success));
+			$request->session()->flash('success', trans('global.messages.item deleted', $success));
 		}
 
 		return $this->cancel();

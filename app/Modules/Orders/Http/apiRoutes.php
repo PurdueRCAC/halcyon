@@ -31,7 +31,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 		'middleware' => 'can:delete orders',
 	])->where('id', '[0-9]+');
 
-	// Comments
+	// Categories
 	$router->group(['prefix' => '/categories'], function (Router $router)
 	{
 		$router->get('/', [
@@ -59,7 +59,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 		])->where('id', '[0-9]+');
 	});
 
-	// Comments
+	// Products
 	$router->group(['prefix' => '/products'], function (Router $router)
 	{
 		$router->get('/', [
@@ -87,6 +87,32 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 		])->where('id', '[0-9]+');
 	});
 
+	// Cart
+	$router->group(['prefix' => '/cart', 'middleware' => 'can:creat orders'], function (Router $router)
+	{
+		$router->get('/', [
+			'as'   => 'api.orders.cart',
+			'uses' => 'CartController@index',
+		]);
+		$router->post('/', [
+			'as' => 'api.orders.cart.create',
+			'uses' => 'CartController@create',
+		]);
+		$router->get('{id}', [
+			'as' => 'api.orders.cart.read',
+			'uses' => 'CartController@read',
+		])->where('id', '[a-z0-9]+');
+		$router->put('{id}', [
+			'as' => 'api.orders.cart.update',
+			'uses' => 'CartController@update',
+		])->where('id', '[a-z0-9]+');
+		$router->delete('{id}', [
+			'as' => 'api.orders.cart.delete',
+			'uses' => 'CartController@delete',
+		])->where('id', '[a-z0-9]+');
+	});
+
+	// Order Items
 	$router->group(['prefix' => '/items'], function (Router $router)
 	{
 		$router->get('/', [
@@ -114,6 +140,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 		])->where('id', '[0-9]+');
 	});
 
+	// Order accounts
 	$router->group(['prefix' => '/accounts'], function (Router $router)
 	{
 		$router->get('/', [

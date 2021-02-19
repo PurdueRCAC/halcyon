@@ -5,25 +5,22 @@ namespace App\Modules\Orders\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Models\Product;
-use App\Modules\Orders\Http\Resources\ProductResource;
-use App\Modules\Orders\Http\Resources\ProductResourceCollection;
-use App\Modules\Users\Models\User;
-use Carbon\Carbon;
+use App\Modules\Orders\Http\Resources\CartResource;
+use App\Modules\Orders\Http\Resources\CartResourceCollection;
 
 /**
  * Products
  *
- * @apiUri    /api/orders/products
+ * @apiUri    /api/orders/cart
  */
-class ProductsController extends Controller
+class CartController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/products
+	 * @apiUri    /api/orders/cart
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -98,95 +95,17 @@ class ProductsController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		// Get filters
-		$filters = array(
-			'search'    => $request->input('search'),
-			'state'     => $request->input('state', 'published'),
-			'category'  => $request->input('category', 0),
-			// Paging
-			'limit'     => $request->input('limit', config('list_limit', 20)),
-			// Sorting
-			'order'     => $request->input('order', 'id'),
-			'order_dir' => $request->input('order_dir', 'desc'),
-		);
+		$cart = app('cart');
+		$cart->restore(auth()->user()->username);
 
-		if (!in_array($filters['order'], ['id', 'name']))
-		{
-			$filters['order'] = Product::$orderBy;
-		}
-
-		if (!in_array($filters['order_dir'], ['asc', 'desc']))
-		{
-			$filters['order_dir'] = Product::$orderDir;
-		}
-
-		$p = (new Product)->getTable();
-		$c = (new Category)->getTable();
-
-		$query = Product::query()
-			->select($p . '.*')
-			->join($c, $c . '.id', $p . '.ordercategoryid')
-			->where(function($where) use ($c)
-			{
-				$where->whereNull($c . '.datetimeremoved')
-					->orWhere($c . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
-			->withTrashed();
-
-		if ($filters['search'])
-		{
-			if (is_numeric($filters['search']))
-			{
-				$query->where($p . '.id', '=', $filters['search']);
-			}
-			else
-			{
-				$query->where($p . '.name', 'like', '%' . $filters['search'] . '%');
-			}
-		}
-
-		if ($filters['state'] == 'published')
-		{
-			$query->where(function($where) use ($p)
-			{
-				$where->whereNull($p . '.datetimeremoved')
-					->orWhere($p . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			});
-		}
-		elseif ($filters['state'] == 'trashed')
-		{
-			//$query->withTrashed()->where($p . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-			$query->where(function($where) use ($p)
-			{
-				$where->wherNoyeNull($p . '.datetimeremoved')
-					->where($p . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-			});
-		}
-
-		if ($filters['category'])
-		{
-			$query->where($p . '.ordercategoryid', '=', $filters['category']);
-		}
-
-		$rows = $query
-			->orderBy($p . '.' . $filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
-			->appends(array_filter($filters));
-
-		$categories = Category::query()
-			//->where('datetimeremoved', '=', '0000-00-00 00:00:00')
-			->where('parentordercategoryid', '>', 0)
-			->orderBy('name', 'asc')
-			->get();
-
-		return new ProductResourceCollection($rows);
+		return new CartResource($cart);
 	}
 
 	/**
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/orders/products
+	 * @apiUri    /api/orders/cart
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -281,66 +200,36 @@ class ProductsController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'name' => 'required|string|max:64',
-			'ordercategoryid' => 'required|integer|min:1',
-			'description' => 'nullable|string|max:2000',
-			'mou' => 'nullable|string|max:255',
-			'unit' => 'nullable|string|max:16',
-			'unitprice' => 'nullable|integer',
-			'recurringtimeperiodid' => 'nullable|integer',
-			'sequence' => 'nullable|integer|min:1',
-			'successororderproductid' => 'nullable|integer|min:1',
-			'terms' => 'nullable|string|max:2000',
-			'restricteddata' => 'nullable|integer',
-			'resourceid' => 'nullable|integer|min:1',
+			'productid' => 'required|integer|min:1',
+			//'userid' => 'required|integer|min:1',
+			'quantity' => 'required|integer|min:1',
 		]);
 
-		$row = new Product();
-		$row->fill($request->all());
+		$product = Product::find($request->input('productid'));
 
-		if ($row->ordercategoryid)
+		if (!$product)
 		{
-			if (!$row->category)
-			{
-				return response()->json(['message' => 'Invalid ordercategoryid'], 415);
-			}
-		}
-		else
-		{
-			$row->ordercategoryid = 1;
+			return response()->json(['message' => 'Invalid productid'], 415);
 		}
 
-		if ($row->resourceid)
-		{
-			if (!$row->resource)
-			{
-				return response()->json(['message' => 'Invalid resourceid'], 415);
-			}
-		}
+		$cart = app('cart');
+		$cart->restore(auth()->user()->username);
+		$cart->add(
+			$product->id,
+			$product->name,
+			$request->input('quantity'),
+			$product->decimalUnitprice
+		);
+		$cart->store(auth()->user()->username);
 
-		if ($row->recurringtimeperiodid)
-		{
-			if (!$row->timeperiod)
-			{
-				return response()->json(['message' => 'Invalid recurringtimeperiodid'], 415);
-			}
-		}
-
-		$row->datetimecreated = Carbon::now()->toDateTimeString();
-
-		if (!$row->save())
-		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
-		}
-
-		return new ProductResource($row);
+		return new CartResource($cart);
 	}
 
 	/**
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/products/{id}
+	 * @apiUri    /api/orders/cart/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -355,16 +244,19 @@ class ProductsController extends Controller
 	 */
 	public function read($id)
 	{
-		$row = Product::findOrFail($id);
+		$cart = app('cart');
+		$cart->restore(auth()->user()->username);
 
-		return new ProductResource($row);
+		$row = $cart->get($id);
+
+		return new CartResource($row);
 	}
 
 	/**
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/orders/products/{id}
+	 * @apiUri    /api/orders/cart/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -469,60 +361,26 @@ class ProductsController extends Controller
 	public function update($id, Request $request)
 	{
 		$request->validate([
-			'name' => 'nullable|string|max:64',
-			'ordercategoryid' => 'nullable|integer|min:1',
-			'description' => 'nullable|string|max:2000',
-			'mou' => 'nullable|string|max:255',
-			'unit' => 'nullable|string|max:16',
-			'unitprice' => 'nullable|integer',
-			'recurringtimeperiodid' => 'nullable|integer',
-			'sequence' => 'nullable|integer|min:1',
-			'successororderproductid' => 'nullable|integer|min:1',
-			'terms' => 'nullable|string|max:2000',
-			'restricteddata' => 'nullable|integer',
-			'resourceid' => 'nullable|integer|min:1',
+			'quantity' => 'required|integer|min:1',
+			'price'    => 'nullable|integer'
 		]);
 
-		$row = Product::findOrFail($id);
-		$row->fill($request->all());
+		$cart = app('cart');
+		$cart->restore(auth()->user()->username);
+		$cart->update(
+			$id,
+			$request->input('quantity')
+		);
+		$cart->store(auth()->user()->username);
 
-		if ($row->ordercategoryid != $row->getOriginal('ordercategoryid'))
-		{
-			if (!$row->category)
-			{
-				return response()->json(['message' => 'Invalid ordercategoryid'], 415);
-			}
-		}
-
-		if ($row->resourceid != $row->getOriginal('resourceid'))
-		{
-			if (!$row->resource)
-			{
-				return response()->json(['message' => 'Invalid resourceid'], 415);
-			}
-		}
-
-		if ($row->recurringtimeperiodid != $row->getOriginal('recurringtimeperiodid'))
-		{
-			if (!$row->timeperiod)
-			{
-				return response()->json(['message' => 'Invalid recurringtimeperiodid'], 415);
-			}
-		}
-
-		if (!$row->save())
-		{
-			return response()->json(['message' => trans('messages.update failed')], 500);
-		}
-
-		return new ProductResource($row);
+		return new CartResource($cart);
 	}
 
 	/**
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/orders/products/{id}
+	 * @apiUri    /api/orders/cart/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -537,16 +395,18 @@ class ProductsController extends Controller
 	 */
 	public function delete($id)
 	{
-		$row = Product::findOrFail($id);
+		$cart = app('cart');
+		$cart->restore(auth()->user()->username);
+		$cart->remove(
+			$id
+		);
+		$cart->store(auth()->user()->username);
 
-		if (!$row->trashed())
+		/*if (!count($cart->content()))
 		{
-			if (!$row->delete())
-			{
-				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
-			}
-		}
+			$cart->forget(auth()->user()->username);
+		}*/
 
-		return response()->json(null, 204);
+		return new CartResource($cart);
 	}
 }

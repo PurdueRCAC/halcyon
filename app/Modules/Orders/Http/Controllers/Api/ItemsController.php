@@ -376,7 +376,7 @@ class ItemsController extends Controller
 	 * }
 	 * @return  Response
 	 */
-	public function destroy($id)
+	public function delete($id)
 	{
 		$row = Item::findOrFail($id);
 

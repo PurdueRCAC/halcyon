@@ -385,7 +385,7 @@ class CategoriesController extends Controller
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function destroy($id)
+	public function delete($id)
 	{
 		$row = Category::findOrFail($id);
 

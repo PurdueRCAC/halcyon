@@ -3,13 +3,16 @@
 namespace App\Modules\Orders\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\View;
-use Illuminate\Database\Eloquent\Factory;
+//use Illuminate\Support\Facades\View;
+//use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Auth\Events\Logout;
+use Illuminate\Session\SessionManager;
 use App\Modules\Orders\Console\RenewCommand;
 use App\Modules\Orders\Console\EmailStatusCommand;
 use App\Modules\Orders\Listeners\GroupOrders;
 use App\Modules\Orders\Listeners\UserOrders;
-use App\Modules\Orders\Composers\ProfileComposer;
+//use App\Modules\Orders\Composers\ProfileComposer;
+use App\Modules\Orders\Entities\Cart;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -60,7 +63,16 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		//
+		$this->app->bind('cart', Cart::class);
+
+		$this->app['events']->listen(Logout::class, function ()
+		{
+			if ($this->app['config']->get('module.orders.destroy_on_logout'))
+			{
+				$this->app->make(SessionManager::class)->forget('cart');
+				//$this->app->make(Cart::class)->forget();
+			}
+		});
 	}
 
 	/**

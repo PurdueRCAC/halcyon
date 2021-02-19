@@ -175,6 +175,41 @@ class Product extends Model
 	}
 
 	/**
+	 * Format unit price
+	 *
+	 * @return  string
+	 */
+	public function getDecimalUnitpriceAttribute()
+	{
+		$number = preg_replace('/[^0-9\-]/', '', $this->unitprice);
+
+		$neg = '';
+		if ($number < 0)
+		{
+			$neg = '-';
+			$number = -$number;
+		}
+
+		if ($number > 99)
+		{
+			$dollars = substr($number, 0, strlen($number) - 2);
+			$cents   = substr($number, strlen($number) - 2, 2);
+
+			$number = $dollars . '.' . $cents;
+		}
+		elseif ($number > 9 && $number < 100)
+		{
+			$number = '0.' . $number;
+		}
+		else
+		{
+			$number = '0.0' . $number;
+		}
+
+		return $neg . $number;
+	}
+
+	/**
 	 * Set unit price
 	 *
 	 * @return  void

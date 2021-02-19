@@ -471,7 +471,13 @@ class OrdersController extends Controller
 	 * 
 	 * @return Response
 	 */
-	public function destroy()
+	public function cart(Request $request)
 	{
+		$cart = app('cart');
+		$cart->restore(auth()->user()->username);
+
+		return view('orders::site.orders.cart', [
+			'cart' => $cart
+		]);
 	}
 }

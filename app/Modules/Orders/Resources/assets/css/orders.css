@@ -1,5 +1,5 @@
 /**
- * Orders
+ * Orders module styles
  */
 
 .never,
@@ -12,13 +12,48 @@
 .draghandle {
 	cursor: move;
 }
+.category-total {
+	font-weight: bold;
+}
+.spinner-border {
+	display: none;
+}
+.processing .spinner-border {
+	display: inline-block;
+}
+/*.order-status {
+	color: #f00;
+	text-decoration: none;
+	white-space: nowrap;
+	margin: 0;
+	padding: 0.5em;
+	display: inline-block;
+	font-size: 0.85em;
+	line-height: 1;
+	-webkit-border-radius: 0.25em;
+	-moz-border-radius: 0.25em;
+	border-radius: 0.25em;
+	color: #6b7897;
+	background-color: #f9f9f9;
+}*/
 .canceled {
 	color: #999;
 }
 .cancellable {
 	margin: 0 0 2em 0;
 }
-
+/*.pending-payment {
+	color: #5a7ef9;
+	background-color: #e7ebf9; blue
+}
+.pending-collection {
+	color: #0486f0;
+	background-color: #deedff;
+}
+.pending-approval {
+	color: #7f51f4;
+	background-color: #dfd5ff;
+}*/
 .pending_payment {
 	color: #5ed001;
 	/*background-color: rgba(216, 255, 184, 0.5);  bffe8a green */
@@ -39,8 +74,10 @@
 	color: #3db557;
 }
 
+
 .product-sequence,
 .product-delete {
+	/*float: left;*/
 	margin: 0;
 }
 a.product-move-up,

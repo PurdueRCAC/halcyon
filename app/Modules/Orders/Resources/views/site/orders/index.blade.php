@@ -35,10 +35,10 @@ $(document).ready(function() {
 
 <h2 class="sr-only">{{ trans('orders::orders.orders') }}</h2>
 
-<form action="{{ route('site.orders.index') }}" method="get" class="row">
+<form action="{{ route('site.orders.index') }}" method="get" class="row mt-3">
 	<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 
-		<fieldset class="filters">
+		<fieldset class="filters mt-0">
 			<div class="form-group">
 				<label for="filter_search">{{ trans('search.label') }}</label>
 				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="Find orders by account or ID" value="{{ $filters['search'] }}" />
@@ -93,7 +93,7 @@ $(document).ready(function() {
 	</div>
 	<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	@if (count($rows))
-		<table class="table table-hover mt-3">
+		<table class="table table-hover mt-0">
 			<caption class="sr-only">{{ trans('orders::orders.orders placed') }}</caption>
 			<thead>
 				<tr>
