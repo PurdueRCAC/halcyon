@@ -60,7 +60,7 @@ $(document).ready(function() {
 				btn.removeClass('processing');
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
-				console.log('Failed to update cart.');
+				alert(xhr.responseJSON.message);
 				btn.removeClass('processing');
 			}
 		});
@@ -105,7 +105,7 @@ $(document).ready(function() {
 				$('#' + btn.data('product') + "_product").addClass('selected');
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
-				console.log('Failed to add to cart.');
+				alert(xhr.responseJSON.message);
 				btn.removeClass('processing');
 			}
 		});
