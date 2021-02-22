@@ -88,7 +88,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 	});
 
 	// Cart
-	$router->group(['prefix' => '/cart', 'middleware' => 'can:creat orders'], function (Router $router)
+	$router->group(['prefix' => '/cart', 'middleware' => 'can:create orders'], function (Router $router)
 	{
 		$router->get('/', [
 			'as'   => 'api.orders.cart',
