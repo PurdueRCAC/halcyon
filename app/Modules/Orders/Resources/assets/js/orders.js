@@ -1257,7 +1257,7 @@ function SaveQuantities() {
 			//WSPostURL(id, post, UpdatedAccountInfo);
 		}
 	}
-	return;
+
 	if (num_changes == 0) {
 		CancelEditAccounts();
 	}
