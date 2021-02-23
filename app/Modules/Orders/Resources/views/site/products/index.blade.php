@@ -265,6 +265,15 @@ $(document).ready(function() {
 					<?php
 				}
 			}
+			else
+			{
+				?>
+				<li class="list-group-item cart-item cart-empty">
+					<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+					Your cart is empty.
+				</li>
+				<?php
+			}
 			?>
 			<li class="list-group-item template hide">
 				<div class="row">

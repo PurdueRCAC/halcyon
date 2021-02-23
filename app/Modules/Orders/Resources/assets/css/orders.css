@@ -21,6 +21,16 @@
 .processing .spinner-border {
 	display: inline-block;
 }
+.cart-empty {
+	text-align: center;
+	color: #656565;
+}
+.cart-empty .fa {
+	font-size: 2em;
+	margin: 0.2em 0;
+	color: #ddd;
+	display: block;
+}
 /*.order-status {
 	color: #f00;
 	text-decoration: none;

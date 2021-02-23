@@ -135,6 +135,11 @@
 					$(btn.data('item')).remove();
 
 					$('#ordertotal').text(response.total);
+
+					// Disable the 'continue' button if the cart is empty
+					if ($('.cart-item').length <= 0) {
+						$('#continue').prop('disabled', true);
+					}
 				},
 				error: function(xhr, ajaxOptions, thrownError) {
 					console.log('Failed to update member type.');
@@ -202,7 +207,7 @@
 					$product = App\Modules\Orders\Models\Product::find($item->id);
 					$products[] = $product;
 					?>
-					<tr<?php if (!$product->public) { echo ' class="orderproductitemprivate"'; } ?> id="{{ $product->id }}_product">
+					<tr class="cart-item <?php if (!$product->public) { echo 'orderproductitemprivate'; } ?>" id="{{ $product->id }}_product">
 						<td class="orderproductitem">
 							<p>
 								@if (!$product->public)
@@ -395,7 +400,7 @@
 		</div>
 
 		<div class="text-center">
-			<input id="continue" class="order btn btn-primary" type="submit" value="Continue"
+			<input id="continue" class="order btn btn-primary" type="submit" value="Continue" <?php if (!count($rows)) { echo 'disabled'; } ?>
 				data-api="{{ route('api.orders.create') }}"
 				data-error="There was an error processing your order. Please wait a few minutes and try again or contact rcac-help@purdue.edu for help." />
 			<input id="cancel" class="order btn btn-secondary hide" type="submit" value="Edit Order" />
