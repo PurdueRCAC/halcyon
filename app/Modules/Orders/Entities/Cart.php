@@ -410,6 +410,8 @@ class Cart
 	 */
 	public function restore($identifier)
 	{
+		$this->session->forget('cart');
+
 		if (!$this->storedCartWithIdentifierExists($identifier))
 		{
 			return;
@@ -425,7 +427,7 @@ class Cart
 
 		$this->instance($stored->instance);
 
-		$this->session->forget('cart');
+		//$this->session->forget('cart');
 
 		$content = $this->getContent();
 
