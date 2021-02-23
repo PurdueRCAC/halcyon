@@ -18,15 +18,17 @@ $(document).ready(function() {
 		});
 	}
 
-	//UpdateOrderTotal(this);
-
-	/*$('.quantity-input').on('change', function(e) {
-		UpdateOrderTotal(this);
+	// Enable/disable button when quantity changes
+	$('.quantity-input').on('change', function(e) {
+		var inp = $(this);
+		if (inp.val() > 0) {
+			$(inp.closest('tr')).find('.btn-secondary').prop('disabled', false);
+		} else {
+			$(inp.closest('tr')).find('.btn-secondary').prop('disabled', true);
+		}
 	});
-	$('.total-input').on('change', function(e) {
-		UpdateOrderTotal(this, true);
-	});*/
 
+	// Confirm deletion
 	$('.btn-delete').on('click', function(e) {
 		e.preventDefault();
 		if (confirm($(this).data('conrim'))) {
@@ -35,6 +37,7 @@ $(document).ready(function() {
 		return false;
 	});
 
+	// Update something in the cart
 	$('.btn-cart-update').on('click', function(e) {
 		e.preventDefault();
 
@@ -66,6 +69,7 @@ $(document).ready(function() {
 		});
 	});
 
+	// Add to the cart
 	$('.btn-cart-add').on('click', function(e) {
 		e.preventDefault();
 
@@ -111,6 +115,7 @@ $(document).ready(function() {
 		});
 	});
 
+	// Update the cart display
 	function updateCart(response) {
 		var cart = $('#cart');
 			cart.find('.cart-item').remove();
@@ -372,12 +377,12 @@ $(document).ready(function() {
 						@if (!$found)
 							<span id="{{ $product->id }}_linetotal" class="hide">{{ $found ? $found->price() : 0.00 }}</span>
 						
-							<button class="btn btn-cart-add btn-secondary" data-product="{{ $product->id }}" data-api="{{ route('api.orders.cart.create') }}" data-text-update="Update cart">
+							<button class="btn btn-cart-add btn-secondary" disabled data-product="{{ $product->id }}" data-api="{{ route('api.orders.cart.create') }}" data-text-update="Update cart">
 								Add to cart
 								<span class="spinner-border spinner-border-sm" role="status"><span class="hide">Working...</span></span>
 							</button>
 						@else
-							<button class="btn btn-cart-update btn-secondary" data-product="{{ $product->id }}" data-api="{{ route('api.orders.cart.update', ['id' => $item->rowId]) }}">
+							<button class="btn btn-cart-update btn-secondary" disabled data-product="{{ $product->id }}" data-api="{{ route('api.orders.cart.update', ['id' => $item->rowId]) }}">
 								Update cart
 								<span class="spinner-border spinner-border-sm" role="status"><span class="hide">Working...</span></span>
 							</button>
