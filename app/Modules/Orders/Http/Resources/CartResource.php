@@ -18,7 +18,7 @@ class CartResource extends JsonResource
 		//$data['api'] = route('api.orders.cart.read', ['id' => $this->rowId]);
 
 		$data = array();
-		$data['data'] = array_values($this->content()->toArray());
+		$data['data'] = array_values($this->content()->sortBy('name')->toArray());
 		$data['tax'] = $this->tax();
 		$data['subtotal'] = $this->subtotal();
 		$data['total'] = $this->total();
