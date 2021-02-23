@@ -30,9 +30,19 @@ class StorageHome
 	{
 		// Need to check for Home dir and create if necessary
 		// First check if we have a storage dir already
-		$home = Asset::query()
-			->where('name', '=', 'Home')
-			->first();
+		if ($event->resource->home != 'shared')
+		{
+			$home = Asset::query()
+				->where('name', '=', 'Home')
+				->where('parentid', '=', $event->resource->id)
+				->first();
+		}
+		else
+		{
+			$home = Asset::query()
+				->where('name', '=', 'Home')
+				->first();
+		}
 
 		if (!$home)
 		{
@@ -52,21 +62,18 @@ class StorageHome
 		// Get values
 		$storage = StorageResource::query()
 			->where('parentresourceid', '=', $home->id)
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->withTrashed()
+			->whereIsActive()
 			->first();
 
 		// Prepare storagedir entry
 		$dir = Directory::create([
-			'resourceid' => $home->id,
-			'name' => $event->user->username,
-			'path' => $event->user->username,
-			'bytes' => $storage->defaultquotaspace,
-			'files' => $storage->defaultquotafile,
-			'owneruserid' => $event->user->id,
+			'resourceid'        => $home->id,
+			'name'              => $event->user->username,
+			'path'              => $event->user->username,
+			'bytes'             => $storage->defaultquotaspace,
+			'files'             => $storage->defaultquotafile,
+			'owneruserid'       => $event->user->id,
 			'storageresourceid' => $storage->id,
 		]);
 
