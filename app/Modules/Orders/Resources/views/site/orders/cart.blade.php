@@ -174,12 +174,14 @@
 	</div>
 
 	<form action="{{ route('site.orders.index') }}" method="post">
-		<?php
+<div class="row">
+			<div class="col-md-8">
+<?php
 		$rows = $cart->content();
 		$products = array();
 		?>
 		@if (count($rows))
-			<table class="table order-products mt-3">
+			<table class="table order-products mt-0">
 				<caption class="sr-only">{{ trans('orders::orders.products') }}</caption>
 				<thead>
 					<tr>
@@ -216,7 +218,7 @@
 								<b id="{{ $product->id }}_productname">{{ $product->name }}</b><br />
 								<span class="text-muted hide">{{ $product->category->name }}</span>
 							</p>
-							{{ $product->description }}
+							<!-- {{ $product->description }} -->
 
 							@if ($product->mou || $product->restricteddata)
 							<div>
@@ -269,143 +271,162 @@
 			<p class="alert alert-info">Your cart is empty.</p>
 		@endif
 
-		<div id="forme" class="cancellable stash">
-			<p>
-				Are you placing this order on behalf of a faculty member?
-				<a href="#help1" class="help icn tip" title="Help">
-					<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span>
-				</a>
-			</p>
+					</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="usernotes">Any comments or notes you'd like to add?</label>
+					<textarea name="usernotes" id="usernotes" class="form-control" cols="35" rows="5"></textarea>
+				</div>
 
-			<div id="help1" class="dialog dialog-help" title="Placing order on behalf of someone else">
-				<p>You may place an order on behalf of another person. To do so select "Yes" and you will be prompted to search for this person.</p>
-				<p>If you are placing this order for yourself click "No" and then "Continue".</p>
-			</div>
+				<!-- <div class="panel card">
+					<div class="card-body panel-body">
+				<div class="orderproductitem text-right orderprice">
+					{{ trans('orders::orders.total') }}<br />
+					$<span id="ordertotal" class="category-total">{{ $cart->total() }}</span>
+				</div> -->
+	</div>
+	</div>
 
-			<div class="row">
-				<div class="col-md-6">
-					<div class="form-block">
-						<div class="form-check">
-							<input class="form-check-input" type="radio" id="formeyes" value="Yes" name="forme" />
-							<label class="form-check-label" for="formeyes">{{ trans('global.yes') }}</label>
-							<span class="form-text text-muted">If you are a graduate student please answer "Yes".</span>
+				<div id="forme" class="cancellable stash">
+					<p>
+						Are you placing this order on behalf of a faculty member?
+						<a href="#help1" class="help icn tip" title="Help">
+							<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span>
+						</a>
+					</p>
+
+					<div id="help1" class="dialog dialog-help" title="Placing order on behalf of someone else">
+						<p>You may place an order on behalf of another person. To do so select "Yes" and you will be prompted to search for this person.</p>
+						<p>If you are placing this order for yourself click "No" and then "Continue".</p>
+					</div>
+
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-block">
+								<div class="form-check">
+									<input class="form-check-input" type="radio" id="formeyes" value="Yes" name="forme" />
+									<label class="form-check-label" for="formeyes">{{ trans('global.yes') }}</label>
+									<span class="form-text text-muted">If you are a graduate student please answer "Yes".</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-block">
+								<div class="form-check">
+									<input class="form-check-input" type="radio" id="formeno" value="No" name="forme" />
+									<label class="form-check-label" for="formeno">{{ trans('global.no') }}</label>
+									<span class="form-text text-muted">If you are placing this order for yourself select "No".</span>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-md-6">
-					<div class="form-block">
-						<div class="form-check">
-							<input class="form-check-input" type="radio" id="formeno" value="No" name="forme" />
-							<label class="form-check-label" for="formeno">{{ trans('global.no') }}</label>
-							<span class="form-text text-muted">If you are placing this order for yourself select "No".</span>
-						</div>
+
+				<div id="usersearch" class="cancellable stash">
+					<p>
+						Please use the search box below to select the faculty member this order is for:
+						<a href="#help2" class="help icn tip" title="Help">
+							<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span>
+						</a>
+					</p>
+
+					<div id="help2" class="dialog dialog-help" title="Placing order on behalf of someone else">
+						<p>Use this box to search for the person you are placing this order on behalf of. You may search by full name, email address, or Career account username. Once found click the person from the results to fill in the box.</p>
+					</div>
+
+					<div class="form-group">
+						<span class="input-group">
+							<input type="text" name="search" id="search_user" class="form-control" data-api-create="{{ route('api.users.create') }}" data-api="{{ route('api.users.index') }}?search=%s" placeholder="Search users..." value="" />
+							<span class="input-group-append">
+								<span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
+							</span>
+						</span>
 					</div>
 				</div>
-			</div>
-		</div>
 
-		<div id="usersearch" class="cancellable stash">
-			<p>
-				Please use the search box below to select the faculty member this order is for:
-				<a href="#help2" class="help icn tip" title="Help">
-					<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span>
-				</a>
-			</p>
+				<div id="mouagree" class="cancellable stash">
+					<div><p>Please read and consent to the MOU Agreement for the following items.</p></div>
 
-			<div id="help2" class="dialog dialog-help" title="Placing order on behalf of someone else">
-				<p>Use this box to search for the person you are placing this order on behalf of. You may search by full name, email address, or Career account username. Once found click the person from the results to fill in the box.</p>
-			</div>
-
-			<div class="form-group">
-				<span class="input-group">
-					<input type="text" name="search" id="search_user" class="form-control" data-api-create="{{ route('api.users.create') }}" data-api="{{ route('api.users.index') }}?search=%s" placeholder="Search users..." value="" />
-					<span class="input-group-append">
-						<span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
-					</span>
-				</span>
-			</div>
-		</div>
-
-		<div id="mouagree" class="cancellable stash">
-			<div><p>Please read and consent to the MOU Agreement for the following items.</p></div>
-
-			<div id="help3" class="dialog dialog-help" title="MOU Agreement">
-				<p>Please use the link provided to download the MOU Agreement. Please read the Agreement carefully and click the checkbox once you have read and consent to the Agreement.</p>
-			</div>
-			<?php
-			foreach ($products as $product):
-				if (!$product->mou):
-					continue;
-				endif;
-				?>
-				<div id="{{ $product->id }}_mou" class="stash">
-					<div class="form-block">
-						<div class="form-check">
-							<input class="form-check-input mou-agree" type="checkbox" data-id="{{ $product->id }}" id="{{ $product->id }}_mouagree" />
-							<label class="form-check-label" for="{{ $product->id }}_mouagree">I have read and consent to the <abbr title="Memorandum of Understanding">MOU</abbr> Agreement.</label>
-							<p class="form-text text-muted">
-								<a href="{{ $product->mou }}" target="_blank">{{ $product->name }} - <abbr title="Memorandum of Understanding">MOU</abbr> Agreement</a>
-
-								<a href="#help3" class="help icn tip" title="Help">
-									<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Please click checkbox after reading and consenting to MOU Agreement.</span>
-								</a>
-							</p>
-						</div>
+					<div id="help3" class="dialog dialog-help" title="MOU Agreement">
+						<p>Please use the link provided to download the MOU Agreement. Please read the Agreement carefully and click the checkbox once you have read and consent to the Agreement.</p>
 					</div>
+					<?php
+					foreach ($products as $product):
+						if (!$product->mou):
+							continue;
+						endif;
+						?>
+						<div id="{{ $product->id }}_mou" class="stash">
+							<div class="form-block">
+								<div class="form-check">
+									<input class="form-check-input mou-agree" type="checkbox" data-id="{{ $product->id }}" id="{{ $product->id }}_mouagree" />
+									<label class="form-check-label" for="{{ $product->id }}_mouagree">I have read and consent to the <abbr title="Memorandum of Understanding">MOU</abbr> Agreement.</label>
+									<p class="form-text text-muted">
+										<a href="{{ $product->mou }}" target="_blank">{{ $product->name }} - <abbr title="Memorandum of Understanding">MOU</abbr> Agreement</a>
+
+										<a href="#help3" class="help icn tip" title="Help">
+											<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Please click checkbox after reading and consenting to MOU Agreement.</span>
+										</a>
+									</p>
+								</div>
+							</div>
+						</div>
+						<?php
+					endforeach;
+					?>
 				</div>
-				<?php
-			endforeach;
-			?>
-		</div>
 
-		<div id="restrictagree" class="cancellable" style="display: none;">
-			<p>Will you be using any of the selected products for restricted data?</p>
+				<div id="restrictagree" class="cancellable" style="display: none;">
+					<p>Will you be using any of the selected products for restricted data?</p>
 
-			<?php
-			foreach ($products as $product):
-				if (!$product->restricteddata):
-					continue;
-				endif;
-				?>
-				<fieldset id="{{ $product->id }}_restrict" style="display: none;">
-					<legend>{{ $product->name }} restricted data use. Please check all that apply:</legend>
+					<?php
+					foreach ($products as $product):
+						if (!$product->restricteddata):
+							continue;
+						endif;
+						?>
+						<fieldset id="{{ $product->id }}_restrict" style="display: none;">
+							<legend>{{ $product->name }} restricted data use. Please check all that apply:</legend>
 
-					<div class="form-check">
-						<input class="form-check-input restrict-agree" type="checkbox" data-id="{{ $product->id }}" data-dialog="#help_restrictagree1" id="{{ $product->id }}_restrictagree1" />
-						<label class="form-check-label" for="{{ $product->id }}_restrictagree1">Government restricted or export-controlled data (eg., ITAR, EAR, 7012)</label>
+							<div class="form-check">
+								<input class="form-check-input restrict-agree" type="checkbox" data-id="{{ $product->id }}" data-dialog="#help_restrictagree1" id="{{ $product->id }}_restrictagree1" />
+								<label class="form-check-label" for="{{ $product->id }}_restrictagree1">Government restricted or export-controlled data (eg., ITAR, EAR, 7012)</label>
 
-						<div id="help_restrictagree1" class="dialog dialog-help" title="Government restricted data">
-							<p>Storing or use of government restricted or export controlled data is prohibited.</p>
-						</div>
-					</div>
+								<div id="help_restrictagree1" class="dialog dialog-help" title="Government restricted data">
+									<p>Storing or use of government restricted or export controlled data is prohibited.</p>
+								</div>
+							</div>
 
-					<div class="form-check">
-						<input class="form-check-input restrict-agree" type="checkbox" data-id="{{ $product->id }}" id="{{ $product->id }}_restrictagree2" />
-						<label class="form-check-label" for="{{ $product->id }}_restrictagree2">IRB restricted data</label>
-					</div>
+							<div class="form-check">
+								<input class="form-check-input restrict-agree" type="checkbox" data-id="{{ $product->id }}" id="{{ $product->id }}_restrictagree2" />
+								<label class="form-check-label" for="{{ $product->id }}_restrictagree2">IRB restricted data</label>
+							</div>
 
-					<div class="form-check">
-						<input class="form-check-input restrict-agree" type="checkbox" data-id="{{ $product->id }}" id="{{ $product->id }}_restrictagree3" />
-						<label class="form-check-label" for="{{ $product->id }}_restrictagree3">HIPAA restricted data</label>
-					</div>
+							<div class="form-check">
+								<input class="form-check-input restrict-agree" type="checkbox" data-id="{{ $product->id }}" id="{{ $product->id }}_restrictagree3" />
+								<label class="form-check-label" for="{{ $product->id }}_restrictagree3">HIPAA restricted data</label>
+							</div>
 
-					<div class="form-check">
-						<input class="form-check-input restrict-agree" type="checkbox" data-id="{{ $product->id }}" id="{{ $product->id }}_restrictagree4" />
-						<label class="form-check-label" for="{{ $product->id }}_restrictagree4">FERPA restricted data</label>
-					</div>
-				</fieldset>
-				<?php
-			endforeach;
-			?>
-		</div>
+							<div class="form-check">
+								<input class="form-check-input restrict-agree" type="checkbox" data-id="{{ $product->id }}" id="{{ $product->id }}_restrictagree4" />
+								<label class="form-check-label" for="{{ $product->id }}_restrictagree4">FERPA restricted data</label>
+							</div>
+						</fieldset>
+						<?php
+					endforeach;
+					?>
+				</div>
 
-		<div class="text-center">
-			<input id="continue" class="order btn btn-primary" type="submit" value="Continue" <?php if (!count($rows)) { echo 'disabled'; } ?>
-				data-api="{{ route('api.orders.create') }}"
-				data-error="There was an error processing your order. Please wait a few minutes and try again or contact rcac-help@purdue.edu for help." />
-			<input id="cancel" class="order btn btn-secondary hide" type="submit" value="Edit Order" />
-		</div>
+				<div class="text-center">
+					<input id="continue" class="order btn btn-primary" type="submit" value="Continue" <?php if (!count($rows)) { echo 'disabled'; } ?>
+						data-submit-txt="Place Order"
+						data-api="{{ route('api.orders.create') }}"
+						data-error="There was an error processing your order. Please wait a few minutes and try again or contact rcac-help@purdue.edu for help." />
+					<input id="cancel" class="order btn btn-secondary hide" type="submit" value="Edit Order" />
+				</div>
 
+			<!--</div>
+		</div>-->
 		<input type="hidden" id="userid" value="{{ auth()->user()->id }}" />
 
 		@csrf

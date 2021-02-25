@@ -532,16 +532,20 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										<i id="user_save" class="fa fa-pencil"></i><span class="sr-only">Edit</span>
 									</a>
 								</p>
-								@if ($order->user->title)
-									<p class="form-text">{{ $order->user->title }}</p>
-								@endif
+								@if ($order->user)
+									@if ($order->user->title)
+										<p class="form-text">{{ $order->user->title }}</p>
+									@endif
 
-								@if ($order->user->department)
-									<p class="form-text">{{ $order->user->department }}</p>
-								@endif
+									@if ($order->user->department)
+										<p class="form-text">{{ $order->user->department }}</p>
+									@endif
 
-								@if ($order->user->school)
-									<p class="form-text">{{ $order->user->school }}</p>
+									@if ($order->user->school)
+										<p class="form-text">{{ $order->user->school }}</p>
+									@endif
+								@else
+									<p class="form-text">{{ trans('global.unknown') }}</p>
 								@endif
 							@else
 								<p class="form-text">

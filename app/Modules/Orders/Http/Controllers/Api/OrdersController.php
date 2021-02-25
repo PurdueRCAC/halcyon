@@ -393,7 +393,7 @@ class OrdersController extends Controller
 		{
 			$userid = $request->input('userid');
 			// Allow passing a username as $userid
-			if (is_string($userid))
+			if (!is_numeric($userid))
 			{
 				$user = User::findByUsername($userid);
 				if (!$user)

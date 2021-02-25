@@ -755,10 +755,12 @@ function MouAgree() {
 		//}
 	}
 
-	if (restrict) {
-		$( "#continue" ).val("Continue");
-	} else {
-		$( "#continue" ).val("Continue");
+	if (!restrict) {
+		// Change button text
+		var btn = document.getElementById('continue');
+		var btnval = btn.value;
+		btn.value = btn.getAttribute('data-submit-txt');
+		btn.setAttribute('data-submit-txt', btnval);
 	}
 
 	var opened = false;
@@ -822,7 +824,13 @@ function RestrictAgree() {
 	var count = 0;
 	var checked = 0;
 
-	$( "#continue" ).val("Continue");
+	if (!restrict) {
+		// Change button text
+		var btn = document.getElementById('continue');
+		var btnval = btn.value;
+		btn.value = btn.getAttribute('data-submit-txt');
+		btn.setAttribute('data-submit-txt', btnval);
+	}
 
 	//var count = 0;
 	var inputs = document.getElementsByClassName("restrict-agree");
@@ -908,9 +916,9 @@ function TotalOrder() {
 
 	var name;
 	if (name = document.getElementById("search_user").value.match(/^.*?\(([a-z0-9]+)\)$/)) {
-		order['user'] = name[1];
+		order['userid'] = name[1];
 	} else {
-		order['user'] = document.getElementById("userid").value;
+		order['userid'] = document.getElementById("userid").value;
 	}
 
 	var count = 0;
@@ -974,11 +982,11 @@ function TotalOrder() {
 	}
 	order['items'] = items; //JSON.stringify(items);
 	order['staffnotes'] = notes; //JSON.stringify(notes);
+	order['usernotes'] = document.getElementById('usernotes').value;
 	
 	//var post = '{"userid": "' + order['user'] + '", "items": ' + order['items'] + ', "staffnotes": ' + order['staffnotes'] + '}';
-	//console.log(post);
 	var btn = document.getElementById('continue');
-	//return;
+
 //console.log(order); return;
 	$.ajax({
 		url: btn.getAttribute('data-api'),
@@ -998,6 +1006,7 @@ function TotalOrder() {
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
 			console.log(xhr);
+			alert("There was an error processing your order. Please wait a few minutes and try again or contact help.");
 			//Halcyon.message('danger', xhr.responseJSON.message);
 			//Halcyon.message('danger', btn.getAttribute('data-error'));
 		}
