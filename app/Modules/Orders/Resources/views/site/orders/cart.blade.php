@@ -101,7 +101,7 @@
 			UpdateOrderTotal(this, true);
 		});
 
-		$('.form-block').on('click', function(e) {
+		$('.form-block-radio').on('click', function(e) {
 			$(this).find('input[type="radio"]').not(':checked').prop("checked", true);
 
 			var c = $(this).find('input[type="checkbox"]');
@@ -118,6 +118,13 @@
 			} else {
 				$('.form-block').removeClass('checked');
 				$(this).addClass('checked');
+			}
+		});
+		$('.form-block-check input[type="checkbox"]').on('change', function(e) {
+			if ($(this).is(':checked')) {
+				$(this).closest('.form-block').addClass('checked');
+			} else {
+				$(this).closest('.form-block').removeClass('checked');
 			}
 		});
 
@@ -294,7 +301,7 @@
 
 			<div class="row">
 				<div class="col-md-6">
-					<div class="form-block">
+					<div class="form-block form-block-radio">
 						<div class="form-check">
 							<input class="form-check-input" type="radio" id="formeyes" value="Yes" name="forme" />
 							<label class="form-check-label" for="formeyes">{{ trans('global.yes') }}</label>
@@ -303,7 +310,7 @@
 					</div>
 				</div>
 				<div class="col-md-6">
-					<div class="form-block">
+					<div class="form-block form-block-radio">
 						<div class="form-check">
 							<input class="form-check-input" type="radio" id="formeno" value="No" name="forme" />
 							<label class="form-check-label" for="formeno">{{ trans('global.no') }}</label>
@@ -349,7 +356,7 @@
 				endif;
 				?>
 				<div id="{{ $product->id }}_mou" class="stash">
-					<div class="form-block">
+					<div class="form-block form-block-check">
 						<div class="form-check">
 							<input class="form-check-input mou-agree" type="checkbox" data-id="{{ $product->id }}" id="{{ $product->id }}_mouagree" />
 							<label class="form-check-label" for="{{ $product->id }}_mouagree">I have read and consent to the <abbr title="Memorandum of Understanding">MOU</abbr> Agreement.</label>
