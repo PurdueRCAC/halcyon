@@ -143,3 +143,31 @@
 .sidenav .tree li.active.parent:before {
 	content: '\f078';
 }
+
+.ratings {
+	margin: 4em 0 0 0;
+}
+.ratings fieldset {
+	border: none;
+	margin: 0;
+	padding: 0;
+}
+.ratings fieldset legend {
+	float: left;
+	margin: 0 2em 0 0;
+	padding: 0;
+	line-height: 2;
+}
+.ratings .card-body>* {
+	margin: 0;
+}
+.ratings .form-group {
+	position: relative;
+}
+.ratings .form-textbox-counter {
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 85%;
+	text-align: right;
+}
