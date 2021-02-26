@@ -86,6 +86,147 @@
 			@endif
 		@endif
 	@endif
-</div>
 
+	@if (config('module.knowledge.collect_feedback', true))
+	<div id="helpful" class="ratings card">
+		<div class="card-body">
+			<div id="question-state" class="show">
+				<fieldset>
+					<legend>
+						<div id="okapi-a">
+							<span>Helpful?</span>
+						</div>
+					</legend>
+					<div class="helpful-btn-grp">
+						<button class="btn btn-feedback btn-outline-secondary" id="yes-button"
+							data-feedback-type="positive"
+							data-feedback-text="yes"
+							data-feedback-event="btn.click"
+							title="Solved my problem">
+							Yes
+						</button>
+						<button class="btn btn-feedback btn-outline-secondary" id="no-button"
+							data-feedback-type="negative"
+							data-feedback-text="no"
+							data-feedback-event="btn.click"
+							title="Not helpful">
+							No
+						</button>
+					</div>
+				</fieldset>
+			</div>
+
+			<div id="feedback-state" class="hide">
+				<form autocomplete="off" method="post" action="{{ route('site.knowledge.page', ['uri' => ($p ? $p : '/')]) }}" data-api="{{ route('api.knowledge.feedback.create') }}">
+					<p id="feedback-response"
+						data-no-label="Thanks for letting us know."
+						data-yes-label="We’re glad this article helped.">
+						Thanks for letting us know.
+					</p>
+
+					<div class="form-group">
+						<label id="feedback-label" for="feedback-text" data-no-label="Thanks for letting us know." data-yes-label="We’re glad this article helped.">How can we make this article more helpful? (Optional)</label>
+						<textarea id="feedback-text" name="comments" rows="2" cols="45"
+							class="form-control form-counter-textarea"
+							data-no-label="How can we make this article more helpful? (Optional)"
+							data-yes-label="Anything else you’d like us to know? (Optional)"
+							data-max-length="250"
+							aria-describedby="char_limit_counter"></textarea>
+						<span class="form-text text-muted">Please don’t include any personal information in your comment. Maximum character limit is 250.</span>
+						<div class="form-textbox-counter" id="char_limit_counter">
+							<span class="sr-only" id="char-limit-message">Characters left:</span>
+							<span class="char-count text-muted hide">250</span>
+						</div>
+					</div>
+
+					<div class="form-group hide">
+						<label for="feedback-hpt">Leave this field blank</label>
+						<input type="text" name="hpt" id="feedback-hpt" value="" />
+					</div>
+
+					<input type="hidden" name="target_id" value="{{ $node->id }}" />
+					<input type="hidden" name="type" id="feedback-type" value="" />
+					<input type="hidden" name="user_id" value="{{ auth()->user() ? auth()->user()->id : 0 }}" />
+
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary" id="submit-feedback">
+							Submit
+						</button>
+					</div>
+
+					@csrf
+				</form>
+			</div>
+
+			<div id="rating-done" class="alert alert-success hide">
+				Thanks for your feedback.
+			</div>
+		</div>
+	</div>
+	<script>
+	$(document).ready(function() {
+		$('.btn-feedback').on('click', function(e) {
+			e.preventDefault();
+
+			$('#feedback-state').removeClass('hide');
+			var lbl = $('#feedback-label'),
+				val = $(this).data('feedback-text');
+
+			$('#feedback-type').val($(this).data('feedback-type'));
+
+			lbl.text($('#feedback-text').data(val + '-label'));
+			$('#feedback-response').text($('#feedback-response').data(val + '-label'));
+
+			$('#question-state').addClass('hide');
+		});
+
+		$('#submit-feedback').on('click', function(e){
+			e.preventDefault();
+
+			// Honeypot was filled
+			if ($('#feedback-hpt').val()) {
+				return;
+			}
+
+			$('#feedback-state').addClass('hide');
+
+			var frm = $($(this).closest('form'));
+
+			$.ajax({
+				url: frm.data('api'),
+				type: 'post',
+				data: frm.serialize(),
+				dataType: 'json',
+				async: false,
+				success: function(response) {
+					$('#rating-done').removeClass('hide');
+				},
+				error: function(xhr, ajaxOptions, thrownError) {
+					$('#rating-error').removeClass('hide');
+				}
+			});
+		});
+
+		$('[data-max-length]').on('keyup', function () {
+			var chars = $(this).val().length,
+				max = parseInt($(this).data('max-length')),
+				ctr = $(this).parent().find('.char-count');
+
+			if (chars) {
+				ctr.removeClass('hide');
+			} else {
+				ctr.addClass('hide');
+			}
+			ctr.text(max - chars);
+
+			if (chars >= max) {
+				var trimmed = $(this).val().substring(0, max);
+				$(this).val(trimmed);
+			}
+		});
+	});
+	</script>
+	@endif
+
+</div>
 @stop

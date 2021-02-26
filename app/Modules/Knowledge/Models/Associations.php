@@ -74,6 +74,16 @@ class Associations extends Model
 	}
 
 	/**
+	 * Defines a relationship to feedback
+	 *
+	 * @return  object
+	 */
+	public function feedback()
+	{
+		return $this->hasMany(Feedback::class, 'target_id');
+	}
+
+	/**
 	 * Get published children
 	 *
 	 * @return  object
@@ -671,5 +681,56 @@ class Associations extends Model
 		$this->rgt = $repositionData->new_rgt;
 
 		return true;
+	}
+
+	public function getPositiveRatingAttribute()
+	{
+		$total = $this->feedback()
+			->count();
+
+		if (!$total)
+		{
+			return 0;
+		}
+
+		$positive = $this->feedback()
+			->where('type', '=', 'positive')
+			->count();
+
+		return ($positive / $total) * 100;
+	}
+
+	public function getNegativeRatingAttribute()
+	{
+		$total = $this->feedback()
+			->count();
+
+		if (!$total)
+		{
+			return 0;
+		}
+
+		$negative = $this->feedback()
+			->where('type', '=', 'negative')
+			->count();
+
+		return ($negative / $total) * 100;
+	}
+
+	public function getNeutralRatingAttribute()
+	{
+		$total = $this->feedback()
+			->count();
+
+		if (!$total)
+		{
+			return 0;
+		}
+
+		$neutral = $this->feedback()
+			->where('type', '=', 'neutral')
+			->count();
+
+		return ($neutral / $total) * 100;
 	}
 }

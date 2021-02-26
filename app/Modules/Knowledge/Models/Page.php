@@ -1,9 +1,4 @@
 <?php
-/**
- * @package   halcyon-cms
- * @copyright Copyright 2005-2015 Halcyon Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Modules\Knowledge\Models;
 
