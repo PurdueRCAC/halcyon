@@ -8,3 +8,8 @@ $router->get('docs', [
 	'uses' => 'DocsController@index',
 	//'middleware' => 'can:admin',
 ]);
+
+$router->get('captcha', [
+	'as'   => 'site.core.captcha',
+	'uses' => 'CaptchaController@index',
+]);

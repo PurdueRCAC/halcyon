@@ -35,3 +35,20 @@ if (!function_exists('captcha'))
 		return $event->render();
 	}
 }
+
+if (!function_exists('validate_captcha'))
+{
+	/**
+	 * Check if a CAPTCHA is valid
+	 * 
+	 * @param   string  $name
+	 * @param   array   $atts
+	 * @return  Response
+	 */
+	function validate_captcha($name, $atts = array())
+	{
+		event($event = new App\Modules\Core\Events\ValidateCaptcha($name, $atts));
+
+		return $event->valid;
+	}
+}

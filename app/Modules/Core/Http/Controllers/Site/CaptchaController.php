@@ -16,11 +16,6 @@ class CaptchaController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		if (ob_get_contents())
-		{
-			ob_clean();
-		}
-
 		captcha(true);
 	}
 }

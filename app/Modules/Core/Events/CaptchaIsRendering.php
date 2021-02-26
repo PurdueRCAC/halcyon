@@ -23,7 +23,14 @@ class CaptchaIsRendering
 	 *
 	 * @var string
 	 */
-	private $content;
+	public $valid = false;
+
+	/**
+	 * The original body of the page to render
+	 *
+	 * @var string
+	 */
+	protected $content;
 
 	/**
 	 * Constructor
