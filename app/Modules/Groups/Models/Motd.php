@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
+use App\Modules\Core\Traits\LegacyTrash;
 
 /**
  * Group motd model
  */
 class Motd extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
 
 	/**
 	 * The name of the "created at" column.
@@ -73,16 +74,6 @@ class Motd extends Model
 	protected $rules = array(
 		'groupid' => 'required|integer|min:1'
 	);
-
-	/**
-	 * If item is removed
-	 *
-	 * @return  bool
-	 **/
-	public function isTrashed()
-	{
-		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
-	}
 
 	/**
 	 * Get parent group

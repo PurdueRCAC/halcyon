@@ -57,19 +57,11 @@ class ResourcesController extends Controller
 
 		if ($filters['state'] == 'active')
 		{
-			$query->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			});
+			$query->whereIsActive();
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->where(function($where)
-			{
-				$where->whereNotNull('datetimeremoved')
-					->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
-			});
+			$query->whereIsTrashed();
 		}
 
 		if ($filters['type'] > 0)

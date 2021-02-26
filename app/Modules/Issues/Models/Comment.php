@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
+use App\Modules\Core\Traits\LegacyTrash;
 use App\Halcyon\Utility\PorterStemmer;
 
 /**
@@ -14,7 +15,7 @@ use App\Halcyon\Utility\PorterStemmer;
  */
 class Comment extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
 
 	/**
 	 * The name of the "created at" column.
@@ -381,39 +382,5 @@ class Comment extends Model
 		}
 
 		return $match[1] . ' ' . $match[2];
-	}
-
-		/**
-	 * Query scope where record isn't trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsActive($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNull($t . '.datetimeremoved')
-					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-		});
-	}
-
-	/**
-	 * Query scope where record is trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsTrashed($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNotNull($t . '.datetimeremoved')
-				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-		});
 	}
 }

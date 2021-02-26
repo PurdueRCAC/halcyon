@@ -193,6 +193,22 @@ $(document).ready(function() {
 							{{ Illuminate\Support\Str::limit($row->title, 70) }}
 						</span>
 					@endif
+					@if (config('module.knowledge.collect_feedback', true))
+						@php
+						$assoc = App\Modules\Knowledge\Models\Associations::find($row->id);
+						@endphp
+						<div class="progress" style="height: 2px;">
+							@if ($assoc->positiveRating)
+								<div class="progress-bar bg-success" role="progressbar" style="width: {{ $assoc->positiveRating }}%" aria-valuenow="{{ $assoc->positiveRating }}" aria-valuemin="0" aria-valuemax="100"></div>
+							@endif
+							@if ($assoc->neutralRating)
+								<div class="progress-bar" role="progressbar" style="width: {{ $assoc->neutralRating }}%" aria-valuenow="{{ $assoc->neutralRating }}" aria-valuemin="0" aria-valuemax="100"></div>
+							@endif
+							@if ($assoc->negativeRating)
+								<div class="progress-bar bg-danger" role="progressbar" style="width: {{ $assoc->negativeRating }}%" aria-valuenow="{{ $assoc->negativeRating }}" aria-valuemin="0" aria-valuemax="100"></div>
+							@endif
+						</div>
+					@endif
 				</td>
 				<td>
 					/{{ trim($row->path, '/') }}
@@ -234,15 +250,21 @@ $(document).ready(function() {
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->getOriginal('updated_at') && $row->getOriginal('updated_at') != '0000-00-00 00:00:00')
-							<time datetime="{{ Carbon\Carbon::parse($row->updated_at)->format('Y-m-d\TH:i:s\Z') }}">{{ $row->updated_at }}</time>
+						@if ($row->updated_at)
+							<time datetime="{{ Carbon\Carbon::parse($row->updated_at)->format('Y-m-d\TH:i:s\Z') }}">
+								@if ($row->updated_at->timestamp > Carbon\Carbon::now()->timestamp)
+									{{ $row->updated_at->diffForHumans() }}
+								@else
+									{{ $row->updated_at->format('Y-m-d') }}
+								@endif
+							</time>
 						@else
-							@if ($row->getOriginal('created_at') && $row->getOriginal('created_at') != '0000-00-00 00:00:00')
+							@if ($row->created_at)
 								<time datetime="{{ Carbon\Carbon::parse($row->created_at)->format('Y-m-d\TH:i:s\Z') }}">
-									@if ($row->getOriginal('created_at') > Carbon\Carbon::now()->toDateTimeString())
+									@if ($row->created_at->timestamp > Carbon\Carbon::now()->timestamp)
 										{{ $row->created_at->diffForHumans() }}
 									@else
-										{{ $row->created_at }}
+										{{ $row->created_at->format('Y-m-d') }}
 									@endif
 								</time>
 							@else

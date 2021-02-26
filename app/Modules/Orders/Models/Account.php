@@ -2,7 +2,9 @@
 namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
+use App\Modules\Core\Traits\LegacyTrash;
 use Carbon\Carbon;
 
 /**
@@ -10,7 +12,7 @@ use Carbon\Carbon;
  */
 class Account extends Model
 {
-	use Historable;
+	use Historable, SoftDeletes, LegacyTrash;
 
 	/**
 	 * The table to which the class pertains
@@ -69,26 +71,15 @@ class Account extends Model
 	public static $orderDir = 'asc';
 
 	/**
-	 * If item is trashed
-	 *
-	 * @return  bool
-	 **/
-	public function isTrashed()
-	{
-		return ($this->datetimeremoved
-			&& $this->datetimeremoved != '0000-00-00 00:00:00'
-			&& $this->datetimeremoved != '-0001-11-30 00:00:00'
-			&& $this->datetimeremoved < Carbon::now()->toDateTimeString());
-	}
-
-	/**
 	 * If account is approved
 	 *
 	 * @return  bool
 	 **/
 	public function isApproved()
 	{
-		return ($this->datetimeapproved && $this->datetimeapproved != '0000-00-00 00:00:00' && $this->datetimeapproved != '-0001-11-30 00:00:00');
+		return ($this->datetimeapproved
+			&& $this->datetimeapproved != '0000-00-00 00:00:00'
+			&& $this->datetimeapproved != '-0001-11-30 00:00:00');
 	}
 
 	/**
@@ -98,7 +89,9 @@ class Account extends Model
 	 **/
 	public function isPaid()
 	{
-		return ($this->datetimepaid && $this->datetimepaid != '0000-00-00 00:00:00' && $this->datetimepaid != '-0001-11-30 00:00:00');
+		return ($this->datetimepaid
+			&& $this->datetimepaid != '0000-00-00 00:00:00'
+			&& $this->datetimepaid != '-0001-11-30 00:00:00');
 	}
 
 	/**
@@ -108,7 +101,9 @@ class Account extends Model
 	 **/
 	public function isDenied()
 	{
-		return ($this->datetimedenied && $this->datetimedenied != '0000-00-00 00:00:00' && $this->datetimedenied != '-0001-11-30 00:00:00');
+		return ($this->datetimedenied
+			&& $this->datetimedenied != '0000-00-00 00:00:00'
+			&& $this->datetimedenied != '-0001-11-30 00:00:00');
 	}
 
 	/**
@@ -239,39 +234,5 @@ class Account extends Model
 		}
 
 		return $neg . $number;
-	}
-
-	/**
-	 * Query scope where record isn't trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsActive($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNull($t . '.datetimeremoved')
-					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-		});
-	}
-
-	/**
-	 * Query scope where record is trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsTrashed($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNotNull($t . '.datetimeremoved')
-				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-		});
 	}
 }

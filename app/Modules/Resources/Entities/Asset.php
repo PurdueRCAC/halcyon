@@ -12,6 +12,7 @@ use App\Modules\Resources\Events\AssetUpdating;
 use App\Modules\Resources\Events\AssetUpdated;
 use App\Modules\Resources\Events\AssetDeleted;
 use App\Modules\History\Traits\Historable;
+use App\Modules\Core\Traits\LegacyTrash;
 use App\Halcyon\Models\Casts\Params;
 
 /**
@@ -19,7 +20,7 @@ use App\Halcyon\Models\Casts\Params;
  */
 class Asset extends Model
 {
-	use SoftDeletes, Historable;
+	use SoftDeletes, LegacyTrash, Historable;
 
 	/**
 	 * The name of the "created at" column.
@@ -149,16 +150,6 @@ class Asset extends Model
 		}
 
 		return '';
-	}
-
-	/**
-	 * Determine if in a trashed state
-	 *
-	 * @return  bool
-	 */
-	public function isTrashed()
-	{
-		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
 	}
 
 	/**
@@ -373,39 +364,5 @@ class Asset extends Model
 			->limit(1)
 			->get()
 			->first();
-	}
-
-	/**
-	 * Query scope where record isn't trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsActive($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNull($t . '.datetimeremoved')
-					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-		});
-	}
-
-	/**
-	 * Query scope where record is trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsTrashed($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNotNull($t . '.datetimeremoved')
-				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-		});
 	}
 }

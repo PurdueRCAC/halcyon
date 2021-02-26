@@ -10,6 +10,7 @@ use App\Modules\Groups\Models\UnixGroup;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
+use App\Modules\Core\Traits\LegacyTrash;
 use App\Halcyon\Utility\Number;
 use App\Modules\Storage\Events\DirectoryCreated;
 use App\Modules\Storage\Events\DirectoryUpdated;
@@ -21,7 +22,7 @@ use Carbon\Carbon;
  */
 class Directory extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
 
 	/**
 	 * The name of the "created at" column.
@@ -83,16 +84,6 @@ class Directory extends Model
 		'updated'  => DirectoryUpdated::class,
 		'deleted'  => DirectoryDeleted::class,
 	];
-
-	/**
-	 * Determine if in a trashed state
-	 *
-	 * @return  bool
-	 */
-	public function isTrashed()
-	{
-		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
-	}
 
 	/**
 	 * Defines a relationship to a resource
@@ -698,39 +689,5 @@ class Directory extends Model
 		}
 
 		return $mult;
-	}
-
-	/**
-	 * Query scope where record isn't trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsActive($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNull($t . '.datetimeremoved')
-					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-		});
-	}
-
-	/**
-	 * Query scope where record is trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsTrashed($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNotNull($t . '.datetimeremoved')
-				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-		});
 	}
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
+use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Groups\Events\UnixGroupMemberCreated;
 use App\Modules\Groups\Events\UnixGroupMemberDeleted;
 
@@ -14,7 +15,7 @@ use App\Modules\Groups\Events\UnixGroupMemberDeleted;
  */
 class UnixGroupMember extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
 
 	/**
 	 * The name of the "created at" column.
@@ -91,16 +92,6 @@ class UnixGroupMember extends Model
 	];
 
 	/**
-	 * If entry is trashed
-	 *
-	 * @return  bool
-	 **/
-	public function isTrashed()
-	{
-		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
-	}
-
-	/**
 	 * Get parent group
 	 *
 	 * @return  object
@@ -118,39 +109,5 @@ class UnixGroupMember extends Model
 	public function user()
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
-	}
-
-	/**
-	 * Query scope where record isn't trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsActive($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNull($t . '.datetimeremoved')
-					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-		});
-	}
-
-	/**
-	 * Query scope where record is trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsTrashed($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNotNull($t . '.datetimeremoved')
-				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-		});
 	}
 }

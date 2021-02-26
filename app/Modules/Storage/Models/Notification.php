@@ -5,6 +5,7 @@ namespace App\Modules\Storage\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
+use App\Modules\Core\Traits\LegacyTrash;
 use App\Halcyon\Models\Timeperiod;
 use App\Modules\Storage\Models\Notification\Type;
 use Carbon\Carbon;
@@ -14,7 +15,7 @@ use Carbon\Carbon;
  */
 class Notification extends Model
 {
-	use Historable, SoftDeletes;
+	use Historable, SoftDeletes, LegacyTrash;
 
 	/**
 	 * The name of the "created at" column.
@@ -65,16 +66,6 @@ class Notification extends Model
 		'datetimecreated',
 		'datetimeremoved',
 	];
-
-	/**
-	 * Determine if in a trashed state
-	 *
-	 * @return  bool
-	 */
-	public function isTrashed()
-	{
-		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
-	}
 
 	/**
 	 * Set value in bytes
@@ -209,40 +200,8 @@ class Notification extends Model
 	 */
 	public function wasNotified()
 	{
-		return ($this->datetimelastnotify && $this->datetimelastnotify != '0000-00-00 00:00:00' && $this->datetimelastnotify != '-0001-11-30 00:00:00');
-	}
-
-	/**
-	 * Query scope where record isn't trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsActive($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNull($t . '.datetimeremoved')
-					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-		});
-	}
-
-	/**
-	 * Query scope where record is trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsTrashed($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNotNull($t . '.datetimeremoved')
-				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-		});
+		return ($this->datetimelastnotify
+			&& $this->datetimelastnotify != '0000-00-00 00:00:00'
+			&& $this->datetimelastnotify != '-0001-11-30 00:00:00');
 	}
 }

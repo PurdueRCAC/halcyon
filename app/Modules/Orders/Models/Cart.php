@@ -4,7 +4,7 @@ namespace App\Modules\Orders\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Model for order product
+ * Model for order cart
  */
 class Cart extends Model
 {

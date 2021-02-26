@@ -7,7 +7,7 @@ use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 
 /**
- * Model for a scheduler
+ * Model for a scheduler policy
  */
 class SchedulerPolicy extends Model
 {

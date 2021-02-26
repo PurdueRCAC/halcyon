@@ -12,6 +12,7 @@ use App\Modules\Queues\Events\UserUpdating;
 use App\Modules\Queues\Events\UserUpdated;
 use App\Modules\Queues\Events\UserDeleted;
 use App\Modules\Groups\Models\Group;
+use App\Modules\Core\Traits\LegacyTrash;
 use Carbon\Carbon;
 
 /**
@@ -19,7 +20,7 @@ use Carbon\Carbon;
  */
 class User extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
 
 	/**
 	 * The name of the "created at" column.
@@ -79,19 +80,6 @@ class User extends Model
 		'updated'  => UserUpdated::class,
 		'deleted'  => UserDeleted::class,
 	];
-
-	/**
-	 * If entry is trashed
-	 *
-	 * @return  bool
-	 **/
-	public function isTrashed()
-	{
-		return ($this->datetimeremoved
-			&& $this->datetimeremoved != '0000-00-00 00:00:00'
-			&& $this->datetimeremoved != '-0001-11-30 00:00:00'
-			&& $this->datetimeremoved < Carbon::now()->toDateTimeString());
-	}
 
 	/**
 	 * Defines a relationship to notification type
@@ -241,40 +229,6 @@ class User extends Model
 	public function scopeWhereIsPending($query)
 	{
 		return $query->where($this->getTable() . '.membertype', '=', MemberType::PENDING);
-	}
-
-	/**
-	 * Query scope where record isn't trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsActive($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNull($t . '.datetimeremoved')
-					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-		});
-	}
-
-	/**
-	 * Query scope where record is trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsTrashed($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNotNull($t . '.datetimeremoved')
-				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-		});
 	}
 
 	/**

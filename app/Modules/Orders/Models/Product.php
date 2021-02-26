@@ -4,6 +4,7 @@ namespace App\Modules\Orders\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
+use App\Modules\Core\Traits\LegacyTrash;
 use Carbon\Carbon;
 
 /**
@@ -11,7 +12,7 @@ use Carbon\Carbon;
  */
 class Product extends Model
 {
-	use SoftDeletes, Historable;
+	use SoftDeletes, LegacyTrash, Historable;
 
 	/**
 	 * The name of the "created at" column.
@@ -217,63 +218,5 @@ class Product extends Model
 	public function setUnitpriceAttribute($value)
 	{
 		$this->attributes['unitprice'] = preg_replace('/[^0-9]+/', '', $value);
-	}
-
-	/**
-	 * Determine if the model instance has been soft-deleted.
-	 *
-	 * @return bool
-	 */
-	public function isTrashed()
-	{
-		$result = $this->trashed();
-
-		if ($result)
-		{
-			if ($this->{$this->getDeletedAtColumn()} == '0000-00-00 00:00:00'
-			 || $this->{$this->getDeletedAtColumn()} == '-0001-11-30 00:00:00'
-			 || $this->{$this->getDeletedAtColumn()} >= Carbon::now()->toDateTimeString())
-			{
-				$result = false;
-			}
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Query scope where record isn't trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsActive($query)
-	{
-		$t = $this->getTable();
-		$c = $this->getDeletedAtColumn();
-
-		return $query->where(function($where) use ($t, $c)
-		{
-			$where->whereNull($t . '.' . $c)
-					->orWhere($t . '.' . $c, '=', '0000-00-00 00:00:00');
-		});
-	}
-
-	/**
-	 * Query scope where record is trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsTrashed($query)
-	{
-		$t = $this->getTable();
-		$c = $this->getDeletedAtColumn();
-
-		return $query->where(function($where) use ($t, $c)
-		{
-			$where->whereNotNull($t . '.' . $c)
-				->where($t . '.' . $c, '!=', '0000-00-00 00:00:00');
-		});
 	}
 }

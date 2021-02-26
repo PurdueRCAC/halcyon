@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Resources\Entities\Asset;
+use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Courses\Events\AccountCreating;
 use App\Modules\Courses\Events\AccountCreated;
 use App\Modules\Courses\Events\AccountUpdating;
@@ -18,7 +19,7 @@ use Carbon\Carbon;
  */
 class Account extends Model
 {
-	use SoftDeletes, Historable;
+	use SoftDeletes, LegacyTrash, Historable;
 
 	/**
 	 * The name of the "created at" column.
@@ -121,16 +122,6 @@ class Account extends Model
 	public $report = null;
 
 	/**
-	 * If entry is trashed
-	 *
-	 * @return  bool
-	 **/
-	public function isTrashed()
-	{
-		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
-	}
-
-	/**
 	 * Get a list of users
 	 *
 	 * @return  object
@@ -176,39 +167,5 @@ class Account extends Model
 		}
 
 		return parent::delete($options);
-	}
-
-	/**
-	 * Query scope where record isn't trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsActive($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNull($t . '.datetimeremoved')
-					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-		});
-	}
-
-	/**
-	 * Query scope where record is trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsTrashed($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNotNull($t . '.datetimeremoved')
-				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-		});
 	}
 }

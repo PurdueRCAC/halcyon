@@ -80,7 +80,10 @@ class Size extends Model
 	 */
 	public function hasStarted()
 	{
-		if (!$this->datetimestart || $this->datetimestart == '0000-00-00 00:00:00' && $this->datetimestart == '-0001-11-30 00:00:00')
+		// No start time means start immediately
+		if (!$this->datetimestart
+		 || $this->datetimestart == '0000-00-00 00:00:00'
+		 || $this->datetimestart == '-0001-11-30 00:00:00')
 		{
 			return true;
 		}
@@ -94,7 +97,10 @@ class Size extends Model
 	 */
 	public function hasEnded()
 	{
-		return ($this->datetimestop && $this->datetimestop != '0000-00-00 00:00:00' && $this->datetimestop != '-0001-11-30 00:00:00' && $this->datetimestop < Carbon::now());
+		return ($this->datetimestop
+			&& $this->datetimestop != '0000-00-00 00:00:00'
+			&& $this->datetimestop != '-0001-11-30 00:00:00'
+			&& $this->datetimestop < Carbon::now());
 	}
 
 	/**

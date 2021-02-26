@@ -55,30 +55,16 @@ class SubresourcesController extends Controller
 		$c = (new Child)->getTable();
 
 		$query = Subresource::query()
-			->select($s . '.*', $c . '.resourceid');
+			->select($s . '.*', $c . '.resourceid')
+			->withTrashed();
 
 		if ($filters['state'] == 'trashed')
 		{
-			/*$query->where('datetimeremoved', '!=', '0000-00-00 00:00:00')
-				->whereNotNull('datetimeremoved');*/
-			$query->onlyTrashed();
+			$query->whereIsTrashed();
 		}
-		elseif ($filters['state'] == 'all')
+		elseif ($filters['state'] == 'published')
 		{
-			$query->withTrashed();
-			/*$query->where(function($where)
-			{
-				$where->where('datetimeremoved', '=', '0000-00-00 00:00:00')
-					->orWhereNull('datetimeremoved');
-			});*/
-		}
-		else
-		{
-			/*$query->where(function($where)
-			{
-				$where->where('datetimeremoved', '=', '0000-00-00 00:00:00')
-					->orWhereNull('datetimeremoved');
-			});*/
+			$query->whereIsActive();
 		}
 
 		if ($filters['search'])
