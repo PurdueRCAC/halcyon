@@ -1,0 +1,11 @@
+{
+    "name": "CAPTCHA - Image",
+    "alias": "listener_captcha_image",
+    "description": "Generates an image based CAPTCHA.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

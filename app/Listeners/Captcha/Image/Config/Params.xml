@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="bgColor" type="text" size="25" default="#ffffff" label="listener.captcha.image::image.background color" description="listener.captcha.image::image.background color desc" />
+			<field name="textColor" type="text" size="25" default="#2c8007" label="listener.captcha.image::image.text color" description="listener.captcha.image::image.text color desc" />
+			<field name="imageFunction" type="list" default="Adv" label="listener.captcha.image::image.function" description="listener.captcha.image::image.function desc">
+				<option value="Plain">listener.captcha.image::image.function plain</option>
+				<option value="Adv">listener.captcha.image::image.function distorted</option>
+			</field>
+		</fieldset>
+	</fields>
+</config>
