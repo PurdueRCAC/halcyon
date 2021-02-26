@@ -23,7 +23,7 @@ class ValidateCaptcha
 	 *
 	 * @var string
 	 */
-	public $valid = false;
+	public $valid = true;
 
 	/**
 	 * Constructor
