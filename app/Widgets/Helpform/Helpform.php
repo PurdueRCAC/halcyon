@@ -29,11 +29,6 @@ class Helpform extends Widget
 				'user' => null,
 			);
 
-			if (!isset($data['name']))
-			{
-				$errors[] = trans('widget.helpform::helpform.error.name');
-			}
-
 			if (!isset($data['email']))
 			{
 				$errors[] = trans('widget.helpform::helpform.error.email');
@@ -47,6 +42,11 @@ class Helpform extends Widget
 			if (!isset($data['subject']))
 			{
 				$errors[] = trans('widget.helpform::helpform.error.subject');
+			}
+
+			if (!validate_captcha('helpcaptcha'))
+			{
+				$errors[] = trans('widget.helpform::helpform.error.captcha');
 			}
 
 			if (empty($errors))

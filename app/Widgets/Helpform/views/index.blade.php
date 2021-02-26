@@ -67,31 +67,23 @@
 		<div class="form-group">
 			<label for="resource">What RCAC resources does this involve?</label>
 			<select class="form-control searchable-select-multi" multiple="multiple" name="resource[]" id="resource">
-				<?php
-				foreach ($types as $t => $res)
-				{
-					?>
+				@foreach ($types as $t => $res)
 					<optgroup label="{{ $t }}" class="select2-result-selectable">
-						<?php
-						foreach ($res as $resource)
-						{
-							?>
+						@foreach ($res as $resource)
 							<option value="{{ $resource->id }}">{{ $resource->name }}</option>
-							<?php
-						}
-						?>
+						@endforeach
 					</optgroup>
-					<?php
-				}
-				?>
+				@endforeach
 			</select>
 		</div>
 
 		<div class="form-group">
 			<label for="report">Describe the issue <span class="required-field">*</span></label>
 			<textarea id="report" name="report" class="form-control" required rows="15" cols="77"></textarea>
-			<span class="form-text tex-muted">Please include job IDs (if applicable).</span>
+			<span class="form-text text-muted">Please include job IDs (if applicable).</span>
 		</div>
+
+		{!! captcha('helpcaptcha') !!}
 
 		@csrf
 
