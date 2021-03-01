@@ -14,49 +14,64 @@ Your account on {{ implode(', ', $resources) }} has been created and are ready f
 
 @php
 $partner = false;
+$scratch = false;
+$standby = false;
 @endphp
 @foreach ($activity as $resourceid => $data)
-### {{ $data->resource->name }}:
-
-@foreach ($data->queues as $queue)
-* {{ $queue->name }} - {{ $queue->cores }} cores, {{ $queue->walltime }} hours
+<table><caption>{{ $data->resource->name }}</caption>
+<tr><th scope="row"><strong>User guide</strong></th><td>{{ route('site.knowledge.page', ['uri' => $data->resource->name]) }}</td></tr>
+<tr><th scope="row"><strong>Front-end</strong></th><td>{{ $data->resource->rolename }}.{{ str_replace('www.', '.', request()->getHttpHost()) }}</td></tr>
+<tr><th scope="row"><strong>Home directory</strong></th><td>{!! $data->resource->home == 'shared' ? 'shared' : '<strong>specific</strong> to ' . $data->resource->name !!}, 25GB</td></tr>
+@if ($data->storage)
+@php
+	$scratch = true;
+@endphp
+<tr><th scope="row"><strong>Scratch space</strong></th><td>{{ $data->storage->space }} space; {{ $data->storage->files }} files</td></tr>
+@foreach ($data->queues as $i => $queue)
+<tr><th scope="row">{!! ($i == 0 ? '<strong>Queues</strong>' : '') !!}</th><td>{{ $queue->name }} - {{ $queue->cores }} cores, {{ $queue->walltime }} hours</td></tr>
 @endforeach
 @foreach ($data->standbys as $standby)
 @php
-if (preg_match("/^partner/", $standby->name))
-{
+$standby = true;
+if (preg_match("/^partner/", $standby->name)):
 	$partner = true;
-}
+endif;
 @endphp
-* {{ $standby->name }} - {{ $standby->walltime }} hours
+<tr><th scope="row"><strong>{{ $standby->name }}</strong></th><td>{{ $standby->walltime }} hours</td></tr>
 @endforeach
+</tbody></table>
 @endforeach
-
-You can also see this list by running the `slist` command.
 
 @if ($partner)
+### Partner Queue
+
 One of the above resources provides partners and their researchers who have purchased shared access to the cluster through a shared 'partner' queue. If your research group has purchased dedicated access, there will also be a queue named after that partner or research group on this resource. 
 @endif
 
+@if ($standby)
+### Standby Queue
+
 You also have access to the "standby" queue. This queue utilizes idle cores from other queues. You can use this queue to run jobs of up to 4 hours. Wait times in standby will vary wildly (minutes to days) depending on cluster utilization and how many nodes your jobs request.
-
-----
-
-You have a home directory that is shared across all {{ config('app.name') }} resources. This space has a quota of 25GB.
-
-Scratch space is also available for storing large input and output data during computations. This space offers both a much larger quota and better performance than your home directory. **There is no backup service for scratch directories and files not accessed or modified in the [last 60 days will be removed]({{ route('page', ['uri' => 'policies/scratchpurge']) }}). Files in scratch directories are not recoverable if they are purged or accidentally deleted.** You will receive a warning email one week in advance of files being purged as a reminder to back up files. This space has the following quotas:
-
-@foreach ($activity as $resourceid => $data)
-@if ($data->storage)
-* {{ $data->resource->name }}: {{ $data->storage->space }} space; {{ $data->storage->files }} files
 @endif
-@endforeach
 
-You can also see this list with the `myquota` command.
+@if ($scratch)
+### Scratch Space
+Scratch space is also available for storing large input and output data during computations. This space offers both a much larger quota and better performance than your home directory.
 
-Long-term archival space is also offered via the Fortress HPSS Archival system. Fortress stores files on a tape library and uses a tape robot to retrieve and store these files upon request. Further information on using Fortress can be found in the [user guide](https://www.rcac.purdue.edu/storage/fortress/guide/).
+<p class="alert alert-warning">There is no backup service for scratch directories and files not accessed or modified in the [last 60 days will be removed]({{ route('page', ['uri' => 'policies/scratchpurge']) }}). Files in scratch directories are not recoverable if they are purged or accidentally deleted.</p>
+@endif
+
+### Archival Space
+
+Long-term archival space is also offered via the Fortress HPSS Archival system. Fortress stores files on a tape library and uses a tape robot to retrieve and store these files upon request. Further information on using Fortress can be found in the [user guide]({{ route('site.knowledge.page', ['uri' => 'fortress']) }}).
 
 ----
 
 Please also review the [acceptable use]({{ route('page', ['uri' => 'policies/resourceuse']) }}), [data]({{ route('page', ['uri' => 'policies/dataaccess']) }}), [quota]({{ route('page', ['uri' => 'policies/defaultquotas']) }}), [scratch purge policies]({{ route('page', ['uri' => 'policies/scratchpurge']) }}), and [other policies]({{ route('page', ['uri' => 'policies']) }}).
+
+<div class="alert alert-info">
+<h3>Need Help?</h3>
+
+<p>Informal, one-on-one help is available from Research Computing staff at <a href="{{ route('page', ['uri' => 'coffee']) }}">Coffee Break Consultations</a>. Check the schedule for available times.</p>
+</div>
 @endcomponent
