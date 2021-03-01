@@ -64,7 +64,7 @@ app('pathway')
 	@endif
 
 	<div class="row">
-		<div class="col col-md-7">
+		<div class="col-md-7">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
@@ -120,7 +120,7 @@ app('pathway')
 				</div>
 			</fieldset>
 		</div>
-		<div class="col col-md-5 span5">
+		<div class="col-md-5">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.publishing') }}</legend>
 
@@ -199,23 +199,37 @@ app('pathway')
 						</div>
 					</div>
 				</fieldset>
-
-				<!-- <div class="form-group">
-					<label for="params-show_title">{{ trans('knowledge::knowledge.show title') }}:</label><br />
-					<select class="form-control" name="params[show_title]" id="params-show_title">
-						<option value="0"<?php if (!$page->params->get('show_title')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
-						<option value="1"<?php if ($page->params->get('show_title')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
-					</select>
-				</div>
-
-				<div class="form-group">
-					<label for="params-show_toc">{{ trans('knowledge::knowledge.show toc') }}:</label><br />
-					<select class="form-control" name="params[show_toc]" id="params-show_toc">
-						<option value="0"<?php if (!$page->params->get('show_toc')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
-						<option value="1"<?php if ($page->params->get('show_toc')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
-					</select>
-				</div> -->
 			</fieldset>
+
+			@if (config('module.knowledge.collect_feedback', true))
+				<fieldset class="adminform">
+					<legend>{{ trans('knowledge::knowledge.feedback') }}</legend>
+
+					<div class="row">
+						<div class="col-md-4">
+							<span class="text-success">Positive</span>
+							<span class="text-lg">{{ $row->positiveRating }}%</span>
+							<div class="progress" style="height: 2px;">
+								<div class="progress-bar bg-success" role="progressbar" style="width: {{ $row->positiveRating }}%" aria-valuenow="{{ $row->positiveRating }}" aria-valuemin="0" aria-valuemax="100"></div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<span class="text-neutral">Neutral</span>
+							<span class="text-lg">{{ $row->neutralRating }}%</span>
+							<div class="progress" style="height: 2px;">
+								<div class="progress-bar" role="progressbar" style="width: {{ $row->neutralRating }}%" aria-valuenow="{{ $row->neutralRating }}" aria-valuemin="0" aria-valuemax="100"></div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<span class="text-danger">Negative</span>
+							<span class="text-lg">{{ $row->negativeRating }}%</span>
+							<div class="progress" style="height: 2px;">
+								<div class="progress-bar bg-danger" role="progressbar" style="width: {{ $row->negativeRating }}%" aria-valuenow="{{ $row->negativeRating }}" aria-valuemin="0" aria-valuemax="100"></div>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			@endif
 
 			@sliders('start', 'module-sliders')
 				@sliders('panel', trans('knowledge::knowledge.variables'), 'params-variables')

@@ -193,22 +193,6 @@ $(document).ready(function() {
 							{{ Illuminate\Support\Str::limit($row->title, 70) }}
 						</span>
 					@endif
-					@if (config('module.knowledge.collect_feedback', true))
-						@php
-						$assoc = App\Modules\Knowledge\Models\Associations::find($row->id);
-						@endphp
-						<div class="progress" style="height: 2px;">
-							@if ($assoc->positiveRating)
-								<div class="progress-bar bg-success" role="progressbar" style="width: {{ $assoc->positiveRating }}%" aria-valuenow="{{ $assoc->positiveRating }}" aria-valuemin="0" aria-valuemax="100"></div>
-							@endif
-							@if ($assoc->neutralRating)
-								<div class="progress-bar" role="progressbar" style="width: {{ $assoc->neutralRating }}%" aria-valuenow="{{ $assoc->neutralRating }}" aria-valuemin="0" aria-valuemax="100"></div>
-							@endif
-							@if ($assoc->negativeRating)
-								<div class="progress-bar bg-danger" role="progressbar" style="width: {{ $assoc->negativeRating }}%" aria-valuenow="{{ $assoc->negativeRating }}" aria-valuemin="0" aria-valuemax="100"></div>
-							@endif
-						</div>
-					@endif
 				</td>
 				<td>
 					/{{ trim($row->path, '/') }}

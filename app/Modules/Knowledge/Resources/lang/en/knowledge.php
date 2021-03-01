@@ -55,4 +55,5 @@ return [
 	'options' => 'Options',
 	'ordering' => 'Ordering',
 	'all levels' => '- All Levels -',
+	'feedback' => 'Feedback',
 ];
