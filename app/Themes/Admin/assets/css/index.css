@@ -67,6 +67,9 @@
   --page-link-bg: #fff;
   --page-link-br: #dee2e6;
   --page-link: #333;
+  --page-link-bg-disabled: #fff;
+  --page-link-br-disabled: #dee2e6;
+  --page-link-disabled: #6c757d;
   --indicator: #ddd;
   --table-br: #e8e8e8;
   --table: #656565;
@@ -139,6 +142,9 @@
   --page-link-bg: rgba(255, 255, 255, 0.1);
   --page-link-br: #1c1b21;
   --page-link: #888;
+  --page-link-bg-disabled: rgba(255, 255, 255, 0.05);
+  --page-link-br-disabled: #1c1b21;
+  --page-link-disabled: #6c757d;
   --indicator: #555;
   --table-br: #1d1d24;
   --table: #999;
@@ -3531,15 +3537,15 @@ div.current li {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: 5px 2em 2em 2em;
-  background-color: var(--panel);
   border-radius: 0.5em;
   padding: 0 0.8em 0 1.8em;
 /*-webkit-box-shadow: 0px 2px 4px rgba(31,30,47,0.1);
 box-shadow: 0px 2px 4px 0 rgba(31,30,47,0.1);
-
-
 border: 1px solid rgba(0,0,0,.125);
   border: 1px solid #d7d7d7;*/
+  background-color: var(--panel);
+  border-color: var(--panel-border);
+  color: var(--input-color);
   border: 1px solid rgba(0,0,0,.125);
 }
 .toolbar-box .pagetitle h2 {
@@ -3992,11 +3998,11 @@ border: 1px solid rgba(0,0,0,.125);
   margin: 0;
   padding: 1.5em 0;
   background-color: transparent;
-  /*color: #444;*/
   font-size: 0.85em;
+  /*font-weight: bold;*/
 }
 .breadcrumb-item+.breadcrumb-item::before {
-  color: #ccc;
+  color: rgba(200, 200, 200, 0.75);
 }
 .breadcrumb .row,
 .breadcrumb .col-md-12,
@@ -5050,8 +5056,7 @@ a.menulist:hover:before {
   }
 
   fieldset.adminform,
-  .card,
-  .toolbar-box .pagetitle {
+  .card {
     background-color: var(--panel);
     border-color: var(--panel-border);
     color: var(--input-color);
@@ -5249,9 +5254,9 @@ a.menulist:hover:before {
     border-color: var(--page-link-br);
   }
   .page-item.disabled .page-link {
-    color: #6c757d;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-color: #1c1b21;
+    color: var(--page-link-disabled);
+    background-color: var(--page-link-bg-disabled);
+    border-color: var(--page-link-br-disabled);
   }
   .page-item.active .page-link {
     background-color: rgba(92, 192, 215, 0.2);
