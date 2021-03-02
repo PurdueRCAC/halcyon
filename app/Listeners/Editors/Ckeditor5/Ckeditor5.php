@@ -71,7 +71,7 @@ class Ckeditor5
 		$config = json_encode($this->buildConfig($params));
 
 		app('view')->addNamespace(
-			'listener.editor.ckeditor',
+			'listener.editor.ckeditor5',
 			app_path() . '/Listeners/Editors/Ckeditor5/views'
 		);
 
@@ -96,7 +96,7 @@ class Ckeditor5
 	{
 		// Object to hold our final config
 		$config = new stdClass;
-		$config->autoParagraph = false;
+		/*$config->autoParagraph = false;
 		$config->startupMode                   = 'wysiwyg';
 		$config->tabSpaces                     = 4;
 		$config->height                        = '200px';
@@ -319,7 +319,7 @@ class Ckeditor5
 		//$config->skin = $params->get('skin', 'moono');
 
 		// Let the global filters handle what HTML tags are or aren't allowed
-		$config->allowedContent = true;
+		$config->allowedContent = true;*/
 
 		return $config;
 	}

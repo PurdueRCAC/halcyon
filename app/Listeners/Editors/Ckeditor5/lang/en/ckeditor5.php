@@ -1,5 +1,5 @@
 <?php
 return [
-	'listener name' => 'Editor - CKEditor',
-	'listener desc' => 'This plugin loads the CKEditor editor.',
+	'listener name' => 'Editor - CKEditor 5',
+	'listener desc' => 'This loads the CKEditor 5 editor.',
 ];
