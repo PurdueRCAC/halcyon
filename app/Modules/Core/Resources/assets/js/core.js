@@ -392,6 +392,9 @@ Halcyon.saveOrder = function(n, task) {
  * @return  bool
  */
 Halcyon.hasClass = function(el, className) {
+	if (!el || !className) {
+		return false;
+	}
 	return el.classList ? el.classList.contains(className) : new RegExp('\\b'+ className+'\\b').test(el.className);
 }
 
@@ -403,6 +406,9 @@ Halcyon.hasClass = function(el, className) {
  * @return  bool
  */
 Halcyon.addClass = function(el, className) {
+	if (!el) {
+		return;
+	}
 	if (el.classList) {
 		el.classList.add(className);
 	} else if (!Halcyon.hasClass(el, className)) {
@@ -418,6 +424,9 @@ Halcyon.addClass = function(el, className) {
  * @return  bool
  */
 Halcyon.removeClass = function(el, className) {
+	if (!el) {
+		return;
+	}
 	if (el.classList) {
 		el.classList.remove(className);
 	} else {
