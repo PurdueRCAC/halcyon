@@ -36,13 +36,15 @@ var Roles = {
 								cell.setAttribute('data-loading', true);
 								cell.appendChild(image);
 
-								console.log(cell.getAttribute('data-api') +  "/" + resource + "." + userid);
+								//console.log(cell.getAttribute('data-api') +  "/" + resource + "." + userid);
 
 								WSGetURL(cell.getAttribute('data-api') +  "/" + resource + "." + userid, Roles.PopulateRole, results.data[count]['id']);
 							}
 						}
 					}
 				}
+			} else {
+				console.log(xml.responseText);
 			}
 		}
 	},
