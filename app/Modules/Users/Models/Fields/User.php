@@ -1,5 +1,5 @@
 <?php
-namespace App\Halcyon\Form\Fields;
+namespace App\Modules\Users\Models\Fields;
 
 use App\Halcyon\Form\Field;
 use App\Modules\Users\Models\User as UserModel;

@@ -1,5 +1,5 @@
 <?php
-namespace App\Halcyon\Form\Fields;
+namespace App\Modules\Users\Models\Fields;
 
 use App\Halcyon\Form\Field;
 use App\Halcyon\Html\Builder\Select as Dropdown;
@@ -30,7 +30,7 @@ class Usergroup extends Field
 		$attr = '';
 
 		// Initialize some field attributes.
-		$attr .= $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
+		$attr .= $this->element['class'] ? ' class="form-control ' . (string) $this->element['class'] . '"' : ' class="form-control"';
 		$attr .= ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
 		$attr .= $this->element['size'] ? ' size="' . (int) $this->element['size'] . '"' : '';
 		$attr .= $this->multiple ? ' multiple="multiple"' : '';
