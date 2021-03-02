@@ -2596,10 +2596,10 @@ border-bottom: 1px solid #d7d7d7;
 .ui-autocomplete {
   z-index: 1000 !important;
 }
-.ui-accordion .ui-accordion-header {
+/*.ui-accordion .ui-accordion-header {
   background-color: #fff;
   border-color: #d7d7d7;
-}
+}*/
 .ui-accordion .ui-accordion-header .badge {
   position: absolute;
   right: 1em;
@@ -5320,6 +5320,8 @@ a.menulist:hover:before {
     border-color: transparent;
   }
 */
+  .ui-tabs .ui-accordion .ui-state-default.ui-accordion-header,
+  .ui-tabs .ui-widget-content .ui-accordion .ui-state-default.ui-accordion-header,
   .ui-accordion .ui-accordion-header {
     background-color: var(--accordian-body);
     border-color: transparent;
@@ -5392,6 +5394,20 @@ a.menulist:hover:before {
   .ui-tabs .ui-state-active a:link,
   .ui-tabs .ui-state-active a:visited {
     color: var(--tab-active);
+  }
+
+  .ui-datepicker-calendar thead th:first-child,
+  .ui-datepicker-calendar thead th:last-child,
+  .ui-datepicker-calendar thead th {
+    border-color: transparent;
+    background-color: transparent;
+  }
+  .ui-datepicker-calendar .ui-datepicker-unselectable,
+  .ui-datepicker-calendar .ui-datepicker-unselectable:hover,
+  .ui-datepicker-calendar tbody tr td:first-child,
+  .ui-datepicker-calendar tbody td {
+    border-color: transparent;
+    background-color: transparent;
   }
 
   /*#header .user-options li:before {
