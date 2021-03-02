@@ -57,7 +57,7 @@ app('pathway')
 	@endif
 @endcomponent
 
-<form action="{{ route('admin.users.roles.update') }}" id="component-form" method="post" name="adminForm" id="adminForm">
+<form action="{{ route('admin.users.roles.update') }}" method="post" name="adminForm" id="adminForm">
 
 	<div id="permissions-sliders" class="pane-sliders">
 		<div id="permissions-rules">
@@ -174,6 +174,7 @@ app('pathway')
 		</div>
 	</div>
 
+	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="id" value="{{ $assetId }}" />
 
 	@csrf
