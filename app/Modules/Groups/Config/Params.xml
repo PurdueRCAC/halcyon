@@ -12,7 +12,7 @@
 			label="access.permissions"
 			filter="rules"
 			validate="rules"
-			module="history"
+			module="groups"
 			section="module" />
 	</fieldset>
 </config>

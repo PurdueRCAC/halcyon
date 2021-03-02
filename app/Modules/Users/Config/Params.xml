@@ -52,8 +52,7 @@
 			<option
 				value="1">global.yes</option>
 		</field>
-	</fieldset>
-	<fieldset name="basic">
+
 		<field name="defaultpic" type="text" menu="hide" default="/modules/users/images/profile.gif" label="Default picture" description="Default placeholder image for user pictures" />
 	</fieldset>
 	<fieldset name="permissions" label="access.permissions" description="access.permissions description">
