@@ -48,7 +48,7 @@ class Role extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'title' => 'notempty'
+		'title' => 'required|string|max:100'
 	);
 
 	/**
@@ -148,7 +148,7 @@ class Role extends Model
 	 *
 	 * @param   integer  $parent_id  The root of the tree to rebuild.
 	 * @param   integer  $left       The left id to start with in building the tree.
-	 * @return  boolean  True on success
+	 * @return  integer
 	 */
 	public function rebuild($parent_id = 0, $left = 0)
 	{
@@ -169,10 +169,10 @@ class Role extends Model
 			$right = $this->rebuild($child->id, $right);
 
 			// if there is an update failure, return false to break out of the recursion
-			if ($right === false)
+			/*if ($right === false)
 			{
 				return false;
-			}
+			}*/
 		}
 
 		// we've got the left value, and now that we've processed
@@ -185,10 +185,10 @@ class Role extends Model
 			));
 
 		// if there is an update failure, return false to break out of the recursion
-		if (!$result)
+		/*if (!$result)
 		{
 			return false;
-		}
+		}*/
 
 		// return the right value of this node + 1
 		return $right + 1;
@@ -319,6 +319,7 @@ class Role extends Model
 			})
 			->leftJoin($map->getTable() . ' AS m', 'm.role_id', 'a.id')
 			->groupBy('a.id', 'a.title', 'a.lft', 'a.rgt', 'a.parent_id')
+			->orderBy('a.lft', 'asc')
 			->get();
 
 		return $results;
