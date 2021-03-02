@@ -56,52 +56,44 @@ class FieldsOfScienceController extends Controller
 			}
 			else
 			{
-				$filters['search'] = strtolower((string)$filters['search']);
+				/*$filters['search'] = strtolower((string)$filters['search']);
 
-				$query->where('name', 'like', '%' . $filters['search'] . '%');
+				$query->where('name', 'like', '%' . $filters['search'] . '%');*/
+
+				$query->where(function($where) use ($filters)
+				{
+					$search = strtolower((string)$filters['search']);
+					$skipmiddlename = preg_replace('/ /', '% ', $search);
+
+					$where->where('name', 'like', '% ' . $search . '%')
+						->orWhere('name', 'like', $search . '%')
+						->orWhere('name', 'like', '% ' . $skipmiddlename . '%')
+						->orWhere('name', 'like', $skipmiddlename . '%');
+				});
 			}
 
-			if ($filters['parent'])
+			/*if ($filters['parent'])
 			{
 				$query->where('parentid', '=', $filters['parent']);
-			}
+			}*/
+			$query->where('parentid', '>', 0);
 
 			$rows = $query
 				->orderBy($filters['order'], $filters['order_dir'])
 				->get();
+
+			$total = count($rows);
+
+			$rows = $rows->slice($filters['start'], $filters['limit']);
 		}
 		else
 		{
 			$rows = FieldOfScience::tree($filters['order'], $filters['order_dir']);
 			$root = array_shift($rows);
+
+			$total = count($rows);
+			$rows = array_slice($rows, $filters['start'], $filters['limit']);
 		}
-
-		/*$rows = $query
-			->withCount('groups')
-			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'], ['*'], 'page', $filters['page']);*/
-
-		$total = count($rows);
-		/*$levellimit = ($filters['limit'] == 0) ? 500 : $filters['limit'];
-		$list       = array();
-		$children   = array();
-
-		if ($rows)
-		{
-			// First pass - collect children
-			foreach ($rows as $k)
-			{
-				$pt = $k->parentid;
-				$list = @$children[$pt] ? $children[$pt] : array();
-				array_push($list, $k);
-				$children[$pt] = $list;
-			}
-
-			// Second pass - get an indent list of the items
-			$list = $this->treeRecurse(0, '', array(), $children, max(0, $levellimit-1));
-		}*/
-
-		$rows = array_slice($rows, $filters['start'], $filters['limit']);
 
 		$paginator = new \Illuminate\Pagination\LengthAwarePaginator($rows, $total, $filters['limit'], $filters['page']);
 		$paginator->withPath(route('admin.groups.fieldsofscience'));

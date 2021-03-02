@@ -56,29 +56,45 @@ class DepartmentsController extends Controller
 			}
 			else
 			{
-				$filters['search'] = strtolower((string)$filters['search']);
+				/*$filters['search'] = strtolower((string)$filters['search']);
 
-				$query->where('name', 'like', '%' . $filters['search'] . '%');
+				$query->where('name', 'like', '%' . $filters['search'] . '%');*/
+
+				$query->where(function($where) use ($filters)
+				{
+					$search = strtolower((string)$filters['search']);
+					$skipmiddlename = preg_replace('/ /', '% ', $search);
+
+					$where->where('name', 'like', '% ' . $search . '%')
+						->orWhere('name', 'like', $search . '%')
+						->orWhere('name', 'like', '% ' . $skipmiddlename . '%')
+						->orWhere('name', 'like', $skipmiddlename . '%');
+				});
 			}
 
-			if ($filters['parent'])
+			/*if ($filters['parent'])
 			{
 				$query->where('parentid', '=', $filters['parent']);
-			}
+			}*/
+			$query->where('parentid', '>', 0);
 
 			$rows = $query
 				->orderBy($filters['order'], $filters['order_dir'])
 				->get();
+
+			$total = count($rows);
+
+			$rows = $rows->slice($filters['start'], $filters['limit']);
 		}
 		else
 		{
 			$rows = Department::tree($filters['order'], $filters['order_dir']);
 			$root = array_shift($rows);
+
+			$total = count($rows);
+
+			$rows = array_slice($rows, $filters['start'], $filters['limit']);
 		}
-
-		$total = count($rows);
-
-		$rows = array_slice($rows, $filters['start'], $filters['limit']);
 
 		$paginator = new \Illuminate\Pagination\LengthAwarePaginator($rows, $total, $filters['limit'], $filters['page']);
 		$paginator->withPath(route('admin.groups.departments'));

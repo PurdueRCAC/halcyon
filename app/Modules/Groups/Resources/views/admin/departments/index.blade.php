@@ -100,7 +100,9 @@ app('pathway')
 					@endif
 				</td>
 				<td>
-					<span class="gi">{!! str_repeat('|&mdash;', $row->level - 1) !!}</span>
+					@if ($row->level > 0)
+						<span class="gi">{!! str_repeat('|&mdash;', $row->level - 1) !!}</span>
+					@endif
 					@if (auth()->user()->can('edit groups'))
 						<a href="{{ route('admin.groups.departments.edit', ['id' => $row->id]) }}">
 					@endif
