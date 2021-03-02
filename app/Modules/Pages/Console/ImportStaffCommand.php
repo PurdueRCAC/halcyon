@@ -20,7 +20,7 @@ class ImportStaffCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Process auto-renewable orders';
+	protected $description = 'Import old portal staff pages';
 
 	/**
 	 * Execute the console command.
