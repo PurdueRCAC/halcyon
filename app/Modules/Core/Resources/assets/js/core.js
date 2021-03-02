@@ -842,6 +842,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			$('#permissions-rules .stop-propagation').on('click', function(e) {
 				e.stopPropagation();
 			});
+			$('.tabs').tabs();
 		});
 	});
 
