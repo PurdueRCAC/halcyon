@@ -232,21 +232,21 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 						{{ $row->title }}
 					@endif
 					@if ($row->type != 'separator')
-						<p class="smallsub" title="{{ $row->path }}">
+						<div class="smallsub" title="{{ $row->path }}">
 							{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level - 1) !!}
 							@if ($row->type != 'url')
 								@if (empty($row->note))
-									/{{ trim($row->link, '/') }}
+									<span class="text-muted">/{{ trim($row->link, '/') }}</span>
 								@else
 									{!! trans('global.LIST_ALIAS_NOTE', ['alias' => $row->alias, 'note' => $row->note]) !!}
 								@endif
 							@elseif ($row->type == 'url')
-								{{ $row->link }}
+								<span class="text-muted">{{ $row->link }}</span>
 								@if ($row->note)
 									{!! trans('global.LIST_NOTE', ['note' => $row->note]) !!}
 								@endif
 							@endif
-						</p>
+						</div>
 					@endif
 				</td>
 				<td class="text-center priority-3">
