@@ -135,23 +135,23 @@ app('pathway')
 									<td headers="aclactionth{{ $role->value }}">
 									@if (App\Halcyon\Access\Gate::checkRole($role->value, 'admin', $assetId) !== true)
 										@if ($inheritedRule === null)
-											<span class="state no icon-unset">{{ trans('access.rules.not allowed') }}</span>
+											<span class="badge badge-warning">{{ trans('access.rules.not allowed') }}</span>
 										@elseif ($inheritedRule === true)
-											<span class="state yes icon-allowed">{{ trans('access.rules.allowed') }}</span>
+											<span class="badge badge-success">{{ trans('access.rules.allowed') }}</span>
 										@elseif ($inheritedRule === false)
 											@if ($assetRule === false)
-												<span class="state no icon-denied">{{ trans('access.rules.not allowed') }}</span>
+												<span class="badge badge-danger">{{ trans('access.rules.not allowed') }}</span>
 											@else
-												<span class="state no icon-denied"><span class="fa fa-lock"></span> {{ trans('access.rules.not allowed locked') }}</span>
+												<span class="badge badge-danger"><span class="fa fa-lock"></span> {{ trans('access.rules.not allowed locked') }}</span>
 											@endif
 										@endif
 									@else
 										@if ($action['name'] === 'admin')
-											<span class="state yes icon-allowed">{{ trans('access.rules.allowed') }}</span>
+											<span class="badge badge-success">{{ trans('access.rules.allowed') }}</span>
 										@elseif ($inheritedRule === false)
-											<span class="state no icon-denied"><span class="fa fa-lock"> {{ trans('access.rules.not allowed admin conflict') }}</span></span>
+											<span class="badge badge-danger"><span class="fa fa-lock"> {{ trans('access.rules.not allowed admin conflict') }}</span></span>
 										@else
-											<span class="state yes icon-allowed"><span class="fa fa-lock"> {{ trans('access.rules.allowed admin') }}</span></span>
+											<span class="badge badge-success"><span class="fa fa-lock"> {{ trans('access.rules.allowed admin') }}</span></span>
 										@endif
 									@endif
 									</td>
