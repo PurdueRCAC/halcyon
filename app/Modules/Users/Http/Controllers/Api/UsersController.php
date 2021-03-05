@@ -511,8 +511,9 @@ class UsersController extends Controller
 			{
 				$facet = Facet::findByUserAndKey($user->id, $key);
 				$facet = $facet ?: new Facet;
-				$facet->key   = $key;
-				$facet->value = $value;
+				$facet->user_id = $user->id;
+				$facet->key     = $key;
+				$facet->value   = $value;
 				$facet->save();
 			}
 		}
