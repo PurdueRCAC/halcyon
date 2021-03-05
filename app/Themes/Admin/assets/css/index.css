@@ -5075,7 +5075,7 @@ a.menulist:hover:before {
   }*/
   .list-group-item {
     background-color: transparent;
-    border-color: #1d1d24;
+    border-color: var(--panel-border);
     color: var(--input-color);
   }
 
@@ -5104,11 +5104,6 @@ a.menulist:hover:before {
   fieldset.adminform fieldset {
     border-color: rgba(255, 255, 255, 0.1);
   }*/
-  html .select2-container--default .select2-results__option[aria-selected=true],
-  .form-control:focus {
-    background-color: var(--input-back-focus);
-    border-color: var(--input-border-focus);
-  }
   /*html .select2-container--default .select2-selection--single .select2-selection__rendered {
     color: #fff;
   }
@@ -5123,6 +5118,12 @@ a.menulist:hover:before {
   html .select2-container--default .select2-selection--multiple {
     background-color: var(--input-back);
     border-color: var(--input-border);
+    color: var(--input-color);
+  }
+  html .select2-container--default .select2-results__option[aria-selected=true],
+  .form-control:focus {
+    background-color: var(--input-back-focus);
+    border-color: var(--input-border-focus);
     color: var(--input-color);
   }
   /*.form-control-plaintext {
