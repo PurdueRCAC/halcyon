@@ -23,41 +23,63 @@ class TypesController extends Controller
 	 * @apiUri    /api/queues/types
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "limit",
-	 *      "description":   "Number of result to return.",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       25
-	 * }
-	 * @apiParameter {
-	 *      "name":          "page",
-	 *      "description":   "Number of where to start returning results.",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       0
-	 * }
-	 * @apiParameter {
 	 *      "name":          "search",
 	 *      "description":   "A word or phrase to search for.",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "order",
-	 *      "description":   "Field to sort results by.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       "created",
-	 *      "allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result to return.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   20
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "order_dir",
-	 *      "description":   "Direction to sort results by.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       "desc",
-	 *      "allowedValues": "asc, desc"
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimestart",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"parentid",
+	 * 				"datetimescreated",
+	 * 				"datetimeremoved"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -68,7 +90,7 @@ class TypesController extends Controller
 			'search'   => $request->input('search', ''),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
-			//'start' => $request->input('limitstart', 0),
+			'page'     => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'name'),
 			'order_dir' => $request->input('order_dir', 'asc')
@@ -90,7 +112,7 @@ class TypesController extends Controller
 		$rows = $query
 			->withCount('queues')
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		return new ResourceCollection($rows);
@@ -103,11 +125,14 @@ class TypesController extends Controller
 	 * @apiUri    /api/queues/types
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the queue type",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"name":          "name",
+	 * 		"description":   "The name of the queue type",
+	 * 		"type":          "string",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 20
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -130,11 +155,13 @@ class TypesController extends Controller
 	 * @apiUri    /api/queues/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response
@@ -153,18 +180,22 @@ class TypesController extends Controller
 	 * @apiUri    /api/queues/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 *      "name":          "name",
 	 *      "description":   "The name of the queue type",
-	 *      "type":          "string",
 	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 20
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
@@ -190,11 +221,13 @@ class TypesController extends Controller
 	 * @apiUri    /api/queues/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response

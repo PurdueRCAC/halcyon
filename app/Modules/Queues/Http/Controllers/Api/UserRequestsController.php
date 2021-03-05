@@ -103,7 +103,7 @@ class UserRequestsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @param   Request  $request
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -113,6 +113,7 @@ class UserRequestsController extends Controller
 			'queueid'   => $request->input('queueid', 0),
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'     => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'datetimecreated'),
 			'order_dir' => $request->input('order_dir', 'desc')
@@ -143,7 +144,7 @@ class UserRequestsController extends Controller
 
 		$rows = $query
 			->orderBy($u . '.' . $filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		return new UserRequestResourceCollection($rows);

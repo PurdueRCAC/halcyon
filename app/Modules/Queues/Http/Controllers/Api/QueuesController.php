@@ -29,50 +29,113 @@ class QueuesController extends Controller
 	 * @apiUri    /api/queues
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "limit",
-	 * 		"description":   "Number of result to return.",
-	 * 		"type":          "integer",
+	 * 		"name":          "state",
+	 * 		"description":   "Queue state.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "enabled",
+	 * 			"enum": [
+	 * 				"enabled",
+	 * 				"disabled",
+	 * 				"trashed"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "type",
+	 * 		"description":   "Queue type ID.",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   25
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "scheduler",
+	 * 		"description":   "Scheduler type ID.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "resource",
+	 * 		"description":   "Resource ID.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "subresource",
+	 * 		"description":   "Subresource ID.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result to return.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   20
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "search",
-	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "created",
-	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved",
+	 * 				"parentid"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -95,7 +158,7 @@ class QueuesController extends Controller
 			'class' => $request->input('class'),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
-			//'start' => $request->input('limitstart', 0),
+			'page'     => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', Queue::$orderBy),
 			'order_dir' => $request->input('order_dir', Queue::$orderDir)
@@ -201,7 +264,7 @@ class QueuesController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		return new QueueResourceCollection($rows);
@@ -216,9 +279,10 @@ class QueuesController extends Controller
 	 * 		"in":            "body",
 	 *      "name":          "name",
 	 *      "description":   "The name of the queue type",
-	 *      "type":          "string",
 	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -226,7 +290,34 @@ class QueuesController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'name' => 'required|string|max:64'
+			'schedulerid'      => 'nullable|integer',
+			'subresourceid'    => 'nullable|integer',
+			'name'             => 'required|string|max:64',
+			'groupid'          => 'nullable|integer',
+			'queuetype'        => 'required|integer',
+			'automatic'        => 'nullable|integer',
+			'free'             => 'nullable|integer',
+			'schedulerpolicyid' => 'nullable|integer',
+			'enabled'          => 'nullable|integer',
+			'started'          => 'nullable|integer',
+			'reservation'      => 'nullable|integer',
+			'cluster'          => 'nullable|string|max:32',
+			'priority'         => 'nullable|integer',
+			'defaultwalltime'  => 'nullable|integer',
+			'maxjobsqueued'    => 'nullable|integer',
+			'maxjobsqueueduser' => 'nullable|integer',
+			'maxjobsrun'       => 'nullable|integer',
+			'maxjobsrunuser'   => 'nullable|integer',
+			'maxjobscore'      => 'nullable|integer',
+			'nodecoresdefault' => 'nullable|integer',
+			'nodecoresmin'     => 'nullable|integer',
+			'nodecoresmax'     => 'nullable|integer',
+			'nodememmin'       => 'nullable|string|max:5',
+			'nodememmax'       => 'nullable|string|max:5',
+			'aclusersenabled'  => 'nullable|integer',
+			'aclgroups'        => 'nullable|string|max:255',
+			'maxijobfactor'    => 'nullable|integer',
+			'maxijobuserfactor' => 'nullable|integer',
 		]);
 
 		$queue = Queue::create($request->all());
@@ -303,10 +394,11 @@ class QueuesController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "name",
-	 *      "description":   "The name of the queue type",
-	 *      "type":          "string",
+	 *      "description":   "The name of the queue",
 	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
@@ -315,8 +407,34 @@ class QueuesController extends Controller
 	public function update($id, Request $request)
 	{
 		$request->validate([
-			'name' => 'nullable|string|max:64',
-			'datetimelastseen' => 'nullable|date'
+			'schedulerid'      => 'nullable|integer',
+			'subresourceid'    => 'nullable|integer',
+			'name'             => 'nullable|string|max:64',
+			'groupid'          => 'nullable|integer',
+			'queuetype'        => 'nullable|integer',
+			'automatic'        => 'nullable|integer',
+			'free'             => 'nullable|integer',
+			'schedulerpolicyid' => 'nullable|integer',
+			'enabled'          => 'nullable|integer',
+			'started'          => 'nullable|integer',
+			'reservation'      => 'nullable|integer',
+			'cluster'          => 'nullable|string|max:32',
+			'priority'         => 'nullable|integer',
+			'defaultwalltime'  => 'nullable|integer',
+			'maxjobsqueued'    => 'nullable|integer',
+			'maxjobsqueueduser' => 'nullable|integer',
+			'maxjobsrun'       => 'nullable|integer',
+			'maxjobsrunuser'   => 'nullable|integer',
+			'maxjobscore'      => 'nullable|integer',
+			'nodecoresdefault' => 'nullable|integer',
+			'nodecoresmin'     => 'nullable|integer',
+			'nodecoresmax'     => 'nullable|integer',
+			'nodememmin'       => 'nullable|string|max:5',
+			'nodememmax'       => 'nullable|string|max:5',
+			'aclusersenabled'  => 'nullable|integer',
+			'aclgroups'        => 'nullable|string|max:255',
+			'maxijobfactor'    => 'nullable|integer',
+			'maxijobuserfactor' => 'nullable|integer',
 		]);
 
 		$queue = Queue::findOrFail($id);

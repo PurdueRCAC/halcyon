@@ -67,6 +67,7 @@ class SchedulerPoliciesController extends Controller
 			'search' => $request->input('search'),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
+			'page'     => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'name'),
 			'order_dir' => $request->input('order_dir', 'desc')
@@ -86,7 +87,7 @@ class SchedulerPoliciesController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		return new ResourceCollection($rows);
@@ -98,11 +99,14 @@ class SchedulerPoliciesController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /api/queues/schedulerpolicies
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 *      "name":          "name",
 	 *      "description":   "The policy name",
-	 *      "type":          "string",
 	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 64
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -124,11 +128,13 @@ class SchedulerPoliciesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/queues/schedulerpolicies/{id}
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the scheduler policy",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response
@@ -146,18 +152,22 @@ class SchedulerPoliciesController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /api/queues/schedulerpolicies/{id}
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the scheduler policy",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
-	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The policy name",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "name",
+	 * 		"description":   "The policy name",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 64
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
@@ -182,11 +192,13 @@ class SchedulerPoliciesController extends Controller
 	 * @apiMethod DELETE
 	 * @apiUri    /api/queues/schedulerpolicies/{id}
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the scheduler policy",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response

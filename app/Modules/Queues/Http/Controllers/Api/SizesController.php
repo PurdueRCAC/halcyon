@@ -26,11 +26,10 @@ class SizesController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   25
+	 * 			"default":   20
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -43,9 +42,10 @@ class SizesController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order",
@@ -81,6 +81,7 @@ class SizesController extends Controller
 			'sellerqueueid' => $request->input('sellerqueueid', 0),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
+			'page'     => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'datetimestart'),
 			'order_dir' => $request->input('order_dir', 'desc')
@@ -122,7 +123,7 @@ class SizesController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		return new ResourceCollection($rows);
@@ -135,11 +136,71 @@ class SizesController extends Controller
 	 * @apiUri    /api/queues/sizes
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the queue type",
-	 *      "type":          "string",
+	 * 		"in":            "body",
+	 *      "name":          "queueid",
+	 *      "description":   "ID of the queue being sold to",
 	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "sellerqueueid",
+	 *      "description":   "ID of the seller queue",
+	 *      "required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "datetimestart",
+	 *      "description":   "Date/time of when the loan starts",
+	 *      "required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "datetimestop",
+	 *      "description":   "Date/time of when the loan stops",
+	 *      "required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "nodecount",
+	 *      "description":   "Node count",
+	 *      "required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "corecount",
+	 *      "description":   "Core count",
+	 *      "required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "comment",
+	 *      "description":   "Comment",
+	 *      "required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @param  Request  $request
 	 * @return Response
@@ -275,11 +336,71 @@ class SizesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the queue type",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 *      "name":          "queueid",
+	 *      "description":   "ID of the queue being sold to",
+	 *      "required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "sellerqueueid",
+	 *      "description":   "ID of the seller queue",
+	 *      "required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "datetimestart",
+	 *      "description":   "Date/time of when the loan starts",
+	 *      "required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "datetimestop",
+	 *      "description":   "Date/time of when the loan stops",
+	 *      "required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "nodecount",
+	 *      "description":   "Node count",
+	 *      "required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "corecount",
+	 *      "description":   "Core count",
+	 *      "required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "comment",
+	 *      "description":   "Comment",
+	 *      "required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request

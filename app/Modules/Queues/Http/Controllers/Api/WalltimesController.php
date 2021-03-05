@@ -70,7 +70,7 @@ class WalltimesController extends Controller
 			'datetimestop' => $request->input('datetimestop'),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
-			//'start' => $request->input('limitstart', 0),
+			'page'     => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'id'),
 			'order_dir' => $request->input('order_dir', 'desc')
@@ -100,7 +100,7 @@ class WalltimesController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		return new ResourceCollection($rows);

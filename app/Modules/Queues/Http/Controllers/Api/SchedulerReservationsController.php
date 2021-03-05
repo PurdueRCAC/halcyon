@@ -17,7 +17,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class SchedulerReservationsController extends Controller
 {
 	/**
-	 * Display a listing of queue schedulers
+	 * Display a listing of queue scheduler reservations
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/queues/schedulerreservations
@@ -67,6 +67,7 @@ class SchedulerReservationsController extends Controller
 			'search' => $request->input('search'),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
+			'page'     => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'name'),
 			'order_dir' => $request->input('order_dir', 'desc')
@@ -86,23 +87,58 @@ class SchedulerReservationsController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		return new ResourceCollection($rows);
 	}
 
 	/**
-	 * Create a queue scheduler policy
+	 * Create a queue scheduler reservation
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/queues/schedulerpolicies
+	 * @apiUri    /api/queues/schedulerreservations
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The policy name",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "name",
+	 * 		"description":   "Entry name",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "nodes",
+	 * 		"description":   "Comma-separated list of node names",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Date/time of when the reservation starts",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Date/time of when the reservation stops",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -119,16 +155,18 @@ class SchedulerReservationsController extends Controller
 	}
 
 	/**
-	 * Read a queue scheduler policy
+	 * Read a queue scheduler reservation
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/schedulerpolicies/{id}
+	 * @apiUri    /api/queues/schedulerreservations/{id}
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the scheduler policy",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response
@@ -144,20 +182,57 @@ class SchedulerReservationsController extends Controller
 	 * Update a queue scheduler policy
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/queues/schedulerpolicies/{id}
+	 * @apiUri    /api/queues/schedulerreservations/{id}
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the scheduler policy",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The policy name",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "name",
+	 * 		"description":   "Entry name",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "nodes",
+	 * 		"description":   "Comma-separated list of node names",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Date/time of when the reservation starts",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Date/time of when the reservation stops",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
@@ -177,16 +252,18 @@ class SchedulerReservationsController extends Controller
 	}
 
 	/**
-	 * Delete a queue scheduler policy
+	 * Delete a queue scheduler reservation
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/queues/schedulerpolicies/{id}
+	 * @apiUri    /api/queues/schedulerreservations/{id}
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the scheduler policy",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response

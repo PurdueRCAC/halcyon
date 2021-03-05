@@ -25,47 +25,86 @@ class LoansController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "queueid",
+	 * 		"description":   "ID of the queue the loan whent to",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "lenderqueueid",
+	 * 		"description":   "ID of the lender queue",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "state",
+	 * 		"description":   "Sate of the loan.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 			"enum": [
+	 * 				"ended",
+	 * 				"ongoing"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   25
+	 * 			"default":   20
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "search",
-	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimestart",
-	 * 		"allowedValues": "id, queueid, lenderqueueid, datetimestart, datetimestop"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimestart",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"queueid",
+	 * 				"lenderqueueid",
+	 * 				"datetimestart",
+	 * 				"datetimestop"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "asc",
@@ -86,7 +125,7 @@ class LoansController extends Controller
 			'lenderqueueid' => $request->input('lenderqueueid', 0),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
-			//'start' => $request->input('limitstart', 0),
+			'page'     => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'datetimestart'),
 			'order_dir' => $request->input('order_dir', 'desc')
@@ -128,7 +167,7 @@ class LoansController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		return new ResourceCollection($rows);
@@ -144,50 +183,61 @@ class LoansController extends Controller
 	 * 		"in":            "body",
 	 *      "name":          "queueid",
 	 *      "description":   "ID of the queue being loaned to",
-	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "lenderqueueid",
 	 *      "description":   "ID of the queue being loaned",
-	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "datetimestart",
-	 *      "description":   "Date/time (YYYY-MM-DD hh:mm:ss) of when the loan starts",
-	 *      "type":          "string",
+	 *      "description":   "Date/time of when the loan starts",
 	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "datetimestop",
-	 *      "description":   "Date/time (YYYY-MM-DD hh:mm:ss) of when the loan stops",
-	 *      "type":          "string",
+	 *      "description":   "Date/time of when the loan stops",
 	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "nodecount",
 	 *      "description":   "Node count",
-	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "corecount",
 	 *      "description":   "Core count",
-	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -309,49 +359,59 @@ class LoansController extends Controller
 	 * 		"in":            "body",
 	 *      "name":          "queueid",
 	 *      "description":   "ID of the queue being loaned to",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "lenderqueueid",
 	 *      "description":   "ID of the queue being loaned",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "datetimestart",
-	 *      "description":   "Date/time (YYYY-MM-DD hh:mm:ss) of when the loan starts",
-	 *      "type":          "string",
+	 *      "description":   "Date/time of when the loan starts",
 	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "datetimestop",
-	 *      "description":   "Date/time (YYYY-MM-DD hh:mm:ss) of when the loan stops",
-	 *      "type":          "string",
+	 *      "description":   "Date/time of when the loan stops",
 	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "nodecount",
 	 *      "description":   "Node count",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "corecount",
 	 *      "description":   "Core count",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */
