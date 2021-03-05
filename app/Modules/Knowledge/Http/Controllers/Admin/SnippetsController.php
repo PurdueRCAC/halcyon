@@ -180,18 +180,16 @@ class SnippetsController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'page.title'   => 'required',
-			'page.content' => 'required',
-			'fields.access' => 'nullable|min:1',
-			'fields.state'  => 'nullable|min:1',
+			'page.title'    => 'required|string|max:255',
+			'page.content'  => 'required|string',
+			'fields.access' => 'nullable|integer|min:1',
+			'fields.state'  => 'nullable|integer|min:0',
 		]);
 
 		$id = $request->input('id');
 		$parent_id = $request->input('fields.parent_id');
 
 		$row = $id ? SnippetAssociation::findOrFail($id) : new SnippetAssociation;
-		//$row->access = $request->input('fields.access');
-		//$row->state  = $request->input('fields.state');
 		$row->page_id = $request->input('fields.page_id');
 		$orig_parent_id = $row->parent_id;
 		$row->parent_id = $parent_id;
@@ -202,11 +200,11 @@ class SnippetsController extends Controller
 			$page = new Page;
 		}
 		$page->snippet = 1;
-		$page->access = $request->input('fields.access');
-		$page->state  = $request->input('fields.state');
-		$page->title = $request->input('page.title');
-		$page->alias = $request->input('page.alias');
-		$page->alias = $page->alias ?: $page->title;
+		$page->access  = $request->input('fields.access');
+		$page->state   = $request->input('fields.state');
+		$page->title   = $request->input('page.title');
+		$page->alias   = $request->input('page.alias');
+		$page->alias   = $page->alias ?: $page->title;
 		$page->content = $request->input('page.content');
 		if ($params = $request->input('params', []))
 		{
@@ -264,7 +262,7 @@ class SnippetsController extends Controller
 	}
 
 	/**
-	 * Comment the specified entry
+	 * Attach an entry to a parent entry
 	 *
 	 * @param   Request $request
 	 * @return  Response
@@ -272,14 +270,14 @@ class SnippetsController extends Controller
 	public function attach(Request $request)
 	{
 		$request->validate([
-			'parent_id' => 'required',
-			'page_id' => 'required'
+			'parent_id' => 'required|integer',
+			'page_id'   => 'required|integer'
 		]);
 
 		$row = new SnippetAssociation;
-		$row->access = 1;
-		$row->state  = 1;
-		$row->page_id = $request->input('page_id');
+		$row->access    = 1;
+		$row->state     = 1;
+		$row->page_id   = $request->input('page_id');
 		$row->parent_id = $request->input('parent_id');
 
 		if (!$row->save())
@@ -343,8 +341,8 @@ class SnippetsController extends Controller
 		if ($success)
 		{
 			$msg = $state
-				? 'knowledge::knowledge.items published'
-				: 'knowledge::knowledge.items unpublished';
+				? 'global.messages.item published'
+				: 'global.messages.item unpublished';
 
 			$request->session()->flash('success', trans($msg, ['count' => $success]));
 		}
@@ -404,7 +402,7 @@ class SnippetsController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', $success));
+			$request->session()->flash('success', trans('global.messages.item deleted', $success));
 		}
 
 		return $this->cancel();

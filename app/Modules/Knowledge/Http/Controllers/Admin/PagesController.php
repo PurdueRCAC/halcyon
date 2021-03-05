@@ -25,7 +25,7 @@ class PagesController extends Controller
 		$filters = array(
 			'search'    => null,
 			'parent'    => null,
-			'state'     => null,
+			'state'     => 'published',
 			'access'    => null,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -92,15 +92,15 @@ class PagesController extends Controller
 
 		if ($filters['state'] == 'published')
 		{
-			$query->where($p . '.state', '=', 1);
+			$query->where($a . '.state', '=', 1);
 		}
 		elseif ($filters['state'] == 'unpublished')
 		{
-			$query->where($p . '.state', '=', 0);
+			$query->where($a . '.state', '=', 0);
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->onlyTrashed(); //->whereNotNull($page . '.deleted_at');
+			$query->onlyTrashed();
 		}
 		else
 		{
@@ -109,13 +109,12 @@ class PagesController extends Controller
 
 		if ($filters['access'] > 0)
 		{
-			$query->where($p . '.access', '=', (int)$filters['access']);
+			$query->where($a . '.access', '=', (int)$filters['access']);
 		}
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
-
 
 		$list = Page::query()
 			->join($a, $a . '.page_id', $p . '.id')
@@ -133,9 +132,9 @@ class PagesController extends Controller
 		}
 
 		return view('knowledge::admin.pages.index', [
-			'filters' => $filters,
-			'rows'    => $rows,
-			'tree' => $list,
+			'filters'  => $filters,
+			'rows'     => $rows,
+			'tree'     => $list,
 			'ordering' => $ordering,
 			//'paginator' => $paginator,
 		]);
@@ -177,18 +176,18 @@ class PagesController extends Controller
 
 		$p = (new Page)->getTable();
 		$a = (new SnippetAssociation)->getTable();
+
 		$snippets = Page::query()
 			->join($a, $a . '.page_id', $p . '.id')
 			->select($p . '.title', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id', $a . '.path', $a . '.parent_id', $a . '.page_id')
 			->where($p . '.snippet', '=', 1)
-			//->where($a . '.level', '=', 1)
 			->orderBy('lft', 'asc')
 			->get();
 
 		return view('knowledge::admin.pages.select', [
 			'parent_id' => $parent_id,
-			'parents' => $parents,
-			'snippets' => $snippets,
+			'parents'   => $parents,
+			'snippets'  => $snippets,
 		]);
 	}
 
@@ -273,10 +272,10 @@ class PagesController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'page.title'   => 'required|string|max:255',
-			'page.content' => 'required|string',
-			'fields.access' => 'nullable|min:1',
-			'fields.state'  => 'nullable',
+			'page.title'    => 'required|string|max:255',
+			'page.content'  => 'required|string',
+			'fields.access' => 'nullable|integer|min:1',
+			'fields.state'  => 'nullable|integer',
 		]);
 
 		$id = $request->input('id');
@@ -333,13 +332,10 @@ class PagesController extends Controller
 		}
 
 		$row->page_id = $page->id;
+		$row->path = '';
 		if ($row->parent)
 		{
 			$row->path = trim($row->parent->path . '/' . $page->alias, '/');
-		}
-		else
-		{
-			$row->path = '';
 		}
 
 		if (!$row->save())
