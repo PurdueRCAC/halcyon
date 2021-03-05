@@ -143,39 +143,22 @@ class RolesController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "title",
-	 * 		"description":   "Menu title",
+	 * 		"description":   "Role title",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "A description of the menu",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "client_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
+	 * 		"name":          "parent_id",
+	 * 		"description":   "Parent role ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
 	 * 			"default":   0
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "menutype",
-	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @param  Request $request
@@ -184,7 +167,7 @@ class RolesController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'title' => 'required|string|max:100',
+			'title'     => 'required|string|max:100',
 			'parent_id' => 'required|integer|min:1'
 		]);
 
@@ -244,37 +227,22 @@ class RolesController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "title",
-	 * 		"description":   "Menu title",
+	 * 		"description":   "Role title",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "A description of the menu",
+	 * 		"name":          "parent_id",
+	 * 		"description":   "Parent role ID",
+	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "client_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "menutype",
-	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer",
+	 * 			"default":   0
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -284,7 +252,7 @@ class RolesController extends Controller
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'title' => 'nullable|string|max:100',
+			'title'     => 'nullable|string|max:100',
 			'parent_id' => 'nullable|integer'
 		]);
 

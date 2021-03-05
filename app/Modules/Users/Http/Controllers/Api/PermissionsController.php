@@ -151,39 +151,11 @@ class PermissionsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "title",
-	 * 		"description":   "Menu title",
+	 * 		"name":          "params",
+	 * 		"description":   "A list of permissions.",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "A description of the menu",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "client_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "menutype",
-	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "array"
 	 * 		}
 	 * }
 	 * @param  string  $module

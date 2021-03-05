@@ -144,42 +144,20 @@ class LevelsController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "title",
-	 * 		"description":   "Menu title",
-	 * 		"type":          "string",
+	 * 		"description":   "Access level title",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "A description of the menu",
-	 * 		"type":          "string",
-	 * 		"required":      false,
+	 * 		"name":          "rules",
+	 * 		"description":   "A list of role IDs",
+	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "client_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "menutype",
-	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "array"
 	 * 		}
 	 * }
 	 * @param  Request $request
@@ -248,38 +226,20 @@ class LevelsController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "title",
-	 * 		"description":   "Menu title",
+	 * 		"description":   "Access level title",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "A description of the menu",
+	 * 		"name":          "rules",
+	 * 		"description":   "A list of role IDs",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "client_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "menutype",
-	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "array"
 	 * 		}
 	 * }
 	 * @param   Request $request

@@ -162,7 +162,8 @@ class FacetsController extends Controller
 	 * 		"description":   "Facet name",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -171,7 +172,8 @@ class FacetsController extends Controller
 	 * 		"description":   "Facet value,
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 8096
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -211,10 +213,10 @@ class FacetsController extends Controller
 	{
 		$request->validate([
 			'user_id' => 'required|integer|min:1',
-			'key' => 'required|string|max:255',
-			'value' => 'required|string|max:8096',
-			'locked' => 'nullable|integer',
-			'access' => 'nullable|integer',
+			'key'     => 'required|string|max:255',
+			'value'   => 'required|string|max:8096',
+			'locked'  => 'nullable|integer',
+			'access'  => 'nullable|integer',
 		]);
 
 		$row = new Facet;
@@ -288,7 +290,8 @@ class FacetsController extends Controller
 	 * 		"description":   "Facet value,
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 8096
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -297,8 +300,7 @@ class FacetsController extends Controller
 	 * 		"description":   "View level ID",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -308,7 +310,7 @@ class FacetsController extends Controller
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'value' => 'nullable|string|max:8096',
+			'value'  => 'nullable|string|max:8096',
 			'access' => 'nullable|integer',
 		]);
 
