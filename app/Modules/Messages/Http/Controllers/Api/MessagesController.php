@@ -26,70 +26,104 @@ class MessagesController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "state",
 	 * 		"description":   "Message state",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "pending",
-	 * 		"allowedValues": "pending, complete, incomplete"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "pending",
+	 * 			"enum": [
+	 * 				"pending",
+	 * 				"complete",
+	 * 				"incomplete"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "start",
 	 * 		"description":   "Submitted datetime start",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "stop",
 	 * 		"description":   "Submitted datetime end",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "returnstatus",
 	 * 		"description":   "Filter by return status",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       20
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   20
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "name",
-	 * 		"allowedValues": "id, userid, messagequeuetypeid, messagequeueoptionsid, pid, datetimesubmitted, datetimestarted, datetimecompleted, returnstatus"
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "order_dir",
-	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       "asc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"userid",
+	 * 				"messagequeuetypeid",
+	 * 				"messagequeueoptionsid",
+	 * 				"pid",
+	 * 				"datetimesubmitted",
+	 * 				"datetimestarted",
+	 * 				"datetimecompleted",
+	 * 				"returnstatus"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -199,28 +233,37 @@ class MessagesController extends Controller
 	 * 		"description":   "Message type ID.",
 	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "targetobjectid",
 	 * 		"description":   "Target object ID",
 	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "messagequeueoptionsid",
 	 * 		"description":   "Message options ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "userid",
 	 * 		"description":   "User ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @param  Request $request
 	 * @return Response
@@ -327,90 +370,119 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "userid",
-	 * 		"description":   "User ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
 	 * 		"name":          "messagequeuetypeid",
 	 * 		"description":   "Message type ID.",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "targetobjectid",
 	 * 		"description":   "Target object ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "messagequeueoptionsid",
 	 * 		"description":   "Message options ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "pid",
 	 * 		"description":   "Process ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "datetimestarted",
-	 * 		"description":   "Datetime started (YYYY-MM-DD HH:mm:ss)",
-	 * 		"type":          "string",
+	 * 		"description":   "Datetime started",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "datetimecompleted",
-	 * 		"description":   "Datetime completed (YYYY-MM-DD HH:mm:ss)",
-	 * 		"type":          "string",
+	 * 		"description":   "Datetime completed",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "returnstatus",
 	 * 		"description":   "Return status code",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "output",
 	 * 		"description":   "Process output",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 150
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "started",
 	 * 		"description":   "Starting processing",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null,
-	 * 		"allowedValues": "0, 1"
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "completed",
 	 * 		"description":   "Ending processing",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null,
-	 * 		"allowedValues": "0, 1"
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "retry",
 	 * 		"description":   "Number of minutes to retry in",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @param  Request $request
 	 * @param  integer $id

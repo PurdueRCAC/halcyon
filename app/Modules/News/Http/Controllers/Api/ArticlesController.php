@@ -109,7 +109,7 @@ class ArticlesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   25
+	 * 			"default":   20
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -400,7 +400,7 @@ class ArticlesController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   null
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -409,8 +409,7 @@ class ArticlesController extends Controller
 	 * 		"description":   "The entry's body",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string",
-	 * 			"default":   null
+	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -479,7 +478,7 @@ class ArticlesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   null
+	 * 			"maxLength": 32
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -489,7 +488,7 @@ class ArticlesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   null
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @param   Request  $request
@@ -762,7 +761,7 @@ class ArticlesController extends Controller
 	 * Preview a news article
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/news
+	 * @apiUri    /api/news/preview
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -790,15 +789,8 @@ class ArticlesController extends Controller
 	public function preview(Request $request)
 	{
 		$request->validate([
-			//'newstypeid' => 'required|integer|in:0,1',
 			'body' => 'required|string|max:15000',
-			'vars' => 'nullable|array',
-			//'published' => 'nullable|integer|in:0,1',
-			//'template' => 'nullable|integer|in:0,1',
-			//'datetimenews' => 'required|date',
-			//'datetimenewsend' => 'nullable|date',
-			//'location' => 'nullable|string',
-			//'url' => 'nullable|url',
+			'vars' => 'nullable|array'
 		]);
 
 		$row = new Article();

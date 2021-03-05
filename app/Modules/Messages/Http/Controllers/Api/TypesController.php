@@ -24,9 +24,10 @@ class TypesController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "resourceid",
@@ -38,31 +39,42 @@ class TypesController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "classname",
 	 * 		"description":   "Class name",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       20
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   20
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "name",
-	 * 		"allowedValues": "id, resourceid, name, classname"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"resourceid",
+	 * 				"name",
+	 * 				"classname"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order_dir",
@@ -142,23 +154,29 @@ class TypesController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "name",
 	 * 		"description":   "Name",
-	 * 		"type":          "string",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 24
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "classname",
 	 * 		"description":   "Class name",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 24
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "resourceid",
 	 * 		"description":   "Resource ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @param  Request $request
 	 * @return Response
@@ -246,23 +264,28 @@ class TypesController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "name",
 	 * 		"description":   "Name",
-	 * 		"type":          "string",
-	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 24
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "classname",
 	 * 		"description":   "Class name",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 24
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "resourceid",
 	 * 		"description":   "Resource ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param  Request $request
 	 * @param  integer $id

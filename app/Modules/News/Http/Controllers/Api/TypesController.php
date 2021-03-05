@@ -40,15 +40,6 @@ class TypesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "location",
-	 * 		"description":   "Filter by types that allow articles to set location",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
 	 * 		"name":          "future",
 	 * 		"description":   "Filter by types that allow articles to set future",
 	 * 		"required":      false,
@@ -81,7 +72,7 @@ class TypesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   25
+	 * 			"default":   20
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -122,6 +113,56 @@ class TypesController extends Controller
 	 * 				"asc",
 	 * 				"desc"
 	 * 			]
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entries lookup",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"data": [{
+	 * 						"id":            "1",
+	 * 						"name":          "Examples",
+	 * 						"tagresources":  0,
+	 * 						"tagusers":      1,
+	 * 						"location":      1,
+	 * 						"future":        1,
+	 * 						"calendar":      1,
+	 * 						"url":           1,
+	 * 						"api":           "https://example.com/api/news/types/1"
+	 * 					},{
+	 * 						"id":            "2",
+	 * 						"name":          "Outages and Maintenance",
+	 * 						"tagresources":  1,
+	 * 						"tagusers":      0,
+	 * 						"location":      0,
+	 * 						"future":        1,
+	 * 						"calendar":      1,
+	 * 						"url":           0,
+	 * 						"api":           "https://example.com/api/news/types/2"
+	 * 					}],
+	 * 					"links": {
+	 * 					        "first": "https://example.com/api/news/types?limit=20&order=name&order_dir=asc&page=1",
+	 * 					        "last": "https://example.com/api/news/types?limit=20&order=name&order_dir=asc&page=1",
+	 * 					        "prev": null,
+	 * 					        "next": null
+	 * 					    },
+	 * 					    "meta": {
+	 * 					        "current_page": 1,
+	 * 					        "from": 1,
+	 * 					        "last_page": 1,
+	 * 					        "path": "https://example.com/api/news/types",
+	 * 					        "per_page": 20,
+	 * 					        "to": 2,
+	 * 					        "total": 2
+	 * 					    }
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"415": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @return Response
@@ -217,9 +258,10 @@ class TypesController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "The name of the type",
-	 * 		"required":      false,
+	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -238,11 +280,72 @@ class TypesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "tagusers",
+	 * 		"description":   "Allow articles to tag users",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "location",
+	 * 		"description":   "Allow articles to set location",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "future",
+	 * 		"description":   "Allow articles to set future",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "ongoing",
+	 * 		"description":   "Allow articles to set ongoing",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "url",
 	 * 		"description":   "A URL associated with the news article",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer",
+	 * 			"default":   0,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -258,7 +361,8 @@ class TypesController extends Controller
 	 * 						"location":      1,
 	 * 						"future":        1,
 	 * 						"calendar":      1,
-	 * 						"url":           "https://example.com"
+	 * 						"url":           1,
+	 * 						"api":           "https://example.com/api/news/types/1"
 	 * 					}
 	 * 				}
 	 * 			}
@@ -322,7 +426,8 @@ class TypesController extends Controller
 	 * 						"location":      1,
 	 * 						"future":        1,
 	 * 						"calendar":      1,
-	 * 						"url":           "https://example.com"
+	 * 						"url":           1,
+	 * 						"api":           "https://example.com/api/news/types/1"
 	 * 					}
 	 * 				}
 	 * 			}
@@ -364,7 +469,73 @@ class TypesController extends Controller
 	 * 		"description":   "The name of the type",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "tagresources",
+	 * 		"description":   "Allow articles to tag resources",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "tagusers",
+	 * 		"description":   "Allow articles to tag users",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "location",
+	 * 		"description":   "Allow articles to set location",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "future",
+	 * 		"description":   "Allow articles to set future",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "ongoing",
+	 * 		"description":   "Allow articles to set ongoing",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -373,7 +544,11 @@ class TypesController extends Controller
 	 * 		"description":   "A URL associated with the news article",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer",
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -389,7 +564,8 @@ class TypesController extends Controller
 	 * 						"location":      1,
 	 * 						"future":        1,
 	 * 						"calendar":      1,
-	 * 						"url":           "https://example.com"
+	 * 						"url":           1,
+	 * 						"api":           "https://example.com/api/news/types/1"
 	 * 					}
 	 * 				}
 	 * 			}
