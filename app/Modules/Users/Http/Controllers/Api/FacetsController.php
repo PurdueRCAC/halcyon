@@ -220,6 +220,11 @@ class FacetsController extends Controller
 		$row = new Facet;
 		$row->fill($request->all());
 
+		if (!$row->user_id)
+		{
+			$row->user_id = auth()->user()->id;
+		}
+
 		// Check that the provided user ID is valid
 		$user = $row->user;
 
@@ -229,7 +234,7 @@ class FacetsController extends Controller
 		}
 
 		// Does this facet for this user already exist?
-		$exists = Facet::findByUserAndKey($request->input('user_id'), $request->input('key'));
+		$exists = Facet::findByUserAndKey($row->user_id, $request->input('key'));
 
 		if ($exists)
 		{
