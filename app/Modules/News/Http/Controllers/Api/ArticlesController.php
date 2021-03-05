@@ -30,12 +30,67 @@ class ArticlesController extends Controller
 	 * @apiUri    /api/news
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "contactreportid",
-	 * 		"description":   "ID of contact report",
+	 * 		"name":          "start",
+	 * 		"description":   "Filter entries scheduled on or after this date",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "stop",
+	 * 		"description":   "Filter entries scheduled to end before this date",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "type",
+	 * 		"description":   "New type ID",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   0
+	 * 			"default":   "null"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "state",
+	 * 		"description":   "The article state.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "published",
+	 * 			"enum": [
+	 * 				"published",
+	 * 				"unpublished"å
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "resource",
+	 * 		"description":   "A comma-separated list of associated resource IDs to filter by",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"example":   "1,2,3,4"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "location",
+	 * 		"description":   "A location to filter entries by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -71,10 +126,16 @@ class ArticlesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"headline",
+	 * 				"datetimecreated"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -287,6 +348,7 @@ class ArticlesController extends Controller
 		{
 			$r = (new Newsresource)->getTable();
 			$filters['resource'] = explode(',', $filters['resource']);
+			$filters['resource'] = array_map('trim', $filters['resource']);
 
 			$query->join($r, $r . '.newsid', $n . '.id')
 				->whereIn($r . '.resourceid', $filters['resource']);
