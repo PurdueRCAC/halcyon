@@ -86,8 +86,14 @@ Toolbar::cancel(route('admin.issues.todos.cancel'));
 			<div class="help">
 				<p>{{ trans('issues::issues.formatting help') }}</p>
 
-				<table>
-					<caption>MarkDown Quick Guide</code>
+				<table class="table table-bordered">
+					<caption>MarkDown Quick Guide</caption>
+					<thead>
+						<tr>
+							<th scope="col">MarkDown</th>
+							<th scope="col">HTML</th>
+						</tr>
+					</thead>
 					<tbody>
 						<tr>
 							<td>*bold*</td>
@@ -95,7 +101,7 @@ Toolbar::cancel(route('admin.issues.todos.cancel'));
 						</tr>
 						<tr>
 							<td>_italic_</td>
-							<td><em>bold</em></td>
+							<td><em>italic</em></td>
 						</tr>
 						<tr>
 							<td>`code`</td>
