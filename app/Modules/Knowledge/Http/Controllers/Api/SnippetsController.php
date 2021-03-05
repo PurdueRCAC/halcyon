@@ -25,6 +25,105 @@ class SnippetsController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/knowledge/snippets
 	 * @apiAuthorization  false
+	 * @apiMethod GET
+	 * @apiUri    /api/knowledge/feedback
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "parent",
+	 * 		"description":   "Parent page ID.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "access",
+	 * 		"description":   "Access level.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "state",
+	 * 		"description":   "The page state.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "published",
+	 * 			"enum": [
+	 * 				"published",
+	 * 				"unpublished",
+	 * 				"trashed"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for in feedback comments.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   ""
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"required":      false,
+	* 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "created_at",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"created_at",
+	 * 				"ip",
+	 * 				"user_id",
+	 * 				"target_id",
+	 * 				"type"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  Response
 	 */
@@ -163,38 +262,11 @@ class SnippetsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "publish_up",
-	 * 		"description":   "Start publishing (defaults to created time)",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "publish_down",
-	 * 		"description":   "Stop publishing",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
 	 * 		"name":          "parent_id",
 	 * 		"description":   "Parent page ID",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "publish_up",
-	 * 		"description":   "Start publishing (defaults to created time)",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @param  Request $request
@@ -203,11 +275,11 @@ class SnippetsController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'title' => 'required|string|max:255',
-			'alias' => 'nullable|string|max:255',
-			'content' => 'required|string',
-			'access' => 'nullable|integer|min:1',
-			'state'  => 'nullable|integer',
+			'title'     => 'required|string|max:255',
+			'alias'     => 'nullable|string|max:255',
+			'content'   => 'required|string',
+			'access'    => 'nullable|integer|min:1',
+			'state'     => 'nullable|integer',
 			'parent_id' => 'required|integer',
 		]);
 
@@ -326,11 +398,69 @@ class SnippetsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "report",
-	 * 		"description":   "Group name",
+	 * 		"name":          "title",
+	 * 		"description":   "Title",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "slug",
+	 * 		"description":   "URL slug. If not provided, one is genereated from the title.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "[a-z0-9_-]+",
+	 * 			"example":   "page_name"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "content",
+	 * 		"description":   "Content",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "state",
+	 * 		"description":   "Published state",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "access",
+	 * 		"description":   "Access level",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				1,
+	 * 				2
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "parent_id",
+	 * 		"description":   "Parent page ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0,
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -340,11 +470,11 @@ class SnippetsController extends Controller
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'title' => 'nullable|string|max:255',
-			'alias' => 'nullable|string|max:255',
-			'content' => 'nullable|string',
-			'access' => 'nullable|integer|min:1',
-			'state'  => 'nullable|integer',
+			'title'     => 'nullable|string|max:255',
+			'alias'     => 'nullable|string|max:255',
+			'content'   => 'nullable|string',
+			'access'    => 'nullable|integer|min:1',
+			'state'     => 'nullable|integer',
 			'parent_id' => 'nullable|integer',
 		]);
 

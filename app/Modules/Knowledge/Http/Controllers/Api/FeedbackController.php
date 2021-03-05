@@ -10,7 +10,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Knowledge\Models\Feedback;
 
 /**
- * Pages
+ * Feedback
  *
  * @apiUri    /api/knowledge/feedback
  */
@@ -19,6 +19,140 @@ class FeedbackController extends Controller
 	/**
 	 * Display a listing of feedback
 	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/knowledge/feedback
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "user_id",
+	 * 		"description":   "The user ID of the feedback submitter.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "target_id",
+	 * 		"description":   "The page association the feedback is related to.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "type",
+	 * 		"description":   "The type of feedback.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null,
+	 * 			"enum": [
+	 * 				"positive",
+	 * 				"neutral",
+	 * 				"negative"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "start",
+	 * 		"description":   "Feedback created on or after this datetime.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "stop",
+	 * 		"description":   "Feedback created before this datetime.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "ip",
+	 * 		"description":   "The IP address of the feedback submitter.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   ""
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for in feedback comments.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   ""
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"required":      false,
+	* 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "created_at",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"created_at",
+	 * 				"ip",
+	 * 				"user_id",
+	 * 				"target_id",
+	 * 				"type"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
+	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
