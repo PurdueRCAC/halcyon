@@ -46,6 +46,7 @@
   --input-border: #ddd;
   --input-border-focus: #5897fb;
   --input-color: #444;
+  --input-color-disabled: #656565;
   --input-prepend-back: #f1f1f1;
   --check-back: #f5f5f5;
   --check-back-disabled: #eee;
@@ -128,11 +129,13 @@
   --legend-text: #fff;
   --legend-border: rgba(255, 255, 255, 0.1);
   --input-back: rgba(255, 255, 255, 0.05); /*rgba(0, 0, 0, 0.25);*/
-  --input-back-disabled: #eee;
+  --input-back-disabled: rgba(255, 255, 255, 0.1);
   --input-back-focus: rgba(255, 255, 255, 0.05);
   --input-border: transparent; /*rgba(255, 255, 255, 0.1);*/
   --input-border-focus: #5897fb;
+  --input-border-disabled: rgba(255, 255, 255, 0.1);
   --input-color: rgba(255, 255, 255, 0.75);
+  --input-color-disabled: rgba(255, 255, 255, 0.5);
   --input-prepend-back: rgba(255, 255, 255, 0.1);
   --check-back: rgba(255, 255, 255, 0.1);
   --check-back-disabled: #eee;
@@ -5125,6 +5128,12 @@ a.menulist:hover:before {
     background-color: var(--input-back-focus);
     border-color: var(--input-border-focus);
     color: var(--input-color);
+  }
+  .form-control:disabled,
+  .form-control[readonly] {
+    background-color: var(--input-back-disabled);
+    border-color: var(--input-border-disabled);
+    color: var(--input-color-disabled);
   }
   /*.form-control-plaintext {
     color: #eee;
