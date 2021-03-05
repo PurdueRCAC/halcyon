@@ -1,6 +1,6 @@
 <?php
 return [
-	'module name' => 'Storage',
+	'module name' => 'Storage Manager',
 	'storage' => 'Storage',
 	'resource' => 'Resource',
 
