@@ -49,13 +49,11 @@
 			<p class="form-text">Select if you primarily intend to run computational simulations</p>
 		</div>
 
-		<div class="form-block">
 			<div class="form-check">
 				<input type="radio" class="form-check-input" name="apply[needs]" id="apply_gateway" data-show="#set_gateway" data-hide="#set_computational" value="gateway" />
 				<label for="apply_gateway" class="form-check-label">Science Gateway Needs</label>
 				<p class="form-text">Select if you intend to deploy a science gateway or associated services</p>
 			</div>
-		</div>
 	</fieldset>
 
 	<fieldset id="set_computational" class="form-dependent hide">
@@ -80,10 +78,12 @@
 
 		<fieldset class="form-group">
 			<legend>Does your project require access to any public datasets?</legend>
+
 			<div class="form-check">
 				<input type="radio" class="form-check-input" name="apply[nongateway_datasets]" id="apply_nongateway_datasets_no" value="no">
 				<label for="apply_nongateway_datasets_no" class="form-check-label">No</label>
 			</div>
+
 			<div class="form-check">
 				<input type="radio" class="form-check-input" name="apply[nongateway_datasets]" id="apply_nongateway_datasets_yes" data-show="#apply_nongateway_datasets_group" value="yes">
 				<label for="apply_nongateway_datasets_yes" class="form-check-label">Yes</label>
