@@ -201,11 +201,11 @@ a.card:focus {
 	background-image: url('../images/anvil/lindsay.jpg');
 }
 
-fieldset.form-group {
+.editform fieldset.form-group {
 	border: none;
 	padding: 0;
 }
-fieldset.form-group legend {
+.editform fieldset.form-group>legend {
 	border: none;
 	font-size: 1em;
 	margin: 0 0 0.5em 0;
