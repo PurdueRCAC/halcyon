@@ -1,5 +1,5 @@
 
-<form method="post" action="{{ route('page', ['uri' => request()->path()]) }}">
+<form method="post" action="{{ route('page', ['uri' => request()->path()]) }}" class="editform">
 	<fieldset>
 		<legend>About Yourself</legend>
 
