@@ -1,3 +1,6 @@
+/**
+ * Styles for the Anvil promotional pages
+ */
 #content>.container {
 	width: auto;
 	max-width: 100%;
@@ -10,8 +13,9 @@
 	display: none;
 }
 .hero {
-	background: #666 url('../images/background-anvil.jpg') right center no-repeat;
+	background: #666 url('../images/anvil/background.jpg') right center no-repeat;
 	background-size: auto 100%;
+	background-position: -710px 0;
 	margin: 0 0 2em 0;
 }
 .hero .container {
@@ -47,12 +51,12 @@
 .hero .tagline {
 	text-transform: uppercase;
 	color: #fff;
-	font-size: 3.16em;
+	font-size: 3.25em;
 	font-weight: bold;
 	line-height: 1;
 	position: absolute;
 	bottom: -0.1em;
-	right: -0.1em;
+	right: 0;
 	margin: 0;
 	font-family: acumin-pro-condensed, "Franklin Gothic", sans-serif;
 	display: none;
@@ -97,7 +101,7 @@
 }
 
 .sidenav-news {
-	margin: 4em 0 0 0;
+	margin: 2em 0 2em 0;
 }
 .contentInner .sidenav-news ul li {
 	list-style: none;
@@ -160,18 +164,6 @@ a.card:focus {
 	padding-bottom: 0;
 }
 
-.contentPage section .card-graphic {
-	padding: 0;
-	text-align: center;
-	height: 250px;
-	overflow: hidden;
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-.contentPage section .card-graphic img {
-	width: 100%;
-}
 .contentPage section .card-pic {
 	background-color: transparent;
 	border: 2px solid #eee;
@@ -183,12 +175,8 @@ a.card:focus {
 	margin-top: 4em;
 }
 .contentPage section .card-pic .card-pic-container {
-	width: 250px;
-	position: absolute;
-	bottom: 30px;
-	right: -30px;
-	width: 160px;
-	height: 160px;
+	height: 250px;
+	width: 100%;
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -212,26 +200,6 @@ a.card:focus {
 .contentPage section .card-pic .card-ondemand {
 	background-image: url('../images/anvil/lindsay.jpg');
 }
-.contentPage section .card-pic-r .card-body {
-	margin-right: 134px;
-}
-.contentPage section .card-pic-l .card-body {
-	margin-left: 134px;
-}
-.contentPage section .card-pic-l .card-pic-container {
-	right: auto;
-	left: -30px;
-}
-
-.contentPage section.highlights .row {
-	display: flex;
-	flex-flow: row;
-	flex-wrap: wrap;
-}
-.contentPage section.highlights .row>div {
-	flex: 1 0 auto;
-	float: none;
-}
 
 fieldset.form-group {
 	border: none;
@@ -243,14 +211,21 @@ fieldset.form-group legend {
 	margin: 0 0 0.5em 0;
 	padding: 0;
 }
-
+.coming-soon .card-header {
+	text-align: center;
+}
 .input-required {
 	color: #c00;
 }
-
-@media (min-width: 768px) {
-	.contentPage {
-		padding-top: 40px;
+@media (min-width: 480px) {
+	.hero {
+		background-position: -550px 0;
+	}
+}
+@media (min-width: 600px) {
+	.hero {
+		background-position: top right;
+		background-size: 100% auto;
 	}
 	.hero {
 		background-position: top right;
@@ -261,5 +236,36 @@ fieldset.form-group legend {
 	}
 	.hero .tagline {
 		display: block;
+	}
+	.sidenav-news {
+		margin: 4em 0 2em 0;
+	}
+	.contentPage {
+		padding-top: 40px;
+	}
+	.contentPage section .card-pic .card-pic-container {
+		width: 250px;
+		position: absolute;
+		bottom: 30px;
+		right: -30px;
+		width: 160px;
+		height: 160px;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: center center;
+		border: 6px solid #fff;
+	}
+	.contentPage section .card-pic-r .card-body {
+		margin-right: 134px;
+	}
+	.contentPage section .card-pic-l .card-body {
+		margin-left: 134px;
+	}
+	.contentPage section .card-pic-l .card-pic-container {
+		right: auto;
+		left: -30px;
+	}
+	.coming-soon .card-header {
+		text-align: right;
 	}
 }
