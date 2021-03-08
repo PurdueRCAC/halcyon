@@ -137,44 +137,49 @@ class LoansController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /api/storage/loans
 	 * @apiParameter {
-	 *      "name":          "resourceid",
-	 *      "description":   "Resource ID",
-	 *      "required":      true,
-	 *     "schema": {
+	 * 		"in":            "body",
+	 * 		"name":          "resourceid",
+	 * 		"description":   "Resource ID",
+	 * 		"required":      true,
+	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "groupid",
-	 *      "description":   "Group id",
-	 *      "required":      true,
-	 *     "schema": {
+	 * 		"in":            "body",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group id",
+	 * 		"required":      true,
+	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "lendergroupid",
-	 *      "description":   "Lender Group id",
-	 *      "required":      false,
-	 *     "schema": {
+	 * 		"in":            "body",
+	 * 		"name":          "lendergroupid",
+	 * 		"description":   "Lender Group id",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *     "name":          "datetimestart",
-	 *     "description":   "Start date",
-	 *     "required":      true,
-	 *     "schema": {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Start date",
+	 * 		"required":      true,
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"format":    "date-time",
 	 * 			"example":   "2021-01-30T08:30:00Z"
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *     "name":          "datetimestop",
-	 *     "description":   "Stop date",
-	 *     "required":      false,
-	 *     "schema": {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Stop date",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"format":    "date-time",
 	 * 			"example":   "2021-01-30T08:30:00Z"
@@ -373,44 +378,49 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "resourceid",
-	 *      "description":   "Resource ID",
-	 *      "required":      false,
-	 *     "schema": {
+	 * 		"in":            "body",
+	 * 		"name":          "resourceid",
+	 * 		"description":   "Resource ID",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "groupid",
-	 *      "description":   "Group id",
-	 *      "required":      false,
-	 *     "schema": {
+	 * 		"in":            "body",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group id",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "lendergroupid",
-	 *      "description":   "Lender Group id",
-	 *      "required":      false,
-	 *     "schema": {
+	 * 		"in":            "body",
+	 * 		"name":          "lendergroupid",
+	 * 		"description":   "Lender Group id",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *     "name":          "datetimestart",
-	 *     "description":   "Start date",
-	 *     "required":      false,
-	 *     "schema": {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Start date",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"format":    "date-time",
 	 * 			"example":   "2021-01-30T08:30:00Z"
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *     "name":          "datetimestop",
-	 *     "description":   "Stop date",
-	 *     "required":      false,
-	 *     "schema": {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Stop date",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"format":    "date-time",
 	 * 			"example":   "2021-01-30T08:30:00Z"

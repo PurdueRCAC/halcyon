@@ -102,7 +102,7 @@ class SchedulerReservationsController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Entry name",
-	 * 		"required":      false,
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"maxLength": 32
@@ -122,7 +122,7 @@ class SchedulerReservationsController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "datetimestart",
 	 * 		"description":   "Date/time of when the reservation starts",
-	 * 		"required":      false,
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"format":    "date-time",
@@ -146,7 +146,11 @@ class SchedulerReservationsController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
+			'schedulerid' => 'nullable|integer',
 			'name' => 'required|string|max:64',
+			'nodes' => 'nullable|string|max:255',
+			'datetimestart' => 'required|date',
+			'datetimestop' => 'nullable|date',
 		]);
 
 		$row = SchedulerPolicy::create($request->all());
@@ -243,7 +247,11 @@ class SchedulerReservationsController extends Controller
 		$row = SchedulerPolicy::findOrFail($id);
 
 		$request->validate([
+			'schedulerid' => 'nullable|integer',
 			'name' => 'nullable|string|max:64',
+			'nodes' => 'nullable|string|max:255',
+			'datetimestart' => 'nullable|date',
+			'datetimestop' => 'nullable|date',
 		]);
 
 		$row->update($request->all());

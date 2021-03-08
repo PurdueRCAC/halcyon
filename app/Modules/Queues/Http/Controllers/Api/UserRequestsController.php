@@ -29,71 +29,93 @@ class UserRequestsController extends Controller
 	 * @apiUri    /api/queues/requests
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"name":          "limit",
-	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
+	 * 		"in":            "query",
+	 * 		"name":          "owneruserid",
+	 * 		"description":   "Owner user ID",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   25
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "page",
-	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       1
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "owneruserid",
-	 * 		"description":   "Owner user ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "unixgroup",
 	 * 		"description":   "Unix group name",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "unixid",
 	 * 		"description":   "Unix ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "deptnumber",
 	 * 		"description":   "Organization department ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result to return.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   20
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "name",
-	 * 		"allowedValues": "id, name, owneruserid, unixgroup, unixid, deptnumber"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimestart",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"owneruserid",
+	 * 				"unixgroup",
+	 * 				"unixid",
+	 * 				"deptnumber"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "asc",
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "asc",
@@ -157,46 +179,32 @@ class UserRequestsController extends Controller
 	 * @apiUri    /api/queues/requests
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
+	 * 		"in":            "body",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "name",
-	 * 		"description":   "Group name",
-	 * 		"type":          "string",
-	 * 		"required":      true,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "comment",
+	 * 		"description":   "Comment",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2048
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
-	 * 		"type":          "integer",
+	 * 		"in":            "body",
+	 * 		"name":          "queues",
+	 * 		"description":   "Queues requesting access to",
 	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "array"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -395,39 +403,23 @@ class UserRequestsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "name",
-	 * 		"description":   "Group name",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
-	 * 		"type":          "string",
+	 * 		"in":            "body",
+	 * 		"name":          "comment",
+	 * 		"description":   "Comment",
 	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2048
+	 * 		}
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id

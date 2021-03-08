@@ -17,46 +17,74 @@ class StorageController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /storage
 	 * @apiParameter {
-	 * 		"name":          "limit",
-	 * 		"description":   "Number of result to return.",
-	 * 		"type":          "integer",
+	 * 		"in":            "query",
+	 * 		"name":          "state",
+	 * 		"description":   "Record state.",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   25
+	 * 			"type":      "string",
+	 * 			"default":   "active",
+	 * 			"enum": [
+	 * 				"active",
+	 * 				"inactive",
+	 * 				"all"
+	 * 			]
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result to return.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   20
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "created",
-	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "order_dir",
-	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved",
+	 * 				"parentid"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -79,17 +107,17 @@ class StorageController extends Controller
 		);
 
 		// Get records
-		$query = StorageResource::query();
+		$query = StorageResource::query()->withTrashed();
 
-		if ($filters['state'] != '*')
+		if ($filters['state'] != 'all')
 		{
 			if ($filters['state'] == 'active')
 			{
-				$query->where('datetimeremoved', '=', '0000-00-00 00:00:00');
+				$query->whereIsActive();
 			}
 			elseif ($filters['state'] == 'inactive')
 			{
-				$query->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+				$query->whereIsTrashed();
 			}
 		}
 
@@ -125,12 +153,99 @@ class StorageController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /storage
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "name",
+	 * 		"description":   "The name of the storage resource",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
+	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "path",
+	 * 		"description":   "The storage resource base path",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255,
+	 * 			"example":   "/scratch/foo"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "parentresourceid",
+	 * 		"description":   "The parent resource's ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "import",
+	 * 		"description":   "Import",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "boolean"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "importhostname",
+	 * 		"description":   "Import hostname",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "boolean"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "autouserdir",
+	 * 		"description":   "Auto create user directory",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "boolean"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "defaultquotaspace",
+	 * 		"description":   "Default quota space in bytes",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "defaultquotafile",
+	 * 		"description":   "Default number of files",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "getquotatypeid",
+	 * 		"description":   "Get Quota message type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "createtypeid",
+	 * 		"description":   "Create Quota message type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -257,6 +372,71 @@ class StorageController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "import",
+	 * 		"description":   "Import",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "boolean"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "importhostname",
+	 * 		"description":   "Import hostname",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "boolean"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "autouserdir",
+	 * 		"description":   "Auto create user directory",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "boolean"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "defaultquotaspace",
+	 * 		"description":   "Default quota space in bytes",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "defaultquotafile",
+	 * 		"description":   "Default number of files",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "getquotatypeid",
+	 * 		"description":   "Get Quota message type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "createtypeid",
+	 * 		"description":   "Create Quota message type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @param   integer  $id
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function update($id, Request $request)
@@ -323,6 +503,7 @@ class StorageController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

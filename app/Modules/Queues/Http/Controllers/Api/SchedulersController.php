@@ -134,53 +134,70 @@ class SchedulersController extends Controller
 	 * @apiUri    /api/queues/schedulers
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "hostname",
-	 *      "description":   "Hostname",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "queuesubresourceid",
-	 *      "description":   "Queue subresource ID",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "queuesubresourceid",
+	 * 		"description":   "Queue subresource ID",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "batchsystem",
-	 *      "description":   "Batchsystem ID",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "hostname",
+	 * 		"description":   "Hostname",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 64
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "Datetime for draining",
-	 *      "description":   "The start time. Defaults to now.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "batchsystem",
+	 * 		"description":   "Batchsystem ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "datetimelastimportstart",
-	 *      "description":   "Datetime for last import",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "schedulerpolocyid",
+	 * 		"description":   "Scheduler Policy ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "schedulerpolicyid",
-	 *      "description":   "Scheduler policy ID",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "defaultmaxwalltime",
+	 * 		"description":   "Default max wall time",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "defaultmaxwalltime",
-	 *      "description":   "Default max walltime in seconds",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "datetimedraindown",
+	 * 		"description":   "Drain timestamp",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -188,13 +205,13 @@ class SchedulersController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'hostname' => 'required|string|max:64',
-			'queuesubresourceid' => 'required|integer|min:1',
-			'batchsystem' => 'nullable|integer|min:1',
-			'datetimedraindown' => 'nullable|string',
+			'hostname'                => 'required|string|max:64',
+			'queuesubresourceid'      => 'required|integer|min:1',
+			'batchsystem'             => 'nullable|integer|min:1',
+			'datetimedraindown'       => 'nullable|string',
 			'datetimelastimportstart' => 'nullable|string',
-			'schedulerpolicyid' => 'nullable|integer',
-			'defaultmaxwalltime' => 'required|integer',
+			'schedulerpolicyid'       => 'nullable|integer',
+			'defaultmaxwalltime'      => 'required|integer',
 		]);
 
 		$row = Scheduler::findByHostname($request->input('hostname'));
@@ -216,11 +233,13 @@ class SchedulersController extends Controller
 	 * @apiUri    /api/queues/schedulers/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue walltime",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response
@@ -239,25 +258,92 @@ class SchedulersController extends Controller
 	 * @apiUri    /api/queues/schedulers/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue walltime",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "datetimestart",
-	 *      "description":   "The start time",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "queuesubresourceid",
+	 * 		"description":   "Queue subresource ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "datetimestop",
-	 *      "description":   "The stop time",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "hostname",
+	 * 		"description":   "Hostname",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 64
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "batchsystem",
+	 * 		"description":   "Batchsystem ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "schedulerpolocyid",
+	 * 		"description":   "Scheduler Policy ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "defaultmaxwalltime",
+	 * 		"description":   "Default max wall time in seconds",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimedraindown",
+	 * 		"description":   "Drain timestamp",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimelastimportstart",
+	 * 		"description":   "Last import started timestamp",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimelastimportstop",
+	 * 		"description":   "Last import finished timestamp",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T09:30:00Z"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
@@ -268,9 +354,14 @@ class SchedulersController extends Controller
 		$row = Scheduler::findOrFail($id);
 
 		$request->validate([
-			'datetimestart' => 'nullable|string',
-			'datetimestop' => 'nullable|string',
-			'walltime' => 'nullable|integer',
+			'hostname'                => 'nullable|string|max:64',
+			'queuesubresourceid'      => 'nullable|integer|min:1',
+			'batchsystem'             => 'nullable|integer|min:1',
+			'datetimedraindown'       => 'nullable|date',
+			'datetimelastimportstart' => 'nullable|date',
+			'datetimelastimportstop'  => 'nullable|date',
+			'schedulerpolicyid'       => 'nullable|integer',
+			'defaultmaxwalltime'      => 'nullable|integer',
 		]);
 
 		$row->update($request->all());
@@ -285,11 +376,13 @@ class SchedulersController extends Controller
 	 * @apiUri    /api/queues/schedulers/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue walltime",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response

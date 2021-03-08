@@ -22,41 +22,83 @@ class PurchasesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/storage/purchases
 	 * @apiParameter {
-	 * 		"name":          "limit",
-	 * 		"description":   "Number of result to return.",
-	 * 		"type":          "integer",
+	 * 		"in":            "query",
+	 * 		"name":          "resourceid",
+	 * 		"description":   "A Resource ID to filter by.",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   25
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "page",
-	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
+	 * 		"in":            "query",
+	 * 		"name":          "groupid",
+	 * 		"description":   "A Group ID to filter by.",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "sellergroupid",
+	 * 		"description":   "A selling Group ID to filter by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result to return.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   20
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 *      "default":       "created",
-	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimestart",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"resourceid",
+	 * 				"groupid",
+	 * 				"datetimestart",
+	 * 				"datetimestop",
+	 * 				"bytes",
+	 * 				"sellergroupid"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "desc",
 	 * 		"schema": {
@@ -107,6 +149,18 @@ class PurchasesController extends Controller
 			$query->where('sellergroupid', '=', $filters['sellergroupid']);
 		}
 
+		if ($filters['search'])
+		{
+			if (is_numeric($filters['search']))
+			{
+				$query->where('id', '=', $filters['search']);
+			}
+			else
+			{
+				$query->where('comment', 'like', '%' . $filters['search'] . '%');
+			}
+		}
+
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
@@ -126,23 +180,86 @@ class PurchasesController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /api/storage/purchases
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "resourceid",
+	 * 		"description":   "Resource ID",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "groupid",
+	 * 		"description":   "ID of group making the purchase",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "sellergroupid",
+	 * 		"description":   "ID of seller group",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Timestamp for when the purchase starts",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Timestamp for when the purchase stops",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "bytes",
+	 * 		"description":   "Amount of space in bytes being purchases",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "comment",
+	 * 		"description":   "Comments/notes",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
+	 * 		}
+	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
 	{
 		$request->validate([
-			'resourceid' => 'required|integer|min:1',
-			'groupid' => 'required|integer',
-			//'bytes' => 'nullable|integer',
+			'resourceid'    => 'required|integer|min:1',
+			'groupid'       => 'required|integer',
+			'bytes'         => 'nullable|integer',
 			'sellergroupid' => 'nullable|integer',
 			'datetimestart' => 'required|date',
-			'datetimestop' => 'nullable|date',
+			'datetimestop'  => 'nullable|date',
+			'comment'       => 'nullable|string|max:2000'
 		]);
 
 		$row = new Purchase;
@@ -325,23 +442,88 @@ class PurchasesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "resourceid",
+	 * 		"description":   "Resource ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "groupid",
+	 * 		"description":   "ID of group making the purchase",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "sellergroupid",
+	 * 		"description":   "ID of seller group",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Timestamp for when the purchase starts",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"default":   "Now",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Timestamp for when the purchase stops",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "bytes",
+	 * 		"description":   "Amount of space in bytes being purchases",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "comment",
+	 * 		"description":   "Comments/notes",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
+	 * 		}
+	 * }
+	 * @param   integer  $id
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function update($id, Request $request)
 	{
 		$request->validate([
-			'resourceid' => 'required|integer|min:1',
-			'groupid' => 'required|integer',
+			'resourceid'    => 'required|integer|min:1',
+			'groupid'       => 'required|integer',
 			//'bytes' => 'nullable|integer',
 			'sellergroupid' => 'nullable|integer',
-			'datetimestart' => 'required|date',
-			'datetimestop' => 'nullable|date',
+			'datetimestart' => 'nullable|date',
+			'datetimestop'  => 'nullable|date',
+			'comment'       => 'nullable|string'
 		]);
 
 		$row = Purchase::findOrFail($id);
