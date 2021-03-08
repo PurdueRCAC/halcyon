@@ -62,11 +62,29 @@ $(document).ready(function() {
             });
     }*/
 
-    $('.form-check-input').on('change', function(e){
+    $('.form-check-input').on('change', function (e) {
         if ($(this).is(':checked') && $(this).data('show')) {
             $($(this).data('show')).removeClass('hide');
+            if ($(this).data('hide')) {
+                $($(this).data('hide')).addClass('hide');
+            }
         } else {
             $(this).closest('fieldset').find('.form-dependent').addClass('hide');
+        }
+    });
+
+    $('[data-word-limit]').on('keyup', function () {
+        var words = $(this).val()
+            .replace(/^[\s,.;]+/, "")
+            .replace(/[\s,.;]+$/, "")
+            .split(/[\s,.;]+/)
+            .length;
+        $(this).parent().find('.word-count').text(words);
+
+        var max = parseInt($(this).data('word-limit'));
+        if (words >= max) {
+            var trimmed = $(this).val().split(/\s+/, max).join(' ');
+            $(this).val(trimmed);
         }
     });
 
@@ -77,7 +95,27 @@ $(document).ready(function() {
 
     var inputs = $('input[required],textarea[required]');
     var needed = inputs.length, validated = 0;
-    inputs.on('change', function(e){
+
+    inputs.on('blur', function (e) {
+        if (this.value) {
+            if (this.validity.valid) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+                validated++;
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        } else {
+            this.classList.remove('is-valid');
+            this.classList.add('is-invalid');
+        }
+        if (needed == validated) {
+            sbmt.prop('disabled', false);
+        }
+    });
+
+    inputs.on('change', function (e) {
         if (this.value) {
             if (this.validity.valid) {
                 this.classList.add('is-valid');
@@ -91,7 +129,7 @@ $(document).ready(function() {
         }
     });
 
-    sbmt.on('click', function(e){
+    sbmt.on('click', function (e) {
         e.preventDefault();
 
         var elms = frm.querySelectorAll('input[required]');
