@@ -37,7 +37,6 @@ class ThemesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
@@ -103,6 +102,7 @@ class ThemesController extends Controller
 			'client_id' => null,
 			// Pagination
 			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			'order'     => 'title',
 			'order_dir' => 'asc',
 		);
@@ -201,7 +201,7 @@ class ThemesController extends Controller
 
 		// Get records
 		$rows = $query
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		//$preview = $this->config->get('template_positions_display');
@@ -236,7 +236,6 @@ class ThemesController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "client_id",
 	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",

@@ -25,7 +25,6 @@ class TagsController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -106,6 +105,7 @@ class TagsController extends Controller
 			'type'     => $request->input('type', null),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
+			'page'     => $request->input('page', 1),
 			//'start' => $request->input('limitstart', 0),
 			// Sorting
 			'order'     => $request->input('order', Tag::$orderBy),
@@ -145,7 +145,8 @@ class TagsController extends Controller
 		$rows = $query
 			//->withCount('tagged')
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit']);
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
+			->appends(array_filter($filters));
 
 		return new TagResourceCollection($rows);
 	}
@@ -327,7 +328,7 @@ class TagsController extends Controller
 	 * @param   integer $id
 	 * @return  Response
 	 */
-	public function destroy($id)
+	public function delete($id)
 	{
 		$tag = Tag::findOrFail($id);
 

@@ -78,6 +78,33 @@ class LevelsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"data": [
+	 * 							{
+	 * 								"id": 1,
+	 * 								"title": "Public",
+	 * 								"ordering": 0,
+	 * 								"rules": [1],
+	 * 								"api": "https:\/\/yourhost/api/users/levels/1"
+	 * 							},
+	 * 							{
+	 * 								"id": 2,
+	 * 								"title": "Registered",
+	 * 								"ordering": 1,
+	 * 								"rules": [2,8],
+	 * 								"api": "https:\/\/yourhost/api/users/levels/2"
+	 * 							}
+	 * 						]
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		}
+	 * }
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -86,7 +113,10 @@ class LevelsController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
+			// Paging
 			'limit'     => config('list_limit', 20),
+			'page'      => 1,
+			// Sorting
 			'order'     => Level::$orderBy,
 			'order_dir' => Level::$orderDir,
 		);
@@ -125,7 +155,7 @@ class LevelsController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		$rows->each(function ($item, $key)
@@ -158,6 +188,25 @@ class LevelsController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "array"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 7,
+	 * 						"title": "Example",
+	 * 						"ordering": 7,
+	 * 						"rules": [2,3,4],
+	 * 						"api": "https:\/\/yourhost/api/users/levels/7"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param  Request $request
@@ -195,6 +244,25 @@ class LevelsController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful update",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 7,
+	 * 						"title": "Example",
+	 * 						"ordering": 7,
+	 * 						"rules": [2,3,4],
+	 * 						"api": "https:\/\/yourhost/api/users/levels/7"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param  integer  $id
@@ -240,6 +308,28 @@ class LevelsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "array"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful update",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 7,
+	 * 						"title": "Example",
+	 * 						"ordering": 7,
+	 * 						"rules": [2,3,4,5],
+	 * 						"api": "https:\/\/yourhost/api/users/levels/7"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"415": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request $request

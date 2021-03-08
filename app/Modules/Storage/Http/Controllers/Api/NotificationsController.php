@@ -81,6 +81,7 @@ class NotificationsController extends Controller
 			'timeperiodid' => $request->input('timeperiodid', '-1'),
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'id'),
 			'order_dir' => $request->input('order_dir', 'desc')
@@ -116,7 +117,7 @@ class NotificationsController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends($filters);
 
 		$rows->each(function($item, $key)

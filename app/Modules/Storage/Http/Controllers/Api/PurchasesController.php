@@ -78,6 +78,7 @@ class PurchasesController extends Controller
 			'sellergroupid' => $request->input('sellergroupid'),
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'datetimestart'),
 			'order_dir' => $request->input('order_dir', 'desc')
@@ -108,7 +109,7 @@ class PurchasesController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends($filters);
 
 		$rows->each(function($item, $key)

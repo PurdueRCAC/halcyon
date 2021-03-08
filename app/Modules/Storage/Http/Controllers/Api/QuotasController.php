@@ -21,16 +21,22 @@ use App\Modules\Users\Models\User;
 class QuotasController extends Controller
 {
 	/**
-	 * Display a listing of quotas for a user
+	 * Display a listing of quotas for a user.
+	 * 
+	 * Note that if the user has any current quota usage information,
+	 * a message is added to the queue to provide the latest info.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/storage/quotas
+	 * @apiUri    /api/storage/quotas/{username?}
 	 * @apiParameter {
+	 * 		"in":            "path"
 	 * 		"name":          "username",
 	 * 		"description":   "User username to retrieve data for",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "Current user's username"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "Current user's username"
+	 * 		}
 	 * }
 	 * @return Response
 	 */

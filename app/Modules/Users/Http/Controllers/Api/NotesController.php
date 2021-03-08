@@ -86,7 +86,10 @@ class NotesController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
+			// Paging
 			'limit'     => config('list_limit', 20),
+			'page'      => 1,
+			// Sorting
 			'order'     => Note::$orderBy,
 			'order_dir' => Note::$orderDir,
 		);
@@ -134,7 +137,7 @@ class NotesController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		$rows->each(function ($item, $key)
@@ -154,17 +157,16 @@ class NotesController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "subject",
 	 * 		"description":   "Subject of the note",
-	 * 		"type":          "string",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": "100"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "body",
 	 * 		"description":   "Body of the note",
-	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
@@ -174,7 +176,6 @@ class NotesController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "user_id",
 	 * 		"description":   "User ID",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
@@ -188,7 +189,7 @@ class NotesController extends Controller
 		$request->validate([
 			'user_id' => 'required|integer|min:1',
 			'subject' => 'required|string|max:100',
-			'body' => 'required|string'
+			'body'    => 'required|string'
 		]);
 
 		$row = new Note;
@@ -254,36 +255,18 @@ class NotesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "title",
-	 * 		"description":   "Menu title",
+	 * 		"name":          "subject",
+	 * 		"description":   "Subject of the note",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": "100"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "A description of the menu",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "client_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "menutype",
-	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
+	 * 		"name":          "body",
+	 * 		"description":   "Note content",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
@@ -297,7 +280,7 @@ class NotesController extends Controller
 	{
 		$request->validate([
 			'subject' => 'nullable|string|max:100',
-			'body' => 'nullable|string'
+			'body'    => 'nullable|string'
 		]);
 
 		$row = Note::findOrFail($id);

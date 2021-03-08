@@ -359,9 +359,11 @@ class WidgetsController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.title' => 'required|string|max:100',
+			'fields.title'    => 'required|string|max:100',
 			'fields.position' => 'required|string|max:50',
-			'fields.widget' => 'required|string|max:50'
+			'fields.widget'   => 'required|string|max:50',
+			'fields.params'   => 'nullable|array',
+			'fields.menu'     => 'nullable|array',
 		]);
 
 		$id = $request->input('id');
@@ -371,6 +373,7 @@ class WidgetsController extends Controller
 		$row->fill($request->input('fields'));
 		$row->note = '';
 
+		// Set params
 		$row->params;
 
 		if ($params = $request->input('fields.params'))
@@ -402,7 +405,7 @@ class WidgetsController extends Controller
 
 		$row->checkin();
 
-		return $this->cancel($request)->withSuccess(trans('global.messages.update success'));
+		return $this->cancel($request)->withSuccess($id ? trans('global.messages.item updated') : trans('global.messages.item created'));
 	}
 
 	/**

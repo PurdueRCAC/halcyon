@@ -97,6 +97,7 @@ class FacetsController extends Controller
 			'user_id'   => null,
 			'search'    => null,
 			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			'order'     => Facet::$orderBy,
 			'order_dir' => Facet::$orderDir,
 		);
@@ -140,7 +141,7 @@ class FacetsController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		$rows->each(function ($item, $key)

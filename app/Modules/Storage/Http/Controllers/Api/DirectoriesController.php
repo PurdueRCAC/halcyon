@@ -26,9 +26,17 @@ class DirectoriesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/storage/directories
 	 * @apiParameter {
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
-	 * 		"description":   "Number of result to return.",
-	 * 		"type":          "integer",
+	 * 		"description":   "Number of result per page.",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -36,36 +44,40 @@ class DirectoriesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "search",
-	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       ""
-	 * }
-	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 *      "default":       "created",
-	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "order_dir",
-	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "name",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved",
+	 * 				"parentid"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -77,15 +89,16 @@ class DirectoriesController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'search'   => $request->input('search', ''),
+			'search'     => $request->input('search', ''),
 			'resourceid' => $request->input('resourceid'),
 			'storageresourceid' => $request->input('storageresourceid'),
-			'groupid' => $request->input('groupid'),
+			'groupid'   => $request->input('groupid'),
 			'parentstoragedirid' => $request->input('parentstoragedirid'),
-			'state'    => $request->input('state', 'active'),
-			'quota'    => $request->input('quota'),
+			'state'     => $request->input('state', 'active'),
+			'quota'     => $request->input('quota'),
 			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
+			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'path'),
 			'order_dir' => $request->input('order_dir', 'ASC')
@@ -146,7 +159,7 @@ class DirectoriesController extends Controller
 			->withCount('children')
 			->groupBy('id')
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends($filters);
 
 		return new DirectoryResourceCollection($rows);

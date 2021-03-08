@@ -81,16 +81,17 @@ class UsersController extends Controller
 	{
 		// Get filters
 		$filters = array(
-			'search'   => null,
-			'range' => null,
+			'search'     => null,
+			'range'      => null,
 			'created_at' => null,
 			//'email_verified' => 1,
 			//'block'    => 0,
 			//'access'   => 0,
 			//'approved' => 1,
-			'role_id' => 0,
+			'role_id'   => 0,
 			// Paging
 			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			// Sorting
 			'order'     => 'datecreated',
 			'order_dir' => 'desc',
@@ -257,7 +258,7 @@ class UsersController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 		
 		foreach ($rows as $row)

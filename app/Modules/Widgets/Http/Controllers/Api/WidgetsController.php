@@ -103,6 +103,8 @@ class WidgetsController extends Controller
 	 * @apiResponse {
 	 * 		"200": {
 	 * 			"description": "List of widgets",
+	 * 			"content": {
+	 * 				"application/json": {
 	 * "example": {
 	 *     "current_page": 1,
 	 *     "data": [
@@ -247,7 +249,7 @@ class WidgetsController extends Controller
 	 *     "prev_page_url": null,
 	 *     "to": 3,
 	 *     "total": 5
-	 * }}}
+	 * }}}}}
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -264,6 +266,7 @@ class WidgetsController extends Controller
 			'client_id' => 0,
 			// Pagination
 			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			'order'     => Widget::$orderBy,
 			'order_dir' => Widget::$orderDir,
 		);
@@ -442,7 +445,7 @@ class WidgetsController extends Controller
 		}
 
 		$rows = $query
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		return new WidgetResourceCollection($rows);
@@ -480,15 +483,35 @@ class WidgetsController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "params",
+	 * 		"description":   "A list of key value pairs",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "menu",
+	 * 		"description":   "A list of menu item assignments",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array"
+	 * 		}
+	 * }
 	 * @param  Request $request
 	 * @return Response
 	 */
 	public function create(Request $request)
 	{
 		$request->validate([
-			'title' => 'required|string|max:100',
+			'title'    => 'required|string|max:100',
 			'position' => 'required|string|max:50',
-			'widget' => 'required|string|max:50'
+			'widget'   => 'required|string|max:50',
+			'params'   => 'nullable|array',
+			'menu'     => 'nullable|array',
 		]);
 
 		$row = new Widget();
@@ -540,50 +563,60 @@ class WidgetsController extends Controller
 	 * 		}
 	 * }
 	 * @apiResponse {
-	 * 		"data": {
-	 * 			"id": 134,
-	 * 			"title": "Announcements",
-	 * 			"note": "",
-	 * 			"content": "",
-	 * 			"ordering": 1,
-	 * 			"position": "featureRight",
-	 * 			"checked_out": 0,
-	 * 			"checked_out_time": null,
-	 * 			"publish_up": null,
-	 * 			"publish_down": null,
-	 * 			"published": 1,
-	 * 			"module": "news",
-	 * 			"access": 1,
-	 * 			"showtitle": 0,
-	 * 			"params": {
-	 * 				"catid": "2",
-	 * 				"item_title": "0",
-	 * 				"link_titles": null,
-	 * 				"item_heading": "h4",
-	 * 				"showLastSeparator": "1",
-	 * 				"readmore": "1",
-	 * 				"limit": "5",
-	 * 				"ordering": "published",
-	 * 				"direction": "DESC",
-	 * 				"layout": null,
-	 * 				"moduleclass_sfx": null,
-	 * 				"cache": "0",
-	 * 				"cache_time": "900",
-	 * 				"cachemode": "itemid"
-	 * 			},
-	 * 			"client_id": 0,
-	 * 			"language": "*",
-	 * 			"language_title": null,
-	 * 			"editor": null,
-	 * 			"access_level": "Public",
-	 * 			"pages": 0,
-	 * 			"name": "news",
-	 * 			"api": "https://yourhost/api/widgets/134",
-	 * 			"menu_assignment": 1,
-	 * 			"can": {
-	 * 				"edit": false,
-	 * 				"delete": false
+	 * 		"200": {
+	 * 			"description": "Successful record lookup",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 134,
+	 * 						"title": "Announcements",
+	 * 						"note": "",
+	 * 						"content": "",
+	 * 						"ordering": 1,
+	 * 						"position": "featureRight",
+	 * 						"checked_out": 0,
+	 * 						"checked_out_time": null,
+	 * 						"publish_up": null,
+	 * 						"publish_down": null,
+	 * 						"published": 1,
+	 * 						"module": "news",
+	 * 						"access": 1,
+	 * 						"showtitle": 0,
+	 * 						"params": {
+	 * 							"catid": "2",
+	 * 							"item_title": "0",
+	 * 							"link_titles": null,
+	 * 							"item_heading": "h4",
+	 * 							"showLastSeparator": "1",
+	 * 							"readmore": "1",
+	 * 							"limit": "5",
+	 * 							"ordering": "published",
+	 * 							"direction": "DESC",
+	 * 							"layout": null,
+	 * 							"moduleclass_sfx": null,
+	 * 							"cache": "0",
+	 * 							"cache_time": "900",
+	 * 							"cachemode": "itemid"
+	 * 						},
+	 * 						"client_id": 0,
+	 * 						"language": "*",
+	 * 						"language_title": null,
+	 * 						"editor": null,
+	 * 						"access_level": "Public",
+	 * 						"pages": 0,
+	 * 						"name": "news",
+	 * 						"api": "https://yourhost/api/widgets/134",
+	 * 						"menu_assignment": 1,
+	 * 						"can": {
+	 * 							"edit": false,
+	 * 							"delete": false
+	 * 						}
+	 * 					}
+	 * 				}
 	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param  integer  $id
@@ -628,6 +661,84 @@ class WidgetsController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "params",
+	 * 		"description":   "A list of key value pairs",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "menu",
+	 * 		"description":   "A list of menu item assignments",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful record update",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 134,
+	 * 						"title": "Announcements",
+	 * 						"note": "",
+	 * 						"content": "",
+	 * 						"ordering": 1,
+	 * 						"position": "featureRight",
+	 * 						"checked_out": 0,
+	 * 						"checked_out_time": null,
+	 * 						"publish_up": null,
+	 * 						"publish_down": null,
+	 * 						"published": 1,
+	 * 						"module": "news",
+	 * 						"access": 1,
+	 * 						"showtitle": 0,
+	 * 						"params": {
+	 * 							"catid": "2",
+	 * 							"item_title": "0",
+	 * 							"link_titles": null,
+	 * 							"item_heading": "h4",
+	 * 							"showLastSeparator": "1",
+	 * 							"readmore": "1",
+	 * 							"limit": "5",
+	 * 							"ordering": "published",
+	 * 							"direction": "DESC",
+	 * 							"layout": null,
+	 * 							"moduleclass_sfx": null,
+	 * 							"cache": "0",
+	 * 							"cache_time": "900",
+	 * 							"cachemode": "itemid"
+	 * 						},
+	 * 						"client_id": 0,
+	 * 						"language": "*",
+	 * 						"language_title": null,
+	 * 						"editor": null,
+	 * 						"access_level": "Public",
+	 * 						"pages": 0,
+	 * 						"name": "news",
+	 * 						"api": "https://yourhost/api/widgets/134",
+	 * 						"menu_assignment": 1,
+	 * 						"can": {
+	 * 							"edit": false,
+	 * 							"delete": false
+	 * 						}
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"415": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request $request
 	 * @param   integer $id
 	 * @return  Response
@@ -635,9 +746,11 @@ class WidgetsController extends Controller
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'title' => 'nullable|string|max:100',
+			'title'    => 'nullable|string|max:100',
 			'position' => 'nullable|string|max:50',
-			'widget' => 'nullable|string|max:50'
+			'widget'   => 'nullable|string|max:50',
+			'params'   => 'nullable|array',
+			'menu'     => 'nullable|array',
 		]);
 
 		$row = Widget::findOrFail($id);

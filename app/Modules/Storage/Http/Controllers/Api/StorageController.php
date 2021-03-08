@@ -72,6 +72,7 @@ class StorageController extends Controller
 			'state'    => $request->input('state', 'active'),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
+			'page'     => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'name'),
 			'order_dir' => $request->input('order_dir', 'asc')
@@ -107,7 +108,7 @@ class StorageController extends Controller
 		$rows = $query
 			->withCount('directories')
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends($filters);
 
 		$rows->each(function($item, $key)
@@ -227,11 +228,34 @@ class StorageController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "name",
+	 * 		"description":   "The name of the storage resource",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "path",
+	 * 		"description":   "The storage resource base path",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255,
+	 * 			"example":   "/scratch/foo"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "parentresourceid",
+	 * 		"description":   "The parent resource's ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return  Response
 	 */
