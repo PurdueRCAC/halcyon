@@ -24,6 +24,7 @@ class MessagesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/messages
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "state",
 	 * 		"description":   "Message state",
 	 * 		"required":      false,
@@ -38,6 +39,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "start",
 	 * 		"description":   "Submitted datetime start",
 	 * 		"required":      false,
@@ -48,6 +50,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "stop",
 	 * 		"description":   "Submitted datetime end",
 	 * 		"required":      false,
@@ -58,9 +61,9 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "returnstatus",
 	 * 		"description":   "Filter by return status",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
@@ -229,27 +232,27 @@ class MessagesController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /api/messages
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "messagequeuetypeid",
 	 * 		"description":   "Message type ID.",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "targetobjectid",
 	 * 		"description":   "Target object ID",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "messagequeueoptionsid",
 	 * 		"description":   "Message options ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -257,6 +260,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "userid",
 	 * 		"description":   "User ID",
 	 * 		"required":      false,
@@ -370,33 +374,34 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "messagequeuetypeid",
 	 * 		"description":   "Message type ID.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "targetobjectid",
 	 * 		"description":   "Target object ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "messagequeueoptionsid",
 	 * 		"description":   "Message options ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "userid",
 	 * 		"description":   "User ID",
 	 * 		"required":      false,
@@ -405,15 +410,16 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "pid",
 	 * 		"description":   "Process ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "datetimestarted",
 	 * 		"description":   "Datetime started",
 	 * 		"required":      false,
@@ -424,6 +430,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "datetimecompleted",
 	 * 		"description":   "Datetime completed",
 	 * 		"required":      false,
@@ -434,15 +441,16 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "returnstatus",
 	 * 		"description":   "Return status code",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "output",
 	 * 		"description":   "Process output",
 	 * 		"required":      false,
@@ -452,6 +460,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "started",
 	 * 		"description":   "Starting processing",
 	 * 		"required":      false,
@@ -464,6 +473,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "completed",
 	 * 		"description":   "Ending processing",
 	 * 		"required":      false,
@@ -476,6 +486,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "retry",
 	 * 		"description":   "Number of minutes to retry in",
 	 * 		"required":      false,

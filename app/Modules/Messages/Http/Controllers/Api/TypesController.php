@@ -22,6 +22,7 @@ class TypesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/messages/types
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"required":      false,
@@ -30,13 +31,16 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "resourceid",
 	 * 		"description":   "Resource ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "classname",
 	 * 		"description":   "Class name",
 	 * 		"required":      false,
@@ -45,6 +49,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
 	 * 		"required":      false,
@@ -54,6 +59,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"required":      false,
@@ -63,6 +69,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"required":      false,
@@ -77,11 +84,10 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "asc",
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "asc",

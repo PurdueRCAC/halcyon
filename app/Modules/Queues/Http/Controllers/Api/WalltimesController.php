@@ -23,41 +23,83 @@ class WalltimesController extends Controller
 	 * @apiUri    /api/queues/walltimes
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "limit",
-	 *      "description":   "Number of result to return.",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       25
+	 * 		"in":            "query",
+	 * 		"name":          "queueid",
+	 * 		"description":   "Queue ID to filter by",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "page",
-	 *      "description":   "Number of where to start returning results.",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       0
+	 * 		"in":            "query",
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Items that start after this date",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "search",
-	 *      "description":   "A word or phrase to search for.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "query",
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Items that stop before this date",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "order",
-	 *      "description":   "Field to sort results by.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       "created",
-	 *      "allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result to return.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   20
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "order_dir",
-	 *      "description":   "Direction to sort results by.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       "desc",
-	 *      "allowedValues": "asc, desc"
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"datetimecreated"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -113,32 +155,45 @@ class WalltimesController extends Controller
 	 * @apiUri    /api/queues/walltimes
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "queueid",
-	 *      "description":   "The ID of owning queue",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "queueid",
+	 * 		"description":   "The ID of owning queue",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "datetimestart",
-	 *      "description":   "The start time. Defaults to now.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "The start time",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z",
+	 * 			"default":   "Now"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "datetimestop",
-	 *      "description":   "The stop time",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "The stop time",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "walltime",
-	 *      "description":   "walltime in seconds",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "walltime",
+	 * 		"description":   "Walltime in seconds",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -164,11 +219,13 @@ class WalltimesController extends Controller
 	 * @apiUri    /api/queues/walltimes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue walltime",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response
@@ -187,25 +244,44 @@ class WalltimesController extends Controller
 	 * @apiUri    /api/queues/walltimes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue walltime",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "datetimestart",
-	 *      "description":   "The start time",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "The start time",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "datetimestop",
-	 *      "description":   "The stop time",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "The stop time",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "walltime",
+	 * 		"description":   "Walltime in seconds",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
@@ -233,11 +309,13 @@ class WalltimesController extends Controller
 	 * @apiUri    /api/queues/walltimes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue walltime",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response

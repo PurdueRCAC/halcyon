@@ -165,6 +165,7 @@ class TypesController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)

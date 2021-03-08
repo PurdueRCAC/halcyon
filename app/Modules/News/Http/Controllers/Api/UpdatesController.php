@@ -88,6 +88,8 @@ class UpdatesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  integer  $news_id
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index($news_id, Request $request)
@@ -244,6 +246,7 @@ class UpdatesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
+	 * @param  integer  $news_id
 	 * @param  integer  $id
 	 * @return Response
 	 */
@@ -300,8 +303,9 @@ class UpdatesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   Request  $request
+	 * @param   integer  $news_id
 	 * @param   integer  $id
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function update($news_id, $id, Request $request)
@@ -348,10 +352,11 @@ class UpdatesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
+	 * @param   integer  $news_id
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function delete($id)
+	public function delete($news_id, $id)
 	{
 		$row = Update::findOrFail($id);
 

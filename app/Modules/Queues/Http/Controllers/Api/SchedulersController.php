@@ -23,62 +23,90 @@ class SchedulersController extends Controller
 	 * @apiUri    /api/queues/schedulers
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "queuesubresourceid",
-	 *      "description":   "Filter by queue subresource ID",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "query",
+	 * 		"name":          "queuesubresourceid",
+	 * 		"description":   "Filter by queue subresource ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "batchsystem",
-	 *      "description":   "Filter by batchsystem ID",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "query",
+	 * 		"name":          "batchsystem",
+	 * 		"description":   "Filter by batchsystem ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "schedulerpolicyid",
-	 *      "description":   "Filter by scheduler policy ID",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "query",
+	 * 		"name":          "schedulerpolicyid",
+	 * 		"description":   "Filter by scheduler policy ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "limit",
-	 *      "description":   "Number of result to return.",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       25
+	 * 		"in":            "query",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "page",
-	 *      "description":   "Number of where to start returning results.",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       0
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result to return.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   20
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "search",
-	 *      "description":   "A word or phrase to search for.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "order",
-	 *      "description":   "Field to sort results by.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       "created",
-	 *      "allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
+	 * 		"in":            "query",
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "id",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"queuesubresourceid",
+	 * 				"batchsystem",
+	 * 				"schedulerpolicyid"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "order_dir",
-	 *      "description":   "Direction to sort results by.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       "desc",
-	 *      "allowedValues": "asc, desc"
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response

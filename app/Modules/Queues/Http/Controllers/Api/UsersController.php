@@ -27,41 +27,88 @@ class UsersController extends Controller
 	 * @apiUri    /api/queues/users
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "limit",
-	 *      "description":   "Number of result to return.",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       25
+	 * 		"in":            "query",
+	 * 		"name":          "queueid",
+	 * 		"description":   "A queue ID to filter by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "page",
-	 *      "description":   "Number of where to start returning results.",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       0
+	 * 		"in":            "query",
+	 * 		"name":          "userid",
+	 * 		"description":   "A user ID to filter by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "search",
-	 *      "description":   "A word or phrase to search for.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "query",
+	 * 		"name":          "membertype",
+	 * 		"description":   "A member type ID to filter by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "order",
-	 *      "description":   "Field to sort results by.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       "created",
-	 *      "allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
+	 * 		"in":            "query",
+	 * 		"name":          "notice",
+	 * 		"description":   "A notice state to filter by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "order_dir",
-	 *      "description":   "Direction to sort results by.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       "desc",
-	 *      "allowedValues": "asc, desc"
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result to return.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   20
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"datetimecreated"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -123,11 +170,41 @@ class UsersController extends Controller
 	 * @apiUri    /api/queues/users
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the queue user",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "queueid",
+	 * 		"description":   "Queue ID",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "userrequestid",
+	 * 		"description":   "User Request ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "membertype",
+	 * 		"description":   "Member type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -228,11 +305,13 @@ class UsersController extends Controller
 	 * @apiUri    /api/queues/users/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue user",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response
@@ -251,53 +330,70 @@ class UsersController extends Controller
 	 * @apiUri    /api/queues/users/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue user",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "queueid",
-	 *      "description":   "The ID of the queue",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       null
+	 * 		"in":            "body",
+	 * 		"name":          "queueid",
+	 * 		"description":   "Queue ID",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "userid",
-	 *      "description":   "The ID of the user",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       null
+	 * 		"in":            "body",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "userrequestid",
-	 *      "description":   "The ID of a user request",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       null
+	 * 		"in":            "body",
+	 * 		"name":          "userrequestid",
+	 * 		"description":   "User Request ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "membertype",
-	 *      "description":   "The ID of user member type",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       null
+	 * 		"in":            "body",
+	 * 		"name":          "membertype",
+	 * 		"description":   "Member type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "datetimelastseen",
-	 *      "description":   "The datetime the user was last seen",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       null
+	 * 		"in":            "body",
+	 * 		"name":          "datetimelastseen",
+	 * 		"description":   "The datetime the user was last seen",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "notice",
-	 *      "description":   "The notice state",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       null
+	 * 		"in":            "body",
+	 * 		"name":          "notice",
+	 * 		"description":   "he notice state,
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
@@ -353,11 +449,13 @@ class UsersController extends Controller
 	 * @apiUri    /api/queues/users/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "id",
-	 *      "description":   "The ID of the queue user",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @return  Response
