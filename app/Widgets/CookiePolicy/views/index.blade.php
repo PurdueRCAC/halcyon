@@ -1,11 +1,7 @@
 <?php
 /**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
+ * Cookie Policy banner
  */
-//$this->css();
-//$this->js();
 ?>
 <div class="cookiepolicy" id="{{ id }}">
 	<div class="cookiepolicy-message">

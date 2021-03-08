@@ -1,16 +1,12 @@
 /**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
+ * Cookie Policy scripts
  */
 
-//-------------------------------------------------------------
-// Add an event to close the notice
-//-------------------------------------------------------------
 jQuery(document).ready(function($){
 
 	$('body').addClass('has-eprivacy-warning');
 
+	// Add an event to close the notice
 	$('.mod_eprivacy-close').on('click', function(e) {
 		e.preventDefault();
 
