@@ -1928,10 +1928,13 @@ ul {
   list-style: none;
   margin: 0;
 }
+.ui-widget-content a,
 a {
   color: var(--link);
   text-decoration: none;
 }
+.ui-widget-content a:hover,
+.ui-widget-content a:focus,
 a:hover,
 a:focus {
   color: var(--link-hover);
@@ -2505,8 +2508,9 @@ fieldset.adminform fieldset {
 }
 .ui-widget-header {
   border: none;
-border-bottom: 1px solid #ddd;
+border-bottom: 1px solid var(--tabs-border);
 background: transparent;
+color: var(--tab-active);
 }
 .ui-state-default,
 .ui-widget-content .ui-state-default,
@@ -2697,6 +2701,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 .ui-dialog.ui-widget-content {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: none;
+  background: var(--body-bg);
 }
 .ui-dialog .ui-dialog-content {
   padding: 1.5em;
