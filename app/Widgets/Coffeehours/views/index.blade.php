@@ -25,8 +25,8 @@ foreach ($rows as $event)
 {
 	$slot = new stdClass;
 	$slot->title = (isset($event->location) && $event->location) ? $event->location : $event->headline;
-	$slot->start = (new DateTime($event->datetimenews))->format('Y-m-d\TH:i:s');
-	$slot->end   = (new DateTime($event->datetimenewsend))->format('Y-m-d\TH:i:s');
+	$slot->start = $event->datetimenews->format('Y-m-d\TH:i:s');
+	$slot->end   = $event->datetimenewsend->format('Y-m-d\TH:i:s');
 	$slot->id    = $event->id;
 
 	$attending = false;
@@ -48,17 +48,28 @@ foreach ($rows as $event)
 		}
 	}
 
-	if ($event->url)
-	{
-		$slot->backgroundColor = '#0e7e12';
+	$now = Carbon\Carbon::now();
+	$endregistration = Carbon\Carbon::parse($event->datetimenews)->modify('-2 hours');
+
+	//if ($event->url)
+	//{
+		$slot->backgroundColor = '#0e7e12'; // green
 		$slot->borderColor = '#0e7e12';
 
-		if ($reserved)
+		// Mark as closed registration
+		if ($now->getTimestamp() >= $endregistration->getTimestamp())
 		{
-			$slot->backgroundColor = '#757575';
+			$slot->backgroundColor = '#757575'; // gray
 			$slot->borderColor = '#757575';
 		}
-	}
+
+		// Mark as reserved if the event hasn't ended
+		if ($reserved && $now->getTimestamp() < $event->datetimenewsend->getTimestamp())
+		{
+			$slot->backgroundColor = '#0c5460'; // blue
+			$slot->borderColor = '#0c5460';
+		}
+	//}
 
 	$events[] = $slot;
 	?>
@@ -102,7 +113,7 @@ foreach ($rows as $event)
 			//$news_start = new DateTime($event->datetimenews);
 			//$news_end = new DateTime($event->datetimenewsend);
 
-			$now = new DateTime();
+			//$now = new DateTime();
 
 			if ($event->isToday())
 			{
@@ -158,8 +169,8 @@ foreach ($rows as $event)
 			}
 
 			if (!$event->template
-				&& $event->datetimenewsend != '0000-00-00 00:00:00'
-				&& $event->datetimenewsend > $now->format('Y-m-d h:i:s'))
+			 && $event->datetimenewsend != '0000-00-00 00:00:00'
+			 && $event->datetimenewsend > $now->format('Y-m-d h:i:s'))
 			{
 				if ($type->calendar)
 				{
