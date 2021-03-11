@@ -16,6 +16,11 @@ app('pathway')
 @endphp
 
 @section('toolbar')
+	{!!
+		Toolbar::custom(route('admin.messages.rerun'), 'refresh', 'refresh', 'messages::messages.rerun', true);
+		Toolbar::spacer();
+	!!}
+
 	@if (auth()->user()->can('delete messages'))
 		{!! Toolbar::deleteList('', route('admin.messages.delete')) !!}
 	@endif
@@ -77,6 +82,13 @@ app('pathway')
 					@foreach ($types as $type)
 						<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id): echo ' selected="selected"'; endif;?>>{{ $type->name }}</option>
 					@endforeach
+				</select>
+
+				<label class="sr-only" for="filter_status">{{ trans('messages::messages.status') }}</label>
+				<select name="status" id="filter_status" class="form-control filter filter-submit">
+					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all statuses') }}</option>
+					<option value="success"<?php if ($filters['status'] == 'success'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.success') }}</option>
+					<option value="failure"<?php if ($filters['status'] == 'failure'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.failure') }}</option>
 				</select>
 			</div>
 		</div>

@@ -22,6 +22,7 @@ class MessagesController extends Controller
 		// Get filters
 		$filters = array(
 			'state'     => 'published',
+			'status'    => '*',
 			'start'     => null,
 			'stop'      => null,
 			'type'      => '',
@@ -71,6 +72,15 @@ class MessagesController extends Controller
 			$query->where('datetimesubmitted', '>', $filters['start']);
 		}
 
+		if ($filters['status'] == 'success')
+		{
+			$query->where('status', '=', 0);
+		}
+		elseif ($filters['status'] == 'failure')
+		{
+			$query->where('status', '>', 0);
+		}
+
 		if ($filters['stop'])
 		{
 			$query->where('datetimesubmitted', '<=', $filters['stop']);
@@ -103,8 +113,6 @@ class MessagesController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Message();
 
 		$types = Type::orderBy('name', 'asc')->get();
@@ -154,8 +162,6 @@ class MessagesController extends Controller
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Message::findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))
@@ -292,6 +298,53 @@ class MessagesController extends Controller
 		if ($success)
 		{
 			$request->session()->flash('success', trans('messages.item deleted', $success));
+		}
+
+		return $this->cancel();
+	}
+
+	/**
+	 * Rerun the specified messages
+	 *
+	 * @param   Request  $request
+	 * @return  Response
+	 */
+	public function rerun(Request $request)
+	{
+		// Incoming
+		$ids = $request->input('id', array());
+		$ids = (!is_array($ids) ? array($ids) : $ids);
+
+		$success = 0;
+
+		foreach ($ids as $id)
+		{
+			// Delete the entry
+			// Note: This is recursive and will also remove all descendents
+			$row = Message::findOrFail($id);
+
+			if (!$row->completed())
+			{
+				continue;
+			}
+
+			if (!$row->update([
+				'datetimestarted' => null,
+				'datetimecompleted' => null,
+				'pid' => 0,
+				'returnstatus' => 0
+			]))
+			{
+				$request->session()->flash('error', trans('messages::messages.error.failed to rerun'));
+				continue;
+			}
+
+			$success++;
+		}
+
+		if ($success)
+		{
+			$request->session()->flash('success', trans('messages::messages.item reset', $success));
 		}
 
 		return $this->cancel();

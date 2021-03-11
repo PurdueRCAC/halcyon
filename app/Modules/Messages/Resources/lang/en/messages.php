@@ -44,4 +44,9 @@ return [
 		'invalid message queue type id' => 'Please select a type.',
 		'invalid name' => 'Please provide a name.',
 	],
+	'status' => 'Return status',
+	'all statuses' => '- All Return Statuses -',
+	'success' => 'Successful',
+	'failure' => 'Failed',
+	'rerun' => 'Re-submit',
 ];

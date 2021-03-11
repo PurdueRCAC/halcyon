@@ -48,6 +48,10 @@ $router->group(['prefix' => 'messages'], function (Router $router)
 		'as'   => 'admin.messages.cancel',
 		'uses' => 'MessagesController@cancel',
 	]);
+	$router->match(['get', 'post'], '/rerun', [
+		'as'   => 'admin.messages.rerun',
+		'uses' => 'MessagesController@rerun',
+	]);
 	$router->get('/create', [
 		'as' => 'admin.messages.create',
 		'uses' => 'MessagesController@create',
