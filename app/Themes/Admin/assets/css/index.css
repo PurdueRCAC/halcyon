@@ -117,6 +117,7 @@
   --badge-warning: #212529;
   --badge-info-background: rgba(30, 163, 163, 1);
   --badge-info: blue;
+  --none: #ccc;
   /*--page-link-border: #f5f5f5;*/
 }
 [data-mode=dark] {
@@ -206,6 +207,7 @@
   --badge-warning: rgba(255, 191, 39, 1);
   --badge-info-background: rgba(30, 163, 163, 0.3);
   --badge-info: rgba(30, 163, 163, 1);
+  --none: #555;
   /*--page-link-border: #1c1b21;*/
 }
 
@@ -4939,7 +4941,7 @@ a.menulist:hover:before {
 .none,
 .unknown,
 .never {
-  color: #ccc;
+  color: var(--none);
 }
 
 /* Usage meter */
