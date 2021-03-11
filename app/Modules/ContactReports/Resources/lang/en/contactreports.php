@@ -47,4 +47,10 @@ return [
 	'types' => 'Types',
 	'type' => 'Type',
 	'name' => 'Name',
+	'followup' => 'Followup',
+	'followup desc' => 'Set these values if you wish to send automated followup communications to the user in the contact report.',
+	'timeperiod' => 'Timeperiod',
+	'timeperiod count' => 'Number of timeperiods to wait before following up',
+	'timeperiod limit' => 'Number of timeperiods to look back in time to find unprocessed followups',
+	'all types' => '- All Types -',
 ];

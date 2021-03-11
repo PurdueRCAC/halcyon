@@ -79,6 +79,9 @@ app('pathway')
 				<th scope="col">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('contactreports::contactreports.reports'), 'reports_count', $filters['order_dir'], $filters['order']); ?>
 				</th>
+				<th scope="col">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('contactreports::contactreports.followup'), 'timeperiodid', $filters['order_dir'], $filters['order']); ?>
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -107,6 +110,13 @@ app('pathway')
 					<a href="{{ route('admin.contactreports.index', ['type' => $row->id]) }}">
 						{{ $row->reports_count }}
 					</a>
+				</td>
+				<td>
+					@if ($row->timeperiodid)
+						{{ $row->timeperiodcount }} {{ $row->timeperiod->plural }}
+					@else
+						<span class="none">{{ trans('global.none') }}</span>
+					@endif
 				</td>
 			</tr>
 		@endforeach

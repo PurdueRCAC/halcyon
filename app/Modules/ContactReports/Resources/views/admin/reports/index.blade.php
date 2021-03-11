@@ -59,10 +59,10 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-3">
+			<div class="col col-md-3 text-right">
 				<label class="sr-only" for="filter_contactreporttypeid">{{ trans('contactreports::contactreports.type') }}:</label>
 				<select name="type" id="filter_contactreporttypeid" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['type'] == '*') { echo ' selected="selected"'; } ?>>{{ trans('global.all') }}</option>
+					<option value="*"<?php if ($filters['type'] == '*') { echo ' selected="selected"'; } ?>>{{ trans('contactreports::contactreports.all types') }}</option>
 					<option value="0"<?php if (!$filters['type']) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
 					@foreach ($types as $type)
 						<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id) { echo ' selected="selected"'; } ?>>{{ $type->name }}</option>
@@ -155,7 +155,13 @@ app('pathway')
 					$users = array();
 					foreach ($row->users as $user)
 					{
-						$users[] = ($user->user ? $user->user->name : trans('global.unknown'));
+						$u = ($user->user ? $user->user->name : trans('global.unknown'));
+						
+						if ($user->notified()):
+							$u .= ' <time datetime="' . $user->datetimelastnotify->toDateTimeString() . '">' . $user->datetimelastnotify->format('Y-m-d') . '</time>';
+						endif;
+
+						$users[] = $u;
 					}
 					?>
 					@if (count($users))
@@ -166,9 +172,9 @@ app('pathway')
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->getOriginal('datetimecontact') && $row->getOriginal('datetimecontact') != '0000-00-00 00:00:00')
+						@if ($row->datetimecontact && $row->datetimecontact != '0000-00-00 00:00:00' && $row->datetimecontact != '-0001-11-30 00:00:00')
 							<time datetime="{{ $row->datetimecontact }}">
-								@if ($row->datetimecontact->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
+								@if ($row->datetimecontact->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
 									{{ $row->datetimecontact->diffForHumans() }}
 								@else
 									{{ $row->datetimecontact->format('Y-m-d') }}

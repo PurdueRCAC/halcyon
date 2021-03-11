@@ -54,6 +54,7 @@ class CreateContactReportsTables extends Migration
 				$table->integer('contactreportid')->unsigned()->default(0);
 				$table->integer('userid')->unsigned()->default(0);
 				$table->timestamp('datetimecreated');
+				$table->timestamp('datetimelastnotify');
 				$table->index(['contactreportid', 'userid']);
 				$table->index('userid');
 			});
@@ -95,6 +96,9 @@ class CreateContactReportsTables extends Migration
 			{
 				$table->increments('id');
 				$table->string('name');
+				$table->tinyInteger('timeperiodid')->unsigned()->default(0);
+				$table->tinyInteger('timeperiodcount')->unsigned()->default(0);
+				$table->tinyInteger('timeperiodlimit')->unsigned()->default(0);
 			});
 		}
 

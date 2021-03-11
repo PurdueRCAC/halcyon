@@ -9,6 +9,7 @@ use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\ContactReports\Events\TypeCreated;
 use App\Modules\ContactReports\Events\TypeDeleted;
+use App\Halcyon\Models\Timeperiod;
 
 /**
  * Model for Contact Report type
@@ -135,6 +136,16 @@ class Type extends Model
 	public function reports()
 	{
 		return $this->hasMany(Report::class, 'contactreporttypeid');
+	}
+
+	/**
+	 * Defines a relationship to timeperiod
+	 *
+	 * @return  object
+	 */
+	public function timeperiod()
+	{
+		return $this->belongsTo(Timeperiod::class, 'timeperiodid');
 	}
 
 	/**

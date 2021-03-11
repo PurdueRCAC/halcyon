@@ -63,11 +63,11 @@ class User extends Model
 	);
 
 	/**
-	 * Defines a relationship to article
+	 * Defines a relationship to report
 	 *
 	 * @return  object
 	 */
-	public function article()
+	public function report()
 	{
 		return $this->belongsTo(Report::class, 'contactreportid');
 	}
@@ -90,5 +90,15 @@ class User extends Model
 	public function followers()
 	{
 		return $this->hasMany(Follow::class, 'targetuserid')->whereIsContactFollower();
+	}
+
+	/**
+	 * Was the user notified?
+	 *
+	 * @return  object
+	 */
+	public function notified()
+	{
+		return ($this->datetimelastnotify && $this->datetimelastnotify != '0000-00-00 00:00:00' && $this->datetimelastnotify != '-0001-11-30 00:00:00');
 	}
 }
