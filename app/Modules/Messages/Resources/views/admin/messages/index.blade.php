@@ -53,21 +53,21 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-3">
+			<div class="col col-md-2">
 				<label class="sr-only" for="filter_start">{{ trans('messages::messages.start') }}</label>
 				<span class="input-group">
 					<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="Submitted from" />
 					<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
 				</span>
 			</div>
-			<div class="col col-md-3">
+			<div class="col col-md-2">
 				<label class="sr-only" for="filter_stop">{{ trans('messages::messages.stop') }}</label>
 				<span class="input-group">
 					<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="Submitted to" />
 					<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
 				</span>
 			</div>
-			<div class="col col-md-6 text-right filter-select">
+			<div class="col col-md-8 text-right filter-select">
 				<label class="sr-only" for="filter_state">{{ trans('messages::messages.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all states') }}</option>
@@ -141,7 +141,13 @@ app('pathway')
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr>
+			<?php
+			$cls = '';
+			if ($row->completed() && $row->returnstatus):
+				$cls = ' class="error-danger"';
+			endif;
+			?>
+			<tr{{ $cls }}>
 				@if (auth()->user()->can('delete messages'))
 					<td>
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
@@ -207,14 +213,14 @@ app('pathway')
 				<td>
 					<?php
 					$timetable  = '<table><tbody>';
-					$timetable .= '<tr><th>' . trans('messages::messages.started') . '</th><td>';
+					$timetable .= '<tr><th scope=\'row\'>' . trans('messages::messages.started') . '</th><td>';
 					if ($row->datetimestarted && $row->datetimestarted != '0000-00-00 00:00:00' && $row->datetimestarted != '-0001-11-30 00:00:00'):
 						$timetable .= '<time datetime=\''. $row->datetimestarted .'\'>' . $row->datetimestarted . '</time>';
 					else:
 						$timetable .= trans('messages::messages.not started');
 					endif;
 					$timetable .= '</td></tr>';
-					$timetable .= '<tr><th>' . trans('messages::messages.completed') . '</th><td>';
+					$timetable .= '<tr><th scope=\'row\'>' . trans('messages::messages.completed') . '</th><td>';
 					if ($row->datetimecompleted && $row->datetimecompleted != '0000-00-00 00:00:00' && $row->datetimecompleted != '-0001-11-30 00:00:00'):
 						$timetable .= '<time datetime=\''. $row->datetimecompleted .'\'>' . $row->datetimecompleted . '</time>';
 					else:
@@ -225,12 +231,12 @@ app('pathway')
 					?>
 					@if ($row->started())
 						@if ($row->completed())
-							<span class="badge badge-success has-tip" title="{!! $timetable !!}"><span class="glyph icon-check"></span> {{ $row->elapsed }}</span>
+							<span class="badge badge-success has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-check"></span> {{ $row->elapsed }}</span>
 						@else
-							<span class="badge badge-warning has-tip" title="{!! $timetable !!}"><span class="glyph icon-rotate-ccw"></span> {{ trans('messages::messages.processing') }}</span>
+							<span class="badge badge-warning has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-rotate-ccw"></span> {{ trans('messages::messages.processing') }}</span>
 						@endif
 					@else
-						<span class="badge badge-info has-tip" title="{!! $timetable !!}"><span class="glyph icon-more-horizontal"></span> {{ trans('messages::messages.pending') }}</span>
+						<span class="badge badge-info has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-more-horizontal"></span> {{ trans('messages::messages.pending') }}</span>
 					@endif
 				</td>
 				<td class="text-right">
@@ -243,6 +249,11 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-4 text-right">
+					<?php /*@if ($row->completed())
+						@if ($row->returnstatus)
+							<span class="text-danger icon-alert-octagon" aria-hidden="true"></span>
+						@endif
+					@endif*/ ?>
 					{{ $row->returnstatus }}
 				</td>
 			</tr>

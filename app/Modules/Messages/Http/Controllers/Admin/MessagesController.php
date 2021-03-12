@@ -74,11 +74,11 @@ class MessagesController extends Controller
 
 		if ($filters['status'] == 'success')
 		{
-			$query->where('status', '=', 0);
+			$query->where('returnstatus', '=', 0);
 		}
 		elseif ($filters['status'] == 'failure')
 		{
-			$query->where('status', '>', 0);
+			$query->where('returnstatus', '>', 0);
 		}
 
 		if ($filters['stop'])
