@@ -16,9 +16,15 @@
 @if ($page->metadata)
 	@foreach ($page->metadata->all() as $k => $v)
 		@if ($v)
+			@if ($v == '__comment__')
+				@push('meta')
+		{!! $k !!}
+@endpush
+			@else
 			@push('meta')
 		<meta name="{{ $k }}" content="{{ $v }}" />
 @endpush
+			@endif
 		@endif
 	@endforeach
 @endif

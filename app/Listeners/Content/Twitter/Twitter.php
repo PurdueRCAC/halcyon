@@ -151,6 +151,7 @@ class Twitter
 			}
 		}
 
+		$page->metadata->set('<!-- Twitter -->', '__comment__');
 		foreach ($tags as $key => $val)
 		{
 			$page->metadata->set($key, $val);

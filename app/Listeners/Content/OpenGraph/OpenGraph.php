@@ -158,6 +158,7 @@ class OpenGraph
 			}
 		}
 
+		$page->metadata->set('<!-- OpenGraph -->', '__comment__');
 		foreach ($tags as $key => $val)
 		{
 			$page->metadata->set($key, $val);
