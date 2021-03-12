@@ -118,6 +118,7 @@
   --badge-info-background: rgba(30, 163, 163, 1);
   --badge-info: blue;
   --none: #ccc;
+  --tag-bg: rgba(230, 230, 230, 0.2);
   /*--page-link-border: #f5f5f5;*/
 }
 [data-mode=dark] {
@@ -208,6 +209,7 @@
   --badge-info-background: rgba(30, 163, 163, 0.3);
   --badge-info: rgba(30, 163, 163, 1);
   --none: #555;
+  --tag-bg: rgba(230, 230, 230, 0.2);
   /*--page-link-border: #1c1b21;*/
 }
 
@@ -1405,6 +1407,7 @@ label {
 .form-group .select2-container--default .select2-selection--single .select2-selection__rendered {
     line-height: 1.5;
     padding: .375rem .75rem;
+    color: var(--input-color);
 }
 
 table.cke_dialog tbody tr td,
@@ -2083,9 +2086,10 @@ table.adminlist thead th input[type=checkbox] {
   background-color: #fff;
 }*/
 table.adminlist tbody tr.checked {
-    /*background-color: #eaf6f6;*/
-    background-color: rgba(92, 192, 215, 0.1);
-  }
+  /*background-color: #eaf6f6;*/
+  background-color: rgba(92, 192, 215, 0.1);
+}
+
 table.adminlist tbody tr.disabled th,
 table.adminlist tbody tr.disabled td,
 table.adminlist tbody tr.disabled a,
@@ -2659,6 +2663,7 @@ html .select2-container--default .select2-selection--single,
 html .select2-container--default .select2-selection--single .select2-selection__rendered,
 html .select2-container--default .select2-selection--single .select2-selection__arrow {
   height: 32px;
+  color: var(--input-color);
 }
 html .select2-container--default .select2-selection--multiple .select2-selection__rendered {
   padding: 0 10px;
@@ -5070,19 +5075,20 @@ a.menulist:hover:before {
   }
   .form-group .select2-container--default .select2-selection--single .select2-selection__rendered {
     color: rgba(255, 255, 255, 0.75);
-  }
+  }*/
+  .ui-datepicker.ui-widget-content,
   html .select2-dropdown {
-    background-color: #1c1b21;
-    border-color: #1c1b21;
+    background-color: var(--body-bg);
+    border-color: var(--body-bg);
   }
-  html .tagsinput {
+  /*html .tagsinput {
     background: var(--panel);
     border-color: transparent;
     color: var(--input-color);
-  }
-   html .tagsinput .tag {
-    background-color: rgba(230, 230, 230, 0.2);
   }*/
+   html .tagsinput .tag {
+    background-color: var(--tag-bg);
+  }
   .list-group-item {
     background-color: transparent;
     border-color: var(--panel-border);
