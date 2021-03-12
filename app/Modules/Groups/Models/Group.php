@@ -25,6 +25,11 @@ class Group extends Model
 {
 	use ErrorBag, Validatable, Historable;
 
+	/**
+	 * Timestamps
+	 *
+	 * @var  bool
+	 **/
 	public $timestamps = false;
 
 	/**
@@ -112,14 +117,14 @@ class Group extends Model
 	}
 
 	/**
-	 * Fields of science
+	 * Get a list of sfields of science
 	 *
 	 * @return  object
 	 */
-	/*public function fieldsOfScience()
+	public function fieldsOfScience()
 	{
-		return $this->hasMany(GroupFieldOfScience::class, 'groupid');
-	}*/
+		return $this->hasMany(FieldOfScience::class, 'groupid');
+	}
 
 	/**
 	 * Department
@@ -199,9 +204,9 @@ class Group extends Model
 	}
 
 	/**
-	 * Get a list of messages
+	 * Get a list of storage buckets
 	 *
-	 * @return  object
+	 * @return  array
 	 */
 	public function getStorageBucketsAttribute()
 	{
@@ -255,10 +260,10 @@ class Group extends Model
 		foreach ($data as $row)
 		{
 			array_push($storagebuckets, array(
-				'resourceid'  => $row->resourceid,
-				'soldbytes'   => $row->soldbytes,
-				'loanedbytes' => 0,
-				'totalbytes'  => $row->soldbytes,
+				'resourceid'       => $row->resourceid,
+				'soldbytes'        => $row->soldbytes,
+				'loanedbytes'      => 0,
+				'totalbytes'       => $row->soldbytes,
 				'unallocatedbytes' => 0,
 			));
 		}
@@ -374,16 +379,6 @@ class Group extends Model
 	}
 
 	/**
-	 * Get a list of storage loans
-	 *
-	 * @return  object
-	 */
-	public function fieldsOfScience()
-	{
-		return $this->hasMany(FieldOfScience::class, 'groupid');
-	}
-
-	/**
 	 * Get a list of unix groups
 	 *
 	 * @return  object
@@ -401,7 +396,8 @@ class Group extends Model
 	public function getMotdAttribute()
 	{
 		return $this->motds()
-			->whereNull('datetimeremoved')
+			->withTrashed()
+			->whereIsActive()
 			->orderBy('datetimecreated', 'desc')
 			->first();
 	}
@@ -422,10 +418,7 @@ class Group extends Model
 				continue;
 			}
 
-			//if ($queue->resource->trashed())
-			if ($queue->resource->datetimeremoved
-			 && $queue->resource->datetimeremoved != '0000-00-00 00:00:00'
-			 && $queue->resource->datetimeremoved != '-0001-11-30 00:00:00')
+			if ($queue->resource->isTrashed())
 			{
 				continue;
 			}
@@ -440,7 +433,7 @@ class Group extends Model
 	}
 
 	/**
-	 * Get a list of resources
+	 * Get a list of prior (trashed) resources
 	 *
 	 * @return  object
 	 */
@@ -455,9 +448,7 @@ class Group extends Model
 				continue;
 			}
 
-			if (!$queue->resource->datetimeremoved
-			 || $queue->resource->datetimeremoved == '0000-00-00 00:00:00'
-			 || $queue->resource->datetimeremoved == '-0001-11-30 00:00:00')
+			if (!$queue->resource->isTrashed())
 			{
 				continue;
 			}

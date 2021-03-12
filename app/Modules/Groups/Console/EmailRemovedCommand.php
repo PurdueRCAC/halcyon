@@ -108,6 +108,7 @@ class EmailRemovedCommand extends Command
 				}
 			}
 
+			// Email the affected users
 			foreach ($people as $userid => $user)
 			{
 				if (!$user)
@@ -128,6 +129,7 @@ class EmailRemovedCommand extends Command
 				$this->info("Emailed ownerremoved to {$user->email}.");
 			}
 
+			// Email managers
 			foreach ($group->managers as $manager)
 			{
 				$user = $manager->user;

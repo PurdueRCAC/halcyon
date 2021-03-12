@@ -13,6 +13,9 @@ class Type extends Model
 {
 	use ErrorBag, Validatable, Historable;
 
+	/**
+	 * Membership type levels
+	 **/
 	const MEMBER  = 1;
 	const MANAGER = 2;
 	const VIEWER  = 3;
@@ -54,6 +57,6 @@ class Type extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'name' => 'required'
+		'name' => 'required|string|max:20'
 	);
 }

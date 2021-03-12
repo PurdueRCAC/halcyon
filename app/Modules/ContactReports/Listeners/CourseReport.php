@@ -23,13 +23,14 @@ class CourseReport
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Handle a Course account being created
 	 *
 	 * @param   object   $event  AccountCreated
 	 * @return  void
 	 */
 	public function handleAccountCreated(AccountCreated $event)
 	{
+		// Does the course have a report?
 		if (!$event->course->report)
 		{
 			return;

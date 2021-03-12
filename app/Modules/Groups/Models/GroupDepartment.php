@@ -54,8 +54,8 @@ class GroupDepartment extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'groupid' => 'required',
-		'collegedeptid' => 'required'
+		'groupid' => 'required|integer',
+		'collegedeptid' => 'required|integer'
 	);
 
 	/**

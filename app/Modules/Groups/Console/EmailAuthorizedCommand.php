@@ -92,6 +92,7 @@ class EmailAuthorizedCommand extends Command
 				}
 			}
 
+			// Email the affected users
 			foreach ($people as $userid => $user)
 			{
 				if (!$user)
@@ -112,6 +113,7 @@ class EmailAuthorizedCommand extends Command
 				$this->info("Emailed ownerauthorized to {$user->email}.");
 			}
 
+			// Email managers
 			foreach ($group->managers as $manager)
 			{
 				$user = $manager->user;

@@ -65,7 +65,7 @@ class Node extends Model
 	}
 
 	/**
-	 * Get parent group
+	 * Get associated resource
 	 *
 	 * @return  object
 	 */

@@ -221,6 +221,7 @@ class Member extends Model
 	/**
 	 * Query scope where is member
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereIsMember($query)
@@ -231,6 +232,7 @@ class Member extends Model
 	/**
 	 * Query scope where membership is manager
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereIsManager($query)
@@ -241,6 +243,7 @@ class Member extends Model
 	/**
 	 * Query scope where membership is viewer
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereIsViewer($query)
@@ -251,6 +254,7 @@ class Member extends Model
 	/**
 	 * Query scope where membership is pending
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereIsPending($query)

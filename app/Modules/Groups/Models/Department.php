@@ -60,7 +60,7 @@ class Department extends Model
 		'name' => 'required'
 	);
 
-		/**
+	/**
 	 * The "booted" method of the model.
 	 *
 	 * @return void
@@ -123,6 +123,7 @@ class Department extends Model
 	 * @param   integer  $maxlevel  Maximum levels to descend
 	 * @param   integer  $level     Indention level
 	 * @param   integer  $type      Indention type
+	 * @param   string   $prfx
 	 * @return  array
 	 */
 	protected static function treeRecurse($id, $list, $children, $maxlevel=9999, $level=0, $type=1, $prfx = '')
@@ -166,6 +167,7 @@ class Department extends Model
 	/**
 	 * Get all parents
 	 *
+	 * @param   array  $ancestors
 	 * @return  array
 	 */
 	public function ancestors($ancestors = array())
@@ -209,6 +211,7 @@ class Department extends Model
 	/**
 	 * Delete entry and associated data
 	 *
+	 * @param   array  $options
 	 * @return  bool
 	 */
 	public function delete(array $options = [])

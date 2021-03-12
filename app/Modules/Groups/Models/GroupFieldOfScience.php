@@ -54,8 +54,8 @@ class GroupFieldOfScience extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'groupid' => 'required',
-		'fieldofscienceid' => 'required'
+		'groupid' => 'required|string',
+		'fieldofscienceid' => 'required|string'
 	);
 
 	/**

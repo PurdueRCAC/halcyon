@@ -1,12 +1,12 @@
-## Courses Module
+# Courses Module
 
 This module allows for users to select a class or workshop they are an instructor off and create an associated Course Account. Enrollments from the selected class or workshop are then given the appropriate resource role, allowing login access to the resource.
 
-### Command line options
+## Command line options
 
 Every command has an optional `--debug` flag that will run the command in a non-modification mode and only report changes it _would_ make.
 
-#### Sync
+### Sync
 
 `artisan courses:sync`
 
@@ -48,7 +48,7 @@ The Sync command retrieves enrollment information for registered course accounts
 * `App\Modules\Resources\Events\ResourceMemberCreated`
 * `App\Modules\Resources\Events\ResourceMemberDeleted`
 
-#### Email Additions
+### Email Additions
 
 `artisan courses:emailadditions`
 
@@ -58,7 +58,7 @@ This command looks for any new course users with `notice=1` and sends an email t
 
 (none)
 
-#### Email Removals
+### Email Removals
 
 `artisan courses:emailremovals`
 
@@ -67,3 +67,7 @@ This command looks for any course user with `notice=2` and sends an email to the
 **Events triggered:**
 
 (none)
+
+## Subscribed Events
+
+ * `App\Modules\Users\Events\UserBeforeDisplay` - When a User's page is being displayed, this pulls associated Courses.
