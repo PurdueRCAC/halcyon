@@ -7,7 +7,6 @@
 <script>
 $(document).ready(function() { 
 	$('.filter-submit').on('change', function(e){
-		//Filter($(this).data('type'), $(this).data('field'));
 		$(this).closest('form').submit();
 	});
 });

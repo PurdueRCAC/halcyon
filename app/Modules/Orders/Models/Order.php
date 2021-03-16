@@ -316,6 +316,16 @@ class Order extends Model
 	}
 
 	/**
+	 * Is the order in an active state?
+	 *
+	 * @return  bool
+	 */
+	public function isActive()
+	{
+		return ($this->status != 'canceled' && $this->status != 'complete');
+	}
+
+	/**
 	 * Delete entry and associated data
 	 *
 	 * @param   array  $options

@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Orders\Models\Account;
+use App\Modules\Orders\Models\Order;
 use Carbon\Carbon;
 
 /**
@@ -140,46 +141,65 @@ class AccountsController extends Controller
 			$filters['order_dir'] = 'desc';
 		}
 
-		$query = Account::query();
+		$a = (new Account)->getTable();
+		$o = (new Order)->getTable();
+
+		$query = Account::query()
+			->select($a . '.*');
+
+		if (!auth()->user()->can('manage orders'))
+		{
+			$userid = auth()->user()->id;
+
+			$query->join($o, $o . 'id', $a . '.orderid');
+			$query->where(function($where) use ($userid, $a, $o)
+			{
+				$where->where($a . '.approveruserid', '=', $userid)
+					->orWhere($o . '.userid', '=', $userid)
+					->orWhere($o . '.submitteruserid', '=', $userid);
+			});
+		}
 
 		if ($filters['approveruserid'])
 		{
-			$query->where('approveruserid', '=', $filters['approveruserid']);
+			$query->where($a . '.approveruserid', '=', $filters['approveruserid']);
 		}
 
 		if ($filters['orderid'])
 		{
-			$query->where('orderid', '=', $filters['orderid']);
+			$query->where($a . '.orderid', '=', $filters['orderid']);
 		}
 
 		if (!is_null($filters['notice']))
 		{
-			$query->where('notice', '=', $filters['notice']);
+			$query->where($a . '.notice', '=', $filters['notice']);
 		}
 
 		if ($filters['fund'])
 		{
-			$query->where(function($where)
+			$query->where(function($where) use ($a, $filters)
 			{
-				$where->where('purchaseio', 'like', '%' . $filters['fund'] . '%')
-					->orWhere('purchasewbse', 'like', '%' . $filters['fund'] . '%');
+				$filters['fund'] = preg_replace('/[^a-zA-Z0-9]+/', '', $filters['fund']);
+
+				$where->where($a . '.purchaseio', 'like', '%' . $filters['fund'] . '%')
+					->orWhere($a . '.purchasewbse', 'like', '%' . $filters['fund'] . '%');
 			});
 		}
 
 		if ($filters['doc'])
 		{
-			$query->where('paymentdocid', 'like', '%' . $filters['doc'] . '%');;
+			$query->where($a . '.paymentdocid', 'like', '%' . $filters['doc'] . '%');;
 		}
 
 		if ($filters['search'])
 		{
 			if (is_numeric($filters['search']))
 			{
-				$query->where('id', '=', $filters['search']);
+				$query->where($a . '.id', '=', $filters['search']);
 			}
 			else
 			{
-				$query->where('budgetjustifaction', 'like', '%' . $filters['search'] . '%');
+				$query->where($a . '.budgetjustifaction', 'like', '%' . $filters['search'] . '%');
 			}
 		}
 
@@ -198,31 +218,93 @@ class AccountsController extends Controller
 	 * @apiUri    /api/orders/accounts
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "usernotes",
-	 * 		"description":   "Submitter notes.",
-	 * 		"required":      false,
+	 * 		"name":          "orderid",
+	 * 		"description":   "Order ID",
+	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "Longer description of a tag",
-	 * 		"required":      false,
+	 * 		"name":          "amount",
+	 * 		"description":   "Amount, formatted or not",
+	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"example":   "2,400.00"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "namespace",
-	 * 		"description":   "Namespace for tag",
+	 * 		"name":          "purchasefund",
+	 * 		"description":   "Purchase fund",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 8
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "purchasecostcenter",
+	 * 		"description":   "Purchase cost center",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 10
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "purchaseorder",
+	 * 		"description":   "Purchase order",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 10
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "purchaseio",
+	 * 		"description":   "Purchase IO",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 10
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "purchasewbse",
+	 * 		"description":   "Purchase WBSE",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 17
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "budgetjustification",
+	 * 		"description":   "Budget justification",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "approveruserid",
+	 * 		"description":   "Approver user ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -256,11 +338,8 @@ class AccountsController extends Controller
 		// Select approvers of this order
 		$approvers = Account::query()
 			->where('orderid', '=', $row->orderid)
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->withTrashed()
+			->whereIsActive()
 			->get()
 			->pluck('approveruserid')
 			->toArray();
@@ -291,6 +370,7 @@ class AccountsController extends Controller
 		}
 
 		$row->save();
+		$row->api = route('api.orders.accounts.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -309,12 +389,13 @@ class AccountsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function read($id)
 	{
 		$row = Account::findOrFail($id);
-		//$row->status;
+		$row->api = route('api.orders.accounts.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -325,66 +406,147 @@ class AccountsController extends Controller
 	 * @apiMethod PUT
 	 * @apiUri    /api/orders/accounts/{id}
 	 * @apiParameter {
-	 * 		"in":            "path",
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"required":      true,
+	 * 		"in":            "body",
+	 * 		"name":          "amount",
+	 * 		"description":   "Amount, formatted or not",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"example":   "2,400.00"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "purchasefund",
+	 * 		"description":   "Purchase fund",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 8
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "purchasecostcenter",
+	 * 		"description":   "Purchase cost center",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 10
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "purchaseorder",
+	 * 		"description":   "Purchase order",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 10
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "purchaseio",
+	 * 		"description":   "Purchase IO",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 10
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "purchasewbse",
+	 * 		"description":   "Purchase WBSE",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 17
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "budgetjustification",
+	 * 		"description":   "Budget justification",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "approveruserid",
+	 * 		"description":   "Approver user ID",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "Tag text",
+	 * 		"name":          "approved",
+	 * 		"description":   "Has the payment been approved?",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "boolean"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "slug",
-	 * 		"description":   "Normalized text (alpha-numeric, no punctuation)",
+	 * 		"name":          "paid",
+	 * 		"description":   "Has the payment been paid?",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "boolean"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "Longer description of a tag",
+	 * 		"name":          "denied",
+	 * 		"description":   "Has the payment been denied?",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "boolean"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "namespace",
-	 * 		"description":   "Namespace for tag",
+	 * 		"name":          "datetimepaymentdoc",
+	 * 		"description":   "Timestamp for the payment doc",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "substitutes",
-	 * 		"description":   "Comma-separated list of aliases or alternatives",
+	 * 		"name":          "paymentdocid",
+	 * 		"description":   "Payment doc ID",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "boolean"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "notice",
+	 * 		"description":   "Notice state",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @param   integer $id
 	 * @param   Request $request
 	 * @return  Response
 	 */
 	public function update($id, Request $request)
 	{
 		$request->validate([
-			//'orderid' => 'required|integer',
 			'amount' => 'nullable|string',
 			'purchasefund' => 'nullable|string|max:8',
 			'purchasecostcenter' => 'nullable|string|max:10',
@@ -396,7 +558,7 @@ class AccountsController extends Controller
 			'approved' => 'nullable|integer',
 			'paid' => 'nullable|integer',
 			'denied' => 'nullable|integer',
-			'datetimepaymentdoc' => 'nullable|string',
+			'datetimepaymentdoc' => 'nullable|date',
 			'paymentdocid' => 'nullable|string',
 			'notice' => 'nullable|integer',
 		]);
@@ -407,11 +569,8 @@ class AccountsController extends Controller
 		// Select approvers of this order
 		$approvers = Account::query()
 			->where('orderid', '=', $row->orderid)
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->withTrashed()
+			->whereIsActive()
 			->get()
 			->pluck('approveruserid')
 			->toArray();
@@ -440,6 +599,7 @@ class AccountsController extends Controller
 
 		if ($request->has('approveruserid'))
 		{
+			$row->approveruserid = $request->input('approveruserid');
 			$row->notice = 3;
 		}
 
@@ -487,6 +647,7 @@ class AccountsController extends Controller
 		}
 
 		$row->save();
+		$row->api = route('api.orders.accounts.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -505,6 +666,7 @@ class AccountsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function destroy($id)

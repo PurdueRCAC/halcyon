@@ -502,7 +502,14 @@ function AddedNewCategory(xml) {
  */
 function DeleteProduct(product)  {
 	if (confirm("Are you sure you want to delete '" + document.getElementById("SPAN_" + product + "_name").innerHTML + "'?")) {
-		WSDeleteURL(product, DeletedProduct);
+		WSDeleteURL(product, function(xml) {
+			if (xml.status != 200) {
+				// Error handling
+				alert("An error occurred.");
+			} else {
+				window.location.reload();
+			}
+		});
 	}
 }
 
@@ -512,14 +519,14 @@ function DeleteProduct(product)  {
  * @param   {object}  xml
  * @return  {void}
  */
-function DeletedProduct(xml) {
+/*function DeletedProduct(xml) {
 	if (xml.status != 200) {
 		// Error handling
 		alert("An error occurred.");
 	} else {
 		window.location.reload();
 	}
-}
+}*/
 
 /**
  * Delete a category
@@ -529,7 +536,14 @@ function DeletedProduct(xml) {
  */
 function DeleteCategory(category)  {
 	if (confirm("Are you sure you want to delete '" + document.getElementById("SPAN_" + category + "_name").innerHTML + "' and all its products?")) {
-		WSDeleteURL(category, DeletedCategory);
+		WSDeleteURL(category, function(xml) {
+			if (xml.status != 200) {
+				// Error handling
+				alert("An error occurred.");
+			} else {
+				window.location.reload();
+			}
+		});
 	}
 }
 
@@ -540,14 +554,14 @@ function DeleteCategory(category)  {
  * @param   {string}  change
  * @return  {void}
  */
-function DeletedCategory(xml) {
+/*function DeletedCategory(xml) {
 	if (xml.status != 200) {
 		// Error handling
 		alert("An error occurred.");
 	} else {
 		window.location.reload();
 	}
-}
+}*/
 
 /**
  * Sequence items
@@ -778,25 +792,16 @@ function MouAgree() {
 
 	inputs = document.getElementsByClassName('mou-agree');
 	for (x=0;x<inputs.length;x++) {
-		//if (inputs[x].id.match("_mouagree$")) {
-			var product = inputs[x].getAttribute('data-id'); //id;
-			//product = product.substr(0,product.lastIndexOf("_"));
+		var product = inputs[x].getAttribute('data-id');
+		var mou = document.getElementById(product + "_mou");
+		if (mou.style.display != 'none') {
 
-			var mou = document.getElementById(product + "_mou");
-			if (mou.style.display != 'none') {
-
-				// Check checkbox
-				var box = inputs[x];
-				if (box.checked == true) {
-					checked++;
-					//document.getElementById("mou_error_" + product).style.display = "none";
-				} /*else {
-					if (!opened) {
-						document.getElementById("mou_error_" + product).style.display = "inline";
-					}
-				}*/
+			// Check checkbox
+			var box = inputs[x];
+			if (box.checked == true) {
+				checked++;
 			}
-		//}
+		}
 	}
 
 	if (count != checked) {
@@ -820,36 +825,29 @@ function MouAgree() {
  * @return  {void}
  */
 function RestrictAgree() {
-	//var inputs = document.getElementsByTagName("input");
 	var count = 0;
-	var checked = 0;
+	//var checked = 0;
 
-	if (!restrict) {
-		// Change button text
-		var btn = document.getElementById('continue');
-		var btnval = btn.value;
-		btn.value = btn.getAttribute('data-submit-txt');
-		btn.setAttribute('data-submit-txt', btnval);
-	}
+	// Change button text
+	var btn = document.getElementById('continue');
+	var btnval = btn.value;
+	btn.value = btn.getAttribute('data-submit-txt');
+	btn.setAttribute('data-submit-txt', btnval);
 
-	//var count = 0;
 	var inputs = document.getElementsByClassName("restrict-agree");
 	for (var x=0;x<inputs.length;x++) {
-		//if (inputs[x].id.match(/[^_]+_restrictagree\d+/)) {
-			var product = inputs[x].getAttribute('data-id'); //.id;
-			//product = product.substr(0, product.lastIndexOf("_"));
+		var product = inputs[x].getAttribute('data-id');
 
-			// did we select this?
-			var quantity = document.getElementById(product + "_quantity").value;
+		// did we select this?
+		var quantity = document.getElementById(product + "_quantity").value;
 
-			var restrict = document.getElementById(product + "_restrict");
-			if (quantity > 0) {
-				restrict.style.display = "block";
-				count++;
-			} else {
-				restrict.style.display = "none";
-			}
-		//}
+		var restrict = document.getElementById(product + "_restrict");
+		if (quantity > 0) {
+			restrict.style.display = "block";
+			count++;
+		} else {
+			restrict.style.display = "none";
+		}
 	}
 
 	var opened = false;
@@ -985,8 +983,9 @@ function TotalOrder() {
 	order['usernotes'] = document.getElementById('usernotes').value;
 	
 	//var post = '{"userid": "' + order['user'] + '", "items": ' + order['items'] + ', "staffnotes": ' + order['staffnotes'] + '}';
+	//console.log(post);
 	var btn = document.getElementById('continue');
-
+	//return;
 //console.log(order); return;
 	$.ajax({
 		url: btn.getAttribute('data-api'),
@@ -994,6 +993,7 @@ function TotalOrder() {
 		data: {
 			userid: order['user'],
 			items: order['items'],
+			usernotes: order['usernotes'],
 			staffnotes: order['staffnotes']
 		},
 		dataType: 'json',
@@ -1029,27 +1029,31 @@ function TotalOrder() {
  */
 function AddNewAccountRow() {
 	var row = document.getElementById("account_new_row");
-	var row2 = document.getElementById("account_new_row2");
-	var prompt_row = document.getElementById("account_new_row_prompt");
+	//var row2 = document.getElementById("account_new_row2");
+	//var prompt_row = document.getElementById("account_new_row_prompt");
 	var new_row = row.cloneNode(true);
-	var new_row2 = row2.cloneNode(true);
+	//var new_row2 = row2.cloneNode(true);
 
 	var new_box = new_row.getElementsByTagName("input")[0];
-	var new_box2 = new_row.getElementsByTagName("input")[1];
+	//var new_box2 = new_row.getElementsByTagName("input")[1];
 
-	new_row.id = "";
-	new_row2.id = "";
+	var i = row.parentNode.getElementsByTagName("tr").length;
+	new_row.id = "account_new_row" + i;
+	var rm = new_row.getElementsByClassName("account-remove")[0];
+	rm.setAttribute('href', '#' + new_row.id);
+
+	//new_row2.id = "";
 
 	new_box.value = "";
-	new_box2.value = "";
+	//new_box2.value = "";
 
 	var autocompleteOrderPruchaseAccount = function(url) {
 		return function(request, response) {
 			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-				response($.map(data.accounts, function (el) {
+				response($.map(data.data, function (el) {
 					return {
-						label: el.name,
-						id: el.id
+						label: (el.purchasewbse ? el.purchasewbse : el.purchaseio),
+						id: (el.purchasewbse ? el.purchasewbse : el.purchaseio)
 					};
 				}));
 			});
@@ -1057,8 +1061,8 @@ function AddNewAccountRow() {
 	};
 
 	$( new_box ).autocomplete({
-		source: autocompleteOrderPruchaseAccount(ROOT_URL + "orderpurchaseaccount/fund:%s"),
-		dataName: 'accounts',
+		source: autocompleteOrderPruchaseAccount(ROOT_URL + "orders/accounts/?api_token=" + $('meta[name="api-token"]').attr('content') + "&fund=%s"),
+		dataName: 'data',
 		height: 150,
 		delay: 100,
 		minLength: 0,
@@ -1068,7 +1072,7 @@ function AddNewAccountRow() {
 		autoText: false
 	});
 
-	$( new_box2 ).autocomplete({
+	/*$( new_box2 ).autocomplete({
 		source: autocompleteOrderPruchaseAccount(ROOT_URL + "orderpurchaseaccount/cc:%s"),
 		dataName: 'accounts',
 		height: 150,
@@ -1078,12 +1082,79 @@ function AddNewAccountRow() {
 		filter: /^[a-zA-Z]?[0-9\.]*$/i,
 		noResultsText: '',
 		autoText: false
-	});
+	});*/
 
-	row.parentNode.insertBefore(new_row, prompt_row);
-	row.parentNode.insertBefore(new_row2, prompt_row);
-	new_row.style.display = "table-row";
-	new_row2.style.display = "table-row";
+	new_row.classList.remove('hide');
+	row.parentNode.insertBefore(new_row, row);
+	//row.parentNode.insertBefore(new_row2, prompt_row);
+	//new_row.style.display = "table-row";
+	//new_row2.style.display = "table-row";
+
+	AccountApproverSearch();
+}
+
+function AccountApproverSearch() {
+	var users = $(".form-users");
+	if (users.length) {
+		users.each(function (i, user) {
+			user = $(user);
+			var cl = user.clone()
+				.attr('type', 'hidden')
+				.val(user.val().replace(/([^:]+):/, ''));
+			user
+				.attr('name', user.attr('id') + i)
+				.attr('id', user.attr('id') + i)
+				.val(user.val().replace(/(:\d+)$/, ''))
+				.after(cl);
+			user.autocomplete({
+				minLength: 2,
+				source: function (request, response) {
+					return $.getJSON(user.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
+						response($.map(data.data, function (el) {
+							return {
+								label: el.name + ' (' + el.username + ')',
+								name: el.name,
+								id: el.id,
+							};
+						}));
+					});
+				},
+				select: function (event, ui) {
+					event.preventDefault();
+					// Set selection
+					user.val(ui.item.label); // display the selected text
+					cl.val(ui.item.id); // save selected id to input
+					return false;
+				}
+			});
+		});
+	}
+}
+
+function AddNewProductRow() {
+	var row = document.getElementById("item_new_row");
+
+	var new_row = row.cloneNode(true);
+
+	var new_box = new_row.getElementsByTagName("input")[0];
+
+	var i = row.parentNode.getElementsByTagName("tr").length;
+	new_row.id = "item_new_row" + i;
+
+	var rm = new_row.getElementsByClassName("item-remove")[0];
+	rm.setAttribute('href', '#' + new_row.id);
+
+	//new_row2.id = "";
+
+	new_box.value = 0;
+	//new_box2.value = "";
+
+	new_row.classList.remove('hide');
+	row.parentNode.insertBefore(new_row, row);
+
+	$(new_row).find('.searchable-select').select2();
+
+	//ProductSearch();
 }
 
 /**
@@ -1100,7 +1171,7 @@ function UpdateBalance(quick) {
 	// Get all amounts
 	var amounts = $('[name=account_amount]');
 	var accounts = $('[name=account]');
-	var errors = $('.amount_error');
+	//var errors = $('.account_error');
 	var balance = document.getElementById("balance");
 	//var justifications = $('[name=justification]');
 	var total = document.getElementById("ordertotal").innerHTML.replace(/[,\.]/g, "");
@@ -1110,7 +1181,7 @@ function UpdateBalance(quick) {
 
 	for (var x=0;x<amounts.length;x++) {
 		ok = true;
-		if (accounts[x].value != "" ) {
+		if (accounts[x].value != "") {
 			// Check account number for WBSE
 			account = accounts[x].value;
 			// If we are starting with letter, assume we are inputting WBSE
@@ -1146,12 +1217,15 @@ function UpdateBalance(quick) {
 			}
 
 			if (ok) {
-				errors[x].style.display = "none";
+				//errors[x].style.display = "none";
+				accounts[x].classList.remove('is-invalid');
 			} else {
-				errors[x].style.display = "inline";
+				accounts[x].classList.add('is-invalid');
+				//errors[x].style.display = "inline";
 				error_count++;
 			}
 		}
+
 		var amt = amounts[x].value;
 		amt = amt.replace(/[\$,]/g, "");
 		if (amt.match(/^-?[0-9]+$/)) {
@@ -1163,15 +1237,17 @@ function UpdateBalance(quick) {
 			amt = amt.replace(/[,\.]/g, "");
 			amt = amt.replace(/^0+/, "");
 			if (!quick) {
-				amounts[x].value = FormatNumber(amt).replace(/[,]/g,"");
+				amounts[x].value = FormatNumber(amt).replace(/[,]/g, "");
 			}
 			total -= amt;
-
-		} else if (amt == "" && ok) {
-			errors[x].style.display = "none";
+			amounts[x].classList.remove('is-invalid');
+		} else if (amt == "") {// && ok) {
+			//errors[x].style.display = "none";
+			amounts[x].classList.remove('is-invalid');
 		} else {
 			// Turn on "error" icon
-			errors[x].style.display = "inline";
+			//errors[x].style.display = "inline";
+			amounts[x].classList.add('is-invalid');
 			error_count++;
 		}
 	}
@@ -1185,10 +1261,13 @@ function UpdateBalance(quick) {
 	} else {
 		document.getElementById("balance_error").style.display = "none";
 	}
+
 	if (total == 0 && error_count == 0) {
+		// Enable buttons
 		document.getElementById("save_accounts").disabled = false;
 		document.getElementById("save_quantities").disabled = false;
 	} else {
+		// Disable buttons if any errors
 		document.getElementById("save_accounts").disabled = true;
 		if (document.getElementById("save_quantities").value != "Edit Quantities") {
 			document.getElementById("save_quantities").disabled = true;
@@ -1246,25 +1325,79 @@ function SaveQuantities() {
 	var items = $('[name=item]');
 	var num_changes = 0;
 
+	var post, id;
+
 	for (var x=0;x<originalquantity.length;x++) {
-		var post = {}
-		var id = items[x].value;
+		post = {}
+		id = items[x].getAttribute('data-api');//value;
+
 		if (originalquantity[x].value != quantityinputs[x].value && quantityinputs[x].value.match(/^[0-9]+$/)) {
 			post['quantity'] = quantityinputs[x].value;
 		}
 		if (originalperiods[x].value != periodsinputs[x].value && periodsinputs[x].value.match(/^[0-9]+$/)) {
 			post['timeperiodcount'] = periodsinputs[x].value;
 		}
-		if (originalprice.length == quantityinputs.length && originalprice[x].value.replace(/[,\.]/g, "") != priceinputs[x].value.replace(/[,\.]/g, "") && priceinputs[x].value.replace(/[,\.]/g, "").match(/^[0-9]+$/)) {
+		if (originalprice.length == quantityinputs.length
+		 && originalprice[x].value.replace(/[,\.]/g, "") != priceinputs[x].value.replace(/[,\.]/g, "")
+		 && priceinputs[x].value.replace(/[,\.]/g, "").match(/^[0-9]+$/)) {
 			post['price'] = priceinputs[x].value.replace(/[,\.]/g, "");
 		}
-
+		//console.log(post);
 		post = JSON.stringify(post);
+
 		if (post != "{}") {
 			pendingupdates++;
 			num_changes++;
-			//WSPostURL(id, post, UpdatedAccountInfo);
+			//console.log(id);
+			WSPutURL(id, post, UpdatedAccountInfo);
 		}
+	}
+
+	// Check for deleted items
+	for (x = 0; x < deleteitems.length; x++) {
+		pendingupdates++;
+		num_changes++;
+		//console.log(deleteitems[x]);
+		WSDeleteURL(deleteitems[x]);//, UpdatedAccountInfo);
+	}
+
+	// Check for new items
+	var order = document.getElementById('order');
+	var products = $('.item-product');
+
+	for (x = 0; x < products.length; x++) {
+		if (!products[x].value || products[x].value == '0') {
+			continue;
+		}
+
+		var container = $($(products[x]).closest('tr'));
+		var quantity = container.find('.item-quantity')[0];
+
+		if (!quantity.value) {
+			continue;
+		}
+
+		var total = container.find('.item-total')[0],
+			periods = container.find('.item-periods')[0],
+			opt = $(products[x]).find('option:selected');
+
+		var post = {
+			'orderid': order.value,
+			'orderproductid': opt.attr('value'),
+			'quantity': quantity.value,
+			'price': total.value.replace(/[,\.]/g, ""),
+			'origunitprice': opt.attr('data-price').replace(/[,\.]/g, ""),
+			'recurringtimeperiodid': opt.attr('data-recurringtimeperiodid'),
+			'timeperiodcount': periods.value
+		};
+
+		pendingupdates++;
+		num_changes++;
+
+		//console.log(post);
+		post = JSON.stringify(post);
+
+		WSPostURL(iteminputs[x].getAttribute('data-api'), post);
 	}
 
 	if (num_changes == 0) {
@@ -1281,7 +1414,8 @@ function SaveAccounts() {
 	var accounts = $('[name=account]');
 	var amounts = $('[name=account_amount]');
 	var justifications = $('[name=justification]');
-	var account_errors = $('[name=amount_error]');
+	var approverinputs = $('[name=approver]');
+	//var account_errors = $('[name=amount_error]');
 	var total = document.getElementById("ordertotal").innerHTML.replace(/[,\.]/g, "");
 	var order = document.getElementById("order").value;
 	var posts = Array();
@@ -1301,37 +1435,63 @@ function SaveAccounts() {
 				account = account.charAt(0).toLowerCase() + account.substr(1);
 				// Strip periods
 				account = account.replace(/\./g,'');
-				posts[count] = {'purchasewbse': account, 'amount': amt, 'order': order, 'justification': justifications[x].value};
+				posts[count] = {
+					'purchasewbse': account,
+					'amount': amt,
+					'orderid': order,
+					'budgetjustification': justifications[x].value
+				};
 			} else if (account.match(/^\d{10}$/)) {
 				//IO
-				posts[count] = {'purchaseio': account, 'amount': amt, 'order': order, 'justification': justifications[x].value};
+				posts[count] = {
+					'purchaseio': account,
+					'amount': amt,
+					'orderid': order,
+					'budgetjustification': justifications[x].value
+				};
 			} else {
 				// We should not be here!
 				alert("Format error");
 				return;
 			}
+			if (approverinputs[x].value) {
+				posts[count]['approveruserid'] = approverinputs[x].value;
+			}
 			total -= amt;
 			count++;
-		} 
+		}
+
 		var row_errors = 0;
 		if (accounts[x].value == "") {
 			row_errors++;
-			account_errors[x].style.display = "inline";
+			//account_errors[x].style.display = "inline";
+			accounts[x].classList.add('is-invalid');
 		}
 		if (!amounts[x].value.match(/^-?[0-9]+\.[0-9]{2}$/)) {
 			row_errors++;
+			accounts[x].classList.add('is-invalid');
 		}
 
 		errors += row_errors;
 
-		if (row_errors > 0) { 
-			$( accounts[x].parentNode.parentNode.parentNode ).effect( "highlight", {'duration': 1000} );
+		if (row_errors > 0) {
+			$(accounts[x].parentNode.parentNode.parentNode).effect("highlight", {'duration': 1000});
 		}
 	}
 
 	if (total == 0 && errors == 0) {
-		var post = "{\"accounts\": " + JSON.stringify(posts) + "}";
-		WSPostURL(ROOT_URL + "order/" + order.split("/")[3], post, SavedAccounts);
+		var post = '{"accounts": ' + JSON.stringify(posts) + '}';
+		//console.log(ROOT_URL + "orders/" + order);
+		console.log(post);
+		return;
+		WSPutURL(ROOT_URL + "orders/" + order, post, function(xml) {
+			if (xml.status == 200) {
+				window.scrollTo(0, 0);
+				window.location.reload();
+			} else {
+				alert("An error occurred while saving accounts.");
+			}
+		});
 	}
 }
 
@@ -1341,14 +1501,14 @@ function SaveAccounts() {
  * @param   {object}  xml
  * @return  {void}
  */
-function SavedAccounts(xml) {
+/*function SavedAccounts(xml) {
 	if (xml.status == 200) {
 		window.scrollTo(0, 0);
 		window.location.reload();
 	} else {
 		alert("An error occurred while saving accounts.");
 	}
-}
+}*/
 
 /**
  * Cancel an order
@@ -1384,10 +1544,10 @@ function CanceledOrder(xml) {
  * @param   {string}  button
  * @return  {void}
  */
-function ApproveAccount(id, button) {
+function ApproveAccount(url, id) {
 	var post = JSON.stringify({"approved": 1});
 
-	WSPostURL(id, post, ApprovedAccount, id);
+	WSPutURL(url, post, ApprovedAccount, id);
 }
 
 /**
@@ -1479,7 +1639,7 @@ function RemindedOrder(xml) {
 function DenyAccount(id, button) {
 	var post = JSON.stringify({"denied": 1});
 
-	WSPostURL(id, post, DeniedAccount, id);
+	WSPutURL(id, post, DeniedAccount, id);
 }
 
 /**
@@ -1512,7 +1672,7 @@ function CollectAccount(id, button) {
 	if (docid != "" && docdate.match(/\d{4}-\d{2}-\d{2}/)) {
 		var post = JSON.stringify({"paid": 1, "docid": docid, "docdate": docdate});
 
-		WSPostURL(id, post, CollectedAccount, id);
+		WSPutURL(id, post, CollectedAccount, id);
 	}
 }
 
@@ -1599,6 +1759,7 @@ function FulfilledItem(xml, id) {
 }
 
 var deleteaccounts = Array();
+var deleteitems = Array();
 var pendingupdates = 0;
 
 /**
@@ -1612,34 +1773,35 @@ function EditAccounts() {
 	var new_row = document.getElementById("account_new_row");
 	var x;
 
-	if (b.value == "Save Changes") {
-
+	if (b.innerHTML == b.getAttribute('data-save-txt')) {
 		//verify first
-
 		var accountstatus = $('[name=accountid]');
 		var accountinputs = $('[name=account]');
-		var costcenterinputs = $('[name=costcenter]');
-		var orderinputs = $('[name=purchaseorder]');
+		//var costcenterinputs = $('[name=costcenter]');
+		//var orderinputs = $('[name=purchaseorder]');
 		var justificationinputs = $('[name=justification]');
 		var approverinputs = $('[name=approver]');
 		var amountinputs = $('[name=account_amount]');
-		var account_errors = $('[name=amount_error]');
+		//var account_errors = $('[name=amount_error]');
 
+		// Check amounts have values
 		var errors = 0;
 		var row_errors = 0;
 		for (x=0;x<accountinputs.length-1;x++) {
 			row_errors = 0;
 			if (accountinputs[x].value == "") {
 				row_errors++;
-				account_errors[x].style.display = "inline";
+				//account_errors[x].style.display = "inline";
+				accountinputs[x].classList.add('is-invalid');
 			}
 			if (!amountinputs[x].value.match(/^-?[0-9]+\.[0-9]{2}$/)) {
 				row_errors++;
+				accountinputs[x].classList.add('is-invalid');
 			}
 			errors += row_errors;
 
 			if (row_errors > 0) {
-				$( accountinputs[x].parentNode.parentNode.parentNode ).effect( "highlight", {'duration': 1000} );
+				$(accountinputs[x].parentNode.parentNode.parentNode).effect("highlight", {'duration': 1000});
 			}
 		}
 
@@ -1648,14 +1810,15 @@ function EditAccounts() {
 		}
 
 		var items = $('[name=item]');
-
 		var num_changes = 0;
-		// Check for edits
+
+		// Check accounts for edits
 		var spans = $('.account_span');
 		for (x=0;x<spans.length;x++) {
+			// Check the old value (in HTML) against the input
 			if (spans[x].innerHTML != accountinputs[x].value) {
 				var id = accountstatus[x].getAttribute('data-api');
-				account = accountinputs[x].value
+				account = accountinputs[x].value;
 				if (account.match(/^[A-Za-z]\.\d{8}\.\d{2}\.\d{3}$/)) {
 					// WBSE - f.90000000.02.001
 					// Normalize letter
@@ -1672,38 +1835,49 @@ function EditAccounts() {
 				}
 				pendingupdates++;
 				num_changes++;
-				WSPostURL(id, post, UpdatedAccountInfo);
+				post = JSON.stringify(post);
+				WSPutURL(id, post, UpdatedAccountInfo);
 			}
 		}
+
+		// Check budget justifications
 		var spans = $('.justification_span');
 		for (x=0;x<spans.length;x++) {
-			if (spans[x].innerHTML != justificationinputs[x].value && spans[x].innerHTML != "null" && justificationinputs[x].value != "null") {
+			// Check the old value (in HTML) against the input
+			if (spans[x].innerHTML != justificationinputs[x].value
+			 && spans[x].innerHTML != "null"
+			 && justificationinputs[x].value != "null") {
 				var id = accountstatus[x].getAttribute('data-api');
 				var post = {'justification': justificationinputs[x].value}; //JSON.stringify({'justification': justificationinputs[x].value});
+				post = JSON.stringify(post);
 				pendingupdates++;
 				num_changes++;
-				WSPostURL(id, post, UpdatedAccountInfo);
+				WSPutURL(id, post, UpdatedAccountInfo);
 			}
 		}
 
+		// Check approvers
 		var spans = $('.approver_span');
 		for (x=0;x<approverinputs.length;x++) {
-			if ((spans[x].getElementsByTagName("a").length == 0 && approverinputs[x].value.match(/.*?\(([a-z0-9]+)\)/))
-			 || (spans[x].getElementsByTagName("a").length != 0 && spans[x].getElementsByTagName("a")[0].innerHTML != approverinputs[x].value && approverinputs[x].value.match(/.*?\(([a-z0-9]+)\)/))) {
+			//if ((spans[x].getElementsByTagName("a").length == 0 && approverinputs[x].value.match(/.*?\(([a-z0-9]+)\)/))
+			// || (spans[x].getElementsByTagName("a").length != 0 && spans[x].getElementsByTagName("a")[0].innerHTML != approverinputs[x].value && approverinputs[x].value.match(/.*?\(([a-z0-9]+)\)/))) {
+			if (spans[x].getAttribute('data-approverid') != approverinputs[x].value) {
 				var id = accountstatus[x].getAttribute('data-api');
-				var name = approverinputs[x].value.match(/.*?\(([a-z0-9]+)\)/);
-				name = name[1];
-				var post = {'approver': name};
+				//var name = approverinputs[x].value.match(/.*?\(([a-z0-9]+)\)/);
+				//	name = name[1];
+				var post = {'approveruserid': (approverinputs[x].value ? approverinputs[x].value : 0)};
 
 				if (accountstatus[x].value == "PENDING_COLLECTION") {
-					post['approved'] = "0";	
+					post['approved'] = "0";
 				}
 				pendingupdates++;
 				num_changes++;
-				WSPostURL(id, post, UpdatedAccountInfo);
+				post = JSON.stringify(post);
+				WSPutURL(id, post, UpdatedAccountInfo);
 			}
 		}
 
+		// Check if amounts changed
 		var spans = $('.account_amount_span');
 		for (x=0;x<spans.length;x++) {
 			var amount = amountinputs[x].value;
@@ -1719,12 +1893,13 @@ function EditAccounts() {
 					}
 					pendingupdates++;
 					num_changes++;
-					WSPostURL(id, post, UpdatedAccountInfo);
+					post = JSON.stringify(post);
+					WSPutURL(id, post, UpdatedAccountInfo);
 				}
 			}
 		}
 
-		var quantityinputs = $('[name=quantity]');
+		/*var quantityinputs = $('[name=quantity]');
 		var originalquantity = $('[name=original_quantity]');
 		var periodsinputs = $('[name=periods]');
 		var originalperiods = $('[name=original_periods]');
@@ -1747,14 +1922,15 @@ function EditAccounts() {
 			//if (post != "{}") {
 				pendingupdates++;
 				num_changes++;
-				WSPostURL(id, post, UpdatedAccountInfo);
+				WSPutURL(id, post, UpdatedAccountInfo);
 			//}
-		}
+		}*/
 
 		// Check for deleted accounts
 		for (x=0;x<deleteaccounts.length;x++) {
 			pendingupdates++;
 			num_changes++;
+			//console.log(deleteaccounts[x]);
 			WSDeleteURL(deleteaccounts[x], UpdatedAccountInfo);
 		}
 
@@ -1764,33 +1940,39 @@ function EditAccounts() {
 				var amount = amountinputs[x].value;
 				if (accountinputs[x].value != "" && amount.match(/^-?[0-9]+\.[0-9]{2}$/)) {
 					var account = accountinputs[x].value
+
+					var post = {
+						'orderid': document.getElementById("order").value,
+						'amount': amount.replace(/[,.]/g, ""),
+						'budgetjustification': justificationinputs[x].value
+					};
+
 					if (account.match(/^[A-Za-z]\.\d{8}\.\d{2}\.\d{3}$/)) {
 						// WBSE - f.90000000.02.001
 						// Normalize letter
 						account = account.charAt(0).toLowerCase() + account.substr(1);
 						// Strip periods
 						account = account.replace(/\./g,'');
-						var post = {
-							'order': document.getElementById("order").value,
-							'amount': amount.replace(/[,.]/g, ""),
-							'purchasewbse': account,
-							'justification': justificationinputs[x].value
-						};
+
+						post['purchasewbse'] = account;
 					} else if (account.match(/^\d{10}$/)) {
-						var post = {
-							'order': document.getElementById("order").value,
-							'amount': amount.replace(/[,.]/g, ""),
-							'purchaseio': account,
-							'justification': justificationinputs[x].value
-						};
+						post['purchaseio'] = account;
 					} else {
 						// Really shouldn't be here
 						alert("Format error");
 						return;
 					}
 
+					if (approverinputs[x].value) {
+						post['approveruserid'] = approverinputs[x].value;
+					}
+
 					pendingupdates++;
 					num_changes++;
+
+					console.log(post);
+					post = JSON.stringify(post);
+
 					WSPostURL(accountinputs[x].getAttribute('data-api'), post, UpdatedAccountInfo);
 				}
 			}
@@ -1799,32 +1981,35 @@ function EditAccounts() {
 		if (num_changes == 0) {
 			CancelEditAccounts();
 		}
-
 	} else {
+		b.innerHTML = b.getAttribute('data-save-txt');
+		$(c).removeClass('hide');
 
-		b.value = "Save Changes";
-		c.style.display = "inline";
-		if (new_row != null) {
-			var prompt_row = document.getElementById("account_new_row_prompt");
-			prompt_row.style.display = "table-row";
-		}
+		//if (new_row != null) {
+			//var prompt_row = document.getElementById("account_new_row_prompt");
+			//prompt_row.style.display = "table-row";
+		//}
+		$('.account-edit-hide').addClass('hide');
+		$('.account-edit-show').removeClass('hide');
 
 		var accountstatus = $('[name=accountid]');
 
 		// enable delete buttons
-		var buttons = $('[name=editremove]');
+		/*var buttons = $('[name=editremove]');
 		for (x=0;x<buttons.length;x++) {
 			buttons[x].style.display = "inline";
-		}
+		}*/
 
 		// disable any approve/deny buttons
-		buttons = $('[name=adbutton]');
+		$('[name=adbutton]').prop('disabled', true);
+		/*buttons = $('[name=adbutton]');
 		for (x=0;x<buttons.length;x++) {
 			buttons[x].style.display = "none";
-		}
+		}*/
 
 		// disable any remind buttons
-		buttons = $('[name=remind]');
+		$('[name=remind]').prop('disabled', true);
+		/*buttons = $('[name=remind]');
 		for (x=0;x<buttons.length;x++) {
 			buttons[x].style.display = "none";
 		}
@@ -1874,7 +2059,7 @@ function EditAccounts() {
 				inputs[x].style.display = "inline";
 				spans[x].style.display = "none";
 			}
-		}
+		}*/
 	}
 }
 
@@ -1894,19 +2079,41 @@ function CancelEditAccounts() {
  * @param   {object}  e
  * @return  {void}
  */
-function EditRemoveAccount(id, e) {
-	var table = e.parentNode.parentNode.parentNode.parentNode;
-	var rows = table.getElementsByTagName("tr");
-	if (id != null) {
-		deleteaccounts.push(id);
+function EditRemoveAccount(btn, e) {
+	//var table = e.parentNode.parentNode.parentNode.parentNode;
+	var row = $(btn.attr('href'));//table.getElementsByTagName("tr");
+	if (btn.attr('data-api')) {
+		deleteaccounts.push(btn.attr('data-api'));
+		//console.log(btn.attr('data-api'));
+		//WSDeleteURL(btn.attr('data-api'));
 	}
-	for (var x=0;x<rows.length;x++) {
+	row.remove();
+	/*for (var x=0;x<rows.length;x++) {
 		if (rows[x] == e.parentNode.parentNode.parentNode) {
 			e.parentNode.parentNode.parentNode.parentNode.removeChild(rows[x+1]);
 			e.parentNode.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode.parentNode);
 		}
-	}
+	}*/
 	UpdateBalance();
+}
+
+/**
+ * Remove account while editing
+ *
+ * @param   {string}  id
+ * @param   {object}  e
+ * @return  {void}
+ */
+function EditRemoveProduct(btn, e) {
+	var row = $(btn.attr('href'));//table.getElementsByTagName("tr");
+	if (btn.attr('data-api')) {
+		deleteitems.push(btn.attr('data-api'));
+		//console.log(btn.attr('data-api'));
+		//WSDeleteURL(btn.attr('data-api'));
+	}
+	row.remove();
+
+	UpdateTotal();
 }
 
 /**
@@ -1924,6 +2131,7 @@ var numerrorboxes = 0;
  */
 function UpdatedAccountInfo(xml) {
 	pendingupdates--;
+
 	if (xml.status == 200) {
 		if (pendingupdates == 0) {
 			window.location.reload(true);
@@ -1980,7 +2188,7 @@ function UpdateTotal(tot_override) {
 			spans[x].innerHTML = FormatNumber(prices[x].innerHTML.replace(/[,\.]/g,"") * inputs[x].value * periods[x].value);
 			total += prices[x].innerHTML.replace(/[,\.]/g,"") * inputs[x].value * periods[x].value;
 			if (totalinputs.length == inputs.length) {
-				totalinputs[x].value = FormatNumber(prices[x].innerHTML.replace(/[,\.]/g,"") * inputs[x].value * periods[x].value).replace(/,/g,"");
+				totalinputs[x].value = FormatNumber(prices[x].innerHTML.replace(/[,\.]/g, "") * inputs[x].value * periods[x].value); //.replace(/,/g,"");
 			}
 		} else {
 			if (totalinputs.length == inputs.length) {
@@ -1993,6 +2201,7 @@ function UpdateTotal(tot_override) {
 		qspans[x].innerHTML = inputs[x].value;
 		periods_spans[x].innerHTML = periods[x].value;
 	}
+
 	document.getElementById("ordertotal").innerHTML = FormatNumber(total);
 
 	var allow = true;
@@ -2042,7 +2251,7 @@ function UpdateTotal(tot_override) {
  */
 function EditQuantities() {
 	var b = document.getElementById("save_quantities");
-	var c = document.getElementById("cancel_quantities");
+	//var c = document.getElementById("cancel_quantities");
 	var b2 = document.getElementById("save_accounts");
 	//var c2 = document.getElementById("cancel_accounts");
 	//var itemstatus = $('[name=itemid]');
@@ -2050,14 +2259,17 @@ function EditQuantities() {
 	var inputs = $('[name=quantity]');
 
 	if (b.getAttribute('data-state') != 'active') {
-		if (b2 && b2.value == "Edit Accounts") {
+		if (b2 && b2.innerHTML == "Edit Accounts") {
 			EditAccounts();
 		}
 		b.setAttribute('data-state', 'active');
-		b.value = b.getAttribute('data-active');
-		c.style.display = "inline";
+		b.innerHTML = b.getAttribute('data-active');
+		//c.style.display = "inline";
 
-		var spans = $('.quantity_span');
+		$('.item-edit-hide').addClass('hide');
+		$('.item-edit-show').removeClass('hide');
+
+		/*var spans = $('.quantity_span');
 		var totals = $('[name=itemtotal]');
 		var price = $('[name=price]');
 		var periods = $('[name=periods]');
@@ -2076,7 +2288,7 @@ function EditQuantities() {
 				totalinputs[x].style.display = "inline";
 				totals[x].style.display = "none";
 			}
-		}
+		}*/
 	} else {
 		// See how many total items are in the order.
 		var totalItems = 0;
@@ -2086,8 +2298,8 @@ function EditQuantities() {
 
 		// Alert the user that this will delete their order.
 		if (totalItems == 0) {
-			$( '#error1' ).dialog({
-				modal: true, 
+			$('#error1').dialog({
+				modal: true,
 				width: 500,
 				buttons: {
 					"Cancel order": function() {
@@ -2095,12 +2307,12 @@ function EditQuantities() {
 						WSDeleteURL(order, CanceledOrder);
 					},
 					"Exit": function() {
-						$( this ).dialog( "close" );
+						$(this).dialog("close");
 						CancelEditAccounts();
 					}
 				}
 			});
-			$( '#error1' ).dialog('open');
+			$('#error1').dialog('open');
 			return;
 		}
 

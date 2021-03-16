@@ -9,6 +9,7 @@ use App\Modules\Orders\Models\Order;
 use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Models\Item;
+use App\Modules\Orders\Models\Account;
 use App\Modules\Users\Models\User;
 use App\Modules\Orders\Http\Resources\OrderResource;
 use App\Modules\Orders\Http\Resources\OrderResourceCollection;
@@ -369,6 +370,7 @@ class OrdersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -496,8 +498,10 @@ class OrdersController extends Controller
 
 		// ADD FORLOOP ABOVE FOR THE ACCOUNTS: AND TRANSLATE IT
 		/*if ($request->has('orderitemsequence')
-		 && $accounts)
+		 && $request->has('accounts'))
 		{
+			$accounts = $request->input('accounts');
+
 			$numaccounts = count($accounts);
 			$remainder = $numaccounts ? $total % $numaccounts : 0;
 			$remainder_check = $remainder;
@@ -615,9 +619,10 @@ class OrdersController extends Controller
 			'userid' => 'nullable|integer',
 			'groupid' => 'nullable|integer',
 			'submitteruserid' => 'nullable|integer',
-			'usernotes' => 'nullable|string',
-			'staffnotes' => 'nullable|string',
+			'usernotes' => 'nullable|string|max:2000',
+			'staffnotes' => 'nullable|string|max:2000',
 			'notice' => 'nullable|integer',
+			'accounts' => 'nullable|array',
 		]);
 
 		$row = Order::findOrFail($id);
@@ -634,12 +639,29 @@ class OrdersController extends Controller
 			return response()->json(['message' => 'Invalid group ID'], 404);
 		}
 
-		$row->save();
+		// Ensure client is authorized
+		if (auth()->user()->id != $row->userid
+		 && auth()->user()->id != $row->submitteruserid
+		 && !auth()->user()->can('manage orders'))
+		{
+			return response()->json(['message' => trans('global.error.not authorized')], 403);
+		}
+
+		// Check if we need to actually do anything
+		if ($request->has('userid')
+		 || $request->has('groupid')
+		 || $request->has('submitteruserid')
+		 || $request->has('usernotes')
+		 || $request->has('staffnotes')
+		 || $request->has('notice'))
+		{
+			$row->save();
+		}
 
 		if ($request->has('accounts'))
 		{
 			// Create account records
-			$accounts = (array)$request->has('accounts');
+			$accounts = (array)$request->input('accounts');
 
 			foreach ($accounts as $a)
 			{
@@ -672,9 +694,28 @@ class OrdersController extends Controller
 	 */
 	public function delete($id)
 	{
-		$row = Order::findOrFail($id);
+		//$row = Order::findOrFail($id);
+		// We need to handle it this way to account for differences
+		// in datetime fields to how Laravel expects them to be
+		$row = Order::all()
+			->withTrashed()
+			->where('id', '=', $id)
+			->first();
 
-		if (!$row->trashed())
+		if (!$row)
+		{
+			return response()->json(['message' => trans('global.error.not found')], 404);
+		}
+
+		// Ensure client is authorized
+		if (auth()->user()->id != $row->userid
+		 && auth()->user()->id != $row->submitteruserid
+		 && !auth()->user()->can('manage orders'))
+		{
+			return response()->json(['message' => trans('global.error.not authorized')], 403);
+		}
+
+		if (!$row->isTrashed())
 		{
 			if (!$row->delete())
 			{

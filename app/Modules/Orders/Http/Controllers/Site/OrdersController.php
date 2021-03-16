@@ -441,8 +441,15 @@ class OrdersController extends Controller
 				route('site.orders.read', ['id' => $id])
 			);
 
+		$products = Product::query()
+			->withTrashed()
+			->whereIsActive()
+			->orderBy('name', 'asc')
+			->get();
+
 		return view('orders::site.orders.edit', [
-			'order' => $order
+			'order' => $order,
+			'products' => $products
 		]);
 	}
 

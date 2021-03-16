@@ -9,19 +9,55 @@
 <script>
 $(document).ready(function() { 
 	$('.filter-submit').on('change', function(e){
-		//Filter($(this).data('type'), $(this).data('field'));
 		$(this).closest('form').submit();
 	});
+
+	var users = $(".form-users");
+	if (users.length) {
+		users.each(function (i, user) {
+			user = $(user);
+			var cl = user.clone()
+				.attr('type', 'hidden')
+				.val(user.val().replace(/([^:]+):/, ''));
+			user
+				.attr('name', user.attr('id') + i)
+				.attr('id', user.attr('id') + i)
+				.val(user.val().replace(/(:\d+)$/, ''))
+				.after(cl);
+			user.autocomplete({
+				minLength: 2,
+				source: function (request, response) {
+					return $.getJSON(user.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
+						response($.map(data.data, function (el) {
+							return {
+								label: el.name + ' (' + el.username + ')',
+								name: el.name,
+								id: el.id,
+							};
+						}));
+					});
+				},
+				select: function (event, ui) {
+					event.preventDefault();
+					// Set selection
+					user.val(ui.item.label); // display the selected text
+					cl.val(ui.item.id); // save selected id to input
+					user.closest('form').submit();
+					return true;
+				}
+			});
+		});
+	}
 });
 </script>
 @endpush
 
 @php
-	app('pathway')
-		->append(
-			trans('orders::orders.orders'),
-			route('site.orders.index')
-		);
+app('pathway')
+	->append(
+		trans('orders::orders.orders'),
+		route('site.orders.index')
+	);
 @endphp
 
 @section('content')
@@ -35,10 +71,19 @@ $(document).ready(function() {
 
 <h2 class="sr-only">{{ trans('orders::orders.orders') }}</h2>
 
-<form action="{{ route('site.orders.index') }}" method="get" class="row mt-3">
+<form action="{{ route('site.orders.index') }}" method="get" class="row">
 	<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 
 		<fieldset class="filters mt-0">
+			@if (auth()->user()->can('manage orders'))
+				<?php
+				$user = App\Modules\Users\Models\User::find($filters['userid']);
+				?>
+				<div class="form-group">
+					<label for="filter_userid">{{ trans('orders::orders.submitter') }}</label>
+					<input type="text" name="userid" id="filter_userid" class="form-control form-users filter-submit" data-uri="{{ route('api.users.index') }}?search=%s" placeholder="Find orders by user" value="{{ $user ? $user->name . ':' . $user->id : '' }}" />
+				</div>
+			@endif
 			<div class="form-group">
 				<label for="filter_search">{{ trans('search.label') }}</label>
 				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="Find orders by account or ID" value="{{ $filters['search'] }}" />
@@ -148,18 +193,26 @@ $(document).ready(function() {
 						@if ($row->groupid)
 							@if (auth()->user()->can('manage groups'))
 								<a href="{{ route('admin.groups.edit', ['id' => $row->groupid]) }}">
-									<?php echo $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+									<?php echo $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span> (group ID: ' . $row->groupid . ')'; ?>
 								</a>
 							@else
-								<?php echo $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+								<?php echo $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span> (group ID: ' . $row->groupid . ')'; ?>
 							@endif
 						@else
 							@if (auth()->user()->can('manage users'))
-								<a href="{{ route('site.users.account', ['u' => $row->userid]) }}">
-									<?php echo $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
-								</a>
+								@if ($row->userid)
+									<a href="{{ route('site.orders.index', ['userid' => $row->userid]) }}">
+										<?php echo $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span> (user ID: ' . $row->userid . ')'; ?>
+									</a>
+								@else
+									<span class="none">{{ trans('global.none') }}</span>
+								@endif
 							@else
-								<?php echo $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+								@if ($row->userid)
+									<?php echo $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span> (user ID: ' . $row->userid . ')'; ?>
+								@else
+									<span class="none">{{ trans('global.none') }}</span>
+								@endif
 							@endif
 						@endif
 					</td>

@@ -8,6 +8,7 @@ return [
 	'id' => 'ID',
 	'notes' => 'User notes',
 	'status' => 'Status',
+	'submitted' => 'Submitted',
 	'submitter' => 'Submitter',
 	'created' => 'Created',
 	'removed' => 'Removed',
@@ -68,6 +69,7 @@ return [
 	'fulfilled' => 'Fulfilled',
 	'collect' => 'Collect',
 	'subtotal' => 'Sub-total',
+	'select product' => '- Select product -',
 	'search products' => 'Search products...',
 	'hidden' => 'Hidden',
 	'create product' => 'New product',
@@ -89,4 +91,8 @@ return [
 	'remove from cart' => 'Remove from cart',
 	'all restricted data' => '- All Un/Restricted -',
 	'all recurrence' => '- All Recurrence -',
+	'confirm' => [
+		'item removal' => 'Are you sure you want to remove this item?',
+		'account removal' => 'Are you sure you want to remove this account?',
+	],
 ];

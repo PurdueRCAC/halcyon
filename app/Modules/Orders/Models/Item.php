@@ -54,6 +54,15 @@ class Item extends Model
 	);
 
 	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $guarded = [
+		'id'
+	];
+
+	/**
 	 * Default order by for model
 	 *
 	 * @var string
@@ -212,8 +221,8 @@ class Item extends Model
 	 **/
 	public function recurrenceRange()
 	{
-		$recur_months  = $this->product->timeperiod->months;
-		$recur_seconds = $this->product->timeperiod->unixtime;
+		$recur_months  = $this->product->timeperiod ? $this->product->timeperiod->months : 0;
+		$recur_seconds = $this->product->timeperiod ? $this->product->timeperiod->unixtime : 0;
 
 		$datestart = '0000-00-00 00:00:00';
 

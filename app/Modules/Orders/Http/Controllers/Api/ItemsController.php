@@ -241,29 +241,65 @@ class ItemsController extends Controller
 	 * @apiUri    /api/orders/items
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "usernotes",
-	 * 		"description":   "Submitter notes.",
-	 * 		"required":      false,
+	 * 		"name":          "orderid",
+	 * 		"description":   "Order ID",
+	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "Longer description of a tag",
-	 * 		"required":      false,
+	 * 		"name":          "orderproductid",
+	 * 		"description":   "Order product ID",
+	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "namespace",
-	 * 		"description":   "Namespace for tag",
+	 * 		"name":          "quantity",
+	 * 		"description":   "Quantity",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "price",
+	 * 		"description":   "Price",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "origunitprice",
+	 * 		"description":   "Original unit price",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "origorderitemid",
+	 * 		"description":   "Original order item ID (recurring order)",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "timeperiodcount",
+	 * 		"description":   "Original order timeperiod count (recurring order)",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @return Response
@@ -271,11 +307,66 @@ class ItemsController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'name' => 'required'
+			'orderid'         => 'required|integer|min:1',
+			'orderproductid'  => 'required|integer|min:1',
+			'quantity'        => 'required|integer|min:1',
+			'price'           => 'required|integer',
+			'origunitprice'   => 'nullable|integer',
+			'origorderitemid' => 'nullable|integer',
+			'timeperiodcount' => 'nullable|integer',
 		]);
 
-		$row = Item::create($request->all());
+		$row = new Item; //$request->all()
+		$row->orderid = $request->input('orderid');
+		$row->orderproductid = $request->input('orderproductid');
+		$row->quantity = $request->input('quantity');
+		$row->price = $request->input('price');
+		if ($request->has('origunitprice'))
+		{
+			$row->origunitprice = $request->input('origunitprice');
+		}
+		if ($request->has('origorderitemid'))
+		{
+			$row->origorderitemid = $request->input('origorderitemid');
+		}
+		if ($request->has('timeperiodcount'))
+		{
+			$row->timeperiodcount = $request->input('timeperiodcount');
+		}
+
+		if (!$row->order)
+		{
+			return response()->json(['message' => trans('orders::orders.error.invalid order')], 415);
+		}
+
+		if (auth()->user()->id != $row->order->userid
+		 && auth()->user()->id != $row->order->submitteruserid
+		 && !auth()->user()->can('manage orders'))
+		{
+			return response()->json(['message' => trans('global.error.not authorized')], 403);
+		}
+
+		if (!$row->product)
+		{
+			return response()->json(['message' => trans('orders::orders.error.invalid product')], 415);
+		}
+
+		if (!$row->origunitprice)
+		{
+			$row->origunitprice = $row->product->unitprice;
+		}
+
+		$row->save();
+
+		// Set orig item if necessary
+		if ($row->product->recurringtimeperiodid > 0 && !$row->origorderitemid)
+		{
+			$row->origorderitemid = $row->id;
+			$row->save();
+		}
+
 		$row->recurrence = $row->recurrenceRange();
+		$row->api = route('api.orders.items.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -301,6 +392,8 @@ class ItemsController extends Controller
 		$row = Item::findOrFail($id);
 		$row->recurrence = $row->recurrenceRange();
 
+		$row->api = route('api.orders.items.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
@@ -313,54 +406,46 @@ class ItemsController extends Controller
 	 * 		"in":            "path",
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
-	 * 		"required":      true,
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "Tag text",
+	 * 		"name":          "quantity",
+	 * 		"description":   "Quantity",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "slug",
-	 * 		"description":   "Normalized text (alpha-numeric, no punctuation)",
+	 * 		"name":          "price",
+	 * 		"description":   "Price",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "Longer description of a tag",
+	 * 		"name":          "datetimefulfilled",
+	 * 		"description":   "Date time fulfilled",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"format":    "date/time"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "namespace",
-	 * 		"description":   "Namespace for tag",
+	 * 		"name":          "timeperiodcount",
+	 * 		"description":   "Original order timeperiod count (recurring order)",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "substitutes",
-	 * 		"description":   "Comma-separated list of aliases or alternatives",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -369,12 +454,47 @@ class ItemsController extends Controller
 	public function update($id, Request $request)
 	{
 		$request->validate([
-			'name' => 'required|max:255',
+			'datetimefulfilled' => 'nullable|date',
+			'quantity' => 'nullable|integer',
+			'price' => 'nullable|integer',
+			'timeperiodcount' => 'nullable|integer',
 		]);
 
 		$row = Item::findOrFail($id);
-		$row->update($request->all());
+		$row->fill($request->all());
+
+		// Make sure the order still exists
+		if (!$row->order)
+		{
+			return response()->json(['message' => trans('orders::orders.error.invalid order')], 415);
+		}
+
+		// Check permissions
+		if (auth()->user()->id != $row->order->userid
+		 && auth()->user()->id != $row->order->submitteruserid
+		 && !auth()->user()->can('manage orders'))
+		{
+			return response()->json(['message' => trans('global.error.not authorized')], 403);
+		}
+
+		// Only admins can edit price
+		if ($request->has('price'))
+		{
+			if (!auth()->user()->can('manage orders'))
+			{
+				return response()->json(['message' => trans('global.error.not authorized')], 403);
+			}
+		}
+		else
+		{
+			$row->price = $row->quantity * $row->product->unitprice;
+			$row->price = $row->timeperiodcount ? $row->timeperiodcount * $row->price : $row->price;
+		}
+
+		$row->save();
+
 		$row->recurrence = $row->recurrenceRange();
+		$row->api = route('api.orders.items.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -398,6 +518,20 @@ class ItemsController extends Controller
 	public function delete($id)
 	{
 		$row = Item::findOrFail($id);
+
+		// Make sure the order still exists
+		if (!$row->order)
+		{
+			return response()->json(['message' => trans('orders::orders.error.invalid order')], 415);
+		}
+
+		// Check permissions
+		if (auth()->user()->id != $row->order->userid
+		 && auth()->user()->id != $row->order->submitteruserid
+		 && !auth()->user()->can('manage orders'))
+		{
+			return response()->json(['message' => trans('global.error.not authorized')], 403);
+		}
 
 		if (!$row->trashed())
 		{

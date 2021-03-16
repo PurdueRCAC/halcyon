@@ -6,9 +6,32 @@
 
 @push('scripts')
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
-@push('scripts')
 <script>
 jQuery(document).ready(function($){
+	$('.filter-submit').on('change', function(e){
+		$(this).closest('form').submit();
+	});
+
+	$('.category-delete').on('click', function(e){
+		e.preventDefault();
+		if (confirm($(this).attr('data-confirm'))) {
+			$.ajax({
+				url: $(this).attr('data-api'),
+				type: 'delete',
+				dataType: 'json',
+				async: false,
+				success: function (response) {
+					window.location.reload();
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					console.log(xhr.responseJSON.message);
+					//btn.find('.spinner-border').addClass('d-none');
+					//alert(xhr.responseJSON.message);
+				}
+			});
+		}
+	});
+
 	var sortableHelper = function (e, ui) {
 		ui.children().each(function () {
 			$(this).width($(this).width());
@@ -69,7 +92,6 @@ jQuery(document).ready(function($){
 });
 </script>
 @endpush
-@endpush
 
 @section('title')
 {!! config('orders.name') !!}
@@ -78,7 +100,7 @@ jQuery(document).ready(function($){
 @php
 app('pathway')
 	->append(
-		trans('orders::orders.module name'),
+		trans('orders::orders.orders'),
 		route('site.orders.index')
 	)
 	->append(
@@ -95,7 +117,7 @@ app('pathway')
 
 	<form action="{{ route('site.orders.categories') }}" method="post" name="adminForm" id="adminForm" class="row">
 		<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-			<fieldset id="filter-bar" class="filters">
+			<fieldset class="filters mt-0">
 				<legend class="sr-only">Filter</legend>
 
 				<div class="form-group">
@@ -118,7 +140,8 @@ app('pathway')
 			</fieldset>
 		</div>
 		<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-			<table class="table table-hover mt-3">
+			<table class="table table-hover mt-0">
+				<caption class="sr-only">{{ trans('orders::orders.categories') }}</caption>
 				<thead>
 					<tr>
 						@if (auth()->user()->can('delete orders.categories'))
@@ -145,7 +168,7 @@ app('pathway')
 					<tr data-id="{{ $row->id }}" data-api="{{ route('api.orders.categories.update', ['id' => $row->id]) }}">
 						<td>
 							@if (auth()->user()->can('delete orders.categories'))
-								<a class="btn btn-danger btn-sm" href="{{ route('site.orders.categories.delete', ['id' => $row->id]) }}" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.orders.categories.delete', ['id' => $row->id]) }}">
+								<a class="btn text-danger btn-sm category-delete" href="{{ route('site.orders.categories.delete', ['id' => $row->id]) }}" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.orders.categories.delete', ['id' => $row->id]) }}">
 									<i class="fa fa-trash" aria-hidden="true"></i>
 									<span class="sr-only">{{ trans('global.button.delete') }}</span>
 								</a>
