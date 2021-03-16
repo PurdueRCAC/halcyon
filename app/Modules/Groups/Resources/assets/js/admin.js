@@ -13,9 +13,13 @@ var BASEGROUPS = Array('', 'data', 'apps');
  * @param   {string}   group
  * @return  {void}
  */
-function CreateNewGroupVal(num, btn) {
+function CreateNewGroupVal(num, btn, all) {
 	var base = btn.data('value'),
 		group = btn.data('group');
+
+	if (typeof (all) == 'undefined') {
+		all = true;
+	}
 
 	// The callback only accepts one argument, so we
 	// need to compact this
@@ -32,9 +36,9 @@ function CreateNewGroupVal(num, btn) {
 		async: false,
 		success: function (response) {
 			num++;
-			if (num < BASEGROUPS.length) {
+			if (all && num < BASEGROUPS.length) {
 				setTimeout(function () {
-					CreateNewGroupVal(num, btn);
+					CreateNewGroupVal(num, btn, all);
 				}, 5000);
 			} else {
 				Halcyon.message('success', 'Item added');
@@ -169,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		$(this).find('.spinner-border').removeClass('d-none');
 
-		CreateNewGroupVal(0, $(this));
+		CreateNewGroupVal(0, $(this), parseInt($(this).data('all-groups')));
 	});
 
 	$('.add-category').on('click', function(e){

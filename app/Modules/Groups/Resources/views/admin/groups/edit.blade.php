@@ -95,6 +95,7 @@ app('pathway')
 					<fieldset class="adminform">
 						<legend>{{ trans('groups::groups.unix groups') }}</legend>
 
+						@if (count($row->unixGroups))
 						<table class="table table-hover">
 							<caption class="sr-only">{{ trans('groups::groups.unix groups') }}</caption>
 							<thead>
@@ -107,23 +108,24 @@ app('pathway')
 								</tr>
 							</thead>
 							<tbody>
-							@foreach ($row->unixGroups as $i => $u)
-								<tr id="unixgroup-{{ $u->id }}" data-id="{{ $u->id }}">
-									<td>{{ $u->id }}</td>
-									<td>{{ $u->longname }}</td>
-									<td>{{ $u->shortname }}</td>
-									<td class="text-right">{{ $u->members()->count() }}</td>
-									<td class="text-right">
-										@if (!preg_match("/rcs[0-9]{4}[0-9]/", $u->shortname))
-										<a href="#unixgroup-{{ $u->id }}" class="btn btn-secondary btn-danger remove-unixgroup"
-											data-api="{{ route('api.unixgroups.delete', ['id' => $u->id]) }}"
-											data-confirm="{{ trans('groups::groups.confirm delete') }}">
-											<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
-										</a>
-										@endif
-									</td>
-								</tr>
-							@endforeach
+							
+								@foreach ($row->unixGroups as $i => $u)
+									<tr id="unixgroup-{{ $u->id }}" data-id="{{ $u->id }}">
+										<td>{{ $u->id }}</td>
+										<td>{{ $u->longname }}</td>
+										<td>{{ $u->shortname }}</td>
+										<td class="text-right">{{ $u->members()->count() }}</td>
+										<td class="text-right">
+											@if (!preg_match("/rcs[0-9]{4}[0-9]/", $u->shortname))
+											<a href="#unixgroup-{{ $u->id }}" class="btn btn-secondary btn-danger remove-unixgroup"
+												data-api="{{ route('api.unixgroups.delete', ['id' => $u->id]) }}"
+												data-confirm="{{ trans('groups::groups.confirm delete') }}">
+												<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+											</a>
+											@endif
+										</td>
+									</tr>
+								@endforeach
 								<tr class="hidden" id="unixgroup-{id}" data-id="{id}">
 									<td>{id}</td>
 									<td>{longname}</td>
@@ -157,12 +159,18 @@ app('pathway')
 								</tr>
 							</tfoot>
 						</table>
+						@else
+							<p class="text-center"><span class="none">{{ trans('global.none') }}</span></p>
+						@endif
 
 						@if (!count($row->unixGroups))
 							<div>
 								<p class="text-center">
-									<button class="btn btn-secondary create-default-unix-groups" data-api="{{ route('api.unixgroups.create') }}" data-group="{{ $row->id }}" data-value="{{ $row->unixgroup }}" id="INPUT_groupsbutton_{{ $row->id }}">
+									<button class="btn btn-secondary create-default-unix-groups" data-api="{{ route('api.unixgroups.create') }}" data-group="{{ $row->id }}" data-value="{{ $row->unixgroup }}" data-all-groups="1" id="INPUT_groupsbutton_{{ $row->id }}">
 										<span class="spinner-border spinner-border-sm d-none" role="status"></span> Create Default Unix Groups
+									</button>
+									<button class="btn btn-outline-secondary create-default-unix-groups" data-api="{{ route('api.unixgroups.create') }}" data-group="{{ $row->id }}" data-value="{{ $row->unixgroup }}" data-all-groups="0">
+										<span class="spinner-border spinner-border-sm" role="status"></span> Create Base Group Only
 									</button>
 								</p>
 								<p class="form-text">This will create default Unix groups; A base group, `apps`, and `data` group will be created. These will prefixed by the base name chosen. Once these are created, the groups and base name cannot be easily changed.</p>
