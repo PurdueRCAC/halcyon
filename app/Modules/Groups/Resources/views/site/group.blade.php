@@ -346,13 +346,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					item.toggleClass('hide');
 				}
 			}
-
-			//EditProperty($(this).data('prop'), $(this).data('value'));
-			/*$('#SPAN_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
-			$('#INPUT_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
-			$('#CANCEL_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
-			$('#SAVE_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
-			$('#EDIT_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');*/
 		});
 
 		$('.edit-property-input').on('keyup', function(event){
@@ -372,13 +365,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					item.toggleClass('hide');
 				}
 			}
-
-			//CancelEditProperty($(this).data('prop'), $(this).data('value'));
-			/*$('#SPAN_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
-			$('#INPUT_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
-			$('#CANCEL_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
-			$('#SAVE_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');
-			$('#EDIT_' + $(this).data('prop') + '_' + $(this).data('value')).toggleClass('hide');*/
 		});
 
 		$('.save-property').on('click', function(e){

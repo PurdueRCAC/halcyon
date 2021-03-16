@@ -8,6 +8,7 @@ use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
 use App\Modules\Groups\Models\Type;
+use App\Modules\Users\Models\UserUsername;
 use App\Modules\Users\Models\User;
 
 class MembersController extends Controller
@@ -53,10 +54,12 @@ class MembersController extends Controller
 		$group = Group::findOrFail($filters['group']);
 
 		$u = (new User)->getTable();
+		$uu = (new UserUsername)->getTable();
 		$m = (new Member)->getTable();
 
 		$query = Member::query()
-			->join($u, $u . '.id', $m . '.userid')
+			->join($uu, $uu . '.userid', $m . '.userid')
+			->join($u, $u . '.id', $uu . '.userid')
 			->select($m . '.*', $u . '.name')
 			->with('type')
 			->where($m . '.groupid', '=', $group->id);
@@ -76,7 +79,7 @@ class MembersController extends Controller
 		if ($filters['state'] == 'active')
 		{
 			$query->withTrashed()
-				->whereNull($u . '.deleted_at')
+				->whereNull($uu . '.dateremoved')
 				->where(function($where) use ($m)
 				{
 					$where->whereNull($m . '.dateremoved') //, '=', '0000-00-00 00:00:00')
@@ -87,9 +90,9 @@ class MembersController extends Controller
 		{
 			//$query->onlyTrashed();
 			$query->withTrashed()
-				->where(function($where) use ($u, $m)
+				->where(function($where) use ($uu, $m)
 				{
-					$where->whereNotNull($u . '.deleted_at')
+					$where->whereNotNull($uu . '.dateremoved')
 						->orWhere(function($w) use ($m)
 						{
 							$w->whereNotNull($m . '.dateremoved')

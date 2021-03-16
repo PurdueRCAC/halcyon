@@ -41,7 +41,11 @@
 					<div class="row">
 						<div class="col-md-11">
 							@foreach ($dept->department->ancestors() as $ancestor)
-								<?php if (!$ancestor->parentid) { continue; } ?>
+								@php
+								if (!$ancestor->parentid):
+									continue;
+								endif;
+								@endphp
 								{{ $ancestor->name }} <span class="text-muted">&rsaquo;</span>
 							@endforeach
 							{{ $dept->department->name }}
@@ -246,13 +250,11 @@
 			</div>
 			<div class="col col-md-6 text-right">
 				@if ($canManage)
-					<?php if (count($group->unixgroups) > 0) { ?>
+					@if (count($group->unixgroups) > 0)
 						<a href="#new-unixgroup_{{ $group->id }}" class="btn btn-default btn-sm add-unix-group help">
 							<i class="fa fa-plus-circle" aria-hidden="true"></i> Add New Unix Group
 						</a>
-					<?php }/* elseif ($group->unixgroup != '') { ?>
-						<button class="btn btn-default btn-sm create-default-unix-groups" data-group="<?php echo $group->id; ?>" data-value="<?php echo $group->unixgroup; ?>" id="INPUT_groupsbutton_<?php echo $group->id; ?>"><i class="fa fa-plus-circle" aria-hidden="true"></i> Create Default Unix Groups</button>
-					<?php }*/ ?>
+					@endif
 				@endif
 			</div>
 		</div>
@@ -295,7 +297,7 @@
 			</div>
 		</div>
 
-		<div class="dialog dialog-help" id="box1_<?php echo $group->id; ?>" title="Base Unix Group">
+		<div class="dialog dialog-help" id="box1_{{ $group->id }}" title="Base Unix Group">
 			<p>This is the base name for all of your group's Unix groups. Once set, this name is not easily changed so please carefully consider your choice. If you wish to change it, email <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a> to discuss your options. Group base names may be named with the following guidelines.</p>
 			<ul>
 				<li>Should typically be the same as your queue name for consistency.</li>
@@ -305,16 +307,19 @@
 			</ul>
 		</div>
 
-		<?php if ($group->unixgroup && count($group->unixgroups) == 0) { ?>
+		@if ($group->unixgroup && count($group->unixgroups) == 0)
 			<div id="INPUT_groupsbutton">
 				<p class="text-center">
-					<button class="btn btn-secondary create-default-unix-groups" data-api="{{ route('api.unixgroups.create') }}" data-group="{{ $group->id }}" data-value="{{ $group->unixgroup }}" id="INPUT_groupsbutton_{{ $group->id }}">
+					<button class="btn btn-secondary create-default-unix-groups" data-api="{{ route('api.unixgroups.create') }}" data-group="{{ $group->id }}" data-value="{{ $group->unixgroup }}" data-all-groups="1" id="INPUT_groupsbutton_{{ $group->id }}">
 						<span class="spinner-border spinner-border-sm" role="status"></span> Create Default Unix Groups
+					</button>
+					<button class="btn create-default-unix-groups" data-api="{{ route('api.unixgroups.create') }}" data-group="{{ $group->id }}" data-value="{{ $group->unixgroup }}" data-all-groups="0">
+						<span class="spinner-border spinner-border-sm" role="status"></span> Create Base Group Only
 					</button>
 				</p>
 				<p class="form-text">This will create default Unix groups; A base group, <code>apps</code>, and <code>data</code> group will be created. These will prefixed by the base name chosen. Once these are created, the groups and base name cannot be easily changed.</p>
 			</div>
-		<?php } ?>
+		@endif
 
 		@if (count($group->unixgroups) > 0)
 			<table id="actmaint_info" class="table table-hover {{ (!$group->unixgroup ? 'hide' : '') }}">

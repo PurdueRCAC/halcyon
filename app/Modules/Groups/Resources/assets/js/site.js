@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		$(this).attr('data-loading', true);
 
-		CreateNewGroupVal(0, $(this));
+		CreateNewGroupVal(0, $(this), parseInt($(this).data('all-groups')));
 	});
 
 	$('.add-category').on('click', function (e) {

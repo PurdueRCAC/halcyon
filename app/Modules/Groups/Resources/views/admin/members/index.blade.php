@@ -235,20 +235,20 @@ app('pathway')
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr<?php if (($row->user && $row->user->trashed()) || $row->isTrashed()) { echo ' class="trashed"'; } ?>>
+			<tr<?php if (($row->user && $row->user->isTrashed()) || $row->isTrashed()) { echo ' class="trashed"'; } ?>>
 				@if (auth()->user()->can('edit groups'))
 					<td>
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
 					</td>
 				@endif
 				<td class="priority-5">
-					@if (($row->user && $row->user->trashed()) || $row->isTrashed())
+					@if (($row->user && $row->user->isTrashed()) || $row->isTrashed())
 						<span class="icon-trash" aria-hidden="true"></span>
 					@endif
 					{{ $row->id }}
 				</td>
 				<td>
-					@if ($row->user && $row->user->trashed())
+					@if ($row->user && $row->user->isTrashed())
 						<span class="icon-alert-triangle glyph warning has-tip" title="{{ trans('groups::groups.user account removed') }}">{{ trans('groups::groups.user account removed') }}</span>
 					@endif
 					@if (auth()->user()->can('edit users'))
@@ -287,7 +287,7 @@ app('pathway')
 					</span>
 				</td>
 				<td>
-					@if (($row->user && $row->user->trashed()) || $row->isTrashed())
+					@if (($row->user && $row->user->isTrashed()) || $row->isTrashed())
 						{{ $row->type->name }}
 					@else
 						<?php
