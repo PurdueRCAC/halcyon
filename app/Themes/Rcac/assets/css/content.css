@@ -1857,85 +1857,6 @@ ul pre {
 	margin-top: 0px;
 }
 
-
-table.orderproduct th.orderproduct {
-	font-weight: bold;
-}
-.row.orderproductitemprivate,
-table.orderproduct tr.orderproductitemprivate td {
-	background: #FCF9EF;
-}
-table.orderproduct td.orderprice {
-	text-align: right;
-	white-space: nowrap;
-}
-table.orderproduct th.orderprice {
-	text-align: right;
-}
-table.orderproduct .orderproductextra td {
-	border-top: none;
-}
-table.orderproduct td.ordertotal {
-	border-top-style: double;
-	border-top-width: 3px;
-	border-top-color: #666666;
-}
-table.orderproduct h2 {
-	margin-bottom: 0.3em;
-	margin-top: 6px;
-}
-table.orderproduct p {
-	line-height: 150%;
-}
-table.orderproduct input {
-	font-weight: normal;
-	height: 2em;
-}
-
-div.order {
-	font-size: 0.85em;
-}
-div.orderheader {
-	margin-top: 2em;
-	margin-bottom: 0.5em;
-	font-weight: bold;
-	font-size: 1.3em;
-	border-bottom: 1px solid #999999;
-}
-div.orderheaderitemblock {
-	padding-left: 3px;
-}
-
-div.orderstatusblock {
-	float: right;
-	text-align: right;
-	padding-right: 3px;
-}
-div.orderstatus {
-	font-size: 1.4em;
-	font-weight: bold;
-}
-div.orderstatus input {
-	margin-top: 8px;
-}
-span.orderstatusred {
-	color: #FF0000;
-}
-span.orderstatusorange {
-	color: #DF7401;
-}
-span.orderstatusgreen {
-	color: #04B404;
-}
-p.ordernotes {
-	background: #F7F7F7;
-	padding: 4px;
-	min-height: 163px;
-}
-p.ordernotes img {
-	margin-bottom: 2px;
-}
-
 div.dialog {
 	text-align: left;
 	display: none;
@@ -1951,6 +1872,7 @@ div.dialog ul li {
 div.dialog ol li {
 	list-style: decimal;
 }
+
 p.step {
 	margin-bottom: 0.5em;
 }
@@ -1969,34 +1891,6 @@ p.stepcomplete img {
 	height: 16px;
 	margin-bottom: -4px;
 	margin-left: 4px;
-}
-
-ol.order li.step {
-	margin-left: 23px;
-	margin-bottom: 0.25em;
-}
-ol.order li.currentstep {
-	font-weight: bold;
-}
-ol.order li.stepcomplete {
-	color: #666666;
-	margin-bottom: 0.25em;
-}
-ol.order li.stepcomplete:before {
-	content: "\2713";
-	display: block;
-	width: 20px;
-	height: 20px;
-	font-size: 16px;
-	line-height: 20px;
-	color: green;
-	margin: 0 3px 0 0;
-	float: left;
-}
-ol.order li.notmystep {
-	color: #666666;
-	margin-left: 23px;
-	margin-bottom: 0.25em;
 }
 
 #ui-datepicker-div {
