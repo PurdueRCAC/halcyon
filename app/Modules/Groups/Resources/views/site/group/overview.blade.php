@@ -341,7 +341,7 @@
 					</tr>
 				</tfoot>
 				<tbody>
-					@foreach ($group->unixgroups as $unixgroup)
+					@foreach ($group->unixgroups()->orderBy('longname', 'asc')->get() as $unixgroup)
 						<tr id="unixgroup-{{ $unixgroup->id }}" data-id="{{ $unixgroup->id }}">
 							<td>{{ $unixgroup->longname }}</td>
 							<td class="extendedinfo hide">{{ config('modules.groups.unix_prefix', 'rcac-') . $unixgroup->longname }}</td>
