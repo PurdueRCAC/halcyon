@@ -31,22 +31,25 @@
 						<tr>
 							<?php
 							$title = '';
-							if ($q->subresource->nodecores)
+							if ($q->subresource)
 							{
-								$title .= $q->subresource->nodecores . ' cores, ';
-							}
-							else
-							{
-								$title .= '-- cores, ';
-							}
+								if ($q->subresource->nodecores)
+								{
+									$title .= $q->subresource->nodecores . ' cores, ';
+								}
+								else
+								{
+									$title .= '-- cores, ';
+								}
 
-							if ($q->subresource->nodemem)
-							{
-								$title .= $q->subresource->nodemem . ' memory';
-							}
-							else
-							{
-								$title .= '-- memory';
+								if ($q->subresource->nodemem)
+								{
+									$title .= $q->subresource->nodemem . ' memory';
+								}
+								else
+								{
+									$title .= '-- memory';
+								}
 							}
 							?>
 							<td title="{{ $title }}">
@@ -91,7 +94,7 @@
 								{{ $q->totalcores }}
 							</td>
 							<td class="text-right">
-								@if ($q->subresource->nodecores > 0)
+								@if ($q->subresource && $q->subresource->nodecores > 0)
 									{{ round($q->totalcores/$q->subresource->nodecores, 1) }}
 								@endif
 							</td>
