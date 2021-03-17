@@ -188,7 +188,7 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-4">
-					@if ($row->getOriginal('datetimeremoved') && $row->getOriginal('datetimeremoved') != '0000-00-00 00:00:00' && $row->getOriginal('datetimeremoved') != '-0001-11-30 00:00:00')
+					@if ($row->isTrashed())
 						@if (auth()->user()->can('edit queues'))
 							<a class="btn btn-secondary state trashed" href="{{ route('admin.queues.restore', ['id' => $row->id]) }}" title="{{ trans('queues::queues.set state to', ['state' => trans('global.enabled')]) }}">
 								{{ trans('global.trashed') }}
@@ -221,7 +221,7 @@ app('pathway')
 					@endif
 				</td>
 				<td class="text-center">
-					@if ($row->datetimeremoved && $row->datetimeremoved != '0000-00-00 00:00:00' && $row->datetimeremoved != '-0001-11-30 00:00:00')
+					@if ($row->isTrashed())
 						@if (auth()->user()->can('edit queues'))
 							<a class="glyph icon-trash" href="{{ route('admin.queues.restore', ['id' => $row->id]) }}" title="{{ trans('queues::queues.set state to', ['state' => trans('global.enabled')]) }}">
 								{{ trans('global.trashed') }}

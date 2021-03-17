@@ -106,4 +106,7 @@ return [
 	'sell to' => 'Sell to',
 	'action' => 'Action',
 	'source' => 'Source',
+	'disable scheduling' => 'Disable scheduling',
+	'enable scheduling' => 'Enable scheduling',
+	'options' => 'Options',
 ];
