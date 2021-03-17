@@ -515,14 +515,14 @@ th.colGroup {
 td.colGroup {
 	background-color: #f5f5f5;
 }
-tr.even th,
+/*tr.even th,
 tr.even td {
 	background: #f6f6f6;
 }
 tr.even th.colGroup,
 tr.even td.colGroup {
 	background: #f1f1f1;
-}
+}*/
 
 table.contact th {
 	width: 96px;
@@ -1892,7 +1892,10 @@ p.stepcomplete img {
 	margin-bottom: -4px;
 	margin-left: 4px;
 }
-
+th.col-queue,
+td.col-queue {
+	background-color: rgba(0, 0, 0, 0.025);
+}
 #ui-datepicker-div {
 	font-size: 0.9em;
 }
@@ -2583,9 +2586,9 @@ html .select2-container--default.select2-container--focus .select2-selection--mu
 body table.dataTable {
 	margin: 0 !important;
 }
-body table.dataTable tr.odd {
+/*body table.dataTable tr.odd {
 	background-color: #fff;
-}
+}*/
 body table.dataTable tr:first-child td {
 	border-top: none;
 }
