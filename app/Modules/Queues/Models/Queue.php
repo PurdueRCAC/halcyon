@@ -328,7 +328,7 @@ class Queue extends Model
 	 */
 	private function sumCoresAndNodes()
 	{
-		$nodecores = $this->subresource->nodecores;
+		$nodecores = $this->subresource ? $this->subresource->nodecores : 0;
 		$active = 0;
 
 		$totalcores  = 0;
