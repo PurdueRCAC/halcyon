@@ -70,6 +70,20 @@ class Tag extends Model
 	];
 
 	/**
+	 * Generate stemmed report
+	 *
+	 * @param   string  $value
+	 * @return  string
+	 */
+	public function setNameAttribute($value)
+	{
+		$this->attributes['name'] = $value;
+		$this->attributes['slug'] = $this->normalize($value);
+
+		return $value;
+	}
+
+	/**
 	 * Normalize tag input
 	 *
 	 * @param   string  $tag
@@ -127,7 +141,7 @@ class Tag extends Model
 		);
 
 		$tag = str_replace(array_keys($transliterationTable), array_values($transliterationTable), $tag);
-		return strtolower(preg_replace("/[^a-zA-Z0-9]/", '', $tag));
+		return strtolower(preg_replace("/[^a-zA-Z0-9_]/", '', $tag));
 	}
 
 	/**
@@ -182,7 +196,7 @@ class Tag extends Model
 	 */
 	public function aliases()
 	{
-		return $this->hasMany(Alias::class, 'tag_id');
+		return $this->hasMany(self::class, 'parent_id');
 	}
 
 	/**

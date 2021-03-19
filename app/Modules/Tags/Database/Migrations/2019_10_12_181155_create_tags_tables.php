@@ -18,17 +18,16 @@ class CreateTagsTables extends Migration
 			Schema::create('tags', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->string('name', 255);
-				$table->string('slug', 255);
-				$table->string('namespace', 255);
-				//$table->text('description')->nullable();
-				//$table->timestamp('created_at');
+				$table->integer('parent_id')->unsigned()->default(0);
+				$table->string('name', 150);
+				$table->string('slug', 100);
+				$table->string('namespace', 100);
 				$table->integer('created_by')->unsigned()->default(0);
-				//$table->timestamp('updated_at');
 				$table->integer('updated_by')->unsigned()->default(0);
 				$table->integer('tagged_count')->unsigned()->default(0);
 				$table->integer('alias_count')->unsigned()->default(0);
 				$table->timestamps();
+				$table->index('parent_id');
 			});
 		}
 
@@ -40,14 +39,9 @@ class CreateTagsTables extends Migration
 				$table->integer('tag_id')->unsigned()->default(0);
 				$table->integer('taggable_id')->unsigned()->default(0);
 				$table->string('taggable_type', 255);
-				//$table->smallInteger('strength')->unsigned()->default(0);
 				$table->timestamp('created_at');
 				$table->integer('created_by')->unsigned()->default(0);
-				//$table->timestamp('deleted_at');
-				//$table->integer('deleted_by')->unsigned()->default(0);
-				//$table->string('label', 30);
 				$table->index(['taggable_id', 'taggable_type']);
-				//$table->index(['label', 'tag-id']);
 				$table->index('tag_id');
 			});
 		}
@@ -56,10 +50,11 @@ class CreateTagsTables extends Migration
 		{
 			$table->increments('id');
 			$table->integer('tag_id')->unsigned()->default(0);
-			$table->string('tag', 255);
-			$table->string('raw_tag', 255);
-			$table->timestamp('created');
-			$table->integer('created_by')->unsigned()->default(0);
+			$table->string('name', 255);
+			$table->string('slug', 255);
+			//$table->timestamp('created');
+			//$table->integer('created_by')->unsigned()->default(0);
+			$table->timestamps();
 			$table->index('tag_id');
 		});
 

@@ -100,13 +100,12 @@ class TagsController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'search'   => $request->input('search', ''),
-			'state'    => $request->input('state', 'active'),
-			'type'     => $request->input('type', null),
+			'search'    => $request->input('search', ''),
+			'state'     => $request->input('state', 'active'),
+			'type'      => $request->input('type', null),
 			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
-			'page'     => $request->input('page', 1),
-			//'start' => $request->input('limitstart', 0),
+			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', Tag::$orderBy),
 			'order_dir' => $request->input('order_dir', Tag::$orderDir)
@@ -130,16 +129,17 @@ class TagsController extends Controller
 			});
 		}
 
-		if ($filters['state'])
+		if ($filters['state'] == 'active')
 		{
-			if ($filters['state'] == 'active')
-			{
-				$query->whereNull('deleted_at');
-			}
-			elseif ($filters['state'] == 'trashed')
-			{
-				$query->whereNotNull('deleted_at');
-			}
+			// Laravel does this by default
+		}
+		elseif ($filters['state'] == 'trashed')
+		{
+			$query->onlyTrashed();
+		}
+		else
+		{
+			$query->withTrashed();
 		}
 
 		$rows = $query
@@ -162,16 +162,19 @@ class TagsController extends Controller
 	 * 		"description":   "Tag to be created.",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 150
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "Longer description of a tag",
+	 * 		"name":          "slug",
+	 * 		"description":   "Normalized text (alpha-numeric, no punctuation)",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 100,
+	 * 			"example":   "water"
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -189,12 +192,20 @@ class TagsController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'name' => 'required|min:3|max:255'
+			'name' => 'required|string|min:3|max:1500',
+			'slug' => 'nullable|string|max:100'
 		]);
 
-		$tag = Tag::create($request->all());
+		$row = Tag::findByTag($request->input('slug') ? $request->input('slug') : $request->input('name'));
 
-		return new TagResource($tag);
+		if ($row)
+		{
+			return response()->json(['message' => trans('tags::tags.tag already exists')], 415);
+		}
+
+		$row = Tag::create($request->all());
+
+		return new TagResource($row);
 	}
 
 	/**
@@ -216,9 +227,9 @@ class TagsController extends Controller
 	 */
 	public function read($id)
 	{
-		$tag = Tag::findOrFail($id);
+		$row = Tag::findOrFail($id);
 
-		return new TagResource($tag);
+		return new TagResource($row);
 	}
 
 	/**
@@ -241,7 +252,8 @@ class TagsController extends Controller
 	 * 		"description":   "Tag text",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 150
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -250,16 +262,9 @@ class TagsController extends Controller
 	 * 		"description":   "Normalized text (alpha-numeric, no punctuation)",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "Longer description of a tag",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 100,
+	 * 			"example":   "water"
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -273,11 +278,12 @@ class TagsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "substitutes",
+	 * 		"name":          "aliases",
 	 * 		"description":   "Comma-separated list of aliases or alternatives",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"example":   "one,two,three"
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -287,9 +293,8 @@ class TagsController extends Controller
 	public function update(Request $request, $id)
 	{
 		$validator = Validator::make($request->all(), [
-			'description' => 'nullable|string',
-			'slug' => 'nullable|min:3|max:255',
-			'name' => 'required|min:3|max:255',
+			'slug' => 'nullable|min:3|max:150',
+			'name' => 'nullable|min:3|max:100',
 		]);
 
 		if ($validator->fails())
@@ -297,10 +302,10 @@ class TagsController extends Controller
 			return response()->json(['message' => $validator->messages()->first()], 409);
 		}
 
-		$tag = Type::findOrFail($id);
-		$tag->update($request->all());
+		$row = Type::findOrFail($id);
+		$row->update($request->all());
 
-		return new TagResource($tag);
+		return new TagResource($row);
 	}
 
 	/**
@@ -330,11 +335,11 @@ class TagsController extends Controller
 	 */
 	public function delete($id)
 	{
-		$tag = Tag::findOrFail($id);
+		$row = Tag::findOrFail($id);
 
-		if (!$tag->trashed())
+		if (!$row->trashed())
 		{
-			$tag->delete();
+			$row->delete();
 		}
 
 		return response()->json(null, 204);

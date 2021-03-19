@@ -116,7 +116,7 @@ app('pathway')
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->getOriginal('created_at') && $row->getOriginal('created_at') != '0000-00-00 00:00:00')
+						@if ($row->created_at)
 							<time datetime="{{ $row->created_at }}">{{ $row->created_at }}</time>
 						@else
 							<span class="never">{{ trans('global.unknown') }}</span>

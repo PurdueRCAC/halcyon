@@ -73,8 +73,6 @@ class TaggedController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Tag();
 
 		return view('tags::admin.tagged.edit', [
@@ -127,8 +125,6 @@ class TaggedController extends Controller
 	 */
 	public function edit($id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Tag::findOrFail($id);
 
 		return view('tags::admin.tagged.edit', [

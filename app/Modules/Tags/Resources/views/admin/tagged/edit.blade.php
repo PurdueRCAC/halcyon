@@ -1,5 +1,21 @@
 @extends('layouts.master')
 
+@php
+app('request')->merge(['hidemainmenu' => 1]);
+
+app('pathway')
+	->append(
+		trans('tags::tags.module name'),
+		route('admin.tags.index')
+	)
+	->append(
+		trans('tags::tags.tagged')
+	)
+	->append(
+		($row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create'))
+	);
+@endphp
+
 @section('toolbar')
 	@if (auth()->user()->can('edit tags'))
 		{!! Toolbar::save(route('admin.tags.tagged.store')) !!}
@@ -18,7 +34,7 @@
 @stop
 
 @section('content')
-<form action="{{ route('admin.tags.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.VALIDATION_FORM_FAILED') }}">
+<form action="{{ route('admin.tags.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 	<div class="row grid">
 		<div class="col col-md-7 span7">
 			<fieldset class="adminform">

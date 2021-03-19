@@ -20,7 +20,7 @@ class TagsController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
-			'state'     => null,
+			'state'     => 'active',
 			// Paging
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -34,7 +34,7 @@ class TagsController extends Controller
 			$filters[$key] = $request->state('tags.filter_' . $key, $key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'name', 'slug', 'created_at', 'updated_at']))
+		if (!in_array($filters['order'], ['id', 'name', 'slug', 'created_at', 'updated_at', 'tagged_count', 'alias_count']))
 		{
 			$filters['order'] = Tag::$orderBy;
 		}
@@ -44,7 +44,8 @@ class TagsController extends Controller
 			$filters['order_dir'] = Tag::$orderDir;
 		}
 
-		$query = Tag::query();
+		$query = Tag::query()
+			->where('parent_id', '=', 0);
 
 		if ($filters['search'])
 		{
@@ -57,16 +58,17 @@ class TagsController extends Controller
 			});
 		}
 
-		if ($filters['state'])
+		if ($filters['state'] == 'active')
 		{
-			if ($filters['state'] == 'active')
-			{
-				$query->where('deleted_at', '=', '0000-00-00 00:00:00');
-			}
-			elseif ($filters['state'] == 'trashed')
-			{
-				$query->where('deleted_at', '!=', '0000-00-00 00:00:00');
-			}
+			// Laravel does this by default
+		}
+		elseif ($filters['state'] == 'trashed')
+		{
+			$query->onlyTrashed();
+		}
+		else
+		{
+			$query->withTrashed();
 		}
 
 		$rows = $query
@@ -87,12 +89,25 @@ class TagsController extends Controller
 	 */
 	public function create()
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Tag();
 
 		return view('tags::admin.tags.edit', [
 			'row' => $row
+		]);
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  integer  $id
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		$row = Tag::findOrFail($id);
+
+		return view('tags::admin.tags.edit', [
+			'row' => $row,
 		]);
 	}
 
@@ -105,50 +120,52 @@ class TagsController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required'
+			'fields.name' => 'required|string|max:150',
+			'fields.slug' => 'nullable|string|max:100'
 		]);
 
 		$id = $request->input('id');
 
 		$row = $id ? Tag::findOrFail($id) : new Tag();
 		$row->fill($request->input('fields'));
-		$row->slug = $row->normalize($row->name);
+		//$row->slug = $row->normalize($row->name);
 
 		if (!$row->created_by)
 		{
 			$row->created_by = auth()->user()->id;
 		}
 
-		if (!$row->updated_by)
+		if ($row->id)
 		{
 			$row->updated_by = auth()->user()->id;
 		}
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->with('success', trans('messages.item saved'));
-	}
+		$aliases = $request->input('alias', []);
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  integer  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		app('request')->merge(['hidemainmenu' => 1]);
+		foreach ($aliases as $alias)
+		{
+			$a = Tag::all()
+				->where('name', '=', $alias['name'])
+				->where('parent_id', '=', $id)
+				->first();
 
-		$row = Tag::findOrFail($id);
+			if (!$a)
+			{
+				$a = new Tag;
+				$a->parent_id = $id;
+				$a->name = $alias['name'];
+				$a->save();
+			}
+		}
 
-		return view('tags::admin.tags.edit', [
-			'row' => $row,
-		]);
+		return $this->cancel()->with('success', trans('global.messages.item saved'));
 	}
 
 	/**
@@ -179,7 +196,7 @@ class TagsController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();
