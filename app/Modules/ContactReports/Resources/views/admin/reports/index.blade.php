@@ -142,6 +142,12 @@ app('pathway')
 							{{ Illuminate\Support\Str::limit($row->report, 70) }}
 						</span>
 					@endif
+					@if (count($row->tags))
+						<br />tags:
+						@foreach ($row->tags as $tag)
+							<a href="{{ route('admin.contactreports.index', ['tag' => $tag->slug]) }}">{{ $tag->name }}</a>,
+						@endforeach
+					@endif
 				</td>
 				<td class="priority-4">
 					@if ($row->group && $row->group->id)

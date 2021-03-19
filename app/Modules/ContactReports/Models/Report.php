@@ -5,6 +5,7 @@ namespace App\Modules\ContactReports\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
+use App\Modules\Tags\Traits\Taggable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\ContactReports\Events\ReportPrepareContent;
 use Carbon\Carbon;
@@ -17,7 +18,7 @@ use App\Halcyon\Access\Map;
  */
 class Report extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use ErrorBag, Validatable, Historable, Taggable;
 
 	/**
 	 * The name of the "created at" column.
@@ -95,6 +96,55 @@ class Report extends Model
 		'preblocks'  => array(),
 		'codeblocks' => array()
 	);
+
+	/**
+	 * Runs extra setup code when creating/updating a new model
+	 *
+	 * @return  void
+	 */
+	protected static function boot()
+	{
+		parent::boot();
+
+		// Parse out hashtags and tag the record
+		static::created(function ($model)
+		{
+			preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $model->report, $matches);
+
+			if (!empty($matches[0]))
+			{
+				$tags = array();
+
+				foreach ($matches[0] as $match)
+				{
+					$tags[] = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+				}
+
+				$model->setTags($tags);
+			}
+
+			return true;
+		});
+
+		static::updated(function ($model)
+		{
+			preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $model->report, $matches);
+
+			if (!empty($matches[0]))
+			{
+				$tags = array();
+
+				foreach ($matches[0] as $match)
+				{
+					$tags[] = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+				}
+
+				$model->setTags($tags);
+			}
+
+			return true;
+		});
+	}
 
 	/**
 	 * Defines a relationship to updates
@@ -647,5 +697,72 @@ class Report extends Model
 		$subscribers = array_unique($subscribers);
 
 		return $subscribers;
+	}
+
+	/*public function getKeywordsAttribute()
+	{
+		$str = $this->report;
+
+		$min_word_length = 3;
+		$avoid = [
+			'we','the','to','i','am','is','are','he','she','a','an','and','here','there','can',
+			'they', 'them',
+			'could','were','has','have','had','been','welcome','of','home','&nbsp;','&ldquo;',
+			'words','into','this','there'
+		];
+		$strip_arr = ["," ,"." ,";" ,":", "\"", "'", "“","”","(",")", "!","?"];
+		$str_clean = str_replace($strip_arr, '', $str);
+		$str_arr = explode(' ', $str_clean);
+		$clean_arr = [];
+
+		foreach($str_arr as $word)
+		{
+			if (strlen($word) > $min_word_length)
+			{
+				$word = strtolower($word);
+				if (!in_array($word, $avoid))
+				{
+					$clean_arr[] = $word;
+				}
+			}
+		}
+
+		return implode(',', $clean_arr);
+	}*/
+
+	static $entityNamespace = 'crm';
+
+	public function getHashtagsAttribute()
+	{
+		$str = $this->report;
+
+		/*$expression = "/(^|[^a-z0-9_])#([a-z0-9_]+)/";
+		$str = preg_replace_callback($expression, function($matches)
+		{
+			$tag = \App\Modules\Tags\Models\Tag::findByTag($matches[1]);
+
+			if (!$tag)
+			{
+				$tag = new \App\Modules\Tags\Models\Tag;
+				$tag->tag = $matches[1];
+				$tag->save();
+			}
+
+		}, $str);*/
+		preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $str, $matches);
+
+		$hashtag = [];
+		if (!empty($matches[0]))
+		{
+			foreach ($matches[0] as $match)
+			{
+				$match = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+				$this->addTag($match);
+
+				$hashtag[] = $match;
+			}
+		}
+
+		return implode(', ', $hashtag);
 	}
 }
