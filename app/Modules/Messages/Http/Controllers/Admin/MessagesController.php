@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use App\Modules\Messages\Models\Message;
 use App\Modules\Messages\Models\Type;
 use App\Halcyon\Http\StatefulRequest;
+use Carbon\Carbon;
 
 class MessagesController extends Controller
 {
@@ -19,11 +20,13 @@ class MessagesController extends Controller
 	 */
 	public function index(StatefulRequest $request)
 	{
+		$weekago = Carbon::now()->modify('-1 week');
+
 		// Get filters
 		$filters = array(
 			'state'     => 'published',
 			'status'    => '*',
-			'start'     => null,
+			'start'     => $weekago->format('Y-m-d'),
 			'stop'      => null,
 			'type'      => '',
 			'limit'     => config('list_limit', 20),
@@ -69,7 +72,7 @@ class MessagesController extends Controller
 
 		if ($filters['start'])
 		{
-			$query->where('datetimesubmitted', '>', $filters['start']);
+			$query->where('datetimesubmitted', '>', $filters['start'] . ' 00:00:00');
 		}
 
 		if ($filters['status'] == 'success')
@@ -83,7 +86,7 @@ class MessagesController extends Controller
 
 		if ($filters['stop'])
 		{
-			$query->where('datetimesubmitted', '<=', $filters['stop']);
+			$query->where('datetimesubmitted', '<=', $filters['stop'] . ' 00:00:00');
 		}
 
 		if ($filters['type'])
@@ -99,10 +102,31 @@ class MessagesController extends Controller
 			->orderBy('name', 'asc')
 			->get();
 
+		$stats = new \stdClass;
+		$stats->failed = Message::query()
+			->where('datetimestarted', '!=', '0000-00-00 00:00:00')
+			->where('datetimecompleted', '!=', '0000-00-00 00:00:00')
+			->where('datetimesubmitted', '>=', $filters['start'] . ' 00:00:00')
+			->where('returnstatus', '>', 0)
+			->count();
+	
+		$stats->succeeded = Message::query()
+			->where('datetimestarted', '!=', '0000-00-00 00:00:00')
+			->where('datetimecompleted', '!=', '0000-00-00 00:00:00')
+			->where('datetimesubmitted', '>=', $filters['start'] . ' 00:00:00')
+			->where('returnstatus', '=', 0)
+			->count();
+
+		$stats->pending = Message::query()
+			->where('datetimestarted', '=', '0000-00-00 00:00:00')
+			->where('datetimecompleted', '=', '0000-00-00 00:00:00')
+			->count();
+
 		return view('messages::admin.messages.index', [
 			'filters' => $filters,
 			'rows'    => $rows,
-			'types'   => $types
+			'types'   => $types,
+			'stats'   => $stats
 		]);
 	}
 
