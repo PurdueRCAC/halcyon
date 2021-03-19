@@ -7,11 +7,6 @@ use App\Modules\Tags\Models\Tag;
 class TagUpdated
 {
 	/**
-	 * @var array
-	 */
-	public $data;
-
-	/**
 	 * @var Tag
 	 */
 	public $tag;
@@ -19,33 +14,11 @@ class TagUpdated
 	/**
 	 * Constructor
 	 *
-	 * @param Tag $tag
-	 * @param array $data
+	 * @param  Tag $tag
 	 * @return void
 	 */
-	public function __construct(Tag $tag, array $data)
+	public function __construct(Tag $tag)
 	{
-		$this->data = $data;
 		$this->tag = $tag;
-	}
-
-	/**
-	 * Return the entity
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function getTag()
-	{
-		return $this->tag;
-	}
-
-	/**
-	 * Return ALL data sent
-	 *
-	 * @return array
-	 */
-	public function getSubmissionData()
-	{
-		return $this->data;
 	}
 }

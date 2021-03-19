@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Tag\Traits;
+namespace App\Modules\Tags\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use App\Modules\Tags\Models\Tag;
 
-trait TaggableTrait
+trait Taggable
 {
 	/**
 	 * {@inheritdoc}
@@ -88,7 +88,7 @@ trait TaggableTrait
 	{
 		$instance = new static;
 
-		return $instance->createTagsModel()->whereNamespace($instance->getEntityClassName());
+		return $instance->createTagsModel()->whereDomain($instance->getEntityClassName());
 	}
 
 	/**
@@ -141,19 +141,18 @@ trait TaggableTrait
 	 */
 	public function addTag($name)
 	{
-		$tag = $this->createTagsModel()->where('namespace', $this->getEntityClassName())
-			->with('translations')
-			->whereHas('translations', function (Builder $q) use ($name)
-			{
-				$q->where('slug', $this->generateTagSlug($name));
-			})->first();
+		$tag = $this->createTagsModel()
+			//->where('domain', $this->getEntityClassName())
+			->where('slug', $this->generateTagSlug($name))
+			->first();
 
 		if ($tag === null)
 		{
 			$tag = new Tag([
-				'namespace' => $this->getEntityClassName(),
+				'domain' => $this->getEntityClassName(),
 				'slug' => $this->generateTagSlug($name),
 				'name' => $name,
+				'created_by' => auth()->user() ? auth()->user()->id : 0
 			]);
 		}
 
@@ -165,6 +164,7 @@ trait TaggableTrait
 		if ($this->tags->contains($tag->id) === false)
 		{
 			$this->tags()->attach($tag);
+			$this->tags->push($tag);
 		}
 	}
 
@@ -189,11 +189,9 @@ trait TaggableTrait
 	public function removeTag($name)
 	{
 		$tag = $this->createTagsModel()
-			->where('namespace', $this->getEntityClassName())
-			->with('translations')
-			->whereHas('translations', function (Builder $q) use ($name) {
-				$q->where('slug', $this->generateTagSlug($name));
-			})->first();
+			//->where('domain', $this->getEntityClassName())
+			->where('slug', $this->generateTagSlug($name))
+			->first();
 
 		if ($tag)
 		{

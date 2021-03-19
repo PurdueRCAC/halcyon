@@ -43,10 +43,32 @@ class Tagged extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'tag_id'        => 'positive|nonzero',
-		'taggable_type' => 'required',
-		'taggable_id'   => 'positive|nonzero'
+		'tag_id'        => 'required|integer',
+		'taggable_type' => 'required|string',
+		'taggable_id'   => 'required|integer'
 	);
+
+	/**
+	 * Runs extra setup code when creating a new model
+	 *
+	 * @return  void
+	 */
+	protected static function boot()
+	{
+		parent::boot();
+
+		static::created(function ($model)
+		{
+			$c = self::query()
+				->where('tag_id', '=', $model->tag_id)
+				->count();
+
+			$model->tag->tagged_count = $c;
+			$model->tag->save();
+
+			return true;
+		});
+	}
 
 	/**
 	 * Get parent tag

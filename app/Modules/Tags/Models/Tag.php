@@ -89,7 +89,7 @@ class Tag extends Model
 	 * @param   string  $tag
 	 * @return  string
 	 */
-	public function normalize($tag)
+	public function normalize($name)
 	{
 		$transliterationTable = array(
 			'á' => 'a', 'Á' => 'A', 'à' => 'a', 'À' => 'A', 'ă' => 'a', 'Ă' => 'A', 'â' => 'a', 'Â' => 'A', 'å' => 'a', 'Å' => 'A', 'ã' => 'a', 'Ã' => 'A', 'ą' => 'a', 'Ą' => 'A', 'ā' => 'a', 'Ā' => 'A', 'ä' => 'ae', 'Ä' => 'AE', 'æ' => 'ae', 'Æ' => 'AE',
@@ -140,8 +140,25 @@ class Tag extends Model
 			'Ю' => 'ju', 'я' => 'ja', 'Я' => 'ja'
 		);
 
-		$tag = str_replace(array_keys($transliterationTable), array_values($transliterationTable), $tag);
-		return strtolower(preg_replace("/[^a-zA-Z0-9_]/", '', $tag));
+		$name = str_replace(array_keys($transliterationTable), array_values($transliterationTable), $name);
+
+		$separator = '-';
+		// Convert all dashes/underscores into separator
+		$flip = '_';
+
+		$name = preg_replace('!['.preg_quote($flip).']+!u', $separator, $name);
+
+		// Replace @ with the word 'at'
+		$name = str_replace('@', $separator.'at'.$separator, $name);
+
+		// Remove all characters that are not the separator, letters, numbers, or whitespace.
+		$name = preg_replace('![^'.preg_quote($separator).'\pL\pN\s]+!u', '', mb_strtolower($name));
+
+		// Replace all separator characters and whitespace by a single separator
+		$name = preg_replace('!['.preg_quote($separator).'\s]+!u', $separator, $name);
+
+		return trim($name, $separator);
+		//return strtolower(preg_replace("/[^a-zA-Z0-9_]/", '', $tag));
 	}
 
 	/**

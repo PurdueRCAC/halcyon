@@ -9,18 +9,16 @@ class TagUpdating
 	/**
 	 * @var Tag
 	 */
-	private $tag;
+	public $tag;
 
+	/**
+	 * Constructor
+	 *
+	 * @param  Tag $tag
+	 * @return void
+	 */
 	public function __construct(Tag $tag)
 	{
 		$this->tag = $tag;
-	}
-
-	/**
-	 * @return User
-	 */
-	public function getTag()
-	{
-		return $this->tag;
 	}
 }
