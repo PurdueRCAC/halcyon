@@ -170,7 +170,7 @@
 							</a>
 						</div>
 						<div class="department col-lg-9 col-md-9 col-sm-9 col-xs-12">
-							<a href="{{ url()->to('/') }}" title="{{ config('site-name') }}">
+							<a href="{{ route('home') }}" title="{{ config('app.name') }}">
 								Information Technology<span class="tagline">Research Computing</span>
 							</a>
 						</div>
@@ -182,7 +182,7 @@
 							@else
 								<li><a href="{{ route('login') }}" class="btn btn-secondary btn-inverse"><i class="fa fa-lock" aria-hidden="true"></i> {{ trans('theme::rcac.login') }}</a></li>
 							@endif
-							<li><a href="{{ url('/help') }}" class="btn btn-info"><i class="fa fa-question-circle" aria-hidden="true"></i> {{ trans('theme::rcac.get help') }}</a></li>
+							<li><a href="{{ route('page', ['uri' => 'help']) }}" class="btn btn-info"><i class="fa fa-question-circle" aria-hidden="true"></i> {{ trans('theme::rcac.get help') }}</a></li>
 						</ul>
 					</div>
 				</div>
@@ -233,7 +233,7 @@
 		</main>
 
 		<footer id="footer">
-			<?php /*@widget('footer')*/ ?>
+			@widget('footer')
 			<div class="footer">
 				<div class="container">
 					<div class="row panel-group" id="accordion">
