@@ -113,7 +113,7 @@ class Tree
 			foreach ($this->_current->getChildren() as $child)
 			{
 				$this->_current =& $child;
-				$this->renderLevel($depth++);
+				$this->renderLevel($depth+1);
 			}
 			echo "</ul>\n";
 		}
@@ -162,7 +162,7 @@ class Tree
 		}
 
 		// Print the item
-		echo '<li' . $class . '>';
+		echo str_repeat("\t", $depth) . '<li' . $class . '>';// . "\n";
 
 		// Print a link if it exists
 		$linkClass = $this->getIconClass($iconClass);
@@ -170,6 +170,8 @@ class Tree
 		{
 			$linkClass = ' class="' . $linkClass . '"';
 		}
+
+		//echo str_repeat("\t", $depth + 1);
 
 		if ($this->_current->link != null && $this->_current->target != null)
 		{
@@ -188,6 +190,8 @@ class Tree
 			echo '<span></span>';
 		}
 
+		//echo "\n";
+
 		// Recurse through children if they exist
 		while ($this->_current->hasChildren())
 		{
@@ -198,20 +202,20 @@ class Tree
 				{
 					$id = ' id="menu-' . strtolower($this->_current->id) . '"';
 				}
-				echo '<ul' . $id . ' class="menu-component">' . "\n";
+				echo "\n" . str_repeat("\t", $depth + 1) . '<ul' . $id . ' class="menu-component">' . "\n";
 			}
 			else
 			{
-				echo '<ul>' . "\n";
+				echo "\n" . str_repeat("\t", $depth + 1) . '<ul>' . "\n";
 			}
 
 			foreach ($this->_current->getChildren() as $child)
 			{
 				$this->_current =& $child;
-				$this->renderLevel($depth++);
+				$this->renderLevel($depth+2);
 			}
 
-			echo "</ul>\n";
+			echo str_repeat("\t", $depth + 1) . "</ul>\n" . str_repeat("\t", $depth);
 		}
 		echo "</li>\n";
 	}
