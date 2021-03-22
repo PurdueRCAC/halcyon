@@ -255,6 +255,17 @@ class WidgetManager
 	}
 
 	/**
+	 * Return the widget assets path
+	 * 
+	 * @param  string $widget
+	 * @return string
+	 */
+	public function getAssetPath($widget)
+	{
+		return public_path($this->app['config']->get('module.widgets.path.assets', 'widgets') . '/' . $widget);
+	}
+
+	/**
 	 * Load published widgets.
 	 *
 	 * @return  object  Collection

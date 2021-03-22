@@ -1,6 +1,8 @@
 <?php
 namespace App\Modules\Widgets\Entities;
 
+use Illuminate\Support\Str;
+
 /**
  * Base widget class
  */
@@ -43,10 +45,6 @@ class Widget
 	public function __construct($model)
 	{
 		$name = $model->widget;
-		if (substr($name, 0, 4) == 'mod_')
-		{
-			$name = substr($name, 4);
-		}
 		//$name = Str::studly($name);
 
 		$this->name   = $name;
@@ -82,6 +80,36 @@ class Widget
 	 */
 	public function getViewName($layout='index')
 	{
-		return 'widget.' . $this->name . '::' . $layout;
+		return 'widget.' . $this->getLowerName() . '::' . $layout;
+	}
+
+	/**
+	 * Get the widget name in lowercase
+	 *
+	 * @return  string
+	 */
+	public function getLowerName()
+	{
+		return strtolower($this->name);
+	}
+
+	/**
+	 * Get the widget name in studly case
+	 *
+	 * @return  string
+	 */
+	public function getStudlyName()
+	{
+		return Str::studly($this->name);
+	}
+
+	/**
+	 * Get the path of a layout for this widget
+	 *
+	 * @return  string
+	 */
+	public function getPath()
+	{
+		return app('config')->get('module.widgets.path', app_path('Widgets')) . '/' . $this->getStudlyName();
 	}
 }

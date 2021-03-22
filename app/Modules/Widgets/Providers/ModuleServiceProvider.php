@@ -6,6 +6,11 @@ use App\Modules\Widgets\Entities\WidgetManager;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use App\Modules\Widgets\Console\InstallCommand;
+use App\Modules\Widgets\Console\DisableCommand;
+use App\Modules\Widgets\Console\EnableCommand;
+use App\Modules\Widgets\Console\PublishCommand;
+use App\Modules\Widgets\Console\SetupCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -39,6 +44,7 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 	}
@@ -54,6 +60,22 @@ class ModuleServiceProvider extends ServiceProvider
 		{
 			return new WidgetManager($app);
 		});
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	protected function registerConsoleCommands()
+	{
+		$this->commands([
+			InstallCommand::class,
+			DisableCommand::class,
+			EnableCommand::class,
+			PublishCommand::class,
+			SetupCommand::class,
+		]);
 	}
 
 	/**
