@@ -25,15 +25,15 @@ class SetupCommand extends Command
 	 */
 	public function handle()
 	{
-		$this->generateModulesFolder();
+		$this->generateThemesFolder();
 
 		$this->generateAssetsFolder();
 	}
 
 	/**
-	 * Generate the modules folder.
+	 * Generate the themes folder.
 	 */
-	public function generateModulesFolder()
+	public function generateThemesFolder()
 	{
 		$this->generateDirectory(
 			app_path('Themes'),
