@@ -5,12 +5,14 @@ namespace App\Modules\ContactReports\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Comment;
 use App\Modules\ContactReports\Models\Reportresource;
 use App\Modules\ContactReports\Models\User as ReportUser;
 use App\Modules\ContactReports\Models\Type;
+use App\Halcyon\Utility\PorterStemmer;
 use Carbon\Carbon;
 
 class ReportsController extends Controller
@@ -26,6 +28,7 @@ class ReportsController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
+			'tag'       => '',
 			'group'    => null,
 			'start'    => null,
 			'stop'     => null,
@@ -54,14 +57,45 @@ class ReportsController extends Controller
 
 		$query = Report::query();
 
+		if ($filters['tag'])
+		{
+			$query->withTag($filters['tag']);
+		}
+
 		if ($filters['search'])
 		{
-			$query->where('report', 'like', '%' . $filters['search'] . '%');
-			/*$query->where(function($query) use ($filters)
+			// Trim extra garbage
+			$keyword = preg_replace('/[^A-Za-z0-9]/', ' ', $filters['search']);
+
+			// Calculate stem for the word
+			$keywords = array();
+			$stem = PorterStemmer::Stem($keyword);
+			$stem = substr($stem, 0, 1) . $stem;
+
+			$keywords[] = $stem;
+
+			$sql  = "(MATCH(stemmedreport) AGAINST ('+";
+			$sql .= $keywords[0];
+			for ($i=1; $i<count($keywords); $i++)
 			{
-				$query->where('headline', 'like', '%' . $filters['search'] . '%')
-					->orWhere('body', 'like', '%' . $filters['search'] . '%');
-			});*/
+				$sql .= " +" . $keywords[$i];
+			}
+			$sql .= "') * 10 + 2 * (1 / (DATEDIFF(NOW(), datetimecontact) + 1))) AS score";
+
+			$query->select(['*', DB::raw($sql)]);
+
+			$sql  = "MATCH(stemmedreport) AGAINST ('+";
+			$sql .= $keywords[0];
+			for ($i=1; $i<count($keywords); $i++)
+			{
+				$sql .= " +" . $keywords[$i];
+			}
+			$sql .= "' IN BOOLEAN MODE)";
+
+			$query->whereRaw($sql)
+				->orderBy('score', 'desc');
+
+			//$query->where('report', 'like', '%' . $filters['search'] . '%');
 		}
 
 		if ($filters['notice'] != '*')
@@ -89,7 +123,7 @@ class ReportsController extends Controller
 		return view('contactreports::admin.reports.index', [
 			'filters' => $filters,
 			'rows'    => $rows,
-			'types' => $types,
+			'types'   => $types,
 		]);
 	}
 
@@ -106,9 +140,9 @@ class ReportsController extends Controller
 		$types = Type::all();
 
 		return view('contactreports::admin.reports.edit', [
-			'row'   => $row,
+			'row'    => $row,
 			'groups' => $groups,
-			'types' => $types,
+			'types'  => $types,
 		]);
 	}
 
@@ -152,6 +186,7 @@ class ReportsController extends Controller
 			$addresources = array();
 			$deleteresources = array();
 
+			// Resources that need removing
 			foreach ($prior as $r)
 			{
 				$found = false;
@@ -170,6 +205,7 @@ class ReportsController extends Controller
 				}
 			}
 
+			// Resources that need adding
 			foreach ($resources as $r)
 			{
 				$found = false;
@@ -216,14 +252,15 @@ class ReportsController extends Controller
 		{
 			$people = (array)$people;
 
-			// Fetch current list of resources
+			// Fetch current list of users
 			$prior = $row->users;
 
-			// Remove and add resource-contactreport mappings
+			// Remove and add mappings
 			// First calculate diff
 			$addusers = array();
 			$deleteusers = array();
 
+			// Users that need removing
 			foreach ($prior as $r)
 			{
 				$found = false;
@@ -242,6 +279,7 @@ class ReportsController extends Controller
 				}
 			}
 
+			// Users that need adding
 			foreach ($people as $r)
 			{
 				$found = false;
@@ -306,9 +344,9 @@ class ReportsController extends Controller
 		$types = Type::all();
 
 		return view('contactreports::admin.reports.edit', [
-			'row'   => $row,
+			'row'    => $row,
 			'groups' => $groups,
-			'types' => $types,
+			'types'  => $types,
 		]);
 	}
 
