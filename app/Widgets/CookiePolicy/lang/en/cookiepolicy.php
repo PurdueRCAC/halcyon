@@ -1,16 +1,10 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 return [
 	'widget name' => 'e-Privacy Directive (cookie policy)',
 	'widget desc' => 'This shows a notice about the site\'s e-Privacy directive (aka cookie policy)',
 	// Misc.
 	'close' => 'Close',
-	'default message' => 'The %s website uses cookies. By continuing to browse the site, you are agreeing to our use of cookies. <a href="/legal/privacy">Find out more &raquo;</a>',
+	'default message' => 'The :name website uses cookies. By continuing to browse the site, you are agreeing to our use of cookies. <a href="/legal/privacy">Find out more &raquo;</a>',
 	// Params
 	'params' => [
 		'id' => 'Widget ID',

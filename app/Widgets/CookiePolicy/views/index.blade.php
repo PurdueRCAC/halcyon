@@ -1,9 +1,12 @@
-<?php
-/**
- * Cookie Policy banner
- */
-?>
-<div class="cookiepolicy" id="{{ id }}">
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('widgets/cookiepolicy/css/cookiepolicy.css?v=' . filemtime(public_path() . '/widgets/cookiepolicy/css/cookiepolicy.css')) }}" />
+@endpush
+
+@push('scripts')
+<script src="{{ asset('widgets/cookiepolicy/js/cookiepolicy.js?v=' . filemtime(public_path() . '/widgets/cookiepolicy/js/cookiepolicy.js')) }}"></script>
+@endpush
+
+<div class="cookiepolicy" id="{{ $id }}">
 	<div class="cookiepolicy-message">
 		{{ $message }}
 

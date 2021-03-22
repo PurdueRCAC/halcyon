@@ -17,7 +17,7 @@ class Cookiepolicy extends Widget
 	{
 		if (auth()->user())
 		{
-			return;
+			//return;
 		}
 
 		if (app('session')->has('cookiepolicy'))
@@ -47,7 +47,7 @@ class Cookiepolicy extends Widget
 			return;
 		}
 
-		$message = $this->params->get('message', trans('widget.cookiepolicy::cookiepolicy.default message', config('app.sitename')));
+		$message = $this->params->get('message', trans('widget.cookiepolicy::cookiepolicy.default message', ['name' => config('app.sitename')]));
 
 		$uri  = request()->url();
 		$uri .= (strstr($uri, '?')) ? '&' : '?';
@@ -61,6 +61,7 @@ class Cookiepolicy extends Widget
 			'message'  => $message,
 			'uri'      => $uri,
 			'duration' => $duration,
+			'id'       => $id,
 		]);
 	}
 }
