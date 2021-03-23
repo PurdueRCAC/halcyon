@@ -7,7 +7,7 @@ jQuery(document).ready(function($){
 	$('body').addClass('has-eprivacy-warning');
 
 	// Add an event to close the notice
-	$('.mod_eprivacy-close').on('click', function(e) {
+	$('.eprivacy-close').on('click', function(e) {
 		e.preventDefault();
 
 		var id = $($(this).parent().parent()).attr('id'),

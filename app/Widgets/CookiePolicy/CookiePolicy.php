@@ -47,7 +47,8 @@ class Cookiepolicy extends Widget
 			return;
 		}
 
-		$message = $this->params->get('message', trans('widget.cookiepolicy::cookiepolicy.default message', ['name' => config('app.sitename')]));
+		$message = trim($this->params->get('message', ''));
+		$message = $message ?: trans('widget.cookiepolicy::cookiepolicy.default message', ['name' => config('app.sitename')]);
 
 		$uri  = request()->url();
 		$uri .= (strstr($uri, '?')) ? '&' : '?';
