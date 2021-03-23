@@ -32,6 +32,7 @@
 
 [data-mode=light] {*/
 :root {
+  color-scheme: light dark;
   --panel: #fff;
   --panel-border: #ddd;
   --body-bg: #f5f5f5;
@@ -86,6 +87,7 @@
   --label: #333;
   --hr: #ccc;
   --tip-back: #383838;
+  --tip-border: #383838;
   --tip-color: #fff;
   --tab-back-active: #f5f5f5;
   --tab-border-active: #d7d7d7 #d7d7d7 #f5f5f5 #d7d7d7;
@@ -177,6 +179,7 @@
   --label: #d3d3d3;
   --hr: rgba(255, 255, 255, 0.1);
   --tip-back: #fff;
+  --tip-border: #fff;
   --tip-color: #383838;
   --tab-back-active: #1c1b21;
   --tab-border-active: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.2) #1c1b21 rgba(255, 255, 255, 0.2);
@@ -2669,7 +2672,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   padding: 0 10px;
 }
 html .select2-container--default .select2-selection--multiple .select2-selection__choice {
-  background-color: rgb(230, 230, 230);
+  background-color: var(--tag-bg);
   border-color: transparent;
   position: relative;
   padding-right: 1.7em;
@@ -4293,15 +4296,16 @@ label[data-hint] {
   /*background: #fff9e2;
   color: #cea000;
   border: 2px solid #ffce00;*/
-  background: #383838;
-  color: #fff;
+  background: var(--tip-back);
+  border-color: var(--tip-color);
+  color: var(--tip-color);
   z-index: 50;
 }
 .tool-tip .tip-title {
   padding: 0;
   margin: 0;
   font-weight: bold;
-  border-bottom: 1px solid #f7eabc;
+  /*border-bottom: 1px solid #f7eabc;*/
 }
 .ui-tooltip {
   padding: 0.2em 0.7em;
@@ -4310,9 +4314,12 @@ label[data-hint] {
   padding: 0.3em;
   font-size: 1em;
   margin: 0;
-}*/
+}
 .trashed a {
   text-decoration: line-through;
+}*/
+tr.trashed {
+  background-color: rgba(218, 52, 71, 0.1);
 }
 .tool-tip .tip-text img {
   -webkit-border-radius: 50%;
