@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Modules\Tags\Models\Tag;
-use App\Modules\Tags\Http\Resources\TagsResourceCollection;
-use App\Modules\Tags\Http\Resources\TagsResource;
+use App\Modules\Tags\Http\Resources\TagResourceCollection;
+use App\Modules\Tags\Http\Resources\TagResource;
 
 /**
  * Tags
@@ -186,6 +186,15 @@ class TagsController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "parent_id",
+	 * 		"description":   "Parent tag ID. Set this to create an alias for that tag.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -193,7 +202,8 @@ class TagsController extends Controller
 	{
 		$request->validate([
 			'name' => 'required|string|min:3|max:1500',
-			'slug' => 'nullable|string|max:100'
+			'slug' => 'nullable|string|max:100',
+			'parent_id' => 'nullable|integer'
 		]);
 
 		$row = Tag::findByTag($request->input('slug') ? $request->input('slug') : $request->input('name'));

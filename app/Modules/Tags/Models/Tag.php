@@ -296,25 +296,12 @@ class Tag extends Model
 	 **/
 	public static function findByTag($tag)
 	{
-		$instance = self::query();
+		$instance = new self;
 
-		$model = $instance->where('slug', '=', $instance->normalize($tag))->limit(1)->get();
-
-		if (!$model->id)
-		{
-			$sub = Alias::blank()
-				->where('slug', '=', $instance->normalize($tag))
-				->limit(1)
-				->get()
-				->first();
-
-			if ($tag_id = $sub->tag_id)
-			{
-				$model = self::oneOrNew($tag_id);
-			}
-		}
-
-		return $model;
+		return self::query()
+			->where('slug', '=', $instance->normalize($tag))
+			->limit(1)
+			->first();
 	}
 
 	/**

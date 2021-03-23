@@ -14,7 +14,7 @@ app('pathway')
 	@endif
 
 	@if (auth()->user()->can('create tags'))
-		{!! Toolbar::addNew(route('admin.tags.delete')) !!}
+		{!! Toolbar::addNew(route('admin.tags.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin tags'))

@@ -4,7 +4,7 @@ namespace App\Modules\Tags\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class TagsResourceCollection extends ResourceCollection
+class TagResourceCollection extends ResourceCollection
 {
 	/**
 	 * Transform the resource collection into an array.

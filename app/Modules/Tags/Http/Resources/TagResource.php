@@ -4,7 +4,7 @@ namespace App\Modules\Tags\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TagsResource extends JsonResource
+class TagResource extends JsonResource
 {
 	/**
 	 * Transform the resource collection into an array.

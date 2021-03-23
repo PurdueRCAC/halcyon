@@ -30,6 +30,84 @@ jQuery(document).ready(function ($) {
 			//}
 		}
 	});
+
+	$('.alias-add').on('click', function(e){
+		e.preventDefault();
+
+		var name = $($(this).attr('href'));
+		var btn = $(this);
+
+		// create new relationship
+		$.ajax({
+			url: btn.data('api'),
+			type: 'post',
+			data: {
+				'parent_id' : btn.data('id'),
+				'name' : name.val()
+			},
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+				Halcyon.message('success', 'Item added');
+
+				var c = name.closest('table');
+				var li = c.find('tr.hidden');
+
+				if (typeof(li) !== 'undefined') {
+					var template = $(li)
+						.clone()
+						.removeClass('hidden');
+
+					template
+						.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
+						.data('id', response.id);
+
+					template.find('a').each(function(i, el){
+						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
+					});
+
+					var content = template
+						.html()
+						.replace(/\{id\}/g, response.id)
+						.replace(/\{name\}/g, response.name)
+						.replace(/\{slug\}/g, response.slug);
+
+					template.html(content).insertBefore(li);
+				}
+
+				name.val('');
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				//console.log(xhr);
+				Halcyon.message('danger', xhr.responseJSON.message);
+			}
+		});
+	});
+
+	$('#main').on('click', '.remove-alias', function(e){
+		e.preventDefault();
+
+		var result = confirm($(this).data('confirm'));
+
+		if (result) {
+			var field = $($(this).attr('href'));
+
+			// delete relationship
+			$.ajax({
+				url: $(this).data('api'),
+				type: 'delete',
+				dataType: 'json',
+				async: false,
+				success: function(data) {
+					Halcyon.message('success', 'Item removed');
+					field.remove();
+				},
+				error: function(xhr, ajaxOptions, thrownError) {
+					Halcyon.message('danger', xhr.responseJSON.message);
+				}
+			});
+		}
+	});
 });
 </script>
 @endpush
@@ -73,9 +151,9 @@ app('pathway')
 
 				<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 
-				<div class="form-group" data-hint="{{ trans('tags::tags.name hint') }}">
+				<div class="form-group">
 					<label for="field-name">{{ trans('tags::tags.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" data-rel="#field-slug" class="form-control sluggable required" size="30" maxlength="250" value="{{ $row->name }}" />
+					<input type="text" name="fields[name]" id="field-name" data-rel="#field-slug" class="form-control sluggable required" required maxlength="250" value="{{ $row->name }}" />
 				</div>
 
 				<div class="form-group">
@@ -85,6 +163,7 @@ app('pathway')
 				</div>
 			</fieldset>
 
+		@if ($row->id)
 			<fieldset class="adminform">
 				<legend>{{ trans('tags::tags.alias') }}</legend>
 
@@ -105,13 +184,11 @@ app('pathway')
 									<td>{{ $u->name }}</td>
 									<td>{{ $u->slug }}</td>
 									<td class="text-right">
-										@if (!preg_match("/rcs[0-9]{4}[0-9]/", $u->shortname))
 										<a href="#alias-{{ $u->id }}" class="btn btn-secondary btn-danger remove-alias"
 											data-api="{{ route('api.tags.delete', ['id' => $u->id]) }}"
 											data-confirm="{{ trans('tags::tags.confirm delete') }}">
 											<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
 										</a>
-										@endif
 									</td>
 								</tr>
 							@endforeach
@@ -135,8 +212,8 @@ app('pathway')
 									<input type="text" name="name" id="name" class="form-control input-alias" placeholder="{{ trans('tags::tags.name') }}" />
 								</td>
 								<td class="text-right">
-									<a href="#name" class="btn btn-secondary btn-success add-alias"
-										data-group="{{ $row->id }}"
+									<a href="#name" class="btn btn-secondary btn-success alias-add"
+										data-id="{{ $row->id }}"
 										data-api="{{ route('api.tags.create') }}">
 										<span class="icon-plus glyph">{{ trans('global.add') }}</span>
 									</a>
@@ -145,6 +222,7 @@ app('pathway')
 						</tfoot>
 					</table>
 			</fieldset>
+		@endif
 		</div>
 		<div class="col-md-5">
 			@include('history::admin.history')
