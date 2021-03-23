@@ -60,14 +60,14 @@ app('pathway')
 			<div class="col col-xs-12 col-sm-9 text-right filter-select">
 				<label class="sr-only" for="filter-state">{{ trans('users::users.state') }}:</label>
 				<select name="state" id="filter-state" class="form-control filter filter-submit">
-					<option value="*">{{ trans('users::users.select state') }}</option>
+					<option value="*">{{ trans('users::users.all states') }}</option>
 					<option value="enabled"<?php if ($filters['state'] == 'enabled'): echo ' selected="selected"'; endif;?>>{{ trans('users::users.status enabled') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('users::users.status trashed') }}</option>
 				</select>
 
 				<label class="sr-only" for="filter-role_id">{{ trans('users::users.usergroup') }}:</label>
 				<select name="role_id" id="filter-role_id" class="form-control filter filter-submit">
-					<option value="0">{{ trans('users::users.select role') }}</option>
+					<option value="0">{{ trans('users::users.all roles') }}</option>
 					<?php foreach (App\Modules\Users\Helpers\Admin::getAccessRoles() as $role): ?>
 						<option value="{{ $role->value }}"<?php if ($filters['role_id'] == $role->value): echo ' selected="selected"'; endif;?>>{{ $role->text }}</option>
 					<?php endforeach; ?>
@@ -158,72 +158,72 @@ app('pathway')
 				$incomplete = true;
 			endif;*/
 			?>
-			<tr>
+			<tr<?php if ($row->isTrashed()) { echo ' class="trashed"'; } ?>>
 				<td>
-					<?php if ($canEdit) : ?>
+					@if ($canEdit)
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-					<?php endif; ?>
+					@endif
 				</td>
 				<td class="priority-5">
 					{{ $row->id }}
 				</td>
 				<td>
-					<?php if ($canEdit) : ?>
+					@if ($canEdit)
 						<a href="{{ route('admin.users.edit', ['id' => $row->id]) }}">
 							{{ $row->name }}
 						</a>
-					<?php else : ?>
+					@else
 						{{ $row->name }}
-					<?php endif; ?>
+					@endif
 				</td>
 				<td class="priority-4">
-					<?php if ($canChange) : ?>
+					@if ($canChange)
 						<a href="{{ route('admin.users.edit', ['id' => $row->id]) }}">
-					<?php endif; ?>
+					@endif
 						@if ($row->username)
 							{{ $row->username }}
 						@else
 							<span class="unknown">{{ trans('global.none') }}</span>
 						@endif
-					<?php if ($canChange) : ?>
+					@if ($canChange)
 						</a>
-					<?php endif; ?>
+					@endif
 				</td>
 				<td class="center priority-3">
-					<?php if ($canChange) : ?>
+					@if ($canChange)
 						<a class="permissions glyph icon-settings tip" href="{{ route('admin.users.debug', ['id' => $row->id]) }}" data-tip="{{ trans('users::users.debug user') }}">
 							{{ trans('users::users.debug user') }}
 						</a> &nbsp;
-					<?php endif; ?>
-					<?php if (substr_count($row->role_names, "\n") > 1) : ?>
+					@endif
+					@if (substr_count($row->role_names, "\n") > 1)
 						<span class="hasTip" title="{{ trans('users::users.roles') . '::' . $row->role_names }}">{{ trans('users::users.roles') }}</span>
-					<?php else : ?>
+					@else
 						{!! $row->role_names !!}
-					<?php endif; ?>
+					@endif
 				</td>
 				<td class="priority-4">
 					@if ($row->isTrashed())
-						<span class="badge state trashed">
+						<span class="badge badge-danger">
 							{{ trans('users::users.status trashed') }}
 						</span>
 					@else
-						<span class="badge state on">
+						<span class="badge badge-success">
 							{{ trans('users::users.status enabled') }}
 						</span>
 					@endif
 				</td>
 				<td class="priority-6">
-					<?php if (!$row->hasVisited()) : ?>
+					@if (!$row->hasVisited())
 						<span class="never">{{ trans('global.never') }}</span>
-					<?php else: ?>
-						<time datetime="<?php echo $row->last_visit->format('Y-m-dTh:i:s'); ?>">
+					@else
+						<time datetime="{{ $row->last_visit->format('Y-m-dTh:i:s') }}">
 							@if ($row->last_visit->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
 								{{ $row->last_visit->diffForHumans() }}
 							@else
-								{{ $row->last_visit }}
+								{{ $row->last_visit->format('Y-m-d') }}
 							@endif
 						</time>
-					<?php endif; ?>
+					@endif
 				</td>
 			</tr>
 		@endforeach

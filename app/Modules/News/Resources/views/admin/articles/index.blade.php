@@ -100,7 +100,7 @@ else
 		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
-	<!--
+	<!-- Experimental Vue rendering
 	<div id="app">
 		<table-component></table-component>
 	</div>
@@ -129,10 +129,10 @@ else
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('news::news.type'), 'newstypeid', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" colspan="2" class="priority-4">
-					{!! Html::grid('sort', trans('news::news.publish window'), 'datetimenews', $filters['order_dir'], $filters['order']) !!}
-				</th>
 				@if (!$template)
+					<th scope="col" colspan="2" class="priority-4">
+						{!! Html::grid('sort', trans('news::news.publish window'), 'datetimenews', $filters['order_dir'], $filters['order']) !!}
+					</th>
 					<th scope="col" class="priority-4 text-right">{{ trans('news::news.updates') }}</th>
 				@endif
 			</tr>
@@ -162,21 +162,21 @@ else
 				<td>
 					@if (auth()->user()->can('edit.state news'))
 						@if ($row->published)
-							<a class="btn btn-sm state published" href="{{ route('admin.news.unpublish', ['id' => $row->id]) }}" title="{{ trans('news::news.unpublish') }}">
+							<a class="btn btn-sm btn-success" href="{{ route('admin.news.unpublish', ['id' => $row->id]) }}" title="{{ trans('news::news.unpublish') }}">
 								{{ trans('global.published') }}
 							</a>
 						@else
-							<a class="btn btn-sm state unpublished" href="{{ route('admin.news.publish', ['id' => $row->id]) }}" title="{{ trans('news::news.publish') }}">
+							<a class="btn btn-sm btn-secondary" href="{{ route('admin.news.publish', ['id' => $row->id]) }}" title="{{ trans('news::news.publish') }}">
 								{{ trans('global.unpublished') }}
 							</a>
 						@endif
 					@else
 						@if ($row->published)
-							<span class="badge state published">
+							<span class="badge badge-success">
 								{{ trans('global.published') }}
 							</span>
 						@else
-							<span class="badge state unpublished">
+							<span class="badge badge-secondary">
 								{{ trans('global.unpublished') }}
 							</span>
 						@endif
@@ -185,29 +185,29 @@ else
 				<td class="priority-4">
 					{{ $row->type->name }}
 				</td>
-				<td class="priority-4 text-nowrap">
-					@if ($row->hasStart())
-						<time datetime="{{ $row->datetimenews->format('Y-m-d\TH:i:s\Z') }}">
-							{{ $row->datetimenews->format('M j, Y g:ia') }}
-						</time>
-					@else
-						<span class="none">{{ trans('global.none') }}</span>
-					@endif
-				</td>
-				<td class="priority-4 text-nowrap">
-					@if ($row->hasStart())
-						@if ($row->hasEnd())
-							<time datetime="{{ $row->datetimenewsend->format('Y-m-d\TH:i:s\Z') }}">
-								{{ $row->isSameDay() ? $row->datetimenewsend->format('g:ia') : $row->datetimenewsend->format('M j, Y g:ia') }}
+				@if (!$template)
+					<td class="priority-4 text-nowrap">
+						@if ($row->hasStart())
+							<time datetime="{{ $row->datetimenews->format('Y-m-d\TH:i:s\Z') }}">
+								{{ $row->datetimenews->format('M j, Y g:ia') }}
 							</time>
 						@else
-							<span class="never">{{ trans('global.never') }}</span>
+							<span class="none">{{ trans('global.none') }}</span>
 						@endif
-					@else
-						<span class="none">{{ trans('global.none') }}</span>
-					@endif
-				</td>
-				@if (!$template)
+					</td>
+					<td class="priority-4 text-nowrap">
+						@if ($row->hasStart())
+							@if ($row->hasEnd())
+								<time datetime="{{ $row->datetimenewsend->format('Y-m-d\TH:i:s\Z') }}">
+									{{ $row->isSameDay() ? $row->datetimenewsend->format('g:ia') : $row->datetimenewsend->format('M j, Y g:ia') }}
+								</time>
+							@else
+								<span class="never">{{ trans('global.never') }}</span>
+							@endif
+						@else
+							<span class="none">{{ trans('global.none') }}</span>
+						@endif
+					</td>
 					<td class="priority-4 text-right">
 						<a href="{{ route('admin.news.updates', ['article' => $row->id]) }}">
 							{{ $row->updates_count }}

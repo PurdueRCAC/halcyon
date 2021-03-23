@@ -85,9 +85,9 @@ app('pathway')
 				<label class="sr-only" for="filter-access">{{ trans('pages::pages.access level') }}</label>
 				<select name="access" id="filter-access" class="form-control filter filter-submit">
 					<option value="">{{ trans('pages::pages.access select') }}</option>
-					<?php foreach (App\Halcyon\Access\Viewlevel::all() as $access): ?>
-						<option value="<?php echo $access->id; ?>"<?php if ($filters['access'] == $access->id) { echo ' selected="selected"'; } ?>><?php echo e($access->title); ?></option>
-					<?php endforeach; ?>
+					@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
+						<option value="{{ $access->id }}"<?php if ($filters['access'] == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
+					@endforeach
 				</select>
 			</div>
 		</div>
@@ -129,7 +129,7 @@ app('pathway')
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr>
+			<tr<?php if ($row->trashed()) { echo ' class="trashed"'; } ?>>
 				@if (auth()->user()->can('delete pages'))
 					<td>
 						@if ($row->parent_id != 0)
@@ -142,6 +142,9 @@ app('pathway')
 				</td>
 				<td>
 					<?php echo str_repeat('<span class="gi">|&mdash;</span>', $row->level); ?>
+					@if ($row->trashed())
+						<span class="glyph icon-trash text-danger" aria-hidden="true"></span>
+					@endif
 					@if (auth()->user()->can('edit pages'))
 						<a href="{{ route('admin.pages.edit', ['id' => $row->id]) }}">
 							{{ $row->title }}
@@ -157,13 +160,13 @@ app('pathway')
 				</td>
 				<td>
 					@if ($row->isRoot())
-						<span class="state published">
+						<span class="badge badge-success">
 							{{ trans('pages::pages.published') }}
 						</span>
 					@else
 						@if ($row->trashed())
 							@if (auth()->user()->can('edit pages'))
-								<a class="btn btn-secondary state trashed" href="{{ route('admin.pages.restore', ['id' => $row->id]) }}" title="{{ trans('pages::pages.set state to', ['state' => trans('global.published')]) }}">
+								<a class="btn btn-sm btn-secondary state trashed" href="{{ route('admin.pages.restore', ['id' => $row->id]) }}" data-tip="{{ trans('pages::pages.set state to', ['state' => trans('global.published')]) }}">
 							@endif
 								{{ trans('pages::pages.trashed') }}
 							@if (auth()->user()->can('edit pages'))
@@ -171,7 +174,7 @@ app('pathway')
 							@endif
 						@elseif ($row->state == 1)
 							@if (auth()->user()->can('edit pages'))
-								<a class="btn btn-secondary state published" href="{{ route('admin.pages.unpublish', ['id' => $row->id]) }}" title="{{ trans('pages::pages.set state to', ['state' => trans('global.unpublished')]) }}">
+								<a class="btn btn-sm btn-success" href="{{ route('admin.pages.unpublish', ['id' => $row->id]) }}" data-tip="{{ trans('pages::pages.set state to', ['state' => trans('global.unpublished')]) }}">
 							@endif
 								{{ trans('pages::pages.published') }}
 							@if (auth()->user()->can('edit pages'))
@@ -179,7 +182,7 @@ app('pathway')
 							@endif
 						@else
 							@if (auth()->user()->can('edit pages'))
-								<a class="btn btn-secondary state unpublished" href="{{ route('admin.pages.publish', ['id' => $row->id]) }}" title="{{ trans('pages::pages.set state to', ['state' => trans('global.published')]) }}">
+								<a class="btn btn-sm btn-secondary" href="{{ route('admin.pages.publish', ['id' => $row->id]) }}" data-tip="{{ trans('pages::pages.set state to', ['state' => trans('global.published')]) }}">
 							@endif
 								{{ trans('pages::pages.unpublished') }}
 							@if (auth()->user()->can('edit pages'))

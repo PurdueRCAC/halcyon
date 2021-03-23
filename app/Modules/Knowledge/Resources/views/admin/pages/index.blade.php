@@ -100,7 +100,7 @@ $(document).ready(function() {
 
 				<label class="sr-only" for="filter_state">{{ trans('knowledge::knowledge.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('knowledge::knowledge.state_all') }}</option>
+					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('knowledge::knowledge.all states') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
 					<option value="unpublished"<?php if ($filters['state'] == 'unpublished'): echo ' selected="selected"'; endif;?>>{{ trans('global.unpublished') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
@@ -108,19 +108,19 @@ $(document).ready(function() {
 
 				<label class="sr-only" for="filter-access">{{ trans('knowledge::knowledge.access level') }}</label>
 				<select name="access" id="filter-access" class="form-control filter filter-submit">
-					<option value="">{{ trans('knowledge::knowledge.access select') }}</option>
-					<?php foreach (App\Halcyon\Access\Viewlevel::all() as $access): ?>
-						<option value="<?php echo $access->id; ?>"<?php if ($filters['access'] == $access->id) { echo ' selected="selected"'; } ?>><?php echo e($access->title); ?></option>
-					<?php endforeach; ?>
+					<option value="">{{ trans('knowledge::knowledge.all access levels') }}</option>
+					@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
+						<option value="<?php echo $access->id; ?>"<?php if ($filters['access'] == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
+					@endforeach
 				</select>
 
 				<label class="sr-only" for="filter_parent">{{ trans('knowledge::knowledge.parent') }}:</label>
 				<select name="parent" id="filter_parent" class="form-control filter filter-submit searchable-select">
 					<option value="0">{{ trans('knowledge::knowledge.all pages') }}</option>
-					<?php foreach ($tree as $page): ?>
+					@foreach ($tree as $page)
 						<?php $selected = ($page->assoc_id == $filters['parent'] ? ' selected="selected"' : ''); ?>
 						<option value="{{ $page->assoc_id }}"<?php echo $selected; ?>><?php echo str_repeat('|&mdash; ', $page->level) . e(Illuminate\Support\Str::limit($page->title, 70)); ?></option>
-					<?php endforeach; ?>
+					@endforeach
 				</select>
 			</div>
 		</div>
@@ -205,7 +205,7 @@ $(document).ready(function() {
 				<td>
 					@if ($row->trashed())
 						@if (auth()->user()->can('edit knowledge'))
-							<a class="btn btn-secondary state trashed" href="{{ route('admin.knowledge.restore', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
+							<a class="btn btn-sm btn-secondary state trashed" href="{{ route('admin.knowledge.restore', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
 						@endif
 							{{ trans('knowledge::knowledge.trashed') }}
 						@if (auth()->user()->can('edit knowledge'))
@@ -213,7 +213,7 @@ $(document).ready(function() {
 						@endif
 					@elseif ($row->isPublished())
 						@if (auth()->user()->can('edit knowledge'))
-							<a class="btn btn-secondary state published" href="{{ route('admin.knowledge.unpublish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.unpublished')]) }}">
+							<a class="btn btn-sm btn-success btn-state" href="{{ route('admin.knowledge.unpublish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.unpublished')]) }}">
 						@endif
 							{{ trans('knowledge::knowledge.published') }}
 						@if (auth()->user()->can('edit knowledge'))
@@ -221,7 +221,7 @@ $(document).ready(function() {
 						@endif
 					@else
 						@if (auth()->user()->can('edit knowledge'))
-							<a class="btn btn-secondary state unpublished" href="{{ route('admin.knowledge.publish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
+							<a class="btn btn-sm btn-secondary btn-state" href="{{ route('admin.knowledge.publish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
 						@endif
 							{{ trans('knowledge::knowledge.unpublished') }}
 						@if (auth()->user()->can('edit knowledge'))

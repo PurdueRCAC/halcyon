@@ -115,7 +115,7 @@ app('pathway')
 			<div class="col col-md-9 text-right">
 				<label class="sr-only" for="filter_fieldofscience">{{ trans('groups::groups.field of science') }}</label>
 				<select name="fieldofscience" id="filter_fieldofscience" class="form-control filter-submit searchable-select">
-					<option value="0">{{ trans('groups::groups.select field of science') }}</option>
+					<option value="0">{{ trans('groups::groups.all fields of science') }}</option>
 					@foreach ($fields as $field)
 						@php
 						if ($field->level == 0):
@@ -128,7 +128,7 @@ app('pathway')
 
 				<label class="sr-only" for="filter_department">{{ trans('groups::groups.department') }}</label>
 				<select name="department" id="filter_department" class="form-control filter-submit searchable-select">
-					<option value="0">{{ trans('groups::groups.select department') }}</option>
+					<option value="0">{{ trans('groups::groups.all departments') }}</option>
 					@foreach ($departments as $department)
 						@php
 						if ($department->level == 0):
@@ -166,7 +166,7 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('groups::groups.unix group'), 'unixgroup', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-4 text-right">
 					{!! Html::grid('sort', trans('groups::groups.members'), 'members_count', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4">
@@ -203,7 +203,7 @@ app('pathway')
 						</a>
 					@endif
 				</td>
-				<td class="priority-4">
+				<td class="priority-4 text-right">
 					<a href="{{ route('admin.groups.members', ['group' => $row->id]) }}">
 						{{ $row->members_count }}
 					</a>

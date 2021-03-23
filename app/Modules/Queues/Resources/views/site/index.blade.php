@@ -7,7 +7,7 @@
 @section('content')
 <h2>{!! config('queues.name') !!}</h2>
 
-<form action="{{ url('/queues') }}" method="post" name="adminForm" id="adminForm">
+<form action="{{ url('site.queues.index') }}" method="post" name="adminForm" id="adminForm">
 
 	<fieldset id="filter-bar" class="form-inline">
 		<legend>Filter</legend>

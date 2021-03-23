@@ -68,7 +68,7 @@ class InstallCommand extends Command
 					continue;
 				}
 
-				$this->laravel['widget']->registerTheme(new Theme(basename($dir), $dir));
+				$this->laravel['widget']->registerWidget(new Widget(basename($dir), $dir));
 			}
 			//$this->error("File 'widgets.json' does not exist in your project root.");
 
@@ -127,7 +127,7 @@ class InstallCommand extends Command
 		if (!$this->option('no-update'))
 		{
 			$this->call('widget:update', [
-				'widget' => $installer->getThemeName(),
+				'widget' => $installer->getWidgetName(),
 			]);
 		}
 	}
@@ -140,8 +140,8 @@ class InstallCommand extends Command
 	protected function getArguments()
 	{
 		return [
-			['name', InputArgument::OPTIONAL, 'The name of the theme to be installed.'],
-			['version', InputArgument::OPTIONAL, 'The version of the theme to be installed.'],
+			['name', InputArgument::OPTIONAL, 'The name of the widget to be installed.'],
+			['version', InputArgument::OPTIONAL, 'The version of the widget to be installed.'],
 		];
 	}
 
@@ -156,7 +156,7 @@ class InstallCommand extends Command
 			['timeout', null, InputOption::VALUE_OPTIONAL, 'The process timeout.', null],
 			['path', '/app/Widgets', InputOption::VALUE_OPTIONAL, 'The installation path.', null],
 			['type', null, InputOption::VALUE_OPTIONAL, 'The type of installation.', null],
-			['tree', null, InputOption::VALUE_NONE, 'Install the theme as a git subtree', null],
+			['tree', null, InputOption::VALUE_NONE, 'Install the widget as a git subtree', null],
 			['no-update', null, InputOption::VALUE_NONE, 'Disables the automatic update of the dependencies.', null],
 		];
 	}

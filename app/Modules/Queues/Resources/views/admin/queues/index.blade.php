@@ -72,10 +72,10 @@ app('pathway')
 				<label class="sr-only" for="filter_resource">{{ trans('queues::queues.resource') }}:</label>
 				<select name="resource" id="filter_resource" class="form-control filter filter-submit">
 					<option value="0">{{ trans('queues::queues.all resources') }}</option>
-					<?php foreach ($resources as $resource): ?>
+					@foreach ($resources as $resource)
 						<?php $selected = ($resource->id == $filters['resource'] ? ' selected="selected"' : ''); ?>
 						<option value="{{ $resource->id }}"<?php echo $selected; ?>>{{ str_repeat('- ', $resource->level) . $resource->name }}</option>
-						<?php foreach ($resource->subresources()->orderBy('name', 'asc')->get() as $subresource): ?>
+						@foreach ($resource->subresources()->orderBy('name', 'asc')->get() as $subresource)
 							<?php
 							if ($subresource->isTrashed()):
 								continue;
@@ -83,8 +83,8 @@ app('pathway')
 							$selected = ('s' . $subresource->id == $filters['resource'] ? ' selected="selected"' : '');
 							?>
 							<option value="s{{ $subresource->id }}"<?php echo $selected; ?>>{{ str_repeat('- ', 1) . $subresource->name }}</option>
-						<?php endforeach; ?>
-					<?php endforeach; ?>
+						@endforeach
+					@endforeach
 				</select>
 
 				<label class="sr-only" for="filter_class">{{ trans('queues::queues.class') }}:</label>
@@ -103,235 +103,220 @@ app('pathway')
 	</fieldset>
 
 	<div class="card mb-4">
-	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('queues::queues.queues') }}</caption>
-		<thead>
-			<tr>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th colspan="2" class="text-center">{{ trans('queues::queues.nodes') }}</th>
-				<th colspan="2" class="text-center">{{ trans('queues::queues.cores') }}</th>
-				<th></th>
-				<th></th>
-			</tr>
-			<tr>
-				<th>
-					{!! Html::grid('checkall') !!}
-				</th>
-				<th scope="col" class="priority-5">
-					{!! Html::grid('sort', trans('queues::queues.id'), 'id', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col">
-					{!! Html::grid('sort', trans('queues::queues.name'), 'name', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('queues::queues.state'), 'enabled', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('queues::queues.scheduling'), 'started', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('queues::queues.group'), 'groupid', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-2 text-center">
-					{!! Html::grid('sort', trans('queues::queues.class'), 'groupid', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="text-right">
-					{{ trans('queues::queues.total') }}
-				</th>
-				<th scope="col" class="text-right">
-					{{ trans('queues::queues.loans') }}
-				</th>
-				<th scope="col" class="text-right">
-					{{ trans('queues::queues.total') }}
-				</th>
-				<th scope="col" class="text-right">
-					{{ trans('queues::queues.loans') }}
-				</th>
-				<th scope="col">
-					{{ trans('queues::queues.resource') }}
-				</th>
-				<th scope="col" class="text-right">
-					{{ trans('queues::queues.walltime') }}
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-		@foreach ($rows as $i => $row)
-			<tr<?php if ($row->isTrashed()) { echo ' class="trashed"'; } ?>>
-				<td>
-					@if (auth()->user()->can('edit.state queues') || auth()->user()->can('delete queues'))
-						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-					@endif
-				</td>
-				<td class="priority-5">
-					{{ $row->id }}
-				</td>
-				<td>
-					<!--
-					@if ($row->groupid <= 0)
-						<span class="glyph icon-cpu" data-tip="{{ trans('queues::queues.system') }}">{{ trans('queues::queues.system') }}</span>
-					@else
-						<span class="glyph icon-user" data-tip="{{ trans('queues::queues.owner') }}">{{ trans('queues::queues.owner') }}</span>
-					@endif
-					-->
-					@if (auth()->user()->can('edit queues'))
-					<a href="{{ route('admin.queues.edit', ['id' => $row->id]) }}">
-					@endif
-						{{ $row->name }}
-					@if (auth()->user()->can('edit queues'))
-					</a>
-					@endif
-				</td>
-				<td class="priority-4">
-					@if ($row->isTrashed())
-						@if (auth()->user()->can('edit queues'))
-							<a class="btn btn-secondary state trashed" href="{{ route('admin.queues.restore', ['id' => $row->id]) }}" title="{{ trans('queues::queues.set state to', ['state' => trans('global.enabled')]) }}">
-								{{ trans('global.trashed') }}
-							</a>
-						@else
-							<span class="badge state trashed">
-								{{ trans('global.trashed') }}
-							</span>
-						@endif
-					@elseif ($row->enabled)
-						@if (auth()->user()->can('edit queues'))
-							<a class="btn btn-secondary state published" href="{{ route('admin.queues.disable', ['id' => $row->id]) }}" title="{{ trans('queues::queues.set state to', ['state' => trans('global.disabled')]) }}">
-								{{ trans('global.enabled') }}
-							</a>
-						@else
-							<span class="badge state published">
-								{{ trans('global.enabled') }}
-							</span>
-						@endif
-					@else
-						@if (auth()->user()->can('edit queues'))
-							<a class="btn btn-secondary state unpublished" href="{{ route('admin.queues.enable', ['id' => $row->id]) }}" title="{{ trans('queues::queues.set state to', ['state' => trans('global.enabled')]) }}">
-								{{ trans('global.disabled') }}
-							</a>
-						@else
-							<span class="badge state unpublished">
-								{{ trans('global.disabled') }}
-							</span>
-						@endif
-					@endif
-				</td>
-				<td class="text-center">
-					@if ($row->isTrashed())
-						@if (auth()->user()->can('edit queues'))
-							<a class="glyph icon-trash" href="{{ route('admin.queues.restore', ['id' => $row->id]) }}" title="{{ trans('queues::queues.set state to', ['state' => trans('global.enabled')]) }}">
-								{{ trans('global.trashed') }}
-							</a>
-						@else
-							<span class="glyph icon-trash">
-								{{ trans('global.trashed') }}
-							</span>
-						@endif
-					@else
-						<?php if ($row->enabled && $row->started && $row->active) { ?>
-							<?php if ($row->reservation) { ?>
-								<a class="glyph icon-circle" href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="Queue has dedicated reservation.">
-									{{ trans('Queue has dedicated reservation.') }}
-								</a>
-							<?php } else { ?>
-								<a class="glyph icon-check-circle text-success" href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="Queue is running.">
-									{{ trans('Queue is running.') }}
-								</a>
-							<?php } ?>
-						<?php } else if ($row->active) { ?>
-							<a class="glyph icon-minus-circle text-danger" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('Queue is stopped or disabled.') }}">
-								{{ trans('Queue is stopped or disabled.') }}
-							</a>
-						<?php } else if (!$row->active) { ?>
-							<a class="glyph icon-alert-triangle text-warning" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('Queue has no active resources. Remove queue or sell/loan nodes.') }}">
-								{{ trans('Queue has no active resources. Remove queue or sell/loan nodes.') }}
-							</a>
-						<?php } ?>
-					@endif
-				</td>
-				<td class="priority-4">
-					@if ($row->group)
-						<a href="{{ route('admin.groups.edit', ['id' => $row->groupid]) }}">
-							{{ $row->group->name }}
-						</a>
-					@else
-						<span class="unknown">{{ trans('global.none') }}</span>
-					@endif
-				</td>
-				<td class="priority-4 text-center">
-					@if ($row->groupid <= 0)
-						<span class="icon-cpu" data-tip="{{ trans('queues::queues.system') }}">{{ trans('queues::queues.system') }}</span>
-					@else
-						<span class="icon-user" data-tip="{{ trans('queues::queues.owner') }}">{{ trans('queues::queues.owner') }}</span>
-					@endif
-				</td>
-				<td class="text-right">
-					{!! $row->totalnodes ? $row->totalnodes : '<span class="none">' . $row->totalnodes . '</span>' !!}
-				</td>
-				<td class="text-right">
-					{!! $row->loanednodes ? $row->loanednodes : '<span class="none">' . $row->loanednodes . '</span>' !!}
-				</td>
-				<td class="text-right">
-					{!! $row->totalcores ? $row->totalcores : '<span class="none">' . $row->totalcores . '</span>' !!}
-				</td>
-				<td class="text-right">
-					{!! $row->loanedcores ? $row->loanedcores : '<span class="none">' . $row->loanedcores . '</span>' !!}
-					<?php
-					/*$soldpercent = $row->totalcores ? round(($row->soldcores / $row->totalcores) * 100, 1) : 0;
-					$loanedpercent = $row->totalcores ? round(($row->loanedcores / $row->totalcores) * 100, 1) : 0;
-					echo 'total cores: ' . $row->totalcores . ' avail: ' . ($row->totalcores - $row->soldcores - $row->loanedcores);
-					?>
-					<!-- <div class="row">
-						<div class="col col-md-4">{{ $row->soldcores }} sold</div>
-						<div class="col col-md-4">{{ $row->loanedcores }} loaned</div>
-						<div class="col col-md-4">of {{ $row->totalcores }}</div>
-					</div> -->
-					<span class="progress" style="height: 0.2em">
-						<span class="progress-bar bg-info" style="width: <?php echo $soldpercent; ?>%" aria-valuenow="<?php echo $soldpercent; ?>" aria-valuemin="0" aria-valuemax="100"></span>
-						<span class="progress-bar bg-warning" style="width: <?php echo $loanedpercent; ?>%" aria-valuenow="<?php echo $loanedpercent; ?>" aria-valuemin="0" aria-valuemax="100"></span>
-					</span>*/?>
-				</td>
-				<td class="priority-4">
-					@if ($row->subresourceid)
-						@if ($row->resource)
-							@if ($row->subresource)
-								<span data-tip="{{ $row->subresource->name }}">
+		<table class="table table-hover adminlist">
+			<caption class="sr-only">{{ trans('queues::queues.queues') }}</caption>
+			<thead>
+				<tr>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th colspan="2" class="text-center">{{ trans('queues::queues.nodes') }}</th>
+					<th colspan="2" class="text-center">{{ trans('queues::queues.cores') }}</th>
+					<th></th>
+					<th></th>
+				</tr>
+				<tr>
+					<th>
+						{!! Html::grid('checkall') !!}
+					</th>
+					<th scope="col" class="priority-5">
+						{!! Html::grid('sort', trans('queues::queues.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+					</th>
+					<th scope="col">
+						{!! Html::grid('sort', trans('queues::queues.name'), 'name', $filters['order_dir'], $filters['order']) !!}
+					</th>
+					<th scope="col" class="priority-4">
+						{!! Html::grid('sort', trans('queues::queues.state'), 'enabled', $filters['order_dir'], $filters['order']) !!}
+					</th>
+					<th scope="col" class="priority-4">
+						{!! Html::grid('sort', trans('queues::queues.scheduling'), 'started', $filters['order_dir'], $filters['order']) !!}
+					</th>
+					<th scope="col" class="priority-4">
+						{!! Html::grid('sort', trans('queues::queues.group'), 'groupid', $filters['order_dir'], $filters['order']) !!}
+					</th>
+					<th scope="col" class="priority-2 text-center">
+						{!! Html::grid('sort', trans('queues::queues.class'), 'groupid', $filters['order_dir'], $filters['order']) !!}
+					</th>
+					<th scope="col" class="text-right">
+						{{ trans('queues::queues.total') }}
+					</th>
+					<th scope="col" class="text-right">
+						{{ trans('queues::queues.loans') }}
+					</th>
+					<th scope="col" class="text-right">
+						{{ trans('queues::queues.total') }}
+					</th>
+					<th scope="col" class="text-right">
+						{{ trans('queues::queues.loans') }}
+					</th>
+					<th scope="col">
+						{{ trans('queues::queues.resource') }}
+					</th>
+					<th scope="col" class="text-right">
+						{{ trans('queues::queues.walltime') }}
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach ($rows as $i => $row)
+					<tr<?php if ($row->isTrashed()) { echo ' class="trashed"'; } ?>>
+						<td>
+							@if (auth()->user()->can('edit.state queues') || auth()->user()->can('delete queues'))
+								<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
 							@endif
-							{{ $row->resource->name }}
-							@if ($row->subresource)
-								</span>
+						</td>
+						<td class="priority-5">
+							{{ $row->id }}
+						</td>
+						<td>
+							@if (auth()->user()->can('edit queues'))
+							<a href="{{ route('admin.queues.edit', ['id' => $row->id]) }}">
 							@endif
-						@else
-							<span class="unknown">{{ trans('global.unknown') }}</span>
-						@endif
-						<!--(
-						@if ($row->subresource)
-							{{ $row->subresource->name }}
-						@else
-							<span class="unknown">{{ trans('global.unknown') }}</span>
-						@endif
-						)-->
-					@else
-						<span class="none">{{ trans('global.none') }}</span>
-					@endif
-				</td>
-				<td class="text-right">
-					<?php
-					$walltime = $row->walltimes()->first();
-					if ($walltime)
-					{
-						echo $row->walltimes()->first()->humanWalltime;
-					}
-					?>
-				</td>
-			</tr>
-		@endforeach
-		</tbody>
-	</table>
+								{{ $row->name }}
+							@if (auth()->user()->can('edit queues'))
+							</a>
+							@endif
+						</td>
+						<td class="priority-4">
+							@if ($row->isTrashed())
+								@if (auth()->user()->can('edit queues'))
+									<a class="badge badge-danger" href="{{ route('admin.queues.restore', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.set state to', ['state' => trans('global.enabled')]) }}">
+										{{ trans('global.trashed') }}
+									</a>
+								@else
+									<span class="badge badge-danger">
+										{{ trans('global.trashed') }}
+									</span>
+								@endif
+							@elseif ($row->enabled)
+								@if (auth()->user()->can('edit queues'))
+									<a class="badge badge-success" href="{{ route('admin.queues.disable', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.set state to', ['state' => trans('global.disabled')]) }}">
+										{{ trans('global.enabled') }}
+									</a>
+								@else
+									<span class="badge badge-success">
+										{{ trans('global.enabled') }}
+									</span>
+								@endif
+							@else
+								@if (auth()->user()->can('edit queues'))
+									<a class="badge badge-secondary" href="{{ route('admin.queues.enable', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.set state to', ['state' => trans('global.enabled')]) }}">
+										{{ trans('global.disabled') }}
+									</a>
+								@else
+									<span class="badge badge-secondary">
+										{{ trans('global.disabled') }}
+									</span>
+								@endif
+							@endif
+						</td>
+						<td class="text-center">
+							@if ($row->isTrashed())
+								@if (auth()->user()->can('edit queues'))
+									<a class="glyph icon-trash text-danger" href="{{ route('admin.queues.restore', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.set state to', ['state' => trans('global.enabled')]) }}">
+										{{ trans('global.trashed') }}
+									</a>
+								@else
+									<span class="glyph icon-trash text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
+										{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time>
+									</span>
+								@endif
+							@else
+								@if ($row->enabled && $row->started && $row->active)
+									@if ($row->reservation)
+										<a class="glyph icon-circle" href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="Queue has dedicated reservation.">
+											{{ trans('Queue has dedicated reservation.') }}
+										</a>
+									@else
+										<a class="glyph icon-check-circle text-success" href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="Queue is running.">
+											{{ trans('Queue is running.') }}
+										</a>
+									@endif
+								@elseif ($row->active)
+									<a class="glyph icon-minus-circle text-danger" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('Queue is stopped or disabled.') }}">
+										{{ trans('Queue is stopped or disabled.') }}
+									</a>
+								@elseif (!$row->active)
+									<a class="glyph icon-alert-triangle text-warning" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('Queue has no active resources. Remove queue or sell/loan nodes.') }}">
+										{{ trans('Queue has no active resources. Remove queue or sell/loan nodes.') }}
+									</a>
+								@endif
+							@endif
+						</td>
+						<td class="priority-4">
+							@if ($row->group)
+								<a href="{{ route('admin.groups.edit', ['id' => $row->groupid]) }}">
+									{{ $row->group->name }}
+								</a>
+							@else
+								<span class="unknown">{{ trans('global.none') }}</span>
+							@endif
+						</td>
+						<td class="priority-4 text-center">
+							@if ($row->groupid <= 0)
+								<span class="icon-cpu" data-tip="{{ trans('queues::queues.system') }}">{{ trans('queues::queues.system') }}</span>
+							@else
+								<span class="icon-user" data-tip="{{ trans('queues::queues.owner') }}">{{ trans('queues::queues.owner') }}</span>
+							@endif
+						</td>
+						<td class="text-right">
+							{!! $row->totalnodes ? $row->totalnodes : '<span class="none">' . $row->totalnodes . '</span>' !!}
+						</td>
+						<td class="text-right">
+							{!! $row->loanednodes ? $row->loanednodes : '<span class="none">' . $row->loanednodes . '</span>' !!}
+						</td>
+						<td class="text-right">
+							{!! $row->totalcores ? $row->totalcores : '<span class="none">' . $row->totalcores . '</span>' !!}
+						</td>
+						<td class="text-right">
+							{!! $row->loanedcores ? $row->loanedcores : '<span class="none">' . $row->loanedcores . '</span>' !!}
+							<?php
+							/*$soldpercent = $row->totalcores ? round(($row->soldcores / $row->totalcores) * 100, 1) : 0;
+							$loanedpercent = $row->totalcores ? round(($row->loanedcores / $row->totalcores) * 100, 1) : 0;
+							echo 'total cores: ' . $row->totalcores . ' avail: ' . ($row->totalcores - $row->soldcores - $row->loanedcores);
+							?>
+							<!-- <div class="row">
+								<div class="col col-md-4">{{ $row->soldcores }} sold</div>
+								<div class="col col-md-4">{{ $row->loanedcores }} loaned</div>
+								<div class="col col-md-4">of {{ $row->totalcores }}</div>
+							</div> -->
+							<span class="progress" style="height: 0.2em">
+								<span class="progress-bar bg-info" style="width: <?php echo $soldpercent; ?>%" aria-valuenow="<?php echo $soldpercent; ?>" aria-valuemin="0" aria-valuemax="100"></span>
+								<span class="progress-bar bg-warning" style="width: <?php echo $loanedpercent; ?>%" aria-valuenow="<?php echo $loanedpercent; ?>" aria-valuemin="0" aria-valuemax="100"></span>
+							</span>*/?>
+						</td>
+						<td class="priority-4">
+							@if ($row->subresourceid)
+								@if ($row->resource)
+									@if ($row->subresource)
+										<span data-tip="{{ $row->subresource->name }}">
+									@endif
+									{{ $row->resource->name }}
+									@if ($row->subresource)
+										</span>
+									@endif
+								@else
+									<span class="unknown">{{ trans('global.unknown') }}</span>
+								@endif
+							@else
+								<span class="none">{{ trans('global.none') }}</span>
+							@endif
+						</td>
+						<td class="text-right">
+							<?php
+							$walltime = $row->walltimes()->first();
+							if ($walltime):
+								echo $row->walltimes()->first()->humanWalltime;
+							endif;
+							?>
+						</td>
+					</tr>
+				@endforeach
+			</tbody>
+		</table>
 	</div>
 
 	{{ $rows->render() }}

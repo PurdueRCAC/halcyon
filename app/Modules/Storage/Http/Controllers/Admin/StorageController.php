@@ -198,7 +198,7 @@ class StorageController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('global.messages.item deleted', ['number' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return redirect(route('admin.storage.index'));

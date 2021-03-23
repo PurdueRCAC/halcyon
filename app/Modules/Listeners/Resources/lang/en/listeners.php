@@ -28,6 +28,8 @@ return [
 	'custom content' => 'Custom Content',
 	'enable' => 'Enable',
 	'disable' => 'Disable',
+	'click to publish' => 'Click to publish',
+	'click to unpublish' => 'Click to unpublish',
 	'field' => array(
 		'content description' => 'Text',
 		'content' => 'Text',

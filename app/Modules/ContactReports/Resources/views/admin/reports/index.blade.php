@@ -143,9 +143,9 @@ app('pathway')
 						</span>
 					@endif
 					@if (count($row->tags))
-						<br />tags:
+						<br />
 						@foreach ($row->tags as $tag)
-							<a href="{{ route('admin.contactreports.index', ['tag' => $tag->slug]) }}">{{ $tag->name }}</a>,
+							<a class="badge badge-sm badge-secondary" href="{{ route('admin.contactreports.index', ['tag' => $tag->slug]) }}">{{ $tag->name }}</a>
 						@endforeach
 					@endif
 				</td>
@@ -161,7 +161,7 @@ app('pathway')
 					$users = array();
 					foreach ($row->users as $user)
 					{
-						$u = ($user->user ? $user->user->name : trans('global.unknown'));
+						$u = ($user->user ? $user->user->name : $user->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
 						
 						if ($user->notified()):
 							$u .= ' <time datetime="' . $user->datetimelastnotify->toDateTimeString() . '">' . $user->datetimelastnotify->format('Y-m-d') . '</time>';
@@ -187,7 +187,7 @@ app('pathway')
 								@endif
 							</time>
 						@else
-							<span class="never">{{ trans('global.unknown') }}</span>
+							<span class="unknown">{{ trans('global.unknown') }}</span>
 						@endif
 					</span>
 				</td>

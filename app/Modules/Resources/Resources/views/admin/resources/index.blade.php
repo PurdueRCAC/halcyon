@@ -68,17 +68,17 @@ app('pathway')
 				<label class="sr-only" for="filter_type">{{ trans('resources::assets.type') }}</label>
 				<select name="type" id="filter_type" class="form-control filter filter-submit">
 					<option value="0">{{ trans('resources::assets.all types') }}</option>
-					<?php foreach ($types as $type): ?>
+					@foreach ($types as $type)
 						<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id): echo ' selected="selected"'; endif;?>>{{ $type->name }}</option>
-					<?php endforeach; ?>
+					@endforeach
 				</select>
 
 				<label class="sr-only" for="filter_batchsystem">{{ trans('resources::assets.batchsystem') }}</label>
 				<select name="batchsystem" id="filter_batchsystem" class="form-control filter filter-submit">
 					<option value="0">{{ trans('resources::assets.all batchsystems') }}</option>
-					<?php foreach ($batchsystems as $batchsystem): ?>
+					@foreach ($batchsystems as $batchsystem)
 						<option value="{{ $batchsystem->id }}"<?php if ($filters['batchsystem'] == $batchsystem->id): echo ' selected="selected"'; endif;?>>{{ $batchsystem->name }}</option>
-					<?php endforeach; ?>
+					@endforeach
 				</select>
 			</div>
 		</div>
@@ -133,14 +133,14 @@ app('pathway')
 			$cls = $trashed ? 'trashed' : 'active';
 			if ($filters['state'] == 'trashed')
 			{
-				$cls = '';
+				//$cls = '';
 				if (!$trashed)
 				{
 					$disabled = true;
 				}
 			}
 			?>
-			<tr class="{{ $cls }} @if ($disabled) disabled @endif">
+			<tr class="{{ $cls }}">
 				@if (!$disabled && auth()->user()->can('delete resources'))
 					<td>
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
@@ -152,7 +152,7 @@ app('pathway')
 				<td>
 					{!! $row->treename !!}
 					@if ($trashed)
-						<span class="fa fa-trash unknown" aria-hidden="true"></span>
+						<span class="glyph icon-trash text-danger" aria-hidden="true"></span>
 					@endif
 					@if (!$disabled && auth()->user()->can('edit resources'))
 						<a href="{{ route('admin.resources.edit', ['id' => $row->id]) }}">

@@ -108,13 +108,6 @@ class Widget extends Model
 	];
 
 	/**
-	 * Configuration registry
-	 *
-	 * @var  object
-	 */
-	//protected $paramsRegistry = null;
-
-	/**
 	 * The path to the installed files
 	 *
 	 * @var  string
@@ -353,6 +346,11 @@ class Widget extends Model
 		return $form;
 	}
 
+	/**
+	 * Register the widget's language directory
+	 *
+	 * @return  void
+	 */
 	public function registerLanguage()
 	{
 		$name = $this->widget;
@@ -386,14 +384,6 @@ class Widget extends Model
 	 */
 	public function menuAssigned()
 	{
-		/*$db = App::get('db');
-		$db->setQuery(
-			'SELECT menuid' .
-			' FROM widget_menus' .
-			' WHERE moduleid = '.$this->get('id')
-		);
-		return $db->loadColumn();*/
-
 		return Menu::query()
 			->where('moduleid', '=', (int)$this->id)
 			->get()
@@ -502,7 +492,7 @@ class Widget extends Model
 
 					if (!$menu->save())
 					{
-						$this->addError('More failed: ' . $menu->getError());
+						$this->addError('Move failed: ' . $menu->getError());
 						return false;
 					}
 				}
@@ -548,7 +538,7 @@ class Widget extends Model
 		// Add the custom WHERE clause if set.
 		if ($where)
 		{
-			$query->where(\DB::raw($where));
+			$query->where(DB::raw($where));
 		}
 
 		// Select the first row with the criteria.

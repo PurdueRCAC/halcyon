@@ -38,11 +38,7 @@ app('pathway')
 @section('content')
 
 @component('storage::admin.submenu')
-	@if (request()->segment(3) == 'types')
-		types
-	@else
-		storage
-	@endif
+	types
 @endcomponent
 <form action="{{ route('admin.storage.types') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
 	<div class="container-fluid">
@@ -64,30 +60,30 @@ app('pathway')
 		</fieldset>
 
 		<div class="card mb-4">
-				<table class="table table-hover adminlist">
-					<caption class="sr-only">{{ trans('storage::storage.module name') }}</caption>
-					<thead>
-						<tr>
-							@if (auth()->user()->can('delete storage'))
-								<th>
-									{!! Html::grid('checkall') !!}
-								</th>
-							@endif
-							<th scope="col" class="priority-5">
-								{!! Html::grid('sort', trans('storage::storage.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+			<table class="table table-hover adminlist">
+				<caption class="sr-only">{{ trans('storage::storage.module name') }}</caption>
+				<thead>
+					<tr>
+						@if (auth()->user()->can('delete storage'))
+							<th>
+								{!! Html::grid('checkall') !!}
 							</th>
-							<th scope="col">
-								{!! Html::grid('sort', trans('storage::storage.name'), 'name', $filters['order_dir'], $filters['order']) !!}
-							</th>
-							<th scope="col">
-								{!! Html::grid('sort', trans('storage::storage.time period'), 'defaulttimeperiodid', $filters['order_dir'], $filters['order']) !!}
-							</th>
-							<th scope="col" class="priority-4 numeric">
-								{{ trans('storage::storage.notifications') }}
-							</th>
-						</tr>
-					</thead>
-					<tbody>
+						@endif
+						<th scope="col" class="priority-5">
+							{!! Html::grid('sort', trans('storage::storage.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+						</th>
+						<th scope="col">
+							{!! Html::grid('sort', trans('storage::storage.name'), 'name', $filters['order_dir'], $filters['order']) !!}
+						</th>
+						<th scope="col">
+							{!! Html::grid('sort', trans('storage::storage.time period'), 'defaulttimeperiodid', $filters['order_dir'], $filters['order']) !!}
+						</th>
+						<th scope="col" class="priority-4 numeric">
+							{{ trans('storage::storage.notifications') }}
+						</th>
+					</tr>
+				</thead>
+				<tbody>
 					@foreach ($rows as $i => $row)
 						<tr>
 							@if (auth()->user()->can('delete storage'))
@@ -123,11 +119,11 @@ app('pathway')
 							</td>
 						</tr>
 					@endforeach
-					</tbody>
-				</table>
+				</tbody>
+			</table>
 
-				{{ $rows->render() }}
-			</div>
+			{{ $rows->render() }}
+		</div>
 	</div>
 
 	<input type="hidden" name="task" value="" autocomplete="off" />

@@ -146,22 +146,22 @@ app('pathway')
 						@endif
 					@endif
 					@if (!$path)
-						<p class="smallsub">{{ trans('listeners::listeners.error missing files') }}</p>
+						<div class="text-sm text-muted">{{ trans('listeners::listeners.error missing files') }}</div>
 					@endif
 				</td>
 				<td>
 					@if ($canEdit)
-						@if ($row->enabled == 1)
-							<a class="btn btn-sm published" href="{{ route('admin.listeners.unpublish', ['id' => $row->id]) }}">
+						@if ($row->enabled)
+							<a class="btn btn-sm btn-success" data-tip="{{ trans('listeners::listeners.click to unpublish') }}" href="{{ route('admin.listeners.unpublish', ['id' => $row->id]) }}">
 								{{ trans('listeners::listeners.published') }}
 							</a>
 						@else
-							<a class="btn btn-sm unpublished" href="{{ route('admin.listeners.publish', ['id' => $row->id]) }}">
+							<a class="btn btn-sm btn-secondary" data-tip="{{ trans('listeners::listeners.click to publish') }}" href="{{ route('admin.listeners.publish', ['id' => $row->id]) }}">
 								{{ trans('listeners::listeners.unpublished') }}
 							</a>
 						@endif
 					@else
-						@if ($row->enabled == 1)
+						@if ($row->enabled)
 							<span class="state published">
 								{{ trans('listeners::listeners.published') }}
 							</span>

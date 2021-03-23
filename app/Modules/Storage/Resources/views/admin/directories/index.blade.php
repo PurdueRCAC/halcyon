@@ -43,11 +43,7 @@ if ($parent)
 
 @section('content')
 @component('storage::admin.submenu')
-	@if (request()->segment(3) == 'types')
-		types
-	@else
-		storage
-	@endif
+	directories
 @endcomponent
 
 <form action="{{ route('admin.storage.directories') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
@@ -73,7 +69,7 @@ if ($parent)
 
 				<label class="sr-only" for="filter_state">{{ trans('storage::storage.resource') }}</label>
 				<select name="resource" class="form-control filter filter-submit">
-					<option value="0"<?php if (!$filters['resource']): echo ' selected="selected"'; endif;?>>{{ trans('global.all') }}</option>
+					<option value="0"<?php if (!$filters['resource']): echo ' selected="selected"'; endif;?>>{{ trans('storage::storage.all resources') }}</option>
 					@foreach ($storages as $s)
 						<option value="{{ $s->id }}"<?php if ($filters['resource'] == $s->id): echo ' selected="selected"'; endif;?>>{{ $s->name }}</option>
 					@endforeach
@@ -125,7 +121,7 @@ if ($parent)
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr>
+			<tr<?php if ($row->isTrashed()) { echo ' class="trashed"'; } ?>>
 				@if (auth()->user()->can('delete storage'))
 					<td>
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
@@ -136,7 +132,9 @@ if ($parent)
 				</td>
 				<td>
 					@if ($row->isTrashed())
-						<span class="glyph icon-trash">{{ trans('global.trashed') }}</span>
+						<span class="glyph icon-trash text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
+							{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time>
+						</span>
 					@endif
 					@if (auth()->user()->can('edit storage'))
 					<a href="{{ route('admin.storage.directories.edit', ['id' => $row->id]) }}">

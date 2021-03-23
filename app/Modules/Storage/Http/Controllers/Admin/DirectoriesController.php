@@ -11,6 +11,7 @@ use App\Modules\Storage\Models\Notification;
 use App\Halcyon\Http\StatefulRequest;
 use App\Halcyon\Utility\Number;
 use App\Modules\Users\Models\User;
+use App\Modules\Groups\Models\Group;
 use Carbon\Carbon;
 
 class DirectoriesController extends Controller
@@ -85,15 +86,19 @@ class DirectoriesController extends Controller
 			else
 			{
 				$u = (new User)->getTable();
+				$g = (new Group)->getTable();
 
 				$query->leftJoin($u, $u . '.id', $d . '.owneruserid');
+				$query->leftJoin($g, $g . '.id', $d . '.groupid');
 
-				$query->where(function($where) use ($filters, $d, $u)
+				$query->where(function($where) use ($filters, $d, $u, $g)
 				{
 					$where->where($d . '.name', 'like', '%' . $filters['search'] . '%')
 						->orWhere($d . '.name', 'like', $filters['search'] . '%')
 						->orWhere($d . '.name', 'like', '%' . $filters['search'])
-						->orWhere($u . '.name', 'like', '%' . $filters['search'] . '%');
+						->orWhere($u . '.name', 'like', '%' . $filters['search'] . '%')
+						->orWhere($g . '.name', 'like', $filters['search'] . '%')
+						->orWhere($g . '.name', 'like', '%' . $filters['search'] . '%');
 				});
 			}
 		}

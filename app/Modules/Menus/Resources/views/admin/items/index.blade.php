@@ -142,13 +142,13 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 
 				<label class="sr-only" for="filter_level">{{ trans('menus::menus.level') }}</label>
 				<select name="level" id="filter_level" class="form-control filter filter-submit">
-					<option value="">{{ trans('menus::menus.option select level') }}</option>
+					<option value="">{{ trans('menus::menus.all levels') }}</option>
 					<?php echo \App\Halcyon\Html\Builder\Select::options($f_levels, 'value', 'text', $filters['level']); ?>
 				</select>
 
 				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
-					<option value="">{{ trans('global.option.select published') }}</option>
+					<option value="">{{ trans('menus::menus.all states') }}</option>
 					<?php //echo \App\Halcyon\Html\Builder\Select::options(\App\Halcyon\Html\Builder\Grid::publishedOptions(array('archived' => false)), 'value', 'text', $filters['state'], true); ?>
 					<option value="published"<?php if ($filters['state'] == 'published') { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
 					<option value="unpublished"<?php if ($filters['state'] == 'unpublished') { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
@@ -157,7 +157,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 
 				<label class="sr-only" for="filter_access">{{ trans('global.access') }}</label>
 				<select name="access" id="filter_access" class="form-control filter filter-submit">
-					<option value="">{{ trans('global.option.select access') }}</option>
+					<option value="">{{ trans('menus::menus.all access levels') }}</option>
 					<?php echo \App\Halcyon\Html\Builder\Select::options(\App\Halcyon\Html\Builder\Access::assetgroups(), 'value', 'text', $filters['access']); ?>
 				</select>
 
@@ -205,8 +205,8 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 		?>
 		<tbody class="sortable" id="row-1" data-id="1">
 		@foreach ($rows as $i => $row)
-			<tr id="row-{{ $row->id }}" data-parent="{{ $row->parent_id }}" data-id="{{ $row->id }}">
 			<?php $orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
+			<tr<?php if ($row->trashed()) { echo ' class="trashed"'; } ?> id="row-{{ $row->id }}" data-parent="{{ $row->parent_id }}" data-id="{{ $row->id }}">
 				<td>
 					@if ($canChange)
 						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
@@ -252,31 +252,31 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 				<td class="text-center priority-3">
 					@if ($row->trashed())
 						@if ($canChange)
-							<a class="btn btn-secondary btn-sm trashed" href="{{ route('admin.menus.items.restore', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.restore" title="Restore menu item">
+							<a class="btn btn-danger btn-sm" href="{{ route('admin.menus.items.restore', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.restore" data-tip="Restore menu item">
 								{{ trans('global.trashed') }}
 							</a>
 						@else
-							<span class="badge trashed">
+							<span class="badge badge-danger">
 								{{ trans('global.trashed') }}
 							</span>
 						@endif
 					@elseif ($row->state)
 						@if ($canChange)
-							<a class="btn btn-secondary btn-sm published" href="{{ route('admin.menus.items.unpublish', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.unpublish" title="Unpublish menu item">
+							<a class="btn btn-success btn-sm" href="{{ route('admin.menus.items.unpublish', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.unpublish" data-tip="Unpublish menu item">
 								{{ trans('global.published') }}
 							</a>
 						@else
-							<span class="badge published">
+							<span class="badge badge-success">
 								{{ trans('global.published') }}
 							</span>
 						@endif
 					@else
 						@if ($canChange)
-							<a class="btn btn-secondary btn-sm unpublished" href="{{ route('admin.menus.items.publish', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.publish" title="Publish menu item">
+							<a class="btn btn-success btn-sm" href="{{ route('admin.menus.items.publish', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.publish" data-tip="Publish menu item">
 								{{ trans('global.unpublished') }}
 							</a>
 						@else
-							<span class="badge unpublished">
+							<span class="badge badge-secondary">
 								{{ trans('global.unpublished') }}
 							</span>
 						@endif

@@ -265,18 +265,16 @@ app('pathway')
 	->append(
 		($row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create'))
 	);
+
+if (auth()->user()->can('edit widgets')):
+	Toolbar::save(route('admin.widgets.store'));
+endif;
+
+Toolbar::spacer();
+Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('edit widgets'))
-		{!! Toolbar::save(route('admin.widgets.store')) !!}
-	@endif
-
-	{!!
-		Toolbar::spacer();
-		Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
-	!!}
-
 	{!! Toolbar::render() !!}
 @stop
 

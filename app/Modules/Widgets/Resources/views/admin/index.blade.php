@@ -69,7 +69,7 @@ app('pathway')
 
 				<label class="sr-only" for="filter_state">{{ trans('widgets::widgets.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('widgets::widgets.state_all') }}</option>
+					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('widgets::widgets.all states') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
 					<option value="unpublished"<?php if ($filters['state'] == 'unpublished'): echo ' selected="selected"'; endif;?>>{{ trans('global.unpublished') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
@@ -77,26 +77,26 @@ app('pathway')
 
 				<label class="sr-only" for="filter_position">{{ trans('widgets::widgets.select position') }}</label>
 				<select name="position" id="filter_position" class="form-control filter filter-submit">
-					<option value="">{{ trans('widgets::widgets.select position') }}</option>
-					<?php foreach (App\Modules\Widgets\Helpers\Admin::getPositions($filters['client_id']) as $position): ?>
-						<option value="<?php echo $position->value; ?>"<?php if ($filters['position'] == $position->position) { echo ' selected="selected"'; } ?>><?php echo e($position->position); ?></option>
-					<?php endforeach; ?>
+					<option value="">{{ trans('widgets::widgets.all positions') }}</option>
+					@foreach (App\Modules\Widgets\Helpers\Admin::getPositions($filters['client_id']) as $position)
+						<option value="{{ $position->value }}"<?php if ($filters['position'] == $position->position) { echo ' selected="selected"'; } ?>>{{ $position->position }}</option>
+					@endforeach
 				</select>
 
 				<label class="sr-only" for="filter_widget">{{ trans('widgets::widgets.select widget') }}</label>
 				<select name="widget" id="filter_widget" class="form-control filter filter-submit">
-					<option value="">{{ trans('widgets::widgets.select widget') }}</option>
-					<?php foreach (App\Modules\Widgets\Helpers\Admin::getWidgets($filters['client_id']) as $widget): ?>
-						<option value="<?php echo $widget->element; ?>"<?php if ($filters['widget'] == $widget->element) { echo ' selected="selected"'; } ?>><?php echo e($widget->name); ?></option>
-					<?php endforeach; ?>
+					<option value="">{{ trans('widgets::widgets.all widgets') }}</option>
+					@foreach (App\Modules\Widgets\Helpers\Admin::getWidgets($filters['client_id']) as $widget)
+						<option value="{{ $widget->element }}"<?php if ($filters['widget'] == $widget->element) { echo ' selected="selected"'; } ?>>{{ $widget->name }}</option>
+					@endforeach
 				</select>
 
 				<label class="sr-only" for="filter_access">{{ trans('widgets::widgets.access level') }}</label>
 				<select name="access" id="filter_access" class="form-control filter filter-submit">
-					<option value="">{{ trans('widgets::widgets.access select') }}</option>
-					<?php foreach (App\Halcyon\Access\Viewlevel::all() as $access): ?>
-						<option value="<?php echo $access->id; ?>"<?php if ($filters['access'] == $access->id) { echo ' selected="selected"'; } ?>><?php echo e($access->title); ?></option>
-					<?php endforeach; ?>
+					<option value="">{{ trans('widgets::widgets.all levels') }}</option>
+					@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
+						<option value="{{ $access->id }}"<?php if ($filters['access'] == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
+					@endforeach
 				</select>
 			</div>
 		</div>
@@ -151,7 +151,7 @@ app('pathway')
 			$positions = $rows->pluck('position')->toArray();
 			?>
 		@foreach ($rows as $i => $row)
-			<tr>
+			<tr class="row-{{ ($row->published ? 'published' : 'unpublished') }}">
 				@if (auth()->user()->can('edit.state widgets') || auth()->user()->can('delete widgets'))
 					<td>
 						{!! Html::grid('id', $i, $row->id) !!}
@@ -186,22 +186,22 @@ app('pathway')
 				</td>
 				<td>
 					@if (auth()->user()->can('edit.state widgets'))
-						@if ($row->published == 1)
-							<a class="btn btn-sm btn-secondary published" href="{{ route('admin.widgets.unpublish', ['id' => $row->id]) }}">
+						@if ($row->published)
+							<a class="btn btn-sm btn-success" data-tip="{{ trans('widgets::widgets.click to unpublish') }}" href="{{ route('admin.widgets.unpublish', ['id' => $row->id]) }}">
 								{{ trans('widgets::widgets.published') }}
 							</a>
 						@else
-							<a class="btn btn-sm btn-secondary unpublished" href="{{ route('admin.widgets.publish', ['id' => $row->id]) }}">
+							<a class="btn btn-sm btn-secondary" data-tip="{{ trans('widgets::widgets.click to publish') }}" href="{{ route('admin.widgets.publish', ['id' => $row->id]) }}">
 								{{ trans('widgets::widgets.unpublished') }}
 							</a>
 						@endif
 					@else
-						@if ($row->published == 1)
-							<span class="badge published">
+						@if ($row->published)
+							<span class="badge badge-success">
 								{{ trans('widgets::widgets.published') }}
 							</span>
 						@else
-							<span class="badge unpublished">
+							<span class="badge badge-secondary">
 								{{ trans('widgets::widgets.unpublished') }}
 							</span>
 						@endif
@@ -280,27 +280,27 @@ app('pathway')
 		<h2 class="modal-title sr-only">{{ trans('widgets::widgets.choose type') }}</h2>
 
 		<div class="card">
-		<table id="new-modules-list" class="table table-hover adminlist">
-			<caption class="sr-only">{{ trans('widgets::widgets.available widgets') }}</caption>
-			<thead>
-				<tr>
-					<th scope="col">{{ trans('widgets::widgets.title') }}</th>
-					<th scope="col">{{ trans('widgets::widgets.widget') }}</th>
-				</tr>
-			</thead>
-			<tbody>
-			@foreach ($widgets as $item)
-				<tr>
-					<td>
-						<span class="editlinktip hasTip" title="{{ $item->name }} :: {{ $item->desc }}"><a href="{{ route('admin.widgets.create', ['eid' => $item->id]) }}">{{ $item->name }}</a></span>
-					</td>
-					<td>
-						{{ $item->element }}
-					</td>
-				</tr>
-			@endforeach
-			</tbody>
-		</table>
+			<table id="new-modules-list" class="table table-hover adminlist">
+				<caption class="sr-only">{{ trans('widgets::widgets.available widgets') }}</caption>
+				<thead>
+					<tr>
+						<th scope="col">{{ trans('widgets::widgets.title') }}</th>
+						<th scope="col">{{ trans('widgets::widgets.widget') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+				@foreach ($widgets as $item)
+					<tr>
+						<td>
+							<span class="editlinktip hasTip" title="{{ $item->name }} :: {{ $item->desc }}"><a href="{{ route('admin.widgets.create', ['eid' => $item->id]) }}">{{ $item->name }}</a></span>
+						</td>
+						<td>
+							{{ $item->element }}
+						</td>
+					</tr>
+				@endforeach
+				</tbody>
+			</table>
 		</div>
 	</div>
 
@@ -311,34 +311,33 @@ app('pathway')
 
 @section('scripts')
 <script>
-	function validate(){
-		var value = $('#menu_assignment').val(),
-			list  = $('#menu-assignment');
+function validate(){
+	var value = $('#menu_assignment').val(),
+		list  = $('#menu-assignment');
 
-		if (value == '-' || value == '0') {
-			$('.btn-assignments').each(function(i, el) {
-				$(el).prop('disabled', true);
-			});
-			list.find('input').each(function(i, el){
-				$(el).prop('disabled', true);
-				if (value == '-'){
-					$(el).prop('checked', false);
-				} else {
-					$(el).prop('checked', true);
-				}
-			});
-		} else {
-			$('.btn-assignments').each(function(i, el) {
-				$(el).prop('disabled', false);
-			});
-			list.find('input').each(function(i, el){
-				$(el).prop('disabled', false);
-			});
-		}
+	if (value == '-' || value == '0') {
+		$('.btn-assignments').each(function(i, el) {
+			$(el).prop('disabled', true);
+		});
+		list.find('input').each(function(i, el){
+			$(el).prop('disabled', true);
+			if (value == '-'){
+				$(el).prop('checked', false);
+			} else {
+				$(el).prop('checked', true);
+			}
+		});
+	} else {
+		$('.btn-assignments').each(function(i, el) {
+			$(el).prop('disabled', false);
+		});
+		list.find('input').each(function(i, el){
+			$(el).prop('disabled', false);
+		});
 	}
+}
 
 $(document).ready(function() {
-
 	var dialog = $("#new-widget").dialog({
 		autoOpen: false,
 		height: 400,
