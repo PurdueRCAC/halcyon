@@ -8,6 +8,8 @@
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta name="base-url" content="{{ rtrim(url('/'), '/') }}">
 		<meta name="api-token" content="{{ (Auth::user() ? Auth::user()->api_token : '') }}">
+		<meta name="theme-color" content="#000000">
+		<meta name="color-scheme" content="light dark">
 
 		<!-- Styles -->
 		<?php
