@@ -62,7 +62,13 @@ class PublishCommand extends Command
 		}
 		else
 		{
-			$theme = $this->laravel['themes']->findOrFail($name);
+			$theme = $this->laravel['themes']->find($name);
+		}
+
+		if (!$theme)
+		{
+			$this->error('Failed to find theme named ' . $name);
+			return;
 		}
 
 		/*with(new AssetPublisher($theme))
