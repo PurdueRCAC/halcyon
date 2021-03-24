@@ -78,7 +78,7 @@ app('pathway')
 					<th scope="col" class="priority-3 text-right">
 						{!! Html::grid('sort', trans('tags::tags.aliases'), 'alias_count', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="priority-4">
+					<th scope="col" class="priority-4 text-center">
 						{!! Html::grid('sort', trans('tags::tags.created'), 'created', $filters['order_dir'], $filters['order']) !!}
 					</th>
 				</tr>
@@ -113,12 +113,24 @@ app('pathway')
 							@endif
 						</td>
 						<td class="priority-3 text-right">
+							@if (!$row->tagged_count)
+								<span class="none">
+							@endif
 							{{ $row->tagged_count }}
+							@if (!$row->tagged_count)
+								</span>
+							@endif
 						</td>
 						<td class="priority-3 text-right">
+							@if (!$row->alias_count)
+								<span class="none">
+							@endif
 							{{ $row->alias_count }}
+							@if (!$row->alias_count)
+								</span>
+							@endif
 						</td>
-						<td class="priority-4">
+						<td class="priority-4 text-center">
 							<span class="datetime">
 								@if ($row->created_at)
 									<time datetime="{{ $row->created_at->toDateTimeString() }}">

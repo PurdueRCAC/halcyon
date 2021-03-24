@@ -165,7 +165,7 @@ class TagsController extends Controller
 			}
 		}
 
-		return $this->cancel()->with('success', trans('global.messages.item saved'));
+		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**
