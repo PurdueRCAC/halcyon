@@ -1382,6 +1382,7 @@ h4 {
   content: "\271A";
 }
 
+/* Color mode controls */
 #mode:before {
   font-family: "Feather";
   content: "\e8cf";
@@ -1413,6 +1414,7 @@ label {
     color: var(--input-color);
 }
 
+/* [!] CKEditor */
 table.cke_dialog tbody tr td,
 table.cke_dialog tbody tr td:first-child,
 table.cke_dialog tbody tr td:last-child {
@@ -1495,7 +1497,7 @@ body .cke_bottom {
 .permissions.button {
   padding: 0.5em 0.71em;
 }
-input.combobox {
+/*input.combobox {
   -webkit-transition: none;
   -moz-transition: none;
   -o-transition: none;
@@ -1507,7 +1509,7 @@ input.combobox {
 }
 .opera input.combobox {
   margin-top: 8px;
-}
+}*/
 /*select {
   width: 100%;
   max-width: 100%;
@@ -2740,14 +2742,15 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 }
 .ui-datepicker .ui-datepicker-calendar {
   border: none;
-}
+}*/
 .ui-datepicker .ui-datepicker-calendar thead tr th,
 .ui-datepicker .ui-datepicker-calendar tbody tr th,
 .ui-datepicker .ui-datepicker-calendar tbody tr td {
-  border: none;
-  padding: 0;
+  /*border: none;
+  padding: 0;*/
+  border-radius: 0.25em;
 }
-.ui-datepicker .ui-datepicker-calendar tbody tr th,
+/*.ui-datepicker .ui-datepicker-calendar tbody tr th,
 .ui-datepicker .ui-datepicker-calendar tbody tr td {
   background-color: #333;
   background-color: rgba(255, 255, 255, 0.1);
@@ -3627,11 +3630,14 @@ border: 1px solid rgba(0,0,0,.125);
   flex-flow: row;
 }
 .toolbar-box ul li {
-  margin: 0 0 0 0.5em;
+  margin: 0;
   padding: 0;
   list-style: none;
   flex: 0 1 auto;
   /*float: left;*/
+}
+.toolbar-box ul li + li {
+  margin-left: 0.5em;
 }
 .toolbar-box .spacer,
 .toolbar-box .divider {
