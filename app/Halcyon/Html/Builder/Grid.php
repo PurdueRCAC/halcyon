@@ -153,7 +153,7 @@ class Grid
 	{
 		$html  = '<span class="form-check">';
 		$html .= '<input type="checkbox" name="toggle" value="" id="toggle-all" class="form-check-input checkbox-toggle toggle-all" />';
-		$html .= '<label class="form-check-label" for="toggle-all"></label>';
+		$html .= '<label class="form-check-label" for="toggle-all"><span class="sr-only">' . trans('global.check all') . '</span></label>';
 		$html .= '</span>';
 
 		return $html;
