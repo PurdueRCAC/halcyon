@@ -27,7 +27,7 @@ trait Historable
 			$old = [];
 			foreach ($model->attributes as $key => $value)
 			{
-				$originalValue = $model->original[$key];
+				$originalValue = isset($model->original[$key]) ? $model->original[$key] : null;
 
 				if ($value != $originalValue)
 				{
