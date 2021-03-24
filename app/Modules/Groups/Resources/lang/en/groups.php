@@ -28,6 +28,8 @@ return [
 	'unix groups' => 'Unix Groups',
 	'all departments' => '- All Departments -',
 	'all fields of science' => '- All Fields of Science -',
+	'select department' => '- Select Department -',
+	'select field of science' => '- Field of Science -',
 	'fields of science' => 'Fields of Science',
 	'field of science' => 'Field of Science',
 	'departments' => 'Departments',

@@ -48,6 +48,9 @@ app('pathway')
 				<a href="#group-details">{{ trans('global.details') }}</a>
 			</li>
 			@if ($row->id)
+				<li>
+					<a href="#group-members">{{ trans('groups::groups.members') }}</a>
+				</li>
 				@foreach ($sections as $section)
 					<li>
 						<a href="#group-{{ $section['route'] }}">{{ $section['name'] }}</a>
@@ -78,7 +81,7 @@ app('pathway')
 							<div class="col col-md-6">
 								<div class="form-group">
 									<label for="field-unixgroup">{{ trans('groups::groups.unix group base name') }}:</label>
-									<input type="text" class="form-control input-unixgroup" name="fields[unixgroup]" id="field-unixgroup" maxlength="10" value="{{ $row->unixgroup }}" />
+									<input type="text" class="form-control input-unixgroup" name="fields[unixgroup]" id="field-unixgroup" maxlength="10" pattern="[a-z0-9]+" value="{{ $row->unixgroup }}" />
 									<span class="form-text text-muted">{{ trans('groups::groups.unix group base name hint') }}</span>
 								</div>
 							</div>
@@ -146,7 +149,7 @@ app('pathway')
 									<td colspan="3">
 										<span class="input-group">
 											<span class="input-group-prepend"><span class="input-group-text">{{ $row->unixgroup }}-</span></span>
-											<input type="text" name="longname" id="longname" class="form-control input-unixgroup" placeholder="{{ trans('groups::groups.name') }}" />
+											<input type="text" name="longname" id="longname" class="form-control input-unixgroup" maxlength="{{ (32 - strlen($row->unixgroup)) }}" pattern="[a-z0-9]+" placeholder="{{ strtolower(trans('groups::groups.name')) }}" />
 										</span>
 									</td>
 									<td class="text-right">
@@ -343,6 +346,10 @@ app('pathway')
 		</div>
 
 		@if ($row->id)
+			<div id="group-members">
+				Members info here...
+			</div>
+
 			@foreach ($sections as $section)
 				<div id="group-{{ $section['route'] }}">
 					{!! $section['content'] !!}
