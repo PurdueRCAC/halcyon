@@ -83,7 +83,7 @@
 					--></li>
 				</ul>
 
-				<nav id="nav" class="main-navigation">
+				<nav id="nav" class="main-navigation" aria-label="{{ trans('theme::app.main') }}">
 					<div class="inner-wrap">
 						@widget('menu')
 					</div>
@@ -130,7 +130,7 @@
 					@include('partials.notifications')
 					<!-- Notifications ends -->
 
-					<nav id="sub-nav" class="sub-navigation">
+					<nav id="sub-nav" class="sub-navigation" aria-label="{{ trans('theme::app.module sections') }}">
 						@widget('submenu')
 					</nav><!-- / .sub-navigation -->
 
