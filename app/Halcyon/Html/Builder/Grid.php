@@ -103,7 +103,12 @@ class Grid
 			return '';
 		}
 
-		return '<span class="form-check"><input type="checkbox" id="cb' . $rowNum . '" name="' . $name . '[]" value="' . $recId . '" class="form-check-input checkbox-toggle" /><label for="cb' . $rowNum . '"></label></span>';
+		$html  = '<span class="form-check">';
+		$html .= '<input type="checkbox" id="cb' . $rowNum . '" name="' . $name . '[]" value="' . $recId . '" class="form-check-input checkbox-toggle" />';
+		$html .= '<label for="cb' . $rowNum . '" class="form-check-label"><span class="sr-only">' . trans('global.admin.record id', ['id' => $recId]) . '</span></label>';
+		$html .= '</span>';
+
+		return $html;
 	}
 
 	/**
