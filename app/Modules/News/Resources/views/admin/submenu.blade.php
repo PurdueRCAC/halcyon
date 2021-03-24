@@ -1,5 +1,5 @@
 
-<nav role="navigation">
+<nav class="container-fluid" aria-label="{{ trans('news::news.module sections') }}">
 	<ul class="nav nav-tabs">
 		<li class="nav-item">
 			<a class="nav-link @if (!trim($slot) || trim($slot) == 'articles') active @endif" href="{{ route('admin.news.index') }}">{{ trans('news::news.articles') }}</a>

@@ -1,6 +1,7 @@
 <?php
 return [
 	'module name' => 'Order Manager',
+	'module sections' => 'Module section',
 	'orders' => 'Orders',
 	'category' => 'Category',
 	'categories' => 'Product Categories',

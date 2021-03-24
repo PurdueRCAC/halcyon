@@ -1,6 +1,7 @@
 <?php
 return [
 	'module name' => 'Contact Reports Manager',
+	'module sections' => 'Module sections',
 	'contact reports' => 'Contact Reports',
 	'configuration' => 'Configuration',
 	// Admin sub-menu

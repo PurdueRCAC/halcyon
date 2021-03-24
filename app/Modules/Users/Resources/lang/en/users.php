@@ -1,6 +1,7 @@
 <?php
 return [
 	'module name' => 'User Manager',
+	'module sections' => 'Module sections',
 	'users' => 'Users',
 	'notes' => 'Notes',
 	'roles' => 'Roles',

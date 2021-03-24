@@ -1,6 +1,7 @@
 <?php
 return [
 	'module name' => 'Group Manager',
+	'module sections' => 'Module sections',
 	'groups' => 'Groups',
 	'id' => 'ID',
 	'name' => 'Name',

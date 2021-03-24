@@ -1,6 +1,7 @@
 <?php
 return [
 	'module name' => 'History Manager',
+	'module sections' => 'Module sections',
 	'history manager' => 'History Manager',
 	'id' => 'ID',
 	'item id' => 'Item ID',

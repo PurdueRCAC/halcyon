@@ -1,6 +1,7 @@
 <?php
 return [
 	'module name' => 'Message Queue',
+	'module sections' => 'Module sections',
 	'configuration' => 'Messages Configuration',
 	// Sub-menu
 	'messages' => 'Messages',

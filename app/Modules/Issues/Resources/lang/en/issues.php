@@ -1,6 +1,7 @@
 <?php
 return [
 	'module name' => 'Issues Manager',
+	'module sections' => 'Module sections',
 	'issue' => 'Issue',
 	'configuration' => 'Configuration',
 	// Admin sub-menu

@@ -1,6 +1,7 @@
 <?php
 return [
 	'module name' => 'Storage Manager',
+	'module sections' => 'Module sections',
 	'storage' => 'Storage',
 	'resource' => 'Resource',
 

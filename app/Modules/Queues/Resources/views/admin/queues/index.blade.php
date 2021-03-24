@@ -75,15 +75,18 @@ app('pathway')
 					@foreach ($resources as $resource)
 						<?php $selected = ($resource->id == $filters['resource'] ? ' selected="selected"' : ''); ?>
 						<option value="{{ $resource->id }}"<?php echo $selected; ?>>{{ str_repeat('- ', $resource->level) . $resource->name }}</option>
-						@foreach ($resource->subresources()->orderBy('name', 'asc')->get() as $subresource)
-							<?php
+						<?php
+						foreach ($resource->subresources()->orderBy('name', 'asc')->get() as $subresource):
 							if ($subresource->isTrashed()):
 								continue;
 							endif;
-							$selected = ('s' . $subresource->id == $filters['resource'] ? ' selected="selected"' : '');
+							$key = 's' . $subresource->id;
+							$selected = ($filters['resource'] && $key == (string)$filters['resource'] ? ' selected="selected"' : '');
 							?>
-							<option value="s{{ $subresource->id }}"<?php echo $selected; ?>>{{ str_repeat('- ', 1) . $subresource->name }}</option>
-						@endforeach
+							<option value="{{ $key }}"<?php echo $selected; ?>>{{ str_repeat('- ', 1) . $subresource->name }}</option>
+							<?php
+						endforeach;
+						?>
 					@endforeach
 				</select>
 
@@ -113,8 +116,9 @@ app('pathway')
 					<th></th>
 					<th></th>
 					<th></th>
-					<th colspan="2" class="text-center">{{ trans('queues::queues.nodes') }}</th>
-					<th colspan="2" class="text-center">{{ trans('queues::queues.cores') }}</th>
+					<th></th>
+					<th colspan="2">{{ trans('queues::queues.nodes') }}</th>
+					<th colspan="2">{{ trans('queues::queues.cores') }}</th>
 					<th></th>
 					<th></th>
 				</tr>

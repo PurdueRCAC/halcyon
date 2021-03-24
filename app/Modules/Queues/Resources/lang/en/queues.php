@@ -1,6 +1,7 @@
 <?php
 return [
 	'module name' => 'Queue Manager',
+	'module sections' => 'Module sections',
 	'queues' => 'Queues',
 	'queue' => 'Queue',
 	'purchases and loans' => 'Purchases & Loans',

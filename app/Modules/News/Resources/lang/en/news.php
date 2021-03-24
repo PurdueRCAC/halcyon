@@ -1,6 +1,7 @@
 <?php
 return [
 	'module name' => 'News Manager',
+	'module sections' => 'Module section',
 	'configuration' => 'Pages Configuration',
 	// Sub-menu
 	'articles' => 'Articles',

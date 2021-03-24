@@ -1,6 +1,7 @@
 <?php
 return [
 	'module name' => 'Knowledge Base',
+	'module sections' => 'Module sections',
 	'configuration' => 'Configuration',
 	// Sub-menu
 	'knowledge base' => 'Knowledge Base',
