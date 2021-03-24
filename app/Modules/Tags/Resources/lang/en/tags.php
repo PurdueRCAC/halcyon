@@ -22,4 +22,5 @@ return [
 	'taggable type hint' => 'The type of item being tagged. This typically corresponds to a module name such as "user", "page", etc.',
 	'aliases' => 'Aliases',
 	'history' => 'History',
+	'record id' => 'Tag #:id',
 ];
