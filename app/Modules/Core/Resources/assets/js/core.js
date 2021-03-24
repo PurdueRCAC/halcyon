@@ -193,13 +193,20 @@ Halcyon.checkAll = function(checkbox, stub) {
 }
 
 Halcyon.enableDisableBtn = function(num) {
-	var toolbarbuttons = document.getElementsByClassName('toolbar-list');
-	for (i = 0; i < toolbarbuttons.length; i++)
-	{
-		if (!num) {
-			Halcyon.addClass(toolbarbuttons[i], 'disabled');
+	var toolbarbuttons = document.getElementsByClassName('toolbar-btn');
+	for (i = 0; i < toolbarbuttons.length; i++) {
+		if (Halcyon.hasClass(toolbarbuttons[i], 'toolbar-list')) {
+			if (!num) {
+				Halcyon.addClass(toolbarbuttons[i], 'disabled');
+			} else {
+				Halcyon.removeClass(toolbarbuttons[i], 'disabled');
+			}
 		} else {
-			Halcyon.removeClass(toolbarbuttons[i], 'disabled');
+			if (num) {
+				Halcyon.addClass(toolbarbuttons[i], 'disabled');
+			} else {
+				Halcyon.removeClass(toolbarbuttons[i], 'disabled');
+			}
 		}
 	}
 }
