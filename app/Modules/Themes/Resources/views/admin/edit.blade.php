@@ -62,7 +62,7 @@ trans('themes::themes.module name'): {{ $row->id ? 'Edit: #' . $row->id : 'Creat
 									</li>
 								</ul>
 							</fieldset>
-							<div class="form-text text-muted">{!! trans('themes::themes.home description') !!}</div>
+							<!-- <div class="form-text text-muted">{!! trans('themes::themes.home description') !!}</div> -->
 						</div>
 
 				@endif
