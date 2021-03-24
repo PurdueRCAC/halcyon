@@ -36,6 +36,9 @@ return [
 	'show' => 'Show',
 	'hide' => 'Hide',
 	'warn javascript required' => 'Warning! JavaScript must be enabled for proper operation of the Administrator backend.',
+	'admin' => [
+		'record id' => 'Record #:id',
+	],
 	'messages' => [
 		'item created' => ':name successfully created.',
 		'creation failed' => 'Failed to create record.',

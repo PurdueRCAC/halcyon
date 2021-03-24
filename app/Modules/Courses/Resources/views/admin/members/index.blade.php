@@ -89,7 +89,7 @@
 			<tr<?php if ($row->user && $row->user->trashed()) { echo ' class="trashed"'; } ?>>
 				<td>
 					@if (auth()->user()->can('edit courses'))
-						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
+						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"><span class="sr-only">{{ trans('global.admin.record id', ['id' => $row->id]) }}</span></label></span>
 					@endif
 				</td>
 				<td class="priority-5">

@@ -209,7 +209,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 			<tr<?php if ($row->trashed()) { echo ' class="trashed"'; } ?> id="row-{{ $row->id }}" data-parent="{{ $row->parent_id }}" data-id="{{ $row->id }}">
 				<td>
 					@if ($canChange)
-						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
+						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"><span class="sr-only">{{ trans('global.admin.record id', ['id' => $row->id]) }}</span></label></span>
 					@endif
 				</td>
 				<td class="priority-5">

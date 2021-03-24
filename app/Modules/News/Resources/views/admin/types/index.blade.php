@@ -63,6 +63,7 @@ app('pathway')
 
 	<div class="card mb-4">
 	<table class="table table-hover adminlist">
+		<caption class="sr-only">{{ trans('news::news.types') }}</caption>
 		<thead>
 			<tr>
 				@if (auth()->user()->can('delete news.types'))
@@ -101,7 +102,7 @@ app('pathway')
 			<tr>
 				@if (auth()->user()->can('delete news.types'))
 					<td>
-						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
+						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"><span class="sr-only">{{ trans('global.admin.record id', ['id' => $row->id]) }}</span></label></span>
 					</td>
 				@endif
 				<td class="priority-5">
