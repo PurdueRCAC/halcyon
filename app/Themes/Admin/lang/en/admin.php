@@ -9,6 +9,7 @@ return [
 	'dark' => 'Dark',
 	'toggle theme' => 'Toggle color mode',
 	// Misc.
+	'admin' => 'Administration',
 	'dashboard' => 'Dashboard',
 	'help' => 'Help',
 	'error occurred' => 'An error has occurred',

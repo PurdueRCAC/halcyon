@@ -11,6 +11,8 @@
 		<meta name="theme-color" content="#000000">
 		<meta name="color-scheme" content="light dark">
 
+		<title>{{ config('app.name') }} - {{ trans('theme::admin.admin') }}@hasSection('title'): @yield('title')@endif</title>
+
 		<!-- Styles -->
 		<?php
 		$styles = array(
