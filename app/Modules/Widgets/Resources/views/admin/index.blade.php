@@ -162,8 +162,8 @@ app('pathway')
 				</td>
 				<td>
 					@if ($row->checked_out)
-						<a class="glyph icon-check-square warning" data-tip="Checked out">
-							Checked out
+						<a class="glyph icon-check-square warning" data-tip="{{ trans('widgets::widgets.checked out') }}">
+							{{ trans('widgets::widgets.checked out') }}
 						</a>
 					@endif
 					@if (auth()->user()->can('edit widgets'))

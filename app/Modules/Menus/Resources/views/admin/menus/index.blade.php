@@ -87,7 +87,7 @@ app('pathway')
 			<tr>
 				<td>
 					@if (auth()->user()->can('edit menus'))
-						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"><span class="sr-only">{{ trans('global.admin.record id', ['id' => $row->id]) }}</span></label></span>
+						{!! Html::grid('id', $i, $row->id) !!}
 					@endif
 				</td>
 				<td class="priority-5">

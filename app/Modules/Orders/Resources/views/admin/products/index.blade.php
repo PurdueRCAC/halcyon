@@ -161,7 +161,7 @@ app('pathway')
 			<tr<?php if ($row->istrashed()) { echo ' class="trashed"'; } ?>>
 				@if (auth()->user()->can('delete orders.products'))
 					<td>
-						<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"><span class="sr-only">{{ trans('global.admin.record id', ['id' => $row->id]) }}</span></label></span>
+						{!! Html::grid('id', $i, $row->id) !!}
 					</td>
 				@endif
 				<td class="priority-5">
