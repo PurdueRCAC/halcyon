@@ -65,7 +65,11 @@ class Breadcrumbs extends Widget
 		{
 			$item = new stdClass();
 			$item->name = htmlspecialchars($this->params->get('homeText', trans('widget.breadcrumbs::breadcrumbs.home')));
-			$item->link = url('/'); //url('index.php?Itemid=' . app('menu')->getDefault()->id);
+			$item->link = $this->params->get('homeUrl', url('/'));
+			if (substr($item->link, 0, 4) != 'http')
+			{
+				$item->link = url($item->link);
+			}
 
 			array_unshift($crumbs, $item);
 		}

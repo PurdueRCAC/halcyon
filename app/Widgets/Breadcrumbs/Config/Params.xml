@@ -11,6 +11,7 @@
 				<option value="1">global.yes</option>
 			</field>
 			<field name="homeText" type="text" label="widget.breadcrumbs::config.home text" description="widget.breadcrumbs::config.home text" />
+			<field name="homeUrl" type="text" label="widget.breadcrumbs::config.home url" description="widget.breadcrumbs::config.home url" />
 			<field name="showLast" type="radio" default="1" label="widget.breadcrumbs::config.show last" description="widget.breadcrumbs::config.show last description">
 				<option value="0">global.no</option>
 				<option value="1">global.yes</option>

@@ -1,8 +1,6 @@
 <?php
 /**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
+ * @package  Breadcrumbs widget
  */
 ?>
 <div class="breadcrumb<?php echo $class_sfx; ?> pathway<?php echo $class_sfx; ?>" aria-label="<?php echo trans('widget.breadcrumbs::breadcrumbs.widget_name'); ?>">

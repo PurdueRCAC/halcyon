@@ -1,11 +1,8 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
 
 return [
+	'home url description' => 'A URL to be used for the "Home" link. If not set, the base URL for the app will be used.',
+	'home url' => 'Home URL',
 	'home text description' => 'This text will be shown as Home entry. If the field is left empty, it will use the default value from the language file.',
 	'home text' => 'Text for Home Entry',
 	'separator description' => 'A text separator',
