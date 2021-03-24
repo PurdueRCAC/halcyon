@@ -2593,6 +2593,62 @@ body table.dataTable tr:first-child td {
 	border-top: none;
 }
 
+.cookiepolicy {
+	margin: 0;
+	padding: 1em 5em 1em 2em;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #f8ee7b;
+	z-index: 10000;
+	width: 100%;
+	color: #333;
+}
+.cookiepolicy-close {
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #e4d53f;
+	text-align: left;
+	padding: 0.5em;
+	font-size: 2em;
+	font-weight: 200;
+	text-decoration: none;
+	border: none !important;
+}
+.cookiepolicy-close:hover {
+	border: none !important;
+	text-decoration: none;
+	background-color: #222;
+	color: #e4d53f;
+}
+.cookiepolicy-close span {
+	display: block;
+	width: 1em;
+	height: 1em;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.cookiepolicy-close span:before {
+	content: "\2715";
+	padding: 0.2em;
+}
+
+/* [!] Catch accessibility violations */
+img:not([alt]) {
+	outline: 2px solid red;
+}
+
+/* Remove list styles on ul, ol elements with a list role,
+which suggests default styling will be removed
+ul[role="list"],
+ol[role="list"] {
+	list-style: none;
+}*/
+
 @media print {
 	.department a:after,
 	.login,
