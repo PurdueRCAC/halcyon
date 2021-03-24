@@ -66,7 +66,7 @@
 						<span class="logo-container">
 							<span class="logo-shim"></span>
 							@if ($file = app('themes')->getActiveTheme()->getParams('logo'))
-								<img src="{{ asset($file) }}" alt="{{ config('app.name') }}" width="47" />
+								<img src="{{ asset($file) }}" alt="" width="47" />
 							@else
 								<?php echo file_get_contents(app_path('Themes/Admin/assets/images/halcyon.svg')); ?>
 							@endif
@@ -83,7 +83,7 @@
 					--></li>
 				</ul>
 
-				<nav id="nav" role="navigation" class="main-navigation">
+				<nav id="nav" class="main-navigation">
 					<div class="inner-wrap">
 						@widget('menu')
 					</div>
@@ -130,7 +130,7 @@
 					@include('partials.notifications')
 					<!-- Notifications ends -->
 
-					<nav role="navigation" class="sub-navigation">
+					<nav id="sub-nav" class="sub-navigation">
 						@widget('submenu')
 					</nav><!-- / .sub-navigation -->
 
