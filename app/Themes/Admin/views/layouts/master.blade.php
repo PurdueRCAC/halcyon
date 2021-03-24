@@ -71,7 +71,7 @@
 								<?php echo file_get_contents(app_path('Themes/Admin/assets/images/halcyon.svg')); ?>
 							@endif
 						</span>
-						{{ config('app.name') }}
+						<span class="app-name">{{ config('app.name') }}</span>
 					</a>
 				</h1>
 
