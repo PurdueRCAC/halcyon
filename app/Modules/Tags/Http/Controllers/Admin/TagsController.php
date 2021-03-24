@@ -128,7 +128,6 @@ class TagsController extends Controller
 
 		$row = $id ? Tag::findOrFail($id) : new Tag();
 		$row->fill($request->input('fields'));
-		//$row->slug = $row->normalize($row->name);
 
 		if (!$row->created_by)
 		{
@@ -161,6 +160,7 @@ class TagsController extends Controller
 				$a = new Tag;
 				$a->parent_id = $id;
 				$a->name = $alias['name'];
+				$a->created_by = auth()->user()->id;
 				$a->save();
 			}
 		}

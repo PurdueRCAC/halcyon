@@ -213,7 +213,10 @@ class TagsController extends Controller
 			return response()->json(['message' => trans('tags::tags.tag already exists')], 415);
 		}
 
-		$row = Tag::create($request->all());
+		$data = $request->all();
+		$data['created_by'] = auth()->user()->id;
+
+		$row = Tag::create($data);
 
 		return new TagResource($row);
 	}
@@ -312,8 +315,11 @@ class TagsController extends Controller
 			return response()->json(['message' => $validator->messages()->first()], 409);
 		}
 
+		$data = $request->all();
+		$data['updated_by'] = auth()->user()->id;
+
 		$row = Type::findOrFail($id);
-		$row->update($request->all());
+		$row->update($data);
 
 		return new TagResource($row);
 	}

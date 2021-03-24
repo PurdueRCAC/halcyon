@@ -55,7 +55,9 @@ class Tag extends Model
 	 * @var array
 	 */
 	protected $rules = array(
-		'name' => 'required'
+		'name' => 'required|string|min:3|max:1500',
+		'slug' => 'nullable|string|max:100',
+		'parent_id' => 'nullable|integer'
 	);
 
 	/**
@@ -68,6 +70,38 @@ class Tag extends Model
 		'updated'  => TagUpdated::class,
 		'deleted'  => TagDeleted::class,
 	];
+
+	/**
+	 * Runs extra setup code when creating/deleting a new model
+	 *
+	 * @return  void
+	 */
+	protected static function booted()
+	{
+		static::created(function ($model)
+		{
+			if ($model->parent_id)
+			{
+				$total = self::query()
+					->where('parent_id', '=', $model->parent_id)
+					->count();
+
+				$model->parent->update(['alias_count' => $total]);
+			}
+		});
+
+		static::deleted(function ($model)
+		{
+			if ($model->parent_id)
+			{
+				$total = self::query()
+					->where('parent_id', '=', $model->parent_id)
+					->count();
+
+				$model->parent->update(['alias_count' => $total]);
+			}
+		});
+	}
 
 	/**
 	 * Generate stemmed report
@@ -207,6 +241,16 @@ class Tag extends Model
 	}
 
 	/**
+	 * Creator profile
+	 *
+	 * @return  object
+	 */
+	public function parent()
+	{
+		return $this->belongsTo(self::class, 'parent_id');
+	}
+
+	/**
 	 * Get a list of aliases
 	 *
 	 * @return  object
@@ -260,33 +304,10 @@ class Tag extends Model
 			$row->delete();
 		}
 
+		$this->deleted_by = auth()->user()->id;
+
 		return parent::delete($options);
 	}
-
-	/**
-	 * Save entry
-	 *
-	 * @return  object
-	 */
-	/*public function save(array $options = array())
-	{
-		$action = $this->isNew() ? 'tag_created' : 'tag_edited';
-
-		$result = parent::save();
-
-		if ($result)
-		{
-			$log = Log::blank();
-			$log->tag_id = $this->id;
-			$log->action = $action;
-			$log->comments = $this->toJson();
-			$log->save();
-		}
-
-		//$this->purgeCache();
-
-		return $result;
-	}*/
 
 	/**
 	 * Retrieves one row loaded by a tag field
@@ -399,26 +420,22 @@ class Tag extends Model
 
 		// Get all the substitutions to this tag
 		// Loop through the records and link them to a different tag
-		if (!Alias::moveTo($this->id, $tag_id))
+		if (!self::moveTo($this->id, $tag_id))
 		{
 			$this->addError(trans('Failed to move aliases attached to tag.'));
 			return false;
 		}
 
-		// Make the current tag a substitute for the new tag
-		$sub = Alias::blank();
-		$sub->name   = $this->name;
-		$sub->tag_id = $tag_id;
-		if (!$sub->save())
-		{
-			$this->addError($sub->getError());
-			return false;
-		}
+		// Make the current tag an alias for the new tag
+		$sub = new self;
+		$sub->name      = $this->name;
+		$sub->parent_id = $tag_id;
+		$sub->save();
 
 		// Update new tag's counts
 		$tag = self::find($tag_id);
 		$tag->tagged_count = $tag->tagged()->count();
-		$tag->alias_count = $tag->aliases()->count();
+		$tag->alias_count  = $tag->aliases()->count();
 		$tag->save();
 
 		// Destroy the old tag
@@ -466,7 +483,7 @@ class Tag extends Model
 	 * @param   string   $tag_string
 	 * @return  boolean
 	 */
-	public function saveSubstitutions($tag_string='')
+	public function saveAliases($tag_string='')
 	{
 		// Get the old list of substitutions
 		$subs = array();
@@ -492,27 +509,19 @@ class Tag extends Model
 				continue; // Substitution already exists
 			}
 
-			$sub = new Alias;
-			$sub->name   = trim($name);
-			$sub->slug   = trim($nrm);
-			$sub->tag_id = $this->id;
-			if (!$sub->save())
-			{
-				$this->addError($sub->getError());
-			}
+			$sub = new self;
+			$sub->name      = trim($name);
+			$sub->parent_id = $this->id;
+			$sub->save();
 		}
 
-		// Run through the old list of substitutions, finding any
+		// Run through the old list of aliases, finding any
 		// not in the new list and delete them
 		foreach ($subs as $key => $sub)
 		{
 			if (!in_array($key, $tags))
 			{
-				if (!$sub->delete())
-				{
-					$this->addError($sub->getError());
-					return false;
-				}
+				$sub->delete();
 			}
 		}
 
@@ -530,9 +539,9 @@ class Tag extends Model
 				// Loop through the associations and link them to a different tag
 				Tagged::moveTo($tag->id, $this->id);
 
-				// Get all the substitutions to this tag
+				// Get all the aliases to this tag
 				// Loop through the records and link them to a different tag
-				Alias::moveTo($tag->id, $this->id);
+				self::moveTo($tag->id, $this->id);
 
 				// Delete the tag
 				$tag->delete();
@@ -540,7 +549,7 @@ class Tag extends Model
 		}
 
 		$this->tagged_count = $this->tagged()->count();
-		$this->alias_count = $this->aliases()->count();
+		$this->alias_count  = $this->aliases()->count();
 
 		return $this->save();
 	}
