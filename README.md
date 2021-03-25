@@ -32,3 +32,42 @@ To be able to run Halcyon you have to meet the following requirements:
 * Tokenizer PHP Extension
 * XML PHP Extension
 * MySql 5.5+ or MariahDB 10.1+
+
+### Install
+
+Clone the repo.
+
+```
+git clone https://github.rcac.purdue.edu/RCAC-Staff/halcyon.git .
+```
+
+Move into the directory.
+
+```
+cd halcyon
+```
+
+#### Docker
+
+This will perform the Composer install and initial database migration (found under the manual setup).
+
+```
+docker-compose up
+```
+
+#### Manual
+
+Run Composer to install dependencies.
+
+```
+php ./bin/composer install --prefer-dist
+```
+
+Modify the database configuration in `config/database.php` or `.env`.
+
+Run migrations to install tables and base data.
+
+```
+php artisan migrate
+php artisan module:migrate
+```
