@@ -4,9 +4,17 @@
 .form-group label {
 	font-weight: bold;
 }
-
+.badge {
+	white-space: normal !important;
+}
 div.order {
 	font-size: 0.85em;
+}
+.order .card-title {
+	font-size: 1.2em;
+}
+.contentInner ul li.list-group-item {
+	margin: 0;
 }
 div.orderheader {
 	margin-top: 2em;
@@ -40,6 +48,7 @@ span.orderstatusgreen {
 	color: #04B404;
 }
 
+/*
 table.orderproduct th.orderproduct {
 	font-weight: bold;
 }
@@ -72,7 +81,7 @@ table.orderproduct p {
 table.orderproduct input {
 	font-weight: normal;
 	height: 2em;
-}
+}*/
 
 ol.order li {
 	position: relative;
@@ -158,18 +167,8 @@ ol.order li.notmystep {
 .cancellable {
 	margin: 0 0 2em 0;
 }
-/*.pending-payment {
-	color: #5a7ef9;
-	background-color: #e7ebf9; blue
-}
-.pending-collection {
-	color: #0486f0;
-	background-color: #deedff;
-}
-.pending-approval {
-	color: #7f51f4;
-	background-color: #dfd5ff;
-}*/
+
+/* Status */
 .pending_payment {
 	color: rgba(25, 132, 184, 1);
 	background-color: rgba(25, 132, 184, 0.1);
@@ -177,17 +176,20 @@ ol.order li.notmystep {
 .pending_collection,
 .pending_approval,
 .pending_boassignment {
-	color: #ffaa00;
 	color: rgba(211, 112, 79, 1);
 	background-color: rgba(211, 112, 79, 0.1);
 }
 .pending_fulfillment {
-	color: rgba(211, 81, 93, 1);
-	background-color: rgba(211, 81, 93, 0.1);
+	color: #bd7e01;
+	background-color: rgba(211, 165, 81, 0.1);
 }
 .complete {
 	color: rgba(82, 157, 35, 1);
 	background-color: rgba(82, 157, 35, 0.1);
+}
+.canceled {
+	color: rgba(211, 81, 93, 1);
+	background-color: rgba(211, 81, 93, 0.1);
 }
 
 

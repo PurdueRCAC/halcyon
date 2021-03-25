@@ -2,6 +2,7 @@
 /* global $ */ // jquery.js
 /* global ROOT_URL */ // common.js
 /* global WSPostURL */ // common.js
+/* global WSPutURL */ // common.js
 /* global WSDeleteURL */ // common.js
 
 /**
@@ -445,22 +446,15 @@ function AddNewProduct(category) {
 	post['public'] = "0";
 
 	post = JSON.stringify(post);
-	WSPostURL(ROOT_URL + "orderproduct", post, AddedNewProduct);
-}
 
-/**
- * Callback after adding a new product
- *
- * @param   {object}  xml
- * @return  {void}
- */
-function AddedNewProduct(xml) {
-	if (xml.status != 200) {
-		// Error handling
-		alert("An error occurred.");
-	} else {
-		window.location.reload();
-	}
+	WSPostURL(ROOT_URL + "orders/products", post, function(xml) {
+		if (xml.status != 200) {
+			// Error handling
+			alert("An error occurred.");
+		} else {
+			window.location.reload(true);
+		}
+	});
 }
 
 /**
@@ -471,27 +465,19 @@ function AddedNewProduct(xml) {
 function AddNewCategory() {
 	// Insert blank new entry and refresh page
 	var post = {};
-	post['parentcategory'] = ROOT_URL + "ordercategory/1";
+	post['parentcategory'] = ROOT_URL + "orders/categories/1";
 	post['name'] = "New Category";
 	post['description'] = "Enter description for new category. This category will not be displayed until at least one public product is created.";
 
 	post = JSON.stringify(post);
-	WSPostURL(ROOT_URL + "ordercategory", post, AddedNewCategory);
-}
-
-/**
- * Callback after adding a new category
- *
- * @param   {object}  xml
- * @return  {void}
- */
-function AddedNewCategory(xml) {
-	if (xml.status != 200) {
-		// Error handling
-		alert("An error occurred.");
-	} else {
-		window.location.reload();
-	}
+	WSPostURL(ROOT_URL + "ordercategory", post, function(xml) {
+		if (xml.status != 200) {
+			// Error handling
+			alert("An error occurred.");
+		} else {
+			window.location.reload(true);
+		}
+	});
 }
 
 /**
@@ -500,7 +486,7 @@ function AddedNewCategory(xml) {
  * @param   {string}  product
  * @return  {void}
  */
-function DeleteProduct(product)  {
+function DeleteProduct(product) {
 	if (confirm("Are you sure you want to delete '" + document.getElementById("SPAN_" + product + "_name").innerHTML + "'?")) {
 		WSDeleteURL(product, function(xml) {
 			if (xml.status != 200) {
@@ -514,27 +500,12 @@ function DeleteProduct(product)  {
 }
 
 /**
- * Callback after deleting a product
- *
- * @param   {object}  xml
- * @return  {void}
- */
-/*function DeletedProduct(xml) {
-	if (xml.status != 200) {
-		// Error handling
-		alert("An error occurred.");
-	} else {
-		window.location.reload();
-	}
-}*/
-
-/**
  * Delete a category
  *
  * @param   {string}  category
  * @return  {void}
  */
-function DeleteCategory(category)  {
+function DeleteCategory(category) {
 	if (confirm("Are you sure you want to delete '" + document.getElementById("SPAN_" + category + "_name").innerHTML + "' and all its products?")) {
 		WSDeleteURL(category, function(xml) {
 			if (xml.status != 200) {
@@ -548,22 +519,6 @@ function DeleteCategory(category)  {
 }
 
 /**
- * Callback after deleting a category
- *
- * @param   {object}  xml
- * @param   {string}  change
- * @return  {void}
- */
-/*function DeletedCategory(xml) {
-	if (xml.status != 200) {
-		// Error handling
-		alert("An error occurred.");
-	} else {
-		window.location.reload();
-	}
-}*/
-
-/**
  * Sequence items
  *
  * @param   {string}  item
@@ -575,7 +530,7 @@ function Sequence(item, change) {
 	post['sequence'] = change;
 	post = JSON.stringify(post);
 
-	WSPostURL(item, post, Sequenced, change);
+	WSPutURL(item, post, Sequenced, change);
 }
 
 /**
@@ -1515,11 +1470,11 @@ function SaveAccounts() {
  *
  * @return  {void}
  */
-function CancelOrder() {
-	var order = document.getElementById("order").value;
+function CancelOrder(button) {
+	var url = document.getElementById("order").getAttribute('data-api');
 
-	if (confirm("Are you sure you wish to cancel this order?")) {
-		WSDeleteURL(order, CanceledOrder);
+	if (confirm(button.getAttribute('data-confirm'))) {
+		WSDeleteURL(url, CanceledOrder);
 	}
 }
 
@@ -1531,10 +1486,48 @@ function CancelOrder() {
  */
 function CanceledOrder(xml) {
 	if (xml.status == 200) {
-		window.location = "/order/view/";
+		window.location.reload();// = "/orders/";
 	} else {
 		alert("An error occurred while canceling order.");
 	}
+}
+
+/**
+ * Cancel an order
+ *
+ * @return  {void}
+ */
+function RestoreOrder(button) {
+	var url = document.getElementById("order").getAttribute('data-api');
+
+	var post = JSON.stringify({ "restore": 1 });
+
+	WSPutURL(url, post, function (xml) {
+		if (xml.status == 200) {
+			window.location.reload();
+		} else {
+			alert("An error occurred while restoring order.");
+		}
+	});
+}
+
+/**
+ * Reset an account
+ *
+ * @param   {string}  id
+ * @param   {string}  button
+ * @return  {void}
+ */
+function ResetAccount(url, button) {
+	var post = JSON.stringify({ "reset": 1 });
+
+	WSPutURL(url, post, function (xml) {
+		if (xml.status == 200) {
+			window.location.reload();
+		} else {
+			alert("An error occurred while resetting account.");
+		}
+	});
 }
 
 /**
@@ -1544,33 +1537,38 @@ function CanceledOrder(xml) {
  * @param   {string}  button
  * @return  {void}
  */
-function ApproveAccount(url, id) {
+function ApproveAccount(url, button) {
 	var post = JSON.stringify({"approved": 1});
 
-	WSPutURL(url, post, ApprovedAccount, id);
-}
+	/*WSPutURL(url, post, function(xml, button) {
+		if (xml.status == 200) {*/
+			var id = button.getAttribute('data-id');
 
-/**
- * Callback after approving an account
- *
- * @param   {object}  xml
- * @param   {string}  id
- * @return  {void}
- */
-function ApprovedAccount(xml, id) {
-	if (xml.status == 200) {
-		document.getElementById("status_" + id).innerHTML = "Approved";
-		document.getElementById("button_" + id).style.visibility = "hidden";
+			button.classList.add('hide');
+			button.disabled = true;
 
-		var accountstatus = $('[name=accountid]');
-		for (var x=0;x<accountstatus.length;x++) {
-			if (accountstatus[x].id == id) {
-				accountstatus[x].value = "PENDING_COLLECTION";
+			document.getElementById("status_" + id).innerHTML = button.getAttribute('data-txt');
+			//document.getElementById("button_" + id).style.visibility = "hidden";
+
+			document.getElementById("button_" + id + "_deny").classList.add('hide');
+			document.getElementById("button_" + id + "_deny").disabled = true;
+
+			document.getElementById("button_" + id + "_reset").classList.remove('hide');
+			document.getElementById("button_" + id + "_reset").disabled = false;
+
+			document.getElementById("button_" + id + "_remind").classList.add('hide');
+			document.getElementById("button_" + id + "_remind").disabled = true;
+
+			var accountstatus = $('[name=accountid]');
+			for (var x = 0; x < accountstatus.length; x++) {
+				if (accountstatus[x].id == id) {
+					accountstatus[x].value = "PENDING_COLLECTION";
+				}
 			}
+		/*} else {
+			alert("An error occurred while approving account.");
 		}
-	} else {
-		alert("An error occurred while approving account.");
-	}
+	}, button);*/
 }
 
 /**
@@ -1581,14 +1579,14 @@ function ApprovedAccount(xml, id) {
  * @return  {void}
  */
 function RemindAccount(url, button) {
-	var post = JSON.stringify({"notice": 3});
+	var post = JSON.stringify({ "notice": 3 });
 
-	WSPutURL(url, post, function(xml, button) {
+	WSPutURL(url, post, function (xml, button) {
 		if (xml.status == 200) {
-			//document.getElementById("status_" + id).innerHTML = "Reminded";
 			var id = button.getAttribute('data-id');
+
 			document.getElementById("status_" + id).innerHTML = button.getAttribute('data-txt');
-			document.getElementById("button_" + id).classList.add('hide');//.style.visibility = "hidden";
+			document.getElementById("button_" + id).classList.add('hide');
 		} else {
 			alert("An error occurred while approving account.");
 		}
@@ -1596,46 +1594,24 @@ function RemindAccount(url, button) {
 }
 
 /**
- * Callback after remind  account
- *
- * @param   {object}  xml
- * @param   {string}  id
- * @return  {void}
- */
-/*function RemindedAccount(xml, id) {
-	if (xml.status == 200) {
-		document.getElementById("status_" + id).innerHTML = "Reminded";
-		document.getElementById("button_" + id).style.visibility = "hidden";
-	} else {
-		alert("An error occurred while approving account.");
-	}
-}*/
-
-/**
  * Remind order
  *
  * @param   {string}  id
  * @return  {void}
  */
-function RemindOrder(id) {
-	var post = JSON.stringify({"notice": 1});
+function RemindOrder(url, button) {
+	var post = JSON.stringify({ "notice": 1 });
 
-	WSPostURL(id, post, RemindedOrder);
-}
-
-/**
- * Callback after remind order
- *
- * @param   {object}  xml
- * @return  {void}
- */
-function RemindedOrder(xml) {
-	if (xml.status == 200) {
-		document.getElementById("remindorderspan").innerHTML = "Reminded";
-		document.getElementById("remindorder").style.display = "none";
-	} else {
-		alert("An error occurred while approving account.");
-	}
+	WSPutURL(url, post, function(xml, button) {
+		if (xml.status == 200) {
+			document.getElementById("remindorderspan").innerHTML = button.getAttribute('data-txt');
+			//document.getElementById("remindorder").style.display = "none";
+			button.classList.add('hide');
+			button.disabled = true;
+		} else {
+			alert("An error occurred while approving account.");
+		}
+	}, button);
 }
 
 /**
@@ -1646,66 +1622,63 @@ function RemindedOrder(xml) {
  * @return  {void}
  */
 function DenyAccount(url, button) {
-	var post = JSON.stringify({"denied": 1});
+	var post = JSON.stringify({ "denied": 1 });
 
-	WSPutURL(url, post, function(xml, button) {
-		if (xml.status == 200) {
+	/*WSPutURL(url, post, function (xml, button) {
+		if (xml.status == 200) {*/
 			var id = button.getAttribute('data-id');
+
+			button.classList.add('hide');
+			button.disabled = true;
+
 			document.getElementById("status_" + id).innerHTML = button.getAttribute('data-txt');
-			document.getElementById("button_" + id).classList.add('hide');
-		} else {
+			//document.getElementById("button_" + id).classList.add('hide');
+
+			document.getElementById("button_" + id + "_approve").classList.add('hide');
+			document.getElementById("button_" + id + "_approve").disabled = true;
+
+			document.getElementById("button_" + id + "_remind").classList.add('hide');
+			document.getElementById("button_" + id + "_remind").disabled = true;
+
+			document.getElementById("button_" + id + "_reset").classList.remove('hide');
+			document.getElementById("button_" + id + "_reset").disabled = false;
+
+			var accountstatus = $('[name=accountid]');
+			for (var x = 0; x < accountstatus.length; x++) {
+				if (accountstatus[x].id == id) {
+					accountstatus[x].value = "DENIED";
+				}
+			}
+		/*} else {
 			alert("An error occurred while denying account.");
 		}
-	}, button);
+	}, button);*/
 }
-
-/**
- * Callback after denying account
- *
- * @param   {object}  xml
- * @param   {string}  id
- * @return  {void}
- */
-/*function DeniedAccount(xml, id) {
-	if (xml.status == 200) {
-		document.getElementById("status_" + id).innerHTML = "Denied";
-		document.getElementById("button_" + id).style.visibility = "hidden";
-	} else {
-		alert("An error occurred while denying account.");
-	}
-}*/
 
 /**
  * Collect account
  *
- * @param   {string}  id
+ * @param   {string}  url
  * @param   {string}  button
  * @return  {void}
  */
-function CollectAccount(id, button) {
+function CollectAccount(url, button) {
+	var id = button.getAttribute('data-id');
+
 	var docid = document.getElementById("docid_" + id).value;
 	var docdate = document.getElementById("docdate_" + id).value;
 
 	if (docid != "" && docdate.match(/\d{4}-\d{2}-\d{2}/)) {
 		var post = JSON.stringify({"paid": 1, "docid": docid, "docdate": docdate});
 
-		WSPutURL(id, post, CollectedAccount, id);
-	}
-}
-
-/**
- * Callback after collecting account
- *
- * @param   {object}  xml
- * @param   {string}  id
- * @return  {void}
- */
-function CollectedAccount(xml, id) {
-	if (xml.status == 200) {
-		document.getElementById("status_" + id).innerHTML = "Paid";
-		document.getElementById("button_" + id).style.display = "none";
-	} else {
-		alert("An error occurred while collecting account.");
+		WSPutURL(url, post, function(xml, id) {
+			if (xml.status == 200) {
+				document.getElementById("status_" + id).innerHTML = "Paid";
+				document.getElementById("button_" + id).style.display = "none";
+			} else {
+				alert("An error occurred while collecting account.");
+			}
+		}, id);
 	}
 }
 
@@ -1742,37 +1715,31 @@ function CopyDocDate(input) {
 /**
  * Fulfill item
  *
- * @param   {string}  id
+ * @param   {string}  url
  * @param   {string}  button
  * @return  {void}
  */
-function FulfillItem(id, button) {
+function FulfillItem(url, button) {
 	var post = JSON.stringify({"fulfilled": 1});
 
-	WSPostURL(id, post, FulfilledItem, id);
-}
+	WSPutURL(url, post, function(xml, button) {
+		if (xml.status == 200) {
+			var id = button.getAttribute('data-id');
 
-/**
- * Callback after fulfilling item
- *
- * @param   {object}  xml
- * @param   {string}  id
- * @return  {void}
- */
-function FulfilledItem(xml, id) {
-	if (xml.status == 200) {
-		document.getElementById("status_" + id).innerHTML = "Fulfilled";
-		document.getElementById("button_" + id).style.visibility = "hidden";
+			document.getElementById("status_" + id).innerHTML = button.getAttribute('data-txt');
+			document.getElementById("button_" + id).classList.add('hide');//style.visibility = "hidden";
+			document.getElementById("button_" + id).disabled = true;
 
-		var itemstatus = $('[name=itemid]');
-		for (var x=0;x<itemstatus.length;x++) {
-			if (itemstatus[x].id == id) {
-				itemstatus[x].value = "FULFILLED";
+			var itemstatus = $('[name=itemid]');
+			for (var x = 0; x < itemstatus.length; x++) {
+				if (itemstatus[x].id == id) {
+					itemstatus[x].value = "FULFILLED";
+				}
 			}
+		} else {
+			alert("An error occurred while fulfilling item.");
 		}
-	} else {
-		alert("An error occurred while fulfilling item.");
-	}
+	}, button);
 }
 
 var deleteaccounts = Array();
@@ -1987,7 +1954,7 @@ function EditAccounts() {
 					pendingupdates++;
 					num_changes++;
 
-					console.log(post);
+					//console.log(post);
 					post = JSON.stringify(post);
 
 					WSPostURL(accountinputs[x].getAttribute('data-api'), post, UpdatedAccountInfo);
@@ -1999,7 +1966,12 @@ function EditAccounts() {
 			CancelEditAccounts();
 		}
 	} else {
+		// Change the "edit" button into a "save" button
 		b.innerHTML = b.getAttribute('data-save-txt');
+		b.classList.remove('btn-secondary');
+		b.classList.add('btn-success');
+
+		// Show the cancel button
 		$(c).removeClass('hide');
 
 		//if (new_row != null) {
@@ -2105,12 +2077,7 @@ function EditRemoveAccount(btn, e) {
 		//WSDeleteURL(btn.attr('data-api'));
 	}
 	row.remove();
-	/*for (var x=0;x<rows.length;x++) {
-		if (rows[x] == e.parentNode.parentNode.parentNode) {
-			e.parentNode.parentNode.parentNode.parentNode.removeChild(rows[x+1]);
-			e.parentNode.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode.parentNode);
-		}
-	}*/
+
 	UpdateBalance();
 }
 
@@ -2276,11 +2243,13 @@ function EditQuantities() {
 	var inputs = $('[name=quantity]');
 
 	if (b.getAttribute('data-state') != 'active') {
-		if (b2 && b2.innerHTML == "Edit Accounts") {
+		/*if (b2 && b2.innerHTML == "Edit Accounts") {
 			EditAccounts();
-		}
+		}*/
 		b.setAttribute('data-state', 'active');
 		b.innerHTML = b.getAttribute('data-active');
+		b.classList.remove('btn-secondary');
+		b.classList.add('btn-success');
 		//c.style.display = "inline";
 
 		$('.item-edit-hide').addClass('hide');
@@ -2416,7 +2385,7 @@ function SaveOrderGroup() {
 		if (document.getElementById("edit_group").innerHTML != name) {
 			var post = {'groupid': name}; //JSON.stringify({'group': name});
 			pendingupdates++;
-			WSPostURL(id, post, UpdatedAccountInfo);
+			WSPutURL(id, post, UpdatedAccountInfo);
 		} else {
 			document.getElementById("search_group").style.display = "none";
 			document.getElementById("edit_group").style.display = "inline";
@@ -2438,10 +2407,10 @@ function Renew(sequence) {
 
 	//post = JSON.stringify(post);
 
-	WSPostURL(ROOT_URL + "order", post, function(xml) {
+	WSPostURL(ROOT_URL + "orders", post, function(xml) {
 		if (xml.status == 200) {
 			var results =  JSON.parse(xml.responseText);
-			window.location = "/order/" + results['id'].split("/")[3];
+			window.location = "/orders/" + results['id'];
 		} else {
 			alert("An error occurred while renewing. Please wait a few minutes and try again. If error continues, please contact rcac-help@purdue.edu.");
 		}
@@ -2488,7 +2457,7 @@ function Filter(page, field) {
 	} else {
 		url = "?" + field + "=" + value;
 	}
-	url = "/order/" + page + "/" + url;
+	url = "/orders/" + page + "/" + url;
 
 	window.location = url;
 }
