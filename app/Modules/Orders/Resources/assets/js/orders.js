@@ -1671,14 +1671,16 @@ function CollectAccount(url, button) {
 	if (docid != "" && docdate.match(/\d{4}-\d{2}-\d{2}/)) {
 		var post = JSON.stringify({"paid": 1, "docid": docid, "docdate": docdate});
 
-		WSPutURL(url, post, function(xml, id) {
+		WSPutURL(url, post, function(xml, button) {
 			if (xml.status == 200) {
-				document.getElementById("status_" + id).innerHTML = "Paid";
-				document.getElementById("button_" + id).style.display = "none";
+				id = button.getAttribute('data-id');
+
+				document.getElementById("status_" + id).innerHTML = button.getAttribute('data-txt');
+				document.getElementById("button_" + id).classList.add('hide');
 			} else {
 				alert("An error occurred while collecting account.");
 			}
-		}, id);
+		}, button);
 	}
 }
 
@@ -2380,12 +2382,14 @@ function SaveOrderGroup() {
 		document.getElementById("search_group").style.display = "inline";
 		document.getElementById("edit_group").style.display = "none";
 	} else {
-		var id = document.getElementById("order").getAttribute('data-api');//value;
-		var name = document.getElementById("search_group").value;
-		if (document.getElementById("edit_group").innerHTML != name) {
-			var post = {'groupid': name}; //JSON.stringify({'group': name});
+		var url = document.getElementById("order").getAttribute('data-api');
+		var id = document.getElementById("search_group").getAttribute('data-groupid');
+
+		if (document.getElementById("edit_group").getAttribute('data-groupid') != id) {
+			var post = JSON.stringify({'groupid': id});
 			pendingupdates++;
-			WSPutURL(id, post, UpdatedAccountInfo);
+
+			WSPutURL(url, post, UpdatedAccountInfo);
 		} else {
 			document.getElementById("search_group").style.display = "none";
 			document.getElementById("edit_group").style.display = "inline";

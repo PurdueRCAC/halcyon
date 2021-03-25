@@ -50,45 +50,141 @@ app('pathway')
 			</fieldset>
 		</div>
 		<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+			
+			<div class="card">
+				<div class="card-header">
+					<div class="row">
+						<div class="col-md-8">
+							<h3 class="card-title">Recurring Item #{{ $item->id }}</h3>
+						</div>
+						<div class="col-md-4 text-right">
+							@if ($item->datepaiduntil == $item->datebilleduntil && $item->datepaiduntil && $item->datepaiduntil != '0000-00-00 00:00:00')
+								<button class="btn btn-sm btn-secondary recur-renew tip" title="Generate an order to extend service for this recurring item" data-item="{{ $item->id }}">Renew Now</button>
+							@endif
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="form-group">
+						<p><strong>{{ trans('orders::orders.product') }}:</strong></p>
+						<p class="form-text">{{ $item->product->name }}</p>
+					</div>
+					<div class="form-group">
+						<p><strong>{{ trans('orders::orders.group') }}:</strong></p>
+						<p class="form-text">
+							@foreach ($item->ordergroups as $group)
+								{{ $group }}<br />
+							@endforeach
+						</p>
+					</div>
+			
+					@if ($item->start())
+					<div class="row">
+						<div class="col">
+							<p><strong>{{ trans('orders::orders.started') }}:</strong></p>
+							<p>
+								{{ $item->start()->format('F j, Y') }}
+							</p>
+						</div>
+						<div class="col">
+							<p><strong>{{ trans('orders::orders.paid through') }}:</strong></p>
+							<p>
+								{{ $item->paiduntil->format('F j, Y') }}
+							</p>
+						</div>
+						@if ($item->paiduntil != $item->billeduntil)
+							<div class="col">
+								<p><strong>{{ trans('orders::orders.billed through') }}:</strong></p>
+								<p>
+									{{ $item->billeduntil->format('F j, Y') }}
+								</p>
+							</div>
+						@endif
+					</div>
+					@endif
+				</div>
+			</div>
+
 			@if (count($items))
-				<table class="table table-hover mt-0">
-					<caption class="sr-only">{{ trans('orders::orders.recurring items') }}</caption>
+				<table class="table table-hover">
+					<caption>{{ trans('orders::orders.order history') }}</caption>
 					<thead>
 						<tr>
 							<th scope="col" class="priority-5">
-								{{ trans('orders::orders.id') }}
+								{{ trans('orders::orders.order') }}
 							</th>
 							<th scope="col" class="priority-4">
-								{{ trans('orders::orders.product') }}
+								{{ trans('orders::orders.status') }}
 							</th>
 							<th scope="col">
-								{{ trans('orders::orders.billed until') }}
+								{{ trans('orders::orders.quantity') }}
 							</th>
-							<th scope="col" class="priority-4">
-								{{ trans('orders::orders.submitter') }}
+							<th scope="col" class="priority-4" colspan="2">
+								{{ trans('orders::orders.service') }}
+							</th>
+							<th scope="col" class="priority-4 text-right">
+								{{ trans('orders::orders.price') }}
 							</th>
 						</tr>
 					</thead>
 					<tbody>
+					@php
+						$total = 0;
+					@endphp
 					@foreach ($items as $i => $row)
 						<tr>
 							<td class="priority-5">
-								
-								{{ $row['id'] }}
-
+								{{ $row->orderid }}
 							</td>
 							<td>
-								
+								@if ($row->isFulfilled())
+									Paid
+								@elseif ($row->order->isCanceled())
+									Canceled
+								@else
+									Billed
+								@endif
+							</td>
+							<td>
+								{{ $row->quantity }}
 							</td>
 							<td class="priority-4">
-								
+								@if ($row->order->isCanceled())
+									-
+								@else
+									{{ $row->start->format('Y-m-d') }}
+								@endif
 							</td>
 							<td class="priority-4">
-								
+								@if ($row->order->isCanceled())
+									-
+								@else
+									{{ $row->end->format('Y-m-d') }}
+								@endif
+							</td>
+							<td class="text-right">
+								@if ($row->order->isCanceled())
+									-
+								@else
+									$&nbsp;{{ $item->formatCurrency($row->price) }}
+								@endif
+								@php
+									$total += $row->price;
+								@endphp
 							</td>
 						</tr>
 					@endforeach
 					</tbody>
+					<tfoot>
+						<tr>
+							<th scope="row" colspan="5" class="text-right">
+								<strong>Total</strong>
+							</th>
+							<td class="text-right">
+								$&nbsp;{{ $item->formatCurrency($total) }}
+							</td>
+						</tr>
+					</tfoot>
 				</table>
 			@else
 				<p class="alert alert-info">No orders found.</p>

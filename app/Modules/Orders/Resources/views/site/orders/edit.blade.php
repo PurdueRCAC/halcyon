@@ -138,7 +138,7 @@ $(document).ready(function() {
 	});
 	$('.account-collect').on('click', function(e){
 		e.preventDefault();
-		CollectAccount($(this).data('id'), this);
+		CollectAccount($(this).data('api'), this);
 	});
 	$('.account-reset').on('click', function(e){
 		e.preventDefault();
@@ -279,8 +279,48 @@ $(document).ready(function() {
 		height: 150,
 		delay: 100,
 		minLength: 2,
-		filter: /^[a-z0-9\-_ \.,\'\(\)]+$/i
+		filter: /^[a-z0-9\-_ \.,\'\(\)]+$/i,
+		select: function (event, ui) {
+			event.preventDefault();
+
+			$("#search_group")
+				.attr('data-groupid', ui['item'].id)
+				.val(ui['item'].label);
+		}
 	});
+
+	/*var group = $("#search_group");
+	if (group.length) {
+		var cl = group.clone()
+			.attr('type', 'hidden')
+			.val(group.val().replace(/([^:]+):/, ''));
+		group
+			.attr('name', 'groupid' + 'copy')
+			.attr('id', group.attr('id') + 'copy')
+			.val(group.val().replace(/(:\d+)$/, ''))
+			.after(cl);
+		group.autocomplete({
+			minLength: 2,
+			source: function( request, response ) {
+				return $.getJSON(group.attr('data-uri').replace('%s', encodeURIComponent(request.term)), function (data) {
+					response($.map(data.data, function (el) {
+						return {
+							label: el.name,
+							name: el.name,
+							id: el.id,
+						};
+					}));
+				});
+			},
+			select: function (event, ui) {
+				event.preventDefault();
+				// Set selection
+				group.val(ui.item.label); // display the selected text
+				cl.val(ui.item.id); // save selected id to input
+				return false;
+			}
+		});
+	}*/
 
 	AccountApproverSearch();
 });
@@ -429,8 +469,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 			<form action="{{ route('site.orders.store') }}" method="post" name="adminForm" id="order-form" class="order">
 				<input type="hidden" name="id" id="order" data-api="{{ route('api.orders.update', ['id' => $order->id]) }}" value="{{ $order->id }}" />
 
-				<div class="pane pane-default card">
-					<div class="pane-heading card-header">
+				<div class="card">
+					<div class="card-header">
 						<div class="row">
 							<div class="col col-md-6">
 								<h3 class="pane-title card-title">{{ '#' . $order->id }}</h3>
@@ -456,7 +496,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							</div>
 						</div>
 					</div>
-					<div class="pane-body card-body">
+					<div class="card-body">
 						<div class="row">
 							<div class="col col-md-6">
 								<div class="form-group">
@@ -492,8 +532,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												<input type="text" name="search_user" id="search_user" class="form-control form-users" value="{{ ($order->user ? $order->user->name . ':' . $order->userid : '') }}" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
 											</span>
 
-											<a href="#edit_user" id="order_user_save" class="order-edit" title="Edit" data-txt-save="Save Change">
-												<i id="user_save" class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit</span>
+											<a href="#edit_user" id="order_user_save" class="order-edit" title="{{ trans('global.button.edit') }}" data-txt-save="Save Change">
+												<i id="user_save" class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>
 											</a>
 										</p>
 										@if ($order->user)
@@ -525,7 +565,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									<label for="search_group">{{ trans('orders::orders.group') }}:</label>
 									@if (auth()->user()->can('manage orders') && $order->status != 'canceled')
 										<p class="form-text">
-											<span id="edit_group">
+											<span id="edit_group" data-groupid="{{ $order->groupid }}">
 												@if ($order->groupid)
 													{{ $order->group->name }}
 												@else
@@ -533,10 +573,10 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												@endif
 											</span>
 
-											<input type="text" name="search_group" id="search_group" class="form-control form-groups stash" value="{{ $order->group ? $order->group->name : '' }}" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
+											<input type="text" name="search_group" id="search_group" class="form-control form-groups stash" data-groupid="{{ $order->groupid }}" value="{{ $order->group ? $order->group->name : '' }}" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
 
-											<a href="#edit_group" id="order_group_save" class="order-edit" title="Edit" data-txt-save="Save Change">
-												<i id="group_save" class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit</span>
+											<a href="#edit_group" id="order_group_save" class="order-edit" title="{{ trans('global.button.edit') }}" data-txt-save="Save Change">
+												<i id="group_save" class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>
 											</a>
 										</p>
 									@else
@@ -556,8 +596,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 
 				<?php $history = $order->history()->orderBy('created_at', 'desc')->get(); ?>
 
-				<div class="pane pane-default card">
-					<div class="pane-heading card-header">
+				<div class="card">
+					<div class="card-header">
 						<div class="row">
 							<div class="col col-md-6">
 								<h3 class="card-title">{{ trans('orders::orders.items') }}</h3>
@@ -590,7 +630,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							</div>
 						</div>
 					</div>
-					<div class="panel-body card-body">
+					<div class="card-body">
 						<table class="table">
 							<caption class="sr-only">{{ trans('orders::orders.items') }}</caption>
 							<thead>
@@ -693,7 +733,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										<td class="text-right text-nowrap">
 											<span class="item-edit-hide">{{ config('orders.currency', '$') }} <span name="itemtotal">{{ $item->formattedTotal }}</span></span>
 											@if ($item->origorderitemid)
-												<a href="/order/recur/{{ $order->id }}" class="tip" title="This is a recurring item.">
+												<a href="{{ route('site.orders.recurring.read', ['id' => $order->id]) }}" class="text-success tip" title="This is a recurring item.">
 													<i class="fa fa-undo" aria-hidden="true"></i><span class="sr-only">This is a recurring item.</span>
 												</a>
 											@endif
@@ -786,8 +826,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				</div><!-- / .card -->
 
 				@if (($order->status != 'canceled' || count($order->accounts) > 0) && $order->total)
-				<div class="pane pane-default card">
-					<div class="pane-heading card-header">
+				<div class="card">
+					<div class="card-header">
 						<div class="row">
 							<div class="col col-md-6">
 								<h3 class="card-title">
@@ -812,7 +852,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							</div>
 						</div>
 					</div>
-					<div class="pane-body card-body">
+					<div class="card-body">
 						<table class="table">
 							<caption class="sr-only">{{ trans('orders::orders.payment information') }}</caption>
 							<thead>
@@ -902,19 +942,13 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												</div>
 											@elseif ($s == 'pending_collection')
 												@if ($order->status == 'pending_collection' && auth()->user()->can('manage orders'))
-													<div class="form-group mt-3 account-edit-hide" id="button_{{ $account->id }}">
-														<label for="docid_{{ $account->id }}" class="sr-only">Doc ID</label>
-														<input type="text" class="doc copy-doc form-control" name="docid" id="docid_{{ $account->id }}" placeholder="Doc ID" size="15" maxlength="12" />
-
-														<label for="docdate_{{ $account->id }}" class="sr-only">Doc Date</label>
-														<input type="text" class="doc copy-docdate form-control date-pick" name="docdate" id="docdate_{{ $account->id }}" placeholder="Doc Date (YYYY-MM-DD)" size="15" />
-
-														<button class="btn btn-sm btn-secondary account-collect" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}">{{ trans('orders::orders.collect') }}</button>
+													<div class="form-group mt-3 account-edit-hide">
+														<button name="adbutton" id="button_{{ $account->id }}_reset" class="btn btn-sm btn-warning account-reset" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-confirm="Are you sure you want to reset approved/denied status for this account?">Reset</button>
 													</div>
 												@endif
-											@elseif (($s == 'denied' || $s == 'approved') && auth()->user()->can('manage orders'))
+											@elseif ($s == 'denied' && auth()->user()->can('manage orders'))
 												<div class="form-group mt-3 account-edit-hide" id="button_{{ $account->id }}">
-													<button name="adbutton" id="button_{{ $account->id }}_reset" class="btn btn-sm btn-warning account-reset" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-confirm="Are you sure you want to reset approved/paid/denied status for this account?">Reset</button>
+													<button name="adbutton" id="button_{{ $account->id }}_reset" class="btn btn-sm btn-warning account-reset" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-confirm="Are you sure you want to reset approved/denied status for this account?">Reset</button>
 												</div>
 											@endif
 										</td>
@@ -931,8 +965,19 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											@endif
 											<br />
 											<label class="sr-only" for="justification{{ $account->id }}">Budget justification:</label>
-											<span class="account-edit-hide form-text text-muted justification_span">{{ $account->budgetjustification ? $account->budgetjustification : trans('global.none') }}</span>
+											<span class="account-edit-hide form-text text-muted justification_span">{{ $account->budgetjustification ? $account->budgetjustification : '' }}</span>
 											<textarea name="justification" id="justification{{ $account->id }}" rows="3" maxlength="2000" cols="68" class="account-edit-show hide form-control balance-update">{{ $account->budgetjustification }}</textarea>
+											@if ($order->status == 'pending_collection' && auth()->user()->can('manage orders'))
+												<div class="form-inline mt-3 account-edit-hide" id="button_{{ $account->id }}">
+													<label for="docid_{{ $account->id }}" class="sr-only">Doc ID</label>
+													<input type="text" class="doc copy-doc form-control" name="docid" id="docid_{{ $account->id }}" placeholder="Doc ID" size="15" maxlength="12" />
+
+													<label for="docdate_{{ $account->id }}" class="sr-only">Doc Date</label>
+													<input type="text" class="doc copy-docdate form-control date-pick" name="docdate" id="docdate_{{ $account->id }}" placeholder="Doc Date (YYYY-MM-DD)" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" size="10" />
+
+													<button class="btn btn-secondary account-collect" data-txt="Paid" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}">{{ trans('orders::orders.collect') }}</button>
+												</div>
+											@endif
 										</td>
 										<!-- <td class="orderproductitem">
 											<span name="account_span">{{ $account->purchasefund }}</span>
@@ -1070,8 +1115,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				</div><!-- / .card -->
 				@endif
 
-				<div class="pane pane-default card">
-					<div class="pane-heading card-header">
+				<div class="card">
+					<div class="card-header">
 						@if ($canEdit)
 							<div class="row">
 								<div class="col-md-6">
@@ -1102,7 +1147,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							</h3>
 						@endif
 					</div>
-					<div class="pane-body card-body">
+					<div class="card-body">
 						<div id="help1" title="Order Notes" class="dialog dialog-help">
 							<p>Use this section to leave any special instructions, extra contact information, or any other notes for this order. ITaP and your business office staff will be able to view these notes.</p>
 						</div>
@@ -1119,8 +1164,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				</div><!-- / .card -->
 
 				@if (auth()->user()->can('manage orders'))
-					<div class="pane pane-default card">
-						<div class="pane-heading card-header">
+					<div class="card">
+						<div class="card-header">
 							<div class="row">
 								<div class="col-md-6">
 									<h3 class="pane-title card-title">{{ trans('orders::orders.staff notes') }}</h3>
@@ -1137,7 +1182,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								</div>
 							</div>
 						</div>
-						<div class="pane-body card-body">
+						<div class="card-body">
 							<p class="ordernotes">
 								<span id="SPAN_{{ $order->id }}_staffnotes">{!! $order->staffnotes ? nl2br($order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</span>
 
@@ -1148,100 +1193,122 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 					</div><!-- / .card -->
 				@endif
 
-				@if ($order->id)
+				@if (auth()->user()->can('manage orders'))
 					<div id="order-history" class="card">
 						<div class="card-header">
 							<h3 class="card-title">{{ trans('history::history.history') }}</h3>
 						</div>
-							<ul class="list-group list-group-flush">
-								<?php
-								if (count($history)):
-									$sorted = $history->sortByDesc('updated_at');
+						<ul class="list-group list-group-flush">
+							<?php
+							if (count($history)):
+								$sorted = $history->sortByDesc('updated_at');
 
-									foreach ($sorted as $action):
-										$actor = trans('global.unknown');
+								foreach ($sorted as $action):
+									$actor = trans('global.unknown');
 
-										if ($action->user):
-											$actor = e($action->user->name);
+									if ($action->user):
+										$actor = e($action->user->name);
+									endif;
+
+									if ($action->action == 'created'):
+										$dt = $action->created_at;// && $action->created_at != '0000-00-00 00:00:00' ? $action->created_at : trans('global.unknown');
+									elseif ($action->action == 'updated'):
+										$dt = $action->updated_at;
+									endif;
+
+									$fields = array_keys(get_object_vars($action->new));
+									foreach ($fields as $i => $k):
+										if (in_array($k, ['created_at', 'updated_at', 'deleted_at'])):
+											unset($fields[$i]);
 										endif;
+									endforeach;
+									$old = Carbon\Carbon::now()->subDays(2); //->toDateTimeString();
 
-										if ($action->action == 'created'):
-											$dt = $action->created_at;// && $action->created_at != '0000-00-00 00:00:00' ? $action->created_at : trans('global.unknown');
-										elseif ($action->action == 'updated'):
-											$dt = $action->updated_at;
-										endif;
+									$type = $action->historable_type;
+									$type = explode('\\', $type);
+									$type = end($type);
 
-										$fields = array_keys(get_object_vars($action->new));
-										foreach ($fields as $i => $k)
-										{
-											if (in_array($k, ['created_at', 'updated_at', 'deleted_at']))
-											{
-												unset($fields[$i]);
-											}
-										}
-										$old = Carbon\Carbon::now()->subDays(2); //->toDateTimeString();
+									$entity = strtolower($type);
 
-										$type = $action->historable_type;
-										$type = explode('\\', $type);
-										$type = end($type);
-
-										$entity = strtolower($type);
-
-										$did = '';
-										if ($entity == 'account' && $action->action == 'created')
+									$did = '';
+									if ($entity == 'account')
+									{
+										if ($action->action == 'created')
 										{
 											$did = '<span class="text-info">added</span> payment account #' . $action->historable_id;
 										}
-										if ($entity == 'item' && $action->action == 'created')
+										if ($action->action == 'updated')
+										{
+											$did = '<span class="text-info">edited</span> a payment account';
+										}
+										if ($action->action == 'deleted')
+										{
+											$did = '<span class="text-danger">removed</span> a payment account';
+										}
+									}
+									if ($entity == 'item')
+									{
+										if ($action->action == 'created')
 										{
 											$did = '<span class="text-info">added</span> an item to the order';
 										}
-										if ($entity == 'order' && $action->action == 'created')
+										if ($action->action == 'updated')
+										{
+											$did = '<span class="text-info">edited</span> an item';
+										}
+										if ($action->action == 'deleted')
+										{
+											$did = '<span class="text-danger">removed</span> an item';
+										}
+									}
+									if ($entity == 'order')
+									{
+										if ($action->action == 'created')
 										{
 											$did = '<span class="text-success">placed</span> this order';
 										}
-										if ($entity == 'order' && $action->action == 'updated')
+										if ($action->action == 'updated')
 										{
 											$did = '<span class="text-info">edited</span> this order';
 										}
-										if (in_array('approveruserid', $fields))
-										{
-											$did = '<span class="text-info">set</span> approver for payment account #' . $action->historable_id;
-										}
-										if (in_array('datetimedenied', $fields))
-										{
-											$did = '<span class="text-danger">denied</span> payment account #' . $action->historable_id;
-										}
-										?>
-										<li class="list-group-item">
-											<!-- <span class="entry-log-action">{{ trans('history::history.action ' . $action->action, ['user' => $actor, 'entity' => $entity]) }}</span><br /> -->
-											<div class="row">
-												<div class="col-md-8">
-												{!! $actor . ' ' . $did !!}
-												</div>
-												<div class="col-md-4 text-right">
-											<time datetime="{{ $action->dt }}" class="entry-log-date">
-												@if ($dt < $old)
-													{{ $dt->format('d M Y') }}
-												@else
-													{{ $dt->diffForHumans() }}
-												@endif
-											</time>
-												</div>
-											</div>
-										</li>
-										<?php
-									endforeach;
-								else:
+									}
+									if (in_array('approveruserid', $fields))
+									{
+										$did = '<span class="text-info">set</span> approver for payment account #' . $action->historable_id;
+									}
+									if (in_array('datetimedenied', $fields))
+									{
+										$did = '<span class="text-danger">denied</span> payment account #' . $action->historable_id;
+									}
 									?>
 									<li class="list-group-item">
-										<span class="entry-diff">{{ trans('history::history.none found') }}</span>
+										<!-- <span class="entry-log-action">{{ trans('history::history.action ' . $action->action, ['user' => $actor, 'entity' => $entity]) }}</span><br /> -->
+										<div class="row">
+											<div class="col-md-8">
+											{!! $actor . ' ' . $did !!}
+											</div>
+											<div class="col-md-4 text-right">
+										<time datetime="{{ $action->dt }}" class="entry-log-date">
+											@if ($dt < $old)
+												{{ $dt->format('d M Y') }}
+											@else
+												{{ $dt->diffForHumans() }}
+											@endif
+										</time>
+											</div>
+										</div>
 									</li>
 									<?php
-								endif;
+								endforeach;
+							else:
 								?>
-							</ul>
-
+								<li class="list-group-item">
+									<span class="entry-diff">{{ trans('history::history.none found') }}</span>
+								</li>
+								<?php
+							endif;
+							?>
+						</ul>
 					</div><!-- / #order-history -->
 				@endif
 

@@ -191,6 +191,11 @@ class Order extends Model
 		return $neg . $number;
 	}
 
+	public function isCanceled()
+	{
+		return $this->isTrashed();
+	}
+
 	/**
 	 * Get order status
 	 *

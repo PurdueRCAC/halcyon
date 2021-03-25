@@ -92,6 +92,12 @@ return [
 	'remove from cart' => 'Remove from cart',
 	'all restricted data' => '- All Un/Restricted -',
 	'all recurrence' => '- All Recurrence -',
+	'order history' => 'Order History',
+	'service' => 'Service',
+	'order' => 'Order',
+	'started' => 'Started',
+	'billed through' => 'Billed through',
+	'paid through' => 'Paid through',
 	'confirm' => [
 		'item removal' => 'Are you sure you want to remove this item?',
 		'account removal' => 'Are you sure you want to remove this account?',

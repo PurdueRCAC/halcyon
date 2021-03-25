@@ -243,17 +243,19 @@ class Item extends Model
 				$datestart = $row->datetimefulfilled;
 			}
 
-			$item = $row->toArray();
+			//$item = $row->toArray();
 
 			$users[] = $row->order->userid;
 			$users[] = $row->order->submitteruserid;
 			$groups[] = $row->order->groupid;
 
-			if (!$row->isTrashed())
+			/*if (!$row->isTrashed())
 			{
-				$item['start'] = $datestart;
+				//$item['start'] = $datestart;
+				$item->start = $datestart;
 
-				$start = Carbon::parse($item['start']);
+				//$start = Carbon::parse($item['start']);
+				$start = Carbon::parse($item->start);
 
 				if ($recur_months || $recur_seconds)
 				{
@@ -261,7 +263,8 @@ class Item extends Model
 						->modify('+' . ($recur_seconds * $item['timeperiodcount']) . ' seconds');
 				}
 
-				$item['end'] = $start->toDateTimeString();
+				//$item['end'] = $start->toDateTimeString();
+				$item->end = $start;
 
 				$datestart = $item['end'];
 			}
@@ -270,14 +273,37 @@ class Item extends Model
 				$item['start'] = '0000-00-00 00:00:00';
 				$item['end']   = '0000-00-00 00:00:00';
 			}
+			
+			$items[] = $item;*/
+			if (!$row->isTrashed())
+			{
+				$row->start = $datestart;
 
-			$items[] = $item;
+				$start = Carbon::parse($row->start);
+
+				if ($recur_months || $recur_seconds)
+				{
+					$start->modify('+' . ($recur_months * $row->timeperiodcount) . ' months')
+						->modify('+' . ($recur_seconds * $row->timeperiodcount) . ' seconds');
+				}
+
+				$row->end = $start;
+
+				$datestart = $row->end;
+			}
+			else
+			{
+				$row->start = Carbon::parse('0000-00-00 00:00:00');
+				$row->end = Carbon::parse('0000-00-00 00:00:00');
+			}
+
+			$items[] = $row;
 		}
 
 		$this->orderusers = array_values(array_unique($users));
 		$this->ordergroups = array_values(array_unique($groups));
 
-		return $items;
+		return collect($items);
 	}
 
 	/**
@@ -293,12 +319,20 @@ class Item extends Model
 
 			foreach ($this->recurrenceRange() as $item)
 			{
-				if ($item['id'] == $this->id)
+				/*if ($item['id'] == $this->id)
 				{
-					if ($item['start'] != '0000-00-00 00:00:00')
+					if ($item['start'] && $item['start'] != '0000-00-00 00:00:00')
 					{
 						$this->setAttribute('start_at', Carbon::parse($item['start']));
 						$this->setAttribute('end_at', Carbon::parse($item['end']));
+					}
+				}*/
+				if ($item->id == $this->id)
+				{
+					if ($item->start && $item->start != '0000-00-00 00:00:00' && $item->start != '-0001-11-30 00:00:00')
+					{
+						$this->setAttribute('start_at', $item->start);
+						$this->setAttribute('end_at', $item->end);
 					}
 				}
 			}
@@ -320,12 +354,20 @@ class Item extends Model
 
 			foreach ($this->recurrenceRange() as $item)
 			{
-				if ($item['id'] == $this->id)
+				/*if ($item['id'] == $this->id)
 				{
-					if ($item['end'] != '0000-00-00 00:00:00')
+					if ($item['end'] && $item['end'] != '0000-00-00 00:00:00')
 					{
 						$this->setAttribute('start_at', Carbon::parse($item['start']));
 						$this->setAttribute('end_at', Carbon::parse($item['end']));
+					}
+				}*/
+				if ($item->id == $this->id)
+				{
+					if ($item->end && $item->end != '0000-00-00 00:00:00' && $item->end != '-0001-11-30 00:00:00')
+					{
+						$this->setAttribute('start_at', $item->start);
+						$this->setAttribute('end_at', $item->end);
 					}
 				}
 			}

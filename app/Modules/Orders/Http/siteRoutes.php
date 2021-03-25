@@ -57,7 +57,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth.admin'], function (R
 	// Recurring items
 	$router->group(['prefix' => '/recur'], function (Router $router)
 	{
-		$router->get('/recur', [
+		$router->get('/', [
 			'as' => 'site.orders.recurring',
 			'uses' => 'OrdersController@recurring',
 			'middleware' => 'can:manage orders',

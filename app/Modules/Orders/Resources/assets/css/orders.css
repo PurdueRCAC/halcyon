@@ -175,6 +175,7 @@ ol.order li.notmystep {
 }
 .pending_collection,
 .pending_approval,
+.pending_assignment,
 .pending_boassignment {
 	color: rgba(211, 112, 79, 1);
 	background-color: rgba(211, 112, 79, 0.1);
