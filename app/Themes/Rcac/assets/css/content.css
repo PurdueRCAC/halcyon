@@ -92,8 +92,16 @@ figcaption {
 	margin-left: 0;
 }
 
- /* tabs 
-.nav-tabs {
+ /* tabs */
+.nav-tabs .nav-link {
+	text-decoration: none;
+	color: #656565;
+}
+.nav-tabs .active {
+	font-weight: bold;
+	color: #000;
+}
+/*.nav-tabs {
 	border-bottom: 2px solid #DDD;
 }
 .nav-tabs > li {
