@@ -10,6 +10,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Orders\Models\Order;
 use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Models\Item;
+use Carbon\Carbon;
 
 /**
  * Order Items
@@ -458,10 +459,11 @@ class ItemsController extends Controller
 			'quantity' => 'nullable|integer',
 			'price' => 'nullable|integer',
 			'timeperiodcount' => 'nullable|integer',
+			'fulfilled' => 'nullable|integer',
 		]);
 
 		$row = Item::findOrFail($id);
-		$row->fill($request->all());
+		//$row->fill($request->all());
 
 		// Make sure the order still exists
 		if (!$row->order)
@@ -477,6 +479,15 @@ class ItemsController extends Controller
 			return response()->json(['message' => trans('global.error.not authorized')], 403);
 		}
 
+		if ($request->has('quantity'))
+		{
+			$row->quantity = $request->input('quantity');
+		}
+		if ($request->has('timeperiodcount'))
+		{
+			$row->timeperiodcount = $request->input('timeperiodcount');
+		}
+
 		// Only admins can edit price
 		if ($request->has('price'))
 		{
@@ -484,11 +495,18 @@ class ItemsController extends Controller
 			{
 				return response()->json(['message' => trans('global.error.not authorized')], 403);
 			}
+
+			$row->price = $request->input('price');
 		}
 		else
 		{
 			$row->price = $row->quantity * $row->product->unitprice;
 			$row->price = $row->timeperiodcount ? $row->timeperiodcount * $row->price : $row->price;
+		}
+
+		if ($request->input('fulfilled'))
+		{
+			$row->datetimefulfilled = Carbon::now();
 		}
 
 		$row->save();
@@ -542,5 +560,229 @@ class ItemsController extends Controller
 		}
 
 		return response()->json(null, 204);
+	}
+
+	/**
+	 * Get recurring item sequence
+	 *
+	 * @apiMethod DELETE
+	 * @apiUri    /api/orders/sequence/{id}
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @param   integer  $id
+	 * @return  Response
+	 */
+	public function sequence($id)
+	{
+		$row = Item::findOrFail($id);
+
+		$items = $row->recurrenceRange();
+		$row->items = $items;
+
+		return new JsonResource($row);
+
+		// Fetch orderitemsequence information from the database.
+		$i = (new Item)->getTable();
+		$o = (new Order)->getTable();
+
+		$rows = Item::query()
+			->select($i . '.*', $o . '.userid', $o . '.groupid', $o . '.submitteruserid', $o . '.datetimeremoved AS ordercanceled')
+			->join($o, $o . '.id', $i . '.orderid')
+			->where($i . '.origorderitemid', '=', $id)
+			->withTrashed()
+			->whereIsActive()
+			->orderBy($i . '.datetimecreated', 'asc')
+			->get();
+
+		if (count($rows) <= 0)
+		{
+			return response()->json(null, 204);
+		}
+
+		$paidperiods   = 0;
+		$billedperiods = 0;
+		$users  = array();
+		$groups = array();
+		$response = new Fluent();
+		$datestart = null;
+		//$this->orderitems = array();
+		//$this->orderusers = array();
+		//$this->ordergroups = array();
+
+		foreach ($rows as $row)
+		{
+			if ($row->id == $id)
+			{
+				$datecreated = $row->datetimecreated;
+				$datestart   = $row->datetimefulfilled;
+			}
+
+			if ($row->isFulfilled())
+			{
+				$paidperiods += $row->timeperiodcount;
+			}
+
+			if (!$row->isTrashed() && (!$row->ordercanceled || $row->ordercanceled == '0000-00-00 00:00:00'))
+			{
+				$billedperiods += $row->timeperiodcount;
+			}
+
+			if (!in_array($row->userid, $users))
+			{
+				array_push($users, $row->userid);
+			}
+
+			if ($row->groupid && !in_array($row->groupid, $groups))
+			{
+				array_push($groups, $row->groupid);
+			}
+
+			if (!in_array($row->submitteruserid, $users))
+			{
+				array_push($users, $row->submitteruserid);
+			}
+
+			/*array_push($response->items, array(
+				'id'              => ROOT_URI . 'orderitem/' . $row['id'],
+				'order'           => ROOT_URI . 'order/' . $row['orderid'],
+				'created'         => $row['datetimecreated'],
+				'ordercanceled'   => $row['ordercanceled'],
+				'fulfilled'       => $row['datetimefulfilled'],
+				'quantity'        => $row['quantity'],
+				'price'           => $row['price'],
+				'timeperiodcount' => $row['timeperiodcount'],
+			));*/
+		}
+
+		// Get approvers
+		/*$sql = "SELECT DISTINCT orderpurchaseaccounts.approveruserid
+			FROM orderitems, orderpurchaseaccounts
+			WHERE orderitems.orderid = orderpurchaseaccounts.orderid
+			AND orderitems.origorderitemid = '" . $this->db->escape_string($id) . "'
+			AND orderitems.datetimeremoved = '0000-00-00 00:00:00'";
+		$data2 = array();
+		$rows = $this->db->query($sql, $data2);*/
+
+		$a = (new Account)->getTable();
+
+		$approvers = Account::query()
+			->select($a . '.approveruserid')
+			->join($i, $i . '.orderid', $a . '.orderid')
+			->where($i . '.origorderitemid', '=', $id)
+			->withTrashed()
+			->whereIsActive()
+			->get()
+			->pluck('approveruserid')
+			->toArray();
+		$approvers = array_unique($approvers);
+
+		$response->approvers = $approvers;
+
+		foreach ($approvers as $approver)
+		{
+			//array_push($this->orderapprovers, ROOT_URI . 'user/' . $row['approveruserid']);
+			//array_push($users, $row['approveruserid']);
+			if (!in_array($approver, $users))
+			{
+				array_push($users, $approver);
+			}
+		}
+
+		// Get details about product
+		$sql = "SELECT timeperiods.unixtime, timeperiods.months
+			FROM orderproducts, timeperiods
+			WHERE orderproducts.id = '" . $this->db->escape_string($data[0]['orderproductid']) . "'
+			AND orderproducts.recurringtimeperiodid = timeperiods.id";
+		$data = array();
+		$rows = $this->db->query($sql, $data);
+
+		if ($rows == 0)
+		{
+			return 404;
+		}
+
+		$recur_months  = $row->product->timeperiod->months; //$data[0]['months'];
+		$recur_seconds = $row->product->timeperiod->unixtime; //$data[0]['unixtime'];
+
+		$months_billed  = $billedperiods * $recur_months;
+		$seconds_billed = $billedperiods * $recur_seconds;
+		$months_paid    = $paidperiods * $recur_months;
+		$seconds_paid   = $paidperiods * $recur_seconds;
+
+		if ($datestart && $datestart != '0000-00-00 00:00:00')
+		{
+			// Calculate billed time
+			$datebilleduntil = Carbon::parse($datestart)
+				->modify('+' . $months_billed . ' months')
+				->modify('+' . $seconds_billed . ' seconds');
+
+			// Calculate billed time
+			$sql = "SELECT '" . $this->db->escape_string($this->datestart) . "' + INTERVAL " . $this->db->escape_string($months_paid) . " MONTH + INTERVAL " . $this->db->escape_string($seconds_paid) . " SECOND AS date";
+			$data = array();
+			$rows = $this->db->query($sql, $data);
+
+			if ($rows == 0)
+			{
+				$this->addError(__METHOD__ . '(): Failed to calculate paid until date');
+				return 500;
+			}
+
+			$this->datepaiduntil = $data[0]['date'];
+
+			$start = $this->datestart;
+
+			foreach ($this->orderitems as &$item)
+			{
+				if ($item['ordercanceled'] == '0000-00-00 00:00:00')
+				{
+					$item['start'] = $start;
+
+					$sql = "SELECT '" . $this->db->escape_string($start) . "' + INTERVAL " . $this->db->escape_string($recur_months * $item['timeperiodcount']) . " MONTH + INTERVAL " . $this->db->escape_string($recur_seconds * $item['timeperiodcount']) . " SECOND AS date";
+					$data = array();
+					$rows = $this->db->query($sql, $data);
+
+					if ($rows == 0)
+					{
+						$this->addError(__METHOD__ . '(): Failed to calculate date');
+						return 500;
+					}
+
+					$item['end'] = $data[0]['date'];
+
+					$start = $item['end'];
+				}
+				else
+				{
+					$item['start'] = '0000-00-00 00:00:00';
+					$item['end']   = '0000-00-00 00:00:00';
+				}
+			}
+		}
+		else
+		{
+			$this->datebilleduntil = '0000-00-00 00:00:00';
+			$this->datepaiduntil   = '0000-00-00 00:00:00';
+
+			foreach ($this->orderitems as &$item)
+			{
+				$item['start'] = '0000-00-00 00:00:00';
+				$item['end']   = '0000-00-00 00:00:00';
+			}
+		}
+
+		// Ensure client is authorized
+		if (!in_array($this->myuserid, $users) && !$this->globalread)
+		{
+			return 403;
+		}
+
+		return new JsonResource($response);
 	}
 }

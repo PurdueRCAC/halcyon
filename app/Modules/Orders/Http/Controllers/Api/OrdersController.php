@@ -623,9 +623,19 @@ class OrdersController extends Controller
 			'staffnotes' => 'nullable|string|max:2000',
 			'notice' => 'nullable|integer',
 			'accounts' => 'nullable|array',
+			'restore' => 'nullable|integer',
 		]);
 
-		$row = Order::findOrFail($id);
+		//$row = Order::findOrFail($id);
+		$row = Order::query()
+			->withTrashed()
+			->where('id', '=', $id)
+			->first();
+
+		if (!$row)
+		{
+			return response()->json(['message' => trans('global.error.not found')], 404);
+		}
 
 		$row->userid = $request->input('userid', $row->userid);
 		$row->groupid = $request->input('groupid', $row->groupid);
@@ -645,6 +655,20 @@ class OrdersController extends Controller
 		 && !auth()->user()->can('manage orders'))
 		{
 			return response()->json(['message' => trans('global.error.not authorized')], 403);
+		}
+
+		if ($request->input('restore') && auth()->user()->can('manage orders'))
+		{
+			// [!] Hackish workaround for resetting date fields
+			//     that don't have a `null` default value.
+			//     TODO: Change the table schema!
+			$db = app('db');
+			$db->table($row->getTable())
+				->update([
+					'datetimeremoved' => '0000-00-00 00:00:00'
+				]);
+
+			//$row->datetimeremoved = '0000-00-00 00:00:00';
 		}
 
 		// Check if we need to actually do anything

@@ -1576,14 +1576,23 @@ function ApprovedAccount(xml, id) {
 /**
  * Remind account
  *
- * @param   {string}  id
+ * @param   {string}  url
  * @param   {string}  button
  * @return  {void}
  */
-function RemindAccount(id, button) {
+function RemindAccount(url, button) {
 	var post = JSON.stringify({"notice": 3});
 
-	WSPostURL(id, post, RemindedAccount, id);
+	WSPutURL(url, post, function(xml, button) {
+		if (xml.status == 200) {
+			//document.getElementById("status_" + id).innerHTML = "Reminded";
+			var id = button.getAttribute('data-id');
+			document.getElementById("status_" + id).innerHTML = button.getAttribute('data-txt');
+			document.getElementById("button_" + id).classList.add('hide');//.style.visibility = "hidden";
+		} else {
+			alert("An error occurred while approving account.");
+		}
+	}, button);
 }
 
 /**
@@ -1593,14 +1602,14 @@ function RemindAccount(id, button) {
  * @param   {string}  id
  * @return  {void}
  */
-function RemindedAccount(xml, id) {
+/*function RemindedAccount(xml, id) {
 	if (xml.status == 200) {
 		document.getElementById("status_" + id).innerHTML = "Reminded";
 		document.getElementById("button_" + id).style.visibility = "hidden";
 	} else {
 		alert("An error occurred while approving account.");
 	}
-}
+}*/
 
 /**
  * Remind order
@@ -1632,14 +1641,22 @@ function RemindedOrder(xml) {
 /**
  * Deny account
  *
- * @param   {string}  id
+ * @param   {string}  url
  * @param   {string}  button
  * @return  {void}
  */
-function DenyAccount(id, button) {
+function DenyAccount(url, button) {
 	var post = JSON.stringify({"denied": 1});
 
-	WSPutURL(id, post, DeniedAccount, id);
+	WSPutURL(url, post, function(xml, button) {
+		if (xml.status == 200) {
+			var id = button.getAttribute('data-id');
+			document.getElementById("status_" + id).innerHTML = button.getAttribute('data-txt');
+			document.getElementById("button_" + id).classList.add('hide');
+		} else {
+			alert("An error occurred while denying account.");
+		}
+	}, button);
 }
 
 /**
@@ -1649,14 +1666,14 @@ function DenyAccount(id, button) {
  * @param   {string}  id
  * @return  {void}
  */
-function DeniedAccount(xml, id) {
+/*function DeniedAccount(xml, id) {
 	if (xml.status == 200) {
 		document.getElementById("status_" + id).innerHTML = "Denied";
 		document.getElementById("button_" + id).style.visibility = "hidden";
 	} else {
 		alert("An error occurred while denying account.");
 	}
-}
+}*/
 
 /**
  * Collect account

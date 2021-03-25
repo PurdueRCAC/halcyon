@@ -394,10 +394,28 @@ class OrdersController extends Controller
 			->orderBy('name', 'asc')
 			->get();
 
-		return view('orders::site.orders.recur', [
+		return view('orders::site.recurring.index', [
 			'rows'    => $rows,
 			'filters' => $filters,
 			'products' => $products
+		]);
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
+	 * @return Response
+	 */
+	public function recurringitem($id)
+	{
+		$item = Item::findOrFail($id);
+
+		$items = $item->recurrenceRange();
+
+		return view('orders::site.recurring.read', [
+			'item' => $item,
+			'items' => $items
 		]);
 	}
 
@@ -429,7 +447,24 @@ class OrdersController extends Controller
 	 */
 	public function edit($id)
 	{
-		$order = Order::findOrFail($id);
+		$order = Order::query()
+			->withTrashed()
+			->where('id', '=', $id)
+			->first();
+
+		if (!$order)
+		{
+			abort(404, 'Order Not Found');
+		}
+
+		$myorder = (auth()->user()->id == $order->submitteruserid || auth()->user()->id == $order->userid);
+		$canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own orders') && $myorder));
+		$approvers = $order->accounts->pluck('approveruserid')->toArray();
+
+		if (!$myorder && !$canEdit && !in_array(auth()->user()->id, $approvers))
+		{
+			abort(403, 'Not Authorized');
+		}
 
 		app('pathway')
 			->append(
@@ -451,26 +486,6 @@ class OrdersController extends Controller
 			'order' => $order,
 			'products' => $products
 		]);
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 * 
-	 * @param  Request $request
-	 * @return Response
-	 */
-	public function store(Request $request)
-	{
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 * 
-	 * @param  Request $request
-	 * @return Response
-	 */
-	public function update(Request $request)
-	{
 	}
 
 	/**

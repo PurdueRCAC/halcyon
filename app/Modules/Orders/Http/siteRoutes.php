@@ -42,7 +42,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth.admin'], function (R
 		'middleware' => 'can:create orders',
 	]);
 
-	$router->get('recur', [
+	/*$router->get('recur', [
 		'as' => 'site.orders.recurring',
 		'uses' => 'OrdersController@recurring',
 		'middleware' => 'can:manage orders',
@@ -52,7 +52,22 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth.admin'], function (R
 		'as' => 'site.orders.delete',
 		'uses' => 'OrdersController@delete',
 		'middleware' => 'can:delete orders',
-	])->where('id', '[0-9]+');
+	])->where('id', '[0-9]+');*/
+
+	// Recurring items
+	$router->group(['prefix' => '/recur'], function (Router $router)
+	{
+		$router->get('/recur', [
+			'as' => 'site.orders.recurring',
+			'uses' => 'OrdersController@recurring',
+			'middleware' => 'can:manage orders',
+		]);
+		$router->get('/{id}', [
+			'as' => 'site.orders.recurring.read',
+			'uses' => 'OrdersController@recurringitem',
+			'middleware' => 'can:manage orders',
+		])->where('id', '[0-9]+');
+	});
 
 	// Categories
 	$router->group(['prefix' => '/categories'], function (Router $router)

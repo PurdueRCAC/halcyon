@@ -26,7 +26,7 @@
 
 <form action="{{ route('admin.orders.products.store') }}" method="post" name="adminForm" class="editform">
 	<div class="row">
-		<div class="col col-md-7">
+		<div class="col col-md-8">
 			<fieldset>
 				<legend>{{ trans('global.details') }}</legend>
 
@@ -73,7 +73,7 @@
 					<label for="field-resourceid">{{ trans('orders::orders.resource') }}:</label>
 					<select class="form-control" name="fields[resourceid]" id="field-resourceid">
 						<option value="0"<?php if (!$row->resourceid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
-						<?php foreach (App\Modules\Resources\Entities\Asset::all() as $resource): ?>
+						<?php foreach (App\Modules\Resources\Entities\Asset::query()->withTrashed()->whereIsactive()->orderBy('name', 'asc')->get() as $resource): ?>
 							<option value="{{ $resource->id }}"<?php if ($row->resourceid == $resource->id) { echo ' selected="selected"'; } ?>>{{ $resource->name }}</option>
 						<?php endforeach; ?>
 					</select>
@@ -111,7 +111,7 @@
 				</div>
 			</fieldset>
 		</div>
-		<div class="col col-md-5">
+		<div class="col col-md-4">
 			<fieldset>
 				<legend>{{ trans('global.publishing') }}</legend>
 

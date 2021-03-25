@@ -547,6 +547,7 @@ class AccountsController extends Controller
 	public function update($id, Request $request)
 	{
 		$request->validate([
+			// Fields
 			'amount' => 'nullable|string',
 			'purchasefund' => 'nullable|string|max:8',
 			'purchasecostcenter' => 'nullable|string|max:10',
@@ -555,16 +556,50 @@ class AccountsController extends Controller
 			'purchasewbse' => 'nullable|string|max:17',
 			'budgetjustification' => 'nullable|string|max:2000',
 			'approveruserid' => 'nullable|integer',
-			'approved' => 'nullable|integer',
-			'paid' => 'nullable|integer',
-			'denied' => 'nullable|integer',
 			'datetimepaymentdoc' => 'nullable|date',
 			'paymentdocid' => 'nullable|string',
 			'notice' => 'nullable|integer',
+			// Actions
+			'approved' => 'nullable|integer',
+			'paid' => 'nullable|integer',
+			'denied' => 'nullable|integer',
+			'reset' => 'nullable|integer',
 		]);
 
 		$row = Account::findOrFail($id);
-		$row->fill($request->all());
+		if ($request->has('purchasefund'))
+		{
+			$row->purchasefund = $request->input('purchasefund');
+		}
+		if ($request->has('purchasecostcenter'))
+		{
+			$row->purchasecostcenter = $request->input('purchasecostcenter');
+		}
+		if ($request->has('purchaseorder'))
+		{
+			$row->purchaseorder = $request->input('purchaseorder');
+		}
+		if ($request->has('budgetjustification'))
+		{
+			$row->budgetjustification = $request->input('budgetjustification');
+		}
+		if ($request->has('approveruserid'))
+		{
+			$row->approveruserid = $request->input('approveruserid');
+		}
+		if ($request->has('datetimepaymentdoc'))
+		{
+			$row->datetimepaymentdoc = $request->input('datetimepaymentdoc');
+		}
+		if ($request->has('paymentdocid'))
+		{
+			$row->paymentdocid = $request->input('paymentdocid');
+		}
+		if ($request->has('notice'))
+		{
+			$row->notice = $request->input('notice');
+		}
+		//$row->fill($request->all());
 
 		// Select approvers of this order
 		$approvers = Account::query()
@@ -631,6 +666,33 @@ class AccountsController extends Controller
 		{
 			$row->datetimedenied = Carbon::now()->toDateTimeString();
 			$row->notice = 5;
+		}
+
+		if ($request->input('reset') && auth()->user()->can('manage orders'))
+		{
+			// [!] Hackish workaround for resetting date fields
+			//     that don't have a `null` default value.
+			//     TODO: Change the table schema!
+			$db = app('db');
+			$db->table($row->getTable())
+				->update([
+					'datetimepaid' => '0000-00-00 00:00:00',
+					'datetimeapproved' => '0000-00-00 00:00:00',
+					'datetimedenied' => '0000-00-00 00:00:00'
+				]);
+
+			//$row->datetimepaid = '0000-00-00 00:00:00';
+			//$row->datetimeapproved = '0000-00-00 00:00:00';
+			//$row->datetimedenied = '0000-00-00 00:00:00';
+
+			if ($row->approveruserid)
+			{
+				$row->notice = 3;
+			}
+			else
+			{
+				$row->notice = 2;
+			}
 		}
 
 		if ($request->input('purchaseio')

@@ -195,7 +195,7 @@ class Item extends Model
 	/**
 	 * If item is trashed
 	 *
-	 * @return  bool
+	 * @return  mixed  Carbon|null
 	 **/
 	public function getPaiduntilAttribute()
 	{
@@ -206,7 +206,7 @@ class Item extends Model
 	/**
 	 * If item is trashed
 	 *
-	 * @return  bool
+	 * @return  mixed  Carbon|null
 	 **/
 	public function getBilleduntilAttribute()
 	{
@@ -215,9 +215,9 @@ class Item extends Model
 	}
 
 	/**
-	 * If account is fulfilled
+	 * Recurrence range
 	 *
-	 * @return  bool
+	 * @return  array
 	 **/
 	public function recurrenceRange()
 	{

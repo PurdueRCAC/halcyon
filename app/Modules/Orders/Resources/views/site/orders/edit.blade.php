@@ -57,7 +57,7 @@ $(document).ready(function() {
 
 	$('.order-fulfill').on('click', function(e){
 		e.preventDefault();
-		FulfillItem($(this).data('id'), this);
+		FulfillItem($(this).data('api'), this);
 	});
 
 	$('#orderheaderpopup').dialog({
@@ -93,36 +93,22 @@ $(document).ready(function() {
 	});
 	$('#remindorder').on('click', function(e){
 		e.preventDefault();
-		RemindOrder($(this).data('id'));
+		RemindOrder($('#order').data('api'), this);
 	});
 	$('#cancelorder').on('click', function(e){
 		e.preventDefault();
-		CancelOrder();
+		CancelOrder(this);
+	});
+	$('#restoreorder').on('click', function(e){
+		e.preventDefault();
+		RestoreOrder(this);
 	});
 
-
+	// Account creation/editing
 	$('.account-add').on('click', function(e){
 		e.preventDefault();
 		AddNewAccountRow();
 	});
-
-	$('.account-approve').on('click', function(e){
-		e.preventDefault();
-		ApproveAccount($(this).data('api'), $(this).data('id'));
-	});
-	$('.account-deny').on('click', function(e){
-		e.preventDefault();
-		DenyAccount($(this).data('id'), this);
-	});
-	$('.account-remind').on('click', function(e){
-		e.preventDefault();
-		RemindAccount($(this).data('id'), this);
-	});
-	$('.account-collect').on('click', function(e){
-		e.preventDefault();
-		CollectAccount($(this).data('id'), this);
-	});
-
 	$('.account-save').on('click', function(e){
 		e.preventDefault();
 		SaveAccounts();
@@ -134,6 +120,31 @@ $(document).ready(function() {
 	$('.account-edit-cancel').on('click', function(e){
 		e.preventDefault();
 		CancelEditAccounts();
+	});
+	// Account status
+	$('.account-approve').on('click', function(e){
+		e.preventDefault();
+		ApproveAccount($(this).data('api'), this);
+	});
+	$('.account-deny').on('click', function(e){
+		e.preventDefault();
+		if (confirm($(this).attr('data-confirm'))) {
+			DenyAccount($(this).data('api'), this);
+		}
+	});
+	$('.account-remind').on('click', function(e){
+		e.preventDefault();
+		RemindAccount($(this).data('api'), this);
+	});
+	$('.account-collect').on('click', function(e){
+		e.preventDefault();
+		CollectAccount($(this).data('id'), this);
+	});
+	$('.account-reset').on('click', function(e){
+		e.preventDefault();
+		if (confirm($(this).attr('data-confirm'))) {
+			ResetAccount($(this).data('api'), this);
+		}
 	});
 
 	// Adding products to an order
@@ -287,7 +298,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 	orders
 @endcomponent
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-	<h2 class="sr-only">{{ trans('orders::orders.orders') }}: {{ $order->id ? '#' . $order->id : 'Create' }}</h2>
+	<h2 class="sr-only">{{ trans('orders::orders.orders') }}: #{{ $order->id }}</h2>
 
 	<div class="row">
 		<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
@@ -308,7 +319,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				</ol>
 				@if ($order->status == 'pending_payment' && auth()->user()->can('manage orders'))
 					<p class="text-center">
-						<button class="btn btn-secondary" id="remindorder" data-id="{{ $order->id }}">Remind Customer</button>
+						<button class="btn btn-secondary" id="remindorder" data-txt="Reminded">Remind Customer</button>
 						<span id="remindorderspan"></span>
 					</p>
 				@endif
@@ -398,7 +409,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 					<p>This order is complete.</p>
 				</div>
 			@elseif ($order->status == 'canceled')
-				<p class="alert alert-error">This order was canceled.</p>
+				<p class="alert alert-danger">This order was canceled.</p>
 				<ol class="order">
 					<li class="text-success stepcomplete">Submit order</li>
 					<li class="step"><del>Enter payment information</del></li>
@@ -415,14 +426,14 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 			</div><!-- / .orderstatusblock -->
 		</div>
 		<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-			<form action="{{ route('site.orders.store') }}" method="post" name="adminForm" id="item-form" class="order">
+			<form action="{{ route('site.orders.store') }}" method="post" name="adminForm" id="order-form" class="order">
 				<input type="hidden" name="id" id="order" data-api="{{ route('api.orders.update', ['id' => $order->id]) }}" value="{{ $order->id }}" />
 
 				<div class="pane pane-default card">
 					<div class="pane-heading card-header">
 						<div class="row">
 							<div class="col col-md-6">
-								<div class="pane-title card-title"><strong>{{ '#' . $order->id }}</strong></div>
+								<h3 class="pane-title card-title">{{ '#' . $order->id }}</h3>
 							</div>
 							<div class="col col-md-6 text-right">
 								<?php
@@ -430,12 +441,17 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								|| $order->status == 'pending_boassignment'
 								|| (($order->status == 'pending_approval' || $order->status == 'pending_fulfillment') && auth()->user()->can('manage orders'))
 								|| ($order->status == 'pending_approval' && !$myorder)): ?>
-									<button class="btn btn-danger" id="cancelorder">Cancel Order</button>
+									<button class="btn btn-sm btn-danger" id="cancelorder" data-confirm="Are you sure you wish to cancel this order?">Cancel Order</button>
 								<?php else: ?>
-									<button class="btn tip" id="printorder" title="Print Order">
+									<button class="btn btn-sm tip" id="printorder" title="Print Order">
 										<i class="fa fa-print" aria-hidden="true"></i>
 										<span class="sr-only">Print Order</span>
 									</button>
+									@if ($order->status == 'canceled' && auth()->user()->can('manage orders'))
+										<button class="btn btn-sm btn-secondary" id="restoreorder">
+											Restore Order
+										</button>
+									@endif
 								<?php endif; ?>
 							</div>
 						</div>
@@ -462,7 +478,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							<div class="col col-md-6">
 								<div class="form-group{{ $errors->has('userid') ? ' has-error' : '' }}">
 									<label for="field-userid">{{ trans('orders::orders.user') }}:</label>
-									@if (auth()->user()->can('manage orders'))
+									@if (auth()->user()->can('manage orders') && $order->status != 'canceled')
 										<p class="form-text">
 											<span id="edit_user" data-userid="{{ $order->userid }}">
 												@if ($order->user)
@@ -507,7 +523,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							<div class="col col-md-6">
 								<div class="form-group{{ $errors->has('groupid') ? ' has-error' : '' }}">
 									<label for="search_group">{{ trans('orders::orders.group') }}:</label>
-									@if (auth()->user()->can('manage orders'))
+									@if (auth()->user()->can('manage orders') && $order->status != 'canceled')
 										<p class="form-text">
 											<span id="edit_group">
 												@if ($order->groupid)
@@ -544,7 +560,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 					<div class="pane-heading card-header">
 						<div class="row">
 							<div class="col col-md-6">
-								<div>{{ trans('orders::orders.items') }}</div>
+								<h3 class="card-title">{{ trans('orders::orders.items') }}</h3>
 							</div>
 							<div class="col col-md-6 text-right">
 								<?php
@@ -558,7 +574,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										<i class="fa fa-question-circle" aria-hidden="true"></i> Help
 									</a>
 
-									<button id="save_quantities" class="btn btn-sm btn-secondary" data-state="inactive" data-inactive="Edit Quantities" data-active="Save Changes">Edit Quantities</button>
+									<button id="save_quantities" class="btn btn-sm btn-secondary" data-state="inactive" data-inactive="Edit Items" data-active="Save Changes">Edit Items</button>
 									<button id="cancel_quantities" class="btn btn-sm btn-link item-edit-show hide">Cancel Changes</button>
 
 									<div id="error1" title="Cancel Order?" class="dialog dialog-confirm">
@@ -597,25 +613,26 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										@if (!$item->isFulfilled())
 											@if ($order->status != 'canceled' && $order->status == 'pending_fulfillment')
 												<td>
-													<span class="bage order-status {{ str_replace(' ', '-', $order->status) }}" id="status_{{ $item->id }}">{{ trans('orders::orders.pending_fulfillment') }}</span>
+													<div class="badge order-status {{ str_replace(' ', '-', $order->status) }}" id="status_{{ $item->id }}">{{ trans('orders::orders.pending_fulfillment') }}</div>
+
 													<div class="mt-3 text-center item-edit-hide">
-														<button class="btn btn-sm btn-secondary order-fulfill" id="button_<?php echo $item->id; ?>" data-id="<?php echo $item->id; ?>">{{ trans('orders::orders.fulfill') }}</button>
+														<button class="btn btn-sm btn-secondary order-fulfill" id="button_{{ $item->id }}" data-api="{{ route('api.orders.items.update', ['id' => $item->id]) }}" data-txt="Fulfilled" data-id="{{ $item->id }}">{{ trans('orders::orders.fulfill') }}</button>
 													</div>
 												</td>
 											@else
 												<td>
-													<span class="bage order-status {{ str_replace(' ', '-', $order->status) }}">
-														@if ($order->status == 'pending_fulfillment')
+													<div class="badge order-status {{ str_replace(' ', '-', $order->status) }}">
+														@if ($order->status == 'pending_fulfillment' || $order->status == 'canceled')
 															{{ trans('orders::orders.' . $order->status) }}
 														@else
 															{{ trans('orders::orders.pending_approval') }}
 														@endif
-													</span>
+													</div>
 												</td>
 											@endif
 										@else
 											<td>
-												<span class="bage order-status fulfilled">{{ trans('orders::orders.fulfilled') }}</span><br />
+												<div class="badge order-status fulfilled">{{ trans('orders::orders.fulfilled') }}</div>
 												<time datetime="{{ $item->fulfilled }}">{{ Carbon\Carbon::parse($item->fulfilled)->format('M j, Y') }}</time>
 											</td>
 										@endif
@@ -773,9 +790,9 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 					<div class="pane-heading card-header">
 						<div class="row">
 							<div class="col col-md-6">
-								<div class="card-title">
+								<h3 class="card-title">
 									{{ trans('orders::orders.payment information') }}
-								</div>
+								</h3>
 							</div>
 							<div class="col col-md-6 text-right">
 								@if (count($order->accounts) == 0 && $canEdit)
@@ -821,7 +838,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								$total = 0;
 								foreach ($order->accounts as $account)
 								{
-									$history = $history->merge($account->history()->orderBy('created_at', 'desc')->get());
+									$history = $history->merge($account->history()->orderBy('updated_at', 'desc')->get());
 
 									$s = $account->status;
 
@@ -867,31 +884,38 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									?>
 									<tr id="account_{{ $account->id }}">
 										<td>
-											<span id="status_{{ $account->id }}" class="badge order-status {{ $account->status }}">{{ $text }}</span>
+											<div id="status_{{ $account->id }}" class="badge order-status {{ $account->status }}">{{ $text }}</div>
 											<input type="hidden" name="accountid" data-api="{{ route('api.orders.accounts.read', ['id' => $account->id]) }}" id="{{ $account->id }}" value="{{ strtoupper($account->status) }}" />
 
 											@if ($s == 'pending_approval')
-												<div class="form-group mt-3 account-edit-hide">
+												<div class="form-group mt-3 account-edit-hide" id="button_{{ $account->id }}">
 													@if ($account->approveruserid == auth()->user()->id || auth()->user()->can('manage orders'))
-														<button name="adbutton" class="btn btn-sm btn-success account-approve" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}">Approve</button>
-														<button name="adbutton" class="btn btn-sm btn-danger account-deny" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}">Deny</button>
+														<button name="adbutton" id="button_{{ $account->id }}_approve" class="btn btn-sm btn-success account-approve" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-txt="Approved">Approve</button>
+														<button name="adbutton" id="button_{{ $account->id }}_deny" class="btn btn-sm btn-danger account-deny" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-txt="Denied" data-confirm="Are you sure you want to deny payment with this account?">Deny</button>
 													@endif
 													@if (auth()->user()->can('manage orders'))
-														<button name="remind" class="btn btn-sm btn-secondary account-remind" data-id="{{ $account->id }}">Remind</button>
+														<button name="remind" id="button_{{ $account->id }}_remind" class="btn btn-sm btn-secondary account-remind" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-txt="Reminded">Remind</button>
+													@endif
+													@if (auth()->user()->can('manage orders'))
+														<button name="adbutton" id="button_{{ $account->id }}_reset" class="btn btn-sm btn-warning account-reset hide" disabled data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-confirm="Are you sure you want to reset approved/paid/denied status for this account?">Reset</button>
 													@endif
 												</div>
 											@elseif ($s == 'pending_collection')
 												@if ($order->status == 'pending_collection' && auth()->user()->can('manage orders'))
-													<div class="form-group mt-3 account-edit-hide">
+													<div class="form-group mt-3 account-edit-hide" id="button_{{ $account->id }}">
 														<label for="docid_{{ $account->id }}" class="sr-only">Doc ID</label>
 														<input type="text" class="doc copy-doc form-control" name="docid" id="docid_{{ $account->id }}" placeholder="Doc ID" size="15" maxlength="12" />
 
 														<label for="docdate_{{ $account->id }}" class="sr-only">Doc Date</label>
-														<input type="text" class="doc copy-docdate form-control date-pick" name="docdate" id="docdate_{{ $account->id }}" placeholder="Doc Date" size="15" />
+														<input type="text" class="doc copy-docdate form-control date-pick" name="docdate" id="docdate_{{ $account->id }}" placeholder="Doc Date (YYYY-MM-DD)" size="15" />
 
 														<button class="btn btn-sm btn-secondary account-collect" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}">{{ trans('orders::orders.collect') }}</button>
 													</div>
 												@endif
+											@elseif (($s == 'denied' || $s == 'approved') && auth()->user()->can('manage orders'))
+												<div class="form-group mt-3 account-edit-hide" id="button_{{ $account->id }}">
+													<button name="adbutton" id="button_{{ $account->id }}_reset" class="btn btn-sm btn-warning account-reset" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-confirm="Are you sure you want to reset approved/paid/denied status for this account?">Reset</button>
+												</div>
 											@endif
 										</td>
 										<td>
@@ -1051,20 +1075,22 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						@if ($canEdit)
 							<div class="row">
 								<div class="col-md-6">
-									<div class="panel-title card-title">
+									<h3 class="panel-title card-title">
 										{{ trans('orders::orders.notes') }}
 										<a href="#help1" class="help icn tip" title="Help on Order Notes">
 											<i class="fa fa-question-circle" aria-hidden="true"></i> Help
 										</a>
-									</div>
+									</h3>
 								</div>
 								<div class="col-md-6 text-right">
+									@if ($order->status != 'canceled')
 									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property tip" title="Edit" data-prop="usernotes" data-value="{{ $order->id }}">
 										<i class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_usernotes"></i><span class="sr-only">Edit</span>
 									</a>
 									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_usernotes" class="stash cancel-edit-property" title="Cancel" data-prop="usernotes" data-value="{{ $order->id }}">
 										<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">Cancel</span>
 									</a>
+									@endif
 								</div>
 							</div>
 						@else
@@ -1097,15 +1123,17 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						<div class="pane-heading card-header">
 							<div class="row">
 								<div class="col-md-6">
-									<div class="pane-title card-title">{{ trans('orders::orders.staff notes') }}</div>
+									<h3 class="pane-title card-title">{{ trans('orders::orders.staff notes') }}</h3>
 								</div>
 								<div class="col-md-6 text-right">
+								@if ($order->status != 'canceled')
 									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property tip" title="Edit" data-prop="staffnotes" data-value="{{ $order->id }}">
 										<i class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_staffnotes"></i><span class="sr-only">Edit</span>
 									</a>
 									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_staffnotes" class="stash cancel-edit-property tip" title="Cancel" data-prop="staffnotes" data-value="{{ $order->id }}">
 										<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">Cancel</span>
 									</a>
+								@endif
 								</div>
 							</div>
 						</div>
@@ -1121,22 +1149,27 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				@endif
 
 				@if ($order->id)
-					<div id="order-history">
-						<div class="data-wrap">
-							<h3>{{ trans('history::history.history') }}</h3>
-							<ul class="entry-log">
+					<div id="order-history" class="card">
+						<div class="card-header">
+							<h3 class="card-title">{{ trans('history::history.history') }}</h3>
+						</div>
+							<ul class="list-group list-group-flush">
 								<?php
 								if (count($history)):
-									$history->sortByDesc('created_at');
+									$sorted = $history->sortByDesc('updated_at');
 
-									foreach ($history as $action):
+									foreach ($sorted as $action):
 										$actor = trans('global.unknown');
 
 										if ($action->user):
 											$actor = e($action->user->name);
 										endif;
 
-										$created = $action->created_at && $action->created_at != '0000-00-00 00:00:00' ? $action->created_at : trans('global.unknown');
+										if ($action->action == 'created'):
+											$dt = $action->created_at;// && $action->created_at != '0000-00-00 00:00:00' ? $action->created_at : trans('global.unknown');
+										elseif ($action->action == 'updated'):
+											$dt = $action->updated_at;
+										endif;
 
 										$fields = array_keys(get_object_vars($action->new));
 										foreach ($fields as $i => $k)
@@ -1147,32 +1180,68 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											}
 										}
 										$old = Carbon\Carbon::now()->subDays(2); //->toDateTimeString();
+
+										$type = $action->historable_type;
+										$type = explode('\\', $type);
+										$type = end($type);
+
+										$entity = strtolower($type);
+
+										$did = '';
+										if ($entity == 'account' && $action->action == 'created')
+										{
+											$did = '<span class="text-info">added</span> payment account #' . $action->historable_id;
+										}
+										if ($entity == 'item' && $action->action == 'created')
+										{
+											$did = '<span class="text-info">added</span> an item to the order';
+										}
+										if ($entity == 'order' && $action->action == 'created')
+										{
+											$did = '<span class="text-success">placed</span> this order';
+										}
+										if ($entity == 'order' && $action->action == 'updated')
+										{
+											$did = '<span class="text-info">edited</span> this order';
+										}
+										if (in_array('approveruserid', $fields))
+										{
+											$did = '<span class="text-info">set</span> approver for payment account #' . $action->historable_id;
+										}
+										if (in_array('datetimedenied', $fields))
+										{
+											$did = '<span class="text-danger">denied</span> payment account #' . $action->historable_id;
+										}
 										?>
-										<li>
-											<span class="entry-log-action">{{ trans('history::history.action ' . $action->action, ['user' => $actor, 'entity' => 'menu']) }}</span><br />
-											<time datetime="{{ $action->created_at }}" class="entry-log-date">
-												@if ($action->created_at < $old)
-													{{ $action->created_at->format('d M Y') }}
+										<li class="list-group-item">
+											<!-- <span class="entry-log-action">{{ trans('history::history.action ' . $action->action, ['user' => $actor, 'entity' => $entity]) }}</span><br /> -->
+											<div class="row">
+												<div class="col-md-8">
+												{!! $actor . ' ' . $did !!}
+												</div>
+												<div class="col-md-4 text-right">
+											<time datetime="{{ $action->dt }}" class="entry-log-date">
+												@if ($dt < $old)
+													{{ $dt->format('d M Y') }}
 												@else
-													{{ $action->created_at->diffForHumans() }}
+													{{ $dt->diffForHumans() }}
 												@endif
-											</time><br />
-											@if ($action->action == 'updated')
-												<span class="entry-diff">Changed fields: <?php echo implode(', ', $fields); ?></span>
-											@endif
+											</time>
+												</div>
+											</div>
 										</li>
 										<?php
 									endforeach;
 								else:
 									?>
-									<li>
+									<li class="list-group-item">
 										<span class="entry-diff">{{ trans('history::history.none found') }}</span>
 									</li>
 									<?php
 								endif;
 								?>
 							</ul>
-						</div>
+
 					</div><!-- / #order-history -->
 				@endif
 

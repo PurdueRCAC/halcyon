@@ -174,9 +174,11 @@ $(document).ready(function() {
 		</div>
 		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
 			@if (auth()->user() && auth()->user()->can('manage orders'))
-				<a href="{{ route('site.orders.products.create') }}" class="btn btn-secondary">
+			<p>
+				<a href="{{ route('site.orders.products.create') }}" class="btn btn-info">
 					<i class="fa fa-plus"></i> {{ trans('orders::orders.create product') }}
 				</a>
+			</p>
 			@endif
 		</div>
 	</div>
@@ -205,10 +207,9 @@ $(document).ready(function() {
 						<option value="0"<?php if (!$filters['category']): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
 						<?php foreach ($categories as $category) { ?>
 							<?php
-							if ($filters['category'] == $category->id)
-							{
+							if ($filters['category'] == $category->id):
 								$cat = $category;
-							}
+							endif;
 							?>
 							<option value="{{ $category->id }}"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
 						<?php } ?>
@@ -245,10 +246,8 @@ $(document).ready(function() {
 			<?php
 			$items = $cart->content();
 
-			if (count($items))
-			{
-				foreach ($items as $item)
-				{
+			if (count($items)):
+				foreach ($items as $item):
 					$product = App\Modules\Orders\Models\Product::find($item->id);
 					?>
 					<li class="list-group-item cart-item">
@@ -263,17 +262,15 @@ $(document).ready(function() {
 					</div>
 					</li>
 					<?php
-				}
-			}
-			else
-			{
+				endforeach;
+			else:
 				?>
 				<li class="list-group-item cart-item cart-empty">
 					<i class="fa fa-shopping-cart" aria-hidden="true"></i>
 					Your cart is empty.
 				</li>
 				<?php
-			}
+			endif;
 			?>
 			<li class="list-group-item template hide">
 				<div class="row">

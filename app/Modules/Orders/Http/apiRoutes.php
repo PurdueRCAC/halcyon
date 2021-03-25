@@ -31,6 +31,11 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 		'middleware' => 'can:delete orders',
 	])->where('id', '[0-9]+');
 
+	$router->get('/sequence/{id}', [
+		'as' => 'api.orders.items.sequence',
+		'uses' => 'ItemsController@sequence',
+	])->where('id', '[0-9]+');
+
 	// Categories
 	$router->group(['prefix' => '/categories'], function (Router $router)
 	{
