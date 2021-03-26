@@ -98,6 +98,7 @@ return [
 	'started' => 'Started',
 	'billed through' => 'Billed through',
 	'paid through' => 'Paid through',
+	'create category' => 'New category',
 	'confirm' => [
 		'item removal' => 'Are you sure you want to remove this item?',
 		'account removal' => 'Are you sure you want to remove this account?',

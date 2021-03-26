@@ -125,7 +125,9 @@ class CategoriesController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required'
+			'fields.parentordercategoryid' => 'nullable|integer',
+			'fields.name' => 'required|string|max:64',
+			'fields.description' => 'nullable|string|max:2000',
 		]);
 
 		$id = $request->input('id');
@@ -141,7 +143,6 @@ class CategoriesController extends Controller
 		elseif ($request->input('state') != 'trashed' && $row->trashed())
 		{
 			$row->datetimeremoved = '0000-00-00 00:00:00';
-			//$row->restore();
 		}
 
 		if (!$row->save())
@@ -167,7 +168,8 @@ class CategoriesController extends Controller
 		$categories = Category::query()
 			->where('id', '!=', $id)
 			->where('id', '!=', 1)
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->withTrashed()
+			->whereIsActive()
 			->orderBy('name', 'asc')
 			->get();
 
@@ -180,7 +182,7 @@ class CategoriesController extends Controller
 	/**
 	 * Remove the specified entry
 	 *
-	 * @param   integer   $id
+	 * @param   Request $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)

@@ -1,6 +1,10 @@
-/**
+/*!
  * Orders module styles
  */
+
+.nav-tabs {
+	margin-bottom: 1em;
+}
 .form-group label {
 	font-weight: bold;
 }
@@ -10,116 +14,16 @@
 .card-title {
 	font-size: 1.2em;
 }
-div.order {
-	font-size: 0.85em;
-}
-.contentInner ul li.list-group-item {
+/*.contentInner ul li.list-group-item {
 	margin: 0;
-}
-div.orderheader {
-	margin-top: 2em;
-	margin-bottom: 0.5em;
-	font-weight: bold;
-	font-size: 1.3em;
-	border-bottom: 1px solid #999999;
-}
-div.orderheaderitemblock {
-	padding-left: 3px;
-}
-div.orderstatusblock {
-	float: right;
-	text-align: right;
-	padding-right: 3px;
-}
-div.orderstatus {
-	font-size: 1.4em;
-	font-weight: bold;
-}
-div.orderstatus input {
-	margin-top: 8px;
-}
-span.orderstatusred {
-	color: #FF0000;
-}
-span.orderstatusorange {
-	color: #DF7401;
-}
-span.orderstatusgreen {
-	color: #04B404;
-}
-
-/*
-table.orderproduct th.orderproduct {
-	font-weight: bold;
-}
-.row.orderproductitemprivate,
-table.orderproduct tr.orderproductitemprivate td {
-	background: #FCF9EF;
-}
-table.orderproduct td.orderprice {
-	text-align: right;
-	white-space: nowrap;
-}
-table.orderproduct th.orderprice {
-	text-align: right;
-}
-table.orderproduct .orderproductextra td {
-	border-top: none;
-}
-table.orderproduct td.ordertotal {
-	border-top-style: double;
-	border-top-width: 3px;
-	border-top-color: #666666;
-}
-table.orderproduct h2 {
-	margin-bottom: 0.3em;
-	margin-top: 6px;
-}
-table.orderproduct p {
-	line-height: 150%;
-}
-table.orderproduct input {
-	font-weight: normal;
-	height: 2em;
 }*/
 
-ol.order li {
-	position: relative;
-	list-style: decimal;
-	list-style-position: outside;
-	margin-bottom: 0.25em;
+table tbody tr.selected td,
+table tbody tr.selected {
+	background-color: #eaf6f6;
 }
-ol.order li:before {
-	position: absolute;
-	left: -35px;
-	top: 0;
-}
-ol.order li.currentstep {
-	font-weight: bold;
-}
-ol.order li.stepcomplete:before {
-	content: "\2713";
-	display: block;
-	width: 20px;
-	height: 20px;
-	font-size: 16px;
-	line-height: 20px;
-	color: green;
-	margin: 0 3px 0 0;
-	float: left;
-}
-ol.order li.notmystep {
-	color: #666666;
-}
-
 .ordernotes {
 	min-height: 163px;
-}
-
-.none,
-.never,
-.unknown {
-	color: #ccc;
 }
 .filters {
 	background-color: #f5f5f5;
@@ -136,6 +40,8 @@ ol.order li.notmystep {
 .processing .spinner-border {
 	display: inline-block;
 }
+
+/* Cart / Checkout */
 .cart-empty {
 	text-align: center;
 	color: #656565;
@@ -146,26 +52,11 @@ ol.order li.notmystep {
 	color: #ddd;
 	display: block;
 }
-/*.order-status {
-	color: #f00;
-	text-decoration: none;
-	white-space: nowrap;
-	margin: 0;
-	padding: 0.5em;
-	display: inline-block;
-	font-size: 0.85em;
-	line-height: 1;
-	-webkit-border-radius: 0.25em;
-	-moz-border-radius: 0.25em;
-	border-radius: 0.25em;
-	color: #6b7897;
-	background-color: #f9f9f9;
-}*/
-.canceled {
-	color: #999;
-}
 .cancellable {
 	margin: 0 0 2em 0;
+}
+.checkout-step {
+	display: none;
 }
 
 /* Status */
@@ -193,70 +84,35 @@ ol.order li.notmystep {
 	background-color: rgba(211, 81, 93, 0.1);
 }
 
-
-.product-sequence,
-.product-delete {
-	/*float: left;*/
-	margin: 0;
+/* Order steps */
+ol.steps li {
+	position: relative;
+	list-style: decimal;
+	list-style-position: outside;
+	margin-bottom: 0.25em;
 }
-a.product-move-up,
-a.product-move-down,
-a.product-move-up:visited,
-a.product-move-down:visited {
-	color: #20809D;
+ol.steps li:before {
+	position: absolute;
+	left: -2.25em;
+	top: 0;
 }
-a.product-move-up:hover,
-a.product-move-down:hover,
-a.product-move-up:focus,
-a.product-move-down:focus {
-	color: blue;
-}
-.product-move-down .editicon {
-	width: auto;
-	height: auto;
-}
-.product-delete {
-	width: 18px;
-	height: 18px;
-}
-.product-edit-cancel img {
-	display: none;
-}
-.product-edit-controls {
-	white-space: nowrap;
-}
-.product-edit-disabled {
-	cursor: not-allowed;
-}
-.product-edit-input {
-	display: none;
-}
-.product-label {
+ol.steps li.current {
 	font-weight: bold;
 }
-.product-mou {
-	width: 350px;
-	font-size: 0.7em;
-	word-wrap:break-word;
+ol.steps li.complete {
+	background: transparent;
 }
-table.orderproduct td.product-category {
-	padding: 6px;
+ol.steps li.complete:before {
+	content: "\2713";
+	display: block;
+	width: 1em;
+	margin: 0 0.2em 0 0;
+	float: left;
 }
-table.orderproduct td.product-manage {
-	padding-right: 20px;
-	padding-left: 12px;
+ol.steps li.notmystep {
+	color: #666;
 }
 
-table tbody tr.selected td,
-table tbody tr.selected {
-	background-color: #eaf6f6;
-}
-.checkout-step {
-	display: none;
-}
-.nav-tabs {
-	margin-bottom: 1em;
-}
 @media print {
 	.container {
 		width: 100% !important;

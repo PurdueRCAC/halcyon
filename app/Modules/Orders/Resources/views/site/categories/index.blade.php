@@ -113,7 +113,21 @@ app('pathway')
 	categories
 @endcomponent
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-	<h2 class="sr-only">{{ trans('orders::orders.categories') }}</h2>
+
+	<div class="row">
+		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+			<h2 class="sr-only">{{ trans('orders::orders.categories') }}</h2>
+		</div>
+		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+			@if (auth()->user()->can('create orders.categories'))
+			<p>
+				<a href="{{ route('site.orders.categories.create') }}" class="btn btn-info">
+					<i class="fa fa-plus"></i> {{ trans('orders::orders.create category') }}
+				</a>
+			</p>
+			@endif
+		</div>
+	</div>
 
 	<form action="{{ route('site.orders.categories') }}" method="post" name="adminForm" id="adminForm" class="row">
 		<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
