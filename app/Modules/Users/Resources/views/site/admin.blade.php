@@ -19,7 +19,7 @@ $(document).ready(function() {
 					data: function (params) {
 						var query = {
 							search: params.term,
-							order: 'surname',
+							order: 'name',
 							order_dir: 'asc'
 						}
 
