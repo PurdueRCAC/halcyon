@@ -91,7 +91,9 @@ figcaption {
 .panel > .list-group li {
 	margin-left: 0;
 }
-
+label .required {
+	color: #c00;
+}
  /* tabs */
 .nav-tabs .nav-link {
 	text-decoration: none;
