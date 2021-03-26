@@ -621,6 +621,8 @@ class AccountsController extends Controller
 
 		if ($request->has('amount'))
 		{
+			$row->amount = $request->input('amount');
+
 			// auto approve for orders less than 1000. Should not effect recurring orders.
 			if (config('orders.admin_user') && $submitter != config('orders.admin_user'))
 			{
@@ -731,7 +733,7 @@ class AccountsController extends Controller
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function destroy($id)
+	public function delete($id)
 	{
 		$row = Account::findOrFail($id);
 

@@ -1053,14 +1053,14 @@ function AccountApproverSearch() {
 	if (users.length) {
 		users.each(function (i, user) {
 			user = $(user);
-			var cl = user.clone()
+			/*var cl = user.clone()
 				.attr('type', 'hidden')
 				.val(user.val().replace(/([^:]+):/, ''));
 			user
 				.attr('name', user.attr('id') + i)
 				.attr('id', user.attr('id') + i)
 				.val(user.val().replace(/(:\d+)$/, ''))
-				.after(cl);
+				.after(cl);*/
 			user.autocomplete({
 				minLength: 2,
 				source: function (request, response) {
@@ -1078,7 +1078,8 @@ function AccountApproverSearch() {
 					event.preventDefault();
 					// Set selection
 					user.val(ui.item.label); // display the selected text
-					cl.val(ui.item.id); // save selected id to input
+					user.attr('data-id', ui.item.id);
+					//cl.val(ui.item.id); // save selected id to input
 					return false;
 				}
 			});
@@ -1845,19 +1846,23 @@ function EditAccounts() {
 		// Check approvers
 		var spans = $('.approver_span');
 		for (x=0;x<approverinputs.length;x++) {
+			if (typeof (accountstatus[x]) == 'undefined') {
+				continue;
+			}
 			//if ((spans[x].getElementsByTagName("a").length == 0 && approverinputs[x].value.match(/.*?\(([a-z0-9]+)\)/))
 			// || (spans[x].getElementsByTagName("a").length != 0 && spans[x].getElementsByTagName("a")[0].innerHTML != approverinputs[x].value && approverinputs[x].value.match(/.*?\(([a-z0-9]+)\)/))) {
-			if (spans[x].getAttribute('data-approverid') != approverinputs[x].value) {
+			if (spans[x].getAttribute('data-approverid') != approverinputs[x].getAttribute('data-id')) {
 				var id = accountstatus[x].getAttribute('data-api');
 				//var name = approverinputs[x].value.match(/.*?\(([a-z0-9]+)\)/);
 				//	name = name[1];
-				var post = {'approveruserid': (approverinputs[x].value ? approverinputs[x].value : 0)};
-
+				var post = { 'approveruserid': approverinputs[x].getAttribute('data-id') }//(approverinputs[x].value ? approverinputs[x].value : 0)};
+				console.log(approverinputs[x]);
 				if (accountstatus[x].value == "PENDING_COLLECTION") {
 					post['approved'] = "0";
 				}
 				pendingupdates++;
 				num_changes++;
+				//console.log(post);
 				post = JSON.stringify(post);
 				WSPutURL(id, post, UpdatedAccountInfo);
 			}
@@ -1879,6 +1884,7 @@ function EditAccounts() {
 					}
 					pendingupdates++;
 					num_changes++;
+					//console.log(post);
 					post = JSON.stringify(post);
 					WSPutURL(id, post, UpdatedAccountInfo);
 				}
@@ -1949,8 +1955,8 @@ function EditAccounts() {
 						return;
 					}
 
-					if (approverinputs[x].value) {
-						post['approveruserid'] = approverinputs[x].value;
+					if (approverinputs[x].getAttribute('data-id')) {
+						post['approveruserid'] = approverinputs[x].getAttribute('data-id');
 					}
 
 					pendingupdates++;
@@ -2118,7 +2124,7 @@ var numerrorboxes = 0;
 function UpdatedAccountInfo(xml) {
 	pendingupdates--;
 
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		if (pendingupdates == 0) {
 			window.location.reload(true);
 		}

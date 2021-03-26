@@ -940,12 +940,10 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 														<button name="adbutton" id="button_{{ $account->id }}_reset" class="btn btn-sm btn-warning account-reset hide" disabled data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-confirm="Are you sure you want to reset approved/paid/denied status for this account?">Reset</button>
 													@endif
 												</div>
-											@elseif ($s == 'pending_collection')
-												@if ($order->status == 'pending_collection' && auth()->user()->can('manage orders'))
-													<div class="form-group mt-3 account-edit-hide">
-														<button name="adbutton" id="button_{{ $account->id }}_reset" class="btn btn-sm btn-warning account-reset" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-confirm="Are you sure you want to reset approved/denied status for this account?">Reset</button>
-													</div>
-												@endif
+											@elseif ($s == 'pending_collection' && auth()->user()->can('manage orders'))
+												<div class="form-group mt-3 account-edit-hide">
+													<button name="adbutton" id="button_{{ $account->id }}_reset" class="btn btn-sm btn-warning account-reset" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-confirm="Are you sure you want to reset approved/denied status for this account?">Reset</button>
+												</div>
 											@elseif ($s == 'denied' && auth()->user()->can('manage orders'))
 												<div class="form-group mt-3 account-edit-hide" id="button_{{ $account->id }}">
 													<button name="adbutton" id="button_{{ $account->id }}_reset" class="btn btn-sm btn-warning account-reset" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-confirm="Are you sure you want to reset approved/denied status for this account?">Reset</button>
@@ -1003,7 +1001,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												<span class="account-edit-hide approver_span none" data-approverid="{{ $account->approveruserid ? $account->approveruserid : '' }}">{{ trans('global.none') }}</span>
 											@endif
 											<span class="account-edit-show hide">
-												<input type="text" id="search_{{ $account->id }}" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" class="form-control form-users" name="approver" value="{{ $account->approver ? $account->approver->name . ' (' . $account->approver->username . ')' : '' }}" />
+												<input type="text" id="search_{{ $account->id }}" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" data-id="{{ $account->approveruserid }}" class="form-control form-users" name="approver" value="{{ $account->approver ? $account->approver->name . ' (' . $account->approver->username . ')' : '' }}" />
 											</span>
 										</td>
 										<td class="text-right text-nowrap">
@@ -1033,11 +1031,12 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											<td>
 												<input type="text" maxlength="17" class="form-control num8 balance-update" name="account" data-api="{{ route('api.orders.accounts.create') }}" placeholder="Account" value="" />
 												<br />
-												<label class="sr-only" for="new_justification">Budget justification</label>
-												<textarea name="justification" id="new_justification" rows="3" cols="35" maxlength="2000" placeholder="Budget justification" class="form-control balance-update"></textarea>
+												<label class="sr-only" for="justification0">Budget justification</label>
+												<textarea name="justification" id="justification0" rows="3" cols="35" maxlength="2000" placeholder="Budget justification" class="form-control balance-update"></textarea>
 											</td>
 											<td>
-												<input type="text" name="account_approver" id="new_approver" class="form-control form-users" value="" placeholder="Approver" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" />
+												<span class="approver_span hide" data-approverid=""></span>
+												<input type="text" name="approver" id="approver0" class="form-control form-users" value="" placeholder="Approver" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" />
 											</td>
 											<td class="text-right text-nowrap">
 												<!-- <span class="input-group">
@@ -1052,8 +1051,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										</tr>
 									@endif
 									<tr id="account_new_row" class="hide">
-										<td{!! count($order->accounts) == 0 ? ' class="hide"' : '' !!}>
-										</td>
+										<td{!! count($order->accounts) == 0 ? ' class="hide"' : '' !!}></td>
 										<td>
 											<input type="text" maxlength="17" class="form-control num8 balance-update" name="account" data-api="{{ route('api.orders.accounts.create') }}" placeholder="Account" value="" />
 											<br />
@@ -1061,7 +1059,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											<textarea name="justification" id="new_justification" rows="3" cols="35" maxlength="2000" placeholder="Budget justification" class="form-control balance-update"></textarea>
 										</td>
 										<td>
-											<input type="text" name="account_approver" id="new_approver" class="form-control form-users" value="" placeholder="Approver" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" />
+											<span class="approver_span hide" data-approverid=""></span>
+											<input type="text" name="approver" id="new_approver" class="form-control form-users" value="" placeholder="Approver" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" />
 										</td>
 										<td class="text-right text-nowrap">
 											<input type="text" name="account_amount" class="form-control balance-update" size="8" value="0.00" />
