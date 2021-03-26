@@ -359,8 +359,18 @@ class AccountsController extends Controller
 			$row->approveruserid = auth()->user()->id;
 		}
 
+		if ($row->approveruserid)
+		{
+			if (!$row->approver)
+			{
+				return response()->json(['message' => trans('orders::orders.errors.invalid approverid')], 415);
+			}
+
+			$row->notice = 3;
+		}
+
 		// auto approve for orders less than 1000. Should not effect recurring orders.
-		if (config('orders.admin_user') && $submitter != config('orders.admin_user'))
+		if (config('module.orders.admin_user') && auth()->user()->id != config('module.orders.admin_user'))
 		{
 			if ($row->amount > 5000 && $row->amount <= 100000)
 			{
@@ -412,7 +422,7 @@ class AccountsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"example":   "2,400.00"
+	 * 			"example":   "2,400.00 or 240000"
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -506,6 +516,15 @@ class AccountsController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "denied",
 	 * 		"description":   "Has the payment been denied?",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "boolean"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "reset",
+	 * 		"description":   "Reset paid/denied status?",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "boolean"

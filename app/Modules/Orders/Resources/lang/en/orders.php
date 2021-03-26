@@ -102,4 +102,8 @@ return [
 		'item removal' => 'Are you sure you want to remove this item?',
 		'account removal' => 'Are you sure you want to remove this account?',
 	],
+	'errors' => [
+		'invalid orderid' => 'Invalid order ID.',
+		'invalid approverid' => 'Invalid approver ID',
+	],
 ];
