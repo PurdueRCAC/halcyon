@@ -8,8 +8,9 @@
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
 $(document).ready(function() { 
-	$('.filter-submit').on('change', function(e){
-		$(this).closest('form').submit();
+	$('.recur-renew').on('click', function(e){
+		e.preventDefault();
+		Renew($(this).data('api'), $(this).data('item'));
 	});
 });
 </script>
@@ -38,18 +39,8 @@ app('pathway')
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	<h2 class="sr-only">{{ trans('orders::orders.recurring') }}</h2>
 
-	<form action="{{ route('site.orders.recurring') }}" method="get" class="row">
-		<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-			<fieldset class="filters mt-0">
-				<legend class="sr-only">Filter</legend>
-
-				<div class="form-group">
-					<label for="filter_search">{{ trans('search.label') }}</label>
-					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="" />
-				</div>
-			</fieldset>
-		</div>
-		<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+	<form action="{{ route('site.orders.recurring.read', ['id' => $item->id]) }}" method="get" class="row">
+		<div class="contentInner col-lg-12 col-md-12 col-sm-12 col-xs-12">
 			
 			<div class="card">
 				<div class="card-header">
@@ -58,8 +49,8 @@ app('pathway')
 							<h3 class="card-title">Recurring Item #{{ $item->id }}</h3>
 						</div>
 						<div class="col-md-4 text-right">
-							@if ($item->datepaiduntil == $item->datebilleduntil && $item->datepaiduntil && $item->datepaiduntil != '0000-00-00 00:00:00')
-								<button class="btn btn-sm btn-secondary recur-renew tip" title="Generate an order to extend service for this recurring item" data-item="{{ $item->id }}">Renew Now</button>
+							@if ($item->paiduntil == $item->billeduntil && $item->paiduntil && $item->paiduntil != '0000-00-00 00:00:00' && $item->paiduntil != '-0001-11-30 00:00:00')
+								<button class="btn btn-sm btn-secondary recur-renew tip" title="Generate an order to extend service for this recurring item" data-api="{{ route('api.orders.create') }}" data-item="{{ $item->id }}">Renew Now</button>
 							@endif
 						</div>
 					</div>
@@ -67,17 +58,34 @@ app('pathway')
 				<div class="card-body">
 					<div class="form-group">
 						<p><strong>{{ trans('orders::orders.product') }}:</strong></p>
-						<p class="form-text">{{ $item->product->name }}</p>
-					</div>
-					<div class="form-group">
-						<p><strong>{{ trans('orders::orders.group') }}:</strong></p>
 						<p class="form-text">
-							@foreach ($item->ordergroups as $group)
-								{{ $group }}<br />
-							@endforeach
+							<a href="{{ route('site.orders.recurring', ['product' => $item->orderproductid]) }}">{{ $item->product->name }}</a>
 						</p>
 					</div>
-			
+
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<p><strong>{{ trans('orders::orders.user') }}:</strong></p>
+								<ul>
+									@foreach ($item->orderusers as $user)
+										<li><a href="{{ route('site.users.account', ['u' => $user]) }}">{{ App\Modules\Users\Models\User::findOrFail($user)->name }}</a></li>
+									@endforeach
+								</ul>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<p><strong>{{ trans('orders::orders.group') }}:</strong></p>
+								<ul>
+									@foreach ($item->ordergroups as $group)
+										<li>{{ App\Modules\Groups\Models\Group::findOrFail($group)->name }}</li>
+									@endforeach
+								</ul>
+							</div>
+						</div>
+					</div>
+
 					@if ($item->start())
 					<div class="row">
 						<div class="col">

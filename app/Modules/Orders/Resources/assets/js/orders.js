@@ -2404,14 +2404,12 @@ function SaveOrderGroup() {
  * @param   {number}  sequence
  * @return  {void}
  */
-function Renew(sequence) {
+function Renew(url, sequence) {
 	var post = {};
-
 	post['orderitemsequence'] = sequence;
+	post = JSON.stringify(post);
 
-	//post = JSON.stringify(post);
-
-	WSPostURL(ROOT_URL + "orders", post, function(xml) {
+	WSPostURL(url, post, function(xml) {
 		if (xml.status == 200) {
 			var results =  JSON.parse(xml.responseText);
 			window.location = "/orders/" + results['id'];

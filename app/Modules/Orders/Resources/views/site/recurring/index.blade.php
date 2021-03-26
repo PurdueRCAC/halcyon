@@ -44,14 +44,25 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="filter_search">{{ trans('search.label') }}</label>
-					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('Find by ID, user, or group') }}" value="{{ $filters['search'] }}" />
 				</div>
 
 				<div class="form-group">
 					<label for="filter_product">{{ trans('orders::orders.product') }}</label>
 					<select name="product" id="filter_product" class="form-control filter filter-submit">
 						<option value="*"<?php if ($filters['product'] == 0): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all products') }}</option>
-						<?php foreach ($products as $product) { ?>
+						<?php
+						$prev = 0;
+						foreach ($products as $product) { ?>
+							@if ($product->recurringtimeperiodid != $prev)
+								@if ($prev)
+									</optgroup>
+								@endif
+								@php
+								$prev = $product->recurringtimeperiodid;
+								@endphp
+								<optgroup label="{{ $product->timeperiod->name }}">
+							@endif
 							<option value="<?php echo $product->id; ?>"<?php if ($filters['product'] == $product->id): echo ' selected="selected"'; endif;?>>{{ $product->name }}</option>
 						<?php } ?>
 					</select>
@@ -67,6 +78,9 @@ app('pathway')
 							<th scope="col" class="priority-5">
 								<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.id'), 'id', $filters['order_dir'], $filters['order']); ?>
 							</th>
+							<th scope="col" class="priority-5">
+								{{ trans('orders::orders.recurrence') }}
+							</th>
 							<th scope="col" class="priority-4">
 								<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.product'), 'product', $filters['order_dir'], $filters['order']); ?>
 							</th>
@@ -75,7 +89,7 @@ app('pathway')
 								<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.billed until'), 'billeduntil', $filters['order_dir'], $filters['order']); ?>
 							</th>
 							<th scope="col" class="priority-4">
-								{{ trans('orders::orders.submitter') }}
+								{{ trans('orders::orders.for') }}
 							</th>
 						</tr>
 					</thead>
@@ -90,6 +104,9 @@ app('pathway')
 								@else
 									{{ $row->id }}
 								@endif
+							</td>
+							<td>
+								{{ $row->product->timeperiod->name }}
 							</td>
 							<td>
 								{{ $row->product->name }}

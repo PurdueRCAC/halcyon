@@ -361,13 +361,36 @@ class OrdersController extends Controller
 		if (!auth()->user()->can('manage orders'))
 		{
 			$query->where(function($where) use ($o)
-				{
-					$where->where($o . '.userid', '=', auth()->user()->id)
-						->orWhere($o . '.submitteruserid', '=', auth()->user()->id);
-				});
+			{
+				$where->where($o . '.userid', '=', auth()->user()->id)
+					->orWhere($o . '.submitteruserid', '=', auth()->user()->id);
+			});
 		}
 
-		if ($filters['product'])
+		if ($filters['search'])
+		{
+			if (is_numeric($filters['search']))
+			{
+				$query->where($i . '.id', '=', $filters['search']);
+			}
+			else
+			{
+				$u = (new User())->getTable();
+				$g = (new \App\Modules\Groups\Models\Group())->getTable();
+
+				$query->leftJoin($u, $u . '.id', $o . '.userid');
+				$query->leftJoin($g, $g . '.id', $o . '.groupid')
+					->where(function($query) use ($filters, $g, $u)
+					{
+						$query->where($g . '.name', 'like', $filters['search'] . '%')
+							->orWhere($g . '.name', 'like', '%' . $filters['search'] . '%')
+							->orWhere($u . '.name', 'like', $filters['search'] . '%')
+							->orWhere($u . '.name', 'like', '%' . $filters['search'] . '%');
+					});
+			}
+		}
+
+		if ($filters['product'] && $filters['product'] != '*')
 		{
 			$query->where($i . '.orderproductid', '=', $filters['product']);
 		}
@@ -386,11 +409,10 @@ class OrdersController extends Controller
 			->appends(array_filter($filters));
 
 		$products = Product::query()
-			->where(function($where)
-				{
-					$where->whereNull('datetimeremoved')
-						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
+			->withTrashed()
+			->whereIsActive()
+			->where('recurringtimeperiodid', '>', 0)
+			->orderBy('recurringtimeperiodid', 'asc')
 			->orderBy('name', 'asc')
 			->get();
 

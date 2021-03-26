@@ -1,10 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css?v=' . filemtime(public_path() . '/modules/orders/css/orders.css')) }}" />
 @endpush
 
 @push('scripts')
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
 $(document).ready(function() { 
@@ -13,7 +15,7 @@ $(document).ready(function() {
 	});
 
 	var users = $(".form-users");
-	if (users.length) {
+	/*if (users.length) {
 		users.each(function (i, user) {
 			user = $(user);
 			var cl = user.clone()
@@ -47,6 +49,44 @@ $(document).ready(function() {
 				}
 			});
 		});
+	}*/
+	if (users.length) {
+		users.each(function(i, el){
+			$(el).select2({
+				placeholder: $(el).attr('placeholder'),
+				ajax: {
+					url: $(el).data('api') + '&api_token=' + $('meta[name="api-token"]').attr('content'),
+					dataType: 'json',
+					maximumSelectionLength: 1,
+					data: function (params) {
+						var query = {
+							search: params.term,
+							order: 'name',
+							order_dir: 'asc'
+						}
+
+						return query;
+					},
+					processResults: function (data) {
+						for (var i = 0; i < data.data.length; i++) {
+							data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+						}
+
+						return {
+							results: data.data
+						};
+					}
+				}
+			});
+		});
+		users.on('select2:select', function (e) {
+			var data = e.params.data;
+			window.location = $(this).data('url') + "?u=" + data.id;
+		});
+		users.on('select2:unselect', function (e) {
+			var data = e.params.data;
+			window.location = $(this).data('url') + "?u=";
+		});
 	}
 });
 </script>
@@ -75,18 +115,23 @@ app('pathway')
 	<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 
 		<fieldset class="filters mt-0">
-			@if (auth()->user()->can('manage orders'))
+			<?php /*@if (auth()->user()->can('manage orders'))
 				<?php
 				$user = App\Modules\Users\Models\User::find($filters['userid']);
 				?>
 				<div class="form-group">
 					<label for="filter_userid">{{ trans('orders::orders.submitter') }}</label>
-					<input type="text" name="userid" id="filter_userid" class="form-control form-users filter-submit" data-uri="{{ route('api.users.index') }}?search=%s" placeholder="Find orders by user" value="{{ $user ? $user->name . ':' . $user->id : '' }}" />
+					<!-- <input type="text" name="userid" id="filter_userid" class="form-control form-users filter-submit" data-uri="{{ route('api.users.index') }}?search=%s" placeholder="Find by user or group" value="{{ $user ? $user->name . ':' . $user->id : '' }}" /> -->
+					<select name="userid" id="filter_userid" class="form-control form-users filter-submit" multiple="multiple" placeholder="Find by submitter" data-url="{{ route('site.orders.index') }}" data-api="{{ route('api.users.index') }}?search=%s">
+						@if ($user)
+						<option value="{{ $user->id }}" selected="selected">{{ $user->name }}</option>
+						@endif
+					</select>
 				</div>
-			@endif
+			@endif*/ ?>
 			<div class="form-group">
 				<label for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="Find orders by account or ID" value="{{ $filters['search'] }}" />
+				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="Find by account, user, or group" value="{{ $filters['search'] }}" />
 			</div>
 
 			<div class="form-group">
@@ -123,11 +168,11 @@ app('pathway')
 			</div>
 			<div class="form-group">
 				<label for="filter_start">{{ trans('orders::orders.start date') }}</label>
-				<input type="text" name="start" id="filter_start" size="10" class="form-control date-pick filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
+				<input type="text" name="start" id="filter_start" size="10" class="form-control date-pick filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date (YYYY-MM-DD)" />
 			</div>
 			<div class="form-group">
 				<label for="filter_end">{{ trans('orders::orders.end date') }}</label>
-				<input type="text" name="end" id="filter_end" size="10" class="form-control date-pick filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
+				<input type="text" name="end" id="filter_end" size="10" class="form-control date-pick filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date (YYYY-MM-DD)" />
 			</div>
 
 			<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />

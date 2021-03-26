@@ -53,7 +53,7 @@ app('pathway')
 			</div>
 
 			<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-				<label for="field-name">{{ trans('orders::orders.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+				<label for="field-name">{{ trans('orders::orders.name') }}: <span class="required" title="{{ trans('global.required') }}">*</span></label>
 				<input type="text" name="fields[name]" id="field-name" class="form-control required" maxlength="250" value="{{ $row->name }}" />
 			</div>
 

@@ -7,11 +7,11 @@
 .badge {
 	white-space: normal !important;
 }
+.card-title {
+	font-size: 1.2em;
+}
 div.order {
 	font-size: 0.85em;
-}
-.order .card-title {
-	font-size: 1.2em;
 }
 .contentInner ul li.list-group-item {
 	margin: 0;
