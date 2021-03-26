@@ -39,14 +39,14 @@ class GroupResource extends JsonResource
 
 				$ma = $m->toArray();
 
-				if (!$m->isTrashed() && $m->user->isTrashed())
+				if (!$m->isTrashed() && ($m->user && $m->user->isTrashed()))
 				{
 					$ma['dateremoved'] = $m->user->dateremoved;
 				}
 
 				if ($m->isManager())
 				{
-					if ($m->isTrashed() || $m->user->isTrashed())
+					if ($m->isTrashed() || ($m->user && $m->user->isTrashed()))
 					{
 						$data['priormanagers'][] = $ma;
 					}
@@ -59,7 +59,7 @@ class GroupResource extends JsonResource
 
 				if ($m->isViewer())
 				{
-					if ($m->isTrashed() || $m->user->isTrashed())
+					if ($m->isTrashed() || ($m->user && $m->user->isTrashed()))
 					{
 						$data['priorviewers'][] = $ma;
 					}
@@ -70,7 +70,7 @@ class GroupResource extends JsonResource
 					continue;
 				}
 
-				if ($m->isTrashed() || $m->user->isTrashed())
+				if ($m->isTrashed() || ($m->user && $m->user->isTrashed()))
 				{
 					$data['priormembers'][] = $ma;
 				}
