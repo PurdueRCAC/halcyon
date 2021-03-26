@@ -3,6 +3,7 @@
 @import '../css/font-awesome-css.min';
 @import 'bootstrap';
 @import 'college';
+@import 'diagnostics';
 
 /* 
 gold: #98700d;
@@ -107,8 +108,16 @@ figcaption {
 	margin-left: 0;
 }
 
- /* tabs 
-.nav-tabs {
+ /* tabs */
+.nav-tabs .nav-link {
+	text-decoration: none;
+	color: #656565;
+}
+.nav-tabs .active {
+	font-weight: bold;
+	color: #000;
+}
+ /*.nav-tabs {
 	border-bottom: 2px solid #DDD;
 }
 .nav-tabs > li {
@@ -221,11 +230,6 @@ a.btn-info:active {
 	font-weight: 400;
 	text-decoration: none;
 }
-/*.login a.btn-d,
-.login a.btn-default:hover,
-.login a.btn-default:active {
-	color: #000;
-}*/
 .login a.btn-info {
 	color: #fff;
 	background-color: #20809D;
@@ -293,11 +297,11 @@ li.resource_list {
 	margin-left: 0;
 }
 
-.pagination-row {
+/*.pagination-row {
 	margin-top: 1em;
 	margin-bottom: 1em;
 	font-size: 0.85em;
-}
+}*/
 
 /*button*/
 .accountsbtn {

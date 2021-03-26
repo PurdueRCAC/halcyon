@@ -94,6 +94,11 @@ figcaption {
 label .required {
 	color: #c00;
 }
+.none,
+.never,
+.unknown {
+	color: #ccc;
+}
  /* tabs */
 .nav-tabs .nav-link {
 	text-decoration: none;
