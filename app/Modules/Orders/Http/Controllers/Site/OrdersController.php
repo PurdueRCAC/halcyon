@@ -513,6 +513,7 @@ class OrdersController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function cart(Request $request)
