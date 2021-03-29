@@ -14,38 +14,14 @@
 .card .card-title {
 	font-weight: bold;
 }
-/*.indent {
-	text-indent: 2.5%;
+.showcase .card-body {
+	background-image: url('../../../files/envision/ShowcaseBanner.jpg');
 }
-
-li.resource_list a img {
-	display: none;
+.showcase .card-title {
+	color:#8e6f3e;
+	text-decoration:underline;
+	font-style:italic;
 }
-
-.topic {
-	font-size: large;
-	font-weight: bold;
-	text-align: center;
-}
-
-.projectTitle {
-	font-weight: bold;
-	text-align: center;
-	font-size: medium;
-	padding-top: 0;
-}
-
-.projectImg {
-	margin-top: 15px;
-	max-width: 180px;
-	max-height: 120px;
-}
-
-.envision .topicImg {
-	width: 40px;
-	height: 40px;
-}
-*/
 #logo {
 	width: 100%;
 	height: 67px;
