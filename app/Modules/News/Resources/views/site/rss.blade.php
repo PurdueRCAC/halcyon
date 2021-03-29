@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script type="text/javascript" src="{{ asset('modules/news/js/rss.js') }}"></script>
+<script type="text/javascript" src="{{ asset('modules/news/js/rss.js?v=' . filemtime(public_path() . '/modules/news/js/rss.js')) }}"></script>
 @endpush
 
 @section('content')
@@ -12,16 +12,14 @@
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	<h3>{{ trans('news::news.feeds') }}</h3>
 	<ul class="rsscontainer">
-		<li>
+		<li class="form-check">
 			<a class="rss" href="all"><i class="fa fa-rss-square" aria-hidden="true"></i> <strong>{{ trans('news::news.all news') }}</strong></a>
 		</li>
 		<?php
 		$resourceNewsTypes = array();
 
-		if (count($types))
-		{
-			foreach ($types as $n)
-			{
+		if (count($types)):
+			foreach ($types as $n):
 				$info = '';
 				if ($n->tagresources == 0)
 				{
@@ -34,14 +32,18 @@
 					array_push($resourceNewsTypes, $n->id);
 				}
 				?>
-				<li>
-					<input class="rssCheckbox" value="{{ $n->name }}" type="checkbox" />
-					<a target="_blank" class="rss" href="{{ route('site.news.feed', ['name' => $n->name]) }}"><i class="fa fa-rss-square" aria-hidden="true"></i> {{ $n->name }}</a>
+				<li class="form-check">
+					<input class="form-check-input rssCheckbox" value="{{ $n->name }}" id="checkbox{{ str_replace(' ', '', $n->name) }}" type="checkbox" />
+					<label class="form-check-label" for="checkbox{{ str_replace(' ', '', $n->name) }}">
+						<a target="_blank" class="rss" href="{{ route('site.news.feed', ['name' => $n->name]) }}">
+							<i class="fa fa-rss-square" aria-hidden="true"></i> {{ $n->name }}
+						</a>
+					</label>
 					<?php echo $info; ?>
 				</li>
 				<?php
-			}
-		}
+			endforeach;
+		endif;
 
 		// Force a comma at the end when imploding.
 		array_push($resourceNewsTypes, '');
@@ -56,21 +58,20 @@
 			->orderBy('name', 'asc')
 			->get();
 
-		if (count($resources))
-		{
-			foreach ($resources as $r)
-			{
+		if (count($resources)):
+			foreach ($resources as $r):
 				?>
-				<li>
-					<input class="rssCheckbox" value="{{ $r->name }}" type="checkbox" />
-					<a target="_blank" id="{{ $r->name }}" class="rss" href="{{ route('site.news.feed', ['name' => implode(',', $resourceNewsTypes) . $r->name]) }}">
-						<i class="fa fa-rss-square" aria-hidden="true"></i>
-						{{ $r->name }}
-					</a>
+				<li class="form-check">
+					<input class="form-check-input rssCheckbox" value="{{ $r->name }}" id="checkbox{{ str_replace(' ', '', $n->name) }}" type="checkbox" />
+					<label class="form-check-label" for="checkbox{{ str_replace(' ', '', $n->name) }}">
+						<a target="_blank" id="{{ $r->name }}" class="rss" href="{{ route('site.news.feed', ['name' => implode(',', $resourceNewsTypes) . $r->name]) }}">
+							<i class="fa fa-rss-square" aria-hidden="true"></i> {{ $r->name }}
+						</a>
+					</label>
 				</li>
 				<?php
-			}
-		}
+			endforeach;
+		endif;
 		?>
 	</ul>
 
@@ -81,8 +82,7 @@
 	</div>
 
 	<p>
-		<button class="rssCustomize btn btn-default" data-txt="{{ trans('global.cancel') }}">{{ trans('news::news.customize feed') }}</button>
+		<button class="rssCustomize btn btn-secondary" data-txt="{{ trans('global.cancel') }}">{{ trans('news::news.customize feed') }}</button>
 	</p>
 </div>
-
 @stop
