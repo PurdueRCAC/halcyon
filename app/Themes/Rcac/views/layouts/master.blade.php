@@ -38,18 +38,18 @@
 		$styles = array(
 			//'themes/rcac/css/jquerytimepicker_min.css',
 			//'https://use.typekit.net/ghc8hdz.css' => 'rel="preload" as="style"',
-			'themes/rcac/css/font-awesome-css.min.css' => 'rel="stylesheet" type="text/css" media="all"',
 			'themes/rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.min.css' => 'rel="stylesheet" type="text/css" media="all"',
-			'themes/rcac/css/college.css' => 'rel="stylesheet" type="text/css" media="all"',
-			'themes/rcac/css/content.css' => 'rel="stylesheet" type="text/css" media="all"'
-			//'themes/rcac/css/site.css',
+			//'themes/rcac/css/font-awesome-css.min.css' => 'rel="stylesheet" type="text/css" media="all"',
+			//'themes/rcac/css/college.css' => 'rel="stylesheet" type="text/css" media="all"',
+			//'themes/rcac/css/content.css' => 'rel="stylesheet" type="text/css" media="all"'
+			'themes/rcac/css/site.css' => 'rel="stylesheet" type="text/css" media="all"',
 		);
 		if (!app('isAdmin') && Auth::check()):
 			$styles['themes/rcac/css/admin.css'] = 'rel="stylesheet" type="text/css" media="all"';
 		endif;
 
 		foreach ($styles as $css => $attrs):
-			$attrs = $attrs ?: 'rel="stylesheet" media="all"';
+			$attrs = $attrs ?: 'rel="stylesheet" type="text/css" media="all"';
 			$sfx = (substr($css, 0, 4) != 'http' ? '?v=' . filemtime(public_path() . '/' . $css) : '');
 			?>
 		<link {!! $attrs !!} href="{{ asset($css . $sfx) }}" />
@@ -113,9 +113,9 @@
 					<div class="collapse navbar-collapse gold justify-content-between">
 						<ul class="nav navbar-nav information">
 							<li class="dropdown">
-								<a class="dropdown-toggle" data-toggle="dropdown" title="Info Menu" href="#">Find Info For <b class="caret"></b></a>
+								<a class="dropdown-toggle" data-toggle="dropdown" title="Info Menu" href="#find-info-for">Find Info For <b class="caret"></b></a>
 								<p class="hide">Find Info For</p>
-								<ul class="dropdown-menu" id="pu-find">
+								<ul class="dropdown-menu" id="find-info-for">
 									<li><a href="http://www.purdue.edu/purdue/academics/">Academics</a></li>
 									<li><a href="http://www.purdue.edu/purdue/admissions/">Admissions</a></li>
 									<li><a href="http://www.purdue.edu/purdue/current_students/">Current Students</a></li>
@@ -239,68 +239,56 @@
 					<div class="row panel-group" id="accordion">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><a href="#footerone" class="collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="footerone" role="button">Communication <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
+								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerone">Portal <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
 							</div>
 							<div class="panel-collapse collapse" id="footerone">
 								<div class="panel-body">
 									<ul>
-										<li><a href="https://one.purdue.edu">OneCampus Portal</a></li>
-										<li><a href="https://purdue.brightspace.com" rel="noopener" target="_blank">Brightspace</a></li>
-										<li><a href="https://www.purdue.edu/boilerconnect/">BoilerConnect</a></li>
-										<li><a href="https://portal.office.com/">Office 365</a></li>
-										<li><a href="https://outlook.office.com/">Outlook</a></li>
-										<li><a href="https://mypurdue.purdue.edu">myPurdue</a></li>
+										<li><a href="https://mypurdue.purdue.edu/">MyPurdue</a></li>
+										<li><a href="https://one.purdue.edu/">OneCampus Portal</a></li>
+										<li><a href="https://www.purdue.edu/employeeportal">Employee Portal</a></li>
 									</ul>
 								</div>
 							</div>
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#footertwo" aria-expanded="false" aria-controls="footertwo" role="button">Campus <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
+								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footertwo">Services <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
 							</div>
 							<div class="panel-collapse collapse" id="footertwo">
 								<div class="panel-body">
 									<ul>
-										<li><a href="https://www.purdue.edu/purdue/faculty_staff/index.php">Faculty and Staff</a></li>
-										<li><a href="https://www.purdue.edu/hr/">Human Resources</a></li>
-										<li><a href="https://www.purdue.edu/purdue/careers/index.php">Careers</a></li>
-										<li><a href="https://www.purdue.edu/purdue/about/colleges_schools.php">Colleges and Schools</a></li>
-										<li><a href="https://www.purdue.edu/directory/">Directory</a></li>
-										<li><a href="https://www.purdue.edu/campus-map/">Campus Map</a></li>
+										<li><a href="https://www.itap.purdue.edu/">Information Technology</a></li>
+										<li><a href="https://www.lib.purdue.edu/">Libraries</a></li>
+										<li><a href="https://www.itap.purdue.edu/directory/">Directory</a></li>
 									</ul>
 								</div>
 							</div>
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#footerthree" aria-expanded="false" aria-controls="footerthree" role="button">Information <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
+								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerthree">Communication <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
 							</div>
 							<div class="panel-collapse collapse" id="footerthree">
 								<div class="panel-body">
 									<ul>
-										<li><a href="https://www.purdue.edu/newsroom/purduetoday/">Purdue Today</a></li>
-										<li><a href="https://calendar.purdue.edu/">Calendar</a></li>
-										<li><a href="https://www.lib.purdue.edu/">Libraries</a></li>
-										<li><a href="https://www.purdue.edu/physicalfacilities/construction/">Construction</a></li>
-										<li><a href="https://www.purdue.edu/bursar/tuition/calculator.php">Tuition Calculator</a></li>
-										<li><a href="https://www.purdue.edu/hr/CHL/">Center for Healthy Living</a></li>
+										<li><a href="https://exchange.purdue.edu/">Outlook</a></li>
+										<li><a href="https://portal.office.com/">Office 365</a></li>
+										<li><a href="http://www.purdue.edu/newsroom/purduetoday/">Purdue Today</a></li>
 									</ul>
 								</div>
 							</div>
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#footerfour" aria-expanded="false" aria-controls="footerfour" role="button">People <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
+								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerfour">University <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
 							</div>
 							<div class="panel-collapse collapse" id="footerfour">
 								<div class="panel-body">
 									<ul>
-										<li><a href="https://www.purdue.edu/hotline/">Speak Up</a></li>
-										<li><a href="https://www.purdue.edu/diversity-inclusion/">Diversity and Inclusion</a></li>
-										<li><a href="https://www.purdue.edu/ethics/">Ethics and Compliance</a></li>
-										<li><a href="https://www.itap.purdue.edu/">Information Technology</a></li>
-										<li><a href="https://www.purdue.edu/ehps/police/reports/">Annual Security Report</a></li>
-										<li><a href="https://www.purdue.edu/timely-warnings/">Timely Warnings</a></li>
+										<li><a href="http://www.purdue.edu/research/">Research &amp; Partnerships</a></li>
+										<li><a href="http://www.purdue.edu/purdue/careers/">Careers</a></li>
+										<li><a href="http://www.purdue.edu/diversity-inclusion/">Diversity &amp; Inclusion</a></li>
 									</ul>
 								</div>
 							</div>

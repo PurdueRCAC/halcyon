@@ -2,9 +2,9 @@
  * Diangostics
  */
 
-/* Empty Elements */
+/* Empty Elements
 div:empty,
-span:empty,
+span:empty, */
 li:empty,
 p:empty,
 td:empty,
@@ -13,8 +13,8 @@ th:empty {
 	outline: 5px dotted yellow !important;
 }
 
-/* Missing Attributes */
-table:not([summary]),
+/* Missing Attributes
+table:not([summary]), */
 img:not([alt]) {
 	outline: 5px solid orange !important;
 }
@@ -93,6 +93,10 @@ table[cellspacing],
 *[name] {
 	outline: 5px solid #33FF00 !important;
 }
-input[name] {
+/* Undo the above as these elements are allowed to hane the `name` attribute */
+form[name],
+input[name],
+select[name],
+textarea[name] {
 	outline: none !important;
 }
