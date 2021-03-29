@@ -209,7 +209,7 @@ class PagesController extends Controller
 		$root = Page::rootNode();
 		$row->rebuild($root->id);
 
-		return redirect(route('admin.pages.index'))->withSuccess(trans('global.messages.update success'));
+		return redirect(route('admin.pages.index'))->withSuccess(trans('global.messages.item ' . ($id ? 'created' : 'updated')));
 	}
 
 	/**
