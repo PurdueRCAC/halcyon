@@ -20,11 +20,6 @@ li {
 	list-style: none;
 	padding: 0;
 }
-/*p,
-li {
-	font-size: 0.95em;
-}*/
-
 address {
 	margin-left: 2em;
 }
@@ -72,7 +67,7 @@ figcaption {
 .alert.alert-info:before {
 	content: "\f05a";
 }
-
+/*
 .panel-primary {
 	border-color: #ddd;
 }
@@ -90,7 +85,7 @@ figcaption {
 }
 .panel > .list-group li {
 	margin-left: 0;
-}
+}*/
 label .required {
 	color: #c00;
 }
@@ -99,6 +94,7 @@ label .required {
 .unknown {
 	color: #ccc;
 }
+
  /* tabs */
 .nav-tabs .nav-link {
 	text-decoration: none;
@@ -180,7 +176,7 @@ label .required {
 .btn:active {
 	text-decoration: none !important;
 }
-a.btn-primary,
+/*a.btn-primary,
 a.btn-primary:visited,
 a.btn-primary:hover,
 a.btn-primary:active,
@@ -189,7 +185,7 @@ a.btn-info:visited,
 a.btn-info:hover,
 a.btn-info:active {
 	color: #fff;
-}
+}*/
 
 /*login */
 .login {
@@ -512,7 +508,7 @@ a.fc-event:hover,
 a.fc-event:focus {
 	text-decoration: underline;
 }
-
+/*
 table.inrows-wide {
 	margin: 1em 0;
 	font-size: .85em;
@@ -523,7 +519,7 @@ table.inrows-wide th {
 }
 table.inrows-wide td {
 	padding: 0.5em;
-}
+}*/
 th.colGroup {
 	background-color: #e9e9e9;
 }
@@ -542,10 +538,10 @@ tr.even td.colGroup {
 table.contact th {
 	width: 96px;
 }
-
+/*
 table.simpleTable td {
 	border: 0;
-}
+}*/
 .ui-datepicker {
 	-webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
 	-moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
@@ -1049,7 +1045,7 @@ ul.purchases li {
 	font-size: 0.95em;
 }
 
-/* Browser compatibility notice */
+/* Browser compatibility notice
 .browserError {
 	display: none;
 	font-weight: bold;
@@ -1082,8 +1078,9 @@ ul.purchases li {
 .safari4 .browserError,
 .safari5 .browserError {
 	display: block;
-}
+} */
 
+/* Software modules */
 .modules div.click {
 	cursor: pointer;
 	padding-left: 3px;
@@ -1096,7 +1093,6 @@ ul.purchases li {
 .modules div.highlight {
 	background-color: #fff986;
 }
-
 .modules img.control {
 	margin-bottom: -3px;
 }
@@ -1133,17 +1129,17 @@ ul.purchases li {
 	border-color: #AAAAAA;
 	font-size: 0.8em;
 }
-
 .modules div.moduleHeader {
 	display: none;
 }
-
 .modules img.editicon {
 	width: 16px;
 	height: 16px;
 	margin-bottom: -3px;
 	margin-left: 6px;
 }
+
+/* Misc */
 .edit-property {
 	opacity: 0.5;
 }
@@ -1162,21 +1158,7 @@ a.add {
 a.add:hover {
 	color:green;
 }
-/* clearfix for adding spaces */
-.clearfix {
-	display: inline-block;
-}
-/* start commented backslash hack \*/
-* html .clearfix {
-	height: 1%;
-}
-.clearfix {
-	display: block;
-}
-/* close commented backslash hack */
 
-p.newsheader {
-}
 
 h2.newsheader {
 	padding-top: 0;
@@ -1227,7 +1209,7 @@ ul.rsscontainer {
 .rssCheckbox {
 	display: none;
 }
-
+/*
 div.searchMain {
 	border: 1px solid #6c6c6c;
 	background-color: #fff;
@@ -1251,9 +1233,9 @@ div.searchMain div {
 div.searchMain .empty,
 div.searchMain .empty:hover {
 	color: #aaa;
-	cursor: disabled;
+	cursor: none;
 	background-color: transparent;
-}
+}*/
 
 div.crm_results {
 	margin: -7px 0 0px !important;
@@ -1299,9 +1281,6 @@ form.addManyToQueue {
 /* Maint table */
 table.simpleTable th {
 	white-space: nowrap;
-}
-
-table.mainTable {
 }
 .mainTable-container {
 	overflow-y: auto;
@@ -1387,7 +1366,7 @@ table.mainTable th.hiddenHeader {
 	overflow: hidden;
 }
 
-/* Group table */
+/* Group table 
 table.groupTable tr.unixGroups img.editicon {
 	visibility: hidden;
 }
@@ -1396,9 +1375,9 @@ table.groupTable tr.unixGroups:hover img.editicon {
 }
 table.groupTable tr.unixGroups:hover td {
 	background-color: rgba(207, 181, 59, 0.6);
-}
+}*/
 
-/* Info table */
+/* Info table 
 table.infoTable td.groupName {
 	white-space: nowrap;
 	font-weight: bold;
@@ -1408,9 +1387,9 @@ table.infoTable td.unixGroups {
 }
 table.infoTable tr.resourceRow:hover td {
 	background-color: rgba(207, 181, 59, 0.6);
-}
+}*/
 
-/* Queue Table */
+/* Queue Table
 table.queueTable tr td img.editicon {
 	height: 15px;
 	width: 15px;
@@ -1429,7 +1408,7 @@ table.queueTable .nameColumn {
 }
 table.queueTable .statusCol {
 	width: 125px;
-}
+} */
 table .action-container,
 table .action-container {
 	visibility: hidden;
@@ -1443,7 +1422,7 @@ table.mainTable caption {
 	display: block;
 }
 
-/* Storage table */
+/* Storage table
 table.storageTable tr:hover td {
 	background-color: rgba(207, 181, 59, 0.6);
 }
@@ -1452,7 +1431,7 @@ table.storageQueueTable tr.completed:hover td {
 }
 table.storageQueueTable tr.reveal:hover td {
 	background-color: #D3D3D3;
-}
+} */
 
 div.group-content {
 	min-width: 800px;
@@ -1651,7 +1630,7 @@ img.newsdeleteresource {
 	color:#fff;
 	background-color:#721c24;
 }
-.badge-primary {
+/*.badge-primary {
 	color: #fff;
 	background-color: #007bff;
 }
@@ -1670,7 +1649,7 @@ img.newsdeleteresource {
 .badge-warning {
 	color: #212529;
 	background-color: #ffc107;
-}
+}*/
 .crm-item .panel-footer,
 .news-item .panel-footer {
 	color: #757575;
@@ -1745,7 +1724,7 @@ div.resource_pic img {
 	}
 }
 
-/* Queue size table */
+/* Queue size table
 table.queueSize {
 	border: 0px; 
 	background-color: #ffffff;
@@ -1819,7 +1798,7 @@ a.newHardware {
 }
 td.itemCol a {
 	color: #5D3E00 !important;
-}
+} */
 
 /* Tree table */
 table.tree {
@@ -1965,7 +1944,7 @@ input {
 textarea {
 	line-height: 125%;
 }
-
+/*
 table.queueForm {
 	background-color: #F0F0F0;
 	width: 100%;
@@ -1975,11 +1954,10 @@ table.queueForm td {
 	padding: 1px 3px 1px 3px;
 	vertical-align: top;
 }
-
 table.queueForm td.queueFormLeftCol {
 	text-align: right;
 	width: 80px;
-}
+}*/
 
 input.error {
 	border-color: red;
@@ -2068,7 +2046,7 @@ div.launch:after {
 	}
 }
 
-/* Loading spinenr */
+/* Loading spinenr 
 .spinner-border {
 	display: inline-block;
 	width: 14px;
@@ -2083,7 +2061,7 @@ div.launch:after {
 	to {
 		transform: rotate(360deg);
 	}
-}
+}*/
 
 /* Actions container */
 .spinner-border {
@@ -2703,7 +2681,7 @@ ol[role="list"] {
 		text-align: left;
 	}
 	.top .row {
-		align-items: left;
+		align-items: flex-start;
 		flex-direction: row;
 	}
 	.top>.container {
@@ -2717,16 +2695,4 @@ ol[role="list"] {
 		display: block;
 	}
 	/* Page specific */
-	.order a,
-	.order a:link,
-	.order a:visited,
-	.order a:hover,
-	.order a:active {
-		font-weight: normal;
-		border: none;
-		text-decoration: none;
-	}
-	.order a:after {
-		display: none;
-	}
 }

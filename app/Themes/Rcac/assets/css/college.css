@@ -11013,7 +11013,7 @@ table.gsc-search-box .gsc-search-button {
 	outline-offset:1px
 }
 
-@media (min-width: 992px) and(max-width: 1199px) {
+@media (min-width: 992px) and (max-width: 1199px) {
 	.top .department > a {
 		display: inline-block;
 		padding: 2px 0px;
@@ -11065,7 +11065,7 @@ table.gsc-search-box .gsc-search-button {
 		font-size:1.4375em
 	}
 }
-@media (min-width: 768px) and(max-width: 991px) {
+@media (min-width: 768px) and (max-width: 991px) {
 	.top .row {
 		display: flex;
 		align-items: center;
@@ -11452,7 +11452,7 @@ table.gsc-search-box .gsc-search-button {
 		width: auto;
 		min-width: 160px;
 		height: auto;
-		min-height: none;
+		min-height: 0;
 		background: #fff;
 		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 		padding:0
