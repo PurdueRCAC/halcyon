@@ -10,7 +10,7 @@ $content = '';
 
 	@if ($pic = $resource->picture)
 		<div class="resource_pic">
-			<img src="{{ $pic }}" alt="">
+			<img src="{{ $pic }}" alt="{{ $resource->name }}">
 		</div>
 	@endif
 

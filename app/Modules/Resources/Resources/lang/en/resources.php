@@ -6,6 +6,7 @@ return [
 	'types' => 'Types',
 	'batchsystems' => 'Batch Systems',
 	'type resources' => ':type Resources',
+	'type retired resources' => 'Retired :type Resources',
 	'retired' => 'Retired Resources',
 
 	'errors' => [

@@ -68,20 +68,15 @@ class ResourcesController extends Controller
 			abort(404);
 		}
 
-		app('pathway')->append(
-			$type->name,
-			url('/' . strtolower($type->name))
-		);
-
 		$rows = $type->resources()
 			->withTrashed()
+			->whereIsActive()
+			//->where('display', '>', 0)
 			->where(function($where)
 			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+				$where->whereNotNull('listname')
+					->where('listname', '!=', '');
 			})
-			//->where('display', '>', 0)
-			->where('listname', '!=', '')
 			->whereNotNull('description')
 			->orderBy('display', 'desc')
 			->get();
@@ -109,36 +104,29 @@ class ResourcesController extends Controller
 			abort(404);
 		}
 
-		app('pathway')
-			->append(
-				$type->name,
-				url('/' . strtolower($type->name))
-			)
-			->append(
-				trans('resources::resources.retired'),
-				route('site.resources.' . strtolower($type->name) . '.retired')
-			);
-
 		$items = $type->resources()
 			->withTrashed()
+			->whereIsActive()
+			//->where('display', '>', 0)
 			->where(function($where)
 			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+				$where->whereNotNull('listname')
+					->where('listname', '!=', '');
 			})
-			->where('display', '>', 0)
+			->whereNotNull('description')
 			->orderBy('display', 'desc')
 			->get();
 
 		$rows = $type->resources()
 			->withTrashed()
+			->whereIsTrashed()
+			//->where('display', '>', 0)
 			->where(function($where)
 			{
-				$where->whereNotNull('datetimeremoved')
-					->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+				$where->whereNotNull('listname')
+					->where('listname', '!=', '');
 			})
-			//->where('display', '>', 0)
-			->where('listname', '!=', '')
+			->whereNotNull('description')
 			->orderBy('display', 'desc')
 			->get();
 
