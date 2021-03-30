@@ -14,6 +14,7 @@ return [
 		'update' => 'Update',
 		'delete' => 'Delete',
 		'reset' => 'Reset',
+		'restore' => 'Restore',
 		'apply' => 'Apply',
 		'save' => 'Save',
 		'options' => 'Options'
