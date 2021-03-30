@@ -506,4 +506,24 @@ class Queue extends Model
 
 		return $this->attributes['loanednodes'];
 	}
+
+	/**
+	 * Stop scheduling
+	 *
+	 * @return  bool
+	 */
+	public function stop()
+	{
+		return $this->update(['started' => 0]);
+	}
+
+	/**
+	 * Stop scheduling
+	 *
+	 * @return  bool
+	 */
+	public function start()
+	{
+		return $this->update(['started' => 1]);
+	}
 }

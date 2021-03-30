@@ -144,6 +144,8 @@ class Subresource extends Model
 		$name = $this->name;
 
 		$queues = Queue::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('subresourceid', '=', $this->id)
 			->orWhereIn('subresourceid', function($in) use ($tbl, $name)
 			{
@@ -155,10 +157,13 @@ class Subresource extends Model
 			})
 			->get();
 
+		/*$queues->each(function ($item, $key)
+		{
+			$item->stop();
+		});*/
 		foreach ($queues as $queue)
 		{
-			$queue->started = 0;
-			$queue->save();
+			$queue->stop();
 		}
 
 		// If marked as just started, set back to still stopped
@@ -171,6 +176,8 @@ class Subresource extends Model
 			// If 0, we are just now stopping
 			$this->notice = 2;
 		}
+
+		$this->update(['notice' => $this->notice]);
 	}
 
 	/**
@@ -180,10 +187,14 @@ class Subresource extends Model
 	 */
 	public function startQueues()
 	{
-		foreach ($this->queues as $queue)
+		$queues = $this->queues()
+			->withTrashed()
+			->whereIsActive()
+			->get();
+
+		foreach ($queues as $queue)
 		{
-			$queue->started = 1;
-			$queue->save();
+			$queue->start();
 		}
 
 		// If marked as just started, set back to still stopped
@@ -195,6 +206,8 @@ class Subresource extends Model
 		{
 			$this->notice = 0;
 		}
+
+		$this->update(['notice' => $this->notice]);
 	}
 
 	/**
@@ -214,14 +227,25 @@ class Subresource extends Model
 		$now = Carbon::now();
 
 		$query = $this->queues()
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00');
+			->withTrashed()
+			->whereIsActive();
 
 		if (!$this->nodecores)
 		{
 			$query->where('cluster', 'like', 'standby%');
 		}
 
-		//$sql = "SELECT if (SUM(queueloans.corecount) IS NULL, 0, SUM(queueloans.corecount)) AS loanedcores FROM queues, queueloans, subresources WHERE queues.subresourceid = subresources.id AND queueloans.queueid = queues.id AND (queueloans.datetimestop = '0000-00-00 00:00:00' OR queueloans.datetimestop > NOW()) AND (queueloans.datetimestart = '0000-00-00 00:00:00' OR queueloans.datetimestart <= NOW()) AND queues.datetimeremoved = '0000-00-00 00:00:00' AND queues.subresourceid = '" . $this->db->escape_string($id) . "' AND (subresources.nodecores <> 0 OR queues.cluster LIKE 'standby%') AND queues.groupid > '0'";
+		/*
+		$sql = "SELECT if (SUM(queueloans.corecount) IS NULL, 0, SUM(queueloans.corecount)) AS loanedcores
+		FROM queues, queueloans, subresources
+		WHERE queues.subresourceid = subresources.id
+		AND queueloans.queueid = queues.id
+		AND (queueloans.datetimestop = '0000-00-00 00:00:00' OR queueloans.datetimestop > NOW())
+		AND (queueloans.datetimestart = '0000-00-00 00:00:00' OR queueloans.datetimestart <= NOW())
+		AND queues.datetimeremoved = '0000-00-00 00:00:00' AND queues.subresourceid = '" . $this->db->escape_string($id) . "'
+		AND (subresources.nodecores <> 0 OR queues.cluster LIKE 'standby%')
+		AND queues.groupid > '0'";
+		*/
 
 		$queues = $query->get();
 
@@ -334,7 +358,7 @@ class Subresource extends Model
 	{
 		$queuestatus = 1;
 
-		foreach ($this->queues as $queue)
+		foreach ($this->queues()->withTrashed()->whereIsActive()->get() as $queue)
 		{
 			if ($queue->started)
 			{

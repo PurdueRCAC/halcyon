@@ -13,6 +13,11 @@ app('pathway')
 @endphp
 
 @section('toolbar')
+	@if (auth()->user()->can('edit.state resources.subresources'))
+		{!! Toolbar::publishList(route('admin.resources.subresources.start'), trans('resources::resources.start scheduling')) !!}
+		{!! Toolbar::unpublishList(route('admin.resources.subresources.stop'), trans('resources::resources.stop scheduling')) !!}
+	@endif
+
 	@if (auth()->user()->can('delete resources'))
 		@if ($filters['state'] == 'trashed')
 			{!! Toolbar::custom(route('admin.resources.subresources.restore'), 'refresh', 'refresh', trans('global.restore'), false) !!}
@@ -113,7 +118,7 @@ app('pathway')
 					{!! Html::grid('sort', trans('resources::assets.node gpus'), 'nodegpus', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4">{{ trans('resources::assets.node attributes') }}</th>
-				<th scope="col" class="priority-4">{{ trans('resources::assets.queues') }}</th>
+				<th scope="col" class="priority-4" colspan="2">{{ trans('resources::assets.queues') }}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -182,12 +187,18 @@ app('pathway')
 					{!! $row->nodeattributes ? $row->nodeattributes : '<span class="unknown">' . trans('global.none') . '</span>' !!}
 				</td>
 				<td class="priority-4 text-right">
-					@if ($row->queuestatus > 1)
-						<span class="glyph icon-alert-triangle text-warning tip" aria-hidden="true" data-tip="{{ trans('One or more stopped queues') }}">{{ trans('One or more stopped queues') }}</span>
-					@endif
 					<a href="{{ route('admin.queues.index', ['resource' => 's' . $row->id]) }}">
 						{{ $row->queues_count }}
 					</a>
+				</td>
+				<td>
+					@if ($row->queuestatus == 1)
+						<span class="glyph icon-check-circle text-success" data-tip="{{ trans('All queues running') }}">{{ trans('All queues running') }}</span>
+					@elseif ($row->queuestatus == 0)
+						<span class="glyph icon-minus-circle text-danger tip" data-tip="{{ trans('All queues stopped') }}">{{ trans('All queues stopped') }}</span>
+					@else
+						<span class="glyph icon-alert-triangle text-warning tip" data-tip="{{ trans('One or more stopped queues') }}">{{ trans('One or more stopped queues') }}</span>
+					@endif
 				</td>
 			</tr>
 		@endforeach

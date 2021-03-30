@@ -365,6 +365,7 @@ class SubresourcesController extends Controller
 		if (isset($data['queuestatus']))
 		{
 			$queuestatus = $data['queuestatus'];
+			unset($data['queuestatus']);
 		}
 
 		$row = Subresource::findOrFail($id);

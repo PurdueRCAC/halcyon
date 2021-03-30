@@ -284,6 +284,64 @@ class SubresourcesController extends Controller
 	}
 
 	/**
+	 * Restore a removed item
+	 *
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function stop(Request $request)
+	{
+		$ids = $request->input('id', array());
+		$ids = (!is_array($ids) ? array($ids) : $ids);
+
+		$success = 0;
+
+		foreach ($ids as $id)
+		{
+			$row = Subresource::findOrFail($id);
+			$row->stopQueues();
+
+			$success++;
+		}
+
+		if ($success)
+		{
+			$request->session()->flash('success', trans('resources::resources.messages.queues stopped', ['count' => $success]));
+		}
+
+		return $this->cancel();
+	}
+
+	/**
+	 * Restore a removed item
+	 *
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function start(Request $request)
+	{
+		$ids = $request->input('id', array());
+		$ids = (!is_array($ids) ? array($ids) : $ids);
+
+		$success = 0;
+
+		foreach ($ids as $id)
+		{
+			$row = Subresource::findOrFail($id);
+			$row->startQueues();
+
+			$success++;
+		}
+
+		if ($success)
+		{
+			$request->session()->flash('success', trans('resources::resources.messages.queues started', ['count' => $success]));
+		}
+
+		return $this->cancel();
+	}
+
+	/**
 	 * Return to default page
 	 *
 	 * @return  Response

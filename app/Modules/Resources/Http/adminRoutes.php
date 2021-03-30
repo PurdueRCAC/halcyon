@@ -138,6 +138,16 @@ $router->group(['prefix' => 'resources', 'middleware' => 'can:manage resources']
 			'uses' => 'SubresourcesController@delete',
 			'middleware' => 'can:delete resources.subresources',
 		]);
+		$router->match(['get', 'post'], '/start/{id?}', [
+			'as'   => 'admin.resources.subresources.start',
+			'uses' => 'SubresourcesController@start',
+			'middleware' => 'can:edit.state resources.subresources',
+		]);
+		$router->match(['get', 'post'], '/stop/{id?}', [
+			'as'   => 'admin.resources.subresources.stop',
+			'uses' => 'SubresourcesController@stop',
+			'middleware' => 'can:edit.state resources.subresources',
+		]);
 		$router->match(['get', 'post'], 'cancel', [
 			'as' => 'admin.resources.subresources.cancel',
 			'uses' => 'SubresourcesController@cancel',
