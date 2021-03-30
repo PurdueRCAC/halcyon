@@ -50,7 +50,17 @@ class HttpLogger
 		$log->hostname = $this->getClientHost();
 		$log->servername = $this->getClientServer();
 		$log->ip = $request->ip();
-		$log->payload = json_encode($request->all());
+		// Handle some localhost cases
+		$log->ip = $log->ip == '::1' ? '127.0.0.1' : $log->ip;
+		if ($log->transportmethod == 'GET' && $app == 'ui')
+		{
+			// Collect the user agent string
+			$log->payload = $request->server('HTTP_USER_AGENT');
+		}
+		else
+		{
+			$log->payload = json_encode($request->all());
+		}
 		$log->status = $response->status();
 		$log->uri = $request->fullUrl();
 		$log->app = $app;
