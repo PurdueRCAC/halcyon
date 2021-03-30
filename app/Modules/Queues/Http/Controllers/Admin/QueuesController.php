@@ -161,6 +161,8 @@ class QueuesController extends Controller
 
 		/*$resources = (new Asset)->tree();*/
 		$resources = Asset::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('batchsystem', '>', 0)
 			->where('listname', '!=', '')
 			->orderBy('name', 'asc')
