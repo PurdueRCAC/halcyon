@@ -2,38 +2,6 @@
 
 @push('styles')
 <link rel="stylesheet" type="text/css" href="{{ Module::asset('core:vendor/chartjs/Chart.css') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.css') }}" />
-<style>
-.sparkline { 
-  display: inline-block;
-  height: 1em;
-  background-color: rgba(255, 255, 255, 0.05);
-  margin: 0;
-  transition: all .5s ease;
-}
-
-.sparkline .index { 
-	position: relative;
-  float: left;
-  width: 2px;
-  height: 1em;
-}
-
-.sparkline .index .count { 
-  display: block; 
-  position: absolute; 
-  bottom: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 0; 
-  background: #AAA;
-  font: 0/0 a;
-  text-shadow: none;
-  color: transparent;
-}
-.sparkline-chart {
-
-}
-</style>
 @endpush
 
 @push('scripts')
@@ -47,11 +15,11 @@ jQuery(document).ready(function ($) {
 		const chart = new Chart(ctx, {
 		type: 'line',
 		data: {
-			labels: JSON.parse($(el).attr('data-labels')), //['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+			labels: JSON.parse($(el).attr('data-labels')),
 			datasets: [
 				{
 					fill: false,
-					data: JSON.parse($(el).attr('data-values'))//[435, 321, 532, 801, 1231, 1098, 732, 321, 451, 482, 513, 397]
+					data: JSON.parse($(el).attr('data-values'))
 				}
 			]
 		},
@@ -321,34 +289,11 @@ app('pathway')
 							->where('datetime', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
 							->count();
 					}
-					//array_reverse($visits);
-					//$visits = [435, 321, 532, 801, 1231, 1098, 732, 321, 451, 482, 513, 397];
 					?>
 					<canvas id="sparkline{{ $row->id }}" class="sparkline-chart" width="100" height="25" data-labels="{{ json_encode(array_keys($visits)) }}" data-values="{{ json_encode(array_values($visits)) }}">
 						@foreach ($visits as $day => $val)
 							{{ $day }}: $val<br />
 						@endforeach
-					<!-- <span class="sparkline">
-							<span class="index"><span class="count" style="height: 27%;">60</span></span>
-							<span class="index"><span class="count" style="height: 97%;">220</span></span>
-							<span class="index"><span class="count" style="height: 62%;">140</span></span>
-							<span class="index"><span class="count" style="height: 35%;">80</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 0%;">0</span></span>
-							<span class="index"><span class="count" style="height: 5%;">5</span></span>
-						</span> -->
 					</canvas>
 				</td>
 			</tr>
