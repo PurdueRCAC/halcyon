@@ -107,7 +107,8 @@ return [
 	'sell to' => 'Sell to',
 	'action' => 'Action',
 	'source' => 'Source',
-	'disable scheduling' => 'Disable scheduling',
-	'enable scheduling' => 'Enable scheduling',
+	'start scheduling' => 'Start scheduling',
+	'stop scheduling' => 'Stop scheduling',
 	'options' => 'Options',
+	'all states' => '- All States -',
 ];

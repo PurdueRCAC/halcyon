@@ -12,6 +12,14 @@ app('pathway')
 @endphp
 
 @section('toolbar')
+	@if (auth()->user()->can('edit.state queues'))
+		{!!
+			Toolbar::publishList(route('admin.queues.start'), trans('queues::queues.start scheduling'));
+			Toolbar::unpublishList(route('admin.queues.stop'), trans('queues::queues.stop scheduling'));
+			Toolbar::spacer();
+		!!}
+	@endif
+
 	@if (auth()->user()->can('delete queues'))
 		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.queues.delete')) !!}
 	@endif
@@ -76,10 +84,7 @@ app('pathway')
 						<?php $selected = ($resource->id == $filters['resource'] ? ' selected="selected"' : ''); ?>
 						<option value="{{ $resource->id }}"<?php echo $selected; ?>>{{ str_repeat('- ', $resource->level) . $resource->name }}</option>
 						<?php
-						foreach ($resource->subresources()->orderBy('name', 'asc')->get() as $subresource):
-							if ($subresource->isTrashed()):
-								continue;
-							endif;
+						foreach ($resource->subresources()->withTrashed()->whereIsActive()->orderBy('name', 'asc')->get() as $subresource):
 							$key = 's' . $subresource->id;
 							$selected = ($filters['resource'] && $key == (string)$filters['resource'] ? ' selected="selected"' : '');
 							?>
@@ -261,22 +266,22 @@ app('pathway')
 						</td>
 						<td class="priority-4 text-center">
 							@if ($row->groupid <= 0)
-								<span class="icon-cpu" data-tip="{{ trans('queues::queues.system') }}">{{ trans('queues::queues.system') }}</span>
+								<span class="icon-cpu">{{ trans('queues::queues.system') }}</span>
 							@else
-								<span class="icon-user" data-tip="{{ trans('queues::queues.owner') }}">{{ trans('queues::queues.owner') }}</span>
+								<span class="icon-user">{{ trans('queues::queues.owner') }}</span>
 							@endif
 						</td>
 						<td class="text-right">
-							{!! $row->totalnodes ? $row->totalnodes : '<span class="none">' . $row->totalnodes . '</span>' !!}
+							{!! $row->totalnodes ? number_format($row->totalnodes) : '<span class="none">' . $row->totalnodes . '</span>' !!}
 						</td>
 						<td class="text-right">
-							{!! $row->loanednodes ? $row->loanednodes : '<span class="none">' . $row->loanednodes . '</span>' !!}
+							{!! $row->loanednodes ? number_format($row->loanednodes) : '<span class="none">' . $row->loanednodes . '</span>' !!}
 						</td>
 						<td class="text-right">
-							{!! $row->totalcores ? $row->totalcores : '<span class="none">' . $row->totalcores . '</span>' !!}
+							{!! $row->totalcores ? number_format($row->totalcores) : '<span class="none">' . $row->totalcores . '</span>' !!}
 						</td>
 						<td class="text-right">
-							{!! $row->loanedcores ? $row->loanedcores : '<span class="none">' . $row->loanedcores . '</span>' !!}
+							{!! $row->loanedcores ? number_format($row->loanedcores) : '<span class="none">' . $row->loanedcores . '</span>' !!}
 							<?php
 							/*$soldpercent = $row->totalcores ? round(($row->soldcores / $row->totalcores) * 100, 1) : 0;
 							$loanedpercent = $row->totalcores ? round(($row->loanedcores / $row->totalcores) * 100, 1) : 0;
@@ -294,7 +299,7 @@ app('pathway')
 						</td>
 						<td class="priority-4">
 							@if ($row->subresourceid)
-								@if ($row->resource)
+								<?php /*@if ($row->resource)
 									@if ($row->subresource)
 										<span data-tip="{{ $row->subresource->name }}">
 									@endif
@@ -302,6 +307,13 @@ app('pathway')
 									@if ($row->subresource)
 										</span>
 									@endif
+								@else
+									<span class="unknown">{{ trans('global.unknown') }}</span>
+								@endif*/ ?>
+								@if ($row->subresource)
+									{{ $row->subresource->name }}
+								@elseif ($row->resource)
+									{{ $row->resource->name }}
 								@else
 									<span class="unknown">{{ trans('global.unknown') }}</span>
 								@endif
