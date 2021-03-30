@@ -52,6 +52,7 @@ class CreateResourcesTables extends Migration
 			{
 				$table->increments('id');
 				$table->char('name', 20);
+
 			});
 			//$this->info('Created `resourcetypes` table.');
 		}

@@ -16,7 +16,7 @@ class AddDescriptions extends Migration
 		{
 			Schema::table('resources', function (Blueprint $table)
 			{
-				$table->string('description', 1000)->nullable();
+				$table->string('description', 2000)->nullable();
 			});
 		}
 
@@ -24,7 +24,7 @@ class AddDescriptions extends Migration
 		{
 			Schema::table('resourcetypes', function (Blueprint $table)
 			{
-				$table->string('description', 1000)->nullable();
+				$table->string('description', 2000)->nullable();
 			});
 		}
 	}
