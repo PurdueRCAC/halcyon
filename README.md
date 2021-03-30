@@ -1,5 +1,7 @@
 ## Halcyon
 
+[![Build Status](https://build.rcac.purdue.edu/api/badges/RCAC-Staff/halcyon/status.svg)](https://build.rcac.purdue.edu/RCAC-Staff/halcyon)
+
 ITaP Research Computing portal.
 
 This is built on Laravel.
