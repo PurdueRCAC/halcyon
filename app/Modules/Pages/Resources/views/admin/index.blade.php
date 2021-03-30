@@ -1,7 +1,94 @@
 @extends('layouts.master')
 
+@push('styles')
+<link rel="stylesheet" type="text/css" href="{{ Module::asset('core:vendor/chartjs/Chart.css') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.css') }}" />
+<style>
+.sparkline { 
+  display: inline-block;
+  height: 1em;
+  background-color: rgba(255, 255, 255, 0.05);
+  margin: 0;
+  transition: all .5s ease;
+}
+
+.sparkline .index { 
+	position: relative;
+  float: left;
+  width: 2px;
+  height: 1em;
+}
+
+.sparkline .index .count { 
+  display: block; 
+  position: absolute; 
+  bottom: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 0; 
+  background: #AAA;
+  font: 0/0 a;
+  text-shadow: none;
+  color: transparent;
+}
+.sparkline-chart {
+
+}
+</style>
+@endpush
+
 @push('scripts')
+<script src="{{ Module::asset('core:vendor/chartjs/Chart.min.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
 <script src="{{ Module::asset('pages:js/pages.js') . '?v=' . filemtime(public_path() . '/modules/pages/js/pages.js') }}"></script>
+<script>
+jQuery(document).ready(function ($) {
+	var el = $('.sparkline-chart');
+	el.each(function(i, el){
+		const ctx = el.getContext('2d');
+		const chart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: JSON.parse($(el).attr('data-labels')), //['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+			datasets: [
+				{
+					fill: false,
+					data: JSON.parse($(el).attr('data-values'))//[435, 321, 532, 801, 1231, 1098, 732, 321, 451, 482, 513, 397]
+				}
+			]
+		},
+		options: {
+			responsive: false,
+			animation: {
+				duration: 0
+			},
+			legend: {
+				display: false
+			},
+			elements: {
+				line: {
+					borderColor: '#fff',
+					borderWidth: 1
+				},
+				point: {
+					radius: 0
+				}
+			},
+			scales: {
+				yAxes: [
+					{
+						display: false
+					}
+				],
+				xAxes: [
+					{
+						display: false
+					}
+				]
+			}
+		}
+		});
+	});
+});
+</script>
 @endpush
 
 @php
@@ -125,6 +212,9 @@ app('pathway')
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('pages::pages.updated'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
+				<th scope="col" class="priority-4">
+					Visits
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -166,7 +256,7 @@ app('pathway')
 					@else
 						@if ($row->trashed())
 							@if (auth()->user()->can('edit pages'))
-								<a class="btn btn-sm btn-secondary state trashed" href="{{ route('admin.pages.restore', ['id' => $row->id]) }}" data-tip="{{ trans('pages::pages.set state to', ['state' => trans('global.published')]) }}">
+								<a class="badge badge-secondary state trashed" href="{{ route('admin.pages.restore', ['id' => $row->id]) }}" data-tip="{{ trans('pages::pages.set state to', ['state' => trans('global.published')]) }}">
 							@endif
 								{{ trans('pages::pages.trashed') }}
 							@if (auth()->user()->can('edit pages'))
@@ -174,7 +264,7 @@ app('pathway')
 							@endif
 						@elseif ($row->state == 1)
 							@if (auth()->user()->can('edit pages'))
-								<a class="btn btn-sm btn-success" href="{{ route('admin.pages.unpublish', ['id' => $row->id]) }}" data-tip="{{ trans('pages::pages.set state to', ['state' => trans('global.unpublished')]) }}">
+								<a class="badge badge-success" href="{{ route('admin.pages.unpublish', ['id' => $row->id]) }}" data-tip="{{ trans('pages::pages.set state to', ['state' => trans('global.unpublished')]) }}">
 							@endif
 								{{ trans('pages::pages.published') }}
 							@if (auth()->user()->can('edit pages'))
@@ -182,7 +272,7 @@ app('pathway')
 							@endif
 						@else
 							@if (auth()->user()->can('edit pages'))
-								<a class="btn btn-sm btn-secondary" href="{{ route('admin.pages.publish', ['id' => $row->id]) }}" data-tip="{{ trans('pages::pages.set state to', ['state' => trans('global.published')]) }}">
+								<a class="badge badge-secondary" href="{{ route('admin.pages.publish', ['id' => $row->id]) }}" data-tip="{{ trans('pages::pages.set state to', ['state' => trans('global.published')]) }}">
 							@endif
 								{{ trans('pages::pages.unpublished') }}
 							@if (auth()->user()->can('edit pages'))
@@ -196,22 +286,70 @@ app('pathway')
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->getOriginal('updated_at') && $row->getOriginal('updated_at') != '0000-00-00 00:00:00')
-							<time datetime="{{ Carbon\Carbon::parse($row->updated_at)->format('Y-m-d\TH:i:s\Z') }}">{{ $row->updated_at }}</time>
+						@if ($row->updated_at)
+							<time datetime="{{ $row->updated_at->format('Y-m-d\TH:i:s\Z') }}">
+								@if ($row->updated_at->toDateTimeString() > Carbon\Carbon::now()->toDateTimeString())
+									{{ $row->updated_at->diffForHumans() }}
+								@else
+									{{ $row->updated_at->format('Y-m-d') }}
+								@endif
+							</time>
+						@elseif ($row->created_at)
+							<time datetime="{{ Carbon\Carbon::parse($row->created_at)->format('Y-m-d\TH:i:s\Z') }}">
+								@if ($row->created_at->toDateTimeString() > Carbon\Carbon::now()->toDateTimeString())
+									{{ $row->created_at->diffForHumans() }}
+								@else
+									{{ $row->created_at->format('Y-m-d') }}
+								@endif
+							</time>
 						@else
-							@if ($row->getOriginal('created_at') && $row->getOriginal('created_at') != '0000-00-00 00:00:00')
-								<time datetime="{{ Carbon\Carbon::parse($row->created_at)->format('Y-m-d\TH:i:s\Z') }}">
-									@if ($row->getOriginal('created_at') > Carbon\Carbon::now()->toDateTimeString())
-										{{ $row->created_at->diffForHumans() }}
-									@else
-										{{ $row->created_at }}
-									@endif
-								</time>
-							@else
-								<span class="never">{{ trans('global.unknown') }}</span>
-							@endif
+							<span class="never">{{ trans('global.unknown') }}</span>
 						@endif
 					</span>
+				</td>
+				<td>
+					<?php
+					$now = Carbon\Carbon::now();
+					$visits = array();
+					for ($d = 7; $d >= 0; $d--)
+					{
+						$yesterday = Carbon\Carbon::now()->modify('- ' . $d . ' days');
+						$tomorrow  = Carbon\Carbon::now()->modify(($d ? '- ' . ($d - 1) : '+ 1') . ' days');
+
+						$visits[$yesterday->format('Y-m-d')] = $row->logs()
+							->where('datetime', '>', $yesterday->format('Y-m-d') . ' 00:00:00')
+							->where('datetime', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
+							->count();
+					}
+					//array_reverse($visits);
+					//$visits = [435, 321, 532, 801, 1231, 1098, 732, 321, 451, 482, 513, 397];
+					?>
+					<canvas id="sparkline{{ $row->id }}" class="sparkline-chart" width="100" height="25" data-labels="{{ json_encode(array_keys($visits)) }}" data-values="{{ json_encode(array_values($visits)) }}">
+						@foreach ($visits as $day => $val)
+							{{ $day }}: $val<br />
+						@endforeach
+					<!-- <span class="sparkline">
+							<span class="index"><span class="count" style="height: 27%;">60</span></span>
+							<span class="index"><span class="count" style="height: 97%;">220</span></span>
+							<span class="index"><span class="count" style="height: 62%;">140</span></span>
+							<span class="index"><span class="count" style="height: 35%;">80</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 0%;">0</span></span>
+							<span class="index"><span class="count" style="height: 5%;">5</span></span>
+						</span> -->
+					</canvas>
 				</td>
 			</tr>
 		@endforeach

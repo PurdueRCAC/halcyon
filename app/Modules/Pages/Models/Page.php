@@ -566,6 +566,19 @@ class Page extends Model
 	}
 
 	/**
+	 * Establish relationship to log model
+	 *
+	 * @return  object
+	 */
+	public function logs()
+	{
+		return \App\Modules\History\Models\Log::query()
+			->where('app', '=', 'ui')
+			->where('transportmethod', '=', 'GET')
+			->where('uri', '=', '/' . $this->path);
+	}
+
+	/**
 	 * Determine if record is the home page
 	 * 
 	 * @return  boolean
