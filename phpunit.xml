@@ -2,7 +2,14 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
-         colors="true">
+         colors="true"
+         backupGlobals="false"
+         backupStaticAttributes="false"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false">
     <testsuites>
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit</directory>
@@ -11,10 +18,28 @@
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
+
+        <testsuite name="Modules">
+            <directory suffix="Test.php">./Modules/**/Tests</directory>
+        </testsuite>
+        <testsuite name="Modules-Feature">
+            <directory suffix="Test.php">./Modules/**/Tests/Feature</directory>
+        </testsuite>
+        <testsuite name="Modules-Unit">
+            <directory suffix="Test.php">./Modules/**/Tests/Unit</directory>
+        </testsuite>
     </testsuites>
     <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./app</directory>
+        <whitelist processUncoveredFilesFromWhitelist="true" addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./app/Widgets</directory>
+            <directory suffix=".php">./app/Modules</directory>
+            <exclude>
+                <directory suffix="blade.php">./app/Modules</directory>
+                <directory suffix=".php">./app/Modules/**/Routes</directory>
+                <directory suffix=".php">./app/Modules/**/Ressources</directory>
+                <directory suffix=".php">./app/Modules/**/Tests</directory>
+                <directory suffix=".php">./app/Modules/**/Config</directory>
+            </exclude>
         </whitelist>
     </filter>
     <php>
