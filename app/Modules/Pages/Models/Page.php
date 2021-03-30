@@ -595,7 +595,7 @@ class Page extends Model
 	 */
 	public function isModified()
 	{
-		return ($this->updated && $this->updated != '0000-00-00 00:00:00');
+		return $this->updated_at;
 	}
 
 	/**
@@ -621,14 +621,12 @@ class Page extends Model
 		}
 
 		if ($this->publish_up
-		 && $this->publish_up != '0000-00-00 00:00:00'
 		 && $this->publish_up > Carbon::now()->toDateTimeString())
 		{
 			return false;
 		}
 
 		if ($this->publish_down
-		 && $this->publish_down != '0000-00-00 00:00:00'
 		 && $this->publish_down <= Carbon::now()->toDateTimeString())
 		{
 			return false;
@@ -988,7 +986,7 @@ class Page extends Model
 		// Check for a database error.
 		if (!$query)
 		{
-			$this->addError(trans('global.ERROR_REBUILDPATH_FAILED', get_class($this)));
+			$this->addError(trans('pages::pages.error.path rebuild failed', get_class($this)));
 			return false;
 		}
 

@@ -2,6 +2,7 @@
 return [
 	'module name' => 'Page Manager',
 	'configuration' => 'Pages Configuration',
+	// Fields
 	'id' => 'ID',
 	'title' => 'Title',
 	'path' => 'Path',
@@ -61,5 +62,8 @@ return [
 	],
 	'invalid' => [
 		'title' => 'Please provide a valid title',
+	],
+	'error' => [
+		'path rebuild failed' => 'Path rebuild failed',
 	],
 ];
