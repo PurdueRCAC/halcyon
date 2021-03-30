@@ -15,7 +15,7 @@ app('pathway')
 @section('toolbar')
 	@if (auth()->user()->can('delete resources'))
 		@if ($filters['state'] == 'trashed')
-			{!! Toolbar::custom(route('admin.resources.restore'), 'refresh', 'refresh', trans('global.restore'), false) !!}
+			{!! Toolbar::custom(route('admin.resources.restore'), 'refresh', 'refresh', trans('global.button.restore'), true) !!}
 		@else
 			{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.resources.delete')) !!}
 		@endif
@@ -152,7 +152,7 @@ app('pathway')
 				<td>
 					{!! $row->treename !!}
 					@if ($trashed)
-						<span class="glyph icon-trash text-danger" aria-hidden="true"></span>
+						<span class="glyph icon-trash text-danger" aria-hidden="true" data-tip="Removed on {{ $row->datetimeremoved->format('Y-m-d') }}"></span>
 					@endif
 					@if (!$disabled && auth()->user()->can('edit resources'))
 						<a href="{{ route('admin.resources.edit', ['id' => $row->id]) }}">

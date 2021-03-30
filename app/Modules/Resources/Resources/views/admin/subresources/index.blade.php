@@ -13,7 +13,7 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('edit.state resources.subresources'))
+	@if (auth()->user()->can('edit.state queues'))
 		{!! Toolbar::publishList(route('admin.resources.subresources.start'), trans('resources::resources.start scheduling')) !!}
 		{!! Toolbar::unpublishList(route('admin.resources.subresources.stop'), trans('resources::resources.stop scheduling')) !!}
 	@endif

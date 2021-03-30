@@ -77,6 +77,9 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('resources::assets.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 				</th>
+				<th scope="col">
+					{!! Html::grid('sort', trans('resources::assets.description'), 'description', $filters['order_dir'], $filters['order']) !!}
+				</th>
 				<th scope="col" class="priority-4 text-right">
 					{{ trans('resources::assets.resources') }}
 				</th>
@@ -100,6 +103,13 @@ app('pathway')
 						{{ $row->name }}
 					@if (auth()->user()->can('edit resources.types'))
 					</a>
+					@endif
+				</td>
+				<td class="priority-5">
+					@if ($row->description)
+						{{ Illuminate\Support\Str::limit($row->description, 70) }}
+					@else
+						<span class="none">{{ trans('global.none') }}</span>
 					@endif
 				</td>
 				<td class="priority-4 text-right">

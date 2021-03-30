@@ -62,12 +62,10 @@ class SubresourcesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -144,75 +142,96 @@ class SubresourcesController extends Controller
 	 * @apiUri    /api/resources/subresources/
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 *      "name":          "resourceid",
+	 *      "description":   "ID of the parent resource",
+	 *      "required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 *      "name":          "name",
 	 *      "description":   "The name of the sub-resource",
-	 *      "type":          "string",
 	 *      "required":      true,
-	 *      "default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "cluster",
 	 *      "description":   "Cluster name",
-	 *      "type":          "string",
 	 *      "required":      true,
-	 *      "default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "nodecores",
 	 *      "description":   "Number of node cores",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "nodemem",
 	 *      "description":   "Memory per node",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "nodegpus",
 	 *      "description":   "Number of GPUs per node",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "nodeattributes",
 	 *      "description":   "Node attributes",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "description",
 	 *      "description":   "Short description of the sub-resource",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "notice",
 	 *      "description":   "Notification status",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"in":            "body",
+	 *      "in":            "body",
 	 *      "name":          "queuestatus",
 	 *      "description":   "Queue status",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -220,16 +239,28 @@ class SubresourcesController extends Controller
 	{
 		$request->validate([
 			'name'           => 'required|unique:subresource|max:32',
-			'cluster'        => 'nullable|string|max:32',
-			'nodecores'      => 'nullable|integer',
-			'nodemem'        => 'nullable|string|max:5',
+			'cluster'        => 'required|string|max:32',
+			'nodecores'      => 'required|integer',
+			'nodemem'        => 'required|string|max:5',
 			'nodegpus'       => 'nullable|integer',
 			'nodeattributes' => 'nullable|string|max:16',
 			'description'    => 'nullable|string|max:255',
-			'notice'         => 'nullable|integer',
+			'notice'         => 'nullable|integer'
 		]);
 
 		$row = Subresource::create($request->all());
+
+		// Create Resource/Subresource association
+		$child = new Child;
+		$child->resourceid = $request->input('resourceid');
+
+		if (!$child->resource)
+		{
+			return response()->json(['message' => trans('resources::assets.invalid resource')], 415);
+		}
+
+		$child->subresourceid = $row->id;
+		$child->save();
 
 		return new SubresourceResource($row);
 	}

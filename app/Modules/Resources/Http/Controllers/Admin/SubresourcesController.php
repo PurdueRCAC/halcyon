@@ -161,8 +161,8 @@ class SubresourcesController extends Controller
 		$request->validate([
 			'fields.name' => 'required|string|max:32',
 			'fields.cluster' => 'required|string|max:12',
-			'fields.nodecores' => 'nullable|integer|max:999',
-			'fields.nodemem' => 'nullable|string|max:5',
+			'fields.nodecores' => 'required|integer|max:999',
+			'fields.nodemem' => 'required|string|max:5',
 			'fields.nodegpus' => 'nullable|integer|max:9999',
 			'fields.nodeattributes' => 'nullable|string|max:16',
 			'fields.description' => 'nullable|string|max:255',

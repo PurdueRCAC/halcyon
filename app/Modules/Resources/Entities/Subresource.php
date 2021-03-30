@@ -94,7 +94,7 @@ class Subresource extends Model
 	 */
 	protected $rules = array(
 		'name'           => 'required|unique:subresource|max:32',
-		'cluster'        => 'nullable|string|max:32',
+		'cluster'        => 'required|string|max:32',
 		'nodecores'      => 'nullable|integer',
 		'nodemem'        => 'nullable|string|max:5',
 		'nodegpus'       => 'nullable|integer',
@@ -157,10 +157,6 @@ class Subresource extends Model
 			})
 			->get();
 
-		/*$queues->each(function ($item, $key)
-		{
-			$item->stop();
-		});*/
 		foreach ($queues as $queue)
 		{
 			$queue->stop();
