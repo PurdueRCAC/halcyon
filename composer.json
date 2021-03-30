@@ -1,7 +1,7 @@
 {
     "name": "purdue/halcyon",
     "type": "project",
-    "description": "The Halcyon cluster resource management application.",
+    "description": "The Halcyon HPC resource allocation portal.",
     "keywords": [
         "cms",
         "halcyon",
