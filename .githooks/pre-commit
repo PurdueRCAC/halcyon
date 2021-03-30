@@ -152,10 +152,18 @@ declare -a errors
 
 # Fetch all changed php files and validate them.
 # This will check only staged files to be commited.
-files=$(git diff --cached --name-only --diff-filter=ACM $against | grep '\.php$' | grep -Ev '\.(blade.php|txt)$' | grep -Ev '(_ide_helper.php)$')
+files=$(git diff --name-only --diff-filter=ACM HEAD^ | grep '\.php$' | grep -Ev '\.(blade.php|txt)$' | grep -Ev '(_ide_helper.php)$')
+echo "Files:"
+for file in $files
+do
+    echo "    ${file}"
+done
 
 # Project Folder.
 project=$(git rev-parse --show-toplevel)
+echo "Project:"
+echo "    ${project}"
+echo
 
 # Apenas caminhos e nomes dos arquivos: /path/file.php,/foo/file.php,/bar/file.php
 for relative_file_path in $files
