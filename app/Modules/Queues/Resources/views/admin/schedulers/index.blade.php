@@ -118,7 +118,7 @@ app('pathway')
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr>
+			<tr{!! ($row->isTrashed() ? ' class="trashed"' : '') !!}>
 				@if (auth()->user()->can('delete queues.schedulers'))
 					<td>
 						{!! Html::grid('id', $i, $row->id) !!}
@@ -128,8 +128,8 @@ app('pathway')
 					{{ $row->id }}
 				</td>
 				<td>
-					@if ($row->trashed() && $row->datetimeremoved != '-0001-11-30 00:00:00')
-						<span class="badge badge-danger">Trashed<!-- <span class="icon-trash"></span> --></span>
+					@if ($row->isTrashed())
+						<span class="glyph icon-trash text-danger">Trashed</span>
 					@endif
 					@if (auth()->user()->can('edit queues.schedulers'))
 						<a href="{{ route('admin.queues.schedulers.edit', ['id' => $row->id]) }}">
