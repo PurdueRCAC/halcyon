@@ -1,0 +1,14 @@
+---
+kind: pipeline
+name: PHP Linter
+
+clone:
+  depth: 5
+
+steps:
+- name: Lint PHP
+  pull: if-not-exists
+  image: php:7.2-alpine
+  commands:
+  - sh -c 'apk add git bash'
+  - .githooks/pre-commit
