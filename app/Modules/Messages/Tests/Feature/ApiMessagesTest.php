@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use App\Modules\Users\Models\User;
 use Tests\TestCase;
 
-class MessagesTest extends TestCase
+class ApiMessagesTest extends TestCase
 {
     use WithoutMiddleware;
 
@@ -17,7 +17,7 @@ class MessagesTest extends TestCase
      */
     public function testIndex()
     {
-        $response = $this->get('/api/messages');
+        $response = $this->json('get', '/api/messages');
 
         $response->assertStatus(200);
     }
@@ -36,7 +36,7 @@ class MessagesTest extends TestCase
         );
 
         $response = $this->actingAs($user)
-            ->post('/api/messages', $data)
+            ->json('post', '/api/messages', $data)
             ->seeJsonEquals([
                 'id' => true
             ]);
@@ -51,7 +51,7 @@ class MessagesTest extends TestCase
      */
     public function testRead()
     {
-        $response = $this->get('/api/messages/1');
+        $response = $this->json('get', '/api/messages/1');
 
         $response->assertStatus(200);
     }
@@ -70,7 +70,7 @@ class MessagesTest extends TestCase
         );
 
         $response = $this->actingAs($user)
-            ->put('/api/messages/1', $data)
+            ->json('put', '/api/messages/1', $data)
             ->seeJsonEquals([
                 'id' => true
             ]);
@@ -88,7 +88,7 @@ class MessagesTest extends TestCase
         $user = new User;
 
         $response = $this->actingAs($user)
-            ->delete('/api/messages/1');
+            ->json('delete', '/api/messages/1');
 
         $response->assertStatus(200);
     }
