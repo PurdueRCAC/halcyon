@@ -44,8 +44,8 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
 
-		if (!app()->runningInConsole())
-		{
+		//if (!app()->runningInConsole())
+		//{
 			$manager = $this->app['themes'];
 
 			//$themePaths = $manager->all();
@@ -65,7 +65,7 @@ class ModuleServiceProvider extends ServiceProvider
 					$theme->getPath() . '/assets' => $manager->getAssetPath($theme->getName()),
 				], 'public');*/
 			}
-		}
+		//}
 
 		if ($path = theme_path('views'))
 		{
