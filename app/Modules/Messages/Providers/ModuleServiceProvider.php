@@ -2,6 +2,7 @@
 namespace App\Modules\Messages\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Factory;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -26,12 +27,26 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
+		$this->registerFactories();
 		$this->registerTranslations();
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+	}
+
+	/**
+	 * Register an additional directory of factories.
+	 *
+	 * @return void
+	 */
+	public function registerFactories()
+	{
+		if (! app()->environment('production') && $this->app->runningInConsole())
+		{
+			app(Factory::class)->load(dirname(__DIR__) . '/Database/Factories');
+		}
 	}
 
 	/**
