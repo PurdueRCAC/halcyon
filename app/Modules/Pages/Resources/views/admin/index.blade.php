@@ -9,8 +9,7 @@
 <script src="{{ Module::asset('pages:js/pages.js') . '?v=' . filemtime(public_path() . '/modules/pages/js/pages.js') }}"></script>
 <script>
 jQuery(document).ready(function ($) {
-	var el = $('.sparkline-chart');
-	el.each(function(i, el){
+	$('.sparkline-chart').each(function(i, el){
 		const ctx = el.getContext('2d');
 		const chart = new Chart(ctx, {
 		type: 'line',
@@ -33,7 +32,7 @@ jQuery(document).ready(function ($) {
 			},
 			elements: {
 				line: {
-					borderColor: '#fff',
+					borderColor: '#0071EB',
 					borderWidth: 1
 				},
 				point: {
