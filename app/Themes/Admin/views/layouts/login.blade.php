@@ -7,7 +7,7 @@
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 
 		<!-- Styles -->
-		<link rel="stylesheet" type="text/css" media="all" href="{{ asset('themes/Admin/css/login.css?v=' . filemtime(public_path() . '/themes/Admin/css/login.css')) }}" />
+		<link rel="stylesheet" type="text/css" media="all" href="{{ asset('themes/admin/css/login.css?v=' . filemtime(public_path() . '/themes/admin/css/login.css')) }}" />
 		<!--[if IE 9]>
 			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/browser/ie9.css') }}" />
 		<![endif]-->
@@ -18,8 +18,8 @@
 		@yield('styles')
 
 		<!-- Scripts -->
-		<script type="text/javascript" src="{{ asset('themes/Admin/js/jquery.min.js?v=' . filemtime(public_path() . '/themes/Admin/js/jquery.min.js')) }}"></script>
-		<script type="text/javascript" src="{{ asset('themes/Admin/js/login.js?v=' . filemtime(public_path() . '/themes/Admin/js/login.js')) }}"></script>
+		<script type="text/javascript" src="{{ asset('themes/admin/js/jquery.min.js?v=' . filemtime(public_path() . '/themes/admin/js/jquery.min.js')) }}"></script>
+		<script type="text/javascript" src="{{ asset('themes/admin/js/login.js?v=' . filemtime(public_path() . '/themes/admin/js/login.js')) }}"></script>
 		@yield('scripts')
 	</head>
 	<body id="login-body" class="dark">
