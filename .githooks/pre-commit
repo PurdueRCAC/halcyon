@@ -224,6 +224,6 @@ if [ -n "$errors" ]; then
     exit 1
 fi
 
-message_success 'No Errors Found.'
+#message_success 'No Errors Found.'
 
 exit 0
