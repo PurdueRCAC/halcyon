@@ -106,7 +106,7 @@ class ExternalHref
 				$href = preg_replace("/https?:\/\//i", '', $list['href']);
 
 				// Skip if internal link
-				if (stripos($href, $_SERVER['SERVER_NAME']) === 0)
+				if (isset($_SERVER['SERVER_NAME']) && stripos($href, $_SERVER['SERVER_NAME']) === 0)
 				{
 					continue;
 				}
