@@ -34,18 +34,20 @@
 		@stack('meta')
 
 		<!-- Styles -->
-		<?php
+		<link rel="preload" as="style" href="https://use.typekit.net/ghc8hdz.css" />
+<?php
 		$styles = array(
 			//'themes/rcac/css/jquerytimepicker_min.css',
 			//'https://use.typekit.net/ghc8hdz.css' => 'rel="preload" as="style"',
-			'themes/rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.min.css' => 'rel="stylesheet" type="text/css" media="all"',
-			//'themes/rcac/css/font-awesome-css.min.css' => 'rel="stylesheet" type="text/css" media="all"',
-			//'themes/rcac/css/college.css' => 'rel="stylesheet" type="text/css" media="all"',
-			//'themes/rcac/css/content.css' => 'rel="stylesheet" type="text/css" media="all"'
-			'themes/rcac/css/site.css' => 'rel="stylesheet" type="text/css" media="all"',
+			'https://use.typekit.net/ghc8hdz.css' => 'rel="stylesheet" type="text/css"',
+			'themes/rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.min.css' => 'rel="stylesheet" type="text/css"',
+			//'themes/rcac/css/font-awesome-css.min.css' => 'rel="stylesheet" type="text/css"',
+			//'themes/rcac/css/college.css' => 'rel="stylesheet" type="text/css"',
+			//'themes/rcac/css/content.css' => 'rel="stylesheet" type="text/css"'
+			'themes/rcac/css/site.css' => 'rel="stylesheet" type="text/css"',
 		);
 		if (!app('isAdmin') && Auth::check()):
-			$styles['themes/rcac/css/admin.css'] = 'rel="stylesheet" type="text/css" media="all"';
+			$styles['themes/rcac/css/admin.css'] = 'rel="stylesheet" type="text/css"';
 		endif;
 
 		foreach ($styles as $css => $attrs):

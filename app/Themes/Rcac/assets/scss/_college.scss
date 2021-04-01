@@ -1,4 +1,5 @@
-﻿@import url('https://use.typekit.net/ghc8hdz.css');
+﻿/* [!] Fonts - Moved this to a preload `link`
+@import url("https://use.typekit.net/ghc8hdz.css"); */
 
 /*!
  * Purdue U
@@ -14,7 +15,7 @@ html {
 	font-size: 92.5%
 }
 body {
-	font-family: acumin-pro, "Franklin Gothic", sans-serif
+	font-family: acumin-pro, "Franklin Gothic", "Arial", sans-serif
 }
 @media (min-width: 768px) {
 	body {
@@ -33,7 +34,7 @@ body {
 h1 {
 	margin: 0 0 2rem;
 	line-height: 1.22;
-	font-family: acumin-pro, "Franklin Gothic", sans-serif;
+	font-family: acumin-pro, "Franklin Gothic", "Arial", sans-serif;
 	color: black;
 	font-size: 2.3125rem;
 	font-weight:700
@@ -46,7 +47,7 @@ h1 {
 }
 
 h2 {
-	font-family: acumin-pro-condensed, "Franklin Gothic", sans-serif;
+	font-family: acumin-pro-condensed, "Franklin Gothic", "Arial Narrow", sans-serif;
 	margin: 2rem 0 1.5rem;
 	line-height: 1.2;
 	color: #8e6f3e;
@@ -61,7 +62,7 @@ h2 {
 }
 
 h3 {
-	font-family: acumin-pro-semi-condensed, "Franklin Gothic", sans-serif;
+	font-family: acumin-pro-semi-condensed, "Franklin Gothic", "Arial", sans-serif;
 	margin: 1.75rem 0 1.5rem;
 	line-height: 1.2;
 	font-weight: 600;
@@ -76,7 +77,7 @@ h3 {
 }
 
 h4 {
-	font-family: acumin-pro-semi-condensed, "Franklin Gothic", sans-serif;
+	font-family: acumin-pro-semi-condensed, "Franklin Gothic", "Arial", sans-serif;
 	margin: 1.5rem 0 1.5rem;
 	line-height: 1.2;
 	text-transform: uppercase;
@@ -92,7 +93,7 @@ h4 {
 }
 
 h5 {
-	font-family: acumin-pro, "Franklin Gothic", sans-serif;
+	font-family: acumin-pro, "Franklin Gothic", "Arial", sans-serif;
 	margin: 1.5rem 0 1.5rem;
 	line-height: 1.2;
 	font-weight: 700;
@@ -107,7 +108,7 @@ h5 {
 }
 
 h6 {
-	font-family: acumin-pro-semi-condensed, "Franklin Gothic", sans-serif;
+	font-family: acumin-pro-semi-condensed, "Franklin Gothic", "Arial", sans-serif;
 	margin: 1.5rem 0 1.5rem;
 	line-height: 1.2;
 	text-transform: uppercase;
@@ -516,7 +517,7 @@ table.gsc-search-box .gsc-search-button {
 
 @media (min-width: 768px) {
 	.goldbar {
-		padding: 5px 0 5px 0;
+		padding: 6px 0 5px 0;
 		font-size:.90em
 	}
 	.goldbar .hide {
@@ -684,7 +685,7 @@ table.gsc-search-box .gsc-search-button {
 }
 .top .department {
 	color: #fff;
-	font-family: acumin-pro-condensed, "Franklin Gothic", sans-serif;
+	font-family: acumin-pro-condensed, "Franklin Gothic", "Arial Narrow", sans-serif;
 	letter-spacing: 0;
 	padding-left: 15px;
 	padding-right:15px
@@ -720,7 +721,7 @@ table.gsc-search-box .gsc-search-button {
 	display: block;
 	clear: left;
 	color: inherit;
-	font-family: acumin-pro-semi-condensed, "Franklin Gothic", sans-serif;
+	font-family: acumin-pro-semi-condensed, "Franklin Gothic", "Arial", sans-serif;
 	font-size: .6087em;
 	line-height: 1.2em;
 	letter-spacing: 0;
@@ -810,7 +811,7 @@ table.gsc-search-box .gsc-search-button {
 	border: none;
 	box-shadow: 0px 3px 6px #00000029;
 	text-transform: uppercase !important;
-	font-family: "acumin-pro-semi-condensed", "Franklin Gothic", sans-serif;
+	font-family: acumin-pro-semi-condensed, "Franklin Gothic", "Arial", sans-serif;
 	box-shadow:0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 	padding: 0;
 }
@@ -1273,7 +1274,8 @@ table.gsc-search-box .gsc-search-button {
 	background-color: #f5f5f5;
 	color: #444;
 	font-size: .75em;
-	font-family: acumin-pro, "Franklin Gothic", sans-serif
+	line-height: 2.5em;
+	font-family: acumin-pro, "Franklin Gothic", "Arial", sans-serif
 }
 .breadcrumb a:link,
 .breadcrumb a:visited {
@@ -2896,7 +2898,7 @@ table.gsc-search-box .gsc-search-button {
 	font-size:1.3125em
 }
 .footer #accordion .panel .panel-heading .panel-title {
-	font-family: acumin-pro-semi-condensed, "Franklin Gothic", sans-serif !important;
+	font-family: acumin-pro-semi-condensed, "Franklin Gothic", "Arial", sans-serif !important;
 	font-size: 1em;
 	font-weight: 700;
 	text-transform:uppercase;
@@ -3125,7 +3127,7 @@ table.gsc-search-box .gsc-search-button {
 		line-height:1em
 	}
 	.footer #accordion .panel .panel-heading .panel-title {
-		font-family: acumin-pro-semi-condensed, "Franklin Gothic", sans-serif;
+		font-family: acumin-pro-semi-condensed, "Franklin Gothic", "Arial", sans-serif;
 		padding-top: 0;
 		padding-bottom: 0.625rem;
 		font-size:1em
