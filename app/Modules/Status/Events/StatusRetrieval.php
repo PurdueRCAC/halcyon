@@ -2,7 +2,7 @@
 
 namespace App\Modules\Status\Events;
 
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 
 class StatusRetrieval
 {

@@ -110,7 +110,7 @@ app('pathway')
 					<!-- <input type="text" name="resources" id="field-resources" class="form-control form-resources" data-uri="{{ url('/') }}/api/resources/?api_token={{ auth()->user()->api_token }}&search=%s" value="{{ implode(', ', $r) }}" /> -->
 					<select class="form-control basic-multiple" name="resources[]" id="field-resources" multiple="multiple" data-placeholder="Select resource...">
 						<?php
-						$resources = App\Modules\Resources\Entities\Asset::orderBy('name', 'asc')->get();
+						$resources = App\Modules\Resources\Models\Asset::orderBy('name', 'asc')->get();
 						foreach ($resources as $resource)
 						{
 							?>

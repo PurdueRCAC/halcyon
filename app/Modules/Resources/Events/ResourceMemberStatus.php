@@ -2,7 +2,7 @@
 
 namespace App\Modules\Resources\Events;
 
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 use App\Modules\Users\Models\User;
 
 class ResourceMemberStatus

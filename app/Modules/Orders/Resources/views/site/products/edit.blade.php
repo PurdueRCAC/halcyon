@@ -116,7 +116,7 @@ jQuery(document).ready(function ($) {
 					<label for="field-resourceid">{{ trans('orders::orders.resource') }}:</label>
 					<select class="form-control" name="fields[resourceid]" id="field-resourceid">
 						<option value="0"<?php if (!$row->resourceid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
-						<?php foreach (App\Modules\Resources\Entities\Asset::query()->withTrashed()->whereIsactive()->orderBy('name', 'asc')->get() as $resource): ?>
+						<?php foreach (App\Modules\Resources\Models\Asset::query()->withTrashed()->whereIsactive()->orderBy('name', 'asc')->get() as $resource): ?>
 							<option value="{{ $resource->id }}"<?php if ($row->resourceid == $resource->id) { echo ' selected="selected"'; } ?>>{{ $resource->name }}</option>
 						<?php endforeach; ?>
 					</select>

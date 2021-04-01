@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Modules\Widgets\Entities\Widget;
 use App\Widgets\Earlyuserform\Mail\Application;
 use App\Widgets\Earlyuserform\Mail\Confirmation;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 
 /**
  * Display an Early User application form

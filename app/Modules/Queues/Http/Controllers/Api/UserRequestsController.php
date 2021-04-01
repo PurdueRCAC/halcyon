@@ -9,7 +9,7 @@ use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as Member;
 use App\Modules\Queues\Models\GroupUser;
 use App\Modules\Queues\Models\UserRequest;
-use App\Modules\Resources\Entities\Child;
+use App\Modules\Resources\Models\Child;
 use App\Modules\Queues\Http\Resources\UserRequestResource;
 use App\Modules\Queues\Http\Resources\UserRequestResourceCollection;
 //use Illuminate\Http\Resources\Json\JsonResource;

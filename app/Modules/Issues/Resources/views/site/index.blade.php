@@ -250,7 +250,7 @@ app('pathway')->append(
 								{
 									if (trim($r))
 									{
-										$resource = App\Modules\Resources\Entities\Asset::find($r);
+										$resource = App\Modules\Resources\Models\Asset::find($r);
 										$resources[] = $resource->name . ':' . $resource->id;
 									}
 								}

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Resources\Entities\Fields;
+namespace App\Modules\Resources\Models\Fields;
 
 use App\Halcyon\Form\Fields\Select;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 
 /**
- * Supports a modal article picker.
+ * Select field of available Resources
  */
 class ResourceEntry extends Select
 {
@@ -18,18 +18,16 @@ class ResourceEntry extends Select
 	protected $type = 'ResourceEntry';
 
 	/**
-	 * Method to get the field input markup.
+	 * Method to get the field options.
 	 *
-	 * @return  string  The field input markup.
+	 * @return  array
 	 */
 	protected function getOptions()
 	{
 		$rows = Asset::query()
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->select('id', 'name')
+			->withTrashed()
+			->whereIsActive()
 			->orderBy('name', 'asc')
 			->get();
 
@@ -37,7 +35,7 @@ class ResourceEntry extends Select
 		{
 			$options[] = array(
 				'value' => $row->id,
-				'text' => $row->name
+				'text'  => $row->name
 			);
 		}
 

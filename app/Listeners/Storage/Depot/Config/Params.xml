@@ -2,7 +2,7 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="resourceid" type="App\Modules\Resources\Entities\Fields\ResourceEntry" label="listener.storage.depot::depot.resource" description="listener.storage.depot::depot.resource desc" />
+			<field name="resourceid" type="App\Modules\Resources\Models\Fields\ResourceEntry" label="listener.storage.depot::depot.resource" description="listener.storage.depot::depot.resource desc" />
 		</fieldset>
 	</fields>
 </config>

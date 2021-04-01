@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Modules\Resources\Entities\Batchsystem;
+use App\Modules\Resources\Models\Batchsystem;
 
 /**
  * Batch systems

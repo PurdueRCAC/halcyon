@@ -5,9 +5,9 @@ namespace App\Modules\Resources\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Resources\Entities\Asset;
-use App\Modules\Resources\Entities\Type;
-use App\Modules\Resources\Entities\Batchsystem;
+use App\Modules\Resources\Models\Asset;
+use App\Modules\Resources\Models\Type;
+use App\Modules\Resources\Models\Batchsystem;
 use App\Modules\Resources\Events\AssetDisplaying;
 use App\Halcyon\Http\StatefulRequest;
 

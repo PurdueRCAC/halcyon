@@ -4,7 +4,7 @@ namespace App\Listeners\Users\Courses;
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Events\InstructorLookup;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 use Carbon\Carbon;
 
 /**

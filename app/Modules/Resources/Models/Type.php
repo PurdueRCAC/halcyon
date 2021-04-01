@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Resources\Entities;
+namespace App\Modules\Resources\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\Resources\Events\TypeCreating;

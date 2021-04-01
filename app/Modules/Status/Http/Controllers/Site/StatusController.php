@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use App\Modules\Resources\Entities\Type as AssetType;
+use App\Modules\Resources\Models\Type as AssetType;
 use App\Modules\News\Models\Type as NewsType;
 use GuzzleHttp\Client;
 

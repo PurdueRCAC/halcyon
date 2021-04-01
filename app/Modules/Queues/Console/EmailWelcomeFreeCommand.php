@@ -9,7 +9,7 @@ use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User;
 use App\Modules\Queues\Models\GroupUser;
 use App\Modules\Storage\Models\StorageResource;
-use App\Modules\Resources\Entities\Child;
+use App\Modules\Resources\Models\Child;
 use App\Modules\Users\Models\User as SiteUser;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Queues\Mail\WelcomeFree;

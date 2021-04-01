@@ -2,7 +2,7 @@
 
 namespace App\Modules\Resources\Events;
 
-use App\Modules\Resources\Entities\Subresource;
+use App\Modules\Resources\Models\Subresource;
 
 class SubresourceUpdated
 {

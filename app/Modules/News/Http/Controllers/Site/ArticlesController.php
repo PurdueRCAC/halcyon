@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
 use App\Modules\News\Models\Newsresource;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 use Carbon\Carbon;
 use App\Modules\Users\Models\User;
 

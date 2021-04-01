@@ -11,9 +11,9 @@ use App\Modules\Queues\Models\Queue;
 //use App\Modules\Queues\Models\Type;
 //use App\Modules\Queues\Models\Scheduler;
 //use App\Modules\Queues\Models\SchedulerPolicy;
-//use App\Modules\Resources\Entities\Subresource;
-use App\Modules\Resources\Entities\Child;
-use App\Modules\Resources\Entities\Asset;
+//use App\Modules\Resources\Models\Subresource;
+use App\Modules\Resources\Models\Child;
+use App\Modules\Resources\Models\Asset;
 
 /**
  * Queues

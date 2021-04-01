@@ -3,7 +3,7 @@
 namespace App\Modules\Status\Console;
 
 use Illuminate\Console\Command;
-use App\Modules\Resources\Entities\Type as AssetType;
+use App\Modules\Resources\Models\Type as AssetType;
 use App\Modules\Status\Events\StatusRetrieval;
 use Carbon\Carbon;
 

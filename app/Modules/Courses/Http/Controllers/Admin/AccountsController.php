@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Events\InstructorLookup;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 use Carbon\Carbon;
 
 class AccountsController extends Controller

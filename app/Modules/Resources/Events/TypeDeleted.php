@@ -2,7 +2,7 @@
 
 namespace App\Modules\Resources\Events;
 
-use App\Modules\Resources\Entities\Type;
+use App\Modules\Resources\Models\Type;
 
 class TypeDeleted
 {

@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 
 /**
  * Group node model

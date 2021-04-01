@@ -1,7 +1,7 @@
 <?php
 namespace App\Listeners\Resources\StorageFortress;
 
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberStatus;
 use App\Modules\Queues\Models\User as QueueUser;

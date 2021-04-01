@@ -134,7 +134,7 @@ app('pathway')
 					<select class="form-control" name="fields[resourceid]" id="field-resourceid">
 						<option value="0"<?php if (!$row->resourceid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
 						<?php
-						$resources = (new App\Modules\Resources\Entities\Asset)->tree();
+						$resources = (new App\Modules\Resources\Models\Asset)->tree();
 						foreach ($resources as $resource): ?>
 							<option value="{{ $resource->id }}"<?php if ($row->resourceid == $resource->id) { echo ' selected="selected"'; } ?>>{!! str_repeat('|&mdash;', $resource->level) !!} {{ $resource->name }}</option>
 						<?php endforeach; ?>

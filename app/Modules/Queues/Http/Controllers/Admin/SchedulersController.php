@@ -7,8 +7,8 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Queues\Models\SchedulerPolicy;
-use App\Modules\Resources\Entities\Batchsystem;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Batchsystem;
+use App\Modules\Resources\Models\Asset;
 use App\Halcyon\Http\StatefulRequest;
 
 class SchedulersController extends Controller

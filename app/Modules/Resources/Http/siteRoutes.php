@@ -2,7 +2,7 @@
 
 use Illuminate\Routing\Router;
 
-$types = App\Modules\Resources\Entities\Type::all();
+$types = App\Modules\Resources\Models\Type::all();
 
 foreach ($types as $type)
 {

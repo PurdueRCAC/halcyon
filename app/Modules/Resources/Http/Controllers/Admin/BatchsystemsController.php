@@ -5,7 +5,7 @@ namespace App\Modules\Resources\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Resources\Entities\Batchsystem;
+use App\Modules\Resources\Models\Batchsystem;
 use App\Halcyon\Http\StatefulRequest;
 
 class BatchsystemsController extends Controller

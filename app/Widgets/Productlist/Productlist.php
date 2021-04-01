@@ -3,7 +3,7 @@ namespace App\Widgets\Productlist;
 
 use App\Modules\Orders\Models\Category;
 use App\Modules\Widgets\Entities\Widget;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 
 /**
  * Widget for displaying products

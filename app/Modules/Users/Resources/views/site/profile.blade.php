@@ -342,7 +342,7 @@ $active = $sections->firstWhere('active', '=', true);
 				<div class="card-body panel-body">
 					<?php
 					// Gather roles
-					$resources = App\Modules\Resources\Entities\Asset::query()
+					$resources = App\Modules\Resources\Models\Asset::query()
 						->where('rolename', '!=', '')
 						//->where('retired', '=', 0)
 						->where('listname', '!=', '')

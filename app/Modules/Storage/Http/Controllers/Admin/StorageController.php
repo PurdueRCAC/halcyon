@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Modules\Storage\Models\StorageResource;
 use App\Halcyon\Http\StatefulRequest;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 use App\Modules\Messages\Models\Type as MessageType;
 
 class StorageController extends Controller

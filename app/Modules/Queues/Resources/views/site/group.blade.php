@@ -24,7 +24,7 @@
 
 		$q = (new App\Modules\Queues\Models\Queue)->getTable();
 		$s = (new App\Modules\Queues\Models\Scheduler)->getTable();
-		$r = (new App\Modules\Resources\Entities\Subresource)->getTable();
+		$r = (new App\Modules\Resources\Models\Subresource)->getTable();
 
 		$queues = $group->queues()
 			->select($q . '.*')

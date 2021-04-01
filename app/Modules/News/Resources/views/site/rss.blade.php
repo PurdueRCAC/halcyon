@@ -53,7 +53,7 @@
 	<h3>{{ trans('news::news.resource feeds') }}</h3>
 	<ul class="rsscontainer">
 		<?php
-		$resources = App\Modules\Resources\Entities\Asset::query()
+		$resources = App\Modules\Resources\Models\Asset::query()
 			->where('listname', '!=', '')
 			->orderBy('name', 'asc')
 			->get();

@@ -5,7 +5,7 @@ namespace App\Modules\Messages\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Modules\Messages\Models\Type;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 use App\Halcyon\Http\StatefulRequest;
 
 class TypesController extends Controller

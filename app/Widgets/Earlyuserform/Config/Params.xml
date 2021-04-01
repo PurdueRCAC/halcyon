@@ -2,7 +2,7 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="resourceid" type="App\Modules\Resources\Entities\Fields\ResourceEntry" extension="resources" default="" label="widget.earlyuserform::earlyuserform.params.asset" description="widget.earlyuserform::earlyuserform.params.asset desc">
+			<field name="resourceid" type="App\Modules\Resources\Models\Fields\ResourceEntry" extension="resources" default="" label="widget.earlyuserform::earlyuserform.params.asset" description="widget.earlyuserform::earlyuserform.params.asset desc">
 				<option value="">widget.earlyuserform::earlyuserform.params.all assets</option>
 			</field>
 			<field name="email" type="text" label="widget.earlyuserform::earlyuserform.params.email" description="widget.earlyuserform::earlyuserform.params.email desc" />

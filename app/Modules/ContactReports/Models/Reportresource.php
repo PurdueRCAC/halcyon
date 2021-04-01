@@ -78,6 +78,6 @@ class Reportresource extends Model
 	 */
 	public function resource()
 	{
-		return $this->belongsTo('App\Modules\Resources\Entities\Asset', 'resourceid');
+		return $this->belongsTo('App\Modules\Resources\Models\Asset', 'resourceid');
 	}
 }

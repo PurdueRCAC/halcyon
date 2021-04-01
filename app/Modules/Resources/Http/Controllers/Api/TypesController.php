@@ -5,7 +5,7 @@ namespace App\Modules\Resources\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Resources\Entities\Type;
+use App\Modules\Resources\Models\Type;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 

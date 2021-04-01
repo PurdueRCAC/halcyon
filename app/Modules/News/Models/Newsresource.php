@@ -3,7 +3,7 @@
 namespace App\Modules\News\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 
 /**
  * News model mapping to resources

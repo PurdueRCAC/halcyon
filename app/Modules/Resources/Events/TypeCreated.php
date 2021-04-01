@@ -2,7 +2,7 @@
 
 namespace App\Modules\Resources\Events;
 
-use App\Modules\Resources\Entities\Type;
+use App\Modules\Resources\Models\Type;
 
 class TypeCreated
 {
@@ -15,7 +15,6 @@ class TypeCreated
 	 * Constructor
 	 *
 	 * @param Type $type
-	 * @param array $data
 	 * @return void
 	 */
 	public function __construct(Type $type)

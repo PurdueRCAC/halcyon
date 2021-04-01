@@ -3,7 +3,7 @@ namespace App\Listeners\Resources\Grafana;
 
 use Illuminate\Support\Facades\Storage;
 use App\Modules\Status\Events\StatusRetrieval;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 

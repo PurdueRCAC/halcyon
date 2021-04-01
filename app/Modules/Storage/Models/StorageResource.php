@@ -80,7 +80,7 @@ class StorageResource extends Model
 	 */
 	public function resource()
 	{
-		return $this->belongsTo('App\Modules\Resources\Entities\Asset', 'parentresourceid')->withTrashed();
+		return $this->belongsTo('App\Modules\Resources\Models\Asset', 'parentresourceid')->withTrashed();
 	}
 
 	/**

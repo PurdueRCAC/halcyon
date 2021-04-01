@@ -11,7 +11,7 @@ use App\Modules\Courses\Events\CourseEnrollment;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberDeleted;
 use App\Modules\Resources\Events\ResourceMemberStatus;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Users\Events\UserLookup;

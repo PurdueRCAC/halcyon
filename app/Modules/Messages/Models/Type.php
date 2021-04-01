@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 use App\Modules\Messages\Events\TypeCreating;
 use App\Modules\Messages\Events\TypeCreated;
 use App\Modules\Messages\Events\TypeUpdating;

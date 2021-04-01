@@ -155,7 +155,7 @@
 							{
 								if (trim($r))
 								{
-									$resource = App\Modules\Resources\Entities\Asset::findOrFail($r);
+									$resource = App\Modules\Resources\Models\Asset::findOrFail($r);
 									$selected[] = $resource->name . ':' . $r . '';
 								}
 							}*/
@@ -164,7 +164,7 @@
 						<?php /*<input name="resource" id="newsresource" size="45" class="form-control" value="{{ implode(',', $resources) }}" data-uri="{{ route('api.resources.index') }}?search=%s" />*/ ?>
 						<select class="form-control searchable-select-multi" multiple="multiple" name="resource[]" id="newsresource">
 							<?php
-							$resources = App\Modules\Resources\Entities\Asset::query()
+							$resources = App\Modules\Resources\Models\Asset::query()
 								->withTrashed()
 								->where('listname', '!=', '')
 								->where('display', '>', 0)
@@ -189,10 +189,10 @@
 
 							foreach ($types as $t => $res)
 							{
-								$type = App\Modules\Resources\Entities\Type::find($t);
+								$type = App\Modules\Resources\Models\Type::find($t);
 								if (!$type)
 								{
-									$type = new App\Modules\Resources\Entities\Type;
+									$type = new App\Modules\Resources\Models\Type;
 									$type->name = 'Services';
 								}
 								?>

@@ -4,7 +4,7 @@ namespace App\Modules\Resources\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\Resources\Entities\Subresource;
+use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Mail\Scheduling;
 
 class EmailSchedulingCommand extends Command

@@ -5,7 +5,7 @@ namespace App\Modules\Courses\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Asset;
 use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Courses\Events\AccountCreating;
 use App\Modules\Courses\Events\AccountCreated;

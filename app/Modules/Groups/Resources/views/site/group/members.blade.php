@@ -3,8 +3,8 @@ $m = (new \App\Modules\Groups\Models\Member)->getTable();
 $ug = (new \App\Modules\Groups\Models\UnixGroupMember)->getTable();
 $u = (new \App\Modules\Users\Models\UserUsername)->getTable();
 $q = (new \App\Modules\Queues\Models\Queue)->getTable();
-$s = (new \App\Modules\Resources\Entities\Child)->getTable();
-$r = (new \App\Modules\Resources\Entities\Asset)->getTable();
+$s = (new \App\Modules\Resources\Models\Child)->getTable();
+$r = (new \App\Modules\Resources\Models\Asset)->getTable();
 
 /*$managers = $group->members()
 	->withTrashed()

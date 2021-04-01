@@ -5,8 +5,8 @@ namespace App\Modules\Resources\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Resources\Entities\Child;
-use App\Modules\Resources\Entities\Subresource;
+use App\Modules\Resources\Models\Child;
+use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Http\Resources\SubresourceResourceCollection;
 use App\Modules\Resources\Http\Resources\SubresourceResource;
 

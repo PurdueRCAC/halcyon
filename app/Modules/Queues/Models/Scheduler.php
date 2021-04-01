@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Resources\Entities\Batchsystem;
-use App\Modules\Resources\Entities\Subresource;
-use App\Modules\Resources\Entities\Asset;
-use App\Modules\Resources\Entities\Child;
+use App\Modules\Resources\Models\Batchsystem;
+use App\Modules\Resources\Models\Subresource;
+use App\Modules\Resources\Models\Asset;
+use App\Modules\Resources\Models\Child;
 use App\Modules\Core\Traits\LegacyTrash;
 use Carbon\Carbon;
 

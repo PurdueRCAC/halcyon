@@ -87,7 +87,7 @@ app('pathway')
 					<select class="form-control basic-multiple" name="resources[]" multiple="multiple" data-placeholder="">
 						<?php
 						$r = $row->resources->pluck('resourceid')->toArray();
-						$resources = App\Modules\Resources\Entities\Asset::orderBy('name', 'asc')->get();
+						$resources = App\Modules\Resources\Models\Asset::orderBy('name', 'asc')->get();
 						foreach ($resources as $resource)
 						{
 							?>

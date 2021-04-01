@@ -12,9 +12,9 @@ use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Queues\Models\SchedulerPolicy;
 use App\Modules\Queues\Models\Walltime;
 use App\Modules\Queues\Models\Size;
-use App\Modules\Resources\Entities\Subresource;
-use App\Modules\Resources\Entities\Child;
-use App\Modules\Resources\Entities\Asset;
+use App\Modules\Resources\Models\Subresource;
+use App\Modules\Resources\Models\Child;
+use App\Modules\Resources\Models\Asset;
 
 class QueuesController extends Controller
 {
