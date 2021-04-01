@@ -22,6 +22,7 @@
 	cursor: pointer;
 	text-decoration: none;
 	color: #aaa;
+	font-weight: normal;
 }
 #adminmenu a:hover,
 #adminmenu a:active,
