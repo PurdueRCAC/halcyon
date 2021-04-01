@@ -66,6 +66,64 @@ class CreateNewsTables extends Migration
 				$table->typeInteger('tagusers')->unsigned()->default(0);
 				$table->typeInteger('calendar')->unsigned()->default(0);
 			});
+
+			$types = array(
+				array(
+					'name' => 'Outages and Maintenance',
+					'tagresources' => 1,
+					'location' => 0,
+					'future' => 1,
+					'ongoing' => 1,
+					'tagusers' => 0,
+					'calendar' => 1,
+					'url' => 0,
+				),
+				array(
+					'name' => 'Announcements',
+					'tagresources' => 1,
+					'location' => 0,
+					'future' => 1,
+					'ongoing' => 0,
+					'tagusers' => 0,
+					'calendar' => 0,
+					'url' => 0,
+				),
+				array(
+					'name' => 'Science Highlights',
+					'tagresources' => 0,
+					'location' => 0,
+					'future' => 0,
+					'ongoing' => 0,
+					'tagusers' => 0,
+					'calendar' => 0,
+					'url' => 0,
+				),
+				array(
+					'name' => 'Events',
+					'tagresources' => 0,
+					'location' => 1,
+					'future' => 1,
+					'ongoing' => 0,
+					'tagusers' => 1,
+					'calendar' => 1,
+					'url' => 1,
+				),
+				array(
+					'name' => 'Office Hours',
+					'tagresources' => 0,
+					'location' => 1,
+					'future' => 1,
+					'ongoing' => 0,
+					'tagusers' => 1,
+					'calendar' => 1,
+					'url' => 1,
+				),
+			);
+
+			foreach ($types as $type)
+			{
+				DB::table('newstypes')->insert($type);
+			}
 		}
 
 		if (!Schema::hasTable('newsupdates'))

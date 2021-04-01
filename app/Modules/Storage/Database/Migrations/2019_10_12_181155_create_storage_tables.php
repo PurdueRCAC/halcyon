@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateStorageTables extends Migration
 {
@@ -55,7 +56,39 @@ class CreateStorageTables extends Migration
 				$table->smallInteger('defaulttimeperiodid')->unsigned()->default(0);
 				$table->tinyInteger('valuetype')->default(0);
 			});
-			//$this->info('Created `storagedirquotanotificationtypes` table.');
+			
+			$types = array(
+				array(
+					'name' => 'Usage Report',
+					'defaulttimeperiodid' => 2,
+					'valuetype' => 1,
+				),
+				array(
+					'name' => 'Space Threshold - Value',
+					'defaulttimeperiodid' => 0,
+					'valuetype' => 2,
+				),
+				array(
+					'name' => 'Space Threshold - Percent',
+					'defaulttimeperiodid' => 0,
+					'valuetype' => 3,
+				),
+				array(
+					'name' => 'File Threshold - Value',
+					'defaulttimeperiodid' => 0,
+					'valuetype' => 4,
+				),
+				array(
+					'name' => 'File Threshold - Percent',
+					'defaulttimeperiodid' => 0,
+					'valuetype' => 3,
+				),
+			);
+
+			foreach ($types as $type)
+			{
+				DB::table('storagedirquotanotificationtypes')->insert($type);
+			}
 		}
 
 		if (!Schema::hasTable('storagedirquotanotifications'))

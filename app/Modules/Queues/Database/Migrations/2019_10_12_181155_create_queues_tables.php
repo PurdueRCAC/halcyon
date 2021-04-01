@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateQueuesTables extends Migration
 {
@@ -63,7 +64,20 @@ class CreateQueuesTables extends Migration
 				$table->increments('id');
 				$table->char('name', 20);
 			});
-			//$this->info('Created `queuetypes` table.');
+
+			$types = array(
+				'compute queue',
+				'storage',
+				'virtual machine',
+				'hadoop'
+			);
+
+			foreach ($types as $type)
+			{
+				DB::table('queuetypes')->insert([
+					'name' => $type
+				]);
+			}
 		}
 
 		if (!Schema::hasTable('queuesizes'))
@@ -144,7 +158,34 @@ class CreateQueuesTables extends Migration
 				$table->string('code', 16);
 				$table->string('name', 64);
 			});
-			//$this->info('Created `schedulerpolicies` table.');
+
+			$schedulerpolicies = array(
+				array(
+					'name' => 'World Shared Node Scheduling',
+					'code' => 'SHARED',
+				),
+				array(
+					'name' => 'Whole Node Scheduling',
+					'code' => 'SINGLEJOB',
+				),
+				array(
+					'name' => 'Single User Shared Scheduling',
+					'code' => 'SINGLEUSER',
+				),
+				array(
+					'name' => 'Single Project Shared Scheduling',
+					'code' => 'SINGLEACCOUNT',
+				),
+				array(
+					'name' => 'Single Group Shared Scheduling',
+					'code' => 'SINGLEGROUP',
+				),
+			);
+
+			foreach ($schedulerpolicies as $policy)
+			{
+				DB::table('schedulerpolicies')->insert($policy);
+			}
 		}
 
 		if (!Schema::hasTable('schedulers'))

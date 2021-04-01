@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateResourcesTables extends Migration
 {
@@ -29,7 +30,6 @@ class CreateResourcesTables extends Migration
 				$table->tinyInteger('producttype')->unsigned()->default(0);
 				$table->index(['datetimeremoved', 'datetimecreated']);
 			});
-			//$this->info('Created `resources` table.');
 		}
 
 		if (!Schema::hasTable('resourcesubresources'))
@@ -43,7 +43,6 @@ class CreateResourcesTables extends Migration
 				$table->index('subresourceid');
 				$table->index(['resourceid', 'subresourceid']);
 			});
-			//$this->info('Created `resourcesubresources` table.');
 		}
 
 		if (!Schema::hasTable('resourcetypes'))
@@ -52,9 +51,15 @@ class CreateResourcesTables extends Migration
 			{
 				$table->increments('id');
 				$table->char('name', 20);
-
 			});
-			//$this->info('Created `resourcetypes` table.');
+
+			DB::table('resourcetypes')->insert([
+				'name' => 'Compute'
+			]);
+
+			DB::table('resourcetypes')->insert([
+				'name' => 'Storage'
+			]);
 		}
 
 		if (!Schema::hasTable('batchsystems'))
@@ -64,7 +69,22 @@ class CreateResourcesTables extends Migration
 				$table->increments('id');
 				$table->char('name', 16);
 			});
-			//$this->info('Created `batchsystems` table.');
+
+			$batchsystems = array(
+				'PBS',
+				'Condor',
+				'SLURM',
+				'Nimbus',
+				'WinHPC',
+				'Hadoop'
+			);
+
+			foreach ($batchsystems as $batchsystem)
+			{
+				DB::table('batchsystems')->insert([
+					'name' => $batchsystem
+				]);
+			}
 		}
 	}
 
@@ -84,7 +104,6 @@ class CreateResourcesTables extends Migration
 		foreach ($tables as $table)
 		{
 			Schema::dropIfExists($table);
-			//$this->info('Dropped `' . $table . '` table.');
 		}
 	}
 }

@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Migration script for installing base tables
@@ -38,7 +39,16 @@ class CreateBaseTables extends Migration
 				$table->index(['element', 'folder', 'client_id']);
 				$table->index(['type', 'element', 'folder', 'client_id']);
 			});
-			//$this->command->info('Created `extensions` table.');
+
+			/*DB::table('extensions')->insert([
+				'name' => 'core',
+				'type' => 'module',
+				'element' => 'core',
+				'client_id' => 0,
+				'enabled' => 1,
+				'access' => 1,
+				'protected' => 1,
+			]);*/
 		}
 
 		if (!Schema::hasTable('timeperiods'))
@@ -53,7 +63,54 @@ class CreateBaseTables extends Migration
 				$table->tinyInteger('months')->unsigned()->default(0);
 				$table->tinyInteger('warningtimeperiodid')->unsigned()->default(0);
 			});
-			//$this->command->info('Created `timeperiods` table.');
+
+			$timeperiods = array(
+				array(
+					'name' => 'daily',
+					'singular' => 'day',
+					'plural' => 'days',
+					'unixtime' => 86400,
+					'months' => 0,
+					'warningtimeperiodid' => 5,
+				),
+				array(
+					'name' => 'weekly',
+					'singular' => 'week',
+					'plural' => 'weeks',
+					'unixtime' => 604800,
+					'months' => 0,
+					'warningtimeperiodid' => 1,
+				),
+				array(
+					'name' => 'monthly',
+					'singular' => 'month',
+					'plural' => 'months',
+					'unixtime' => 0,
+					'months' => 1,
+					'warningtimeperiodid' => 2,
+				),
+				array(
+					'name' => 'annual',
+					'singular' => 'year',
+					'plural' => 'years',
+					'unixtime' => 0,
+					'months' => 12,
+					'warningtimeperiodid' => 3,
+				),
+				array(
+					'name' => 'hourly',
+					'singular' => 'hour',
+					'plural' => 'hours',
+					'unixtime' => 3600,
+					'months' => 0,
+					'warningtimeperiodid' => 0,
+				),
+			);
+
+			foreach ($timeperiods as $timeperiod)
+			{
+				DB::table('timeperiods')->insert($timeperiod);
+			}
 		}
 	}
 
@@ -70,7 +127,6 @@ class CreateBaseTables extends Migration
 		foreach ($tables as $table)
 		{
 			Schema::dropIfExists($table);
-			//$this->command->info('Dropped `' . $table . '` table.');
 		}
 	}
 }

@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Migration script for installing news tables
@@ -33,7 +34,6 @@ class CreateContactReportsTables extends Migration
 				$table->index(['groupid', 'datetimecontact']);
 				$table->index('contactreporttypeid');
 			});
-			//$this->info('Created `contactreports` table.');
 		}
 
 		if (!Schema::hasTable('contactreportstems'))
@@ -43,7 +43,6 @@ class CreateContactReportsTables extends Migration
 				$table->increments('id');
 				$table->text('stemmedtext');
 			});
-			//$this->info('Created `contactreportstems` table.');
 		}
 
 		if (!Schema::hasTable('contactreportusers'))
@@ -58,7 +57,6 @@ class CreateContactReportsTables extends Migration
 				$table->index(['contactreportid', 'userid']);
 				$table->index('userid');
 			});
-			//$this->info('Created `contactreportusers` table.');
 		}
 
 		if (!Schema::hasTable('contactreportcomments'))
@@ -74,7 +72,6 @@ class CreateContactReportsTables extends Migration
 				$table->integer('notice')->unsigned()->default(0);
 				$table->index('contactreportid');
 			});
-			//$this->info('Created `contactreportcomments` table.');
 		}
 
 		if (!Schema::hasTable('contactreportresources'))
@@ -87,7 +84,6 @@ class CreateContactReportsTables extends Migration
 				$table->index('resourceid');
 				$table->index('contactreportid');
 			});
-			//$this->info('Created `contactreportresources` table.');
 		}
 
 		if (!Schema::hasTable('contactreporttypes'))
@@ -100,6 +96,23 @@ class CreateContactReportsTables extends Migration
 				$table->tinyInteger('timeperiodcount')->unsigned()->default(0);
 				$table->tinyInteger('timeperiodlimit')->unsigned()->default(0);
 			});
+
+			$types = array(
+				'Office Hours',
+				'Email / Phone',
+				'Personal Meeting',
+				'New Faculty Meeting',
+				'Strategic Partner Meeting',
+				'Class Account Request',
+				'Workshop Account Request',
+			);
+
+			foreach ($types as $type)
+			{
+				DB::table('contactreporttypes')->insert([
+					'name' => $type
+				]);
+			}
 		}
 
 		if (!Schema::hasTable('linkusers'))
@@ -116,7 +129,6 @@ class CreateContactReportsTables extends Migration
 				$table->index(['userid', 'membertype', 'dateremoved', 'datecreated']);
 				$table->index(['targetuserid', 'membertype', 'dateremoved', 'datecreated']);
 			});
-			//$this->info('Created `linkusers` table.');
 		}
 	}
 
@@ -137,8 +149,6 @@ class CreateContactReportsTables extends Migration
 		foreach ($tables as $table)
 		{
 			Schema::dropIfExists($table);
-
-			//$this->info('Dropped `' . $table . '` table.');
 		}
 	}
 }
