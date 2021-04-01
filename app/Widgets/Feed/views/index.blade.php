@@ -1,26 +1,20 @@
 <?php
 /**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
+ * @package  Feed widget
  */
 
-if ($feed != false)
-{
+if ($feed != false):
 	//image handling
 	$iUrl   = isset($feed->image->url)   ? $feed->image->url   : null;
 	$iTitle = isset($feed->image->title) ? $feed->image->title : null;
 	$actualItems = count($feed->items);
 	$setItems    = $params->get('rssitems', 5);
 
-	if ($setItems > $actualItems)
-	{
+	if ($setItems > $actualItems):
 		$totalItems = $actualItems;
-	}
-	else
-	{
+	else:
 		$totalItems = $setItems;
-	}
+	endif;
 	?>
 	<div class="feed{{ $clss }} feed-{{ $rssrtl ? 'rtl' : 'ltr' }}">
 		@if (!is_null($feed->title) && $params->get('rsstitle', 1))
@@ -49,57 +43,47 @@ if ($feed != false)
 				?>
 				<li class="newsfeed-item">
 					<?php
-					if (!is_null($currItem->get_link()))
-					{
-						if (!is_null($feed->title) && $params->get('rsstitle', 1))
-						{
+					if (!is_null($currItem->get_link())):
+						if (!is_null($feed->title) && $params->get('rsstitle', 1)):
 							echo '<h5 class="feed-link">';
-						}
-						else
-						{
+						else:
 							echo '<h4 class="feed-link">';
-						}
+						endif;
 						?>
 						<a href="<?php echo $currItem->get_link(); ?>" rel="nofollow external">
 							<?php echo $currItem->get_title(); ?>
 						</a>
 						<?php
-						if (!is_null($feed->title) && $params->get('rsstitle', 1))
-						{
+						if (!is_null($feed->title) && $params->get('rsstitle', 1)):
 							echo '</h5>';
-						}
-						else
-						{
+						else:
 							echo '</h4>';
-						}
-					}
+						endif;
+					endif;
 
 					// item description
-					if ($params->get('rssitemdesc', 1))
-					{
+					if ($params->get('rssitemdesc', 1)):
 						// item description
 						$text = $currItem->get_description();
 						$text = str_replace('&apos;', "'", $text);
 						$text = strip_tags($text);
 						// word limit check
-						if ($words)
-						{
+						if ($words):
 							$texts = explode(' ', $text);
 							$count = count($texts);
-							if ($count > $words)
-							{
+							if ($count > $words):
 								$text = '';
 								for ($i = 0; $i < $words; $i ++)
 								{
 									$text .= ' '.$texts[$i];
 								}
 								$text .= '...';
-							}
-						}
+							endif;
+						endif;
 						?>
 						<p><?php echo $text; ?></p>
 						<?php
-					}
+					endif;
 					?>
 				</li>
 				<?php
@@ -108,4 +92,4 @@ if ($feed != false)
 		</ul>
 	</div>
 	<?php
-}
+endif;
