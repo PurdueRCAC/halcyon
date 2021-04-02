@@ -5,6 +5,7 @@ namespace App\Modules\Menus\Entities;
 use App\Halcyon\Config\Registry;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use App\Modules\Menus\Models\Item;
 
 /**
@@ -301,6 +302,11 @@ class Menu extends Fluent
 	public function load()
 	{
 		$w = (new Item)->getTable();
+
+		if (!Schema::hasTable('menu_items'))
+		{
+			return;
+		}
 
 		$items = DB::table($w)
 			->leftJoin('extensions', $w . '.module_id', '=', 'extensions.id')

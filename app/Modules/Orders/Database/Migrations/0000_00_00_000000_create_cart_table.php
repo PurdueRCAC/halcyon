@@ -15,7 +15,7 @@ class CreateCartTable extends Migration
 		{
 			Schema::create('ordercarts', function (Blueprint $table)
 			{
-				$table->string('identifier');
+				$table->string('identifier')->comment('FK to userusernames.username');
 				$table->string('instance');
 				$table->longText('content');
 				$table->nullableTimestamps();

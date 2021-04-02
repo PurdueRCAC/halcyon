@@ -30,10 +30,10 @@ class CreateBaseTables extends Migration
 				$table->tinyInteger('protected')->unsigned()->default(0);
 				$table->text('params')->nullable();
 				$table->integer('checked_out')->unsigned()->default(0);
-				$table->timestamp('checked_out_time')->nullable();
+				$table->dateTime('checked_out_time')->nullable();
 				$table->integer('ordering')->unsigned()->default(0);
 				$table->integer('state')->unsigned()->default(0);
-				$table->timestamp('updated_at')->nullable();
+				$table->dateTime('updated_at')->nullable();
 				$table->integer('updated_by')->unsigned()->default(0);
 				$table->index(['element', 'client_id']);
 				$table->index(['element', 'folder', 'client_id']);
@@ -49,6 +49,28 @@ class CreateBaseTables extends Migration
 				'access' => 1,
 				'protected' => 1,
 			]);*/
+		}
+
+		if (!Schema::hasTable('collegedept'))
+		{
+			Schema::create('collegedept', function (Blueprint $table)
+			{
+				$table->increments('id');
+				$table->integer('parentid')->unsigned()->default(0);
+				$table->string('name', 255);
+				$table->index('parentid');
+			});
+		}
+
+		if (!Schema::hasTable('fieldofscience'))
+		{
+			Schema::create('fieldofscience', function (Blueprint $table)
+			{
+				$table->increments('id');
+				$table->integer('parentid')->unsigned()->default(0);
+				$table->string('name', 255);
+				$table->index('parentid');
+			});
 		}
 
 		if (!Schema::hasTable('timeperiods'))
@@ -121,6 +143,8 @@ class CreateBaseTables extends Migration
 	{
 		$tables = array(
 			'extensions',
+			'collegedept',
+			'fieldofscience',
 			'timeperiods',
 		);
 

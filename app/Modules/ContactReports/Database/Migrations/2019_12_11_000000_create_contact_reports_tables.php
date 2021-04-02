@@ -24,16 +24,18 @@ class CreateContactReportsTables extends Migration
 				$table->integer('userid')->unsigned()->default(0);
 				$table->text('report');
 				$table->text('stemmedreport');
-				$table->timestamp('datetimecreated');
-				$table->timestamp('datetimecontact');
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimecontact');
 				$table->integer('notice')->unsigned()->default(0);
-				$table->timestamp('datetimegroupid');
+				$table->dateTime('datetimegroupid');
 				$table->integer('contactreporttypeid')->unsigned()->default(0);
-				$table->index(['groupid', 'userid', 'datetimecontact']);
-				$table->index(['userid', 'datetimecontact']);
-				$table->index(['groupid', 'datetimecontact']);
+				$table->index(['groupid', 'userid', 'datetimecontact'], 'groupid');
+				$table->index(['userid', 'datetimecontact'], 'userid');
+				$table->index(['groupid', 'datetimecontact'], 'datetimecontact');
 				$table->index('contactreporttypeid');
 			});
+
+			DB::statement('ALTER TABLE contactreports ADD FULLTEXT search(stemmedreport)');
 		}
 
 		if (!Schema::hasTable('contactreportstems'))
@@ -43,6 +45,8 @@ class CreateContactReportsTables extends Migration
 				$table->increments('id');
 				$table->text('stemmedtext');
 			});
+
+			DB::statement('ALTER TABLE contactreports ADD FULLTEXT search(stemmedtext)');
 		}
 
 		if (!Schema::hasTable('contactreportusers'))
@@ -52,9 +56,9 @@ class CreateContactReportsTables extends Migration
 				$table->increments('id');
 				$table->integer('contactreportid')->unsigned()->default(0);
 				$table->integer('userid')->unsigned()->default(0);
-				$table->timestamp('datetimecreated');
-				$table->timestamp('datetimelastnotify');
-				$table->index(['contactreportid', 'userid']);
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimelastnotify');
+				$table->index(['contactreportid', 'userid'], 'contactreportid');
 				$table->index('userid');
 			});
 		}
@@ -66,12 +70,14 @@ class CreateContactReportsTables extends Migration
 				$table->increments('id');
 				$table->integer('contactreportid')->unsigned()->default(0);
 				$table->integer('userid')->unsigned()->default(0);
-				$table->timestamp('datetimecreated');
 				$table->text('comment');
 				$table->text('stemmedcomment');
+				$table->dateTime('datetimecreated');
 				$table->integer('notice')->unsigned()->default(0);
 				$table->index('contactreportid');
 			});
+
+			DB::statement('ALTER TABLE contactreportcomments ADD FULLTEXT search(stemmedcomment)');
 		}
 
 		if (!Schema::hasTable('contactreportresources'))
@@ -91,7 +97,7 @@ class CreateContactReportsTables extends Migration
 			Schema::create('contactreporttypes', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->string('name');
+				$table->string('name', 32);
 				$table->tinyInteger('timeperiodid')->unsigned()->default(0);
 				$table->tinyInteger('timeperiodcount')->unsigned()->default(0);
 				$table->tinyInteger('timeperiodlimit')->unsigned()->default(0);
@@ -123,11 +129,11 @@ class CreateContactReportsTables extends Migration
 				$table->integer('userid')->unsigned()->default(0);
 				$table->integer('targetuserid')->unsigned()->default(0);
 				$table->integer('membertype')->unsigned()->default(0);
-				$table->timestamp('datecreated');
-				$table->timestamp('dateremoved');
-				$table->timestamp('datelastseen');
-				$table->index(['userid', 'membertype', 'dateremoved', 'datecreated']);
-				$table->index(['targetuserid', 'membertype', 'dateremoved', 'datecreated']);
+				$table->dateTime('datecreated');
+				$table->dateTime('dateremoved');
+				$table->dateTime('datelastseen');
+				$table->index(['userid', 'membertype', 'dateremoved', 'datecreated'], 'userid');
+				$table->index(['targetuserid', 'membertype', 'dateremoved', 'datecreated'], 'targetuserid');
 			});
 		}
 	}
@@ -143,6 +149,7 @@ class CreateContactReportsTables extends Migration
 			'contactreportusers',
 			'contactreportcomments',
 			'contactreportresources',
+			'contactreporttypes',
 			'linkusers',
 		);
 

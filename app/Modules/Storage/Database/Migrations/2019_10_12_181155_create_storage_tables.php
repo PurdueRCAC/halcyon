@@ -18,33 +18,32 @@ class CreateStorageTables extends Migration
 			Schema::create('storagedirs', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->smallInteger('resourceid')->unsigned()->default(0);
-				$table->integer('groupid')->unsigned()->default(0);
-				$table->integer('parentstoragedirid')->unsigned()->default(0);
+				$table->smallInteger('resourceid')->unsigned()->default(0)->comment('FK to resources.id');
+				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
+				$table->integer('parentstoragedirid')->unsigned()->default(0)->comment('Parent storagedirs.id');
 				$table->char('name', 32);
 				$table->char('path', 255);
 				$table->bigInteger('bytes')->default(0);
-				$table->integer('owneruserid')->unsigned()->default(0);
-				$table->integer('unixgroupid')->unsigned()->default(0);
+				$table->integer('owneruserid')->unsigned()->default(0)->comment('FK to users.id');
+				$table->integer('unixgroupid')->unsigned()->default(0)->comment('FK to unixgroups.id');
 				$table->tinyInteger('ownerread')->default(0);
 				$table->tinyInteger('ownerwrite')->default(0);
 				$table->tinyInteger('groupread')->default(0);
 				$table->tinyInteger('groupwrite')->default(0);
 				$table->tinyInteger('publicread')->default(0);
 				$table->tinyInteger('publicwrite')->default(0);
-				$table->timestamp('datetimecreated');
-				$table->softDeletes('datetimeremoved');
-				$table->timestamp('datetimeconfigured');
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimeconfigured');
 				$table->tinyInteger('autouser')->default(0);
 				$table->integer('files')->default(0);
-				$table->integer('autouserunixgroupid')->default(0);
-				$table->integer('storageresourceid')->default(0);
-				$table->index(['resourceid', 'groupid', 'datetimeremoved', 'datetimecreated']);
+				$table->integer('autouserunixgroupid')->default(0)->comment('FK to unixgroups.id');
+				$table->integer('storageresourceid')->default(0)->comment('FK to storageresources.id');
+				$table->index(['resourceid', 'groupid', 'datetimeremoved', 'datetimecreated'], 'resource');
 				$table->index('parentstoragedirid');
 				$table->index('resourceid');
 				$table->index('groupid');
 			});
-			//$this->info('Created `storagedirs` table.');
 		}
 
 		if (!Schema::hasTable('storagedirquotanotificationtypes'))
@@ -53,7 +52,7 @@ class CreateStorageTables extends Migration
 			{
 				$table->increments('id');
 				$table->char('name', 100);
-				$table->smallInteger('defaulttimeperiodid')->unsigned()->default(0);
+				$table->smallInteger('defaulttimeperiodid')->unsigned()->default(0)->comment('FK to timeperiods.id');
 				$table->tinyInteger('valuetype')->default(0);
 			});
 			
@@ -96,22 +95,21 @@ class CreateStorageTables extends Migration
 			Schema::create('storagedirquotanotifications', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('storagedirid')->unsigned()->default(0);
-				$table->integer('userid')->unsigned()->default(0);
-				$table->smallInteger('storagedirquotanotificationtypeid')->unsigned()->default(0);
+				$table->integer('storagedirid')->unsigned()->default(0)->comment('FK to storagedirs.id');
+				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
+				$table->smallInteger('storagedirquotanotificationtypeid')->unsigned()->default(0)->comment('FK to storagedirquotanotificationtypes.id');
 				$table->bigInteger('value')->default(0);
-				$table->smallInteger('timeperiodid')->unsigned()->default(0);
+				$table->smallInteger('timeperiodid')->unsigned()->default(0)->comment('FK to timeperiods.id');
 				$table->integer('periods')->default(0);
 				$table->smallInteger('notice')->unsigned()->default(0);
-				$table->timestamp('datetimelastnotify');
-				$table->timestamp('datetimecreated');
-				$table->softDeletes('datetimeremoved');
-				$table->tinyInteger('enabled')->unsigned()->default(0);
+				$table->dateTime('datetimelastnotify');
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
+				$table->tinyInteger('enabled')->unsigned()->default(1);
 				$table->index('userid');
 				$table->index('storagedirquotanotificationtypeid');
 				$table->index('storagedirid');
 			});
-			//$this->info('Created `storagedirquotanotification` table.');
 		}
 
 		if (!Schema::hasTable('storagedirpurchases'))
@@ -119,16 +117,15 @@ class CreateStorageTables extends Migration
 			Schema::create('storagedirpurchases', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->smallInteger('resourceid')->unsigned()->default(0);
-				$table->integer('groupid')->unsigned()->default(0);
-				$table->timestamp('datetimestart');
-				$table->timestamp('datetimestop');
+				$table->smallInteger('resourceid')->unsigned()->default(0)->comment('FK to resources.id');
+				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
+				$table->dateTime('datetimestart');
+				$table->dateTime('datetimestop');
 				$table->bigInteger('bytes')->default(0);
-				$table->integer('sellergroupid')->unsigned()->default(0);
-				$table->char('comment', 2000);
-				$table->index(['resourceid', 'groupid', 'datetimestop', 'datetimestart']);
+				$table->integer('sellergroupid')->unsigned()->default(0)->comment('FK to groups.id');
+				$table->string('comment', 2000);
+				$table->index(['resourceid', 'groupid', 'datetimestop', 'datetimestart'], 'resourceid');
 			});
-			//$this->info('Created `storagedirpurchases` table.');
 		}
 
 		if (!Schema::hasTable('storagedirloans'))
@@ -136,16 +133,15 @@ class CreateStorageTables extends Migration
 			Schema::create('storagedirloans', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->smallInteger('resourceid')->unsigned()->default(0);
-				$table->integer('groupid')->unsigned()->default(0);
-				$table->timestamp('datetimestart');
-				$table->timestamp('datetimestop');
+				$table->smallInteger('resourceid')->unsigned()->default(0)->comment('FK to resources.id');
+				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
+				$table->dateTime('datetimestart');
+				$table->dateTime('datetimestop');
 				$table->bigInteger('bytes')->default(0);
-				$table->integer('lendergroupid')->unsigned()->default(0);
-				$table->char('comment', 2000);
-				$table->index(['resourceid', 'groupid', 'datetimestop', 'datetimestart']);
+				$table->integer('lendergroupid')->unsigned()->default(0)->comment('FK to groups.id');
+				$table->string('comment', 2000);
+				$table->index(['resourceid', 'groupid', 'datetimestop', 'datetimestart'], 'resourceid');
 			});
-			//$this->info('Created `storagedirloans` table.');
 		}
 
 		if (!Schema::hasTable('storagedirusage'))
@@ -153,17 +149,16 @@ class CreateStorageTables extends Migration
 			Schema::create('storagedirusage', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('storagedirid')->unsigned()->default(0);
-				$table->bigInteger('quota')->default(0);
-				$table->bigInteger('filequota')->default(0);
-				$table->bigInteger('space')->default(0);
-				$table->bigInteger('files')->default(0);
-				$table->timestamp('datetimerecorded');
+				$table->integer('storagedirid')->unsigned()->default(0)->comment('FK to storagedirs.id');
+				$table->bigInteger('quota')->unsigned()->default(0);
+				$table->bigInteger('filequota')->unsigned()->default(0);
+				$table->bigInteger('space')->unsigned()->default(0);
+				$table->bigInteger('files')->unsigned()->default(0);
+				$table->dateTime('datetimerecorded');
 				$table->integer('lastinterval')->unsigned()->default(0);
 				$table->index('storagedirid');
-				$table->index(['storagedirusage', 'datetimerecorded']);
+				$table->index(['storagedirid', 'datetimerecorded'], 'storagedirusage');
 			});
-			//$this->info('Created `storagedirusage` table.');
 		}
 
 		if (!Schema::hasTable('storageresources'))
@@ -172,10 +167,10 @@ class CreateStorageTables extends Migration
 			{
 				$table->increments('id');
 				$table->char('name', 32);
-				$table->timestamp('datetimecreated');
-				$table->softDeletes('datetimeremoved');
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
 				$table->char('path', 255);
-				$table->integer('parentresourceid')->unsigned()->default(0);
+				$table->integer('parentresourceid')->unsigned()->default(0)->comment('Parent storageresources.id');
 				$table->tinyInteger('import')->default(0);
 				$table->tinyInteger('autouserdir')->default(0);
 				$table->bigInteger('defaultquotaspace')->default(0);
@@ -185,7 +180,6 @@ class CreateStorageTables extends Migration
 				$table->integer('createtypeid')->unsigned()->default(0);
 				$table->index('parentresourceid');
 			});
-			//$this->info('Created `storageresources` table.');
 		}
 	}
 
@@ -208,8 +202,6 @@ class CreateStorageTables extends Migration
 		foreach ($tables as $table)
 		{
 			Schema::dropIfExists($table);
-
-			//$this->info('Dropped `' . $table . '` table.');
 		}
 	}
 }

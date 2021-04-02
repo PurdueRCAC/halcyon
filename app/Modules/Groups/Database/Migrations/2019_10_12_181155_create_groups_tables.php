@@ -29,7 +29,6 @@ class CreateGroupsTables extends Migration
 				$table->index('unixid');
 				$table->index('owneruserid');
 			});
-			//$this->info('Created `groups` table.');
 		}
 
 		if (!Schema::hasTable('groupusers'))
@@ -42,21 +41,36 @@ class CreateGroupsTables extends Migration
 				$table->integer('userrequestid')->unsigned()->default(0);
 				$table->integer('membertype')->unsigned()->default(0);
 				$table->integer('owner')->unsigned()->default(0);
-				$table->timestamp('created_at');
-				$table->timestamp('deleted_at');
-				$table->timestamp('last_visit');
+				$table->dateTime('datecreated');
+				$table->dateTime('dateremoved');
+				$table->dateTime('datelastseen');
 				$table->integer('notice')->unsigned()->default(0);
-				$table->index(['groupid','userid','datecreated','dateremoved']);
-				$table->index(['groupid','datecreated','dateremoved']);
-				$table->index(['userid','membertype','datecreated','dateremoved']);
-				$table->index(['groupid','userid','membertype','datecreated','dateremoved']);
-				$table->index(['groupid','membertype','datecreated','dateremoved']);
+				$table->index(['groupid','userid','datecreated','dateremoved'], 'groupid_1');
+				$table->index(['groupid','datecreated','dateremoved'], 'groupid_2');
+				$table->index(['userid','membertype','datecreated','dateremoved'], 'userid');
+				$table->index(['groupid','userid','membertype','datecreated','dateremoved'], 'groupid_3');
+				$table->index(['groupid','membertype','datecreated','dateremoved'], 'groupid_4');
 				$table->index('datelastseen');
 				$table->index('userrequestid');
-				$table->index(['notice','groupid']);
-				$table->index(['groupid','membertype','owner','datecreated','dateremoved']);
+				$table->index(['notice','groupid'], 'notice');
+				$table->index(['groupid','membertype','owner','datecreated','dateremoved'], 'groupid_6');
 			});
-			//$this->info('Created `groupusers` table.');
+		}
+
+		if (!Schema::hasTable('groupnodes'))
+		{
+			Schema::create('groupnodes', function (Blueprint $table)
+			{
+				$table->increments('id');
+				$table->string('year', 6);
+				$table->integer('resourceid')->unsigned()->default(0);
+				$table->integer('groupid')->unsigned()->default(0);
+				$table->integer('maxnodes')->unsigned()->default(0);
+				$table->decimal('parentnodes', 9, 4)->unsigned()->default(0.0000);
+				$table->index(['year', 'resourceid', 'groupid'], 'year');
+				$table->index(['resourceid', 'groupid'], 'resourceid');
+				$table->index(['groupid', 'year'], 'groupid');
+			});
 		}
 
 		if (!Schema::hasTable('groupmotds'))
@@ -66,11 +80,10 @@ class CreateGroupsTables extends Migration
 				$table->increments('id');
 				$table->integer('groupid')->unsigned()->default(0);
 				$table->text('motd');
-				$table->timestamp('datetimecreated');
-				$table->timestamp('datetimeremoved');
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
 				$table->index('groupid');
 			});
-			//$this->info('Created `groupmotds` table.');
 		}
 
 		if (!Schema::hasTable('groupcollegedept'))
@@ -84,7 +97,6 @@ class CreateGroupsTables extends Migration
 				$table->index('groupid');
 				$table->index('collegedeptid');
 			});
-			//$this->info('Created `groupcollegedept` table.');
 		}
 
 		if (!Schema::hasTable('groupfieldofscience'))
@@ -97,9 +109,26 @@ class CreateGroupsTables extends Migration
 				$table->integer('newid')->unsigned()->default(0);
 				$table->integer('percentage')->unsigned()->default(0);
 				$table->index('groupid');
-				$table->index(['fieldofscienceid', 'groupid']);
+				$table->index(['fieldofscienceid', 'groupid'], 'fieldofscienceid');
 			});
-			//$this->info('Created `groupfieldofscience` table.');
+		}
+
+		if (!Schema::hasTable('groupqueueusers'))
+		{
+			Schema::create('groupqueueusers', function (Blueprint $table)
+			{
+				$table->increments('id');
+				$table->integer('groupid')->unsigned()->default(0);
+				$table->integer('queueuserid')->unsigned()->default(0);
+				$table->integer('userrequestid')->unsigned()->default(0);
+				$table->integer('membertype')->unsigned()->default(0);
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
+				$table->integer('notice')->unsigned()->default(0);
+				$table->index(['groupid', 'datetimecreated', 'datetimeremoved'], 'groupid');
+				$table->index(['queueuserid', 'datetimecreated', 'datetimeremoved'], 'queueuserid');
+				$table->index(['notice', 'groupid'], 'notice');
+			});
 		}
 
 		if (!Schema::hasTable('unixgroups'))
@@ -107,16 +136,15 @@ class CreateGroupsTables extends Migration
 			Schema::create('unixgroups', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('groupid')->unsigned()->default(0);
+				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
 				$table->mediumInteger('unixgid')->unsigned()->default(0);
 				$table->string('shortname', 8);
 				$table->string('longname', 32);
-				$table->timestamp('datetimecreated');
-				$table->timestamp('datetimeremoved');
-				$table->index(['groupid', 'datetimecreated', 'datetimeremoved']);
-				$table->index(['longname', 'datetimecreated', 'datetimeremoved']);
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
+				$table->index(['groupid', 'datetimecreated', 'datetimeremoved'], 'groupid');
+				$table->index(['longname', 'datetimecreated', 'datetimeremoved'], 'longname');
 			});
-			//$this->info('Created `unixgroups` table.');
 		}
 
 		if (!Schema::hasTable('unixgroupusers'))
@@ -124,17 +152,15 @@ class CreateGroupsTables extends Migration
 			Schema::create('unixgroupusers', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('unixgroupid')->unsigned()->default(0);
-				$table->integer('userid')->unsigned()->default(0);
-				$table->timestamp('datetimecreated');
-				$table->timestamp('datetimeremoved');
-				$table->timestamp('last_visit');
+				$table->integer('unixgroupid')->unsigned()->default(0)->comment('FK to unixgroups.id');
+				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
 				$table->integer('notice')->unsigned()->default(0);
-				$table->index(['unixgroupid', 'datetimecreated', 'datetimeremoved']);
-				$table->index(['userid', 'datetimecreated', 'datetimeremoved']);
-				$table->index(['notice', 'unixgroupid']);
+				$table->index(['unixgroupid', 'datetimecreated', 'datetimeremoved'], 'unixgroupid');
+				$table->index(['userid', 'datetimecreated', 'datetimeremoved'], 'userid');
+				$table->index(['notice', 'unixgroupid'], 'notice');
 			});
-			//$this->info('Created `unixgroupusers` table.');
 		}
 
 		if (!Schema::hasTable('membertypes'))
@@ -144,7 +170,6 @@ class CreateGroupsTables extends Migration
 				$table->increments('id');
 				$table->string('name');
 			});
-			//$this->info('Created `membertypes` table.');
 
 			// Populate defaults
 			$membertypes = array(
@@ -187,8 +212,10 @@ class CreateGroupsTables extends Migration
 			'groups',
 			'groupusers',
 			'groupmotds',
+			'groupnodes',
 			'groupcollegedept',
 			'groupfieldofscience',
+			'groupqueueusers',
 			'unixgroups',
 			'unixgroupusers',
 			'membertypes',

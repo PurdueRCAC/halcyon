@@ -19,8 +19,8 @@ class MakeResourcesDatesNullable extends Migration
 			2. Doctrine will throw an exception for column type 'timestamp'
 			Schema::table('resources', function (Blueprint $table)
 			{
-				$table->timestamp('datetimecreated')->nullable()->change();
-				$table->timestamp('datetimeremoved')->nullable()->change();
+				$table->dateTime('datetimecreated')->nullable()->change();
+				$table->dateTime('datetimeremoved')->nullable()->change();
 			});
 
 			DB::table('resources')
@@ -49,8 +49,8 @@ class MakeResourcesDatesNullable extends Migration
 			2. Doctrine will throw an exception for column type 'timestamp'
 			Schema::table('subresources', function (Blueprint $table)
 			{
-				$table->timestamp('datetimecreated')->nullable()->change();
-				$table->timestamp('datetimeremoved')->nullable()->change();
+				$table->dateTime('datetimecreated')->nullable()->change();
+				$table->dateTime('datetimeremoved')->nullable()->change();
 			});
 
 			DB::table('subresources')

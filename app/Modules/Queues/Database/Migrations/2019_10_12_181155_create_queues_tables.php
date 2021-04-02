@@ -18,14 +18,14 @@ class CreateQueuesTables extends Migration
 			Schema::create('queues', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('schedulerid')->unsigned()->default(0);
-				$table->integer('subresourceid')->unsigned()->default(0);
+				$table->integer('schedulerid')->unsigned()->default(0)->comment('FK to schedulers.id');
+				$table->integer('subresourceid')->unsigned()->default(0)->comment('FK to subresources.id');
 				$table->char('name', 64);
-				$table->integer('groupid')->unsigned()->default(0);
+				$table->integer('groupid')->default(-1)->comment('FK to groups.id');
 				$table->tinyInteger('queuetype')->unsigned()->default(0);
 				$table->tinyInteger('automatic')->unsigned()->default(0);
 				$table->tinyInteger('free')->unsigned()->default(0);
-				$table->integer('schedulerpolicyid')->unsigned()->default(0);
+				$table->integer('schedulerpolicyid')->unsigned()->default(0)->comment('FK to schedulerpolicies.id');
 				$table->tinyInteger('enabled')->unsigned()->default(0);
 				$table->tinyInteger('started')->unsigned()->default(0);
 				$table->tinyInteger('reservation')->unsigned()->default(0);
@@ -42,19 +42,18 @@ class CreateQueuesTables extends Migration
 				$table->smallInteger('nodecoresmax')->unsigned()->default(0);
 				$table->char('nodememmin', 5);
 				$table->char('nodememmax', 5);
-				$table->tinyInteger('aclusersenabled')->unsigned()->default(0);
+				$table->tinyInteger('aclusersenabled')->unsigned()->default(1);
 				$table->char('aclgroups', 255);
-				$table->timestamp('datetimecreated');
-				$table->timestamp('datetimeremoved');
-				$table->timestamp('datetimelastseen');
-				$table->smallInteger('maxjobfactor')->unsigned()->default(0);
-				$table->smallInteger('maxjobuserfactor')->unsigned()->default(0);
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimelastseen');
+				$table->smallInteger('maxjobfactor')->unsigned()->default(2);
+				$table->smallInteger('maxjobuserfactor')->unsigned()->default(1);
 				$table->index('groupid');
 				$table->index('subresourceid');
 				$table->index('schedulerpolicyid');
 				$table->index('schedulerid');
 			});
-			//$this->info('Created `queues` table.');
 		}
 
 		if (!Schema::hasTable('queuetypes'))
@@ -85,17 +84,16 @@ class CreateQueuesTables extends Migration
 			Schema::create('queuesizes', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('queueid')->unsigned()->default(0);
-				$table->timestamp('datetimestart');
-				$table->timestamp('datetimestop');
+				$table->integer('queueid')->unsigned()->default(0)->comment('Queue being sold to. FK to queues.id');
+				$table->dateTime('datetimestart');
+				$table->dateTime('datetimestop');
 				$table->smallInteger('nodecount')->unsigned()->default(0);
 				$table->smallInteger('corecount')->unsigned()->default(0);
-				$table->integer('sellerqueueid')->unsigned()->default(0);
-				$table->char('comment', 2000);
+				$table->integer('sellerqueueid')->unsigned()->default(0)->comment('Queue making the sell. FK to queues.id');
+				$table->string('comment', 2000);
 				$table->index(['queueid', 'datetimestart', 'datetimestop']);
 				$table->index('sellerqueueid');
 			});
-			//$this->info('Created `queuesizes` table.');
 		}
 
 		if (!Schema::hasTable('queueloans'))
@@ -103,17 +101,16 @@ class CreateQueuesTables extends Migration
 			Schema::create('queueloans', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('queueid')->unsigned()->default(0);
-				$table->timestamp('datetimestart');
-				$table->timestamp('datetimestop');
+				$table->integer('queueid')->unsigned()->default(0)->comment('Queue being loaded to. FK to queues.id');
+				$table->dateTime('datetimestart');
+				$table->dateTime('datetimestop');
 				$table->smallInteger('nodecount')->unsigned()->default(0);
 				$table->smallInteger('corecount')->unsigned()->default(0);
-				$table->integer('lenderqueueid')->unsigned()->default(0);
-				$table->char('comment', 2000);
-				$table->index(['queueid', 'datetimestart', 'datetimestop']);
+				$table->integer('lenderqueueid')->unsigned()->default(0)->comment('Queue being loaned from. FK to queues.id');
+				$table->string('comment', 2000);
+				$table->index(['queueid', 'datetimestart', 'datetimestop'], 'queueid');
 				$table->index('lenderqueueid');
 			});
-			//$this->info('Created `queueloans` table.');
 		}
 
 		if (!Schema::hasTable('queueusers'))
@@ -121,19 +118,18 @@ class CreateQueuesTables extends Migration
 			Schema::create('queueusers', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('queueid')->unsigned()->default(0);
-				$table->integer('userid')->unsigned()->default(0);
-				$table->integer('userrequestid')->unsigned()->default(0);
-				$table->tinyInteger('membertype')->unsigned()->default(0);
-				$table->timestamp('datetimecreated');
-				$table->timestamp('datetimeremoved');
-				$table->timestamp('datetimelastseen');
+				$table->integer('queueid')->unsigned()->default(0)->comment('FK to queues.id');
+				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
+				$table->integer('userrequestid')->unsigned()->default(0)->comment('FK to userrequests.id');
+				$table->tinyInteger('membertype')->unsigned()->default(0)->comment('FK to membertypes.id');
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimelastseen');
 				$table->tinyInteger('notice')->unsigned()->default(0);
-				$table->index(['queueid', 'userid', 'membertype', 'datetimeremoved']);
+				$table->index(['queueid', 'userid', 'membertype', 'datetimeremoved'], 'queueid');
 				$table->index('userrequestid');
-				$table->index('notice');
+				$table->index(['notice', 'queueid'], 'notice');
 			});
-			//$this->info('Created `queueusers` table.');
 		}
 
 		if (!Schema::hasTable('queuewalltimes'))
@@ -141,13 +137,12 @@ class CreateQueuesTables extends Migration
 			Schema::create('queuewalltimes', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('queueid')->unsigned()->default(0);
-				$table->timestamp('datetimestart');
-				$table->timestamp('datetimestop');
+				$table->integer('queueid')->unsigned()->default(0)->comment('FK to queues.id');
+				$table->dateTime('datetimestart');
+				$table->dateTime('datetimestop');
 				$table->integer('walltime')->unsigned()->default(0);
-				$table->index(['queueid', 'datetimestart', 'datetimestop']);
+				$table->index(['queueid', 'datetimestart', 'datetimestop', 'queueid']);
 			});
-			//$this->info('Created `queuewalltimes` table.');
 		}
 
 		if (!Schema::hasTable('schedulerpolicies'))
@@ -193,23 +188,22 @@ class CreateQueuesTables extends Migration
 			Schema::create('schedulers', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('queuesubresourceid')->unsigned()->default(0);
+				$table->integer('queuesubresourceid')->unsigned()->default(0)->comment('FK to subresources.id');
 				$table->string('hostname', 64);
 				$table->tinyInteger('batchsystem')->unsigned()->default(0);
-				$table->tinyInteger('schedulerpolicyid')->unsigned()->default(0);
+				$table->tinyInteger('schedulerpolicyid')->unsigned()->default(1)->comment('FK to schedulerpolicies.id');
 				$table->integer('defaultmaxwalltime')->unsigned()->default(0);
 				$table->string('teragridresource', 64);
-				$table->tinyInteger('teragridaggregate')->unsigned()->default(0);
-				$table->timestamp('datetimedraindown');
-				$table->timestamp('datetimecreated');
-				$table->timestamp('datetimeremoved');
-				$table->timestamp('datetimelastimportstart');
-				$table->timestamp('datetimelastimportstop');
-				$table->index(['queuesubresourceid', 'datetimecreated', 'datetimeremoved']);
+				$table->tinyInteger('teragridaggregate')->unsigned()->default(1);
+				$table->dateTime('datetimedraindown');
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimelastimportstart');
+				$table->dateTime('datetimelastimportstop');
+				$table->index(['queuesubresourceid', 'datetimecreated', 'datetimeremoved'], 'queuesubresourceid');
 				$table->index('batchsystem');
 				$table->index('schedulerpolicyid');
 			});
-			//$this->info('Created `schedulers` table.');
 		}
 
 		if (!Schema::hasTable('schedulerreservations'))
@@ -217,15 +211,14 @@ class CreateQueuesTables extends Migration
 			Schema::create('schedulerreservations', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->tinyInteger('schedulerid')->unsigned()->default(0);
+				$table->tinyInteger('schedulerid')->unsigned()->default(0)->comment('FK to schedulers.id');
 				$table->string('name', 32);
 				$table->string('nodes', 255);
-				$table->timestamp('datetimestart');
-				$table->timestamp('datetimestop');
-				$table->index(['schedulerid', 'datetimestop']);
-				$table->index(['schedulerid', 'datetimestart', 'datetimestop']);
+				$table->dateTime('datetimestart');
+				$table->dateTime('datetimestop');
+				$table->index(['schedulerid', 'datetimestop'], 'schedulerid');
+				$table->index(['schedulerid', 'datetimestart', 'datetimestop'], 'schedulerid_2');
 			});
-			//$this->info('Created `schedulerreservations` table.');
 		}
 	}
 
@@ -250,7 +243,6 @@ class CreateQueuesTables extends Migration
 		foreach ($tables as $table)
 		{
 			Schema::dropIfExists($table);
-			//$this->info('Deleted `' . $table . '` table.');
 		}
 	}
 }

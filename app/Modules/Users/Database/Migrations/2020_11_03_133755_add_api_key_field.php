@@ -13,7 +13,7 @@ class AddApiKeyField extends Migration
 	 */
 	public function up()
 	{
-		if (Schema::hasTable('users'))
+		if (Schema::hasTable('users') && !Schema::hasColumn('users', 'api_token'))
 		{
 			Schema::table('users', function (Blueprint $table)
 			{
@@ -28,7 +28,7 @@ class AddApiKeyField extends Migration
 	 */
 	public function down()
 	{
-		if (Schema::hasTable('users'))
+		if (Schema::hasTable('users') && Schema::hasColumn('users', 'api_token'))
 		{
 			Schema::table('users', function (Blueprint $table)
 			{

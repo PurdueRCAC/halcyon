@@ -23,15 +23,15 @@ class CreateCronJobsTable extends Migration
 				$table->string('department', 4);
 				$table->string('coursenumber', 8);
 				$table->string('classname', 255);
-				$table->timestamp('datetimestart');
-				$table->timestamp('datetimestop');
 				$table->integer('resourceid')->unsigned()->default(0);
 				$table->integer('notice')->unsigned()->default(0);
+				$table->dateTime('datetimestart');
+				$table->dateTime('datetimestop');
 				$table->string('semester', 16);
 				$table->integer('groupid')->unsigned()->default(0);
 				$table->integer('userid')->unsigned()->default(0);
-				$table->timestamp('datetimecreated');
-				$table->timestamp('datetimeremoved');
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
 				$table->integer('studentcount')->unsigned()->default(0);
 				$table->string('reference', 64);
 				$table->index('resourceid');
@@ -48,13 +48,13 @@ class CreateCronJobsTable extends Migration
 				$table->integer('classaccountid')->unsigned()->default(0);
 				$table->integer('userid')->unsigned()->default(0);
 				$table->integer('membertype')->unsigned()->default(0);
-				$table->timestamp('datetimestart');
-				$table->timestamp('datetimestop');
+				$table->dateTime('datetimestart');
+				$table->dateTime('datetimestop');
 				$table->integer('notice')->unsigned()->default(0);
-				$table->timestamp('datetimecreated');
-				$table->timestamp('datetimeremoved');
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
 				$table->index('classaccountid');
-				$table->index(['userid', 'membertype', 'datetimecreated', 'datetimeremoved']);
+				$table->index(['userid', 'membertype', 'datetimecreated', 'datetimeremoved'], 'userid');
 			});
 			//$this->info('Created `classusers` table.');
 		}

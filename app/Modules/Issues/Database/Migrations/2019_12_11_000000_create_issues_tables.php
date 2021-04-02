@@ -22,14 +22,13 @@ class CreateIssuesTables extends Migration
 				$table->integer('userid')->unsigned()->default(0);
 				$table->text('report');
 				$table->text('stemmedreport');
-				$table->timestamp('datetimecreated');
+				$table->dateTime('datetimecreated');
 				$table->integer('issuetodoid')->unsigned()->default(0);
 				$table->index(['userid', 'datetimecreated']);
-				$table->index('stemmedreport');
+				//$table->index('stemmedreport');
 			});
 
 			DB::statement('ALTER TABLE issues ADD FULLTEXT search(stemmedtext)');
-			//$this->info('Created `issues` table.');
 		}
 
 		if (!Schema::hasTable('issuecomments'))
@@ -41,8 +40,8 @@ class CreateIssuesTables extends Migration
 				$table->integer('userid')->unsigned()->default(0);
 				$table->text('comment');
 				$table->text('stemmedcomment');
-				$table->timestamp('datetimecreated');
-				$table->timestamp('datetimeremoved');
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
 				$table->tinyInteger('resolution')->unsigned()->default(0);
 				$table->index('issueid');
 				$table->index('userid');
@@ -50,7 +49,6 @@ class CreateIssuesTables extends Migration
 			});
 
 			DB::statement('ALTER TABLE issuecomments ADD FULLTEXT search(stemmedcomment)');
-			//$this->info('Created `issuecomments` table.');
 		}
 
 		if (!Schema::hasTable('issueresources'))
@@ -63,7 +61,6 @@ class CreateIssuesTables extends Migration
 				$table->index('resourceid');
 				$table->index('issueid');
 			});
-			//$this->info('Created `issueresources` table.');
 		}
 
 		if (!Schema::hasTable('issuetodos'))
@@ -74,12 +71,11 @@ class CreateIssuesTables extends Migration
 				$table->integer('userid')->unsigned()->default(0);
 				$table->string('name');
 				$table->text('description');
-				$table->timestamp('datetimecreated');
-				$table->timestamp('datetimeremoved');
 				$table->integer('recurringtimeperiodid')->unsigned()->default(0);
+				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimeremoved');
 				$table->index(['userid', 'datetimecreated']);
 			});
-			//$this->info('Created `issuetodos` table.');
 		}
 	}
 
@@ -98,8 +94,6 @@ class CreateIssuesTables extends Migration
 		foreach ($tables as $table)
 		{
 			Schema::dropIfExists($table);
-
-			//$this->info('Dropped `' . $table . '` table.');
 		}
 	}
 }

@@ -21,9 +21,9 @@ class CreateKnowledgeTables extends Migration
 				$table->increments('id');
 				$table->string('title');
 				$table->string('alias');
-				$table->timestamp('created_at')->nullable();
-				$table->timestamp('updated_at')->nullable();
-				$table->timestamp('deleted_at')->nullable();
+				$table->dateTime('created_at')->nullable();
+				$table->dateTime('updated_at')->nullable();
+				$table->dateTime('deleted_at')->nullable();
 				$table->integer('state')->unsigned()->default(0);
 				$table->integer('access')->unsigned()->default(0);
 				$table->text('content');

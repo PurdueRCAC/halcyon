@@ -5,6 +5,7 @@ namespace App\Modules\Themes\Entities;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Str;
 use App\Modules\Themes\Models\Theme as Model;
+use Illuminate\Support\Facades\Schema;
 
 class ThemeManager implements \Countable
 {
@@ -144,7 +145,7 @@ class ThemeManager implements \Countable
 
 		foreach ($directories as $theme)
 		{
-			$name = $theme->template;
+			$name = Str::studly($theme->element);
 
 			if (!$this->getFinder()->isDirectory($this->path . '/' . $name))
 			{
@@ -166,9 +167,24 @@ class ThemeManager implements \Countable
 	 */
 	private function getThemes($state = null)
 	{
-		//return $this->getFinder()->directories($this->path);
 		$s = (new Model)->getTable();
-		//$e = 'extensions';
+
+		if (!Schema::hasTable($s))
+		{
+			$dirs = $this->getFinder()->directories($this->path);
+
+			$rows = array();
+			foreach ($dirs as $dir)
+			{
+				$theme = new Model;
+				$theme->name = basename($dir);
+				$theme->element = strtolower($theme->name);
+
+				$rows[] = $theme;
+			}
+
+			return collect($rows);
+		}
 
 		$query = $this->getDatabase()
 			->table($s)
@@ -176,18 +192,17 @@ class ThemeManager implements \Countable
 				$s . '.id AS id',
 				$s . '.enabled AS home',
 				$s . '.name',
+				$s . '.element',
 				$s . '.params',
 				$s . '.protected'
 			]);
-			//->join($e, $e . '.element', $s . '.template')
-			//->where($s . '.client_id', '=', (int)$client_id)
+
 		if (!is_null($state))
 		{
 			$query->where($s . '.enabled', '=', $state);
 		}
 		$query
 			->where($s . '.type', '=', 'theme')
-			//->where($e . '.client_id', '=', $s . '.client_id')
 			->orderBy($s . '.enabled', 'desc');
 
 		return $query->get();

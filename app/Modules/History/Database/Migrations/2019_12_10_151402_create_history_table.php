@@ -17,7 +17,6 @@ class CreateHistoryTable extends Migration
 		{
 			Schema::create('history', function (Blueprint $table)
 			{
-				//$table->engine = 'InnoDB';
 				$table->increments('id');
 				$table->integer('user_id')->unsigned()->nullable();
 				$table->integer('historable_id')->unsigned();
@@ -30,16 +29,14 @@ class CreateHistoryTable extends Migration
 				$table->index(['historable_type', 'historable_id']);
 				$table->index('action');
 			});
-			//$this->info('Created `history` table.');
 		}
 
 		if (!Schema::hasTable('log'))
 		{
 			Schema::create('log', function (Blueprint $table)
 			{
-				//$table->engine = 'InnoDB';
 				$table->increments('id');
-				$table->timestamp('datetime');
+				$table->dateTime('datetime');
 				$table->string('ip', 39);
 				$table->string('hostname', 128);
 				$table->integer('userid')->unsigned()->default(0);
@@ -55,11 +52,10 @@ class CreateHistoryTable extends Migration
 				$table->integer('groupid')->unsigned()->default(0);
 				$table->integer('targetuserid')->unsigned()->default(0);
 				$table->integer('targetobjectid')->unsigned()->default(0);
-				$table->index(['app', 'classname', 'objectid', 'datetime']);
+				$table->index(['app', 'classname', 'objectid', 'datetime'], 'app_3');
 				$table->index('groupid');
-				$table->index(['app', 'classname', 'groupid', 'datetime']);
+				$table->index(['app', 'classname', 'groupid', 'datetime'], 'app');
 			});
-			//$this->info('Created `log` table.');
 		}
 	}
 

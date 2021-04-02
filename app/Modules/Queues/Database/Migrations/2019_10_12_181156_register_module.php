@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 use App\Modules\Core\Models\Extension;
+use App\Halcyon\Access\Asset;
 
 class RegisterModule extends Migration
 {

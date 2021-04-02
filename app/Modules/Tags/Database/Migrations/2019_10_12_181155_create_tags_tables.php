@@ -18,15 +18,18 @@ class CreateTagsTables extends Migration
 			Schema::create('tags', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('parent_id')->unsigned()->default(0);
+				$table->integer('parent_id')->unsigned()->default(0)->comment('Parent tags.id');
 				$table->string('name', 150);
 				$table->string('slug', 100);
-				$table->string('namespace', 100);
-				$table->integer('created_by')->unsigned()->default(0);
-				$table->integer('updated_by')->unsigned()->default(0);
-				$table->integer('tagged_count')->unsigned()->default(0);
-				$table->integer('alias_count')->unsigned()->default(0);
-				$table->timestamps();
+				$table->string('domain', 100);
+				$table->dateTime('created_at');
+				$table->integer('created_by')->unsigned()->default(0)->comment('FK to users.id');
+				$table->dateTime('updated_at');
+				$table->integer('updated_by')->unsigned()->default(0)->comment('FK to users.id');
+				$table->dateTime('deleted_at');
+				$table->integer('deleted_by')->unsigned()->default(0)->comment('FK to users.id');
+				$table->integer('tagged_count')->unsigned()->default(0)->comment('Cached count for number of items tagged');
+				$table->integer('alias_count')->unsigned()->default(0)->comment('Cached count for number of aliases');
 				$table->index('parent_id');
 			});
 		}
@@ -36,39 +39,15 @@ class CreateTagsTables extends Migration
 			Schema::create('tags_tagged', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('tag_id')->unsigned()->default(0);
+				$table->integer('tag_id')->unsigned()->default(0)->comment('FK to tags.id');
 				$table->integer('taggable_id')->unsigned()->default(0);
 				$table->string('taggable_type', 255);
-				$table->timestamp('created_at');
-				$table->integer('created_by')->unsigned()->default(0);
-				$table->index(['taggable_id', 'taggable_type']);
+				$table->dateTime('created_at');
+				$table->integer('created_by')->unsigned()->default(0)->comment('FK to users.id');
+				$table->index(['taggable_id', 'taggable_type'], 'taggables');
 				$table->index('tag_id');
 			});
 		}
-
-		/*Schema::create('tags_substitutes', function (Blueprint $table)
-		{
-			$table->increments('id');
-			$table->integer('tag_id')->unsigned()->default(0);
-			$table->string('name', 255);
-			$table->string('slug', 255);
-			//$table->timestamp('created');
-			//$table->integer('created_by')->unsigned()->default(0);
-			$table->timestamps();
-			$table->index('tag_id');
-		});
-
-		Schema::create('tags_logs', function (Blueprint $table)
-		{
-			$table->increments('id');
-			$table->integer('tag_id')->unsigned()->default(0);
-			$table->timestamp('created');
-			$table->integer('user_id')->unsigned()->default(0);
-			$table->string('action', 50);
-			$table->text('comments')->nullable();
-			$table->index('tag_id');
-			$table->index('user_id');
-		});*/
 	}
 
 	/**
@@ -80,7 +59,5 @@ class CreateTagsTables extends Migration
 	{
 		Schema::dropIfExists('tags');
 		Schema::dropIfExists('tags_tagged');
-		//Schema::drop('tags_substitutes');
-		//Schema::drop('tags_log');
 	}
 }

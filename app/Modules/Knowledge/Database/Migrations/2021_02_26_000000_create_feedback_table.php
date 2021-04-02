@@ -23,8 +23,8 @@ class CreateFeedbackTable extends Migration
 				$table->string('ip', 15);
 				$table->string('type', 10);
 				$table->integer('user_id')->unsigned()->default(0);
-				$table->timestamp('created_at')->nullable();
-				$table->timestamp('updated_at')->nullable();
+				$table->dateTime('created_at')->nullable();
+				$table->dateTime('updated_at')->nullable();
 				$table->string('comments', 255);
 				$table->index(['target_id', 'type']);
 				$table->index('user_id');

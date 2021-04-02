@@ -12,15 +12,36 @@ class AddDescriptions extends Migration
 	 */
 	public function up()
 	{
+		// Resources
 		if (Schema::hasTable('resources'))
 		{
-			Schema::table('resources', function (Blueprint $table)
+			if (!Schema::hasColumn('resources', 'description'))
 			{
-				$table->string('description', 2000)->nullable();
-			});
+				Schema::table('resources', function (Blueprint $table)
+				{
+					$table->string('description', 2000)->nullable();
+				});
+			}
+
+			if (!Schema::hasColumn('resources', 'params'))
+			{
+				Schema::table('resources', function (Blueprint $table)
+				{
+					$table->string('status', 2000)->nullable();
+				});
+			}
+
+			if (!Schema::hasColumn('resources', 'status'))
+			{
+				Schema::table('resources', function (Blueprint $table)
+				{
+					$table->string('status', 50)->nullable();
+				});
+			}
 		}
 
-		if (Schema::hasTable('resourcetypes'))
+		// Resource types
+		if (Schema::hasTable('resourcetypes') && !Schema::hasColumn('resourcetypes', 'description'))
 		{
 			Schema::table('resourcetypes', function (Blueprint $table)
 			{
@@ -35,14 +56,39 @@ class AddDescriptions extends Migration
 	 */
 	public function down()
 	{
-		Schema::table('resources', function (Blueprint $table)
+		if (Schema::hasTable('resources'))
 		{
-			$table->dropColumn('description');
-		});
+			if (Schema::hasColumn('resources', 'description'))
+			{
+				Schema::table('resources', function (Blueprint $table)
+				{
+					$table->dropColumn('description');
+				});
+			}
 
-		Schema::table('resourcetypes', function (Blueprint $table)
+			if (Schema::hasColumn('resources', 'params'))
+			{
+				Schema::table('resources', function (Blueprint $table)
+				{
+					$table->dropColumn('params');
+				});
+			}
+
+			if (Schema::hasColumn('resources', 'status'))
+			{
+				Schema::table('resources', function (Blueprint $table)
+				{
+					$table->dropColumn('status');
+				});
+			}
+		}
+
+		if (Schema::hasTable('resourcetypes') && Schema::hasColumn('resourcetypes', 'description'))
 		{
-			$table->dropColumn('description');
-		});
+			Schema::table('resourcetypes', function (Blueprint $table)
+			{
+				$table->dropColumn('description');
+			});
+		}
 	}
 }

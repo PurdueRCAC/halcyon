@@ -5,6 +5,7 @@ namespace App\Modules\Listeners\Providers;
 //use App\Modules\Listeners\Entities\ListenerManager;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use App\Modules\Listeners\Models\Listener;
 
@@ -48,21 +49,24 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	public function registerListeners()
 	{
-		$query = Listener::where('enabled', 1)
-			->where('type', '=', 'listener');
-
-		if ($user = auth()->user())
+		if (Schema::hasTable('extensions'))
 		{
-			$query->whereIn('access', $user->getAuthorisedViewLevels());
-		}
+			$query = Listener::where('enabled', 1)
+				->where('type', '=', 'listener');
 
-		$listeners = $query
-			->orderBy('ordering', 'asc')
-			->get();
+			if ($user = auth()->user())
+			{
+				$query->whereIn('access', $user->getAuthorisedViewLevels());
+			}
 
-		foreach ($listeners as $listener)
-		{
-			$this->subscribeListener($listener);
+			$listeners = $query
+				->orderBy('ordering', 'asc')
+				->get();
+
+			foreach ($listeners as $listener)
+			{
+				$this->subscribeListener($listener);
+			}
 		}
 	}
 

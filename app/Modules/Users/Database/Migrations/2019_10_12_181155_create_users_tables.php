@@ -19,30 +19,28 @@ class CreateUsersTables extends Migration
 			{
 				$table->increments('id');
 				$table->string('name', 255);
-				$table->string('given_name', 255);
-				$table->string('middle_name', 255);
-				$table->string('surname', 255);
-				$table->string('username', 150);
-				$table->string('email', 255);
-				$table->timestamp('email_verified_at');
-				$table->string('password', 255);
-				$table->tinyInteger('block')->unsigned()->default(0);
-				$table->tinyInteger('approved')->unsigned()->default(0);
-				$table->timestamp('created_at');
-				$table->string('created_ip', 40);
-				$table->timestamp('last_visit');
-				$table->tinyInteger('activation')->default(0);
-				$table->text('params');
-				$table->timestamp('updated_at');
-				$table->timestamp('deleted_at');
-				$table->tinyInteger('organization_id')->unsigned()->default(0);
-				$table->string('remember_token', 100);
-				$table->index('username');
+				$table->tinyInteger('puid')->unsigned()->default(0);
 				$table->index('name');
-				$table->index('block');
-				$table->index('email');
+				$table->index('puid');
 			});
-			//$this->info('Created `users` table.');
+		}
+
+		if (!Schema::hasTable('userusernames'))
+		{
+			Schema::create('userusernames', function (Blueprint $table)
+			{
+				$table->increments('id');
+				$table->integer('userid')->unsigned()->default(0)->comment('Foreign Key to users.id');
+				$table->string('username', 16);
+				$table->integer('unixid')->unsigned()->default(0);
+				$table->dateTime('datecreated');
+				$table->dateTime('dateremoved');
+				$table->dateTime('datelastseen');
+				$table->index(['username', 'datecreated', 'dateremoved'], 'login');
+				$table->index(['unixid', 'datecreated', 'dateremoved'], 'unixid');
+				$table->index('userid');
+				$table->index('datelastseen');
+			});
 		}
 
 		if (!Schema::hasTable('user_notes'))
@@ -50,26 +48,25 @@ class CreateUsersTables extends Migration
 			Schema::create('user_notes', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('user_id')->unsigned()->default(0);
-				$table->integer('category_id')->unsigned()->default(0);
+				$table->integer('user_id')->unsigned()->default(0)->comment('Foreign Key to users.id');
+				//$table->integer('category_id')->unsigned()->default(0);
 				$table->string('subject', 100)->default('');
 				$table->text('body');
 				$table->tinyInteger('state')->unsigned()->default(0);
 				$table->integer('checked_out')->unsigned()->default(0);
-				$table->timestamp('checked_out_time');
+				$table->dateTime('checked_out_time');
 				$table->integer('created_by')->unsigned()->default(0);
-				$table->timestamp('created_at');
+				$table->dateTime('created_at');
 				$table->integer('updated_by')->unsigned()->default(0);
-				$table->timestamp('updated_at');
-				$table->timestamp('review_time');
-				$table->timestamp('publish_up');
-				$table->timestamp('publish_down');
+				$table->dateTime('updated_at');
+				$table->dateTime('review_time');
+				//$table->dateTime('publish_up');
+				//$table->dateTime('publish_down');
 				$table->index('user_id');
 				$table->index('category_id');
 
-				$table->foreign('user_id')->references('id')->on('users');
+				//$table->foreign('user_id')->references('id')->on('users');
 			});
-			//$this->info('Created `user_notes` table.');
 		}
 
 		if (!Schema::hasTable('user_facets'))
@@ -77,7 +74,7 @@ class CreateUsersTables extends Migration
 			Schema::create('user_facets', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('user_id')->unsigned()->default(0);
+				$table->integer('user_id')->unsigned()->default(0)->comment('Foreign Key to users.id');
 				$table->string('key', 255);
 				$table->string('value', 8096);
 				$table->tinyInteger('locked')->unsigned()->default(0);
@@ -91,16 +88,15 @@ class CreateUsersTables extends Migration
 			Schema::create('user_roles', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('parent_id')->unsigned()->default(0);
-				$table->integer('lft')->unsigned()->default(0);
-				$table->integer('rgt')->unsigned()->default(0);
+				$table->integer('parent_id')->unsigned()->default(0)->comment('Adjacency List Reference Id');
+				$table->integer('lft')->unsigned()->default(0)->comment('Nested set lft.');
+				$table->integer('rgt')->unsigned()->default(0)->comment('Nested set rgt.');
 				$table->string('title', 100)->default('');
-				$table->index(['parent_id', 'title']);
+				$table->unique(['parent_id', 'title']);
 				$table->index('parent_id');
 				$table->index('title');
 				$table->index(['lft', 'rgt']);
 			});
-			//$this->info('Created `user_roles` table.');
 		}
 
 		if (!Schema::hasTable('user_role_map'))
@@ -108,12 +104,12 @@ class CreateUsersTables extends Migration
 			Schema::create('user_role_map', function (Blueprint $table)
 			{
 				//$table->increments('id');
-				$table->integer('user_id')->unsigned()->default(0);
-				$table->integer('role_id')->unsigned()->default(0);
+				$table->integer('user_id')->unsigned()->default(0)->comment('Foreign Key to users.id');
+				$table->integer('role_id')->unsigned()->default(0)->comment('Foreign Key to user_roles.id');
+				$table->primary(['user_id', 'role_id']);
 
 				$table->foreign('user_id')->references('id')->on('users');
 			});
-			//$this->info('Created `user_role_map` table.');
 		}
 
 		if (!Schema::hasTable('permissions'))
@@ -121,18 +117,29 @@ class CreateUsersTables extends Migration
 			Schema::create('permissions', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('parent_id')->unsigned()->default(0);
-				$table->integer('lft')->unsigned()->default(0);
-				$table->integer('rgt')->unsigned()->default(0);
-				$table->integer('level')->unsigned()->default(0);
-				$table->string('name', 50);
-				$table->string('title', 100);
-				$table->string('rules', 5120);
-				$table->index('name');
+				$table->integer('parent_id')->unsigned()->default(0)->comment('Nested set parent.');
+				$table->integer('lft')->unsigned()->default(0)->comment('Nested set lft.');
+				$table->integer('rgt')->unsigned()->default(0)->comment('Nested set rgt.');
+				$table->integer('level')->unsigned()->default(0)->comment('The cached level in the nested tree.');
+				$table->string('name', 50)->comment('The unique name for the asset.');
+				$table->string('title', 100)->comment('The descriptive title for the asset.');
+				$table->string('rules', 5120)->comment('JSON encoded access control.');
+				$table->unique('name');
 				$table->index(['lft', 'rgt']);
 				$table->index('parent_id');
 			});
-			//$this->info('Created `permissions` table.');
+		}
+
+		if (!Schema::hasTable('viewlevels'))
+		{
+			Schema::create('viewlevels', function (Blueprint $table)
+			{
+				$table->increments('id');
+				$table->string('title', 100)->comment('The descriptive title for the entry.');
+				$table->integer('ordering')->unsigned()->default(0);
+				$table->string('rules', 5120)->comment('JSON encoded access control.');
+				$table->unique('title');
+			});
 		}
 	}
 
@@ -149,6 +156,7 @@ class CreateUsersTables extends Migration
 			'user_roles',
 			'user_role_map',
 			'permissions',
+			'viewlevels'
 		);
 
 		foreach ($tables as $table)

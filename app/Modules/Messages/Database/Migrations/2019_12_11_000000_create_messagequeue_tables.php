@@ -20,18 +20,18 @@ class CreateMessagequeueTables extends Migration
 			Schema::create('messagequeue', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('userid')->unsigned()->default(0);
-				$table->integer('messagequeuetypeid')->unsigned()->default(0);
+				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
+				$table->integer('messagequeuetypeid')->unsigned()->default(0)->comment('FK to messagequeuetypes.id');
 				$table->integer('targetobjectid')->unsigned()->default(0);
 				$table->integer('messagequeueoptionsid')->unsigned()->default(0);
-				$table->timestamp('datetimesubmitted');
-				$table->timestamp('datetimestarted');
-				$table->timestamp('datetimecompleted');
+				$table->dateTime('datetimesubmitted');
+				$table->dateTime('datetimestarted');
+				$table->dateTime('datetimecompleted');
 				$table->integer('pid')->unsigned()->default(0);
 				$table->integer('returnstatus')->unsigned()->default(0);
 				$table->string('output', 150);
-				$table->index(['targetobject', 'userid']);
 				$table->index('datetimecompleted');
+				$table->index(['targetobjectid', 'userid'], 'targetobject');
 			});
 		}
 
@@ -41,7 +41,7 @@ class CreateMessagequeueTables extends Migration
 			{
 				$table->increments('id');
 				$table->string('name', 24);
-				$table->integer('resourceid')->unsigned()->default(0);
+				$table->integer('resourceid')->unsigned()->default(0)->comment('FK to resources.id');
 				$table->string('classname', 24);
 			});
 		}
