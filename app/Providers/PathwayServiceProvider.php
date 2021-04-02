@@ -35,7 +35,9 @@ class PathwayServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		if (!$this->app->bound('menu') || $this->app->runningInConsole())
+		if (!$this->app->bound('menu')
+		 || $this->app->runningInConsole()
+		 || $this->app['request']->wantsJson())
 		{
 			return;
 		}
@@ -78,7 +80,7 @@ class PathwayServiceProvider extends ServiceProvider
 							break;
 
 						default:
-							$url = 'index.php?Itemid=' . $link->id;
+							$url = $link->link;
 							break;
 					}
 

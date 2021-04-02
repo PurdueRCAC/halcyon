@@ -171,20 +171,44 @@ class ThemeManager implements \Countable
 
 		if (!Schema::hasTable($s))
 		{
-			$dirs = $this->getFinder()->directories($this->path);
-
-			$rows = array();
-			foreach ($dirs as $dir)
-			{
-				$theme = new Model;
-				$theme->name = basename($dir);
-				$theme->element = strtolower($theme->name);
-
-				$rows[] = $theme;
-			}
-
-			return collect($rows);
+			return $this->getThemesFromFiles($state);
 		}
+
+		return $this->getThemesFromDatabase($state);
+	}
+
+	/**
+	 * Get the themes from filesystem directories
+	 * 
+	 * @param  integer  $state
+	 * @return array
+	 */
+	private function getThemesFromFiles($state = null)
+	{
+		$dirs = $this->getFinder()->directories($this->path);
+
+		$rows = array();
+		foreach ($dirs as $dir)
+		{
+			$theme = new Model;
+			$theme->name = basename($dir);
+			$theme->element = strtolower($theme->name);
+
+			$rows[] = $theme;
+		}
+
+		return collect($rows);
+	}
+
+	/**
+	 * Get the themes from the database
+	 * 
+	 * @param  integer  $state
+	 * @return array
+	 */
+	private function getThemesFromDatabase($state = null)
+	{
+		$s = (new Model)->getTable();
 
 		$query = $this->getDatabase()
 			->table($s)
@@ -205,7 +229,14 @@ class ThemeManager implements \Countable
 			->where($s . '.type', '=', 'theme')
 			->orderBy($s . '.enabled', 'desc');
 
-		return $query->get();
+		$rows = $query->get();
+
+		if (count($rows) <= 0)
+		{
+			$rows = $this->getThemesFromFiles($state);
+		}
+
+		return $rows;
 	}
 
 	/**

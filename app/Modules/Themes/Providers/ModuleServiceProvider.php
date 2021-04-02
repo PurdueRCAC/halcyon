@@ -43,8 +43,7 @@ class ModuleServiceProvider extends ServiceProvider
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
-
-		if (!app()->runningInConsole())
+		if (!app()->runningInConsole() && !request()->wantsJson())
 		{
 			$manager = $this->app['themes'];
 
@@ -67,12 +66,13 @@ class ModuleServiceProvider extends ServiceProvider
 			}
 		}
 
-		if ($path = theme_path('views'))
+		/*if ($path = theme_path('views'))
 		{
 			$paths = array_merge([$path], config('view.paths'));
 			config()->set('view.paths', $paths);
 		}
-		/*$paths = collect($paths);
+
+		$paths = collect($paths);
 
 		View::replaceNamespace('errors', $paths->map(function ($path) {
 			return "{$path}/errors";
@@ -110,10 +110,6 @@ class ModuleServiceProvider extends ServiceProvider
 				$this->app['files']->copy($file, $dest);
 			}
 		}
-		/*if ($this->app['files']->copyDirectory($sourcePath, $destinationPath))
-		{
-			return true;
-		}*/
 	}
 
 	/**
