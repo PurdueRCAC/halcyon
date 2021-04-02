@@ -51,6 +51,31 @@ class CreateBaseTables extends Migration
 			]);*/
 		}
 
+		if (!Schema::hasTable('languages'))
+		{
+			Schema::create('languages', function (Blueprint $table)
+			{
+				$table->increments('lang_id');
+				$table->char('lang_code', 7);
+				$table->string('title', 50);
+				$table->string('title_native', 50);
+				$table->string('sef', 50);
+				$table->string('image', 50);
+				$table->string('description', 512);
+				$table->text('metakey');
+				$table->text('metadesc');
+				$table->string('sitename', 1024);
+				$table->integer('published')->unsigned()->default(0);
+				$table->integer('access')->unsigned()->default(0);
+				$table->integer('ordering')->unsigned()->default(0);
+				$table->unique('sef');
+				$table->unique('image');
+				$table->unique('lang_code');
+				$table->index('access');
+				$table->index('ordering');
+			});
+		}
+
 		if (!Schema::hasTable('collegedept'))
 		{
 			Schema::create('collegedept', function (Blueprint $table)
@@ -143,6 +168,7 @@ class CreateBaseTables extends Migration
 	{
 		$tables = array(
 			'extensions',
+			'languages',
 			'collegedept',
 			'fieldofscience',
 			'timeperiods',

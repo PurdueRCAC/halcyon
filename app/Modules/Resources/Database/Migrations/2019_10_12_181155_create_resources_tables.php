@@ -122,6 +122,16 @@ class CreateResourcesTables extends Migration
 				$table->index('datetimecreated');
 			});
 		}
+
+		if (!Schema::hasTable('box'))
+		{
+			Schema::create('box', function (Blueprint $table)
+			{
+				$table->increments('id');
+				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
+				$table->dateTime('datetimecreated');
+			});
+		}
 	}
 
 	/**
@@ -136,7 +146,8 @@ class CreateResourcesTables extends Migration
 			'resourcetypes',
 			'subresources',
 			'batchsystems',
-			'jobscripts'
+			'jobscripts',
+			'box'
 		);
 
 		foreach ($tables as $table)
