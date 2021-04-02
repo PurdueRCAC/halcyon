@@ -32,7 +32,7 @@ class CreateCronJobsTable extends Migration
 				$table->integer('updated_by')->unsigned()->default(0);
 				$table->integer('active')->unsigned()->default(0);
 				$table->integer('ordering')->unsigned()->default(0);
-				$table->text('params')->nullable();
+				$table->string('params', 5000)->nullable();
 				$table->dateTime('publish_up')->nullable();
 				$table->dateTime('publish_down')->nullable();
 				$table->index('state');

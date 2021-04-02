@@ -5,8 +5,13 @@ use Illuminate\Support\Facades\Schema;
 use App\Modules\Core\Models\Extension;
 use App\Halcyon\Access\Asset;
 
-class RegisterModule extends Migration
+class RegisterQueuesModule extends Migration
 {
+	/**
+	 * Module name
+	 * 
+	 * @var  string
+	 */
 	public $module = 'queues';
 
 	/**
@@ -29,8 +34,6 @@ class RegisterModule extends Migration
 					'protected' => 1,
 					'name' => trans('queues::queues.module name')
 				]);
-
-				//$this->info(sprintf('Added extension entry for module "%s"', $this->module));
 			}
 		}
 
@@ -55,7 +58,7 @@ class RegisterModule extends Migration
 					'edit.state' => array()
 				);*/
 
-				// Register the component container just under root in the assets table
+				// Register the module just under root in the assets table
 				$asset = new Asset;
 				$asset->name = $module;
 				$asset->parent_id = 1;
@@ -79,7 +82,6 @@ class RegisterModule extends Migration
 		if ($exist)
 		{
 			$exist->delete();
-			//$this->info(sprintf('Deleted extensions entry for module "%s"', $this->module));
 		}
 
 		$exist = Asset::findByName($this->module);
@@ -87,7 +89,6 @@ class RegisterModule extends Migration
 		if ($exist)
 		{
 			$exist->delete();
-			//$this->info(sprintf('Deleted permissions entry for module "%s"', $this->module));
 		}
 	}
 }

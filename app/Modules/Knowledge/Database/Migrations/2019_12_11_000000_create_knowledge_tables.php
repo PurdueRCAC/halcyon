@@ -34,7 +34,6 @@ class CreateKnowledgeTables extends Migration
 				$table->index('access');
 				$table->index('snippet');
 			});
-			//$this->info('Created `kb_pages` table.');
 		}
 
 		if (!Schema::hasTable('kb_page_associations'))
@@ -42,8 +41,8 @@ class CreateKnowledgeTables extends Migration
 			Schema::create('kb_page_associations', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('parent_id')->unsigned()->default(0);
-				$table->integer('page_id')->unsigned()->default(0);
+				$table->integer('parent_id')->unsigned()->default(0)->comment('Parent kb_page_associations.id');
+				$table->integer('page_id')->unsigned()->default(0)->comment('FK to kb_pages.id');
 				$table->integer('lft')->unsigned()->default(0);
 				$table->integer('rgt')->unsigned()->default(0);
 				$table->integer('level')->unsigned()->default(0);
@@ -54,7 +53,6 @@ class CreateKnowledgeTables extends Migration
 				$table->index('state');
 				$table->index('access');
 			});
-			//$this->info('Created `kb_page_associations` table.');
 		}
 
 		if (!Schema::hasTable('kb_snippet_associations'))
@@ -62,8 +60,8 @@ class CreateKnowledgeTables extends Migration
 			Schema::create('kb_snippet_associations', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('parent_id')->unsigned()->default(0);
-				$table->integer('page_id')->unsigned()->default(0);
+				$table->integer('parent_id')->unsigned()->default(0)->comment('Parent kb_snippet_associations.id');
+				$table->integer('page_id')->unsigned()->default(0)->comment('FK to kb_pages.id');
 				$table->integer('lft')->unsigned()->default(0);
 				$table->integer('rgt')->unsigned()->default(0);
 				$table->integer('level')->unsigned()->default(0);
@@ -74,7 +72,6 @@ class CreateKnowledgeTables extends Migration
 				$table->index('state');
 				$table->index('access');
 			});
-			//$this->info('Created `kb_page_associations` table.');
 		}
 	}
 
@@ -86,12 +83,12 @@ class CreateKnowledgeTables extends Migration
 		$tables = array(
 			'kb_pages',
 			'kb_page_associations',
+			'kb_snippet_associations'
 		);
 
 		foreach ($tables as $table)
 		{
 			Schema::dropIfExists($table);
-			//$this->info('Dropped `' . $table . '` table.');
 		}
 	}
 }

@@ -23,13 +23,13 @@ class CreateCronJobsTable extends Migration
 				$table->string('department', 4);
 				$table->string('coursenumber', 8);
 				$table->string('classname', 255);
-				$table->integer('resourceid')->unsigned()->default(0);
+				$table->integer('resourceid')->unsigned()->default(0)->comment('FK to resources.id');
 				$table->integer('notice')->unsigned()->default(0);
 				$table->dateTime('datetimestart');
 				$table->dateTime('datetimestop');
 				$table->string('semester', 16);
-				$table->integer('groupid')->unsigned()->default(0);
-				$table->integer('userid')->unsigned()->default(0);
+				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
+				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
 				$table->dateTime('datetimecreated');
 				$table->dateTime('datetimeremoved');
 				$table->integer('studentcount')->unsigned()->default(0);
@@ -37,7 +37,6 @@ class CreateCronJobsTable extends Migration
 				$table->index('resourceid');
 				$table->index('userid');
 			});
-			//$this->info('Created `classaccounts` table.');
 		}
 
 		if (!Schema::hasTable('classusers'))
@@ -45,9 +44,9 @@ class CreateCronJobsTable extends Migration
 			Schema::create('classusers', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('classaccountid')->unsigned()->default(0);
-				$table->integer('userid')->unsigned()->default(0);
-				$table->integer('membertype')->unsigned()->default(0);
+				$table->integer('classaccountid')->unsigned()->default(0)->comment('FK to classaccounts.id');
+				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
+				$table->integer('membertype')->unsigned()->default(0)->comment('FK to membertypes.id');
 				$table->dateTime('datetimestart');
 				$table->dateTime('datetimestop');
 				$table->integer('notice')->unsigned()->default(0);
@@ -56,7 +55,6 @@ class CreateCronJobsTable extends Migration
 				$table->index('classaccountid');
 				$table->index(['userid', 'membertype', 'datetimecreated', 'datetimeremoved'], 'userid');
 			});
-			//$this->info('Created `classusers` table.');
 		}
 	}
 
@@ -66,9 +64,6 @@ class CreateCronJobsTable extends Migration
 	public function down()
 	{
 		Schema::dropIfExists('classaccounts');
-		//$this->info('Created `classaccounts` table.');
-
 		Schema::dropIfExists('classusers');
-		//$this->info('Created `classusers` table.');
 	}
 }

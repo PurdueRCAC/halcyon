@@ -19,10 +19,10 @@ class CreateGroupsTables extends Migration
 			{
 				$table->increments('id');
 				$table->string('name', 48);
-				$table->integer('owneruserid')->unsigned()->default(0);
+				$table->integer('owneruserid')->unsigned()->default(0)->comment('FK to users.id');
 				$table->string('unixgroup', 48);
 				$table->integer('unixid')->unsigned()->default(0);
-				$table->integer('deptnumber')->unsigned()->default(0);
+				$table->integer('deptnumber')->unsigned()->default(0)->comment('FK to collegedept.id');
 				$table->integer('onepurdue')->unsigned()->default(0);
 				$table->string('githuborgname', 39);
 				$table->index('unixgroup');
@@ -36,15 +36,15 @@ class CreateGroupsTables extends Migration
 			Schema::create('groupusers', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('groupid')->unsigned()->default(0);
-				$table->integer('userid')->unsigned()->default(0);
-				$table->integer('userrequestid')->unsigned()->default(0);
-				$table->integer('membertype')->unsigned()->default(0);
-				$table->integer('owner')->unsigned()->default(0);
+				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
+				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
+				$table->integer('userrequestid')->unsigned()->default(0)->comment('FK to userrequests.id');
+				$table->integer('membertype')->unsigned()->default(0)->comment('FK to membertypes.id');
+				$table->tinyInteger('owner')->unsigned()->default(0);
 				$table->dateTime('datecreated');
 				$table->dateTime('dateremoved');
 				$table->dateTime('datelastseen');
-				$table->integer('notice')->unsigned()->default(0);
+				$table->tinyInteger('notice')->unsigned()->default(0);
 				$table->index(['groupid','userid','datecreated','dateremoved'], 'groupid_1');
 				$table->index(['groupid','datecreated','dateremoved'], 'groupid_2');
 				$table->index(['userid','membertype','datecreated','dateremoved'], 'userid');
@@ -63,8 +63,8 @@ class CreateGroupsTables extends Migration
 			{
 				$table->increments('id');
 				$table->string('year', 6);
-				$table->integer('resourceid')->unsigned()->default(0);
-				$table->integer('groupid')->unsigned()->default(0);
+				$table->integer('resourceid')->unsigned()->default(0)->comment('FK to resources.id');
+				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
 				$table->integer('maxnodes')->unsigned()->default(0);
 				$table->decimal('parentnodes', 9, 4)->unsigned()->default(0.0000);
 				$table->index(['year', 'resourceid', 'groupid'], 'year');
@@ -78,7 +78,7 @@ class CreateGroupsTables extends Migration
 			Schema::create('groupmotds', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('groupid')->unsigned()->default(0);
+				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
 				$table->text('motd');
 				$table->dateTime('datetimecreated');
 				$table->dateTime('datetimeremoved');
@@ -91,8 +91,8 @@ class CreateGroupsTables extends Migration
 			Schema::create('groupcollegedept', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('groupid')->unsigned()->default(0);
-				$table->integer('collegedeptid')->unsigned()->default(0);
+				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
+				$table->integer('collegedeptid')->unsigned()->default(0)->comment('FK to collegedept.id');
 				$table->integer('percentage')->unsigned()->default(0);
 				$table->index('groupid');
 				$table->index('collegedeptid');
@@ -104,8 +104,8 @@ class CreateGroupsTables extends Migration
 			Schema::create('groupfieldofscience', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('groupid')->unsigned()->default(0);
-				$table->integer('fieldofscienceid')->unsigned()->default(0);
+				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
+				$table->integer('fieldofscienceid')->unsigned()->default(0)->comment('FK to fieldofscience.id');
 				$table->integer('newid')->unsigned()->default(0);
 				$table->integer('percentage')->unsigned()->default(0);
 				$table->index('groupid');
@@ -118,10 +118,10 @@ class CreateGroupsTables extends Migration
 			Schema::create('groupqueueusers', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('groupid')->unsigned()->default(0);
-				$table->integer('queueuserid')->unsigned()->default(0);
-				$table->integer('userrequestid')->unsigned()->default(0);
-				$table->integer('membertype')->unsigned()->default(0);
+				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
+				$table->integer('queueuserid')->unsigned()->default(0)->comment('FK to queueusers.id');
+				$table->integer('userrequestid')->unsigned()->default(0)->comment('FK to userrequests.id');
+				$table->integer('membertype')->unsigned()->default(0)->comment('FK to membertypes.id');
 				$table->dateTime('datetimecreated');
 				$table->dateTime('datetimeremoved');
 				$table->integer('notice')->unsigned()->default(0);

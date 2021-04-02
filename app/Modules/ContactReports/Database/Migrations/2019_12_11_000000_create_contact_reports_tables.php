@@ -20,15 +20,15 @@ class CreateContactReportsTables extends Migration
 			Schema::create('contactreports', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('groupid')->unsigned()->default(0);
-				$table->integer('userid')->unsigned()->default(0);
+				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
+				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
 				$table->text('report');
 				$table->text('stemmedreport');
 				$table->dateTime('datetimecreated');
 				$table->dateTime('datetimecontact');
 				$table->integer('notice')->unsigned()->default(0);
 				$table->dateTime('datetimegroupid');
-				$table->integer('contactreporttypeid')->unsigned()->default(0);
+				$table->integer('contactreporttypeid')->unsigned()->default(0)->comment('FK to contactreporttypes.id');
 				$table->index(['groupid', 'userid', 'datetimecontact'], 'groupid');
 				$table->index(['userid', 'datetimecontact'], 'userid');
 				$table->index(['groupid', 'datetimecontact'], 'datetimecontact');
@@ -54,8 +54,8 @@ class CreateContactReportsTables extends Migration
 			Schema::create('contactreportusers', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('contactreportid')->unsigned()->default(0);
-				$table->integer('userid')->unsigned()->default(0);
+				$table->integer('contactreportid')->unsigned()->default(0)->comment('FK to contactreports.id');
+				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
 				$table->dateTime('datetimecreated');
 				$table->dateTime('datetimelastnotify');
 				$table->index(['contactreportid', 'userid'], 'contactreportid');
@@ -68,8 +68,8 @@ class CreateContactReportsTables extends Migration
 			Schema::create('contactreportcomments', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('contactreportid')->unsigned()->default(0);
-				$table->integer('userid')->unsigned()->default(0);
+				$table->integer('contactreportid')->unsigned()->default(0)->comment('FK to contactreports.id');
+				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
 				$table->text('comment');
 				$table->text('stemmedcomment');
 				$table->dateTime('datetimecreated');
@@ -85,8 +85,8 @@ class CreateContactReportsTables extends Migration
 			Schema::create('contactreportresources', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('contactreportid')->unsigned()->default(0);
-				$table->integer('resourceid')->unsigned()->default(0);
+				$table->integer('contactreportid')->unsigned()->default(0)->comment('FK to contactreports.id');
+				$table->integer('resourceid')->unsigned()->default(0)->comment('FK to resources.id');
 				$table->index('resourceid');
 				$table->index('contactreportid');
 			});
@@ -126,9 +126,9 @@ class CreateContactReportsTables extends Migration
 			Schema::create('linkusers', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('userid')->unsigned()->default(0);
-				$table->integer('targetuserid')->unsigned()->default(0);
-				$table->integer('membertype')->unsigned()->default(0);
+				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
+				$table->integer('targetuserid')->unsigned()->default(0)->comment('FK to users.id');
+				$table->integer('membertype')->unsigned()->default(0)->comment('FK to membertypes.id');
 				$table->dateTime('datecreated');
 				$table->dateTime('dateremoved');
 				$table->dateTime('datelastseen');
