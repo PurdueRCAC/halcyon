@@ -296,7 +296,7 @@ class WidgetManager
 
 		if ($itemid = app('request')->input('itemid', -1))
 		{
-			$query->leftJoin('widgets_menu AS mm', 'mm.moduleid', $w . '.id')
+			$query->leftJoin('widgets_menu AS mm', 'mm.widgetid', $w . '.id')
 				->where(function ($where) use ($itemid)
 				{
 					$where->where('mm.menuid', '=', (int) $itemid)
