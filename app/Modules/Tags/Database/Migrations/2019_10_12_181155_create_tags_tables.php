@@ -22,11 +22,11 @@ class CreateTagsTables extends Migration
 				$table->string('name', 150);
 				$table->string('slug', 100);
 				$table->string('domain', 100);
-				$table->dateTime('created_at');
+				$table->dateTime('created_at')->nullable();
 				$table->integer('created_by')->unsigned()->default(0)->comment('FK to users.id');
-				$table->dateTime('updated_at');
+				$table->dateTime('updated_at')->nullable();
 				$table->integer('updated_by')->unsigned()->default(0)->comment('FK to users.id');
-				$table->dateTime('deleted_at');
+				$table->dateTime('deleted_at')->nullable();
 				$table->integer('deleted_by')->unsigned()->default(0)->comment('FK to users.id');
 				$table->integer('tagged_count')->unsigned()->default(0)->comment('Cached count for number of items tagged');
 				$table->integer('alias_count')->unsigned()->default(0)->comment('Cached count for number of aliases');
@@ -42,7 +42,7 @@ class CreateTagsTables extends Migration
 				$table->integer('tag_id')->unsigned()->default(0)->comment('FK to tags.id');
 				$table->integer('taggable_id')->unsigned()->default(0);
 				$table->string('taggable_type', 255);
-				$table->dateTime('created_at');
+				$table->dateTime('created_at')->nullable();
 				$table->integer('created_by')->unsigned()->default(0)->comment('FK to users.id');
 				$table->index(['taggable_id', 'taggable_type'], 'taggables');
 				$table->index('tag_id');

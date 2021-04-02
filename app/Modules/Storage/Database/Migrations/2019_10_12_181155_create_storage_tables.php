@@ -32,8 +32,8 @@ class CreateStorageTables extends Migration
 				$table->tinyInteger('groupwrite')->default(0);
 				$table->tinyInteger('publicread')->default(0);
 				$table->tinyInteger('publicwrite')->default(0);
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->dateTime('datetimeconfigured');
 				$table->tinyInteger('autouser')->default(0);
 				$table->integer('files')->default(0);
@@ -102,12 +102,12 @@ class CreateStorageTables extends Migration
 				$table->smallInteger('timeperiodid')->unsigned()->default(0)->comment('FK to timeperiods.id');
 				$table->integer('periods')->default(0);
 				$table->smallInteger('notice')->unsigned()->default(0);
-				$table->dateTime('datetimelastnotify');
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimelastnotify')->nullable();
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->tinyInteger('enabled')->unsigned()->default(1);
 				$table->index('userid');
-				$table->index('storagedirquotanotificationtypeid');
+				$table->index('storagedirquotanotificationtypeid', 'storagedirquotanotificationtypeid');
 				$table->index('storagedirid');
 			});
 		}
@@ -119,8 +119,8 @@ class CreateStorageTables extends Migration
 				$table->increments('id');
 				$table->smallInteger('resourceid')->unsigned()->default(0)->comment('FK to resources.id');
 				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
-				$table->dateTime('datetimestart');
-				$table->dateTime('datetimestop');
+				$table->dateTime('datetimestart')->nullable();
+				$table->dateTime('datetimestop')->nullable();
 				$table->bigInteger('bytes')->default(0);
 				$table->integer('sellergroupid')->unsigned()->default(0)->comment('FK to groups.id');
 				$table->string('comment', 2000);
@@ -135,8 +135,8 @@ class CreateStorageTables extends Migration
 				$table->increments('id');
 				$table->smallInteger('resourceid')->unsigned()->default(0)->comment('FK to resources.id');
 				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
-				$table->dateTime('datetimestart');
-				$table->dateTime('datetimestop');
+				$table->dateTime('datetimestart')->nullable();
+				$table->dateTime('datetimestop')->nullable();
 				$table->bigInteger('bytes')->default(0);
 				$table->integer('lendergroupid')->unsigned()->default(0)->comment('FK to groups.id');
 				$table->string('comment', 2000);
@@ -154,7 +154,7 @@ class CreateStorageTables extends Migration
 				$table->bigInteger('filequota')->unsigned()->default(0);
 				$table->bigInteger('space')->unsigned()->default(0);
 				$table->bigInteger('files')->unsigned()->default(0);
-				$table->dateTime('datetimerecorded');
+				$table->dateTime('datetimerecorded')->nullable();
 				$table->integer('lastinterval')->unsigned()->default(0);
 				$table->index('storagedirid');
 				$table->index(['storagedirid', 'datetimerecorded'], 'storagedirusage');
@@ -167,8 +167,8 @@ class CreateStorageTables extends Migration
 			{
 				$table->increments('id');
 				$table->char('name', 32);
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->char('path', 255);
 				$table->integer('parentresourceid')->unsigned()->default(0)->comment('Parent storageresources.id');
 				$table->tinyInteger('import')->default(0);

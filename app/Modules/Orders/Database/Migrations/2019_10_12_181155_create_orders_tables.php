@@ -22,8 +22,8 @@ class CreateOrdersTables extends Migration
 				$table->integer('parentordercategoryid')->unsigned()->default(0)->comment('The parent ordercategories.id');
 				$table->char('name', 64);
 				$table->string('description', 2000);
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->smallInteger('sequence');
 			});
 
@@ -44,8 +44,8 @@ class CreateOrdersTables extends Migration
 				$table->integer('userid')->unsigned()->default(0)->comment('Who the order for. FK to users.id');
 				$table->integer('submitteruserid')->unsigned()->default(0)->comment('Who submitted the order. FK to users.id');
 				$table->integer('groupid')->unsigned()->default(0)->comment('The group the order is for. FK to groups.id');
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->string('usernotes', 2000);
 				$table->string('staffnotes', 2000);
 				$table->tinyInteger('notice')->unsigned()->default(0);
@@ -69,9 +69,9 @@ class CreateOrdersTables extends Migration
 				$table->integer('origunitprice')->unsigned()->default(0);
 				$table->tinyInteger('recurringtimeperiodid')->unsigned()->default(0)->comment('FK to timeperiods.id');
 				$table->tinyInteger('timeperiodcount')->unsigned()->default(0);
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
-				$table->dateTime('datetimefulfilled');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
+				$table->dateTime('datetimefulfilled')->nullable();
 				$table->index('orderid');
 
 				$table->foreign('orderid')->references('id')->on('orders');
@@ -91,8 +91,8 @@ class CreateOrdersTables extends Migration
 				$table->tinyInteger('recurringtimeperiodid')->unsigned()->default(0)->comment('FK to timeperiods.id');
 				$table->tinyInteger('public')->unsigned()->default(0);
 				$table->tinyInteger('ticket')->unsigned()->default(0);
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->smallInteger('sequence')->unsigned()->default(0);
 				$table->smallInteger('successororderproductid')->unsigned()->default(0);
 				$table->string('terms', 2000);
@@ -118,12 +118,12 @@ class CreateOrdersTables extends Migration
 				$table->integer('amount')->unsigned()->default(0);
 				$table->integer('approveruserid')->unsigned()->default(0)->comment('The assigned approver for this account. FK to users.id');
 				$table->char('paymentdocid', 12);
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
-				$table->dateTime('datetimeapproved');
-				$table->dateTime('datetimedenied');
-				$table->dateTime('datetimepaid');
-				$table->dateTime('datetimepaymentdoc');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
+				$table->dateTime('datetimeapproved')->nullable();
+				$table->dateTime('datetimedenied')->nullable();
+				$table->dateTime('datetimepaid')->nullable();
+				$table->dateTime('datetimepaymentdoc')->nullable();
 				$table->tinyInteger('notice')->unsigned()->default(0);
 				$table->char('purchaseio', 10)->default(0);
 				$table->char('purchasewbse', 17)->default(0);

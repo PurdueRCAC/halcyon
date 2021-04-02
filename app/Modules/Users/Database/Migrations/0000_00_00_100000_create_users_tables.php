@@ -33,9 +33,9 @@ class CreateUsersTables extends Migration
 				$table->integer('userid')->unsigned()->default(0)->comment('Foreign Key to users.id');
 				$table->string('username', 16);
 				$table->integer('unixid')->unsigned()->default(0);
-				$table->dateTime('datecreated');
-				$table->dateTime('dateremoved');
-				$table->dateTime('datelastseen');
+				$table->dateTime('datecreated')->nullable();
+				$table->dateTime('dateremoved')->nullable();
+				$table->dateTime('datelastseen')->nullable();
 				$table->index(['username', 'datecreated', 'dateremoved'], 'login');
 				$table->index(['unixid', 'datecreated', 'dateremoved'], 'unixid');
 				$table->index('userid');
@@ -54,16 +54,16 @@ class CreateUsersTables extends Migration
 				$table->text('body');
 				$table->tinyInteger('state')->unsigned()->default(0);
 				$table->integer('checked_out')->unsigned()->default(0);
-				$table->dateTime('checked_out_time');
+				$table->dateTime('checked_out_time')->nullable();
 				$table->integer('created_by')->unsigned()->default(0);
-				$table->dateTime('created_at');
+				$table->dateTime('created_at')->nullable();
 				$table->integer('updated_by')->unsigned()->default(0);
-				$table->dateTime('updated_at');
+				$table->dateTime('updated_at')->nullable();
 				$table->dateTime('review_time');
 				//$table->dateTime('publish_up');
 				//$table->dateTime('publish_down');
 				$table->index('user_id');
-				$table->index('category_id');
+				//$table->index('category_id');
 
 				//$table->foreign('user_id')->references('id')->on('users');
 			});

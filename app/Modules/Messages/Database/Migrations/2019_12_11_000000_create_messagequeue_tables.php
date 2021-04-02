@@ -24,9 +24,9 @@ class CreateMessagequeueTables extends Migration
 				$table->integer('messagequeuetypeid')->unsigned()->default(0)->comment('FK to messagequeuetypes.id');
 				$table->integer('targetobjectid')->unsigned()->default(0);
 				$table->integer('messagequeueoptionsid')->unsigned()->default(0);
-				$table->dateTime('datetimesubmitted');
-				$table->dateTime('datetimestarted');
-				$table->dateTime('datetimecompleted');
+				$table->dateTime('datetimesubmitted')->nullable();
+				$table->dateTime('datetimestarted')->nullable();
+				$table->dateTime('datetimecompleted')->nullable();
 				$table->integer('pid')->unsigned()->default(0);
 				$table->integer('returnstatus')->unsigned()->default(0);
 				$table->string('output', 150);

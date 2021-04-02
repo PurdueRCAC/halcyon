@@ -22,13 +22,13 @@ class CreateIssuesTables extends Migration
 				$table->integer('userid')->unsigned()->default(0);
 				$table->text('report');
 				$table->text('stemmedreport');
-				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimecreated')->nullable();
 				$table->integer('issuetodoid')->unsigned()->default(0);
 				$table->index(['userid', 'datetimecreated']);
 				//$table->index('stemmedreport');
 			});
 
-			DB::statement('ALTER TABLE issues ADD FULLTEXT search(stemmedtext)');
+			DB::statement('ALTER TABLE issues ADD FULLTEXT (stemmedreport)');
 		}
 
 		if (!Schema::hasTable('issuecomments'))
@@ -40,15 +40,15 @@ class CreateIssuesTables extends Migration
 				$table->integer('userid')->unsigned()->default(0);
 				$table->text('comment');
 				$table->text('stemmedcomment');
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->tinyInteger('resolution')->unsigned()->default(0);
 				$table->index('issueid');
 				$table->index('userid');
 				$table->index('resolution');
 			});
 
-			DB::statement('ALTER TABLE issuecomments ADD FULLTEXT search(stemmedcomment)');
+			DB::statement('ALTER TABLE issuecomments ADD FULLTEXT (stemmedcomment)');
 		}
 
 		if (!Schema::hasTable('issueresources'))
@@ -72,8 +72,8 @@ class CreateIssuesTables extends Migration
 				$table->string('name');
 				$table->text('description');
 				$table->integer('recurringtimeperiodid')->unsigned()->default(0);
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->index(['userid', 'datetimecreated']);
 			});
 		}

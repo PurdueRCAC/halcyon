@@ -28,12 +28,12 @@ class CreateNewsTables extends Migration
 				$table->string('headline', 255);
 				$table->string('body', 15000);
 				$table->string('location', 32)->nullable();
-				$table->dateTime('datetimenews');
-				$table->dateTime('datetimenewsend');
-				$table->dateTime('datetimeupdate');
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeedited');
-				$table->dateTime('datetimemailed');
+				$table->dateTime('datetimenews')->nullable();
+				$table->dateTime('datetimenewsend')->nullable();
+				$table->dateTime('datetimeupdate')->nullable();
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeedited')->nullable();
+				$table->dateTime('datetimemailed')->nullable();
 				$table->integer('lastmailuserid')->unsigned()->default(0)->comment('FK to users.id');
 				$table->string('url', 255)->nullable();
 				$table->index(['newstypeid', 'datetimenews'], 'newstypeid');
@@ -48,10 +48,10 @@ class CreateNewsTables extends Migration
 			Schema::create('newsstemmedtext', function (Blueprint $table)
 			{
 				$table->increments('id')->comment('This should be the same as news.id');
-				$table->string('stemmedtext', 20000);
+				$table->string('stemmedtext', 16200);
 			});
 
-			DB::statement('ALTER TABLE newsstemmedtext ADD FULLTEXT search(stemmedtext)');
+			DB::statement('ALTER TABLE newsstemmedtext ADD FULLTEXT (stemmedtext)');
 		}
 
 		if (!Schema::hasTable('newstypes'))
@@ -135,9 +135,9 @@ class CreateNewsTables extends Migration
 				$table->increments('id');
 				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
 				$table->integer('edituserid')->unsigned()->default(0)->comment('FK to users.id');
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeedited');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeedited')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->string('body', 15000);
 				$table->integer('newsid')->unsigned()->default(0)->comment('FK to news.id');
 				$table->index(['newsid', 'datetimecreated', 'datetimeremoved'], 'newsid');
@@ -169,8 +169,8 @@ class CreateNewsTables extends Migration
 				$table->integer('newsid')->unsigned()->default(0)->comment('FK to news.id');
 				$table->integer('associd')->unsigned()->default(0);
 				$table->string('assoctype');
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->index(['assoctype', 'associd'], 'assoc');
 				$table->index('newsid');
 

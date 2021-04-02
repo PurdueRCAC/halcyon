@@ -25,6 +25,8 @@ class CreatePagesTables extends Migration
 				$table->integer('access')->unsigned()->default(0)->comment('FK to viewlevels.id');
 				$table->dateTime('created_at')->nullable();
 				$table->integer('created_by')->unsigned()->default(0)->comment('FK to users.id');
+				$table->dateTime('updated_at')->nullable();
+				$table->integer('updated_by')->unsigned()->default(0)->comment('FK to users.id');
 				$table->dateTime('deleted_at')->nullable();
 				$table->integer('deleted_by')->unsigned()->default(0)->comment('FK to users.id');
 				$table->dateTime('checked_out')->nullable();

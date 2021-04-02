@@ -41,9 +41,9 @@ class CreateMenusTables extends Migration
 				$table->tinyInteger('home')->unsigned()->default(0);
 				$table->string('language', 7);
 				$table->tinyInteger('client_id')->unsigned()->default(0);
-				$table->dateTime('created_at');
-				$table->dateTime('updated_at');
-				$table->dateTime('deleted_at');
+				$table->dateTime('created_at')->nullable();
+				$table->dateTime('updated_at')->nullable();
+				$table->dateTime('deleted_at')->nullable();
 				$table->index(['module_id', 'menutype', 'published', 'access'], 'module');
 				$table->index('menutype');
 				$table->index(['lft', 'rgt']);
@@ -63,9 +63,9 @@ class CreateMenusTables extends Migration
 				$table->string('title', 48);
 				$table->string('description', 255);
 				$table->tinyInteger('client_id')->unsigned()->default(0);
-				$table->dateTime('created_at');
-				$table->dateTime('updated_at');
-				$table->dateTime('deleted_at');
+				$table->dateTime('created_at')->nullable();
+				$table->dateTime('updated_at')->nullable();
+				$table->dateTime('deleted_at')->nullable();
 				$table->index('menutype');
 			});
 		}

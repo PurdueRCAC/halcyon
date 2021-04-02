@@ -36,7 +36,7 @@ class CreateHistoryTable extends Migration
 			Schema::create('log', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->dateTime('datetime');
+				$table->dateTime('datetime')->nullable();
 				$table->string('ip', 39);
 				$table->string('hostname', 128);
 				$table->integer('userid')->unsigned()->default(0);
@@ -67,9 +67,6 @@ class CreateHistoryTable extends Migration
 	public function down()
 	{
 		Schema::dropIfExists('history');
-		//$this->info('Dropped `history` table.');
-
 		Schema::dropIfExists('log');
-		//$this->info('Dropped `log` table.');
 	}
 }

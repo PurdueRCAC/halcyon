@@ -22,12 +22,12 @@ class CreateContactReportsTables extends Migration
 				$table->increments('id');
 				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
 				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
-				$table->text('report');
-				$table->text('stemmedreport');
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimecontact');
+				$table->string('report', 8096);
+				$table->string('stemmedreport', 8096);
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimecontact')->nullable();
 				$table->integer('notice')->unsigned()->default(0);
-				$table->dateTime('datetimegroupid');
+				$table->dateTime('datetimegroupid')->nullable();
 				$table->integer('contactreporttypeid')->unsigned()->default(0)->comment('FK to contactreporttypes.id');
 				$table->index(['groupid', 'userid', 'datetimecontact'], 'groupid');
 				$table->index(['userid', 'datetimecontact'], 'userid');
@@ -35,7 +35,7 @@ class CreateContactReportsTables extends Migration
 				$table->index('contactreporttypeid');
 			});
 
-			DB::statement('ALTER TABLE contactreports ADD FULLTEXT search(stemmedreport)');
+			DB::statement('ALTER TABLE contactreports ADD FULLTEXT (stemmedreport)');
 		}
 
 		if (!Schema::hasTable('contactreportstems'))
@@ -43,10 +43,10 @@ class CreateContactReportsTables extends Migration
 			Schema::create('contactreportstems', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->text('stemmedtext');
+				$table->string('stemmedtext', 12000);
 			});
 
-			DB::statement('ALTER TABLE contactreports ADD FULLTEXT search(stemmedtext)');
+			DB::statement('ALTER TABLE contactreportstems ADD FULLTEXT (stemmedtext)');
 		}
 
 		if (!Schema::hasTable('contactreportusers'))
@@ -56,8 +56,8 @@ class CreateContactReportsTables extends Migration
 				$table->increments('id');
 				$table->integer('contactreportid')->unsigned()->default(0)->comment('FK to contactreports.id');
 				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimelastnotify');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimelastnotify')->nullable();
 				$table->index(['contactreportid', 'userid'], 'contactreportid');
 				$table->index('userid');
 			});
@@ -70,14 +70,14 @@ class CreateContactReportsTables extends Migration
 				$table->increments('id');
 				$table->integer('contactreportid')->unsigned()->default(0)->comment('FK to contactreports.id');
 				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
-				$table->text('comment');
-				$table->text('stemmedcomment');
-				$table->dateTime('datetimecreated');
+				$table->string('comment', 8096);
+				$table->string('stemmedcomment', 8096);
+				$table->dateTime('datetimecreated')->nullable();
 				$table->integer('notice')->unsigned()->default(0);
 				$table->index('contactreportid');
 			});
 
-			DB::statement('ALTER TABLE contactreportcomments ADD FULLTEXT search(stemmedcomment)');
+			DB::statement('ALTER TABLE contactreportcomments ADD FULLTEXT (stemmedcomment)');
 		}
 
 		if (!Schema::hasTable('contactreportresources'))
@@ -129,9 +129,9 @@ class CreateContactReportsTables extends Migration
 				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
 				$table->integer('targetuserid')->unsigned()->default(0)->comment('FK to users.id');
 				$table->integer('membertype')->unsigned()->default(0)->comment('FK to membertypes.id');
-				$table->dateTime('datecreated');
-				$table->dateTime('dateremoved');
-				$table->dateTime('datelastseen');
+				$table->dateTime('datecreated')->nullable();
+				$table->dateTime('dateremoved')->nullable();
+				$table->dateTime('datelastseen')->nullable();
 				$table->index(['userid', 'membertype', 'dateremoved', 'datecreated'], 'userid');
 				$table->index(['targetuserid', 'membertype', 'dateremoved', 'datecreated'], 'targetuserid');
 			});

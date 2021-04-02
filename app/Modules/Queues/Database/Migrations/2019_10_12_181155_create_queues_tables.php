@@ -44,9 +44,9 @@ class CreateQueuesTables extends Migration
 				$table->char('nodememmax', 5);
 				$table->tinyInteger('aclusersenabled')->unsigned()->default(1);
 				$table->char('aclgroups', 255);
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
-				$table->dateTime('datetimelastseen');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
+				$table->dateTime('datetimelastseen')->nullable();
 				$table->smallInteger('maxjobfactor')->unsigned()->default(2);
 				$table->smallInteger('maxjobuserfactor')->unsigned()->default(1);
 				$table->index('groupid');
@@ -85,8 +85,8 @@ class CreateQueuesTables extends Migration
 			{
 				$table->increments('id');
 				$table->integer('queueid')->unsigned()->default(0)->comment('Queue being sold to. FK to queues.id');
-				$table->dateTime('datetimestart');
-				$table->dateTime('datetimestop');
+				$table->dateTime('datetimestart')->nullable();
+				$table->dateTime('datetimestop')->nullable();
 				$table->smallInteger('nodecount')->unsigned()->default(0);
 				$table->smallInteger('corecount')->unsigned()->default(0);
 				$table->integer('sellerqueueid')->unsigned()->default(0)->comment('Queue making the sell. FK to queues.id');
@@ -102,8 +102,8 @@ class CreateQueuesTables extends Migration
 			{
 				$table->increments('id');
 				$table->integer('queueid')->unsigned()->default(0)->comment('Queue being loaded to. FK to queues.id');
-				$table->dateTime('datetimestart');
-				$table->dateTime('datetimestop');
+				$table->dateTime('datetimestart')->nullable();
+				$table->dateTime('datetimestop')->nullable();
 				$table->smallInteger('nodecount')->unsigned()->default(0);
 				$table->smallInteger('corecount')->unsigned()->default(0);
 				$table->integer('lenderqueueid')->unsigned()->default(0)->comment('Queue being loaned from. FK to queues.id');
@@ -122,9 +122,9 @@ class CreateQueuesTables extends Migration
 				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
 				$table->integer('userrequestid')->unsigned()->default(0)->comment('FK to userrequests.id');
 				$table->tinyInteger('membertype')->unsigned()->default(0)->comment('FK to membertypes.id');
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
-				$table->dateTime('datetimelastseen');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
+				$table->dateTime('datetimelastseen')->nullable();
 				$table->tinyInteger('notice')->unsigned()->default(0);
 				$table->index(['queueid', 'userid', 'membertype', 'datetimeremoved'], 'queueid');
 				$table->index('userrequestid');
@@ -138,10 +138,10 @@ class CreateQueuesTables extends Migration
 			{
 				$table->increments('id');
 				$table->integer('queueid')->unsigned()->default(0)->comment('FK to queues.id');
-				$table->dateTime('datetimestart');
-				$table->dateTime('datetimestop');
+				$table->dateTime('datetimestart')->nullable();
+				$table->dateTime('datetimestop')->nullable();
 				$table->integer('walltime')->unsigned()->default(0);
-				$table->index(['queueid', 'datetimestart', 'datetimestop', 'queueid']);
+				$table->index(['queueid', 'datetimestart', 'datetimestop'], 'queueid');
 			});
 		}
 
@@ -196,10 +196,10 @@ class CreateQueuesTables extends Migration
 				$table->string('teragridresource', 64);
 				$table->tinyInteger('teragridaggregate')->unsigned()->default(1);
 				$table->dateTime('datetimedraindown');
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
-				$table->dateTime('datetimelastimportstart');
-				$table->dateTime('datetimelastimportstop');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
+				$table->dateTime('datetimelastimportstart')->nullable();
+				$table->dateTime('datetimelastimportstop')->nullable();
 				$table->index(['queuesubresourceid', 'datetimecreated', 'datetimeremoved'], 'queuesubresourceid');
 				$table->index('batchsystem');
 				$table->index('schedulerpolicyid');
@@ -214,8 +214,8 @@ class CreateQueuesTables extends Migration
 				$table->tinyInteger('schedulerid')->unsigned()->default(0)->comment('FK to schedulers.id');
 				$table->string('name', 32);
 				$table->string('nodes', 255);
-				$table->dateTime('datetimestart');
-				$table->dateTime('datetimestop');
+				$table->dateTime('datetimestart')->nullable();
+				$table->dateTime('datetimestop')->nullable();
 				$table->index(['schedulerid', 'datetimestop'], 'schedulerid');
 				$table->index(['schedulerid', 'datetimestart', 'datetimestop'], 'schedulerid_2');
 			});

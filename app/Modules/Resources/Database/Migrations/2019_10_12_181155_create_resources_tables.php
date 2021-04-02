@@ -19,8 +19,8 @@ class CreateResourcesTables extends Migration
 			{
 				$table->increments('id');
 				$table->char('name', 32);
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->smallInteger('parentid')->unsigned()->default(0)->comment('Parent resource. FK to resources.id');
 				$table->tinyInteger('batchsystem')->default(0)->comment('FK to batchsystems.id');
 				$table->char('rolename', 32);
@@ -46,8 +46,8 @@ class CreateResourcesTables extends Migration
 				$table->tinyInteger('nodegpus')->unsigned()->default(0);
 				$table->char('nodeattributes', 16);
 				$table->char('description', 255);
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->tinyInteger('notice')->unsigned()->default(0);
 			});
 		}
@@ -116,7 +116,7 @@ class CreateResourcesTables extends Migration
 				$table->string('system', 64);
 				$table->text('script');
 				$table->text('env');
-				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimecreated')->nullable();
 				$table->unique(['jobid', 'system']);
 				$table->index('system');
 				$table->index('datetimecreated');
@@ -129,7 +129,7 @@ class CreateResourcesTables extends Migration
 			{
 				$table->increments('id');
 				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
-				$table->dateTime('datetimecreated');
+				$table->dateTime('datetimecreated')->nullable();
 			});
 		}
 	}

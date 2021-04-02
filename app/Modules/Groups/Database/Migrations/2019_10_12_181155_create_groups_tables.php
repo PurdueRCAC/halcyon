@@ -41,9 +41,9 @@ class CreateGroupsTables extends Migration
 				$table->integer('userrequestid')->unsigned()->default(0)->comment('FK to userrequests.id');
 				$table->integer('membertype')->unsigned()->default(0)->comment('FK to membertypes.id');
 				$table->tinyInteger('owner')->unsigned()->default(0);
-				$table->dateTime('datecreated');
-				$table->dateTime('dateremoved');
-				$table->dateTime('datelastseen');
+				$table->dateTime('datecreated')->nullable();
+				$table->dateTime('dateremoved')->nullable();
+				$table->dateTime('datelastseen')->nullable();
 				$table->tinyInteger('notice')->unsigned()->default(0);
 				$table->index(['groupid','userid','datecreated','dateremoved'], 'groupid_1');
 				$table->index(['groupid','datecreated','dateremoved'], 'groupid_2');
@@ -80,8 +80,8 @@ class CreateGroupsTables extends Migration
 				$table->increments('id');
 				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
 				$table->text('motd');
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->index('groupid');
 			});
 		}
@@ -122,8 +122,8 @@ class CreateGroupsTables extends Migration
 				$table->integer('queueuserid')->unsigned()->default(0)->comment('FK to queueusers.id');
 				$table->integer('userrequestid')->unsigned()->default(0)->comment('FK to userrequests.id');
 				$table->integer('membertype')->unsigned()->default(0)->comment('FK to membertypes.id');
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->integer('notice')->unsigned()->default(0);
 				$table->index(['groupid', 'datetimecreated', 'datetimeremoved'], 'groupid');
 				$table->index(['queueuserid', 'datetimecreated', 'datetimeremoved'], 'queueuserid');
@@ -140,8 +140,8 @@ class CreateGroupsTables extends Migration
 				$table->mediumInteger('unixgid')->unsigned()->default(0);
 				$table->string('shortname', 8);
 				$table->string('longname', 32);
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->index(['groupid', 'datetimecreated', 'datetimeremoved'], 'groupid');
 				$table->index(['longname', 'datetimecreated', 'datetimeremoved'], 'longname');
 			});
@@ -154,8 +154,8 @@ class CreateGroupsTables extends Migration
 				$table->increments('id');
 				$table->integer('unixgroupid')->unsigned()->default(0)->comment('FK to unixgroups.id');
 				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
-				$table->dateTime('datetimecreated');
-				$table->dateTime('datetimeremoved');
+				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->integer('notice')->unsigned()->default(0);
 				$table->index(['unixgroupid', 'datetimecreated', 'datetimeremoved'], 'unixgroupid');
 				$table->index(['userid', 'datetimecreated', 'datetimeremoved'], 'userid');
@@ -224,8 +224,6 @@ class CreateGroupsTables extends Migration
 		foreach ($tables as $table)
 		{
 			Schema::dropIfExists($table);
-
-			//$this->info('Dropped `' . $table . '` table.');
 		}
 	}
 }
