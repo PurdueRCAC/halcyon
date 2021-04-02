@@ -35,7 +35,7 @@ class PathwayServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		if (!$this->app->bound('menu'))
+		if (!$this->app->bound('menu') || $this->app->runningInConsole())
 		{
 			return;
 		}
