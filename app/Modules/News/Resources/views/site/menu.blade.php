@@ -1,4 +1,4 @@
-
+<nav aria-label="News Categories">
 	<ul class="dropdown-menu">
 		<?php foreach ($types as $type): ?>
 			<li<?php if ($active == $type->id) { echo ' class="active"'; } ?>>
@@ -15,3 +15,4 @@
 		<?php } ?>
 		<li<?php if (!is_numeric($active) && $active == 'feeds') { echo ' class="active"'; } ?>><a href="{{ route('site.news.rss') }}">{{ trans('news::news.rss feeds') }}</a></li>
 	</ul>
+</nav>

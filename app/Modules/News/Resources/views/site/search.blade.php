@@ -108,6 +108,7 @@
 							<input id="datestartshort" type="text" class="date-pick form-control" name="start" placeholder="YYYY-MM-DD" data-start="{{ $startdate }}" value="{{ $startdate }}" />
 						</div>
 						<div class="input-group input-time tab-add tab-edit hide">
+							<label for="timestartshort" class="sr-only">Time from</label>
 							<span class="input-group-prepend"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
 							<input id="timestartshort" type="text" class="time-pick form-control" name="starttime" placeholder="h:mm AM/PM" value="{{ $starttime }}" />
 						</div>
@@ -120,6 +121,7 @@
 							<input id="datestopshort" type="text" class="date-pick form-control" name="stop" placeholder="YYYY-MM-DD" data-stop="{{ $stopdate }}" value="{{ $stopdate }}">
 						</div>
 						<div class="input-group input-time tab-add tab-edit hide">
+						<label for="timestopshort" class="sr-only">Time to</label>
 							<span class="input-group-prepend"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
 							<input id="timestopshort" type="text" class="time-pick form-control" name="stoptime" placeholder="h:mm AM/PM" value="{{ $stoptime }}" />
 						</div>

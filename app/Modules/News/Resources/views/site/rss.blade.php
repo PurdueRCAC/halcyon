@@ -21,16 +21,13 @@
 		if (count($types)):
 			foreach ($types as $n):
 				$info = '';
-				if ($n->tagresources == 0)
-				{
+				if ($n->tagresources == 0):
 					$info = '<span class="rssCheckbox"><span class="alert alert-warning">Warning: will not filter based on the resources selected.</span></span>';
-				}
-				else
-				{
+				else:
 					// Keep track of all the resources that do require resources so that we know what 
 					// news to get when only grabbing a resources RSS.
 					array_push($resourceNewsTypes, $n->id);
-				}
+				endif;
 				?>
 				<li class="form-check">
 					<input class="form-check-input rssCheckbox" value="{{ $n->name }}" id="checkbox{{ str_replace(' ', '', $n->name) }}" type="checkbox" />
@@ -62,8 +59,8 @@
 			foreach ($resources as $r):
 				?>
 				<li class="form-check">
-					<input class="form-check-input rssCheckbox" value="{{ $r->name }}" id="checkbox{{ str_replace(' ', '', $n->name) }}" type="checkbox" />
-					<label class="form-check-label" for="checkbox{{ str_replace(' ', '', $n->name) }}">
+					<input class="form-check-input rssCheckbox" value="{{ $r->name }}" id="checkbox_{{ str_replace(' ', '', $n->name) }}" type="checkbox" />
+					<label class="form-check-label" for="checkbox_{{ str_replace(' ', '', $n->name) }}">
 						<a target="_blank" id="{{ $r->name }}" class="rss" href="{{ route('site.news.feed', ['name' => implode(',', $resourceNewsTypes) . $r->name]) }}">
 							<i class="fa fa-rss-square" aria-hidden="true"></i> {{ $r->name }}
 						</a>
@@ -77,7 +74,7 @@
 
 	<div class="rssCheckbox">
 		<p>
-			<a target="_blank" id="customRSS" class="rssLogo" href="#">{{ trans('news::news.custom feed') }}</a>
+			<a target="_blank" id="customRSS" class="rssLogo" href="{{ route('site.news.rss') }}">{{ trans('news::news.custom feed') }}</a>
 		</p>
 	</div>
 
