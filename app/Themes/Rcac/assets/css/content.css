@@ -1448,7 +1448,7 @@ img.crmdeleteuser {
 	margin-bottom: -2px;
 }
 table td.newsheadline {
-	font-size: 20px;
+	font-size: 1.2em;
 	font-weight: bold;
 	text-align: left;
 }
@@ -1809,14 +1809,14 @@ td.itemCol a {
 table.tree {
 	margin-top: 0px;
 	border-collapse: separate;
-	font-size: 12px;
+	font-size: 1em;
 }
 table.tree th {
 	white-space: nowrap;
 	padding: 1px 4px 1px 4px;
 	text-align: left;
 	font-weight: bold;
-	font-size: 13px;
+	font-size: 1em;
 }
 table.tree td {
 	text-align: left;

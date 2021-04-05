@@ -4872,7 +4872,7 @@ select.form-control,
 .card-header {
   padding: 0.75rem 1.25rem;
   margin-bottom: 0;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: #f7f7f7;
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
@@ -4886,7 +4886,7 @@ select.form-control,
 
 .card-footer {
   padding: 0.75rem 1.25rem;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: #f7f7f7;
   border-top: 1px solid rgba(0, 0, 0, 0.125);
 }
 
@@ -10325,7 +10325,7 @@ a.text-dark:hover, a.text-dark:focus {
 
 html {
 	background-color: #3b3b3b;
-	color: #000;
+	color: #ccc;
 	font-size: 95%;
 }
 body {
@@ -11021,8 +11021,10 @@ table.gsc-search-box .gsc-search-button {
 	}
 }
 .top .department a,
+.top .department a:link,
 .top .department a:visited,
 .top .department a:hover,
+.top .department a:focus,
 .top .department a:active {
 	color: #fff;
 	font-weight: 600;
@@ -13541,8 +13543,10 @@ table.gsc-search-box .gsc-search-button {
 	line-height:1.5em
 }
 .bottom a,
+.bottom a:link,
 .bottom a:visited,
 .bottom a:hover,
+.bottom a:focus,
 .bottom a:active {
 	color:#ccc
 }
