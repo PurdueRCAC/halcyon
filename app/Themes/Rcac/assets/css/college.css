@@ -13188,6 +13188,7 @@ table.gsc-search-box .gsc-search-button {
 	width:100%
 }
 .footer #accordion .panel a,
+.footer #accordion .panel a:link,
 .footer #accordion .panel a:visited {
 	color: #adadad;
 	font-weight: 400;
