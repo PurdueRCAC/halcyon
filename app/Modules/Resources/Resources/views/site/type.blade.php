@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title'){{ $type->name }}@stop
+
 @php
 app('pathway')
 	->append(

@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title')Coffee Hours@stop
+
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/core/main.min.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/daygrid/main.min.css') }}" />

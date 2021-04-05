@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title'){{ $resource->type->name }}: {{ $resource->name }}@stop
+
 @php
 $content = '';
 @endphp

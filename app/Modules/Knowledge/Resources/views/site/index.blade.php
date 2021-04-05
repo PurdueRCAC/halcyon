@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title'){{ trans('knowledge::knowledge.module name') }}: {{ $node->page->headline }}@stop
+
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/prism/prism.css') }}?v={{ filemtime(public_path('modules/core/vendor/prism/prism.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/knowledge/css/knowledge.css') }}?v={{ filemtime(public_path('modules/knowledge/css/knowledge.css')) }}" />
@@ -34,7 +36,6 @@
 					</span>
 					<input type="hidden" name="parent" value="{{ $parent }}" />
 				</div>
-				
 			</form>
 		</div>
 		<div class="col-md-3 text-right">

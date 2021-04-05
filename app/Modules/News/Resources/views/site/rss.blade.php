@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title'){{ trans('news::news.feeds') }}@stop
+
 @push('scripts')
 <script type="text/javascript" src="{{ asset('modules/news/js/rss.js?v=' . filemtime(public_path() . '/modules/news/js/rss.js')) }}"></script>
 @endpush

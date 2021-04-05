@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title'){{ $type->name }}@stop
+
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css?v=' . filemtime(public_path() . '/modules/news/css/news.css')) }}" />
 @endpush

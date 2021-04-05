@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title'){{ $article->headline }}@stop
+
 @push('scripts')
 <script src="{{ asset('modules/news/js/site.js') }}"></script>
 <script>

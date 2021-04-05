@@ -1,7 +1,9 @@
 @extends('layouts.master')
 
+@section('title'){{ trans('knowledge::knowledge.module name') }}: {{ trans('knowledge::knowledge.search') }}@stop
+
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/knowledge/css/knowledge.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/knowledge/css/knowledge.css') }}?v={{ filemtime(public_path('modules/knowledge/css/knowledge.css')) }}" />
 @endpush
 
 @section('content')
@@ -18,12 +20,15 @@
 			<form method="get" action="{{ route('site.knowledge.search') }}">
 				<div class="form-group">
 					<label class="sr-only" for="knowledge_search">{{ trans('knowledge::knowledge.search') }}</label>
-					<input type="search" name="search" id="knowledge_search" class="form-control" placeholder="{{ trans('knowledge::knowledge.search placeholder') }}" value="{{ $filters['search'] }}" />
+					<span class="input-group">
+						<input type="search" name="search" id="knowledge_search" class="form-control" placeholder="{{ trans('knowledge::knowledge.search placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append">
+							<input type="submit" class="input-group-text" value="Submit" />
+						</span>
+					</span>
 					<input type="hidden" name="parent" value="{{ $filters['parent'] }}" />
 				</div>
 			</form>
-		</div>
-		<div class="col-md-3 text-right">
 		</div>
 	</div>
 
