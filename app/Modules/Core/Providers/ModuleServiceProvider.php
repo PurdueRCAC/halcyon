@@ -90,6 +90,8 @@ class ModuleServiceProvider extends ServiceProvider
 		{
 			return $path . '/modules/' . $this->name;
 		}, config('view.paths')), [$sourcePath]), $this->name);
+
+		\Illuminate\Pagination\LengthAwarePaginator::defaultView('core::pagination.bootstrap-4');
 	}
 
 	/**
