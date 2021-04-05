@@ -59,8 +59,8 @@
 			foreach ($resources as $r):
 				?>
 				<li class="form-check">
-					<input class="form-check-input rssCheckbox" value="{{ $r->name }}" id="checkbox_{{ str_replace(' ', '', $n->name) }}" type="checkbox" />
-					<label class="form-check-label" for="checkbox_{{ str_replace(' ', '', $n->name) }}">
+					<input class="form-check-input rssCheckbox" value="{{ $r->name }}" id="checkbox_{{ str_replace(' ', '', $r->name) }}" type="checkbox" />
+					<label class="form-check-label" for="checkbox_{{ str_replace(' ', '', $r->name) }}">
 						<a target="_blank" id="{{ $r->name }}" class="rss" href="{{ route('site.news.feed', ['name' => implode(',', $resourceNewsTypes) . $r->name]) }}">
 							<i class="fa fa-rss-square" aria-hidden="true"></i> {{ $r->name }}
 						</a>
