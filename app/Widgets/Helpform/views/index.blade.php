@@ -10,7 +10,7 @@
 	<fieldset id="help-cats">
 		<legend>Please select a topic</legend>
 
-		@foreach ($topics as $topic)
+		<?php foreach ($topics as $topic): ?>
 			<?php
 			if (!$topic['title'])
 			{
@@ -21,14 +21,14 @@
 				<input type="radio" name="category" class="help-cat form-check-input" id="cat_{{ $topic['name'] }}" value="{{ $topic['name'] }}" />
 				<label for="cat_{{ $topic['name'] }}" class="form-check-label">{{ $topic['title'] }}</label>
 			</div>
-		@endforeach
+		<?php endforeach; ?>
 
 		<div class="form-check">
-			<input type="radio" name="category" class="help-cat form-check-input" id="cat_conda" value="other" />
+			<input type="radio" name="category" class="help-cat form-check-input" id="cat_other" value="other" />
 			<label for="cat_other" class="form-check-label">Other...</label>
 		</div>
 
-		@foreach ($topics as $topic)
+		<?php foreach ($topics as $topic): ?>
 			<?php
 			if (!$topic['title'])
 			{
@@ -42,7 +42,7 @@
 					</div>
 				</article>
 			</div>
-		@endforeach
+		<?php endforeach; ?>
 
 		<div class="form-group hide" id="contact_help">
 			<br />
