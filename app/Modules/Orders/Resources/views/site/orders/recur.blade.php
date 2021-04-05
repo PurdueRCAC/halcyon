@@ -15,6 +15,8 @@ $(document).ready(function() {
 </script>
 @endpush
 
+@section('title'){{ trans('orders::orders.orders') }: {{ trans('orders::orders.recurring') }}@stop
+
 @php
 app('pathway')
 	->append(

@@ -94,7 +94,7 @@ jQuery(document).ready(function($){
 @endpush
 
 @section('title')
-{!! config('orders.name') !!}
+{!! trans('orders::orders.orders') !!}: {{ trans('orders::orders.categories') }}
 @stop
 
 @php

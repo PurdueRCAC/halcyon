@@ -327,6 +327,8 @@ $(document).ready(function() {
 </script>
 @endpush
 
+@section('title'){{ trans('orders::orders.orders') }}: #{{ $order->id }}@stop
+
 @php
 $myorder = (auth()->user()->id == $order->submitteruserid || auth()->user()->id == $order->userid);
 $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own orders') && $myorder));

@@ -92,6 +92,8 @@ $(document).ready(function() {
 </script>
 @endpush
 
+@section('title'){{ trans('orders::orders.orders') }}@stop
+
 @php
 app('pathway')
 	->append(

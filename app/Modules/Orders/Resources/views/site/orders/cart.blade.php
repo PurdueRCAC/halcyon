@@ -157,6 +157,8 @@
 </script>
 @endpush
 
+@section('title'){{ trans('orders::orders.cart') }}@stop
+
 @php
 	app('pathway')
 		->append(

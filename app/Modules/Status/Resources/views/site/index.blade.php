@@ -6,7 +6,28 @@
 
 @push('scripts')
 <script src="{{ asset('modules/status/js/site.js') }}"></script>
+<script>
+	$(document).ready(function() {
+		$('.card-header').on('click', function (event) {
+			event.preventDefault();
+
+			//$('.list-group').addClass('hidden');
+
+			$(this).parent().find('.list-group').toggleClass('hidden');
+		});
+
+		$('.section-header a').on('click', function (event) {
+			event.preventDefault();
+
+			//$('.list-group').addClass('hidden');
+
+			$($(this).attr('href')).toggleClass('open');
+		});
+	});
+</script>
 @endpush
+
+@section('title'){{ trans('status::status.status') }}@stop
 
 @php
 app('pathway')->append(
@@ -467,25 +488,5 @@ app('pathway')->append(
 		</div><!-- / .col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
 	</div><!-- / .row -->
 @endif
-
-<script>
-	$(document).ready(function() {
-		$('.card-header').on('click', function (event) {
-			event.preventDefault();
-
-			//$('.list-group').addClass('hidden');
-
-			$(this).parent().find('.list-group').toggleClass('hidden');
-		});
-
-		$('.section-header a').on('click', function (event) {
-			event.preventDefault();
-
-			//$('.list-group').addClass('hidden');
-
-			$($(this).attr('href')).toggleClass('open');
-		});
-	});
-</script>
 </div>
 @stop

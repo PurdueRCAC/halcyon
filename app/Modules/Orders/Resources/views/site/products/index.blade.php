@@ -147,7 +147,7 @@ $(document).ready(function() {
 @endpush
 
 @section('title')
-{!! config('orders.name') !!}: {{ trans('orders::orders.products') }}
+{!! trans('orders::orders.orders') !!}: {{ trans('orders::orders.products') }}
 @stop
 
 @php
