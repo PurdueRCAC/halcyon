@@ -26,9 +26,15 @@
 			<form method="get" action="{{ route('site.knowledge.search') }}">
 				<div class="form-group">
 					<label class="sr-only" for="knowledge_search">{{ trans('knowledge::knowledge.search') }}</label>
-					<input type="search" name="search" id="knowledge_search" class="form-control" placeholder="{{ trans('knowledge::knowledge.search placeholder') }}" value="" />
+					<span class="input-group">
+						<input type="search" name="search" id="knowledge_search" class="form-control" placeholder="{{ trans('knowledge::knowledge.search placeholder') }}" value="" />
+						<span class="input-group-append">
+							<input type="submit" class="input-group-text" value="Submit" />
+						</span>
+					</span>
 					<input type="hidden" name="parent" value="{{ $parent }}" />
 				</div>
+				
 			</form>
 		</div>
 		<div class="col-md-3 text-right">
