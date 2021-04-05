@@ -735,7 +735,7 @@ table.gsc-search-box .gsc-search-button {
 	font-weight: 100;
 	text-decoration:none
 }
-.top .department .tagline a:link:focus,
+.top .department .tagline a:focus,
 .top .department .tagline a:visited:focus,
 .top .department .tagline a:hover:focus,
 .top .department .tagline a:active:focus {
@@ -891,7 +891,7 @@ table.gsc-search-box .gsc-search-button {
 	.blackbar li {
 		color:#fff
 	}
-	.blackbar li a:link,
+	.blackbar li a,
 	.blackbar li a:visited,
 	.blackbar li a:hover,
 	.blackbar li a:focus,
@@ -908,7 +908,7 @@ table.gsc-search-box .gsc-search-button {
 	width:100%
 }
 .blackbar a,
-.blackbar a:link,
+/*.blackbar a:link,*/
 .blackbar a:visited,
 .blackbar a:hover,
 .blackbar a:focus,
@@ -1190,7 +1190,7 @@ table.gsc-search-box .gsc-search-button {
 
 @media (max-width: 991px) {
 	.blackbar .black .dropdown-menu li a,
-	.blackbar .black .dropdown-menu li a:link,
+	/*.blackbar .black .dropdown-menu li a:link,*/
 	.blackbar .black .dropdown-menu li a:visited {
 		background-color:inherit !important
 	}
@@ -1277,7 +1277,7 @@ table.gsc-search-box .gsc-search-button {
 	line-height: 2.5em;
 	font-family: acumin-pro, "Franklin Gothic", "Arial", sans-serif
 }
-.breadcrumb a:link,
+.breadcrumb a,
 .breadcrumb a:visited {
 	color: inherit;
 	font-weight: 300;
@@ -1579,7 +1579,7 @@ table.gsc-search-box .gsc-search-button {
 	border: solid 2px #bbb;
 	color: #000;
 }
-.collegeContent .grid .introContainer .intro a.featureLink:link {
+.collegeContent .grid .introContainer .intro a.featureLink {
 	background-color: #d8d8d8;
 	font-weight: normal;
 	text-decoration: none;
@@ -1603,7 +1603,7 @@ table.gsc-search-box .gsc-search-button {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: #fff;
 }
-.collegeContent .grid .tiles .row .tile a:link {
+.collegeContent .grid .tiles .row .tile a {
 	text-decoration: none;
 	font-weight: 400;
 }
@@ -2880,7 +2880,7 @@ table.gsc-search-box .gsc-search-button {
 	display: inline-block;
 	width:100%
 }
-.footer #accordion .panel a:link,
+.footer #accordion .panel a,
 .footer #accordion .panel a:visited {
 	color: #adadad;
 	font-weight: 400;
@@ -2907,7 +2907,7 @@ table.gsc-search-box .gsc-search-button {
 .footer #accordion .panel .panel-heading a {
 	display:block
 }
-.footer #accordion .panel .panel-heading a:link,
+.footer #accordion .panel .panel-heading a,
 .footer #accordion .panel .panel-heading a:visited,
 .footer #accordion .panel .panel-heading a:hover,
 .footer #accordion .panel .panel-heading a:active {
@@ -2945,7 +2945,7 @@ table.gsc-search-box .gsc-search-button {
 	padding-bottom: 13.52942%;
 	transition:filter 0.25s ease-in
 }
-.footer #accordion .motto .tagline--150:link,
+.footer #accordion .motto .tagline--150,
 .footer #accordion .motto .tagline--150:visited {
 	filter:brightness(1)
 }
@@ -3044,7 +3044,7 @@ table.gsc-search-box .gsc-search-button {
 .footer #accordion .motto a .fa-amazon-square:after {
 	content: "Amazon"
 }
-.footer #accordion .motto a:link,
+.footer #accordion .motto a,
 .footer #accordion .motto a:visited {
 	color: #999;
 	text-decoration:none
@@ -3064,7 +3064,7 @@ table.gsc-search-box .gsc-search-button {
 @media (max-width: 767px) {
 	.footer #accordion .panel .panel-heading .panel-title > a:visited,
 	.footer #accordion .panel .panel-heading .panel-title > a:active,
-	.footer #accordion .panel .panel-heading .panel-title > a:link {
+	.footer #accordion .panel .panel-heading .panel-title > a {
 		font-weight:700
 	}
 	.footer #accordion .panel .panel-heading a .fa-plus {
@@ -3232,7 +3232,7 @@ table.gsc-search-box .gsc-search-button {
 	text-align: center;
 	line-height:1.5em
 }
-.bottom a:link,
+.bottom a,
 .bottom a:visited,
 .bottom a:hover,
 .bottom a:active {
