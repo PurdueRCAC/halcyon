@@ -567,8 +567,13 @@ div.ui-dialog {
 	color: #333;
 	font-weight: bold;
 }
-.ui-dialog .ui-dialog-titlebar-close:before {
-	content: '';
+.ui-dialog .ui-dialog-titlebar-close {
+  background: transparent;
+  right: 1em;
+  line-height: 1;
+}
+.ui-dialog .ui-dialog-titlebar-close .ui-icon:before {
+  content: "\e8f6";
 }
 
 #TR_date>td:first-child {

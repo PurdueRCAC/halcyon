@@ -40,7 +40,8 @@
 			//'themes/rcac/css/jquerytimepicker_min.css',
 			//'https://use.typekit.net/ghc8hdz.css' => 'rel="preload" as="style"',
 			'https://use.typekit.net/ghc8hdz.css' => 'rel="stylesheet" type="text/css"',
-			'themes/rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.min.css' => 'rel="stylesheet" type="text/css"',
+			//'themes/rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.min.css' => 'rel="stylesheet" type="text/css"',
+			'modules/core/vendor/jquery-ui/jquery-ui.min.css' => 'rel="stylesheet" type="text/css"',
 			'themes/rcac/css/font-awesome-css.min.css' => 'rel="stylesheet" type="text/css"',
 			'themes/rcac/css/college.css' => 'rel="stylesheet" type="text/css"',
 			'themes/rcac/css/content.css' => 'rel="stylesheet" type="text/css"'
@@ -71,11 +72,13 @@
 		</script>
 <?php
 		$scripts = array(
-			'themes/rcac/js/jquery-3.5.1.min.js',
-			'themes/rcac/js/common/jquery-ui-1.12.1/jquery-ui.min.js',
+			//'themes/rcac/js/jquery-3.5.1.min.js',
+			//'themes/rcac/js/common/jquery-ui-1.12.1/jquery-ui.min.js',
+			'modules/core/vendor/jquery/jquery.min.js',
+			'modules/core/vendor/bootstrap/bootstrap.bundle.min.js', // Ths needs to be included before jquery-ui
+			'modules/core/vendor/jquery-ui/jquery-ui.min.js',
 			//'themes/rcac/js/css_browser_selector.js',
 			//'themes/rcac/js/modernizr-1.5.min.js',
-			'modules/core/vendor/bootstrap/bootstrap.bundle.min.js', //'themes/rcac/js/bootstrap.min.js',
 			'themes/rcac/js/common/common.js',
 			'themes/rcac/js/google_jquery_link_tracking.js',
 			//'themes/rcac/js/common/date.js',
