@@ -226,12 +226,12 @@ a.btn-info:active {
 	font-weight: 400;
 	text-decoration: none;
 }
-.login a:hover {
+.login a:not(.btn):hover {
 	color: #9d9d9d;
 	font-weight: 400;
 	text-decoration: none;
 }
-.login a.btn-info {
+/*.login a.btn-info {
 	color: #fff;
 	background-color: #20809D;
 	border-color: #1F809E;
@@ -241,7 +241,7 @@ a.btn-info:active {
 	color: #fff;
 	background-color: #1E7994;
 	border-color: #1D7995;
-}
+}*/
 
 /* mobile */
 @media only screen and (max-width: 760px) {

@@ -709,10 +709,12 @@ table.gsc-search-box .gsc-search-button {
 		line-height:1.1em
 	}
 }
-.top .department a,
-.top .department a:visited,
-.top .department a:hover,
-.top .department a:active {
+.top .department > a,
+.top .department > a:link,
+.top .department > a:visited,
+.top .department > a:hover,
+.top .department > a:focus,
+.top .department > a:active {
 	color: #fff;
 	font-weight: 600;
 	text-decoration:none

@@ -169,6 +169,10 @@
 	font-weight: 400
 }
 
+.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer {
+	background-color: black;
+	color: #fff;
+}
 
 .deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer a.tile {
 	position: relative;
@@ -176,6 +180,7 @@
 	height: 100%;
 	width: 100%;
 	background-color: #000;
+	color: #fff;
 	font-family: 'archivoNarrow', "Helvetica Neue", Helvetica, Arial, sans-serif;
 	line-height: 1.09091em
 }
@@ -227,11 +232,11 @@
 }
 
 .deptOfficeContent .container .bannerRow .tabsContainer ul.nav li a {
-	margin: 0px;
-	padding: 10px 0px;
+	margin: 0;
+	padding: 10px 0;
 	letter-spacing: 1px;
-	border: 0px;
-	border-radius: 0px;
+	border: none;
+	border-radius: 0;
 	text-align: center;
 	font-weight: 300
 }
@@ -403,10 +408,10 @@
 @media (min-width: 768px) and (min-width: 992px) {
 	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer {
 		padding: 15px;
-		background-color: black;
+		/*background-color: black;*/
 		overflow: auto;
 		margin-bottom: 30px;
-		color: #fff;
+		/*color: #fff;*/
 	}
 
 	.deptOfficeContent .container .audienceTiles.tiles-2 .tileRow .tileContainer a.tile {
@@ -423,7 +428,7 @@
 @media (min-width: 768px) and (min-width: 768px) and (max-width: 991px) {
 	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer {
 		padding: 15px;
-		background-color: black;
+		/*background-color: black;*/
 		overflow: auto;
 		width: 335px;
 	}
@@ -507,7 +512,7 @@
 	}
 	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer {
 		padding: 20px;
-		background-color: black;
+		/*background-color: black;*/
 		overflow: auto;
 		margin-bottom: 30px;
 	}
@@ -519,7 +524,7 @@
 	}
 	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer {
 		padding: 10px;
-		background-color: black;
+		/*background-color: black;*/
 	}
 }
 
@@ -547,7 +552,7 @@
 	}
 	.deptOfficeContent .container .bannerRow .audienceTiles .tileRow .tileContainer {
 		padding: 10px;
-		background-color: black;
+		/*background-color: black;*/
 		overflow: auto;
 	}
 }
