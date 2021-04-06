@@ -3426,14 +3426,16 @@ document.addEventListener('DOMContentLoaded', function() {
 		NEWSDateSearch($(this).attr('name'));
 	});
 
-	$('.time-pick').timepicker({
-		timeFormat: "h:i A",
-		minTime: '8:00am',
-		maxTime: '5:00pm',
-		change: function() {
-			$(this).trigger('change');
-		}
-	});
+	if ($('.time-pick').length) {
+		$('.time-pick').timepicker({
+			timeFormat: "h:i A",
+			minTime: '8:00am',
+			maxTime: '5:00pm',
+			change: function() {
+				$(this).trigger('change');
+			}
+		});
+	}
 
 	// Dialogs
 	if ($('.samplebox').length) {
