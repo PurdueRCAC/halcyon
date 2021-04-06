@@ -2,6 +2,9 @@
 namespace App\Widgets\Impacttables;
 
 use App\Modules\Widgets\Entities\Widget;
+use App\Modules\Impact\Models\Table;
+use App\Modules\Impact\Models\Impact;
+use App\Modules\Impact\Models\AwardReport;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -17,8 +20,8 @@ class Impacttables extends Widget
 	 */
 	public function run()
 	{
-		$it = 'impacttables';
-		$i = 'impacts';
+		$it = (new Table)->getTable();
+		$i  = (new Impact)->getTable();
 
 		$all_rows = app('db')
 			->table($it)
@@ -44,14 +47,12 @@ class Impacttables extends Widget
 			->orderBy($i . '.sequence', 'asc')
 			->get();
 
-		$data = app('db')
-			->table('awardreports')
+		$data = AwardReport::query()
 			->where('awardeecount', '!=', 0)
 			->orderBy('fiscalyear', 'desc')
 			->get();
 
-		$updatedatetime = app('db')
-			->table('impacts')
+		$updatedatetime = Impact::query()
 			->select(DB::raw('MAX(updatedatetime) AS updated'))
 			->first();
 

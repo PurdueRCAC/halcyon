@@ -23,5 +23,6 @@
     "Tags": true,
     "Themes": true,
     "Users": true,
-    "Widgets": true
+    "Widgets": true,
+    "Impact": true
 }
