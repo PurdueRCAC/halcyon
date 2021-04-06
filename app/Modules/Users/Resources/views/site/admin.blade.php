@@ -61,10 +61,10 @@ $(document).ready(function() {
 					@endif
 				</select>
 				<span class="input-group-append">
-					<span class="input-group-text">
-						<i class="fa fa-user" aria-hidden="true" id="add_button_a"></i>
-						<input type="submit" class="sr-only" value="Search" />
-					</span>
+					<button type="submit" class="btn input-group-text">
+						<i class="fa fa-search" id="add_button_a" aria-hidden="true"></i>
+						<span class="sr-only">Search</span>
+					</button>
 				</span>
 			</div>
 		</form>
