@@ -172,7 +172,7 @@ class MembersController extends Controller
 			return response()->json(null, 403);
 		}
 
-		// Look up the current username of the user 
+		// Look up the current user
 		$user = User::findOrFail($userid);
 
 		if (!$user || $user->isTrashed())
@@ -180,6 +180,7 @@ class MembersController extends Controller
 			return response()->json(['message' => trans('Failed to find user for ID :id', ['id' => $userid])], 404);
 		}
 
+		// Look up the current resource
 		$asset = Asset::findOrFail($resource);
 
 		if (!$asset || $asset->isTrashed())
