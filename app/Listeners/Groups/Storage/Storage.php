@@ -31,9 +31,12 @@ class Storage
 		$group = $event->getGroup();
 		$client = app('isAdmin') ? 'admin' : 'site';
 
-		$content = view('storage::' . $client . '.directories.group', [
-			'group' => $group
-		]);
+		if ($event->getActive() == 'storage' || $client == 'admin')
+		{
+			$content = view('storage::' . $client . '.directories.group', [
+				'group' => $group
+			]);
+		}
 
 		$event->addSection(
 			'storage',

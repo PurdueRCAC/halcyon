@@ -51,7 +51,7 @@ $past = $motds
 if (count($past))
 {
 	?>
-	<div class="card panel panel-default">
+	<div class="card">
 		<div class="card-header panel-heading">
 			{{ trans('groups::groups.past notices') }}
 		</div>
@@ -59,15 +59,21 @@ if (count($past))
 			@foreach ($past as $motd)
 				<li class="list-group-item">
 					<p class="text-muted">
-						{{ $motd->datetimecreated }} to
-						@if ($motd->datetimeremoved && $motd->datetimeremoved != '0000-00-00 00:00:00')
-							{{ $motd->datetimeremoved }}
+						{{ $motd->datetimecreated->format('F j, Y') }} to
+						@if ($motd->isTrashed())
+							{{ $motd->datetimeremoved->format('F j, Y') }}
 						@else
 							trans('global.never')
 						@endif
 					</p>
 					<blockquote>
-						<p>{{ $motd->motd }}</p>
+						<p>
+							@if (trim($motd->motd))
+								{{ $motd->motd }}
+							@else
+								<span class="none">{{ trans('global.none') }}</span>
+							@endif
+						</p>
 					</blockquote>
 				</li>
 			@endforeach

@@ -36,11 +36,33 @@
 								@endif
 							</td>
 							<td>
-								<span class="badge badge-sm order-status {{ str_replace(' ', '-', $order->status) }}" data-tip="Accounts: {{ $order->accounts }}<br />Assigned: {{ $order->accountsassigned }}<br />Approved: {{ $order->accountsapproved }}<br />Denied: {{ $order->accountsdenied }}<br />Paid: {{ $order->accountspaid }}<br />---<br />Items: {{ $order->items }}<br />Fulfilled: {{ $order->itemsfulfilled }}">
+								<?php
+								$accountsassigned = $order->accounts->filter(function($value, $key)
+								{
+									return $value->approveruserid > 0;
+								})->count();
+								$accountsapproved = $order->accounts->filter(function($value, $key)
+								{
+									return $value->isApproved();
+								})->count();
+								$accountsdenied = $order->accounts->filter(function($value, $key)
+								{
+									return $value->isDenied();
+								})->count();
+								$accountspaid = $order->accounts->filter(function($value, $key)
+								{
+									return $value->isPaid();
+								})->count();
+								$itemsfulfilled = $order->items->filter(function($value, $key)
+								{
+									return $value->isFulfilled();
+								})->count();
+								?>
+								<span class="badge badge-sm order-status {{ str_replace(' ', '-', $order->status) }}" data-tip="Accounts: {{ $order->accounts->count() }}<br />Assigned: {{ $accountsassigned }}<br />Approved: {{ $accountsapproved }}<br />Denied: {{ $accountsdenied }}<br />Paid: {{ $accountspaid }}<br />---<br />Items: {{ $order->items->count() }}<br />Fulfilled: {{ $itemsfulfilled }}">
 									{{ trans('orders::orders.' . $order->status) }}
 								</span>
 							</td>
-							<td>{{ $order->datetimecreated }}</td>
+							<td>{{ $order->datetimecreated->format('Y-m-d') }}</td>
 							<td>
 								<?php
 								$products = array();

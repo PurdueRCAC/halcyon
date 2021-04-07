@@ -1,12 +1,13 @@
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap.min.css') }}" />
+<!-- <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/datatables/datatables.min.css') }}" /> -->
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js') }}"></script>
-<script src="{{ asset('modules/core/vendor/datatables/datatables.min.js') }}"></script>
-<script src="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap.min.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/datatables/dataTables.min.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/groups/js/site.js?v=' . filemtime(public_path() . '/modules/groups/js/site.js')) }}"></script>
 <script>
@@ -97,7 +98,7 @@ var UserRequests = {
 	rejectpending: 0,
 
 	/**
-	 * Approvet a user request
+	 * Approve a user request
 	 *
 	 * @param   {array}  requests
 	 * @return  {void}
@@ -213,6 +214,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			$('#submit-requests').prop('disabled', false);
 		});
 		$('#submit-requests').on('click', function(e){
+			e.preventDefault();
+
 			var inputs = $('.approve-request:checked');
 
 			if (!inputs.length) {
@@ -223,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			UserRequests.approvepending = 0;
 
 			// Loop through list and approve users. -2 so it doesnt hit the approve/deny all buttons
-			for (var i = 0; i < inputs.length - 2; i++) {
+			for (var i = 0; i < inputs.length; i++) {
 				var user = inputs[i].value.split(",")[0];
 				var approve = inputs[i].value.split(",")[1];
 
@@ -435,14 +438,100 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		$('.searchable-select').select2();
 
-		$('.datatable').DataTable({
+		if ($('.datatable').length) {
+			$('.datatable').DataTable({
+				pageLength: 20,
+				pagingType: 'numbers',
+				info: false,
+				ordering: false,
+				lengthChange: false,
+				scrollX: true,
+				//autoWidth: false,
+				language: {
+					searchPlaceholder: "Filter users...",
+					search: "_INPUT_",
+				},
+				fixedColumns: {
+					leftColumns: 1
+				},
+				initComplete: function () {
+					$($.fn.dataTable.tables(true)).css('width', '100%');
+
+					var table = this;
+					this.api().columns().every(function (i) {
+						if (i < 2) {
+							return;
+						}
+						var column = this;
+						var select = $('<select class="data-col-filter" data-index="' + i + '"><option value="all">- All -</option><option value="selected">Selected</option><option value="not-selected">Not selected</option></select><br />')
+							.prependTo($(column.header()));
+					});
+
+					$('.data-col-filter').on('change', function(){
+						var val = $(this).val(),
+						index = $(this).data('index');
+
+						// If all records should be displayed
+						if (val === 'all'){
+							$.fn.dataTable.ext.search.pop();
+							table.api().draw();
+						}
+
+						// If selected records should be displayed
+						if (val === 'selected'){
+							$.fn.dataTable.ext.search.pop();
+							$.fn.dataTable.ext.search.push(
+								function (settings, data, dataIndex){
+									//return ($(table.api().row(dataIndex).node()).hasClass('selected')) ? true : false;
+									var has = $(table
+										.api()
+										.cell(dataIndex, index)
+										.node())
+										.find(':checked').length;
+
+									return has ? true : false;
+								}
+							);
+							
+							table.api().draw();
+						}
+
+						// If selected records should not be displayed
+						if (val === 'not-selected'){
+							$.fn.dataTable.ext.search.pop();
+							$.fn.dataTable.ext.search.push(
+								function (settings, data, dataIndex){
+									//($(table.api().row(dataIndex).node()).hasClass('selected')) ? false : true;
+									var has = $(table
+										.api()
+										.cell(dataIndex, index)
+										.node())
+										.find(':checked').length;
+
+									return has ? false : true;
+								}
+							);
+							
+							table.api().draw();
+						}
+					});
+				}
+			});
+		}
+		/*var dts = false;
+		$('a.tab').on('shown.bs.tab', function(e){
+			//$($.fn.dataTable.tables(true)).DataTable().columns.adjust();//.draw();
+			if (dts) {
+				return;
+			}
+			$('.datatable').DataTable({
 			pageLength: 20,
 			pagingType: 'numbers',
 			info: false,
 			ordering: false,
 			lengthChange: false,
 			scrollX: true,
-			autoWidth: false,
+			//autoWidth: false,
 			language: {
 				searchPlaceholder: "Filter users...",
 				search: "_INPUT_",
@@ -451,38 +540,13 @@ document.addEventListener('DOMContentLoaded', function() {
 				leftColumns: 1//,
 				//rightColumns: 1
 			},
-			/*lengthMenu: [[10, 25, 50, -1], [10, 25, 50, 'All']],*/
 			initComplete: function () {
 				//this.page(0).draw(true);
+				dts = true;
 				$($.fn.dataTable.tables(true)).css('width', '100%');
-				//$($.fn.dataTable.tables( true ) ).DataTable().columns.adjust();//.draw();
-				/*this.api().columns().every(function (i) {
-					var column = this;
-					var select = $('<select data-index="' + i + '"><option value=""></option></select>')
-						.appendTo($(column.footer()).empty());
-
-					column.data().unique().sort().each(function (d, j) {
-						select.append('<option value="'+d+'">'+d+'</option>');
-					});
-				});
-
-				var table = this;
-
-				$(table.api().table().container()).on('change', 'tfoot select', function () {
-					var val = $.fn.dataTable.util.escapeRegex(
-						$(this).val()
-					);
-
-					table.api()
-						.column($(this).data('index'))
-						.search(val ? '^'+val+'$' : '', true, false)
-						.draw();
-				});*/
 			}
-		});
-		$('a.tab').on('shown.bs.tab', function(e){
-			$($.fn.dataTable.tables(true)).DataTable().columns.adjust();//.draw();
-		});
+			});
+		});*/
 
 		$('.membership-edit').on('click', function(e){
 			e.preventDefault();
@@ -694,9 +758,11 @@ document.addEventListener('DOMContentLoaded', function() {
 			if ($(this).data('api')) {
 				$.ajax({
 					url: $(this).data('api'),
-					type: 'put',
+					type: 'post',
 					data: {
-						membertype: $(this).data('target')
+						userid: $(this).data('userid'),
+						membertype: $(this).data('target'),
+						groupid: $('#groupid').val()
 					},
 					dataType: 'json',
 					async: false,
@@ -799,6 +865,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 @php
 $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own groups') && $group->isManager(auth()->user()));
+$subsection = request()->segment(4);
+$subsection = $subsection ?: 'overview';
 @endphp
 
 	<div class="contentInner">
@@ -820,32 +888,32 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 		</div>
 
 		<div id="everything">
-			<ul class="nav nav-tabs tabs">
+			<ul class="nav nav-tabs">
 				<li class="nav-item">
-					<a href="#DIV_group-overview" id="group-overview" class="nav-link tab active activeTab">
+					<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $group->id]) }}" id="group-overview" class="nav-link tab<?php if ($subsection == 'overview') { echo ' active activeTab'; } ?>">
 						Overview
 					</a>
 				</li>
 			@if ($canManage)
 				<li class="nav-item">
-					<a href="#DIV_group-members" id="group-members" class="nav-link tab">
+					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'members']) }}" id="group-members" class="nav-link tab<?php if ($subsection == 'members') { echo ' active activeTab'; } ?>">
 						Members
 					</a>
 				</li>
 			@endif
 			@foreach ($sections as $section)
 				<li class="nav-item">
-					<a href="#DIV_group-{{ $section['route'] }}" id="group-{{ $section['route'] }}" class="nav-link tab">{{ $section['name'] }}</a>
+					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => $section['route']]) }}" id="group-{{ $section['route'] }}" class="nav-link tab<?php if ($subsection == $section['route']) { echo ' active activeTab'; } ?>">{{ $section['name'] }}</a>
 				</li>
 			@endforeach
 			@if ($canManage)
 				<li class="nav-item">
-					<a href="#DIV_group-motd" id="group-motd" class="nav-link tab">
+					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'motd']) }}" id="group-motd" class="nav-link tab<?php if ($subsection == 'motd') { echo ' active activeTab'; } ?>">
 						Notices
 					</a>
 				</li>
 				<li class="nav-item">
-					<a href="#DIV_group-history" id="group-history" class="nav-link tab">
+					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'history']) }}" id="group-history" class="nav-link tab<?php if ($subsection == 'history') { echo ' active activeTab'; } ?>">
 						History
 					</a>
 				</li>
@@ -854,33 +922,39 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 
 			<input type="hidden" id="groupid" value="{{ $group->id }}" />
 			<input type="hidden" id="HIDDEN_property_{{ $group->id }}" value="{{ $group->id }}" />
-			<!-- <div class="tabMain" id="tabMain"> -->
 
-				<div id="DIV_group-overview">
-					@include('groups::site.group.overview', ['group' => $group])
-				</div><!-- / #group-overview -->
+			@if ($subsection == 'overview')
+			<div id="DIV_group-overview">
+				@include('groups::site.group.overview', ['group' => $group])
+			</div><!-- / #group-overview -->
+			@endif
 
-				<div id="DIV_group-members" class="stash">
-					@include('groups::site.group.members', ['group' => $group])
-				</div><!-- / #group-members -->
+			@if ($subsection == 'members')
+			<div id="DIV_group-members">
+				@include('groups::site.group.members', ['group' => $group])
+			</div><!-- / #group-members -->
+			@endif
 
 			@foreach ($sections as $section)
-				<div id="DIV_group-{{ $section['route'] }}" class="stash">
+				@if ($subsection == $section['route'])
+				<div id="DIV_group-{{ $section['route'] }}">
 					{{ $section['content'] }}
 				</div>
+				@endif
 			@endforeach
 
 			@if ($canManage)
-				<div id="DIV_group-motd" class="stash">
+				@if ($subsection == 'motd')
+				<div id="DIV_group-motd">
 					@include('groups::site.group.motd', ['group' => $group])
 				</div><!-- / #group-motd -->
+				@endif
 
-				<div id="DIV_group-history" class="stash">
+				@if ($subsection == 'history')
+				<div id="DIV_group-history">
 					@include('groups::site.group.history', ['group' => $group])
 				</div><!-- / #group-history -->
+				@endif
 			@endif
-
-			<!--</div>-->
 		</div><!-- / #everything -->
-
 	</div><!-- / .contentInner -->

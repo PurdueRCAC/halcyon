@@ -38,9 +38,12 @@ class Orders
 		$content = null;
 		$client = app('isAdmin') ? 'admin' : 'site';
 
-		$content = view('orders::' . $client . '.orders.group', [
-			'group' => $group
-		]);
+		if ($event->getActive() == 'orders' || $client == 'admin')
+		{
+			$content = view('orders::' . $client . '.orders.group', [
+				'group' => $group
+			]);
+		}
 
 		$event->addSection(
 			'orders',

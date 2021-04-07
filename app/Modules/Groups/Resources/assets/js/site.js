@@ -108,6 +108,21 @@ document.addEventListener('DOMContentLoaded', function () {
 		CreateNewGroupVal(0, $(this), parseInt($(this).data('all-groups')));
 	});
 
+	$('.edit-categories').on('click', function (e) {
+		e.preventDefault();
+
+		var container = $($(this).attr('href'));
+		container.find('.edit-show').removeClass('hide');
+		container.find('.edit-hide').addClass('hide');
+	});
+	$('.cancel-categories').on('click', function (e) {
+		e.preventDefault();
+
+		var container = $($(this).attr('href'));
+		container.find('.edit-hide').removeClass('hide');
+		container.find('.edit-show').addClass('hide');
+	});
+
 	$('.add-category').on('click', function (e) {
 		e.preventDefault();
 

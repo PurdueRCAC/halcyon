@@ -134,11 +134,8 @@ class UnixGroupMembers
 		$dirs = Directory::query()
 			->where('unixgroupid', '=', $event->member->unixgroupid)
 			->where('bytes', '<>', 0)
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->withTrashed()
+			->whereIsActive()
 			->get();
 
 		if (!count($dirs))

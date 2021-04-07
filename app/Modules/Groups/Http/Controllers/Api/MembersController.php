@@ -231,22 +231,59 @@ class MembersController extends Controller
 		$groupid = $request->input('groupid');
 		$userid  = $request->input('userid');
 
-		$exists = Member::findByGroupAndUser($groupid, $userid);
+		$row = Member::findByGroupAndUser($groupid, $userid);
 
-		if ($exists)
+		if (!$row)
 		{
-			return $exists; //response()->json(['message' => trans('groups::groups.group membership already exists')], 415);
+			$row = new Member;
 		}
 
-		$row = new Member;
 		$row->groupid = $groupid;
+
+		if (!$row->group)
+		{
+			return response()->json(['message' => trans('groups::groups.error.invalid group id')], 415);
+		}
+
 		$row->userid = $userid;
+
+		if (!$row->user)
+		{
+			return response()->json(['message' => trans('groups::groups.error.invalid user id')], 415);
+		}
+
+		// Do not allow non-admins to remove himself as an owner.
+		// This would just invite too many potential problems.
+		if ($row->isManager()
+		 && $request->has('membertype')
+		 && $request->input('membertype') != 2
+		 && !auth()->user()->can('manage groups'))
+		{
+			if ($row->userid == auth()->user()->id)
+			{
+				return response()->json(['message' => trans('groups::groups.error.cannot remove self as owner')], 409);
+			}
+		}
+
 		$row->membertype = $request->input('membertype', 1);
+
+		if ($row->isManager())
+		{
+			$row->notice = 21;
+		}
+
+		// Do we have any owners?
+		// If not, there's no one else to notify
+		if (count($row->group->managers) == 0)
+		{
+			$row->notice = 0;
+		}
+
 		$row->userrequestid = $request->input('userrequestid', 0);
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
 		return $row;
@@ -347,6 +384,18 @@ class MembersController extends Controller
 
 		if ($request->has('membertype'))
 		{
+			// Do not allow non-admins to remove himself as an owner.
+			// This would just invite too many potential problems.
+			if ($row->isManager()
+			 && $request->input('membertype') != 2
+			 && !auth()->user()->can('manage groups'))
+			{
+				if ($row->userid == auth()->user()->id)
+				{
+					return response()->json(['message' => trans('Cannot remove self as owner of a group')], 409);
+				}
+			}
+
 			$row->membertype = $request->input('membertype');
 		}
 

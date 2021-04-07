@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Storage\Listeners\Messages;
 use App\Modules\Storage\Listeners\Resources;
+use App\Modules\Storage\Listeners\GroupMembers;
 use App\Modules\Storage\Listeners\UnixGroupMembers;
 use App\Modules\Storage\Listeners\Notifications;
 use App\Modules\Storage\Listeners\UserStorage;
@@ -56,6 +57,7 @@ class ModuleServiceProvider extends ServiceProvider
 
 		if (is_dir(dirname(dirname(__DIR__))) . '/Groups')
 		{
+			$this->app['events']->subscribe(new GroupMembers);
 			$this->app['events']->subscribe(new UnixGroupMembers);
 		}
 

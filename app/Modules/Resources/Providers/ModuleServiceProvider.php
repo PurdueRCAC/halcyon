@@ -5,6 +5,8 @@ namespace App\Modules\Resources\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Resources\Console\EmailSchedulingCommand;
+use App\Modules\Resources\Listeners\Groups;
+use App\Modules\Resources\Listeners\Queues;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -36,6 +38,16 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		if (is_dir(dirname(dirname(__DIR__))) . '/Queues')
+		{
+			$this->app['events']->subscribe(new Queues);
+		}
+
+		if (is_dir(dirname(dirname(__DIR__))) . '/Groups')
+		{
+			$this->app['events']->subscribe(new Groups);
+		}
 	}
 
 	/**

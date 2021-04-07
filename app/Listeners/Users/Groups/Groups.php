@@ -249,7 +249,10 @@ class Groups
 						route('site.users.account.section.show', array_merge($r, ['id' => $id]))
 					);
 
-				event($e = new GroupDisplay($group, 'details'));
+				$subsection = request()->segment(4);
+				$subsection = $subsection ?: 'overview';
+
+				event($e = new GroupDisplay($group, $subsection));
 				$sections = collect($e->getSections());
 
 				$content = view('groups::site.group', [

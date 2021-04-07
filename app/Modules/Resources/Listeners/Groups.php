@@ -1,0 +1,99 @@
+<?php
+
+namespace App\Modules\Resources\Listeners;
+
+use App\Modules\Groups\Events\MemberCreated;
+use App\Modules\Resources\Events\ResourceMemberStatus;
+use App\Modules\Resources\Events\ResourceMemberCreated;
+use App\Modules\Resources\Models\Asset;
+use App\Modules\Resources\Models\Child;
+use App\Modules\Queues\Models\Queue;
+
+/**
+ * Group listener
+ */
+class Groups
+{
+	/**
+	 * Register the listeners for the subscriber.
+	 *
+	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @return void
+	 */
+	public function subscribe($events)
+	{
+		$events->listen(MemberCreated::class, self::class . '@handleMemberCreated');
+	}
+
+	/**
+	 * Plugin that loads module positions within content
+	 *
+	 * @param   string   $context  The context of the content being passed to the plugin.
+	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @return  void
+	 */
+	public function handleMemberCreated(MemberCreated $event)
+	{
+		$member = $event->member;
+
+		if (!$member || !$member->isManager())
+		{
+			return;
+		}
+
+		$q = (new Queue)->getTable();
+		$s = (new Child)->getTable();
+		$r = (new Asset)->getTable();
+
+		// Get hosts this group has resources on
+		$data = $member->group->queues()
+			->withTrashed()
+			->select($s . '.resourceid')
+			->join($s, $s . '.subresourceid', $q . '.subresourceid')
+			->join($r, $r . '.id', $s . '.resourceid')
+			->where(function($wher) use ($q)
+			{
+				$wher->whereNull($q . '.datetimeremoved')
+					->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where(function($wher) use ($r)
+			{
+				$wher->whereNull($r . '.datetimeremoved')
+					->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->get();
+
+		foreach ($data as $row)
+		{
+			// Look up the current resource
+			$asset = Asset::findOrFail($row->resourceid);
+
+			if (!$asset || $asset->isTrashed())
+			{
+				continue;
+			}
+
+			// Look up the ACMaint role name of the resource
+			if (!$asset->rolename)
+			{
+				continue;
+			}
+
+			// Call central accounting service to request status
+			event($resourcemember = new ResourceMemberStatus($asset, $member->user));
+
+			if ($resourcemember->status <= 0)
+			{
+				error_log(__METHOD__ . '(): Bad status for `resourcemember` ' . $copyobj->user);
+				continue;
+			}
+
+			if ($resourcemember->status == 1
+			 || $resourcemember->status == 4)
+			{
+				// Make call to resourcemember to generate role
+				event($event = new ResourceMemberCreated($asset, $member->user));
+			}
+		}
+	}
+}

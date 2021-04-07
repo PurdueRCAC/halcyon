@@ -31,9 +31,12 @@ class Queues
 		$group = $event->getGroup();
 		$client = app('isAdmin') ? 'admin' : 'site';
 
-		$content = view('queues::site.group', [
-			'group' => $group
-		]);
+		if ($event->getActive() == 'queues' || $client == 'admin')
+		{
+			$content = view('queues::site.group', [
+				'group' => $group
+			]);
+		}
 
 		$event->addSection(
 			'queues',

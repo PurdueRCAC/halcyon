@@ -267,6 +267,9 @@ li.resource_list {
 	list-style: circle outside none;
 	margin-left: 1.25em;
 }
+.contentInner .list-group-flush .list-group-item {
+	margin-left: 0;
+}
 
 .contentInner ul.nav-tabs li {
 	list-style: none;
@@ -2498,6 +2501,9 @@ img.align-right {
 	fill: currentColor;
 }
 
+.contentInner .select2-container {
+    width: 100% !important;
+}
 .contentInner .select2-container .select2-selection--single {
 	height: 34px;
 }
@@ -2589,9 +2595,9 @@ html .select2-container--default.select2-container--focus .select2-selection--mu
 body table.dataTable {
 	margin: 0 !important;
 }
-/*body table.dataTable tr.odd {
+body table.dataTable tr {
 	background-color: #fff;
-}*/
+}
 body table.dataTable tr:first-child td {
 	border-top: none;
 }

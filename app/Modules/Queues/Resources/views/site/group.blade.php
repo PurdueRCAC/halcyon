@@ -129,22 +129,22 @@
 					@if (auth()->user()->can('edit.state queues'))
 					<td>
 						@if ($q->enabled)
-							<a class="set-queue-status btn-enable tip"
+							<a class="set-queue-status btn-enable"
 								href="{{ route('admin.queues.disable', ['id' => $q->id]) }}"
 								data-api="{{ route('api.queues.update', ['id' => $q->id]) }}"
 								data-queue="{{ $q->id }}"
 								data-status="0"
-								title="{{ trans('queues::queues.disable scheduling') }}">
-								<i class="fa fa-ban" aria-hidden="true"></i> {{ trans('queues::queues.disable scheduling') }}
+								title="{{ trans('queues::queues.stop scheduling') }}">
+								<i class="fa fa-ban" aria-hidden="true"></i> {{ trans('queues::queues.stop scheduling') }}
 							</a>
 						@else
-							<a class="set-queue-status btn-disable tip"
+							<a class="set-queue-status btn-disable"
 								href="{{ route('admin.queues.enable', ['id' => $q->id]) }}"
 								data-api="{{ route('api.queues.update', ['id' => $q->id]) }}"
 								data-queue="{{ $q->id }}"
 								data-status="1"
-								title="{{ trans('queues::queues.enable scheduling') }}">
-								<i class="fa fa-check" aria-hidden="true"></i> {{ trans('queues::queues.enable scheduling') }}
+								title="{{ trans('queues::queues.start scheduling') }}">
+								<i class="fa fa-check" aria-hidden="true"></i> {{ trans('queues::queues.start scheduling') }}
 							</a>
 						@endif
 					</td>

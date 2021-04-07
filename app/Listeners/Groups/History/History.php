@@ -31,9 +31,12 @@ class History
 		$group = $event->getGroup();
 		$client = app('isAdmin') ? 'admin' : 'site';
 
+		if ($event->getActive() == 'history' || $client == 'admin')
+		{
 		$content = view('groups::site.group.history', [
 			'group' => $group
 		]);
+		}
 
 		$event->addSection(
 			'history',

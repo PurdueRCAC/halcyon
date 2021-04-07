@@ -30,11 +30,29 @@
 	</div>
 </div>
 
-<div class="card panel panel-default">
+<div class="card panel panel-default" id="departments">
 	<div class="card-header panel-heading">
-		Departments
+		<div class="row">
+			<div class="col-md-11">
+				Departments
+			</div>
+			<div class="col-md-1 text-right">
+				@if ($canManage)
+					<a href="#departments"
+						class="edit edit-categories edit-hide tip"
+						title="{{ trans('global.button.edit') }}">
+						<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>
+					</a>
+					<a href="#departments"
+						class="cancel cancel-categories edit-show hide tip"
+						title="{{ trans('global.button.cancel') }}">
+						<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.cancel') }}</span>
+					</a>
+				@endif
+			</div>
+		</div>
 	</div>
-	<ul class="list-group list-group-flush">
+	<ul class="list-group list-group-flush mb-0">
 		@if ($group->departments()->count())
 			@foreach ($group->departments as $dept)
 				<li class="list-group-item" id="department-{{ $dept->id }}" data-id="{{ $dept->id }}">
@@ -50,7 +68,7 @@
 							@endforeach
 							{{ $dept->department->name }}
 						</div>
-						<div class="col-md-1 text-right">
+						<div class="col-md-1 text-right edit-show hide">
 							@if ($canManage)
 								<a href="#department-{{ $dept->id }}"
 									class="delete delete-department remove-category tip"
@@ -65,15 +83,15 @@
 				</li>
 			@endforeach
 		@elseif (!$canManage)
-			<li class="list-group-item"><span class="none">{{ trans('global.none') }}</span></li>
+			<li class="list-group-item edit-hide"><span class="none">{{ trans('global.none') }}</span></li>
 		@endif
 		@if ($canManage)
-			<li class="list-group-item hidden" id="department-{id}" data-id="{id}">
+			<li class="list-group-item hide" id="department-{id}" data-id="{id}">
 				<div class="row">
 					<div class="col-md-11">
 						{name}
 					</div>
-					<div class="text-right">
+					<div class="col-md-1 text-right edit-show">
 						<a href="#department-{id}"
 							class="delete delete-department remove-category tip"
 							title="{{ trans('global.button.delete') }}"
@@ -84,7 +102,7 @@
 					</div>
 				</div>
 			</li>
-			<li class="list-group-item">
+			<li class="list-group-item edit-show hide">
 				<div class="row">
 					<div class="col-md-11">
 						<select name="department" id="new-department" data-category="collegedeptid" class="form-control searchable-select">
@@ -138,11 +156,29 @@
 	</script> -->
 </div>
 
-<div class="card panel panel-default">
+<div class="card panel panel-default" id="fieldofscience">
 	<div class="card-header panel-heading">
-		Field of Science
+		<div class="row">
+			<div class="col-md-11">
+				Field of Science
+			</div>
+			<div class="col-md-1 text-right">
+				@if ($canManage)
+					<a href="#fieldofscience"
+						class="edit edit-categories edit-hide tip"
+						title="{{ trans('global.button.edit') }}">
+						<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>
+					</a>
+					<a href="#fieldofscience"
+						class="cancel cancel-categories edit-show hide tip"
+						title="{{ trans('global.button.cancel') }}">
+						<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.cancel') }}</span>
+					</a>
+				@endif
+			</div>
+		</div>
 	</div>
-	<ul class="list-group list-group-flush">
+	<ul class="list-group list-group-flush mb-0">
 		@if ($group->fieldsOfScience()->count())
 			@foreach ($group->fieldsOfScience as $field)
 				<li class="list-group-item" id="fieldofscience-{{ $field->id }}" data-id="{{ $field->id }}">
@@ -154,7 +190,7 @@
 							@endforeach
 							{{ $field->field->name }}
 						</div>
-						<div class="col-md-1 text-right">
+						<div class="col-md-1 edit-show hide text-right">
 							@if ($canManage)
 								<a href="#fieldofscience-{{ $field->id }}"
 									class="delete delete-fieldofscience remove-category tip"
@@ -172,12 +208,12 @@
 			<li class="list-group-item"><span class="none">{{ trans('global.none') }}</span></li>
 		@endif
 		@if ($canManage)
-			<li class="list-group-item hidden" id="fieldofscience-{id}" data-id="{id}">
+			<li class="list-group-item hide" id="fieldofscience-{id}" data-id="{id}">
 				<div class="row">
 					<div class="col-md-11">
 						{name}
 					</div>
-					<div class="col-md-1 text-right">
+					<div class="col-md-1 edit-show text-right">
 						<a href="#fieldofscience-{id}"
 							class="delete delete-fieldofscience remove-category tip"
 							title="{{ trans('global.button.delete') }}"
@@ -188,7 +224,7 @@
 					</div>
 				</div>
 			</li>
-			<li class="list-group-item">
+			<li class="list-group-item edit-show hide">
 				<div class="row">
 					<div class="col-md-11">
 						<select name="fieldofscience" id="new-fieldofscience" data-category="fieldofscienceid" class="form-control searchable-select">
