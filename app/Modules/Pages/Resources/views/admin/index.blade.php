@@ -180,7 +180,7 @@ app('pathway')
 					{!! Html::grid('sort', trans('pages::pages.updated'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4">
-					Visits
+					7 Day Trend
 				</th>
 			</tr>
 		</thead>
