@@ -2,19 +2,19 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="mode" type="list" default="0" label="listeners.content.externalhref::externalhref.params.MODE_LABEL" description="listeners.content.externalhref::externalhref.params.MODE_DESC">
-				<option value="0">listeners.content.externalhref::externalhref.params.MODE_SETIF</option>
-				<option value="1">listeners.content.externalhref::externalhref.params.MODE_FORCE</option>
-				<option value="2">listeners.content.externalhref::externalhref.params.MODE_STRIP</option>
-				<option value="3">listeners.content.externalhref::externalhref.params.MODE_NOCHANGE</option>
+			<field name="mode" type="list" default="0" label="listener.content.externalhref::externalhref.params.MODE_LABEL" description="listener.content.externalhref::externalhref.params.MODE_DESC">
+				<option value="0">listener.content.externalhref::externalhref.params.MODE_SETIF</option>
+				<option value="1">listener.content.externalhref::externalhref.params.MODE_FORCE</option>
+				<option value="2">listener.content.externalhref::externalhref.params.MODE_STRIP</option>
+				<option value="3">listener.content.externalhref::externalhref.params.MODE_NOCHANGE</option>
 			</field>
-			<field name="target" type="list" default="0" label="listeners.content.externalhref::externalhref.params.TARGET_LABEL" description="listeners.content.externalhref::externalhref.params.TARGET_DESC">
-				<option value="0">listeners.content.externalhref::externalhref.params.TARGET_IFSET</option>
-				<option value="1">listeners.content.externalhref::externalhref.params.TARGET_BLANK</option>
-				<option value="2">listeners.content.externalhref::externalhref.params.TARGET_PARENT</option>
-				<option value="3">listeners.content.externalhref::externalhref.params.TARGET_NOCHANGE</option>
+			<field name="target" type="list" default="0" label="listener.content.externalhref::externalhref.params.TARGET_LABEL" description="listener.content.externalhref::externalhref.params.TARGET_DESC">
+				<option value="0">listener.content.externalhref::externalhref.params.TARGET_IFSET</option>
+				<option value="1">listener.content.externalhref::externalhref.params.TARGET_BLANK</option>
+				<option value="2">listener.content.externalhref::externalhref.params.TARGET_PARENT</option>
+				<option value="3">listener.content.externalhref::externalhref.params.TARGET_NOCHANGE</option>
 			</field>
-			<field name="classes" type="textarea" default="" label="listeners.content.externalhref::externalhref.params.CSS_LABEL" description="listeners.content.externalhref::externalhref.params.CSS_DESC" rows="10" cols="25" />
+			<field name="classes" type="textarea" default="" label="listener.content.externalhref::externalhref.params.CSS_LABEL" description="listener.content.externalhref::externalhref.params.CSS_DESC" rows="10" cols="25" />
 		</fieldset>
 	</fields>
 </config>
