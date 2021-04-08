@@ -93,7 +93,7 @@ app('pathway')
 				<th scope="col">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('listeners::listeners.state'), 'enabled', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="priority-3">
+				<th scope="col" class="priority-3 text-center">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('listeners::listeners.ordering'), 'ordering', $filters['order_dir'], $filters['order']); ?>
 				</th>
 				<th scope="col" class="priority-4">
@@ -152,27 +152,27 @@ app('pathway')
 				<td>
 					@if ($canEdit)
 						@if ($row->enabled)
-							<a class="btn btn-sm btn-success" data-tip="{{ trans('listeners::listeners.click to unpublish') }}" href="{{ route('admin.listeners.unpublish', ['id' => $row->id]) }}">
+							<a class="badge badge-success" data-tip="{{ trans('listeners::listeners.click to unpublish') }}" href="{{ route('admin.listeners.unpublish', ['id' => $row->id]) }}">
 								{{ trans('listeners::listeners.published') }}
 							</a>
 						@else
-							<a class="btn btn-sm btn-secondary" data-tip="{{ trans('listeners::listeners.click to publish') }}" href="{{ route('admin.listeners.publish', ['id' => $row->id]) }}">
+							<a class="badge badge-secondary" data-tip="{{ trans('listeners::listeners.click to publish') }}" href="{{ route('admin.listeners.publish', ['id' => $row->id]) }}">
 								{{ trans('listeners::listeners.unpublished') }}
 							</a>
 						@endif
 					@else
 						@if ($row->enabled)
-							<span class="state published">
+							<span class="badge badge-success">
 								{{ trans('listeners::listeners.published') }}
 							</span>
 						@else
-							<span class="state unpublished">
+							<span class="badge badge-secondary">
 								{{ trans('listeners::listeners.unpublished') }}
 							</span>
 						@endif
 					@endif
 				</td>
-				<td class="priority-3">
+				<td class="priority-3 text-center">
 					{{ $row->ordering }}
 				</td>
 				<td class="priority-5">

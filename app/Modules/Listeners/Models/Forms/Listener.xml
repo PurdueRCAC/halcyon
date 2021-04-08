@@ -14,7 +14,7 @@
 			type="text"
 			label="listeners::listeners.name"
 			description="listeners::listeners.name desc"
-			class="form-control-plaintext"
+			class="form-control"
 			readonly="true" />
 
 		<field
@@ -36,7 +36,7 @@
 		<field
 			name="folder"
 			type="text"
-			class="form-control-plaintext"
+			class="form-control"
 			size="20"
 			label="listeners::listeners.folder"
 			description="listeners::listeners.folder desc"
@@ -45,7 +45,7 @@
 		<field
 			name="element"
 			type="text"
-			class="form-control-plaintext"
+			class="form-control"
 			size="20"
 			label="listeners::listeners.element"
 			description="listeners::listeners.element desc"
