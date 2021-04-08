@@ -1,6 +1,6 @@
 @if (!request()->ajax())
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js {{ app('themes')->getActiveTheme()->getParams('mode', 'light') }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js" data-mode="{{ auth()->user()->facet('theme.admin.mode', app('themes')->getActiveTheme()->getParams('mode', 'light')) }}">
 	<head>
 		<!-- Metadata -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -8,6 +8,10 @@
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta name="base-url" content="{{ rtrim(url('/'), '/') }}">
 		<meta name="api-token" content="{{ (Auth::user() ? Auth::user()->api_token : '') }}">
+		<meta name="theme-color" content="#000000">
+		<meta name="color-scheme" content="light dark">
+
+		<title>{{ config('app.name') }} - {{ trans('theme::admin.error') }}@hasSection('title'): @yield('title')@endif</title>
 
 		<!-- Styles -->
 		<?php
@@ -37,9 +41,9 @@
 		<?php
 		$scripts = array(
 			'modules/core/vendor/jquery/jquery.min.js',
+			//'modules/core/vendor/bootstrap/bootstrap.bundle.min.js',
 			'modules/core/vendor/jquery-ui/jquery-ui.min.js',
 			'modules/core/vendor/jquery-timepicker/jquery.timepicker.js',
-			//'modules/core/vendor/bootstrap/bootstrap.bundle.min.js',
 			'modules/core/js/core.js',
 			'themes/admin/js/index.js',
 		);
@@ -57,9 +61,13 @@
 					<a href="{{ url()->to('/') }}">
 						<span class="logo-container">
 							<span class="logo-shim"></span>
-							<?php echo file_get_contents(app_path('Themes/Admin/assets/images/halcyon.svg')); ?>
+							@if ($file = app('themes')->getActiveTheme()->getParams('logo'))
+								<img src="{{ asset($file) }}" alt="" width="47" />
+							@else
+								<?php echo file_get_contents(app_path('Themes/Admin/assets/images/halcyon.svg')); ?>
+							@endif
 						</span>
-						{{ config('app.name') }}
+						<span class="app-name">{{ config('app.name') }}</span>
 					</a>
 				</h1>
 
@@ -101,7 +109,7 @@
 				</ul>
 			</header><!-- / #header -->
 
-			<div id="container-component">
+			<div id="container-module">
 				<main id="error-content">
 @endif
 						@yield('content')

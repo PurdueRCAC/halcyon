@@ -43,9 +43,9 @@
 		<?php
 		$scripts = array(
 			'modules/core/vendor/jquery/jquery.min.js',
+			//'modules/core/vendor/bootstrap/bootstrap.bundle.min.js',
 			'modules/core/vendor/jquery-ui/jquery-ui.min.js',
 			'modules/core/vendor/jquery-timepicker/jquery.timepicker.js',
-			//'modules/core/vendor/bootstrap/bootstrap.bundle.min.js',
 			'modules/core/js/core.js',
 			'themes/admin/js/index.js',
 		);
