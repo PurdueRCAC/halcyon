@@ -122,8 +122,6 @@ class Report extends Model
 
 				$model->setTags($tags);
 			}
-
-			return true;
 		});
 
 		static::updated(function ($model)
@@ -141,8 +139,6 @@ class Report extends Model
 
 				$model->setTags($tags);
 			}
-
-			return true;
 		});
 	}
 

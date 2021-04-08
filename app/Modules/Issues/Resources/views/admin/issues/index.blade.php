@@ -39,7 +39,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('issues.name') !!}
+{{ trans('issues::issues.module name') }}
 @stop
 
 @section('content')
@@ -153,7 +153,7 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-6">
+			<div class="col col-md-5">
 				<div class="form-group">
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
@@ -163,16 +163,31 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col col-md-3">
+				@if ($filters['tag'])
+				<span class="input-group">
+					<span class="form-control">
+						<span class="tag badge badge-secondary">
+							{{ $filters['tag'] }}
+							<a href="{{ route('admin.issues.index', ['tag' => '']) }}" class="icon-x glyph fa fa-times">x</a>
+						</span>
+					</span>
+					<span class="input-group-append">
+						<span class="input-group-text"><span class="icon-tag glyph">Tags</span></span>
+					</span>
+				</span>
+				@endif
+			</div>
+			<div class="col col-md-2">
 				<label class="sr-only" for="filter_start">{{ trans('issues::issues.start') }}</label>
 				<span class="input-group">
-					<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="Start date" />
+					<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" size="10" value="{{ $filters['start'] }}" placeholder="Start date" />
 					<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span>
 				</span>
 			</div>
-			<div class="col col-md-3">
+			<div class="col col-md-2">
 				<label class="sr-only" for="filter_stop">{{ trans('issues::issues.stop') }}</label>
 				<span class="input-group">
-					<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="End date" />
+					<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" size="10" value="{{ $filters['stop'] }}" placeholder="End date" />
 					<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
 				</span>
 			</div>
@@ -231,6 +246,12 @@ app('pathway')
 						<span>
 							{{ Illuminate\Support\Str::limit($row->report, 70) }}
 						</span>
+					@endif
+					@if (count($row->tags))
+						<br />
+						@foreach ($row->tags as $tag)
+							<a class="tag badge badge-sm badge-secondary" href="{{ route('admin.issues.index', ['tag' => $tag->slug]) }}">{{ $tag->name }}</a>
+						@endforeach
 					@endif
 				</td>
 				<td class="priority-4">

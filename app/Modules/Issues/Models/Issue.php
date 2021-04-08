@@ -11,13 +11,14 @@ use App\Modules\Core\Traits\LegacyTrash;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Modules\Issues\Events\IssuePrepareContent;
 use App\Modules\Users\Models\User;
+use App\Modules\Tags\Traits\Taggable;
 
 /**
  * Issue model
  */
 class Issue extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
+	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash, Taggable;
 
 	/**
 	 * The name of the "created at" column.
@@ -101,6 +102,58 @@ class Issue extends Model
 		'preblocks'  => array(),
 		'codeblocks' => array()
 	);
+
+	/**
+	 * Tag namespace
+	 *
+	 * @var  string
+	 */
+	static $entityNamespace = 'issues';
+
+	/**
+	 * Runs extra setup code when creating/updating a new model
+	 *
+	 * @return  void
+	 */
+	protected static function boot()
+	{
+		parent::boot();
+
+		// Parse out hashtags and tag the record
+		static::created(function ($model)
+		{
+			preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $model->report, $matches);
+
+			if (!empty($matches[0]))
+			{
+				$tags = array();
+
+				foreach ($matches[0] as $match)
+				{
+					$tags[] = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+				}
+
+				$model->setTags($tags);
+			}
+		});
+
+		static::updated(function ($model)
+		{
+			preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $model->report, $matches);
+
+			if (!empty($matches[0]))
+			{
+				$tags = array();
+
+				foreach ($matches[0] as $match)
+				{
+					$tags[] = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+				}
+
+				$model->setTags($tags);
+			}
+		});
+	}
 
 	/**
 	 * Defines a relationship to updates

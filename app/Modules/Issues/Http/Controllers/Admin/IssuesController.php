@@ -25,10 +25,11 @@ class IssuesController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
-			'group'    => null,
-			'start'    => null,
-			'stop'     => null,
-			'notice'   => '*',
+			'tag'       => '',
+			'group'     => null,
+			'start'     => null,
+			'stop'      => null,
+			'notice'    => '*',
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			'order'     => Issue::$orderBy,
@@ -52,6 +53,11 @@ class IssuesController extends Controller
 
 		$query = Issue::query()
 			->where('issuetodoid', '=', 0);
+
+		if ($filters['tag'])
+		{
+			$query->withTag($filters['tag']);
+		}
 
 		if ($filters['search'])
 		{
