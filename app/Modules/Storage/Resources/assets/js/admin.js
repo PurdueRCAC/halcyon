@@ -444,6 +444,14 @@ function ResetPermissions(btn) {
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function() {
+	if ($('.searchable-select').length) {
+		$('.searchable-select').select2()
+			.on('select2:select', function (e) {
+				if ($(this).hasClass('filter-submit')) {
+					$(this).closest('form').submit();
+				}
+			});
+	}
 	/*var autocompleteUsers = function(url) {
 		return function(request, response) {
 			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {

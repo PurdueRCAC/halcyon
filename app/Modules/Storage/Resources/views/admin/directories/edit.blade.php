@@ -53,6 +53,19 @@ app('pathway')
 
 @section('content')
 <form action="{{ route('admin.storage.directories.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+
+	<div class="tabs">
+		<ul>
+			<li>
+				<a href="#dir-details">{{ trans('global.details') }}</a>
+			</li>
+			<li>
+				<a href="#dir-messages">{{ trans('storage::storage.messages') }}</a>
+			</li>
+		</ul>
+
+		<div id="dir-details">
+
 	<div class="row">
 		<div class="col-md-7">
 			<fieldset class="adminform">
@@ -72,10 +85,14 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-name">{{ trans('storage::storage.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					@if ($row->storageResource && $row->storageResource->path)
 					<span class="input-group">
 						<span class="input-group-prepend"><span class="input-group-text"><span id="storageresourceid_path">{{ $row->storageResource ? rtrim($row->storageResource->path, '/') : '' }}</span>{{ $row->parent ? '/' . trim($row->parent->path, '/') : '' }}/<span id="new_dir_path"></span></span></span>
+					@endif
 						<input type="text" name="fields[name]" id="field-name" class="form-control required" pattern="^([a-zA-Z0-9]+\.?[\-_ ]*)*[a-zA-Z0-9]$" required value="{{ $row->name }}" />
+					@if ($row->storageResource && $row->storageResource->path)
 					</span>
+					@endif
 					<span class="form-text text-muted">{{ trans('storage::storage.name desc') }}</span>
 				</div>
 
@@ -105,10 +122,13 @@ app('pathway')
 					<input type="text" name="fields[bytes]" id="field-bytes" class="form-control" value="{{ App\Halcyon\Utility\Number::formatBytes($row->bytes) }}" />
 					<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 				</div>
-
-
-					<table class="table table-hover table-bordered">
-						<caption>{{ trans('storage::storage.permissions') }}</caption>
+			</fieldset>
+		</div>
+		<div class="col-md-5">
+			<fieldset class="adminform">
+				<legend>{{ trans('storage::storage.permissions') }}</legend>
+					<table class="table table-hover table-bordered mb-3">
+						<caption class="sr-only">{{ trans('storage::storage.permissions') }}</caption>
 						<thead>
 							<tr>
 								<th scope="col">{{ trans('storage::storage.permission.level') }}</th>
@@ -167,11 +187,9 @@ app('pathway')
 
 			</fieldset>
 		</div>
-		<div class="col-md-5">
-			@include('history::admin.history')
-		</div>
 	</div>
-
+		</div><!-- / #dir-details -->
+		<div id="dir-messages">
 	<fieldset class="adminform">
 		<legend>{{ trans('storage::storage.messages') }}</legend>
 
@@ -188,6 +206,7 @@ app('pathway')
 				</tr>
 			</thead>
 			<tbody>
+			@if (count($row->messages))
 				@foreach ($row->messages as $message)
 					<tr>
 						<td><span class="badge badge-{{ $message->status == 'completed' ? 'success' : 'warning' }}">{{ trans('messages::messages.' . $message->status) }}</span></td>
@@ -210,9 +229,18 @@ app('pathway')
 						</td>
 					</tr>
 				@endforeach
+			@else
+				<tr>
+					<td colspan="6" class="text-center">
+						<span class="none">{{ trans('global.none') }}</span>
+					</td>
+				</tr>
+			@endif
 			</tbody>
 		</table>
 	</fieldset>
+	</div><!-- / #dir-messages -->
+						</div><!-- / .tabs -->
 
 	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 	<input type="hidden" name="resourceid" id="resourceid" value="{{ $row->storageResource ? $row->storageResource->parentresourceid : '' }}" />

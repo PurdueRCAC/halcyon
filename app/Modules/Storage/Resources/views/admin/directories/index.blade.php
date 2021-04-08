@@ -69,7 +69,7 @@ if ($parent)
 
 				<label class="sr-only" for="filter_state">{{ trans('storage::storage.resource') }}</label>
 				<select name="resource" class="form-control filter filter-submit">
-					<option value="0"<?php if (!$filters['resource']): echo ' selected="selected"'; endif;?>>{{ trans('storage::storage.all resources') }}</option>
+					<option value="0"<?php if (!$filters['resource']): echo ' selected="selected"'; endif;?>>{{ trans('storage::storage.all storage resources') }}</option>
 					@foreach ($storages as $s)
 						<option value="{{ $s->id }}"<?php if ($filters['resource'] == $s->id): echo ' selected="selected"'; endif;?>>{{ $s->name }}</option>
 					@endforeach
@@ -114,9 +114,6 @@ if ($parent)
 				<th scope="col" class="priority-4 text-right">
 					{{ trans('storage::storage.directories') }}
 				</th>
-				<!-- <th scope="col" class="priority-4">{{ trans('storage::storage.created') }}</th>
-				<th scope="col" class="priority-4">{{ trans('storage::storage.removed') }}</th>
-				<th scope="col" colspan="4">{{ trans('storage::storage.permissions') }} r/w/x</th> -->
 			</tr>
 		</thead>
 		<tbody>
@@ -189,37 +186,9 @@ if ($parent)
 						<a class="btn btn-sm btn-success" href="{{ route('admin.storage.directories.create', ['parent' => $row->id, 'resource' => $row->storageresourceid]) }}">
 							<span class="icon-plus"></span><span class="sr-only">{{ trans('global.add') }}</span>
 						</a>
-						<span class="none">0</span>
+						0
 					@endif
 				</td>
-				<!--<td>
-					@if ($row->ownerread)
-						<span class="state yes">{{ trans('global.yes') }}</span>
-					@else
-						<span class="state no">{{ trans('global.no') }}</span>
-					@endif
-				</td>
-				<td>
-					@if ($row->ownerwrite)
-						<span class="state yes">{{ trans('global.yes') }}</span>
-					@else
-						<span class="state no">{{ trans('global.no') }}</span>
-					@endif
-				</td>
-				<td>
-					@if ($row->groupread)
-						<span class="state yes">{{ trans('global.yes') }}</span>
-					@else
-						<span class="state no">{{ trans('global.no') }}</span>
-					@endif
-				</td>
-				<td>
-					@if ($row->groupwrite)
-						<span class="state yes">{{ trans('global.yes') }}</span>
-					@else
-						<span class="state no">{{ trans('global.no') }}</span>
-					@endif
-				</td> -->
 			</tr>
 		@endforeach
 		</tbody>

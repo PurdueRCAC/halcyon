@@ -1,5 +1,14 @@
 @extends('layouts.master')
 
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+@endpush
+
+@push('scripts')
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ Module::asset('storage:js/admin.js') . '?v=' . filemtime(public_path() . '/modules/storage/js/admin.js') }}"></script>
+@endpush
+
 @php
 app('request')->merge(['hidemainmenu' => 1]);
 
@@ -39,7 +48,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-parentresourceid">{{ trans('storage::storage.resource type') }}:</label>
-					<select name="fields[parentresourceid]" id="field-parentresourceid" class="form-control">
+					<select name="fields[parentresourceid]" id="field-parentresourceid" class="form-control searchable-select">
 						<option value="0">{{ trans('global.none') }}</option>
 						<?php foreach ($resources as $resource): ?>
 							<?php $selected = ($resource->id == $row->parentresourceid ? ' selected="selected"' : ''); ?>

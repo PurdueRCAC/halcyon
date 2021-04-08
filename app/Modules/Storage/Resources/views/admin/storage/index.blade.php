@@ -1,6 +1,11 @@
 @extends('layouts.master')
 
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+@endpush
+
 @push('scripts')
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ Module::asset('storage:js/admin.js') . '?v=' . filemtime(public_path() . '/modules/storage/js/admin.js') }}"></script>
 @endpush
 
@@ -62,7 +67,7 @@ app('pathway')
 				</select>
 
 				<label class="sr-only" for="filter_resource">{{ trans('storage::storage.resource') }}</label>
-				<select name="resource" id="filter_resource" class="form-control filter filter-submit">
+				<select name="resource" id="filter_resource" class="form-control filter filter-submit searchable-select">
 					<option value="0">{{ trans('storage::storage.all resources') }}</option>
 					@foreach ($resources as $resource)
 						<option value="{{ $resource->id }}"<?php if ($filters['resource'] == $resource->id): echo ' selected="selected"'; endif;?>>{{ str_repeat('- ', $resource->level) . $resource->name }}</option>
