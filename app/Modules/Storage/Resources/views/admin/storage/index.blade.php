@@ -37,7 +37,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('storage.name') !!}
+{{ trans('storage::storage.module name') }}
 @stop
 
 @section('content')

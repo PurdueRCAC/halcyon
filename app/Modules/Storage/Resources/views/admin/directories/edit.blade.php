@@ -48,7 +48,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('storage.name') !!}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('storage::storage.module name') }}: {{ trans('storage::storage.directories') }}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
 @stop
 
 @section('content')

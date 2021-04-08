@@ -36,7 +36,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('storage.name') !!}
+{{ trans('storage::storage.module name') }}: {{ ($row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create')) }}
 @stop
 
 @section('content')

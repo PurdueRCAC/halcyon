@@ -38,7 +38,7 @@ if ($parent)
 @stop
 
 @section('title')
-{!! config('storage.name') !!}{{ $storage ? ': ' . $storage->name : '' }}
+{{ trans('storage::storage.module name') }}{{ $storage ? ': ' . $storage->name : '' }}: trans('storage::storage.directories')
 @stop
 
 @section('content')

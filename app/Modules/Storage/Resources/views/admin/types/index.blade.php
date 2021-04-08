@@ -32,7 +32,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('storage.name') !!}
+{{ trans('storage::storage.module name') }}: {{ trans('storage::storage.notification types') }}
 @stop
 
 @section('content')
