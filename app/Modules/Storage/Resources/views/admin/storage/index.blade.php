@@ -60,6 +60,14 @@ app('pathway')
 					<option value="active"<?php if ($filters['state'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('global.active') }}</option>
 					<option value="inactive"<?php if ($filters['state'] == 'inactive'): echo ' selected="selected"'; endif;?>>{{ trans('global.inactive') }}</option>
 				</select>
+
+				<label class="sr-only" for="filter_resource">{{ trans('storage::storage.resource') }}</label>
+				<select name="resource" id="filter_resource" class="form-control filter filter-submit">
+					<option value="0">{{ trans('storage::storage.all resources') }}</option>
+					@foreach ($resources as $resource)
+						<option value="{{ $resource->id }}"<?php if ($filters['resource'] == $resource->id): echo ' selected="selected"'; endif;?>>{{ str_repeat('- ', $resource->level) . $resource->name }}</option>
+					@endforeach
+				</select>
 			</div>
 		</div>
 
@@ -153,6 +161,9 @@ app('pathway')
 						<td class="priority-4">
 							@if ($row->parentresourceid)
 								@if ($row->resource)
+									@if ($row->resource->isTrashed())
+										<span class="icon-trash text-danger" aria-hidden="true"></span>
+									@endif
 									<a href="{{ route('admin.resources.edit', ['id' => $row->parentresourceid]) }}">
 										{{ $row->resource->name }}
 									</a>

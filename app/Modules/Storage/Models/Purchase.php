@@ -105,6 +105,7 @@ class Purchase extends Model
 	/**
 	 * Set a query's WHERE clause to include published state
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhenAvailable($query)
@@ -128,6 +129,7 @@ class Purchase extends Model
 	/**
 	 * Set a query's WHERE clause to include published state
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhenNotAvailable($query)
@@ -142,7 +144,7 @@ class Purchase extends Model
 	/**
 	 * Set value in bytes
 	 *
-	 * @param   mixed
+	 * @param   mixed  $value
 	 * @return  void
 	 */
 	public function setBytesAttribute($value)

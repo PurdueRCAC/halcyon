@@ -64,6 +64,22 @@ class StorageResource extends Model
 	];
 
 	/**
+	 * The "booted" method of the model.
+	 *
+	 * @return void
+	 */
+	protected static function booted()
+	{
+		static::deleted(function ($model)
+		{
+			foreach ($model->directories as $directory)
+			{
+				$directory->delete();
+			}
+		});
+	}
+
+	/**
 	 * Defines a relationship to directories
 	 *
 	 * @return  object
@@ -106,6 +122,7 @@ class StorageResource extends Model
 	/**
 	 * Find a record by name
 	 *
+	 * @param   string  $name
 	 * @return  object
 	 */
 	public static function findByName($name)
@@ -123,7 +140,7 @@ class StorageResource extends Model
 	/**
 	 * Set value in bytes
 	 *
-	 * @param   mixed
+	 * @param   mixed  $value
 	 * @return  void
 	 */
 	public function setDefaultquotaspaceAttribute($value)
@@ -148,7 +165,7 @@ class StorageResource extends Model
 	/**
 	 * Set value in bytes
 	 *
-	 * @param   mixed
+	 * @param   mixed  $value
 	 * @return  void
 	 */
 	public function setDefaultquotafileAttribute($value)

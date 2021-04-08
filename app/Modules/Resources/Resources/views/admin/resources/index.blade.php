@@ -93,6 +93,38 @@ app('pathway')
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('resources::resources.resources') }}</caption>
 		<thead>
+			<?php
+			/* Experimental reworking of filters
+			<tr class="filters">
+				@if (auth()->user()->can('delete resources'))
+				<th></th>
+				@endif
+				<th colspan="4">
+					<span class="input-group input-group-sm">
+						<input type="text" name="search" id="filter_search" class="form-control form-control-sm filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					</span>
+				</th>
+				<th>
+					<select name="type" id="filter_type" class="form-control form-control-sm filter filter-submit">
+						<option value="0">{{ trans('resources::assets.all types') }}</option>
+						@foreach ($types as $type)
+							<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id): echo ' selected="selected"'; endif;?>>{{ $type->name }}</option>
+						@endforeach
+					</select>
+				</th>
+				<th>
+					<select name="batchsystem" id="filter_batchsystem" class="form-control form-control-sm filter filter-submit">
+						<option value="0">{{ trans('resources::assets.all batchsystems') }}</option>
+						@foreach ($batchsystems as $batchsystem)
+							<option value="{{ $batchsystem->id }}"<?php if ($filters['batchsystem'] == $batchsystem->id): echo ' selected="selected"'; endif;?>>{{ $batchsystem->name }}</option>
+						@endforeach
+					</select>
+				</th>
+				<th></th>
+				<th></th>
+			</tr>*/
+			?>
 			<tr>
 				@if (auth()->user()->can('delete resources'))
 					<th>

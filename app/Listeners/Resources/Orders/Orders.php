@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Resources\Orders;
 
+use App\Modules\Resources\Events\AssetDeleted;
 use App\Modules\Resources\Events\AssetDisplaying;
 use App\Modules\Orders\Models\Product;
 
@@ -18,6 +19,25 @@ class Orders
 	public function subscribe($events)
 	{
 		$events->listen(AssetDisplaying::class, self::class . '@handleAssetDisplaying');
+		$events->listen(AssetDeleted::class, self::class . '@handleAssetDeleted');
+	}
+
+	/**
+	 * Unpublish linked products when a resource is trashed
+	 *
+	 * @param   AssetDeleted  $event
+	 * @return  void
+	 */
+	public function handleAssetDeleted(AssetDeleted $event)
+	{
+		$products = Product::query()
+			->where('resourceid', '=', $event->asset->id)
+			->get();
+
+		foreach ($products as $product)
+		{
+			$product->delete();
+		}
 	}
 
 	/**

@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Resources\Queues;
 
+use App\Modules\Resources\Events\AssetDeleted;
 use App\Modules\Resources\Events\SubresourceCreated;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\Walltime;
@@ -19,6 +20,24 @@ class Queues
 	public function subscribe($events)
 	{
 		$events->listen(SubresourceCreated::class, self::class . '@handleSubresourceCreated');
+	}
+
+	/**
+	 * Unpublish linked products when a resource is trashed
+	 *
+	 * @param   AssetDeleted  $event
+	 * @return  void
+	 */
+	public function handleAssetDeleted(SubresourceDeleted $event)
+	{
+		$schedulers = Scheduler::query()
+			->where('queuesubresourceid', '=', $event->subresource->id)
+			->get();
+
+		foreach ($schedulers as $scheduler)
+		{
+			$scheduler->delete();
+		}
 	}
 
 	/**

@@ -36,7 +36,7 @@ return [
 	'no storage found' => 'No storage items found for this group.',
 
 	// Misc.
-	'all resources' => '- All Storage -',
+	'all resources' => '- All Resources -',
 	'active' => 'Active',
 	'inactive' => 'Inactive',
 

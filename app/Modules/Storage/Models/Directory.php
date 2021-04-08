@@ -566,6 +566,7 @@ class Directory extends Model
 	/**
 	 * Get directory tree
 	 *
+	 * @param   bool   $expanded
 	 * @return  array
 	 */
 	public function tree($expanded = true)
@@ -611,6 +612,7 @@ class Directory extends Model
 	/**
 	 * Get nested directory tree
 	 *
+	 * @param   array  $items
 	 * @return  array
 	 */
 	public function nested($items = array())
@@ -628,7 +630,7 @@ class Directory extends Model
 	/**
 	 * Set value in bytes
 	 *
-	 * @param   mixed
+	 * @param   mixed  $value
 	 * @return  void
 	 */
 	public function setBytesAttribute($value)

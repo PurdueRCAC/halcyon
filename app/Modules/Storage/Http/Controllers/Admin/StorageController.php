@@ -23,6 +23,7 @@ class StorageController extends Controller
 		$filters = array(
 			'search'   => '',
 			'state'    => 'active',
+			'resource' => null,
 			// Paging
 			'limit'    => config('list_limit', 20),
 			'page'     => 1,
@@ -68,15 +69,23 @@ class StorageController extends Controller
 			}
 		}
 
+		if ($filters['resource'])
+		{
+			$query->where('parentresourceid', '=', $filters['resource']);
+		}
+
 		$rows = $query
 			->withCount('directories')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
+		$resources = (new Asset)->tree();
+
 		return view('storage::admin.storage.index', [
 			'rows'    => $rows,
-			'filters' => $filters
+			'filters' => $filters,
+			'resources' => $resources,
 		]);
 	}
 

@@ -120,7 +120,7 @@ class Usage extends Model
 	/**
 	 * Set value in bytes
 	 *
-	 * @param   mixed
+	 * @param   mixed  $value
 	 * @return  void
 	 */
 	public function setSpaceAttribute($value)

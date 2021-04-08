@@ -173,7 +173,7 @@ class Asset extends Model
 	}
 
 	/**
-	 * Defines a relationship to subresources
+	 * Defines a relationship to child assets
 	 *
 	 * @return  object
 	 */
@@ -183,7 +183,7 @@ class Asset extends Model
 	}
 
 	/**
-	 * Get the resource
+	 * Defines a direct relationship to subresources
 	 *
 	 * @return object
 	 */
@@ -230,6 +230,19 @@ class Asset extends Model
 			$result = $result ?: 1;
 
 			$model->setAttribute('display', (int)$result);
+		});
+
+		static::deleted(function ($model)
+		{
+			foreach ($model->descendents as $child)
+			{
+				$child->delete();
+			}
+
+			foreach ($model->subresources as $subresource)
+			{
+				$subresource->delete();
+			}
 		});
 	}
 
@@ -335,17 +348,22 @@ class Asset extends Model
 	 *
 	 * @throws \Exception
 	 */
-	public function delete()
+	/*public function delete()
 	{
 		$result = parent::delete();
 
-		foreach ($this->children as $child)
+		foreach ($this->descendents as $child)
 		{
 			$child->delete();
 		}
 
+		foreach ($this->subresources as $subresource)
+		{
+			$subresource->delete();
+		}
+
 		return $result;
-	}
+	}*/
 
 	/**
 	 * Retrieve record by name

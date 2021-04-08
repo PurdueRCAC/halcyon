@@ -9,6 +9,7 @@ use App\Modules\Storage\Models\Purchase;
 use App\Modules\Storage\Models\Loan;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\AssetBeforeDisplay;
+use App\Modules\Resources\Events\AssetDeleted;
 
 /**
  * Resources listener
@@ -25,6 +26,28 @@ class Resources
 	{
 		$events->listen(ResourceMemberCreated::class, self::class . '@handleResourceMemberCreated');
 		$events->listen(AssetBeforeDisplay::class, self::class . '@handleAssetBeforeDisplay');
+		$events->listen(AssetDeleted::class, self::class . '@handleAssetDeleted');
+	}
+
+	/**
+	 * Trash storage resources when the parent resource
+	 * is trashed.
+	 *
+	 * @param   object   $event
+	 * @return  void
+	 */
+	public function handleAssetDeleted(AssetDeleted $event)
+	{
+		$data = StorageResource::query()
+			->where('parentresourceid', '=', $event->asset->id)
+			->withTrashed()
+			->whereIsActive()
+			->get();
+
+		foreach ($data as $row)
+		{
+			$row->delete();
+		}
 	}
 
 	/**

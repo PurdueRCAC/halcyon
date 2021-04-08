@@ -2,6 +2,7 @@
 namespace App\Listeners\Resources\Knowledge;
 
 use App\Modules\Resources\Events\AssetDisplaying;
+use App\Modules\Resources\Events\AssetDeleted;
 use App\Modules\Knowledge\Models\Page;
 use App\Modules\Knowledge\Models\Associations;
 use App\Modules\Knowledge\Models\Association;
@@ -20,6 +21,36 @@ class Knowledge
 	public function subscribe($events)
 	{
 		$events->listen(AssetDisplaying::class, self::class . '@handleAssetDisplaying');
+		$events->listen(AssetDeleted::class, self::class . '@handleAssetDeleted');
+	}
+
+	/**
+	 * Unpublish linked pages when a resource is trashed
+	 *
+	 * @param   AssetDeleted  $event
+	 * @return  void
+	 */
+	public function handleAssetDeleted(AssetDeleted $event)
+	{
+		$a = (new Associations)->getTable();
+		$p = (new Page)->getTable();
+
+		$assoc = Associations::query()
+			->select($a . '.*')
+			->join($p, $p . '.id', $a . '.page_id')
+			->where($a . '.path', '=', $event->asset->listname)
+			->where($a . '.state', '=', 1)
+			->whereIn($a . '.access', $access)
+			->orderBy($a . '.id', 'asc')
+			->get()
+			->first();
+
+		if (!$assoc)
+		{
+			return;
+		}
+
+		$assoc->update(['state' => 0]);
 	}
 
 	/**

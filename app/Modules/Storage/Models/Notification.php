@@ -70,7 +70,7 @@ class Notification extends Model
 	/**
 	 * Set value in bytes
 	 *
-	 * @param   mixed
+	 * @param   mixed  $value
 	 * @return  void
 	 */
 	public function setValueAttribute($value)
@@ -170,10 +170,9 @@ class Notification extends Model
 	}
 
 	/**
-	 * Set value in bytes
+	 * Get next notify datetime
 	 *
-	 * @param   mixed
-	 * @return  void
+	 * @return  string
 	 */
 	public function getNextnotifyAttribute()
 	{
