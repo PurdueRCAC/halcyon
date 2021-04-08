@@ -57,7 +57,7 @@ class Menu extends Model
 	 * @var array
 	 */
 	protected $fillable = [
-		'moduleid',
+		'widgetid',
 		'menuid'
 	];
 
@@ -151,7 +151,7 @@ class Menu extends Model
 	public static function deleteByWidget($widgetid)
 	{
 		$rows = self::query()
-			->where('moduleid', '=', (int)$widgetid)
+			->where('widgetid', '=', (int)$widgetid)
 			->get();
 
 		foreach ($rows as $row)

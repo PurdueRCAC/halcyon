@@ -187,11 +187,11 @@ app('pathway')
 				<td>
 					@if (auth()->user()->can('edit.state widgets'))
 						@if ($row->published)
-							<a class="btn btn-sm btn-success" data-tip="{{ trans('widgets::widgets.click to unpublish') }}" href="{{ route('admin.widgets.unpublish', ['id' => $row->id]) }}">
+							<a class="badge badge-success" data-tip="{{ trans('widgets::widgets.click to unpublish') }}" href="{{ route('admin.widgets.unpublish', ['id' => $row->id]) }}">
 								{{ trans('widgets::widgets.published') }}
 							</a>
 						@else
-							<a class="btn btn-sm btn-secondary" data-tip="{{ trans('widgets::widgets.click to publish') }}" href="{{ route('admin.widgets.publish', ['id' => $row->id]) }}">
+							<a class="badge badge-secondary" data-tip="{{ trans('widgets::widgets.click to publish') }}" href="{{ route('admin.widgets.publish', ['id' => $row->id]) }}">
 								{{ trans('widgets::widgets.unpublished') }}
 							</a>
 						@endif

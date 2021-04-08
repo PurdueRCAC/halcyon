@@ -325,7 +325,7 @@ class WidgetsController extends Controller
 		// Join over menus
 		$query
 			//->select('MIN(' . $m . '.menuid) AS pages')
-			->leftJoin($m, $m . '.moduleid', $p . '.id');
+			->leftJoin($m, $m . '.widgetid', $p . '.id');
 
 		// Join over the extensions
 		$query
@@ -355,7 +355,7 @@ class WidgetsController extends Controller
 				//$l . '.lang_code',
 				$u . '.id',
 				$a . '.id',
-				$m . '.moduleid',
+				$m . '.widgetid',
 				$e . '.element',
 				$p . '.publish_up',
 				$p . '.publish_down',

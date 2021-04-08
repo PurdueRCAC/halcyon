@@ -385,7 +385,7 @@ class Widget extends Model
 	public function menuAssigned()
 	{
 		return Menu::query()
-			->where('moduleid', '=', (int)$this->id)
+			->where('widgetid', '=', (int)$this->id)
 			->get()
 			->pluck('menuid')
 			->toArray();
@@ -466,7 +466,7 @@ class Widget extends Model
 			{
 				// assign new widget to `all` menu item associations
 				$menu = new Menu(array(
-					'moduleid' => $this->id,
+					'widgetid' => $this->id,
 					'menuid'   => 0
 				));
 
@@ -486,7 +486,7 @@ class Widget extends Model
 				foreach ($assigned as &$pk)
 				{
 					$menu = new Menu(array(
-						'moduleid' => $this->id,
+						'widgetid' => $this->id,
 						'menuid'   => ((int) $pk * $sign)
 					));
 
