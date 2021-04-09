@@ -1,8 +1,6 @@
 <?php
 /**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
+ * @package  Title widget
  */
 
 if (isset($this->title) && !empty($this->title)):

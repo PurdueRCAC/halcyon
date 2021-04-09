@@ -1,11 +1,7 @@
 <?php
 /**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
+ * @package  Menu widget
  */
-
-// Note. It is important to remove spaces between elements.
 ?>
 <ul class="menu<?php echo $class_sfx ? ' ' . $class_sfx : ''; ?>"<?php
 	$tag = '';
