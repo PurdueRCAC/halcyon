@@ -169,7 +169,7 @@ $active = $sections->firstWhere('active', '=', true);
 												<strong>{{ $session->ip_address == '::1' ? 'localhost' : $session->ip_address }}</strong>
 											</div>
 											<div class="col-md-4">
-												{{ $session->last_activity }}
+												{{ $session->last_activity->diffForHumans() }}
 											</div>
 											<div class="col-md-4 text-right">
 												@if ($session->id == session()->getId())
@@ -178,7 +178,7 @@ $active = $sections->firstWhere('active', '=', true);
 											</div>
 										</div>
 									</div>
-									<div class="session-current card-text">
+									<div class="session-current card-text text-muted">
 										{{ $session->user_agent }}
 									</div>
 								</div></div>
