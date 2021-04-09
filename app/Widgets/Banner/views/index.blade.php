@@ -1,11 +1,9 @@
 <?php
 /**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
+ * @package  Banner widget
  */
 ?>
-<?php if (count($outages) == 0) { ?>
+@if (count($outages) == 0)
 	<div class="bannerContainer col-lg-8 col-md-8 hidden-s-down hidden-xs-down">
 		<div id="wrapper-promo-home">
 			<div id="promo-home">
@@ -13,23 +11,23 @@
 					<ul class="bxslider">
 						<li>
 							<div class="multiple">
-								<a href="/services/communityclusters/"><img src="{{ asset('files/promo/2017/brown.png') }}" alt="Brown HPC Cluster"/></a>
-								<a href="/compute/snyder/"><img src="{{ asset('files/promo/2017/snyder.png') }}" alt="Snyder Big Memory Cluster"/></a>
-								<a href="/services/communityclusters/"><img src="{{ asset('files/promo/2017/workbench.png') }}" alt="Data Workbench"/></a>
+								<a href="{{ route('page', ['uri' => 'compute/brown']) }}"><img src="{{ asset('files/promo/2017/brown.png') }}" alt="Brown HPC Cluster"/></a>
+								<a href="{{ route('page', ['uri' => 'compute/bell']) }}"><img src="{{ asset('files/promo/2021/bell.png') }}" alt="Bell Cluster"/></a>
+								<a href="{{ route('page', ['uri' => 'compute/workbench']) }}"><img src="{{ asset('files/promo/2017/workbench.png') }}" alt="Data Workbench"/></a>
 							</div>
 						</li>
 						<li>
-							<a href="{{ url('/storage/depot') }}">
+							<a href="{{ route('page', ['uri' => 'storage/depot']) }}">
 								<img src="{{ asset('files/promo/depot/large.png') }}" alt="Research Data Depot" />
 							</a>
 						</li>
 						<li> 
-							<a href="{{ url('/coffee') }}">
+							<a href="{{ route('page', ['uri' => 'coffee']) }}">
 								<img src="{{ asset('files/promo/coffee/large.jpg') }}" alt="Research Computing Coffee Consultations" />
 							</a>
 						</li>
 						<li> 
-							<a href="{{ url('/news/117') }}">
+							<a href="{{ route('page', ['uri' => 'news/117']) }}">
 								<img src="{{ asset('files/promo/catlin/large.jpg') }}" alt="Science Highlights" />
 							</a>
 						</li>
@@ -39,7 +37,7 @@
 							</a>
 						</li>
 						<li> 
-							<a href="{{ url('/news/114') }}">
+							<a href="{{ route('page', ['uri' => 'news/114']) }}">
 								<img src="{{ asset('files/promo/delgado/large.jpg') }}" alt="Extreme Science and Engineering Discovery Environment" />
 							</a>
 						</li>
@@ -54,7 +52,7 @@
 							</a>
 						</li>
 						<li> 
-							<a href="{{ url('/services/communityclusters') }}">
+							<a href="{{ route('page', ['uri' => 'services/communityclusters']) }}">
 								<img src="{{ asset('files/promo/clusterprogram/large.jpg') }}" alt="Community Cluster Program" />
 							</a>
 						</li>
@@ -69,7 +67,7 @@
 		</div>
 	</div>
 	<div class="audienceTiles col-lg-4 col-md-4 col-sm-12 col-xs-12 tiles-1">
-<?php } else { ?>
+@else
 	<div class="audienceTiles col-lg-4 col-md-6 col-sm-12 col-xs-12 tiles-1">
 		<div class="tileRow">
 			<div class="tileContainer col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -83,28 +81,26 @@
 			<div class="tileContainer col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<h2 class="tile">Current Outages</h2>
 
-				<?php if (count($outages)) { ?>
+				@if (count($outages))
 					<ul class="newslist">
-						<?php foreach ($outages as $item) { ?>
+						@foreach ($outages as $item)
 							<li class="first">
 								<a href="{{ route('site.news.show', ['id' => $item->id]) }}">{{ $item->headline }}</a>
 								<p class="date">
-									<span style="white-space:nowrap">{{ $item->formatDate($item->datetimenews, $item->datetimenewsend) }}</span> 
-									<?php if ($item->isToday()) { ?>
+									<span class="text-nowrap">{{ $item->formatDate($item->datetimenews, $item->datetimenewsend) }}</span>
+									@if ($item->isToday())
 										<span class="badge badge-info">Today</span>
-									<?php } ?>
+									@endif
 								</p>
-								<?php
-								$update = $item->updates()->orderBy('datetimecreated', 'desc')->first();
-								if ($update) { ?>
-									<p class="newsupdated">Updated: {{ $update->datetimecreated->format('') }}</p>
-								<?php } ?>
+								@if ($update = $item->updates()->orderBy('datetimecreated', 'desc')->first())
+									<p class="newsupdated">Updated: {{ $update->datetimecreated->format('M d, Y h:ia') }}</p>
+								@endif
 							</li>
-						<?php } ?>
+						@endforeach
 					</ul>
-				<?php } else { ?>
+				@else
 					<p>There are no outages at this time.</p>
-				<?php } ?>
+				@endif
 
 				<div class="more">
 					<a href="{{ route('site.news.type', ['name' => $type->id]) }}">previous…</a>
@@ -114,34 +110,32 @@
 	</div><!-- /.audienceTiles -->
 
 	<div class="audienceTiles col-lg-4 col-md-6 col-sm-12 col-xs-12 tiles-1">
-<?php } ?>
+@endif
 
 		<div class="tileRow">
 			<div class="tileContainer col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<h2 class="tile">Upcoming Maintenance</h2>
 
-				<?php if (count($maintenance)) { ?>
+				@if (count($maintenance))
 					<ul class="newslist">
-						<?php foreach ($maintenance as $item) { ?>
+						@foreach ($maintenance as $item)
 							<li class="first">
 								<a href="{{ route('site.news.show', ['id' => $item->id]) }}">{{ $item->headline }}</a>
 								<p class="date">
-									<span style="white-space:nowrap">{{ $item->formatDate($item->datetimenews, $item->datetimenewsend) }}</span> 
-									<?php if ($item->isToday()) { ?>
+									<span class="text-nowrap">{{ $item->formatDate($item->datetimenews, $item->datetimenewsend) }}</span> 
+									@if ($item->isToday())
 										<span class="badge badge-info">Today</span>
-									<?php } ?>
+									@endif
 								</p>
-								<?php
-								$update = $item->updates()->orderBy('datetimecreated', 'desc')->first();
-								if ($update) { ?>
+								@if ($update = $item->updates()->orderBy('datetimecreated', 'desc')->first())
 									<p class="newsupdated">Updated: {{ $update->datetimecreated->format('M d, Y h:ia') }}</p>
-								<?php } ?>
+								@endif
 							</li>
-						<?php } ?>
+						@endforeach
 					</ul>
-				<?php } else { ?>
+				@else
 					<p>There is no upcoming maintenance scheduled at this time.</p>
-				<?php } ?>
+				@endif
 
 				<div class="more">
 					<a href="{{ route('site.news.type', ['name' => $type2->id]) }}">previous…</a>
