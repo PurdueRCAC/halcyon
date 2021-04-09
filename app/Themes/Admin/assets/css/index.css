@@ -106,9 +106,12 @@
   --on-back-hover: #297A3A;
   --on-border-hover: #297A3A;
   --fieldset-hover: #d7d7d7;
-  --accordian-body: rgba(0, 0, 0, 0.05);
+  --accordian-body: #fff;
   --accordian-border: rgba(0, 0, 0, 0.2);
   --accordian-color-active: #222;
+  --accordian-body-active: #fff;
+  --accordian-border-active: rgba(20, 106, 236, 0.5);
+  --accordian-header-border: rgba(0, 0, 0, 0.1);
   --badge-danger-background: rgba(218, 52, 71, 1);
   --badge-danger: #fff;
   --badge-success-background: rgba(48, 166, 73, 1);
@@ -203,7 +206,10 @@
   --fieldset-hover: rgba(255, 255, 255, 0.2);
   --accordian-body: rgba(255, 255, 255, 0.1);
   --accordian-border: rgba(255, 255, 255, 0.2);
+  --accordian-header-border: rgba(255, 255, 255, 0.1);
   --accordian-color-active: #fff;
+  --accordian-body-active: rgba(255, 255, 255, 0.1);
+  --accordian-border-active: rgba(20, 106, 236, 0.5);
   --badge-danger-background: rgba(218, 52, 71, 0.3);
   --badge-danger: rgba(218, 52, 71, 1);
   --badge-success-background: rgba(48, 166, 73, 0.3);
@@ -5131,11 +5137,11 @@ a.menulist:hover:before {
   .ui-tabs .ui-widget-content .ui-accordion .ui-state-default.ui-accordion-header,
   .ui-accordion .ui-accordion-header {
     background-color: var(--accordian-body);
-    border-color: transparent;
+    border-color: var(--accordian-border);
   }
-  .pane-sliders.ui-accordion .ui-accordion-header {
+  /*.pane-sliders.ui-accordion .ui-accordion-header {
     background-color: rgba(20, 106, 236, 0.1);
-  }
+  }*/
   .ui-accordion .ui-state-active a,
   .ui-accordion .ui-state-active a:link,
   .ui-accordion .ui-state-active a:visited {
@@ -5148,14 +5154,12 @@ a.menulist:hover:before {
   }
   .pane-sliders.ui-accordion .ui-state-active,
   .ui-tabs .pane-sliders.ui-accordion .ui-state-active {
-    border-color: rgba(20, 106, 236, 0.5);
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--accordian-border-active);
+    border-bottom-color: var(--accordian-header-border);
   }
-  .ui-accordion .ui-accordion-content-active {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
+  .ui-accordion .ui-accordion-content-active,
   .pane-sliders.ui-accordion .ui-accordion-content-active {
-    background-color: rgba(20, 106, 236, 0.1);
+    background-color: var(--accordian-body-active);
   }
   .ui-icon-triangle-1-e:before {
     border-color: transparent transparent transparent #666;
