@@ -451,4 +451,62 @@ class Message extends Model
 			return $diff . ' ' . trans_choice('global.time.months', $diff);//$diff . ' month' . ($diff == 1 ? '' : 's');
 		}
 	}
+
+	/**
+	 * Define a query scope
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereStarted($query, $since = null)
+	{
+		return $query->where(function($where) use ($since)
+		{
+			$where->whereNotNull('datetimestarted')
+				->where('datetimestarted', '!=', '0000-00-00 00:00:00');
+
+			if ($since)
+			{
+				$where->where('datetimestarted', '>', $since);
+			}
+		});
+	}
+
+	/**
+	 * Define a query scope
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereCompleted($query, $since = null)
+	{
+		return $query->where(function($where) use ($since)
+		{
+			$where->whereNotNull('datetimecompleted')
+				->where('datetimecompleted', '!=', '0000-00-00 00:00:00');
+
+			if ($since)
+			{
+				$where->where('datetimecompleted', '>', $since);
+			}
+		});
+	}
+
+	/**
+	 * Define a query scope
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereSuccessful($query)
+	{
+		return $query->where('returnstatus', '=', 0);
+	}
+
+	/**
+	 * Define a query scope
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereNotSuccessful($query)
+	{
+		return $query->where('returnstatus', '>', 0);
+	}
 }

@@ -14,13 +14,25 @@ $menu->getParent();
 //
 // Site SubMenu
 //
-$menu->addChild(
-	new Node(trans('widget.adminmenu::adminmenu.configuration'), route('admin.core.sysinfo'), 'class:settings', in_array($active, ['info', 'core', 'config', 'checkin', 'cache', 'redirect', 'history'])), true
-);
 
 $chm = $user->can('admin messages');
 $cam = $user->can('manage cache');
 $cst = $user->can('manage cron');
+
+$badge = '';
+if ($chm && Module::isEnabled('messages'))
+{
+	$failed = App\Modules\Messages\Models\Message::whereCompleted(Carbon\Carbon::now()->modify('-1 week')->toDateTimeString())
+		->whereNotSuccessful()
+		->count();
+	if ($failed)
+	{
+		$badge = ' <span class="badge badge-danger">' . $failed . '</span>';
+	}
+}
+$menu->addChild(
+	new Node(trans('widget.adminmenu::adminmenu.configuration') . $badge, route('admin.core.sysinfo'), 'class:settings', in_array($active, ['info', 'core', 'config', 'checkin', 'cache', 'redirect', 'history'])), true
+);
 
 if ($chm || $cam || $cst)
 {

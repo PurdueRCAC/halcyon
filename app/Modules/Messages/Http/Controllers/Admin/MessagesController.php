@@ -104,17 +104,15 @@ class MessagesController extends Controller
 
 		$stats = new \stdClass;
 		$stats->failed = Message::query()
-			->where('datetimestarted', '!=', '0000-00-00 00:00:00')
-			->where('datetimecompleted', '!=', '0000-00-00 00:00:00')
-			->where('datetimesubmitted', '>=', $filters['start'] . ' 00:00:00')
-			->where('returnstatus', '>', 0)
+			->whereStarted()
+			->whereCompleted($filters['start'])
+			->whereNotSuccessful()
 			->count();
 	
 		$stats->succeeded = Message::query()
-			->where('datetimestarted', '!=', '0000-00-00 00:00:00')
-			->where('datetimecompleted', '!=', '0000-00-00 00:00:00')
-			->where('datetimesubmitted', '>=', $filters['start'] . ' 00:00:00')
-			->where('returnstatus', '=', 0)
+			->whereStarted()
+			->whereCompleted($filters['start'])
+			->whereSuccessful()
 			->count();
 
 		$stats->pending = Message::query()
