@@ -1,8 +1,6 @@
 <?php
 /**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
+ * @package  Whosonline widget
  */
 ?>
 <div class="card widget {{ $widget->widget }}" id="{{ $widget->widget . $widget->id }}">
@@ -18,9 +16,9 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php if (count($rows) > 0) : ?>
-				<?php foreach ($rows as $k => $row) : ?>
-					<?php if (($k+1) <= $params->get('display_limit', 25)) : ?>
+			<?php if (count($rows) > 0): ?>
+				<?php foreach ($rows as $k => $row): ?>
+					<?php if (($k+1) <= $params->get('display_limit', 25)): ?>
 						<tr>
 							<td>
 								<?php
@@ -35,9 +33,14 @@
 									if ($user):
 										echo e($user->name) . ' (' . e($user->username) . ')';
 									else:
-										echo trans('global.guest');
+										echo trans('widget.whosonline::whosonline.guest');
 									endif;
 								endif;
+								/*
+								$agent = new Jenssegers\Agent\Agent;
+								$agent->setUserAgent($row->user_agent);
+								echo '<br /><span class="text-muted">Device: ' . $agent->browser() . ' on ' . $agent->platform() . '</span>';
+								*/
 								?>
 							</td>
 							<td class="priority-3">
@@ -60,7 +63,7 @@
 						<a class="btn btn-secondary" href="{{ route('admin.users.index') }}">{{ trans('widget.whosonline::whosonline.view all') }}</a>
 					</td>
 				</tr>
-			<?php else : ?>
+			<?php else: ?>
 				<tr>
 					<td colspan="{{ ($editAuthorized ? 3 : 2) }}">
 						{{ trans('widget.whosonline::whosonline.no results') }}

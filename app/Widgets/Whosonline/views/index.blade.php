@@ -1,11 +1,8 @@
 <?php
 /**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
+ * @package  Whosonline widget
  */
 ?>
-
 <div class="<?php echo $widget->params->get('moduleclass_sfx', ''); ?>">
 	<?php if ($widget->params->get('showmode', 0) == 0 || $widget->params->get('showmode', 0) == 2) : ?>
 		<table>
