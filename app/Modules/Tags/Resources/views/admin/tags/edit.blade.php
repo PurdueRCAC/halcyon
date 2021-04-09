@@ -145,7 +145,7 @@ app('pathway')
 @section('content')
 <form action="{{ route('admin.tags.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 	<div class="row">
-		<div class="col-md-7">
+		<div class="col-md-6">
 			<fieldset class="adminform">
 				<legend><span>{{ trans('global.details') }}</span></legend>
 
@@ -162,10 +162,11 @@ app('pathway')
 					<span class="hint form-text text-muted">{{ trans('tags::tags.slug hint') }}</span>
 				</div>
 			</fieldset>
-
-		@if ($row->id)
-			<fieldset class="adminform">
-				<legend>{{ trans('tags::tags.alias') }}</legend>
+		</div>
+		<div class="col-md-6">
+			@if ($row->id)
+				<fieldset class="adminform">
+					<legend>{{ trans('tags::tags.alias') }}</legend>
 
 					<table class="table table-hover">
 						<caption class="sr-only">{{ trans('tags::tags.alias') }}</caption>
@@ -221,11 +222,8 @@ app('pathway')
 							</tr>
 						</tfoot>
 					</table>
-			</fieldset>
-		@endif
-		</div>
-		<div class="col-md-5">
-			@include('history::admin.history')
+				</fieldset>
+			@endif
 		</div>
 	</div>
 
