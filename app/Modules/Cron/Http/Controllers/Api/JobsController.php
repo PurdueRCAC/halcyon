@@ -249,7 +249,7 @@ class JobsController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return response()->json(['message' => $error], 415);
 		}
@@ -361,7 +361,7 @@ class JobsController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return response()->json(['message' => $error], 415);
 		}

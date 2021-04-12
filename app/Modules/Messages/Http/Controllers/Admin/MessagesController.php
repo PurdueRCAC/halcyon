@@ -220,10 +220,10 @@ class MessagesController extends Controller
 
 		if (!$row->save())
 		{
-			return redirect()->back()->withError(trans('messages.update failed'));
+			return redirect()->back()->withError(trans('global.messages.update failed'));
 		}
 
-		return $this->cancel()->withSuccess(trans('messages.update success'));
+		return $this->cancel()->withSuccess(trans('global.messages.update success'));
 	}
 
 	/**
@@ -319,7 +319,7 @@ class MessagesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', $success));
+			$request->session()->flash('success', trans('global.messages.item deleted', $success));
 		}
 
 		return $this->cancel();

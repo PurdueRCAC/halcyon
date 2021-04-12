@@ -348,7 +348,7 @@ class GroupsController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
 		$member = new Member;
@@ -358,7 +358,7 @@ class GroupsController extends Controller
 
 		if (!$member->save())
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
 		return new GroupResource($row);
@@ -532,7 +532,7 @@ class GroupsController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
 		return new GroupResource($row);

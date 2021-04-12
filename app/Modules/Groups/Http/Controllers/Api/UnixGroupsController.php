@@ -369,7 +369,7 @@ class UnixgroupsController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
 		return new UnixGroupResource($row);
@@ -474,7 +474,7 @@ class UnixgroupsController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
 		return new UnixGroupResource($row);

@@ -230,7 +230,7 @@ class UserRequestsController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
 		// Generate necessary groupuser or queueuser records

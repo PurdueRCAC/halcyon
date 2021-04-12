@@ -271,7 +271,7 @@ class LoansController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
 		// Does the queue have any cores yet?
@@ -307,7 +307,7 @@ class LoansController extends Controller
 
 			if (!$exist->save())
 			{
-				return response()->json(['message' => trans('messages.create failed')], 500);
+				return response()->json(['message' => trans('global.messages.create failed')], 500);
 			}
 
 			return new JsonResource($exist);
@@ -433,7 +433,7 @@ class LoansController extends Controller
 
 		if (!$row->update($request->all()))
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
 		return new JsonResource($row);

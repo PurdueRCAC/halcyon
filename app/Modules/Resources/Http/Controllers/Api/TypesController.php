@@ -137,7 +137,7 @@ class TypesController extends Controller
 
 		if (!$row)
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
 		$row->resources_count = $row->resources()->count();
@@ -222,7 +222,7 @@ class TypesController extends Controller
 
 		if (!$row->update($request->all()))
 		{
-			return response()->json(['message' => trans('messages.update failed')], 500);
+			return response()->json(['message' => trans('global.messages.update failed')], 500);
 		}
 
 		$row->resources_count = $row->resources()->count();

@@ -423,7 +423,7 @@ class ItemsController extends Controller
 		// Fail if checked out not by 'me'
 		if ($row->isCheckedOut())
 		{
-			return $this->cancel()->with('warning', trans('messages.item checked out'));
+			return $this->cancel()->with('warning', trans('global.messages.item checked out'));
 		}
 
 		if ($fields = app('request')->old('fields'))

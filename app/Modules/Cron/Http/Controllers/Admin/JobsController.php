@@ -171,12 +171,12 @@ class JobsController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('messages.save failed');
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->with('success', trans('messages.item saved'));
+		return $this->cancel()->with('success', trans('global.messages.item saved'));
 	}
 
 	/**
@@ -190,7 +190,7 @@ class JobsController extends Controller
 		$order = Job::findOrFail($id);
 		$order->delete();
 
-		return $this->cancel()->with('success', trans('messages.item deleted'));
+		return $this->cancel()->with('success', trans('global.messages.item deleted'));
 	}
 
 	/**

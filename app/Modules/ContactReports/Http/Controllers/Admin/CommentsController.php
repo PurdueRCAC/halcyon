@@ -166,7 +166,7 @@ class CommentsController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', $success));
+			$request->session()->flash('success', trans('global.messages.item deleted', $success));
 		}
 
 		return $this->cancel();

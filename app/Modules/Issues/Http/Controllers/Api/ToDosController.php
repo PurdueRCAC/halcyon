@@ -201,7 +201,7 @@ class ToDosController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
 		$row->api = route('api.issues.todos.read', ['id' => $row->id]);
@@ -295,7 +295,7 @@ class ToDosController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.update failed')], 500);
+			return response()->json(['message' => trans('global.messages.update failed')], 500);
 		}
 
 		$row->api = route('api.issues.todos.read', ['id' => $row->id]);

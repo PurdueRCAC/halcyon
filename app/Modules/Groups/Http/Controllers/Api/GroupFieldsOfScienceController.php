@@ -165,7 +165,7 @@ class GroupFieldsOfScienceController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
 		$row->api = route('api.groups.groupfieldsofscience.read', ['group' => $row->groupid, 'id' => $row->id]);
@@ -257,7 +257,7 @@ class GroupFieldsOfScienceController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => trans('messages.create failed')], 500);
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
 		$row->api = route('api.groups.groupfieldsofscience.read', ['group' => $row->groupid, 'id' => $row->id]);
