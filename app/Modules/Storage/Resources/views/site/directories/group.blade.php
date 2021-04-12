@@ -224,7 +224,7 @@
 						<?php } else { ?>
 							<div class="row mb-3">
 								<div class="col-md-4">
-									<label for="{{ $dir->id }}_quota_input">{{ trans('storage::storage.quota') }}</label>
+									<label for="{{ $dir->id }}_quota_input">{{ trans('storage::storage.quota') }} (bytes)</label>
 								</div>
 								<div class="col-md-8">
 									<?php
@@ -518,16 +518,16 @@
 											</td>
 											<td class="text-center">
 												@if ($child['permissions']['group']['read'])
-													<span class="glyph icon-check success dirperm">{{ trans('global.yes') }}</span>
+													<span class="fa fa-check text-success success dirperm"><span class="sr-only">{{ trans('global.yes') }}</span></span>
 												@else
-													<span class="glyph icon-x failed dirperm">{{ trans('global.no') }}</span>
+													<span class="fa fa-times text-danger failed dirperm"><span class="sr-only">{{ trans('global.no') }}</span></span>
 												@endif
 											</td>
 											<td class="text-center">
 												@if ($child['permissions']['group']['write'])
-													<span class="glyph icon-check success dirperm">{{ trans('global.yes') }}</span>
+													<span class="fa fa-check text-success success dirperm"><span class="sr-only">{{ trans('global.yes') }}</span></span>
 												@else
-													<span class="glyph icon-x failed dirperm">{{ trans('global.no') }}</span>
+													<span class="fa fa-times text-danger failed dirperm"><span class="sr-only">{{ trans('global.no') }}</span></span>
 												@endif
 											</td>
 										</tr>
