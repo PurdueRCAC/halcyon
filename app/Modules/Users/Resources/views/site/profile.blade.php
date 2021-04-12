@@ -388,7 +388,7 @@ $active = $sections->firstWhere('active', '=', true);
 								<select id="role" class="form-control" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
 									<option value="">(Select Role)</option>
 									@foreach ($resources as $resource)
-										<option value="{{ $resource->id }}">{{ $resource->name }}</option>
+										<option value="{{ $resource->id }}" data-api="{{ route('api.resources.members.read', ['id' => $resource->id . '.' . $user->id]) }}">{{ $resource->name }}</option>
 									@endforeach
 								</select>
 							</div>
@@ -416,7 +416,7 @@ $active = $sections->firstWhere('active', '=', true);
 									<button id="role_delete" class="btn btn-danger role-delete hide" data-id="{{ $user->id }}">Delete Role</button>
 								</div>
 
-								<span id="role_errors" class="alert alert-error"></span>
+								<span id="role_errors" class="alert alert-warning hide"></span>
 							</div>
 
 						</form>

@@ -102,14 +102,14 @@ var Roles = {
 	 */
 	GetUserStatus: function(userid) {
 		var resource = document.getElementById("role");
-		resource = resource[resource.selectedIndex].value;
+		resource = resource[resource.selectedIndex];//.value;
 
 		if (resource) {
-			WSGetURL(resource.getAttribute('data-api') + "/" + resource + "." + userid, Roles.GotUserStatus);
+			WSGetURL(resource.getAttribute('data-api'), Roles.GotUserStatus); // + "/" + resource + "." + userid
 		}
 	},
 
-	GotUserStatus: function(xml) {
+	GotUserStatus: function (xml) {
 		var stat = document.getElementById("role_status");
 
 		if (xml.status < 400) {
@@ -165,8 +165,9 @@ var Roles = {
 
 			group.value = results['primarygroup'];
 			shell.value = results['loginshell'];
-			pi.value    = results['pilogin'];
+			pi.value = results['pilogin'];
 		} else {
+			//stat.classList.remove('hide');
 			stat.value = "Unknown - Error";
 		}
 		document.getElementById("role_errors").innerHTML = "";
