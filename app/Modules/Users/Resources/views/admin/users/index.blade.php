@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/users/css/users.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/users/css/users.css?v=' . filemtime(public_path() . '/modules/users/css/users.css')) }}" />
 @endpush
 
 @php
@@ -106,7 +106,13 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('users::users.username'), 'username', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-3 nowrap">{{ trans('users::users.roles') }}</th>
+				@if (auth()->user()->can('admin'))
+				<th scope="col" colspan="2" class="priority-3 nowrap">
+				@else
+				<th scope="col" class="priority-3 nowrap">
+				@endif
+					{{ trans('users::users.roles') }}
+				</th>
 				<th scope="col" class="priority-3">{{ trans('users::users.status') }}</th>
 				<th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('users::users.last visit'), 'last_visit', $filters['order_dir'], $filters['order']) !!}
@@ -189,12 +195,14 @@ app('pathway')
 						</a>
 					@endif
 				</td>
-				<td class="center priority-3">
-					@if ($canChange)
+				@if ($canChange)
+				<td class="text-center priority-3">
 						<a class="permissions glyph icon-settings tip" href="{{ route('admin.users.debug', ['id' => $row->id]) }}" data-tip="{{ trans('users::users.debug user') }}">
 							{{ trans('users::users.debug user') }}
-						</a> &nbsp;
-					@endif
+						</a>
+				</div>
+				@endif
+				<td class="priority-3">
 					@if (substr_count($row->role_names, "\n") > 1)
 						<span class="hasTip" title="{{ trans('users::users.roles') . '::' . $row->role_names }}">{{ trans('users::users.roles') }}</span>
 					@else

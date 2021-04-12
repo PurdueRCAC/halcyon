@@ -1,9 +1,24 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ asset('js/validate.js?v=' . filemtime(public_path() . '/js/validate.js')) }}"></script>
 <script src="{{ asset('modules/users/js/users.js?v=' . filemtime(public_path() . '/modules/users/js/users.js')) }}"></script>
 @endpush
+
+@php
+app('pathway')
+	->append(
+		trans('users::users.module name'),
+		route('admin.users.index')
+	)
+	->append(
+		$user->name,
+		route('admin.users.edit', ['id' => $user->id])
+	)
+	->append(
+		'Permissions',
+		route('admin.users.debug', ['id' => $user->id])
+	);
+@endphp
 
 @section('toolbar')
 	{!!
@@ -15,17 +30,22 @@
 @stop
 
 @section('title')
-{{ trans('users::system.users') }}: {{ $user->name }}: Permissions
+{{ trans('users::users.module name') }}: {{ $user->name }}: Permissions
 @stop
 
 @section('content')
 <form action="{{ route('admin.users.debug', ['id' => $user->id]) }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="filter-search col col-xs-12 col-sm-5">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="filter_search" id="filter_search" class="form-control filter" value="{{ $filters['search'] }}" placeholder="{{ trans('search.placeholder') }}" />
-				<button type="submit" class="btn">{{ trans('search.submit') }}</button>
+			<div class="filter-search col col-xs-12 col-sm-3">
+				<div class="form-group">
+					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<span class="input-group">
+						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					</span>
+				</div>
+				<button type="submit" class="btn sr-only">{{ trans('search.submit') }}</button>
 			</div>
 			<div class="filter-select col col-xs-12 col-sm-7 text-right">
 				<label class="sr-only" for="filter_module">{{ trans('users::users.module') }}</label>
@@ -51,17 +71,24 @@
 					<?php echo Html::select('options', $levels, 'value', 'text', $filters['level_end']); ?>
 				</select>
 			</div>
+			<div class="filter-select col col-xs-12 col-sm-2">
+				<div class="dropdown dropleft">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="legendmenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						{{ trans('users::access.debug.legend') }}
+					</button>
+					<div class="dropdown-menu" aria-labelledby="legendmenu">
+						<span class="dropdown-item">{!! trans('users::access.debug.implicit deny', ['minus' => '<span class="state-no badge badge-warning">-</span>']) !!}</span>
+						<span class="dropdown-item">{!! trans('users::access.debug.explicit allow', ['plus' => '<span class="state-yes badge badge-success">&#10003;</span>']) !!}</span>
+						<span class="dropdown-item">{!! trans('users::access.debug.explicit deny', ['minus' => '<span class="state-no badge badge-danger">&#10007;</span>']) !!}</span>
+					</div>
+				</div>
+			</div>
 		</div>
 	</fieldset>
 
+	<div class="card mb-4">
 	<table class="table table-hover adminlist">
-		<caption>
-			{{ trans('users::access.debug.legend') }}
-			<span class="swatch">{!! trans('users::access.debug.no check', ['minus' => '-']) !!}</span>
-			<span class="check-0 swatch">{!! trans('users::access.debug.implicit deny', ['minus' => '-']) !!}</span>
-			<span class="check-a swatch">{!! trans('users::access.debug.explicit allow', ['plus' => '&#10003;']) !!}</span>
-			<span class="check-d swatch">{!! trans('users::access.debug.explicit deny', ['minus' => '&#10007;']) !!}</span>
-		</caption>
+		<caption class="sr-only">Permissions</caption>
 		<thead>
 			<tr>
 				<th scope="col">
@@ -74,7 +101,7 @@
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('users::access.name'), 'name', $filters['order_dir'], $filters['order']); ?>
 				</th>
 				<?php foreach ($actions as $key => $action) : ?>
-					<th>
+					<th scope="col" class="text-center">
 						<span class="hasTip" title="<?php echo htmlspecialchars(trans($action[0]), ENT_COMPAT, 'UTF-8'); ?>"><?php echo trans($key); ?></span>
 					</th>
 				<?php endforeach; ?>
@@ -82,7 +109,7 @@
 		</thead>
 		<tbody>
 		<?php foreach ($assets as $item) : ?>
-			<tr class="row0">
+			<tr>
 				<td>
 					{{ $item->id }}
 				</td>
@@ -101,19 +128,19 @@
 					$check = $checks[$name];
 					if ($check === true) :
 						$class = 'check-a';
-						$text  = '<span class="state yes">&#10003;</span>';
+						$text  = '<span class="state-yes badge badge-success">&#10003;</span>';
 					elseif ($check === false) :
 						$class = 'check-d';
-						$text  = '<span class="state no">&#10007;</span>';
+						$text  = '<span class="state-no badge badge-danger">&#10007;</span>';
 					elseif ($check === null) :
 						$class = 'check-0';
-						$text  = '<span class="state no">-</span>';
+						$text  = '<span class="state-no badge badge-warning">-</span>';
 					else :
 						$class = '';
 						$text  = '&#160;';
 					endif;
 					?>
-					<td class="center {{ $class }}">
+					<td class="text-center {{ $class }}">
 						{!! $text !!}
 					</td>
 				<?php endforeach; ?>
@@ -121,6 +148,7 @@
 			<?php endforeach; ?>
 		</tbody>
 	</table>
+	</div>
 
 	{{ $assets->render() }}
 

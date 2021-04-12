@@ -420,7 +420,7 @@ class UsersController extends Controller
 
 		if (!$user->save())
 		{
-			$error = $user->getError() ? $user->getError() : trans('messages.save failed');
+			$error = $user->getError() ? $user->getError() : trans('global.messages.save failed');
 
 			return redirect()
 				->back()
@@ -436,14 +436,14 @@ class UsersController extends Controller
 
 		/*if (!$user->setRoles($fields['roles']))
 		{
-			$error = $user->getError() ? $user->getError() : trans('messages.save failed');
+			$error = $user->getError() ? $user->getError() : trans('global.messages.save failed');
 
 			return redirect()
 				->back()
 				->withError($error);
 		}*/
 
-		return $this->cancel()->with('success', trans('messages.item saved'));
+		return $this->cancel()->with('success', trans('global.messages.item saved'));
 	}
 
 	/**
@@ -508,7 +508,7 @@ class UsersController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages.item deleted', ['count' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();
