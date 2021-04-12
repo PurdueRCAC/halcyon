@@ -281,7 +281,7 @@
 			<div class="col col-md-6">
 				Unix Groups
 				@if ($canManage)
-					<a href="#box2_<?php echo $group->id; ?>" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a>
+					<a href="#box2_{{ $group->id }}" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a>
 				@endif
 			</div>
 			<div class="col col-md-6 text-right">
@@ -366,13 +366,15 @@
 						<th scope="col" class="extendedinfo hide">ACMaint Name</th>
 						<th scope="col" class="extendedinfo hide">Short Name</th>
 						<th scope="col" class="extendedinfo hide text-right">GID Number</th>
+						@if ($canManage)
 						<th scope="col" class="text-right">Actions</th>
+						@endif
 					</tr>
 				</thead>
 				<tfoot>
 					<tr>
 						<td colspan="5" class="text-right">
-							<button class="btn btn-default btn-sm reveal" data-toggle=".extendedinfo" data-text="<i class='fa fa-eye-slash'></i> Hide Extended Info</button>"><i class="fa fa-eye"></i> Show Extended Info</button>
+							<button class="btn btn-sm reveal" data-toggle=".extendedinfo" data-text="<i class='fa fa-eye-slash'></i> Hide Extended Info</button>"><i class="fa fa-eye"></i> Show Extended Info</button>
 						</td>
 					</tr>
 				</tfoot>
@@ -383,8 +385,9 @@
 							<td class="extendedinfo hide">{{ config('modules.groups.unix_prefix', 'rcac-') . $unixgroup->longname }}</td>
 							<td class="extendedinfo hide">{{ $unixgroup->shortname }}</td>
 							<td class="extendedinfo hide text-right">{{ $unixgroup->unixgid }}</td>
+							@if ($canManage)
 							<td class="text-right">
-								@if ($canManage && !preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname))
+								@if (!preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname))
 									<a href="{{ route('site.users.account.section', ['section' => 'groups', 'delete' => $unixgroup->id]) }}"
 										class="delete delete-unix-group remove-unixgroup"
 										data-api="{{ route('api.unixgroups.delete', ['id' => $unixgroup->id]) }}"
@@ -393,6 +396,7 @@
 									--></a>
 								@endif
 							</td>
+							@endif
 						</tr>
 					@endforeach
 					@if ($canManage)
@@ -434,27 +438,17 @@
 		</div>
 
 		<div class="dialog dialog-help" id="box2_{{ $group->id }}" title="Unix Groups">
-			<?php
-			$doc = '';
-			if (count($group->unixgroups) > 0)
-			{
-				?>
+			@if (count($group->unixgroups) > 0)
 				<p>These are your group's Unix groups. You may create and delete additional custom groups as you need them. Any custom groups will be prefixed by your base name. Groups may be named with the following guidelines.</p>
 				<ul>
 					<li>May only contain lower case letters and numbers. Upper case letters and other characters are not permitted.</li>
 					<li>Total name length, including prefix and hyphen may not exceed 17 characters.</li>
 					<li>Must be a unique name.</li>
 				</ul>
-				<?php
-			}
-			else
-			{
-				?>
+			@else
 				<p>Your group's default groups may be created by pressing this button. You will need to create the default before creating any custom groups. Three groups will be created, a base group, apps, and data group. The names will be prefixed by your chosen group base name. Once these are created they are not easily changed to please carefully consider your base name choice.</p>
-				<p>If you have any existing Unix groups, please do not continue with creating the defaults. Contact <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a> and ITaP Research Computing staff will assist in importing existing groups into the management system and create any remaining groups.<p>
-				<?php
-			}
-			?>
+				<p>If you have any existing Unix groups, please do not continue with creating the defaults. Contact <a href="{{ route('page', ['uri' => 'help']) }}">support</a> and staff will assist in importing existing groups into the management system and create any remaining groups.<p>
+			@endif
 		</div>
 	</div><!-- / .card-body -->
 </div><!-- / .card -->
