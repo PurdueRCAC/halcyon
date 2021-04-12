@@ -355,45 +355,45 @@ counter-reset: linenumber;
 				Halcyon = {};
 
 			/**
- * Check if an element has the specified class name
- *
- * @param   el         The element to test
- * @param   className  The class to test for
- * @return  bool
- */
-Halcyon.hasClass = function(el, className) {
-	return el.classList ? el.classList.contains(className) : new RegExp('\\b'+ className+'\\b').test(el.className);
-}
+			 * Check if an element has the specified class name
+			 *
+			 * @param   el         The element to test
+			 * @param   className  The class to test for
+			 * @return  bool
+			 */
+			Halcyon.hasClass = function(el, className) {
+				return el.classList ? el.classList.contains(className) : new RegExp('\\b'+ className+'\\b').test(el.className);
+			}
 
-/**
- * Add a class to an element
- *
- * @param   el         The element to add the class to
- * @param   className  The class to add
- * @return  bool
- */
-Halcyon.addClass = function(el, className) {
-	if (el.classList) {
-		el.classList.add(className);
-	} else if (!Halcyon.hasClass(el, className)) {
-		el.className += ' ' + className;
-	}
-}
+			/**
+			 * Add a class to an element
+			 *
+			 * @param   el         The element to add the class to
+			 * @param   className  The class to add
+			 * @return  bool
+			 */
+			Halcyon.addClass = function(el, className) {
+				if (el.classList) {
+					el.classList.add(className);
+				} else if (!Halcyon.hasClass(el, className)) {
+					el.className += ' ' + className;
+				}
+			}
 
-/**
- * Remove a class from an element
- *
- * @param   el         The element to remove the class from
- * @param   className  The class to remove
- * @return  bool
- */
-Halcyon.removeClass = function(el, className) {
-	if (el.classList) {
-		el.classList.remove(className);
-	} else {
-		el.className = el.className.replace(new RegExp('\\b'+ className+'\\b', 'g'), '');
-	}
-}
+			/**
+			 * Remove a class from an element
+			 *
+			 * @param   el         The element to remove the class from
+			 * @param   className  The class to remove
+			 * @return  bool
+			 */
+			Halcyon.removeClass = function(el, className) {
+				if (el.classList) {
+					el.classList.remove(className);
+				} else {
+					el.className = el.className.replace(new RegExp('\\b'+ className+'\\b', 'g'), '');
+				}
+			}
 
 			document.addEventListener('DOMContentLoaded', function() {
 				var i;
@@ -409,6 +409,26 @@ Halcyon.removeClass = function(el, className) {
 							Halcyon.removeClass(this.parentNode, 'is-open');
 						} else {
 							Halcyon.addClass(this.parentNode, 'is-open');
+						}
+					});
+				}
+
+				var nodes = document.getElementsByClassName('node');
+				for (i = 0; i < nodes.length; i++)
+				{
+					nodes[i].addEventListener('click', function(e){
+						e.preventDefault();
+
+						if (Halcyon.hasClass(this.parentNode, 'active')) {
+							Halcyon.removeClass(this.parentNode, 'active');
+						} else {
+							var nds = document.getElementsByClassName('node');
+							for (i = 0; i < nds.length; i++)
+							{
+								Halcyon.removeClass(nds[i].parentNode, 'active');
+							}
+
+							Halcyon.addClass(this.parentNode, 'active');
 						}
 					});
 				}
@@ -432,26 +452,18 @@ Halcyon.removeClass = function(el, className) {
 			<ul class="docs-sidebar-tree">
 				@foreach ($modules as $mod)
 				<li class="folder<?php if ($mod->getLowerName() == $module) { echo ' active'; } ?>">
-					<a href="{{ route('api.' . $mod->getLowerName() . '.index') }}">{{ trans($mod->getLowerName() . '::' . $mod->getLowerName() . '.module name') }}</a>
-					<?php
-					if (isset($documentation['sections'][$mod->getLowerName()]))
-					{
-						?>
+					<a class="node" href="{{ route('api.' . $mod->getLowerName() . '.index') }}">{{ trans($mod->getLowerName() . '::' . $mod->getLowerName() . '.module name') }}</a>
+					@if (isset($documentation['sections'][$mod->getLowerName()]))
 						<ul>
-							<?php
-						foreach ($documentation['sections'][$mod->getLowerName()] as $controller => $endpoints)
-						{
-							?>
+						@foreach ($documentation['sections'][$mod->getLowerName()] as $controller => $endpoints)
 							<li>
-								<a href="{{ route('api.' . $mod->getLowerName() . '.index') }}#operations-tag-{{ $controller }}">{{ $endpoints['name'] ? $endpoints['name'] : trans($mod->getLowerName() . '::' . $mod->getLowerName() . '.' . $controller) }}</a>
+								<a href="{{ route('api.' . $mod->getLowerName() . '.index') }}#operations-tag-{{ $controller }}">
+									{{ $endpoints['name'] ? $endpoints['name'] : trans($mod->getLowerName() . '::' . $mod->getLowerName() . '.' . $controller) }}
+								</a>
 							</li>
-							<?php
-						}
-							?>
+						@endforeach
 						</ul>
-						<?php
-					}
-					?>
+					@endif
 				</li>
 				@endforeach
 			</ul>
@@ -460,16 +472,13 @@ Halcyon.removeClass = function(el, className) {
 		<main class="docs-main swagger-ui">
 			<div class="docs-content m-5">
 				<?php
-				if ($module)
-				{
+				if ($module):
 					$active = $documentation['sections'][$module];
 
-					foreach ($active as $controller => $endpoints)
-					{
-						if (empty($endpoints))
-						{
+					foreach ($active as $controller => $endpoints):
+						if (empty($endpoints)):
 							continue;
-						}
+						endif;
 					?>
 				<section class="mb-5">
 					<h3 class="opblock-tag" id="operations-tag-{{ $controller }}" data-tag="{{ $controller }}" data-is-open="false">
@@ -482,10 +491,10 @@ Halcyon.removeClass = function(el, className) {
 
 					<?php
 				foreach ($endpoints['endpoints'] as $endpoint):
-					if (!$endpoint['method'])
-					{
+					if (!$endpoint['method']):
 						continue;
-					}
+					endif;
+
 					$key = $endpoint['_metadata']['module'] . '-' . $endpoint['_metadata']['method'];
 					?>
 					<div class="doc-section endpoint" id="{{ $key }}">
@@ -504,10 +513,8 @@ Halcyon.removeClass = function(el, className) {
 									<div class="opblock-summary-description">{{ $endpoint['name'] }}</div>
 								@endif
 								@if (isset($endpoint['authorization']) && $endpoint['authorization'])
-									<span class="authorization__btn unlocked" aria-label="authorization button unlocked"></span>
-								@else
-									<span class="authorization__btn unlocked">
-										<svg viewBox="0 0 20 20" id="unlocked" width="16" height="16"><path d="M15.8 8H14V5.6C14 2.703 12.665 1 10 1 7.334 1 6 2.703 6 5.6V6h2v-.801C8 3.754 8.797 3 10 3c1.203 0 2 .754 2 2.199V8H4c-.553 0-1 .646-1 1.199V17c0 .549.428 1.139.951 1.307l1.197.387C5.672 18.861 6.55 19 7.1 19h5.8c.549 0 1.428-.139 1.951-.307l1.196-.387c.524-.167.953-.757.953-1.306V9.199C17 8.646 16.352 8 15.8 8z"></path></svg>
+									<span class="authorization__btn locked">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="14" height="14"><path d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z"/></svg>
 									</span>
 								@endif
 							</div>
@@ -639,8 +646,8 @@ Halcyon.removeClass = function(el, className) {
 				?>
 			</section>
 			<?php
-					}
-				}
+					endforeach;
+				endif;
 				?>
 			</div>
 		</main>
