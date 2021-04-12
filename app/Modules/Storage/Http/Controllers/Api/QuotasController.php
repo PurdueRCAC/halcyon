@@ -28,6 +28,7 @@ class QuotasController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/storage/quotas/{username?}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path"
 	 * 		"name":          "username",

@@ -85,6 +85,7 @@ class DirectoriesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -171,6 +172,7 @@ class DirectoriesController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/storage/directories
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -619,6 +621,7 @@ class DirectoriesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/storage/directories/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -1031,6 +1034,7 @@ class DirectoriesController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/storage/directories/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

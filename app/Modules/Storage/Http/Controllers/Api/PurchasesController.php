@@ -21,6 +21,7 @@ class PurchasesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/storage/purchases
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "resourceid",
@@ -110,6 +111,7 @@ class PurchasesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -179,6 +181,7 @@ class PurchasesController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/storage/purchases
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "resourceid",
@@ -394,6 +397,7 @@ class PurchasesController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/storage/purchases/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -403,6 +407,7 @@ class PurchasesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param  integer  $id
 	 * @return  Response
 	 */
 	public function read($id)
@@ -432,6 +437,7 @@ class PurchasesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/storage/purchases/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -673,6 +679,7 @@ class PurchasesController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/storage/purchases/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -682,6 +689,7 @@ class PurchasesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

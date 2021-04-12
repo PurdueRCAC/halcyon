@@ -25,6 +25,7 @@ class UsersController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/users
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -280,6 +281,7 @@ class UsersController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/users
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -319,6 +321,7 @@ class UsersController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/users/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -343,6 +346,7 @@ class UsersController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/users/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -527,6 +531,7 @@ class UsersController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/users/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

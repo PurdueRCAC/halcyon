@@ -22,6 +22,7 @@ class NotificationsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /storage/notifications
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
@@ -69,7 +70,8 @@ class NotificationsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param  Request  $request
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -133,6 +135,7 @@ class NotificationsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /storage/notifications
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "storagedirid",
@@ -218,7 +221,7 @@ class NotificationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -284,6 +287,7 @@ class NotificationsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /storage/notifications/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -294,7 +298,7 @@ class NotificationsController extends Controller
 	 * 		}
 	 * }
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function read($id)
 	{
@@ -309,6 +313,7 @@ class NotificationsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /storage/notifications/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -406,7 +411,7 @@ class NotificationsController extends Controller
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -458,6 +463,7 @@ class NotificationsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /storage/notifications/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -467,7 +473,8 @@ class NotificationsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @return  Response
+	 * @param  integer  $id
+	 * @return Response
 	 */
 	public function delete($id)
 	{

@@ -63,6 +63,7 @@ class TypesController extends Controller
 	 *      "default":       "desc",
 	 *      "allowedValues": "asc, desc"
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -108,6 +109,7 @@ class TypesController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/resources/types
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "name",
@@ -124,6 +126,7 @@ class TypesController extends Controller
 	 *         "api": "https://yourhost/api/resources/types/3"
 	 *     }
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -168,6 +171,7 @@ class TypesController extends Controller
 	 *         "api": "https://yourhost/api/resources/types/1"
 	 *     }
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function read($id)
@@ -184,6 +188,7 @@ class TypesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/resources/types/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -209,6 +214,8 @@ class TypesController extends Controller
 	 *         "api": "https://yourhost/api/resources/types/3"
 	 *     }
 	 * }
+	 * @param   integer  $id
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function update($id, Request $request)
@@ -236,6 +243,7 @@ class TypesController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/resources/types/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -245,6 +253,7 @@ class TypesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

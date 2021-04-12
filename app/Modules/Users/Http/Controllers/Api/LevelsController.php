@@ -20,6 +20,7 @@ class LevelsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/users/levels
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -171,6 +172,7 @@ class LevelsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/users/levels
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "title",
@@ -237,6 +239,7 @@ class LevelsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/users/levels/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -282,6 +285,7 @@ class LevelsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/users/levels/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -361,6 +365,7 @@ class LevelsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/users/levels/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

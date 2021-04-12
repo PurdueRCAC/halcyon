@@ -1,5 +1,98 @@
 @extends('layouts.master')
 
+@push('styles')
+<style>
+	.flex-list-wrapper,
+	.flex-table,
+	.flex-list-inner {
+		width: 100%;
+	}
+	.flex-table .flex-table-header {
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+align-items: center;
+padding: 0 10px;
+}
+.flex-table .flex-table-header span {
+-webkit-box-flex: 1;
+-ms-flex: 1 1 0px;
+flex: 1 1 0px;
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+align-items: center;
+font-size: .8rem;
+font-weight: 600;
+color: #999;
+text-transform: uppercase;
+padding: 0 10px 10px 10px;
+}
+.flex-table .flex-table-header span.cell-end {
+-webkit-box-pack: end;
+-ms-flex-pack: end;
+justify-content: flex-end;
+}
+.flex-table .flex-table-header span.is-grow {
+-webkit-box-flex: 2;
+-ms-flex-positive: 2;
+flex-grow: 2;
+}
+.flex-table .flex-table-item {
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: stretch;
+-ms-flex-align: stretch;
+align-items: stretch;
+width: 100%;
+
+background: rgba(255, 255, 255, 0.05);
+border-radius: 0.25em;
+border: none;
+padding: 0.75rem;
+margin-bottom: 1px;
+}
+.flex-table .flex-table-item .flex-table-cell {
+	-webkit-box-flex: 1;
+	-ms-flex: 1 1 0px;
+	flex: 1 1 0px;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	padding: 0 0.75rem;
+	font-family: "Roboto",sans-serif;
+}
+.flex-table .flex-table-item .flex-table-cell.cell-end {
+-webkit-box-pack: end;
+-ms-flex-pack: end;
+justify-content: flex-end;
+}
+.flex-table .flex-table-item .flex-table-cell.is-grow {
+-webkit-box-flex: 2;
+-ms-flex-positive: 2;
+flex-grow: 2;
+}
+.flex-table .flex-table-item .flex-table-cell.is-user,
+.flex-table .flex-table-item .flex-table-cell.is-media {
+padding-left: 0;
+}
+.flex-table .flex-table-item .flex-table-cell.is-user.is-grow,
+.flex-table .flex-table-item .flex-table-cell.is-media.is-grow {
+-webkit-box-flex: 2;
+-ms-flex-positive: 2;
+flex-grow: 2;
+}
+</style>
+@endpush
+
 @section('title')
 Style guide
 @stop
@@ -231,6 +324,193 @@ Style guide
     </tr>
   </tbody>
 </table>
+
+<div class="flex-list-wrapper flex-list-v1 mb-4">
+		<div class="flex-table">
+
+			<!--Table header-->
+			<div class="flex-table-header" data-filter-hide="">
+				<span class="is-grow">User</span>
+				<span>Location</span>
+				<span>Industry</span>
+				<span>Status</span>
+				<span>Relations</span>
+				<span class="cell-end">Actions</span>
+			</div>
+
+			<div class="flex-list-inner">
+				<!--Table item-->
+				<div class="table-row">
+				<div class="flex-table-item">
+					<div class="flex-table-cell is-media is-grow">
+						<div class="h-avatar is-medium">
+							<img class="avatar" src="assets/img/avatars/photos/8.jpg" data-demo-src="assets/img/avatars/photos/8.jpg" alt="" data-user-popover="3">
+							<img class="badge" src="assets/img/icons/flags/united-states-of-america.svg" data-demo-src="assets/img/icons/flags/united-states-of-america.svg" alt="">
+						</div>
+						<div>
+							<span class="item-name dark-inverted" data-filter-match="">Erik K.</span>
+							<span class="item-meta">
+									<span data-filter-match="">Product Manager</span>
+							</span>
+						</div>
+					</div>
+					<div class="flex-table-cell" data-th="Location">
+						<span class="light-text" data-filter-match="">New York, NY</span>
+					</div>
+					<div class="flex-table-cell" data-th="Industry">
+						<span class="light-text" data-filter-match="">Software</span>
+					</div>
+					<div class="flex-table-cell" data-th="Status">
+						<span class="tag is-success is-rounded" data-filter-match="">Online</span>
+					</div>
+					<div class="flex-table-cell" data-th="Relations">
+						<div class="avatar-stack is-pushed-mobile">
+							<div class="h-avatar is-small">
+								<span class="avatar is-fake is-info" data-user-popover="34">
+									<span>JD</span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="flex-table-cell cell-end" data-th="Actions">
+						<div class="dropdown is-spaced is-dots is-right dropdown-trigger is-pushed-mobile">
+							<div class="is-trigger" aria-haspopup="true">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+							</div>
+							<div class="dropdown-menu" role="menu">
+								<div class="dropdown-content">
+									<a href="#" class="dropdown-item is-media">
+										<div class="icon">
+											<i class="lnil lnil-eye"></i>
+										</div>
+										<div class="meta">
+											<span>View</span>
+											<span>View user details</span>
+										</div>
+									</a>
+									<a href="#" class="dropdown-item is-media">
+										<div class="icon">
+											<i class="lnil lnil-briefcase"></i>
+										</div>
+										<div class="meta">
+											<span>Projects</span>
+											<span>View user projects</span>
+										</div>
+									</a>
+									<a href="#" class="dropdown-item is-media">
+										<div class="icon">
+											<i class="lnil lnil-calendar"></i>
+										</div>
+										<div class="meta">
+											<span>Schedule</span>
+											<span>Schedule a meeting</span>
+										</div>
+									</a>
+									<hr class="dropdown-divider">
+									<a href="#" class="dropdown-item is-media">
+										<div class="icon">
+											<i class="lnil lnil-trash-can-alt"></i>
+										</div>
+										<div class="meta">
+											<span>Remove</span>
+											<span>Remove from list</span>
+										</div>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="table-row hide">
+					Detailed info here
+				</div>
+				</div>
+
+				<!--Table item-->
+				<div class="flex-table-item">
+					<div class="flex-table-cell is-media is-grow">
+						<div class="h-avatar is-medium">
+							<img class="avatar" src="assets/img/avatars/photos/22.jpg" data-demo-src="assets/img/avatars/photos/22.jpg" alt="" data-user-popover="5">
+							<img class="badge" src="assets/img/icons/flags/united-states-of-america.svg" data-demo-src="assets/img/icons/flags/united-states-of-america.svg" alt="">
+						</div>
+						<div>
+							<span class="item-name dark-inverted" data-filter-match="">Jimmy H.</span>
+							<span class="item-meta">
+									<span data-filter-match="">Project Manager</span>
+							</span>
+						</div>
+					</div>
+					<div class="flex-table-cell" data-th="Location">
+						<span class="light-text" data-filter-match="">Los Angeles, CA</span>
+					</div>
+					<div class="flex-table-cell" data-th="Industry">
+						<span class="light-text" data-filter-match="">Business</span>
+					</div>
+					<div class="flex-table-cell" data-th="Status">
+						<span class="tag is-rounded" data-filter-match="">Offline</span>
+					</div>
+					<div class="flex-table-cell" data-th="Relations">
+						<div class="avatar-stack is-pushed-mobile">
+							<div class="h-avatar is-small">
+								<span class="avatar is-fake is-danger" data-user-popover="35">
+										<span>SC</span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="flex-table-cell cell-end" data-th="Actions">
+						<div class="dropdown is-spaced is-dots is-right dropdown-trigger is-pushed-mobile">
+							<div class="is-trigger" aria-haspopup="true">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+							</div>
+							<div class="dropdown-menu" role="menu">
+								<div class="dropdown-content">
+									<a href="#" class="dropdown-item is-media">
+										<div class="icon">
+											<i class="lnil lnil-eye"></i>
+										</div>
+										<div class="meta">
+											<span>View</span>
+											<span>View user details</span>
+										</div>
+									</a>
+									<a href="#" class="dropdown-item is-media">
+										<div class="icon">
+											<i class="lnil lnil-briefcase"></i>
+										</div>
+										<div class="meta">
+											<span>Projects</span>
+											<span>View user projects</span>
+										</div>
+									</a>
+									<a href="#" class="dropdown-item is-media">
+										<div class="icon">
+											<i class="lnil lnil-calendar"></i>
+										</div>
+										<div class="meta">
+											<span>Schedule</span>
+											<span>Schedule a meeting</span>
+										</div>
+									</a>
+									<hr class="dropdown-divider">
+									<a href="#" class="dropdown-item is-media">
+										<div class="icon">
+											<i class="lnil lnil-trash-can-alt"></i>
+										</div>
+										<div class="meta">
+											<span>Remove</span>
+											<span>Remove from list</span>
+										</div>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div><!-- / .flex-table-item -->
+
+			</div><!-- / .flex-list-inner -->
+		</div><!-- / .flex-table -->
+	</div>
 
 	<h2>Forms</h2>
 	<form>

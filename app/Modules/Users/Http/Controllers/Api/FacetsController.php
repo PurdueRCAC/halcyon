@@ -20,6 +20,7 @@ class FacetsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/users/facets
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "user_id",
@@ -157,6 +158,7 @@ class FacetsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/users/facets
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "key",
@@ -259,6 +261,7 @@ class FacetsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/users/facets/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -285,6 +288,7 @@ class FacetsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/users/facets/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "value",
@@ -339,6 +343,7 @@ class FacetsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/users/facets/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

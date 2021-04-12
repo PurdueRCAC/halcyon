@@ -118,6 +118,7 @@ class NotificationTypesController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /storage/notifications/types
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -189,7 +190,8 @@ class NotificationTypesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @return  Response
+	 * @param  integer  $id
+	 * @return Response
 	 */
 	public function read($id)
 	{
@@ -204,6 +206,7 @@ class NotificationTypesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /storage/notifications/types/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -288,6 +291,7 @@ class NotificationTypesController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /storage/notifications/types/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -297,7 +301,8 @@ class NotificationTypesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @return  Response
+	 * @param  integer  $id
+	 * @return Response
 	 */
 	public function delete($id)
 	{

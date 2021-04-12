@@ -21,6 +21,7 @@ class LoansController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/storage/loans
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
@@ -136,6 +137,7 @@ class LoansController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/storage/loans
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "resourceid",
@@ -329,6 +331,7 @@ class LoansController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/storage/loans/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -368,6 +371,7 @@ class LoansController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/storage/loans/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -588,6 +592,7 @@ class LoansController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/storage/loans/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

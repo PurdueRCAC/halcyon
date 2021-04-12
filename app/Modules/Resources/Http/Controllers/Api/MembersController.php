@@ -25,13 +25,16 @@ class MembersController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/resources/members
+	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "in":            "body",
-	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       null
+	 * 		"in":            "body",
+	 * 		"name":          "name",
+	 * 		"description":   "The name of the resource type",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 16
+	 * 		}
 	 * }
 	 * @param  Request $request
 	 * @return Response
@@ -132,7 +135,6 @@ class MembersController extends Controller
 		);
 
 		return new JsonResource($data);
-		//return new AssetResource($asset);
 	}
 
 	/**
@@ -140,13 +142,15 @@ class MembersController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/resources/members/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       null
+	 * 		"in":            "query",
+	 * 		"name":          "name",
+	 * 		"description":   "The ID of the resource type",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   integer $id
 	 * @return  Response
@@ -217,68 +221,19 @@ class MembersController extends Controller
 	}
 
 	/**
-	 * Update a resource
-	 *
-	 * @apiMethod PUT
-	 * @apiUri    /api/resources/members/{id}
-	 * @apiParameter {
-	 *      "in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the resource type",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       null
-	 * }
-	 * @apiParameter {
-	 *      "in":            "body",
-	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       null
-	 * }
-	 * @param  Request $request
-	 * @return Response
-	 */
-	public function update(Asset $asset, Request $request)
-	{
-		$request->validate([
-			'name' => 'required|max:32',
-			'datetimecreated' => 'nullable|date'
-		]);
-
-		$asset->update($request->all());
-
-		/*$asset = Asset::findOrFail($id);
-		$asset->set([
-			'name'         => $request->get('name'),
-			'parentid'     => $request->get('parentid'),
-			'rolename'     => $request->get('rolename'),
-			'listname'     => $request->get('listname'),
-			'resourcetype' => $request->get('resourcetype'),
-			'producttype'  => $request->get('producttype')
-		]);
-
-		$asset->save();*/
-
-		//event(new ResourceUpdated($asset));
-		event('onAfterResourceSave', $asset);
-
-		return new AssetResource($asset);
-	}
-
-	/**
 	 * Delete a resource
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/resources/members/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "Resource ID and user ID separated by a period. Example: 1234.5678",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       null
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Resource ID and user ID separated by a period. Example: 1234.5678",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @param  string $id
 	 * @return Response

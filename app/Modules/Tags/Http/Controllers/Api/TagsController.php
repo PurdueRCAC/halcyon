@@ -156,6 +156,7 @@ class TagsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/tags
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -250,6 +251,7 @@ class TagsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/tags/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -329,6 +331,7 @@ class TagsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/tags/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

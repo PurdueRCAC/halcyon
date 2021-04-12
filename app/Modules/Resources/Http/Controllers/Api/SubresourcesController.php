@@ -72,6 +72,7 @@ class SubresourcesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -140,6 +141,7 @@ class SubresourcesController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/resources/subresources/
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "resourceid",
@@ -233,6 +235,7 @@ class SubresourcesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -279,6 +282,7 @@ class SubresourcesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function read($id)
@@ -293,6 +297,7 @@ class SubresourcesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/resources/subresources/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -374,6 +379,8 @@ class SubresourcesController extends Controller
 	 *      "required":      false,
 	 *      "default":       null
 	 * }
+	 * @param   integer  $id
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function update($id, Request $request)
@@ -424,6 +431,7 @@ class SubresourcesController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/resources/subresources/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -433,6 +441,7 @@ class SubresourcesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

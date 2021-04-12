@@ -73,6 +73,7 @@ class ResourcesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -133,6 +134,7 @@ class ResourcesController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/resources
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "name",
@@ -181,6 +183,7 @@ class ResourcesController extends Controller
 	 *      "required":      false,
 	 *      "default":       null
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -221,6 +224,7 @@ class ResourcesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function read($id)
@@ -235,6 +239,7 @@ class ResourcesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/resources/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -292,6 +297,8 @@ class ResourcesController extends Controller
 	 *      "required":      false,
 	 *      "default":       null
 	 * }
+	 * @param   integer  $id
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function update($id, Request $request)
@@ -330,6 +337,7 @@ class ResourcesController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/resources/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

@@ -91,6 +91,7 @@ class StorageController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -152,6 +153,7 @@ class StorageController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /storage
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -317,6 +319,7 @@ class StorageController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function read($id)
@@ -333,6 +336,7 @@ class StorageController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /storage/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -494,6 +498,7 @@ class StorageController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /storage/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

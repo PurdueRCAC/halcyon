@@ -23,45 +23,63 @@ class BatchsystemsController extends Controller
 	 * @apiUri    /api/resources/batchsystems
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 *      "name":          "limit",
-	 *      "description":   "Number of result to return.",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       25
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result to return.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   20
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 *      "name":          "page",
-	 *      "description":   "Number of where to start returning results.",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       0
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 *      "name":          "search",
-	 *      "description":   "A word or phrase to search for.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       null
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 *      "name":          "order",
-	 *      "description":   "Field to sort results by.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       "created",
-	 *      "allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved",
+	 * 				"parentid"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 *      "name":          "order_dir",
-	 *      "description":   "Direction to sort results by.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       "desc",
-	 *      "allowedValues": "asc, desc"
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "desc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -108,14 +126,18 @@ class BatchsystemsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/resources/batchsystems
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "name",
-	 *      "description":   "The name of the batchsystem",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       null
+	 * 		"name":          "name",
+	 * 		"description":   "The name of the batch system",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 16
+	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -143,13 +165,15 @@ class BatchsystemsController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/resources/batchsystems/{id}
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the batchsystem",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       null
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function read($id)
@@ -167,22 +191,28 @@ class BatchsystemsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/resources/batchsystems/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the batchsystem",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       null
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "name",
-	 *      "description":   "The name of the batchsystem",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       null
+	 * 		"name":          "name",
+	 * 		"description":   "The name of the batch system",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 16
+	 * 		}
 	 * }
+	 * @param   integer  $id
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function update($id, Request $request)
@@ -209,14 +239,17 @@ class BatchsystemsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/resources/batchsystems/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 *      "name":          "id",
-	 *      "description":   "The ID of the batchsystem",
-	 *      "type":          "integer",
-	 *      "required":      true,
-	 *      "default":       null
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)

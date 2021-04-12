@@ -20,6 +20,7 @@ class RolesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/users/roles
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -141,6 +142,7 @@ class RolesController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/users/roles
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "title",
@@ -190,6 +192,7 @@ class RolesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/users/roles/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -216,6 +219,7 @@ class RolesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/users/roles/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -275,6 +279,7 @@ class RolesController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/users/roles/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

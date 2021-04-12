@@ -60,9 +60,9 @@ class ModuleServiceProvider extends ServiceProvider
 
 				$this->publish($theme->getPath() . '/assets', $manager->getAssetPath($theme->getLowerName()));
 
-				/*$this->publishes([
+				$this->publishes([
 					$theme->getPath() . '/assets' => $manager->getAssetPath($theme->getName()),
-				], 'public');*/
+				], 'public');
 			}
 		}
 

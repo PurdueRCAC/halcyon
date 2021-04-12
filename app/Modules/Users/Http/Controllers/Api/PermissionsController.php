@@ -20,6 +20,7 @@ class PermissionsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/users/permissions
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -141,6 +142,7 @@ class PermissionsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/users/permissions/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -257,6 +259,7 @@ class PermissionsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/users/permissions/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

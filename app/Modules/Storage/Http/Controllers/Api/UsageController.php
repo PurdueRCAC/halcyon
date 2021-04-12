@@ -19,6 +19,7 @@ class UsageController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /storage/loans
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -79,6 +80,7 @@ class UsageController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -198,6 +200,7 @@ class UsageController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /storage/usage
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "name",
 	 *      "description":   "The name of the resource type",
@@ -205,6 +208,7 @@ class UsageController extends Controller
 	 *      "required":      true,
 	 *      "default":       ""
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -286,6 +290,7 @@ class UsageController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /storage/usage/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -295,6 +300,7 @@ class UsageController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function read($id)
@@ -334,6 +340,8 @@ class UsageController extends Controller
 	 *      "required":      true,
 	 *      "default":       ""
 	 * }
+	 * @param   integer  $id
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function update($id, Request $request)
@@ -389,6 +397,7 @@ class UsageController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /storage/usage/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -398,6 +407,7 @@ class UsageController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)
