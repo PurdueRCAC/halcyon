@@ -157,6 +157,7 @@ class TypesController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/messages/types
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "name",
 	 * 		"description":   "Name",
@@ -258,6 +259,7 @@ class TypesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/messages/types/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -344,6 +346,7 @@ class TypesController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/messages/types/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

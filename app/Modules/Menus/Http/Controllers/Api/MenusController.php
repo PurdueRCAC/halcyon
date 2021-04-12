@@ -77,6 +77,7 @@ class MenusController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -139,6 +140,7 @@ class MenusController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/menus
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "title",
 	 * 		"description":   "Menu title",
@@ -206,6 +208,7 @@ class MenusController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function read($id)
@@ -222,6 +225,7 @@ class MenusController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/menus/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -260,6 +264,7 @@ class MenusController extends Controller
 	 * 		"default":       ""
 	 * }
 	 * @param   Request $request
+	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -290,6 +295,7 @@ class MenusController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/menus/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

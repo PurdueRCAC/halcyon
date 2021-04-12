@@ -325,6 +325,7 @@ class OrdersController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/orders
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "userid",

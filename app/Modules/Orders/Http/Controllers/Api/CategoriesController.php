@@ -179,6 +179,7 @@ class CategoriesController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/orders/categories
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -282,6 +283,7 @@ class CategoriesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/orders/categories/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -373,6 +375,7 @@ class CategoriesController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/orders/categories/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

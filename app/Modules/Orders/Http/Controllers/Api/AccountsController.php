@@ -216,6 +216,7 @@ class AccountsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/orders/accounts
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "orderid",
@@ -415,6 +416,7 @@ class AccountsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/orders/accounts/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "amount",
@@ -740,6 +742,7 @@ class AccountsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/orders/accounts/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

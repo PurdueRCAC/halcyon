@@ -77,6 +77,7 @@ class ItemsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -385,6 +386,7 @@ class ItemsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/menus/items
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
@@ -504,6 +506,7 @@ class ItemsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/menus/items/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -582,6 +585,7 @@ class ItemsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/menus/items/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -611,6 +615,7 @@ class ItemsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/menus/items/reorder
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",

@@ -240,6 +240,7 @@ class ItemsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/orders/items
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "orderid",
@@ -303,6 +304,7 @@ class ItemsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -386,6 +388,7 @@ class ItemsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function read($id)
@@ -403,6 +406,7 @@ class ItemsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/orders/items/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -449,6 +453,7 @@ class ItemsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer $id
 	 * @param   Request $request
 	 * @return  Response
 	 */
@@ -522,6 +527,7 @@ class ItemsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/orders/items/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -531,6 +537,7 @@ class ItemsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @return  Response
 	 */
 	public function delete($id)
@@ -589,7 +596,7 @@ class ItemsController extends Controller
 		return new JsonResource($row);
 
 		// Fetch orderitemsequence information from the database.
-		$i = (new Item)->getTable();
+		/*$i = (new Item)->getTable();
 		$o = (new Order)->getTable();
 
 		$rows = Item::query()
@@ -649,7 +656,7 @@ class ItemsController extends Controller
 				array_push($users, $row->submitteruserid);
 			}
 
-			/*array_push($response->items, array(
+			array_push($response->items, array(
 				'id'              => ROOT_URI . 'orderitem/' . $row['id'],
 				'order'           => ROOT_URI . 'order/' . $row['orderid'],
 				'created'         => $row['datetimecreated'],
@@ -658,18 +665,10 @@ class ItemsController extends Controller
 				'quantity'        => $row['quantity'],
 				'price'           => $row['price'],
 				'timeperiodcount' => $row['timeperiodcount'],
-			));*/
+			));
 		}
 
 		// Get approvers
-		/*$sql = "SELECT DISTINCT orderpurchaseaccounts.approveruserid
-			FROM orderitems, orderpurchaseaccounts
-			WHERE orderitems.orderid = orderpurchaseaccounts.orderid
-			AND orderitems.origorderitemid = '" . $this->db->escape_string($id) . "'
-			AND orderitems.datetimeremoved = '0000-00-00 00:00:00'";
-		$data2 = array();
-		$rows = $this->db->query($sql, $data2);*/
-
 		$a = (new Account)->getTable();
 
 		$approvers = Account::query()
@@ -783,6 +782,6 @@ class ItemsController extends Controller
 			return 403;
 		}
 
-		return new JsonResource($response);
+		return new JsonResource($response);*/
 	}
 }

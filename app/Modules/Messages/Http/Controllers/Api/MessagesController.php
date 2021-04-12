@@ -231,6 +231,7 @@ class MessagesController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/messages
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "messagequeuetypeid",
@@ -364,6 +365,7 @@ class MessagesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/messages/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -579,6 +581,7 @@ class MessagesController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/messages/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

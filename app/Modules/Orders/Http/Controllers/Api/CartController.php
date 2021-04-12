@@ -37,6 +37,7 @@ class CartController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/orders/cart
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "quantity",
@@ -118,6 +119,7 @@ class CartController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/orders/cart/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -172,6 +174,7 @@ class CartController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/orders/cart/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
