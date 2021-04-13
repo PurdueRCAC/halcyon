@@ -44,6 +44,49 @@ class Generator
 
 		// create all needed keys in output
 		$this->output = array(
+			'openapi'  => '3.0.0',
+			'info' => array(
+				'title' => trans('core::docs.api title', ['title' => config('app.name')]),
+				//'description' => trans('core::docs.api description'),
+				'version' => '0.0.1',
+			),
+			'servers' => array(
+				array(
+					'url' => route('api.core.index'),
+					'description' => trans('core::docs.api server')
+				),
+			),
+			'components' => array(
+				'parameters' => array(
+					'limitParam' => array(
+						'name' => 'limit',
+						'in' => 'query',
+						'description' => 'Number of records to return per page',
+						'required' => false,
+						'schema' => array(
+							'type' => 'integer',
+							'format' => 'int32'
+						),
+					),
+					'pageParam' => array(
+						'name' => 'page',
+						'in' => 'query',
+						'description' => '',
+						'required' => false,
+						'schema' => array(
+							'type' => 'integer',
+							'format' => 'int32'
+						),
+					),
+				),
+				'securitySchemes' => array(
+					'api_token' => array(
+						'type' => 'apiKey',
+						'name' => 'api_token',
+						'in'   => 'header'
+					),
+				),
+			),
 			'sections' => array(),
 			'versions' => array(
 				'max'       => '',
@@ -97,17 +140,17 @@ class Generator
 			return false;
 		}
 
-		// get developer params to get cache expiration
+		// Get developer params to get cache expiration
 		$cacheExpiration = config()->get('module.core.doc_expiration', 720);
 
-		// cache file
+		// Check if we have a cache file
 		$cacheFile = storage_path('app/public/openapi.json');
 
-		// check if we have a cache file 
 		if (file_exists($cacheFile))
 		{
-			// check if its still valid
+			// Check if its still valid
 			$cacheMakeTime = @filemtime($cacheFile);
+
 			if (time() - $cacheExpiration < $cacheMakeTime)
 			{
 				$this->output = json_decode(file_get_contents($cacheFile), true);

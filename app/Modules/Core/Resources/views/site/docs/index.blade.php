@@ -9,7 +9,7 @@
 		<meta name="base-url" content="{{ rtrim(asset('/'), '/') }}">
 		<meta name="api-token" content="{{ (Auth::user() ? Auth::user()->api_token : '') }}">
 
-		<title>ITaP Research Computing @hasSection('title') - @yield('title') @endif</title>
+		<title>{{ config('app.name') }}@hasSection('title') - @yield('title') @endif</title>
 
 		<meta name="description" content="Information Technology at Purdue (ITaP) Research Computing provides advanced computational resources and services to support Purdue faculty and staff researchers." />
 		<meta name="keywords" content="Purdue University, RCAC, Research Computing, Information Technology at Purdue, ITaP" />
@@ -30,6 +30,7 @@
 			-ms-text-size-adjust: 100%;
 			-webkit-text-size-adjust:100%;
 			font-family: sans-serif;
+			height: 100%;
 		}
 
 		body {
@@ -40,26 +41,82 @@
 			font-weight: 400;
 			line-height: 1.5;
 			color: #212529;
+			height: 100%;
+		}
+		a {
+			color: #0071EB;
+		}
+		code {
+			color: #D71972;
+		}
+		.badge-info {
+			background-color: #20809D;
+		}
+		.text-info {
+			color: #20809D;
+		}
+
+		.panel-v {
+			min-height: 100%;
+			width: 100%;
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			-webkit-box-align: center;
+			-ms-flex-align: center;
+			align-items: center;
+			-webkit-transition: ease height 300ms;
+			transition: ease height 300ms;
+			flex-direction: column;
+		}
+		.panel-v > * {
+			align-self: stretch;
+			-webkit-box-flex: 1;
+			-ms-flex-positive: 1;
+			flex-grow: 1;
+			width: 100%;
+		}
+		.panel-v > .docs-info,
+		.panel-v > footer {
+			flex-grow: 0;
+			padding: 1rem 3rem;
+		}
+		footer section {
+			color: #666;
+			display: -ms-flexbox;
+			display: flex;
+			-ms-flex-wrap: wrap;
+			flex-wrap: wrap;
+			flex-direction: row;
+			width: 100%;
+		}
+		footer section > * {
+			flex: 1 0 auto;
+		}
+		footer section > *:last-child {
+			text-align: right;
 		}
 		.docs-sidebar {
 			background: #f9f9f9;
-			border-right: 1px solid rgba(148,151,155,0.2);
-height: 100%;
-position: fixed;
-overflow-y: auto;
-max-width: 270px;
-min-width: 270px;
-overflow-x: hidden;
-}
-.docs-sidebar+.docs-main {
-position: relative;
-overflow: hidden;
-margin-left: 270px;
-}
-.docs-content {
-}
+			border-bottom: 1px solid rgba(148,151,155,0.2);
+		}
+		/*.docs-sidebar+.docs-main {
+			position: relative;
+			overflow: hidden;
+		}*/
+		.docs-content {
+			padding: 0 3rem 3rem 3rem;
+		}
+
 .docs-sidebar ul {
 	list-style: none;
+}
+.docs-sidebar-tree {
+	display: none;
+	margin: 1em 0;
+}
+.docs-sidebar-tree.active {
+	display: block;
 }
 .docs-sidebar-tree ul {
 	margin-left: 1em;
@@ -105,29 +162,75 @@ background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%
 	display: block;
 }
 .docs-sidebar-header {
-position: relative;
-display: flex;
-align-items: center;
-justify-content: space-between;
-height: 5rem;
-padding: 1.5rem;
-padding-right: 0;
+padding: 1rem;
 border-bottom: 1px solid rgba(148,151,155,0.2);
 z-index: 0;
-min-width: 270px;
-margin: 0 0 2em 0;
+margin: 0;
+position: relative;
+}
+.docs-sidebar-header .navbar-toggle {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
 }
 .docs-sidebar-header h2 {
-	font-size: 1.5em;
+	font-size: 1em;
 }
-.docs-sidebar-header {
-/*position: fixed;*/
-border-right: 1px solid rgba(148,151,155,0.2);
+/*.docs-sidebar-header {
+position: fixed;
 z-index: 1;
-max-width: 270px;
 background-color: #F9F9F9;
-}
+}*/
 
+@media (max-width: 760px) {
+	table th {
+		display: none;
+	}
+	table,
+	table tbody,
+	table tr,
+	table td {
+		width: auto;
+		display: block;
+		border-top: none;
+	}
+	table tr {
+		margin: 0 0 1em 0;
+		border: 1px solid #eee;
+	}
+}
+@media (min-width: 760px) {
+	body {
+		padding-left: 270px;
+	}
+	/*.docs-sidebar-header {
+		width: 270px;
+	}*/
+	.docs-sidebar-header {
+		padding: 1.5rem;
+	}
+	.docs-sidebar-header h2 {
+		font-size: 1.5em;
+	}
+	.docs-sidebar {
+		border-bottom: none;
+		border-right: 1px solid rgba(148,151,155,0.2);
+		height: 100%;
+		position: fixed;
+		overflow-y: auto;
+		max-width: 270px;
+		min-width: 270px;
+		overflow-x: hidden;
+		top: 0;
+		left: 0;
+	}
+	.docs-sidebar-tree {
+		display: block;
+	}
+	.docs-sidebar-header .navbar-toggle {
+		display: none;
+	}
+}
 
 .swagger-ui .opblock {
     margin: 0 0 15px;
@@ -260,17 +363,18 @@ background-color: #F9F9F9;
     font-weight: 600;
     color:#3b4151
 }
+
 .swagger-ui .opblock .opblock-section {
 	padding: 2em;
 }
 
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
     .swagger-ui .opblock .opblock-summary-operation-id,
     .swagger-ui .opblock .opblock-summary-path,
     .swagger-ui .opblock .opblock-summary-path__deprecated {
         font-size: 0.85em;
     }
-}
+}*/
 
 .swagger-ui .opblock .opblock-summary-path {
     flex-shrink: 0;
@@ -278,19 +382,19 @@ background-color: #F9F9F9;
 }
 
 .swagger-ui .opblock.opblock-get .opblock-summary-method {
-    background:#61affe
+    background: #0071EB; /*#61affe*/
 }
 .swagger-ui .opblock.opblock-patch .opblock-summary-method {
     background:#50e3c2
 }
 .swagger-ui .opblock.opblock-delete .opblock-summary-method {
-    background:#f93e3e
+    background: #ED0707; /*#f93e3e*/
 }
 .swagger-ui .opblock.opblock-put .opblock-summary-method {
-    background:#fca130
+    background: #C15401; /*#fca130;*/
 }
 .swagger-ui .opblock.opblock-post .opblock-summary-method {
-    background:#49cc90;
+    background: #218739; /*#49cc90;*/
     /*background: #fff;
     color: #49cc90;
     border: 2px solid #49cc90;*/
@@ -344,7 +448,36 @@ pre {
 padding-left: 4.5rem !important;
 counter-reset: linenumber;
 }
-		</style>
+
+.navbar-toggle .bar {
+	display: block;
+	width: 22px;
+	height: 2px;
+	border-radius: 1px;
+}
+.navbar-toggle .bar + .bar {
+	margin-top: 4px;
+}
+
+.navbar-toggle {
+	padding: 2px 0;
+	/*font-size: 1em;*/
+}
+.navbar-toggle .bar {
+	float: left;
+	clear: left;
+	margin-right: 10px;
+	background-color: #666;
+}
+.navbar-toggle>.bar:first-child {
+	margin-top: 3px;
+}
+.navbar-toggle:hover {
+	color: #000;
+}
+.navbar-toggle:hover .bar {
+	background-color: #000;
+}		</style>
 		@yield('styles')
 		@stack('styles')
 
@@ -398,7 +531,7 @@ counter-reset: linenumber;
 			document.addEventListener('DOMContentLoaded', function() {
 				var i;
 
-				// Add event listeners to toolbar buttons
+				// Open/close endpoint blocks
 				var summary = document.getElementsByClassName('opblock-summary');
 				for (i = 0; i < summary.length; i++)
 				{
@@ -413,6 +546,7 @@ counter-reset: linenumber;
 					});
 				}
 
+				// Open/close doc folders
 				var nodes = document.getElementsByClassName('node');
 				for (i = 0; i < nodes.length; i++)
 				{
@@ -432,6 +566,22 @@ counter-reset: linenumber;
 						}
 					});
 				}
+
+				var menu = document.getElementsByClassName('navbar-toggle');
+				for (i = 0; i < menu.length; i++)
+				{
+					menu[i].addEventListener('click', function(e){
+						e.preventDefault();
+
+						var menu = document.querySelector(this.getAttribute('href'));
+
+						if (Halcyon.hasClass(menu, 'active')) {
+							Halcyon.removeClass(menu, 'active');
+						} else {
+							Halcyon.addClass(menu, 'active');
+						}
+					});
+				}
 			});
 		</script>
 		@yield('scripts')
@@ -439,17 +589,27 @@ counter-reset: linenumber;
 	</head>
 	<body>
 		<header class="sr-only">
-			<!-- logo and Tagline -->
 			<div class="top">
-				<h1>API Documentation</h1>
-			</div><!-- / .top -->
+				<h1>{{ config('app.name') }}</h1>
+			</div>
 		</header>
 
 		<nav class="docs-sidebar">
 			<div class="docs-sidebar-header">
-				<h2>API Documentation</h2>
+				<h2>
+					API Documentation
+					@if (!empty($documentation['info']['version']))
+						<span class="badge badge-info">{{ $documentation['info']['version'] }}</span>
+					@endif
+				</h2>
+				<a href="#endpoints" class="navbar-toggle" data-target=".docs-sidebar-tree" data-toggle="collapse" type="button" title="{{ trans('core::docs.menu') }}">
+					<span class="bar"></span>
+					<span class="bar"></span>
+					<span class="bar"></span>
+					<span class="sr-only">{{ trans('core::docs.menu') }}</span>
+				</a>
 			</div>
-			<ul class="docs-sidebar-tree">
+			<ul class="docs-sidebar-tree" id="endpoints">
 				@foreach ($modules as $mod)
 				<li class="folder<?php if ($mod->getLowerName() == $module) { echo ' active'; } ?>">
 					<a class="node" href="{{ route('api.' . $mod->getLowerName() . '.index') }}">{{ trans($mod->getLowerName() . '::' . $mod->getLowerName() . '.module name') }}</a>
@@ -469,191 +629,215 @@ counter-reset: linenumber;
 			</ul>
 		</nav>
 
-		<main class="docs-main swagger-ui">
-			<div class="docs-content m-5">
-				<?php
-				if ($module):
-					$active = $documentation['sections'][$module];
-
-					foreach ($active as $controller => $endpoints):
-						if (empty($endpoints)):
-							continue;
-						endif;
-					?>
-				<section class="mb-5">
-					<h3 class="opblock-tag" id="operations-tag-{{ $controller }}" data-tag="{{ $controller }}" data-is-open="false">
-						{{ $endpoints['name'] ? $endpoints['name'] : trans($mod->getLowerName() . '::' . $mod->getLowerName() . '.' . $controller) }}
-					</h3>
-
-					@if ($endpoints['description'])
-						<p>{{ $endpoints['description'] }}</p>
-					@endif
-
-					<?php
-				foreach ($endpoints['endpoints'] as $endpoint):
-					if (!$endpoint['method']):
-						continue;
-					endif;
-
-					$key = $endpoint['_metadata']['module'] . '-' . $endpoint['_metadata']['method'];
-					?>
-					<div class="doc-section endpoint" id="{{ $key }}">
-
-						<div class="opblock opblock-{{ strtolower($endpoint['method']) }}" id="{{ $key }}">
-							<div class="opblock-summary opblock-summary-post">
-								@if ($endpoint['method'])
-									<span class="opblock-summary-method">{{ $endpoint['method'] }}</span>
-								@endif
-								@if ($endpoint['uri'])
-									<span class="opblock-summary-path" data-path="{{ $endpoint['uri'] }}">
-										{!! preg_replace('/(\{[^}]+\})/', "<code>$1</code>", $endpoint['uri']) !!}
-									</span>
-								@endif
-								@if ($endpoint['name'])
-									<div class="opblock-summary-description">{{ $endpoint['name'] }}</div>
-								@endif
-								@if (isset($endpoint['authorization']) && $endpoint['authorization'])
-									<span class="authorization__btn locked">
-										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="14" height="14"><path d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z"/></svg>
-									</span>
-								@endif
-							</div>
-
-							<div class="opblock-body">
-								@if ($endpoint['description'])
-									<div class="opblock-description-wrapper">
-										<div class="opblock-description">
-											<p>{{ $endpoint['description'] }}</p>
-										</div>
-									</div>
-								@endif
-
-								<div class="opblock-section" id="{{ $key }}-params">
-									<div class="opblock-section-header">
-										<div class="tab-header">
-											<h4 class="opblock-title">{{ trans('core::docs.parameters') }}</h4>
-										</div>
-										<!-- <div class="try-out"><button class="btn try-out__btn">Try it out </button></div> -->
-									</div>
-									<div class="parameters-container">
-										<div class="table-container">
-											@if (count($endpoint['parameters']) > 0)
-												<table class="table">
-													<caption class="sr-only">{{ trans('core::docs.parameters') }}</caption>
-													<thead>
-														<tr>
-															<th scope="col">{{ trans('core::docs.name') }}</th>
-															<th scope="col">{{ trans('core::docs.in') }}</th>
-															<th scope="col">{{ trans('core::docs.type') }}</th>
-															<th scope="col">{{ trans('core::docs.default') }}</th>
-															<th scope="col">{{ trans('core::docs.description') }}</th>
-															<th scope="col">{{ trans('core::docs.accepted values') }}</th>
-														</tr>
-													</thead>
-													<tbody>
-														@foreach ($endpoint['parameters'] as $param)
-															<tr>
-																<td>
-																	<code><span class="docs-api-param-name">{{ $param['name'] }}</span></code>
-																</td>
-																<td>
-																	@if (isset($param['in']) && $param['in'])
-																		<span class="docs-api-tag docs-api-param-{{ isset($param['in']) ? $param['in'] : '' }}">{{ $param['in'] }}</span>
-																	@endif
-																</td>
-																<td>
-																	@if (isset($param['schema']['type']) && $param['schema']['type'])
-																		<span class="docs-api-tag docs-api-param-type">{{ $param['schema']['type'] }}</span>
-																	@endif
-																	@if (isset($param['schema']['format']) && $param['schema']['format'])
-																		<br /><small>Format: {{ $param['schema']['format'] }}</small>
-																	@endif
-																	@if (isset($param['schema']['example']) && $param['schema']['example'])
-																		<br /><small>Example: {{ $param['schema']['example'] }}</small>
-																	@endif
-																</td>
-																<td>
-																	<code class="nohighlight">{{ (isset($param['schema']['default']) && !is_null($param['schema']['default'])) ? $param['schema']['default'] : 'null' }}</code>
-																</td>
-																<td>
-																	@if ($param['required'])
-																		<span class="required">{{ trans('global.required') }}</span>
-																	@endif
-																	{{ $param['description'] }}
-																</td>
-																<td>
-																	@if (isset($param['schema']['enum']))
-																		<code class="nohighlight">{!! implode('</code>, <code class="nohighlight">', $param['schema']['enum']) !!}</code>
-																	@endif
-																</td>
-															</tr>
-														@endforeach
-													</tbody>
-												</table>
-											@else
-												<p class="alert alert-info">{{ trans('global.none') }}</p>
-											@endif
-										</div>
-									</div>
-								</div>
-
-								@if (isset($endpoint['response']) && $endpoint['response'])
-								<div class="opblock-section">
-									<div class="opblock-section-header">
-										<div class="tab-header">
-											<h4 class="opblock-title">{{ trans('core::docs.response') }}</h4>
-										</div>
-									</div>
-									<div class="response-container">
-										<table class="table">
-											<caption class="sr-only">{{ trans('core::docs.response codes') }}</caption>
-											<thead>
-												<tr>
-													<th scope="col">{{ trans('core::docs.code') }}</th>
-													<th scope="col">{{ trans('core::docs.description') }}</th>
-													<th scope="col">{{ trans('core::docs.example') }}</th>
-												</tr>
-											</thead>
-											<tbody>
-												@foreach ($endpoint['response'] as $code => $response)
-													<tr>
-														<td>
-															<code><span class="docs-api-param-name">{{ $code }}</span></code>
-														</td>
-														<td>
-															{{ isset($response->description) ? $response->description : '' }}
-														</td>
-														<td>
-														@if (isset($response->content))
-															@foreach ($response->content as $mime => $example)
-																<code>{{ $mime }}</code>:
-																<pre><code class="language-json">{{ json_encode($example->example, JSON_PRETTY_PRINT) }}</code></pre>
-															@endforeach
-														@endif
-														</td>
-													</tr>
-												@endforeach
-											</tbody>
-										</table>
-									</div>
-								</div>
-								@endif
-							</div>
+		<main class="panel panel-v">
+			@if (!empty($documentation['servers']))
+				<div class="docs-info">
+					@foreach ($documentation['servers'] as $server)
+						<p><a href="{{ $server['url'] }}">{{ $server['url'] }}</a> - {{ $server['description'] }}</p>
+					@endforeach
+				</div>
+			@endif
+			<div class="docs-main swagger-ui">
+				<div class="docs-content">
+					@if (!empty($documentation['errors']))
+						<div class="alert alert-danger">
+							@foreach ($documentation['errors'] as $error)
+								<p>{{ $error }}</p>
+							@endforeach
 						</div>
-					</div>
-				<?php
-				endforeach;
-				?>
-			</section>
-			<?php
-					endforeach;
-				endif;
-				?>
+					@endif
+					<?php
+					if ($module):
+						$active = $documentation['sections'][$module];
+
+						foreach ($active as $controller => $endpoints):
+							if (empty($endpoints)):
+								continue;
+							endif;
+							?>
+							<section class="mb-5">
+								<h3 class="opblock-tag" id="operations-tag-{{ $controller }}" data-tag="{{ $controller }}" data-is-open="false">
+									{{ $endpoints['name'] ? $endpoints['name'] : trans($mod->getLowerName() . '::' . $mod->getLowerName() . '.' . $controller) }}
+								</h3>
+
+								@if ($endpoints['description'])
+									<p>{{ $endpoints['description'] }}</p>
+								@endif
+
+								<?php
+								foreach ($endpoints['endpoints'] as $endpoint):
+									if (!$endpoint['method']):
+										continue;
+									endif;
+
+									$key = strtolower($endpoint['_metadata']['module']) . '-' . strtolower($endpoint['_metadata']['controller']) . '-' . $endpoint['_metadata']['method'];
+									?>
+									<div class="doc-section endpoint" id="{{ $key }}">
+
+										<div class="opblock opblock-{{ strtolower($endpoint['method']) }}">
+											<div class="opblock-summary opblock-summary-post">
+												@if ($endpoint['method'])
+													<span class="opblock-summary-method">{{ $endpoint['method'] }}</span>
+												@endif
+												@if ($endpoint['uri'])
+													<span class="opblock-summary-path" data-path="{{ $endpoint['uri'] }}">
+														{!! preg_replace('/(\{[^}]+\})/', "<code>$1</code>", $endpoint['uri']) !!}
+													</span>
+												@endif
+												@if ($endpoint['name'])
+													<div class="opblock-summary-description">{{ $endpoint['name'] }}</div>
+												@endif
+												@if (isset($endpoint['authorization']) && $endpoint['authorization'])
+													<span class="authorization__btn locked">
+														<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="14" height="14"><path d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z"/></svg>
+													</span>
+												@endif
+											</div>
+
+											<div class="opblock-body">
+												@if ($endpoint['description'])
+													<div class="opblock-description-wrapper">
+														<div class="opblock-description">
+															<p>{{ $endpoint['description'] }}</p>
+														</div>
+													</div>
+												@endif
+
+												<div class="opblock-section" id="{{ $key }}-params">
+													<div class="opblock-section-header">
+														<div class="tab-header">
+															<h4 class="opblock-title">{{ trans('core::docs.parameters') }}</h4>
+														</div>
+														<!-- <div class="try-out"><button class="btn try-out__btn">Try it out </button></div> -->
+													</div>
+													<div class="parameters-container">
+														<div class="table-container">
+															@if (count($endpoint['parameters']) > 0)
+																<table class="table">
+																	<caption class="sr-only">{{ trans('core::docs.parameters') }}</caption>
+																	<thead>
+																		<tr>
+																			<th scope="col">{{ trans('core::docs.name') }}</th>
+																			<th scope="col">{{ trans('core::docs.in') }}</th>
+																			<th scope="col">{{ trans('core::docs.type') }}</th>
+																			<th scope="col">{{ trans('core::docs.default') }}</th>
+																			<th scope="col">{{ trans('core::docs.description') }}</th>
+																			<th scope="col">{{ trans('core::docs.accepted values') }}</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		@foreach ($endpoint['parameters'] as $param)
+																			<tr>
+																				<td>
+																					<code><span class="docs-api-param-name">{{ $param['name'] }}</span></code>
+																				</td>
+																				<td>
+																					@if (isset($param['in']) && $param['in'])
+																						<span class="docs-api-tag docs-api-param-{{ isset($param['in']) ? $param['in'] : '' }}">{{ $param['in'] }}</span>
+																					@endif
+																				</td>
+																				<td>
+																					@if (isset($param['schema']['type']) && $param['schema']['type'])
+																						<span class="docs-api-tag docs-api-param-type">{{ $param['schema']['type'] }}</span>
+																					@endif
+																					@if (isset($param['schema']['format']) && $param['schema']['format'])
+																						<br /><small>Format: {{ $param['schema']['format'] }}</small>
+																					@endif
+																					@if (isset($param['schema']['example']) && $param['schema']['example'])
+																						<br /><small>Example: {{ $param['schema']['example'] }}</small>
+																					@endif
+																				</td>
+																				<td>
+																					<code class="nohighlight">{{ (isset($param['schema']['default']) && !is_null($param['schema']['default'])) ? $param['schema']['default'] : 'null' }}</code>
+																				</td>
+																				<td>
+																					@if ($param['required'])
+																						<span class="required">{{ trans('global.required') }}</span>
+																					@endif
+																					{{ $param['description'] }}
+																				</td>
+																				<td>
+																					@if (isset($param['schema']['enum']))
+																						<code class="nohighlight">{!! implode('</code>, <code class="nohighlight">', $param['schema']['enum']) !!}</code>
+																					@endif
+																				</td>
+																			</tr>
+																		@endforeach
+																	</tbody>
+																</table>
+															@else
+																<p class="alert alert-info">{{ trans('global.none') }}</p>
+															@endif
+														</div>
+													</div>
+												</div>
+
+												@if (isset($endpoint['response']) && $endpoint['response'])
+												<div class="opblock-section">
+													<div class="opblock-section-header">
+														<div class="tab-header">
+															<h4 class="opblock-title">{{ trans('core::docs.response') }}</h4>
+														</div>
+													</div>
+													<div class="response-container">
+														<table class="table">
+															<caption class="sr-only">{{ trans('core::docs.response codes') }}</caption>
+															<thead>
+																<tr>
+																	<th scope="col">{{ trans('core::docs.code') }}</th>
+																	<th scope="col">{{ trans('core::docs.description') }}</th>
+																	<th scope="col">{{ trans('core::docs.example') }}</th>
+																</tr>
+															</thead>
+															<tbody>
+																@foreach ($endpoint['response'] as $code => $response)
+																	<tr>
+																		<td>
+																			<code><span class="docs-api-param-name">{{ $code }}</span></code>
+																		</td>
+																		<td>
+																			{{ isset($response->description) ? $response->description : '' }}
+																		</td>
+																		<td>
+																		@if (isset($response->content))
+																			@foreach ($response->content as $mime => $example)
+																				<code>{{ $mime }}</code>:
+																				<pre><code class="language-json">{{ json_encode($example->example, JSON_PRETTY_PRINT) }}</code></pre>
+																			@endforeach
+																		@endif
+																		</td>
+																	</tr>
+																@endforeach
+															</tbody>
+														</table>
+													</div>
+												</div>
+												@endif
+											</div>
+										</div>
+									</div>
+								<?php
+								endforeach;
+							?>
+							</section>
+							<?php
+						endforeach;
+					endif;
+					?>
+				</div>
 			</div>
+
+			<footer>
+				<section class="basement">
+					<p class="copyright">
+						{!! trans('core::docs.copyright', ['name' => config('app.name'), 'url' => url()->to('/api'), 'date' => gmdate("Y")]) !!}
+					</p>
+					<p class="promotion">
+						{!! trans('core::docs.powered by', ['v' => 1]) !!}
+					</p>
+				</section>
+			</footer>
 		</main>
 
-		<footer>
-			fdsasd
-		</footer>
 	</body>
 </html>
