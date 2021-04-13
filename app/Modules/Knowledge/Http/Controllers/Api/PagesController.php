@@ -295,7 +295,7 @@ class PagesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   0,
+	 * 			"default":   0
 	 * 		}
 	 * }
 	 * @param  Request $request
@@ -423,6 +423,7 @@ class PagesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/knowledge/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -496,7 +497,7 @@ class PagesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   0,
+	 * 			"default":   0
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -597,6 +598,7 @@ class PagesController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/knowledge/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

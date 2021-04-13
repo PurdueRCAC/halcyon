@@ -47,7 +47,7 @@ class WidgetsController extends Controller
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string",
+	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @apiParameter {

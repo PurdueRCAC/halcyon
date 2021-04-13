@@ -47,7 +47,7 @@ class LoansController extends Controller
 	 * 		"description":   "Sate of the loan.",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
 	 * 			"enum": [
 	 * 				"ended",
 	 * 				"ongoing"

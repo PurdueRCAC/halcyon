@@ -172,7 +172,7 @@ class FacetsController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "value",
-	 * 		"description":   "Facet value,
+	 * 		"description":   "Facet value",
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string",
@@ -292,7 +292,7 @@ class FacetsController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "value",
-	 * 		"description":   "Facet value,
+	 * 		"description":   "Facet value",
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string",

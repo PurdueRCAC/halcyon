@@ -232,6 +232,7 @@ class GroupsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/groups
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -393,6 +394,7 @@ class GroupsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/groups/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -543,6 +545,7 @@ class GroupsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/groups/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

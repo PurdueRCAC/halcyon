@@ -24,6 +24,7 @@ class UnixGroupMembersController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/unixgroups/members
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -166,6 +167,7 @@ class UnixGroupMembersController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/unixgroups/members
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -210,7 +212,7 @@ class UnixGroupMembersController extends Controller
 	 * 		"description":   "Unix group system ID",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @param   Request  $request
@@ -274,6 +276,7 @@ class UnixGroupMembersController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/unixgroups/members/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -298,6 +301,7 @@ class UnixGroupMembersController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/unixgroups/members/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -313,7 +317,7 @@ class UnixGroupMembersController extends Controller
 	 * 		"description":   "Notice state",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -352,6 +356,7 @@ class UnixGroupMembersController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/unixgroups/members/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

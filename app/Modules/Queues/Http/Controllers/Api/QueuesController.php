@@ -275,6 +275,7 @@ class QueuesController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/queues
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "schedulerid",
@@ -515,7 +516,7 @@ class QueuesController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "maxijobfactor",
-	 * 		"description":   "Max ijob factor,
+	 * 		"description":   "Max ijob factor",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
@@ -524,7 +525,7 @@ class QueuesController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "maxijobuserfactor",
-	 * 		"description":   "Max ijob user factor,
+	 * 		"description":   "Max ijob user factor",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
@@ -628,6 +629,7 @@ class QueuesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/queues/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -877,7 +879,7 @@ class QueuesController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "maxijobfactor",
-	 * 		"description":   "Max ijob factor,
+	 * 		"description":   "Max ijob factor",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
@@ -886,7 +888,7 @@ class QueuesController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "maxijobuserfactor",
-	 * 		"description":   "Max ijob user factor,
+	 * 		"description":   "Max ijob user factor",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
@@ -954,6 +956,7 @@ class QueuesController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/queues/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

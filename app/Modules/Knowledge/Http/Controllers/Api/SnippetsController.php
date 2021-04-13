@@ -387,6 +387,7 @@ class SnippetsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/knowledge/snippets/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -460,7 +461,7 @@ class SnippetsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   0,
+	 * 			"default":   0
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -553,6 +554,7 @@ class SnippetsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/knowledge/snippets/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

@@ -70,7 +70,7 @@ class ArticlesController extends Controller
 	 * 			"default":   "published",
 	 * 			"enum": [
 	 * 				"published",
-	 * 				"unpublished"å
+	 * 				"unpublished"
 	 * 			]
 	 * 		}
 	 * }

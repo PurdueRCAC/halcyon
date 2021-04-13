@@ -121,6 +121,7 @@ class SchedulerPoliciesController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/queues/schedulerpolicies
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -174,6 +175,7 @@ class SchedulerPoliciesController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/queues/schedulerpolicies/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -215,6 +217,7 @@ class SchedulerPoliciesController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/queues/schedulerpolicies/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

@@ -98,6 +98,7 @@ class SchedulerReservationsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/queues/schedulerreservations
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -187,6 +188,7 @@ class SchedulerReservationsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/queues/schedulerreservations/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -264,6 +266,7 @@ class SchedulerReservationsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/queues/schedulerreservations/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

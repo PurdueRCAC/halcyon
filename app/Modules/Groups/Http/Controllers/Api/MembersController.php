@@ -20,6 +20,7 @@ class MembersController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/groups/members
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -176,6 +177,7 @@ class MembersController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/groups/members
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -294,6 +296,7 @@ class MembersController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/groups/members/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -320,6 +323,7 @@ class MembersController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/groups/members/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -420,6 +424,7 @@ class MembersController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/groups/members/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

@@ -222,7 +222,7 @@ class SchedulersController extends Controller
 	 * 		"description":   "Drain timestamp",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			type":      "string",
+	 * 			"type":       "string",
 	 * 			"format":    "date-time",
 	 * 			"example":   "2021-01-30T09:30:00Z"
 	 * 		}
@@ -346,7 +346,7 @@ class SchedulersController extends Controller
 	 * 		"description":   "Drain timestamp",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			type":      "string",
+	 * 			"type":      "string",
 	 * 			"format":    "date-time",
 	 * 			"example":   "2021-01-30T09:30:00Z"
 	 * 		}
@@ -357,7 +357,7 @@ class SchedulersController extends Controller
 	 * 		"description":   "Last import started timestamp",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			type":      "string",
+	 * 			"type":      "string",
 	 * 			"format":    "date-time",
 	 * 			"example":   "2021-01-30T09:30:00Z"
 	 * 		}
@@ -368,7 +368,7 @@ class SchedulersController extends Controller
 	 * 		"description":   "Last import finished timestamp",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			type":      "string",
+	 * 			"type":      "string",
 	 * 			"format":    "date-time",
 	 * 			"example":   "2021-01-30T09:30:00Z"
 	 * 		}

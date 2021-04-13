@@ -145,6 +145,7 @@ class MotdController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/groups/motd
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "motd",
@@ -231,6 +232,7 @@ class MotdController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/groups/motd/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -296,6 +298,7 @@ class MotdController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/groups/motd/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

@@ -153,6 +153,7 @@ class FieldsOfScienceController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/groups/fieldsofscience
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -231,6 +232,7 @@ class FieldsOfScienceController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/groups/fieldsofscience/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -297,6 +299,7 @@ class FieldsOfScienceController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/groups/fieldsofscience/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

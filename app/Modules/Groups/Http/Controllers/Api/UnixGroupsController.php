@@ -147,6 +147,7 @@ class UnixgroupsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/unixgroups
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -404,6 +405,7 @@ class UnixgroupsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/unixgroups/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -485,6 +487,7 @@ class UnixgroupsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/unixgroups/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

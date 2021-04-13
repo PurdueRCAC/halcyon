@@ -23,6 +23,7 @@ class ListenersController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/listeners
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -222,11 +223,12 @@ class ListenersController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/listeners
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Name",
-	 * 		"required":      true
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string"
 	 * 		}
@@ -303,6 +305,7 @@ class ListenersController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/listeners/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -327,6 +330,7 @@ class ListenersController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/listeners/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -416,6 +420,7 @@ class ListenersController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/listeners/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

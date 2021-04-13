@@ -154,6 +154,7 @@ class DepartmentsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/groups/departments
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -231,6 +232,7 @@ class DepartmentsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/groups/departments/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -297,6 +299,7 @@ class DepartmentsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/groups/departments/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

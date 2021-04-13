@@ -389,7 +389,7 @@ class UsersController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "notice",
-	 * 		"description":   "he notice state,
+	 * 		"description":   "The notice state",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"

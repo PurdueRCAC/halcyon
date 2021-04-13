@@ -30,7 +30,7 @@ class QuotasController extends Controller
 	 * @apiUri    /api/storage/quotas/{username?}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "path"
+	 * 		"in":            "path",
 	 * 		"name":          "username",
 	 * 		"description":   "User username to retrieve data for",
 	 * 		"required":      false,
