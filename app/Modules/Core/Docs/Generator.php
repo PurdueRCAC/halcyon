@@ -249,7 +249,12 @@ class Generator
 				$controller = str_replace('.php', '', basename($file));
 				$controller = preg_replace('/(.*)Controller$/', "$1", $controller);
 
-				$output[$module][$controller] = $this->processFile($file);
+				$data = $this->processFile($file);
+
+				if (!empty($data) && !empty($data['endpoints']))
+				{
+					$output[$module][$controller] = $data;
+				}
 			}
 
 			ksort($output[$module]);
@@ -334,6 +339,7 @@ class Generator
 			//$parts = explode('v', $controller);
 			//$v = array_pop($parts);
 			//$controller = implode('v', $parts);
+			$skip = false;
 
 			// Create endpoint data array
 			$endpoint = array(
@@ -358,6 +364,11 @@ class Generator
 			{
 				$name    = strtolower(str_replace('api', '', $tag->getName()));
 				$content = $tag->getDescription()->render(); //Content();
+
+				if ($name == 'skip')
+				{
+					$skip = true;
+				}
 
 				// Handle parameters separately
 				// json decode param input
@@ -414,8 +425,13 @@ class Generator
 				$endpoint[$name] = $content;
 			}
 
+			if ($skip)
+			{
+				continue;
+			}
+
 			// Add endpoint to output
-			// We always want indexTask to be first in the list
+			// We always want index to be first in the list
 			if ($method->getName() == 'index')
 			{
 				array_unshift($output['endpoints'], $endpoint);

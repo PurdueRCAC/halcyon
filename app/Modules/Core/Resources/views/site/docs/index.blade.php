@@ -822,6 +822,12 @@ counter-reset: linenumber;
 							</section>
 							<?php
 						endforeach;
+					else:
+						?>
+						<section class="mb-5">
+							<p>Choose a section to view available endpoints, parameters, and examples.</p>
+						</section>
+						<?php
 					endif;
 					?>
 				</div>

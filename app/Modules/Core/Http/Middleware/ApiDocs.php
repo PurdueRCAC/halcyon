@@ -17,7 +17,7 @@ class ApiDocs
 	 */
 	public function handle($request, Closure $next, $redirectToRoute = null)
 	{
-		if ($request->is('api/*') && stristr($request->headers->get('accept'), 'text/html') !== false)
+		if (($request->is('api') || $request->is('api/*')) && stristr($request->headers->get('accept'), 'text/html') !== false)
 		{
 			//return App::make('App\Modules\Core\Http\Controllers\Site\DocsController')->index($request);
 
