@@ -771,15 +771,15 @@
 								<tr>
 									<td>
 										@if ($message->status == 'completed')
-											<i class="fa fa-check" aria-hidden="true"></i>
+											<i class="fa fa-check text-success" aria-hidden="true"></i>
 										@elseif ($message->status == 'error')
-											<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+											<i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
 										@elseif ($message->status == 'deferred')
 											<i class="fa fa-clock" aria-hidden="true"></i>
 										@elseif ($message->status == 'running')
-											<i class="fa fa-heartbeat" aria-hidden="true"></i>
+											<i class="fa fa-heartbeat text-warning" aria-hidden="true"></i>
 										@elseif ($message->status == 'queued')
-											<i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+											<i class="fa fa-ellipsis-h text-info" aria-hidden="true"></i>
 										@endif
 										<span class="sr-only">{{ trans('messages::messages.' . $message->status) }}</span>
 									</td>
