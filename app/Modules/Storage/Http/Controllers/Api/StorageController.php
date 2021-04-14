@@ -9,10 +9,15 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Storage\Models\StorageResource;
 
+/**
+ * Storage Resources
+ *
+ * @apiUri    /storage
+ */
 class StorageController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of storage resources.
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /storage
@@ -149,7 +154,7 @@ class StorageController extends Controller
 	}
 
 	/**
-	 * Create a resource
+	 * Create a storage resource
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /storage
@@ -306,9 +311,9 @@ class StorageController extends Controller
 	}
 
 	/**
-	 * Read a resource
+	 * Read a storage resource
 	 *
-	 * @apiMethod POST
+	 * @apiMethod GET
 	 * @apiUri    /storage/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -332,7 +337,7 @@ class StorageController extends Controller
 	}
 
 	/**
-	 * Update a resource
+	 * Update a storage resource
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /storage/{id}
@@ -494,7 +499,7 @@ class StorageController extends Controller
 	}
 
 	/**
-	 * Delete a storage directory
+	 * Delete a storage resource
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /storage/{id}

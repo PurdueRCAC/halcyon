@@ -9,8 +9,10 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Users\Models\Note;
 
 /**
- * View notes
- *
+ * User Notes
+ * 
+ * Administrative notes pertaining to specific users
+ * 
  * @apiUri    /api/users/notes
  */
 class NotesController extends Controller

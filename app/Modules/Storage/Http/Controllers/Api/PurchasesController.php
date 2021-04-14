@@ -12,7 +12,7 @@ use App\Modules\Storage\Models\Purchase;
 /**
  * Purchases
  *
- * @apiUri    /api/storage/purchases
+ * @apiUri    /storage/purchases
  */
 class PurchasesController extends Controller
 {
@@ -20,7 +20,7 @@ class PurchasesController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/storage/purchases
+	 * @apiUri    /storage/purchases
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -180,7 +180,7 @@ class PurchasesController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/storage/purchases
+	 * @apiUri    /storage/purchases
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -395,8 +395,8 @@ class PurchasesController extends Controller
 	/**
 	 * Read an entry
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /api/storage/purchases/{id}
+	 * @apiMethod GET
+	 * @apiUri    /storage/purchases/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -436,7 +436,7 @@ class PurchasesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/storage/purchases/{id}
+	 * @apiUri    /storage/purchases/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -678,7 +678,7 @@ class PurchasesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/storage/purchases/{id}
+	 * @apiUri    /storage/purchases/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

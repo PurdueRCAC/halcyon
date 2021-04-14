@@ -12,8 +12,8 @@ use App\Modules\Orders\Models\Order;
 use Carbon\Carbon;
 
 /**
- * Order Accounts
- *
+ * Order Purchase Accounts
+ * 
  * @apiUri    /api/orders/accounts
  */
 class AccountsController extends Controller

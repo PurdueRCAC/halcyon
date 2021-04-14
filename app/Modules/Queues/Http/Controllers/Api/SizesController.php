@@ -11,7 +11,7 @@ use App\Modules\Queues\Models\Size;
 use Carbon\Carbon;
 
 /**
- * Queue Sizes
+ * Queue Purchases
  *
  * @apiUri    /api/queues/sizes
  */

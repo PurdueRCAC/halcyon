@@ -10,7 +10,7 @@ use App\Modules\Orders\Http\Resources\CartResource;
 use App\Modules\Orders\Http\Resources\CartResourceCollection;
 
 /**
- * Products
+ * Shopping Cart
  *
  * @apiUri    /api/orders/cart
  */

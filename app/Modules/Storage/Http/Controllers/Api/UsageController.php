@@ -12,13 +12,18 @@ use App\Modules\Storage\Models\Usage;
 use App\Modules\Storage\Models\Directory;
 use Carbon\Carbon;
 
+/**
+ * Usage
+ *
+ * @apiUri    /api/storage/usage
+ */
 class UsageController extends Controller
 {
 	/**
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /storage/loans
+	 * @apiUri    /storage/usage
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -288,7 +293,7 @@ class UsageController extends Controller
 	/**
 	 * Read an entry
 	 *
-	 * @apiMethod POST
+	 * @apiMethod GET
 	 * @apiUri    /storage/usage/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {

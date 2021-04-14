@@ -10,7 +10,7 @@ use App\Modules\Users\Models\Facet;
 
 /**
  * User facets
- *
+ * 
  * @apiUri    /api/users/facets
  */
 class FacetsController extends Controller

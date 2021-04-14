@@ -28,12 +28,47 @@ class MembersController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "The name of the resource type",
+	 * 		"name":          "user",
+	 * 		"description":   "User ID",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string",
-	 * 			"maxLength": 16
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "resource",
+	 * 		"description":   "Resource ID",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "loginshell",
+	 * 		"description":   "Login shell",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "pilogin",
+	 * 		"description":   "PI's username",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "piid",
+	 * 		"description":   "PI's user ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @param  Request $request
@@ -47,7 +82,7 @@ class MembersController extends Controller
 			'primarygroup' => 'nullable|string',
 			'loginshell' => 'nullable|string',
 			'pilogin' => 'nullable|string',
-			'piid' => 'nullable|string',
+			'piid' => 'nullable|integer',
 		]);
 
 		$userid = $request->input('user');
@@ -141,15 +176,16 @@ class MembersController extends Controller
 	 * Read a resource
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/resources/members/{id}
+	 * @apiUri    /api/resources/members/{user id}.{resource id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "name",
-	 * 		"description":   "The ID of the resource type",
+	 * 		"in":            "path",
+	 * 		"name":          "user id.resource id",
+	 * 		"description":   "User ID and Resource ID separated by a period",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "integer"
+	 * 			"type":      "string",
+	 * 			"example":   "12345.67"
 	 * 		}
 	 * }
 	 * @param   integer $id
@@ -224,15 +260,16 @@ class MembersController extends Controller
 	 * Delete a resource
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/resources/members/{id}
+	 * @apiUri    /api/resources/members/{user id}.{resource id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
-	 * 		"name":          "id",
-	 * 		"description":   "Resource ID and user ID separated by a period. Example: 1234.5678",
+	 * 		"name":          "user id.resource id",
+	 * 		"description":   "User ID and Resource ID separated by a period",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"example":   "12345.67"
 	 * 		}
 	 * }
 	 * @param  string $id

@@ -15,8 +15,10 @@ use Carbon\Carbon;
 
 /**
  * Directories
- *
- * @apiUri    /api/storage/directories
+ * 
+ * Directories found under a storage resource
+ * 
+ * @apiUri    /storage/directories
  */
 class DirectoriesController extends Controller
 {
@@ -24,7 +26,7 @@ class DirectoriesController extends Controller
 	 * Display a listing of the resource.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/storage/directories
+	 * @apiUri    /storage/directories
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -171,7 +173,7 @@ class DirectoriesController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/storage/directories
+	 * @apiUri    /storage/directories
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -596,8 +598,8 @@ class DirectoriesController extends Controller
 	/**
 	 * Read a resource
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /api/storage/directories/{id}
+	 * @apiMethod GET
+	 * @apiUri    /storage/directories/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -620,7 +622,7 @@ class DirectoriesController extends Controller
 	 * Update a resource
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/storage/directories/{id}
+	 * @apiUri    /storage/directories/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -1033,7 +1035,7 @@ class DirectoriesController extends Controller
 	 * Delete a storage directory
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/storage/directories/{id}
+	 * @apiUri    /storage/directories/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

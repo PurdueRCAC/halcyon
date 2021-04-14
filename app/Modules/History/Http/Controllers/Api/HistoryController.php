@@ -79,11 +79,12 @@ class HistoryController extends Controller
 	 * 		"description":   "Field to sort results by.",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "created_at",
-	 * 			"default":   "asc",
+	 * 			"type":      "string",
+	 * 			"default":   "created_at",
 	 * 			"enum": [
 	 * 				"id",
-	 * 				"created_at"
+	 * 				"created_at",
+	 * 				"action"
 	 * 			]
 	 * 		}
 	 * }

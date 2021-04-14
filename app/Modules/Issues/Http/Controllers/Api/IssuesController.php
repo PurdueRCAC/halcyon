@@ -13,7 +13,7 @@ use App\Modules\Issues\Http\Resources\IssueResourceCollection;
 use Carbon\Carbon;
 
 /**
- * Contact Issues
+ * Issues
  *
  * @apiUri    /api/issues
  */

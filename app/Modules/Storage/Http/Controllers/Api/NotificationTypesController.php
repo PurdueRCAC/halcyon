@@ -17,7 +17,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class NotificationTypesController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of notification types.
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /storage/notifications/types
@@ -114,7 +114,7 @@ class NotificationTypesController extends Controller
 	}
 
 	/**
-	 * Create a resource
+	 * Create a notification type.
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /storage/notifications/types
@@ -154,6 +154,7 @@ class NotificationTypesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -177,9 +178,9 @@ class NotificationTypesController extends Controller
 	}
 
 	/**
-	 * Read a resource
+	 * Read a notification type.
 	 *
-	 * @apiMethod POST
+	 * @apiMethod GET
 	 * @apiUri    /storage/notifications/types/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -202,7 +203,7 @@ class NotificationTypesController extends Controller
 	}
 
 	/**
-	 * Update a resource
+	 * Update a notification type.
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /storage/notifications/types/{id}
@@ -287,7 +288,7 @@ class NotificationTypesController extends Controller
 	}
 
 	/**
-	 * Delete a resource
+	 * Delete a notification type.
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /storage/notifications/types/{id}

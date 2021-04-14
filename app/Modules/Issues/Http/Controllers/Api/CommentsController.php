@@ -12,7 +12,9 @@ use Carbon\Carbon;
 
 /**
  * Comments
- *
+ * 
+ * Comments on an issue.
+ * 
  * @apiUri    /api/issues/comments
  */
 class CommentsController extends Controller
@@ -302,7 +304,7 @@ class CommentsController extends Controller
 	 * Delete an issue comment
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/issues/delete/{id}
+	 * @apiUri    /api/issues/comments/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

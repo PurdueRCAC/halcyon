@@ -14,7 +14,9 @@ use Carbon\Carbon;
 
 /**
  * Snippets
- *
+ * 
+ * Re-usable pages. Modifying one may affect multiple pages in the knowledge base.
+ * 
  * @apiUri    /api/knowledge/snippets
  */
 class SnippetsController extends Controller

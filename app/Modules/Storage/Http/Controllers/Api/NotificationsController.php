@@ -18,7 +18,7 @@ use Carbon\Carbon;
 class NotificationsController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of notifications.
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /storage/notifications
@@ -52,7 +52,7 @@ class NotificationsController extends Controller
 	 * 		"description":   "Field to sort results by.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
-	 *      "default":       "created",
+	 * 		"default":       "created",
 	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
 	 * }
 	 * @apiParameter {
@@ -131,7 +131,7 @@ class NotificationsController extends Controller
 	}
 
 	/**
-	 * Create a resource
+	 * Create a notification.
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /storage/notifications
@@ -283,7 +283,7 @@ class NotificationsController extends Controller
 	}
 
 	/**
-	 * Read a resource
+	 * Read a notification.
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /storage/notifications/{id}
@@ -309,7 +309,7 @@ class NotificationsController extends Controller
 	}
 
 	/**
-	 * Update a resource
+	 * Update a notification.
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /storage/notifications/{id}
@@ -459,7 +459,7 @@ class NotificationsController extends Controller
 	}
 
 	/**
-	 * Delete a resource
+	 * Delete a notification.
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /storage/notifications/{id}

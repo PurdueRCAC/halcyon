@@ -12,7 +12,7 @@ use App\Modules\Storage\Models\Loan;
 /**
  * Loans
  *
- * @apiUri    /api/storage/loans
+ * @apiUri    /storage/loans
  */
 class LoansController extends Controller
 {
@@ -20,7 +20,7 @@ class LoansController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/storage/loans
+	 * @apiUri    /storage/loans
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "limit",
@@ -136,7 +136,7 @@ class LoansController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/storage/loans
+	 * @apiUri    /storage/loans
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -329,8 +329,8 @@ class LoansController extends Controller
 	/**
 	 * Read an entry
 	 *
-	 * @apiMethod POST
-	 * @apiUri    /api/storage/loans/{id}
+	 * @apiMethod GET
+	 * @apiUri    /storage/loans/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -370,7 +370,7 @@ class LoansController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/storage/loans/{id}
+	 * @apiUri    /storage/loans/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -591,7 +591,7 @@ class LoansController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/storage/loans/{id}
+	 * @apiUri    /storage/loans/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

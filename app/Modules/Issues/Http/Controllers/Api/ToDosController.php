@@ -11,7 +11,9 @@ use App\Modules\Issues\Models\ToDo;
 
 /**
  * Issue To-Dos
- *
+ * 
+ * Checklist items that can have a recurrence such as daily, weekly, etc.
+ * 
  * @apiUri    /api/issues/todos
  */
 class ToDosController extends Controller

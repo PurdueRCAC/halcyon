@@ -14,7 +14,9 @@ use Carbon\Carbon;
 
 /**
  * Order Items
- *
+ * 
+ * Ordered products, their quantities, etc.
+ * 
  * @apiUri    /api/orders/items
  */
 class ItemsController extends Controller

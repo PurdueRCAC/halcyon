@@ -22,7 +22,7 @@ class PagesController extends Controller
 	 * Display a listing of articles
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/knowledge/feedback
+	 * @apiUri    /api/knowledge
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "parent",

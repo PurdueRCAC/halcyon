@@ -10,7 +10,9 @@ use App\Halcyon\Access\Role;
 
 /**
  * Roles
- *
+ * 
+ * Authorization roles that permissions can be assigned to.
+ * 
  * @apiUri    /api/users/roles
  */
 class RolesController extends Controller
