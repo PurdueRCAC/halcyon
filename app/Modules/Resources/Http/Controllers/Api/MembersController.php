@@ -89,7 +89,7 @@ class MembersController extends Controller
 		$resourceid = $request->input('resource');
 		$loginshell = $request->input('loginshell');
 
-		// Look up the current username of the user 
+		// Look up the current username of the user
 		$user = User::findOrFail($userid);
 
 		if (!$user || $user->trashed())
