@@ -126,6 +126,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		var section = document.querySelector(hash);
 
 		if (section) {
+			var eps = document.getElementsByClassName('docs-collection');
+			for (i = 0; i < eps.length; i++) {
+				Halcyon.addClass(eps[i], 'hide');
+			}
 			Halcyon.removeClass(section, 'hide');
 		}
 
