@@ -437,6 +437,19 @@ function NEWSKeywordSearch(key) {
 }
 
 /**
+ * replace <'s and '>
+ *
+ * @param   {string}  text
+ * @return  {string}
+ */
+function PrepareText(text) {
+	text = text.replace(/</g, '&lt;');
+	text = text.replace(/>/g, '&gt;');
+
+	return text;
+}
+
+/**
  * post new entry to database
  *
  * @return  {void}
@@ -584,7 +597,7 @@ function NEWSAddEntry() {
 		post = JSON.stringify(post);
 		if (post != "{}") {
 			var id = original['id'].substr(original['id'].lastIndexOf("/")+1);
-			WSPostURL(original['id'], post, NEWSUpdatedNews, id);
+			WSPutURL(original['id'], post, NEWSUpdatedNews, id);
 		}
 
 		return;
@@ -965,7 +978,7 @@ function NEWSToggleAddButton() {
 		if (template_select.options[template_select.selectedIndex].value == "savetemplate") {
 			template.checked = true;
 		} else if (template_select.options[template_select.selectedIndex].value != "0") {
-			if (document.getElementById("TR_use_template").style.display != "none") {
+			if (!document.getElementById("TR_use_template").classList.contains('d-none')) {
 				NEWSUseTemplate();
 			}
 		}
@@ -2631,8 +2644,9 @@ function NEWSClearSearch() {
 function PreviewExample(example) {
 	var example_vars = {};
 	example_vars["startDate"] = new Date();
-	example_vars["endDate"] = new Date();
-	example_vars["endDate"].addDays(1);
+	var d = new Date();
+	d.setDate(d.getDate() + 1);
+	example_vars["endDate"] = d;
 	example_vars["resources"] = ["Anvil", "Bell"];//[{"resourcename": "Carter"}, {"resourcename": "Conte"}];
 	example_vars["location"] = "Envision Center";
 
@@ -2999,7 +3013,7 @@ function NEWSSentMail(xml, news) {
  */
 function NEWSUseTemplate() {
 	var template = document.getElementById("template_select");
-	template = template.options[template.selectedIndex].value;
+	template = template.options[template.selectedIndex].value;//.getAttribute('data-api')
 
 	if (template != "0" && template != "savetemplate") {
 
@@ -3016,9 +3030,9 @@ function NEWSUseTemplate() {
 		}
 
 		if (!overwrite) {
-			document.getElementById("TR_use_template").style.display = "none";
-			document.getElementById("TR_template").style.display = "none";
-			document.getElementById("TR_date").style.visibility = "visible";
+			document.getElementById("TR_use_template").classList.add('d-none');//.style.display = "none";
+			document.getElementById("TR_template").classList.add('d-none');//.style.display = "none";
+			document.getElementById("TR_date").classList.remove('d-none');//style.visibility = "visible";
 			document.getElementById("template").checked = false;
 			document.getElementById("published").checked = true;
 
@@ -3040,7 +3054,7 @@ function NEWSPopulateTemplate(xml) {
 	if (xml.status == 200) {
 		var news = JSON.parse(xml.responseText);
 		document.getElementById("Headline").value = news.headline.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
-		document.getElementById("NotesText").value = news.news.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
+		document.getElementById("NotesText").value = news.body.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
 
 		var newstype = document.getElementById("newstype");
 		var x;
@@ -3644,6 +3658,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (url != null) {
 		NEWSToggle(url[1]);
 		//setTimeout("NEWSSearch();", 200);
+	} else {
+		NEWSToggle('search');
 	}
 
 	$('.btn-attend').on('click', function(event){

@@ -153,6 +153,16 @@ class Asset extends Model
 	}
 
 	/**
+	 * Get mailing list
+	 *
+	 * @return  string
+	 */
+	public function getMailinglistAttribute()
+	{
+		return $this->listname ? $this->listname . '-users@lists.purdue.edu' : '';
+	}
+
+	/**
 	 * Defines a relationship to type
 	 *
 	 * @return  object
