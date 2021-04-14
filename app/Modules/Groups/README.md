@@ -43,7 +43,7 @@ This is a scheduled task with a default crontab of `*/20 * * * *` (every 20 minu
 
 Some event flows interact with 3rd-party services (via events triggers) and other modules (sometimes events, sometimes direct usage). These are documented below for easier reference.
 
----
+### Enabling a queue
 
 When enabling a queue for a group member via the GUI interface, it performs the following actions:
 
@@ -65,7 +65,9 @@ When enabling a queue for a group member via the GUI interface, it performs the 
           * Add `queueusers` database entry for Fortress queue #33338
 * Create `queueusers` entry
 
-When enabling a unix group membership for a group member via the GUI interface, it performs the following actions:
+### Enabling unix group membership
+
+When enabling unix group membership for a group member via the GUI interface, it performs the following actions:
 
 * Call `/api/unixgroups/members`
 * Validate incoming data
