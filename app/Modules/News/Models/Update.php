@@ -205,7 +205,7 @@ class Update extends Model
 	 *
 	 * @return string
 	 */
-	public function getformattedBodyAttribute()
+	public function getFormattedBodyAttribute()
 	{
 		$text = $this->body;
 

@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Modules\News\Mail\Article as Message;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
 use App\Modules\News\Models\Stemmedtext;
 use App\Modules\News\Models\Newsresource;
+use App\Modules\News\Models\Association;
 use App\Modules\News\Http\Resources\ArticleResource;
 use App\Modules\News\Http\Resources\ArticleResourceCollection;
 use App\Modules\History\Models\Log;
@@ -508,16 +511,62 @@ class ArticlesController extends Controller
 			'url' => 'nullable|url',
 		]);
 
-		$row = new Article($request->all());
+		$row = new Article();
+
+		$row->headline = $request->input('headline');
+		$row->body = $request->input('body');
+		$row->published = $request->input('published');
+		$row->template = $request->input('template');
+		$row->datetimenews = $request->input('datetimenews');
+		if ($request->has('datetimenewsend'))
+		{
+			$row->datetimenewsend = $request->input('datetimenewsend');
+
+			if ($row->datetimenews > $row->datetimenewsend)
+			{
+				return response()->json(['message' => trans('news::news.error.invalid time range')], 500);
+			}
+		}
+
+		if ($row->template)
+		{
+			$row->datetimenews = '0000-00-00 00:00:00';
+			$row->datetimenewsend = '0000-00-00 00:00:00';
+		}
+
+		if ($request->has('location'))
+		{
+			$row->location = $request->input('location');
+		}
+
+		if ($request->has('url'))
+		{
+			$row->url = $request->input('url');
+		}
 
 		if (!$row->userid)
 		{
 			$row->userid = auth()->user()->id;
 		}
 
+		if ($row->url && !filter_var($row->url, FILTER_VALIDATE_URL))
+		{
+			return response()->json(['message' => trans('news::news.error.invalid url')], 415);
+		}
+
 		if (!$row->save())
 		{
 			return response()->json(['message' => $row->getError()], 500);
+		}
+
+		if ($request->has('resources'))
+		{
+			$row->setResources($request->input('resources'));
+		}
+
+		if ($request->has('associations'))
+		{
+			$row->setAssociations($request->input('associations'));
 		}
 
 		return new ArticleResource($row);
@@ -709,11 +758,87 @@ class ArticlesController extends Controller
 		]);
 
 		$row = Article::findOrFail($id);
-		$row->fill($request->all());
+		//$row->fill($request->all());
+
+		if ($request->has('newstypeid'))
+		{
+			$row->newstypeid = $request->input('newstypeid');
+
+			if (!$row->type)
+			{
+				return response()->json(['message' => trans('news::news.error.invalid type')], 415);
+			}
+		}
+
+		if ($request->has('headline'))
+		{
+			$row->headline = $request->input('headline');
+		}
+
+		if ($request->has('body'))
+		{
+			$row->body = $request->input('body');
+		}
+
+		if ($request->has('published'))
+		{
+			$row->published = $request->input('published');
+		}
+
+		if ($request->has('template'))
+		{
+			$row->template = $request->input('template');
+
+			if ($row->template)
+			{
+				$row->datetimenews = '0000-00-00 00:00:00';
+				$row->datetimenewsend = '0000-00-00 00:00:00';
+			}
+		}
+
+		if ($request->has('datetimenews'))
+		{
+			$row->datetimenews = $request->input('datetimenews');
+		}
+
+		if ($request->has('datetimenewsend'))
+		{
+			$row->datetimenewsend = $request->input('datetimenewsend');
+
+			if ($row->datetimenews > $row->datetimenewsend)
+			{
+				return response()->json(['message' => trans('news::news.error.invalid time range')], 415);
+			}
+		}
+
+		if ($request->has('location'))
+		{
+			$row->location = $request->input('location');
+		}
+
+		if ($request->has('url'))
+		{
+			$row->url = $request->input('url');
+
+			if ($row->url && !filter_var($row->url, FILTER_VALIDATE_URL))
+			{
+				return response()->json(['message' => trans('news::news.error.invalid url')], 415);
+			}
+		}
 
 		if (!$row->save())
 		{
 			return response()->json(['message' => $row->getError()], 500);
+		}
+
+		if ($request->has('resources'))
+		{
+			$row->setResources($request->input('resources'));
+		}
+
+		if ($request->has('associations'))
+		{
+			$row->setAssociations($request->input('associations'));
 		}
 
 		return new ArticleResource($row);
@@ -798,6 +923,116 @@ class ArticlesController extends Controller
 		$row->body = $request->input('body');
 		$row->datetimecreated = Carbon::now();
 		$row->vars = $request->input('vars');
+
+		return new ArticleResource($row);
+	}
+
+	/**
+	 * Email a news article
+	 *
+	 * @apiMethod PUT
+	 * @apiUri    /api/news/{id}/email
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "associations",
+	 * 		"description":   "A list of user IDs to send the email to. If none provided, Resource mailing lists are used instead.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array",
+	 * 			"default":   null
+	 * 		}
+	 * }
+	 * @param   Request  $request
+	 * @return  Response
+	 */
+	public function email($id, Request $request)
+	{
+		$request->validate([
+			'body' => 'required|string|max:15000',
+			'vars' => 'nullable|array'
+		]);
+
+		$row = Article::findOrFail($id);
+
+		// Fetch name of sender
+		$name = auth()->user()->name . ' via ' . config('app.name') . ' News';
+
+		// Recipients
+		$emails = array();
+
+		if ($request->has('associations'))
+		{
+			$associations = $request->has('associations');
+
+			foreach ($associations as $i => $association)
+			{
+				$association = str_replace(ROOT_URI, '', $association);
+				$association = trim($association, '/');
+
+				$parts = explode('/', $association);
+
+				if (count($parts) != 2)
+				{
+					unset($associations[$i]);
+					continue;
+				}
+
+				$associations[$i] = new Association(array(
+					'associd'   => intval($parts[1]),
+					'assoctype' => $parts[0]
+				));
+
+				if ($associations[$i]->assoctype == 'user')
+				{
+					$user = $associations[$i]->associated;
+
+					if (!$user || !$user->mail)
+					{
+						continue;
+					}
+
+					$emails[] = $user->email;
+				}
+			}
+		}
+		else
+		{
+			if (count($row->resources))
+			{
+				foreach ($copyobj->resources as $res)
+				{
+					if ($res->resource->listname && $res->resource->listname != 'none')
+					{
+						$emails[] = $res->resource->mailinglist;
+					}
+				}
+			}
+		}
+
+		if (count($emails) > 0)
+		{
+			$message = new Message($row, $name);
+
+			foreach ($emails as $email)
+			{
+				Mail::to($email)->send($message);
+			}
+		}
+
+		$row->update([
+			'datetimemailed' => Carbon::now()->toDateTimeString(),
+			'lastmailuserid' => auth()->user()->id
+		]);
 
 		return new ArticleResource($row);
 	}

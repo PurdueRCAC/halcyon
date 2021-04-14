@@ -17,16 +17,19 @@ $router->group(['prefix' => 'news'], function (Router $router)
 	$router->post('/preview', [
 		'as' => 'api.news.preview',
 		'uses' => 'ArticlesController@preview',
-		//'middleware' => 'auth:api',
 	]);
 	$router->get('{id}', [
 		'as'   => 'api.news.read',
 		'uses' => 'ArticlesController@read',
 	])->where('id', '[0-9]+');
+	$router->put('{id}/email', [
+		'as'   => 'api.news.email',
+		'uses' => 'ArticlesController@email',
+		'middleware' => ['auth:api', 'can:edit news'],
+	])->where('id', '[0-9]+');
 	$router->put('{id}', [
 		'as'   => 'api.news.update',
 		'uses' => 'ArticlesController@update',
-		//'middleware' => 'auth:api',
 		'middleware' => ['auth:api', 'can:edit news'],
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [

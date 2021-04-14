@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title')Manage News &amp; Events@stop
+@section('title') Manage News &amp; Events @stop
 
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.css')) }}" />
@@ -118,7 +118,7 @@
 									<span class="input-group-prepend"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
 									<input id="datestartshort" type="text" class="date-pick form-control" name="start" placeholder="YYYY-MM-DD" data-start="{{ $startdate }}" value="{{ $startdate }}" />
 								</div>
-								<div class="input-group input-time tab-add tab-edit hide">
+								<div class="input-group input-time tab-add tab-edit">
 									<span class="input-group-prepend"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
 									<input id="timestartshort" type="text" class="time-pick form-control" name="starttime" placeholder="h:mm AM/PM" value="{{ $starttime }}" />
 								</div>
@@ -130,7 +130,7 @@
 									<span class="input-group-prepend"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
 									<input id="datestopshort" type="text" class="date-pick form-control" name="stop" placeholder="YYYY-MM-DD" data-stop="{{ $stopdate }}" value="{{ $stopdate }}">
 								</div>
-								<div class="input-group input-time tab-add tab-edit hide">
+								<div class="input-group input-time tab-add tab-edit">
 									<span class="input-group-prepend"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
 									<input id="timestopshort" type="text" class="time-pick form-control" name="stoptime" placeholder="h:mm AM/PM" value="{{ $stoptime }}" />
 								</div>
@@ -143,7 +143,7 @@
 								<select id="newstype" name="newstype" class="custom-select">
 									<option id="OPTION_all" value="-1">All</option>
 									@foreach ($types as $type)
-										<option value="{{ $type->id }}"<?php if ($filters['newstype'] == $type->id) { echo ' selected="selected"'; } ?> data-tagresources="{{ $type->tagresources }}" data-taglocation="{{ $type->location }}">{{ $type->name }}</option>
+										<option value="{{ $type->id }}"<?php if ($filters['newstype'] == $type->id) { echo ' selected="selected"'; } ?> data-tagresources="{{ $type->tagresources }}" data-tagusers="{{ $type->tagusers }}" data-taglocation="{{ $type->location }}"  data-tagurl="{{ $type->url }}">{{ $type->name }}</option>
 									@endforeach
 								</select>
 							</div>
@@ -158,20 +158,62 @@
 							<label for="newsresource" class="col-sm-2 col-form-label">Resource</label>
 							<div class="col-sm-10">
 								<?php
-								$resources = array();
-								if ($res = request('resource'))
+								$selected = array();
+								if ($res = $filters['resource'])
 								{
-									foreach (explode(',', $res) as $r)
-									{
-										if (trim($r))
-										{
-											$resource = App\Modules\Resources\Models\Asset::findOrFail($r);
-											$resources[] = $resource->name . ':' . $r . '';
-										}
-									}
+									$selected = explode(',', $res);
+									$selected = array_map('trim', $selected);
 								}
 								?>
-								<input name="resource" id="newsresource" size="45" class="form-control" value="{{ implode(',', $resources) }}" data-uri="{{ route('api.resources.index') }}/%s" />
+								<?php /*<input name="resource" id="newsresource" size="45" class="form-control" value="{{ implode(',', $resources) }}" data-uri="{{ route('api.resources.index') }}?search=%s" />*/ ?>
+								<select class="form-control searchable-select-multi" multiple="multiple" name="resource[]" id="newsresource">
+									<?php
+									$resources = App\Modules\Resources\Models\Asset::query()
+										->withTrashed()
+										->where('listname', '!=', '')
+										->where('display', '>', 0)
+										->where(function($where)
+										{
+											$where->whereNull('datetimeremoved')
+												->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+										})
+										->orderBy('name')
+										->get();
+
+									$types = array();
+									foreach ($resources as $resource)
+									{
+										if (!isset($types[$resource->resourcetype]))
+										{
+											$types[$resource->resourcetype] = array();
+										}
+										$types[$resource->resourcetype][] = $resource;
+									}
+									ksort($types);
+
+									foreach ($types as $t => $res)
+									{
+										$type = App\Modules\Resources\Models\Type::find($t);
+										if (!$type)
+										{
+											$type = new App\Modules\Resources\Models\Type;
+											$type->name = 'Services';
+										}
+										?>
+										<optgroup label="{{ $type->name }}" class="select2-result-selectable">
+											<?php
+											foreach ($res as $resource)
+											{
+												?>
+												<option value="{{ $resource->id }}"<?php if (in_array($resource->id, $selected)) { echo ' selected="selected"'; } ?>>{{ $resource->name }}</option>
+												<?php
+											}
+											?>
+										</optgroup>
+										<?php
+									}
+									?>
+								</select>
 							</div>
 						</div>
 						<div class="form-group row tab-add tab-edit" id="TR_user">
@@ -227,7 +269,7 @@
 
 									foreach ($templates as $template)
 									{
-										echo '<option value="' . $template['id'] . '">' . e($template['headline']) . '</option>';
+										echo '<option value="' . route('api.news.read', ['id' => $template['id']]) . '" data-api="' . route('api.news.read', ['id' => $template['id']]) . '">' . e($template['headline']) . '</option>';
 									}
 									?>
 								</select>
@@ -282,7 +324,7 @@
 							<div class="col-sm-10">
 								<input id="INPUT_add" type="submit" class="btn btn-primary" data-add="Add News" data-edit="Save Changes" value="Add News" disabled="true" />
 								<input id="INPUT_preview" type="button" class="btn btn-secondary" value="Preview" data-id="{{ request('id') }}" />
-								<input id="INPUT_clear" type="reset" class="btn btn-link" data-add="Add News" data-edit="Save Changes" value="Clear" />
+								<input id="INPUT_clear" type="reset" class="btn btn-danger" data-add="Add News" data-edit="Save Changes" value="Clear" />
 							</div>
 						</div>
 

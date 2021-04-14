@@ -112,6 +112,54 @@ class Article extends Model
 	];
 
 	/**
+	 * Set body value
+	 *
+	 * @param   string  $value
+	 * @return  void
+	 */
+	public function setHeadlineAttribute($value)
+	{
+		$value = strip_tags($value);
+		$value = htmlentities($value, ENT_QUOTES, 'UTF-8');
+
+		$this->attributes['body'] = $value;
+	}
+
+	/**
+	 * Set body value
+	 *
+	 * @param   string  $value
+	 * @return  void
+	 */
+	public function setBodyAttribute($value)
+	{
+		$value = strip_tags($value);
+
+		$host = request()->getHttpHost();
+
+		$value = preg_replace("/(https?:\/\/)?" . $host . "\/news\/\?id=(\d+)/", "NEWS#$3$4", $value);
+		$value = preg_replace("/(https?:\/\/)?" . $host . "\/news\/\?id=(\d+)/", "NEWS#$3$4", $value);
+		$value = preg_replace("/(https?:\/\/)?" . $host . "\/news\/(\d+)/", "NEWS#$3$4", $value);
+		$value = preg_replace("/(https?:\/\/)?" . $host . "\/news\/(\d+)/", "NEWS#$3$4", $value);
+
+		$this->attributes['body'] = $value;
+	}
+
+	/**
+	 * Set body value
+	 *
+	 * @param   string  $value
+	 * @return  void
+	 */
+	public function setLocationAttribute($value)
+	{
+		$value = strip_tags($value);
+		$value = htmlentities($value, ENT_QUOTES, 'UTF-8');
+
+		$this->attributes['location'] = $value;
+	}
+
+	/**
 	 * Defines a relationship to updates
 	 *
 	 * @return  object
@@ -723,22 +771,20 @@ class Article extends Model
 			}
 		}
 
-		foreach ($this->resources as $resource)
+		if ($this->isTrashed())
 		{
-			if (!$resource->delete($options))
+			foreach ($this->resources as $resource)
 			{
-				$this->addError($resource->getError());
-				return false;
+				$resource->delete($options);
 			}
-		}
 
-		if ($stemmedtext = $this->stemmedtext)
-		{
-			if (!$stemmedtext->delete($options))
+			foreach ($this->associations as $association)
 			{
-				$this->addError($stemmedtext->getError());
-				return false;
+				$association->delete($options);
 			}
+
+			$row = Stemmedtext::find($this->id);
+			$row->delete();
 		}
 
 		// Attempt to delete the record
@@ -1013,5 +1059,148 @@ class Article extends Model
 		}
 
 		return $vars;
+	}
+
+	/**
+	 * Set resources list
+	 *
+	 * @param   array  $resources
+	 * @return  void
+	 */
+	public function setResources($resources = array())
+	{
+		// Remove and add resource-news mappings
+		// First calculate diff
+		$addresources = array();
+		$deleteresources = array();
+
+		foreach ($this->resources as $r)
+		{
+			$found = false;
+
+			foreach ($resources as $r2)
+			{
+				if ($r2 == $r->resourceid)
+				{
+					$found = true;
+				}
+			}
+
+			if (!$found)
+			{
+				array_push($deleteresources, $r);
+			}
+		}
+
+		foreach ($resources as $r)
+		{
+			$found = false;
+
+			foreach ($this->resources as $r2)
+			{
+				if ($r2->resourceid == $r)
+				{
+					$found = true;
+				}
+			}
+
+			if (!$found)
+			{
+				array_push($addresources, $r);
+			}
+		}
+
+		foreach ($deleteresources as $r)
+		{
+			$r->delete();
+		}
+
+		foreach ($addresources as $resourceid)
+		{
+			$r = new Newsresource;
+			$r->resourceid = $resourceid;
+			$r->newsid = $this->id;
+			$r->save();
+		}
+	}
+
+	/**
+	 * Set associations list
+	 *
+	 * @param   array  $associations
+	 * @return  void
+	 */
+	public function setAssociations($associations = array())
+	{
+		$addassoc = array();
+		$delassoc = array();
+
+		foreach ($this->associations as $r)
+		{
+			$found = false;
+
+			foreach ($associations as $r2)
+			{
+				if (!is_array($r2))
+				{
+					$r2 = array(
+						'associd' => $r2,
+						'assoctype' => 'user'
+					);
+				}
+
+				if ($r2['associd'] == $r->associd
+				 && $r2['assoctype'] == $r->assoctype)
+				{
+					$found = true;
+				}
+			}
+
+			if (!$found)
+			{
+				array_push($delassoc, $r);
+			}
+		}
+
+		foreach ($associations as $r2)
+		{
+			$found = false;
+
+			foreach ($this->associations as $r)
+			{
+				if (!is_array($r2))
+				{
+					$r2 = array(
+						'associd' => $r2,
+						'assoctype' => 'user'
+					);
+				}
+
+				if ($r2['associd'] == $r->associd
+				 && $r2['assoctype'] == $r->assoctype)
+				{
+					$found = true;
+				}
+			}
+
+			if (!$found)
+			{
+				array_push($addassoc, $r2);
+			}
+		}
+
+		foreach ($delassoc as $r)
+		{
+			$r->delete();
+		}
+
+		foreach ($addassoc as $assoc)
+		{
+			$r = new Association;
+			$r->associd = $assoc['associd'];
+			$r->assoctype = $assoc['assoctype'];
+			$r->newsid = $this->id;
+			$r->save();
+		}
 	}
 }
