@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (Halcyon.hasClass(this.parentNode, 'active')) {
 				Halcyon.removeClass(this.parentNode, 'active');
 			} else {
+				// De-activate any other menu items and sections
 				var nds = document.getElementsByClassName('node');
 				for (i = 0; i < nds.length; i++) {
 					Halcyon.removeClass(nds[i].parentNode, 'active');
@@ -84,13 +85,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				Halcyon.addClass(this.parentNode, 'active');
 
-				var section = document.querySelector(this.getAttribute('href'));
+				// Set URL hash
+				window.location.hash = this.getAttribute('href');
 
+				// Show the targetted section
+				var section = document.querySelector(this.getAttribute('href'));
 				Halcyon.removeClass(section, 'hide');
+
+				// Close the menu if open (mobile)
+				var menu = this.parentNode.parentNode;
+				if (Halcyon.hasClass(menu, 'active')) {
+					Halcyon.removeClass(menu, 'active');
+				}
 			}
 		});
 	}
 
+	// Open/close menu
 	var menu = document.getElementsByClassName('navbar-toggle');
 	for (i = 0; i < menu.length; i++) {
 		menu[i].addEventListener('click', function (e) {
@@ -104,5 +115,26 @@ document.addEventListener('DOMContentLoaded', function () {
 				Halcyon.addClass(menu, 'active');
 			}
 		});
+	}
+
+	// Activate section and menu if URL contains a hash
+	var hash = window.location.hash;
+	if (hash) {
+		if (hash.indexOf('-') !== -1) {
+			hash = hash.split('-')[0];
+		}
+		var section = document.querySelector(hash);
+
+		if (section) {
+			Halcyon.removeClass(section, 'hide');
+		}
+
+		var nds = document.getElementsByClassName('node');
+		for (i = 0; i < nds.length; i++) {
+			if (nds[i].getAttribute('href') == hash) {
+				Halcyon.addClass(nds[i].parentNode, 'active');
+				break;
+			}
+		}
 	}
 });

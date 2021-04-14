@@ -172,7 +172,7 @@
 													<div class="parameters-container">
 														<div class="table-container">
 															@if (count($endpoint['parameters']) > 0)
-																<table class="table">
+																<table class="table mb-0">
 																	<caption class="sr-only">{{ trans('core::docs.parameters') }}</caption>
 																	<thead>
 																		<tr>
@@ -187,15 +187,15 @@
 																	<tbody>
 																		@foreach ($endpoint['parameters'] as $param)
 																			<tr>
-																				<td>
+																				<td data-th="{{ trans('core::docs.name') }}">
 																					<code><span class="docs-api-param-name">{{ $param['name'] }}</span></code>
 																				</td>
-																				<td>
+																				<td data-th="{{ trans('core::docs.in') }}">
 																					@if (isset($param['in']) && $param['in'])
 																						<span class="docs-api-tag docs-api-param-{{ isset($param['in']) ? $param['in'] : '' }}">{{ $param['in'] }}</span>
 																					@endif
 																				</td>
-																				<td>
+																				<td data-th="{{ trans('core::docs.type') }}">
 																					@if (isset($param['schema']['type']) && $param['schema']['type'])
 																						<span class="docs-api-tag docs-api-param-type">{{ $param['schema']['type'] }}</span>
 																					@endif
@@ -206,16 +206,16 @@
 																						<br /><small>Example: {{ $param['schema']['example'] }}</small>
 																					@endif
 																				</td>
-																				<td>
+																				<td data-th="{{ trans('core::docs.default') }}">
 																					<code class="nohighlight">{{ (isset($param['schema']['default']) && !is_null($param['schema']['default'])) ? $param['schema']['default'] : 'null' }}</code>
 																				</td>
-																				<td>
+																				<td data-th="{{ trans('core::docs.description') }}">
 																					@if ($param['required'])
 																						<span class="required">{{ trans('global.required') }}</span>
 																					@endif
 																					{{ $param['description'] }}
 																				</td>
-																				<td>
+																				<td data-th="{{ trans('core::docs.accepted values') }}">
 																					@if (isset($param['schema']['enum']))
 																						<code class="nohighlight">{!! implode('</code>, <code class="nohighlight">', $param['schema']['enum']) !!}</code>
 																					@endif
@@ -239,7 +239,7 @@
 														</div>
 													</div>
 													<div class="response-container">
-														<table class="table">
+														<table class="table mb-0">
 															<caption class="sr-only">{{ trans('core::docs.response codes') }}</caption>
 															<thead>
 																<tr>
@@ -251,13 +251,13 @@
 															<tbody>
 																@foreach ($endpoint['response'] as $code => $response)
 																	<tr>
-																		<td>
+																		<td data-th="{{ trans('core::docs.code') }}">
 																			<code><span class="docs-api-param-name">{{ $code }}</span></code>
 																		</td>
-																		<td>
+																		<td data-th="{{ trans('core::docs.description') }}">
 																			{{ isset($response->description) ? $response->description : '' }}
 																		</td>
-																		<td>
+																		<td data-th="{{ trans('core::docs.example') }}">
 																		@if (isset($response->content))
 																			@foreach ($response->content as $mime => $example)
 																				<code>{{ $mime }}</code>:
