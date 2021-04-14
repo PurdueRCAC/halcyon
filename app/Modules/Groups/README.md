@@ -83,4 +83,4 @@ When enabling a unix group membership for a group member via the GUI interface, 
   * Create `storagedirs` entries if none exist
   * Create notifications for this user for any directory that has a quota and is owned by this group
 
-**Note:** ACMaint is called via the `GroupPrivision` and `RolePRovision` event listeners.
+**Note:** ACMaint is a 3rd-party service called via the `GroupPrivision` and `RoleProvision` event listeners.
