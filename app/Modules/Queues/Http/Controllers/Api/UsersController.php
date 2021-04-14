@@ -111,7 +111,7 @@ class UsersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -207,7 +207,7 @@ class UsersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -314,7 +314,7 @@ class UsersController extends Controller
 	 * 		}
 	 * }
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function read($id)
 	{
@@ -397,7 +397,7 @@ class UsersController extends Controller
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -493,7 +493,7 @@ class UsersController extends Controller
 
 			if (count($gqusers) && auth()->user()->id != $row->userid)
 			{
-				return 403;
+				return response()->json(['message' => trans('global.messages.not authorized')], 403);
 			}
 			elseif (count($gqusers) && auth()->user()->id == $row->userid)
 			{
