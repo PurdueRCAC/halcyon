@@ -1,4 +1,4 @@
-## Groups Module
+# Groups Module
 
 Handle management of groups.
 
@@ -38,3 +38,49 @@ This is a scheduled task with a default crontab of `*/20 * * * *` (every 20 minu
 
  * `App\Modules\Queues\Events\UserRequestUpdated` - Add membership to the base unix group of the Group the user made the request to.
  * `App\Modules\Users\Events\UserBeforeDisplay` - When a User's page is being displayed, this pulls associated Groups.
+
+## Event Flows
+
+Some event flows interact with 3rd-party services (via events triggers) and other modules (sometimes events, sometimes direct usage). These are documented below for easier reference.
+
+---
+
+When enabling a queue for a group member via the GUI interface, it performs the following actions:
+
+* Call `/api/queue/users`
+* Validate incoming data
+  * Check user exists
+  * Check queue exists
+  * Make sure actor has permissions to perform this action
+  * Check RCAC LDAP for special classifications (System Account, Software Account, Lab Account)
+  * Check if the user has access to the resource the queue is on
+    * Check role status for the resource in ACMaint
+      * If status is 'NO_ROLE_EXISTS' or 'ROLE_REMOVAL_PENDING', create a resource member entry
+        * POST to ACMaint `createOrUpdateRole`
+        * If needed, set up scratch directory for the resource and user
+        * If needed, set up home directory for the resource and user
+        * If role is not 'HPSSUSER' (Fortress), check role status for the resource in ACMaint
+          * If status is 'NO_ROLE_EXISTS' or 'ROLE_REMOVAL_PENDING', create a resource member entry
+          * POST to ACMaint `createOrUpdateRole`
+          * Add `queueusers` database entry for Fortress queue #33338
+* Create `queueusers` entry
+
+When enabling a unix group membership for a group member via the GUI interface, it performs the following actions:
+
+* Call `/api/unixgroups/members`
+* Validate incoming data
+  * Check user exists
+  * Check unix group exists
+  * Make sure actor has permissions to perform this action
+  * Check RCAC LDAP for special classifications (System Account, Software Account, Lab Account)
+  * Check if the user has access to the resource the queue is on
+    * Check role status for 'HPSSUSER' (Fortress) in ACMaint
+      * If status is 'NO_ROLE_EXISTS' or 'ROLE_REMOVAL_PENDING', create a resource member entry
+      * POST to ACMaint `createOrUpdateRole`
+* POST to ACMaint `addGroupMember`
+* Create `unixgroupusers` entry
+* Check if storage dirs need to be created for this user
+  * Create `storagedirs` entries if none exist
+  * Create notifications for this user for any directory that has a quota and is owned by this group
+
+**Note:** ACMaint is called via the `GroupPrivision` and `RolePRovision` event listeners.
