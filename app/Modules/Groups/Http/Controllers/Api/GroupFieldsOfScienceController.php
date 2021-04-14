@@ -10,8 +10,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Groups\Models\GroupFieldOfScience;
 
 /**
- * FieldsOfScience
- *
+ * Group Fields of Science
+ * 
+ * Relationship mappings of a group to fields of science
+ * 
  * @apiUri    /api/groups/{group}/fieldsofscience
  */
 class GroupFieldsOfScienceController extends Controller

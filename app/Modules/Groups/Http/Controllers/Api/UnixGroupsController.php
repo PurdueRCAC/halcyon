@@ -16,7 +16,7 @@ use App\Modules\Groups\Events\UnixGroupFetch;
  *
  * @apiUri    /api/unixgroups
  */
-class UnixgroupsController extends Controller
+class UnixGroupsController extends Controller
 {
 	/**
 	 * Display a listing of entries
@@ -192,7 +192,7 @@ class UnixgroupsController extends Controller
 	 * 		"description":   "Unix group system ID",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @param   Request  $request
@@ -441,7 +441,7 @@ class UnixgroupsController extends Controller
 	 * 		"description":   "Unix group system ID",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @param   Request $request

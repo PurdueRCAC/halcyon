@@ -10,8 +10,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Groups\Models\GroupDepartment;
 
 /**
- * Departments
- *
+ * Group Departments
+ * 
+ * Relationship mappings of a group to departments
+ * 
  * @apiUri    /api/groups/{group}/departments
  */
 class GroupDepartmentsController extends Controller
@@ -204,7 +206,7 @@ class GroupDepartmentsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/groups/departments/{id}
+	 * @apiUri    /api/groups/{group}/departments/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

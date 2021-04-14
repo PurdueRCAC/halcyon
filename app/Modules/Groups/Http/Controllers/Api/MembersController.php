@@ -9,7 +9,7 @@ use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
 
 /**
- * Members
+ * Group Members
  *
  * @apiUri    /api/groups/members
  */

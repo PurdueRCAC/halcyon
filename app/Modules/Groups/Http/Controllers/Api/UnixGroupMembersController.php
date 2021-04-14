@@ -13,7 +13,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Users\Models\User;
 
 /**
- * Unix groups
+ * Unix group members
  *
  * @apiUri    /api/unixgroups
  */
