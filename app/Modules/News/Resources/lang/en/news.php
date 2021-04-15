@@ -11,6 +11,8 @@ return [
 	'tomorrow' => 'Tomorrow',
 	'happening now' => 'Happening now',
 	// Fields
+	'email' => 'Email',
+	'send email' => 'Email this article',
 	'id' => 'ID',
 	'headline' => 'Headline',
 	'name' => 'Name',

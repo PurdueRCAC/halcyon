@@ -596,8 +596,8 @@ function NEWSAddEntry() {
 
 		post = JSON.stringify(post);
 		if (post != "{}") {
-			var id = original['id'].substr(original['id'].lastIndexOf("/")+1);
-			WSPutURL(original['id'], post, NEWSUpdatedNews, id);
+			var id = original['id']; //.substr(original['id'].lastIndexOf("/")+1);
+			WSPutURL(original['api'], post, NEWSUpdatedNews, id);
 		}
 
 		return;
@@ -698,7 +698,7 @@ function NEWSNewNews(xml) {
 		var results = JSON.parse(xml.responseText);
 
 		// Clear the resource listing
-		if ($('.tagsinput').length) {
+		/*if ($('.tagsinput').length) {
 			$('#newsresource').clearTags();
 		} else {
 			document.getElementById('newsresource').value = '';
@@ -712,11 +712,11 @@ function NEWSNewNews(xml) {
 		document.getElementById("datestopshort").value = "";
 		document.getElementById("timestopshort").value = "";
 
-		var id = results['id'];
-		id = id.split('/');
-		id = id[id.length-1];
+		//var id = results['id'];
+		//id = id.split('/');
+		//id = id[id.length-1];*/
 
-		window.location.href = "/news/" + id;
+		window.location.href = results.uri; //"/news/" + id;
 	} else if (xml.status == 409) {
 		SetError('Invalid date.', 'Please pick the current date or a date in the past.');
 	} else {
@@ -761,48 +761,32 @@ function NEWSSearch() {
 	if (list) {
 		if (tagresources == "0") {
 			$(list).addClass('d-none');
-			//list.style.display = "none";
-			//list.visible = false;
 		} else {
 			$(list).removeClass('d-none');
-			//list.style.display = "flex";
-			//list.visible = true;
 		}
 	}
 
 	if (locale) {
 		if (taglocation == "0") {
 			$(locale).addClass('d-none');
-			//locale.style.display = "flex";
-			//locale.visible = false;
 		} else {
 			$(locale).removeClass('d-none');
-			//locale.style.display = "block";
-			//locale.visible = true;
 		}
 	}
 
 	if (url) {
-		if (tagurl == "0") {
+		if (!tagurl || tagurl == "0") {
 			$(url).addClass('d-none');
-			//url.style.display = "none";
-			//url.visible = false;
 		} else {
 			$(url).removeClass('d-none');
-			//url.style.display = "flex";
-			//url.visible = true;
 		}
 	}
 
 	if (users) {
-		if (tagusers == "0") {
+		if (!tagusers || tagusers == "0") {
 			$(users).addClass('d-none');
-			//users.style.display = "block";
-			//users.visible = true;
 		} else {
 			$(users).removeClass('d-none');
-			//users.style.display = "flex";
-			//users.visible = false;
 		}
 	}
 
@@ -1225,7 +1209,7 @@ function NEWSPrintRow(news) {
 		td2.className = "newspublication";
 
 		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
+		a.href = "?id=" + id + '&edit';
 
 		if (published == "1") {
 			a.onclick = function (e) {
@@ -1288,7 +1272,7 @@ function NEWSPrintRow(news) {
 
 		// Delete button
 		a = document.createElement("a");
-		a.href = "/news/manage?delete&id=" + id;
+		a.href = "?delete&id=" + id;
 		a.className = 'edit news-delete icn tip';
 		a.title = "Delete News Story.";
 		a.onclick = function (e) {
@@ -1309,13 +1293,41 @@ function NEWSPrintRow(news) {
 		if (resources.length > 0 && published == "1") {
 			a = document.createElement("a");
 			a.className = 'edit news-mail tip';
-			a.href = "/news/manage?mail&id=" + id;
+			a.href = "?mail&id=" + id;
 			a.onclick = function (e) {
 				e.preventDefault();
 				NEWSSendMail(id);
 			};
 			a.id = "A_mail_" + id;
 			a.title = "Preview mail to mailing lists.";
+
+			if (maildate != undefined) {
+				span = document.createElement("span");
+				span.innerHTML = "Last sent " + news.formattedmaildate + " by " + mailuser['name'] + " ";
+				span.className = "newspostedby";
+
+				a.appendChild(span);
+			}
+
+			img = document.createElement("i");
+			img.className = "newsedit fa fa-envelope";
+			img.setAttribute('aria-hidden', true);
+			img.id = "IMG_mail_" + id;
+
+			a.appendChild(img);
+			//a.appendChild(document.createTextNode("Preview mail to mailing lists."));
+			tr.appendChild(a);
+		}
+		else if (users.length > 0 && published == "1") {
+			a = document.createElement("a");
+			a.className = 'edit news-mail tip';
+			a.href = "?mail&id=" + id;
+			a.onclick = function (e) {
+				e.preventDefault();
+				NEWSWriteMail(id);
+			};
+			a.id = "A_mail_" + id;
+			a.title = "Write mail to users.";
 
 			if (maildate != undefined) {
 				span = document.createElement("span");
@@ -1355,7 +1367,7 @@ function NEWSPrintRow(news) {
 	if (edit) {
 		// Edit button
 		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
+		a.href = "?id=" + id + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
 			NEWSEditNewsHeadlineOpen(id);
@@ -1387,7 +1399,7 @@ function NEWSPrintRow(news) {
 	if (edit) {
 		// Save button
 		a = document.createElement("a");
-		a.href = "/news/manage?save&id=" + id;
+		a.href = "?save&id=" + id;
 		a.onclick = function (e) {
 			e.preventDefault();
 			NEWSSaveNewsHeadline(id);
@@ -1407,7 +1419,7 @@ function NEWSPrintRow(news) {
 
 		// Cancel button
 		a = document.createElement("a");
-		a.href = "/news/" + id;
+		a.href = news.uri;
 		a.onclick = function (e) {
 			e.preventDefault();
 			NEWSCancelNewsHeadline(id);
@@ -1441,12 +1453,12 @@ function NEWSPrintRow(news) {
 
 	if (edit) {
 		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
+		a.href = "?id=" + id + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
 			NEWSClearSearch();
 			if (!window.location.href.match(/\/news/)) {
-				window.location = "/news/manage/?id=" + id + "&edit";
+				window.location = "?id=" + id + "&edit";
 			} else {
 				NEWSClearSearch();
 				var url = window.location.href.split("?");
@@ -1479,7 +1491,7 @@ function NEWSPrintRow(news) {
 
 		if (edit) {
 			a = document.createElement("a");
-			a.href = "/news/manage?id=" + id + '&edit';
+			a.href = "?id=" + id + '&edit';
 			a.onclick = function (e) {
 				e.preventDefault();
 				NEWSEditNewsLocationOpen(id);
@@ -1511,7 +1523,7 @@ function NEWSPrintRow(news) {
 
 		if (edit) {
 			a = document.createElement("a");
-			a.href = "/news/manage?id=" + id + '&edit';
+			a.href = "?id=" + id + '&edit';
 			a.onclick = function (e) {
 				e.preventDefault();
 				NEWSSaveNewsLocation(id);
@@ -1530,7 +1542,7 @@ function NEWSPrintRow(news) {
 			li.appendChild(a);
 
 			a = document.createElement("a");
-			a.href = "/news/" + id;
+			a.href = news.uri;
 			a.onclick = function (e) {
 				e.preventDefault();
 				NEWSCancelNewsLocation(id);
@@ -1565,7 +1577,7 @@ function NEWSPrintRow(news) {
 
 		if (edit) {
 			a = document.createElement("a");
-			a.href = "/news/manage?id=" + id + '&edit';
+			a.href = "?id=" + id + '&edit';
 			a.onclick = function (e) {
 				e.preventDefault();
 				NEWSEditNewsUrlOpen(id);
@@ -1596,7 +1608,7 @@ function NEWSPrintRow(news) {
 
 		if (edit) {
 			a = document.createElement("a");
-			a.href = "/news/manage?id=" + id + '&edit';
+			a.href = "?id=" + id + '&edit';
 			a.onclick = function (e) {
 				e.preventDefault();
 				NEWSSaveNewsUrl(id);
@@ -1615,7 +1627,7 @@ function NEWSPrintRow(news) {
 			li.appendChild(a);
 
 			a = document.createElement("a");
-			a.href = "/news/" + id;
+			a.href = news.uri;
 			a.onclick = function (e) {
 				e.preventDefault();
 				NEWSCancelNewsUrl(id);
@@ -1656,7 +1668,7 @@ function NEWSPrintRow(news) {
 
 		if (edit) {
 			a = document.createElement("a");
-			a.href = "/news/manage?id=" + id + '&edit';
+			a.href = "?id=" + id + '&edit';
 			a.title = "Edit tagged resources.";
 			a.className = "news-action icn tip";
 
@@ -1691,7 +1703,7 @@ function NEWSPrintRow(news) {
 
 		if (edit) {
 			a = document.createElement("a");
-			a.href = "/news/manage?id=" + id + '&edit';
+			a.href = "?id=" + id + '&edit';
 			a.title = "Edit associated users.";
 			a.className = "news-action icn tip";
 
@@ -1718,7 +1730,7 @@ function NEWSPrintRow(news) {
 
 	if (edit) {
 		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
+		a.href = "?id=" + id + '&edit';
 		a.title = "Edit news story, change text, headline, or tagged resources.";
 		a.className = "news-action icn tip";
 
@@ -1780,7 +1792,7 @@ function NEWSPrintRow(news) {
 		opt.className = "card-options panel-options";
 
 		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
+		a.href = "?id=" + id + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
 			NEWSEditNewsTextOpen(id);
@@ -1798,7 +1810,7 @@ function NEWSPrintRow(news) {
 
 		// Preview button
 		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
+		a.href = "?id=" + id + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
 			NEWSPreview(id);
@@ -1819,7 +1831,7 @@ function NEWSPrintRow(news) {
 
 		// Save button
 		a = document.createElement("a");
-		a.href = "/news/manage?id=" + id + '&edit';
+		a.href = "e?id=" + id + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
 			NEWSSaveNewsText(id);
@@ -1839,7 +1851,7 @@ function NEWSPrintRow(news) {
 
 		// Cancel button
 		a = document.createElement("a");
-		a.href = "/news/" + id;
+		a.href = news.uri;
 		a.onclick = function (e) {
 			e.preventDefault();
 			NEWSCancelNewsText(id);
@@ -1991,7 +2003,7 @@ function NEWSPrintRow(news) {
 		// Save button
 		a = document.createElement("a");
 		a.className = "news-save icn tip";
-		a.href = "/news/manage?update&id=" + id;
+		a.href = "?update&id=" + id;
 		a.onclick = function (e) {
 			e.preventDefault();
 			NewsPostUpdate(news['id']);
@@ -2148,8 +2160,8 @@ function NEWSSaveNewsText(news) {
 		img.parentNode.title = "Saving changes...";
 
 	var post = {
-		'body' : text,
-		'lastedit' : LASTEDIT[news]
+		'body' : text//,
+		//'lastedit' : LASTEDIT[news]
 	};
 
 	if (update == true) {
@@ -2157,7 +2169,7 @@ function NEWSSaveNewsText(news) {
 	}
 	post = JSON.stringify(post);
 
-	WSPostURL(root + "news/" + news, post, NEWSSavedNewsText, news);
+	WSPutURL(root + "news/" + news, post, NEWSSavedNewsText, news);
 }
 
 /**
@@ -2629,7 +2641,10 @@ function NEWSClearSearch() {
 	}
 
 	if (window.location.href.match(/[&?]edit/)) {
-		window.location = window.location.href.replace(/&edit/, "&search");
+		window.location = window.location.href
+			.replace(/&edit/, "&search")
+			.replace(/\?edit/, "?search")
+			.replace(/id=\d+/, "");
 	}
 
 	NEWSSearch();
@@ -2678,7 +2693,7 @@ function NEWSPreviewVars(news) {
 		} else {
 			startDate = document.getElementById("datestartshort").value + " 12:00 AM"
 		}
-		preview_vars["startDate"] = startDate;
+		preview_vars["startdate"] = startDate;
 	}
 
 	if (document.getElementById("datestopshort").value != "") {
@@ -2687,7 +2702,7 @@ function NEWSPreviewVars(news) {
 		} else {
 			endDate = document.getElementById("datestopshort").value + " 12:00 AM";
 		}
-		preview_vars["endDate"] = endDate;
+		preview_vars["enddate"] = endDate;
 	}
 
 	if (document.getElementById("newstype").value <= 2) {
@@ -2700,7 +2715,7 @@ function NEWSPreviewVars(news) {
 		/*if ($('.tagsinput').length) {
 			var resources = $('.tagsinput').find('.tag-text');*/
 		$.each(resources, function (i, el) {
-			preview_vars['resources'][i] = { "resourcename": el };
+			preview_vars['resources'][i] = el; //{ "resourcename": el };
 		});
 		//}
 	}
@@ -2737,20 +2752,21 @@ function NEWSPreview(news, edit) {
 	if (text == "") {
 		return;
 	}
-	var post_string = { 'text': text };
+
+	var post = { 'body': text };
 	if (news == "new") {
-		post_string['vars'] = NEWSPreviewVars(news);
+		post['vars'] = NEWSPreviewVars(news);
 	} else {
 		if (edit) {
-			post_string['vars'] = NEWSPreviewVars(news);
+			post['vars'] = NEWSPreviewVars(news);
 		}
-		post_string['news'] = "/api/news/" + news;
+		post['id'] = news;
 	}
 
-	WSPostURL(root + "news/preview", JSON.stringify(post_string), function (xml) {
+	WSPostURL(root + "news/preview", JSON.stringify(post), function (xml) {
 		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
-			document.getElementById("preview").innerHTML = results['formattedtext'];
+			document.getElementById("preview").innerHTML = results['formattedbody'];
 		} else {
 			alert("An error occurred while generating preview.");
 		}
@@ -2843,10 +2859,12 @@ function NEWSSendMail(news) {
 		if (data['resources'].length > 0) {
 			footer += '<hr /><p>Send to resource mailing lists:</p><div class="row">';
 			for (var x = 0; x < data['resources'].length; x++) {
-				footer += '<div class="col-md-3"><label><input type="checkbox" checked="checked" value="' + data['resources'][x]['resourceid'] + '" class="preview-resource" /> ' + data['resources'][x]['resourcename'] + '</label></div>';
+				footer += '<div class="col-md-3"><label><input type="checkbox" checked="checked" value="' + data['resources'][x]['resourceid'] + '" class="preview-resource" /> ' + data['resources'][x]['resource']['name'] + '</label></div>';
 			}
 			footer += '</div>';
 		}
+
+		document.getElementById("mailpreview").innerHTML = header + body + footer;
 
 		$('#mailpreview').dialog({ modal: true,
 			width: '691px',
@@ -2869,13 +2887,13 @@ function NEWSSendMail(news) {
 						}
 					});
 
-					if ($('.preview-resource').length != resources.length) {
+					//if ($('.preview-resource').length != resources.length) {
 						post.resources = resources;
-					}
+					//}
 
 					post = JSON.stringify(post);
 
-					WSPostURL(ROOT_URL + "news/" + news, post, NEWSSentMail, news);
+					WSPutURL(ROOT_URL + "news/" + news + "/email", post, NEWSSentMail, news);
 				}
 			}
 		});
@@ -2923,14 +2941,14 @@ function NEWSWriteMail(news) {
 			}
 		});
 		to.clearTags();
-
+		console.log(data.associations);
 		var x;
 		for (x = 0; x < data.associations.length; x++) {
 			if ($('.tagsinput').length) {
 				if (!to.tagExist(data.associations[x]['id'])) {
 					to.addTag({
 						'id': data.associations[x]['associd'],
-						'label': data.associations[x]['assocname']
+						'label': data.associations[x]['name']
 					});
 				}
 			}
@@ -2958,10 +2976,10 @@ function NEWSWriteMail(news) {
 						'mail': 1,
 						'lastedit': LASTEDIT[news],
 						'headline': $('#mail-subject').val(),
-						'news': $('#mail-body').val(),
+						'body': $('#mail-body').val(),
 						'associations': associations
 					});
-					WSPostURL(ROOT_URL + "news/" + news, post, NEWSSentMail, news);
+					WSPutURL(ROOT_URL + "news/" + news + "/email", post, NEWSSentMail, news);
 				}
 			}
 		});
@@ -3164,7 +3182,7 @@ function NewsPostUpdate(newsid) {
 		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 
-			NewsPrintUpdate(newsid, results.data);
+			NewsPrintUpdate(newsid, results);
 			document.getElementById(newsid + "_newupdatebox").value = "";
 			NewsCollapseNewUpdate(newsid + "_newupdatebox");
 		} else {
@@ -3183,11 +3201,10 @@ function NewsPostUpdate(newsid) {
  * @return  {void}
  */
 function NewsPrintUpdate(newsid, update, edit) {
-	/*if (typeof(edit) == 'undefined') {
-		edit = false;
-	}*/
+	if (typeof(edit) === 'undefined') {
+		edit = update.can.edit;
+	}
 
-	edit = update.can.edit;
 	var page = document.location.href.split("/")[4];
 	if (page == 'news') {
 		update['body'] = HighlightMatches(update['body']);
@@ -3214,7 +3231,7 @@ function NewsPrintUpdate(newsid, update, edit) {
 
 		a = document.createElement("a");
 		a.className = 'edit news-update-delete tip';
-		a.href = "/news/manage?delete&update=" + update['id'];
+		a.href = "?delete&update=" + update['id'];
 		a.onclick = function (e) {
 			e.preventDefault();
 			NewsDeleteUpdate(update['id'], newsid);
@@ -3245,7 +3262,7 @@ function NewsPrintUpdate(newsid, update, edit) {
 	if (edit) {
 		// Edit button
 		a = document.createElement("a");
-		a.href = "/news/manage?update=" + update['id'] + '&edit';
+		a.href = "?update=" + update['id'] + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
 			NewsEditUpdateTextOpen(update['id']);
@@ -3276,7 +3293,7 @@ function NewsPrintUpdate(newsid, update, edit) {
 
 		// Save button
 		a = document.createElement("a");
-		a.href = "/news/manage?update=" + update['id'] + '&edit';
+		a.href = "?update=" + update['id'] + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
 			NewsSaveUpdateText(newsid, update['id']);
@@ -3368,11 +3385,13 @@ function NewsSaveUpdateText(newsid, update) {
 		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 			icon.style.display = "none";
-			icon.onclick = function () { NewsSaveUpdateText(results.data.newsid, update); };
+			icon.onclick = function () {
+				NewsSaveUpdateText(results.data.newsid, update);
+			};
 			text.style.display = "block";
 			box.style.display = "none";
 			editicon.style.display = "block";
-			text.innerHTML = results.data['formattedbody'];
+			text.innerHTML = results.formattedbody;
 		} else if (xml.status == 403) {
 			img.className = "fa fa-exclamation-circle";
 			img.parentNode.title = "Unable to save changes, grace editing window has passed.";
@@ -3393,8 +3412,8 @@ function NewsSaveUpdateText(newsid, update) {
 function NewsDeleteUpdate(updateid, reportid) {
 	if (confirm("Are you sure you want to delete this update?")) {
 		WSDeleteURL(root + "news/" + reportid + "/updates/" + updateid, function(xml, arg) {
-			if (xml.status == 200) {
-				document.getElementById(arg['updateid'] + "_update").parentNode.style.display = "none";
+			if (xml.status < 400) {
+				$('#' + arg['updateid'] + "_update").closest('li').remove();
 			} else if (xml.status == 403) {
 				document.getElementById(arg['reportid'] + "_updatedeleteimg").className = "fa fa-exclamation-circle";
 				document.getElementById(arg['reportid'] + "_updatedeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";

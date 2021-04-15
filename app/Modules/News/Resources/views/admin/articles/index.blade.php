@@ -1,7 +1,15 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
+@endpush
+
+@push('scripts')
+<script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/news/js/admin.js?v=' . filemtime(public_path() . '/modules/news/js/admin.js')) }}"></script>
 @endpush
 
 @php
@@ -134,6 +142,7 @@ else
 						{!! Html::grid('sort', trans('news::news.publish window'), 'datetimenews', $filters['order_dir'], $filters['order']) !!}
 					</th>
 					<th scope="col" class="priority-4 text-right">{{ trans('news::news.updates') }}</th>
+					<th scope="col" class="priority-4 text-right">{{ trans('news::news.email') }}</th>
 				@endif
 			</tr>
 		</thead>
@@ -163,6 +172,16 @@ else
 						@else
 							<span class="none">{{ trans('global.none') }}</span>
 						@endif
+					@endif
+
+					@if ($row->isMailed())
+						<div class="text-muted">
+							Last emailed:
+							<time datetime="{{ $row->datetimemailed->format('Y-m-d\TH:i:s\Z') }}">
+								{{ $row->datetimemailed->format('M j, Y g:ia') }}
+							</time>
+							by {{ $row->mailer ? $row->mailer->name : trans('global.unknown') }}
+						</div>
 					@endif
 				</td>
 				<td>
@@ -219,6 +238,11 @@ else
 							{{ $row->updates_count }}
 						</a>
 					</td>
+					<td class="priority-4 text-right">
+						<button class="btn news-mail" data-success="Email sent!" data-article="{{ route('api.news.read', ['id' => $row->id]) }}" data-api="{{ route('api.news.email', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.send email') }}">
+							<span class="icon-mail glyph">Email</span>
+						</button>
+					</td>
 				@endif
 			</tr>
 		@endforeach
@@ -227,6 +251,60 @@ else
 	</div>
 
 	{{ $rows->render() }}
+
+	<script id="mailpreview-template" type="text/x-handlebars-template">
+		<div id="mail-recipients">To: <?php echo '{{resourcelist}}'; ?> Users</div>
+		<div id="mail-from">From: YOU via Research Computing</div>
+		<div id="mail-subject">Subject: <?php echo '{{subject}} - {{formatteddate}}'; ?></div>
+		<hr />
+		<div id="mail-meta">
+			<strong><?php echo '{{subject}}'; ?></strong><br/>
+			<?php echo '{{formatteddate}}'; ?><br/>
+			<?php echo '{{locale}}'; ?><br/>
+		</div>
+
+		<?php echo '{{#if updates}}'; ?>
+			<?php echo '{{#each updates}}'; ?>
+				<span class="newsupdate" style="font-style: italic"><strong>UPDATE: <?php echo '{{formattedcreateddate}}'; ?></strong></span>
+				<?php echo '{{{formattedbody}}}'; ?><br/>
+			<?php echo '{{/each}}'; ?>
+			<span class="newsupdate" style="font-style: italic"><strong>ORIGINAL: <?php echo '{{formattedcreateddate}}'; ?></strong></span>
+		<?php echo '{{/if}}'; ?>
+		<?php echo '{{{formattedbody}}}'; ?>
+
+		<hr/>
+		<a href="<?php echo '{{uri}}'; ?>">ITaP Research Computing News</a> from YOU<br/>
+		<br/>
+		Please reply to <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a> with any questions or concerns.<br/>
+		<a href="<?php echo '{{uri}}'; ?>">View this article on the web.</a>
+
+		<div class="ui-dialog-pane-highlight">
+			<?php echo '{{#if resources}}'; ?>
+				<fieldset class="option-group">
+					<legend>Send to resource mailing lists:</legend>
+					<div class="row">
+						<?php echo '{{#each resources}}'; ?>
+							<div class="col-md-3">
+								<label>
+									<input type="checkbox" checked="checked" value="<?php echo '{{resourceid}}'; ?>" class="preview-resource" />
+									<?php echo '{{resource.name}}'; ?>
+								</label>
+							</div>
+						<?php echo '{{/each}}'; ?>
+					</div>
+				</fieldset>
+			<?php echo '{{/if}}'; ?>
+
+			<div class="form-group row">
+				<label for="newsuser" class="col-sm-2 col-form-label">Send to:</label>
+				<div class="col-sm-10">
+					<input type="text" name="to" id="mail-to" class="form-control form-users" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
+				</div>
+			</div>
+		</div>
+	</script>
+	<div id="mailpreview" class="dialog" title="Mail Preview">
+	</div>
 
 	<input type="hidden" name="boxchecked" value="0" />
 

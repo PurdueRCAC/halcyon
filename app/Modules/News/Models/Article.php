@@ -77,7 +77,7 @@ class Article extends Model
 		'datetimeupdate',
 		'datetimecreated',
 		'datetimeedited',
-		'datetimeemailed',
+		'datetimemailed',
 	];
 
 	/**

@@ -232,7 +232,7 @@ class ArticlesController extends Controller
 
 		$types = Type::query()->orderBy('name', 'asc')->get();
 
-		$templates = Article::where('template', '=', 1)->get();
+		$templates = Article::where('template', '=', 1)->where('published', '=', 1)->get();
 
 		app('pathway')
 			->append(

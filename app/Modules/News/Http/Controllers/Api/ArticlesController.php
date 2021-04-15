@@ -500,7 +500,7 @@ class ArticlesController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'newstypeid' => 'required|integer',
+			'newstypeid' => 'required|integer|min:1',
 			'headline' => 'required|string|max:255',
 			'body' => 'required|string|max:15000',
 			'published' => 'nullable|integer|in:0,1',
@@ -513,6 +513,7 @@ class ArticlesController extends Controller
 
 		$row = new Article();
 
+		$row->newstypeid = $request->input('newstypeid');
 		$row->headline = $request->input('headline');
 		$row->body = $request->input('body');
 		$row->published = $request->input('published');
@@ -755,6 +756,7 @@ class ArticlesController extends Controller
 			'datetimenewsend' => 'nullable|date',
 			'location' => 'nullable|string',
 			'url' => 'nullable|url',
+			'update' => 'nullable|integer'
 		]);
 
 		$row = Article::findOrFail($id);
@@ -824,6 +826,11 @@ class ArticlesController extends Controller
 			{
 				return response()->json(['message' => trans('news::news.error.invalid url')], 415);
 			}
+		}
+
+		if ($request->input('update'))
+		{
+			$row->datetimeupdate = Carbon::now()->toDateTimeString();
 		}
 
 		if (!$row->save())
@@ -952,6 +959,16 @@ class ArticlesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "resources",
+	 * 		"description":   "A list of resource IDs to send the email to mailing lists.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array",
+	 * 			"default":   null
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "associations",
 	 * 		"description":   "A list of user IDs to send the email to. If none provided, Resource mailing lists are used instead.",
 	 * 		"required":      false,
@@ -966,11 +983,23 @@ class ArticlesController extends Controller
 	public function email($id, Request $request)
 	{
 		$request->validate([
-			'body' => 'required|string|max:15000',
-			'vars' => 'nullable|array'
+			'headline' => 'nullable|string|max:255',
+			'body' => 'nullable|string|max:15000',
+			'associations' => 'nullable|array',
+			'resources' => 'nullable|array'
 		]);
 
 		$row = Article::findOrFail($id);
+
+		if ($request->has('headline'))
+		{
+			$row->headline = $request->input('headline');
+		}
+
+		if ($request->has('body'))
+		{
+			$row->body = $request->input('body');
+		}
 
 		// Fetch name of sender
 		$name = auth()->user()->name . ' via ' . config('app.name') . ' News';
@@ -1013,16 +1042,21 @@ class ArticlesController extends Controller
 				}
 			}
 		}
-		else
+
+		if ($request->has('resources'))
 		{
-			if (count($row->resources))
+			$resources = $request->input('resources');
+
+			foreach ($row->resources as $res)
 			{
-				foreach ($copyobj->resources as $res)
+				if (!in_array($res->resourceid, $resources))
 				{
-					if ($res->resource->listname && $res->resource->listname != 'none')
-					{
-						$emails[] = $res->resource->mailinglist;
-					}
+					continue;
+				}
+
+				if ($res->resource->listname && $res->resource->listname != 'none')
+				{
+					$emails[] = $res->resource->mailinglist;
 				}
 			}
 		}

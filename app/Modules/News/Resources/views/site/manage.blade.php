@@ -318,7 +318,7 @@
 								<input type="reset" class="btn btn-link" value="Clear" id="INPUT_clearsearch" />
 							</div>
 						</div>
-						<div class="form-group row tab-add" id="TR_create">
+						<div class="form-group row tab-add tab-edit" id="TR_create">
 							<div class="col-sm-2">
 							</div>
 							<div class="col-sm-10">
@@ -548,6 +548,40 @@ Additionally these variables are available inside updates and will be filled wit
 	<div id="mailpreview" class="dialog" title="Mail Preview">
 	</div>
 
+	<div id="mailwrite" class="stash" title="Write Mail">
+		<form method="post" action="/news/manage">
+			<div class="form-group row">
+				<label for="newsuser" class="col-sm-2 col-form-label">To</label>
+				<div class="col-sm-10">
+					<input name="to" id="mail-to" class="form-control" value="" data-uri="{{ route('api.users.index') }}/%s" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="mail-from" class="col-sm-2 col-form-label">From</label>
+				<div class="col-sm-10">
+					<input id="mail-from" name="from" type="text" disabled="disabled" readonly="readonly" class="form-control" value="{{ auth()->user()->name }} via Research Computing" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="mail-subject" class="col-sm-2 col-form-label">Subject</label>
+				<div class="col-sm-10">
+					<input id="mail-subject" name="subject" type="text" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="NotesText" class="col-sm-2 col-form-label">
+					Body
+					<a href="#help1" class="help icn tip" title="Help">
+						<i class="fa fa-question-circle" aria-hidden="true"></i> Help
+					</a>
+				</label>
+				<div class="col-sm-10">
+					<textarea name="body" id="mail-body" rows="15" cols="77" class="form-control"></textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+
 	<div id="dialog-confirm" class="dialog" title="Unsaved Changes">
 		<p>You have unsaved changes that need to be saved before mailing news item.</p>
 		<p>Would you like to save the changes?</p>
@@ -631,7 +665,8 @@ Additionally these variables are available inside updates and will be filled wit
 				$starttime = '';
 			}
 
-			$data = $news;
+			$data = (object)$news->toArray();
+			$data->api = route('api.news.update', ['id' => $news->id]);
 			$data->news = $news->body;
 			$data->startdate = $startdate;
 			$data->stopdate = $stopdate;
@@ -640,10 +675,15 @@ Additionally these variables are available inside updates and will be filled wit
 			$data->resources = array();
 			foreach ($news->resources as $r)
 			{
-				$r->resourcename = $r->resource->name;
-				$data->resources[] = $r;
+				//$r->resourcename = $r->resource->name;
+				$data->resources[] = array(
+					'id' => $r->id,
+					'resourceid' => $r->resourceid,
+					'newsid' => $r->newsid,
+					'resourcename' => $r->resource->name
+				);
 			}
-			$data->associations;
+			$data->associations = $news->associations;
 			$data->lastedit = $news->datetimeedit ? $news->datetimeedit->toDateTimeString() : '0000-00-00 00:00:00';
 			?>
 			<script type="application/json" id="news-data">

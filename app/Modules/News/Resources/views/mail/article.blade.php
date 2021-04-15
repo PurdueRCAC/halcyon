@@ -22,5 +22,5 @@ _**ORIGINAL: {{ $article->formatDate($article->datetimenews, $article->datetimen
 {!! $article->formattedBody !!}
 
 ---
-[Article #{{ $article->id }}]({{ route('site.news.show', ['id' => $article->id]) }}) posted on {{ $report->datetimenews->format('F j, Y g:ia') }}.
+[Article #{{ $article->id }}]({{ route('site.news.show', ['id' => $article->id]) }}) posted on {{ $article->datetimenews->format('F j, Y g:ia') }}.
 @endcomponent
