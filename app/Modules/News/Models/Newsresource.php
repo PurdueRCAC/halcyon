@@ -18,6 +18,13 @@ class Newsresource extends Model
 	protected $table = 'newsresources';
 
 	/**
+	 * Indicates if the model should be timestamped.
+	 *
+	 * @var  bool
+	 */
+	public $timestamps = false;
+
+	/**
 	 * Default order by for model
 	 *
 	 * @var  string

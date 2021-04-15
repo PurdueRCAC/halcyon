@@ -151,12 +151,18 @@ else
 				<td>
 					@if (auth()->user()->can('edit news'))
 						<a href="{{ route('admin.news.edit', ['id' => $row->id]) }}">
-							{{ Illuminate\Support\Str::limit($row->headline, 70) }}
+							@if ($row->headline)
+								{{ Illuminate\Support\Str::limit($row->headline, 70) }}
+							@else
+								<span class="none">{{ trans('global.none') }}</span>
+							@endif
 						</a>
 					@else
-						<span>
+						@if ($row->headline)
 							{{ Illuminate\Support\Str::limit($row->headline, 70) }}
-						</span>
+						@else
+							<span class="none">{{ trans('global.none') }}</span>
+						@endif
 					@endif
 				</td>
 				<td>

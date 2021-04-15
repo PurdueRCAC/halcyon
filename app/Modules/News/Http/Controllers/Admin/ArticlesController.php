@@ -212,7 +212,7 @@ class ArticlesController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.newstypeid' => 'required|integer|in:0,1',
+			'fields.newstypeid' => 'required|integer',
 			'fields.headline' => 'required|string|max:255',
 			'fields.body' => 'required|string|max:15000',
 			'fields.published' => 'nullable|integer|in:0,1',
@@ -231,8 +231,19 @@ class ArticlesController extends Controller
 			unset($fields['datetimenewsend']);
 		}
 
+		$id = $request->input('id');
+
 		$row = $id ? Article::findOrFail($id) : new Article();
 		$row->fill($fields);
+
+		if (!$id)
+		{
+			$row->userid = auth()->user()->id;
+		}
+		else
+		{
+			$row->edituserid = auth()->user()->id;
+		}
 
 		if (!$row->type)
 		{
@@ -271,7 +282,7 @@ class ArticlesController extends Controller
 			$row->setAssociations($request->input('associations'));
 		}
 
-		return $this->cancel()->with('success', trans('global.messages.item saved'));
+		return $this->cancel()->with('success', trans('global.messages.' . ($id ? 'item updated' : 'item created')));
 	}
 
 	/**
@@ -325,8 +336,8 @@ class ArticlesController extends Controller
 		if ($success)
 		{
 			$msg = $state
-				? 'news::news.items published'
-				: 'news::news.items unpublished';
+				? 'global.messages.item published'
+				: 'global.messages.item unpublished';
 
 			$request->session()->flash('success', trans($msg, ['count' => $success]));
 		}

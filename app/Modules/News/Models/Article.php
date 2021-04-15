@@ -122,7 +122,7 @@ class Article extends Model
 		$value = strip_tags($value);
 		$value = htmlentities($value, ENT_QUOTES, 'UTF-8');
 
-		$this->attributes['body'] = $value;
+		$this->attributes['headline'] = $value;
 	}
 
 	/**
@@ -1062,6 +1062,13 @@ class Article extends Model
 	 */
 	public function setResources($resources = array())
 	{
+		if (empty($resources))
+		{
+			return;
+		}
+
+		$resources = (array)$resources;
+
 		// Remove and add resource-news mappings
 		// First calculate diff
 		$addresources = array();
@@ -1125,6 +1132,13 @@ class Article extends Model
 	 */
 	public function setAssociations($associations = array())
 	{
+		if (empty($associations))
+		{
+			return;
+		}
+
+		$associations = (array)$associations;
+
 		$addassoc = array();
 		$delassoc = array();
 

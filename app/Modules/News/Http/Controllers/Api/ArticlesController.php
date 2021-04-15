@@ -500,7 +500,7 @@ class ArticlesController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'newstypeid' => 'required|integer|in:0,1',
+			'newstypeid' => 'required|integer',
 			'headline' => 'required|string|max:255',
 			'body' => 'required|string|max:15000',
 			'published' => 'nullable|integer|in:0,1',
@@ -747,7 +747,7 @@ class ArticlesController extends Controller
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'newstypeid' => 'nullable|integer|in:0,1',
+			'newstypeid' => 'nullable|integer',
 			'body' => 'nullable|string',
 			'published' => 'nullable|integer|in:0,1',
 			'template' => 'nullable|integer|in:0,1',

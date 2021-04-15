@@ -212,7 +212,7 @@ app('pathway')
 						<td>
 							Includes end date &amp; time, if set. Example:<br />
 							Thursday, April 15, 2021<br />
-							Thursday, April 15, 2021 - Friday, April 16, 2021
+							April 15 - 16, 2021
 						</td>
 					</tr>
 					<tr>

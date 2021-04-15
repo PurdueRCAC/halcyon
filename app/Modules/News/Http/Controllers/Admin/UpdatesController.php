@@ -137,33 +137,21 @@ class UpdatesController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.body'   => 'required',
-			'fields.newsid' => 'required'
+			'fields.body'   => 'required|string|max:15000',
+			'fields.newsid' => 'required|integer'
 		]);
 
 		$id = $request->input('id');
 
-		if ($id)
-		{
-			$row = Update::findOrFail($id);
-			$row->fill($request->input('fields'));
-		}
-		else
-		{
-			$row = new Update($request->input('fields'));
-		}
-
-		/*if ($request->input('state') == 'published' && $row->isTrashed())
-		{
-			$row->restore();
-		}*/
+		$row = $id ? Update::findOrFail($id) : new Update;
+		$row->fill($request->input('fields'));
 
 		if (!$row->save())
 		{
 			return redirect()->back()->with('error', trans('global.messages.save failed'));
 		}
 
-		return redirect(route('admin.news.updates', ['article' => $row->newsid]))->withSuccess(trans('global.messages.item saved'));
+		return redirect(route('admin.news.updates', ['article' => $row->newsid]))->withSuccess(trans('global.messages.' . ($id ? 'item updated' : 'item created')));
 	}
 
 	/**
