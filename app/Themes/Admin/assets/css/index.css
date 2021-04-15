@@ -2743,6 +2743,10 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   content: "\e8f6";
   font-family: 'Feather';
 }
+.ui-dialog-pane-highlight {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 1em;
+}
 /*.ui-datepicker {
   background: #111111;
   background: rgba(0, 0, 0, 0.8);
