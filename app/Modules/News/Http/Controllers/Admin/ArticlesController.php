@@ -158,50 +158,26 @@ class ArticlesController extends Controller
 
 		$types = Type::orderBy('name', 'asc')->get();
 
-		foreach ($types as $type)
+		if ($df = config('modules.news.default_type', 0))
 		{
-			if ($type->id == config('modules.news.default_type', 0))
+			foreach ($types as $type)
 			{
-				$row->newstypeid = $type->id;
+				if ($type->id == $df)
+				{
+					$row->newstypeid = $type->id;
+					break;
+				}
 			}
+		}
+		else
+		{
+			$row->newstypeid = $types->first()->id;
 		}
 
 		return view('news::admin.articles.edit', [
 			'row'   => $row,
 			'types' => $types
 		]);
-	}
-
-	/**
-	 * Store a newly created entry
-	 *
-	 * @param   Request  $request
-	 * @return  Response
-	 */
-	public function store(Request $request)
-	{
-		$request->validate([
-			'fields.headline' => 'required',
-			'fields.body' => 'required'
-		]);
-
-		$fields = $request->input('fields');
-		$fields['location'] = isset($fields['location']) ? (string)$fields['location'] : '';
-
-		if (array_key_exists('datetimenewsend', $fields) && !trim($fields['datetimenewsend']))
-		{
-			unset($fields['datetimenewsend']);
-		}
-
-		$row = new Article();
-		$row->fill($fields);
-
-		if (!$row->save())
-		{
-			return redirect()->back()->with('error', 'Failed to create item.');
-		}
-
-		return $this->cancel()->withSuccess('Item created!');
 	}
 
 	/**
@@ -228,35 +204,74 @@ class ArticlesController extends Controller
 	}
 
 	/**
-	 * Update the specified entry
+	 * Store a newly created entry
 	 *
-	 * @param   Request $request
-	 * @param   integer $id
+	 * @param   Request  $request
 	 * @return  Response
 	 */
-	public function update(Request $request, $id)
+	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.headline' => 'required'
+			'fields.newstypeid' => 'required|integer|in:0,1',
+			'fields.headline' => 'required|string|max:255',
+			'fields.body' => 'required|string|max:15000',
+			'fields.published' => 'nullable|integer|in:0,1',
+			'fields.template' => 'nullable|integer|in:0,1',
+			'fields.datetimenews' => 'required|date',
+			'fields.datetimenewsend' => 'nullable|date',
+			'fields.location' => 'nullable|string|max:32',
+			'fields.url' => 'nullable|url',
 		]);
 
 		$fields = $request->input('fields');
-		$fields['location'] = (string)$fields['location'];
+		$fields['location'] = isset($fields['location']) ? (string)$fields['location'] : '';
 
 		if (array_key_exists('datetimenewsend', $fields) && !trim($fields['datetimenewsend']))
 		{
 			unset($fields['datetimenewsend']);
 		}
 
-		$row = Article::findOrFail($id);
+		$row = $id ? Article::findOrFail($id) : new Article();
 		$row->fill($fields);
 
-		if (!$row->save())
+		if (!$row->type)
 		{
-			return redirect()->back()->withError(trans('global.messages.update failed'));
+			return redirect()->back()->with('error', trans('news::news.error.invalid type'));
 		}
 
-		return $this->cancel()->withSuccess(trans('global.messages.update success'));
+		// Templates shouldn't have datetimes set
+		if ($row->template)
+		{
+			$row->datetimenews = '0000-00-00 00:00:00';
+			$row->datetimenewsend = '0000-00-00 00:00:00';
+		}
+
+		if ($row->datetimenewsend && $row->datetimenews > $row->datetimenewsend)
+		{
+			return redirect()->back()->with('error', trans('news::news.error.invalid time range'));
+		}
+
+		if ($row->url && !filter_var($row->url, FILTER_VALIDATE_URL))
+		{
+			return redirect()->back()->with('error', trans('news::news.error.invalid url'));
+		}
+		
+		if (!$row->save())
+		{
+			return redirect()->back()->with('error', trans('news::news.error.Failed to create item.'));
+		}
+
+		if ($request->has('resources'))
+		{
+			$row->setResources($request->input('resources'));
+		}
+
+		if ($request->has('associations'))
+		{
+			$row->setAssociations($request->input('associations'));
+		}
+
+		return $this->cancel()->with('success', trans('global.messages.item saved'));
 	}
 
 	/**
@@ -264,7 +279,7 @@ class ArticlesController extends Controller
 	 * 
 	 * @param  Request  $request
 	 * @param  integer  $id
-	 * @return  Response
+	 * @return Response
 	 */
 	public function state(Request $request, $id)
 	{
@@ -297,9 +312,7 @@ class ArticlesController extends Controller
 			// Don't update last modified timestamp for state changes
 			$row->timestamps = false;
 
-			$row->published = $state;
-
-			if (!$row->save())
+			if (!$row->update(['published' => $state]))
 			{
 				$request->session()->flash('error', $row->getError());
 				continue;
@@ -325,7 +338,7 @@ class ArticlesController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param  Request  $request
-	 * @return  Response
+	 * @return Response
 	 */
 	public function delete(Request $request)
 	{

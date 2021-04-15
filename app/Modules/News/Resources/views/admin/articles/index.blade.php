@@ -162,11 +162,11 @@ else
 				<td>
 					@if (auth()->user()->can('edit.state news'))
 						@if ($row->published)
-							<a class="btn btn-sm btn-success" href="{{ route('admin.news.unpublish', ['id' => $row->id]) }}" title="{{ trans('news::news.unpublish') }}">
+							<a class="badge badge-success" href="{{ route('admin.news.unpublish', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.click to unpublish') }}">
 								{{ trans('global.published') }}
 							</a>
 						@else
-							<a class="btn btn-sm btn-secondary" href="{{ route('admin.news.publish', ['id' => $row->id]) }}" title="{{ trans('news::news.publish') }}">
+							<a class="badge badge-secondary" href="{{ route('admin.news.publish', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.click to publish') }}">
 								{{ trans('global.unpublished') }}
 							</a>
 						@endif

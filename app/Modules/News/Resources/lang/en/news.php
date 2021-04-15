@@ -15,7 +15,7 @@ return [
 	'headline' => 'Headline',
 	'name' => 'Name',
 	'body' => 'Body',
-	'body formatting' => 'Text is formatted in MarkDown',
+	'body formatting' => 'Text is formatted in <a class="help-dialog" href="#markdown">MarkDown</a>',
 	'state' => 'State',
 	'created' => 'Created',
 	'creator' => 'Creator',
@@ -64,6 +64,8 @@ return [
 	'custom feed' => 'Custom Feed',
 	'search' => 'Search',
 	'events' => 'Events',
+	'click to unpublish' => 'Click to unpublish',
+	'click to publish' => 'Click to publish',
 	'error' => [
 		'invalid type' => 'Please select a type.',
 		'invalid headline' => 'Please provide a headline.',

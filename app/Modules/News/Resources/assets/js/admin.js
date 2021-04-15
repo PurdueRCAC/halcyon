@@ -12,11 +12,11 @@ function NEWSPreviewVars() {
 
 	/* Grab the variables we need and populate the preview variables. */
 	if (document.getElementById("field-datetimenews").value != "") {
-		preview_vars["startDate"] = document.getElementById("field-datetimenews").value;
+		preview_vars["startdate"] = document.getElementById("field-datetimenews").value;
 	}
 
 	if (document.getElementById("field-datetimenewsend").value != "") {
-		preview_vars["endDate"] = document.getElementById("field-datetimenewsend").value;
+		preview_vars["enddate"] = document.getElementById("field-datetimenewsend").value;
 	}
 
 	if (type.getAttribute('data-tagresources') == 1) {
@@ -27,7 +27,7 @@ function NEWSPreviewVars() {
 		});
 
 		$.each(resources, function (i, el) {
-			preview_vars['resources'][i] = { "resourcename": el };
+			preview_vars['resources'][i] = el; //{ "resourcename": el };
 		});
 	}
 	preview_vars['update'] = "0";
@@ -65,7 +65,7 @@ function NEWSPreview(btn) {
 
 	post['vars'] = NEWSPreviewVars();
 	post['news'] = btn.data('api');
-
+console.log(post);
 	$.ajax({
 		url: btn.data('api'),
 		type: 'post',
@@ -88,9 +88,9 @@ function NEWSPreview(btn) {
 /**
  * Initiate event hooks
  */
-document.addEventListener('DOMContentLoaded', function () {
-	var autocompleteUsers = function (url) {
-		return function (request, response) {
+document.addEventListener('DOMContentLoaded', function() {
+	var autocompleteUsers = function(url) {
+		return function(request, response) {
 			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
 				response($.map(data.data, function (el) {
 					return {
@@ -103,8 +103,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		};
 	};
 
-	var autocompleteResources = function (url) {
-		return function (request, response) {
+	var autocompleteResources = function(url) {
+		return function(request, response) {
 			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
 				response($.map(data.data, function (el) {
 					return {
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		placeholder: $(this).data('placeholder')
 	});
 
-	$('#field-newstypeid').on('change', function () {
+	$('#field-newstypeid').on('change', function(){
 		var selected = $($(this).children('option:selected'));
 
 		$('.type-option').addClass('d-none');

@@ -881,21 +881,21 @@ class Article extends Model
 	protected function getContentVars()
 	{
 		$vars = array(
-			'date'           => "%date%",
-			'datetime'       => "%datetime%",
-			'time'           => "%time%",
-			'updatedatetime' => "%updatedatetime%",
-			'startdatetime'  => "%startdatetime%",
-			'startdate'      => "%startdate%",
-			'starttime'      => "%starttime%",
-			'enddatetime'    => "%enddatetime%",
-			'enddate'        => "%enddate%",
-			'endtime'        => "%endtime%",
+			'date'           => '%date%',
+			'datetime'       => '%datetime%',
+			'time'           => '%time%',
+			'updatedatetime' => '%updatedatetime%',
+			'startdatetime'  => '%startdatetime%',
+			'startdate'      => '%startdate%',
+			'starttime'      => '%starttime%',
+			'enddatetime'    => '%enddatetime%',
+			'enddate'        => '%enddate%',
+			'endtime'        => '%endtime%',
 		);
 
 		if ($this->vars)
 		{
-			$vars = $this->vars;
+			$vars = array_merge($vars, $this->vars);
 			$this->vars = null;
 		}
 
@@ -903,17 +903,15 @@ class Article extends Model
 		{
 			if ($var == 'datetime' || $var == 'date')
 			{
-				if ($this->getOriginal('datetimenews')
-				 && $this->getOriginal('datetimenews') != '0000-00-00 00:00:00')
+				if ($this->hasStart())
 				{
-					if ($this->datetimenews->format('Y-m-d') == $this->datetimenewsend->format('Y-m-d')
-					 || $this->getOriginal('datetimenewsend') == '0000-00-00 00:00:00')
+					if (!$this->hasEnd() || $this->datetimenews->format('Y-m-d') == $this->datetimenewsend->format('Y-m-d'))
 					{
 						// single day
 						$date = $this->datetimenews->format('l, F j, Y');
 						$time = $this->datetimenews->format('g:ia');
 
-						if ($this->getOriginal('datetimenewsend') != '0000-00-00 00:00:00')
+						if ($this->hasEnd())
 						{
 							$time = 'from ' . $time . ' - ' . $this->datetimenewsend->format('g:ia');
 						}
@@ -939,7 +937,7 @@ class Article extends Model
 						}
 						else
 						{
-							$vars[$var] = preg_replace("/&nbsp;/", ' at ', $this->formatDate($this->getOriginal('datetimenews'), $this->getOriginal('datetimenewsend')));
+							$vars[$var] = preg_replace("/&nbsp;/", ' at ', $this->formatDate($this->datetimenews, $this->datetimenewsend));
 						}
 					}
 				}
@@ -947,24 +945,20 @@ class Article extends Model
 
 			if ($var == 'time')
 			{
-				if ($this->getOriginal('datetimenews')
-				 && $this->getOriginal('datetimenews') != '0000-00-00 00:00:00')
+				if ($this->hasStart())
 				{
-					if ($this->getOriginal('datetimenewsend') == '0000-00-00 00:00:00')
+					$vars[$var] = $this->datetimenews->format('g:ia');
+
+					if ($this->hasEnd())
 					{
-						$vars[$var] = $this->datetimenews->format('g:ia');
-					}
-					else
-					{
-						$vars[$var] = $this->datetimenews->format('g:ia') . ' &#8211; ' . $this->datetimenewsend->format('g:ia');
+						$vars[$var] .= ' &#8211; ' . $this->datetimenewsend->format('g:ia');
 					}
 				}
 			}
 
 			if ($var == 'startdatetime' || $var == 'startdate' || $var == 'starttime')
 			{
-				if ($this->getOriginal('datetimenews')
-				 && $this->getOriginal('datetimenews') != '0000-00-00 00:00:00')
+				if ($this->hasStart())
 				{
 					$date = $this->datetimenews->format('l, F jS, Y');
 					$time = $this->datetimenews->format('g:ia');
@@ -986,8 +980,7 @@ class Article extends Model
 
 			if ($var == 'enddatetime' || $var == 'enddate' || $var == 'endtime')
 			{
-				if ($this->getOriginal('datetimenewsend')
-				 && $this->getOriginal('datetimenewsend') != '0000-00-00 00:00:00')
+				if ($this->hasEnd())
 				{
 					$date = $this->datetimenewsend->format('l, F jS, Y');
 					$time = $this->datetimenewsend->format('g:ia');
@@ -1009,17 +1002,17 @@ class Article extends Model
 
 			if ($var == 'updatedatetime')
 			{
-				if ($this->getOriginal('datetimeupdate')
-				 && $this->getOriginal('datetimeupdate') != '0000-00-00 00:00:00')
+				if ($this->isUpdated())
 				{
-					$vars[$var] = $this->formatDate($this->getOriginal('datetimeupdate'));
+					$vars[$var] = $this->formatDate($this->datetimeupdate);
 				}
 				else
 				{
-					if ($this->getOriginal('datetimecreated')
-					 && $this->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
+					if ($this->datetimecreated
+					 && $this->datetimecreated != '0000-00-00 00:00:00'
+					 && $this->datetimecreated != '-0001-11-30 00:00:00')
 					{
-						$vars[$var] = $this->formatDate($this->getOriginal('datetimecreated'));
+						$vars[$var] = $this->formatDate($this->datetimecreated);
 					}
 					else
 					{
@@ -1029,7 +1022,7 @@ class Article extends Model
 			}
 		}
 
-		if (isset($this->location) && $this->location != '')
+		if (isset($this->location) && $this->location)
 		{
 			$vars['location'] = $this->location;
 		}
