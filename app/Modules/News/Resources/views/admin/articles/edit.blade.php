@@ -63,6 +63,16 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
+				<div class="form-group">
+					<label for="template_select">Template</label>
+					<select id="template_select" name="template_select" class="form-control">
+						<option value="0">(No Template)</option>
+						@foreach ($templates as $template)
+							<option value="{{ route('api.news.read', ['id' => $template['id']]) }}" data-api="{{ route('api.news.read', ['id' => $template['id']]) }}">{{ $template['headline'] }}</option>
+						@endforeach
+					</select>
+				</div>
+
 				<div class="form-group form-block">
 					<div class="form-check">
 						<input type="checkbox" name="fields[template]" id="field-template" class="form-check-input" value="1"<?php if ($row->template) { echo ' checked="checked"'; } ?> />

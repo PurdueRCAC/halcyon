@@ -771,8 +771,8 @@ class Article extends Model
 			}
 		}
 
-		if ($this->isTrashed())
-		{
+		//if ($this->isTrashed())
+		//{
 			foreach ($this->resources as $resource)
 			{
 				$resource->delete($options);
@@ -785,7 +785,7 @@ class Article extends Model
 
 			$row = Stemmedtext::find($this->id);
 			$row->delete();
-		}
+		//}
 
 		// Attempt to delete the record
 		return parent::delete($options);

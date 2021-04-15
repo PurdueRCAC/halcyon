@@ -13,7 +13,7 @@ app('pathway')
 
 @section('toolbar')
 	@if (auth()->user()->can('delete news.types'))
-		{!! Toolbar::deleteList('', route('admin.news.types.delete')) !!}
+		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.news.types.delete')) !!}
 	@endif
 
 	@if (auth()->user()->can('create news.types'))

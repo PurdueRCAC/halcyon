@@ -146,6 +146,15 @@ class UpdatesController extends Controller
 		$row = $id ? Update::findOrFail($id) : new Update;
 		$row->fill($request->input('fields'));
 
+		if (!$id)
+		{
+			$row->userid = auth()->user()->id;
+		}
+		else
+		{
+			$row->edituserid = auth()->user()->id;
+		}
+
 		if (!$row->save())
 		{
 			return redirect()->back()->with('error', trans('global.messages.save failed'));

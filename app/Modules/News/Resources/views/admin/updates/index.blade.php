@@ -21,7 +21,7 @@ app('pathway')
 
 @section('toolbar')
 	@if (auth()->user()->can('delete news'))
-		{!! Toolbar::deleteList('', route('admin.news.updates.delete', ['article' => $article->id])) !!}
+		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.news.updates.delete', ['article' => $article->id])) !!}
 	@endif
 
 	@if (auth()->user()->can('create news'))

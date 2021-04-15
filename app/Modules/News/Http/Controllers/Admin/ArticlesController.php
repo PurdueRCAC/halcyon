@@ -174,9 +174,16 @@ class ArticlesController extends Controller
 			$row->newstypeid = $types->first()->id;
 		}
 
+		$templates = Article::query()
+			->where('published', '=', 1)
+			->where('template', '=', 1)
+			->orderBy('headline', 'asc')
+			->get();
+
 		return view('news::admin.articles.edit', [
 			'row'   => $row,
-			'types' => $types
+			'types' => $types,
+			'templates' => $templates
 		]);
 	}
 
@@ -197,9 +204,16 @@ class ArticlesController extends Controller
 
 		$types = Type::orderBy('name', 'asc')->get();
 
+		$templates = Article::query()
+			->where('published', '=', 1)
+			->where('template', '=', 1)
+			->orderBy('headline', 'asc')
+			->get();
+
 		return view('news::admin.articles.edit', [
 			'row'   => $row,
-			'types' => $types
+			'types' => $types,
+			'templates' => $templates
 		]);
 	}
 
