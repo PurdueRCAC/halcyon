@@ -130,18 +130,117 @@
   /*--page-link-border: #f5f5f5;*/
 }
 [data-mode=dark] {
+  --panel: #1e1e1e;
+  --panel-border: transparent;
+  --body-bg: #121212;
+  --body-text: #999;
+  --menu-bg: #1e1e1e;
+  --header-text: #999;
+  --legend-text: #fff;
+  --legend-border: rgba(255, 255, 255, 0.1);
+  --input-back: rgba(255, 255, 255, 0.05);
+  --input-back-disabled: rgba(255, 255, 255, 0.1);
+  --input-back-focus: rgba(255, 255, 255, 0.05);
+  --input-border: transparent;
+  --input-border-focus: #5897fb;
+  --input-border-disabled: rgba(255, 255, 255, 0.1);
+  --input-color: rgba(255, 255, 255, 0.75);
+  --input-color-disabled: rgba(255, 255, 255, 0.5);
+  --input-prepend-back: rgba(255, 255, 255, 0.1);
+  --check-back: rgba(255, 255, 255, 0.1);
+  --check-back-disabled: #eee;
+  --check-border: transparent;
+  --check-back-checked: #5897fb;
+  --check-border-checked: #5897fb;
+  --btn-secondary-bg: #f1f1f1;
+  --btn-secondary-br: #f1f1f1;
+  --btn-secondary-cl: #333;
+  --btn-secondary-bg-focus: #eee;
+  --btn-secondary-br-focus: #eee;
+  --btn-secondary-cl-focus: #222;
+  --btn-secondary-bg-active: #e1e1e1;
+  --btn-secondary-br-active: #e1e1e1;
+  --btn-secondary-cl-active: #111;
+  --footer-border: rgba(255, 255, 255, 0.1);
+  --fieldset-bg: #1c1b21;
+  --fieldset-br: rgba(0,0,0,.125);
+  --page-link-bg: rgba(255, 255, 255, 0.1);
+  --page-link-br: #1c1b21;
+  --page-link: #888;
+  --page-link-bg-disabled: rgba(255, 255, 255, 0.05);
+  --page-link-br-disabled: #1c1b21;
+  --page-link-disabled: #6c757d;
+  --page-link-bg-active: rgba(92, 192, 215, 0.2);
+  --page-link-br-active: #1c1b21;
+  --indicator: #555;
+  --table-br: rgba(0, 0, 0, 0.25);
+  --table: #999;
+  --table-th: #757575;
+  --table-th-active: #fff;
+  --table-th-hover: #5897fb;
+  --table-link: #757575;
+  --table-tr-hover: #fff;
+  --link: #e1e1e1;
+  --link-hover: #5897fb;
+  --label: #d3d3d3;
+  --hr: rgba(255, 255, 255, 0.1);
+  --tip-back: #fff;
+  --tip-border: #fff;
+  --tip-color: #383838;
+  --tab-back-active: #121212;/*#1c1b21;*/
+  --tab-border-active: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.2) #1c1b21 rgba(255, 255, 255, 0.2);
+  --tab-active: #fff;
+  --tabs-border: rgba(255, 255, 255, 0.2);
+  --off-color: #fff;
+  --off-border: #444;
+  --off-back: #444;
+  --off-color-hover: #e7e7e7;
+  --off-back-hover: #686868;
+  --off-border-hover: #686868;
+  --on-color: #fff;
+  --on-border: transparent;
+  --on-back: rgba(48, 166, 73, 0.3);
+  --on-color-hover: #fff;
+  --on-back-hover: rgba(48, 166, 73, 0.6);
+  --on-border-hover: transparent;
+  --fieldset-hover: rgba(255, 255, 255, 0.2);
+  --accordian-body: rgba(255, 255, 255, 0.1);
+  --accordian-border: rgba(255, 255, 255, 0.2);
+  --accordian-header-border: rgba(255, 255, 255, 0.1);
+  --accordian-color-active: #fff;
+  --accordian-body-active: rgba(255, 255, 255, 0.1);
+  --accordian-border-active: rgba(20, 106, 236, 0.5);
+  --badge-danger-background: rgba(218, 52, 71, 0.3);
+  --badge-danger: rgba(218, 52, 71, 1);
+  --badge-success-background: rgba(48, 166, 73, 0.3);
+  --badge-success: rgba(48, 166, 73, 1);
+  --badge-primary-background: rgba(30, 163, 183, 0.3);
+  --badge-primary: #fff;
+  --badge-warning-background: rgba(255, 191, 39, 0.3);
+  --badge-warning: rgba(255, 191, 39, 1);
+  --badge-info-background: rgba(30, 163, 163, 0.3);
+  --badge-info: rgba(30, 163, 163, 1);
+  --none: #858585;
+  --tag-bg: rgba(230, 230, 230, 0.2);
+  /*--page-link-border: #1c1b21;*/
+  --ui-widget-bg: #1c1b21;
+  --ui-widget-br: #292930;
+  --required: #c00;
+}
+/*
+[data-mode=dark] {
   --panel: rgba(255, 255, 255, 0.05);
   --panel-border: transparent;
   --body-bg: #1c1b21;
-  --body-text: #aaa;
+  --body-text: #999;
   --menu-bg: #292930;
   --header-text: #5e5e5e;
   --legend-text: #fff;
   --legend-border: rgba(255, 255, 255, 0.1);
-  --input-back: rgba(255, 255, 255, 0.05); /*rgba(0, 0, 0, 0.25);*/
+  --input-back: rgba(255, 255, 255, 0.05);
   --input-back-disabled: rgba(255, 255, 255, 0.1);
   --input-back-focus: rgba(255, 255, 255, 0.05);
-  --input-border: transparent; /*rgba(255, 255, 255, 0.1);*/
+  --input-border: transparent;
   --input-border-focus: #5897fb;
   --input-border-disabled: rgba(255, 255, 255, 0.1);
   --input-color: rgba(255, 255, 255, 0.75);
@@ -187,7 +286,7 @@
   --tip-back: #fff;
   --tip-border: #fff;
   --tip-color: #383838;
-  --tab-back-active: #1c1b21;
+  --tab-back-active: #121212;
   --tab-border-active: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.2) #1c1b21 rgba(255, 255, 255, 0.2);
   --tab-active: #fff;
   --tabs-border: rgba(255, 255, 255, 0.2);
@@ -210,23 +309,23 @@
   --accordian-color-active: #fff;
   --accordian-body-active: rgba(255, 255, 255, 0.1);
   --accordian-border-active: rgba(20, 106, 236, 0.5);
-  --badge-danger-background: rgba(218, 52, 71, 0.3); /* rgba(244,106,106,.25) */
-  --badge-danger: rgba(218, 52, 71, 1); /* #f46a6a */
-  --badge-success-background: rgba(48, 166, 73, 0.3); /* rgba(52,195,143,.18) */
-  --badge-success: rgba(48, 166, 73, 1); /* #34c38f */
+  --badge-danger-background: rgba(218, 52, 71, 0.3);
+  --badge-danger: rgba(218, 52, 71, 1);
+  --badge-success-background: rgba(48, 166, 73, 0.3);
+  --badge-success: rgba(48, 166, 73, 1);
   --badge-primary-background: rgba(30, 163, 183, 0.3);
   --badge-primary: #fff;
-  --badge-warning-background: rgba(255, 191, 39, 0.3); /* rgba(241,180,76,.18) */
-  --badge-warning: rgba(255, 191, 39, 1); /* #f1b44c */
-  --badge-info-background: rgba(30, 163, 163, 0.3); /* rgba(80,165,241,.18) */
-  --badge-info: rgba(30, 163, 163, 1); /* #50a5f1 */
-  --none: #555;
+  --badge-warning-background: rgba(255, 191, 39, 0.3);
+  --badge-warning: rgba(255, 191, 39, 1);
+  --badge-info-background: rgba(30, 163, 163, 0.3);
+  --badge-info: rgba(30, 163, 163, 1);
+  --none: #858585;
   --tag-bg: rgba(230, 230, 230, 0.2);
-  /*--page-link-border: #1c1b21;*/
   --ui-widget-bg: #1c1b21;
   --ui-widget-br: #292930;
   --required: #c00;
 }
+*/
 
 html,
 body,
@@ -1509,34 +1608,9 @@ body .cke_bottom {
 .permissions.button {
   padding: 0.5em 0.71em;
 }
-/*input.combobox {
-  -webkit-transition: none;
-  -moz-transition: none;
-  -o-transition: none;
-  transition: none;
-  background-color: #F6F6F6;
-  line-height: 1em;
-  margin-top: 2px;
-  z-index: 1000;
-}
-.opera input.combobox {
-  margin-top: 8px;
-}*/
-.ui-widget select,
-select.ui-state-default,
-.ui-widget-content select.ui-state-default,
-.ui-widget-header select.ui-state-default,
-select {
-  /* This block is duplicated from .form-control but we need it to
-  forcefully style some JQuery UI content */
-  height: calc(1.5em + .75rem + 2px);
-  padding: .375rem 2em .375rem .75rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  border-radius: 0.25rem;
 
-  border: 1px solid var(--input-border);
+select {
+  border: 1px solid rgb(206, 212, 218);
   background: none;
   background-color: #F0F0F0;
   background-color: rgba(0, 0, 0, 0.039);
@@ -3657,9 +3731,12 @@ border: 1px solid rgba(0,0,0,.125);
 }
 .toolbar-box .btn-publish,
 .toolbar-box .btn-save {
-  color: #fff;
-  background-color: #218739; /*#28a745;*/
-  border-color: #218739;
+  color: #000;
+  background-color: #62d6c6;
+  border-color: #62d6c6;
+ /*color: #000;
+  background-color: #9ff894;
+  border-color: #9ff894; */
 }
 .toolbar-box .btn-publish:hover,
 .toolbar-box .btn-save:hover {
@@ -3671,6 +3748,9 @@ border: 1px solid rgba(0,0,0,.125);
   color: #fff;
   background-color: #0071EB;
   border-color: #0071EB;
+  /*color: #000;
+  background-color: #62d6c6;
+  border-color: #62d6c6;*/
 }
 .toolbar-box .btn-plus:hover {
   color: #fff;
@@ -3695,13 +3775,16 @@ border: 1px solid rgba(0,0,0,.125);
 .toolbar-box .btn-cancel,
 .btn-cancel {
   color: #fff;
-  background-color: #C15401; /*rgba(193, 84, 1, 0.2); #ffc107;*/
-  border-color: #C15401; /*#ffc107;*/
+  background-color: #C15401;
+  border-color: #C15401;
+  /*color: #000;
+  background-color: #e68765;
+  border-color: #e68765;*/
 }
 .toolbar-box .btn-cancel:hover,
 .btn-cancel:hover {
-  background-color: #AD4B01; /*#e0a800;*/
-  border-color: #AD4B01; /*#d39e00;*/
+  background-color: #AD4B01;
+  border-color: #AD4B01;
 }
 /*.toolbar-box .btn-trash.disabled,
 .toolbar-box .btn-trash:disabled {

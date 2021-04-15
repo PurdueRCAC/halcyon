@@ -20,7 +20,7 @@
 			'modules/core/vendor/bootstrap/bootstrap.min.css',
 			'modules/core/vendor/jquery-ui/jquery-ui.min.css',
 			'modules/core/vendor/jquery-datepicker/jquery.datepicker.css',
-			'modules/core/vendor/jquery-timepicker/jquery.timepicker.css',
+			'modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.css',
 			'themes/admin/css/index.css',
 		);
 		foreach ($styles as $css):
@@ -45,7 +45,7 @@
 			'modules/core/vendor/jquery/jquery.min.js',
 			//'modules/core/vendor/bootstrap/bootstrap.bundle.min.js',
 			'modules/core/vendor/jquery-ui/jquery-ui.min.js',
-			'modules/core/vendor/jquery-timepicker/jquery.timepicker.js',
+			'modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.js',
 			'modules/core/js/core.js',
 			'themes/admin/js/index.js',
 		);
