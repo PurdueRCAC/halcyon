@@ -725,14 +725,30 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 	$('input.datetime').datetimepicker({
 		duration: '',
-		showTime: true,
+		//showTime: true,
 		constrainInput: false,
-		stepMinutes: 1,
-		stepHours: 1,
-		altTimeField: '',
-		time24h: true,
+		//stepMinutes: 1,
+		//stepHours: 1,
+		//altTimeField: '',
+		//time24h: true,
 		dateFormat: 'yy-mm-dd',
+		controlType: 'select',
+		oneLine: true,
 		timeFormat: 'HH:mm:00'
+	});
+
+	$('.dialog-help').dialog({
+		autoOpen: false,
+		modal: true,
+		width: 550
+	});
+
+	$('.help-dialog').on('click', function (e) {
+		e.preventDefault();
+
+		if ($($(this).attr('href')).length) {
+			$($(this).attr('href')).dialog('open');
+		}
 	});
 
 	$('.dropdown-toggle').on('click', function(event){
