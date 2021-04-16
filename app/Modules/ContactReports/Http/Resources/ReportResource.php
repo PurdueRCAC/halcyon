@@ -56,6 +56,8 @@ class ReportResource extends JsonResource
 
 			$data['comments'][] = new CommentResource($comment);
 		}
+		$data['type'] = $this->type;
+		//$data['type']->api = route('api.contactreports.types.read', ['id' => $this->contactreporttypeid]);
 		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
 		$data['users'] = $this->users->each(function ($res, $key)
 		{
@@ -68,8 +70,11 @@ class ReportResource extends JsonResource
 		$data['groupname'] = $this->group ? $this->group->name : null;
 		$data['resources'] = $this->resources->each(function ($res, $key)
 		{
-			$res->resource->api = route('api.resources.read', ['id' => $res->resource->id]);
-			$res->name = $res->resource->name;
+			if ($res->resource)
+			{
+				$res->resource->api = route('api.resources.read', ['id' => $res->resourceid]);
+				$res->name = $res->resource->name;
+			}
 		});
 		$data['age'] = Carbon::now()->timestamp - $this->datetimecreated->timestamp;
 

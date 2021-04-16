@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Follow;
+use App\Modules\ContactReports\Models\Type;
 use App\Modules\Groups\Models\Member as GroupUser;
 
 class ReportsController extends Controller
@@ -29,6 +30,7 @@ class ReportsController extends Controller
 			'start'    => null,
 			'stop'     => null,
 			'id'       => null,
+			'type'     => null,
 			'notice'   => '*',
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -84,15 +86,15 @@ class ReportsController extends Controller
 			$query->where('groupid', '=', $filters['group']);
 		}
 
+		if ($filters['type'])
+		{
+			$query->where('contactreporttypeid', '=', $filters['type']);
+		}
+
 		$rows = $query
 			->withCount('comments')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
-
-		app('pathway')->append(
-			trans('contactreports::contactreports.contact reports'),
-			route('site.contactreports.index')
-		);
 
 		$row = null;
 		if ($filters['id'])
@@ -132,10 +134,13 @@ class ReportsController extends Controller
 			}
 		}
 
+		$types = Type::query()->orderBy('name', 'asc')->get();
+
 		return view('contactreports::site.index', [
 			'filters' => $filters,
 			'rows' => $rows,
 			'report' => $row,
+			'types' => $types,
 			'followingusers' => $followingusers,
 			'followinggroups' => $followinggroups,
 		]);

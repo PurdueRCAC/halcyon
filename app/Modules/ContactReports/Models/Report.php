@@ -203,6 +203,16 @@ class Report extends Model
 	}
 
 	/**
+	 * Defines a relationship to type
+	 *
+	 * @return  object
+	 */
+	public function type()
+	{
+		return $this->belongsTo(Type::class, 'contactreporttypeid');
+	}
+
+	/**
 	 * Generate a link to item
 	 *
 	 * @return  string

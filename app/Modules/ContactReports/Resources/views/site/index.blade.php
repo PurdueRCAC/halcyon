@@ -6,8 +6,16 @@
 
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
-<script src="{{ asset('modules/contactreports/js/site.js') }}"></script>
+<script src="{{ asset('modules/core/js/date.js?v=' . filemtime(public_path() . '/modules/core/js/date.js')) }}"></script>
+<script src="{{ asset('modules/contactreports/js/site.js?v=' . filemtime(public_path() . '/modules/contactreports/js/site.js')) }}"></script>
 @endpush
+
+@php
+app('pathway')->append(
+	trans('contactreports::contactreports.contact reports'),
+	route('site.contactreports.index')
+);
+@endphp
 
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
@@ -42,16 +50,27 @@
 
 	<div id="everything">
 		<ul class="nav nav-tabs crm-tabs">
-			<li class="nav-item"><a id="TAB_search" class="nav-link active tab activeTab" href="#search">{{ trans('contactreports::contactreports.search') }}</a></li>
-			<li class="nav-item"><a id="TAB_add" class="nav-link tab" href="#add">{{ trans('contactreports::contactreports.add new') }}</a></li>
-			<li class="nav-item"><a id="TAB_follow" class="nav-link tab" href="#follow">{{ trans('contactreports::contactreports.follow') }}</a></li>
+			<li class="nav-item">
+				<a id="TAB_search" class="nav-link active tab activeTab" href="#search">{{ trans('contactreports::contactreports.search') }}</a>
+			</li>
+			<li class="nav-item">
+				<a id="TAB_add" class="nav-link tab"
+					data-txt-search="{{ trans('contactreports::contactreports.add new') }}"
+					data-txt-add="{{ trans('contactreports::contactreports.add new') }}"
+					data-txt-edit="Edit Report"
+					data-txt-follow="{{ trans('contactreports::contactreports.add new') }}"
+					href="#add">{{ trans('contactreports::contactreports.add new') }}</a>
+			</li>
+			<li class="nav-item">
+				<a id="TAB_follow" class="nav-link tab" href="#follow">{{ trans('contactreports::contactreports.follow') }}</a>
+			</li>
 		</ul>
 		<div class="tabMain" id="tabMain">
 			<div id="DIV_crm">
 
 				<form method="get" action="{{ route('site.contactreports.index') }}" class="editform">
 					<fieldset>
-						<legend><span id="SPAN_header" data-search="Search Reports" data-add="Add New Reports" data-edit="Edit Reports">Search Reports</span></legend>
+						<legend><span id="SPAN_header" data-txt-search="Search Reports" data-txt-add="Add New Report" data-txt-edit="Edit Report" data-txt-follow="Follow New Reports">Search Reports</span></legend>
 
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_date">
 							<label for="datestartshort" class="col-sm-2 col-form-label">{{ trans('contactreports::contactreports.date from') }}</label>
@@ -124,6 +143,27 @@
 							</div>
 						</div>
 
+						<div class="form-group row tab-search tab-add tab-edit" id="TR_type">
+							<label for="crmtype" class="col-sm-2 col-form-label">Category</label>
+							<div class="col-sm-10">
+								<select id="crmtype" name="crmtype" class="form-control">
+									<option id="OPTION_all" value="-1">All</option>
+									<option id="OPTION_uncategorized" value="0">Uncategorized</option>
+									<?php
+									foreach ($types as $type):
+										$selected = '';
+										if ($type->id == $filters['type']):
+											$selected = ' selected="selected"';
+										endif;
+										?>
+										<option value="{{ $type->id }}"<?php echo $selected; ?>>{{ $type->name }}</option>
+										<?php
+									endforeach;
+									?>
+								</select>
+							</div>
+						</div>
+
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_resource">
 							<label for="newsresource" class="col-sm-2 col-form-label">{{ trans('contactreports::contactreports.resources') }}</label>
 							<div class="col-sm-10">
@@ -172,8 +212,22 @@
 							<div class="col-sm-2">
 							</div>
 							<div class="col-sm-10">
-								<input id="INPUT_add" type="submit" class="btn btn-primary" value="{{ trans('contactreports::contactreports.add report') }}" disabled="true" />
-								<input id="INPUT_clear" type="reset" class="btn btn-link btn-clear" value="{{ trans('contactreports::contactreports.clear') }}" />
+								<input id="INPUT_add" 
+									type="submit"
+									class="btn btn-primary"
+									data-txt-search="{{ trans('contactreports::contactreports.search') }}"
+									data-txt-add="{{ trans('contactreports::contactreports.add report') }}"
+									data-txt-edit="Save changes"
+									data-txt-follow="Save changes"
+									value="{{ trans('contactreports::contactreports.add report') }}"
+									disabled="true" />
+								<input id="INPUT_clear" type="reset"
+									class="btn btn-link btn-clear"
+									data-txt-search="{{ trans('contactreports::contactreports.clear') }}"
+									data-txt-add="{{ trans('contactreports::contactreports.clear') }}"
+									data-txt-edit="Cancel edit"
+									data-txt-follow="Cancel changes"
+									value="{{ trans('contactreports::contactreports.clear') }}" />
 							</div>
 						</div>
 
@@ -265,7 +319,9 @@
 					"age": "",
 					"users": <?php echo json_encode($report->users); ?>,
 					"resources": <?php echo json_encode($report->resources); ?>,
-					"note": <?php echo json_encode($report->report); ?>
+					"note": <?php echo json_encode($report->report); ?>,
+					"contactreporttype": "<?php echo $report->type ? $report->type->name : ''; ?>",
+					"contactreporttypeid": "<?php echo $report->contactreporttypeid; ?>"
 				},
 				"originalusers": [],
 				"originalcontactusers": []
