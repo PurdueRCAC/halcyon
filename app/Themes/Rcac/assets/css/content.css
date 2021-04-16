@@ -1233,6 +1233,9 @@ ul.newslist li {
 ul.rsscontainer {
 	list-style: none;
 }
+ul.rsscontainer li {
+	margin-left: 0;
+}
 
 .rssCheckbox {
 	display: none;
