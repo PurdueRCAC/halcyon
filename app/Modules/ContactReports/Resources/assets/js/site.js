@@ -10,10 +10,13 @@
 /* global ChangeSearch */ // search.js
 /* global HighlightMatches */ // text.js
 
+// date.js - used for month names
+
 var keywords_pending = 0;
 var multi_group = false;
 var groupsearch = false;
 var usersearch = false;
+var activetab = null;
 
 /**
  * Toggle UI tabs
@@ -33,47 +36,34 @@ function CRMToggle(on, refresh) {
 	$(".tab-search").addClass('hide');
 	$(".tab-" + on).removeClass('hide');
 
+	activetab = on;
+
 	$(".tab").removeClass('activeTab').removeClass('active');
+
+	document.getElementById("INPUT_clear").value = document.getElementById("INPUT_clear").getAttribute('data-txt-' + on);
+	document.getElementById("INPUT_add").value = document.getElementById("INPUT_add").getAttribute('data-txt-' + on);
+	document.getElementById("TAB_add").innerHTML = document.getElementById("TAB_add").getAttribute('data-txt-' + on);
+	document.getElementById("SPAN_header").innerHTML = document.getElementById("SPAN_header").getAttribute('data-txt-' + on);
 
 	if (on == 'search') {
 		$("#TAB_" + on).addClass('activeTab').addClass('active');
 
-		document.getElementById("SPAN_header").innerHTML = "Search Reports";
-
-		document.getElementById("TAB_add").innerHTML = "Add New";
-		document.getElementById("INPUT_clear").value = "Clear";
-		document.getElementById("INPUT_add").value = "Add Report";
 		document.getElementById("datestartshort").disabled = false;
 
 		multi_group = true;
 	} else if (on == 'add') {
 		$("#TAB_" + on).addClass('activeTab').addClass('active');
 
-		document.getElementById("SPAN_header").innerHTML = "Add New Report";
-
-		document.getElementById("TAB_add").innerHTML = "Add New";
-		document.getElementById("INPUT_clear").value = "Clear";
-		document.getElementById("INPUT_add").value = "Add Report";
 		document.getElementById("datestartshort").disabled = false;
 
 		multi_group = false;
 	} else if (on == 'edit') {
 		$("#TAB_add").addClass('activeTab').addClass('active');
 
-		document.getElementById("TAB_add").innerHTML = "Edit Report";
-		document.getElementById("SPAN_header").innerHTML = "Edit Report";
-		document.getElementById("INPUT_clear").value = "Cancel edit";
-		document.getElementById("INPUT_add").value = "Save Changes";
-
 		multi_group = false;
 	} else if (on == 'follow') {
 		$("#TAB_" + on).addClass('activeTab').addClass('active');
 
-		document.getElementById("SPAN_header").innerHTML = "Follow New Reports";
-
-		document.getElementById("TAB_add").innerHTML = "Add New";
-		document.getElementById("INPUT_clear").value = "Cancel changes";
-		document.getElementById("INPUT_add").value = "Save changes";
 		document.getElementById("datestartshort").disabled = false;
 
 		// resets users and groups when in follow context
@@ -206,17 +196,17 @@ function CRMSearchUser(xml, flags) {
 		var people = $('#people');
 
 		if ($('.tagsinput').length) {
-			if (!people.tagExist(results.data['id'])) {
+			if (!people.tagExist(results.id)) {
 				people.addTag({
-					'id': results.data['id'],
-					'label': results.data['name']
+					'id': results.id,
+					'label': results.name
 				}, {
 					focus: false,
 					callback: false
 				});
 			}
 		} else {
-			people.val(people.val() + (people.val() ? ', ' : '') + results.data['name'] + ':' + results.data['id']);
+			people.val(people.val() + (people.val() ? ', ' : '') + results.name + ':' + results.id);
 		}
 	} else {
 		// error handling
@@ -265,14 +255,14 @@ function CRMSearchResource(xml, flags) {
 		var resource = $('#crmresource');
 
 		if ($('.tagsinput').length) {
-			if (!resource.tagExist(results.data['id'])) {
+			if (!resource.tagExist(results.id)) {
 				resource.addTag({
-					'id': results.data['id'],
-					'label': results.data['name']
+					'id': results.id,
+					'label': results.name
 				});
 			}
 		} else {
-			resource.val(resource.val() + (resource.val() ? ', ' : '') + results.data['name'] + ':' + results.data['id']);
+			resource.val(resource.val() + (resource.val() ? ', ' : '') + results.name + ':' + results.id);
 		}
 	} else {
 		// error handling
@@ -495,6 +485,7 @@ function CRMAddEntry() {
 	var resources = new Array();
 	var myuserid = document.getElementById("myuserid").value;
 	var contactdate = document.getElementById("datestartshort").value;
+	var type = document.getElementById("crmtype").value;
 	var i = 0,
 		x = 0,
 		y = 0;
@@ -609,6 +600,10 @@ function CRMAddEntry() {
 		}
 		if (groups.length == 0 && original['group'] != '') {
 			post['groupid'] = 0;
+		}
+
+		if (type != original['contactreporttypeid']) {
+			post['contactreporttypeid'] = type;
 		}
 
 		post['resources'] = resources;
@@ -785,7 +780,8 @@ function CRMAddEntry() {
 		post = {
 			'report': notes,
 			'datetimecontact': contactdate,
-			'userid': myuserid
+			'userid': myuserid,
+			'contactreporttypeid': type
 		};
 
 		if (groups.length > 0) {
@@ -867,7 +863,7 @@ function CRMUpdatedFollowGroup(xml) {
 function CRMNewReport(xml, people) {
 	document.getElementById("INPUT_add").disabled = false;
 
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		var results = JSON.parse(xml.responseText);
 
 		/*for (var x = 0; x < people.length; x++) {
@@ -882,13 +878,13 @@ function CRMNewReport(xml, people) {
 
 		CRMClearSearch();
 
-		document.getElementById("id").value = results.data['id'];
+		document.getElementById("id").value = results.id;
 
 		CRMToggle('search', true);
 		/*setTimeout(function () {
 			CRMSearch();
 		}, 250);*/
-	} else if (xml.status == 409) {
+	} else if (xml.status == 409 || xml.status == 415) {
 		SetError('Invalid date.', 'Please pick the current date or a date in the past.');
 	} else {
 		SetError('Unable to create report.', 'Your session may have timed out. Copy your text and reload page.');
@@ -930,6 +926,7 @@ function CRMSearch() {
 	var start = document.getElementById("datestartshort").value;
 	var stop = document.getElementById("datestopshort").value;
 	var id = document.getElementById("id").value;
+	var typeid = document.getElementById("crmtype").value;
 	var i = 0,
 		x = 0;
 
@@ -1061,6 +1058,10 @@ function CRMSearch() {
 			searchstring += "," + resources[x];
 			querystring += "," + resources[x];
 		}
+	}
+	if (typeid != '-1') {
+		searchstring += " type:" + typeid;
+		querystring += "&type=" + typeid;
 	}
 	// if not add new
 	if (!document.getElementById("TAB_add").className.match(/active/)) {
@@ -1544,6 +1545,19 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 			li.appendChild(span);
 		}
 
+		ul.appendChild(li);
+	}
+
+	// Type
+	if (report['contactreporttypeid'] > 0) {
+		li = document.createElement("li");
+		li.className = 'news-type';
+
+		span = document.createElement("span");
+		span.className = "newstype";
+		span.appendChild(document.createTextNode(report['type']['name']));
+
+		li.appendChild(span);
 		ul.appendChild(li);
 	}
 
@@ -2040,7 +2054,7 @@ function CRMPostComment(reportid) {
 		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 
-			CRMPrintComment(reportid, results.data);//, results['user']);
+			CRMPrintComment(reportid, results);
 			document.getElementById(reportid + "_newcommentbox").value = "";
 			CRMCollapseNewComment(reportid + "_newcommentbox");
 
@@ -2072,7 +2086,7 @@ function CRMSubscribeComment(reportid) {
 			var a = div.getElementsByTagName("a")[0];
 			a.onclick = function (e) {
 				e.preventDefault();
-				CRMUnsubscribeComment(results.data['id'], reportid);
+				CRMUnsubscribeComment(results.id, reportid);
 			};
 			a.innerHTML = "Unsubscribe";
 		} else {
@@ -2182,7 +2196,7 @@ function CRMSaveReportText(report, api) {
 	WSPutURL(api, post, function(xml, report) {
 		var img = document.getElementById(report + "_textsaveiconimg");
 
-		if (xml.status == 200) {
+		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 
 			var icon = document.getElementById(report + "_textsaveicon");
@@ -2190,9 +2204,11 @@ function CRMSaveReportText(report, api) {
 				CRMSaveReportText(report, api);
 			};
 			icon.style.display = "none";
+
 			var text = document.getElementById(report + "_text");
 			text.style.display = "block";
-			text.innerHTML = results.data['formattedreport'];
+			text.innerHTML = results.formattedreport;
+
 			document.getElementById(report + "_textarea").style.display = "none";
 			document.getElementById(report + "_textediticon").style.display = "block";
 			document.getElementById(report + "_textcancelicon").style.display = "none";
@@ -2226,7 +2242,7 @@ function CRMSaveCommentText(comment) {
 	var post = { 'comment': text };
 	post = JSON.stringify(post);
 
-	WSPostURL(document.getElementById(comment).getAttribute('data-api'), post, function(xml, comment) {
+	WSPutURL(document.getElementById('comment_' + comment).getAttribute('data-api'), post, function(xml, comment) {
 		var img = document.getElementById(comment + "_commenttextsaveiconimg");
 
 		if (xml.status == 200) {
@@ -2240,7 +2256,7 @@ function CRMSaveCommentText(comment) {
 
 			var text = document.getElementById(comment + "_comment");
 			text.style.display = "block";
-			text.innerHTML = results.data['formattedcomment'];
+			text.innerHTML = results.formattedcomment;
 
 			var box = document.getElementById(comment + "_commenttextarea");
 			box.style.display = "none";
@@ -2350,6 +2366,11 @@ function CRMClearSearch() {
 		if ($('.tagsinput').length) {
 			$(resources).clearTags();
 		}
+	}
+
+	var type = document.getElementById("crmtype");
+	if (type) {
+		type.value = '-1';
 	}
 
 	if (window.location.href.match(/edit/)) {
@@ -2482,6 +2503,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			event.preventDefault();
 			CRMAddEntry();
 		});
+		$('#crmtype').on('change', function (event) {
+			event.preventDefault();
+			CRMSearch();
+		});
 
 		var group = $("#group");
 		if (group.length) {
@@ -2582,6 +2607,13 @@ document.addEventListener('DOMContentLoaded', function () {
 			document.getElementById('datestartshort').value = original.datetimecontact;//.substring(0, 10);
 			document.getElementById('NotesText').value = original.note;
 
+			$("#crmtype > option").each(function () {
+				if (this.value == original['contactreporttypeid']) {
+					$('#crmtype > option:selected', 'select[name="options"]').removeAttr('selected');
+					$(this).attr('selected', true);
+				}
+			});
+
 			//CRMToggleSearch('people');
 			//CRMToggleSearch('none');
 
@@ -2629,7 +2661,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		var url = window.location.href.match(/[&?](\w+)$/);
-		if (url != null) {
+		if (url != null && activetab != url[1]) {
 			CRMToggle(url[1]);
 			setTimeout(function () {
 				CRMSearch();
@@ -2656,7 +2688,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	var container = $('#reports');
-	if (container.length) {
+	if (container.length && !window.location.href.match(/[&?](\w+)$/)) {
 		/*var q = '';
 		if (container.data('query')) {
 			q = '?' + encodeURI($('#reports').data('query'));
