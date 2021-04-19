@@ -53,6 +53,16 @@ class User extends Model
 	];
 
 	/**
+	 * The attributes that should be mutated to dates.
+	 *
+	 * @var  array
+	 */
+	protected $dates = [
+		'datetimecreated',
+		'datetimelastnotify',
+	];
+
+	/**
 	 * Fields and their validation criteria
 	 *
 	 * @var array

@@ -1189,7 +1189,7 @@ function CRMSearched(xml) {
 
 			var td = $("<p></p>")
 				.attr({
-					id: "displayEntries",
+					id: "displayEntries"
 				})
 				.html("Displaying " + Math.min(count, DEFAULT_ENTRIES) + " of " +
 					results.data.length + " CRM Reports...<br/>"
@@ -1459,9 +1459,13 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		var p = Array();
 		for (x = 0; x < report.users.length; x++) {
 			//if (report.users[x]['id'] == report['id']) {
-				a = document.createElement("a");
-				a.href = "admin/users/" + report.users[x]['userid'];
-				a.innerHTML = report.users[x]['name'];
+			a = document.createElement("a");
+			a.href = "admin/users/" + report.users[x]['userid'];
+			a.innerHTML = report.users[x]['name'];
+
+			if (report.users[x]['datetimelastnotify'] != '0000-00-00 00:00:00') {
+				a.innerHTML = a.innerHTML + ' <i class="fa fa-envelope" aria-hidden="true" title="Follow up email sent ' + report.users[x]['datetimelastnotify'] + '"></i>';
+			}
 
 				/*if (report.users[x]['can']['edit']) {
 					a.className = 'crmadmin';
