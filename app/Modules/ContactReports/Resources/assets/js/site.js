@@ -1343,7 +1343,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	td.className = "crmid";
 
 	a = document.createElement("a");
-	a.href = "contactreports?id=" + id;
+	a.href = "?id=" + id;
 	a.innerHTML = "#" + id;
 
 	td.appendChild(a);
@@ -1351,7 +1351,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	if (edit) {
 		// Delete button
 		a = document.createElement("a");
-		a.href = "/contactreports?id=" + id + "&delete";
+		a.href = "?id=" + id + "&delete";
 		a.className = 'edit news-delete tip';
 		a.onclick = function (e) {
 			e.preventDefault();
@@ -1386,7 +1386,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	if (edit) {
 		a = document.createElement("a");
-		a.href = "contactreports/?id=" + report['id'] + "&edit";
+		a.href = "?id=" + report['id'] + "&edit";
 		a.className = "news-action tip";
 		a.onclick = function (e) {
 			e.preventDefault();
@@ -1481,7 +1481,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 			li.appendChild(span);
 
-			if (edit) {
+			/*if (edit) {
 				a = document.createElement("a");
 				a.href = "contactreports/?id=" + report['id'] + "&edit";
 				a.className = "news-action tip";
@@ -1490,7 +1490,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 					CRMClearSearch();
 
-					if (!window.location.href.match(/crm/)) {
+					if (!window.location.href.match(/contactreports/)) {
 						window.location = "contactreports/?id=" + report['id'] + "&edit";
 					} else {
 						var url = window.location.href.split("?");
@@ -1507,7 +1507,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 				a.appendChild(img);
 				li.appendChild(a);
-			}
+			}*/
 
 			ul.appendChild(li);
 		}
@@ -1529,7 +1529,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 		li.appendChild(span);
 
-		if (edit) {
+		/*if (edit) {
 			a = document.createElement("a");
 			a.className = "news-action tip"
 			a.href = "contactreports?id=" + id + '&edit';
@@ -1543,10 +1543,29 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 			span.appendChild(a);
 			li.appendChild(span);
-		}
+		}*/
 
 		ul.appendChild(li);
 	}
+
+	// Tags list
+	/*if (report.tags.length > 0) {
+		li = document.createElement("li");
+		li.className = 'news-tags';
+
+		span = document.createElement("span");
+		span.className = "crmposttags";
+
+		var r = Array();
+		for (x = 0; x < report.tags.length; x++) {
+			r.push(report.tags[x].name);
+		}
+		span.innerHTML = r.join(', ');
+
+		li.appendChild(span);
+
+		ul.appendChild(li);
+	}*/
 
 	// Type
 	if (report['contactreporttypeid'] > 0) {
@@ -1578,7 +1597,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 		// Edit button
 		a = document.createElement("a");
-		a.href = "contactreports?id=" + id + '&edit';
+		a.href = "?id=" + id + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
 			CRMEditReportTextOpen(report['id']);
@@ -1597,7 +1616,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 		// Save button
 		a = document.createElement("a");
-		a.href = "contactreports?id=" + id + '&edit';
+		a.href = "?id=" + id + '&edit';
 		a.onclick = function (e) {
 			e.preventDefault();
 			CRMSaveReportText(report['id'], report['api']);
@@ -1617,7 +1636,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 		// Cancel button
 		a = document.createElement("a");
-		a.href = "contactreports?id=" + id;
+		a.href = "?id=" + id;
 		a.onclick = function (e) {
 			e.preventDefault();
 			CRMCancelReportText(id);
@@ -1689,8 +1708,8 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	if (!report['subscribed']) {
 		a = document.createElement("a");
-		a.href = "/contactreports?id=" + id + "&subscribe";
-		a.className = 'btn btn-default btn-sm';
+		a.href = "?id=" + id + "&subscribe";
+		a.className = 'btn btn-secondary btn-sm';
 		a.onclick = function (e) {
 			e.preventDefault();
 			CRMSubscribeComment(report['id']);
@@ -1702,8 +1721,8 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		td.appendChild(document.createTextNode("Subscribed"));
 	} else if (report['subscribed'] == "2") {
 		a = document.createElement("a");
-		a.href = "/contactreports?id=" + id + "&unsubscribe";
-		a.className = 'btn btn-default btn-sm';
+		a.href = "?id=" + id + "&unsubscribe";
+		a.className = 'btn btn-secondary btn-sm';
 		a.onclick = function (e) {
 			e.preventDefault();
 			CRMUnsubscribeComment(report['subscribedcommentid'], report['id']);
@@ -1740,7 +1759,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	// Save button
 	a = document.createElement("a");
-	a.href = "/news/manage?update&id=" + id;
+	a.href = "?comment&id=" + id;
 	a.onclick = function (e) {
 		e.preventDefault();
 		CRMPostComment(report['id']);
@@ -1845,8 +1864,8 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 		tr.appendChild(span);
 
 		a = document.createElement("a");
-		a.className = 'edit crm-comment-delete tip';
-		a.href = "/account/crm?comment=" + comment['id'] + "&delete";
+		a.className = 'edit news-delete tip';
+		a.href = "?comment=" + comment['id'] + "&delete";
 		a.onclick = function (e) {
 			e.preventDefault();
 			CRMDeleteComment(comment['id'], reportid);
@@ -1877,7 +1896,7 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 	if (edit) {
 		// Edit button
 		a = document.createElement("a");
-		a.href = "/account/crm?id=" + reportid + "#" + comment['id'];
+		a.href = "?id=" + reportid + "#" + comment['id'];
 		a.onclick = function (e) {
 			e.preventDefault();
 			CRMEditCommentTextOpen(comment['id']);
@@ -1907,7 +1926,7 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 
 		// Save button
 		a = document.createElement("a");
-		a.href = "/account/crm?id=" + reportid + "#" + comment['id'];
+		a.href = "?id=" + reportid + "#" + comment['id'];
 		a.onclick = function (e) {
 			e.preventDefault();
 			CRMSaveCommentText(comment['id']);
