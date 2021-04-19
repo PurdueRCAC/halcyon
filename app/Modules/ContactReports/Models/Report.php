@@ -321,6 +321,7 @@ class Report extends Model
 
 		$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
 		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
+		$text = str_replace('<th>', '<th scope="col">', $text);
 
 		//$text = preg_replace_callback("/\{\{CODE\}\}/", 'replaceCode', $text);
 
