@@ -91,6 +91,9 @@ figcaption {
 .panel > .list-group li {
 	margin-left: 0;
 }*/
+label {
+	font-weight: bold;
+}
 label .required {
 	color: #c00;
 }
