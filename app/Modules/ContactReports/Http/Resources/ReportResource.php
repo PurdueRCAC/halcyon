@@ -76,6 +76,7 @@ class ReportResource extends JsonResource
 				$res->name = $res->resource->name;
 			}
 		});
+		$data['tags'] = $this->tags;
 		$data['age'] = Carbon::now()->timestamp - $this->datetimecreated->timestamp;
 
 		$data['api'] = route('api.contactreports.read', ['id' => $this->id]);
