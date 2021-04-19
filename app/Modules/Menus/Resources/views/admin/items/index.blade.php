@@ -175,6 +175,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	@if (count($rows))
 	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('menus::menus.items') }}</caption>
@@ -252,7 +253,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 				<td class="text-center priority-3">
 					@if ($row->trashed())
 						@if ($canChange)
-							<a class="btn btn-danger btn-sm" href="{{ route('admin.menus.items.restore', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.restore" data-tip="Restore menu item">
+							<a class="badge badge-danger" href="{{ route('admin.menus.items.restore', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.restore" data-tip="Restore menu item">
 								{{ trans('global.trashed') }}
 							</a>
 						@else
@@ -262,7 +263,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 						@endif
 					@elseif ($row->state)
 						@if ($canChange)
-							<a class="btn btn-success btn-sm" href="{{ route('admin.menus.items.unpublish', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.unpublish" data-tip="Unpublish menu item">
+							<a class="badge badge-success" href="{{ route('admin.menus.items.unpublish', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.unpublish" data-tip="Unpublish menu item">
 								{{ trans('global.published') }}
 							</a>
 						@else
@@ -272,7 +273,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 						@endif
 					@else
 						@if ($canChange)
-							<a class="btn btn-success btn-sm" href="{{ route('admin.menus.items.publish', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.publish" data-tip="Publish menu item">
+							<a class="badge badge-success" href="{{ route('admin.menus.items.publish', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.publish" data-tip="Publish menu item">
 								{{ trans('global.unpublished') }}
 							</a>
 						@else
@@ -310,6 +311,11 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 	</div>
 
 	{{ $rows->render() }}
+	@else
+		<div class="container">
+			<p class="text-muted text-center">No results found.</p>
+		</div>
+	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
 

@@ -189,7 +189,7 @@ class ItemsController extends Controller
 			}
 			else
 			{
-				$query->where(function($where)
+				$query->where(function($where) use ($a, $search)
 				{
 					$where->where($a . '.title', 'like', '%' . $search . '%')
 						->orWhere($a . '.alias', 'like', '%' . $search . '%')
