@@ -12,7 +12,7 @@
 			</div>
 			<div class="col-md-6">
 				<div class="form-group">
-					<label for="apply_domain">Email <span class="input-required">*</span></label>
+					<label for="apply_email">Email <span class="input-required">*</span></label>
 					<input type="email" class="form-control" required name="apply[email]" id="apply_email" />
 				</div>
 			</div>
