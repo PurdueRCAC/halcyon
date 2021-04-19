@@ -314,6 +314,7 @@ class Menu extends Fluent
 			->where($w . '.published', '=', 1)
 			->where($w . '.parent_id', '>', 0)
 			->where($w . '.client_id', '=', 0)
+			->whereNull($w . '.deleted_at')
 			->whereIn($w . '.access', $this->get('access', [1]))
 			->orderBy($w . '.lft', 'asc')
 			->get();
