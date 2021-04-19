@@ -98,6 +98,7 @@ class ReportsController extends Controller
 			'stop'      => null,
 			'people'    => null,
 			'resource'  => null,
+			'tag'       => null,
 			'type'      => '*',
 			'notice'    => '*',
 			'limit'     => config('list_limit', 20),
@@ -131,6 +132,11 @@ class ReportsController extends Controller
 		if ($filters['search'])
 		{
 			$query->where($cr . '.report', 'like', '%' . $filters['search'] . '%');
+
+			/*if (empty($filters['tag']))
+			{
+				$filters['tag'] = preg_replace('/\s+/', ',', $filters['search']);
+			}*/
 		}
 
 		if ($filters['notice'] != '*')
@@ -190,6 +196,14 @@ class ReportsController extends Controller
 			$query->join($crr, $crr . '.contactreportid', $cr . '.id')
 				->whereIn($crr . '.resourceid', $filters['resource']);
 		}
+
+		if ($filters['tag'])
+		{
+			$filters['tag'] = explode(',', $filters['tag']);
+
+			$query->withTag($filters['tag']);
+		}
+
 		$query->select($cr . '.*');
 
 		$rows = $query

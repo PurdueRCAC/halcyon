@@ -486,19 +486,22 @@ class Report extends Model
 
 		foreach ($vars as $var => $value)
 		{
-			if ($var == 'datetime' || $var == 'date')
+			if ($this->datetimecreated)
 			{
-				if ($this->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
+				if ($var == 'datetime' || $var == 'date')
 				{
-					$vars[$var] = preg_replace("/&nbsp;/", ' at ', $this->formatDate($this->datetimecreated->format('Y-m-d') . ' 00:00:00'));
+					if ($this->datetimecreated != '0000-00-00 00:00:00')
+					{
+						$vars[$var] = preg_replace("/&nbsp;/", ' at ', $this->formatDate($this->datetimecreated->format('Y-m-d') . ' 00:00:00'));
+					}
 				}
-			}
 
-			if ($var == 'time')
-			{
-				if ($this->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
+				if ($var == 'time')
 				{
-					$vars[$var] = $this->datetimecreated->format('g:ia');
+					if ($this->datetimecreated != '0000-00-00 00:00:00')
+					{
+						$vars[$var] = $this->datetimecreated->format('g:ia');
+					}
 				}
 			}
 		}

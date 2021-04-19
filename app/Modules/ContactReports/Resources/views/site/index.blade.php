@@ -193,9 +193,12 @@ app('pathway')->append(
 						</div>
 
 						<div class="form-group row tab-add tab-edit" id="TR_notes">
-							<label for="NotesText" class="col-sm-2 col-form-label">{{ trans('contactreports::contactreports.notes') }}</label>
+							<label for="NotesText" class="col-sm-2 col-form-label">
+								{{ trans('contactreports::contactreports.notes') }}
+							</label>
 							<div class="col-sm-10">
 								<textarea id="NotesText" class="form-control" rows="10" cols="80"></textarea>
+								<span class="form-text text-muted">Reports can be formatted with <a href="#help1" class="help tip" title="MarkDown Formatting Help">MarkDown</a>. Hash tags (e.g., #python) can be used to tag entries.</span>
 							</div>
 						</div>
 
@@ -241,6 +244,118 @@ app('pathway')->append(
 
 			</div><!-- / #DIV_crm -->
 		</div><!-- / #tabMain -->
+
+<?php
+$help1a = "The news interface supports basic font formatting:
+
+**Bold** _example_, or you can have **_both_**.
+
+These examples are fully interactive. Just type in the top box and see the formatting below live.";
+
+$help1b = "Unordered lists can be made using '-' or '*' to denote list items. Ordered lists can be made in a similar fashion.
+- This
+- Is
+* A
+* List
+
+1) One
+2) Two
+3. Three";
+
+$help1c = "Hyperlinks can be made in the following way.
+
+http://www.purdue.edu
+
+[ITaP Research Computing](http://www.rcac.purdue.edu)
+
+By using [Title] notation immediately preceding a URL in parentheses, you can give it another title.
+
+Email addresses will automatically be converted into mailto links: rcac-help@purdue.edu";
+
+
+$help1e = "      The interface will ignore any artificial
+line breaking or   extra spaces .
+A full empty line is required to
+get a line break to display.
+
+
+
+As well, extra line breaks are
+ignored.";
+
+$help1f = "Inline code can be created with single back-ticks to mark the beginning and end. Example: `this is inline code`. Code blocks can be created using triple back-ticks to mark the beginning and end of a code block. Text inside the code block will be exempt from other formatting rules and will display exactly as typed.
+
+```
+// This is an example of some code
+
+int main (int argc, char * argv[]) {
+	printf(\"hello world!\\n\");
+	return 0;
+}
+```
+";
+
+$help1g = "Tables can be created using \"|\" to start a line to mark the beginning and end of a table row. Cell divisions in the table are marked by a single \"|\". The other formatting rules apply within the cells.
+
+| Node     | Cores   | Memory   |
+|----------|--------:|---------:|
+| Carter-A | 16      | 32GB     |
+| Carter-B | 16      | 64GB     |
+";
+?>
+		<div id="help1" class="dialog dialog-help" title="Text Formatting">
+			<ul>
+				<li><a href="#help1a">Fonts</a></li>
+				<li><a href="#help1b">Lists</a></li>
+				<li><a href="#help1c">Links</a></li>
+				<li><a href="#help1e">Line Breaks</a></li>
+				<li><a href="#help1f">Code</a></li>
+				<li><a href="#help1g">Tables</a></li>
+				<li><a href="#help1h">Variables</a></li>
+			</ul>
+			<div id="help1a">
+				<?php
+				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1a]);
+				?>
+				<p>Input text: <textarea id="help1ainput" class="samplebox" data-sample="a"><?php echo $help1a; ?></textarea></p>
+				<p>Output text: <br/><div id="help1aoutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div></p>
+			</div>
+			<div id="help1b">
+				<?php
+				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1b]);
+				?>
+				<p>Input text: <textarea id="help1binput" class="samplebox" data-sample="b"><?php echo $help1b; ?></textarea></p>
+				<p>Output text: <br/><div id="help1boutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div></p>
+			</div>
+			<div id="help1c">
+				<?php
+				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1c]);
+				?>
+				<p>Input text: <textarea id="help1cinput" class="samplebox" data-sample="c"><?php echo $help1c; ?></textarea></p>
+				<p>Output text: <br/><div id="help1coutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div></p>
+			</div>
+			<div id="help1e">
+				<?php
+				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1e]);
+				?>
+				<p>Input text: <textarea id="help1einput" class="samplebox" data-sample="e"><?php echo $help1e; ?></textarea></p>
+				<p>Output text: <br/><div id="help1eoutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div></p>
+			</div>
+			<div id="help1f">
+				<?php
+				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1f]);
+				?>
+				<p>Input text: <textarea id="help1finput" class="samplebox" data-sample="f"><?php echo $help1f; ?></textarea></p>
+				<p>Output text: <br/><div id="help1foutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div></p>
+			</div>
+			<div id="help1g">
+				<?php
+				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1g]);
+				?>
+				<p>Input text: <textarea id="help1ginput" class="samplebox" data-sample="g"><?php echo $help1g; ?></textarea></p>
+				<p>Output text: <br/><div id="help1goutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div></p>
+			</div>
+		</div>
 
 		<?php
 		$valid_args = array('start', 'stop', 'id', 'group', 'people', 'resource', 'search');

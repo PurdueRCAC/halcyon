@@ -27,32 +27,16 @@ class ReportResource extends JsonResource
 		$data['subscribedcommentid'] = 0;
 		foreach ($this->comments as $comment)
 		{
-			/*$c = $comment->toArray();
-
-			$c['formatteddate'] = $comment->formattedDate;
-			$c['formattedcomment'] = $comment->formattedComment;
-			$c['username'] = $comment->creator ? $comment->creator->name : trans('global.unknown');
-
-			$c['api'] = route('api.contactreports.comments.read', ['comment' => $comment->id]);
-
-			$c['can']['edit']   = false;
-			$c['can']['delete'] = false;
-
-			if ($user)
+			if ($user && $comment->userid == $user->id)
 			{
-				if ($comment->userid == $user->id)
-				{
-					$data['subscribed'] = $comment->comment ? 1 : 2;
-					if (!$comment->comment)
-					{
-						$data['subscribedcommentid'] = $comment->id;
-						//continue;
-					}
-				}
+				$data['subscribed'] = $comment->comment ? 1 : 2;
 
-				$c['can']['edit']   = ($user->can('edit contactreports') || ($user->can('edit.own contactreports') && $comment->userid == $user->id));
-				$c['can']['delete'] = $user->can('delete contactreports');
-			}*/
+				if (!$comment->comment)
+				{
+					$data['subscribedcommentid'] = $comment->id;
+					//continue;
+				}
+			}
 
 			$data['comments'][] = new CommentResource($comment);
 		}

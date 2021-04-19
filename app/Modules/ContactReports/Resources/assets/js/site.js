@@ -1092,7 +1092,7 @@ function CRMSearch() {
 
 	if (typeof (history.pushState) != 'undefined') {
 		var tab = window.location.href.match(/[&?](\w+)$/);
-		if (tab != null) {
+		if (tab != null && tab[1] != 'search') {
 			querystring = querystring + "&" + tab[1];
 		}
 		querystring = querystring.replace(/^&+/, '?');
@@ -1393,7 +1393,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 			CRMClearSearch();
 
-			if (!window.location.href.match(/crm/)) {
+			if (!window.location.href.match(/contactreports/)) {
 				window.location = this.href;
 			} else {
 				var url = window.location.href.split("?");
@@ -1516,7 +1516,12 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	// Resource list
 	if (report.resources.length > 0) {
 		li = document.createElement("li");
-		li.className = 'news-tags';
+		li.className = 'item-resources';
+
+		icon = document.createElement("i");
+		icon.className = "fa fa-server";
+		icon.setAttribute('aria-hidden', true);
+		li.appendChild(icon);
 
 		span = document.createElement("span");
 		span.className = "crmpostresources";
@@ -1549,9 +1554,14 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	}
 
 	// Tags list
-	/*if (report.tags.length > 0) {
+	if (report.tags.length > 0) {
 		li = document.createElement("li");
-		li.className = 'news-tags';
+		li.className = 'item-tags';
+
+		icon = document.createElement("i");
+		icon.className = "fa fa-tags";
+		icon.setAttribute('aria-hidden', true);
+		li.appendChild(icon);
 
 		span = document.createElement("span");
 		span.className = "crmposttags";
@@ -1565,7 +1575,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		li.appendChild(span);
 
 		ul.appendChild(li);
-	}*/
+	}
 
 	// Type
 	if (report['contactreporttypeid'] > 0) {
@@ -2705,6 +2715,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				CRMToggleSearch('none');
 			});
 	}
+
+	$('#help1').tabs();
 
 	var container = $('#reports');
 	if (container.length && !window.location.href.match(/[&?](\w+)$/)) {
