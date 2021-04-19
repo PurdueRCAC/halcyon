@@ -1,0 +1,11 @@
+{
+    "name": "Content - FootPrints",
+    "alias": "listener_content_footprints",
+    "description": "Expand references in content to FootPrints tickets to full links.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
