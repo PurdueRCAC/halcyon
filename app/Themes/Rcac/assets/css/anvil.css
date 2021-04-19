@@ -204,9 +204,13 @@ a.card:focus {
 .editform fieldset.form-group {
 	border: none;
 	padding: 0;
+	font-size: 1em;
 }
 .editform fieldset.form-group>legend {
 	border: none;
+	background: transparent;
+	position: static;
+	float: none;
 	font-size: 1em;
 	margin: 0 0 0.5em 0;
 	padding: 0;
