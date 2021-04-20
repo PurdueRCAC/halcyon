@@ -43,7 +43,8 @@ class ModuleServiceProvider extends ServiceProvider
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
-		if (!app()->runningInConsole() && !request()->wantsJson())
+		//!app()->runningInConsole() && 
+		if (!request()->wantsJson())
 		{
 			$manager = $this->app['themes'];
 
