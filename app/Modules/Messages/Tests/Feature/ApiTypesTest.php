@@ -17,9 +17,10 @@ class ApiTypesTest extends TestCase
      */
     public function testIndex()
     {
-        $response = $this->json('get', '/api/messages/types');
+        $response = $this->json('get', route('api.messages.types'));
 
-        $response->assertStatus(200);
+        $response
+            ->assertStatus(200);
     }
 
     /**
@@ -32,16 +33,19 @@ class ApiTypesTest extends TestCase
         $user = new User;
 
         $data = array(
-            'name' => 'foo',
+            'name' => 'feature test',
+            'resourceid' => 1,
+            'classname' => 'storagedir'
         );
 
         $response = $this->actingAs($user)
-            ->json('post', '/api/messages/types', $data)
-            ->seeJsonEquals([
-                'id' => true
-            ]);
+            ->json('post', route('api.messages.types.create'), $data);
 
-        $response->assertStatus(200);
+        $response
+            ->assertStatus(201)
+            ->assertJsonPath('name', $data['name'])
+            ->assertJsonPath('resourceid', $data['resourceid'])
+            ->assertJsonPath('classname', $data['classname']);
     }
 
     /**
@@ -51,9 +55,28 @@ class ApiTypesTest extends TestCase
      */
     public function testRead()
     {
-        $response = $this->json('get', '/api/messages/types/1');
+        $user = new User;
 
-        $response->assertStatus(200);
+        $data = array(
+            'name' => 'feature test',
+            'resourceid' => 1,
+            'classname' => 'storagedir'
+        );
+
+        $response = $this->actingAs($user)
+            ->json('post', route('api.messages.types.create'), $data);
+
+        $created = $response->decodeResponseJson();
+
+        $response = $this->actingAs($user)
+            ->json('get', route('api.messages.types.read', ['id' => $created['id']]));
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('id', $created['id'])
+            ->assertJsonPath('name', $data['name'])
+            ->assertJsonPath('resourceid', $data['resourceid'])
+            ->assertJsonPath('classname', $data['classname']);
     }
 
     /**
@@ -66,16 +89,27 @@ class ApiTypesTest extends TestCase
         $user = new User;
 
         $data = array(
-            'name' => 'bar',
+            'name' => 'feature test',
+            'resourceid' => 1,
+            'classname' => 'storagedir'
         );
 
         $response = $this->actingAs($user)
-            ->json('put', '/api/messages/types/1', $data)
-            ->seeJsonEquals([
-                'id' => true
-            ]);
+            ->json('post', route('api.messages.types.create'), $data);
 
-        $response->assertStatus(200);
+        $fake = $response->decodeResponseJson();
+
+        $put = array(
+            'name' => 'feature update test'
+        );
+
+        $response = $this->actingAs($user)
+            ->json('put', route('api.messages.types.update', ['id' => $fake['id']]), $put);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('id', $fake['id'])
+            ->assertJsonPath('name', $put['name']);
     }
 
     /**
@@ -87,9 +121,20 @@ class ApiTypesTest extends TestCase
     {
         $user = new User;
 
-        $response = $this->actingAs($user)
-            ->json('delete', '/api/messages/types/1');
+        $data = array(
+            'name' => 'feature test',
+            'resourceid' => 1,
+            'classname' => 'storagedir'
+        );
 
-        $response->assertStatus(200);
+        $response = $this->actingAs($user)
+            ->json('post', route('api.messages.types.create'), $data);
+
+        $fake = $response->decodeResponseJson();
+
+        $response = $this->actingAs($user)
+            ->json('delete', route('api.messages.types.delete', ['id' => $fake['id']]));
+
+        $response->assertStatus(204);
     }
 }

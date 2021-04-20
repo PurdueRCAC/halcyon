@@ -199,7 +199,7 @@ class Message extends Model
 		{
 			if (!$this->type)
 			{
-				$this->setError('Invalid messagequeuetypeid');
+				$this->addError('Invalid messagequeuetypeid');
 				return false;
 			}
 		}

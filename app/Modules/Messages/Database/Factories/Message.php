@@ -14,6 +14,6 @@ $factory->define(Message::class, function (Faker $faker)
         'messagequeueoptionsid' => 0,
         'pid' => $faker->randomNumber(),
         'datetimestarted' => now(),
-        'returnstatus' => 2
+        'returnstatus' => 0
     ];
 });

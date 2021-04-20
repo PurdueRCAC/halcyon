@@ -216,18 +216,20 @@ class TypesController extends Controller
 		if ($request->has('resourceid') || $request->has('resource'))
 		{
 			$row->resourceid = $request->input('resourceid', $request->input('resource'));
+
+			if (!$row->resource)
+			{
+				return response()->json(['message' => 'messages::messages.error.invalid resource id'], 409);
+			}
 		}
 		if ($request->has('classname'))
 		{
 			$row->classname = $request->input('classname');
 		}
 
-		if (!$row->save())
-		{
-			return response()->json(['message' => $row->getError()], 409);
-		}
+		$row->save();
 
-		return new JsonResource($row);
+		return new TypeResource($row);
 	}
 
 	/**

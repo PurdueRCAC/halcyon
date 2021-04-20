@@ -312,7 +312,7 @@ class MessagesController extends Controller
 		}
 
 		// Legacy compatibility
-		if ($request->segment(1))
+		if ($request->segment(1) == 'ws')
 		{
 			$row->messagequeuetypeid = $request->input('messagequeuetype');
 			$row->targetobjectid = $request->input('targetobject');

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Messages\Tests\Api;
 
+use App\Modules\Messages\Models\Message;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use App\Modules\Users\Models\User;
 use Tests\TestCase;
@@ -17,9 +18,13 @@ class ApiMessagesTest extends TestCase
      */
     public function testIndex()
     {
-        $response = $this->json('get', '/api/messages');
+        $posts = factory(Message::class, 2)->create();
 
-        $response->assertStatus(200);
+        $response = $this->json('get', route('api.messages.index'));
+
+        $response
+            ->assertStatus(200);
+            //->assertJsonPath('data', $posts->toArray());
     }
 
     /**
@@ -31,17 +36,16 @@ class ApiMessagesTest extends TestCase
     {
         $user = new User;
 
-        $data = array(
-            'targetid' => 1,
-        );
+        $data = factory(Message::class)->make();
 
         $response = $this->actingAs($user)
-            ->json('post', '/api/messages', $data)
-            ->seeJsonEquals([
-                'id' => true
-            ]);
+            ->json('post', route('api.messages.create'), $data->toArray());
 
-        $response->assertStatus(200);
+        $response
+            ->assertStatus(201)
+            ->assertJsonPath('targetobjectid', $data->targetobjectid)
+            ->assertJsonPath('messagequeuetypeid', $data->messagequeuetypeid)
+            ->assertJsonPath('userid', $data->userid);
     }
 
     /**
@@ -51,9 +55,18 @@ class ApiMessagesTest extends TestCase
      */
     public function testRead()
     {
-        $response = $this->json('get', '/api/messages/1');
+        $user = new User;
 
-        $response->assertStatus(200);
+        $data = factory(Message::class)->create();
+
+        $response = $this->actingAs($user)
+            ->json('get', route('api.messages.read', ['id' => $data->id]));
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('id', $data->id)
+            ->assertJsonPath('targetobjectid', $data->targetobjectid)
+            ->assertJsonPath('messagequeuetypeid', $data->messagequeuetypeid);
     }
 
     /**
@@ -65,17 +78,23 @@ class ApiMessagesTest extends TestCase
     {
         $user = new User;
 
-        $data = array(
-            'targetid' => 2,
+        $fake = factory(Message::class)->create();
+
+        /*$response = $this->actingAs($user)
+            ->json('post', route('api.messages.create'), $fake->toArray());*/
+
+        $put = array(
+            'targetobjectid' => 2,
+            'started' => 1
         );
 
         $response = $this->actingAs($user)
-            ->json('put', '/api/messages/1', $data)
-            ->seeJsonEquals([
-                'id' => true
-            ]);
+            ->json('put', route('api.messages.update', ['id' => $fake->id]), $put);
 
-        $response->assertStatus(200);
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('id', $fake->id)
+            ->assertJsonPath('targetobjectid', $put['targetobjectid']);
     }
 
     /**
@@ -87,9 +106,11 @@ class ApiMessagesTest extends TestCase
     {
         $user = new User;
 
-        $response = $this->actingAs($user)
-            ->json('delete', '/api/messages/1');
+        $fake = factory(Message::class)->create();
 
-        $response->assertStatus(200);
+        $response = $this->actingAs($user)
+            ->json('delete', route('api.messages.delete', ['id' => $fake->id]));
+
+        $response->assertStatus(204);
     }
 }
