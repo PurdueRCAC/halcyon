@@ -135,7 +135,7 @@
 						<p class="hide">Quick Links</p>
 						<ul class="nav navbar-nav right quicklinks" id="pu-quicklinks">
 							<li><a href="http://www.purdue.edu/purdue/admissions/">Apply</a></li>
-							<li><a href="http://www.purdue.edu/newsroom/">News</a></li>
+							<li><a href="http://www.purdue.edu/newsroom/"><span class="sr-only">Purdue University </span>News</a></li>
 							<li><a href="http://www.purdue.edu/president/">President</a></li>
 							<li><a href="http://www.purdueofficialstore.com/">Shop</a></li>
 							<li><a href="http://www.purdue.edu/visit/">Visit</a></li>
