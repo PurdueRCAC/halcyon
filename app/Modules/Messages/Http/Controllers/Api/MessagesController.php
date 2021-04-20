@@ -511,8 +511,9 @@ class MessagesController extends Controller
 			'pid' => 'nullable|integer|min:1',
 			'datetimestarted' => 'nullable|date',
 			'datetimecompleted' => 'nullable|date',
-			'returnstatus' => 'nullable|integer|min:1',
+			'returnstatus' => 'nullable|integer',
 			'output' => 'nullable|string|max:150',
+			// Shortcut flags
 			'started' => 'nullable|integer',
 			'completed' => 'nullable|integer',
 		]);
