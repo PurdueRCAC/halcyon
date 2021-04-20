@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'messagequeue'], function (Router $router)
+$router->group(['prefix' => 'messagequeue', 'middleware' => 'auth.ip'], function (Router $router)
 {
 	$router->get('/', [
 		'as'   => 'ws.messages.index',
@@ -28,7 +28,7 @@ $router->group(['prefix' => 'messagequeue'], function (Router $router)
 });
 
 // Types
-$router->group(['prefix' => 'messagequeuetype'], function (Router $router)
+$router->group(['prefix' => 'messagequeuetype', 'middleware' => 'auth.ip'], function (Router $router)
 {
 	$router->get('/', [
 		'as'   => 'ws.messages.types',
