@@ -39,11 +39,13 @@
 			</form>
 		</div>
 		<div class="col-md-3 text-right">
+		@if ($p)
 			@if (request('all'))
 				<a class="btn btn-secondary" href="<?php if ($p) { echo route('site.knowledge.page', ['uri' => $p]); } else { echo route('site.knowledge.index'); } ?>">{{ trans('knowledge::knowledge.collapse topics') }}</a>
 			@else
 				<a class="btn btn-secondary" href="<?php if ($p) { echo route('site.knowledge.page', ['uri' => $p, 'all' => 'true']); } else { echo route('site.knowledge.index', ['all' => 'true']); } ?>">{{ trans('knowledge::knowledge.expand topics') }}</a>
 			@endif
+		@endif
 		</div>
 	</div>
 

@@ -205,7 +205,7 @@ $(document).ready(function() {
 				<td>
 					@if ($row->trashed())
 						@if (auth()->user()->can('edit knowledge'))
-							<a class="btn btn-sm btn-secondary state trashed" href="{{ route('admin.knowledge.restore', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
+							<a class="badge badge-secondary btn-state trashed" href="{{ route('admin.knowledge.restore', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
 						@endif
 							{{ trans('knowledge::knowledge.trashed') }}
 						@if (auth()->user()->can('edit knowledge'))
@@ -213,7 +213,7 @@ $(document).ready(function() {
 						@endif
 					@elseif ($row->isPublished())
 						@if (auth()->user()->can('edit knowledge'))
-							<a class="btn btn-sm btn-success btn-state" href="{{ route('admin.knowledge.unpublish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.unpublished')]) }}">
+							<a class="badge badge-success btn-state" href="{{ route('admin.knowledge.unpublish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.unpublished')]) }}">
 						@endif
 							{{ trans('knowledge::knowledge.published') }}
 						@if (auth()->user()->can('edit knowledge'))
@@ -221,7 +221,7 @@ $(document).ready(function() {
 						@endif
 					@else
 						@if (auth()->user()->can('edit knowledge'))
-							<a class="btn btn-sm btn-secondary btn-state" href="{{ route('admin.knowledge.publish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
+							<a class="badge badge-secondary btn-state" href="{{ route('admin.knowledge.publish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
 						@endif
 							{{ trans('knowledge::knowledge.unpublished') }}
 						@if (auth()->user()->can('edit knowledge'))
