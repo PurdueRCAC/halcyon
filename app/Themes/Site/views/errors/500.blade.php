@@ -9,6 +9,5 @@
 			<h3><i class="fa fa-warning text-red"></i> {{ trans('global.error 500 title') }}</h3>
 			<p>{!! trans('global.error 500 description') !!}</p>
 		</div>
-		<!-- /.error-content -->
 	</div>
 @stop

@@ -21,7 +21,6 @@
 {{-- Footer --}}
 @slot('footer')
 @component('mail::footer')
-If you have any questions about this process please contact rcac-help@purdue.edu.
 
 © {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
 @endcomponent
