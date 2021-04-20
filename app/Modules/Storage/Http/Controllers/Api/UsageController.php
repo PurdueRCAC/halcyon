@@ -5,9 +5,9 @@ namespace App\Modules\Storage\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
+use App\Modules\Storage\Http\Resources\UsageResource;
 use App\Modules\Storage\Models\Usage;
 use App\Modules\Storage\Models\Directory;
 use Carbon\Carbon;
@@ -220,20 +220,20 @@ class UsageController extends Controller
 	{
 		$rules = [
 			'storagedirid' => 'required|integer|min:1',
-			'quota' => 'required',
-			'space' => 'nullable',
-			'filequota' => 'nullable',
-			'files' => 'nullable',
+			'quota' => 'required|integer',
+			'space' => 'nullable|integer',
+			'filequota' => 'nullable|integer',
+			'files' => 'nullable|integer',
 		];
 		// [!] Legacy compatibility
 		if (request()->segment(1) == 'ws')
 		{
 			$rules = [
 				'storagedir' => 'required|string',
-				'quota' => 'required',
-				'space' => 'nullable',
-				'filequota' => 'nullable',
-				'files' => 'nullable',
+				'quota' => 'required|integer',
+				'space' => 'nullable|integer',
+				'filequota' => 'nullable|integer',
+				'files' => 'nullable|integer',
 			];
 		}
 		$request->validate($rules);
@@ -260,10 +260,14 @@ class UsageController extends Controller
 			$row->files = $request->input('files');
 		}
 
+		if (!$row->directory)
+		{
+			return response()->json(['message' => trans('Invalid storagedirid specified')], 409);
+		}
+
 		// Does the storagedir have any bytes yet?
 		$last = Usage::query()
 			->where('storagedirid', '=', $row->storagedirid)
-			->where('resourceid', '=', $row->resourceid)
 			->orderBy('datetimerecorded', 'desc')
 			->limit(1)
 			->get()
@@ -278,16 +282,7 @@ class UsageController extends Controller
 
 		$row->save();
 
-		$row->api = route('api.storage.usage.read', ['id' => $row->id]);
-
-		// [!] Legacy compatibility
-		if (request()->segment(1) == 'ws')
-		{
-			$row->id = '/ws/storagedirusage/' . $row->id;
-			$row->recorded = $row->datetimerecorded;
-		}
-
-		return new JsonResource($row);
+		return new UsageResource($row);
 	}
 
 	/**
@@ -312,16 +307,7 @@ class UsageController extends Controller
 	{
 		$row = Usage::findOrFail($id);
 
-		$row->api = route('api.storage.usage.read', ['id' => $row->id]);
-
-		// [!] Legacy compatibility
-		if (request()->segment(1) == 'ws')
-		{
-			$row->id = '/ws/storagedirusage/' . $row->id;
-			$row->recorded = $row->datetimerecorded;
-		}
-
-		return new JsonResource($row);
+		return new UsageResource($row);
 	}
 
 	/**
@@ -354,10 +340,10 @@ class UsageController extends Controller
 		$request->validate([
 			'storagedirid' => 'nullable|integer|min:1',
 			'storagedir' => 'nullable|string',
-			'quota' => 'nullable',
-			'space' => 'nullable',
-			'filequota' => 'nullable',
-			'files' => 'nullable',
+			'quota' => 'nullable|integer',
+			'space' => 'nullable|integer',
+			'filequota' => 'nullable|integer',
+			'files' => 'nullable|integer',
 		]);
 
 		$row = Usage::findOrFail($id);
@@ -365,6 +351,11 @@ class UsageController extends Controller
 		if ($request->has('storagedirid') || $request->has('storagedir'))
 		{
 			$row->storagedirid = $request->input('storagedirid', $request->input('storagedir'));
+
+			if (!$row->directory)
+			{
+				return response()->json(['message' => trans('Invalid storagedirid specified')], 409);
+			}
 		}
 		if ($request->has('quota'))
 		{
@@ -385,16 +376,7 @@ class UsageController extends Controller
 
 		$row->save();
 
-		$row->api = route('api.storage.usage.read', ['id' => $row->id]);
-
-		// [!] Legacy compatibility
-		if (request()->segment(1) == 'ws')
-		{
-			$row->id = '/ws/storagedirusage/' . $row->id;
-			$row->recorded = $row->datetimerecorded;
-		}
-
-		return new JsonResource($row);
+		return new UsageResource($row);
 	}
 
 	/**

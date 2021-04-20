@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'storagedirusage'], function (Router $router)
+$router->group(['prefix' => 'storagedirusage', 'middleware' => 'auth.ip'], function (Router $router)
 {
 	$router->get('/', [
 		'as' => 'ws.storage.usage',
@@ -34,9 +34,10 @@ $router->group(['prefix' => 'storagedirusage'], function (Router $router)
 $router->get('storagedirquota/{username?}', [
 	'as' => 'ws.storage.quotas',
 	'uses' => 'QuotasController@index',
+	'middleware' => 'auth.ip'
 ]);
 
-$router->group(['prefix' => 'storagedirpurchase'], function (Router $router)
+$router->group(['prefix' => 'storagedirpurchase', 'middleware' => 'auth.ip'], function (Router $router)
 {
 	$router->get('/', [
 		'as' => 'ws.storage.purchases',
@@ -60,7 +61,7 @@ $router->group(['prefix' => 'storagedirpurchase'], function (Router $router)
 	])->where('id', '[0-9]+');
 });
 
-$router->group(['prefix' => 'storagedirloan'], function (Router $router)
+$router->group(['prefix' => 'storagedirloan', 'middleware' => 'auth.ip'], function (Router $router)
 {
 	$router->get('/', [
 		'as' => 'ws.storage.loans',
@@ -84,7 +85,7 @@ $router->group(['prefix' => 'storagedirloan'], function (Router $router)
 	])->where('id', '[0-9]+');
 });
 
-$router->group(['prefix' => 'storagedir'], function (Router $router)
+$router->group(['prefix' => 'storagedir', 'middleware' => 'auth.ip'], function (Router $router)
 {
 	$router->get('/', [
 		'as' => 'ws.storage.directories',
