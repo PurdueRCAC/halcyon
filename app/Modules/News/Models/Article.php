@@ -576,7 +576,7 @@ class Article extends Model
 		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
 		$text = str_replace('<th>', '<th scope="col">', $text);
 
-		$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
+		$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*?<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
 		$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
 
 		return $text;
