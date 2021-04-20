@@ -237,6 +237,6 @@ return [
         'Html' => App\Halcyon\Facades\Html::class,
         'Toolbar' => App\Halcyon\Facades\Toolbar::class,
     ],
-    'admin-theme' => 'Admin',
-    'site-theme' => 'Rcac',
+    //'admin-theme' => 'Admin',
+    //'site-theme' => 'Site',
 ];

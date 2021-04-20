@@ -71,13 +71,25 @@ class ThemeManager implements \Countable
 	{
 		foreach ($this->allEnabled() as $theme)
 		{
-			if ($theme->getLowerName() == strtolower($name))
+			if ($theme->getLowerElement() == strtolower($name))
 			{
 				return $theme;
 			}
 		}
 
 		return;
+	}
+
+	/**
+	 * Get only the public themes
+	 * @return array
+	 */
+	public function findEnabledByType($type = 'site')
+	{
+		foreach ($this->allByType($type) as $theme)
+		{
+			return $theme;
+		}
 	}
 
 	/**
@@ -97,7 +109,7 @@ class ThemeManager implements \Countable
 
 		foreach ($directories as $theme)
 		{
-			$name = Str::studly($theme->name);
+			$name = Str::studly($theme->element);
 
 			if (!$this->getFinder()->isDirectory($this->path . '/' . $name))
 			{
@@ -193,6 +205,7 @@ class ThemeManager implements \Countable
 			$theme = new Model;
 			$theme->name = basename($dir);
 			$theme->element = strtolower($theme->name);
+			$theme->client_id = 0;
 
 			$rows[] = $theme;
 		}
@@ -206,7 +219,7 @@ class ThemeManager implements \Countable
 	 * @param  integer  $state
 	 * @return array
 	 */
-	private function getThemesFromDatabase($state = null)
+	private function getThemesFromDatabase($state = null, $type = null)
 	{
 		$s = (new Model)->getTable();
 
@@ -218,12 +231,17 @@ class ThemeManager implements \Countable
 				$s . '.name',
 				$s . '.element',
 				$s . '.params',
-				$s . '.protected'
+				$s . '.protected',
+				$s . '.client_id'
 			]);
 
 		if (!is_null($state))
 		{
 			$query->where($s . '.enabled', '=', $state);
+		}
+		if (!is_null($type))
+		{
+			$query->where($s . '.client_id', '=', $type == 'admin' ? 1 : 0);
 		}
 		$query
 			->where($s . '.type', '=', 'theme')
@@ -323,19 +341,21 @@ class ThemeManager implements \Countable
 	{
 		if (!$theme instanceof Theme)
 		{
-			$theme = $this->find($theme);
+			$found = $this->find($theme);
 
-			if (!$theme)
+			if (!$found)
 			{
 				throw new ThemeNotFoundException('Theme "' . $theme . '" not found.');
 			}
+
+			$theme = $found;
 		}
 
 		$this->activeTheme = $theme;
 
-		$this->activateViewPaths($theme);
+		$this->activateViewPaths($this->activeTheme);
 
-		$this->activateLangPaths($theme);
+		$this->activateLangPaths($this->activeTheme);
 	}
 
 	/**
@@ -376,7 +396,7 @@ class ThemeManager implements \Countable
 	 */
 	private function isType($client_id, $type = 'site')
 	{
-		$type = $type == 'site' ? 1 : 0;
+		$type = $type == 'site' ? 0 : 1;
 
 		return ($client_id == $type);
 	}

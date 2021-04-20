@@ -50,11 +50,13 @@ class ModuleServiceProvider extends ServiceProvider
 			//$themePaths = $manager->all();
 			$client = $this->app['isAdmin'] ? 'admin' : 'site';
 
-			$theme = $this->app['config']->get('app.' . $client . '-theme', null);
+			//$theme = $this->app['config']->get('app.' . $client . '-theme', $client);
+
+			$theme = $manager->findEnabledByType($client);
 
 			if (!is_null($theme))
 			{
-				$theme = $manager->find($theme);
+				//$theme = $manager->find($theme);
 
 				$manager->activate($theme);
 

@@ -68,6 +68,26 @@ class Theme
 	}
 
 	/**
+	 * Get element
+	 *
+	 * @return  string
+	 */
+	public function getElement(): string
+	{
+		return basename($this->getPath());
+	}
+
+	/**
+	 * Get element
+	 *
+	 * @return  string
+	 */
+	public function getLowerElement(): string
+	{
+		return strtolower($this->getElement());
+	}
+
+	/**
 	 * Get path
 	 *
 	 * @return  string
