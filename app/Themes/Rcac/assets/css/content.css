@@ -1121,8 +1121,9 @@ ul.purchases li {
 .modules div.hover {
 	background-color: #ece1cb;
 }
-.modules div.highlight {
+.highlight {
 	background-color: #fff986;
+	font-weight: normal;
 }
 .modules img.control {
 	margin-bottom: -3px;
