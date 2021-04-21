@@ -294,7 +294,7 @@ class MessagesController extends Controller
 	 * @param  Request  $request
 	 * @return  Response
 	 */
-	public function destroy(Request $request)
+	public function delete(Request $request)
 	{
 		// Incoming
 		$ids = $request->input('id', array());

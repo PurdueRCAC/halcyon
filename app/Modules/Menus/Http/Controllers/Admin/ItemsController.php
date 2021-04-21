@@ -399,6 +399,11 @@ class ItemsController extends Controller
 				break;
 		}
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		$form = $row->getForm();
 
 		$widgets = \App\Modules\Menus\Models\Widget::forMenuId($row->id);
@@ -498,12 +503,22 @@ class ItemsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		//$request->validate([
+		$rules = [
 			'fields.menutype' => 'required|string|max:24',
 			'fields.title' => 'nullable|string|max:255',
 			'fields.path' => 'nullable|string|max:1024',
 			'fields.link' => 'nullable|string|max:1024',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('fields.id');
 

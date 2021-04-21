@@ -174,6 +174,11 @@ class ArticlesController extends Controller
 			$row->newstypeid = $types->first()->id;
 		}
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		$templates = Article::query()
 			->where('published', '=', 1)
 			->where('template', '=', 1)

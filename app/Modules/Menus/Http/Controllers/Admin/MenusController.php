@@ -143,10 +143,20 @@ class MenusController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		//$request->validate([
+		$rules = [
 			'fields.menutype' => 'required|string|max:24',
 			'fields.title' => 'required|string|max:48'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 

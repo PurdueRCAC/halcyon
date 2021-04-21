@@ -54,7 +54,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-name">{{ trans('contactreports::contactreports.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="250" value="{{ $row->name }}" />
+					<input type="text" name="fields[name]" id="field-name" class="form-control required{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->name }}" />
 					<span class="invalid-feedback">{{ trans('contactreports::contactreports.error.invalid name') }}</span>
 				</div>
 			</fieldset>

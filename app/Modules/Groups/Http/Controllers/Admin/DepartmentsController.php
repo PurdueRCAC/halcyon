@@ -117,6 +117,11 @@ class DepartmentsController extends Controller
 
 		$row = new Department();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('groups::admin.departments.edit', [
 			'row' => $row,
 			'parents' => $parents
@@ -135,6 +140,11 @@ class DepartmentsController extends Controller
 
 		$row = Department::findOrFail($id);
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('groups::admin.departments.edit', [
 			'row' => $row,
 			'parents' => $parents,
@@ -149,9 +159,19 @@ class DepartmentsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
-			'fields.name' => 'required'
-		]);
+		//$request->validate([
+		$rules = [
+			'fields.name' => 'required|string|max:255'
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 

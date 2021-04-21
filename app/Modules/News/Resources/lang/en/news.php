@@ -6,7 +6,7 @@ return [
 	// Sub-menu
 	'articles' => 'Articles',
 	'templates' => 'Templates',
-	'types' => 'Categories',
+	'types' => 'Types',
 	'today' => 'Today',
 	'tomorrow' => 'Tomorrow',
 	'happening now' => 'Happening now',
@@ -24,7 +24,7 @@ return [
 	'modified' => 'Last Modified',
 	'modifier' => 'Modifier',
 	'removed' => 'Removed',
-	'type' => 'Category',
+	'type' => 'Type',
 	'publish up' => 'Start publishing',
 	'publish down' => 'Stop publishing',
 	'template' => 'Template',
@@ -34,7 +34,7 @@ return [
 	// Filters
 	'access' => 'Access',
 	'select access' => '- Access level -',
-	'select type' => '- All Categories -',
+	'select type' => '- All Types -',
 	'state' => 'State',
 	'state_all' => '- All States -',
 	'state_unpublish' => 'Unpublish',

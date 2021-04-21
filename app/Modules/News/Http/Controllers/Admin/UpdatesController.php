@@ -98,6 +98,11 @@ class UpdatesController extends Controller
 		$row = new Update();
 		$row->newsid = $article->id;
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('news::admin.updates.edit', [
 			'row'     => $row,
 			'article' => $article
@@ -136,10 +141,20 @@ class UpdatesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		//$request->validate([
+		$rules = [
 			'fields.body'   => 'required|string|max:15000',
 			'fields.newsid' => 'required|integer'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 
@@ -160,7 +175,7 @@ class UpdatesController extends Controller
 			return redirect()->back()->with('error', trans('global.messages.save failed'));
 		}
 
-		return redirect(route('admin.news.updates', ['article' => $row->newsid]))->withSuccess(trans('global.messages.' . ($id ? 'item updated' : 'item created')));
+		return redirect(route('admin.news.updates', ['article' => $row->newsid]))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

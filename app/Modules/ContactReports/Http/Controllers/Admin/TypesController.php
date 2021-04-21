@@ -4,6 +4,7 @@ namespace App\Modules\ContactReports\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\ContactReports\Models\Type;
 use App\Halcyon\Http\StatefulRequest;
 
@@ -68,6 +69,32 @@ class TypesController extends Controller
 	{
 		$row = new Type();
 
+		if ($fields = $request->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
+		return view('contactreports::admin.types.edit', [
+			'row' => $row
+		]);
+	}
+
+
+	/**
+	 * Show the form for editing the specified entry
+	 *
+	 * @param   integer   $id
+	 * @return  Response
+	 */
+	public function edit($id)
+	{
+		$row = Type::findOrFail($id);
+
+		if ($fields = $request->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('contactreports::admin.types.edit', [
 			'row' => $row
 		]);
@@ -81,9 +108,19 @@ class TypesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		//$request->validate([
+		$rules = [
 			'fields.name' => 'required|string|max:32',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 
@@ -106,21 +143,6 @@ class TypesController extends Controller
 		}
 
 		return $this->cancel()->with('success', trans('global.messages.item saved'));
-	}
-
-	/**
-	 * Show the form for editing the specified entry
-	 *
-	 * @param   integer   $id
-	 * @return  Response
-	 */
-	public function edit($id)
-	{
-		$row = Type::findOrFail($id);
-
-		return view('contactreports::admin.types.edit', [
-			'row' => $row
-		]);
 	}
 
 	/**

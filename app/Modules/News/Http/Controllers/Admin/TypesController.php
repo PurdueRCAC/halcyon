@@ -67,6 +67,11 @@ class TypesController extends Controller
 	{
 		$row = new Type();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('news::admin.types.edit', [
 			'row' => $row
 		]);
@@ -116,6 +121,11 @@ class TypesController extends Controller
 	public function edit($id)
 	{
 		$row = Type::findOrFail($id);
+
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
 
 		return view('news::admin.types.edit', [
 			'row' => $row

@@ -112,6 +112,11 @@ class GroupsController extends Controller
 	{
 		$row = new Group();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		$departments = Department::tree();
 		$fields = FieldOfScience::tree();
 
@@ -130,10 +135,20 @@ class GroupsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		//$request->validate([
+		$rules = [
 			'fields.name' => 'required|max:255',
 			'fields.unixgroup' => 'nullable|max:10',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 
@@ -177,6 +192,11 @@ class GroupsController extends Controller
 	public function edit($id)
 	{
 		$row = Group::findOrFail($id);
+
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
 
 		$departments = Department::tree();
 		$fields = FieldOfScience::tree();

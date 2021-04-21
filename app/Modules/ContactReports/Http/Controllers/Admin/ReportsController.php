@@ -138,6 +138,7 @@ class ReportsController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
+	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function create(Request $request)
@@ -174,6 +175,57 @@ class ReportsController extends Controller
 				$row->users->push($user);
 			}
 		}
+
+		return view('contactreports::admin.reports.edit', [
+			'row'    => $row,
+			'groups' => $groups,
+			'types'  => $types,
+		]);
+	}
+
+	/**
+	 * Show the form for editing the specified entry
+	 *
+	 * @param   Request  $request
+	 * @param   integer  $id
+	 * @return  Response
+	 */
+	public function edit(Request $request, $id)
+	{
+		$row = Report::findOrFail($id);
+
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
+		if ($resources = $request->old('resources'))
+		{
+			$row->resources = collect([]);
+			foreach ($resources as $r)
+			{
+				$resource = new Reportresource;
+				$resource->resourceid = $r;
+
+				$row->resources->push($resource);
+			}
+		}
+
+		if ($people = $request->old('people'))
+		{
+			$people = explode(',', $people);
+			$row->users = collect([]);
+			foreach ($people as $p)
+			{
+				$user = new ReportUser;
+				$user->userid = $p;
+
+				$row->users->push($user);
+			}
+		}
+
+		$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();
+		$types = Type::all();
 
 		return view('contactreports::admin.reports.edit', [
 			'row'    => $row,
@@ -371,56 +423,6 @@ class ReportsController extends Controller
 		}
 
 		return $this->cancel()->withSuccess('Item created!');
-	}
-
-	/**
-	 * Show the form for editing the specified entry
-	 *
-	 * @param   integer  $id
-	 * @return  Response
-	 */
-	public function editRequest($request, $id)
-	{
-		$row = Report::findOrFail($id);
-
-		if ($fields = app('request')->old('fields'))
-		{
-			$row->fill($fields);
-		}
-
-		if ($resources = $request->old('resources'))
-		{
-			$row->resources = collect([]);
-			foreach ($resources as $r)
-			{
-				$resource = new Reportresource;
-				$resource->resourceid = $r;
-
-				$row->resources->push($resource);
-			}
-		}
-
-		if ($people = $request->old('people'))
-		{
-			$people = explode(',', $people);
-			$row->users = collect([]);
-			foreach ($people as $p)
-			{
-				$user = new ReportUser;
-				$user->userid = $p;
-
-				$row->users->push($user);
-			}
-		}
-
-		$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();
-		$types = Type::all();
-
-		return view('contactreports::admin.reports.edit', [
-			'row'    => $row,
-			'groups' => $groups,
-			'types'  => $types,
-		]);
 	}
 
 	/**
