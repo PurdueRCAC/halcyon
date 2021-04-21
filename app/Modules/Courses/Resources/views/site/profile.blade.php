@@ -10,7 +10,7 @@
 			<h2>{{ trans('courses::courses.my courses') }}</h2>
 		</div>
 		<div class="col-md-3 text-right">
-			<a href="#add-account" data-hide=".table" data-icon="fa-times" data-text="<i class='fa fa-times' aria-hidden='true'></i> {{ trans('global.cancel') }}" class="btn btn-default add-account">
+			<a href="#add-account" data-hide=".table" data-icon="fa-times" data-text="<i class='fa fa-times' aria-hidden='true'></i> {{ trans('global.cancel') }}" class="btn btn-secondary add-account">
 				<i class="fa fa-plus" aria-hidden="true"></i>
 				{{ trans('courses::courses.add account') }}
 			</a>
@@ -48,6 +48,7 @@
 			<tbody>
 				<?php
 				$now = Carbon\Carbon::now();
+				$total = 0;
 
 				foreach ($courses as $class)
 				{
@@ -145,7 +146,19 @@
 							</td>
 						</tr>
 						<?php
+						$total++;
 					}
+				}
+
+				if (!$total)
+				{
+					?>
+					<tr>
+						<td class="text-center text-muted" colspan="7">
+							{{ trans('global.none') }}
+						</td>
+					</tr>
+					<?php
 				}
 				?>
 			</tbody>
@@ -229,7 +242,7 @@
 		@endforeach
 	@endif
 
-	<form id="add-account" method="post" class="create-form hide" action="{{ route('site.users.account.section', ['section' => 'class']) }}{{ request()->has('u') ? '?u=' . request()->input('u') : '' }}">
+	<form id="add-account" method="post" class="create-form hide editform" action="{{ route('site.users.account.section', ['section' => 'class']) }}{{ request()->has('u') ? '?u=' . request()->input('u') : '' }}">
 		@if (auth()->user()->can('manage users'))
 			<div class="form-group">
 				<label for="field-type">{{ trans('courses::courses.type') }}:</label>
@@ -345,7 +358,7 @@
 				<div class="form-group row">
 					<div class="col-sm-2 col-form-label">Class Name</div>
 					<div class="col-sm-10">
-						<!-- <input type="text" id="new_class_name" readonly class="form-control-plaintext" data-href="{{ route('site.users.account.section', ['section' => 'class']) }}{{ request()->has('u') ? '?u=' . request()->input('u') : '' }}" placeholder="(Select Class)" value="" /> -->
+						<!-- <input type="text" readonly class="form-control-plaintext"id="new_class_name" data-href="{{ route('site.users.account.section', ['section' => 'class']) }}{{ request()->has('u') ? '?u=' . request()->input('u') : '' }}" placeholder="(Select Class)" value="" /> -->
 						<span id="new_class_name" data-href="{{ route('site.users.account.section', ['section' => 'class']) }}{{ request()->has('u') ? '?u=' . request()->input('u') : '' }}">(Select Class)</span>
 					</div>
 				</div>
