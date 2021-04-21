@@ -33,7 +33,20 @@ $(document).ready(function() {
 				dataName: 'data',
 				height: 150,
 				delay: 100,
-				minLength: 1
+				minLength: 1,
+				open: function (e, ui) {
+					var acData = $(this).data('ui-autocomplete');
+
+					acData
+						.menu
+						.element
+						.find('.ui-menu-item-wrapper')
+						.each(function () {
+							var me = $(this);
+							var regex = new RegExp('(' + acData.term + ')', "gi");
+							me.html(me.text().replace(regex, '<strong>$1</strong>'));
+						});
+				}
 			}
 		});
 	}
