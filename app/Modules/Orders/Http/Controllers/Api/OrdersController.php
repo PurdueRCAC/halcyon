@@ -5,6 +5,7 @@ namespace App\Modules\Orders\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Orders\Models\Order;
 use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Models\Product;
