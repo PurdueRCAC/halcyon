@@ -232,6 +232,8 @@ class UniTime
 						$course->classId     = $class->classId;
 						$course->instructors = $instructors;
 						$course->students    = array();
+						$course->student_list = array();
+						$course->enrollment  = array();
 
 						$result2 = $this->request("enrollments?classId=" . $class->classId);
 
@@ -265,8 +267,6 @@ class UniTime
 						if ($enrollments['status'] == 200)
 						{
 							$course->enrollment = $enrollments['body'];
-
-							$course->student_list = array();
 
 							if (is_array($course->enrollment))
 							{
