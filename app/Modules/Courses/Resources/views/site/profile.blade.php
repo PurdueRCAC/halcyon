@@ -100,7 +100,7 @@
 						?>
 						<tr>
 							<td>
-								{{ $resource->name }}
+								{{ $resource ? $resource->name : trans('global.unknown') }}
 							</td>
 							<td>
 								@if ($class->semester == 'Workshop')
@@ -187,7 +187,7 @@
 					<tr>
 						<th scope="row">Resource</th>
 						<td>
-							{{ $class->resource->name }}
+							{{ $class->resource ? $class->resource->name : trans('global.unknown') }}
 						</td>
 					</tr>
 					<tr>
@@ -204,7 +204,7 @@
 										<a href="#USER_{{ $usr->id }}_{{ $class->crn }}" class="user-delete delete" data-api="{{ route('api.courses.members.delete', ['id' => $user->id]) }}" data-confirm="Are you sure you wish to remove this user?" data-user="{{ $user->id }}" data-crn="{{ $class->crn }}">
 											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">Delete</span>
 										</a>
-										{{ $usr->user->name }}
+										{{ $usr->user ? $usr->user->name : trans('global.unknown') }}
 										<input type="hidden" id="HIDDEN_{{ $usr->id }}_{{ $class->crn }}" value="{{ $usr->id }}" />
 									</li>
 									<?php
