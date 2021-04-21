@@ -338,6 +338,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
+	$('#markdown').tabs();
+
 	/*var newsresource = $(".form-resources");
 	if (newsresource.length) {
 		newsresource.tagsInput({
