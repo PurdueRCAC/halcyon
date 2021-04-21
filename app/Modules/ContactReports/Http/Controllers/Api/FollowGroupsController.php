@@ -10,17 +10,17 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Carbon\Carbon;
 
 /**
- * Comments
+ * Follow Groups
  *
- * @apiUri    /api/contactreports/followusers
+ * @apiUri    /api/contactreports/followgroups
  */
 class FollowGroupsController extends Controller
 {
 	/**
-	 * Display a listing of contact reports comments
+	 * Display a listing of contact reports followgroups
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/contactreports/comments
+	 * @apiUri    /api/contactreports/followgroups
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "contactreportid",

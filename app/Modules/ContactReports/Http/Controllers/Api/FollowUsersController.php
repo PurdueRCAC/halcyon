@@ -10,7 +10,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Carbon\Carbon;
 
 /**
- * Comments
+ * Follow Users
  *
  * @apiUri    /api/contactreports/followusers
  */
@@ -20,7 +20,7 @@ class FollowUsersController extends Controller
 	 * Display a listing of contact reports comments
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/contactreports/comments
+	 * @apiUri    /api/contactreports/followusers
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "contactreportid",
