@@ -182,7 +182,7 @@ function CRMSearchUser(xml, flags) {
 		//disabled = flags['disabled'];
 	}
 
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		var results = JSON.parse(xml.responseText);
 
 		if (!pageload) {
@@ -191,7 +191,7 @@ function CRMSearchUser(xml, flags) {
 				document.getElementById("INPUT_add").disabled = false;
 			}
 		}
-
+console.log(results);
 		// reset search box
 		var people = $('#people');
 
@@ -226,7 +226,7 @@ function CRMSearchUser(xml, flags) {
 }
 
 /**
- * Result handler function when selecting a group
+ * Result handler function when selecting a resource
  *
  * @param   {object}  xml
  * @param   {array}   flags
@@ -254,7 +254,9 @@ function CRMSearchResource(xml, flags) {
 		// reset search box
 		var resource = $('#crmresource');
 
-		if ($('.tagsinput').length) {
+		resource.val(results.id);
+
+		/*if ($('.tagsinput').length) {
 			if (!resource.tagExist(results.id)) {
 				resource.addTag({
 					'id': results.id,
@@ -263,7 +265,7 @@ function CRMSearchResource(xml, flags) {
 			}
 		} else {
 			resource.val(resource.val() + (resource.val() ? ', ' : '') + results.name + ':' + results.id);
-		}
+		}*/
 	} else {
 		// error handling
 		switch (xml.status) {
@@ -530,7 +532,7 @@ function CRMAddEntry() {
 				//}
 			}
 		}
-		resourcedata = document.getElementById("crmresource").value.split(',');
+		/*resourcedata = document.getElementById("crmresource").value.split(',');
 		for (i = 0; i < resourcedata.length; i++) {
 			if (resourcedata[i] != "") {
 				if (resourcedata[i].indexOf('/') !== -1) {
@@ -540,7 +542,7 @@ function CRMAddEntry() {
 					resources.push(resourcedata[i]);
 				}
 			}
-		}
+		}*/
 	} /*else {
 		groupsdata = document.getElementById("TD_group").getElementsByTagName("div");
 		peopledata = document.getElementById("TD_people").getElementsByTagName("div");
@@ -567,6 +569,19 @@ function CRMAddEntry() {
 			}
 		}
 	}*/
+	resourcedata = Array.prototype.slice.call(document.querySelectorAll('#crmresource option:checked'), 0).map(function (v) {
+		return v.value;
+	});
+	for (var i = 0; i < resourcedata.length; i++) {
+		if (resourcedata[i] != "") {
+			if (resourcedata[i].indexOf('/') !== -1) {
+				var resource = resourcedata[i].split('/');
+				resources.push(resource[resource.length - 1]);
+			} else {
+				resources.push(resourcedata[i]);
+			}
+		}
+	}
 
 	notes = document.getElementById("NotesText").value;
 
@@ -917,7 +932,7 @@ function CRMSearch() {
 	var people = new Array();
 	var person = null;
 
-	var resourcedata = new Array();
+	//var resourcedata = new Array();
 	var resources = new Array();
 	var resource = null;
 
@@ -956,7 +971,7 @@ function CRMSearch() {
 		}
 
 		// Fetch list of selected resources
-		resourcedata = document.getElementById("crmresource").value.split(',');
+		/*resourcedata = document.getElementById("crmresource").value.split(',');
 		for (i = 0; i < resourcedata.length; i++) {
 			if (resourcedata[i] != "") {
 				if (resourcedata[i].indexOf('/') !== -1) {
@@ -966,11 +981,11 @@ function CRMSearch() {
 					resources.push(resourcedata[i]);
 				}
 			}
-		}
+		}*/
 	} else {
 		groupsdata = document.getElementById("TD_group").getElementsByTagName("div");
 		peopledata = document.getElementById("TD_people").getElementsByTagName("div");
-		resourcedata = document.getElementById("TD_resource").getElementsByTagName("div");
+		//resourcedata = document.getElementById("TD_resource").getElementsByTagName("div");
 
 		for (i = 0; i < groupsdata.length; i++) {
 			if (groupsdata[i].id.search("GROUP_") == 0) {
@@ -988,11 +1003,25 @@ function CRMSearch() {
 			}
 		}
 
-		for (i = 0; i < resourcedata.length; i++) {
+		/*for (i = 0; i < resourcedata.length; i++) {
 			if (resourcedata[i].id.search("RESOURCE_") == 0) {
 				resource = resourcedata[i].id.substr(5);
 				resource = resource.split('/');
 				resources.push(resource[3]);
+			}
+		}*/
+	}
+
+	var resourcedata = Array.prototype.slice.call(document.querySelectorAll('#crmresource option:checked'), 0).map(function (v) {
+		return v.value;
+	});
+	for (var i = 0; i < resourcedata.length; i++) {
+		if (resourcedata[i] != "") {
+			if (resourcedata[i].indexOf('/') !== -1) {
+				var resource = resourcedata[i].split('/');
+				resources.push(resource[resource.length - 1]);
+			} else {
+				resources.push(resourcedata[i]);
 			}
 		}
 	}
@@ -1151,7 +1180,12 @@ function CRMSearched(xml) {
 		} else {
 			reports.html('');
 
+			var keywords = document.getElementById("keywords").value;
 			for (var x = 0; x < results.data.length; x++, count++) {
+				if (keywords) {
+					var regex = new RegExp('(' + keywords.split(' ').join('|') + ')', "gi");
+					results.data[x].formattedreport = results.data[x].formattedreport.replace(regex, '<strong class="highlight">$1</strong>');
+				}
 				CRMPrintRow(
 					results.data[x],
 					//results.people,
@@ -2396,10 +2430,11 @@ function CRMClearSearch() {
 
 	var resources = document.getElementById("crmresource");
 	if (resources) {
-		resources.value = '';
+		/*resources.value = '';
 		if ($('.tagsinput').length) {
 			$(resources).clearTags();
-		}
+		}*/
+		$(resources).val(null).trigger('change');
 	}
 
 	var type = document.getElementById("crmtype");
@@ -2424,7 +2459,7 @@ function CRMClearSearch() {
 			if (!skip) {
 				// fake WS call
 				xml = new Object();
-				xml.responseText = JSON.stringify({data: sdata.followerofgroups[x]});
+				xml.responseText = JSON.stringify(sdata.followerofgroups[x]); //.{data: sdata.followerofgroups[x]});
 				xml.status = 200;
 				CRMSearchGroup(xml, { 'pageload': true, 'disabled': false });
 			}
@@ -2444,7 +2479,7 @@ function CRMClearSearch() {
 			if (!skip) {
 				// fake WS call
 				xml = new Object();
-				xml.responseText = JSON.stringify({data: sdata.followerofusers[x]});
+				xml.responseText = JSON.stringify(sdata.followerofusers[x]); //{data: sdata.followerofusers[x]});
 				xml.status = 200;
 				CRMSearchUser(xml, { 'pageload': true, 'disabled': false });
 			}
@@ -2470,6 +2505,11 @@ var autocompleteList = function (url, key) {
 				if (typeof (el.id) == 'undefined' && typeof (el.usernames) != 'undefined') {
 					el.id = el.usernames[0]['name'];
 				}
+				if (typeof (el.username) != 'undefined') {
+					el.name += ' (' + el.username + ')';
+				}
+				//var regEx = new RegExp("(" + request.term + ")(?!([^<]+)?>)", "gi");
+				//el.name = el.name.replace(regEx, '<span class="highlight">$1</span>');
 				return {
 					label: el.name,
 					name: el.name,
@@ -2545,7 +2585,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		var group = $("#group");
 		if (group.length) {
 			group.tagsInput({
-				placeholder: 'Select group...',
+				placeholder: '',
 				importPattern: /([^:]+):(.+)/i,
 				limit: 1,
 				'autocomplete': {
@@ -2554,6 +2594,19 @@ document.addEventListener('DOMContentLoaded', function () {
 					height: 150,
 					delay: 100,
 					minLength: 1,
+					open: function (e, ui) {
+						var acData = $(this).data('ui-autocomplete');
+
+						acData
+							.menu
+							.element
+							.find('.ui-menu-item-wrapper')
+							.each(function () {
+								var me = $(this);
+								var regex = new RegExp('(' + acData.term + ')', "gi");
+								me.html(me.text().replace(regex, '<b>$1</b>'));
+							});
+					}
 					//maxLength: 1
 				},
 				'onAddTag': function () { //input, value
@@ -2575,7 +2628,20 @@ document.addEventListener('DOMContentLoaded', function () {
 					dataName: 'users',
 					height: 150,
 					delay: 100,
-					minLength: 1
+					minLength: 1,
+					open: function (e, ui) {
+						var acData = $(this).data('ui-autocomplete');
+
+						acData
+							.menu
+							.element
+							.find('.ui-menu-item-wrapper')
+							.each(function () {
+								var me = $(this);
+								var regex = new RegExp('(' + acData.term + ')', "gi");
+								me.html(me.text().replace(regex, '<b>$1</b>'));
+							});
+					}
 				},
 				'onAddTag': function () { //input, value
 					CRMSearch();
@@ -2587,7 +2653,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		var crmresource = $("#crmresource");
-		if (crmresource.length) {
+		/*if (crmresource.length) {
 			crmresource.tagsInput({
 				placeholder: '',
 				importPattern: /([^:]+):(.+)/i,
@@ -2604,6 +2670,46 @@ document.addEventListener('DOMContentLoaded', function () {
 				'onRemoveTag': function () {
 					CRMSearch();
 				}
+			});
+		}*/
+		var rselects = $(".searchable-select-multi");
+		if (rselects.length) {
+			$(".searchable-select-multi").select2({
+				multiple: true,
+				closeOnSelect: false,
+				templateResult: function (item) {
+					if (typeof item.children != 'undefined') {
+						var s = $(item.element).find('option').length - $(item.element).find('option:selected').length;
+						var el = $('<button class="btn btn-sm btn_select2_optgroup" data-group="' + item.text + '">Select All</span>');
+
+						// Click event
+						el.on('click', function (e) {
+							e.preventDefault();
+							// Select all optgroup child if there aren't, else deselect all
+							rselects.find('optgroup[label="' + $(this).data('group') + '"] option').prop(
+								'selected',
+								$(item.element).find('option').length - $(item.element).find('option:selected').length
+							);
+
+							// Trigger change event + close dropdown
+							rselects.trigger('change.select2');
+							rselects.select2('close');
+							NEWSSearch();
+						});
+
+						var elp = $('<span class="my_select2_optgroup">' + item.text + '</span>');
+						elp.append(el);
+
+						return elp;
+					}
+					return item.text;
+				}
+			})
+			.on('select2:select', function () {
+				CRMSearch();
+			})
+			.on('select2:unselect', function () {
+				CRMSearch();
 			});
 		}
 
@@ -2671,9 +2777,14 @@ document.addEventListener('DOMContentLoaded', function () {
 				//}
 			}
 
+			var vals = [];
 			for (x = 0; x < original.resources.length; x++) {
-				WSGetURL(crmresource.data('api') + '/' + original.resources[x]['resourceid'], CRMSearchResource, { 'pageload': true, 'disabled': false });
+				//WSGetURL(crmresource.data('api') + '/' + original.resources[x]['resourceid'], CRMSearchResource, { 'pageload': true, 'disabled': false });
+				vals.push(original.resources[x]['resourceid']);
 			}
+			crmresource
+				.val(vals)
+				.trigger('change');
 
 			if (original.age > 86400) {
 				document.getElementById('datestartshort').disabled = true;

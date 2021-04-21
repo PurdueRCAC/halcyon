@@ -5,6 +5,7 @@ namespace App\Modules\Users\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Users\Http\Resources\UserResourceCollection;
 use App\Modules\Users\Http\Resources\UserResource;
 use App\Modules\Users\Models\User;
@@ -160,17 +161,19 @@ class UsersController extends Controller
 			}
 			else
 			{
+				$query->select($a . '.id', $a . '.name', $a . '.puid', DB::raw("CASE WHEN " . $u . ".username='" . strtolower((string)$filters['search']) . "' THEN 100 ELSE 1 END AS score"))
+					->orderBy('score', 'desc');
 				$query->where(function($where) use ($filters, $a, $u)
 				{
 					$search = strtolower((string)$filters['search']);
 					$skipmiddlename = preg_replace('/ /', '% ', $search);
 
-					$where->where($a . '.name', 'like', '% ' . $search . '%')
+					$where->where($u . '.username', 'like', $search . '%')
+						->orWhere($u . '.username', 'like', '%' . $search . '%')
+						->orWhere($a . '.name', 'like', '% ' . $search . '%')
 						->orWhere($a . '.name', 'like', $search . '%')
 						->orWhere($a . '.name', 'like', '% ' . $skipmiddlename . '%')
-						->orWhere($a . '.name', 'like', $skipmiddlename . '%')
-						->orWhere($u . '.username', 'like', '' . $search . '%')
-						->orWhere($u . '.username', 'like', '%' . $search . '%');
+						->orWhere($a . '.name', 'like', $skipmiddlename . '%');
 						//->orWhere($a . '.email', 'like', '%' . $search . '%');
 				});
 			}

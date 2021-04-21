@@ -5,6 +5,7 @@ namespace App\Modules\Groups\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
 use App\Modules\Groups\Http\Resources\GroupResource;
@@ -157,13 +158,67 @@ class GroupsController extends Controller
 		$g = (new Group)->getTable();
 
 		$query = Group::query()
-			->select($g . '.*');
+			->select(DB::raw('DISTINCT ' . $g . '.id, ' . $g . '.name, ' . $g . '.owneruserid, ' . $g . '.unixgroup, ' . $g . '.unixid, ' . $g . '.deptnumber, ' . $g . '.onepurdue, ' . $g . '.githuborgname'));
 
 		if ($filters['search'])
 		{
-			$filters['search'] = strtolower((string)$filters['search']);
+			if (is_numeric($filters['search']))
+			{
+				$query->where($g . '.id', '=', (int)$filters['search']);
+			}
+			else
+			{
+				$search = (string)$filters['search'];
+				$search = trim($search);
+				$search = preg_replace('/ +/', ' ', $search);
 
-			$query->where($g . '.name', 'like', '%' . $filters['search'] . '%');
+				// Skip matches on trailing "group" or we'll return a billion results
+				if (preg_match('/Group$/i', $search))
+				{
+					$search = preg_replace('/Group$/i', '', $search);
+				}
+
+				if (!empty($filters['searchuser']))
+				{
+					//$filters['searchuser'] = $search;
+					$query->where(function($where) use ($g, $search)
+					{
+						$where->where($g . '.name', 'like', $search . '%')
+							->orWhere($g . '.name', 'like', '%' . $search . '%');
+					});
+				}
+				else
+				{
+					$gu = (new Member)->getTable();
+					$u = (new User)->getTable();
+					$uu = (new UserUsername)->getTable();
+
+					$query->join($gu, $gu . '.groupid', $g . '.id');
+					$query->join($u, $u . '.id', $gu . '.userid');
+					$query->join($uu, $uu . '.userid', $u . '.id');
+
+					//$query->where($gu . '.membertype', '=', 2);
+					$query->where(function($where) use ($g, $gu, $u, $uu, $search)
+					{
+						$where->where($g . '.name', 'like', $search . '%')
+							->orWhere($g . '.name', 'like', '%' . $search . '%')
+							->orWhere(function($userswhere) use ($gu, $u, $uu, $search)
+							{
+								$userswhere
+									->where($gu . '.membertype', '=', 2)
+									->where(function($users) use ($u, $uu, $search)
+									{
+										$users->where($uu . '.username', '=', $search)
+											->orWhere($uu . '.username', 'like', $search . '%')
+											->orWhere($uu . '.username', 'like', '%' . $search . '%')
+											->orWhere($u . '.name', 'like', '%' . $search . '%')
+											->orWhere($u . '.name', 'like', $search . '%')
+											->orWhere($u . '.name', 'like', '%' . $search);
+									});
+							});
+					});
+				}
+			}
 		}
 
 		if ($filters['searchuser'])
@@ -181,15 +236,22 @@ class GroupsController extends Controller
 			$query->where($gu . '.membertype', '=', 2);
 			$query->where(function($where) use ($g, $u, $uu, $filters)
 			{
-				$where->where($g . '.name', 'like', '%' . $filters['searchuser'] . '%')
+				$where->where($uu . '.username', '=', $filters['searchuser'])
+					->orWhere($uu . '.username', 'like', $filters['searchuser'] . '%')
+					->orWhere($uu . '.username', 'like', '%' . $filters['searchuser'] . '%')
+					->orWhere($u . '.name', 'like', '%' . $filters['searchuser'] . '%')
+					->orWhere($u . '.name', 'like', $filters['searchuser'] . '%')
+					->orWhere($u . '.name', 'like', '%' . $filters['searchuser']);
+				/*$where->where($g . '.name', 'like', '%' . $filters['searchuser'] . '%')
 					->orWhere(function($users) use ($u, $uu, $filters)
 					{
-						$users->where($u . '.name', 'like', '%' . $filters['searchuser'] . '%')
-							->orWhere($u . '.name', 'like', $filters['searchuser'] . '%')
-							->orWhere($u . '.name', 'like', '%' . $filters['searchuser'])
+						$users->where($uu . '.username', '=', $filters['searchuser'])
 							->orWhere($uu . '.username', 'like', $filters['searchuser'] . '%')
-							->orWhere($uu . '.username', 'like', '%' . $filters['searchuser'] . '%');
-					});
+							->orWhere($uu . '.username', 'like', '%' . $filters['searchuser'] . '%')
+							->orWhere($u . '.name', 'like', '%' . $filters['searchuser'] . '%')
+							->orWhere($u . '.name', 'like', $filters['searchuser'] . '%')
+							->orWhere($u . '.name', 'like', '%' . $filters['searchuser']);
+					});*/
 			});
 		}
 
@@ -217,7 +279,7 @@ class GroupsController extends Controller
 		{
 			$query->withCount('members');
 		}*/
-
+//echo $query->toSql(); die();
 		$rows = $query
 			//->with('motd')
 			->orderBy($g . '.' . $filters['order'], $filters['order_dir'])

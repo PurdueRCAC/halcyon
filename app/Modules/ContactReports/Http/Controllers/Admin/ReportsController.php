@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Comment;
@@ -64,38 +65,45 @@ class ReportsController extends Controller
 
 		if ($filters['search'])
 		{
-			// Trim extra garbage
-			$keyword = preg_replace('/[^A-Za-z0-9]/', ' ', $filters['search']);
-
-			// Calculate stem for the word
-			$keywords = array();
-			$stem = PorterStemmer::Stem($keyword);
-			$stem = substr($stem, 0, 1) . $stem;
-
-			$keywords[] = $stem;
-
-			$sql  = "(MATCH(stemmedreport) AGAINST ('+";
-			$sql .= $keywords[0];
-			for ($i=1; $i<count($keywords); $i++)
+			if (is_numeric($filters['search']))
 			{
-				$sql .= " +" . $keywords[$i];
+				$query->where($cr . '.id', '=', (int)$filters['search']);
 			}
-			$sql .= "') * 10 + 2 * (1 / (DATEDIFF(NOW(), datetimecontact) + 1))) AS score";
-
-			$query->select(['*', DB::raw($sql)]);
-
-			$sql  = "MATCH(stemmedreport) AGAINST ('+";
-			$sql .= $keywords[0];
-			for ($i=1; $i<count($keywords); $i++)
+			else
 			{
-				$sql .= " +" . $keywords[$i];
+				// Trim extra garbage
+				$keyword = preg_replace('/[^A-Za-z0-9]/', ' ', $filters['search']);
+
+				// Calculate stem for the word
+				$keywords = array();
+				$stem = PorterStemmer::Stem($keyword);
+				$stem = substr($stem, 0, 1) . $stem;
+
+				$keywords[] = $stem;
+
+				$sql  = "(MATCH(stemmedreport) AGAINST ('+";
+				$sql .= $keywords[0];
+				for ($i=1; $i<count($keywords); $i++)
+				{
+					$sql .= " +" . $keywords[$i];
+				}
+				$sql .= "') * 10 + 2 * (1 / (DATEDIFF(NOW(), datetimecontact) + 1))) AS score";
+
+				$query->select(['*', DB::raw($sql)]);
+
+				$sql  = "MATCH(stemmedreport) AGAINST ('+";
+				$sql .= $keywords[0];
+				for ($i=1; $i<count($keywords); $i++)
+				{
+					$sql .= " +" . $keywords[$i];
+				}
+				$sql .= "' IN BOOLEAN MODE)";
+
+				$query->whereRaw($sql)
+					->orderBy('score', 'desc');
+
+				//$query->where('report', 'like', '%' . $filters['search'] . '%');
 			}
-			$sql .= "' IN BOOLEAN MODE)";
-
-			$query->whereRaw($sql)
-				->orderBy('score', 'desc');
-
-			//$query->where('report', 'like', '%' . $filters['search'] . '%');
 		}
 
 		if ($filters['notice'] != '*')
@@ -132,12 +140,40 @@ class ReportsController extends Controller
 	 *
 	 * @return  Response
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Report();
 
 		$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();
 		$types = Type::all();
+
+		if ($fields = $request->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
+		if ($resources = $request->old('resources'))
+		{
+			foreach ($resources as $r)
+			{
+				$resource = new Reportresource;
+				$resource->resourceid = $r;
+
+				$row->resources->push($resource);
+			}
+		}
+
+		if ($people = $request->old('people'))
+		{
+			$people = explode(',', $people);
+			foreach ($people as $p)
+			{
+				$user = new ReportUser;
+				$user->userid = $p;
+
+				$row->users->push($user);
+			}
+		}
 
 		return view('contactreports::admin.reports.edit', [
 			'row'    => $row,
@@ -156,13 +192,25 @@ class ReportsController extends Controller
 	{
 		$now = new Carbon();
 
-		$request->validate([
+		//$request->validate([
+		$rules = [
 			'fields.report' => 'required',
 			'fields.datetimecontact' => 'required|date|before_or_equal:' . $now->toDateTimeString(),
 			'fields.userid' => 'nullable|integer',
 			'fields.groupid' => 'nullable|integer',
+			'fields.resources' => 'nullable|array',
+			'fields.contactreporttypeid' => 'nullable|integer',
 			'fields.datetimegroupid' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 
@@ -331,13 +379,38 @@ class ReportsController extends Controller
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function edit($id)
+	public function editRequest($request, $id)
 	{
 		$row = Report::findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))
 		{
 			$row->fill($fields);
+		}
+
+		if ($resources = $request->old('resources'))
+		{
+			$row->resources = collect([]);
+			foreach ($resources as $r)
+			{
+				$resource = new Reportresource;
+				$resource->resourceid = $r;
+
+				$row->resources->push($resource);
+			}
+		}
+
+		if ($people = $request->old('people'))
+		{
+			$people = explode(',', $people);
+			$row->users = collect([]);
+			foreach ($people as $p)
+			{
+				$user = new ReportUser;
+				$user->userid = $p;
+
+				$row->users->push($user);
+			}
 		}
 
 		$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();

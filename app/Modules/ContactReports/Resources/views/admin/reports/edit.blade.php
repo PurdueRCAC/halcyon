@@ -77,11 +77,11 @@ app('pathway')
 
 				<div class="form-group">
 					<?php
-					$resources = array();
+					/*$resources = array();
 					foreach ($row->resources as $resource)
 					{
 						$resources[] = ($resource->resource ? $resource->resource->name : trans('global.unknown')) . ':' . $resource->resourceid;
-					}
+					}*/
 					?>
 					<label for="field-resources">{{ trans('contactreports::contactreports.resources') }}:</label>
 					<select class="form-control basic-multiple" name="resources[]" multiple="multiple" data-placeholder="">

@@ -5,11 +5,13 @@ namespace App\Modules\ContactReports\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Reportresource;
 use App\Modules\ContactReports\Models\User;
 use App\Modules\ContactReports\Http\Resources\ReportResource as ApiReportResource;
 use App\Modules\ContactReports\Http\Resources\ReportResourceCollection;
+use App\Halcyon\Utility\PorterStemmer;
 use Carbon\Carbon;
 
 /**
@@ -129,16 +131,6 @@ class ReportsController extends Controller
 
 		$cr = (new Report)->getTable();
 
-		if ($filters['search'])
-		{
-			$query->where($cr . '.report', 'like', '%' . $filters['search'] . '%');
-
-			/*if (empty($filters['tag']))
-			{
-				$filters['tag'] = preg_replace('/\s+/', ',', $filters['search']);
-			}*/
-		}
-
 		if ($filters['notice'] != '*')
 		{
 			$query->where($cr . '.notice', '=', $filters['notice']);
@@ -204,7 +196,59 @@ class ReportsController extends Controller
 			$query->withTag($filters['tag']);
 		}
 
-		$query->select($cr . '.*');
+		if ($filters['search'])
+		{
+			if (is_numeric($filters['search']))
+			{
+				$query->where($cr . '.id', '=', (int)$filters['search']);
+			}
+			else
+			{
+				// Trim extra garbage
+				$keyword = preg_replace('/[^A-Za-z0-9]/', ' ', $filters['search']);
+
+				// Calculate stem for the word
+				$keywords = array();
+				$stem = PorterStemmer::Stem($keyword);
+				$stem = substr($stem, 0, 1) . $stem;
+
+				$keywords[] = $stem;
+
+				// Select score
+				$sql  = "(MATCH(" . $cr . ".stemmedreport) AGAINST ('+";
+				$sql .= $keywords[0];
+				for ($i=1; $i<count($keywords); $i++)
+				{
+					$sql .= " +" . $keywords[$i];
+				}
+				$sql .= "') * 10 + 2 * (1 / (DATEDIFF(NOW(), " . $cr . ".datetimecontact) + 1))) AS score";
+
+				$query->select(['*', DB::raw($sql)]);
+
+				// Where match
+				$sql  = "MATCH(" . $cr . ".stemmedreport) AGAINST ('+";
+				$sql .= $keywords[0];
+				for ($i=1; $i<count($keywords); $i++)
+				{
+					$sql .= " +" . $keywords[$i];
+				}
+				$sql .= "' IN BOOLEAN MODE)";
+
+				$query->whereRaw($sql)
+					->orderBy('score', 'desc');
+
+				//$query->where('report', 'like', '%' . $filters['search'] . '%');
+
+				/*if (empty($filters['tag']))
+				{
+					$filters['tag'] = preg_replace('/\s+/', ',', $filters['search']);
+				}*/
+			}
+		}
+		else
+		{
+			$query->select($cr . '.*');
+		}
 
 		$rows = $query
 			->orderBy($cr . '.' . $filters['order'], $filters['order_dir'])
