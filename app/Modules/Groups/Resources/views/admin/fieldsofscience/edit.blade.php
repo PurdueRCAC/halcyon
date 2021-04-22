@@ -44,7 +44,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.groups.fieldsofscience.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+<form action="{{ route('admin.groups.fieldsofscience.store') }}" method="post" name="adminForm" id="item-form" class="editform">
 	<div class="row">
 		<div class="col col-md-7">
 			<fieldset class="adminform">
@@ -86,7 +86,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-name">{{ trans('groups::groups.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control required" maxlength="250" value="{{ $row->name }}" />
+					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->name }}" />
 				</div>
 
 				<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />

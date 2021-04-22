@@ -811,7 +811,7 @@ app('pathway')
 
 						<div class="form-group">
 							<label for="field-name">{{ trans('groups::groups.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-							<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="250" value="{{ $row->name }}" />
+							<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->name }}" />
 							<span class="invalid-feedback">{{ trans('groups::groups.invalid.title') }}</span>
 						</div>
 
@@ -819,7 +819,7 @@ app('pathway')
 							<div class="col col-md-6">
 								<div class="form-group">
 									<label for="field-unixgroup">{{ trans('groups::groups.unix group base name') }}:</label>
-									<input type="text" class="form-control input-unixgroup" name="fields[unixgroup]" id="field-unixgroup" maxlength="10" pattern="[a-z0-9]+" value="{{ $row->unixgroup }}" />
+									<input type="text" class="form-control input-unixgroup{{ $errors->has('fields.unixgroup') ? ' is-invalid' : '' }}" name="fields[unixgroup]" id="field-unixgroup" maxlength="10" pattern="[a-z0-9]+" value="{{ $row->unixgroup }}" />
 									<span class="form-text text-muted">{{ trans('groups::groups.unix group base name hint') }}</span>
 								</div>
 							</div>
