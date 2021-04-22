@@ -164,7 +164,7 @@ app('pathway')
 						$u = ($user->user ? $user->user->name : $user->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
 						
 						if ($user->notified()):
-							$u .= ' <time datetime="' . $user->datetimelastnotify->toDateTimeString() . '">' . $user->datetimelastnotify->format('Y-m-d') . '</time>';
+							$u .= ' <span class="icon-mail glyph" data-tip="Followup email sent on ' . $user->datetimelastnotify->toDateTimeString() . '"><time datetime="' . $user->datetimelastnotify->toDateTimeString() . '">' . $user->datetimelastnotify->format('Y-m-d') . '</time></span>';
 						endif;
 
 						$users[] = $u;

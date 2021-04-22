@@ -46,7 +46,7 @@ app('request')->merge(['hidemainmenu' => 1]);
 
 				<div class="form-group">
 					<label for="field-comment">{{ trans('contactreports::contactreports.comment') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<textarea name="fields[comment]" id="field-comment" class="form-control" rows="20" cols="40">{{ $row->comment }}</textarea>
+					<textarea name="fields[comment]" id="field-comment" class="form-control{{ $errors->has('fields.comment') ? ' is-invalid' : '' }}" required rows="20" cols="40">{{ $row->comment }}</textarea>
 				</div>
 			</fieldset>
 		</div>

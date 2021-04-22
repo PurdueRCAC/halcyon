@@ -25,6 +25,7 @@ return [
 	'history edited' => 'Edited by :user @ :timestamp',
 	'search news' => 'Search ContactReports',
 	'contacted' => 'Contacted',
+	'report formatting' => 'Text is formatted in <a class="help-dialog" href="#markdown">MarkDown</a>',
 	// Comment
 	'comment' => 'Comment',
 	'contactreport id' => 'Report ID',

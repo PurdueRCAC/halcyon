@@ -63,7 +63,7 @@ app('pathway')
 
 				<p flass="form-text">{{ trans('contactreports::contactreports.followup desc') }}</p>
 
-				<div class="form-group{{ $errors->has('timeperiodid') ? ' has-error' : '' }}">
+				<div class="form-group">
 					<label for="field-timeperiodid">{{ trans('contactreports::contactreports.timeperiod') }}</label>
 					<select class="form-control" name="fields[timeperiodid]" id="field-timeperiodid">
 						<option value="0"<?php if (!$row->imeperiodid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
