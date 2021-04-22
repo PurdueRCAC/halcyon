@@ -334,7 +334,7 @@ class CommentsController extends Controller
 	 * Delete a contact report comment
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/contactreports/delete/{id}
+	 * @apiUri    /api/contactreports/comments/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
