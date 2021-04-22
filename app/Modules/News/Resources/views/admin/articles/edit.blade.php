@@ -310,7 +310,7 @@ app('pathway')
 	<?php
 $help1a = "The news interface supports basic font formatting:
 
-*Bold* _example_, or you can have *_both_*.
+**Bold** _example_, or you can have **_both_**.
 
 These examples are fully interactive. Just type in the top box and see the formatting below live.";
 
@@ -334,7 +334,7 @@ By using [Title] notation immediately preceding a URL in parentheses, you can gi
 
 Email addresses will automatically be converted into mailto links: help@example.edu";
 
-$help1d = "You can also mention and link another news article by referencing it's news ID and the title of the article will be automatically retrieved:
+$help1d = "You can also mention and link another news article by referencing its news ID and the title of the article will be automatically retrieved:
 
 NEWS#658
 
@@ -358,8 +358,8 @@ $help1f = "Inline code can be created with single back-ticks to mark the beginni
 // This is an example of some code
 
 int main (int argc, char * argv[]) {
-	printf(\"hello world!\\n\");
-	return 0;
+    printf(\"hello world!\\n\");
+    return 0;
 }
 ```
 ";
@@ -371,32 +371,8 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 | Carter-A |      16 |     32GB |
 | Carter-B |      16 |     64GB |
 ";
-
-$help1h = "Several variables are available to automatically fill in certain fields for a news articles. These include dates, resources, and location. Variables are denoted such as '%date%'. Below is a listing of possible variables.
-
-Templates may also be written to contain placeholder text intended to be replaced by the author. These are variables that cannot be filled in automatically. They are denoted such as '%%insert text here%%'.
-
-List of possible variables:
-- %date%
-- %datetime%
-- %time%
-- %startdatetime%
-- %startdate%
-- %starttime%
-- %enddatetime%
-- %enddate%
-- %endtime%
-- %resources%
-- %location%
-
-Additionally these variables are available inside updates and will be filled with appropriate values for each update:
-
-- %updatetime%
-- %updatedate%
-- %updatedatetime%
-";
 ?>
-	<div id="markdown" class="dialog dialog-help" title="MarkDown Help">
+	<div id="markdown" class="dialog dialog-help tabs" title="MarkDown Help">
 		<ul>
 			<li><a href="#help1a">Fonts</a></li>
 			<li><a href="#help1b">Lists</a></li>
@@ -405,7 +381,6 @@ Additionally these variables are available inside updates and will be filled wit
 			<li><a href="#help1e">Line Breaks</a></li>
 			<li><a href="#help1f">Code</a></li>
 			<li><a href="#help1g">Tables</a></li>
-			<li><a href="#help1h">Variables</a></li>
 		</ul>
 		<div id="help1a">
 			<?php
@@ -483,14 +458,6 @@ Additionally these variables are available inside updates and will be filled wit
 			</div>
 			<p>Output text:</p>
 			<div id="help1goutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
-		</div>
-		<div id="help1h">
-			<div class="form-group">
-				<label for="help1hinput">Input text:</label>
-				<textarea id="help1hinput" class="form-control samplebox" rows="5" data-sample="h"><?php echo $help1h; ?></textarea>
-			</div>
-			<p>Output text:</p>
-			<div id="help1houtput" class="sampleoutput"></div>
 		</div>
 	</div>
 
