@@ -2246,6 +2246,11 @@ table.adminlist td.order input[type=number] {
 .align-center {
   text-align: center;
 }*/
+.sampleoutput {
+  border: 1px solid var(--input-border);
+  padding: 1em;
+  border-radius: 0.25em;
+}
 .adminlist {
   margin: 0;
 }

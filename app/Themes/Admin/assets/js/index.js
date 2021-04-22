@@ -162,7 +162,7 @@ jQuery(document).ready(function($){
 		$(this).toggleClass('active');
 	});
 
-	$('.tabs').tabs();
+	/*$('.tabs').tabs();
 
 	$('.dialog-help').dialog({
 		autoOpen: false,
@@ -176,7 +176,7 @@ jQuery(document).ready(function($){
 		if ($($(this).attr('href')).length) {
 			$($(this).attr('href')).dialog('open');
 		}
-	});
+	});*/
 
 	$('.main-navigation li.node>a').on('click', function(e){
 		$(this).parent().toggleClass('active');
