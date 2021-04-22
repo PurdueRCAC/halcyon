@@ -63,7 +63,15 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
-				<div class="form-group">
+				<div class="form-group form-block">
+					<div class="form-check">
+						<input type="checkbox" name="fields[template]" id="field-template" class="form-check-input" value="1"<?php if ($row->template) { echo ' checked="checked"'; } ?> />
+						<label for="field-template" class="form-check-label">{{ trans('news::news.template') }}</label>
+						<span class="form-text text-muted">Templates do not appear as public articles.</span>
+					</div>
+				</div>
+
+				<div class="form-group template-hide{{ $row->template ? ' hide' : '' }}">
 					<label for="template_select">Template</label>
 					<select id="template_select" name="template_select" class="form-control">
 						<option value="0">(No Template)</option>
@@ -71,14 +79,6 @@ app('pathway')
 							<option value="{{ route('api.news.read', ['id' => $template['id']]) }}" data-api="{{ route('api.news.read', ['id' => $template['id']]) }}">{{ $template['headline'] }}</option>
 						@endforeach
 					</select>
-				</div>
-
-				<div class="form-group form-block">
-					<div class="form-check">
-						<input type="checkbox" name="fields[template]" id="field-template" class="form-check-input" value="1"<?php if ($row->template) { echo ' checked="checked"'; } ?> />
-						<label for="field-template" class="form-check-label">{{ trans('news::news.template') }}</label>
-						<span class="form-text text-muted">Templates do not appear as public articles.</span>
-					</div>
 				</div>
 
 				<div class="form-group">
@@ -194,18 +194,18 @@ app('pathway')
 					</select>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group template-hide{{ $row->template ? ' hide' : '' }}">
 					<label for="field-datetimenews">{{ trans('news::news.publish up') }}:</label>
 					<span class="input-group input-datetime">
-						<input type="text" class="form-control datetime" name="fields[datetimenews]" id="field-datetimenews" value="<?php echo e(Carbon\Carbon::parse($row->datetimenews ? $row->datetimenews : $row->datetimenews)); ?>" />
+						<input type="text" class="form-control datetime" name="fields[datetimenews]" id="field-datetimenews" value="{{ $row->hasStart() ? $row->datetimenews->toDateTimeString() : '' }}" placeholder="{{ trans('global.immediately') }}" />
 						<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
 					</span>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group template-hide{{ $row->template ? ' hide' : '' }}">
 					<label for="field-datetimenewsend">{{ trans('news::news.publish down') }}:</label>
 					<span class="input-group input-datetime">
-						<input type="text" class="form-control datetime" name="fields[datetimenewsend]" id="field-datetimenewsend" value="<?php echo ($row->datetimenewsend ? e(Carbon\Carbon::parse($row->datetimenewsend)->toDateTimeString()) : ''); ?>" placeholder="<?php echo ($row->datetimenewsend ? '' : trans('global.never')); ?>" />
+						<input type="text" class="form-control datetime" name="fields[datetimenewsend]" id="field-datetimenewsend" value="{{ $row->hasEnd() ? $row->datetimenewsend->toDateTimeString() : '' }}" placeholder="{{ trans('global.never') }}" />
 						<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
 					</span>
 				</div>

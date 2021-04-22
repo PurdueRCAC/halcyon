@@ -275,8 +275,7 @@ class ArticlesController extends Controller
 			$row->datetimenews = '0000-00-00 00:00:00';
 			$row->datetimenewsend = '0000-00-00 00:00:00';
 		}
-
-		if ($row->datetimenewsend && $row->datetimenews > $row->datetimenewsend)
+		elseif ($row->datetimenewsend && $row->datetimenews > $row->datetimenewsend)
 		{
 			return redirect()->back()->with('error', trans('news::news.error.invalid time range'));
 		}
