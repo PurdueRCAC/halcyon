@@ -28,6 +28,7 @@ return [
 	'default' => 'Default',
 	'none' => '(none)',
 	'never' => '(never)',
+	'immediately' => 'immediately',
 	'unknown' => '(unknown)',
 	'undefined' => '(undefined)',
 	'empty' => '(empty)',

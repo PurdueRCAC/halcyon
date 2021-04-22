@@ -90,7 +90,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-title">{{ trans('knowledge::knowledge.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="page[title]" id="field-title" class="form-control required" required maxlength="250" value="{{ $page->title }}" />
+					<input type="text" name="page[title]" id="field-title" class="form-control{{ $errors->has('page.title') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $page->title }}" />
 					<span class="invalid-feedback">{{ trans('knowledge::knowledge.invalid.title') }}</span>
 				</div>
 
@@ -115,7 +115,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="page--content">{{ trans('knowledge::knowledge.content') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					{!! editor('page[content]', $page->content, ['rows' => 35, 'class' => 'required', 'required' => 'required']) !!}
+					{!! editor('page[content]', $page->content, ['rows' => 35, 'class' => ($errors->has('page.content') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
 					<span class="invalid-feedback">{{ trans('knowledge::knowledge.invalid.content') }}</span>
 				</div>
 			</fieldset>
@@ -134,7 +134,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-state">{{ trans('knowledge::knowledge.state') }}:</label><br />
+					<label for="field-state">{{ trans('knowledge::knowledge.state') }}:</label>
 					<select class="form-control" name="fields[state]" id="field-state"<?php if ($row->id && $row->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
 						<option value="1"<?php if ($row->state == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
 						<option value="0"<?php if ($row->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
@@ -143,12 +143,12 @@ app('pathway')
 
 				<!--
 				<div class="form-group">
-					<label for="field-publish_up">{{ trans('knowledge::knowledge.publish up') }}:</label><br />
+					<label for="field-publish_up">{{ trans('knowledge::knowledge.publish up') }}:</label>
 					{!! Html::input('calendar', 'fields[publish_up]', Carbon\Carbon::parse($row->publish_up ? $row->publish_up : $page->created_at)) !!}
 				</div>
 
 				<div class="form-group">
-					<label for="field-publish_down">{{ trans('knowledge::knowledge.publish down') }}:</label><br />
+					<label for="field-publish_down">{{ trans('knowledge::knowledge.publish down') }}:</label>
 					<span class="input-group input-datetime">
 						<input type="text" name="fields[publish_down]" id="field-publish_down" class="form-control datetime" value="<?php echo ($row->publish_down ? e(Carbon\Carbon::parse($row->publish_down)->toDateTimeString()) : ''); ?>" placeholder="<?php echo ($row->publish_down ? '' : trans('global.never')); ?>" />
 						<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>

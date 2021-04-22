@@ -91,7 +91,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-title">{{ trans('knowledge::knowledge.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="page[title]" id="field-title" class="form-control required" required maxlength="250" value="{{ $page->title }}" />
+					<input type="text" name="page[title]" id="field-title" class="form-control{{ $errors->has('page.title') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $page->title }}" />
 					<span class="invalid-feedback">{{ trans('knowledge::knowledge.invalid.title') }}</span>
 				</div>
 
@@ -110,7 +110,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="page--content">{{ trans('knowledge::knowledge.content') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					{!! editor('page[content]', $page->content, ['rows' => 35, 'class' => 'required', 'required' => 'required']) !!}
+					{!! editor('page[content]', $page->content, ['rows' => 35, 'class' => ($errors->has('page.title') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
 					<span class="invalid-feedback">{{ trans('knowledge::knowledge.invalid.content') }}</span>
 				</div>
 			</fieldset>
