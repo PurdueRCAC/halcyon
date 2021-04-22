@@ -20,7 +20,7 @@ class CommentResource extends JsonResource
 		$data['formattedcomment'] = $this->formattedComment;
 		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
 
-		$data['api'] = route('api.contactreports.comments.read', ['comment' => $this->id]);
+		$data['api'] = route('api.contactreports.comments.read', ['id' => $this->id]);
 
 		unset($data['report']);
 

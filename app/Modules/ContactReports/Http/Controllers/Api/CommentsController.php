@@ -4,10 +4,12 @@ namespace App\Modules\ContactReports\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Comment;
 use App\Modules\ContactReports\Http\Resources\CommentResource;
 use App\Modules\ContactReports\Http\Resources\CommentResourceCollection;
+use App\Halcyon\Utility\PorterStemmer;
 use Carbon\Carbon;
 
 /**
@@ -117,41 +119,49 @@ class CommentsController extends Controller
 			$filters['order_dir'] = Comment::$orderDir;
 		}
 
-		//$report = Report::findOrFail($filters['id']);
-
-		$query = Comment::query()->where('contactreportid', $filters['contactreportid']);
-
-		$cr = (new Comment)->getTable();
+		$query = Comment::query();
+		
+		if ($filters['contactreportid'])
+		{
+			$query->where('contactreportid', $filters['contactreportid']);
+		}
 
 		if ($filters['search'])
 		{
-			$query->where('commment', 'like', '%' . $filters['search'] . '%');
+			if (is_numeric($filters['search']))
+			{
+				$query->where('id', '=', (int)$filters['search']);
+			}
+			else
+			{
+				// Trim extra garbage
+				$keyword = preg_replace('/[^A-Za-z0-9]/', ' ', $filters['search']);
+
+				// Calculate stem for the word
+				$keywords = array();
+				$stem = PorterStemmer::Stem($keyword);
+				$stem = substr($stem, 0, 1) . $stem;
+				$keywords[] = $stem;
+
+				$match = implode(' +', $keywords);
+				$match = trim($match);
+
+				// Select score
+				$sql = "(MATCH(stemmedcomment) AGAINST ('" . $match . "') * 10 + 2 * (1 / (DATEDIFF(NOW(), datetimecreated) + 1))) AS score";
+
+				$query->select(['*', DB::raw($sql)]);
+
+				// Where match
+				$sql = "MATCH(stemmedcomment) AGAINST ('" . $match . "' IN BOOLEAN MODE)";
+
+				$query->whereRaw($sql)
+					->orderBy('score', 'desc');
+			}
 		}
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
-
-		/*$rows->each(function ($item, $key)
-		{
-			$item->url = route('site.contactreports.show', ['id' => $item->contactreportid]);
-			//$item->formatteddate = $item->formatDate($item->getOriginal('datetimenews'), $item->getOriginal('datetimenewsend'));
-			$item->formattedcomment = $item->formattedComment();
-			$item->canEdit   = false;
-			$item->canDelete = false;
-
-			if (auth()->user())
-			{
-				if (auth()->user()->can('edit contactreports'))
-				{
-					$item->canEdit   = true;
-				}
-				if (auth()->user()->can('delete contactreports'))
-				{
-					$item->canDelete = true;
-				}
-			}
-		});*/
 
 		return new CommentResourceCollection($rows);
 	}
@@ -184,7 +194,7 @@ class CommentsController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'comment' => 'nullable|string',
+			'comment' => 'nullable|string|max:8096',
 			'contactreportid' => 'required|integer',
 		]);
 
@@ -197,7 +207,7 @@ class CommentsController extends Controller
 
 		if (!$row->report)
 		{
-			return response()->json(['message' => __METHOD__ . '(): Invalid contactreport ID'], 415);
+			return response()->json(['message' => __METHOD__ . '(): Invalid contactreport ID'], 409);
 		}
 
 		// Set notice state
@@ -232,12 +242,12 @@ class CommentsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @param  integer  $comment
+	 * @param  integer  $id
 	 * @return Response
 	 */
-	public function read($comment)
+	public function read($id)
 	{
-		$item = Comment::findOrFail((int)$comment);
+		$item = Comment::findOrFail((int)$id);
 
 		return new CommentResource($item);
 	}
@@ -274,10 +284,10 @@ class CommentsController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @param   Request  $request
-	 * @param   integer  $comment
+	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function update(Request $request, $comment)
+	public function update(Request $request, $id)
 	{
 		$request->validate([
 			'comment' => 'nullable|string',
@@ -298,29 +308,16 @@ class CommentsController extends Controller
 			unset($data['userid']);
 		}
 
-		$row = Comment::findOrFail($comment);
+		$row = Comment::findOrFail($id);
 		$row->fill($data);
 
-		if ($row->contactreportid != $row->getOriginal('contactreportid'))
+		if ($request->has('contactreportid'))
 		{
-			/*if (!$row->contactreportid)
-			{
-				return response()->json(['message' => __METHOD__ . '(): Missing contactreport ID'], 415);
-			}*/
-
 			if (!$row->report)
 			{
-				return response()->json(['message' => __METHOD__ . '(): Invalid contactreport ID'], 415);
+				return response()->json(['message' => __METHOD__ . '(): Invalid contactreport ID'], 409);
 			}
 		}
-
-		/*if ($row->comment != $row->getOriginal('comment'))
-		{
-			if (!$row->comment)
-			{
-				return response()->json(['message' => __METHOD__ . '(): Invalid comment'], 415);
-			}
-		}*/
 
 		if (!$row->save())
 		{
@@ -348,9 +345,9 @@ class CommentsController extends Controller
 	 * @param   integer  $comment
 	 * @return  Response
 	 */
-	public function delete($comment)
+	public function delete($id)
 	{
-		$row = Comment::findOrFail($comment);
+		$row = Comment::findOrFail($id);
 
 		if (!$row->delete())
 		{

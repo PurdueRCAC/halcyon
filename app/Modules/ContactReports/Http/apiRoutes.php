@@ -41,20 +41,20 @@ $router->group(['prefix' => 'contactreports', 'middleware' => 'auth:api'], funct
 			'uses' => 'CommentsController@create',
 			'middleware' => 'can:create contactreports',
 		]);
-		$router->get('{comment}', [
+		$router->get('{id}', [
 			'as' => 'api.contactreports.comments.read',
 			'uses' => 'CommentsController@read',
-		])->where('comment', '[0-9]+');
-		$router->put('{comment}', [
+		])->where('id', '[0-9]+');
+		$router->put('{id}', [
 			'as' => 'api.contactreports.comments.update',
 			'uses' => 'CommentsController@update',
 			'middleware' => 'can:edit contactreports',
-		])->where('comment', '[0-9]+');
-		$router->delete('{comment}', [
+		])->where('id', '[0-9]+');
+		$router->delete('{id}', [
 			'as' => 'api.contactreports.comments.delete',
 			'uses' => 'CommentsController@delete',
 			'middleware' => 'can:delete contactreports',
-		])->where('comment', '[0-9]+');
+		])->where('id', '[0-9]+');
 	});
 
 	// Types
