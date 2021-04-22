@@ -737,10 +737,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		timeFormat: 'HH:mm:00'
 	});
 
+	$('.tabs').tabs();
+
 	$('.dialog-help').dialog({
 		autoOpen: false,
 		modal: true,
-		width: 550
+		width: 600
 	});
 
 	$('.help-dialog').on('click', function (e) {
