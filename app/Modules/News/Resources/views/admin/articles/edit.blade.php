@@ -159,30 +159,6 @@ app('pathway')
 			</fieldset>
 		</div>
 		<div class="col col-md-5">
-			<!-- <table class="meta">
-				<caption>Metadata</caption>
-				<tbody>
-					<tr>
-						<th scope="row">{{ trans('news::news.created') }}:</th>
-						<td>
-							<?php if ($row->datetimecreated && $row->datetimecreated != '0000-00-00 00:00:00'): ?>
-								{{ $row->datetimecreated }}
-							<?php else: ?>
-								{{ trans('global.unknown') }}
-							<?php endif; ?>
-						</td>
-					</tr>
-					<?php if ($row->isUpdated()): ?>
-						<tr>
-							<th scope="row"><?php echo trans('news::news.removed'); ?>:</th>
-							<td>
-								{{ $row->datetimeupdate }}
-							</td>
-						</tr>
-					<?php endif; ?>
-				</tbody>
-			</table> -->
-
 			<fieldset class="adminform">
 				<legend>{{ trans('global.publishing') }}</legend>
 
@@ -213,92 +189,94 @@ app('pathway')
 
 			<fieldset class="adminform">
 				<legend>Variables</legend>
+
 				<p>Variables can be included in the headline or body of an article. These allow for inserting information set in other fields, such as start date, end date, location, and/or resources.</p>
-			<table class="table table-bordered">
-				<caption class="sr-only">Available Variables</caption>
-				<tbody>
-					<tr>
-						<th scope="row">%date%</th>
-						<td>
-							Includes end date &amp; time, if set. Example:<br />
-							Thursday, April 15, 2021<br />
-							April 15 - 16, 2021
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">%datetime%</th>
-						<td>
-							Includes end date &amp; time, if set. Example:<br />
-							Thursday, April 15, 2021 at 3:45pm<br />
-							Thursday, April 15, 2021 from 3:45pm - 4:45pm<br />
-							Thursday, April 15, 2021 at 3:45pm - Friday, April 16, 2021 at 3:45pm
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">%time%</th>
-						<td>
-							Includes end date &amp; time, if set. Example:<br />
-							3:45pm<br />
-							3:45pm - 4:45pm
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">%updatedatetime%</th>
-						<td>
-							Updated date &amp; time
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">%startdatetime%</th>
-						<td>
-							Start date &amp; time
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">%startdate%</th>
-						<td>
-							Start date
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">%starttime%</th>
-						<td>
-							Start time
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">%enddatetime%</th>
-						<td>
-							End date &amp; time
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">%enddate%</th>
-						<td>
-							End date
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">%endtime%</th>
-						<td>
-							End time
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">%location%</th>
-						<td>
-							Location
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">%resources%</th>
-						<td>
-							List of tagged resource names. Example:<br />
-							Bell, Brown and Halstead
-						</td>
-					</tr>
-				</tbody>
-			</table>
+
+				<table class="table table-bordered">
+					<caption class="sr-only">Available Variables</caption>
+					<tbody>
+						<tr>
+							<th scope="row">%date%</th>
+							<td>
+								Includes end date &amp; time, if set. Example:<br />
+								Thursday, April 15, 2021<br />
+								April 15 - 16, 2021
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">%datetime%</th>
+							<td>
+								Includes end date &amp; time, if set. Example:<br />
+								Thursday, April 15, 2021 at 3:45pm<br />
+								Thursday, April 15, 2021 from 3:45pm - 4:45pm<br />
+								Thursday, April 15, 2021 at 3:45pm - Friday, April 16, 2021 at 3:45pm
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">%time%</th>
+							<td>
+								Includes end date &amp; time, if set. Example:<br />
+								3:45pm<br />
+								3:45pm - 4:45pm
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">%updatedatetime%</th>
+							<td>
+								Updated date &amp; time
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">%startdatetime%</th>
+							<td>
+								Start date &amp; time
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">%startdate%</th>
+							<td>
+								Start date
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">%starttime%</th>
+							<td>
+								Start time
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">%enddatetime%</th>
+							<td>
+								End date &amp; time
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">%enddate%</th>
+							<td>
+								End date
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">%endtime%</th>
+							<td>
+								End time
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">%location%</th>
+							<td>
+								Location
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">%resources%</th>
+							<td>
+								List of tagged resource names. Example:<br />
+								Bell, Brown and Halstead
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</fieldset>
 
 			<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />

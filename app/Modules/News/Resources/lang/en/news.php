@@ -5,6 +5,7 @@ return [
 	'configuration' => 'Pages Configuration',
 	// Sub-menu
 	'articles' => 'Articles',
+	'article' => 'Article',
 	'templates' => 'Templates',
 	'types' => 'Types',
 	'today' => 'Today',

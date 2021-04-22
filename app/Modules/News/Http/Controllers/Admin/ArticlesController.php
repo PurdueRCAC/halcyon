@@ -11,6 +11,7 @@ use App\Modules\News\Models\Type;
 use App\Modules\News\Models\Stemmedtext;
 use App\Halcyon\Http\StatefulRequest;
 use App\Halcyon\Utility\PorterStemmer;
+use Carbon\Carbon;
 
 class ArticlesController extends Controller
 {
@@ -236,7 +237,7 @@ class ArticlesController extends Controller
 			'fields.body' => 'required|string|max:15000',
 			'fields.published' => 'nullable|integer|in:0,1',
 			'fields.template' => 'nullable|integer|in:0,1',
-			'fields.datetimenews' => 'required|date',
+			'fields.datetimenews' => 'nullable|date',
 			'fields.datetimenewsend' => 'nullable|date',
 			'fields.location' => 'nullable|string|max:32',
 			'fields.url' => 'nullable|url',
@@ -245,6 +246,10 @@ class ArticlesController extends Controller
 		$fields = $request->input('fields');
 		$fields['location'] = isset($fields['location']) ? (string)$fields['location'] : '';
 
+		if (array_key_exists('datetimenews', $fields) && !trim($fields['datetimenews']))
+		{
+			unset($fields['datetimenews']);
+		}
 		if (array_key_exists('datetimenewsend', $fields) && !trim($fields['datetimenewsend']))
 		{
 			unset($fields['datetimenewsend']);
@@ -272,12 +277,20 @@ class ArticlesController extends Controller
 		// Templates shouldn't have datetimes set
 		if ($row->template)
 		{
-			$row->datetimenews = '0000-00-00 00:00:00';
-			$row->datetimenewsend = '0000-00-00 00:00:00';
+			//$row->datetimenews = '0000-00-00 00:00:00';
+			//$row->datetimenewsend = '0000-00-00 00:00:00';
 		}
-		elseif ($row->datetimenewsend && $row->datetimenews > $row->datetimenewsend)
+		else
 		{
-			return redirect()->back()->with('error', trans('news::news.error.invalid time range'));
+			if (!$row->hasStart())
+			{
+				$row->datetimenews = Carbon::now();
+			}
+
+			if ($row->datetimenewsend && $row->datetimenews > $row->datetimenewsend)
+			{
+				return redirect()->back()->with('error', trans('news::news.error.invalid time range'));
+			}
 		}
 
 		if ($row->url && !filter_var($row->url, FILTER_VALIDATE_URL))
@@ -300,7 +313,7 @@ class ArticlesController extends Controller
 			$row->setAssociations($request->input('associations'));
 		}
 
-		return $this->cancel()->with('success', trans('global.messages.' . ($id ? 'item updated' : 'item created')));
+		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created'), ['name' => trans('news::news.article')]));
 	}
 
 	/**
