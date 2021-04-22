@@ -186,10 +186,10 @@ jQuery(document).ready(function($){
 		e.preventDefault();
 
 		var btn = $('#mode'),
-			mode = btn.data('mode');
+			mode = btn.attr('data-mode');
 
 		$.ajax({
-			url: btn.data('api'),
+			url: btn.attr('data-api'),
 			type: 'put',
 			data: {
 				facets: {
@@ -200,8 +200,8 @@ jQuery(document).ready(function($){
 			async: false,
 			success: function (response) {
 				$('html').attr('data-mode', mode);
-				console.log($('html').attr('data-mode'));
-				btn.attr('data-mode', mode);
+
+				btn.attr('data-mode', mode == 'dark' ? 'light' : 'dark');
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
 				console.log(xhr);
