@@ -87,7 +87,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-name">{{ trans('queues::queues.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control required" required pattern="[a-zA-Z0-9_]{1,64}" maxlength="64" value="{{ $row->name }}" data-invalid-msg="The field 'Queue Name' is required." />
+					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required pattern="[a-zA-Z0-9_]{1,64}" maxlength="64" value="{{ $row->name }}" data-invalid-msg="The field 'Queue Name' is required." />
 					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
 				</div>
 
@@ -96,7 +96,7 @@ app('pathway')
 						<div class="form-group">
 							<label for="field-schedulerid">{{ trans('queues::queues.scheduler') }}:  <span class="required">{{ trans('global.required') }}</span></label>
 							<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
-							<select name="fields[schedulerid]" id="field-schedulerid" class="form-control required" required>
+							<select name="fields[schedulerid]" id="field-schedulerid" class="form-control{{ $errors->has('fields.schedulerid') ? ' is-invalid' : '' }}" required>
 								<option value="0">{{ trans('global.none') }}</option>
 								@foreach ($schedulers as $scheduler)
 									<?php $selected = ($scheduler->id == $row->schedulerid ? ' selected="selected"' : ''); ?>
@@ -132,7 +132,7 @@ app('pathway')
 							$mem   = '-';
 							?>
 							<label for="field-subresourceid">{{ trans('queues::queues.subresource') }}:  <span class="required">{{ trans('global.required') }}</span></label>
-							<select name="fields[subresourceid]" id="field-subresourceid" class="form-control required" required>
+							<select name="fields[subresourceid]" id="field-subresourceid" class="form-control{{ $errors->has('fields.subresourceid') ? ' is-invalid' : '' }}" required>
 								<option value="0">{{ trans('global.none') }}</option>
 								<?php foreach ($resources as $resource): ?>
 									<?php

@@ -47,13 +47,13 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-hostname">{{ trans('queues::queues.hostname') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[hostname]" id="field-hostname" class="form-control required" required value="{{ $row->hostname }}" />
+					<input type="text" name="fields[hostname]" id="field-hostname" class="form-control{{ $errors->has('fields.hostname') ? ' is-invalid' : '' }}" required value="{{ $row->hostname }}" />
 					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid hostname') }}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="field-queuesubresourceid">{{ trans('queues::queues.resource') }}:</label>
-					<select name="fields[queuesubresourceid]" id="field-queuesubresourceid" class="form-control">
+					<label for="field-queuesubresourceid">{{ trans('queues::queues.resource') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<select name="fields[queuesubresourceid]" id="field-queuesubresourceid" class="form-control{{ $errors->has('fields.queuesubresourceid') ? ' is-invalid' : '' }}" required>
 						<option value="0">{{ trans('global.none') }}</option>
 						<?php foreach ($resources as $resource): ?>
 							<?php $children = $resource->children()->get();
@@ -124,8 +124,8 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-schedulerpolicyid">{{ trans('queues::queues.scheduler policy') }}:</label>
-					<select name="fields[schedulerpolicyid]" id="field-schedulerpolicyid" class="form-control">
+					<label for="field-schedulerpolicyid">{{ trans('queues::queues.scheduler policy') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<select name="fields[schedulerpolicyid]" id="field-schedulerpolicyid" class="form-control{{ $errors->has('fields.schedulerpolicyid') ? ' is-invalid' : '' }}" required>
 						<option value="0">{{ trans('queues::queues.all scheduler policies') }}</option>
 						<?php foreach ($policies as $policy): ?>
 							<?php $selected = ($policy->id == $row->schedulerpolicyid ? ' selected="selected"' : ''); ?>

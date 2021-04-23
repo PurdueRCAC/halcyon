@@ -238,7 +238,7 @@ class SchedulersController extends Controller
 			'batchsystem'             => 'nullable|integer|min:1',
 			'datetimedraindown'       => 'nullable|string',
 			'datetimelastimportstart' => 'nullable|string',
-			'schedulerpolicyid'       => 'nullable|integer',
+			'schedulerpolicyid'       => 'required|integer',
 			'defaultmaxwalltime'      => 'required|integer',
 		]);
 

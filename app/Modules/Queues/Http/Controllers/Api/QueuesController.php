@@ -537,65 +537,63 @@ class QueuesController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'schedulerid'      => 'nullable|integer',
-			'subresourceid'    => 'nullable|integer',
-			'name'             => 'required|string|max:64',
-			'groupid'          => 'nullable|integer',
-			'queuetype'        => 'required|integer',
-			'automatic'        => 'nullable|integer',
-			'free'             => 'nullable|integer',
+			'schedulerid'       => 'nullable|integer',
+			'subresourceid'     => 'nullable|integer',
+			'name'              => 'required|string|max:64',
+			'groupid'           => 'nullable|integer',
+			'queuetype'         => 'required|integer',
+			'automatic'         => 'nullable|integer',
+			'free'              => 'nullable|integer',
 			'schedulerpolicyid' => 'nullable|integer',
-			'enabled'          => 'nullable|integer',
-			'started'          => 'nullable|integer',
-			'reservation'      => 'nullable|integer',
-			'cluster'          => 'nullable|string|max:32',
-			'priority'         => 'nullable|integer',
-			'defaultwalltime'  => 'nullable|integer',
-			'maxjobsqueued'    => 'nullable|integer',
+			'enabled'           => 'nullable|integer',
+			'started'           => 'nullable|integer',
+			'reservation'       => 'nullable|integer',
+			'cluster'           => 'nullable|string|max:32',
+			'priority'          => 'nullable|integer',
+			'defaultwalltime'   => 'nullable|integer',
+			'maxjobsqueued'     => 'nullable|integer',
 			'maxjobsqueueduser' => 'nullable|integer',
-			'maxjobsrun'       => 'nullable|integer',
-			'maxjobsrunuser'   => 'nullable|integer',
-			'maxjobscore'      => 'nullable|integer',
-			'nodecoresdefault' => 'nullable|integer',
-			'nodecoresmin'     => 'nullable|integer',
-			'nodecoresmax'     => 'nullable|integer',
-			'nodememmin'       => 'nullable|string|max:5',
-			'nodememmax'       => 'nullable|string|max:5',
-			'aclusersenabled'  => 'nullable|integer',
-			'aclgroups'        => 'nullable|string|max:255',
-			'maxijobfactor'    => 'nullable|integer',
+			'maxjobsrun'        => 'nullable|integer',
+			'maxjobsrunuser'    => 'nullable|integer',
+			'maxjobscore'       => 'nullable|integer',
+			'nodecoresdefault'  => 'nullable|integer',
+			'nodecoresmin'      => 'nullable|integer',
+			'nodecoresmax'      => 'nullable|integer',
+			'nodememmin'        => 'nullable|string|max:5',
+			'nodememmax'        => 'nullable|string|max:5',
+			'aclusersenabled'   => 'nullable|integer',
+			'aclgroups'         => 'nullable|string|max:255',
+			'maxijobfactor'     => 'nullable|integer',
 			'maxijobuserfactor' => 'nullable|integer',
 		]);
 
-		$queue = Queue::create($request->all());
-		/*$queue = new Queue([
-			'name'         => $request->input('name'),
-			'parentid'     => $request->input('parentid'),
-			'rolename'     => $request->input('rolename'),
-			'listname'     => $request->input('listname'),
-			'queuetype' => $request->input('queuetype'),
-			'producttype'  => $request->input('producttype')
-		]);
+		$queue = new Queue;
+		$queue->fill($request->all());
 
 		if ($queue->schedulerid && !$queue->scheduler)
 		{
-			abort(415, trans('Invalid scheduler ID'));
+			return response()->json(trans('queues::queues.error.invalid scheduler id'), 409);
+		}
+
+		if ($queue->subresourceid && !$queue->subresource)
+		{
+			return response()->json(trans('queues::queues.error.invalid subresource id'), 409);
 		}
 
 		if ($queue->groupid && !$queue->group)
 		{
-			abort(415, trans('Invalid group ID'));
+			return response()->json(trans('queues::queues.error.invalid group id'), 409);
 		}
 
 		if ($queue->schedulerpolicyid && !$queue->schedulerPolicy)
 		{
-			abort(415, trans('Invalid group ID'));
+			return response()->json(trans('queues::queues.error.invalid schedulerpolicy id'), 409);
 		}
 
 		if (!$queue->save())
 		{
-			abort(415, $queue->getError());
-		}*/
+			return response()->json(trans('queues::queues.error.creation failed'), 500);
+		}
 
 		return new QueueResource($queue);
 	}
@@ -901,33 +899,33 @@ class QueuesController extends Controller
 	public function update($id, Request $request)
 	{
 		$request->validate([
-			'schedulerid'      => 'nullable|integer',
-			'subresourceid'    => 'nullable|integer',
-			'name'             => 'nullable|string|max:64',
-			'groupid'          => 'nullable|integer',
-			'queuetype'        => 'nullable|integer',
-			'automatic'        => 'nullable|integer',
-			'free'             => 'nullable|integer',
+			'schedulerid'       => 'nullable|integer',
+			'subresourceid'     => 'nullable|integer',
+			'name'              => 'nullable|string|max:64',
+			'groupid'           => 'nullable|integer',
+			'queuetype'         => 'nullable|integer',
+			'automatic'         => 'nullable|integer',
+			'free'              => 'nullable|integer',
 			'schedulerpolicyid' => 'nullable|integer',
-			'enabled'          => 'nullable|integer',
-			'started'          => 'nullable|integer',
-			'reservation'      => 'nullable|integer',
-			'cluster'          => 'nullable|string|max:32',
-			'priority'         => 'nullable|integer',
-			'defaultwalltime'  => 'nullable|integer',
-			'maxjobsqueued'    => 'nullable|integer',
+			'enabled'           => 'nullable|integer',
+			'started'           => 'nullable|integer',
+			'reservation'       => 'nullable|integer',
+			'cluster'           => 'nullable|string|max:32',
+			'priority'          => 'nullable|integer',
+			'defaultwalltime'   => 'nullable|integer',
+			'maxjobsqueued'     => 'nullable|integer',
 			'maxjobsqueueduser' => 'nullable|integer',
-			'maxjobsrun'       => 'nullable|integer',
-			'maxjobsrunuser'   => 'nullable|integer',
-			'maxjobscore'      => 'nullable|integer',
-			'nodecoresdefault' => 'nullable|integer',
-			'nodecoresmin'     => 'nullable|integer',
-			'nodecoresmax'     => 'nullable|integer',
-			'nodememmin'       => 'nullable|string|max:5',
-			'nodememmax'       => 'nullable|string|max:5',
-			'aclusersenabled'  => 'nullable|integer',
-			'aclgroups'        => 'nullable|string|max:255',
-			'maxijobfactor'    => 'nullable|integer',
+			'maxjobsrun'        => 'nullable|integer',
+			'maxjobsrunuser'    => 'nullable|integer',
+			'maxjobscore'       => 'nullable|integer',
+			'nodecoresdefault'  => 'nullable|integer',
+			'nodecoresmin'      => 'nullable|integer',
+			'nodecoresmax'      => 'nullable|integer',
+			'nodememmin'        => 'nullable|string|max:5',
+			'nodememmax'        => 'nullable|string|max:5',
+			'aclusersenabled'   => 'nullable|integer',
+			'aclgroups'         => 'nullable|string|max:255',
+			'maxijobfactor'     => 'nullable|integer',
 			'maxijobuserfactor' => 'nullable|integer',
 		]);
 
@@ -935,18 +933,8 @@ class QueuesController extends Controller
 		$queue->update($request->all());
 
 		/*$queue = Queue::findOrFail($id);
-		$queue->set([
-			'name'         => $request->get('name'),
-			'parentid'     => $request->get('parentid'),
-			'rolename'     => $request->get('rolename'),
-			'listname'     => $request->get('listname'),
-			'queuetype' => $request->get('queuetype'),
-			'producttype'  => $request->get('producttype')
-		]);
 
 		$queue->save();*/
-
-		//event(new QueueUpdated($queue));
 
 		return new QueuesQueue($queue);
 	}
