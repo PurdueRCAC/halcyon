@@ -37,16 +37,16 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
-				<div class="form-group{{ $errors->has('title') ? ' is-invalid' : '' }}">
+				<div class="form-group">
 					<label for="field-title">{{ trans('menus::menus.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[title]" id="field-title" class="form-control required" required maxlength="250" value="{{ $row->title }}" />
+					<input type="text" name="fields[title]" id="field-title" class="form-control{{ $errors->has('fields.title') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->title }}" />
 					<span class="invalid-feedback">{{ trans('menus::menus.invalid.title') }}</span>
 					{!! $errors->first('title', '<span class="form-text text-danger">:message</span>') !!}
 				</div>
 
-				<div class="form-group{{ $errors->has('menutype') ? ' is-invalid' : '' }}">
+				<div class="form-group">
 					<label for="field-menutype">{{ trans('menus::menus.item type') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[menutype]" id="field-menutype" class="form-control required" required maxlength="250" value="{{ $row->menutype }}" />
+					<input type="text" name="fields[menutype]" id="field-menutype" class="form-control{{ $errors->has('fields.menutype') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->menutype }}" />
 					<span class="invalid-feedback">{{ trans('menus::menus.invalid.type') }}</span>
 					{!! $errors->first('menutype', '<span class="form-text text-danger">:message</span>') !!}
 				</div>

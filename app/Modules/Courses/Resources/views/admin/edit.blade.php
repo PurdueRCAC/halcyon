@@ -44,7 +44,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-userid">{{ trans('courses::courses.owner') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<span class="input-group">
-						<input type="text" name="fields[userid]" id="field-userid" data-show="#field-options" class="form-control form-users redirect" required data-uri="{{ route('api.users.index') }}?search=%s" data-location="{{ $row->id ? route('admin.courses.edit', ['id' => $row->id]) : route('admin.courses.create') }}?userid=%s" value="{{ ($row->user ? $row->user->name . ':' . $row->userid : '') }}" />
+						<input type="text" name="fields[userid]" id="field-userid" data-show="#field-options" class="form-control form-users redirect{{ $errors->has('fields.userid') ? ' is-invalid' : '' }}" required data-uri="{{ route('api.users.index') }}?search=%s" data-location="{{ $row->id ? route('admin.courses.edit', ['id' => $row->id]) : route('admin.courses.create') }}?userid=%s" value="{{ ($row->user ? $row->user->name . ':' . $row->userid : '') }}" />
 						<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
 					</span>
 				</div>
@@ -62,7 +62,7 @@ app('pathway')
 
 					<div class="form-group">
 						<label for="field-resourceid">{{ trans('courses::courses.resource') }}: <span class="required">{{ trans('global.required') }}</span></label>
-						<select name="field[resourceid]" id="field-resourceid" class="form-control required" required>
+						<select name="field[resourceid]" id="field-resourceid" class="form-control{{ $errors->has('fields.resourceid') ? ' is-invalid' : '' }}" required>
 							<option value="0">{{ trans('global.none') }}</option>
 							<?php foreach ($resources as $resource): ?>
 								<?php
@@ -112,20 +112,20 @@ app('pathway')
 
 						<div class="form-group type-course type-dependant">
 							<label for="field-semester">{{ trans('courses::courses.semester') }}: <span class="required">{{ trans('global.required') }}</span></label>
-							<input type="text" name="fields[semester]" id="field-semester" class="form-control" maxlength="16" value="{{ $row->semester }}" />
+							<input type="text" name="fields[semester]" id="field-semester" class="form-control{{ $errors->has('fields.semester') ? ' is-invalid' : '' }}" required maxlength="16" value="{{ $row->semester }}" />
 						</div>
 
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group type-course type-dependant">
 									<label for="field-crn">{{ trans('courses::courses.crn') }}:</label>
-									<input type="text" name="fields[crn]" id="field-crn" class="form-control" maxlength="8" value="{{ $row->crn }}" />
+									<input type="text" name="fields[crn]" id="field-crn" class="form-control{{ $errors->has('fields.crn') ? ' is-invalid' : '' }}" maxlength="8" value="{{ $row->crn }}" />
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group type-course type-dependant">
 									<label for="field-coursenumber">{{ trans('courses::courses.course number') }}:</label>
-									<input type="text" name="fields[coursenumber]" id="field-coursenumber" class="form-control" maxlength="255" value="{{ $row->coursenumber }}" />
+									<input type="text" name="fields[coursenumber]" id="field-coursenumber" class="form-control{{ $errors->has('fields.coursenumber') ? ' is-invalid' : '' }}" maxlength="255" value="{{ $row->coursenumber }}" />
 								</div>
 							</div>
 						</div>
@@ -134,13 +134,13 @@ app('pathway')
 							<div class="col-md-6">
 								<div class="form-group type-course type-dependant">
 									<label for="field-department">{{ trans('courses::courses.department') }}:</label>
-									<input type="text" name="fields[department]" id="field-department" class="form-control" maxlength="4" value="{{ $row->department }}" />
+									<input type="text" name="fields[department]" id="field-department" class="form-control{{ $errors->has('fields.department') ? ' is-invalid' : '' }}" maxlength="4" value="{{ $row->department }}" />
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group type-course type-dependant">
 									<label for="field-reference">{{ trans('courses::courses.reference') }}:</label>
-									<input type="text" name="fields[reference]" id="field-reference" class="form-control" maxlength="64" value="{{ $row->reference }}" />
+									<input type="text" name="fields[reference]" id="field-reference" class="form-control{{ $errors->has('fields.reference') ? ' is-invalid' : '' }}" maxlength="64" value="{{ $row->reference }}" />
 								</div>
 							</div>
 						</div>
@@ -168,7 +168,7 @@ app('pathway')
 								{{ $member->userid }}
 							</td>
 							<td>
-								{{ $member->user->name }}
+								{{ $member->user ? $member->user->name : trans('global.unknown') }}
 							</td>
 							<td class="text-right">
 								<a href="#member-{{ $member->id }}" class="btn btn-danger remove-member" data-id="{{ $member->id }}" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.courses.members.delete', ['id' => $row->id]) }}">

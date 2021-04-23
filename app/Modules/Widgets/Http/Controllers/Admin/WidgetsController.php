@@ -624,7 +624,7 @@ class WidgetsController extends Controller
 		}
 
 		// Redirect
-		return $this->cancel();
+		return $this->cancel($request);
 	}
 
 	/**

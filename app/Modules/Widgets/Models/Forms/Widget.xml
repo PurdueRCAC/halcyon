@@ -71,6 +71,7 @@
 			description="widgets::widgets.position description"
 			label="widgets::widgets.position"
 			maxlength="50"
+			required="true"
 		/>
 
 		<field name="access" type="accesslevel"

@@ -339,10 +339,12 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 					</div>
 				</div>
 
+				<!--
 				<div class="form-group">
 					<?php echo $form->getLabel('language'); ?>
 					<?php echo $form->getInput('language'); ?>
 				</div>
+				-->
 
 				<div class="form-group">
 					<?php echo $form->getLabel('note'); ?>

@@ -23,15 +23,12 @@ $( document ).ready(function() {
 				$('.menutype-'+$(el).val()).show();
 			}
 		});
-	$('#fields_page_id').on('change', function(e){
+
+		$('#fields_page_id').on('change', function(e){
 		if ($('#fields_title').val() == '') {
 			$('#fields_title').val($(this).children("option:selected").text().replace(/\|\— /g, ''));
 		}
 	});
-	/*$('input[type="checkbox"].flat-blue, input[type="radio"].flat-blue').iCheck({
-		checkboxClass: 'icheckbox_flat-blue',
-		radioClass: 'iradio_flat-blue'
-	});*/
 
 	var data = $('#menutypes');
 	if (data.length) {
@@ -166,8 +163,6 @@ app('pathway')
 						<?php echo $form->getInput('link'); ?>
 					</div>
 				<?php endif*/ ?>
-
-				
 
 				<div class="form-group">
 					<?php echo $form->getLabel('menutype'); ?>
