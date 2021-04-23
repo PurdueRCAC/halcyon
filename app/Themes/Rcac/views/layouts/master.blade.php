@@ -193,6 +193,8 @@
 				</div>
 			</div><!-- / .top -->
 
+			@widget('header')
+
 			<nav class="navbar navbar-light navbar-expand-lg blackbar" aria-label="Main Menu">
 				<div class="container">
 					<div class="navbar-header">

@@ -11012,30 +11012,30 @@ table.gsc-search-box .gsc-search-button {
 	padding-left: 15px;
 	padding-right: 15px
 }
-.top .department > a {
+.top .department a {
 	display: inline-block;
 	line-height: 1.2em;
 	border: none;
 	padding:0
 }
-.top .department > a:focus {
+.top .department a:focus {
 	outline: 1px dotted #dedede;
 	outline-offset:1px
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
-	.top .department > a {
+	.top .department a {
 		display: inline-block;
 		padding: 2px 0px;
 		line-height:1.1em
 	}
 }
-.top .department > a,
-.top .department > a:link,
-.top .department > a:visited,
-.top .department > a:hover,
-.top .department > a:focus,
-.top .department > a:active {
+.top .department a,
+.top .department a:link,
+.top .department a:visited,
+.top .department a:hover,
+.top .department a:focus,
+.top .department a:active {
 	color: #fff;
 	font-weight: 600;
 	text-decoration:none

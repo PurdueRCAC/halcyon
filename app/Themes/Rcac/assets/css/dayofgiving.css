@@ -1,0 +1,64 @@
+﻿.dayofgiving {
+	background-color: #daaa00;
+	background-color: #333;
+	position: relative;
+	font-family: acumin-pro-semi-condensed, "Franklin Gothic", sans-serif;
+	color: #fff;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+.dayofgiving a {
+	text-decoration: none;
+	color: #fff;
+}
+.dayofgiving em {
+	font-weight: normal;
+}
+.dayofgiving-logo {
+	position: absolute;
+	top: -80%;
+	left: 6.5em;
+	z-index: 500;
+}
+.dayofgiving span,
+.dayofgiving a span {
+	color: #daaa00;
+}
+.dayofgiving a span {
+	margin-right: 9em;
+}
+.dayofgiving .btn {
+	background-color: #daaa00;
+	color: #333;
+	margin-left: 4em;
+	border-radius: 0;
+	padding: 6px 10px;
+	font-family: acumin-pro-condensed, "Franklin Gothic", sans-serif;
+}
+@media (max-width: 767px) {
+	.dayofgiving {
+		padding: 1em;
+	}
+	.dayofgiving-logo {
+		position: static;
+		left: auto;
+		top: auto;
+		float: left;
+	}
+	.dayofgiving a span {
+		margin-right: auto;
+	}
+	.dayofgiving a span,
+	.dayofgiving em {
+		display: block;
+	}
+	.dayofgiving-callout {
+		font-size: 85%;
+		line-height: 1;
+	}
+	.dayofgiving .btn {
+		position: absolute;
+		top: -3em;
+		right: 0;
+	}
+}
