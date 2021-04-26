@@ -240,7 +240,7 @@ class DbmLdap
 			$status = 404;
 
 			// Look for user record in LDAP
-			$result = $ldap->search()
+			$results = $ldap->search()
 				->where('cn', '=', $event->user->username)
 				->select(['cn', 'mail', 'employeeNumber'])
 				->first();
@@ -250,9 +250,9 @@ class DbmLdap
 				$status = 200;
 
 				// Set user data
-				$event->user->name = Str::properCaseNoun($result['cn'][0]);
-				$event->user->puid = $result['employeeNumber'][0];
-				//$event->user->email = $result['mail'][0];
+				$event->user->name = Str::properCaseNoun($results['cn'][0]);
+				$event->user->puid = $results['employeeNumber'][0];
+				//$event->user->email = $results['mail'][0];
 				$event->user->save();
 			}
 		}
