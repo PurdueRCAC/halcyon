@@ -299,21 +299,22 @@ class User extends Model implements
 	public function getSurnameAttribute()
 	{
 		$name = explode(' ', $this->name);
-		$surname = end($name);
+		//$surname = end($name);
 
-		return $surname;
+		return array_pop($name);
 	}
 
 	/**
-	 * Get givenname
+	 * Get given name
 	 *
 	 * @return  string
 	 */
-	public function getGivennameAttribute()
+	public function getGivenNameAttribute()
 	{
 		$name = explode(' ', $this->name);
+		$surname = array_pop($name);
 
-		return $name[0];
+		return implode(' ', $name);
 	}
 
 	/**
