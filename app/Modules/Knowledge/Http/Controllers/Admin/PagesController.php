@@ -229,7 +229,7 @@ class PagesController extends Controller
 
 				if (!$row->save())
 				{
-					return redirect()->back()->withError(trans('knowledge::knowledge.failed to attach snippets'));
+					return redirect()->back()->withError(trans('knowledge::knowledge.error.failed to attach snippets'));
 				}
 
 				$parents[$id] = $row->id;
@@ -359,7 +359,7 @@ class PagesController extends Controller
 			return redirect()->back()->withError($row->getError());
 		}
 
-		return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.update success'));
+		return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created'), ['name' => trans('knowledge::knowledge.page')]));
 	}
 
 	/**
@@ -377,7 +377,7 @@ class PagesController extends Controller
 			return redirect()->back()->withError($row->getError());
 		}
 
-		return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.update success'));
+		return redirect(route('admin.knowledge.index'))->withSuccess(trans('knowledge::knowledge.tree rebuilt'));
 	}
 
 	/**
@@ -421,7 +421,7 @@ class PagesController extends Controller
 		// Check for an ID
 		if (count($ids) < 1)
 		{
-			$request->session()->flash('warning', trans($state ? 'knowledge::knowledge.select to publish' : 'knowledge::knowledge.select to unpublish'));
+			$request->session()->flash('warning', trans('knowledge::knowledge.error.select to ' . ($state ? 'publish' : 'unpublish')));
 			return $this->cancel();
 		}
 

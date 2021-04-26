@@ -368,11 +368,9 @@ class UsersController extends Controller
 		]);
 
 		$id = $request->input('id');
-
-		$user = $id ? User::findOrFail($id) : new User();
-
 		$fields = $request->input('fields');
 
+		$user = $id ? User::findOrFail($id) : new User();
 		$user->fill($fields);
 
 		if (!$user->id)
@@ -443,7 +441,7 @@ class UsersController extends Controller
 				->withError($error);
 		}*/
 
-		return $this->cancel()->with('success', trans('global.messages.item saved'));
+		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**
@@ -460,7 +458,7 @@ class UsersController extends Controller
 			$user->sourced = 1;
 		}
 
-		if (!$user->surname)
+		/*if (!$user->surname)
 		{
 			$bits = explode(' ', $user->name);
 
@@ -473,7 +471,7 @@ class UsersController extends Controller
 			{
 				$user->middle_name = implode(' ', $bits);
 			}
-		}
+		}*/
 
 		return view('users::admin.users.edit', [
 			'user' => $user

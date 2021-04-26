@@ -28,6 +28,7 @@ return [
 	'content' => 'Content',
 	'last update' => 'Last Update',
 	'pages' => 'Pages',
+	'page' => 'Page',
 	'snippets' => 'Snippets',
 	'all pages' => '- All Pages -',
 	'verify delete' => 'Are you sure you want to remove these items?',
@@ -57,4 +58,10 @@ return [
 	'ordering' => 'Ordering',
 	'all levels' => '- All Levels -',
 	'feedback' => 'Feedback',
+	'snippets attached' => 'Snippet(s) attached',
+	'error' => [
+		'failed to attach snippets' =>'Failed to attach snippets.',
+		'select to publish' => 'Select items to publish',
+		'select to unpublish' => 'Select items to unpublish',
+	],
 ];

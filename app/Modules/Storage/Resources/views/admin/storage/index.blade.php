@@ -152,15 +152,11 @@ app('pathway')
 						<td class="priority-4 text-right">
 							@if ($row->defaultquotaspace)
 								{{ App\Halcyon\Utility\Number::formatBytes($row->defaultquotaspace) }}
-							@else
-								<span class="none">{{ trans('global.none') }}</span>
 							@endif
 						</td>
 						<td class="priority-3 text-right">
 							@if ($row->defaultquotafile)
 								{{ number_format($row->defaultquotafile, 2) }}
-							@else
-								<span class="none">{{ trans('global.none') }}</span>
 							@endif
 						</td>
 						<td class="priority-4">
@@ -175,8 +171,6 @@ app('pathway')
 								@else
 									<span class="unknown">{{ trans('global.unknown') }}</span>
 								@endif
-							@else
-								<span class="none">{{ trans('global.none') }}</span>
 							@endif
 						</td>
 						<td class="priority-4 text-right">

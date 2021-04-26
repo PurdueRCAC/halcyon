@@ -307,7 +307,7 @@ class SnippetsController extends Controller
 		// Check for an ID
 		if (count($ids) < 1)
 		{
-			$request->session()->flash('warning', trans($state ? 'knowledge::knowledge.select to publish' : 'knowledge::knowledge.select to unpublish'));
+			$request->session()->flash('warning', trans('knowledge::knowledge.error.select to ' . ($state ? 'publish' : 'unpublish')));
 			return $this->cancel();
 		}
 

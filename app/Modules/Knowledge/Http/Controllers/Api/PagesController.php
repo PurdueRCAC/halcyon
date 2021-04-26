@@ -388,7 +388,7 @@ class PagesController extends Controller
 		// Rebuild the paths of the entry's children
 		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
 		{
-			return response()->json(['message' => trans('knowledge::knowledge.messages.rebuild failed')], 409);
+			return response()->json(['message' => trans('knowledge::knowledge.error.rebuild failed')], 409);
 		}
 
 		return new PageResource($row);
@@ -587,7 +587,7 @@ class PagesController extends Controller
 		// Rebuild the paths of the entry's children
 		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
 		{
-			return response()->json(['message' => trans('knowledge::knowledge.messages.rebuild failed')], 409);
+			return response()->json(['message' => trans('knowledge::knowledge.error.rebuild failed')], 409);
 		}
 
 		return new PageResource($row);

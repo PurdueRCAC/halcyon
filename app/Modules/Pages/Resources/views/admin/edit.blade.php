@@ -60,19 +60,19 @@ app('pathway')
 					<input type="hidden" name="fields[parent_id]" value="{{ $row->parent_id }}" />
 				<?php endif; ?>
 
-				<div class="form-group{{ $errors->has('title') ? ' is-invalid' : '' }}">
+				<div class="form-group">
 					<label for="field-title">{{ trans('pages::pages.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[title]" id="field-title" class="form-control required" required maxlength="250" value="{{ $row->title }}" />
+					<input type="text" name="fields[title]" id="field-title" class="form-control{{ $errors->has('fields.title') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->title }}" />
 					<span class="invalid-feedback">{{ trans('pages::pages.invalid.title') }}</span>
 				</div>
 
-				<div class="form-group{{ $errors->has('alias') ? ' is-invalid' : '' }}">
+				<div class="form-group">
 					<label for="field-alias">{{ trans('pages::pages.path') }}:</label>
 					<div class="input-group mb-2 mr-sm-2">
 						<div class="input-group-prepend">
 							<div class="input-group-text">{{ url('/') }}<span id="parent-path">{{ ($row->parent && trim($row->parent->path, '/') ? '/' . $row->parent->path : '') }}</span>/</div>
 						</div>
-						<input type="text" name="fields[alias]" id="field-alias" class="form-control" maxlength="250"<?php if ($row->alias == 'home'): ?> disabled="disabled"<?php endif; ?> value="{{ $row->alias }}" />
+						<input type="text" name="fields[alias]" id="field-alias" class="form-control{{ $errors->has('fields.alias') ? ' is-invalid' : '' }}" maxlength="250"<?php if ($row->alias == 'home'): ?> disabled="disabled"<?php endif; ?> value="{{ $row->alias }}" />
 					</div>
 					<span class="form-text text-muted">{{ trans('pages::pages.path hint') }}</span>
 				</div>

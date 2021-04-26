@@ -292,6 +292,31 @@ class User extends Model implements
 	}
 
 	/**
+	 * Get surname
+	 *
+	 * @return  string
+	 */
+	public function getSurnameAttribute()
+	{
+		$name = explode(' ', $this->name);
+		$surname = end($name);
+
+		return $surname;
+	}
+
+	/**
+	 * Get givenname
+	 *
+	 * @return  string
+	 */
+	public function getGivennameAttribute()
+	{
+		$name = explode(' ', $this->name);
+
+		return $name[0];
+	}
+
+	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
 	 * @return  array
