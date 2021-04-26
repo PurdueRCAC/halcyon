@@ -2,7 +2,7 @@
     "name": "Users - Amie LDAP",
     "alias": "listener_users_amieldap",
     "description": "This connects to the Amie LDAP.",
-    "keywords": ["ldap", "amie"],
+    "keywords": ["ldap", "amie", "xsede"],
     "active": 1,
     "order": 0,
     "aliases": {},
