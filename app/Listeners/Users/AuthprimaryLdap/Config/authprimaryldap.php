@@ -2,12 +2,27 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | AuthPrimary LDAP credentials
+    | AuthPrimary LDAP credentials - All users
     |--------------------------------------------------------------------------
     */
-    'hosts'    => ['authprimary.rcac.purdue.edu'],
-    'use_ssl'  => false,
-    'base_dn'  => env('LDAP_AUTHPRIMARY_BASEDN', conf('ldap_amie', 'basedn', 'dc=rcac,dc=purdue,dc=edu')),
-    'username' => env('LDAP_AUTHPRIMARY_USERNAME', conf('ldap_amie', 'rdn', 'cn=halcyon,dc=rcac,dc=purdue,dc=edu')),
-    'password' => env('LDAP_AUTHPRIMARY_PASSWORD', conf('ldap_amie', 'pass', '')),
+    'all' => [
+        'hosts'    => ['authprimary.rcac.purdue.edu'],
+        'use_ssl'  => false,
+        'base_dn'  => env('LDAP_AUTHPRIMARY_BASEDN', conf('ldap_amie', 'basedn', 'ou=allPeople,dc=anvil,dc=rcac,dc=purdue,dc=edu')),
+        'username' => env('LDAP_AUTHPRIMARY_USERNAME', conf('ldap_amie', 'rdn', 'cn=halcyon,dc=rcac,dc=purdue,dc=edu')),
+        'password' => env('LDAP_AUTHPRIMARY_PASSWORD', conf('ldap_amie', 'pass', '')),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | AuthPrimary LDAP credentials - Authorized users
+    |--------------------------------------------------------------------------
+    */
+    'authorized' => [
+        'hosts'    => ['authprimary.rcac.purdue.edu'],
+        'use_ssl'  => false,
+        'base_dn'  => env('LDAP_AUTHPRIMARY_BASEDN', conf('ldap_amie', 'basedn', 'ou=People,dc=anvil,dc=rcac,dc=purdue,dc=edu')),
+        'username' => env('LDAP_AUTHPRIMARY_USERNAME', conf('ldap_amie', 'rdn', 'cn=halcyon,dc=rcac,dc=purdue,dc=edu')),
+        'password' => env('LDAP_AUTHPRIMARY_PASSWORD', conf('ldap_amie', 'pass', '')),
+    ],
 ];

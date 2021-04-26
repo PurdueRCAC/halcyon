@@ -1,11 +1,9 @@
 <?php
 namespace App\Listeners\Users\AuthprimaryLdap;
 
-use App\Modules\Users\Events\UserCreated;
-use App\Modules\Users\Models\User;
-use App\Modules\Users\Models\UserUsername;
-use App\Halcyon\Utility\Str;
+use App\Modules\Users\Events\UserSync;
 use App\Modules\History\Traits\Loggable;
+use Exception;
 
 /**
  * User listener for AuthPrimary Ldap
@@ -22,7 +20,7 @@ class AuthprimaryLdap
 	 */
 	public function subscribe($events)
 	{
-		$events->listen(UserSearching::class, self::class . '@handleUserSearching');
+		$events->listen(UserSync::class, self::class . '@handleUserSync');
 	}
 
 	/**
@@ -30,14 +28,14 @@ class AuthprimaryLdap
 	 *
 	 * @return  array
 	 */
-	private function config()
+	private function config($sub = null)
 	{
 		if (!app()->has('ldap'))
 		{
 			return array();
 		}
 
-		return config('listener.amieldap', []);
+		return config('listener.authprimary' . ($sub ? '.' . $sub : ''), []);
 	}
 
 	/**
@@ -46,66 +44,168 @@ class AuthprimaryLdap
 	 * @param   array  $config
 	 * @return  object
 	 */
-	private function connect($config)
+	private function connectPeople($config)
 	{
 		return app('ldap')
-				->addProvider($config, 'amie')
-				->connect('amie');
+				->addProvider($config, 'authprimary')
+				->connect('authprimary');
+	}
+
+	/**
+	 * Establish LDAP connection
+	 *
+	 * @param   array  $config
+	 * @return  object
+	 */
+	private function connectAllPeople($config)
+	{
+		return app('ldap')
+				->addProvider($config, 'authprimaryall')
+				->connect('authprimaryall');
 	}
 
 	/**
 	 * Handle a User creation event
 	 * 
-	 * This will look up information in the Purdue LDAP
-	 * for the specific user and add it to the local
-	 * account.
+	 * This will add entries to the AuthPrimary LDAP
 	 *
-	 * @param   UserCreated  $event
+	 * @param   UserSync  $event
 	 * @return  void
 	 */
-	public function handleUserCreated(UserCreated $event)
+	public function handleUserSync(UserSync $event)
 	{
-		$config = $this->config();
+		// Make sure config is set
+		$configall = $this->config('all');
+		$config = $this->config('authorized');
 
-		if (empty($config))
+		if (empty($configall) || empty($config))
 		{
 			return;
 		}
 
-		// We'll assume we already have all the user's info
-		if ($event->user->puid)
-		{
-			return;
-		}
+		$user = $event->user;
 
 		try
 		{
-			$ldap = $this->connect($config);
-			$status = 404;
+			$ldap = $this->connectAllPeople($configall);
+			$status = 500;
 
-			// Look for user record in LDAP
+			// Check for an existing record
 			$result = $ldap->search()
-				->where('cn', '=', $event->user->username)
-				->select(['cn', 'mail', 'employeeNumber'])
+				->where('uid', '=', $user->username)
 				->first();
 
-			if (!empty($results))
+			if (!$result || !$result->exists)
 			{
-				$status = 200;
+				/*
+				Sample LDAP entry
 
-				// Set user data
-				$event->user->name = Str::properCaseNoun($result['cn'][0]);
-				$event->user->puid = $result['employeeNumber'][0];
-				//$event->user->email = $result['mail'][0];
-				$event->user->save();
+				# example, AllPeople, anvil.rcac.purdue.edu
+				dn: uid=example,ou=AllPeople,dc=anvil,dc=rcac,dc=purdue,dc=edu
+				objectClass: posixAccount
+				objectClass: inetOrgPerson
+				objectClass: top
+				uid: example
+				uidNumber: 20972
+				gidNumber: 6751
+				homeDirectory: /home/example
+				loginShell: /bin/tcsh
+				cn: Ex A Mple
+				sn: Ex
+				*/
+				// Create user record in ou=allPeople
+				$entry = $ldap->make()->user([
+					'uid'           => $user->username,
+					'uidNumber'     => $user->uidNumber,
+					'gidNumber'     => $user->gidNumber,
+					'cn'            => $auth ? $user->name : '-',
+					'sn'            => $auth ? $user->surname : '-',
+					'loginShell'    => $auth ? $user->loginShell : '/bin/false',
+					'homeDirectory' => $auth ? '/home/' . $user->username : '/dev/null',
+				]);
+
+				if (!$entry->save())
+				{
+					throw new Exception('Failed to make AuthPrimary ou=allPeople record', 500);
+				}
+			}
+			elseif ($auth)
+			{
+				// Update user record in ou=allPeople
+				$entry->setAttribute('cn', $user->name);
+				$entry->setAttribute('sn', $user->surname);
+				$entry->setAttribute('loginShell', $user->loginShell);
+				$entry->setAttribute('homeDirectory', '/home/' . $user->username);
+
+				if (!$entry->save())
+				{
+					throw new Exception('Failed to update AuthPrimary ou=allPeople record', 500);
+				}
+			}
+
+			if ($auth)
+			{
+				$ldap = $this->connectPeople($config);
+
+				// Check for an existing record
+				$result = $ldap->search()
+					->where('uid', '=', $user->username)
+					->first();
+
+				if (!$result || !$result->exists)
+				{
+					/*
+					Sample LDAP entry
+
+					# example, People, anvil.rcac.purdue.edu
+					dn: uid=example,ou=People,dc=anvil,dc=rcac,dc=purdue,dc=edu
+					objectClass: posixAccount
+					objectClass: inetOrgPerson
+					objectClass: top
+					uid: example
+					uidNumber: 20972
+					gidNumber: 6751
+					homeDirectory: /home/example
+					loginShell: /bin/tcsh
+					cn: Ex A Mple
+					givenName: Ex A
+					sn: Mple
+					gecos: Ex A Mple
+					telephoneNumber: 49-61741
+					*/
+					// Create user record in ou=People
+					$data = [
+						'uid'           => $user->username,
+						'uidNumber'     => $user->uidNumber,
+						'gidNumber'     => $user->gidNumber,
+						'cn'            => $user->name,
+						'givenName'     => $user->givenName,
+						'sn'            => $user->surname,
+						'loginShell'    => $user->loginShell,
+						'homeDirectory' => '/home/' . $user->username,
+						'gecos'         => $user->name,
+					];
+
+					if ($user->telephone)
+					{
+						$data['telephoneNumber'] = $user->telephone;
+					}
+
+					$entry = $ldap->make()->user($data);
+
+					if (!$entry->save())
+					{
+						throw new Exception('Failed to make AuthPrimary ou=People record', 500);
+					}
+				}
 			}
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			$status = 500;
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'cn=' . $event->user->username);
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->user->username);
 	}
 }

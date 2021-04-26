@@ -2,7 +2,7 @@
     "name": "Users - AuthPrimary LDAP",
     "alias": "listener_users_authprimaryldap",
     "description": "This connects to the AuthPrimary LDAP.",
-    "keywords": ["ldap"],
+    "keywords": ["ldap", "rcac"],
     "active": 1,
     "order": 0,
     "aliases": {},
