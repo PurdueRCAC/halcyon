@@ -1,0 +1,35 @@
+uuid: da82d0be-15c7-4df9-b298-4ab4ef8a46f7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_control_type
+    - taxonomy.vocabulary.control_type
+    - taxonomy.vocabulary.facets
+  content:
+    - 'taxonomy_term:control_type:e138e5a3-0eb3-4bd6-971c-094a2da11b51'
+_core:
+  default_config_hash: uLcoXrP7ENedZBxNtr-a-cZg7vg7PqbbOcmEyYN288Q
+id: taxonomy_term.facets.field_control_type
+field_name: field_control_type
+entity_type: taxonomy_term
+bundle: facets
+label: 'Control Type'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    target_uuid: e138e5a3-0eb3-4bd6-971c-094a2da11b51
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      control_type: control_type
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

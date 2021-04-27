@@ -5,6 +5,7 @@
     "Courses": true,
     "Cron": false,
     "Dashboard": true,
+    "Finder": true,
     "Groups": true,
     "History": true,
     "Issues": true,
