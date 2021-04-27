@@ -147,7 +147,7 @@ class AmieLdap
 
 				foreach ($atts as $key)
 				{
-					if ($val = $result->getAttribute($key, 0))
+					if ($val = $results->getAttribute($key, 0))
 					{
 						$user->{$key} = $val;
 					}
