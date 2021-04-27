@@ -443,6 +443,7 @@ h6, .h6 {
 .lead {
   font-size: 1.25rem;
   font-weight: 300;
+  line-height: 1.4;
 }
 
 .display-1 {
