@@ -49,7 +49,7 @@ class TermData extends Model
 	);
 
 	/**
-	 * Field of science
+	 * Children
 	 *
 	 * @return  object
 	 */
@@ -59,7 +59,7 @@ class TermData extends Model
 	}
 
 	/**
-	 * Group
+	 * Parent
 	 *
 	 * @return  object
 	 */
@@ -69,13 +69,13 @@ class TermData extends Model
 	}
 
 	/**
-	 * Group
+	 * Field control type
 	 *
 	 * @return  object
 	 */
 	public function fieldControlType()
 	{
-		return $this->hasOne(TermFieldControlType::class, 'entity_id', 'id')->where('revision_id', '=', );
+		return $this->hasOne(TermFieldControlType::class, 'entity_id', 'id');
 	}
 
 	/** 
