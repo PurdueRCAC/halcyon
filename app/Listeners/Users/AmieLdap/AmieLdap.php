@@ -78,11 +78,11 @@ class AmieLdap
 			$status = 404;
 
 			// Look for user record in LDAP
-			$result = $ldap->search()
+			$results = $ldap->search()
 				->where('uid', '=', $event->uid)
 				->first();
 
-			if ($result && $result->exists)
+			if ($results && $results->exists)
 			{
 				$status = 200;
 
@@ -151,6 +151,15 @@ class AmieLdap
 					{
 						$user->{$key} = $val;
 					}
+				}
+
+				if ($user->uid)
+				{
+					$user->username = $user->uid;
+				}
+				if ($user->cn)
+				{
+					$user->name = $user->cn;
 				}
 			}
 		}
