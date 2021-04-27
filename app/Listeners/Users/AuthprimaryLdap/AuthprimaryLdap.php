@@ -127,6 +127,8 @@ class AuthprimaryLdap
 				];
 
 				$entry = $ldap->make()->user($data);
+				$entry->setAttribute('objectclass', 'inetOrgPerson');
+				$entry->setDn('uid=' . $data['uid'] . ',' . $entry->getDnBuilder()->get());
 
 				if (!$entry->save())
 				{
@@ -157,15 +159,15 @@ class AuthprimaryLdap
 				];
 			}
 
+			$ldap = $this->connectPeople($config);
+
+			// Check for an existing record
+			$result = $ldap->search()
+				->where('uid', '=', $user->username)
+				->first();
+
 			if ($auth)
 			{
-				$ldap = $this->connectPeople($config);
-
-				// Check for an existing record
-				$result = $ldap->search()
-					->where('uid', '=', $user->username)
-					->first();
-
 				if (!$result || !$result->exists)
 				{
 					/*
@@ -206,6 +208,8 @@ class AuthprimaryLdap
 					}
 
 					$entry = $ldap->make()->user($data);
+					$entry->setAttribute('objectclass', ['posixAccount', 'inetOrgPerson', 'top']);
+					$entry->setDn('uid=' . $data['uid'] . ',' . $entry->getDnBuilder()->get());
 
 					if (!$entry->save())
 					{
@@ -214,6 +218,14 @@ class AuthprimaryLdap
 
 					$results['created_auth'] = $data;
 					$status = 201;
+				}
+			}
+			else
+			{
+				// Remove unauthorized records
+				if ($result && $result->exists)
+				{
+					$result->delete();
 				}
 			}
 		}
