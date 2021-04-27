@@ -5,6 +5,7 @@ namespace App\Modules\Tags\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Tags\Models\Tag;
 use App\Modules\Tags\Http\Resources\TagResourceCollection;
 use App\Modules\Tags\Http\Resources\TagResource;

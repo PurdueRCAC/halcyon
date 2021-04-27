@@ -4,6 +4,7 @@ namespace App\Modules\Groups\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Groups\Models\Department;
 use App\Modules\Groups\Models\GroupDepartment;
