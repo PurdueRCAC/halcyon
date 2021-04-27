@@ -118,6 +118,10 @@ class Node extends Model
 	 */
 	public static function services()
 	{
+		if (is_file(public_path('files/servicelist.json')))
+		{
+			return json_decode(file_get_contents(public_path('files/servicelist.json')));
+		}
 		/*$values = [
 			'type' => 'service'
 		];

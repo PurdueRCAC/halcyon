@@ -658,7 +658,7 @@ class FinderController extends Controller
 	 */
 	public function servicelist()
 	{
-		$services = Node::services();//$this->createTestServiceList();
+		$services = Node::services();
 
 		return new JsonResource($services);
 	}

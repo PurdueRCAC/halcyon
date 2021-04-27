@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Finder Term
  */
-class Term extends Model
+class TermData extends Model
 {
 	/**
 	 * Timestamps
@@ -85,6 +85,10 @@ class Term extends Model
 	 */
 	public static function tree()
 	{
+		if (is_file(public_path('files/facettree.json')))
+		{
+			return json_decode(file_get_contents(public_path('files/facettree.json')));
+		}
 		/*$terms = Drupal::entityTypeManager()
 			->getStorage('taxonomy_term')
 			->loadTree("facets", 0, null, true);*/

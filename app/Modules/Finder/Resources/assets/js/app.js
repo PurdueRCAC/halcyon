@@ -7,16 +7,16 @@
             .substr(1)
             .split("&")
             .forEach(function (item) {
-              tmp = item.split("=");
-              if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                tmp = item.split("=");
+                if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
             });
         return result;
     }
 
 
     var servicelist = [
- //           { name: "Shared File Services", matches: [1,2,4,5,6,7] }
-        ];
+        //           { name: "Shared File Services", matches: [1,2,4,5,6,7] }
+    ];
 
     let servicehelp = {}; // this is the help text for each service
 
@@ -48,9 +48,9 @@
         </li>\
         {{/questions}}");
 
-    $.Mustache.add("checkbox-facet-template","<input type='checkbox' id='facet-{{id}}'>");
+    $.Mustache.add("checkbox-facet-template", "<input type='checkbox' id='facet-{{id}}'>");
 
-    $.Mustache.add("radio-facet-template","<input type='radio' id='facet-{{id}}'>");
+    $.Mustache.add("radio-facet-template", "<input type='radio' id='facet-{{id}}'>");
 
     $.Mustache.add("services-template",
         "{{#services}}\
@@ -65,42 +65,42 @@
         {{/services}}"
     );
 
-        var errors = [];
-        var facets = [];
+    var errors = [];
+    var facets = [];
 
-        // The list of services which could be visible in the grid.
-        // Only 3 of them are going to actually be visible.
-        var visible_classes = []; // items like ".service-23"
-        var first_visible = 0;
+    // The list of services which could be visible in the grid.
+    // Only 3 of them are going to actually be visible.
+    var visible_classes = []; // items like ".service-23"
+    var first_visible = 0;
 
-        var jump_delay = false;
+    var jump_delay = false;
 
-        var questionlist = [
-            {
-                id: "security",
-                question: 'What is the security risk associated with your data?',
-                control_type: 'radio',
-                choices: [
-                    {id:1, text:'low risk', selected: false, turnoff: [2,3]},
-                    {id:2, text:'moderate risk', selected: false, turnoff: [1,3]},
-                    {id:3, text:'high risk', selected: false, turnoff: [1,2]}
-                ]
-            },
+    var questionlist = [
+        {
+            id: "security",
+            question: 'What is the security risk associated with your data?',
+            control_type: 'radio',
+            choices: [
+                { id: 1, text: 'low risk', selected: false, turnoff: [2, 3] },
+                { id: 2, text: 'moderate risk', selected: false, turnoff: [1, 3] },
+                { id: 3, text: 'high risk', selected: false, turnoff: [1, 2] }
+            ]
+        },
 
-            {
-                id: "protection",
-                question: 'What additional protection do you need for your data?',
-                control_type: "checkbox",
-                choices: [
-                    {id:6, text:"replication", selected: false, turnoff: []},
-                    {id:7, text:"backup / snapshots", selected: false, turnoff: []}
-                ]
-            }
-        ];
+        {
+            id: "protection",
+            question: 'What additional protection do you need for your data?',
+            control_type: "checkbox",
+            choices: [
+                { id: 6, text: "replication", selected: false, turnoff: [] },
+                { id: 7, text: "backup / snapshots", selected: false, turnoff: [] }
+            ]
+        }
+    ];
 
     // read the data from JSON endpoints
 
-    $.getJSON( drupalSettings.path.baseUrl + "/api/finder/settings", function( response ) {
+    $.getJSON(drupalSettings.path.baseUrl + "/api/finder/settings", function (response) {
         //alert(JSON.stringify(response));
         $('#pagetitle').html(response.title.replace(/(?:\r\n|\r|\n)/g, '<br />'));
         $('#pagesubtitle').html(response.subtitle.replace(/(?:\r\n|\r|\n)/g, '<br />'));
@@ -117,7 +117,7 @@
     });
 
 
-    $.getJSON( drupalSettings.path.baseUrl + "/api/finder/facettree", function( response ) {
+    $.getJSON(drupalSettings.path.baseUrl + "/api/finder/facettree", function (response) {
 
         // JSON responses are automatically parsed.
 
@@ -131,7 +131,7 @@
         questionlist = [];
 
         readfacets = response;
-        for (i=0;i<readfacets.length;i++) {
+        for (i = 0; i < readfacets.length; i++) {
 
             question = new Object();
             question.id = readfacets[i].id;
@@ -140,15 +140,15 @@
             question.description = readfacets[i].description;
             question.choices = [];
             // get all choice_ids to aid computing turnoff array
-            choice_ids = readfacets[i].choices.map(function(a) {return a.id;});
-            for (j=0;j<readfacets[i].choices.length;j++) {
+            choice_ids = readfacets[i].choices.map(function (a) { return a.id; });
+            for (j = 0; j < readfacets[i].choices.length; j++) {
                 choicein = readfacets[i].choices[j];
                 var facet = new Object();
                 facet.id = choicein.id;
                 facet.text = choicein.name;
                 facet.checked = "";
-                facet.selected = (facetsselected.indexOf(""+facet.id) > -1);
-                if (facet.selected) {facet.checked = "checked";}
+                facet.selected = (facetsselected.indexOf("" + facet.id) > -1);
+                if (facet.selected) { facet.checked = "checked"; }
                 //facet.selected = false;
                 facet.turnoff = [];
                 if (question.control_type == "radio") {
@@ -167,48 +167,48 @@
 
         // render the questions
 
-        $("#questionlist").append($.Mustache.render('question-checkbox-template', {questions: questionlist} ));
+        $("#questionlist").append($.Mustache.render('question-checkbox-template', { questions: questionlist }));
 
-            $(".facet").on("change", function (thefacet) {
-                var a = find_facet($(this).attr("facetid"));
+        $(".facet").on("change", function (thefacet) {
+            var a = find_facet($(this).attr("facetid"));
 
-                $('.jump-to-chart').hide();
+            $('.jump-to-chart').hide();
 
-                a.selected = ! a.selected;
-                if (! a.selected) {
-                    $("#facet-"+a.id).prop("checked", false);
-                }
+            a.selected = !a.selected;
+            if (!a.selected) {
+                $("#facet-" + a.id).prop("checked", false);
+            }
 
-                // if this question has radio buttons, turn off some radio
-                // buttons as necessary
-                if (a.selected) {
-                    for (var k=0; k<a.turnoff.length; k++) {
-                        off = a.turnoff[k];
-                        for (var i=0; i<questionlist.length; i++) {
-                            question = questionlist[i];
-                            for (var j=0; j<question.choices.length; j++) {
-                                choice = question.choices[j];
-                                //alert(choice.id+" vs "+off);
-                                if (choice.id*1 == off*1) {  // force to numbers
-                                    choice.selected = false;
-                                    $("#facet-"+choice.id).prop("checked", false);
-                                }
+            // if this question has radio buttons, turn off some radio
+            // buttons as necessary
+            if (a.selected) {
+                for (var k = 0; k < a.turnoff.length; k++) {
+                    off = a.turnoff[k];
+                    for (var i = 0; i < questionlist.length; i++) {
+                        question = questionlist[i];
+                        for (var j = 0; j < question.choices.length; j++) {
+                            choice = question.choices[j];
+                            //alert(choice.id+" vs "+off);
+                            if (choice.id * 1 == off * 1) {  // force to numbers
+                                choice.selected = false;
+                                $("#facet-" + choice.id).prop("checked", false);
                             }
                         }
-                    };
-                }
-                // need to turn off the card checkboxes.
-                // or maybe not -- leave selected services selelcted when clicking facets
-                //$(".cardcheckbox").prop("checked",false);
+                    }
+                };
+            }
+            // need to turn off the card checkboxes.
+            // or maybe not -- leave selected services selelcted when clicking facets
+            //$(".cardcheckbox").prop("checked",false);
 
-                evaluate_services();
+            evaluate_services();
 
-            });
+        });
     });
 
 
     // load the services
-    $.getJSON( drupalSettings.path.baseUrl + "/api/finder/servicelist", function( responseb ) {
+    $.getJSON(drupalSettings.path.baseUrl + "/api/finder/servicelist", function (responseb) {
         services = responseb;
         //servicelist = responseb.data;
 
@@ -224,17 +224,16 @@
                 servicehelp = val;
                 //alert(JSON.stringify(servicehelp));
             } else {
-                if(servicesselected.includes(val.id))
-                {
+                if (servicesselected.includes(val.id)) {
                     val.checked = "checked";
-                    var service = 'service-'+val.id;
+                    var service = 'service-' + val.id;
                     visible_classes.push(service);
                     visible_classes.sort();
                     $(".service").hide();
-                    first_visible=0;
-                    $.each(visible_classes, function (index,service)  {$(service).show(); });
+                    first_visible = 0;
+                    $.each(visible_classes, function (index, service) { $(service).show(); });
                 }
-                else{
+                else {
                     val.checked = "";
                 }
                 servicelist.push(val);
@@ -245,16 +244,16 @@
         // alert(JSON.stringify(servicelist));
         //
         // render the services grid
-        $("#modularstorage-services").append($.Mustache.render('services-template', {services: servicelist} ));
+        $("#modularstorage-services").append($.Mustache.render('services-template', { services: servicelist }));
         // render the comparison chart
 
 
-// instead of labels, we have field_data[field]["label"]
+        // instead of labels, we have field_data[field]["label"]
 
         help_text_counter = 0;
         chart = "<thead><tr><td></td>";
-        for (i=0;i<servicelist.length;i++) {
-            chart = chart + "<th class='service service-"+servicelist[i].id+"' scope='col'>"+servicelist[i]["title"]+"</th>";
+        for (i = 0; i < servicelist.length; i++) {
+            chart = chart + "<th class='service service-" + servicelist[i].id + "' scope='col'>" + servicelist[i]["title"] + "</th>";
         }
         chart = chart + "</tr></thead>"; // end first row
         //alert(chart);
@@ -267,20 +266,20 @@
             fieldweight[field] = servicelist[0].field_data[field].weight;
         }
 
-        sortedfields = Object.keys(fieldweight).sort(function(a,b){return fieldweight[a]-fieldweight[b]})
+        sortedfields = Object.keys(fieldweight).sort(function (a, b) { return fieldweight[a] - fieldweight[b] })
         // every other row
-        for (var i=0;i<sortedfields.length;i++) {
+        for (var i = 0; i < sortedfields.length; i++) {
             field = sortedfields[i];
             //alert(field);
             chart = chart + "<tr>";
-            chart = chart + "<th scope='row'>"+servicelist[0].field_data[field].label;
+            chart = chart + "<th scope='row'>" + servicelist[0].field_data[field].label;
             help_text_counter++;
-            help =  servicehelp.field_data[field].value ? "<a class='popup' aria-haspop='true' href='#help-"+help_text_counter+"'><span class='sr-only'>More information about "+servicelist[0].field_data[field].label+"</span><span class='fa fa-info-circle'></span></a><div class='help' id='help-"+help_text_counter+"'><h3>"+servicelist[0].field_data[field].label+"</h3>"+servicehelp.field_data[field].value+"</div>" : "";
+            help = servicehelp.field_data[field].value ? "<a class='popup' aria-haspop='true' href='#help-" + help_text_counter + "'><span class='sr-only'>More information about " + servicelist[0].field_data[field].label + "</span><span class='fa fa-info-circle'></span></a><div class='help' id='help-" + help_text_counter + "'><h3>" + servicelist[0].field_data[field].label + "</h3>" + servicehelp.field_data[field].value + "</div>" : "";
             chart = chart + help;
-            chart = chart +"</th>"; // row title
-                for (var j=0;j<servicelist.length;j++) {
-                    chart = chart + "<td class='service service-"+servicelist[j].id+"' data-label='"+servicelist[0].field_data[field].label+"'>"+servicelist[j].field_data[field].value+"</td>";
-                }
+            chart = chart + "</th>"; // row title
+            for (var j = 0; j < servicelist.length; j++) {
+                chart = chart + "<td class='service service-" + servicelist[j].id + "' data-label='" + servicelist[0].field_data[field].label + "'>" + servicelist[j].field_data[field].value + "</td>";
+            }
             chart = chart + "</tr>";
         }
 
@@ -304,57 +303,57 @@
     // utility function to show or hide services.
     // services have id="service-{{id}}"
 
-    function evaluate_services(){
+    function evaluate_services() {
         // get a list of selected facet ids
         $(".service-panel").removeClass("mismatch").find(".cardcheckbox").removeAttr("disabled");
         selected = [];
-        questionlist.forEach(function(question) {
-            question.choices.forEach(function(choice) {
+        questionlist.forEach(function (question) {
+            question.choices.forEach(function (choice) {
                 if (choice.selected == true) {
                     selected.push(choice.id);
                 }
             });
         })
         // now set the visibility of each service. These are in the manual checkbox list
-        visible_classes=[];
-        visible_services=[]; // list of ids for the url parameter
+        visible_classes = [];
+        visible_services = []; // list of ids for the url parameter
         number_visible = 0;
         comparisonlist = "";
 
-        for (i=0;i<servicelist.length;i++) {
+        for (i = 0; i < servicelist.length; i++) {
             service = servicelist[i];
             var hidden = "no";
             for (var j = 0; j < selected.length; j++) {
-                if ( service.facet_matches.indexOf(selected[j]) < 0) {
-                    $("#service-"+service.id) // card
+                if (service.facet_matches.indexOf(selected[j]) < 0) {
+                    $("#service-" + service.id) // card
                         .addClass('mismatch')
                         .find(".cardcheckbox")
                         .prop('checked', false)
                         .attr('disabled', true);
-                    $(".service-"+service.id).hide(); // table column
-                    servicelist[i]["hidden"]="yes";
+                    $(".service-" + service.id).hide(); // table column
+                    servicelist[i]["hidden"] = "yes";
                     hidden = "yes";
                 }
             };
 
             // look at the card checkbox. if not checked, this service is hidden from the chart
-            if ($("#service-"+service.id).find('.cardcheckbox').prop('checked') == false) { // card
+            if ($("#service-" + service.id).find('.cardcheckbox').prop('checked') == false) { // card
                 hidden = "yes";
-                servicelist[i]["hidden"]="yes";
+                servicelist[i]["hidden"] = "yes";
                 //$("#service-"+service.id).addClass("mismatch") // card
-                $(".service-"+service.id).hide(); // table column
+                $(".service-" + service.id).hide(); // table column
             }
 
             if (hidden == "no") {
-                $("#service-"+service.id).removeClass('mismatch'); // card
-                $(".service-"+service.id).show(); // table column
-                servicelist[i]["hidden"]="no";
+                $("#service-" + service.id).removeClass('mismatch'); // card
+                $(".service-" + service.id).show(); // table column
+                servicelist[i]["hidden"] = "no";
                 number_visible = number_visible + 1;
                 visible_classes.push(".service-" + service.id);  // table column
                 comparisonlist = comparisonlist +
-                "<label><input type='checkbox' id='comparison-"+service.id+
-                "' service='.service-"+service.id+"' class='manualcheckbox' checked name='manualcheckbox-"+service.id+"'> "+
-                service.title+"<div class='control-indicator'></div></label>";
+                    "<label><input type='checkbox' id='comparison-" + service.id +
+                    "' service='.service-" + service.id + "' class='manualcheckbox' checked name='manualcheckbox-" + service.id + "'> " +
+                    service.title + "<div class='control-indicator'></div></label>";
             }
 
             var service_count = $('.cardcheckbox:checked').length;
@@ -372,7 +371,7 @@
         // this event handler is for the list of manual checkboxes.  The effect is to
         // show or hide services which match the Step 1 criteria in the comparison chart
 
-        $(".manualcheckbox").click( function() {
+        $(".manualcheckbox").click(function () {
             var service = $(this).attr("service");
             if ($(this).prop("checked")) {
                 visible_classes.push(service);
@@ -384,25 +383,25 @@
             }
             visible_classes.sort();
             $(".service").hide();
-            $.each(visible_classes, function (index,service)  {$(service).show(); });
+            $.each(visible_classes, function (index, service) { $(service).show(); });
         });
 
-        $('.chart-select-all').click(function() {
+        $('.chart-select-all').click(function () {
             $('.manualcheckbox').prop("checked", true);
             visible_classes = [];
-            $(".manualcheckbox").each( function () {
+            $(".manualcheckbox").each(function () {
                 var service = $(this).attr("service");
                 visible_classes.push(service);
             });
             visible_classes.sort();
             $(".service").hide();
-            first_visible=0;
+            first_visible = 0;
             //show = visible_classes.slice(first_visible,first_visible+columns_to_show);
             show = visible_classes;  // use all of them when scrolling the table.
-            $.each(show, function (index,service)  {$(service).show(); });
+            $.each(show, function (index, service) { $(service).show(); });
         });
 
-        $('.chart-select-none').click(function() {
+        $('.chart-select-none').click(function () {
             $('.manualcheckbox').prop("checked", false);
             visible_classes = [];
             $(".service").hide();
@@ -411,29 +410,34 @@
         addEvents();
 
         facetlist = selected.join(","); // list of facets which are "on"
-        $("#return").html("<a href='"+document.location.protocol+"//"+document.location.host+"/finder?facets="+facetlist+"'>Return</a>");
+        $("#return").html("<a href='" + document.location.protocol + "//" + document.location.host + "/finder?facets=" + facetlist + "'>Return</a>");
     }
 
-    $(document).on("change", ".cardcheckbox",function () {
+    $(document).on("change", ".cardcheckbox", function () {
         evaluate_services();
         var service_count = $('.cardcheckbox:checked').length;
-        if (service_count < 1) { $('#container34').hide(); }
+
+        if (service_count < 1) {
+            $('#container34').hide();
+        } else {
+            $('#container34').show();
+        }
     });
 
-    $(".jump_button").click(function(){
+    /*$(".jump_button").click(function(){
       jump_delay = true;
       setTimeout(function(){ jump_delay = false }, 500);
       $('html, body').animate({
         scrollTop: $(".comparisonchart-wrapper-wrapper").offset().top
       }, 500);
       $(".jump-to-chart").hide();
-    });
+    });*/
 
-    $( "#modularstorage-services" ).on('click', '.cardcheckbox', function() {
+    $("#modularstorage-services").on('click', '.cardcheckbox', function () {
         $('.jump-to-chart').show();
         var service_count = $('.cardcheckbox:checked').length;
         if (service_count < 1) {
-              $('#container34').hide();
+            $('#container34').hide();
             $(".jump-to-chart").hide();
         } else {
             $('#container34').show();
@@ -441,8 +445,9 @@
         listenForScrollEvent($('#comparisonchart tbody'));
     });
 
-    $('.btn-clear-filters').click(function(){
-        $('.facet').each( function () {
+    $('.btn-clear-filters').click(function (e) {
+        e.preventDefault();
+        $('.facet').each(function () {
             if ($(this).prop('checked')) {
                 $(this).trigger('click');
             }
@@ -450,7 +455,8 @@
         $('.cardcheckbox').prop('checked', false);
     });
 
-    $('.btn-select-all').click(function(){
+    $('.btn-select-all').click(function (e) {
+        e.preventDefault();
         $('.cardcheckbox').not('.mismatch .cardcheckbox').prop('checked', true);
         evaluate_services();
         $('.jump-to-chart').show();
@@ -458,18 +464,21 @@
         listenForScrollEvent($('#comparisonchart tbody'));
     });
 
-    $('.btn-select-none').click(function(){
+    $('.btn-select-none').click(function (e) {
+        e.preventDefault();
         $('.cardcheckbox').prop('checked', false);
         evaluate_services();
         $('.jump-to-chart').hide();
         $('#container34').hide();  // not sure we want this
     });
 
-    $('.btn-compare-all-table').click(function(){
+    $('.btn-compare-all-table').click(function (e) {
+        e.preventDefault();
         $('.manualcheckbox:visible').prop('checked', true);
     });
 
-    $('.btn-clear-all-table').click(function(){
+    $('.btn-clear-all-table').click(function (e) {
+        e.preventDefault();
         $('.manualcheckbox:visible').prop('checked', false);
     });
 
@@ -494,8 +503,8 @@
     // }, 200);
 
 
-    function listenForScrollEvent(el){
-        el.on("scroll", function(){
+    function listenForScrollEvent(el) {
+        el.on("scroll", function () {
             el.trigger("custom-scroll");
         })
         //psw look for STSM events
@@ -507,9 +516,9 @@
 
     // find the facet with the given id
     function find_facet(facetid) {
-        for (i=0;i<questionlist.length;i++) {
+        for (i = 0; i < questionlist.length; i++) {
             question = questionlist[i];
-            for (j=0;j<question.choices.length;j++) {
+            for (j = 0; j < question.choices.length; j++) {
                 facet = question.choices[j];
                 if (facet.id == facetid) {
                     return facet;
@@ -519,12 +528,12 @@
         return null;
     }
 
-/* jQuery Validate Emails with Regex */
-function validateEmail(Email) {
-    var pattern = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    /* jQuery Validate Emails with Regex */
+    function validateEmail(Email) {
+        var pattern = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 
-    return $.trim(Email).match(pattern) ? true : false;
-}
+        return $.trim(Email).match(pattern) ? true : false;
+    }
 
     $("#send_email").click(function () {
         name = $("#name").val();
@@ -543,8 +552,8 @@ function validateEmail(Email) {
 
         qdata = [];
 
-        questionlist.forEach(function(question) {
-            question.choices.forEach(function(choice) {
+        questionlist.forEach(function (question) {
+            question.choices.forEach(function (choice) {
                 if (choice.selected == true) {
                     qdata.push([question.id, choice.id]);
                 }
@@ -554,15 +563,20 @@ function validateEmail(Email) {
         sdata = [];
 
 
-        for (i=0;i<servicelist.length;i++) {
+        for (i = 0; i < servicelist.length; i++) {
             if (servicelist[i]["hidden"] == "no") {
                 sdata.push(servicelist[i].id);
             }
         }
 
+        var comments = '';
+        if ($('textarea#comments').val()) {
+            comments = $('textarea#comments').val();
+        }
 
         $("#name").val(""); // clear the input fields
         $("#emailaddr").val("");
+        $("#comments").val("");
 
         emailaddresses = [];
         if ($("#emailtoself").prop("checked")) {
@@ -573,15 +587,15 @@ function validateEmail(Email) {
         }
         if (emailaddresses.length > 0) {
             var csrf_token;
-            $.getJSON( drupalSettings.path.baseUrl + "/api/session/token", function( response ) {
+            $.getJSON(drupalSettings.path.baseUrl + "/api/session/token", function (response) {
                 csrf_token = response.data;
             });
 
             emaildata = {
-                    name: name,
-                    email: emailaddresses.join(","),
-                    qdata: qdata,
-                    sdata: sdata
+                name: name,
+                email: emailaddresses.join(","),
+                qdata: qdata,
+                sdata: sdata
             };
 
             //alert(JSON.stringify(emaildata));
@@ -608,31 +622,31 @@ function validateEmail(Email) {
     })
 
 
-// the question highlighting only works if the control key is pressed :-)
+    // the question highlighting only works if the control key is pressed :-)
 
     $(document).on("mouseover", ".service-panel",
-    function(event) {
-        if (event.ctrlKey) {
-            serviceid = $(this).attr("service");
-            //alert("enter "+serviceid);
-            for (i=0; i<servicelist.length; i++) {
-                if (servicelist[i].id == serviceid) {
-                    var facetlist = servicelist[i].facet_matches; //arr of strings
-                    $('.checkbox').each( function () {
-                        if ($.inArray($(this).attr("facetid"), facetlist) < 0) {
-                            $(this).addClass('blocker');
-                        }
-                    });
+        function (event) {
+            if (event.ctrlKey) {
+                serviceid = $(this).attr("service");
+                //alert("enter "+serviceid);
+                for (i = 0; i < servicelist.length; i++) {
+                    if (servicelist[i].id == serviceid) {
+                        var facetlist = servicelist[i].facet_matches; //arr of strings
+                        $('.checkbox').each(function () {
+                            if ($.inArray($(this).attr("facetid"), facetlist) < 0) {
+                                $(this).addClass('blocker');
+                            }
+                        });
+                    }
                 }
             }
-        }
-    });
+        });
 
     $(document).on("mouseleave", ".service-panel",
-    function (event) {
-        //alert("leave");
-        $('.checkbox').removeClass('blocker');
-    });
+        function (event) {
+            //alert("leave");
+            $('.checkbox').removeClass('blocker');
+        });
 
     /*scroll To See More functions to add notification if scroll bar is shown
         hides notification if scroll bar changes
@@ -646,26 +660,26 @@ function validateEmail(Email) {
     });
     */
 
-    function addEvents(){
+    function addEvents() {
         var htmlTxt = "Scroll to See More";
         var $so = $(".scrolling-outer");
         var $som = $("#scroll-to-see-more");
         //see if scrolling outer exists and scroll to see more element exists
-        if (($so.length == 1)&&($som.length==0)){
+        if (($so.length == 1) && ($som.length == 0)) {
             //build scroll to see more notification
-            $(".scrolling-outer").after('<div id="scroll-to-see-more" role="alert" aria-label="Scroll to see more" class="my-hidden" >'+
-                                        '<ul class="notifications"><li><i class="material-icons">'+htmlTxt+
-                                        '</i><span class="fa fa-arrow-right"></span></li></ul></div>');
+            $(".scrolling-outer").after('<div id="scroll-to-see-more" role="alert" aria-label="Scroll to see more" class="my-hidden" >' +
+                '<ul class="notifications"><li><i class="material-icons">' + htmlTxt +
+                '</i><span class="fa fa-arrow-right"></span></li></ul></div>');
 
         }
-        $(".manualcheckbox").on("change", function(){
+        $(".manualcheckbox").on("change", function () {
             show_STSM();
         });
-        $(".chart-select-all").on("click", function(){
+        $(".chart-select-all").on("click", function () {
             show_STSM();
         });
         //if NONE filter is selected hie stsm
-        $(".chart-select-none").on("click", function(){
+        $(".chart-select-none").on("click", function () {
             $('#scroll-to-see-more').removeClass('my-show');
             $('#scroll-to-see-more').addClass('my-hidden');
         });
@@ -675,32 +689,32 @@ function validateEmail(Email) {
     }
 
     //if the scroll bar is present show STSM
-    $( window ).resize(function() {
-        if (!SCROLL_CONF){
+    $(window).resize(function () {
+        if (!SCROLL_CONF) {
             show_STSM();
         }
     });
 
     //test to see if scroll bar exists if it does show STSM
     //for some reason scroll bar width is 6000+ when first rendered?
-    function show_STSM(){
+    function show_STSM() {
         var elementSO = $(".scrolling-outer").get(0);
-        if (elementSO && !SCROLL_CONF){
+        if (elementSO && !SCROLL_CONF) {
             var selected = $("#selection-number").text();
             var compChecked = $(".manualcheckbox:checked").length;
-            if (parseInt(selected) > 12 ){
+            if (parseInt(selected) > 12) {
                 //really big table just show
-                if (compChecked == selected){
+                if (compChecked == selected) {
                     $('#scroll-to-see-more').removeClass('my-hidden');
                     $('#scroll-to-see-more').addClass('my-show');
-                }else if(elementSO.offsetWidth < elementSO.scrollWidth){
+                } else if (elementSO.offsetWidth < elementSO.scrollWidth) {
                     $('#scroll-to-see-more').removeClass('my-hidden');
                     $('#scroll-to-see-more').addClass('my-show');
-                }else{
+                } else {
                     $('#scroll-to-see-more').removeClass('my-show');
                     $('#scroll-to-see-more').addClass('my-hidden');
                 }
-            }else if ((elementSO.offsetWidth < elementSO.scrollWidth) && (elementSO.scrollWidth < 5000)) {
+            } else if ((elementSO.offsetWidth < elementSO.scrollWidth) && (elementSO.scrollWidth < 5000)) {
                 //console.log("has overflow "+elementSO.offsetWidth+" < "+elementSO.scrollWidth);
                 $('#scroll-to-see-more').removeClass('my-hidden');
                 $('#scroll-to-see-more').addClass('my-show');
@@ -710,7 +724,7 @@ function validateEmail(Email) {
                 $('#scroll-to-see-more').addClass('my-hidden');
             }
             //add scrolling outer event to hide STSM on scroll this could be in
-            $(".scrolling-outer").scroll(function(){
+            $(".scrolling-outer").scroll(function () {
                 $('#scroll-to-see-more').removeClass('my-show');
                 $('#scroll-to-see-more').addClass('my-hidden');
                 SCROLL_CONF = true;
@@ -727,20 +741,20 @@ function validateEmail(Email) {
 
     //WA fix for tabing to table header only used if user is tabing through table
     //shows or hides overlay
-    function add_focus_events(){
+    function add_focus_events() {
         var my_attr = $(".floating-row-header").find("a").attr('data-hidden');
-        if( !my_attr){
-            $("#comparisonchart th").find("a").on("focus", function(){
+        if (!my_attr) {
+            $("#comparisonchart th").find("a").on("focus", function () {
                 $(".floating-row-header").hide();
             });
 
-            $("#comparisonchart th").find("a").on("focusout", function(){
+            $("#comparisonchart th").find("a").on("focusout", function () {
                 $(".floating-row-header").show();
             });
 
             $(".floating-row-header a").attr({
                 tabindex: '-1',
-                "data-hidden" : "true"
+                "data-hidden": "true"
             });
 
         };
