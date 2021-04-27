@@ -5,6 +5,7 @@ namespace App\Modules\Menus\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Menus\Models\Type;
 use App\Modules\Menus\Models\Item;
 use App\Halcyon\Access\Viewlevel;
