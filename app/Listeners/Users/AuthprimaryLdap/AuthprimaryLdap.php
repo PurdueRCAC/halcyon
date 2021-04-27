@@ -35,7 +35,7 @@ class AuthprimaryLdap
 			return array();
 		}
 
-		return config('listener.authprimary' . ($sub ? '.' . $sub : ''), []);
+		return config('listener.authprimaryldap' . ($sub ? '.' . $sub : ''), []);
 	}
 
 	/**
@@ -83,12 +83,14 @@ class AuthprimaryLdap
 			return;
 		}
 
+		$auth = false;
 		$user = $event->user;
+		$results = array();
+		$status = 200;
 
 		try
 		{
 			$ldap = $this->connectAllPeople($configall);
-			$status = 500;
 
 			// Check for an existing record
 			$result = $ldap->search()
@@ -114,7 +116,7 @@ class AuthprimaryLdap
 				sn: Ex
 				*/
 				// Create user record in ou=allPeople
-				$entry = $ldap->make()->user([
+				$data = [
 					'uid'           => $user->username,
 					'uidNumber'     => $user->uidNumber,
 					'gidNumber'     => $user->gidNumber,
@@ -122,12 +124,17 @@ class AuthprimaryLdap
 					'sn'            => $auth ? $user->surname : '-',
 					'loginShell'    => $auth ? $user->loginShell : '/bin/false',
 					'homeDirectory' => $auth ? '/home/' . $user->username : '/dev/null',
-				]);
+				];
+
+				$entry = $ldap->make()->user($data);
 
 				if (!$entry->save())
 				{
 					throw new Exception('Failed to make AuthPrimary ou=allPeople record', 500);
 				}
+
+				$results['created'] = $data;
+				$status = 201;
 			}
 			elseif ($auth)
 			{
@@ -141,6 +148,13 @@ class AuthprimaryLdap
 				{
 					throw new Exception('Failed to update AuthPrimary ou=allPeople record', 500);
 				}
+
+				$results['updated'] = [
+					'cn' => $user->name,
+					'sn' => $user->surname,
+					'loginShell' => $user->loginShell,
+					'homeDirectory' => '/home/' . $user->username
+				];
 			}
 
 			if ($auth)
@@ -197,6 +211,9 @@ class AuthprimaryLdap
 					{
 						throw new Exception('Failed to make AuthPrimary ou=People record', 500);
 					}
+
+					$results['created_auth'] = $data;
+					$status = 201;
 				}
 			}
 		}
