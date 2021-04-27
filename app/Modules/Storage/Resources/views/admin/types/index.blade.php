@@ -114,7 +114,7 @@ app('pathway')
 								@if ($row->notifications_count)
 									{{ number_format($row->notifications_count) }}
 								@else
-									<span class="none">{{ number_format($row->notifications_count) }}</span>
+									{{ number_format($row->notifications_count) }}
 								@endif
 							</td>
 						</tr>
