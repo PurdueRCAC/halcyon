@@ -138,8 +138,8 @@ class FieldsController extends Controller
 	{
 		//$request->validate([
 		$rules = [
-			'fields.title' => 'required|string|max:255',
-			'fields.summary' => 'nullable|string|max:1200'
+			'fields.label' => 'required|string|max:150',
+			'fields.name' => 'nullable|string|max:150'
 		];
 
 		$validator = Validator::make($request->all(), $rules);

@@ -179,24 +179,25 @@ class FieldsController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'parentid' => 'nullable|integer',
-			'name' => 'required|string',
+			'label' => 'required|string|max:150',
+			'name' => 'nullable|string|max:150'
 		]);
 
-		$parentid = $request->input('parentid');
-		$parentid = $parentid ?: 1;
-
 		$row = new Field;
-		$row->parentid = $parentid;
+		$row->label = $request->input('label');
 		$row->name = $request->input('name');
+
+		if (!$row->name)
+		{
+			$row->name = $row->label;
+		}
 
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
-		$row->api = route('api.finder.fieldsofscience.read', ['id' => $row->id]);
-		$row->finder_count = $row->finder()->count();
+		$row->api = route('api.finder.fields.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -221,8 +222,7 @@ class FieldsController extends Controller
 	public function read($id)
 	{
 		$row = Field::findOrFail($id);
-		$row->api = route('api.finder.fieldsofscience.read', ['id' => $row->id]);
-		$row->finder_count = $row->finder()->count();
+		$row->api = route('api.finder.fields.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -267,20 +267,20 @@ class FieldsController extends Controller
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'parentid' => 'nullable|integer',
-			'name' => 'nullable|string',
+			'label' => 'nullable|string|max:150',
+			'name' => 'nullable|string|max:150'
 		]);
 
 		$row = Field::findOrFail($id);
 
-		if ($parentid = $request->input('parentid'))
+		if ($request->has('label'))
 		{
-			$row->parentid = $parentid;
+			$row->label = $request->input('label');
 		}
 
-		if ($name = $request->input('name'))
+		if ($request->has('name'))
 		{
-			$row->name = $name;
+			$row->name = $request->input('name');
 		}
 
 		if (!$row->save())
@@ -288,8 +288,7 @@ class FieldsController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
-		$row->api = route('api.finder.fieldsofscience.read', ['id' => $row->id]);
-		$row->finder_count = $row->finder()->count();
+		$row->api = route('api.finder.fields.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}

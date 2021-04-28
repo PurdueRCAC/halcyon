@@ -49,8 +49,6 @@ class FacetsController extends Controller
 		$query = Facet::query()
 			->where('parent', '=', 0);
 
-		$g = (new Facet)->getTable();
-
 		if ($filters['search'])
 		{
 			if (is_numeric($filters['search']))
@@ -143,7 +141,7 @@ class FacetsController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Group::findOrFail($id) : new Group();
+		$row = $id ? Facet::findOrFail($id) : new Facet();
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())

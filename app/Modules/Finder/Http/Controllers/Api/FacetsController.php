@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Finder\Models\Facet;
+use App\Modules\Finder\Models\ServiceFacet;
 
 /**
  * Facets
@@ -101,7 +102,7 @@ class FacetsController extends Controller
 	{
 		$filters = array(
 			'search'   => $request->input('search', ''),
-			'parentid' => $request->input('parentid'),
+			'parent' => $request->input('parent', 0),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
 			// Sorting
@@ -114,36 +115,48 @@ class FacetsController extends Controller
 			$filters['order_dir'] = Facet::$orderDir;
 		}
 
-		$query = Facet::query();
+		$query = Facet::query()
+			->where('parent', '=', $filters['parent']);
 
 		if ($filters['search'])
 		{
-			$filters['search'] = strtolower((string)$filters['search']);
+			if (is_numeric($filters['search']))
+			{
+				$query->where($g . '.id', '=', $filters['search']);
+			}
+			else
+			{
+				$filters['search'] = strtolower((string)$filters['search']);
 
-			$query->where('name', 'like', '%' . $filters['search'] . '%');
+				$query->where(function ($where) use ($filters, $g)
+				{
+					$where->where($g . '.name', 'like', '%' . $filters['search'] . '%')
+						->orWhere($g . '.description', 'like', '%' . $filters['search'] . '%');
+				});
+			}
 		}
 
-		if ($filters['parentid'])
+		if ($filters['state'] == 'published')
 		{
-			$filters['parentid'] = strtolower((string)$filters['parentid']);
-
-			$query->where('parentid', '=', $filters['parentid']);
+			$query->where('status', '=', 1);
 		}
-		else
+		elseif ($filters['state'] == 'unpublished')
 		{
-			$query->where('parentid', '!=', 0);
+			$query->where('status', '=', 0);
+		}
+		elseif ($filters['state'] == 'trashed')
+		{
+			$query->withTrashed();
 		}
 
 		$rows = $query
-			->withCount('finder')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
 		$rows->each(function ($row, $key)
 		{
-			$row->api = route('api.finder.departments.read', ['id' => $row->id]);
-			$row->finder_count = $row->finder()->count();
+			$row->api = route('api.finder.facets.read', ['id' => $row->id]);
 		});
 
 		return new ResourceCollection($rows);
@@ -179,24 +192,58 @@ class FacetsController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'parentid' => 'nullable|integer',
-			'name' => 'required|string',
+			'name' => 'required|string|max:150',
+			'control_type' => 'required|string|max:150',
+			'description' => 'nullable|string',
+			'parent' => 'nullable|integer',
+			'status' => 'nullable|integer',
 		]);
 
-		$parentid = $request->input('parentid');
-		$parentid = $parentid ?: 1;
-
 		$row = new Facet;
-		$row->parentid = $parentid;
+		$row->control_type = $request->input('control_type');
 		$row->name = $request->input('name');
+		$row->parent = $request->input('parent', 0);
+		$row->status = $request->input('status', 1);
 
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
-		$row->api = route('api.finder.fieldsofscience.read', ['id' => $row->id]);
-		$row->finder_count = $row->finder()->count();
+		if ($request->has('choices'))
+		{
+			$choices = $request->input('choices', []);
+
+			// Add new or update choices
+			foreach ($choices as $choice)
+			{
+				$c = Facet::find($choice['id']);
+
+				if (!$c || !$c->id)
+				{
+					$c = new Facet;
+				}
+
+				$c->parent = $row->id;
+				$c->name = $choice['name'];
+				$c->status = 1;
+				$c->save();
+
+				if (!empty($choice['matches']))
+				{
+					// Add new matches
+					foreach ($choice['matches'] as $service_id)
+					{
+						$match = new ServiceFacet;
+						$match->service_id = $service_id;
+						$match->facet_id = $c->id;
+						$match->save();
+					}
+				}
+			}
+		}
+
+		$row->api = route('api.finder.facets.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -221,8 +268,8 @@ class FacetsController extends Controller
 	public function read($id)
 	{
 		$row = Facet::findOrFail($id);
-		$row->api = route('api.finder.fieldsofscience.read', ['id' => $row->id]);
-		$row->finder_count = $row->finder()->count();
+		$row->api = route('api.finder.facets.read', ['id' => $row->id]);
+		$row->choices;
 
 		return new JsonResource($row);
 	}
@@ -267,15 +314,19 @@ class FacetsController extends Controller
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'parentid' => 'nullable|integer',
-			'name' => 'nullable|string',
+			'name' => 'nullable|string|max:150',
+			'control_type' => 'nullable|string|max:150',
+			'description' => 'nullable|string',
+			'parent' => 'nullable|integer',
+			'status' => 'nullable|integer',
+			'choices' => 'nullable|array',
 		]);
 
 		$row = Facet::findOrFail($id);
 
-		if ($parentid = $request->input('parentid'))
+		if ($request->has('parent'))
 		{
-			$row->parentid = $parentid;
+			$row->parent = $request->input('parent');
 		}
 
 		if ($name = $request->input('name'))
@@ -283,13 +334,83 @@ class FacetsController extends Controller
 			$row->name = $name;
 		}
 
+		if ($request->has('description'))
+		{
+			$row->description = $request->input('description');
+		}
+
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
-		$row->api = route('api.finder.fieldsofscience.read', ['id' => $row->id]);
-		$row->finder_count = $row->finder()->count();
+		$old = $row->facets;
+		$current = array();
+
+		if ($request->has('choices'))
+		{
+			$choices = $request->input('choices', []);
+
+			// Add new or update choices
+			foreach ($choices as $choice)
+			{
+				$c = Facet::find($choice['id']);
+
+				if (!$c || !$c->id)
+				{
+					$c = new Facet;
+				}
+
+				$c->parent = $row->id;
+				$c->name = $choice['name'];
+				$c->status = 1;
+				$c->save();
+
+				$current[] = $c->id;
+
+				$oldmatches = $c->services;
+				$currentmatches = array();
+
+				if (!empty($choice['matches']))
+				{
+					// Add new matches
+					foreach ($choice['matches'] as $service_id)
+					{
+						$match = ServiceFacet::findByServiceAndFacet($service_id, $c->id);
+
+						if (!$match || !$match->id)
+						{
+							$match = new ServiceFacet;
+							$match->service_id = $service_id;
+							$match->facet_id = $c->id;
+							$match->save();
+						}
+
+						$currentmatches[] = $service_id;
+					}
+				}
+
+				// Remove any previous matches not in the new dataset
+				foreach ($oldmatches as $om)
+				{
+					if (!in_array($om->service_id, $currentmatches))
+					{
+						$om->delete();
+					}
+				}
+			}
+
+			// Remove any previous choices not in the new dataset
+			foreach ($old as $o)
+			{
+				if (!in_array($o->id, $current))
+				{
+					$o->delete();
+				}
+			}
+		}
+
+		$row->api = route('api.finder.facets.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}

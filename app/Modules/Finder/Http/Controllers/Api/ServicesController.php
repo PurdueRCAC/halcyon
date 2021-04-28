@@ -7,7 +7,9 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Modules\Finder\Models\Field;
 use App\Modules\Finder\Models\Service;
+use App\Modules\Finder\Models\ServiceField;
 
 /**
  * Services
@@ -101,7 +103,7 @@ class ServicesController extends Controller
 	{
 		$filters = array(
 			'search'    => $request->input('search', ''),
-			'status'    => $request->input('status', 'published'),
+			'state'    => $request->input('state', 'published'),
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
 			// Sorting
@@ -190,24 +192,41 @@ class ServicesController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'parentid' => 'nullable|integer',
-			'name' => 'required|string',
+			'title' => 'required|string|max:255',
+			'summary' => 'nullable|string|max:1200'
 		]);
 
-		$parentid = $request->input('parentid');
-		$parentid = $parentid ?: 1;
-
 		$row = new Service;
-		$row->parentid = $parentid;
-		$row->name = $request->input('name');
+		$row->title = $request->input('title');
+		$row->summary = $request->input('summary');
 
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
-		$row->api = route('api.finder.fieldsofscience.read', ['id' => $row->id]);
-		$row->finder_count = $row->finder()->count();
+		if ($request->has('fields'))
+		{
+			$sfields = $request->input('fields');
+
+			foreach ($sfields as $name => $value)
+			{
+				$field = Field::findByName($name);
+
+				if (!$field)
+				{
+					continue;
+				}
+
+				$fs = new ServiceField;
+				$fs->service_id = $service->id;
+				$fs->field_id = $field->id;
+				$fs->value = $value;
+				$fs->save();
+			}
+		}
+
+		$row->api = route('api.finder.services.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -232,8 +251,8 @@ class ServicesController extends Controller
 	public function read($id)
 	{
 		$row = Service::findOrFail($id);
-		$row->api = route('api.finder.fieldsofscience.read', ['id' => $row->id]);
-		$row->finder_count = $row->finder()->count();
+		$row->api = route('api.finder.services.read', ['id' => $row->id]);
+		$row->fields;
 
 		return new JsonResource($row);
 	}
@@ -278,20 +297,20 @@ class ServicesController extends Controller
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'parentid' => 'nullable|integer',
-			'name' => 'nullable|string',
+			'title' => 'nullable|string|max:255',
+			'summary' => 'nullable|string|max:1200'
 		]);
 
 		$row = Service::findOrFail($id);
 
-		if ($parentid = $request->input('parentid'))
+		if ($request->has('title'))
 		{
-			$row->parentid = $parentid;
+			$row->title = $request->input('title');
 		}
 
-		if ($name = $request->input('name'))
+		if ($request->has('summary'))
 		{
-			$row->name = $name;
+			$row->summary = $request->input('summary');
 		}
 
 		if (!$row->save())
@@ -299,8 +318,34 @@ class ServicesController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
-		$row->api = route('api.finder.fieldsofscience.read', ['id' => $row->id]);
-		$row->finder_count = $row->finder()->count();
+		if ($request->has('fields'))
+		{
+			$sfields = $request->input('fields');
+
+			foreach ($sfields as $name => $value)
+			{
+				$field = Field::findByName($name);
+
+				if (!$field)
+				{
+					continue;
+				}
+
+				$fs = ServiceField::findByServiceAndField($service->id, $field->id);
+
+				if (!$fs || ! $fs->id)
+				{
+					$fs = new ServiceField;
+				}
+
+				$fs->service_id = $service->id;
+				$fs->field_id = $field->id;
+				$fs->value = $value;
+				$fs->save();
+			}
+		}
+
+		$row->api = route('api.finder.services.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
