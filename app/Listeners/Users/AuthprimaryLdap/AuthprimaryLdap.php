@@ -115,6 +115,11 @@ class AuthprimaryLdap
 				cn: Ex A Mple
 				sn: Ex
 				*/
+				if (!$user->loginShell)
+				{
+					$user->loginShell = '/bin/bash';
+				}
+
 				// Create user record in ou=allPeople
 				$data = [
 					'uid'           => $user->username,
