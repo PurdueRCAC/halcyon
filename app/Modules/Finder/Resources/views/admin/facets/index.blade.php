@@ -7,7 +7,7 @@ app('pathway')
 		route('admin.finder.index')
 	)
 	->append(
-		trans('finder::finder.finder'),
+		trans('finder::finder.facets'),
 		route('admin.finder.index')
 	);
 @endphp
