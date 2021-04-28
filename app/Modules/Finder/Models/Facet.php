@@ -184,11 +184,25 @@ class Facet extends Model
 		{
 			$result = self::query()
 				->select(DB::raw('MAX(weight) + 1 AS seq'))
+				->where('parent', '=', $model->parent)
 				->get()
 				->first()
 				->seq;
 
 			$model->setAttribute('weight', (int)$result);
+		});
+
+		static::deleted(function ($model)
+		{
+			foreach ($model->choices as $choice)
+			{
+				$choice->delete();
+			}
+
+			foreach ($model->services as $service)
+			{
+				$service->delete();
+			}
 		});
 	}
 }

@@ -127,8 +127,9 @@ class FacetsController extends Controller
 	{
 		//$request->validate([
 		$rules = [
-			'fields.name' => 'required|max:255',
-			'fields.unixgroup' => 'nullable|max:10',
+			'fields.name' => 'required|string|max:150',
+			'fields.control_type' => 'required|string|max:150',
+			'fields.description' => 'nullable|string',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -145,24 +146,6 @@ class FacetsController extends Controller
 		$row = $id ? Group::findOrFail($id) : new Group();
 		$row->fill($request->input('fields'));
 
-		// Verify UNIX group is sane - this is just a first pass,
-		// would still need to make sure this is not a duplicate anywhere, etc
-		if ($row->unixgroup)
-		{
-			if (!preg_match('/^[a-z][a-z0-9\-]{0,8}[a-z0-9]$/', $row->unixgroup))
-			{
-				return redirect()->back()->withError(trans('Field `unixgroup` not in valid format'));
-			}
-
-			$exists = Group::findByUnixgroup($row->unixgroup);
-
-			// Check for a duplicate
-			if ($exists)
-			{
-				return redirect()->back()->withError(trans('`unixgroup` ' . $row->unixgroup . ' already exists'));
-			}
-		}
-
 		if (!$row->save())
 		{
 			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
@@ -170,7 +153,73 @@ class FacetsController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->with('success', trans('global.messages.item saved'));
+		$old = $row->facets;
+		$current = array();
+
+		if ($request->has('choices'))
+		{
+			$choices = $request->input('choices', []);
+
+			// Add new or update choices
+			foreach ($choices as $choice)
+			{
+				$c = Facet::find($choice['id']);
+
+				if (!$c || !$c->id)
+				{
+					$c = new Facet;
+				}
+
+				$c->parent = $row->id;
+				$c->name = $choice['name'];
+				$c->status = 1;
+				$c->save();
+
+				$current[] = $c->id;
+
+				$oldmatches = $c->services;
+				$currentmatches = array();
+
+				if (!empty($choice['matches']))
+				{
+					// Add new matches
+					foreach ($choice['matches'] as $service_id)
+					{
+						$match = ServiceFacet::findByServiceAndFacet($service_id, $c->id);
+
+						if (!$match || !$match->id)
+						{
+							$match = new ServiceFacet;
+							$match->service_id = $service_id;
+							$match->facet_id = $c->id;
+							$match->save();
+						}
+
+						$currentmatches[] = $service_id;
+					}
+				}
+
+				// Remove any previous matches not in the new dataset
+				foreach ($oldmatches as $om)
+				{
+					if (!in_array($om->service_id, $currentmatches))
+					{
+						$om->delete();
+					}
+				}
+			}
+
+			// Remove any previous choices not in the new dataset
+			foreach ($old as $o)
+			{
+				if (!in_array($o->id, $current))
+				{
+					$o->delete();
+				}
+			}
+		}
+
+		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

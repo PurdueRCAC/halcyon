@@ -181,7 +181,6 @@ class Service extends Model
 			}
 
 			$fields = $node->fields()
-				//->orderBy('weight', 'asc')
 				->get();
 
 			if (count($fields))
@@ -209,13 +208,27 @@ class Service extends Model
 			array_push($services, $s);
 		}
 
-		/*$title = [];
-		foreach ($services as $key => $row)
-		{
-			$title[$key] = $row['title'];
-		}
-		array_multisort($title, SORT_ASC, $services);*/
-
 		return $services;
+	}
+
+	/**
+	 * The "booted" method of the model.
+	 *
+	 * @return void
+	 */
+	protected static function booted()
+	{
+		static::deleted(function ($model)
+		{
+			foreach ($model->fields as $field)
+			{
+				$field->delete();
+			}
+
+			foreach ($model->facets as $facet)
+			{
+				$facet->delete();
+			}
+		});
 	}
 }

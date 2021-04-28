@@ -85,7 +85,7 @@ app('pathway')
 					{!! Html::grid('sort', trans('finder::finder.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
-					{!! Html::grid('sort', trans('finder::finder.control_type'), 'control_type', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('finder::finder.control type'), 'control_type', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('finder::finder.status'), 'status', $filters['order_dir'], $filters['order']) !!}

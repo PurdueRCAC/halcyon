@@ -54,6 +54,16 @@ class Field extends Model
 	);
 
 	/**
+	 * Field Services
+	 *
+	 * @return  object
+	 */
+	public function services()
+	{
+		return $this->hasMany(ServiceField::class, 'field_id');
+	}
+
+	/**
 	 * Retrieves one row loaded by name
 	 *
 	 * @param   string   $name
@@ -103,6 +113,14 @@ class Field extends Model
 				->seq;
 
 			$model->setAttribute('weight', (int)$result);
+		});
+
+		static::deleted(function ($model)
+		{
+			foreach ($this->services as $service)
+			{
+				$service->delete();
+			}
 		});
 	}
 }

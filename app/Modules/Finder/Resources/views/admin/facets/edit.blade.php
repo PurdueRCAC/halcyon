@@ -1,5 +1,10 @@
 @extends('layouts.master')
 
+@push('scripts')
+<script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js') }}"></script>
+<script src="{{ asset('modules/finder/js/admin.js?v=' . filemtime(public_path() . '/modules/finder/js/admin.js')) }}"></script>
+@endpush
+
 @php
 app('request')->merge(['hidemainmenu' => 1]);
 
@@ -37,7 +42,7 @@ app('pathway')
 @section('content')
 <form action="{{ route('admin.finder.store') }}" method="post" name="adminForm" id="item-form" class="editform">
 	<div class="row">
-		<div class="col col-md-7">
+		<div class="col col-md-6">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
@@ -64,34 +69,120 @@ app('pathway')
 					<div class="form-group">
 						<div class="form-check">
 							<input type="radio" name="fields[control_type]" id="field-control_type-checkbox" class="form-check-input" value="checkbox"<?php if ($row->control_type == 'radio') { echo ' checked="checked"'; } ?> />
-							<label for="field-control_type-checkbox" class="form-check-label">{{ trans('finder::finder.radio') }}</label>
+							<label for="field-control_type-checkbox" class="form-check-label">{{ trans('finder::finder.checkbox') }}</label>
 						</div>
 					</div>
 				</fieldset>
 
 				<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 			</fieldset>
-
+		</div>
+		<div class="col col-md-6">
 			<fieldset class="adminform">
 				<legend>{{ trans('finder::finder.choices') }}</legend>
 
-				@foreach ($row->choices()->orderBy('weight', 'asc')->get() as $choice)
+				<div id="choices">
+				@foreach ($row->choices()->orderBy('weight', 'asc')->get() as $k => $choice)
+				<fieldset id="choice-{{ $k }}">
 					<?php
 					$matches = $choice->services->pluck('service_id')->toArray();
 					?>
-					<div class="form-group">
-						<label for="choice-{{ $choice->id }}-name">{{ trans('finder::finder.choice') }}:</label>
-						<input type="text" name="choice[{{ $choice->id }}][name]" id="choice-{{ $choice->id }}-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $choice->name }}" />
+					<div class="row">
+						<div class="col-md-10">
+							<div class="form-group">
+								<label for="choice-{{ $k }}-name">{{ trans('finder::finder.value') }}:</label>
+								<input type="text" name="choice[{{ $k }}][name]" id="choice-{{ $k }}-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $choice->name }}" />
+								<input type="hidden" name="choice[{{ $k }}][id]" id="choice-{{ $k }}-id" value="{{ $choice->id }}" />
+							</div>
+						</div>
+						<div class="col-md-2 text-right">
+							<button class="btn remove-choice" data-confirm="{{ trans('finder::finder.confirm delete') }}" data-target="#choice-{{ $k }}">
+								<span class="glyph icon-trash text-danger">
+									{{ trans('finder::finder.remove choice') }}
+								</span>
+							</button>
+						</div>
 					</div>
-					<select name="choice[{{ $choice->id }}][matches]" size="7" multiple="multiple" class="form-control">
-					@foreach ($services as $service)
-						<option value="{{ $service->id }}"<?php if (in_array($service->id, $matches)) { echo ' selected="selected"'; }?>>{{ $service->title }}</option>
-					@endforeach
-					</select>
+
+					<div class="row">
+						<div class="col">
+							<?php
+							$i = 0;
+							?>
+							@foreach ($services as $service)
+								<div class="form-group-wrap">
+									<div class="form-check">
+										<input type="checkbox" name="choice[{{ $k }}][matches]" id="choice-{{ $k }}-{{ $service->id }}" class="form-check-input" value="{{ $service->id }}"<?php if (in_array($service->id, $matches)) { echo ' checked="checked"'; } ?> />
+										<label for="choice-{{ $k }}-{{ $service->id }}" class="form-check-label">{{ $service->title }}</label>
+									</div>
+								</div>
+								<?php
+								$i++;
+								if ($i == 8):
+									?>
+						</div>
+						<div class="col">
+									<?php
+									$i = 0;
+								endif;
+								?>
+							@endforeach
+						</div>
+					</div>
+				</fieldset>
 				@endforeach
+				</div>
+				<div class="text-right">
+					<button class="btn btn-secondary add-choice" id="add-choice" data-template="#choice-template" data-container="#choices">{{ trans('finder::finder.add choice') }}</button>
+				</div>
+
+				<script type="text/x-handlebars-template" id="choice-template">
+				<fieldset id="choice-<?php echo '{{i}}'; ?>">
+					<div class="row">
+						<div class="col-md-10">
+							<div class="form-group">
+								<label for="choice-<?php echo '{{i}}'; ?>-name">{{ trans('finder::finder.value') }}:</label>
+								<input type="text" name="choice[<?php echo '{{i}}'; ?>][name]" id="choice-<?php echo '{{i}}'; ?>-name" class="form-control" required maxlength="250" value="" />
+								<input type="hidden" name="choice[<?php echo '{{i}}'; ?>][id]" id="choice-<?php echo '{{i}}'; ?>-id" value="" />
+							</div>
+						</div>
+						<div class="col-md-2 text-right">
+							<button class="btn remove-choice" data-confirm="{{ trans('finder::finder.confirm delete') }}" data-target="#choice-<?php echo '{{i}}'; ?>">
+								<span class="glyph icon-trash text-danger">
+									{{ trans('finder::finder.remove choice') }}
+								</span>
+							</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<?php
+							$i = 0;
+							?>
+							@foreach ($services as $service)
+								<div class="form-group-wrap">
+									<div class="form-check">
+										<input type="checkbox" name="choice[<?php echo '{{i}}'; ?>][matches]" id="choice-<?php echo '{{i}}'; ?>-{{ $service->id }}" class="form-check-input" value="{{ $service->id }}" />
+										<label for="choice-<?php echo '{{i}}'; ?>-{{ $service->id }}" class="form-check-label">{{ $service->title }}</label>
+									</div>
+								</div>
+								<?php
+								$i++;
+								if ($i == 8):
+									?>
+						</div>
+						<div class="col">
+									<?php
+									$i = 0;
+								endif;
+								?>
+							@endforeach
+						</div>
+					</div>
+				</fieldset>
+				</script>
 			</fieldset>
-		</div>
-		<div class="col col-md-5">
+
 		</div>
 	</div>
 
