@@ -227,6 +227,7 @@ class Item extends Model
 		$datestart = '0000-00-00 00:00:00';
 
 		$data = self::query()
+			->withTrashed()
 			->whereIsActive()
 			->where('origorderitemid', '=', $this->origorderitemid)
 			->orderBy('datetimecreated', 'asc')
@@ -243,7 +244,10 @@ class Item extends Model
 				$datestart = $row->datetimefulfilled;
 			}
 
-			//$item = $row->toArray();
+			if (!$row->order)
+			{
+				continue;
+			}
 
 			$users[] = $row->order->userid;
 			$users[] = $row->order->submitteruserid;
