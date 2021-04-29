@@ -171,7 +171,7 @@ class MenusController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->with('success', trans('global.messages.item saved'));
+		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

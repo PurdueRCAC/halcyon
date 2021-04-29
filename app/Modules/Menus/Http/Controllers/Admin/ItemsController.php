@@ -539,7 +539,7 @@ class ItemsController extends Controller
 		// Set this to redirects work correctly.
 		$request->merge(['menutype' => $row->menutype]);
 
-		return $this->cancel()->with('success', trans('global.messages.item saved'));
+		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**
