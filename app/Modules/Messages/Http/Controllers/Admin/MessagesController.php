@@ -245,7 +245,7 @@ class MessagesController extends Controller
 		// Check for an ID
 		if (count($ids) < 1)
 		{
-			$request->session()->flash('warning', trans($state ? 'news::news.select to publish' : 'news::news.select to unpublish'));
+			$request->session()->flash('warning', trans('news::news.select to ' . ($state ? 'publish' : 'unpublish')));
 			return $this->cancel();
 		}
 
@@ -319,7 +319,7 @@ class MessagesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('global.messages.item deleted', $success));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();
@@ -366,7 +366,7 @@ class MessagesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('messages::messages.item reset', $success));
+			$request->session()->flash('success', trans('messages::messages.item reset', ['count' => $success]));
 		}
 
 		return $this->cancel();
