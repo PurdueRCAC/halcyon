@@ -37,7 +37,7 @@ endif;
 		endif;
 		?>
 		<li id="{{ $fold['name'] }}"<?php echo $cls; ?>>
-			<a class="folder" data-folder="{{ '/' . $fold['path'] }}" href="{{ route('admin.media.medialist') . '?folder=/' . urlencode($fold['path']) }}">
+			<a class="folder" data-folder="{{ '/' . $fold['path'] }}" data-href="{{ route('admin.media.medialist') . '?folder=/' . urlencode($fold['path']) }}" href="{{ route('admin.media.index') . '?folder=' . urlencode('/' . $fold['path']) }}">
 				<span class="folder-icon">
 					<img src="<?php echo $icon; ?>" alt="{{ $fold['name'] }}" />
 				</span>

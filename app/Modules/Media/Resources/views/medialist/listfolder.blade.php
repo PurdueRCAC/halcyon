@@ -4,7 +4,7 @@ $path = ltrim($file->getRelativePath(), '/');
 ?>
 	<tr class="media-item media-item-list">
 		<td width="<?php echo (!auth()->user()->can('delete media')) ? '70' : '60'; ?>%">
-			<a class="folder-item" data-folder="/{{ $path }}" href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}">
+			<a class="folder-item" data-folder="/{{ $path }}" data-href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}" href="{{ route('admin.media.index', ['folder' => '/' . $path]) }}">
 				<span class="media-icon">
 					<img src="{{ asset('modules/media/filetypes/folder.svg') }}" alt="{{ $file->getFilename() }}" />
 				</span>

@@ -170,7 +170,7 @@ class MediaController extends Controller
 		$disk = $request->input('disk');
 		$path = $request->input('path');
 		$files = $request->file();
-		$overwrite = $request->input('overwrite');
+		$overwrite = $request->input('overwrite', true);
 
 		if (empty($files))
 		{
@@ -189,7 +189,7 @@ class MediaController extends Controller
 			}
 
 			// Check file size
-			$maxSize = config('modules.media.max_upload_size', 0);
+			$maxSize = config('module.media.max-file-size', 0);
 
 			if (($maxSize && $file->getSize() / 1024 > $maxSize)
 			 || $file->getSize() / 1024 > $file->getMaxFilesize())
@@ -208,7 +208,7 @@ class MediaController extends Controller
 			}*/
 
 			// Check allowed file type
-			$allowedTypes = config('modules.media.allowed_types', []);
+			$allowedTypes = config('module.media.allowed-extensions', []);
 
 			if (!empty($allowedTypes)
 			 && !in_array(

@@ -6,7 +6,7 @@ $ext = 'folder';
 <div class="media-item media-item-thumb">
 	<div class="media-preview">
 		<div class="media-preview-inner">
-			<a class="media-thumb folder-item" data-folder="/{{ $path }}" href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}">
+			<a class="media-thumb folder-item" data-folder="/{{ $path }}" data-href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}" href="{{ route('admin.media.index', ['folder' => '/' . $path]) }}">
 				<span class="media-preview-shim"></span><!--
 				--><img src="{{ $icon }}" alt="{{ $file->getFilename() }}" width="80" />
 			</a>

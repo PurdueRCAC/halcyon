@@ -79,7 +79,7 @@ app('pathway')
 				<div class="media-view">
 					<div class="media-items" id="media-items" data-tmpl="" data-confirm="{{ trans('global.confirm delete') }}" data-list="{{ route('admin.media.medialist') }}">
 						<?php
-						$children = App\Modules\Media\Helpers\MediaHelper::getChildren(storage_path() . '/app', '');
+						$children = App\Modules\Media\Helpers\MediaHelper::getChildren(storage_path() . '/app' . $folder, '');
 						?>
 						@include('media::medialist.index')
 					</div>
