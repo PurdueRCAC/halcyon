@@ -117,7 +117,7 @@
 
 		@if (auth()->user() && auth()->user()->can('manage news'))
 			<p class="alert alert-info">
-				<a href="{{ route('admin.news.edit', ['id' => $article->id]) }}">Edit Article</a><br /><br />
+				<a href="{{ route('site.news.manage', ['id' => $article->id, 'edit' => 1]) }}">Edit Article</a><br /><br />
 				View Count: <span id="viewcount"><span class="spinner">Loading...</span></span><br />
 				Unique View Count: <span id="uniqueviewcount"><span class="spinner">Loading...</span></span>
 			</p>

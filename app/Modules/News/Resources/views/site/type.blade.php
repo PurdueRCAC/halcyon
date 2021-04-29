@@ -189,6 +189,11 @@
 		<ul class="news-list">
 			@foreach ($articles as $article)
 				<li>
+					@if (auth()->user() && auth()->user()->can('edit news'))
+						<a class="btn float-right tip" href="{{ route('site.news.manage', ['id' => $article->id, 'edit' => 1]) }}" title="Edit"><!--
+							--><i class="fa fa-fw fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit</span><!--
+						--></a>
+					@endif
 					<article id="article-{{ $article->id }}">
 						<h3 class="news-title">
 							<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
