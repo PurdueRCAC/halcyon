@@ -108,6 +108,11 @@ app('pathway')
 					<input type="text" name="fields[location]" id="field-location" class="form-control" value="{{ $row->location }}" />
 				</div>
 
+				<div class="form-group type-option type-url <?php if (!$row->type->url) { echo ' d-none'; } ?>">
+					<label for="field-url">{{ trans('news::news.url') }}:</label>
+					<input type="text" name="fields[url]" id="field-url" class="form-control" value="{{ $row->url }}" />
+				</div>
+
 				<div class="form-group type-option type-tagresources <?php if (!$row->type->tagresources) { echo ' d-none'; } ?>">
 					<?php
 					$r = array();
