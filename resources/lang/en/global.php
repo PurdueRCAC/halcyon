@@ -42,10 +42,10 @@ return [
 		'record id' => 'Record #:id',
 	],
 	'messages' => [
-		'item created' => ':name successfully created.',
+		'item created' => 'Item successfully created.',
 		'creation failed' => 'Failed to create record.',
-		'item not found' => ':name not found.',
-		'item updated' => ':name successfully updated.',
+		'item not found' => 'Item not found.',
+		'item updated' => 'Item successfully updated.',
 		'update failed' => 'Failed to update record :id.',
 		'item deleted' => ':count successfully deleted.',
 		'delete failed' => 'Failed to delete record :id.',
