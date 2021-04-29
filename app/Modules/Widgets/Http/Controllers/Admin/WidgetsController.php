@@ -405,7 +405,7 @@ class WidgetsController extends Controller
 
 		$row->checkin();
 
-		return $this->cancel($request)->withSuccess($id ? trans('global.messages.item updated') : trans('global.messages.item created'));
+		return $this->cancel($request)->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

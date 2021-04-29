@@ -359,7 +359,7 @@ class PagesController extends Controller
 			return redirect()->back()->withError($row->getError());
 		}
 
-		return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created'), ['name' => trans('knowledge::knowledge.page')]));
+		return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

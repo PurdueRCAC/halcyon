@@ -128,7 +128,7 @@ class SchedulerPoliciesController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created'), ['name' => trans('queues::queues.scheduler policy')]));
+		return $this->cancel()->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

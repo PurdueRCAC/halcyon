@@ -129,7 +129,7 @@ class TypesController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created'), ['name' => trans('queues::queues.type')]));
+		return $this->cancel()->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

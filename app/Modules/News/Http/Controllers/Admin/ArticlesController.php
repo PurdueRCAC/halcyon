@@ -313,7 +313,7 @@ class ArticlesController extends Controller
 			$row->setAssociations($request->input('associations'));
 		}
 
-		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created'), ['name' => trans('news::news.article')]));
+		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**
