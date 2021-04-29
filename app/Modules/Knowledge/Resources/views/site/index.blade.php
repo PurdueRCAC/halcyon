@@ -190,7 +190,7 @@
 
 	@if (auth()->user() && auth()->user()->can('edit knowledge'))
 		<div class="hide" id="page-form{{ $page->id }}">
-			<form action="{{ route('site.knowledge.page', ['uri' => $p]) }}" data-api="{{ route('api.knowledge.update', ['id' => $node->id]) }}" method="post" name="pageform" id="pageform" class="editform">
+			<form action="{{ route('site.knowledge.page', ['uri' => ($p ? $p : '/')]) }}" data-api="{{ route('api.knowledge.update', ['id' => $node->id]) }}" method="post" name="pageform" id="pageform" class="editform">
 				@if (auth()->user()->can('edit pages'))
 					<fieldset>
 						<legend>{{ trans('global.details') }}</legend>
@@ -297,7 +297,7 @@
 						{{ trans('global.save') }}
 						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Saving...</span></span>
 					</button>
-					<a href="{{ route('site.knowledge.page', ['uri' => $p]) }}" data-id="{{ $page->id }}" class="cancel btn btn-link">Cancel</a>
+					<a href="{{ route('site.knowledge.page', ['uri' => ($p ? $p : '/')]) }}" data-id="{{ $page->id }}" class="cancel btn btn-link">Cancel</a>
 				</p>
 			</form>
 		</div>
