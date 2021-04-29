@@ -38,7 +38,7 @@ class ArticleResource extends JsonResource
 
 		$data['associations'] = $this->associations->each(function ($res, $key)
 		{
-			$res->name = null;
+			$res->name = trans('global.unknown');
 			if ($associated = $res->associated)
 			{
 				$res->name = $associated->name;

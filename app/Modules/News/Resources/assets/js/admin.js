@@ -54,7 +54,7 @@ function NEWSSendMail(btn) {
 				if (!to.tagExist(data.associations[x]['id'])) {
 					to.addTag({
 						'id': data.associations[x]['associd'],
-						'label': data.associations[x]['assocname']
+						'label': data.associations[x]['name']
 					});
 				}
 			}
