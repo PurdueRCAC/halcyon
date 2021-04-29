@@ -32,6 +32,8 @@ return [
 	'updates' => 'Updates',
 	'no items this week' => 'There are no :type this week',
 	'news story number' => 'News Story #:number',
+	'now' => '(now)',
+	'never' => '(no end)',
 	// Filters
 	'access' => 'Access',
 	'select access' => '- Access level -',
