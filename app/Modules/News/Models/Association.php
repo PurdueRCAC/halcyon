@@ -18,6 +18,27 @@ class Association extends Model
 	protected $table = 'newsassociations';
 
 	/**
+	 * The name of the "created at" column.
+	 *
+	 * @var  string
+	 */
+	const CREATED_AT = 'datetimecreated';
+
+	/**
+	 * The name of the "updated at" column.
+	 *
+	 * @var  string
+	 */
+	const UPDATED_AT = null;
+
+	/**
+	 * The name of the "deleted at" column.
+	 *
+	 * @var  string
+	 */
+	const DELETED_AT = 'datetimeremoved';
+
+	/**
 	 * Default order by for model
 	 *
 	 * @var  string
