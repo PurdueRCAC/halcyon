@@ -513,11 +513,14 @@ class PagesController extends Controller
 			'access'    => 'nullable|integer|min:1',
 			'state'     => 'nullable|integer',
 			'parent_id' => 'nullable|integer',
+			'params'    => 'nullable|array',
 		]);
+
+		$row = Associations::findOrFail($id);
+		$orig_parent_id = $row->parent_id;
 
 		$parent_id = $request->input('parent_id', $row->parent_id);
 
-		$row = Associations::findOrFail($id);
 		if ($request->has('access'))
 		{
 			$row->access = $request->input('access');

@@ -105,14 +105,6 @@ app('pathway')
 					<span class="form-text text-muted hint">{{ trans('knowledge::knowledge.path hint') }}</span>
 				</div>
 
-				<?php /*@if (!$page->snippet)
-					<div class="form-group form-check">
-						<input type="checkbox" name="page[snippet]" id="field-snippet" class="form-check-input" value="1" />
-						<label class="form-check-label" for="field-snippet">{{ trans('knowledge::knowledge.this is a snippet') }}</label>
-					</div>
-				@endif*/?>
-				<input type="hidden" name="page[snippet]" id="field-snippet" class="form-check-input" value="{{ $page->snippet }}" />
-
 				<div class="form-group">
 					<label for="page--content">{{ trans('knowledge::knowledge.content') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					{!! editor('page[content]', $page->content, ['rows' => 35, 'class' => ($errors->has('page.content') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
@@ -326,7 +318,7 @@ app('pathway')
 	</div>
 
 	<input type="hidden" name="fields[page_id]" value="{{ $page->id }}" />
-	<input type="hidden" name="fields[snippet]" value="1" />
+	<input type="hidden" name="page[snippet]" value="{{ $page->snippet }}" />
 	<input type="hidden" name="id" value="{{ $row->id }}" />
 
 	@csrf

@@ -171,3 +171,10 @@
 	font-size: 85%;
 	text-align: right;
 }
+
+.edit-controls {
+	position: absolute;
+	right: 15px;
+	background: #eee;
+	border-radius: 0.25em;
+}

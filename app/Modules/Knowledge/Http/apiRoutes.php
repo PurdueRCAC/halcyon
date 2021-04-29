@@ -12,7 +12,7 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 	$router->post('/', [
 		'as' => 'api.knowledge.create',
 		'uses' => 'PagesController@create',
-		'middleware' => 'auth:api|can:create knowledge',
+		'middleware' => ['auth:api', 'can:create knowledge'],
 	]);
 	$router->get('{id}', [
 		'as'   => 'api.knowledge.read',
@@ -21,41 +21,41 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 	$router->put('{id}', [
 		'as'   => 'api.knowledge.update',
 		'uses' => 'PagesController@update',
-		'middleware' => 'auth:api|can:edit knowledge',
+		'middleware' => ['auth:api', 'can:edit knowledge'],
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
 		'as' => 'api.knowledge.delete',
 		'uses' => 'PagesController@delete',
-		'middleware' => 'auth:api|can:delete knowledge',
+		'middleware' => ['auth:api', 'can:delete knowledge'],
 	])->where('id', '[0-9]+');
 
 	// Page snippets
-	$router->group(['prefix' => '/snippets', 'middleware' => 'auth:api|can:manage knowledge'], function (Router $router)
+	$router->group(['prefix' => '/snippets', 'middleware' => ['auth:api', 'can:manage knowledge']], function (Router $router)
 	{
 		$router->get('/', [
 			'as'   => 'api.knowledge.snippets',
 			'uses' => 'SnippetsController@index',
-			//'middleware' => 'auth:api|can:manage knowledge',
+			//'middleware' => ['auth:api', 'can:manage knowledge'],
 		]);
 		$router->post('/', [
 			'as' => 'api.knowledge.snippets.create',
 			'uses' => 'SnippetsController@create',
-			//'middleware' => 'auth:api|can:create knowledge',
+			//'middleware' => ['auth:api', 'can:create knowledge'],
 		]);
 		$router->get('{id}', [
 			'as' => 'api.knowledge.snippets.read',
 			'uses' => 'SnippetsController@read',
-			//'middleware' => 'auth:api|can:manage knowledge',
+			//'middleware' => ['auth:api', 'can:manage knowledge'],
 		])->where('id', '[0-9]+');
 		$router->put('{id}', [
 			'as' => 'api.knowledge.snippets.update',
 			'uses' => 'SnippetsController@update',
-			//'middleware' => 'auth:api|can:edit knowledge',
+			//'middleware' => ['auth:api', 'can:edit knowledge'],
 		])->where('id', '[0-9]+');
 		$router->delete('{id', [
 			'as' => 'api.knowledge.snippets.delete',
 			'uses' => 'SnippetsController@delete',
-			//'middleware' => 'auth:api|can:delete knowledge',
+			//'middleware' => ['auth:api', 'can:delete knowledge'],
 		])->where('id', '[0-9]+');
 	});
 

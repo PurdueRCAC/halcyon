@@ -9,6 +9,7 @@
 
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/prism/prism.js?v=' . filemtime(public_path() . '/modules/core/vendor/prism/prism.js')) }}"></script>
+<script src="{{ asset('modules/knowledge/js/site.js?v=' . filemtime(public_path() . '/modules/knowledge/js/site.js')) }}"></script>
 @endpush
 
 @section('content')
@@ -50,13 +51,15 @@
 	</div>
 
 	<div class="warticle-wrap" id="page-content{{ $page->id }}">
-		<?php /*
+
 		@if (auth()->user() && auth()->user()->can('edit knowledge'))
+		<div class="edit-controls">
 			<a href="#page-form{{ $page->id }}" data-id="{{ $page->id }}" class="edit btn tip" title="{{ trans('global.button.edit') }}">
 				<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>
 			</a>
+		</div>
 		@endif
-		*/ ?>
+
 		<article>
 			@if ($page->params->get('show_title', 1))
 				<h2>{{ $page->headline }}</h2>
@@ -182,73 +185,9 @@
 					</div>
 				</div>
 			</div>
-			<script>
-			$(document).ready(function() {
-				$('.btn-feedback').on('click', function(e) {
-					e.preventDefault();
-
-					$('#feedback-state').removeClass('hide');
-					var lbl = $('#feedback-label'),
-						val = $(this).data('feedback-text');
-
-					$('#feedback-type').val($(this).data('feedback-type'));
-
-					lbl.text($('#feedback-text').data(val + '-label'));
-					$('#feedback-response').text($('#feedback-response').data(val + '-label'));
-
-					$('#question-state').addClass('hide');
-				});
-
-				$('#submit-feedback').on('click', function(e){
-					e.preventDefault();
-
-					// Honeypot was filled
-					if ($('#feedback-hpt').val()) {
-						return;
-					}
-
-					$('#feedback-state').addClass('hide');
-
-					var frm = $($(this).closest('form'));
-
-					$.ajax({
-						url: frm.data('api'),
-						type: 'post',
-						data: frm.serialize(),
-						dataType: 'json',
-						async: false,
-						success: function(response) {
-							$('#rating-done').removeClass('hide');
-						},
-						error: function(xhr, ajaxOptions, thrownError) {
-							$('#rating-error').removeClass('hide');
-						}
-					});
-				});
-
-				$('[data-max-length]').on('keyup', function () {
-					var chars = $(this).val().length,
-						max = parseInt($(this).data('max-length')),
-						ctr = $(this).parent().find('.char-count');
-
-					if (chars) {
-						ctr.removeClass('hide');
-					} else {
-						ctr.addClass('hide');
-					}
-					ctr.text(max - chars);
-
-					if (chars >= max) {
-						var trimmed = $(this).val().substring(0, max);
-						$(this).val(trimmed);
-					}
-				});
-			});
-			</script>
 		@endif
 	</div>
 
-	<?php /*
 	@if (auth()->user() && auth()->user()->can('edit knowledge'))
 		<div class="hide" id="page-form{{ $page->id }}">
 			<form action="{{ route('site.knowledge.page', ['uri' => $p]) }}" data-api="{{ route('api.knowledge.update', ['id' => $node->id]) }}" method="post" name="pageform" id="pageform" class="editform">
@@ -256,10 +195,12 @@
 					<fieldset>
 						<legend>{{ trans('global.details') }}</legend>
 
-						<div class="form-group">
-							<label for="field-title">{{ trans('pages::pages.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
-							<input type="text" name="fields[title]" id="field-title" class="form-control required" maxlength="250" value="{{ $page->title }}" />
-						</div>
+						@if ($page->snippet)
+							<div class="alert alert-warning">
+								{{ trans('knowledge::knowledge.warning page is reusable') }}
+							</div>
+						@endif
+
 						@php
 						$parentpath = '';
 						if ($page->path):
@@ -270,123 +211,96 @@
 							endif;
 						endif;
 						@endphp
-						<div class="form-group" data-hint="{{ trans('pages::pages.path hint') }}">
-							<label for="field-alias">{{ trans('pages::pages.path') }}:</label>
+
+						<div class="form-group">
+							<label for="field-title">{{ trans('knowledge::knowledge.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
+							<input type="text" name="title" id="field-title" class="form-control{{ $errors->has('page.title') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $page->title }}" />
+							<span class="invalid-feedback">{{ trans('knowledge::knowledge.invalid.title') }}</span>
+						</div>
+
+						<div class="form-group">
+							<label for="field-alias">{{ trans('knowledge::knowledge.path') }}:</label>
 							<div class="input-group mb-2 mr-sm-2">
 								<div class="input-group-prepend">
-									<div class="input-group-text">{{ url('/') }}<span id="parent-path">{{ $parentpath }}</span>/</div>
+									<div class="input-group-text">{{ route('site.knowledge.index') }}<span id="parent-path">{{ $parentpath }}</span>/</div>
 								</div>
-								<input type="text" name="fields[alias]" id="field-alias" class="form-control" maxlength="250"<?php if ($page->alias == 'home'): ?> disabled="disabled"<?php endif; ?> value="{{ $page->alias }}" />
+								<input type="text" name="alias" id="field-alias" class="form-control" maxlength="250"<?php if ($page->alias == 'home'): ?> disabled="disabled"<?php endif; ?> value="{{ $page->alias }}" />
 							</div>
-							<span class="form-text text-muted hint">{{ trans('pages::pages.path hint') }}</span>
+							<span class="form-text text-muted hint">{{ trans('knowledge::knowledge.path hint') }}</span>
 						</div>
 
 						<div class="form-group">
 							<label for="field-content">{{ trans('pages::pages.content') }}: <span class="required">{{ trans('global.required') }}</span></label>
-							{!! editor('fields[content]', $page->content, ['rows' => 35, 'class' => 'required']) !!}
+							{!! editor('content', $page->content, ['rows' => 35, 'class' => 'required']) !!}
 						</div>
 					</fieldset>
 				@endif
 
+				<div class="row">
 				@if (auth()->user()->can('edit.state pages'))
-					<fieldset>
-						<legend>{{ trans('global.publishing') }}</legend>
+					<div class="col col-md-6">
+						<fieldset>
+							<legend>{{ trans('global.publishing') }}</legend>
 
-						<div class="row">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label for="field-access">{{ trans('pages::pages.access') }}:</label>
-									<select class="form-control" name="fields[access]" id="field-access"<?php if ($page->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
-										@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
-											<option value="<?php echo $access->id; ?>"<?php if ($page->access == $access->id) { echo ' selected="selected"'; } ?>><?php echo e($access->title); ?></option>
-										@endforeach
-									</select>
-								</div>
-
-								<div class="form-group">
-									<label for="field-state">{{ trans('pages::pages.state') }}:</label><br />
-									<select class="form-control" name="fields[state]" id="field-state"<?php if ($page->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
-										<option value="0"<?php if ($page->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
-										<option value="1"<?php if ($page->state == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
-									</select>
-								</div>
+							<div class="form-group">
+								<label for="field-access">{{ trans('knowledge::knowledge.access') }}:</label>
+								<select class="form-control" name="access" id="field-access"<?php if ($page->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
+									@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
+										<option value="{{ $access->id }}"<?php if ($node->access == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
+									@endforeach
+								</select>
 							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label for="params-show_title">{{ trans('knowledge::knowledge.show title') }}</label>
-									<select name="params[show_title]" id="params-show_title" class="form-control">
-										<option value="0"<?php if (!$page->params->get('show_title', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
-										<option value="1"<?php if (!$page->params->get('show_title', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
-									</select>
-								</div>
 
-								<div class="form-group">
-									<label for="params-show_toc">{{ trans('knowledge::knowledge.show toc') }}</label>
-									<select name="params[show_toc]" id="params-show_toc" class="form-control">
-										<option value="0"<?php if (!$page->params->get('show_toc', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
-										<option value="1"<?php if (!$page->params->get('show_toc', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
-									</select>
-								</div>
+							<div class="form-group">
+								<label for="field-state">{{ trans('knowledge::knowledge.state') }}:</label><br />
+								<select class="form-control" name="state" id="field-state"<?php if ($page->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
+									<option value="0"<?php if ($node->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
+									<option value="1"<?php if ($node->state == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
+								</select>
 							</div>
-						</div>
-					</fieldset>
+						</fieldset>
+					</div>
+					<div class="col-md-6">
+				@else
+					<div class="col col-md-12">
 				@endif
+						<fieldset>
+							<legend>{{ trans('knowledge::knowledge.options') }}</legend>
+
+							<div class="form-group">
+								<label for="params-show_title">{{ trans('knowledge::knowledge.show title') }}</label>
+								<select name="params[show_title]" id="params-show_title" class="form-control">
+									<option value="0"<?php if (!$page->params->get('show_title', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
+									<option value="1"<?php if ($page->params->get('show_title', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
+								</select>
+							</div>
+
+							<div class="form-group">
+								<label for="params-show_toc">{{ trans('knowledge::knowledge.show toc') }}</label>
+								<select name="params[show_toc]" id="params-show_toc" class="form-control">
+									<option value="0"<?php if (!$page->params->get('show_toc', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
+									<option value="1"<?php if ($page->params->get('show_toc', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
+								</select>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+
+				<input type="hidden" name="id" value="{{ $node->id }}" />
+				<input type="hidden" name="page_id" value="{{ $page->id }}" />
+				<input type="hidden" name="snippet" value="{{ $page->snippet }}" />
 
 				@csrf
 
 				<p class="text-center">
 					<button class="btn btn-success" id="save-page" type="submit">
 						{{ trans('global.save') }}
-						<span class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Saving...</span></span>
+						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Saving...</span></span>
 					</button>
 					<a href="{{ route('site.knowledge.page', ['uri' => $p]) }}" data-id="{{ $page->id }}" class="cancel btn btn-link">Cancel</a>
 				</p>
 			</form>
 		</div>
-		<script>
-			jQuery(document).ready(function($){
-				$('#content')
-					// Add confirm dialog to delete links
-					.on('click', 'a.delete', function (e) {
-						var res = confirm($(this).attr('data-confirm'));
-						if (!res) {
-							e.preventDefault();
-						}
-						return res;
-					})
-					.on('click', 'a.edit,a.cancel', function(e){
-						e.preventDefault();
-
-						var id = $(this).attr('data-id');
-
-						$('#page-form' + id).toggleClass('hide');
-						$('#page-content' + id).toggleClass('hide');
-					});
-				
-				$('#save-page').on('click', function(e){
-					e.preventDefault();
-
-					$(this).addClass('processing');
-
-					var frm = $($(this).closest('form'));
-
-					$.ajax({
-						url: frm.data('api'),
-						type: 'post',
-						data: frm.serialize(),
-						dataType: 'json',
-						async: false,
-						success: function(response) {
-							window.location.reload();
-						},
-						error: function(xhr, ajaxOptions, thrownError) {
-							$('#rating-error').removeClass('hide');
-						}
-					});
-				});
-			});
-		</script>
 	@endif
-	*/ ?>
 </div>
 @stop
