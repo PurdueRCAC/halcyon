@@ -221,6 +221,11 @@ a.card:focus {
 .input-required {
 	color: #c00;
 }
+.nsf-acknowledgement {
+	background: url("../images/anvil/nsf-70-color.png") top left no-repeat;
+	padding: 20px 0 20px 85px;
+	min-height: 75px;
+}
 @media (min-width: 480px) {
 	.hero {
 		background-position: -550px 0;
