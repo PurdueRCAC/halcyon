@@ -19,27 +19,18 @@ class AuthController extends Controller
 	 */
 	public function login(Request $request)
 	{
-		/*if (app()->has('cas'))
-		{
-			$cas = app('cas');
-
-			if ($cas->checkAuthentication())
-			{
-				return $this->callback();
-			}
-			else
-			{
-				return $cas->authenticate();
-			}
-		}*/
-
 		if (app()->has('cas'))
 		{
 			$cas = app('cas');
 
 			if (!$cas->checkAuthentication())
 			{
+				//return $this->callback();
 				return $cas->authenticate();
+			}
+			else
+			{
+				return redirect()->intended($this->authenticatedRoute());
 			}
 		}
 
@@ -84,8 +75,7 @@ class AuthController extends Controller
 		}
 
 		return redirect()
-			->intended(route(config('users.redirect_route_after_login', 'home')));
-			//->withSuccess(trans('users::messages.successfully logged in'));
+			->intended($this->authenticatedRoute());
 	}
 
 	/**
@@ -137,7 +127,7 @@ class AuthController extends Controller
 					//$user = \App\Modules\Users\Models\User::where('username', '=', $cas->user())->first();
 					$user = \App\Modules\Users\Models\User::findByUsername($cas->user());
 
-					if (!$user && config('users.create_on_login', 1))
+					if (!$user && config('module.users.create_on_login', 1))
 					{
 						$user = new \App\Modules\Users\Models\User;
 						$user->name = $cas->getAttribute('fullname');
@@ -167,7 +157,7 @@ class AuthController extends Controller
 			}
 		}
 
-		$route = route(config('users.redirect_route_after_login', 'home'));
+		$route = $this->authenticatedRoute();
 
 		if ($url = session('url.intended'))
 		{
@@ -193,7 +183,7 @@ class AuthController extends Controller
 			//app('cas')->logout(route('home'), route('home'));
 		}
 
-		return redirect()->route('login');
+		return redirect()->route(config('module.users.redirect_route_after_logout', 'login'));
 	}
 
 	/**
@@ -206,7 +196,7 @@ class AuthController extends Controller
 		if (Auth::check())
 		{
 			return redirect()
-				->intended(route(config('users.redirect_route_after_login', 'home')))
+				->intended($this->authenticatedRoute())
 				->withSuccess(trans('users::messages.already registered'));
 		}
 
@@ -221,5 +211,15 @@ class AuthController extends Controller
 	 */
 	public function registering(Request $request)
 	{
+	}
+
+	/**
+	 * Get route to redirect to after being authenticated
+	 * 
+	 * @return string
+	 */
+	private function authenticatedRoute()
+	{
+		return route(config('module.users.redirect_route_after_login', 'home'));
 	}
 }
