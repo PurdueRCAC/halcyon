@@ -27,7 +27,7 @@ class None
 	 */
 	public function handle(EditorIsRendering $editor)
 	{
-		$content = $editor->getValue();
+		$content = e($editor->getValue());
 
 		$attr = $editor->getAttributes();
 		$attr['name'] = $editor->getName();

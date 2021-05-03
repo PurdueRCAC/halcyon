@@ -76,9 +76,9 @@ class Ckeditor
 		);
 
 		$editor->setContent(view('listener.editor.ckeditor::textarea', [
-			'name'  => $editor->getName(),
+			'name'  => $name, //$editor->getName(),
 			'id'    => $attr['id'],
-			'value' => $editor->getValue(),
+			'value' => $content, //$editor->getValue(),
 			'atts'  => $attributes,
 			'config' => $config,
 		]));
