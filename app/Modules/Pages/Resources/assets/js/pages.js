@@ -1,5 +1,8 @@
+/**
+ * @package  Pages manager
+ */
 
-Halcyon.submitbutton = function(task) {
+/*Halcyon.submitbutton = function(task) {
 	var frm = document.getElementById('adminForm');
 
 	if (frm) {
@@ -7,16 +10,6 @@ Halcyon.submitbutton = function(task) {
 	}
 
 	$(document).trigger('editorSave');
-
-	/*var frm = document.getElementById('item-form');
-
-	if (frm) {
-		if (task == 'cancel' || document.formvalidator.isValid(frm)) {
-			Halcyon.submitform(task, frm);
-		} else {
-			alert(frm.getAttribute('data-invalid-msg'));
-		}
-	}*/
 
 	var frm = document.getElementById('item-form'),
 		invalid = false;
@@ -35,11 +28,9 @@ Halcyon.submitbutton = function(task) {
 
 		if (task == 'cancel' || task.match(/cancel$/) || !invalid) {
 			Halcyon.submitform(task, frm);
-		} /*else {
-			alert('Invalid data');
-		}*/
+		}
 	}
-}
+}*/
 
 jQuery(document).ready(function ($) {
 	var alias = $('#field-alias');
@@ -109,5 +100,51 @@ jQuery(document).ready(function ($) {
 		//clone.find('.btn').removeClass('disabled');
 
 		tr.after(clone);
+	});
+
+	$('.sparkline-chart').each(function (i, el) {
+		const ctx = el.getContext('2d');
+		const chart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: JSON.parse($(el).attr('data-labels')),
+				datasets: [
+					{
+						fill: false,
+						data: JSON.parse($(el).attr('data-values'))
+					}
+				]
+			},
+			options: {
+				responsive: false,
+				animation: {
+					duration: 0
+				},
+				legend: {
+					display: false
+				},
+				elements: {
+					line: {
+						borderColor: '#0071EB',
+						borderWidth: 1
+					},
+					point: {
+						radius: 0
+					}
+				},
+				scales: {
+					yAxes: [
+						{
+							display: false
+						}
+					],
+					xAxes: [
+						{
+							display: false
+						}
+					]
+				}
+			}
+		});
 	});
 });

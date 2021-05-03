@@ -7,55 +7,6 @@
 @push('scripts')
 <script src="{{ Module::asset('core:vendor/chartjs/Chart.min.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
 <script src="{{ Module::asset('pages:js/pages.js') . '?v=' . filemtime(public_path() . '/modules/pages/js/pages.js') }}"></script>
-<script>
-jQuery(document).ready(function ($) {
-	$('.sparkline-chart').each(function(i, el){
-		const ctx = el.getContext('2d');
-		const chart = new Chart(ctx, {
-		type: 'line',
-		data: {
-			labels: JSON.parse($(el).attr('data-labels')),
-			datasets: [
-				{
-					fill: false,
-					data: JSON.parse($(el).attr('data-values'))
-				}
-			]
-		},
-		options: {
-			responsive: false,
-			animation: {
-				duration: 0
-			},
-			legend: {
-				display: false
-			},
-			elements: {
-				line: {
-					borderColor: '#0071EB',
-					borderWidth: 1
-				},
-				point: {
-					radius: 0
-				}
-			},
-			scales: {
-				yAxes: [
-					{
-						display: false
-					}
-				],
-				xAxes: [
-					{
-						display: false
-					}
-				]
-			}
-		}
-		});
-	});
-});
-</script>
 @endpush
 
 @php
@@ -64,12 +15,10 @@ app('pathway')
 		trans('pages::pages.module name'),
 		route('admin.pages.index')
 	);
-/*		@if (auth()->user()->can('manage pages'))
-			{!!
-				Toolbar::checkin('admin.pages.checkin');
-				Toolbar::spacer();
-			!!}
-		@endif*/
+	/*if (auth()->user()->can('manage pages'))
+		Toolbar::checkin('admin.pages.checkin');
+		Toolbar::spacer();
+	endif;*/
 @endphp
 
 @section('toolbar')
@@ -179,9 +128,9 @@ app('pathway')
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('pages::pages.updated'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4">
+				<?php /*<th scope="col" class="priority-4">
 					7 Day Trend
-				</th>
+				</th>*/ ?>
 			</tr>
 		</thead>
 		<tbody>
@@ -274,7 +223,7 @@ app('pathway')
 						@endif
 					</span>
 				</td>
-				<td>
+				<?php /*<td>
 					<?php
 					$now = Carbon\Carbon::now();
 					$visits = array();
@@ -294,7 +243,7 @@ app('pathway')
 							{{ $day }}: $val<br />
 						@endforeach
 					</canvas>
-				</td>
+				</td>*/ ?>
 			</tr>
 		@endforeach
 		</tbody>

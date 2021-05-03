@@ -40,25 +40,25 @@ app('pathway')
 
 	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 
-	<div class="row grid">
-		<div class="col col-md-8">
+	<div class="row">
+		<div class="col-md-8">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
-				<?php if ($row->alias != 'home'): ?>
+				@if ($row->alias != 'home')
 					<div class="form-group">
 						<label for="field-parent_id">{{ trans('pages::pages.parent') }}: <span class="required">{{ trans('global.required') }}</span></label>
 						<select name="fields[parent_id]" id="field-parent_id" class="form-control">
 							<option value="1" data-path="">{{ trans('pages::pages.home') }}</option>
-							<?php foreach ($parents as $page): ?>
+							@foreach ($parents as $page)
 								<?php $selected = ($page->id == $row->parent_id ? ' selected="selected"' : ''); ?>
 								<option value="{{ $page->id }}"<?php echo $selected; ?> data-path="/{{ $page->path }}"><?php echo str_repeat('|&mdash; ', $page->level) . e($page->title); ?></option>
-							<?php endforeach; ?>
+							@endforeach
 						</select>
 					</div>
-				<?php else: ?>
+				@else
 					<input type="hidden" name="fields[parent_id]" value="{{ $row->parent_id }}" />
-				<?php endif; ?>
+				@endif
 
 				<div class="form-group">
 					<label for="field-title">{{ trans('pages::pages.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
@@ -83,16 +83,16 @@ app('pathway')
 				</div>
 			</fieldset>
 		</div>
-		<div class="col col-md-4">
+		<div class="col-md-4">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.publishing') }}</legend>
 
 				<div class="form-group">
 					<label for="field-access">{{ trans('pages::pages.access') }}:</label>
 					<select class="form-control" name="fields[access]" id="field-access"<?php if ($row->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
-						<?php foreach (App\Halcyon\Access\Viewlevel::all() as $access): ?>
-							<option value="<?php echo $access->id; ?>"<?php if ($row->access == $access->id) { echo ' selected="selected"'; } ?>><?php echo e($access->title); ?></option>
-						<?php endforeach; ?>
+						@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
+							<option value="{{ $access->id }}"<?php if ($row->access == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
+						@endforeach
 					</select>
 				</div>
 
