@@ -10,6 +10,13 @@ function bindContextModals() {
 	$('.dialog').dialog({
 		autoOpen: false,
 		modal: true,
+		close: function () {
+			// We need to do this to avoid "cached" dialogs
+			// for folder contents that are reloaded via AJAX
+			$(this).dialog('close');
+			$(this).dialog('destroy');
+			$(this).html('');
+		},
 		width: 700
 	});
 
