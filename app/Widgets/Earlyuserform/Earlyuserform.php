@@ -21,6 +21,7 @@ class Earlyuserform extends Widget
 	{
 		$errors = array();
 		$data = array();
+		$view = 'index';
 
 		if (request()->method() == 'POST')
 		{
@@ -28,29 +29,29 @@ class Earlyuserform extends Widget
 
 			if (!isset($data['name']))
 			{
-				$errors[] = trans('Please provide a name.');
+				$errors[] = trans('widget.earlyuserform::earlyuserform.error.invalid name');
 			}
 
 			if (!isset($data['email']))
 			{
-				$errors[] = trans('Please provide a valid email.');
+				$errors[] = trans('widget.earlyuserform::earlyuserform.error.invalid email');
 			}
 
 			if (!isset($data['institution']))
 			{
-				$errors[] = trans('Please provide an institution.');
+				$errors[] = trans('widget.earlyuserform::earlyuserform.error.invalid institution');
 			}
 
 			if (!isset($data['domain']))
 			{
-				$errors[] = trans('Please provide a domain.');
+				$errors[] = trans('widget.earlyuserform::earlyuserform.error.invalid domain');
 			}
 
 			if (empty($errors))
 			{
 				// Prepare and send actual email
 				$destination = $this->params->get('email');
-				$destination = 'zooley@purdue.edu';
+
 				$rname = trans('global.unknown');
 
 				if ($resourceid  = $this->params->get('resourceid'))
@@ -61,25 +62,21 @@ class Earlyuserform extends Widget
 
 				$message = new Application($data, $destination, $rname);
 
-				//Mail::to($destination)->send($message);
+				Mail::to($destination)->send($message);
 
 				if ($this->params->get('send_confirmation'))
 				{
 					$message = new Confirmation($data, $destination, $rname);
 					//echo $message->render();
-					//Mail::to($data['email'])->send($message);
+					Mail::to($data['email'])->send($message);
 				}
 
-				return view($this->getViewName('success'), [
-					'data' => $data,
-					'errors' => $errors,
-					'params' => $this->params,
-				]);
+				$view = 'success';
 			}
 		}
 
-		return view($this->getViewName('index'), [
-			'data' => $data,
+		return view($this->getViewName($view), [
+			'data'   => $data,
 			'errors' => $errors,
 			'params' => $this->params,
 		]);

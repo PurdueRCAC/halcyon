@@ -3,6 +3,13 @@ return [
 	'widget name' => 'Early User Form',
 	'widget desc' => 'This displays a Early User Application form',
 
+	'error' => [
+		'invalid email' => 'Please provide a valid email.',
+		'invalid institution' => 'Please provide an institution.',
+		'invalid domain' => 'Please provide a domain.',
+		'invalid name' => 'Please provide a name.',
+	],
+
 	// Misc.
 	'params' => [
 		'asset' => 'Resource',
