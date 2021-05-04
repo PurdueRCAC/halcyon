@@ -218,9 +218,9 @@ class Resources
 		$directory->fill([
 			'resourceid'        => $storageResource->parentresourceid,
 			'name'              => $event->user->username,
-			'path'              => $p,
-			'bytes'             => $row->defaultquotaspace,
-			'files'             => $row->defaultquotafile,
+			'path'              => $event->user->username,
+			'bytes'             => $storageResource->defaultquotaspace,
+			'files'             => $storageResource->defaultquotafile,
 			'owneruserid'       => $event->user->id,
 			'storageresourceid' => $storageResource->id,
 		]);

@@ -3,6 +3,8 @@
 namespace App\Modules\Resources\Listeners;
 
 use App\Modules\Queues\Events\QueueCreated;
+use App\Modules\Resources\Events\ResourceMemberCreated;
+use App\Modules\Resources\Events\ResourceMemberStatus;
 
 /**
  * Queue listener
@@ -42,15 +44,15 @@ class Queues
 		{
 			foreach ($queue->group->managers as $user)
 			{
-				event($resourcemember = new ResourceMemberStatus($user, $queue->scheduler->resource));
+				event($resourcemember = new ResourceMemberStatus($queue->scheduler->resource, $user->user));
 
 				if ($resourcemember->status <= 0)
 				{
-					throw new \Exception(__METHOD__ . '(): Bad status for `resourcemember` ' . $user->id);
+					throw new \Exception(__METHOD__ . '(): Bad status for `resourcemember` ' . $user->userid . '.' . $queue->scheduler->resource->id);
 				}
 				elseif ($resourcemember->status == 1 || $resourcemember->status == 4)
 				{
-					event($resourcemember = new ResourceMemberCreated($user, $queue->scheduler->resource));
+					event($resourcemember = new ResourceMemberCreated($queue->scheduler->resource, $user->user));
 				}
 			}
 		}

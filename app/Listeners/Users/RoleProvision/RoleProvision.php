@@ -234,6 +234,8 @@ class RoleProvision
 		}
 		catch (\Exception $e)
 		{
+			//$event->status = -1;
+
 			$status  = 500;
 			$results = ['error' => $e->getMessage()];
 

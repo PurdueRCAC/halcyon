@@ -269,7 +269,20 @@ class QueuesController extends Controller
 		$row = $id ? Queue::findOrFail($id) : new Queue();
 		$row->fill($request->input('fields'));
 
-		$row->defaultwalltime = $row->defaultwalltime * 60 * 60;
+		if (!$id)
+		{
+			$exists = Queue::query()
+				->withTrashed()
+				->whereIsActive()
+				->where('name', '=', $row->name)
+				->where('schedulerid', '=', $row->schedulerid)
+				->first();
+
+			if ($exists)
+			{
+				return redirect()->back()->withError(trans('queues::queues.error.queue already exists'));
+			}
+		}
 
 		if (!$request->has('fields.free'))
 		{

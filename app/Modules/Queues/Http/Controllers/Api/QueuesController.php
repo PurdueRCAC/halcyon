@@ -570,6 +570,18 @@ class QueuesController extends Controller
 		$queue = new Queue;
 		$queue->fill($request->all());
 
+		$exists = Queue::query()
+			->withTrashed()
+			->whereIsActive()
+			->where('name', '=', $queue->name)
+			->where('schedulerid', '=', $queue->schedulerid)
+			->first();
+
+		if ($exists)
+		{
+			return response()->json(trans('queues::queues.error.queue already exists'), 409);
+		}
+
 		if ($queue->schedulerid && !$queue->scheduler)
 		{
 			return response()->json(trans('queues::queues.error.invalid scheduler id'), 409);

@@ -20,7 +20,7 @@ class ResourceMemberStatus
 	/**
 	 * @var integer
 	 */
-	public $status = -1;
+	public $status = 1;
 
 	/**
 	 * Constructor
