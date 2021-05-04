@@ -48,7 +48,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-hostname">{{ trans('queues::queues.hostname') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[hostname]" id="field-hostname" class="form-control{{ $errors->has('fields.hostname') ? ' is-invalid' : '' }}" required value="{{ $row->hostname }}" />
-					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid hostname') }}</span>
+					<span class="invalid-feedback">{{ $errors->first('fields.hostname') }}</span>
 				</div>
 
 				<div class="form-group">
@@ -66,6 +66,7 @@ app('pathway')
 							<?php } ?>
 						<?php endforeach; ?>
 					</select>
+					<span class="invalid-feedback">{{ $errors->first('fields.queuesubresourceid') }}</span>
 				</div>
 
 				<div class="form-group">
@@ -132,6 +133,7 @@ app('pathway')
 							<option value="{{ $policy->id }}"<?php echo $selected; ?>>{{ $policy->name }}</option>
 						<?php endforeach; ?>
 					</select>
+					<span class="invalid-feedback">{{ $errors->first('fields.schedulerpolicyid') }}</span>
 				</div>
 			</fieldset>
 		</div>

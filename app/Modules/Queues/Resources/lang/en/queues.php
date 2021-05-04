@@ -95,7 +95,7 @@ return [
 	'free desc' => 'Can be reserved for free?',
 	'comment' => 'Comment',
 	'error' => [
-		'invalid name' => 'Please provide a name.',
+		'invalid name' => 'Please provide a valid name.',
 		'invalid hostname' => 'Please provide a valid hostname.',
 		'invalid scheduler' => 'Please select a scheduler.',
 		'invalid subresource' => 'Please select a node type.',

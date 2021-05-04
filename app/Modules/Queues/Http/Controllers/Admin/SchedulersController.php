@@ -5,6 +5,7 @@ namespace App\Modules\Queues\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Queues\Models\SchedulerPolicy;
 use App\Modules\Resources\Models\Batchsystem;
@@ -109,6 +110,7 @@ class SchedulersController extends Controller
 	public function create()
 	{
 		$row = new Scheduler();
+		$row->defaultmaxwalltime = 1209600;
 
 		$policies = SchedulerPolicy::orderBy('name', 'asc')->get();
 		$batchsystems = Batchsystem::orderBy('name', 'asc')->get();
@@ -156,15 +158,23 @@ class SchedulersController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.hostname' => 'required|string|max:64',
 			'fields.queuesubresourceid' => 'required|integer|min:1',
 			'fields.batchsystem' => 'nullable|integer|min:1',
 			'fields.datetimedraindown' => 'nullable|string',
 			'fields.datetimelastimportstart' => 'nullable|string',
 			'fields.schedulerpolicyid' => 'nullable|integer',
-			//'fields.defaultmaxwalltime' => 'required|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 
@@ -176,7 +186,7 @@ class SchedulersController extends Controller
 		switch ($request->input('unit'))
 		{
 			case 'days':
-				$row->defaultmaxwalltime = $walltime * 60 * 60 * 60;
+				$row->defaultmaxwalltime = $walltime * 24 * 60 * 60;
 			break;
 			case 'hours':
 				$row->defaultmaxwalltime = $walltime * 60 * 60;
@@ -188,7 +198,6 @@ class SchedulersController extends Controller
 				$row->defaultmaxwalltime = $walltime;
 			break;
 		}
-		
 
 		if (!$row->save())
 		{
