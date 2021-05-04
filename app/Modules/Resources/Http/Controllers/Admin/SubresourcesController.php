@@ -5,6 +5,7 @@ namespace App\Modules\Resources\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Models\Child;
@@ -158,7 +159,7 @@ class SubresourcesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.name' => 'required|string|max:32',
 			'fields.cluster' => 'required|string|max:12',
 			'fields.nodecores' => 'required|integer|max:999',
@@ -166,7 +167,16 @@ class SubresourcesController extends Controller
 			'fields.nodegpus' => 'nullable|integer|max:9999',
 			'fields.nodeattributes' => 'nullable|string|max:16',
 			'fields.description' => 'nullable|string|max:255',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 
@@ -198,7 +208,7 @@ class SubresourcesController extends Controller
 		$child->subresourceid = $row->id;
 		$child->save();
 
-		return redirect(route('admin.resources.subresources'))->withSuccess(trans('global.messages.update success'));
+		return redirect(route('admin.resources.subresources'))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

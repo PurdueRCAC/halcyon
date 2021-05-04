@@ -5,6 +5,7 @@ namespace App\Modules\Resources\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Models\Type;
 use App\Halcyon\Http\StatefulRequest;
@@ -35,7 +36,7 @@ class TypesController extends Controller
 			$filters[$key] = $request->state('resources.types.filter_' . $key, $key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'name']))
+		if (!in_array($filters['order'], ['id', 'name', 'description']))
 		{
 			$filters['order'] = Type::$orderBy;
 		}
@@ -111,9 +112,19 @@ class TypesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
-			'fields.name' => 'required|max:20'
-		]);
+		$rules = [
+			'fields.name' => 'required|string|max:20',
+			'fields.description' => 'nullable|string'
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = (int)$request->input('id');
 
@@ -128,7 +139,7 @@ class TypesController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->withSuccess(trans('global.messages.update success'));
+		return $this->cancel()->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

@@ -40,7 +40,6 @@ class Knowledge
 			->join($p, $p . '.id', $a . '.page_id')
 			->where($a . '.path', '=', $event->asset->listname)
 			->where($a . '.state', '=', 1)
-			->whereIn($a . '.access', $access)
 			->orderBy($a . '.id', 'asc')
 			->get()
 			->first();
@@ -50,7 +49,8 @@ class Knowledge
 			return;
 		}
 
-		$assoc->update(['state' => 0]);
+		$assoc->state = 1;
+		$assoc->save();
 	}
 
 	/**

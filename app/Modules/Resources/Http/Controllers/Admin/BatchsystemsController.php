@@ -5,6 +5,7 @@ namespace App\Modules\Resources\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Resources\Models\Batchsystem;
 use App\Halcyon\Http\StatefulRequest;
 
@@ -78,6 +79,11 @@ class BatchsystemsController extends Controller
 	{
 		$row = new Batchsystem();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('resources::admin.batchsystems.edit', [
 			'row' => $row
 		]);
@@ -111,9 +117,18 @@ class BatchsystemsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.name' => 'required|string|max:16'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = (int)$request->input('id');
 
@@ -127,7 +142,7 @@ class BatchsystemsController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->withSuccess(trans('global.messages.update success'));
+		return $this->cancel()->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

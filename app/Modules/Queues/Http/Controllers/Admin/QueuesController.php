@@ -38,7 +38,6 @@ class QueuesController extends Controller
 			// Paging
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
-			//'start'    => $request->input('limitstart', 0),
 			// Sorting
 			'order'     => Queue::$orderBy,
 			'order_dir' => Queue::$orderDir,
@@ -49,7 +48,7 @@ class QueuesController extends Controller
 			$filters[$key] = $request->state('queues.filter_' . $key, $key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'name', 'state', 'type', 'parent', 'queuetype', 'groupid']))
+		if (!in_array($filters['order'], ['id', 'name', 'enabled', 'type', 'parent', 'queuetype', 'groupid']))
 		{
 			$filters['order'] = Queue::$orderBy;
 		}

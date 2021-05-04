@@ -5,6 +5,7 @@ namespace App\Modules\Resources\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Models\Type;
 use App\Modules\Resources\Models\Batchsystem;
@@ -269,7 +270,7 @@ class ResourcesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.name'         => 'required|max:32',
 			'fields.parentid'     => 'nullable|integer',
 			'fields.rolename'     => 'nullable|string|max:32',
@@ -277,7 +278,16 @@ class ResourcesController extends Controller
 			'fields.batchsystem'  => 'nullable|integer',
 			'fields.resourcetype' => 'nullable|integer',
 			'fields.producttype'  => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 
@@ -300,7 +310,7 @@ class ResourcesController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		return redirect(route('admin.resources.index'))->withSuccess(trans('global.messages.update success'));
+		return redirect(route('admin.resources.index'))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

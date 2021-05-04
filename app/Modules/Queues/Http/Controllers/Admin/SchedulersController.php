@@ -41,7 +41,7 @@ class SchedulersController extends Controller
 			$filters[$key] = $request->state('queues.schedulers.filter_' . $key, $key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'hostname']))
+		if (!in_array($filters['order'], ['id', 'hostname', 'defaultmaxwalltime', 'schedulerpolicyid', 'batchsystem']))
 		{
 			$filters['order'] = Scheduler::$orderBy;
 		}

@@ -5,6 +5,7 @@ use App\Modules\Resources\Events\AssetDeleted;
 use App\Modules\Resources\Events\SubresourceCreated;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\Walltime;
+use App\Modules\Queues\Models\Scheduler;
 
 /**
  * Queue listener for resources
@@ -65,13 +66,21 @@ class Queues
 
 		$walltime = 0;
 
-		if ($assoc = $subresource->association)
-		{
-			$resource = $assoc->resource;
+		//if ($assoc = $subresource->association)
+		$scheduler = Scheduler::query()
+			->withTrashed()
+			->whereIsActive()
+			->where('queuesubresourceid', '=', $subresource->id)
+			->first();
 
-			$queue->schedulerid = $resource->schedulerid;
-			$queue->schedulerpolicyid = $resource->schedulerpolicy_id;
-			$walltime = $resource->defaultmaxwalltime;
+		if ($scheduler)
+		{
+			//$resource = $assoc->resource;
+
+			$queue->schedulerid = $scheduler->id;
+			$queue->schedulerpolicyid = $scheduler->schedulerpolicyid;
+
+			$walltime = $scheduler->defaultmaxwalltime;
 		}
 
 		$queue->maxjobsqueued     = config()->get('queues.maxjobsqueued', 12000);
