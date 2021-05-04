@@ -117,5 +117,23 @@ $content = '';
 		<h2>{{ $resource->name }}</h2>
 		<p>{{ $resource->description }}</p>
 	@endif
+
+	@if ($resource->isTrashed())
+		<h3>Lifetime Service</h3>
+
+		<table class="table table-bordered">
+			<caption class="sr-only">Stats</caption>
+			<tbody>
+				<tr>
+					<th scope="row">Installed</th>
+					<td>{{ $resource->datetimecreated->format('Y-m-d') }}</td>
+				</tr>
+				<tr>
+					<th scope="row">Retired</th>
+					<td>{{ $resource->datetimeremoved->format('Y-m-d') }}</td>
+				</tr>
+			</tbody>
+		</table>
+	@endif
 </div>
 @stop
