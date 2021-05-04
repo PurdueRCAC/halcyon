@@ -56,22 +56,6 @@ function NEWSToggle(on, refresh) {
 	document.getElementById("TAB_search_action").innerHTML = "";
 	if (on == 'search') {
 		// toggle the search fields on
-		/*document.getElementById("TR_date").style.display = "block";
-		//document.getElementById("TR_keywords").style.display = "block";
-		//document.getElementById("TR_newstype").style.display = "block";
-		//document.getElementById("TR_resource").style.display = "block";
-		document.getElementById("TR_user").style.display = "none";
-		//document.getElementById("TR_location").style.display = "block";
-		document.getElementById("TR_url").style.display = "none";
-		//document.getElementById("TR_headline").style.display = "none";
-		document.getElementById("TR_notes").style.display = "none";
-		//document.getElementById("TR_search").style.display = "block";
-		document.getElementById("TR_create").style.display = "none";
-		//document.getElementById("TR_id").style.display = "block";
-		document.getElementById("TR_published").style.display = "none";
-		//document.getElementById("TR_template").style.display = "block";
-		document.getElementById("TR_use_template").style.display = "none";*/
-
 		document.getElementById("TAB_search").className = "nav-link active tab activeTab";
 		document.getElementById("TAB_add").className = "nav-link tab";
 
@@ -103,21 +87,6 @@ function NEWSToggle(on, refresh) {
 
 	} else if (on == 'add') {
 		// toggle the new entry fields on
-		/*document.getElementById("TR_date").style.display = "block";
-		document.getElementById("TR_keywords").style.display = "none";
-		//document.getElementById("TR_resource").style.display = "block";
-		//document.getElementById("TR_location").style.display = "block";
-		//document.getElementById("TR_url").style.display = "block";
-		//document.getElementById("TR_newstype").style.display = "block";
-		//document.getElementById("TR_headline").style.display = "block";
-		//document.getElementById("TR_notes").style.display = "block";
-		document.getElementById("TR_search").style.display = "none";
-		//document.getElementById("TR_create").style.display = "block";
-		document.getElementById("TR_id").style.display = "none";
-		//document.getElementById("TR_published").style.display = "block";
-		document.getElementById("TR_template").style.display = "none";
-		//document.getElementById("TR_use_template").style.display = "block";*/
-
 		document.getElementById("TAB_search").className = "nav-link tab";
 		document.getElementById("TAB_add").className = "nav-link active tab activeTab";
 
@@ -143,24 +112,6 @@ function NEWSToggle(on, refresh) {
 		}*/
 	} else if (on == 'edit') {
 		// toggle the new entry fields on
-		/*document.getElementById("TR_date").style.display = "block";
-		if (document.getElementById("template").checked) {
-			document.getElementById("TR_date").style.visibility = "hidden";
-		}
-		document.getElementById("TR_keywords").style.display = "none";
-		document.getElementById("TR_resource").style.display = "block";
-		//document.getElementById("TR_user").style.display = "block";
-		document.getElementById("TR_location").style.display = "block";
-		document.getElementById("TR_url").style.display = "block";
-		document.getElementById("TR_headline").style.display = "block";
-		document.getElementById("TR_notes").style.display = "block";
-		document.getElementById("TR_search").style.display = "none";
-		document.getElementById("TR_create").style.display = "block";
-		document.getElementById("TR_id").style.display = "none";
-		document.getElementById("TR_published").style.display = "block";
-		document.getElementById("TR_template").style.display = "none";
-		document.getElementById("TR_use_template").style.display = "none";*/
-
 		document.getElementById("TAB_search").className = "nav-link tab";
 		document.getElementById("TAB_add").className = "nav-link active tab activeTab";
 
@@ -228,18 +179,7 @@ function NEWSAddResource(resource) {
 	} else {
 		results = resource;
 	}
-	/*var resourceid = results['resourceid'];
 
-	if ($('.tagsinput').length) {
-		if (!$('#newsresource').tagExist(resourceid)) {
-			$('#newsresource').addTag({
-				'id': results['resourceid'],
-				'label': results['resourcename']
-			});
-		}
-	} else {
-		$('#newsresource').val($('#newsresource').val() + ($('#newsresource').val() ? ', ' : '') + results['resourcename'] + ':' + results['resourceid']);
-	}*/
 	$('#newsresource')
 		.val(results['resourceid'])
 		.trigger('change');
@@ -287,45 +227,29 @@ function NEWSNewstypeSearch() {
 	if (document.getElementById("TR_resource")) {
 		if (tagresources == "0") {
 			$('#TR_resource').addClass('d-none');
-			//document.getElementById("TR_resource").style.display = "none";
-			//document.getElementById("TR_resource").visible = false;
 		} else {
 			$('#TR_resource').removeClass('d-none');
-			//document.getElementById("TR_resource").style.display = "block";
-			//document.getElementById("TR_resource").visible = true;
 		}
 	}
 	if (document.getElementById("TR_location")) {
 		if (taglocation == "0") {
 			$('#TR_location').addClass('d-none');
-			//document.getElementById("TR_location").style.display = "none";
-			//document.getElementById("TR_location").visible = false;
 		} else {
 			$('#TR_location').removeClass('d-none');
-			//document.getElementById("TR_location").style.display = "block";
-			//document.getElementById("TR_location").visible = true;
 		}
 	}
 	if (document.getElementById("TR_url")) {
 		if (tagurl == "0") {
 			$('#TR_url').addClass('d-none');
-			//document.getElementById("TR_url").style.display = "none";
-			//document.getElementById("TR_url").visible = false;
 		} else {
 			$('#TR_url').removeClass('d-none');
-			//document.getElementById("TR_url").style.display = "block";
-			//document.getElementById("TR_url").visible = true;
 		}
 	}
 	if (document.getElementById("TR_user")) {
 		if (tagusers == "0") {
 			$('#TR_user').addClass('d-none');
-			//document.getElementById("TR_user").style.display = "none";
-			//document.getElementById("TR_user").visible = false;
 		} else {
 			$('#TR_user').removeClass('d-none');
-			//document.getElementById("TR_user").style.display = "block";
-			//document.getElementById("TR_user").visible = true;
 		}
 	}
 	NEWSSearch();
@@ -3048,9 +2972,9 @@ function NEWSUseTemplate() {
 		}
 
 		if (!overwrite) {
-			document.getElementById("TR_use_template").classList.add('d-none');//.style.display = "none";
-			document.getElementById("TR_template").classList.add('d-none');//.style.display = "none";
-			document.getElementById("TR_date").classList.remove('d-none');//style.visibility = "visible";
+			document.getElementById("TR_use_template").classList.add('d-none');
+			document.getElementById("TR_template").classList.add('d-none');
+			document.getElementById("TR_date").classList.remove('d-none');
 			document.getElementById("template").checked = false;
 			document.getElementById("published").checked = true;
 
@@ -3095,27 +3019,6 @@ function NEWSPopulateTemplate(xml) {
 						'id': news.resources[x]['resourceid'],
 						'label': news.resources[x]['resourcename']
 					});
-				}
-			} else {
-				var res = document.getElementById("TD_resource");
-				if (res) {
-					var resourcedata = res.getElementsByTagName("div");
-					var dup = false;
-					for (var i=0;i<resourcedata.length;i++) {
-						if (resourcedata[i].style.display != "none") {
-							if (resourcedata[i].id.search("RESOURCE_")==0) {
-								if (resourcedata[i].id.substr(9) == news.resources[x]['resourceid']) {
-									dup = true;
-								}
-							}
-						}
-					}
-
-					if (!dup) {
-						NEWSAddResource(JSON.stringify(news.resources[x]));
-					}
-				} else {
-					$('#newsresource').va($('#newsresource').va() + ', ' + news.resources[x]['resourcename'] + ':' + news.resources[x]['resourceid']);
 				}
 			}*/
 		}
@@ -3538,26 +3441,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		return false;
 	});
 
-	/*var newsresource = $("#newsresource");
-	if (newsresource.length) {
-		newsresource.tagsInput({
-			placeholder: 'Select resource...',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteNews(newsresource.attr('data-uri')),
-				dataName: 'resources',
-				height: 150,
-				delay: 100,
-				minLength: 1
-			},
-			'onAddTag': function() {
-				NEWSSearch();
-			},
-			'onRemoveTag': function() {
-				NEWSSearch();
-			}
-		});
-	}*/
 	var rselects = $(".searchable-select-multi");
 	if (rselects.length) {
 		$(".searchable-select-multi").select2({
@@ -3620,14 +3503,71 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
+	$('.btn-attend').on('click', function (event) {
+		event.preventDefault();
+
+		var el = $(this);
+
+		var newsid = el.data('newsid');
+		var id = newsid.substr(newsid.lastIndexOf("/") + 1);
+
+		var parts = el.data('assoc').split('/');
+
+		var post = {
+			'associd': parts[parts.length - 1],
+			'assoctype': parts[parts.length - 2],
+			'newsid': id
+		};
+
+		post = JSON.stringify(post);
+
+		WSPostURL(root + "news/associations/", post, function (xml) {
+			if (xml.status == 200) {
+				el.parent().html('<span class="alert alert-success">Thank you for your interest!</span>');
+			} else if (xml.status == 403) {
+				el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');
+			} else {
+				el.parent().append('<span class="alert alert-error">An error occurred.</span>');
+			}
+		});
+	});
+
+	$('.btn-notattend').on('click', function (event) {
+		event.preventDefault();
+
+		var el = $(this);
+
+		WSDeleteURL(el.data('id'), function (xml, id) {
+			if (xml.status == 200) {
+				el.parent().html('<span class="alert alert-success">Successfully cancelled.</span>');
+			} else if (xml.status == 403) {
+				el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');
+			} else {
+				el.parent().append('<span class="alert alert-error">An error occurred.</span>');
+			}
+		});
+	});
+
+	$('#attendees-reveal').on('click', function (e) {
+		e.preventDefault();
+
+		$(this).addClass('stash');
+		$('#attendees-all').removeClass('stash');
+		$('#attendees').addClass('stash');
+	});
+
+	var url = window.location.href.match(/[&?](\w+)$/),
+		on = 'search',
+		refresh = true;
+
+	if (url != null) {
+		on = url[1];
+	}
+
 	var data = $('#news-data');
 	if (data.length) {
-		//var edit = true;
 		var original = JSON.parse(data.html());
 		var i = 0;
-
-		//NEWSToggleSearch('resource');
-		//NEWSToggleSearch('none');
 
 		$("#newstype > option").each(function() {
 			if (this.value == original['newstype']) {
@@ -3665,71 +3605,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (original.template == "1") {
 			document.getElementById('template').checked = true;
 		}
-		NEWSToggle('edit', false);
+
+		on = 'edit';
+		refresh = false;
 	}
+
+	NEWSToggle(on, refresh);
 
 	if ($('#news').length) {
-		//WSGetURL(root + "news/" + ($('#news').data('query') ? encodeURI($('#news').data('query')) : ''), NEWSSearched);
 		NEWSSearch();
 	}
-
-	var url = window.location.href.match(/[&?](\w+)$/);
-	if (url != null) {
-		NEWSToggle(url[1]);
-		//setTimeout("NEWSSearch();", 200);
-	} else {
-		NEWSToggle('search');
-	}
-
-	$('.btn-attend').on('click', function(event){
-		event.preventDefault();
-
-		var el = $(this);
-
-		var newsid = el.data('newsid');
-		var id = newsid.substr(newsid.lastIndexOf("/")+1);
-
-		var parts = el.data('assoc').split('/');
-
-		var post = {
-			'associd': parts[parts.length-1],
-			'assoctype': parts[parts.length-2],
-			'newsid': id
-		};
-
-		post = JSON.stringify(post);
-
-		WSPostURL(root + "news/associations/", post, function(xml){
-			if (xml.status == 200) {
-				el.parent().html('<span class="alert alert-success">Thank you for your interest!</span>');
-			} else if (xml.status == 403) {
-				el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');
-			} else {
-				el.parent().append('<span class="alert alert-error">An error occurred.</span>');
-			}
-		});
-	});
-	$('.btn-notattend').on('click', function(event){
-		event.preventDefault();
-
-		var el = $(this);
-
-		WSDeleteURL(el.data('id'), function(xml, id){
-			if (xml.status == 200) {
-				el.parent().html('<span class="alert alert-success">Successfully cancelled.</span>');
-			} else if (xml.status == 403) {
-				el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');
-			} else {
-				el.parent().append('<span class="alert alert-error">An error occurred.</span>');
-			}
-		});
-	});
-
-	$('#attendees-reveal').on('click', function (e) {
-		e.preventDefault();
-
-		$(this).addClass('stash');
-		$('#attendees-all').removeClass('stash');
-		$('#attendees').addClass('stash');
-	});
 });
