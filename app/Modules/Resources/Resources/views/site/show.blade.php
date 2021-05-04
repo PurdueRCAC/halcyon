@@ -73,35 +73,41 @@ $content = '';
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-	@if ($resource->params->get('gateway') || $resource->params->get('desktop') || $resource->params->get('notebook') || $resource->params->get('rstudio'))
-		<div class="launch">
-			@if ($gateway = $resource->params->get('gateway'))
-				<div class="panel">
-					Gateway
-					<a class="btn btn-launch" href="{{ $gateway }}" title="Launch OnDemand Gateway" target="_blank" rel="noopener">Launch</a>
-				</div>
-			@endif
+	@if (!$resource->isTrashed())
+		@if ($resource->params->get('gateway') || $resource->params->get('desktop') || $resource->params->get('notebook') || $resource->params->get('rstudio'))
+			<div class="launch">
+				@if ($gateway = $resource->params->get('gateway'))
+					<div class="panel">
+						Gateway
+						<a class="btn btn-launch" href="{{ $gateway }}" title="Launch OnDemand Gateway" target="_blank" rel="noopener">Launch</a>
+					</div>
+				@endif
 
-			@if ($desktop = $resource->params->get('desktop'))
-				<div class="panel">
-					Remote Desktop
-					<a class="btn btn-launch" href="{{ $desktop }}" title="Launch Remote Desktop" target="_blank" rel="noopener">Launch</a>
-				</div>
-			@endif
+				@if ($desktop = $resource->params->get('desktop'))
+					<div class="panel">
+						Remote Desktop
+						<a class="btn btn-launch" href="{{ $desktop }}" title="Launch Remote Desktop" target="_blank" rel="noopener">Launch</a>
+					</div>
+				@endif
 
-			@if ($notebook = $resource->params->get('notebook'))
-				<div class="panel">
-					Jupyter Hub
-					<a class="btn btn-launch" href="{{ $notebook }}" title="Launch Jupyter Hub" target="_blank" rel="noopener">Launch</a>
-				</div>
-			@endif
+				@if ($notebook = $resource->params->get('notebook'))
+					<div class="panel">
+						Jupyter Hub
+						<a class="btn btn-launch" href="{{ $notebook }}" title="Launch Jupyter Hub" target="_blank" rel="noopener">Launch</a>
+					</div>
+				@endif
 
-			@if ($rstudio = $resource->params->get('rstudio'))
-				<div class="panel">
-					Rstudio
-					<a class="btn btn-launch" href="{{ $rstudio }}" title="Launch Rstudio" target="_blank" rel="noopener">Launch</a>
-				</div>
-			@endif
+				@if ($rstudio = $resource->params->get('rstudio'))
+					<div class="panel">
+						Rstudio
+						<a class="btn btn-launch" href="{{ $rstudio }}" title="Launch Rstudio" target="_blank" rel="noopener">Launch</a>
+					</div>
+				@endif
+			</div>
+		@endif
+	@else
+		<div class="alert alert-info">
+			This was retired on {{ $resource->datetimeremoved->format('M d, Y') }}
 		</div>
 	@endif
 
