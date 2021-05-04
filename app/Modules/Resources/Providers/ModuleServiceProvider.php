@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Resources\Console\EmailSchedulingCommand;
 use App\Modules\Resources\Listeners\Groups;
 use App\Modules\Resources\Listeners\Queues;
+use App\Modules\Resources\Listeners\Subresources;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,8 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		$this->app['events']->subscribe(new Subresources);
 
 		if (is_dir(dirname(dirname(__DIR__))) . '/Queues')
 		{

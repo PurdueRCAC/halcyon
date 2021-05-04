@@ -2,6 +2,7 @@
 namespace App\Listeners\Resources\Queues;
 
 use App\Modules\Resources\Events\AssetDeleted;
+use App\Modules\Resources\Events\AssetCreated;
 use App\Modules\Resources\Events\SubresourceCreated;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\Walltime;
@@ -20,7 +21,35 @@ class Queues
 	 */
 	public function subscribe($events)
 	{
+		$events->listen(AssetCreated::class, self::class . '@handleAssetCreated');
 		$events->listen(SubresourceCreated::class, self::class . '@handleSubresourceCreated');
+	}
+
+	/**
+	 * Create a default scheduler for a new compute asset
+	 *
+	 * @param   AssetCreated  $event
+	 * @return  void
+	 */
+	public function handleAssetCreated(AssetCreated $event)
+	{
+		if ($event->asset->resourcetype != 1)
+		{
+			return;
+		}
+
+		$child = $event->asset->children->first();
+
+		$scheduler = new Scheduler;
+		$scheduler->hostname = $asset->rolename . '.rcac.purdue.edu';
+		if ($child)
+		{
+			$scheduler->queuesubresourceid = $child->subresourceid;
+		}
+		$scheduler->batchsystem = $event->asset->batchsystem;
+		$scheduler->schedulerpolicyid = 1;
+		$scheduler->defaultmaxwalltime = 1209600;
+		$scheduler->save();
 	}
 
 	/**
@@ -29,10 +58,10 @@ class Queues
 	 * @param   AssetDeleted  $event
 	 * @return  void
 	 */
-	public function handleAssetDeleted(SubresourceDeleted $event)
+	public function handleAssetDeleted(AssetDeleted $event)
 	{
 		$schedulers = Scheduler::query()
-			->where('queuesubresourceid', '=', $event->subresource->id)
+			->where('queuesubresourceid', '=', $event->asset->id)
 			->get();
 
 		foreach ($schedulers as $scheduler)
