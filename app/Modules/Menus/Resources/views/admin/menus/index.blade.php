@@ -77,7 +77,7 @@ app('pathway')
 				<th scope="col" class="priority-4 text-right">
 					{{ trans('menus::menus.trashed items') }}
 				</th>
-				<th scope="col">
+				<th scope="col" class="priority-6">
 					{{ trans('menus::menus.linked widgets') }}
 				</th>
 			</tr>
@@ -126,7 +126,7 @@ app('pathway')
 						{{ $row->countTrashedItems() }}
 					</a>
 				</td>
-				<td>
+				<td class="priority-6">
 					@if (isset($widgets[$row->menutype]))
 						<ul>
 							@foreach ($widgets[$row->menutype] as $widget)

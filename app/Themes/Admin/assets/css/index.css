@@ -3749,85 +3749,13 @@ border: 1px solid rgba(0,0,0,.125);
   }
 }*/
 @media (max-width: 50em) {
-  .toolbar-box {
-    z-index: 999;
-  }
-  .toolbar-box ul {
-    min-width: 8em;
-    -webkit-border-radius: 0.25em;
-    -moz-border-radius: 0.25em;
-    border-radius: 0.25em;
-  }
-  .toolbar-box ul:before {
-    content: "Actions";
-    text-transform: uppercase;
-    font-weight: bold;
-    display: block;
-    border: 1px solid #dadada;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 0.65em 0.85em 0.65em 2em;
-    text-align: right;
-    -webkit-border-radius: 0.25em;
-    -moz-border-radius: 0.25em;
-    border-radius: 0.25em;
-    letter-spacing: 0.1em;
-  }
-  .toolbar-box ul:after {
-    content: "\f0d7";
-    font-family: 'Fontcons';
-    display: block;
-    position: absolute;
-    left: 0.9em;
-    top: 0.75em;
-  }
-  .toolbar-box ul li {
-    float: none;
-    display: none;
-    font-size: 115%;
-  }
   .toolbar-box ul li a {
-    width: auto;
-    height: auto;
-    text-align: left;
-    padding: 0.618em;
-    border: none;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    border-radius: 0;
-    color: #444;
-  }
-  .toolbar-box ul li a span {
-    display: inline;
-    width: auto;
-    height: auto;
-    margin: 0;
+    width: 2.5em;
+    overflow: hidden;
+    white-space: nowrap;
   }
   .toolbar-box ul li a span:before {
-    font-size: 1em;
-    color: #444;
-  }
-  .toolbar-box ul li a:hover:after,
-  .toolbar-box ul li a:hover:before {
-    display: none;
-  }
-  .toolbar-box ul li.first a,
-  .toolbar-box ul li.last a,
-  .toolbar-box ul li.first.last a,
-  .toolbar-box ul li.button + li.button a {
-    border: none;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    border-radius: 0;
-  }
-  .toolbar-box ul:hover,
-  .toolbar-box ul.active {
-    background-color: #fff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    color: #444;
-    cursor: pointer;
-  }
-  .toolbar-box ul.active li {
-    display: block;
+    margin-right: 1em;
   }
 }
 

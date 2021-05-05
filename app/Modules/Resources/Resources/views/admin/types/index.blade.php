@@ -77,7 +77,7 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('resources::assets.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col">
+				<th scope="col" class="priority-2">
 					{!! Html::grid('sort', trans('resources::assets.description'), 'description', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4 text-right">
@@ -105,7 +105,7 @@ app('pathway')
 					</a>
 					@endif
 				</td>
-				<td class="priority-5">
+				<td class="priority-2">
 					@if ($row->description)
 						{{ Illuminate\Support\Str::limit($row->description, 70) }}
 					@else

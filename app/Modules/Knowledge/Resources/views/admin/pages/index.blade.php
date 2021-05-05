@@ -158,10 +158,10 @@ $(document).ready(function() {
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('knowledge::knowledge.access'), 'access', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2">
+				<th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('knowledge::knowledge.last update'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2">
+				<th scope="col" class="priority-5">
 					{{ trans('knowledge::knowledge.ordering') }}
 				</th>
 			</tr>
@@ -202,7 +202,7 @@ $(document).ready(function() {
 						<span class="icon-repeat" data-tip="{{ trans('knowledge::knowledge.snippet') }}"><span class="sr-only">{{ trans('knowledge::knowledge.snippet') }}</span></span>
 					@endif
 				</td>
-				<td>
+				<td class="priority-4">
 					@if ($row->trashed())
 						@if (auth()->user()->can('edit knowledge'))
 							<a class="badge badge-secondary btn-state trashed" href="{{ route('admin.knowledge.restore', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
@@ -229,10 +229,10 @@ $(document).ready(function() {
 						@endif
 					@endif
 				</td>
-				<td>
+				<td class="priority-4">
 					<span class="badge access {{ str_replace(' ', '', strtolower($row->viewlevel ? $row->viewlevel->title : '')) }}">{{ $row->viewlevel ? $row->viewlevel->title : trans('global.unknown') }}</span>
 				</td>
-				<td class="priority-4">
+				<td class="priority-6">
 					<span class="datetime">
 						@if ($row->updated_at)
 							<time datetime="{{ Carbon\Carbon::parse($row->updated_at)->format('Y-m-d\TH:i:s\Z') }}">
@@ -257,7 +257,7 @@ $(document).ready(function() {
 						@endif
 					</span>
 				</td>
-				<td class="text-center">
+				<td class="priority-5 text-center">
 					<?php $orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
 					<?php if (auth()->user()->can('edit knowledge')): ?>
 						<span class="glyph">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.knowledge.orderup', ['id' => $row->id])) !!}</span>

@@ -75,7 +75,7 @@ app('pathway')
 						<th scope="col">
 							{!! Html::grid('sort', trans('storage::storage.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 						</th>
-						<th scope="col">
+						<th scope="col" class="priority-4">
 							{!! Html::grid('sort', trans('storage::storage.time period'), 'defaulttimeperiodid', $filters['order_dir'], $filters['order']) !!}
 						</th>
 						<th scope="col" class="priority-4 numeric">

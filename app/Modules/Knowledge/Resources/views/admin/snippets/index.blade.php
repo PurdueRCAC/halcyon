@@ -94,13 +94,13 @@ app('pathway')
 				<th scope="col">
 					{{ trans('knowledge::knowledge.path') }}
 				</th>
-				<th scope="col" class="priority-2">
+				<th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('knowledge::knowledge.last update'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2">
+				<th scope="col" class="priority-5">
 					{{ trans('knowledge::knowledge.ordering') }}
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="priority-2 text-right">
 					{{ trans('knowledge::knowledge.used') }}
 				</th>
 			</tr>
@@ -136,7 +136,7 @@ app('pathway')
 				<td>
 					{{ $row->path }}
 				</td>
-				<td class="priority-4">
+				<td class="priority-6">
 					<span class="datetime">
 						@if ($row->getOriginal('updated_at') && $row->getOriginal('updated_at') != '0000-00-00 00:00:00')
 							<time datetime="{{ Carbon\Carbon::parse($row->updated_at)->format('Y-m-d\TH:i:s\Z') }}">{{ $row->updated_at->format('Y-m-d') }}</time>
@@ -155,7 +155,7 @@ app('pathway')
 						@endif
 					</span>
 				</td>
-				<td class="text-center">
+				<td class="priority-5 text-center">
 					<?php $orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
 					<?php if (auth()->user()->can('edit knowledge')): ?>
 						<span class="glyph">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.knowledge.snippets.orderup', ['id' => $row->id])) !!}</span>
@@ -165,7 +165,7 @@ app('pathway')
 						<?php echo $orderkey + 1;?>
 					<?php endif; ?>
 				</td>
-				<td class="text-right">
+				<td class="priority-2 text-right">
 					{{ $row->used }}
 				</td>
 			</tr>

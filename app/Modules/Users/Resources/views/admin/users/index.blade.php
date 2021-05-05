@@ -182,7 +182,7 @@ app('pathway')
 						{{ $row->name }}
 					@endif
 				</td>
-				<td class="priority-4">
+				<td>
 					@if ($canChange)
 						<a href="{{ route('admin.users.edit', ['id' => $row->id]) }}">
 					@endif
@@ -209,7 +209,7 @@ app('pathway')
 						{!! $row->role_names !!}
 					@endif
 				</td>
-				<td class="priority-4">
+				<td class="priority-3">
 					@if ($row->isTrashed())
 						<span class="badge badge-danger">
 							{{ trans('users::users.status trashed') }}

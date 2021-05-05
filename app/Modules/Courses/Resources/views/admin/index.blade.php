@@ -115,10 +115,10 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('courses::courses.course name'), 'classname', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col">
+				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('courses::courses.department'), 'department', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-3">
+				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('courses::courses.course number'), 'coursenumber', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-2">
@@ -202,14 +202,14 @@ app('pathway')
 						</span>
 					@endif
 				</td>
-				<td>
+				<td class="priority-4">
 					@if ($row->department)
 						{{ $row->department }}
 					@else
 						<span class="none">{{ trans('global.none') }}</span>
 					@endif
 				</td>
-				<td class="priority-3">
+				<td class="priority-5">
 					@if ($row->coursenumber)
 						{{ $row->coursenumber }}
 					@else
@@ -223,7 +223,7 @@ app('pathway')
 						<span class="none">{{ trans('global.none') }}</span>
 					@endif
 				</td>
-				<td class="priority-2">
+				<td class="priority-4">
 					@if ($row->resource)
 						{{ $row->resource->name }}
 					@else

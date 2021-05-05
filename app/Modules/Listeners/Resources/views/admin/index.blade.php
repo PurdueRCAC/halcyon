@@ -93,17 +93,17 @@ app('pathway')
 				<th scope="col">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('listeners::listeners.state'), 'enabled', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="priority-3 text-center">
+				<th scope="col" class="priority-3">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('listeners::listeners.access'), 'access', $filters['order_dir'], $filters['order']); ?>
+				</th>
+				<th scope="col" class="priority-4 text-center">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('listeners::listeners.ordering'), 'ordering', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-5">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('listeners::listeners.folder'), 'folder', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-5">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('listeners::listeners.element'), 'element', $filters['order_dir'], $filters['order']); ?>
-				</th>
-				<th scope="col" class="priority-4">
-					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('listeners::listeners.access'), 'access', $filters['order_dir'], $filters['order']); ?>
 				</th>
 			</tr>
 		</thead>
@@ -172,7 +172,10 @@ app('pathway')
 						@endif
 					@endif
 				</td>
-				<td class="priority-3 text-center">
+				<td class="priority-3">
+					<span class="badge access {{ str_replace(' ', '', strtolower($row->access_level)) }}">{{ $row->access_level }}</span>
+				</td>
+				<td class="priority-4 text-center">
 					{{ $row->ordering }}
 				</td>
 				<td class="priority-5">
@@ -180,9 +183,6 @@ app('pathway')
 				</td>
 				<td class="priority-5">
 					{{ $row->element }}
-				</td>
-				<td class="priority-4">
-					<span class="badge access {{ str_replace(' ', '', strtolower($row->access_level)) }}">{{ $row->access_level }}</span>
 				</td>
 			</tr>
 		@endforeach

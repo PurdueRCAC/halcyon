@@ -221,7 +221,7 @@ app('pathway')
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('issues::issues.created'), 'datetimecreated', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2 text-right">
+				<th scope="col" class="priority-3 text-right">
 					{{ trans('issues::issues.comments') }}
 				</th>
 			</tr>
@@ -276,7 +276,7 @@ app('pathway')
 						@endif
 					</span>
 				</td>
-				<td class="priority-4 text-right">
+				<td class="priority-3 text-right">
 					@if ($row->comments_count)
 						{{ $row->comments_count }}
 					@else

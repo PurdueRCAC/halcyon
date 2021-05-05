@@ -116,19 +116,19 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('pages::pages.title'), 'title', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col">
+				<th scope="col" class="priority-2">
 					{!! Html::grid('sort', trans('pages::pages.path'), 'path', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col">
+				<th scope="col" class="priority-3">
 					{!! Html::grid('sort', trans('pages::pages.state'), 'state', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col">
+				<th scope="col" class="priority-3">
 					{!! Html::grid('sort', trans('pages::pages.access'), 'access', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('pages::pages.updated'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<?php /*<th scope="col" class="priority-4">
+				<?php /*<th scope="col" class="priority-6">
 					7 Day Trend
 				</th>*/ ?>
 			</tr>
@@ -159,12 +159,12 @@ app('pathway')
 						{{ $row->title }}
 					@endif
 				</td>
-				<td>
+				<td class="priority-2">
 					<a href="{{ route('admin.pages.edit', ['id' => $row->id]) }}">
 						/{{ ltrim($row->path, '/') }}
 					</a>
 				</td>
-				<td>
+				<td class="priority-3">
 					@if ($row->isRoot())
 						<span class="badge badge-success">
 							{{ trans('pages::pages.published') }}
@@ -197,7 +197,7 @@ app('pathway')
 						@endif
 					@endif
 				</td>
-				<td>
+				<td class="priority-3">
 					<span class="badge access {{ str_replace(' ', '', strtolower($row->viewlevel->title)) }}">{{ $row->viewlevel->title }}</span>
 				</td>
 				<td class="priority-4">
@@ -223,7 +223,7 @@ app('pathway')
 						@endif
 					</span>
 				</td>
-				<?php /*<td>
+				<?php /*<td class="priority-6">
 					<?php
 					$now = Carbon\Carbon::now();
 					$visits = array();

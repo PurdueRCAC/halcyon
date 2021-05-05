@@ -123,11 +123,11 @@ trans('themes::themes.module name')
 				</td>
 				<td class="priority-4">
 					@if ($row->enabled)
-						<span class="badge yes">
+						<span class="badge badge-success">
 							{{ trans('global.yes') }}
 						</span>
 					@else
-						<span class="badge no">
+						<span class="badge badge-secondary">
 							{{ trans('global.no') }}
 						</span>
 					@endif

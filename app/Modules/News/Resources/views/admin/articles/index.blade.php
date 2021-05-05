@@ -131,7 +131,7 @@ else
 				<th scope="col">
 					{!! Html::grid('sort', trans('news::news.headline'), 'headline', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col">
+				<th scope="col" class="priority-2">
 					{!! Html::grid('sort', trans('news::news.state'), 'state', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4">
@@ -141,8 +141,8 @@ else
 					<th scope="col" colspan="2" class="priority-4">
 						{!! Html::grid('sort', trans('news::news.publish window'), 'datetimenews', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="priority-4 text-right">{{ trans('news::news.updates') }}</th>
-					<th scope="col" class="priority-4 text-right">{{ trans('news::news.email') }}</th>
+					<th scope="col" class="priority-5 text-right">{{ trans('news::news.updates') }}</th>
+					<th scope="col" class="priority-6 text-right">{{ trans('news::news.email') }}</th>
 				@endif
 			</tr>
 		</thead>
@@ -184,7 +184,7 @@ else
 						</div>
 					@endif
 				</td>
-				<td>
+				<td class="priority-2">
 					@if (auth()->user()->can('edit.state news'))
 						@if ($row->published)
 							<a class="badge badge-success" href="{{ route('admin.news.unpublish', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.click to unpublish') }}">
@@ -233,12 +233,12 @@ else
 							<span class="none">{{ trans('global.none') }}</span>
 						@endif
 					</td>
-					<td class="priority-4 text-right">
+					<td class="priority-5 text-right">
 						<a href="{{ route('admin.news.updates', ['article' => $row->id]) }}">
 							{{ $row->updates_count }}
 						</a>
 					</td>
-					<td class="priority-4 text-right">
+					<td class="priority-6 text-right">
 						<button class="btn news-mail" data-success="Email sent!" data-article="{{ route('api.news.read', ['id' => $row->id]) }}" data-api="{{ route('api.news.email', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.send email') }}">
 							<span class="icon-mail glyph">Email</span>
 						</button>

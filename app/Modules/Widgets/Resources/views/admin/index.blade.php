@@ -135,10 +135,10 @@ app('pathway')
 				<th scope="col" class="priority-4">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('widgets::widgets.widget'), 'widget', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="priority-2">
+				<th scope="col" class="priority-4">
 					{{ trans('widgets::widgets.pages') }}
 				</th>
-				<th scope="col">
+				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('widgets::widgets.access'), 'access', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<?php /*<th scope="col">
