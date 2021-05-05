@@ -137,11 +137,13 @@ app('pathway')
 	<div class="tabs">
 		<ul>
 			<li><a href="#user-account">Account</a></li>
-			<li><a href="#user-attributes">Attributes</a></li>
-		@if (auth()->user()->can('view users.notes'))
-			<li><a href="#user-notes">Notes</a></li>
-		@endif
-			<!-- <li><a href="#user-history">History</a></li> -->
+			@if ($user->id)
+				<li><a href="#user-attributes">Attributes</a></li>
+				@if (auth()->user()->can('view users.notes'))
+					<li><a href="#user-notes">Notes</a></li>
+				@endif
+				<!-- <li><a href="#user-history">History</a></li> -->
+			@endif
 		</ul>
 		<div id="user-account">
 	<div class="row">
@@ -155,12 +157,12 @@ app('pathway')
 
 				<div class="form-group">
 					<label id="field_username-lbl" for="field_username">{{ trans('users::users.username') }} <span class="required star">{{ trans('global.required') }}</span></label>
-					<input type="text" name="ufields[username]" id="field_username" value="{{ $user->username }}" class="form-control required<?php if ($user->id) { echo ' readonly" readonly="readonly'; } ?>" />
+					<input type="text" name="ufields[username]" id="field_username" value="{{ $user->username }}" class="form-control<?php if ($user->id) { echo ' readonly" readonly="readonly'; } ?>" required />
 				</div>
 
 				<div class="form-group">
 					<label for="field-name">{{ trans('users::users.name') }}: <span class="required star">{{ trans('global.required') }}</span></label>
-					<input type="text" class="form-control required<?php if ($user->sourced) { echo ' readonly" readonly="readonly'; } ?>" required name="fields[name]" id="field-name" value="{{ $user->name }}" />
+					<input type="text" class="form-control<?php if ($user->sourced) { echo ' readonly" readonly="readonly'; } ?>" required name="fields[name]" id="field-name" value="{{ $user->name }}" />
 				</div>
 
 				<div class="form-group">
@@ -168,6 +170,7 @@ app('pathway')
 					<input type="text" class="form-control" name="fields[puid]" id="field-organization_id" value="{{ $user->puid }}" />
 				</div>
 
+				@if ($user->id)
 				<div class="form-group">
 					<label for="field-api_token">{{ trans('users::users.api token') }}:</label>
 					<div class="row">
@@ -180,6 +183,7 @@ app('pathway')
 					</div>
 					<span class="form-text text-muted">{{ trans('users::users.api token hint') }}</span>
 				</div>
+				@endif
 			</fieldset>
 
 			<fieldset id="user-groups" class="adminform">
@@ -216,6 +220,7 @@ app('pathway')
 				</tbody>
 			</table>
 
+			@if ($user->id)
 			<fieldset class="adminform">
 				<legend>{{ trans('users::users.status') }}</legend>
 
@@ -239,6 +244,7 @@ app('pathway')
 					</fieldset>
 				</div>
 			</fieldset>
+			@endif
 
 			<?php /*@foreach ($user->sessions as $session)
 			<fieldset class="adminform">
@@ -260,6 +266,8 @@ app('pathway')
 				</div><!-- / .col -->
 			</div><!-- / .grid -->
 		</div><!-- / #user-account -->
+
+		@if ($user->id)
 		<div id="user-attributes">
 			<div class="card">
 				<table class="table table-hover">
@@ -431,6 +439,7 @@ app('pathway')
 		<!-- <div id="user-history">
 			History
 		</div>/ #user-history -->
+		@endif
 	</div><!-- / .tabs -->
 
 	<input type="hidden" name="id" value="{{ $user->id }}" />

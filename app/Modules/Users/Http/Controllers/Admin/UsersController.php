@@ -347,10 +347,10 @@ class UsersController extends Controller
 	 */
 	public function create()
 	{
-		$row = new User;
+		$user = new User;
 
-		return view('news::admin.users.edit', [
-			'row' => $row
+		return view('users::admin.users.edit', [
+			'user' => $user
 		]);
 	}
 
