@@ -49,6 +49,7 @@
   --input-color: #444;
   --input-color-disabled: #656565;
   --input-prepend-back: #f1f1f1;
+  --input-prepend: #495057;
   --check-back: #f5f5f5;
   --check-back-disabled: #eee;
   --check-border: #cdcdcd;
@@ -147,6 +148,7 @@
   --input-color: rgba(255, 255, 255, 0.75);
   --input-color-disabled: rgba(255, 255, 255, 0.5);
   --input-prepend-back: rgba(255, 255, 255, 0.1);
+  --input-prepend: rgba(255, 255, 255, 0.5);
   --check-back: rgba(255, 255, 255, 0.1);
   --check-back-disabled: #eee;
   --check-border: transparent;
@@ -1538,8 +1540,7 @@ select {
 
   border: 1px solid var(--input-border);
   background: none;
-  background-color: #F0F0F0;
-  background-color: rgba(0, 0, 0, 0.039);
+  background-color: var(--input-back);
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -1556,11 +1557,10 @@ select:focus,
 select:active,
 select:hover {
   outline: none;
-  border-color: #aaaaaa;
-  border-color: rgba(0, 0, 0, 0.26);
+  border-color: var(--input-back-focus);
   box-shadow: inset 0 0 1px #ffffff, 0 0 2px rgba(0, 0, 0, 0.35);
 }
-select:focus,
+/*select:focus,
 select:active {
   background-color: #f8f8f8;
   color: #444;
@@ -1574,7 +1574,7 @@ select.error:hover,
 select.invalid:focus,
 select.error:focus {
   box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-}
+}*/
 select::-ms-expand {
   /* for IE 11 */
   display: none;
@@ -1829,6 +1829,9 @@ label .required:before {
 }
 .input-group .input-group-prepend {
   background-color: var(--input-prepend-back);
+}
+.input-group .input-group-prepend .input-group-text {
+  color: var(--input-prepend);
 }
 .input-group .form-control.is-invalid,
 .was-validated .input-group .form-control:invalid {
@@ -2579,7 +2582,7 @@ fieldset .ui-tabs .ui-widget-header .ui-state-default,
 fieldset .ui-tabs .ui-button,
 html fieldset .ui-tabs .ui-button.ui-state-disabled:hover,
 html fieldset .ui-tabs .ui-button.ui-state-disabled:active {
-background: #fff;
+  background: #fff;
 }
 fieldset .ui-tabs .ui-state-active,
 fieldset .ui-tabs .ui-widget-content .ui-state-active,
@@ -2590,7 +2593,15 @@ fieldset .ui-tabs .ui-button.ui-state-active:hover {
   background-color: #fff;
   border-color: #d7d7d7 #d7d7d7 #fff;
 }
-
+.ui-accordion .ui-state-default a,
+.ui-accordion .ui-state-default a:link,
+.ui-accordion .ui-state-default a:visited,
+.ui-accordion a.ui-button,
+.ui-accordion a:link.ui-button,
+.ui-accordion a:visited.ui-button,
+.ui-accordion .ui-button {
+  color: var(--link);
+}
 /*.nav-tabs {
 border-bottom: 1px solid #d7d7d7;
 }*/
