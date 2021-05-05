@@ -33,13 +33,6 @@ app('pathway')
 		{!! Toolbar::addNew(route('admin.users.roles.create')) !!}
 	@endif
 
-	@if (auth()->user()->can('admin users'))
-		{!!
-			Toolbar::spacer();
-			Toolbar::preferences('users')
-		!!}
-	@endif
-
 	{!! Toolbar::render() !!}
 @stop
 
