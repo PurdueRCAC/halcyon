@@ -64,4 +64,7 @@ return [
 		'select to publish' => 'Select items to publish',
 		'select to unpublish' => 'Select items to unpublish',
 	],
+	'params' => [
+		'collect feedback' => 'Collect feedback',
+	],
 ];
