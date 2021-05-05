@@ -8,6 +8,9 @@ use Illuminate\Routing\Controller;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Http\Resources\AssetResourceCollection;
 use App\Modules\Resources\Http\Resources\AssetResource;
+use App\Modules\Resources\Http\Resources\MemberResourceCollection;
+use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\Userusername;
 
 /**
  * Resources
@@ -362,5 +365,79 @@ class ResourcesController extends Controller
 		}
 
 		return response()->json(null, 204);
+	}
+
+	/**
+	 * Read a resource
+	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/resources/{id}
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @param   integer  $id
+	 * @return  Response
+	 */
+	public function members($id)
+	{
+		$resource = Asset::findOrFail($id);
+
+		$subresources = $resource->subresources()
+			->where(function($where)
+			{
+				$where->whereNull('datetimeremoved')
+					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->get();
+
+		$userids = array();
+
+		foreach ($subresources as $sub)
+		{
+			$queues = $sub->queues()
+				->withTrashed()
+				->where(function($where)
+				{
+					$where->whereNull('datetimeremoved')
+						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+				->get();
+				//->pluck('queuid')
+				//->toArray();
+
+			foreach ($queues as $queue)
+			{
+				$userids += $queue->users()
+					->withTrashed()
+					->whereIsActive()
+					->get()
+					->pluck('userid')
+					->toArray();
+			}
+		}
+
+		$userids = array_unique($userids);
+
+		$u = (new User)->getTable();
+		$uu = (new Userusername)->getTable();
+
+		$rows = User::query()
+			->select($u . '.*')
+			->join($uu, $uu . '.userid', $u . '.id')
+			->where(function($where) use ($uu)
+			{
+				$where->whereNull($uu . '.dateremoved')
+					->orWhere($uu . '.dateremoved', '=', '0000-00-00 00:00:00');
+			})
+			->whereIn($u . '.id', $userids)
+			->get();
+
+		return new MemberResourceCollection($rows);
 	}
 }

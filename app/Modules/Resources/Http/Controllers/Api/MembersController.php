@@ -338,13 +338,10 @@ class MembersController extends Controller
 		$rows = 0;
 
 		$resources = Asset::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('rolename', '!=', '')
 			->where('listname', '!=', '')
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->get();
 
 		foreach ($resources as $res)
@@ -366,8 +363,9 @@ class MembersController extends Controller
 						$where->whereNull('datetimeremoved')
 							->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
 					})
-					->pluck('queuid')
-					->toArray();
+					->get();
+					//->pluck('queuid')
+					//->toArray();
 
 				foreach ($queues as $queue)
 				{
