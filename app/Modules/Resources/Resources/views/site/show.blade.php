@@ -132,6 +132,30 @@ $content = '';
 					<th scope="row">Retired</th>
 					<td>{{ $resource->datetimeremoved->format('Y-m-d') }}</td>
 				</tr>
+				<?php /*<tr>
+					<th scope="row">Groups</th>
+					<td>
+						<?php
+						$g = (new App\Modules\Groups\Models\Group)->getTable();
+						$q = (new App\Modules\Queues\Models\Queue)->getTable();
+						$c = (new App\Modules\Resources\Models\Child)->getTable();
+
+						$total = App\Modules\Groups\Models\Group::query()
+							->select(Illuminate\Support\Facades\DB::raw('DISTINCT(' . $g . '.id)'))
+							->join($q, $q . '.groupid', $g . '.id')
+							->join($c, $c . '.subresourceid', $q . '.subresourceid')
+							->where(function($where) use ($q)
+							{
+								$where->whereNull($q . '.datetimeremoved')
+									->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+							})
+							->where($c . '.resourceid', '=', $resource->id)
+							->count();
+
+						echo $total;
+						?>
+					</td>
+				</tr>*/ ?>
 			</tbody>
 		</table>
 	@endif
