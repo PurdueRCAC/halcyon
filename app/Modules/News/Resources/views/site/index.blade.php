@@ -1,5 +1,12 @@
 @extends('layouts.master')
 
+@php
+app('pathway')->append(
+	config('news.name'),
+	route('site.news.index')
+);
+@endphp
+
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	@include('news::site.menu', ['types' => $types, 'active' => 0])

@@ -8,7 +8,7 @@
 /* global HighlightMatches */ // text.js
 
 var keywords_pending = 0;
-var img_url = "/include/images/";
+//var img_url = "/include/images/";
 var LASTEDIT = new Array();
 var root = base_url + "/api/";
 
@@ -56,19 +56,26 @@ function NEWSToggle(on, refresh) {
 	document.getElementById("TAB_search_action").innerHTML = "";
 	if (on == 'search') {
 		// toggle the search fields on
-		document.getElementById("TAB_search").className = "nav-link active tab activeTab";
-		document.getElementById("TAB_add").className = "nav-link tab";
+		var tab = document.getElementById("TAB_search");
+		// Crude check for being on the search page vs manage page
+		// as the search page doesn't have any tabs
+		if (tab) {
+			document.getElementById("TAB_search").className = "nav-link active tab activeTab";
+			document.getElementById("TAB_add").className = "nav-link tab";
 
-		document.getElementById("TAB_add").innerHTML = "Add News";
-		document.getElementById("INPUT_clear").value = "Clear";
-		document.getElementById("INPUT_preview").style.display = "none";
-		document.getElementById("INPUT_add").value = "Add News";
+			document.getElementById("TAB_add").innerHTML = "Add News";
+			document.getElementById("INPUT_clear").value = "Clear";
+			document.getElementById("INPUT_preview").style.display = "none";
+			document.getElementById("INPUT_add").value = "Add News";
+
+			document.getElementById("published").checked = false;
+			document.getElementById("template").checked = false;
+		}
+
 		document.getElementById("datestartshort").value = "";
 		document.getElementById("timestartshort").value = "";
 		document.getElementById("datestopshort").value = "";
 		document.getElementById("timestopshort").value = "";
-		document.getElementById("published").checked = false;
-		document.getElementById("template").checked = false;
 
 		document.getElementById("location").value = "";
 		document.getElementById("id").value = "";
@@ -927,7 +934,7 @@ function NEWSSearched(xml) {
 
 		// parse results
 		var results = JSON.parse(xml.responseText);
-		var edit = false;//results['canEdit']; //(results['authorized'] == 1) ? true : false;
+		//var edit = false;//results['canEdit']; //(results['authorized'] == 1) ? true : false;
 
 		document.getElementById("matchingnews").innerHTML = "Found " + results.meta.total + " matching News Articles";
 		for (var x=0;x<results.data.length;x++) {
@@ -1086,6 +1093,10 @@ function NEWSSearched(xml) {
  */
 function NEWSPrintRow(news) {
 	var edit = news.can.edit;
+	var tab = document.getElementById("TAB_search");
+	if (!tab) {
+		edit = false;
+	}
 
 	var id = news.id; //.split('/');
 		//id = id[id.length - 1];
@@ -3610,9 +3621,18 @@ document.addEventListener('DOMContentLoaded', function() {
 		refresh = false;
 	}
 
-	NEWSToggle(on, refresh);
-
 	if ($('#news').length) {
+		NEWSToggle(on, refresh);
 		NEWSSearch();
+	}
+
+	var stats = $('#articlestats');
+	if (stats.length) {
+		$.getJSON(stats.attr('data-api'), function (data) {
+			if (data) {
+				$('#viewcount').html(data.viewcount);
+				$('#uniqueviewcount').html(data.uniquecount);
+			}
+		});
 	}
 });

@@ -10,6 +10,18 @@
 <script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script>
 @endpush
 
+@php
+app('pathway')
+	->append(
+		config('news.name'),
+		route('site.news.index')
+	)
+	->append(
+		$type->name,
+		route('site.news.type', ['name' => $type->alias])
+	);
+@endphp
+
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	@include('news::site.menu', ['types' => $types, 'active' => $type->id])
@@ -86,6 +98,39 @@
 			</div>
 		</div>
 	@endif
+
+	<?php /*<form method="get" action="{{ route('site.news.type', ['name' => $type->name]) }}">
+		<fieldset class="filters">
+			<legend class="sr-only">Filter</legend>
+
+			<div class="form-group">
+				<label for="keywords">Search</label>
+				<input type="search" name="keyword" id="keywords" class="form-control" value="{{ $filters['keyword'] }}" />
+			</div>
+
+			<div class="form-group">
+				<label for="resource">Resource</label>
+				<input type="text" name="resource" id="resource" class="form-control" value="{{ $filters['resource'] }}" />
+			</div>
+
+			<div class="form-group">
+				<label for="datetimenews">Date from</label>
+				<span class="input-group">
+					<input type="text" class="date-pick form-control" name="start" id="datetimenews" placeholder="YYYY-MM-DD" value="{{ $filters['start'] }}" />
+					<span class="input-group-append"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
+				</span>
+			</div>
+
+			<div class="form-group">
+				<label for="datetimenewsend">Date to</label>
+				<span class="input-group">
+					<input type="text" class="date-pick form-control" name="stop" id="datetimenewsend" placeholder="YYYY-MM-DD" value="{{ $filters['end'] }}" />
+					<span class="input-group-append"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
+				</span>
+			</div>
+			@csrf
+		</fieldset>
+	</form>*/ ?>
 
 	<?php /*if (!$type->future) { ?>
 		<p>Here are <?php echo strtolower($type->name); ?> from this week. Older <?php echo strtolower($type->name); ?> are listed at the bottom.</p>

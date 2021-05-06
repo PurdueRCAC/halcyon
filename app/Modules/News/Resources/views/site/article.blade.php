@@ -3,16 +3,20 @@
 @section('title'){{ $article->headline }}@stop
 
 @push('scripts')
-<script src="{{ asset('modules/news/js/site.js') }}"></script>
-<script>
-	$.getJSON("<?php echo route('api.news.views', ['id' => $article->id]); ?>", function(data) {
-		if (data) {
-			$('#viewcount').html(data.viewcount);
-			$('#uniqueviewcount').html(data.uniquecount);
-		}
-	});
-</script>
+<script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script>
 @endpush
+
+@php
+app('pathway')
+	->append(
+		config('news.name'),
+		route('site.news.index')
+	)
+	->append(
+		Illuminate\Support\Str::limit($article->headline, 70),
+		route('site.news.show', ['id' => $article->id])
+	);
+@endphp
 
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
@@ -20,7 +24,22 @@
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-	<h2>{{ $article->headline }}</h2>
+	
+
+	@if (auth()->user() && auth()->user()->can('edit news'))
+	<div class="row">
+		<div class="col-sm-12 col-md-10">
+			<h2>{{ $article->headline }}</h2>
+		</div>
+		<div class="col-sm-12 col-md-2">
+			<a class="btn float-right tip" href="{{ route('site.news.manage', ['id' => $article->id, 'edit' => 1]) }}" title="Edit"><!--
+				--><i class="fa fa-fw fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit</span><!--
+			--></a>
+		</div>
+	</div>
+	@else
+		<h2>{{ $article->headline }}</h2>
+	@endif
 
 	<div class="wrapper-news">
 		<p class="newsheader">
@@ -116,7 +135,7 @@
 		</p>
 
 		@if (auth()->user() && auth()->user()->can('manage news'))
-			<p class="alert alert-info">
+			<p class="alert alert-info" id="articlestats" data-api="{{ route('api.news.views', ['id' => $article->id]) }}">
 				<a href="{{ route('site.news.manage', ['id' => $article->id, 'edit' => 1]) }}">Edit Article</a><br /><br />
 				View Count: <span id="viewcount"><span class="spinner">Loading...</span></span><br />
 				Unique View Count: <span id="uniqueviewcount"><span class="spinner">Loading...</span></span>

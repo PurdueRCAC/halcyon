@@ -9,8 +9,8 @@ use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
 use App\Modules\News\Models\Newsresource;
 use App\Modules\Resources\Models\Asset;
-use Carbon\Carbon;
 use App\Modules\Users\Models\User;
+use Carbon\Carbon;
 
 class ArticlesController extends Controller
 {
@@ -24,11 +24,6 @@ class ArticlesController extends Controller
 			->where('name', 'NOT LIKE', 'coffee%')
 			->orderBy('name', 'asc')
 			->get();
-
-		app('pathway')->append(
-			config('news.name'),
-			route('site.news.index')
-		);
 
 		return view('news::site.index', [
 			'types' => $types
@@ -72,17 +67,10 @@ class ArticlesController extends Controller
 			$filters['order_dir'] = 'desc';
 		}*/
 
-		$types = Type::query()->orderBy('name', 'asc')->get();
-
-		app('pathway')
-			->append(
-				config('news.name'),
-				route('site.news.index')
-			)
-			->append(
-				trans('news::news.search'),
-				route('site.news.search')
-			);
+		$types = Type::query()
+			->where('name', 'NOT LIKE', 'coffee%')
+			->orderBy('name', 'asc')
+			->get();
 
 		return view('news::site.search', [
 			'types' => $types,
@@ -100,16 +88,6 @@ class ArticlesController extends Controller
 			->where('name', 'NOT LIKE', 'coffee%')
 			->orderBy('name', 'asc')
 			->get();
-
-		app('pathway')
-			->append(
-				config('news.name'),
-				route('site.news.index')
-			)
-			->append(
-				trans('news::news.feeds'),
-				route('site.news.rss')
-			);
 
 		return view('news::site.rss', [
 			'types' => $types
@@ -257,7 +235,7 @@ class ArticlesController extends Controller
 	 * @param   string  $name
 	 * @return  Response
 	 */
-	public function type($name)
+	public function type($name, Request $request)
 	{
 		$row = Type::findByName($name);
 
@@ -290,25 +268,45 @@ class ArticlesController extends Controller
 				->where('template', '=', 0);
 		}
 
+		if ($request->has('start'))
+		{
+			$start = Carbon::parse($request->input('start'));
+			$query->where('datetimenews', '>', $start->toDateTimeString());
+		}
+
+		if ($request->has('stop'))
+		{
+			$stop = $request->input('stop');
+			$query->where(function($where) use ($stop)
+			{
+				$stop = Carbon::parse($stop);
+				$where->whereNull('datetimenewsend')
+					->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00')
+					->orWhere('datetimenewsend', '<=', $stop->toDateTimeString());
+			});
+		}
+
+		if ($request->has('resource'))
+		{
+			$r = (new Newsresource)->getTable();
+			$n = (new Article)->getTable();
+
+			$resource = explode(',', $request->input('resource'));
+			$resource = array_map('trim', $resource);
+
+			$query->join($r, $r . '.newsid', $n . '.id')
+				->whereIn($r . '.resourceid', $resource);
+		}
+
 		$articles = $query
-				->orderBy('datetimenews', 'desc')
-				->limit(20)
-				->paginate();
+			->orderBy('datetimenews', 'desc')
+			->limit(20)
+			->paginate();
 
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
 			->orderBy('name', 'asc')
 			->get();
-
-		app('pathway')
-			->append(
-				config('news.name'),
-				route('site.news.index')
-			)
-			->append(
-				$row->name,
-				route('site.news.type', ['name' => $name])
-			);
 
 		return view('news::site.type', [
 			'type' => $row,
@@ -554,17 +552,10 @@ class ArticlesController extends Controller
 	{
 		$row = Article::findOrFail($id);
 
-		$types = Type::query()->orderBy('name', 'asc')->get();
-
-		app('pathway')
-			->append(
-				config('news.name'),
-				route('site.news.index')
-			)
-			->append(
-				$row->headline,
-				route('site.news.show', ['id' => $id])
-			);
+		$types = Type::query()
+			->where('name', 'NOT LIKE', 'coffee%')
+			->orderBy('name', 'asc')
+			->get();
 
 		return view('news::site.article', [
 			'article' => $row,

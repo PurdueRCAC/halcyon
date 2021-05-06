@@ -10,6 +10,18 @@
 <script type="text/javascript" src="{{ asset('modules/news/js/rss.js?v=' . filemtime(public_path() . '/modules/news/js/rss.js')) }}"></script>
 @endpush
 
+@php
+app('pathway')
+	->append(
+		config('news.name'),
+		route('site.news.index')
+	)
+	->append(
+		trans('news::news.feeds'),
+		route('site.news.rss')
+	);
+@endphp
+
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	@include('news::site.menu', ['types' => $types, 'active' => 'feeds'])
@@ -23,6 +35,7 @@
 		</li>
 		<?php
 		$resourceNewsTypes = array();
+		$types = App\Modules\News\Models\Type::query()->orderBy('name', 'asc')->get();
 
 		if (count($types)):
 			foreach ($types as $n):
@@ -53,30 +66,32 @@
 		?>
 	</ul>
 
-	<h3>{{ trans('news::news.resource feeds') }}</h3>
-	<ul class="rsscontainer">
-		<?php
-		$resources = App\Modules\Resources\Models\Asset::query()
-			->where('listname', '!=', '')
-			->orderBy('name', 'asc')
-			->get();
+	@if (class_exists('App\Modules\Resources\Models\Asset'))
+		<h3>{{ trans('news::news.resource feeds') }}</h3>
+		<ul class="rsscontainer">
+			<?php
+			$resources = App\Modules\Resources\Models\Asset::query()
+				->where('listname', '!=', '')
+				->orderBy('name', 'asc')
+				->get();
 
-		if (count($resources)):
-			foreach ($resources as $r):
-				?>
-				<li class="form-check">
-					<input class="form-check-input rssCheckbox" value="{{ $r->name }}" id="checkbox_{{ str_replace(' ', '', $r->name) }}" type="checkbox" />
-					<label class="form-check-label" for="checkbox_{{ str_replace(' ', '', $r->name) }}">
-						<a target="_blank" id="{{ $r->name }}" class="rss" href="{{ route('site.news.feed', ['name' => implode(',', $resourceNewsTypes) . $r->name]) }}">
-							<i class="fa fa-rss-square" aria-hidden="true"></i> {{ $r->name }}
-						</a>
-					</label>
-				</li>
-				<?php
-			endforeach;
-		endif;
-		?>
-	</ul>
+			if (count($resources)):
+				foreach ($resources as $r):
+					?>
+					<li class="form-check">
+						<input class="form-check-input rssCheckbox" value="{{ $r->name }}" id="checkbox_{{ str_replace(' ', '', $r->name) }}" type="checkbox" />
+						<label class="form-check-label" for="checkbox_{{ str_replace(' ', '', $r->name) }}">
+							<a target="_blank" id="{{ $r->name }}" class="rss" href="{{ route('site.news.feed', ['name' => implode(',', $resourceNewsTypes) . $r->name]) }}">
+								<i class="fa fa-rss-square" aria-hidden="true"></i> {{ $r->name }}
+							</a>
+						</label>
+					</li>
+					<?php
+				endforeach;
+			endif;
+			?>
+		</ul>
+	@endif
 
 	<div class="rssCheckbox">
 		<p>

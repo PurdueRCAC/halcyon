@@ -59,7 +59,7 @@ return [
 	'no categories' => 'No news categories found at this time.',
 	'see more' => 'see more...',
 	'search news' => 'Search News',
-	'manage news' => 'Manage News & Events',
+	'manage news' => 'Manage News',
 	'url' => 'URL',
 	'publish window' => 'Publish window',
 	'feeds' => 'News Feeds',
