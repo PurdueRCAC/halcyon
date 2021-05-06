@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Events\InstructorLookup;
@@ -118,6 +119,11 @@ class AccountsController extends Controller
 		$row->datetimestart = Carbon::now();
 		$row->datetimestop = Carbon::now()->modify('+5 months');
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		event($event = new InstructorLookup($row->user));
 
 		$courses = $event->courses;
@@ -140,6 +146,11 @@ class AccountsController extends Controller
 	{
 		$row = Account::findOrFail($id);
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		event($event = new InstructorLookup($row->user));
 
 		$courses = $event->courses;
@@ -160,7 +171,7 @@ class AccountsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.crn' => 'nullable|string|max:8',
 			'fields.department' => 'nullable|string|max:4',
 			'fields.coursenumber' => 'nullable|string|max:8',
@@ -168,9 +179,18 @@ class AccountsController extends Controller
 			'fields.resourceid' => 'required|integer|min:1',
 			'fields.groupid' => 'nullable|integer|min:1',
 			'fields.userid' => 'nullable|integer|min:1',
-			'fields.datetimestart' => 'required|datetime',
-			'fields.datetimestop' => 'nullable|datetime',
-		]);
+			'fields.datetimestart' => 'required|date',
+			'fields.datetimestop' => 'nullable|date',
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 		$type = $request->input('type');

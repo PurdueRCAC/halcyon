@@ -36,6 +36,17 @@ app('pathway')
 
 @section('content')
 <form action="{{ route('admin.courses.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+
+	@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+	@endif
+
 	<div class="row">
 		<div class="col-md-7">
 			<fieldset class="adminform">
@@ -62,7 +73,7 @@ app('pathway')
 
 					<div class="form-group">
 						<label for="field-resourceid">{{ trans('courses::courses.resource') }}: <span class="required">{{ trans('global.required') }}</span></label>
-						<select name="field[resourceid]" id="field-resourceid" class="form-control{{ $errors->has('fields.resourceid') ? ' is-invalid' : '' }}" required>
+						<select name="fields[resourceid]" id="field-resourceid" class="form-control{{ $errors->has('fields.resourceid') ? ' is-invalid' : '' }}" required>
 							<option value="0">{{ trans('global.none') }}</option>
 							<?php foreach ($resources as $resource): ?>
 								<?php
