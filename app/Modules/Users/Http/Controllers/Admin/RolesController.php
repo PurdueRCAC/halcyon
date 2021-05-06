@@ -122,6 +122,11 @@ class RolesController extends Controller
 			->orderBy('lft', 'asc')
 			->get();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('users::admin.roles.edit', [
 			'row' => $row,
 			'options' => $options
@@ -136,9 +141,18 @@ class RolesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
-			'fields.title' => 'required'
-		]);
+		$roles = [
+			'fields.title' => 'required|string|max:100'
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 
@@ -227,6 +241,11 @@ class RolesController extends Controller
 			->where('id', '!=', $row->id)
 			->orderBy('lft', 'asc')
 			->get();
+
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
 
 		return view('users::admin.roles.edit', [
 			'row' => $row,

@@ -43,12 +43,12 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-title">{{ trans('users::access.title') }}: <span class="required">{{ trans('global.required') }}</span></label><br />
-					<input class="form-control required" type="text" name="fields[title]" id="field-title" value="{{ $row->title }}" />
+					<input class="form-control" required type="text" name="fields[title]" id="field-title" value="{{ $row->title }}" />
 				</div>
 
 				<div class="form-group">
 					<label for="field-parent_id">{{ trans('users::access.parent') }}: <span class="required">{{ trans('global.required') }}</span></label><br />
-					<select name="fields[parent_id]" id="field-parent_id" class="form-control required">
+					<select name="fields[parent_id]" id="field-parent_id" class="form-control" required>
 						<?php
 						foreach ($options as $option):
 							//if (auth()->user()->can('admin') || (!App\Halcyon\Access\Access::checkGroup($option->id, 'admin'))):

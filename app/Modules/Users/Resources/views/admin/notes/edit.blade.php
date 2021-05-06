@@ -56,12 +56,12 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-subject">{{ trans('users::notes.subject') }}: <span class="required">{{ trans('global.required') }}</span></label><br />
-					<input type="text" class="form-control required" name="fields[subject]" id="field-subject" value="{{ $row->subject }}" />
+					<input type="text" class="form-control" required name="fields[subject]" id="field-subject" value="{{ $row->subject }}" />
 				</div>
 
 				<div class="form-group">
 					<label for="field-body">{{ trans('users::notes.body') }}:</label>
-					{!! editor('fields[body]', $row->body, ['rows' => 15, 'class' => 'minimal no-footer']) !!}
+					{!! editor('fields[body]', $row->body, ['rows' => 15, 'class' => 'minimal no-footer', 'required' => 'required']) !!}
 				</div>
 
 				<input type="hidden" name="id" value="{{ $row->id }}" />

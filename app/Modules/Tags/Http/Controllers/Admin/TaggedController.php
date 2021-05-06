@@ -75,6 +75,11 @@ class TaggedController extends Controller
 	{
 		$row = new Tag();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('tags::admin.tagged.edit', [
 			'row' => $row
 		]);
@@ -88,9 +93,18 @@ class TaggedController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
-			'fields.name' => 'required'
-		]);
+		$rules = [
+			'fields.name' => 'required|string'
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 
@@ -126,6 +140,11 @@ class TaggedController extends Controller
 	public function edit($id)
 	{
 		$row = Tag::findOrFail($id);
+
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
 
 		return view('tags::admin.tagged.edit', [
 			'row' => $row,

@@ -91,6 +91,11 @@ class TagsController extends Controller
 	{
 		$row = new Tag();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('tags::admin.tags.edit', [
 			'row' => $row
 		]);
@@ -106,6 +111,11 @@ class TagsController extends Controller
 	{
 		$row = Tag::findOrFail($id);
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('tags::admin.tags.edit', [
 			'row' => $row,
 		]);
@@ -119,10 +129,19 @@ class TagsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.name' => 'required|string|max:150',
 			'fields.slug' => 'nullable|string|max:100'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 

@@ -100,6 +100,11 @@ class NotesController extends Controller
 	{
 		$row = new Note;
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('users::admin.notes.edit', [
 			'row' => $row
 		]);
@@ -115,6 +120,11 @@ class NotesController extends Controller
 	{
 		$row = Note::findOrFail($id);
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('users::admin.notes.edit', [
 			'row' => $row
 		]);
@@ -128,9 +138,19 @@ class NotesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
-			'fields.body' => 'required'
-		]);
+		$rules = [
+			'fields.subject' => 'required|string',
+			'fields.body' => 'required|string'
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 

@@ -43,7 +43,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-title">{{ trans('users::access.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[title]" id="field-title" class="form-control required" value="{{ $row->title }}" />
+					<input type="text" name="fields[title]" id="field-title" class="form-control required" maxlength="100" value="{{ $row->title }}" />
 					<span class="form-text text-muted">{{ trans('users::access.title desc') }}</span>
 				</div>
 			</fieldset>

@@ -82,6 +82,11 @@ class LevelsController extends Controller
 			->orderBy('lft', 'asc')
 			->get();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('users::admin.levels.edit', [
 			'row' => $row,
 			'roles' => $roles
@@ -102,6 +107,11 @@ class LevelsController extends Controller
 			->orderBy('lft', 'asc')
 			->get();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('users::admin.levels.edit', [
 			'row' => $row,
 			'roles' => $roles
@@ -116,9 +126,18 @@ class LevelsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
-			'fields.title' => 'required'
-		]);
+		$rules = [
+			'fields.title' => 'required|string|max:100'
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 
