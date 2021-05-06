@@ -74,32 +74,32 @@ $router->group(['prefix' => 'issues', 'middleware' => 'can:manage issues'], func
 	{
 		$router->match(['get', 'post'], '/', [
 			'as'   => 'admin.issues.todos',
-			'uses' => 'ToDosController@index',
+			'uses' => 'TodosController@index',
 			//'middleware' => 'can:manage issues',
 		]);
 		$router->get('/create', [
 			'as' => 'admin.issues.todos.create',
-			'uses' => 'ToDosController@create',
+			'uses' => 'TodosController@create',
 			'middleware' => 'can:create issues',
 		]);
 		$router->post('/store', [
 			'as' => 'admin.issues.todos.store',
-			'uses' => 'ToDosController@store',
+			'uses' => 'TodosController@store',
 			'middleware' => 'can:create issues,edit issues',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.issues.todos.edit',
-			'uses' => 'ToDosController@edit',
+			'uses' => 'TodosController@edit',
 			'middleware' => 'can:edit issues',
 		]);
 		$router->match(['get', 'post'], '/delete/{id?}', [
 			'as'   => 'admin.issues.todos.delete',
-			'uses' => 'ToDosController@delete',
+			'uses' => 'TodosController@delete',
 			'middleware' => 'can:delete issues',
 		]);
 		$router->match(['get', 'post'], '/cancel', [
 			'as' => 'admin.issues.todos.cancel',
-			'uses' => 'ToDosController@cancel',
+			'uses' => 'TodosController@cancel',
 		]);
 	});
 });

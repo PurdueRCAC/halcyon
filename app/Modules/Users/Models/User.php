@@ -466,6 +466,26 @@ class User extends Model implements
 	}
 
 	/**
+	 * Find a facet value
+	 *
+	 * @param   string  $key
+	 * @param   mixed   $default
+	 * @return  string
+	 */
+	public function addFacet($key, $val, $access = 0, $locked = 0)
+	{
+		$facet = new Facet;
+		$facet->user_id = $this->id;
+		$facet->key     = $key;
+		$facet->value   = $val;
+		$facet->access  = $access;
+		$facet->locked  = $locked;
+		$facet->save();
+
+		$this->facets->push($facet);
+	}
+
+	/**
 	 * Finds a user by username
 	 *
 	 * @param   string  $username

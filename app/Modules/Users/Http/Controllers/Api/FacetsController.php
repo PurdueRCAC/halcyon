@@ -215,7 +215,7 @@ class FacetsController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'user_id' => 'required|integer|min:1',
+			'user_id' => 'nullable|integer|min:1',
 			'key'     => 'required|string|max:255',
 			'value'   => 'required|string|max:8096',
 			'locked'  => 'nullable|integer',
@@ -223,11 +223,26 @@ class FacetsController extends Controller
 		]);
 
 		$row = new Facet;
-		$row->fill($request->all());
+		$row->key   = $request->input('key');
+		$row->value = $request->input('value');
 
-		if (!$row->user_id)
+		if ($request->has('user_id'))
+		{
+			$row->user_id = $request->input('user_id');
+		}
+		else
 		{
 			$row->user_id = auth()->user()->id;
+		}
+
+		if ($request->has('locked'))
+		{
+			$row->locked = $request->input('locked');
+		}
+
+		if ($request->has('access'))
+		{
+			$row->access = $request->input('access');
 		}
 
 		// Check that the provided user ID is valid

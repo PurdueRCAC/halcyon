@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
+use App\Modules\Users\Models\Facet;
 use App\Halcyon\Http\StatefulRequest;
 use App\Halcyon\Access\Map;
 use App\Halcyon\Access\Group as Role;
@@ -431,6 +432,26 @@ class UsersController extends Controller
 		$username->userid = $user->id;
 		$username->fill($ufields);
 		$username->save();
+
+		if ($request->has('facet'))
+		{
+			$facets = $request->input('facet');
+
+			foreach ($facets as $i => $f)
+			{
+				if (!$f['key'])
+				{
+					continue;
+				}
+				$facet = Facet::findByUserAndKey($user->id, $f['key']);
+				$facet = $facet ?: new Facet;
+				$facet->user_id = $user->id;
+				$facet->key     = $f['key'];
+				$facet->value   = $f['value'];
+				$facet->access  = $f['access'];
+				$facet->save();
+			}
+		}
 
 		/*if (!$user->setRoles($fields['roles']))
 		{

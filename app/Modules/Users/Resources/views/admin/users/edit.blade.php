@@ -18,26 +18,26 @@ jQuery(document).ready(function ($) {
 			type: 'post',
 			data: {
 				'user_id' : btn.data('userid'),
-				'key' : name.val(),
-				'value' : name.val(),
-				'access' : name.val()
+				'key' : key.val(),
+				'value' : value.val(),
+				'access' : access.val()
 			},
 			dataType: 'json',
 			async: false,
 			success: function(response) {
 				Halcyon.message('success', 'Item added');
 
-				var c = name.closest('table');
-				var li = c.find('tr.hidden');
+				var c = btn.closest('table');
+				var li = '#facet-template';//c.find('tr.hidden');
 
 				if (typeof(li) !== 'undefined') {
-					var template = $(li)
-						.clone()
-						.removeClass('hidden');
+					var template = $(li);
+						//.clone()
+						//.removeClass('hidden');
 
-					template
-						.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
-						.data('id', response.id);
+					//template
+					//	.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
+					//	.data('id', response.id);
 
 					template.find('a').each(function(i, el){
 						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
@@ -45,12 +45,15 @@ jQuery(document).ready(function ($) {
 
 					var content = template
 						.html()
+						.replace(/\{i\}/g, c.find('tbody>tr').length + 2)
 						.replace(/\{id\}/g, response.id)
 						.replace(/\{key\}/g, response.key)
 						.replace(/\{value\}/g, response.value)
 						.replace(/\{access\}/g, response.access);
 
-					template.html(content).insertBefore(li);
+					//template.html(content).insertBefore(li);
+					//template.html(content);
+					$(c.find('tbody')[0]).append(content);
 				}
 
 				key.val(''),
@@ -284,7 +287,7 @@ app('pathway')
 					$i = 0;
 					?>
 					@foreach ($user->facets as $facet)
-						<tr>
+						<tr id="facet-{{ $facet->id }}">
 							<td>
 								@if ($facet->locked)
 									<span class="icon-lock glyph">{{ trans('users::users.locked') }}</span>
@@ -302,7 +305,7 @@ app('pathway')
 							</td>
 							<td class="text-right">
 								<input type="hidden" name="facet[{{ $i }}][id]" class="form-control" value="{{ $facet->id }}" />
-								<a href="#facet-{id}" class="btn btn-secondary btn-danger remove-facet"
+								<a href="#facet-{{ $facet->id }}" class="btn btn-secondary btn-danger remove-facet"
 									data-api="{{ route('api.users.facets.delete', ['id' => $facet->id]) }}"
 									data-confirm="{{ trans('users::users.confirm delete') }}">
 									<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
@@ -313,20 +316,6 @@ app('pathway')
 						$i++;
 						?>
 					@endforeach
-						<tr class="hidden" id="facet-{id}" data-id="{id}">
-							<td></td>
-							<td><input type="text" name="facet[{$i}][key]" class="form-control" value="{key}" /></td>
-							<td><input type="text" name="facet[{$i}][value]" class="form-control" value="{value}" /></td>
-							<td>{access}</td>
-							<td class="text-right">
-								<input type="hidden" name="facet[{i}][id]" class="form-control" value="{id}" />
-								<a href="#facet-{id}" class="btn btn-secondary btn-danger remove-facet"
-									data-api="{{ route('api.users.facets.create') }}/{id}"
-									data-confirm="{{ trans('users::users.confirm delete') }}">
-									<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
-								</a>
-							</td>
-						</tr>
 					</tbody>
 					<tfoot>
 						<tr id="newfacet">
@@ -351,6 +340,29 @@ app('pathway')
 						</tr>
 					</tfoot>
 				</table>
+				<script id="facet-template" type="text/x-handlebars-template">
+					<tr id="facet-{id}" data-id="{id}">
+						<td></td>
+						<td><input type="text" name="facet[{i}][key]" class="form-control" value="{key}" /></td>
+						<td><input type="text" name="facet[{i}][value]" class="form-control" value="{value}" /></td>
+						<td>
+							<select name="facet[{i}][access]" class="form-control">
+								<option value="0">{{ trans('users::users.private') }}</option>
+								@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
+									<option value="{{ $access->id }}">{{ $access->title }}</option>
+								@endforeach
+							</select>
+						</td>
+						<td class="text-right">
+							<input type="hidden" name="facet[{i}][id]" class="form-control" value="{id}" />
+							<a href="#facet-{id}" class="btn btn-secondary btn-danger remove-facet"
+								data-api="{{ route('api.users.facets.create') }}/{id}"
+								data-confirm="{{ trans('users::users.confirm delete') }}">
+								<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+							</a>
+						</td>
+					</tr>
+				</script>
 			</div>
 		</div>
 		@if (auth()->user()->can('view users.notes'))

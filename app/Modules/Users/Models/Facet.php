@@ -3,7 +3,7 @@ namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\Users\Events\FacetCreated;
-use App\Modules\Users\Events\FaceteDeleted;
+use App\Modules\Users\Events\FacetDeleted;
 
 /**
  * User facet model
