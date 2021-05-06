@@ -2,10 +2,10 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="user" type="text" label="listener.groups.github::github.username" description="listener.groups.github::github.username desc" />
-			<field name="pass" type="passord" label="listener.groups.github::github.password" description="listener.groups.github::github.password desc" />
-			<field name="url" type="text" label="listener.groups.github::github.url" description="listener.groups.github::github.url desc" />
-			<field name="api_key" type="text" label="listener.groups.github::github.api key" description="listener.groups.github::github.api key desc" />
+			<field name="user" type="text" label="listener.groups.github::github.username" />
+			<field name="pass" type="passord" label="listener.groups.github::github.password" />
+			<field name="url" type="text" label="listener.groups.github::github.url" />
+			<field name="api_key" type="text" label="listener.groups.github::github.api key" />
 		</fieldset>
 	</fields>
 </config>

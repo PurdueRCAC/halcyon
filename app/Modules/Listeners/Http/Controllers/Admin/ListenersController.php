@@ -146,6 +146,11 @@ class ListenersController extends Controller
 		$row = new Listener;
 		$row->registerLanguage();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('listeners::admin.edit', [
 			'row'  => $row,
 			'form' => $row->getForm()
@@ -201,18 +206,26 @@ class ListenersController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
-			'fields.folder' => 'required',
-			'fields.element' => 'required'
-		]);
+		$rules = [
+			'fields.access' => 'nullable|integer',
+			'fields.state'  => 'nullable|integer',
+			'fields.params' => 'nullable|array',
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
  
 		$id = $request->input('id');
 
 		$row = $id ? Listener::findOrFail($id) : new Listener();
 
 		$row->fill($request->input('fields'));
-
-		//$row->params = json_encode($request->input('params', []));
 
 		if (!$row->save())
 		{

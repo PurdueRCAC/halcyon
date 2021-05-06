@@ -43,7 +43,7 @@
 				<option value="website">website</option>
 				<option value="article">article</option>
 			</field>
-			<field name="image" type="media" default="" label="listener.content.opengraph::opengraph.image label" description="listener.content.opengraph::opengraph.image desc" />
+			<field name="image" type="App\Modules\Media\Models\Fields\Media" default="" label="listener.content.opengraph::opengraph.image label" description="listener.content.opengraph::opengraph.image desc" />
 			<field name="url" type="text" default="" label="listener.content.opengraph::opengraph.url label" description="listener.content.opengraph::opengraph.url desc" />
 			<field name="site_name" type="text" default="" label="listener.content.opengraph::opengraph.site name label" description="listener.content.opengraph::opengraph.site name desc" />
 			<field name="description" type="textarea" default="" label="listener.content.opengraph::opengraph.description label" description="listener.content.opengraph::opengraph.description desc" />

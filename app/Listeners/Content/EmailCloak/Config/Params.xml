@@ -2,9 +2,9 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="mode" type="list" default="1" description="listeners.content.emailcloak::emailcloak.MODE_DESC" label="listeners.content.emailcloak::emailcloak.MODE_LABEL">
-				<option value="0">listeners.content.emailcloak::emailcloak.NONLINKABLE</option>
-				<option value="1">listeners.content.emailcloak::emailcloak.LINKABLE</option>
+			<field name="mode" type="list" default="1" description="listener.content.emailcloak::emailcloak.params.mode desc" label="listener.content.emailcloak::emailcloak.params.mode">
+				<option value="0">listener.content.emailcloak::emailcloak.params.nonlinkable</option>
+				<option value="1">listener.content.emailcloak::emailcloak.params.linkable</option>
 			</field>
 		</fieldset>
 	</fields>

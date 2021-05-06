@@ -43,7 +43,7 @@
 				<option value="website">website</option>
 				<option value="article">article</option>
 			</field>
-			<field name="image" type="media" default="" label="listener.content.twitter::twitter.image label" description="listener.content.twitter::twitter.image desc" />
+			<field name="image" type="App\Modules\Media\Models\Fields\Media" default="" label="listener.content.twitter::twitter.image label" description="listener.content.twitter::twitter.image desc" />
 			<field name="url" type="text" default="" label="listener.content.twitter::twitter.url label" description="listener.content.twitter::twitter.url desc" />
 			<field name="site_name" type="text" default="" label="listener.content.twitter::twitter.site name label" description="listener.content.twitter::twitter.site name desc" />
 			<field name="description" type="textarea" default="" label="listener.content.twitter::twitter.description label" description="listener.content.twitter::twitter.description desc" />

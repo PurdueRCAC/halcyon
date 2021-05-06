@@ -1,6 +1,6 @@
 <?php
 return [
-	'listener name' => 'Resources - News',
-	'listener desc' => 'Process asset paths in pages.',
+	'listener name' => 'Resources - Pages',
+	'listener desc' => 'This retrieves Pages associated with the specified Resource.',
 	'outages' => 'Outages & Maintenance',
 ];
