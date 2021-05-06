@@ -31,7 +31,7 @@ class ResourceIssues
 	 */
 	public function handleAssetDisplaying(AssetDisplaying $event)
 	{
-		if (!app()->has('isAdmin') || !app()->has('isAdmin'))
+		if (!app()->has('isAdmin') || !app()->get('isAdmin'))
 		{
 			return;
 		}
