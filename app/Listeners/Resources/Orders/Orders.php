@@ -31,6 +31,8 @@ class Orders
 	public function handleAssetDeleted(AssetDeleted $event)
 	{
 		$products = Product::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('resourceid', '=', $event->asset->id)
 			->get();
 
@@ -54,6 +56,8 @@ class Orders
 		}
 
 		$product = Product::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('resourceid', '=', $event->getAsset()->id)
 			->get()
 			->first();
