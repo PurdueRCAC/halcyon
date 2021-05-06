@@ -206,9 +206,11 @@ class Page extends Model
 		$vars = array();
 		$vars['myusername'] = 'myusername';
 		$vars['user'] = ['username' => 'myusername'];
+		$vars['user']['staff'] = 0;
 		if (auth()->user())
 		{
 			$vars['user']['username'] = auth()->user()->username;
+			$vars['user']['staff'] = (auth()->user()->can('manage knowledge') ? 1 : 0);
 		}
 		$vars['resource'] = $this->variables->toArray(); //(array)$this->params->get('variables', []);
 		foreach ((array)$this->params->get('tags', []) as $tag)
