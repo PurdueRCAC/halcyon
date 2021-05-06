@@ -28,6 +28,12 @@ class MemberResource extends JsonResource
 			'delete' => false,
 		);
 
+		$data['user'] = array(
+			'id' => $this->userid,
+			'name' => $this->user->name,
+			'username' => $this->user->username,
+		);
+
 		$user = auth()->user();
 
 		if ($user)
