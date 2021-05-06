@@ -31,13 +31,13 @@ class CourseReport
 	public function handleAccountCreated(AccountCreated $event)
 	{
 		// Does the course have a report?
-		if (!$event->course->report)
+		if (!$event->account->report)
 		{
 			return;
 		}
 
 		$report = new Report;
-		$report->report = $event->course->report;
+		$report->report = $event->account->report;
 		$report->userid = auth()->user()->id;
 		$report->contactdate = Carbon::now()->toDateTimeString();
 		$report->save();

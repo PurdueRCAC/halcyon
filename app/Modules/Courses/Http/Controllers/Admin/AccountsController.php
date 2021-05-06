@@ -197,24 +197,33 @@ class AccountsController extends Controller
 
 		$row = $id ? Account::findOrFail($id) : new Account();
 		$row->fill($request->input('fields'));
+		$row->classname = $request->input('fields.classname');
+		if ($request->has('fields.coursenumber'))
+		{
+			$row->coursenumber = $request->input('fields.coursenumber');
+		}
+		if ($request->has('crn'))
+		{
+			$row->crn = $request->input('crn');
+		}
 
 		if ($type == 'workshop')
 		{
 			if ($row->classname == '')
 			{
-				return redirect()->back()->withError(trans('Required field `classname` is empty'));
+				return redirect()->back()->withInput($request->input())->withError(trans('Required field `classname` is empty'));
 			}
 			if ($row->datetimestart == '')
 			{
-				return redirect()->back()->withError(trans('Required field `start` is empty'));
+				return redirect()->back()->withInput($request->input())->withError(trans('Required field `start` is empty'));
 			}
 			if ($row->datetimestop == '')
 			{
-				return redirect()->back()->withError(trans('Required field `stop` is empty'));
+				return redirect()->back()->withInput($request->input())->withError(trans('Required field `stop` is empty'));
 			}
 			$row->datetimestart = Carbon::parse($row->datetimestart)->modify('-86400 seconds')->toDateTimeString();
 			$row->datetimestop  = Carbon::parse($row->datetimestop)->modify('+86400 seconds')->toDateTimeString();
-			$row->crn = uniqid();
+			$row->crn = substr(uniqid(), 0, 8);
 			$row->semester = 'Workshop';
 			$row->reference = $row->semester;
 			$row->department = '';
