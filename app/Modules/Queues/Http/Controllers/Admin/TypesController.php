@@ -81,6 +81,11 @@ class TypesController extends Controller
 	{
 		$row = new Type();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('queues::admin.types.edit', [
 			'row' => $row
 		]);

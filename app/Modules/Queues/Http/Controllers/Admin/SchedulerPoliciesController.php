@@ -80,6 +80,11 @@ class SchedulerPoliciesController extends Controller
 	{
 		$row = new SchedulerPolicy();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('queues::admin.schedulerpolicies.edit', [
 			'row' => $row
 		]);

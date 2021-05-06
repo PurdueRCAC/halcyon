@@ -112,6 +112,11 @@ class SchedulersController extends Controller
 		$row = new Scheduler();
 		$row->defaultmaxwalltime = 1209600;
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		$policies = SchedulerPolicy::orderBy('name', 'asc')->get();
 		$batchsystems = Batchsystem::orderBy('name', 'asc')->get();
 		$resources = (new Asset)->tree();

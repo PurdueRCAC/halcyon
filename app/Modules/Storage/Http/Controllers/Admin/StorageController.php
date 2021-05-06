@@ -102,6 +102,11 @@ class StorageController extends Controller
 
 		$messagetypes = MessageType::query()->orderBy('name', 'asc')->get();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('storage::admin.storage.edit', [
 			'row'   => $asset,
 			'resources' => $resources,
@@ -123,6 +128,11 @@ class StorageController extends Controller
 
 		$messagetypes = MessageType::query()->orderBy('name', 'asc')->get();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('storage::admin.storage.edit', [
 			'row'   => $asset,
 			'resources' => $resources,
@@ -138,13 +148,22 @@ class StorageController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.name' => 'required|string|max:32',
 			'fields.parentresourceid' => 'nullable|integer',
 			'fields.path' => 'nullable|string|max:255',
 			'fields.import' => 'nullable|in:0,1',
 			'fields.autousedir' => 'nullable|in:0,1',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 

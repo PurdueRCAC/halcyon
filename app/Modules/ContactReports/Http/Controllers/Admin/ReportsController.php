@@ -247,7 +247,7 @@ class ReportsController extends Controller
 		//$request->validate([
 		$rules = [
 			'fields.report' => 'required',
-			'fields.datetimecontact' => 'required|date|before_or_equal:' . $now->toDateTimeString(),
+			'fields.datetimecontact' => 'required|date|before_or_equal:' . $now->format('Y-m-d'),
 			'fields.userid' => 'nullable|integer',
 			'fields.groupid' => 'nullable|integer',
 			'fields.resources' => 'nullable|array',

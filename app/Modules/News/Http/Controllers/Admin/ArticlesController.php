@@ -231,17 +231,26 @@ class ArticlesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.newstypeid' => 'required|integer',
 			'fields.headline' => 'required|string|max:255',
 			'fields.body' => 'required|string|max:15000',
 			'fields.published' => 'nullable|integer|in:0,1',
 			'fields.template' => 'nullable|integer|in:0,1',
-			'fields.datetimenews' => 'nullable|date',
-			'fields.datetimenewsend' => 'nullable|date',
+			'fields.datetimenews' => 'nullable|datetime',
+			'fields.datetimenewsend' => 'nullable|datetime',
 			'fields.location' => 'nullable|string|max:32',
 			'fields.url' => 'nullable|url',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$fields = $request->input('fields');
 		$fields['location'] = isset($fields['location']) ? (string)$fields['location'] : '';

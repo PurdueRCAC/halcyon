@@ -200,6 +200,11 @@ class QueuesController extends Controller
 		$row->defaultwalltime = 0.5;
 		$row->enabled = 1;
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		$types = Type::orderBy('name', 'asc')->get();
 		$schedulers = Scheduler::orderBy('hostname', 'asc')->get();
 		$schedulerpolicies = SchedulerPolicy::orderBy('name', 'asc')->get();

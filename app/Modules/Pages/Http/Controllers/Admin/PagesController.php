@@ -123,6 +123,11 @@ class PagesController extends Controller
 		$row->access = 1;
 		$row->state = 1;
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		$parents = Page::query()
 			->select('id', 'title', 'path', 'level')
 			->where('level', '>', 0)
@@ -177,11 +182,20 @@ class PagesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
-			'fields.title' => 'required',
-			'fields.content' => 'required',
+		$rules = [
+			'fields.title' => 'required|string|max:255',
+			'fields.content' => 'required|string',
 			'fields.access'  => 'nullable|min:1'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 

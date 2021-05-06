@@ -85,9 +85,18 @@ class TypesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.name' => 'required|string|max:32',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 

@@ -117,6 +117,11 @@ class IssuesController extends Controller
 	{
 		$row = new Issue();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('issues::admin.issues.edit', [
 			'row' => $row
 		]);
@@ -150,11 +155,20 @@ class IssuesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.report' => 'required',
-			'fields.datetimecreated' => 'nullable|date',
+			'fields.datetimecreated' => 'nullable|datetime',
 			'fields.userid' => 'nullable|integer'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 

@@ -72,6 +72,11 @@ class NotificationTypesController extends Controller
 		$row = new Type;
 		$timeperiods = Timeperiod::all();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('storage::admin.types.edit', [
 			'row'   => $row,
 			'timeperiods' => $timeperiods,
@@ -89,6 +94,11 @@ class NotificationTypesController extends Controller
 		$row = Type::find($id);
 		$timeperiods = Timeperiod::all();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('storage::admin.types.edit', [
 			'row'   => $row,
 			'timeperiods' => $timeperiods,
@@ -103,11 +113,20 @@ class NotificationTypesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.name' => 'required|string|max:100',
 			'fields.defaulttimeperiodid' => 'nullable|integer',
 			'fields.valuetype' => 'required|integer|min:1'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 

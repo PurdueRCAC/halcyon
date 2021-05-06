@@ -154,6 +154,11 @@ class DirectoriesController extends Controller
 			$row->parentstoragedirid = $parent;
 		}
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		$storages = StorageResource::query()
 			->orderBy('name', 'asc')
 			->get();
@@ -173,6 +178,11 @@ class DirectoriesController extends Controller
 	public function edit($id)
 	{
 		$row = Directory::findOrFail($id);
+
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
 
 		$storages = StorageResource::query()
 			->orderBy('name', 'asc')
@@ -198,7 +208,7 @@ class DirectoriesController extends Controller
 
 		if (empty($data))
 		{
-			$request->validate([
+			$rules = [
 				'fields.name' => 'required|string|max:32',
 				'fields.storageresourceid' => 'nullable|integer',
 				'fields.groupid' => 'nullable|integer',
@@ -206,7 +216,16 @@ class DirectoriesController extends Controller
 				'fields.owneruserid' => 'nullable|integer',
 				'fields.autouserunixgroupid' => 'nullable|integer',
 				'fields.autouser' => 'nullable|in:0,1,2,3',
-			]);
+			];
+
+			$validator = Validator::make($request->all(), $rules);
+
+			if ($validator->fails())
+			{
+				return redirect()->back()
+					->withInput($request->input())
+					->withErrors($validator->messages());
+			}
 
 			$data = $request->input('fields');
 			$id = $request->input('id');

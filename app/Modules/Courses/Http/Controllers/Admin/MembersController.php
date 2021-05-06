@@ -111,7 +111,12 @@ class MembersController extends Controller
 
 		$row = new Account();
 
-		return view('groups::admin.edit', [
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
+		return view('courses::admin.edit', [
 			'row' => $row
 		]);
 	}
@@ -124,9 +129,18 @@ class MembersController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.name' => 'required'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 
@@ -166,7 +180,12 @@ class MembersController extends Controller
 
 		$row = Member::findOrFail($id);
 
-		return view('groups::admin.members.edit', [
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
+		return view('courses::admin.members.edit', [
 			'row' => $row,
 		]);
 	}
@@ -212,6 +231,6 @@ class MembersController extends Controller
 	 */
 	public function cancel()
 	{
-		return redirect(route('admin.groups.members'));
+		return redirect(route('admin.courses.members'));
 	}
 }

@@ -84,6 +84,11 @@ class TodosController extends Controller
 	{
 		$row = new ToDo();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('issues::admin.todos.edit', [
 			'row' => $row
 		]);
@@ -117,12 +122,21 @@ class TodosController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.name' => 'required|string|max:255',
 			'fields.description' => 'nullable|string|max:2000',
 			'fields.recurringtimeperiodid' => 'nullable|integer',
 			'fields.userid' => 'nullable|integer'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 

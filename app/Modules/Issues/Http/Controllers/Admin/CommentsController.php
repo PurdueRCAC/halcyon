@@ -77,6 +77,11 @@ class CommentsController extends Controller
 		$row = new Comment();
 		$row->contactreportid = $report->id;
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		return view('issues::admin.comments.edit', [
 			'row'    => $row,
 			'report' => $report
@@ -115,10 +120,19 @@ class CommentsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.comment'   => 'required',
 			'fields.contactreportid' => 'required'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 

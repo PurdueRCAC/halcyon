@@ -271,12 +271,21 @@ class PagesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'page.title'    => 'required|string|max:255',
 			'page.content'  => 'required|string',
 			'fields.access' => 'nullable|integer|min:1',
 			'fields.state'  => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 		$parent_id = $request->input('fields.parent_id');
