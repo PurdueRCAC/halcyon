@@ -5,21 +5,20 @@
 ?>
 <ul class="menu<?php echo $class_sfx ? ' ' . $class_sfx : ''; ?>"<?php
 	$tag = '';
-	if ($params->get('tag_id') != null)
-	{
+	if ($params->get('tag_id') != null):
 		$tag = $params->get('tag_id').'';
 		echo ' id="' . $tag . '"';
-	}
+	endif;
 ?>>
 	<?php
 	$current = trim(request()->path(), '/');
 
 	foreach ($list as $i => $item):
 		$class = 'nav-item item-' . $item->id;
-		if ($item->id == $active_id)
+		/*if ($item->id == $active_id)
 		{
 			$class .= ' current';
-		}
+		}*/
 
 		//if (in_array($item->id, $path))
 		if (trim($item->link, '/') == $current)
@@ -68,16 +67,15 @@
 			case 'separator':
 				// Note. It is important to remove spaces between elements.
 				$title = $item->anchor_title ? ' title="' . $item->anchor_title . '" ' : '';
-				if ($item->menu_image)
-				{
-					$item->params->get('menu_text', 1) ?
-						$linktype = '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> ' :
-						$linktype = '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
-				}
-				else
-				{
+
+				if ($item->menu_image):
+					$linktype = $item->params->get('menu_text', 1)
+						? '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> '
+						: '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
+				else:
 					$linktype = $item->title;
-				}
+				endif;
+
 				?><div class="separator"<?php echo $title; ?>><?php //echo $linktype; ?></div><?php
 			break;
 			case 'url':
@@ -89,16 +87,15 @@
 				// Note. It is important to remove spaces between elements.
 				$class = $item->anchor_css   ? 'class="' . $item->anchor_css . '" '   : '';
 				$title = $item->anchor_title ? 'title="' . $item->anchor_title . '" ' : '';
-				if ($item->menu_image)
-				{
-					$item->params->get('menu_text', 1) ?
-						$linktype = '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> ' :
-						$linktype = '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
-				}
-				else
-				{
+
+				if ($item->menu_image):
+					$linktype = $item->params->get('menu_text', 1)
+						? '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> '
+						: '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
+				else:
 					$linktype = $item->title;
-				}
+				endif;
+
 				if ($item->parent):
 					$linktype .= '<span class="caret"></span>';
 				endif;
@@ -146,16 +143,13 @@
 				// Note. It is important to remove spaces between elements.
 				//$class = $item->anchor_css   ? 'class="' . $item->anchor_css . '" '   : '';
 				//$title = $item->anchor_title ? 'title="' . $item->anchor_title . '" ' : '';
-				if ($item->menu_image)
-				{
-					$item->params->get('menu_text', 1) ?
-						$linktype = '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> ' :
-						$linktype = '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
-				}
-				else
-				{
+				if ($item->menu_image):
+					$linktype = $item->params->get('menu_text', 1)
+						? '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> '
+						: '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
+				else:
 					$linktype = $item->title;
-				}
+				endif;
 
 				if ($item->parent):
 					$linktype .= '<span class="caret"></span>';
@@ -181,16 +175,14 @@
 				// Note. It is important to remove spaces between elements.
 				$class = $item->anchor_css   ? 'class="' . $item->anchor_css . '" '   : '';
 				$title = $item->anchor_title ? 'title="' . $item->anchor_title . '" ' : '';
-				if ($item->menu_image)
-				{
-					$item->params->get('menu_text', 1) ?
-						$linktype = '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> ' :
-						$linktype = '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
-				}
-				else
-				{
+
+				if ($item->menu_image):
+					$linktype = $item->params->get('menu_text', 1)
+						? '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> '
+						: '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
+				else:
 					$linktype = $item->title;
-				}
+				endif;
 
 				if ($item->parent):
 					$linktype .= '<span class="caret"></span>';

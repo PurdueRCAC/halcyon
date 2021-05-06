@@ -19,13 +19,14 @@ class Menu extends Widget
 		$menu = new SiteMenu([
 			'access' => auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array(1)
 		]);
+		//$menu->setActive(app('menu')->getActive()->id);
 
 		$list      = self::getList($menu, $this->params);
-		//$menu      = App::get('menu');
+		//$menu      = app('menu');
 
-		$active    = $menu->getActive();
-		$active_id = isset($active) ? $active->id : $menu->getDefault()->id;
-		$path      = isset($active) ? $active->tree : array();
+		//$active    = $menu->getActive();
+		//$active_id = $active ? $active->id : 0;//$menu->getDefault()->id;
+		//$path      = isset($active) ? $active->tree : array();
 		$showAll   = $this->params->get('showAllChildren');
 		$class_sfx = htmlspecialchars($this->params->get('class_sfx'));
 
@@ -34,8 +35,8 @@ class Menu extends Widget
 
 		return view($this->getViewName($layout), [
 			'list'      => $list,
-			'path'      => $path,
-			'active_id' => $active_id,
+			//'path'      => $path,
+			//'active_id' => $active_id,
 			'showAll'   => $showAll,
 			'class_sfx' => $class_sfx,
 			'params'    => $this->params,
@@ -51,11 +52,17 @@ class Menu extends Widget
 	protected static function getList($menu, &$params)
 	{
 		// If no active menu, use default
-		$active = ($menu->getActive()) ? $menu->getActive() : $menu->getDefault();
+		//$active = ($menu->getActive()) ? $menu->getActive() : $menu->getDefault();
 
 		// Initialise variables.
 		$list     = array();
-		$path     = $active->tree;
+
+		/*if (!$active)
+		{
+			return $list;
+		}*/
+
+		//$path     = $active->tree;
 		$start    = (int) $params->get('startLevel');
 		$end      = (int) $params->get('endLevel');
 		$showAll  = $params->get('showAllChildren');
@@ -68,9 +75,9 @@ class Menu extends Widget
 			foreach ($items as $i => $item)
 			{
 				if (($start && $start > $item->level)
-					|| ($end && $item->level > $end)
+				 || ($end && $item->level > $end)
 					//|| (!$showAll && $item->level > 1 && !in_array($item->parent_id, $path))
-					|| ($start > 1 && !in_array($item->tree[$start-2], $path))
+					//|| ($start > 1 && !in_array($item->tree[$start-2], $path))
 				)
 				{
 					unset($items[$i]);

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Menus\Entities;
 
-use App\Halcyon\Config\Registry;
+use Illuminate\Config\Repository;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -53,17 +53,6 @@ class Menu extends Fluent
 
 		// Load the menu items
 		$this->load();
-
-		foreach ($this->_items as $item)
-		{
-			if ($item->home)
-			{
-				$this->_default[trim($item->language)] = $item->id;
-			}
-
-			// Decode the item params
-			$item->params = new Registry($item->params);
-		}
 	}
 
 	/**
@@ -135,9 +124,7 @@ class Menu extends Fluent
 		{
 			$this->_active = $id;
 
-			$result =& $this->_items[$id];
-
-			return $result;
+			return $this->_items[$id];
 		}
 
 		return null;
@@ -146,15 +133,13 @@ class Menu extends Fluent
 	/**
 	 * Get menu item by id.
 	 *
-	 * @return  object  The item object.
+	 * @return  mixed  The item object.
 	 */
 	public function getActive()
 	{
-		if ($this->_active)
+		if ($this->_active && isset($this->_items[$this->_active]))
 		{
-			$item =& $this->_items[$this->_active];
-
-			return $item;
+			return $this->_items[$this->_active];
 		}
 
 		return null;
@@ -257,12 +242,12 @@ class Menu extends Fluent
 	 */
 	public function getParams($id)
 	{
-		if ($menu = $this->getItem($id))
+		if ($item = $this->getItem($id))
 		{
-			return $menu->params;
+			return $item->params;
 		}
 
-		return new Registry;
+		return new Repository;
 	}
 
 	/**
@@ -303,7 +288,7 @@ class Menu extends Fluent
 	{
 		$w = (new Item)->getTable();
 
-		if (!Schema::hasTable('menu_items'))
+		if (!Schema::hasTable($w))
 		{
 			return;
 		}
@@ -349,7 +334,7 @@ class Menu extends Fluent
 			}
 
 			// Decode the item params
-			$item->params = new Registry($item->params);
+			$item->params = new Repository($item->params ? json_decode($item->params, true) : []);
 		}
 	}
 }

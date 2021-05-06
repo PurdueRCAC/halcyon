@@ -121,19 +121,6 @@ class SetActiveMenu
 		// Carry on...
 		if ($found)
 		{
-			/*$route = substr($route, strlen($found->route));
-			if ($route)
-			{
-				$route = substr($route, 1);
-			}
-
-			$uri->setVar('Itemid', $found->id);
-			$uri->setVar('option', $found->component);
-			$uri->setPath($route);
-			foreach ($found->query as $key => $val)
-			{
-				$uri->setVar($key, $val);
-			}*/
 			$request->merge(['itemid' => $found->id]);
 
 			$menu->setActive($found->id);
