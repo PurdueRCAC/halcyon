@@ -90,10 +90,10 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 
 	$router->group(['prefix' => 'members', 'middleware' => 'auth:api'], function (Router $router)
 	{
-		/*$router->get('/', [
+		$router->get('/', [
 			'as' => 'api.resources.members',
 			'uses' => 'MembersController@index',
-		]);*/
+		]);
 		$router->post('/', [
 			'as' => 'api.resources.members.create',
 			'uses' => 'MembersController@create',
