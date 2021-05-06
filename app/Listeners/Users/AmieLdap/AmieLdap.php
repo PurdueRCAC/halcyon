@@ -70,7 +70,7 @@ class AmieLdap
 			return;
 		}
 
-		$user = new User;
+		$user = $event->user; //new User;
 
 		try
 		{
@@ -89,22 +89,13 @@ class AmieLdap
 				/*
 				Sample LDAP entry
 
-				# PEB215459, Projects, anvil.rcac.purdue.edu
-				dn: x-xsede-pid=PEB215459,ou=Projects,dc=anvil,dc=rcac,dc=purdue,dc=edu
-				objectClass: x-xsede-xsedeProject
+				# x-tannazr, People, anvil.rcac.purdue.edu
+				dn: uid=x-tannazr,ou=People,dc=anvil,dc=rcac,dc=purdue,dc=edu
 				objectClass: x-xsede-xsedePerson
 				objectClass: posixAccount
 				objectClass: inetOrgPerson
 				objectClass: top
-				x-xsede-recordId: 87665808
-				x-xsede-pid: PEB215459
 				uid: x-tannazr
-				x-xsede-resource: test-resource1.purdue.xsede
-				x-xsede-startTime: 20210415000000Z
-				x-xsede-endTime: 20220415000000Z
-				x-xsede-serviceUnits: 1
-				description: Lorem ipsum dolor est...
-				title: Lorem Ipsum
 				x-xsede-personId: x-tannazr
 				givenName:: VEFOTkFaIA==
 				sn: REZAEI DAMAVANDI
@@ -122,7 +113,6 @@ class AmieLdap
 				VANDI
 				x-xsede-userDn: /C=US/O=National Center for Supercomputing Applications/CN=TAN
 				NAZ REZAEI DAMAVANDI
-				x-xsede-gid: x-peb215459
 				gidNumber: 7000060
 				uidNumber: 7000006
 				homeDirectory: /home/x-tannazr
@@ -142,24 +132,57 @@ class AmieLdap
 					'departmentNumber', // A string, not a number. Wut?
 					'telephoneNumber',
 					'co', // Country
-					'x-xsede-personId'
+					'x-xsede-personId',
+					/*'x-xsede-recordId',
+					'x-xsede-pid',
+					'x-xsede-resource',
+					'x-xsede-startTime',
+					'x-xsede-endTime',
+					'x-xsede-serviceUnits',
+					'x-xsede-gid',*/
 				];
 
+				if (!$user)
+				{
+					$user = User::findByUsername($event->uid);
+				}
+
+				// Create new user if doesn't exist
+				if (!$user)
+				{
+					$user = new User;
+					$user->name = $results->getAttribute('cn', 0);
+					$user->save();
+
+					$username = new Userusername;
+					$username->userid = $user->id;
+					$username->username = $results->getAttribute('uid', 0);
+					$username->save();
+				}
+
+				// Add metadata
 				foreach ($atts as $key)
 				{
-					if ($val = $results->getAttribute($key, 0))
+					$meta = $user->facets->firstWhere($key, $val);
+					$val = $results->getAttribute($key, 0);
+
+					if (!$meta && $val)
 					{
-						$user->{$key} = $val;
+						$user->addFacet($key, $val, 0, 1);
 					}
 				}
 
-				if ($user->uid)
+				if ($vals = $results->getAttribute('x-xsede-userDn'))
 				{
-					$user->username = $user->uid;
-				}
-				if ($user->cn)
-				{
-					$user->name = $user->cn;
+					foreach ($vals as $val)
+					{
+						$meta = $user->facets->search($val);
+
+						if (!$meta)
+						{
+							$user->addFacet($key, $val, 0, 1);
+						}
+					}
 				}
 			}
 		}
