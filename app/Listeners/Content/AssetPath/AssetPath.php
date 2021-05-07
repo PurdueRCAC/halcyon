@@ -33,6 +33,12 @@ class AssetPath
 			{
 				return 'src="' . $matches[1] . '"';
 			}
+
+			if (substr($matches[1], 0, 6) == '/files')
+			{
+				$matches[1] = substr($matches[1], 6);
+			}
+
 			return 'src="' . asset("files/" . $matches[1]) . '"';
 		}, $event->getBody());
 		$content = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $content);
