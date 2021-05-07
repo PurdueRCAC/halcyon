@@ -89,5 +89,7 @@ return [
 		'notebook desc' => 'URL for launching Jupyter Hub',
 		'rstudio' => 'RStudio',
 		'rstudio desc' => 'URL for launching RStudio',
+		'url' => 'URL',
+		'url desc' => 'Alternate URL to point the resource to',
 	],
 ];

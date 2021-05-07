@@ -164,6 +164,12 @@ app('pathway')
 									<input type="text" class="form-control" name="params[rstudio]" id="params-rstudio" value="{{ $row->params->get('rstudio') }}" />
 									<span class="form-text text-muted">{{ trans('resources::assets.params.rstudio desc') }}</span>
 								</div>
+
+								<div class="form-group">
+									<label for="params-url">{{ trans('resources::assets.params.url') }}:</label>
+									<input type="text" class="form-control" name="params[url]" id="params-url" value="{{ $row->params->get('url') }}" />
+									<span class="form-text text-muted">{{ trans('resources::assets.params.url desc') }}</span>
+								</div>
 							</fieldset>
 					@sliders('end')
 
