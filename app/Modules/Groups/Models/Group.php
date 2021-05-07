@@ -528,4 +528,77 @@ class Group extends Model
 
 		return parent::delete($options);
 	}
+
+	/**
+	 * Add user as a manager
+	 *
+	 * @param   integer  $userid
+	 * @param   integer  $owner
+	 * @return  bool
+	 */
+	public function addManager($userid, $owner = 0)
+	{
+		$member = Member::findByGroupAndUser($this->id, $userid);
+
+		if ($member && $member->membertype == Type::MANAGER)
+		{
+			return true;
+		}
+
+		$member = $member ?: new Member;
+		$member->userid = $userid;
+		$member->groupid = $this->id;
+		$member->membertype = Type::MANAGER;
+		$member->owner = $owner;
+
+		return $member->save();
+	}
+
+	/**
+	 * Add user as a member
+	 *
+	 * @param   integer  $userid
+	 * @return  bool
+	 */
+	public function addMember($userid)
+	{
+		$member = Member::findByGroupAndUser($this->id, $userid);
+
+		if ($member && $member->membertype == Type::MEMBER)
+		{
+			return true;
+		}
+
+		$member = $member ?: new Member;
+		$member->userid = $userid;
+		$member->groupid = $this->id;
+		$member->membertype = Type::MEMBER;
+		$member->owner = 0;
+
+		return $member->save();
+	}
+
+	/**
+	 * Add a user as Viewer
+	 *
+	 * @param   integer  $userid
+	 * @return  bool
+	 */
+	public function addViewer($userid)
+	{
+		$member = Member::findByGroupAndUser($this->id, $userid);
+
+		if ($member && $member->membertype == Type::VIEWER)
+		{
+			return true;
+		}
+
+		$member = $member ?: new Member;
+		$member->userid = $userid;
+		$member->groupid = $this->id;
+		$member->membertype = Type::VIEWER;
+		$member->owner = 0;
+
+		return $member->save();
+	}
 }
