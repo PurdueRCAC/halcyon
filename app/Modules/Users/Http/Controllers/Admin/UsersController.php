@@ -350,6 +350,11 @@ class UsersController extends Controller
 	{
 		$user = new User;
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$user->fill($fields);
+		}
+
 		return view('users::admin.users.edit', [
 			'user' => $user
 		]);
@@ -363,10 +368,19 @@ class UsersController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
-			'fields.name' => 'required',
+		$rules = [
+			'fields.name' => 'required|string|max:128',
 			//'fields.email' => 'required',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 		$fields = $request->input('fields');
@@ -474,25 +488,16 @@ class UsersController extends Controller
 	public function edit($id)
 	{
 		$user = User::findOrFail($id);
+
 		if ($user->puid)
 		{
 			$user->sourced = 1;
 		}
 
-		/*if (!$user->surname)
+		if ($fields = app('request')->old('fields'))
 		{
-			$bits = explode(' ', $user->name);
-
-			$user->surname = array_pop($bits);
-			if (count($bits) >= 1)
-			{
-				$user->given_name = array_shift($bits);
-			}
-			if (count($bits) >= 1)
-			{
-				$user->middle_name = implode(' ', $bits);
-			}
-		}*/
+			$user->fill($fields);
+		}
 
 		return view('users::admin.users.edit', [
 			'user' => $user
@@ -546,7 +551,7 @@ class UsersController extends Controller
 	/**
 	 * Sets the account blocked state of a member
 	 *
-	 * @param  Request $request
+	 * @param   Request $request
 	 * @return  Response
 	 */
 	public function unblock(Request $request)
@@ -557,8 +562,8 @@ class UsersController extends Controller
 	/**
 	 * Sets the account blocked state of a member
 	 *
-	 * @param  Request $request
-	 * @param  integer $state
+	 * @param   Request $request
+	 * @param   integer $state
 	 * @return  Response
 	 */
 	public function block(Request $request, $state = 1)
@@ -713,11 +718,11 @@ class UsersController extends Controller
 
 		// Output the HTML
 		return view('users::admin.users.debug', [
-			'user' => $user,
+			'user'    => $user,
 			'filters' => $filters,
-			'assets' => $assets,
+			'assets'  => $assets,
 			'actions' => $actions,
-			'levels' => $levels,
+			'levels'  => $levels,
 			'modules' => $modules,
 		]);
 	}
