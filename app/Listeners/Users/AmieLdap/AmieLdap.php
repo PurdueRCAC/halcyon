@@ -3,8 +3,13 @@ namespace App\Listeners\Users\AmieLdap;
 
 use App\Modules\Users\Events\UserSyncing;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\Userusername;
 use App\Halcyon\Utility\Str;
 use App\Modules\History\Traits\Loggable;
+use App\Modules\Groups\Models\Group;
+use App\Modules\Resources\Models\Asset;
+use App\Modules\Queues\Models\Scheduler;
+use App\Modules\Queues\Models\Queue;
 
 /**
  * User listener for Amie Ldap
@@ -89,13 +94,22 @@ class AmieLdap
 				/*
 				Sample LDAP entry
 
-				# x-tannazr, People, anvil.rcac.purdue.edu
-				dn: uid=x-tannazr,ou=People,dc=anvil,dc=rcac,dc=purdue,dc=edu
+				# PEB215459, Projects, anvil.rcac.purdue.edu
+				dn: x-xsede-pid=PEB215459,ou=Projects,dc=anvil,dc=rcac,dc=purdue,dc=edu
+				objectClass: x-xsede-xsedeProject
 				objectClass: x-xsede-xsedePerson
 				objectClass: posixAccount
 				objectClass: inetOrgPerson
 				objectClass: top
+				x-xsede-recordId: 87665808
+				x-xsede-pid: PEB215459
 				uid: x-tannazr
+				x-xsede-resource: test-resource1.purdue.xsede
+				x-xsede-startTime: 20210415000000Z
+				x-xsede-endTime: 20220415000000Z
+				x-xsede-serviceUnits: 1
+				description: Lorem ipsum dolor est...
+				title: Lorem Ipsum
 				x-xsede-personId: x-tannazr
 				givenName:: VEFOTkFaIA==
 				sn: REZAEI DAMAVANDI
@@ -113,6 +127,7 @@ class AmieLdap
 				VANDI
 				x-xsede-userDn: /C=US/O=National Center for Supercomputing Applications/CN=TAN
 				NAZ REZAEI DAMAVANDI
+				x-xsede-gid: x-peb215459
 				gidNumber: 7000060
 				uidNumber: 7000006
 				homeDirectory: /home/x-tannazr
@@ -182,6 +197,66 @@ class AmieLdap
 						{
 							$user->addFacet($key, $val, 0, 1);
 						}
+					}
+				}
+
+				if ($pid = $results->getAttribute('x-xsede-pid', 0))
+				{
+					$group = Group::findByName($pid);
+
+					if (!$group)
+					{
+						$group = new Group;
+						$group->name = $pid;
+						$group->owneruserid = $user->id;
+						$group->save();
+
+						$group->addManager($user->id, 1);
+					}
+
+					$queue = $group->queues->search($pid);
+
+					if (!$queue)
+					{
+						$resource = Asset::findByName('anvil');
+
+						$subresource = $resource ? null : $resource->subresources->first();
+
+						$scheduler = Scheduler::query()
+							->where('hostname', '=', 'anvil-adm.rcac.purdue.edu')
+							->get();
+
+						if ($subresource && $scheduler)
+						{
+							$queue = new Queue;
+							$queue->name = $pid;
+							$queue->groupid = $group->id;
+							$queue->queuetype = 1;
+							$queue->enabled = 1;
+							$queue->started = 1;
+							$queue->defaultwalltime = 30 * 60;
+							$queue->maxwalltime = $scheduler->defaultmaxwalltime;
+							$queue->subresourceid = $subresource->id;
+							$queue->schedulerid = $scheduler->schedulerid;
+							$queue->schedulerpolicyid = $scheduler->schedulerpolicyid;
+							$queue->maxjobsqueued = 12000;
+							$queue->maxjobsqueuesuser = 5000;
+							$queue->cluster = $subresource->cluster;
+							$queue->save();
+						}
+					}
+
+					$sizes = $queue->sizes()->orderBy('id', 'asc')->get();
+
+					if (!count($sizes))
+					{
+						$start = $results->getAttribute('x-xsede-startTime', 0);
+						$start = $start ?: null;
+
+						$stop = $results->getAttribute('x-xsede-endTime', 0);
+						$stop = $stop ?: null;
+
+						$queue->addLoan($seller->id, $start, $stop, $nodecount, $corecount);
 					}
 				}
 			}
