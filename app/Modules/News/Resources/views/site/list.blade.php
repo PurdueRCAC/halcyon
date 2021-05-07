@@ -1,6 +1,6 @@
 
 @if ($articles->count() > 0)
-<div class="alert alert-info sidenmenu-news">
+<div class="alert alert-info">
 	<ul class="newslist">
 		@foreach ($articles as $i => $article)
 			<li<?php if ($i == 0) { echo ' class="first"'; } ?>>
@@ -15,7 +15,7 @@
 					@elseif ($article->isTomorrow())
 						<span class="badge">Tomorrow</span>
 					@endif
-					<i class="fa fa-fw fa-clock-o" aria-hidden="true"></i>
+
 					<time datetime="{{ $article->datetimenews }}">
 						{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
 					</time>
