@@ -7,6 +7,7 @@ return [
 	// Misc.
 	'news' => 'News',
 	'no articles found' => 'No articles found.',
+	'no type found' => 'There are no upcoming :type at this time.',
 	'updated' => 'Updated',
 	'more' => 'see more…',
 

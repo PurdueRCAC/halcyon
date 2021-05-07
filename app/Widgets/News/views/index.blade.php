@@ -30,7 +30,11 @@
 		</ul>
 	<?php else: ?>
 		<ul class="newslist">
-			<li>{{ trans('widget.news::news.no articles found') }}</li>
+			@if ($params->get('newstypeid'))
+				<li class="first">{{ trans('widget.news::news.no type found', ['type' => $type->name]) }}</li>
+			@else
+				<li class="first">{{ trans('widget.news::news.no articles found') }}</li>
+			@endif
 		</ul>
 	<?php endif; ?>
 	<?php if ($params->get('more')): ?>
