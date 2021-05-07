@@ -106,10 +106,16 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-2">
-					@if ($row->description)
-						{{ Illuminate\Support\Str::limit($row->description, 70) }}
-					@else
-						<span class="none">{{ trans('global.none') }}</span>
+					@if (auth()->user()->can('edit resources.types'))
+					<a href="{{ route('admin.resources.types.edit', ['id' => $row->id]) }}">
+					@endif
+						@if ($row->description)
+							{{ Illuminate\Support\Str::limit(strip_tags($row->description), 70) }}
+						@else
+							<span class="none">{{ trans('global.none') }}</span>
+						@endif
+					@if (auth()->user()->can('edit resources.types'))
+					</a>
 					@endif
 				</td>
 				<td class="priority-4 text-right">

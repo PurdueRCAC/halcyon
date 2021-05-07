@@ -22,7 +22,13 @@ app('pathway')
 	<ul class="dropdown-menu">
 		@foreach ($items as $i => $row)
 			<li>
-				<a href="{{ route('site.resources.' . $type->alias . '.show', ['name' => ($row->listname ? $row->listname : $row->rolename)]) }}">{{ $row->name }}</a>
+				@php
+				$url = route('site.resources.' . $type->alias . '.show', ['name' => ($row->listname ? $row->listname : $row->rolename)]);
+				if ($row->params->get('url')):
+					$url = $row->params->get('url');
+				endif;
+				@endphp
+				<a href="{{ $url }}">{{ $row->name }}</a>
 			</li>
 		@endforeach
 		<li><div class="separator"></div></li>
@@ -33,17 +39,23 @@ app('pathway')
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	<h2>{{ $retired ? trans('resources::resources.type retired resources', ['type' => $type->name]) : trans('resources::resources.type resources', ['type' => $type->name]) }}</h2>
 	@if ($type->description)
-		<p>{{ $type->description }}</p>
+		{!! $type->description !!}
 	@endif
 
 	<div class="row resources">
 		@foreach ($rows as $i => $row)
 			<div class="col-md-12">
 				<div class="card mb-3">
+					@if ($url = $row->params->get('url'))
+					<a href="{{ $url }}" class="card-content">
+					@else
 					<a href="{{ route('site.resources.' . $type->alias . '.show', ['name' => $row->listname]) }}" class="card-content">
+					@endif
 						<div class="card-header">
 							@if ($thumb = $row->thumb)
-								<img src="{{ $thumb }}" class="card-img" alt="{{ $row->name }} thumbnail" />
+								<img src="{{ $thumb }}" class="card-img" width="80" alt="{{ $row->name }} thumbnail" />
+							@else
+								<img src="{{ asset('/modules/resources/images/resource.png') }}" class="card-img" width="80" alt="{{ $row->name }} thumbnail" />
 							@endif
 						</div>
 						<div class="card-body">
