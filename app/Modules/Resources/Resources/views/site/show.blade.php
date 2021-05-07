@@ -16,6 +16,12 @@ $content = '';
 		</div>
 	@endif
 
+	@foreach ($sections as $section)
+		@if (!$section['active'] && $section['content'])
+			{!! $section['content'] !!}
+		@endif
+	@endforeach
+
 	<ul class="dropdown-menu">
 		@foreach ($sections as $section)
 			<?php

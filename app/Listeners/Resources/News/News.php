@@ -40,9 +40,42 @@ class News
 
 		app('translator')->addNamespace('listener.resources.news', __DIR__ . '/lang');
 
+		$a = (new Article)->getTable();
+		$r = (new Newsresource)->getTable();
+
+		$now = Carbon::now()->toDateTimeString();
+
+		$news = Article::query()
+			->select($a . '.*')
+			->join($r, $r . '.newsid', $a . '.id')
+			->wherePublished()
+			->where($a . '.newstypeid', '=', 1)
+			->where($a . '.template', '=', 0)
+			//->where($a . '.datetimenews', '<', $now)
+			->where(function($where) use ($now, $a)
+			{
+				$where->whereNull($a . '.datetimenewsend')
+					->orWhere($a . '.datetimenewsend', '=', '0000-00-00 00:00:00')
+					->orWhere($a . '.datetimenewsend', '>', $now);
+			})
+			->where($r . '.resourceid', '=', $event->getAsset()->id)
+			->orderBy($a . '.datetimenews', 'desc')
+			->get();
+
+		$content = null;
+
+		if (count($news) > 0)
+		{
+			$content = view('news::site.list', [
+				'articles' => $news
+			]);
+		}
+
 		$event->addSection(
 			route('site.news.type', ['name' => $event->getAsset()->name]),
-			trans('listener.resources.news::news.outages')
+			trans('listener.resources.news::news.outages'),
+			false,
+			$content
 		);
 	}
 
