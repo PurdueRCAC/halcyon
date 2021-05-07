@@ -526,4 +526,106 @@ class Queue extends Model
 	{
 		return $this->update(['started' => 1]);
 	}
+
+	/**
+	 * Add loan
+	 *
+	 * @return  bool
+	 */
+	public function addLoan($lenderqueueid, $start, $stop, $nodecount, $corecount, $comment = null)
+	{
+		$row = new Loan;
+		$row->queueid = $this->id;
+		$row->lenderqueueid = $lenderqueueid;
+
+		$row->datetimestart = Carbon::now()->toDateTimeFormat();
+		if ($start = $results->getAttribute('x-xsede-startTime', 0))
+		{
+			$row->datetimestart = Carbon::parse($start)->toDateTimeString();
+		}
+
+		if ($stop = $results->getAttribute('x-xsede-endTime', 0))
+		{
+			$row->datetimestop = Carbon::parse($stop)->toDateTimeString();
+		}
+
+		$row->nodecount = $nodecount;
+		$row->corecount = $corecount;
+
+		if ($comment)
+		{
+			$row->comment = $comment;
+		}
+
+		return $row->save();
+	}
+
+	/**
+	 * Add purchase
+	 *
+	 * @return  bool
+	 */
+	public function addPurchase($lenderqueueid, $start, $stop, $nodecount, $corecount, $comment = null)
+	{
+		$row = new Size;
+		$row->queueid = $this->id;
+		$row->lenderqueueid = $lenderqueueid;
+
+		$row->datetimestart = Carbon::now()->toDateTimeFormat();
+		if ($start = $results->getAttribute('x-xsede-startTime', 0))
+		{
+			$row->datetimestart = Carbon::parse($start)->toDateTimeString();
+		}
+
+		if ($stop = $results->getAttribute('x-xsede-endTime', 0))
+		{
+			$row->datetimestop = Carbon::parse($stop)->toDateTimeString();
+		}
+
+		$row->nodecount = $nodecount;
+		$row->corecount = $corecount;
+
+		if ($comment)
+		{
+			$row->comment = $comment;
+		}
+
+		// Does the queue have any cores yet?
+		$count = Size::query()
+			->where('queueid', '=', (int)$row->queueid)
+			->orderBy('datetimestart', 'asc')
+			->get()
+			->first();
+
+		if (!$count)
+		{
+			// Have not been sold anything and never will have anything
+			return false;
+		}
+		elseif ($count->datetimestart > $row->datetimestart)
+		{
+			// Have not been sold anything before this would start
+			return false;
+		}
+
+		// Look for an existing entry in the same time frame and same queues to update instead
+		$exist = Size::query()
+			->where('queueid', '=', (int)$row->queueid)
+			->where('sellerqueueid', '=', $row->sellerqueueid)
+			->where('datetimestart', '=', $row->datetimestart)
+			->where('datetimestop', '=', $row->datetimestop)
+			->orderBy('datetimestart', 'asc')
+			->get()
+			->first();
+
+		if ($exist)
+		{
+			$exist->nodecount = $row->nodecount;
+			$exist->corecount = $row->corecount;
+
+			return $exist->save();
+		}
+
+		return $row->save();
+	}
 }
