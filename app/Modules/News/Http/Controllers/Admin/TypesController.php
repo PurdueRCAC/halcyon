@@ -4,6 +4,7 @@ namespace App\Modules\News\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Models\Type;
 use App\Halcyon\Http\StatefulRequest;
 

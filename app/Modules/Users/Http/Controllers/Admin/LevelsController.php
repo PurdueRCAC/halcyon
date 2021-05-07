@@ -5,6 +5,7 @@ namespace App\Modules\Users\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 //use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Access\Viewlevel as Level;
 use App\Halcyon\Access\Role;
 use App\Halcyon\Http\StatefulRequest;

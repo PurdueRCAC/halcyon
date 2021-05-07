@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Widgets\Models\Widget;
 use App\Modules\Widgets\Models\Menu;
 use App\Modules\Users\Models\User;
@@ -284,6 +285,11 @@ class WidgetsController extends Controller
 			}
 		}
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		$row->registerLanguage();
 
 		return view('widgets::admin.edit', [
@@ -358,13 +364,22 @@ class WidgetsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'fields.title'    => 'required|string|max:100',
 			'fields.position' => 'required|string|max:50',
 			'fields.widget'   => 'required|string|max:50',
 			'fields.params'   => 'nullable|array',
 			'fields.menu'     => 'nullable|array',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
 
 		$id = $request->input('id');
 

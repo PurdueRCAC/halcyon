@@ -4,10 +4,11 @@ namespace App\Modules\Pages\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Config\Repository;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Pages\Models\Page;
 use App\Modules\Pages\Models\Version;
 use App\Halcyon\Http\StatefulRequest;
-use Illuminate\Config\Repository;
 
 class PagesController extends Controller
 {

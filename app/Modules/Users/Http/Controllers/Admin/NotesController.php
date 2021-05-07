@@ -5,6 +5,7 @@ namespace App\Modules\Users\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Users\Models\Note;
 use App\Halcyon\Http\StatefulRequest;
 

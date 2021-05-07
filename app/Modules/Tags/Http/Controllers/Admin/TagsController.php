@@ -4,6 +4,7 @@ namespace App\Modules\Tags\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Tags\Models\Tag;
 use App\Halcyon\Http\StatefulRequest;
 
