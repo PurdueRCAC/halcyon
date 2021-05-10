@@ -551,21 +551,27 @@ h4 {
   font-weight: normal;
   font-style: normal;
 }
+.fa:before,
 *[class^="icon-"]:before,
 *[class*=" icon-"]:before {
   font-family: "Feather";
   margin-right: 0.2em;
   speak: none;
 }
+.fa {
+  font-style: normal;
+}
 .icon-alert-octagon:before {
   content: "\e81b";
 }
+.fa-exclamation-circle:before,
 .icon-alert-circle:before {
   content: "\e81c";
 }
 .icon-activity:before {
   content: "\e81d";
 }
+.fa-exclamation-triangle:before,
 .icon-alert-triangle:before {
   content: "\e81e";
 }
@@ -788,6 +794,7 @@ h4 {
 .icon-edit-2:before {
   content: "\e866";
 }
+.fa-pencil:before,
 .icon-edit:before {
   content: "\e867";
 }
@@ -1223,6 +1230,7 @@ h4 {
 .icon-wind:before {
   content: "\e8f5";
 }
+.fa-times:before,
 .icon-cancel:before,
 .icon-x:before {
   content: "\e8f6";
@@ -1263,6 +1271,7 @@ h4 {
 .icon-crop:before {
   content: "\e902";
 }
+.fa-question-circle:before,
 .icon-help:before,
 .icon-help-circle:before {
   content: "\e903";
@@ -2071,6 +2080,14 @@ box-shadow: 0px 2px 4px 0 rgba(31,30,47,0.1);
   border: none;
   box-shadow: 0 1px 15px 1px rgba(62,57,107,.07);*/
   border: 1px solid rgba(0,0,0,.125);
+  margin: 0 0 1.5rem 0;
+}
+.card-header {
+  background-color: transparent;
+}
+.card-header .card-title {
+  margin: 0;
+  padding: 0;
 }
 /*table.adminlist {
   margin: 0 0 1em 0;
@@ -2257,10 +2274,10 @@ table.adminlist td.order input[type=number] {
 .adminlist {
   margin: 0;
 }
-.order {
+.sort {
   white-space: nowrap;
 }
-.order span {
+.sort span {
   display: inline-block;
   width: 16px;
 }

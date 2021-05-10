@@ -301,7 +301,7 @@ class OrdersController extends Controller
 			->get();
 
 		return view('orders::admin.orders.edit', [
-			'row' => $order,
+			'order' => $order,
 			'categories' => $categories
 		]);
 	}
@@ -316,15 +316,23 @@ class OrdersController extends Controller
 	{
 		$order = Order::find($id);
 
+		$products = Product::query()
+			->withTrashed()
+			->whereIsActive()
+			->orderBy('name', 'asc')
+			->get();
+
 		$categories = Category::query()
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
+			->withTrashed()
+			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
 
 		return view('orders::admin.orders.edit', [
-			'row'   => $order,
-			'categories' => $categories
+			'order' => $order,
+			'categories' => $categories,
+			'products' => $products,
 		]);
 	}
 
