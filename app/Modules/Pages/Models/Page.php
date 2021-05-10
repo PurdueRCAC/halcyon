@@ -338,8 +338,16 @@ class Page extends Model
 		{
 			foreach ($matches as $match)
 			{
+				// Trim whitespace
 				$path = trim($match[1]);
+				// Trim quotes
 				$path = trim($path, '"\'');
+
+				if (substr($path, 0, 6) == '/files')
+				{
+					$path = substr($path, 6);
+				}
+				$path = ltrim($path, '/');
 
 				$text = \storage_path('app/public/' . $path);
 
@@ -366,8 +374,16 @@ class Page extends Model
 		{
 			foreach ($matches as $match)
 			{
-				$path = strtolower(trim($match[1]));
+				// Trim whitespace
+				$path = trim($match[1]);
+				// Trim quotes
 				$path = trim($path, '"\'');
+
+				if (substr($path, 0, 6) == '/files')
+				{
+					$path = substr($path, 6);
+				}
+				$path = ltrim($path, '/');
 
 				$text = \asset('files/' . $path);
 
