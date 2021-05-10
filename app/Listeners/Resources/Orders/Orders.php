@@ -67,7 +67,7 @@ class Orders
 			app('translator')->addNamespace('listener.resources.orders', __DIR__ . '/lang');
 
 			$event->addSection(
-				route('site.orders.products.read', ['id' => $product->id]),
+				route('site.orders.products') . '#' . $product->id . '_product',
 				trans('listener.resources.orders::orders.purchase access')
 			);
 		}
