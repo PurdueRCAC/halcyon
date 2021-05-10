@@ -234,21 +234,30 @@ class SizesController extends Controller
 		$row->queueid = $request->input('queueid');
 		$row->sellerqueueid = $request->input('sellerqueueid');
 		$row->datetimestart = $request->input('datetimestart');
+		if (!$row->datetimestart)
+		{
+			$row->datetimestart = Carbon::now()->toDateTimeFormat();
+		}
 		if ($request->has('datetimestop'))
 		{
-			$request->input('datetimestop');
+			$row->datetimestop = $request->input('datetimestop');
 		}
-		$row->nodecount = $request->input('nodecount');
-		$row->corecount = $request->input('corecount');
+		if ($request->has('nodecount'))
+		{
+			$row->nodecount = $request->input('nodecount');
+		}
+		if ($request->has('corecount'))
+		{
+			$row->corecount = $request->input('corecount');
+		}
 		if ($request->has('comment'))
 		{
 			$request->input('comment');
 		}
-		//$row->fill($request->all());
 
-		if (!$row->datetimestart)
+		if ($row->datetimestop && $row->datetimestart > $row->datetimestop)
 		{
-			$row->datetimestart = Carbon::now()->toDateTimeFormat();
+			return response()->json(['message' => trans('queues::queues.Field `start` cannot be after or equal to stop time')], 409);
 		}
 
 		if (!$row->queue)
@@ -297,10 +306,51 @@ class SizesController extends Controller
 				return response()->json(['message' => trans('global.messages.create failed')], 500);
 			}
 
+			// Find counter entry to update as well
+			$counter = Size::query()
+				->where('queueid', '=', $row->sellerqueueid)
+				->where('sellerqueueid', '=', (int)$row->queueid)
+				->where('datetimestart', '=', $row->datetimestart)
+				->where('datetimestop', '=', $row->datetimestop)
+				->orderBy('datetimestart', 'asc')
+				->get()
+				->first();
+
+			if ($counter)
+			{
+				$counter->corecount = -$exist->corecount;
+
+				if (!$counter->save())
+				{
+					return response()->json(['message' => trans('global.messages.Failed to update `queuesizes` entry for #:id', ['id' => $exist->id])], 500);
+				}
+			}
+			else
+			{
+				return response()->json(['message' => trans('global.messages.Failed to retrieve `queuesizes` entry')], 506);
+			}
+
 			return new JsonResource($exist);
 		}
 
 		if (!$row->save())
+		{
+			return response()->json(['message' => trans('global.messages.create failed')], 500);
+		}
+
+		// Enforce proper accounting
+		$counter = new Size;
+		$counter->queueid = $row->sellerqueueid;
+		$counter->sellerqueueid = $row->queueid;
+		$counter->datetimestart = $row->datetimestart;
+		if ($row->hasEnd())
+		{
+			$counter->datetimestop = $row->datetimestop;
+		}
+		$counter->nodecount = $row->nodecount;
+		$counter->corecount = -$row->corecount;
+
+		if (!$counter->save())
 		{
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
@@ -424,17 +474,155 @@ class SizesController extends Controller
 		$request->validate([
 			'queueid' => 'nullable|integer',
 			'sellerqueueid' => 'nullable|integer',
-			'datetimestart' => 'nullable|datetime',
-			'datetimestop' => 'nullable|datetime',
+			'datetimestart' => 'nullable|date',
+			'datetimestop' => 'nullable|date',
 			'nodecount' => 'nullable|integer',
 			'corecount' => 'nullable|integer',
 		]);
 
 		$row = Size::findOrFail($id);
 
-		if (!$row->update($request->all()))
+		if ($request->has('datetimestart'))
+		{
+			$row->datetimestart = $request->input('datetimestart');
+		}
+
+		if ($request->has('datetimestop'))
+		{
+			$row->datetimestop = $request->input('datetimestop');
+		}
+
+		if ($row->datetimestop && $row->datetimestart > $row->datetimestop)
+		{
+			return response()->json(['message' => trans('queues::queues.Field `start` cannot be after or equal to stop time')], 409);
+		}
+
+		// Sanity checks if we are changing coreecount
+		if ($request->has('corecount'))
+		{
+			$cores = $request->input('corecount');
+
+			// Can't change corecount of a entry that has already started
+			if ($row->hasStarted())
+			{
+				return response()->json(['message' => trans('queues::queues.Field `start` cannot be before "now"')], 409);
+			}
+
+			// Don't allow swapping of sale direction or nullation of sale
+			if ($cores > 0 && $row->corecount <= 0)
+			{
+				return response()->json(['message' => trans('queues::queues.Invalid `corecount` value')], 415);
+			}
+
+			if ($cores < 0 && $row->corecount >= 0)
+			{
+				return response()->json(['message' => trans('queues::queues.Invalid `corecount` value')], 415);
+			}
+
+			$row->corecount = $cores;
+
+			// if we are adjusting the source of the loan, the seller is itself. make sure we check core counts agains the source
+			if ($row->corecount < 0)
+			{
+				$sellerid = $row->queueid;
+			}
+			else
+			{
+				$sellerid = $row->sellerqueueid;
+			}
+
+			// Does the queue have any cores yet?
+			$count = Size::query()
+				->where('queueid', '=', (int)$row->queueid)
+				->orderBy('datetimestart', 'asc')
+				->get()
+				->first();
+
+			if (!$count)
+			{
+				return response()->json(['message' => trans('queues::queues.Have not been sold anything and never will have anything')], 409);
+			}
+			elseif ($count->datetimestart > $row->datetimestart)
+			{
+				return response()->json(['message' => trans('queues::queues.Have not been sold anything before this would start')], 409);
+			}
+
+			// Make sure we have enough cores in the source 
+			/*$sql = "SET @tot:=0, @tot2:=0";
+			$this->db->execute($sql, RCACDB_CACHE);
+
+			$stop_sql = "";
+			if (isset($copyobj->stop) && $copyobj->stop != '0000-00-00 00:00:00')
+			{
+				$stop_sql = " AND date < '" . $this->db->escape_string($copyobj->stop) . "'";
+			}
+
+			$start_sql = "";
+			if (!isset($copyobj->start))
+			{
+				$start_sql = $start;
+			}
+			else
+			{
+				$start_sql = $copyobj->start;
+			}
+
+			$sql = "SELECT MIN(tot) AS min, date FROM (
+				(SELECT * FROM (
+					SELECT id, corecount, date, (@tot:=@tot + tb1.corecount) AS tot FROM (
+						SELECT id, corecount, datetimestart AS date FROM queuesizes WHERE queueid = '" . $this->db->escape_string($lenderid) . "'
+						UNION SELECT id, -corecount, datetimestop AS date FROM queuesizes WHERE queueid = '" . $this->db->escape_string($lenderid) . "'
+						UNION SELECT id, corecount, datetimestart AS date FROM queueloans WHERE corecount < 0 AND queueid = '" . $this->db->escape_string($lenderid) . "'
+						UNION SELECT id, -corecount, datetimestop AS date FROM queueloans WHERE corecount < 0 AND queueid = '" . $this->db->escape_string($lenderid) . "'
+					) AS tb1 WHERE date <> '0000-00-00 00:00:00' ORDER BY date
+				) AS tb2 WHERE date >= '" . $this->db->escape_string($start_sql) . "'" . $stop_sql . ")
+				UNION
+				(SELECT * FROM (
+					SELECT id, corecount, date, (@tot2:=@tot2 + tb3.corecount) AS tot FROM (
+						SELECT id, corecount, datetimestart AS date FROM queuesizes WHERE queueid = '" . $this->db->escape_string($lenderid) . "'
+						UNION SELECT id, -corecount, datetimestop AS date FROM queuesizes WHERE queueid = '" . $this->db->escape_string($lenderid) . "'
+						UNION SELECT id, corecount, datetimestart AS date FROM queueloans WHERE corecount < 0 AND queueid = '" . $this->db->escape_string($lenderid) . "'
+						UNION SELECT id, -corecount, datetimestop AS date FROM queueloans WHERE corecount < 0 AND queueid = '" . $this->db->escape_string($lenderid) . "'
+					) AS tb3 WHERE date <> '0000-00-00 00:00:00' AND date < '" . $this->db->escape_string($start_sql) . "' ORDER BY date
+				) AS tb4 ORDER BY date DESC LIMIT 1)
+			) AS tb5;";
+
+			$data = array();
+			$rows = $this->db->query($sql, $data, RCACDB_CACHE);
+
+			//if ($data[0]['min'] == null || $data[0]['min'] < $row->corecount)
+			//{
+				//return 409;
+			//}*/
+		}
+
+		if (!$row->save())
 		{
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
+		}
+
+		// Find counter entry to update as well
+		$counter = Size::query()
+			->where('queueid', '=', $row->sellerqueueid)
+			->where('sellerqueueid', '=', (int)$row->queueid)
+			->where('datetimestart', '=', $row->datetimestart)
+			->where('datetimestop', '=', $row->datetimestop)
+			->orderBy('datetimestart', 'asc')
+			->get()
+			->first();
+
+		if ($counter)
+		{
+			$counter->corecount = -$row->corecount;
+
+			if (!$counter->save())
+			{
+				return response()->json(['message' => trans('global.messages.Failed to update `queuesizes` entry for #:id', ['id' => $counter->id])], 500);
+			}
+		}
+		else
+		{
+			return response()->json(['message' => trans('global.messages.Failed to retrieve `queuesizes` entry')], 506);
 		}
 
 		return new JsonResource($row);
@@ -462,9 +650,40 @@ class SizesController extends Controller
 	{
 		$row = Size::findOrFail($id);
 
-		if (!$row->delete())
+		$counter = Size::query()
+			->where('queueid', '=', $row->sellerqueueid)
+			->where('sellerqueueid', '=', (int)$row->queueid)
+			->where('datetimestart', '=', $row->datetimestart)
+			->where('datetimestop', '=', $row->datetimestop)
+			->orderBy('datetimestart', 'asc')
+			->get()
+			->first();
+
+		if ($row->hasStarted())
 		{
-			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			$row->datetimestop = Carbon::now();
+			$row->save();
+
+			if ($counter)
+			{
+				$counter->datetimestop = Carbon::now();
+				$counter->save();
+			}
+		}
+		else
+		{
+			if ($counter)
+			{
+				if (!$counter->delete())
+				{
+					return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+				}
+			}
+
+			if (!$row->delete())
+			{
+				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			}
 		}
 
 		return response()->json(null, 204);

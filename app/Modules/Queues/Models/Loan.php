@@ -43,6 +43,37 @@ class Loan extends Model
 	];
 
 	/**
+	 * The event map for the model.
+	 *
+	 * @var array
+	 */
+	/*protected $dispatchesEvents = [
+		'created'  => LoanCreated::class,
+		'updated'  => LoanUpdated::class,
+		'deleted'  => LoanDeleted::class,
+	];*/
+
+	/**
+	 * Determine if in a trashed state
+	 *
+	 * @return  bool
+	 */
+	public function hasStart()
+	{
+		return ($this->datetimestart && $this->datetimestart != '0000-00-00 00:00:00' && $this->datetimestart != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * Determine if in a trashed state
+	 *
+	 * @return  bool
+	 */
+	public function hasEnd()
+	{
+		return ($this->datetimestop && $this->datetimestop != '0000-00-00 00:00:00' && $this->datetimestop != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Determine if in a trashed state
 	 *
 	 * @return  bool
@@ -50,9 +81,7 @@ class Loan extends Model
 	public function hasStarted()
 	{
 		// No start time means start immediately
-		if (!$this->datetimestart
-		 || $this->datetimestart == '0000-00-00 00:00:00'
-		 || $this->datetimestart == '-0001-11-30 00:00:00')
+		if (!$this->hasStart())
 		{
 			return true;
 		}
@@ -66,10 +95,7 @@ class Loan extends Model
 	 */
 	public function hasEnded()
 	{
-		return ($this->datetimestop
-			&& $this->datetimestop != '0000-00-00 00:00:00'
-			&& $this->datetimestop != '-0001-11-30 00:00:00'
-			&& $this->datetimestop < Carbon::now());
+		return ($this->hasEnd() && $this->datetimestop < Carbon::now());
 	}
 
 	/**

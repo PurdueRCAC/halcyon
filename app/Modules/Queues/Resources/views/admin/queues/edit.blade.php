@@ -1,10 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
 @endpush
 
 @push('scripts')
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
 <script src="{{ asset('modules/queues/js/admin.js?v=' . filemtime(public_path() . '/modules/queues/js/admin.js')) }}"></script>
 @endpush
@@ -397,18 +399,18 @@ app('pathway')
 						<th scope="col">{{ trans('queues::queues.queue') }}</th>
 						<th scope="col" class="text-right">{{ trans('queues::queues.nodes') }}</th>
 						<th scope="col" class="text-right">{{ trans('queues::queues.total') }}</th>
-						<th scope="col"></th>
+						<th scope="col" class="text-right"></th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
-					$sizes = $row->sizes;
-					$sold  = $row->sold;
+					$purchases = $row->sizes;
+					//$sold  = $row->sold;
 					$loans = $row->loans;
 					$nodecores = $row->subresource->nodecores;
 					$total = 0;
 
-					$items = $sizes->merge($sold);
+					$items = $purchases;//$purchases->merge($sold);
 					$items = $items->merge($loans)->sortBy('datetimestart');
 
 					foreach ($items as $item)
@@ -418,7 +420,8 @@ app('pathway')
 							$item->total = $total;
 							continue;
 						}
-						if (($item->sellerqueueid == $row->id && $item->corecount > 0)
+
+						/*if (($item->sellerqueueid == $row->id && $item->corecount > 0)
 						|| ($item->corecount < 0 && $item->type == 0)
 						|| ($item->corecount < 0 && $item->type == 1))
 						{
@@ -428,7 +431,9 @@ app('pathway')
 							|| ($item->corecount > 0 && $item->type == 1))
 						{
 							$total += $nodecores ? round($item->corecount / $nodecores, 1) : 0;
-						}
+						}*/
+						$total += $nodecores ? round($item->corecount / $nodecores, 1) : 0;
+
 						$item->total = $total;
 					}
 
@@ -436,10 +441,14 @@ app('pathway')
 
 					foreach ($items as $item): ?>
 					<tr>
-						<td>{{ $item->datetimestart }}</td>
 						<td>
-							@if ($item->datetimestop && $item->datetimestop != '0000-00-00 00:00:00' && $item->datetimestop != '-0001-11-30 00:00:00')
-								<time datetime="{{ $item->datetimestop }}">{{ $item->datetimestop }}</time>
+							@if ($item->hasStart())
+								<time datetime="{{ $item->datetimestop }}">{{ $item->datetimestart->format('Y-m-d') }}</time>
+							@endif
+						</td>
+						<td>
+							@if ($item->hasEnd())
+								<time datetime="{{ $item->datetimestop }}">{{ $item->datetimestop->format('Y-m-d') }}</time>
 							@else
 								<span class="never">{{ trans('global.never') }}</span>
 							@endif
@@ -480,8 +489,11 @@ app('pathway')
 							//$title .= $item->corecount . " cores; ".$what.": ";
 							$amt = $nodecores ? round($item->corecount / $nodecores, 1) : 0;
 
-							echo $what;
+							echo '<a href="#dialog-edit' . $item->id . '" class="dialog-btn">' . $what . '</a>';
 							?>
+							@if ($comment = $item->comment)
+								<br /><span class="text-muted">{{ $comment }}</span>
+							@endif
 						</td>
 						<td>
 							@if ($item->sellerqueueid == $row->id)
@@ -503,12 +515,12 @@ app('pathway')
 							@endif
 						</td>
 						<td class="text-right">
-							<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ $amt }}</span>
+							<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ abs($amt) }}</span>
 						</td>
 						<td class="text-right">
 							{{ $item->total }}
 						</td>
-						<td>
+						<td class="text-right">
 							<button class="btn btn-sm btn-danger delete"
 								data-confirm="{{ trans('global.confirm delete') }}"
 								data-success="{{ trans('queues::queues.item deleted') }}"
@@ -516,6 +528,56 @@ app('pathway')
 								data-id="{{ $item->id }}">
 								<span class="icon-trash"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
 							</button>
+
+							<div class="dialog" id="dialog-edit{{ $item->id }}" title="{{ trans('queues::queues.edit ' . ($item->type == 1 ? 'loan' : 'size')) }}">
+								<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.loans.update', ['id' => $item->id]) }}">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.nodes') }}</label>
+												<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" name="nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $item->nodecount }}" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }}</label>
+												<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" name="cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="loan-datetimestart{{ $item->id }}">{{ trans('queues::queues.start') }}</label>
+												<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart{{ $item->id }}" name="datetimestart" value="{{ $item->datetimestart->toDateTimeString() }}" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="loan-datetimestop{{ $item->id }}">{{ trans('queues::queues.end') }}</label>
+												@if ($item->type == 1)
+													<input type="text" name="datetimestop" class="form-control datetime" id="loan-datetimestop{{ $item->id }}" value="{{ $item->hasEnd() ? $item->datetimestop->toDateTimeString() : '' }}" />
+												@else
+													<input type="text" name="datetimestop" class="form-control datetime" id="sell-datetimestop{{ $item->id }}" disabled="disabled" placeholder="{{ trans('queues::queues.end of life') }}" value="" />
+												@endif
+												</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="loan-comment{{ $item->id }}">{{ trans('queues::queues.comment') }}</label>
+										<textarea id="loan-comment{{ $item->id }}" name="comment" class="form-control" rows="3" cols="40">{{ $item->comment }}</textarea>
+									</div>
+
+									<div class="dialog-footer text-right">
+										<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.update') }}" data-action="update" data-success="{{ trans('queues::queues.item updated') }}" />
+									</div>
+
+									<input type="hidden" name="id" value="{{ $item->id }}" />
+									@csrf
+								</form>
+							</div>
 						</td>
 					</tr>
 					<?php
@@ -545,7 +607,7 @@ app('pathway')
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="sell-datetimestart">{{ trans('queues::queues.start') }}</label>
-							<input type="text" class="form-control datetime" id="sell-datetimestart" name="datetimestart" value="" />
+							<input type="text" class="form-control datetime" id="sell-datetimestart" name="datetimestart" value="{{ Carbon\Carbon::now()->toDateTimeString() }}" />
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -558,7 +620,47 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="sell-group">{{ trans('queues::queues.sell to') }}</label>
-					<span class="input-group">
+					<select name="groupid" id="sell-group"
+						class="form-control form-group-queues"
+						data-update="sell-queue"
+						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
+						data-queue-api="{{ route('api.queues.index') }}"
+						data-subresource="{{ $row->subresourceid }}">
+						<option value="0">{{ trans('queues::queues.select group') }}</option>
+						<?php
+						$groups = array();
+						$first = null;
+						foreach ($row->subresource->queues as $queue)
+						{
+							if (isset($groups[$queue->groupid]) || $queue->groupid == $row->groupid)
+							{
+								continue;
+							}
+
+							if ($queue->groupid < 0)
+							{
+								$first = App\Modules\Groups\Models\Group::find(1);
+								$first->id = -1;
+							}
+
+							if (!$queue->group)
+							{
+								continue;
+							}
+
+							$groups[$queue->groupid] = $queue->group;
+						}
+						$groups = collect($groups)->sortBy('name');
+						if ($first)
+						{
+							$groups->prepend($first);
+						}
+						?>
+						@foreach ($groups as $group)
+							<option value="{{ $group->id }}">{{ $group->name }}</option>
+						@endforeach
+					</select>
+					<!-- <span class="input-group">
 						<input type="text" name="groupid" id="sell-group"
 							class="form-control form-group-queues"
 							data-update="sell-queue"
@@ -567,7 +669,7 @@ app('pathway')
 							data-subresource="{{ $row->subresourceid }}"
 							value="" />
 						<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
-					</span>
+					</span> -->
 				</div>
 
 				<div class="form-group">
@@ -607,29 +709,40 @@ app('pathway')
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="loan-datetimestart">{{ trans('queues::queues.start') }}</label>
-							<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart" name="datetimestart" value="" />
+							<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart" value="{{ Carbon\Carbon::now()->toDateTimeString() }}" />
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="loan-datetimestop">{{ trans('queues::queues.end') }}</label>
-							<input type="text" name="datetimestop" class="form-control datetime" id="loan-datetimestop" name="datetimestop" value="" />
+							<input type="text" name="datetimestop" class="form-control datetime" id="loan-datetimestop" value="" />
 						</div>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="loan-group">{{ trans('queues::queues.loan to') }}</label>
-					<span class="input-group">
+					<select name="groupid" id="loan-group"
+						class="form-control form-group-queues"
+						data-update="loan-queue"
+						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
+						data-queue-api="{{ route('api.queues.index') }}"
+						data-subresource="{{ $row->subresourceid }}">
+						<option value="0">{{ trans('queues::queues.select group') }}</option>
+						@foreach ($groups as $group)
+							<option value="{{ $group->id }}">{{ $group->name }}</option>
+						@endforeach
+					</select>
+					<!-- <span class="input-group">
 						<input type="text" name="groupid" id="loan-group"
-							class="form-control form-group-queues"
+							class="form-control form-group-q"
 							data-update="loan-queue"
 							data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
 							data-queue-api="{{ route('api.queues.index') }}"
 							data-subresource="{{ $row->subresourceid }}"
 							value="" />
 						<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
-					</span>
+					</span> -->
 				</div>
 
 				<div class="form-group">

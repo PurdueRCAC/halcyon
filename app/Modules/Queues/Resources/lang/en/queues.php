@@ -58,6 +58,7 @@ return [
 	'scheduling' => 'Scheduling',
 	'stopped' => 'Stopped',
 	'started' => 'Started',
+	'select group' => '(select group)',
 	'messages' => [
 		'items enabled' => 'Queue(s) enabled.',
 		'items disabled' => 'Queue(s) disabled.',

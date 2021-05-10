@@ -267,7 +267,7 @@ class Queue extends Model
 	}
 
 	/**
-	 * Defines a relationship to sizes
+	 * Defines a relationship to sizes where the queue is the seller
 	 *
 	 * @return  object
 	 */
@@ -277,7 +277,7 @@ class Queue extends Model
 	}
 
 	/**
-	 * Defines a relationship to sizes
+	 * Defines a relationship to loans
 	 *
 	 * @return  object
 	 */
@@ -287,7 +287,7 @@ class Queue extends Model
 	}
 
 	/**
-	 * Defines a relationship to sizes
+	 * Defines a relationship to users
 	 *
 	 * @return  object
 	 */
@@ -340,7 +340,7 @@ class Queue extends Model
 
 		$now = Carbon::now();
 
-		$sizes = $this->sizes()
+		$purchases = $this->sizes()
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimestop')
@@ -350,7 +350,7 @@ class Queue extends Model
 			->where('datetimestart', '<=', $now->toDateTimeString())
 			->get();
 
-		foreach ($sizes as $size)
+		foreach ($purchases as $size)
 		{
 			$soldcores += (int) $size->corecount;
 

@@ -1,3 +1,8 @@
+/**
+ * @package    halcyon
+ * @copyright  Copyright 2019 Purdue University.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
 
 /**
  * New queue group
@@ -315,10 +320,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			select.appendChild(opt);
 
-			for (var x in results['subresources']) {
+			for (var x in results.data['subresources']) {
 				opt = document.createElement("option");
-				opt.value = results['subresources'][x]['id'];
-				opt.innerHTML = results['subresources'][x]['name'];
+				opt.value = results.data['subresources'][x]['id'];
+				opt.innerHTML = results.data['subresources'][x]['name'];
 
 				select.appendChild(opt);
 			}
@@ -334,7 +339,73 @@ document.addEventListener('DOMContentLoaded', function() {
 		});*/
 		$($(this).attr('href')).dialog({
 			modal: true,
-			width: '550px'
+			width: '550px',
+			open: function() {
+
+		var groups = $(".form-group-queues");
+		if (groups.length) {
+			$(".form-group-queues").select2({
+				//placeholder: $(this).data('placeholder')
+			})
+				.on('select2:select', function (e) {
+					e.preventDefault();
+
+					var group = $(this);
+
+					// Set selection
+					//group.val(ui.item.label); // display the selected text
+					//cl.val(ui.item.id); // save selected id to input
+
+					var queue = $('#' + group.data('update'));
+					var dest_queue = document.getElementById("field-id").value;
+					//console.log(group.data('queue-api') + '?groupid=' + group.val() + '&subresource=' + group.data('subresource'));
+
+					$.ajax({
+						url: group.data('queue-api'),
+						type: 'get',
+						data: {
+							'group': group.val(),
+							'subresource': group.data('subresource')
+						},
+						dataType: 'json',
+						async: false,
+						success: function (data) {
+							if (data.data.length > 0) {
+								queue.prop('disabled', false);
+								queue.empty();//options.length = 0;
+
+								opt = document.createElement("option");
+								opt.innerHTML = "- Select Queue -";
+								queue.append(opt);
+
+								var x, opt;
+								for (x in data.data) {
+									//if (data.data[x]['name'].match(/^(rcac|workq|debug)/)) {
+									if (data.data[x]['id'] != dest_queue) {
+										opt = document.createElement("option");
+										opt.innerHTML = data.data[x]['name'] + " (" + data.data[x]['subresource']['name'] + ")";
+										opt.value = data.data[x]['id'];
+
+										//queue.appendChild(opt);
+										queue.append(opt);
+									}
+									//}
+								}
+							}
+						},
+						error: function (xhr, reason, thrownError) {
+							if (xhr.responseJSON) {
+								Halcyon.message('danger', xhr.responseJSON.message);
+							} else {
+								Halcyon.message('danger', 'Failed to retrieve queues.');
+							}
+							console.log(xhr.responseText);
+						}
+					});
+					return false;
+				});
+		}
+			}
 		});
 	});
 
@@ -368,9 +439,69 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	var groups = $(".form-group-queues");
+	/*var groups = $(".form-group-queues");
 	if (groups.length) {
-		groups.each(function (i, group) {
+		groups.select2({
+			//placeholder: $(this).data('placeholder')
+		})
+		.on('select2:select', function (e) {
+			e.preventDefault();
+
+			var group = $(this);
+
+			// Set selection
+			//group.val(ui.item.label); // display the selected text
+			//cl.val(ui.item.id); // save selected id to input
+
+			var queue = $('#' + group.data('update'));
+			var dest_queue = document.getElementById("field-id").value;
+			console.log(group.data('queue-api') + '?groupid=' + group.val() + '&subresource=' + group.data('subresource'));
+
+			$.ajax({
+				url: group.data('queue-api'),
+				type: 'get',
+				data: {
+					'group': group.val(),
+					'subresource': group.data('subresource')
+				},
+				dataType: 'json',
+				async: false,
+				success: function (data) {
+					if (data.data.length > 0) {
+						queue.prop('disabled', false);
+						queue.empty();//options.length = 0;
+
+						opt = document.createElement("option");
+						opt.innerHTML = "- Select Queue -";
+						queue.append(opt);
+
+						var x, opt;
+						for (x in data.data) {
+							//if (data.data[x]['name'].match(/^(rcac|workq|debug)/)) {
+							if (data.data[x]['id'] != dest_queue) {
+								opt = document.createElement("option");
+								opt.innerHTML = data.data[x]['name'] + " (" + data.data[x]['subresource']['name'] + ")";
+								opt.value = data.data[x]['id'];
+
+								//queue.appendChild(opt);
+								queue.append(opt);
+							}
+							//}
+						}
+					}
+				},
+				error: function (xhr, reason, thrownError) {
+					if (xhr.responseJSON) {
+						Halcyon.message('danger', xhr.responseJSON.message);
+					} else {
+						Halcyon.message('danger', 'Failed to retrieve queues.');
+					}
+					console.log(xhr.responseText);
+				}
+			});
+			return false;
+		});
+		/*groups.each(function (i, group) {
 			group = $(group);
 			var cl = group.clone()
 				.attr('type', 'hidden')
@@ -449,7 +580,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			});
 		});
-	}
+	}*/
 
 	$('.dialog-submit').on('click', function(e){
 		e.preventDefault();
@@ -459,7 +590,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		$.ajax({
 			url: frm.data('api'),
-			type: 'post',
+			type: btn.getAttribute('data-action') == 'update' ? 'put' : 'post',
 			data: frm.serialize(),
 			dataType: 'json',
 			async: false,
@@ -505,12 +636,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	$('#field-aclusersenabled').on('change', function (e) {
+	$('#field-aclusersenabled').on('change', function(e){
 		$('#field-aclgroups').parent().toggleClass('hide');
 	});
-
-	/*$('#create_queue_btn').on('click', function (event) {
-		event.preventDefault();
-		CreateQueue(this);
-	});*/
 });

@@ -246,18 +246,36 @@ class LoansController extends Controller
 		$request->validate([
 			'queueid' => 'required|integer',
 			'lenderqueueid' => 'required|integer',
-			'datetimestart' => 'nullable|datetime',
-			'datetimestop' => 'nullable|datetime',
+			'datetimestart' => 'nullable|date',
+			'datetimestop' => 'nullable|date',
 			'nodecount' => 'nullable|integer',
 			'corecount' => 'nullable|integer',
+			'comment' => 'nullable|string',
 		]);
 
 		$row = new Loan;
-		$row->fill($request->all());
-
+		$row->queueid = $request->input('queueid');
+		$row->lenderqueueid = $request->input('lenderqueueid');
+		$row->datetimestart = $request->input('datetimestart');
 		if (!$row->datetimestart)
 		{
 			$row->datetimestart = Carbon::now()->toDateTimeFormat();
+		}
+		if ($request->has('datetimestop'))
+		{
+			$row->datetimestop = $request->input('datetimestop');
+		}
+		if ($request->has('nodecount'))
+		{
+			$row->nodecount = $request->input('nodecount');
+		}
+		if ($request->has('corecount'))
+		{
+			$row->corecount = $request->input('corecount');
+		}
+		if ($request->has('comment'))
+		{
+			$row->comment = $request->input('comment');
 		}
 
 		if ($row->datetimestop && $row->datetimestart > $row->datetimestop)
@@ -348,7 +366,10 @@ class LoansController extends Controller
 		$counter->queueid = $row->lenderqueueid;
 		$counter->lenderqueueid = $row->queueid;
 		$counter->datetimestart = $row->datetimestart;
-		$counter->datetimestop = $row->datetimestop;
+		if ($row->hasEnd())
+		{
+			$counter->datetimestop = $row->datetimestop;
+		}
 		$counter->nodecount = $row->nodecount;
 		$counter->corecount = -$row->corecount;
 
@@ -467,10 +488,11 @@ class LoansController extends Controller
 		$request->validate([
 			//'queueid' => 'nullable|integer',
 			//'lenderqueueid' => 'nullable|integer',
-			'datetimestart' => 'nullable|datetime',
-			'datetimestop' => 'nullable|datetime',
+			'datetimestart' => 'nullable|date',
+			'datetimestop' => 'nullable|date',
 			'nodecount' => 'nullable|integer',
 			'corecount' => 'nullable|integer',
+			'comment' => 'nullable|string',
 		]);
 
 		$row = Loan::findOrFail($id);
@@ -589,6 +611,11 @@ class LoansController extends Controller
 			//}*/
 		}
 
+		if ($request->has('comment'))
+		{
+			$row->comment = $request->input('comment');
+		}
+
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
@@ -606,7 +633,7 @@ class LoansController extends Controller
 
 		if ($counter)
 		{
-			$counter->corecount = -$exist->corecount;
+			$counter->corecount = -$row->corecount;
 
 			if (!$counter->save())
 			{
@@ -642,9 +669,40 @@ class LoansController extends Controller
 	{
 		$row = Loan::findOrFail($id);
 
-		if (!$row->delete())
+		$counter = Loan::query()
+			->where('queueid', '=', $row->lenderqueueid)
+			->where('lenderqueueid', '=', (int)$row->queueid)
+			->where('datetimestart', '=', $row->datetimestart)
+			->where('datetimestop', '=', $row->datetimestop)
+			->orderBy('datetimestart', 'asc')
+			->get()
+			->first();
+
+		if ($row->hasStarted())
 		{
-			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			$row->datetimestop = Carbon::now();
+			$row->save();
+
+			if ($counter)
+			{
+				$counter->datetimestop = Carbon::now();
+				$counter->save();
+			}
+		}
+		else
+		{
+			if ($counter)
+			{
+				if (!$counter->delete())
+				{
+					return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+				}
+			}
+
+			if (!$row->delete())
+			{
+				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			}
 		}
 
 		return response()->json(null, 204);

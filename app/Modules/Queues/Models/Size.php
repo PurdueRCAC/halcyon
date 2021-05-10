@@ -61,14 +61,22 @@ class Size extends Model
 	];
 
 	/**
+	 * The attributes that should be mutated to dates.
+	 *
+	 * @var  array
+	 */
+	protected $dates = [
+		'datetimestart',
+		'datetimestop',
+	];
+
+	/**
 	 * The event map for the model.
 	 *
 	 * @var array
 	 */
 	/*protected $dispatchesEvents = [
-		'creating' => SizeCreating::class,
 		'created'  => SizeCreated::class,
-		'updating' => SizeUpdating::class,
 		'updated'  => SizeUpdated::class,
 		'deleted'  => SizeDeleted::class,
 	];*/
@@ -78,12 +86,30 @@ class Size extends Model
 	 *
 	 * @return  bool
 	 */
+	public function hasStart()
+	{
+		return ($this->datetimestart && $this->datetimestart != '0000-00-00 00:00:00' && $this->datetimestart != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * Determine if in a trashed state
+	 *
+	 * @return  bool
+	 */
+	public function hasEnd()
+	{
+		return ($this->datetimestop && $this->datetimestop != '0000-00-00 00:00:00' && $this->datetimestop != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * Determine if in a trashed state
+	 *
+	 * @return  bool
+	 */
 	public function hasStarted()
 	{
 		// No start time means start immediately
-		if (!$this->datetimestart
-		 || $this->datetimestart == '0000-00-00 00:00:00'
-		 || $this->datetimestart == '-0001-11-30 00:00:00')
+		if (!$this->hasStart())
 		{
 			return true;
 		}
@@ -97,10 +123,7 @@ class Size extends Model
 	 */
 	public function hasEnded()
 	{
-		return ($this->datetimestop
-			&& $this->datetimestop != '0000-00-00 00:00:00'
-			&& $this->datetimestop != '-0001-11-30 00:00:00'
-			&& $this->datetimestop < Carbon::now());
+		return ($this->hasEnd() && $this->datetimestop < Carbon::now());
 	}
 
 	/**
