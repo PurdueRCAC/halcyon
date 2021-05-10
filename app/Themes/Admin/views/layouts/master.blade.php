@@ -58,7 +58,7 @@
 		@yield('scripts')
 		@stack('scripts')
 	</head>
-	<body>
+	<body{!! (auth()->user()->facet('theme.admin.menu') == 'open' ? ' class="menu-open"' : '') !!}>
 		<div id="container-main">
 			<header id="header" role="banner">
 				<h1>
@@ -77,7 +77,7 @@
 
 				<ul class="user-options">
 					<li data-title="{{ trans('theme::admin.open-close menu') }}"><!-- 
-						--><a href="#nav" class="hamburger ico-menu"><!-- 
+						--><a href="#nav" class="hamburger ico-menu" data-api="{{ route('api.users.update', ['id' => auth()->user()->id]) }}"><!-- 
 							--><span class="hamburger-box"><span class="hamburger-inner"></span></span>{{ trans('theme::admin.menu') }}<!-- 
 						--></a><!-- 
 					--></li>

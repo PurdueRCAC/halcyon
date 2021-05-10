@@ -132,19 +132,37 @@ smaller area with "overflow: scroll" enabled?
 })(jQuery);
 
 jQuery(document).ready(function($){
-	$('html').removeClass('nojs');
+	$('html').removeClass('no-js');
 
 	$('.hamburger').on('click', function (e){
 		e.preventDefault();
 
+		var btn = $(this),
+			mode = $('body').hasClass('menu-open') ? 'closed' : 'open';
+
 		$('body').toggleClass('menu-open');
+
+		$.ajax({
+			url: btn.attr('data-api'),
+			type: 'put',
+			data: {
+				facets: {
+					'theme.admin.menu': mode
+				}
+			},
+			dataType: 'json',
+			async: false,
+			error: function (xhr, ajaxOptions, thrownError) {
+				console.log(xhr);
+			}
+		});
 	});
 
-	var menu = $('#toolbar-box'),
+	/*var menu = $('#toolbar-box'),
 		top = menu.offset().top - parseFloat(menu.css('margin-top').replace(/auto/, 0));
 
 	// Stick the toolbar to the top of the screen when the browser has scrolled
-	/*$(window).on('scroll', function(event) {
+	$(window).on('scroll', function(event) {
 		// what the y position of the scroll is
 		var y = $(window).scrollTop();
 		// whether that's below the form
@@ -161,22 +179,6 @@ jQuery(document).ready(function($){
 	$('#toolbar ul').on('click', function(e){
 		$(this).toggleClass('active');
 	});
-
-	/*$('.tabs').tabs();
-
-	$('.dialog-help').dialog({
-		autoOpen: false,
-		modal: true,
-		width: 550
-	});
-
-	$('.help').on('click', function (e) {
-		e.preventDefault();
-
-		if ($($(this).attr('href')).length) {
-			$($(this).attr('href')).dialog('open');
-		}
-	});*/
 
 	$('.main-navigation li.node>a').on('click', function(e){
 		$(this).parent().toggleClass('active');
