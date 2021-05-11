@@ -69,6 +69,11 @@ class PagesController extends Controller
 			->select($p . '.title', $p . '.snippet', $p . '.updated_at', $a . '.*'); //$p . '.state', $p . '.access', 
 			//->select($p . '.title', $p . '.snippet', $p . '.updated_at', $a . '.*');
 
+		$lists = Page::query()
+			->join($a, $a . '.page_id', $p . '.id')
+			->select($p . '.*', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id AS assoc_id')
+			->where($a . '.level', '<', 2);
+
 		if ($filters['search'])
 		{
 			$query->where(function($query) use ($filters, $p)
@@ -94,18 +99,22 @@ class PagesController extends Controller
 		if ($filters['state'] == 'published')
 		{
 			$query->where($a . '.state', '=', 1);
+			$lists->where($a . '.state', '=', 1);
 		}
 		elseif ($filters['state'] == 'unpublished')
 		{
 			$query->where($a . '.state', '=', 0);
+			$lists->where($a . '.state', '=', 0);
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
 			$query->onlyTrashed();
+			$lists->onlyTrashed();
 		}
 		else
 		{
 			$query->withTrashed();
+			$lists->withTrashed();
 		}
 
 		if ($filters['access'] > 0)
@@ -117,10 +126,7 @@ class PagesController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		$list = Page::query()
-			->join($a, $a . '.page_id', $p . '.id')
-			->select($p . '.*', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id AS assoc_id')
-			->where('level', '<', 2)
+		$list = $lists
 			->orderBy('lft', 'asc')
 			->get();
 
