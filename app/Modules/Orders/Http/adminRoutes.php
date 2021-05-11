@@ -21,7 +21,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'can:manage orders'], func
 		$router->post('/store', [
 			'as' => 'admin.orders.categories.store',
 			'uses' => 'CategoriesController@store',
-			'middleware' => 'can:create orders.categories,edit orders.categories',
+			'middleware' => 'can:create orders.categories|edit orders.categories',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.orders.categories.edit',
@@ -55,7 +55,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'can:manage orders'], func
 		$router->post('/store', [
 			'as' => 'admin.orders.products.store',
 			'uses' => 'ProductsController@store',
-			'middleware' => 'can:create orders,edit orders',
+			'middleware' => 'can:create orders|edit orders',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.orders.products.edit',
@@ -91,7 +91,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'can:manage orders'], func
 	$router->post('store', [
 		'as' => 'admin.orders.store',
 		'uses' => 'OrdersController@store',
-		'middleware' => 'can:create orders,edit orders',
+		'middleware' => 'can:create orders|edit orders',
 	]);
 	$router->get('{id}', [
 		'as' => 'admin.orders.edit',

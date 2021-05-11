@@ -17,7 +17,7 @@ $router->group(['prefix' => 'history'], function (Router $router)
 	$router->post('/store', [
 		'as' => 'admin.history.store',
 		'uses' => 'HistoryController@store',
-		'middleware' => 'can:create history,edit history',
+		'middleware' => 'can:create history|edit history',
 	]);
 	$router->get('/{id}', [
 		'as' => 'admin.history.show',

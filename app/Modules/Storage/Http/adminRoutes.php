@@ -18,7 +18,7 @@ $router->group(['prefix' => 'storage'], function (Router $router)
 	$router->post('store', [
 		'as' => 'admin.storage.store',
 		'uses' => 'StorageController@store',
-		'middleware' => 'can:create storage,edit storage',
+		'middleware' => 'can:create storage|edit storage',
 	]);
 	$router->get('{id}', [
 		'as' => 'admin.storage.edit',
@@ -50,7 +50,7 @@ $router->group(['prefix' => 'storage'], function (Router $router)
 		$router->post('store', [
 			'as' => 'admin.storage.directories.store',
 			'uses' => 'DirectoriesController@store',
-			'middleware' => 'can:create storage,edit storage',
+			'middleware' => 'can:create storage|edit storage',
 		]);
 		$router->get('{id}', [
 			'as' => 'admin.storage.directories.edit',
@@ -83,7 +83,7 @@ $router->group(['prefix' => 'storage'], function (Router $router)
 		$router->post('store', [
 			'as' => 'admin.storage.types.store',
 			'uses' => 'NotificationTypesController@store',
-			//'middleware' => 'can:create storage,edit storage',
+			//'middleware' => 'can:create storage|edit storage',
 		]);
 		$router->get('{id}', [
 			'as' => 'admin.storage.types.edit',

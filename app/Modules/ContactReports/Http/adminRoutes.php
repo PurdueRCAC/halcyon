@@ -22,7 +22,7 @@ $router->group(['prefix' => 'contactreports', 'middleware' => 'can:manage contac
 	$router->post('/store', [
 		'as' => 'admin.contactreports.store',
 		'uses' => 'ReportsController@store',
-		'middleware' => 'can:create contactreports,edit contactreports',
+		'middleware' => 'can:create contactreports|edit contactreports',
 	]);
 	$router->get('/edit/{id}', [
 		'as' => 'admin.contactreports.edit',
@@ -51,7 +51,7 @@ $router->group(['prefix' => 'contactreports', 'middleware' => 'can:manage contac
 		$router->post('/store', [
 			'as' => 'admin.contactreports.comments.store',
 			'uses' => 'CommentsController@store',
-			'middleware' => 'can:create contactreports,edit contactreports',
+			'middleware' => 'can:create contactreports|edit contactreports',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.contactreports.comments.edit',
@@ -84,7 +84,7 @@ $router->group(['prefix' => 'contactreports', 'middleware' => 'can:manage contac
 		$router->post('/store', [
 			'as' => 'admin.contactreports.types.store',
 			'uses' => 'TypesController@store',
-			'middleware' => 'can:create contactreports,edit contactreports',
+			'middleware' => 'can:create contactreports|edit contactreports',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.contactreports.types.edit',

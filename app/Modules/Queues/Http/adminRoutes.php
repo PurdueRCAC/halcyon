@@ -20,7 +20,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->post('store', [
 			'as' => 'admin.queues.types.store',
 			'uses' => 'TypesController@store',
-			'middleware' => 'can:create queues.types,edit queues.types',
+			'middleware' => 'can:create queues.types|edit queues.types',
 		]);
 		$router->get('{id}', [
 			'as' => 'admin.queues.types.edit',
@@ -53,7 +53,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->post('store', [
 			'as' => 'admin.queues.schedulers.store',
 			'uses' => 'SchedulersController@store',
-			'middleware' => 'can:create queues.schedulers,edit queues.schedulers',
+			'middleware' => 'can:create queues.schedulers|edit queues.schedulers',
 		]);
 		$router->get('{id}', [
 			'as' => 'admin.queues.schedulers.edit',
@@ -86,7 +86,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->post('store', [
 			'as' => 'admin.queues.schedulerpolicies.store',
 			'uses' => 'SchedulerPoliciesController@store',
-			'middleware' => 'can:create queues.schedulerpolicies,edit queues.schedulerpolicies',
+			'middleware' => 'can:create queues.schedulerpolicies|edit queues.schedulerpolicies',
 		]);
 		$router->get('{id}', [
 			'as' => 'admin.queues.schedulerpolicies.edit',
@@ -121,7 +121,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 	$router->post('/store', [
 		'as'   => 'admin.queues.store',
 		'uses' => 'QueuesController@store',
-		'middleware' => 'can:create queues,edit queues',
+		'middleware' => 'can:create queues|edit queues',
 	]);
 	$router->get('/{id}', [
 		'as'   => 'admin.queues.edit',

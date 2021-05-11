@@ -15,7 +15,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.groups.members.create',
 			'uses' => 'MembersController@create',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		]);
 		$router->get('{id}', [
 			'as' => 'api.groups.members.read',
@@ -25,12 +25,12 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.groups.members.update',
 			'uses' => 'MembersController@update',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.groups.members.delete',
 			'uses' => 'MembersController@delete',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		])->where('id', '[0-9]+');
 	});
 
@@ -44,7 +44,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.groups.motd.create',
 			'uses' => 'MotdController@create',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		]);
 		$router->get('{id}', [
 			'as' => 'api.groups.motd.read',
@@ -54,12 +54,12 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.groups.motd.update',
 			'uses' => 'MotdController@update',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.groups.motd.delete',
 			'uses' => 'MotdController@delete',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		])->where('id', '[0-9]+');
 	});
 
@@ -73,7 +73,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.groups.departments.create',
 			'uses' => 'DepartmentsController@create',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		]);
 		$router->get('{id}', [
 			'as' => 'api.groups.departments.read',
@@ -139,7 +139,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 	$router->put('{id}', [
 		'as' => 'api.groups.update',
 		'uses' => 'GroupsController@update',
-		'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+		'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 	]);
 	$router->delete('{id}', [
 		'as' => 'api.groups.delete',
@@ -157,7 +157,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.groups.groupdepartments.create',
 			'uses' => 'GroupDepartmentsController@create',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		]);
 		$router->get('{id}', [
 			'as' => 'api.groups.groupdepartments.read',
@@ -167,12 +167,12 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.groups.groupdepartments.update',
 			'uses' => 'GroupDepartmentsController@update',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.groups.groupdepartments.delete',
 			'uses' => 'GroupDepartmentsController@delete',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		])->where('id', '[0-9]+');
 	});
 
@@ -186,7 +186,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.groups.groupfieldsofscience.create',
 			'uses' => 'GroupFieldsOfScienceController@create',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		]);
 		$router->get('{id}', [
 			'as' => 'api.groups.groupfieldsofscience.read',
@@ -196,12 +196,12 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.groups.groupfieldsofscience.update',
 			'uses' => 'GroupFieldsOfScienceController@update',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.groups.groupfieldsofscience.delete',
 			'uses' => 'GroupFieldsOfScienceController@delete',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		])->where('id', '[0-9]+');
 	});
 });
@@ -218,7 +218,7 @@ $router->group(['prefix' => 'unixgroups'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.unixgroups.members.create',
 			'uses' => 'UnixGroupMembersController@create',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		]);
 		$router->get('{id}', [
 			'as' => 'api.unixgroups.members.read',
@@ -228,12 +228,12 @@ $router->group(['prefix' => 'unixgroups'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.unixgroups.members.update',
 			'uses' => 'UnixGroupMembersController@update',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.unixgroups.members.delete',
 			'uses' => 'UnixGroupMembersController@delete',
-			'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 		])->where('id', '[0-9]+');
 	});
 
@@ -245,7 +245,7 @@ $router->group(['prefix' => 'unixgroups'], function (Router $router)
 	$router->post('/', [
 		'as' => 'api.unixgroups.create',
 		'uses' => 'UnixGroupsController@create',
-		'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+		'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 	]);
 	$router->get('{id}', [
 		'as' => 'api.unixgroups.read',
@@ -255,11 +255,11 @@ $router->group(['prefix' => 'unixgroups'], function (Router $router)
 	$router->put('{id}', [
 		'as' => 'api.unixgroups.update',
 		'uses' => 'UnixGroupsController@update',
-		'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+		'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
 		'as' => 'api.unixgroups.delete',
 		'uses' => 'UnixGroupsController@delete',
-		'middleware' => ['auth:api', 'can:edit groups,edit.own groups'],
+		'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
 	])->where('id', '[0-9]+');
 });

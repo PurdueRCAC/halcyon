@@ -31,7 +31,7 @@ $router->group(['prefix' => 'widgets'], function (Router $router)
 	$router->post('/store', [
 		'as'   => 'admin.widgets.store',
 		'uses' => 'WidgetsController@store',
-		'middleware' => 'can:create widgets,edit widgets',
+		'middleware' => 'can:create widgets|edit widgets',
 	]);
 	$router->match(['get', 'post'], '/publish/{id?}', [
 		'as'   => 'admin.widgets.publish',

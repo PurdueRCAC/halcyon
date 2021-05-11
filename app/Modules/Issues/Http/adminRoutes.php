@@ -22,7 +22,7 @@ $router->group(['prefix' => 'issues', 'middleware' => 'can:manage issues'], func
 	$router->post('/store', [
 		'as' => 'admin.issues.store',
 		'uses' => 'IssuesController@store',
-		'middleware' => 'can:create issues,edit issues',
+		'middleware' => 'can:create issues|edit issues',
 	]);
 	$router->get('/edit/{id}', [
 		'as' => 'admin.issues.edit',
@@ -51,7 +51,7 @@ $router->group(['prefix' => 'issues', 'middleware' => 'can:manage issues'], func
 		$router->post('/store', [
 			'as' => 'admin.issues.comments.store',
 			'uses' => 'CommentsController@store',
-			'middleware' => 'can:create issues,edit issues',
+			'middleware' => 'can:create issues|edit issues',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.issues.comments.edit',
@@ -85,7 +85,7 @@ $router->group(['prefix' => 'issues', 'middleware' => 'can:manage issues'], func
 		$router->post('/store', [
 			'as' => 'admin.issues.todos.store',
 			'uses' => 'TodosController@store',
-			'middleware' => 'can:create issues,edit issues',
+			'middleware' => 'can:create issues|edit issues',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.issues.todos.edit',

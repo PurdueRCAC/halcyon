@@ -17,7 +17,7 @@ $router->group(['prefix' => 'groups', 'middleware' => 'can:manage groups'], func
 	$router->post('store', [
 		'as' => 'admin.groups.store',
 		'uses' => 'GroupsController@store',
-		'middleware' => 'can:create groups,edit groups',
+		'middleware' => 'can:create groups|edit groups',
 	]);
 	$router->get('edit/{id}', [
 		'as' => 'admin.groups.edit',
@@ -49,7 +49,7 @@ $router->group(['prefix' => 'groups', 'middleware' => 'can:manage groups'], func
 		$router->post('/{group}/store', [
 			'as' => 'admin.groups.members.store',
 			'uses' => 'MembersController@store',
-			'middleware' => 'can:create groups.members,edit groups.members',
+			'middleware' => 'can:create groups.members|edit groups.members',
 		]);
 		$router->get('/{group}/edit/{id}', [
 			'as' => 'admin.groups.members.edit',
@@ -82,7 +82,7 @@ $router->group(['prefix' => 'groups', 'middleware' => 'can:manage groups'], func
 		$router->post('/store', [
 			'as' => 'admin.groups.fieldsofscience.store',
 			'uses' => 'FieldsOfScienceController@store',
-			'middleware' => 'can:create groups.fieldsofscience,edit groups.fieldsofscience',
+			'middleware' => 'can:create groups.fieldsofscience|edit groups.fieldsofscience',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.groups.fieldsofscience.edit',
@@ -115,7 +115,7 @@ $router->group(['prefix' => 'groups', 'middleware' => 'can:manage groups'], func
 		$router->post('/store', [
 			'as' => 'admin.groups.departments.store',
 			'uses' => 'DepartmentsController@store',
-			'middleware' => 'can:create groups.departments,edit groups.departments',
+			'middleware' => 'can:create groups.departments|edit groups.departments',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.groups.departments.edit',

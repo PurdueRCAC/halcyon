@@ -26,7 +26,7 @@ $router->group(['prefix' => 'issues', 'middleware' => ['auth.admin', 'can:manage
 		$router->post('/store', [
 			'as' => 'site.issues.todos.store',
 			'uses' => 'ToDosController@store',
-			'middleware' => 'can:create issues,edit issues',
+			'middleware' => 'can:create issues|edit issues',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'site.issues.todos.edit',
@@ -69,7 +69,7 @@ $router->group(['prefix' => 'issues', 'middleware' => ['auth.admin', 'can:manage
 	$router->put('{id}', [
 		'as' => 'site.issues.update',
 		'uses' => 'IssuesController@update',
-		'middleware' => 'can:edit issues,can:create issues',
+		'middleware' => 'can:edit issues|can:create issues',
 	])->where('id', '[0-9]+');
 
 	$router->delete('{id}', [

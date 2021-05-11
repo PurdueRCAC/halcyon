@@ -32,7 +32,7 @@ $router->group(['prefix' => 'media'], function (Router $router)
 	$router->post('/store', [
 		'as' => 'admin.media.store',
 		'uses' => 'MediaController@store',
-		'middleware' => 'can:create media,edit media',
+		'middleware' => 'can:create media|edit media',
 	]);
 	$router->get('/edit/{id}', [
 		'as' => 'admin.media.edit',

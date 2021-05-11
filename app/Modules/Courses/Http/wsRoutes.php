@@ -23,12 +23,12 @@ $router->group(['prefix' => 'classaccount'], function (Router $router)
 	$router->put('{id}', [
 		'as' => 'ws.courses.update',
 		'uses' => 'AccountsController@update',
-		'middleware' => 'auth:api|can:edit courses',
+		'middleware' => ['auth:api', 'can:edit courses'],
 	]);
 	$router->delete('{id}', [
 		'as' => 'ws.courses.delete',
 		'uses' => 'AccountsController@delete',
-		'middleware' => 'auth:api|can:delete courses',
+		'middleware' => ['auth:api', 'can:delete courses'],
 	]);
 });
 
@@ -48,7 +48,7 @@ $router->group(['prefix' => 'classuser'], function (Router $router)
 	$router->post('/', [
 		'as' => 'ws.courses.members.create',
 		'uses' => 'MembersController@create',
-		'middleware' => ['auth:api', 'can:edit courses,edit.own courses'],
+		'middleware' => ['auth:api', 'can:edit courses|edit.own courses'],
 	]);
 	$router->get('{id}', [
 		'as' => 'ws.courses.members.read',
@@ -58,11 +58,11 @@ $router->group(['prefix' => 'classuser'], function (Router $router)
 	$router->put('{id}', [
 		'as' => 'ws.courses.members.update',
 		'uses' => 'MembersController@update',
-		'middleware' => ['auth:api', 'can:edit courses,edit.own courses'],
+		'middleware' => ['auth:api', 'can:edit courses|edit.own courses'],
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
 		'as' => 'ws.courses.members.delete',
 		'uses' => 'MembersController@delete',
-		'middleware' => ['auth:api', 'can:edit courses,edit.own courses'],
+		'middleware' => ['auth:api', 'can:edit courses|edit.own courses'],
 	])->where('id', '[0-9]+');
 });

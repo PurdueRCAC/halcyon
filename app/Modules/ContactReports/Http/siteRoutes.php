@@ -35,7 +35,7 @@ $router->group(['prefix' => 'contactreports', 'middleware' => ['auth.admin', 'ca
 	$router->put('{id}', [
 		'as' => 'site.contactreports.update',
 		'uses' => 'ReportsController@update',
-		'middleware' => 'can:edit contactreports,can:create contactreports',
+		'middleware' => 'can:edit contactreports|can:edit contactreports',
 	])->where('id', '[0-9]+');
 
 	$router->delete('{id}', [

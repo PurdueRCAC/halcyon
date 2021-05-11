@@ -17,7 +17,7 @@ $router->group(['prefix' => 'cron', 'middleware' => 'can:manage cron'], function
 	$router->post('store', [
 		'as' => 'admin.cron.store',
 		'uses' => 'JobsController@store',
-		'middleware' => 'can:create cron,edit cron',
+		'middleware' => 'can:create cron|edit cron',
 	]);
 	$router->get('{id}', [
 		'as' => 'admin.cron.edit',

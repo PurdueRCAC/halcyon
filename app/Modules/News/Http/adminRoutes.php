@@ -22,7 +22,7 @@ $router->group(['prefix' => 'news', 'middleware' => 'can:manage news'], function
 	$router->post('/store', [
 		'as' => 'admin.news.store',
 		'uses' => 'ArticlesController@store',
-		'middleware' => 'can:create news,edit news',
+		'middleware' => 'can:create news|edit news',
 	]);
 	$router->get('/publish/{id}', [
 		'as'   => 'admin.news.publish',
@@ -66,7 +66,7 @@ $router->group(['prefix' => 'news', 'middleware' => 'can:manage news'], function
 		$router->post('/store', [
 			'as' => 'admin.news.types.store',
 			'uses' => 'TypesController@store',
-			'middleware' => 'can:create news.types,edit news.types',
+			'middleware' => 'can:create news.types|edit news.types',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.news.types.edit',
@@ -100,7 +100,7 @@ $router->group(['prefix' => 'news', 'middleware' => 'can:manage news'], function
 		$router->post('/store', [
 			'as' => 'admin.news.updates.store',
 			'uses' => 'UpdatesController@store',
-			'middleware' => 'can:create news,edit news',
+			'middleware' => 'can:create news|edit news',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.news.updates.edit',

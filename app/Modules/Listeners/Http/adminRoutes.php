@@ -16,7 +16,7 @@ $router->group(['prefix' => 'listeners'], function (Router $router)
 	$router->post('/store', [
 		'as'   => 'admin.listeners.store',
 		'uses' => 'ListenersController@store',
-		'middleware' => 'can:create listeners,edit listeners',
+		'middleware' => 'can:create listeners|edit listeners',
 	]);
 	$router->get('/publish/{id?}', [
 		'as'   => 'admin.listeners.publish',

@@ -18,7 +18,7 @@ $router->group(['prefix' => 'menus'], function (Router $router)
 	$router->post('/store', [
 		'as'   => 'admin.menus.store',
 		'uses' => 'MenusController@store',
-		'middleware' => 'can:create menus,edit menus',
+		'middleware' => 'can:create menus|edit menus',
 	]);
 	$router->get('/{id}', [
 		'as'   => 'admin.menus.edit',
@@ -86,7 +86,7 @@ $router->group(['prefix' => 'menus'], function (Router $router)
 		$router->post('/store', [
 			'as'   => 'admin.menus.items.store',
 			'uses' => 'ItemsController@store',
-			'middleware' => 'can:create menus,edit menus',
+			'middleware' => 'can:create menus|edit menus',
 		]);
 		$router->get('/{id}', [
 			'as'   => 'admin.menus.items.edit',

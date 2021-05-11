@@ -22,7 +22,7 @@ $router->group(['prefix' => 'pages'], function (Router $router)
 	$router->post('/store', [
 		'as'   => 'admin.pages.store',
 		'uses' => 'PagesController@store',
-		'middleware' => 'can:create pages,edit pages',
+		'middleware' => 'can:create pages|edit pages',
 	]);
 	$router->match(['get', 'post'], '/publish/{id?}', [
 		'as'   => 'admin.pages.publish',

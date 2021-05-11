@@ -18,7 +18,7 @@ $router->group(['prefix' => 'tags'], function (Router $router)
 	$router->post('store', [
 		'as' => 'admin.tags.store',
 		'uses' => 'TagsController@store',
-		'middleware' => 'can:create tags,edit tags',
+		'middleware' => 'can:create tags|edit tags',
 	]);
 	$router->get('edit/{id}', [
 		'as' => 'admin.tags.edit',

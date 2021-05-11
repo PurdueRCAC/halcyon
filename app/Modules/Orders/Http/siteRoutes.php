@@ -16,7 +16,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth.admin'], function (R
 	$router->post('store', [
 		'as' => 'site.orders.store',
 		'uses' => 'OrdersController@store',
-		'middleware' => 'can:create orders,can:edit orders',
+		'middleware' => 'can:create orders|edit orders',
 	]);
 	$router->get('view/{id}', [
 		'as' => 'site.orders.read',
@@ -85,7 +85,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth.admin'], function (R
 		$router->post('/store', [
 			'as' => 'site.orders.categories.store',
 			'uses' => 'CategoriesController@store',
-			'middleware' => 'can:create orders.categories,edit orders.categories',
+			'middleware' => 'can:create orders.categories|edit orders.categories',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'site.orders.categories.edit',
@@ -123,7 +123,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth.admin'], function (R
 		$router->post('/store', [
 			'as' => 'site.orders.products.store',
 			'uses' => 'ProductsController@store',
-			'middleware' => 'can:create orders,edit orders',
+			'middleware' => 'can:create orders|edit orders',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'site.orders.products.edit',

@@ -17,7 +17,7 @@ $router->group(['prefix' => 'themes'], function (Router $router)
 	$router->post('store', [
 		'as' => 'admin.themes.store',
 		'uses' => 'ThemesController@store',
-		'middleware' => 'can:create themes,edit themes',
+		'middleware' => 'can:create themes|edit themes',
 	]);
 	$router->get('{id}', [
 		'as' => 'admin.themes.edit',

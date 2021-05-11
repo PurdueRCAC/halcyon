@@ -27,12 +27,12 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 	$router->post('/attach', [
 		'as' => 'admin.knowledge.attach',
 		'uses' => 'PagesController@attach',
-		'middleware' => 'can:create knowledge,edit knowledge',
+		'middleware' => 'can:create knowledge|edit knowledge',
 	]);
 	$router->post('/store', [
 		'as' => 'admin.knowledge.store',
 		'uses' => 'PagesController@store',
-		'middleware' => 'can:create knowledge,edit knowledge',
+		'middleware' => 'can:create knowledge|edit knowledge',
 	]);
 	$router->get('/rebuild', [
 		'as' => 'admin.knowledge.rebuild',
@@ -91,12 +91,12 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 		$router->post('/store', [
 			'as' => 'admin.knowledge.snippets.store',
 			'uses' => 'SnippetsController@store',
-			'middleware' => 'can:create knowledge,edit knowledge',
+			'middleware' => 'can:create knowledge|edit knowledge',
 		]);
 		$router->post('/attach', [
 			'as' => 'admin.knowledge.snippets.attach',
 			'uses' => 'SnippetsController@attach',
-			'middleware' => 'can:create knowledge,edit knowledge',
+			'middleware' => 'can:create knowledge|edit knowledge',
 		]);
 		$router->match(['get', 'post'], '/orderup/{id}', [
 			'as'   => 'admin.knowledge.snippets.orderup',

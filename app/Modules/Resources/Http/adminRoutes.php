@@ -22,7 +22,7 @@ $router->group(['prefix' => 'resources', 'middleware' => 'can:manage resources']
 	$router->post('/store', [
 		'as'   => 'admin.resources.store',
 		'uses' => 'ResourcesController@store',
-		'middleware' => 'can:create resources,edit resources',
+		'middleware' => 'can:create resources|edit resources',
 	]);
 	$router->get('/{id}', [
 		'as'   => 'admin.resources.edit',
@@ -55,7 +55,7 @@ $router->group(['prefix' => 'resources', 'middleware' => 'can:manage resources']
 		$router->post('store', [
 			'as' => 'admin.resources.types.store',
 			'uses' => 'TypesController@store',
-			'middleware' => 'can:create resources.types,edit resources.types',
+			'middleware' => 'can:create resources.types|edit resources.types',
 		]);
 		$router->get('{id}', [
 			'as' => 'admin.resources.types.edit',
@@ -88,7 +88,7 @@ $router->group(['prefix' => 'resources', 'middleware' => 'can:manage resources']
 		$router->post('store', [
 			'as' => 'admin.resources.batchsystems.store',
 			'uses' => 'BatchsystemsController@store',
-			'middleware' => 'can:create resources.batchsystems,edit resources.batchsystems',
+			'middleware' => 'can:create resources.batchsystems|edit resources.batchsystems',
 		]);
 		$router->get('{id}', [
 			'as' => 'admin.resources.batchsystems.edit',
@@ -121,7 +121,7 @@ $router->group(['prefix' => 'resources', 'middleware' => 'can:manage resources']
 		$router->post('store', [
 			'as' => 'admin.resources.subresources.store',
 			'uses' => 'SubresourcesController@store',
-			'middleware' => 'can:create resources.subresources,edit resources.subresources',
+			'middleware' => 'can:create resources.subresources|edit resources.subresources',
 		]);
 		$router->get('{id}', [
 			'as' => 'admin.resources.subresources.edit',

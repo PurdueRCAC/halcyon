@@ -38,7 +38,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 	$router->post('store', [
 		'as' => 'admin.users.store',
 		'uses' => 'UsersController@store',
-		'middleware' => 'can:create users,edit users',
+		'middleware' => 'can:create users|edit users',
 	]);
 	$router->match(['get', 'post'], '/block/{id?}', [
 		'as' => 'admin.users.block',
@@ -86,7 +86,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->post('store', [
 			'as' => 'admin.users.notes.store',
 			'uses' => 'NotesController@store',
-			'middleware' => 'can:create users.notes,edit users.notes',
+			'middleware' => 'can:create users.notes|edit users.notes',
 		]);
 		$router->get('{id}', [
 			'as' => 'admin.users.notes.edit',
@@ -119,7 +119,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->post('store', [
 			'as' => 'admin.users.roles.store',
 			'uses' => 'RolesController@store',
-			'middleware' => 'can:create users.roles,edit users.roles',
+			'middleware' => 'can:create users.roles|edit users.roles',
 		]);
 		$router->post('update', [
 			'as' => 'admin.users.roles.update',
@@ -157,7 +157,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->post('store', [
 			'as' => 'admin.users.levels.store',
 			'uses' => 'LevelsController@store',
-			'middleware' => 'can:create users.levels,edit users.levels',
+			'middleware' => 'can:create users.levels|edit users.levels',
 		]);
 		$router->get('{id}', [
 			'as' => 'admin.users.levels.edit',
@@ -185,7 +185,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->post('store', [
 			'as' => 'admin.users.permissions.store',
 			'uses' => 'PermissionsController@store',
-			//'middleware' => 'can:create users.levels,edit users.levels',
+			//'middleware' => 'can:create users.levels|edit users.levels',
 		]);
 		$router->match(['get', 'post'], 'cancel', [
 			'as' => 'admin.users.permissions.cancel',

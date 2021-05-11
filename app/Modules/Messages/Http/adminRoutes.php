@@ -21,7 +21,7 @@ $router->group(['prefix' => 'messages'], function (Router $router)
 		$router->post('/store', [
 			'as' => 'admin.messages.types.store',
 			'uses' => 'TypesController@store',
-			'middleware' => 'can:create messages.types,edit messages.types',
+			'middleware' => 'can:create messages.types|edit messages.types',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.messages.types.edit',
@@ -60,7 +60,7 @@ $router->group(['prefix' => 'messages'], function (Router $router)
 	$router->post('/store', [
 		'as' => 'admin.messages.store',
 		'uses' => 'MessagesController@store',
-		'middleware' => 'can:create messages,edit messages',
+		'middleware' => 'can:create messages|edit messages',
 	]);
 	$router->get('/edit/{id}', [
 		'as' => 'admin.messages.edit',

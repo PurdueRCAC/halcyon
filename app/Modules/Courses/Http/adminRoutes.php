@@ -20,7 +20,7 @@ $router->group(['prefix' => 'courses', 'middleware' => 'can:manage courses'], fu
 		$router->post('/store', [
 			'as' => 'admin.courses.members.store',
 			'uses' => 'MembersController@store',
-			'middleware' => 'can:create courses.members,edit courses.members',
+			'middleware' => 'can:create courses.members|edit courses.members',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.courses.members.edit',
@@ -50,7 +50,7 @@ $router->group(['prefix' => 'courses', 'middleware' => 'can:manage courses'], fu
 	$router->post('store', [
 		'as' => 'admin.courses.store',
 		'uses' => 'AccountsController@store',
-		'middleware' => 'can:create courses,edit courses',
+		'middleware' => 'can:create courses|edit courses',
 	]);
 	$router->get('{id}', [
 		'as' => 'admin.courses.edit',
