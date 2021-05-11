@@ -65,7 +65,15 @@ class HttpLogger
 		}
 		else
 		{
-			$log->payload = json_encode($request->all());
+			$all = $request->all();
+			foreach ($all as $k => $v)
+			{
+				if (is_string($v) && strlen($v) > 500)
+				{
+					$all[$k] = substr($v, 0, 500) . ' ...';
+				}
+			}
+			$log->payload = json_encode($all);
 			$log->uri = $request->fullUrl();
 		}
 		$log->status = $response->status();
