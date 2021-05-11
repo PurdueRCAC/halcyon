@@ -639,11 +639,15 @@ Halcyon.paginate = function()
 	}
 }
 
+var ROOT_URL = '/api/';
+
 /**
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function() {
 	var i;
+
+	ROOT_URL = $('meta[name="base-url"]').attr('content') + '/api/';
 
 	// Add event listeners to toolbar buttons
 	var toolbarbuttons = document.getElementsByClassName('toolbar-btn');
