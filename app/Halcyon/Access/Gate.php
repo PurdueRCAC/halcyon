@@ -84,11 +84,6 @@ class Gate
 		$action = strtolower(preg_replace('#[\s\-]+#', '.', $action));
 		$asset  = strtolower(preg_replace('#[\s\-]+#', '.', trim($asset)));
 
-		/*if (substr($action, 0, 5) != 'core.')
-		{
-			$action = 'core.' . $action;
-		}*/
-
 		// Default to the root asset node.
 		if (empty($asset))
 		{
@@ -215,11 +210,6 @@ class Gate
 		$action = strtolower(preg_replace('#[\s\-]+#', '.', trim($action)));
 		$asset  = strtolower(preg_replace('#[\s\-]+#', '.', trim($asset)));
 
-		/*if (substr($action, 0, 5) != 'core.')
-		{
-			$action = 'core.' . $action;
-		}*/
-
 		// Get role path for role
 		$rolePath = self::getRolePath($roleId);
 
@@ -340,18 +330,18 @@ class Gate
 			$query->groupBy('a.lft');
 		}
 
-		$result = $query->get()->pluck('rules')->first();//->toArray();
+		$result = $query->get()->pluck('rules')->toArray();
 
 		// Get the root even if the asset is not found and in recursive mode
 		if (empty($result) && $recursive)
 		{
 			$result = Asset::findOrFail(Asset::getRootId());
-			$result = $result->rules; //array($result->rules);
+			$result = $result->rules;
 		}
 
 		// Instantiate and return the Rules object for the asset rules.
-		$rules = new Rules($result);
-		//$rules->mergeCollection($result);
+		$rules = new Rules;
+		$rules->mergeCollection($result);
 
 		return $rules;
 	}
