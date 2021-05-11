@@ -209,14 +209,12 @@ function EditProperty(field, item) {
 		img.className = "fa fa-save";
 		img.title = "Click to save changes.";
 		cancelimg.style.display = "inline";
-		//span.style.display = "none";
-		span.classList.add('hide');
-		/*if (input.tagName == "TEXTAREA") {
+		span.style.display = "none";
+		if (input.tagName == "TEXTAREA") {
 			input.style.display = "block";
 		} else {
 			input.style.display = "inline";
-		}*/
-		input.classList.remove('hide');
+		}
 		if (input.tagName != "SELECT" && input.tagName != "TEXTAREA") {
 			input.value = span.innerHTML;
 
@@ -229,10 +227,8 @@ function EditProperty(field, item) {
 		// turn to save mode
 		img.className = "fa fa-spinner";
 		img.title = "Click to edit field";
-		//span.style.display = "inline";
-		span.classList.remove('hide');
-		//input.style.display = "none";
-		input.classList.add('hide');
+		span.style.display = "inline";
+		input.style.display = "none";
 
 		if (input.tagName == "SELECT") {
 			input = input.options[input.selectedIndex];
@@ -2332,8 +2328,8 @@ function SaveOrderUser() {
 
 	if (button.className.match(/pencil/)) {
 		button.className = "fa fa-save";
-		document.getElementById("search_user").parentNode.style.display = "inline";
-		document.getElementById("edit_user").style.display = "none";
+		document.getElementById("search_user").parentNode.classList.remove('hide');//parentNode.style.display = "inline";
+		document.getElementById("edit_user").classList.add('hide');//style.display = "none";
 	} else {
 		var id = document.getElementById("order").getAttribute('data-api'); //value;
 		var name = document.getElementById("search_user").value;
@@ -2371,8 +2367,8 @@ function SaveOrderUser() {
 					}
 				});
 			} else {
-				document.getElementById("search_user").parentNode.style.display = "none";
-				document.getElementById("edit_user").style.display = "inline";
+				document.getElementById("search_user").parentNode.classList.add('hide');
+				document.getElementById("edit_user").classList.remove('hide');
 				button.className = "fa fa-pencil";
 			}
 		}

@@ -289,6 +289,91 @@ $(document).ready(function() {
 		}
 	});
 
+	/*var autocompleteName = function(url) {
+		return function(request, response) {
+			console.log(url.replace('%s', encodeURIComponent(request.term)));
+			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
+				response($.map(data.data, function (el) {
+					return {
+						label: el.name,
+						name: el.name,
+						id: el.id,
+						username: el.username
+						//priorusernames: el.priorusernames
+					};
+				}));
+			});
+		};
+	};
+	$("#search_user").autocomplete({
+		source: autocompleteName($("#search_user").data('api')),
+		dataName: 'users',
+		height: 150,
+		delay: 100,
+		minLength: 2,
+		select: function (event, ui) {
+			event.preventDefault();
+			var thing = ui['item'].label;
+
+			if (typeof(ui['item'].username) != 'undefined') {
+				thing = thing + " (" + ui['item'].username + ")";
+			} else if (typeof(ui['item'].priorusername) != 'undefined') {
+				thing = thing + " (" + ui['item'].priorusername + ")";
+			}
+			$("#search_user").val(thing);
+		},
+		create: function () {
+			$(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+				var thing = item.label;
+
+				if (typeof(item.username) != 'undefined') {
+					thing = thing + " (" + item.username + ")";
+				} else if (typeof(item.priorusername) != 'undefined') {
+					thing = thing + " (" + item.priorusername + ")";
+				}
+				return $("<li>")
+					.append($("<div>").text(thing))
+					.appendTo(ul);
+			};
+		}
+	});
+	$("#search_user").on("autocompleteselect", SearchEventHandler);*/
+	var users = $(".form-users");
+	if (users.length) {
+		users.each(function(i, user){
+			user = $(user);
+			var cl = user.clone()
+				.attr('type', 'hidden')
+				.val(user.val().replace(/([^:]+):/, ''));
+			user
+				.attr('name', user.attr('id') + i)
+				.attr('id', user.attr('id') + i)
+				.val(user.val().replace(/(:\d+)$/, ''))
+				.after(cl);
+			user.autocomplete({
+				minLength: 2,
+				source: function( request, response ) {
+					return $.getJSON(user.attr('data-uri').replace('%s', encodeURIComponent(request.term)), function (data) {
+						response($.map(data.data, function (el) {
+							return {
+								label: el.name + ' (' + el.username + ')',
+								name: el.name,
+								id: el.id,
+							};
+						}));
+					});
+				},
+				select: function (event, ui) {
+					event.preventDefault();
+					// Set selection
+					user.val(ui.item.label); // display the selected text
+					cl.val(ui.item.id); // save selected id to input
+					return false;
+				}
+			});
+		});
+	}
+
 	/*var group = $("#search_group");
 	if (group.length) {
 		var cl = group.clone()
@@ -361,10 +446,12 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 @section('content')
 <!-- <form action="{{ route('admin.orders.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate"> -->
 
+<form action="{{ route('admin.orders.store') }}" method="post" name="adminForm" id="item-form" class="editform order">
 @if ($order->id)
 	<div class="tabs">
 		<ul>
 			<li><a href="#order-info">Order</a></li>
+			<li><a href="#order-notes">Notes</a></li>
 			<li><a href="#order-history">History</a></li>
 		</ul>
 		<div id="order-info">
@@ -495,7 +582,6 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 			</div><!-- / .orderstatusblock -->
 		</div>
 		<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-			<form action="{{ route('admin.orders.store') }}" method="post" name="adminForm" id="order-form" class="editform order">
 				<input type="hidden" name="id" id="order" data-api="{{ route('api.orders.update', ['id' => $order->id]) }}" value="{{ $order->id }}" />
 
 				<div class="card">
@@ -557,8 +643,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												@endif
 											</span>
 
-											<span class="stash">
-												<input type="text" name="search_user" id="search_user" class="form-control form-users" value="{{ ($order->user ? $order->user->name . ':' . $order->userid : '') }}" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
+											<span class="hide">
+											<input type="text" name="search_user" id="search_user" class="form-control form-users" value="{{ ($order->user ? $order->user->name . ':' . $order->userid : '') }}" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
 											</span>
 
 											<a href="#edit_user" id="order_user_save" class="order-edit" title="{{ trans('global.button.edit') }}" data-txt-save="Save Change">
@@ -602,7 +688,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												@endif
 											</span>
 
-											<input type="text" name="search_group" id="search_group" class="form-control form-groups stash" data-groupid="{{ $order->groupid }}" value="{{ $order->group ? $order->group->name : '' }}" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
+											<input type="text" name="search_group" id="search_group" class="form-control form-groups hide" data-groupid="{{ $order->groupid }}" value="{{ $order->group ? $order->group->name : '' }}" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
 
 											<a href="#edit_group" id="order_group_save" class="order-edit" title="{{ trans('global.button.edit') }}" data-txt-save="Save Change">
 												<i id="group_save" class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>
@@ -639,8 +725,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								|| (
 									($order->status == 'pending_approval' || $order->status == 'pending_fulfillment') && auth()->user()->can('manage orders'))
 									|| ($order->status == 'pending_approval' && !$myorder)) && (auth()->user()->can('manage orders') || $myorder)): ?>
-									<a href="#help4" class="help glyph tip" title="Help">
-										<span class="icon-help-circle" aria-hidden="true"></span> Help
+									<a href="#help4" class="btn text-info help help-dialog" data-tip="Help">
+										<span class="icon-help-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 									</a>
 
 									<button id="save_quantities" class="btn btn-sm btn-secondary" data-state="inactive" data-inactive="Edit Items" data-active="Save Changes">Edit Items</button>
@@ -779,7 +865,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 													class="btn btn-dangerd text-danger item-remove tip"
 													data-api="{{ route('api.orders.items.delete', ['id' => $item->id]) }}"
 													data-confirm="{{ trans('orders::orders.confirm.item removal') }}">
-													<span class="icon-trash" aria-hidden="true"></span><span class="sr-only">Remove product</span>
+													<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Remove product</span>
 												</a>
 											</td>
 										@endif
@@ -823,7 +909,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												class="btn btn-link text-danger item-remove tip"
 												data-api=""
 												data-confirm="{{ trans('orders::orders.confirm.account removal') }}">
-												<span class="icon-trash" aria-hidden="true"></span><span class="sr-only">Remove product</span>
+												<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Remove product</span>
 											</a>
 										</td>
 									</tr>
@@ -844,7 +930,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												data-api="{{ route('api.orders.items.create') }}"
 												class="btn btn-successd text-success item-add tip"
 												title="Add product">
-												<span class="icon-plus-circle" aria-hidden="true"></span><span class="sr-only">Add</span>
+												<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only">Add</span>
 											</a>
 										</td>
 									@endif
@@ -866,8 +952,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							</div>
 							<div class="col col-md-6 text-right">
 								@if (count($order->accounts) == 0 && $canEdit)
-									<a href="#help2" class="help glyph tip" title="Help on Payment Information">
-										<span class="icon-help-circle" aria-hidden="true"></span> Help
+									<a href="#help2" class="help text-info help-dialog" data-tip="Help on Payment Information">
+										<span class="icon-help-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 									</a>
 									<button class="btn btn-secondary account-save" id="save_accounts" disabled="true">Save Accounts</button>
 								@else
@@ -1035,7 +1121,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											</span>
 										</td>
 										<td class="text-right text-nowrap">
-											<a href="#help2" class="help tip" title="Help">
+											<a href="#help2" class="help help-dialog" data-tip="Help">
 												<span class="amount_error hide"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span class="sr-only">Required field is missing or invalid format</span></span>
 											</a>
 											<span class="account-edit-hide">{{ config('orders.currency', '$') }} <span class="account_amount_span">{{ $account->formattedAmount }}</span></span>
@@ -1110,7 +1196,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							<tfoot>
 								<tr>
 									<td class="text-right" colspan="{{ count($order->accounts) == 0 ? 2 : 3 }}">
-										<a href="#help2" class="help icn"><!--
+										<a href="#help2" class="help help-dialog icn" data-tip="Balance should be $0.00 before saving changes."><!--
 											--><i id="balance_error" aria-hidden="true" class="fa fa-exclamation-triangle text-warning hide"></i><span class="sr-only">Balance should be $0.00 before saving changes.</span><!--
 										--></a>
 										<strong>{{ trans('orders::orders.balance remaining') }}</strong>
@@ -1121,7 +1207,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									@if ($canEdit)
 										<td class="account-edit-show{{ count($order->accounts) > 0 ? ' hide' : '' }}">
 											<a href="#account_new_row" title="Add account" class="btn btn-link text-success account-add tip">
-												<span class="icon-plus-circle" aria-hidden="true"></span><span class="sr-only">Add account</span>
+												<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only">Add account</span>
 											</a>
 										</td>
 									@endif
@@ -1143,7 +1229,10 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 					</div>
 				</div><!-- / .card -->
 				@endif
-
+			</div><!-- / .contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
+		</div><!-- / .row -->
+		</div>
+		<div id="order-notes">
 				<div class="card">
 					<div class="card-header">
 						@if ($canEdit)
@@ -1151,17 +1240,17 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								<div class="col-md-6">
 									<h3 class="panel-title card-title">
 										{{ trans('orders::orders.notes') }}
-										<a href="#help1" class="help glyph text-info" data-tip="Help on Order Notes">
-											<span class="icon-help-circle" aria-hidden="true"></span> Help
+										<a href="#help1" class="help btn help-dialog text-info" data-tip="Help on Order Notes">
+											<span class="icon-help-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 										</a>
 									</h3>
 								</div>
 								<div class="col-md-6 text-right">
 									@if ($order->status != 'canceled')
-									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property" data-tip="Edit" data-prop="usernotes" data-value="{{ $order->id }}">
+									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property btn" data-tip="Edit" data-prop="usernotes" data-value="{{ $order->id }}">
 										<i class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_usernotes"></i><span class="sr-only">Edit</span>
 									</a>
-									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_usernotes" class="stash cancel-edit-property" title="Cancel" data-prop="usernotes" data-value="{{ $order->id }}">
+									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_usernotes" class="hide cancel-edit-property btn" title="Cancel" data-prop="usernotes" data-value="{{ $order->id }}">
 										<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">Cancel</span>
 									</a>
 									@endif
@@ -1170,8 +1259,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						@else
 							<h3 class="panel-title card-title">
 								{{ trans('orders::orders.notes') }}
-								<a href="#help1" class="help glyph tip" title="Help on Order Notes">
-									<span class="icon-help-circle" aria-hidden="true"></span> Help
+								<a href="#help1" class="help btn help-dialog tip" data-tip="Help on Order Notes">
+									<span class="icon-help-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 								</a>
 							</h3>
 						@endif
@@ -1201,10 +1290,10 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								</div>
 								<div class="col-md-6 text-right">
 								@if ($order->status != 'canceled')
-									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property" data-tip="Edit" data-prop="staffnotes" data-value="{{ $order->id }}">
+									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property btn" data-tip="Edit" data-prop="staffnotes" data-value="{{ $order->id }}">
 										<i class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_staffnotes"></i><span class="sr-only">Edit</span>
 									</a>
-									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_staffnotes" class="hide cancel-edit-property" data-tip="Cancel" data-prop="staffnotes" data-value="{{ $order->id }}">
+									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_staffnotes" class="hide btn cancel-edit-property" data-tip="Cancel" data-prop="staffnotes" data-value="{{ $order->id }}">
 										<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">Cancel</span>
 									</a>
 								@endif
@@ -1221,12 +1310,6 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						</div>
 					</div><!-- / .card -->
 				@endif
-
-				@csrf
-			</form>
-
-		</div><!-- / .contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
-	</div><!-- / .row -->
 @if ($order->id)
 		</div>
 		<div id="order-history">

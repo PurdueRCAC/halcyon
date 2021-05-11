@@ -144,12 +144,14 @@ class ProductsController extends Controller
 	{
 		$row = new Product();
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		$categories = Category::query()
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->withTrashed()
+			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
@@ -171,16 +173,13 @@ class ProductsController extends Controller
 		$row = Product::findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))
-		{print_r($fields);
+		{
 			$row->fill($fields);
 		}
 
 		$categories = Category::query()
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->withTrashed()
+			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
@@ -200,16 +199,14 @@ class ProductsController extends Controller
 	public function store(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
-		//$request->validateWithBag('errors', [
 			'fields.name' => 'required|string|max:255',
 			'fields.ordercategoryid' => 'required|integer|min:1',
 			'fields.unitprice' => 'required|string',
 			'fields.unit' => 'required|string|min:1,max:16',
 		]);
 
-		if ($validator->fails()) //!$request->validated())
+		if ($validator->fails())
 		{
-			//return response()->json(['message' => $validator->messages()->first()], 409);
 			return redirect()->back()->withInput()->withError($validator->messages());
 		}
 
