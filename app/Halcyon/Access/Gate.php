@@ -137,11 +137,16 @@ class Gate
 
 		if (!$result)
 		{
-			$actions = explode(',', $action);
+			$actions = explode('|', $action);
 
 			foreach ($actions as $ability)
 			{
 				$result = self::check($userId, $ability, $asset);
+
+				if ($result)
+				{
+					break;
+				}
 			}
 		}
 
