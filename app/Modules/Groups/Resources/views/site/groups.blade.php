@@ -83,7 +83,7 @@ function CreateNewGroup() {
 					<div class="form-text text-muted">{{ $user->name }} will be added as a manager.</div>
 				</div>
 
-				<span id="new_group_action" class="alert alert-warning"></span>
+				<span id="new_group_action" class="alert alert-warning hide"></span>
 
 				<div class="dialog-footer">
 					<div class="row">
@@ -101,24 +101,64 @@ function CreateNewGroup() {
 	@endif
 
 	<div id="everything">
-		<div class="row">
+		<table class="table">
+			<caption class="sr-only">Active Groups</caption>
+			<thead>
+				<tr>
+					<th scope="col">
+						Group
+					</th>
+					<th scope="col">
+						Base Unix group
+					</th>
+					<th scope="col">
+						Membership
+					</th>
+					<th scope="col">
+						Joined
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+		@foreach ($groups as $g)
+			<tr>
+				<td>
+					<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">
+						{{ $g->group->name }}
+					</a>
+				</td>
+				<td>
+					{!! $g->group->unixgroup ? $g->group->unixgroup : '<span class="none text-muted">' . trans('global.none') . '</span>' !!}
+				</td>
+				<td>
+					<span class="badge {{ $g->isManager() ? 'badge-success' : 'badge-secondary' }}">{{ $g->type->name }}</span>
+				</td>
+				<td>
+					{{ $g->datecreated ? $g->datecreated->format('Y-m-d') : trans('global.unknown') }}
+				</td>
+			</tr>
+		@endforeach
+			</tbody>
+		</table>
+
+		<?php /*<div class="row">
 			@foreach ($groups as $g)
 			<div class="col-md-6">
 				<div class="card panel panel-default shadow-sm">
 					<div class="card-body panel-body">
-						<span class="badge {{ $g->isManager() ? 'badge-success' : 'badge-secondary' }} pull-right">{{ $g->type->name }}</span>
 						<h3 class="card-title panel-title">
 							<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">
 								{{ $g->group->name }}
 							</a>
 						</h3>
+						<span class="badge {{ $g->isManager() ? 'badge-success' : 'badge-secondary' }} pull-right">{{ $g->type->name }}</span>
 						<p class="card-text">Base Unix group: {!! $g->group->unixgroup ? $g->group->unixgroup : '<span class="none text-muted">' . trans('global.none') . '</span>' !!}</p>
 					</div>
 					@if ($g->isManager() || auth()->user()->can('manage groups'))
 						<div class="card-footer panel-footer">
 							<div class="d-flex justify-content-between align-items-center">
 								<div class="btn-group">
-									<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}#members" class="btn btn-secondary btn-sm">Manage</a>
+									<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}/members" class="btn btn-secondary btn-sm">Manage</a>
 								</div>
 							</div>
 						</div>
@@ -126,6 +166,6 @@ function CreateNewGroup() {
 				</div>
 			</div>
 			@endforeach
-		</div>
+		</div>*/ ?>
 	</div><!-- / #everything -->
 </div><!-- / .contentInner -->

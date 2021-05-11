@@ -213,9 +213,14 @@ class Groups
 			{
 				$group = Group::findOrFail($id);
 
-				$membership = $group->members()->where('userid', '=', $user->id)->get()->first();
+				$membership = $group->members()
+					->withTrashed()
+					->whereIsActive()
+					->where('userid', '=', $user->id)
+					->orderBy('membertype', 'desc')
+					->get()
+					->first();
 
-				//if (!in_array($user->id, $group->members->pluck('userid')->toArray()))
 				if (!$membership)
 				{
 					$found = false;
@@ -230,7 +235,7 @@ class Groups
 							->get()
 							->first();
 
-						if ($membership) //$queue->users()->where('userid', '=', $user->id)->count())
+						if ($membership)
 						{
 							$found = true;
 							break;
@@ -265,7 +270,10 @@ class Groups
 			else
 			{
 				$rows = $user->groups()
+					->withTrashed()
+					->whereIsActive()
 					->where('groupid', '>', 0)
+					->orderBy('membertype', 'desc')
 					->get();
 
 				$groups = array_unique($rows->pluck('groupid')->toArray());
@@ -292,8 +300,30 @@ class Groups
 					if (!in_array($queue->groupid, $groups))
 					{
 						$qu->groupid = $queue->groupid;
+
 						$rows->add($qu);
+
 						$groups[] = $queue->groupid;
+					}
+				}
+
+				$managers = $rows->filter(function($value, $key)
+				{
+					return $value->isManager();
+				});//->pluck('groupid')->toArray();
+
+				foreach ($rows as $k => $g)
+				{
+					/*if (in_array($g->groupid, $managers))
+					{
+						$rows->forget($k);
+					}*/
+					foreach ($managers as $manager)
+					{
+						if ($g->groupid == $manager->groupid && $g->id != $manager->id)
+						{
+							$rows->forget($k);
+						}
 					}
 				}
 
