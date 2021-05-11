@@ -930,6 +930,7 @@ h4 {
 .icon-mic-off:before {
   content: "\e893";
 }
+.fa-ban:before,
 .icon-minus-circle:before {
   content: "\e894";
 }
@@ -1015,6 +1016,7 @@ h4 {
 .icon-plus-square:before {
   content: "\e8af";
 }
+.fa-plus-circle:before,
 .icon-plus-circle:before {
   content: "\e8b0";
 }
@@ -1052,6 +1054,7 @@ h4 {
 .icon-rotate-cw:before {
   content: "\e8bb";
 }
+.fa-save:before,
 .icon-save-close:before,
 .icon-save:before {
   content: "\e8bc";
@@ -1149,6 +1152,7 @@ h4 {
 .icon-trash-2:before {
   content: "\e8da";
 }
+.fa-trash:before,
 .icon-trash:before {
   content: "\e8db";
 }
@@ -3832,6 +3836,14 @@ border: 1px solid rgba(0,0,0,.125);
   }
 }
 
+.alert>*:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+.alert>*:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
 .alert-success {
   background-color: #a3ca60;
   color: #ffffff;
@@ -3852,6 +3864,14 @@ border: 1px solid rgba(0,0,0,.125);
   background-color: #dd5555;
   color: #ffffff;
   border-color: #dd5555;
+}
+.alert a,
+.alert a:link,
+.alert a:hover,
+.alert a:active,
+.alert a:focus {
+  color: #fff;
+  font-weight: bold;
 }
 /*.alert {
   padding-left: 3em;
