@@ -2,7 +2,9 @@
 namespace App\Listeners\Resources\StorageHome;
 
 use App\Modules\Resources\Events\ResourceMemberCreated;
+use App\Modules\Resources\Models\Asset;
 use App\Modules\Storage\Models\StorageResource;
+use App\Modules\Storage\Models\Directory;
 
 /**
  * Storage listener for resources

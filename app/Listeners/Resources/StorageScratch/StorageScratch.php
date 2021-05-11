@@ -3,6 +3,7 @@ namespace App\Listeners\Resources\StorageScratch;
 
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Storage\Models\StorageResource;
+use App\Modules\Storage\Models\Directory;
 
 /**
  * Storage listener for resources
