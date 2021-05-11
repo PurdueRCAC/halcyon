@@ -388,17 +388,18 @@
 						if (count($child_dirs) > 0 && $dir->parentstoragedirid) { ?>
 							<div class="row mb-3">
 								<div class="col-md-4">
-									<label for="<?php echo $dir->id; ?>_other_read_box">Read access for <?php echo $bottle_dirs_string; ?></label>
+									<label for="<?php echo $dir->id; ?>_other_read_box" class="form-check-label">Read access for <?php echo $bottle_dirs_string; ?></label>
 								</div>
 								<div class="col-md-8">
+									<span class="form-check">
 									<?php if ($dir->unixPermissions->other->read) { ?>
 										<input type="checkbox" id="<?php echo $dir->id; ?>_other_read_box" class="form-check-input" checked="checked" />
-										<span id="<?php echo $dir->id; ?>_other_read_span">{{ trans('global.yes') }}</span>
+										<span id="<?php echo $dir->id; ?>_other_read_span">{{ trans('global.yes') }}</span> to directories:
 									<?php } else { ?>
 										<input type="checkbox" id="<?php echo $dir->id; ?>_other_read_box" class="form-check-input" />
-										<span id="<?php echo $dir->id; ?>_other_read_span">{{ trans('global.no') }}</span>
+										<span id="<?php echo $dir->id; ?>_other_read_span">{{ trans('global.no') }}</span> to directories:
 									<?php } ?>
-									to directories:
+									</span>
 
 									<ul>
 									<?php foreach ($child_dirs as $child) { ?>
