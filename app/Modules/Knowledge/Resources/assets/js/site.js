@@ -86,8 +86,8 @@ jQuery(document).ready(function ($) {
 		var frm = $(this),
 			invalid = false;
 
-		var elms = frm.querySelectorAll('input[required]');
-		elms.forEach(function (el) {
+		var elms = frm.find('input[required]');
+		elms.each(function (i, el) {
 			if (!el.value || !el.validity.valid) {
 				el.classList.add('is-invalid');
 				invalid = true;
@@ -95,8 +95,8 @@ jQuery(document).ready(function ($) {
 				el.classList.remove('is-invalid');
 			}
 		});
-		var elms = frm.querySelectorAll('select[required]');
-		elms.forEach(function (el) {
+		var elms = frm.find('select[required]');
+		elms.each(function (i, el) {
 			if (!el.value || el.value <= 0) {
 				el.classList.add('is-invalid');
 				invalid = true;
@@ -104,8 +104,8 @@ jQuery(document).ready(function ($) {
 				el.classList.remove('is-invalid');
 			}
 		});
-		var elms = frm.querySelectorAll('textarea[required]');
-		elms.forEach(function (el) {
+		var elms = frm.find('textarea[required]');
+		elms.each(function (i, el) {
 			if (!el.value || !el.validity.valid) {
 				el.classList.add('is-invalid');
 				invalid = true;
@@ -120,7 +120,6 @@ jQuery(document).ready(function ($) {
 
 		var btn = $('#save-page');
 		btn.addClass('processing');
-
 		/*var post = frm.serializeArray().reduce(function(obj, item) {
 			obj[item.name] = item.value;
 			return obj;
