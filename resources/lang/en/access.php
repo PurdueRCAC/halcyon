@@ -3,7 +3,7 @@
 return [
 	// Actions
 	'permissions' => 'Permissions',
-	'permissions description' => 'Default permissions used for all content in this module.',
+	'permissions desc' => 'Default permissions used for all content in this module.',
 	'admin' => 'Super Admin',
 	'admin description' => 'Allows users in the role to perform any action regardless of the settings.',
 	'module settings' => 'Module Settings',
