@@ -180,7 +180,7 @@ class AuthController extends Controller
 
 		if (app()->has('cas'))
 		{
-			//app('cas')->logout(route('home'), route('home'));
+			app('cas')->logout(route('home'), route('home'));
 		}
 
 		return redirect()->route(config('module.users.redirect_route_after_logout', 'login'));
