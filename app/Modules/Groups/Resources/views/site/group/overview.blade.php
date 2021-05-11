@@ -343,7 +343,7 @@
 			</ul>
 		</div>
 
-		@if ($group->unixgroup && count($group->unixgroups) == 0)
+		@if ($group->unixgroup && count($group->unixgroups) == 0 && $canManage)
 			<div id="INPUT_groupsbutton">
 				<p class="text-center">
 					<button class="btn btn-secondary create-default-unix-groups" data-api="{{ route('api.unixgroups.create') }}" data-group="{{ $group->id }}" data-value="{{ $group->unixgroup }}" data-all-groups="1" id="INPUT_groupsbutton_{{ $group->id }}">
