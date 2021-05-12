@@ -221,6 +221,33 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		])->where('id', '[0-9]+');
 	});
 
+	$router->group(['prefix' => 'allocations', 'middleware' => 'auth:api'], function (Router $router)
+	{
+		$router->get('/', [
+			'as' => 'api.allocations',
+			'uses' => 'AllocationsController@index',
+		]);
+		$router->post('/', [
+			'as' => 'api.allocations.create',
+			'uses' => 'AllocationsController@create',
+			'middleware' => 'can:create queues',
+		]);
+		$router->get('{id}', [
+			'as' => 'api.allocations.read',
+			'uses' => 'AllocationsController@read',
+		])->where('id', '[0-9]+');
+		$router->put('{id}', [
+			'as' => 'api.allocations.update',
+			'uses' => 'AllocationsController@update',
+			'middleware' => 'can:edit queues',
+		])->where('id', '[0-9]+');
+		$router->delete('{id}', [
+			'as' => 'api.allocations.delete',
+			'uses' => 'AllocationsController@delete',
+			'middleware' => 'can:delete queues',
+		])->where('id', '[0-9]+');
+	});
+
 	$router->get('/', [
 		'as' => 'api.queues.index',
 		'uses' => 'QueuesController@index',
