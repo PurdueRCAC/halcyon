@@ -16,6 +16,15 @@ class RoleProvision
 	use Loggable;
 
 	/**
+	 * Ignore some resources
+	 * 
+	 * @var  array
+	 */
+	private $blacklist = [
+		'anvil'
+	];
+
+	/**
 	 * Register the listeners for the subscriber.
 	 *
 	 * @param  Illuminate\Events\Dispatcher  $events
@@ -40,6 +49,11 @@ class RoleProvision
 		$config = $this->config();
 
 		if (empty($config))
+		{
+			return;
+		}
+
+		if (in_array($event->resource->rolename, $this->blacklist))
 		{
 			return;
 		}
@@ -93,6 +107,8 @@ class RoleProvision
 			error_log(__METHOD__ . '(): Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
 		}
 
+		$event->status = $status;
+
 		$this->log('roleprovision', __METHOD__, 'POST', $status, $body, $url);
 	}
 
@@ -108,6 +124,11 @@ class RoleProvision
 		$config = $this->config();
 
 		if (empty($config))
+		{
+			return;
+		}
+
+		if (in_array($event->resource->rolename, $this->blacklist))
 		{
 			return;
 		}
@@ -163,6 +184,11 @@ class RoleProvision
 		$config = $this->config();
 
 		if (empty($config))
+		{
+			return;
+		}
+
+		if (in_array($event->resource->rolename, $this->blacklist))
 		{
 			return;
 		}
@@ -246,7 +272,7 @@ class RoleProvision
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Add the given resource as a role to each manager of the group that owns the newly created queue
 	 *
 	 * @param   QueueCreated   $event
 	 * @return  void
@@ -257,6 +283,11 @@ class RoleProvision
 		$config = $this->config();
 
 		if (empty($config))
+		{
+			return;
+		}
+
+		if (in_array($event->resource->rolename, $this->blacklist))
 		{
 			return;
 		}
