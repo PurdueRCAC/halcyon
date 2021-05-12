@@ -377,12 +377,12 @@ class Page extends Model
 		foreach ($clauses as $clause)
 		{
 			$operator = $clause['operator'];
-			$right    = $clause['value'];
+			$right    = trim($clause['value']);
 			$result   = false;
 
 			if (isset($vars[$clause['tag']][$clause['var']]))
 			{
-				$left = $vars[$clause['tag']][$clause['var']];
+				$left = trim($vars[$clause['tag']][$clause['var']]);
 
 				if ($operator == '==')
 				{
