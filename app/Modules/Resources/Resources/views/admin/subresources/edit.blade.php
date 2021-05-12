@@ -64,7 +64,7 @@ app('pathway')
 						<div class="form-group">
 							<div class="form-group">
 								<label for="field-cluster">{{ trans('resources::assets.cluster') }}: <span class="required">{{ trans('global.required') }}</span></label>
-								<input type="text" name="fields[cluster]" id="field-cluster" class="form-control" required maxlength="12" value="{{ $row->cluster }}" />
+								<input type="text" name="fields[cluster]" id="field-cluster" class="form-control" maxlength="12" value="{{ $row->cluster }}" />
 							</div>
 						</div>
 					</div>
@@ -89,7 +89,7 @@ app('pathway')
 						<div class="form-group">
 							<div class="form-group">
 								<label for="field-nodecores">{{ trans('resources::assets.node cores') }}: <span class="required">{{ trans('global.required') }}</span></label>
-								<input type="number" name="fields[nodecores]" id="field-nodecores" class="form-control" required  value="{{ $row->nodecores }}" />
+								<input type="number" name="fields[nodecores]" id="field-nodecores" class="form-control" value="{{ $row->nodecores }}" />
 							</div>
 						</div>
 					</div>
@@ -97,7 +97,7 @@ app('pathway')
 						<div class="form-group">
 							<div class="form-group">
 								<label for="field-nodemem">{{ trans('resources::assets.node mem') }}: <span class="required">{{ trans('global.required') }}</span></label>
-								<input type="text" name="fields[nodemem]" id="field-nodemem" class="form-control" required  pattern="[0-9]{1,4}[PTGMKB]" value="{{ $row->nodemem }}" />
+								<input type="text" name="fields[nodemem]" id="field-nodemem" class="form-control" pattern="[0-9]{1,4}[PTGMKB]" value="{{ $row->nodemem }}" />
 							</div>
 						</div>
 					</div>

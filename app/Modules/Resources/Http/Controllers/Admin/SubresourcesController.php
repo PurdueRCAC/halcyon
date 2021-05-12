@@ -161,9 +161,9 @@ class SubresourcesController extends Controller
 	{
 		$rules = [
 			'fields.name' => 'required|string|max:32',
-			'fields.cluster' => 'required|string|max:12',
-			'fields.nodecores' => 'required|integer|max:999',
-			'fields.nodemem' => 'required|string|max:5',
+			'fields.cluster' => 'nullable|string|max:12',
+			'fields.nodecores' => 'nullable|integer|max:999',
+			'fields.nodemem' => 'nullable|string|max:5',
 			'fields.nodegpus' => 'nullable|integer|max:9999',
 			'fields.nodeattributes' => 'nullable|string|max:16',
 			'fields.description' => 'nullable|string|max:255',
@@ -184,6 +184,9 @@ class SubresourcesController extends Controller
 		$row = $id ? Subresource::findOrFail($id) : new Subresource();
 		$row->fill($request->input('fields'));
 		$row->nodeattributes = (string)$row->nodeattributes;
+		$row->description = $row->description ?: '';
+		$row->nodecores = $row->nodecores ?: 0;
+		$row->nodemem = $row->nodemem ?: '';
 
 		if (!$row->save())
 		{
