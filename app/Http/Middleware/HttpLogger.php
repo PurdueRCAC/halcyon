@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Modules\History\Models\Log as Logger;
 
 class HttpLogger
@@ -76,7 +77,13 @@ class HttpLogger
 			$log->payload = json_encode($all);
 			$log->uri = $request->fullUrl();
 		}
-		$log->status = $response->status();
+
+		$log->status = 200;
+		if (!($response instanceof StreamedResponse))
+		{
+			$log->status = $response->status();
+		}
+		
 		$log->app = $app;
 		$log->classname = $cls;
 		$log->classmethod = $method;
