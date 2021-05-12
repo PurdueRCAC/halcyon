@@ -254,7 +254,9 @@ $members = $members->sortBy('username');
 ?>
 <div class="row mb-3">
 	<div class="col-md-6">
-		<button id="export_to_csv" data-id="{{ $group->id }}" class="btn btn-info btn-sm"><i class="fa fa-table" ara-hidden="true"></i> Export to CSV</button>
+		<button id="export_to_csv" data-id="{{ $group->id }}" class="btn btn-info btn-sm">
+			<i class="fa fa-table" ara-hidden="true"></i> Export to CSV
+		</button>
 	</div>
 	<div class="col-md-6 text-right">
 		<a href="#add_member_dialog" class="add_member btn btn-secondary btn-sm" data-membertype="1">
@@ -269,7 +271,7 @@ $members = $members->sortBy('username');
 		New membership requests
 	</div>
 	<div class="card-body">
-		<form  id="FORM_{{ $group->id }}">
+		<form id="FORM_{{ $group->id }}" method="post">
 			<table class="table table-hover fitToPanel">
 				<caption class="sr-only">Membership Requests</caption>
 				<thead>
@@ -320,6 +322,8 @@ $members = $members->sortBy('username');
 					</tr>
 				</tfoot>
 			</table>
+
+			@csrf
 		</form>
 	</div>
 </div>
@@ -348,12 +352,10 @@ $members = $members->sortBy('username');
 					@if (count($unixgroups))
 					<th scope="col" class="col-unixgroup text-nowrap" colspan="{{ count($unixgroups) }}">Unix Groups</th>
 					@endif
-					<!-- <th scope="col">&nbsp;</th> -->
 				</tr>
 				<tr>
 					<th scope="col">User</th>
 					<th scope="col">Options</th>
-					<!-- <th scope="col">Username</th> -->
 					<?php
 					$csv_headers = array(
 						'Name',
@@ -377,7 +379,6 @@ $members = $members->sortBy('username');
 					$csv_data = array();
 					$csv_data[] = $csv_headers;
 					?>
-					
 				</tr>
 			</thead>
 			<tbody>
@@ -418,10 +419,10 @@ $members = $members->sortBy('username');
 						$in = array();
 						$qu = array();
 						$csv = array(
-								($member->user ? $member->user->name : trans('global.unknown')),
-								($member->user ? $member->username : trans('global.unknown')),
-								'Managers'
-							);
+							($member->user ? $member->user->name : trans('global.unknown')),
+							($member->user ? $member->username : trans('global.unknown')),
+							'Managers'
+						);
 						foreach ($queues as $queue):
 							//$qu[$queue->id] = $queue->users->pluck('userid')->toArray();
 							$checked = '';
@@ -679,7 +680,6 @@ $members = $members->sortBy('username');
 				<tr>
 					<th scope="col">&nbsp;</th>
 					<th scope="col">&nbsp;</th>
-					<!-- <th scope="col">&nbsp;</th> -->
 					@if (count($queues))
 					<th scope="col" class="text-left col-queue" colspan="{{ count($queues) }}">Queues</th>
 					@endif
@@ -690,21 +690,12 @@ $members = $members->sortBy('username');
 				<tr>
 					<th scope="col" class="text-nowrap">User</th>
 					<th scope="col">Options</th>
-					<!-- <th scope="col">Username</th> -->
-					<?php
-					foreach ($queues as $queue):
-						?>
+					@foreach ($queues as $queue)
 						<th scope="col" class="col-queue text-nowrap text-center">{{ $queue->name }} ({{ $queue->resource->name }})</th>
-						<?php
-					endforeach;
-
-					foreach ($unixgroups as $unix):
-						?>
+					@endforeach
+					@foreach ($unixgroups as $unix)
 						<th scope="col" class="col-unixgroup text-nowrap text-center">{{ $unix->longname }}</th>
-						<?php
-					endforeach;
-					?>
-					
+					@endforeach;
 				</tr>
 			</thead>
 			<tbody>
@@ -835,29 +826,16 @@ $members = $members->sortBy('username');
 						@if (count($unixgroups))
 						<th scope="col" class="col-unixgroup" colspan="{{ count($unixgroups) }}">Unix Groups</th>
 						@endif
-						<!--<th scope="col">&nbsp;</th>-->
 					</tr>
 					<tr>
 						<th class="text-nowrap" scope="col">User</th>
 						<th scope="col" class="text-right">Options</th>
-						<!-- <th class="text-nowrap" scope="col">Username</th> -->
-						<?php
-						//$qu = array();
-						foreach ($queues as $queue):
-							//$qu[$queue->id] = $queue->users->pluck('userid')->toArray();
-							?>
+						@foreach ($queues as $queue)
 							<th scope="col" class="col-queue text-nowrap text-center">{{ $queue->name }} ({{ $queue->resource->name }})</th>
-							<?php
-						endforeach;
-
-						//$uu = array();
-						foreach ($unixgroups as $unix):
-							//$uu[$unix->id] = $unix->members->pluck('userid')->toArray();
-							?>
+						@endforeach
+						@foreach ($unixgroups as $unix)
 							<th scope="col" class="col-unixgroup text-nowrap text-center">{{ $unix->longname }}</th>
-							<?php
-						endforeach;
-						?>
+						@endforeach
 					</tr>
 				</thead>
 				<tbody>
@@ -943,7 +921,6 @@ $members = $members->sortBy('username');
 							endforeach;
 							$csv_data[] = $csv;
 							?>
-							
 						</tr>
 					@endforeach
 				</tbody>
@@ -983,17 +960,12 @@ $members = $members->sortBy('username');
 							<tr>
 								<th scope="row" class="rowHead">{{ $name }}</th>
 								<td class="rowData">
-								<?php
-								foreach ($queues as $queue)
-								{
-									?>
+								@foreach ($queues as $queue)
 									<div class="form-check">
 										<input type="checkbox" class="form-check-input add-queue-member" name="queue[]" id="queue{{ $queue->id }}" value="{{ $queue->id }}" />
 										<label class="form-check-label" for="queue{{ $queue->id }}">{{ $queue->name }}</label>
 									</div>
-									<?php
-								}
-								?>
+								@endforeach
 								</td>
 							</tr>
 						@endforeach
@@ -1031,6 +1003,8 @@ $members = $members->sortBy('username');
 				</div>
 			</div>
 		</div>
+
+		@csrf
 	</form>
 </div>
 
@@ -1040,4 +1014,5 @@ $members = $members->sortBy('username');
 	<input type="hidden" name="filename" value="group_{{ $group->id }}_members" />
 	<!-- Allow form submission with keyboard without duplicating the dialog button -->
 	<input type="submit" tabindex="-1" />
+	@csrf
 </form>
