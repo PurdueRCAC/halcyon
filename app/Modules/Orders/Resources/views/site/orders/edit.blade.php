@@ -1215,9 +1215,11 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										$dt = $action->created_at;// && $action->created_at != '0000-00-00 00:00:00' ? $action->created_at : trans('global.unknown');
 									elseif ($action->action == 'updated'):
 										$dt = $action->updated_at;
+									elseif ($action->action == 'deleted'):
+										$dt = $action->deleted_at;
 									endif;
 
-									$fields = array_keys(get_object_vars($action->new));
+									$fields = is_object($action->new) ? array_keys(get_object_vars($action->new)) : array_keys($action->new);
 									foreach ($fields as $i => $k):
 										if (in_array($k, ['created_at', 'updated_at', 'deleted_at'])):
 											unset($fields[$i]);
@@ -1289,9 +1291,9 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											{!! $actor . ' ' . $did !!}
 											</div>
 											<div class="col-md-4 text-right">
-										<time datetime="{{ $action->dt }}" class="entry-log-date">
+										<time datetime="{{ $dt }}" class="entry-log-date">
 											@if ($dt < $old)
-												{{ $dt->format('d M Y') }}
+												{{ $dt ? $dt->format('d M Y') : trans('global.unknown') }}
 											@else
 												{{ $dt->diffForHumans() }}
 											@endif

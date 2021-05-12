@@ -723,7 +723,7 @@ class OrdersController extends Controller
 		//$row = Order::findOrFail($id);
 		// We need to handle it this way to account for differences
 		// in datetime fields to how Laravel expects them to be
-		$row = Order::all()
+		$row = Order::query()
 			->withTrashed()
 			->where('id', '=', $id)
 			->first();
