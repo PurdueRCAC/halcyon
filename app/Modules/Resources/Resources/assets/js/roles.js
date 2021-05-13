@@ -240,13 +240,15 @@ $(document).ready(function() {
 		Roles.GetUserStatus($(this).data('id'));
 	});
 	$('.role-add').on('change', function (e) {
+		e.preventDefault();
 		Roles.Add($(this).data('id'));
 	});
 	$('.role-delete').on('change', function (e) {
+		e.preventDefault();
 		Role.Delete($(this).data('id'));
 	});
 
-	var dialog = $(".roles-dialog").dialog({
+	$(".roles-dialog").dialog({
 		autoOpen: false,
 		height: 'auto',
 		width: 500,
