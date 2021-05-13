@@ -342,7 +342,7 @@ class AmieLdap
 				foreach ($atts as $key)
 				{
 					$val = $results->getAttribute($key, 0);
-					$meta = $user->facets->firstWhere($key, $val);
+					$meta = $user->facets->firstWhere('key', '=', $key);
 
 					if (!$meta && $val)
 					{
@@ -350,15 +350,24 @@ class AmieLdap
 					}
 				}
 
+				if ($uidNumber = $results->getAttribute('uidNumber', 0))
+				{
+					$user->uidNumber = $uidNumber;
+				}
+				if ($gidNumber = $results->getAttribute('gidNumber', 0))
+				{
+					$user->gidNumber = $gidNumber;
+				}
+
 				if ($vals = $results->getAttribute('x-xsede-userDn'))
 				{
 					foreach ($vals as $val)
 					{
-						$meta = $user->facets->search($val);
+						$meta = $user->facets->firstWhere('value', '=', $val);
 
 						if (!$meta)
 						{
-							$user->addFacet($key, $val, 0, 1);
+							$user->addFacet('x-xsede-userDn', $val, 0, 1);
 						}
 					}
 				}
