@@ -113,6 +113,21 @@ class AuthprimaryLdap
 			{
 				$user->loginShell = '/bin/bash';
 			}
+			if (!$user->uidNumber)
+			{
+				$f = $user->facets()->where('key', '=', 'uidNumber')->first();
+				$user->uidNumber = $f->value;
+			}
+			if (!$user->gidNumber)
+			{
+				$f = $user->facets()->where('key', '=', 'gidNumber')->first();
+				$user->gidNumber = $f->value;
+			}
+			if (!$user->telephoneNumber)
+			{
+				$f = $user->facets()->where('key', '=', 'telephoneNumber')->first();
+				$user->telephoneNumber = $f->value;
+			}
 
 			if (!$result || !$result->exists)
 			{
@@ -145,7 +160,7 @@ class AuthprimaryLdap
 				];
 
 				$entry = $ldap->make()->user($data);
-				$entry->setAttribute('objectclass', 'inetOrgPerson');
+				$entry->setAttribute('objectclass', ['posixAccount', 'inetOrgPerson', 'top']);
 				$entry->setDn('uid=' . $data['uid'] . ',' . $entry->getDnBuilder()->get());
 
 				if (!$entry->save())
@@ -207,6 +222,7 @@ class AuthprimaryLdap
 					gecos: Ex A Mple
 					telephoneNumber: 49-61741
 					*/
+
 					// Create user record in ou=People
 					$data = [
 						'uid'           => $user->username,
