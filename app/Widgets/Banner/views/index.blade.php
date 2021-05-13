@@ -103,7 +103,7 @@
 				@endif
 
 				<div class="more">
-					<a href="{{ route('site.news.type', ['name' => $type->id]) }}">previous…</a>
+					<a href="{{ route('site.news.type', ['name' => $type->alias]) }}">previous…</a>
 				</div>
 			</div>
 		</div><!-- /.tileRow -->
@@ -138,7 +138,7 @@
 				@endif
 
 				<div class="more">
-					<a href="{{ route('site.news.type', ['name' => $type2->id]) }}">previous…</a>
+					<a href="{{ route('site.news.type', ['name' => $type2->alias]) }}">previous…</a>
 				</div>
 			</div>
 		</div><!-- /.tileRow -->
