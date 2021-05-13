@@ -333,8 +333,8 @@ $active = $sections->firstWhere('active', '=', true);
 							Roles
 						</div>
 						<div class="col-md-3 text-right">
-							<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-default btn-sm">
-								<i class="fa fa-pencil"></i> Manage Roles
+							<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm">
+								<i class="fa fa-pencil" aria-hidden="true"></i> Manage Roles
 							</a>
 						</div>
 					</div>
