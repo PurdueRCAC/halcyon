@@ -1,11 +1,15 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+<!-- <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/datatables/datatables.min.css') }}" /> -->
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.css?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/dataTables.bootstrap4.min.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js?v=' . filemtime(public_path() . '/modules/core/vendor/handlebars/handlebars.min-v4.7.6.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/datatables/dataTables.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/dataTables.min.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/dataTables.bootstrap4.min.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/groups/js/admin.js?v=' . filemtime(public_path() . '/modules/groups/js/admin.js')) }}"></script>
 <script>
@@ -96,7 +100,7 @@ var UserRequests = {
 	rejectpending: 0,
 
 	/**
-	 * Approvet a user request
+	 * Approve a user request
 	 *
 	 * @param   {array}  requests
 	 * @return  {void}
@@ -212,6 +216,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			$('#submit-requests').prop('disabled', false);
 		});
 		$('#submit-requests').on('click', function(e){
+			e.preventDefault();
+
 			var inputs = $('.approve-request:checked');
 
 			if (!inputs.length) {
@@ -222,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			UserRequests.approvepending = 0;
 
 			// Loop through list and approve users. -2 so it doesnt hit the approve/deny all buttons
-			for (var i = 0; i < inputs.length - 2; i++) {
+			for (var i = 0; i < inputs.length; i++) {
 				var user = inputs[i].value.split(",")[0];
 				var approve = inputs[i].value.split(",")[1];
 
@@ -434,6 +440,116 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		$('.searchable-select').select2();
 
+		if ($('.datatable').length) {
+			$('.datatable').DataTable({
+				pageLength: 20,
+				pagingType: 'numbers',
+				info: false,
+				ordering: false,
+				lengthChange: false,
+				scrollX: true,
+				//autoWidth: false,
+				language: {
+					searchPlaceholder: "Filter users...",
+					search: "_INPUT_",
+				},
+				fixedColumns: {
+					leftColumns: 1
+				},
+				initComplete: function () {
+					$($.fn.dataTable.tables(true)).css('width', '100%');
+
+					var table = this;
+					this.api().columns().every(function (i) {
+						if (i < 2) {
+							return;
+						}
+						var column = this;
+						var select = $('<select class="data-col-filter" data-index="' + i + '"><option value="all">- All -</option><option value="selected">Selected</option><option value="not-selected">Not selected</option></select><br />')
+							.prependTo($(column.header()));
+					});
+
+					$('.data-col-filter').on('change', function(){
+						var val = $(this).val(),
+						index = $(this).data('index');
+
+						// If all records should be displayed
+						if (val === 'all'){
+							$.fn.dataTable.ext.search.pop();
+							table.api().draw();
+						}
+
+						// If selected records should be displayed
+						if (val === 'selected'){
+							$.fn.dataTable.ext.search.pop();
+							$.fn.dataTable.ext.search.push(
+								function (settings, data, dataIndex){
+									//return ($(table.api().row(dataIndex).node()).hasClass('selected')) ? true : false;
+									var has = $(table
+										.api()
+										.cell(dataIndex, index)
+										.node())
+										.find(':checked').length;
+
+									return has ? true : false;
+								}
+							);
+							
+							table.api().draw();
+						}
+
+						// If selected records should not be displayed
+						if (val === 'not-selected'){
+							$.fn.dataTable.ext.search.pop();
+							$.fn.dataTable.ext.search.push(
+								function (settings, data, dataIndex){
+									//($(table.api().row(dataIndex).node()).hasClass('selected')) ? false : true;
+									var has = $(table
+										.api()
+										.cell(dataIndex, index)
+										.node())
+										.find(':checked').length;
+
+									return has ? false : true;
+								}
+							);
+							
+							table.api().draw();
+						}
+					});
+				}
+			});
+		}
+		/*var dts = false;
+		$('a.tab').on('shown.bs.tab', function(e){
+			//$($.fn.dataTable.tables(true)).DataTable().columns.adjust();//.draw();
+			if (dts) {
+				return;
+			}
+			$('.datatable').DataTable({
+			pageLength: 20,
+			pagingType: 'numbers',
+			info: false,
+			ordering: false,
+			lengthChange: false,
+			scrollX: true,
+			//autoWidth: false,
+			language: {
+				searchPlaceholder: "Filter users...",
+				search: "_INPUT_",
+			},
+			fixedColumns: {
+				leftColumns: 1//,
+				//rightColumns: 1
+			},
+			initComplete: function () {
+				//this.page(0).draw(true);
+				dts = true;
+				$($.fn.dataTable.tables(true)).css('width', '100%');
+			}
+			});
+		});*/
+
 		$('.membership-edit').on('click', function(e){
 			e.preventDefault();
 
@@ -644,9 +760,11 @@ document.addEventListener('DOMContentLoaded', function() {
 			if ($(this).data('api')) {
 				$.ajax({
 					url: $(this).data('api'),
-					type: 'put',
+					type: 'post',
 					data: {
-						membertype: $(this).data('target')
+						userid: $(this).data('userid'),
+						membertype: $(this).data('target'),
+						groupid: $('#groupid').val()
 					},
 					dataType: 'json',
 					async: false,
@@ -778,7 +896,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.groups.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+
 
 	<div class="tabs">
 		<ul>
@@ -804,6 +922,7 @@ app('pathway')
 		</ul>
 
 		<div id="group-details">
+			<form action="{{ route('admin.groups.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 			<div class="row">
 				<div class="col col-md-7">
 					<fieldset class="adminform">
@@ -849,7 +968,6 @@ app('pathway')
 								</tr>
 							</thead>
 							<tbody>
-							
 								@foreach ($row->unixGroups as $i => $u)
 									<tr id="unixgroup-{{ $u->id }}" data-id="{{ $u->id }}">
 										<td>{{ $u->id }}</td>
@@ -858,10 +976,10 @@ app('pathway')
 										<td class="text-right">{{ $u->members()->count() }}</td>
 										<td class="text-right">
 											@if (!preg_match("/rcs[0-9]{4}[0-9]/", $u->shortname))
-											<a href="#unixgroup-{{ $u->id }}" class="btn btn-secondary btn-danger remove-unixgroup"
+											<a href="#unixgroup-{{ $u->id }}" class="btn text-danger remove-unixgroup"
 												data-api="{{ route('api.unixgroups.delete', ['id' => $u->id]) }}"
 												data-confirm="{{ trans('groups::groups.confirm delete') }}">
-												<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+												<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
 											</a>
 											@endif
 										</td>
@@ -873,10 +991,10 @@ app('pathway')
 									<td>{shortname}</td>
 									<td class="text-right">0</td>
 									<td class="text-right">
-										<a href="#unixgroup-{id}" class="btn btn-secondary btn-danger remove-unixgroup"
+										<a href="#unixgroup-{id}" class="btn text-danger remove-unixgroup"
 											data-api="{{ route('api.unixgroups.create') }}/{id}"
 											data-confirm="{{ trans('groups::groups.confirm delete') }}">
-											<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -891,10 +1009,10 @@ app('pathway')
 										</span>
 									</td>
 									<td class="text-right">
-										<a href="#longname" class="btn btn-secondary btn-success add-unixgroup"
+										<a href="#longname" class="btn text-success add-unixgroup"
 											data-group="{{ $row->id }}"
 											data-api="{{ route('api.unixgroups.create') }}">
-											<span class="icon-plus glyph">{{ trans('global.add') }}</span>
+											<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.add') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -941,10 +1059,10 @@ app('pathway')
 										?>{{ $prf . $dept->department->name }}
 									</td>
 									<td class="text-right">
-										<a href="#department-{{ $dept->id }}" class="btn btn-secondary btn-danger remove-category"
+										<a href="#department-{{ $dept->id }}" class="btn text-danger remove-category"
 											data-api="{{ route('api.groups.groupdepartments.delete', ['group' => $row->id, 'id' => $dept->id]) }}"
 											data-confirm="{{ trans('groups::groups.confirm delete') }}">
-											<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -952,10 +1070,10 @@ app('pathway')
 								<tr class="hidden" id="department-{id}" data-id="{id}">
 									<td>{name}</td>
 									<td class="text-right">
-										<a href="#department-{id}" class="btn btn-secondary btn-danger remove-category"
+										<a href="#department-{id}" class="btn text-danger remove-category"
 											data-api="{{ route('api.groups.groupdepartments.create', ['group' => $row->id]) }}/{id}"
 											data-confirm="{{ trans('groups::groups.confirm delete') }}">
-											<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -988,10 +1106,10 @@ app('pathway')
 									</td>
 									<td class="text-right">
 										<a href="#department"
-											class="btn btn-secondary btn-success add-category"
+											class="btn text-success add-category"
 											data-group="{{ $row->id }}"
 											data-api="{{ route('api.groups.groupdepartments.create', ['group' => $row->id]) }}">
-											<span class="icon-plus glyph">{{ trans('global.add') }}</span>
+											<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.add') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -1020,10 +1138,10 @@ app('pathway')
 										?>{{ $prf . $field->field->name }}
 									</td>
 									<td class="text-right">
-										<a href="#fieldofscience-{{ $field->id }}" class="btn btn-secondary btn-danger remove-category"
+										<a href="#fieldofscience-{{ $field->id }}" class="btn text-danger remove-category"
 											data-api="{{ route('api.groups.groupfieldsofscience.delete', ['group' => $row->id, 'id' => $field->id]) }}"
 											data-confirm="{{ trans('groups::groups.confirm delete') }}">
-											<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -1031,10 +1149,10 @@ app('pathway')
 								<tr class="hidden" id="fieldofscience-{id}" data-id="{id}">
 									<td>{name}</td>
 									<td class="text-right">
-										<a href="#fieldofscience-{id}" class="btn btn-secondary btn-danger remove-category"
+										<a href="#fieldofscience-{id}" class="btn text-danger remove-category"
 											data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $row->id]) }}/{id}"
 											data-confirm="{{ trans('groups::groups.confirm delete') }}">
-											<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -1067,10 +1185,10 @@ app('pathway')
 									</td>
 									<td class="text-right">
 										<a href="#fieldofscience"
-											class="btn btn-secondary btn-success add-category"
+											class="btn text-success add-category"
 											data-group="{{ $row->id }}"
 											data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $row->id]) }}">
-											<span class="icon-plus glyph">{{ trans('global.add') }}</span>
+											<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.add') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -1081,6 +1199,8 @@ app('pathway')
 					<input type="hidden" name="id" value="{{ $row->id }}" />
 				</div>
 			</div>
+			@csrf
+			</form>
 		</div>
 
 		@if ($row->id)
@@ -1103,6 +1223,5 @@ app('pathway')
 		@endif
 	</div>
 
-	@csrf
-</form>
+
 @stop

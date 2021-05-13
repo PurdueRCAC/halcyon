@@ -78,7 +78,7 @@ app('pathway')
 					{!! Html::grid('sort', trans('groups::groups.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4 text-right">
-					{!! Html::grid('sort', trans('groups::groups.groups'), 'members_count', $filters['order_dir'], $filters['order']) !!}
+					{{ trans('groups::groups.groups') }}
 				</th>
 			</tr>
 		</thead>
