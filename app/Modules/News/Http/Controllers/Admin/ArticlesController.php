@@ -238,8 +238,8 @@ class ArticlesController extends Controller
 			'fields.body' => 'required|string|max:15000',
 			'fields.published' => 'nullable|integer|in:0,1',
 			'fields.template' => 'nullable|integer|in:0,1',
-			'fields.datetimenews' => 'nullable|datetime',
-			'fields.datetimenewsend' => 'nullable|datetime',
+			'fields.datetimenews' => 'nullable|date',
+			'fields.datetimenewsend' => 'nullable|date',
 			'fields.location' => 'nullable|string|max:32',
 			'fields.url' => 'nullable|url',
 		];
