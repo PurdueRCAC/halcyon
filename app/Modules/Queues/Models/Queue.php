@@ -538,13 +538,13 @@ class Queue extends Model
 		$row->queueid = $this->id;
 		$row->lenderqueueid = $lenderqueueid;
 
-		$row->datetimestart = Carbon::now()->toDateTimeFormat();
-		if ($start = $results->getAttribute('x-xsede-startTime', 0))
+		$row->datetimestart = Carbon::now()->toDateTimeString();
+		if ($start)
 		{
 			$row->datetimestart = Carbon::parse($start)->toDateTimeString();
 		}
 
-		if ($stop = $results->getAttribute('x-xsede-endTime', 0))
+		if ($stop)
 		{
 			$row->datetimestop = Carbon::parse($stop)->toDateTimeString();
 		}
@@ -571,13 +571,13 @@ class Queue extends Model
 		$row->queueid = $this->id;
 		$row->lenderqueueid = $lenderqueueid;
 
-		$row->datetimestart = Carbon::now()->toDateTimeFormat();
-		if ($start = $results->getAttribute('x-xsede-startTime', 0))
+		$row->datetimestart = Carbon::now()->toDateTimeString();
+		if ($start)
 		{
 			$row->datetimestart = Carbon::parse($start)->toDateTimeString();
 		}
 
-		if ($stop = $results->getAttribute('x-xsede-endTime', 0))
+		if ($stop)
 		{
 			$row->datetimestop = Carbon::parse($stop)->toDateTimeString();
 		}
