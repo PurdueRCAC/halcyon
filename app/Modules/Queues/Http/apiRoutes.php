@@ -235,17 +235,17 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->get('{id}', [
 			'as' => 'api.allocations.read',
 			'uses' => 'AllocationsController@read',
-		])->where('id', '[0-9]+');
+		]);
 		$router->put('{id}', [
 			'as' => 'api.allocations.update',
 			'uses' => 'AllocationsController@update',
 			'middleware' => 'can:edit queues',
-		])->where('id', '[0-9]+');
+		]);
 		$router->delete('{id}', [
 			'as' => 'api.allocations.delete',
 			'uses' => 'AllocationsController@delete',
 			'middleware' => 'can:delete queues',
-		])->where('id', '[0-9]+');
+		]);
 	});
 
 	$router->get('/', [
