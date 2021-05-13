@@ -41,6 +41,7 @@ return [
 	'admin' => [
 		'record id' => 'Record #:id',
 	],
+	'click to sort this column' => 'Click to sort this column',
 	'messages' => [
 		'item created' => 'Item successfully created.',
 		'creation failed' => 'Failed to create record.',
