@@ -3,9 +3,9 @@ namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Modules\Users\Events\UserCreating;
-use App\Modules\Users\Events\UserCreated;
-use App\Modules\Users\Events\UserDeleted;
+//use App\Modules\Users\Events\UserUsernameCreating;
+//use App\Modules\Users\Events\UserUsernameCreated;
+//use App\Modules\Users\Events\UserUsernameDeleted;
 
 /**
  * User Usernames
@@ -79,11 +79,11 @@ class UserUsername extends Model
 	 *
 	 * @var array
 	 */
-	protected $dispatchesEvents = [
-		'creating' => UserCreating::class,
-		'created'  => UserCreated::class,
-		'deleted'  => UserDeleted::class,
-	];
+	/*protected $dispatchesEvents = [
+		'creating' => UserUsernameCreating::class,
+		'created'  => UserUsernameCreated::class,
+		'deleted'  => UserUsernameDeleted::class,
+	];*/
 
 	/**
 	 * Get notes
