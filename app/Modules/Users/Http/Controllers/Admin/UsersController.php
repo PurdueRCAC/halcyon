@@ -54,7 +54,7 @@ class UsersController extends Controller
 		$filters['limit'] = $request->state('users.limit', 'limit', config('list_limit', 20));
 		$filters['page'] = $request->state('users.page', 'page', 1);
 
-		if (!in_array($filters['order'], ['id', 'name', 'username', 'email', 'access', 'datecreated', 'lastVisitDate']))
+		if (!in_array($filters['order'], ['id', 'name', 'username', 'email', 'access', 'datecreated', 'datelastseen']))
 		{
 			$filters['order'] = 'name';
 		}
@@ -190,7 +190,7 @@ class UsersController extends Controller
 		}
 
 		$rows = $query
-			->orderBy($a . '.' . $filters['order'], $filters['order_dir'])
+			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
 		return view('users::admin.users.index', [

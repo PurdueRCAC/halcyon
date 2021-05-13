@@ -115,7 +115,7 @@ app('pathway')
 				</th>
 				<th scope="col" class="priority-3">{{ trans('users::users.status') }}</th>
 				<th scope="col" class="priority-6">
-					{!! Html::grid('sort', trans('users::users.last visit'), 'last_visit', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('users::users.last visit'), 'datelastseen', $filters['order_dir'], $filters['order']) !!}
 				</th>
 			</tr>
 		</thead>
