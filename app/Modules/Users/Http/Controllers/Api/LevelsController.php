@@ -223,6 +223,7 @@ class LevelsController extends Controller
 
 		$row = new Level;
 		$row->fill($request->all());
+		$row->rules = array_map('intval', $row->rules);
 
 		if (!$row->save())
 		{
@@ -349,6 +350,7 @@ class LevelsController extends Controller
 
 		$row = Level::findOrFail($id);
 		$row->fill($request->all());
+		$row->rules = array_map('intval', $row->rules);
 
 		if (!$row->save())
 		{

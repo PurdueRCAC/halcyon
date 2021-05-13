@@ -33,7 +33,7 @@ class LevelsController extends Controller
 
 		foreach ($filters as $key => $default)
 		{
-			$filters[$key] = $request->state('users.roles.filter_' . $key, $key, $default);
+			$filters[$key] = $request->state('users.levels.filter_' . $key, $key, $default);
 		}
 
 		if (!in_array($filters['order'], ['id', 'title', 'ordering']))
@@ -128,7 +128,8 @@ class LevelsController extends Controller
 	public function store(Request $request)
 	{
 		$rules = [
-			'fields.title' => 'required|string|max:100'
+			'fields.title' => 'required|string|max:100',
+			'fields.rules' => 'nullable|array'
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -144,6 +145,7 @@ class LevelsController extends Controller
 
 		$row = $id ? Level::findOrFail($id) : new Level();
 		$row->fill($request->input('fields'));
+		$row->rules = array_map('intval', $row->rules);
 
 		if (!$row->save())
 		{
@@ -152,7 +154,7 @@ class LevelsController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->with('success', trans('global.messages.item saved'));
+		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

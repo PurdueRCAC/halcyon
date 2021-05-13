@@ -144,7 +144,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 
 	$router->group(['prefix' => 'levels'], function (Router $router)
 	{
-		$router->get('/', [
+		$router->match(['get', 'post'], '/', [
 			'as' => 'admin.users.levels',
 			'uses' => 'LevelsController@index',
 			//'middleware' => 'can:users.levels',
