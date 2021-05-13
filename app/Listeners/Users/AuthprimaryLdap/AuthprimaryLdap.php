@@ -33,6 +33,8 @@ class AuthprimaryLdap
 	public function subscribe($events)
 	{
 		$events->listen(UserSync::class, self::class . '@handleUserSync');
+		$events->listen(ResourceMemberCreated::class, self::class . '@handleResourceMemberCreated');
+		$events->listen(ResourceMemberStatus::class, self::class . '@handleResourceMemberStatus');
 	}
 
 	/**
@@ -236,9 +238,9 @@ class AuthprimaryLdap
 						'gecos'         => $user->name,
 					];
 
-					if ($user->telephone)
+					if ($user->telephoneNumber)
 					{
-						$data['telephoneNumber'] = $user->telephone;
+						$data['telephoneNumber'] = $user->telephoneNumber;
 					}
 
 					$entry = $ldap->make()->user($data);
@@ -313,6 +315,22 @@ class AuthprimaryLdap
 			}
 		}
 
+		if (!$user->uidNumber)
+		{
+			$f = $user->facets()->where('key', '=', 'uidNumber')->first();
+			$user->uidNumber = $f->value;
+		}
+		if (!$user->gidNumber)
+		{
+			$f = $user->facets()->where('key', '=', 'gidNumber')->first();
+			$user->gidNumber = $f->value;
+		}
+		if (!$user->telephoneNumber)
+		{
+			$f = $user->facets()->where('key', '=', 'telephoneNumber')->first();
+			$user->telephoneNumber = $f->value;
+		}
+
 		//$results = array();
 		$status = 200;
 
@@ -351,12 +369,12 @@ class AuthprimaryLdap
 					'gidNumber'     => $user->gidNumber,
 					'cn'            => $user->name,
 					'sn'            => $user->surname,
-					'loginShell'    => $user->loginShell,
+					'loginShell'    => $user->loginshell,
 					'homeDirectory' => '/home/' . $user->username,
 				];
 
 				$entry = $ldap->make()->user($data);
-				$entry->setAttribute('objectclass', 'inetOrgPerson');
+				$entry->setAttribute('objectclass', ['posixAccount', 'inetOrgPerson', 'top']);
 				$entry->setDn('uid=' . $data['uid'] . ',' . $entry->getDnBuilder()->get());
 
 				if (!$entry->save())
@@ -409,9 +427,9 @@ class AuthprimaryLdap
 					'gecos'         => $user->name,
 				];
 
-				if ($user->telephone)
+				if ($user->telephoneNumber)
 				{
-					$data['telephoneNumber'] = $user->telephone;
+					$data['telephoneNumber'] = $user->telephoneNumber;
 				}
 
 				$entry = $ldap->make()->user($data);
@@ -449,7 +467,7 @@ class AuthprimaryLdap
 		// Make sure config is set
 		$config = $this->config('authorized');
 
-		if (empty($configall) || empty($config))
+		if (empty($config))
 		{
 			return;
 		}
@@ -458,6 +476,8 @@ class AuthprimaryLdap
 		{
 			return;
 		}
+
+		$results = array();
 
 		try
 		{
@@ -474,6 +494,7 @@ class AuthprimaryLdap
 			}
 			else
 			{
+				$results['dn'] = $result->getAttribute('distinguishedname', 0);
 				$event->status = 3;
 			}
 
@@ -487,18 +508,19 @@ class AuthprimaryLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, $url, $event->user->id);
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->user->username, $event->user->id);
 	}
 
 	/**
-	 * Get status for a user
+	 * Handle removal of resource/member association
 	 *
-	 * @param   ResourceMemberStatus   $event
+	 * @param   ResourceMemberDeleted   $event
 	 * @return  void
 	 */
 	public function handleResourceMemberDeleted(ResourceMemberDeleted $event)
 	{
 		// Make sure config is set
+		$configall = $this->config('all');
 		$config = $this->config('authorized');
 
 		if (empty($configall) || empty($config))
@@ -511,6 +533,8 @@ class AuthprimaryLdap
 			return;
 		}
 
+		$results = array();
+
 		try
 		{
 			// Check for an existing record in the ou=People (i.e., authorized) tree
@@ -522,7 +546,31 @@ class AuthprimaryLdap
 
 			if ($result && $result->exists)
 			{
-				$result->delete();
+				if (!$result->delete())
+				{
+					throw new Exception('Failed to delete AuthPrimary ou=People record for uid=' . $event->user->username, 500);
+				}
+			}
+
+			// Note: We only delete from ou=People, and NOT from ou=allPeople
+			// For ou=allPeople, we mask out some fields
+			$ldap = $this->connectAllPeople($configall);
+
+			$result = $ldap->search()
+				->where('uid', '=', $event->user->username)
+				->first();
+
+			if ($result && $result->exists)
+			{
+				$result->cn = '-';
+				$result->sn = '-';
+				$result->longinShell = '/bin/false';
+				$result->homeDirectory = '/dev/null';
+
+				if (!$result->update())
+				{
+					throw new Exception('Failed to mask AuthPrimary ou=allPeople record for uid=' . $event->user->username, 500);
+				}
 			}
 
 			$status = 200;
@@ -533,6 +581,6 @@ class AuthprimaryLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'DELETE', $status, $results, $url, $event->user->id);
+		$this->log('ldap', __METHOD__, 'DELETE', $status, $results, 'uid=' . $event->user->username, $event->user->id);
 	}
 }
