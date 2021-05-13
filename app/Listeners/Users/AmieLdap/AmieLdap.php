@@ -4,7 +4,7 @@ namespace App\Listeners\Users\AmieLdap;
 use App\Modules\Users\Events\UserSyncing;
 use App\Modules\Users\Events\UserSync;
 use App\Modules\Users\Models\User;
-use App\Modules\Users\Models\Userusername;
+use App\Modules\Users\Models\UserUsername;
 use App\Halcyon\Utility\Str;
 use App\Modules\History\Traits\Loggable;
 use App\Modules\Groups\Models\Group;
@@ -236,12 +236,12 @@ class AmieLdap
 
 		$data = $event->data;
 
-		if (!empty($data['dn']))
+		if (empty($data['x-xsede-pid']))
 		{
 			return;
 		}
 
-		$queue = null;
+		$queue = new Queue;
 
 		try
 		{
@@ -250,7 +250,7 @@ class AmieLdap
 
 			// Look for user record in LDAP
 			$results = $ldap->search()
-				->where('dn', '=', $data['dn'])
+				->where('x-xsede-pid', '=', $data['x-xsede-pid'])
 				->first();
 
 			if ($results && $results->exists)
@@ -326,13 +326,13 @@ class AmieLdap
 				$user = User::findByUsername($results->getAttribute('uid', 0));
 
 				// Create new user if doesn't exist
-				if (!$user)
+				if (!$user || !$user->id)
 				{
 					$user = new User;
 					$user->name = $results->getAttribute('cn', 0);
 					$user->save();
 
-					$username = new Userusername;
+					$username = new UserUsername;
 					$username->userid = $user->id;
 					$username->username = $results->getAttribute('uid', 0);
 					$username->save();
@@ -341,8 +341,8 @@ class AmieLdap
 				// Add metadata
 				foreach ($atts as $key)
 				{
-					$meta = $user->facets->firstWhere($key, $val);
 					$val = $results->getAttribute($key, 0);
+					$meta = $user->facets->firstWhere($key, $val);
 
 					if (!$meta && $val)
 					{
@@ -367,7 +367,7 @@ class AmieLdap
 				{
 					$group = Group::findByName($pid);
 
-					if (!$group)
+					if (!$group || !$group->id)
 					{
 						$group = new Group;
 						$group->name = $pid;
@@ -377,39 +377,45 @@ class AmieLdap
 						$group->addManager($user->id, 1);
 					}
 
-					$queue = $group->queues->search($pid);
+					$queue = $group->queues()
+						->withTrashed()
+						->whereIsActive()
+						->where('name', '=', $pid)
+						->first();
 
-					if (!$queue)
+					$dn = explode(',', $results->getAttribute('distinguishedname', 0));
+					if (isset($dn[2]))
 					{
-						$dn = explode(',', $data['dn']);
-						if (isset($dn[2]))
-						{
-							$rolename = str_replace('dc=', '', $dn[2]);
-						}
+						$rolename = str_replace('dc=', '', $dn[2]);
+					}
 
-						$resource = Asset::findByName($rolename);
+					$resource = Asset::findByName($rolename);
 
-						$subresource = $resource ? null : $resource->subresources->first();
+					$subresource = $resource ? $resource->subresources->first() : null;
 
+					if (!$queue || !$queue->id)
+					{
 						$scheduler = Scheduler::query()
 							->where('hostname', '=', $rolename . '-adm.rcac.purdue.edu')
-							->get();
+							->get()
+							->first();
+
+						$queue = new Queue;
+						$queue->name = $pid;
+						$queue->groupid = $group->id;
+						$queue->queuetype = 1;
+						$queue->enabled = 1;
+						$queue->started = 1;
 
 						if ($subresource && $scheduler)
 						{
-							$queue = new Queue;
-							$queue->name = $pid;
-							$queue->groupid = $group->id;
-							$queue->queuetype = 1;
-							$queue->enabled = 1;
-							$queue->started = 1;
 							$queue->defaultwalltime = 30 * 60;
-							$queue->maxwalltime = $scheduler->defaultmaxwalltime;
+							//$queue->maxwalltime = $scheduler->defaultmaxwalltime;
 							$queue->subresourceid = $subresource->id;
-							$queue->schedulerid = $scheduler->schedulerid;
+							$queue->schedulerid = $scheduler->id;
 							$queue->schedulerpolicyid = $scheduler->schedulerpolicyid;
 							$queue->maxjobsqueued = 12000;
-							$queue->maxjobsqueuesuser = 5000;
+							$queue->maxjobsqueueduser = 5000;
 							$queue->cluster = $subresource->cluster;
 							$queue->save();
 						}
@@ -422,7 +428,7 @@ class AmieLdap
 					$start = $start ? Carbon::parse($start) : null;
 					$now = Carbon::now();
 
-					if (!count($sizes) && $serviceUnits && $start && $start >= $now)
+					if (!count($sizes) && $serviceUnits)// && $start && $start >= $now)
 					{
 						$start = $results->getAttribute('x-xsede-startTime', 0);
 						$start = $start ?: null;
@@ -433,11 +439,22 @@ class AmieLdap
 						$nodecount = (int)$serviceUnits;
 						$corecount = $subresource->nodecores * $nodecount;
 
-						$queue->addLoan($seller->id, $start, $stop, $nodecount, $corecount);
+						$lenderqueue = $subresource->queues()
+							->withTrashed()
+							->whereIsActive()
+							->where('groupid', '=', '-1')
+							->where('cluster', '=', '')
+							->orderBy('id', 'asc')
+							->first();
+
+						if ($lenderqueue)
+						{
+							$queue->addLoan($lenderqueue->id, $start, $stop, $nodecount, $corecount);
+						}
 					}
 				}
 
-				event(new UserSync($user));
+				event(new UserSync($user, true));
 			}
 		}
 		catch (\Exception $e)
@@ -448,6 +465,6 @@ class AmieLdap
 
 		$event->response = $queue;
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->uid);
+		$this->log('ldap', __METHOD__, 'POST', $status, $results, json_encode($event->data));
 	}
 }
