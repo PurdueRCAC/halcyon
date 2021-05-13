@@ -181,11 +181,10 @@ var Roles = {
 	 */
 	Add: function(userid) {
 		var resource = document.getElementById("role");
-		resource = resource[resource.selectedIndex].value;
 
 		var post = {
 			'user' : userid,
-			'resource' : resource,
+			'resource': resource[resource.selectedIndex].value,
 			'primarygroup': document.getElementById("role_group").value,
 			'loginshell': document.getElementById("role_shell").value,
 			'pilogin': document.getElementById("role_pi").value
@@ -239,11 +238,11 @@ $(document).ready(function() {
 	$('#role').on('change', function (e) {
 		Roles.GetUserStatus($(this).data('id'));
 	});
-	$('.role-add').on('change', function (e) {
+	$('.role-add').on('click', function (e) {
 		e.preventDefault();
 		Roles.Add($(this).data('id'));
 	});
-	$('.role-delete').on('change', function (e) {
+	$('.role-delete').on('click', function (e) {
 		e.preventDefault();
 		Role.Delete($(this).data('id'));
 	});
