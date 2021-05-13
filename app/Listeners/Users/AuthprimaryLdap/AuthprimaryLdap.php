@@ -95,7 +95,7 @@ class AuthprimaryLdap
 			return;
 		}
 
-		$auth = false;
+		$auth = $event->authorized;
 		$user = $event->user;
 		$results = array();
 		$status = 200;
