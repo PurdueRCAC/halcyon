@@ -785,6 +785,7 @@ h4 {
 .icon-download-cloud:before {
   content: "\e863";
 }
+.fa-download:before,
 .icon-download:before {
   content: "\e864";
 }
