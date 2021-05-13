@@ -26,6 +26,12 @@ return [
         '::1', // localhost
         '127.0.0.1', // localhost
 
+        // rices machines (for dev & testing)
+        '69.174.157.170',
+        '10.195.55.39',
+
+        '128.211.157.39', // amie.anvil.rcac.purdue.edu
+
         '172.18.8.33',     // gateway.mack
         '128.211.157.26',  // ondemand.rcac
         '128.211.157.21',  // newxenon.rcac.purdue.edu
