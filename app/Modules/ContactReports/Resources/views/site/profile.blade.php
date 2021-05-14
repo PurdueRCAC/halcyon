@@ -23,7 +23,7 @@
 									$users = array();
 									foreach ($row->users as $u)
 									{
-										$users[] = '<a href="' . route('site.users.account', ['u' => $u->userid]). '">' . $u->user->name . '</a>';
+										$users[] = '<a href="' . route('site.users.account', ['u' => $u->userid]). '">' . $u->user ? $u->user->name : trans('global.unknown') . ' (#' . $u->userid . ')' . '</a>';
 									}
 									?>
 								<li class="news-users"><span class="crmusers">{!! implode(', ', $users) !!}</span></li>
@@ -33,7 +33,7 @@
 									$resources = array();
 									foreach ($row->resources as $r)
 									{
-										$resources[] = e($r->resource->name);
+										$resources[] = $r->resource ? e($r->resource->name) : trans('global.unknown') . ' (#' . $r->resourceid. ')';
 									}
 									?>
 								<li class="news-tags"><span class="crmresources">{!! implode(', ', $resources) !!}</span></li>
