@@ -79,7 +79,7 @@ var Roles = {
 
 			cell.setAttribute('data-api', results['api']);
 
-			document.getElementById('resource' + results['resource']['id'] + '_shell').innerHTML = results['loginshell'];
+			document.getElementById('resource' + results['resource']['id'] + '_shell').innerHTML = results['loginShell'];
 			document.getElementById('resource' + results['resource']['id'] + '_group').innerHTML = results['primarygroup'];
 			document.getElementById('resource' + results['resource']['id'] + '_pi').innerHTML = results['pilogin'];
 		} else {
@@ -164,7 +164,7 @@ var Roles = {
 			}
 
 			group.value = results['primarygroup'];
-			shell.value = results['loginshell'];
+			shell.value = results['loginShell'];
 			pi.value = results['pilogin'];
 		} else {
 			//stat.classList.remove('hide');
