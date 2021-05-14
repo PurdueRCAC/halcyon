@@ -191,7 +191,7 @@ function CRMSearchUser(xml, flags) {
 				document.getElementById("INPUT_add").disabled = false;
 			}
 		}
-console.log(results);
+
 		// reset search box
 		var people = $('#people');
 
@@ -1350,9 +1350,12 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	//id = id[id.length - 1];
 
 	// determine if this entry can be edited
-	var edit = false;
+	var edit = false, del = false;
 	if (report['can']['edit']) {
 		edit = true;
+	}
+	if (report['can']['delete']) {
+		del = true;
 	}
 
 	var tr, td, div, a, span, img, li, x;
@@ -1382,7 +1385,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	td.appendChild(a);
 
-	if (edit) {
+	if (del) {
 		// Delete button
 		a = document.createElement("a");
 		a.href = "?id=" + id + "&delete";
