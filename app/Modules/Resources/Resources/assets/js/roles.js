@@ -192,12 +192,7 @@ var Roles = {
 
 		WSPostURL(resource.getAttribute('data-api'), JSON.stringify(post), function(xml) {
 			if (xml.status < 400) {
-				/*var results = JSON.parse(xml.responseText);
-				var userid = results['user']['id'];
-				var resource = results['resource']['id'];
-
-				WSGetURL(ROOT_URL + "resources/members/" + resource + "." + userid, Roles.GotUserRoleStatus);*/
-				Roles.GotUserRoleStatus(xml);
+				Roles.GotUserStatus(xml);
 			} else if (xml.status == 409) {
 				document.getElementById("role_errors").innerHTML = "One of the arguments is not valid.";
 			} else {
