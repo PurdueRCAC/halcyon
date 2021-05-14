@@ -206,7 +206,7 @@ class RcacLdap
 				{
 					if (isset($data['loginShell']))
 					{
-						$user->loginshell = $data['loginShell'][0];
+						$user->loginShell = $data['loginShell'][0];
 					}
 
 					if (isset($data['homeDirectory']))
@@ -218,7 +218,7 @@ class RcacLdap
 		}
 		catch (\Exception $e)
 		{
-			$user->loginshell = false;
+			$user->loginShell = false;
 
 			$status = 500;
 			$results = ['error' => $e->getMessage()];
@@ -245,7 +245,7 @@ class RcacLdap
 		}
 
 		$event->user->pilogin = '';
-		$event->user->loginshell = '/bin/bash';
+		$event->user->loginShell = '/bin/bash';
 
 		if ($event->resource->rolename != 'peregrn1')
 		{
@@ -274,7 +274,7 @@ class RcacLdap
 			{
 				$status = 200;
 
-				$event->user->loginshell = $results[0]['loginshell'][0];
+				$event->user->loginShell = $results[0]['loginshell'][0];
 
 				$meta = $event->user->facets->firstWhere('key', '=', 'loginShell');
 				if (!$meta)

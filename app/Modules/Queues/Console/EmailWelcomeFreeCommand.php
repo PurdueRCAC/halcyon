@@ -83,11 +83,11 @@ class EmailWelcomeFreeCommand extends Command
 			$u = $event->getUser();
 
 			// Check login shell
-			if ($u->loginshell)
+			if ($u->loginShell)
 			{
-				if (!file_exists($u->loginshell))
+				if (!file_exists($u->loginShell))
 				{
-					$this->error('Login Shell ' . $u->loginshell . ' is invalid.');
+					$this->error('Login Shell ' . $u->loginShell . ' is invalid.');
 					continue;
 				}
 			}

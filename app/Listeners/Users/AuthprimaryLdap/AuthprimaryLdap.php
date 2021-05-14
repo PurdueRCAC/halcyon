@@ -308,7 +308,7 @@ class AuthprimaryLdap
 		$user = $event->user;
 
 		$user->pilogin = $user->pilogin ?: '';
-		$user->loginshell = $user->loginshell ?: '/bin/bash';
+		$user->loginShell = $user->loginShell ?: '/bin/bash';
 
 		if (!$user->primarygroup)
 		{
@@ -376,7 +376,7 @@ class AuthprimaryLdap
 					'gidNumber'     => $user->gidNumber,
 					'cn'            => $user->name,
 					'sn'            => $user->surname,
-					'loginShell'    => $user->loginshell,
+					'loginShell'    => $user->loginShell,
 					'homeDirectory' => '/home/' . $user->username,
 				];
 
@@ -429,7 +429,7 @@ class AuthprimaryLdap
 					'cn'            => $user->name,
 					'givenName'     => $user->givenName,
 					'sn'            => $user->surname,
-					'loginShell'    => $user->loginshell,
+					'loginShell'    => $user->loginShell,
 					'homeDirectory' => '/home/' . $user->username,
 					'gecos'         => $user->name,
 				];

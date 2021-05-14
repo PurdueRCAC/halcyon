@@ -46,7 +46,7 @@ class MembersController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "loginshell",
+	 * 		"name":          "loginShell",
 	 * 		"description":   "Login shell",
 	 * 		"required":      false,
 	 * 		"schema": {
@@ -87,7 +87,7 @@ class MembersController extends Controller
 
 		$userid = $request->input('user');
 		$resourceid = $request->input('resource');
-		$loginshell = $request->input('loginshell');
+		$loginShell = $request->input('loginshell');
 
 		// Look up the current username of the user
 		$user = User::findOrFail($userid);
@@ -128,9 +128,9 @@ class MembersController extends Controller
 		}
 
 		// Is the shell valid?
-		if (!file_exists($loginshell) && $loginshell != 'nologin')
+		if (!file_exists($loginShell) && $loginShell != 'nologin')
 		{
-			return response()->json(['message' => trans('Invalid loginshell')], 409);
+			return response()->json(['message' => trans('Invalid loginShell')], 409);
 		}
 
 		// Look up the current username of the PI if ID was specified
@@ -163,7 +163,7 @@ class MembersController extends Controller
 				'name' => $user->name
 			),
 			'status'       => $event->status,
-			'loginshell'   => $event->user->loginshell,
+			'loginShell'   => $event->user->loginShell,
 			'primarygroup' => $event->user->primarygroup,
 			'pilogin'      => $event->user->pilogin,
 			'api'          => route('api.resources.members.read', $asset->id . '.' . $user->id)
@@ -247,7 +247,7 @@ class MembersController extends Controller
 				'name' => $user->name
 			),
 			'status'       => $event->status,
-			'loginshell'   => $event->user->loginshell,
+			'loginShell'   => $event->user->loginShell,
 			'primarygroup' => $event->user->primarygroup,
 			'pilogin'      => $event->user->pilogin,
 			'api'          => route('api.resources.members.read', $id)

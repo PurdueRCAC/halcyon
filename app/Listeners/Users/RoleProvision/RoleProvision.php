@@ -68,7 +68,7 @@ class RoleProvision
 				'requestorLogin' => auth()->user()->username,
 				'customerLogin'  => $event->user->username,
 				'primaryGroup'   => $event->user->primarygroup,
-				'loginShell'     => $event->user->loginshell,
+				'loginShell'     => $event->user->loginShell,
 				'quota'          => '1',
 				'piLogin'        => $event->user->pilogin
 			)
@@ -327,7 +327,7 @@ class RoleProvision
 						'requestorLogin' => auth()->user()->username,
 						'customerLogin'  => $user->username,
 						'primaryGroup'   => $resourcemember->primarygroup,
-						'loginShell'     => $resourcemember->loginshell,
+						'loginShell'     => $resourcemember->loginShell,
 						'quota'          => '1',
 						'piLogin'        => $resourcemember->pilogin
 					)

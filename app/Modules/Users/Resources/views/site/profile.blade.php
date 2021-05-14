@@ -140,10 +140,10 @@ $active = $sections->firstWhere('active', '=', true);
 
 					<p>
 						<strong>Login Shell</strong><br />
-						@if ($user->loginshell === false)
+						@if ($user->loginShell === false)
 							<span class="alert alert-error">Failed to retrieve shell information</span>
 						@else
-							<span class="text-muted">{!! $user->loginshell ? e($user->loginshell) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
+							<span class="text-muted">{!! $user->loginShell ? e($user->loginShell) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
 						@endif
 					</p>
 				</div>

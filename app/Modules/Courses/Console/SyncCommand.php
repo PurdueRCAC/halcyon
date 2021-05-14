@@ -207,7 +207,7 @@ class SyncCommand extends Command
 			$u = new User;
 			$u->username = $user;
 			$u->primarygroup = 'student';
-			$u->loginshell = '/bin/bash';
+			$u->loginShell = '/bin/bash';
 			$u->quota = 1;
 			$u->pilogin = $user;
 
