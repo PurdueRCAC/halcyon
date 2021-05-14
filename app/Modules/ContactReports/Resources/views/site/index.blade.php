@@ -189,7 +189,7 @@ app('pathway')->append(
 								$selected = array();
 								if ($res = $filters['resource'])
 								{
-									$selected = explode(',', $res);
+									$selected = is_string($res) ? explode(',', $res) : $res;
 									$selected = array_map('trim', $selected);
 								}
 								?>
@@ -421,7 +421,16 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 		{
 			if (request()->has($key))
 			{
-				$string[] = $key . '=' . request()->input($key);
+				$val = request()->input($key);
+
+				if (is_array($val))
+				{
+					$string[] = $key . '[]=' . implode('&' . $key . '[]=', $val);
+				}
+				elseif ($val)
+				{
+					$string[] = $key . '=' . $val;
+				}
 			}
 		}
 
