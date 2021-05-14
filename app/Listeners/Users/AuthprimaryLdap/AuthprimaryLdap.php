@@ -118,17 +118,26 @@ class AuthprimaryLdap
 			if (!$user->uidNumber)
 			{
 				$f = $user->facets()->where('key', '=', 'uidNumber')->first();
-				$user->uidNumber = $f->value;
+				if ($f)
+				{
+					$user->uidNumber = $f->value;
+				}
 			}
 			if (!$user->gidNumber)
 			{
 				$f = $user->facets()->where('key', '=', 'gidNumber')->first();
-				$user->gidNumber = $f->value;
+				if ($f)
+				{
+					$user->gidNumber = $f->value;
+				}
 			}
 			if (!$user->telephoneNumber)
 			{
 				$f = $user->facets()->where('key', '=', 'telephoneNumber')->first();
-				$user->telephoneNumber = $f->value;
+				if ($f)
+				{
+					$user->telephoneNumber = $f->value;
+				}
 			}
 
 			if (!$result || !$result->exists)
@@ -318,17 +327,26 @@ class AuthprimaryLdap
 		if (!$user->uidNumber)
 		{
 			$f = $user->facets()->where('key', '=', 'uidNumber')->first();
-			$user->uidNumber = $f->value;
+			if ($f)
+			{
+				$user->uidNumber = $f->value;
+			}
 		}
 		if (!$user->gidNumber)
 		{
 			$f = $user->facets()->where('key', '=', 'gidNumber')->first();
-			$user->gidNumber = $f->value;
+			if ($f)
+			{
+				$user->gidNumber = $f->value;
+			}
 		}
 		if (!$user->telephoneNumber)
 		{
 			$f = $user->facets()->where('key', '=', 'telephoneNumber')->first();
-			$user->telephoneNumber = $f->value;
+			if ($f)
+			{
+				$user->telephoneNumber = $f->value;
+			}
 		}
 
 		//$results = array();
