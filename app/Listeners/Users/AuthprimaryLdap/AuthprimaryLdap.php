@@ -324,28 +324,17 @@ class AuthprimaryLdap
 			}
 		}
 
-		if (!$user->uidNumber)
+		// Check for cached metadata
+		foreach (['uidNumber', 'gidNumber', 'telephoneNumber'] as $key)
 		{
-			$f = $user->facets()->where('key', '=', 'uidNumber')->first();
-			if ($f)
+			if (!$user->{$key})
 			{
-				$user->uidNumber = $f->value;
-			}
-		}
-		if (!$user->gidNumber)
-		{
-			$f = $user->facets()->where('key', '=', 'gidNumber')->first();
-			if ($f)
-			{
-				$user->gidNumber = $f->value;
-			}
-		}
-		if (!$user->telephoneNumber)
-		{
-			$f = $user->facets()->where('key', '=', 'telephoneNumber')->first();
-			if ($f)
-			{
-				$user->telephoneNumber = $f->value;
+				$f = $user->facets()->where('key', '=', $key)->first();
+
+				if ($f)
+				{
+					$user->{$key} = $f->value;
+				}
 			}
 		}
 
