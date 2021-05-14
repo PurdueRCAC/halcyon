@@ -14,9 +14,11 @@
 							<h3 class="card-title panel-title crmcontactdate">{{ $row->datetimecontact->format('M d, Y') }}</h3>
 							<ul class="card-meta panel-meta news-meta">
 								<li class="news-date"><span class="crmpostdate">Posted on {{ $row->datetimecreated->format('M d, Y') }}</span></li>
-								<li class="news-author"><span class="crmposter">Posted by {{ $row->creator->name }}</span></li>
+								@if ($row->creator)
+									<li class="news-author"><span class="crmposter">Posted by {{ $row->creator->name }}</span></li>
+								@endif
 								@if ($row->group)
-								<li class="news-group">{{ $row->group->name }}</li>
+									<li class="news-group">{{ $row->group->name }}</li>
 								@endif
 								@if (count($row->users))
 									<?php
@@ -26,7 +28,7 @@
 										$users[] = '<a href="' . route('site.users.account', ['u' => $u->userid]). '">' . $u->user ? $u->user->name : trans('global.unknown') . ' (#' . $u->userid . ')' . '</a>';
 									}
 									?>
-								<li class="news-users"><span class="crmusers">{!! implode(', ', $users) !!}</span></li>
+									<li class="news-users"><span class="crmusers">{!! implode(', ', $users) !!}</span></li>
 								@endif
 								@if (count($row->resources))
 									<?php
@@ -36,7 +38,7 @@
 										$resources[] = $r->resource ? e($r->resource->name) : trans('global.unknown') . ' (#' . $r->resourceid. ')';
 									}
 									?>
-								<li class="news-tags"><span class="crmresources">{!! implode(', ', $resources) !!}</span></li>
+									<li class="news-tags"><span class="crmresources">{!! implode(', ', $resources) !!}</span></li>
 								@endif
 							</ul>
 						</div>

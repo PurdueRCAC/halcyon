@@ -306,7 +306,11 @@ class ReportsController extends Controller
 		$row = new Report();
 		$row->datetimecontact = $request->input('datetimecontact');
 		$row->report = $request->input('report');
-		$row->userid = $request->input('userid', auth()->user() ? auth()->user()->id : 0);
+		$row->userid = $request->input('userid');
+		if (!$row->userid)
+		{
+			$row->userid = auth()->user()->id;
+		}
 		$row->groupid = $request->input('groupid', 0);
 		$row->notice = $request->input('notice', 23);
 
