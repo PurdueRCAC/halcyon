@@ -92,7 +92,7 @@ class MembersController extends Controller
 		// Look up the current username of the user
 		$user = User::findOrFail($userid);
 
-		if (!$user || $user->trashed())
+		if (!$user || $user->isTrashed())
 		{
 			return response()->json(['message' => trans('Failed to find user for ID :id', ['id' => $userid])], 404);
 		}
