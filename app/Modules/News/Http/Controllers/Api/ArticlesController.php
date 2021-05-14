@@ -505,7 +505,7 @@ class ArticlesController extends Controller
 			'body' => 'required|string|max:15000',
 			'published' => 'nullable|integer|in:0,1',
 			'template' => 'nullable|integer|in:0,1',
-			'datetimenews' => 'required|date',
+			'datetimenews' => 'nullable|date',
 			'datetimenewsend' => 'nullable|date',
 			'location' => 'nullable|string|max:32',
 			'url' => 'nullable|url',
@@ -518,22 +518,43 @@ class ArticlesController extends Controller
 		$row->body = $request->input('body');
 		$row->published = $request->input('published');
 		$row->template = $request->input('template');
-		$row->datetimenews = $request->input('datetimenews');
+		if ($row->template)
+		{
+			$row->published = 1;
+		}
+
+		$datetimenews = $request->input('datetimenews');
+
+		if ($datetimenews && $datetimenews != '0000-00-00 00:00:00')
+		{
+			$row->datetimenews = $datetimenews;
+		}
+
+		if (!$row->template && !$row->datetimenews)
+		{
+			return response()->json(['message' => trans('news::news.error.invalid time range')], 415);
+		}
+
 		if ($request->has('datetimenewsend'))
 		{
-			$row->datetimenewsend = $request->input('datetimenewsend');
+			$datetimenewsend = $request->input('datetimenewsend');
 
-			if ($row->datetimenews > $row->datetimenewsend)
+			if ($datetimenewsend && $datetimenewsend != '0000-00-00 00:00:00')
 			{
-				return response()->json(['message' => trans('news::news.error.invalid time range')], 500);
+				$row->datetimenewsend = $datetimenewsend;
+
+				if ($row->datetimenews > $row->datetimenewsend)
+				{
+					return response()->json(['message' => trans('news::news.error.invalid time range')], 415);
+				}
 			}
 		}
 
-		if ($row->template)
+		/*if ($row->template)
 		{
-			$row->datetimenews = '0000-00-00 00:00:00';
-			$row->datetimenewsend = '0000-00-00 00:00:00';
-		}
+			$row->datetimenews = null;
+			$row->datetimenewsend = null;
+		}*/
 
 		if ($request->has('location'))
 		{
@@ -791,11 +812,11 @@ class ArticlesController extends Controller
 		{
 			$row->template = $request->input('template');
 
-			if ($row->template)
+			/*if ($row->template)
 			{
 				$row->datetimenews = '0000-00-00 00:00:00';
 				$row->datetimenewsend = '0000-00-00 00:00:00';
-			}
+			}*/
 		}
 
 		if ($request->has('datetimenews'))
@@ -805,11 +826,16 @@ class ArticlesController extends Controller
 
 		if ($request->has('datetimenewsend'))
 		{
-			$row->datetimenewsend = $request->input('datetimenewsend');
+			$datetimenewsend = $request->input('datetimenewsend');
 
-			if ($row->datetimenews > $row->datetimenewsend)
+			if ($datetimenewsend && $datetimenewsend != '0000-00-00 00:00:00')
 			{
-				return response()->json(['message' => trans('news::news.error.invalid time range')], 415);
+				$row->datetimenewsend = $datetimenewsend;
+
+				if ($row->datetimenews > $row->datetimenewsend)
+				{
+					return response()->json(['message' => trans('news::news.error.invalid time range')], 415);
+				}
 			}
 		}
 
