@@ -415,6 +415,9 @@ function NEWSAddEntry() {
 		return;
 	}
 
+	if (!newsdate) {
+		newsdate = '0000-00-00';
+	}
 	match = newstime.match(/^(\d{1,2}):(\d{2}) ?(AM|PM)$/);
 	if (match) {
 		var hour = parseInt(match[1]);
@@ -545,14 +548,23 @@ function NEWSAddEntry() {
 		post = {
 			'body': notes,
 			'newstypeid': newstypeid,
-			'headline': headline,
-			'datetimenews': newsdate,
-			'datetimenewsend': newsdateend
+			'headline': headline
+			//'datetimenews': newsdate,
+			//'datetimenewsend': newsdateend
 		};
 
-		if (newsdateend == newsdate) {
-			post['datetimenewsend'] = '0000-00-00 00:00:00';
+		if (newsdate && newsdate != '0000-00-00 00:00:00') {
+			post['datetimenews'] = newsdate;
 		}
+		if (newsdateend
+		 && newsdateend != '0000-00-00 00:00:00'
+		 && newsdateend != newsdate) {
+			post['datetimenewsend'] = newsdateend;
+		}
+
+		/*if (newsdateend == newsdate) {
+			post['datetimenewsend'] = '0000-00-00 00:00:00';
+		}*/
 		if (resource.length > 0) {
 			post['resources'] = resource;
 		}
@@ -567,6 +579,7 @@ function NEWSAddEntry() {
 		}
 		if (template == true) {
 			post['template'] = "1";
+			post['published'] = "1";
 		}
 		if (template == false) {
 			post['template'] = "0";
@@ -647,8 +660,12 @@ function NEWSNewNews(xml) {
 		//id = id.split('/');
 		//id = id[id.length-1];*/
 
-		window.location.href = results.uri; //"/news/" + id;
-	} else if (xml.status == 409) {
+		if (results.template) {
+			NEWSToggle('search', false);
+		} else {
+			window.location.href = results.uri;
+		}
+	} else if (xml.status == 409 || xml.status == 415) {
 		SetError('Invalid date.', 'Please pick the current date or a date in the past.');
 	} else {
 		SetError('Unable to create news story.', 'An error occurred during processing of news story.');
@@ -1092,7 +1109,8 @@ function NEWSSearched(xml) {
  * @return  {void}
  */
 function NEWSPrintRow(news) {
-	var edit = news.can.edit;
+	var edit = news.can.edit,
+		del = news.can.delete;
 	var tab = document.getElementById("TAB_search");
 	if (!tab) {
 		edit = false;
@@ -1124,7 +1142,7 @@ function NEWSPrintRow(news) {
 	var tr, td, div, a, img, span, li, x;
 
 	// -- Admin header
-	if (edit) {
+	if (edit || del) {
 		tr = document.createElement("div");
 		tr.className = 'card-header panel-heading news-admin';
 
@@ -1205,24 +1223,26 @@ function NEWSPrintRow(news) {
 		td2.appendChild(a);
 		tr.appendChild(td2);
 
-		// Delete button
-		a = document.createElement("a");
-		a.href = "?delete&id=" + id;
-		a.className = 'edit news-delete icn tip';
-		a.title = "Delete News Story.";
-		a.onclick = function (e) {
-			e.preventDefault();
-			NEWSDeleteNews(id);
-		};
+		if (del) {
+			// Delete button
+			a = document.createElement("a");
+			a.href = "?delete&id=" + id;
+			a.className = 'edit news-delete icn tip';
+			a.title = "Delete News Story.";
+			a.onclick = function (e) {
+				e.preventDefault();
+				NEWSDeleteNews(id);
+			};
 
-		img = document.createElement("i");
-		img.className = "fa fa-trash";
-		img.setAttribute('aria-hidden', true);
-		img.id = id + "_newsdeleteimg";
+			img = document.createElement("i");
+			img.className = "fa fa-trash";
+			img.setAttribute('aria-hidden', true);
+			img.id = id + "_newsdeleteimg";
 
-		a.appendChild(img);
-		a.appendChild(document.createTextNode("Delete News Story."));
-		tr.appendChild(a);
+			a.appendChild(img);
+			a.appendChild(document.createTextNode("Delete News Story."));
+			tr.appendChild(a);
+		}
 
 		// Mailing
 		if (resources.length > 0 && published == "1") {
@@ -1996,7 +2016,7 @@ function NEWSDeleteNews(newsid) {
 				if (img) {
 					if (xml.status == 403) {
 						img.className = "fa fa-exclamation-triangle";
-						img.parentNode.title = "Unable to save changes, grace editing window has passed.";
+						img.parentNode.title = "Unable to delete story. Permission denied.";
 					} else {
 						img.className = "fa fa-exclamation-circle";
 						img.parentNode.title = "An error occurred while deleting story.";
