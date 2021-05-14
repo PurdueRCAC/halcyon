@@ -252,8 +252,8 @@ class AccountsController extends Controller
 			'resourceid' => 'required|integer|min:1',
 			'groupid' => 'nullable|integer|min:1',
 			'userid' => 'nullable|integer|min:1',
-			'datetimestart' => 'required|datetime',
-			'datetimestop' => 'required|datetime',
+			'datetimestart' => 'required|date',
+			'datetimestop' => 'required|date',
 		]);
 
 		$type = $request->input('type');
@@ -478,8 +478,8 @@ class AccountsController extends Controller
 			'resourceid' => 'nullable|integer|min:1',
 			'groupid' => 'nullable|integer|min:1',
 			'userid' => 'nullable|integer|min:1',
-			'datetimestart' => 'nullable|datetime',
-			'datetimestop' => 'nullable|datetime',
+			'datetimestart' => 'nullable|date',
+			'datetimestop' => 'nullable|date',
 		]);
 
 		$row = Account::findOrFail($id);
