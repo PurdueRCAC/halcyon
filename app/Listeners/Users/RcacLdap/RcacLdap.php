@@ -276,6 +276,12 @@ class RcacLdap
 
 				$event->user->loginshell = $results[0]['loginshell'][0];
 
+				$meta = $event->user->facets->firstWhere('key', '=', 'loginShell');
+				if (!$meta)
+				{
+					$event->user->addFacet('loginShell', $event->user->loginShell, 0, 1);
+				}
+
 				if (isset($results[0]['authorizedby']))
 				{
 					$event->user->pilogin = $results[0]['authorizedby'][0];
