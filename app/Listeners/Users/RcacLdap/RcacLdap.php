@@ -265,7 +265,7 @@ class RcacLdap
 			// Performing a query.
 			$results = $ldap->search()
 				->where('uid', '=', $event->user->username)
-				->select(['loginShell', 'authorizedBy', 'gidNumber'])
+				->select(['loginShell', 'authorizedBy', 'gidNumber', 'uidNumber'])
 				->get();
 
 			$status = 404;
@@ -281,12 +281,30 @@ class RcacLdap
 					$event->user->pilogin = $results[0]['authorizedby'][0];
 				}
 
+				if (isset($results[0]['uidNumber']))
+				{
+					$event->user->uidNumber = $results[0]['uidnumber'][0];
+
+					$meta = $event->user->facets->firstWhere('key', '=', 'uidNumber');
+					if (!$meta)
+					{
+						$event->user->addFacet('uidNumber', $event->user->uidNumber, 0, 1);
+					}
+				}
+
 				// Resolve group name
 				$config = config('ldap.rcac_group', []);
 
 				if (!empty($config))
 				{
 					$gid = $results[0]['gidnumber'][0];
+					$event->user->gidNumber = $gid;
+
+					$meta = $event->user->facets->firstWhere('key', '=', 'gidNumber');
+					if (!$meta)
+					{
+						$event->user->addFacet('gidNumber', $event->user->gidNumber, 0, 1);
+					}
 
 					$ldap_group = $this->connect($config);
 
