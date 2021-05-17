@@ -2,6 +2,11 @@
 namespace App\Listeners\Groups\Queues;
 
 use App\Modules\Groups\Events\GroupDisplay;
+use App\Modules\Groups\Events\GroupReading;
+use App\Modules\Queues\Models\Queue;
+use App\Modules\Resources\Models\Subresource;
+use App\Modules\Resources\Models\Asset;
+use App\Modules\Resources\Models\Child;
 
 /**
  * Queues listener for group events
@@ -17,6 +22,50 @@ class Queues
 	public function subscribe($events)
 	{
 		$events->listen(GroupDisplay::class, self::class . '@handleGroupDisplay');
+		$events->listen(GroupReading::class, self::class . '@handleGroupReading');
+	}
+
+	/**
+	 * Plugin that loads module positions within content
+	 *
+	 * @param   string   $context  The context of the content being passed to the plugin.
+	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @return  void
+	 */
+	public function handleGroupReading(GroupReading $event)
+	{
+		$q = (new Queue)->getTable();
+		$s = (new Subresource)->getTable();
+		$r = (new Asset)->getTable();
+		$c = (new Child)->getTable();
+
+		$queues = Queue::query()
+			->withTrashed()
+			->whereIsActive()
+			->join($s, $s . '.id', $q . '.subresourceid')
+			->join($c, $c . '.subresourceid', $q . '.subresourceid')
+			->join($r, $r . '.id', $c . '.resourceid')
+			->where(function($where) use ($q)
+			{
+				$where->whereNull($q . '.datetimeremoved')
+					->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where(function($where) use ($r)
+			{
+				$where->whereNull($r . '.datetimeremoved')
+					->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where('groupid', '=', $event->group->id)
+			->get();
+
+		$resources = array();
+		foreach ($queues as $queue)
+		{
+			$resources[] = $queue->resource;
+		}
+
+		$event->group->queues = $queues;
+		$event->group->resources = $resources;
 	}
 
 	/**
