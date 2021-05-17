@@ -157,7 +157,7 @@ class IssuesController extends Controller
 	{
 		$rules = [
 			'fields.report' => 'required',
-			'fields.datetimecreated' => 'nullable|datetime',
+			'fields.datetimecreated' => 'nullable|date',
 			'fields.userid' => 'nullable|integer'
 		];
 
