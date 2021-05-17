@@ -2276,6 +2276,13 @@ table.adminlist td.order input[type=number] {
   padding: 1em;
   border-radius: 0.25em;
 }
+.sampleoutput ul {
+  list-style: disc;
+  margin: 0 0 1em 1em;
+}
+.sampleoutput ol {
+  margin: 0 0 1em 1em;
+}
 .adminlist {
   margin: 0;
 }
