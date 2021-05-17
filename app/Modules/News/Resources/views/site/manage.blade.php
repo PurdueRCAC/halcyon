@@ -387,8 +387,8 @@ $help1b = "Unordered lists can be made using '-' or '*' to denote list items. Or
 * A
 * List
 
-1) One
-2) Two
+1. One
+2. Two
 3. Three";
 
 $help1c = "Hyperlinks can be made in the following way.
@@ -432,6 +432,8 @@ int main (int argc, char * argv[]) {
 ";
 
 $help1g = "Tables can be created using \"|\" to start a line to mark the beginning and end of a table row. Cell divisions in the table are marked by a single \"|\". The other formatting rules apply within the cells.
+
+The line right before the table will be used as the caption for the table.
 
 | *Node* | *Cores* | *Memory* |
 | Carter-A | 16 | 32GB |

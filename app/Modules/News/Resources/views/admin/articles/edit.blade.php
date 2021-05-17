@@ -303,8 +303,8 @@ $help1b = "Unordered lists can be made using '-' or '*' to denote list items. Or
 * A
 * List
 
-1) One
-2) Two
+1. One
+2. Two
 3. Three";
 
 $help1c = "Hyperlinks can be made in the following way.
@@ -349,6 +349,8 @@ int main (int argc, char * argv[]) {
 
 $help1g = "Tables can be created using \"|\" to start a line to mark the beginning and end of a table row. Cell divisions in the table are marked by a single \"|\". The other formatting rules apply within the cells.
 
+The line right before the table will be used as the caption for the table.
+
 | *Node*   | *Cores* | *Memory* |
 |----------|--------:|---------:|
 | Carter-A |      16 |     32GB |
@@ -373,7 +375,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 				<label for="help1ainput">Input text:</label>
 				<textarea id="help1ainput" class="form-control samplebox" rows="5" data-sample="a"><?php echo $help1a; ?></textarea>
 			</div>
-			<p>Output text:<p>
+			<div>Output text:</div>
 			<div id="help1aoutput" class="sampleoutput"><?php echo $article->formattedbody; ?></div>
 		</div>
 		<div id="help1b">
@@ -384,7 +386,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 				<label for="help1binput">Input text:</label>
 				<textarea id="help1binput" class="form-control samplebox" rows="5" data-sample="b"><?php echo $help1b; ?></textarea>
 			</div>
-			<p>Output text:</p>
+			<div>Output text:</div>
 			<div id="help1boutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
 		</div>
 		<div id="help1c">
@@ -395,7 +397,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 				<label for="help1cinput">Input text:</label>
 				<textarea id="help1cinput" class="form-control samplebox" rows="5" data-sample="c"><?php echo $help1c; ?></textarea>
 			</div>
-			<p>Output text:</p>
+			<div>Output text:</div>
 			<div id="help1coutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
 		</div>
 		<div id="help1d">
@@ -406,7 +408,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 				<label for="help1dinput">Input text:</label>
 				<textarea id="help1dinput" class="form-control samplebox" rows="5" data-sample="d"><?php echo $help1d; ?></textarea>
 			</div>
-			<p>Output text:</p>
+			<div>Output text:</div>
 			<div id="help1doutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
 		</div>
 		<div id="help1e">
@@ -417,7 +419,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 				<label for="help1einput">Input text:</label>
 				<textarea id="help1einput" class="form-control samplebox" rows="5" data-sample="e"><?php echo $help1e; ?></textarea>
 			</div>
-			<p>Output text:</p>
+			<div>Output text:</div>
 			<div id="help1eoutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
 		</div>
 		<div id="help1f">
@@ -428,7 +430,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 				<label for="help1finput">Input text:</label>
 				<textarea id="help1finput" class="form-control samplebox" rows="5" data-sample="f"><?php echo $help1f; ?></textarea>
 			</div>
-			<p>Output text:</p>
+			<div>Output text:</div>
 			<div id="help1foutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
 		</div>
 		<div id="help1g">
@@ -439,7 +441,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 				<label for="help1ginput">Input text:</label>
 				<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1g; ?></textarea>
 			</div>
-			<p>Output text:</p>
+			<div>Output text:</div>
 			<div id="help1goutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
 		</div>
 	</div>
