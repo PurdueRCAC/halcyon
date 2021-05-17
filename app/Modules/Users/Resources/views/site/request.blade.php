@@ -5,7 +5,7 @@ $active = $sections->firstWhere('active', '=', true);
 @endphp
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 @endpush
 
 @push('scripts')
@@ -137,12 +137,12 @@ $(document).ready(function() {
 				</p>
 			</div><!-- / #request_header -->
 
-			<div id="searchbox" class="panel panel-default">
-				<div class="panel-heading">
+			<div id="searchbox" class="card">
+				<div class="card-header">
 					<strong>1)</strong> Use the search box below to find the research group, faculty, or staff member you will be using ITaP Research Computing resources to conduct research for.
 				</div>
-				<div class="panel-body">
-					
+				<div class="card-body">
+
 						<div class="form-group">
 							<label for="newuser">Search faculty or research group name:</label><br/>
 							<div class="input-group">
@@ -158,16 +158,16 @@ $(document).ready(function() {
 							</div>
 							<!-- <span id="add_errors"></span> -->
 						</div>
-					
+
 				</div>
 			</div><!-- / #request_header -->
 
 			<div id="selection_info" class="request-selection">
-				<div id="person" class="panel panel-default" style="display: none">
-					<div class="panel-heading">
+				<div id="person" class="card" style="display: none">
+					<div class="card-header">
 						<strong>1)</strong> Person Selected:
 					</div>
-					<div class="panel-body">
+					<div class="card-body">
 						<div class="row">
 							<div class="col col-sm-12 col-md-8">
 								<span id="personname"></span><br/>
@@ -182,18 +182,18 @@ $(document).ready(function() {
 					</div>
 					<input type="hidden" id="selected-user" value="" />
 				</div>
-				<div id="group" class="panel panel-default" style="display: none">
-					<div class="panel-heading">
+				<div id="group" class="card" style="display: none">
+					<div class="card-header">
 						<strong>1)</strong> Group Selected:
 					</div>
-					<div class="panel-body">
+					<div class="card-body">
 						<div class="row">
 							<div class="col col-sm-12 col-md-8">
 								<span id="groupname">Name here</span><br/>
 								<span id="dept"></span>
 							</div>
 							<div class="col col-sm-12 col-md-4">
-								<a href="{{ route('site.users.account.request') }}" class="request-clear btn btn-default" title="Choose another group.">
+								<a href="{{ route('site.users.account.request') }}" class="request-clear btn btn-secondary" title="Choose another group.">
 									<i class="fa fa-undo" aria-hidden="true"></i> Change selection
 								</a>
 							</div>
@@ -203,40 +203,40 @@ $(document).ready(function() {
 				</div>
 			</div><!-- / #selection_info -->
 
-			<div id="resources" class="panel panel-default request-selection" style="display: none">
-				<div class="panel-heading">
+			<div id="resources" class="card request-selection" style="display: none">
+				<div class="card-header">
 					<strong>2)</strong> Select which resources to request an account on:
 				</div>
-				<div class="panel-body">
+				<div class="card-body">
 					<div id="resourcelist">
 					</div>
 				</div>
 			</div><!-- / #resources -->
 
-			<div id="queues" class="panel panel-default request-selection" style="display: none">
-				<div class="panel-heading">
+			<div id="queues" class="card request-selection" style="display: none">
+				<div class="card-header">
 					<strong>2)</strong> Select which queues and resources to request access to:
 				</div>
-				<div class="panel-body">
+				<div class="card-body">
 					<div id="queuelist">
 					</div>
 				</div>
 			</div><!-- / #queues -->
 
-			<div id="comments" class="panel panel-default request-selection" style="display: none">
-				<div class="panel-heading">
+			<div id="comments" class="card request-selection" style="display: none">
+				<div class="card-header">
 					<strong>3)</strong> Enter comments to send with your request <span class="badge">optional</span>:
 				</div>
-				<div class="panel-body">
+				<div class="card-body">
 					<textarea rows="5" cols="60" id="commenttext" class="form-control"></textarea>
 				</div>
 			</div><!-- / #comments -->
 
-			<div id="controls" class="panel panel-default request-selection" style="display: none">
-				<div class="panel-heading">
+			<div id="controls" class="card request-selection" style="display: none">
+				<div class="card-header">
 					<strong>4)</strong> Review your request before submitting.
 				</div>
-				<div class="panel-body">
+				<div class="card-body">
 					<p>An email notification will be sent to the managers of the research group or faculty member for approval.</p>
 
 					<p class="alert alert-warning">NOTE: Your request will need to be approved by the research group or faculty you have entered. Please direct any questions regarding approval status to those people.</p>
@@ -257,39 +257,39 @@ $(document).ready(function() {
 					<p>Your request has been submitted. An email notification has been sent to the faculty or staff member or managers of this group to approve your request. You will be notified once your request is approved. You may view the status of your request from the "My Accounts" tab. <strong>Your request will need to be approved by the research group or faculty you have entered. Please direct any questions regarding approval status to those people.</strong> Below is a summary of your request.</p>
 				</div>
 
-				<div id="person_confirmation" class="panel panel-default" style="display: none">
-					<div class="panel-heading">Faculty/staff member selected:</div>
-					<div class="panel-body">
+				<div id="person_confirmation" class="card" style="display: none">
+					<div class="card-header">Faculty/staff member selected:</div>
+					<div class="card-body">
 						<span id="personname_confirmation"></span>
 					</div>
 				</div>
 
-				<div id="group_confirmation" class="panel panel-default" style="display: none">
-					<div class="panel-heading">Research group selected:</div>
-					<div class="panel-body">
+				<div id="group_confirmation" class="card" style="display: none">
+					<div class="card-header">Research group selected:</div>
+					<div class="card-body">
 						<span id="groupname_confirmation"></span>
 					</div>
 				</div>
 
-				<div id="resources_confirmation" class="panel panel-default" style="display: none">
-					<div class="panel-heading">Requested resources:</div>
-					<div class="panel-body">
+				<div id="resources_confirmation" class="card" style="display: none">
+					<div class="card-header">Requested resources:</div>
+					<div class="card-body">
 						<div id="resourcelist_confirmation">
 						</div>
 					</div>
 				</div>
 
-				<div id="queues_confirmation" class="panel panel-default" style="display: none">
-					<div class="panel-heading">Requested queues:</div>
-					<div class="panel-body">
+				<div id="queues_confirmation" class="card" style="display: none">
+					<div class="card-header">Requested queues:</div>
+					<div class="card-body">
 						<div id="queuelist_confirmation">
 						</div>
 					</div>
 				</div>
 
-				<div id="comment_confirmation" class="panel panel-default" style="display: none">
-					<div class="panel-heading">Comments:</div>
-					<div class="panel-body">
+				<div id="comment_confirmation" class="card" style="display: none">
+					<div class="card-header">Comments:</div>
+					<div class="card-body">
 						<div id="commenttext_confirmation">
 						</div>
 					</div>

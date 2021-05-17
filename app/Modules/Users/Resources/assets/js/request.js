@@ -73,21 +73,21 @@ function PrintAccountResources(user) {
 	var queues = Array();
 	var memberofqueues = Array();
 	var pendingmemberofqueues = Array();
-	var x;
-
+	var fortress = false;
+	var x, div;
+console.log(user);
 	if (typeof(user['resources']) != 'undefined') {
 		document.getElementById("resources").style.display = "block";
 		document.getElementById("queues").style.display = "none";
-		var div = document.getElementById("resourcelist");
+		div = document.getElementById("resourcelist");
 		resources = user['resources'];
 		if (typeof(user['pendingresources']) != 'undefined') {
 			pendingresources = user['pendingresources'];
 		}
-		var fortress = false;
 	} else if (typeof(user['queues']) != 'undefined') {
 		document.getElementById("queues").style.display = "block";
 		document.getElementById("resources").style.display = "none";
-		var div = document.getElementById("queuelist");
+		div = document.getElementById("queuelist");
 		queues = user['queues'];
 		memberofqueues = user['memberofqueues'];
 		if (typeof(user['pendingmemberofqueues']) != 'undefined') {
@@ -100,7 +100,9 @@ function PrintAccountResources(user) {
 	document.getElementById("comments").style.display = "block";
 	document.getElementById("controls").style.display = "block";
 
-	div.innerHTML = "";
+	if (div) {
+		div.innerHTML = "";
+	}
 
 	var d, box, label, resource, queue;
 	for (x=0;x<resources.length;x++) {
