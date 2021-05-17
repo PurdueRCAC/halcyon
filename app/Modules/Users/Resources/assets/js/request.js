@@ -75,7 +75,7 @@ function PrintAccountResources(user) {
 	var pendingmemberofqueues = Array();
 	var fortress = false;
 	var x, div;
-console.log(user);
+
 	if (typeof(user['resources']) != 'undefined') {
 		document.getElementById("resources").style.display = "block";
 		document.getElementById("queues").style.display = "none";
@@ -93,7 +93,7 @@ console.log(user);
 		if (typeof(user['pendingmemberofqueues']) != 'undefined') {
 			pendingmemberofqueues = user['pendingmemberofqueues'];
 		}
-		var fortress = true;
+		fortress = true;
 	}
 
 	document.getElementById("searchbox").style.display = "none";
@@ -283,22 +283,6 @@ console.log(user);
 }
 
 /**
- * Clear request
- *
- * @return  {void}
- */
-/*function ClearRequest() {
-	document.getElementById("group").style.display = "none";
-	document.getElementById("person").style.display = "none";
-	document.getElementById("resources").style.display = "none";
-	document.getElementById("queues").style.display = "none";
-	document.getElementById("comments").style.display = "none";
-	document.getElementById("controls").style.display = "none";
-	document.getElementById("searchbox").style.display = "block";
-	document.getElementById("newuser").value = "";
-}*/
-
-/**
  * Submit request
  *
  * @return  {void}
@@ -400,16 +384,13 @@ function SubmitRequest() {
 	document.getElementById("request_header").style.display = "none";
 
 	// assemble and submit request
-	var post = {'comment' : document.getElementById("commenttext").value };
+	var post = {'comment': document.getElementById("commenttext").value };
 
-	//if (SELECTED.match(/group/)) {
-		post['group'] = document.getElementById("selected-group").value; //SELECTED;
-	//} else {
-		post['user'] = document.getElementById("selected-user").value; //SELECTED;
-	//}
-
+	post['group'] = document.getElementById("selected-group").value;
+	post['user'] = document.getElementById("selected-user").value;
 	post['resources'] = Array();
 	post['queues'] = Array();
+
 	for (x=0;x<resources.length;x++) {
 		post['resources'].push(resources[x]);
 	}
@@ -419,11 +400,10 @@ function SubmitRequest() {
 	}
 
 	post = JSON.stringify(post);
-console.log(post);
 
 	$.when(
-		$.post('/api/groups/request', post).fail(function() {
-			alert("An error occurred");
+		$.post(ROOT_URL + 'queues/requests', post).fail(function() {
+			alert("There was an error processing your request.");
 		})
 	).done(function(request) {
 		window.location = url;
@@ -483,7 +463,7 @@ function CheckFortress(id) {
 function RemoveQueue(id, name, resource) {
 	if (confirm("Are you sure you wish to remove access to the queue '" + name + "' (" + resource + ")? \n\nIf this is your last queue on this cluster your account will be removed. Please make an off-site backup of all important data before removing access.")) {
 		WSDeleteURL(id, function(xml) {
-			if (xml.status == 200) {
+			if (xml.status < 400) {
 				location.reload(true);
 			} else {
 				alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact rcac-help@purdue.edu");
@@ -491,20 +471,6 @@ function RemoveQueue(id, name, resource) {
 		});
 	}
 }
-
-/**
- * Callback after removing a queue
- *
- * @param   {object}  xml
- * @return  {void}
- */
-/*function RemovedQueue(xml) {
-	if (xml.status == 200) {
-		location.reload(true);
-	} else {
-		alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact rcac-help@purdue.edu");
-	}
-}*/
 
 /**
  * Cancel a queue request
@@ -517,7 +483,7 @@ function RemoveQueue(id, name, resource) {
 function CancelQueueRequest(id, name, resource) {
 	if (confirm("Are you sure you wish to cancel this request for access to the queue '" + name + "' (" + resource + ")? ")) {
 		WSDeleteURL(id, function(xml) {
-			if (xml.status == 200) {
+			if (xml.status < 400) {
 				location.reload(true);
 			} else {
 				alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact rcac-help@purdue.edu");
@@ -525,20 +491,6 @@ function CancelQueueRequest(id, name, resource) {
 		});
 	}
 }
-
-/**
- * Callback after cancelling a queue request
- *
- * @param   {object}  xml
- * @return  {void}
- */
-/*function CanceledQueueRequest(xml) {
-	if (xml.status == 200) {
-		location.reload(true);
-	} else {
-		alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact rcac-help@purdue.edu");
-	}
-}*/
 
 /**
  * Cancel a resource request
@@ -549,6 +501,7 @@ function CancelQueueRequest(id, name, resource) {
  */
 function CancelResourceRequest(id, resources) {
 	var del = false;
+
 	if (resources.length > 0) {
 		var r = "";
 		for (var x=0;x<resources.length;x++) {
@@ -560,76 +513,15 @@ function CancelResourceRequest(id, resources) {
 	}
 
 	if (del) {
-		WSDeleteURL(id, CanceledResourceRequest);
+		WSDeleteURL(id, function(xml) {
+			if (xml.status < 400) {
+				location.reload(true);
+			} else {
+				alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact rcac-help@purdue.edu");
+			}
+		});
 	}
 }
-
-/**
- * Callback after cancelling a resource request
- *
- * @param   {object}  xml
- * @return  {void}
- */
-function CanceledResourceRequest(xml) {
-	if (xml.status == 200) {
-		location.reload(true);
-	} else {
-		alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact rcac-help@purdue.edu");
-	}
-}
-
-/**
- * Suspend a Github account
- *
- * @param   {string}  id
- * @return  {void}
- */
-/*function SuspendGithub(id) {
-	if (confirm("Are you sure you wish to suspend your Github account? This will not delete your data, but you be unable to log in. You may re-activate your account at any time.")) {
-		var post = { 'suspend': 1 };
-		WSPostURL(id, JSON.stringify(post), ModifiedGithubAccount);
-	}
-}*/
-
-/**
- * Create a Github account
- *
- * @param   {string}  id
- * @return  {void}
- */
-/*function CreateGithubMember(id) {
-	var post = { 'create': 1 };
-	WSPostURL(id, JSON.stringify(post), ModifiedGithubAccount);
-}*/
-
-/**
- * Unsuspend a Github account
- *
- * @param   {string}  id
- * @return  {void}
- */
-/*function UnsuspendGithub(id) {
-	if (confirm("Are you sure you wish to unsuspend your Github account?")) {
-		var post = { 'suspend': 0 };
-		WSPostURL(id, JSON.stringify(post), ModifiedGithubAccount);
-	}
-}*/
-
-/**
- * Callback after modifying Github account
- *
- * @param   {object}  xml
- * @return  {void}
- */
-/*function ModifiedGithubAccount(xml) {
-	if (xml.status == 200) {
-		location.reload(true);
-	} else if (xml.status == 301) {
-		alert("Your account will be created during an overnight process. You should be able to log into GitHub tomorrow morning.");
-	} else {
-		alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact rcac-help@purdue.edu");
-	}
-}*/
 
 /**
  * Request group
@@ -644,7 +536,7 @@ function RequestGroup(longname, user) {
 		'user'    : user
 	};
 
-	WSPostURL(ROOT_URL + "unixgroupmember", JSON.stringify(post), function(xml) {
+	WSPostURL(ROOT_URL + "unixgroups/members", JSON.stringify(post), function(xml) {
 		if (xml.status == 200) {
 			alert("You have been added to the access list for this software. Changes will take up to 4 hours to propagate to all cluster nodes.");
 			location.reload(true)
@@ -684,7 +576,6 @@ $(document).ready(function() {
 		filter: /^[a-z0-9\-_ .,@+]+$/i,
 		select: function(event, ui) {
 			var data = results[ui.item.id];
-			//console.log(data);
 
 			document.getElementById("person").style.display = "none";
 			document.getElementById("group").style.display = "block";
@@ -709,12 +600,7 @@ $(document).ready(function() {
 		for (x=0;x<els.length;x++) {
 			els[x].style.display = 'none';
 		}
-		/*document.getElementById("group").style.display = 'none';
-		document.getElementById("person").style.display = 'none';
-		document.getElementById("resources").style.display = "none";
-		document.getElementById("queues").style.display = "none";
-		document.getElementById("comments").style.display = "none";
-		document.getElementById("controls").style.display = "none";*/
+
 		document.getElementById("searchbox").style.display = 'block';
 		document.getElementById("newuser").value = '';
 	});

@@ -193,21 +193,32 @@ $active = $sections->firstWhere('active', '=', true);
 				</div>
 			@endif
 
-			<?php /*<div class="card panel panel-default session">
+			<?php
+			$queues = $user->queues()
+				//->where('groupid', '>', 0)
+				//->whereIn('membertype', [1, 4])
+				->whereIsPending()
+				//->whereNotIn('id', $q)
+				->withTrashed()
+				->whereIsActive()
+				->get();
+
+			if (count($queues)):
+			?>
+			<div class="card panel panel-default session">
 				<div class="card-header panel-heading">
-					Resources
+					Requests
 				</div>
 				<ul class="list-group list-group-flush">
 					<?php
 					// Owner groups
-					$memberships = $user->groups()
+					/*$memberships = $user->groups()
 						->where('groupid', '>', 0)
-						->where('membertype', '=', 2)
+						->whereIsManager()
 						->get();
 
 					$q = array();
-					foreach ($memberships as $membership)
-					{
+					foreach ($memberships as $membership):
 						$group = $membership->group;
 
 						$unixgroups = $group->unixGroups->pluck('longname')->toArray();
@@ -224,9 +235,7 @@ $active = $sections->firstWhere('active', '=', true);
 								</div>
 							</div>
 							<div class="card-text panel-body">
-								<?php
-								foreach ($group->queues as $queue):
-									?>
+								@foreach ($group->queues as $queue)
 									<div class="row">
 										<div class="col-md-6">
 											<strong class="text-muted">Queue</strong>: {{ $queue->name }}
@@ -235,58 +244,45 @@ $active = $sections->firstWhere('active', '=', true);
 											<strong class="text-muted">Resource</strong>: {{ $queue->subresource->name }}
 										</div>
 									</div>
-									<?php
-								endforeach;
-								?>
+								@endforeach
 								@if (!empty($unixgroups))
 									<strong class="text-muted">Unix Groups</strong>: {{ implode(', ', $unixgroups) }}
 								@endif
 							</div>
 						</li>
 						<?php
-					}
-
+					endforeach;
+					
 					$queues = $user->queues()
 						//->where('groupid', '>', 0)
-						->whereIn('membertype', [1, 4])
-						->whereNotIn('id', $q)
+						//->whereIn('membertype', [1, 4])
+						->whereIsPending()
+						//->whereNotIn('id', $q)
 						->withTrashed()
-						->get();
+						->whereIsActive()
+						->get();*/
 
-					foreach ($queues as $qu)
-					{
+					foreach ($queues as $qu):
 						// We only want trashed requests (4)
-						if ($qu->membertype == 1
-						&& $qu->datetimeremoved
-						&& $qu->datetimeremoved != '0000-00-00 00:00:00'
-						&& $qu->datetimeremoved != '-0001-11-30 00:00:00')//$qu->trashed())
-						{
+						if ($qu->isMember() && $qu->isTrashed()):
 							continue;
-						}
+						endif;
 
 						$queue = $qu->queue;
 
-						if (!$queue || ($queue->datetimeremoved
-						&& $queue->datetimeremoved != '0000-00-00 00:00:00'
-						&& $queue->datetimeremoved != '-0001-11-30 00:00:00'))
-						{
+						if (!$queue || $queue->isTrashed()):
 							continue;
-						}
+						endif;
 
-						if (!$queue->scheduler
-						|| ($queue->scheduler->datetimeremoved
-						&& $queue->scheduler->datetimeremoved != '0000-00-00 00:00:00'
-						&& $queue->scheduler->datetimeremoved != '-0001-11-30 00:00:00'))
-						{
+						if (!$queue->scheduler || $queue->scheduler->isTrashed()):
 							continue;
-						}
+						endif;
 
 						$group = $queue->group;
 
-						if (!$group->id)
-						{
+						if ($group || !$group->id):
 							continue;
-						}
+						endif;
 
 						$unixgroups = $group->unixGroups->pluck('longname')->toArray();
 						?>
@@ -320,10 +316,11 @@ $active = $sections->firstWhere('active', '=', true);
 							</div>
 						</li>
 						<?php
-					}
+					endforeach;
 					?>
 				</ul>
-			</div>*/ ?>
+			</div>
+		<?php endif; ?>
 
 		@if (auth()->user()->can('manage users'))
 			<div class="card panel panel-default session mb-3">

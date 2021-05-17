@@ -11,95 +11,6 @@ $active = $sections->firstWhere('active', '=', true);
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/users/js/request.js?v=' . filemtime(public_path() . '/modules/users/js/request.js')) }}"></script>
-<script>
-$(document).ready(function() {
-	/*var results = [];
-	var autocompleteName = function(url) {
-		return function(request, response) {
-			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-				response($.map(data.data, function (el) {
-					results[el.id] = el;
-					return {
-						label: el.name,
-						name: el.name,
-						id: el.id//,
-						//usernames: el.usernames,
-						//priorusernames: el.priorusernames
-					};
-				}));
-			});
-		};
-	};
-
-	$(".searchgroups").autocomplete({
-		source: autocompleteName("<?php echo url('/'); ?>/api/groups/?api_token=<?php echo auth()->user()->api_token; ?>&searchuser=%s"),
-		dataName: 'data',
-		height: 150,
-		delay: 100,
-		minLength: 2,
-		filter: /^[a-z0-9\-_ .,@+]+$/i,
-		select: function(event, ui) {
-			console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
-
-			var data = results[ui.item.id];
-			console.log(data);
-
-				document.getElementById("person").style.display = "none";
-				document.getElementById("group").style.display = "block";
-				document.getElementById("groupname").innerHTML = data['name'];
-
-				var names = [];
-				for (x=0;x<data['department'].length;x++) {
-					names.push(data['department'][x]['name']);
-				}
-				document.getElementById("dept").innerHTML = names.join(', ');
-
-			PrintAccountResources(data);
-		}
-	});*/
-
-
-
-	/*$('.searchuser').select2({
-		ajax: {
-			url: "<?php echo url('/'); ?>/api/groups/",
-			dataType: 'json',
-			//maximumSelectionLength: 1,
-			//theme: "classic",
-			data: function (params) {
-				var query = {
-					searchuser: params.term,
-					//order: 'name',
-					//order_dir: 'asc',
-					api_token: "<?php echo auth()->user()->api_token; ?>"
-				}
-
-				return query;
-			},
-			processResults: function (data) {
-				for (var i = 0; i < data.data.length; i++) {
-					data.data[i].text = data.data[i].name; // + ' (' + data.data[i].username + ')';
-				}
-
-				return {
-					results: data.data
-				};
-			}
-		}
-	});
-	$('.searchuser')
-		.on('select2:select', function (e) {
-			var data = e.params.data;
-			console.log(data.id);
-			//window.location = "<?php echo request()->url(); ?>?id=" + data.id;
-		})
-		.on('select2:unselect', function (e) {
-			var data = e.params.data;
-			console.log(data);
-			//window.location = "<?php echo request()->url(); ?>";
-		});*/
-});
-</script>
 @endpush
 
 @section('content')
@@ -295,6 +206,8 @@ $(document).ready(function() {
 					</div>
 				</div>
 			</div><!-- / #confirmation -->
+
+			<div id="errors"></div>
 
 			<div>
 				<p>If you encounter any issues with this request form or have any questions contact <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a>.</p>
