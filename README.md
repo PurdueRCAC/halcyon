@@ -35,6 +35,68 @@ To be able to run Halcyon you have to meet the following requirements:
 * XML PHP Extension
 * MySql 5.5+ or MariahDB 10.1+
 
+### Structure
+
+Extensions typically consist of [modules](https://nwidart.com/laravel-modules/v6/introduction), widgets, listeners, and themes.
+
+```
+app/
+|_ Listeners/
+   |_ Queues/
+      |_ lang/
+      |_ Queues.php
+      |_ listener.json
+|_ Modules/
+   |_ News/
+      |_ Config/
+      |_ Console/
+      |_ Database/
+         |_ Migrations/
+         |_ Seeders/
+      |_ Events/
+      |_ Http/
+         |_ Controllers/
+         |_ Middleware/
+         |_ Resources/
+         |_ adminRoutes.php
+         |_ apiRoutes.php
+         |_ siteRoutes.php
+      |_ Mail/
+      |_ Models/
+      |_ Providers/
+         |_ BlogServiceProvider.php
+         |_ RouteServiceProvider.php
+      |_ Resources/
+         |_ assets/
+            |_ js/
+               |_ app.js
+            |_ css/
+               |_ app.css
+         |_ lang/
+         |_ views/
+      |_ Tests/
+      |_ composer.json
+      |_ module.json
+      |_ package.json
+      |_ webpack.mix.js
+|_ Themes/
+   |_ Admin/
+      |_ assets/
+         |_ js/
+            |_ app.js
+         |_ css/
+            |_ app.css
+      |_ lang/
+      |_ views/
+      |_ theme.json
+|_ Widgets/
+   |_ Menu/
+      |_ lang/
+      |_ views/
+      |_ Menu.php
+      |_ widget.json
+```
+
 ### Install
 
 Clone the repo.
@@ -72,4 +134,12 @@ Run migrations to install tables and base data.
 ```
 php artisan migrate
 php artisan module:migrate
+```
+
+#### Git Hooks
+
+The repo contains some useful git hooks for development.
+
+```
+git config core.hooksPath .githooks
 ```
