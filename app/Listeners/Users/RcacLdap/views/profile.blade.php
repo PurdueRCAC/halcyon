@@ -4,15 +4,27 @@
 
 		@if (!empty($results))
 			<table class="table table-hover">
-				<caption>RCAC LDAP</caption>
+				<caption class="sr-only">RCAC LDAP Attributes</caption>
+				<thead>
+					<tr>
+						<th scope="col">Attribute</th>
+						<th scope="col">Value</th>
+					</tr>
+				</thead>
 				<tbody>
 					@foreach ($results->getAttributes() as $key => $val)
+						<?php
+						if (is_numeric($key))
+						{
+							continue;
+						}
+						?>
 						<tr>
 							<th scope="row">
 								{{ $key }}
 							</th>
 							<td>
-								{{ $val }}
+								{{ implode('<br />', $val) }}
 							</td>
 						</tr>
 					@endforeach

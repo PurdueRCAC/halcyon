@@ -271,6 +271,8 @@ class RcacLdap
 					);
 
 				// Performing a query.
+				$ldap = $this->connect($config);
+
 				$results = $ldap->search()
 					->where('uid', '=', $user->username)
 					->first();
