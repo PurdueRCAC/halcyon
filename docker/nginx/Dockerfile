@@ -10,7 +10,7 @@ WORKDIR /tmp/certgen
 RUN openssl genrsa -des3 -passout pass:halcyon -out server.pass.key 2048 \
     && openssl rsa -passin pass:halcyon -in server.pass.key -out server.key \
     && rm server.pass.key \
-    && openssl req -new -key server.key -out server.csr -subj "/CN=halcyon.rcac.purdue.edu" \
+    && openssl req -new -key server.key -out server.csr -subj "/CN=localhost" \
     && openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt \
     && cp server.crt /etc/ssl/certs/ \
     && cp server.key /etc/ssl/private/ \
