@@ -7,18 +7,18 @@ use App\Modules\Queues\Models\UserRequest;
 class UserRequestUpdated
 {
 	/**
-	 * @var User
+	 * @var UserRequest
 	 */
 	public $userrequest;
 
 	/**
 	 * Constructor
 	 *
-	 * @param  User $user
+	 * @param  UserRequest $userrequest
 	 * @return void
 	 */
 	public function __construct(UserRequest $userrequest)
 	{
-		$this->userrequest = $userrequest
+		$this->userrequest = $userrequest;
 	}
 }

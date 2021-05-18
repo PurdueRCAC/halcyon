@@ -50,7 +50,7 @@ $active = $sections->firstWhere('active', '=', true);
 				</div>
 				<div class="col-md-3 text-right">
 					@if (auth()->user()->id == $user->id)
-						<a class="btn btn-default btn-secondary" href="{{ route('site.users.account.request') }}">{{ trans('users::users.request access') }}</a>
+						<a class="btn btn-outline-secondary" href="{{ route('site.users.account.request') }}">{{ trans('users::users.request access') }}</a>
 					@endif
 				</div>
 			</div>
@@ -263,7 +263,6 @@ $active = $sections->firstWhere('active', '=', true);
 						->get();*/
 
 					foreach ($queues as $qu):
-						// We only want trashed requests (4)
 						if ($qu->isMember() && $qu->isTrashed()):
 							continue;
 						endif;
@@ -280,7 +279,7 @@ $active = $sections->firstWhere('active', '=', true);
 
 						$group = $queue->group;
 
-						if ($group || !$group->id):
+						if (!$group || !$group->id):
 							continue;
 						endif;
 

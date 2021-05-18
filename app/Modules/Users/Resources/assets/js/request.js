@@ -76,21 +76,21 @@ function PrintAccountResources(user) {
 	var fortress = false;
 	var x, div;
 
-	if (typeof(user['resources']) != 'undefined') {
+	if (typeof (user['resources']) != 'undefined') {
 		document.getElementById("resources").style.display = "block";
 		document.getElementById("queues").style.display = "none";
 		div = document.getElementById("resourcelist");
 		resources = user['resources'];
-		if (typeof(user['pendingresources']) != 'undefined') {
+		if (typeof (user['pendingresources']) != 'undefined') {
 			pendingresources = user['pendingresources'];
 		}
-	} else if (typeof(user['queues']) != 'undefined') {
+	} else if (typeof (user['queues']) != 'undefined') {
 		document.getElementById("queues").style.display = "block";
 		document.getElementById("resources").style.display = "none";
 		div = document.getElementById("queuelist");
 		queues = user['queues'];
 		memberofqueues = user['memberofqueues'];
-		if (typeof(user['pendingmemberofqueues']) != 'undefined') {
+		if (typeof (user['pendingmemberofqueues']) != 'undefined') {
 			pendingmemberofqueues = user['pendingmemberofqueues'];
 		}
 		fortress = true;
@@ -105,7 +105,7 @@ function PrintAccountResources(user) {
 	}
 
 	var d, box, label, resource, queue;
-	for (x=0;x<resources.length;x++) {
+	for (x = 0; x < resources.length; x++) {
 		resource = resources[x];
 
 		if (resource['name'] == "BoilerGrid") {
@@ -138,7 +138,7 @@ function PrintAccountResources(user) {
 		div.appendChild(d);
 	}
 
-	for (x=0;x<pendingresources.length;x++) {
+	for (x = 0; x < pendingresources.length; x++) {
 		resource = pendingresources[x];
 
 		d = document.createElement("div");
@@ -165,17 +165,17 @@ function PrintAccountResources(user) {
 	}
 
 	if (fortress) {
-		for (x=0;x<resources.length;x++) {
+		for (x = 0; x < resources.length; x++) {
 			resource = resources[x];
 
 			box = document.getElementById(resource['id']);
-			box.onchange = function() {
+			box.onchange = function () {
 				CheckFortress(this.id);
 			};
 		}
 	}
 
-	for (x=0;x<queues.length;x++) {
+	for (x = 0; x < queues.length; x++) {
 		queue = queues[x];
 
 		d = document.createElement("div");
@@ -199,8 +199,8 @@ function PrintAccountResources(user) {
 		label = document.createElement("label");
 		label.setAttribute('for', box.id);
 		if (queue['resource'].match(/Radon/)
-		|| queue['resource'].match(/Fortress/)
-		|| queue['resource'].match(/BoilerGrid/)) {
+			|| queue['resource'].match(/Fortress/)
+			|| queue['resource'].match(/BoilerGrid/)) {
 			label.innerHTML = queue['resource'] + " (" + queue['name'] + ")";
 		} else {
 			label.innerHTML = queue['name'] + " (" + queue['subresource'] + ")";
@@ -212,7 +212,7 @@ function PrintAccountResources(user) {
 		div.appendChild(d);
 	}
 
-	for (x=0;x<memberofqueues.length;x++) {
+	for (x = 0; x < memberofqueues.length; x++) {
 		queue = memberofqueues[x];
 
 		d = document.createElement("div");
@@ -227,8 +227,8 @@ function PrintAccountResources(user) {
 
 		span = document.createElement("span");
 		if (queue['resource'].match(/Radon/)
-		|| queue['resource'].match(/Fortress/)
-		|| queue['resource'].match(/BoilerGrid/)) {
+			|| queue['resource'].match(/Fortress/)
+			|| queue['resource'].match(/BoilerGrid/)) {
 			span.innerHTML = queue['resource'] + " (" + queue['name'] + ", access authorized)";
 		} else {
 			span.innerHTML = queue['name'] + " (" + queue['subresource'] + ", access authorized)";
@@ -240,7 +240,7 @@ function PrintAccountResources(user) {
 		div.appendChild(d);
 	}
 
-	for (x=0;x<pendingmemberofqueues.length;x++) {
+	for (x = 0; x < pendingmemberofqueues.length; x++) {
 		queue = pendingmemberofqueues[x];
 
 		d = document.createElement("div");
@@ -255,8 +255,8 @@ function PrintAccountResources(user) {
 
 		span = document.createElement("span");
 		if (queue['resource'].match(/Radon/)
-		|| queue['resource'].match(/Fortress/)
-		|| queue['resource'].match(/BoilerGrid/)) {
+			|| queue['resource'].match(/Fortress/)
+			|| queue['resource'].match(/BoilerGrid/)) {
 			span.innerHTML = queue['resource'] + " (" + queue['name'] + ", request pending)";
 		} else {
 			span.innerHTML = queue['name'] + " (" + queue['subresource'] + ", request pending)";
@@ -294,36 +294,36 @@ function SubmitRequest() {
 	var x, boxes, box;
 
 	//if (document.getElementById("resources").style.display != "none") {
-		//boxes = document.getElementById("resourcelist").getElementsByTagName("div");
-		boxes = document.querySelectorAll("#resourcelist input[type=checkbox]"); //.getElementsByTagName("div");
-		for (x=0; x<boxes.length; x++) {
-			box = boxes[x];
-			//box = boxes[x].getElementsByTagName("input")[0];
-			//var text = boxes[x].getElementsByTagName("label")[0].innerHTML;
-			if (box.checked == true
-			 && box.disabled == false) {
-				resources.push(box.id);
-			}
-			/*if (text.match(/Radon/)) {
-				free = true;
-			} else if (box.disabled == true && text.match(/Fortress/)) {
-				resources.push(box.id);
-			}*/
+	//boxes = document.getElementById("resourcelist").getElementsByTagName("div");
+	boxes = document.querySelectorAll("#resourcelist input[type=checkbox]"); //.getElementsByTagName("div");
+	for (x = 0; x < boxes.length; x++) {
+		box = boxes[x];
+		//box = boxes[x].getElementsByTagName("input")[0];
+		//var text = boxes[x].getElementsByTagName("label")[0].innerHTML;
+		if (box.checked == true
+			&& box.disabled == false) {
+			resources.push(box.id);
 		}
+		/*if (text.match(/Radon/)) {
+			free = true;
+		} else if (box.disabled == true && text.match(/Fortress/)) {
+			resources.push(box.id);
+		}*/
+	}
 	//} else if (document.getElementById("queues").style.display != "none") {
-		boxes = document.querySelectorAll("queuelist input[type=checkbox]"); //.getElementsByTagName("div");
-		for (x=0;x<boxes.length;x++) {
-			box = boxes[x]; //.getElementsByTagName("input")[0];
+	boxes = document.querySelectorAll("queuelist input[type=checkbox]"); //.getElementsByTagName("div");
+	for (x = 0; x < boxes.length; x++) {
+		box = boxes[x]; //.getElementsByTagName("input")[0];
 
-			if (box.checked == true
-			 && box.disabled == false) {
-				queues.push(box.id);
-			}
+		if (box.checked == true
+			&& box.disabled == false) {
+			queues.push(box.id);
 		}
+	}
 	//}
 
 	if (queues.length == 0
-	 && resources.length == 0) {
+		&& resources.length == 0) {
 		alert("Please make a selection");
 		return;
 	}
@@ -332,8 +332,8 @@ function SubmitRequest() {
 		document.getElementById("free_confirmation").style.display = "block";
 		document.getElementById("cluster_confirmation").style.display = "none";
 	} else {*/
-		document.getElementById("cluster_confirmation").style.display = "block";
-		document.getElementById("free_confirmation").style.display = "none";
+	document.getElementById("cluster_confirmation").style.display = "block";
+	document.getElementById("free_confirmation").style.display = "none";
 	//}
 
 	if (document.getElementById("person").style.display != "none") {
@@ -350,7 +350,7 @@ function SubmitRequest() {
 	if (queues.length > 0) {
 		document.getElementById("queues_confirmation").style.display = "block";
 		list = document.getElementById("queuelist_confirmation");
-		for (x=0;x<queues.length;x++) {
+		for (x = 0; x < queues.length; x++) {
 			div = document.createElement("div");
 			div.innerHTML = document.getElementById(queues[x] + "_name").getElementsByTagName("label")[0].innerHTML;
 
@@ -359,7 +359,7 @@ function SubmitRequest() {
 	} else if (resources.length > 0) {
 		document.getElementById("resources_confirmation").style.display = "block";
 		list = document.getElementById("resourcelist_confirmation");
-		for (x=0;x<resources.length;x++) {
+		for (x = 0; x < resources.length; x++) {
 			div = document.createElement("div");
 			div.innerHTML = document.getElementById(resources[x] + "_name").getElementsByTagName("label")[0].innerHTML;
 
@@ -384,29 +384,30 @@ function SubmitRequest() {
 	document.getElementById("request_header").style.display = "none";
 
 	// assemble and submit request
-	var post = {'comment': document.getElementById("commenttext").value };
+	var post = { 'comment': document.getElementById("commenttext").value };
 
 	post['group'] = document.getElementById("selected-group").value;
-	post['user'] = document.getElementById("selected-user").value;
+	post['userid'] = document.getElementById("selected-user").value;
 	post['resources'] = Array();
 	post['queues'] = Array();
 
-	for (x=0;x<resources.length;x++) {
+	for (x = 0; x < resources.length; x++) {
 		post['resources'].push(resources[x]);
 	}
 
-	for (x=0;x<queues.length;x++) {
+	for (x = 0; x < queues.length; x++) {
 		post['queues'].push(queues[x]);
 	}
 
-	post = JSON.stringify(post);
+	//post = JSON.stringify(post);
 
 	$.when(
-		$.post(ROOT_URL + 'queues/requests', post).fail(function() {
-			alert("There was an error processing your request.");
+		$.post(ROOT_URL + 'queues/requests', post).fail(function () {
+			$('#errors').addClass('alert').addClass('alert-danger').text("There was an error processing your request.");
 		})
-	).done(function(request) {
-		window.location = url;
+	).done(function (request) {
+		//window.location = url;
+		$('#errors').addClass('alert').addClass('alert-success').text("Your request has been submitted.");
 	});
 	/*WSPostURL(ROOT_URL + "userrequest", post, function(xml) {
 		if (xml.status != 200) {
@@ -439,7 +440,7 @@ function CheckFortress(id) {
 	} else if (clicked.checked == false) {
 		var resources = document.getElementById("resourcelist").getElementsByTagName("input");
 		var keepfortress = false;
-		for (var x=0;x<resources.length;x++) {
+		for (var x = 0; x < resources.length; x++) {
 			if (resources[x].id != ROOT_URL + "resource/48" && resources[x].checked == true) {
 				keepfortress = true;
 				break;
@@ -462,7 +463,7 @@ function CheckFortress(id) {
  */
 function RemoveQueue(id, name, resource) {
 	if (confirm("Are you sure you wish to remove access to the queue '" + name + "' (" + resource + ")? \n\nIf this is your last queue on this cluster your account will be removed. Please make an off-site backup of all important data before removing access.")) {
-		WSDeleteURL(id, function(xml) {
+		WSDeleteURL(id, function (xml) {
 			if (xml.status < 400) {
 				location.reload(true);
 			} else {
@@ -482,7 +483,7 @@ function RemoveQueue(id, name, resource) {
  */
 function CancelQueueRequest(id, name, resource) {
 	if (confirm("Are you sure you wish to cancel this request for access to the queue '" + name + "' (" + resource + ")? ")) {
-		WSDeleteURL(id, function(xml) {
+		WSDeleteURL(id, function (xml) {
 			if (xml.status < 400) {
 				location.reload(true);
 			} else {
@@ -504,7 +505,7 @@ function CancelResourceRequest(id, resources) {
 
 	if (resources.length > 0) {
 		var r = "";
-		for (var x=0;x<resources.length;x++) {
+		for (var x = 0; x < resources.length; x++) {
 			r = r + resources[x]['name'] + "\n";
 		}
 		del = confirm("Are you sure you wish this request?\n\nYou must request cancel this request in full, including requests for:\n\n" + r);
@@ -513,7 +514,7 @@ function CancelResourceRequest(id, resources) {
 	}
 
 	if (del) {
-		WSDeleteURL(id, function(xml) {
+		WSDeleteURL(id, function (xml) {
 			if (xml.status < 400) {
 				location.reload(true);
 			} else {
@@ -533,10 +534,10 @@ function CancelResourceRequest(id, resources) {
 function RequestGroup(longname, user) {
 	var post = {
 		'longname': longname,
-		'user'    : user
+		'user': user
 	};
 
-	WSPostURL(ROOT_URL + "unixgroups/members", JSON.stringify(post), function(xml) {
+	WSPostURL(ROOT_URL + "unixgroups/members", JSON.stringify(post), function (xml) {
 		if (xml.status == 200) {
 			alert("You have been added to the access list for this software. Changes will take up to 4 hours to propagate to all cluster nodes.");
 			location.reload(true)
@@ -549,12 +550,12 @@ function RequestGroup(longname, user) {
 /**
  * Initiate event hooks
  */
-$(document).ready(function() {
+$(document).ready(function () {
 	var results = [];
 
 	$('.searchgroups').autocomplete({
 		//source: autocompleteName(this.getAttribute('data-source')),
-		source: function(request, response) {
+		source: function (request, response) {
 			var url = $(this.element).data('source');
 
 			//return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
@@ -574,7 +575,7 @@ $(document).ready(function() {
 		delay: 100,
 		minLength: 2,
 		filter: /^[a-z0-9\-_ .,@+]+$/i,
-		select: function(event, ui) {
+		select: function (event, ui) {
 			var data = results[ui.item.id];
 
 			document.getElementById("person").style.display = "none";
@@ -583,7 +584,7 @@ $(document).ready(function() {
 			document.getElementById("selected-group").value = data['id'];
 
 			var names = [];
-			for (x=0;x<data['department'].length;x++) {
+			for (x = 0; x < data['department'].length; x++) {
 				names.push(data['department'][x]['name']);
 			}
 			document.getElementById("dept").innerHTML = names.join(', ');
@@ -592,12 +593,12 @@ $(document).ready(function() {
 		}
 	});
 
-	$('.request-clear').on('click', function(e){
+	$('.request-clear').on('click', function (e) {
 		e.preventDefault();
 
 		var els = document.querySelectorAll('.request-selection');
 
-		for (x=0;x<els.length;x++) {
+		for (x = 0; x < els.length; x++) {
 			els[x].style.display = 'none';
 		}
 
@@ -605,7 +606,7 @@ $(document).ready(function() {
 		document.getElementById("newuser").value = '';
 	});
 
-	$('.request-submit').on('click', function(e){
+	$('.request-submit').on('click', function (e) {
 		e.preventDefault();
 		SubmitRequest();
 	});

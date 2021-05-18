@@ -60,12 +60,11 @@ $active = $sections->firstWhere('active', '=', true);
 								<input type="text" name="newuser" id="newuser" class="form-control searchgroups" data-source="{{ route('api.groups.index', ['api_token' => auth()->user()->api_token, 'searchuser' => '']) }}" autocorrect="off" autocapitalize="off" />
 								<!-- <div id="user_results" class="searchMain usersearch_results"></div>
 								<select name="newuser" id="newuser" class="form-control searchuser"></select> -->
-								<div class="input-group-addon">
+								<span class="input-group-append">
 									<span class="input-group-text">
 										<i class="fa fa-search" aria-hidden="true" id="add_button_a"></i>
-										<!-- <img src="/include/images/loading.gif" width="14" id="search_loading" alt="Loading..." class="icon" /> -->
 									</span>
-								</div>
+								</span>
 							</div>
 							<!-- <span id="add_errors"></span> -->
 						</div>
@@ -85,7 +84,7 @@ $active = $sections->firstWhere('active', '=', true);
 								<span id="title"></span>
 							</div>
 							<div class="col col-sm-12 col-md-4">
-								<a href="{{ route('site.users.account.request') }}" class="request-clear btn btn-default" title="Choose another person.">
+								<a href="{{ route('site.users.account.request') }}" class="request-clear btn" title="Choose another person.">
 									<i class="fa fa-undo" aria-hidden="true"></i> Change selection
 								</a>
 							</div>
@@ -104,7 +103,7 @@ $active = $sections->firstWhere('active', '=', true);
 								<span id="dept"></span>
 							</div>
 							<div class="col col-sm-12 col-md-4">
-								<a href="{{ route('site.users.account.request') }}" class="request-clear btn btn-secondary" title="Choose another group.">
+								<a href="{{ route('site.users.account.request') }}" class="request-clear btn" title="Choose another group.">
 									<i class="fa fa-undo" aria-hidden="true"></i> Change selection
 								</a>
 							</div>
@@ -136,7 +135,7 @@ $active = $sections->firstWhere('active', '=', true);
 
 			<div id="comments" class="card request-selection" style="display: none">
 				<div class="card-header">
-					<strong>3)</strong> Enter comments to send with your request <span class="badge">optional</span>:
+					<strong>3)</strong> Enter comments to send with your request <span class="badge badge-secondary">optional</span>:
 				</div>
 				<div class="card-body">
 					<textarea rows="5" cols="60" id="commenttext" class="form-control"></textarea>
@@ -208,11 +207,6 @@ $active = $sections->firstWhere('active', '=', true);
 			</div><!-- / #confirmation -->
 
 			<div id="errors"></div>
-
-			<div>
-				<p>If you encounter any issues with this request form or have any questions contact <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a>.</p>
-			</div>
-
 		</form>
 	</div>
 </div>

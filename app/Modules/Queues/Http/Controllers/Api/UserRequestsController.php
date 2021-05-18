@@ -214,9 +214,18 @@ class UserRequestsController extends Controller
 		$request->validate([
 			'userid' => 'nullable|integer|min:1',
 			'comment' => 'nullable|string|max:255',
-			'queues' => 'required|array',
-			'group' => 'nullable'
+			'queues' => 'nullable|array',
+			'resources' => 'nullable|array',
+			'group' => 'nullable|integer'
 		]);
+
+		$queues = (array)$request->input('queues');
+		$resources = (array)$request->input('resources');
+
+		if (empty($queues) && empty($resources))
+		{
+			return response()->json(['message' => trans('queues::queues.error.missing queues or resources')], 415);
+		}
 
 		$group = $request->input('group');
 
@@ -234,8 +243,6 @@ class UserRequestsController extends Controller
 		}
 
 		// Generate necessary groupuser or queueuser records
-		$queues = $request->input('queues', []);
-
 		foreach ($queues as $queueid)
 		{
 			$queueuser = 0;
@@ -288,8 +295,6 @@ class UserRequestsController extends Controller
 			}
 		}
 
-		$resources = $request->input('resources', []);
-
 		if ($group && count($resources))
 		{
 			// Gather the queues this group owns and are in the requested resources
@@ -323,26 +328,26 @@ class UserRequestsController extends Controller
 						->where('userid', '=', $row->userid)
 						->get()
 						->first();
+				}
 
-					if (!$queueuser)
+				if (!$queueuser)
+				{
+					$queueuser = new Member;
+					$queueuser->queueid = $queue->id;
+					$queueuser->userid  = $row->userid;
+					if (!$queue->groupid)
 					{
-						$queueuser = new Member;
-						$queueuser->queueid = $queueid;
-						$queueuser->userid  = $row->userid;
-						if (!$queue->groupid)
-						{
-							$queueuser->userrequestid = 0;
-							$queueuser->notice        = 0;
-							$queueuser->setAsMember();
-						}
-						else
-						{
-							$queueuser->userrequestid = $row->id;
-							$queueuser->notice        = 6;
-							$queueuser->setAsPending();
-						}
-						$queueuser->save();
+						$queueuser->userrequestid = 0;
+						$queueuser->notice        = 0;
+						$queueuser->setAsMember();
 					}
+					else
+					{
+						$queueuser->userrequestid = $row->id;
+						$queueuser->notice        = 6;
+						$queueuser->setAsPending();
+					}
+					$queueuser->save();
 				}
 
 				// Set up groupqueueuser entry

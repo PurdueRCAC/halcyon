@@ -54,7 +54,7 @@ class UserRequestResource extends JsonResource
 				->join($q, $q . '.id', $u . '.queueid')
 				->where($u . '.userid', '=', $numrequest->userid)
 				->where($q . '.groupid', '=', $numrequest->groupid)
-				->whereMember()
+				->whereIsMember()
 				->count();
 
 			if ($isMember)
