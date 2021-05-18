@@ -24,7 +24,7 @@
 								{{ $key }}
 							</th>
 							<td>
-								{{ implode('<br />', $val) }}
+								{!! implode('<br />', $val) !!}
 							</td>
 						</tr>
 					@endforeach
