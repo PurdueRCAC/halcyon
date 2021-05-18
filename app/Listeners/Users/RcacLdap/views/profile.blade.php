@@ -30,5 +30,7 @@
 					@endforeach
 				</tbody>
 			</table>
+		@else
+			<p class="alert alert-warning">No entry found.</p>
 		@endif
 	</div>
