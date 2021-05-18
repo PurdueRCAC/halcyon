@@ -3,6 +3,7 @@ namespace App\Listeners\Users\RcacLdap;
 
 use App\Modules\Users\Events\UserSearching;
 use App\Modules\Users\Events\UserBeforeDisplay;
+use App\Modules\Users\Events\UserDisplay;
 use App\Modules\Users\Models\User;
 use App\Modules\Courses\Events\CourseEnrollment;
 use App\Modules\Resources\Events\ResourceMemberStatus;
@@ -27,6 +28,7 @@ class RcacLdap
 	{
 		$events->listen(UserSearching::class, self::class . '@handleUserSearching');
 		$events->listen(UserBeforeDisplay::class, self::class . '@handleUserBeforeDisplay');
+		$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
 		$events->listen(ResourceMemberStatus::class, self::class . '@handleResourceMemberStatus');
 		$events->listen(UnixGroupFetch::class, self::class . '@handleUnixGroupFetch');
 		$events->listen(CourseEnrollment::class, self::class . '@handleCourseEnrollment');
@@ -227,6 +229,84 @@ class RcacLdap
 		$event->setUser($user);
 	
 		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $user->username);
+	}
+
+	/**
+	 * Display data for a user
+	 *
+	 * @param   UserDisplay  $event
+	 * @return  void
+	 */
+	public function handleUserDisplay(UserDisplay $event)
+	{
+		$config = $this->config();
+
+		if (empty($config) || !auth()->user()->can('manage users'))
+		{
+			return;
+		}
+
+		$content = null;
+		$user = $event->getUser();
+
+		$r = ['section' => 'rcacldap'];
+		if (auth()->user()->id != $user->id)
+		{
+			$r['u'] = $user->id;
+		}
+
+		app('translator')->addNamespace(
+			'listener.users.rcacldap',
+			__DIR__ . '/lang'
+		);
+
+		if ($event->getActive() == 'rcacldap')
+		{
+			try
+			{
+				app('pathway')
+					->append(
+						trans('listener.users.rcacldap::rcacldap.title'),
+						route('site.users.account.section', $r)
+					);
+
+				// Performing a query.
+				$results = $ldap->search()
+					->where('uid', '=', $user->username)
+					->first();
+
+				$status = 404;
+
+				if (!empty($results))
+				{
+					$status = 200;
+				}
+
+				app('view')->addNamespace(
+					'listener.users.footprints',
+					__DIR__ . '/views'
+				);
+
+				$content = view('listener.users.footprints::profile', [
+					'user'    => $user,
+					'results' => $results,
+				]);
+			}
+			catch (\Exception $e)
+			{
+				$status = 500;
+				$results = ['error' => $e->getMessage()];
+			}
+
+			$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $user->username);
+		}
+
+		$event->addSection(
+			route('site.users.account.section', $r),
+			trans('listener.users.rcacldap::rcacldap.title'),
+			($event->getActive() == 'rcacldap'),
+			$content
+		);
 	}
 
 	/**
