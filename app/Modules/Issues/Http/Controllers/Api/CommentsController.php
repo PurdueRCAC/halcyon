@@ -28,23 +28,25 @@ class CommentsController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "issueid",
 	 * 		"description":   "ID of issue",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -55,26 +57,35 @@ class CommentsController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"issueid",
+	 * 				"userid",
+	 * 				"notice",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "asc",
@@ -84,8 +95,8 @@ class CommentsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @param   Request  $request
-	 * @return Response
+	 * @param  Request  $request
+	 * @return CommentResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -152,26 +163,39 @@ class CommentsController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "comment",
 	 * 		"description":   "The comment being made",
-	 * 		"type":          "string",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 8096
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "issueid",
 	 * 		"description":   "ID of the issue",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "resolution",
+	 * 		"description":   "IS this the official resolution to the issue?",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  CommentResource
 	 */
 	public function create(Request $request)
 	{
 		$request->validate([
-			'comment' => 'nullable|string',
+			'comment' => 'nullable|string|max:8096',
 			'issueid' => 'required|integer',
+			'resolution' => 'nullable|integer',
 		]);
 
 		$row = new Comment($request->all());
@@ -210,8 +234,8 @@ class CommentsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @param  integer  $id
-	 * @return Response
+	 * @param  integer  $comment
+	 * @return CommentResource
 	 */
 	public function read($comment)
 	{
@@ -239,57 +263,62 @@ class CommentsController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "comment",
 	 * 		"description":   "The comment being made",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 8096
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "issueid",
 	 * 		"description":   "ID of the issue",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "resolution",
+	 * 		"description":   "IS this the official resolution to the issue?",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @param   integer  $id
-	 * @return  Response
+	 * @param   integer  $comment
+	 * @return  CommentResource
 	 */
 	public function update(Request $request, $comment)
 	{
 		$request->validate([
-			'comment' => 'nullable|string',
+			'comment' => 'nullable|string|max:8096',
 			'issueid' => 'nullable|integer',
-			'userid' => 'nullable|integer',
-			'notice' => 'nullable|integer',
+			'resolution' => 'nullable|integer',
 		]);
 
-		$data = $request->all();
-
-		if (isset($data['datetimecreated']))
-		{
-			unset($data['datetimecreated']);
-		}
-
-		if (!auth()->user() || !auth()->user()->can('admin issues'))
-		{
-			unset($data['userid']);
-		}
-
 		$row = Comment::findOrFail($comment);
-		$row->fill($data);
 
-		if ($row->issueid != $row->getOriginal('issueid'))
+		if ($request->has('comment'))
 		{
+			$row->comment = $request->input('comment');
+		}
+
+		if ($request->has('resolution'))
+		{
+			$row->resolution = $request->input('resolution');
+		}
+
+		if ($request->has('issueid'))
+		{
+			$row->issueid = $request->input('issueid');
+
 			if (!$row->issue)
 			{
 				return response()->json(['message' => __METHOD__ . '(): Invalid issue ID'], 415);
 			}
-		}
-
-		if (!$row->comment)
-		{
-			return response()->json(['message' => __METHOD__ . '(): Comment text cannot be emoty'], 415);
 		}
 
 		if (!$row->save())

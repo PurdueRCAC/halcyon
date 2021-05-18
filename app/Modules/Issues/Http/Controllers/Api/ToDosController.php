@@ -27,7 +27,6 @@ class ToDosController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -38,34 +37,44 @@ class ToDosController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * 		schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"userid",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved",
+	 * 				"recurringtimeperiodid"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "asc",
@@ -76,7 +85,7 @@ class ToDosController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -152,30 +161,44 @@ class ToDosController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "datetimecreated",
-	 * 		"description":   "Timestamp (YYYY-MM-DD or YYYY-MM-DD hh:mm:ss) of the issue",
-	 * 		"type":          "string",
+	 * 		"name":          "name",
+	 * 		"description":   "Name of the To-Do item",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "description",
+	 * 		"description":   "Description of the To-Do item",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "recurringtimeperiodid",
+	 * 		"description":   "Recurring timeperiod ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "userid",
-	 * 		"description":   "ID of the user creating the entry",
-	 * 		"type":          "integer",
+	 * 		"description":   "User ID",
 	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "issuetodo",
-	 * 		"description":   "Is this a To-Do item?",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -184,7 +207,6 @@ class ToDosController extends Controller
 		$request->validate([
 			'name' => 'required|string|max:255',
 			'description' => 'required|string|max:2000',
-			'datetimecreated' => 'required|date',
 			'userid' => 'nullable|integer',
 			'recurringtimeperiodid' => 'nullable|integer',
 		]);
@@ -226,7 +248,7 @@ class ToDosController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return Response
+	 * @return JsonResource
 	 */
 	public function read($id)
 	{
@@ -254,29 +276,42 @@ class ToDosController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "datetimecreated",
-	 * 		"description":   "Timestamp (YYYY-MM-DD or YYYY-MM-DD hh:mm:ss) of the issue",
-	 * 		"type":          "string",
+	 * 		"name":          "name",
+	 * 		"description":   "Name of the To-Do item",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "issuetodo",
-	 * 		"description":   "Is this a To-Do item?",
-	 * 		"type":          "integer",
+	 * 		"name":          "description",
+	 * 		"description":   "Description of the To-Do item",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "recurringtimeperiodid",
+	 * 		"description":   "Recurring timeperiod ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'name' => 'nullable|string',
-			'description' => 'nullable|string',
+			'name' => 'nullable|string|max:255',
+			'description' => 'nullable|string|max:2000',
 			'recurringtimeperiodid' => 'nullable|integer',
 		]);
 

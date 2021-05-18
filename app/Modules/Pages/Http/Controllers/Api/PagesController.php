@@ -213,7 +213,8 @@ class PagesController extends Controller
 	 * 		"description":   "Title",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -222,7 +223,8 @@ class PagesController extends Controller
 	 * 		"description":   "URL slug",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -380,7 +382,8 @@ class PagesController extends Controller
 	 * 		"description":   "Title",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -389,7 +392,8 @@ class PagesController extends Controller
 	 * 		"description":   "URL slug",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @apiParameter {

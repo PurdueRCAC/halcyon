@@ -28,7 +28,6 @@ class IssuesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -39,34 +38,43 @@ class IssuesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"issuetodoid",
+	 * 				"userid",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "asc",
@@ -76,8 +84,8 @@ class IssuesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @param   Request  $request
-	 * @return Response
+	 * @param  Request  $request
+	 * @return IssueResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -191,11 +199,24 @@ class IssuesController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "report",
+	 * 		"description":   "Report text",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 8096
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "datetimecreated",
 	 * 		"description":   "Timestamp (YYYY-MM-DD or YYYY-MM-DD hh:mm:ss) of the issue",
-	 * 		"type":          "string",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -203,15 +224,18 @@ class IssuesController extends Controller
 	 * 		"description":   "ID of the user creating the entry",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "issuetodo",
 	 * 		"description":   "Is this a To-Do item?",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return  Response
@@ -221,7 +245,7 @@ class IssuesController extends Controller
 		$now = new Carbon();
 
 		$request->validate([
-			'report' => 'required|string',
+			'report' => 'required|string|max:8096',
 			'datetimecreated' => 'nullable|date',
 			'userid' => 'nullable|integer',
 			'issuetodoid' => 'nullable|integer',
@@ -303,19 +327,33 @@ class IssuesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "report",
+	 * 		"description":   "Report text",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 8096
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "datetimecreated",
 	 * 		"description":   "Timestamp (YYYY-MM-DD or YYYY-MM-DD hh:mm:ss) of the issue",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "issuetodo",
 	 * 		"description":   "Is this a To-Do item?",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
@@ -326,7 +364,7 @@ class IssuesController extends Controller
 		$now = new Carbon();
 
 		$request->validate([
-			'report' => 'nullable|string',
+			'report' => 'nullable|string|max:8096',
 			'datetimecreated' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
 			'issuetodoid' => 'nullable|integer',
 		]);
@@ -339,7 +377,7 @@ class IssuesController extends Controller
 
 		if (!$row->report)
 		{
-			return response()->json(['message' =>  '`report` cannot be empty'], 415);
+			return response()->json(['message' => trans('issues::issues.error.report cannot be empty')], 415);
 		}
 
 		if (!$row->save())
@@ -401,7 +439,7 @@ class IssuesController extends Controller
 			{
 				if (!$r->delete())
 				{
-					$errors[] = 'Failed to delete `issueresources` entry #' . $r;
+					$errors[] = trans('issues::issues.error.failed to delete issueresources entry #:id', ['id' => $r]);
 				}
 			}
 
@@ -416,7 +454,7 @@ class IssuesController extends Controller
 
 				if (!$rr->save())
 				{
-					$errors[] = 'Failed to create `issueresources` entry for resourceid #' . $r;
+					$errors[] = trans('issues::issues.error.failed to create issueresources resourceid #:id', ['id' => $r]);
 				}
 			}
 		}
