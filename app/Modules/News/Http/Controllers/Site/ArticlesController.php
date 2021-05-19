@@ -11,6 +11,8 @@ use App\Modules\News\Models\Newsresource;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Users\Models\User;
 use Carbon\Carbon;
+use DateTimeZone;
+use DateTime;
 
 class ArticlesController extends Controller
 {
@@ -408,7 +410,8 @@ class ArticlesController extends Controller
 			$file = str_replace(' ', '_', $org . ' ' . $name);
 		}
 
-		$now = $n->format('Ymd\THis\Z');
+		// Don't include timezone if we're including the timezone block below
+		$now = $n->format('Ymd\THis'); // 'Ymd\THis\Z'
 
 		// Create output
 		$output  = "BEGIN:VCALENDAR\r\n";
@@ -419,6 +422,59 @@ class ArticlesController extends Controller
 		$output .= "X-PUBLISHED-TTL:PT15M\r\n";
 		$output .= "X-ORIGINAL-URL:" . route('site.news.calendar', ['name' => $search]) . "\r\n";
 		$output .= "CALSCALE:GREGORIAN\r\n";
+
+		// Get event timezone setting
+		// use this in "DTSTART;TZID="
+		$tzName = date_default_timezone_get(); // America/Indianapolis
+
+		$timezone = new DateTimeZone($tzName);
+		$year = date('Y');
+
+		$transitions = $timeZone->getTransitions(mktime(0, 0, 0, 2, 1, $year), mktime(0, 0, 0, 11, 31, $year));
+		$transitions = array_slice($transitions, 1, 2);
+
+		$dat = array(
+			'start' => null,
+			'startoffset' => '-0000',
+			'stop' => null,
+			'stopoffset' => '-0000'
+		);
+		foreach ($transitions as $transition)
+		{
+			$tm = new DateTime($transition['time']);
+
+			if ($transition['isdst'])
+			{
+				$dst['start'] = $tm->format('Ymd\This');
+				$dst['startoffset'] = '-0' . (abs($transition['offset']) / 60 / 60) . '00';
+			}
+			else
+			{
+				$dst['stop'] = $tm->format('Ymd\This');
+				$dst['stopoffset'] = '-0' . (abs($transition['offset']) / 60 / 60) . '00';
+			}
+		}
+
+		// Include timezone info so DST is handled correctly
+		$output .= "BEGIN:VTIMEZONE\r\n";
+		$output .= "TZID:" . $tzName . "\r\n";
+		$output .= "LAST-MODIFIED:20050809T050000Z\r\n";
+
+		$output .= "BEGIN:STANDARD\r\n";
+		$output .= "DTSTART:" . $dst['stop'] . "\r\n";
+		$output .= "TZOFFSETFROM:" . $dst['startoffset'] . "\r\n";
+		$output .= "TZOFFSETTO:" . $dst['stopoffset'] . "\r\n";
+		$output .= "TZNAME:EST\r\n";
+		$output .= "END:STANDARD\r\n";
+
+		$output .= "BEGIN:DAYLIGHT\r\n";
+		$output .= "DTSTART:" . $dst['start'] . "\r\n";
+		$output .= "TZOFFSETFROM:" . $dst['stopoffset'] . "\r\n";
+		$output .= "TZOFFSETTO:" . $dst['startoffset'] . "\r\n";
+		$output .= "TZNAME:EDT\r\n";
+		$output .= "END:DAYLIGHT\r\n";
+
+		$output .= "END:VTIMEZONE\r\n";
 
 		foreach ($events as $event)
 		{
@@ -432,13 +488,9 @@ class ArticlesController extends Controller
 			$url      = route('site.news.show', ['id' => $id]);
 			$allDay   = 0;
 
-			// Get event timezone setting
-			// use this in "DTSTART;TZID="
-			$tzName = date_default_timezone_get();
-
 			// Get publish up/down dates
 			$dtStart = "DTSTART;TZID={$tzName}:" . $event->datetimenews->format('Ymd\THis');
-			$created = $event->datetimecreated->format('Ymd\THis\Z');
+			$created = $event->datetimecreated->format('Ymd\THis'); // 'Ymd\THis\Z'
 
 			// Start output
 			$output .= "BEGIN:VEVENT\r\n";
@@ -446,10 +498,9 @@ class ArticlesController extends Controller
 			//$output .= "SEQUENCE:{$sequence}\r\n";
 			$output .= "DTSTAMP:{$now}\r\n";
 			$output .= $dtStart  . "\r\n";
-			if ($event->datetimenewsend && $event->datetimenewsend->toDateTimeString() != '0000-00-00 00:00:00')
+			if ($event->hasEnd())
 			{
-				$dtEnd   = "DTEND;TZID={$tzName}:" . $event->datetimenewsend->format('Ymd\THis');
-				$output .= $dtEnd . "\r\n";
+				$output .= "DTEND;TZID={$tzName}:" . $event->datetimenewsend->format('Ymd\THis') . "\r\n";
 			}
 			else
 			{
@@ -457,9 +508,9 @@ class ArticlesController extends Controller
 			}
 
 			$output .= "CREATED:{$created}\r\n";
-			if ($event->datetimeedited && $event->datetimeedited->toDateTimeString() != '0000-00-00 00:00:00')
+			if ($event->isModified())
 			{
-				$modified = $event->datetimeedited->format('Ymd\THis\Z');
+				$modified = $event->datetimeedited->format('Ymd\THis'); // 'Ymd\THis\Z'
 
 				$output .= "LAST-MODIFIED:{$modified}\r\n";
 			}
