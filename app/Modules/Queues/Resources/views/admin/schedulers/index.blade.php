@@ -140,16 +140,14 @@ app('pathway')
 					@endif
 				</td>
 				<td class="text-center">
-					{!! $row->batchsystm ? $row->batchsystm->name : '<span class="unknown">' . trans('global.none') . '</span>' !!}
+					{{ $row->batchsystm ? $row->batchsystm->name : '' }}
 				</td>
 				<td>
-					{!! $row->policy ? $row->policy->name : '<span class="unknown">' . trans('global.none') . '</span>' !!}
+					{{ $row->policy ? $row->policy->name : '' }}
 				</td>
 				<td class="priority-4 text-center">
 					@if ($row->defaultmaxwalltime)
 						{{ $row->humanDefaultmaxwalltime() }}
-					@else
-						<span class="none">{{ trans('global.none') }}</span>
 					@endif
 				</td>
 				<td class="priority-4 text-right">
