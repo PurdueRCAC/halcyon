@@ -19,4 +19,9 @@ return [
 		'queues stopped' => 'Queue scheduling stopped on :count subresources',
 		'queues started' => 'Queue scheduling started on :count subresources',
 	],
+	'queue status' => [
+		'all queues running' => 'All queues running',
+		'all queues stopped' => 'All queues stopped',
+		'stopped queues' => 'One or more stopped queues',
+	],
 ];

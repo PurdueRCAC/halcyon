@@ -198,7 +198,7 @@ app('pathway')
 					@if (!$disabled && auth()->user()->can('edit resources'))
 						<a href="{{ route('admin.resources.edit', ['id' => $row->id]) }}">
 					@endif
-						{!! $row->rolename ? $row->rolename : '<span class="unknown">' . trans('global.none') . '</span>' !!}
+						{{ $row->rolename }}
 					@if (!$disabled && auth()->user()->can('edit resources'))
 						</a>
 					@endif
@@ -207,7 +207,7 @@ app('pathway')
 					@if (!$disabled && auth()->user()->can('edit resources'))
 						<a href="{{ route('admin.resources.edit', ['id' => $row->id]) }}">
 					@endif
-						{!! $row->listname ? $row->listname : '<span class="unknown">' . trans('global.none') . '</span>' !!}
+						{{ $row->listname }}
 					@if (!$disabled && auth()->user()->can('edit resources'))
 						</a>
 					@endif
@@ -216,7 +216,7 @@ app('pathway')
 					{{ $row->type->name }}
 				</td>
 				<td class="priority-4">
-					{!! $row->batchsystm ? $row->batchsystm->name : '<span class="unknown">' . trans('global.none') . '</span>' !!}
+					{{ $row->batchsystm ? $row->batchsystm->name : '' }}
 				</td>
 				<td class="priority-4 text-right">
 					<a href="{{ route('admin.resources.subresources', ['resource' => $row->id]) }}">

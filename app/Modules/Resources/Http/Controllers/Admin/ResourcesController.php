@@ -374,18 +374,20 @@ class ResourcesController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Asset::findOrFail($id);
+			$row = Asset::query()->withTrashed()->where('id', '=', $id)->first();
 
-			if ($row->trashed())
+			if ($row && $row->isTrashed())
 			{
-				if (!$row->restore())
+				if (!$row->update(['datetimeremoved' => '0000-00-00 00:00:00']))
 				{
 					$request->session()->flash('error', $row->getError());
 					continue;
 				}
+				else
+				{
+					$success++;
+				}
 			}
-
-			$success++;
 		}
 
 		if ($success)

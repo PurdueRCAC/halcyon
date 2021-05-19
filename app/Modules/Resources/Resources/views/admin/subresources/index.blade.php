@@ -58,7 +58,12 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+						<span class="input-group-append">
+							<button class="input-group-text" type="submit">
+								<span class="icon-search" aria-hidden="true"></span>
+								<span class="sr-only">{{ trans('search.submit') }}</span>
+							</button>
+						</span>
 					</span>
 				</div>
 			</div>
@@ -82,8 +87,6 @@ app('pathway')
 
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
-
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	<div class="card mb-4">
@@ -152,16 +155,16 @@ app('pathway')
 					@if (auth()->user()->can('edit resources') || auth()->user()->can('delete resources'))
 						<a href="{{ route('admin.resources.subresources.edit', ['id' => $row->id]) }}">
 					@endif
-						{!! $row->cluster ? $row->cluster : '<span class="unknown">' . trans('global.none') . '</span>' !!}
+						{{ $row->cluster }}
 					@if (auth()->user()->can('edit resources') || auth()->user()->can('delete resources'))
 						</a>
 					@endif
 				</td>
 				<td>
-					{!! $row->association ? $row->association->resource->name : '<span class="unknown">' . trans('global.none') . '</span>' !!}
+					{{ $row->association ? $row->association->resource->name : '' }}
 				</td>
 				<td class="priority-4 text-right">
-					{!! $row->nodemem ? $row->nodemem : '<span class="unknown">' . trans('global.none') . '</span>' !!}
+					{{ $row->nodemem }}
 				</td>
 				<td class="priority-3 text-right">
 					{{ $row->nodecores }}
@@ -184,7 +187,7 @@ app('pathway')
 					{{ $row->nodegpus }}
 				</td>
 				<td class="priority-4">
-					{!! $row->nodeattributes ? $row->nodeattributes : '<span class="unknown">' . trans('global.none') . '</span>' !!}
+					{{ $row->nodeattributes }}
 				</td>
 				<td class="priority-4 text-right">
 					<a href="{{ route('admin.queues.index', ['resource' => 's' . $row->id]) }}">
@@ -193,11 +196,17 @@ app('pathway')
 				</td>
 				<td>
 					@if ($row->queuestatus == 1)
-						<span class="glyph icon-check-circle text-success" data-tip="{{ trans('All queues running') }}">{{ trans('All queues running') }}</span>
+						<span class="glyph icon-check-circle text-success" data-tip="{{ trans('resources::resources.queue status.all queues running') }}">
+							{{ trans('resources::resources.queue status.all queues running') }}
+						</span>
 					@elseif ($row->queuestatus == 0)
-						<span class="glyph icon-minus-circle text-danger tip" data-tip="{{ trans('All queues stopped') }}">{{ trans('All queues stopped') }}</span>
+						<span class="glyph icon-minus-circle text-danger tip" data-tip="{{ trans('resources::resources.queue status.all queues stopped') }}">
+							{{ trans('resources::resources.queue status.all queues stopped') }}
+						</span>
 					@else
-						<span class="glyph icon-alert-triangle text-warning tip" data-tip="{{ trans('One or more stopped queues') }}">{{ trans('One or more stopped queues') }}</span>
+						<span class="glyph icon-alert-triangle text-warning tip" data-tip="{{ trans('resources::resources.queue status.stopped queues') }}">
+							{{ trans('resources::resources.queue status.stopped queues') }}
+						</span>
 					@endif
 				</td>
 			</tr>
