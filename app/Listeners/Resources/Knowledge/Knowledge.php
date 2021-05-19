@@ -130,8 +130,8 @@ class Knowledge
 		// FAQ page
 		$faq = $page->children()
 			->where('alias', '=', 'faq')
-			//->whereIn($a . '.access', $access)
-			->whereIn($p . '.access', $access)
+			->where($a . '.state', '=', 1)
+			->whereIn($a . '.access', $access)
 			->get()
 			->first();
 
@@ -148,8 +148,8 @@ class Knowledge
 		// Bio
 		$bio = $page->children()
 			->where('alias', '=', 'bio')
-			->whereIn($p . '.access', $access)
-			//->whereIn($a . '.access', $access)
+			->where($a . '.state', '=', 1)
+			->whereIn($a . '.access', $access)
 			->get()
 			->first();
 
