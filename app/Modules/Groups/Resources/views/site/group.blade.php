@@ -867,6 +867,8 @@ document.addEventListener('DOMContentLoaded', function() {
 $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own groups') && $group->isManager(auth()->user()));
 $subsection = request()->segment(4);
 $subsection = $subsection ?: 'overview';
+
+$pending = $group->pendingMembersCount;
 @endphp
 
 	<div class="contentInner">
@@ -898,6 +900,9 @@ $subsection = $subsection ?: 'overview';
 				<li class="nav-item">
 					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'members']) }}" id="group-members" class="nav-link tab<?php if ($subsection == 'members') { echo ' active activeTab'; } ?>">
 						Members
+						@if ($pending)
+							<span class="badge badge-warning tip" title="Pending membership requests">{{ $pending }}</span>
+						@endif
 					</a>
 				</li>
 			@endif

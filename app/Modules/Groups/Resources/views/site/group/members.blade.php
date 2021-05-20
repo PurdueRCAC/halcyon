@@ -31,12 +31,6 @@ foreach ($users as $me)
 
 	if (!$me->user || $me->user->isTrashed())
 	{
-		/*if (!in_array($me->id, $disabledids))
-		{
-			$disabledids[] = $me->id;
-			$disabled->push($me);
-		}*/
-		//echo $me->userid . '<br />';
 		if (!($found = $disabled->firstWhere('userid', $me->userid)))
 		{
 			$disabled->push($me);
@@ -90,8 +84,6 @@ $queues = $group->queues()
 	})
 	->get();
 
-$q = (new \App\Modules\Queues\Models\User)->getTable();
-
 foreach ($queues as $queue)
 {
 	if (!isset($resources[$queue->resource->name]))
@@ -102,15 +94,8 @@ foreach ($queues as $queue)
 
 	$users = $queue->users()
 		->withTrashed()
-		->select($q . '.*')//, $u . '.name')
-		->join($u, $u . '.userid', $q . '.userid')
-		->where(function($where) use ($q)
-		{
-			$where->whereNull($q . '.datetimeremoved')
-				->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-		})
-		//->whereNotIn($q . '.userid', $processed)
-		->orderBy($q . '.datetimecreated', 'desc')
+		->whereIsActive()
+		->orderBy('datetimecreated', 'desc')
 		->get();
 
 	foreach ($users as $me)
@@ -124,11 +109,6 @@ foreach ($queues as $queue)
 
 		if (!$me->user || $me->user->isTrashed())
 		{
-			/*if (!in_array($me->id, $disabledids))
-			{
-				$disabledids[] = $me->id;
-				$disabled->push($me);
-			}*/
 			if (!($found = $disabled->firstWhere('userid', $me->userid)))
 			{
 				$disabled->push($me);
@@ -197,7 +177,6 @@ foreach ($unixgroups as $unixgroup)
 	$users = $unixgroup->members()
 		->withTrashed()
 		->whereIsActive()
-		//->whereNotIn('userid', $processed)
 		->get();
 
 	$unixgroup->activemembers = $users;
@@ -213,7 +192,6 @@ foreach ($unixgroups as $unixgroup)
 
 		if (!$me->user || $me->user->isTrashed())
 		{
-			//echo $me->userid . '<br />';
 			if (!($found = $disabled->firstWhere('userid', $me->userid)))
 			{
 				$disabled->push($me);
@@ -291,14 +269,12 @@ $members = $members->sortBy('username');
 								<?php
 								$approves = array();
 								$denies = array();
-								if (isset($user_requests[$req->userid]))
-								{
-									foreach ($user_requests[$req->userid] as $reqid)
-									{
+								if (isset($user_requests[$req->userid])):
+									foreach ($user_requests[$req->userid] as $reqid):
 										$approves[] = route('api.queues.requests.update', ['id' => $reqid]);
-										$denies[] = route('api.queues.requests.delete', ['id' => $reqid]);
-									}
-								}
+										$denies[]   = route('api.queues.requests.delete', ['id' => $reqid]);
+									endforeach;
+								endif;
 								?>
 								<input type="radio" name="approve{{ $i }}" class="approve-request approve-value0" data-api="{{ implode(',', $approves) }}" value="{{ $req->userid }},0" />
 							</td>

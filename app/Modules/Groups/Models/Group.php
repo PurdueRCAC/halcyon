@@ -463,6 +463,64 @@ class Group extends Model
 	}
 
 	/**
+	 * Get a list of prior (trashed) resources
+	 *
+	 * @return  object
+	 */
+	public function getPendingMembersCountAttribute()
+	{
+		$q = (new Queue)->getTable();
+		$s = (new \App\Modules\Resources\Models\Child)->getTable();
+		$r = (new \App\Modules\Resources\Models\Asset)->getTable();
+
+		$queues = $this->queues()
+			->withTrashed()
+			->select($q . '.*')
+			->join($s, $s . '.subresourceid', $q . '.subresourceid')
+			->join($r, $r . '.id', $s . '.resourceid')
+			->where(function($wher) use ($q)
+			{
+				$wher->whereNull($q . '.datetimeremoved')
+					->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where(function($wher) use ($r)
+			{
+				$wher->whereNull($r . '.datetimeremoved')
+					->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->get();
+
+		$processed = array();
+		$pending = 0;
+
+		foreach ($queues as $queue)
+		{
+			$users = $queue->users()
+				->withTrashed()
+				->whereIsActive()
+				->whereIsPending()
+				->get();
+
+			foreach ($users as $me)
+			{
+				if (in_array($me->userid, $processed))
+				{
+					continue;
+				}
+
+				if ($me->user && !$me->user->isTrashed())
+				{
+					$pending++;
+				}
+
+				$processed[] = $me->userid;
+			}
+		}
+
+		return $pending;
+	}
+
+	/**
 	 * Get a list of "message of the day"
 	 *
 	 * @param   string  $name

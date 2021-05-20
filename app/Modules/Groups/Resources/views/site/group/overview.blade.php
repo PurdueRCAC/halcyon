@@ -29,9 +29,7 @@
 		</div>
 	</div>
 </div>
-<?php
-var_dump(auth()->user()->can('edit groups,edit.own groups'));
-?>
+
 <div class="card panel panel-default" id="departments">
 	<div class="card-header panel-heading">
 		<div class="row">
