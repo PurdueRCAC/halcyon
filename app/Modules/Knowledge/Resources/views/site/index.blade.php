@@ -115,9 +115,9 @@
 					<div id="question-state" class="show">
 						<fieldset>
 							<legend>
-								<div id="okapi-a">
+								<span id="okapi-a">
 									<span>Helpful?</span>
-								</div>
+								</span>
 							</legend>
 							<div class="helpful-btn-grp">
 								<button class="btn btn-feedback btn-outline-secondary" id="yes-button"
