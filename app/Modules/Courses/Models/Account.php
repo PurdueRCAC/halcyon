@@ -168,4 +168,24 @@ class Account extends Model
 
 		return parent::delete($options);
 	}
+
+	/**
+	 * Determine if entry has a start time
+	 *
+	 * @return  bool
+	 */
+	public function hasStart()
+	{
+		return ($this->datetimestart && $this->datetimestart != '0000-00-00 00:00:00' && $this->datetimestart != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * Determine if entry has an end time
+	 *
+	 * @return  bool
+	 */
+	public function hasEnd()
+	{
+		return ($this->datetimestop && $this->datetimestop != '0000-00-00 00:00:00' && $this->datetimestop != '-0001-11-30 00:00:00');
+	}
 }

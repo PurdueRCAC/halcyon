@@ -56,7 +56,7 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-7 filter-search">
+			<div class="col col-md-6 filter-search">
 				<div class="form-group">
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
@@ -65,7 +65,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-2 text-right">
+			<div class="col col-md-3 text-right">
 				<div class="form-group">
 					<label for="member-userid" class="sr-only">{{ trans('courses::courses.member') }}:</label>
 					<span class="input-group">
@@ -140,40 +140,6 @@ app('pathway')
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<?php
-			switch ($row->state)
-			{
-				case '2': // Deleted
-					$task = 'publish';
-					$alt  = trans('global.trashed');
-					$cls  = 'trash';
-				break;
-				case '1': // Published
-					$task = 'unpublish';
-					$alt  = trans('global.published');
-					$cls  = 'publish';
-				break;
-				case '0': // Unpublished
-				default:
-					$task = 'publish';
-					$alt  = trans('global.unpublished');
-					$cls  = 'unpublish';
-				break;
-			}
-
-			switch ($row->active)
-			{
-				case '1': // Published
-					$alt2 = trans('courses::courses.active');
-					$cls2 = 'publish';
-				break;
-				case '0': // Unpublished
-				default:
-					$alt2 = trans('courses::courses.inactive');
-					$cls2 = 'unpublish';
-				break;
-			}
-			?>
 			<tr>
 				@if (auth()->user()->can('delete courses'))
 					<td>
@@ -188,16 +154,12 @@ app('pathway')
 						<a href="{{ route('admin.courses.edit', ['id' => $row->id]) }}">
 							@if ($row->classname)
 								{{ $row->classname }}
-							@else
-								<span class="none">{{ trans('global.none') }}</span>
 							@endif
 						</a>
 					@else
 						<span>
 							@if ($row->classname)
 								{{ $row->classname }}
-							@else
-								<span class="none">{{ trans('global.none') }}</span>
 							@endif
 						</span>
 					@endif
@@ -205,46 +167,34 @@ app('pathway')
 				<td class="priority-4">
 					@if ($row->department)
 						{{ $row->department }}
-					@else
-						<span class="none">{{ trans('global.none') }}</span>
 					@endif
 				</td>
 				<td class="priority-5">
 					@if ($row->coursenumber)
 						{{ $row->coursenumber }}
-					@else
-						<span class="none">{{ trans('global.none') }}</span>
 					@endif
 				</td>
 				<td class="priority-2">
 					@if ($row->semester)
 						{{ $row->semester }}
-					@else
-						<span class="none">{{ trans('global.none') }}</span>
 					@endif
 				</td>
 				<td class="priority-4">
 					@if ($row->resource)
 						{{ $row->resource->name }}
-					@else
-						<span class="none">{{ trans('global.none') }}</span>
 					@endif
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->datetimestart && $row->datetimestart != '0000-00-00 00:00:00')
+						@if ($row->hasStart())
 							<time datetime="{{ $row->datetimestart }}">{{ $row->datetimestart->format('Y-m-d') }}</time>
-						@else
-							<span class="never">{{ trans('global.unknown') }}</span>
 						@endif
 					</span>
 				</td>
 				<td class="priority-2">
 					<span class="datetime">
-						@if ($row->datetimestop && $row->datetimestop != '0000-00-00 00:00:00')
+						@if ($row->hasEnd())
 							<time datetime="{{ $row->datetimestop }}">{{ $row->datetimestop->format('Y-m-d') }}</time>
-						@else
-							<span class="never">{{ trans('global.never') }}</span>
 						@endif
 					</span>
 				</td>
