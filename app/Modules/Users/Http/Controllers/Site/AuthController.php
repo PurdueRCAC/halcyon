@@ -19,6 +19,11 @@ class AuthController extends Controller
 	 */
 	public function login(Request $request)
 	{
+		if (Auth::check())
+		{
+			return redirect()->intended($this->authenticatedRoute());
+		}
+
 		if (app()->has('cas'))
 		{
 			$cas = app('cas');
@@ -52,7 +57,7 @@ class AuthController extends Controller
 		//Auth::loginUsingId($user->id);
 
 		$request->validate([
-			'email' => 'required|email',
+			'email'    => 'required|email',
 			'password' => 'required|min:3'
 		]);
 
@@ -71,7 +76,7 @@ class AuthController extends Controller
 			return redirect()
 				->back()
 				->withInput()
-				->withError('Authentication failed');
+				->withError(trans('users::auth.authentication failed'));
 		}
 
 		return redirect()

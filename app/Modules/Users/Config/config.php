@@ -16,4 +16,7 @@ return [
 			'required' => false,
 		],
 	],
+	'redirect_route_after_login' => 'home',
+	'redirect_route_after_logout' => 'home',
+	'create_on_login' => 1,
 ];
