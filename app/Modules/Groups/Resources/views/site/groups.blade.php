@@ -144,7 +144,7 @@ function CreateNewGroup() {
 					</span>
 				</td>
 				<td>
-					{{ $g->datecreated ? $g->datecreated->format('Y-m-d') : trans('global.unknown') }}
+					{{ $g->datecreated ? $g->datecreated->format('Y-m-d') : ($g->datetimecreated ? $g->datetimecreated->format('Y-m-d') : trans('global.unknown')) }}
 				</td>
 			</tr>
 		@endforeach
