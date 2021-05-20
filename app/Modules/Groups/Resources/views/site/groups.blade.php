@@ -131,7 +131,17 @@ function CreateNewGroup() {
 					{!! $g->group->unixgroup ? $g->group->unixgroup : '<span class="none text-muted">' . trans('global.none') . '</span>' !!}
 				</td>
 				<td>
-					<span class="badge {{ $g->isManager() ? 'badge-success' : 'badge-secondary' }}">{{ $g->type->name }}</span>
+					@if ($g->isManager())
+						<span class="badge badge-success">
+					@elseif ($g->isMember())
+						<span class="badge badge-secondary">
+					@elseif ($g->isViewer())
+						<span class="badge badge-info">
+					@elseif ($g->isPending())
+						<span class="badge badge-warning">
+					@endif
+						{{ $g->type->name }}
+					</span>
 				</td>
 				<td>
 					{{ $g->datecreated ? $g->datecreated->format('Y-m-d') : trans('global.unknown') }}
