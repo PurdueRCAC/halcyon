@@ -151,7 +151,7 @@ app('pathway')
 							@endif
 						</time>
 					@else
-						<span class="never">{{ trans('global.unknown') }}</span>
+						<span class="unknown">{{ trans('global.unknown') }}</span>
 					@endif
 					@if (auth()->user()->can('edit orders'))
 						</a>
@@ -160,10 +160,10 @@ app('pathway')
 				<td>
 					@if (auth()->user()->can('edit orders'))
 						<a href="{{ route('admin.orders.edit', ['id' => $row->id]) }}">
-							<?php echo $row->usernotes ? e(Illuminate\Support\Str::limit($row->usernotes, 50)) : '<span class="unknown">' . trans('global.none') . '</span>'; ?>
+							{{ $row->usernotes ? Illuminate\Support\Str::limit($row->usernotes, 50) : '' }}
 						</a>
 					@else
-						<?php echo $row->usernotes ? e(Illuminate\Support\Str::limit($row->usernotes, 50)) : '<span class="unknown">' . trans('global.none') . '</span>'; ?>
+						{{ $row->usernotes ? Illuminate\Support\Str::limit($row->usernotes, 50) : '' }}
 					@endif
 					<!-- <br />
 					accounts: {{ $row->accounts }}<br />
@@ -183,18 +183,18 @@ app('pathway')
 					@if ($row->groupid)
 						@if (auth()->user()->can('manage groups'))
 							<a href="{{ route('admin.groups.edit', ['id' => $row->groupid]) }}">
-								<?php echo $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+								<?php echo $row->group ? $row->group->name : 'Group ID #' . $row->groupid; ?>
 							</a>
 						@else
-							<?php echo $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+							<?php echo $row->group ? $row->group->name : 'Group ID #' . $row->groupid; ?>
 						@endif
 					@else
 						@if (auth()->user()->can('manage users'))
 							<a href="{{ route('admin.users.edit', ['id' => $row->userid]) }}">
-								<?php echo $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+								<?php echo $row->name ? $row->name : 'User ID #' . $row->userid; ?>
 							</a>
 						@else
-							<?php echo $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span>'; ?>
+							<?php echo $row->name ? $row->name : 'User ID #' . $row->userid; ?>
 						@endif
 					@endif
 				</td>
