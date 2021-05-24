@@ -50,7 +50,7 @@ class Adminmenu extends Widget
 			->select(
 				$menus . '.*',
 				DB::raw('SUM(' . $items . '.home) AS home'),
-				$items . '.language',
+				$items . '.language'
 				//'languages.image',
 				//'languages.sef',
 				//'languages.title_native'
