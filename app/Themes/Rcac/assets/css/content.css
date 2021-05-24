@@ -951,7 +951,8 @@ ul.purchases li {
 	color: #555555;
 }
 .text-muted {
-	color: #737373;
+	/*color: #737373;*/
+	color: #666F75 !important;
 }
 .purchase-pricing .row {
 	margin: 1px 0 0 0;

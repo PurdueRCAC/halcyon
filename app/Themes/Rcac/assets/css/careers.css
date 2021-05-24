@@ -14,7 +14,7 @@
 }
 .hero {
 	background: #666 url('../images/IMG_3532d.jpg') right bottom no-repeat;
-	background-size: auto 100%;
+	background-size: 100% auto;
 	margin: 0 0 2em 0;
 }
 .hero .container {
@@ -55,7 +55,7 @@
 	line-height: 1;
 	position: absolute;
 	bottom: -0.1em;
-	left: 40%;
+	left: 457px;
 	margin: 0;
 	font-family: acumin-pro-condensed, "Franklin Gothic", sans-serif;
 	display: none;
@@ -135,7 +135,7 @@ a.card:focus {
 	padding: 2em;
 }
 
-.contentPage .side-nav li {
+.side-nav li {
 	list-style: none;
 	margin: 0;
 	border-top: solid 1px #ccc;
@@ -153,18 +153,14 @@ a.card:focus {
 	color: #000;
 	text-decoration: underline;
 }
-/*.contentPage .card .btn {
-	position: absolute;
-	top: 1.5rem;
-	right: -1rem;
-	border-radius: 0;
-}*/
 
-@media (min-width: 480px) {
+@media (min-width: 400px) {
 	.hero {
-		background-position: -350px 0;
+		background-position: right bottom;
+		background-size: 100% auto;
 	}
 }
+
 @media (min-width: 600px) {
 	.hero {
 		background-position: 0 -350px;
@@ -181,30 +177,5 @@ a.card:focus {
 	}
 	.contentPage {
 		padding-top: 40px;
-	}
-	.contentPage section .card-pic .card-pic-container {
-		width: 250px;
-		position: absolute;
-		bottom: 30px;
-		right: -30px;
-		width: 160px;
-		height: 160px;
-		background-size: cover;
-		background-repeat: no-repeat;
-		background-position: center center;
-		border: 6px solid #fff;
-	}
-	.contentPage section .card-pic-r .card-body {
-		margin-right: 134px;
-	}
-	.contentPage section .card-pic-l .card-body {
-		margin-left: 134px;
-	}
-	.contentPage section .card-pic-l .card-pic-container {
-		right: auto;
-		left: -30px;
-	}
-	.coming-soon .card-header {
-		text-align: right;
 	}
 }
