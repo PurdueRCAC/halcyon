@@ -51,12 +51,12 @@ class Adminmenu extends Widget
 				$menus . '.*',
 				DB::raw('SUM(' . $items . '.home) AS home'),
 				$items . '.language',
-				'languages.image',
-				'languages.sef',
-				'languages.title_native'
+				//'languages.image',
+				//'languages.sef',
+				//'languages.title_native'
 			)
 			->leftJoin($items, $items . '.menutype', '=', $menus . '.menutype')
-			->leftJoin('languages', 'languages.lang_code', '=', $items . '.language')
+			//->leftJoin('languages', 'languages.lang_code', '=', $items . '.language')
 			->whereNull($menus . '.deleted_at')
 			->where(function($where) use ($items)
 			{
@@ -77,9 +77,9 @@ class Adminmenu extends Widget
 			->groupBy($menus . '.deleted_at')
 			->groupBy($items . '.menutype')
 			->groupBy($items . '.language')
-			->groupBy('languages.image')
-			->groupBy('languages.sef')
-			->groupBy('languages.title_native')
+			//->groupBy('languages.image')
+			//->groupBy('languages.sef')
+			//->groupBy('languages.title_native')
 			->get();
 	}
 

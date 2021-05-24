@@ -600,13 +600,13 @@ class Item extends Model
 			// We need to qualify the full path to avoid collisions with module file names.
 			if ($form->loadFile($formFile, true, '/metadata') == false)
 			{
-				throw new Exception(trans('JERROR_LOADFILE_FAILED'));
+				throw new Exception(trans('menus::menus.error.load file failed'));
 			}
 
 			// Attempt to load the xml file.
 			if (!$xml = simplexml_load_file($formFile))
 			{
-				throw new Exception(trans('JERROR_LOADFILE_FAILED'));
+				throw new Exception(trans('menus::menus.error.load file failed'));
 			}
 
 			// Get the help data from the XML file if present.
@@ -622,7 +622,7 @@ class Item extends Model
 				// Attempt to load the xml file.
 				if (!$xmlFile || ($xmlFile && !$xml = simplexml_load_file($xmlFile)))
 				{
-					throw new Exception(trans('JERROR_LOADFILE_FAILED'));
+					throw new Exception(trans('menus::menus.error.load file failed'));
 				}
 
 				// Get the help data from the XML file if present.
@@ -657,14 +657,14 @@ class Item extends Model
 			// Add the component params last of all to the existing form.
 			if (!$form->load($path, true, '/config'))
 			{
-				throw new Exception(trans('JERROR_LOADFILE_FAILED'));
+				throw new Exception(trans('menus::menus.error.load file failed'));
 			}
 		}
 
 		// Load the specific type file
 		if (!$form->loadFile(__DIR__ . '/Forms/item_' . $type . '.xml', false, false))
 		{
-			throw new Exception(trans('JERROR_LOADFILE_FAILED'));
+			throw new Exception(trans('menus::menus.error.load file failed'));
 		}
 
 		// Association menu items
@@ -677,7 +677,7 @@ class Item extends Model
 			$fields->addAttribute('name', 'associations');
 			$fieldset = $fields->addChild('fieldset');
 			$fieldset->addAttribute('name', 'item_associations');
-			$fieldset->addAttribute('description', 'COM_MENUS_ITEM_ASSOCIATIONS_FIELDSET_DESC');
+			$fieldset->addAttribute('description', 'menus::menus.item associations desc');
 
 			$add = false;
 			foreach ($languages as $tag => $language)
@@ -693,7 +693,7 @@ class Item extends Model
 					$field->addAttribute('label', $language->title);
 					$field->addAttribute('translate_label', 'false');
 
-					$option = $field->addChild('option', 'COM_MENUS_ITEM_FIELD_ASSOCIATION_NO_VALUE');
+					$option = $field->addChild('option', 'menus::menus.item association none');
 					$option->addAttribute('value', '');
 				}
 			}
@@ -702,22 +702,13 @@ class Item extends Model
 			{
 				$form->load($addform, false);
 			}
-		}*/
+		}
 
 		// Trigger the form preparation event.
-		//event($group . '.onContentPrepareForm', array($form, $data));
+		//event($event = new ContentPrepareForm($form, $data, $group ));
 
-		// Check for errors encountered while preparing the form.
-		/*if (count($results) && in_array(false, $results, true))
-		{
-			// Get the last error.
-			$error = $dispatcher->getError();
-
-			if (!($error instanceof Exception))
-			{
-				throw new Exception($error);
-			}
-		}*/
+		$form = $event->form;
+		*/
 
 		return $form;
 	}

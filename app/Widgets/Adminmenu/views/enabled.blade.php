@@ -119,18 +119,12 @@ if ($user->can('manage users')
 		);
 	}
 
-	/*if ($createUser)
-	{
-		$menu->addChild(
-			new Node(trans('widget.adminmenu::adminmenu.COM_CONTENT_NEW_CATEGORY'), 'index.php?option=categories&task=category.add&extension=members', 'class:newarticle')
-		);
-		$menu->getParent();
-	}
-
+	/*
 	$menu->addSeparator();
 	$menu->addChild(
 		new Node(trans('widget.adminmenu::adminmenu.MASS_MAIL_USERS'), 'index.php?option=members&controller=mail', 'class:massmail')
-	);*/
+	);
+	*/
 
 	$menu->getParent();
 }
@@ -143,25 +137,18 @@ if ($user->can('manage menus') && Module::isEnabled('menus'))
 	$menu->addChild(
 		new Node(trans('widget.adminmenu::adminmenu.menus'), route('admin.menus.index'), 'class:menus', ($active == 'menus')), true
 	);
-	$createMenu = $shownew; // && User::authorise('core.create', 'menus');
 
 	$menu->addChild(
-		new Node(trans('widget.adminmenu::adminmenu.menu manager'), route('admin.menus.index'), 'class:menumgr'), $createMenu
+		new Node(trans('widget.adminmenu::adminmenu.menu manager'), route('admin.menus.index'), 'class:menumgr'), $shownew
 	);
-	/*if ($createMenu)
-	{
-		$menu->addChild(
-			new Node(trans('widget.adminmenu::adminmenu.MENU_MANAGER_NEW_MENU'), 'index.php?option=menus&view=menu&layout=edit', 'class:newmenu')
-		);
-		
-	}*/
+
 	$menu->getParent();
 	$menu->addSeparator();
 
 	// Menu Types
 	foreach ($menus as $menuType)
 	{
-		$alt = '*' . $menuType->sef . '*';
+		//$alt = '*' . $menuType->sef . '*';
 		if ($menuType->home == 0)
 		{
 			$titleicon = '';
@@ -174,21 +161,15 @@ if ($user->can('manage menus') && Module::isEnabled('menus'))
 		{
 			$titleicon = ' <span class="home multiple" title="' . trans('widget.adminmenu::adminmenu.HOME_MULTIPLE') . '">' . $menuType->home . '</span>';
 		}
-		else
+		/*else
 		{
 			$titleicon = ' <span title="' . $menuType->title_native . '">' . $alt . '</span>';
-		}
+		}*/
 
 		$menu->addChild(
-			new Node($menuType->title, route('admin.menus.items', ['menutype' => $menuType->menutype]), 'class:menu', null, null, $titleicon), $createMenu
+			new Node($menuType->title, route('admin.menus.items', ['menutype' => $menuType->menutype]), 'class:menu', null, null, $titleicon), true
 		);
 
-		/*if ($createMenu)
-		{
-			$menu->addChild(
-				new Node(trans('widget.adminmenu::adminmenu.MENU_MANAGER_NEW_MENU_ITEM'), 'index.php?option=menus&view=item&layout=edit&menutype=' . $menuType->menutype, 'class:newarticle')
-			);
-		}*/
 		$menu->getParent();
 	}
 	$menu->getParent();
@@ -213,25 +194,7 @@ if ($user->can('manage pages')
 		);
 		$menu->getParent();
 	}
-	/*if ($createContent)
-	{
-		$menu->addChild(
-			new Node(trans('widget.adminmenu::adminmenu.new page'), route('admin.pages.create'), 'class:newarticle')
-		);
-		$menu->getParent();
-	}*/
 
-	/*$menu->addChild(
-		new Node(trans('widget.adminmenu::adminmenu.CATEGORY_MANAGER'), route('admin.categories.index', ['extension' => 'pages']), 'class:category'), $createContent
-	);
-	if ($createContent)
-	{
-		$menu->addChild(
-			new Node(trans('widget.adminmenu::adminmenu.COM_CONTENT_NEW_CATEGORY'), route('admin.categories.create', ['extension' => 'pages']), 'class:newarticle')
-		);
-		$menu->getParent();
-	}
-	*/
 	if ($user->can('manage news') && Module::isEnabled('news'))
 	{
 		//$menu->addSeparator();

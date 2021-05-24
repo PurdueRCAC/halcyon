@@ -51,7 +51,7 @@ class ThemesController extends Controller
 		$query = Theme::query();
 
 		//$e = 'extensions';
-		$l = 'languages';
+		//$l = 'languages';
 		//$m = 'menu_items';
 		$s = (new Theme)->getTable();
 

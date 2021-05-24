@@ -295,11 +295,11 @@ class WidgetsController extends Controller
 		$a = (new Viewlevel)->getTable();
 		$m = (new Menu)->getTable();
 		$e = 'extensions';
-		$l = 'languages';
+		//$l = 'languages';
 
 		$query->select(
 				$p . '.*',
-				$l . '.title AS language_title',
+				//$l . '.title AS language_title',
 				$u . '.name AS editor',
 				$a . '.title AS access_level',
 				DB::raw('MIN(' . $m . '.menuid) AS pages'),
@@ -308,28 +308,23 @@ class WidgetsController extends Controller
 			->where($p . '.client_id', '=', $filters['client_id']);
 
 		// Join over the language
-		$query
-			//->select($l . '.title AS language_title')
-			->leftJoin($l, $l . '.lang_code', $p . '.language');
+		//$query
+		//	->leftJoin($l, $l . '.lang_code', $p . '.language');
 
 		// Join over the users for the checked out user.
 		$query
-			//->select($u . '.name AS editor')
 			->leftJoin($u, $u . '.id', $p . '.checked_out');
 
 		// Join over the access groups.
 		$query
-			//->select($a . '.title AS access_level')
 			->leftJoin($a, $a . '.id', $p . '.access');
 
 		// Join over menus
 		$query
-			//->select('MIN(' . $m . '.menuid) AS pages')
 			->leftJoin($m, $m . '.widgetid', $p . '.id');
 
 		// Join over the extensions
 		$query
-			//->select($e . '.name AS name')
 			->leftJoin($e, $e . '.element', $p . '.module')
 			->where($e . '.type', '=', 'widget')
 			->groupBy(
@@ -348,7 +343,7 @@ class WidgetsController extends Controller
 				$p . '.showtitle',
 				$p . '.params',
 				$p . '.client_id',
-				$l . '.title',
+				//$l . '.title',
 				$u . '.name',
 				$a . '.title',
 				$e . '.name',
@@ -369,14 +364,6 @@ class WidgetsController extends Controller
 		}
 
 		// Filter by published state
-		/*if (is_numeric($filters['state']))
-		{
-			$query->where($p . '.published', '=', (int) $filters['state']);
-		}
-		elseif ($filters['state'] === '')
-		{
-			$query->whereIn($p . '.published', array(0, 1));
-		}*/
 		if ($filters['state'] == 'published')
 		{
 			$query->where($p . '.published', '=', 1);

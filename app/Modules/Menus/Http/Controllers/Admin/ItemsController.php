@@ -100,8 +100,8 @@ class ItemsController extends Controller
 			$a . '.language',
 			$a . '.client_id',
 			$a . '.deleted_at',
-			'l.title AS language_title',
-			'l.image AS image',
+			//'l.title AS language_title',
+			//'l.image AS image',
 			'u.name AS editor',
 			'c.element AS componentname',
 			'ag.title AS access_level',
@@ -115,7 +115,7 @@ class ItemsController extends Controller
 		//$query->from($query->getTableName(), 'a');
 
 		// Join over the language
-		$query->leftJoin('languages AS l', 'l.lang_code', $a . '.language', 'left');
+		//$query->leftJoin('languages AS l', 'l.lang_code', $a . '.language', 'left');
 
 		// Join over the users.
 		$query->leftJoin('users AS u', 'u.id', $a . '.checked_out');

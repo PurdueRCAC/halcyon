@@ -64,7 +64,7 @@ class CreateBaseTables extends Migration
 			});
 		}
 
-		if (!Schema::hasTable('languages'))
+		/*if (!Schema::hasTable('languages'))
 		{
 			Schema::create('languages', function (Blueprint $table)
 			{
@@ -87,7 +87,7 @@ class CreateBaseTables extends Migration
 				$table->index('access');
 				$table->index('ordering');
 			});
-		}
+		}*/
 
 		if (!Schema::hasTable('collegedept'))
 		{

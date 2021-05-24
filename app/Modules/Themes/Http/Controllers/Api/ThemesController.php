@@ -125,7 +125,7 @@ class ThemesController extends Controller
 		$query = Theme::query();
 
 		$e = 'extensions';
-		$l = 'languages';
+		//$l = 'languages';
 		$m = 'menu';
 		$s = (new Theme)->getTable();
 
@@ -139,8 +139,8 @@ class ThemesController extends Controller
 				$s . '.params',
 				//'\'0\' AS assigned',
 				$m . '.template_style_id AS assigned',
-				$l . '.title AS language_title',
-				$l . '.image',
+				//$l . '.title AS language_title',
+				//$l . '.image',
 				$e . '.id AS e_id'
 			]);
 
@@ -149,8 +149,8 @@ class ThemesController extends Controller
 			->leftJoin($m, $m . '.template_style_id', $s . '.id');
 
 		// Join over the language
-		$query
-			->leftJoin($l, $l . '.lang_code', $s . '.home');
+		//$query
+		//	->leftJoin($l, $l . '.lang_code', $s . '.home');
 
 		// Filter by extension enabled
 		$query
@@ -194,8 +194,8 @@ class ThemesController extends Controller
 				$s . '.title',
 				$s . '.home',
 				$s . '.client_id',
-				$l . '.title',
-				$l . '.image',
+				//$l . '.title',
+				//$l . '.image',
 				$e . '.id AS extension_id'
 			]);
 

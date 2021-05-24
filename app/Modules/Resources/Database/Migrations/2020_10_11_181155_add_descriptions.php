@@ -17,6 +17,7 @@ class AddDescriptions extends Migration
 		{
 			if (!Schema::hasColumn('resources', 'description'))
 			{
+				//ALTER TABLE `resources` ADD COLUMN `description` VARCHAR(2000);
 				Schema::table('resources', function (Blueprint $table)
 				{
 					$table->string('description', 2000)->nullable();
@@ -25,6 +26,7 @@ class AddDescriptions extends Migration
 
 			if (!Schema::hasColumn('resources', 'params'))
 			{
+				//ALTER TABLE `resources` ADD COLUMN `params` VARCHAR(2000);
 				Schema::table('resources', function (Blueprint $table)
 				{
 					$table->string('status', 2000)->nullable();
@@ -33,6 +35,7 @@ class AddDescriptions extends Migration
 
 			if (!Schema::hasColumn('resources', 'status'))
 			{
+				//ALTER TABLE `resources` ADD COLUMN `status` VARCHAR(50);
 				Schema::table('resources', function (Blueprint $table)
 				{
 					$table->string('status', 50)->nullable();
@@ -43,6 +46,7 @@ class AddDescriptions extends Migration
 		// Resource types
 		if (Schema::hasTable('resourcetypes') && !Schema::hasColumn('resourcetypes', 'description'))
 		{
+			//ALTER TABLE `resourcetypes` ADD COLUMN `description` VARCHAR(2000);
 			Schema::table('resourcetypes', function (Blueprint $table)
 			{
 				$table->string('description', 2000)->nullable();
