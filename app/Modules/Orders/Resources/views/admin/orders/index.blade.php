@@ -172,7 +172,8 @@ app('pathway')
 					denied: {{ $row->accountsdenied }}<br />
 					paid: {{ $row->accountspaid }}<br />
 					items: {{ $row->items_count }}<br />
-					fulfilled {{ $row->itemsfulfilled }}<br /> -->
+					fulfilled {{ $row->itemsfulfilled }}<br />
+					-->
 				</td>
 				<td>
 					<span class="badge badge-sm order-status {{ str_replace(' ', '-', $row->status) }}" data-tip="Accounts: {{ $row->accounts }}<br />Assigned: {{ $row->accountsassigned }}<br />Approved: {{ $row->accountsapproved }}<br />Denied: {{ $row->accountsdenied }}<br />Paid: {{ $row->accountspaid }}<br />---<br />Items: {{ $row->items_count }}<br />Fulfilled: {{ $row->itemsfulfilled }}">

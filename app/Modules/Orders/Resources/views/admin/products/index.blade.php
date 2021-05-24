@@ -89,7 +89,7 @@ app('pathway')
 				<select name="category" id="filter_category" class="form-control filter filter-submit">
 					<option value="0"<?php if (!$filters['category']): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
 					@foreach ($categories as $category)
-						<option value="<?php echo $category->id; ?>"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
+						<option value="{{ $category->id }}"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
 					@endforeach
 				</select>
 
@@ -111,7 +111,7 @@ app('pathway')
 				<select name="recurrence" id="filter_recurrence" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['recurrence'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all recurrence') }}</option>
 					@foreach (App\Modules\Orders\Models\Timeperiod::all() as $timeperiod)
-						<option value="<?php echo $timeperiod->id; ?>"<?php if ($filters['recurrence'] == $timeperiod->id): echo ' selected="selected"'; endif;?>>{{ $timeperiod->name }}</option>
+						<option value="{{ $timeperiod->id }}"<?php if ($filters['recurrence'] == $timeperiod->id): echo ' selected="selected"'; endif;?>>{{ $timeperiod->name }}</option>
 					@endforeach
 				</select>
 			</div>
@@ -169,10 +169,14 @@ app('pathway')
 				</td>
 				<td>
 					@if ($row->istrashed())
-						<span class="glyph icon-trash text-danger" aria-hidden="true" data-tip="{{ trans('global.trashed') }}"></span>
+						<span class="glyph icon-trash text-danger" aria-hidden="true" data-tip="{{ trans('global.trashed') }}">
+							<span class="sr-only">{{ trans('global.trashed') }}</span>
+						</span>
 					@endif
 					@if (!$row->public)
-						<span class="glyph icon-eye-off text-warning" aria-hidden="true" data-tip="{{ trans('orders::orders.hidden') }}"></span>
+						<span class="glyph icon-eye-off text-warning" aria-hidden="true" data-tip="{{ trans('orders::orders.hidden') }}">
+							<span class="sr-only">{{ trans('orders::orders.hidden') }}</span>
+						</span>
 					@endif
 					@if (auth()->user()->can('edit orders.products'))
 						<a href="{{ route('admin.orders.products.edit', ['id' => $row->id]) }}">

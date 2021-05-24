@@ -470,7 +470,7 @@ function AddNewCategory() {
 	post['description'] = "Enter description for new category. This category will not be displayed until at least one public product is created.";
 
 	post = JSON.stringify(post);
-	WSPostURL(ROOT_URL + "ordercategory", post, function(xml) {
+	WSPostURL(ROOT_URL + "orders/categories", post, function(xml) {
 		if (xml.status != 200) {
 			// Error handling
 			alert("An error occurred.");
