@@ -16,12 +16,20 @@ class ScheduleServiceProvider extends ServiceProvider
 		{
 			$schedule = $this->app->make(Schedule::class);
 
-			$schedule->command(EmailAdditionsCommand::class)->cron(config('module.courses.schedule.emailadditions', '*/20 * * * *'));
+			$schedule->command(EmailAdditionsCommand::class)
+				->cron(config('module.courses.schedule.emailadditions', '*/20 * * * *'))
+				->withoutOverlapping();
 
-			$schedule->command(EmailRemovalsCommand::class)->cron(config('module.courses.schedule.emailremovals', '*/20 * * * *'));
+			$schedule->command(EmailRemovalsCommand::class)
+				->cron(config('module.courses.schedule.emailremovals', '*/20 * * * *'))
+				->withoutOverlapping();
 
-			$schedule->command(SyncCommand::class)->cron(config('module.courses.schedule.sync', '5 0 * * *'));
-			//$schedule->command(SyncCommand::class)->cron(config('module.courses.schedule.sync', '0 8 * * *'));
+			$schedule->command(SyncCommand::class)
+				->cron(config('module.courses.schedule.sync', '5 0 * * *')) // 0 8 * * *
+				->onFailure(function ()
+				{
+					error_log('Courses syncing produced an error.');
+				});
 		});
 	}
 }
