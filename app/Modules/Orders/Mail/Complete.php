@@ -45,7 +45,7 @@ class Complete extends Mailable
 	public function build()
 	{
 		return $this->markdown('orders::mail.complete')
-					->subject(config('app.name') . '- Order #' . $order->id . ' Complete')
+					->subject(config('app.name') . '- Order #' . $this->order->id . ' Complete')
 					->with([
 						'order' => $this->order,
 						'user' => $this->user,

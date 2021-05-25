@@ -3,7 +3,7 @@ Hello {{ $user->name }},
 
 This is an automated message notifying that an order has payment information entered. This order is ready for business office assignment.
 
-Please assign business office approvers on the [Order Management](https://www.rcac.purdue.edu/order/{$order->id}) page.
+Please assign business office approvers on the [Order Management]({{ route('site.orders.read', ['id' => $order->id]) }}) page.
 
 ---
 
@@ -11,6 +11,6 @@ Please assign business office approvers on the [Order Management](https://www.rc
 
 ---
 
-You may view this order in detail from the [Order Management]({{ route('site.orders.read', ['id' => $order->id]) }}) page. If you have any questions about this process please contact rcac-help@purdue.edu
+You may view this order in detail from the [Order Management]({{ route('site.orders.read', ['id' => $order->id]) }}) page. If you have any questions about this process please contact {{ config('mail.from.address') }}.
 
 @endcomponent

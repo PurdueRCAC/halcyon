@@ -29,7 +29,7 @@ if ($item->isRecurring())
 	}
 }
 ?>
-| {{ $item->product->name }} | {{ $item->quantity }} | ${{ $item->price }} | {{ $renew }} |
+| {{ $item->product->name }} | {{ $item->quantity }} | ${{ $item->formattedPrice }} | {{ $renew }} |
 @endforeach
 @endcomponent
 
@@ -41,8 +41,8 @@ $remaining = $order->total;
 | Item               |    Amount | Notes |
 | -------------------|----------:|-------|
 | Order Total        | ${{ $order->formattedTotal }} |       |
-@foreach ($order->accounts as $account)
-| Account ${{ $account->account }} | ${{ $account->formattedAmount }} | {{ $account->budgetjustification }} |
+@foreach ($order->accounts()->withTrashed()->whereIsActive()->get() as $account)
+| Account {{ $account->account }} | ${{ $account->formattedAmount }} | {{ $account->budgetjustification }} |
 @php
 $remaining -= $account->amount;
 @endphp
@@ -54,11 +54,11 @@ $remaining -= $account->amount;
 @if ($order->usernotes)
 **Notes:**
 
-> {{ $order->usernotes }}
+> {!! str_replace("\n", '<br />', $order->usernotes) !!}
 @endif
 
-@if ($user->can('manage orders'))
+@if ($user->can('manage orders') && $order->staffnotes)
 **Internal Notes:**
 
-> {{ $order->staffnotes }}
+> {!! str_replace("\n", '<br />', $order->staffnotes) !!}
 @endif

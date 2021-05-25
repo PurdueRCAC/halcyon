@@ -13,6 +13,7 @@ use App\Modules\Orders\Mail\PaymentApproved;
 use App\Modules\Orders\Mail\Ticket;
 use App\Modules\Orders\Mail\Fulfilled;
 use App\Modules\Orders\Mail\Complete;
+use App\Modules\Orders\Mail\Canceled;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Access\Map;
 
@@ -71,27 +72,29 @@ class EmailStatusCommand extends Command
 	{
 		$debug = $this->option('debug') ? true : false;
 
-		//$this->info('Emailing order status...');
-
-		$groups = config('orders.admin_group', []);
+		$roles = config('module.orders.staff', []);
 		$admins = array();
 		$processed = array();
 
 		// Get admins
-		if (!empty($groups))
+		if (!empty($roles))
 		{
 			$admins = Map::query()
-				->whereIn('group_id', $groups)
+				->whereIn('role_id', $roles)
 				->get()
 				->pluck('user_id')
 				->toArray();
 			$admins = array_unique($admins);
 		}
 
+		//--------------------------------------------------------------------------
 		// STEP 1: Order Entered
+		//--------------------------------------------------------------------------
 		$this->info('Process new orders pending payment info...');
 
 		$orders = Order::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('notice', '=', self::PENDING_PAYMENT)
 			->orderBy('id', 'asc')
 			->get();
@@ -137,9 +140,9 @@ class EmailStatusCommand extends Command
 					continue;
 				}
 
-				Mail::to($user->email)->send($message);
+				//Mail::to($user->email)->send($message);
 
-				$this->info("Emailed order #{$order->id} to {$user->email}.");
+				$this->info("Emailed new order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -148,14 +151,19 @@ class EmailStatusCommand extends Command
 			}
 
 			// Change states
+			$order->offsetUnset('type');
 			$order->update(['notice' => self::PENDING_BOASSIGNMENT]);
 			$processed[] = $order->id;
 		}
 
+		//--------------------------------------------------------------------------
 		// STEP 2: Payment information entered
+		//--------------------------------------------------------------------------
 		$this->info('Process new orders pending business office assignment...');
 
 		$orders = Order::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('notice', '=', self::PENDING_BOASSIGNMENT)
 			->whereNotIn('id', $processed)
 			->orderBy('id', 'asc')
@@ -167,7 +175,7 @@ class EmailStatusCommand extends Command
 			{
 				if ($debug)
 				{
-					$this->warning('skipping ' . $order->id . ' - ' . $order->status);
+					$this->line('skipping ' . $order->id . ' - ' . $order->status);
 				}
 				continue;
 			}
@@ -191,9 +199,9 @@ class EmailStatusCommand extends Command
 					continue;
 				}
 
-				Mail::to($user->email)->send($message);
+				//Mail::to($user->email)->send($message);
 
-				$this->info("Emailed order #{$order->id} to {$user->email}.");
+				$this->info("Emailed pending payment info order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -206,10 +214,14 @@ class EmailStatusCommand extends Command
 			$processed[] = $order->id;
 		}
 
+		//--------------------------------------------------------------------------
 		// STEP 3: Business office approvers assigned
+		//--------------------------------------------------------------------------
 		$this->info('Process new orders pending approval, fulfillment, collection, complete...');
 
 		$orders = Order::query()
+			->withTrashed()
+			->whereIsActive()
 			->whereIn('notice', [self::PENDING_APPROVAL, self::PENDING_FULFILLMENT, self::PENDING_COLLECTION, self::COMPLETE])
 			->whereNotIn('id', $processed)
 			->orderBy('id', 'asc')
@@ -219,9 +231,11 @@ class EmailStatusCommand extends Command
 		{
 			$approvers = array();
 			$denied = false;
-			foreach ($order->accounts as $account)
+			foreach ($order->accounts()->withTrashed()->whereIsActive()->get() as $account)
 			{
-				if ($account->approveruserid && !in_array($account->approveruserid, $approvers) && $account->notice == self::ACCOUNT_ASSIGNED)
+				if ($account->approveruserid
+				 && !in_array($account->approveruserid, $approvers)
+				 && $account->notice == self::ACCOUNT_ASSIGNED)
 				{
 					array_push($approvers, $account->approveruserid);
 				}
@@ -255,9 +269,9 @@ class EmailStatusCommand extends Command
 					continue;
 				}
 
-				Mail::to($user->email)->send($message);
+				//Mail::to($user->email)->send($message);
 
-				$this->info("Emailed order #{$order->id} to {$user->email}.");
+				$this->info("Emailed pending payment approval order #{$order->id} to {$user->email}.");
 			}
 
 			// Send denied notice if needed
@@ -286,7 +300,7 @@ class EmailStatusCommand extends Command
 						continue;
 					}
 
-					Mail::to($user->email)->send($message);
+					//Mail::to($user->email)->send($message);
 
 					$this->info("Emailed payment denied for order #{$order->id} to {$user->email}.");
 				}
@@ -310,10 +324,14 @@ class EmailStatusCommand extends Command
 			}
 		}
 
+		//--------------------------------------------------------------------------
 		// STEP 4: Payment approved, pending fulfillment
+		//--------------------------------------------------------------------------
 		$this->info('Process payment approved, pending fulfillment...');
 
 		$orders = Order::query()
+			->withTrashed()
+			->whereIsActive()
 			->whereIn('notice', [self::PENDING_FULFILLMENT])
 			->orderBy('id', 'asc')
 			->get();
@@ -324,7 +342,7 @@ class EmailStatusCommand extends Command
 			{
 				if ($debug)
 				{
-					$this->warning('skipping ' . $order->id . ' - ' . $order->status);
+					$this->line('skipping ' . $order->id . ' - ' . $order->status);
 				}
 				continue;
 			}
@@ -353,9 +371,9 @@ class EmailStatusCommand extends Command
 					continue;
 				}
 
-				Mail::to($user->email)->send($message);
+				//Mail::to($user->email)->send($message);
 
-				$this->info("Emailed order #{$order->id} to {$user->email}.");
+				$this->info("Emailed pending fulfillment order #{$order->id} to {$user->email}.");
 			}
 
 			$ticket = false;
@@ -374,7 +392,7 @@ class EmailStatusCommand extends Command
 			if ($ticket)
 			{
 				$user = new User;
-				$user->email = 'rcac-help@purdue.edu';
+				$user->email = config('mail.from.address');
 				$user->name = config('app.name');
 
 				// Prepare and send actual email
@@ -386,7 +404,7 @@ class EmailStatusCommand extends Command
 				}
 				else
 				{
-					Mail::to($user->email)->send($message);
+					//Mail::to($user->email)->send($message);
 				}
 
 				$this->info("Emailed order #{$order->id} to {$user->email}.");
@@ -401,10 +419,14 @@ class EmailStatusCommand extends Command
 			$order->update(['notice' => self::PENDING_COLLECTION]);
 		}
 
+		//--------------------------------------------------------------------------
 		// STEP 5: Order fulfilled, pending collection
+		//--------------------------------------------------------------------------
 		$this->info('Process order fulfilled, pending collection...');
 
 		$orders = Order::query()
+			->withTrashed()
+			->whereIsActive()
 			->whereIn('notice', [self::PENDING_COLLECTION])
 			->orderBy('id', 'asc')
 			->get();
@@ -415,7 +437,7 @@ class EmailStatusCommand extends Command
 			{
 				if ($debug)
 				{
-					$this->warning('skipping ' . $order->id . ' - ' . $order->status);
+					$this->line('skipping ' . $order->id . ' - ' . $order->status);
 				}
 				continue;
 			}
@@ -444,9 +466,9 @@ class EmailStatusCommand extends Command
 					continue;
 				}
 
-				Mail::to($user->email)->send($message);
+				//Mail::to($user->email)->send($message);
 
-				$this->info("Emailed order #{$order->id} to {$user->email}.");
+				$this->info("Emailed pending collection order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -458,10 +480,14 @@ class EmailStatusCommand extends Command
 			$order->update(['notice' => self::COMPLETE]);
 		}
 
+		//--------------------------------------------------------------------------
 		// STEP 6: Order collected and complete
+		//--------------------------------------------------------------------------
 		$this->info('Process order collected and complete...');
 
 		$orders = Order::query()
+			->withTrashed()
+			->whereIsActive()
 			->whereIn('notice', [self::COMPLETE])
 			->orderBy('id', 'asc')
 			->get();
@@ -472,7 +498,7 @@ class EmailStatusCommand extends Command
 			{
 				if ($debug)
 				{
-					$this->warning('skipping ' . $order->id . ' - ' . $order->status);
+					$this->line('skipping ' . $order->id . ' - ' . $order->status);
 				}
 				continue;
 			}
@@ -496,9 +522,9 @@ class EmailStatusCommand extends Command
 					continue;
 				}
 
-				Mail::to($user->email)->send($message);
+				//Mail::to($user->email)->send($message);
 
-				$this->info("Emailed order #{$order->id} to {$user->email}.");
+				$this->info("Emailed completed order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -510,21 +536,25 @@ class EmailStatusCommand extends Command
 			$order->update(['notice' => self::NO_NOTICE]);
 		}
 
+		//--------------------------------------------------------------------------
 		// STEP CANCELED: Order canceled
+		//--------------------------------------------------------------------------
 		$this->info('Process canceled...');
 
 		$orders = Order::query()
-			->whereIn('notice', [self::CANCELED])
+			->withTrashed()
+			->whereIsTrashed()
+			->whereIn('notice', [self::CANCELED_NOTICE])
 			->orderBy('id', 'asc')
 			->get();
 
 		foreach ($orders as $order)
 		{
-			if (constant(self::class . '::' . strtoupper($order->status)) > self::CANCELED)
+			if ($order->id != 6946 && constant(self::class . '::' . strtoupper($order->status)) > self::CANCELED_NOTICE)
 			{
 				if ($debug)
 				{
-					$this->warning('skipping ' . $order->id . ' - ' . $order->status);
+					$this->line('skipping ' . $order->id . ' - ' . $order->status);
 				}
 				continue;
 			}
@@ -553,9 +583,9 @@ class EmailStatusCommand extends Command
 					continue;
 				}
 
-				Mail::to($user->email)->send($message);
+				//Mail::to($user->email)->send($message);
 
-				$this->info("Emailed order #{$order->id} to {$user->email}.");
+				$this->info("Emailed canceled order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)

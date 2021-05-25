@@ -50,8 +50,20 @@ class Order extends Model
 	 * @var array
 	 */
 	public $dates = array(
-		'datetimecreated'
+		'datetimecreated',
+		'datetimeremoved'
 	);
+
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $guarded = [
+		'id',
+		'datetimecreated',
+		'datetimeremoved'
+	];
 
 	/**
 	 * Default order by for model

@@ -13,5 +13,5 @@ This is an automated message notifying that Order #{{ $order->id }} has been **f
 
 ---
 
-You may view this order in detail from the [Order Management]({{ route('site.orders.read', ['id' => $order->id]) }}) page. If you have any questions about this process please contact rcac-help@purdue.edu
+You may view this order in detail from the [Order Management]({{ route('site.orders.read', ['id' => $order->id]) }}) page. If you have any questions about this process please contact {{ config('mail.from.address') }}.
 @endcomponent
