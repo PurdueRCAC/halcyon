@@ -9,7 +9,7 @@ Access to your ITaP Research Computing resources has been **removed** for the fo
 {{ $data['user']->name }} ({{ $data['user']->email }})
 
 @foreach ($data['queueusers'] as $queueuser)
-* {{ $queueuser->subresource->resource->name }}: '{{ $queueuser->queue->name }}' queue - _removed by {{ $queueuser->log->user->name }}_
+* {{ $queueuser->queue->resource->name }}: '{{ $queueuser->queue->name }}' queue - _removed by {{ $queueuser->log ? $queueuser->log->user->name : trans('global.unknown') }}_
 @endforeach
 @endforeach
 

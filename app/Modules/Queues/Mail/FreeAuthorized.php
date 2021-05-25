@@ -19,13 +19,29 @@ class FreeAuthorized extends Mailable
 	protected $user;
 
 	/**
+	 * The User
+	 *
+	 * @var array
+	 */
+	protected $queueusers;
+
+	/**
+	 * The User
+	 *
+	 * @var array
+	 */
+	protected $roles;
+
+	/**
 	 * Create a new message instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user)
+	public function __construct(User $user, $queueusers, $roles)
 	{
 		$this->user = $user;
+		$this->queueusers = $queueusers;
+		$this->roles = $roles;
 	}
 
 	/**
@@ -39,6 +55,8 @@ class FreeAuthorized extends Mailable
 					->subject(trans('queues::mail.freeauthorized'))
 					->with([
 						'user' => $this->user,
+						'queueusers' => $this->queueusers,
+						'roles' => $this->roles,
 					]);
 	}
 }

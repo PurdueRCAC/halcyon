@@ -94,14 +94,17 @@ class EmailFreeRequestedCommand extends Command
 					continue;
 				}
 
-				$student_activity = array();
-				foreach ($users as $user)
+				$user_activity = array();
+				foreach ($users as $gquser)
 				{
-					if (!isset($user_activity[$user->userid]))
+					$queueuser = $gquser->queueuser;
+
+					if (!isset($user_activity[$queueuser->userid]))
 					{
-						$user_activity[$user->userid] = array();
+						$user_activity[$queueuser->userid] = array();
 					}
-					array_push($user_activity[$usert->userid], $user);
+
+					array_push($user_activity[$queueuser->userid], $gquser);
 				}
 
 				foreach ($user_activity as $userid => $activity)

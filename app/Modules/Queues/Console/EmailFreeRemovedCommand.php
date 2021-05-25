@@ -100,22 +100,24 @@ class EmailFreeRemovedCommand extends Command
 				}
 
 				// Condense students
-				$student_activity = array();
+				$user_activity = array();
 
-				foreach ($groupqueueusers as $student)
+				foreach ($groupqueueusers as $gquser)
 				{
-					if (!isset($student_activity[$student->userid]))
+					$queueuser = $gquser->queueuser;
+
+					if (!isset($user_activity[$queueuser->userid]))
 					{
-						$student_activity[$student->userid] = array();
+						$user_activity[$queueuser->userid] = array();
 					}
 
-					array_push($student_activity[$student->userid], $student);
+					array_push($user_activity[$queueuser->userid], $queueuser);
 				}
 
 				// Send email to each student
 				$data = array();
 				$removals = array();
-				foreach ($student_activity as $userid => $groupqueuestudents)
+				foreach ($user_activity as $userid => $groupqueuestudents)
 				{
 					// Start assembling email
 					$user = User::find($userid);
@@ -152,7 +154,7 @@ class EmailFreeRemovedCommand extends Command
 						->pluck('queueid')
 						->toArray();
 
-					$removing = $groupqueuestudents->where('queueid', $existing);
+					$removing = collect($groupqueuestudents)->whereIn('queueid', $existing);
 
 					// Is anything actually being removed?
 					if (!count($removing))
@@ -165,6 +167,16 @@ class EmailFreeRemovedCommand extends Command
 					$removals[$userid] = array();
 					foreach ($groupqueuestudents as $queueuser)
 					{
+						if (!$queueuser->queue)
+						{
+							continue;
+						}
+
+						if (!$queueuser->queue->resource)
+						{
+							continue;
+						}
+
 						$role = $queueuser->queue->resource->rolename;
 
 						if ($role == $last_role)
@@ -180,7 +192,7 @@ class EmailFreeRemovedCommand extends Command
 						if ($event->status == 1  // ROLE_REMOVAL_PENDING
 						 || $event->status == 4) // NO_ROLE_EXISTS
 						{
-							array_push($removals[$userid], $queueuser->queue->resource); //$last_role);
+							array_push($removals[$userid], $queueuser->queue->resource);
 						}
 					}
 
@@ -188,6 +200,32 @@ class EmailFreeRemovedCommand extends Command
 						'user'       => $user,
 						'queueusers' => $groupqueuestudents,
 					);
+
+					$keeping = QueueUser::query()
+						->withTrashed()
+						->select($qu . '.*')
+						->join($q, $q . '.id', $qu . '.queueid')
+						->join($s, $s . '.id', $q . '.schedulerid')
+						->where($qu . '.membertype', '=', 1)
+						->where($qu . '.userid', '=', $userid)
+						->where($qu . '.notice', '<>', 6)
+						->whereNotIn($qu . '.queueid', $removing)
+						->where(function($where) use ($qu)
+						{
+							$where->whereNull($qu . '.datetimeremoved')
+								->orWhere($qu . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+						})
+						->where(function($where) use ($q)
+						{
+							$where->whereNull($q . '.datetimeremoved')
+								->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+						})
+						->where(function($where) use ($s)
+						{
+							$where->whereNull($s . '.datetimeremoved')
+								->orWhere($s . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+						})
+						->get();
 
 					// Prepare and send actual email
 					$message = new FreeRemoved($user, $removing, $keeping, $removals[$userid]);
@@ -207,8 +245,18 @@ class EmailFreeRemovedCommand extends Command
 					// Change states
 					foreach ($groupqueuestudents as $queueuser)
 					{
+						if (!$queueuser->queue)
+						{
+							continue;
+						}
+
+						if (!$queueuser->queue->resource)
+						{
+							continue;
+						}
+
 						// Determine which state to go to, depending on whether a new role was created
-						$q = $queueuser->queue->subresource->resource;
+						$q = $queueuser->queue->resource;
 
 						$notice = 0;
 						if (in_array($q->rolename, $r))
@@ -218,6 +266,11 @@ class EmailFreeRemovedCommand extends Command
 
 						$groupqueue->update(['notice' => $notice]);
 					}
+				}
+
+				if (empty($data))
+				{
+					continue;
 				}
 
 				// Email group managers

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Queues\Mail;
 
-use App\Modules\Queues\Models\Queue;
+use App\Modules\Users\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -12,21 +12,30 @@ class FreeDenied extends Mailable
 	use Queueable, SerializesModels;
 
 	/**
-	 * The Queue
+	 * The User
 	 *
-	 * @var Queue
+	 * @var User
 	 */
-	protected $queue;
+	protected $user;
+
+	/**
+	 * The User
+	 *
+	 * @var array
+	 */
+	protected $queueusers;
 
 	/**
 	 * Create a new message instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(Queue $queue)
+	public function __construct(User $user, $queueusers)
 	{
-		$this->queue = $queue;
+		$this->user = $user;
+		$this->queueusers = $queueusers;
 	}
+
 
 	/**
 	 * Build the message.
@@ -38,7 +47,8 @@ class FreeDenied extends Mailable
 		return $this->markdown('queues::mail.freedenied.user')
 					->subject(trans('queues::mail.freedenied.user'))
 					->with([
-						'queue' => $this->queue,
+						'user' => $this->user,
+						'denials' => $this->queueusers,
 					]);
 	}
 }

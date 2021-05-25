@@ -44,7 +44,7 @@ class EmailFreeDeniedCommand extends Command
 		$qu = (new QueueUser)->getTable();
 		$q = (new Queue)->getTable();
 
-		$users = GroupUser::query()
+		$groupqueueusers = GroupUser::query()
 			->select($gu . '.*', $qu . '.queueid')
 			->join($qu, $qu . '.id', $gu . '.queueuserid')
 			->join($q, $q . '.id', $qu . '.queueid')
@@ -53,7 +53,7 @@ class EmailFreeDeniedCommand extends Command
 			->where($qu . '.notice', '=', 12)
 			->get();
 
-		if (!count($users))
+		if (!count($groupqueueusers))
 		{
 			$this->comment('No records to email.');
 			return;
@@ -62,28 +62,28 @@ class EmailFreeDeniedCommand extends Command
 		// Group activity by groupid so we can determine when to send the group mail
 		$group_activity = array();
 
-		foreach ($users as $user)
+		foreach ($groupqueueusers as $groupqueueuser)
 		{
-			if (!isset($group_activity[$user->groupid]))
+			if (!isset($group_activity[$groupqueueuser->groupid]))
 			{
-				$group_activity[$user->groupid] = array();
+				$group_activity[$groupqueueuser->groupid] = array();
 			}
 
-			array_push($group_activity[$user->groupid], $user);
+			array_push($group_activity[$groupqueueuser->groupid], $groupqueueuser);
 		}
 
 		$now = date("U");
 		$threshold = 300; // threshold for when considering activity "done"
 
-		foreach ($group_activity as $groupid => $users)
+		foreach ($group_activity as $groupid => $groupqueueusers)
 		{
 			// Find the latest activity
 			$latest = 0;
-			foreach ($users as $user)
+			foreach ($groupqueueusers as $groupqueueuser)
 			{
-				if ($user->datetimecreated->format('U') > $latest)
+				if ($groupqueueuser->datetimecreated->format('U') > $latest)
 				{
-					$latest = $user->datetimecreated->format('U');
+					$latest = $groupqueueuser->datetimecreated->format('U');
 				}
 			}
 
@@ -97,14 +97,18 @@ class EmailFreeDeniedCommand extends Command
 					continue;
 				}
 
-				$student_activity = array();
-				foreach ($users as $user)
+				$user_activity = array();
+
+				foreach ($groupqueueusers as $gquser)
 				{
-					if (!isset($user_activity[$user->userid]))
+					$queueuser = $gquser->queueuser;
+
+					if (!isset($user_activity[$queueuser->userid]))
 					{
-						$user_activity[$user->userid] = array();
+						$user_activity[$queueuser->userid] = array();
 					}
-					array_push($user_activity[$usert->userid], $user);
+
+					array_push($user_activity[$queueuser->userid], $gquser);
 				}
 
 				// Send email to each student

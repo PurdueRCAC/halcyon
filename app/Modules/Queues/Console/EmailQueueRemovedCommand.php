@@ -167,7 +167,7 @@ class EmailQueueRemovedCommand extends Command
 						if ($event->status == 1  // ROLE_REMOVAL_PENDING
 						 || $event->status == 4) // NO_ROLE_EXISTS
 						{
-							array_push($removals[$userid], $queueuser->queue->resource); //$last_role);
+							array_push($removals[$userid], $queueuser->queue->resource);
 						}
 					}
 
@@ -175,6 +175,32 @@ class EmailQueueRemovedCommand extends Command
 						'user'       => $user,
 						'queueusers' => $queuestudents,
 					);
+
+					$keeping = QueueUser::query()
+						->withTrashed()
+						->select($qu . '.*')
+						->join($q, $q . '.id', $qu . '.queueid')
+						->join($s, $s . '.id', $q . '.schedulerid')
+						->where($qu . '.membertype', '=', 1)
+						->where($qu . '.userid', '=', $userid)
+						->where($qu . '.notice', '<>', 6)
+						->whereNotIn($qu . '.queueid', $removing)
+						->where(function($where) use ($qu)
+						{
+							$where->whereNull($qu . '.datetimeremoved')
+								->orWhere($qu . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+						})
+						->where(function($where) use ($q)
+						{
+							$where->whereNull($q . '.datetimeremoved')
+								->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+						})
+						->where(function($where) use ($s)
+						{
+							$where->whereNull($s . '.datetimeremoved')
+								->orWhere($s . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+						})
+						->get();
 
 					// Prepare and send actual email
 					$message = new QueueRemoved($user, $removing, $keeping, $removals[$userid]);
@@ -188,6 +214,11 @@ class EmailQueueRemovedCommand extends Command
 					Mail::to($user->email)->send($message);
 
 					$this->info("Emailed queueremoved to {$user->email}.");
+				}
+
+				if (empty($data))
+				{
+					continue;
 				}
 
 				// Email group managers

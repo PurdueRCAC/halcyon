@@ -19,6 +19,6 @@ These accounts will be created during overnight processing. Accounts are general
 You have been granted **access** to the following resources.
 
 @foreach ($queueusers as $queueuser)
-* {{ $queueuser->queue->resource->name }}: '{{ $queueuser->queue->name }}' queue - _removed by {{ $queueuser->log->user }}_
+* {{ $queueuser->queue->resource->name }}: '{{ $queueuser->queue->name }}' queue
 @endforeach
 @endcomponent

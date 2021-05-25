@@ -45,15 +45,25 @@ class EmailFreeAuthorizedCommand extends Command
 		$qu = (new QueueUser)->getTable();
 		$q = (new Queue)->getTable();
 
-		$users = GroupUser::query()
+		$groupqueueusers = GroupUser::query()
 			->select($gu . '.*', $qu . '.queueid')
 			->join($qu, $qu . '.id', $gu . '.queueuserid')
 			->join($q, $q . '.id', $qu . '.queueid')
 			->whereIn($qu . '.membertype', [1, 4])
 			->where($qu . '.notice', '=', 2)
+			->where(function($where) use ($qu)
+			{
+				$where->whereNull($qu . '.datetimeremoved')
+					->orWhere($qu . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where(function($where) use ($gu)
+			{
+				$where->whereNull($gu . '.datetimeremoved')
+					->orWhere($gu . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
 			->get();
 
-		if (!count($users))
+		if (!count($groupqueueusers))
 		{
 			$this->comment('No records to email.');
 			return;
@@ -62,26 +72,26 @@ class EmailFreeAuthorizedCommand extends Command
 		// Group activity by groupid so we can determine when to send the group mail
 		$group_activity = array();
 
-		foreach ($users as $user)
+		foreach ($groupqueueusers as $groupqueueuser)
 		{
-			if (!isset($group_activity[$user->groupid]))
+			if (!isset($group_activity[$groupqueueuser->groupid]))
 			{
-				$group_activity[$user->groupid] = array();
+				$group_activity[$groupqueueuser->groupid] = array();
 			}
 
-			array_push($group_activity[$user->groupid], $user);
+			array_push($group_activity[$groupqueueuser->groupid], $groupqueueuser);
 		}
 
 		$now = date("U");
 		$threshold = 300; // threshold for when considering activity "done"
 
-		foreach ($group_activity as $groupid => $users)
+		foreach ($group_activity as $groupid => $groupqueueusers)
 		{
-			$this->info("Starting processing group ID #{$groupid}.");
+			$this->line("Processing group ID #{$groupid}...");
 
 			// Find the latest activity
 			$latest = 0;
-			foreach ($users as $g)
+			foreach ($groupqueueusers as $g)
 			{
 				if ($g->datetimecreated->format('U') > $latest)
 				{
@@ -94,21 +104,24 @@ class EmailFreeAuthorizedCommand extends Command
 				// Email everyone involved in this group
 
 				// Condense students
-				$student_activity = array();
+				$user_activity = array();
 
-				foreach ($users as $student)
+				foreach ($groupqueueusers as $gquser)
 				{
-					if (!isset($student_activity[$student->userid]))
+					$queueuser = $gquser->queueuser;
+
+					if (!isset($user_activity[$queueuser->userid]))
 					{
-						$student_activity[$student->userid] = array();
+						$user_activity[$queueuser->userid] = array();
 					}
 
-					array_push($student_activity[$student->userid], $student);
+					array_push($user_activity[$queueuser->userid], $queueuser);
 				}
 
 				// Send email to each student
 				$roles = array();
-				foreach ($student_activity as $userid => $queueusers)
+				$data = array();
+				foreach ($user_activity as $userid => $queueusers)
 				{
 					$user = User::find($userid);
 
@@ -123,7 +136,23 @@ class EmailFreeAuthorizedCommand extends Command
 
 					foreach ($queueusers as $queueuser)
 					{
-						$role = $queueuser->queue->resource->rolename;
+						$queue = $queueuser->queue()->withTrashed()->first();
+
+						// Queue was removed
+						if (!$queueuser->queue)
+						{
+							continue;
+						}
+
+						$resource = $queue->resource()->withTrashed()->first();
+
+						// Resource was removed
+						if (!$resource)
+						{
+							continue;
+						}
+
+						$role = $resource->rolename;
 
 						if ($role == $last_role)
 						{
@@ -133,16 +162,23 @@ class EmailFreeAuthorizedCommand extends Command
 						$last_role = $role;
 
 						// Contact role provision service
-						event($event = new ResourceMemberStatus($queueuser->queue->resource, $user));
+						event($event = new ResourceMemberStatus($resource, $user));
 
 						if ($event->status != 3) // ROLE_ACCOUNTS_READY
 						{
-							array_push($roles[$userid], $queueuser->queue->resource); //$last_role);
+							echo $resource->id . "\n";
+							array_push($roles[$userid], $resource);
 						}
 					}
 
+					$data[$userid] = array(
+						'user'       => $user,
+						'queueusers' => $queueusers,
+						'roles'      => $roles[$userid]
+					);
+
 					// Prepare and send actual email
-					$message = new FreeAuthorized($user, $queueusers, $roles);
+					$message = new FreeAuthorized($user, $queueusers, $roles[$userid]);
 
 					if ($debug)
 					{
@@ -172,6 +208,11 @@ class EmailFreeAuthorizedCommand extends Command
 					}
 				}
 
+				if (empty($data))
+				{
+					continue;
+				}
+
 				// Assemble list of managers to email
 				$group = Group::find($groupid);
 
@@ -191,8 +232,6 @@ class EmailFreeAuthorizedCommand extends Command
 					$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
 				}
 			}
-
-			$this->info("Finished processing group ID #{$group}.");
 		}
 	}
 }

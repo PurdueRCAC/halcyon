@@ -122,9 +122,9 @@ class GroupUser extends Model
 	 *
 	 * @return  object
 	 */
-	public function user()
+	public function queueuser()
 	{
-		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
+		return $this->belongsTo(User::class, 'queueuserid');
 	}
 
 	/**
@@ -144,7 +144,7 @@ class GroupUser extends Model
 	 */
 	public function request()
 	{
-		return $this->hasOne(UserRequest::class, 'userrequestid');
+		return $this->hasOne(UserRequest::class, 'id', 'userrequestid');
 	}
 
 	/**

@@ -3,14 +3,16 @@ Hello {{ $user->name }},
 
 The following people have been requested access for the following {{ config('app.name') }} resources.
 
-@foreach ($user_activity as $user_id => $data)
+@foreach ($requests as $userid => $data)
 ---
+@php
+$uuser = App\Modules\Users\Models\User::find($userid);
+@endphp
+{{ $uuser ? $uuser->name : $userid }} ({{ $uuser ? $uuser->username : trans('global.unknown') }}):
 
-{{ $data['user']->name }} ({{ $data['user']->email }}):
-
-@foreach ($data['userqueues'] as $userqueue)
-* {{ $$userqueue->queue->resource->name }}: '{{ $userqueue->queue->name }}' queue
-@if ($userqueue->request->comment)
+@foreach ($data as $userqueue)
+* {{ $userqueue->queue()->withTrashed()->first()->resource()->withTrashed()->first()->name }}: '{{ $userqueue->queue()->withTrashed()->first()->name }}' queue
+@if ($userqueue->request && $userqueue->request->comment)
     * Comment: {{ $userqueue->request->comment }}
 @endif
 @endforeach

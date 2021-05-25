@@ -2,7 +2,7 @@
 
 namespace App\Modules\Queues\Mail;
 
-use App\Modules\Queues\Models\Queue;
+use App\Modules\Users\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -12,20 +12,28 @@ class FreeAuthorizedManager extends Mailable
 	use Queueable, SerializesModels;
 
 	/**
-	 * The Queue
+	 * Group manager
 	 *
-	 * @var Queue
+	 * @var User
 	 */
-	protected $queue;
+	protected $user;
+
+	/**
+	 * List of queue users
+	 *
+	 * @var array
+	 */
+	protected $data;
 
 	/**
 	 * Create a new message instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(Queue $queue)
+	public function __construct(User $user, $authorized = array())
 	{
-		$this->queue = $queue;
+		$this->user = $user;
+		$this->authorized = $authorized;
 	}
 
 	/**
@@ -38,7 +46,8 @@ class FreeAuthorizedManager extends Mailable
 		return $this->markdown('queues::mail.freeauthorized.manager')
 					->subject(trans('queues::mail.freeauthorized'))
 					->with([
-						'queue' => $this->queue,
+						'user' => $this->user,
+						'authorized' => $this->authorized
 					]);
 	}
 }

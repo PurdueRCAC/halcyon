@@ -2,8 +2,8 @@
 
 namespace App\Modules\Queues\Mail;
 
+use App\Modules\Users\Models\User;
 use App\Modules\Queues\Models\UserRequest;
-use App\Modules\Queues\Models\Queue;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,6 +11,13 @@ use Illuminate\Queue\SerializesModels;
 class FreeRequested extends Mailable
 {
 	use Queueable, SerializesModels;
+
+	/**
+	 * The User
+	 *
+	 * @var User
+	 */
+	protected $user;
 
 	/**
 	 * The user request
@@ -24,8 +31,9 @@ class FreeRequested extends Mailable
 	 *
 	 * @return void
 	 */
-	public function __construct($userrequests)
+	public function __construct(User $user, $userrequests)
 	{
+		$this->user = $user;
 		$this->userrequests = $userrequests;
 	}
 
@@ -39,6 +47,7 @@ class FreeRequested extends Mailable
 		return $this->markdown('queues::mail.freerequested')
 					->subject(trans('queues::mail.freerequested'))
 					->with([
+						'user' => $this->user,
 						'requests' => $this->userrequests
 					]);
 	}

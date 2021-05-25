@@ -3,22 +3,22 @@ Hello {{ $user->name }},
 
 You that you have been **removed** from the following queues.
 
-@foreach ($queueusers as $queueuser)
-* {{ $queueuser->subresource->resource->name }}: '{{ $queueuser->queue->name }}' queue
+@foreach ($removedqueues as $queueuser)
+* {{ $queueuser->queue->resource->name }}: '{{ $queueuser->queue->name }}' queue
 @endforeach
 
-@if (count($existing))
+@if (count($keptqueues))
 Please note you **still have access** to the following queues and resources.
 
-@foreach ($existing as $queueuser)
-* {{ $queueuser->subresource->resource->name }}: '{{ $queueuser->queue->name }}' queue
+@foreach ($keptqueues as $queueuser)
+* {{ $queueuser->queue->resource->name }}: '{{ $queueuser->queue->name }}' queue
 @endforeach
 @endif
 
-@if (count($roleremovals))
+@if (count($removedroles))
 Accounts on the following {{ config('app.name') }} resources will be removed during overnight processing.
 
-@foreach ($roleremovals as $resource)
+@foreach ($removedroles as $resource)
 * {{ $resource->name }}
 @endforeach
 

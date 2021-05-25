@@ -9,6 +9,7 @@ use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Groups\Models\Group;
+use App\Modules\Resources\Events\ResourceMemberStatus;
 use Carbon\Carbon;
 
 /**
@@ -43,9 +44,9 @@ class EmailExpiredCommand extends Command
 		$qu = (new QueueUser)->getTable();
 		$q = (new Queue)->getTable();
 
-		$users = QueueUser::query()
+		$queueusers = QueueUser::query()
 			->select($qu . '.*')
-			->join($uu, $uu . '.userid', $uu . '.userid')
+			->join($uu, $uu . '.userid', $qu . '.userid')
 			->join($q, $q . '.id', $qu . '.queueid')
 			->where(function($where) use ($q)
 			{
@@ -59,11 +60,16 @@ class EmailExpiredCommand extends Command
 			})
 			->where(function($where) use ($uu)
 			{
-				$now = Carbon::now();
+				$where->whereNull($uu . '.dateremoved')
+					->orWhere($uu . '.dateremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where(function($where) use ($uu)
+			{
+				$now = Carbon::now()->modify('-1 day');
 
-				$where->whereNotNull($uu . '.dateremoved')
-					->where($uu . '.dateremoved', '!=', '0000-00-00 00:00:00')
-					->where($uu . '.dateremoved', '<', $now->toDateTimeString());
+				$where->whereNotNull($uu . '.datelastseen')
+					->where($uu . '.datelastseen', '!=', '0000-00-00 00:00:00')
+					->where($uu . '.datelastseen', '<', $now->toDateTimeString());
 			})
 			->groupBy($qu . '.id')
 			->groupBy($qu . '.datetimecreated')
@@ -75,7 +81,7 @@ class EmailExpiredCommand extends Command
 			->orderBy($uu . '.datelastseen', 'asc')
 			->get();
 
-		if (!count($users))
+		if (!count($queueusers))
 		{
 			$this->comment('No records to email.');
 			return;
@@ -84,29 +90,50 @@ class EmailExpiredCommand extends Command
 		// Group activity by groupid so we can determine when to send the group mail
 		$group_activity = array();
 
-		foreach ($users as $user)
+		foreach ($queueusers as $queueuser)
 		{
-			if (!isset($group_activity[$user->groupid]))
+			if (!$queueuser->queue)
 			{
-				$group_activity[$user->groupid] = array();
+				$this->error("Could not find queue for #{$queueuser->queueid}.");
+				continue;
 			}
 
-			array_push($group_activity[$user->groupid], $user);
+			$resource = $queueuser->queue->resource;
+
+			if (!$resource)
+			{
+				$this->error("Could not find resource for #{$queueuser->id}.");
+				continue;
+			}
+
+			event($event = new ResourceMemberStatus($resource, $queueuser->user));
+
+			// -1 = connect or something equally bad
+			//  0 = invalid user
+			//  1 = NO_ROLE_EXISTS
+			if ($event->status <= 1)
+			{
+				if ($event->status < 0)
+				{
+					$this->error("Something bad happened looking up resource member status for " . $resource->id . '.' . $queueuser->userid);
+				}
+
+				continue;
+			}
+
+			$groupid = $queueuser->queue->groupid;
+
+			if (!isset($group_activity[$groupid]))
+			{
+				$group_activity[$groupid] = array();
+			}
+
+			array_push($group_activity[$groupid], $queueuser);
 		}
 
-		foreach ($group_activity as $groupid => $users)
+		foreach ($group_activity as $groupid => $queueusers)
 		{
-			$this->info("Starting processing group ID #{$groupid}.");
-
-			// Find the latest activity
-			$latest = 0;
-			foreach ($users as $g)
-			{
-				if ($g->datetimecreated->format('U') > $latest)
-				{
-					$latest = $g->datetimecreated->format('U');
-				}
-			}
+			$this->line("Starting processing group ID #{$groupid}.");
 
 			$group = Group::find($groupid);
 
@@ -118,7 +145,7 @@ class EmailExpiredCommand extends Command
 			foreach ($group->managers as $manager)
 			{
 				// Prepare and send actual email
-				$message = new Expired($manager->user, $users);
+				$message = new Expired($manager->user, $queueusers);
 
 				if ($debug)
 				{
@@ -131,7 +158,5 @@ class EmailExpiredCommand extends Command
 				$this->info("Emailed expired to manager {$manager->user->email}.");
 			}
 		}
-
-		$this->info("Finished processing group ID #{$group}.");
 	}
 }

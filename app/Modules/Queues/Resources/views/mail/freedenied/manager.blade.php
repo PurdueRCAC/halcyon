@@ -9,7 +9,7 @@ Requests for access to {{ config('app.name') }} resources has been denied for th
 {{ $data['user']->name }} ({{ $data['user']->email }})
 
 @foreach ($data['queueusers'] as $groupqueue)
-* {{ $groupqueue->queue->resource->name }}: '{{ $groupqueue->queue->name }}' queue - _denied by {{ $queueuser->log->user->name }}_
+* {{ $groupqueue->queue()->withTrashed()->first()->resource()->withTrashed()->first()->name }}: '{{ $groupqueue->queue()->withTrashed()->first()->name }}' queue - _denied by {{ $groupqueue->log ? $groupqueue->log->user->name : trans('global.unknown') }}_
 @endforeach
 @endforeach
 
