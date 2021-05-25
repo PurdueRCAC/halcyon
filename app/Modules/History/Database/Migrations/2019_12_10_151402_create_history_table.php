@@ -27,6 +27,7 @@ class CreateHistoryTable extends Migration
 				$table->json('new');
 				$table->timestamps();
 				$table->index(['historable_type', 'historable_id']);
+				$table->index('user_id');
 				$table->index('action');
 			});
 		}
