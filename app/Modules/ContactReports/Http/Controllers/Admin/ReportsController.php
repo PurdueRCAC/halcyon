@@ -268,6 +268,8 @@ class ReportsController extends Controller
 
 		$row = $id ? Report::findOrFail($id) : new Report();
 		$row->fill($request->input('fields'));
+		$row->userid = $row->userid ?: auth()->user()->id;
+		$row->notice = 23;
 
 		if (!$row->save())
 		{

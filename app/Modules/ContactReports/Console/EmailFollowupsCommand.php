@@ -46,7 +46,7 @@ class EmailFollowupsCommand extends Command
 		}
 
 		$users = [];
-		$now = new \DateTime('now');
+		$now = Carbon::now();
 
 		foreach ($types as $type)
 		{
@@ -64,15 +64,15 @@ class EmailFollowupsCommand extends Command
 			$r = (new Report)->getTable();
 			$cu = (new CrmUser)->getTable();
 
-			$users = CrmUser::all()
+			$users = CrmUser::query()
 				->join($r, $r . '.id', $cu . '.contactreportid')
 				->select($cu . '.*', $r . '.datetimecontact')
 				->where($r . '.contactreporttypeid', '>=', $type->id)
 				->where($r . '.datetimecontact', '>=', $threshold)
-				->where(function($where)
+				->where(function($where) use ($cu)
 				{
-					$where->whereNull('datetimelastnotify')
-						->orWhere('datetimelastnotify', '=', '0000-00-00 00:00:00');
+					$where->whereNull($cu . '.datetimelastnotify')
+						->orWhere($cu . '.datetimelastnotify', '=', '0000-00-00 00:00:00');
 				})
 				->get();
 
@@ -93,7 +93,7 @@ class EmailFollowupsCommand extends Command
 				// Did we find an active account?
 				$user = $u->user;
 
-				if (!$user || ($user->dateremoved && $user->dateremoved != '0000-00-00 00:00:00'))
+				if (!$user || $user->isTrashed())
 				{
 					continue;
 				}

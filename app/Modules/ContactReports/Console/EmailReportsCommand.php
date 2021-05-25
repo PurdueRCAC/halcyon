@@ -32,7 +32,9 @@ class EmailReportsCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 
 		// Get all new comments
-		$reports = Report::where('notice', '!=', 0)->orderBy('id', 'asc')->get();
+		$reports = Report::where('notice', '!=', 0)
+			->orderBy('id', 'asc')
+			->get();
 
 		if (!count($reports))
 		{

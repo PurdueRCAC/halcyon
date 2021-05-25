@@ -3,6 +3,7 @@ namespace App\Modules\ContactReports\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Modules\ContactReports\Console\EmailCommentsCommand;
+use App\Modules\ContactReports\Console\EmailFollowupsCommand;
 use App\Modules\ContactReports\Console\EmailReportsCommand;
 use App\Modules\ContactReports\Listeners\GroupReports;
 use App\Modules\ContactReports\Listeners\CourseReport;
@@ -123,7 +124,8 @@ class ModuleServiceProvider extends ServiceProvider
 	{
 		$this->commands([
 			EmailCommentsCommand::class,
-			EmailReportsCommand::class
+			EmailReportsCommand::class,
+			EmailFollowupsCommand::class
 		]);
 	}
 }

@@ -624,7 +624,7 @@ class Report extends Model
 		}
 
 		// Also select all users tagged in the report who have CRM privs.
-		$role_id = config('modules.contactreports.staff', 0);
+		$role_id = config('module.contactreports.staff', 0);
 
 		if ($role_id)
 		{
@@ -663,7 +663,7 @@ class Report extends Model
 
 		foreach ($this->users as $user)
 		{
-			$subscribers[] = $user->userid;
+			//$subscribers[] = $user->userid;
 
 			foreach ($user->followers as $follower)
 			{
@@ -672,7 +672,7 @@ class Report extends Model
 		}
 
 		// Also select all users tagged in the report who have CRM privs.
-		$role_id = config('modules.contactreports.staff', 0);
+		$role_id = config('module.contactreports.staff', 0);
 
 		if ($role_id)
 		{

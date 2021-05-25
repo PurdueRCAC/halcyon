@@ -91,7 +91,7 @@ class EmailCommentsCommand extends Command
 						continue;
 					}
 
-					//Mail::to($user->email)->send($message);
+					Mail::to($user->email)->send($message);
 
 					$this->info("Emailed comment #{$comment->id} to {$user->email}.");
 				}
@@ -106,7 +106,7 @@ class EmailCommentsCommand extends Command
 			foreach ($comments as $comment)
 			{
 				$comment->notice = 0;
-				//$comment->save();
+				$comment->save();
 			}
 		}
 	}

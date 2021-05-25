@@ -140,7 +140,7 @@ app('pathway')
 					if (count($comments) > 0) {
 					?>
 						@foreach ($comments as $comment)
-						<li id="comment_{{ $comment->id }}" data-api="{{ route('api.contactreports.comments.update', ['comment' => $comment->id]) }}">
+						<li id="comment_{{ $comment->id }}" data-api="{{ route('api.contactreports.comments.update', ['id' => $comment->id]) }}">
 							<a href="#comment_{{ $comment->id }}_comment" class="btn btn-link comment-edit hide-when-editing">
 								<span class="icon-edit"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
 							</a>
