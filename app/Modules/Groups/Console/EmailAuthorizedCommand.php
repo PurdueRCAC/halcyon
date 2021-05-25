@@ -35,6 +35,8 @@ class EmailAuthorizedCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 
 		$users = Member::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('notice', '=', 21)
 			->get();
 
@@ -88,13 +90,15 @@ class EmailAuthorizedCommand extends Command
 			{
 				if (!isset($people[$groupuser->userid]))
 				{
-					$people[$groupuser->userid] = $groupuser->user;
+					$people[$groupuser->userid] = $groupuser;
 				}
 			}
 
 			// Email the affected users
-			foreach ($people as $userid => $user)
+			foreach ($people as $userid => $groupuser)
 			{
+				$user = $groupuser->user;
+
 				if (!$user)
 				{
 					continue;
@@ -109,6 +113,8 @@ class EmailAuthorizedCommand extends Command
 				}
 
 				Mail::to($user->email)->send($message);
+
+				$groupuser->update(['notice' => 0]);
 
 				$this->info("Emailed ownerauthorized to {$user->email}.");
 			}
@@ -133,7 +139,7 @@ class EmailAuthorizedCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->info("Emailed ownerauthorized to {$user->email}.");
+				$this->info("Emailed ownerauthorized to manager {$user->email}.");
 			}
 		}
 	}

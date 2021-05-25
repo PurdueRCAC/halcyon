@@ -89,7 +89,10 @@ class EmailRemovedCommand extends Command
 			{
 				if (!isset($people[$groupuser->userid]))
 				{
-					$user = $groupuser->user;
+					if (!$groupuser->user)
+					{
+						continue;
+					}
 
 					$actor = Log::query()
 						->where('targetuserid', '=', $groupuser->userid)
@@ -101,16 +104,18 @@ class EmailRemovedCommand extends Command
 
 					if ($actor)
 					{
-						$user->actor = $actor->user;
+						$groupuser->actor = $actor->user;
 					}
 
-					$people[$groupuser->userid] = $user;
+					$people[$groupuser->userid] = $groupuser;
 				}
 			}
 
 			// Email the affected users
-			foreach ($people as $userid => $user)
+			foreach ($people as $userid => $groupuser)
 			{
+				$user = $groupuser->user;
+
 				if (!$user)
 				{
 					continue;
@@ -125,6 +130,8 @@ class EmailRemovedCommand extends Command
 				}
 
 				Mail::to($user->email)->send($message);
+
+				$groupuser->update(['notice' => 0]);
 
 				$this->info("Emailed ownerremoved to {$user->email}.");
 			}
@@ -149,7 +156,7 @@ class EmailRemovedCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->info("Emailed ownerremoved to {$user->email}.");
+				$this->info("Emailed ownerremoved to manager {$user->email}.");
 			}
 		}
 	}
