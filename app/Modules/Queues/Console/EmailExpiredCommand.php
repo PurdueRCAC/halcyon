@@ -12,7 +12,7 @@ use App\Modules\Groups\Models\Group;
 use Carbon\Carbon;
 
 /**
- * newly exipred users
+ * Newly exipred users
  */
 class EmailExpiredCommand extends Command
 {
@@ -32,6 +32,8 @@ class EmailExpiredCommand extends Command
 
 	/**
 	 * Execute the console command.
+	 * 
+	 * @return  void
 	 */
 	public function handle()
 	{
