@@ -28,7 +28,7 @@ class RcacLdap
 	{
 		$events->listen(UserSearching::class, self::class . '@handleUserSearching');
 		$events->listen(UserBeforeDisplay::class, self::class . '@handleUserBeforeDisplay');
-		$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
+		//$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
 		$events->listen(ResourceMemberStatus::class, self::class . '@handleResourceMemberStatus');
 		$events->listen(UnixGroupFetch::class, self::class . '@handleUnixGroupFetch');
 		$events->listen(CourseEnrollment::class, self::class . '@handleCourseEnrollment');
