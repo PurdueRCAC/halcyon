@@ -274,6 +274,24 @@ class User extends Model implements
 	}
 
 	/**
+	 * Get user's email address
+	 * 
+	 * If not set, it assumes the same domain as the mail "From address" config option
+	 *
+	 * @return  string
+	 */
+	public function getEmailAttribute()
+	{
+		if (!isset($this->attributes['email']))
+		{
+			//event($event = new UserBeforeDisplay($this));
+			$host = config('mail.from.address');
+			$this->attributes['email'] = $this->username . strstr($host, '@');
+		}
+		return $this->attributes['email'];
+	}
+
+	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
 	 * @return  string
