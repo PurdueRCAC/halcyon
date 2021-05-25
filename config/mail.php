@@ -86,9 +86,10 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
     'to' => [
-        'address' => 'zooley@purdue.edu',
-        'name' => 'Halcyon Test'
+        'address' => env('MAIL_TO_ADDRESS', null),
+        'name' => env('MAIL_TO_NAME', null),
     ],
+
     /*
     |--------------------------------------------------------------------------
     | Markdown Mail Settings
