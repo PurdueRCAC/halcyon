@@ -107,11 +107,6 @@ class EmailRemovalsCommand extends Command
 
 			$this->info("Emailed course removals to {$user->email}.");
 
-			if ($debug)
-			{
-				continue;
-			}
-
 			// Change states
 			$course->update(['notice' => 0]);
 

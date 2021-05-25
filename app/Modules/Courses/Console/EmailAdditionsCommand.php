@@ -36,6 +36,7 @@ class EmailAdditionsCommand extends Command
 
 		$members = Member::query()
 			->withTrashed()
+			->whereIsActive()
 			->where('notice', '=', 1)
 			->orderBy('id', 'asc')
 			->get();
@@ -106,11 +107,6 @@ class EmailAdditionsCommand extends Command
 			Mail::to($user->email)->send($message);
 
 			$this->info("Emailed course additions to {$user->email}.");
-
-			if ($debug)
-			{
-				continue;
-			}
 
 			// Change states
 			$course->update(['notice' => 0]);
