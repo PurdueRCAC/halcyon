@@ -33,6 +33,7 @@ return [
         '128.211.157.39', // amie.anvil.rcac.purdue.edu
 
         '172.18.8.33',     // gateway.mack
+        '172.18.66.17',    // ondemand.mack
         '128.211.157.26',  // ondemand.rcac
         '128.211.157.21',  // newxenon.rcac.purdue.edu
         '172.18.64.46',    // warden.rcac.purdue.edu
