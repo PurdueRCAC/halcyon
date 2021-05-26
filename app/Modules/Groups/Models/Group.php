@@ -147,6 +147,16 @@ class Group extends Model
 	}
 
 	/**
+	 * Get a list of users
+	 *
+	 * @return  object
+	 */
+	/*public function managers()
+	{
+		return $this->hasMany(Member::class, 'groupid')->where('membertype', '=', 2);
+	}*/
+
+	/**
 	 * Get a list of managers
 	 *
 	 * @return  object
@@ -163,6 +173,11 @@ class Group extends Model
 			{
 				$where->whereNull($u . '.dateremoved')
 					->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where(function($where) use ($m)
+			{
+				$where->whereNull($m . '.dateremoved')
+					->orWhere($m . '.dateremoved', '=', '0000-00-00 00:00:00');
 			})
 			->where($m . '.membertype', '=', 2)
 			->orderBy($m . '.datecreated', 'desc')
