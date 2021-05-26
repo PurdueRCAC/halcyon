@@ -30,12 +30,17 @@ class CasManager
 
 		if ($this->config['cas_debug'] === true)
 		{
-			phpCAS::setDebug();
+			try
+			{
+				phpCAS::setDebug();
+			}
+			catch (\Exception $e)
+			{
+				// Fix for depreciation of setDebug
+				phpCAS::setLogger();
+			}
+			
 			phpCAS::log('Loaded configuration:' . PHP_EOL . serialize($config));
-		}
-		else
-		{
-			phpCAS::setDebug($this->config['cas_debug']);
 		}
 
 		phpCAS::setVerbose($this->config['cas_verbose_errors']);
