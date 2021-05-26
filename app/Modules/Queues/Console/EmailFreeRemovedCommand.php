@@ -209,7 +209,7 @@ class EmailFreeRemovedCommand extends Command
 						->where($qu . '.membertype', '=', 1)
 						->where($qu . '.userid', '=', $userid)
 						->where($qu . '.notice', '<>', 6)
-						->whereNotIn($qu . '.queueid', $removing)
+						->whereNotIn($qu . '.queueid', $removing->pluck('queueid')->toArray())
 						->where(function($where) use ($qu)
 						{
 							$where->whereNull($qu . '.datetimeremoved')

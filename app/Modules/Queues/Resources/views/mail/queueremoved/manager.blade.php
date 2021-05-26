@@ -1,7 +1,7 @@
 @component('mail::message')
 Hello {{ $user->name }},
 
-Access to your {{ config('app.name') }} resources (resources, queues, and Unix groups) has been removed for the following people.
+Access to your {{ config('app.name') }} resources (resources, queues, and Unix groups) has been **removed** for the following people.
 
 @foreach ($removals as $userid => $data)
 ---
@@ -9,7 +9,7 @@ Access to your {{ config('app.name') }} resources (resources, queues, and Unix g
 {{ $data['user']->name }} ({{ $data['user']->email }})
 
 @foreach ($data['queueusers'] as $queueuser)
-* {{ $queueuser->subresource->resource->name }}: '{{ $queueuser->queue->name }}' queue - _removed by {{ $queueuser->log ? $queueuser->log->user : trans('global.unknown') }}_
+* {{ $queueuser->queue->resource->name }}: '{{ $queueuser->queue->name }}' queue - _removed by {{ $queueuser->log ? $queueuser->log->user : trans('global.unknown') }}_
 @endforeach
 @endforeach
 

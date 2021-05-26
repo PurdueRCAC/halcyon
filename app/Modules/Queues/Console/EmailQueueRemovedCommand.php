@@ -12,6 +12,7 @@ use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Users\Models\User;
 use App\Modules\Groups\Models\Group;
+use App\Modules\Resources\Events\ResourceMemberStatus;
 
 class EmailQueueRemovedCommand extends Command
 {
@@ -105,13 +106,18 @@ class EmailQueueRemovedCommand extends Command
 				}
 
 				// Send email to each student
-				//$roles = array();
 				$data = array();
 				$removals = array();
 				foreach ($student_activity as $userid => $queuestudents)
 				{
 					// Start assembling email
 					$user = User::find($userid);
+
+					if (!$user)
+					{
+						$this->error('Could not find account for user #' . $userid);
+						continue;
+					}
 
 					$existing = QueueUser::query()
 						->withTrashed()
@@ -184,7 +190,7 @@ class EmailQueueRemovedCommand extends Command
 						->where($qu . '.membertype', '=', 1)
 						->where($qu . '.userid', '=', $userid)
 						->where($qu . '.notice', '<>', 6)
-						->whereNotIn($qu . '.queueid', $removing)
+						->whereNotIn($qu . '.queueid', $removing->pluck('queueid')->toArray())
 						->where(function($where) use ($qu)
 						{
 							$where->whereNull($qu . '.datetimeremoved')
@@ -214,6 +220,12 @@ class EmailQueueRemovedCommand extends Command
 					Mail::to($user->email)->send($message);
 
 					$this->info("Emailed queueremoved to {$user->email}.");
+
+					// Change states
+					foreach ($queuestudents as $queueuser)
+					{
+						$queueuser->update(['notice' => 0]);
+					}
 				}
 
 				if (empty($data))

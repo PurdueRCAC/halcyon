@@ -98,7 +98,7 @@ class EmailWelcomeFreeCommand extends Command
 			}
 
 			// Check home directory
-			if ($u->homeDirectory)
+			/*if ($u->homeDirectory)
 			{
 				if (!file_exists($u->homeDirectory))
 				{
@@ -110,7 +110,7 @@ class EmailWelcomeFreeCommand extends Command
 			{
 				$this->error('Home directory is not set for user ID #' . $userid);
 				continue;
-			}
+			}*/
 
 			$activity  = array();
 
@@ -120,7 +120,7 @@ class EmailWelcomeFreeCommand extends Command
 
 				if (!isset($activity[$queue->resource->id]))
 				{
-					$activity[$queue->resource->id] = new \stdClass; //new Fluent;
+					$activity[$queue->resource->id] = new \stdClass;
 					$activity[$queue->resource->id]->resource = $queue->resource;
 					$activity[$queue->resource->id]->queues   = array();
 
@@ -160,7 +160,7 @@ class EmailWelcomeFreeCommand extends Command
 				$userqueue->update(['notice' => 0]);
 			}
 
-			$this->info("Emailed queueauthorized to {$user->email}.");
+			$this->info("Emailed welcome (free) to {$u->email}.");
 		}
 	}
 }

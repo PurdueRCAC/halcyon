@@ -69,7 +69,7 @@ class EmailQueueAuthorizedCommand extends Command
 
 		foreach ($group_activity as $groupid => $groupqueueusers)
 		{
-			$this->info("Starting processing group ID #{$groupid}.");
+			$this->line("Starting processing group ID #{$groupid}.");
 
 			// Find the latest activity
 			$latest = 0;
@@ -173,7 +173,7 @@ class EmailQueueAuthorizedCommand extends Command
 							$notice = 8;
 						}
 
-						$queueuser->save(['notice' => $notice]);
+						$queueuser->update(['notice' => $notice]);
 					}
 				}
 
@@ -194,8 +194,6 @@ class EmailQueueAuthorizedCommand extends Command
 					$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
 				}
 			}
-
-			$this->info("Finished processing group ID #{$group}.");
 		}
 	}
 }

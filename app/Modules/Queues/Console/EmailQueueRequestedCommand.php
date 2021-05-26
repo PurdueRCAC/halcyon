@@ -76,6 +76,12 @@ class EmailQueueRequestedCommand extends Command
 				continue;
 			}
 
+			if (!count($group->managers))
+			{
+				$this->error('No active managers found for group #' . $groupid);
+				continue;
+			}
+
 			// Find the latest activity
 			$latest = 0;
 			foreach ($users as $user)
@@ -100,13 +106,6 @@ class EmailQueueRequestedCommand extends Command
 
 				foreach ($user_activity as $userid => $activity)
 				{
-					// Change states
-					foreach ($activity as $queueuser)
-					{
-						$queueuser->notice = 0;
-						$queueuser->save();
-					}
-
 					$user = User::find($userid);
 
 					if (!$user)
@@ -137,6 +136,18 @@ class EmailQueueRequestedCommand extends Command
 					Mail::to($manager->user->email)->send($message);
 
 					$this->info("Emailed queuerequested to {$manager->user->email}.");
+				}
+
+				if (!$debug)
+				{
+					foreach ($user_activity as $userid => $activity)
+					{
+						// Change states
+						foreach ($activity['queueusers'] as $queueuser)
+						{
+							$queueuser->update(['notice' => 0]);
+						}
+					}
 				}
 			}
 		}

@@ -3,10 +3,13 @@ Hello {{ $user->name }},
 
 The following people have been requested access for the following {{ config('app.name') }} resources and queues that you manage.
 
-@foreach ($requests as $user_id => $data)
+@foreach ($requests as $userid => $data)
 ---
 
-{{ $data['user']->name }} ({{ $data['user']->email }}):
+@php
+$uuser = $data['user'];
+@endphp
+{{ $uuser ? $uuser->name : $userid }} ({{ $uuser ? $uuser->username : trans('global.unknown') }}):
 
 @foreach ($data['queueusers'] as $userqueue)
 @if ($userqueue->queue)

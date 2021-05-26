@@ -508,6 +508,71 @@ class Queue extends Model
 	}
 
 	/**
+	 * Get total cores
+	 *
+	 * @return  integer
+	 */
+	public function getWalltimeAttribute()
+	{
+		$walltime = 0;
+
+		foreach ($this->walltimes as $w)
+		{
+			$walltime += $w->walltime;
+		}
+
+		return $walltime;
+	}
+
+	/**
+	 * Get default max walltime in human readable format
+	 *
+	 * @return  string
+	 */
+	public function getHumanWalltimeAttribute()
+	{
+		$inputSeconds = $this->walltime;
+
+		$secondsInAMinute = 60;
+		$secondsInAnHour = 60 * $secondsInAMinute;
+		$secondsInADay = 24 * $secondsInAnHour;
+
+		// Extract days
+		$days = floor($inputSeconds / $secondsInADay);
+
+		// Extract hours
+		$hourSeconds = $inputSeconds % $secondsInADay;
+		$hours = floor($hourSeconds / $secondsInAnHour);
+
+		// Extract minutes
+		$minuteSeconds = $hourSeconds % $secondsInAnHour;
+		$minutes = floor($minuteSeconds / $secondsInAMinute);
+
+		// Extract the remaining seconds
+		$remainingSeconds = $minuteSeconds % $secondsInAMinute;
+		$seconds = ceil($remainingSeconds);
+
+		// Format and return
+		$timeParts = [];
+		$sections = [
+			'days'    => (int)$days,
+			'hours'   => (int)$hours,
+			'minutes' => (int)$minutes,
+			'seconds' => (int)$seconds,
+		];
+
+		foreach ($sections as $name => $value)
+		{
+			if ($value > 0)
+			{
+				$timeParts[] = $value . ' ' . trans_choice('global.time.' . $name, $value);
+			}
+		}
+
+		return implode(', ', $timeParts);
+	}
+
+	/**
 	 * Stop scheduling
 	 *
 	 * @return  bool

@@ -22,29 +22,50 @@ $scratch = false;
 $standby = false;
 @endphp
 @foreach ($activity as $resourceid => $data)
-<table><caption>{{ $data->resource->name }}</caption>
-<tr><th scope="row"><strong>User guide</strong></th><td>{{ route('site.knowledge.page', ['uri' => $data->resource->name]) }}</td></tr>
-<tr><th scope="row"><strong>Front-end</strong></th><td>{{ $data->resource->rolename }}.{{ str_replace('www.', '.', request()->getHttpHost()) }}</td></tr>
-<tr><th scope="row"><strong>Home directory</strong></th><td>{!! $data->resource->home == 'shared' ? 'shared' : '<strong>specific</strong> to ' . $data->resource->name !!}, 25GB</td></tr>
+<table>
+	<caption>{{ $data->resource->name }}</caption>
+	<tbody>
+		<tr>
+			<th scope="row"><strong>User guide</strong></th>
+			<td><a href="{{ route('site.knowledge.page', ['uri' => $data->resource->listname]) }}">{{ route('site.knowledge.page', ['uri' => $data->resource->listname]) }}</a></td>
+		</tr>
+		<tr>
+			<th scope="row"><strong>Front-end</strong></th>
+			<td>{{ $data->resource->rolename }}.{{ str_replace('www.', '.', request()->getHttpHost()) }}</td>
+		</tr>
+		<tr>
+			<th scope="row"><strong>Home directory</strong></th>
+			<td>{!! $data->resource->home == 'shared' ? 'shared' : '<strong>specific</strong> to ' . $data->resource->name !!}, 25GB</td>
+		</tr>
 @if ($data->storage)
 @php
 	$scratch = true;
 @endphp
-<tr><th scope="row"><strong>Scratch space</strong></th><td>{{ $data->storage->space }} space; {{ $data->storage->files }} files</td></tr>
+		<tr>
+			<th scope="row"><strong>Scratch space</strong></th>
+			<td>{{ $data->storage->space }} space; {{ $data->storage->files }} files</td>
+		</tr>
 @endif
 @foreach ($data->queues as $i => $queue)
-<tr><th scope="row">{!! ($i == 0 ? '<strong>Queues</strong>' : '') !!}</th><td>{{ $queue->name }} - {{ $queue->cores }} cores, {{ $queue->walltime }} hours</td></tr>
+		<tr>
+			<th scope="row">{!! ($i == 0 ? '<strong>Queues</strong>' : '') !!}</th>
+			<td>{{ $queue->name }} - {{ $queue->totalcores }} cores, {{ $queue->humanWalltime }}</td>
+		</tr>
 @endforeach
-@foreach ($data->standbys as $standby)
+@foreach ($data->standbys as $sb)
 @php
 $standby = true;
-if (preg_match("/^partner/", $standby->name)):
+if (preg_match("/^partner/", $sb->name)):
 	$partner = true;
 endif;
 @endphp
-<tr><th scope="row"><strong>{{ $standby->name }}</strong></th><td>{{ $standby->walltime }} hours</td></tr>
+		<tr>
+			<th></th>
+			<td>{{ $sb->name }} - {{ $sb->humanWalltime }}</td>
+		</tr>
 @endforeach
-</tbody></table>
+	</tbody>
+</table>
 @endforeach
 
 @if ($partner)

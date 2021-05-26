@@ -72,6 +72,8 @@ class EmailQueueDeniedCommand extends Command
 
 		foreach ($group_activity as $groupid => $users)
 		{
+			$this->line("Starting processing group ID #{$groupid}.");
+
 			// Find the latest activity
 			$latest = 0;
 			foreach ($users as $user)

@@ -87,7 +87,7 @@ class EmailWelcomeClusterCommand extends Command
 
 				if (!isset($activity[$queue->resource->id]))
 				{
-					$activity[$queue->resource->id] = new \stdClass; //new Fluent;
+					$activity[$queue->resource->id] = new \stdClass;
 					$activity[$queue->resource->id]->resource = $queue->resource;
 					$activity[$queue->resource->id]->queues   = array();
 
@@ -127,7 +127,7 @@ class EmailWelcomeClusterCommand extends Command
 				$userqueue->update(['notice' => 0]);
 			}
 
-			$this->info("Emailed welcome (cluster) to {$user->email}.");
+			$this->info("Emailed welcome (cluster) to {$u->email}.");
 		}
 	}
 }
