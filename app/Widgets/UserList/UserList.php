@@ -1,5 +1,5 @@
 <?php
-namespace App\Widgets\Userlist;
+namespace App\Widgets\UserList;
 
 use App\Halcyon\Access\Map;
 use App\Modules\Users\Models\User;

@@ -1,5 +1,5 @@
 <?php
-namespace App\Widgets\Cookiepolicy;
+namespace App\Widgets\CookiePolicy;
 
 use App\Modules\Widgets\Entities\Widget;
 
