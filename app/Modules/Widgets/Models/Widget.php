@@ -279,10 +279,6 @@ class Widget extends Model
 
 			if ($widget = $this->widget)
 			{
-				if (substr($widget, 0, 4) == 'mod_')
-				{
-					$widget = substr($widget, 4);
-				}
 				$widget = ucfirst($widget);
 
 				$path = app_path() . '/Widgets/' . $widget . '/' . $widget . '.php';
