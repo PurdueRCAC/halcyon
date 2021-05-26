@@ -24,7 +24,7 @@ class ListenersController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
-			'state'     => '',
+			'state'     => 1,
 			'access'    => 0,
 			'folder'  => null,
 			'enabled'    => null,
