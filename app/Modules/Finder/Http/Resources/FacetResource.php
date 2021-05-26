@@ -4,7 +4,7 @@ namespace App\Modules\Finder\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FinderResource extends JsonResource
+class FacetResource extends JsonResource
 {
 	/**
 	 * Transform the resource collection into an array.

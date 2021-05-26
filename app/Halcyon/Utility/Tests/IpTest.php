@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Halcyon\Base\Tests;
+namespace App\Halcyon\Utility\Tests;
 
 use App\Halcyon\Test\Basic;
 use App\Halcyon\Utility\Ip;

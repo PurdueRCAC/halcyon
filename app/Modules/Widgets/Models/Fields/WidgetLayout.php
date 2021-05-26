@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Halcyon\Form\Fields;
+namespace App\Modules\Widgets\Models\Fields;
 
 use App\Halcyon\Form\Field;
 use App\Halcyon\Form\Form;
 use App\Halcyon\Html\Builder\Select as Dropdown;
-use App\Halcyon\Base\ClientManager;
 use App\Halcyon\Filesystem\Util;
 
 /**

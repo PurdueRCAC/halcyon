@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Modules\Pages\Events;
+namespace App\Modules\Orders\Events;
 
-use App\Modules\Pages\Models\Page;
+use App\Modules\Orders\Entities\Cart;
 
-class PageCreated
+class CartRestored
 {
 	/**
-	 * @var Page
+	 * @var Cart
 	 */
-	public $page;
+	public $cart;
 
 	/**
 	 * Constructor
 	 *
-	 * @param Page $page
+	 * @param Cart $cart
 	 * @return void
 	 */
-	public function __construct(Page $page)
+	public function __construct(Cart $cart)
 	{
-		$this->page = $page;
+		$this->cart = $cart;
 	}
 }

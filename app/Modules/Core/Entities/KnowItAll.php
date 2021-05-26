@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * Model class for getting system information
  */
-class KnowItall extends Fluent
+class KnowItAll extends Fluent
 {
 	/**
 	 * @var  array  some php settings

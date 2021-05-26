@@ -1,5 +1,5 @@
 <?php
-namespace App\Halcyon\Utilities;
+namespace App\Halcyon\Utility;
 
 /**
  * Class Ldap.

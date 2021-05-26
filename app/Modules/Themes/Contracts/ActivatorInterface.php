@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Themes\Themes\Contracts;
+namespace App\Modules\Themes\Contracts;
 
-use App\Themes\Themes\Entities\Theme;
+use App\Modules\Themes\Entities\Theme;
 
 interface ActivatorInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Messages\Tests\Api;
+namespace App\Modules\Messages\Tests\Feature;
 
 use App\Modules\Messages\Models\Message;
 use Illuminate\Foundation\Testing\WithoutMiddleware;

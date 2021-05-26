@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Page\Http\Requests;
+namespace App\Modules\Pages\Http\Requests;
 
 use App\Modules\Core\Internationalisation\BaseFormRequest;
 

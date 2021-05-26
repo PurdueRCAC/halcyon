@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Halcyon\Form\Fields;
+namespace App\Modules\Listeners\Models\Fields;
 
 use Illuminate\Support\Str;
 use App\Halcyon\Form\Field;

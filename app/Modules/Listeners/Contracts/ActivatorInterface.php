@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Listeners\Listeners\Contracts;
+namespace App\Modules\Listeners\Contracts;
 
-use App\Listeners\Listeners\Models\Listener;
+use App\Modules\Listeners\Models\Listener;
 
 interface ActivatorInterface
 {

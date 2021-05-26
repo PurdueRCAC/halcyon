@@ -1,12 +1,12 @@
 <?php
 
-namespace App\listeners\Listeners\Activators;
+namespace App\Modules\Listeners\Activators;
 
 use Illuminate\Cache\CacheManager;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Container\Container;
-use App\listeners\Listeners\Contracts\ActivatorInterface;
-use App\listeners\Listeners\Models\Listener;
+use App\Modules\Listeners\Contracts\ActivatorInterface;
+use App\Modules\Listeners\Models\Listener;
 
 class DatabaseActivator implements ActivatorInterface
 {

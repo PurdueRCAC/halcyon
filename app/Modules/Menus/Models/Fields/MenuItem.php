@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Halcyon\Form\Fields;
+namespace App\Modules\Menus\Models\Fields;
 
 use App\Halcyon\Form\Field;
 use App\Halcyon\Html\Builder\Select as Dropdown;

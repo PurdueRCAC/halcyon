@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Halcyon\Form\Fields;
+namespace App\Modules\Tags\Models\Fields;
 
 use App\Halcyon\Html\Builder\Behavior;
 

@@ -8,14 +8,14 @@ use App\Halcyon\Html\Builder\Access;
  * Provides a list of access levels. Access levels control what users in specific
  * groups can see.
  */
-class AccessLevel extends Select
+class Accesslevel extends Select
 {
 	/**
 	 * The form field type.
 	 *
 	 * @var  string
 	 */
-	public $type = 'AccessLevel';
+	public $type = 'Accesslevel';
 
 	/**
 	 * Method to get the field input markup.

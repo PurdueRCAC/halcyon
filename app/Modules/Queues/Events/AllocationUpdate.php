@@ -2,7 +2,7 @@
 
 namespace App\Modules\Queues\Events;
 
-class AllocationCreate
+class AllocationUpdate
 {
 	/**
 	 * @var mixed

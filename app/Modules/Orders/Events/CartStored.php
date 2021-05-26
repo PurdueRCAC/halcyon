@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Modules\Pages\Events;
+namespace App\Modules\Orders\Events;
 
-class PageMetadata
+use App\Modules\Orders\Entities\Cart;
+
+class CartAdded
 {
 	/**
-	 * The page
-	 *
-	 * @var object
+	 * @var Cart
 	 */
-	public $page;
+	public $cart;
 
 	/**
 	 * Constructor
 	 *
-	 * @param  Page $page
+	 * @param Cart $cart
 	 * @return void
 	 */
-	public function __construct($page)
+	public function __construct(Cart $cart)
 	{
-		$this->page = $page;
+		$this->cart = $cart;
 	}
 }
