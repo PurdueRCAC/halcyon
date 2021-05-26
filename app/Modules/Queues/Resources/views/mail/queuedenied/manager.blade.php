@@ -1,7 +1,7 @@
 @component('mail::message')
 Hello {{ $user->name }},
 
-Requests for access to your {{ config('app.name') }} resources has been **denied** for the following people, resources and queues that you manage.
+Requests for access to your {{ config('app.name') }} resources has been **<span style="color:red;">denied</span>** for the following people, resources and queues that you manage.
 
 @foreach ($denials as $userid => $data)
 ---

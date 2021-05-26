@@ -1,7 +1,7 @@
 @component('mail::message')
 Hello {{ $user->name }},
 
-You that you have been **removed** from the following queues.
+You that you have been **<span style="color:red;">removed</span>** from the following queues.
 
 @foreach ($removedqueues as $queueuser)
 * {{ $queueuser->queue->resource->name }}: '{{ $queueuser->queue->name }}' queue

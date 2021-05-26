@@ -1,7 +1,7 @@
 @component('mail::message')
 Hello {{ $user->name }},
 
-Access to your {{ config('app.name') }} resources (resources, queues, and Unix groups) has been **removed** for the following people.
+Access to your {{ config('app.name') }} resources (resources, queues, and Unix groups) has been **<span style="color:red;">removed</span>** for the following people.
 
 @foreach ($removals as $userid => $data)
 ---
