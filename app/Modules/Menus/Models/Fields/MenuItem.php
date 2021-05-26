@@ -8,14 +8,14 @@ use App\Halcyon\Html\Builder\Select as Dropdown;
 /**
  * Supports an HTML grouped select list of menu item grouped by menu
  */
-class Menuitem extends Groupedlist
+class MenuItem extends Groupedlist
 {
 	/**
 	 * The form field type.
 	 *
 	 * @var  string
 	 */
-	public $type = 'Menuitem';
+	public $type = 'MenuItem';
 
 	/**
 	 * Method to get the field option groups.

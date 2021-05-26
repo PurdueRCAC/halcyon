@@ -8,14 +8,14 @@ use App\Halcyon\Form\Field;
 /**
  * Form Field class for listing plugins
  */
-class Plugins extends Select
+class Listeners extends Select
 {
 	/**
 	 * The field type.
 	 *
 	 * @var  string
 	 */
-	protected $type = 'Plugins';
+	protected $type = 'Listeners';
 
 	/**
 	 * Method to get a list of options for a list input.

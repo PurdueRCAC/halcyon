@@ -10,7 +10,7 @@ use Carbon\Carbon;
 /**
  * Widget for displaying a list of users
  */
-class Userlist extends Widget
+class UserList extends Widget
 {
 	/**
 	 * Display

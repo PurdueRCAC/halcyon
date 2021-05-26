@@ -4,7 +4,7 @@ namespace App\Modules\Orders\Events;
 
 use App\Modules\Orders\Entities\Cart;
 
-class CartAdded
+class CartStored
 {
 	/**
 	 * @var Cart

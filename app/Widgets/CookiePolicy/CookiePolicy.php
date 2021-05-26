@@ -6,7 +6,7 @@ use App\Modules\Widgets\Entities\Widget;
 /**
  * Module class for displaying cookie policy
  */
-class Cookiepolicy extends Widget
+class CookiePolicy extends Widget
 {
 	/**
 	 * Display module
