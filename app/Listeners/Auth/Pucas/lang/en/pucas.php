@@ -1,5 +1,8 @@
 <?php
 return [
+	'listener name' => 'Purdue CAS',
+	'listener desc' => 'Handles user authentication against Purdue University CAS',
+
 	'sign_in' => 'Footer',
 	'error_expired_ticket' => 'CAS ticket has expired',
 	'unknown_user' => 'Unknown user and new user registration is not permitted.',
