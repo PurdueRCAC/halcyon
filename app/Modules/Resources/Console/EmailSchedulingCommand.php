@@ -5,6 +5,8 @@ namespace App\Modules\Resources\Console;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Resources\Models\Subresource;
+use App\Modules\Resources\Models\Child;
+use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Mail\Scheduling;
 
 class EmailSchedulingCommand extends Command
@@ -31,8 +33,22 @@ class EmailSchedulingCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 		$email = 'rcac-alerts@lists.purdue.edu';
 
+		$a = (new Asset)->getTable();
+		$s = (new Subresource)->getTable();
+		$c = (new Child)->getTable();
+
 		$stopped = Subresource::query()
-			->where('notice', '=', 2)
+			->select($s . '.*')
+			->join($c, $c . '.subresourceid', $s . '.id')
+			->join($a, $a . '.id', $c . '.resourceid')
+			->withTrashed()
+			->whereIsActive()
+			->where(function($where) use ($a)
+			{
+				$where->whereNull($a . '.datetimeremoved')
+					->orWhere($a . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where($s . '.notice', '=', 2)
 			->get();
 
 		if (count($stopped))
@@ -61,11 +77,31 @@ class EmailSchedulingCommand extends Command
 		}
 
 		$started = Subresource::query()
-			->where('notice', '=', 1)
+			->select($s . '.*')
+			->join($c, $c . '.subresourceid', $s . '.id')
+			->join($a, $a . '.id', $c . '.resourceid')
+			->withTrashed()
+			->whereIsActive()
+			->where(function($where) use ($a)
+			{
+				$where->whereNull($a . '.datetimeremoved')
+					->orWhere($a . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where($s . '.notice', '=', 1)
 			->get();
 
 		$stopped = Subresource::query()
-			->where('notice', '=', 3)
+			->select($s . '.*')
+			->join($c, $c . '.subresourceid', $s . '.id')
+			->join($a, $a . '.id', $c . '.resourceid')
+			->withTrashed()
+			->whereIsActive()
+			->where(function($where) use ($a)
+			{
+				$where->whereNull($a . '.datetimeremoved')
+					->orWhere($a . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where($s . '.notice', '=', 3)
 			->get();
 
 		if (count($started))

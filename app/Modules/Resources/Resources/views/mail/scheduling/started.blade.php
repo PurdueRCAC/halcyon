@@ -1,6 +1,6 @@
 @component('mail::message')
 
-Scheduling has been <span style="color:green;">RESTARTED</span> on:
+Scheduling has been **<span style="color:green;">RESTARTED</span>** on:
 
 @foreach ($started as $resource)
 * {{ $resource->name }}
