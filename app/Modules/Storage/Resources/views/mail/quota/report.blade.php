@@ -16,6 +16,6 @@ You are receiving this alert in response to quota reports you have defined.
 
 You may disable or adjust these reports at the following URL:
 
-https://www.rcac.purdue.edu/account/myquota/
+[{{ route('site.users.account.section', ['section' => 'quota']) }}]({{ route('site.users.account.section', ['section' => 'quota']) }})
 
 @endcomponent

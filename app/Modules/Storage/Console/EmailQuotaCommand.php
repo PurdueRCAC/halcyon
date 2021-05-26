@@ -38,6 +38,8 @@ class EmailQuotaCommand extends Command
 
 		$users = Notification::query()
 			->select(DB::raw('DISTINCT(userid) AS userid'))
+			->withTrashed()
+			->whereIsActive()
 			->get()
 			->pluck('userid')
 			->toArray();
@@ -78,7 +80,7 @@ class EmailQuotaCommand extends Command
 
 			foreach ($notifications as $not)
 			{
-				if (!$not->datetimelastnotify || $not->datetimelastnotify == '0000-00-00 00:00:00')
+				if (!$not->wasNotified())
 				{
 					$not->datetimelastnotify = $not->datetimecreated;
 				}
@@ -271,6 +273,6 @@ class EmailQuotaCommand extends Command
 			}
 		}
 
-		$this->info('Finished emailing quota.');
+		//$this->info('Finished emailing quota.');
 	}
 }

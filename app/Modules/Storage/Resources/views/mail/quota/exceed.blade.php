@@ -16,7 +16,7 @@ Current usage:
 
 Additional Data Depot space can be ordered from the following URL:
 
-https://www.rcac.purdue.edu/purchase
+[{{ route('page', ['uri' => 'purchase']) }}]({{ route('page', ['uri' => 'purchase']) }})
 
 ---
 
@@ -24,5 +24,5 @@ You are receiving this alert in response to alerts that have been automatically 
 
 You may disable or adjust these alerts at the following URL:
 
-https://www.rcac.purdue.edu/account/myquota/
+[{{ route('site.users.account.section', ['section' => 'quota']) }}]({{ route('site.users.account.section', ['section' => 'quota']) }})
 @endcomponent
