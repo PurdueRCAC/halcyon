@@ -84,11 +84,8 @@ class UnixGroupMember extends Model
 	 * @var array
 	 */
 	protected $dispatchesEvents = [
-		'creating' => UnixGroupMemberCreated::class,
-		//'created'  => UnixGroupMemberCreated::class,
-		//'updating' => UnixGroupMemberUpdating::class,
-		//'updated'  => UnixGroupMemberUpdated::class,
-		'deleted'  => UnixGroupMemberDeleted::class,
+		'created' => UnixGroupMemberCreated::class,
+		'deleted' => UnixGroupMemberDeleted::class,
 	];
 
 	/**

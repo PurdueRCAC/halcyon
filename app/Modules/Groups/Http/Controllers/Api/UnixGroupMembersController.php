@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\UnixGroup;
 use App\Modules\Groups\Models\UnixGroupMember;
+use App\Modules\Groups\Events\UnixGroupMemberCreating;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Users\Models\User;
@@ -260,7 +261,13 @@ class UnixGroupMembersController extends Controller
 		if (!$unixgroup->group->isManager(auth()->user())
 		 && !auth()->user()->can('manage groups'))
 		{
-			return response()->json(['message' => trans('groups::groups.user not authorized')], 403);
+			// Call other checks to see if the user is allowed to be added
+			event($event = new UnixGroupMemberCreating($row));
+
+			if ($event->restricted)
+			{
+				return response()->json(['message' => trans('groups::groups.user not authorized')], 403);
+			}
 		}
 
 		if (!$row->save())

@@ -126,4 +126,34 @@ class UnixGroup extends Model
 
 		return parent::delete($options);
 	}
+
+	/**
+	 * Get a list of "message of the day"
+	 *
+	 * @param   string  $name
+	 * @return  object
+	 */
+	public static function findByLongname($name)
+	{
+		return self::query()
+			->where('longname', '=', $name)
+			->withTrashed()
+			->whereIsActive()
+			->first();
+	}
+
+	/**
+	 * Get a list of "message of the day"
+	 *
+	 * @param   string  $name
+	 * @return  object
+	 */
+	public static function findByShortname($name)
+	{
+		return self::query()
+			->where('shortname', '=', $name)
+			->withTrashed()
+			->whereIsActive()
+			->first();
+	}
 }
