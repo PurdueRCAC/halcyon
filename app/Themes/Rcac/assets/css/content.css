@@ -2517,6 +2517,15 @@ img.align-right {
 .contentInner .select2-container {
     width: 100% !important;
 }
+.contentPage .input-group > .select2-container {
+    -ms-flex: 1 1 0%;
+    flex: 1 1 0%;
+}
+.contentPage .input-group > .select2-container--default:not(:last-child) .select2-selection--multiple {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
 .contentInner .select2-container .select2-selection--single {
 	height: 34px;
 }
