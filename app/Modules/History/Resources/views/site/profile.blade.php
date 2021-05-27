@@ -15,10 +15,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php
-					foreach ($groups as $group)
-					{
-						?>
+					@foreach ($groups as $group)
 						<tr>
 							<td>
 								{{ $group->type ? $group->type->name : trans('global.unknown') }}
@@ -27,19 +24,25 @@
 								{{ $group->group ? $group->group->name : trans('global.unknown') }}
 							</td>
 							<td>
-								{{ $group->datecreated->format('M d, Y') }}
+								<time datetime="{{ $group->datecreated->toDateTimeString() }}">
+									{{ $group->datecreated->format('M d, Y') }}
+								</time>
 							</td>
 							<td>
 								@if ($group->isTrashed())
-									{{ $group->dateremoved->format('M d, Y') }}
+									<time datetime="{{ $group->dateremoved->toDateTimeString() }}">
+										@if ($group->dateremoved->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
+											{{ $group->dateremoved->diffForHumans() }}
+										@else
+											{{ $group->dateremoved->format('M d, Y') }}
+										@endif
+									</time>
 								@else
 									-
 								@endif
 							</td>
 						</tr>
-						<?php
-					}
-					?>
+					@endforeach
 				</tbody>
 			</table>
 		@endif
@@ -68,11 +71,19 @@
 								{{ $ug ? $ug->longname : trans('global.unknown') }}
 							</td>
 							<td>
-								{{ $group->datetimecreated->format('M d, Y') }}
+								<time datetime="{{ $group->datetimecreated->toDateTimeString() }}">
+									{{ $group->datetimecreated->format('M d, Y') }}
+								</time>
 							</td>
 							<td>
 								@if ($group->isTrashed())
-									{{ $group->datetimeremoved->format('M d, Y') }}
+									<time datetime="{{ $group->datetimeremoved->toDateTimeString() }}">
+										@if ($group->datetimeremoved->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
+											{{ $group->datetimeremoved->diffForHumans() }}
+										@else
+											{{ $group->datetimeremoved->format('M d, Y') }}
+										@endif
+									</time>
 								@else
 									-
 								@endif
@@ -99,7 +110,9 @@
 				<tbody>
 					<?php
 					foreach ($queues as $queue):
-						$q = $queue->queue()->withTrashed()->first();
+						$q = $queue->queue()
+							->withTrashed()
+							->first();
 						?>
 						<tr id="queueuser{{ $queue->id }}">
 							<td>
@@ -109,17 +122,41 @@
 								{{ $q ? $q->name : trans('global.unknown') }}
 							</td>
 							<td>
-								{{ $queue->datetimecreated->format('M d, Y') }}
+								<time datetime="{{ $queue->datetimecreated->toDateTimeString() }}">
+									@if ($queue->datetimecreated->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
+										{{ $queue->datetimecreated->diffForHumans() }}
+									@else
+										{{ $queue->datetimecreated->format('M d, Y') }}
+									@endif
+								</time>
 							</td>
 							<td>
 								@if ($queue->isTrashed())
-									{{ $queue->datetimeremoved->format('M d, Y') }}
+									<time datetime="{{ $queue->datetimeremoved->toDateTimeString() }}">
+										@if ($queue->datetimeremoved->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
+											{{ $queue->datetimeremoved->diffForHumans() }}
+										@else
+											{{ $queue->datetimeremoved->format('M d, Y') }}
+										@endif
+									</time>
 								@else
 									@if ($q->isTrashed())
-										{{ $q->datetimeremoved->format('M d, Y') }}
+										<time datetime="{{ $q->datetimeremoved->toDateTimeString() }}">
+											@if ($q->datetimeremoved->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
+												{{ $q->datetimeremoved->diffForHumans() }}
+											@else
+												{{ $q->datetimeremoved->format('M d, Y') }}
+											@endif
+										</time>
 									@else
 										@if ($q->resource->isTrashed())
-											{{ $q->resource->datetimeremoved->format('M d, Y') }}
+											<time datetime="{{ $q->resource->datetimeremoved->toDateTimeString() }}">
+												@if ($q->resource->datetimeremoved->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
+													{{ $q->resource->datetimeremoved->diffForHumans() }}
+												@else
+													{{ $q->resource->datetimeremoved->format('M d, Y') }}
+												@endif
+											</time>
 										@else
 											-
 										@endif
