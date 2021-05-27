@@ -527,18 +527,18 @@ function CancelResourceRequest(id, resources) {
 /**
  * Request group
  *
- * @param   {string}  longname
- * @param   {string}  user
+ * @param   {number}  unixgroup
+ * @param   {number}  user
  * @return  {void}
  */
-function RequestGroup(longname, user) {
+function RequestGroup(unixgroup, user) {
 	var post = {
-		'longname': longname,
-		'user': user
+		'unixgroupid': unixgroup,
+		'userid': user
 	};
 
 	WSPostURL(ROOT_URL + "unixgroups/members", JSON.stringify(post), function (xml) {
-		if (xml.status == 200) {
+		if (xml.status < 400) {
 			alert("You have been added to the access list for this software. Changes will take up to 4 hours to propagate to all cluster nodes.");
 			location.reload(true)
 		} else {
@@ -609,5 +609,10 @@ $(document).ready(function () {
 	$('.request-submit').on('click', function (e) {
 		e.preventDefault();
 		SubmitRequest();
+	});
+
+	$('.btn-software-request').on('click', function (e) {
+		e.preventDefault();
+		RequestGroup($(this).data('group'), $(this).data('user'));
 	});
 });

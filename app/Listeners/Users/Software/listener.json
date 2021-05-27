@@ -1,0 +1,11 @@
+{
+    "name": "Users - Software",
+    "alias": "listener_users_software",
+    "description": "Page where a user can request access to specific software.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
