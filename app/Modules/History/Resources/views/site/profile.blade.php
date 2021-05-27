@@ -1,7 +1,8 @@
 
-	<div class="contentInner">
-		<h2>{{ trans('history::history.history') }}</h2>
+<div class="contentInner">
+	<h2>{{ trans('history::history.history') }}</h2>
 
+	@if (count($groups) || count($unixgroups) || count($queues))
 		@if (count($groups) > 0)
 			<table class="table table-hover">
 				<caption>Group History</caption>
@@ -41,11 +42,9 @@
 					?>
 				</tbody>
 			</table>
-		@else
-			<p class="alert alert-info">No history found.</p>
 		@endif
 
-		@if (count($groups) > 0)
+		@if (count($unixgroups) > 0)
 			<table class="table table-hover">
 				<caption>Unix Group History</caption>
 				<thead>
@@ -58,8 +57,7 @@
 				</thead>
 				<tbody>
 					<?php
-					foreach ($unixgroups as $group)
-					{
+					foreach ($unixgroups as $group):
 						$ug = $group->unixgroup()->withTrashed()->first();
 						?>
 						<tr id="unixgroup{{ $group->id }}">
@@ -81,12 +79,10 @@
 							</td>
 						</tr>
 						<?php
-					}
+					endforeach;
 					?>
 				</tbody>
 			</table>
-		@else
-			<p class="alert alert-info">No history found.</p>
 		@endif
 
 		@if (count($queues) > 0)
@@ -102,8 +98,7 @@
 				</thead>
 				<tbody>
 					<?php
-					foreach ($queues as $queue)
-					{
+					foreach ($queues as $queue):
 						$q = $queue->queue()->withTrashed()->first();
 						?>
 						<tr id="queueuser{{ $queue->id }}">
@@ -133,11 +128,12 @@
 							</td>
 						</tr>
 						<?php
-					}
+					endforeach;
 					?>
 				</tbody>
 			</table>
-		@else
-			<p class="alert alert-info">No history found.</p>
 		@endif
-	</div>
+	@else
+		<p class="alert alert-info">No history found.</p>
+	@endif
+</div>
