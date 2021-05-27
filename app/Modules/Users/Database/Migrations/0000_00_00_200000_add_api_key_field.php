@@ -15,6 +15,7 @@ class AddApiKeyField extends Migration
 	{
 		if (Schema::hasTable('users') && !Schema::hasColumn('users', 'api_token'))
 		{
+			// ALTER TABLE `users` ADD COLUMN `api_token` varchar(100) DEFAULT NULL;
 			Schema::table('users', function (Blueprint $table)
 			{
 				$table->string('api_token', 100);
