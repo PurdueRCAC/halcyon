@@ -83,7 +83,7 @@
 					--></li>
 				</ul>
 
-				<nav id="nav" class="main-navigation" aria-label="{{ trans('theme::app.main') }}">
+				<nav id="nav" class="main-navigation" aria-label="{{ trans('theme::admin.main') }}">
 					<div class="inner-wrap">
 						@widget('menu')
 					</div>
