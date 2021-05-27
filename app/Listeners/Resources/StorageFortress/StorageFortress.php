@@ -4,6 +4,7 @@ namespace App\Listeners\Resources\StorageFortress;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberStatus;
+use App\Modules\Groups\Events\UnixGroupMemberCreated;
 use App\Modules\Queues\Models\User as QueueUser;
 
 /**
@@ -36,12 +37,9 @@ class StorageFortress
 		}
 
 		$resource = Asset::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('rolename', '=', 'HPSSUSER')
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->first();
 
 		if (!$resource)
@@ -77,6 +75,35 @@ class StorageFortress
 				'userid'     => $event->user->id,
 				'membertype' => 1,
 			]);
+		}
+	}
+
+	/**
+	 * Perform some setup when a unix group member is created
+	 *
+	 * @param   UnixGroupMemberCreated  $event
+	 * @return  void
+	 */
+	public function handleUnixGroupMemberCreated(UnixGroupMemberCreated $event)
+	{
+		$resource = Asset::query()
+			->withTrashed()
+			->whereIsActive()
+			->where('rolename', '=', 'HPSSUSER')
+			->first();
+
+		if (!$resource)
+		{
+			return;
+		}
+
+		// Check if they have the HPSS role, if not, give them that role
+		event($ev = new ResourceMemberStatus($resource, $event->member->user));
+
+		if ($ev->status == 1 || $ev->status == 4)
+		{
+			// Make call to role provision to generate role
+			event($ev = new ResourceMemberCreated($resource, $event->member->user));
 		}
 	}
 }
