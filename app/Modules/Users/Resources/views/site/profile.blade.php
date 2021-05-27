@@ -36,12 +36,9 @@ $active = $sections->firstWhere('active', '=', true);
 <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	<input type="hidden" name="userid" id="userid" value="{{ $user->id }}" />
 	<?php
-	if ($active)
-	{
+	if ($active):
 		echo isset($active['content']) ? $active['content'] : '';
-	}
-	else
-	{
+	else:
 		?>
 		<div class="contentInner">
 			<div class="row">
@@ -85,7 +82,7 @@ $active = $sections->firstWhere('active', '=', true);
 						<div class="col-md-6">
 							<p>
 								<strong>Username</strong><br />
-								<span class="text-muted">{{ $user->username }}</strong>
+								<span class="text-muted">{{ $user->username }}</span>
 							</p>
 						</div>
 						<div class="col-md-6">
@@ -127,7 +124,7 @@ $active = $sections->firstWhere('active', '=', true);
 						<div class="col-md-6">
 							<p>
 								<strong>Email</strong><br />
-								<span class="text-muted">{{ $user->email }}
+								<span class="text-muted">{{ $user->email }}</span>
 							</p>
 						</div>
 						<div class="col-md-6">
@@ -160,28 +157,29 @@ $active = $sections->firstWhere('active', '=', true);
 								<li class="list-group-item">
 									<div class="row">
 										<div class="col-md-1">
-												<i class="fa fa-desktop"></i>
+											<i class="fa fa-desktop"></i>
 										</div>
 										<div class="col-md-11">
-									<div class="session-ip card-title">
-										<div class="row">
-											<div class="col-md-4">
-												<strong>{{ $session->ip_address == '::1' ? 'localhost' : $session->ip_address }}</strong>
+											<div class="session-ip card-title">
+												<div class="row">
+													<div class="col-md-4">
+														<strong>{{ $session->ip_address == '::1' ? 'localhost' : $session->ip_address }}</strong>
+													</div>
+													<div class="col-md-4">
+														{{ $session->last_activity->diffForHumans() }}
+													</div>
+													<div class="col-md-4 text-right">
+														@if ($session->id == session()->getId())
+															<span class="badge badge-info float-right">Your current session</span>
+														@endif
+													</div>
+												</div>
 											</div>
-											<div class="col-md-4">
-												{{ $session->last_activity->diffForHumans() }}
-											</div>
-											<div class="col-md-4 text-right">
-												@if ($session->id == session()->getId())
-													<span class="badge badge-info float-right">Your current session</span>
-												@endif
+											<div class="session-current card-text text-muted">
+												{{ $session->user_agent }}
 											</div>
 										</div>
 									</div>
-									<div class="session-current card-text text-muted">
-										{{ $session->user_agent }}
-									</div>
-								</div></div>
 								</li>
 							@endforeach
 						@else
@@ -370,7 +368,8 @@ $active = $sections->firstWhere('active', '=', true);
 								<td id="resource{{ $resource->id }}_shell">-</td>
 								<td id="resource{{ $resource->id }}_pi">-</td>
 								<td id="resource{{ $resource->id }}" data-api="{{ route('api.resources.members') }}">
-									<span class="fa fa-exclamation-triangle"></span><span class="sr-only">Loading...</span>
+									<span class="fa fa-exclamation-triangle" aria-hidde="true"></span>
+									<span class="sr-only">Loading...</span>
 								</td>
 							</tr>
 						@endforeach
@@ -422,7 +421,7 @@ $active = $sections->firstWhere('active', '=', true);
 		@endif
 		</div><!-- / .contentInner -->
 		<?php
-	}
+	endif;
 	?>
 </div>
 
