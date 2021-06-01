@@ -2550,7 +2550,7 @@ html .select2-container--default .select2-results__group button {
 	float: right;
 }
 html .select2-container--default .select2-selection--multiple .select2-selection__choice {
-  background-color: #888;
+  background-color: #757575;
   color: #fff;
   border-color: transparent;
   position: relative;
