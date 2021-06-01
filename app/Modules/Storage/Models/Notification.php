@@ -123,7 +123,7 @@ class Notification extends Model
 		$mult = $num;
 		for ($i=0; $i<$power; $i++)
 		{
-			$mult = $num*1024;
+			$mult = $mult*1024;
 		}
 
 		return $mult;

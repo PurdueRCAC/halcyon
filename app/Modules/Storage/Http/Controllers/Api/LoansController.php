@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Storage\Models\Loan;
+use Carbon\Carbon;
 
 /**
  * Loans
@@ -204,12 +205,12 @@ class LoansController extends Controller
 		$row = new Loan;
 		$row->fill($request->all());
 
-		if (strtotime($row->datetimestart) < Carbon::now()->timestamp - 300)
+		if ($row->datetimestart->timestamp < Carbon::now()->timestamp - 300)
 		{
 			return response()->json(['message' => trans('Field `start` cannot be before "now"')], 409);
 		}
 
-		if (strtotime($row->datetimestart) >= strtotime($row->datetimestop))
+		if ($row->datetimestop && $row->datetimestart->timestamp >= $row->datetimestop->timestamp)
 		{
 			return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 		}
@@ -229,7 +230,7 @@ class LoansController extends Controller
 		{
 			// Does the storagedir have any bytes yet?
 			$first = Loan::query()
-				->where('groupid', '=', $row->groupid)
+				->where('groupid', '=', $row->lendergroupid)
 				->where('resourceid', '=', $row->resourceid)
 				->orderBy('datetimestart', 'asc')
 				->limit(1)
@@ -242,7 +243,7 @@ class LoansController extends Controller
 				return response()->json(['message' => trans('Have not sold anything and never will have anything')], 409);
 			}
 
-			if (strtotime($first->datetimestart) > strtotime($row->datetimestart))
+			if ($first->datetimestart->timestamp > $row->datetimestart->timestamp)
 			{
 				// Haven't been sold anything before this would start, so don't bother
 				return response()->json(['message' => trans('Have not sold anything before this would start')], 409);
@@ -281,7 +282,7 @@ class LoansController extends Controller
 			// Convert to string to add negative or PHP will lose precision on large values
 			if ($row->bytes < 0)
 			{
-				$counter->bytes = ltrim($row->bytes, '-');
+				$counter->bytes = abs($row->bytes);//ltrim($row->bytes, '-');
 			}
 			else
 			{
@@ -308,9 +309,10 @@ class LoansController extends Controller
 
 			$counter = new Loan;
 			$counter->fill($data);
+
 			if ($counter->bytes < 0)
 			{
-				$counter->bytes = ltrim($counter->bytes, '-');
+				$counter->bytes = abs($counter->bytes);//ltrim($counter->bytes, '-');
 			}
 			else
 			{
@@ -318,6 +320,7 @@ class LoansController extends Controller
 			}
 			$counter->groupid = $row->lendergroupid;
 			$counter->lendergroupid = $row->groupid;
+			
 			$counter->save();
 		}
 
@@ -452,13 +455,13 @@ class LoansController extends Controller
 		if ($row->datetimestart != $row->getOriginal('datetimestart'))
 		{
 			// Make sure the start time isn't the past
-			if (strtotime($row->datetimestart) < Carbon::now()->timestamp - 300)
+			if ($row->datetimestart->timestamp < Carbon::now()->timestamp - 300)
 			{
 				return response()->json(['message' => trans('Field `start` cannot be before "now"')], 409);
 			}
 
 			// Make sure we aren't setting the start time after the start
-			/*if (strtotime($row->datetimestart) >= strtotime($row->datetimestop))
+			/*if ($row->datetimestart->timestamp >= $row->datetimestop->timestamp)
 			{
 				return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 			}*/
@@ -466,7 +469,7 @@ class LoansController extends Controller
 			if ($row->datetimestop)
 			{
 				// Compare to new values
-				if (strtotime($row->datetimestop) <= strtotime($row->datetimestart))
+				if ($row->datetimestop->timestamp <= $row->datetimestart->timestamp)
 				{
 					return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 				}
@@ -474,7 +477,7 @@ class LoansController extends Controller
 			elseif ($row->getOriginal('datetimestop') && $row->getOriginal('datetimestop') != '0000-00-00 00:00:00')
 			{
 				// Compare to existing value
-				if (strtotime($row->getOriginal('datetimestop')) <= strtotime($row->datetimestart))
+				if (strtotime($row->getOriginal('datetimestop')) <= $row->datetimestart->timestamp)
 				{
 					return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 				}
@@ -487,7 +490,7 @@ class LoansController extends Controller
 			if ($row->datetimestart != $row->getOriginal('datetimestart'))
 			{
 				// Compare to new values
-				if (strtotime($row->datetimestop) <= strtotime($row->datetimestart))
+				if ($row->datetimestop->timestamp <= $row->datetimestart->timestamp)
 				{
 					return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 				}
@@ -495,7 +498,7 @@ class LoansController extends Controller
 			else
 			{
 				// Compare to existing value
-				if (strtotime($row->datetimestop) <= strtotime($row->getOriginal('datetimestop')))
+				if ($row->datetimestop->timestamp <= strtotime($row->getOriginal('datetimestop')))
 				{
 					return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 				}
@@ -506,7 +509,7 @@ class LoansController extends Controller
 		if ($request->has('bytes'))
 		{
 			// Can't change bytes of a entry that has already started
-			if (strtotime($row->datetimestart) <= Carbon::now()->timestamp)
+			if ($row->datetimestart->timestamp <= Carbon::now()->timestamp)
 			{
 				return response()->json(['message' => trans('Cannot change bytes of a entry that has already started')], 409);
 			}
@@ -539,7 +542,7 @@ class LoansController extends Controller
 					return response()->json(['message' => trans('Have not sold anything and never will have anything')], 409);
 				}
 
-				if (strtotime($first->datetimestart) > strtotime($row->datetimestart))
+				if ($first->datetimestart->timestamp > $row->datetimestart->timestamp)
 				{
 					// Haven't been sold anything before this would start, so don't bother
 					return response()->json(['message' => trans('Have not sold anything before this would start')], 409);

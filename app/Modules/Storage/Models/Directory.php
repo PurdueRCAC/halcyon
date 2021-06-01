@@ -191,7 +191,7 @@ class Directory extends Model
 		$message->messagequeuetypeid = !is_null($typeid) ?: $row->storageResource->getquotatypeid;
 		if ($offset)
 		{
-			$message->datetimecreated = Carbon::now()->add($offset . ' seconds')->toDateTimeString();
+			$message->datetimesubmitted = Carbon::now()->add($offset . ' seconds')->toDateTimeString();
 		}
 		$message->save();
 	}
@@ -636,11 +636,16 @@ class Directory extends Model
 	public function setBytesAttribute($value)
 	{
 		$value = str_replace(',', '', $value);
+		$neg = false;
 
-		if (preg_match_all("/^(\-?\d*\.?\d+)\s*(\w+)$/", $value, $matches))
+		if (preg_match_all("/^(\-?\d*\.?\d+)\s*([PpTtGgMmKkBb]{1,2})$/", $value, $matches))
 		{
+			if ($matches[1][0] < 0)
+			{
+				$neg = true;
+			}
 			$num  = abs((int)$matches[1][0]);
-			$unit = strtolower($matches[2][0]);
+			$unit = $matches[2][0];
 
 			$value = $this->convertToBytes($num, $unit);
 		}
@@ -649,7 +654,7 @@ class Directory extends Model
 			$value = intval($value);
 		}
 
-		$this->attributes['bytes'] = (int)$value;
+		$this->attributes['bytes'] = $neg ? -(int)$value : (int)$value;
 	}
 
 	/**

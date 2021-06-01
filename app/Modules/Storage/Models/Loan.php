@@ -44,12 +44,22 @@ class Loan extends Model
 	protected $table = 'storagedirloans';
 
 	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $guarded = [
+		'id'
+	];
+
+	/**
 	 * Automatic fields to populate every time a row is created
 	 *
 	 * @var  array
 	 */
 	protected $dates = array(
-		'datetimestart'
+		'datetimestart',
+		'datetimestop'
 	);
 
 	/**
@@ -148,9 +158,15 @@ class Loan extends Model
 	public function setBytesAttribute($value)
 	{
 		$value = str_replace(',', '', $value);
+		
+		$neg = false;
 
-		if (preg_match_all("/^(\-?\d*\.?\d+)\s*(\w+)$/", $value, $matches))
+		if (preg_match_all("/^(\-?\d*\.?\d+)\s*([PpTtGgMmKkBb]{1,2})$/", $value, $matches))
 		{
+			if ($matches[1][0] < 0)
+			{
+				$neg = true;
+			}
 			$num  = abs((int)$matches[1][0]);
 			$unit = $matches[2][0];
 
@@ -158,10 +174,11 @@ class Loan extends Model
 		}
 		else
 		{
+			
 			$value = intval($value);
 		}
 
-		$this->attributes['bytes'] = (int)$value;
+		$this->attributes['bytes'] = $neg ? -(int)$value : (int)$value;
 	}
 
 	/**
@@ -199,7 +216,7 @@ class Loan extends Model
 		$mult = $num;
 		for ($i=0; $i<$power; $i++)
 		{
-			$mult = $num*1024;
+			$mult = $mult*1024;
 		}
 
 		return $mult;

@@ -90,4 +90,13 @@ return [
 	'total' => 'Total',
 	'history' => 'History',
 	'source' => 'From/To',
+	'sell space' => 'Sell Space',
+	'loan space' => 'Loan Space',
+	'end of life' => '(end of system life)',
+	'select group' => '(select group)',
+	'org owned' => '(ITaP-Owned)',
+	'seller' => 'Seller',
+	'lender' => 'Lender',
+	'sell to' => 'Sell to',
+	'loan to' => 'Loan to',
 ];
