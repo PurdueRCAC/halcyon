@@ -114,6 +114,16 @@ app('pathway')
 			?>
 		</p>
 
+		@if (count($article->updates))
+			@foreach ($article->updates as $update)
+				<div class="newsupdate">UPDATE: {!! $update->formattedDatetimecreated($update->datetimecreated) !!}</div>
+				{!! $update->formattedBody !!}
+				<br/>
+			@endforeach
+
+			<div class="newsupdate">ORIGINAL: {{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}</div>
+		@endif
+
 		{!! $article->formattedBody !!}
 
 		<p class="newsfooter">
