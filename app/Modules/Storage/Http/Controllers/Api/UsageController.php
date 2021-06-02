@@ -132,7 +132,7 @@ class UsageController extends Controller
 						day, $u.id
 					ORDER BY $u.storagedirid,
 						$u.datetimerecorded DESC) AS tb1
-			GROUP BY tb1.storagedirid, tb1.quota, tb1.space, tb1.lastcheck, tb1.lastinterval"
+			GROUP BY tb1.resourceid, tb1.storagedirid,tb1.quota, tb1.space, tb1.lastcheck, tb1.lastinterval"
 		);
 
 		foreach ($rows as $row)
