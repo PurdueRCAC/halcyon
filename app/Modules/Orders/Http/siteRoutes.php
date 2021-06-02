@@ -163,7 +163,7 @@ $router->group(['prefix' => 'order', 'middleware' => 'auth.admin'], function (Ro
 		'uses' => 'OrdersController@store',
 		'middleware' => 'can:create orders|edit orders',
 	]);
-	$router->get('view/{id}', [
+	$router->get('{id}', [
 		'as' => 'site.orders.read',
 		'uses' => 'OrdersController@edit',
 		//'middleware' => 'can:tag.tags.edit',
