@@ -821,13 +821,18 @@ $(document).ready(function () {
 		//ShowStudents($(this).data('crn'));
 		var crn = $(this).data('crn');
 
+		if ($('#class_people_' + crn).length) {
+			$('#class_people_' + crn).toggleClass('hide');
+			return;
+		}
+
 		var selected_class = '';
 		if (crn == 'new') {
 			selected_class = $('#new_class_select option:selected');
 		} else {
 			selected_class = $('#new_class_select option[id="option_class_' + crn + '"]');
 		}
-
+		console.log(selected_class);
 		var students = '';
 		if (selected_class.val() != 'first') {
 			students = selected_class.data('students')['students'].join('<br/>');

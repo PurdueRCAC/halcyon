@@ -193,9 +193,9 @@
 					<tr>
 						<th scope="row">Account Users</th>
 						<td>
-							All registered students <a href="{{ route('site.users.account.section', ['section' => 'class']) }}#showstudents" class="btn btn-sm btn-default show-students" data-crn="{{ $class->crn }}">View List</a><br/>
+							All registered students <a href="{{ route('site.users.account.section', ['section' => 'class']) }}#showstudents" class="show-students" data-crn="{{ $class->crn }}">[ View List ]</a><br/>
 
-							<ul id="class_people_{{ $class->crn }}" class="hide">
+							<ul id="class_people_{{ $class->crn }}" class="student-list hide">
 								<?php
 								foreach ($class->members as $usr)
 								{

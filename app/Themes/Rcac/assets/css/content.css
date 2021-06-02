@@ -2734,6 +2734,22 @@ body table.dataTable tr:first-child td {
 	}
 }
 
+div.dialog ul.student-list,
+.student-list {
+	max-height: 12em;
+	overflow-x: scroll;
+	border: 1px solid #ccc;
+	margin-left: 0;
+	padding-left: 10px;
+	list-style: none;
+}
+div.dialog ul.student-list li,
+.student-list li {
+	margin-left: 0;
+	padding-left: 0;
+	list-style: none;
+}
+
 /* [!] Catch accessibility violations */
 img:not([alt]) {
 	outline: 2px solid red;
