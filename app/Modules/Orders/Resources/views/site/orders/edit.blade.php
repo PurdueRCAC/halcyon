@@ -735,7 +735,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										<td class="text-right text-nowrap">
 											<span class="item-edit-hide">{{ config('orders.currency', '$') }} <span name="itemtotal">{{ $item->formattedTotal }}</span></span>
 											@if ($item->origorderitemid)
-												<a href="{{ route('site.orders.recurring.read', ['id' => $order->id]) }}" class="text-success tip" title="This is a recurring item.">
+												<a href="{{ route('site.orders.recurring.read', ['id' => $item->id]) }}" class="text-success tip" title="This is a recurring item.">
 													<i class="fa fa-undo" aria-hidden="true"></i><span class="sr-only">This is a recurring item.</span>
 												</a>
 											@endif
