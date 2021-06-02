@@ -32,14 +32,14 @@
 
 		$directories = $group->directories;
 
-		$canManage = auth()->user() && auth()->user()->can('manage groups');
+		//$canManage = auth()->user() && auth()->user()->can('manage groups');
 
 		$rows = $directories->filter(function($item) use ($canManage)
 		{
-			if ($canManage)
-			{
-				return $item->parentstoragedirid == 0;
-			}
+			//if ($canManage)
+			//{
+				//return $item->parentstoragedirid == 0;
+			//}
 			return $item->parentstoragedirid == 0 && $item->storageresourceid == 4;
 		});
 
