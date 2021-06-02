@@ -134,7 +134,7 @@ class RcacLdap
 
 					$user = User::findByUsername($result['uid'][0]);
 
-					if (!$user)
+					if (!$user || !$user->id)
 					{
 						$user = new User;
 						$user->name = Str::properCaseNoun($result['cn'][0]);
