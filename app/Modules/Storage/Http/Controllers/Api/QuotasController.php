@@ -41,7 +41,7 @@ class QuotasController extends Controller
 	 * }
 	 * @return Response
 	 */
-	public function index(Request $request, $username)
+	public function index(Request $request, $username = null)
 	{
 		/*$filters = array(
 			'username'  => $request->input('username', auth()->user()->username)
@@ -74,6 +74,16 @@ class QuotasController extends Controller
 					$where->where($d . '.bytes', '<>', 0)
 						->orWhere($r . '.defaultquotaspace', '<>', 0);
 				})
+			->where(function($where) use ($d)
+				{
+					$where->whereNull($d . '.datetimeremoved')
+						->orWhere($d . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+			->where(function($where) use ($r)
+				{
+					$where->whereNull($r . '.datetimeremoved')
+						->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
 			->get();
 
 		$g = (new UnixGroup)->getTable();
@@ -87,6 +97,16 @@ class QuotasController extends Controller
 				{
 					$where->where($d . '.bytes', '<>', 0)
 						->orWhere($r . '.defaultquotaspace', '<>', 0);
+				})
+			->where(function($where) use ($d)
+				{
+					$where->whereNull($d . '.datetimeremoved')
+						->orWhere($d . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+			->where(function($where) use ($r)
+				{
+					$where->whereNull($r . '.datetimeremoved')
+						->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
 				})
 			->get();
 
