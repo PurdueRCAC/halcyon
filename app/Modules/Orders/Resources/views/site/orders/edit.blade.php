@@ -575,7 +575,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												@endif
 											</span>
 
-											<input type="text" name="search_group" id="search_group" class="form-control form-groups hide" data-groupid="{{ $order->groupid }}" value="{{ $order->group ? $order->group->name : '' }}" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
+											<input type="text" name="search_group" id="search_group" class="form-control form-groups hide" data-groupid="{{ $order->groupid }}" value="{{ $order->groupid && $order->group ? $order->group->name : '' }}" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
 
 											<a href="#edit_group" id="order_group_save" class="order-edit" title="{{ trans('global.button.edit') }}" data-txt-save="Save Change">
 												<i id="group_save" class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>

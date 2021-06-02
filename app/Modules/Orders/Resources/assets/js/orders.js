@@ -470,7 +470,7 @@ function AddNewCategory() {
 	post['description'] = "Enter description for new category. This category will not be displayed until at least one public product is created.";
 
 	post = JSON.stringify(post);
-	WSPostURL(ROOT_URL + "orders/categories", post, function(xml) {
+	WSPostURL(ROOT_URL + "ordercategory", post, function(xml) {
 		if (xml.status != 200) {
 			// Error handling
 			alert("An error occurred.");
@@ -1486,7 +1486,7 @@ function CancelOrder(button) {
  * @return  {void}
  */
 function CanceledOrder(xml) {
-	if (xml.status < 400) {
+	if (xml.status == 200) {
 		window.location.reload();// = "/orders/";
 	} else {
 		alert("An error occurred while canceling order.");
@@ -2385,8 +2385,8 @@ function SaveOrderGroup() {
 
 	if (button.className.match(/pencil/)) {
 		button.className = "fa fa-save";
-		document.getElementById("search_group").style.display = "inline";
-		document.getElementById("edit_group").style.display = "none";
+		document.getElementById("search_group").classList.remove('hide');
+		document.getElementById("edit_group").classList.add('hide');
 	} else {
 		var url = document.getElementById("order").getAttribute('data-api');
 		var id = document.getElementById("search_group").getAttribute('data-groupid');
@@ -2397,8 +2397,8 @@ function SaveOrderGroup() {
 
 			WSPutURL(url, post, UpdatedAccountInfo);
 		} else {
-			document.getElementById("search_group").style.display = "none";
-			document.getElementById("edit_group").style.display = "inline";
+			document.getElementById("search_group").classList.add('hide');
+			document.getElementById("edit_group").classList.remove('hide');
 			button.className = "fa fa-pencil";
 		}
 	}
