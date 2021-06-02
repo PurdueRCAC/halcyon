@@ -22,7 +22,7 @@ class UsageResource extends JsonResource
 		if (request()->segment(1) == 'ws')
 		{
 			$data['id'] = '/ws/storagedirusage/' . $this->id;
-			$data['recorded'] = $this->datetimerecorded;
+			$data['recorded'] = $this->datetimerecorded->toDateTimeString();
 		}
 
 		return $data;
