@@ -123,10 +123,15 @@ class PedLdap
 						continue;
 					}
 
-					$user = new User;
-					$user->name = Str::properCaseNoun($result['cn'][0]);
-					$user->username = $result['uid'][0];
-					$user->email = $user->username . '@purdue.edu';
+					$user = User::findByUsername($result['uid'][0]);
+
+					if (!$user)
+					{
+						$user = new User;
+						$user->name = Str::properCaseNoun($result['cn'][0]);
+						$user->username = $result['uid'][0];
+						$user->email = $user->username . '@purdue.edu';
+					}
 
 					$usernames[] = $user->username;
 
@@ -153,10 +158,16 @@ class PedLdap
 						continue;
 					}
 
-					$user = new User;
-					$user->name = Str::properCaseNoun($result['cn'][0]);
-					$user->username = $result['uid'][0];
-					$user->email = $result['mail'][0];
+					$user = User::findByUsername($result['uid'][0]);
+
+					if (!$user)
+					{
+						$user = new User;
+						$user->name = Str::properCaseNoun($result['cn'][0]);
+						//$user->puid = $result['puid'][0];
+						$user->username = $result['uid'][0];
+						$user->email = $result['mail'][0];
+					}
 
 					$event->results->push($user);
 				}
