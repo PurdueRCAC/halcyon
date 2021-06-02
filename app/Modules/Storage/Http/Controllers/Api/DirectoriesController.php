@@ -159,12 +159,25 @@ class DirectoriesController extends Controller
 			}
 		}
 
-		$rows = $query
-			->withCount('children')
-			->groupBy('id')
-			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
-			->appends($filters);
+		if (request()->segment(1) == 'ws')
+		{
+			$rows = $query
+				->withCount('children')
+				//->groupBy('id')
+				->orderBy($filters['order'], $filters['order_dir'])
+				->appends($filters);
+
+			return $rows;
+		}
+		else
+		{
+			$rows = $query
+				->withCount('children')
+				//->groupBy('id')
+				->orderBy($filters['order'], $filters['order_dir'])
+				->paginate($filters['limit'], ['*'], 'page', $filters['page'])
+				->appends($filters);
+		}
 
 		return new DirectoryResourceCollection($rows);
 	}
