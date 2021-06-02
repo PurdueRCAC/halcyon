@@ -91,7 +91,7 @@ class PedLdap
 				if (preg_match("/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/", $search))
 				{
 					$results = $ldap->search()
-						->where('email', '=', $search)
+						->where('mail', '=', $search)
 						->select(['cn', 'uid', 'title', 'purdueEduCampus'])
 						->get();
 
