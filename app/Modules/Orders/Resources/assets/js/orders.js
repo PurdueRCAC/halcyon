@@ -1541,8 +1541,8 @@ function ResetAccount(url, button) {
 function ApproveAccount(url, button) {
 	var post = JSON.stringify({"approved": 1});
 
-	/*WSPutURL(url, post, function(xml, button) {
-		if (xml.status == 200) {*/
+	WSPutURL(url, post, function(xml, button) {
+		if (xml.status < 400) {
 			var id = button.getAttribute('data-id');
 
 			button.classList.add('hide');
@@ -1566,10 +1566,10 @@ function ApproveAccount(url, button) {
 					accountstatus[x].value = "PENDING_COLLECTION";
 				}
 			}
-		/*} else {
+		} else {
 			alert("An error occurred while approving account.");
 		}
-	}, button);*/
+	}, button);
 }
 
 /**
