@@ -5,6 +5,7 @@ use App\Modules\Users\Events\UserDisplay;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
+use App\Modules\Groups\Models\UnixGroupMember;
 use App\Modules\Groups\Events\GroupDisplay;
 
 /**
@@ -126,6 +127,34 @@ class Groups
 		}
 
 		$user->priorviewerofgroups = $memberships;
+
+		$memberships = UnixGroupMember::query()
+			->withTrashed()
+			->whereIsActive()
+			->where('userid', '=', $user->id)
+			->orderBy('datetimecreated', 'asc')
+			->get();
+
+		foreach ($memberships as $membership)
+		{
+			$membership->api = route('api.unixgroups.read', ['id' => $membership->unixgroupid]);
+		}
+
+		$user->memberofunixgroups = $memberships;
+
+		$memberships = UnixGroupMember::query()
+			->withTrashed()
+			->whereIsTrashed()
+			->where('userid', '=', $user->id)
+			->orderBy('datetimecreated', 'asc')
+			->get();
+
+		foreach ($memberships as $membership)
+		{
+			$membership->api = route('api.unixgroups.read', ['id' => $membership->unixgroupid]);
+		}
+
+		$user->priormemberofunixgroups = $memberships;
 
 		$event->setUser($user);
 	}
