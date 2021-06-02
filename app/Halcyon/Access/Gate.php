@@ -84,6 +84,16 @@ class Gate
 		$action = strtolower(preg_replace('#[\s\-]+#', '.', $action));
 		$asset  = strtolower(preg_replace('#[\s\-]+#', '.', trim($asset)));
 
+		// Temporary shim to get permissions working
+		$parts = explode('.', $asset);
+		if (count($parts) > 1)
+		{
+			if (!is_numeric(end($parts)))
+			{
+				$asset = $parts[0];
+			}
+		}
+
 		// Default to the root asset node.
 		if (empty($asset))
 		{
@@ -214,6 +224,16 @@ class Gate
 		$roleId = (int) $roleId;
 		$action = strtolower(preg_replace('#[\s\-]+#', '.', trim($action)));
 		$asset  = strtolower(preg_replace('#[\s\-]+#', '.', trim($asset)));
+
+		// Temporary shim to get permissions working
+		$parts = explode('.', $asset);
+		if (count($parts) > 1)
+		{
+			if (!is_numeric(end($parts)))
+			{
+				$asset = $parts[0];
+			}
+		}
 
 		// Get role path for role
 		$rolePath = self::getRolePath($roleId);
