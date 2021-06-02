@@ -229,18 +229,19 @@ class MessagesController extends Controller
 
 			foreach ($rows as $row)
 			{
-				$data = $row->toArray();
+				$data = array(); //$row->toArray();
 
-				$data['id'] = '/ws/messagequeue/' . $data['id'];
-				$data['messagequeuetype'] = '/ws/messagequeuetype/' . $data['messagequeuetypeid'];
-				$data['datetimesubmitted'] = $row->datetimesubmitted->toDateTimeString();
-				$data['datetimestarted'] = $row->datetimestarted->toDateTimeString();
-				$data['datetimecompleted'] = $row->datetimecompleted->toDateTimeString();
-				$data['submitted'] = $data['datetimesubmitted'];
-				$data['started'] = $row->started() ? $data['datetimestarted'] : '0000-00-00 00:00:00';
-				$data['completed'] = $row->completed() ? $data['datetimecompleted']->toDateTimeString() : '0000-00-00 00:00:00';
-				$data['user'] = '/ws/user/' . $data['userid'];
-				$data['targetobject'] = '/ws/' . ($row->type ? $row->type->classname : 'unknown') . '/' . $data['targetobjectid'];
+				//unset($data['type']);
+				$data['id'] = '/ws/messagequeue/' . $row->id;
+				$data['messagequeuetype'] = '/ws/messagequeuetype/' . $row->messagequeuetypeid;
+				//$data['datetimesubmitted'] = $row->datetimesubmitted->toDateTimeString();
+				//$data['datetimestarted'] = $row->datetimestarted->toDateTimeString();
+				//$data['datetimecompleted'] = $row->datetimecompleted->toDateTimeString();
+				$data['submitted'] = $row->datetimesubmitted->toDateTimeString();
+				$data['started'] = $row->started() ? $row->datetimestarted->toDateTimeString() : '0000-00-00 00:00:00';
+				$data['completed'] = $row->completed() ? $row->datetimecompleted->toDateTimeString() : '0000-00-00 00:00:00';
+				//$data['user'] = '/ws/user/' . $data['userid'];
+				$data['targetobject'] = '/ws/' . ($row->type ? $row->type->classname : 'unknown') . '/' . $row->targetobjectid;
 
 				$items[] = $data;
 			}
