@@ -20,7 +20,7 @@ $router->group(['prefix' => 'classaccount'], function (Router $router)
 		'uses' => 'AccountsController@read',
 		'middleware' => 'auth:api',
 	]);
-	$router->put('{id}', [
+	$router->match(['put', 'post'], '{id}', [
 		'as' => 'ws.courses.update',
 		'uses' => 'AccountsController@update',
 		'middleware' => ['auth:api', 'can:edit courses'],
@@ -55,7 +55,7 @@ $router->group(['prefix' => 'classuser'], function (Router $router)
 		'uses' => 'MembersController@read',
 		'middleware' => 'auth:api',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'post'], '{id}', [
 		'as' => 'ws.courses.members.update',
 		'uses' => 'MembersController@update',
 		'middleware' => ['auth:api', 'can:edit courses|edit.own courses'],

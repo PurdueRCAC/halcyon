@@ -23,7 +23,7 @@ $router->group(['prefix' => 'user'], function (Router $router)
 		//'middleware' => 'can:users.user.view',
 	])->where('id', '[0-9]+');
 
-	$router->put('{id}', [
+	$router->match(['put', 'post'], '{id}', [
 		'as' => 'ws.users.update',
 		'uses' => 'UsersController@update',
 		'middleware' => ['auth:api', 'can:edit users'],
