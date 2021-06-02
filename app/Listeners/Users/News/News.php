@@ -5,6 +5,7 @@ use App\Modules\Users\Events\UserDisplay;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Association;
 use App\Modules\News\Models\Type;
+use App\Modules\Listeners\Models\Listener;
 
 /**
  * User listener for News
@@ -30,6 +31,18 @@ class News
 	 */
 	public function handleUserDisplay(UserDisplay $event)
 	{
+		$listener = Listener::query()
+			->where('type', '=', 'listener')
+			->where('folder', '=', 'users')
+			->where('element', '=', 'News')
+			->get()
+			->first();
+
+		if (auth()->user() && !in_array($listener->access, auth()->user()->getAuthorisedViewLevels()))
+		{
+			return;
+		}
+
 		$content = null;
 		$user = $event->getUser();
 		$states = [1];

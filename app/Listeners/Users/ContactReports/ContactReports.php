@@ -4,6 +4,7 @@ namespace App\Listeners\Users\ContactReports;
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\User;
+use App\Modules\Listeners\Models\Listener;
 
 /**
  * Contact Reports listener for users
@@ -29,6 +30,18 @@ class ContactReports
 	 */
 	public function handleUserDisplay(UserDisplay $event)
 	{
+		$listener = Listener::query()
+			->where('type', '=', 'listener')
+			->where('folder', '=', 'users')
+			->where('element', '=', 'ContactReports')
+			->get()
+			->first();
+
+		if (auth()->user() && !in_array($listener->access, auth()->user()->getAuthorisedViewLevels()))
+		{
+			return;
+		}
+
 		$content = null;
 		$user = $event->getUser();
 

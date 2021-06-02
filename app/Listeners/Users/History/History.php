@@ -3,6 +3,7 @@ namespace App\Listeners\Users\History;
 
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\History\Models\Log;
+use App\Modules\Listeners\Models\Listener;
 
 /**
  * User listener for history
@@ -28,6 +29,18 @@ class History
 	 */
 	public function handleUserDisplay(UserDisplay $event)
 	{
+		$listener = Listener::query()
+			->where('type', '=', 'listener')
+			->where('folder', '=', 'users')
+			->where('element', '=', 'History')
+			->get()
+			->first();
+
+		if (auth()->user() && !in_array($listener->access, auth()->user()->getAuthorisedViewLevels()))
+		{
+			return;
+		}
+
 		$content = null;
 		$user = $event->getUser();
 

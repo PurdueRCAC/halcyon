@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            //\App\Modules\Listeners\Http\Middleware\RegisterListeners::class,
             \App\Modules\Users\Http\Middleware\LastActivity::class,
             \App\Modules\Menus\Http\Middleware\SetActiveMenu::class,
         ],
@@ -44,6 +45,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            //\App\Modules\Listeners\Http\Middleware\RegisterListeners::class,
             \App\Modules\Core\Http\Middleware\ApiDocs::class,
         ],
     ];
