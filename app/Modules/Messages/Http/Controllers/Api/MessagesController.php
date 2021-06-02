@@ -222,9 +222,27 @@ class MessagesController extends Controller
 		{
 			$rows = $query
 				->limit(1000)
-				->orderBy($filters['order'], $filters['order_dir']);
+				->orderBy($filters['order'], $filters['order_dir'])
+				->get();
 
-			return response()->json($rows, 200);
+			$items = array();
+
+			foreach ($rows as $row)
+			{
+				$data = $row->toArray();
+
+				$data['id'] = '/ws/messagequeue/' . $data['id'];
+				$data['messagequeuetype'] = '/ws/messagequeuetype/' . $data['messagequeuetypeid'];
+				$data['submitted'] = $data['datetimesubmitted'];
+				$data['started'] = $row->started() ? $data['datetimestarted'] : '0000-00-00 00:00:00';
+				$data['completed'] = $row->completed() ? $data['datetimecompleted'] : '0000-00-00 00:00:00';
+				$data['user'] = '/ws/user/' . $data['userid'];
+				$data['targetobject'] = '/ws/' . ($row->type ? $row->type->classname : 'unknown') . '/' . $data['targetobjectid'];
+
+				$items[] = $data;
+			}
+
+			return response()->json($items, 200);
 		}
 
 		$rows = $query
