@@ -127,7 +127,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 		$router->post('/', [
 			'as' => 'api.orders.items.create',
 			'uses' => 'ItemsController@create',
-			'middleware' => 'can:create orders.items',
+			'middleware' => 'can:edit orders',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.orders.items.read',
@@ -136,12 +136,12 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 		$router->put('{id}', [
 			'as' => 'api.orders.items.update',
 			'uses' => 'ItemsController@update',
-			'middleware' => 'can:edit orders.items',
+			'middleware' => 'can:edit orders',
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.orders.items.delete',
 			'uses' => 'ItemsController@delete',
-			'middleware' => 'can:delete orders.items',
+			'middleware' => 'can:edit orders',
 		])->where('id', '[0-9]+');
 	});
 
@@ -155,7 +155,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 		$router->post('/', [
 			'as' => 'api.orders.accounts.create',
 			'uses' => 'AccountsController@create',
-			'middleware' => 'can:create orders.accounts',
+			'middleware' => 'can:edit orders',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.orders.accounts.read',
@@ -164,12 +164,12 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 		$router->put('{id}', [
 			'as' => 'api.orders.accounts.update',
 			'uses' => 'AccountsController@update',
-			'middleware' => 'can:edit orders.accounts',
+			'middleware' => 'can:edit orders',
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.orders.accounts.delete',
 			'uses' => 'AccountsController@delete',
-			'middleware' => 'can:delete orders.accounts',
+			'middleware' => 'can:edit orders',
 		])->where('id', '[0-9]+');
 	});
 });
