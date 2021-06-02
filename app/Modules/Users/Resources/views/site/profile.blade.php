@@ -52,6 +52,8 @@ $active = $sections->firstWhere('active', '=', true);
 				</div>
 			</div>
 
+			@include('users::site.depot', ['user' => $user])
+
 			<div class="card panel panel-default mb-3">
 				<div class="card-header panel-heading">
 					Profile
