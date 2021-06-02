@@ -476,6 +476,20 @@ class Message extends Model
 	 *
 	 * @return  object
 	 */
+	public function scopeWhereNotStarted($query)
+	{
+		return $query->where(function($where) use ($since)
+		{
+			$where->whereNull('datetimestarted')
+				->orWhere('datetimestarted', '=', '0000-00-00 00:00:00');
+		});
+	}
+
+	/**
+	 * Define a query scope
+	 *
+	 * @return  object
+	 */
 	public function scopeWhereCompleted($query, $since = null)
 	{
 		return $query->where(function($where) use ($since)
@@ -487,6 +501,20 @@ class Message extends Model
 			{
 				$where->where('datetimecompleted', '>', $since);
 			}
+		});
+	}
+
+	/**
+	 * Define a query scope
+	 *
+	 * @return  object
+	 */
+	public function scopeWhereNotCompleted($query)
+	{
+		return $query->where(function($where) use ($since)
+		{
+			$where->whereNull('datetimecompleted')
+				->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
 		});
 	}
 

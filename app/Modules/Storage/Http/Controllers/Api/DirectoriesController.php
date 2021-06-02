@@ -164,19 +164,23 @@ class DirectoriesController extends Controller
 			$rows = $query
 				->withCount('children')
 				//->groupBy('id')
+				->limit(1000)
 				->orderBy($filters['order'], $filters['order_dir']);
+
+			$rows->each(function($item, $key)
+			{
+				$item->type = $item->messagequeuetypeid;
+			});
 
 			return response()->json($rows, 200);
 		}
-		else
-		{
-			$rows = $query
-				->withCount('children')
-				//->groupBy('id')
-				->orderBy($filters['order'], $filters['order_dir'])
-				->paginate($filters['limit'], ['*'], 'page', $filters['page'])
-				->appends($filters);
-		}
+
+		$rows = $query
+			->withCount('children')
+			//->groupBy('id')
+			->orderBy($filters['order'], $filters['order_dir'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
+			->appends($filters);
 
 		return new DirectoryResourceCollection($rows);
 	}

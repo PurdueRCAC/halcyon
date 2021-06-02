@@ -128,11 +128,11 @@ class UsageController extends Controller
 						$u.storagedirid <> 0
 						AND ($u.quota <> 0 OR $u.space <> 0)
 						AND $d.id = $u.storagedirid
-					GROUP BY $u.storagedirid,
+					GROUP BY $d.resourceid, $u.storagedirid, $u.quota, $u.space, $u.lastinterval, $u.datetimerecorded,
 						day, $u.id
 					ORDER BY $u.storagedirid,
 						$u.datetimerecorded DESC) AS tb1
-			GROUP BY tb1.resourceid, tb1.storagedirid,tb1.quota, tb1.space, tb1.lastcheck, tb1.lastinterval"
+			GROUP BY tb1.resourceid, tb1.storagedirid, tb1.quota, tb1.space, tb1.lastcheck, tb1.lastinterval"
 		);
 
 		foreach ($rows as $row)

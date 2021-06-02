@@ -218,6 +218,15 @@ class MessagesController extends Controller
 			$query->where('returnstatus', '=', $filters['returnstatus']);
 		}
 
+		if (request()->segment(1) == 'ws')
+		{
+			$rows = $query
+				->limit(1000)
+				->orderBy($filters['order'], $filters['order_dir']);
+
+			return response()->json($rows, 200);
+		}
+
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
