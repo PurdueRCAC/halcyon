@@ -29,6 +29,7 @@ return [
         // rices machines (for dev & testing)
         '69.174.157.170',
         '10.195.55.39',
+        '10.195.49.76',
 
         '128.211.157.39', // amie.anvil.rcac.purdue.edu
 
