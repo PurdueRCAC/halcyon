@@ -311,10 +311,24 @@ class UsersController extends Controller
 	public function create(Request $request): UserResource
 	{
 		$request->validate(array(
-			'name' => 'required',
+			'name' => 'required|string|max:128',
 		));
 
-		$user = User::create($request->all());
+		$user = new User;
+		$user->name = $request->input('name');
+		if ($request->has('puid'))
+		{
+			$user->puid = $request->inout('puid');
+		}
+		$user->save();
+
+		if ($request->has('username'))
+		{
+			$username = new UserUsername;
+			$username->userid = $user->id;
+			$username->username = $request->input('username');
+			$username->save();
+		}
 
 		return new UserResource($user);
 	}
