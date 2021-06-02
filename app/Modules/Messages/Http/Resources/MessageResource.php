@@ -57,6 +57,7 @@ class MessageResource extends JsonResource
 			$data = array();
 			$data['id'] = '/ws/messagequeue/' . $this->id;
 			$data['messagequeuetype'] = '/ws/messagequeuetype/' . $this->messagequeuetypeid;
+			$data['type'] = '/ws/messagequeuetype/' . $this->messagequeuetypeid;
 			$data['submitted'] = $this->datetimesubmitted->toDateTimeString();
 			$data['started'] = $this->started() ? $this->datetimestarted->toDateTimeString() : '0000-00-00 00:00:00';
 			$data['completed'] = $this->completed() ? $this->datetimecompleted->toDateTimeString() : '0000-00-00 00:00:00';
