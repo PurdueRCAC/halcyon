@@ -106,12 +106,6 @@
 			description="COM_CONTENT_FIELD_HITS_DESC"  size="6"
 			readonly="true" filter="unset" />
 
-		<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-			description="COM_CONTENT_FIELD_LANGUAGE_DESC" 
-		>
-			<option value="*">JALL</option>
-		</field>
-
 		<field name="featured" type="list"
 			label="JFEATURED"
 			description="COM_CONTENT_FIELD_FEATURED_DESC"

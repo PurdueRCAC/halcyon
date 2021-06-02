@@ -92,13 +92,6 @@
 			cols="40"
 		/>
 
-		<field name="language" type="contentlanguage"
-			description="widgets::widgets.field.language description"
-			label="widgets::widgets.field.language"
-		>
-			<option value="*">global.all</option>
-		</field>
-
 		<field name="assignment" type="hidden" />
 
 		<field name="assigned" type="hidden" />

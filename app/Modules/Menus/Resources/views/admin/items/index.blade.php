@@ -160,11 +160,6 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 					<option value="">{{ trans('menus::menus.all access levels') }}</option>
 					<?php echo \App\Halcyon\Html\Builder\Select::options(\App\Halcyon\Html\Builder\Access::assetgroups(), 'value', 'text', $filters['access']); ?>
 				</select>
-
-				<!-- <select name="language" class="form-control filter filter-submit">
-					<option value="">{{ trans('global.option.select language') }}</option>
-					<?php echo \App\Halcyon\Html\Builder\Select::options(\App\Halcyon\Html\Builder\Contentlanguage::existing(true, true), 'value', 'text', $filters['language']); ?>
-				</select> -->
 			</div>
 		</div>
 
