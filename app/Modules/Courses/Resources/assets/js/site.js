@@ -164,7 +164,7 @@ function AddingManyUsersEmail(xml, post_obj) {
 			WSPostURL(ROOT_URL + "users", post, newUser, post_obj);
 		}
 
-		var user = response['users'][0]['id'];
+		var user = response['data'][0]['id'];
 		post = {
 			'userid': user,
 			'classaccountid': post_obj['classaccountid'],
