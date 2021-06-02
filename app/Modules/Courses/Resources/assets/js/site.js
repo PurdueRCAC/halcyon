@@ -268,7 +268,7 @@ function PrintErrors() {
  */
 function newUser(xml, post_obj) {
 	pending--;
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		//var response = JSON.parse(xml.responseText);
 		//var post = JSON.stringify(post_obj);
 		pending++;
@@ -289,7 +289,7 @@ function newUser(xml, post_obj) {
  */
 function AddedManyUsers(xml, post_obj) {
 	pending--;
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		if (pending == 0 && errors == 0) {
 			window.location.reload(true);
 			return;
