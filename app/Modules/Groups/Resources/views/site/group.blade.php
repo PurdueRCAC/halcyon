@@ -917,11 +917,11 @@ $pending = $group->pendingMembersCount;
 						Notices
 					</a>
 				</li>
-				<li class="nav-item">
+				<?php /*<li class="nav-item">
 					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'history']) }}" id="group-history" class="nav-link tab<?php if ($subsection == 'history') { echo ' active activeTab'; } ?>">
 						History
 					</a>
-				</li>
+				</li>*/ ?>
 			@endif
 			</ul>
 
