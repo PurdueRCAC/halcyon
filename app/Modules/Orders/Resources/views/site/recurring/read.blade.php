@@ -145,7 +145,9 @@ app('pathway')
 					@foreach ($items as $i => $row)
 						<tr>
 							<td class="priority-5">
-								{{ $row->orderid }}
+								<a href="{{ route('site.orders.read', ['id' => $row->orderid]) }}">
+									{{ $row->orderid }}
+								</a>
 							</td>
 							<td>
 								@if ($row->isFulfilled())
