@@ -43,7 +43,7 @@ class MessageResource extends JsonResource
 		// [!] Legacy compatibility
 		if ($request->segment(1) == 'ws')
 		{
-			$data['id'] = '/ws/messagequeue/' . $data['id'];
+			/*$data['id'] = '/ws/messagequeue/' . $data['id'];
 			$data['messagequeuetype'] = '/ws/messagequeuetype/' . $data['messagequeuetypeid'];
 			$data['datetimesubmitted'] = $this->datetimesubmitted->toDateTimeString();
 			$data['datetimestarted'] = $this->datetimestarted->toDateTimeString();
@@ -52,7 +52,15 @@ class MessageResource extends JsonResource
 			$data['started'] = $this->started() ? $data['datetimestarted'] : '0000-00-00 00:00:00';
 			$data['completed'] = $this->completed() ? $data['datetimecompleted'] : '0000-00-00 00:00:00';
 			$data['user'] = '/ws/user/' . $data['userid'];
-			$data['targetobject'] = '/ws/' . $this->type->classname . '/' . $data['targetobjectid'];
+			$data['targetobject'] = '/ws/' . $this->type->classname . '/' . $data['targetobjectid'];*/
+
+			$data = array();
+			$data['id'] = '/ws/messagequeue/' . $this->id;
+			$data['messagequeuetype'] = '/ws/messagequeuetype/' . $this->messagequeuetypeid;
+			$data['submitted'] = $this->datetimesubmitted->toDateTimeString();
+			$data['started'] = $this->started() ? $this->datetimestarted->toDateTimeString() : '0000-00-00 00:00:00';
+			$data['completed'] = $this->completed() ? $this->datetimecompleted->toDateTimeString() : '0000-00-00 00:00:00';
+			$data['targetobject'] = '/ws/' . ($this->type ? $this->type->classname : 'unknown') . '/' . $this->targetobjectid;
 		}
 
 		return $data;
