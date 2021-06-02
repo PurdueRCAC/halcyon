@@ -40,12 +40,11 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->get('/', [
 			'as' => 'api.users.levels',
 			'uses' => 'LevelsController@index',
-			//'middleware' => 'can:users.levels',
 		]);
 		$router->post('/', [
 			'as' => 'api.users.levels.create',
 			'uses' => 'LevelsController@create',
-			'middleware' => 'can:create users.levels',
+			'middleware' => 'can:manage users',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.users.levels.read',
@@ -54,12 +53,12 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->put('/', [
 			'as' => 'api.users.levels.update',
 			'uses' => 'LevelsController@update',
-			'middleware' => 'can:edit users.levels',
+			'middleware' => 'can:manage users',
 		]);
 		$router->delete('{id}', [
 			'as'   => 'api.users.levels.delete',
 			'uses' => 'LevelsController@delete',
-			'middleware' => 'can:delete users.levels',
+			'middleware' => 'can:manage users',
 		]);
 	});
 
@@ -72,7 +71,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.users.roles.create',
 			'uses' => 'RolesController@create',
-			'middleware' => 'can:create users.roles',
+			'middleware' => 'can:manage users',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.users.roles.read',
@@ -81,12 +80,12 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->put('/', [
 			'as' => 'api.users.roles.update',
 			'uses' => 'RolesController@update',
-			'middleware' => 'can:edit users.roles',
+			'middleware' => 'can:manage users',
 		]);
 		$router->delete('{id}', [
 			'as'   => 'api.users.roles.delete',
 			'uses' => 'RolesController@delete',
-			'middleware' => 'can:delete users.roles',
+			'middleware' => 'can:manage users',
 		]);
 	});
 
@@ -95,12 +94,11 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->get('/', [
 			'as' => 'api.users.facets',
 			'uses' => 'FacetsController@index',
-			//'middleware' => 'can:users.facets',
 		]);
 		$router->post('/', [
 			'as' => 'api.users.facets.create',
 			'uses' => 'FacetsController@create',
-			'middleware' => 'can:create users.facets',
+			'middleware' => 'can:edit users',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.users.facets.read',
@@ -109,12 +107,12 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->put('/', [
 			'as' => 'api.users.facets.update',
 			'uses' => 'FacetsController@update',
-			'middleware' => 'can:edit users.facets',
+			'middleware' => 'can:edit users',
 		]);
 		$router->delete('{id}', [
 			'as'   => 'api.users.facets.delete',
 			'uses' => 'FacetsController@delete',
-			'middleware' => 'can:delete users.facets',
+			'middleware' => 'can:edit users',
 		]);
 	});
 
@@ -123,12 +121,11 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->get('/', [
 			'as' => 'api.users.notes',
 			'uses' => 'NotesController@index',
-			//'middleware' => 'can:users.notes',
 		]);
 		$router->post('/', [
 			'as' => 'api.users.notes.create',
 			'uses' => 'NotesController@create',
-			'middleware' => 'can:create users.notes',
+			'middleware' => 'can:edit users',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.users.notes.read',
@@ -137,12 +134,12 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->put('/', [
 			'as' => 'api.users.notes.update',
 			'uses' => 'NotesController@update',
-			'middleware' => 'can:edit users.notes',
+			'middleware' => 'can:edit users',
 		]);
 		$router->delete('{id}', [
 			'as'   => 'api.users.notes.delete',
 			'uses' => 'NotesController@delete',
-			'middleware' => 'can:delete users.notes',
+			'middleware' => 'can:edit users',
 		]);
 	});
 });
