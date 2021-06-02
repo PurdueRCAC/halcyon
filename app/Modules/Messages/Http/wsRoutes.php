@@ -17,7 +17,7 @@ $router->group(['prefix' => 'messagequeue', 'middleware' => 'auth.ip'], function
 		'as'   => 'ws.messages.read',
 		'uses' => 'MessagesController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'post'], '{id}', [
 		'as'   => 'ws.messages.update',
 		'uses' => 'MessagesController@update',
 	])->where('id', '[0-9]+');
@@ -42,7 +42,7 @@ $router->group(['prefix' => 'messagequeuetype', 'middleware' => 'auth.ip'], func
 		'as' => 'ws.messages.types.read',
 		'uses' => 'TypesController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'post'], '{id}', [
 		'as' => 'ws.messages.types.update',
 		'uses' => 'TypesController@update',
 	])->where('id', '[0-9]+');

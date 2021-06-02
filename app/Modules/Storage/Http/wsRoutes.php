@@ -21,7 +21,7 @@ $router->group(['prefix' => 'storagedirusage', 'middleware' => 'auth.ip'], funct
 		'as' => 'ws.storage.usage',
 		'uses' => 'UsageController@index',
 	])->where('id', '[a-zA-Z_]+');
-	$router->put('{id}', [
+	$router->match(['put', 'post'], '{id}', [
 		'as' => 'ws.storage.usage.update',
 		'uses' => 'UsageController@update',
 	])->where('id', '[0-9]+');
@@ -51,7 +51,7 @@ $router->group(['prefix' => 'storagedirpurchase', 'middleware' => 'auth.ip'], fu
 		'as' => 'ws.storage.purchases.read',
 		'uses' => 'PurchasesController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'post'], '{id}', [
 		'as' => 'ws.storage.purchases.update',
 		'uses' => 'PurchasesController@update',
 	])->where('id', '[0-9]+');
@@ -75,7 +75,7 @@ $router->group(['prefix' => 'storagedirloan', 'middleware' => 'auth.ip'], functi
 		'as' => 'ws.storage.loans.read',
 		'uses' => 'LoansController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'post'], '{id}', [
 		'as' => 'ws.storage.loans.update',
 		'uses' => 'LoansController@update',
 	])->where('id', '[0-9]+');
@@ -99,7 +99,7 @@ $router->group(['prefix' => 'storagedir', 'middleware' => 'auth.ip'], function (
 		'as' => 'ws.storage.directories.read',
 		'uses' => 'DirectoriesController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'post'], '{id}', [
 		'as' => 'ws.storage.directories.update',
 		'uses' => 'DirectoriesController@update',
 	])->where('id', '[0-9]+');
