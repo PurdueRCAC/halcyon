@@ -919,7 +919,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									else if ($s == 'paid')
 									{
 										$cls = 'success';
-										$text = trans('orders::orders.paid on date', ['date' => date("M j, Y", strtotime($account->docdate)), 'docid' => $account->docid]);
+										$text = trans('orders::orders.paid on date', ['date' => date("M j, Y", strtotime($account->datetimepaymentdoc)), 'docid' => $account->paymentdocid]);
 									}
 
 									$total += $account->amount;
