@@ -955,11 +955,13 @@ $pending = $group->pendingMembersCount;
 				</div><!-- / #group-motd -->
 				@endif
 
+				<?php /*
 				@if ($subsection == 'history')
 				<div id="DIV_group-history">
 					@include('groups::site.group.history', ['group' => $group])
 				</div><!-- / #group-history -->
 				@endif
+				*/ ?>
 			@endif
 		</div><!-- / #everything -->
 	</div><!-- / .contentInner -->
