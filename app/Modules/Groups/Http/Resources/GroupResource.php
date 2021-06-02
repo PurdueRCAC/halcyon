@@ -89,7 +89,7 @@ class GroupResource extends JsonResource
 		$data['motd'] = $this->motd;
 		if ($data['motd'])
 		{
-			$data['motd']['api'] = route('api.groups.notifications.read', ['id' => $data['motd']['id']]);
+			$data['motd']['api'] = route('api.groups.motd.read', ['id' => $data['motd']['id']]);
 		}
 
 		$data['loans'] = $this->loans()
