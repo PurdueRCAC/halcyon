@@ -210,13 +210,9 @@ app('pathway')
 			@foreach ($rows as $i => $row)
 				<tr>
 					<td class="priority-5">
-						@if (auth()->user()->can('edit orders'))
-							<a href="{{ route('site.orders.read', ['id' => $row->id]) }}">
-								{{ $row->id }}
-							</a>
-						@else
+						<a href="{{ route('site.orders.read', ['id' => $row->id]) }}">
 							{{ $row->id }}
-						@endif
+						</a>
 					</td>
 					<td class="priority-4">
 						@if ($row->getOriginal('datetimecreated') && $row->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
