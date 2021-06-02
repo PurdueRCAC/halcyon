@@ -166,7 +166,7 @@ class DirectoriesController extends Controller
 				//->groupBy('id')
 				->orderBy($filters['order'], $filters['order_dir']);
 
-			return $rows;
+			return response()->json($rows, 200);
 		}
 		else
 		{
