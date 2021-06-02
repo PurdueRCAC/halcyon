@@ -252,7 +252,7 @@ class MembersController extends Controller
 
 		if ($exists)
 		{
-			return new JsonResource($exists);
+			return new MemberResource($exists);
 		}
 
 		$row = new Member;
