@@ -233,9 +233,12 @@ class MessagesController extends Controller
 
 				$data['id'] = '/ws/messagequeue/' . $data['id'];
 				$data['messagequeuetype'] = '/ws/messagequeuetype/' . $data['messagequeuetypeid'];
+				$data['datetimesubmitted'] = $row->datetimesubmitted->toDateTimeString();
+				$data['datetimestarted'] = $row->datetimestarted->toDateTimeString();
+				$data['datetimecompleted'] = $row->datetimecompleted->toDateTimeString();
 				$data['submitted'] = $data['datetimesubmitted'];
 				$data['started'] = $row->started() ? $data['datetimestarted'] : '0000-00-00 00:00:00';
-				$data['completed'] = $row->completed() ? $data['datetimecompleted'] : '0000-00-00 00:00:00';
+				$data['completed'] = $row->completed() ? $data['datetimecompleted']->toDateTimeString() : '0000-00-00 00:00:00';
 				$data['user'] = '/ws/user/' . $data['userid'];
 				$data['targetobject'] = '/ws/' . ($row->type ? $row->type->classname : 'unknown') . '/' . $data['targetobjectid'];
 
