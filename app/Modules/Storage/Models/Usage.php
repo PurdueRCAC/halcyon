@@ -75,7 +75,7 @@ class Usage extends Model
 	{
 		$value = str_replace(',', '', $value);
 
-		if (preg_match_all("/^(\-?\d*\.?\d+)\s*(\w+)$/", $value, $matches))
+		if (preg_match_all("/^(\-?\d*\.?\d+)\s*([PpTtGgMmKkBb]{1,2})$/", $value, $matches))
 		{
 			$num  = abs((int)$matches[1][0]);
 			$unit = $matches[2][0];
@@ -127,7 +127,7 @@ class Usage extends Model
 	{
 		$value = str_replace(',', '', $value);
 
-		if (preg_match_all("/^(\-?\d*\.?\d+)\s*(\w+)$/", $value, $matches))
+		if (preg_match_all("/^(\-?\d*\.?\d+)\s*([PpTtGgMmKkBb]{1,2})$/", $value, $matches))
 		{
 			$num  = abs((int)$matches[1][0]);
 			$unit = $matches[2][0];
