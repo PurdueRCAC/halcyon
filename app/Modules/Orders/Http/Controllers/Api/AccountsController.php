@@ -330,6 +330,7 @@ class AccountsController extends Controller
 
 		$row = new Account;
 		$row->fill($request->all());
+		$row->budgetjustification = $row->budgetjustification ?: '';
 
 		if (!$row->order)
 		{
