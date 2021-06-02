@@ -195,7 +195,7 @@
 						<td>
 							All registered students <a href="{{ route('site.users.account.section', ['section' => 'class']) }}#showstudents" class="btn btn-sm btn-default show-students" data-crn="{{ $class->crn }}">View List</a><br/>
 
-							<ul id="class_people_{{ $class->crn }}">
+							<ul id="class_people_{{ $class->crn }}" class="hide">
 								<?php
 								foreach ($class->members as $usr)
 								{
@@ -225,15 +225,15 @@
 							<td colspan="2">
 								<div class="form-group">
 									<label for="bulkadd_{{ $class->crn }}">Bulk add users:</label>
-									<textarea class="bulkAdd" id="bulkadd_{{ $class->crn }}" rows="8" cols="40" placeholder="Username or email, comma or line seperated." id="users"></textarea>
+									<textarea class="bulkAdd form-control" id="bulkadd_{{ $class->crn }}" rows="8" cols="40" placeholder="Username or email, comma or line seperated." id="users"></textarea>
 								</div>
-								<button class="account-add" data-crn="{{ $class->crn }}" data-id="{{ $class->id }}">Bulk Add Accounts</button>
+								<button class="btn btn-secondary account-add" data-crn="{{ $class->crn }}" data-id="{{ $class->id }}">Bulk Add Accounts</button>
 							</td>
 						</tr>
 					@endif
 					</tbody>
 				</table>
-				<div class="form-group text-center">
+				<div class="form-group text-right">
 					<button class="btn btn-danger account-delete" data-confirm="Are you sure you wish to delete this class account?" data-id="{{ $class->id }}">
 						<i class="fa fa-trash" aria-hidden="true"></i> Delete
 					</button>

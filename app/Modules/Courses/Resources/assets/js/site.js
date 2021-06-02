@@ -147,6 +147,13 @@ function AddingManyUsersEmail(xml, post_obj) {
 		var response = JSON.parse(xml.responseText);
 		var post;
 
+		if (response['data'].length == 0) {
+			errors++;
+			problem_users.push(post_obj['userid']);
+			PrintErrors();
+			return;
+		}
+
 		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
 			var username = response['data'][0]['username']; //[0]['name'];
 			post = { 'username': username, 'name': response['data'][0]['name'] };
@@ -187,6 +194,13 @@ function AddingManyUsers(xml, post_obj) {
 	if (xml.status == 200) {
 		var response = JSON.parse(xml.responseText);
 		var post;
+
+		if (response['data'].length == 0) {
+			errors++;
+			problem_users.push(post_obj['userid']);
+			PrintErrors();
+			return;
+		}
 
 		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
 			var username = response['data'][0]['username']; //[0]['name'];
