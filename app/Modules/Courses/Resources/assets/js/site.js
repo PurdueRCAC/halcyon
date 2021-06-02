@@ -272,10 +272,10 @@ function newUser(xml, post_obj) {
 		//var response = JSON.parse(xml.responseText);
 		//var post = JSON.stringify(post_obj);
 		pending++;
-		WSGetURL(ROOT_URL + 'username/' + post_obj['user'], AddingManyUsers, post_obj);
+		WSGetURL(ROOT_URL + 'users/?search=' + post_obj['userid'], AddingManyUsers, post_obj);
 	} else {
 		errors++;
-		problem_users.push(post_obj['user']);
+		problem_users.push(post_obj['userid']);
 		PrintErrors();
 	}
 }
