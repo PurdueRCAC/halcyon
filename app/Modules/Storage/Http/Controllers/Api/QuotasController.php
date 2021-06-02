@@ -112,7 +112,7 @@ class QuotasController extends Controller
 
 		$rows = $rows->merge($rows2);
 
-		$rows->each(function ($row, $key)
+		$rows->each(function ($row, $key) use ($username)
 		{
 			$data = $row->usage()
 				->orderBy('datetimerecorded', 'desc')
@@ -128,6 +128,7 @@ class QuotasController extends Controller
 			$row->total_file_usage  = 0;
 			$row->file_limit        = 1;
 			$row->timestamp         = 0;
+			$row->user              = $username;
 
 			$row->api = route('api.storage.read', ['id' => $row->id]);
 
