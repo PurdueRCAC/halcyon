@@ -89,7 +89,14 @@ class HttpLogger
 		$log->classname = $cls;
 		$log->classmethod = $method;
 		$log->objectid = '';
-		$log->save();
+		try
+		{
+			$log->save();
+		}
+		catch (\Exception $e)
+		{
+			// Don't break everything if this fails:wq
+		}
 
 		return $response;
 	}
