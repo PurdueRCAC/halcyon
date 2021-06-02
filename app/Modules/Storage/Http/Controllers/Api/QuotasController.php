@@ -176,6 +176,16 @@ class QuotasController extends Controller
 			}
 		});
 
-		return new ResourceCollection($rows);
+		$data = new \stdClass;
+		$data->version = 1;
+		$data->timestamp = date("U");
+		$data->quotas = array();
+		foreach ($rows as $row)
+		{
+			$data->quotas[] = $row->toArray();
+		}
+
+		//return new JsonResource($data); //ResourceCollection($rows);
+		return response()->json($data, 200);
 	}
 }
