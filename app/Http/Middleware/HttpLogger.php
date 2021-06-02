@@ -77,6 +77,7 @@ class HttpLogger
 			$log->payload = json_encode($all);
 			$log->uri = $request->fullUrl();
 		}
+		$log->payload = $log->payload ?: '';
 
 		$log->status = 200;
 		if (!($response instanceof StreamedResponse))
