@@ -164,8 +164,7 @@ class DirectoriesController extends Controller
 			$rows = $query
 				->withCount('children')
 				//->groupBy('id')
-				->orderBy($filters['order'], $filters['order_dir'])
-				->appends($filters);
+				->orderBy($filters['order'], $filters['order_dir']);
 
 			return $rows;
 		}
