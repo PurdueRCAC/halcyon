@@ -62,6 +62,8 @@ class MessageResource extends JsonResource
 			$data['started'] = $this->started() ? $this->datetimestarted->toDateTimeString() : '0000-00-00 00:00:00';
 			$data['completed'] = $this->completed() ? $this->datetimecompleted->toDateTimeString() : '0000-00-00 00:00:00';
 			$data['targetobject'] = '/ws/' . ($this->type ? $this->type->classname : 'unknown') . '/' . $this->targetobjectid;
+			$data['userid'] = '/ws/user/' . $data['userid'];
+			$data['pid'] = $this->pid;
 		}
 
 		return $data;
