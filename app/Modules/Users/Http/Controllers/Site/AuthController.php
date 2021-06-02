@@ -142,12 +142,18 @@ class AuthController extends Controller
 							$userusername = new \App\Modules\Users\Models\UserUsername;
 							$userusername->userid = $user->id;
 							$userusername->username = $cas->user();
-							$userusername->api_key = Str::random(60);
+							$userusername->save();
 						}
 					}
 
 					if ($user && $user->id)
 					{
+						if (!$user->api_token)
+						{
+							$user->api_token = Str::random(60);
+							$user->save();
+						}
+
 						Auth::loginUsingId($user->id);
 					}
 				}
