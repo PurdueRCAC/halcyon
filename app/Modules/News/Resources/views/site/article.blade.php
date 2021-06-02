@@ -115,7 +115,7 @@ app('pathway')
 		</p>
 
 		@if (count($article->updates))
-			@foreach ($article->updates as $update)
+			@foreach ($article->updates()->orderBy('datetimecreated', 'desc')->get() as $update)
 				<div class="newsupdate">UPDATE: {!! $update->formattedDatetimecreated($update->datetimecreated) !!}</div>
 				{!! $update->formattedBody !!}
 				<br/>
