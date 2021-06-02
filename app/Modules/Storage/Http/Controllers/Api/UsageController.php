@@ -239,6 +239,11 @@ class UsageController extends Controller
 		$request->validate($rules);
 
 		$row = new Usage;
+		$row->quota = 0;
+		$row->filequota = 0;
+		$row->files = 0;
+		$row->space = 0;
+	
 		if ($request->has('storagedirid') || $request->has('storagedir'))
 		{
 			$row->storagedirid = $request->input('storagedirid', $request->input('storagedir'));
