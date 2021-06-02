@@ -117,17 +117,17 @@ function BulkAddAccounts(crn, classaccount) {
 		var email = reg.test(user);
 
 		post_obj = {};
-		post_obj['user'] = user;
-		post_obj['classaccount'] = classaccount;
+		post_obj['userid'] = user;
+		post_obj['classaccountid'] = classaccount;
 
 
 		if (email == true) {
 			pending++;
-			WSGetURL(ROOT_URL + 'name/' + user, AddingManyUsersEmail, post_obj);
+			WSGetURL(ROOT_URL + 'users/?search=' + user, AddingManyUsersEmail, post_obj);
 		} else {
 			if (user != "") {
 				pending++;
-				WSGetURL(ROOT_URL + 'username/' + user, AddingManyUsers, post_obj);
+				WSGetURL(ROOT_URL + 'users/?search=' + user, AddingManyUsers, post_obj);
 			}
 		}
 	}
@@ -147,29 +147,29 @@ function AddingManyUsersEmail(xml, post_obj) {
 		var response = JSON.parse(xml.responseText);
 		var post;
 
-		if (typeof (response['users'][0]['id']) == 'undefined' || !response['users'][0]['id']) {
-			var username = response['users'][0]['usernames'][0]['name'];
-			post = { 'name': username };
+		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
+			var username = response['data'][0]['username']; //[0]['name'];
+			post = { 'username': username, 'name': response['data'][0]['name'] };
 			post_obj['user'] = username;
 
 			post = JSON.stringify(post);
 			pending++;
-			WSPostURL(ROOT_URL + "userusername", post, newUser, post_obj);
+			WSPostURL(ROOT_URL + "users", post, newUser, post_obj);
 		}
 
 		var user = response['users'][0]['id'];
 		post = {
-			'user': user,
-			'classaccount': post_obj['classaccount'],
+			'userid': user,
+			'classaccountid': post_obj['classaccountid'],
 		};
 
 		post = JSON.stringify(post);
 		pending++;
 
-		WSPostURL(ROOT_URL + "classuser", post, AddedManyUsers, post_obj);
+		WSPostURL(ROOT_URL + "courses/members", post, AddedManyUsers, post_obj);
 	} else if (xml.status == 404) {
 		errors++;
-		problem_users.push(post_obj['user']);
+		problem_users.push(post_obj['userid']);
 		PrintErrors();
 	}
 }
@@ -188,27 +188,28 @@ function AddingManyUsers(xml, post_obj) {
 		var response = JSON.parse(xml.responseText);
 		var post;
 
-		if (typeof (response['usernames'][0]['id']) == 'undefined' || !response['usernames'][0]['id']) {
-			post = { 'name': post_obj['user'] };
+		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
+			var username = response['data'][0]['username']; //[0]['name'];
+			post = { 'username': username, 'name': response['data'][0]['name'] };
 			post = JSON.stringify(post);
 			pending++;
-			WSPostURL(ROOT_URL + "userusername", post, newUser, post_obj);
+			WSPostURL(ROOT_URL + "users", post, newUser, post_obj);
 			return;
 		}
 
-		var user = response['id'];
+		var user = response['data'][0]['id'];
 
 		post = {
-			'user': user,
-			'classaccount': post_obj['classaccount'],
+			'userid': user,
+			'classaccountid': post_obj['classaccountid'],
 		};
 		post = JSON.stringify(post);
 		pending++;
 
-		WSPostURL(ROOT_URL + "classuser", post, AddedManyUsers, post_obj);
+		WSPostURL(ROOT_URL + "courses/members", post, AddedManyUsers, post_obj);
 	} else if (xml.status == 404) {
 		errors++;
-		problem_users.push(post_obj['user']);
+		problem_users.push(post_obj['userid']);
 		PrintErrors();
 	}
 }
