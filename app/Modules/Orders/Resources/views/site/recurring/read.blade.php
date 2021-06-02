@@ -87,6 +87,9 @@ app('pathway')
 					</div>
 
 					@if ($item->start())
+						@php
+						$until = $item->until();
+						@endphp
 					<div class="row">
 						<div class="col">
 							<p><strong>{{ trans('orders::orders.started') }}:</strong></p>
@@ -97,14 +100,14 @@ app('pathway')
 						<div class="col">
 							<p><strong>{{ trans('orders::orders.paid through') }}:</strong></p>
 							<p>
-								{{ $item->paiduntil->format('F j, Y') }}
+								{{ $item->paiduntil ? $item->paiduntil->format("F j, Y") : trans('global.never') }}
 							</p>
 						</div>
 						@if ($item->paiduntil != $item->billeduntil)
 							<div class="col">
 								<p><strong>{{ trans('orders::orders.billed through') }}:</strong></p>
 								<p>
-									{{ $item->billeduntil->format('F j, Y') }}
+									{{ $item->billeduntil ? $item->billeduntil->format("F j, Y") : trans('global.never') }}
 								</p>
 							</div>
 						@endif
