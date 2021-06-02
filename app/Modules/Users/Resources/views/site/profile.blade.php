@@ -148,6 +148,7 @@ $active = $sections->firstWhere('active', '=', true);
 				</div>
 			</div>
 
+			<?php /*
 			@if (auth()->user()->can('manage users'))
 				<div class="card panel panel-default session mb-3">
 					<div class="card-header panel-heading">
@@ -192,6 +193,8 @@ $active = $sections->firstWhere('active', '=', true);
 					</ul>
 				</div>
 			@endif
+			*/
+			?>
 
 			<?php
 			$queues = $user->queues()
