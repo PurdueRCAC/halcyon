@@ -51,7 +51,7 @@ app('pathway')
 					<select name="fields[parent_id]" id="field-parent_id" class="form-control" required>
 						<?php
 						foreach ($options as $option):
-							//if (auth()->user()->can('admin') || (!App\Halcyon\Access\Access::checkGroup($option->id, 'admin'))):
+							//if (auth()->user()->can('admin') || (!App\Halcyon\Access\Gate::checkGroup($option->id, 'admin'))):
 								$level = $option->countDescendents();
 								?>
 								<option value="{{ $option->id }}"<?php if ($option->id == $row->parent_id) { echo ' selected="selected"'; } ?>><?php echo str_repeat('- ', $level) . $option->title; ?></option>

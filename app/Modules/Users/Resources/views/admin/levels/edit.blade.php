@@ -60,7 +60,7 @@ app('pathway')
 
 						foreach ($roles as $role):
 							// If checkSuperAdmin is true, only add item if the user is superadmin or the group is not super admin
-							if ($isSuperAdmin || (!App\Halcyon\Access\Access::checkGroup($role->id, 'admin'))):
+							if ($isSuperAdmin || (!App\Halcyon\Access\Gate::checkGroup($role->id, 'admin'))):
 								// Setup  the variable attributes.
 								$eid = 'role_' . $role->id;
 								// Don't call in_array unless something is selected

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Widgets\Helpers;
 
-use App\Halcyon\Access\Access;
+use App\Halcyon\Access\Gate;
 use App\Halcyon\Html\Builder\Select;
 use App\Halcyon\Html\Builder\Grid;
 use App\Modules\Widgets\Models\Widget;

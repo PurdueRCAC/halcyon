@@ -3,7 +3,7 @@
 namespace App\Halcyon\Html\Builder;
 
 use App\Halcyon\Error\Exception\Exception;
-use App\Halcyon\Access\Access as Gate;
+use App\Halcyon\Access\Gate;
 use App\Halcyon\Access\Role;
 use App\Halcyon\Access\Viewlevel;
 use Illuminate\Support\Facades\DB;

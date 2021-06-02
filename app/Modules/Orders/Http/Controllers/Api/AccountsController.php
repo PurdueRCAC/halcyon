@@ -698,11 +698,14 @@ class AccountsController extends Controller
 			//     TODO: Change the table schema!
 			$db = app('db');
 			$db->table($row->getTable())
+				->where('id', '=', $id)
 				->update([
 					'datetimepaid' => '0000-00-00 00:00:00',
 					'datetimeapproved' => '0000-00-00 00:00:00',
 					'datetimedenied' => '0000-00-00 00:00:00'
 				]);
+
+			DB::statement(DB::raw());
 
 			//$row->datetimepaid = '0000-00-00 00:00:00';
 			//$row->datetimeapproved = '0000-00-00 00:00:00';

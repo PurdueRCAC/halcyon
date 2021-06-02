@@ -59,7 +59,7 @@ class Admin
 
 			$path = dirname(__DIR__) . '/Config/access.php';
 
-			$actions = include $path;//App\Halcyon\Access\Access::getActionsFromFile($path);
+			$actions = include $path;//App\Halcyon\Access\Gate::getActionsFromFile($path);
 			$actions ? $actions['module'] : array();
 
 			foreach ($actions as $action)
