@@ -27,8 +27,16 @@ class Storage
 	 */
 	public function handleGroupDisplay(GroupDisplay $event)
 	{
-		$content = null;
 		$group = $event->getGroup();
+
+		$canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own groups') && $group->isManager(auth()->user()));
+
+		if (!$canManage)
+		{
+			return;
+		}
+
+		$content = null;
 		$client = app('isAdmin') ? 'admin' : 'site';
 
 		if ($event->getActive() == 'storage' || $client == 'admin')
