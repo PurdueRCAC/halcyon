@@ -144,6 +144,11 @@ class Resources
 	 */
 	public function handleResourceMemberCreated(ResourceMemberCreated $event)
 	{
+		if (!$event->user->id)
+		{
+			return;
+		}
+
 		$alphabetical = config()->get('module.storage.alphabetical', [83, 86, 75, 76]);
 
 		// Set up scratch dir if needed
@@ -159,6 +164,8 @@ class Resources
 		{
 			// First check if we have a storage dir already
 			$directory = Directory::query()
+				->withTrashed()
+				->whereIsActive()
 				->where('name', '=', $event->user->username)
 				->where('storageresourceid', '=', $row->id)
 				->get()
