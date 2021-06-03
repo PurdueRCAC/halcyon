@@ -1438,8 +1438,8 @@ function SaveAccounts() {
 	if (total == 0 && errors == 0) {
 		var post = '{"accounts": ' + JSON.stringify(posts) + '}';
 		//console.log(ROOT_URL + "orders/" + order);
-		console.log(post);
-		return;
+		//console.log(post);
+		//return;
 		WSPutURL(ROOT_URL + "orders/" + order, post, function(xml) {
 			if (xml.status == 200) {
 				window.scrollTo(0, 0);
