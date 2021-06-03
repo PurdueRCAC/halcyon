@@ -23,6 +23,7 @@ trait Loggable
 	protected function log($app, $func, $method = 'GET', $status = 200, $payload = array(), $uri = '', $targetuserid = 0)
 	{
 		$method = strtoupper($method);
+		$targetuserid = $targetuserid ?: 0;
 
 		if (!in_array($method, ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'DELETE']))
 		{
