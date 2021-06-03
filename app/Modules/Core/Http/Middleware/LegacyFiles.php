@@ -29,10 +29,11 @@ class LegacyFiles
 				$first = array_shift($f);
 
 				$path = 'public/' . implode('/', $f);
+				$path = str_replace('../', '', $path);
 
-				if (file_exists(storage_path('app/' . $path)))
+				if (is_file(storage_path('app/' . $path)) && !is_dir(storage_path('app/' . $path)))
 				{
-					return redirect('/files/' . implode('/', $f), 301); //Storage::download($path);
+					return redirect('/files/' . implode('/', $f));//, 301); //Storage::download($path);
 				}
 			}
 		}
