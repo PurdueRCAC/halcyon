@@ -646,6 +646,6 @@ class RcacLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'host=' . $event->account->resource->rolename . '.rcac.purdue.edu');
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'host=scholar.rcac.purdue.edu');
 	}
 }
