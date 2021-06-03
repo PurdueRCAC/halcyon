@@ -42,7 +42,7 @@ class SyncCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 		$log   = $this->option('log') ? true : false;
 
-		$msg = __METHOD__ . '(): Starting sync.';
+		$msg = 'Starting class sync.';
 
 		$this->info($msg);
 		if ($log)
@@ -61,7 +61,7 @@ class SyncCommand extends Command
 			->where('userid', '>', 0)
 			->get();
 
-		$this->info(__METHOD__ . '(): Looking up instructor class info ...');
+		$this->info('Looking up instructor class info ...');
 
 		foreach ($classdata as $row)
 		{
@@ -76,7 +76,7 @@ class SyncCommand extends Command
 			}
 		}
 
-		$this->info(__METHOD__ . '(): Looking up enrollment info for each class ...');
+		$this->info('Looking up enrollment info for each class ...');
 
 		// Fetch course enrollments
 		$students = array();
@@ -103,7 +103,7 @@ class SyncCommand extends Command
 
 					if (!$user)
 					{
-						$msg = __METHOD__ . '(): Failed to retrieve user ID for puid ' . $student->externalId;
+						$msg = 'Failed to retrieve user ID for puid ' . $student->externalId;
 
 						$this->error($msg);
 						if ($log)
@@ -145,7 +145,7 @@ class SyncCommand extends Command
 
 					if (!$member->save())
 					{
-						$msg = __METHOD__ . '(): Failed to create `classusers` entry for user #' . $user->id . ', class #' . $course->id;
+						$msg = 'Failed to create `classusers` entry for user #' . $user->id . ', class #' . $course->id;
 
 						$this->error($msg);
 						if ($log)
@@ -223,7 +223,7 @@ class SyncCommand extends Command
 
 			if ($event->status >= 400)
 			{
-				$msg = __METHOD__ . '(): Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
+				$msg = 'Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
 
 				$this->error($msg);
 				if ($log)
@@ -243,7 +243,7 @@ class SyncCommand extends Command
 
 				if ($event->status >= 400)
 				{
-					$msg = __METHOD__ . '(): Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
+					$msg = 'Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
 
 					$this->error($msg);
 					if ($log)
@@ -261,7 +261,7 @@ class SyncCommand extends Command
 
 				if ($event->status >= 400)
 				{
-					$msg = __METHOD__ . '(): Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
+					$msg = 'Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
 
 					$this->error($msg);
 					if ($log)
@@ -280,7 +280,7 @@ class SyncCommand extends Command
 
 					if ($event->status >= 400)
 					{
-						$msg = __METHOD__ . '(): Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
+						$msg = 'Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
 
 						$this->error($msg);
 						if ($log)
@@ -292,7 +292,7 @@ class SyncCommand extends Command
 				}
 				else
 				{
-					$msg = __METHOD__ . '(): EXISTS ' . $user . ': ' . $event->status;
+					$msg = 'AIMO ACMaint account already exists for ' . $user . ': ' . $event->status;
 
 					$this->info($msg);
 					if ($log)
@@ -315,7 +315,7 @@ class SyncCommand extends Command
 		);
 		$msg = implode(', ', $data);
 
-		$this->info(__METHOD__ . '(): ' . $msg);
+		$this->info('Class sync - ' . $msg);
 		if ($log)
 		{
 			error_log($msg);
@@ -326,7 +326,7 @@ class SyncCommand extends Command
 		if ((count($remove_users) - count($create_users)) > count($users))
 		{
 			// TODO: how can we detect and allow normal wipeage during semester turnover?
-			$msg = __METHOD__ . '(): Deleting more users than we will have left. This seems wrong!';
+			$msg = 'Deleting more users than we will have left. This seems wrong!';
 
 			$this->error($msg);
 			if ($log)
@@ -341,7 +341,7 @@ class SyncCommand extends Command
 		{
 			if ($debug)
 			{
-				$msg = __METHOD__ . '(): Would delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
+				$msg = 'Would delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
 
 				$this->info($msg);
 				if ($log)
@@ -356,7 +356,7 @@ class SyncCommand extends Command
 
 			if ($event->status >= 400)
 			{
-				$msg = __METHOD__ . '(): Could not delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
+				$msg = 'Could not delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
 
 				$this->error($msg);
 				if ($log)
@@ -370,7 +370,7 @@ class SyncCommand extends Command
 			{
 				$removed[] = $user;
 
-				$msg = __METHOD__ . '(): Deleted AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
+				$msg = 'Deleted AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
 
 				$this->success($msg);
 				if ($log)
@@ -380,7 +380,7 @@ class SyncCommand extends Command
 			}
 		}
 
-		$msg = __METHOD__ . '(): Finished sync.';
+		$msg = 'Finished class sync.';
 
 		$this->info($msg);
 		if ($log)
