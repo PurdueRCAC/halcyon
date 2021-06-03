@@ -350,27 +350,30 @@ class DirectoriesController extends Controller
 	 */
 	public function create(Request $request, $data = array(), $offset = 0)
 	{
-		$request->validate([
-			'name' => 'required|string|max:32',
-			//'path' => 'nullable|string|max:255',
-			'resourceid' => 'required|integer|min:1',
-			'groupid' => 'required|integer|min:1',
-			'bytes' => 'required|string',
-			'parentstorageid' => 'nullable|integer',
-			'owneruserid' => 'nullable|integer',
-			'unixgroupid' => 'nullable|integer',
-			'ownerread' => 'nullable|integer',
-			'groupread' => 'nullable|integer',
-			'groupwrite' => 'nullable|integer',
-			'publicread' => 'nullable|integer',
-			'publicwrite' => 'nullable|integer',
-			'autouser' => 'nullable|in:0,1,2,3',
-			'files' => 'nullable|integer',
-			'autouserunixgroupid' => 'nullable|integer',
-			'storageresourceid' => 'nullable|integer',
-		]);
+		if (empty($data))
+		{
+			$request->validate([
+				'name' => 'required|string|max:32',
+				//'path' => 'nullable|string|max:255',
+				'resourceid' => 'required|integer|min:1',
+				'groupid' => 'required|integer|min:1',
+				'bytes' => 'required|string',
+				'parentstorageid' => 'nullable|integer',
+				'owneruserid' => 'nullable|integer',
+				'unixgroupid' => 'nullable|integer',
+				'ownerread' => 'nullable|integer',
+				'groupread' => 'nullable|integer',
+				'groupwrite' => 'nullable|integer',
+				'publicread' => 'nullable|integer',
+				'publicwrite' => 'nullable|integer',
+				'autouser' => 'nullable|in:0,1,2,3',
+				'files' => 'nullable|integer',
+				'autouserunixgroupid' => 'nullable|integer',
+				'storageresourceid' => 'nullable|integer',
+			]);
 
-		$data = empty($data) ? $request->all() : $data;
+			$data = $request->all();
+		}
 
 		$bytesource = null;
 		if (array_key_exists('bytesource', $data))
