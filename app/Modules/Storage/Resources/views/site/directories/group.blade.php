@@ -32,7 +32,7 @@
 
 		$directories = $group->directories;
 
-		//$canManage = auth()->user() && auth()->user()->can('manage groups');
+		$canManage = auth()->user() && auth()->user()->can('manage groups');
 
 		$rows = $directories->filter(function($item) use ($canManage)
 		{
