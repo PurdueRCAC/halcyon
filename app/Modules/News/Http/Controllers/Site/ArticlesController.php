@@ -430,10 +430,10 @@ class ArticlesController extends Controller
 		$timezone = new DateTimeZone($tzName);
 		$year = date('Y');
 
-		$transitions = $timeZone->getTransitions(mktime(0, 0, 0, 2, 1, $year), mktime(0, 0, 0, 11, 31, $year));
-		$transitions = array_slice($transitions, 1, 2);
+		$transitions = $timezone->getTransitions(mktime(0, 0, 0, 2, 1, $year), mktime(0, 0, 0, 11, 31, $year));
+		$transitions = $transitions ? array_slice($transitions, 1, 2) : array();
 
-		$dat = array(
+		$dst = array(
 			'start' => null,
 			'startoffset' => '-0000',
 			'stop' => null,
@@ -535,13 +535,18 @@ class ArticlesController extends Controller
 			}
 
 			// Do we have associated users?
-			if (count($row->associations))
+			if (count($event->associations))
 			{
-				foreach ($row->associations as $association)
+				foreach ($event->associations as $association)
 				{
 					if ($association->assoctype == 'user')
 					{
 						$user = User::find($association->associd);
+
+						if (!$user)
+						{
+							continue;
+						}
 
 						$output .= "ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=TENTATIVE;CN=" . $user->name . "\r\n";
 						$output .= "\t:MAILTO:" . $user->mail . "\r\n";
