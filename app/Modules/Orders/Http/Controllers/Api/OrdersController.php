@@ -693,6 +693,7 @@ class OrdersController extends Controller
 			{
 				$account = new Account;
 				$account->fill($a);
+				$account->budgetjustification = $account->budgetjustification ?: '';
 				$account->orderid = $id;
 				$account->save();
 			}
