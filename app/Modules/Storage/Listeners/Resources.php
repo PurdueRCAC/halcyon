@@ -148,6 +148,8 @@ class Resources
 
 		// Set up scratch dir if needed
 		$data = StorageResource::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('parentresourceid', '=', $event->resource->id)
 			->where('autouserdir', '=', 1)
 			->get();
@@ -197,6 +199,8 @@ class Resources
 		// Need to check for Home dir and create if necessary
 		// First check if we have a storage dir already
 		$directory = Directory::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('name', '=', $event->user->username)
 			->where('resourceid', '=', 81)
 			->get()
@@ -209,6 +213,8 @@ class Resources
 
 		// Get values
 		$storageResource = StorageResource::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('name', '=', 'Home')
 			->get()
 			->first();
