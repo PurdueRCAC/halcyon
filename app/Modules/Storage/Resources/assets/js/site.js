@@ -418,6 +418,142 @@ function ResetPermissions(btn) {
 }
 
 /**
+ * Edit a unix group
+ *
+ * @param   {string}  dir
+ * @return  {void}
+ */
+function EditUnixGroup(dir, api) {
+	//var button = document.getElementById(dir + "_edit_button");
+	//var span = document.getElementById(dir + "_unixgroup_span");
+	var input = document.getElementById(dir + "_unixgroup_select");
+	//var auto_span = document.getElementById(dir + "_autouserunixgroup_span");
+	var auto_input = document.getElementById(dir + "_autouserunixgroup_select");
+	//var span_quota = document.getElementById(dir + "_quota_span");
+	var input_quota = document.getElementById(dir + "_quota_input");
+	//var span_other = document.getElementById(dir + "_other_read_span");
+	var input_other = document.getElementById(dir + "_other_read_box");
+
+	//var span_type = document.getElementById(dir + "_dir_type");
+	var input_type = document.getElementById(dir + "_dir_type_select");
+
+	/*if (button.value.match(/^Edit/)) {
+		// Turn on edit mode
+		//img.src = "/include/images/save.png";
+		button.value = "Save Changes";
+		if (input != null) {
+			span.style.display = "none";
+			input.style.display = "inline";
+			if (auto_span != null) {
+				auto_span.style.display = "none";
+				auto_input.style.display = "inline";
+			}
+		}
+		if (input_other != null) {
+			span_other.style.display = "none";
+			input_other.style.display = "inline";
+		}
+		if (input_quota != null) {
+			span_quota.style.display = "none";
+			input_quota.style.display = "inline";
+		}
+		if (input_type != null) {
+			span_type.style.display = "none";
+			input_type.style.display = "inline";
+		}
+	} else {*/
+	// Save quota
+	//img.src = "/include/images/loading.gif";
+	//img.style.width = "20px";
+	//img.style.height = "20px";
+
+	// Make WS call
+	var post = {};
+	if (input != null) {
+		post['unixgroupid'] = input.options[input.selectedIndex].value;
+	}
+
+	if (auto_input != null) {
+		post['autouserunixgroupid'] = auto_input.options[auto_input.selectedIndex].value;
+	}
+
+	if (input_other != null) {
+		if (input_other.checked == true) {
+			post['publicread'] = '1';
+		} else {
+			post['publicread'] = '0';
+		}
+	}
+
+	if (input_quota != null && input_quota.value) {
+		post['bytes'] = input_quota.value;
+	}
+
+	if (input_type != null) {
+		var type = input_type.options[input_type.selectedIndex].value;
+		if (type == "user") {
+			post['groupread'] = "1";
+			post['groupwrite'] = "0";
+		} else if (type == "userwrite") {
+			post['groupread'] = "1";
+			post['groupwrite'] = "1";
+		} else if (type == "userprivate") {
+			post['groupread'] = "0";
+			post['groupwrite'] = "0";
+		} else if (type == "autouser") {
+			post['autouser'] = "1";
+			post['groupread'] = "1";
+			post['groupwrite'] = "0";
+		} else if (type == "autouserprivate") {
+			post['autouser'] = "2";
+			post['groupread'] = "0";
+			post['groupwrite'] = "0";
+		} else if (type == "autouserreadwrite") {
+			post['autouser'] = "3";
+			post['groupread'] = "1";
+			post['groupwrite'] = "1";
+		} else {
+			post['groupread'] = "0";
+		}
+	}
+	//console.log(api); return;
+	//console.log(post); return;
+	post = JSON.stringify(post);
+	WSPutURL(api, post, EditedUnixGroup, dir);
+	//}
+}
+
+/**
+ * Callback after editing a unix group
+ *
+ * @param   {object}  xml
+ * @param   {string}  dir
+ * @return  {void}
+ */
+function EditedUnixGroup(xml, dir) {
+	//var img = document.getElementById(dir + "_unixgroup_img");
+	var error = document.getElementById(dir + "_error");
+
+	if (xml.status < 400) {
+		//var results = JSON.parse(xml.responseText);
+
+		//var span = document.getElementById(dir + "_unixgroup_span");
+		//var input = document.getElementById(dir + "_unixgroup_select");
+		//img.src = "/include/images/edit.png";
+		//span.style.display = "inline";
+		//input.style.display = "none";
+
+		//span.innerHTML = input.options[input.selectedIndex].innerHTML;
+		//error.innerHTML = "";
+		window.location.reload(true);
+	} else {
+		//img.src = "/include/images/error.png";
+		error.classList.remove('hide');
+		error.innerHTML = "An error occurred while setting unix group.";
+	}
+}
+
+/**
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
@@ -674,12 +810,12 @@ document.addEventListener('DOMContentLoaded', function () {
 	/*$('.permissions-reset').on('click', function(e) {
 		e.preventDefault();
 		ResetPermissions($(this).data('dir'), $(this).data('path'));
-	});
+	});*/
 	$('.unixgroup-edit').on('click', function(e) {
 		e.preventDefault();
-		EditUnixGroup($(this).data('dir'));
+		EditUnixGroup($(this).data('dir'), $(this).data('api'));
 	});
-	$('.unixgroup-create').on('click', function(e) {
+	/*$('.unixgroup-create').on('click', function(e) {
 		e.preventDefault();
 		CreateDefaultUnixGroups($(this).data('unixgroup'), $(this).data('id'));
 	});

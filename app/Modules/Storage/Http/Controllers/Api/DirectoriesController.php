@@ -889,7 +889,7 @@ class DirectoriesController extends Controller
 			$bucket = null;
 			foreach ($row->group->storagebuckets as $b)
 			{
-				if ($b->resourceid == $row->resourceid)
+				if ($b['resourceid'] == $row->resourceid)
 				{
 					$bucket = $b;
 					break;

@@ -627,6 +627,8 @@
 								</div>
 							</div><!--/ .row -->
 
+							<div class="alert alert-danger hide" id="{{ $dir->id }}_error"></div>
+
 							<div class="dialog-footer">
 								<div class="row">
 									<div class="col-md-6">
@@ -645,7 +647,7 @@
 										@endif
 									</div>
 									<div class="col-md-6 text-right">
-										<input disabled="disabled" id="{{ $dir->id }}_save_button" class="btn btn-success unixgroup-edit" data-dir="{{ $dir->id }}" type="button" value="{{ trans('global.button.save') }}" />
+										<input disabled="disabled" id="{{ $dir->id }}_save_button" class="btn btn-success unixgroup-edit" data-dir="{{ $dir->id }}" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}" type="button" value="{{ trans('global.button.save') }}" />
 									</div>
 								</div><!--/ .row -->
 							</div>
