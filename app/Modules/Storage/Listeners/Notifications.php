@@ -33,43 +33,49 @@ class Notifications
 
 		if ($row->bytes)
 		{
-			// Create 99% alert for existing users
-			$members = $row->unixgroup->members;
-
-			foreach ($members as $member)
+			if ($row->unixgroup)
 			{
-				$notifications = $row->notifications()
-					->where('userid', '=', $member->userid)
-					->count();
+				// Create 99% alert for existing users
+				$members = $row->unixgroup->members;
 
-				if (!$notifications)
+				foreach ($members as $member)
 				{
-					Notification::create([
-						'storagedirid' => $row->id,
-						'storagedirquotanotificationtypeid' => 3,
-						'userid' => $member->userid,
-						'value' => 99,
-					]);
+					$notifications = $row->notifications()
+						->where('userid', '=', $member->userid)
+						->count();
+
+					if (!$notifications)
+					{
+						Notification::create([
+							'storagedirid' => $row->id,
+							'storagedirquotanotificationtypeid' => 3,
+							'userid' => $member->userid,
+							'value' => 99,
+						]);
+					}
 				}
 			}
 
 			// Create 80% and 99% alert for existing managers
-			$managers = $row->group->managers;
-
-			foreach ($managers as $member)
+			if ($row->group)
 			{
-				$notifications = $row->notifications()
-					->where('userid', '=', $member->userid)
-					->count();
+				$managers = $row->group->managers;
 
-				if (!$notifications)
+				foreach ($managers as $member)
 				{
-					Notification::create([
-						'storagedirid' => $row->id,
-						'storagedirquotanotificationtypeid' => 3,
-						'userid' => $member->userid,
-						'value' => 99,
-					]);
+					$notifications = $row->notifications()
+						->where('userid', '=', $member->userid)
+						->count();
+
+					if (!$notifications)
+					{
+						Notification::create([
+							'storagedirid' => $row->id,
+							'storagedirquotanotificationtypeid' => 3,
+							'userid' => $member->userid,
+							'value' => 99,
+						]);
+					}
 				}
 			}
 		}
