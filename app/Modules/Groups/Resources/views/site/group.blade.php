@@ -892,13 +892,13 @@ $pending = $group->pendingMembersCount;
 		<div id="everything">
 			<ul class="nav nav-tabs">
 				<li class="nav-item">
-					<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $group->id]) }}" id="group-overview" class="nav-link tab<?php if ($subsection == 'overview') { echo ' active activeTab'; } ?>">
+					<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $group->id, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}" id="group-overview" class="nav-link tab<?php if ($subsection == 'overview') { echo ' active activeTab'; } ?>">
 						Overview
 					</a>
 				</li>
 			@if ($canManage)
 				<li class="nav-item">
-					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'members']) }}" id="group-members" class="nav-link tab<?php if ($subsection == 'members') { echo ' active activeTab'; } ?>">
+					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'members', 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}" id="group-members" class="nav-link tab<?php if ($subsection == 'members') { echo ' active activeTab'; } ?>">
 						Members
 						@if ($pending)
 							<span class="badge badge-warning tip" title="Pending membership requests">{{ $pending }}</span>
@@ -908,17 +908,17 @@ $pending = $group->pendingMembersCount;
 			@endif
 			@foreach ($sections as $section)
 				<li class="nav-item">
-					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => $section['route']]) }}" id="group-{{ $section['route'] }}" class="nav-link tab<?php if ($subsection == $section['route']) { echo ' active activeTab'; } ?>">{{ $section['name'] }}</a>
+					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => $section['route'], 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}" id="group-{{ $section['route'] }}" class="nav-link tab<?php if ($subsection == $section['route']) { echo ' active activeTab'; } ?>">{{ $section['name'] }}</a>
 				</li>
 			@endforeach
 			@if ($canManage)
 				<li class="nav-item">
-					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'motd']) }}" id="group-motd" class="nav-link tab<?php if ($subsection == 'motd') { echo ' active activeTab'; } ?>">
+					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'motd', 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}" id="group-motd" class="nav-link tab<?php if ($subsection == 'motd') { echo ' active activeTab'; } ?>">
 						Notices
 					</a>
 				</li>
 				<?php /*<li class="nav-item">
-					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'history']) }}" id="group-history" class="nav-link tab<?php if ($subsection == 'history') { echo ' active activeTab'; } ?>">
+					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'history', 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}" id="group-history" class="nav-link tab<?php if ($subsection == 'history') { echo ' active activeTab'; } ?>">
 						History
 					</a>
 				</li>*/ ?>
