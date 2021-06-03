@@ -203,7 +203,7 @@ class EmailQuotaCommand extends Command
 					$not->threshold = $not->value . '%';
 				}
 
-				if ($not->status == 0 && $not->notice == 0)
+				if ($not->status === 0 && $not->notice === 0)
 				{
 					$message = new Quota('exceed', $user, $not, $last);
 
@@ -218,11 +218,11 @@ class EmailQuotaCommand extends Command
 					$this->info('Emailed exceed quota to ' . $user->email);
 				}
 				// Over threshold, have already notified. Nothing to do.
-				else if ($not->status == 0 && $not->notice == 1)
+				else if ($not->status === 0 && $not->notice === 1)
 				{
 				}
 				// Under threshold, haven't notified
-				else if ($not->status == 1 && $not->notice == 1)
+				else if ($not->status === 1 && $not->notice === 1)
 				{
 					$message = new Quota('below', $user, $not, $last);
 
@@ -237,7 +237,7 @@ class EmailQuotaCommand extends Command
 					$this->info('Emailed below quota to ' . $user->email);
 				}
 				// Under threshold, never notified or have notified. Nothing to do.
-				else if ($not->status == 1 && $not->notice == 0)
+				else if ($not->status === 1 && $not->notice === 0)
 				{
 				}
 				else
