@@ -10,6 +10,7 @@ use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Resources\Events\ResourceMemberStatus;
+use App\Modules\Resources\Models\Subresource;
 use Carbon\Carbon;
 
 /**
@@ -43,11 +44,13 @@ class EmailExpiredCommand extends Command
 		$uu = (new UserUsername)->getTable();
 		$qu = (new QueueUser)->getTable();
 		$q = (new Queue)->getTable();
+		$s = (new Subresource)->getTable();
 
 		$queueusers = QueueUser::query()
 			->select($qu . '.*')
 			->join($uu, $uu . '.userid', $qu . '.userid')
 			->join($q, $q . '.id', $qu . '.queueid')
+			->join($s, $s . '.id', $q . '.subresourceid')
 			->where(function($where) use ($q)
 			{
 				$where->whereNull($q . '.datetimeremoved')
@@ -63,6 +66,11 @@ class EmailExpiredCommand extends Command
 				$where->whereNull($uu . '.dateremoved')
 					->orWhere($uu . '.dateremoved', '=', '0000-00-00 00:00:00');
 			})
+			->where(function($where) use ($s)
+			{
+				$where->whereNull($s . '.datetimeremoved')
+					->orWhere($s . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
 			->where(function($where) use ($uu)
 			{
 				$now = Carbon::now()->modify('-1 day');
@@ -74,11 +82,18 @@ class EmailExpiredCommand extends Command
 			->groupBy($qu . '.id')
 			->groupBy($qu . '.datetimecreated')
 			->groupBy($qu . '.userid')
+			->groupBy($qu . '.queueid')
+			->groupBy($qu . '.userrequestid')
+			->groupBy($qu . '.membertype')
+			->groupBy($qu . '.datetimeremoved')
+			->groupBy($qu . '.datetimelastseen')
+			->groupBy($qu . '.notice')
 			->groupBy($q . '.groupid')
 			->groupBy($uu . '.datecreated')
 			->groupBy($uu . '.datelastseen')
 			->orderBy($uu . '.datecreated', 'asc')
 			->orderBy($uu . '.datelastseen', 'asc')
+			->limit(1000)
 			->get();
 
 		if (!count($queueusers))
@@ -129,6 +144,12 @@ class EmailExpiredCommand extends Command
 			}
 
 			array_push($group_activity[$groupid], $queueuser);
+		}
+
+		if (!count($group_activity))
+		{
+			$this->comment('No records to email.');
+			return;
 		}
 
 		foreach ($group_activity as $groupid => $queueusers)
