@@ -324,7 +324,7 @@
 									</div>
 									<div class="col-md-8">
 										<select id="{{ $dir->id }}_dir_type_select" class="form-control">
-											<option value="autouser"<?php if ($dir->autouser == '1') { ?> selected="selected"<?php } ?>>Auto User - Group Readable</
+											<option value="autouser"<?php if ($dir->autouser == '1') { ?> selected="selected"<?php } ?>>Auto User - Group Readable</option>
 											<option value="autouserreadwrite"<?php if ($dir->autouser == '3') { ?> selected="selected"<?php } ?>>Auto User - Group Readable Writable</option>
 											<option value="autouserprivate"<?php if ($dir->autouser == '2') { ?> selected="selected"<?php } ?>>Auto User - Private</option>
 										</select>
