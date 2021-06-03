@@ -54,6 +54,11 @@ class StorageFortress
 			event($ev = new ResourceMemberCreated($resource, $event->user));
 		}
 
+		if (!$event->user->id)
+		{
+			return;
+		}
+
 		// Add DB tracking entry for fortress
 		$queueid = 33338;
 
