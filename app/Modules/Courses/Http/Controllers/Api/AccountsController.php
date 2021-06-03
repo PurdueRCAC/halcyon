@@ -672,16 +672,6 @@ class AccountsController extends Controller
 		$create_users = $event->create_users;
 		$remove_users = $event->remove_users;
 
-		// Do some sanity checking
-		// If our net loss here is greater than the new total, something is wrong
-		if ((count($remove_users) - count($create_users)) > count($users))
-		{
-			// TODO: how can we detect and allow normal wipeage during semester turnover?
-			$msg = __METHOD__ . '(): Deleting more users than we will have left. This seems wrong!';
-			error_log($msg);
-			$errors[] = $msg;
-		}
-
 		$fortress = Asset::findByName('HPSSUSER');
 
 		$created = array();
@@ -763,23 +753,35 @@ class AccountsController extends Controller
 			}
 		}
 
-		$removed = array();
-		foreach ($remove_users as $user)
+		// Do some sanity checking
+		// If our net loss here is greater than the new total, something is wrong
+		if ((count($remove_users) - count($create_users)) > count($users))
 		{
-			// Remove scholar
-			event($event = new ResourceMemberDeleted($row->resource, $user));
-
-			if ($event->status >= 400)
+			// TODO: how can we detect and allow normal wipeage during semester turnover?
+			$msg = __METHOD__ . '(): Deleting more users than we will have left. This seems wrong!';
+			error_log($msg);
+			$errors[] = $msg;
+		}
+		else
+		{
+			$removed = array();
+			foreach ($remove_users as $user)
 			{
-				$msg = __METHOD__ . '(): Could not delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
-				error_log($msg);
-				$errors[] = $msg;
-				continue;
-			}
+				// Remove scholar
+				event($event = new ResourceMemberDeleted($row->resource, $user));
 
-			if ($event->status)
-			{
-				$removed[] = $user;
+				if ($event->status >= 400)
+				{
+					$msg = __METHOD__ . '(): Could not delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
+					error_log($msg);
+					$errors[] = $msg;
+					continue;
+				}
+
+				if ($event->status)
+				{
+					$removed[] = $user;
+				}
 			}
 		}
 
