@@ -93,19 +93,19 @@ app('pathway')
 			}
 
 			// WILL BE USED LATER FOR ADDING TO CALENDAR
-			if (!$article->template && $article->newsdateend > Carbon\Carbon::now()->format('Y-m-d h:i:s'))
+			if (!$article->template && $article->datetimenewsend > Carbon\Carbon::now()->format('Y-m-d h:i:s'))
 			{
-				if ($type->calendar)
+				if ($article->type->calendar)
 				{
 					?>
 					<br />
 					<i class="fa fa-fw fa-calendar" aria-hidden="true"></i>
-					<a target="_blank" class="calendar calendar-subscribe" href="webcal://<?php echo request()->getHttpHost(); ?>/news/calendar/<?php echo $article->id; ?>" title="Subscribe to event"><!--
+					<a target="_blank" class="calendar calendar-subscribe" href="{{ str_replace(['http:', 'https:'], 'webcal:', route('site.news.calendar', ['name' => $article->id])) }}" title="Subscribe to event"><!--
 						-->Subscribe<!--
 					--></a>
 					&nbsp;|&nbsp;
 					<i class="fa fa-fw fa-download" aria-hidden="true"></i>
-					<a target="_blank" class="calendar calendar-download" href="/news/calendar/<?php echo $article->id; ?>" title="Download event"><!--
+					<a target="_blank" class="calendar calendar-download" href="{{ route('site.news.calendar', ['name' => $article->id]) }}" title="Download event"><!--
 						-->Download<!--
 					--></a>
 					<?php

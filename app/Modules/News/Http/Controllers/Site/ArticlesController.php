@@ -387,7 +387,7 @@ class ArticlesController extends Controller
 
 			$name .= ' - ' . $search;
 
-			$events = array((array)$news);
+			$events = array($news);
 
 			$file = str_replace(' ', '_', $org . ' ' . $name);
 		}
