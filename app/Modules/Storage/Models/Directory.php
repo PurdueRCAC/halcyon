@@ -188,7 +188,7 @@ class Directory extends Model
 		$message = new Message;
 		$message->userid = $userid ?: (auth()->user() ? auth()->user()->id : 0);
 		$message->targetobjectid = $this->id;
-		$message->messagequeuetypeid = !is_null($typeid) ?: $row->storageResource->getquotatypeid;
+		$message->messagequeuetypeid = !is_null($typeid) ? $typeid : $this->storageResource->getquotatypeid;
 		if ($offset)
 		{
 			$message->datetimesubmitted = Carbon::now()->add($offset . ' seconds')->toDateTimeString();
