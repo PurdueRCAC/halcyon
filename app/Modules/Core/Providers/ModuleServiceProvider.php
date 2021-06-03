@@ -2,6 +2,7 @@
 namespace App\Modules\Core\Providers;
 
 use App\Modules\Core\Http\Middleware\PublicPath;
+use App\Modules\Core\Http\Middleware\LegacyFiles;
 use Illuminate\Support\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -41,6 +42,7 @@ class ModuleServiceProvider extends ServiceProvider
 		// adding global middleware
 		$kernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
 		$kernel->pushMiddleware(PublicPath::class);
+		$kernel->pushMiddleware(LegacyFiles::class);
 	}
 
 	/**
