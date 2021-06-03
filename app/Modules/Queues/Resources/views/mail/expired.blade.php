@@ -4,7 +4,7 @@ Hello {{ $user->name }},
 This is an automated message notifying you that one or more of your {{ config('app.name') }} Reasearcher's accounts has expired. This may be due to the person(s) graduating or otherwise departing from the University. Following are the persons with expired accounts.
 
 @foreach ($people as $person)
-* {{ $person->name }}
+* {{ $person->user->name }}
 @endforeach
 
 If the person(s) no longer requires access to your resources, please go to the [Manage Users page](https://www.rcac.purdue.edu/account/user/) and remove access by unchecking their boxes. You will see a separate table for disabled accounts.
