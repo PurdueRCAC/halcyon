@@ -3,6 +3,8 @@ namespace App\Listeners\Content\News;
 
 use App\Modules\Pages\Events\PageContentIsRendering;
 use App\Modules\News\Models\Article;
+use App\Modules\News\Events\ArticlePrepareContent;
+use App\Modules\News\Events\UpdatePrepareContent;
 
 /**
  * Content listener for News
@@ -17,7 +19,11 @@ class News
 	 */
 	public function subscribe($events)
 	{
-		$events->listen(PageContentIsRendering::class, self::class . '@handlePageContentIsRendering');
+		$events->listen(PageContentIsRendering::class, self::class . '@handle');
+
+		// News
+		$events->listen(ArticlePrepareContent::class, self::class . '@handle');
+		$events->listen(UpdatePrepareContent::class, self::class . '@handle');
 	}
 
 	/**
@@ -26,7 +32,7 @@ class News
 	 * @param   object   $event  The article object.  Note $article->text is also available
 	 * @return  void
 	 */
-	public function handlePageContentIsRendering(PageContentIsRendering $event)
+	public function handle($event)
 	{
 		$content = $event->getBody();
 

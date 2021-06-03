@@ -8,6 +8,7 @@ use App\Halcyon\Config\Registry;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
+use App\Modules\News\Events\UpdatePrepareContent;
 
 /**
  * Model for a news article update
@@ -208,6 +209,17 @@ class Update extends Model
 	public function getFormattedBodyAttribute()
 	{
 		$text = $this->body;
+
+		event($event = new UpdatePrepareContent($text));
+
+		$text = $event->getBody();
+
+		if (class_exists('Parsedown'))
+		{
+			$mdParser = new \Parsedown();
+
+			$text = $mdParser->text(trim($text));
+		}
 
 		// separate code blocks
 		$text = preg_replace("/\}\}\n\{\{/", "}}\n\n\n{{", $text);
