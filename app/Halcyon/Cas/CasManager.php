@@ -40,7 +40,7 @@ class CasManager
 				phpCAS::setLogger();
 			}
 			
-			phpCAS::log('Loaded configuration:' . PHP_EOL . serialize($config));
+			phpCAS::log('Loaded configuration:' . PHP_EOL . serialize($this->config));
 		}
 
 		phpCAS::setVerbose($this->config['cas_verbose_errors']);
