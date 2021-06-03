@@ -3,7 +3,8 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'orders', 'middleware' => 'auth.admin'], function (Router $router) {
+$router->group(['prefix' => 'orders', 'middleware' => 'auth.admin'], function (Router $router)
+{
 	$router->get('/', [
 		'as' => 'site.orders.index',
 		'uses' => 'OrdersController@index',
@@ -148,29 +149,40 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth.admin'], function (R
 });
 
 // Legacy routes
-$router->group(['prefix' => 'order', 'middleware' => 'auth.admin'], function (Router $router) {
+$router->group(['prefix' => 'order', 'middleware' => 'auth.admin'], function (Router $router)
+{
 	$router->get('/', [
-		'as' => 'site.orders.index',
+		'as' => 'site.order.index',
+		'uses' => 'OrdersController@index',
+	]);
+	$router->get('/view', [
+		'as' => 'site.order.index',
 		'uses' => 'OrdersController@index',
 	]);
 	$router->get('create', [
-		'as' => 'site.orders.create',
+		'as' => 'site.order.create',
 		'uses' => 'OrdersController@create',
 		'middleware' => 'can:create orders',
 	]);
 	$router->post('store', [
-		'as' => 'site.orders.store',
+		'as' => 'site.order.store',
 		'uses' => 'OrdersController@store',
 		'middleware' => 'can:create orders|edit orders',
 	]);
 	$router->get('{id}', [
-		'as' => 'site.orders.read',
+		'as' => 'site.order.read',
+		'uses' => 'OrdersController@edit',
+		//'middleware' => 'can:tag.tags.edit',
+	])->where('id', '[0-9]+');
+
+	$router->get('/view/{id}', [
+		'as' => 'site.order.read',
 		'uses' => 'OrdersController@edit',
 		//'middleware' => 'can:tag.tags.edit',
 	])->where('id', '[0-9]+');
 
 	$router->get('cart', [
-		'as' => 'site.orders.cart',
+		'as' => 'site.order.cart',
 		'uses' => 'OrdersController@cart',
 		'middleware' => 'can:create orders',
 	]);
@@ -179,12 +191,12 @@ $router->group(['prefix' => 'order', 'middleware' => 'auth.admin'], function (Ro
 	$router->group(['prefix' => '/recur'], function (Router $router)
 	{
 		$router->get('/', [
-			'as' => 'site.orders.recurring',
+			'as' => 'site.order.recurring',
 			'uses' => 'OrdersController@recurring',
 			'middleware' => 'can:manage orders',
 		]);
 		$router->get('/{id}', [
-			'as' => 'site.orders.recurring.read',
+			'as' => 'site.order.recurring.read',
 			'uses' => 'OrdersController@recurringitem',
 			'middleware' => 'can:manage orders',
 		])->where('id', '[0-9]+');
@@ -194,32 +206,32 @@ $router->group(['prefix' => 'order', 'middleware' => 'auth.admin'], function (Ro
 	$router->group(['prefix' => '/categories'], function (Router $router)
 	{
 		$router->match(['get', 'post'], '/', [
-			'as'   => 'site.orders.categories',
+			'as'   => 'site.order.categories',
 			'uses' => 'CategoriesController@index',
 			'middleware' => 'can:manage orders',
 		]);
 		$router->get('/create', [
-			'as' => 'site.orders.categories.create',
+			'as' => 'site.order.categories.create',
 			'uses' => 'CategoriesController@create',
 			'middleware' => 'can:create orders.categories',
 		]);
 		$router->post('/store', [
-			'as' => 'site.orders.categories.store',
+			'as' => 'site.order.categories.store',
 			'uses' => 'CategoriesController@store',
 			'middleware' => 'can:create orders.categories|edit orders.categories',
 		]);
 		$router->get('/edit/{id}', [
-			'as' => 'site.orders.categories.edit',
+			'as' => 'site.order.categories.edit',
 			'uses' => 'CategoriesController@edit',
 			'middleware' => 'can:edit orders.categories',
 		])->where('id', '[0-9]+');
 		$router->match(['get', 'post'], '/delete/{id?}', [
-			'as'   => 'site.orders.categories.delete',
+			'as'   => 'site.order.categories.delete',
 			'uses' => 'CategoriesController@delete',
 			'middleware' => 'can:delete orders.categories',
 		])->where('id', '[0-9]+');
 		$router->post('/cancel', [
-			'as' => 'site.orders.categories.cancel',
+			'as' => 'site.order.categories.cancel',
 			'uses' => 'CategoriesController@cancel',
 		]);
 	});
@@ -228,11 +240,11 @@ $router->group(['prefix' => 'order', 'middleware' => 'auth.admin'], function (Ro
 	$router->group(['prefix' => '/products'], function (Router $router)
 	{
 		$router->match(['get', 'post'], '/', [
-			'as'   => 'site.orders.products',
+			'as'   => 'site.order.products',
 			'uses' => 'ProductsController@index',
 		]);
 		$router->match(['get', 'post'], '/manage', [
-			'as'   => 'site.orders.products.manage',
+			'as'   => 'site.order.products.manage',
 			'uses' => 'ProductsController@manage',
 			'middleware' => 'can:manage orders',
 		]);
@@ -242,27 +254,27 @@ $router->group(['prefix' => 'order', 'middleware' => 'auth.admin'], function (Ro
 			'middleware' => 'can:create orders',
 		]);
 		$router->post('/store', [
-			'as' => 'site.orders.products.store',
+			'as' => 'site.order.products.store',
 			'uses' => 'ProductsController@store',
 			'middleware' => 'can:create orders|edit orders',
 		]);
 		$router->get('/edit/{id}', [
-			'as' => 'site.orders.products.edit',
+			'as' => 'site.order.products.edit',
 			'uses' => 'ProductsController@edit',
 			'middleware' => 'can:edit orders',
 		]);
 		$router->get('/view/{id}', [
-			'as' => 'site.orders.products.read',
+			'as' => 'site.order.products.read',
 			'uses' => 'ProductsController@read',
 			//'middleware' => 'can:edit orders',
 		]);
 		$router->match(['get', 'post'], '/delete/{id?}', [
-			'as'   => 'site.orders.products.delete',
+			'as'   => 'site.order.products.delete',
 			'uses' => 'ProductsController@delete',
 			'middleware' => 'can:delete orders',
 		]);
 		$router->post('/cancel', [
-			'as' => 'site.orders.products.cancel',
+			'as' => 'site.order.products.cancel',
 			'uses' => 'ProductsController@cancel',
 		]);
 	});
