@@ -116,9 +116,11 @@ class SyncCommand extends Command
 					// Create an account if none exist
 					if (!$user->id)
 					{
+						$user->puid = $student->externalId;
 						$user->save();
 
 						$user->userusername->userid = $user->id;
+						$user->userusername->username = $user->username;
 						$user->userusername->save();
 					}
 				}
@@ -160,6 +162,7 @@ class SyncCommand extends Command
 			}
 
 			// Slap student count back into database
+			unset($course->classid);
 			$course->update([
 				'studentcount' => $count
 			]);
@@ -204,7 +207,11 @@ class SyncCommand extends Command
 		$created = array();
 		foreach ($create_users as $user)
 		{
-			$u = new User;
+			$u = User::findByUsername($user);
+			if (!$u)
+			{
+				$u = new User;
+			}
 			$u->username = $user;
 			$u->primarygroup = 'student';
 			$u->loginShell = '/bin/bash';
@@ -227,6 +234,7 @@ class SyncCommand extends Command
 			}
 
 			// Is status is pending or ready
+			// If $event->status == 1, then no role currently exists
 			if ($event->status != 2
 			 && $event->status != 3)
 			{
@@ -265,7 +273,7 @@ class SyncCommand extends Command
 
 				// Is status is pending or ready
 				if ($event->status != 2
-				&& $event->status != 3)
+				 && $event->status != 3)
 				{
 					// Create account
 					event($event = new ResourceMemberCreated($fortress, $u));
