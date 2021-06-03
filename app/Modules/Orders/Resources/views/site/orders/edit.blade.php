@@ -651,7 +651,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								<?php foreach ($order->items as $item) {
 									$history = $history->merge($item->history()->orderBy('created_at', 'desc')->get());
 									?>
-									<tr>
+									<tr id="item_{{ $item->id }}">
 										@if (!$item->isFulfilled())
 											@if ($order->status != 'canceled' && $order->status == 'pending_fulfillment')
 												<td>
@@ -747,7 +747,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										</td>
 										@if ($order->isActive() && auth()->user()->can('manage orders'))
 											<td class="item-edit-show hide">
-												<a href="{{ route('site.orders.read', ['id' => $order->id, 'remove' => $item->id]) }}"
+												<a href="#item_{{ $item->id }}"
 													title="Remove product"
 													class="btn btn-dangerd text-danger item-remove tip"
 													data-api="{{ route('api.orders.items.delete', ['id' => $item->id]) }}"
@@ -762,7 +762,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									<tr id="item_new_row" class="hide">
 										<td></td>
 										<td>
-											<select name="new_product" class="form-control item-product searchable-select">
+											<select name="new_product" class="form-control item-product searchable-select" data-api="{{ route('api.orders.items.create') }}">
 												<option value="0">{{ trans('orders::orders.select product') }}</option>
 												@foreach ($products as $product)
 													<option value="{{ $product->id }}"
@@ -775,7 +775,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										</td>
 										<td class="text-right">
 											<span class="quantity_span hide"></span>
-											<input type="number" name="quantity" value="0" size="4" class="item-quantity form-control total-update" />
+											<input type="number" name="newquantity" value="0" size="4" class="item-quantity form-control total-update" />
 											<span class="item-period hide">
 												for
 												<input type="number" name="periods" min="1" max="999" value="1" class="item-periods form-control total-update" />
@@ -788,7 +788,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										</td>
 										<td class="text-right text-nowrap">
 											<span class="hide" name="itemtotal"></span>
-											<input type="text" name="linetotal" value="0.00" class="item-total form-control total-update" />
+											<input type="text" name="newlinetotal" value="0.00" class="item-total form-control total-update" />
 										</td>
 										<td>
 											<a href="#item_new_row"

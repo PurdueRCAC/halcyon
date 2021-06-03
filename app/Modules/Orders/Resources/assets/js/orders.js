@@ -1100,6 +1100,12 @@ function AddNewProductRow() {
 	var rm = new_row.getElementsByClassName("item-remove")[0];
 	rm.setAttribute('href', '#' + new_row.id);
 
+	var q = new_row.querySelector("input[name=newquantity]");
+	q.name = 'quantity';
+
+	var t = new_row.querySelector("input[name=newlinetotal]");
+	t.name = 'linetotal';
+
 	//new_row2.id = "";
 
 	new_box.value = 0;
@@ -1298,13 +1304,13 @@ function SaveQuantities() {
 		 && priceinputs[x].value.replace(/[,\.]/g, "").match(/^[0-9]+$/)) {
 			post['price'] = priceinputs[x].value.replace(/[,\.]/g, "");
 		}
-		//console.log(post);
+
 		post = JSON.stringify(post);
 
 		if (post != "{}") {
 			pendingupdates++;
 			num_changes++;
-			//console.log(id);
+
 			WSPutURL(id, post, UpdatedAccountInfo);
 		}
 	}
@@ -1313,8 +1319,8 @@ function SaveQuantities() {
 	for (x = 0; x < deleteitems.length; x++) {
 		pendingupdates++;
 		num_changes++;
-		//console.log(deleteitems[x]);
-		WSDeleteURL(deleteitems[x]);//, UpdatedAccountInfo);
+
+		WSDeleteURL(deleteitems[x], UpdatedAccountInfo);
 	}
 
 	// Check for new items
@@ -1350,10 +1356,9 @@ function SaveQuantities() {
 		pendingupdates++;
 		num_changes++;
 
-		//console.log(post);
 		post = JSON.stringify(post);
 
-		WSPostURL(iteminputs[x].getAttribute('data-api'), post);
+		WSPostURL(products[x].getAttribute('data-api'), post, UpdatedAccountInfo);
 	}
 
 	if (num_changes == 0) {
@@ -1411,7 +1416,7 @@ function SaveAccounts() {
 				return;
 			}
 			if (approverinputs[x].value) {
-				posts[count]['approveruserid'] = approverinputs[x].getAttribute('data-id');//value;
+				posts[count]['approveruserid'] = approverinputs[x].value;
 			}
 			total -= amt;
 			count++;
@@ -2098,6 +2103,7 @@ function EditRemoveAccount(btn, e) {
  */
 function EditRemoveProduct(btn, e) {
 	var row = $(btn.attr('href'));//table.getElementsByTagName("tr");
+
 	if (btn.attr('data-api')) {
 		deleteitems.push(btn.attr('data-api'));
 		//console.log(btn.attr('data-api'));

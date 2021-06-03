@@ -560,7 +560,7 @@ class ItemsController extends Controller
 			return response()->json(['message' => trans('global.error.not authorized')], 403);
 		}
 
-		if (!$row->trashed())
+		if (!$row->isTrashed())
 		{
 			if (!$row->delete())
 			{
