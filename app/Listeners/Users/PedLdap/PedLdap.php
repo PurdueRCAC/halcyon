@@ -114,7 +114,7 @@ class PedLdap
 				{
 					if ($event->results->count() >= $event->results->total())
 					{
-						break;
+						//break;
 					}
 
 					// We have a local record for this user
