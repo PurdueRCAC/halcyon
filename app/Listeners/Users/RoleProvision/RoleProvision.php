@@ -64,7 +64,7 @@ class RoleProvision
 			'createOrUpdateRoleRequest' => array(
 				'organization'   => 'rcs',
 				'role'           => $event->resource->rolename,
-				'requestorLogin' => auth()->user()->username,
+				'requestorLogin' => $event->user->username,
 				'customerLogin'  => $event->user->username,
 				'primaryGroup'   => $event->user->primarygroup ? $event->user->primarygroup : 'student',
 				'loginShell'     => $event->user->loginShell ? $event->user->loginShell : '/bin/bash',
@@ -321,7 +321,7 @@ class RoleProvision
 					'createOrUpdateRoleRequest' => array(
 						'organization'   => 'rcs',
 						'role'           => $queue->scheduler->resource->rolename,
-						'requestorLogin' => auth()->user()->username,
+						'requestorLogin' => (auth()->user() ? auth()->user()->username : $user->username),
 						'customerLogin'  => $user->username,
 						'primaryGroup'   => $resourcemember->primarygroup,
 						'loginShell'     => $resourcemember->loginShell,
