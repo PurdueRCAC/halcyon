@@ -357,7 +357,7 @@ class RcacLdap
 
 			$status = 404;
 
-			if (!empty($results))
+			if (!empty($results) && count($results) > 0)
 			{
 				$status = 200;
 
@@ -628,7 +628,7 @@ class RcacLdap
 
 				$create_users = array_diff($users, $ldap_users);
 				$create_users = array_diff($create_users, $system_users);
-				$remove_users = array_diff($users, $scholar_users);
+				$remove_users = array_diff($ldap_users, $users);
 				$remove_users = array_diff($remove_users, $system_users);
 
 				$event->create_users = $create_users;
