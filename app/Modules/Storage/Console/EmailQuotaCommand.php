@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use App\Modules\Storage\Models\Notification;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\Usage;
+use App\Modules\Storage\Models\StorageResource;
+use App\Modules\Resources\Models\Asset;
 use App\Modules\Storage\Mail\Quota;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Utility\Number;
@@ -52,6 +54,8 @@ class EmailQuotaCommand extends Command
 
 		$n = (new Notification)->getTable();
 		$d = (new Directory)->getTable();
+		$r = (new Asset)->getTable();
+		$s = (new StorageResource)->getTable();
 
 		foreach ($users as $userid)
 		{
@@ -65,6 +69,8 @@ class EmailQuotaCommand extends Command
 
 			$notifications = Notification::query()
 				->join($d, $d . '.id', $n . '.storagedirid')
+				->join($r, $r . '.id', $d . '.resourceid')
+				->join($s, $s . '.id', $d . '.storageresourceid')
 				->where($n . '.userid', '=', $userid)
 				->where(function($where) use ($n)
 				{
@@ -75,6 +81,16 @@ class EmailQuotaCommand extends Command
 				{
 					$where->whereNull($d . '.datetimeremoved')
 						->orWhere($d . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+				->where(function($where) use ($r)
+				{
+					$where->whereNull($r . '.datetimeremoved')
+						->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+				->where(function($where) use ($s)
+				{
+					$where->whereNull($s . '.datetimeremoved')
+						->orWhere($s . '.datetimeremoved', '=', '0000-00-00 00:00:00');
 				})
 				->get();
 
