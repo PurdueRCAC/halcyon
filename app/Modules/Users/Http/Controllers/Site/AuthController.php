@@ -132,7 +132,7 @@ class AuthController extends Controller
 					//$user = \App\Modules\Users\Models\User::where('username', '=', $cas->user())->first();
 					$user = \App\Modules\Users\Models\User::findByUsername($cas->user());
 
-					if (!$user && config('module.users.create_on_login', 1))
+					if ((!$user || !$user->id) && config('module.users.create_on_login', 1))
 					{
 						$user = new \App\Modules\Users\Models\User;
 						$user->name = $cas->getAttribute('fullname');
@@ -155,6 +155,10 @@ class AuthController extends Controller
 						}
 
 						Auth::loginUsingId($user->id);
+					}
+					else
+					{
+						return response('Unauthorized.', 401);
 					}
 				}
 			}
@@ -189,9 +193,11 @@ class AuthController extends Controller
 	{
 		Auth::logout();
 
+		session()->flush();
+
 		if (app()->has('cas'))
 		{
-			app('cas')->logout(route('home'), route('home'));
+			//app('cas')->logout(route('home'), route('home'));
 		}
 
 		return redirect()->route(config('module.users.redirect_route_after_logout', 'login'));

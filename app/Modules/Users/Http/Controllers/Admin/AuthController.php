@@ -55,7 +55,8 @@ class AuthController extends Controller
 			}
 			else
 			{
-				app('cas')->logout();
+				//app('cas')->logout();
+				return redirect()->intended($this->authenticatedRoute());
 			}
 		}
 
@@ -143,11 +144,23 @@ class AuthController extends Controller
 	{
 		Auth::logout();
 
+		session()->flush();
+
 		/*if (app()->has('cas'))
 		{
 			app('cas')->logout('', route('admin.login'));
 		}*/
 
 		return redirect()->route('admin.login');
+	}
+
+	/**
+	 * Get route to redirect to after being authenticated
+	 * 
+	 * @return string
+	 */
+	private function authenticatedRoute()
+	{
+		return route(config('module.users.redirect_route_after_login', 'home'));
 	}
 }

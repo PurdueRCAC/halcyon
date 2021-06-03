@@ -64,45 +64,8 @@ class AdminMiddleware
 	 */
 	public function handle($request, \Closure $next)
 	{
-		/*if ($this->application->has('cas'))
-		{
-			$cas = $this->application['cas'];
-
-			if ($cas->checkAuthentication())
-			{
-				// Store the user credentials in a Laravel managed session
-				//session()->put('cas_user', $cas->user());
-				if (!$this->auth->user())
-				{
-					$user = \App\Modules\Users\Models\User::where('username', '=', $cas->user())->first();
-
-					if (!$user)
-					{
-						$user = new \App\Modules\Users\Models\User;
-						$user->username = $cas->user();
-						$user->name = $cas->user();
-						$user->email = $cas->user() . '@purdue.edu';
-						$user->save();
-					}
-
-					//if ($user)
-					//{
-						$this->auth->loginUsingId($user->id);
-					//}
-				}
-			}
-			else
-			{
-				if ($request->ajax() || $request->wantsJson())
-				{
-					return response('Unauthorized.', 401);
-				}
-				$cas->authenticate();
-			}
-		}*/
-
 		// Check if the user is logged in
-		if (!$this->auth->check() && route('admin.login') != $request->url())
+		if (!$this->auth->check() && route('login') != $request->url())
 		{
 			if ($request->ajax())
 			{
@@ -113,7 +76,50 @@ class AdminMiddleware
 			$this->session->put('url.intended', $this->request->url());
 
 			// Redirect to the login page
-			return $this->redirect->route('admin.login');
+			//return $this->redirect->route('login');
+			if (app()->has('cas'))
+			{
+				$cas = app('cas');
+
+				if (!$cas->checkAuthentication())
+				{
+					return $cas->authenticate();
+				}
+				else
+				{
+					$user = \App\Modules\Users\Models\User::findByUsername($cas->user());
+
+					if ((!$user || !$user->id) && config('module.users.create_on_login', 1))
+					{
+						$user = new \App\Modules\Users\Models\User;
+						$user->name = $cas->getAttribute('fullname');
+
+						if ($user->save())
+						{
+							$userusername = new \App\Modules\Users\Models\UserUsername;
+							$userusername->userid = $user->id;
+							$userusername->username = $cas->user();
+							$userusername->save();
+						}
+					}
+
+					if ($user && $user->id)
+					{
+						if (!$user->api_token)
+						{
+							$user->api_token = \Illuminate\Support\Str::random(60);
+							$user->save();
+						}
+
+						\Illuminate\Support\Facades\Auth::loginUsingId($user->id);
+					}
+					else
+					{
+						return response('Unauthorized.', 401);
+					}
+					//return redirect(route('callback'));
+				}
+			}
 		}
 
 		// Check if the user has access to the dashboard page
