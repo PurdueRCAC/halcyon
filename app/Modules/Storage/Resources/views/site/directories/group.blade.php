@@ -273,7 +273,7 @@
 											<?php foreach ($dir->group->unixgroups as $unixgroup) { ?>
 												<?php
 												$selected = '';
-												if ($dir->autouserunixgroup && $unixgroup->id == $dir->autouserunixgroup->id)
+												if ($dir->autouserunixgroupid && $unixgroup->id == $dir->autouserunixgroupid)
 												{
 													$selected = 'selected="selected"';
 												}
