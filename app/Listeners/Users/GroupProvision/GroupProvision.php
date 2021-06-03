@@ -64,8 +64,8 @@ class GroupProvision
 					$config['user'],
 					$config['password']
 				],
-				'body' => $body,
-				'json' => ['body' => $body]
+				//'form_params' => $body,
+				'json' => $body //['body' => $body]
 			]);
 
 			$status = $res->getStatusCode();

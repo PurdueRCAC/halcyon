@@ -77,13 +77,13 @@ class RoleProvision
 		{
 			$client = new Client();
 
-			$res = $client->request('POST', $config['url'] . $url, [
+			$res = $client->request('POST', $url, [
 				'auth' => [
 					$config['user'],
 					$config['password']
 				],
-				'body' => $body,
-				'json' => ['body' => $body]
+				//'form_params' => $body,
+				'json' => $body //['body' => $body]
 			]);
 
 			$status = $res->getStatusCode();
@@ -91,11 +91,11 @@ class RoleProvision
 
 			if ($status < 400)
 			{
-				error_log(__METHOD__ . '(): Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
+				error_log(__METHOD__ . '(): Created AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
 			}
 			else
 			{
-				error_log(__METHOD__ . '(): Created AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
+				error_log(__METHOD__ . '(): Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
 			}
 		}
 		catch (\Exception $e)
@@ -139,13 +139,13 @@ class RoleProvision
 
 			$body = $event->resource->rolename;
 
-			$res = $client->request('DELETE', $config['url'] . $url, [
+			$res = $client->request('DELETE', $url, [
 				'auth' => [
 					$config['user'],
 					$config['password']
-				],
-				'body' => $body,
-				'json' => ['body' => $body]
+				]//,
+				//'form_params' => $body,
+				//'json' => $body //['body' => $body]
 			]);
 
 			$status = $res->getStatusCode();
@@ -335,8 +335,8 @@ class RoleProvision
 						$config['user'],
 						$config['password']
 					],
-					'body' => $body,
-					'json' => ['body' => $body]
+					//'form_params' => $body//,
+					'json' => $body //['body' => $body]
 				]);
 
 				$status = $res->getStatusCode();
