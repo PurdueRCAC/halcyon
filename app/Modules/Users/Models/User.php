@@ -168,8 +168,8 @@ class User extends Model implements
 					$where->whereNull('dateremoved')
 						->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
 				})*/
-				->orderBy('datecreated', 'desc')
 				->orderBy('dateremoved', 'asc')
+				->orderBy('datecreated', 'desc')
 				->first();
 
 			if (!$this->userusername)
