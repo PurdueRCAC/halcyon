@@ -122,10 +122,7 @@ class PagesController extends Controller
 		{
 			$node->path = ($alias ? $alias . '/' : '') . $node->page->alias;
 
-			if (!$node->save())
-			{
-				die('here');
-			}
+			$node->save();
 
 			$children = $node->children()->orderBy('lft', 'asc')->get();
 

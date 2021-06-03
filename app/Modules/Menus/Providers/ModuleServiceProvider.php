@@ -47,7 +47,7 @@ class ModuleServiceProvider extends ServiceProvider
 	{
 		//$name = app('route')->currentRouteName();
 		$route = app('router')->current();
-		var_dump($route); die('here');
+
 		$route = trim($route, '/');
 
 		$menu = app('menu');
