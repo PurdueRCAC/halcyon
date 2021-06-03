@@ -401,7 +401,7 @@ class Message extends Model
 		$diff = $end - $start;
 
 		// Less than a minute
-		if ($diff < 60 || $unit == 'seconds')
+		if ($diff < 60)
 		{
 			return $diff . ' ' . trans_choice('global.time.seconds', $diff);// $diff . ' second' . ($diff == 1 ? '' : 's');
 		}
@@ -410,7 +410,7 @@ class Message extends Model
 		$diff = round($diff / 60);
 
 		// 1 to 59 minutes
-		if ($diff < 60 || $unit == 'minute')
+		if ($diff < 60)
 		{
 			return $diff . ' ' . trans_choice('global.time.minutes', $diff);//$diff . ' minute' . ($diff == 1 ? '' : 's');
 		}
@@ -419,7 +419,7 @@ class Message extends Model
 		$diff = round($diff / 60);
 
 		// 1 to 23 hours
-		if ($diff < 24 || $unit == 'hour')
+		if ($diff < 24)
 		{
 			return $diff . ' ' . trans_choice('global.time.hours', $diff);//$diff . ' hour' . ($diff == 1 ? '' : 's');
 		}
@@ -428,7 +428,7 @@ class Message extends Model
 		$diff = round($diff / 24);
 
 		// 1 to 6 days
-		if ($diff < 7 || $unit == 'day')
+		if ($diff < 7)
 		{
 			return $diff . ' ' . trans_choice('global.time.days', $diff);//$diff . ' day' . ($diff == 1 ? '' : 's');
 		}
@@ -437,7 +437,7 @@ class Message extends Model
 		$diff = round($diff / 7);
 
 		// 1 to 4 weeks
-		if ($diff <= 4 || $unit == 'week')
+		if ($diff <= 4)
 		{
 			return $diff . ' ' . trans_choice('global.time.weeks', $diff);//$diff . ' week' . ($diff == 1 ? '' : 's');
 		}
@@ -446,7 +446,7 @@ class Message extends Model
 		$diff = round($diff / 4);
 
 		// 1 to 12 months
-		if ($diff <= 12 || $unit == 'month')
+		if ($diff <= 12)
 		{
 			return $diff . ' ' . trans_choice('global.time.months', $diff);//$diff . ' month' . ($diff == 1 ? '' : 's');
 		}
