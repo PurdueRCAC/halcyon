@@ -75,6 +75,84 @@ class DbmLdap
 			return;
 		}
 
+		$usernames = array();
+		foreach ($event->results as $user)
+		{
+			$usernames[] = $user->username;
+		}
+
+		try
+		{
+			$ldap = $this->connect($config);
+
+			$search = $event->search;
+			$status = 404;
+
+			// We already found a match, so kip this lookup
+			if (!in_array($search, $usernames))
+			{
+				$results = array();
+
+				// Try finding by email address
+				if (preg_match("/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/", $search))
+				{
+					$results = $ldap->search()
+						->where('mail', '=', $search)
+						->select(['cn', 'uid', 'employeeNumber'])
+						->get();
+
+					if (empty($results))
+					{
+						$search = strstr($search, '@', true);
+					}
+				}
+
+				if (empty($results))
+				{
+					// Look for a currently active username in I2A2 matching the request.
+					$results = $ldap->search()
+						->where('uid', '=', $search . '*')
+						->select(['cn', 'uid', 'employeeNumber'])
+						->get();
+				}
+
+				foreach ($results as $result)
+				{
+					//if ($event->results->count() >= $event->results->total())
+					//{
+						//break;
+					//}
+
+					// We have a local record for this user
+					if (in_array($result['uid'][0], $usernames))
+					{
+						continue;
+					}
+
+					$user = User::findByUsername($result['uid'][0]);
+
+					if (!$user || !$user->id)
+					{
+						$user = new User;
+						$user->name = Str::properCaseNoun($result['cn'][0]);
+						$user->username = $result['uid'][0];
+						$user->puid = $result['employeeNumber'][0];
+					}
+
+					$usernames[] = $user->username;
+
+					$event->results->push($user);
+				}
+			}
+		}
+		catch (\Exception $e)
+		{
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
+		}
+
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->search);
+
 		/*try
 		{
 			$ldap = $this->connect($config);
@@ -185,7 +263,11 @@ class DbmLdap
 
 				foreach ($data as $key => $result)
 				{
-					$user = new User;
+					$user = User::findByUsername($result['uid'][0]);
+					if (!$user)
+					{
+						$user = new User;
+					}
 					$user->name = $result['cn'][0];
 					$user->userusername = new UserUsername;
 					$user->userusername->username = $result['uid'][0];
