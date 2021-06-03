@@ -66,10 +66,10 @@ class RoleProvision
 				'role'           => $event->resource->rolename,
 				'requestorLogin' => auth()->user()->username,
 				'customerLogin'  => $event->user->username,
-				'primaryGroup'   => $event->user->primarygroup,
-				'loginShell'     => $event->user->loginShell,
+				'primaryGroup'   => $event->user->primarygroup ? $event->user->primarygroup : 'student',
+				'loginShell'     => $event->user->loginShell ? $event->user->loginShell : '/bin/bash',
 				'quota'          => '1',
-				'piLogin'        => $event->user->pilogin
+				'piLogin'        => $event->user->pilogin ? $event->user->pilogin : $event->user->username
 			)
 		);
 
