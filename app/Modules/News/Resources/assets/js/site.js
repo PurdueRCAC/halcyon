@@ -3539,21 +3539,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		var el = $(this);
 
-		var newsid = el.data('newsid');
-		var id = newsid.substr(newsid.lastIndexOf("/") + 1);
+		var id = el.data('newsid');
+		//var id = newsid.substr(newsid.lastIndexOf("/") + 1);
 
-		var parts = el.data('assoc').split('/');
+		//var parts = el.data('assoc').split('/');
 
 		var post = {
-			'associd': parts[parts.length - 1],
-			'assoctype': parts[parts.length - 2],
+			'associd': el.data('assoc'), //parts[parts.length - 1],
+			'assoctype': 'user',//parts[parts.length - 2],
 			'newsid': id
 		};
 
 		post = JSON.stringify(post);
 
-		WSPostURL(root + "news/associations/", post, function (xml) {
-			if (xml.status == 200) {
+		WSPostURL(root + "news/associations", post, function (xml) {
+			if (xml.status < 400) {
 				el.parent().html('<span class="alert alert-success">Thank you for your interest!</span>');
 			} else if (xml.status == 403) {
 				el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');

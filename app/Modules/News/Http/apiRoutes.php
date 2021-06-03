@@ -48,7 +48,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.news.types.create',
 			'uses' => 'TypesController@create',
-			'middleware' => ['auth:api', 'can:create news.types'],
+			'middleware' => ['auth:api', 'can:manage news'],
 		]);
 		$router->get('{id}', [
 			'as' => 'api.news.types.read',
@@ -57,12 +57,37 @@ $router->group(['prefix' => 'news'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.news.types.update',
 			'uses' => 'TypesController@update',
-			'middleware' => ['auth:api', 'can:edit news.types'],
+			'middleware' => ['auth:api', 'can:manage news'],
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.news.types.delete',
 			'uses' => 'TypesController@delete',
-			'middleware' => ['auth:api', 'can:delete news.types'],
+			'middleware' => ['auth:api', 'can:manage news'],
+		])->where('id', '[0-9]+');
+	});
+
+	// Associations
+	$router->group(['prefix' => 'associations'], function (Router $router)
+	{
+		$router->get('/', [
+			'as'   => 'api.news.associations',
+			'uses' => 'AssociationsController@index',
+		]);
+		$router->post('/', [
+			'as' => 'api.news.associations.create',
+			'uses' => 'AssociationsController@create',
+		]);
+		$router->get('{id}', [
+			'as' => 'api.news.associations.read',
+			'uses' => 'AssociationsController@read',
+		])->where('id', '[0-9]+');
+		$router->put('{id}', [
+			'as' => 'api.news.associations.update',
+			'uses' => 'AssociationsController@update',
+		])->where('id', '[0-9]+');
+		$router->delete('{id}', [
+			'as' => 'api.news.associations.delete',
+			'uses' => 'AssociationsController@delete',
 		])->where('id', '[0-9]+');
 	});
 

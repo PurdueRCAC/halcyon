@@ -81,7 +81,7 @@ foreach ($rows as $event)
 				@else
 					@if ($reserved)
 						This time is reserved
-					@else
+					@elseif ($now->getTimestamp() < $endregistration->getTimestamp())
 						@if (auth()->user())
 							@if (!$attending)
 								<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">Reserve this time</a>
@@ -90,7 +90,7 @@ foreach ($rows as $event)
 								<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel</a>
 							@endif
 						@else
-							<a class="btn btn-primary" href="/login?loginrefer=<?php echo urlencode(route('page', ['uri' => 'coffee', 'attend' => 1])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">Reserve this time</a>
+							<a class="btn btn-primary" href="{{ route('login') }}?loginrefer=<?php echo urlencode(route('page', ['uri' => 'coffee', 'attend' => 1])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">Reserve this time</a>
 						@endif
 					@endif
 				@endif
@@ -136,7 +136,7 @@ foreach ($rows as $event)
 				echo '<br /><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> ' . $event->location;
 			}
 
-			if ($event->url)
+			if ($event->url && auth()->user() && auth()->user()->can('manage news'))
 			{
 				echo '<br /><i class="fa fa-fw fa-link" aria-hidden="true"></i> <a href="' . $event->url . '">' . $event->url . '</a>';
 			}
@@ -169,7 +169,7 @@ foreach ($rows as $event)
 			}
 
 			if (!$event->template
-			 && $event->datetimenewsend != '0000-00-00 00:00:00'
+			 && $event->hasEnd()
 			 && $event->datetimenewsend > $now->format('Y-m-d h:i:s'))
 			{
 				if ($type->calendar)
@@ -177,7 +177,7 @@ foreach ($rows as $event)
 					?>
 					<br />
 					<i class="fa fa-fw fa-calendar" aria-hidden="true"></i>
-					<a target="_blank" class="calendar calendar-subscribe" href="webcal://<?php echo request()->getHttpHost(); ?>/news/calendar/<?php echo $event->id; ?>" title="Subscribe to event"><!--
+					<a target="_blank" class="calendar calendar-subscribe" href="<?php echo request()->getHttpHost(); ?><?php echo str_replace(['http:', 'https:'], 'webcal:', route('site.news.calendar', ['name' => $event->id])); ?>" title="Subscribe to event"><!--
 						-->Subscribe<!--
 					--></a>
 					&nbsp;|&nbsp;
