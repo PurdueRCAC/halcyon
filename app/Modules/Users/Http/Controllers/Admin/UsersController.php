@@ -398,7 +398,7 @@ class UsersController extends Controller
 				$newUsertype = Role::findByTitle('Registered')->id;
 			}
 
-			$user->roles = array($newUsertype);
+			$user->newroles = array($newUsertype);
 
 			$user->created_at = Carbon::now()->toDateTimeString();
 		}
