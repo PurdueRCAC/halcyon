@@ -10,6 +10,9 @@ use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\GroupUser;
 use App\Modules\Group\Models\Group;
+use App\Modules\Resources\Events\ResourceMemberCreated;
+use App\Modules\Resources\Events\ResourceMemberStatus;
+use App\Modules\Resources\Events\ResourceMemberDeleted;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -311,6 +314,14 @@ class UsersController extends Controller
 		}
 
 		$row->save();
+
+		event($resourcemember = new ResourceMemberStatus($row->queue->scheduler->resource, $row->user));
+
+		if ($resourcemember->status == 1 || $resourcemember->status == 4)
+		{
+			event($resourcemember = new ResourceMemberCreated($row->queue->scheduler->resource, $row->user));
+		}
+
 		$row->api = route('api.queues.users.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
@@ -544,6 +555,57 @@ class UsersController extends Controller
 		if (!$row->delete())
 		{
 			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+		}
+
+		event($resourcemember = new ResourceMemberStatus($row->queue->scheduler->resource, $row->user));
+
+		if ($resourcemember->status == 2 || $resourcemember->status == 3)
+		{
+			$rows = 0;
+
+			$resources = Asset::query()
+				->withTrashed()
+				->whereIsActive()
+				->where('rolename', '!=', '')
+				->where('listname', '!=', '')
+				->get();
+
+			foreach ($resources as $res)
+			{
+				$subresources = $res->subresources()
+					->withTrashed()
+					->whereIsActive()
+					->get();
+
+				foreach ($subresources as $sub)
+				{
+					$queues = $sub->queues()
+						->whereIn('groupid', $owned)
+						->withTrashed()
+						->whereIsActive()
+						->get();
+						//->pluck('queuid')
+						//->toArray();
+
+					foreach ($queues as $queue)
+					{
+						$rows += $queue->users()
+							->whereIsMember()
+							->where('userid', '=', $user->id)
+							->count();
+
+						$rows += $queue->group->members()
+							->whereIsManager()
+							->where('userid', '=', $user->id)
+							->count();
+					}
+				}
+			}
+
+			if ($rows == 0)
+			{
+				event($resourcemember = new ResourceMemberDeleted($row->queue->scheduler->resource, $row->user));
+			}
 		}
 
 		return response()->json(null, 204);

@@ -307,21 +307,15 @@ class MembersController extends Controller
 
 			$queues = array();
 			$subresources = $resource->subresources()
-				->where(function($where)
-				{
-					$where->whereNull('datetimeremoved')
-						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
+				->withTrashed()
+				->whereIsActive()
 				->get();
 			foreach ($subresources as $sub)
 			{
 				$queues += $sub->queues()
 					->whereIn('groupid', $owned)
-					->where(function($where)
-					{
-						$where->whereNull('datetimeremoved')
-							->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-					})
+					->withTrashed()
+					->whereIsActive()
 					->pluck('queuid')
 					->toArray();
 			}
@@ -347,22 +341,16 @@ class MembersController extends Controller
 		foreach ($resources as $res)
 		{
 			$subresources = $res->subresources()
-				->where(function($where)
-				{
-					$where->whereNull('datetimeremoved')
-						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
+				->withTrashed()
+				->whereIsActive()
 				->get();
 
 			foreach ($subresources as $sub)
 			{
 				$queues = $sub->queues()
 					->whereIn('groupid', $owned)
-					->where(function($where)
-					{
-						$where->whereNull('datetimeremoved')
-							->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-					})
+					->withTrashed()
+					->whereIsActive()
 					->get();
 					//->pluck('queuid')
 					//->toArray();
