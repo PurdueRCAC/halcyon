@@ -507,9 +507,35 @@ class Group extends Model
 
 		$processed = array();
 		$pending = 0;
+		$managers = $this->managers->pluck('userid')->toArray();
 
 		foreach ($queues as $queue)
 		{
+			// First we need to look for potentially duplicate records
+			$active = array();
+
+			$queueids = $queue->users()
+				->withTrashed()
+				->whereIsActive()
+				->orderBy('membertype', 'asc')
+				->get();
+
+			foreach ($queueids as $queueid)
+			{
+				$key = $queueid->queueid . '-' . $queueid->userid;
+
+				if (in_array($key, $active) && $queueid->isPending())
+				{
+					// Duplicate record, remove
+					$queueid->delete();
+				}
+
+				if (!$queueid->isPending())
+				{
+					$active[] = $key;
+				}
+			}
+
 			$users = $queue->users()
 				->withTrashed()
 				->whereIsActive()
@@ -525,6 +551,16 @@ class Group extends Model
 
 				if ($me->user && !$me->user->isTrashed())
 				{
+					// If the user is already a group manager, then they're approved
+					if (in_array($me->userid, $managers))
+					{
+						$me->membertype = 1;
+						$me->notice = 0;
+						$me->save();
+
+						continue;
+					}
+
 					$pending++;
 				}
 
