@@ -45,7 +45,7 @@ class QueueAuthorizedManager extends Mailable
 	public function build()
 	{
 		return $this->markdown('queues::mail.queueauthorized.manager')
-					->subject(trans('queues::mail.queueauthorized.manager'))
+					->subject(trans('queues::mail.queueauthorized'))
 					->with([
 						'user' => $this->user,
 						'authorized' => $this->authorized,

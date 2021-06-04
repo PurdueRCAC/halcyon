@@ -52,7 +52,7 @@ class QueueAuthorized extends Mailable
 	public function build()
 	{
 		return $this->markdown('queues::mail.queueauthorized.user')
-					->subject(trans('queues::mail.queueauthorized.user'))
+					->subject(trans('queues::mail.queueauthorized'))
 					->with([
 						'user' => $this->user,
 						'queueusers' => $this->queueusers,
