@@ -142,7 +142,7 @@ class RolesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$roles = [
+		$rules = [
 			'fields.title' => 'required|string|max:100'
 		];
 
