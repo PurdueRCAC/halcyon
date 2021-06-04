@@ -867,11 +867,12 @@ function TotalOrder() {
 	var order = {};
 	var items = Array();
 
+	order['submitteruserid'] = document.getElementById("userid").value;
+	order['userid'] = document.getElementById("userid").value;
+
 	var name;
 	if (name = document.getElementById("search_user").value.match(/^.*?\(([a-z0-9]+)\)$/)) {
 		order['userid'] = name[1];
-	} else {
-		order['userid'] = document.getElementById("userid").value;
 	}
 
 	var count = 0;
@@ -946,7 +947,8 @@ function TotalOrder() {
 		url: btn.getAttribute('data-api'),
 		type: 'post',
 		data: {
-			userid: order['user'],
+			submitteruserid: order['submitteruserid'],
+			userid: order['userid'],
 			items: order['items'],
 			usernotes: order['usernotes'],
 			staffnotes: order['staffnotes']
