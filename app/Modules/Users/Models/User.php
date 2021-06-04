@@ -670,7 +670,7 @@ class User extends Model implements
 
 			if ($user->save())
 			{
-				$userusername = $user->userusername;
+				$userusername = $user->getUserUsername();
 				if (!$userusername || !$userusername->id)
 				{
 					$userusername = new UserUsername;
@@ -678,8 +678,6 @@ class User extends Model implements
 				$userusername->userid = $user->id;
 				$userusername->username = $username;
 				$userusername->save();
-
-				$user->userusername = $userusername;
 			}
 		}
 

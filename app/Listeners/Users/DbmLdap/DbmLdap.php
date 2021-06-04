@@ -270,8 +270,7 @@ class DbmLdap
 						$user = new User;
 					}
 					$user->name = $result['cn'][0];
-					$user->userusername = new UserUsername;
-					$user->userusername->username = $result['uid'][0];
+					$user->getUserUsername()->username = $result['uid'][0];
 					$user->puid = $result['employeeNumber'][0];
 
 					//$event->user = $user;
