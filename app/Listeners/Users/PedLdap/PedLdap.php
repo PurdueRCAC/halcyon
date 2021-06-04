@@ -105,8 +105,8 @@ class PedLdap
 				{
 					// Look for a currently active username in I2A2 matching the request.
 					$results = $ldap->search()
-						->where('uid', '=', $search)
-						->orWhere('uid', '=', $search . '*')
+						->where('uid', 'contains', $search)
+						//->orWhere('uid', '=', $search . '*')
 						->select(['cn', 'uid', 'title', 'purdueEduCampus'])
 						->get();
 				}
@@ -132,6 +132,7 @@ class PedLdap
 						$user->name = Str::properCaseNoun($result['cn'][0]);
 						$user->username = $result['uid'][0];
 						$user->email = $user->username . '@purdue.edu';
+						//$user->id = $user->username;
 					}
 
 					$usernames[] = $user->username;
@@ -142,8 +143,8 @@ class PedLdap
 
 			// Look for all currently active users in I2A2 with a real name matching the request.
 			$results = $ldap->search()
-				->where('cn', '=', $search)
-				->orWhere('cn', 'ends_with', ' ' . $search)
+				->where('cn', 'contains', $search)
+				//->orWhere('cn', 'ends_with', ' ' . $search)
 				->select(['cn', 'uid', 'title', 'sn', 'givenname', 'mail', 'purdueEduCampus'])
 				->get();
 
@@ -168,6 +169,7 @@ class PedLdap
 						//$user->puid = $result['puid'][0];
 						$user->username = $result['uid'][0];
 						$user->email = $result['mail'][0];
+						//$user->id = $user->username;
 					}
 
 					$event->results->push($user);

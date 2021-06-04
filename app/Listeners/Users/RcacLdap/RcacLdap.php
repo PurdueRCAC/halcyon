@@ -115,8 +115,8 @@ class RcacLdap
 			if (empty($results))
 			{
 				$results = $ldap->search()
-					->where('uid', '=', $search)
-					->orWhere('uid', '=', $search . '*')
+					->where('uid', 'contains', $search)
+					//->orWhere('uid', '=', $search . '*')
 					->select(['cn', 'uid'])
 					->get();
 			}
@@ -141,6 +141,7 @@ class RcacLdap
 						$user->name = Str::properCaseNoun($result['cn'][0]);
 						$user->username = $result['uid'][0];
 						$user->email = $user->username . '@purdue.edu';
+						//$user->id = $user->username;
 					}
 
 					$usernames[] = $user->username;
