@@ -2,25 +2,23 @@
 namespace App\Modules\Users\Models;
 
 use Illuminate\Notifications\Notifiable;
-//use Illuminate\Contracts\Auth\MustVerifyEmail;
-//use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Halcyon\Config\Registry;
 use App\Halcyon\Access\Gate;
 use App\Halcyon\Access\Map;
+use App\Halcyon\Access\Role;
 use Illuminate\Auth\Authenticatable;
-//use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
-//use Illuminate\Auth\Passwords\CanResetPassword;
-//use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use App\Modules\Users\Events\UserCreating;
 use App\Modules\Users\Events\UserCreated;
 use App\Modules\Users\Events\UserUpdating;
 use App\Modules\Users\Events\UserUpdated;
 use App\Modules\Users\Events\UserDeleted;
+use App\Modules\Users\Events\UserLookup;
 use Carbon\Carbon;
 
 /**
@@ -627,5 +625,64 @@ class User extends Model implements
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Create a new user from a username
+	 *
+	 * @param   string  $username
+	 * @return  User
+	 */
+	public static function createFromUsername($username)
+	{
+		$user = self::findByUsername($username);
+
+		if ($user && $user->id)
+		{
+			return $user;
+		}
+
+		event($event = new UserLookup(['username' => $username]));
+
+		if (count($event->results))
+		{
+			$user = array_shift($event->results);
+		}
+
+		if (!$user)
+		{
+			$user = new self;
+			$user->name = $username;
+		}
+
+		if ($user)
+		{
+			$user->api_token = Str::random(60);
+
+			$newUsertype = config('modules.users.new_usertype');
+
+			if (!$newUsertype)
+			{
+				$newUsertype = Role::findByTitle('Registered')->id;
+			}
+
+			$user->newroles = array($newUsertype);
+
+			if ($user->save())
+			{
+				$userusername = $user->userusername;
+				if (!$userusername || !$userusername->id)
+				{
+					$userusername = new UserUsername;
+				}
+				$userusername->userid = $user->id;
+				$userusername->username = $username;
+				$userusername->save();
+
+				$user->userusername = $userusername;
+			}
+		}
+
+		return $user;
 	}
 }
