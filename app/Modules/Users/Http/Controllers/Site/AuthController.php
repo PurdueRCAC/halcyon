@@ -7,6 +7,9 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Halcyon\Access\Role;
+use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\UserUsername;
 //use App\User;
 
 class AuthController extends Controller
@@ -129,17 +132,26 @@ class AuthController extends Controller
 				//session()->put('cas_user', $cas->user());
 				if (!auth()->user())
 				{
-					//$user = \App\Modules\Users\Models\User::where('username', '=', $cas->user())->first();
-					$user = \App\Modules\Users\Models\User::findByUsername($cas->user());
+					$user = User::findByUsername($cas->user());
+
+					$newUsertype = config('modules.users.new_usertype');
+
+					if (!$newUsertype)
+					{
+						$newUsertype = Role::findByTitle('Registered')->id;
+					}
 
 					if ((!$user || !$user->id) && config('module.users.create_on_login', 1))
 					{
-						$user = new \App\Modules\Users\Models\User;
+						$user = new User;
 						$user->name = $cas->getAttribute('fullname');
+						$user->api_token = Str::random(60);
+
+						$user->newroles = array($newUsertype);
 
 						if ($user->save())
 						{
-							$userusername = new \App\Modules\Users\Models\UserUsername;
+							$userusername = new UserUsername;
 							$userusername->userid = $user->id;
 							$userusername->username = $cas->user();
 							$userusername->save();
@@ -148,6 +160,12 @@ class AuthController extends Controller
 
 					if ($user && $user->id)
 					{
+						if (!count($user->roles))
+						{
+							$user->newroles = array($newUsertype);
+							$user->save();
+						}
+
 						if (!$user->api_token)
 						{
 							$user->api_token = Str::random(60);
