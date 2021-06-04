@@ -26,8 +26,6 @@ class LegacyFiles
 
 			for ($i = 0; $i < count($f); $i++)
 			{
-				$first = array_shift($f);
-
 				$path = 'public/' . implode('/', $f);
 				$path = str_replace('../', '', $path);
 
@@ -35,6 +33,8 @@ class LegacyFiles
 				{
 					return redirect('/files/' . implode('/', $f));//, 301); //Storage::download($path);
 				}
+
+				$first = array_shift($f);
 			}
 		}
 
