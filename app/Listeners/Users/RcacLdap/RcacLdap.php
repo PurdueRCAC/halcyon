@@ -115,7 +115,8 @@ class RcacLdap
 			if (empty($results))
 			{
 				$results = $ldap->search()
-					->where('uid', '=', $search . '*')
+					->where('uid', '=', $search)
+					->orWhere('uid', '=', $search . '*')
 					->select(['cn', 'uid'])
 					->get();
 			}

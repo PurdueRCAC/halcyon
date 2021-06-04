@@ -105,7 +105,8 @@ class PedLdap
 				{
 					// Look for a currently active username in I2A2 matching the request.
 					$results = $ldap->search()
-						->where('uid', '=', $search . '*')
+						->where('uid', '=', $search)
+						->orWhere('uid', '=', $search . '*')
 						->select(['cn', 'uid', 'title', 'purdueEduCampus'])
 						->get();
 				}
@@ -141,7 +142,7 @@ class PedLdap
 
 			// Look for all currently active users in I2A2 with a real name matching the request.
 			$results = $ldap->search()
-				->orWhere('cn', '=', $search)
+				->where('cn', '=', $search)
 				->orWhere('cn', 'ends_with', ' ' . $search)
 				->select(['cn', 'uid', 'title', 'sn', 'givenname', 'mail', 'purdueEduCampus'])
 				->get();

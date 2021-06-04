@@ -68,6 +68,7 @@ class DbmLdap
 	 */
 	public function handleUserSearching(UserSearching $event)
 	{
+		return;
 		$config = $this->config();
 
 		if (empty($config))
