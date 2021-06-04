@@ -52,20 +52,6 @@ class EmailStatusCommand extends Command
 	const ACCOUNT_DENIED = 5;
 
 	/**
-	 * Output help documentation
-	 *
-	 * @return  void
-	 **/
-	public function help()
-	{
-		$this->output
-			 ->getHelpOutput()
-			 ->addOverview('Email order status')
-			 ->addTasks($this)
-			 ->render();
-	}
-
-	/**
 	 * Execute the console command.
 	 */
 	public function handle()
@@ -90,7 +76,10 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP 1: Order Entered
 		//--------------------------------------------------------------------------
-		$this->info('Process new orders pending payment info...');
+		if ($debug)
+		{
+			$this->info('Process new orders pending payment info...');
+		}
 
 		$orders = Order::query()
 			->withTrashed()
@@ -142,7 +131,7 @@ class EmailStatusCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->info("Emailed new order #{$order->id} to {$user->email}.");
+				//$this->info("Emailed new order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -159,7 +148,10 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP 2: Payment information entered
 		//--------------------------------------------------------------------------
-		$this->info('Process new orders pending business office assignment...');
+		if ($debug)
+		{
+			$this->info('Process new orders pending business office assignment...');
+		}
 
 		$orders = Order::query()
 			->withTrashed()
@@ -201,7 +193,7 @@ class EmailStatusCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->info("Emailed pending payment info order #{$order->id} to {$user->email}.");
+				//$this->info("Emailed pending payment info order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -217,7 +209,10 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP 3: Business office approvers assigned
 		//--------------------------------------------------------------------------
-		$this->info('Process new orders pending approval, fulfillment, collection, complete...');
+		if ($debug)
+		{
+			$this->info('Process new orders pending approval, fulfillment, collection, complete...');
+		}
 
 		$orders = Order::query()
 			->withTrashed()
@@ -271,7 +266,7 @@ class EmailStatusCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->info("Emailed pending payment approval order #{$order->id} to {$user->email}.");
+				//$this->info("Emailed pending payment approval order #{$order->id} to {$user->email}.");
 			}
 
 			// Send denied notice if needed
@@ -302,7 +297,7 @@ class EmailStatusCommand extends Command
 
 					Mail::to($user->email)->send($message);
 
-					$this->info("Emailed payment denied for order #{$order->id} to {$user->email}.");
+					//$this->info("Emailed payment denied for order #{$order->id} to {$user->email}.");
 				}
 			}
 
@@ -327,7 +322,10 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP 4: Payment approved, pending fulfillment
 		//--------------------------------------------------------------------------
-		$this->info('Process payment approved, pending fulfillment...');
+		if ($debug)
+		{
+			$this->info('Process payment approved, pending fulfillment...');
+		}
 
 		$orders = Order::query()
 			->withTrashed()
@@ -373,7 +371,7 @@ class EmailStatusCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->info("Emailed pending fulfillment order #{$order->id} to {$user->email}.");
+				//$this->info("Emailed pending fulfillment order #{$order->id} to {$user->email}.");
 			}
 
 			$ticket = false;
@@ -407,7 +405,7 @@ class EmailStatusCommand extends Command
 					Mail::to($user->email)->send($message);
 				}
 
-				$this->info("Emailed order #{$order->id} to {$user->email}.");
+				//$this->info("Emailed order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -422,7 +420,10 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP 5: Order fulfilled, pending collection
 		//--------------------------------------------------------------------------
-		$this->info('Process order fulfilled, pending collection...');
+		if ($debug)
+		{
+			$this->info('Process order fulfilled, pending collection...');
+		}
 
 		$orders = Order::query()
 			->withTrashed()
@@ -468,7 +469,7 @@ class EmailStatusCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->info("Emailed pending collection order #{$order->id} to {$user->email}.");
+				//$this->info("Emailed pending collection order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -483,7 +484,10 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP 6: Order collected and complete
 		//--------------------------------------------------------------------------
-		$this->info('Process order collected and complete...');
+		if ($debug)
+		{
+			$this->info('Process order collected and complete...');
+		}
 
 		$orders = Order::query()
 			->withTrashed()
@@ -524,7 +528,7 @@ class EmailStatusCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->info("Emailed completed order #{$order->id} to {$user->email}.");
+				//$this->info("Emailed completed order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -585,7 +589,7 @@ class EmailStatusCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->info("Emailed canceled order #{$order->id} to {$user->email}.");
+				//$this->info("Emailed canceled order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)

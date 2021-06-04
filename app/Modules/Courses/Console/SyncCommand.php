@@ -61,7 +61,10 @@ class SyncCommand extends Command
 			->where('userid', '>', 0)
 			->get();
 
-		$this->info('Looking up instructor class info ...');
+		if ($debug)
+		{
+			$this->info('Looking up instructor class info ...');
+		}
 
 		foreach ($classdata as $row)
 		{
@@ -76,7 +79,10 @@ class SyncCommand extends Command
 			}
 		}
 
-		$this->info('Looking up enrollment info for each class ...');
+		if ($debug)
+		{
+			$this->info('Looking up enrollment info for each class ...');
+		}
 
 		// Fetch course enrollments
 		$students = array();
@@ -294,7 +300,10 @@ class SyncCommand extends Command
 				{
 					$msg = 'AIMO ACMaint account already exists for ' . $user . ': ' . $event->status;
 
-					$this->info($msg);
+					if ($debug)
+					{
+						$this->info($msg);
+					}
 					if ($log)
 					{
 						error_log($msg);
@@ -315,7 +324,10 @@ class SyncCommand extends Command
 		);
 		$msg = implode(', ', $data);
 
-		$this->info('Class sync - ' . $msg);
+		if ($debug)
+		{
+			$this->info('Class sync - ' . $msg);
+		}
 		if ($log)
 		{
 			error_log($msg);
@@ -344,6 +356,7 @@ class SyncCommand extends Command
 				$msg = 'Would delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
 
 				$this->info($msg);
+
 				if ($log)
 				{
 					error_log($msg);
@@ -372,7 +385,10 @@ class SyncCommand extends Command
 
 				$msg = 'Deleted AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
 
-				$this->success($msg);
+				if ($debug)
+				{
+					$this->success($msg);
+				}
 				if ($log)
 				{
 					error_log($msg);
@@ -382,7 +398,10 @@ class SyncCommand extends Command
 
 		$msg = 'Finished class sync.';
 
-		$this->info($msg);
+		if ($debug)
+		{
+			$this->info($msg);
+		}
 		if ($log)
 		{
 			error_log($msg);

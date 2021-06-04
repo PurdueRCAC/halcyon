@@ -47,7 +47,10 @@ class EmailQueueAuthorizedCommand extends Command
 
 		if (!count($users))
 		{
-			$this->comment('No records to email.');
+			if ($debug)
+			{
+				$this->comment('No records to email.');
+			}
 			return;
 		}
 
@@ -69,7 +72,10 @@ class EmailQueueAuthorizedCommand extends Command
 
 		foreach ($group_activity as $groupid => $groupqueueusers)
 		{
-			$this->line("Starting processing group ID #{$groupid}.");
+			if ($debug)
+			{
+				$this->info("Starting processing group ID #{$groupid}.");
+			}
 
 			// Find the latest activity
 			$latest = 0;
@@ -157,7 +163,7 @@ class EmailQueueAuthorizedCommand extends Command
 
 					Mail::to($user->email)->send($message);
 
-					$this->info("Emailed freeauthorized to {$user->email}.");
+					//$this->info("Emailed freeauthorized to {$user->email}.");
 
 					$r = collect($roles[$userid])->pluck('rolename')->toArray();
 
@@ -191,7 +197,7 @@ class EmailQueueAuthorizedCommand extends Command
 
 					Mail::to($manager->user->email)->send($message);
 
-					$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
+					//$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
 				}
 			}
 		}

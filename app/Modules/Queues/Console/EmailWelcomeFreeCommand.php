@@ -52,7 +52,10 @@ class EmailWelcomeFreeCommand extends Command
 
 		if (!count($users))
 		{
-			$this->comment('No records to email.');
+			if ($debug)
+			{
+				$this->comment('No records to email.');
+			}
 			return;
 		}
 
@@ -160,7 +163,7 @@ class EmailWelcomeFreeCommand extends Command
 				$userqueue->update(['notice' => 0]);
 			}
 
-			$this->info("Emailed welcome (free) to {$u->email}.");
+			//$this->info("Emailed welcome (free) to {$u->email}.");
 		}
 	}
 }

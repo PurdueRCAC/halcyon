@@ -55,7 +55,10 @@ class EmailFreeDeniedCommand extends Command
 
 		if (!count($groupqueueusers))
 		{
-			$this->comment('No records to email.');
+			if ($debug)
+			{
+				$this->comment('No records to email.');
+			}
 			return;
 		}
 
@@ -161,7 +164,7 @@ class EmailFreeDeniedCommand extends Command
 
 					Mail::to($manager->user->email)->send($message);
 
-					$this->info("Emailed freedenied to manager {$manager->user->email}.");
+					//$this->info("Emailed freedenied to manager {$manager->user->email}.");
 				}
 			}
 		}

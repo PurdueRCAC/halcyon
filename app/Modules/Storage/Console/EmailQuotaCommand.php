@@ -48,7 +48,10 @@ class EmailQuotaCommand extends Command
 
 		if (!count($users))
 		{
-			$this->info('No quotas found');
+			if ($debug)
+			{
+				$this->info('No quotas found');
+			}
 			return;
 		}
 
@@ -215,7 +218,7 @@ class EmailQuotaCommand extends Command
 
 					Mail::to($user->email)->send($message);
 
-					$this->info('Emailed exceed quota to ' . $user->email);
+					//$this->info('Emailed exceed quota to ' . $user->email);
 				}
 				// Over threshold, have already notified. Nothing to do.
 				else if ($not->status === 0 && $not->notice === 1)
@@ -234,7 +237,7 @@ class EmailQuotaCommand extends Command
 
 					Mail::to($user->email)->send($message);
 
-					$this->info('Emailed below quota to ' . $user->email);
+					//$this->info('Emailed below quota to ' . $user->email);
 				}
 				// Under threshold, never notified or have notified. Nothing to do.
 				else if ($not->status === 1 && $not->notice === 0)
@@ -271,7 +274,7 @@ class EmailQuotaCommand extends Command
 
 							Mail::to($user->email)->send($message);
 
-							$this->info('Emailed report quota to ' . $user->email);
+							//$this->info('Emailed report quota to ' . $user->email);
 						}
 
 						// Attempt to prevent weird situations of resetting report date.
@@ -288,7 +291,5 @@ class EmailQuotaCommand extends Command
 				}
 			}
 		}
-
-		//$this->info('Finished emailing quota.');
 	}
 }

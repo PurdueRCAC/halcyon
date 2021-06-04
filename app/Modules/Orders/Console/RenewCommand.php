@@ -10,11 +10,11 @@ use Carbon\Carbon;
 class RenewCommand extends Command
 {
 	/**
-	 * The console command name.
+	 * The name and signature of the console command.
 	 *
 	 * @var string
 	 */
-	protected $name = 'orders:renew';
+	protected $signature = 'orders:renew {--debug : Output emails rather than sending}';
 
 	/**
 	 * The console command description.
@@ -30,7 +30,12 @@ class RenewCommand extends Command
 	 */
 	public function handle()
 	{
-		$this->info('Renewing orders...');
+		$debug = $this->option('debug') ? true : false;
+
+		if ($debug)
+		{
+			$this->info('Renewing orders...');
+		}
 		return;
 
 		$query = Item::query();
@@ -147,7 +152,7 @@ class RenewCommand extends Command
 
 				if (!$item)
 				{
-					$this->warning('Failed to find order information for orderitemid #' . $sequence);
+					$this->error('Failed to find order information for orderitemid #' . $sequence);
 					continue;
 				}
 
@@ -203,26 +208,12 @@ class RenewCommand extends Command
 
 				if ($total != $item->price)
 				{
-					$this->warning('Total and item price do not match');
+					$this->error('Total and item price do not match');
 					continue;
 				}
 
 				$item->save();
 			}
 		}
-	}
-
-	/**
-	 * Output help documentation
-	 *
-	 * @return  void
-	 **/
-	public function help()
-	{
-		$this->output
-			 ->getHelpOutput()
-			 ->addOverview('Process auto-renewable orders')
-			 ->addTasks($this)
-			 ->render();
 	}
 }

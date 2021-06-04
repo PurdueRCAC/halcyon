@@ -41,7 +41,10 @@ class EmailRemovedCommand extends Command
 
 		if (!count($users))
 		{
-			$this->comment('No records to email.');
+			if ($debug)
+			{
+				$this->comment('No records to email.');
+			}
 			return;
 		}
 
@@ -133,7 +136,7 @@ class EmailRemovedCommand extends Command
 
 				$groupuser->update(['notice' => 0]);
 
-				$this->info("Emailed ownerremoved to {$user->email}.");
+				//$this->info("Emailed ownerremoved to {$user->email}.");
 			}
 
 			// Email managers
@@ -156,7 +159,7 @@ class EmailRemovedCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->info("Emailed ownerremoved to manager {$user->email}.");
+				//$this->info("Emailed ownerremoved to manager {$user->email}.");
 			}
 		}
 	}

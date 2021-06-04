@@ -49,7 +49,10 @@ class EmailWelcomeClusterCommand extends Command
 
 		if (!count($users))
 		{
-			$this->comment('No records to email.');
+			if ($debug)
+			{
+				$this->comment('No records to email.');
+			}
 			return;
 		}
 
@@ -127,7 +130,7 @@ class EmailWelcomeClusterCommand extends Command
 				$userqueue->update(['notice' => 0]);
 			}
 
-			$this->info("Emailed welcome (cluster) to {$u->email}.");
+			//$this->info("Emailed welcome (cluster) to {$u->email}.");
 		}
 	}
 }

@@ -39,7 +39,10 @@ class EmailCommentsCommand extends Command
 
 		if (!count($comments))
 		{
-			$this->comment('No new comments to email.');
+			if ($debug)
+			{
+				$this->comment('No new comments to email.');
+			}
 			return;
 		}
 
@@ -93,7 +96,7 @@ class EmailCommentsCommand extends Command
 
 					Mail::to($user->email)->send($message);
 
-					$this->info("Emailed comment #{$comment->id} to {$user->email}.");
+					//$this->info("Emailed comment #{$comment->id} to {$user->email}.");
 				}
 			}
 

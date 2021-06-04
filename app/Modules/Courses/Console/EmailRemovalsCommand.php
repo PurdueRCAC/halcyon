@@ -42,7 +42,10 @@ class EmailRemovalsCommand extends Command
 
 		if (!count($members))
 		{
-			$this->comment('No new removals to email.');
+			if ($debug)
+			{
+				$this->comment('No new removals to email.');
+			}
 			return;
 		}
 
@@ -105,7 +108,7 @@ class EmailRemovalsCommand extends Command
 
 			Mail::to($user->email)->send($message);
 
-			$this->info("Emailed course removals to {$user->email}.");
+			//$this->info("Emailed course removals to {$user->email}.");
 
 			// Change states
 			$course->update(['notice' => 0]);

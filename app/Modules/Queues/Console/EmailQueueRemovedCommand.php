@@ -50,7 +50,10 @@ class EmailQueueRemovedCommand extends Command
 
 		if (!count($users))
 		{
-			$this->comment('No records to email.');
+			if ($debug)
+			{
+				$this->comment('No records to email.');
+			}
 			return;
 		}
 
@@ -219,7 +222,7 @@ class EmailQueueRemovedCommand extends Command
 
 					Mail::to($user->email)->send($message);
 
-					$this->info("Emailed queueremoved to {$user->email}.");
+					//$this->info("Emailed queueremoved to {$user->email}.");
 
 					// Change states
 					foreach ($queuestudents as $queueuser)
@@ -247,7 +250,7 @@ class EmailQueueRemovedCommand extends Command
 
 					Mail::to($manager->user->email)->send($message);
 
-					$this->info("Emailed queueremoved to manager {$manager->user->email}.");
+					//$this->info("Emailed queueremoved to manager {$manager->user->email}.");
 				}
 			}
 		}

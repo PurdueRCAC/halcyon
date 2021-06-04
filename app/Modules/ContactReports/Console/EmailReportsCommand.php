@@ -38,7 +38,10 @@ class EmailReportsCommand extends Command
 
 		if (!count($reports))
 		{
-			$this->comment('No new reports to email.');
+			if ($debug)
+			{
+				$this->comment('No new reports to email.');
+			}
 			return;
 		}
 
@@ -85,7 +88,7 @@ class EmailReportsCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->info("Emailed report #{$report->id} to {$user->email}.");
+				//$this->info("Emailed report #{$report->id} to {$user->email}.");
 			}
 
 			if ($debug)

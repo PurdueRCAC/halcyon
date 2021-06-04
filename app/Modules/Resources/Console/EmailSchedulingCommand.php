@@ -63,7 +63,7 @@ class EmailSchedulingCommand extends Command
 			{
 				Mail::to($email)->send($message);
 
-				$this->info("Emailed stopped scheduling to {$email}.");
+				//$this->info("Emailed stopped scheduling to {$email}.");
 
 				foreach ($stopped as $subresource)
 				{
@@ -71,8 +71,9 @@ class EmailSchedulingCommand extends Command
 				}
 			}
 		}
-		else
+		elseif ($debug)
 		{
+			
 			$this->info('No stopped queues found.');
 		}
 
@@ -116,7 +117,7 @@ class EmailSchedulingCommand extends Command
 			{
 				Mail::to($email)->send($message);
 
-				$this->info("Emailed started scheduling to {$email}.");
+				//$this->info("Emailed started scheduling to {$email}.");
 
 				foreach ($started as $subresource)
 				{
@@ -124,7 +125,7 @@ class EmailSchedulingCommand extends Command
 				}
 			}
 		}
-		else
+		elseif ($debug)
 		{
 			$this->info('No newly started queues found.');
 		}

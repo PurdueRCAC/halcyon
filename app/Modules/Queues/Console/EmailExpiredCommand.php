@@ -98,7 +98,10 @@ class EmailExpiredCommand extends Command
 
 		if (!count($queueusers))
 		{
-			$this->comment('No records to email.');
+			if ($debug)
+			{
+				$this->comment('No records to email.');
+			}
 			return;
 		}
 
@@ -148,13 +151,19 @@ class EmailExpiredCommand extends Command
 
 		if (!count($group_activity))
 		{
-			$this->comment('No records to email.');
+			if ($debug)
+			{
+				$this->comment('No records to email.');
+			}
 			return;
 		}
 
 		foreach ($group_activity as $groupid => $queueusers)
 		{
-			$this->line("Starting processing group ID #{$groupid}.");
+			if ($debug)
+			{
+				$this->line("Starting processing group ID #{$groupid}.");
+			}
 
 			$group = Group::find($groupid);
 
@@ -176,7 +185,7 @@ class EmailExpiredCommand extends Command
 
 				Mail::to($manager->user->email)->send($message);
 
-				$this->info("Emailed expired to manager {$manager->user->email}.");
+				//$this->info("Emailed expired to manager {$manager->user->email}.");
 			}
 		}
 	}

@@ -52,7 +52,10 @@ class EmailFreeRequestedCommand extends Command
 
 		if (!count($users))
 		{
-			$this->comment('No records to email.');
+			if ($debug)
+			{
+				$this->comment('No records to email.');
+			}
 			return;
 		}
 
@@ -130,7 +133,7 @@ class EmailFreeRequestedCommand extends Command
 
 					Mail::to($manager->user->email)->send($message);
 
-					$this->info("Emailed freerequested to manager {$manager->user->email}.");
+					//$this->info("Emailed freerequested to manager {$manager->user->email}.");
 				}
 			}
 		}

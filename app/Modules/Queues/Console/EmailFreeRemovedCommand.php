@@ -57,7 +57,10 @@ class EmailFreeRemovedCommand extends Command
 
 		if (!count($users))
 		{
-			$this->comment('No records to email.');
+			if ($debug)
+			{
+				$this->comment('No records to email.');
+			}
 			return;
 		}
 
@@ -238,7 +241,7 @@ class EmailFreeRemovedCommand extends Command
 
 					Mail::to($user->email)->send($message);
 
-					$this->info("Emailed freeremoved to {$user->email}.");
+					//$this->info("Emailed freeremoved to {$user->email}.");
 
 					$r = collect($removals[$userid])->pluck('rolename')->toArray();
 
@@ -287,7 +290,7 @@ class EmailFreeRemovedCommand extends Command
 
 					Mail::to($manager->user->email)->send($message);
 
-					$this->info("Emailed freeremoved to manager {$manager->user->email}.");
+					//$this->info("Emailed freeremoved to manager {$manager->user->email}.");
 				}
 			}
 		}

@@ -43,7 +43,10 @@ class EmailAdditionsCommand extends Command
 
 		if (!count($members))
 		{
-			$this->comment('No new additions to email.');
+			if ($debug)
+			{
+				$this->comment('No new additions to email.');
+			}
 			return;
 		}
 
@@ -106,7 +109,7 @@ class EmailAdditionsCommand extends Command
 
 			Mail::to($user->email)->send($message);
 
-			$this->info("Emailed course additions to {$user->email}.");
+			//$this->info("Emailed course additions to {$user->email}.");
 
 			// Change states
 			$course->update(['notice' => 0]);

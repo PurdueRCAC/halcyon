@@ -42,7 +42,10 @@ class EmailAuthorizedCommand extends Command
 
 		if (!count($users))
 		{
-			$this->comment('No records to email.');
+			if ($debug)
+			{
+				$this->comment('No records to email.');
+			}
 			return;
 		}
 
@@ -116,7 +119,7 @@ class EmailAuthorizedCommand extends Command
 
 				$groupuser->update(['notice' => 0]);
 
-				$this->info("Emailed ownerauthorized to {$user->email}.");
+				//$this->info("Emailed ownerauthorized to {$user->email}.");
 			}
 
 			// Email managers
@@ -139,7 +142,7 @@ class EmailAuthorizedCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->info("Emailed ownerauthorized to manager {$user->email}.");
+				//$this->info("Emailed ownerauthorized to manager {$user->email}.");
 			}
 		}
 	}

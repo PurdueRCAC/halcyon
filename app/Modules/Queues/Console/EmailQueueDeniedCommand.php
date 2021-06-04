@@ -50,7 +50,10 @@ class EmailQueueDeniedCommand extends Command
 
 		if (!count($users))
 		{
-			$this->comment('No records to email.');
+			if ($debug)
+			{
+				$this->comment('No records to email.');
+			}
 			return;
 		}
 
@@ -72,7 +75,10 @@ class EmailQueueDeniedCommand extends Command
 
 		foreach ($group_activity as $groupid => $users)
 		{
-			$this->line("Starting processing group ID #{$groupid}.");
+			if ($debug)
+			{
+				$this->info("Starting processing group ID #{$groupid}.");
+			}
 
 			// Find the latest activity
 			$latest = 0;
@@ -134,7 +140,7 @@ class EmailQueueDeniedCommand extends Command
 
 					Mail::to($user->email)->send($message);
 
-					$this->info("Emailed queuedenied to {$user->email}.");
+					//$this->info("Emailed queuedenied to {$user->email}.");
 
 					// Change states
 					foreach ($queueusers as $queueuser)
@@ -157,7 +163,7 @@ class EmailQueueDeniedCommand extends Command
 
 					Mail::to($manager->user->email)->send($message);
 
-					$this->info("Emailed queuedenied to manager {$manager->user->email}.");
+					//$this->info("Emailed queuedenied to manager {$manager->user->email}.");
 				}
 			}
 		}

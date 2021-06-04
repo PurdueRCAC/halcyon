@@ -41,7 +41,10 @@ class EmailFollowupsCommand extends Command
 
 		if (!count($types))
 		{
-			$this->comment('No contact report types are configured for followups.');
+			if ($debug)
+			{
+				$this->comment('No contact report types are configured for followups.');
+			}
 			return;
 		}
 
@@ -120,13 +123,11 @@ class EmailFollowupsCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->info("Emailed {$type->name} followup to {$user->email}.");
+				//$this->info("Emailed {$type->name} followup to {$user->email}.");
 
 				// Update the record
 				$u->update(['datetimelastnotify' => $now->toDateTimeString()]);
 			}
 		}
-
-		$this->comment('Finished followups.');
 	}
 }
