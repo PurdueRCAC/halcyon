@@ -1416,7 +1416,7 @@ function SaveAccounts() {
 				return;
 			}
 			if (approverinputs[x].value) {
-				posts[count]['approveruserid'] = approverinputs[x].value;
+				posts[count]['approveruserid'] = approverinputs[x].getAttribute('data-id');//value;
 			}
 			total -= amt;
 			count++;
