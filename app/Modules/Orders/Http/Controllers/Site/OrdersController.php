@@ -114,6 +114,10 @@ class OrdersController extends Controller
 			->groupBy($o . '.notice')
 			->groupBy($o . '.submitteruserid')
 			->groupBy($o . '.groupid');
+		if ($filters['product'] != '*')
+		{
+			$subitems->where($i . '.orderproductid', '=', $filters['product']);
+		}
 
 		$query
 			->select([
@@ -218,6 +222,7 @@ class OrdersController extends Controller
 				}
 				if ($filters['product'] != '*')
 				{
+					$sub->leftJoin($i, $i . '.orderid', $o . '.id');
 					$sub->where($i . '.orderproductid', '=', $filters['product']);
 				}
 			}, 'tbaccounts')
