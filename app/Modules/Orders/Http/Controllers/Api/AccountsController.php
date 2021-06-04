@@ -697,7 +697,7 @@ class AccountsController extends Controller
 			// [!] Hackish workaround for resetting date fields
 			//     that don't have a `null` default value.
 			//     TODO: Change the table schema!
-			$db = app('db');
+			/*$db = app('db');
 			$db->table($row->getTable())
 				->where('id', '=', $id)
 				->update([
@@ -706,11 +706,25 @@ class AccountsController extends Controller
 					'datetimedenied' => '0000-00-00 00:00:00'
 				]);
 
-			DB::statement(DB::raw());
+			DB::statement(DB::raw());*/
 
-			//$row->datetimepaid = '0000-00-00 00:00:00';
-			//$row->datetimeapproved = '0000-00-00 00:00:00';
-			//$row->datetimedenied = '0000-00-00 00:00:00';
+			try
+			{
+				ini_set('mysql.connect_timeout', '3');
+				ini_set('output_buffering', '8192');
+
+				$db = mysqli_init();
+				$db->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5);
+				$db->real_connect(config('database.connections.mysql.host'), config('database.connections.mysql.username'), config('database.connections.mysql.password'), config('database.connections.mysql.database'));
+
+				$sql = "UPDATE " . $row->getTable() . " SET `datetimepaid`='0000-00-00 00:00:00', `datetimeapproved`='0000-00-00 00:00:00', `datetimedenied`='0000-00-00 00:00:00' WHERE `id`=$id";
+
+				$result = mysqli_query($db, $sql);
+			}
+			catch (\Exception $e)
+			{
+				// Do nothing
+			}
 
 			if ($row->approveruserid)
 			{
