@@ -223,16 +223,28 @@ class UnixGroupMembersController extends Controller
 	{
 		$request->validate([
 			'unixgroupid' => 'required|integer',
-			'userid' => 'required|integer',
+			'userid' => 'required',
 			'notice' => 'nullable|integer',
 		]);
+
+		$userid = $request->input('userid');
+
+		if (!is_numeric($userid))
+		{
+			$user = User::createFromUsername($userid);
+
+			if ($user && $user->id)
+			{
+				$userid = $user->id;
+			}
+		}
 
 		// Check to see if groups.unixgroup (base) is set
 		$unixgroup = UnixGroup::findOrFail($request->input('unixgroupid'));
 
 		$row = UnixGroupMember::query()
 			->where('unixgroupid', '=', $request->input('unixgroupid'))
-			->where('userid', '=', $request->input('userid'))
+			->where('userid', '=', $userid)
 			->get()
 			->first();
 
@@ -246,14 +258,14 @@ class UnixGroupMembersController extends Controller
 		{
 			$row = new UnixGroupMember;
 			$row->unixgroupid = $request->input('unixgroupid');
-			$row->userid = $request->input('userid');
+			$row->userid = $userid;
 			$row->notice = 2;
 		}
 
 		// Look up the current username of the user being granted access.
-		$user = User::findOrFail($row->userid);
+		$user = User::find($row->userid);
 
-		if ($user->isTrashed())
+		if (!$user || !$user->id || $user->isTrashed())
 		{
 			return response()->json(['message' => trans('groups::groups.user not found')], 409);
 		}

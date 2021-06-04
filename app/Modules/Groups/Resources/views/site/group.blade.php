@@ -593,6 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					},
 					processResults: function (data) {
 						for (var i = 0; i < data.data.length; i++) {
+							data.data[i].id = data.data[i].id > 0 ? data.data[i].id : data.data[i].username;
 							data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
 						}
 
@@ -644,6 +645,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					async: false,
 					success: function (data) {
 						processed['users']++;
+
+						userid = data.userid;
 
 						queues.each(function(k, checkbox){
 							$.ajax({

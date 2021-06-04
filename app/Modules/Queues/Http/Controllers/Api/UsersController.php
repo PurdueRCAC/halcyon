@@ -213,16 +213,28 @@ class UsersController extends Controller
 	{
 		$request->validate([
 			'queueid' => 'required|integer',
-			'userid' => 'required|integer',
+			'userid' => 'required',
 			'userrequestid' => 'nullable|integer',
 			'membertype' => 'nullable|integer',
 		]);
+
+		$userid = $request->input('userid');
+
+		if (!is_numeric($userid))
+		{
+			$user = User::createFromUsername($userid);
+
+			if ($user && $user->id)
+			{
+				$userid = $user->id;
+			}
+		}
 
 		$queue = Queue::findOrFail($request->input('queueid'));
 
 		$row = QueueUser::query()
 			->where('queueid', '=', $request->input('queueid'))
-			->where('userid', '=', $request->input('userid'))
+			->where('userid', '=', $userid)
 			->get()
 			->first();
 
@@ -236,7 +248,7 @@ class UsersController extends Controller
 		{
 			$row = new QueueUser();
 			$row->queueid = $request->input('queueid');
-			$row->userid = $request->input('userid');
+			$row->userid = $userid;
 			if ($request->has('userrequestid'))
 			{
 				$row->userrequestid = $request->input('userrequestid');
@@ -247,9 +259,9 @@ class UsersController extends Controller
 		}
 
 		// Look up the current username of the user being granted access.
-		$user = User::findOrFail($row->userid);
+		$user = User::find($row->userid);
 
-		if ($user->isTrashed())
+		if (!$user || !$user->id || $user->isTrashed())
 		{
 			return response()->json(['message' => trans('global.error.user not found')], 409);
 		}

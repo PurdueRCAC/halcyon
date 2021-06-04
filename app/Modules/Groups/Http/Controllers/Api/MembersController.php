@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
+use App\Modules\Users\Models\User;
 
 /**
  * Group Members
@@ -225,13 +226,28 @@ class MembersController extends Controller
 	{
 		$request->validate([
 			'groupid' => 'required|integer',
-			'userid' => 'required|integer',
+			'userid' => 'required',
 			'membertype' => 'nullable|integer',
 			'userrequestid' => 'nullable|integer',
 		]);
 
 		$groupid = $request->input('groupid');
 		$userid  = $request->input('userid');
+
+		if (!is_numeric($userid))
+		{
+			//$user = User::findByUsername($userid);
+
+			//if (!$user || !$user->id)
+			//{
+				$user = User::createFromUsername($userid);
+			//}
+
+			if ($user && $user->id)
+			{
+				$userid = $user->id;
+			}
+		}
 
 		$row = Member::findByGroupAndUser($groupid, $userid);
 
@@ -251,7 +267,7 @@ class MembersController extends Controller
 
 		if (!$row->user)
 		{
-			return response()->json(['message' => trans('groups::groups.error.invalid user id')], 415);
+			return response()->json(['message' => trans('groups::groups.error.invalid user id' . $request->input('userid'))], 415);
 		}
 
 		// Do not allow non-admins to remove himself as an owner.
