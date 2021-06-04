@@ -864,7 +864,8 @@ document.addEventListener('DOMContentLoaded', function() {
 @endpush
 
 @php
-$canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own groups') && $group->isManager(auth()->user()));
+//$canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own groups') && $group->isManager(auth()->user()));
+$canManage = auth()->user()->can('manage groups') || ((auth()->user()->can('edit groups') || auth()->user()->can('edit.own groups')) && $group->isManager(auth()->user()));
 $subsection = request()->segment(4);
 $subsection = $subsection ?: 'overview';
 

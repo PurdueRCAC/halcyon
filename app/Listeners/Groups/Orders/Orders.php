@@ -30,7 +30,9 @@ class Orders
 		$group = $event->getGroup();
 		$user = auth()->user();
 
-		if (!$user || !($user->can('edit groups') || ($user->can('edit.own groups') && $group->isManager($user))))
+		$canManage = auth()->user()->can('manage groups') || ((auth()->user()->can('edit groups') || auth()->user()->can('edit.own groups')) && $group->isManager(auth()->user()));
+
+		if (!$user || !$canManage)
 		{
 			return;
 		}

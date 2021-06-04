@@ -73,7 +73,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.groups.departments.create',
 			'uses' => 'DepartmentsController@create',
-			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
+			'middleware' => ['auth:api', 'can:manage groups'],
 		]);
 		$router->get('{id}', [
 			'as' => 'api.groups.departments.read',
@@ -83,12 +83,12 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.groups.departments.update',
 			'uses' => 'DepartmentsController@update',
-			'middleware' => ['auth:api', 'can:edit groups.departments'],
+			'middleware' => ['auth:api', 'can:manage groups'],
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.groups.departments.delete',
 			'uses' => 'DepartmentsController@delete',
-			'middleware' => ['auth:api', 'can:delete groups.departments'],
+			'middleware' => ['auth:api', 'can:manage groups'],
 		])->where('id', '[0-9]+');
 	});
 
@@ -102,7 +102,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.groups.fieldsofscience.create',
 			'uses' => 'FieldsOfScienceController@create',
-			'middleware' => ['auth:api', 'can:edit groups.fieldsofscience'],
+			'middleware' => ['auth:api', 'can:manage groups'],
 		]);
 		$router->get('{id}', [
 			'as' => 'api.groups.fieldsofscience.read',
@@ -112,12 +112,12 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.groups.fieldsofscience.update',
 			'uses' => 'FieldsOfScienceController@update',
-			'middleware' => ['auth:api', 'can:edit groups.fieldsofscience'],
+			'middleware' => ['auth:api', 'can:manage groups'],
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.groups.fieldsofscience.delete',
 			'uses' => 'FieldsOfScienceController@delete',
-			'middleware' => ['auth:api', 'can:delete groups.fieldsofscience'],
+			'middleware' => ['auth:api', 'can:manage groups'],
 		])->where('id', '[0-9]+');
 	});
 
