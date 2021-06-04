@@ -104,10 +104,10 @@ var UserRequests = {
 	 * @return  {void}
 	 */
 	Approve: function(requests) {
-		for (var request in requests) {
+		for (var i=0; i < requests.length; i++) {
 			UserRequests.approvepending++;
 
-			WSPutURL(request, '{}', function(xml) {
+			WSPutURL(requests[i], '{}', function(xml) {
 				if (xml.status < 400) {
 					UserRequests.approvepending--;
 
@@ -128,10 +128,10 @@ var UserRequests = {
 	 * @return  {void}
 	 */
 	Reject: function(requests) {
-		for (var request in requests) {
+		for (var i=0; i < requests.length; i++) {
 			UserRequests.approvepending++;
 
-			WSDeleteURL(request, function(xml) {
+			WSDeleteURL(requests[i], function(xml) {
 				if (xml.status < 400) {
 					UserRequests.rejectpending--;
 
