@@ -304,6 +304,8 @@ class MembersController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
+		$row->api = route('api.groups.members.read', ['id' => $row->id]);
+
 		return $row;
 	}
 

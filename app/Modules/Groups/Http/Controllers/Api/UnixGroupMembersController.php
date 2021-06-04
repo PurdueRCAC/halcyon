@@ -115,6 +115,7 @@ class UnixGroupMembersController extends Controller
 		$filters = array(
 			'search'   => $request->input('search'),
 			'unixgroupid'   => $request->input('groupid'),
+			'userid' => $request->input('userid'),
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
 			// Sorting
@@ -159,6 +160,11 @@ class UnixGroupMembersController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
+
+		$rows->map(function($row, $key)
+		{
+			$row->api = route('api.unixgroups.members.read', ['id' => $row->id]);
+		});
 
 		return new ResourceCollection($rows);
 	}
@@ -287,6 +293,8 @@ class UnixGroupMembersController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
+		$row->api = route('api.unixgroups.members.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
@@ -311,6 +319,7 @@ class UnixGroupMembersController extends Controller
 	public function read($id)
 	{
 		$row = UnixGroupMember::findOrFail($id);
+		$row->api = route('api.unixgroups.members.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -366,6 +375,8 @@ class UnixGroupMembersController extends Controller
 		{
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
+
+		$row->api = route('api.unixgroups.members.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
