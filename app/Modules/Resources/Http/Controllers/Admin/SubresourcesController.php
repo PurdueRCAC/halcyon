@@ -140,7 +140,7 @@ class SubresourcesController extends Controller
 			$row->fill($fields);
 		}
 
-		$resourceid = $row->association->resourceid;
+		$resourceid = $row->association ? $row->association->resourceid : 0;
 
 		$parents  = (new Asset)->tree();
 

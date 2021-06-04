@@ -39,7 +39,8 @@ class Queues
 		}
 
 		// Create roles as necessary
-		if ($queue->scheduler->resource
+		if ($queue->scheduler
+		 && $queue->scheduler->resource
 		 && $queue->scheduler->resource->rolename)
 		{
 			foreach ($queue->group->managers as $user)
