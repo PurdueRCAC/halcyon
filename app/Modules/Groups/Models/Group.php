@@ -167,8 +167,9 @@ class Group extends Model
 		$u = (new \App\Modules\Users\Models\UserUsername)->getTable();
 
 		$managers = $this->members()
+			->withTrashed()
 			->select($m . '.*')
-			->join($u, $u . '.id', $m . '.userid')
+			->join($u, $u . '.userid', $m . '.userid')
 			->where(function($where) use ($u)
 			{
 				$where->whereNull($u . '.dateremoved')
