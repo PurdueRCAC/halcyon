@@ -423,7 +423,7 @@ $members = $members->sortBy('username');
 							<td class="col-queue text-nowrap text-center">
 								<input type="checkbox"
 									class="membership-toggle queue-toggle"
-									name="queue[{{ $queue->id }}]"{{ $checked }}
+									name="queue[{{ $queue->id }}]"{!! $checked !!}
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
 									data-api="{{ $checked && !$disable ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
@@ -589,6 +589,7 @@ $members = $members->sortBy('username');
 										name="queue[{{ $queue->id }}]"{{ $checked }}
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $queue->id }}"
+										data-api-create="{{ route('api.queues.users.create') }}"
 										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
 										value="1" />
 								</td>
@@ -620,6 +621,7 @@ $members = $members->sortBy('username');
 										name="unix[{{ $unix->id }}]"{{ $checked }}
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $unix->id }}"
+										data-api-create="{{ route('api.unixgroups.members.create') }}"
 										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
 										value="1" />
 								</td>

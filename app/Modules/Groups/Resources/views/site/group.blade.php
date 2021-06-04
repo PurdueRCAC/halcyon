@@ -782,24 +782,27 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('body').on('change', '.membership-toggle', function(e){
 			e.preventDefault();
 
-			if ($(this).is(':checked')) {
+			var bx = $(this);
+
+			if (bx.is(':checked')) {
 				var post = {
 					userid: $(this).data('userid')
 				};
 				if ($(this).hasClass('queue-toggle')) {
 					post['groupid'] = $('#groupid').val();
-					post['queueid'] = $(this).data('objectid');
+					post['queueid'] = bx.data('objectid');
 				} else {
-					post['unixgroupid'] = $(this).data('objectid');
+					post['unixgroupid'] = bx.data('objectid');
 				}
 
 				$.ajax({
-					url: $(this).data('api'),
+					url: bx.data('api'),
 					type: 'post',
 					data: post,
 					dataType: 'json',
 					async: false,
 					success: function (data) {
+						bx.data('api', data.api);
 					},
 					error: function (xhr, ajaxOptions, thrownError) {
 						if (xhr.status == 416) {
@@ -811,11 +814,12 @@ document.addEventListener('DOMContentLoaded', function() {
 				});
 			} else {
 				$.ajax({
-					url: $(this).data('api'),
+					url: bx.data('api'),
 					type: 'delete',
 					dataType: 'json',
 					async: false,
 					success: function (data) {
+						bx.data('api', bx.data('api-create'));
 					},
 					error: function (xhr, ajaxOptions, thrownError) {
 						if (xhr.status == 416) {
