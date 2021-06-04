@@ -118,6 +118,7 @@ class EmailFollowupsCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed {$type->name} followup to {$user->email}.");
 					continue;
 				}
 

@@ -96,7 +96,10 @@ class EmailFreeDeniedCommand extends Command
 
 				if (!$group)
 				{
-					$this->error('Could not find group #' . $groupid);
+					if ($debug)
+					{
+						$this->error('Could not find group #' . $groupid);
+					}
 					continue;
 				}
 
@@ -122,7 +125,10 @@ class EmailFreeDeniedCommand extends Command
 
 					if (!$user)
 					{
-						$this->error('Could not find account for user #' . $userid);
+						if ($debug)
+						{
+							$this->error('Could not find account for user #' . $userid);
+						}
 						continue;
 					}
 
@@ -136,12 +142,13 @@ class EmailFreeDeniedCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed freedenied to {$user->email}.");
 						continue;
 					}
 
 					Mail::to($user->email)->send($message);
 
-					$this->info("Emailed freedenied to {$user->email}.");
+					//$this->info("Emailed freedenied to {$user->email}.");
 
 					// Change states
 					foreach ($queueusers as $queueuser)
@@ -159,6 +166,7 @@ class EmailFreeDeniedCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed freedenied to manager {$manager->user->email}.");
 						continue;
 					}
 

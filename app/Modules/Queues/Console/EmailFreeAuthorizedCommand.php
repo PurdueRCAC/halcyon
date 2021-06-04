@@ -133,7 +133,10 @@ class EmailFreeAuthorizedCommand extends Command
 
 					if (!$user)
 					{
-						$this->error('Could not find account for user #' . $userid);
+						if ($debug)
+						{
+							$this->error('Could not find account for user #' . $userid);
+						}
 						continue;
 					}
 
@@ -189,6 +192,7 @@ class EmailFreeAuthorizedCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed freeauthorized to {$user->email}.");
 						continue;
 					}
 
@@ -230,6 +234,7 @@ class EmailFreeAuthorizedCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
 						continue;
 					}
 

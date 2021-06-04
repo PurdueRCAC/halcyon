@@ -75,13 +75,19 @@ class EmailQueueRequestedCommand extends Command
 
 			if (!$group)
 			{
-				$this->error('Could not find group #' . $groupid);
+				if ($debug)
+				{
+					$this->error('Could not find group #' . $groupid);
+				}
 				continue;
 			}
 
 			if (!count($group->managers))
 			{
-				$this->error('No active managers found for group #' . $groupid);
+				if ($debug)
+				{
+					$this->error('No active managers found for group #' . $groupid);
+				}
 				continue;
 			}
 
@@ -114,7 +120,10 @@ class EmailQueueRequestedCommand extends Command
 					if (!$user)
 					{
 						unset($user_activity[$userid]);
-						$this->error('Could not find account for user #' . $userid);
+						if ($debug)
+						{
+							$this->error('Could not find account for user #' . $userid);
+						}
 						continue;
 					}
 

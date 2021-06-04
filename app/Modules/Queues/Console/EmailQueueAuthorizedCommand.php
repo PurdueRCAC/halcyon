@@ -192,6 +192,7 @@ class EmailQueueAuthorizedCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
 						continue;
 					}
 

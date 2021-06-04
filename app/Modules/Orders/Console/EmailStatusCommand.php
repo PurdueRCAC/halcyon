@@ -126,6 +126,7 @@ class EmailStatusCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed new order #{$order->id} to {$user->email}.");
 					continue;
 				}
 
@@ -188,6 +189,7 @@ class EmailStatusCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed pending payment info order #{$order->id} to {$user->email}.");
 					continue;
 				}
 
@@ -261,6 +263,7 @@ class EmailStatusCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed pending payment approval order #{$order->id} to {$user->email}.");
 					continue;
 				}
 
@@ -292,6 +295,7 @@ class EmailStatusCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed payment denied for order #{$order->id} to {$user->email}.");
 						continue;
 					}
 
@@ -366,6 +370,7 @@ class EmailStatusCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed pending fulfillment order #{$order->id} to {$user->email}.");
 					continue;
 				}
 
@@ -399,6 +404,7 @@ class EmailStatusCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed order #{$order->id} to {$user->email}.");
 				}
 				else
 				{
@@ -464,6 +470,7 @@ class EmailStatusCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed pending collection order #{$order->id} to {$user->email}.");
 					continue;
 				}
 
@@ -523,6 +530,7 @@ class EmailStatusCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed completed order #{$order->id} to {$user->email}.");
 					continue;
 				}
 
@@ -543,7 +551,10 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP CANCELED: Order canceled
 		//--------------------------------------------------------------------------
-		$this->info('Process canceled...');
+		if ($debug)
+		{
+			$this->info('Process canceled...');
+		}
 
 		$orders = Order::query()
 			->withTrashed()
@@ -584,6 +595,7 @@ class EmailStatusCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed canceled order #{$order->id} to {$user->email}.");
 					continue;
 				}
 

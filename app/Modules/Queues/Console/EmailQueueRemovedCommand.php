@@ -91,7 +91,10 @@ class EmailQueueRemovedCommand extends Command
 
 				if (!$group)
 				{
-					$this->error('Could not find group #' . $groupid);
+					if ($debug)
+					{
+						$this->error('Could not find group #' . $groupid);
+					}
 					continue;
 				}
 
@@ -118,7 +121,10 @@ class EmailQueueRemovedCommand extends Command
 
 					if (!$user)
 					{
-						$this->error('Could not find account for user #' . $userid);
+						if ($debug)
+						{
+							$this->error('Could not find account for user #' . $userid);
+						}
 						continue;
 					}
 
@@ -217,6 +223,7 @@ class EmailQueueRemovedCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed queueremoved to {$user->email}.");
 						continue;
 					}
 
@@ -245,6 +252,7 @@ class EmailQueueRemovedCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed queueremoved to manager {$manager->user->email}.");
 						continue;
 					}
 

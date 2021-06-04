@@ -129,6 +129,7 @@ class EmailRemovedCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed ownerremoved to {$user->email}.");
 					continue;
 				}
 
@@ -154,6 +155,7 @@ class EmailRemovedCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed ownerremoved to manager {$user->email}.");
 					continue;
 				}
 

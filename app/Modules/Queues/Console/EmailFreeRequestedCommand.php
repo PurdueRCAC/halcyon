@@ -93,7 +93,10 @@ class EmailFreeRequestedCommand extends Command
 
 				if (!$group)
 				{
-					$this->error('Could not find group #' . $groupid);
+					if ($debug)
+					{
+						$this->error('Could not find group #' . $groupid);
+					}
 					continue;
 				}
 
@@ -128,6 +131,7 @@ class EmailFreeRequestedCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed freerequested to manager {$manager->user->email}.");
 						continue;
 					}
 

@@ -98,7 +98,10 @@ class EmailFreeRemovedCommand extends Command
 
 				if (!$group)
 				{
-					$this->error('Could not find group #' . $groupid);
+					if ($debug)
+					{
+						$this->error('Could not find group #' . $groupid);
+					}
 					continue;
 				}
 
@@ -127,7 +130,10 @@ class EmailFreeRemovedCommand extends Command
 
 					if (!$user)
 					{
-						$this->error('Could not find account for user #' . $userid);
+						if ($debug)
+						{
+							$this->error('Could not find account for user #' . $userid);
+						}
 						continue;
 					}
 
@@ -236,6 +242,7 @@ class EmailFreeRemovedCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed freeremoved to {$user->email}.");
 						continue;
 					}
 
@@ -285,6 +292,7 @@ class EmailFreeRemovedCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed freeremoved to manager {$manager->user->email}.");
 						continue;
 					}
 

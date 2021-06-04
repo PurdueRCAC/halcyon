@@ -112,6 +112,7 @@ class EmailAuthorizedCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed ownerauthorized to {$user->email}.");
 					continue;
 				}
 
@@ -137,6 +138,7 @@ class EmailAuthorizedCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed ownerauthorized to manager {$user->email}.");
 					continue;
 				}
 

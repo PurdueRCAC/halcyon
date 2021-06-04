@@ -112,7 +112,10 @@ class EmailExpiredCommand extends Command
 		{
 			if (!$queueuser->queue)
 			{
-				$this->error("Could not find queue for #{$queueuser->queueid}.");
+				if ($debug)
+				{
+					$this->error("Could not find queue for #{$queueuser->queueid}.");
+				}
 				continue;
 			}
 
@@ -120,7 +123,10 @@ class EmailExpiredCommand extends Command
 
 			if (!$resource)
 			{
-				$this->error("Could not find resource for #{$queueuser->id}.");
+				if ($debug)
+				{
+					$this->error("Could not find resource for #{$queueuser->id}.");
+				}
 				continue;
 			}
 
@@ -131,7 +137,7 @@ class EmailExpiredCommand extends Command
 			//  1 = NO_ROLE_EXISTS
 			if ($event->status <= 1)
 			{
-				if ($event->status < 0)
+				if ($event->status < 0 && $debug)
 				{
 					$this->error("Something bad happened looking up resource member status for " . $resource->id . '.' . $queueuser->userid);
 				}
@@ -180,6 +186,7 @@ class EmailExpiredCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed expired to manager {$manager->user->email}.");
 					continue;
 				}
 

@@ -74,7 +74,10 @@ class EmailWelcomeClusterCommand extends Command
 
 			if (!$u)
 			{
-				$this->error('Could not find account for user ID #' . $userid);
+				if ($debug)
+				{
+					$this->error('Could not find account for user ID #' . $userid);
+				}
 				continue;
 			}
 
@@ -120,6 +123,7 @@ class EmailWelcomeClusterCommand extends Command
 			if ($debug)
 			{
 				echo $message->render();
+				$this->info("Emailed welcome (cluster) to {$u->email}.");
 				continue;
 			}
 

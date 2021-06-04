@@ -58,6 +58,7 @@ class EmailSchedulingCommand extends Command
 			if ($debug)
 			{
 				echo $message->render();
+				$this->info("Emailed stopped scheduling to {$email}.");
 			}
 			else
 			{
@@ -112,6 +113,7 @@ class EmailSchedulingCommand extends Command
 			if ($debug)
 			{
 				echo $message->render();
+				$this->info("Emailed started scheduling to {$email}.");
 			}
 			else
 			{

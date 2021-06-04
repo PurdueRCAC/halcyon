@@ -96,7 +96,10 @@ class EmailQueueDeniedCommand extends Command
 
 				if (!$group)
 				{
-					$this->error('Could not find group #' . $groupid);
+					if ($debug)
+					{
+						$this->error('Could not find group #' . $groupid);
+					}
 					continue;
 				}
 
@@ -121,7 +124,10 @@ class EmailQueueDeniedCommand extends Command
 
 					if (!$user)
 					{
-						$this->error('Could not find account for user #' . $userid);
+						if ($debug)
+						{
+							$this->error('Could not find account for user #' . $userid);
+						}
 						continue;
 					}
 
@@ -135,6 +141,7 @@ class EmailQueueDeniedCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed queuedenied to {$user->email}.");
 						continue;
 					}
 
@@ -158,6 +165,7 @@ class EmailQueueDeniedCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed queuedenied to manager {$manager->user->email}.");
 						continue;
 					}
 

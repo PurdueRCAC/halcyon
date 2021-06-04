@@ -83,6 +83,7 @@ class EmailReportsCommand extends Command
 				if ($debug)
 				{
 					echo $message->render();
+					$this->info("Emailed report #{$report->id} to {$user->email}.");
 					continue;
 				}
 

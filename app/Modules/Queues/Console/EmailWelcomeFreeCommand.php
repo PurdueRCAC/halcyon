@@ -77,7 +77,10 @@ class EmailWelcomeFreeCommand extends Command
 
 			if (!$u)
 			{
-				$this->error('Could not find account for user ID #' . $userid);
+				if ($debug)
+				{
+					$this->error('Could not find account for user ID #' . $userid);
+				}
 				continue;
 			}
 
@@ -90,13 +93,19 @@ class EmailWelcomeFreeCommand extends Command
 			{
 				if (!file_exists($u->loginShell))
 				{
-					$this->error('Login Shell ' . $u->loginShell . ' is invalid.');
+					if ($debug)
+					{
+						$this->error('Login Shell ' . $u->loginShell . ' is invalid.');
+					}
 					continue;
 				}
 			}
 			else
 			{
-				$this->error('Login Shell is not set for user ID #' . $userid);
+				if ($debug)
+				{
+					$this->error('Login Shell is not set for user ID #' . $userid);
+				}
 				continue;
 			}
 
@@ -153,6 +162,7 @@ class EmailWelcomeFreeCommand extends Command
 			if ($debug)
 			{
 				echo $message->render();
+				$this->info("Emailed welcome (free) to {$u->email}.");
 				continue;
 			}
 

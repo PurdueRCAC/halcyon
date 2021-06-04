@@ -91,6 +91,7 @@ class EmailCommentsCommand extends Command
 					if ($debug)
 					{
 						echo $message->render();
+						$this->info("Emailed comment #{$comment->id} to {$user->email}.");
 						continue;
 					}
 
