@@ -27,7 +27,7 @@ $standby = false;
 	<tbody>
 		<tr>
 			<th scope="row"><strong>User guide</strong></th>
-			<td><a href="{{ route('site.knowledge.page', ['uri' => $data->resource->listname]) }}">{{ route('site.knowledge.page', ['uri' => $data->resource->listname]) }}</a></td>
+			<td><a href="{{ route('site.knowledge.page', ['uri' => ($data->resource->listname ? $data->resource->listname : $data->resource->rolename)]) }}">{{ route('site.knowledge.page', ['uri' => ($data->resource->listname ? $data->resource->listname : $data->resource->rolename)]) }}</a></td>
 		</tr>
 		<tr>
 			<th scope="row"><strong>Front-end</strong></th>
