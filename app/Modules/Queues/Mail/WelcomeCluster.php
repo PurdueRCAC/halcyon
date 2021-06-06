@@ -44,7 +44,7 @@ class WelcomeCluster extends Mailable
 	public function build()
 	{
 		return $this->markdown('queues::mail.welcome.cluster')
-					->subject(trans('queues::mail.welcom.cluster'))
+					->subject(trans('queues::mail.welcome.cluster'))
 					->with([
 						'user' => $this->user,
 						'activity' => $this->activity,
