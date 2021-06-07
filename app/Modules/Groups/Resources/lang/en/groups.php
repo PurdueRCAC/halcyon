@@ -58,4 +58,8 @@ return [
 		'description' => 'Any actions taken by managers of this group are listed below. There may be a short delay in actions showing up in the log.',
 		'error' => 'An error occurred while performing this action. Action may not have completed.',
 	],
+	'mail' => [
+		'ownerauthorized' => 'Manager Approved',
+		'ownerremoved' => 'Manager Removed',
+	],
 ];

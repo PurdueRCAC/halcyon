@@ -47,7 +47,7 @@ class OwnerRemoved extends Mailable
 	public function build()
 	{
 		return $this->markdown('groups::mail.ownerremoved.user')
-					->subject(trans('groups::mail.ownerremoved'))
+					->subject(trans('groups::groups.mail.ownerremoved'))
 					->with([
 						'user' => $this->user,
 						'group' => $this->group

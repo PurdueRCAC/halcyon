@@ -47,7 +47,7 @@ class OwnerAuthorized extends Mailable
 	public function build()
 	{
 		return $this->markdown('groups::mail.ownerauthorized.user')
-					->subject(trans('groups::mail.ownerauthorized'))
+					->subject(trans('groups::groups.mail.ownerauthorized'))
 					->with([
 						'user' => $this->user,
 						'group' => $this->group
