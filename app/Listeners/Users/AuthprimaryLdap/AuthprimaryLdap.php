@@ -302,7 +302,7 @@ class AuthprimaryLdap
 	 * @param   ResourceMemberCreated  $event
 	 * @return  void
 	 */
-	public function handleResourceMemberCreating(ResourceMemberCreating $event)
+	public function handleResourceMemberCreated(ResourceMemberCreated $event)
 	{
 		// Make sure config is set
 		$configall = $this->config('all');
