@@ -327,6 +327,10 @@ class MembersController extends Controller
 				return response()->json(null, 403);
 			}
 		}
+		else
+		{
+			$owned = $user->groups->pluck('id')->toArray();
+		}
 
 		// Check for other queue memberships on this resource that might conflict with removing the role
 		$rows = 0;

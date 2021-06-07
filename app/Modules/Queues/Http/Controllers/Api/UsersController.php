@@ -564,6 +564,8 @@ class UsersController extends Controller
 		{
 			$rows = 0;
 
+			$owned = $row->user->groups->pluck('id')->toArray();
+
 			$resources = Asset::query()
 				->withTrashed()
 				->whereIsActive()
