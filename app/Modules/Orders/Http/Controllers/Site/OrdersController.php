@@ -149,7 +149,7 @@ class OrdersController extends Controller
 			{
 				$sub->select(
 					//$o . '.*',
-					DB::raw("DISTINCT $o.*"),
+					DB::raw("DISTINCT $o.*, $a.approveruserid"),
 					//DB::raw('SUM(' . $i . '.price) AS ordertotal'),
 					DB::raw("COUNT(" . $a . ".id) AS accounts"),
 					//DB::raw("COUNT(" . $i . ".id) AS items_count"),
