@@ -43,8 +43,10 @@ class SyncCommand extends Command
 		$log   = $this->option('log') ? true : false;
 
 		$msg = 'Starting class sync.';
-
-		$this->info($msg);
+		if ($debug)
+		{
+			$this->info($msg);
+		}
 		if ($log)
 		{
 			error_log($msg);
@@ -338,7 +340,7 @@ class SyncCommand extends Command
 		if ((count($remove_users) - count($create_users)) > count($users))
 		{
 			// TODO: how can we detect and allow normal wipeage during semester turnover?
-			$msg = 'Deleting more users than we will have left. This seems wrong!';
+			$msg = 'Deleting more users than we will have left. This seems wrong! Removing ' . count($remove_users) . ' of ' . count($users) . ' total.';
 
 			$this->error($msg);
 			if ($log)
