@@ -110,6 +110,10 @@ class OrdersController extends Controller
 			->groupBy($o . '.notice')
 			->groupBy($o . '.submitteruserid')
 			->groupBy($o . '.groupid');
+		/*if ($filters['product'] != '*')
+		{
+			$subitems->where($i . '.orderproductid', '=', $filters['product']);
+		}*/
 		/*"SELECT DISTINCT orders.id, orders.userid, orders.submitteruserid, orders.groupid, orders.datetimecreated, orders.datetimeremoved,
 			GROUP_CONCAT(orderproducts.ordercategoryid SEPARATOR ',') AS ordercategoryid,
 			SUM(orderitems.price) AS ordertotal,
@@ -222,6 +226,7 @@ class OrdersController extends Controller
 					$p = (new Product())->getTable();
 					//$i = (new Item())->getTable();
 
+					$sub->join($i, $i . '.orderid', $o . '.id');
 					$sub->join($p, $p . '.id', $i . '.orderproductid')
 						->where($p . '.ordercategoryid', '=', $filters['category']);
 				}

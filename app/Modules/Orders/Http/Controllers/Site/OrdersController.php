@@ -212,6 +212,11 @@ class OrdersController extends Controller
 					$sub->where($o . '.datetimecreated', '<', $filters['end']);
 				}
 
+				if ($filters['category'] != '*' || $filters['product'] != '*')
+				{
+					$sub->join($i, $i . '.orderid', $o . '.id');
+				}
+
 				if ($filters['category'] != '*')
 				{
 					$p = (new Product())->getTable();
@@ -222,7 +227,6 @@ class OrdersController extends Controller
 				}
 				if ($filters['product'] != '*')
 				{
-					$sub->leftJoin($i, $i . '.orderid', $o . '.id');
 					$sub->where($i . '.orderproductid', '=', $filters['product']);
 				}
 			}, 'tbaccounts')
