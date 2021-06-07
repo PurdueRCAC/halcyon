@@ -357,7 +357,7 @@ class Group extends Model
 				$allocatedbytes = $b->bytes;
 			}
 
-			$bucket['unallocatedbytes'] = ($bucket['totalbytes'] - $allocated[$bucket['resourceid']]);
+			$bucket['unallocatedbytes'] = abs($bucket['totalbytes'] - $allocated[$bucket['resourceid']]);
 			$bucket['allocatedbytes'] = $allocatedbytes;
 		}
 

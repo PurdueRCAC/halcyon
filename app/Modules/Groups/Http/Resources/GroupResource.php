@@ -194,7 +194,7 @@ class GroupResource extends JsonResource
 
 		foreach ($buckets as $k => $v)
 		{
-			$buckets[$k]['unallocatedbytes'] = ($buckets[$k]['allocatedbytes'] - $buckets[$k]['totalbytes']);
+			$buckets[$k]['unallocatedbytes'] = abs($buckets[$k]['allocatedbytes'] - $buckets[$k]['totalbytes']);
 		}
 
 		$data['storagebuckets'] = $buckets;
