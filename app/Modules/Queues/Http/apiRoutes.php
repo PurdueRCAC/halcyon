@@ -14,7 +14,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.queues.types.create',
 			'uses' => 'TypesController@create',
-			'middleware' => 'can:create queues.types',
+			'middleware' => 'can:manage queues',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.queues.types.read',
@@ -23,12 +23,12 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.queues.types.update',
 			'uses' => 'TypesController@update',
-			'middleware' => 'can:edit queues.types',
+			'middleware' => 'can:manage queues',
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.queues.types.delete',
 			'uses' => 'TypesController@delete',
-			'middleware' => 'can:delete queues.types',
+			'middleware' => 'can:manage queues',
 		])->where('id', '[0-9]+');
 	});
 
@@ -41,7 +41,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.queues.walltimes.create',
 			'uses' => 'WalltimesController@create',
-			'middleware' => 'can:create queues.walltimes',
+			'middleware' => 'can:edit queues|edit.own queues',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.queues.walltimes.read',
@@ -50,12 +50,12 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.queues.walltimes.update',
 			'uses' => 'WalltimesController@update',
-			'middleware' => 'can:edit queues.walltimes',
+			'middleware' => 'can:edit queues|edit.own queues',
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.queues.walltimes.delete',
 			'uses' => 'WalltimesController@delete',
-			'middleware' => 'can:delete queues.walltimes',
+			'middleware' => 'can:edit queues|edit.own queues',
 		])->where('id', '[0-9]+');
 	});
 
@@ -68,7 +68,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.queues.schedulers.create',
 			'uses' => 'SchedulersController@create',
-			'middleware' => 'can:create queues.schedulers',
+			'middleware' => 'can:manage queues',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.queues.schedulers.read',
@@ -77,12 +77,12 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.queues.schedulers.update',
 			'uses' => 'SchedulersController@update',
-			'middleware' => 'can:edit queues.schedulers',
+			'middleware' => 'can:manage queues',
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.queues.schedulers.delete',
 			'uses' => 'SchedulersController@delete',
-			'middleware' => 'can:delete queues.schedulers',
+			'middleware' => 'can:manage queues',
 		])->where('id', '[0-9]+');
 	});
 
@@ -95,7 +95,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.queues.schedulerpolicies.create',
 			'uses' => 'SchedulerPoliciesController@create',
-			'middleware' => 'can:create queues.schedulerpolicies',
+			'middleware' => 'can:manage queues',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.queues.schedulerpolicies.read',
@@ -104,12 +104,12 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.queues.schedulerpolicies.update',
 			'uses' => 'SchedulerPoliciesController@update',
-			'middleware' => 'can:edit queues.schedulerpolicies',
+			'middleware' => 'can:manage queues',
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.queues.schedulerpolicies.delete',
 			'uses' => 'SchedulerPoliciesController@delete',
-			'middleware' => 'can:delete queues.schedulerpolicies',
+			'middleware' => 'can:manage queues',
 		])->where('id', '[0-9]+');
 	});
 
@@ -122,7 +122,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.queues.loans.create',
 			'uses' => 'LoansController@create',
-			'middleware' => 'can:create queues',
+			'middleware' => 'can:edit queues|edit.own queues',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.queues.loans.read',
@@ -131,12 +131,12 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.queues.loans.update',
 			'uses' => 'LoansController@update',
-			'middleware' => 'can:edit queues',
+			'middleware' => 'can:edit queues|edit.own queues',
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.queues.loans.delete',
 			'uses' => 'LoansController@delete',
-			'middleware' => 'can:delete queues',
+			'middleware' => 'can:edit queues|edit.own queues',
 		])->where('id', '[0-9]+');
 	});
 
@@ -149,7 +149,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.queues.sizes.create',
 			'uses' => 'SizesController@create',
-			'middleware' => 'can:create queues',
+			'middleware' => 'can:edit queues|edit.own queues',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.queues.sizes.read',
@@ -158,12 +158,12 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.queues.sizes.update',
 			'uses' => 'SizesController@update',
-			'middleware' => 'can:edit queues',
+			'middleware' => 'can:edit queues|edit.own queues',
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.queues.sizes.delete',
 			'uses' => 'SizesController@delete',
-			'middleware' => 'can:delete queues',
+			'middleware' => 'can:edit queues|edit.own queues',
 		])->where('id', '[0-9]+');
 	});
 
@@ -203,7 +203,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.queues.users.create',
 			'uses' => 'UsersController@create',
-			'middleware' => 'can:manage queues',
+			'middleware' => 'can:edit queues|edit.own queues',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.queues.users.read',
@@ -212,12 +212,12 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		$router->put('{id}', [
 			'as' => 'api.queues.users.update',
 			'uses' => 'UsersController@update',
-			'middleware' => 'can:manage queues',
+			'middleware' => 'can:edit queues|edit.own queues',
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.queues.users.delete',
 			'uses' => 'UsersController@delete',
-			'middleware' => 'can:manage queues',
+			'middleware' => 'can:edit queues|edit.own queues',
 		])->where('id', '[0-9]+');
 	});
 
