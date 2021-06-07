@@ -266,12 +266,10 @@ app('pathway')
 							$timetable .= '</td></tr>';
 							$timetable .= '</tbody></table>';
 							?>
-							@if ($row->started())
-								@if ($row->completed())
-									<span class="badge badge-success has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-check"></span> {{ $row->elapsed }}</span>
-								@else
-									<span class="badge badge-warning has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-rotate-ccw"></span> {{ trans('messages::messages.processing') }}</span>
-								@endif
+							@if ($row->completed())
+								<span class="badge badge-success has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-check"></span> {{ $row->elapsed }}</span>
+							@elseif ($row->started())
+								<span class="badge badge-warning has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-rotate-ccw"></span> {{ trans('messages::messages.processing') }}</span>
 							@else
 								<span class="badge badge-info has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-more-horizontal"></span> {{ trans('messages::messages.pending') }}</span>
 							@endif
