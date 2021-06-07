@@ -302,7 +302,7 @@ class AuthprimaryLdap
 	 * @param   ResourceMemberCreated  $event
 	 * @return  void
 	 */
-	public function handleResourceMemberCreated(ResourceMemberCreated $event)
+	public function handleResourceMemberCreating(ResourceMemberCreating $event)
 	{
 		// Make sure config is set
 		$configall = $this->config('all');
@@ -610,7 +610,7 @@ class AuthprimaryLdap
 	 * @param   UnixGroupCreated  $event
 	 * @return  void
 	 */
-	public function handleUnixGroupCreating(UnixGroupCreated $event)
+	public function handleUnixGroupCreated(UnixGroupCreated $event)
 	{
 		$config = $this->config('groups');
 

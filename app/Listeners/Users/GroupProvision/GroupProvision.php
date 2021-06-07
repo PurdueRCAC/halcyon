@@ -37,7 +37,7 @@ class GroupProvision
 	 * @param   UnixGroupCreated  $event
 	 * @return  void
 	 */
-	public function handleUnixGroupCreating(UnixGroupCreated $event)
+	public function handleUnixGroupCreating(UnixGroupCreating $event)
 	{
 		$config = $this->config();
 
