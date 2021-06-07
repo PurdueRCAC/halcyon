@@ -531,7 +531,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											</span>
 
 											<span class="hide">
-												<input type="text" name="search_user" id="search_user" class="form-control form-users" value="{{ ($order->user ? $order->user->name . ' (' . $order->user->username . ')' : '') }}" data-userid="{{ $order->userid }}" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
+												<input type="text" name="search_user" id="search_user" class="form-control form-users" value="{{ ($order->user ? $order->user->name . ' (' . $order->user->username . ')' : '') }}" data-id="{{ $order->userid }}" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
 											</span>
 
 											<a href="#edit_user" id="order_user_save" class="order-edit" title="{{ trans('global.button.edit') }}" data-txt-save="Save Change">

@@ -2340,7 +2340,7 @@ function SaveOrderUser() {
 		document.getElementById("edit_user").classList.add('hide');
 	} else {
 		var id = document.getElementById("order").getAttribute('data-api'); //value;
-		var name = document.getElementById("search_user").getAttribute('data-userid');
+		var name = document.getElementById("search_user").getAttribute('data-id');
 
 		if (name) {
 			if (name != document.getElementById("edit_user").getAttribute('data-userid')) {
