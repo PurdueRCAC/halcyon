@@ -2156,7 +2156,7 @@ function NEWSSavedNewsText(xml, news) {
 		document.getElementById(news + "_texthelpicon").style.display = "none";
 
 		var text = document.getElementById(news + "_text");
-			text.innerHTML = results['formattednews'];
+			text.innerHTML = results['formattedbody'];
 			text.style.display = "block";
 	} else if (xml.status == 403) {
 		img.className = "fa fa-exclamation-circle";
@@ -2809,7 +2809,7 @@ function NEWSSendMail(news) {
 			}
 			body = body + '<span class="newsupdate">ORIGINAL: ' + data['formattedcreateddate'] + "</span>";
 		}
-		body = body + data['formattednews'];
+		body = body + data['formattedbody'];
 
 		if (data['resources'].length > 0) {
 			footer += '<hr /><p>Send to resource mailing lists:</p><div class="row">';
