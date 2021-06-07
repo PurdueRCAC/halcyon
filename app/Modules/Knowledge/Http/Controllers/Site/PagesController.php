@@ -24,6 +24,12 @@ class PagesController extends Controller
 	{
 		$path = trim($request->path(), '/');
 
+		if (substr($path, -4) == '/all')
+		{
+			$path = substr($path, 0, -4);
+			$request->merge(['all' => 1]);
+		}
+
 		// Load the entire path
 		$pages = Associations::stackByPath($path);
 
