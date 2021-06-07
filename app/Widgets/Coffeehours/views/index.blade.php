@@ -136,7 +136,7 @@ foreach ($rows as $event)
 				echo '<br /><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> ' . $event->location;
 			}
 
-			if ($event->url && auth()->user() && auth()->user()->can('manage news'))
+			if ($event->url && auth()->user())
 			{
 				echo '<br /><i class="fa fa-fw fa-link" aria-hidden="true"></i> <a href="' . $event->url . '">' . $event->url . '</a>';
 			}
