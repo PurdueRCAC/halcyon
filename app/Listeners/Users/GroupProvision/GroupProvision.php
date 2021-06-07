@@ -6,6 +6,7 @@ use App\Modules\Groups\Events\UnixGroupCreating;
 use App\Modules\Groups\Events\UnixGroupDeleted;
 use App\Modules\Groups\Events\UnixGroupMemberCreated;
 use App\Modules\Groups\Events\UnixGroupMemberDeleted;
+use App\Modules\Groups\Events\UnixGroupFetch;
 use App\Modules\History\Traits\Loggable;
 use GuzzleHttp\Client;
 
@@ -84,6 +85,23 @@ class GroupProvision
 				}
 
 				error_log(__METHOD__ . '(): Created AIMO ACMaint group ' . $event->unixgroup->shortname . ': ' . $res->getBody()->getContents());
+			}
+			elseif ($return == 400 && substr($results, -strlen('already exists')) == 'already exists')
+			{
+				// See if this information is provided elsewhere
+				event($e = new UnixGroupFetch($event->unixgroup->shortname));
+
+				if (!empty($e->results))
+				{
+					if (isset($e->results[0]['gidNumber']))
+					{
+						$this->unixgroup->unixgid = intval($e->results[0]['gidNumber'][0]);
+					}
+					elseif (isset($e->results[0]['gidnumber']))
+					{
+						$this->unixgroup->unixgid = intval($e->results[0]['gidnumber'][0]);
+					}
+				}
 			}
 			else
 			{
