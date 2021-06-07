@@ -255,9 +255,14 @@ class SizesController extends Controller
 			$request->input('comment');
 		}
 
+		if (!$row->sellerqueueid && $row->corecount < 0)
+		{
+			$row->sellerqueueid = $row->queueid;
+		}
+
 		if ($row->datetimestop && $row->datetimestart > $row->datetimestop)
 		{
-			return response()->json(['message' => trans('queues::queues.Field `start` cannot be after or equal to stop time')], 409);
+			return response()->json(['message' => trans('queues::queues.error.start cannot be after end')], 409);
 		}
 
 		if (!$row->queue)
@@ -272,18 +277,18 @@ class SizesController extends Controller
 
 		// Does the queue have any cores yet?
 		$count = Size::query()
-			->where('queueid', '=', (int)$row->queueid)
+			->where('queueid', '=', (int)$row->sellerqueueid)
 			->orderBy('datetimestart', 'asc')
 			->get()
 			->first();
 
 		if (!$count)
 		{
-			return response()->json(['message' => trans('queues::queues.Have not been sold anything and never will have anything')], 409);
+			return response()->json(['message' => trans('queues::queues.error.queue is empty')], 409);
 		}
 		elseif ($count->datetimestart > $row->datetimestart)
 		{
-			return response()->json(['message' => trans('queues::queues.Have not been sold anything before this would start')], 409);
+			return response()->json(['message' => trans('queues::queues.error.queue has not started')], 409);
 		}
 
 		// Look for an existing entry in the same time frame and same queues to update instead

@@ -88,6 +88,14 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
+					<label for="field-groupid">{{ trans('queues::queues.group') }}:</label>
+					<span class="input-group">
+						<input type="text" name="fields[groupid]" id="field-groupid" class="form-control form-groups" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" data-multiple="false" placeholder="Search for group..." value="{{ ($row->group ? $row->group->name . ':' . $row->groupid : '') }}" />
+						<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
+					</span>
+				</div>
+
+				<div class="form-group">
 					<label for="field-name">{{ trans('queues::queues.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required pattern="[a-zA-Z0-9_]{1,64}" maxlength="64" value="{{ $row->name }}" data-invalid-msg="The field 'Queue Name' is required." />
 					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
@@ -208,14 +216,6 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-priority">{{ trans('queues::queues.priority') }}:</label>
 					<input type="number" name="fields[priority]" id="field-priority" class="form-control" min="0" value="{{ $row->priority }}" />
-				</div>
-
-				<div class="form-group">
-					<label for="field-groupid">{{ trans('queues::queues.group') }}:</label>
-					<span class="input-group">
-						<input type="text" name="fields[groupid]" id="field-groupid" class="form-control form-groups" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" data-multiple="false" placeholder="Search for group..." value="{{ ($row->group ? $row->group->name . ':' . $row->groupid : '') }}" />
-						<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
-					</span>
 				</div>
 
 				<div class="row">
@@ -619,20 +619,21 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="sell-group">{{ trans('queues::queues.sell to') }}</label>
-					<select name="groupid" id="sell-group"
+					<label for="seller-group">{{ trans('queues::queues.seller') }}</label>
+					<select name="sellergroupid" id="seller-group"
 						class="form-control form-group-queues"
-						data-update="sell-queue"
+						data-update="seller-queue"
 						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
 						data-queue-api="{{ route('api.queues.index') }}"
 						data-subresource="{{ $row->subresourceid }}">
 						<option value="0">{{ trans('queues::queues.select group') }}</option>
+						<!--<option value="-1">{{ trans('queues::queues.org owned') }}</option>-->
 						<?php
 						$groups = array();
 						$first = null;
 						foreach ($row->subresource->queues as $queue)
 						{
-							if (isset($groups[$queue->groupid]) || $queue->groupid == $row->groupid)
+							if (isset($groups[$queue->groupid]))// || $queue->groupid == $row->groupid)
 							{
 								continue;
 							}
@@ -657,19 +658,32 @@ app('pathway')
 						}
 						?>
 						@foreach ($groups as $group)
+							<option value="{{ $group->id }}"<?php if ($group->id == $row->groupid) { echo ' selected="selected"'; } ?>>{{ $group->name }}</option>
+						@endforeach
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="seller-queue">{{ trans('queues::queues.queue') }}</label>
+					<select id="seller-queue" name="sellerqueueid" class="form-control" disabled="true">
+						<option>{{ trans('queues::queues.select queue') }}</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="sell-group">{{ trans('queues::queues.sell to') }}</label>
+					<select name="groupid" id="sell-group"
+						class="form-control form-group-queues"
+						data-update="sell-queue"
+						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
+						data-queue-api="{{ route('api.queues.index') }}"
+						data-subresource="{{ $row->subresourceid }}">
+						<option value="0">{{ trans('queues::queues.select group') }}</option>
+						<!--<option value="-1">{{ trans('queues::queues.org owned') }}</option>-->
+						@foreach ($groups as $group)
 							<option value="{{ $group->id }}">{{ $group->name }}</option>
 						@endforeach
 					</select>
-					<!-- <span class="input-group">
-						<input type="text" name="groupid" id="sell-group"
-							class="form-control form-group-queues"
-							data-update="sell-queue"
-							data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
-							data-queue-api="{{ route('api.queues.index') }}"
-							data-subresource="{{ $row->subresourceid }}"
-							value="" />
-						<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
-					</span> -->
 				</div>
 
 				<div class="form-group">
@@ -679,11 +693,15 @@ app('pathway')
 					</select>
 				</div>
 
+				<div class="form-group">
+					<label for="sell-comment">{{ trans('queues::queues.comment') }}</label>
+					<textarea id="sell-comment" name="comment" class="form-control" cols="35" rows="3"></textarea>
+				</div>
+
 				<div class="dialog-footer text-right">
 					<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-success="{{ trans('queues::queues.item created') }}" />
 				</div>
 
-				<input type="hidden" name="sellerqueueid" value="{{ $row->id }}" />
 				@csrf
 			</form>
 		</div>
@@ -721,6 +739,29 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
+					<label for="loan-group">{{ trans('queues::queues.lender') }}</label>
+					<select name="lendergroupid" id="lender-group"
+						class="form-control form-group-queues"
+						data-update="lender-queue"
+						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
+						data-queue-api="{{ route('api.queues.index') }}"
+						data-subresource="{{ $row->subresourceid }}">
+						<option value="0">{{ trans('queues::queues.select group') }}</option>
+						<!--<option value="-1">{{ trans('queues::queues.org owned') }}</option>-->
+						@foreach ($groups as $group)
+							<option value="{{ $group->id }}"<?php if ($group->id == $row->groupid) { echo ' selected="selected"'; } ?>>{{ $group->name }}</option>
+						@endforeach
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="lender-queue">{{ trans('queues::queues.queue') }}</label>
+					<select id="lender-queue" name="lenderqueueid" class="form-control" disabled="true">
+						<option>{{ trans('queues::queues.select queue') }}</option>
+					</select>
+				</div>
+
+				<div class="form-group">
 					<label for="loan-group">{{ trans('queues::queues.loan to') }}</label>
 					<select name="groupid" id="loan-group"
 						class="form-control form-group-queues"
@@ -729,6 +770,7 @@ app('pathway')
 						data-queue-api="{{ route('api.queues.index') }}"
 						data-subresource="{{ $row->subresourceid }}">
 						<option value="0">{{ trans('queues::queues.select group') }}</option>
+						<!--<option value="-1">{{ trans('queues::queues.org owned') }}</option>-->
 						@foreach ($groups as $group)
 							<option value="{{ $group->id }}">{{ $group->name }}</option>
 						@endforeach
@@ -757,11 +799,15 @@ app('pathway')
 					<textarea id="loan-comment" name="comment" class="form-control" rows="3" cols="40"></textarea>
 				</div>
 
+				<div class="form-group">
+					<label for="loan-comment">{{ trans('queues::queues.comment') }}</label>
+					<textarea id="loan-comment" name="comment" class="form-control" cols="35" rows="3"></textarea>
+				</div>
+
 				<div class="dialog-footer text-right">
 					<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-success="{{ trans('queues::queues.item created') }}" />
 				</div>
 
-				<input type="hidden" name="lenderqueueid" value="{{ $row->id }}" />
 				@csrf
 			</form>
 		</div>

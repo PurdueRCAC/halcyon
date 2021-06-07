@@ -280,7 +280,7 @@ class LoansController extends Controller
 
 		if ($row->datetimestop && $row->datetimestart > $row->datetimestop)
 		{
-			return response()->json(['message' => trans('queues::queues.Field `start` cannot be after or equal to stop time')], 409);
+			return response()->json(['message' => trans('queues::queues.error.start cannot be after end')], 409);
 		}
 
 		if (!$row->queue)
@@ -295,18 +295,18 @@ class LoansController extends Controller
 
 		// Does the queue have any cores yet?
 		$count = Size::query()
-			->where('queueid', '=', (int)$row->queueid)
+			->where('queueid', '=', (int)$row->lenderqueueid)
 			->orderBy('datetimestart', 'asc')
 			->get()
 			->first();
 
 		if (!$count)
 		{
-			return response()->json(['message' => trans('queues::queues.Have not been sold anything and never will have anything')], 409);
+			return response()->json(['message' => trans('queues::queues.error.queue is empty')], 409);
 		}
 		elseif ($count->datetimestart > $row->datetimestart)
 		{
-			return response()->json(['message' => trans('queues::queues.Have not been sold anything before this would start')], 409);
+			return response()->json(['message' => trans('queues::queues.queue has not started')], 409);
 		}
 
 		// Look for an existing entry in the same time frame and same queues to update instead

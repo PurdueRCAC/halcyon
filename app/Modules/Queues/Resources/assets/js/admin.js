@@ -381,14 +381,14 @@ document.addEventListener('DOMContentLoaded', function() {
 								var x, opt;
 								for (x in data.data) {
 									//if (data.data[x]['name'].match(/^(rcac|workq|debug)/)) {
-									if (data.data[x]['id'] != dest_queue) {
+									//if (data.data[x]['id'] != dest_queue) {
 										opt = document.createElement("option");
 										opt.innerHTML = data.data[x]['name'] + " (" + data.data[x]['subresource']['name'] + ")";
 										opt.value = data.data[x]['id'];
 
 										//queue.appendChild(opt);
 										queue.append(opt);
-									}
+									//}
 									//}
 								}
 							}
