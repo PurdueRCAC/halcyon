@@ -86,7 +86,7 @@ class GroupProvision
 
 				error_log(__METHOD__ . '(): Created AIMO ACMaint group ' . $event->unixgroup->shortname . ': ' . $res->getBody()->getContents());
 			}
-			elseif ($return == 400 && substr($results, -strlen('already exists')) == 'already exists')
+			elseif ($status == 400 && stristr('already exists', $res->getBody()->getContents()))
 			{
 				// See if this information is provided elsewhere
 				event($e = new UnixGroupFetch($event->unixgroup->shortname));
