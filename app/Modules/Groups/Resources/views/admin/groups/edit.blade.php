@@ -915,9 +915,6 @@ app('pathway')
 				<li>
 					<a href="#group-motd">{{ trans('groups::groups.motd') }}</a>
 				</li>
-				<li>
-					<a href="#group-history">{{ trans('groups::groups.history.title') }}</a>
-				</li>
 			@endif
 		</ul>
 
@@ -1216,9 +1213,6 @@ app('pathway')
 
 			<div id="group-motd">
 				@include('groups::admin.groups.motd', ['group' => $row])
-			</div>
-			<div id="group-history">
-				@include('groups::admin.groups.history', ['group' => $row])
 			</div>
 		@endif
 	</div>
