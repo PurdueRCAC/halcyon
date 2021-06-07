@@ -58,7 +58,7 @@ class UnixGroupMembers
 			{
 				$userdir = new Directory;
 				$userdir->bytes      = '-';
-				$userdir->bytesource = '';
+				//$userdir->bytesource = '';
 				$userdir->groupid    = $dir->groupid;
 				$userdir->name       = $event->member->user->username;
 				$userdir->parent     = $dir->id;
