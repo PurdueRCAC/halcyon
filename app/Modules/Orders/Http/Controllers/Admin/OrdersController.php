@@ -324,6 +324,15 @@ class OrdersController extends Controller
 			$query->orderBy('name', $filters['order_dir']);
 		}
 
+		if ($request->has('export'))
+		{
+			$rows = $query
+				->orderBy($filters['order'], $filters['order_dir'])
+				->get();
+
+			return $this->export($rows);
+		}
+
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
@@ -344,6 +353,89 @@ class OrdersController extends Controller
 			'rows'    => $rows,
 			'filters' => $filters,
 			'categories' => $categories
+		]);
+	}
+
+	/**
+	 * Download a list of records
+	 * 
+	 * @param  object  $rows
+	 * @return Response
+	 */
+	public function export($rows)
+	{
+		$data = array();
+		$data[] = array(
+			trans('orders::orders.id'),
+			trans('orders::orders.created'),
+			trans('orders::orders.status'),
+			trans('orders::orders.submitter'),
+			trans('orders::orders.user'),
+			trans('orders::orders.group'),
+			trans('orders::orders.total')
+		);
+		foreach ($rows as $row)
+		{
+			$submitter = '';
+			$user = '';
+			$group = '';
+
+			if ($row->groupid)
+			{
+				$group = $row->group ? $row->group->name : '';
+			}
+
+			if ($row->userid)
+			{
+				$user = $row->user ? $row->user->name : '';
+			}
+
+			if ($row->submitteruserid)
+			{
+				$submitter = $row->submitter ? $row->submitter->name : '';
+			}
+
+			$data[] = array(
+				$row->id,
+				$row->datetimecreated->format('Y-m-d'),
+				$row->status,
+				$submitter,
+				$user,
+				$group,
+				config('orders.currency', '$') . ' ' . $row->formatNumber($row->ordertotal),
+				$row->usernotes
+			);
+		}
+
+		$filename = 'orders_data.csv';
+
+		$headers = array(
+			'Content-type' => 'text/csv',
+			'Content-Disposition' => 'attachment; filename=' . $filename,
+			'Pragma' => 'no-cache',
+			'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+			'Expires' => '0',
+			'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
+		);
+
+		$callback = function() use ($data)
+		{
+			$file = fopen('php://output', 'w');
+
+			foreach ($data as $datum)
+			{
+				fputcsv($file, $datum);
+			}
+			fclose($file);
+		};
+
+		return response()->streamDownload($callback, $filename, $headers);
+
+		// Set headers and output
+		return new Response($output, 200, [
+			'Content-Type' => 'text/csv;charset=UTF-8',
+			'Content-Disposition' => 'attachment; filename="' . $file . '.csv"',
+			'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
 		]);
 	}
 

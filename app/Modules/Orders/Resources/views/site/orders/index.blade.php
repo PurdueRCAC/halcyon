@@ -245,14 +245,14 @@ app('pathway')
 							@if (auth()->user()->can('manage users'))
 								@if ($row->userid)
 									<a href="{{ route('site.orders.index', ['userid' => $row->userid]) }}">
-										<?php echo $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span> (user ID: ' . $row->userid . ')'; ?>
+										<?php echo $row->user ? $row->user->name : ' <span class="unknown">' . trans('global.unknown') . '</span> (user ID: ' . $row->userid . ')'; ?>
 									</a>
 								@else
 									<span class="none">{{ trans('global.none') }}</span>
 								@endif
 							@else
 								@if ($row->userid)
-									<?php echo $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span> (user ID: ' . $row->userid . ')'; ?>
+									<?php echo $row->user ? $row->user->name : ' <span class="unknown">' . trans('global.unknown') . '</span> (user ID: ' . $row->userid . ')'; ?>
 								@else
 									<span class="none">{{ trans('global.none') }}</span>
 								@endif

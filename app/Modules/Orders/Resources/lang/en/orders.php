@@ -17,6 +17,7 @@ return [
 	'amount' => 'Amount',
 	'all statuses' => '- All Statuses -',
 	'all categories' => '- All Categories -',
+	'export' => 'Export Results',
 	// Status
 	'active' => 'All Active',
 	'pending' => 'Pending',

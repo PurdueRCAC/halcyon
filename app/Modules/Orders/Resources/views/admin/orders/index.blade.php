@@ -21,6 +21,11 @@ app('pathway')
 		{!! Toolbar::deleteList('', route('admin.orders.delete')) !!}
 	@endif
 
+	{!!
+		Toolbar::custom(route('admin.orders.index', ['export' => 'csv']), 'export', 'export', trans('orders::orders.export'), false);
+		Toolbar::spacer();
+	!!}
+
 	@if (auth()->user()->can('create orders'))
 		{!! Toolbar::addNew(route('admin.orders.create')) !!}
 	@endif
