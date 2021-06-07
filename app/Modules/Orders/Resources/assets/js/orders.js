@@ -2336,37 +2336,31 @@ function SaveOrderUser() {
 
 	if (button.className.match(/pencil/)) {
 		button.className = "fa fa-save";
-		document.getElementById("search_user").parentNode.classList.remove('hide');//parentNode.style.display = "inline";
-		document.getElementById("edit_user").classList.add('hide');//style.display = "none";
+		document.getElementById("search_user").parentNode.classList.remove('hide');
+		document.getElementById("edit_user").classList.add('hide');
 	} else {
 		var id = document.getElementById("order").getAttribute('data-api'); //value;
-		var name = document.getElementById("search_user").value;
-		//console.log(name);
-		//var nm = name.match(/^.*?\(([a-z0-9]+)\)$/);
-		if (name) {
-			//if (nm[0] != document.getElementById("edit_user").innerHTML) {
-			if (name != document.getElementById("edit_user").getAttribute('data-userid')) {
-				//name = nm[1];
+		var name = document.getElementById("search_user").getAttribute('data-userid');
 
-				//var post = JSON.stringify({'userid': name});
+		if (name) {
+			if (name != document.getElementById("edit_user").getAttribute('data-userid')) {
 				pendingupdates++;
-				//WSPutURL(id, post, UpdatedAccountInfo);
 
 				$.ajax({
 					url: id,
 					type: 'put',
 					data: {
-						'userid' : name
+						'userid': name
 					},
 					dataType: 'json',
 					async: false,
-					success: function(response) {
+					success: function (response) {
 						pendingupdates--;
 						if (pendingupdates == 0) {
 							window.location.reload(true);
 						}
 					},
-					error: function(xhr, ajaxOptions, thrownError) {
+					error: function (xhr, ajaxOptions, thrownError) {
 						console.log(xhr);
 						if (numerrorboxes == 0) {
 							alert("An error occurred while updating account. Please reload page and try again or contact rcac-help@purdue.edu.");
