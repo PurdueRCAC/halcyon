@@ -22,6 +22,15 @@ class LegacyFiles
 
 		if (strstr($s, '.'))
 		{
+			if (substr($s, 0, strlen('compute/')) == 'compute/')
+			{
+				$s = str_replace(['compute/', 'images/'], ['resources/', ''], $s);
+			}
+			if (substr($s, 0, strlen('storage/')) == 'storage/')
+			{
+				$s = str_replace(['storage/', 'images/'], ['resources/', ''], $s);
+			}
+
 			$f = explode('/', $s);
 
 			for ($i = 0; $i < count($f); $i++)
