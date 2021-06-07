@@ -593,7 +593,7 @@
 									{{ trans('storage::storage.unallocated space') }}
 								</div>
 								<div class="col-md-8">
-									<span name="unallocated"><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['unallocatedbytes']); ?></span> / <span name="totalbytes"><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['totalbytes']); ?></span>
+									<span name="unallocated"><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['unallocatedbytes'], 1); ?></span> / <span name="totalbytes"><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['totalbytes'], 1); ?></span>
 									<?php
 									if ($dir->bytes)
 									{

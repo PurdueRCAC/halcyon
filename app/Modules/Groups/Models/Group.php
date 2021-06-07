@@ -226,7 +226,60 @@ class Group extends Model
 	 */
 	public function getStorageBucketsAttribute()
 	{
-		$allocated = array();
+		$buckets = array();
+		foreach ($this->loans()->whenAvailable()->get() as $dir)
+		{
+			if (!isset($buckets[$dir->resourceid]))
+			{
+				$buckets[$dir->resourceid] = array(
+					'resourceid' => 0,
+					'soldbytes' => 0,
+					'loanedbytes' => 0,
+					'totalbytes' => 0,
+					'unallocatedbytes' => 0,
+					'allocatedbytes' => 0,
+				);
+			}
+			$buckets[$dir->resourceid]['resourceid'] = $dir->resourceid;
+			$buckets[$dir->resourceid]['loanedbytes'] += $dir->bytes;
+			$buckets[$dir->resourceid]['totalbytes'] += $dir->bytes;
+		}
+
+		foreach ($this->purchases()->whenAvailable()->get() as $dir)
+		{
+			if (!isset($buckets[$dir->resourceid]))
+			{
+				$buckets[$dir->resourceid] = array(
+					'resourceid' => 0,
+					'soldbytes' => 0,
+					'loanedbytes' => 0,
+					'totalbytes' => 0,
+					'unallocatedbytes' => 0,
+					'allocatedbytes' => 0,
+				);
+			}
+			$buckets[$dir->resourceid]['resourceid'] = $dir->resourceid;
+			$buckets[$dir->resourceid]['soldbytes'] += $dir->bytes;
+			$buckets[$dir->resourceid]['totalbytes'] += $dir->bytes;
+		}
+
+		foreach ($this->directories()->withTrashed()->whereIsActive()->get() as $dir)
+		{
+			if (!isset($buckets[$dir->resourceid]))
+			{
+				continue;
+			}
+			$buckets[$dir->resourceid]['allocatedbytes'] += $dir->bytes;
+		}
+
+		foreach ($buckets as $k => $v)
+		{
+			$buckets[$k]['unallocatedbytes'] = abs($buckets[$k]['allocatedbytes'] - $buckets[$k]['totalbytes']);
+		}
+
+		return $buckets;
+
+		/*$allocated = array();
 		$now = Carbon::now();
 
 		// Fetch allocated amounts
@@ -359,7 +412,7 @@ class Group extends Model
 
 			$bucket['unallocatedbytes'] = abs($bucket['totalbytes'] - $allocated[$bucket['resourceid']]);
 			$bucket['allocatedbytes'] = $allocatedbytes;
-		}
+		}*/
 
 		return $storagebuckets;
 	}
