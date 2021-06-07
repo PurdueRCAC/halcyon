@@ -437,7 +437,7 @@ class DirectoriesController extends Controller
 					//'bytesource'  => '',
 					'groupid'     => $row->groupid,
 					'name'        => $member->user->username,
-					'parent'      => $row->id,
+					'parentstoragedirid' => $row->id,
 					'resourceid'  => $row->resourceid,
 					'unixgroupid' => $row->unixgroupid,
 					'userid'      => $row->userid,
