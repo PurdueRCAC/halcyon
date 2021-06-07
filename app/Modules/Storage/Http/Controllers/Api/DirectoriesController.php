@@ -632,7 +632,17 @@ class DirectoriesController extends Controller
 	 */
 	public function read($id)
 	{
-		$row = Directory::findOrFail($id);
+		$row = Directory::query()
+			->withTrashed()
+			->where('id', '=', $id)
+			->limit(1)
+			->get()
+			->first();
+
+		if (!$row)
+		{
+			return response()->json(null, 404);
+		}
 
 		return new DirectoryResource($row);
 	}
