@@ -426,6 +426,7 @@ $members = $members->sortBy('username');
 									name="queue[{{ $queue->id }}]"{!! $checked !!}
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
+									data-api-create="{{ route('api.queues.users.create') }}"
 									data-api="{{ $checked && !$disable ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
 									value="1" />
 							</td>
@@ -459,6 +460,7 @@ $members = $members->sortBy('username');
 									name="unix[{{ $unix->id }}]"{{ $checked }}
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $unix->id }}"
+									data-api-create="{{ route('api.unixgroups.members.create') }}"
 									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
 									value="1" />
 							</td>
@@ -735,6 +737,7 @@ $members = $members->sortBy('username');
 									name="queue[{{ $queue->id }}]"{{ $checked }}
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
+									data-api-create="{{ route('api.queues.users.create') }}"
 									data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
 									value="1" />
 							</td>
@@ -764,6 +767,7 @@ $members = $members->sortBy('username');
 									name="unix[{{ $unix->id }}]"{{ $checked }}
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $unix->id }}"
+									data-api-create="{{ route('api.unixgroups.members.create') }}"
 									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
 									value="1" />
 							</td>
@@ -865,6 +869,7 @@ $members = $members->sortBy('username');
 										name="queue[{{ $queue->id }}]"{{ $checked }}
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $queue->id }}"
+										data-api-create="{{ route('api.queues.users.create') }}"
 										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
 										disabled="disabled"
 										value="1" />
@@ -891,6 +896,7 @@ $members = $members->sortBy('username');
 										name="unix[{{ $unix->id }}]"{{ $checked }}
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $unix->groupid }}"
+										data-api-create="{{ route('api.unixgroups.members.create') }}"
 										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
 										disabled="disabled"
 										value="1" />
