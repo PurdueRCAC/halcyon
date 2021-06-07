@@ -62,7 +62,7 @@ class UnixGroupMembers
 				$userdir->groupid    = $dir->groupid;
 				$userdir->name       = $event->member->user->username;
 				$userdir->parentstoragedirid = $dir->id;
-				$userdir->resource   = $dir->resourceid;
+				$userdir->resourceid = $dir->resourceid;
 				$userdir->unixgroup  = $event->member->unixgroupid;
 				$userdir->user       = $event->member->userid;
 
