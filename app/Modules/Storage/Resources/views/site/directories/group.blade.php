@@ -658,8 +658,12 @@
 				</div><!-- / .panel -->
 				<?php
 			endforeach;
+		else:
 			?>
-
+			<p class="text-center text-muted">{{ trans('global.none') }}</p>
+			<?php
+		endif;
+		?>
 			<div class="card panel panel-default">
 				<div class="card-header panel-heading">
 					@if (auth()->user()->can('manage storage'))
@@ -883,7 +887,7 @@
 					@endif
 				</div>
 			</div><!-- / .panel -->
-
+		@if (auth()->user()->can('manage storage'))
 			<div class="card panel panel-default">
 				<div class="card-header panel-heading">
 					{{ trans('storage::storage.messages') }}
@@ -945,12 +949,6 @@
 					@endif
 				</div>
 			</div><!-- / .panel -->
-			<?php
-		else:
-			?>
-			<p class="text-center text-muted">{{ trans('global.none') }}</p>
-			<?php
-		endif;
-		?>
+		@endif
 	</div><!-- / .col -->
 </div><!-- / .row -->
