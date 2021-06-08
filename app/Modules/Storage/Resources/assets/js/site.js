@@ -872,7 +872,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		ResetPermissions(this);
 	});
 
-	$('body').on('change', '.form-control', function (el) {
+	$('body').on('change', '.form-control,.form-check-input', function (el) {
 		var dialog = $(this).closest('.dialog');
 		if (dialog.length) {
 			$('#' + $(dialog).data('id') + '_save_button').prop('disabled', false);
