@@ -675,7 +675,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="seller-queue">{{ trans('queues::queues.queue') }}</label>
-					<select id="seller-queue" name="sellerqueueid" class="form-control" disabled="true">
+					<select id="seller-queue" name="sellerqueueid" class="form-control">
 						<option value="0">{{ trans('queues::queues.select queue') }}</option>
 					</select>
 				</div>

@@ -231,8 +231,11 @@ class SizesController extends Controller
 		]);
 
 		$row = new Size;
-		$row->queueid = $request->input('queueid');
-		$row->sellerqueueid = $request->input('sellerqueueid');
+		$row->queueid = (int)$request->input('queueid');
+		if ($request->has('sellerqueueid'))
+		{
+			$row->sellerqueueid = (int)$request->input('sellerqueueid');
+		}
 		$row->datetimestart = $request->input('datetimestart');
 		if (!$row->datetimestart)
 		{
@@ -244,11 +247,11 @@ class SizesController extends Controller
 		}
 		if ($request->has('nodecount'))
 		{
-			$row->nodecount = $request->input('nodecount');
+			$row->nodecount = (int)$request->input('nodecount');
 		}
 		if ($request->has('corecount'))
 		{
-			$row->corecount = $request->input('corecount');
+			$row->corecount = (int)$request->input('corecount');
 		}
 		if ($request->has('comment'))
 		{
