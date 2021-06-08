@@ -87,7 +87,7 @@ class RoleProvision
 			]);
 
 			$status = $res->getStatusCode();
-			$body   = json_decode($res->getBody()->getContents());
+			//$body   = json_decode($res->getBody()->getContents());
 
 			if ($status < 400)
 			{
