@@ -529,6 +529,7 @@ app('pathway')
 							</a>
 						</td>
 						<td class="text-right">
+							@if (auth()->user()->can('admin queues'))
 							<button class="btn btn-sm text-danger delete"
 								data-confirm="{{ trans('global.confirm delete') }}"
 								data-success="{{ trans('queues::queues.item deleted') }}"
@@ -536,6 +537,7 @@ app('pathway')
 								data-id="{{ $item->id }}">
 								<span class="icon-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
 							</button>
+							@endif
 
 							<div class="dialog" id="dialog-edit{{ $item->id }}" title="{{ trans('queues::queues.edit ' . ($item->type == 1 ? 'loan' : 'size')) }}">
 								<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.loans.update', ['id' => $item->id]) }}">
