@@ -109,7 +109,7 @@ return [
 	],
 	'number cores' => ':num cores',
 	'number memory' => ':num memory',
-	'select queue' => '- Select Queue -',
+	'select queue' => '(Select Queue)',
 	'loan to' => 'Loan to',
 	'sell to' => 'Sell to',
 	'action' => 'Action',
@@ -120,4 +120,5 @@ return [
 	'all states' => '- All States -',
 	'edit loan' => 'Edit loan',
 	'edit size' => 'Edit purchase',
+	'new hardware' => 'New hardware',
 ];

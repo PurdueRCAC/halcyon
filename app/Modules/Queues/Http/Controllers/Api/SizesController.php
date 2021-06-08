@@ -222,11 +222,11 @@ class SizesController extends Controller
 	{
 		$request->validate([
 			'queueid' => 'required|integer',
-			'sellerqueueid' => 'required|integer',
+			'sellerqueueid' => 'nullable|integer',
 			'datetimestart' => 'nullable|date',
 			'datetimestop' => 'nullable|date',
 			'nodecount' => 'nullable|integer',
-			'corecount' => 'nullable|integer',
+			'corecount' => 'required|integer',
 			'comments' => 'nullable|string',
 		]);
 
@@ -270,25 +270,28 @@ class SizesController extends Controller
 			return response()->json(['message' => trans('queues::queues.invalid queue id')], 415);
 		}
 
-		if (!$row->seller)
+		/*if (!$row->seller)
 		{
 			return response()->json(['message' => trans('queues::queues.invalid seller queue id')], 415);
-		}
+		}*/
 
-		// Does the queue have any cores yet?
-		$count = Size::query()
-			->where('queueid', '=', (int)$row->sellerqueueid)
-			->orderBy('datetimestart', 'asc')
-			->get()
-			->first();
+		if ($row->seller)
+		{
+			// Does the queue have any cores yet?
+			$count = Size::query()
+				->where('queueid', '=', (int)$row->sellerqueueid)
+				->orderBy('datetimestart', 'asc')
+				->get()
+				->first();
 
-		if (!$count)
-		{
-			return response()->json(['message' => trans('queues::queues.error.queue is empty')], 409);
-		}
-		elseif ($count->datetimestart > $row->datetimestart)
-		{
-			return response()->json(['message' => trans('queues::queues.error.queue has not started')], 409);
+			if (!$count)
+			{
+				return response()->json(['message' => trans('queues::queues.error.queue is empty')], 409);
+			}
+			elseif ($count->datetimestart > $row->datetimestart)
+			{
+				return response()->json(['message' => trans('queues::queues.error.queue has not started')], 409);
+			}
 		}
 
 		// Look for an existing entry in the same time frame and same queues to update instead
@@ -343,21 +346,24 @@ class SizesController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
-		// Enforce proper accounting
-		$counter = new Size;
-		$counter->queueid = $row->sellerqueueid;
-		$counter->sellerqueueid = $row->queueid;
-		$counter->datetimestart = $row->datetimestart;
-		if ($row->hasEnd())
+		if ($row->seller)
 		{
-			$counter->datetimestop = $row->datetimestop;
-		}
-		$counter->nodecount = $row->nodecount;
-		$counter->corecount = -$row->corecount;
+			// Enforce proper accounting
+			$counter = new Size;
+			$counter->queueid = $row->sellerqueueid;
+			$counter->sellerqueueid = $row->queueid;
+			$counter->datetimestart = $row->datetimestart;
+			if ($row->hasEnd())
+			{
+				$counter->datetimestop = $row->datetimestop;
+			}
+			$counter->nodecount = $row->nodecount;
+			$counter->corecount = -$row->corecount;
 
-		if (!$counter->save())
-		{
-			return response()->json(['message' => trans('global.messages.create failed')], 500);
+			if (!$counter->save())
+			{
+				return response()->json(['message' => trans('global.messages.create failed')], 500);
+			}
 		}
 
 		return new JsonResource($row);

@@ -333,78 +333,67 @@ document.addEventListener('DOMContentLoaded', function() {
 	$('.dialog-btn').on('click', function(e){
 		e.preventDefault();
 
-		/*$(".dialog").dialog({
-			modal: true,
-			width: '550px'
-		});*/
 		$($(this).attr('href')).dialog({
 			modal: true,
 			width: '550px',
 			open: function() {
+				var groups = $(".form-group-queues");
+				if (groups.length) {
+					$(".form-group-queues")
+						.select2({})
+						.on('select2:select', function (e) {
+							e.preventDefault();
 
-		var groups = $(".form-group-queues");
-		if (groups.length) {
-			$(".form-group-queues").select2({
-				//placeholder: $(this).data('placeholder')
-			})
-				.on('select2:select', function (e) {
-					e.preventDefault();
+							var group = $(this);
 
-					var group = $(this);
+							var queue = $('#' + group.data('update'));
+							var dest_queue = document.getElementById("field-id").value;
 
-					// Set selection
-					//group.val(ui.item.label); // display the selected text
-					//cl.val(ui.item.id); // save selected id to input
+							$.ajax({
+								url: group.data('queue-api'),
+								type: 'get',
+								data: {
+									'group': group.val(),
+									'subresource': $('#field-subresourceid').val()//group.data('subresource')
+								},
+								dataType: 'json',
+								async: false,
+								success: function (data) {
+									if (data.data.length > 0) {
+										queue.prop('disabled', false);
+										queue.empty();//options.length = 0;
 
-					var queue = $('#' + group.data('update'));
-					var dest_queue = document.getElementById("field-id").value;
-					//console.log(group.data('queue-api') + '?groupid=' + group.val() + '&subresource=' + group.data('subresource'));
-
-					$.ajax({
-						url: group.data('queue-api'),
-						type: 'get',
-						data: {
-							'group': group.val(),
-							'subresource': group.data('subresource')
-						},
-						dataType: 'json',
-						async: false,
-						success: function (data) {
-							if (data.data.length > 0) {
-								queue.prop('disabled', false);
-								queue.empty();//options.length = 0;
-
-								opt = document.createElement("option");
-								opt.innerHTML = "- Select Queue -";
-								queue.append(opt);
-
-								var x, opt;
-								for (x in data.data) {
-									//if (data.data[x]['name'].match(/^(rcac|workq|debug)/)) {
-									//if (data.data[x]['id'] != dest_queue) {
 										opt = document.createElement("option");
-										opt.innerHTML = data.data[x]['name'] + " (" + data.data[x]['subresource']['name'] + ")";
-										opt.value = data.data[x]['id'];
-
-										//queue.appendChild(opt);
+										opt.value = 0;
+										opt.innerHTML = "(Select Queue)";
 										queue.append(opt);
-									//}
-									//}
+
+										var x, opt;
+										for (x in data.data) {
+											//if (data.data[x]['name'].match(/^(rcac|workq|debug)/)) {
+											//if (data.data[x]['id'] != dest_queue) {
+												opt = document.createElement("option");
+												opt.innerHTML = data.data[x]['name'] + " (" + data.data[x]['subresource']['name'] + ")";
+												opt.value = data.data[x]['id'];
+
+												queue.append(opt);
+											//}
+											//}
+										}
+									}
+								},
+								error: function (xhr, reason, thrownError) {
+									if (xhr.responseJSON) {
+										Halcyon.message('danger', xhr.responseJSON.message);
+									} else {
+										Halcyon.message('danger', 'Failed to retrieve queues.');
+									}
+									console.log(xhr.responseText);
 								}
-							}
-						},
-						error: function (xhr, reason, thrownError) {
-							if (xhr.responseJSON) {
-								Halcyon.message('danger', xhr.responseJSON.message);
-							} else {
-								Halcyon.message('danger', 'Failed to retrieve queues.');
-							}
-							console.log(xhr.responseText);
-						}
-					});
-					return false;
-				});
-		}
+							});
+							return false;
+						});
+				}
 			}
 		});
 	});

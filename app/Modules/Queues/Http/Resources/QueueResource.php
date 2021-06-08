@@ -29,7 +29,10 @@ class QueueResource extends JsonResource
 		$data['schedulerpolicy']['api'] = route('api.queues.schedulerpolicies.read', ['id' => $data['schedulerpolicy']['id']]);
 
 		$data['scheduler'] = $this->scheduler;
-		$data['scheduler']['api'] = route('api.queues.schedulers.read', ['id' => $data['scheduler']['id']]);
+		if ($this->scheduler)
+		{
+			$data['scheduler']['api'] = route('api.queues.schedulers.read', ['id' => $data['scheduler']['id']]);
+		}
 
 		$data['sizes'] = $this->sizes()
 			->where(function($where) use ($now)

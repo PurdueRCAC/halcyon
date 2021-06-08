@@ -501,7 +501,7 @@ app('pathway')
 							@elseif ($item->source)
 								{{ $item->source->group ? $item->source->group->name : '(ITaP Owned)' }}
 							@else
-								trans('New hardware')
+								{{ trans('queues::queues.new hardware') }}
 							@endif
 						</td>
 						<td>
@@ -676,7 +676,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="seller-queue">{{ trans('queues::queues.queue') }}</label>
 					<select id="seller-queue" name="sellerqueueid" class="form-control" disabled="true">
-						<option>{{ trans('queues::queues.select queue') }}</option>
+						<option value="0">{{ trans('queues::queues.select queue') }}</option>
 					</select>
 				</div>
 
@@ -699,7 +699,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="sell-queue">{{ trans('queues::queues.queue') }}</label>
 					<select id="sell-queue" name="queueid" class="form-control" disabled="true">
-						<option>{{ trans('queues::queues.select queue') }}</option>
+						<option value="0">{{ trans('queues::queues.select queue') }}</option>
 					</select>
 				</div>
 
@@ -767,7 +767,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="lender-queue">{{ trans('queues::queues.queue') }}</label>
 					<select id="lender-queue" name="lenderqueueid" class="form-control" disabled="true">
-						<option>{{ trans('queues::queues.select queue') }}</option>
+						<option value="0">{{ trans('queues::queues.select queue') }}</option>
 					</select>
 				</div>
 
@@ -800,7 +800,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="loan-queue">{{ trans('queues::queues.queue') }}</label>
 					<select id="loan-queue" name="queueid" class="form-control" disabled="true">
-						<option>{{ trans('queues::queues.select queue') }}</option>
+						<option value="0">{{ trans('queues::queues.select queue') }}</option>
 					</select>
 				</div>
 
