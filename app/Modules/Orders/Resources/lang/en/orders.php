@@ -3,6 +3,7 @@ return [
 	'module name' => 'Order Manager',
 	'module sections' => 'Module section',
 	'orders' => 'Orders',
+	'order' => 'Order',
 	'category' => 'Category',
 	'categories' => 'Product Categories',
 	'products' => 'Products',
@@ -108,4 +109,8 @@ return [
 		'invalid orderid' => 'Invalid order ID.',
 		'invalid approverid' => 'Invalid approver ID',
 	],
+	'export summary' => 'Order Summary',
+	'export items' => 'Order Summary and Items',
+	'export accounts' => 'Order Summary and Accounts',
+	'type' => 'Type',
 ];

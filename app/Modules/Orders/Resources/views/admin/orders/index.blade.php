@@ -6,6 +6,22 @@
 
 @push('scripts')
 <script src="{{ asset('modules/orders/js/orders.js') }}"></script>
+<script>
+$(document).ready(function() {
+	var dialog = $("#export-orders").dialog({
+		autoOpen: false,
+		height: 'auto',
+		width: 250,
+		modal: true
+	});
+
+	$('#toolbar-export>.btn-export').off('click').on('click', function(e){
+		e.preventDefault();
+
+		dialog.dialog("open");
+	});
+});
+</script>
 @endpush
 
 @php
@@ -22,7 +38,7 @@ app('pathway')
 	@endif
 
 	{!!
-		Toolbar::custom(route('admin.orders.index', ['export' => 'csv']), 'export', 'export', trans('orders::orders.export'), false);
+		Toolbar::link('export', trans('orders::orders.export'), route('admin.orders.index'));
 		Toolbar::spacer();
 	!!}
 
@@ -217,6 +233,26 @@ app('pathway')
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
+
+	<div id="export-orders" class="hide" title="{{ trans('orders::orders.export') }}">
+		<h2 class="modal-title sr-only">{{ trans('knowledge::knowledge.choose type') }}</h2>
+
+		<p>
+			<a href="{{ route('admin.orders.index', ['export' => 'only_main']) }}" class="btn btn-outline-primary d-block">
+				{{ trans('orders::orders.export summary') }}
+			</a>
+		</p>
+		<p>
+			<a href="{{ route('admin.orders.index', ['export' => 'items']) }}" class="btn btn-outline-secondary d-block">
+				{{ trans('orders::orders.export items') }}
+			</a>
+		</p>
+		<p>
+			<a href="{{ route('admin.orders.index', ['export' => 'accounts']) }}" class="btn btn-outline-secondary d-block">
+				{{ trans('orders::orders.export accounts') }}
+			</a>
+		</p>
+	</div>
 
 	@csrf
 </form>

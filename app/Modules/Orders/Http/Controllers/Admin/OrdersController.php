@@ -330,7 +330,7 @@ class OrdersController extends Controller
 				->orderBy($filters['order'], $filters['order_dir'])
 				->get();
 
-			return $this->export($rows);
+			return $this->export($rows, $request->input('export'));
 		}
 
 		$rows = $query
@@ -362,18 +362,27 @@ class OrdersController extends Controller
 	 * @param  object  $rows
 	 * @return Response
 	 */
-	public function export($rows)
+	public function export($rows, $export)
 	{
 		$data = array();
 		$data[] = array(
+			trans('orders::orders.type'),
 			trans('orders::orders.id'),
+			trans('orders::orders.order'),
 			trans('orders::orders.created'),
 			trans('orders::orders.status'),
 			trans('orders::orders.submitter'),
 			trans('orders::orders.user'),
 			trans('orders::orders.group'),
-			trans('orders::orders.total')
+			trans('orders::orders.quantity'),
+			trans('orders::orders.price'),
+			trans('orders::orders.total'),
+			'purchaseio',
+			'purchasewbse',
+			trans('orders::orders.product'),
+			trans('orders::orders.notes'),
 		);
+
 		foreach ($rows as $row)
 		{
 			$submitter = '';
@@ -396,15 +405,70 @@ class OrdersController extends Controller
 			}
 
 			$data[] = array(
+				'order',
+				$row->id,
 				$row->id,
 				$row->datetimecreated->format('Y-m-d'),
 				$row->status,
 				$submitter,
 				$user,
 				$group,
+				'',
+				'',
 				config('orders.currency', '$') . ' ' . $row->formatNumber($row->ordertotal),
+				'',
+				'',
+				'',
 				$row->usernotes
 			);
+
+			if ($export == 'items')
+			{
+				foreach ($row->items()->withTrashed()->whereIsActive()->get() as $item)
+				{
+					$data[] = array(
+						'item',
+						$item->id,
+						$item->orderid,
+						$item->datetimecreated->format('Y-m-d'),
+						$item->isFulfilled() ? 'fullfilled' : 'pending',
+						'',
+						'',
+						'',
+						$item->quantity,
+						config('orders.currency', '$') . ' ' . $row->formatNumber($item->origunitprice),
+						config('orders.currency', '$') . ' ' . $row->formatNumber($item->price),
+						'',
+						'',
+						$item->product ? $item->product->name : $item->orderproductid,
+						''
+					);
+				}
+			}
+
+			if ($export == 'accounts')
+			{
+				foreach ($row->accounts()->withTrashed()->whereIsActive()->get() as $account)
+				{
+					$data[] = array(
+						'account',
+						$account->id,
+						$account->orderid,
+						$account->datetimecreated->format('Y-m-d'),
+						$account->status,
+						'',
+						'',
+						'',
+						'',
+						'',
+						config('orders.currency', '$') . ' ' . $row->formatNumber($account->amount),
+						$account->purchaseio ? $account->purchaseio : '',
+						$account->purchasewbse ? $account->purchasewbse : '',
+						'',
+						''
+					);
+				}
+			}
 		}
 
 		$filename = 'orders_data.csv';
