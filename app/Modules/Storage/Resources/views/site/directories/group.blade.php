@@ -755,7 +755,7 @@
 											{!! ($item->bytes > 0 ? '<span class="increase text-success">+ ' : '<span class="decrease text-danger">- ') . App\Halcyon\Utility\Number::formatBytes(abs($item->bytes)) . '</span>' !!}
 										</td>
 										<td class="text-right">
-											{{ App\Halcyon\Utility\Number::formatBytes($item->total) }}
+											{{ App\Halcyon\Utility\Number::formatBytes($item->total, 1) }}
 										</td>
 										@if (auth()->user()->can('manage storage'))
 										<td class="text-right">
