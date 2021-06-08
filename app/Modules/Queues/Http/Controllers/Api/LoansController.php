@@ -502,7 +502,7 @@ class LoansController extends Controller
 			->where('queueid', '=', $row->lenderqueueid)
 			->where('lenderqueueid', '=', (int)$row->queueid)
 			->where('datetimestart', '=', $row->datetimestart)
-			->where('datetimestop', '=', $row->datetimestop)
+			->where('datetimestop', '=', ($row->hasEnd() ? $row->datetimestop : '0000-00-00 00:00:00'))
 			->orderBy('datetimestart', 'asc')
 			->get()
 			->first();

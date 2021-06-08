@@ -492,7 +492,7 @@ class SizesController extends Controller
 			->where('queueid', '=', $row->sellerqueueid)
 			->where('sellerqueueid', '=', (int)$row->queueid)
 			->where('datetimestart', '=', $row->datetimestart)
-			->where('datetimestop', '=', $row->datetimestop)
+			->where('datetimestop', '=', ($row->hasEnd() ? $row->datetimestop : '0000-00-00 00:00:00'))
 			->orderBy('datetimestart', 'asc')
 			->get()
 			->first();
