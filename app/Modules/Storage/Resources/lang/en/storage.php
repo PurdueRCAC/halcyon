@@ -99,4 +99,7 @@ return [
 	'lender' => 'Lender',
 	'sell to' => 'Sell to',
 	'loan to' => 'Loan to',
+	'options' => 'Options',
+	'edit purchase' => 'Edit purchase',
+	'edit loan' => 'Edit loan',
 ];

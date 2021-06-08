@@ -525,8 +525,8 @@ class PurchasesController extends Controller
 	public function update($id, Request $request)
 	{
 		$request->validate([
-			'resourceid'    => 'required|integer|min:1',
-			'groupid'       => 'required|integer',
+			'resourceid'    => 'nullable|integer|min:1',
+			'groupid'       => 'nullable|integer',
 			//'bytes' => 'nullable|integer',
 			'sellergroupid' => 'nullable|integer',
 			'datetimestart' => 'nullable|date',
@@ -535,6 +535,9 @@ class PurchasesController extends Controller
 		]);
 
 		$row = Purchase::findOrFail($id);
+
+		$counter = $row->counter;
+
 		$row->fill($request->all());
 
 		// Sanity checks if we are changing start time
@@ -595,7 +598,7 @@ class PurchasesController extends Controller
 		if ($request->has('bytes'))
 		{
 			// Can't change bytes of a entry that has already started
-			if ($row->datetimestart->timestamp <= Carbon::now()->timestamp)
+			if ($row->bytes != $row->getOriginal('bytes') && $row->datetimestart->timestamp <= Carbon::now()->timestamp)
 			{
 				return response()->json(['message' => trans('Cannot change bytes of a entry that has already started')], 409);
 			}
@@ -653,8 +656,6 @@ class PurchasesController extends Controller
 
 		if ($row->sellergroupid)
 		{
-			$counter = $row->counter;
-
 			if ($counter && $row->bytes)
 			{
 				// Convert to string to add negative or PHP will lose precision on large values
@@ -666,9 +667,13 @@ class PurchasesController extends Controller
 				{
 					$counter->bytes = '-' . $row->bytes;
 				}
-			}
 
-			$counter->save();
+				if ($row->hasEnd())
+				{
+					$counter->datetimestop = $row->datetimestop;
+				}
+				$counter->save();
+			}
 		}
 
 		$row->api = route('api.storage.purchases.read', ['id' => $row->id]);

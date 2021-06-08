@@ -659,11 +659,6 @@
 				</div><!-- / .panel -->
 				<?php
 			endforeach;
-		else:
-			?>
-			<p class="text-center text-muted">{{ trans('global.none') }}</p>
-			<?php
-		endif;
 		?>
 			<div class="card panel panel-default">
 				<div class="card-header panel-heading">
@@ -714,6 +709,11 @@
 									<th scope="col">{{ trans('storage::storage.end') }}</th>
 									<th scope="col" class="text-right">{{ trans('storage::storage.amount') }}</th>
 									<th scope="col" class="text-right">{{ trans('storage::storage.total') }}</th>
+									@if (auth()->user()->can('admin storage'))
+										<th scope="col" colspan="2" class="text-right">{{ trans('storage::storage.options') }}</th>
+									@elseif (auth()->user()->can('manage storage'))
+										<th scope="col" class="text-right">{{ trans('storage::storage.options') }}</th>
+									@endif
 								</tr>
 							</thead>
 							<tbody>
@@ -745,7 +745,7 @@
 											<time datetime="{{ $item->datetimestart }}">{{ $item->datetimestart->format('Y-m-d') }}</time>
 										</td>
 										<td>
-											@if ($item->hasEnded())
+											@if ($item->hasEnd())
 												<time datetime="{{ $item->datetimestop }}">{{ $item->datetimestop->format('Y-m-d') }}</time>
 											@else
 												-
@@ -757,6 +757,112 @@
 										<td class="text-right">
 											{{ App\Halcyon\Utility\Number::formatBytes($item->total) }}
 										</td>
+										@if (auth()->user()->can('manage storage'))
+										<td class="text-right">
+											<a href="#dialog-edit-{{ $item->type . $item->id }}" class="btn btn-sm dialog-btn"
+												data-api="{{ route('api.storage.' . ($item->type == 'loan' ? 'loans' : 'purchases'). '.update', ['id' => $item->id]) }}"
+												data-id="{{ $item->id }}">
+												<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
+											</a>
+
+											<?php
+											$t = $item->type;
+											?>
+											<div class="dialog" id="dialog-edit-{{ $t . $item->id }}" title="{{ trans('storage::storage.edit ' . $t) }}">
+												<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.' . ($item->type == 'loan' ? 'loans' : 'purchases'). '.update', ['id' => $item->id]) }}">
+													<div class="form-group">
+														<label for="{{ $t }}-bytes{{ $item->id }}">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
+														<input type="text" class="form-control bytes" size="4" id="{{ $t }}-bytes{{ $item->id }}" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]" value="{{ App\Halcyon\Utility\Number::formatBytes(abs($item->bytes)) }}" />
+														<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
+													</div>
+
+													<div class="row">
+														<div class="col-md-6">
+															<div class="form-group">
+																<label for="{{ $t }}-datetimestart{{ $item->id }}">{{ trans('queues::queues.start') }} <span class="required">*</span></label>
+																<input type="text" name="datetimestart" class="form-control datetime" id="{{ $t }}-datetimestart{{ $item->id }}" required value="{{ $item->datetimestart->toDateTimeString() }}" />
+															</div>
+														</div>
+														<div class="col-md-6">
+															<div class="form-group">
+																<label for="{{ $t }}-datetimestop{{ $item->id }}">{{ trans('queues::queues.end') }}</label>
+																<input type="text" name="datetimestop" class="form-control datetime" id="{{ $t }}-datetimestop{{ $item->id }}" value="{{ $item->hasEnd() ? $item->datetimestop->toDateTimeString() : '' }}" <?php if ($t == 'purchase') { echo 'disabled="disabled"'; } ?> placeholder="{{ trans('storage::storage.end of life') }}" />
+															</div>
+														</div>
+													</div>
+
+													@if ($t == 'loan')
+													<div class="form-group">
+														<label for="{{ $t }}-lendergroup{{ $item->id }}">{{ trans('storage::storage.lender') }} <span class="required">*</span></label>
+														<select name="lendergroupid" id="{{ $t }}-lendergroup{{ $item->id }}"
+															class="form-control form-group-storage"
+															data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
+															<option value="0">{{ trans('storage::storage.select group') }}</option>
+															@if ($item->lendergroupid == -1)
+															<option value="-1" selected="selected">{{ trans('storage::storage.org owned') }}</option>
+															@else
+															<option value="{{ $item->lendergroupid }}">{{ $item->lender->name }}</option>
+															@endif
+														</select>
+													</div>
+													@else
+													<div class="form-group">
+														<label for="{{ $t }}-sellergroup{{ $item->id }}">{{ $t == 'loan' ? trans('storage::storage.lender') : trans('storage::storage.seller') }} <span class="required">*</span></label>
+														<select name="sellergroupid" id="{{ $t }}-sellergroup{{ $item->id }}"
+															class="form-control form-group-storage"
+															data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
+															<option value="0">{{ trans('storage::storage.select group') }}</option>
+															@if ($item->sellergroupid == -1)
+															<option value="-1" selected="selected">{{ trans('storage::storage.org owned') }}</option>
+															@else
+															<option value="{{ $item->sellergroupid }}">{{ $item->seller->name }}</option>
+															@endif
+														</select>
+													</div>
+													@endif
+
+													<div class="form-group">
+														<label for="{{ $t }}-group{{ $item->id }}">{{ $t == 'loan' ? trans('storage::storage.loan to') : trans('storage::storage.sell to') }} <span class="required">*</span></label>
+														<select name="groupid" id="{{ $t }}-group{{ $item->id }}"
+															class="form-control form-group-storage"
+															data-update="{{ $t }}-storage"
+															data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
+															@if ($item->groupid == -1)
+															<option value="-1" selected="selected">{{ trans('storage::storage.org owned') }}</option>
+															@else
+															<option value="{{ $item->groupid }}">{{ $item->group->name }}</option>
+															@endif
+														</select>
+													</div>
+
+													<div class="form-group">
+														<label for="{{ $t }}-comment">{{ trans('storage::storage.comment') }}</label>
+														<textarea id="{{ $t }}-comment" name="comment" class="form-control" rows="3" cols="40">{{ $item->comment }}</textarea>
+													</div>
+
+													<div id="error_{{ $t }}" class="alert alert-danger hide"></div>
+
+													<div class="dialog-footer text-right">
+														<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.update') }}" data-id="{{ $item->id }}" data-type="{{ $t }}" data-success="{{ trans('queues::queues.item updated') }}" />
+													</div>
+
+													<input type="hidden" name="resourceid" value="{{ $item->resourceid }}" />
+													<input type="hidden" name="id" value="{{ $item->id }}" />
+													@csrf
+												</form>
+											</div>
+										</td>
+										@if (auth()->user()->can('admin storage'))
+										<td class="text-right">
+											<button class="btn btn-sm text-danger storage-delete"
+												data-confirm="{{ trans('global.confirm delete') }}"
+												data-api="{{ route('api.storage.' . ($item->type == 'loan' ? 'loans' : 'purchases'). '.delete', ['id' => $item->id]) }}"
+												data-id="{{ $item->id }}">
+												<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
+											</button>
+										</td>
+										@endif
+										@endif
 									</tr>
 								@endforeach
 							</tbody>
@@ -951,5 +1057,12 @@
 				</div>
 			</div><!-- / .panel -->
 		@endif
+		<?php
+		else:
+			?>
+			<p class="text-center text-muted">{{ trans('global.none') }}</p>
+			<?php
+		endif;
+		?>
 	</div><!-- / .col -->
 </div><!-- / .row -->

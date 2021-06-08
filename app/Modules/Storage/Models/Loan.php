@@ -107,9 +107,19 @@ class Loan extends Model
 	 *
 	 * @return  object
 	 */
-	public function hasEnded()
+	public function hasEnd()
 	{
 		return ($this->datetimestop && $this->datetimestop != '0000-00-00 00:00:00' && $this->datetimestop != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * Set a query's WHERE clause to include published state
+	 *
+	 * @return  object
+	 */
+	public function hasEnded()
+	{
+		return ($this->hasEnd() && $this->datetimestop->toDateTimeString() <= Carbon::now()->toDateTimeString());
 	}
 
 	/**
@@ -231,7 +241,7 @@ class Loan extends Model
 	{
 		return self::query()
 			->where('datetimestart', '=', $this->datetimestart)
-			->where('datetimestop', '=', $this->datetimestop)
+			->where('datetimestop', '=', ($this->hasEnd() ? $this->datetimestop : '0000-00-00 00:00:00'))
 			->where('groupid', '=', $this->lendergroupid)
 			->where('lendergroupid', '=', $this->groupid)
 			->get()

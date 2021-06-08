@@ -977,7 +977,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		$.ajax({
 			url: frm.data('api'),
-			type: 'post',
+			type: btn.attr('data-id') ? 'put' : 'post',
 			data: frm.serialize(),
 			dataType: 'json',
 			async: false,
@@ -990,13 +990,49 @@ document.addEventListener('DOMContentLoaded', function () {
 				if (xhr.responseJSON) {
 					msg = xhr.responseJSON.message;
 				} else {
-					msg = 'Failed to create item.';
+					msg = 'Failed to process item.';
 				}
-				$('#error_' + btn.attr('data-type'))
+				$('#error_' + btn.attr('data-type') + btn.attr('data-id'))
 					.removeClass('hide')
 					.text(msg);
 				//console.log(xhr.responseText);
 			}
+		});
+	});
+
+	$('.storage-delete').on('click', function (e) {
+		e.preventDefault();
+
+		var btn = this;
+
+		if (confirm(btn.getAttribute('data-confirm'))) {
+			$.ajax({
+				url: btn.getAttribute('data-api'),
+				type: 'delete',
+				dataType: 'json',
+				async: false,
+				success: function (data) {
+					Halcyon.message('success', btn.getAttribute('data-success'));
+					window.location.reload(true);
+				},
+				error: function (xhr, reason, thrownError) {
+					if (xhr.responseJSON) {
+						Halcyon.message('danger', xhr.responseJSON.message);
+					} else {
+						Halcyon.message('danger', 'Failed to delete item.');
+					}
+					console.log(xhr.responseText);
+				}
+			});
+		}
+	});
+
+	$('.storage-edit').on('click', function (e) {
+		e.preventDefault();
+
+		$($(this).attr('href')).dialog({
+			modal: true,
+			width: '550px'
 		});
 	});
 
