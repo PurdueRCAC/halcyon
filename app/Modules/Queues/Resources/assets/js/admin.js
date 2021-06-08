@@ -636,6 +636,15 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
+	$('.edit').on('click', function (e) {
+		e.preventDefault();
+
+		$($(this).attr('href')).dialog({
+			modal: true,
+			width: '550px'
+		});
+	});
+
 	$('#field-aclusersenabled').on('change', function(e){
 		$('#field-aclgroups').parent().toggleClass('hide');
 	});
