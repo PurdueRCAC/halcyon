@@ -113,4 +113,5 @@ return [
 	'export items' => 'Order Summary and Items',
 	'export accounts' => 'Order Summary and Accounts',
 	'type' => 'Type',
+	'department' => 'Department',
 ];

@@ -374,6 +374,7 @@ class OrdersController extends Controller
 			trans('orders::orders.submitter'),
 			trans('orders::orders.user'),
 			trans('orders::orders.group'),
+			trans('orders::orders.department'),
 			trans('orders::orders.quantity'),
 			trans('orders::orders.price'),
 			trans('orders::orders.total'),
@@ -388,10 +389,19 @@ class OrdersController extends Controller
 			$submitter = '';
 			$user = '';
 			$group = '';
+			$department = '';
 
 			if ($row->groupid)
 			{
 				$group = $row->group ? $row->group->name : '';
+				if ($row->group)
+				{
+					$first = $row->group->departmentList()->first();
+					if ($first)
+					{
+						$department = $first->name;
+					}
+				}
 			}
 
 			if ($row->userid)
@@ -413,6 +423,7 @@ class OrdersController extends Controller
 				$submitter,
 				$user,
 				$group,
+				$department,
 				'',
 				'',
 				config('orders.currency', '$') . ' ' . $row->formatNumber($row->ordertotal),
@@ -432,6 +443,7 @@ class OrdersController extends Controller
 						$item->orderid,
 						$item->datetimecreated->format('Y-m-d'),
 						$item->isFulfilled() ? 'fullfilled' : 'pending',
+						'',
 						'',
 						'',
 						'',
@@ -456,6 +468,7 @@ class OrdersController extends Controller
 						$account->orderid,
 						$account->datetimecreated->format('Y-m-d'),
 						$account->status,
+						'',
 						'',
 						'',
 						'',
