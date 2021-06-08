@@ -78,6 +78,14 @@ class HttpLogger
 			$log->uri = $request->fullUrl();
 		}
 		$log->payload = $log->payload ?: '';
+		if ($request->has('groupid'))
+		{
+			$log->groupid = intval($request->input('groupid'));
+		}
+		if ($request->has('userid') && is_numeric($request->input('userid')))
+		{
+			$log->targetuserid = intval($request->input('userid'));
+		}
 
 		$log->status = 200;
 		if (!($response instanceof StreamedResponse))
