@@ -277,7 +277,7 @@ class Update extends Model
 		}
 
 		$uvars = array(
-			'updatedatetime' => $this->getOriginal('datetimecreated'),
+			'updatedatetime' => date('F j, Y g:ia', strtotime($this->getOriginal('datetimecreated'))),
 			'updatedate'     => date('l, F jS, Y', strtotime($this->getOriginal('datetimecreated'))),
 			'updatetime'     => date("g:ia", strtotime($this->getOriginal('datetimecreated')))
 		);
