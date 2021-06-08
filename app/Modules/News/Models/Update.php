@@ -285,9 +285,10 @@ class Update extends Model
 		$news = $this->article->getAttributes(); //$this->article->toArray();
 		$news['resources'] = $this->article->resources->toArray();
 		$resources = array();
-		foreach ($news['resources'] as $resource)
+		foreach ($this->article->resources as $r)
 		{
-			$resource['resourcename'] = $resource['resourceid'];
+			$resource = $r->toArray();
+			$resource['resourcename'] = $r->resource->name;
 			array_push($resources, $resource['resourcename']);
 		}
 
