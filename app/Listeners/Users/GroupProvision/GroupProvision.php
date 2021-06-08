@@ -25,7 +25,7 @@ class GroupProvision
 	 */
 	public function subscribe($events)
 	{
-		$events->listen(UserUpdated::class, self::class . '@handleUserUpdated');
+		//$events->listen(UserUpdated::class, self::class . '@handleUserUpdated');
 		$events->listen(UnixGroupCreating::class, self::class . '@handleUnixGroupCreating');
 		$events->listen(UnixGroupDeleted::class, self::class . '@handleUnixGroupDeleted');
 		$events->listen(UnixGroupMemberCreated::class, self::class . '@handleUnixGroupMemberCreated');
