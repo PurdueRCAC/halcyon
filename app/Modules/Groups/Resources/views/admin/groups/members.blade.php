@@ -137,11 +137,7 @@ $processed = array();
 
 $users = $group->members()
 	->withTrashed()
-	->where(function($where)
-	{
-		$where->whereNull('dateremoved')
-			->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
-	})
+	->whereIsActive()
 	->orderBy('datecreated', 'desc')
 	->get();
 
