@@ -31,6 +31,11 @@ class LegacyFiles
 				$s = str_replace(['storage/', 'images/'], ['resources/', ''], $s);
 			}
 
+			if (substr($s, -strlen('ciworkforce2020/report/report.pdf')) == 'ciworkforce2020/report/report.pdf')
+			{
+				$s = str_replace('report/', '', $s);
+			}
+
 			$f = explode('/', $s);
 
 			for ($i = 0; $i < count($f); $i++)
