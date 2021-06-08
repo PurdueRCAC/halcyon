@@ -487,6 +487,16 @@ class SizesController extends Controller
 
 		$row = Size::findOrFail($id);
 
+		// Find counter entry to update as well
+		$counter = Size::query()
+			->where('queueid', '=', $row->sellerqueueid)
+			->where('sellerqueueid', '=', (int)$row->queueid)
+			->where('datetimestart', '=', $row->datetimestart)
+			->where('datetimestop', '=', $row->datetimestop)
+			->orderBy('datetimestart', 'asc')
+			->get()
+			->first();
+
 		if ($request->has('datetimestart'))
 		{
 			$row->datetimestart = $request->input('datetimestart');
@@ -538,7 +548,7 @@ class SizesController extends Controller
 
 			// Does the queue have any cores yet?
 			$count = Size::query()
-				->where('queueid', '=', (int)$row->queueid)
+				->where('queueid', '=', (int)$row->sellerqueueid)
 				->orderBy('datetimestart', 'asc')
 				->get()
 				->first();
@@ -606,19 +616,10 @@ class SizesController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
-		// Find counter entry to update as well
-		$counter = Size::query()
-			->where('queueid', '=', $row->sellerqueueid)
-			->where('sellerqueueid', '=', (int)$row->queueid)
-			->where('datetimestart', '=', $row->datetimestart)
-			->where('datetimestop', '=', $row->datetimestop)
-			->orderBy('datetimestart', 'asc')
-			->get()
-			->first();
-
 		if ($counter)
 		{
 			$counter->corecount = -$row->corecount;
+			$counter->datetimestop = $row->datetimestop;
 
 			if (!$counter->save())
 			{

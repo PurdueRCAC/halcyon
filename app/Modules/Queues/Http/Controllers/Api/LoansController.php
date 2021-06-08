@@ -345,12 +345,12 @@ class LoansController extends Controller
 
 				if (!$counter->save())
 				{
-					return response()->json(['message' => trans('global.messages.Failed to update `queueloans` entry for #:id', ['id' => $exist->id])], 500);
+					return response()->json(['message' => trans('global.messages.Failed to update `queueloans` counter entry for #:id', ['id' => $exist->id])], 500);
 				}
 			}
 			else
 			{
-				return response()->json(['message' => trans('global.messages.Failed to retrieve `queueloans` entry')], 506);
+				return response()->json(['message' => trans('global.messages.Failed to retrieve `queueloans` counter entry')], 506);
 			}
 
 			return new JsonResource($exist);
@@ -497,6 +497,16 @@ class LoansController extends Controller
 
 		$row = Loan::findOrFail($id);
 
+		// Find counter entry to update as well
+		$counter = Loan::query()
+			->where('queueid', '=', $row->lenderqueueid)
+			->where('lenderqueueid', '=', (int)$row->queueid)
+			->where('datetimestart', '=', $row->datetimestart)
+			->where('datetimestop', '=', $row->datetimestop)
+			->orderBy('datetimestart', 'asc')
+			->get()
+			->first();
+
 		if ($request->has('datetimestart'))
 		{
 			$row->datetimestart = $request->input('datetimestart');
@@ -548,7 +558,7 @@ class LoansController extends Controller
 
 			// Does the queue have any cores yet?
 			$count = Size::query()
-				->where('queueid', '=', (int)$row->queueid)
+				->where('queueid', '=', (int)$row->lenderqueueid)
 				->orderBy('datetimestart', 'asc')
 				->get()
 				->first();
@@ -621,28 +631,19 @@ class LoansController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
-		// Find counter entry to update as well
-		$counter = Loan::query()
-			->where('queueid', '=', $row->lenderqueueid)
-			->where('lenderqueueid', '=', (int)$row->queueid)
-			->where('datetimestart', '=', $row->datetimestart)
-			->where('datetimestop', '=', $row->datetimestop)
-			->orderBy('datetimestart', 'asc')
-			->get()
-			->first();
-
 		if ($counter)
 		{
 			$counter->corecount = -$row->corecount;
+			$counter->datetimestop = $row->datetimestop;
 
 			if (!$counter->save())
 			{
-				return response()->json(['message' => trans('global.messages.Failed to update `queueloans` entry for #:id', ['id' => $counter->id])], 500);
+				return response()->json(['message' => trans('global.messages.Failed to update `queueloans` counter entry for #:id', ['id' => $counter->id])], 500);
 			}
 		}
 		else
 		{
-			return response()->json(['message' => trans('global.messages.Failed to retrieve `queueloans` entry')], 506);
+			return response()->json(['message' => trans('global.messages.Failed to retrieve `queueloans` counter entry')], 506);
 		}
 
 		return new JsonResource($row);

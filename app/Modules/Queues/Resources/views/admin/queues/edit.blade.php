@@ -399,7 +399,7 @@ app('pathway')
 						<th scope="col">{{ trans('queues::queues.queue') }}</th>
 						<th scope="col" class="text-right">{{ trans('queues::queues.nodes') }}</th>
 						<th scope="col" class="text-right">{{ trans('queues::queues.total') }}</th>
-						<th scope="col" class="text-right"></th>
+						<th scope="col" class="text-right" colspan="2">{{ trans('queues::queues.options') }}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -440,7 +440,7 @@ app('pathway')
 					$items = $items->sortByDesc('datetimestart')->slice(0, 20);
 
 					foreach ($items as $item): ?>
-					<tr>
+					<tr<?php if ($item->hasEnd() && $item->hasEnded()) { echo ' class="trashed"'; } ?>>
 						<td>
 							@if ($item->hasStart())
 								<time datetime="{{ $item->datetimestop }}">{{ $item->datetimestart->format('Y-m-d') }}</time>
@@ -521,12 +521,20 @@ app('pathway')
 							{{ $item->total }}
 						</td>
 						<td class="text-right">
-							<button class="btn btn-sm btn-danger delete"
+							<a href="#dialog-edit{{ $item->id }}" class="btn btn-sm edit"
+								data-success="{{ trans('queues::queues.item updated') }}"
+								data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes'). '.update', ['id' => $item->id]) }}"
+								data-id="{{ $item->id }}">
+								<span class="icon-edit" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
+							</a>
+						</td>
+						<td class="text-right">
+							<button class="btn btn-sm text-danger delete"
 								data-confirm="{{ trans('global.confirm delete') }}"
 								data-success="{{ trans('queues::queues.item deleted') }}"
 								data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes'). '.delete', ['id' => $item->id]) }}"
 								data-id="{{ $item->id }}">
-								<span class="icon-trash"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
+								<span class="icon-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
 							</button>
 
 							<div class="dialog" id="dialog-edit{{ $item->id }}" title="{{ trans('queues::queues.edit ' . ($item->type == 1 ? 'loan' : 'size')) }}">
@@ -535,7 +543,7 @@ app('pathway')
 										<div class="col-md-6">
 											<div class="form-group">
 												<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.nodes') }}</label>
-												<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" name="nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $item->nodecount }}" />
+												<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" name="nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $amt }}" />
 											</div>
 										</div>
 										<div class="col-md-6">
