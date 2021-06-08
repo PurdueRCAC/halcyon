@@ -284,6 +284,10 @@ class QueuesController extends Controller
 
 		$row = $id ? Queue::findOrFail($id) : new Queue();
 		$row->fill($request->input('fields'));
+		if (!$row->groupid)
+		{
+			$row->groupid = -1;
+		}
 
 		if (!$id)
 		{
