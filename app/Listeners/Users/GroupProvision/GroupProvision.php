@@ -177,7 +177,7 @@ class GroupProvision
 	 * @param   UserUpdated  $event
 	 * @return  void
 	 */
-	public function handleUserUpdated(UserUpdated $event)
+	/*public function handleUserUpdated(UserUpdated $event)
 	{
 		$config = $this->config();
 
@@ -209,7 +209,7 @@ class GroupProvision
 		}
 
 		$this->log('groupprovision', __METHOD__, 'GET', $status, $body, $url);
-	}
+	}*/
 
 	/**
 	 * Handle a unix group being created
