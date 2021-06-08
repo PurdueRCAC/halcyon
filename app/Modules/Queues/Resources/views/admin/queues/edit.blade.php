@@ -648,7 +648,7 @@ app('pathway')
 								continue;
 							}
 
-							if ($queue->groupid < 0)
+							if ($queue->groupid < 0 && !$first)
 							{
 								$first = App\Modules\Groups\Models\Group::find(1);
 								$first->id = -1;
@@ -677,6 +677,19 @@ app('pathway')
 					<label for="seller-queue">{{ trans('queues::queues.queue') }}</label>
 					<select id="seller-queue" name="sellerqueueid" class="form-control">
 						<option value="0">{{ trans('queues::queues.select queue') }}</option>
+						@foreach ($groups as $group)
+							<?php
+							if ($group->id == $row->groupid)
+							{
+								foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
+								{
+								?>
+								<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
+								<?php
+								}
+							}
+							?>
+						@endforeach
 					</select>
 				</div>
 
