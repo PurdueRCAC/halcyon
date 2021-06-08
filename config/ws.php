@@ -39,6 +39,7 @@ return [
         '128.211.157.21',  // newxenon.rcac.purdue.edu
         '172.18.64.46',    // warden.rcac.purdue.edu
         '172.18.64.47',    // warden-new.rcac.purdue.edu
+        '172.18.64.196',
         '128.211.157.132', // dpecher.rcac.purdue.edu
         '128.210.189.82',  // duvel.rcac.purdue.edu
         '128.211.157.49',
