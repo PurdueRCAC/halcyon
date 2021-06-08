@@ -118,4 +118,6 @@ return [
 	'stop scheduling' => 'Stop scheduling',
 	'options' => 'Options',
 	'all states' => '- All States -',
+	'edit loan' => 'Edit loan',
+	'edit size' => 'Edit purchase',
 ];
