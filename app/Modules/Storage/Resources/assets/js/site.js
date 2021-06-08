@@ -25,7 +25,7 @@ function NewDirType() {
 	var parent_unixgroup = document.getElementById("selected_dir_unixgroup");
 	var x;
 
-	unixgroup_select.addEventListener('change', function(){
+	unixgroup_select.addEventListener('change', function () {
 		WSGetURL(this.options[this.selectedIndex].getAttribute('data-api'), NewDirUserPopulate);
 	});
 
@@ -132,7 +132,7 @@ function NewDirUserPopulate(xml) {
 			opt.innerHTML = results.members[x]['username'];
 
 			user_select.appendChild(opt);
-			
+
 		}
 	}
 }
@@ -156,6 +156,28 @@ function GuessDirUnixGroup() {
 			}
 		}
 	}
+}
+
+/**
+ * Distribute quota
+ *
+ * @param   {string}  dir
+ * @return  {void}
+ */
+function DistributeQuota(dir, api) {
+	//var img = document.getElementById(dir + "_quota_up");
+
+	//if (img.src.match(/arrow_up\.png$/) || img.src.match(/arrow_down\.png$/)) {
+		// Save quota
+		//img.src = "/include/images/loading.gif";
+		//img.style.width = "20px";
+		//img.style.height = "20px";
+
+		// Make WS call
+		var post = JSON.stringify({ "bytes": "ALL" });
+
+		WSPutURL(api, post, EditedUnixGroup, dir);
+	//}
 }
 
 /**
@@ -763,7 +785,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#new_dir_type').on('change', function (e) {
 		NewDirType();
 	});
-	$('#new_dir_user_select').on('change', function (e){
+	$('#new_dir_user_select').on('change', function (e) {
 		//NewDirUserSelected();
 		var input = document.getElementById("new_dir_input");
 		var selected = document.getElementById("new_dir_user_select");
@@ -811,7 +833,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		e.preventDefault();
 		ResetPermissions($(this).data('dir'), $(this).data('path'));
 	});*/
-	$('.unixgroup-edit').on('click', function(e) {
+	$('.unixgroup-edit').on('click', function (e) {
 		e.preventDefault();
 		EditUnixGroup($(this).data('dir'), $(this).data('api'));
 	});
@@ -838,12 +860,12 @@ document.addEventListener('DOMContentLoaded', function () {
 			$(this).data('apps'),
 			$(this).data('data')
 		);
-	});
+	});*/
 
 	$('.quota_upa').on('click', function(e){
 		e.preventDefault();
-		DistributeQuota($(this).data('dir'));
-	});*/
+		DistributeQuota($(this).data('dir'), $(this).data('api'));
+	});
 
 	$('.permissions-reset').on('click', function (e) {
 		e.preventDefault();

@@ -205,7 +205,7 @@
 						}
 						?>
 						<div id="{{ $did }}_dialog" data-id="{{ $did }}" title="{{ $dir->storageResource->path . '/' . $dir->path }}" class="dialog">
-
+							<form method="post">
 							<?php if ($dir->quotaproblem == 1 && $dir->bytes) { ?>
 								<div class="row mb-3">
 									<div class="col-md-4">
@@ -608,7 +608,7 @@
 											if (-$bucket['unallocatedbytes'] < $dir->bytes)
 											{
 												?>
-												<button id="{{ $dir->id }}_quota_upa" class="btn btn-secondary quota_upa<?php echo $cls; ?>" data-dir="{{ $dir->id }}">
+												<button id="{{ $dir->id }}_quota_upa" class="btn btn-secondary quota_upa<?php echo $cls; ?>" data-dir="{{ $dir->id }}" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}">
 													<span id="{{ $dir->id }}_quota_up" class="icon-arrow-down">{{ trans('storage::storage.remove overallocated') }}</span>
 												</button>
 												<?php
@@ -617,7 +617,7 @@
 										else
 										{
 											?>
-											<button id="{{ $dir->id }}_quota_upa" class="btn btn-secondary quota_upa<?php echo $cls; ?>" data-dir="{{ $dir->id }}">
+											<button id="{{ $dir->id }}_quota_upa" class="btn btn-secondary quota_upa<?php echo $cls; ?>" data-dir="{{ $dir->id }}" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}">
 												<span id="{{ $dir->id }}_quota_up" class="icon-arrow-up">{{ trans('storage::storage.distribute remaining') }}</span>
 											</button>
 											<?php
@@ -651,7 +651,8 @@
 									</div>
 								</div><!--/ .row -->
 							</div>
-
+							@csrf
+							</form>
 						</div><!-- / #<?php echo $did; ?>_dialog -->
 					<?php } ?>
 					</div><!-- / .panel-body -->

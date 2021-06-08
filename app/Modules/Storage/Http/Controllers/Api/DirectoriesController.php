@@ -5,6 +5,7 @@ namespace App\Modules\Storage\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use App\Halcyon\Utility\Number;
 use App\Modules\Storage\Http\Resources\DirectoryResource;
 use App\Modules\Storage\Http\Resources\DirectoryResourceCollection;
 use App\Modules\Storage\Models\Directory;
@@ -478,7 +479,7 @@ class DirectoriesController extends Controller
 			elseif ($row->bytes > $bucket['unallocatedbytes'])
 			{
 				// Check to see if tried to allocate all remaining space but we missed a fwe bits because of rounding
-				if (Number::formatBytes($row->bytes, true) == Number::formatBytes($bucket['unallocatedbytes'], true)
+				if (Number::formatBytes($row->bytes, 2) == Number::formatBytes($bucket['unallocatedbytes'], 2)
 				 && $row->bytes != $bucket['unallocatedbytes'])
 				{
 					$row->bytes = $bucket['unallocatedbytes'];
@@ -492,7 +493,7 @@ class DirectoriesController extends Controller
 			else
 			{
 				// Check to see if tried to allocate all remaining space but we missed a fwe bits because of rounding
-				if (Number::formatBytes($row->bytes, true) == Number::formatBytes($bucket['unallocatedbytes'], true)
+				if (Number::formatBytes($row->bytes, 2) == Number::formatBytes($bucket['unallocatedbytes'], 2)
 				 && $row->bytes != $bucket['unallocatedbytes'])
 				{
 					$row->bytes = $bucket['unallocatedbytes'];
@@ -854,9 +855,34 @@ class DirectoriesController extends Controller
 			'storageresourceid' => 'nullable|integer',
 		]);
 
-		$row->fill($request->all());
+		//$row->fill($request->all());
+		$keys = array(
+			'name',
+			'path',
+			'resourceid',
+			'groupid',
+			'parentstorageid',
+			'owneruserid',
+			'unixgroupid',
+			'ownerread',
+			'groupread',
+			'groupwrite',
+			'publicread',
+			'publicwrite',
+			'autouser',
+			'files',
+			'autouserunixgroupid',
+			'storageresourceid',
+		);
+		foreach ($keys as $key)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
 
-		if ($request->input('quotaupdate'))
+		if ($request->has('quotaupdate'))
 		{
 			// Fetch message type
 			$type = MessageType::query()
@@ -896,6 +922,8 @@ class DirectoriesController extends Controller
 			return new DirectoryResource($row);
 		}
 
+		$unallocatedbytes = 0;
+
 		if ($request->has('bytes'))
 		{
 			// Find appropriate bucket
@@ -917,6 +945,8 @@ class DirectoriesController extends Controller
 				{
 					return response()->json(['message' => trans('Empty bucket')], 415);
 				}
+
+				$row->bytes = $bytes;
 
 				// Top level dirs are required to have a quota
 				if ($row->bytes == 0 && !$row->parent)
@@ -942,7 +972,7 @@ class DirectoriesController extends Controller
 				}
 
 				// Check to see if tried to allocate all remaining space but we missed a fwe bits because of rounding
-				if (Number::formatBytes($row->bytes) == Number::formatBytes($bucket['unallocatedbytes'] + $row->getOriginal('bytes'))
+				if (Number::formatBytes($row->bytes, 2) == Number::formatBytes($bucket['unallocatedbytes'] + $row->getOriginal('bytes'), 2)
 				 && $row->bytes != $bucket['unallocatedbytes'] + $row->getOriginal('bytes'))
 				{
 					$row->bytes = $bucket['unallocatedbytes'] + $row->getOriginal('bytes');
@@ -952,12 +982,13 @@ class DirectoriesController extends Controller
 			{
 				if ($bucket == null)
 				{
-					$row->bytes = 0;
+					$bytes = $row->getOriginal('bytes');
 				}
 				else
 				{
-					$row->bytes = $bucket['unallocatedbytes'] + $row->getOriginal('bytes');
+					$bytes = $bucket['unallocatedbytes'] + $row->getOriginal('bytes');
 				}
+				$row->bytes = $bytes;
 			}
 			else
 			{
@@ -966,16 +997,16 @@ class DirectoriesController extends Controller
 
 			if ($bucket == null)
 			{
-				$row->unallocatedbytes = Number::formatBytes(0);
+				$unallocatedbytes = Number::formatBytes(0, 2);
 			}
 			else
 			{
-				$row->unallocatedbytes = Number::formatBytes($bucket['unallocatedbytes'] + ($bytes - $row->bytes), true);
+				$unallocatedbytes = Number::formatBytes($bucket['unallocatedbytes'] + ($row->getOriginal('bytes') - $bytes), 2);
 			}
 
-			if ($row->unallocatedbytes < 0)
+			if ($unallocatedbytes < 0)
 			{
-				$row->unallocatedbytes = Number::formatBytes(-($bucket['unallocatedbytes'] + ($bytes - $row->bytes)), true);
+				$row->unallocatedbytes = Number::formatBytes(-($bucket['unallocatedbytes'] + ($row->getOriginal('bytes') - $bytes)), 2);
 				$row->overallocated    = 1;
 
 				return new DirectoryResource($row);
@@ -1056,6 +1087,7 @@ class DirectoriesController extends Controller
 		}
 
 		$row->save();
+		$row->unallocatedbytes = $unallocatedbytes;
 
 		return new DirectoryResource($row);
 	}
