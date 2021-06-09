@@ -161,7 +161,7 @@ class ResourcesController extends Controller
 
 		$resource = Asset::findByName($name);
 
-		if (!$resource)
+		if (!$resource || !$resource->listname)
 		{
 			abort(404);
 		}
@@ -176,7 +176,7 @@ class ResourcesController extends Controller
 			)
 			->append(
 				$resource->name,
-				route('site.resources.' . $type->alias . '.show', ['name' => $resource->listname])
+				route('site.resources.' . $type->alias . '.show', ['name' => ($resource->listname ? $resource->listname : $resource->rolename)])
 			);
 
 		$rows = $type->resources()
