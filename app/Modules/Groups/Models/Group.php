@@ -458,6 +458,18 @@ class Group extends Model
 	}
 
 	/**
+	 * Get a list of unix groups
+	 *
+	 * @return  object
+	 */
+	public function getPrimaryUnixGroupAttribute()
+	{
+		return $this->unixGroups()
+			->where('longname', '=', $this->unixgroup)
+			->first();
+	}
+
+	/**
 	 * Get a list of "message of the day"
 	 *
 	 * @return  object
