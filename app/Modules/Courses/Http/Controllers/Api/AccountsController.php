@@ -245,7 +245,7 @@ class AccountsController extends Controller
 	public function create(Request $request)
 	{
 		$request->validate([
-			'crn' => 'nullable|string|max:8',
+			'crn' => 'nullable|max:8',
 			'department' => 'nullable|string|max:4',
 			'coursenumber' => 'nullable|string|max:8',
 			'classname' => 'required|string|max:255',
@@ -256,18 +256,31 @@ class AccountsController extends Controller
 			'datetimestop' => 'required|date',
 		]);
 
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
+
 		$type = $request->input('type');
 
 		$row = new Account;
 		$row->crn = $request->input('crn');
-		$row->department = $request->input('department');
-		$row->coursenumber = $request->input('coursenumber');
+		$row->department = $request->input('department', '');
+		$row->coursenumber = $request->input('coursenumber', '');
 		$row->classname = $request->input('classname');
 		$row->resourceid = $request->input('resourceid');
-		$row->groupid = $request->input('groupid');
-		$row->userid = $request->input('userid');
+		$row->groupid = $request->input('groupid', 0);
+		$row->userid = $request->input('userid', 0);
 		$row->datetimestart = $request->input('datetimestart', $request->input('start'));
 		$row->datetimestop = $request->input('datetimestop', $request->input('stop'));
+		
+		if ($request->has('classid'))
+		{
+			$row->classid = $request->input('classid');
+		}
+
 		//$row->fill($request->all());
 
 		if (!$row->userid)
@@ -333,6 +346,7 @@ class AccountsController extends Controller
 			$row->datetimestart = Carbon::parse($row->datetimestart)->modify('-259200 seconds')->toDateTimeString();
 			$row->datetimestop  = Carbon::parse($row->datetimestop)->modify('+604800 seconds')->toDateTimeString();
 			$row->notice = 1;
+			$row->forget('classid');
 		}
 
 		if (!$row->save())
