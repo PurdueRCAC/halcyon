@@ -652,11 +652,11 @@ class User extends Model implements
 		if (!$user)
 		{
 			$user = new self;
-			$user->name = $username;
 		}
 
 		if ($user)
 		{
+			$user->name = $user->name ?: $username;
 			$user->api_token = Str::random(60);
 
 			$newUsertype = config('modules.users.new_usertype');
