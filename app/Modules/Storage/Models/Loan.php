@@ -132,10 +132,11 @@ class Loan extends Model
 	{
 		$now = Carbon::now()->toDateTimeString();
 
-		return $query->where(function($where) use ($now)
+		return $query->withTrashed()
+			->where(function($where) use ($now)
 			{
 				$where->where('datetimestart', '=', '0000-00-00 00:00:00')
-					->orWhere('datetimestart', '<', $now);
+					->orWhere('datetimestart', '<=', $now);
 			})
 			->where(function($where) use ($now)
 			{
@@ -154,7 +155,8 @@ class Loan extends Model
 	{
 		$now = Carbon::now()->toDateTimeString();
 
-		return $query->whereNotNull('datetimestop')
+		return $query->withTrashed()
+			->whereNotNull('datetimestop')
 			->where('datetimestop', '!=', '0000-00-00 00:00:00')
 			->where('datetimestop', '<=', $now);
 	}

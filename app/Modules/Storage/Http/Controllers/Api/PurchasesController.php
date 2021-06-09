@@ -414,7 +414,15 @@ class PurchasesController extends Controller
 	 */
 	public function read($id)
 	{
-		$row = Purchase::findOrFail($id);
+		$row = Purchase::query()
+			->withTrashed()
+			->where('id', '=', $id)
+			->first();
+
+		if (!$row)
+		{
+			return response()->json(null, 404);
+		}
 
 		if (!auth()->user()->can('manage storage'))
 		{
@@ -534,14 +542,23 @@ class PurchasesController extends Controller
 			'comment'       => 'nullable|string'
 		]);
 
-		$row = Purchase::findOrFail($id);
+		$row = Purchase::query()
+			->withTrashed()
+			->where('id', '=', $id)
+			->first();
+
+		if (!$row)
+		{
+			return response()->json(null, 404);
+		}
 
 		$counter = $row->counter;
 
 		$row->fill($request->all());
 
 		// Sanity checks if we are changing start time
-		if ($row->datetimestart != $row->getOriginal('datetimestart'))
+		if ($request->has('datetimestart')
+		 && $request->input('datetimestart') != $row->datetimestart->toDateTimeString())
 		{
 			// Make sure the start time isn't the past
 			if ($row->datetimestart->timestamp < Carbon::now()->timestamp - 300)
@@ -555,7 +572,7 @@ class PurchasesController extends Controller
 				return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 			}*/
 
-			if ($row->datetimestop)
+			if ($row->hasEnd())
 			{
 				// Compare to new values
 				if ($row->datetimestop->timestamp <= $row->datetimestart->timestamp)
@@ -563,27 +580,27 @@ class PurchasesController extends Controller
 					return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 				}
 			}
-			elseif ($row->getOriginal('datetimestop') && $row->getOriginal('datetimestop') != '0000-00-00 00:00:00')
+			/*elseif ($row->getOriginal('datetimestop') && $row->getOriginal('datetimestop') != '0000-00-00 00:00:00')
 			{
 				// Compare to existing value
 				if (strtotime($row->getOriginal('datetimestop')) <= $row->datetimestart->timestamp)
 				{
 					return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 				}
-			}
+			}*/
 		}
 
 		if ($row->datetimestop != $row->getOriginal('datetimestop'))
 		{
 			// Make sure we aren't setting the stop time before the start
-			if ($row->datetimestart != $row->getOriginal('datetimestart'))
-			{
+			//if ($row->datetimestart != $row->getOriginal('datetimestart'))
+			//{
 				// Compare to new values
 				if ($row->datetimestop->timestamp <= $row->datetimestart->timestamp)
 				{
 					return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 				}
-			}
+			/*}
 			else
 			{
 				// Compare to existing value
@@ -591,7 +608,7 @@ class PurchasesController extends Controller
 				{
 					return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 				}
-			}
+			}*/
 		}
 
 		// Sanity checks if we are changing bytes
@@ -618,7 +635,7 @@ class PurchasesController extends Controller
 			{
 				// Does the storagedir have any bytes yet?
 				$first = Purchase::query()
-					->where('groupid', '=', $row->groupid)
+					->where('groupid', '=', $row->sellergroupid)
 					->where('resourceid', '=', $row->resourceid)
 					->orderBy('datetimestart', 'asc')
 					->limit(1)
@@ -701,18 +718,24 @@ class PurchasesController extends Controller
 	 */
 	public function delete($id)
 	{
-		$row = Purchase::findOrFail($id);
+		$row = Purchase::query()
+			->withTrashed()
+			->where('id', '=', $id)
+			->first();
 
-		$counter = $row->counter;
-
-		if (!$row->delete())
+		if ($row)
 		{
-			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
-		}
+			$counter = $row->counter;
 
-		if ($row->sellergroupid && $counter)
-		{
-			$counter->delete();
+			if (!$row->delete())
+			{
+				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			}
+
+			if ($row->sellergroupid && $counter)
+			{
+				$counter->delete();
+			}
 		}
 
 		return response()->json(null, 204);

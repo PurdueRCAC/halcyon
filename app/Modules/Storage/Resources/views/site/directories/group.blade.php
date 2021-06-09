@@ -401,10 +401,10 @@
 										<span class="form-check">
 										<?php if ($dir->unixPermissions->other->read) { ?>
 											<input type="checkbox" id="<?php echo $dir->id; ?>_other_read_box" class="form-check-input" checked="checked" />
-											<span id="<?php echo $dir->id; ?>_other_read_span">{{ trans('global.yes') }}</span> to directories:
+											<span id="<?php echo $dir->id; ?>_other_read_span" class="hide">{{ trans('global.yes') }}</span> to directories:
 										<?php } else { ?>
 											<input type="checkbox" id="<?php echo $dir->id; ?>_other_read_box" class="form-check-input" />
-											<span id="<?php echo $dir->id; ?>_other_read_span">{{ trans('global.no') }}</span> to directories:
+											<span id="<?php echo $dir->id; ?>_other_read_span" class="hide">{{ trans('global.no') }}</span> to directories:
 										<?php } ?>
 										</span>
 
@@ -593,7 +593,7 @@
 									{{ trans('storage::storage.unallocated space') }}
 								</div>
 								<div class="col-md-8">
-									<span name="unallocated"><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['unallocatedbytes'], 1); ?></span> / <span name="totalbytes"><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['totalbytes'], 1); ?></span>
+									<span name="unallocated"{!! $bucket['unallocatedbytes'] < 0 ? ' class="text-danger"' : '' !!}><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['unallocatedbytes'], 1); ?></span> / <span name="totalbytes"><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['totalbytes'], 1); ?></span>
 									<?php
 									if ($dir->bytes)
 									{
@@ -602,14 +602,21 @@
 										{
 											$cls = ' hide';
 										}
+										if ($bucket['unallocatedbytes'] < 0 && $row->bytes != 0)
+										{
+											$dir->quotaproblem = 1;
+										}
+
+										$dir->realquota = $dir->bytes - round((($dir->bytes / $bucket['totalbytes']) * -$bucket['unallocatedbytes']));
 
 										if ($dir->quotaproblem == 1 && $dir->bytes && $dir->realquota < $dir->bytes)
 										{
 											if (-$bucket['unallocatedbytes'] < $dir->bytes)
 											{
 												?>
-												<button id="{{ $dir->id }}_quota_upa" class="btn btn-secondary quota_upa<?php echo $cls; ?>" data-dir="{{ $dir->id }}" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}">
-													<span id="{{ $dir->id }}_quota_up" class="icon-arrow-down">{{ trans('storage::storage.remove overallocated') }}</span>
+												<span class="badge badge-warning">over-allocated</span>
+												<button id="{{ $dir->id }}_quota_upa" class="btn tip text-danger quota_upa<?php echo $cls; ?>" data-dir="{{ $dir->id }}" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}" title="{{ trans('storage::storage.remove overallocated') }}">
+													<span id="{{ $dir->id }}_quota_up" class="fa fa-arrow-down" aria-hidden="true"></span><span class="sr-only">{{ trans('storage::storage.remove overallocated') }}</span>
 												</button>
 												<?php
 											}
@@ -617,8 +624,8 @@
 										else
 										{
 											?>
-											<button id="{{ $dir->id }}_quota_upa" class="btn btn-secondary quota_upa<?php echo $cls; ?>" data-dir="{{ $dir->id }}" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}">
-												<span id="{{ $dir->id }}_quota_up" class="icon-arrow-up">{{ trans('storage::storage.distribute remaining') }}</span>
+											<button id="{{ $dir->id }}_quota_upa" class="btn text-info tip quota_upa<?php echo $cls; ?>" data-dir="{{ $dir->id }}" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}" title="{{ trans('storage::storage.distribute remaining') }}">
+												<span id="{{ $dir->id }}_quota_up" class="fa fa-arrow-up" aria-hidden="true"></span><span class="sr-only">{{ trans('storage::storage.distribute remaining') }}</span>
 											</button>
 											<?php
 										}
@@ -691,8 +698,11 @@
 
 					$total = 0;
 					foreach ($history as $item):
-						//$total = $item->type == 'loan' ? ($total - $item->bytes) : ($total + $item->bytes);
-						$total = ($item->bytes > 0 ? $total + $item->bytes : $total - abs($item->bytes)); 
+						if ($item->hasEnded()):
+							continue;
+						endif;
+
+						$total = ($item->bytes > 0 ? $total + $item->bytes : $total - abs($item->bytes));
 						$item->total = $total;
 					endforeach;
 
@@ -718,7 +728,7 @@
 							</thead>
 							<tbody>
 								@foreach ($history as $item)
-									<tr class="{{ $item->type }}">
+									<tr class="{{ $item->type . ($item->hasEnded() ? ' trashed' : '') }}">
 										<td>
 											@if ($item->bytes > 0)
 												<span class="badge badge-success">{{ $item->type }}</span>
@@ -752,7 +762,11 @@
 											@endif
 										</td>
 										<td class="text-right">
-											{!! ($item->bytes > 0 ? '<span class="increase text-success">+ ' : '<span class="decrease text-danger">- ') . App\Halcyon\Utility\Number::formatBytes(abs($item->bytes)) . '</span>' !!}
+											@if ($item->hasEnded())
+												<span class="decrease text-warning">{!! ($item->bytes > 0 ? '+ ' : '- ') . App\Halcyon\Utility\Number::formatBytes(abs($item->bytes)) !!}</span>
+											@else
+												{!! ($item->bytes > 0 ? '<span class="increase text-success">+ ' : '<span class="decrease text-danger">- ') . App\Halcyon\Utility\Number::formatBytes(abs($item->bytes)) . '</span>' !!}
+											@endif
 										</td>
 										<td class="text-right">
 											{{ App\Halcyon\Utility\Number::formatBytes($item->total, 1) }}
