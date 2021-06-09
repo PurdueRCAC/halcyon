@@ -460,7 +460,7 @@
 				<div class="form-group row">
 					<div class="col-sm-2"></div>
 					<div class="col-sm-10 offset-sm-2">
-						<input type="submit" value="{{ trans('courses::courses.create accounts') }}" data-api="{{ route('api.users.create') }}" class="btn btn-success account-create" />
+						<input type="submit" value="{{ trans('courses::courses.create accounts') }}" data-api="{{ route('api.courses.create') }}" class="btn btn-success account-create" />
 					</div>
 				</div>
 			@endif
