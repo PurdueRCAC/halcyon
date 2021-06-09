@@ -18,6 +18,11 @@ class ResourceMemberCreated
 	public $user;
 
 	/**
+	 * @var integer
+	 */
+	public $status;
+
+	/**
 	 * Constructor
 	 *
 	 * @param Subresource $subresource
