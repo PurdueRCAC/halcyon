@@ -18,7 +18,7 @@ class DirectoryResource extends JsonResource
 
 		$data['api'] = route('api.storage.directories.read', ['id' => $this->id]);
 		$data['group'] = $this->group;
-		$data['unixgroup'] = $this->unixgroup->toArray();
+		$data['unixgroup'] = $this->unixgroup ? $this->unixgroup->toArray() : array();
 		$data['autounixgroup'] = $this->autounixgroup;
 
 		// Set directory type
@@ -71,6 +71,10 @@ class DirectoryResource extends JsonResource
 				$data['unixgroup']['id'] = '/ws/unixgroup/' . $data['unixgroup']['id'];
 				$data['unixgroup']['gid'] = $data['unixgroup']['groupid'];
 				unset($data['unixgroup']['groupid']);
+			}
+			else
+			{
+				$data['unixgroup'] = array('id' => '/ws/unixgroup/0', 'name' => '');
 			}
 
 			$data['childdirs'] = array();
