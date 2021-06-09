@@ -193,7 +193,18 @@ class Directory extends Model
 		{
 			$message->datetimesubmitted = Carbon::now()->add($offset . ' seconds')->toDateTimeString();
 		}
-		$message->save();
+
+		$exists = Message::query()
+			->where('userid', '=', $message->userid)
+			->where('targetobjectid', '=', $message->targetobjectid)
+			->where('messagequeuetypeid', '=', $message->messagequeuetypeid)
+			->where('datetimesubmitted', '=', $message->datetimesubmitted)
+			->first();
+
+		if (!$exists)
+		{
+			$message->save();
+		}
 	}
 
 	/**

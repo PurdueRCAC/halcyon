@@ -186,6 +186,7 @@ class DirectoriesController extends Controller
 		}
 
 		$storages = StorageResource::query()
+			->withTrashed()
 			->orderBy('name', 'asc')
 			->get();
 

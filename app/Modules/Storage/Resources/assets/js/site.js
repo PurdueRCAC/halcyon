@@ -576,6 +576,198 @@ function EditedUnixGroup(xml, dir) {
 }
 
 /**
+ * Pedning directories
+ *
+ * @var  {number}
+ */
+var pending_dirs = 0;
+
+/**
+ * Create default directories
+ *
+ * @param   {string}  group
+ * @param   {string}  name
+ * @param   {string}  resource
+ * @param   {number}  quota
+ * @param   {string}  base
+ * @param   {string}  apps
+ * @param   {string}  data
+ * @return  {void}
+ */
+function CreateDefaultDirs(api, group, name, resource, quota, base, apps, etc, data) {
+	var top_dir = {
+		'groupid': group,
+		'name': name,
+		'resourceid': resource,
+		'bytes': 'ALL', //quota + " B",
+		'parentstoragedirid': 0,
+		'unixgroupid': base,
+		'ownerread': 1,
+		'ownerwrite': 1,
+		'groupread': 1,
+		'groupwrite': 0,
+		'publicread': 0,
+		'publicwrite': 0
+	};
+
+	var dirs_desired = {
+		'dirs': [
+			{
+				'groupid': group,
+				'name': "apps",
+				'resourceid': resource,
+				'bytes': '-',
+				'unixgroupid': apps,
+				'ownerread': 1,
+				'ownerwrite': 1,
+				'groupread': 1,
+				'groupwrite': 1,
+				'publicread': 1,
+				'publicwrite': 0
+			},
+			{
+				'groupid': group,
+				'name': "data",
+				'resourceid': resource,
+				'bytes': '-',
+				'unixgroupid': data,
+				'ownerread': 1,
+				'ownerwrite': 1,
+				'groupread': 1,
+				'groupwrite': 1,
+				'publicread': 0,
+				'publicwrite': 0
+			},
+			{
+				'groupid': group,
+				'name': "etc",
+				'resourceid': resource,
+				'bytes': '-',
+				'unixgroupid': etc,
+				'ownerread': 1,
+				'ownerwrite': 1,
+				'groupread': 1,
+				'groupwrite': 1,
+				'publicread': 1,
+				'publicwrite': 0
+			}
+		]
+	};
+
+	// Create base dir
+	WSPostURL(api, JSON.stringify(top_dir), function (xml, dirs_desired) {
+		if (xml.status < 400) {
+			var results = JSON.parse(xml.responseText);
+			var parentdir = results['id'];
+			var x;
+
+			// set parent dir
+			for (x = 0; x < dirs_desired.dirs.length; x++) {
+				dirs_desired.dirs[x]['parentstoragedirid'] = parentdir;
+			}
+
+			// create sub dirs
+			pending_dirs = dirs_desired.dirs.length;
+			for (x = 0; x < dirs_desired.dirs.length; x++) {
+				if (dirs_desired.dirs[x]['unixgroupid'] <= 0) {
+					pending_dirs--;
+					continue;
+				}
+				WSPostURL(api, JSON.stringify(dirs_desired.dirs[x]), function (xml) {
+					if (xml.status < 400) {
+						pending_dirs--;
+
+						if (pending_dirs == 0) {
+							window.location.reload(true);
+						}
+					} else {
+						$('.dir-create-default').removeClass('processing');
+						$('#error_new').removeClass('hide').text("An error occurred while creating directory.");
+					}
+				});
+			}
+		} else {
+			$('.dir-create-default').removeClass('processing');
+			$('#error_new').removeClass('hide').text("An error occurred while creating directory.");
+		}
+	}, dirs_desired);
+}
+
+/**
+ * Set base gorup name
+ *
+ * @param   {string}  group
+ * @return  {void}
+ */
+function SetBaseName(api) {
+	var name = document.getElementById("unixgroup").value;
+	var post = JSON.stringify({ "unixgroup": name });
+
+	if (name != "") {
+		WSPutURL(api, post, function (xml) {
+			if (xml.status < 400) {
+				window.location.reload(true);
+			} else if (xml.status == 409) {
+				$('#error_unixgroup').removeClass('hide').text("Base name already exists.");
+			} else if (xml.status == 415) {
+				$('#error_unixgroup').removeClass('hide').text("Invalid format for base name.");
+			} else {
+				$('#error_unixgroup').removeClass('hide').text("An error occurred while setting base name.");
+			}
+		});
+	}
+}
+
+/**
+ * Unix base groups
+ *
+ * @const
+ * @type  {array}
+ */
+var BASEGROUPS = Array('', 'data', 'apps');
+
+/**
+ * Create UNIX group
+ *
+ * @param   {integer}  num    index for BASEGROUPS array
+ * @param   {string}   group
+ * @return  {void}
+ */
+function CreateNewGroupVal(num, btn, all) {
+	var base = btn.data('value'),
+		group = btn.data('group');
+
+	if (typeof (all) == 'undefined') {
+		all = true;
+	}
+
+	$.ajax({
+		url: btn.data('api'),
+		type: 'post',
+		data: {
+			'longname': BASEGROUPS[num],
+			'groupid': group
+		},
+		dataType: 'json',
+		async: false,
+		success: function (response) {
+			num++;
+			if (all && num < BASEGROUPS.length) {
+				setTimeout(function () {
+					CreateNewGroupVal(num, btn, all);
+				}, 5000);
+			} else {
+				window.location.reload(true);
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+			btn.removeClass('processing');
+			$('#error_unixgroups').removeClass('hide').text(xhr.responseJSON.message);
+		}
+	});
+}
+
+/**
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
@@ -837,30 +1029,38 @@ document.addEventListener('DOMContentLoaded', function () {
 		e.preventDefault();
 		EditUnixGroup($(this).data('dir'), $(this).data('api'));
 	});
-	/*$('.unixgroup-create').on('click', function(e) {
+	$('.unixgroup-create').on('click', function(e) {
 		e.preventDefault();
-		CreateDefaultUnixGroups($(this).data('unixgroup'), $(this).data('id'));
+
+		$(this).addClass('processing');
+
+		CreateNewGroupVal(0, $(this), true);
 	});
 	$('.unixgroup-basename-set').on('click', function(e) {
 		e.preventDefault();
-		SetBaseName($(this).data('id'));
-	});*/
+		SetBaseName($(this).data('api'));
+	});
 	$('.dir-delete').on('click', function (e) {
 		e.preventDefault();
 		DeleteDir(this);
 	});
-	/*$('.dir-create-default').on('click', function(e) {
+	$('.dir-create-default').on('click', function(e) {
 		e.preventDefault();
+
+		$(this).addClass('processing');
+
 		CreateDefaultDirs(
+			$(this).data('api'),
 			$(this).data('id'),
-			$(this).data('unixgroup'),
-			$(this).data('resource'),
+			$('#new-name').val(), //$(this).data('unixgroup'),
+			$('#new-resourceid').val(),
 			$(this).data('quota'),
 			$(this).data('base'),
-			$(this).data('apps'),
-			$(this).data('data')
+			$('#new-apps').is(':checked') ? $('#new-apps').val() : 0,
+			$('#new-etc').is(':checked') ? $('#new-etc').val() : 0,
+			$('#new-data').is(':checked') ? $('#new-data').val() : 0
 		);
-	});*/
+	});
 
 	$('.quota_upa').on('click', function(e){
 		e.preventDefault();

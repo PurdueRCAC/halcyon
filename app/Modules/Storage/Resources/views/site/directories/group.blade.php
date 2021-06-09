@@ -1075,6 +1075,173 @@
 		else:
 			?>
 			<p class="text-center text-muted">{{ trans('global.none') }}</p>
+
+			@if (auth()->user()->can('manage storage'))
+				<h3>Create new storage directories:</h3>
+
+				<div class="card panel panel-default step{{ ($group->unixgroup ? 'complete' : '') }}">
+					<div class="card-header panel-heading">
+						1) Set base name for group:
+					</div>
+					<div class="card-body panel-body">
+						@if (!$group->unixgroup)
+							<div class="form-group">
+								<span class="input-group">
+									<input type="text" class="form-control" id="unixgroup" value="" />
+									<span class="input-group-append">
+										<button class="input-group-text btn btn-primary unixgroup-basename-set" data-api="{{ route('api.groups.update', ['id' => $group->id]) }}" data-id="{{ $group->id }}">
+											<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+											{{ trans('global.button.save') }}
+										</button>
+									</span>
+								</span>
+							</div>
+
+							<div id="error_unixgroup" class="alert alert-danger hide"></div>
+						@else
+							{{ $group->unixgroup }} <i class="fa fa-check text-success" aria-hidden="true"></i>
+						@endif
+					</div>
+				</div>
+
+				<div class="card panel panel-default step{{ (count($group->unixgroups) > 0 ? 'complete' : '') }}">
+					<div class="card-header panel-heading">
+						2) Create Unix groups:
+					</div>
+					<div class="card-body panel-body">
+					@if (count($group->unixGroups) <= 0)
+						<?php
+						$disabled = '';
+						if (!$group->unixgroup)
+						{
+							$disabled = 'disabled="true"';
+						}
+						?>
+						<p>
+							<button <?php echo $disabled; ?> class="btn btn-primary unixgroup-create" data-api="{{ route('api.unixgroups.create') }}" data-value="{{ $group->unixgroup }}" data-group="{{ $group->id }}">
+								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+								Create Unix Groups
+							</button>
+						</p>
+
+						<div id="error_unixgroups" class="alert alert-danger hide"></div>
+
+						<div class="alert alert-warning">
+							<p><strong>THIS ACTION CANNOT BE UNDONE. PLEASE READ!!</strong></p>
+							<p>This will create the default Unix groups. A base group, apps, and data group will be created. These will prefixed by 
+							the chosen base name. Once these are created, the groups and base name cannot be easily changed so only continue 
+							if you are sure.</p>
+							<p>If the group has any existing Unix groups please do not continue and contact support. {{ config('app.name') }} staff 
+							will integrate these group(s) into the web application and set up other default groups.</p>
+							<p>This process may take several minutes. Please do not close the page.</p>
+						</div>
+					@else
+						Create Unix groups <i class="fa fa-check text-success" aria-hidden="true"></i>
+					@endif
+					</div>
+				</div>
+
+				<?php
+				$disabled = '';
+				if (!$group->unixgroup)
+				{
+					$disabled = 'disabled="true"';
+				}
+				$data = $group->unixGroups->firstWhere('longname', $group->unixgroup . '-data');
+				$apps = $group->unixGroups->firstWhere('longname', $group->unixgroup . '-apps');
+				?>
+				<div class="card panel panel-default">
+					<div class="card-header panel-heading">
+						3) Create Default Directories
+					</div>
+					<div class="card-body panel-body">
+						@if (!$group->unixgroup && count($group->unixGroups) > 0)
+						<p class="alert alert-warning">You must create unix groups first.</p>
+						@else
+						<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.directories.create') }}">
+							<div class="form-group">
+								<label for="new-resourceid">{{ trans('storage::storage.parent') }}: <span class="required">*</span></label>
+								<select name="resourceid" id="new-resourceid" class="form-control required" required>
+									<?php
+									$storageresources = App\Modules\Storage\Models\StorageResource::query()
+										->withTrashed()
+										->orderBy('name', 'asc')
+										->get();
+
+									foreach ($storageresources as $s): ?>
+										<?php $selected = ($s->parentresourceid == 64 ? ' selected="selected"' : ''); ?>
+										<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}"<?php echo $selected; ?>>{{ $s->name }}</option>
+									<?php endforeach; ?>
+								</select>
+								<span class="invalid-feedback">{{ trans('storage::storage.error.invalid parent') }}</span>
+							</div>
+
+							<div class="form-group">
+								<label for="new-name">{{ trans('storage::storage.name') }}: <span class="required">*</span></label>
+								<input type="text" name="name" id="new-name" class="form-control required" pattern="^([a-zA-Z0-9]+\.?[\-_ ]*)*[a-zA-Z0-9]$" required value="{{ $group->unixgroup }}" />
+								<span class="form-text text-muted">{{ trans('storage::storage.name desc') }}</span>
+							</div>
+
+							@if ($apps)
+							<div class="form-check">
+								<input type="checkbox" name="defaults" id="new-apps" class="form-check-input" value="{{ $apps->id }}" checked="checked" />
+								<label for="new-defaults" class="form-check-label">{{ trans('Create "(name)-apps" directory') }}</label>
+							</div>
+
+							<div class="form-check">
+								<input type="checkbox" name="defaults" id="new-etc" class="form-check-input" value="{{ $apps->id }}" checked="checked" />
+								<label for="new-defaults" class="form-check-label">{{ trans('Create "(name)-etc" directory') }}</label>
+							</div>
+							@else
+							<div class="form-check">
+								<input type="checkbox" name="defaults" id="new-apps" class="form-check-input" value="{{ $apps->id }}" disabled="disabled" />
+								<label for="new-defaults" class="form-check-label">{{ trans('Create "(name)-apps" directory') }}</label>
+							</div>
+
+							<div class="form-check">
+								<input type="checkbox" name="defaults" id="new-etc" class="form-check-input" value="{{ $apps->id }}" disabled="disabled" />
+								<label for="new-defaults" class="form-check-label">{{ trans('Create "(name)-etc" directory') }}</label>
+							</div>
+							<span class="text-danger">No "(name)-apps" unix group found.</span>
+							@endif
+
+							@if ($data)
+							<div class="form-check">
+								<input type="checkbox" name="defaults" id="new-data" class="form-check-input" value="{{ $data->id }}" checked="checked" />
+								<label for="new-defaults" class="form-check-label">{{ trans('Create "(name)-data" directory') }}</label>
+							</div>
+							@else
+							<div class="form-check">
+								<input type="checkbox" name="defaults" id="new-data" class="form-check-input" value="{{ $data->id }}" disabled="disabled" />
+								<label for="new-defaults" class="form-check-label">{{ trans('Create "(name)-data" directory') }}</label>
+								<span class="text-danger">No "(name)-data" unix group found.</span>
+							</div>
+							@endif
+
+							<div class="dialog-footer text-center">
+								<button class="btn btn-success dir-create-default"
+									data-api="{{ route('api.storage.directories.create') }}"
+									data-id="{{ $group->id }}"
+									data-unixgroup="{{ $group->unixgroup }}"
+									data-base="{{ $group->primaryUnixGroup ? $group->primaryUnixGroup->id : 0 }}"
+									data-apps="{{ $apps ? $apps->id : 0 }}"
+									data-data="{{ $data ? $data->id : 0 }}">
+									<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+									{{ trans('Create Directories') }}
+								</button>
+							</div>
+
+							<div id="error_new" class="alert alert-danger hide"></div>
+
+							<input type="hidden" name="groupid" value="{{ $group->id }}" />
+							<input type="hidden" name="unixgroupid" value="{{ $group->primaryUnixGroup ? $group->primaryUnixGroup->id : 0 }}" />
+							<input type="hidden" name="unixgroup" value="{{ $group->unixgroup }}" />
+							@csrf
+						</form>
+						@endif
+					</div>
+				</div>
+			@endif
 			<?php
 		endif;
 		?>

@@ -363,6 +363,7 @@ class DirectoriesController extends Controller
 				'owneruserid' => 'nullable|integer',
 				'unixgroupid' => 'nullable|integer',
 				'ownerread' => 'nullable|integer',
+				'ownerwrite' => 'nullable|integer',
 				'groupread' => 'nullable|integer',
 				'groupwrite' => 'nullable|integer',
 				'publicread' => 'nullable|integer',
