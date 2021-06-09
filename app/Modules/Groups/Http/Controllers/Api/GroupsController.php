@@ -541,7 +541,7 @@ class GroupsController extends Controller
 			// Check for a duplicate
 			if ($exists && $exists->id != $row->id)
 			{
-				return response()->json(['message' => trans('`unixgroup` ' . $dataobj->unixgroup . ' already exists')], 409);
+				return response()->json(['message' => trans('`unixgroup` ' . $unixgroup . ' already exists')], 409);
 			}
 
 			try
