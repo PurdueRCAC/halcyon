@@ -233,7 +233,12 @@
 											<?php
 											$value = App\Halcyon\Utility\Number::formatBytes($dir->bytes, true);
 											?>
-											<input type="{{ auth()->user()->can('manage storage') ? 'text' : 'hidden' }}" id="{{ $dir->id }}_quota_input" class="form-control" value="{{ $dir->bytes ? $value : '' }}" />
+											@if (auth()->user()->can('manage storage'))
+												<input type="text" id="{{ $dir->id }}_quota_input" class="form-control" value="{{ $dir->bytes ? $value : '' }}" />
+											@else
+												{{ $value }}
+												<input type="hidden" id="{{ $dir->id }}_quota_input" class="form-control" value="{{ $dir->bytes ? $value : '' }}" />
+											@endif
 										@else
 											-
 											<input type="hidden" id="{{ $dir->id }}_quota_input" class="form-control" value="{{ $dir->bytes ? $value : '' }}" />
