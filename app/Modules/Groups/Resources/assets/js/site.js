@@ -37,7 +37,7 @@ function CreateNewGroupVal(num, btn, all) {
 		'longname': BASEGROUPS[num],
 		'groupid': group
 	};
-	console.log(post);
+
 	$.ajax({
 		url: btn.data('api'),
 		type: 'post',
