@@ -243,7 +243,7 @@
 	@endif
 
 	<form id="add-account" method="post" class="create-form hide editform" action="{{ route('site.users.account.section', ['section' => 'class']) }}{{ request()->has('u') ? '?u=' . request()->input('u') : '' }}">
-		@if (auth()->user()->can('manage users'))
+		@if (auth()->user()->can('manage courses'))
 			<div class="form-group">
 				<label for="field-type">{{ trans('courses::courses.type') }}:</label>
 				<select name="type" id="field-type" class="form-control">
@@ -304,6 +304,8 @@
 					</div>
 				</div>
 			</fieldset>
+		@else
+			<input name="type" id="field-type" value="course" />
 		@endif
 
 		<fieldset class="type-course type-dependant">
