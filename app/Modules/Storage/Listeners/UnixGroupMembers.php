@@ -45,13 +45,10 @@ class UnixGroupMembers
 		foreach ($dirs as $dir)
 		{
 			$userdir = Directory::query()
+				->withTrasheD()
+				->whereIsActive()
 				->where('name', '=', $event->member->user->username)
 				->where('parentstoragedirid', '=', $dir->id)
-				->where(function($where)
-				{
-					$where->whereNull('datetimeremoved')
-						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
 				->count();
 
 			if (!$userdir)

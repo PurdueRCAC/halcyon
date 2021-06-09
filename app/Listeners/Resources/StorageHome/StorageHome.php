@@ -52,6 +52,8 @@ class StorageHome
 		}
 
 		$dir = Directory::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('name', '=', $event->user->username)
 			->where('resourceid', '=', $home->id)
 			->first();

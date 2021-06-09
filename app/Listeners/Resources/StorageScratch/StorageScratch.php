@@ -44,6 +44,8 @@ class StorageScratch
 		{
 			// First check if we have a storage dir already
 			$dir = $storage->directories()
+				->withTrashed()
+				->whereIsActive()
 				->where('name', '=', $event->user->username)
 				->first();
 

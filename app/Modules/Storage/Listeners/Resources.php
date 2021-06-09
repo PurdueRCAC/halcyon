@@ -213,7 +213,7 @@ class Resources
 			->get()
 			->first();
 
-		if (!$directory)
+		if ($directory)
 		{
 			return;
 		}
@@ -241,11 +241,5 @@ class Resources
 
 		// Prepare job to create directory in reality
 		$directory->addMessageToQueue(11);
-		/*$message = new Message;
-		$message->fill([
-			'messagequeuetypeid' => 11,
-			'targetobjectid'     => $directory->id,
-		]);
-		$message->save();*/
 	}
 }
