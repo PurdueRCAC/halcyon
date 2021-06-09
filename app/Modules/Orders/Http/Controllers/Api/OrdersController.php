@@ -691,6 +691,20 @@ class OrdersController extends Controller
 
 			foreach ($accounts as $a)
 			{
+				if (isset($a['approveruserid']) && !is_numeric($a['approveruserid']))
+				{
+					$user = User::createFromUsername($a['approveruserid']);
+
+					if ($user && $user->id)
+					{
+						$a['approveruserid'] = $user->id;
+					}
+					else
+					{
+						unset($a['approveruserid']);
+					}
+				}
+
 				$account = new Account;
 				$account->fill($a);
 				$account->budgetjustification = $account->budgetjustification ?: '';

@@ -339,6 +339,10 @@ class AccountsController extends Controller
 			{
 				$data['approveruserid'] = $user->id;
 			}
+			else
+			{
+				unset($data['approveruserid']);
+			}
 		}
 
 		$row = new Account;
