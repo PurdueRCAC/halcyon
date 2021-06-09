@@ -274,7 +274,7 @@ class Group extends Model
 
 		foreach ($buckets as $k => $v)
 		{
-			$buckets[$k]['unallocatedbytes'] = abs($buckets[$k]['allocatedbytes'] - $buckets[$k]['totalbytes']);
+			$buckets[$k]['unallocatedbytes'] = ($buckets[$k]['totalbytes'] - $buckets[$k]['allocatedbytes']);
 		}
 
 		return $buckets;
