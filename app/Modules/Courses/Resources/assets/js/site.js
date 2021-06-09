@@ -21,6 +21,7 @@ function CreateNewClassAccount(btn) {
 	// Fetch input
 	var post = {
 		crn: selected_class.data('crn'),
+		classname: selected_class.data('classname'),
 		classid: selected_class.data('classid'),
 		userid: $('#userid').val(),
 		semester: selected_class.data('semester'),
@@ -646,7 +647,7 @@ $(document).ready(function () {
 	var user = $('.search-user');
 	if (user.length) {
 		user.autocomplete({
-			source: autocompleteName(user.attr('data-uri')),
+			source: autocompleteName(user.attr('data-api')),
 			dataName: 'users',
 			height: 150,
 			delay: 100,
