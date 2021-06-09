@@ -877,11 +877,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (dialog.length) {
 			$('#' + $(dialog).data('id') + '_save_button').prop('disabled', false);
 		}
-		/*var id = $(this).data('id');
-		console.log($(this).find('.form-control'));
-		$(this).find('.form-control').on('change', function(e){
-			$('#' + id + '_save_button').prop('disabled', false);
-		});*/
 	});
 
 	$('.dialog-btn').on('click', function (e) {
