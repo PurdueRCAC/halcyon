@@ -256,13 +256,6 @@ class AccountsController extends Controller
 			'datetimestop' => 'required|date',
 		]);
 
-		$validator = Validator::make($request->all(), $rules);
-
-		if ($validator->fails())
-		{
-			return response()->json(['message' => $validator->messages()], 415);
-		}
-
 		$type = $request->input('type');
 
 		$row = new Account;
@@ -280,8 +273,6 @@ class AccountsController extends Controller
 		{
 			$row->classid = $request->input('classid');
 		}
-
-		//$row->fill($request->all());
 
 		if (!$row->userid)
 		{
@@ -346,7 +337,7 @@ class AccountsController extends Controller
 			$row->datetimestart = Carbon::parse($row->datetimestart)->modify('-259200 seconds')->toDateTimeString();
 			$row->datetimestop  = Carbon::parse($row->datetimestop)->modify('+604800 seconds')->toDateTimeString();
 			$row->notice = 1;
-			$row->forget('classid');
+			unset($row->classid);
 		}
 
 		if (!$row->save())
