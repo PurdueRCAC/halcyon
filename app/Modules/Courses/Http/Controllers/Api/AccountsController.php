@@ -267,6 +267,7 @@ class AccountsController extends Controller
 		$row->groupid = $request->input('groupid', 0);
 		$row->userid = $request->input('userid', 0);
 		$row->reference = $request->input('reference', '');
+		$row->semester = $request->input('semester', '');
 		$row->datetimestart = $request->input('datetimestart', $request->input('start'));
 		$row->datetimestop = $request->input('datetimestop', $request->input('stop'));
 		
