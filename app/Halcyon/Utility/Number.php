@@ -36,15 +36,23 @@ class Number
 			'B ' => 1,              // pow(1024, 0)
 		);
 
+		$sign = '';
+		if ($bytes < 0)
+		{
+			$sign = '-';
+		}
+
+		$bytes = abs($bytes);
+
 		foreach ($quant as $unit => $mag)
 		{
 			if (doubleval($bytes) >= $mag)
 			{
-				return sprintf('%01.' . $decimals . 'f', ($bytes / $mag)) . ' ' . $unit;
+				return $sign . sprintf('%01.' . $decimals . 'f', ($bytes / $mag)) . ' ' . $unit;
 			}
 		}
 
-		return '0 B';
+		return $sign . '0 B';
 	}
 
 	/**
