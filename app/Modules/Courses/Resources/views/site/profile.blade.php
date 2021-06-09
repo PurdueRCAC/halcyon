@@ -305,7 +305,7 @@
 				</div>
 			</fieldset>
 		@else
-			<input name="type" id="field-type" value="course" />
+			<input type="hidden" name="type" id="field-type" value="course" />
 		@endif
 
 		<fieldset class="type-course type-dependant">
