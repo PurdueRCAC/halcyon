@@ -54,7 +54,7 @@ function CreateNewClassAccount(btn) {
 	post['users'] = users;
 
 	WSPostURL(btn.data('api'), JSON.stringify(post), function (xml) {
-		if (xml.status == 200) {
+		if (xml.status < 400) {
 			document.location.reload(true);
 		} else if (xml.status == 403) {
 			alert("Your session may have expired. Click OK to reload page.");
@@ -144,7 +144,7 @@ function BulkAddAccounts(crn, classaccount) {
 function AddingManyUsersEmail(xml, post_obj) {
 	pending--;
 
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		var response = JSON.parse(xml.responseText);
 		var post;
 
@@ -192,7 +192,7 @@ function AddingManyUsersEmail(xml, post_obj) {
 function AddingManyUsers(xml, post_obj) {
 	pending--;
 
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		var response = JSON.parse(xml.responseText);
 		var post;
 
@@ -432,7 +432,7 @@ function ClassUserSearchEventHandler(event, ui, crn) {
  * @return  {void}
  */
 function AddUserClass(xml, crn) {
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		if (typeof (crn) == 'undefined') {
 			crn = '0';
 		}
