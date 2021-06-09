@@ -9,6 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Orders\Models\Account;
 use App\Modules\Orders\Models\Order;
+use App\Modules\Users\Models\User;
 use Carbon\Carbon;
 
 /**
@@ -319,7 +320,7 @@ class AccountsController extends Controller
 			'purchaseio' => 'nullable|string|max:10',
 			'purchasewbse' => 'nullable|string|max:17',
 			'budgetjustification' => 'nullable|string|max:2000',
-			'approveruserid' => 'nullable|integer',
+			'approveruserid' => 'nullable',
 		]);
 
 		if (!$request->has('purchaseio')
@@ -328,8 +329,20 @@ class AccountsController extends Controller
 			return response()->json(['message' => trans('orders::orders.errors.missing required field')], 412);
 		}
 
+		$data = $request->all();
+
+		if ($request->has('approveruserid') && !is_numeric($data['approveruserid']))
+		{
+			$user = User::createFromUsername($data['approveruserid']);
+
+			if ($user && $user->id)
+			{
+				$data['approveruserid'] = $user->id;
+			}
+		}
+
 		$row = new Account;
-		$row->fill($request->all());
+		$row->fill($data);
 		$row->budgetjustification = $row->budgetjustification ?: '';
 
 		if (!$row->order)
@@ -577,7 +590,7 @@ class AccountsController extends Controller
 			'purchaseio' => 'nullable|string|max:10',
 			'purchasewbse' => 'nullable|string|max:17',
 			'budgetjustification' => 'nullable|string|max:2000',
-			'approveruserid' => 'nullable|integer',
+			'approveruserid' => 'nullable',
 			'datetimepaymentdoc' => 'nullable|date',
 			'paymentdocid' => 'nullable|string',
 			'notice' => 'nullable|integer',
@@ -607,7 +620,19 @@ class AccountsController extends Controller
 		}
 		if ($request->has('approveruserid'))
 		{
-			$row->approveruserid = $request->input('approveruserid');
+			$approveruserid = $request->input('approveruserid');
+
+			if (!is_numeric($approveruserid))
+			{
+				$user = User::createFromUsername($approveruserid);
+
+				if ($user && $user->id)
+				{
+					$approveruserid = $user->id;
+				}
+			}
+
+			$row->approveruserid = $approveruserid;
 		}
 		if ($request->has('datetimepaymentdoc'))
 		{
