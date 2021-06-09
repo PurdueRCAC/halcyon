@@ -233,7 +233,7 @@
 											<?php
 											$value = App\Halcyon\Utility\Number::formatBytes($dir->bytes, true);
 											?>
-											<input type="text" id="{{ $dir->id }}_quota_input" class="form-control" value="{{ $dir->bytes ? $value : '' }}" />
+											<input type="{{ auth()->user()->can('manage storage') ? 'text' : 'hidden' }}" id="{{ $dir->id }}_quota_input" class="form-control" value="{{ $dir->bytes ? $value : '' }}" />
 										@else
 											-
 											<input type="hidden" id="{{ $dir->id }}_quota_input" class="form-control" value="{{ $dir->bytes ? $value : '' }}" />
@@ -588,6 +588,7 @@
 								</div><!--/ .row -->
 							@endif
 
+							@if (auth()->user()->can('manage storage'))
 							<div class="row mb-3">
 								<div class="col-md-4">
 									{{ trans('storage::storage.unallocated space') }}
@@ -633,6 +634,7 @@
 									?>
 								</div>
 							</div><!--/ .row -->
+							@endif
 
 							<div class="alert alert-danger hide" id="{{ $dir->id }}_error"></div>
 
@@ -1194,12 +1196,12 @@
 							</div>
 							@else
 							<div class="form-check">
-								<input type="checkbox" name="defaults" id="new-apps" class="form-check-input" value="{{ $apps->id }}" disabled="disabled" />
+								<input type="checkbox" name="defaults" id="new-apps" class="form-check-input" value="{{ $apps ? $apps->id : 0 }}" disabled="disabled" />
 								<label for="new-defaults" class="form-check-label">{{ trans('Create "(name)-apps" directory') }}</label>
 							</div>
 
 							<div class="form-check">
-								<input type="checkbox" name="defaults" id="new-etc" class="form-check-input" value="{{ $apps->id }}" disabled="disabled" />
+								<input type="checkbox" name="defaults" id="new-etc" class="form-check-input" value="{{ $apps ? $apps->id : 0 }}" disabled="disabled" />
 								<label for="new-defaults" class="form-check-label">{{ trans('Create "(name)-etc" directory') }}</label>
 							</div>
 							<span class="text-danger">No "(name)-apps" unix group found.</span>
@@ -1212,7 +1214,7 @@
 							</div>
 							@else
 							<div class="form-check">
-								<input type="checkbox" name="defaults" id="new-data" class="form-check-input" value="{{ $data->id }}" disabled="disabled" />
+								<input type="checkbox" name="defaults" id="new-data" class="form-check-input" value="{{ $data ? $data->id : 0 }}" disabled="disabled" />
 								<label for="new-defaults" class="form-check-label">{{ trans('Create "(name)-data" directory') }}</label>
 								<span class="text-danger">No "(name)-data" unix group found.</span>
 							</div>
