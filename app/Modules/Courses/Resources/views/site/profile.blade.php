@@ -19,6 +19,9 @@
 
 	@if (count($courses) == 0)
 		<p class="alert alert-info">There are no active accounts for classes.</p>
+
+		<h3>What is this page?</h3>
+		<p>Here you can find courses that you're an instructor for that have been set up with access to <a href="{{ route('site.resources.compute.show', ['name' => 'scholar']) }}">Scholar</a>. When set up, all isntructors and students registered for the course will gain access to Scholar. To begin, click the "Add Class" button and select a course.</p>
 	@else
 		<div id="counthelp" class="dialog dialog-help" title="Account Counts">
 			<p>This shows a count of all student accounts associated with this course. The numbers are the number of accounts currently active out of the enrolled students.</p>

@@ -151,15 +151,10 @@ function CreateNewGroup() {
 			</tbody>
 		</table>
 	@else
-		<div class="card">
-			<div class="card-header">
-				You do not appear to be a member of any groups.
-			</div>
-			<div class="card-body">
-				<h3 class="card-title">What is this page?</h3>
-				<p>If you're a manager or member of a group, you'll find it listed here. You will also find groups listed where you're a member of at least one of its resource queues or unix groups.</p>
-			</div>
-		</div>
+		<p class="alert alert-info">You do not appear to be a member of any groups.</p>
+
+		<h3>What is this page?</h3>
+		<p>If you're a manager or member of a group, you'll find it listed here. You will also find groups listed where you're a member of at least one of its resource queues or unix groups.</p>
 	@endif
 	</div><!-- / #everything -->
 </div><!-- / .contentInner -->
