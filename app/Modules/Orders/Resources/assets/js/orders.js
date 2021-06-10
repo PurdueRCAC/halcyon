@@ -350,8 +350,8 @@ function EditProperty(field, item) {
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				//alert(thrownError);
-				console.log(ajaxOptions);
-				console.log(xhr);
+				//console.log(ajaxOptions);
+				//console.log(xhr);
 				EditedProperty({id:0}, item + "_" + field);
 				//Halcyon.message('danger', xhr.responseJSON.message);
 				//Halcyon.message('danger', btn.getAttribute('data-error'));
@@ -942,7 +942,7 @@ function TotalOrder() {
 	//console.log(post);
 	var btn = document.getElementById('continue');
 	//return;
-//console.log(order); return;
+
 	$.ajax({
 		url: btn.getAttribute('data-api'),
 		type: 'post',
@@ -962,7 +962,7 @@ function TotalOrder() {
 			window.location = response.url;
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
-			console.log(xhr);
+			//console.log(xhr);
 			alert("There was an error processing your order. Please wait a few minutes and try again or contact help.");
 			//Halcyon.message('danger', xhr.responseJSON.message);
 			//Halcyon.message('danger', btn.getAttribute('data-error'));
@@ -1978,7 +1978,8 @@ function EditAccounts() {
 		}
 
 		if (num_changes == 0) {
-			CancelEditAccounts();
+			//CancelEditAccounts();
+			SaveQuantities();
 		}
 	} else {
 		// Change the "edit" button into a "save" button
@@ -2354,13 +2355,13 @@ function SaveOrderUser() {
 					},
 					dataType: 'json',
 					async: false,
-					success: function (response) {
+					success: function(response) {
 						pendingupdates--;
 						if (pendingupdates == 0) {
 							window.location.reload(true);
 						}
 					},
-					error: function (xhr, ajaxOptions, thrownError) {
+					error: function(xhr, ajaxOptions, thrownError) {
 						console.log(xhr);
 						if (numerrorboxes == 0) {
 							alert("An error occurred while updating account. Please reload page and try again or contact rcac-help@purdue.edu.");
