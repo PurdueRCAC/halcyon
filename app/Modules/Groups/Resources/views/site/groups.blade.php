@@ -50,8 +50,7 @@ function CreateNewGroup() {
 		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 
-			//location.reload(true);
-			window.location = input.getAttribute('data-uri') + '/' + results.data.id;
+			window.location.reload(true); // = input.getAttribute('data-uri') + '/' + results.data.id;
 		} else if (xml.status == 409) {
 			document.getElementById('new_group_action').innerHTML = ERRORS['creategroupduplicate'];
 		} else {
@@ -101,6 +100,7 @@ function CreateNewGroup() {
 	@endif
 
 	<div id="everything">
+	@if (count($groups))
 		<table class="table">
 			<caption class="sr-only">Active Groups</caption>
 			<thead>
@@ -150,32 +150,16 @@ function CreateNewGroup() {
 		@endforeach
 			</tbody>
 		</table>
-
-		<?php /*<div class="row">
-			@foreach ($groups as $g)
-			<div class="col-md-6">
-				<div class="card panel panel-default shadow-sm">
-					<div class="card-body panel-body">
-						<h3 class="card-title panel-title">
-							<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">
-								{{ $g->group->name }}
-							</a>
-						</h3>
-						<span class="badge {{ $g->isManager() ? 'badge-success' : 'badge-secondary' }} pull-right">{{ $g->type->name }}</span>
-						<p class="card-text">Base Unix group: {!! $g->group->unixgroup ? $g->group->unixgroup : '<span class="none text-muted">' . trans('global.none') . '</span>' !!}</p>
-					</div>
-					@if ($g->isManager() || auth()->user()->can('manage groups'))
-						<div class="card-footer panel-footer">
-							<div class="d-flex justify-content-between align-items-center">
-								<div class="btn-group">
-									<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $g->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}/members" class="btn btn-secondary btn-sm">Manage</a>
-								</div>
-							</div>
-						</div>
-					@endif
-				</div>
+	@else
+		<div class="card">
+			<div class="card-header">
+				You do not appear to be a member of any groups.
 			</div>
-			@endforeach
-		</div>*/ ?>
+			<div class="card-body">
+				<h3 class="card-title">What is this page?</h3>
+				<p>If you're a manager or member of a group, you'll find it listed here. You will also find groups listed where you're a member of at least one of its resource queues or unix groups.</p>
+			</div>
+		</div>
+	@endif
 	</div><!-- / #everything -->
 </div><!-- / .contentInner -->
