@@ -219,16 +219,19 @@ class GroupsController extends Controller
 
 		if ($data = $request->input('data', '[]'))
 		{
-			$data = json_decode($data);
+			$data = json_decode(urldecode($data));
 		}
 
 		$callback = function() use ($data)
 		{
 			$file = fopen('php://output', 'w');
 
-			foreach ($data as $datum)
+			if (is_array($data))
 			{
-				fputcsv($file, $datum);
+				foreach ($data as $datum)
+				{
+					fputcsv($file, $datum);
+				}
 			}
 			fclose($file);
 		};

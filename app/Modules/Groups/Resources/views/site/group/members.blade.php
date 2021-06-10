@@ -993,7 +993,7 @@ $members = $members->sortBy('username');
 </div>
 
 <form id="csv_form_{{ $group->id }}" class="csv_form" method="post" action="{{ route('site.groups.export') }}">
-	<input type="hidden" name="data" value='<?php echo json_encode($csv_data); ?>' />
+	<input type="hidden" name="data" value="<?php echo urlencode(json_encode($csv_data)); ?>" />
 	<input type="hidden" name="id" value="{{ $group->id }}" />
 	<input type="hidden" name="filename" value="group_{{ $group->id }}_members" />
 	<!-- Allow form submission with keyboard without duplicating the dialog button -->
