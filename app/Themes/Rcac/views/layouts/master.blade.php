@@ -102,7 +102,7 @@
 	<body>
 		@widget('top')
 		<header>
-			<div class="navbar navbar-expand-lg goldbar" role="navigation">
+			<nav class="navbar navbar-expand-lg goldbar" role="navigation" aria-label="Purdue University Quick Links">
 				<div class="container">
 					<div class="navbar-header navbar-toggler">
 						<button class="navbar-toggle left" data-target=".gold" data-toggle="collapse" aria-controls="pu-quicklinks" type="button">
@@ -160,7 +160,7 @@
 						</ul>
 					</div><!-- / .search -->
 				</div>
-			</div><!-- / .goldbar -->
+			</nav><!-- / .goldbar -->
 
 			<!-- logo and Tagline -->
 			<div class="top">
@@ -168,8 +168,8 @@
 					<div class="row">
 						<div class="logo col-lg-3 col-md-3 col-sm-3 col-xs-12">
 							<h1 class="sr-only">Purdue University</h1>
-							<a class="svgLinkContainer" href="https://www.purdue.edu">
-								<object class="svgContainer" data="{{ asset('themes/rcac/images/PU-H.svg') }}" type="image/svg+xml" aria-label="Purdue University">
+							<a class="svgLinkContainer" href="https://www.purdue.edu" title="Purdue University">
+								<object class="svgContainer" data="{{ asset('themes/rcac/images/PU-H.svg') }}" type="image/svg+xml" title="Purdue University" role="img">
 									<img alt="Purdue University" src="{{ asset('themes/rcac/images/PU-H.svg') }}" height="45" width="243" />
 								</object>
 							</a>

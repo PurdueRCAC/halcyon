@@ -3,7 +3,7 @@
  * @package  Breadcrumbs widget
  */
 ?>
-<div class="breadcrumb{{ $class_sfx }} pathway{{ $class_sfx }}" aria-label="{{ trans('widget.breadcrumbs::breadcrumbs.widget name') }}">
+<nav class="breadcrumb{{ $class_sfx }} pathway{{ $class_sfx }}" aria-label="{{ trans('widget.breadcrumbs::breadcrumbs.widget name') }}">
 	<div class="container<?php echo (app()->has('isAdmin') && app('isAdmin') ? '-fluid' : ''); ?>">
 		<div class="row">
 			<div id="breadcrumbs">
@@ -52,4 +52,4 @@
 			</div>
 		</div>
 	</div>
-</div>
+<nav>
