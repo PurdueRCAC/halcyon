@@ -7,16 +7,17 @@ services:
     restart: unless-stopped
     working_dir: /var/www/html
     environment:
-      - MYSQL_ROOT_PASSWORD="${DB_PASSWORD}"
-      - MYSQL_DATABASE="${DB_DATABASE}"
-      - MYSQL_USER="${DB_USERNAME}"
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_USER=${DB_USERNAME}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
     ports:
       - "8082:3306"
     volumes:
       - ./storage/dump:/docker-entrypoint-initdb.d
       - ./storage/mysql:/var/lib/mysql
       - .:/var/www/html
-    env_file: .env
+    #env_file: .env
     networks:
       - halcyon
 
