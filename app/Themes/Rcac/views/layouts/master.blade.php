@@ -260,7 +260,7 @@
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footertwo">Services <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
+								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footertwo"><span class="sr-only">Purdue </span>Services <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
 							</div>
 							<div class="panel-collapse collapse" id="footertwo">
 								<div class="panel-body">
@@ -440,7 +440,8 @@
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<p>Purdue University, 610 Purdue Mall, West Lafayette, IN 47907, (765) 494-4600</p>
 							<p><a href="http://www.purdue.edu/purdue/disclaimer.html"> &#169; {{ date("Y") }} Purdue University</a> | <a href="http://www.purdue.edu/purdue/ea_eou_statement.html">An equal access/equal opportunity university</a> | <a href="https://www.purdue.edu/purdue/about/integrity_statement.php">Integrity Statement</a> | <a href="https://www.purdue.edu/securepurdue/security-programs/copyright-policies/reporting-alleged-copyright-infringement.php">Copyright Complaints</a> | <a href="/about/contact/">Maintained by ITaP Research Computing</a></p>
-							<p>Contact Office of Marketing and Media at <a href="mailto:digital-marketing@groups.purdue.edu?subject=Accessibility%20Issue%20with%20Your%20Webpage">digital-marketing@groups.purdue.edu</a> for accessibility issues with this page | <a href="https://www.purdue.edu/disabilityresources/">Accessibility Resources</a> | <a href="https://www.purdue.edu/purdue/contact-us">Contact Us</a></p>
+							<?php /*<p>Contact Office of Marketing and Media at <a href="mailto:digital-marketing@groups.purdue.edu?subject=Accessibility%20Issue%20with%20Your%20Webpage">digital-marketing@groups.purdue.edu</a> for accessibility issues with this page | <a href="https://www.purdue.edu/disabilityresources/">Accessibility Resources</a> | <a href="https://www.purdue.edu/purdue/contact-us">Contact Us</a></p>*/ ?>
+							<p>Contact Research Computing at <a href="mailto:{{ config('mail.from.address') }}?subject=Accessibility%20Issue%20with%20Your%20Webpage">{{ config('mail.from.address') }}</a> for accessibility issues with this page | <a href="https://www.purdue.edu/disabilityresources/">Accessibility Resources</a> | <a href="https://www.purdue.edu/purdue/contact-us/index.php">Contact Purdue</a></p>
 						</div>
 					</div><!-- / .row -->
 				</div><!-- / .container -->
