@@ -698,10 +698,6 @@ class AccountsController extends Controller
 				$row->datetimeapproved = Carbon::now()->toDateTimeString();
 				$row->notice = 4;
 			}
-			else
-			{
-				$row->datetimeapproved = null;
-			}
 		}
 
 		if ($request->input('paid'))
