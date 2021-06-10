@@ -539,16 +539,23 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											</a>
 										</p>
 										@if ($order->user)
-											@if ($order->user->title)
-												<p class="form-text">{{ $order->user->title }}</p>
+											<?php
+											event($event = new App\Modules\Users\Events\UserBeforeDisplay($order->user));
+											$user = $event->getUser();
+											?>
+											@if ($user->title)
+												<p><strong>Title:</strong></p>
+												<p class="form-text">{{ $user->title }}</p>
 											@endif
 
-											@if ($order->user->department)
-												<p class="form-text">{{ $order->user->department }}</p>
+											@if ($user->department)
+												<p><strong>Department:</strong></p>
+												<p class="form-text">{{ $user->department }}</p>
 											@endif
 
-											@if ($order->user->school)
-												<p class="form-text">{{ $order->user->school }}</p>
+											@if ($user->school)
+												<p><strong>School:</strong></p>
+												<p class="form-text">{{ $user->school }}</p>
 											@endif
 										@endif
 									@else

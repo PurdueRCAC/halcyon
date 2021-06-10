@@ -90,7 +90,7 @@ $active = $sections->firstWhere('active', '=', true);
 						<div class="col-md-6">
 							<p>
 								<strong>Department</strong><br />
-								<span class="text-muted">{!! $user->department ? e(ucwords($user->department)) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
+								<span class="text-muted">{!! $user->department ? e($user->department) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
 							</p>
 						</div>
 					</div>
@@ -98,13 +98,13 @@ $active = $sections->firstWhere('active', '=', true);
 						<div class="col-md-6">
 							<p>
 								<strong>Title</strong><br />
-								<span class="text-muted">{!! $user->title ? e(ucwords($user->title)) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
+								<span class="text-muted">{!! $user->title ? e($user->title) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
 							</p>
 						</div>
 						<div class="col-md-6">
 							<p>
 								<strong>Campus</strong><br />
-								<span class="text-muted">{!! $user->campus ? e(ucwords($user->campus)) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
+								<span class="text-muted">{!! $user->campus ? e($user->campus) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
 							</p>
 						</div>
 					</div>

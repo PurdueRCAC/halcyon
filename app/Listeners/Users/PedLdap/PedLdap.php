@@ -246,7 +246,7 @@ class PedLdap
 				{
 					if (isset($data['title']))
 					{
-						$user->title = $data['title'][0];
+						$user->title = Str::properCaseNoun($data['title'][0]);
 					}
 
 					if (isset($data['mail']))
@@ -261,12 +261,12 @@ class PedLdap
 
 					if (isset($data['purdueeducampus']))
 					{
-						$user->campus = $data['purdueeducampus'][0];
+						$user->campus = Str::properCaseNoun($data['purdueeducampus'][0]);
 					}
 
 					if (isset($data['purdueedudepartment']))
 					{
-						$user->department = $data['purdueedudepartment'][0];
+						$user->department = Str::properCaseNoun($data['purdueedudepartment'][0]);
 					}
 
 					if (isset($data['purdueedubuilding']))
@@ -276,7 +276,7 @@ class PedLdap
 
 					if (isset($data['purdueeduschool']))
 					{
-						$user->school = $data['purdueeduschool'][0];
+						$user->school = Str::properCaseNoun($data['purdueeduschool'][0]);
 					}
 
 					if (isset($data['purdueeduofficephone']))
