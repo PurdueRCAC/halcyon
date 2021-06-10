@@ -27,7 +27,7 @@ return [
 	'members' => 'Members',
 	'filter by user' => 'Filter by user',
 	'create accounts' => 'Create Accounts for Class',
-	'add account' => 'Add Account',
+	'add account' => 'Add Class',
 	'invalid' => [
 		'name' => 'Invalid or empty name',
 		'start date' => 'Invalid or empty start date',
