@@ -57,7 +57,7 @@ class ToDosController extends Controller
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"required":      false,
-	 * 		schema": {
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "datetimecreated",
 	 * 			"enum": [
