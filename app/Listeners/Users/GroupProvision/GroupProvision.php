@@ -80,7 +80,7 @@ class GroupProvision
 
 					if (isset($results->groupId) && is_numeric($results->groupId))
 					{
-						$this->unixgroup->unixgid = $results->groupId;
+						$event->unixgroup->unixgid = $results->groupId;
 					}
 				}
 
@@ -95,11 +95,11 @@ class GroupProvision
 				{
 					if (isset($e->results[0]['gidNumber']))
 					{
-						$this->unixgroup->unixgid = intval($e->results[0]['gidNumber'][0]);
+						$event->unixgroup->unixgid = intval($e->results[0]['gidNumber'][0]);
 					}
 					elseif (isset($e->results[0]['gidnumber']))
 					{
-						$this->unixgroup->unixgid = intval($e->results[0]['gidnumber'][0]);
+						$event->unixgroup->unixgid = intval($e->results[0]['gidnumber'][0]);
 					}
 				}
 			}
