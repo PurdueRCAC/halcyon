@@ -761,9 +761,12 @@ class AccountsController extends Controller
 			}
 		}
 
-		if ($request->input('purchaseio')
-		 || $request->input('purchasewbse'))
+		if ($request->has('purchaseio')
+		 || $request->has('purchasewbse'))
 		{
+			$row->purchaseio = $request->input('purchaseio');
+			$row->purchasewbse = $request->input('purchasewbse');
+
 			if ($row->purchaseio)
 			{
 				$row->purchasewbse = 0;
