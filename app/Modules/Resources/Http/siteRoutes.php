@@ -14,6 +14,11 @@ if (Schema::hasTable('resourcetypes'))
 			'uses' => 'ResourcesController@type',
 		]);
 
+		$router->get($type->alias . '/{name}/{section}', [
+			'as' => 'site.resources.' . $type->alias . '.section',
+			'uses' => 'ResourcesController@show',
+		])->where('name', '^(?!solutions$).*$')->where('section', '[a-z0-9\-_]+');
+
 		$router->get($type->alias . '/{name}', [
 			'as' => 'site.resources.' . $type->alias . '.show',
 			'uses' => 'ResourcesController@show',

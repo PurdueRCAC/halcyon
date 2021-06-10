@@ -21,19 +21,28 @@ class AssetDisplaying
 	private $sections;
 
 	/**
+	 * Active content section
+	 *
+	 * @var string
+	 */
+	private $active;
+
+	/**
 	 * Constructor
 	 *
-	 * @param  object $user
+	 * @param  object $asset
+	 * @param  string $active
 	 * @return void
 	 */
-	public function __construct(Asset $asset)
+	public function __construct(Asset $asset, $active = null)
 	{
 		$this->asset = $asset;
+		$this->active = $active;
 		$this->sections = array();
 	}
 
 	/**
-	 * Get the user
+	 * Get the asset
 	 *
 	 * @return string
 	 */
@@ -43,7 +52,7 @@ class AssetDisplaying
 	}
 
 	/**
-	 * Get the user
+	 * Get the sections
 	 *
 	 * @return string
 	 */
@@ -53,8 +62,22 @@ class AssetDisplaying
 	}
 
 	/**
-	 * Get the user
+	 * Get the active section
 	 *
+	 * @return string
+	 */
+	public function getActive()
+	{
+		return $this->active;
+	}
+
+	/**
+	 * Add a section
+	 *
+	 * @param  string  $route
+	 * @param  string  $name
+	 * @param  bool    $active
+	 * @param  string  $content
 	 * @return void
 	 */
 	public function addSection($route, $name, $active = false, $content = null)

@@ -145,7 +145,7 @@ class ResourcesController extends Controller
 	 * @param  string  $name
 	 * @return Response
 	 */
-	public function show(Request $request, $name)
+	public function show(Request $request, $name, $section = null)
 	{
 		if ($name == 'retired')
 		{
@@ -166,7 +166,7 @@ class ResourcesController extends Controller
 			abort(404);
 		}
 
-		event($event = new AssetDisplaying($resource));
+		event($event = new AssetDisplaying($resource, $section));
 		$sections = collect($event->getSections());
 
 		app('pathway')

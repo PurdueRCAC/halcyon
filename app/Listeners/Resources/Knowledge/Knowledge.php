@@ -106,7 +106,7 @@ class Knowledge
 			->get()
 			->first();
 
-		if ($overview)
+		if ($overview && $event->getActive() != 'guide')
 		{
 			$overview->variables->merge($page->variables);
 
@@ -119,6 +119,28 @@ class Knowledge
 		}
 		else
 		{
+			if (!$page->content || $page->params->get('show_toc', 1))
+			{
+				$page->content .= '<h1>' . $page->headline . '</h1>';
+
+				$childs = $assoc->publishedChildren();
+
+				if (count($childs))
+				{
+					$page->content .= '<ul class="kb-toc">';
+					foreach ($childs as $n)
+					{
+						$n->page->variables->merge($page->variables);
+						//$pa = $p ? $p . '/' . $n->page->alias : $n->page->alias;
+
+						$page->content .= '<li>';
+						$page->content .= '<a href="' . route('site.knowledge.page', ['uri' => $n->path]) . '">' . $n->page->headline . '</a>';
+						$page->content .= '</li>';
+					}
+					$page->content .= '</ul>';
+				}
+			}
+
 			$event->addSection(
 				route('site.knowledge.page', ['uri' => $page->path]),
 				$page->headline,
