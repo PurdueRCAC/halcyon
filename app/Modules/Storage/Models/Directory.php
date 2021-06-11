@@ -598,7 +598,7 @@ class Directory extends Model
 		$item['quota'] = $this->quota;
 
 		$children = array();
-		foreach ($this->children()->orderBy('name', 'asc')->get() as $child)
+		foreach ($this->children()->withTrashed()->whereIsActive()->orderBy('name', 'asc')->get() as $child)
 		{
 			$children[] = $child->tree(false);
 		}
@@ -637,7 +637,7 @@ class Directory extends Model
 	{
 		$items[] = $this;
 
-		foreach ($this->children()->orderBy('name', 'asc')->get() as $child)
+		foreach ($this->children()->withTrashed()->whereIsActive()->orderBy('name', 'asc')->get() as $child)
 		{
 			$items = $child->nested($items);
 		}
