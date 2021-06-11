@@ -26,7 +26,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 	$router->put('{id}', [
 		'as' => 'api.users.update',
 		'uses' => 'UsersController@update',
-		'middleware' => ['auth:api', 'can:edit users|can:edit.own'],
+		'middleware' => ['auth:api', 'can:edit users|can:edit.own users'],
 	])->where('id', '[0-9]+');
 
 	$router->delete('{id}', [
