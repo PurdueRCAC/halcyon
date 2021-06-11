@@ -28,7 +28,7 @@ class Fortresskeytab extends Widget
 		{
 			$offcampus = true;
 		}
-$offcampus = false;
+
 		return view($this->getViewName(), [
 			'offcampus' => $offcampus,
 		]);
