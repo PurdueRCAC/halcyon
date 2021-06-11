@@ -386,11 +386,6 @@ class OrdersController extends Controller
 			'notice' => 'nullable|integer',
 		]);
 
-		if (!$request->has('items'))
-		{
-			return response()->json(['message' => 'No items found'], 415);
-		}
-
 		$userid = auth()->user() ? auth()->user()->id : 0;
 
 		if ($request->has('userid'))
@@ -409,6 +404,7 @@ class OrdersController extends Controller
 		}
 
 		$items = (array)$request->input('items', []);
+		$accounts = (array)$request->input('accounts', []);
 		$orderid = 0;
 
 		// Create record
@@ -430,41 +426,50 @@ class OrdersController extends Controller
 			{
 				// Fetch order information
 				$item = Item::query()
+					->withTrashed()
+					->whereIsActive()
 					->where('origorderitemid', $sequence)
-					->where(function($where)
-					{
-						$where->whereNull('datetimeremoved')
-							->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-					})
 					->orderBy('datetimecreated', 'desc')
 					->limit(1)
 					->first();
 
-				if (!$orderitem)
+				if (!$item)
 				{
 					return response()->json(['message' => 'Failed to find order information for orderitemid #' . $sequence], 404);
 				}
 
-				//create a new class.
-				$item->id = null;
-				$item->datetimecreated = null;
+				//unset($item->id);
+				//unset($item->datetimecreated);
 
-				$items[] = (array)$item;
+				$items[] = $item->toArray();
 
 				$orderid = $item->orderid;
-				$row->userid = $item->userid;
-				$row->groupid = $item->groupid;
+
+				$row->userid  = $item->order->userid;
+				$row->groupid = $item->order->groupid;
 			}
 
 			// Fetch accounts information
-			$accounts = Account::query()
+			$accs = Account::query()
+				->withTrashed()
+				->whereIsActive()
 				->where('orderid', '=', $orderid)
 				->get();
+
+			foreach ($accs as $account)
+			{
+				$accounts[] = $account->toArray();
+			}
 		}
 
 		if ($row->groupid && !$row->group)
 		{
 			return response()->json(['message' => 'Invalid group ID'], 404);
+		}
+
+		if (empty($items))
+		{
+			return response()->json(['message' => 'No items found'], 415);
 		}
 
 		$row->save();
@@ -474,8 +479,24 @@ class OrdersController extends Controller
 		{
 			$item = new Item;
 			$item->orderid = $row->id;
-			$item->orderproductid = $i['product'];
+			$item->orderproductid = $i['orderproductid'];
+			if (isset($i['product']))
+			{
+				$item->orderproductid = $i['product'];
+			}
 			$item->quantity = $i['quantity'];
+			if (isset($i['origorderitemid']))
+			{
+				$item->origorderitemid = $i['origorderitemid'];
+			}
+			if (isset($i['recurringtimeperiodid']))
+			{
+				$item->recurringtimeperiodid = $i['recurringtimeperiodid'];
+			}
+			if (isset($i['timeperiodcount']))
+			{
+				$item->timeperiodcount = $i['timeperiodcount'];
+			}
 
 			$total = $item->product->unitprice * $item->quantity;
 
@@ -492,6 +513,21 @@ class OrdersController extends Controller
 			}
 
 			$item->save();
+		}
+
+		if (!empty($accounts))
+		{
+			foreach ($accounts as $a)
+			{
+				$account = new Account;
+				$account->amount              = 0;
+				$account->purchaseio          = $a['purchaseio'];
+				$account->purchasewbse        = $a['purchasewbse'];
+				$account->budgetjustification = $a['budgetjustification'];
+				//$account->approveruserid      = $a['approveruserid'];
+				$account->orderid = $row->id;
+				$account->save();
+			}
 		}
 
 		// Clear the cart

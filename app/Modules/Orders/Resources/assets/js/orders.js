@@ -2419,9 +2419,9 @@ function Renew(url, sequence) {
 	post = JSON.stringify(post);
 
 	WSPostURL(url, post, function(xml) {
-		if (xml.status == 200) {
+		if (xml.status < 400) {
 			var results =  JSON.parse(xml.responseText);
-			window.location = "/orders/" + results['id'];
+			window.location = results.uri;
 		} else {
 			alert("An error occurred while renewing. Please wait a few minutes and try again. If error continues, please contact rcac-help@purdue.edu.");
 		}
