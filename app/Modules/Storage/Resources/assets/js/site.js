@@ -382,13 +382,13 @@ function DeleteDir(btn) {
 					.removeClass('alert-danger')
 					.addClass('alert-success')
 					.removeClass('hide')
-					.txt('Directory removed!');
+					.text('Directory removed!');
 				window.location.reload(true);
 			},
 			error: function (xhr, reason, thrownError) {
 				$('#' + btn.getAttribute('data-dir') + '_error')
 					.removeClass('hide')
-					.txt('Failed to delete directory.');
+					.text('Failed to delete directory.');
 
 				console.log(xhr.responseText);
 			}
