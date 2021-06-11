@@ -378,15 +378,18 @@ function DeleteDir(btn) {
 			dataType: 'json',
 			async: false,
 			success: function (data) {
-				Halcyon.message('success', 'Directory removed!');
+				$('#' + btn.getAttribute('data-dir') + '_error')
+					.removeClass('alert-danger')
+					.addClass('alert-success')
+					.removeClass('hide')
+					.txt('Directory removed!');
 				window.location.reload(true);
 			},
 			error: function (xhr, reason, thrownError) {
-				if (xhr.responseJSON) {
-					Halcyon.message('danger', xhr.responseJSON.message);
-				} else {
-					Halcyon.message('danger', 'Failed to delete directory.');
-				}
+				$('#' + btn.getAttribute('data-dir') + '_error')
+					.removeClass('hide')
+					.txt('Failed to delete directory.');
+
 				console.log(xhr.responseText);
 			}
 		});
@@ -429,10 +432,13 @@ function ResetPermissions(btn) {
 			},
 			error: function (xhr, reason, thrownError) {
 				if (xhr.responseJSON) {
-					Halcyon.message('danger', xhr.responseJSON.message);
+					var msg = xhr.responseJSON.message;
 				} else {
-					Halcyon.message('danger', 'Failed to reset permissions.');
+					var msg = 'Failed to reset permissions.';
 				}
+				$('#' + btn.attr('data-dir') + '_error')
+					.removeClass('hide')
+					.text(msg);
 				console.log(xhr.responseText);
 			}
 		});
@@ -1177,7 +1183,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			dataType: 'json',
 			async: false,
 			success: function (data) {
-				//Halcyon.message('success', btn.getAttribute('data-success'));
 				window.location.reload(true);
 			},
 			error: function (xhr, reason, thrownError) {
@@ -1207,15 +1212,17 @@ document.addEventListener('DOMContentLoaded', function () {
 				dataType: 'json',
 				async: false,
 				success: function (data) {
-					Halcyon.message('success', btn.getAttribute('data-success'));
 					window.location.reload(true);
 				},
 				error: function (xhr, reason, thrownError) {
 					if (xhr.responseJSON) {
-						Halcyon.message('danger', xhr.responseJSON.message);
+						var msg = xhr.responseJSON.message;
 					} else {
-						Halcyon.message('danger', 'Failed to delete item.');
+						var msg = 'Failed to delete item.';
 					}
+					$('#' + btn.attr('data-dir') + '_error')
+						.removeClass('hide')
+						.text(msg);
 					console.log(xhr.responseText);
 				}
 			});
