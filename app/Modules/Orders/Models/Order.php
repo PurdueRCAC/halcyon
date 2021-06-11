@@ -302,7 +302,7 @@ class Order extends Model
 			}
 
 			if (($accounts == 0 && $ordertotal > 0)
-			 || $amountassigned <> $ordertotal
+			 || $amountassigned < $ordertotal
 			 || ($accountsdenied > 0 && ($accountsdenied + $accountsapproved) == $accounts))
 			{
 				$status = 'pending_payment';
