@@ -4,11 +4,12 @@
 $active = $sections->firstWhere('active', '=', true);
 @endphp
 
-@if (auth()->user()->can('manage users'))
 @push('scripts')
+<script src="{{ asset('modules/users/js/site.js?v=' . filemtime(public_path() . '/modules/users/js/site.js')) }}"></script>
+@if (auth()->user()->can('manage users'))
 <script src="{{ asset('modules/resources/js/roles.js?v=' . filemtime(public_path() . '/modules/resources/js/roles.js')) }}"></script>
-@endpush
 @endif
+@endpush
 
 @section('title'){{ ($active ? str_replace(['<span class="badge pull-right">', '</span>'], ['(', ')'], $active['name']) : trans('users::users.my accounts')) }}@stop
 
@@ -138,13 +139,63 @@ $active = $sections->firstWhere('active', '=', true);
 					</div>
 
 					<p>
-						<strong>Login Shell</strong><br />
+						<strong>Login Shell</strong>
+						<a href="#box1_account" class="help icn tip" title="Help">
+							<i class="fa fa-question-circle" aria-hidden="true"></i> Help
+						</a>
+						<br />
 						@if ($user->loginShell === false)
 							<span class="alert alert-error">Failed to retrieve shell information</span>
 						@else
-							<span class="text-muted">{!! $user->loginShell ? e($user->loginShell) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
+							<span id="SPAN_loginshell" class="edit-hide text-muted">{!! $user->loginShell ? e($user->loginShell) : '<span id="SPAN_loginshell" class="edit-hide none">' . trans('global.unknown') . '</span>' !!}</span>
+
+							@if (!preg_match("/acmaint/", $user->loginShell))
+								<a href="#loginshell" id="edit-loginshell" class="edit-hide property-edit" data-prop="loginshell">
+									<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit</span>
+								</a>
+							@endif
+							<div class="form-group edit-show hide" id="loginshell">
+								<select class="form-control property-edit" id="INPUT_loginshell" data-prop="loginshell">
+									<?php
+									$selected = '';
+									if (preg_match("/bash$/", $user->loginShell))
+									{
+										$selected = ' selected="selected"';
+									}
+									?>
+									<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
+									<?php
+									$selected = '';
+									if (preg_match("/csh$/", $user->loginShell))
+									{
+										$selected = ' selected="selected"';
+									}
+									?>
+									<option value="/bin/tcsh"<?php echo $selected; ?>>tcsh</option>
+									<?php
+									$selected = '';
+									if (preg_match("/zsh$/", $user->loginShell))
+									{
+										$selected = ' selected="selected"';
+									}
+									?>
+									<option value="/bin/zsh"<?php echo $selected; ?>>zsh</option>
+								</select>
+								@if (!preg_match("/acmaint/", $user->loginShell))
+									<a href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}" data-api="{{ route('api.users.update', ['id' => $user->id]) }}" class="text-success property-save" data-prop="loginshell">
+										<i class="fa fa-save" aria-hidden="true"></i><span class="sr-only">Save</span>
+									</a>
+									<a href="#edit-loginshell" class="text-danger property-cancel" data-prop="loginshell">
+										<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">Cancel</span>
+									</a>
+								@endif
+								<div class="alert alert-danger hide" id="loginshell_error"></div>
+							</div>
 						@endif
 					</p>
+					<div id="box1_account" class="dialog-help" title="Login Shell">
+						<p>This is the interactive shell you are started with when logging into {{ config('app.name') }} resources. The default for new accounts is bash however you may use this to change it if desired. Supported options are <code>bash</code>, <code>tcsh</code>, and <code>zsh</code>. Once changed, it will take one to two hours for the changes to propagate to all systems.</p>
+					</div>
 				</div>
 			</div>
 

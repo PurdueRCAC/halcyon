@@ -25,7 +25,7 @@ class GroupProvision
 	 */
 	public function subscribe($events)
 	{
-		//$events->listen(UserUpdated::class, self::class . '@handleUserUpdated');
+		$events->listen(UserUpdated::class, self::class . '@handleUserUpdated');
 		$events->listen(UnixGroupCreating::class, self::class . '@handleUnixGroupCreating');
 		$events->listen(UnixGroupDeleted::class, self::class . '@handleUnixGroupDeleted');
 		$events->listen(UnixGroupMemberCreated::class, self::class . '@handleUnixGroupMemberCreated');
@@ -317,6 +317,79 @@ class GroupProvision
 		}
 
 		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, $url);
+	}
+
+	/**
+	 * Handle a user being updated
+	 *
+	 * @param   UserUpdated  $event
+	 * @return  void
+	 */
+	public function handleUserUpdated(UserUpdated $event)
+	{
+		$config = $this->config();
+
+		if (empty($config))
+		{
+			return;
+		}
+
+		$user = $event->user;
+
+		if (!$user->loginShell)
+		{
+			return;
+		}
+
+		try
+		{
+			// Call central accounting service to request status
+			$client = new Client();
+
+			$url = $config['url'] . 'changeShell/rcs/pucc_rcd/' . $user->username . '?loginShell=' . $user->loginShell;
+
+			$res = $client->request('GET', $url, [
+				'auth' => [
+					$config['user'],
+					$config['password']
+				]
+			]);
+
+			$status = $res->getStatusCode();
+			$body   = json_decode($res->getBody()->getContents());
+
+			if ($status < 400)
+			{
+				error_log(__METHOD__ . '(): Changed login shell in AIMO ACMaint member for ' . $user->username);
+
+				// changeShell/organization/hostGroup/memberLogin?loginShell=
+				// this should only be needed for admin users, rcac_misc contains hosts only relevant to rcac staff
+				if ($user->can('manage users'))
+				{
+					$url = $config['url'] . 'changeShell/rcs/pucc_misc/' . $user->username . '?loginShell=' . $user->loginShell;
+
+					$res = $client->request('GET', $url, [
+						'auth' => [
+							$config['user'],
+							$config['password']
+						]
+					]);
+				}
+			}
+			else
+			{
+				error_log(__METHOD__ . '(): Failed to change login shell in AIMO ACMaint for ' . $user->username);
+			}
+		}
+		catch (\Exception $e)
+		{
+			$status = 500;
+			$body   = ['error' => $e->getMessage()];
+
+			error_log(__METHOD__ . '(): Failed to change login shell in AIMO ACMaint for ' . $user->username . ': ' . $e->getMessage());
+		}
+
+		$this->log('groupprovision', __METHOD__, 'GET', $status, $body, $url);
 	}
 
 	/**

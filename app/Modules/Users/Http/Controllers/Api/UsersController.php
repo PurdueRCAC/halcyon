@@ -12,6 +12,7 @@ use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Users\Models\Facet;
 use App\Modules\Users\Events\UserSearching;
+use App\Modules\Users\Events\UserUpdated;
 use App\Halcyon\Access\Map;
 
 /**
@@ -523,6 +524,36 @@ class UsersController extends Controller
 			{
 				return response()->json(['message' => trans('global.messages.save failed', ['id' => $id])], 500);
 			}
+		}
+
+		if ($request->has('loginShell'))
+		{
+			$user->loginShell = $request->input('loginShell');
+
+			// Check that the login shell is valid:
+			//
+			// shell is in /bin
+			if ($user->loginShell != '/sbin/nologin'
+			&& !preg_match('@^/bin/.*sh$@', $user->loginShell)
+			&& !preg_match('@^/opt/acmaint.*$@', $user->loginShell)
+			&& !preg_match('@^/usr/local/bin/.*sh$@', $user->loginShell))
+			{
+				return response()->json(['message' => trans('Field `loginshell` has invalid format')], 415);
+			}
+
+			// shell chosen exists
+			if (!is_file($user->loginShell))
+			{
+				return response()->json(['message' => trans('`loginshell` is not a valid file')], 415);
+			}
+
+			// shell is executable
+			if (!is_executable($user->loginShell))
+			{
+				return response()->json(['message' => trans('`loginshell` is not executable')], 415);
+			}
+
+			event(new UserUpdated($user));
 		}
 
 		if ($request->has('facets'))
