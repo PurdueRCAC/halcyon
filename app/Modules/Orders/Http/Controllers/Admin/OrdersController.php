@@ -72,7 +72,7 @@ class OrdersController extends Controller
 					WHEN (tbaccounts.datetimeremoved > '0000-000-00 00:00:00') THEN 7
 					WHEN (
 							(accounts = 0 AND ordertotal > 0) OR
-							amountassigned <> ordertotal OR
+							amountassigned < ordertotal OR
 							(accountsdenied > 0 AND (accountsdenied + accountsapproved) = accounts)
 						) THEN 3
 					WHEN (accountsassigned < accounts) THEN 2

@@ -76,7 +76,7 @@ class OrdersController extends Controller
 					WHEN (tbaccounts.datetimeremoved > '0000-000-00 00:00:00') THEN 7
 					WHEN (
 							(accounts = 0 AND ordertotal > 0) OR
-							amountassigned <> ordertotal OR
+							amountassigned < ordertotal OR
 							(accountsdenied > 0 AND (accountsdenied + accountsapproved) = accounts)
 						) THEN 3
 					WHEN (accountsassigned < accounts) THEN 2
@@ -320,6 +320,15 @@ class OrdersController extends Controller
 				->where($p . '.ordercategoryid', '=', $filters['category']);
 		}*/
 
+		if ($request->has('export'))
+		{
+			$rows = $query
+				->orderBy($filters['order'], $filters['order_dir'])
+				->get();
+
+			return $this->export($rows, $request->input('export'));
+		}
+
 		$rows = $query
 			//->withCount('items')
 			->orderBy($filters['order'], $filters['order_dir'])
@@ -355,6 +364,166 @@ class OrdersController extends Controller
 			'filters' => $filters,
 			'categories' => $categories,
 			'products' => $products
+		]);
+	}
+
+	/**
+	 * Download a list of records
+	 * 
+	 * @param  object  $rows
+	 * @return Response
+	 */
+	public function export($rows, $export)
+	{
+		$data = array();
+		$data[] = array(
+			trans('orders::orders.type'),
+			trans('orders::orders.id'),
+			trans('orders::orders.order'),
+			trans('orders::orders.created'),
+			trans('orders::orders.status'),
+			trans('orders::orders.submitter'),
+			trans('orders::orders.user'),
+			trans('orders::orders.group'),
+			trans('orders::orders.department'),
+			trans('orders::orders.quantity'),
+			trans('orders::orders.price'),
+			trans('orders::orders.total'),
+			'purchaseio',
+			'purchasewbse',
+			trans('orders::orders.product'),
+			trans('orders::orders.notes'),
+		);
+
+		foreach ($rows as $row)
+		{
+			$submitter = '';
+			$user = '';
+			$group = '';
+			$department = '';
+
+			if ($row->groupid)
+			{
+				$group = $row->group ? $row->group->name : '';
+				if ($row->group)
+				{
+					$first = $row->group->departmentList()->first();
+					if ($first)
+					{
+						$department = $first->name;
+					}
+				}
+			}
+
+			if ($row->userid)
+			{
+				$user = $row->user ? $row->user->name : '';
+			}
+
+			if ($row->submitteruserid)
+			{
+				$submitter = $row->submitter ? $row->submitter->name : '';
+			}
+
+			$data[] = array(
+				'order',
+				$row->id,
+				$row->id,
+				$row->datetimecreated->format('Y-m-d'),
+				$row->status,
+				$submitter,
+				$user,
+				$group,
+				$department,
+				'',
+				'',
+				config('orders.currency', '$') . ' ' . $row->formatNumber($row->ordertotal),
+				'',
+				'',
+				'',
+				$row->usernotes
+			);
+
+			if ($export == 'items')
+			{
+				foreach ($row->items()->withTrashed()->whereIsActive()->get() as $item)
+				{
+					$data[] = array(
+						'item',
+						$item->id,
+						$item->orderid,
+						$item->datetimecreated->format('Y-m-d'),
+						$item->isFulfilled() ? 'fullfilled' : 'pending',
+						'',
+						'',
+						'',
+						'',
+						$item->quantity,
+						config('orders.currency', '$') . ' ' . $row->formatNumber($item->origunitprice),
+						config('orders.currency', '$') . ' ' . $row->formatNumber($item->price),
+						'',
+						'',
+						$item->product ? $item->product->name : $item->orderproductid,
+						''
+					);
+				}
+			}
+
+			if ($export == 'accounts')
+			{
+				foreach ($row->accounts()->withTrashed()->whereIsActive()->get() as $account)
+				{
+					$data[] = array(
+						'account',
+						$account->id,
+						$account->orderid,
+						$account->datetimecreated->format('Y-m-d'),
+						$account->status,
+						'',
+						'',
+						'',
+						'',
+						'',
+						'',
+						config('orders.currency', '$') . ' ' . $row->formatNumber($account->amount),
+						$account->purchaseio ? $account->purchaseio : '',
+						$account->purchasewbse ? $account->purchasewbse : '',
+						'',
+						''
+					);
+				}
+			}
+		}
+
+		$filename = 'orders_data.csv';
+
+		$headers = array(
+			'Content-type' => 'text/csv',
+			'Content-Disposition' => 'attachment; filename=' . $filename,
+			'Pragma' => 'no-cache',
+			'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+			'Expires' => '0',
+			'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
+		);
+
+		$callback = function() use ($data)
+		{
+			$file = fopen('php://output', 'w');
+
+			foreach ($data as $datum)
+			{
+				fputcsv($file, $datum);
+			}
+			fclose($file);
+		};
+
+		return response()->streamDownload($callback, $filename, $headers);
+
+		// Set headers and output
+		return new Response($output, 200, [
+			'Content-Type' => 'text/csv;charset=UTF-8',
+			'Content-Disposition' => 'attachment; filename="' . $file . '.csv"',
+			'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
 		]);
 	}
 

@@ -88,6 +88,19 @@ $(document).ready(function() {
 			window.location = $(this).data('url') + "?u=";
 		});
 	}
+
+	var dialog = $("#export-orders").dialog({
+		autoOpen: false,
+		height: 'auto',
+		width: 250,
+		modal: true
+	});
+
+	$('.btn-export').off('click').on('click', function(e){
+		e.preventDefault();
+
+		dialog.dialog("open");
+	});
 });
 </script>
 @endpush
@@ -184,6 +197,32 @@ app('pathway')
 		</fieldset>
 	</div>
 	<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+		@if (auth()->user()->can('manage orders'))
+			<p class="text-right">
+				<button class="btn btn-primary btn-export">
+					<i class="fa fa-table" aria-hidden="true"></i> Export
+				</button>
+			</p>
+			<div id="export-orders" class="dialog" title="{{ trans('orders::orders.export') }}">
+				<h2 class="modal-title sr-only">{{ trans('knowledge::knowledge.choose type') }}</h2>
+
+				<p>
+					<a href="{{ route('site.orders.index', ['export' => 'only_main']) }}" class="btn btn-outline-primary d-block">
+						{{ trans('orders::orders.export summary') }}
+					</a>
+				</p>
+				<p>
+					<a href="{{ route('site.orders.index', ['export' => 'items']) }}" class="btn btn-outline-secondary d-block">
+						{{ trans('orders::orders.export items') }}
+					</a>
+				</p>
+				<p>
+					<a href="{{ route('site.orders.index', ['export' => 'accounts']) }}" class="btn btn-outline-secondary d-block">
+						{{ trans('orders::orders.export accounts') }}
+					</a>
+				</p>
+			</div>
+		@endif
 	@if (count($rows))
 		<table class="table table-hover mt-0">
 			<caption class="sr-only">{{ trans('orders::orders.orders placed') }}</caption>
