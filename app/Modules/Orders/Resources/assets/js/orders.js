@@ -898,7 +898,7 @@ function TotalOrder() {
 		if (quantity > 0) {
 			//JSON.stringify(
 			items[count] = {
-				'product': product,
+				'orderproductid': product,
 				'price': linetotal,
 				'quantity': quantity
 			};
@@ -934,14 +934,11 @@ function TotalOrder() {
 	if (yescount == 0) {
 		notes = notes + "No restricted data categories were selected.\n\r";
 	}
-	order['items'] = items; //JSON.stringify(items);
-	order['staffnotes'] = notes; //JSON.stringify(notes);
+	order['items'] = items;
+	order['staffnotes'] = notes;
 	order['usernotes'] = document.getElementById('usernotes').value;
 	
-	//var post = '{"userid": "' + order['user'] + '", "items": ' + order['items'] + ', "staffnotes": ' + order['staffnotes'] + '}';
-	//console.log(post);
 	var btn = document.getElementById('continue');
-	//return;
 
 	$.ajax({
 		url: btn.getAttribute('data-api'),
@@ -956,27 +953,13 @@ function TotalOrder() {
 		dataType: 'json',
 		async: false,
 		success: function(response) {
-			//Halcyon.message('success', 'Item added');
-
-			// Don't really need to do anything here, we are just ensuring the selected user has a database entry
 			window.location = response.url;
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
 			//console.log(xhr);
 			alert("There was an error processing your order. Please wait a few minutes and try again or contact help.");
-			//Halcyon.message('danger', xhr.responseJSON.message);
-			//Halcyon.message('danger', btn.getAttribute('data-error'));
 		}
 	});
-
-	/*WSPostURL(ROOT_URL + "order", post, function(xml) {
-		if (xml.status == 200) {
-			var results = JSON.parse(xml.responseText);
-			window.location = "/order/" + results['id'].split("/")[3];
-		} else {
-			alert("There was an error processing your order. Please wait a few minutes and try again or contact rcac-help@purdue.edu for help.");
-		}
-	});*/
 }
 
 /**
