@@ -659,7 +659,7 @@ $members = $members->sortBy('username');
 					@endforeach
 					@foreach ($unixgroups as $unix)
 						<th scope="col" class="col-unixgroup text-nowrap text-center">{{ $unix->longname }}</th>
-					@endforeach;
+					@endforeach
 				</tr>
 			</thead>
 			<tbody>
