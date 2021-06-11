@@ -153,44 +153,48 @@ $active = $sections->firstWhere('active', '=', true);
 								<a href="#loginshell" id="edit-loginshell" class="edit-hide property-edit" data-prop="loginshell">
 									<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit</span>
 								</a>
+								<div id="loginshell" class="edit-show hide">
+									<div class="form-group">
+										<span class="input-group">
+										<select class="form-control property-edit" id="INPUT_loginshell" data-prop="loginshell">
+											<?php
+											$selected = '';
+											if (preg_match("/bash$/", $user->loginShell))
+											{
+												$selected = ' selected="selected"';
+											}
+											?>
+											<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
+											<?php
+											$selected = '';
+											if (preg_match("/csh$/", $user->loginShell))
+											{
+												$selected = ' selected="selected"';
+											}
+											?>
+											<option value="/bin/tcsh"<?php echo $selected; ?>>tcsh</option>
+											<?php
+											$selected = '';
+											if (preg_match("/zsh$/", $user->loginShell))
+											{
+												$selected = ' selected="selected"';
+											}
+											?>
+											<option value="/bin/zsh"<?php echo $selected; ?>>zsh</option>
+										</select>
+										<span class="input-group-append">
+											<a href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}" data-api="{{ route('api.users.update', ['id' => $user->id]) }}" class="btn input-group-text text-success property-save" title="Save">
+												<i class="fa fa-save" aria-hidden="true"></i><span class="sr-only">Save</span>
+											</a>
+											<a href="#edit-loginshell" class="btn input-group-text text-danger property-cancel" title="Cancel">
+												<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">Cancel</span>
+											</a>
+										</span>
+									</div>
+									<p>Please note it may take a few minutes for changes to be reflected.</p>
+									<div class="alert alert-danger hide" id="loginshell_error"></div>
+								</div>
 							@endif
-							<div class="form-group edit-show hide" id="loginshell">
-								<select class="form-control property-edit" id="INPUT_loginshell" data-prop="loginshell">
-									<?php
-									$selected = '';
-									if (preg_match("/bash$/", $user->loginShell))
-									{
-										$selected = ' selected="selected"';
-									}
-									?>
-									<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
-									<?php
-									$selected = '';
-									if (preg_match("/csh$/", $user->loginShell))
-									{
-										$selected = ' selected="selected"';
-									}
-									?>
-									<option value="/bin/tcsh"<?php echo $selected; ?>>tcsh</option>
-									<?php
-									$selected = '';
-									if (preg_match("/zsh$/", $user->loginShell))
-									{
-										$selected = ' selected="selected"';
-									}
-									?>
-									<option value="/bin/zsh"<?php echo $selected; ?>>zsh</option>
-								</select>
-								@if (!preg_match("/acmaint/", $user->loginShell))
-									<a href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}" data-api="{{ route('api.users.update', ['id' => $user->id]) }}" class="text-success property-save" data-prop="loginshell">
-										<i class="fa fa-save" aria-hidden="true"></i><span class="sr-only">Save</span>
-									</a>
-									<a href="#edit-loginshell" class="text-danger property-cancel" data-prop="loginshell">
-										<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">Cancel</span>
-									</a>
-								@endif
-								<div class="alert alert-danger hide" id="loginshell_error"></div>
-							</div>
 						@endif
 					</p>
 					<div id="box1_account" class="dialog-help" title="Login Shell">
