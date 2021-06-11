@@ -1493,8 +1493,8 @@ function CancelOrder(button) {
  * @return  {void}
  */
 function CanceledOrder(xml) {
-	if (xml.status == 200) {
-		window.location.reload();// = "/orders/";
+	if (xml.status < 200) {
+		window.location.reload();
 	} else {
 		alert("An error occurred while canceling order.");
 	}
