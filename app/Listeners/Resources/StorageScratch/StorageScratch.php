@@ -75,7 +75,10 @@ class StorageScratch
 			]);
 
 			// Prepare job to create directory in reality
-			$dir->addMessageToQueue($storage->createtypeid);
+			if ($storage->createtypeid)
+			{
+				$dir->addMessageToQueue($storage->createtypeid);
+			}
 		}
 	}
 }

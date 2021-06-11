@@ -200,7 +200,10 @@ class Resources
 			$directory->save();
 
 			// Prepare job to create directory in reality
-			$directory->addMessageToQueue($row->createtypeid);
+			if ($row->createtypeid)
+			{
+				$directory->addMessageToQueue($row->createtypeid);
+			}
 		}
 
 		// Need to check for Home dir and create if necessary

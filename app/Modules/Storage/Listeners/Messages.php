@@ -36,7 +36,7 @@ class Messages
 
 		if ($type = $message->type)
 		{
-			if ($type->classname == 'storagedir')
+			if (!$type->classname || $type->classname == 'storagedir')
 			{
 				$item = Directory::query()->withTrashed()->where('id', '=', $message->targetobjectid)->first();
 

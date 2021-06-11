@@ -189,6 +189,13 @@ class Directory extends Model
 		$message->userid = $userid ?: (auth()->user() ? auth()->user()->id : 0);
 		$message->targetobjectid = $this->id;
 		$message->messagequeuetypeid = !is_null($typeid) ? $typeid : $this->storageResource->getquotatypeid;
+		$message->messagequeuetypeid = $message->messagequeuetypeid ?: $this->storageResource->createtypeid;
+		if (!$message->messagequeuetypeid)
+		{
+			// We need a type.
+			error_log('Trying to add message for tagret #' . $message->targetobjectid . ' without MQ type id.');
+			return;
+		}
 		if ($offset)
 		{
 			$message->datetimesubmitted = Carbon::now()->add($offset . ' seconds')->toDateTimeString();
