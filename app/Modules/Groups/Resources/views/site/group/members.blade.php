@@ -320,8 +320,7 @@ $members = $members->sortBy('username');
 			<caption class="sr-only">Managers</caption>
 			<thead>
 				<tr>
-					<th scope="col">&nbsp;</th>
-					<th scope="col">&nbsp;</th>
+					<th scope="col" colspan="3">User Info</th>
 					@if (count($queues))
 					<th scope="col" class="col-queue" colspan="{{ count($queues) }}">Queues</th>
 					@endif
@@ -330,8 +329,9 @@ $members = $members->sortBy('username');
 					@endif
 				</tr>
 				<tr>
-					<th scope="col">User</th>
-					<th scope="col">Options</th>
+					<th scope="col" class="text-nowrap">Name</th>
+					<th scope="col">Username</th>
+					<th scope="col" class="text-center">Options</th>
 					<?php
 					$csv_headers = array(
 						'Name',
@@ -368,13 +368,14 @@ $members = $members->sortBy('username');
 							@else
 								{{ $member->user ? $member->user->name : trans('global.unknown') }}
 							@endif
-							<br />
-							<span class="text-muted">{{ $member->user ? $member->user->username : trans('global.unknown') }}</span>
+						</td>
+						<td>
+							{{ $member->user ? $member->user->username : trans('global.unknown') }}
 						</td>
 						<td class="text-center">
 							@if ($member->userid != $user->id || auth()->user()->can('manage groups'))
 								<div class="dropdown dropright">
-									<button class="btn fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										<span class="sr-only">Options</span>
 									</button>
 									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
@@ -388,9 +389,6 @@ $members = $members->sortBy('username');
 								</div>
 							@endif
 						</td>
-						<!-- <td class="text-nowrap">
-							{{ $member->user ? $member->user->username : trans('global.unknown') }}
-						</td> -->
 						<?php
 						$in = array();
 						$qu = array();
@@ -491,9 +489,7 @@ $members = $members->sortBy('username');
 				<caption class="sr-only">Members</caption>
 				<thead>
 					<tr>
-						<th scope="col">&nbsp;</th>
-						<th scope="col">&nbsp;</th>
-						<!-- <th scope="col">&nbsp;</th> -->
+						<th scope="col" colspan="3">User Info</th>
 						@if (count($queues))
 						<th scope="col" class="col-queue" colspan="{{ count($queues) }}">Queues</th>
 						@endif
@@ -502,26 +498,15 @@ $members = $members->sortBy('username');
 						@endif
 					</tr>
 					<tr>
-						<th scope="col" class="text-nowrap">User</th>
-						<th scope="col">Options</th>
-						<!-- <th scope="col">Username</th> -->
-						<?php
-						//$qu = array();
-						foreach ($queues as $queue):
-							//$qu[$queue->id] = $queue->users->pluck('userid')->toArray();
-							?>
+						<th scope="col" class="text-nowrap">Name</th>
+						<th scope="col">Username</th>
+						<th scope="col" class="text-center">Options</th>
+						@foreach ($queues as $queue)
 							<th scope="col" class="col-queue text-nowrap text-center">{{ $queue->name }} ({{ $queue->resource->name }})</th>
-							<?php
-						endforeach;
-
-						//$uu = array();
-						foreach ($unixgroups as $unix):
-							//$uu[$unix->id] = $unix->members->pluck('userid')->toArray();
-							?>
+						@endforeach
+						@foreach ($unixgroups as $unix)
 							<th scope="col" class="col-unixgroup text-nowrap text-center">{{ $unix->longname }}</th>
-							<?php
-						endforeach;
-						?>
+						@endforeach
 					</tr>
 				</thead>
 				<tbody>
@@ -535,15 +520,15 @@ $members = $members->sortBy('username');
 								@else
 									{{ $member->user ? $member->user->name : trans('global.unknown') }}
 								@endif
-								<br />
-								<span class="text-muted">{{ $member->user ? $member->user->username : trans('global.unknown') }}</span>
+								<!-- <br />
+								<span class="text-muted">{{ $member->user ? $member->user->username : trans('global.unknown') }}</span> -->
 							</td>
-							<!-- <td class="text-nowrap">
+							<td class="text-nowrap">
 								{{ $member->user ? $member->user->username : trans('global.unknown') }}
-							</td> -->
+							</td>
 							<td class="text-center">
 								<div class="dropdown dropleft">
-									<button class="btn fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										<span class="sr-only">Options</span>
 									</button>
 									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
@@ -631,7 +616,6 @@ $members = $members->sortBy('username');
 							endforeach;
 							$csv_data[] = $csv;
 							?>
-							
 						</tr>
 					@endforeach
 				</tbody>
@@ -658,8 +642,7 @@ $members = $members->sortBy('username');
 			<caption class="sr-only">Members</caption>
 			<thead>
 				<tr>
-					<th scope="col">&nbsp;</th>
-					<th scope="col">&nbsp;</th>
+					<th scope="col" colspan="3">User Info</th>
 					@if (count($queues))
 					<th scope="col" class="text-left col-queue" colspan="{{ count($queues) }}">Queues</th>
 					@endif
@@ -668,8 +651,9 @@ $members = $members->sortBy('username');
 					@endif
 				</tr>
 				<tr>
-					<th scope="col" class="text-nowrap">User</th>
-					<th scope="col">Options</th>
+					<th scope="col" class="text-nowrap">Name</th>
+					<th scope="col">Username</th>
+					<th scope="col" class="text-center">Options</th>
 					@foreach ($queues as $queue)
 						<th scope="col" class="col-queue text-nowrap text-center">{{ $queue->name }} ({{ $queue->resource->name }})</th>
 					@endforeach
@@ -689,12 +673,13 @@ $members = $members->sortBy('username');
 							@else
 								{{ $member->user ? $member->user->name : trans('global.unknown') }}
 							@endif
-							<br />
-							<span class="text-muted">{{ $member->user ? $member->user->username : trans('global.unknown') }}</span>
+						</td>
+						<td class="text-nowrap">
+							{{ $member->user ? $member->user->username : trans('global.unknown') }}
 						</td>
 						<td class="text-right text-nowrap">
 							<div class="dropdown dropright">
-								<button class="btn fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									<span class="sr-only">Options</span>
 								</button>
 								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
@@ -710,9 +695,6 @@ $members = $members->sortBy('username');
 								</div>
 							</div>
 						</td>
-						<!-- <td class="text-nowrap">
-							{{ $member->user ? $member->user->username : trans('global.unknown') }}
-						</td> -->
 						<?php
 						$csv = array(
 							($member->user ? $member->user->name : trans('global.unknown')),
@@ -800,8 +782,7 @@ $members = $members->sortBy('username');
 				<caption class="sr-only">Disabled Members</caption>
 				<thead>
 					<tr>
-						<th scope="col">&nbsp;</th>
-						<th scope="col">&nbsp;</th>
+						<th scope="col" colspan="3">User Info</th>
 						@if (count($queues))
 						<th scope="col" class="col-queue" colspan="{{ count($queues) }}">Queues</th>
 						@endif
@@ -810,8 +791,9 @@ $members = $members->sortBy('username');
 						@endif
 					</tr>
 					<tr>
-						<th class="text-nowrap" scope="col">User</th>
-						<th scope="col" class="text-right">Options</th>
+						<th scope="col" class="text-nowrap">Name</th>
+						<th scope="col">Username</th>
+						<th scope="col" class="text-center">Options</th>
 						@foreach ($queues as $queue)
 							<th scope="col" class="col-queue text-nowrap text-center">{{ $queue->name }} ({{ $queue->resource->name }})</th>
 						@endforeach
@@ -831,17 +813,15 @@ $members = $members->sortBy('username');
 								@else
 									{{ $member->user ? $member->user->name : trans('global.unknown') }}
 								@endif
-								<br />
-								<span class="text-muted">{{ $member->user ? $member->user->username : trans('global.unknown') }}</span>
+							</td>
+							<td class="text-nowrap">
+								{{ $member->user ? $member->user->username : trans('global.unknown') }}
 							</td>
 							<td class="text-center">
 								<a href="#member{{ $member->id }}" class="membership-remove delete tip" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
 									<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">Remove from group</span>
 								</a>
 							</td>
-							<!-- <td class="text-nowrap">
-								{{ $member->user ? $member->user->username : trans('global.unknown') }}
-							</td> -->
 							<?php
 							$csv = array(
 								($member->user ? $member->user->name : trans('global.unknown')),

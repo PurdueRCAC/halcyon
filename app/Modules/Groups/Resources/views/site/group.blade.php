@@ -459,7 +459,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 					var table = this;
 					this.api().columns().every(function (i) {
-						if (i < 2) {
+						if (i < 3) {
 							return;
 						}
 						var column = this;
