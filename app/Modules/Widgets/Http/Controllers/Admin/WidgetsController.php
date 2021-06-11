@@ -374,6 +374,7 @@ class WidgetsController extends Controller
 
 		$row->fill($request->input('fields'));
 		$row->note = '';
+		$row->language = '*';
 
 		// Set params
 		$row->params;
