@@ -38,7 +38,7 @@ class Messages
 		{
 			if ($type->classname == 'storagedir')
 			{
-				$item = Directory::find($message->targetobjectid);
+				$item = Directory::query()->qithTrashed()->where('id', '=', $message->targetobjectid)->first();
 
 				if ($item)
 				{
