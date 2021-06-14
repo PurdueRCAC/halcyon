@@ -78,12 +78,11 @@ class UnixGroupMembers
 					$userdir->publicread  = 0;
 				}
 
-				if ($userdir->isTrashed())
-				{
-					$userdir->forceRestore(['datetimeremoved']);
-				}
-
 				$userdir->save();
+			}
+			elseif ($userdir->isTrashed())
+			{
+				$userdir->forceRestore(['datetimeremoved']);
 			}
 		}
 
