@@ -9,6 +9,7 @@ use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\UnixGroup;
 use App\Modules\Groups\Models\UnixGroupMember;
 use App\Modules\Groups\Events\UnixGroupMemberCreating;
+use App\Modules\Groups\Events\UnixGroupMemberCreated;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Users\Models\User;
@@ -256,6 +257,7 @@ class UnixGroupMembersController extends Controller
 			->first();
 
 		// Set notice state
+		$restore = false;
 		if ($row)
 		{
 			if ($row->isTrashed())
@@ -264,6 +266,8 @@ class UnixGroupMembersController extends Controller
 			}
 			// Nothing to do, we are cancelling a removal
 			$row->notice = 0;
+
+			$restore = true;
 		}
 		else
 		{
@@ -296,6 +300,11 @@ class UnixGroupMembersController extends Controller
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
+		}
+
+		if ($restore)
+		{
+			event(new UnixGroupMemberCreated($row));
 		}
 
 		$row->api = route('api.unixgroups.members.read', ['id' => $row->id]);
