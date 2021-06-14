@@ -400,7 +400,9 @@
 				<p>You may define email alerts for your storage spaces. These alerts will send you email when your storage usage crosses the defined threshold. They may be set on an absolute value or on a percentage of your allocated space.</p>
 			</div>
 			<?php
-			if (count($storagenotifications) > 0)
+			$alerts = $storagenotifications->where('storagedirquotanotificationtypeid', '!=', 1);
+
+			if (count($alerts) > 0)
 			{
 				?>
 				<table class="table table-hover storage">
@@ -419,7 +421,7 @@
 					</thead>
 					<tbody>
 						<?php
-						foreach ($storagenotifications as $not)
+						foreach ($alerts as $not)
 						{
 							if (!isset($storagedirs[$not->storagedirid]))
 							{
@@ -428,7 +430,7 @@
 
 							$dir = $storagedirs[$not->storagedirid];
 
-							if ($not->storagedirquotanotificationtypeid != 1 && $dir->resourceid == 64)
+							if ($dir->resourceid == 64)
 							{
 								?>
 								<tr>
@@ -497,7 +499,7 @@
 				</table>
 
 				<?php
-				foreach ($storagenotifications as $not)
+				foreach ($alerts as $not)
 				{
 					if (!isset($storagedirs[$not->storagedirid]))
 					{
@@ -506,7 +508,7 @@
 
 					$dir = $storagedirs[$not->storagedirid];
 
-					if ($not->storagedirquotanotificationtypeid != 1 && $dir->resourceid == 64)
+					if ($dir->resourceid == 64)
 					{
 					?>
 					<div id="{{ $not->id }}_not_dialog" title="Storage Alert Detail" class="dialog dialog-details">
@@ -743,7 +745,7 @@
 									@endif
 								</td>
 								<td>
-									<?php echo date("m/d/Y", strtotime($not->nextreport)); ?>
+									<time datetime="{{ $not->datetimelastnotify->format('Y-m-d\TH:i:s\Z') }}"><?php echo $not->wasNotified() ? $not->datetimelastnotify->format('m/d/Y') : trans('global.unknown'); ?></time>
 								</td>
 								<?php if ($user->id == auth()->user()->id || auth()->user()->can('manage storage')) { ?>
 									<td class="text-right">
