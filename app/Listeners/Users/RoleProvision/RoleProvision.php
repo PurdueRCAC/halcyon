@@ -108,7 +108,7 @@ class RoleProvision
 
 		$event->status = $status;
 
-		$this->log('roleprovision', __METHOD__, 'POST', $status, $body, $url);
+		$this->log('roleprovision', __METHOD__, 'POST', $status, $body, 'createOrUpdateRole');
 	}
 
 	/**
@@ -168,7 +168,7 @@ class RoleProvision
 			error_log(__METHOD__ . '(): Could not delete AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
 		}
 
-		$this->log('roleprovision', __METHOD__, 'DELETE', $status, $body, $url, $event->user->id);
+		$this->log('roleprovision', __METHOD__, 'DELETE', $status, $body, 'removeRole/rcs/' . $event->resource->rolename . '/' . auth()->user()->username . '/' . $event->user->username, $event->user->id);
 	}
 
 	/**
@@ -266,7 +266,7 @@ class RoleProvision
 			error_log(__METHOD__ . '(): Could not retrieve AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
 		}
 
-		$this->log('roleprovision', __METHOD__, 'GET', $status, $results, $url, $event->user->id);
+		$this->log('roleprovision', __METHOD__, 'GET', $status, $results, 'getRoleStatus/rcs/' . $event->resource->rolename . '/' . $event->user->username, $event->user->id);
 	}
 
 	/**
@@ -347,7 +347,7 @@ class RoleProvision
 					//throw new \Exception(__METHOD__ . '(): Failed to create `resourcemember` entry for ' . $user->id);
 				}
 
-				$this->log('roleprovision', __METHOD__, 'POST', $status, $res, $url, $user->id);
+				$this->log('roleprovision', __METHOD__, 'POST', $status, $res, 'createOrUpdateRole', $user->id);
 			}
 		}
 	}
