@@ -189,7 +189,7 @@ class Notification extends Model
 			$dt->modify('+ ' . $seconds . ' seconds');
 		}
 
-		return $dt->toDateTimeString();
+		return $dt;//->toDateTimeString();
 	}
 
 	/**

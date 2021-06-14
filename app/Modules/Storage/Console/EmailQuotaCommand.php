@@ -14,6 +14,7 @@ use App\Modules\Resources\Models\Asset;
 use App\Modules\Storage\Mail\Quota;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Utility\Number;
+use Carbon\Carbon;
 
 class EmailQuotaCommand extends Command
 {
@@ -206,43 +207,72 @@ class EmailQuotaCommand extends Command
 					$not->threshold = $not->value . '%';
 				}
 
-				if ($not->status === 0 && $not->notice === 0)
+				// Exceeded quota
+				if ($not->status === 0 && $not->notice == 0)
 				{
-					$message = new Quota('exceed', $user, $not, $last);
-
-					if ($debug)
+					if ($not->enabled && $last && $last->space)
 					{
-						//echo $message->render();
-						$this->info('Emailed exceed quota to ' . $user->email);
-						continue;
+						$message = new Quota('exceed', $user, $not, $last);
+
+						if ($debug)
+						{
+							//echo $message->render();
+							$this->info('Emailed exceed quota to ' . $user->email);
+							continue;
+						}
+
+						Mail::to($user->email)->send($message);
 					}
 
-					Mail::to($user->email)->send($message);
+					// Attempt to prevent weird situations of resetting report date.
+					if ($last && $last->space)
+					{
+						unset($not->status);
+						unset($not->threshold);
+						$not->datetimelastnotify = Carbon::now()->toDateTimeString();
+						$not->notice = 1;
+						$not->save();
+					}
 				}
 				// Over threshold, have already notified. Nothing to do.
-				else if ($not->status === 0 && $not->notice === 1)
+				else if ($not->status === 0 && $not->notice == 1)
 				{
 				}
 				// Under threshold, haven't notified
-				else if ($not->status === 1 && $not->notice === 1)
+				else if ($not->status === 1 && $not->notice == 1)
 				{
-					/*$message = new Quota('below', $user, $not, $last);
-
-					if ($debug)
+					// Only mail if enabled
+					if ($not->enabled)
 					{
-						//echo $message->render();
-						$this->info('Emailed below quota to ' . $user->email);
-						continue;
+						/*$message = new Quota('below', $user, $not, $last);
+
+						if ($debug)
+						{
+							//echo $message->render();
+							$this->info('Emailed below quota to ' . $user->email);
+							continue;
+						}
+
+						Mail::to($user->email)->send($message);*/
 					}
 
-					Mail::to($user->email)->send($message);*/
+					// Attempt to prevent weird situations of resetting report date.
+					if ($last && $last->space > 0)
+					{
+						unset($not->status);
+						unset($not->threshold);
+						$not->datetimelastnotify = Carbon::now()->toDateTimeString();
+						$not->notice = 0;
+						$not->save();
+					}
 				}
 				// Under threshold, never notified or have notified. Nothing to do.
-				else if ($not->status === 1 && $not->notice === 0)
+				else if ($not->status === 1 && $not->notice == 0)
 				{
 				}
 				else
 				{
+					// Is usage report?
 					if ($not->type->id != 1)
 					{
 						continue;
@@ -267,7 +297,7 @@ class EmailQuotaCommand extends Command
 							if ($debug)
 							{
 								//echo $message->render();
-								$this->info('Emailed report quota to ' . $user->email);
+								$this->info('Emailed report quota to ' . $user->email . ', next report:' . $not->nextreport);
 								continue;
 							}
 
@@ -277,6 +307,8 @@ class EmailQuotaCommand extends Command
 						// Attempt to prevent weird situations of resetting report date.
 						if (strtotime($not->nextreport) > strtotime($not->datetimelastnotify))
 						{
+							unset($not->status);
+							unset($not->threshold);
 							$not->datetimelastnotify = $not->nextreport;
 							$not->save();
 						}
