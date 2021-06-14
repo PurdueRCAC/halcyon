@@ -212,13 +212,12 @@ class EmailQuotaCommand extends Command
 
 					if ($debug)
 					{
-						echo $message->render();
+						//echo $message->render();
+						$this->info('Emailed exceed quota to ' . $user->email);
 						continue;
 					}
 
 					Mail::to($user->email)->send($message);
-
-					//$this->info('Emailed exceed quota to ' . $user->email);
 				}
 				// Over threshold, have already notified. Nothing to do.
 				else if ($not->status === 0 && $not->notice === 1)
@@ -227,17 +226,16 @@ class EmailQuotaCommand extends Command
 				// Under threshold, haven't notified
 				else if ($not->status === 1 && $not->notice === 1)
 				{
-					$message = new Quota('below', $user, $not, $last);
+					/*$message = new Quota('below', $user, $not, $last);
 
 					if ($debug)
 					{
-						echo $message->render();
+						//echo $message->render();
+						$this->info('Emailed below quota to ' . $user->email);
 						continue;
 					}
 
-					Mail::to($user->email)->send($message);
-
-					//$this->info('Emailed below quota to ' . $user->email);
+					Mail::to($user->email)->send($message);*/
 				}
 				// Under threshold, never notified or have notified. Nothing to do.
 				else if ($not->status === 1 && $not->notice === 0)
@@ -268,13 +266,12 @@ class EmailQuotaCommand extends Command
 
 							if ($debug)
 							{
-								echo $message->render();
+								//echo $message->render();
+								$this->info('Emailed report quota to ' . $user->email);
 								continue;
 							}
 
 							Mail::to($user->email)->send($message);
-
-							//$this->info('Emailed report quota to ' . $user->email);
 						}
 
 						// Attempt to prevent weird situations of resetting report date.
