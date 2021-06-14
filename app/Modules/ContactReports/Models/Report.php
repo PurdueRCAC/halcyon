@@ -235,7 +235,7 @@ class Report extends Model
 	public function usersAsString()
 	{
 		$tags = array();
-		$tags[] = $this->creator ? $this->creator->name : '#' . $this->userid;
+		//$tags[] = $this->creator ? $this->creator->name : '#' . $this->userid;
 		foreach ($this->users as $u)
 		{
 			$tags[] = $u->user ? $u->user->name : '#' . $u->userid;
