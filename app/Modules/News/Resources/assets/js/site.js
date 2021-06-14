@@ -3568,8 +3568,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		var el = $(this);
 
-		WSDeleteURL(el.data('id'), function (xml, id) {
-			if (xml.status == 200) {
+		WSDeleteURL(root + "news/associations/" + el.data('id'), function (xml, id) {
+			if (xml.status < 400) {
 				el.parent().html('<span class="alert alert-success">Successfully cancelled.</span>');
 			} else if (xml.status == 403) {
 				el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');

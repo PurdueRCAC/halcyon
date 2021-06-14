@@ -11,11 +11,11 @@
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/news/vendor/fullcalendar/core/main.min.js') }}"></script>
-<script src="{{ asset('modules/news/vendor/fullcalendar/interaction/main.min.js') }}"></script>
-<script src="{{ asset('modules/news/vendor/fullcalendar/daygrid/main.min.js') }}"></script>
-<script src="{{ asset('modules/news/vendor/fullcalendar/timegrid/main.min.js') }}"></script>
-<script src="{{ asset('modules/news/js/site.js') }}"></script>
+<script src="{{ asset('modules/news/vendor/fullcalendar/core/main.min.js?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/core/main.min.js')) }}"></script>
+<script src="{{ asset('modules/news/vendor/fullcalendar/interaction/main.min.js?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/interaction/main.min.js')) }}"></script>
+<script src="{{ asset('modules/news/vendor/fullcalendar/daygrid/main.min.js?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/daygrid/main.min.js')) }}"></script>
+<script src="{{ asset('modules/news/vendor/fullcalendar/timegrid/main.min.js?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/timegrid/main.min.js')) }}"></script>
+<script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script>
 @endpush
 
 <?php
@@ -31,6 +31,7 @@ foreach ($rows as $event)
 
 	$attending = false;
 	$reserved  = false;
+
 	foreach ($event->associations as $assoc)
 	{
 		if (auth()->user() && $assoc->associd == auth()->user()->id)
@@ -64,7 +65,7 @@ foreach ($rows as $event)
 		}
 
 		// Mark as reserved if the event hasn't ended
-		if ($reserved && $now->getTimestamp() < $event->datetimenewsend->getTimestamp())
+		if (($reserved || $attending) && $now->getTimestamp() < $event->datetimenewsend->getTimestamp())
 		{
 			$slot->backgroundColor = '#0c5460'; // blue
 			$slot->borderColor = '#0c5460';
