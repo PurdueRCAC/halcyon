@@ -141,6 +141,7 @@ class Item extends Model
 		$datestart = $this->datetimefulfilled;
 
 		$data = self::query()
+			->withTrashed()
 			->whereIsActive()
 			->where('origorderitemid', '=', $this->origorderitemid)
 			->orderBy('datetimecreated', 'asc')
@@ -153,7 +154,7 @@ class Item extends Model
 				$paidperiods += $row->timeperiodcount;
 			}
 
-			if (!$row->isTrashed() && !$row->order->isTrashed())
+			if (!$row->isTrashed() && ($row->order && !$row->order->isTrashed()))
 			{
 				$billedperiods += $row->timeperiodcount;
 			}
@@ -164,26 +165,29 @@ class Item extends Model
 			// Get the timeperiod
 			$timeperiod = $this->product->timeperiod;
 
-			$recur_months   = $timeperiod->months;
-			$recur_seconds  = $timeperiod->unixtime;
+			if ($timeperiod)
+			{
+				$recur_months   = $timeperiod->months;
+				$recur_seconds  = $timeperiod->unixtime;
 
-			// Calculate billed time
-			$months_billed  = $billedperiods * $recur_months;
-			$seconds_billed = $billedperiods * $recur_seconds;
+				// Calculate billed time
+				$months_billed  = $billedperiods * $recur_months;
+				$seconds_billed = $billedperiods * $recur_seconds;
 
-			$datebilleduntil = with(Carbon::parse($datestart))
-				->modify('+ ' . $months_billed . ' month')
-				->modify('+ ' . $seconds_billed . ' second')
-				->format('Y-m-d H:i:s');
+				$datebilleduntil = with(Carbon::parse($datestart))
+					->modify('+ ' . $months_billed . ' month')
+					->modify('+ ' . $seconds_billed . ' second')
+					->format('Y-m-d H:i:s');
 
-			// Calculate paid time
-			$months_paid    = $paidperiods * $recur_months;
-			$seconds_paid   = $paidperiods * $recur_seconds;
+				// Calculate paid time
+				$months_paid    = $paidperiods * $recur_months;
+				$seconds_paid   = $paidperiods * $recur_seconds;
 
-			$datepaiduntil = (Carbon::parse($datestart))
-				->modify('+ ' . $months_paid . ' month')
-				->modify('+ ' . $seconds_paid . ' second')
-				->format('Y-m-d H:i:s');
+				$datepaiduntil = (Carbon::parse($datestart))
+					->modify('+ ' . $months_paid . ' month')
+					->modify('+ ' . $seconds_paid . ' second')
+					->format('Y-m-d H:i:s');
+			}
 		}
 
 		return array(

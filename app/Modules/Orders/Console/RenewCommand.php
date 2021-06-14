@@ -3,8 +3,10 @@
 namespace App\Modules\Orders\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Orders\Models\Item;
 use App\Modules\Orders\Models\Order;
+use App\Modules\Orders\Models\Account;
 use Carbon\Carbon;
 
 class RenewCommand extends Command
@@ -36,25 +38,43 @@ class RenewCommand extends Command
 		{
 			$this->info('Renewing orders...');
 		}
-		return;
 
 		$query = Item::query();
 
-		$i = Item::getTable();
-		$o = Order::getTable();
+		$i = (new Item)->getTable();
+		$o = (new Order)->getTable();
 
-		$query
-			->select($i . '.origorderitemid')
+		$sequences = $query
+			->select(DB::raw('DISTINCT(' . $i . '.origorderitemid)'))
 			->join($o, $o . '.id', '=', $i . '.orderid')
-			->groupBy('origorderitemid')
-			->orderBy('origorderitemid', 'asc');
+			->where(function($where) use ($i)
+			{
+				$where->whereNull($i . '.datetimeremoved')
+					->orWhere($i . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where(function($where) use ($o)
+			{
+				$where->whereNull($o . '.datetimeremoved')
+					->orWhere($o . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where($i . '.origorderitemid', '>', 0)
+			//->where($i . '.recurringtimeperiodid', '>', 0)
+			->groupBy($i . '.origorderitemid')
+			->orderBy($i . '.origorderitemid', 'asc')
+			->get();
 
-		$sequences = $query->get();
 		$renews = array();
 		$now = date("U");
 
-		foreach ($sequences as $sequence)
+		foreach ($sequences as $seq)
 		{
+			$sequence = Item::find($seq->origorderitemid);
+
+			if (!$sequence || !$sequence->id)
+			{
+				continue;
+			}
+
 			$until = $sequence->until();
 
 			// Skip orders that haven't even been paid for once
@@ -70,22 +90,25 @@ class RenewCommand extends Command
 
 			// when do we renew?
 			$producttime = $product->timeperiod;
-			$warningtime = $producttime->warningtime;
+			$warningtime = $producttime->warningtimeperiod;
 
-			$cutoff = Carbon::now()
-				->addMonths($warningtime->months)
-				->addSeconds($warningtime->unixtime)
-				->timestamp;
-
-			$renewthreshold = $cutoff - $now;
-
-			// eligible for renew?
-			$renew = false;
-
-			// is this within the renewal window (or overdue) but has been paid at least once
-			if ($tor <= $renewthreshold && $tor != -$now)
+			if ($warningtime)
 			{
-				$renew = true;
+				$cutoff = Carbon::now()
+					->addMonths($warningtime->months)
+					->addSeconds($warningtime->unixtime)
+					->timestamp;
+
+				$renewthreshold = $cutoff - $now;
+
+				// eligible for renew?
+				$renew = false;
+
+				// is this within the renewal window (or overdue) but has been paid at least once
+				if ($tor <= $renewthreshold && $tor != -$now)
+				{
+					$renew = true;
+				}
 			}
 
 			// don't renew again if we already billed
@@ -94,20 +117,27 @@ class RenewCommand extends Command
 				$renew = false;
 			}
 
+			$orderitems = Item::query()
+				->withTrashed()
+				->whereIsActive()
+				->where('origorderitemid', '=', $sequence->origorderitemid)
+				->orderBy('datetimecreated', 'asc')
+				->get();
+
 			// don't renew again if the last order was canceled
-			if ($renew && $sequence->orderitems[count($sequence->orderitems)-1]['ordercanceled'] != '0000-00-00 00:00:00')
+			if ($renew && $orderitems[count($orderitems)-1]->order->isCanceled())
 			{
 				$renew = false;
 			}
 
 			// don't renew again if the last order had this item removed (quantity = 0)
-			if ($renew && $sequence->orderitems[count($sequence->orderitems)-1]['quantity'] == '0')
+			if ($renew && $orderitems[count($orderitems)-1]->quantity == 0)
 			{
 				$renew = false;
 			}
 
 			// don't renew if product is removed
-			if ($renew && $product->isTrashed())
+			if ($renew && $sequence->product->isTrashed())
 			{
 				$renew = false;
 			}
@@ -124,15 +154,19 @@ class RenewCommand extends Command
 			}
 		}
 
-		foreach ($renews as $sequences)
+		if (!count($renews))
 		{
-			//$neworder = new Order;
-			//$neworder->orderitemsequence = $renew;
+			if ($debug)
+			{
+				$this->info('No renewals found.');
+			}
+			return;
+		}
 
-			//Order::createFromSequence($renew);
-
+		foreach ($renews as $orderid => $sequences)
+		{
 			$items = array();
-			$orderid = 0;
+			$accounts = array();
 
 			// If we sent an itemsequence we are copying another order. GO and fetch all this
 			$items = array();
@@ -140,12 +174,9 @@ class RenewCommand extends Command
 			{
 				// Fetch order information
 				$item = Item::query()
+					->withTrashed()
+					->whereIsActive()
 					->where('origorderitemid', $sequence)
-					->where(function($where)
-					{
-						$where->whereNull('datetimeremoved')
-							->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-					})
 					->orderBy('datetimecreated', 'desc')
 					->limit(1)
 					->first();
@@ -156,46 +187,69 @@ class RenewCommand extends Command
 					continue;
 				}
 
-				//create a new class.
-				$item->id = null;
-				$item->datetimecreated = null;
-
-				$items[] = (array)$item;
-
-				$orderid = $item->orderid;
-
-				//$row->userid  = $item->userid;
-				//$row->groupid = $item->groupid;
+				$items[] = $item->toArray();
 			}
 
 			// Fetch accounts information
-			/*$accounts = Account::query()
+			$accs = Account::query()
+				->withTrashed()
+				->whereIsActive()
 				->where('orderid', '=', $orderid)
-				->get();*/
+				->get();
+
+			foreach ($accs as $account)
+			{
+				$accounts[] = $account->toArray();
+			}
 
 			// Create record
-			$row = Order::find($orderid);
-			//$row->userid = $request->input('userid', auth()->user() ? auth()->user()->id : 0);
-			//$row->groupid = $request->input('groupid', 0);
-			//$row->submitteruserid = $request->input('submitteruserid', $row->userid);
-			//$row->usernotes = $request->input('usernotes', '');
-			//$row->staffnotes = $request->input('staffnotes', '');
-			$row->id = null;
-			$row->datetimecreated = null;
-			$row->notice = 1; //$request->input('notice', 1);
-			$row->save();
+			$order = Order::find($orderid);
+			if (!$order)
+			{
+				$this->error('Could not find order #' . $orderid);
+				continue;
+			}
+
+			$row = new Order;
+			$row->userid = $order->userid;
+			$row->submitteruserid = $order->submitteruserid;
+			$row->groupid = $order->groupid;
+			$row->usernotes = $order->usernotes;
+			$row->staffnotes = $order->staffnotes;
+			$row->notice = 1;
+
+			if ($debug)
+			{
+				$this->info('Copying order #' . $orderid);
+			}
+			else
+			{
+				$row->save();
+			}
 
 			// Create each item in order
 			foreach ($items as $i)
 			{
 				$item = new Item;
-				$item->fill($i);
 				$item->orderid = $row->id;
-				//$item->orderproductid = $i['product'];
-				//$item->quantity = $i['quantity'];
-				//$item->origorderitemid = $i['origorderitemid'];
-				//$item->recurringtimeperiod
-				//$item->origunitprice = $i['origunitprice'];
+				$item->orderproductid = $i['orderproductid'];
+				if (isset($i['product']))
+				{
+					$item->orderproductid = $i['product'];
+				}
+				$item->quantity = $i['quantity'];
+				if (isset($i['origorderitemid']))
+				{
+					$item->origorderitemid = $i['origorderitemid'];
+				}
+				if (isset($i['recurringtimeperiodid']))
+				{
+					$item->recurringtimeperiodid = $i['recurringtimeperiodid'];
+				}
+				if (isset($i['timeperiodcount']))
+				{
+					$item->timeperiodcount = $i['timeperiodcount'];
+				}
 
 				$total = $item->product->unitprice * $item->quantity;
 
@@ -206,13 +260,35 @@ class RenewCommand extends Command
 				}
 				$item->origunitprice = $item->product->unitprice;
 
-				if ($total != $item->price)
+				if ($debug)
 				{
-					$this->error('Total and item price do not match');
+					$this->info('Copying order #' . $orderid . ' item #' . $i['id']);
 					continue;
 				}
 
 				$item->save();
+			}
+
+			if (!empty($accounts))
+			{
+				foreach ($accounts as $a)
+				{
+					$account = new Account;
+					$account->amount              = 0;
+					$account->purchaseio          = $a['purchaseio'];
+					$account->purchasewbse        = $a['purchasewbse'];
+					$account->budgetjustification = $a['budgetjustification'];
+					//$account->approveruserid      = $a['approveruserid'];
+					$account->orderid = $row->id;
+
+					if ($debug)
+					{
+						$this->info('Copying order #' . $orderid . ' account #' . $a['id']);
+						continue;
+					}
+
+					$account->save();
+				}
 			}
 		}
 	}

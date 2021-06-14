@@ -36,6 +36,6 @@ class Timeperiod extends Model
 	 */
 	public function warningtimeperiod()
 	{
-		return $this->hasOne(self::class, 'warningtimeperiodid');
+		return $this->hasOne(self::class, 'id', 'warningtimeperiodid');
 	}
 }
