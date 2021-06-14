@@ -440,130 +440,98 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		$('.searchable-select').select2();
 
-		if ($('.datatable').length) {
-			$('.datatable').DataTable({
-				pageLength: 20,
-				pagingType: 'numbers',
-				info: false,
-				ordering: false,
-				lengthChange: false,
-				scrollX: true,
-				//autoWidth: false,
-				language: {
-					searchPlaceholder: "Filter users...",
-					search: "_INPUT_",
-				},
-				fixedColumns: {
-					leftColumns: 1
-				},
-				initComplete: function () {
-					$($.fn.dataTable.tables(true)).css('width', '100%');
+		//$('a.tab').on('shown.bs.tab', function(e){
+		var inited = false;
+		$('.tabs').on( "tabsactivate", function( event, ui ) {
+			if ($('.datatable').length && !inited) {
+				$('.datatable').DataTable({
+					pageLength: 20,
+					pagingType: 'numbers',
+					info: false,
+					ordering: false,
+					lengthChange: false,
+					scrollX: true,
+					//autoWidth: false,
+					language: {
+						searchPlaceholder: "Filter users...",
+						search: "_INPUT_",
+					},
+					fixedColumns: {
+						leftColumns: 1
+					},
+					initComplete: function () {
+						$($.fn.dataTable.tables(true)).css('width', '100%');
 
-					var table = this;
-					this.api().columns().every(function (i) {
-						if (i < 2) {
-							return;
-						}
-						var column = this;
-						var select = $('<select class="data-col-filter" data-index="' + i + '"><option value="all">- All -</option><option value="selected">Selected</option><option value="not-selected">Not selected</option></select><br />')
-							.prependTo($(column.header()));
-					});
+						var table = this;
+						this.api().columns().every(function (i) {
+							if (i < 2) {
+								return;
+							}
+							var column = this;
+							var select = $('<select class="data-col-filter" data-index="' + i + '"><option value="all">- All -</option><option value="selected">Selected</option><option value="not-selected">Not selected</option></select><br />')
+								.prependTo($(column.header()));
+						});
 
-					$('.data-col-filter').on('change', function(){
-						var val = $(this).val(),
-						index = $(this).data('index');
+						$('.data-col-filter').on('change', function(){
+							var val = $(this).val(),
+							index = $(this).data('index');
 
-						// If all records should be displayed
-						if (val === 'all'){
-							$.fn.dataTable.ext.search.pop();
-							table.api().draw();
-						}
+							// If all records should be displayed
+							if (val === 'all'){
+								$.fn.dataTable.ext.search.pop();
+								table.api().draw();
+							}
 
-						// If selected records should be displayed
-						if (val === 'selected'){
-							$.fn.dataTable.ext.search.pop();
-							$.fn.dataTable.ext.search.push(
-								function (settings, data, dataIndex){
-									//return ($(table.api().row(dataIndex).node()).hasClass('selected')) ? true : false;
-									var has = $(table
-										.api()
-										.cell(dataIndex, index)
-										.node())
-										.find(':checked').length;
+							// If selected records should be displayed
+							if (val === 'selected'){
+								$.fn.dataTable.ext.search.pop();
+								$.fn.dataTable.ext.search.push(
+									function (settings, data, dataIndex){
+										//return ($(table.api().row(dataIndex).node()).hasClass('selected')) ? true : false;
+										var has = $(table
+											.api()
+											.cell(dataIndex, index)
+											.node())
+											.find(':checked').length;
 
-									return has ? true : false;
-								}
-							);
-							
-							table.api().draw();
-						}
+										return has ? true : false;
+									}
+								);
+								
+								table.api().draw();
+							}
 
-						// If selected records should not be displayed
-						if (val === 'not-selected'){
-							$.fn.dataTable.ext.search.pop();
-							$.fn.dataTable.ext.search.push(
-								function (settings, data, dataIndex){
-									//($(table.api().row(dataIndex).node()).hasClass('selected')) ? false : true;
-									var has = $(table
-										.api()
-										.cell(dataIndex, index)
-										.node())
-										.find(':checked').length;
+							// If selected records should not be displayed
+							if (val === 'not-selected'){
+								$.fn.dataTable.ext.search.pop();
+								$.fn.dataTable.ext.search.push(
+									function (settings, data, dataIndex){
+										//($(table.api().row(dataIndex).node()).hasClass('selected')) ? false : true;
+										var has = $(table
+											.api()
+											.cell(dataIndex, index)
+											.node())
+											.find(':checked').length;
 
-									return has ? false : true;
-								}
-							);
-							
-							table.api().draw();
-						}
-					});
-				}
-			});
-		}
-		/*var dts = false;
-		$('a.tab').on('shown.bs.tab', function(e){
-			//$($.fn.dataTable.tables(true)).DataTable().columns.adjust();//.draw();
-			if (dts) {
-				return;
+										return has ? false : true;
+									}
+								);
+								
+								table.api().draw();
+							}
+						});
+					}
+				});
+
+				inited = true;
 			}
-			$('.datatable').DataTable({
-			pageLength: 20,
-			pagingType: 'numbers',
-			info: false,
-			ordering: false,
-			lengthChange: false,
-			scrollX: true,
-			//autoWidth: false,
-			language: {
-				searchPlaceholder: "Filter users...",
-				search: "_INPUT_",
-			},
-			fixedColumns: {
-				leftColumns: 1//,
-				//rightColumns: 1
-			},
-			initComplete: function () {
-				//this.page(0).draw(true);
-				dts = true;
-				$($.fn.dataTable.tables(true)).css('width', '100%');
-			}
-			});
-		});*/
+		});
 
 		$('.membership-edit').on('click', function(e){
 			e.preventDefault();
 
 			$($(this).attr('href')).toggleClass('hidden');
 		});
-
-		/*
-		 $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
-			$($.fn.dataTable.tables( true ) ).css('width', '100%');
-			$($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
-		});
-		*/
-
-		//$('.dataTables_filter input').addClass('form-control');
 
 		var dialog = $(".membership-dialog").dialog({
 			autoOpen: false,

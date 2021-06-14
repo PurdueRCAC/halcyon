@@ -6,127 +6,6 @@ $q = (new \App\Modules\Queues\Models\Queue)->getTable();
 $s = (new \App\Modules\Resources\Models\Child)->getTable();
 $r = (new \App\Modules\Resources\Models\Asset)->getTable();
 
-/*$managers = $group->members()
-	->withTrashed()
-	->select($m . '.*')
-	->join($u, $u . '.userid', $m . '.userid')
-	//->whereNull($u . '.deleted_at')
-	->where(function($where) use ($u)
-	{
-		$where->whereNull($u . '.dateremoved')
-			->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-	})
-	->where(function($where) use ($m)
-	{
-		$where->whereNull($m . '.dateremoved')
-			->orWhere($m . '.dateremoved', '=', '0000-00-00 00:00:00');
-	})
-	->whereIsManager()
-	->orderBy($m . '.datecreated', 'desc')
-	->get();
-
-$managerids = $managers->pluck('userid')->toArray();
-
-$members = $group->members()
-	->withTrashed()
-	->select($m . '.*')//, $u . '.name')
-	->join($u, $u . '.userid', $m . '.userid')
-	//->whereNull($u . '.deleted_at')
-	->where(function($where) use ($u)
-	{
-		$where->whereNull($u . '.dateremoved')
-			->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-	})
-	->where(function($where) use ($m)
-	{
-		$where->whereNull($m . '.dateremoved')
-			->orWhere($m . '.dateremoved', '=', '0000-00-00 00:00:00');
-	})
-	->whereIsMember()
-	->whereNotIn($m . '.userid', $managerids)
-	->orderBy($m . '.datecreated', 'desc')
-	->get();
-
-$resources = array();
-
-$queues = $group->queues()
-	->withTrashed()
-	->select($q . '.*')
-	->join($s, $s . '.subresourceid', $q . '.subresourceid')
-	->join($r, $r . '.id', $s . '.resourceid')
-	->where(function($wher) use ($q)
-	{
-		$wher->whereNull($q . '.datetimeremoved')
-			->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-	})
-	->where(function($wher) use ($r)
-	{
-		$wher->whereNull($r . '.datetimeremoved')
-			->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-	})
-	->get();
-
-$q = (new \App\Modules\Queues\Models\User)->getTable();
-
-foreach ($queues as $queue)
-{
-	if (!isset($resources[$queue->resource->name]))
-	{
-		$resources[$queue->resource->name] = array();
-	}
-	$resources[$queue->resource->name][] = $queue;
-
-	$users = $queue->users()
-		->withTrashed()
-		->select($q . '.*')//, $u . '.name')
-		->join($u, $u . '.userid', $q . '.userid')
-		//->whereNull($u . '.deleted_at')
-		->where(function($where) use ($u)
-		{
-			$where->whereNull($u . '.dateremoved')
-				->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-		})
-		->where(function($where) use ($q)
-		{
-			$where->whereNull($q . '.datetimeremoved')
-				->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-		})
-		->whereIsMember()
-		->whereNotIn($q . '.userid', $managerids)
-		->orderBy($q . '.datetimecreated', 'desc')
-		->get();
-
-	foreach ($users as $me)
-	{
-		if (!($found = $members->firstWhere('userid', $me->userid)))
-		{
-			$members->push($me);
-		}
-	}
-}
-
-$disabled = $group->members()
-	->withTrashed()
-	->select($m . '.*')//, $u . '.name')
-	->join($u, $u . '.userid', $m . '.userid')
-	->where(function($where) use ($m, $u)
-	{
-		$where->where(function($wher) use ($u)
-			{
-				$wher->whereNotNull($u . '.dateremoved')
-					->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
-			})
-			->orWhere(function($wher) use ($m)
-			{
-				$wher->whereNotNull($m . '.dateremoved')
-					->where($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
-			});
-	})
-	//->whereIsMember()
-	//->whereNotIn($m . '.userid', $members->pluck('userid')->toArray())
-	->orderBy($m . '.datecreated', 'desc')
-	->get();*/
-
 $managers = collect([]);
 $members = collect([]);
 $viewers = collect([]);
@@ -148,14 +27,10 @@ foreach ($users as $me)
 		continue;
 	}
 
+	$me->membershiptype = 'groupuser';
+
 	if (!$me->user || $me->user->isTrashed())
 	{
-		/*if (!in_array($me->id, $disabledids))
-		{
-			$disabledids[] = $me->id;
-			$disabled->push($me);
-		}*/
-		//echo $me->userid . '<br />';
 		if (!($found = $disabled->firstWhere('userid', $me->userid)))
 		{
 			$disabled->push($me);
@@ -197,15 +72,17 @@ $queues = $group->queues()
 	->select($q . '.*')
 	->join($s, $s . '.subresourceid', $q . '.subresourceid')
 	->join($r, $r . '.id', $s . '.resourceid')
-	->whereIsActive()
+	->where(function($wher) use ($q)
+	{
+		$wher->whereNull($q . '.datetimeremoved')
+			->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+	})
 	->where(function($wher) use ($r)
 	{
 		$wher->whereNull($r . '.datetimeremoved')
 			->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
 	})
 	->get();
-
-$q = (new \App\Modules\Queues\Models\User)->getTable();
 
 foreach ($queues as $queue)
 {
@@ -217,11 +94,8 @@ foreach ($queues as $queue)
 
 	$users = $queue->users()
 		->withTrashed()
-		->select($q . '.*')//, $u . '.name')
-		->join($u, $u . '.userid', $q . '.userid')
 		->whereIsActive()
-		//->whereNotIn($q . '.userid', $processed)
-		->orderBy($q . '.datetimecreated', 'desc')
+		->orderBy('datetimecreated', 'desc')
 		->get();
 
 	foreach ($users as $me)
@@ -231,13 +105,10 @@ foreach ($queues as $queue)
 			continue;
 		}
 
+		$me->membershiptype = 'queueuser';
+
 		if (!$me->user || $me->user->isTrashed())
 		{
-			/*if (!in_array($me->id, $disabledids))
-			{
-				$disabledids[] = $me->id;
-				$disabled->push($me);
-			}*/
 			if (!($found = $disabled->firstWhere('userid', $me->userid)))
 			{
 				$disabled->push($me);
@@ -306,7 +177,6 @@ foreach ($unixgroups as $unixgroup)
 	$users = $unixgroup->members()
 		->withTrashed()
 		->whereIsActive()
-		//->whereNotIn('userid', $processed)
 		->get();
 
 	$unixgroup->activemembers = $users;
@@ -318,9 +188,10 @@ foreach ($unixgroups as $unixgroup)
 			continue;
 		}
 
+		$me->membershiptype = 'unixgroupuser';
+
 		if (!$me->user || $me->user->isTrashed())
 		{
-			//echo $me->userid . '<br />';
 			if (!($found = $disabled->firstWhere('userid', $me->userid)))
 			{
 				$disabled->push($me);
@@ -355,80 +226,6 @@ foreach ($unixgroups as $unixgroup)
 		$processed[] = $me->userid;
 	}
 }
-
-/*foreach ($queues as $queue)
-{
-	$users = $queue->users()
-		->withTrashed()
-		->select($q . '.*', $u . '.dateremoved')//, $u . '.name')
-		->join($u, $u . '.userid', $q . '.userid')
-		//->join($s, $s . '.subresourceid', $q . '.subresourceid')
-		//->join($r, $r . '.id', $s . '.resourceid')
-		->where(function($where) use ($q, $u)
-		{
-			$where->where(function($wher) use ($u)
-			{
-				$wher->whereNotNull($u . '.dateremoved')
-					->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
-			})
-			->orWhere(function($wher) use ($q)
-			{
-				$wher->whereNotNull($q . '.datetimeremoved')
-					->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-			});
-		})
-		//->whereIsMember()
-		//->whereNotIn($q . '.userid', $members->pluck('userid')->toArray())
-		->orderBy($q . '.datetimecreated', 'desc')
-		->orderBy($u . '.datecreated', 'desc')
-		->get();
-
-	foreach ($users as $me)
-	{
-		if (!($found = $disabled->firstWhere('userid', $me->userid)))
-		{
-			$disabled->push($me);
-		}
-	}
-}
-
-$unixgroups = $group->unixgroups()
-	->withTrashed()
-	->where(function($where)
-	{
-		$where->whereNull('datetimeremoved')
-			->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-	})
-	->orderBy('longname', 'asc')
-	->get();
-
-foreach ($unixgroups as $unixgroup)
-{
-	$users = $unixgroup->members()
-		->withTrashed()
-		->select($ug . '.*')
-		->join($u, $u . '.userid', $ug . '.userid')
-		->where(function($where) use ($ug)
-		{
-			$where->whereNull($ug . '.datetimeremoved')
-				->orWhere($ug . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-		})
-		->where(function($where) use ($u)
-		{
-			$where->whereNull($u . '.dateremoved')
-				->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-		})
-		->whereNotIn($ug . '.userid', $managerids)
-		->get();
-
-	foreach ($users as $me)
-	{
-		if (!($found = $members->firstWhere('userid', $me->userid)))
-		{
-			$members->push($me);
-		}
-	}
-}*/
 
 $managers = $managers->sortBy('username');
 $members = $members->sortBy('username');
@@ -508,34 +305,33 @@ $members = $members->sortBy('username');
 </div>
 @endif
 
-<div class="card mb-3">
+<div class="card">
 	<div class="card-header">
 		Managers
 		<a href="#help_managers_span_{{ $group->id }}" class="help help-dialog btn text-info" data-tip="Help">
-			<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+			<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span>
 		</a>
 		<div class="dialog dialog-help" id="help_managers_span_{{ $group->id }}" title="Managers">
 			<p>Managers are the owners or <abbr title="Principle Investigators">PIs</abbr> of this group and any others they may choose to delegate to manage access to this group. Only Managers can access this interface and are able to grant queue access for other people in the group. Managers can also grant and remove Group Management privileges to and from others, although you cannot remove your own Group Management privileges.</p>
 		</div>
 	</div>
 	<div class="card-body">
-		<table class="table table-hover datatable">
+		<table class="table datatable">
 			<caption class="sr-only">Managers</caption>
 			<thead>
 				<tr>
-					<th scope="col">&nbsp;</th>
-					<th scope="col">&nbsp;</th>
+					<th scope="col" colspan="3">User Info</th>
 					@if (count($queues))
 					<th scope="col" class="col-queue" colspan="{{ count($queues) }}">Queues</th>
 					@endif
 					@if (count($unixgroups))
 					<th scope="col" class="col-unixgroup text-nowrap" colspan="{{ count($unixgroups) }}">Unix Groups</th>
 					@endif
-					<th scope="col">&nbsp;</th>
 				</tr>
 				<tr>
-					<th scope="col">User</th>
+					<th scope="col" class="text-nowrap">Name</th>
 					<th scope="col">Username</th>
+					<th scope="col" class="text-center">Options</th>
 					<?php
 					$csv_headers = array(
 						'Name',
@@ -559,7 +355,6 @@ $members = $members->sortBy('username');
 					$csv_data = array();
 					$csv_data[] = $csv_headers;
 					?>
-					<th scope="col" class="text-right">Options</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -574,17 +369,34 @@ $members = $members->sortBy('username');
 								{{ $member->user ? $member->user->name : trans('global.unknown') }}
 							@endif
 						</td>
-						<td class="text-nowrap">
+						<td>
 							{{ $member->user ? $member->user->username : trans('global.unknown') }}
+						</td>
+						<td class="text-center">
+							@if (auth()->user()->can('manage groups'))
+								<div class="dropdown dropright">
+									<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<span class="sr-only">Options</span>
+									</button>
+									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
+										<a href="#manager-{{ $member->id }}" class="dropdown-item btn membership-move demote" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="1" title="Remove manager privleges">
+											<i class="fa fa-arrow-down" aria-hidden="true"></i> Remove manager privleges
+										</a>
+										<a href="#manager-{{ $member->id }}" class="dropdown-item btn membership-remove delete" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
+											<i class="fa fa-trash" aria-hidden="true"></i> Remove from group
+										</a>
+									</div>
+								</div>
+							@endif
 						</td>
 						<?php
 						$in = array();
 						$qu = array();
 						$csv = array(
-								($member->user ? $member->user->name : trans('global.unknown')),
-								($member->user ? $member->username : trans('global.unknown')),
-								'Managers'
-							);
+							($member->user ? $member->user->name : trans('global.unknown')),
+							($member->user ? $member->username : trans('global.unknown')),
+							'Managers'
+						);
 						foreach ($queues as $queue):
 							//$qu[$queue->id] = $queue->users->pluck('userid')->toArray();
 							$checked = '';
@@ -607,14 +419,16 @@ $members = $members->sortBy('username');
 							$csv[] = $checked ? 'yes' : 'no';
 							?>
 							<td class="col-queue text-nowrap text-center">
-								<span class="form-check"><input type="checkbox"
+								<span class="form-check">
+								<input type="checkbox"
 									class="membership-toggle queue-toggle form-check-input"
-									name="queue[{{ $queue->id }}]"{{ $checked }}
+									name="queue[{{ $queue->id }}]"{!! $checked !!}
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
+									data-api-create="{{ route('api.queues.users.create') }}"
 									data-api="{{ $checked && !$disable ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
 									value="1" />
-									<label class="form-check-label"><span class="sr-only">{{ $queue->name }}</span></label>
+								<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only">{{ $queue->name }}</span></label>
 								</span>
 							</td>
 							<?php
@@ -642,25 +456,22 @@ $members = $members->sortBy('username');
 							endif;
 							?>
 							<td class="col-unixgroup text-nowrap text-center">
-								<span class="form-check"><input type="checkbox"
-									class="membership-toggle unixgroup-toggle"
+								<span class="form-check">
+								<input type="checkbox"
+									class="membership-toggle unixgroup-toggle form-check-input"
 									name="unix[{{ $unix->id }}]"{{ $checked }}
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $unix->id }}"
+									data-api-create="{{ route('api.unixgroups.members.create') }}"
 									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
 									value="1" />
-									<label class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
+								<label for="unix-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
 								</span>
 							</td>
 							<?php
 						endforeach;
 						$csv_data[] = $csv;
 						?>
-						<!-- </td> -->
-						<td class="text-right text-nowrap">
-								<a href="#manager-{{ $member->userid }}" class="membership-move demote tip" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="1" title="Remove manager privleges"><i class="fa fa-arrow-down" aria-hidden="true"></i><span class="sr-only">Demote</span></a>
-								<a href="#member{{ $member->id }}" class="membership-remove delete tip" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group"><i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">Remove from group</span></a>
-						</td>
 					</tr>
 				@endforeach
 			</tbody>
@@ -680,30 +491,28 @@ $members = $members->sortBy('username');
 	</div>
 	<div class="card-body">
 		@if (count($members) > 0)
-			<table class="table table-hover hover datatable">
+			<table class="table datatable">
 				<caption class="sr-only">Members</caption>
 				<thead>
 					<tr>
-						<th scope="col">&nbsp;</th>
-						<th scope="col">&nbsp;</th>
+						<th scope="col" colspan="3">User Info</th>
 						@if (count($queues))
 						<th scope="col" class="col-queue" colspan="{{ count($queues) }}">Queues</th>
 						@endif
 						@if (count($unixgroups))
-						<th scope="col" class="col-unixgroup" colspan="{{ count($unixgroups) }}">Unix Groups</th>
+						<th scope="col" class="col-unixgroup text-nowrap" colspan="{{ count($unixgroups) }}">Unix Groups</th>
 						@endif
-						<th scope="col">&nbsp;</th>
 					</tr>
 					<tr>
-						<th class="text-nowrap" scope="col">User</th>
+						<th scope="col" class="text-nowrap">Name</th>
 						<th scope="col">Username</th>
+						<th scope="col" class="text-center">Options</th>
 						@foreach ($queues as $queue)
 							<th scope="col" class="col-queue text-nowrap text-center">{{ $queue->name }} ({{ $queue->resource->name }})</th>
 						@endforeach
 						@foreach ($unixgroups as $unix)
 							<th scope="col" class="col-unixgroup text-nowrap text-center">{{ $unix->longname }}</th>
 						@endforeach
-						<th scope="col" class="text-right">Options</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -717,9 +526,34 @@ $members = $members->sortBy('username');
 								@else
 									{{ $member->user ? $member->user->name : trans('global.unknown') }}
 								@endif
+								<!-- <br />
+								<span class="text-muted">{{ $member->user ? $member->user->username : trans('global.unknown') }}</span> -->
 							</td>
 							<td class="text-nowrap">
 								{{ $member->user ? $member->user->username : trans('global.unknown') }}
+							</td>
+							<td class="text-center">
+								<div class="dropdown dropleft">
+									<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<span class="sr-only">Options</span>
+									</button>
+									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
+										@if (count($queues))
+										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-allqueues allqueues" title="Enable all queues for this user">
+											<i class="fa fa-fw fa-check-square" aria-hidden="true"></i> Enable all queues
+										</a>
+										@endif
+										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move change" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="3" title="Grant usage viewer privleges">
+											<i class="fa fa-fw fa-bar-chart" aria-hidden="true"></i> Grant usage viewer privleges
+										</a>
+										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move promote" data-api="{{ route('api.groups.members.create') }}" data-target="2" data-userid="{{ $member->userid }}" title="Grant manager privleges">
+											<i class="fa fa-fw fa-arrow-up" aria-hidden="true"></i> Grant manager privleges
+										</a>
+										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-remove delete" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
+											<i class="fa fa-fw fa-trash" aria-hidden="true"></i> Remove from group
+										</a>
+									</div>
+								</div>
 							</td>
 							<?php
 							$csv = array(
@@ -743,13 +577,18 @@ $members = $members->sortBy('username');
 								$csv[] = $checked ? 'yes' : 'no';
 								?>
 								<td class="text-center col-queue">
+									<span class="form-check">
 									<input type="checkbox"
-										class="membership-toggle queue-toggle"
+										class="membership-toggle queue-toggle form-check-input"
+										id="queue-{{ $queue->id }}"
 										name="queue[{{ $queue->id }}]"{{ $checked }}
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $queue->id }}"
+										data-api-create="{{ route('api.queues.users.create') }}"
 										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
 										value="1" />
+									<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only">{{ $queue->name }}</span></label>
+									</span>
 								</td>
 								<?php
 							endforeach;
@@ -774,44 +613,29 @@ $members = $members->sortBy('username');
 								endif;
 								?>
 								<td class="text-center col-unixgroup">
+									<span class="form-check">
 									<input type="checkbox"
-										class="membership-toggle unixgroup-toggle"
+										class="membership-toggle unixgroup-toggle form-check-input"
+										id="unix-{{ $unix->id }}"
 										name="unix[{{ $unix->id }}]"{{ $checked }}
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $unix->id }}"
+										data-api-create="{{ route('api.unixgroups.members.create') }}"
 										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
 										value="1" />
+									<label for="unix-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
+									</span>
 								</td>
 								<?php
 							endforeach;
 							$csv_data[] = $csv;
 							?>
-							<td class="text-right text-nowrap">
-								<!-- <div class="dropdown">
-									<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink{{ $member->id }}" data-bs-toggle="dropdown" aria-expanded="false">
-										<i class="fa fa-ellipsis" aria-hidden="true"></i><span class="sr-only">Options</span>
-									</a>
-									<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink{{ $member->id }}">
-										<li>
-											<a href="#member{{ $member->id }}" class="membership-allqueues allqueues tip" data-container="#member{{ $member->id }}" title="Enable all queues for this user">
-												<i class="fa fa-check-square" aria-hidden="true"></i> Enable all queues
-											</a>
-										</li>
-										<li><a href="#member{{ $member->id }}" class="membership-move change tip" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="1" title="Remove usage viewer privleges"><i class="fa fa-user" aria-hidden="true"></i><span class="sr-only">Remove usage viewer privleges</span></a></li>
-										<li><a href="#member{{ $member->id }}" class="membership-remove delete tip" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group"><i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">Remove from group</span></a></li>
-									</ul>
-								</div> -->
-								<a href="#member{{ $member->id }}" class="membership-allqueues allqueues tip" title="Enable all queues for this user"><i class="fa fa-check-square" aria-hidden="true"></i><span class="sr-only">Enable all queues</span></a>
-								<a href="#member{{ $member->id }}" class="membership-move change tip" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="3" title="Grant usage viewer privleges"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="sr-only">Grant usage viewer privleges</span></a>
-								<a href="#member{{ $member->id }}" class="membership-move promote tip" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="2" title="Grant manager privleges"><i class="fa fa-arrow-up" aria-hidden="true"></i><span class="sr-only">Grant manager privleges</span></a>
-								<a href="#member{{ $member->id }}" class="membership-remove delete tip" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group"><i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">Remove from group</span></a>
-							</td>
 						</tr>
 					@endforeach
 				</tbody>
 			</table>
 		@else
-			<p>No members found.</p>
+			<p class="alert alert-info">No members found.</p>
 		@endif
 	</div>
 </div>
@@ -828,30 +652,28 @@ $members = $members->sortBy('username');
 		</div>
 	</div>
 	<div class="card-body">
-		<table class="table table-hover hover datatable">
+		<table class="table datatable">
 			<caption class="sr-only">Members</caption>
 			<thead>
 				<tr>
-					<th scope="col">&nbsp;</th>
-					<th scope="col">&nbsp;</th>
+					<th scope="col" colspan="3">User Info</th>
 					@if (count($queues))
 					<th scope="col" class="text-left col-queue" colspan="{{ count($queues) }}">Queues</th>
 					@endif
 					@if (count($unixgroups))
 					<th scope="col" class="text-left col-unixgroup" colspan="{{ count($unixgroups) }}">Unix Groups</th>
 					@endif
-					<th scope="col">&nbsp;</th>
 				</tr>
 				<tr>
-					<th class="text-nowrap" scope="col">User</th>
+					<th scope="col" class="text-nowrap">Name</th>
 					<th scope="col">Username</th>
+					<th scope="col" class="text-center">Options</th>
 					@foreach ($queues as $queue)
-						<th scope="col" class="text-nowrap text-center">{{ $queue->name }} ({{ $queue->resource->name }})</th>
+						<th scope="col" class="col-queue text-nowrap text-center">{{ $queue->name }} ({{ $queue->resource->name }})</th>
 					@endforeach
 					@foreach ($unixgroups as $unix)
-						<th scope="col" class="text-nowrap text-center">{{ $unix->longname }}</th>
+						<th scope="col" class="col-unixgroup text-nowrap text-center">{{ $unix->longname }}</th>
 					@endforeach
-					<th scope="col" class="text-right">Options</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -868,6 +690,24 @@ $members = $members->sortBy('username');
 						</td>
 						<td class="text-nowrap">
 							{{ $member->user ? $member->user->username : trans('global.unknown') }}
+						</td>
+						<td class="text-right text-nowrap">
+							<div class="dropdown dropright">
+								<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<span class="sr-only">Options</span>
+								</button>
+								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
+									<a href="#member{{ $member->id }}" class="dropdown-item btn membership-allqueues allqueues" title="Enable all queues for this user">
+										<i class="fa fa-fw fa-check-square" aria-hidden="true"></i> Enable all queues
+									</a>
+									<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move change" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="1" title="Remove usage viewer privleges">
+										<i class="fa fa-fw fa-user" aria-hidden="true"></i> Remove usage viewer privleges
+									</a>
+									<a href="#member{{ $member->id }}" class="dropdown-item btn membership-remove delete" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
+										<i class="fa fa-fw fa-trash" aria-hidden="true"></i> Remove from group
+									</a>
+								</div>
+							</div>
 						</td>
 						<?php
 						$csv = array(
@@ -888,13 +728,18 @@ $members = $members->sortBy('username');
 							$csv[] = $checked ? 'yes' : 'no';
 							?>
 							<td class="text-center col-queue">
+								<span class="form-check">
 								<input type="checkbox"
-									class="membership-toggle queue-toggle"
+									class="membership-toggle queue-toggle form-check-input"
+									id="queue-{{ $queue->id }}"
 									name="queue[{{ $queue->id }}]"{{ $checked }}
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
+									data-api-create="{{ route('api.queues.users.create') }}"
 									data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
 									value="1" />
+								<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only">{{ $queue->name }}</span></label>
+								</span>
 							</td>
 							<?php
 						endforeach;
@@ -917,37 +762,23 @@ $members = $members->sortBy('username');
 							endif;
 							?>
 							<td class="text-center col-unixgroup">
+								<span class="form-check">
 								<input type="checkbox"
-									class="membership-toggle unixgroup-toggle"
+									class="membership-toggle unixgroup-toggle form-check-input"
+									id="unix-{{ $unix->id }}"
 									name="unix[{{ $unix->id }}]"{{ $checked }}
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $unix->id }}"
+									data-api-create="{{ route('api.unixgroups.members.create') }}"
 									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
 									value="1" />
+								<label for="unix-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
+								</span>
 							</td>
 							<?php
 						endforeach;
 						$csv_data[] = $csv;
 						?>
-						<td class="text-right text-nowrap">
-							<div class="dropdown">
-								<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink{{ $member->id }}" data-bs-toggle="dropdown" aria-expanded="false">
-									<i class="fa fa-ellipsis" aria-hidden="true"></i><span class="sr-only">Options</span>
-								</a>
-								<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink{{ $member->id }}">
-									<li>
-										<a href="#member{{ $member->id }}" class="membership-allqueues allqueues tip" data-container="#member{{ $member->id }}" title="Enable all queues for this user">
-											<i class="fa fa-check-square" aria-hidden="true"></i> Enable all queues
-										</a>
-									</li>
-									<li><a href="#member{{ $member->id }}" class="membership-move change tip" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="1" title="Remove usage viewer privleges"><i class="fa fa-user" aria-hidden="true"></i><span class="sr-only">Remove usage viewer privleges</span></a></li>
-									<li><a href="#member{{ $member->id }}" class="membership-remove delete tip" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group"><i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">Remove from group</span></a></li>
-								</ul>
-							</div>
-							<!-- <a href="#member{{ $member->id }}" class="membership-allqueues allqueues tip" data-container="#member{{ $member->id }}" title="Enable all queues for this user"><i class="fa fa-check-square" aria-hidden="true"></i><span class="sr-only">Enable all queues</span></a>
-							<a href="#member{{ $member->id }}" class="membership-move change tip" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="1" title="Remove usage viewer privleges"><i class="fa fa-user" aria-hidden="true"></i><span class="sr-only">Remove usage viewer privleges</span></a>
-							<a href="#member{{ $member->id }}" class="membership-remove delete tip" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group"><i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">Remove from group</span></a> -->
-						</td>
 					</tr>
 				@endforeach
 			</tbody>
@@ -1032,14 +863,17 @@ $members = $members->sortBy('username');
 								$csv[] = $checked ? 'yes' : 'no';
 								?>
 								<td class="text-center col-queue">
+									<span class="form-check">
 									<input type="checkbox"
-										class="membership-toggle queue-toggle"
+										class="membership-toggle queue-toggle form-check-input"
 										name="queue[{{ $queue->id }}]"{{ $checked }}
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $queue->id }}"
 										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
 										disabled="disabled"
 										value="1" />
+									<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only">{{ $queue->name }}</span></label>
+									</span>
 								</td>
 								<?php
 							endforeach;
@@ -1058,14 +892,17 @@ $members = $members->sortBy('username');
 								$csv[] = $checked ? 'yes' : 'no';
 								?>
 								<td class="text-center col-unixgroup">
+									<span class="form-check">
 									<input type="checkbox"
-										class="membership-toggle unixgroup-toggle"
+										class="membership-toggle unixgroup-toggle form-check-input"
 										name="unix[{{ $unix->id }}]"{{ $checked }}
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $unix->groupid }}"
 										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
 										disabled="disabled"
 										value="1" />
+									<label for="unix-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
+									</span>
 								</td>
 								<?php
 							endforeach;
