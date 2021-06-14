@@ -25,7 +25,7 @@ class Link extends Button
 	 * @param   string  $url   The link url
 	 * @return  string  HTML string for the button
 	 */
-	public function fetchButton($type = 'Link', $name = 'back', $text = '', $url = null)
+	public function fetchButton($type = 'Link', $name = 'back', $text = '', $url = null, $list = false)
 	{
 		$text   = trans($text);
 		$class  = $this->fetchIconClass($name);
@@ -42,6 +42,13 @@ class Link extends Button
 		$attr   = array();
 		$attr[] = 'href="' . $task . '"';
 		$attr[] = 'data-title="' . e($text) . '"';
+
+		if ($list)
+		{
+			$cls .= ' toolbar-list';
+
+			$attr[] = ' data-message=""';
+		}
 
 		$html   = array();
 		$html[] = '<a class="' . $cls . '" ' . implode(' ', $attr) . '>';

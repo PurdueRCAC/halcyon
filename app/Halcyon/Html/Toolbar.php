@@ -550,8 +550,8 @@ class Toolbar
 	 * @param   boolean  $list  True to allow use of lists
 	 * @return  void
 	 */
-	public function link($name='', $alt = 'global.toolbar.link', $url)
+	public function link($name='', $alt = 'global.toolbar.link', $url, $list = true)
 	{
-		$this->append('Link', $name, $alt, $url);
+		$this->append('Link', $name, $alt, $url, $list);
 	}
 }
