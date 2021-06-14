@@ -1,6 +1,6 @@
 @component('mail::message')
-{{ $report->usersAsString() }}
-{{ $report->datetimecontact->format('F j, Y') }}
+**People:** {{ $report->usersAsString() }}<br />
+**Date:** {{ $report->datetimecontact->format('F j, Y') }}
 
 {{ $report->report }}
 

@@ -158,7 +158,14 @@ app('pathway')
 				</td>
 				<td class="priority-4">
 					<?php
+					$uids = $row->users->pluck('userid')->toArray();
+
 					$users = array();
+					if ($row->userid && !in_array($row->userid, $uids))
+					{
+						$users[] = ($row->creator ? $row->creator->name : $row->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
+					}
+
 					foreach ($row->users as $user)
 					{
 						$u = ($user->user ? $user->user->name : $user->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');

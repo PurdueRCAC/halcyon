@@ -36,7 +36,7 @@ class NewReport extends Mailable
 	public function build()
 	{
 		return $this->markdown('contactreports::mail.newreport')
-					->subject('Contact Report')
+					->subject('Contact Report - ' . $this->report->usersAsString())
 					->with([
 						'report' => $this->report,
 					]);

@@ -227,13 +227,20 @@ class Report extends Model
 		return route('site.news.show', ['id' => $this->id]);
 	}
 
+	/**
+	 * Get the list of users as a string
+	 *
+	 * @return  string
+	 */
 	public function usersAsString()
 	{
 		$tags = array();
+		$tags[] = $this->creator ? $this->creator->name : '#' . $this->userid;
 		foreach ($this->users as $u)
 		{
 			$tags[] = $u->user ? $u->user->name : '#' . $u->userid;
 		}
+		$tags = array_unique($tags);
 
 		return implode(', ', $tags);
 	}
