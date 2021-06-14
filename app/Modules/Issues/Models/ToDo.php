@@ -95,6 +95,16 @@ class ToDo extends Model
 	);
 
 	/**
+	 * Code block replacements
+	 *
+	 * @var  array
+	 */
+	private $replacements = array(
+		'preblocks'  => array(),
+		'codeblocks' => array()
+	);
+
+	/**
 	 * Defines a relationship to resources map
 	 *
 	 * @return  object
@@ -142,5 +152,85 @@ class ToDo extends Model
 
 		// Attempt to delete the record
 		return parent::delete($options);
+	}
+
+	/**
+	 * Defines a relationship to type
+	 *
+	 * @return string
+	 */
+	public function getFormattedDescriptionAttribute()
+	{
+		$text = $this->description;
+
+		if (class_exists('Parsedown'))
+		{
+			$mdParser = new \Parsedown();
+
+			$text = $mdParser->text(trim($text));
+		}
+
+		// separate code blocks
+		$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
+		$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
+
+		// convert emails
+		$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
+
+		//$text = '<p>' . $text . '</p>';
+		$text = preg_replace("/<p>(.*)(<table.*?>)(.*<\/table>)/m", "<p>$2 <caption>$1</caption>$3", $text);
+
+		$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
+		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
+
+		return $text;
+	}
+
+	/**
+	 * Strip code blocks
+	 *
+	 * @param   array  $match
+	 * @return  string
+	 */
+	protected function stripCode($match)
+	{
+		array_push($this->replacements['codeblocks'], $match[0]);
+
+		return '{{CODE}}';
+	}
+
+	/**
+	 * Strip pre blocks
+	 *
+	 * @param   array  $match
+	 * @return  string
+	 */
+	protected function stripPre($match)
+	{
+		array_push($this->replacements['preblocks'], $match[0]);
+
+		return '{{PRE}}';
+	}
+
+	/**
+	 * Replace code block
+	 *
+	 * @param   array  $match
+	 * @return  string
+	 */
+	protected function replaceCode($match)
+	{
+		return array_shift($this->replacements['codeblocks']);
+	}
+
+	/**
+	 * Replace pre block
+	 *
+	 * @param   array  $match
+	 * @return  string
+	 */
+	protected function replacePre($match)
+	{
+		return array_shift($this->replacements['preblocks']);
 	}
 }

@@ -4890,6 +4890,9 @@ background-color: rgba(0, 0, 0, 0.025);
     border-color: var(--panel-border);
     color: var(--input-color);
   }
+  .list-group-item ul {
+    list-style: disc;
+  }
 
   fieldset.adminform,
   .card {
