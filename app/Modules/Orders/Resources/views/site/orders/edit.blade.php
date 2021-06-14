@@ -682,7 +682,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										@else
 											<td>
 												<div class="badge order-status fulfilled">{{ trans('orders::orders.fulfilled') }}</div>
-												<time datetime="{{ $item->fulfilled }}">{{ Carbon\Carbon::parse($item->fulfilled)->format('M j, Y') }}</time>
+												<time datetime="{{ $item->datetimefulfilled }}">{{ $item->datetimefulfilled->format('M j, Y') }}</time>
 											</td>
 										@endif
 										<td>
