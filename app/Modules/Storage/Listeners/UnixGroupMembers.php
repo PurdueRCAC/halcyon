@@ -45,7 +45,7 @@ class UnixGroupMembers
 		foreach ($dirs as $dir)
 		{
 			$userdir = Directory::query()
-				->withTrasheD()
+				->withTrashed()
 				->whereIsActive()
 				->where('name', '=', $event->member->user->username)
 				->where('parentstoragedirid', '=', $dir->id)
