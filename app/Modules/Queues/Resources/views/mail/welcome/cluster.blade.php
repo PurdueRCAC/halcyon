@@ -31,7 +31,7 @@ $standby = false;
 		</tr>
 		<tr>
 			<th scope="row"><strong>Front-end</strong></th>
-			<td>{{ $data->resource->rolename }}.{{ str_replace('www.', '.', request()->getHttpHost()) }}</td>
+			<td>{{ $data->resource->rolename }}.{{ str_replace('www.', '', request()->getHttpHost()) }}</td>
 		</tr>
 		<tr>
 			<th scope="row"><strong>Home directory</strong></th>
