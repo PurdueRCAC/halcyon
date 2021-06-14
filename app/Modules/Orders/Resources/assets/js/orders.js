@@ -334,9 +334,6 @@ function EditProperty(field, item) {
 		var post = {};
 		post[field] = val;
 
-		//post = JSON.stringify(post);
-		//console.log(post);
-
 		$.ajax({
 			url: document.getElementById('order').getAttribute('data-api'),
 			type: 'put',
@@ -344,20 +341,12 @@ function EditProperty(field, item) {
 			//dataType: 'json',
 			async: false,
 			success: function(response) {
-				//Halcyon.message('success', 'Item added');
-
 				EditedProperty(response.data, item + "_" + field);
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
-				//alert(thrownError);
-				//console.log(ajaxOptions);
-				//console.log(xhr);
 				EditedProperty({id:0}, item + "_" + field);
-				//Halcyon.message('danger', xhr.responseJSON.message);
-				//Halcyon.message('danger', btn.getAttribute('data-error'));
 			}
 		});
-		//WSPostURL(item, post, EditedProperty, item + "_" + field);
 	}
 }
 
@@ -956,7 +945,6 @@ function TotalOrder() {
 			window.location = response.url;
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
-			//console.log(xhr);
 			alert("There was an error processing your order. Please wait a few minutes and try again or contact help.");
 		}
 	});
@@ -1427,9 +1415,7 @@ function SaveAccounts() {
 
 	if (total == 0 && errors == 0) {
 		var post = '{"accounts": ' + JSON.stringify(posts) + '}';
-		//console.log(ROOT_URL + "orders/" + order);
-		//console.log(post);
-		//return;
+
 		WSPutURL(ROOT_URL + "orders/" + order, post, function(xml) {
 			if (xml.status == 200) {
 				window.scrollTo(0, 0);
@@ -1494,7 +1480,7 @@ function RestoreOrder(button) {
 	var post = JSON.stringify({ "restore": 1 });
 
 	WSPutURL(url, post, function (xml) {
-		if (xml.status == 200) {
+		if (xml.status < 400) {
 			window.location.reload();
 		} else {
 			alert("An error occurred while restoring order.");
@@ -1513,7 +1499,7 @@ function ResetAccount(url, button) {
 	var post = JSON.stringify({ "reset": 1 });
 
 	WSPutURL(url, post, function (xml) {
-		if (xml.status == 200) {
+		if (xml.status < 400) {
 			window.location.reload();
 		} else {
 			alert("An error occurred while resetting account.");
@@ -1846,13 +1832,12 @@ function EditAccounts() {
 				//var name = approverinputs[x].value.match(/.*?\(([a-z0-9]+)\)/);
 				//	name = name[1];
 				var post = { 'approveruserid': approverinputs[x].getAttribute('data-id') }//(approverinputs[x].value ? approverinputs[x].value : 0)};
-				console.log(approverinputs[x]);
+
 				if (accountstatus[x].value == "PENDING_COLLECTION") {
 					post['approved'] = "0";
 				}
 				pendingupdates++;
 				num_changes++;
-				//console.log(post);
 				post = JSON.stringify(post);
 				WSPutURL(id, post, UpdatedAccountInfo);
 			}
@@ -1874,8 +1859,8 @@ function EditAccounts() {
 					}
 					pendingupdates++;
 					num_changes++;
-					//console.log(post);
 					post = JSON.stringify(post);
+
 					WSPutURL(id, post, UpdatedAccountInfo);
 				}
 			}
@@ -1912,7 +1897,7 @@ function EditAccounts() {
 		for (x=0;x<deleteaccounts.length;x++) {
 			pendingupdates++;
 			num_changes++;
-			//console.log(deleteaccounts[x]);
+
 			WSDeleteURL(deleteaccounts[x], UpdatedAccountInfo);
 		}
 
@@ -1951,8 +1936,6 @@ function EditAccounts() {
 
 					pendingupdates++;
 					num_changes++;
-
-					//console.log(post);
 					post = JSON.stringify(post);
 
 					WSPostURL(accountinputs[x].getAttribute('data-api'), post, UpdatedAccountInfo);
@@ -2068,12 +2051,10 @@ function CancelEditAccounts() {
  * @return  {void}
  */
 function EditRemoveAccount(btn, e) {
-	//var table = e.parentNode.parentNode.parentNode.parentNode;
-	var row = $(btn.attr('href'));//table.getElementsByTagName("tr");
+	var row = $(btn.attr('href'));
+
 	if (btn.attr('data-api')) {
 		deleteaccounts.push(btn.attr('data-api'));
-		//console.log(btn.attr('data-api'));
-		//WSDeleteURL(btn.attr('data-api'));
 	}
 	row.remove();
 
@@ -2088,12 +2069,10 @@ function EditRemoveAccount(btn, e) {
  * @return  {void}
  */
 function EditRemoveProduct(btn, e) {
-	var row = $(btn.attr('href'));//table.getElementsByTagName("tr");
+	var row = $(btn.attr('href'));
 
 	if (btn.attr('data-api')) {
 		deleteitems.push(btn.attr('data-api'));
-		//console.log(btn.attr('data-api'));
-		//WSDeleteURL(btn.attr('data-api'));
 	}
 	row.remove();
 
@@ -2302,7 +2281,7 @@ function EditQuantities() {
 			return;
 		}
 
-		if ($('[name=accountid]').length > 0) {
+		if ($('[name=accountid]').length > 0 && $('#balance').text() != '0.00') {
 			EditAccounts();
 		} else {
 			SaveQuantities();
@@ -2345,7 +2324,6 @@ function SaveOrderUser() {
 						}
 					},
 					error: function(xhr, ajaxOptions, thrownError) {
-						console.log(xhr);
 						if (numerrorboxes == 0) {
 							alert("An error occurred while updating account. Please reload page and try again or contact rcac-help@purdue.edu.");
 							numerrorboxes++;
@@ -2465,8 +2443,6 @@ function Filter(page, field) {
  */
 function SearchEventHandler(event, ui) {
 	var id = ui['item']['id'];
-	//var name = ui['item']['name'];
-	//var username = ui['item']['usernames'][0]['name'];
 	var username = ui['item']['username'];
 
 	if (typeof(id) == 'undefined') {
@@ -2482,24 +2458,12 @@ function SearchEventHandler(event, ui) {
 			dataType: 'json',
 			async: false,
 			success: function(response) {
-				//Halcyon.message('success', 'Item added');
-
 				// Don't really need to do anything here, we are just ensuring the selected user has a database entry
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
-				//console.log(xhr);
-				Halcyon.message('danger', xhr.responseJSON.message);
+				alert(xhr.responseJSON.message);
 			}
 		});
-
-		/*WSPostURL(ROOT_URL + "userusername", post, function(xml) {
-			if (xml.status == 200) {
-				// Don't really need to do anything here, we are just ensuring the selected user has a database entry
-			} else {
-				// handle errors
-				// Its probably OK. The WS should pick it up.
-			}
-		});*/
 	}
 }
 
@@ -2509,7 +2473,7 @@ function SearchEventHandler(event, ui) {
  * @return  {void}
  */
 function PrintOrder() {
-	/* Hide text boxes if they're empty. */
+	// Hide text boxes if they're empty
 	$(".ordernotes").each(function( index ) {
 		if ($(this).text() == "") {
 			$(this).hide();
@@ -2526,7 +2490,7 @@ function PrintOrder() {
 
 	window.print();
 
-	/* Bring back the elements we hid */
+	// Bring back the elements we hid
 	$(".ordernotes").each(function( index ) {
 		$(this).show();
 		switch(index) {

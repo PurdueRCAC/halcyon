@@ -999,15 +999,15 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											@if ($account->approver)
 												@if (auth()->user()->can('manage users'))
 													<a class="account-edit-hide" href="{{ route('admin.users.edit', ['id' => $account->approver->id]) }}">
-														<span class="approver_span" data-approverid="{{ $account->approveruserid ? $account->approveruserid : '' }}">{{ $account->approver->name }} ({{ $account->approver->username }})</span>
+														<span class="approver_span" data-approverid="{{ $account->approveruserid }}">{{ $account->approver->name }} ({{ $account->approver->username }})</span>
 													</a>
 												@else
-													<span class="account-edit-hide approver_span" data-approverid="{{ $account->approveruserid ? $account->approveruserid : '' }}">{{ $account->approver->name }} ({{ $account->approver->username }})</span>
+													<span class="account-edit-hide approver_span" data-approverid="{{ $account->approveruserid }}">{{ $account->approver->name }} ({{ $account->approver->username }})</span>
 												@endif
 											@elseif ($account->approveruserid)
-												<span class="account-edit-hide approver_span unknown" data-approverid="{{ $account->approveruserid ? $account->approveruserid : '' }}">{{ trans('global.unknown') }}</span> ({{ $account->approveruserid }})
+												<span class="account-edit-hide approver_span unknown" data-approverid="{{ $account->approveruserid }}">{{ trans('global.unknown') }}</span> ({{ $account->approveruserid }})
 											@else
-												<span class="account-edit-hide approver_span none" data-approverid="{{ $account->approveruserid ? $account->approveruserid : '' }}">{{ trans('global.none') }}</span>
+												<span class="account-edit-hide approver_span none" data-approverid="{{ $account->approveruserid }}">{{ trans('global.none') }}</span>
 											@endif
 											<span class="account-edit-show hide">
 												<input type="text" id="search_{{ $account->id }}" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" data-id="{{ $account->approveruserid }}" class="form-control form-users" name="approver" value="{{ $account->approver ? $account->approver->name . ' (' . $account->approver->username . ')' : '' }}" />
