@@ -49,7 +49,7 @@ class UnixGroupMembers
 				//->whereIsActive()
 				->where('name', '=', $event->member->user->username)
 				->where('parentstoragedirid', '=', $dir->id)
-				->count();
+				->get();
 
 			if (!$userdir)
 			{
@@ -61,7 +61,7 @@ class UnixGroupMembers
 				$userdir->parentstoragedirid = $dir->id;
 				$userdir->resourceid  = $dir->resourceid;
 				$userdir->unixgroupid = $event->member->unixgroupid;
-				$userdir->userid      = $event->member->userid;
+				$userdir->owneruserid = $event->member->userid;
 
 				if ($dir->autouser == '1')
 				{
