@@ -49,5 +49,7 @@ return [
 	'past month' => 'Past Month',
 	'complete' => 'Complete',
 	'incomplete' => 'Incomplete',
-	'all' => 'All Statuses'
+	'all' => 'All Statuses',
+	'resolution' => 'Resolution',
+	'mark as resolution' => 'Mark as resolution',
 ];
