@@ -54,28 +54,28 @@ class UnixGroupMembers
 			if (!$userdir)
 			{
 				$userdir = new Directory;
-				$userdir->bytes      = '-';
+				$userdir->bytes       = '-';
 				//$userdir->bytesource = '';
-				$userdir->groupid    = $dir->groupid;
-				$userdir->name       = $event->member->user->username;
+				$userdir->groupid     = $dir->groupid;
+				$userdir->name        = $event->member->user->username;
 				$userdir->parentstoragedirid = $dir->id;
-				$userdir->resourceid = $dir->resourceid;
+				$userdir->resourceid  = $dir->resourceid;
 				$userdir->unixgroupid = $event->member->unixgroupid;
-				$userdir->user       = $event->member->userid;
+				$userdir->userid      = $event->member->userid;
 
 				if ($dir->autouser == '1')
 				{
 					// Group readable
 					$userdir->groupread  = 1;
 					$userdir->groupwrite = 0;
-					$userdir->otherread  = 0;
+					$userdir->publicread  = 0;
 				}
 				elseif ($dir->autouser == '2')
 				{
 					// Private
 					$userdir->groupread  = 0;
 					$userdir->groupwrite = 0;
-					$userdir->otherread  = 0;
+					$userdir->publicread  = 0;
 				}
 
 				if ($userdir->isTrashed())
