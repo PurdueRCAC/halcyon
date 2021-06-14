@@ -116,7 +116,7 @@ class GroupProvision
 			error_log(__METHOD__ . '(): Failed to create AIMO ACMaint group ' . $event->unixgroup->shortname . ': ' . $e->getMessage());
 		}
 
-		$this->log('groupprovision', __METHOD__, 'POST', $status, $body, $url);
+		$this->log('groupprovision', __METHOD__, 'POST', $status, $body, 'createGroup/rcs');
 	}
 
 	/**
@@ -168,7 +168,7 @@ class GroupProvision
 			error_log(__METHOD__ . '(): Failed to remove AIMO ACMaint group ' . $member->unixgroup->shortname . ': ' . $e->getMessage());
 		}
 
-		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, $url);
+		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, 'deleteGroup/rcs/' . $event->unixgroup->shortname);
 	}
 
 	/**
@@ -262,7 +262,7 @@ class GroupProvision
 			error_log(__METHOD__ . '(): Failed to add AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $e->getMessage());
 		}
 
-		$this->log('groupprovision', __METHOD__, 'POST', $status, $body, $url);
+		$this->log('groupprovision', __METHOD__, 'PUT', $status, $body, 'addGroupMember/rcs/pucc_rcd/' . $member->unixgroup->shortname . '/' . $member->user->username);
 	}
 
 	/**
@@ -316,7 +316,7 @@ class GroupProvision
 			error_log(__METHOD__ . '(): Failed to remove AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $e->getMessage());
 		}
 
-		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, $url);
+		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, 'removeGroupMember/rcs/pucc_rcd/' . $member->unixgroup->shortname . '/' . $member->user->username);
 	}
 
 	/**
@@ -389,7 +389,7 @@ class GroupProvision
 			error_log(__METHOD__ . '(): Failed to change login shell in AIMO ACMaint for ' . $user->username . ': ' . $e->getMessage());
 		}
 
-		$this->log('groupprovision', __METHOD__, 'GET', $status, $body, $url);
+		$this->log('groupprovision', __METHOD__, 'GET', $status, $body, 'changeShell/rcs/pucc_misc/' . $user->username . '?loginShell=' . $user->loginShell);
 	}
 
 	/**
