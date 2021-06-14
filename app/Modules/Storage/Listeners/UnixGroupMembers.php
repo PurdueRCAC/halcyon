@@ -49,7 +49,7 @@ class UnixGroupMembers
 				//->whereIsActive()
 				->where('name', '=', $event->member->user->username)
 				->where('parentstoragedirid', '=', $dir->id)
-				->get();
+				->first();
 
 			if (!$userdir)
 			{
