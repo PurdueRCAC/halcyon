@@ -249,11 +249,20 @@ class MembersController extends Controller
 			}
 		}
 
-		$row = Member::findByGroupAndUser($groupid, $userid);
+		//$row = Member::findByGroupAndUser($groupid, $userid);
+		$row = Member::query()
+			->withTrashed()
+			->where('groupid', '=', $groupid)
+			->where('userid', '=', $userid)
+			->first();
 
 		if (!$row)
 		{
 			$row = new Member;
+		}
+		elseif ($row->isTrashed())
+		{
+			$row->forceRestore(['dateremoved']);
 		}
 
 		$row->groupid = $groupid;

@@ -242,6 +242,7 @@ class UsersController extends Controller
 		$queue = Queue::findOrFail($request->input('queueid'));
 
 		$row = QueueUser::query()
+			->withTrashed()
 			->where('queueid', '=', $request->input('queueid'))
 			->where('userid', '=', $userid)
 			->get()
@@ -250,6 +251,10 @@ class UsersController extends Controller
 		// Set notice state
 		if ($row)
 		{
+			if ($row->isTrashed())
+			{
+				$row->forceRestore(['datetimeremoved']);
+			}
 			// Nothing to do, we are cancelling a removal
 			$row->notice = 0;
 		}

@@ -249,6 +249,7 @@ class UnixGroupMembersController extends Controller
 		$unixgroup = UnixGroup::findOrFail($request->input('unixgroupid'));
 
 		$row = UnixGroupMember::query()
+			->withTrashed()
 			->where('unixgroupid', '=', $request->input('unixgroupid'))
 			->where('userid', '=', $userid)
 			->get()
@@ -257,6 +258,10 @@ class UnixGroupMembersController extends Controller
 		// Set notice state
 		if ($row)
 		{
+			if ($row->isTrashed())
+			{
+				$row->forceRestore(['datetimeremoved']);
+			}
 			// Nothing to do, we are cancelling a removal
 			$row->notice = 0;
 		}
