@@ -46,7 +46,7 @@ class UnixGroupMembers
 		{
 			$userdir = Directory::query()
 				->withTrashed()
-				->whereIsActive()
+				//->whereIsActive()
 				->where('name', '=', $event->member->user->username)
 				->where('parentstoragedirid', '=', $dir->id)
 				->count();
@@ -60,7 +60,7 @@ class UnixGroupMembers
 				$userdir->name       = $event->member->user->username;
 				$userdir->parentstoragedirid = $dir->id;
 				$userdir->resourceid = $dir->resourceid;
-				$userdir->unixgroup  = $event->member->unixgroupid;
+				$userdir->unixgroupid = $event->member->unixgroupid;
 				$userdir->user       = $event->member->userid;
 
 				if ($dir->autouser == '1')
@@ -78,19 +78,21 @@ class UnixGroupMembers
 					$userdir->otherread  = 0;
 				}
 
+				if ($userdir->isTrashed())
+				{
+					$userdir->forceRestore(['datetimeremoved']);
+				}
+
 				$userdir->save();
 			}
 		}
 
 		// Create alerts for this user for any directory that has a quota and is owned by this group
 		$dirs = Directory::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('unixgroupid', '=', $event->member->unixgroupid)
 			->where('bytes', '<>', 0)
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->get();
 
 		if (!count($dirs))
