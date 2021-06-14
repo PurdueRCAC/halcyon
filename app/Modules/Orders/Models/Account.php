@@ -175,6 +175,17 @@ class Account extends Model
 	}
 
 	/**
+	 * Format WBSE
+	 *
+	 * @param   string  $purchasewbse
+	 * @return  void
+	 */
+	public function setPurchasewbseAttribute($purchasewbse)
+	{
+		$this->attributes['purchasewbse'] = str_replace('.', '', $purchasewbse);
+	}
+
+	/**
 	 * Account status
 	 *
 	 * @return  string
