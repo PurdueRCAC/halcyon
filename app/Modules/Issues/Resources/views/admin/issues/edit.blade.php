@@ -102,7 +102,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 				<fieldset class="adminform">
 					<legend>{{ trans('issues::issues.comments') }}</legend>
 
-					<ul id="comments">
+					<ul id="comments" class="comments">
 					<?php
 					$comments = $row->comments()->whereIsActive()->orderBy('datetimecreated', 'asc')->get();
 
