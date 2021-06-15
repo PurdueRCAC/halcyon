@@ -91,11 +91,11 @@ class RoleProvision
 
 			if ($status < 400)
 			{
-				error_log(__METHOD__ . '(): Created AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
+				error_log('RoleProvision: Created AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
 			}
 			else
 			{
-				error_log(__METHOD__ . '(): Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
+				error_log('RoleProvision: Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
 			}
 		}
 		catch (\Exception $e)
@@ -103,7 +103,7 @@ class RoleProvision
 			$status = 500;
 			$body   = ['error' => $e->getMessage()];
 
-			error_log(__METHOD__ . '(): Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
+			error_log('RoleProvision: Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
 		}
 
 		$event->status = $status;
@@ -153,11 +153,11 @@ class RoleProvision
 
 			if ($status < 400)
 			{
-				error_log(__METHOD__ . '(): Removed AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username);
+				error_log('RoleProvision: Removed AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username);
 			}
 			else
 			{
-				error_log(__METHOD__ . '(): Could not delete AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
+				error_log('RoleProvision: Could not delete AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
 			}
 		}
 		catch (\Exception $e)
@@ -165,7 +165,7 @@ class RoleProvision
 			$status = 500;
 			$body   = ['error' => $e->getMessage()];
 
-			error_log(__METHOD__ . '(): Could not delete AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
+			error_log('RoleProvision: Could not delete AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
 		}
 
 		$this->log('roleprovision', __METHOD__, 'DELETE', $status, $body, 'removeRole/rcs/' . $event->resource->rolename . '/' . auth()->user()->username . '/' . $event->user->username, $event->user->id);
@@ -208,7 +208,7 @@ class RoleProvision
 
 			if ($status >= 400)
 			{
-				throw new \Exception(__METHOD__ . '(): Failed to find user ' . $event->resource->id . '.' . $event->user->id, $status);
+				throw new \Exception('Failed to find user ' . $event->resource->id . '.' . $event->user->id, $status);
 			}
 
 			$results = json_decode($res->getBody()->getContents());
@@ -253,7 +253,7 @@ class RoleProvision
 
 			if ($status >= 400)
 			{
-				error_log(__METHOD__ . '(): Error getting AIMO ACMaint role info for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $results->roleStatus);
+				error_log('RoleProvision: Error getting AIMO ACMaint role info for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $results->roleStatus);
 			}
 		}
 		catch (\Exception $e)
@@ -263,7 +263,7 @@ class RoleProvision
 			$status  = 500;
 			$results = ['error' => $e->getMessage()];
 
-			error_log(__METHOD__ . '(): Could not retrieve AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
+			error_log('RoleProvision: Could not retrieve AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
 		}
 
 		$this->log('roleprovision', __METHOD__, 'GET', $status, $results, 'getRoleStatus/rcs/' . $event->resource->rolename . '/' . $event->user->username, $event->user->id);
@@ -343,8 +343,8 @@ class RoleProvision
 
 				if ($status >= 400)
 				{
-					error_log(__METHOD__ . '(): Could not create AIMO ACMaint role for ' . $user->username . ': ' . $res->getBody()->getContents());
-					//throw new \Exception(__METHOD__ . '(): Failed to create `resourcemember` entry for ' . $user->id);
+					error_log('RoleProvision: Could not create AIMO ACMaint role for ' . $user->username . ': ' . $res->getBody()->getContents());
+					//throw new \Exception('Failed to create `resourcemember` entry for ' . $user->id);
 				}
 
 				$this->log('roleprovision', __METHOD__, 'POST', $status, $res, 'createOrUpdateRole', $user->id);
