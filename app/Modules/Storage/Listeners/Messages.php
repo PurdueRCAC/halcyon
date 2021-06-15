@@ -3,6 +3,7 @@
 namespace App\Modules\Storage\Listeners;
 
 use App\Modules\Storage\Models\Directory;
+use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Messages\Events\MessageReading;
 use App\Modules\Messages\Models\Type as MessageType;
 use App\Modules\Storage\Events\DirectoryCreated;
