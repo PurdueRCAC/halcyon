@@ -4693,6 +4693,22 @@ a.menulist:hover:before {
   margin-right: 0.2em;
   color: var(--indicator);
 }
+
+.comments li {
+  padding: 1em 0;
+  border-top: 1px solid #ddd;
+}
+.comments li:first-child {
+  border-top: none;
+}
+.comments li>*:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+.comments li>*:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
 /*.level,
 .gtr {
   visibility: hidden;
