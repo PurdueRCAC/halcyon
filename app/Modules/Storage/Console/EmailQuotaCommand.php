@@ -289,6 +289,8 @@ class EmailQuotaCommand extends Command
 					if (strtotime($last->datetimerecorded) != 0
 					 && $last->space != 0)
 					{
+						$not->datetimelastnotify = Carbon::now()->toDateTimeString();
+
 						// Only mail if enabled
 						if ($not->enabled)
 						{
@@ -297,25 +299,32 @@ class EmailQuotaCommand extends Command
 							if ($debug)
 							{
 								//echo $message->render();
-								$this->info('Emailed report quota to ' . $user->email . ', next report:' . $not->nextreport);
+								$this->info('Emailed report quota to ' . $user->email . ', next report:' . $not->nextnotify);
 								continue;
 							}
 
 							Mail::to($user->email)->send($message);
 						}
 
+						unset($not->status);
+						unset($not->threshold);
+						unset($not->nextreport);
+
+						$not->save();
+
 						// Attempt to prevent weird situations of resetting report date.
-						if (strtotime($not->nextreport) > strtotime($not->datetimelastnotify))
+						/*if (strtotime($not->nextreport) > strtotime($not->datetimelastnotify))
 						{
 							unset($not->status);
 							unset($not->threshold);
+							unset($not->nextreport);
 							$not->datetimelastnotify = $not->nextreport;
 							$not->save();
 						}
 						else
 						{
 							$this->error('An error occurred: Tried to go backwards in time with quota report.');
-						}
+						}*/
 					}
 				}
 			}
