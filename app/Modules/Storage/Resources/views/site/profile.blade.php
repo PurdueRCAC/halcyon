@@ -154,8 +154,8 @@
 
 					$.ajax({
 						url: btn.data('api'),
-						type: 'POST',
-						data: {'quotaupdate' : '1' },
+						type: 'PUT',
+						data: {'quotaupdate' : '1'},
 						success: function(result) {
 
 							var oldtime = data.data['latestusage']['datetimerecorded'];
