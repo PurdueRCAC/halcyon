@@ -61,5 +61,7 @@ return [
         '128.211.133.20',  // warden.gilbreth.rcac.purdue.edu
         '128.211.133.19',  // gateway.gilbreth
         '128.210.189.73',  // odin.rcac.purdue.edu
+        '172.31.96.30',    // tools.itap.purdue.edu
+        '172.18.64.182',   // storagetools.rcac.purdue.edu 
     ],
 ];
