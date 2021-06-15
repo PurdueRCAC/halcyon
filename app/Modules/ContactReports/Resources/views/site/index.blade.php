@@ -145,6 +145,27 @@ app('pathway')->append(
 							</div>
 						</div>
 
+						<div class="form-group row tab-search" id="TR_tags">
+							<label for="people" class="col-sm-2 col-form-label">{{ trans('contactreports::contactreports.tags') }}</label>
+							<div class="col-sm-10">
+								<?php
+								$tags = array();
+								if ($tg = $filters['tag'])
+								{
+									foreach (explode(',', $tg) as $t)
+									{
+										if (trim($t))
+										{
+											$tag = App\Modules\Tags\Models\Tag::query()->where('slug', '=', $t)->first();
+											$tags[] = $tag->name . ':' . $t;
+										}
+									}
+								}
+								?>
+								<input name="tag" id="tag" size="45" class="form-control" value="{{ implode(', ', $tags) }}" data-uri="{{ route('api.tags.index') }}?search=%s" data-api="{{ route('api.tags.index') }}" />
+							</div>
+						</div>
+
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_type">
 							<label for="crmtype" class="col-sm-2 col-form-label">Category</label>
 							<div class="col-sm-10">
@@ -413,7 +434,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 		</div>
 
 		<?php
-		$valid_args = array('start', 'stop', 'id', 'group', 'people', 'resource', 'search');
+		$valid_args = array('start', 'stop', 'id', 'group', 'people', 'resource', 'search', 'tag');
 
 		$string = array();
 

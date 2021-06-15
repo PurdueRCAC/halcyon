@@ -32,6 +32,7 @@ class ReportsController extends Controller
 			'id'       => null,
 			'type'     => null,
 			'notice'   => '*',
+			'tag'       => '',
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			'order'     => Report::$orderBy,
@@ -55,6 +56,11 @@ class ReportsController extends Controller
 		}
 
 		$query = Report::query();
+
+		if ($filters['tag'])
+		{
+			$query->withTag($filters['tag']);
+		}
 
 		if ($filters['search'])
 		{

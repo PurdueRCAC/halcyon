@@ -55,4 +55,5 @@ return [
 	'timeperiod count' => 'Number of timeperiods to wait before following up',
 	'timeperiod limit' => 'Number of timeperiods to look back in time to find unprocessed followups',
 	'all types' => '- All Types -',
+	'tags' => 'Tags',
 ];
