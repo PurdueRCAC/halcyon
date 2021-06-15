@@ -18,11 +18,8 @@ class Productlist extends Widget
 	public function run()
 	{
 		$categories = Category::query()
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->withTrashed()
+			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('sequence', 'asc')
 			->get();
@@ -32,11 +29,8 @@ class Productlist extends Widget
 		foreach ($categories as $category)
 		{
 			$query = $category->products()
-				->where(function($where)
-				{
-					$where->whereNull('datetimeremoved')
-						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-				});
+				->withTrashed()
+				->whereIsActive();
 
 			if (!auth()->user() || !auth()->user()->can('manage orders'))
 			{
