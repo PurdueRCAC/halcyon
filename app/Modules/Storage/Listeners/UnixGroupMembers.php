@@ -58,6 +58,7 @@ class UnixGroupMembers
 				//$userdir->bytesource = '';
 				$userdir->groupid     = $dir->groupid;
 				$userdir->name        = $event->member->user->username;
+				$userdir->path        = $dir->path . '/' . $userdir->name;
 				$userdir->parentstoragedirid = $dir->id;
 				$userdir->resourceid  = $dir->resourceid;
 				$userdir->unixgroupid = $event->member->unixgroupid;
