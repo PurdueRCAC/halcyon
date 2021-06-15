@@ -152,7 +152,7 @@ class AccountsController extends Controller
 		{
 			$userid = auth()->user()->id;
 
-			$query->join($o, $o . 'id', $a . '.orderid');
+			$query->join($o, $o . '.id', $a . '.orderid');
 			$query->where(function($where) use ($userid, $a, $o)
 			{
 				$where->where($a . '.approveruserid', '=', $userid)
