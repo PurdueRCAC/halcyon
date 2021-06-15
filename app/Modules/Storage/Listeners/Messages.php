@@ -42,7 +42,8 @@ class Messages
 
 				if ($item)
 				{
-					$event->target = $item->storageResource->path . '/' . $item->path;
+					$sr = $item->storageResource()->withTrashed()->first();
+					$event->target = ($sr ? $sr->path . '/' : '') . $item->path;
 				}
 			}
 		}
