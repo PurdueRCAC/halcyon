@@ -36,16 +36,16 @@
 									@if (auth()->user())
 										@foreach ($products as $prod)
 											<div class="row<?php if (!$prod->public) { echo ' orderproductitemprivate'; } ?>">
-												<div class="col-md-8">
+												<div class="col-md-7">
 													@if (!$prod->public)
 														<span class="badge badge-warning">HIDDEN</span>
 													@endif
 													{{ $prod->name }}
 												</div>
 												<div class="col-md-2 text-right">
-													{{ $prod->price }}
+													$ {{ $prod->price }}
 												</div>
-												<div class="col-md-2">
+												<div class="col-md-3">
 													per {{ $prod->unit }}
 												</div>
 											</div>
