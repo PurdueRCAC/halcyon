@@ -167,12 +167,16 @@ class RenewCommand extends Command
 		{
 			$items = array();
 			$accounts = array();
+			$recentaccounts = $orderid;
 
 			// If we sent an itemsequence we are copying another order. GO and fetch all this
 			$items = array();
 			foreach ($sequences as $sequence)
 			{
 				// Fetch order information
+				// We go newest to oldest so we can fetch the most recent order ID
+				// and, thus, get the most recent account info, which is likely to
+				// change over time
 				$item = Item::query()
 					->withTrashed()
 					->whereIsActive()
@@ -188,13 +192,14 @@ class RenewCommand extends Command
 				}
 
 				$items[] = $item->toArray();
+				$recentaccounts = $item->orderid;
 			}
 
 			// Fetch accounts information
 			$accs = Account::query()
 				->withTrashed()
 				->whereIsActive()
-				->where('orderid', '=', $orderid)
+				->where('orderid', '=', $recentaccounts)
 				->get();
 
 			foreach ($accs as $account)
@@ -212,7 +217,14 @@ class RenewCommand extends Command
 
 			$row = new Order;
 			$row->userid = $order->userid;
-			$row->submitteruserid = $order->submitteruserid;
+			if ($userid = config('module.orders.user_id'))
+			{
+				$row->submitteruserid = $userid;
+			}
+			else
+			{
+				$row->submitteruserid = $order->submitteruserid;
+			}
 			$row->groupid = $order->groupid;
 			$row->usernotes = $order->usernotes;
 			$row->staffnotes = $order->staffnotes;
@@ -275,6 +287,9 @@ class RenewCommand extends Command
 				{
 					$account = new Account;
 					$account->amount              = 0;
+					$account->purchasefund        = $a['purchasefund'];
+					$account->purchasecostcenter  = $a['purchasecostcenter'];
+					$account->purchaseorder       = $a['purchaseorder'];
 					$account->purchaseio          = $a['purchaseio'];
 					$account->purchasewbse        = $a['purchasewbse'];
 					$account->budgetjustification = $a['budgetjustification'];
