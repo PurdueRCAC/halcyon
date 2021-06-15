@@ -55,12 +55,12 @@ class DirectoryResource extends JsonResource
 		{
 			$data['path'] = $this->fullPath;
 			$data['id'] = '/ws/storagedir/' . $this->id;
-
+			$data['quota'] = $this->bytes;
 			$data['group']['id'] = '/ws/group/' . $this->id;
 
 			$data['resource'] = array(
 				'id' => '/ws/resource/' . $this->resourceid,
-				'name' => $this->resource->name
+				'name' => ($this->storageResource && $this->storageResource->resource ? $this->storageResource->resource->name : '')
 			);
 
 			$data['user']['uid'] = $data['user']['id'];
