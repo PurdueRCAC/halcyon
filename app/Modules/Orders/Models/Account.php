@@ -182,7 +182,7 @@ class Account extends Model
 	 */
 	public function setPurchasewbseAttribute($purchasewbse)
 	{
-		$this->attributes['purchasewbse'] = str_replace('.', '', $purchasewbse);
+		$this->attributes['purchasewbse'] = str_replace('.', '', (string)$purchasewbse);
 	}
 
 	/**
