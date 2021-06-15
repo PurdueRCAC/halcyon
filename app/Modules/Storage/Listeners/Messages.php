@@ -42,7 +42,15 @@ class Messages
 
 				if ($item)
 				{
-					$sr = $item->storageResource()->withTrashed()->first();
+					$sr = $item->storageResource;
+					if (!$sr)
+					{
+						$sr = StorageResource::query()
+							->withTrashed()
+							->whereIsActive()
+							->where('parentresourceid', '=', $item->resourceid)
+							->first();
+					}
 					$event->target = ($sr ? $sr->path . '/' : '') . $item->path;
 				}
 			}

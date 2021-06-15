@@ -62,6 +62,7 @@ class UnixGroupMembers
 				$userdir->resourceid  = $dir->resourceid;
 				$userdir->unixgroupid = $event->member->unixgroupid;
 				$userdir->owneruserid = $event->member->userid;
+				$userdir->storageresourceid = $dir->storageresourceid;
 
 				if ($dir->autouser == '1')
 				{
