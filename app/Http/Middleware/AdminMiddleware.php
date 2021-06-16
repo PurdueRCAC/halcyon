@@ -80,6 +80,7 @@ class AdminMiddleware
 			if (app()->has('cas'))
 			{
 				$cas = app('cas');
+				$cas->setFixedServiceURL($this->request->url());
 
 				if (!$cas->checkAuthentication())
 				{
