@@ -273,7 +273,7 @@ class NotificationsController extends Controller
 
 		if ($row->userid != auth()->user()->id
 		 && !auth()->user()->can('manage storage')
-		 && !in_array($groupid, $ownedgroups))
+		 && ($groupid && !in_array($groupid, $ownedgroups)))
 		{
 			return response()->json(null, 403);
 		}
