@@ -334,12 +334,9 @@ class UnixGroupsController extends Controller
 		else
 		{
 			$data = UnixGroup::query()
+				->withTrashed()
+				->whereIsActive()
 				->where('groupid', '=', $group->id)
-				->where(function($where)
-				{
-					$where->whereNull('datetimeremoved')
-						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
 				->orderBy('shortname', 'asc')
 				->get();
 
