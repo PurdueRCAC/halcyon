@@ -179,6 +179,7 @@ function UpdateOrderTotal(input, override) {
 					t.value = FormatNumber(t.value).replace(/[,]/g,"");
 				}
 			}
+
 			//var cattotal = document.getElementById(category + "_total");
 			//var cattotal = document.getElementById("total");
 			if (override || t.tagName == "INPUT") {
@@ -1088,8 +1089,6 @@ function AddNewProductRow() {
 	row.parentNode.insertBefore(new_row, row);
 
 	$(new_row).find('.searchable-select').select2();
-
-	//ProductSearch();
 }
 
 /**
@@ -1944,7 +1943,6 @@ function EditAccounts() {
 		}
 
 		if (num_changes == 0) {
-			//CancelEditAccounts();
 			SaveQuantities();
 		}
 	} else {
@@ -2199,12 +2197,13 @@ function UpdateTotal(tot_override) {
 		allow = false;
 	}
 
-	if (!allow) {
+	/*if (!allow) {
 		UpdateBalance();
-	} else {
+		//EditAccounts();
+	} else {*/
 		document.getElementById("balance").innerHTML = FormatNumber(total);
 		document.getElementById("save_quantities").disabled = false;
-	}
+	//}
 }
 
 /**
@@ -2281,11 +2280,11 @@ function EditQuantities() {
 			return;
 		}
 
-		if ($('[name=accountid]').length > 0 && $('#balance').text() != '0.00') {
+		/*if ($('[name=accountid]').length > 0 && $('#balance').text() != '0.00') {
 			EditAccounts();
-		} else {
+		} else {*/
 			SaveQuantities();
-		}
+		//}
 	}
 }
 

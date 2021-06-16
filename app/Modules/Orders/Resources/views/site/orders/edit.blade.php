@@ -795,7 +795,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										</td>
 										<td class="text-right text-nowrap">
 											<span class="hide" name="itemtotal"></span>
-											<input type="text" name="newlinetotal" value="0.00" class="item-total form-control total-update" />
+											<input type="text" name="newlinetotal" value="0.00" class="item-total form-control total-update" data-override="1" />
 										</td>
 										<td>
 											<a href="#item_new_row"
