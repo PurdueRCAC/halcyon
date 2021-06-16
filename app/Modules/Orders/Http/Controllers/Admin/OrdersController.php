@@ -621,6 +621,8 @@ class OrdersController extends Controller
 				continue;
 			}
 
+			//$row->update(['notice' => 8]);
+
 			$success++;
 		}
 

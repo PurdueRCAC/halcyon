@@ -798,6 +798,8 @@ class OrdersController extends Controller
 			{
 				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
 			}
+
+			$row->update(['notice' => 8]);
 		}
 
 		return response()->json(null, 204);
