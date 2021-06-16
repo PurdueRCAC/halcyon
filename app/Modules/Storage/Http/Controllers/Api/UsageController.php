@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Storage\Http\Resources\UsageResource;
 use App\Modules\Storage\Models\Usage;
 use App\Modules\Storage\Models\Directory;
