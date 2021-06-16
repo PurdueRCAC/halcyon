@@ -660,7 +660,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									?>
 									<tr id="item_{{ $item->id }}">
 										@if (!$item->isFulfilled())
-											@if ($order->status != 'canceled' && $order->status == 'pending_fulfillment')
+											@if ($order->status != 'canceled' && $order->status == 'pending_fulfillment' && auth()->user()->can('manage orders'))
 												<td>
 													<div class="badge order-status {{ str_replace(' ', '-', $order->status) }}" id="status_{{ $item->id }}">{{ trans('orders::orders.pending_fulfillment') }}</div>
 
