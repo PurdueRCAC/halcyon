@@ -230,13 +230,20 @@ class UsageController extends Controller
 		{
 			$rules = [
 				'storagedir' => 'required|string',
-				'quota' => 'required|integer',
-				'space' => 'nullable|integer',
+				'quota' => 'required',
+				'space' => 'nullable',
 				'filequota' => 'nullable|integer',
 				'files' => 'nullable|integer',
 			];
 		}
-		$request->validate($rules);
+		//$request->validate($rules);
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Usage;
 		$row->quota = 0;
