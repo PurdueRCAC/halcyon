@@ -125,14 +125,12 @@ class EmailStatusCommand extends Command
 
 				if ($debug)
 				{
-					echo $message->render();
+					//echo $message->render();
 					$this->info("Emailed new order #{$order->id} to {$user->email}.");
 					continue;
 				}
 
 				Mail::to($user->email)->send($message);
-
-				//$this->info("Emailed new order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -188,14 +186,12 @@ class EmailStatusCommand extends Command
 
 				if ($debug)
 				{
-					echo $message->render();
+					//echo $message->render();
 					$this->info("Emailed pending payment info order #{$order->id} to {$user->email}.");
 					continue;
 				}
 
 				Mail::to($user->email)->send($message);
-
-				//$this->info("Emailed pending payment info order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -262,14 +258,12 @@ class EmailStatusCommand extends Command
 
 				if ($debug)
 				{
-					echo $message->render();
+					//echo $message->render();
 					$this->info("Emailed pending payment approval order #{$order->id} to {$user->email}.");
 					continue;
 				}
 
 				Mail::to($user->email)->send($message);
-
-				//$this->info("Emailed pending payment approval order #{$order->id} to {$user->email}.");
 			}
 
 			// Send denied notice if needed
@@ -294,14 +288,12 @@ class EmailStatusCommand extends Command
 
 					if ($debug)
 					{
-						echo $message->render();
+						//echo $message->render();
 						$this->info("Emailed payment denied for order #{$order->id} to {$user->email}.");
 						continue;
 					}
 
 					Mail::to($user->email)->send($message);
-
-					//$this->info("Emailed payment denied for order #{$order->id} to {$user->email}.");
 				}
 			}
 
@@ -369,14 +361,12 @@ class EmailStatusCommand extends Command
 
 				if ($debug)
 				{
-					echo $message->render();
+					//echo $message->render();
 					$this->info("Emailed pending fulfillment order #{$order->id} to {$user->email}.");
 					continue;
 				}
 
 				Mail::to($user->email)->send($message);
-
-				//$this->info("Emailed pending fulfillment order #{$order->id} to {$user->email}.");
 			}
 
 			$ticket = false;
@@ -403,15 +393,13 @@ class EmailStatusCommand extends Command
 
 				if ($debug)
 				{
-					echo $message->render();
+					//echo $message->render();
 					$this->info("Emailed order #{$order->id} to {$user->email}.");
 				}
 				else
 				{
 					Mail::to($user->email)->send($message);
 				}
-
-				//$this->info("Emailed order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -469,14 +457,12 @@ class EmailStatusCommand extends Command
 
 				if ($debug)
 				{
-					echo $message->render();
+					//echo $message->render();
 					$this->info("Emailed pending collection order #{$order->id} to {$user->email}.");
 					continue;
 				}
 
 				Mail::to($user->email)->send($message);
-
-				//$this->info("Emailed pending collection order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -529,14 +515,12 @@ class EmailStatusCommand extends Command
 
 				if ($debug)
 				{
-					echo $message->render();
+					//echo $message->render();
 					$this->info("Emailed completed order #{$order->id} to {$user->email}.");
 					continue;
 				}
 
 				Mail::to($user->email)->send($message);
-
-				//$this->info("Emailed completed order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
@@ -559,13 +543,14 @@ class EmailStatusCommand extends Command
 		$orders = Order::query()
 			->withTrashed()
 			->whereIsTrashed()
+			//->where('notice', '>', 0)
 			->whereIn('notice', [self::CANCELED_NOTICE])
 			->orderBy('id', 'asc')
 			->get();
 
 		foreach ($orders as $order)
 		{
-			if ($order->id != 6946 && constant(self::class . '::' . strtoupper($order->status)) > self::CANCELED_NOTICE)
+			if (constant(self::class . '::' . strtoupper($order->status)) > self::CANCELED_NOTICE)
 			{
 				if ($debug)
 				{
@@ -594,14 +579,12 @@ class EmailStatusCommand extends Command
 
 				if ($debug)
 				{
-					echo $message->render();
+					//echo $message->render();
 					$this->info("Emailed canceled order #{$order->id} to {$user->email}.");
 					continue;
 				}
 
 				Mail::to($user->email)->send($message);
-
-				//$this->info("Emailed canceled order #{$order->id} to {$user->email}.");
 			}
 
 			if ($debug)
