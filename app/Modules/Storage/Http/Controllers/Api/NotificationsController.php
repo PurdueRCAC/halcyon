@@ -258,7 +258,7 @@ class NotificationsController extends Controller
 
 		if (!$row->directory->groupid)
 		{
-			return response()->json(['message' => trans('Failed to retrieve `groupid` for `storagedirid`')], 415);
+			//return response()->json(['message' => trans('Failed to retrieve `groupid` for `storagedirid`')], 415);
 		}
 
 		// Ensure the client is authorized to create storagedirs.
