@@ -86,7 +86,7 @@ class Order extends Model
 	 */
 	public function items()
 	{
-		return $this->hasMany(Item::class, 'orderid');
+		return $this->hasMany(Item::class, 'orderid')->where('quantity', '>', 0);
 	}
 
 	/**
