@@ -261,6 +261,23 @@ class NotificationsController extends Controller
 			return response()->json(['message' => trans('Failed to retrieve `groupid` for `storagedirid`')], 415);
 		}
 
+		// Ensure the client is authorized to create storagedirs.
+		$groupid = $row->directory->groupid;
+		$ownedgroups = auth()->user()->groups()
+			->withTrashed()
+			->whereIsActive()
+			->whereIsManager()
+			->get()
+			->pluck('groupid')
+			->toArray();
+
+		if ($row->userid != auth()->user()->id
+		 && !auth()->user()->can('manage storage')
+		 && !in_array($groupid, $ownedgroups))
+		{
+			return response()->json(null, 403);
+		}
+
 		if ($request->has('timeperiodid') && !$row->timeperiod)
 		{
 			return response()->json(['message' => trans('Invalid timeperiodid')], 415);

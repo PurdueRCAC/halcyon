@@ -48,6 +48,7 @@ class Quotas
 			$u = (new UnixGroupMember)->getTable();
 			$g = (new Member)->getTable();
 
+			// Grab privately owned resources
 			$dirs = Directory::query()
 				->withTrashed()
 				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
@@ -62,6 +63,7 @@ class Quotas
 				})
 				->get();
 
+			// Grab high level group shared resources
 			$dirs2 = Directory::query()
 				->withTrashed()
 				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
@@ -80,6 +82,7 @@ class Quotas
 
 			$storagedirquota = $dirs->merge($dirs2);
 
+			// Grab directories owned by user
 			$dirs = Directory::query()
 				->withTrashed()
 				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
@@ -117,7 +120,11 @@ class Quotas
 
 			$storagedirs = $dirs3->merge($dirs->merge($dirs2));
 
-			$storagenotifications = Notification::where('userid', '=', $user->id)->get();
+			$storagenotifications = Notification::query()
+				->withTrashed()
+				->whereIsActive()
+				->where('userid', '=', $user->id)
+				->get();
 
 			app('pathway')
 				->append(
@@ -127,7 +134,7 @@ class Quotas
 
 			$content = view('storage::site.profile', [
 				'user' => $user,
-				'storagedir' => $storagedirs,
+				'storagedirs' => $storagedirs,
 				'storagedirquota' => $storagedirquota,
 				'storagenotifications' => $storagenotifications,
 			]);

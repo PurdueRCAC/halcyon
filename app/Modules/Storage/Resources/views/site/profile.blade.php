@@ -50,19 +50,19 @@
 							return;
 						}
 
-						var postdata = {};
-						postdata = { value: $( "#newalertvalue" ).val() }
-						postdata['storagedirquotanotificationtypeid'] = val;
-						postdata['userid'] = $( '#HIDDEN_user' ).val();
-						postdata['storagedirid'] = $('[name=newalertstorage]:selected').val();
-
-						$(this).dialog('close');
+						var postdata = {
+							value: $( "#newalertvalue" ).val(),
+							storagedirquotanotificationtypeid: val,
+							userid: $( '#HIDDEN_user' ).val(),
+							storagedirid: $('[name=newalertstorage]:selected').val()
+						};
 
 						$.ajax({
 							url: $('#newalert').data('api'),
 							type: 'POST',
 							data: postdata,
 							success: function(result) {
+								//$(this).dialog('close');
 								location.reload(true);
 							},
 							error: function (result) {
@@ -277,7 +277,7 @@
 			</div>
 
 			<?php
-			$storagedirs = array();
+			$sdirs = array();
 
 			if ($storagedirquota)
 			{
@@ -364,7 +364,7 @@
 							<?php
 							// Save for easy access later
 							//$dir->ago = $ago;
-							$storagedirs[$dir->id] = $dir;
+							$sdirs[$dir->id] = $dir;
 						}
 						?>
 					</tbody>
@@ -402,7 +402,23 @@
 			<?php
 			$alerts = $storagenotifications->where('storagedirquotanotificationtypeid', '!=', 1);
 
-			if (count($alerts) > 0)
+			$als = array();
+			foreach ($alerts as $not)
+			{
+				if (!isset($sdirs[$not->storagedirid]))
+				{
+					$sdirs[$not->storagedirid] = $not->directory()->withTrashed()->whereIsActive()->first();
+				}
+
+				$dir = $sdirs[$not->storagedirid];
+
+				if ($dir && $dir->resourceid == 64)
+				{
+					$als[] = $not;
+				}
+			}
+
+			if (count($als) > 0)
 			{
 				?>
 				<table class="table table-hover storage">
@@ -421,17 +437,17 @@
 					</thead>
 					<tbody>
 						<?php
-						foreach ($alerts as $not)
+						foreach ($als as $not)
 						{
-							if (!isset($storagedirs[$not->storagedirid]))
+							/*if (!isset($sdirs[$not->storagedirid]))
 							{
 								continue;
 							}
 
-							$dir = $storagedirs[$not->storagedirid];
+							$dir = $sdirs[$not->storagedirid];
 
 							if ($dir->resourceid == 64)
-							{
+							{*/
 								?>
 								<tr>
 									<td>
@@ -492,24 +508,24 @@
 									<?php } ?>
 								</tr>
 								<?php
-							}
+							//}
 						}
 						?>
 					</tbody>
 				</table>
 
 				<?php
-				foreach ($alerts as $not)
+				foreach ($als as $not)
 				{
-					if (!isset($storagedirs[$not->storagedirid]))
+					/*if (!isset($sdirs[$not->storagedirid]))
 					{
 						continue;
 					}
 
-					$dir = $storagedirs[$not->storagedirid];
+					$dir = $sdirs[$not->storagedirid];
 
 					if ($dir->resourceid == 64)
-					{
+					{*/
 					?>
 					<div id="{{ $not->id }}_not_dialog" title="Storage Alert Detail" class="dialog dialog-details">
 						<form method="post" action="{{ route('api.storage.notifications.update', ['id' => $not->id]) }}">
@@ -582,7 +598,7 @@
 						</form>
 					</div>
 					<?php
-					}
+					//}
 				}
 			}
 			else
@@ -601,11 +617,11 @@
 				<label for="newalertstorage">Monitor</label>
 				<select id="newalertstorage" class="form-control">
 					<?php
-					foreach ($storagedirquota as $storagedir)
+					foreach ($storagedirs as $storagedir)
 					{
 						if ($storagedir->resourceid != 64)
 						{
-							//continue;
+							continue;
 						}
 						?>
 						<option name="newalertstorage" value="{{ $storagedir->id }}">{{ $storagedir->resourcepath . '/' . $storagedir->path }}</option>
@@ -685,8 +701,8 @@
 				foreach ($storagenotifications as $not)
 				{
 					if ($not->storagedirquotanotificationtypeid == 1
-					 && isset($storagedirs[$not->storagedirid])
-					 && $storagedirs[$not->storagedirid]->resourceid == 64)
+					 && isset($sdirs[$not->storagedirid])
+					 && $sdirs[$not->storagedirid]->resourceid == 64)
 					{
 						$storagedirquotanotifications[] = $not;
 					}
@@ -719,7 +735,7 @@
 							?>
 							<tr>
 								<td>
-									{{ $storagedirs[$not->storagedirid]->path }}
+									{{ $sdirs[$not->storagedirid]->path }}
 								</td>
 								<td>
 									{{ $not->type->name }}
