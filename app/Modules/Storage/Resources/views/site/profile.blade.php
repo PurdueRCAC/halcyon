@@ -500,7 +500,7 @@
 												class="confirm-delete delete tip"
 												title="{{ trans('global.button.delete') }}"
 												data-id="{{ $not->id }}"
-												data-api="{{ route('api.storage.usage.delete', ['id' => $not->id]) }}"
+												data-api="{{ route('api.storage.notifications.delete', ['id' => $not->id]) }}"
 												data-confirm="Are you sure you wish to delete this notification?"><!--
 												--><i class="fa fa-trash"></i><span class="sr-only">{{ trans('global.button.delete') }}</span><!--
 											--></a>
