@@ -348,7 +348,7 @@ class Order extends Model
 	 * @param   array  $options
 	 * @return  bool
 	 */
-	public function delete(array $options = [])
+	/*public function delete(array $options = [])
 	{
 		foreach ($this->accounts as $row)
 		{
@@ -361,7 +361,7 @@ class Order extends Model
 		}
 
 		return parent::delete($options);
-	}
+	}*/
 
 	/**
 	 * Format unit price
