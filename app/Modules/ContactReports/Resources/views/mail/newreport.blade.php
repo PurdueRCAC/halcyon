@@ -1,5 +1,5 @@
 @component('mail::message')
-@if ($report->group)
+@if ($report->groupid && $report->group)
 **Group:** {{ $report->group->name }}<br />
 @endif
 **People:** {{ $report->usersAsString() }}<br />
