@@ -102,4 +102,9 @@ return [
 	'options' => 'Options',
 	'edit purchase' => 'Edit purchase',
 	'edit loan' => 'Edit loan',
+	'mailquota' => [
+		'exceed' => 'Quota Usage Alert',
+		'below' => 'Quota Usage Alert',
+		'report' => 'Quota Usage Report',
+	],
 ];

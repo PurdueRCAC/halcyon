@@ -62,7 +62,7 @@ class Quota extends Mailable
 	public function build()
 	{
 		return $this->markdown('storage::mail.quota.' . $this->type)
-					->subject(trans('storage::mail.quota.' . $this->type))
+					->subject(trans('storage::storage.mailquota.' . $this->type))
 					->with([
 						'user' => $this->user,
 						'latest' => $this->latest,
