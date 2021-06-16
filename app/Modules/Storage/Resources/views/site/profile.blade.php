@@ -700,10 +700,14 @@
 			{
 				foreach ($storagenotifications as $not)
 				{
-					if ($not->storagedirquotanotificationtypeid == 1
-					 && isset($sdirs[$not->storagedirid])
-					 && $sdirs[$not->storagedirid]->resourceid == 64)
+					if ($not->storagedirquotanotificationtypeid == 1)
+					// && $sdirs[$not->storagedirid]->resourceid == 64)
 					{
+						if (!isset($sdirs[$not->storagedirid]))
+						{
+							$sdirs[$not->storagedirid] = $not->directory()->withTrashed()->whereIsActive()->first();
+						}
+
 						$storagedirquotanotifications[] = $not;
 					}
 				}
@@ -711,6 +715,7 @@
 
 			if (count($storagedirquotanotifications) > 0)
 			{
+				$dir = $sdirs[$not->storagedirid];
 				?>
 				<table class="table table-hover storage">
 					<caption class="sr-only">
@@ -735,7 +740,7 @@
 							?>
 							<tr>
 								<td>
-									{{ $sdirs[$not->storagedirid]->path }}
+									{{ $dir->storageResource->path . '/' . $dir->path }}
 								</td>
 								<td>
 									{{ $not->type->name }}
