@@ -34,27 +34,27 @@ $router->group(['prefix' => 'storage', 'middleware' => 'auth:api'], function (Ro
 		$router->get('/', [
 			'as' => 'api.storage.notifications',
 			'uses' => 'NotificationsController@index',
-			'middleware' => 'can:manage storage.notifications',
+			//'middleware' => 'can:manage storage.notifications',
 		]);
 		$router->post('/', [
 			'as' => 'api.storage.notifications.create',
 			'uses' => 'NotificationsController@create',
-			'middleware' => 'can:create storage.notifications',
+			//'middleware' => 'can:create storage.notifications',
 		]);
 		$router->get('{id}', [
 			'as' => 'api.storage.notifications.read',
 			'uses' => 'NotificationsController@read',
-			'middleware' => 'can:create storage.notifications',
+			//'middleware' => 'can:create storage.notifications',
 		])->where('id', '[0-9]+');
 		$router->put('{id}', [
 			'as' => 'api.storage.notifications.update',
 			'uses' => 'NotificationsController@update',
-			'middleware' => 'can:edit storage.notifications',
+			//'middleware' => 'can:edit storage.notifications',
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.storage.notifications.delete',
 			'uses' => 'NotificationsController@delete',
-			'middleware' => 'can:delete storage.notifications',
+			//'middleware' => 'can:delete storage.notifications',
 		])->where('id', '[0-9]+');
 	});
 
