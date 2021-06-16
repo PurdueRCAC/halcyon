@@ -1888,4 +1888,18 @@ $(document).ready(function () {
 			$(this).data('resource')
 		);
 	});
+
+	$('.delete-queue').on('click', function (e) {
+		e.preventDefault();
+
+		if (confirm($(this).attr('data-confirm'))) {
+			WSDeleteURL($(this).attr('data-api'), function (xml) {
+				if (xml.status < 400) {
+					window.location.reload();
+				} else {
+					alert("An error occurred.");
+				}
+			});
+		}
+	});
 });

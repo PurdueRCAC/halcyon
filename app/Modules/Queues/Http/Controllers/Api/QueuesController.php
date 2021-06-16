@@ -975,7 +975,7 @@ class QueuesController extends Controller
 
 		if (!$queue->isTrashed())
 		{
-			$queue->softDeletes();
+			$queue->delete();
 		}
 
 		return response()->json(null, 204);

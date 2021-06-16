@@ -15,6 +15,7 @@ use App\Modules\Queues\Events\QueueDeleted;
 use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Models\Asset;
+use App\Modules\Resources\Events\ResourceMemberDeleted;
 use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Groups\Models\Group;
 use Carbon\Carbon;
@@ -692,5 +693,107 @@ class Queue extends Model
 		}
 
 		return $row->save();
+	}
+
+	/**
+	 * Delete entry and associated data
+	 *
+	 * @param   array  $options
+	 * @return  bool
+	 */
+	public function delete(array $options = [])
+	{
+		foreach ($this->users as $row)
+		{
+			$row->update(['notice' => 0]);
+			$row->delete();
+
+			// Look up the current username of the user being removed
+			$user = $row->user;
+
+			// Look up the ACMaint role name of the resource to which access is being granted.
+			$resource = $this->resource;
+
+			// Ensure the client is authorized to manage a group with queues on the resource in question.
+			if (!auth()->user()->can('manage resources')
+			&& $user->id != auth()->user()->id)
+			{
+				$owned = auth()->user()->groups->pluck('id')->toArray();
+
+				$queues = array();
+				$subresources = $resource->subresources()
+					->withTrashed()
+					->whereIsActive()
+					->get();
+				foreach ($subresources as $sub)
+				{
+					$queues += $sub->queues()
+						->whereIn('groupid', $owned)
+						->withTrashed()
+						->whereIsActive()
+						->pluck('queuid')
+						->toArray();
+				}
+				array_filter($queues);
+
+				// If no queues found
+				if (count($queues) < 1) // && !in_array($resource->id, array(48, 2, 12, 66)))
+				{
+					return response()->json(null, 403);
+				}
+			}
+			else
+			{
+				$owned = $user->groups->pluck('id')->toArray();
+			}
+
+			// Check for other queue memberships on this resource that might conflict with removing the role
+			$rows = 0;
+
+			$resources = Asset::query()
+				->withTrashed()
+				->whereIsActive()
+				->where('rolename', '!=', '')
+				->where('listname', '!=', '')
+				->get();
+
+			foreach ($resources as $res)
+			{
+				$subresources = $res->subresources()
+					->withTrashed()
+					->whereIsActive()
+					->get();
+
+				foreach ($subresources as $sub)
+				{
+					$queues = $sub->queues()
+						->whereIn('groupid', $owned)
+						->withTrashed()
+						->whereIsActive()
+						->get();
+
+					foreach ($queues as $queue)
+					{
+						$rows += $queue->users()
+							->whereIsMember()
+							->where('userid', '=', $user->id)
+							->count();
+
+						$rows += $queue->group->members()
+							->whereIsManager()
+							->where('userid', '=', $user->id)
+							->count();
+					}
+				}
+			}
+
+			if ($rows <= 0)
+			{
+				// Call central accounting service to remove ACMaint role from this user's account.
+				event(new ResourceMemberDeleted($resource, $user));
+			}
+		}
+
+		return parent::delete($options);
 	}
 }

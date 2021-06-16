@@ -228,7 +228,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 	$router->post('/', [
 		'as' => 'api.queues.create',
 		'uses' => 'QueuesController@create',
-		'middleware' => 'can:create queues',
+		'middleware' => ['auth:api', 'can:create queues'],
 	]);
 	$router->get('{id}', [
 		'as' => 'api.queues.read',
@@ -237,12 +237,12 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 	$router->put('{id}', [
 		'as' => 'api.queues.update',
 		'uses' => 'QueuesController@update',
-		'middleware' => 'can:edit queues',
+		'middleware' => ['auth:api', 'can:edit queues'],
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
 		'as' => 'api.queues.delete',
 		'uses' => 'QueuesController@delete',
-		'middleware' => 'can:delete queues',
+		'middleware' => ['auth:api', 'can:delete queues'],
 	])->where('id', '[0-9]+');
 });
 

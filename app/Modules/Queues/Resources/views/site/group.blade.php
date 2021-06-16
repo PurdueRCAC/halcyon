@@ -16,6 +16,9 @@
 			@if (auth()->user()->can('edit.state queues'))
 			<th scope="col">{{ trans('queues::queues.options') }}</th>
 			@endif
+			@if (auth()->user()->can('delete queues'))
+			<th scope="col"></th>
+			@endif
 		</tr>
 	</thead>
 	<tbody>
@@ -147,6 +150,18 @@
 								<i class="fa fa-check" aria-hidden="true"></i> {{ trans('queues::queues.start scheduling') }}
 							</a>
 						@endif
+					</td>
+					@endif
+					@if (auth()->user()->can('delete queues'))
+					<td class="text-right">
+						<a class="delete-queue btn text-danger"
+							href="{{ route('admin.queues.delete', ['id' => $q->id]) }}"
+							data-api="{{ route('api.queues.delete', ['id' => $q->id]) }}"
+							data-queue="{{ $q->id }}"
+							data-confirm="Are you sure you want to delete this queue?"
+							title="{{ trans('global.button.delete') }}">
+							<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.delete') }}</span>
+						</a>
 					</td>
 					@endif
 				</tr>
