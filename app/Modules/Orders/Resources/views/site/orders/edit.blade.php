@@ -1262,7 +1262,59 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										}
 										if ($action->action == 'updated')
 										{
-											$did = '<span class="text-info">edited</span> a payment account';
+											$did = '<span class="text-info">edited</span> ';
+											$changes = array();
+											$acct = '#' . $action->historable_id;
+											foreach ($order->accounts as $account)
+											{
+												if ($account->id == $action->historable_id)
+												{
+													$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
+													if (in_array('amount', $fields))
+													{
+														$changes[] = 'amount';
+													}
+													if (in_array('budgetjustification', $fields))
+													{
+														$changes[] = 'budget justification';
+													}
+													if (in_array('approveruserid', $fields))
+													{
+														$changes[] = 'approver';
+													}
+												}
+											}
+											$did .= implode(', ', $changes) . ' on payment account ' . $acct;
+
+											if (in_array('datetimeapproved', $fields))
+											{
+												$acct = '#' . $action->historable_id;
+												foreach ($order->accounts as $account)
+												{
+													if ($account->id == $action->historable_id)
+													{
+														$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
+													}
+												}
+												$did = '<span class="text-success">approved</span> account ' . $acct;
+											}
+											if (in_array('approveruserid', $fields))
+											{
+												$acct = '#' . $action->historable_id;
+												foreach ($order->accounts as $account)
+												{
+													if ($account->id == $action->historable_id)
+													{
+														$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
+														$acct .= ' to ' . ($account->approver ? $account->approver->name : trans('global.none'));
+													}
+												}
+												$did = '<span class="text-info">set</span> approver for account ' . $acct;
+											}
+											if (in_array('datetimedenied', $fields))
+											{
+												$did = '<span class="text-danger">denied</span> account #' . $action->historable_id;
+											}
 										}
 										if ($action->action == 'deleted')
 										{
@@ -1278,6 +1330,19 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										if ($action->action == 'updated')
 										{
 											$did = '<span class="text-info">edited</span> an item';
+
+											if (in_array('datetimefulfilled', $fields))
+											{
+												$acct = 'item #' . $action->historable_id;
+												foreach ($order->items as $item)
+												{
+													if ($item->id == $action->historable_id)
+													{
+														$acct = '"' . $item->product->name . '"';
+													}
+												}
+												$did = '<span class="text-success">fulfilled</span> item ' . $acct;
+											}
 										}
 										if ($action->action == 'deleted')
 										{
@@ -1293,67 +1358,31 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										if ($action->action == 'updated')
 										{
 											$did = '<span class="text-info">edited</span> this order';
+
+											if (in_array('userid', $fields))
+											{
+												$did = '<span class="text-info">set</span> the user to ' . ($order->user ? $order->user->name : trans('global.none'));
+											}
+											if (in_array('groupid', $fields))
+											{
+												$did = '<span class="text-info">set</span> the group to ' . ($order->groupid && $order->group ? $order->group->name : trans('global.none'));
+											}
+											if (in_array('usernotes', $fields))
+											{
+												$did = '<span class="text-info">edited</span> user notes';
+											}
+											if (in_array('stffnotes', $fields))
+											{
+												$did = '<span class="text-info">edited</span> staff notes';
+											}
 										}
 										if (!$action->user_id && isset($action->new->notice))
 										{
 											$did = '<span class="text-info">emailed</span> order status';
 										}
 									}
-									if ($action->action == 'updated')
-									{
-										if (in_array('userid', $fields))
-										{
-											$did = '<span class="text-info">set</span> the user to ' . ($order->user ? $order->user->name : trans('global.none'));
-										}
-										if (in_array('groupid', $fields))
-										{
-											$did = '<span class="text-info">set</span> the group to ' . ($order->groupid && $order->group ? $order->group->name : trans('global.none'));
-										}
-										if (in_array('datetimefulfilled', $fields))
-										{
-											$acct = 'item #' . $action->historable_id;
-											foreach ($order->items as $item)
-											{
-												if ($item->id == $action->historable_id)
-												{
-													$acct = '"' . $item->product->name . '"';
-												}
-											}
-											$did = '<span class="text-success">fulfilled</span> item ' . $acct;
-										}
-										if (in_array('datetimeapproved', $fields))
-										{
-											$acct = '#' . $action->historable_id;
-											foreach ($order->accounts as $account)
-											{
-												if ($account->id == $action->historable_id)
-												{
-													$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
-												}
-											}
-											$did = '<span class="text-success">approved</span> account ' . $acct;
-										}
-										if (in_array('approveruserid', $fields))
-										{
-											$acct = '#' . $action->historable_id;
-											foreach ($order->accounts as $account)
-											{
-												if ($account->id == $action->historable_id)
-												{
-													$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
-													$acct .= ' to ' . ($account->approver ? $account->approver->name : trans('global.none'));
-												}
-											}
-											$did = '<span class="text-info">set</span> approver for account ' . $acct;
-										}
-										if (in_array('datetimedenied', $fields))
-										{
-											$did = '<span class="text-danger">denied</span> account #' . $action->historable_id;
-										}
-									}
 									?>
 									<li class="list-group-item" id="action_{{ $action->id }}">
-										<!-- <span class="entry-log-action">{{ trans('history::history.action ' . $action->action, ['user' => $actor, 'entity' => $entity]) }}</span><br /> -->
 										<div class="row">
 											<div class="col-md-8">
 											{!! $actor . ' ' . $did !!}
