@@ -1,6 +1,8 @@
 <?php
 namespace App\Listeners\Auth\Pucas;
 
+use Illuminate\Auth\Events\Logout;
+
 class Pucas
 {
 	/**
@@ -37,7 +39,7 @@ class Pucas
 	/**
 	 * Handle user logout events.
 	 */
-	public function handleUserLogout($event)
+	public function handleUserLogout(Logout $event)
 	{
 		// ...
 	}
