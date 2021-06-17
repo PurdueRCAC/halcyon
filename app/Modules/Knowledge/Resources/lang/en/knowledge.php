@@ -67,4 +67,5 @@ return [
 	'params' => [
 		'collect feedback' => 'Collect feedback',
 	],
+	'tags' => 'Tags',
 ];

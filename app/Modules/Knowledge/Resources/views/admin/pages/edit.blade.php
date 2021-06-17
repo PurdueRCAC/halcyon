@@ -252,7 +252,7 @@ app('pathway')
 										<input type="text" name="params[variables][{{ $i }}][value]" id="params-variables-{{ $i }}-value" value="{{ $val }}" class="form-control" />
 									</td>
 									<td>
-										<a href="#params-variables-{{ $i }}" class="btn btn-danger delete-row"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+										<a href="#params-variables-{{ $i }}" class="btn text-danger delete-row"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
 									</td>
 								</tr>
 								<?php
@@ -272,7 +272,7 @@ app('pathway')
 										<input type="text" name="params[variables][{{ $i }}][value]" id="params-variables-{{ $i }}-value" value="" class="form-control" />
 									</td>
 									<td>
-										<a href="#params-variables-{{ $i }}" class="btn btn-danger delete-row disabled"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+										<a href="#params-variables-{{ $i }}" class="btn text-danger delete-row disabled"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
 									</td>
 								</tr>
 							</tbody>
@@ -280,6 +280,51 @@ app('pathway')
 								<tr>
 									<td colspan="3" class="text-right">
 										<button data-type="script" data-container="param-variables" class="add-row btn btn-success param-variable-new"><span class="glyph icon-plus">{{ trans('global.add') }}</span></button>
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+					</fieldset>
+				@sliders('panel', trans('knowledge::knowledge.tags'), 'params-tags')
+					<fieldset class="panelform" id="param-tags">
+						<table>
+							<thead>
+								<tr>
+									<th scope="col">{{ trans('knowledge::knowledge.key') }}</th>
+									<th scope="col">{{ trans('knowledge::knowledge.value') }}</th>
+								</tr>
+							</thead>
+							<tbody>
+							<?php
+							$i = 0;
+							foreach ($page->params->get('tags', []) as $val)
+							{
+								?>
+								<tr id="params-tags-{{ $i }}">
+									<td>
+										<input type="text" name="params[tags][{{ $i }}]" id="params-tags-{{ $i }}-value" value="{{ $val }}" class="form-control" />
+									</td>
+									<td>
+										<a href="#params-tags-{{ $i }}" class="btn text-danger delete-row"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+									</td>
+								</tr>
+								<?php
+								$i++;
+							}
+							?>
+								<tr id="params-tags-{{ $i }}" class="d-none">
+									<td>
+										<input type="text" name="params[tags][{{ $i }}]" id="params-tags-{{ $i }}-value" value="" class="form-control" />
+									</td>
+									<td>
+										<a href="#params-tags-{{ $i }}" class="btn text-danger delete-row disabled"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+									</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan="3" class="text-right">
+										<button data-type="script" data-container="param-tags" class="add-row btn btn-success param-tag-new"><span class="glyph icon-plus">{{ trans('global.add') }}</span></button>
 									</td>
 								</tr>
 							</tfoot>

@@ -336,6 +336,10 @@ class PagesController extends Controller
 					}
 					$val = $vars;
 				}
+				if ($key == 'tags')
+				{
+					$val = array_filter($val);
+				}
 				$page->params->set($key, $val);
 			}
 		}
