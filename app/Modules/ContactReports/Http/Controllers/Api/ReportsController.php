@@ -292,7 +292,7 @@ class ReportsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$now = new Carbon();
+		$now = Carbon::now();
 
 		$request->validate([
 			'report' => 'required|string',
@@ -301,6 +301,7 @@ class ReportsController extends Controller
 			'groupid' => 'nullable|integer',
 			'datetimegroupid' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
 			'notice' => 'nullable|integer',
+			'contactreporttypeid' => 'nullable|integer',
 		]);
 
 		$row = new Report();
@@ -311,15 +312,14 @@ class ReportsController extends Controller
 		{
 			$row->userid = auth()->user()->id;
 		}
+		if ($request->has('contactreporttypeid') && $request->input('contactreporttypeid') >= 0)
+		{
+			$row->contactreporttypeid = $request->input('contactreporttypeid');
+		}
 		$row->groupid = $request->input('groupid', 0);
 		$row->notice = $request->input('notice', 23);
 
-		/*if (!preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $row->datetimecontact))
-		{
-			return response()->json(['message' => __METHOD__ . '(): Invalid value for field `contactdate`'], 409);
-		}
-
-		if ($row->datetimecontact > $now)
+		/*if ($row->datetimecontact > $now)
 		{
 			return response()->json(['message' => __METHOD__ . '(): `contactdate` cannot be in the future'], 409);
 		}*/
@@ -336,8 +336,6 @@ class ReportsController extends Controller
 
 		$row->datetimecreated = $now->toDateTimeString();
 
-		//$row->stemmedreport = $row->generateStemmedReport();
-
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
@@ -345,7 +343,7 @@ class ReportsController extends Controller
 
 		$errors = array();
 
-		if ($users = $request->input('people'))
+		if ($users = $request->input('users'))
 		{
 			foreach ((array)$users as $user)
 			{
@@ -471,44 +469,43 @@ class ReportsController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$now = new Carbon();
+		$now = Carbon::now();
 
 		$request->validate([
 			'report' => 'nullable|string',
 			'datetimecontact' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
 			'groupid' => 'nullable|integer',
 			'notice' => 'nullable|integer',
+			'contactreporttypeid' => 'nullable|integer',
 			//'datetimegroupid' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
 		]);
 
 		$row = Report::findOrFail($id);
-		//$row->fill($request->all());
 		$row->datetimecontact = $request->input('datetimecontact', $row->datetimecontact);
 		$row->report = $request->input('report', $row->report);
 		$row->userid = $request->input('userid', $row->userid);
 		$row->groupid = $request->input('groupid', $row->groupid);
 		$row->notice = $request->input('notice', $row->notice);
-
-		/*if ($row->datetimecontact != $row->getOriginal('datetimecontact'))
+		if ($request->has('contactreporttypeid') && $request->input('contactreporttypeid') >= 0)
 		{
-			if (!preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $row->datetimecontact))
-			{
-				return response()->json(['message' => 'Invalid value for field `datetimecontact`'], 415);
-			}
+			$row->contactreporttypeid = $request->input('contactreporttypeid');
+		}
 
+		if ($request->has('datetimecontact'))
+		{
 			if ($row->datetimecontact > $now)
 			{
 				return response()->json(['message' => '`datetimecontact` cannot be in the future'], 415);
 			}
 		}
 
-		if ($row->report != $row->getOriginal('report'))
+		if ($request->has('report'))
 		{
 			if (!$row->report)
 			{
 				return response()->json(['message' =>  '`report` cannot be empty'], 415);
 			}
-		}*/
+		}
 
 		if ($row->groupid != $row->getOriginal('groupid'))
 		{
@@ -519,8 +516,6 @@ class ReportsController extends Controller
 
 			$row->datetimegroupid = $now->toDateTimeString();
 		}
-
-		//$row->stemmedreport = $row->generateStemmedReport();
 
 		if (!$row->save())
 		{

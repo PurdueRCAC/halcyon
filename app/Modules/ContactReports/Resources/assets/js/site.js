@@ -807,6 +807,10 @@ function CRMAddEntry() {
 			post['resources'] = resources;
 		}
 
+		if (people.length > 0) {
+			post['users'] = people;
+		}
+
 		post = JSON.stringify(post);
 		document.getElementById("INPUT_add").disabled = true;
 
