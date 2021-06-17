@@ -3599,7 +3599,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		var i = 0;
 
 		$("#newstype > option").each(function() {
-			if (this.value == original['newstype']) {
+			if (this.value == original['newstypeid']) {
 				$('#newstype > option:selected', 'select[name="options"]').removeAttr('selected');
 				$(this).attr('selected', true);
 			}
@@ -3620,10 +3620,15 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.getElementById('location').value = original.location;
 		document.getElementById('url').value = original.url;
 		document.getElementById('NotesText').innerHTML = original.news;
+		var results = [];
 		for (i = 0; i < original.resources.length; i++)
 		{
-			NEWSAddResource(original.resources[i]);
+			//NEWSAddResource(original.resources[i]);
+			results[i] = original.resources[i]['resourceid'];
 		}
+		$('#newsresource')
+			.val(results)
+			.trigger('change');
 		for (i = 0; i < original.associations.length; i++)
 		{
 			NEWSAddAssociation(original.associations[i]);
