@@ -322,11 +322,10 @@ $(document).ready(function() {
 					</th>
 					<th scope="col">
 					</th>
-					@if (auth()->user() && auth()->user()->can('manage orders'))
-						<th scope="col">
-						</th>
-						<th scope="col">
-						</th>
+					@if (auth()->user() && (auth()->user()->can('edit orders') || auth()->user()->can('delete orders')))
+						<th scope="col" class="text-right"<?php if (auth()->user()->can('edit orders') && auth()->user()->can('delete orders')) { echo ' colspan="2"'; } ?>>
+							Options
+						</td>
 					@endif
 				</tr>
 			</thead>
@@ -377,6 +376,7 @@ $(document).ready(function() {
 						<input type="hidden" id="{{ $product->id }}_category" value="{{ $product->ordercategoryid }}" />
 					</td>
 					<td class="orderproductitem text-center">
+						<label class="sr-only" for="{{ $product->id }}_quantity">Quantity</label>
 						<input type="number" name="quantity[{{ $product->id }}][]" id="{{ $product->id }}_quantity" data-id="{{ $product->id }}" size="4" min="0" class="form-control quantity-input" value="{{ $found ? $found->qty : 0 }}" />
 					</td>
 					<td class="orderproductitem text-right text-nowrap">
@@ -397,7 +397,7 @@ $(document).ready(function() {
 					@if (auth()->user() && (auth()->user()->can('edit orders') || auth()->user()->can('delete orders')))
 						@if (auth()->user()->can('edit orders'))
 					<td class="text-nowrap">
-						<a href="{{ route('site.orders.products.edit', ['id' => $product->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }}">
+						<a href="{{ route('site.orders.products.edit', ['id' => $product->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }} product #{{ $product->id }}">
 							<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>
 						</a>
 					</td>
