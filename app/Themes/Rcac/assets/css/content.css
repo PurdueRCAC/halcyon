@@ -82,7 +82,7 @@ label .required {
 .none,
 .never,
 .unknown {
-	color: #ccc;
+	color: #666F75 !important;
 }
 
  /* tabs */
