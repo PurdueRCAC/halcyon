@@ -107,6 +107,7 @@ if (count($l))
 					case 'UsersController':
 					case 'queuemember':
 					case 'groupqueuemember':
+						$payload = $log->jsonPayload;
 						if (isset($payload->queueid))
 						{
 							$queue = App\Modules\Queues\Models\Queue::find($payload->queueid);
