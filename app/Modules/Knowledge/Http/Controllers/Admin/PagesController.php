@@ -280,7 +280,7 @@ class PagesController extends Controller
 	{
 		$rules = [
 			'page.title'    => 'required|string|max:255',
-			'page.content'  => 'required|string',
+			'page.content'  => 'nullable|string',
 			'fields.access' => 'nullable|integer|min:1',
 			'fields.state'  => 'nullable|integer',
 		];
