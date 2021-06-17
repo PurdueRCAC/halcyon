@@ -7,6 +7,10 @@
 
 		<p>Most of the software installed on the clusters are either free or site-licensed for Purdue. However, some licenses have further restrictions such as your academic department or school. The software with additional restrictions for which you are eligible to access are listed below.</p>
 
+		@if (!$user->department)
+			<p class="alert alert-warning">You have no account on {{ config('app.name') }} resources. Please <a href="{{ route('page', ['uri' => 'account/request']) }}">request an account</a> first.</p>
+		@endif
+
 		<table class="table simpleTable">
 			<caption>
 				Eligible Software
@@ -42,28 +46,18 @@
 					endforeach;
 				endforeach;
 
-				if (!$user->department):
-					?>
-					<tr>
-						<td colspan="3">
-							<span class="alert alert-warning">You have no account on ITaP Research Computing resources. Please <a href="{{ route('page', ['uri' => 'account/request']) }}">request an account</a> first.</span>
-						</td>
-					</tr>
-					<?php
-				else:
-					foreach ($software as $s):
-						if (!$s['access'] && in_array($user->department, $s['dept_lower'])):
-							?>
-							<tr>
-								<td>{{ $s['name'] }}</td>
-								<td>{{ $s['req'] }}</td>
-								<td><button class="btn btn-sm btn-secondary btn-software-request" data-group="{{ $s['groupid'] }}" data-user="{{ $user->id }}">Request</button></td>
-							</tr>
-							<?php
-							$count++;
-						endif;
-					endforeach;
-				endif;
+				foreach ($software as $s):
+					if (!$s['access'] && in_array($user->department, $s['dept_lower'])):
+						?>
+						<tr>
+							<td>{{ $s['name'] }}</td>
+							<td>{{ $s['req'] }}</td>
+							<td><button class="btn btn-sm btn-secondary btn-software-request" data-group="{{ $s['groupid'] }}" data-user="{{ $user->id }}">Request</button></td>
+						</tr>
+						<?php
+						$count++;
+					endif;
+				endforeach;
 
 				if ($count == 0):
 					?>
@@ -94,5 +88,5 @@
 			</ul>
 		</div>
 
-		<p>To request software not already installed on the clusters, see the <a href="{{ route('page', ['uri' => 'policies/software']) }}">software installation policy</a>. If you do not see the software you expect above, or encounter any issues, please contact us at <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a>.</p>
+		<p>To request software not already installed on the clusters, see the <a href="{{ route('page', ['uri' => 'policies/software']) }}">software installation policy</a>. If you do not see the software you expect above, or encounter any issues, please contact <a href="{{ route('page', ['uri' => 'help']) }}">support</a>.</p>
 	</div>
