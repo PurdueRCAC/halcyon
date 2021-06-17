@@ -57,6 +57,16 @@ class DirectoryResource extends JsonResource
 			$data['id'] = '/ws/storagedir/' . $this->id;
 			$data['quota'] = $this->bytes;
 			$data['group']['id'] = '/ws/group/' . $this->id;
+			$data['parent'] = '/ws/storagedir/' . $this->parentstoragedirid;
+			$data['created'] = $this->datetimecreated->toDateTimeString();
+			if ($this->isTrashed())
+			{
+				$data['removed'] = $this->datetimeremoved->toDateTimeString();
+			}
+			else
+			{
+				$data['removed'] = '0000-00-00 00:00:00';
+			}
 
 			$data['resource'] = array(
 				'id' => '/ws/resource/' . $this->resourceid,
