@@ -2,6 +2,9 @@
 
 @php
 $active = $sections->firstWhere('active', '=', true);
+$paths = app('pathway')->names();
+$title = end($paths);
+$title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '</span>'], ['(', ')'], $active['name']) : trans('users::users.my accounts'));
 @endphp
 
 @push('scripts')
@@ -11,7 +14,7 @@ $active = $sections->firstWhere('active', '=', true);
 @endif
 @endpush
 
-@section('title'){{ ($active ? str_replace(['<span class="badge pull-right">', '</span>'], ['(', ')'], $active['name']) : trans('users::users.my accounts')) }}@stop
+@section('title'){{ $title }}@stop
 
 @section('content')
 
