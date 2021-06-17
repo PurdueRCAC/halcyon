@@ -321,6 +321,7 @@ $(document).ready(function() {
 						{{ trans('orders::orders.quantity') }}
 					</th>
 					<th scope="col">
+						{{ trans('orders::orders.purchase') }}
 					</th>
 					@if (auth()->user() && (auth()->user()->can('edit orders') || auth()->user()->can('delete orders')))
 						<th scope="col" class="text-right"<?php if (auth()->user()->can('edit orders') && auth()->user()->can('delete orders')) { echo ' colspan="2"'; } ?>>
@@ -397,8 +398,8 @@ $(document).ready(function() {
 					@if (auth()->user() && (auth()->user()->can('edit orders') || auth()->user()->can('delete orders')))
 						@if (auth()->user()->can('edit orders'))
 					<td class="text-nowrap">
-						<a href="{{ route('site.orders.products.edit', ['id' => $product->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }} product #{{ $product->id }}">
-							<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>
+						<a href="{{ route('site.orders.products.edit', ['id' => $product->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }} '{{ $product->name }}' product">
+							<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }} '{{ $product->name }}' product</span>
 						</a>
 					</td>
 						@endif

@@ -115,4 +115,5 @@ return [
 	'type' => 'Type',
 	'department' => 'Department',
 	'for' => 'For',
+	'purchase' => 'Purchase',
 ];
