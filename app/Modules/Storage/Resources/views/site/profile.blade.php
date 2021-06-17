@@ -324,7 +324,7 @@
 										echo App\Halcyon\Utility\Number::formatBytes($usage->space); ?> / <?php echo App\Halcyon\Utility\Number::formatBytes($usage->quota);
 										?>
 										<div class="progress" style="height: 3px">
-											<div class="progress-bar <?php echo $cls; ?>" role="progressbar" style="width: <?php echo $val; ?>%;" aria-valuenow="<?php echo $val; ?>" aria-valuemin="0" aria-valuemax="100"><?php echo $val; ?>%</div>
+											<div class="progress-bar <?php echo $cls; ?>" role="progressbar" style="width: <?php echo $val; ?>%;" aria-valuenow="<?php echo $val; ?>" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo $val; ?>% space used"><?php echo $val; ?>%</div>
 										</div>
 									<?php } ?>
 								</td>
@@ -342,7 +342,7 @@
 										echo number_format($usage->files); ?> / <?php echo number_format($usage->filequota);
 										?>
 										<div class="progress" style="height: 3px">
-											<div class="progress-bar <?php echo $cls; ?>" role="progressbar" style="width: <?php echo $val; ?>%;" aria-valuenow="<?php echo $val; ?>" aria-valuemin="0" aria-valuemax="100"><?php echo $val; ?>%</div>
+											<div class="progress-bar <?php echo $cls; ?>" role="progressbar" style="width: <?php echo $val; ?>%;" aria-valuenow="<?php echo $val; ?>" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo $val; ?>% files allowed used"><?php echo $val; ?>%</div>
 										</div>
 									<?php } ?>
 								</td>
