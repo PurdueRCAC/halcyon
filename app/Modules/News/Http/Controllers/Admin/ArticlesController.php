@@ -424,7 +424,7 @@ class ArticlesController extends Controller
 	}
 
 	/**
-	 * Remove the specified entry
+	 * Copy specified items
 	 *
 	 * @param  Request  $request
 	 * @return Response
