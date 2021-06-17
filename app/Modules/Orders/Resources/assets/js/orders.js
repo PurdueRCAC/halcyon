@@ -1810,7 +1810,7 @@ function EditAccounts() {
 			 && spans[x].innerHTML != "null"
 			 && justificationinputs[x].value != "null") {
 				var id = accountstatus[x].getAttribute('data-api');
-				var post = {'justification': justificationinputs[x].value}; //JSON.stringify({'justification': justificationinputs[x].value});
+				var post = {'budgetjustification': justificationinputs[x].value}; //JSON.stringify({'justification': justificationinputs[x].value});
 				post = JSON.stringify(post);
 				pendingupdates++;
 				num_changes++;
