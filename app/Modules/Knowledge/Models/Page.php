@@ -151,7 +151,7 @@ class Page extends Model
 	{
 		if (!($this->varsRegistry instanceof Registry))
 		{
-			$this->varsRegistry = new Registry($this->params->get('variables', []));
+			$this->varsRegistry = new Registry($this->getVars());
 		}
 
 		return $this->varsRegistry;
@@ -209,10 +209,11 @@ class Page extends Model
 		$vars['user']['staff'] = 0;
 		if (auth()->user())
 		{
+			$vars['myusername'] = auth()->user()->username;
 			$vars['user']['username'] = auth()->user()->username;
 			$vars['user']['staff'] = (auth()->user()->can('manage knowledge') ? 1 : 0);
 		}
-		$vars['resource'] = $this->variables->toArray(); //(array)$this->params->get('variables', []);
+		$vars['resource'] = (array)$this->params->get('variables', []); //$this->variables->toArray(); //
 		foreach ((array)$this->params->get('tags', []) as $tag)
 		{
 			if (in_array($tag, ['communitycluster', 'general', 'paidbutnonpbs', 'selfhome']))
@@ -232,7 +233,7 @@ class Page extends Model
 	 */
 	protected function replaceVariables($matches)
 	{
-		$vars = $this->getVars();
+		$vars = $this->variables->toArray();
 
 		if (isset($vars[$matches[1]][$matches[2]]))
 		{
@@ -315,7 +316,7 @@ class Page extends Model
 	 */
 	protected function replaceIfStatement($matches)
 	{
-		$vars = $this->getVars();
+		$vars = $this->variables->toArray(); //getVars();
 
 		$clauses = array();
 
