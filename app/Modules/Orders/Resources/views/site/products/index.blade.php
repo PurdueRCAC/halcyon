@@ -405,8 +405,8 @@ $(document).ready(function() {
 						@endif
 						@if (auth()->user()->can('delete orders'))
 					<td class="text-nowrap">
-						<a href="{{ route('site.orders.products.delete', ['id' => $product->id]) }}" class="btn btn-sm btn-delete text-danger tip" title="{{ trans('global.button.delete') }}" data-confirm="{{ trans('global.confirm delete') }}">
-							<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.delete') }}</span>
+						<a href="{{ route('site.orders.products.delete', ['id' => $product->id]) }}" class="btn btn-sm btn-delete text-danger tip" title="{{ trans('global.button.delete') }} '{{ $product->name }}' product" data-confirm="{{ trans('global.confirm delete') }}">
+							<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.delete') }} '{{ $product->name }}' product</span>
 						</a>
 					</td>
 						@endif
