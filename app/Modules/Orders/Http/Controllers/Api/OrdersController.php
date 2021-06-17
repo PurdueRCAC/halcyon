@@ -700,13 +700,13 @@ class OrdersController extends Controller
 			// [!] Hackish workaround for resetting date fields
 			//     that don't have a `null` default value.
 			//     TODO: Change the table schema!
-			$db = app('db');
+			/*$db = app('db');
 			$db->table($row->getTable())
 				->update([
 					'datetimeremoved' => '0000-00-00 00:00:00'
-				]);
+				]);*/
 
-			//$row->datetimeremoved = '0000-00-00 00:00:00';
+			$row->forceRestore(['datetimeremoved']);
 		}
 
 		// Check if we need to actually do anything
