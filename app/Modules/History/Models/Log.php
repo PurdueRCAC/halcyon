@@ -95,4 +95,37 @@ class Log extends Model
 	{
 		$this->attributes['transportmethod'] = strtoupper($value);
 	}
+
+	/**
+	 * Get the payload as JSON
+	 *
+	 * @return  object
+	 */
+	public function getJsonPayloadAttribute()
+	{
+		$payload = $this->payload;
+
+		if (substr($payload, 0, 1) != '{'
+		 && substr($payload, 0, 1) != '[')
+		{
+			$payload = new \stdClass;
+			$payload->user_agent = $this->payload;
+		}
+		else
+		{
+			$payload = json_decode($payload);
+
+			if (json_last_error() !== JSON_ERROR_NONE)
+			{
+				$payload = null;
+			}
+		}
+
+		if (!$payload)
+		{
+			$payload = new \stdClass;
+		}
+
+		return $payload;
+	}
 }
