@@ -93,6 +93,28 @@ if (count($l))
 					break;
 
 					case 'MembersController':
+						if ($log->classmethod == 'update')
+						{
+							$log->action = 'Membership status changed';
+
+							$payload = $log->jsonPayload;
+							if (isset($payload->membertype))
+							{
+								if ($payload->membertype == 1)
+								{
+									$log->action = 'Status set to member';
+								}
+								if ($payload->membertype == 2)
+								{
+									$log->action = 'Promoted to manager';
+								}
+								if ($payload->membertype == 2)
+								{
+									$log->action = 'Promoted to group usage viewer';
+								}
+							}
+						}
+
 						if ($log->classmethod == 'create')
 						{
 							$log->action = 'Added to group';
