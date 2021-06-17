@@ -2101,9 +2101,7 @@ img.align-right {
 .storage .progress {
 	margin-bottom: 0;
 }
-.storage .progress-bar {
-	color: transparent;
-}
+
 .updater {
 	color: #28a745;
 }
