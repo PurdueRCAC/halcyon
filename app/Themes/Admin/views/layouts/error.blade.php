@@ -93,7 +93,7 @@
 							<a class="icon-sun" href="{{ request()->url() }}?theme=dark">{{ trans('theme::admin.toggle theme') }}</a>
 						</li> -->
 						<li data-title="{{ trans('theme::admin.logout') }}">
-							<a class="icon-power logout" href="{{ route('admin.logout') }}">{{ trans('theme::admin.logout') }}</a>
+							<a class="icon-power logout" href="{{ route('logout') }}">{{ trans('theme::admin.logout') }}</a>
 						</li>
 					@else
 						@if (app('request')->input('hidemainmenu'))
@@ -102,7 +102,7 @@
 							</li>
 						@else
 							<li data-title="{{ trans('theme::admin.login') }}">
-								<a class="icon-power login" href="{{ route('admin.login') }}">{{ trans('theme::admin.login') }}</a>
+								<a class="icon-power login" href="{{ route('login') }}">{{ trans('theme::admin.login') }}</a>
 							</li>
 						@endif
 					@endif
