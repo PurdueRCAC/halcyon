@@ -215,7 +215,7 @@ class Page extends Model
 		$vars['resource'] = $this->variables->toArray(); //(array)$this->params->get('variables', []);
 		foreach ((array)$this->params->get('tags', []) as $tag)
 		{
-			if (in_array($tag, ['communitycluster', 'general', 'paidbutnonpbs']))
+			if (in_array($tag, ['communitycluster', 'general', 'paidbutnonpbs', 'selfhome']))
 			{
 				$vars['access'] = ['type' => $tag];
 			}
