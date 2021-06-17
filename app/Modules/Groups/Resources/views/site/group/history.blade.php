@@ -5,14 +5,49 @@
 // Get manager adds
 $l = App\Modules\History\Models\Log::query()
 	->where('groupid', '=', $group->id)
-	//->where('app', '=', 'ws')
-	->whereIn('classname', ['groupowner', 'groupviewer', 'queuemember', 'groupqueuemember', 'unixgroupmember', 'unixgroup', 'userrequest'])
+	->whereIn('classname', ['groupowner', 'groupviewer', 'queuemember', 'groupqueuemember', 'unixgroupmember', 'unixgroup', 'userrequest', 'UsersController', 'UserRequestsController', 'UnixGroupsController', 'UnixGroupMembersController', 'MembersController', 'OrdersController'])
 	->where('classmethod', '!=', 'read')
 	//->where('datetime', '>', Carbon\Carbon::now()->modify('-1 month')->toDateTimeString())
 	->orderBy('datetime', 'desc')
 	->limit(20)
 	->paginate();
+/*
+$history = $group->history()->orderBy('created_at', 'desc')->get();
+$ids = array();
+foreach ($group->members as $member)
+{
+	$ids[] = 'groupusers' . $member->id;
+	$history = $history->merge($member->history()->orderBy('created_at', 'desc')->get());
+}
 
+foreach ($group->unixgroups as $unixgroup)
+{
+	$ids[] = 'unixgroups' . $unixgroup->id;
+	$history = $history->merge($unixgroup->history()->orderBy('created_at', 'desc')->get());
+
+	foreach ($unixgroup->members as $u)
+	{
+		$ids[] = 'unixgroupusers' . $u->id;
+		$history = $history->merge($u->history()->orderBy('created_at', 'desc')->get());
+	}
+}
+
+foreach ($group->queues as $queue)
+{
+	$ids[] = 'queues' . $queue->id;
+	$history = $history->merge($queue->history()->orderBy('created_at', 'desc')->get());
+
+	foreach ($queue->users as $u)
+	{
+		$ids[] = 'queueusers' . $u->id;
+		$history = $history->merge($u->history()->orderBy('created_at', 'desc')->get());
+	}
+}
+$sorted = $history->sortByDesc('id');
+echo '<pre>';
+print_r($ids);
+echo '</pre>';
+*/
 if (count($l))
 {
 	?>
@@ -57,6 +92,19 @@ if (count($l))
 						}
 					break;
 
+					case 'MembersController':
+						if ($log->classmethod == 'create')
+						{
+							$log->action = 'Added to group';
+						}
+
+						if ($log->classmethod == 'delete')
+						{
+							$log->action = 'Removed from group';
+						}
+					break;
+
+					case 'UsersController':
 					case 'queuemember':
 					case 'groupqueuemember':
 						$queue = App\Modules\Queues\Models\Queue::find($log->targetobjectid);
@@ -71,6 +119,7 @@ if (count($l))
 						}
 					break;
 
+					case 'UnixGroupMembersController':
 					case 'unixgroupmember':
 						$g = App\Modules\Groups\Models\UnixGroup::find($log->targetobjectid);
 						$groupname = '#' . $log->targetobjectid;
@@ -90,6 +139,7 @@ if (count($l))
 						}
 					break;
 
+					case 'UnixGroupsController':
 					case 'unixgroup':
 						$g = App\Modules\Groups\Models\UnixGroup::find($log->targetobjectid);
 						$groupname = '#' . $log->targetobjectid;
@@ -109,6 +159,7 @@ if (count($l))
 						}
 					break;
 
+					case 'UserRequestsController':
 					case 'userrequest':
 						$queue = App\Modules\Queues\Models\Queue::find($log->targetobjectid);
 						$queuename = '#' . $log->targetobjectid;
@@ -133,6 +184,7 @@ if (count($l))
 						}
 					break;
 
+					case 'OrdersController':
 					case 'order':
 						if ($log->classmethod == 'create')
 						{
