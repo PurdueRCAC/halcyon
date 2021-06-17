@@ -6,7 +6,32 @@
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js') }}"></script>
+<script>
+$(document).ready(function() {
+	var cdialog = $("#copy-article").dialog({
+		autoOpen: false,
+		height: 250,
+		width: 500,
+		modal: true
+	});
+
+	$('#toolbar-copy>.btn-copy').removeClass('toolbar-submit').off('click').on('click', function(e){
+		e.preventDefault();
+
+		//$('#adminForm').addClass('frozen');
+
+		cdialog.dialog("open");
+	});
+	$("#copy-article").find('.btn').on('click', function(e){
+		e.preventDefault();
+		console.log('foo');
+		console.log($(this).closest('form'));
+		console.log($('#adminForm').find('input:checked'));
+		$(this).closest('form').append($('#adminForm').find('input:checked')).submit();
+	})
+});
+</script>
+<script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js?v=' . filemtime(public_path() . '/modules/core/vendor/handlebars/handlebars.min-v4.7.6.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/news/js/admin.js?v=' . filemtime(public_path() . '/modules/news/js/admin.js')) }}"></script>
@@ -34,6 +59,8 @@ else
 	@endif
 
 	@if (auth()->user()->can('create news'))
+		{!! Toolbar::spacer() !!}
+		{!! Toolbar::custom(route('admin.news.copy'), 'copy', 'copy', trans('news::news.copy'), true) !!}
 		{!! Toolbar::addNew(route('admin.news.create')) !!}
 	@endif
 
@@ -307,8 +334,59 @@ else
 	</div>
 
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
+
+<dialog id="copy-article" class="dialog" title="{{ trans('news::news.copy article') }}">
+	<form method="post" action="{{ route('admin.news.copy') }}">
+		<h2 class="modal-title sr-only">{{ trans('news::news.copy article') }}</h2>
+
+		<div class="px-3">
+			<?php /*<div class="row">
+				<div class="col-md-6">*/ ?>
+			<div class="form-group">
+				<label for="copy-start">{{ trans('news::news.copy to') }}:</label>
+				<span class="input-group input-datetime">
+					<input type="text" class="form-control date" name="start" id="copy-start" value="{{ Carbon\Carbon::now()->modify('+1 day')->format('Y-m-d') }}" />
+					<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+				</span>
+			</div>
+
+			<?php /*<div class="form-group">
+				<label for="copy-days">{{ trans('news::news.days to copy') }}:</label>
+				<input type="number" class="form-control" name="days" id="copy-days" value="1" />
+			</div>
+
+				</div>
+				<div class="col-md-6">å
+					<div class="form-group">
+						<label for="copy-days">{{ trans('news::news.times to copy') }}:</label>
+						<select class="form-control datetime" name="times" id="copy-times" multiple size="7">
+							<?php
+							$now   = Carbon\Carbon::now();
+							$start = '07:00:00';
+							$end   = '19:00:00';
+							$date = Carbon\Carbon::parse($now->format('Y-m-d') . ' ' . $start);
+							$date_end = Carbon\Carbon::parse($now->format('Y-m-d') . ' ' . $end);
+
+							for ($date; $date <= $date_end; $date->modify('+30 Minutes'))
+							{
+								?>
+								<option value="<?php echo $date->format('h:i a'); ?>"><?php echo $date->format('h:i a'); ?></option>
+								<?php
+							}
+							?>
+						</select>
+					</div>
+				</div>
+			</div>*/ ?>
+
+			<p class="text-center">
+				<input type="submit" class="btn btn-primary" value="{{ trans('news::news.copy') }}" />
+			</p>
+		</div>
+
+		@csrf
+	</form>
+</dialog>
 
 @stop

@@ -76,4 +76,11 @@ return [
 		'invalid headline' => 'Please provide a headline.',
 		'invalid body' => 'Please provide some content',
 	],
+	// Copy
+	'copy' => 'Copy',
+	'copy to' => 'Copy to',
+	'start copying' => 'Start copying on',
+	'days to copy' => 'Consecutive days to copy to',
+	'copy article' => 'Copy Article',
+	'times to copy' => 'Times to copy to',
 ];

@@ -49,6 +49,11 @@ $router->group(['prefix' => 'news', 'middleware' => 'can:manage news'], function
 		'uses' => 'ArticlesController@delete',
 		'middleware' => 'can:delete news',
 	]);
+	$router->post('/copy', [
+		'as'   => 'admin.news.copy',
+		'uses' => 'ArticlesController@copy',
+		'middleware' => 'can:create news',
+	]);
 
 	// Types
 	$router->group(['prefix' => 'types'], function (Router $router)

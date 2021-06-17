@@ -38,7 +38,7 @@ class ArticlesController extends Controller
 			'access'    => null,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
-			'order'     => 'datetimecreated',
+			'order'     => 'id',
 			'order_dir' => 'desc',
 			'type'      => null,
 		);
@@ -55,9 +55,9 @@ class ArticlesController extends Controller
 			$filters[$key] = $request->state('news.' . $action . '.filter_' . $key, $key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'headline', 'datetimecreated']))
+		if (!in_array($filters['order'], ['id', 'headline', 'datetimecreated', 'state', 'newstypeid']))
 		{
-			$filters['order'] = 'datetimecreated';
+			$filters['order'] = 'id';
 		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
@@ -418,6 +418,67 @@ class ArticlesController extends Controller
 		if ($success)
 		{
 			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
+		}
+
+		return $this->cancel();
+	}
+
+	/**
+	 * Remove the specified entry
+	 *
+	 * @param  Request  $request
+	 * @return Response
+	 */
+	public function copy(Request $request)
+	{
+		// Incoming
+		$ids = $request->input('id', array());
+		$ids = (!is_array($ids) ? array($ids) : $ids);
+		$s = $request->input('start');
+		//$days = $request->input('days');
+
+		$success = 0;
+
+		$now = Carbon::now();
+
+		foreach ($ids as $id)
+		{
+			// Delete the entry
+			// Note: This is recursive and will also remove all descendents
+			$row = Article::findOrFail($id);
+
+			$start = Carbon::parse($s . ' ' . $row->datetimenews->format('H:i:s'));
+
+			$end = Carbon::parse($s . ' ' . $row->datetimenews->format('H:i:s'));
+			$end->modify('+ ' . ($row->datetimenewsend->timestamp - $row->datetimenews->timestamp) . ' seconds');
+
+			//for ($i = 1; $i <= $days; $i++)
+			//{
+				$payload = new Article;
+				$payload->datetimenews    = $start->format('Y-m-d h:i:s');
+				$payload->datetimenewsend = $end->format('Y-m-d h:i:s');
+				$payload->datetimecreated = $now->format('Y-m-d h:i:s');
+				$payload->userid          = $row->userid;
+				$payload->edituserid      = $row->edituserid;
+				$payload->published       = 1;
+				$payload->headline        = $row->headline;
+				$payload->body            = $row->body;
+				$payload->location        = $row->location;
+				$payload->template        = $row->template;
+				$payload->newstypeid      = $row->newstypeid;
+				$payload->url             = $row->url;
+				if ($payload->save())
+				{
+					$success++;
+				}
+				//echo $id . ': ' . $payload->datetimenews . ' to ' . $payload->datetimenewsend . '<br />';
+				//$start->modify('+1 day');
+			//}
+		}
+
+		if ($success)
+		{
+			$request->session()->flash('success', trans('news::news.item copied', ['count' => $success]));
 		}
 
 		return $this->cancel();
