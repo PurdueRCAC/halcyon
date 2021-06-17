@@ -236,7 +236,7 @@
 								<input name="user" id="newsuser" size="45" class="form-control" value="{{ implode(',', $usrs) }}" data-uri="{{ route('api.users.index') }}/%s" />
 							</div>
 						</div>
-						<div class="form-group row tab-add tab-edit" id="TR_published">
+						<div class="form-group row tab-search tab-add tab-edit" id="TR_published">
 							<label for="published" class="col-sm-2 col-form-label">
 								Published
 								<a href="#help2" class="help icn tip" title="Help">
@@ -244,7 +244,7 @@
 								</a>
 							</label>
 							<div class="col-sm-10">
-								<input type="checkbox" id="published" />
+								<input type="checkbox" id="published" name="published" value="1" checked="checked" />
 							</div>
 						</div>
 						<div class="form-group row tab-search" id="TR_template">

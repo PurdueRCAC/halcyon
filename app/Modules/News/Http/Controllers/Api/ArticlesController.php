@@ -175,6 +175,11 @@ class ArticlesController extends Controller
 			'id'        => null,
 		);
 
+		if (auth()->user() && auth()->user()->can('manage news'))
+		{
+			$filters['state'] = '*';
+		}
+
 		foreach ($filters as $key => $default)
 		{
 			$val = $request->input($key);

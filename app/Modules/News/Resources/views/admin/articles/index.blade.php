@@ -333,6 +333,7 @@ else
 	<div id="mailpreview" class="dialog" title="Mail Preview">
 	</div>
 
+	@csrf
 	<input type="hidden" name="boxchecked" value="0" />
 </form>
 
