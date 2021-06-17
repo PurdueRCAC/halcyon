@@ -50,6 +50,11 @@ class DirectoryResource extends JsonResource
 			);
 		}
 
+		if (!$this->isTrashed())
+		{
+			$data['datetimeremoved'] = null;
+		}
+
 		// [!] Legacy compatibility
 		if (request()->segment(1) == 'ws')
 		{
