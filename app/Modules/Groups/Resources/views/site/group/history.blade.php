@@ -107,7 +107,14 @@ if (count($l))
 					case 'UsersController':
 					case 'queuemember':
 					case 'groupqueuemember':
-						$queue = App\Modules\Queues\Models\Queue::find($log->targetobjectid);
+						if (isset($payload->queueid))
+						{
+							$queue = App\Modules\Queues\Models\Queue::find($payload->queueid);
+						}
+						else
+						{
+							$queue = App\Modules\Queues\Models\Queue::find($log->targetobjectid);
+						}
 						if ($log->classmethod == 'create')
 						{
 							$log->action = 'Added to queue ' . ($queue ? $queue->name : trans('global.unknown')) . ' (' . ($queue ? $queue->subresource->name : trans('global.unknown')) . ')';
@@ -141,11 +148,20 @@ if (count($l))
 
 					case 'UnixGroupsController':
 					case 'unixgroup':
-						$g = App\Modules\Groups\Models\UnixGroup::find($log->targetobjectid);
-						$groupname = '#' . $log->targetobjectid;
-						if ($g)
+						$payload = $log->jsonPayload;
+
+						if (isset($payload->longname))
 						{
-							$groupname = $g->longname;
+							$groupname = $payload->longname;
+						}
+						else
+						{
+							$g = App\Modules\Groups\Models\UnixGroup::find($log->targetobjectid);
+							$groupname = '#' . $log->targetobjectid;
+							if ($g)
+							{
+								$groupname = $g->longname;
+							}
 						}
 
 						if ($log->classmethod == 'create')
@@ -206,11 +222,25 @@ if (count($l))
 				<tr>
 					<td><?php echo $log->datetime->format('M j, Y'); ?></td>
 					<td><?php echo $log->datetime->format('g:ia'); ?></td>
-					<td><?php echo $log->user ? $log->user->name : trans('global.unknown'); ?></td>
-					<td><?php echo $log->targetuser ? $log->targetuser->name : trans('global.unknown'); ?></td>
+					<td>
+						@if ($log->userid > 0)
+							{{ $log->user ? $log->user->name : trans('global.unknown') }}
+						@else
+							-
+						@endif
+					</td>
+					<td>
+						@if ($log->targetuserid > 0)
+							{{ $log->targetuser ? $log->targetuser->name : trans('global.unknown') }}
+						@else
+							-
+						@endif
+					</td>
 					<td>
 						<?php if (substr($log->status, 0, 1) != '2') { ?>
-							<i class="fa fa-exclamation-circle" aria-hidden="true"></i> An error occurred while performing this action. Action may not have completed.
+							<span class="tip text-warning" title="An error occurred while performing this action. Action may not have completed.">
+								<i class="fa fa-exclamation-circle" aria-hidden="true"></i><span class="sr-only">An error occurred while performing this action. Action may not have completed.</span>
+							</span>
 						<?php } ?>
 						{{ $log->action }}
 					</td>
