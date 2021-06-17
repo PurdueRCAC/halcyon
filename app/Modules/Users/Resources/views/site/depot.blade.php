@@ -1,113 +1,113 @@
 <?php
 	$found = array();
 
-		foreach ($user->ownerofgroups as $ogroup)
-		{
-			$group = $ogroup->group;
+	foreach ($user->ownerofgroups as $ogroup)
+	{
+		$group = $ogroup->group;
 
-			if (!$group)
+		if (!$group)
+		{
+			continue;
+		}
+
+		$directories = $group->directories()
+			->withTrashed()
+			->whereIsActive()
+			->where('parentstoragedirid', '=', 0)
+			->where('resourceid', '=', 64)
+			->get();
+
+		foreach ($directories as $directory)
+		{
+			if (isset($found[$directory->id]))
 			{
 				continue;
 			}
 
-			$directories = $group->directories()
-				->withTrashed()
-				->whereISActive()
-				->where('parentstoragedirid', '=', 0)
-				->where('resourceid', '=', 64)
-				->get();
+			$found[$directory->id] = $directory;
+		}
+	}
 
-			foreach ($directories as $directory)
-			{
-				if (isset($found[$directory->id]))
-				{
-					continue;
-				}
+	foreach ($user->memberofgroups as $mgroup)
+	{
+		$group = $mgroup->group;
 
-				$found[$directory->id] = $directory;
-			}
+		if (!$group)
+		{
+			continue;
 		}
 
-		foreach ($user->memberofgroups as $mgroup)
-		{
-			$group = $mgroup->group;
+		$directories = $group->directories()
+			->withTrashed()
+			->whereIsActive()
+			->where('parentstoragedirid', '=', 0)
+			->where('resourceid', '=', 64)
+			->get();
 
-			if (!$group)
+		foreach ($directories as $directory)
+		{
+			if (isset($found[$directory->id]))
 			{
 				continue;
 			}
 
-			$directories = $group->directories()
-				->withTrashed()
-				->whereISActive()
-				->where('parentstoragedirid', '=', 0)
-				->where('resourceid', '=', 64)
-				->get();
+			$found[$directory->id] = $directory;
+		}
+	}
 
-			foreach ($directories as $directory)
-			{
-				if (isset($found[$directory->id]))
-				{
-					continue;
-				}
+	foreach ($user->memberofqueues as $queue)
+	{
+		$group = $queue->queue->group;
 
-				$found[$directory->id] = $directory;
-			}
+		if (!$group)
+		{
+			continue;
 		}
 
-		foreach ($user->memberofqueues as $queue)
-		{
-			$group = $queue->group;
+		$directories = $group->directories()
+			->withTrashed()
+			->whereIsActive()
+			->where('parentstoragedirid', '=', 0)
+			->where('resourceid', '=', 64)
+			->get();
 
-			if (!$group)
+		foreach ($directories as $directory)
+		{
+			if (isset($found[$directory->id]))
 			{
 				continue;
 			}
 
-			$directories = $group->directories()
-				->withTrashed()
-				->whereISActive()
-				->where('parentstoragedirid', '=', 0)
-				->where('resourceid', '=', 64)
-				->get();
+			$found[$directory->id] = $directory;
+		}
+	}
 
-			foreach ($directories as $directory)
-			{
-				if (isset($found[$directory->id]))
-				{
-					continue;
-				}
+	foreach ($user->memberofunixgroups as $unixgroup)
+	{
+		$group = $unixgroup->unixgroup->group;
 
-				$found[$directory->id] = $directory;
-			}
+		if (!$group)
+		{
+			continue;
 		}
 
-		foreach ($user->memberofunixgroups as $unixgroup)
-		{
-			$group = $unixgroup->group;
+		$directories = $group->directories()
+			->withTrashed()
+			->whereIsActive()
+			->where('parentstoragedirid', '=', 0)
+			->where('resourceid', '=', 64)
+			->get();
 
-			if (!$group)
+		foreach ($directories as $directory)
+		{
+			if (isset($found[$directory->id]))
 			{
 				continue;
 			}
 
-			$directories = $group->directories()
-				->withTrashed()
-				->whereISActive()
-				->where('parentstoragedirid', '=', 0)
-				->where('resourceid', '=', 64)
-				->get();
-
-			foreach ($directories as $directory)
-			{
-				if (isset($found[$directory->id]))
-				{
-					continue;
-				}
-
-				$found[$directory->id] = $directory;
-			}
+			$found[$directory->id] = $directory;
 		}
+	}
 
 	if (count($found))
 	{
