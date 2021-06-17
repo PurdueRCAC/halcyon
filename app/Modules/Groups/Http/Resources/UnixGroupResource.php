@@ -27,8 +27,18 @@ class UnixGroupResource extends JsonResource
 			foreach ($this->members()->withTrashed()->get() as $m)
 			{
 				$ma = $m->toArray();
-				$ma['username'] = $m->user->username;
-				$ma['name'] = $m->user->name;
+				$ma['username'] = ($m->user ? $m->user->username : trans('global.unknown'));
+				$ma['name'] = ($m->user ? $m->user->name : trans('global.unknown'));
+
+				if (!$m->isTrashed() && ($m->user && $m->user->isTrashed()))
+				{
+					$ma['datetimeremoved'] = $m->user->dateremoved;
+				}
+
+				if (!$m->isTrashed())
+				{
+					$ma['datetimeremoved'] = null;
+				}
 
 				if ($m->isTrashed())
 				{
@@ -40,6 +50,11 @@ class UnixGroupResource extends JsonResource
 				}
 			}
 			//$data['members'] = $this->members;
+		}
+
+		if (!$this->isTrashed())
+		{
+			$data['datetimeremoved'] = null;
 		}
 
 		$data['can']['edit']   = false;

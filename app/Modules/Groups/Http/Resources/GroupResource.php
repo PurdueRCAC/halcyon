@@ -44,6 +44,11 @@ class GroupResource extends JsonResource
 					$ma['dateremoved'] = $m->user->dateremoved;
 				}
 
+				if (!$m->isTrashed())
+				{
+					$ma['dateremoved'] = null;
+				}
+
 				if ($m->isManager())
 				{
 					if ($m->isTrashed() || ($m->user && $m->user->isTrashed()))

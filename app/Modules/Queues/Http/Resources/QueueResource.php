@@ -120,6 +120,11 @@ class QueueResource extends JsonResource
 		$data['loanednodes'] = $this->loanednodes;
 		$data['active']      = $this->active;
 
+		if (!$this->isTrashed())
+		{
+			$data['datetimeremoved'] = null;
+		}
+
 		$data['api'] = route('api.queues.read', ['id' => $this->id]);
 
 		$data['can']['edit']   = false;
