@@ -582,7 +582,7 @@ function NEWSAddEntry() {
 		if (url != "") {
 			post['url'] = url;
 		}
-console.log(post); return;
+
 		post = JSON.stringify(post);
 		document.getElementById("INPUT_add").disabled = true;
 
