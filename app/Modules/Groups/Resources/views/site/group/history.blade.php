@@ -201,19 +201,32 @@ if (count($l))
 					case 'UserRequestsController':
 					case 'userrequest':
 						$payload = $log->jsonPayload;
-						if (isset($payload->queueid))
+						$queuenames = array();
+						$queuename = '#' . $log->targetobjectid;
+
+						if (isset($payload->resources))
 						{
-							$queue = App\Modules\Queues\Models\Queue::find($payload->queueid);
+							foreach ($payload->resources as $resourceid)
+							{
+								foreach ($group->queues as $queue)
+								{
+									if ($queue->resource && $queue->resource->id == $resourceid)
+									{
+										$queuenames[] = $queue->name . ' (' . ($queue->subresource ? $queue->subresource->name : trans('global.unknown')) . ')';
+									}
+								}
+							}
 						}
 						else
 						{
 							$queue = App\Modules\Queues\Models\Queue::find($log->targetobjectid);
+							if ($queue)
+							{
+								$queuenames[] = $queue->name . ' (' . ($queue->subresource ? $queue->subresource->name : trans('global.unknown')) . ')';
+							}
 						}
-						$queuename = '#' . $log->targetobjectid;
-						if ($queue)
-						{
-							$queuename = $queue->name . ' (' . ($queue->subresource ? $queue->subresource->name : trans('global.unknown')) . ')';
-						}
+
+						$queuename = implode(', ', $queuenames);
 
 						if ($log->classmethod == 'create')
 						{
