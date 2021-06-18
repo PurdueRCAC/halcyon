@@ -107,7 +107,7 @@ class DirectoryResource extends JsonResource
 			}
 
 			$data['autouserunixgroup'] = $data['autounixgroup'] ? $data['autounixgroup']->toArray() : array('id' => '/ws/unixgroup/0', 'name' => '');
-			if (!empty($data['autouserunixgroup']))
+			if ($this->autounixgroup)
 			{
 				$data['autouserunixgroup']['id'] = '/ws/unixgroup/' . $data['autouserunixgroup']['id'];
 				$data['autouserunixgroup']['gid'] = $data['autouserunixgroup']['groupid'];
