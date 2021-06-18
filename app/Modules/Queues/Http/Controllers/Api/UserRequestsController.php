@@ -12,6 +12,8 @@ use App\Modules\Queues\Models\UserRequest;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Queues\Http\Resources\UserRequestResource;
 use App\Modules\Queues\Http\Resources\UserRequestResourceCollection;
+use App\Modules\Resources\Events\ResourceMemberCreated;
+use App\Modules\Resources\Events\ResourceMemberStatus;
 //use Illuminate\Http\Resources\Json\JsonResource;
 //use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -474,6 +476,13 @@ class UserRequestsController extends Controller
 			if (!$queueuser->save())
 			{
 				return response()->json(['message' => trans('Failed to update `queueusers` fields `membertype` and `notice` for userrequest :id', ['id' => $id])], 500);
+			}
+
+			event($resourcemember = new ResourceMemberStatus($queueuser->queue->scheduler->resource, $queueuser->user));
+
+			if ($resourcemember->status == 1 || $resourcemember->status == 4)
+			{
+				event($resourcemember = new ResourceMemberCreated($queueuser->queue->scheduler->resource, $queueuser->user));
 			}
 		}
 
