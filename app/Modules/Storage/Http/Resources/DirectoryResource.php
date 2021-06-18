@@ -3,6 +3,7 @@
 namespace App\Modules\Storage\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Carbon\Carbon;
 
 class DirectoryResource extends JsonResource
 {
@@ -96,12 +97,40 @@ class DirectoryResource extends JsonResource
 				$data['unixgroup'] = array('id' => '/ws/unixgroup/0', 'name' => '');
 			}
 
+			if (!empty($data['group']))
+			{
+				$data['group']['id'] = '/ws/group/' . $data['group']['id'];
+			}
+
+			$data['autouserunixgroup'] = $data['autounixgroup']->toArray();
+			if (!empty($data['autouserunixgroup']))
+			{
+				$data['autouserunixgroup']['id'] = '/ws/unixgroup/' . $data['autouserunixgroup']['id'];
+				$data['autouserunixgroup']['gid'] = $data['autouserunixgroup']['groupid'];
+				$data['autouserunixgroup']['created'] = $data['autounixgroup']->datetimecreated->toDateTimeString();
+				$data['autouserunixgroup']['removed'] = $data['autounixgroup']->isTrashed() ? $data['autounixgroup']->datetimeremoved->toDateTimeString() : '0000-00-00 00:00:00';
+				unset($data['autouserunixgroup']['groupid']);
+				unset($data['autouserunixgroup']['datetimecreated']);
+				unset($data['autouserunixgroup']['datetimeremoved']);
+			}
+			unset($data['autounixgroup']);
+
 			$data['childdirs'] = array();
 			foreach ($data['children'] as $child)
 			{
 				$data['childdirs'][] = '/ws/storagedir/' . $child->id;
 			}
 			unset($data['children']);
+
+			$keys = [
+				'resourceid', 'groupid', 'datetimecreated', 'datetimeremoved', 'datetimeconfigured', 'ownerread', 'ownerwrite',
+				'groupread', 'groupwrite', 'publicread', 'publicwrite', 'parentstoragedirid', 'storageresourceid', 'api'
+			];
+			foreach ($keys as $key)
+			{
+				unset($data[$key]);
+			}
+			$data['date'] = Carbon::now()->toDateTimeString();
 		}
 
 		return $data;
