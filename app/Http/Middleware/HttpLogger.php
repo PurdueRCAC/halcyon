@@ -82,6 +82,10 @@ class HttpLogger
 		{
 			$log->groupid = intval($request->input('groupid'));
 		}
+		elseif ($request->has('group'))
+		{
+			$log->groupid = intval($request->input('group'));
+		}
 		if ($request->has('userid') && is_numeric($request->input('userid')))
 		{
 			$log->targetuserid = intval($request->input('userid'));
