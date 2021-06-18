@@ -106,7 +106,7 @@ class DirectoryResource extends JsonResource
 				$data['group']['id'] = '/ws/group/' . $data['group']['id'];
 			}
 
-			$data['autouserunixgroup'] = $data['autounixgroup']->toArray();
+			$data['autouserunixgroup'] = $data['autounixgroup'] ? $data['autounixgroup']->toArray() : array('id' => '/ws/unixgroup/0', 'name' => '');
 			if (!empty($data['autouserunixgroup']))
 			{
 				$data['autouserunixgroup']['id'] = '/ws/unixgroup/' . $data['autouserunixgroup']['id'];
