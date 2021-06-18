@@ -688,7 +688,7 @@
 											$dir->quotaproblem = 1;
 										}
 
-										$dir->realquota = $dir->bytes - round((($dir->bytes / $bucket['totalbytes']) * -$bucket['unallocatedbytes']));
+										$dir->realquota = $bucket['totalbytes'] ? $dir->bytes - round((($dir->bytes / $bucket['totalbytes']) * -$bucket['unallocatedbytes'])) : 0;
 
 										if ($dir->quotaproblem == 1 && $dir->bytes && $dir->realquota < $dir->bytes)
 										{
@@ -759,7 +759,7 @@
 									<span class="none text-muted">- / -</span>
 								@else
 									<?php
-									$val = round(($usage->space / $usage->quota) * 100, 1);
+									$val = $usage->quota ? round(($usage->space / $usage->quota) * 100, 1) : 0;
 
 									$cls = 'bg-success';
 									$cls = $val > 50 ? 'bg-info' : $cls;
@@ -1099,8 +1099,8 @@
 							</div>
 
 							<div class="form-group">
-								<label for="loan-group">{{ trans('storage::storage.lender') }} <span class="required">*</span></label>
-								<select name="lendergroupid" id="sell-lendergroup"
+								<label for="loan-lendergroup">{{ trans('storage::storage.lender') }} <span class="required">*</span></label>
+								<select name="lendergroupid" id="loan-lendergroup"
 									class="form-control form-group-storage"
 									data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
 									<option value="0">{{ trans('storage::storage.select group') }}</option>
@@ -1113,8 +1113,8 @@
 								<label for="loan-group">{{ trans('storage::storage.loan to') }} <span class="required">*</span></label>
 								<select name="groupid" id="loan-group"
 									class="form-control form-group-storage"
-									data-update="loan-storage"
 									data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
+									<option value="0">{{ trans('storage::storage.select group') }}</option>
 									<option value="-1">{{ trans('storage::storage.org owned') }}</option>
 								</select>
 							</div>
