@@ -48,7 +48,7 @@ class Quotas
 			$u = (new UnixGroupMember)->getTable();
 			$g = (new Member)->getTable();
 
-			// Grab privately owned resources
+			
 			$dirs = Directory::query()
 				->withTrashed()
 				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
@@ -61,6 +61,54 @@ class Quotas
 					$where->where($d . '.bytes', '<>', 0)
 						->orWhere($r . '.defaultquotaspace', '<>', 0);
 				})
+				->get();
+
+			
+			$dirs2 = Directory::query()
+				->withTrashed()
+				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
+				->join($r, $r . '.id', $d . '.storageresourceid')
+				->join($u, $u . '.unixgroupid', $d . '.unixgroupid')
+				->where($u . '.userid', '=', $user->id)
+				->where($d . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->where($r . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->where(function($where) use ($d, $r)
+				{
+					$where->where($d . '.bytes', '<>', 0)
+						->orWhere($r . '.defaultquotaspace', '<>', 0);
+				})
+				->get();
+
+			// Grab directories owned by user
+			$dirs3 = Directory::query()
+				->withTrashed()
+				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
+				->join($r, $r . '.id', $d . '.storageresourceid')
+				->join($g, $g . '.groupid', $d . '.groupid')
+				->where($g . '.userid', '=', $user->id)
+				->where($d . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->where($r . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->where(function($where) use ($d, $r)
+				{
+					$where->where($d . '.bytes', '<>', 0)
+						->orWhere($r . '.defaultquotaspace', '<>', 0);
+				})
+				->where($g . '.membertype', '=', 2)
+				->where($g . '.groupid', '<>', 0)
+				->get();
+
+			$storagedirquota = $dirs3->merge($dirs->merge($dirs2));
+
+			// Grab privately owned resources
+			$dirs = Directory::query()
+				->withTrashed()
+				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
+				->join($r, $r . '.id', $d . '.storageresourceid')
+				->where($d . '.owneruserid', '=', $user->id)
+				->where($d . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->where($r . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->where($d . '.bytes', '<>', 0)
 				->get();
 
 			// Grab high level group shared resources
@@ -73,38 +121,10 @@ class Quotas
 				->where($d . '.datetimeremoved', '=', '0000-00-00 00:00:00')
 				->where($r . '.datetimeremoved', '=', '0000-00-00 00:00:00')
 				->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-				->where(function($where) use ($d, $r)
-				{
-					$where->where($d . '.bytes', '<>', 0)
-						->orWhere($r . '.defaultquotaspace', '<>', 0);
-				})
+				->where($d . '.bytes', '<>', 0)
 				->get();
-
-			$storagedirquota = $dirs->merge($dirs2);
 
 			// Grab directories owned by user
-			$dirs = Directory::query()
-				->withTrashed()
-				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
-				->join($r, $r . '.id', $d . '.storageresourceid')
-				->where($d . '.owneruserid', '=', $user->id)
-				->where($d . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-				->where($r . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-				->where($d . '.bytes', '<>', 0)
-				->get();
-
-			$dirs2 = Directory::query()
-				->withTrashed()
-				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
-				->join($r, $r . '.id', $d . '.storageresourceid')
-				->join($u, $u . '.unixgroupid', $d . '.unixgroupid')
-				->where($u . '.userid', '=', $user->id)
-				->where($d . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-				->where($r . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-				->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-				->where($d . '.bytes', '<>', 0)
-				->get();
-
 			$dirs3 = Directory::query()
 				->withTrashed()
 				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
