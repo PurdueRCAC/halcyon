@@ -86,6 +86,18 @@ class Directory extends Model
 	];
 
 	/**
+	 * Determine if configured
+	 *
+	 * @return  bool
+	 */
+	public function isConfigured()
+	{
+		return ($this->datetimeconfigured
+			&& $this->datetimeconfigured != '0000-00-00 00:00:00'
+			&& $this->datetimeconfigured != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Defines a relationship to a resource
 	 *
 	 * @return  object
