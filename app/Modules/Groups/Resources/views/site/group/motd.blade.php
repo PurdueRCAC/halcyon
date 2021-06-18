@@ -81,4 +81,3 @@ if (count($past))
 	</div>
 	<?php
 }
-?>

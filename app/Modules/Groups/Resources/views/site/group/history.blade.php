@@ -7,7 +7,6 @@ $l = App\Modules\History\Models\Log::query()
 	->where('groupid', '=', $group->id)
 	->whereIn('classname', ['groupowner', 'groupviewer', 'queuemember', 'groupqueuemember', 'unixgroupmember', 'unixgroup', 'userrequest', 'UsersController', 'UserRequestsController', 'UnixGroupsController', 'UnixGroupMembersController', 'MembersController', 'OrdersController'])
 	->where('classmethod', '!=', 'read')
-	//->where('datetime', '>', Carbon\Carbon::now()->modify('-1 month')->toDateTimeString())
 	->orderBy('datetime', 'desc')
 	->limit(20)
 	->paginate();
@@ -264,8 +263,8 @@ if (count($l))
 				}
 				?>
 				<tr>
-					<td><?php echo $log->datetime->format('M j, Y'); ?></td>
-					<td><?php echo $log->datetime->format('g:ia'); ?></td>
+					<td>{{ $log->datetime->format('M j, Y') }}</td>
+					<td>{{ $log->datetime->format('g:ia') }}</td>
 					<td>
 						@if ($log->userid > 0)
 							{{ $log->user ? $log->user->name : trans('global.unknown') }}
@@ -281,11 +280,11 @@ if (count($l))
 						@endif
 					</td>
 					<td>
-						<?php if (substr($log->status, 0, 1) != '2') { ?>
+						@if (substr($log->status, 0, 1) != '2')
 							<span class="tip text-warning" title="An error occurred while performing this action. Action may not have completed.">
 								<i class="fa fa-exclamation-circle" aria-hidden="true"></i><span class="sr-only">An error occurred while performing this action. Action may not have completed.</span>
 							</span>
-						<?php } ?>
+						@endif
 						{{ $log->action }}
 					</td>
 				</tr>
@@ -304,4 +303,3 @@ else
 	<p class="alert alert-warning">No activity found.</p>
 	<?php
 }
-?>

@@ -16,12 +16,10 @@
 				</thead>
 				<tbody>
 				<?php
-				foreach ($group->directories as $dir)
-				{
-					if (!$dir->bytes)
-					{
+				foreach ($group->directories as $dir):
+					if (!$dir->bytes):
 						continue;
-					}
+					endif;
 					?>
 					<tr>
 						<td>
@@ -41,7 +39,7 @@
 						</td>
 					</tr>
 					<?php
-				}
+				endif;
 				?>
 				</tbody>
 			</table>
