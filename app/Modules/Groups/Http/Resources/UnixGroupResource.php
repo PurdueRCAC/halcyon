@@ -68,6 +68,12 @@ class UnixGroupResource extends JsonResource
 			$data['can']['delete'] = $user->can('delete groups');
 		}
 
+		// [!] Legacy compatibility
+		if (request()->segment(1) == 'ws')
+		{
+			$data['id'] = '/ws/unixgroup/' . $data['id'];
+		}
+
 		return $data;
 	}
 }
