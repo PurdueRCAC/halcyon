@@ -200,26 +200,34 @@ if (count($l))
 
 					case 'UserRequestsController':
 					case 'userrequest':
-						$queue = App\Modules\Queues\Models\Queue::find($log->targetobjectid);
+						$payload = $log->jsonPayload;
+						if (isset($payload->queueid))
+						{
+							$queue = App\Modules\Queues\Models\Queue::find($payload->queueid);
+						}
+						else
+						{
+							$queue = App\Modules\Queues\Models\Queue::find($log->targetobjectid);
+						}
 						$queuename = '#' . $log->targetobjectid;
 						if ($queue)
 						{
-							$queuename = $queue->name;
+							$queuename = $queue->name . ' (' . ($queue->subresource ? $queue->subresource->name : trans('global.unknown')) . ')';
 						}
 
 						if ($log->classmethod == 'create')
 						{
-							$log->action = 'Submitted request to queue ' . $queuename . ' (' . ($queue ? $queue->subresource->name : trans('global.unknown')) . ')';
+							$log->action = 'Submitted request to queue ' . $queuename;
 						}
 
 						if ($log->classmethod == 'update')
 						{
-							$log->action = 'Approved request to queue ' . $queuename . ' (' . ($queue ? $queue->subresource->name : trans('global.unknown')) . ')';
+							$log->action = 'Approved request to queue ' . $queuename;
 						}
 
 						if ($log->classmethod == 'delete')
 						{
-							$log->action = 'Canceled request to queue ' . $queuename . ' (' . ($queue ? $queue->subresource->name : trans('global.unknown')) . ')';
+							$log->action = 'Canceled request to queue ' . $queuename;
 						}
 					break;
 
