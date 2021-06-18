@@ -72,6 +72,24 @@ class UnixGroupResource extends JsonResource
 		if (request()->segment(1) == 'ws')
 		{
 			$data['id'] = '/ws/unixgroup/' . $data['id'];
+
+			$data['created'] = $this->datetimecreated->toDateTimeString();
+			$data['removed'] = $this->isTrashed() ? $this->datetimeremoved->toDateTimeString() : '0000-00-00 00:00:00';
+
+			unset($data['datetimecreated']);
+			unset($data['datetimeremoved']);
+
+			$data['unixgroupusers'] = array();
+
+			foreach ($this->members as $user)
+			{
+				$data['unixgroupusers'][] = array(
+					'id' => '/ws/unixgroupmember/' . $user->id,
+					'unixgroupid' => $user->unixgroupid,
+					'userid' => $user->userid,
+					'username' => ($user->user ? $user->user->username : '')
+				);
+			}
 		}
 
 		return $data;
