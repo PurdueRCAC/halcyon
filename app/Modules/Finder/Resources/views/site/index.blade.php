@@ -102,7 +102,7 @@ app('pathway')->append(
                     <div class="comparisonchart-wrapper">
                         <table class="table table-striped table-bordered scrolling" id="comparisonchart">
                             <caption class="sr-only">Comparison of services</caption>
-                            <thead><tr><th scope="col">Select from services above to see comparisons.</td></tr></thead>
+                            <thead><tr><th scope="col">Select from services above to see comparisons.</th></tr></thead>
                             <tbody><tr><td>Select from services above to see comparisons.</td></tr></tbody>
                         </table>
                     </div>
