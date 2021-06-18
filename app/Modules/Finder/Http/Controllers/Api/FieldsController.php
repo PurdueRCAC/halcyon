@@ -23,8 +23,8 @@ class FieldsController extends Controller
 	 * @apiUri    /api/finder/fields
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "parentid",
-	 * 		"description":   "Parent department ID",
+	 * 		"name":          "status",
+	 * 		"description":   "Published status",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -69,12 +69,13 @@ class FieldsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "datetimecreated",
+	 * 			"default":   "label",
 	 * 			"enum": [
 	 * 				"id",
-	 * 				"motd",
-	 * 				"datetimecreated",
-	 * 				"datetimeremoved"
+	 * 				"name",
+	 * 				"label",
+	 * 				"created_at",
+	 * 				"deleted_at"
 	 * 			]
 	 * 		}
 	 * }
@@ -101,9 +102,10 @@ class FieldsController extends Controller
 	{
 		$filters = array(
 			'search'   => $request->input('search', ''),
-			'parentid' => $request->input('parentid'),
+			'status'   => $request->input('status', 1),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
+			'page'     => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', Field::$orderBy),
 			'order_dir' => $request->input('order_dir', Field::$orderDir)
@@ -123,15 +125,9 @@ class FieldsController extends Controller
 			$query->where('name', 'like', '%' . $filters['search'] . '%');
 		}
 
-		if ($filters['parentid'])
+		if ($filters['status'])
 		{
-			$filters['parentid'] = strtolower((string)$filters['parentid']);
-
-			$query->where('parentid', '=', $filters['parentid']);
-		}
-		else
-		{
-			$query->where('parentid', '!=', 0);
+			$query->where('status', '=', $filters['status']);
 		}
 
 		$rows = $query
@@ -161,16 +157,41 @@ class FieldsController extends Controller
 	 * 		"description":   "Field name",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 150
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "parentid",
-	 * 		"description":   "Parent department ID",
+	 * 		"name":          "label",
+	 * 		"description":   "Field label",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 150
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "weight",
+	 * 		"description":   "Field weight",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "status",
+	 * 		"description":   "Published state of the record",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
 	 * 		}
 	 * }
 	 * @param   Request  $request
@@ -180,12 +201,20 @@ class FieldsController extends Controller
 	{
 		$request->validate([
 			'label' => 'required|string|max:150',
-			'name' => 'nullable|string|max:150'
+			'name' => 'nullable|string|max:150',
+			'status' => 'nullable|integer',
+			'weight' => 'nullable|integer'
 		]);
 
 		$row = new Field;
 		$row->label = $request->input('label');
 		$row->name = $request->input('name');
+		$row->status = $request->input('status', 1);
+
+		if ($request->has('weight'))
+		{
+			$row->weight = $request->input('weight');
+		}
 
 		if (!$row->name)
 		{
@@ -234,30 +263,46 @@ class FieldsController extends Controller
 	 * @apiUri    /api/finder/fields/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "path",
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"required":      true,
-	 * 		"schema": {
-	 * 			"type":      "integer"
-	 * 		}
-	 * }
-	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Field name",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 150
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "parentid",
-	 * 		"description":   "Parent department ID",
+	 * 		"name":          "label",
+	 * 		"description":   "Field label",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 150
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "weight",
+	 * 		"description":   "Field weight",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "status",
+	 * 		"description":   "Published state of the record",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -268,7 +313,9 @@ class FieldsController extends Controller
 	{
 		$request->validate([
 			'label' => 'nullable|string|max:150',
-			'name' => 'nullable|string|max:150'
+			'name' => 'nullable|string|max:150',
+			'status' => 'nullable|integer',
+			'weight' => 'nullable|integer'
 		]);
 
 		$row = Field::findOrFail($id);
@@ -281,6 +328,16 @@ class FieldsController extends Controller
 		if ($request->has('name'))
 		{
 			$row->name = $request->input('name');
+		}
+
+		if ($request->has('weight'))
+		{
+			$row->weight = $request->input('weight');
+		}
+
+		if ($request->has('status'))
+		{
+			$row->status = $request->input('status');
 		}
 
 		if (!$row->save())

@@ -65,18 +65,33 @@ class ServicesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "state",
+	 * 		"description":   "Published or unpublished state or entries.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "published",
+	 * 			"enum": [
+	 * 				"published",
+	 * 				"unpublished"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "datetimecreated",
+	 * 			"default":   "title",
 	 * 			"enum": [
 	 * 				"id",
-	 * 				"motd",
-	 * 				"datetimecreated",
-	 * 				"datetimeremoved"
+	 * 				"title",
+	 * 				"summary",
+	 * 				"created_at"
 	 * 			]
 	 * 		}
 	 * }
@@ -106,6 +121,7 @@ class ServicesController extends Controller
 			'state'    => $request->input('state', 'published'),
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'     => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', Service::$orderBy),
 			'order_dir' => $request->input('order_dir', Service::$orderDir)
@@ -170,20 +186,36 @@ class ServicesController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "Service name",
+	 * 		"name":          "title",
+	 * 		"description":   "Service title",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "parentid",
-	 * 		"description":   "Parent department ID",
+	 * 		"name":          "summary",
+	 * 		"description":   "Short description of the service",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer"
+	 * 			"type":      "string",
+	 * 			"maxLength": 1200
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "status",
+	 * 		"description":   "Published or unpublished status",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
 	 * 		}
 	 * }
 	 * @param   Request  $request
@@ -193,12 +225,17 @@ class ServicesController extends Controller
 	{
 		$request->validate([
 			'title' => 'required|string|max:255',
-			'summary' => 'nullable|string|max:1200'
+			'summary' => 'nullable|string|max:1200',
+			'status' => 'nullable|integer'
 		]);
 
 		$row = new Service;
 		$row->title = $request->input('title');
 		$row->summary = $request->input('summary');
+		if ($request->has('status'))
+		{
+			$row->status = $request->input('status');
+		}
 
 		if (!$row->save())
 		{
@@ -264,30 +301,46 @@ class ServicesController extends Controller
 	 * @apiUri    /api/finder/services/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "path",
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"required":      true,
+	 * 		"in":            "body",
+	 * 		"name":          "title",
+	 * 		"description":   "Service title",
+	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer"
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "Service name",
+	 * 		"name":          "summary",
+	 * 		"description":   "Short description of the service",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 1200
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "parentid",
-	 * 		"description":   "Parent department ID",
+	 * 		"name":          "status",
+	 * 		"description":   "Published or unpublished status",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer"
+	 * 			"type":      "integer",
+	 * 			"default":   1,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "fields",
+	 * 		"description":   "Fields for a service",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array"
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -298,7 +351,9 @@ class ServicesController extends Controller
 	{
 		$request->validate([
 			'title' => 'nullable|string|max:255',
-			'summary' => 'nullable|string|max:1200'
+			'summary' => 'nullable|string|max:1200',
+			'status' => 'nullable|integer',
+			'fields' => 'nullable|array',
 		]);
 
 		$row = Service::findOrFail($id);
@@ -311,6 +366,11 @@ class ServicesController extends Controller
 		if ($request->has('summary'))
 		{
 			$row->summary = $request->input('summary');
+		}
+
+		if ($request->has('status'))
+		{
+			$row->status = $request->input('status');
 		}
 
 		if (!$row->save())
