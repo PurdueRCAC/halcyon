@@ -158,8 +158,8 @@
 						data: {'quotaupdate' : '1'},
 						success: function(result) {
 
-							var oldtime = data.data['latestusage']['datetimerecorded'];
-							var currtime = data.data['latestusage']['datetimerecorded'];
+							var oldtime = data['latestusage'] ? data['latestusage']['datetimerecorded'] : 0;
+							var currtime = data['latestusage'] ? data['latestusage']['datetimerecorded'] : 0;
 							var checkcount = 0;
 
 							function check() {
@@ -168,7 +168,8 @@
 										if (typeof(data) === 'string') {
 											data = JSON.parse(data);
 										}
-										currtime = data.data['latestusage']['datetimerecorded'];
+
+										currtime = data['latestusage'] ? data['latestusage']['datetimerecorded'] : 0;
 									});
 
 									if (currtime != oldtime) {

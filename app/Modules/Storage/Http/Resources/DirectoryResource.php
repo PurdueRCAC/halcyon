@@ -54,6 +54,10 @@ class DirectoryResource extends JsonResource
 		{
 			$data['datetimeremoved'] = null;
 		}
+		if (!$this->isConfigured())
+		{
+			$data['datetimeconfigured'] = null;
+		}
 
 		// [!] Legacy compatibility
 		if (request()->segment(1) == 'ws')

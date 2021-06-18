@@ -7,6 +7,81 @@
 <script src="{{ asset('modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/fancytree/jquery.fancytree-all.js?v=' . filemtime(public_path() . '/modules/core/vendor/fancytree/jquery.fancytree-all.js')) }}"></script>
 <script src="{{ asset('modules/storage/js/site.js?v=' . filemtime(public_path() . '/modules/storage/js/site.js')) }}"></script>
+<script>
+	$(document).ready(function() {
+		$('.updatequota').on('click', function(event) {
+			var btn = $(this),
+				did = btn.data('id');
+
+			btn.addClass('processing');
+			btn.find('i').addClass('hide');
+			btn.find('.spinner-border').removeClass('hide');
+
+			$.ajax({
+				url: btn.data('api'),
+				type: 'GET',
+				success: function(data) {
+					if (typeof(data) === 'string') {
+						data = JSON.parse(data);
+					}
+
+					$.ajax({
+						url: btn.data('api'),
+						type: 'PUT',
+						data: {'quotaupdate' : '1'},
+						success: function(result) {
+
+							var oldtime = data['latestusage'] ? data['latestusage']['datetimerecorded'] : 0;
+							var currtime = data['latestusage'] ? data['latestusage']['datetimerecorded'] : 0;
+							var checkcount = 0;
+
+							function check() {
+								setTimeout(function() {
+									$.get(btn.data('api'), function (data) {
+										if (typeof(data) === 'string') {
+											data = JSON.parse(data);
+										}
+
+										currtime = data['latestusage'] ? data['latestusage']['datetimerecorded'] : 0;
+									});
+
+									if (currtime != oldtime) {
+										location.reload(true);
+									}
+
+									checkcount++;
+
+									if (checkcount < 45 && currtime == oldtime) {
+										check();
+									}
+
+									if (checkcount >= 45) {
+										alert("Quota checking system is busy or filesystem is unavailable at the moment. Quota refresh has been scheduled so check back on this page later.");
+										location.reload(true);
+									}
+								}, 5000);
+							}
+
+							check();
+						},
+						error: function (result) {
+							alert("An error occurred. Please reload the page and try again");
+
+							btn.find('i').removeClass('hide');
+							btn.find('.spinner-border').addClass('hide');
+						}
+					});
+				},
+				error: function (result) {
+					alert("An error occurred. Please reload the page and try again");
+
+					btn.find('i').removeClass('hide');
+					btn.find('.spinner-border').addClass('hide');
+				}
+			});
+		});
+	});
+</script>
 @endpush
 
 <div class="row">
@@ -669,11 +744,58 @@
 							</form>
 						</div><!-- / #<?php echo $did; ?>_dialog -->
 					<?php } ?>
+					</div>
+					<div class="card-footer">
+						<div class="row">
+							<?php
+							$usage = $row->usage()->orderBy('datetimerecorded', 'desc')->first();
+							if (!$usage)
+							{
+								$usage = new App\Modules\Storage\Models\Usage;
+							}
+							?>
+							<div class="col-md-4 text-center">
+								@if (!$usage->quota)
+									<span class="none text-muted">- / -</span>
+								@else
+									<?php
+									$val = round(($usage->space / $usage->quota) * 100, 1);
+
+									$cls = 'bg-success';
+									$cls = $val > 50 ? 'bg-info' : $cls;
+									$cls = $val > 70 ? 'bg-warning' : $cls;
+									$cls = $val > 90 ? 'bg-danger' : $cls;
+
+									echo App\Halcyon\Utility\Number::formatBytes($usage->space); ?> / <?php echo App\Halcyon\Utility\Number::formatBytes($usage->quota);
+									?>
+									<div class="progress" style="height: 3px">
+										<div class="progress-bar <?php echo $cls; ?>" role="progressbar" style="width: <?php echo $val; ?>%;" aria-valuenow="<?php echo $val; ?>" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo $val; ?>% space used">
+											<span class="sr-only"><?php echo $val; ?>%</span>
+										</div>
+									</div>
+								@endif
+							</div>
+							<div class="col-md-7 text-right">
+								@if ($usage->datetimerecorded)
+									Last checked: {{ $usage->datetimerecorded->diffForHumans() }}
+								@else
+									Never checked: <span class="none text-muted">-</span>
+								@endif
+							</div>
+							<div class="col-md-1 text-right">
+								<a href="#{{ $dir->id }}_dialog" class="details updatequota tip" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}" data-id="{{ $dir->id }}" title="Update usage now"><!--
+								--><i class="fa fa-undo updater" aria-hidden="true"></i><!--
+								--><span class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only">Loading...</span></span><!--
+								--><span class="sr-only">Update usage now</span><!--
+							--></a>
+							</div>
+						</div>
 					</div><!-- / .panel-body -->
 				</div><!-- / .panel -->
 				<?php
 			endforeach;
-		?>
+			?>
+
 			<div class="card panel panel-default">
 				<div class="card-header panel-heading">
 					@if (auth()->user()->can('manage storage'))
