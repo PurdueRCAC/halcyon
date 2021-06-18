@@ -293,7 +293,7 @@ $members = $members->sortBy('username');
 					<tr>
 						<td></td>
 						<td colspan="2" class="text-center">
-							<button id="submit-requests" class="btn btn-success" disabled>{{ trans('global.button.save') }}</button>
+							<button id="submit-requests" data-groupid="{{ $group->id }}" class="btn btn-success" disabled>{{ trans('global.button.save') }}</button>
 						</td>
 					</tr>
 				</tfoot>

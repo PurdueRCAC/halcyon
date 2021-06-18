@@ -103,11 +103,12 @@ var UserRequests = {
 	 * @param   {array}  requests
 	 * @return  {void}
 	 */
-	Approve: function(requests) {
+	Approve: function(requests, groupid) {
 		for (var i=0; i < requests.length; i++) {
 			UserRequests.approvepending++;
 
-			WSPutURL(requests[i], '{}', function(xml) {
+			// Group ID isn't needed but is included for logging
+			WSPutURL(requests[i], '{"groupid":' + groupid + '}', function(xml) {
 				if (xml.status < 400) {
 					UserRequests.approvepending--;
 
@@ -232,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				if (approve == 0 && inputs[i].checked == true) {
 					// Approve the user
-					UserRequests.Approve(inputs[i].getAttribute('data-api').split(','));
+					UserRequests.Approve(inputs[i].getAttribute('data-api').split(','), $(this).attr('data-groupid'));
 				}
 				else if (inputs[i].value.split(",")[1] == 1 && inputs[i].checked == true) {
 					// Delete the request
