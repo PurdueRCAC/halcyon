@@ -137,7 +137,7 @@
 								}
 								else
 								{
-									echo ($row->studentcount ? $row->studentcount : $row->members()->withTrashed()->whereIsActive()->count()) . ' / --';
+									echo ($class->studentcount ? $class->studentcount : $class->members()->withTrashed()->whereIsActive()->count()) . ' / --';
 								}
 								?>
 							</td>
