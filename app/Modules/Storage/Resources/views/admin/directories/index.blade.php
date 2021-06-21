@@ -118,7 +118,10 @@ if ($parent)
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr<?php if ($row->isTrashed()) { echo ' class="trashed"'; } ?>>
+			<?php
+			$sr = $row->storageResource()->withTrashed()->first();
+			?>
+			<tr<?php if ($row->isTrashed() || $sr->isTrashed()) { echo ' class="trashed"'; } ?>>
 				@if (auth()->user()->can('delete storage'))
 					<td>
 						{!! Html::grid('id', $i, $row->id) !!}
@@ -128,7 +131,7 @@ if ($parent)
 					{{ $row->id }}
 				</td>
 				<td>
-					@if ($row->isTrashed())
+					@if ($row->isTrashed() || $sr->isTrashed())
 						<span class="glyph icon-trash text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
 							{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time>
 						</span>
@@ -145,7 +148,7 @@ if ($parent)
 					@if (auth()->user()->can('edit storage'))
 					<a href="{{ route('admin.storage.directories.edit', ['id' => $row->id]) }}">
 					@endif
-						{{ $row->storageResource->path . '/' . $row->path }}
+						{{ $sr ? $sr->path . '/' . $row->path : $row->path }}
 					@if (auth()->user()->can('edit storage'))
 					</a>
 					@endif
@@ -171,8 +174,8 @@ if ($parent)
 					@endif
 				</td>
 				<td class="priority-4">
-					@if ($row->storageResource)
-						{{ $row->storageResource->name }}
+					@if ($sr)
+						{{ $sr->name }}
 					@else
 						<span class="unknown">{{ trans('global.unknown') }}</span>
 					@endif
