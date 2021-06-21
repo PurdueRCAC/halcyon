@@ -213,6 +213,10 @@ class LoansController extends Controller
 		if ($request->has('datetimestop'))
 		{
 			$row->datetimestop = $request->input('datetimestop');
+			if (!$row->datetimestop)
+			{
+				unset($row->datetimestop);
+			}
 		}
 		//$row->fill($request->all());
 
