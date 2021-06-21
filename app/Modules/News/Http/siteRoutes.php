@@ -29,7 +29,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 	$router->get('manage', [
 		'as' => 'site.news.manage',
 		'uses' => 'ArticlesController@manage',
-		'middleware' => 'can:manage news',
+		'middleware' => 'can:create news',
 	]);
 	$router->post('store', [
 		'as' => 'site.news.store',
