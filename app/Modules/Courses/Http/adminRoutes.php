@@ -15,22 +15,22 @@ $router->group(['prefix' => 'courses', 'middleware' => 'can:manage courses'], fu
 		$router->get('/create', [
 			'as' => 'admin.courses.members.create',
 			'uses' => 'MembersController@create',
-			'middleware' => 'can:create courses.members',
+			'middleware' => 'can:edit courses|edit.own courses',
 		]);
 		$router->post('/store', [
 			'as' => 'admin.courses.members.store',
 			'uses' => 'MembersController@store',
-			'middleware' => 'can:create courses.members|edit courses.members',
+			'middleware' => 'can:edit courses|edit.own courses',
 		]);
 		$router->get('/edit/{id}', [
 			'as' => 'admin.courses.members.edit',
 			'uses' => 'MembersController@edit',
-			'middleware' => 'can:edit courses.members',
+			'middleware' => 'can:edit courses|edit.own courses',
 		]);
 		$router->match(['get', 'post'], '/delete/{id?}', [
 			'as'   => 'admin.courses.members.delete',
 			'uses' => 'MembersController@delete',
-			'middleware' => 'can:delete courses.members',
+			'middleware' => 'can:edit courses|edit.own courses',
 		]);
 		$router->post('/cancel', [
 			'as' => 'admin.courses.members.cancel',
