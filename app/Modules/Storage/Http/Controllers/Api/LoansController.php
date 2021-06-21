@@ -203,7 +203,18 @@ class LoansController extends Controller
 		]);
 
 		$row = new Loan;
-		$row->fill($request->all());
+		$row->resourceid = $request->input('resourceid');
+		$row->groupid = $request->input('groupid');
+		if ($request->has('lendergroupid'))
+		{
+			$row->lendergroupid = $request->input('lendergroupid');
+		}
+		$row->datetimestart = $request->input('datetimestart');
+		if ($request->has('datetimestop'))
+		{
+			$row->datetimestop = $request->input('datetimestop');
+		}
+		//$row->fill($request->all());
 
 		if ($row->datetimestart->timestamp < Carbon::now()->timestamp - 300)
 		{
