@@ -93,8 +93,8 @@ app('pathway')
 			</div>
 		</div>
 
-		<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
-		<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
+		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
 		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
