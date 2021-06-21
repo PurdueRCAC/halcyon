@@ -116,7 +116,6 @@ class MessagesController extends Controller
 			->count();
 
 		$stats->pending = Message::query()
-			->where('datetimestarted', '=', '0000-00-00 00:00:00')
 			->where('datetimecompleted', '=', '0000-00-00 00:00:00')
 			->count();
 
