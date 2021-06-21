@@ -201,10 +201,10 @@ app('pathway')
 				<td class="priority-2 text-right">
 					@if (auth()->user()->can('edit courses'))
 						<a href="{{ route('admin.courses.members', ['id' => $row->id]) }}">
-							{{ $row->studentcount }}
+							{{ $row->studentcount ? $row->studentcount : $row->members()->withTrashed()->whereIsActive()->count() }}
 						</a>
 					@else
-						{{ $row->studentcount }}
+						{{ $row->studentcount ? $row->studentcount : $row->members()->withTrashed()->whereIsActive()->count() }}
 					@endif
 				</td>
 			</tr>
