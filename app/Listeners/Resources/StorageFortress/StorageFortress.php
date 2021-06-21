@@ -21,6 +21,7 @@ class StorageFortress
 	public function subscribe($events)
 	{
 		$events->listen(ResourceMemberCreated::class, self::class . '@handleResourceMemberCreated');
+		$events->listen(UnixGroupMemberCreated::class, self::class . '@handleUnixGroupMemberCreated');
 	}
 
 	/**
