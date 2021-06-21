@@ -4,6 +4,9 @@ namespace App\Listeners\Storage\Depot;
 use App\Modules\Storage\Events\DirectoryCreated;
 use App\Modules\Storage\Events\DirectoryUpdated;
 use App\Modules\Storage\Events\DirectoryDeleted;
+use App\Modules\Storage\Events\LoanCreated;
+use App\Modules\Storage\Events\PurchaseCreated;
+use App\Modules\Storage\Models\Directory;
 use App\Modules\Groups\Models\UnixGroup;
 use App\Modules\Messages\Models\Type as MessageType;
 
@@ -23,6 +26,8 @@ class Depot
 		$events->listen(DirectoryCreated::class, self::class . '@handleDirectoryCreated');
 		$events->listen(DirectoryUpdated::class, self::class . '@handleDirectoryUpdated');
 		$events->listen(DirectoryDeleted::class, self::class . '@handleDirectoryDeleted');
+		$events->listen(LoanCreated::class, self::class . '@handleLoanCreated');
+		$events->listen(PurchaseCreated::class, self::class . '@handlePurchaseCreated');
 	}
 
 	/**
@@ -127,6 +132,115 @@ class Depot
 		}
 
 		$this->addNewDirMessages($dir);
+	}
+
+	/**
+	 * Setup default notifications for new directory
+	 *
+	 * @param   LoanCreated  $event
+	 * @return  void
+	 */
+	public function handleLoanCreated(LoanCreated $event)
+	{
+		$loan = $event->loan;
+
+		if ($loan->resourceid != 64 || $loan->bytes <= 0)
+		{
+			return;
+		}
+
+		$dir = Directory::query()
+			->withTrashed()
+			->whereIsActive()
+			->where('parentstoragedirid', '=', 0)
+			->where('groupid', '=', $loan->groupid)
+			->where('resourceid', '=', 64)
+			->first();
+
+		if (!$dir)
+		{
+			return;
+		}
+
+		if (!$dir->bytes)
+		{
+			$bucket = null;
+			foreach ($loan->group->storagebuckets as $b)
+			{
+				if ($b['resourceid'] == $loan->resourceid)
+				{
+					$bucket = $b;
+					break;
+				}
+			}
+
+			if ($bucket == null)
+			{
+				$bytes = $loan->bytes;
+			}
+			else
+			{
+				$bytes = $bucket['unallocatedbytes'] + $dir->bytes;
+			}
+
+			$dir->bytes = $bytes;
+			$dir->save();
+		}
+	}
+
+	/**
+	 * Setup default notifications for new directory
+	 *
+	 * @param   PurchaseCreated  $event
+	 * @return  void
+	 */
+	public function handlePurchaseCreated(PurchaseCreated $event)
+	{
+		$purchase = $event->purchase;
+
+		if ($purchase->resourceid != 64 || $purchase->bytes <= 0)
+		{
+			return;
+		}
+
+		$dir = Directory::query()
+			->withTrashed()
+			->whereIsActive()
+			->where('parentstoragedirid', '=', 0)
+			->where('groupid', '=', $purchase->groupid)
+			->where('resourceid', '=', 64)
+			->first();
+
+		if (!$dir)
+		{
+			return;
+		}
+
+		if (!$dir->bytes)
+		{
+			$bucket = null;
+			foreach ($purchase->group->storagebuckets as $b)
+			{
+				if ($b['resourceid'] == $purchase->resourceid)
+				{
+					$bucket = $b;
+					break;
+				}
+			}
+
+			if ($bucket == null)
+			{
+				$bytes = $purchase->bytes;
+			}
+			else
+			{
+				$bytes = $bucket['unallocatedbytes'] + $dir->bytes;
+			}
+
+			// Set the initial quota
+			$dir->bytes = $bytes;
+			$dir->save();
+		}
 	}
 
 	/**

@@ -200,6 +200,7 @@ class LoansController extends Controller
 			'lendergroupid' => 'nullable|integer',
 			'datetimestart' => 'required|date',
 			'datetimestop' => 'nullable|date',
+			'comment'       => 'nullable|string|max:2000'
 		]);
 
 		$row = new Loan;
@@ -218,6 +219,15 @@ class LoansController extends Controller
 				unset($row->datetimestop);
 			}
 		}
+		if ($request->has('bytes'))
+		{
+			$row->bytes = $request->input('bytes');
+		}
+		if ($request->has('comment'))
+		{
+			$row->comment = $request->input('comment');
+		}
+		$row->comment = $row->comment ?: '';
 		//$row->fill($request->all());
 
 		if ($row->datetimestart->timestamp < Carbon::now()->timestamp - 300)
@@ -321,6 +331,10 @@ class LoansController extends Controller
 			//$group = $row->groupid;
 			$data = $row->toArray();
 			unset($data['id']);
+			if (isset($data['group']))
+			{
+				unset($data['group']);
+			}
 
 			$counter = new Loan;
 			$counter->fill($data);

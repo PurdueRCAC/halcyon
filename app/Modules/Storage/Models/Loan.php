@@ -5,6 +5,7 @@ namespace App\Modules\Storage\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Groups\Models\Group;
+use App\Modules\Storage\Events\LoanCreated;
 use App\Modules\History\Traits\Historable;
 use Carbon\Carbon;
 
@@ -61,6 +62,15 @@ class Loan extends Model
 		'datetimestart',
 		'datetimestop'
 	);
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var array
+	 */
+	protected $dispatchesEvents = [
+		'created' => LoanCreated::class,
+	];
 
 	/**
 	 * Defines a relationship to a resource

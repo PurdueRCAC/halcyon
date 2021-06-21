@@ -267,7 +267,31 @@ class PurchasesController extends Controller
 		]);
 
 		$row = new Purchase;
-		$row->fill($request->all());
+		$row->resourceid = $request->input('resourceid');
+		$row->groupid = $request->input('groupid');
+		if ($request->has('sellergroupid'))
+		{
+			$row->sellergroupid = $request->input('sellergroupid');
+		}
+		$row->datetimestart = $request->input('datetimestart');
+		if ($request->has('datetimestop'))
+		{
+			$row->datetimestop = $request->input('datetimestop');
+			if (!$row->datetimestop)
+			{
+				unset($row->datetimestop);
+			}
+		}
+		if ($request->has('bytes'))
+		{
+			$row->bytes = $request->input('bytes');
+		}
+		if ($request->has('comment'))
+		{
+			$row->comment = $request->input('comment');
+		}
+		$row->comment = $row->comment ?: '';
+		//$row->fill($request->all());
 
 		if ($row->datetimestart->timestamp < Carbon::now()->timestamp - 300)
 		{
@@ -372,6 +396,10 @@ class PurchasesController extends Controller
 			//$group = $row->groupid;
 			$data = $row->toArray();
 			unset($data['id']);
+			if (isset($data['group']))
+			{
+				unset($data['group']);
+			}
 
 			$counter = new Purchase;
 			$counter->fill($data);

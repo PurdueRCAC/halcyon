@@ -5,6 +5,7 @@ namespace App\Modules\Storage\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Groups\Models\Group;
+use App\Modules\Storage\Events\PurchaseCreated;
 use App\Modules\History\Traits\Historable;
 use Carbon\Carbon;
 
@@ -61,6 +62,15 @@ class Purchase extends Model
 		'datetimestart',
 		'datetimestop'
 	);
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var array
+	 */
+	protected $dispatchesEvents = [
+		'created' => PurchaseCreated::class,
+	];
 
 	/**
 	 * Set a query's WHERE clause to include published state
