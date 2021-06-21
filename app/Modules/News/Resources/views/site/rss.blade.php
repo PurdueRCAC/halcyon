@@ -28,6 +28,7 @@ app('pathway')
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+	<h2>{{ trans('news::news.rss feeds') }}</h2>
 	<h3>{{ trans('news::news.feeds') }}</h3>
 	<ul class="rsscontainer">
 		<li class="form-check">
