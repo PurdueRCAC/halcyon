@@ -248,7 +248,7 @@ class Groups
 
 			$unixgroup = $uu->unixgroup;
 
-			if (!$queue || $queue->isTrashed())
+			if (!$unixgroup || $unixgroup->isTrashed())
 			{
 				continue;
 			}
@@ -380,7 +380,7 @@ class Groups
 
 					$unixgroup = $uu->unixgroup;
 
-					if (!$queue || $queue->isTrashed())
+					if (!$unixgroup || $unixgroup->isTrashed())
 					{
 						continue;
 					}
