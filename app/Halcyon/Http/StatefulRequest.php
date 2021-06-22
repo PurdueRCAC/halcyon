@@ -46,7 +46,7 @@ class StatefulRequest extends Request
 	 *
 	 * @return  void
 	 */
-	protected function mergeWithBase()
+	public function mergeWithBase()
 	{
 		static $merged = false;
 
