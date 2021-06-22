@@ -783,6 +783,14 @@ document.addEventListener('DOMContentLoaded', function() {
 			var bx = $(this);
 
 			if (bx.is(':checked')) {
+				if (bx.attr('data-base') && bx.attr('data-base') != bx.attr('id')) {
+					$('#' + bx.attr('data-base'))
+						.prop('checked', true)
+						.attr('checked', 'checked')
+						.prop('disabled', true)
+						.trigger('change');
+				}
+
 				var post = {
 					userid: $(this).data('userid')
 				};

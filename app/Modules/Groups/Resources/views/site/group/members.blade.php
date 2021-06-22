@@ -229,6 +229,7 @@ foreach ($unixgroups as $unixgroup)
 
 $managers = $managers->sortBy('username');
 $members = $members->sortBy('username');
+$i = 0;
 ?>
 <div class="row mb-3">
 	<div class="col-md-6">
@@ -421,7 +422,7 @@ $members = $members->sortBy('username');
 							<td class="col-queue text-nowrap text-center">
 								<input type="checkbox"
 									class="membership-toggle queue-toggle"
-									name="queue[{{ $queue->id }}]"{!! $checked !!}
+									name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
 									data-api-create="{{ route('api.queues.users.create') }}"
@@ -432,10 +433,14 @@ $members = $members->sortBy('username');
 						endforeach;
 
 						$uu = array();
+						$base = null;
 						foreach ($unixgroups as $unix):
 							//$uu[$unix->id] = $unix->members->pluck('userid')->toArray();
 							$checked = '';
 							$m = null;
+							if ($group->unixgroup == $unix->longname):
+								$base = $unix->id;
+							endif;
 							foreach ($unix->activemembers as $m):
 								//if (in_array($member->userid, $uu[$unix->id])):
 								if ($member->userid == $m->userid):
@@ -455,7 +460,9 @@ $members = $members->sortBy('username');
 							<td class="col-unixgroup text-nowrap text-center">
 								<input type="checkbox"
 									class="membership-toggle unixgroup-toggle"
-									name="unix[{{ $unix->id }}]"{{ $checked }}
+									name="unix[{{ $unix->id }}]"{!! $checked !!}
+									id="unix-{{ $i }}-{{ $unix->id }}"
+									data-base="unix-{{ $i }}-{{ $base }}"
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $unix->id }}"
 									data-api-create="{{ route('api.unixgroups.members.create') }}"
@@ -465,6 +472,7 @@ $members = $members->sortBy('username');
 							<?php
 						endforeach;
 						$csv_data[] = $csv;
+						$i++;
 						?>
 					</tr>
 				@endforeach
@@ -573,7 +581,7 @@ $members = $members->sortBy('username');
 								<td class="text-center col-queue">
 									<input type="checkbox"
 										class="membership-toggle queue-toggle"
-										name="queue[{{ $queue->id }}]"{{ $checked }}
+										name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $queue->id }}"
 										data-api-create="{{ route('api.queues.users.create') }}"
@@ -583,9 +591,13 @@ $members = $members->sortBy('username');
 								<?php
 							endforeach;
 
+							$base = null;
 							foreach ($unixgroups as $unix):
 								$checked = '';
 								$m = null;
+								if ($group->unixgroup == $unix->longname):
+									$base = $unix->id;
+								endif;
 								foreach ($unix->activemembers as $m):
 									//if (in_array($member->userid, $uu[$unix->id])):
 									if ($member->userid == $m->userid):
@@ -605,7 +617,9 @@ $members = $members->sortBy('username');
 								<td class="text-center col-unixgroup">
 									<input type="checkbox"
 										class="membership-toggle unixgroup-toggle"
-										name="unix[{{ $unix->id }}]"{{ $checked }}
+										name="unix[{{ $i }}][{{ $unix->id }}]"{!! $checked !!}
+										id="unix-{{ $i }}-{{ $unix->id }}"
+										data-base="unix-{{ $i }}-{{ $base }}"
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $unix->id }}"
 										data-api-create="{{ route('api.unixgroups.members.create') }}"
@@ -615,6 +629,7 @@ $members = $members->sortBy('username');
 								<?php
 							endforeach;
 							$csv_data[] = $csv;
+							$i++;
 							?>
 						</tr>
 					@endforeach
@@ -716,7 +731,7 @@ $members = $members->sortBy('username');
 							<td class="text-center col-queue">
 								<input type="checkbox"
 									class="membership-toggle queue-toggle"
-									name="queue[{{ $queue->id }}]"{{ $checked }}
+									name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
 									data-api-create="{{ route('api.queues.users.create') }}"
@@ -726,9 +741,13 @@ $members = $members->sortBy('username');
 							<?php
 						endforeach;
 
+						$base = null;
 						foreach ($unixgroups as $unix):
 							$checked = '';
 							$m = null;
+							if ($group->unixgroup == $unix->longname):
+								$base = $unix->id;
+							endif;
 							foreach ($unix->activemembers as $m):
 								if ($member->userid == $m->userid):
 									$checked = ' checked="checked"';
@@ -746,7 +765,9 @@ $members = $members->sortBy('username');
 							<td class="text-center col-unixgroup">
 								<input type="checkbox"
 									class="membership-toggle unixgroup-toggle"
-									name="unix[{{ $unix->id }}]"{{ $checked }}
+									name="unix[{{ $i }}][{{ $unix->id }}]"{!! $checked !!}
+									id="unix-{{ $i }}-{{ $unix->id }}"
+									data-base="unix-{{ $i }}-{{ $base }}"
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $unix->id }}"
 									data-api-create="{{ route('api.unixgroups.members.create') }}"
@@ -756,6 +777,7 @@ $members = $members->sortBy('username');
 							<?php
 						endforeach;
 						$csv_data[] = $csv;
+						$i++;
 						?>
 					</tr>
 				@endforeach
@@ -846,7 +868,7 @@ $members = $members->sortBy('username');
 								<td class="text-center col-queue">
 									<input type="checkbox"
 										class="membership-toggle queue-toggle"
-										name="queue[{{ $queue->id }}]"{{ $checked }}
+										name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $queue->id }}"
 										data-api-create="{{ route('api.queues.users.create') }}"
@@ -857,9 +879,13 @@ $members = $members->sortBy('username');
 								<?php
 							endforeach;
 
+							$base = null;
 							foreach ($unixgroups as $unix):
 								$checked = '';
 								$m = null;
+								if ($group->unixgroup == $unix->longname):
+									$base = $unix->id;
+								endif;
 								foreach ($unix->members()->withTrashed()->get() as $m):
 									//if (in_array($member->userid, $uu[$unix->id])):
 									if ($member->userid == $m->userid):
@@ -873,7 +899,9 @@ $members = $members->sortBy('username');
 								<td class="text-center col-unixgroup">
 									<input type="checkbox"
 										class="membership-toggle unixgroup-toggle"
-										name="unix[{{ $unix->id }}]"{{ $checked }}
+										name="unix[{{ $i }}][{{ $unix->id }}]"{!! $checked !!}
+										id="unix-{{ $i }}-{{ $unix->id }}"
+										data-base="unix-{{ $i }}-{{ $base }}"
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $unix->groupid }}"
 										data-api-create="{{ route('api.unixgroups.members.create') }}"
@@ -884,6 +912,7 @@ $members = $members->sortBy('username');
 								<?php
 							endforeach;
 							$csv_data[] = $csv;
+							$i++;
 							?>
 						</tr>
 					@endforeach
