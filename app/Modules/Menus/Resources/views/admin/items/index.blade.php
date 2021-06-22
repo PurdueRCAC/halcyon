@@ -163,7 +163,6 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 			</div>
 		</div>
 
-		<input type="hidden" name="menutype" value="{{ $filters['menutype'] }}" />
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 

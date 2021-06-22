@@ -41,10 +41,17 @@ class ItemsController extends Controller
 			'order_dir' => Item::$orderDir,
 		);
 
+		$reset = false;
 		foreach ($filters as $key => $default)
 		{
+			if ($key != 'page' && session()->get($key) != $request->mergeWithBase()->input($key))
+			{
+				$reset = true;
+			}
 			$filters[$key] = $request->state('menus.items.' . $key, $key, $default);
 		}
+
+		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if ($menutype)
 		{
@@ -525,6 +532,10 @@ class ItemsController extends Controller
 
 		$row = $id ? Item::findOrFail($id) : new Item();
 		$row->fill($request->input('fields'));
+		if ($request->has('fields.page_id'))
+		{
+			$row->page_id = $request->input('fields.page_id');
+		}
 
 		if (!$row->save())
 		{
