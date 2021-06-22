@@ -469,52 +469,49 @@ document.addEventListener('DOMContentLoaded', function() {
 					});
 
 					$('.data-col-filter').on('change', function(){
-						var val = $(this).val(),
-						index = $(this).data('index');
+						$.fn.dataTable.ext.search = [];//.pop();
 
-						// If all records should be displayed
-						if (val === 'all'){
-							$.fn.dataTable.ext.search.pop();
-							table.api().draw();
-						}
+						$('.data-col-filter').each(function(k, el){
+							var val = $(this).val(),
+							index = $(this).data('index');
 
-						// If selected records should be displayed
-						if (val === 'selected'){
-							$.fn.dataTable.ext.search.pop();
-							$.fn.dataTable.ext.search.push(
-								function (settings, data, dataIndex){
-									//return ($(table.api().row(dataIndex).node()).hasClass('selected')) ? true : false;
-									var has = $(table
-										.api()
-										.cell(dataIndex, index)
-										.node())
-										.find(':checked').length;
+							// If all records should be displayed
+							if (val === 'all'){
+								return;
+							}
 
-									return has ? true : false;
-								}
-							);
-							
-							table.api().draw();
-						}
+							// If selected records should be displayed
+							if (val === 'selected'){
+								$.fn.dataTable.ext.search.push(
+									function (settings, data, dataIndex){
+										var has = $(table
+											.api()
+											.cell(dataIndex, index)
+											.node())
+											.find(':checked').length;
 
-						// If selected records should not be displayed
-						if (val === 'not-selected'){
-							$.fn.dataTable.ext.search.pop();
-							$.fn.dataTable.ext.search.push(
-								function (settings, data, dataIndex){
-									//($(table.api().row(dataIndex).node()).hasClass('selected')) ? false : true;
-									var has = $(table
-										.api()
-										.cell(dataIndex, index)
-										.node())
-										.find(':checked').length;
+										return has ? true : false;
+									}
+								);
+							}
 
-									return has ? false : true;
-								}
-							);
-							
-							table.api().draw();
-						}
+							// If selected records should not be displayed
+							if (val === 'not-selected'){
+								$.fn.dataTable.ext.search.push(
+									function (settings, data, dataIndex){
+										var has = $(table
+											.api()
+											.cell(dataIndex, index)
+											.node())
+											.find(':checked').length;
+
+										return has ? false : true;
+									}
+								);
+							}
+						});
+
+						table.api().draw();
 					});
 				}
 			});
