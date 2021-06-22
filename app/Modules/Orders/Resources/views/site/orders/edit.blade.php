@@ -967,8 +967,12 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											@endif
 											@if ($account->purchaseio)
 												<span class="account-edit-hide">Internal order: <span class="account_span">{{ $account->purchaseio }}</span></span>
-											@else
+											@elseif ($account->purchasewbse)
 												<span class="account-edit-hide">WBSE: <span class="account_span">{{ $account->purchasewbse }}</span></span>
+											@elseif ($account->purchasefund)
+												<span class="account-edit-hide">Fund: <span class="account_span">{{ $account->purchasefund }}</span></span><br />
+												<span class="account-edit-hide">Cost Center: <span class="account_span">{{ $account->purchasecostcenter }}</span></span><br />
+												<span class="account-edit-hide">Order: <span class="account_span">{{ $account->purchaseorder }}</span></span>
 											@endif
 											<br />
 											<label class="sr-only" for="justification{{ $account->id }}">Budget justification:</label>
