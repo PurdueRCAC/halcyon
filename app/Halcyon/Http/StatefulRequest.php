@@ -55,5 +55,7 @@ class StatefulRequest extends Request
 			$this->merge(request()->all());
 			$merged = true;
 		}
+
+		return $this;
 	}
 }
