@@ -62,4 +62,5 @@ return [
 		'ownerauthorized' => 'Manager Approved',
 		'ownerremoved' => 'Manager Removed',
 	],
+	'group member' => 'group member',
 ];

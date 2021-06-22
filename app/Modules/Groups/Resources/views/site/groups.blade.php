@@ -133,12 +133,12 @@ function CreateNewGroup() {
 				<td>
 					@if ($g->isManager())
 						<span class="badge badge-success">
-					@elseif ($g->isMember())
-						<span class="badge badge-secondary">
 					@elseif ($g->isViewer())
 						<span class="badge badge-info">
 					@elseif ($g->isPending())
 						<span class="badge badge-warning">
+					@else ($g->isMember())
+						<span class="badge badge-secondary">
 					@endif
 						{{ $g->type->name }}
 					</span>

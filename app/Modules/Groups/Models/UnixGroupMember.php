@@ -107,4 +107,54 @@ class UnixGroupMember extends Model
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
+
+	/**
+	 * Get parent user
+	 *
+	 * @return  object
+	 */
+	public function getTypeAttribute()
+	{
+		return Type::find(Type::MEMBER);
+	}
+
+	/**
+	 * Is regular member?
+	 *
+	 * @return  bool
+	 */
+	public function isMember()
+	{
+		return true;
+	}
+
+	/**
+	 * Is manager?
+	 *
+	 * @return  bool
+	 */
+	public function isManager()
+	{
+		return false;
+	}
+
+	/**
+	 * Is viewer?
+	 *
+	 * @return  bool
+	 */
+	public function isViewer()
+	{
+		return false;
+	}
+
+	/**
+	 * Is memebership pending?
+	 *
+	 * @return  bool
+	 */
+	public function isPending()
+	{
+		return false;
+	}
 }

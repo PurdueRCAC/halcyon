@@ -201,6 +201,8 @@ class Groups
 			}
 		}*/
 		$queueusers = $user->queues()
+			->withTrashed()
+			->whereIsActive()
 			->whereIn('membertype', [1, 4])
 			->get();
 
@@ -226,6 +228,39 @@ class Groups
 			if (!in_array($queue->groupid, $groups))
 			{
 				$groups[] = $queue->groupid;
+				$total++;
+			}
+		}
+
+		$unixusers = UnixGroupMember::query()
+			->withTrashed()
+			->whereIsActive()
+			->where('userid', '=', $user->id)
+			->orderBy('datetimecreated', 'asc')
+			->get();
+
+		foreach ($unixusers as $uu)
+		{
+			if ($uu->isTrashed())
+			{
+				continue;
+			}
+
+			$unixgroup = $uu->unixgroup;
+
+			if (!$queue || $queue->isTrashed())
+			{
+				continue;
+			}
+
+			if (!$unixgroup->group)
+			{
+				continue;
+			}
+
+			if (!in_array($unixgroup->groupid, $groups))
+			{
+				$groups[] = $unixgroup->groupid;
 				$total++;
 			}
 		}
@@ -336,6 +371,35 @@ class Groups
 					}
 				}
 
+				foreach ($unixusers as $uu)
+				{
+					if ($uu->isTrashed())
+					{
+						continue;
+					}
+
+					$unixgroup = $uu->unixgroup;
+
+					if (!$queue || $queue->isTrashed())
+					{
+						continue;
+					}
+
+					if (!$unixgroup->group)
+					{
+						continue;
+					}
+
+					if (!in_array($unixgroup->groupid, $groups))
+					{
+						$uu->groupid = $unixgroup->groupid;
+						$uu->group = $unixgroup->group;
+						$rows->add($uu);
+						$groups[] = $unixgroup->groupid;
+					}
+				}
+
+				/*
 				$managers = $rows->filter(function($value, $key)
 				{
 					return $value->isManager();
@@ -343,10 +407,6 @@ class Groups
 
 				foreach ($rows as $k => $g)
 				{
-					/*if (in_array($g->groupid, $managers))
-					{
-						$rows->forget($k);
-					}*/
 					foreach ($managers as $manager)
 					{
 						if ($g->groupid == $manager->groupid && $g->id != $manager->id)
@@ -355,6 +415,7 @@ class Groups
 						}
 					}
 				}
+				*/
 
 				$content = view('groups::site.groups', [
 					'user'   => $user,
