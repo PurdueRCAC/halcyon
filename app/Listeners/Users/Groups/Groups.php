@@ -399,7 +399,6 @@ class Groups
 					}
 				}
 
-				/*
 				$managers = $rows->filter(function($value, $key)
 				{
 					return $value->isManager();
@@ -415,7 +414,6 @@ class Groups
 						}
 					}
 				}
-				*/
 
 				$content = view('groups::site.groups', [
 					'user'   => $user,
