@@ -1319,6 +1319,18 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											{
 												$did = '<span class="text-danger">denied</span> account #' . $action->historable_id;
 											}
+											if (in_array('notice', $fields) && count($fields) == 1)
+											{
+												$acct = '#' . $action->historable_id;
+												foreach ($order->accounts as $account)
+												{
+													if ($account->id == $action->historable_id)
+													{
+														$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
+													}
+												}
+												$did = '<span class="text-info">set</span> reminder on account ' . $acct;
+											}
 										}
 										if ($action->action == 'deleted')
 										{
