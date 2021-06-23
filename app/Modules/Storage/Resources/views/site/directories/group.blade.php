@@ -1027,7 +1027,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="sell-datetimestart">{{ trans('storage::storage.start') }} <span class="required">*</span></label>
-										<input type="text" class="form-control datetime" id="sell-datetimestart" name="datetimestart" required value="{{ Carbon\Carbon::now()->toDateTimeString() }}" />
+										<input type="text" class="form-control datetime" id="sell-datetimestart" name="datetimestart" required value="{{ Carbon\Carbon::now()->modify('+10 minutes')->toDateTimeString() }}" />
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -1087,7 +1087,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="loan-datetimestart">{{ trans('queues::queues.start') }} <span class="required">*</span></label>
-										<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart" required value="{{ Carbon\Carbon::now()->toDateTimeString() }}" />
+										<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart" required value="{{ Carbon\Carbon::now()->modify('+10 minutes')->toDateTimeString() }}" />
 									</div>
 								</div>
 								<div class="col-md-6">
