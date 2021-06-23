@@ -5,6 +5,7 @@ namespace App\Modules\Queues\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Queues\Models\Loan;
@@ -243,15 +244,32 @@ class LoansController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		/*$request->validate([
 			'queueid' => 'required|integer',
 			'lenderqueueid' => 'required|integer',
 			'datetimestart' => 'nullable|date',
 			'datetimestop' => 'nullable|date',
-			'nodecount' => 'nullable|integer',
+			'nodecount' => 'nullable|numeric',
 			'corecount' => 'nullable|integer',
-			'comment' => 'nullable|string',
-		]);
+			'comment' => 'nullable|string|max:2000',
+		]);*/
+
+		$rules = [
+			'queueid' => 'required|integer',
+			'lenderqueueid' => 'required|integer',
+			'datetimestart' => 'nullable|date',
+			'datetimestop' => 'nullable|date',
+			'nodecount' => 'nullable|numeric',
+			'corecount' => 'nullable|integer',
+			'comment' => 'nullable|string|max:2000',
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Loan;
 		$row->queueid = $request->input('queueid');
@@ -345,12 +363,12 @@ class LoansController extends Controller
 
 				if (!$counter->save())
 				{
-					return response()->json(['message' => trans('global.messages.Failed to update `queueloans` counter entry for #:id', ['id' => $exist->id])], 500);
+					return response()->json(['message' => trans('queues::queues.error.failed to update counter', ['id' => $exist->id])], 500);
 				}
 			}
 			else
 			{
-				return response()->json(['message' => trans('global.messages.Failed to retrieve `queueloans` counter entry')], 506);
+				return response()->json(['message' => trans('queues::queues.error.failed to find counter')], 506);
 			}
 
 			return new JsonResource($exist);
@@ -378,6 +396,8 @@ class LoansController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
+		$row->api = route('api.queues.loans.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
@@ -402,6 +422,8 @@ class LoansController extends Controller
 	public function read($id)
 	{
 		$row = Loan::findOrFail($id);
+
+		$row->api = route('api.queues.loans.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -485,15 +507,32 @@ class LoansController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		/*$request->validate([
 			//'queueid' => 'nullable|integer',
 			//'lenderqueueid' => 'nullable|integer',
 			'datetimestart' => 'nullable|date',
 			'datetimestop' => 'nullable|date',
-			'nodecount' => 'nullable|integer',
+			'nodecount' => 'nullable|numeric',
 			'corecount' => 'nullable|integer',
-			'comment' => 'nullable|string',
-		]);
+			'comment' => 'nullable|string|max:2000',
+		]);*/
+
+		$rules = [
+			//'queueid' => 'nullable|integer',
+			//'lenderqueueid' => 'nullable|integer',
+			'datetimestart' => 'nullable|date',
+			'datetimestop' => 'nullable|date',
+			'nodecount' => 'nullable|numeric',
+			'corecount' => 'nullable|integer',
+			'comment' => 'nullable|string|max:2000',
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Loan::findOrFail($id);
 
@@ -519,7 +558,7 @@ class LoansController extends Controller
 
 		if ($row->datetimestop && $row->datetimestart > $row->datetimestop)
 		{
-			return response()->json(['message' => trans('queues::queues.Field `start` cannot be after or equal to stop time')], 409);
+			return response()->json(['message' => trans('queues::queues.error.start cannot be after stop')], 409);
 		}
 
 		// Sanity checks if we are changing coreecount
@@ -530,7 +569,7 @@ class LoansController extends Controller
 			// Can't change corecount of a entry that has already started
 			if ($row->hasStarted())
 			{
-				return response()->json(['message' => trans('queues::queues.Field `start` cannot be before "now"')], 409);
+				return response()->json(['message' => trans('queues::queues.error.corecount cannot be modified')], 409);
 			}
 
 			// Don't allow swapping of sale direction or nullation of sale
@@ -565,11 +604,11 @@ class LoansController extends Controller
 
 			if (!$count)
 			{
-				return response()->json(['message' => trans('queues::queues.Have not been sold anything and never will have anything')], 409);
+				return response()->json(['message' => trans('queues::queues.error.queue is empty')], 409);
 			}
 			elseif ($count->datetimestart > $row->datetimestart)
 			{
-				return response()->json(['message' => trans('queues::queues.Have not been sold anything before this would start')], 409);
+				return response()->json(['message' => trans('queues::queues.error.queue has not started')], 409);
 			}
 
 			// Make sure we have enough cores in the source 
@@ -638,13 +677,15 @@ class LoansController extends Controller
 
 			if (!$counter->save())
 			{
-				return response()->json(['message' => trans('global.messages.Failed to update `queueloans` counter entry for #:id', ['id' => $counter->id])], 500);
+				return response()->json(['message' => trans('queues::queues.error.failed to update counter', ['id' => $counter->id])], 500);
 			}
 		}
 		else
 		{
-			return response()->json(['message' => trans('global.messages.Failed to retrieve `queueloans` counter entry')], 506);
+			return response()->json(['message' => trans('queues::queues.error.failed to find counter')], 506);
 		}
+
+		$row->api = route('api.queues.loans.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
