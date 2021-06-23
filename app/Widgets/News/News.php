@@ -4,6 +4,7 @@ namespace App\Widgets\News;
 use App\Modules\Widgets\Entities\Widget;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
+use App\Modules\News\Models\Newsresource;
 
 /**
  * Display news articles from selected category
@@ -17,7 +18,10 @@ class News extends Widget
 	 */
 	public function run()
 	{
+		$a = (new Article)->getTable();
+
 		$query = Article::query()
+			->select($a . '.*')
 			->wherePublished();
 
 		$type = new Type();
@@ -26,16 +30,24 @@ class News extends Widget
 		{
 			$type = Type::findOrFail($id);
 
-			$query->where('newstypeid', '=', $id);
+			$query->where($a . '.newstypeid', '=', $id);
 		}
 
 		if ($location = (string)$this->params->get('location'))
 		{
-			$query->where('location', '=', $location);
+			$query->where($a . '.location', '=', $location);
+		}
+
+		if ($resources = $this->params->get('resources'))
+		{
+			$r = (new Newsresource)->getTable();
+
+			$query->join($r, $r . '.newsid', $a . '.id');
+			$query->whereIn($r . '.resourceid', $resources);
 		}
 
 		$articles = $query
-			->orderBy('datetimenews', 'desc')
+			->orderBy($a . '.datetimenews', 'desc')
 			->limit($this->params->get('limit', 5))
 			->get();
 

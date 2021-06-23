@@ -39,5 +39,7 @@ return [
 		'direction old to new' => 'Oldest to Newest',
 		'location' => 'Filter by location',
 		'location desc' => 'Filter news articles by location.',
+		'resource' => 'Resource',
+		'resource desc' => 'Limit entries by selected resources.',
 	],
 ];

@@ -6,6 +6,9 @@
 				<option value="">widget.news::news.params.all categories</option>
 			</field>
 			<field name="location" type="text" default="" label="widget.news::news.params.location" description="widget.news::news.params.location desc" />
+			<field name="resources" type="App\Modules\Resources\Models\Fields\ResourceEntry" extension="resources" default="" size="10" multiple="multiple" label="widget.news::news.params.resource" description="widget.news::news.params.resource desc" >
+				<option value="">widget.news::news.params.all resources</option>
+			</field>
 			<field name="item_title" type="radio" default="0" label="widget.news::news.params.show title" description="widget.news::news.params.show title desc">
 				<option value="1">global.yes</option>
 				<option value="0">global.no</option>
