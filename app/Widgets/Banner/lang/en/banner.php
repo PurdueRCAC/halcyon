@@ -6,7 +6,7 @@
  */
 
 return [
-	'widget name' => 'News',
+	'widget name' => 'Banner',
 	'widget desc' => 'This displays a list of news articles',
 
 	// Misc.
