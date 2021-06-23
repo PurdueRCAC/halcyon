@@ -3,7 +3,7 @@
  * News widget layout
  */
 ?>
-<div class="news<?php if ($params->get('class')) { echo ' ' .  $class; } ?>">
+<div class="news<?php if ($params->get('class')) { echo ' ' .  $params->get('class'); } ?>">
 	<?php if ($params->get('show_title')): ?>
 		<{{ $params->get('item_heading', 'h3') }}>
 			<?php if ($params->get('catid')): ?>
