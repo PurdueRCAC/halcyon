@@ -822,11 +822,6 @@ app('pathway')
 					<textarea id="loan-comment" name="comment" class="form-control" rows="3" cols="40"></textarea>
 				</div>
 
-				<div class="form-group">
-					<label for="loan-comment">{{ trans('queues::queues.comment') }}</label>
-					<textarea id="loan-comment" name="comment" class="form-control" cols="35" rows="3"></textarea>
-				</div>
-
 				<div class="dialog-footer text-right">
 					<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-success="{{ trans('queues::queues.item created') }}" />
 				</div>
