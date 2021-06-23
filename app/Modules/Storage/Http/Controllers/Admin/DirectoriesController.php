@@ -108,17 +108,17 @@ class DirectoriesController extends Controller
 			->orderBy($d . '.' . $filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		$query = StorageResource::query();
+		$query = StorageResource::query()->withTrashed();
 
 		if ($filters['state'] != '*')
 		{
 			if ($filters['state'] == 'active')
 			{
-				$query->where('datetimeremoved', '=', '0000-00-00 00:00:00');
+				$query->whereIsActive();
 			}
 			elseif ($filters['state'] == 'inactive')
 			{
-				$query->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+				//$query->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
 			}
 		}
 
