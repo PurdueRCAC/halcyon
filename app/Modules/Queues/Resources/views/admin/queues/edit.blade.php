@@ -522,7 +522,7 @@ app('pathway')
 						</td>
 						<td class="text-right">
 							<a href="#dialog-edit{{ $item->id }}" class="btn btn-sm edit"
-								data-success="{{ trans('queues::queues.item updated') }}"
+								data-success="{{ trans('global.messages.item updated') }}"
 								data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes'). '.update', ['id' => $item->id]) }}"
 								data-id="{{ $item->id }}">
 								<span class="icon-edit" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
@@ -532,7 +532,7 @@ app('pathway')
 							@if (auth()->user()->can('admin queues'))
 							<button class="btn btn-sm text-danger delete"
 								data-confirm="{{ trans('global.confirm delete') }}"
-								data-success="{{ trans('queues::queues.item deleted') }}"
+								data-success="{{ trans('global.messages.item deleted', ['count' => 1]) }}"
 								data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes'). '.delete', ['id' => $item->id]) }}"
 								data-id="{{ $item->id }}">
 								<span class="icon-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
@@ -540,7 +540,7 @@ app('pathway')
 							@endif
 
 							<div class="dialog" id="dialog-edit{{ $item->id }}" title="{{ trans('queues::queues.edit ' . ($item->type == 1 ? 'loan' : 'size')) }}">
-								<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.loans.update', ['id' => $item->id]) }}">
+								<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes') . '.update', ['id' => $item->id]) }}">
 									<div class="row">
 										<div class="col-md-6">
 											<div class="form-group">
