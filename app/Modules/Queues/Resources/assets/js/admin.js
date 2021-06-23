@@ -398,7 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	$('.nodes').on('keyup', function (e) {
+	$('.nodes').on('change', function (e) {
 		var nodecores = $(this).data('nodes');
 
 		var cores = document.getElementById(this.getAttribute('data-cores-field'));
@@ -411,7 +411,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	$('.cores').on('keyup', function (e) {
+	$('.cores').on('change', function (e) {
 		var nodecores = $(this).data('cores');
 
 		if (nodecores == 0) {
