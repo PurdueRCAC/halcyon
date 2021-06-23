@@ -122,6 +122,9 @@
 	margin: 0 0 1em 0;
 	font-size: 1em;
 }
+.sidenav-news .news {
+	border-bottom: none;
+}
 .card,
 a.card,
 a.card:link {
