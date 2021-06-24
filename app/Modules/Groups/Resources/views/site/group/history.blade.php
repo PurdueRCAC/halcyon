@@ -65,6 +65,23 @@ if (count($l))
 			<?php
 			foreach ($l as $log)
 			{
+				if ($log->targetuserid <= 0 && $log->payload)
+				{
+					if (isset($log->jsonPayload->userid) && $log->jsonPayload->userid)
+					{
+						if (is_numeric($log->jsonPayload->userid))
+						{
+							$log->targetuserid = $log->jsonPayload->userid;
+						}
+						else
+						{
+							$target = App\Modules\Users\Models\User::findByUsername($log->jsonPayload->userid);
+							$log->targetuserid = $target ? $target->id : $log->payload->userid;
+						}
+						$log->save();
+					}
+				}
+
 				switch ($log->classname)
 				{
 					case 'groupowner':
