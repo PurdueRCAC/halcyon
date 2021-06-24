@@ -265,15 +265,18 @@ class Groups
 			}
 		}
 
-		if ($event->getActive() == 'groups')
+		if ($event->getActive() == 'groups' || app('isAdmin'))
 		{
-			app('pathway')
-				->append(
-					trans('groups::groups.my groups'),
-					route('site.users.account.section', $r)
-				);
+			if (!app('isAdmin'))
+			{
+				app('pathway')
+					->append(
+						trans('groups::groups.my groups'),
+						route('site.users.account.section', $r)
+					);
+			}
 
-			if ($id = request()->segment(3))
+			if (!app('isAdmin') && $id = request()->segment(3))
 			{
 				$group = Group::findOrFail($id);
 
@@ -415,7 +418,7 @@ class Groups
 					}
 				}
 
-				$content = view('groups::site.groups', [
+				$content = view('groups::' . (app('isAdmin') ? 'admin.groups.user' : 'site.groups'), [
 					'user'   => $user,
 					'groups' => $rows
 				]);
@@ -424,7 +427,7 @@ class Groups
 
 		$event->addSection(
 			route('site.users.account.section', $r),
-			trans('groups::groups.my groups') . ' <span class="badge pull-right">' . $total . '</span>',
+			trans('groups::groups.my groups') . (app('isAdmin') ? ' (' . $total . ')' : ' <span class="badge pull-right">' . $total . '</span>'),
 			($event->getActive() == 'groups'),
 			$content
 		);

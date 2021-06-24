@@ -237,7 +237,10 @@ class Orders
 			}
 
 			$total = $query->count();
-			/*$rows = $query
+
+		if (app('isAdmin'))
+		{
+			$rows = $query
 				->orderBy($filters['order'], $filters['order_dir'])
 				->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 				->appends(array_filter($filters));
@@ -248,17 +251,17 @@ class Orders
 				->orderBy('name', 'asc')
 				->get();
 
-			$content = view('orders::site.orders.profile', [
-				'user'   => $user,
+			$content = view('orders::admin.orders.user', [
+				'user' => $user,
 				'rows' => $rows,
 				'filters' => $filters,
 				'categories' => $categories,
 			]);
-		}*/
+		}
 
 		$event->addSection(
 			$route, //route('site.users.account.section', $r),
-			trans('orders::orders.my orders') . ' <span class="badge pull-right">' . $total . '</span>',
+			trans('orders::orders.my orders') . ' <span class="pull-right">(' . $total . ')</span>',
 			($event->getActive() == 'orders'),
 			$content
 		);

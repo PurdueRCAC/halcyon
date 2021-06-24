@@ -31,6 +31,11 @@ class Courses
 	 */
 	public function handleUserDisplay(UserDisplay $event)
 	{
+		if (app('isAdmin'))
+		{
+			return;
+		}
+
 		$content = null;
 		$user = $event->getUser();
 
@@ -76,7 +81,7 @@ class Courses
 
 		$event->addSection(
 			route('site.users.account.section', $r),
-			trans('courses::courses.my courses') . ' <span class="badge pull-right">' . $total . '</span>',
+			trans('courses::courses.my courses') . (app('isAdmin') ? ' (' . $total . ')' : ' <span class="badge pull-right">' . $total . '</span>'),
 			($event->getActive() == 'class'),
 			$content
 		);

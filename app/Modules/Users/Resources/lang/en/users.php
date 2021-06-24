@@ -96,4 +96,5 @@ return [
 	'access' => 'Access',
 	'private' => 'Private',
 	'locked' => 'Locked',
+	'sessions' => 'Sessions',
 ];

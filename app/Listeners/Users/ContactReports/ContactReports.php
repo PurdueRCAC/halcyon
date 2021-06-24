@@ -60,7 +60,7 @@ class ContactReports
 			->where($u . '.userid', '=', $user->id)
 			->count();
 
-		if ($event->getActive() == 'contactreports')
+		if ($event->getActive() == 'contactreports' || app('isAdmin'))
 		{
 			app('pathway')
 				->append(
@@ -83,7 +83,7 @@ class ContactReports
 
 		$event->addSection(
 			route('site.users.account.section', $r),
-			trans('contactreports::contactreports.contact reports') . ' <span class="badge pull-right">' . $total . '</span>',
+			trans('contactreports::contactreports.contact reports') . (app('isAdmin') ? ' (' . $total . ')' : ' <span class="badge pull-right">' . $total . '</span>'),
 			($event->getActive() == 'contactreports'),
 			$content
 		);

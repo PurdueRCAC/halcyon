@@ -31,6 +31,11 @@ class News
 	 */
 	public function handleUserDisplay(UserDisplay $event)
 	{
+		if (app('isAdmin'))
+		{
+			return;
+		}
+
 		$listener = Listener::query()
 			->where('type', '=', 'listener')
 			->where('folder', '=', 'users')

@@ -50,7 +50,7 @@ class History
 			$r['u'] = $user->id;
 		}
 
-		if ($event->getActive() == 'history')
+		if ($event->getActive() == 'history' || app('isAdmin'))
 		{
 			app('pathway')
 				->append(

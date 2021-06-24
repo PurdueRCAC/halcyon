@@ -41,7 +41,7 @@ class Quotas
 			$rt['u'] = $user->id;
 		}
 
-		if ($event->getActive() == 'quotas')
+		if ($event->getActive() == 'quotas' || app('isAdmin'))
 		{
 			$d = (new Directory)->getTable();
 			$r = (new StorageResource)->getTable();

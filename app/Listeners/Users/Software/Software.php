@@ -34,6 +34,11 @@ class Software
 	 */
 	public function handleUserDisplay(UserDisplay $event)
 	{
+		if (app('isAdmin'))
+		{
+			return;
+		}
+
 		$content = null;
 		$user = $event->getUser();
 

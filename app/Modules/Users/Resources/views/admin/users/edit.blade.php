@@ -146,6 +146,11 @@ app('pathway')
 					<li><a href="#user-notes">Notes</a></li>
 				@endif
 				<!-- <li><a href="#user-history">History</a></li> -->
+				@foreach ($sections as $section)
+					<li>
+						<a href="#user-{{ $section['route'] }}">{!! $section['name'] !!}</a>
+					</li>
+				@endforeach
 			@endif
 		</ul>
 		<div id="user-account">
@@ -208,22 +213,62 @@ app('pathway')
 				<tbody>
 					<tr>
 						<th scope="row">{{ trans('users::users.register date') }}</th>
-						<td>{{ $user->datecreated }}</td>
+						<td>
+							@if ($user->datecreated && $user->datecreated != '0000-00-00 00:00:00' && $user->datecreated != '-0001-11-30 00:00:00')
+								<time datetime="{{ $user->datecreated }}">{{ $user->datecreated }}</time>
+							@else
+								<span class="unknown">{{ trans('global.unknown') }}</span>
+							@endif
+						</td>
 					</tr>
+				@if ($user->id)
 					<tr>
 						<th scope="row">{{ trans('users::users.last visit date') }}</th>
-						<td>{{ $user->hasVisited() ? $user->last_visit : trans('global.never') }}</td>
+						<td>
+							@if ($user->hasVisited())
+								<time datetime="{{ $user->last_visit }}">{{ $user->last_visit }}</time>
+							@else
+								{{ trans('global.never') }}
+							@endif
+						</td>
 					</tr>
 					@if ($user->isTrashed())
 					<tr>
 						<th scope="row">{{ trans('users::users.removed date') }}</th>
-						<td>{{ $user->dateremoved }} ?></td>
+						<td>
+							<time datetime="{{ $user->dateremoved }}">{{ $user->dateremoved }}</time>
+						</td>
 					</tr>
 					@endif
+					<tr>
+						<th scope="row">Title</th>
+						<td>{!! $user->title ? e($user->title) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
+					</tr>
+					<tr>
+						<th scope="row">Campus</th>
+						<td>{!! $user->campus ? e($user->campus) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
+					</tr>
+					<tr>
+						<th scope="row">Phone</th>
+						<td>{!! $user->phone ? e($user->phone) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
+					</tr>
+					<tr>
+						<th scope="row">Building</th>
+						<td>{!! $user->building ? e($user->building) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
+					</tr>
+					<tr>
+						<th scope="row">Email</th>
+						<td>{{ $user->email }}</td>
+					</tr>
+					<tr>
+						<th scope="row">Room</th>
+						<td>{!! $user->roomnumber ? e($user->roomnumber) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
+					</tr>
+				@endif
 				</tbody>
 			</table>
 
-			@if ($user->id)
+			<?php /*@if ($user->id)
 			<fieldset class="adminform">
 				<legend>{{ trans('users::users.status') }}</legend>
 
@@ -247,25 +292,41 @@ app('pathway')
 					</fieldset>
 				</div>
 			</fieldset>
-			@endif
+			@endif*/ ?>
 
-			<?php /*@foreach ($user->sessions as $session)
+			
 			<fieldset class="adminform">
 				<legend>{{ trans('users::users.sessions') }}</legend>
-				<div class="panel session">
-					<div class="card-body">
-						<div class="session-ip">
-							<strong>{{ $session->ip_address == '::1' ? 'localhost' : $session->ip_address }}</strong>
-						</div>
-					@if ($session->id == session()->getId())
-						<div class="session-current">
-							Your current session
-						</div>
-					@endif
-					</div>
+				<div class="card session">
+					<ul class="list-group list-group-flush">
+						@foreach ($user->sessions as $session)
+						<li class="list-group-item">
+
+									<div class="session-ip card-title">
+										<div class="row">
+											<div class="col-md-4">
+												<strong>{{ $session->ip_address == '::1' ? 'localhost' : $session->ip_address }}</strong>
+											</div>
+											<div class="col-md-4">
+												{{ $session->last_activity->diffForHumans() }}
+											</div>
+											<div class="col-md-4 text-right">
+												@if ($session->id == session()->getId())
+													<span class="badge badge-info float-right">Your current session</span>
+												@endif
+											</div>
+										</div>
+									</div>
+									<div class="session-current card-text text-muted">
+										{{ $session->user_agent }}
+									</div>
+
+						</li>
+						@endforeach
+					</ul>
 				</div>
 			</fieldset>
-			@endforeach*/ ?>
+			
 				</div><!-- / .col -->
 			</div><!-- / .grid -->
 		</div><!-- / #user-account -->
@@ -365,6 +426,11 @@ app('pathway')
 				</script>
 			</div>
 		</div>
+		@foreach ($sections as $section)
+			<div id="user-{{ $section['route'] }}">
+				{!! $section['content'] !!}
+			</div>
+		@endforeach
 		@if (auth()->user()->can('view users.notes'))
 			<div id="user-notes">
 				<div class="row">
