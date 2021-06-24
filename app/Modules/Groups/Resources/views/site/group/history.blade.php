@@ -81,6 +81,14 @@ if (count($l))
 						$log->save();
 					}
 				}
+				if ($log->targetobjectid <= 0 && $log->payload)
+				{
+					if (isset($log->jsonPayload->unixgroupid) && $log->jsonPayload->unixgroupid)
+					{
+						$log->targetobjectid = $log->jsonPayload->unixgroupid;
+						$log->save();
+					}
+				}
 
 				switch ($log->classname)
 				{
