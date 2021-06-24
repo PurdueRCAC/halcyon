@@ -5,7 +5,7 @@ use Illuminate\Routing\Router;
 /** @var Router $router */
 $router->group(['prefix' => 'queues'], function (Router $router)
 {
-	$router->group(['prefix' => 'types'], function (Router $router)
+	$router->group(['prefix' => 'types', 'middleware' => 'auth:api'], function (Router $router)
 	{
 		$router->get('/', [
 			'as' => 'api.queues.types',
@@ -32,7 +32,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		])->where('id', '[0-9]+');
 	});
 
-	$router->group(['prefix' => 'walltimes'], function (Router $router)
+	$router->group(['prefix' => 'walltimes', 'middleware' => 'auth:api'], function (Router $router)
 	{
 		$router->get('/', [
 			'as' => 'api.queues.walltimes',
@@ -59,7 +59,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		])->where('id', '[0-9]+');
 	});
 
-	$router->group(['prefix' => 'schedulers'], function (Router $router)
+	$router->group(['prefix' => 'schedulers', 'middleware' => 'auth:api'], function (Router $router)
 	{
 		$router->get('/', [
 			'as' => 'api.queues.schedulers',
@@ -86,7 +86,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		])->where('id', '[0-9]+');
 	});
 
-	$router->group(['prefix' => 'schedulerpolicies'], function (Router $router)
+	$router->group(['prefix' => 'schedulerpolicies', 'middleware' => 'auth:api'], function (Router $router)
 	{
 		$router->get('/', [
 			'as' => 'api.queues.schedulerpolicies',
