@@ -269,7 +269,7 @@ class AllocationsController extends Controller
 	 * Create a queue
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/queues
+	 * @apiUri    /api/allocations
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -542,7 +542,7 @@ class AllocationsController extends Controller
 	 * Read a queue
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/{id}
+	 * @apiUri    /api/allocations/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -566,7 +566,7 @@ class AllocationsController extends Controller
 	 * Update a queue
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/queues/{id}
+	 * @apiUri    /api/allocations/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
