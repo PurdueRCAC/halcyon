@@ -41,7 +41,7 @@ app('pathway')->append(
 								<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
 								<p class="date">
 									<span>{{ $article->datetimenews->format('M d, Y') }}</span>
-									<span>{{ $article->datetimenews->format('h:m') }}</span>
+									<span>{{ $article->datetimenews->format('h:i') }}</span>
 									@if ($article->isToday())
 										@if ($article->isNow())
 											<span class="badge badge-success">{{ trans('news::news.happening now') }}</span>
