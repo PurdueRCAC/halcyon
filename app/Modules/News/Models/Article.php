@@ -837,7 +837,7 @@ class Article extends Model
 			$datestring = $startdate->format('F j, Y'); //date("F j, Y", strtotime($startdate));
 			if ($starttime != '00:00:00')
 			{
-				$datestring .= ' ' . $startdate->format('g:ia') . ' ' . $startdate->tzName; //date("g:ia", strtotime($startdate));
+				$datestring .= ' ' . $startdate->format('g:ia') . ' ' . $startdate->format('T'); //date("g:ia", strtotime($startdate));
 			}
 		}
 		else
@@ -868,7 +868,7 @@ class Article extends Model
 			{
 				if ($starttime != '')
 				{
-					$starttime = ' ' . $starttime . (!$endtime ? ' ' . $startdate->tzName : '');
+					$starttime = ' ' . $starttime . (!$endtime ? ' ' . $startdate->format('T') : '');
 				}
 				if ($endtime != '')
 				{
