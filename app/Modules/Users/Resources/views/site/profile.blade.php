@@ -78,7 +78,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 							<div class="col-md-6">
 								<p>
 									<strong>Last Visit</strong><br />
-									<span class="text-muted">{{ $user->datelastseen }}</span>
+									<span class="text-muted">{{ $user->hasVisited() ? $user->datelastseen : trans('global.never') }}</span>
 								</p>
 							</div>
 						</div>
