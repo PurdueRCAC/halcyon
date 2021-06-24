@@ -155,7 +155,7 @@ function AddingManyUsersEmail(xml, post_obj) {
 			return;
 		}
 
-		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
+		/*if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
 			var username = response['data'][0]['username']; //[0]['name'];
 			post = { 'username': username, 'name': response['data'][0]['name'] };
 			post_obj['user'] = username;
@@ -163,9 +163,14 @@ function AddingManyUsersEmail(xml, post_obj) {
 			post = JSON.stringify(post);
 			pending++;
 			WSPostURL(ROOT_URL + "users", post, newUser, post_obj);
+		}*/
+		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
+			var user = response['data'][0]['username'];
+		} else {
+			var user = response['data'][0]['id'];
 		}
 
-		var user = response['data'][0]['id'];
+		//var user = response['data'][0]['id'];
 		post = {
 			'userid': user,
 			'classaccountid': post_obj['classaccountid'],
@@ -203,17 +208,21 @@ function AddingManyUsers(xml, post_obj) {
 			return;
 		}
 
-		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
+		/*if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
 			var username = response['data'][0]['username']; //[0]['name'];
 			post = { 'username': username, 'name': response['data'][0]['name'] };
 			post = JSON.stringify(post);
 			pending++;
 			WSPostURL(ROOT_URL + "users", post, newUser, post_obj);
 			return;
+		}*/
+		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
+			var user = response['data'][0]['username'];
+		} else {
+			var user = response['data'][0]['id'];
 		}
 
-		var user = response['data'][0]['id'];
-
+		//var user = response['data'][0]['id'];
 		post = {
 			'userid': user,
 			'classaccountid': post_obj['classaccountid'],
@@ -833,7 +842,7 @@ $(document).ready(function () {
 		} else {
 			selected_class = $('#new_class_select option[id="option_class_' + crn + '"]');
 		}
-		console.log(selected_class);
+
 		var students = '';
 		if (selected_class.val() != 'first') {
 			students = selected_class.data('students')['students'].join('<br/>');

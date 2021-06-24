@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use App\Modules\Courses\Models\Member;
 use App\Modules\Courses\Http\Resources\MemberResource;
 use App\Modules\Courses\Http\Resources\MemberResourceCollection;
+use App\Modules\Users\Models\User;
 
 /**
  * Account Members
@@ -241,12 +242,22 @@ class MembersController extends Controller
 	{
 		$request->validate([
 			'classaccountid' => 'required|integer',
-			'userid' => 'required|integer',
+			'userid' => 'required',
 			'membertype' => 'nullable|integer',
 		]);
 
 		$classaccountid = $request->input('classaccountid');
 		$userid  = $request->input('userid');
+
+		if (!is_numeric($userid))
+		{
+			$user = User::createFromUsername($userid);
+
+			if ($user && $user->id)
+			{
+				$userid = $user->id;
+			}
+		}
 
 		$exists = Member::findByAccountAndUser($classaccountid, $userid);
 
