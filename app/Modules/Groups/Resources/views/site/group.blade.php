@@ -652,7 +652,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								type: 'post',
 								data: {
 									'userid': userid,
-									//'groupid': btn.data('group'),
+									'groupid': btn.data('group'),
 									'queueid': checkbox.value,
 								},
 								dataType: 'json',
@@ -677,7 +677,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								type: 'post',
 								data: {
 									'userid': userid,
-									//'groupid': btn.data('group'),
+									'groupid': btn.data('group'),
 									'unixgroupid': checkbox.value
 								},
 								dataType: 'json',
