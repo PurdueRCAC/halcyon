@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Users\Models\Facet;
+use App\Modules\Users\Events\UserBeforeDisplay;
+use App\Modules\Users\Events\UserDisplay;
 use App\Halcyon\Http\StatefulRequest;
 use App\Halcyon\Access\Map;
 use App\Halcyon\Access\Group as Role;
@@ -500,8 +502,15 @@ class UsersController extends Controller
 			$user->fill($fields);
 		}
 
+		event($event = new UserBeforeDisplay($user));
+		$user = $event->getUser();
+
+		event($event = new UserDisplay($user, ''));
+		$sections = collect($event->getSections());
+
 		return view('users::admin.users.edit', [
-			'user' => $user
+			'user' => $user,
+			'sections' => $sections
 		]);
 	}
 
