@@ -393,7 +393,7 @@ class UsersController extends Controller
 
 		if (!$user->id)
 		{
-			$newUsertype = config('modules.users.new_usertype');
+			$newUsertype = config('module.users.new_usertype');
 
 			if (!$newUsertype)
 			{

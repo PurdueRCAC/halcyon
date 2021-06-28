@@ -134,7 +134,7 @@ class AuthController extends Controller
 				{
 					$user = User::findByUsername($cas->user());
 
-					$newUsertype = config('modules.users.new_usertype');
+					$newUsertype = config('module.users.new_usertype');
 
 					if (!$newUsertype)
 					{
