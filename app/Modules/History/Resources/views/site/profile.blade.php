@@ -149,7 +149,7 @@
 											@endif
 										</time>
 									@else
-										@if ($q->resource->isTrashed())
+										@if ($q->resource && $q->resource->isTrashed())
 											<time datetime="{{ $q->resource->datetimeremoved->toDateTimeString() }}">
 												@if ($q->resource->datetimeremoved->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
 													{{ $q->resource->datetimeremoved->diffForHumans() }}
