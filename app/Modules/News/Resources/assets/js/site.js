@@ -3646,7 +3646,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	if ($('#news').length) {
 		NEWSToggle(on, refresh);
-		NEWSSearch();
+		//NEWSSearch();
 	}
 
 	var stats = $('#articlestats');
