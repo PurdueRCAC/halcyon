@@ -14,7 +14,7 @@ use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Users\Events\UserDisplay;
 use App\Halcyon\Http\StatefulRequest;
 use App\Halcyon\Access\Map;
-use App\Halcyon\Access\Group as Role;
+use App\Halcyon\Access\Role;
 use App\Halcyon\Access\Gate;
 use App\Halcyon\Access\Asset;
 use Carbon\Carbon;
