@@ -116,7 +116,11 @@
 						?>
 						<tr id="queueuser{{ $queue->id }}">
 							<td>
-								{{ $q->resource ? $q->resource->name : trans('global.unknown') }}
+								@if ($q)
+									{{ $q->resource ? $q->resource->name : trans('global.unknown') }}
+								@else
+									{{ trans('global.unknown') }}
+								@endif
 							</td>
 							<td>
 								{{ $q ? $q->name : trans('global.unknown') }}
