@@ -145,11 +145,11 @@ app('pathway')
 				@if (auth()->user()->can('view users.notes'))
 					<li><a href="#user-notes">Notes</a></li>
 				@endif
-				@foreach ($sections as $section)
+				<?php /*@foreach ($sections as $section)
 					<li>
 						<a href="#user-{{ $section['route'] }}">{!! $section['name'] !!}</a>
 					</li>
-				@endforeach
+				@endforeach*/ ?>
 			@endif
 		</ul>
 		<div id="user-account">
@@ -398,12 +398,6 @@ app('pathway')
 				</div>
 			</div>
 
-			<?php /*@foreach ($sections as $section)
-				<div id="user-{{ $section['route'] }}">
-					{!! $section['content'] !!}
-				</div>
-			@endforeach*/ ?>
-
 			@if (auth()->user()->can('view users.notes'))
 				<div id="user-notes">
 					<div class="row">
@@ -487,6 +481,12 @@ app('pathway')
 					</div>
 				</div><!-- / #user-notes -->
 			@endif
+
+			<?php /*@foreach ($sections as $section)
+				<div id="user-{{ $section['route'] }}">
+					{!! $section['content'] !!}
+				</div>
+			@endforeach*/ ?>
 		@endif
 	</div><!-- / .tabs -->
 	<input type="hidden" name="id" value="{{ $user->id }}" />
