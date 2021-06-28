@@ -513,6 +513,12 @@ class OrdersController extends Controller
 			}
 
 			$item->save();
+
+			// Set orig item if necessary
+			if ($item->product->recurringtimeperiodid > 0 && !$item->origorderitemid)
+			{
+				$item->update(['origorderitemid' => $item->id]);
+			}
 		}
 
 		if (!empty($accounts))
