@@ -139,7 +139,7 @@
 											{{ $queue->datetimeremoved->format('M d, Y') }}
 										@endif
 									</time>
-								@else
+								@elseif ($q)
 									@if ($q->isTrashed())
 										<time datetime="{{ $q->datetimeremoved->toDateTimeString() }}">
 											@if ($q->datetimeremoved->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
@@ -161,6 +161,8 @@
 											-
 										@endif
 									@endif
+								@else
+									-
 								@endif
 							</td>
 						</tr>
