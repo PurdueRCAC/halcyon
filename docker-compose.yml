@@ -51,6 +51,15 @@ services:
     networks:
       - halcyon
 
+  node:
+    build:
+      context: ./docker/node
+    image: halcyon/node:latest
+    volumes:
+      - .:/var/www/html
+    networks:
+      - halcyon
+
 #  redis:
 #    image: redis:alpine
 #    container_name: redis
