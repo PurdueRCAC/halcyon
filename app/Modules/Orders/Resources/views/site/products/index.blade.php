@@ -323,7 +323,7 @@ $(document).ready(function() {
 					<th scope="col">
 						{{ trans('orders::orders.purchase') }}
 					</th>
-					@if (auth()->user() && (auth()->user()->can('edit orders') || auth()->user()->can('delete orders')))
+					@if (auth()->user() && auth()->user()->can('manage orders'))
 						<th scope="col" class="text-right"<?php if (auth()->user()->can('edit orders') && auth()->user()->can('delete orders')) { echo ' colspan="2"'; } ?>>
 							Options
 						</td>
@@ -395,7 +395,7 @@ $(document).ready(function() {
 							</button>
 						@endif
 					</td>
-					@if (auth()->user() && (auth()->user()->can('edit orders') || auth()->user()->can('delete orders')))
+					@if (auth()->user() && auth()->user()->can('manage orders'))
 						@if (auth()->user()->can('edit orders'))
 					<td class="text-nowrap">
 						<a href="{{ route('site.orders.products.edit', ['id' => $product->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }} '{{ $product->name }}' product">
