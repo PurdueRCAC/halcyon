@@ -316,17 +316,20 @@ class ProductsController extends Controller
 			'description' => 'nullable|string|max:2000',
 			'mou' => 'nullable|string|max:255',
 			'unit' => 'nullable|string|max:16',
-			'unitprice' => 'nullable|integer',
+			'unitprice' => 'nullable',
 			'recurringtimeperiodid' => 'nullable|integer',
 			'sequence' => 'nullable|integer|min:1',
 			'successororderproductid' => 'nullable|integer|min:1',
 			'terms' => 'nullable|string|max:2000',
 			'restricteddata' => 'nullable|integer',
-			'resourceid' => 'nullable|integer|min:1',
+			'resourceid' => 'nullable|integer',
 		]);
 
 		$row = new Product();
 		$row->fill($request->all());
+		$row->mou = $row->mou ?: '';
+		$row->terms = $row->terms ?: '';
+		$row->description = $row->description ?: '';
 
 		if ($row->ordercategoryid)
 		{
@@ -519,17 +522,20 @@ class ProductsController extends Controller
 			'description' => 'nullable|string|max:2000',
 			'mou' => 'nullable|string|max:255',
 			'unit' => 'nullable|string|max:16',
-			'unitprice' => 'nullable|integer',
+			'unitprice' => 'nullable',
 			'recurringtimeperiodid' => 'nullable|integer',
 			'sequence' => 'nullable|integer|min:1',
 			'successororderproductid' => 'nullable|integer|min:1',
 			'terms' => 'nullable|string|max:2000',
 			'restricteddata' => 'nullable|integer',
-			'resourceid' => 'nullable|integer|min:1',
+			'resourceid' => 'nullable|integer',
 		]);
 
 		$row = Product::findOrFail($id);
 		$row->fill($request->all());
+		$row->mou = $row->mou ?: '';
+		$row->terms = $row->terms ?: '';
+		$row->description = $row->description ?: '';
 
 		if ($row->ordercategoryid != $row->getOriginal('ordercategoryid'))
 		{

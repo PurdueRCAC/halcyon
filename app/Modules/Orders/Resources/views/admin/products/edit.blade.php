@@ -105,7 +105,7 @@ app('pathway')
 					<input type="text" name="fields[name]" id="field-name" class="form-control required" maxlength="250" value="{{ $row->name }}" />
 				</div>
 
-				<div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
+				<div class="form-group{{ $errors->has('fields.description') ? ' has-error' : '' }}">
 					<label for="field-description">{{ trans('orders::orders.description') }}:</label>
 					<textarea name="fields[description]" id="field-description" class="form-control" cols="30" rows="5">{{ $row->description }}</textarea>
 				</div>

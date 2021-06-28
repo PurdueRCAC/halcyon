@@ -67,15 +67,15 @@ jQuery(document).ready(function ($) {
 <div class="contentInner col-md-12">
 	<h2>{{ trans('orders::orders.products') }}: {{ $row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create') }}</h2>
 
-<form action="{{ route('admin.orders.products.store') }}" method="post" name="adminForm" class="editform">
+<form action="{{ route('site.orders.products.store') }}" method="post" name="adminForm" class="editform">
 	<div class="row">
 		<div class="col col-md-8">
 			<fieldset>
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-parentordercategoryid">{{ trans('orders::orders.parent category') }}:</label>
-					<select name="fields[parentordercategoryid]" id="field-parentordercategoryid" class="form-control filter filter-submit">
+					<label for="field-ordercategoryid">{{ trans('orders::orders.parent category') }}: <span class="required" title="{{ trans('global.required') }}">*</span></label>
+					<select name="fields[ordercategoryid]" id="field-ordercategoryid" class="form-control filter filter-submit">
 						<option value="1"<?php if ($row->parentordercategoryid == 1): echo ' selected="selected"'; endif;?>>{{ trans('global.none') }}</option>
 						<?php foreach ($categories as $category) { ?>
 							<option value="<?php echo $category->id; ?>"<?php if ($row->ordercategoryid == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
@@ -83,12 +83,12 @@ jQuery(document).ready(function ($) {
 					</select>
 				</div>
 
-				<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+				<div class="form-group{{ $errors->has('fields.name') ? ' has-error' : '' }}">
 					<label for="field-name">{{ trans('orders::orders.name') }}: <span class="required" title="{{ trans('global.required') }}">*</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control" required maxlength="250" value="{{ $row->name }}" />
 				</div>
 
-				<div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
+				<div class="form-group{{ $errors->has('fields.description') ? ' has-error' : '' }}">
 					<label for="field-description">{{ trans('orders::orders.description') }}:</label>
 					<textarea name="fields[description]" id="field-description" class="form-control" cols="30" rows="5">{{ $row->description }}</textarea>
 				</div>
@@ -112,7 +112,7 @@ jQuery(document).ready(function ($) {
 					</div>
 				</div>
 
-				<div class="form-group{{ $errors->has('resourceid') ? ' has-error' : '' }}">
+				<div class="form-group{{ $errors->has('fields.resourceid') ? ' has-error' : '' }}">
 					<label for="field-resourceid">{{ trans('orders::orders.resource') }}:</label>
 					<select class="form-control" name="fields[resourceid]" id="field-resourceid">
 						<option value="0"<?php if (!$row->resourceid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
@@ -122,16 +122,16 @@ jQuery(document).ready(function ($) {
 					</select>
 				</div>
 
-				<div class="form-group{{ $errors->has('mou') ? ' has-error' : '' }}">
+				<div class="form-group{{ $errors->has('fields.mou') ? ' has-error' : '' }}">
 					<label for="field-mou">{{ trans('orders::orders.mou') }}:</label>
 					<input type="text" name="fields[mou]" id="field-mou" class="form-control" placeholder="http://" value="{{ $row->mou }}" />
 				</div>
 
 				<div class="row">
 					<div class="col col-md-6">
-						<div class="form-group{{ $errors->has('recurringtimeperiod') ? ' has-error' : '' }}">
-							<label for="field-recurringtimeperiod">{{ trans('orders::orders.recurrence') }}:</label>
-							<select class="form-control" name="fields[recurringtimeperiod]" id="field-recurringtimeperiod">
+						<div class="form-group{{ $errors->has('fields.recurringtimeperiodid') ? ' has-error' : '' }}">
+							<label for="field-recurringtimeperiodid">{{ trans('orders::orders.recurrence') }}:</label>
+							<select class="form-control" name="fields[recurringtimeperiodid]" id="field-recurringtimeperiod">
 								<option value="0"<?php if (!$row->recurringtimeperiodid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
 								<?php foreach (App\Halcyon\Models\Timeperiod::all() as $period): ?>
 									<option value="{{ $period->id }}"<?php if ($row->recurringtimeperiodid == $period->id) { echo ' selected="selected"'; } ?>>{{ $period->name }}</option>
@@ -140,7 +140,7 @@ jQuery(document).ready(function ($) {
 						</div>
 					</div>
 					<div class="col col-md-6">
-						<div class="form-check{{ $errors->has('restricteddata') ? ' has-error' : '' }}">
+						<div class="form-check{{ $errors->has('fields.restricteddata') ? ' has-error' : '' }}">
 							<input class="form-check-input" type="checkbox" id="field-restricteddata" name="fields[restricteddata]" value="1"<?php if ($row->restricteddata) { echo ' checked="checked"'; } ?> />
 							<label class="form-check-label" for="field-restricteddata">{{ trans('orders::orders.restricted data') }}</label>
 							<span class="form-text text-muted">{{ trans('orders::orders.restricted data explanation') }}</span>
@@ -148,7 +148,7 @@ jQuery(document).ready(function ($) {
 					</div>
 				</div>
 
-				<div class="form-group{{ $errors->has('terms') ? ' has-error' : '' }}">
+				<div class="form-group{{ $errors->has('fields.terms') ? ' has-error' : '' }}">
 					<label for="field-terms">{{ trans('orders::orders.terms') }}:</label>
 					<textarea name="fields[terms]" id="field-terms" class="form-control" cols="30" rows="5">{{ $row->terms }}</textarea>
 				</div>

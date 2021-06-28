@@ -5,6 +5,7 @@ namespace App\Modules\Orders\Http\Controllers\Site;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Orders\Models\Order;
 use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Models\Product;
@@ -295,6 +296,11 @@ class ProductsController extends Controller
 	{
 		$row = Product::findOrFail($id);
 
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
 		$categories = Category::query()
 			->withTrashed()
 			->whereIsActive()
@@ -316,25 +322,32 @@ class ProductsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
-			'name' => 'required|string|max:64',
-			'ordercategoryid' => 'required|integer|min:1',
-			'description' => 'nullable|string|max:2000',
-			'mou' => 'nullable|string|max:255',
-			'unit' => 'nullable|string|max:16',
-			'unitprice' => 'nullable|integer',
-			'recurringtimeperiodid' => 'nullable|integer',
-			'sequence' => 'nullable|integer|min:1',
-			'successororderproductid' => 'nullable|integer|min:1',
-			'terms' => 'nullable|string|max:2000',
-			'restricteddata' => 'nullable|integer',
-			'resourceid' => 'nullable|integer|min:1',
+		$validator = Validator::make($request->all(), [
+			'fields.name' => 'required|string|max:64',
+			'fields.ordercategoryid' => 'required|integer|min:1',
+			'fields.description' => 'nullable|string|max:2000',
+			'fields.mou' => 'nullable|string|max:255',
+			'fields.unit' => 'nullable|string|max:16',
+			'fields.unitprice' => 'nullable|string',
+			'fields.recurringtimeperiodid' => 'nullable|integer',
+			'fields.sequence' => 'nullable|integer|min:1',
+			'fields.successororderproductid' => 'nullable|integer|min:1',
+			'fields.terms' => 'nullable|string|max:2000',
+			'fields.restricteddata' => 'nullable|integer',
+			'fields.resourceid' => 'nullable|integer',
 		]);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()->withInput()->withError($validator->messages());
+		}
 
 		$id = $request->input('id');
 
 		$row = $id ? Product::findOrFail($id) : new Product();
 		$row->fill($request->input('fields'));
+		$row->terms = $row->terms ?: '';
+		$row->description = $row->description ?: '';
 
 		if (!$row->save())
 		{
@@ -343,7 +356,7 @@ class ProductsController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->withSuccess(trans('global.messages.update success'));
+		return $this->cancel()->withSuccess(trans('global.messages.item updated'));
 	}
 
 	/**
