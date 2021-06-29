@@ -426,8 +426,9 @@ class AmieLdap
 							$queue->maxjobsqueued = 12000;
 							$queue->maxjobsqueueduser = 5000;
 							$queue->cluster = $subresource->cluster;
-							$queue->save();
 						}
+
+						$queue->save();
 					}
 
 					$sizes = $queue->sizes()->orderBy('id', 'asc')->get();
