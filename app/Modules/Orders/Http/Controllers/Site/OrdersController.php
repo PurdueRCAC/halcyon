@@ -118,6 +118,14 @@ class OrdersController extends Controller
 		{
 			$subitems->where($i . '.orderproductid', '=', $filters['product']);
 		}
+		if ($filters['userid'])
+		{
+			$subitems->where(function($query) use ($filters, $o)
+			{
+				$query->where($o . '.userid', '=', $filters['userid'])
+					->orWhere($o . '.submitteruserid', '=', $filters['userid']);
+			});
+		}
 
 		$query
 			->select([
@@ -149,7 +157,7 @@ class OrdersController extends Controller
 			{
 				$sub->select(
 					//$o . '.*',
-					DB::raw("DISTINCT $o.*, $a.approveruserid"),
+					DB::raw("DISTINCT $o.*"),//, $a.approveruserid"),
 					//DB::raw('SUM(' . $i . '.price) AS ordertotal'),
 					DB::raw("COUNT(" . $a . ".id) AS accounts"),
 					//DB::raw("COUNT(" . $i . ".id) AS items_count"),
@@ -176,7 +184,7 @@ class OrdersController extends Controller
 				//->where($i . '.quantity', '>', 0)
 				/*->where(function($where) use ($a)
 				{
-					$where->where($a . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+					$where->where($a . '.datetimeremoved', '=', '0000-00 -00 00:00:00')
 						->orWhereNull($a . '.datetimeremoved');
 				})*/
 				->groupBy($o . '.id')
@@ -187,7 +195,7 @@ class OrdersController extends Controller
 				->groupBy($o . '.staffnotes')
 				->groupBy($o . '.notice')
 				->groupBy($o . '.submitteruserid')
-				->groupBy($a . '.approveruserid')
+				//->groupBy($a . '.approveruserid')
 				->groupBy($o . '.groupid');
 
 				if ($filters['search'] && (is_numeric($filters['search']) || preg_match('/^[a-z]\d+$/', $filters['search'])))
@@ -215,6 +223,16 @@ class OrdersController extends Controller
 				if ($filters['category'] != '*' || $filters['product'] != '*')
 				{
 					$sub->join($i, $i . '.orderid', $o . '.id');
+				}
+
+				if ($filters['userid'])
+				{
+					$sub->where(function($query) use ($filters, $o, $a)
+					{
+						$query->where($o . '.userid', '=', $filters['userid'])
+							->orWhere($o . '.submitteruserid', '=', $filters['userid'])
+							->orWhere($a . '.approveruserid', '=', $filters['userid']);
+					});
 				}
 
 				if ($filters['category'] != '*')
@@ -300,7 +318,7 @@ class OrdersController extends Controller
 			}
 		}
 
-		if ($filters['userid'])
+		/*if ($filters['userid'])
 		{
 			$query->where(function($query) use ($filters)
 			{
@@ -310,7 +328,7 @@ class OrdersController extends Controller
 			});
 		}
 
-		/*if ($filters['category'] != '*')
+		if ($filters['category'] != '*')
 		{
 			$p = (new Product())->getTable();
 			//$i = (new Item())->getTable();
@@ -432,7 +450,7 @@ class OrdersController extends Controller
 				$submitter = $row->submitter ? $row->submitter->name : '';
 			}
 
-			unset($row->state);
+			//unset($row->state);
 
 			$data[] = array(
 				'order',

@@ -378,14 +378,21 @@ class OrdersController extends Controller
 			trans('orders::orders.quantity'),
 			trans('orders::orders.price'),
 			trans('orders::orders.total'),
-			'purchaseio',
-			'purchasewbse',
+			trans('orders::orders.account'),
 			trans('orders::orders.product'),
 			trans('orders::orders.notes'),
 		);
 
+		$orders = array();
 		foreach ($rows as $row)
 		{
+			if (in_array($row->id, $orders))
+			{
+				continue;
+			}
+
+			$orders[] = $row->id;
+
 			$submitter = '';
 			$user = '';
 			$group = '';
@@ -419,7 +426,7 @@ class OrdersController extends Controller
 				$row->id,
 				$row->id,
 				$row->datetimecreated->format('Y-m-d'),
-				$row->status,
+				trans('orders::orders.' . $row->status),
 				$submitter,
 				$user,
 				$group,
@@ -451,7 +458,6 @@ class OrdersController extends Controller
 						config('orders.currency', '$') . ' ' . $row->formatNumber($item->origunitprice),
 						config('orders.currency', '$') . ' ' . $row->formatNumber($item->price),
 						'',
-						'',
 						$item->product ? $item->product->name : $item->orderproductid,
 						''
 					);
@@ -462,12 +468,22 @@ class OrdersController extends Controller
 			{
 				foreach ($row->accounts()->withTrashed()->whereIsActive()->get() as $account)
 				{
+					$acc = '';
+					if ($account->purchaseio)
+					{
+						$acc = $account->purchaseio;
+					}
+					if ($account->purchasewbse)
+					{
+						$acc = $account->purchasewbse;
+					}
+
 					$data[] = array(
 						'account',
 						$account->id,
 						$account->orderid,
 						$account->datetimecreated->format('Y-m-d'),
-						$account->status,
+						trans('orders::orders.' . $account->status),
 						'',
 						'',
 						'',
@@ -475,8 +491,7 @@ class OrdersController extends Controller
 						'',
 						'',
 						config('orders.currency', '$') . ' ' . $row->formatNumber($account->amount),
-						$account->purchaseio ? $account->purchaseio : '',
-						$account->purchasewbse ? $account->purchasewbse : '',
+						$acc,
 						'',
 						''
 					);
