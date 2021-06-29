@@ -205,19 +205,27 @@ app('pathway')
 			</p>
 			<div id="export-orders" class="dialog" title="{{ trans('orders::orders.export') }}">
 				<h2 class="modal-title sr-only">{{ trans('knowledge::knowledge.choose type') }}</h2>
-
+				<?php
+				$filters['export'] = 'only_main';
+				?>
 				<p>
-					<a href="{{ route('site.orders.index', ['export' => 'only_main']) }}" class="btn btn-outline-primary d-block">
+					<a href="{{ route('site.orders.index', $filters) }}" class="btn btn-outline-primary d-block">
 						{{ trans('orders::orders.export summary') }}
 					</a>
 				</p>
+				<?php
+				$filters['export'] = 'items';
+				?>
 				<p>
-					<a href="{{ route('site.orders.index', ['export' => 'items']) }}" class="btn btn-outline-secondary d-block">
+					<a href="{{ route('site.orders.index', $filters) }}" class="btn btn-outline-secondary d-block">
 						{{ trans('orders::orders.export items') }}
 					</a>
 				</p>
+				<?php
+				$filters['export'] = 'accounts';
+				?>
 				<p>
-					<a href="{{ route('site.orders.index', ['export' => 'accounts']) }}" class="btn btn-outline-secondary d-block">
+					<a href="{{ route('site.orders.index', $filters) }}" class="btn btn-outline-secondary d-block">
 						{{ trans('orders::orders.export accounts') }}
 					</a>
 				</p>
