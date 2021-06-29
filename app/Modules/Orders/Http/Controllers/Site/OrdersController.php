@@ -407,7 +407,8 @@ class OrdersController extends Controller
 			trans('orders::orders.quantity'),
 			trans('orders::orders.price'),
 			trans('orders::orders.total'),
-			trans('orders::orders.account'),
+			'purchaseio',
+			'purchasewbse',
 			trans('orders::orders.product'),
 			trans('orders::orders.notes'),
 		);
@@ -489,6 +490,7 @@ class OrdersController extends Controller
 						config('orders.currency', '$') . ' ' . $row->formatNumber($item->origunitprice),
 						config('orders.currency', '$') . ' ' . $row->formatNumber($item->price),
 						'',
+						'',
 						$item->product ? $item->product->name : $item->orderproductid,
 						''
 					);
@@ -499,16 +501,6 @@ class OrdersController extends Controller
 			{
 				foreach ($row->accounts()->withTrashed()->whereIsActive()->get() as $account)
 				{
-					$acc = '';
-					if ($account->purchaseio)
-					{
-						$acc = $account->purchaseio;
-					}
-					if ($account->purchasewbse)
-					{
-						$acc = $account->purchasewbse;
-					}
-
 					$data[] = array(
 						'account',
 						$account->id,
@@ -522,7 +514,8 @@ class OrdersController extends Controller
 						'',
 						'',
 						config('orders.currency', '$') . ' ' . $row->formatNumber($account->amount),
-						$acc,
+						($account->purchaseio ? $account->purchaseio : ''),
+						($account->purchasewbse ? $account->purchasewbse : ''),
 						'',
 						''
 					);
@@ -555,11 +548,11 @@ class OrdersController extends Controller
 		return response()->streamDownload($callback, $filename, $headers);
 
 		// Set headers and output
-		return new Response($output, 200, [
+		/*return new Response($output, 200, [
 			'Content-Type' => 'text/csv;charset=UTF-8',
 			'Content-Disposition' => 'attachment; filename="' . $file . '.csv"',
 			'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
-		]);
+		]);*/
 	}
 
 	/**
