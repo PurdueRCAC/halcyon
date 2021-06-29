@@ -195,7 +195,7 @@ app('pathway')
 					<div class="col-sm-6">
 						<div class="form-group">
 							<?php
-							$val = 0;
+							$val = 336;
 							$wid = '';
 							$walltime = $row->walltimes()->orderBy('id', 'desc')->first();
 							if ($walltime)

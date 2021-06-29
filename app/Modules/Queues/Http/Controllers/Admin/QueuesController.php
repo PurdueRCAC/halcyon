@@ -344,6 +344,7 @@ class QueuesController extends Controller
 		}
 		$walltime->queueid = $row->id;
 		$walltime->walltime = intval($request->input('maxwalltime')) * 60 * 60;
+		$walltime->datetimestart = $row->datetimecreated;
 		$walltime->save();
 
 		if (!$id && $request->input('queueclass') == 'standby')

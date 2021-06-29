@@ -124,6 +124,7 @@ class Queues
 			$wtime = new Walltime;
 			$wtime->queueid = $queue->id;
 			$wtime->walltime = $walltime;
+			$wtime->datetimestart = $row->datetimecreated;
 			$wtime->save();
 		}
 	}
