@@ -3,9 +3,9 @@
 	<fields name="params">
 		<fieldset name="basic">
 			<field name="alertlevel" type="list" default="low" label="widget.notice::notice.alertlevel" description="widget.notice::notice.alertlevel desc">
-				<option value="low">widget.notice::notice.alertlevels.low</option>
-				<option value="medium">widget.notice::notice.alertlevels.medium</option>
-				<option value="high">widget.notice::notice.alertlevels.high</option>
+				<option value="info">widget.notice::notice.alertlevels.low</option>
+				<option value="warning">widget.notice::notice.alertlevels.medium</option>
+				<option value="danger">widget.notice::notice.alertlevels.high</option>
 			</field>
 			<field name="htmlid" type="text" default="notices" label="widget.notice::notice.htmlid" description="widget.notice::notice.htmlid desc" />
 			<field name="message" type="textarea" rows="5" cols="40" default="" label="widget.notice::notice.message" description="widget.notice::notice.message desc" />
