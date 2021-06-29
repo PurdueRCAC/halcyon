@@ -33,7 +33,7 @@ class Queues
 	{
 		$queue = $event->queue;
 
-		if (!$queue)
+		if (!$queue || !$queue->group)
 		{
 			return;
 		}
