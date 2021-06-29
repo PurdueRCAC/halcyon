@@ -266,39 +266,43 @@ class Order extends Model
 				$ordertotal += $item->price;
 			}
 
-			$acc = $this->accounts;
+			$acc = $this->accounts()->withTrashed()->whereIsActive()->get();
 
+			$accounts = 0;
 			$accountspaid     = 0;
 			$accountsapproved = 0;
 			$accountsassigned = 0;
 			$accountsdenied   = 0;
 			$amountassigned   = 0;
 
-			$accounts = count($acc);
-
-			foreach ($acc as $account)
+			if ($acc)
 			{
-				if ($account->approveruserid)
-				{
-					$accountsassigned++;
-				}
+				$accounts = count($acc);
 
-				if ($account->isApproved())
+				foreach ($acc as $account)
 				{
-					$accountsapproved++;
-				}
+					if ($account->approveruserid)
+					{
+						$accountsassigned++;
+					}
 
-				if ($account->isPaid())
-				{
-					$accountspaid++;
-				}
+					if ($account->isApproved())
+					{
+						$accountsapproved++;
+					}
 
-				if ($account->isDenied())
-				{
-					$accountsdenied++;
-				}
+					if ($account->isPaid())
+					{
+						$accountspaid++;
+					}
 
-				$amountassigned += $account->amount;
+					if ($account->isDenied())
+					{
+						$accountsdenied++;
+					}
+
+					$amountassigned += $account->amount;
+				}
 			}
 
 			if (($accounts == 0 && $ordertotal > 0)
