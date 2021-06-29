@@ -292,7 +292,8 @@ class Groups
 				{
 					$found = false;
 					$queues = $group->queues()
-						//->withTrashed()
+						->withTrashed()
+						->whereIsActive()
 						->get();
 
 					foreach ($queues as $queue)
@@ -308,6 +309,37 @@ class Groups
 							break;
 						}
 					}
+
+					if (!$found)
+					{
+						foreach ($unixusers as $membership)
+						{
+							if ($membership->isTrashed())
+							{
+								continue;
+							}
+
+							$unixgroup = $membership->unixgroup;
+
+							if (!$unixgroup || $unixgroup->isTrashed())
+							{
+								continue;
+							}
+
+							if (!$unixgroup->group)
+							{
+								continue;
+							}
+
+							if ($unixgroup->groupid == $group->id)
+							{
+								$found = true;
+								break;
+							}
+						}
+					}
+
+					//$found = in_array($id, $groups);
 
 					if (!$found && !(auth()->user() && auth()->user()->can('manage groups')))
 					{
