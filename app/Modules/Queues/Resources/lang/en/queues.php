@@ -107,6 +107,7 @@ return [
 		'corecount cannot be modified' => 'Core count cannot be modified on entries already in affect',
 		'queue is empty' => 'Have not been sold anything and never will have anything',
 		'queue has not started' => 'Have not been sold anything before this would start',
+		'queue already exists' => 'A queue with the provided name and resource already exists',
 		'start cannot be after end' => 'Field `start` cannot be after or equal to stop time',
 		'failed to find counter' => 'Failed to retrieve counter entry',
 		'failed to update counter' => 'Failed to update counter entry for #:id',
