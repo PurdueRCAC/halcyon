@@ -261,7 +261,7 @@ class Orders
 
 		$event->addSection(
 			$route, //route('site.users.account.section', $r),
-			trans('orders::orders.my orders') . ' <span class="pull-right">(' . $total . ')</span>',
+			trans('orders::orders.my orders') . ' <span class="badge pull-right">' . $total . '</span>',
 			($event->getActive() == 'orders'),
 			$content
 		);
