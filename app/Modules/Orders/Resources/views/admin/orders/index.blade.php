@@ -163,8 +163,8 @@ app('pathway')
 					@if (auth()->user()->can('edit orders'))
 						<a href="{{ route('admin.orders.edit', ['id' => $row->id]) }}">
 					@endif
-					@if ($row->getOriginal('datetimecreated') && $row->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
-						<time datetime="{{ $row->datetimecreated->toDateTimeString() }}">
+					@if ($row->datetimecreated && $row->datetimecreated != '0000-00-00 00:00:00' && $row->datetimecreated != '-0001-11-30 00:00:00')
+						<time datetime="{{ $row->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">
 							@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
 								{{ $row->datetimecreated->diffForHumans() }}
 							@else

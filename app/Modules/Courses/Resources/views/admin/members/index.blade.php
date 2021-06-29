@@ -115,8 +115,8 @@
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->getOriginal('datelastseen') && $row->getOriginal('datelastseen') != '0000-00-00 00:00:00')
-							<time datetime="{{ $row->datelastseen }}">{{ $row->datelastseen }}</time>
+						@if ($row->datelastseen && $row->datelastseen != '0000-00-00 00:00:00')
+							<time datetime="{{ $row->datelastseen->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datelastseen }}</time>
 						@else
 							<span class="never">{{ trans('global.never') }}</span>
 						@endif

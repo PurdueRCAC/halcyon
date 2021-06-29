@@ -10,7 +10,7 @@
 					<label for="MotdText_{{ $group->id }}">Enter the notice your group will see at login</label>
 					<textarea id="MotdText_{{ $group->id }}" data-api="{{ route('api.groups.motd.create') }}" class="form-control" cols="38" rows="4">{{ $group->motd ? $group->motd->motd : '' }}</textarea>
 					@if ($group->motd)
-						<p class="form-text text-muted">Set on {{ $group->motd->datetimecreated->format('Y-m-d') }}</p>
+						<p class="form-text text-muted">Set on <time datimetime="{{ $group->motd->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ $group->motd->datetimecreated->format('F j, Y') }}</time></p>
 					@endif
 				</div>
 
@@ -27,7 +27,7 @@
 			</form>
 		@else
 			<p class="text-muted">
-				{{ $group->datetimecreated }} to {{ $group->datetimeremoved }}
+				<time datimetime="{{ $group->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ $group->datetimecreated->format('F j, Y') }}</time> to <time datimetime="{{ $group->datetimeremoved->format('Y-m-d\TH:i:s\Z') }}">{{ $group->datetimeremoved->format('F j, Y') }}</time>
 			</p>
 			<blockquote>
 				<p>{{ $group->motd }}</p>
@@ -39,17 +39,15 @@
 <?php
 $motds = $group->motds()->withTrashed();
 
-if ($group->motd)
-{
+if ($group->motd):
 	$motds->where('id', '!=', $group->motd->id);
-}
+endif;
 
 $past = $motds
 	->orderBy('datetimecreated', 'desc')
 	->get();
 
-if (count($past))
-{
+if (count($past)):
 	?>
 	<div class="card">
 		<div class="card-header panel-heading">
@@ -59,9 +57,9 @@ if (count($past))
 			@foreach ($past as $motd)
 				<li class="list-group-item">
 					<p class="text-muted">
-						{{ $motd->datetimecreated->format('F j, Y') }} to
+						<time datimetime="{{ $motd->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ $motd->datetimecreated->format('F j, Y') }}</time> to
 						@if ($motd->isTrashed())
-							{{ $motd->datetimeremoved->format('F j, Y') }}
+							<time datimetime="{{ $motd->datetimeremoved->format('Y-m-d\TH:i:s\Z') }}">{{ $motd->datetimeremoved->format('F j, Y') }}</time>
 						@else
 							trans('global.never')
 						@endif
@@ -80,4 +78,4 @@ if (count($past))
 		</ul>
 	</div>
 	<?php
-}
+endif;

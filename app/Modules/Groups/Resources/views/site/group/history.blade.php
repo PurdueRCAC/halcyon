@@ -288,8 +288,8 @@ if (count($l))
 				}
 				?>
 				<tr>
-					<td>{{ $log->datetime->format('M j, Y') }}</td>
-					<td>{{ $log->datetime->format('g:ia') }}</td>
+					<td><time datimetime="{{ $log->datetime->format('Y-m-d\TH:i:s\Z') }}">{{ $log->datetime->format('M j, Y') }}</time></td>
+					<td><time datimetime="{{ $log->datetime->format('Y-m-d\TH:i:s\Z') }}">{{ $log->datetime->format('g:ia') }}</time></td>
 					<td>
 						@if ($log->userid > 0)
 							{{ $log->user ? $log->user->name : trans('global.unknown') }}
@@ -307,7 +307,8 @@ if (count($l))
 					<td>
 						@if (substr($log->status, 0, 1) != '2')
 							<span class="tip text-warning" title="An error occurred while performing this action. Action may not have completed.">
-								<i class="fa fa-exclamation-circle" aria-hidden="true"></i><span class="sr-only">An error occurred while performing this action. Action may not have completed.</span>
+								<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+								<span class="sr-only">An error occurred while performing this action. Action may not have completed.</span>
 							</span>
 						@endif
 						{{ $log->action }}

@@ -144,7 +144,25 @@ function CreateNewGroup() {
 					</span>
 				</td>
 				<td>
-					{{ $g->datecreated ? $g->datecreated->format('Y-m-d') : ($g->datetimecreated ? $g->datetimecreated->format('Y-m-d') : trans('global.unknown')) }}
+					@if ($g->datecreated && $g->datecreated != '0000-00-00 00:00:00' && $g->datecreated != '-0001-11-30 00:00:00')
+						<time datetime="{{ $g->datecreated->format('Y-m-d\TH:i:s\Z') }}">
+							@if ($g->datecreated->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
+								{{ $g->datecreated->diffForHumans() }}
+							@else
+								{{ $g->datecreated->format('F j, Y') }}
+							@endif
+						</time>
+					@elseif ($g->datetimecreated && $g->datetimecreated != '0000-00-00 00:00:00' && $g->datetimecreated != '-0001-11-30 00:00:00')
+						<time datetime="{{ $g->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">
+							@if ($g->datetimecreated->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
+								{{ $g->datetimecreated->diffForHumans() }}
+							@else
+								{{ $g->datetimecreated->format('F j, Y') }}
+							@endif
+						</time>
+					@else
+						<span class="text-muted">{{ trans('global.unknown') }}</span>
+					@endif
 				</td>
 			</tr>
 		@endforeach

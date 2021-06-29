@@ -84,8 +84,14 @@
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->datetimecreated && $row->datetimecreated != '0000-00-00 00:00:00')
-							<time datetime="{{ $row->datetimecreated }}">{{ $row->datetimecreated }}</time>
+						@if ($row->datetimecreated && $row->datetimecreated != '0000-00-00 00:00:00' && $row->datetimecreated != '-0001-11-30 00:00:00')
+							<time datetime="{{ $row->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">
+								@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
+									{{ $row->datetimecreated->diffForHumans() }}
+								@else
+									{{ $row->datetimecreated->format('Y-m-d') }}
+								@endif
+							</time>
 						@else
 							<span class="never">{{ trans('global.unknown') }}</span>
 						@endif
@@ -94,7 +100,7 @@
 				<td class="priority-4">
 					<span class="datetime">
 						@if ($row->isTrashed())
-							<time datetime="{{ $row->datetimeremoved }}">{{ $row->datetimeremoved }}</time>
+							<time datetime="{{ $row->datetimeremoved->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimeremoved }}</time>
 						@else
 							<span class="never">{{ trans('global.never') }}</span>
 						@endif

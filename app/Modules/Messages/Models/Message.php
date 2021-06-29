@@ -80,8 +80,8 @@ class Message extends Model
 	 * @var array
 	 */
 	protected $rules = array(
-		'messagequeuetypeid' => 'required',
-		'targetobjectid' => 'required',
+		'messagequeuetypeid' => 'required|integer',
+		'targetobjectid' => 'required|integer',
 	);
 
 	/**
@@ -317,26 +317,6 @@ class Message extends Model
 		event($event = new MessageReading($this));
 
 		return $event->target;
-		/*$name = null;
-
-		if ($this->type)
-		{
-			$cls = $this->type->classname;
-
-			if ($cls == 'storagedir')
-			{
-				$cls = '\App\Modules\Storage\Models\Directory';
-			}
-
-			$item = $cls::find($this->targetobjectid);
-
-			if ($item)
-			{
-				$name = $item->storageResource->path . '/' . $item->path;
-			}
-		}
-
-		return $name;*/
 	}
 
 	/**
@@ -385,6 +365,11 @@ class Message extends Model
 		return $status;
 	}
 
+	/**
+	 * Get runtime
+	 *
+	 * @return  string
+	 */
 	public function getRuntimeAttribute()
 	{
 		if (!$this->completed())
@@ -453,8 +438,10 @@ class Message extends Model
 	}
 
 	/**
-	 * Define a query scope
+	 * Query for started items
 	 *
+	 * @param   object  $query
+	 * @param   string  $since
 	 * @return  object
 	 */
 	public function scopeWhereStarted($query, $since = null)
@@ -472,8 +459,9 @@ class Message extends Model
 	}
 
 	/**
-	 * Define a query scope
+	 * Query for items that haven't started
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereNotStarted($query)
@@ -486,8 +474,10 @@ class Message extends Model
 	}
 
 	/**
-	 * Define a query scope
+	 * Query for completed items
 	 *
+	 * @param   object  $query
+	 * @param   string  $since
 	 * @return  object
 	 */
 	public function scopeWhereCompleted($query, $since = null)
@@ -505,8 +495,9 @@ class Message extends Model
 	}
 
 	/**
-	 * Define a query scope
+	 * Query for incomplete items
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereNotCompleted($query)
@@ -519,8 +510,9 @@ class Message extends Model
 	}
 
 	/**
-	 * Define a query scope
+	 * Query where return status == 0
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereSuccessful($query)
@@ -529,8 +521,9 @@ class Message extends Model
 	}
 
 	/**
-	 * Define a query scope
+	 * Query where resturn status > 0
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereNotSuccessful($query)
@@ -541,6 +534,7 @@ class Message extends Model
 	/**
 	 * Forcefully reset a timestamp
 	 *
+	 * @param   array  $fields
 	 * @return  void
 	 */
 	public function forceRestore($fields = array('datetimesubmitted'))

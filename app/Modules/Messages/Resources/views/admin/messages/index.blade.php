@@ -222,23 +222,35 @@ app('pathway')
 						<td>
 							@if (auth()->user()->can('edit messages'))
 								<a href="{{ route('admin.messages.edit', ['id' => $row->id]) }}">
-									<time datetime="{{ $row->datetimesubmitted }}">{{ $row->datetimesubmitted }}</time>
+									<time datetime="{{ $row->datetimesubmitted->format('Y-m-d\TH:i:s\Z') }}">
+										@if ($row->datetimesubmitted->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
+											{{ $row->datetimesubmitted->diffForHumans() }}
+										@else
+											{{ $row->datetimesubmitted->format('F j, Y') }}
+										@endif
+									</time>
 								</a>
 							@else
-								<time datetime="{{ $row->datetimesubmitted }}">{{ $row->datetimesubmitted }}</time>
+								<time datetime="{{ $row->datetimesubmitted->format('Y-m-d\TH:i:s\Z') }}">
+									@if ($row->datetimesubmitted->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
+										{{ $row->datetimesubmitted->diffForHumans() }}
+									@else
+										{{ $row->datetimesubmitted->format('F j, Y') }}
+									@endif
+								</time>
 							@endif
 						</td>
 						<!--
 						<td class="priority-4">
-							@if ($row->datetimestarted && $row->datetimestarted != '0000-00-00 00:00:00' && $row->datetimestarted != '-0001-11-30 00:00:00')
-								<time datetime="{{ $row->datetimestarted }}">{{ $row->datetimestarted }}</time>
+							@if ($row->started())
+								<time datetime="{{ $row->datetimestarted->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestarted }}</time>
 							@else
 								<span class="none">{{ trans('messages::messages.not started') }}</span>
 							@endif
 						</td>
 						<td class="priority-4">
-							@if ($row->datetimecompleted && $row->datetimecompleted != '0000-00-00 00:00:00' && $row->datetimecompleted != '-0001-11-30 00:00:00')
-								<time datetime="{{ $row->datetimecompleted }}">{{ $row->datetimecompleted }}</time>
+							@if ($row->completed())
+								<time datetime="{{ $row->datetimecompleted->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimecompleted }}</time>
 							@else
 								<span class="none">{{ trans('messages::messages.not completed') }}</span>
 							@endif

@@ -187,14 +187,14 @@ app('pathway')
 				<td class="priority-4">
 					<span class="datetime">
 						@if ($row->hasStart())
-							<time datetime="{{ $row->datetimestart }}">{{ $row->datetimestart->format('Y-m-d') }}</time>
+							<time datetime="{{ $row->datetimestart->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestart->format('Y-m-d') }}</time>
 						@endif
 					</span>
 				</td>
 				<td class="priority-2">
 					<span class="datetime">
 						@if ($row->hasEnd())
-							<time datetime="{{ $row->datetimestop }}">{{ $row->datetimestop->format('Y-m-d') }}</time>
+							<time datetime="{{ $row->datetimestop->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestop->format('Y-m-d') }}</time>
 						@endif
 					</span>
 				</td>
