@@ -395,9 +395,8 @@ class OrdersController extends Controller
 	{
 		$data = array();
 		$data[] = array(
-			trans('orders::orders.type'),
+			//trans('orders::orders.type'),
 			trans('orders::orders.id'),
-			trans('orders::orders.order'),
 			trans('orders::orders.created'),
 			trans('orders::orders.status'),
 			trans('orders::orders.submitter'),
@@ -453,46 +452,58 @@ class OrdersController extends Controller
 
 			//unset($row->state);
 
-			$data[] = array(
-				'order',
-				$row->id,
-				$row->id,
-				$row->datetimecreated->format('Y-m-d'),
-				trans('orders::orders.' . $row->status),
-				$submitter,
-				$user,
-				$group,
-				$department,
-				'',
-				'',
-				config('orders.currency', '$') . ' ' . $row->formatNumber($row->ordertotal),
-				'',
-				'',
-				'',
-				$row->usernotes
-			);
+			$products = '';
+			if ($export != 'items')
+			{
+				$products = array();
+				foreach ($row->items()->withTrashed()->whereIsActive()->get() as $item)
+				{
+					$products[] = $item->product ? $item->product->name : 'product #' . $item->orderproductid;
+				}
+				$products = implode(', ', $products);
+			}
+
+			if ($export != 'accounts')
+			{
+				$data[] = array(
+					//'order',
+					$row->id,
+					$row->datetimecreated->format('Y-m-d'),
+					trans('orders::orders.' . $row->status),
+					$submitter,
+					$user,
+					$group,
+					$department,
+					'',
+					'',
+					$row->formatNumber($row->ordertotal),
+					'',
+					'',
+					$products,
+					$row->usernotes
+				);
+			}
 
 			if ($export == 'items')
 			{
 				foreach ($row->items()->withTrashed()->whereIsActive()->get() as $item)
 				{
 					$data[] = array(
-						'item',
-						$item->id,
+						//'item',
 						$item->orderid,
 						$item->datetimecreated->format('Y-m-d'),
 						$item->isFulfilled() ? 'fullfilled' : 'pending',
-						'',
-						'',
-						'',
-						'',
+						$submitter,
+						$user,
+						$group,
+						$department,
 						$item->quantity,
-						config('orders.currency', '$') . ' ' . $row->formatNumber($item->origunitprice),
-						config('orders.currency', '$') . ' ' . $row->formatNumber($item->price),
+						$row->formatNumber($item->origunitprice),
+						$row->formatNumber($item->price),
 						'',
 						'',
 						$item->product ? $item->product->name : $item->orderproductid,
-						''
+						$row->usernotes
 					);
 				}
 			}
@@ -502,22 +513,21 @@ class OrdersController extends Controller
 				foreach ($row->accounts()->withTrashed()->whereIsActive()->get() as $account)
 				{
 					$data[] = array(
-						'account',
-						$account->id,
+						//'account',
 						$account->orderid,
 						$account->datetimecreated->format('Y-m-d'),
 						trans('orders::orders.' . $account->status),
+						$submitter,
+						$user,
+						$group,
+						$department,
 						'',
 						'',
-						'',
-						'',
-						'',
-						'',
-						config('orders.currency', '$') . ' ' . $row->formatNumber($account->amount),
+						$row->formatNumber($account->amount),
 						($account->purchaseio ? $account->purchaseio : ''),
 						($account->purchasewbse ? $account->purchasewbse : ''),
-						'',
-						''
+						$products,
+						$row->usernotes
 					);
 				}
 			}
