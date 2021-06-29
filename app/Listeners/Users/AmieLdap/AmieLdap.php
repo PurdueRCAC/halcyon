@@ -438,16 +438,13 @@ class AmieLdap
 					$start = $start ? Carbon::parse($start) : null;
 					$now = Carbon::now();
 
-					if (!count($sizes) && $serviceUnits)// && $start && $start >= $now)
+					if (!count($sizes) && $serviceUnits && $subresource)// && $start && $start >= $now)
 					{
 						$start = $results->getAttribute('x-xsede-startTime', 0);
 						$start = $start ?: null;
 
 						$stop = $results->getAttribute('x-xsede-endTime', 0);
 						$stop = $stop ?: null;
-
-						$nodecount = (int)$serviceUnits;
-						$corecount = $subresource->nodecores * $nodecount;
 
 						$lenderqueue = $subresource->queues()
 							->withTrashed()
@@ -459,6 +456,9 @@ class AmieLdap
 
 						if ($lenderqueue)
 						{
+							$nodecount = (int)$serviceUnits;
+							$corecount = $subresource->nodecores * $nodecount;
+
 							$queue->addLoan($lenderqueue->id, $start, $stop, $nodecount, $corecount);
 						}
 					}
