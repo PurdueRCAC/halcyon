@@ -15,7 +15,7 @@ use App\Modules\Resources\Models\Asset;
 use App\Modules\Queues\Events\AllocationCreate;
 use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Queues\Models\Queue;
-use App\Modules\Queues\Models\QueueUser;
+use App\Modules\Queues\Models\User as QueueUser;
 use Carbon\Carbon;
 
 /**
