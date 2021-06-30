@@ -562,20 +562,20 @@ class AmieLdap
 						}
 					}
 
-					$result->queue = $queue->toArray();
-					$result->queue['members'] = $queue->users()
+					$response->queue = $queue->toArray();
+					$response->queue['members'] = $queue->users()
 						->withTrashed()
 						->whereIsActive()
 						->get()
 						->toArray();
-					$result->group = $group->toArray();
-					$result->group['members'] = $group->members()
+					$response->group = $group->toArray();
+					$response->group['members'] = $group->members()
 						->withTrashed()
 						->whereIsActive()
 						->get()
 						->toArray();
-					$result->unixgroup = $unixgroup->toArray();
-					$result->unixgroup['members'] = $unixgroup->members()
+					$response->unixgroup = $unixgroup->toArray();
+					$response->unixgroup['members'] = $unixgroup->members()
 						->withTrashed()
 						->whereIsActive()
 						->get()
