@@ -1,7 +1,7 @@
 @php
 $path .= $path ? '/' . $node->page->alias : $node->page->alias;
 
-$node->page->variables->merge($variables);
+$node->page->variables->merge($variables, true);
 
 $isActive = (count($current) == 1 && $current[0] == $node->page->alias);
 $children = $node->publishedChildren();
@@ -41,7 +41,7 @@ if (!empty($current) && $current[0] == $node->page->alias)
 		}
 		@endphp
 		@if (count($children))
-			@include('knowledge::site.list', ['nodes' => $children, 'path' => $path, 'current' => $current, 'variables' => $node->page->variables])
+			@include('knowledge::site.list', ['nodes' => $children, 'path' => $path, 'current' => $current, 'variables' => $node->page->variables->toArray()])
 		@endif
 	@endif
 </li>
