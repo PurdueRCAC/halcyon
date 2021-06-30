@@ -8,6 +8,7 @@ use App\Modules\Users\Models\UserUsername;
 use App\Halcyon\Utility\Str;
 use App\Modules\History\Traits\Loggable;
 use App\Modules\Groups\Models\Group;
+use App\Modules\Groups\Models\Unixgroup;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Queues\Events\AllocationCreate;
 use App\Modules\Queues\Models\Scheduler;
@@ -38,14 +39,21 @@ class AmieLdap
 	 *
 	 * @return  array
 	 */
-	private function config()
+	private function config($ou = null)
 	{
 		if (!app()->has('ldap'))
 		{
 			return array();
 		}
 
-		return config('listener.amieldap', []);
+		$config = config('listener.amieldap', []);
+
+		if ($ou && isset($config['base_dn']))
+		{
+			$config['base_dn'] = 'ou=' . $ou . ',' . $config['base_dn'];
+		}
+
+		return $config;
 	}
 
 	/**
@@ -72,7 +80,7 @@ class AmieLdap
 	 */
 	public function handleUserSyncing(UserSyncing $event)
 	{
-		$config = $this->config();
+		$config = $this->config('Projects');
 
 		if (empty($config))
 		{
@@ -227,7 +235,7 @@ class AmieLdap
 	 */
 	public function handleAllocationCreate(AllocationCreate $event)
 	{
-		$config = $this->config();
+		$config = $this->config('Projects');
 
 		if (empty($config))
 		{
@@ -381,11 +389,100 @@ class AmieLdap
 						$group = new Group;
 						$group->name = $pid;
 						$group->owneruserid = $user->id;
+						$group->unixgroup = 'x-' . strtolower($group->name);
 						$group->save();
 
 						$group->addManager($user->id, 1);
 					}
 
+					if (!$group->unixgroup)
+					{
+						$group->unixgroup = 'x-' . strtolower($group->name);
+						$group->save();
+					}
+
+					// Unix groups
+					/*
+					# x-peb216887, Groups, anvil.rcac.purdue.edu
+					dn: cn=x-peb216887,ou=Groups,dc=anvil,dc=rcac,dc=purdue,dc=edu
+					memberUid: x-yinzhang
+					cn: x-peb216887
+					gidNumber: 7000167
+					objectClass: posixGroup
+					objectClass: top
+					*/
+					$gldap = $this->connect($this->config('Groups'));
+					$ugs = $gldap->search()
+							->where('cn', '=', $group->unixgroup)
+							->first();
+
+					if ($ugs && $ugs->exists)
+					{
+						$unixgroup = $group->unixgroups()
+							->withTrashed()
+							->whereIsActive()
+							->first();
+
+						// Create unix group if doesn't exist
+						if (!$unixgroup || !$unixgroup->id)
+						{
+							$unixgroup = new UnixGroup;
+							$unixgroup->groupid = $group->id;
+							$unixgroup->longname = $ugs->getAttribute('cn', 0);
+							$unixgroup->unixgid = $ugs->getAttribute('gidNumber', 0);
+							$unixgroup->save();
+						}
+
+						// Sync membership
+						if ($vals = $ugs->getAttribute('memberUid'))
+						{
+							$ugusers = $unixgroup->members()
+								->withTrashed()
+								->whereIsActive()
+								->get();
+
+							$current = $ugusers->pluck('userid')->toArray();
+							$added = array();
+
+							foreach ($vals as $val)
+							{
+								$member = User::findByUsername($val);
+
+								if (!$member || !$member->id)
+								{
+									continue;
+								}
+
+								// Create user if needed
+								if (!in_array($member->id, $current))
+								{
+									$ugu = new UnixGroupMember;
+									$ugu->unixgroupid = $unixgroup->id;
+									$ugu->userid = $member->id;
+									$ugu->save();
+
+									$added[] = $member->id;
+								}
+							}
+
+							// Remove any users not found in the list from LDAP
+							$remove = array_diff($current, $added);
+
+							foreach ($remove as $userid)
+							{
+								foreach ($ugusers as $uguser)
+								{
+									if ($uguser->userid == $userid)
+									{
+										$uguser->delete();
+										continue;
+									}
+								}
+							}
+						}
+					}
+
+					// Queues
 					$queue = $group->queues()
 						->withTrashed()
 						->whereIsActive()
