@@ -224,7 +224,7 @@ class AmieLdap
 
 		$event->user = $user;
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->uid);
+		$this->log('amieldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->uid);
 	}
 
 	/**
@@ -611,6 +611,6 @@ class AmieLdap
 
 		$event->response = $response;
 
-		$this->log('ldap', __METHOD__, 'POST', $status, $results, json_encode($event->data));
+		$this->log('amieldap', __METHOD__, 'POST', $status, $results, json_encode($event->data));
 	}
 }
