@@ -463,9 +463,9 @@ class AmieLdap
 									$ugu->unixgroupid = $unixgroup->id;
 									$ugu->userid = $member->id;
 									$ugu->save();
-
-									$added[] = $member->id;
 								}
+
+								$added[] = $member->id;
 							}
 
 							// Remove any users not found in the list from LDAP
