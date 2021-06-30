@@ -6,7 +6,7 @@ use App\Modules\History\Traits\Loggable;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberStatus;
 use App\Modules\Resources\Events\ResourceMemberDeleted;
-use App\Modules\Groups\Events\UnixGroupCreating;
+use App\Modules\Groups\Events\UnixGroupCreated;
 use App\Modules\Groups\Events\UnixGroupDeleted;
 use App\Modules\Groups\Events\UnixGroupMemberCreated;
 use App\Modules\Groups\Events\UnixGroupMemberDeleted;
@@ -44,25 +44,33 @@ class AuthprimaryLdap
 		$events->listen(ResourceMemberDeleted::class, self::class . '@handleResourceMemberDeleted');
 
 		// Unix Groups
-		//$events->listen(UnixGroupCreating::class, self::class . '@handleUnixGroupCreating');
-		//$events->listen(UnixGroupDeleted::class, self::class . '@handleUnixGroupDeleted');
-		//$events->listen(UnixGroupMemberCreated::class, self::class . '@handleUnixGroupMemberCreated');
-		//$events->listen(UnixGroupMemberDeleted::class, self::class . '@handleUnixGroupMemberDeleted');
+		$events->listen(UnixGroupCreated::class, self::class . '@handleUnixGroupCreated');
+		$events->listen(UnixGroupDeleted::class, self::class . '@handleUnixGroupDeleted');
+		$events->listen(UnixGroupMemberCreated::class, self::class . '@handleUnixGroupMemberCreated');
+		$events->listen(UnixGroupMemberDeleted::class, self::class . '@handleUnixGroupMemberDeleted');
 	}
 
 	/**
 	 * Get LDAP config
 	 *
+	 * @param   string  $ou
 	 * @return  array
 	 */
-	private function config($sub = null)
+	private function config($ou = 'People')
 	{
 		if (!app()->has('ldap'))
 		{
 			return array();
 		}
 
-		return config('listener.authprimaryldap' . ($sub ? '.' . $sub : ''), []);
+		$config = config('listener.authprimaryldap', []);
+
+		if ($ou && isset($config['base_dn']))
+		{
+			$config['base_dn'] = 'ou=' . $ou . ',' . $config['base_dn'];
+		}
+
+		return $config;
 	}
 
 	/**
@@ -71,24 +79,11 @@ class AuthprimaryLdap
 	 * @param   array  $config
 	 * @return  object
 	 */
-	private function connectPeople($config)
+	private function connect($config, $name = 'authprimary')
 	{
 		return app('ldap')
-				->addProvider($config, 'authprimary')
+				->addProvider($config, $name)
 				->connect('authprimary');
-	}
-
-	/**
-	 * Establish LDAP connection
-	 *
-	 * @param   array  $config
-	 * @return  object
-	 */
-	private function connectAllPeople($config)
-	{
-		return app('ldap')
-				->addProvider($config, 'authprimaryall')
-				->connect('authprimaryall');
 	}
 
 	/**
@@ -102,8 +97,8 @@ class AuthprimaryLdap
 	public function handleUserSync(UserSync $event)
 	{
 		// Make sure config is set
-		$configall = $this->config('all');
-		$config = $this->config('authorized');
+		$configall = $this->config('allPeople');
+		$config = $this->config('People');
 
 		if (empty($configall) || empty($config))
 		{
@@ -117,7 +112,7 @@ class AuthprimaryLdap
 
 		try
 		{
-			$ldap = $this->connectAllPeople($configall);
+			$ldap = $this->connect($configall, 'authprimaryall');
 
 			// Check for an existing record
 			$result = $ldap->search()
@@ -216,7 +211,7 @@ class AuthprimaryLdap
 				];
 			}
 
-			$ldap = $this->connectPeople($config);
+			$ldap = $this->connect($config);
 
 			// Check for an existing record
 			$result = $ldap->search()
@@ -293,7 +288,7 @@ class AuthprimaryLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->user->username);
+		$this->log('authprimaryldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->user->username);
 	}
 
 	/**
@@ -305,8 +300,8 @@ class AuthprimaryLdap
 	public function handleResourceMemberCreated(ResourceMemberCreated $event)
 	{
 		// Make sure config is set
-		$configall = $this->config('all');
-		$config = $this->config('authorized');
+		$configall = $this->config('allPeople');
+		$config = $this->config('People');
 
 		if (empty($configall) || empty($config))
 		{
@@ -356,7 +351,7 @@ class AuthprimaryLdap
 
 		try
 		{
-			$ldap = $this->connectAllPeople($configall);
+			$ldap = $this->connect($configall, 'authprimaryall');
 
 			// Check for an existing record in ou=allPeople
 			$result = $ldap->search()
@@ -407,7 +402,7 @@ class AuthprimaryLdap
 			}
 
 			// Check for an existing record in the ou=People (i.e., authorized) tree
-			$ldap = $this->connectPeople($config);
+			$ldap = $this->connect($config);
 
 			$result = $ldap->search()
 				->where('uid', '=', $user->username)
@@ -485,7 +480,7 @@ class AuthprimaryLdap
 	public function handleResourceMemberStatus(ResourceMemberStatus $event)
 	{
 		// Make sure config is set
-		$config = $this->config('authorized');
+		$config = $this->config('People');
 
 		if (empty($config))
 		{
@@ -502,7 +497,7 @@ class AuthprimaryLdap
 		try
 		{
 			// Check for an existing record in the ou=People (i.e., authorized) tree
-			$ldap = $this->connectPeople($config);
+			$ldap = $this->connect($config);
 
 			$result = $ldap->search()
 				->where('uid', '=', $event->user->username)
@@ -540,8 +535,8 @@ class AuthprimaryLdap
 	public function handleResourceMemberDeleted(ResourceMemberDeleted $event)
 	{
 		// Make sure config is set
-		$configall = $this->config('all');
-		$config = $this->config('authorized');
+		$configall = $this->config('allPeople');
+		$config = $this->config('People');
 
 		if (empty($configall) || empty($config))
 		{
@@ -558,7 +553,7 @@ class AuthprimaryLdap
 		try
 		{
 			// Check for an existing record in the ou=People (i.e., authorized) tree
-			$ldap = $this->connectPeople($config);
+			$ldap = $this->connect($config);
 
 			$result = $ldap->search()
 				->where('uid', '=', $event->user->username)
@@ -574,7 +569,7 @@ class AuthprimaryLdap
 
 			// Note: We only delete from ou=People, and NOT from ou=allPeople
 			// For ou=allPeople, we mask out some fields
-			$ldap = $this->connectAllPeople($configall);
+			$ldap = $this->connect($configall, 'authprimaryall');
 
 			$result = $ldap->search()
 				->where('uid', '=', $event->user->username)
@@ -605,56 +600,82 @@ class AuthprimaryLdap
 	}
 
 	/**
-	 * Handle a unix group being created
+	 * Handle a UnixGroup sync event
+	 * 
+	 * This will add entries to the AuthPrimary LDAP
 	 *
 	 * @param   UnixGroupCreated  $event
 	 * @return  void
 	 */
 	public function handleUnixGroupCreated(UnixGroupCreated $event)
 	{
-		$config = $this->config('groups');
+		// Make sure config is set
+		$config = $this->config('Groups');
 
 		if (empty($config))
 		{
 			return;
 		}
 
+		$unixgroup = $event->unixgroup;
+
+		if (substr($unixgroup->longname, 0, 2) != 'x-')
+		{
+			return;
+		}
+
+		$results = array();
+		$status = 200;
+
 		try
 		{
-			// Check for an existing record in the ou=Groups tree
-			$ldap = $this->connectGroups($config);
+			$ldap = $this->connect($config, 'authprimarygroups');
 
+			// Check for an existing record
 			$result = $ldap->search()
-				->where('cn', '=', $event->unixgroup->longname)
+				->where('cn', '=', $unixgroup->longname)
 				->first();
-
-			$data = [
-				'cn' => $event->unixgroup->longname,
-				'gidNumber' => $event->unixgroup->unixgroupid,
-			];
 
 			if (!$result || !$result->exists)
 			{
+				// Sample LDAP entry
+				//
+				// # x-peb216887, Groups, anvil.rcac.purdue.edu
+				// dn: cn=x-peb216887,ou=Groups,dc=anvil,dc=rcac,dc=purdue,dc=edu
+				// cn: x-peb216887
+				// gidNumber: 7000167
+				// objectClass: posixGroup
+				// objectClass: top
+				// memberUid: x-username1
+				// memberUid: x-username2
+
+				// Create user record in ou=allPeople
+				$data = [
+					'cn'        => $unixgroup->longname,
+					'gidNumber' => $unixgroup->unixgid,
+					//'memberUid' => $usernames
+				];
+
 				$entry = $ldap->make()->group($data);
 				$entry->setAttribute('objectclass', ['posixGroup', 'top']);
 				$entry->setDn('cn=' . $data['cn'] . ',' . $entry->getDnBuilder()->get());
 
 				if (!$entry->save())
 				{
-					throw new Exception('Failed to create unix group `' . $event->unixgroup->longname . '`', 500);
+					throw new Exception('Failed to make AuthPrimary ou=Groups record', 500);
 				}
+
+				$results['created'] = $data;
+				$status = 201;
 			}
-
-			$status = 201;
-			$body   = $data;
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
-			$status = $e->getCode();
-			$body   = ['error' => $e->getMessage()];
+			$status = 500;
+			$results['error'] = $e->getMessage();
 		}
 
-		$this->log('authprimaryldap', __METHOD__, 'DELETE', $status, $body, 'cn=' . $event->unixgroup->longname);
+		$this->log('ldap', __METHOD__, 'POST', $status, $results, 'cn=' . $event->unixgroup->longname);
 	}
 
 	/**
@@ -665,9 +686,17 @@ class AuthprimaryLdap
 	 */
 	public function handleUnixGroupDeleted(UnixGroupDeleted $event)
 	{
-		$config = $this->config('groups');
+		// Make sure config is set
+		$config = $this->config('Groups');
 
 		if (empty($config))
+		{
+			return;
+		}
+
+		$unixgroup = $event->unixgroup;
+
+		if (!$unixgroup || substr($unixgroup->longname, 0, 2) != 'x-')
 		{
 			return;
 		}
@@ -675,17 +704,17 @@ class AuthprimaryLdap
 		try
 		{
 			// Check for an existing record in the ou=Groups tree
-			$ldap = $this->connectGroups($config);
+			$ldap = $this->connect($config, 'authprimarygroups');
 
 			$result = $ldap->search()
-				->where('cn', '=', $event->unixgroup->longname)
+				->where('cn', '=', $unixgroup->longname)
 				->first();
 
 			if ($result && $result->exists)
 			{
 				if (!$result->delete())
 				{
-					throw new Exception('Failed to delete unix group `' . $event->unixgroup->longname . '`', 500);
+					throw new Exception('Failed to delete unix group `' . $unixgroup->longname . '`', 500);
 				}
 			}
 
@@ -698,137 +727,111 @@ class AuthprimaryLdap
 			$body   = ['error' => $e->getMessage()];
 		}
 
-		$this->log('authprimaryldap', __METHOD__, 'DELETE', $status, $body, 'cn=' . $event->unixgroup->longname);
+		$this->log('authprimaryldap', __METHOD__, 'DELETE', $status, $body, 'cn=' . $unixgroup->longname);
 	}
 
 	/**
-	 * Handle a unix group member being created
+	 * Handle a UnixGroupMemberCreated sync event
+	 * 
+	 * This will add entries to the AuthPrimary LDAP
 	 *
 	 * @param   UnixGroupMemberCreated  $event
 	 * @return  void
 	 */
 	public function handleUnixGroupMemberCreated(UnixGroupMemberCreated $event)
 	{
-		$config = $this->config('groups');
-
-		if (empty($config))
-		{
-			return;
-		}
-
-		$member = $event->member;
-		$url = 'cn=' . $member->unixgroup->longname;
-
-		try
-		{
-			// Check for an existing record in the ou=Groups tree
-			$ldap = $this->connectGroups($config);
-
-			$result = $ldap->search()
-				->where('cn', '=', $member->unixgroup->longname)
-				->first();
-
-			if (!$result || !$result->exists)
-			{
-				throw new Exception('Unix Group `' . $member->unixgroup->longname . '` not found.', 404);
-			}
-
-			// Get the list of current members and set that on the unixgroup's entry
-			$members = $member->unixgroup->members()
-				->withTrashed()
-				->whereIsActive()
-				->get();
-
-			$usernames = array();
-			foreach ($members as $m)
-			{
-				$usernames[] = $m->user->username;
-			}
-			$usernames = array_unique($usernames);
-
-			$result->setAttribute('memberUid', $usernames);
-
-			if (!$result->save())
-			{
-				throw new Exception('Failed to set members on unix group `' . $member->unixgroup->longname . '`', 500);
-			}
-
-			$status = 201;
-			$body   = $usernames;
-		}
-		catch (\Exception $e)
-		{
-			$status = $e->getCode();
-			$body   = ['error' => $e->getMessage()];
-		}
-
-		$this->log('authprimaryldap', __METHOD__, 'POST', $status, $body, $url);
+		$this->syncUnixGroupMembers($event);
 	}
 
 	/**
-	 * Handle a unix group being deleted
+	 * Handle a UnixGroupMemberDeleted sync event
+	 * 
+	 * This will add entries to the AuthPrimary LDAP
 	 *
 	 * @param   UnixGroupMemberDeleted  $event
 	 * @return  void
 	 */
 	public function handleUnixGroupMemberDeleted(UnixGroupMemberDeleted $event)
 	{
-		$config = $this->config('groups');
+		$this->syncUnixGroupMembers($event);
+	}
+
+	/**
+	 * Handle a UnixGroup sync event
+	 * 
+	 * This will add entries to the AuthPrimary LDAP
+	 *
+	 * @param   object  $event
+	 * @return  void
+	 */
+	public function syncUnixGroupMembers($event)
+	{
+		// Make sure config is set
+		$config = $this->config('Groups');
 
 		if (empty($config))
 		{
 			return;
 		}
 
-		$member = $event->member;
-		$url = 'cn=' . $member->unixgroup->longname;
+		$unixgroup = $event->member->unixgroup;
+
+		if (!$unixgroup || substr($unixgroup->longname, 0, 2) != 'x-')
+		{
+			return;
+		}
+
+		$results = array();
+		$status = 200;
 
 		try
 		{
-			// Check for an existing record in the ou=Groups tree
-			$ldap = $this->connectGroups($config);
+			$ldap = $this->connect($config, 'authprimarygroups');
 
+			// Check for an existing record
 			$result = $ldap->search()
-				->where('cn', '=', $member->unixgroup->longname)
+				->where('cn', '=', $unixgroup->longname)
 				->first();
 
-			if (!$result || !$result->exists)
+			if ($result && $result->exists)
 			{
-				throw new Exception('Unix Group `' . $member->unixgroup->longname . '` not found.', 404);
-			}
+				$members = $unixgroup->members()
+					->withTrashed()
+					->whereIsActive()
+					->get();
 
-			// Get the list of current members and set that on the unixgroup's entry
-			$members = $member->unixgroup->members()
-				->withTrashed()
-				->whereIsActive()
-				->get();
-
-			$usernames = array();
-			foreach ($members as $m)
-			{
-				if ($m->user && $m->userid != $member->userid)
+				$usernames = array();
+				foreach ($members as $member)
 				{
-					$usernames[] = $m->user->username;
+					if (!$member->user)
+					{
+						continue;
+					}
+
+					$usernames[] = $member->user->username;
 				}
+				$usernames = array_unique($usernames);
+
+				$entry->setAttribute('memberUid', $usernames);
+
+				if (!$entry->save())
+				{
+					throw new Exception('Failed to update AuthPrimary ou=Groups record', 500);
+				}
+
+				$results['updated'] = [
+					'cn' => $unixgroup->longname,
+					'gidNumber' => $unixgroup->unixgid,
+					'memberUid' => $usernames
+				];
 			}
-			$usernames = array_unique($usernames);
-
-			$result->setAttribute('memberUid', $usernames);
-
-			if (!$result->save())
-			{
-				throw new Exception('Failed to set members on unix group `' . $member->unixgroup->longname . '`', 500);
-			}
-
-			$status = 204;
-			$body   = $usernames;
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
-			$status = $e->getCode();
-			$body   = ['error' => $e->getMessage()];
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('authprimaryldap', __METHOD__, 'DELETE', $status, $body, $url);
+		$this->log('authprimaryldap', __METHOD__, 'PUT', $status, $results, 'cn=' . $unixgroup->longname);
 	}
 }
