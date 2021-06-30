@@ -250,7 +250,7 @@ class AmieLdap
 			return;
 		}
 
-		$queue = new Queue;
+		$response = new \stdClass;
 
 		try
 		{
@@ -417,13 +417,13 @@ class AmieLdap
 							->where('cn', '=', $group->unixgroup)
 							->first();
 
+					$unixgroup = $group->unixgroups()
+						->withTrashed()
+						->whereIsActive()
+						->first();
+
 					if ($ugs && $ugs->exists)
 					{
-						$unixgroup = $group->unixgroups()
-							->withTrashed()
-							->whereIsActive()
-							->first();
-
 						// Create unix group if doesn't exist
 						if (!$unixgroup || !$unixgroup->id)
 						{
@@ -560,6 +560,25 @@ class AmieLdap
 							$queue->addLoan($lenderqueue->id, $start, $stop, $nodecount, $corecount);
 						}
 					}
+
+					$result->queue = $queue->toArray();
+					$result->queue['members'] = $queue->users()
+						->withTrashed()
+						->whereIsActive()
+						->get()
+						->toArray();
+					$result->group = $group->toArray();
+					$result->group['members'] = $group->members()
+						->withTrashed()
+						->whereIsActive()
+						->get()
+						->toArray();
+					$result->unixgroup = $unixgroup->toArray();
+					$result->unixgroup['members'] = $unixgroup->members()
+						->withTrashed()
+						->whereIsActive()
+						->get()
+						->toArray();
 				}
 
 				event(new UserSync($user, true));
@@ -571,7 +590,7 @@ class AmieLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$event->response = $queue;
+		$event->response = $response;
 
 		$this->log('ldap', __METHOD__, 'POST', $status, $results, json_encode($event->data));
 	}
