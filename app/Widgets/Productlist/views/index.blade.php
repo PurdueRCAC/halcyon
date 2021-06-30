@@ -16,7 +16,7 @@
 					$resource = $data['resource'];
 					$products = $data['products'];//$resource->listname
 					?>
-					<div id="{{ preg_replace('/[^a-z0-9]/', '', strtolower($resource->name)) }}" class="card purchase-card">
+					<div id="{{ $resource->listname }}" class="card purchase-card">
 						<div class="card-content">
 							<div class="card-header purchase-lefts">
 								<div class="row">
