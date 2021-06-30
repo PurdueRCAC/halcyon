@@ -15,6 +15,7 @@ use App\Modules\Resources\Models\Asset;
 use App\Modules\Queues\Events\AllocationCreate;
 use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Queues\Models\Queue;
+use App\Modules\Queues\Models\QueueUser;
 use Carbon\Carbon;
 
 /**
@@ -530,6 +531,20 @@ class AmieLdap
 						$queue->save();
 					}
 
+					$queuemembers = $queue->users()
+						->withTrashed()
+						->whereIsActive()
+						->count();
+
+					if (!$queuemembers)
+					{
+						$qm = new QueueUser;
+						$qm->queueid = $queue->id;
+						$qm->userid = $user->id;
+						$qm->membertype = 1;
+						$qm->save();
+					}
+
 					$sizes = $queue->sizes()->orderBy('id', 'asc')->get();
 					$serviceUnits = $results->getAttribute('x-xsede-serviceUnits', 0);
 
@@ -562,24 +577,27 @@ class AmieLdap
 						}
 					}
 
-					$response->queue = $queue->toArray();
-					$response->queue['members'] = $queue->users()
+					$q = $queue->toArray();
+					$q['members'] = $queue->users()
 						->withTrashed()
 						->whereIsActive()
 						->get()
 						->toArray();
-					$response->group = $group->toArray();
-					$response->group['members'] = $group->members()
+					$response->queue = $q;
+					$g = $group->toArray();
+					$g['members'] = $group->members()
 						->withTrashed()
 						->whereIsActive()
 						->get()
 						->toArray();
-					$response->unixgroup = $unixgroup->toArray();
-					$response->unixgroup['members'] = $unixgroup->members()
+					$response->group = $g;
+					$u = $unixgroup->toArray();
+					$u['members'] = $unixgroup->members()
 						->withTrashed()
 						->whereIsActive()
 						->get()
 						->toArray();
+					$response->unixgroup = $u;
 				}
 
 				event(new UserSync($user, true));
