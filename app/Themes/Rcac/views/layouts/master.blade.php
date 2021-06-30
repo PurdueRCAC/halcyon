@@ -102,7 +102,7 @@
 	<body>
 		@widget('top')
 		<header>
-			<nav class="navbar navbar-expand-lg goldbar" role="navigation" aria-label="Purdue University Quick Links">
+			<nav class="navbar navbar-expand-lg goldbar" aria-label="Purdue University Quick Links">
 				<div class="container">
 					<div class="navbar-header navbar-toggler">
 						<button class="navbar-toggle left" data-target=".gold" data-toggle="collapse" aria-controls="pu-quicklinks" type="button">
