@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Users\AmieLdap;
 
+use Illuminate\Support\Fluent;
 use App\Modules\Users\Events\UserSyncing;
 use App\Modules\Users\Events\UserSync;
 use App\Modules\Users\Models\User;
@@ -250,7 +251,7 @@ class AmieLdap
 			return;
 		}
 
-		$response = new \stdClass;
+		$response = new Fluent;
 
 		try
 		{
