@@ -83,7 +83,7 @@ class AuthprimaryLdap
 	{
 		return app('ldap')
 				->addProvider($config, $name)
-				->connect('authprimary');
+				->connect($name);
 	}
 
 	/**
