@@ -98,6 +98,15 @@ class OrdersController extends Controller
 				END) AS itemsfulfilled")
 			)
 			->leftJoin($i, $i . '.orderid', $o . '.id')
+			->leftJoin($a, function ($join) use ($a, $o)
+				{
+					$join->on($a . '.orderid', $o . '.id')
+						->on(function($where) use ($a)
+						{
+							$where->where($a . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+								->orWhereNull($a . '.datetimeremoved');
+						});
+				})
 			//->join($p, $p . '.id', $i . '.orderproductid')
 			->where(function($where) use ($i)
 			{
@@ -120,10 +129,11 @@ class OrdersController extends Controller
 		}
 		if ($filters['userid'])
 		{
-			$subitems->where(function($query) use ($filters, $o)
+			$subitems->where(function($query) use ($filters, $o, $a)
 			{
 				$query->where($o . '.userid', '=', $filters['userid'])
-					->orWhere($o . '.submitteruserid', '=', $filters['userid']);
+					->orWhere($o . '.submitteruserid', '=', $filters['userid'])
+					->orWhere($a . '.approveruserid', '=', $filters['userid']);
 			});
 		}
 
