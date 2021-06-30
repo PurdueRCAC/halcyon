@@ -6,7 +6,7 @@ use App\Modules\History\Traits\Loggable;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberStatus;
 use App\Modules\Resources\Events\ResourceMemberDeleted;
-use App\Modules\Groups\Events\UnixGroupCreated;
+use App\Modules\Groups\Events\UnixGroupCreating;
 use App\Modules\Groups\Events\UnixGroupDeleted;
 use App\Modules\Groups\Events\UnixGroupMemberCreated;
 use App\Modules\Groups\Events\UnixGroupMemberDeleted;
@@ -44,7 +44,7 @@ class AuthprimaryLdap
 		$events->listen(ResourceMemberDeleted::class, self::class . '@handleResourceMemberDeleted');
 
 		// Unix Groups
-		$events->listen(UnixGroupCreated::class, self::class . '@handleUnixGroupCreated');
+		$events->listen(UnixGroupCreating::class, self::class . '@handleUnixGroupCreating');
 		$events->listen(UnixGroupDeleted::class, self::class . '@handleUnixGroupDeleted');
 		$events->listen(UnixGroupMemberCreated::class, self::class . '@handleUnixGroupMemberCreated');
 		$events->listen(UnixGroupMemberDeleted::class, self::class . '@handleUnixGroupMemberDeleted');
@@ -193,12 +193,12 @@ class AuthprimaryLdap
 			elseif ($auth)
 			{
 				// Update user record in ou=allPeople
-				$entry->setAttribute('cn', $user->name);
-				$entry->setAttribute('sn', $user->surname);
-				$entry->setAttribute('loginShell', $user->loginShell);
-				$entry->setAttribute('homeDirectory', '/home/' . $user->username);
+				$result->setAttribute('cn', $user->name);
+				$result->setAttribute('sn', $user->surname);
+				$result->setAttribute('loginShell', $user->loginShell);
+				$result->setAttribute('homeDirectory', '/home/' . $user->username);
 
-				if (!$entry->save())
+				if (!$result->save())
 				{
 					throw new Exception('Failed to update AuthPrimary ou=allPeople record', 500);
 				}
@@ -604,10 +604,10 @@ class AuthprimaryLdap
 	 * 
 	 * This will add entries to the AuthPrimary LDAP
 	 *
-	 * @param   UnixGroupCreated  $event
+	 * @param   UnixGroupCreating  $event
 	 * @return  void
 	 */
-	public function handleUnixGroupCreated(UnixGroupCreated $event)
+	public function handleUnixGroupCreating(UnixGroupCreating $event)
 	{
 		// Make sure config is set
 		$config = $this->config('Groups');
@@ -619,7 +619,7 @@ class AuthprimaryLdap
 
 		$unixgroup = $event->unixgroup;
 
-		if (substr($unixgroup->longname, 0, 2) != 'x-')
+		if (!$unixgroup || substr($unixgroup->longname, 0, 2) != 'x-')
 		{
 			return;
 		}
@@ -812,9 +812,9 @@ class AuthprimaryLdap
 				}
 				$usernames = array_unique($usernames);
 
-				$entry->setAttribute('memberUid', $usernames);
+				$result->setAttribute('memberUid', $usernames);
 
-				if (!$entry->save())
+				if (!$result->save())
 				{
 					throw new Exception('Failed to update AuthPrimary ou=Groups record', 500);
 				}
@@ -829,7 +829,7 @@ class AuthprimaryLdap
 		catch (Exception $e)
 		{
 			$status = 500;
-			$results = ['error' => $e->getMessage()];
+			$results['error'] = $e->getMessage();
 		}
 
 		$this->log('authprimaryldap', __METHOD__, 'PUT', $status, $results, 'cn=' . $unixgroup->longname);
