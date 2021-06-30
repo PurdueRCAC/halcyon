@@ -4,10 +4,10 @@
  */
 ?>
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/core/main.min.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/daygrid/main.min.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/timegrid/main.min.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/core/main.min.css?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/core/main.min.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/daygrid/main.min.css?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/daygrid/main.min.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/timegrid/main.min.css?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/timegrid/main.min.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css?v=' . filemtime(public_path() . '/modules/news/css/news.css')) }}" />
 @endpush
 
 @push('scripts')
@@ -52,29 +52,27 @@ foreach ($rows as $event)
 	$now = Carbon\Carbon::now();
 	$endregistration = Carbon\Carbon::parse($event->datetimenews)->modify('-2 hours');
 
-	//if ($event->url)
-	//{
-		$slot->backgroundColor = '#0e7e12'; // green
-		$slot->borderColor = '#0e7e12';
+	$slot->backgroundColor = '#0e7e12'; // green
+	$slot->borderColor = '#0e7e12';
 
-		// Mark as closed registration
-		if ($now->getTimestamp() >= $endregistration->getTimestamp())
-		{
-			$slot->backgroundColor = '#757575'; // gray
-			$slot->borderColor = '#757575';
-		}
+	// Mark as closed registration
+	if ($now->getTimestamp() >= $endregistration->getTimestamp())
+	{
+		$slot->backgroundColor = '#757575'; // gray
+		$slot->borderColor = '#757575';
+	}
 
-		// Mark as reserved if the event hasn't ended
-		if (($reserved || $attending) && $now->getTimestamp() < $event->datetimenewsend->getTimestamp())
-		{
-			$slot->backgroundColor = '#0c5460'; // blue
-			$slot->borderColor = '#0c5460';
-		}
-	//}
+	// Mark as reserved if the event hasn't ended
+	if (($reserved || $attending) && $now->getTimestamp() < $event->datetimenewsend->getTimestamp())
+	{
+		$slot->backgroundColor = '#0c5460'; // blue
+		$slot->borderColor = '#0c5460';
+	}
 
 	$events[] = $slot;
 	?>
-	<div id="coffee{{ $event->id }}" class="dialog dialog-event" title="{{ $event->headline }}">
+	<article id="coffee{{ $event->id }}" class="dialog dialog-event" title="{{ $event->headline }}">
+		<h3 class="sr-only">{{ $event->headline }}</h3>
 		<p class="newsattend">
 			@if ($event->url)
 				@if (auth()->user() && in_array(config()->get('module.news.ignore_role', 4), auth()->user()->getAuthorisedRoles()))
@@ -111,11 +109,6 @@ foreach ($rows as $event)
 		<p class="newsheader">
 			<i class="fa fa-fw fa-clock-o" aria-hidden="true"></i> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
 			<?php
-			//$news_start = new DateTime($event->datetimenews);
-			//$news_end = new DateTime($event->datetimenewsend);
-
-			//$now = new DateTime();
-
 			if ($event->isToday())
 			{
 				if ($event->isNow())
@@ -178,13 +171,13 @@ foreach ($rows as $event)
 					?>
 					<br />
 					<i class="fa fa-fw fa-calendar" aria-hidden="true"></i>
-					<a target="_blank" class="calendar calendar-subscribe" href="<?php echo request()->getHttpHost(); ?><?php echo str_replace(['http:', 'https:'], 'webcal:', route('site.news.calendar', ['name' => $event->id])); ?>" title="Subscribe to event"><!--
-						-->Subscribe<!--
+					<a target="_blank" class="calendar calendar-subscribe" href="<?php echo request()->getHttpHost(); ?><?php echo str_replace(['http:', 'https:'], 'webcal:', route('site.news.calendar', ['name' => $event->id])); ?>"><!--
+						-->Subscribe<span class="sr-only"> to event #{{ $event->id }} at {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}</span><!--
 					--></a>
 					&nbsp;|&nbsp;
 					<i class="fa fa-fw fa-download" aria-hidden="true"></i>
-					<a target="_blank" class="calendar calendar-download" href="<?php echo route('site.news.calendar', ['name' => $event->id]); ?>" title="Download event"><!--
-						-->Download<!--
+					<a target="_blank" class="calendar calendar-download" href="<?php echo route('site.news.calendar', ['name' => $event->id]); ?>"><!--
+						-->Download<span class="sr-only"> event #{{ $event->id }} at {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}</span><!--
 					--></a>
 					<?php
 				}
@@ -192,7 +185,7 @@ foreach ($rows as $event)
 			?>
 		</p>
 		{!! $event->body !!}
-	</div>
+	</article>
 	<?php
 }
 ?>
