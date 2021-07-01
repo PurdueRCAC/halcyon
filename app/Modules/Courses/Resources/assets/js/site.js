@@ -54,7 +54,7 @@ function CreateNewClassAccount(btn) {
 	post['users'] = users;
 
 	WSPostURL(btn.data('api'), JSON.stringify(post), function (xml) {
-		if (xml.status < 400) {
+		if (xml.status == 200) {
 			document.location.reload(true);
 		} else if (xml.status == 403) {
 			alert("Your session may have expired. Click OK to reload page.");
@@ -175,7 +175,7 @@ function AddingManyUsersEmail(xml, post_obj) {
 			'userid': user,
 			'classaccountid': post_obj['classaccountid'],
 		};
-
+console.log(post);
 		post = JSON.stringify(post);
 		pending++;
 
@@ -216,6 +216,7 @@ function AddingManyUsers(xml, post_obj) {
 			WSPostURL(ROOT_URL + "users", post, newUser, post_obj);
 			return;
 		}*/
+		console.log(response['data']); return;
 		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
 			var user = response['data'][0]['username'];
 		} else {
@@ -227,6 +228,7 @@ function AddingManyUsers(xml, post_obj) {
 			'userid': user,
 			'classaccountid': post_obj['classaccountid'],
 		};
+	console.log(post);
 		post = JSON.stringify(post);
 		pending++;
 
@@ -278,14 +280,14 @@ function PrintErrors() {
  */
 function newUser(xml, post_obj) {
 	pending--;
-	if (xml.status < 400) {
+	if (xml.status == 200) {
 		//var response = JSON.parse(xml.responseText);
 		//var post = JSON.stringify(post_obj);
 		pending++;
-		WSGetURL(ROOT_URL + 'users/?search=' + post_obj['userid'], AddingManyUsers, post_obj);
+		WSGetURL(ROOT_URL + 'users/?search=' + post_obj['user'], AddingManyUsers, post_obj);
 	} else {
 		errors++;
-		problem_users.push(post_obj['userid']);
+		problem_users.push(post_obj['user']);
 		PrintErrors();
 	}
 }
@@ -422,12 +424,16 @@ function ClassUserSearchEventHandler(event, ui, crn) {
 	document.getElementById("searchuser" + s_crn).value = "";
 
 	var id = ui['item']['id'];
-	//var name = ui['item']['name'];
-	var username = ui['item']['usernames'][0]['name'];
+	var name = ui['item']['name'];
+	var username = ui['item']['username'];
 
 	if (typeof (id) == 'undefined') {
-		var post = JSON.stringify({ "name": username });
-		WSPostURL(ROOT_URL + "users", post, AddUserClass, crn);
+		var post = JSON.stringify({
+			"name": name,
+			"username": username
+		});
+		console.log(post);
+		//WSPostURL(ROOT_URL + "users", post, AddUserClass, crn);
 	} else {
 		WSGetURL(ROOT_URL + "users/" + id, AddUserClass, crn);
 	}
@@ -450,7 +456,7 @@ function AddUserClass(xml, crn) {
 			s_crn = "_" + crn;
 		}
 		var response = JSON.parse(xml.responseText),
-			results = response.data;
+			results = response; //.data;
 		var list = document.getElementById("class_people" + s_crn);
 
 		// if this was a name search
@@ -475,7 +481,7 @@ function AddUserClass(xml, crn) {
 		// make red X button image
 		var img = document.createElement("i");
 			img.setAttribute('aria-hidden', true);
-			img.className = "fa fa-trash crmdeleteuser";
+			img.className = "fa fa-trash text-danger crmdeleteuser";
 
 		// create link for button
 		var a = document.createElement("a");
@@ -498,7 +504,7 @@ function AddUserClass(xml, crn) {
 		/*if (results['fullname'] != undefined) {
 			span.appendChild(document.createTextNode(results['fullname']));
 		} else {*/
-		span.appendChild(document.createTextNode(results['name'] + ' (' + results['username'] + ')'));
+		span.appendChild(document.createTextNode(' ' + results['name'] + ' (' + results['username'] + ')'));
 		//}
 		list.appendChild(hidden);
 
@@ -518,8 +524,17 @@ function AddUserClass(xml, crn) {
 					if (xml.status < 400) {
 						var results = JSON.parse(xml.responseText);
 						document.getElementById("HIDDEN_" + data['user'] + "_" + data['crn']).value = results['id'];
+						$('#searchuser_alert_' + data['crn'])
+							.removeClass('hide')
+							.removeClass('alert-danger')
+							.addClass('alert-success')
+							.text('Successfully added person.');
 					} else {
-						alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
+						$('#searchuser_alert_' + data['crn'])
+							.removeClass('hide')
+							.removeClass('alert-success')
+							.addClass('alert-danger')
+							.text('An error occurred. Reload the page and try again. If problem persists contact help.');
 					}
 				},
 				{ 'user': results['id'], 'crn': crn }
@@ -663,7 +678,11 @@ $(document).ready(function () {
 			minLength: 2,
 			filter: /^[a-z0-9\-_ .,@+]+$/i,
 			open: function () {
-				$(this).autocomplete("widget").zIndex($('#class_dialog_' + $(this).data('id')).zIndex() + 1);
+				$('#searchuser_alert_' + $(this).data('id')).addClass('hide');
+				/*var dlg = $('#class_dialog_' + $(this).data('id'));
+				if (dlg.length) {
+					$(this).autocomplete("widget").zIndex(dlg.zIndex() + 1);
+				}*/
 			},
 			select: function (event, ui) {
 				ClassUserSearchEventHandler(event, ui, $(this).data('id'));

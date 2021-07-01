@@ -207,7 +207,7 @@
 										<a href="#USER_{{ $usr->id }}_{{ $class->crn }}" class="user-delete delete" data-api="{{ route('api.courses.members.delete', ['id' => $user->id]) }}" data-confirm="Are you sure you wish to remove this user?" data-user="{{ $user->id }}" data-crn="{{ $class->crn }}">
 											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">Delete</span>
 										</a>
-										{{ $usr->user ? $usr->user->name : trans('global.unknown') }}
+										{{ $usr->user ? $usr->user->name . ' (' . $usr->user->username . ')' : $usr->userid . ' ' . trans('global.unknown') }}
 										<input type="hidden" id="HIDDEN_{{ $usr->id }}_{{ $class->crn }}" value="{{ $usr->id }}" />
 									</li>
 									<?php
@@ -219,6 +219,7 @@
 								<div class="form-group">
 									<label for="searchuser_{{ $class->crn }}">Add instructors, TAs, or others:</label>
 									<input id="searchuser_{{ $class->crn }}" class="form-control search-user" data-id="{{ $class->crn }}" data-api="{{ route('api.users.index') }}?search=%s" value="" />
+									<div class="alert hide" id="searchuser_alert_{{ $class->crn }}" data-success="Successfully added person."></div>
 								</div>
 							@endif
 						</td>
