@@ -607,6 +607,8 @@ class AmieLdap
 							$dir->publicread  = 0;
 							$dir->publicwrite = 0;
 							$dir->groupid = $group->id;
+							$dir->unixgroupid = $unixgroup->id;
+							$dir->autouserunixgroupid = $unixgroup->id;
 							$dir->storageresourceid = $storage->id;
 							$dir->resourceid = $storage->parentresourceid;
 							$dir->name = 'x-' . strtolower($group->name);
