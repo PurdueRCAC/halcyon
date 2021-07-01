@@ -84,6 +84,11 @@
 
 	foreach ($user->memberofunixgroups as $unixgroup)
 	{
+		if (!$unixgroup->unixgroup)
+		{
+			continue;
+		}
+
 		$group = $unixgroup->unixgroup->group;
 
 		if (!$group)
