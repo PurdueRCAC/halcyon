@@ -686,25 +686,25 @@ class AmieLdap
 						->whereIsActive()
 						->get()
 						->toArray();
-					if ($q['datetimeremoved'] == '0000-00-00 00:00:00'
-					 || $q['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z')
+					if (isset($q['datetimeremoved'])
+					 && ($q['datetimeremoved'] == '0000-00-00 00:00:00' || $q['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z'))
 					{
 						$q['datetimeremoved'] = null;
 					}
-					if ($q['datetimelastseen'] == '0000-00-00 00:00:00'
-					 || $q['datetimelastseen'] == '-000001-11-30T06:00:00.000000Z')
+					if (isset($q['datetimelastseen'])
+					 && ($q['datetimelastseen'] == '0000-00-00 00:00:00' || $q['datetimelastseen'] == '-000001-11-30T06:00:00.000000Z'))
 					{
 						$q['datetimelastseen'] = null;
 					}
 					foreach ($q['members'] as $k => $member)
 					{
-						if ($member['datetimeremoved'] == '0000-00-00 00:00:00'
-						 || $member['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z')
+						if (isset($member['datetimeremoved'])
+						 && ($member['datetimeremoved'] == '0000-00-00 00:00:00' || $member['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z'))
 						{
 							$member['datetimeremoved'] = null;
 						}
-						if ($member['datetimelastseen'] == '0000-00-00 00:00:00'
-						 || $member['datetimelastseen'] == '-000001-11-30T06:00:00.000000Z')
+						if (isset($member['datetimelastseen'])
+						 && ($member['datetimelastseen'] == '0000-00-00 00:00:00' || $member['datetimelastseen'] == '-000001-11-30T06:00:00.000000Z'))
 						{
 							$member['datetimelastseen'] = null;
 						}
@@ -722,13 +722,13 @@ class AmieLdap
 						->toArray();
 					foreach ($g['members'] as $k => $member)
 					{
-						if ($member['dateremoved'] == '0000-00-00 00:00:00'
-						 || $member['dateremoved'] == '-000001-11-30T06:00:00.000000Z')
+						if (isset($member['dateremoved'])
+						 && ($member['dateremoved'] == '0000-00-00 00:00:00' || $member['dateremoved'] == '-000001-11-30T06:00:00.000000Z'))
 						{
 							$member['dateremoved'] = null;
 						}
-						if ($member['datelastseen'] == '0000-00-00 00:00:00'
-						 || $member['datelastseen'] == '-000001-11-30T06:00:00.000000Z')
+						if (isset($member['datelastseen'])
+						 && ($member['datelastseen'] == '0000-00-00 00:00:00' || $member['datelastseen'] == '-000001-11-30T06:00:00.000000Z'))
 						{
 							$member['datelastseen'] = null;
 						}
@@ -746,16 +746,16 @@ class AmieLdap
 						->toArray();
 					foreach ($u['members'] as $k => $member)
 					{
-						if ($member['datetimeremoved'] == '0000-00-00 00:00:00'
-						 || $member['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z')
+						if (isset($member['datetimeremoved'])
+						 && ($member['datetimeremoved'] == '0000-00-00 00:00:00' || $member['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z'))
 						{
 							$member['datetimeremoved'] = null;
 						}
 						$member['api'] = route('api.unixgroups.members.read', ['id' => $member['id']]);
 						$u['members'][$k] = $member;
 					}
-					if ($u['datetimeremoved'] == '0000-00-00 00:00:00'
-					 || $u['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z')
+					if (isset($u['datetimeremoved'])
+					 && ($u['datetimeremoved'] == '0000-00-00 00:00:00' || $u['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z'))
 					{
 						$u['datetimeremoved'] = null;
 					}
@@ -763,13 +763,13 @@ class AmieLdap
 					$response->unixgroup = $u;
 
 					$d = $dir->toArray();
-					if ($d['datetimeremoved'] == '0000-00-00 00:00:00'
-					 || $d['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z')
+					if (isset($d['datetimeremoved'])
+					 && ($d['datetimeremoved'] == '0000-00-00 00:00:00' || $d['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z'))
 					{
 						$d['datetimeremoved'] = null;
 					}
-					if ($d['datetimeconfigured'] == '0000-00-00 00:00:00'
-					 || $d['datetimeconfigured'] == '-000001-11-30T06:00:00.000000Z')
+					if (isset($d['datetimeconfigured'])
+					 && ($d['datetimeconfigured'] == '0000-00-00 00:00:00' || $d['datetimeconfigured'] == '-000001-11-30T06:00:00.000000Z'))
 					{
 						$d['datetimeconfigured'] = null;
 					}
