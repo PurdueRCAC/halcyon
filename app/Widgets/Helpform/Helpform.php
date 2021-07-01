@@ -1,8 +1,9 @@
 <?php
 namespace App\Widgets\Helpform;
 
-use App\Modules\Widgets\Entities\Widget;
+use Illuminate\Support\Facades\Mail;
 use App\Widgets\Helpform\Mail\Ticket;
+use App\Modules\Widgets\Entities\Widget;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Knowledge\Models\Associations;
 use App\Modules\Users\Models\User;
@@ -19,15 +20,19 @@ class Helpform extends Widget
 	 */
 	public function run()
 	{
-		if (request()->method() == 'POST')
+		$request = request();
+
+		if ($request->method() == 'POST')
 		{
 			$data = array(
-				'email' => request()->input('email'),
-				'subject' => request()->input('subject'),
-				'resource' => request()->input('resource', []),
-				'report' => request()->input('report'),
-				'user' => null,
+				'email'    => $request->input('email'),
+				'subject'  => $request->input('subject'),
+				'resource' => $request->input('resource', []),
+				'report'   => $request->input('report'),
+				'user'     => null,
 			);
+
+			$errors = array();
 
 			if (!isset($data['email']))
 			{
@@ -56,7 +61,11 @@ class Helpform extends Widget
 				$destination = 'zooley@purdue.edu';
 
 				// Collect selected resource names
-				$res = explode(',', $data['resource']);
+				$res = $data['resource'];
+				if (is_string($res))
+				{
+					$res = explode(',', $res);
+				}
 				$resources = array();
 				foreach ($res as $resourceid)
 				{
@@ -69,17 +78,32 @@ class Helpform extends Widget
 				$data['resources'] = implode(', ', $resources);
 
 				// Do they have an account?
-				$user = User::findByEmail($data['email']);
-
-				$data['user'] = $user;
+				if (strstr($data['email'], '@') == '@purdue.edu')
+				{
+					$user = User::findByEmail($data['email']);
+					$data['user'] = $user;
+				}
 
 				// Build the message
 				$message = new Ticket($data, $destination);
-				echo $message;
-				//Mail::to($destination)->send($message);
+
+				$files = $request->file('upload');
+				if ($files)
+				{
+					foreach ($files as $file)
+					{
+						$message->attach($file->getRealPath(), [
+							'as'   => $file->getClientOriginalName(),
+							'mime' => $file->getMimeType(),
+						]);
+					}
+				}
+
+				//echo $message->render();
+				Mail::to($destination)->send($message);
 
 				return view($this->getViewName('success'), [
-					'data' => $data,
+					'data'   => $data,
 					'errors' => $errors,
 					'params' => $this->params,
 				]);
@@ -128,7 +152,7 @@ class Helpform extends Widget
 		$layout = $layout ?: 'index';
 
 		return view($this->getViewName($layout), [
-			'types' => $types,
+			'types'  => $types,
 			'topics' => $topics,
 		]);
 	}

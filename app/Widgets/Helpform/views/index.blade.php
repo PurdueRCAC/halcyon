@@ -1,21 +1,20 @@
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 @endpush
 
-<form method="post" action="{{ route('page', ['uri' => 'help']) }}">
+<form method="post" action="{{ route('page', ['uri' => 'help']) }}" enctype="multipart/form-data" class="editform">
 	<fieldset id="help-cats">
 		<legend>Please select a topic</legend>
 
 		<?php foreach ($topics as $topic): ?>
 			<?php
-			if (!$topic['title'])
-			{
+			if (!$topic['title']):
 				continue;
-			}
+			endif;
 			?>
 			<div class="form-check">
 				<input type="radio" name="category" class="help-cat form-check-input" id="cat_{{ $topic['name'] }}" value="{{ $topic['name'] }}" />
@@ -30,10 +29,9 @@
 
 		<?php foreach ($topics as $topic): ?>
 			<?php
-			if (!$topic['title'])
-			{
+			if (!$topic['title']):
 				continue;
-			}
+			endif;
 			?>
 			<div id="cat_{{ $topic['name'] }}_faq" class="help-cat-faq mt-2 hide">
 				<article class="card">
@@ -83,6 +81,20 @@
 			<span class="form-text text-muted">Please include job IDs (if applicable).</span>
 		</div>
 
+		<?php
+		$tmp = ('-' . time());
+		?>
+		<div class="form-group dropzone">
+			<div id="uploader" class="fallback" data-instructions="Click or Drop files" data-list="#uploader-list">
+				<!-- <noscript> -->
+				<label for="upload">Choose a file<span class="dropzone__dragndrop"> or drag it here</span></label>
+				<input type="file" name="upload[]" id="upload" class="form-control-file" multiple="multiple" />
+				<!-- </noscript> -->
+			</div>
+			<div class="file-list" id="uploader-list"></div>
+			<input type="hidden" name="tmp_dir" id="ticket-tmp_dir" value="{{ $tmp }}" />
+		</div>
+
 		{!! captcha('helpcaptcha') !!}
 
 		@csrf
@@ -92,6 +104,102 @@
 </form>
 
 <script>
+(function (document, window, index) {
+	// feature detection for drag&drop upload
+	var isAdvancedUpload = function()
+		{
+			var div = document.createElement('div');
+			return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
+		}();
+
+	// applying the effect for every form
+	var forms = document.querySelectorAll('.dropzone');
+	Array.prototype.forEach.call(forms, function(form)
+	{
+		var input    = form.querySelector('input[type="file"]'),
+			label    = form.querySelector('label'),
+			filelist = form.querySelector('.file-list'),
+			droppedFiles = false,
+			// output information
+			output = function(msg)
+			{
+				filelist.innerHTML = msg + filelist.innerHTML;
+			},
+			showFiles = function(files)
+			{
+				// process all File objects
+				for (var i = 0, f; f = files[i]; i++) {
+					//parseFile(f);
+					output(
+						"<p>File information: <strong>" + f.name + "</strong> (" + f.size + " bytes)</p>"
+					);
+				}
+				//label.textContent = files.length > 1
+				//	? (input.getAttribute('data-multiple-caption') || '').replace('{count}', files.length)
+				//	: files[0].name;
+			},
+			triggerFormSubmit = function()
+			{
+				var event = document.createEvent( 'HTMLEvents' );
+				event.initEvent( 'submit', true, false );
+				form.dispatchEvent( event );
+			};
+
+		// automatically submit the form on file select
+		input.addEventListener('change', function(e)
+		{
+			showFiles(e.target.files);
+		});
+
+		// drag&drop files if the feature is available
+		if (isAdvancedUpload)
+		{
+			form.classList.add('has-advanced-upload'); // letting the CSS part to know drag&drop is supported by the browser
+
+			['drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'].forEach(function(event)
+			{
+				form.addEventListener(event, function(e)
+				{
+					// preventing the unwanted behaviours
+					e.preventDefault();
+					e.stopPropagation();
+				});
+			});
+
+			['dragover', 'dragenter'].forEach(function(event)
+			{
+				form.addEventListener(event, function()
+				{
+					form.classList.add( 'is-dragover' );
+				});
+			});
+
+			['dragleave', 'dragend', 'drop'].forEach(function(event)
+			{
+				form.addEventListener( event, function()
+				{
+					form.classList.remove( 'is-dragover' );
+				});
+			});
+
+			form.addEventListener('drop', function(e)
+			{
+				droppedFiles = e.target.files || e.dataTransfer.files; // the files that were dropped
+				input.files = droppedFiles;
+				//showFiles(droppedFiles);
+			});
+		}
+
+		// Firefox focus bug fix for file input
+		input.addEventListener('focus', function(){
+			input.classList.add('has-focus');
+		});
+		input.addEventListener('blur', function(){
+			input.classList.remove('has-focus');
+		});
+	});
+}(document, window, 0));
+
 $(document).ready(function() {
 	$('.help-cat').on('change', function(){
 		$('.help-cat-faq').addClass('hide');
@@ -102,7 +210,7 @@ $(document).ready(function() {
 		if ($(this).data('resource')) {
 			$('#resource').val($(this).data('resource'));
 		}
-		$('#subject').val(label.innerHTML);
+		$('#subject').val(label.innerHTML).trigger('blur');
 	});
 
 	$('.btn-contact').on('click', function(e){
@@ -153,6 +261,7 @@ $(document).ready(function() {
 
 	var inputs = $('input[required],textarea[required]');
 	var needed = inputs.length, validated = 0;
+
 	inputs.on('blur', function(e){
 		if (this.value) {
 			if (this.validity.valid) {
@@ -184,6 +293,7 @@ $(document).ready(function() {
 				el.classList.remove('is-invalid');
 			}
 		});
+
 		var elms = frm.querySelectorAll('select[required]');
 		elms.forEach(function (el) {
 			if (!el.value || el.value <= 0) {
@@ -193,6 +303,7 @@ $(document).ready(function() {
 				el.classList.remove('is-invalid');
 			}
 		});
+
 		var elms = frm.querySelectorAll('textarea[required]');
 		elms.forEach(function (el) {
 			if (!el.value || !el.validity.valid) {

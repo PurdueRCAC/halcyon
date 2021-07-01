@@ -10,6 +10,8 @@ return [
 	'select page' => '- Select Page -',
 	'groups' => 'Groups',
 	'resource' => 'Resource',
+	'resources' => 'Resources',
+	'queue' => 'Queue',
 	'queues' => 'Queues',
 	'unix groups' => 'Unix Groups',
 	'email header' => 'Help form submission.',

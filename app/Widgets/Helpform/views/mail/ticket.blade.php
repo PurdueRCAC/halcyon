@@ -4,33 +4,34 @@
 
 ---
 
-@if ($data['user'])
-{{ trans('widget.helpform::helpform.groups') }}:
+<?php if ($data['user']): ?>
+**{{ trans('widget.helpform::helpform.groups') }}:**
+
 <?php
-// Owner groups
-$memberships = $user->groups()
-    ->where('groupid', '>', 0)
-    ->whereIsManager()
-    ->get();
+  // Owner groups
+  $memberships = $data['user']->groups()
+      ->where('groupid', '>', 0)
+      ->whereIsManager()
+      ->get();
 
-$q = array();
-foreach ($memberships as $membership)
-{
-    $group = $membership->group;
+  $q = array();
+  foreach ($memberships as $membership)
+  {
+      $group = $membership->group;
 
-    $unixgroups = $group->unixGroups->pluck('longname')->toArray();
+      $unixgroups = $group->unixGroups->pluck('longname')->toArray();
 ?>
 * {{ $group->name }} ({{ $membership->type->name }})
-@foreach ($group->queues as $queue):
+@foreach ($group->queues as $queue)
   * {{ trans('widget.helpform::helpform.queue') }}: {{ $queue->name }} ({{ $queue->subresource->name }})
-@endforeach;
+@endforeach
 @if (!empty($unixgroups))
   * {{ trans('widget.helpform::helpform.unix groups') }}: {{ implode(', ', $unixgroups) }}
 @endif
 <?php
 }
 
-$queues = $user->queues()
+$queues = $data['user']->queues()
     //->where('groupid', '>', 0)
     ->whereIn('membertype', [1, 4])
     ->whereNotIn('id', $q)
@@ -76,9 +77,9 @@ foreach ($queues as $qu)
 }
 ?>
 ----
-@endif
+<?php endif; ?>
 
-{{ trans('widget.helpform::helpform.resource') }}: {{ $data['resources'] }}
+**{{ trans('widget.helpform::helpform.resources') }}:** {{ $data['resources'] }}
 
 {{ $data['report'] }}
 
