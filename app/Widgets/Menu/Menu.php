@@ -19,10 +19,8 @@ class Menu extends Widget
 		$menu = new SiteMenu([
 			'access' => auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array(1)
 		]);
-		//$menu->setActive(app('menu')->getActive()->id);
 
-		$list      = self::getList($menu, $this->params);
-		//$menu      = app('menu');
+		$list = self::getList($menu, $this->params);
 
 		//$active    = $menu->getActive();
 		//$active_id = $active ? $active->id : 0;//$menu->getDefault()->id;
