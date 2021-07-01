@@ -710,6 +710,7 @@ class AmieLdap
 					{
 						$d['datetimeconfigured'] = null;
 					}
+					$d['api'] = route('api.storage.directories.read', ['id' => $d['id']]);
 					$response->directory = $d;
 				}
 
