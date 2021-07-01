@@ -80,7 +80,7 @@
 											$username = $u->username;
 
 											// See if the they have host entry yet
-											event($e = new App\Modules\Users\Events\UserLookup(['host' => 'scholar.rcac.purdue.edu']));
+											event($e = new App\Modules\Users\Events\UserLookup(['username' => $username, 'host' => 'scholar.rcac.purdue.edu']));
 											/*$rows = 0;
 											if ($rcac_ldap)
 											{
