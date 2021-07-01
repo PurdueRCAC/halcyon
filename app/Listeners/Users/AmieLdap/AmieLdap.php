@@ -385,7 +385,15 @@ class AmieLdap
 					}
 				}
 
-				if ($pid = $results->getAttribute('x-xsede-pid', 0))
+				// Check for a gid
+				// If not found, fallback to a pid
+				$pid = $results->getAttribute('x-xsede-gid', 0);
+				if (!$pid && $results->getAttribute('x-xsede-pid', 0))
+				{
+					$pid = 'x-' . strtolower($results->getAttribute('x-xsede-pid', 0));
+				}
+
+				if ($pid)
 				{
 					$group = Group::findByName($pid);
 
@@ -394,7 +402,7 @@ class AmieLdap
 						$group = new Group;
 						$group->name = $pid;
 						$group->owneruserid = $user->id;
-						$group->unixgroup = 'x-' . strtolower($group->name);
+						$group->unixgroup = $group->name;
 						$group->save();
 
 						$group->addManager($user->id, 1);
@@ -402,7 +410,7 @@ class AmieLdap
 
 					if (!$group->unixgroup)
 					{
-						$group->unixgroup = 'x-' . strtolower($group->name);
+						$group->unixgroup = $group->name;
 						$group->save();
 					}
 
@@ -611,7 +619,7 @@ class AmieLdap
 							$dir->autouserunixgroupid = $unixgroup->id;
 							$dir->storageresourceid = $storage->id;
 							$dir->resourceid = $storage->parentresourceid;
-							$dir->name = 'x-' . strtolower($group->name);
+							$dir->name = $group->name;
 							$dir->path = $dir->name;
 							$dir->bytes = '100 GB';
 							$dir->save();
