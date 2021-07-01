@@ -148,6 +148,12 @@ class AuthprimaryLdap
 				}
 			}
 
+			$userDns = array();
+			foreach ($user->facets()->where('key', '=', 'x-xsede-userDn')->get() as $facet)
+			{
+				$userDns[] = $facet->value;
+			}
+
 			if (!$result || !$result->exists)
 			{
 				/*
@@ -179,7 +185,7 @@ class AuthprimaryLdap
 				];
 
 				$entry = $ldap->make()->user($data);
-				$entry->setAttribute('objectclass', ['posixAccount', 'inetOrgPerson', 'top']);
+				$entry->setAttribute('objectclass', ['x-xsede-xsedePerson', 'posixAccount', 'inetOrgPerson', 'top']);
 				$entry->setDn('uid=' . $data['uid'] . ',' . $entry->getDnBuilder()->get());
 
 				if (!$entry->save())
@@ -253,6 +259,7 @@ class AuthprimaryLdap
 						'loginShell'    => $user->loginShell,
 						'homeDirectory' => '/home/' . $user->username,
 						'gecos'         => $user->name,
+						'x-xsede-userDn' => $userDns,
 					];
 
 					if ($user->telephoneNumber)
@@ -261,7 +268,7 @@ class AuthprimaryLdap
 					}
 
 					$entry = $ldap->make()->user($data);
-					$entry->setAttribute('objectclass', ['posixAccount', 'inetOrgPerson', 'top']);
+					$entry->setAttribute('objectclass', ['x-xsede-xsedePerson', 'posixAccount', 'inetOrgPerson', 'top']);
 					$entry->setDn('uid=' . $data['uid'] . ',' . $entry->getDnBuilder()->get());
 
 					if (!$entry->save())
@@ -271,6 +278,15 @@ class AuthprimaryLdap
 
 					$results['created_auth'] = $data;
 					$status = 201;
+				}
+				elseif (empty($result->getAttribute('x-xsede-userDn')))
+				{
+					$result->setAttribute('x-xsede-userDn', $userDns);
+
+					if (!$result->save())
+					{
+						throw new Exception('Failed to update AuthPrimary ou=allPeople record', 500);
+					}
 				}
 			}
 			else
@@ -345,6 +361,12 @@ class AuthprimaryLdap
 				}
 			}
 		}
+
+		$userDns = array();
+			foreach ($user->facets()->where('key', '=', 'x-xsede-userDn')->get() as $facet)
+			{
+				$userDns[] = $facet->value;
+			}
 
 		//$results = array();
 		$status = 200;
@@ -440,6 +462,7 @@ class AuthprimaryLdap
 					'loginShell'    => $user->loginShell,
 					'homeDirectory' => '/home/' . $user->username,
 					'gecos'         => $user->name,
+					'x-xsede-userDn' => $userDns,
 				];
 
 				if ($user->telephoneNumber)
