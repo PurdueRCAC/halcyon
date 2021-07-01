@@ -493,6 +493,11 @@ class Directory extends Model
 		return $bucket;
 	}
 
+	/**
+	 * Get resource total
+	 *
+	 * @return  array
+	 */
 	public function getResourceTotalAttribute()
 	{
 		// Fetch storage buckets under this group
@@ -515,7 +520,7 @@ class Directory extends Model
 
 		foreach ($items as $purchase)
 		{
-			if ($purchase->start != "0000-00-00 00:00:00")
+			if ($purchase->start && $purchase->start != '0000-00-00 00:00:00' && $purchase->start != '-0001-11-30 00:00:00')
 			{
 				if (!isset($increments[strtotime($purchase->start)]))
 				{
@@ -525,7 +530,7 @@ class Directory extends Model
 				$increments[strtotime($purchase->start)] += $purchase->bytes;
 			}
 
-			if ($purchase->stop != "0000-00-00 00:00:00")
+			if ($purchase->stop && $purchase->stop != '0000-00-00 00:00:00' && $purchase->stop != '-0001-11-30 00:00:00')
 			{
 				if (!isset($increments[strtotime($purchase->stop)]))
 				{
@@ -550,8 +555,8 @@ class Directory extends Model
 		foreach ($totals as $time => $total)
 		{
 			array_push($storagedirtotals, array(
-				'time'     => date('Y-m-d H:i:s', $time),
-				'bytes'    => $total
+				'time'  => date('Y-m-d H:i:s', $time),
+				'bytes' => $total
 			));
 		}
 
@@ -582,7 +587,7 @@ class Directory extends Model
 					{
 						$future_quota = array();
 						$future_quota['time']  = $total['time'];
-						$future_quota['quota'] = $this->db->byteMath("+", $row['bytes'], $this->db->byteFunction("ROUND", $this->db->byteMath("*", $this->db->byteMath("/", $row['bytes'], $this_bucket['allocatedbytes']), $this->db->byteMath("-", $total['bytes'], $allocated[$dir['resource']['id']]))));
+						$future_quota['quota'] = $this->bytes + round(($this->bytes / $this_bucket['totalbytes']) * ($total['bytes'] - $allocated[$this->resourceid]));
 
 						array_push($futurequotas, $future_quota);
 					}
