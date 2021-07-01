@@ -18,6 +18,7 @@ use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Storage\Models\Directory;
+use App\Modules\Storage\Models\Loan;
 use Carbon\Carbon;
 
 /**
@@ -561,15 +562,19 @@ class AmieLdap
 
 					$start = $results->getAttribute('x-xsede-startTime', 0);
 					$start = $start ? Carbon::parse($start) : null;
+
+					$stop  = $results->getAttribute('x-xsede-endTime', 0);
+					$stop  = $stop ? Carbon::parse($stop) : null;
+
 					$now = Carbon::now();
 
 					if (!count($sizes) && $serviceUnits && $subresource)// && $start && $start >= $now)
 					{
-						$start = $results->getAttribute('x-xsede-startTime', 0);
-						$start = $start ?: null;
+						//$start = $results->getAttribute('x-xsede-startTime', 0);
+						//$start = $start ?: null;
 
-						$stop = $results->getAttribute('x-xsede-endTime', 0);
-						$stop = $stop ?: null;
+						//$stop = $results->getAttribute('x-xsede-endTime', 0);
+						//$stop = $stop ?: null;
 
 						$lenderqueue = $subresource->queues()
 							->withTrashed()
@@ -598,6 +603,54 @@ class AmieLdap
 
 					if ($storage)
 					{
+						$buckets = $group->storageBuckets;
+						$space = '100 GB';
+
+						// Has any space been allocatted?
+						if (!isset($buckets[$storage->parentresourceid]))
+						{
+							$loan = new Loan;
+							$loan->resourceid = $storage->parentresourceid;
+							$loan->groupid = $group->id;
+							$loan->lendergroupid = -1;
+							$loan->datetimestart = $start ?: $now;
+							if ($stop)
+							{
+								$loan->datetimestop = $stop;
+							}
+							$loan->bytes = $space;
+							$loan->comment = 'XSEDE project ' . $pid;
+							$loan->save();
+
+							// Enforce proper accounting
+							if ($loan->lendergroupid)
+							{
+								// Convert to string to add negative or PHP will lose precision on large values
+								//$group = $row->groupid;
+								$data = $loan->toArray();
+								unset($data['id']);
+								if (isset($data['group']))
+								{
+									unset($data['group']);
+								}
+
+								$counter = new Loan;
+								$counter->fill($data);
+								if ($counter->bytes < 0)
+								{
+									$counter->bytes = abs($counter->bytes);
+								}
+								else
+								{
+									$counter->bytes = '-' . $counter->bytes;
+								}
+								$counter->groupid = $loan->lendergroupid;
+								$counter->lendergroupid = $loan->groupid;
+								$counter->save();
+							}
+						}
+
+						// Do we have a directory?
 						$dir = $group->directories()
 							->withTrashed()
 							->whereIsActive()
@@ -621,7 +674,7 @@ class AmieLdap
 							$dir->resourceid = $storage->parentresourceid;
 							$dir->name = $group->name;
 							$dir->path = $dir->name;
-							$dir->bytes = '100 GB';
+							$dir->bytes = $space;
 							$dir->save();
 						}
 					}
