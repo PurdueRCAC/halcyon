@@ -584,20 +584,75 @@ class AmieLdap
 						->whereIsActive()
 						->get()
 						->toArray();
+					if ($q['datetimeremoved'] == '0000-00-00 00:00:00'
+					 || $q['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z')
+					{
+						$q['datetimeremoved'] = null;
+					}
+					if ($q['datetimelastseen'] == '0000-00-00 00:00:00'
+					 || $q['datetimelastseen'] == '-000001-11-30T06:00:00.000000Z')
+					{
+						$q['datetimelastseen'] = null;
+					}
+					foreach ($q['members'] as $k => $member)
+					{
+						if ($member['datetimeremoved'] == '0000-00-00 00:00:00'
+						 || $member['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z')
+						{
+							$member['datetimeremoved'] = null;
+						}
+						if ($member['datetimelastseen'] == '0000-00-00 00:00:00'
+						 || $member['datetimelastseen'] == '-000001-11-30T06:00:00.000000Z')
+						{
+							$member['datetimelastseen'] = null;
+						}
+						$member['api'] = route('api.queues.users.read', ['id' => $member['id']]);
+						$q['members'][$k] = $member;
+					}
+					$q['api'] = route('api.queues.read', ['id' => $q['id']]);
 					$response->queue = $q;
+
 					$g = $group->toArray();
 					$g['members'] = $group->members()
 						->withTrashed()
 						->whereIsActive()
 						->get()
 						->toArray();
+					foreach ($g['members'] as $k => $member)
+					{
+						if ($member['dateremoved'] == '0000-00-00 00:00:00'
+						 || $member['dateremoved'] == '-000001-11-30T06:00:00.000000Z')
+						{
+							$member['dateremoved'] = null;
+						}
+						if ($member['datelastseen'] == '0000-00-00 00:00:00'
+						 || $member['datelastseen'] == '-000001-11-30T06:00:00.000000Z')
+						{
+							$member['datelastseen'] = null;
+						}
+						$member['api'] = route('api.groups.members.read', ['id' => $member['id']]);
+						$g['members'][$k] = $member;
+					}
+					$g['api'] = route('api.groups.read', ['id' => $g['id']]);
 					$response->group = $g;
+
 					$u = $unixgroup->toArray();
 					$u['members'] = $unixgroup->members()
 						->withTrashed()
 						->whereIsActive()
 						->get()
 						->toArray();
+					foreach ($u['members'] as $k => $member)
+					{
+						if ($member['datetimeremoved'] == '0000-00-00 00:00:00'
+						 || $member['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z')
+						{
+							$member['datetimeremoved'] = null;
+						}
+						$member['api'] = route('api.unixgroups.members.read', ['id' => $member['id']]);
+						$u['members'][$k] = $member;
+					}
+					$u['api'] = route('api.unixgroups.read', ['id' => $u['id']]);
 					$response->unixgroup = $u;
 				}
 
