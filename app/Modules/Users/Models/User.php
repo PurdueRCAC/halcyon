@@ -535,11 +535,15 @@ class User extends Model implements
 			return self::findByUsername($email);
 		}
 
-		$user = self::query()
+		$email = strstr($email, '@', true);
+
+		return self::findByUsername($email);
+
+		/*$user = self::query()
 			->where('email', '=', $email)
 			->first();
 
-		return $user ?: new self;
+		return $user ?: new self;*/
 	}
 
 	/**
