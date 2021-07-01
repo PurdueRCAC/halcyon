@@ -38,48 +38,8 @@ class ModuleServiceProvider extends ServiceProvider
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
-		//$this->parseRoute();
-
 		$this->app['events']->subscribe(new InstallModule);
 	}
-
-	/*public function parseRoute()
-	{
-		//$name = app('route')->currentRouteName();
-		$route = app('router')->current();
-
-		$route = trim($route, '/');
-
-		$menu = app('menu');
-
-		if (empty($route))
-		{
-			$item = $menu->getDefault();
-
-			// if user not allowed to see default menu item then avoid notices
-			if (is_object($item))
-			{
-				// Set the information in the request
-				//$vars = $item->query;
-
-				// Get the itemid
-				//$vars['menuid'] = $item->id;
-				app('request')->merge(['itemid' => $item->id]);
-
-				// Set the active menu item
-				$menu->setActive($item->id);
-			}
-
-			return true;
-		}
-
-		$items = array_reverse($menu->getMenu());
-
-		$found           = false;
-		$route_lowercase = strtolower($route);
-
-		return true;
-	}*/
 
 	/**
 	 * Register the service provider.
@@ -88,33 +48,13 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		/*$this->app->singleton('menu.manager', function ($app)
-		{
-			return new Menu();
-		});*/
-
 		$this->app->singleton('menu', function($app)
 		{
-			/*$options = [
-				'language_filter' => null,
-				'language'        => null,
-				'access'          => auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array()
-			];
+			$menu = new Menu([
+				'access' => auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array(1)
+			]);
 
-			$options['db'] = $app['db'];
-
-			if ($app->has('language.filter'))
-			{
-				$options['language_filter'] = $app->get('language.filter');
-				$options['language']        = $app->get('language')->getTag();
-			}*/
-			//$app['menu.manager']->set('access', auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array());
-			$menu = new Menu();
-			$menu->set('access', auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array());
-			//$menu->load();
 			return $menu;
-
-			return $app['menu.manager']; //->menu($app['isAdmin'] ? 'admin' : 'site', $options);
 		});
 
 		$this->app->singleton('menu.params', function($app)
@@ -127,11 +67,6 @@ class ModuleServiceProvider extends ServiceProvider
 			{
 				$params = $menu->params;
 			}
-			/*elseif ($app->has('component'))
-			{
-				$temp = clone $app['component']->params('com_menus');
-				$params->merge($temp);
-			}*/
 
 			return $params;
 		});
