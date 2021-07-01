@@ -8,9 +8,10 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Reportresource;
-use App\Modules\ContactReports\Models\User;
+use App\Modules\ContactReports\Models\User as ContactUser;
 use App\Modules\ContactReports\Http\Resources\ReportResource as ApiReportResource;
 use App\Modules\ContactReports\Http\Resources\ReportResourceCollection;
+use App\Modules\Users\Models\User;
 use App\Halcyon\Utility\PorterStemmer;
 use Carbon\Carbon;
 
@@ -168,8 +169,19 @@ class ReportsController extends Controller
 		if ($filters['people'])
 		{
 			$filters['people'] = explode(',', $filters['people']);
+			foreach ($filters['people'] as $k => $person)
+			{
+				if (!is_numeric($person))
+				{
+					$user = User::findByUsername($person);
+					if ($user && $user->id)
+					{
+						$filters['people'][$k] = $user->id;
+					}
+				}
+			}
 
-			$cru = (new User)->getTable();
+			$cru = (new ContactUser)->getTable();
 
 			$query->join($cru, $cru . '.contactreportid', $cr . '.id');
 			$query->where(function ($where) use ($filters, $cru, $cr)
@@ -347,9 +359,23 @@ class ReportsController extends Controller
 		{
 			foreach ((array)$users as $user)
 			{
-				$u = new User;
+				if (!is_numeric($user))
+				{
+					$usr = User::createFromUsername($user);
+				}
+				else
+				{
+					$usr = User::find($user);
+				}
+
+				if (!$usr || !$usr->id)
+				{
+					continue;
+				}
+
+				$u = new ContactUser;
 				$u->contactreportid = $row->id;
-				$u->userid = $user;
+				$u->userid = $usr->id;
 
 				if (!$u->save())
 				{
@@ -657,9 +683,23 @@ class ReportsController extends Controller
 
 			foreach ($addusers as $r)
 			{
-				$rr = new User;
+				if (!is_numeric($r))
+				{
+					$usr = User::createFromUsername($r);
+				}
+				else
+				{
+					$usr = User::find($r);
+				}
+
+				if (!$usr || !$usr->id)
+				{
+					continue;
+				}
+
+				$rr = new ContactUser;
 				$rr->contactreportid = $row->id;
-				$rr->userid = $r;
+				$rr->userid = $usr->id;
 
 				if (!$rr->save())
 				{

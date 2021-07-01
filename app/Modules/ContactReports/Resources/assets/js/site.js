@@ -2527,8 +2527,8 @@ var autocompleteList = function (url, key) {
 	return function (request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
 			response($.map(data.data, function (el) {
-				if (typeof (el.id) == 'undefined' && typeof (el.usernames) != 'undefined') {
-					el.id = el.usernames[0]['name'];
+				if (typeof (el.id) == 'undefined' && typeof (el.username) != 'undefined') {
+					el.id = el.username;
 				}
 				if (typeof (el.username) != 'undefined') {
 					el.name += ' (' + el.username + ')';

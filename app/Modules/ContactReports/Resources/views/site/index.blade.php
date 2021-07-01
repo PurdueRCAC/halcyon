@@ -135,7 +135,14 @@ app('pathway')->append(
 									{
 										if (trim($u))
 										{
-											$usr = App\Modules\Users\Models\User::find($u);
+											if (!is_numeric($u))
+											{
+												$usr = App\Modules\Users\Models\User::findByUsername($u);
+											}
+											else
+											{
+												$usr = App\Modules\Users\Models\User::find($u);
+											}
 											$usrs[] = $usr->name . ':' . $u;
 										}
 									}
