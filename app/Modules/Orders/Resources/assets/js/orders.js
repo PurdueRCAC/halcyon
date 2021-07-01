@@ -1645,10 +1645,10 @@ function CollectAccount(url, button) {
 	var docdate = document.getElementById("docdate_" + id).value;
 
 	if (docid != "" && docdate.match(/\d{4}-\d{2}-\d{2}/)) {
-		var post = JSON.stringify({"paid": 1, "docid": docid, "docdate": docdate});
+		var post = JSON.stringify({ "paid": 1, "paymentdocid": docid, "datetimepaymentdoc": docdate});
 
 		WSPutURL(url, post, function(xml, button) {
-			if (xml.status == 200) {
+			if (xml.status < 400) {
 				id = button.getAttribute('data-id');
 
 				document.getElementById("status_" + id).innerHTML = button.getAttribute('data-txt');
