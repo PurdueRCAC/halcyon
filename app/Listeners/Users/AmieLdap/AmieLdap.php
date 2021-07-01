@@ -16,6 +16,8 @@ use App\Modules\Queues\Events\AllocationCreate;
 use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as QueueUser;
+use App\Modules\Storage\Models\StorageResource;
+use App\Modules\Storage\Models\Directory;
 use Carbon\Carbon;
 
 /**
@@ -578,6 +580,43 @@ class AmieLdap
 						}
 					}
 
+					// Storage
+					$storage = StorageResource::query()
+						->withTrashed()
+						->whereIsActive()
+						->where('path', '=', '/depot')
+						->get()
+						->first();
+
+					if ($storage)
+					{
+						$dir = $group->directories()
+							->withTrashed()
+							->whereIsActive()
+							->where('storageresourceid', '=', $storage->id)
+							->get()
+							->first();
+
+						if (!$dir || !$dir->id)
+						{
+							$dir = new Directory;
+							$dir->ownerread   = 1;
+							$dir->ownerwrite  = 1;
+							$dir->groupread   = 1;
+							$dir->groupwrite  = 1;
+							$dir->publicread  = 0;
+							$dir->publicwrite = 0;
+							$dir->groupid = $group->id;
+							$dir->storageresourceid = $storage->id;
+							$dir->resourceid = $storage->parentresourceid;
+							$dir->name = 'x-' . strtolower($group->name);
+							$dir->path = $dir->name;
+							$dir->bytes = '100 GB';
+							$dir->save();
+						}
+					}
+
+					// Output
 					$q = $queue->toArray();
 					$q['members'] = $queue->users()
 						->withTrashed()
@@ -652,8 +691,26 @@ class AmieLdap
 						$member['api'] = route('api.unixgroups.members.read', ['id' => $member['id']]);
 						$u['members'][$k] = $member;
 					}
+					if ($u['datetimeremoved'] == '0000-00-00 00:00:00'
+					 || $u['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z')
+					{
+						$u['datetimeremoved'] = null;
+					}
 					$u['api'] = route('api.unixgroups.read', ['id' => $u['id']]);
 					$response->unixgroup = $u;
+
+					$d = $dir->toArray();
+					if ($d['datetimeremoved'] == '0000-00-00 00:00:00'
+					 || $d['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z')
+					{
+						$d['datetimeremoved'] = null;
+					}
+					if ($d['datetimeconfigured'] == '0000-00-00 00:00:00'
+					 || $d['datetimeconfigured'] == '-000001-11-30T06:00:00.000000Z')
+					{
+						$d['datetimeconfigured'] = null;
+					}
+					$response->directory = $d;
 				}
 
 				event(new UserSync($user, true));
