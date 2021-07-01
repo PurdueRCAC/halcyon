@@ -477,7 +477,7 @@ function csvEscapeJSON(s) {
 $(document).ready(function() {
 	$('html').removeClass('no-js').addClass('js');
 
-	var tabs = document.querySelectorAll('.tabs a');
+	/*var tabs = document.querySelectorAll('.tabs a');
 
 	if (tabs.length) {
 		// Get a list of all tabs
@@ -505,7 +505,7 @@ $(document).ready(function() {
 			tab = bits[1];
 			ShowTab(tab, tablist);
 		}
-	}
+	}*/
 
 	$('.dialog-help').dialog({
 		autoOpen: false,
@@ -521,7 +521,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$('.editicon').tooltip({
+	/*$('.editicon').tooltip({
 		position: {
 			my: 'center bottom',
 			at: 'center top'
@@ -534,7 +534,7 @@ $(document).ready(function() {
 		content: function () {
 			return $(this).attr('alt');
 		}
-	});
+	});*/
 
 	$('.tip').tooltip({
 		position: {
