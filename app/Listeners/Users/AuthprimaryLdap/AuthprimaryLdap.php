@@ -279,15 +279,6 @@ class AuthprimaryLdap
 					$results['created_auth'] = $data;
 					$status = 201;
 				}
-				elseif (empty($result->getAttribute('x-xsede-userDn')))
-				{
-					$result->setAttribute('x-xsede-userDn', $userDns);
-
-					if (!$result->save())
-					{
-						throw new Exception('Failed to update AuthPrimary ou=allPeople record', 500);
-					}
-				}
 			}
 			else
 			{
