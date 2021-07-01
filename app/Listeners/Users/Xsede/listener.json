@@ -1,0 +1,11 @@
+{
+    "name": "Users - XSEDE",
+    "alias": "listener_users_xsede",
+    "description": "This gathers XSEDE specific user info for display.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
