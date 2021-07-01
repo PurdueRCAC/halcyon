@@ -210,6 +210,11 @@ class DbmLdap
 			return;
 		}
 
+		if (!empty($event->results))
+		{
+			return;
+		}
+
 		$criteria = $event->criteria;
 		$query = [];
 		$results = array();
