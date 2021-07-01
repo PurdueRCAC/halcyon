@@ -298,72 +298,10 @@ class UnixGroupsController extends Controller
 			return response()->json(['message' => trans('groups::groups.entry already exists for :longname', ['longname' => $name])], 409);
 		}
 
-		$lastchar = '0';
-		if (preg_match('/^$/', $name))
-		{
-			$lastchar = '0';
-		}
-		elseif (preg_match('/^data$/', $name))
-		{
-			$lastchar = '1';
-		}
-		elseif (preg_match('/^apps$/', $name))
-		{
-			$lastchar = '2';
-		}
-		elseif (preg_match('/^web$/', $name))
-		{
-			$lastchar = '3';
-		}
-		elseif (preg_match('/^repo$/', $name))
-		{
-			$lastchar = '4';
-		}
-		elseif (preg_match('/^mgr$/', $name))
-		{
-			$lastchar = '5';
-		}
-		elseif (preg_match('/^archive$/', $name))
-		{
-			$lastchar = '6';
-		}
-		elseif (preg_match('/^sudo$/', $name))
-		{
-			$lastchar = '9';
-		}
-		else
-		{
-			$data = UnixGroup::query()
-				->withTrashed()
-				->whereIsActive()
-				->where('groupid', '=', $group->id)
-				->orderBy('shortname', 'asc')
-				->get();
-
-			$lastchar = 'a';
-
-			foreach ($data as $row)
-			{
-				if (preg_match('/^rcs\d{4}[a-z]$/', $row->shortname))
-				{
-					$rowchar = preg_replace('/^rcs\d{4}/', '', $row->shortname);
-
-					if ($rowchar == $lastchar)
-					{
-						$lastchar++;
-					}
-					else
-					{
-						break;
-					}
-				}
-			}
-		}
-
 		$row = new UnixGroup;
 		$row->groupid = $group->id;
 		$row->longname = $base . $name;
-		$row->shortname = 'rcs' . str_pad($group->id, 4, '0', STR_PAD_LEFT) . $lastchar;
+		$row->shortname = $row->generateShortname($name);
 
 		if (!$row->save())
 		{

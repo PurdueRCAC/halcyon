@@ -112,6 +112,79 @@ class UnixGroup extends Model
 	}
 
 	/**
+	 * Generate a shortname from a longname
+	 *
+	 * @param   string  $name
+	 * @return  string
+	 */
+	public function generateShortname($name)
+	{
+		$lastchar = '0';
+		if (preg_match('/^$/', $name))
+		{
+			$lastchar = '0';
+		}
+		elseif (preg_match('/^data$/', $name))
+		{
+			$lastchar = '1';
+		}
+		elseif (preg_match('/^apps$/', $name))
+		{
+			$lastchar = '2';
+		}
+		elseif (preg_match('/^web$/', $name))
+		{
+			$lastchar = '3';
+		}
+		elseif (preg_match('/^repo$/', $name))
+		{
+			$lastchar = '4';
+		}
+		elseif (preg_match('/^mgr$/', $name))
+		{
+			$lastchar = '5';
+		}
+		elseif (preg_match('/^archive$/', $name))
+		{
+			$lastchar = '6';
+		}
+		elseif (preg_match('/^sudo$/', $name))
+		{
+			$lastchar = '9';
+		}
+		else
+		{
+			$data = self::query()
+				->withTrashed()
+				->whereIsActive()
+				->where('groupid', '=', $this->groupid)
+				->orderBy('shortname', 'asc')
+				->get();
+
+			$lastchar = 'a';
+
+			foreach ($data as $row)
+			{
+				if (preg_match('/^rcs\d{4}[a-z]$/', $row->shortname))
+				{
+					$rowchar = preg_replace('/^rcs\d{4}/', '', $row->shortname);
+
+					if ($rowchar == $lastchar)
+					{
+						$lastchar++;
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+		}
+
+		return 'rcs' . str_pad($this->groupid, 4, '0', STR_PAD_LEFT) . $lastchar;
+	}
+
+	/**
 	 * Delete entry and associated data
 	 *
 	 * @param   array  $options

@@ -432,6 +432,7 @@ class AmieLdap
 							$unixgroup = new UnixGroup;
 							$unixgroup->groupid = $group->id;
 							$unixgroup->longname = $ugs->getAttribute('cn', 0);
+							$unixgroup->shortname = $unixgroup->generateShortname($unixgroup->longname);
 							$unixgroup->unixgid = $ugs->getAttribute('gidNumber', 0);
 							$unixgroup->save();
 						}
