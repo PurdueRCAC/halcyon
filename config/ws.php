@@ -56,6 +56,7 @@ return [
         '128.211.149.178',
         '128.211.149.180', // scholar-zfs.rcac.purdue.edu
         '128.211.149.179', // gateway.scholar
+        '128.211.157.253', // gateway.scholar (temporarily housed on kvm-03)
         '128.211.148.29',  // warden.halstead.rcac.purdue.edu
         '128.211.148.30',  // gateway.halstead
         '128.211.133.20',  // warden.gilbreth.rcac.purdue.edu
