@@ -34,17 +34,29 @@ class OrdersController extends Controller
 			'type'      => 0,
 			'userid'    => 0,
 			// Paging
-			'limit'     => config('list_limit', 20),
+			'limit'     => config('list_limit', '20'),
 			'page'      => 1,
 			// Sorting
 			'order'     => Order::$orderBy,
 			'order_dir' => Order::$orderDir,
 		);
 
+		$k = array();
 		foreach ($filters as $key => $default)
 		{
 			$filters[$key] = $request->input($key, $default);
+			if (!in_array($key, ['page', 'order', 'order_dir']))
+			{
+				$k[$key] = $filters[$key];
+			}
 		}
+		$k = json_encode($k);
+
+		if (session()->get('filters.orders') && session()->get('filters.orders') != $k)
+		{
+			$filters['page'] = 1;
+		}
+		session()->put('filters.orders', $k);
 
 		if (!in_array($filters['order'], ['id', 'datetimecreated', 'datetimeremoved']))
 		{
@@ -596,10 +608,22 @@ class OrdersController extends Controller
 			'order_dir' => 'asc',
 		);
 
+		$k = array();
 		foreach ($filters as $key => $default)
 		{
 			$filters[$key] = $request->input($key, $default);
+			if (!in_array($key, ['page', 'order', 'order_dir']))
+			{
+				$k[$key] = $filters[$key];
+			}
 		}
+		$k = json_encode($k);
+
+		if (session()->get('filters.orders.recur') && session()->get('filters.orders.recur') != $k)
+		{
+			$filters['page'] = 1;
+		}
+		session()->put('orders.recur', $k);
 
 		$o = (new Order)->getTable();
 		$i = (new Item())->getTable();
