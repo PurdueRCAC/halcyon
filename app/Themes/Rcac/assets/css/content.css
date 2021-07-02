@@ -205,7 +205,9 @@ a.btn-info:active {
 	padding: 40px 0;
 	min-height: 500px;
 }
-.contentPage a {
+.contentPage a,
+.contentPage a:hover,
+.contentPage a:focus {
 	font-weight: bold;
 }
 .contentInner {
