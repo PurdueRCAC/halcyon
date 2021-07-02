@@ -260,26 +260,37 @@ $(document).ready(function() {
 	sbmt.prop('disabled', true);
 
 	var inputs = $('input[required],textarea[required]');
-	var needed = inputs.length, validated = 0;
+	var needed = inputs.length,
+		validated = 0;
 
-	inputs.on('blur', function(e){
-		if (this.value) {
-			if (this.validity.valid) {
-				this.classList.remove('is-invalid');
-				this.classList.add('is-valid');
-				validated++;
+	inputs
+		.each(function(i, item){
+			if (item.value) {
+				if (item.validity.valid) {
+					item.classList.remove('is-invalid');
+					item.classList.add('is-valid');
+					validated++;
+				}
+			}
+		})
+		.on('blur', function(e){
+			if (this.value) {
+				if (this.validity.valid) {
+					this.classList.remove('is-invalid');
+					this.classList.add('is-valid');
+					validated++;
+				} else {
+					this.classList.remove('is-valid');
+					this.classList.add('is-invalid');
+				}
 			} else {
 				this.classList.remove('is-valid');
 				this.classList.add('is-invalid');
 			}
-		} else {
-			this.classList.remove('is-valid');
-			this.classList.add('is-invalid');
-		}
-		if (needed == validated) {
-			sbmt.prop('disabled', false);
-		}
-	});
+			if (needed == validated) {
+				sbmt.prop('disabled', false);
+			}
+		});
 
 	sbmt.on('click', function(e){
 		e.preventDefault();
