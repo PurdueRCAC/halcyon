@@ -19,8 +19,6 @@ class ThemesController extends Controller
 	 */
 	public function index(StatefulRequest $request)
 	{
-		//$rows = Theme::paginate(20);
-
 		// Get filters
 		$filters = array(
 			'search'    => null,
@@ -33,10 +31,16 @@ class ThemesController extends Controller
 			'order_dir' => 'asc',
 		);
 
+		$reset = false;
 		foreach ($filters as $key => $default)
 		{
+			if ($key != 'page' && session()->get($key) != $request->mergeWithBase()->input($key))
+			{
+				$reset = true;
+			}
 			$filters[$key] = $request->state('themes.filter_' . $key, $key, $default);
 		}
+		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], ['id', 'name']))
 		{

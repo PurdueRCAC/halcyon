@@ -31,10 +31,16 @@ class FieldsOfScienceController extends Controller
 			'order_dir' => FieldOfScience::$orderDir,
 		);
 
+		$reset = false;
 		foreach ($filters as $key => $default)
 		{
+			if ($key != 'page' && session()->get($key) != $request->mergeWithBase()->input($key))
+			{
+				$reset = true;
+			}
 			$filters[$key] = $request->state('groups.fos.filter_' . $key, $key, $default);
 		}
+		$filters['page'] = $reset ? 1 : $filters['page'];
 		$filters['start'] = ($filters['limit'] * $filters['page']) - $filters['limit'];
 
 		if (!in_array($filters['order'], array('id', 'name')))

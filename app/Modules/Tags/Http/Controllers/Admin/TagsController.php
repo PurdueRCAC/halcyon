@@ -30,10 +30,16 @@ class TagsController extends Controller
 			'order_dir' => Tag::$orderDir,
 		);
 
+		$reset = false;
 		foreach ($filters as $key => $default)
 		{
+			if ($key != 'page' && session()->get($key) != $request->mergeWithBase()->input($key))
+			{
+				$reset = true;
+			}
 			$filters[$key] = $request->state('tags.filter_' . $key, $key, $default);
 		}
+		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], ['id', 'name', 'slug', 'created_at', 'updated_at', 'tagged_count', 'alias_count']))
 		{

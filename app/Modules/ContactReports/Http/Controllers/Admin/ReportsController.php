@@ -41,10 +41,16 @@ class ReportsController extends Controller
 			'order_dir' => Report::$orderDir,
 		);
 
+		$reset = false;
 		foreach ($filters as $key => $default)
 		{
+			if ($key != 'page' && session()->get($key) != $request->mergeWithBase()->input($key))
+			{
+				$reset = true;
+			}
 			$filters[$key] = $request->state('crm.reports.filter_' . $key, $key, $default);
 		}
+		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], array_keys((new Report)->getAttributes())))
 		{

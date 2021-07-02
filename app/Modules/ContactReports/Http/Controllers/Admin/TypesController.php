@@ -27,10 +27,16 @@ class TypesController extends Controller
 			'order_dir' => Type::$orderDir,
 		);
 
+		$reset = false;
 		foreach ($filters as $key => $default)
 		{
-			$filters[$key] = $request->state('contactreports.types.filter_' . $key, $key, $default);
+			if ($key != 'page' && session()->get($key) != $request->mergeWithBase()->input($key))
+			{
+				$reset = true;
+			}
+			$filters[$key] = $request->state('crm.types.filter_' . $key, $key, $default);
 		}
+		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], ['id', 'name']))
 		{
