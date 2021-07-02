@@ -58,7 +58,6 @@ class Helpform extends Widget
 			{
 				// Prepare and send actual email
 				$destination = $this->params->get('email');
-				$destination = 'zooley@purdue.edu';
 
 				// Collect selected resource names
 				$res = $data['resource'];
@@ -99,7 +98,9 @@ class Helpform extends Widget
 					}
 				}
 
+				//echo '<pre>';
 				//echo $message->render();
+				//echo '</pre>';
 				Mail::to($destination)->send($message);
 
 				return view($this->getViewName('success'), [

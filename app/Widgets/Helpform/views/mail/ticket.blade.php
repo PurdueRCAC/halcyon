@@ -1,11 +1,10 @@
-@component('mail::message')
 
 {{ trans('widget.helpform::helpform.email header') }}
 
 ---
 
 <?php if ($data['user']): ?>
-**{{ trans('widget.helpform::helpform.groups') }}:**
+{{ trans('widget.helpform::helpform.groups') }}:
 
 <?php
   // Owner groups
@@ -76,11 +75,10 @@ foreach ($queues as $qu)
 <?php
 }
 ?>
+
 ----
 <?php endif; ?>
 
-**{{ trans('widget.helpform::helpform.resources') }}:** {{ $data['resources'] }}
+{{ trans('widget.helpform::helpform.resources') }}: {{ $data['resources'] }}
 
 {{ $data['report'] }}
-
-@endcomponent
