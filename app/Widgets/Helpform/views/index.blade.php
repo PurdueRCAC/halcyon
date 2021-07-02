@@ -6,7 +6,7 @@
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 @endpush
 
-<form method="post" action="{{ route('page', ['uri' => 'help']) }}" enctype="multipart/form-data" class="editform">
+<form method="post" action="{{ route('page', ['uri' => request()->path()]) }}" enctype="multipart/form-data" class="editform">
 	<fieldset id="help-cats">
 		<legend>Please select a topic</legend>
 

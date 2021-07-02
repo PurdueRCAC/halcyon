@@ -43,7 +43,7 @@ class Ticket extends Mailable
 	public function build()
 	{
 		return $this->markdown('widget.helpform::mail.ticket')
-					->from($data['email'], ($data['user'] ? $data['user']->name : $data['email']))
+					->from($this->data['email'], ($this->data['user'] ? $this->data['user']->name : $this->data['email']))
 					->subject($this->data['subject'])
 					->with([
 						'data' => $this->data,
