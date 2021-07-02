@@ -54,11 +54,16 @@ class Helpform extends Widget
 				$errors[] = trans('widget.helpform::helpform.error.captcha');
 			}
 
+			// Prepare and send actual email
+			$destination = $this->params->get('email');
+
+			if (!$destination)
+			{
+				$errors[] = trans('widget.helpform::helpform.error.misconfigured');
+			}
+
 			if (empty($errors))
 			{
-				// Prepare and send actual email
-				$destination = $this->params->get('email');
-
 				// Collect selected resource names
 				$res = $data['resource'];
 				if (is_string($res))
