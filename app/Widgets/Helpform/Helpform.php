@@ -22,6 +22,8 @@ class Helpform extends Widget
 	{
 		$request = request();
 
+		$errors = array();
+
 		if ($request->method() == 'POST')
 		{
 			$data = array(
@@ -31,8 +33,6 @@ class Helpform extends Widget
 				'report'   => $request->input('report'),
 				'user'     => null,
 			);
-
-			$errors = array();
 
 			if (!isset($data['email']))
 			{
