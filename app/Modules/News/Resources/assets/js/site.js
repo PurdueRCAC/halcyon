@@ -653,7 +653,7 @@ function NEWSNewNews(xml) {
 		//id = id[id.length-1];*/
 
 		if (results.template) {
-			NEWSToggle('search', false);
+			NEWSToggle('search', true);
 		} else {
 			window.location.href = results.uri;
 		}
@@ -1924,7 +1924,7 @@ function NEWSPrintRow(news) {
 				select.options[1] = null;
 				select.onchange = function () {
 					WSGetURL(this.options[this.selectedIndex].value, function(xml, news) {
-						if (xml.status == 200) {
+						if (xml.status < 400) {
 							var n = JSON.parse(xml.responseText);
 							document.getElementById(news + "_newupdatebox").value = n.body;
 							document.getElementById(news + "_newupdatebox").rows = 7;
@@ -3646,7 +3646,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	if ($('#news').length) {
 		NEWSToggle(on, refresh);
-		//NEWSSearch();
+		NEWSSearch();
 	}
 
 	var stats = $('#articlestats');
