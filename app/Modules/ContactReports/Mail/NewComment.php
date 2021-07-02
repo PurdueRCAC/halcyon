@@ -36,7 +36,7 @@ class NewComment extends Mailable
 	public function build()
 	{
 		return $this->markdown('contactreports::mail.newcomment')
-					->subject('Contact Report Comment')
+					->subject('Contact Report Comment - ' . ($this->comment->report->groupid && $this->comment->report->group ? $this->comment->report->group->name . ', ' : '') . $this->comment->report->usersAsString())
 					->with([
 						'comment' => $this->comment,
 					]);

@@ -45,7 +45,7 @@ class Followup extends Mailable
 	public function build()
 	{
 		return $this->markdown('contactreports::mail.followup')
-					->subject($this->type->name . ' ' . 'contactreports::contactreports.followup')
+					->subject('Survey')
 					->with([
 						'type' => $this->type,
 						'user' => $this->user,
