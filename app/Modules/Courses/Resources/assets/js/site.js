@@ -850,8 +850,10 @@ $(document).ready(function () {
 		//ShowStudents($(this).data('crn'));
 		var crn = $(this).data('crn');
 
-		if ($('#class_people_' + crn).length) {
-			$('#class_people_' + crn).toggleClass('hide');
+		var target = $(this).attr('href');
+
+		if ($(target).length) {
+			$(target).toggleClass('hide');
 			return;
 		}
 

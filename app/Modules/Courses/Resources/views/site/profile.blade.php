@@ -196,11 +196,55 @@
 					<tr>
 						<th scope="row">Account Users</th>
 						<td>
-							All registered students <a href="{{ route('site.users.account.section', ['section' => 'class']) }}#showstudents" class="show-students" data-crn="{{ $class->crn }}">[ View List ]</a><br/>
+							All registered Instructors, TAs:
 
-							<ul id="class_people_{{ $class->crn }}" class="student-list hide">
+							<?php
+							$members = $class->members()
+								->withTrashed()
+								->whereIsActive()
+								->where('membertype', '>', 0)
+								->get();
+
+							if (count($members))
+							{
+								?>
+							<ul id="class_people_{{ $class->crn }}" class="student-list">
 								<?php
-								foreach ($class->members as $usr)
+								foreach ($members as $usr)
+								{
+									?>
+									<li id="USER_{{ $usr->id }}_{{ $class->crn }}">
+										<a href="#USER_{{ $usr->id }}_{{ $class->crn }}" class="user-delete delete" data-api="{{ route('api.courses.members.delete', ['id' => $user->id]) }}" data-confirm="Are you sure you wish to remove this user?" data-user="{{ $user->id }}" data-crn="{{ $class->crn }}">
+											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">Delete</span>
+										</a>
+										{{ $usr->user ? $usr->user->name . ' (' . $usr->user->username . ')' : $usr->userid . ' ' . trans('global.unknown') }}
+										<input type="hidden" id="HIDDEN_{{ $usr->id }}_{{ $class->crn }}" value="{{ $usr->id }}" />
+									</li>
+									<?php
+								}
+								?>
+							</ul>
+								<?php
+							}
+							else
+							{
+								?>
+								<span class="none">{{ trans('global.none') }}</span><br />
+								<?php
+							}
+							?>
+
+							All registered students: <a href="#class_students_{{ $class->crn }}" class="show-students" data-crn="{{ $class->crn }}">[ View List ]</a><br/>
+
+							<ul id="class_students_{{ $class->crn }}" class="student-list hide">
+								<?php
+								$members = $class->members()
+									->withTrashed()
+									->whereIsActive()
+									->where('membertype', '=', 0)
+									->get();
+
+								foreach ($members as $usr)
 								{
 									?>
 									<li id="USER_{{ $usr->id }}_{{ $class->crn }}">
@@ -387,7 +431,7 @@
 				<div class="form-group row">
 					<div class="col-sm-2 col-form-label">Account Users</div>
 					<div class="col-sm-10">
-						All registered students <a href="{{ route('site.users.account.section', ['section' => 'class']) }}#showstudents" class="btn btn-sm btn-default show-students" data-crn="new">View List</a><br/>
+						All registered students <a href="#class_students_{{ $class->crn }}" class="btn btn-sm btn-default show-students" data-crn="new">View List</a><br/>
 						Instructor: {{ $user->name }}<br/>
 						Others: <br/>
 
