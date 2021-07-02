@@ -7,6 +7,10 @@
 @endpush
 
 <form method="post" action="{{ route('page', ['uri' => request()->path()]) }}" enctype="multipart/form-data" class="editform">
+	@if (!empty($errors))
+		<div class="alert alert-danger">{{ implode('<br />', $errors) }}</div>
+	@endif
+
 	<fieldset id="help-cats">
 		<legend>Please select a topic</legend>
 

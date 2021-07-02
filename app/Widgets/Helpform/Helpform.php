@@ -159,6 +159,7 @@ class Helpform extends Widget
 
 		return view($this->getViewName($layout), [
 			'types'  => $types,
+			'errors' => $errors,
 			'topics' => $topics,
 		]);
 	}
