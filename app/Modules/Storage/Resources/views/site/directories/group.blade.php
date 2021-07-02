@@ -676,7 +676,7 @@
 								<div class="col-md-8">
 									<span name="unallocated"{!! $bucket['unallocatedbytes'] < 0 ? ' class="text-danger"' : '' !!}><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['unallocatedbytes'], 1); ?></span> / <span name="totalbytes"><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['totalbytes'], 1); ?></span>
 									<?php
-									if ($dir->bytes)
+									if ($dir->bytes || (!$dir->bytes && !$dir->parentstoragedirid && $bucket['unallocatedbytes'] != 0))
 									{
 										$cls = '';
 										if ($bucket['unallocatedbytes'] == 0)
