@@ -431,11 +431,11 @@
 				<div class="form-group row">
 					<div class="col-sm-2 col-form-label">Account Users</div>
 					<div class="col-sm-10">
-						All registered students <a href="#class_students_{{ $class->crn }}" class="btn btn-sm btn-default show-students" data-crn="new">View List</a><br/>
+						All registered students <a href="#class_students" class="btn btn-sm btn-default show-students" data-crn="new">View List</a><br/>
 						Instructor: {{ $user->name }}<br/>
 						Others: <br/>
 
-						<ul id="class_people"></ul>
+						<ul id="class_students"></ul>
 
 						<br/>
 						<div class="form-group">
