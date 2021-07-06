@@ -72,32 +72,28 @@ app('pathway')
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 
-	@if ($type->calendar)
-		<div class="row">
-			<div class="col-md-8">
-	@endif
-
-	<h2>
-		{{ $type->name }}
-	</h2>
-
-	@if ($type->calendar)
-			</div>
-			<div class="col-md-4 text-right">
-				<div class="btn-group" role="navigation" aria-label="Calendar options">
-					<a class="btn btn-default tip" href="{{ route('site.news.feed', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}">
-						<i class="fa fa-rss-square" aria-hidden="true"></i><span class="sr-only">{{ trans('news::news.rss feed') }}</span>
-					</a>
-					<a target="_blank" class="btn btn-default calendar calendar-subscribe tip" href="{{ preg_replace('/^https?:\/\//', 'webcal://', route('site.news.calendar', ['name' => strtolower($type->name)])) }}" title="Subscribe to calendar"><!--
-						--><i class="fa fa-fw fa-calendar" aria-hidden="true"></i><span class="sr-only">Subscribe</span><!--
-					--></a>
-					<a target="_blank" class="btn btn-default calendar calendar-download tip" href="{{ route('site.news.calendar', ['name' => strtolower($type->name)]) }}" title="Download calendar"><!--
-						--><i class="fa fa-fw fa-download" aria-hidden="true"></i><span class="sr-only">Download</span><!--
-					--></a>
-				</div>
+	<div class="row">
+		<div class="col-md-8">
+			<h2>
+				{{ $type->name }}
+			</h2>
+		</div>
+		<div class="col-md-4 text-right">
+			<div class="btn-group" role="navigation" aria-label="Calendar options">
+				<a class="btn btn-default tip" href="{{ route('site.news.feed', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}">
+					<i class="fa fa-rss-square" aria-hidden="true"></i><span class="sr-only">{{ trans('news::news.rss feed') }}</span>
+				</a>
+			@if ($type->calendar)
+				<a target="_blank" class="btn btn-default calendar calendar-subscribe tip" href="{{ preg_replace('/^https?:\/\//', 'webcal://', route('site.news.calendar', ['name' => strtolower($type->name)])) }}" title="Subscribe to calendar"><!--
+					--><i class="fa fa-fw fa-calendar" aria-hidden="true"></i><span class="sr-only">Subscribe</span><!--
+				--></a>
+				<a target="_blank" class="btn btn-default calendar calendar-download tip" href="{{ route('site.news.calendar', ['name' => strtolower($type->name)]) }}" title="Download calendar"><!--
+					--><i class="fa fa-fw fa-download" aria-hidden="true"></i><span class="sr-only">Download</span><!--
+				--></a>
+			@endif
 			</div>
 		</div>
-	@endif
+	</div>
 
 	<?php /*<form method="get" action="{{ route('site.news.type', ['name' => $type->name]) }}">
 		<fieldset class="filters">
