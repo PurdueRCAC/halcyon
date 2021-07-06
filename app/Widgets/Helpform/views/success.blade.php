@@ -4,6 +4,6 @@
 		<i class="fa fa-check" aria-hidden="true"></i>
 	</div>
 	<div class="card-body">
-		<p><strong>Thank you for your </strong></p>
+		<p><strong>Thank you for contacting us.</strong></p>
 	</div>
 </div>

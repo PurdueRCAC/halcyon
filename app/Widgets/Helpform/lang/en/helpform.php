@@ -15,7 +15,7 @@ return [
 	'queues' => 'Queues',
 	'unix groups' => 'Unix Groups',
 	'email header' => 'Help form submission.',
-	'email' => 'Desctination email address',
+	'email' => 'Destination email address',
 	'error' => [
 		'name' => 'Please provide a name.',
 		'email' => 'Please provide a valid email.',
