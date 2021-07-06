@@ -1,3 +1,11 @@
+Urgency=Scheduled
+Schedule Date={{ \Carbon\Carbon::now()->format('m/d/Y') }}
+Category=Research
+Service=Research Computing
+Service Offering=High-Performance Computing Resources
+Impact=Minimal
+Comment=Help form submission
+FPSTC=yes
 
 {{ trans('widget.helpform::helpform.email header') }}
 
