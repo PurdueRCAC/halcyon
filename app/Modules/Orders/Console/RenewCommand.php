@@ -286,7 +286,7 @@ class RenewCommand extends Command
 				foreach ($accounts as $a)
 				{
 					$account = new Account;
-					$account->amount              = 0;
+					$account->amount              = $a['amount'];
 					$account->purchasefund        = $a['purchasefund'];
 					$account->purchasecostcenter  = $a['purchasecostcenter'];
 					$account->purchaseorder       = $a['purchaseorder'];
