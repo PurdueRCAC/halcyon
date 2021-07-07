@@ -382,6 +382,31 @@ class Article extends Model
 	}
 
 	/**
+	 * Check if the event is an outage
+	 *
+	 * @return  boolean
+	 */
+	public function isOutage()
+	{
+		if (stristr('outage', $this->headline))
+		{
+			return true;
+		}
+
+		if (stristr('failure', $this->headline))
+		{
+			return true;
+		}
+
+		if (stristr('problem', $this->headline))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Has the event started?
 	 *
 	 * @return  boolean
