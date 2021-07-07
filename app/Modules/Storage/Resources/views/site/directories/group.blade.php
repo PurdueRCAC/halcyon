@@ -287,7 +287,7 @@
 										Desired quota
 									</div>
 									<div class="col-md-8">
-										<?php echo App\Halcyon\Utility\Number::formatBytes($dir->bytes); ?>
+										<?php echo App\Halcyon\Utility\Number::formatBytes($dir->bytes, 1); ?>
 									</div>
 								</div>
 								<div class="row mb-3">
@@ -295,7 +295,7 @@
 										Actual quota <span class="icon-warning" data-tip="Storage space is over-allocated. Quotas reduced until allocation balanced."><span class="sr-only">Storage space is over-allocated. Quotas reduced until allocation balanced.</span></span>
 									</div>
 									<div class="col-md-8">
-										<?php echo App\Halcyon\Utility\Number::formatBytes($dir->bytes); ?>
+										<?php echo App\Halcyon\Utility\Number::formatBytes($dir->bytes, 1); ?>
 									</div>
 								</div><!--/ .row -->
 							<?php } else { ?>
@@ -306,7 +306,7 @@
 									<div class="col-md-8">
 										@if ($dir->bytes)
 											<?php
-											$value = App\Halcyon\Utility\Number::formatBytes($dir->bytes, true);
+											$value = App\Halcyon\Utility\Number::formatBytes($dir->bytes, 1);
 											?>
 											@if (auth()->user()->can('manage storage'))
 												<input type="text" id="{{ $dir->id }}_quota_input" class="form-control" value="{{ $dir->bytes ? $value : '' }}" />
@@ -659,7 +659,7 @@
 												@foreach ($dir->futurequotas as $change)
 													<tr>
 														<td>{{ date('M d, Y', strtotime($change['time'])) }}</td>
-														<td>{{ App\Halcyon\Utility\Number::formatBytes($change['quota']) }}</td>
+														<td>{{ App\Halcyon\Utility\Number::formatBytes($change['quota'], 1) }}</td>
 													</tr>
 												@endforeach
 											</tbody>
@@ -766,7 +766,7 @@
 									$cls = $val > 70 ? 'bg-warning' : $cls;
 									$cls = $val > 90 ? 'bg-danger' : $cls;
 
-									echo App\Halcyon\Utility\Number::formatBytes($usage->space); ?> / <?php echo App\Halcyon\Utility\Number::formatBytes($usage->quota);
+									echo App\Halcyon\Utility\Number::formatBytes($usage->space, 1); ?> / <?php echo App\Halcyon\Utility\Number::formatBytes($usage->quota, 1);
 									?>
 									<div class="progress" style="height: 3px">
 										<div class="progress-bar <?php echo $cls; ?>" role="progressbar" style="width: <?php echo $val; ?>%;" aria-valuenow="<?php echo $val; ?>" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo $val; ?>% space used">
@@ -897,7 +897,7 @@
 										</td>
 										<td class="text-right">
 											@if ($item->hasEnded())
-												<del class="decrease text-warning">{!! ($item->bytes > 0 ? '+ ' : '- ') . App\Halcyon\Utility\Number::formatBytes(abs($item->bytes)) !!}</del>
+												<del class="decrease text-warning">{!! ($item->bytes > 0 ? '+ ' : '- ') . App\Halcyon\Utility\Number::formatBytes(abs($item->bytes), 1) !!}</del>
 											@else
 												{!! ($item->bytes > 0 ? '<span class="increase text-success">+ ' : '<span class="decrease text-danger">- ') . App\Halcyon\Utility\Number::formatBytes(abs($item->bytes), 1) . '</span>' !!}
 											@endif
@@ -920,7 +920,7 @@
 												<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.' . ($item->type == 'loan' ? 'loans' : 'purchases'). '.update', ['id' => $item->id]) }}">
 													<div class="form-group">
 														<label for="{{ $t }}-bytes{{ $item->id }}">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
-														<input type="text" class="form-control bytes" size="4" id="{{ $t }}-bytes{{ $item->id }}" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]" value="{{ App\Halcyon\Utility\Number::formatBytes(abs($item->bytes)) }}" />
+														<input type="text" class="form-control bytes" size="4" id="{{ $t }}-bytes{{ $item->id }}" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]" value="{{ App\Halcyon\Utility\Number::formatBytes(abs($item->bytes), 1) }}" />
 														<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 													</div>
 
