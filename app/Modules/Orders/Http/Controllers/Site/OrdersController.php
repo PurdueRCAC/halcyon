@@ -12,6 +12,7 @@ use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Models\Item;
 use App\Modules\Orders\Models\Account;
 use App\Modules\Users\Models\User;
+use App\Halcyon\Http\StatefulRequest;
 
 class OrdersController extends Controller
 {
@@ -21,7 +22,7 @@ class OrdersController extends Controller
 	 * @param  Request  $request
 	 * @return Response
 	 */
-	public function index(Request $request)
+	public function index(StatefulRequest $request)
 	{
 		// Get filters
 		$filters = array(
@@ -41,7 +42,7 @@ class OrdersController extends Controller
 			'order_dir' => Order::$orderDir,
 		);
 
-		$k = array();
+		/*$k = array();
 		foreach ($filters as $key => $default)
 		{
 			$filters[$key] = $request->input($key, $default);
@@ -56,7 +57,17 @@ class OrdersController extends Controller
 		{
 			$filters['page'] = 1;
 		}
-		session()->put('filters.orders', $k);
+		session()->put('filters.orders', $k);*/
+		$reset = false;
+		foreach ($filters as $key => $default)
+		{
+			if ($key != 'page' && session()->get($key) != $request->mergeWithBase()->input($key))
+			{
+				$reset = true;
+			}
+			$filters[$key] = $request->state('orders.filter_' . $key, $key, $default);
+		}
+		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], ['id', 'datetimecreated', 'datetimeremoved']))
 		{
