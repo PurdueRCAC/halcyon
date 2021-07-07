@@ -153,11 +153,11 @@ class GroupProvision
 
 			if ($status < 400)
 			{
-				error_log('GroupProvision: Removed AIMO ACMaint group ' . $member->unixgroup->shortname . ': ' . $res->getBody()->getContents());
+				error_log('GroupProvision: Removed AIMO ACMaint group ' . $event->unixgroup->shortname);
 			}
 			else
 			{
-				error_log('GroupProvision: Failed to remove AIMO ACMaint group ' . $member->unixgroup->shortname . ': ' . $res->getBody()->getContents());
+				error_log('GroupProvision: Failed to remove AIMO ACMaint group ' . $event->unixgroup->shortname);
 			}
 		}
 		catch (\Exception $e)
@@ -165,7 +165,7 @@ class GroupProvision
 			$status = 500;
 			$body   = ['error' => $e->getMessage()];
 
-			error_log('GroupProvision: Failed to remove AIMO ACMaint group ' . $member->unixgroup->shortname . ': ' . $e->getMessage());
+			error_log('GroupProvision: Failed to remove AIMO ACMaint group ' . $event->unixgroup->shortname . ': ' . $e->getMessage());
 		}
 
 		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, 'deleteGroup/rcs/' . $event->unixgroup->shortname);
