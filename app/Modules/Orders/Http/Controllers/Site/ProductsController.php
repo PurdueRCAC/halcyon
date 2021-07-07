@@ -11,16 +11,17 @@ use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Models\Item;
 use App\Modules\Users\Models\User;
+use App\Halcyon\Http\StatefulRequest;
 
 class ProductsController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  Request  $request
+	 * @param  StatefulRequest  $request
 	 * @return Response
 	 */
-	public function index(Request $request)
+	public function index(StatefulRequest $request)
 	{
 		// Get filters
 		$filters = array(
@@ -36,7 +37,7 @@ class ProductsController extends Controller
 			'order_dir' => Product::$orderDir,
 		);
 
-		foreach ($filters as $key => $default)
+		/*foreach ($filters as $key => $default)
 		{
 			// Check the session
 			$old = $request->session()->get('orders.products.' . $key, $default);
@@ -56,7 +57,17 @@ class ProductsController extends Controller
 			}
 
 			$filters[$key] = $val;
+		}*/
+		$reset = false;
+		foreach ($filters as $key => $default)
+		{
+			if ($key != 'page' && session()->get('orders.products.filter_' . $key) != $request->mergeWithBase()->input($key))
+			{
+				$reset = true;
+			}
+			$filters[$key] = $request->state('orders.products.filter_' . $key, $key, $default);
 		}
+		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], ['id', 'name', 'unitprice', 'ordercategoryid', 'sequence']))
 		{

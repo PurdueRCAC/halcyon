@@ -5,6 +5,7 @@ namespace App\Modules\Orders\Http\Controllers\Site;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Modules\Orders\Models\Category;
+use App\Halcyon\Http\StatefulRequest;
 
 class CategoriesController extends Controller
 {
@@ -14,7 +15,7 @@ class CategoriesController extends Controller
 	 * @param   Request  $request
 	 * @return  Response
 	 */
-	public function index(Request $request)
+	public function index(StatefulRequest $request)
 	{
 		// Get filters
 		$filters = array(
@@ -22,11 +23,12 @@ class CategoriesController extends Controller
 			'parent'    => 1, // Root node
 			'state'     => 'published',
 			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			'order'     => Category::$orderBy,
 			'order_dir' => Category::$orderDir,
 		);
 
-		foreach ($filters as $key => $default)
+		/*foreach ($filters as $key => $default)
 		{
 			// Check the session
 			$old = $request->session()->get('orders.categories.' . $key, $default);
@@ -46,7 +48,17 @@ class CategoriesController extends Controller
 			}
 
 			$filters[$key] = $val;
+		}*/
+		$reset = false;
+		foreach ($filters as $key => $default)
+		{
+			if ($key != 'page' && session()->get('orders.categories.filter_' . $key) != $request->mergeWithBase()->input($key))
+			{
+				$reset = true;
+			}
+			$filters[$key] = $request->state('orders.categories.filter_' . $key, $key, $default);
 		}
+		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], ['id', 'name']))
 		{

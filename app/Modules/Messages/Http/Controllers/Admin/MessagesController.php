@@ -36,10 +36,16 @@ class MessagesController extends Controller
 			'type'      => null,
 		);
 
+		$reset = false;
 		foreach ($filters as $key => $default)
 		{
+			if ($key != 'page' && session()->get('messages.index.filter_' . $key) != $request->mergeWithBase()->input($key))
+			{
+				$reset = true;
+			}
 			$filters[$key] = $request->state('messages.index.filter_' . $key, $key, $default);
 		}
+		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], array_keys((new Message)->getAttributes())))
 		{

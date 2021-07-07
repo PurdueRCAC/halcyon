@@ -38,7 +38,7 @@ class ListenersController extends Controller
 		$reset = false;
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && session()->get($key) != $request->mergeWithBase()->input($key))
+			if ($key != 'page' && session()->get('listeners.filter_' . $key) != $request->mergeWithBase()->input($key))
 			{
 				$reset = true;
 			}

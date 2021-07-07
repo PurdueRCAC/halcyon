@@ -601,10 +601,10 @@ class OrdersController extends Controller
 	/**
 	 * Show the specified resource.
 	 * 
-	 * @param  Request  $request
+	 * @param  StatefulRequest  $request
 	 * @return Response
 	 */
-	public function recurring(Request $request)
+	public function recurring(StatefulRequest $request)
 	{
 		// Get filters
 		$filters = array(
@@ -619,7 +619,7 @@ class OrdersController extends Controller
 			'order_dir' => 'asc',
 		);
 
-		$k = array();
+		/*$k = array();
 		foreach ($filters as $key => $default)
 		{
 			$filters[$key] = $request->input($key, $default);
@@ -629,12 +629,33 @@ class OrdersController extends Controller
 			}
 		}
 		$k = json_encode($k);
-
+		
 		if (session()->get('filters.orders.recur') && session()->get('filters.orders.recur') != $k)
 		{
 			$filters['page'] = 1;
 		}
-		session()->put('orders.recur', $k);
+		session()->put('orders.recur', $k);*/
+
+		$reset = false;
+		foreach ($filters as $key => $default)
+		{
+			if ($key != 'page' && session()->get('orders.recur.filter_' . $key) != $request->mergeWithBase()->input($key))
+			{
+				$reset = true;
+			}
+			$filters[$key] = $request->state('orders.recur.filter_' . $key, $key, $default);
+		}
+		$filters['page'] = $reset ? 1 : $filters['page'];
+
+		if (!in_array($filters['order'], ['id', 'product', 'billeduntil', 'paiduntil']))
+		{
+			$filters['order'] = 'id';
+		}
+
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
+		{
+			$filters['order_dir'] = 'asc';
+		}
 
 		$o = (new Order)->getTable();
 		$i = (new Item())->getTable();

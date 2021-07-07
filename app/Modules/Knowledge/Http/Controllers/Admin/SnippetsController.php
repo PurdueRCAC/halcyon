@@ -36,7 +36,7 @@ class SnippetsController extends Controller
 		{
 			if (!$refresh && $key != 'page')
 			{
-				$refresh = (session()->get($key, $default) != $request->input('search', $default));
+				$refresh = (session()->get('kb.snippets.filter_' . $key, $default) != $request->input('search', $default));
 			}
 			$filters[$key] = $request->state('kb.snippets.filter_' . $key, $key, $default);
 		}
