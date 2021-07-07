@@ -443,7 +443,7 @@ class Directory extends Model
 	 */
 	public function getQuotaAttribute()
 	{
-		return Number::formatBytes($this->bytes);
+		return Number::formatBytes($this->bytes, 1);
 	}
 
 	/**
