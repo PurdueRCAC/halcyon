@@ -387,7 +387,7 @@
 							<td class="extendedinfo hide text-right">{{ $unixgroup->unixgid }}</td>
 							@if ($canManage)
 							<td class="text-right">
-								@if (!preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname))
+								@if (!preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname) || auth()->user()->can('manage groups'))
 									<a href="{{ route('site.users.account.section', ['section' => 'groups', 'delete' => $unixgroup->id]) }}"
 										class="delete delete-unix-group remove-unixgroup"
 										data-api="{{ route('api.unixgroups.delete', ['id' => $unixgroup->id]) }}"

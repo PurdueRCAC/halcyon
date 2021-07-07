@@ -937,13 +937,11 @@ app('pathway')
 										<td>{{ $u->shortname }}</td>
 										<td class="text-right">{{ $u->members()->count() }}</td>
 										<td class="text-right">
-											@if (!preg_match("/rcs[0-9]{4}[0-9]/", $u->shortname))
 											<a href="#unixgroup-{{ $u->id }}" class="btn text-danger remove-unixgroup"
 												data-api="{{ route('api.unixgroups.delete', ['id' => $u->id]) }}"
 												data-confirm="{{ trans('groups::groups.confirm delete') }}">
 												<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
 											</a>
-											@endif
 										</td>
 									</tr>
 								@endforeach
