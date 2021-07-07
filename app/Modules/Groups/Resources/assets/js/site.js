@@ -279,8 +279,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					window.location.reload(true);
 				},
 				error: function (xhr, ajaxOptions, thrownError) {
-					alert(xhr.responseJSON.message);
-					var notice = $("#deletegroup_" + gid);
+					//alert(xhr.responseJSON.message);
+					var notice = $("#deletegroup_" + obj['groupid']);
 
 					if (notice.length) {
 						notice
