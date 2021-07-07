@@ -67,7 +67,7 @@ return [
 	'service renewal' => 'Renewal for :start through :end',
 	'service for' => 'Service for :count :timeperiod',
 	'quantity for' => ':quantity for :count :timeperiod',
-	'paid on date' => 'Paid on :date',
+	'paid on date' => 'Paid on :date<br />:docid',
 	'fulfill' => 'Fulfill',
 	'fulfilled' => 'Fulfilled',
 	'collect' => 'Collect',

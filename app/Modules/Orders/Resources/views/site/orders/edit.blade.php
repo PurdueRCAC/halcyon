@@ -945,7 +945,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									?>
 									<tr id="account_{{ $account->id }}">
 										<td>
-											<div id="status_{{ $account->id }}" class="badge order-status {{ $account->status }}">{{ $text }}</div>
+											<div id="status_{{ $account->id }}" class="badge order-status {{ $account->status }}">{!! $text !!}</div>
 											<input type="hidden" name="accountid" data-api="{{ route('api.orders.accounts.read', ['id' => $account->id]) }}" id="{{ $account->id }}" value="{{ strtoupper($account->status) }}" />
 
 											@if ($s == 'pending_approval')
