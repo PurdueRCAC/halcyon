@@ -885,7 +885,12 @@
 										</td>
 										<td>
 											@if ($item->hasEnd())
+												@if (!$item->hasEnded())
+													<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
+													in <time datetime="{{ $item->datetimestop }}">{{ $item->willEnd() }}</time>
+												@else
 												<time datetime="{{ $item->datetimestop }}">{{ $item->datetimestop->format('Y-m-d') }}</time>
+												@endif
 											@else
 												-
 											@endif

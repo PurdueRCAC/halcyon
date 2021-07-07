@@ -127,6 +127,64 @@ class Size extends Model
 	}
 
 	/**
+	 * Get when this will end in human readable format
+	 *
+	 * @return  string
+	 */
+	public function willEnd()
+	{
+		if (!$this->hasEnd())
+		{
+			return trans('global.never');
+		}
+		if ($this->hasEnded())
+		{
+			return $this->datetimestop->toDateTimeString();
+		}
+
+		$inputSeconds = $this->datetimestop->timestamp - Carbon::now()->timestamp;
+
+		$secondsInAMinute = 60;
+		$secondsInAnHour = 60 * $secondsInAMinute;
+		$secondsInADay = 24 * $secondsInAnHour;
+
+		// Extract days
+		$days = floor($inputSeconds / $secondsInADay);
+
+		// Extract hours
+		$hourSeconds = $inputSeconds % $secondsInADay;
+		$hours = floor($hourSeconds / $secondsInAnHour);
+
+		// Extract minutes
+		$minuteSeconds = $hourSeconds % $secondsInAnHour;
+		$minutes = floor($minuteSeconds / $secondsInAMinute);
+
+		// Extract the remaining seconds
+		$remainingSeconds = $minuteSeconds % $secondsInAMinute;
+		$seconds = ceil($remainingSeconds);
+
+		// Format and return
+		$timeParts = [];
+		$sections = [
+			'days'    => (int)$days,
+			'hours'   => (int)$hours,
+			'minutes' => (int)$minutes,
+			'seconds' => (int)$seconds,
+		];
+
+		foreach ($sections as $name => $value)
+		{
+			if ($value > 0)
+			{
+				$timeParts[] = $value . ' ' . trans_choice('global.time.' . $name, $value);
+				break;
+			}
+		}
+
+		return implode(', ', $timeParts);
+	}
+
+	/**
 	 * Defines a relationship to queue
 	 *
 	 * @return  object
