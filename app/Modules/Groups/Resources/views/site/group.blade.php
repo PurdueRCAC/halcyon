@@ -431,11 +431,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		/*$('.create-default-unix-groups').on('click', function(e){
 			e.preventDefault();
 			CreateDefaultUnixGroups($(this).data('value'), $(this).data('group'));
-		});*/
+		});
 		$('.delete-unix-group').on('click', function(e){
 			e.preventDefault();
-			DeleteUnixGroup($(this).data('unixgroup'), $(this).data('value'));
-		});
+			DeleteUnixGroup($(this), $(this).data('value'));
+		});*/
 
 		$('.searchable-select').select2();
 

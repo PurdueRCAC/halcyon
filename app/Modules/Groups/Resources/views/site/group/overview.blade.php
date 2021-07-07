@@ -390,6 +390,7 @@
 								@if (!preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname) || auth()->user()->can('manage groups'))
 									<a href="{{ route('site.users.account.section', ['section' => 'groups', 'delete' => $unixgroup->id]) }}"
 										class="delete delete-unix-group remove-unixgroup"
+										data-value="{{ $group->id }}"
 										data-api="{{ route('api.unixgroups.delete', ['id' => $unixgroup->id]) }}"
 										data-confirm="{{ trans('groups::groups.confirm delete') }}"><!--
 										--><i class="fa fa-trash"></i><span class="sr-only">{{ trans('global.delete') }}</span><!--
@@ -417,6 +418,8 @@
 					@endif
 				</tbody>
 			</table>
+
+			<div id="deletegroup_{{ $group->id }}" class="alert alert-danger hide"></div>
 		@endif
 
 		<div class="dialog dialog-help" id="new-unixgroup_{{ $group->id }}" title="New Unix Group">

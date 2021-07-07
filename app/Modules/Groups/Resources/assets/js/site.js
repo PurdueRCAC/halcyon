@@ -262,21 +262,31 @@ document.addEventListener('DOMContentLoaded', function () {
 		var result = confirm($(this).data('confirm'));
 
 		if (result) {
-			var field = $($(this).attr('href'));
+			var obj = {
+				'groupid': $(this).data('value')
+			};
 
 			// delete relationship
 			$.ajax({
 				url: $(this).data('api'),
 				type: 'delete',
+				data: obj,
 				dataType: 'json',
 				async: false,
 				success: function (data) {
-					field.remove();
+					//field.remove();
 					//SetAction('Item removed');
+					window.location.reload(true);
 				},
 				error: function (xhr, ajaxOptions, thrownError) {
 					alert(xhr.responseJSON.message);
-					//SetError(xhr.responseJSON.message);
+					var notice = $("#deletegroup_" + gid);
+
+					if (notice.length) {
+						notice
+							.removeClass('hide')
+							.text("An error occured while deleting group.");
+					}
 				}
 			});
 		}
