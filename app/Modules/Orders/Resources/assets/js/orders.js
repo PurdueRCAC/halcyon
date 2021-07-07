@@ -1319,8 +1319,8 @@ function SaveQuantities() {
 			'orderid': order.value,
 			'orderproductid': opt.attr('value'),
 			'quantity': quantity.value,
-			'price': total.value.replace(/[,\.]/g, ""),
-			'origunitprice': opt.attr('data-price').replace(/[,\.]/g, ""),
+			'price': parseInt(total.value.replace(/[,\.]/g, "")),
+			'origunitprice': parseInt(opt.attr('data-price').replace(/[,\.]/g, "")),
 			'recurringtimeperiodid': opt.attr('data-recurringtimeperiodid'),
 			'timeperiodcount': periods.value
 		};
@@ -2201,7 +2201,9 @@ function UpdateTotal(tot_override) {
 		UpdateBalance();
 		//EditAccounts();
 	} else {*/
-		document.getElementById("balance").innerHTML = FormatNumber(total);
+		if (document.getElementById("balance")) {
+			document.getElementById("balance").innerHTML = FormatNumber(total);
+		}
 		document.getElementById("save_quantities").disabled = false;
 	//}
 }

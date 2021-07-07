@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Orders\Models\Order;
 use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Models\Item;
@@ -311,7 +312,8 @@ class ItemsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		//$request->validate([
+		$rules = [
 			'orderid'         => 'required|integer|min:1',
 			'orderproductid'  => 'required|integer|min:1',
 			'quantity'        => 'required|integer|min:1',
@@ -319,7 +321,14 @@ class ItemsController extends Controller
 			'origunitprice'   => 'nullable|integer',
 			'origorderitemid' => 'nullable|integer',
 			'timeperiodcount' => 'nullable|integer',
-		]);
+		]; //]);
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Item; //$request->all()
 		$row->orderid = $request->input('orderid');
