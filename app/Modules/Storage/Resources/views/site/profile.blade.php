@@ -456,7 +456,7 @@
 								?>
 								<tr>
 									<td>
-										<?php echo $dir->storageResource->path . '/' . $dir->path; ?>
+										<?php echo ($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path; ?>
 									</td>
 									<td>
 										<?php echo $not->type->name; ?>
@@ -539,7 +539,7 @@
 						<div class="form-group row">
 							<label for="path_{{ $not->id }}" class="col-sm-4">Path</label>
 							<div class="col-sm-8">
-								<input type="text" id="path_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ $dir->storageResource->path . '/' . $dir->path }}" />
+								<input type="text" id="path_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ ($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path }}" />
 							</div>
 						</div>
 						<div class="form-group row">
@@ -713,6 +713,11 @@
 							$sdirs[$not->storagedirid] = $not->directory()->withTrashed()->whereIsActive()->first();
 						}
 
+						if (!$sdirs[$not->storagedirid]->storageResource)
+						{
+							continue;
+						}
+
 						$storagedirquotanotifications[] = $not;
 					}
 				}
@@ -745,7 +750,7 @@
 							?>
 							<tr>
 								<td>
-									{{ $dir->storageResource->path . '/' . $dir->path }}
+									{{ ($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path }}
 								</td>
 								<td>
 									{{ $not->type->name }}
@@ -807,7 +812,7 @@
 						<div class="form-group row">
 							<label for="path_{{ $not->id }}" class="col-sm-4">Path</label>
 							<div class="col-sm-8">
-								<input type="text" id="path_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ $dir->storageResource->path . '/' . $dir->path }}" />
+								<input type="text" id="path_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ ($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path }}" />
 							</div>
 						</div>
 						<div class="form-group row">
