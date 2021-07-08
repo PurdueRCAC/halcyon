@@ -109,6 +109,7 @@ return [
 		'invalid orderid' => 'Invalid order ID.',
 		'invalid approverid' => 'Invalid approver ID',
 		'file not found' => 'Import file not found',
+		'invalid file type' => 'Only CSV files are supported at this time.',
 	],
 	'export summary' => 'Order Summary',
 	'export items' => 'Order Summary and Items',

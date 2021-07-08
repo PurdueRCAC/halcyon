@@ -866,6 +866,22 @@ class OrdersController extends Controller
 	 */
 	public function import(Request $request)
 	{
+		if (!$request->has('file'))
+		{
+			return redirect()->route('site.orders.index')->withError(trans('orders::orders.errors.file not found'));
+		}
+
+		// Doing this by file extension is iffy at best but
+		// detection by contents productes `txt`
+		$parts = explode('.', $request->file('file')->getClientOriginalName());
+		$extension = end($parts);
+		$extension = strtolower($extension);
+
+		if (!in_array($extension, ['csv']))
+		{
+			return redirect()->route('site.orders.index')->withError(trans('orders::orders.errors.invalid file type'));
+		}
+
 		$file = $request->file('file')->store('temp');
 		$path = storage_path('app/' . $file);
 
@@ -928,7 +944,12 @@ class OrdersController extends Controller
 	 */
 	public function process(Request $request)
 	{
-		$file = base64_decode($request->input('file')); //storage_path($request->input('file'));
+		if (!$request->has('file'))
+		{
+			return redirect()->route('site.orders.index')->withError(trans('orders::orders.errors.file not found'));
+		}
+
+		$file = base64_decode($request->input('file'));
 		$path = storage_path('app/' . $file);
 
 		if (!Storage::disk('local')->exists($file))
