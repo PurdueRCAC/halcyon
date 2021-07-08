@@ -495,13 +495,20 @@ class ItemsController extends Controller
 			return response()->json(['message' => trans('global.error.not authorized')], 403);
 		}
 
+		if ($request->has('timeperiodcount'))
+		{
+			$row->timeperiodcount = $request->input('timeperiodcount');
+		}
+
 		if ($request->has('quantity'))
 		{
 			$row->quantity = $request->input('quantity');
 		}
-		if ($request->has('timeperiodcount'))
+
+		if ($request->has('timeperiodcount') || $request->has('quantity'))
 		{
-			$row->timeperiodcount = $request->input('timeperiodcount');
+			$row->price = $row->quantity * $row->product->unitprice;
+			$row->price = $row->timeperiodcount ? $row->timeperiodcount * $row->price : $row->price;
 		}
 
 		// Only admins can edit price
@@ -513,11 +520,6 @@ class ItemsController extends Controller
 			}
 
 			$row->price = $request->input('price');
-		}
-		else
-		{
-			$row->price = $row->quantity * $row->product->unitprice;
-			$row->price = $row->timeperiodcount ? $row->timeperiodcount * $row->price : $row->price;
 		}
 
 		if ($request->input('fulfilled'))
