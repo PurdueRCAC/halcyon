@@ -49,6 +49,9 @@ figcaption {
 .alert {
 	padding-left: 2.4em;
 }
+.alert a {
+	font-weight: bold;
+}
 .alert:before {
 	position: absolute;
 	top: 0.85em;
@@ -71,6 +74,30 @@ figcaption {
 }
 .alert.alert-info:before {
 	content: "\f05a";
+}
+
+.banner .alert-warning {
+	background-color: #ffc107;
+	color: #7C4A03;
+}
+.banner .alert-warning a,
+.banner .alert-warning a:link {
+	color: #7C4A03;
+}
+.banner .alert-info {
+	background-color: #20809D;
+	color: #E3F3F7;
+}
+.banner .alert-info a,
+.banner .alert-info a:link {
+	color: #E3F3F7;
+}
+.banner .sticky {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 999;
 }
 
 label {
@@ -827,8 +854,11 @@ a.card-content,
 	flex-shrink: 0;
 	width: 100%;
 }
- .card:hover .card-content {
+.card:hover .card-content,
+.card:hover a.card-content,
+a.card-content:hover {
 	box-shadow: 0 14px 28px rgba(0,0,0,.25),0 10px 10px rgba(0,0,0,.22);
+	font-weight: normal;
 }
 .card-body {
 	-ms-flex: 1 1 auto;
