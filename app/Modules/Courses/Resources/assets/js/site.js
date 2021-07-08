@@ -804,6 +804,33 @@ $(document).ready(function () {
 		NewClassSelect();
 	});
 
+	/*
+	Experimental lazy load student list
+	$('#new_class_select option').each(function(i, el){
+		var selected_class = $(el);
+
+		if (!selected_class.data('students')) {
+			return;
+		}
+
+		if (!selected_class.data('students')['students'].length) {
+			WSGetURL(selected_class.data('api'), function (xml) {
+				if (xml.status < 400) {
+					var response = JSON.parse(xml.responseText);
+
+					selected_class.data('count', response.enrollments.length);
+
+					var emails = [];
+					for (var i = 0; i < response.enrollments.length; i++) {
+						emails.push(response.enrollments[i].email);
+					}
+					selected_class.data('students')['students'] = emails;
+				}
+			});
+		}
+	});
+	*/
+
 	// Account
 	$('.account-delete').on('click', function (e) {
 		e.preventDefault();

@@ -382,6 +382,7 @@
 							<option value="">(Select Class)</option>
 							@foreach ($classes as $class)
 								<option id="option_class_{{ $class->classExternalId }}"
+									data-api="{{ route('api.courses.enrollments', ['crn' => $class->classExternalId, 'classid' => $class->courseId]) }}"
 									data-crn="{{ $class->classExternalId }}"
 									data-classid="{{ $class->classId }}"
 									data-userid="{{ $user->id }}"

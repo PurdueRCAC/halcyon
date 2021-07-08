@@ -49,19 +49,24 @@ $router->group(['prefix' => 'courses'], function (Router $router)
 		'uses' => 'AccountsController@sync',
 		'middleware' => 'auth:api',
 	]);
+	$router->get('/enrollments', [
+		'as' => 'api.courses.enrollments',
+		'uses' => 'AccountsController@enrollments',
+		'middleware' => 'auth:api',
+	]);
 	$router->get('{id}', [
 		'as' => 'api.courses.read',
 		'uses' => 'AccountsController@read',
 		'middleware' => 'auth:api',
-	]);
+	])->where('id', '[0-9]+');
 	$router->put('{id}', [
 		'as' => 'api.courses.update',
 		'uses' => 'AccountsController@update',
 		'middleware' => 'auth:api|can:edit courses',
-	]);
+	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
 		'as' => 'api.courses.delete',
 		'uses' => 'AccountsController@delete',
 		'middleware' => 'auth:api|can:delete courses',
-	]);
+	])->where('id', '[0-9]+');
 });

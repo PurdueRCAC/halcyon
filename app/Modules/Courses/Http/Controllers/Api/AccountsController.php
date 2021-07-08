@@ -803,4 +803,25 @@ class AccountsController extends Controller
 
 		return response()->json($data);
 	}
+
+	/**
+	 * Lookup enrollments for a class
+	 * 
+	 * @param   Request  $request
+	 * @return  Response
+	 */
+	public function enrollments(Request $request)
+	{
+		$account = new Account();
+		$account->crn = $request->input('crn');
+		$account->classid = $request->input('classid');
+
+		$data = array('enrollments' => []);
+
+		event($e = new AccountEnrollment($account));
+
+		$data['enrollments'] = $e->enrollments;
+
+		return response()->json($data);
+	}
 }
