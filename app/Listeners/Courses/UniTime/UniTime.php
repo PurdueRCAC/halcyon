@@ -231,11 +231,11 @@ class UniTime
 						$course->stop        = $semester->endDate;
 						$course->classId     = $class->classId;
 						$course->instructors = $instructors;
-						$course->students    = array();
+						//$course->students    = array();
 						$course->student_list = array();
 						$course->enrollment  = array();
 
-						$result2 = $this->request("enrollments?classId=" . $class->classId);
+						/*$result2 = $this->request("enrollments?classId=" . $class->classId);
 
 						if ($result2['status'] == 200)
 						{
@@ -260,7 +260,7 @@ class UniTime
 
 								array_push($course->students, urlencode($name));
 							}
-						}
+						}*/
 
 						$enrollments = $this->request('enrollments?courseId=' . $course->courseId);
 
