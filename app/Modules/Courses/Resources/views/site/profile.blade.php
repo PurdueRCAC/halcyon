@@ -80,13 +80,7 @@
 											$username = $u->username;
 
 											// See if the they have host entry yet
-											event($e = new App\Modules\Users\Events\UserLookup(['username' => $username, 'host' => 'scholar.rcac.purdue.edu']));
-											/*$rows = 0;
-											if ($rcac_ldap)
-											{
-												$foo = array();
-												$rows = $rcac_ldap->query('(&(uid=' . $username . ')(host=scholar.rcac.purdue.edu))', array('uid'), $foo);
-											}*/
+											event($e = new App\Modules\Users\Events\UserLookup(['username' => $username, 'host' => $class->resource->rolename . '.rcac.purdue.edu']));
 
 											if (count($e->results) > 0)
 											{
@@ -435,7 +429,7 @@
 						Instructor: {{ $user->name }}<br/>
 						Others: <br/>
 
-						<ul id="class_students"></ul>
+						<ul id="class_people"></ul>
 
 						<br/>
 						<div class="form-group">
