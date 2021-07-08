@@ -144,7 +144,7 @@
 						</ul>
 					</div><!-- / .gold -->
 
-					<div class="collapse navbar-collapse search" id="search">
+					<div class="collapse navbar-collapse right search" id="search">
 						<ul class="nav navbar-nav navbar-right">
 							<li class="dropdown">
 								<a class="dropdown-toggle" data-toggle="dropdown" title="Search Button" href="#search"><i class="fa fa-search fa-lg" aria-hidden="true"></i><span class="sr-only">Search</span></a>
@@ -169,7 +169,7 @@
 						<div class="logo col-lg-3 col-md-3 col-sm-3 col-xs-12">
 							<h1 class="sr-only">Purdue University</h1>
 							<a class="svgLinkContainer" href="https://www.purdue.edu" title="Purdue University">
-								<object class="svgContainer" data="{{ asset('themes/rcac/images/PU-H.svg') }}" type="image/svg+xml" title="Purdue University" role="img">
+								<object class="svgContainer" data="{{ asset('themes/rcac/images/PU-H.svg') }}" type="image/svg+xml" aria-label="Purdue University" title="Purdue University" role="img">
 									<img alt="Purdue University" src="{{ asset('themes/rcac/images/PU-H.svg') }}" height="45" width="243" />
 								</object>
 							</a>
