@@ -356,7 +356,7 @@ class UniTime
 		}
 
 		// Record the request
-		$this->log('unittime', __METHOD__, $method, $status, $body, $base . $url);
+		$this->log('unitime', __METHOD__, $method, $status, $body, $url);
 
 		return [
 			'status' => $status,
