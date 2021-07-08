@@ -1728,7 +1728,7 @@ function NEWSPrintRow(news) {
 	td.appendChild(span);
 
 	var label = document.createElement("label");
-		label.for = id + "_textarea";
+		label.setAttribute('for', id + "_textarea");
 		label.className = 'sr-only';
 		label.innerHTML = 'News text';
 
@@ -1832,7 +1832,7 @@ function NEWSPrintRow(news) {
 		span.innerHTML = "Mark as updated: ";
 		span.style.display = "none";
 		span.id = id + "_textsaveupdate";
-		span.for = id + "_textsaveupdatebox";
+		span.setAttribute('for', id + "_textsaveupdatebox");
 
 		var checkbox = document.createElement("input");
 			checkbox.type = "checkbox";
@@ -1925,7 +1925,7 @@ function NEWSPrintRow(news) {
 		var tselect = document.getElementById("template_select");
 		if (tselect) {
 			label = document.createElement("label");
-			label.for = news['id'] + "_newupdatetemplate";
+			label.setAttribute('for', news['id'] + "_newupdatetemplate");
 			label.className = 'sr-only';
 			label.innerHTML = 'Use template';
 
@@ -1952,7 +1952,7 @@ function NEWSPrintRow(news) {
 		}
 
 		label = document.createElement("label");
-		label.for = news['id'] + "_newupdatebox";
+		label.setAttribute('for', news['id'] + "_newupdatebox");
 		label.className = 'sr-only';
 		label.innerHTML = 'Post an update';
 
@@ -3231,7 +3231,7 @@ function NewsPrintUpdate(newsid, update, edit) {
 		div.appendChild(a);
 
 		var label = document.createElement("label");
-			label.for = update['id'] + "_updatetextarea";
+			label.setAttribute('for', update['id'] + "_updatetextarea");
 			label.className = 'sr-only';
 			label.innerHTML = 'Update text';
 
