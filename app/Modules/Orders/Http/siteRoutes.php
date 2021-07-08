@@ -42,6 +42,16 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth.admin'], function (R
 		'uses' => 'OrdersController@cart',
 		'middleware' => 'can:create orders',
 	]);
+	$router->post('import', [
+		'as' => 'site.orders.import',
+		'uses' => 'OrdersController@import',
+		'middleware' => 'can:manage orders',
+	]);
+	$router->post('process', [
+		'as' => 'site.orders.process',
+		'uses' => 'OrdersController@process',
+		'middleware' => 'can:manage orders',
+	]);
 
 	/*$router->get('recur', [
 		'as' => 'site.orders.recurring',

@@ -108,6 +108,7 @@ return [
 	'errors' => [
 		'invalid orderid' => 'Invalid order ID.',
 		'invalid approverid' => 'Invalid approver ID',
+		'file not found' => 'Import file not found',
 	],
 	'export summary' => 'Order Summary',
 	'export items' => 'Order Summary and Items',
@@ -116,4 +117,6 @@ return [
 	'department' => 'Department',
 	'for' => 'For',
 	'purchase' => 'Purchase',
+	'import' => 'Import',
+	'accounts updated' => ':count order account(s) updated.',
 ];

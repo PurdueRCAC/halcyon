@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Fluent;
+use Illuminate\Support\Facades\Storage;
 use App\Modules\Orders\Models\Order;
 use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Models\Product;
@@ -13,6 +15,7 @@ use App\Modules\Orders\Models\Item;
 use App\Modules\Orders\Models\Account;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Http\StatefulRequest;
+use Carbon\Carbon;
 
 class OrdersController extends Controller
 {
@@ -441,6 +444,7 @@ class OrdersController extends Controller
 			trans('orders::orders.total'),
 			'purchaseio',
 			'purchasewbse',
+			'paymentdocid',
 			trans('orders::orders.product'),
 			trans('orders::orders.notes'),
 		);
@@ -512,6 +516,7 @@ class OrdersController extends Controller
 					$row->formatNumber($row->ordertotal),
 					'',
 					'',
+					'',
 					$products,
 					$row->usernotes
 				);
@@ -533,6 +538,7 @@ class OrdersController extends Controller
 						$item->quantity,
 						$row->formatNumber($item->origunitprice),
 						$row->formatNumber($item->price),
+						'',
 						'',
 						'',
 						$item->product ? $item->product->name : $item->orderproductid,
@@ -559,6 +565,7 @@ class OrdersController extends Controller
 						$row->formatNumber($account->amount),
 						($account->purchaseio ? $account->purchaseio : ''),
 						($account->purchasewbse ? $account->purchasewbse : ''),
+						($account->paymentdocid ? $account->paymentdocid : ''),
 						$products,
 						$row->usernotes
 					);
@@ -849,5 +856,181 @@ class OrdersController extends Controller
 		return view('orders::site.orders.cart', [
 			'cart' => $cart
 		]);
+	}
+
+	/**
+	 * Display the data being imported
+	 * 
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function import(Request $request)
+	{
+		$file = $request->file('file')->store('temp');
+		$path = storage_path('app/' . $file);
+
+		$row = 0;
+		$headers = array();
+		$data = array();
+
+		try
+		{
+			$handle = fopen($path, 'r');
+
+			if ($handle !== false)
+			{
+				while (!feof($handle))
+				{
+					$line = fgetcsv($handle, 0, ',');
+
+					if ($row == 0)
+					{
+						$headers = $line;
+						$row++;
+						continue;
+					}
+
+					$item = new Fluent;
+					foreach ($headers as $k => $v)
+					{
+						$v = strtolower($v);
+						$item->{$v} = $line[$k];
+					}
+
+					$data[] = $item;
+
+					$row++;
+				}
+				fclose($handle);
+			}
+		}
+		catch (\Exception $e)
+		{
+			Storage::disk('local')->delete($file);
+
+			return redirect()->route('site.orders.index')->withError($e->getMessage());
+		}
+
+		$data = collect($data);
+
+		return view('orders::site.orders.import', [
+			'file' => $file,
+			'headers' => $headers,
+			'data' => $data
+		]);
+	}
+
+	/**
+	 * Process the imported data
+	 * 
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function process(Request $request)
+	{
+		$file = base64_decode($request->input('file')); //storage_path($request->input('file'));
+		$path = storage_path('app/' . $file);
+
+		if (!Storage::disk('local')->exists($file))
+		{
+			return redirect()->route('site.orders.index')->withError(trans('orders::orders.errors.file not found'));
+		}
+
+		$row = 0;
+		$headers = array();
+		$updated = 0;
+
+		try
+		{
+			$handle = fopen($path, 'r');
+			if ($handle !== false)
+			{
+				while (!feof($handle))
+				{
+					$line = fgetcsv($handle, 0, ',');
+
+					if ($row == 0)
+					{
+						$headers = $line;
+						$row++;
+						continue;
+					}
+
+					$item = new Fluent;
+					foreach ($headers as $k => $v)
+					{
+						$v = strtolower($v);
+						$item->{$v} = $line[$k];
+					}
+
+					$data[] = $item;
+
+					$row++;
+				}
+				fclose($handle);
+			}
+
+			foreach ($data as $item)
+			{
+				if (!$item->id)
+				{
+					continue;
+				}
+
+				$order = Order::find($item->id);
+
+				if (!$order)
+				{
+					continue;
+				}
+
+				// Do we have any account info?
+				if (!$item->purchaseio
+				&& !$item->purchasewbse)
+				{
+					continue;
+				}
+
+				// Was a doc ID assigned?
+				if (!$item->paymentdocid)
+				{
+					continue;
+				}
+
+				foreach ($order->accounts as $account)
+				{
+					if (($account->purchaseio == $item->purchaseio || $account->purchasewbse == $item->purchasewbse)
+					&& $item->paymentdocid != $account->paymentdocid)
+					{
+						$account->paymentdocid = $item->paymentdocid;
+						$account->datetimepaymentdoc = Carbon::now()->toDateTimeString();
+						if ($item->datetimepaymentdoc)
+						{
+							$account->datetimepaymentdoc = $item->datetimepaymentdoc;
+						}
+						$account->datetimepaid = Carbon::now()->toDateTimeString();
+						$account->save();
+
+						$updated++;
+					}
+				}
+			}
+
+			// Clean up
+			Storage::disk('local')->delete($file);
+		}
+		catch (\Exception $e)
+		{
+			Storage::disk('local')->delete($file);
+
+			return redirect()->route('site.orders.index')->withError($e->getMessage());
+		}
+
+		if ($updated)
+		{
+			$request->session()->flash('success', trans('orders::orders.accounts updated', ['count' => $updated]));
+		}
+
+		return redirect()->route('site.orders.index');
 	}
 }

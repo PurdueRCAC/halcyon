@@ -990,13 +990,13 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											<label class="sr-only" for="justification{{ $account->id }}">Budget justification:</label>
 											<span class="account-edit-hide form-text text-muted justification_span">{{ $account->budgetjustification ? $account->budgetjustification : '' }}</span>
 											<textarea name="justification" id="justification{{ $account->id }}" rows="3" maxlength="2000" cols="68" class="account-edit-show hide form-control balance-update">{{ $account->budgetjustification }}</textarea>
-											@if ($order->status == 'pending_collection' && auth()->user()->can('manage orders'))
+											@if ($order->status == 'pending_collection' && auth()->user()->can('manage orders') && !$account->paymentdocid)
 												<div class="form-inline mt-3 account-edit-hide" id="button_{{ $account->id }}">
 													<label for="docid_{{ $account->id }}" class="sr-only">Doc ID</label>
-													<input type="text" class="doc copy-doc form-control" name="docid" id="docid_{{ $account->id }}" placeholder="Doc ID" size="15" maxlength="12" />
+													<input type="text" class="doc copy-doc form-control" name="docid" id="docid_{{ $account->id }}" value="{{ $account->paymentdocid }}" placeholder="Doc ID" size="15" maxlength="12" />
 
 													<label for="docdate_{{ $account->id }}" class="sr-only">Doc Date</label>
-													<input type="text" class="doc copy-docdate form-control date-pick" name="docdate" id="docdate_{{ $account->id }}" placeholder="Doc Date (YYYY-MM-DD)" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" size="10" />
+													<input type="text" class="doc copy-docdate form-control date-pick" name="docdate" id="docdate_{{ $account->id }}" placeholder="Doc Date (YYYY-MM-DD)" value="{{ $account->isCollected() ? $account->datetimepaymentdoc->format('Y-m-d') : Carbon\Carbon::now()->format('Y-m-d') }}" size="10" />
 
 													<button class="btn btn-secondary account-collect" data-txt="Paid" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}">{{ trans('orders::orders.collect') }}</button>
 												</div>

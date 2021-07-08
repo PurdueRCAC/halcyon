@@ -116,6 +116,18 @@ class Account extends Model
 	}
 
 	/**
+	 * If account is documented
+	 *
+	 * @return  bool
+	 **/
+	public function isCollected()
+	{
+		return ($this->datetimepaymentdoc
+			&& $this->datetimepaymentdoc != '0000-00-00 00:00:00'
+			&& $this->datetimepaymentdoc != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Defines a relationship to creator
 	 *
 	 * @return  object
