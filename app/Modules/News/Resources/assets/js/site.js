@@ -1727,6 +1727,11 @@ function NEWSPrintRow(news) {
 
 	td.appendChild(span);
 
+	var label = document.createElement("label");
+		label.for = id + "_textarea";
+		label.className = 'sr-only';
+		label.innerHTML = 'News text';
+
 	var textarea = document.createElement("textarea");
 		textarea.id = id + "_textarea";
 		textarea.innerHTML = rawtext;
@@ -1736,6 +1741,7 @@ function NEWSPrintRow(news) {
 		textarea.className = "form-control newspostedittextbox";
 
 	span = document.createElement("span");
+	span.appendChild(label);
 	span.appendChild(textarea);
 
 	td.appendChild(span);
@@ -1822,10 +1828,11 @@ function NEWSPrintRow(news) {
 		//a.appendChild(document.createTextNode("Cancel edits to text"));
 		opt.appendChild(a);
 
-		span = document.createElement("span");
+		span = document.createElement("label");
 		span.innerHTML = "Mark as updated: ";
 		span.style.display = "none";
 		span.id = id + "_textsaveupdate";
+		span.for = id + "_textsaveupdatebox";
 
 		var checkbox = document.createElement("input");
 			checkbox.type = "checkbox";
@@ -1917,6 +1924,11 @@ function NEWSPrintRow(news) {
 
 		var tselect = document.getElementById("template_select");
 		if (tselect) {
+			label = document.createElement("label");
+			label.for = news['id'] + "_newupdatetemplate";
+			label.className = 'sr-only';
+			label.innerHTML = 'Use template';
+
 			var select = document.createElement("select");
 				select.id = news['id'] + "_newupdatetemplate";
 				select.className = 'form-control';
@@ -1935,8 +1947,14 @@ function NEWSPrintRow(news) {
 					}, news['id']);
 				};
 
+			div.appendChild(label);
 			div.appendChild(select);
 		}
+
+		label = document.createElement("label");
+		label.for = news['id'] + "_newupdatebox";
+		label.className = 'sr-only';
+		label.innerHTML = 'Post an update';
 
 		textarea = document.createElement("textarea");
 		textarea.className = "form-control crmupdatebox";
@@ -1951,6 +1969,7 @@ function NEWSPrintRow(news) {
 			NewsCollapseNewUpdate(this.id);
 		};
 
+		div.appendChild(label);
 		div.appendChild(textarea);
 
 		// Save button
@@ -3211,6 +3230,11 @@ function NewsPrintUpdate(newsid, update, edit) {
 		a.appendChild(img);
 		div.appendChild(a);
 
+		var label = document.createElement("label");
+			label.for = update['id'] + "_updatetextarea";
+			label.className = 'sr-only';
+			label.innerHTML = 'Update text';
+
 		// Text box
 		var textarea = document.createElement("textarea");
 			textarea.id = update['id'] + "_updatetextarea";
@@ -3219,6 +3243,7 @@ function NewsPrintUpdate(newsid, update, edit) {
 			textarea.className = "form-control newsupdateedittextbox";
 
 		span = document.createElement("span");
+		span.appendChild(label);
 		span.appendChild(textarea);
 
 		div.appendChild(span);
