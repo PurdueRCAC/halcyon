@@ -18,7 +18,7 @@
 					?>
 					<div id="{{ $resource->listname }}" class="card purchase-card">
 						<div class="card-content">
-							<div class="card-header purchase-lefts">
+							<div class="card-body">
 								<div class="row">
 									<div class="col-md-8">
 										<p class="card-title"><a class="purchase-resource" href="{{ route('site.orders.products', ['category' => $category->id]) }}">{{ $resource->name }}</a></p>
@@ -27,8 +27,7 @@
 										<p><a class="btn btn-default btn-sm btn-purchase" href="{{ route('site.orders.products', ['category' => $category->id]) }}">Purchase Now</a></p>
 									</div>
 								</div>
-							</div>
-							<div class="card-body">
+
 								<p class="card-text">{{ $resource->description }}</p>
 							</div>
 							@if (count($products))

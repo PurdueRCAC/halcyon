@@ -821,14 +821,24 @@ body ul.profile_teaser_contact li {
 .card {
 	margin-bottom: 1.5em;
 }
+.purchase-card,
+.services .card,
+.resources .card {
+	border: none;
+}
+/*.card-img-wrap {
+	background-color: #fff;
+}*/
 a.card-content,
 .card-content {
 	display: flex;
-	background-color: #fff;
+	/*background-color: #fff;
 	background-clip: border-box;
-	/*border: 1px solid rgba(0,0,0,.1);*/
 	box-shadow: 0 .5em 1em -.125em rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.02);
-	transition: all .3s cubic-bezier(.25,.8,.25,1);
+	transition: all .3s cubic-bezier(.25,.8,.25,1);*/
+	background-color: #f5f5f5;
+	transition: all 0.3s ease;
+	border: 2px solid transparent;
 	text-decoration: none;
 	font-weight: normal;
 	height: 100%;
@@ -857,8 +867,12 @@ a.card-content,
 .card:hover .card-content,
 .card:hover a.card-content,
 a.card-content:hover {
-	box-shadow: 0 14px 28px rgba(0,0,0,.25),0 10px 10px rgba(0,0,0,.22);
-	font-weight: normal;
+	/*box-shadow: 0 14px 28px rgba(0,0,0,.25),0 10px 10px rgba(0,0,0,.22);
+	font-weight: normal;*/
+	-webkit-transform: translateY(-7px);
+	transform: translateY(-7px);
+	border-color: #cfb991;
+	font-weight: inherit;
 }
 .card-body {
 	-ms-flex: 1 1 auto;
@@ -885,11 +899,11 @@ ul.purchase li:after {
 ul.purchase li {
 	margin: 1.5em 0;
 }
-
+/*
 .purchase-card {
 	margin: 0;
 	background: #dddddd;
-}
+}*/
 .purchase-card .card-header {
 	padding: 1em 1em 0 1em;
 }
