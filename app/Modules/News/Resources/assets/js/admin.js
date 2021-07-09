@@ -82,12 +82,16 @@ function NEWSSendMail(btn) {
 						}
 					});
 
-					var usersdata = document.getElementById("mail-to").value.split(',');
-					var associations = [],
-						i;
-					for (i = 0; i < usersdata.length; i++) {
-						if (usersdata[i] != "") {
-							associations.push(usersdata[i]);
+					var usersto = document.querySelector("input[name=to]"),
+						associations = [];
+
+					if (usersto) {
+						var usersdata = usersto.value.split(','),
+							i;
+						for (i = 0; i < usersdata.length; i++) {
+							if (usersdata[i] != "") {
+								associations.push(usersdata[i]);
+							}
 						}
 					}
 

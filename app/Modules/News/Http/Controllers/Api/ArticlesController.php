@@ -1092,14 +1092,14 @@ class ArticlesController extends Controller
 			}
 		}
 
+		$emails = array_filter($emails);
+		$emails = array_unique($emails);
+
 		if (count($emails) > 0)
 		{
 			$message = new Message($row, $name);
 
-			foreach ($emails as $email)
-			{
-				Mail::to($email)->send($message);
-			}
+			Mail::to($emails)->send($message);
 		}
 
 		$row->update([
