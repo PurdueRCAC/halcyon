@@ -126,7 +126,8 @@ class Menus
 				'a.menutype',
 				'a.type',
 				'a.checked_out'
-			]);
+			])
+			->whereNull('a.deleted_at');
 		$query->leftJoin($table . ' AS b', function($join)
 		{
 			$join->on('a.lft', '>', 'b.lft')
@@ -214,10 +215,8 @@ class Menus
 
 			return $menuTypes;
 		}
-		else
-		{
-			return $links;
-		}
+
+		return $links;
 	}
 
 	/**
