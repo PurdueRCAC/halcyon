@@ -71,7 +71,7 @@ foreach ($rows as $event)
 
 	$events[] = $slot;
 	?>
-	<article id="coffee{{ $event->id }}" class="dialog dialog-event" title="{{ $event->headline }}" aria-labelledby="coffee{{ $event->id }}-title">
+	<div id="coffee{{ $event->id }}" class="dialog dialog-event" title="{{ $event->headline }}" aria-labelledby="coffee{{ $event->id }}-title">
 		<h3 id="coffee{{ $event->id }}-title" class="sr-only">{{ $event->headline }}</h3>
 		<p class="newsattend">
 			@if ($event->url)
@@ -185,7 +185,7 @@ foreach ($rows as $event)
 			?>
 		</p>
 		{!! $event->body !!}
-	</article>
+		</div>
 	<?php
 }
 ?>
