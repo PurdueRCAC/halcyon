@@ -45,26 +45,11 @@ class OrdersController extends Controller
 			'order_dir' => Order::$orderDir,
 		);
 
-		/*$k = array();
-		foreach ($filters as $key => $default)
-		{
-			$filters[$key] = $request->input($key, $default);
-			if (!in_array($key, ['page', 'order', 'order_dir']))
-			{
-				$k[$key] = $filters[$key];
-			}
-		}
-		$k = json_encode($k);
-
-		if (session()->get('filters.orders') && session()->get('filters.orders') != $k)
-		{
-			$filters['page'] = 1;
-		}
-		session()->put('filters.orders', $k);*/
 		$reset = false;
+		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && session()->get('orders.filter_' . $key) != $request->mergeWithBase()->input($key))
+			if ($key != 'page' && $request->has($key) && session()->get('orders.filter_' . $key) != $request->input($key))
 			{
 				$reset = true;
 			}
@@ -88,8 +73,6 @@ class OrdersController extends Controller
 		}
 
 		$order = new Order;
-
-		//$query = Order::query();
 
 		$query = $order->withTrashed();
 

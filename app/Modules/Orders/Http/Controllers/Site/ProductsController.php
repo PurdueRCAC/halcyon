@@ -37,31 +37,11 @@ class ProductsController extends Controller
 			'order_dir' => Product::$orderDir,
 		);
 
-		/*foreach ($filters as $key => $default)
-		{
-			// Check the session
-			$old = $request->session()->get('orders.products.' . $key, $default);
-
-			// Check request
-			$val = $request->input($key);
-
-			// Save the new value only if it was set in this request.
-			if ($request->exists($key)) //$val !== null)
-			{
-				// Save to session
-				$request->session()->put('orders.products.' . $key, $val);
-			}
-			else
-			{
-				$val = $old;
-			}
-
-			$filters[$key] = $val;
-		}*/
 		$reset = false;
+		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && session()->get('orders.products.filter_' . $key) != $request->mergeWithBase()->input($key))
+			if ($key != 'page' && $request->has($key) && session()->get('orders.products.filter_' . $key) != $request->input($key))
 			{
 				$reset = true;
 			}

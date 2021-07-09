@@ -36,9 +36,10 @@ class PagesController extends Controller
 		);
 
 		$refresh = false;
+		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if (!$refresh && $key != 'page')
+			if ($key != 'page' && $request->has($key) && session()->get('kb.filter_' . $key) != $request->input($key))
 			{
 				$refresh = (session()->get('kb.filter_' . $key, $default) != $request->input('search', $default));
 			}

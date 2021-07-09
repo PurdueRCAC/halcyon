@@ -28,31 +28,11 @@ class CategoriesController extends Controller
 			'order_dir' => Category::$orderDir,
 		);
 
-		/*foreach ($filters as $key => $default)
-		{
-			// Check the session
-			$old = $request->session()->get('orders.categories.' . $key, $default);
-
-			// Check request
-			$val = $request->input($key);
-
-			// Save the new value only if it was set in this request.
-			if ($request->exists($key)) //$val !== null)
-			{
-				// Save to session
-				$request->session()->put('orders.categories.' . $key, $val);
-			}
-			else
-			{
-				$val = $old;
-			}
-
-			$filters[$key] = $val;
-		}*/
 		$reset = false;
+		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && session()->get('orders.categories.filter_' . $key) != $request->mergeWithBase()->input($key))
+			if ($key != 'page' && $request->has($key) && session()->get('orders.categories.filter_' . $key) != $request->input($key))
 			{
 				$reset = true;
 			}

@@ -32,9 +32,10 @@ class TypesController extends Controller
 		);
 
 		$reset = false;
+		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && session()->get('resources.types.filter_' . $key) != $request->mergeWithBase()->input($key))
+			if ($key != 'page' && $request->has($key) && session()->get('resources.types.filter_' . $key) != $request->input($key))
 			{
 				$reset = true;
 			}
