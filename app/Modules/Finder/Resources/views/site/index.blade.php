@@ -44,7 +44,7 @@ app('pathway')->append(
 @section('content')
 
 <div class="col-md-12">
-    <div id="app" role="main">
+    <div id="app">
         <div class="row">
             <div class="col-md-12 app-title">
                 <h2 class="title" id="pagetitle">Data Storage Solutions Finder</h2>
