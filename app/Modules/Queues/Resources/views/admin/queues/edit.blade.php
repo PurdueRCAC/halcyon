@@ -779,8 +779,19 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="lender-queue">{{ trans('queues::queues.queue') }}</label>
-					<select id="lender-queue" name="lenderqueueid" class="form-control" disabled="true">
+					<select id="lender-queue" name="lenderqueueid" class="form-control">
 						<option value="0">{{ trans('queues::queues.select queue') }}</option>
+						<?php
+						if ($group->id == $row->groupid)
+						{
+							foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
+							{
+							?>
+							<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
+							<?php
+							}
+						}
+						?>
 					</select>
 				</div>
 
