@@ -20,10 +20,10 @@ class Banner extends Widget
 	{
 		$now = Carbon::now();
 
-		$today     = Carbon::now()->format('Y-m-d') . ' 00:00:00'; //date("Y-m-d", strtotime($this->date)) . " 00:00:00";
-		$tomorrow  = Carbon::now()->modify('+1 day')->format('Y-m-d') . ' 00:00:00'; //date("Y-m-d", strtotime($this->date) + 86400) . " 00:00:00";
-		$plus12    = Carbon::now()->modify('+12 hours')->toDateTimeString(); //date("Y-m-d H:i:s", strtotime($this->date) + 43200);
-		$minus12   = Carbon::now()->modify('-12 hours')->toDateTimeString(); //date("Y-m-d H:i:s", strtotime($this->date) - 43200);
+		$today     = Carbon::now()->format('Y-m-d') . ' 00:00:00';
+		$tomorrow  = Carbon::now()->modify('+1 day')->format('Y-m-d') . ' 00:00:00';
+		$plus12    = Carbon::now()->modify('+12 hours')->toDateTimeString();
+		$minus12   = Carbon::now()->modify('-12 hours')->toDateTimeString();
 
 		$query = Article::query()
 			->wherePublished()
@@ -85,7 +85,7 @@ class Banner extends Widget
 				})
 				->where('newstypeid', '=', $id)
 				->orderBy('datetimenews', 'desc')
-				->limit($this->params->get('limit', 2))
+				->limit($this->params->get('limit', 1))
 				->get();
 		}
 
