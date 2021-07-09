@@ -113,6 +113,7 @@ class OrdersController extends Controller
 					END";
 
 		$subitems = Order::query()
+			->withTrashed()
 			->select(
 				$o . '.*',
 				DB::raw("SUM(" . $i . ".price) AS ordertotal"),
