@@ -425,14 +425,7 @@ app('pathway')
 			</tbody>
 		</table>
 
-		<div class="row w-100">
-			<div class="col-sm-9">
-				{{ $rows->render() }}
-			</div>
-			<div class="col-sm-3 text-right">
-				Results {{ ($rows->currentPage()-1)*$rows->perPage()+1 }}-{{ $rows->total() > $rows->perPage() ? $rows->currentPage()*$rows->perPage() : $rows->total() }} of {{ $rows->total() }}
-			</div>
-		</div>
+		{{ $rows->render() }}
 	@else
 		<p class="alert alert-info">No orders found.</p>
 	@endif

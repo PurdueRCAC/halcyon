@@ -43,7 +43,7 @@
             @endif
         </ul>
         <p class="text-right">
-            {{ $paginator->total() }} Results
+            Results {{ ($paginator->currentPage()-1)*$paginator->perPage()+1 }}-{{ $paginator->total() > $paginator->perPage() ? $paginator->currentPage()*$paginator->perPage() : $paginator->total() }} of {{ $paginator->total() }}
         </p>
     </nav>
 @endif
