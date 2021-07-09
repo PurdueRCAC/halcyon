@@ -71,8 +71,8 @@ foreach ($rows as $event)
 
 	$events[] = $slot;
 	?>
-	<article id="coffee{{ $event->id }}" class="dialog dialog-event" title="{{ $event->headline }}">
-		<h3 class="sr-only">{{ $event->headline }}</h3>
+	<article id="coffee{{ $event->id }}" class="dialog dialog-event" title="{{ $event->headline }}" aria-labelledby="coffee{{ $event->id }}-title">
+		<h3 id="coffee{{ $event->id }}-title" class="sr-only">{{ $event->headline }}</h3>
 		<p class="newsattend">
 			@if ($event->url)
 				@if (auth()->user() && in_array(config()->get('module.news.ignore_role', 4), auth()->user()->getAuthorisedRoles()))
