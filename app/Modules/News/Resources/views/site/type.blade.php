@@ -235,8 +235,8 @@ app('pathway')
 							--><i class="fa fa-fw fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit</span><!--
 						--></a>
 					@endif
-					<article id="article-{{ $article->id }}">
-						<h3 class="news-title">
+					<article id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title">
+						<h3 id="article-{{ $article->id }}-title" class="news-title">
 							<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
 						</h3>
 						<p class="news-metadata text-muted">
