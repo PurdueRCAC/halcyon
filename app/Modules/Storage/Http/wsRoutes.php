@@ -34,7 +34,7 @@ $router->group(['prefix' => 'storagedirusage', 'middleware' => 'auth.ip'], funct
 $router->get('storagedirquota/{username?}', [
 	'as' => 'ws.storage.quotas',
 	'uses' => 'QuotasController@index',
-	'middleware' => 'auth.ip'
+	'middleware' => ['auth.ip', 'throttle:360,10']
 ]);
 
 $router->group(['prefix' => 'storagedirpurchase', 'middleware' => 'auth.ip'], function (Router $router)
