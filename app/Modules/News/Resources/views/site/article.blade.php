@@ -33,7 +33,7 @@ app('pathway')
 		</div>
 		<div class="col-sm-12 col-md-2">
 			<a class="btn float-right tip" href="{{ route('site.news.manage', ['id' => $article->id, 'edit' => 1]) }}" title="Edit"><!--
-				--><i class="fa fa-fw fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit</span><!--
+				--><span class="fa fa-fw fa-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span><!--
 			--></a>
 		</div>
 	</div>
@@ -44,19 +44,19 @@ app('pathway')
 	<div class="wrapper-news">
 		<p class="newsheader">
 			@if (!$article->template)
-				<i class="fa fa-fw fa-clock-o" aria-hidden="true"></i> {{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
+				<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span> {{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
 			@endif
 
 			@if ($article->location)
-				<br /><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> {{ $article->location }}
+				<br /><span class="fa fa-fw fa-map-marker" aria-hidden="true"></span> {{ $article->location }}
 			@endif
 
 			@if ($article->url)
-				<br /><i class="fa fa-fw fa-link" aria-hidden="true"></i> <a href="' . $article->url . '">{{ $article->url }}</a>
+				<br /><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="' . $article->url . '">{{ $article->url }}</a>
 			@endif
 
 			@if ($article->type)
-				<br /><i class="fa fa-fw fa-folder" aria-hidden="true"></i> {{ $article->type->name }}
+				<br /><span class="fa fa-fw fa-folder" aria-hidden="true"></span> {{ $article->type->name }}
 			@endif
 
 			<?php
@@ -68,7 +68,7 @@ app('pathway')
 				{
 					$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->resource->name)]) . '/">' . $resource->resource->name . '</a>';
 				}
-				echo '<br /><i class="fa fa-fw fa-tags" aria-hidden="true"></i> ' .  implode(', ', $resourceArray);
+				echo '<br /><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray);
 			}
 
 			if (auth()->user()
@@ -85,7 +85,7 @@ app('pathway')
 				}
 				asort($users);
 
-				echo '<br /><i class="fa fa-fw fa-user" aria-hidden="true"></i> <span id="attendees">' . implode(', ', array_slice($users, 0, 5)) . '</span>';
+				echo '<br /><span class="fa fa-fw fa-user" aria-hidden="true"></span> <span id="attendees">' . implode(', ', array_slice($users, 0, 5)) . '</span>';
 				if (count($users) > 5)
 				{
 					echo ' <a id="attendees-reveal" href="#attendees-all">... +' . (count($users) - 5) . ' more</a><span id="attendees-all" class="stash">' . implode(', ', $users) . '</span>';
@@ -99,12 +99,12 @@ app('pathway')
 				{
 					?>
 					<br />
-					<i class="fa fa-fw fa-calendar" aria-hidden="true"></i>
+					<span class="fa fa-fw fa-calendar" aria-hidden="true"></span>
 					<a target="_blank" class="calendar calendar-subscribe" href="{{ str_replace(['http:', 'https:'], 'webcal:', route('site.news.calendar', ['name' => $article->id])) }}" title="Subscribe to event"><!--
 						-->Subscribe<!--
 					--></a>
 					&nbsp;|&nbsp;
-					<i class="fa fa-fw fa-download" aria-hidden="true"></i>
+					<span class="fa fa-fw fa-download" aria-hidden="true"></span>
 					<a target="_blank" class="calendar calendar-download" href="{{ route('site.news.calendar', ['name' => $article->id]) }}" title="Download event"><!--
 						-->Download<!--
 					--></a>

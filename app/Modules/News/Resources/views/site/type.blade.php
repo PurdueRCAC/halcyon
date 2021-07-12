@@ -249,7 +249,7 @@ app('pathway')
 							@elseif ($article->isTomorrow())
 								<span class="badge">Tomorrow</span>
 							@endif
-							<i class="fa fa-fw fa-clock-o" aria-hidden="true"></i>
+							<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span>
 							<time datetime="{{ $article->datetimenews }}">
 								{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
 							</time>
@@ -260,7 +260,7 @@ app('pathway')
 								->first();
 							?>
 							@if ($lastupdate)
-								<span class="badge badge-warning"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Updated {{ $lastupdate->datetimecreated->format('M d, Y h:ia') }}</span>
+								<span class="badge badge-warning"><span class="fa fa-exclamation-circle" aria-hidden="true"></span> Updated {{ $lastupdate->datetimecreated->format('M d, Y h:ia') }}</span>
 							@endif
 
 							<?php
@@ -275,7 +275,7 @@ app('pathway')
 									}
 									$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->resource->name)]) . '">' . $resource->resource->name . '</a>';
 								}
-								echo '<br /><i class="fa fa-fw fa-tags" aria-hidden="true"></i> ' .  implode(', ', $resourceArray);
+								echo '<br /><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray);
 							}
 							?>
 						</p>

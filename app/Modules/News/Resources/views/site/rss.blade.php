@@ -32,7 +32,7 @@ app('pathway')
 	<h3>{{ trans('news::news.feeds') }}</h3>
 	<ul class="rsscontainer">
 		<li class="form-check">
-			<a class="rss" href="all"><i class="fa fa-rss-square" aria-hidden="true"></i> <strong>{{ trans('news::news.all news') }}</strong></a>
+			<a class="rss" href="all"><span class="fa fa-rss-square" aria-hidden="true"></span> <strong>{{ trans('news::news.all news') }}</strong></a>
 		</li>
 		<?php
 		$resourceNewsTypes = array();
@@ -53,7 +53,7 @@ app('pathway')
 					<input class="form-check-input rssCheckbox" value="{{ $n->name }}" id="checkbox{{ str_replace(' ', '', $n->name) }}" type="checkbox" />
 					<label class="form-check-label" for="checkbox{{ str_replace(' ', '', $n->name) }}">
 						<a target="_blank" class="rss" href="{{ route('site.news.feed', ['name' => $n->name]) }}">
-							<i class="fa fa-rss-square" aria-hidden="true"></i> {{ $n->name }}
+							<span class="fa fa-rss-square" aria-hidden="true"></span> {{ $n->name }}
 						</a>
 					</label>
 					<?php echo $info; ?>
@@ -85,7 +85,7 @@ app('pathway')
 						<input class="form-check-input rssCheckbox" value="{{ $r->name }}" id="checkbox_{{ str_replace(' ', '', $r->name) }}" type="checkbox" />
 						<label class="form-check-label" for="checkbox_{{ str_replace(' ', '', $r->name) }}">
 							<a target="_blank" id="{{ $r->name }}" class="rss" href="{{ route('site.news.feed', ['name' => implode(',', $resourceNewsTypes) . $r->name]) }}">
-								<i class="fa fa-rss-square" aria-hidden="true"></i> {{ $r->name }}
+								<span class="fa fa-rss-square" aria-hidden="true"></span> {{ $r->name }}
 							</a>
 						</label>
 					</li>

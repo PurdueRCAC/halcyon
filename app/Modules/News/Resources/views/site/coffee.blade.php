@@ -26,7 +26,7 @@
 
 	<h2 class="newsheader">
 		<a class="icn tip" href="{{ route('site.news.rss', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}">
-			<i class="fa fa-rss-square" aria-hidden="true"></i> {{ trans('news::news.rss feed') }}
+			<span class="fa fa-rss-square" aria-hidden="true"></span> {{ trans('news::news.rss feed') }}
 		</a>
 		{{ $type->name }}
 	</h2>
@@ -176,12 +176,12 @@
 
 				if ($event->location != '')
 				{
-					echo '<br /><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> ' . $event->location;
+					echo '<br /><span class="fa fa-fw fa-map-marker" aria-hidden="true"></span> ' . $event->location;
 				}
 
 				if ($event->url)
 				{
-					echo '<br /><i class="fa fa-fw fa-link" aria-hidden="true"></i> <a href="' . $event->url . '">' . $event->url . '</a>';
+					echo '<br /><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="' . $event->url . '">' . $event->url . '</a>';
 				}
 
 				$resourceArray;
@@ -192,7 +192,7 @@
 					{
 						$resourceArray[] = '<a href="/news/' . strtolower($resource->resource->name) . '/">' . $resource->resource->name . '</a>';
 					}
-					echo '<br /><i class="fa fa-fw fa-tags" aria-hidden="true"></i> ' .  implode(', ', $resourceArray);
+					echo '<br /><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray);
 				}
 
 				if (auth()->user() && auth()->user()->can('manage news') && !empty($event->associations))
@@ -209,7 +209,7 @@
 							}
 						}
 					}
-					echo '<br /><i class="fa fa-fw fa-user" aria-hidden="true"></i> ' . implode(', ', $users);
+					echo '<br /><span class="fa fa-fw fa-user" aria-hidden="true"></span> ' . implode(', ', $users);
 				}
 
 				if (!$event->template
@@ -220,12 +220,12 @@
 					{
 						?>
 						<br />
-						<i class="fa fa-fw fa-calendar" aria-hidden="true"></i>
+						<span class="fa fa-fw fa-calendar" aria-hidden="true"></span>
 						<a target="_blank" class="calendar calendar-subscribe" href="webcal://<?php echo request()->getHttpHost(); ?>/news/calendar/<?php echo $event->id; ?>" title="Subscribe to event"><!--
 							-->Subscribe<!--
 						--></a>
 						&nbsp;|&nbsp;
-						<i class="fa fa-fw fa-download" aria-hidden="true"></i>
+						<span class="fa fa-fw fa-download" aria-hidden="true"></span>
 						<a target="_blank" class="calendar calendar-download" href="/news/calendar/<?php echo $event->id; ?>" title="Download event"><!--
 							-->Download<!--
 						--></a>

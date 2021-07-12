@@ -240,7 +240,7 @@
 							<label for="published" class="col-sm-2 col-form-label">
 								Published
 								<a href="#help2" class="help icn tip" title="Help">
-									<i class="fa fa-question-circle" aria-hidden="true"></i> Help
+									<span class="fa fa-question-circle" aria-hidden="true"></span> Help
 								</a>
 							</label>
 							<div class="col-sm-10">
@@ -257,7 +257,7 @@
 							<label for="template_select" class="col-sm-2 col-form-label">
 								Template
 								<a href="#help4" class="help icn tip" title="Help">
-									<i class="fa fa-question-circle" aria-hidden="true"></i> Help
+									<span class="fa fa-question-circle" aria-hidden="true"></span> Help
 								</a>
 							</label>
 							<div class="col-sm-10">
@@ -297,7 +297,7 @@
 							<label for="NotesText" class="col-sm-2 col-form-label">
 								News Text
 								<a href="#help1" class="help icn tip" title="Help">
-									<i class="fa fa-question-circle" aria-hidden="true"></i> Help
+									<span class="fa fa-question-circle" aria-hidden="true"></span> Help
 								</a>
 							</label>
 							<div class="col-sm-10">
@@ -574,7 +574,7 @@ Additionally these variables are available inside updates and will be filled wit
 				<label for="NotesText" class="col-sm-2 col-form-label">
 					Body
 					<a href="#help1" class="help icn tip" title="Help">
-						<i class="fa fa-question-circle" aria-hidden="true"></i> Help
+						<span class="fa fa-question-circle" aria-hidden="true"></span> Help
 					</a>
 				</label>
 				<div class="col-sm-10">
