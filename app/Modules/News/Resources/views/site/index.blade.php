@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title'){{ route('site.news.index') }}@stop
+
 @php
 app('pathway')->append(
 	config('news.name'),
