@@ -62,30 +62,17 @@
 		@stack('styles')
 		@yield('styles')
 
-		<!--[if IE 9]>
-			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/browser/ie9.css') }}" />
-		<![endif]-->
-
 		<!-- Scripts: Global -->
 		<script type="text/javascript">
 			var base_url = '{!! request()->getBaseUrl() !!}';
 		</script>
 <?php
 		$scripts = array(
-			//'themes/rcac/js/jquery-3.5.1.min.js',
-			//'themes/rcac/js/common/jquery-ui-1.12.1/jquery-ui.min.js',
 			'modules/core/vendor/jquery/jquery.min.js',
 			'modules/core/vendor/bootstrap/bootstrap.bundle.min.js', // Ths needs to be included before jquery-ui
 			'modules/core/vendor/jquery-ui/jquery-ui.min.js',
-			//'themes/rcac/js/css_browser_selector.js',
-			//'themes/rcac/js/modernizr-1.5.min.js',
 			'themes/rcac/js/common/common.js',
 			'themes/rcac/js/google_jquery_link_tracking.js',
-			//'themes/rcac/js/common/date.js',
-			//'themes/rcac/js/common/jquery_cookie.js',
-			//'themes/rcac/js/common/jquerytimepicker_min.js',
-			//'themes/rcac/js/common/json2.js',
-			//'themes/rcac/js/common/text.js',
 		);
 		foreach ($scripts as $script):
 			?>
