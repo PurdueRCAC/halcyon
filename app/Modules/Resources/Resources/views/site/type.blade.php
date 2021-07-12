@@ -6,7 +6,7 @@
 app('pathway')
 	->append(
 		$type->name,
-		route('site.resources.' . $type->alias . '.show', ['name' => $type->alias])
+		($retired ? route('site.resources.type.' . $type->alias) : route('site.resources.' . $type->alias . '.show', ['name' => $type->alias]))
 	);
 
 	if ($retired):
