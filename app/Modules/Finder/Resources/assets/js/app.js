@@ -28,23 +28,23 @@
     $.Mustache.add("question-checkbox-template",
         "{{#questions}}\
         <li>\
-        <div class='question-wrapper'>\
-        <h4 id='question-{{id}}'>{{question}}</h4>\
-        <a aria-haspopup='true' class='popup' data-hidden='true' href='#explanation-{{id}}''>\
-            <span class='fa fa-info-circle' aria-hidden='true'></span>\
-            <span class='sr-only'>More info about {{question}}</span>\
-        </a>\
-        </div>\
-        <div class='help' id='explanation-{{id}}'><h3>{{question}}</h3><p>{{{description}}}</p></div>\
-        <fieldset aria-labelledby='question-{{id}}'>\
-        {{#choices}}\
-            <div class='checkbox' facetid='{{id}}'>\
-            <label for='facet-{{id}}'>\
-            <input type='checkbox' name='facet-{{id}}' id='facet-{{id}}' {{checked}} class='facet' facetid='{{id}}'> {{text}}\
-            </label>\
+            <div class='question-wrapper'>\
+                <h4 id='question-{{id}}'>{{question}}</h4>\
+                <a aria-haspopup='true' class='popup' data-hidden='true' href='#explanation-{{id}}'>\
+                    <span class='fa fa-info-circle' aria-hidden='true'></span>\
+                    <span class='sr-only'>More info about {{question}}</span>\
+                </a>\
             </div>\
-        {{/choices}}\
-        </fieldset>\
+            <div class='help' id='explanation-{{id}}'><h3>{{question}}</h3><p>{{{description}}}</p></div>\
+            <fieldset aria-labelledby='question-{{id}}'>\
+            {{#choices}}\
+                <div class='checkbox' facetid='{{id}}'>\
+                    <label for='facet-{{id}}'>\
+                        <input type='checkbox' name='facet-{{id}}' id='facet-{{id}}' {{checked}} class='facet' facetid='{{id}}'> {{text}}\
+                    </label>\
+                </div>\
+            {{/choices}}\
+            </fieldset>\
         </li>\
         {{/questions}}");
 
@@ -55,11 +55,11 @@
     $.Mustache.add("services-template",
         "{{#services}}\
         <div class='service-panel' id='service-{{id}}' service='{{id}}'>\
-            <label>\
-            <input type='checkbox' class='cardcheckbox' {{checked}}/> \
-            <div class='control-indicator'></div>\
-            <h4 class='service-title'>{{title}}</h4>\
-            <p>{{summary}}</p>\
+            <label for='service-{{id}}-checkbox'>\
+                <input type='checkbox' id='service-{{id}}-checkbox' class='cardcheckbox' {{checked}}/> \
+                <div class='control-indicator'></div>\
+                <h4 class='service-title'>{{title}}</h4>\
+                <p>{{summary}}</p>\
             </label>\
         </div>\
         {{/services}}"
