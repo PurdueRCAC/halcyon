@@ -1,6 +1,9 @@
 /* 
 gold: #98700d;
 antique gold: #eae4d9;
+
+dark gold: #8e6f3e;
+light gold: #cfb991;
 */
 noscript {
 	display: block;
@@ -45,6 +48,7 @@ figcaption {
 	max-width: 40em;
 	margin: 0 auto;
 }
+
 /* Alerts */
 .alert {
 	padding-left: 2.4em;
@@ -932,17 +936,20 @@ ul.purchases li {
 	padding-top: 0.3em;
 	padding-bottom: 0.3em;
 }
+
 .btn-purchase {
-	background-color: #b59454;
-	border-color: #b59454;
+	background-color: #cfb991;
+	border-color: #cfb991;
 	font-weight: bold;
 	text-decoration: none;
+	color: #000;
 }
 .btn-purchase:hover,
 .btn-purchase:focus,
 .btn-purchase:active {
-	color: #000;
-	background-color: #d0a85a;
+	color: #fff;
+	border-color: #8e6f3e;
+	background-color: #8e6f3e;
 	font-weight: bold;
 	text-decoration: none;
 }
@@ -982,7 +989,7 @@ ul.purchases li {
 	margin-bottom: 1em;
 	margin-left: 0;
 	margin-right: 0;
-	border-bottom: 1px solid #98700d;
+	border-bottom: 1px solid #8e6f3e; /*98700d;*/
 }
 .newsleft p a,
 .newsright p a {
@@ -997,7 +1004,7 @@ ul.purchases li {
 	font-size: 0.95em;
 }
 
-/* Software modules */
+/* Software modules 
 .modules div.click {
 	cursor: pointer;
 	padding-left: 3px;
@@ -1055,7 +1062,7 @@ ul.purchases li {
 	height: 16px;
 	margin-bottom: -3px;
 	margin-left: 6px;
-}
+}*/
 
 /* Misc */
 .edit-property {
@@ -1216,9 +1223,9 @@ table.mainTable td.queueColumn {
 	text-align: center;
 	padding: 5px;
 }
-table.mainTable tr:hover td {
+/*table.mainTable tr:hover td {
 	background-color: rgba(207, 181, 59, 0.6); 
-}
+}*/
 table.mainTable th.queueColumnTop {
 	padding: 5px;
 	text-align: center;
@@ -2049,7 +2056,7 @@ h3.downloads {
 	padding-top: 0.5em;
 }
 
-/* Notifications */
+/* Notifications
 .motd_text {
 	padding: 1em;
 	margin: 0 0 2em 0;
@@ -2066,7 +2073,7 @@ h3.downloads {
 .motd_header {
 	font-weight: bold;
 	color: #b29219;
-}
+} */
 
 #add_errors {
 	color: red;
