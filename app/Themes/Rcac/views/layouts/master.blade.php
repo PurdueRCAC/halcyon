@@ -98,14 +98,14 @@
 							<span class="icon-bar"></span> Quick Links
 						</button>
 						<button class="navbar-toggle search right" data-target="#search" data-toggle="collapse" aria-controls="search" type="button">
-							<i class="fa fa-search fa-lg" aria-hidden="true"></i><span class="sr-only">Search</span>
+							<span class="fa fa-search fa-lg" aria-hidden="true"></span><span class="sr-only">Search</span>
 						</button>
 					</div><!-- / .navbar-header -->
 					
 					<div class="collapse navbar-collapse gold justify-content-between">
 						<ul class="nav navbar-nav information">
 							<li class="dropdown">
-								<a class="dropdown-toggle" data-toggle="dropdown" title="Info Menu" href="#find-info-for">Find Info For <b class="caret"></b></a>
+								<a class="dropdown-toggle" data-toggle="dropdown" title="Info Menu" href="#find-info-for">Find Info For <span class="caret"></span></a>
 								<p class="hide">Find Info For</p>
 								<ul class="dropdown-menu" id="find-info-for">
 									<li><a href="http://www.purdue.edu/purdue/academics/">Academics</a></li>
@@ -134,7 +134,7 @@
 					<div class="collapse navbar-collapse right search" id="search">
 						<ul class="nav navbar-nav navbar-right">
 							<li class="dropdown">
-								<a class="dropdown-toggle" data-toggle="dropdown" title="Search Button" href="#search"><i class="fa fa-search fa-lg" aria-hidden="true"></i><span class="sr-only">Search</span></a>
+								<a class="dropdown-toggle" data-toggle="dropdown" title="Search Button" href="#search"><span class="fa fa-search fa-lg" aria-hidden="true"></span><span class="sr-only">Search</span></a>
 								<ul class="dropdown-menu">
 									<li>
 										<div class="form-group">
@@ -172,9 +172,9 @@
 							@if (Auth::check())
 								<li><a href="{{ route('site.users.account') }}">{{ Auth::user()->name }}</a> &nbsp;|&nbsp; <a href="{{ route('logout') }}">{{ trans('theme::rcac.logout') }}</a></li>
 							@else
-								<li><a href="{{ route('login') }}" class="btn btn-secondary btn-inverse"><i class="fa fa-lock" aria-hidden="true"></i> {{ trans('theme::rcac.login') }}</a></li>
+								<li><a href="{{ route('login') }}" class="btn btn-secondary btn-inverse"><span class="fa fa-lock" aria-hidden="true"></span> {{ trans('theme::rcac.login') }}</a></li>
 							@endif
-							<li><a href="{{ route('page', ['uri' => 'help']) }}" class="btn btn-info"><i class="fa fa-question-circle" aria-hidden="true"></i> {{ trans('theme::rcac.get help') }}</a></li>
+							<li><a href="{{ route('page', ['uri' => 'help']) }}" class="btn btn-info"><span class="fa fa-question-circle" aria-hidden="true"></span> {{ trans('theme::rcac.get help') }}</a></li>
 						</ul>
 					</div>
 				</div>
@@ -233,7 +233,7 @@
 					<div class="row panel-group" id="accordion">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerone">Portal <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
+								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerone">Portal <span class="fa fa-plus right" aria-hidden="true"></span><span class="fa fa-minus right" aria-hidden="true"></span></a></h3>
 							</div>
 							<div class="panel-collapse collapse" id="footerone">
 								<div class="panel-body">
@@ -247,7 +247,7 @@
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footertwo"><span class="sr-only">Purdue </span>Services <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
+								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footertwo"><span class="sr-only">Purdue </span>Services <span class="fa fa-plus right" aria-hidden="true"></span><span class="fa fa-minus right" aria-hidden="true"></span></a></h3>
 							</div>
 							<div class="panel-collapse collapse" id="footertwo">
 								<div class="panel-body">
@@ -261,7 +261,7 @@
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerthree">Communication <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
+								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerthree">Communication <span class="fa fa-plus right" aria-hidden="true"></span><span class="fa fa-minus right" aria-hidden="true"></span></a></h3>
 							</div>
 							<div class="panel-collapse collapse" id="footerthree">
 								<div class="panel-body">
@@ -275,7 +275,7 @@
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerfour">University <i class="fa fa-plus right" aria-hidden="true"></i><i class="fa fa-minus right" aria-hidden="true"></i></a></h3>
+								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerfour">University <span class="fa fa-plus right" aria-hidden="true"></span><span class="fa fa-minus right" aria-hidden="true"></span></a></h3>
 							</div>
 							<div class="panel-collapse collapse" id="footerfour">
 								<div class="panel-body">
