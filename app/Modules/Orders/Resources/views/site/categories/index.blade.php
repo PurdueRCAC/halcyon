@@ -122,7 +122,7 @@ app('pathway')
 			@if (auth()->user()->can('create orders.categories'))
 			<p>
 				<a href="{{ route('site.orders.categories.create') }}" class="btn btn-info">
-					<i class="fa fa-plus"></i> {{ trans('orders::orders.create category') }}
+					<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('orders::orders.create category') }}
 				</a>
 			</p>
 			@endif
@@ -183,7 +183,7 @@ app('pathway')
 						<td>
 							@if (auth()->user()->can('delete orders.categories'))
 								<a class="btn text-danger btn-sm category-delete" href="{{ route('site.orders.categories.delete', ['id' => $row->id]) }}" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.orders.categories.delete', ['id' => $row->id]) }}">
-									<i class="fa fa-trash" aria-hidden="true"></i>
+									<span class="fa fa-trash" aria-hidden="true"></span>
 									<span class="sr-only">{{ trans('global.button.delete') }}</span>
 								</a>
 							@endif
@@ -207,8 +207,8 @@ app('pathway')
 							<!-- {{ $row->sequence }} -->
 							@if ($filters['order'] == 'sequence')
 								<span class="draghandle" draggable="true">
-									<i class="fa fa-ellipsis-v" aria-hidde="true"></i>
-									<i class="fa fa-ellipsis-v" aria-hidde="true"></i>
+									<span class="fa fa-ellipsis-v" aria-hidde="true"></span>
+									<span class="fa fa-ellipsis-v" aria-hidde="true"></span>
 									<span class="sr-only">Move</span>
 								</span>
 							@endif

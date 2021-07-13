@@ -1115,7 +1115,7 @@ function IssuesPrintComment(issueid, comment, userid) {
 		var b = document.createElement("button");
 		b.className = 'btn btn-primary';
 		b.id = comment['id'] + "_commenttextsaveicon";
-		b.innerHTML = '<i class="fa fa-save" id="' + comment['id'] + '_commenttextsaveiconimg"></i> Save';
+		b.innerHTML = '<span class="fa fa-save" id="' + comment['id'] + '_commenttextsaveiconimg" aria-hidden="true"></span> Save';
 		b.onclick = function (e) {
 			e.preventDefault();
 			//IssuesPostComment(comment['id']);

@@ -6,7 +6,7 @@
 			<h2>500</h2>
 		</div>
 		<div class="error-body">
-			<h3><i class="fa fa-warning text-red"></i> {{ trans('global.error 500 title') }}</h3>
+			<h3><span class="fa fa-warning text-red" aria-hidden="true"></span> {{ trans('global.error 500 title') }}</h3>
 			<p>{!! trans('global.error 500 description') !!}</p>
 		</div>
 	</div>

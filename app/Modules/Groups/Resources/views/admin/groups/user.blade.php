@@ -70,7 +70,7 @@ function CreateNewGroup() {
 			<div class="col-md-3 text-right">
 				@if (auth()->user()->can('manage groups'))
 				<a class="btn btn-primary float-right add-group" href="{{ route('admin.users.edit', ['id' => $user->id, 'section' => 'groups']) }}">
-					<i class="fa fa-plus-circle"></i> {{ trans('groups::groups.add user to') }}
+					<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('groups::groups.add user to') }}
 				</a>
 				@endif
 			</div>
@@ -91,7 +91,7 @@ function CreateNewGroup() {
 					<div class="row">
 						<div class="col-md-12 text-right">
 							<button type="submit" id="new_group_btn" class="btn btn-success">
-								<i class="fa fa-plus-circle" aria-hidden="true"></i> {{ trans('global.button.create') }}
+								<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('global.button.create') }}
 							</button>
 						</div>
 					</div>

@@ -14,15 +14,15 @@
 			<div class="col-md-2 text-right">
 				@if ($canManage)
 				<a href="{{ route('site.users.account.section', ['section' => 'groups', 'edit' => 'name']) }}" class="edit-property tip" id="EDIT_name_{{ $group->id }}" data-prop="name" data-value="{{ $group->id }}" title="{{ trans('global.edit') }}"><!--
-					--><i class="fa fa-pencil"></i><span class="sr-only">{{ trans('global.edit') }}</span><!--
+					--><span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.edit') }}</span><!--
 				--></a>
 				<a href="{{ route('site.users.account.section', ['section' => 'groups']) }}#save-property" id="SAVE_name_{{ $group->id }}" class="btn save-property tip hide" data-prop="name" data-value="{{ $group->id }}" data-api="{{ route('api.groups.update', ['id' => $group->id]) }}" title="{{ trans('global.save') }}">
 					<span class="spinner-border spinner-border-sm" role="status"></span>
-					<i class="fa fa-save"></i>
+					<span class="fa fa-save" aria-hidden="true"></span>
 					<span class="sr-only">{{ trans('global.save') }}</span>
 				</a>
 				<a href="{{ route('site.users.account.section', ['section' => 'groups']) }}" class="cancel-edit-property tip hide" id="CANCEL_name_{{ $group->id }}" data-prop="name" data-value="{{ $group->id }}" title="{{ trans('global.cancel') }}"><!--
-					--><i class="fa fa-ban"></i><span class="sr-only">{{ trans('global.cancel') }}</span><!--
+					--><span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">{{ trans('global.cancel') }}</span><!--
 				--></a>
 				@endif
 			</div>
@@ -41,12 +41,12 @@
 					<a href="#departments"
 						class="edit edit-categories edit-hide tip"
 						title="{{ trans('global.button.edit') }}">
-						<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>
+						<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
 					</a>
 					<a href="#departments"
 						class="cancel cancel-categories edit-show hide tip"
 						title="{{ trans('global.button.cancel') }}">
-						<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.cancel') }}</span>
+						<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.cancel') }}</span>
 					</a>
 				@endif
 			</div>
@@ -75,7 +75,7 @@
 									title="{{ trans('global.button.delete') }}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}"
 									data-api="{{ route('api.groups.groupdepartments.delete', ['group' => $group->id, 'id' => $dept->id]) }}">
-									<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.delete') }}</span>
+									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
 								</a>
 							@endif
 						</div>
@@ -97,7 +97,7 @@
 							title="{{ trans('global.button.delete') }}"
 							data-api="{{ route('api.groups.groupdepartments.create', ['group' => $group->id]) }}/{id}"
 							data-confirm="{{ trans('groups::groups.confirm delete') }}">
-							<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.delete') }}</span>
+							<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
 						</a>
 					</div>
 				</div>
@@ -127,7 +127,7 @@
 							data-row="#new-department-row"
 							data-group="{{ $group->id }}"
 							data-api="{{ route('api.groups.groupdepartments.create', ['group' => $group->id]) }}">
-							<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.add') }}</span>
+							<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.add') }}</span>
 						</a>
 					</div>
 				</div>
@@ -148,7 +148,7 @@
 						class="delete delete-department remove-category"
 						data-confirm="{{ trans('groups::groups.confirm delete') }}"
 						data-api="{{ route('api.groups.groupdepartments.create', ['group' => $group->id]) }}/{id}">
-						<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
+						<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
 					</a>
 				</div>
 			</div>
@@ -167,12 +167,12 @@
 					<a href="#fieldofscience"
 						class="edit edit-categories edit-hide tip"
 						title="{{ trans('global.button.edit') }}">
-						<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>
+						<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
 					</a>
 					<a href="#fieldofscience"
 						class="cancel cancel-categories edit-show hide tip"
 						title="{{ trans('global.button.cancel') }}">
-						<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.cancel') }}</span>
+						<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.cancel') }}</span>
 					</a>
 				@endif
 			</div>
@@ -197,7 +197,7 @@
 									title="{{ trans('global.button.delete') }}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}"
 									data-api="{{ route('api.groups.groupfieldsofscience.delete', ['group' => $group->id, 'id' => $field->id]) }}">
-									<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.delete') }}</span>
+									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
 								</a>
 							@endif
 						</div>
@@ -219,7 +219,7 @@
 							title="{{ trans('global.button.delete') }}"
 							data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $group->id]) }}/{id}"
 							data-confirm="{{ trans('groups::groups.confirm delete') }}">
-							<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.delete') }}</span>
+							<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
 						</a>
 					</div>
 				</div>
@@ -246,7 +246,7 @@
 							title="{{ trans('global.button.add') }}"
 							data-row="#new-fieldofscience-row"
 							data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $group->id]) }}">
-							<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.add') }}</span>
+							<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.add') }}</span>
 						</a>
 					</div>
 				</div>
@@ -267,7 +267,7 @@
 						class="delete delete-fieldofscience remove-category"
 						data-confirm="{{ trans('groups::groups.confirm delete') }}"
 						data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $group->id]) }}/{id}">
-						<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.delete') }}</span>
+						<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.delete') }}</span>
 					</a>
 				</div>
 			</div>
@@ -281,14 +281,14 @@
 			<div class="col col-md-6">
 				Unix Groups
 				@if ($canManage)
-					<a href="#box2_{{ $group->id }}" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a>
+					<a href="#box2_{{ $group->id }}" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a>
 				@endif
 			</div>
 			<div class="col col-md-6 text-right">
 				@if ($canManage)
 					@if (count($group->unixgroups) > 0)
 						<a href="#new-unixgroup_{{ $group->id }}" class="btn btn-default btn-sm add-unix-group help">
-							<i class="fa fa-plus-circle" aria-hidden="true"></i> Add New Unix Group
+							<span class="fa fa-plus-circle" aria-hidden="true"></span> Add New Unix Group
 						</a>
 					@endif
 				@endif
@@ -300,7 +300,7 @@
 			<div class="card-body panel-body">
 				<?php //if ($group->unixgroup) { ?>
 					<div class="form-inline row">
-						<label class="col-md-3" for="INPUT_unixgroup_{{ $group->id }}">Base Name: <a href="#box1_{{ $group->id }}" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a></label>
+						<label class="col-md-3" for="INPUT_unixgroup_{{ $group->id }}">Base Name: <a href="#box1_{{ $group->id }}" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a></label>
 
 						<div class="col-md-5">
 							<span id="SPAN_unixgroup_{{ $group->id }}">{{ $group->unixgroup ? $group->unixgroup : trans('global.none') }}</span>
@@ -309,22 +309,22 @@
 						<div class="col-md-4 text-right">
 							@if ($canManage)
 							<a href="{{ route('site.users.account.section', ['section' => 'groups']) }}#edit-property" id="EDIT_unixgroup_{{ $group->id }}" class="btn edit-property tip" data-prop="unixgroup" data-value="{{ $group->id }}" title="{{ trans('global.edit') }}"><!--
-								--><i class="fa fa-pencil" id="IMG_unixgroup_{{ $group->id }}"></i><span class="sr-only">{{ trans('global.edit') }}</span><!--
+								--><span class="fa fa-pencil" id="IMG_unixgroup_{{ $group->id }}"></span><span class="sr-only">{{ trans('global.edit') }}</span><!--
 							--></a>
 							<a href="{{ route('site.users.account.section', ['section' => 'groups']) }}#save-property" id="SAVE_unixgroup_{{ $group->id }}" class="btn save-property tip hide" data-prop="unixgroup" data-value="{{ $group->id }}" data-api="{{ route('api.groups.update', ['id' => $group->id]) }}" data-reload="true" title="{{ trans('global.save') }}">
 								<span class="spinner-border spinner-border-sm" role="status"></span>
-								<i class="fa fa-save"></i>
+								<span class="fa fa-save"></span>
 								<span class="sr-only">{{ trans('global.save') }}</span>
 							</a>
 							<a href="{{ route('site.users.account.section', ['section' => 'groups']) }}#cancel-property" id="CANCEL_unixgroup_{{ $group->id }}" class="btn cancel-edit-property tip hide" data-prop="unixgroup" data-value="{{ $group->id }}" title="{{ trans('global.cancel') }}"><!--
-								--><i class="fa fa-ban"></i><span class="sr-only">{{ trans('global.cancel') }}</span><!--
+								--><span class="fa fa-ban"></span><span class="sr-only">{{ trans('global.cancel') }}</span><!--
 							--></a>
 							@endif
 						</div>
 					</div>
 				<?php /*} else { ?>
 					<div class="form-inline row">
-						<label class="col-md-3" for="INPUT_unixgroup_{{ $group->id }}">Base Name: <a href="#box1_{{ $group->id }}" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a></label>
+						<label class="col-md-3" for="INPUT_unixgroup_{{ $group->id }}">Base Name: <a href="#box1_{{ $group->id }}" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a></label>
 						<div class="col-md-9">
 							<?php echo $group->unixgroup ? $group->unixgroup : '<span class="text-muted">' . trans('global.none') . '</span>'; ?>
 						</div>
@@ -374,7 +374,7 @@
 				<tfoot>
 					<tr>
 						<td colspan="5" class="text-right">
-							<button class="btn btn-sm reveal" data-toggle=".extendedinfo" data-text="<i class='fa fa-eye-slash'></i> Hide Extended Info</button>"><i class="fa fa-eye"></i> Show Extended Info</button>
+							<button class="btn btn-sm reveal" data-toggle=".extendedinfo" data-text="<span class='fa fa-eye-slash'></span> Hide Extended Info</button>"><span class="fa fa-eye"></span> Show Extended Info</button>
 						</td>
 					</tr>
 				</tfoot>
@@ -393,7 +393,7 @@
 										data-value="{{ $group->id }}"
 										data-api="{{ route('api.unixgroups.delete', ['id' => $unixgroup->id]) }}"
 										data-confirm="{{ trans('groups::groups.confirm delete') }}"><!--
-										--><i class="fa fa-trash"></i><span class="sr-only">{{ trans('global.delete') }}</span><!--
+										--><span class="fa fa-trash"></span><span class="sr-only">{{ trans('global.delete') }}</span><!--
 									--></a>
 								@endif
 							</td>
@@ -411,7 +411,7 @@
 								class="delete delete-unix-group remove-unixgroup"
 								data-api="{{ route('api.unixgroups.create') }}/{id}"
 								data-confirm="{{ trans('groups::groups.confirm delete') }}"><!--
-								--><i class="fa fa-trash"></i><span class="sr-only">{{ trans('global.delete') }}</span><!--
+								--><span class="fa fa-trash"></span><span class="sr-only">{{ trans('global.delete') }}</span><!--
 							--></a>
 						</td>
 					</tr>

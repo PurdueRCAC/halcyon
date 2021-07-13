@@ -39,11 +39,11 @@ app('pathway')->append(
 @section('content')
 <div class="contentInner col-lg-12 col-md-12 col-sm-12 col-xs-12">
 <ul class="status-legend mb-5">
-	<li><span class="text-success"><i class="fa fa-check" aria-hidden="true"></i></span> {{ trans('status::status.option.operational') }}</li>
-	<li><span class="text-info"><i class="fa fa-wrench" aria-hidden="true"></i></span> {{ trans('status::status.option.maintenance') }}</li>
-	<li><span class="text-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span> {{ trans('status::status.option.impaired') }}</li>
-	<li><span class="text-danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> {{ trans('status::status.option.down') }}</li>
-	<li><span class="text-secondary"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></span> {{ trans('status::status.option.offline') }}</li>
+	<li><span class="text-success"><span class="fa fa-check" aria-hidden="true"></span></span> {{ trans('status::status.option.operational') }}</li>
+	<li><span class="text-info"><span class="fa fa-wrench" aria-hidden="true"></span></span> {{ trans('status::status.option.maintenance') }}</li>
+	<li><span class="text-warning"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span></span> {{ trans('status::status.option.impaired') }}</li>
+	<li><span class="text-danger"><span class="fa fa-exclamation-circle" aria-hidden="true"></span></span> {{ trans('status::status.option.down') }}</li>
+	<li><span class="text-secondary"><span class="fa fa-ellipsis-h" aria-hidden="true"></span></span> {{ trans('status::status.option.offline') }}</li>
 </ul>
 
 @foreach ($restypes as $restype)
@@ -80,29 +80,29 @@ app('pathway')->append(
 							<div class="card-status col-sm-3 col-md-3 text-right">
 								@if ($resource->hasNews)
 									<span class="tip text-<?php echo $resource->hasNews == 'outage' ? 'danger' : 'info'; ?>" title="{{ trans('status::status.has announcements') }}">
-										<i class="fa fa-<?php echo $resource->hasNews == 'outage' ? 'exclamation-circle' : 'wrench'; ?>" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.has announcements') }}</span>
+										<span class="fa fa-<?php echo $resource->hasNews == 'outage' ? 'exclamation-circle' : 'wrench'; ?>" aria-hidden="true"></span><span class="sr-only">{{ trans('status::status.has announcements') }}</span>
 									</span>
 								@endif
 
 								@if ($resource->status == 'impaired')
 									<span class="item-status text-warning tip" title="{{ trans('status::status.state.warning') }}">
-										<i id="{{ $resource->id }}_icon" class="fa fa-exclamation-triangle" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.impaired') }}</span>
+										<span id="{{ $resource->id }}_icon" class="fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only">{{ trans('status::status.state.impaired') }}</span>
 									</span>
 								@elseif ($resource->status == 'down')
 									<span class="item-status text-danger tip" title="{{ trans('status::status.state.down') }}">
-										<i id="{{ $resource->id }}_icon" class="fa fa-exclamation-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.down') }}</span>
+										<span id="{{ $resource->id }}_icon" class="fa fa-exclamation-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('status::status.state.down') }}</span>
 									</span>
 								@elseif ($resource->status == 'maintenance')
 									<span class="item-status text-info tip" title="{{ trans('status::status.state.maintenance') }}">
-										<i id="{{ $resource->id }}_icon" class="fa fa-wrench" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.maintenance') }}</span>
+										<span id="{{ $resource->id }}_icon" class="fa fa-wrench" aria-hidden="true"></span><span class="sr-only">{{ trans('status::status.state.maintenance') }}</span>
 									</span>
 								@elseif ($resource->status == 'offline')
 									<span class="item-status text-secondary tip" title="{{ trans('status::status.state.offline') }}">
-										<i id="{{ $resource->id }}_icon" class="fa fa-ellipsis-h" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.offline') }}</span>
+										<span id="{{ $resource->id }}_icon" class="fa fa-ellipsis-h" aria-hidden="true"></span><span class="sr-only">{{ trans('status::status.state.offline') }}</span>
 									</span>
 								@else
 									<span class="item-status text-success tip" title="{{ trans('status::status.state.operational') }}">
-										<i id="{{ $resource->id }}_icon" class="fa fa-check" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.operational') }}</span>
+										<span id="{{ $resource->id }}_icon" class="fa fa-check" aria-hidden="true"></span><span class="sr-only">{{ trans('status::status.state.operational') }}</span>
 									</span>
 								@endif
 							</div>
@@ -155,15 +155,15 @@ app('pathway')->append(
 											<div class="col-sm-2 col-md-2 text-right">
 												@if ($status == 'warning')
 													<span class="text-warning tip" title="{{ trans('status::status.state.impaired') }}">
-														<i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.impaired') }}</span>
+														<span class="fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only">{{ trans('status::status.state.impaired') }}</span>
 													</span>
 												@elseif ($status == 'danger')
 													<span class="text-danger tip" title="{{ trans('status::status.state.down') }}">
-														<i class="fa fa-exclamation-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.down') }}</span>
+														<span class="fa fa-exclamation-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('status::status.state.down') }}</span>
 													</span>
 												@else
 													<span class="text-success tip" title="{{ trans('status::status.state.operational') }}">
-														<i class="fa fa-check" aria-hidden="true"></i><span class="sr-only">{{ trans('status::status.state.operational') }}</span>
+														<span class="fa fa-check" aria-hidden="true"></span><span class="sr-only">{{ trans('status::status.state.operational') }}</span>
 													</span>
 												@endif
 											</div>
@@ -191,12 +191,12 @@ app('pathway')->append(
 												<span class="value text-nowrap status-operational">
 													@if ($stts)
 														<span class="text-success tip" title="{{ trans('status::status.state.operational') }}">
-															<i class="fa fa-check" aria-hidden="true"></i>
+															<span class="fa fa-check" aria-hidden="true"></span>
 															<span class="sr-only">{{ trans('status::status.state.operational') }}</span>
 														</span>
 													@else
 														<span class="text-danger tip" title="{{ trans('status::status.state.down') }}">
-															<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+															<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
 															<span class="sr-only">{{ trans('status::status.state.down') }}</span>
 														</span>
 													@endif
@@ -237,7 +237,7 @@ app('pathway')->append(
 									<ul class="list-unstyled pl-0" id="section-{{ $k }}-news-details">
 										@if ($typ == 'outage')
 											<li><!-- class="mt-2 d-flex align-items-center justify-content-between">-->
-												<i class="fa fa-link" aria-hidden="true"></i> <a href="#news{{ $ns->id }}">{!! $ns->headline !!}</a>
+												<span class="fa fa-link" aria-hidden="true"></span> <a href="#news{{ $ns->id }}">{!! $ns->headline !!}</a>
 											</li>
 										@else
 											<?php
@@ -344,7 +344,7 @@ app('pathway')->append(
 									@elseif ($article->isTomorrow())
 										<span class="badge">{{ trans('news::news.tomorrow') }}</span>
 									@endif
-									<i class="fa fa-fw fa-clock-o" aria-hidden="true"></i>
+									<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span>
 									<time datetime="{{ $article->datetimenews }}">
 										{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
 									</time>
@@ -355,7 +355,7 @@ app('pathway')->append(
 										->first();
 									?>
 									@if ($lastupdate)
-										<span class="badge badge-warning"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Updated {{ $lastupdate->datetimecreated->format('h:m') }} {{ $lastupdate->datetimecreated->format('M d, Y') }}</span>
+										<span class="badge badge-warning"><span class="fa fa-exclamation-circle" aria-hidden="true"></span> Updated {{ $lastupdate->datetimecreated->format('h:m') }} {{ $lastupdate->datetimecreated->format('M d, Y') }}</span>
 									@endif
 
 									<?php
@@ -370,7 +370,7 @@ app('pathway')->append(
 											}
 											$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->resource->name)]) . '">' . $resource->resource->name . '</a>';
 										}
-										echo '<br /><i class="fa fa-fw fa-tags" aria-hidden="true"></i> ' .  implode(', ', $resourceArray);
+										echo '<br /><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray);
 									}
 									?>
 								</p>
@@ -395,13 +395,13 @@ app('pathway')->append(
 				</div>
 				<div class="col-md-6 text-right">
 					<div class="btn-group" role="group" aria-label="Options">
-						<a target="_blank" class="btn" href="{{ route('site.news.feed', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}"><i class="fa fa-rss-square" aria-hidden="true"></i><span class="sr-only">RSS Feed</span></a>
+						<a target="_blank" class="btn" href="{{ route('site.news.feed', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}"><span class="fa fa-rss-square" aria-hidden="true"></span><span class="sr-only">RSS Feed</span></a>
 						@if ($type->calendar)
 							<a target="_blank" class="btn calendar calendar-subscribe" href="{{ preg_replace('/^https?:\/\//', 'webcal://', route('site.news.calendar', ['name' => strtolower($type->name)])) }}" title="Subscribe to calendar"><!--
-								--><i class="fa fa-fw fa-calendar" aria-hidden="true"></i><span class="sr-only">Subscribe</span><!--
+								--><span class="fa fa-fw fa-calendar" aria-hidden="true"></span><span class="sr-only">Subscribe</span><!--
 							--></a>
 							<a target="_blank" class="btn calendar calendar-download" href="{{ route('site.news.calendar', ['name' => strtolower($type->name)]) }}" title="Download calendar"><!--
-								--><i class="fa fa-fw fa-download" aria-hidden="true"></i><span class="sr-only">Download</span><!--
+								--><span class="fa fa-fw fa-download" aria-hidden="true"></span><span class="sr-only">Download</span><!--
 							--></a>
 						@endif
 					</div>
@@ -446,7 +446,7 @@ app('pathway')->append(
 									</h4>
 								</div>
 								<div class="card-body news-body">
-									<i class="fa fa-fw fa-clock-o" aria-hidden="true"></i> <time datetime="{{ $news->datetimenews->format('Y-m-d h:i:s') }}">{{ $news->formatDate($news->datetimenews, $news->datetimenewsend) }}</time>
+									<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span> <time datetime="{{ $news->datetimenews->format('Y-m-d h:i:s') }}">{{ $news->formatDate($news->datetimenews, $news->datetimenewsend) }}</time>
 
 									@if ($news->isToday())
 										@if ($news->isNow())
@@ -459,10 +459,10 @@ app('pathway')->append(
 									@endif
 
 									@if ($news->location)
-										<br /><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> {{ $news->location }}
+										<br /><span class="fa fa-fw fa-map-marker" aria-hidden="true"></span> {{ $news->location }}
 									@endif
 									@if ($news->url)
-										<br /><i class="fa fa-fw fa-link" aria-hidden="true"></i> <a href="{{ $news->url }}">{{ $news->url }}</a>
+										<br /><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="{{ $news->url }}">{{ $news->url }}</a>
 									@endif
 
 									<?php
@@ -471,7 +471,7 @@ app('pathway')->append(
 										foreach ($news->resources as $resource):
 											$resourceArray[] = '<a href="/news/' . strtolower($resource->resource->name) . '/">' . $resource->resource->name . '</a>';
 										endforeach;
-										echo '<p><i class="fa fa-fw fa-tags" aria-hidden="true"></i> ' .  implode(', ', $resourceArray) . '</p>';
+										echo '<p><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray) . '</p>';
 									endif;
 									?>
 

@@ -1,7 +1,7 @@
 
 <div class="card text-center">
 	<div class="card-header text-success">
-		<i class="fa fa-check" aria-hidden="true"></i>
+		<span class="fa fa-check" aria-hidden="true"></span>
 	</div>
 	<div class="card-body">
 		<p><strong>Thank you for contacting us.</strong></p>

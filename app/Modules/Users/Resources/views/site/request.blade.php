@@ -62,7 +62,7 @@ $active = $sections->firstWhere('active', '=', true);
 								<select name="newuser" id="newuser" class="form-control searchuser"></select> -->
 								<span class="input-group-append">
 									<span class="input-group-text">
-										<i class="fa fa-search" aria-hidden="true" id="add_button_a"></i>
+										<span class="fa fa-search" aria-hidden="true" id="add_button_a"></span>
 									</span>
 								</span>
 							</div>
@@ -85,7 +85,7 @@ $active = $sections->firstWhere('active', '=', true);
 							</div>
 							<div class="col col-sm-12 col-md-4">
 								<a href="{{ route('site.users.account.request') }}" class="request-clear btn" title="Choose another person.">
-									<i class="fa fa-undo" aria-hidden="true"></i> Change selection
+									<span class="fa fa-undo" aria-hidden="true"></span> Change selection
 								</a>
 							</div>
 						</div>
@@ -104,7 +104,7 @@ $active = $sections->firstWhere('active', '=', true);
 							</div>
 							<div class="col col-sm-12 col-md-4">
 								<a href="{{ route('site.users.account.request') }}" class="request-clear btn" title="Choose another group.">
-									<i class="fa fa-undo" aria-hidden="true"></i> Change selection
+									<span class="fa fa-undo" aria-hidden="true"></span> Change selection
 								</a>
 							</div>
 						</div>

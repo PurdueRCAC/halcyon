@@ -140,12 +140,12 @@ jQuery(document).ready(function($){
 					@if ($row->restricteddata)
 						<!-- <span class="badge badge-success">{{ trans('global.yes') }}</span> -->
 						<span class="icn">
-							<i class="fa fa-check"></i> {{ trans('global.yes') }}
+							<span class="fa fa-check" aria-hidden="true"></span> {{ trans('global.yes') }}
 						</span>
 					@else
 						<!-- <span class="badge badge-danger">{{ trans('global.no') }}</span> -->
 						<span class="icn unknown">
-							<i class="fa fa-minus"></i> {{ trans('global.yes') }}
+							<span class="fa fa-minus" aria-hidden="true"></span> {{ trans('global.yes') }}
 						</span>
 					@endif
 				</td>

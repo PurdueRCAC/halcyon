@@ -268,7 +268,9 @@
 		<div class="card-header panel-heading">
 			<div class="card-title">
 				Storage Spaces
-				<a href="#storagespacehelp" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a>
+				<a href="#storagespacehelp" class="help icn tip" title="Help">
+					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+				</a>
 			</div>
 		</div>
 		<div class="card-body panel-body">
@@ -360,7 +362,7 @@
 								</td>
 								<td class="text-center">
 									<a href="#{{ $dir->id }}_dialog" class="details updatequota tip" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}" data-id="{{ $dir->id }}" title="Update usage now"><!--
-									--><i class="fa fa-undo updater" aria-hidden="true"></i><!--
+									--><span class="fa fa-undo updater" aria-hidden="true"></span><!--
 									--><span class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only">Loading...</span></span><!--
 									--><span class="sr-only">Update usage now</span><!--
 								--></a>
@@ -393,10 +395,10 @@
 			<div class="row">
 				<div class="col col-md-6 card-title">
 					Storage Alerts
-					<a href="#storagealerthelp" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span></a>
+					<a href="#storagealerthelp" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a>
 				</div>
 				<div class="col col-md-6 align-right">
-					<button class="btn btn-default btn-sm accountsbtn" id="create-newalert"><i class="fa fa-plus-circle" aria-hidden="true"></i> Create New Alert</button>
+					<button class="btn btn-default btn-sm accountsbtn" id="create-newalert"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Alert</button>
 				</div>
 			</div>
 		</div>
@@ -497,7 +499,7 @@
 									<?php if ($user->id == auth()->user()->id || auth()->user()->can('manage users')) { ?>
 										<td class="text-right">
 											<a href="#<?php echo $not->id; ?>_not_dialog" class="details tip" title="{{ trans('global.button.edit') }}"><!--
-												--><i class="fa fa-pencil"></i><span class="sr-only">{{ trans('global.button.edit') }}</span><!--
+												--><span class="fa fa-pencil"></span><span class="sr-only">{{ trans('global.button.edit') }}</span><!--
 											--></a>
 										</td>
 										<td class="text-right">
@@ -507,7 +509,7 @@
 												data-id="{{ $not->id }}"
 												data-api="{{ route('api.storage.notifications.delete', ['id' => $not->id]) }}"
 												data-confirm="Are you sure you wish to delete this notification?"><!--
-												--><i class="fa fa-trash"></i><span class="sr-only">{{ trans('global.button.delete') }}</span><!--
+												--><span class="fa fa-trash"></span><span class="sr-only">{{ trans('global.button.delete') }}</span><!--
 											--></a>
 										</td>
 									<?php } ?>
@@ -686,11 +688,11 @@
 				<div class="col col-md-6 card-title">
 					Storage Usage Reports
 					<a href="#storageusagehelp" class="help icn tip" title="Help">
-						<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span>
+						<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 					</a>
 				</div>
 				<div class="col col-md-6 align-right">
-					<button class="btn btn-default btn-sm accountsbtn" id="create-newreport"><i class="fa fa-plus-circle" aria-hidden="true"></i> Create New Usage Report</button>
+					<button class="btn btn-default btn-sm accountsbtn" id="create-newreport"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Usage Report</button>
 				</div>
 			</div>
 		</div>
@@ -781,7 +783,7 @@
 								<?php if ($user->id == auth()->user()->id || auth()->user()->can('manage storage')) { ?>
 									<td class="text-right">
 										<a href="#<?php echo $not->id; ?>_not_dialog" class="details tip" title="Edit usage report"><!--
-											--><i class="fa fa-pencil"></i><span class="sr-only">Edit</span><!--
+											--><span class="fa fa-pencil"></span><span class="sr-only">Edit</span><!--
 										--></a>
 									</td>
 									<td class="text-right">
@@ -791,7 +793,7 @@
 											data-id="<?php echo $not->id; ?>"
 											data-api="{{ route('api.storage.notifications.delete', ['id' => $not->id]) }}"
 											data-confirm="Are you sure you wish to delete this report?"><!--
-											--><i class="fa fa-trash"></i><span class="sr-only">{{ trans('global.button.delete') }}</span><!--
+											--><span class="fa fa-trash"></span><span class="sr-only">{{ trans('global.button.delete') }}</span><!--
 										--></a>
 									</td>
 								<?php } ?>

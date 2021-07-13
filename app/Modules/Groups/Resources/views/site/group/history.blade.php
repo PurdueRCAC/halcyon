@@ -307,7 +307,7 @@ if (count($l))
 					<td>
 						@if (substr($log->status, 0, 1) != '2')
 							<span class="tip text-warning" title="An error occurred while performing this action. Action may not have completed.">
-								<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+								<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
 								<span class="sr-only">An error occurred while performing this action. Action may not have completed.</span>
 							</span>
 						@endif

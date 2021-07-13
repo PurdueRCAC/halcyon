@@ -62,7 +62,7 @@ $(document).ready(function() {
 				</select>
 				<span class="input-group-append">
 					<button type="submit" class="btn input-group-text">
-						<i class="fa fa-search" id="add_button_a" aria-hidden="true"></i>
+						<span class="fa fa-search" id="add_button_a" aria-hidden="true"></span>
 						<span class="sr-only">Search</span>
 					</button>
 				</span>

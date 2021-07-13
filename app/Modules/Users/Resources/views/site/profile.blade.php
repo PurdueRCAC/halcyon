@@ -144,7 +144,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 					<p>
 						<strong>Login Shell</strong>
 						<a href="#box1_account" class="help icn tip" title="Help">
-							<i class="fa fa-question-circle" aria-hidden="true"></i> Help
+							<span class="fa fa-question-circle" aria-hidden="true"></span> Help
 						</a>
 						<br />
 						@if ($user->loginShell === false)
@@ -154,7 +154,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 
 							@if (!preg_match("/acmaint/", $user->loginShell))
 								<a href="#loginshell" id="edit-loginshell" class="edit-hide property-edit" data-prop="loginshell">
-									<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit</span>
+									<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span>
 								</a>
 								<div id="loginshell" class="edit-show hide">
 									<div class="form-group">
@@ -187,10 +187,10 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 											</select>
 											<span class="input-group-append">
 												<a href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}" data-api="{{ route('api.users.update', ['id' => $user->id]) }}" class="btn input-group-text text-success property-save" title="Save">
-													<i class="fa fa-save" aria-hidden="true"></i><span class="sr-only">Save</span>
+													<span class="fa fa-save" aria-hidden="true"></span><span class="sr-only">Save</span>
 												</a>
 												<a href="#edit-loginshell" class="btn input-group-text text-danger property-cancel" title="Cancel">
-													<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">Cancel</span>
+													<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">Cancel</span>
 												</a>
 											</span>
 										</span>
@@ -219,7 +219,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 								<li class="list-group-item">
 									<div class="row">
 										<div class="col-md-1">
-											<i class="fa fa-desktop"></i>
+											<span class="fa fa-desktop"></span>
 										</div>
 										<div class="col-md-11">
 											<div class="session-ip card-title">
@@ -392,7 +392,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 						</div>
 						<div class="col-md-3 text-right">
 							<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm">
-								<i class="fa fa-pencil" aria-hidden="true"></i> Manage Roles
+								<span class="fa fa-pencil" aria-hidden="true"></span> Manage Roles
 							</a>
 						</div>
 					</div>

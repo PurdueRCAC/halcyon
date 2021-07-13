@@ -4,7 +4,7 @@
 			<div class="panel-heading news-admin">
 				<span class="newsid">#{{ id }}</span>
 				<a class="edit news-update-delete" href="/news/manage?delete&amp;update=121" id="121_deleteicon" title="Delete update." v-if="canDelete">
-					<i class="fa fa-x" aria-hidden="true"></i>
+					<span class="fa fa-x" aria-hidden="true"></span>
 					Delete
 				</a>
 			</div>

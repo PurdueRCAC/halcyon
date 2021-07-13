@@ -1096,7 +1096,7 @@ __p += '\n\n<div class=\'option\' data-rv-each-option=\'model.' +
 ((__t = ( Formbuilder.options.mappings.OPTIONS )) == null ? '' : __t) +
 '\'>\n  <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n  <input type="text" data-rv-input="option:label" class=\'option-label-input\' placeholder="Label" />\n  <input type="text" data-rv-input="option:value" class=\'option-value-input\' placeholder="Value (if different than label)" />\n  <input type="text" data-rv-input="option:dependents" class=\'option-dependents-input\' placeholder="Dependent fields" />\n  <a class="js-remove-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Remove Option"><i class=\'fa fa-minus-circle\'></i></a>\n</div>\n\n';
+'" title="Remove Option">class=\'fa fa-minus-circle\'></i></a>\n</div>\n\n';
  if (typeof includeOther !== 'undefined'){;
 __p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_OTHER )) == null ? '' : __t) +
@@ -1259,9 +1259,9 @@ this["Formbuilder"]["templates"]["view/duplicate_remove"] = function(obj) {
   with (obj) {
     __p += '<div class=\'actions-wrapper\'>\n  <a class="js-duplicate ' +
       ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-      '" title="Duplicate Field"><i class=\'fa fa-plus-circle\'></i></a>\n  <a class="js-clear ' +
+      '" title="Duplicate Field"><span class=\'fa fa-plus-circle\' aria-hidden=\'true\'></span></a>\n  <a class="js-clear ' +
       ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-      '" title="Remove Field"><i class=\'fa fa-minus-circle\'></i></a>\n</div>';
+      '" title="Remove Field"><span class=\'fa fa-minus-circle\' aria-hidden=\'true\'></span></a>\n</div>';
   }
   return __p
 };

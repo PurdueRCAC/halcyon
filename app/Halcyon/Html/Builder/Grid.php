@@ -278,7 +278,7 @@ class Grid
 		// Load the behavior.
 		//self::behavior();
 
-		$href = '<a href="#" data-rows="' . (count($rows) - 1) . '" data-task="' . $task . '" class="grid-order-save ' . $cls . '" title="' . trans('global.save order') . '"><i class="fa fa-save"></i></a>';
+		$href = '<a href="#" data-rows="' . (count($rows) - 1) . '" data-task="' . $task . '" class="grid-order-save ' . $cls . '" title="' . trans('global.save order') . '"><span class="fa fa-save" aria-hidden="true"></span></a>';
 
 		return $href;
 	}
@@ -611,8 +611,8 @@ class Grid
 		}
 
 		$states = array(
-			1 => array('unsetDefault', 'global.default', 'global.unset default', 'global.default', false, 'default', 'default', 'text' => '<i class="fa fa-star"></i>'),
-			0 => array('setDefault', '', 'global.set default', '', false, 'notdefault', 'notdefault', 'text' => '<i class="fa fa-star"></i>'),
+			1 => array('unsetDefault', 'global.default', 'global.unset default', 'global.default', false, 'default', 'default', 'text' => '<span class="fa fa-star" aria-hidden="true"></span>'),
+			0 => array('setDefault', '', 'global.set default', '', false, 'notdefault', 'notdefault', 'text' => '<span class="fa fa-star" aria-hidden="true"></span>'),
 		);
 
 		return self::state($states, $value, $i, $prefix, $enabled, true, $checkbox);

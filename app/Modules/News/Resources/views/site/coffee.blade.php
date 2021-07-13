@@ -148,7 +148,7 @@
 				<?php } ?>
 			</p>
 			<p class="newsheader">
-				<i class="fa fa-fw fa-clock-o" aria-hidden="true"></i> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
+				<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
 				<?php
 				$news_start = new DateTime($event->datetimenews);
 				$news_end = new DateTime($event->datetimenewsend);

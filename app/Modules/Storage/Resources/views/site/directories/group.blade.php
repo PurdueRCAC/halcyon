@@ -784,7 +784,7 @@
 							</div>
 							<div class="col-md-1 text-right">
 								<a href="#{{ $dir->id }}_dialog" class="details updatequota tip" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}" data-id="{{ $dir->id }}" title="Update usage now"><!--
-								--><i class="fa fa-undo updater" aria-hidden="true"></i><!--
+								--><span class="fa fa-undo updater" aria-hidden="true"></span><!--
 								--><span class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only">Loading...</span></span><!--
 								--><span class="sr-only">Update usage now</span><!--
 							--></a>
@@ -1166,15 +1166,15 @@
 									<tr>
 										<td>
 											@if ($message->status == 'completed')
-												<i class="fa fa-check text-success tip" aria-hidden="true" title="{{ trans('messages::messages.' . $message->status) }}"></i>
+												<span class="fa fa-check text-success tip" aria-hidden="true" title="{{ trans('messages::messages.' . $message->status) }}"></span>
 											@elseif ($message->status == 'error')
-												<i class="fa fa-exclamation-circle text-danger tip" aria-hidden="true" title="{{ trans('messages::messages.' . $message->status) }}"></i>
+												<span class="fa fa-exclamation-circle text-danger tip" aria-hidden="true" title="{{ trans('messages::messages.' . $message->status) }}"></span>
 											@elseif ($message->status == 'deferred')
-												<i class="fa fa-clock tip" aria-hidden="true" title="{{ trans('messages::messages.' . $message->status) }}"></i>
+												<span class="fa fa-clock tip" aria-hidden="true" title="{{ trans('messages::messages.' . $message->status) }}"></span>
 											@elseif ($message->status == 'running')
-												<i class="fa fa-heartbeat text-warning tip" aria-hidden="true" title="{{ trans('messages::messages.' . $message->status) }}"></i>
+												<span class="fa fa-heartbeat text-warning tip" aria-hidden="true" title="{{ trans('messages::messages.' . $message->status) }}"></span>
 											@elseif ($message->status == 'queued')
-												<i class="fa fa-ellipsis-h text-info tip" aria-hidden="true" title="{{ trans('messages::messages.' . $message->status) }}"></i>
+												<span class="fa fa-ellipsis-h text-info tip" aria-hidden="true" title="{{ trans('messages::messages.' . $message->status) }}"></span>
 											@endif
 											<span class="sr-only">{{ trans('messages::messages.' . $message->status) }}</span>
 										</td>
@@ -1233,7 +1233,7 @@
 
 							<div id="error_unixgroup" class="alert alert-danger hide"></div>
 						@else
-							{{ $group->unixgroup }} <i class="fa fa-check text-success" aria-hidden="true"></i>
+							{{ $group->unixgroup }} <span class="fa fa-check text-success" aria-hidden="true"></span>
 						@endif
 					</div>
 				</div>
@@ -1270,7 +1270,7 @@
 							<p>This process may take several minutes. Please do not close the page.</p>
 						</div>
 					@else
-						Create Unix groups <i class="fa fa-check text-success" aria-hidden="true"></i>
+						Create Unix groups <span class="fa fa-check text-success" aria-hidden="true"></span>
 					@endif
 					</div>
 				</div>

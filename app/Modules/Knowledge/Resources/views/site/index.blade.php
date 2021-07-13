@@ -55,7 +55,7 @@
 		@if (auth()->user() && auth()->user()->can('edit knowledge'))
 		<div class="edit-controls">
 			<a href="#page-form{{ $page->id }}" data-id="{{ $page->id }}" class="edit btn tip" title="{{ trans('global.button.edit') }}">
-				<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>
+				<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
 			</a>
 		</div>
 		@endif

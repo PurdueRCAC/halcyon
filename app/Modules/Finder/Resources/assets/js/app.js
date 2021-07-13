@@ -668,8 +668,8 @@
         if (($so.length == 1) && ($som.length == 0)) {
             //build scroll to see more notification
             $(".scrolling-outer").after('<div id="scroll-to-see-more" role="alert" aria-label="Scroll to see more" class="my-hidden" >' +
-                '<ul class="notifications"><li><i class="material-icons">' + htmlTxt +
-                '</i><span class="fa fa-arrow-right"></span></li></ul></div>');
+                '<ul class="notifications"><li><span class="material-icons" aria-hidden="true">' + htmlTxt +
+                '</span><span class="fa fa-arrow-right"></span></li></ul></div>');
 
         }
         $(".manualcheckbox").on("change", function () {

@@ -69,7 +69,7 @@ function CreateNewGroup() {
 			</div>
 			<div class="col-md-3 text-right">
 				<a class="btn btn-outline-secondary float-right add-group" href="{{ route('site.users.account.section', ['section' => 'groups']) }}">
-					<i class="fa fa-plus-circle"></i> {{ trans('global.create') }}
+					<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('global.create') }}
 				</a>
 			</div>
 		</div>
@@ -88,7 +88,7 @@ function CreateNewGroup() {
 					<div class="row">
 						<div class="col-md-12 text-right">
 							<button type="submit" id="new_group_btn" class="btn btn-success">
-								<i class="fa fa-plus-circle" aria-hidden="true"></i> {{ trans('global.button.create') }}
+								<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('global.button.create') }}
 							</button>
 						</div>
 					</div>

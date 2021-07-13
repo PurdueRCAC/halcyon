@@ -88,19 +88,19 @@
 	@if (auth()->user() && (auth()->user()->can('create pages') || auth()->user()->can('edit pages') || auth()->user()->can('edit.state pages') || auth()->user()->can('delete pages')))
 		<!-- <div class="edit-controls">
 			@if (auth()->user()->can('create pages'))
-				<a href="{{ route('site.pages.create', ['parent_id' => $page->id]) }}" class="edit" title="{{ trans('Create page') }}"><i class="fa fa-plus"></i></a>
+				<a href="{{ route('site.pages.create', ['parent_id' => $page->id]) }}" class="edit" title="{{ trans('Create page') }}"><span class="fa fa-plus" aria-hidden="true"></span></a>
 			@endif
 			@if (auth()->user()->can('edit pages'))
-				<a href="{{ route('page', ['uri' => $page->path, 'edit' => 1]) }}" class="edit" data-id="{{ $page->id }}" title="{{ trans('Edit page') }}"><i class="fa fa-pencil"></i></a>
+				<a href="{{ route('page', ['uri' => $page->path, 'edit' => 1]) }}" class="edit" data-id="{{ $page->id }}" title="{{ trans('Edit page') }}"><span class="fa fa-pencil" aria-hidden="true"></span></a>
 			@endif
 			@if (auth()->user()->can('delete pages'))
-				<a href="{{ route('page', ['uri' => $page->path, 'delete' => 1]) }}" class="delete" data-id="{{ $page->id }}" data-confirm="{{ trans('pages::pages.confirm delete') }}" title="{{ trans('Delete page') }}"><i class="fa fa-trash"></i></a>
+				<a href="{{ route('page', ['uri' => $page->path, 'delete' => 1]) }}" class="delete" data-id="{{ $page->id }}" data-confirm="{{ trans('pages::pages.confirm delete') }}" title="{{ trans('Delete page') }}"><span class="fa fa-trash" aria-hidden="true"></span></a>
 			@endif
 			@if (auth()->user()->can('edit.state pages'))
 				@if ($page->state)
-					<a href="{{ route('page', ['uri' => $page->path, 'state' => 'unpublish']) }}" data-id="{{ $page->id }}" title="{{ trans('Unpublish page') }}"><i class="fa fa-check-circle"></i></a>
+					<a href="{{ route('page', ['uri' => $page->path, 'state' => 'unpublish']) }}" data-id="{{ $page->id }}" title="{{ trans('Unpublish page') }}"><span class="fa fa-check-circle" aria-hidden="true"></span></a>
 				@else
-					<a href="{{ route('page', ['uri' => $page->path, 'state' => 'publish']) }}" data-id="{{ $page->id }}" title="{{ trans('Publish page') }}"><i class="fa fa-minus-circle"></i></a>
+					<a href="{{ route('page', ['uri' => $page->path, 'state' => 'publish']) }}" data-id="{{ $page->id }}" title="{{ trans('Publish page') }}"><span class="fa fa-minus-circle" aria-hidden="true"></span></a>
 				@endif
 			@endif
 		</div> -->

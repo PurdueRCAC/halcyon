@@ -10,12 +10,12 @@
 					<a v-else v-bind:href="this.ROOT_URL + '/news/manage?edit&amp;id=' + id" class="badge badge-unpublished" title="Publish news item.">Unpublished</a>
 				</span>
 				<a v-bind:href="this.ROOT_URL + '/news/manage?delete&amp;id=' + id" class="edit news-delete" v-on:click="del($event)" v-if="canDelete">
-					<i class="fa fa-trash" aria-hidden="true"></i>
+					<span class="fa fa-trash" aria-hidden="true"></span>
 					Delete
 				</a>
 				<a v-bind:href="this.ROOT_URL + '/news/manage?mail&amp;id=' + id" class="edit news-mail" id="A_mail_1234" title="Preview mail to mailing lists.">
 					<span class="newspostedby">Last sent November 19, 2018&nbsp; 4:28pm by Kevin D Colby</span>
-					<i class="fa fa-envelope" aria-hidden="true"></i>
+					<span class="fa fa-envelope" aria-hidden="true"></span>
 					Preview mail
 				</a>
 			</div>
@@ -29,7 +29,7 @@
 							<time>{{ formatteddate }}</time>
 						</span>
 						<a v-bind:href="this.ROOT_URL + '/news/manage?edit&amp;id=' + id" v-if="canEdit">
-							<i class="fa fa-pencil" aria-hidden="true"></i>
+							<span class="fa fa-pencil" aria-hidden="true"></span>
 							Edit
 						</a>
 					</li>
@@ -37,7 +37,7 @@
 						<span class="newstype">
 							{{ type.name }}
 							<a v-bind:href="this.ROOT_URL + '/news/manage?edit&amp;id=' + id" v-if="canEdit">
-								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="fa fa-pencil" aria-hidden="true"></span>
 								Edit
 							</a>
 						</span>

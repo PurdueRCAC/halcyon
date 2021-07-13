@@ -496,7 +496,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 						<div class="panel-body">
 							<div id="{{ $row->id }}_newupdate">
 								<textarea class="form-control crmcommentbox" placeholder="Write a comment..." id="5037_newcommentbox" rows="1" cols="45"></textarea>
-								<a href="/news/manage?update&amp;id=5037" title="Add a new comment."><i class="fa fa-save" aria-hidden="true" id="5037_newcommentboxsave" style="display: none;"></i></a>
+								<a href="/news/manage?update&amp;id=5037" title="Add a new comment."><span class="fa fa-save" aria-hidden="true" id="5037_newcommentboxsave" style="display: none;"></span></a>
 							</div>
 						</div>
 					</div>

@@ -122,66 +122,66 @@ app('pathway')
 				<td class="priority-4 text-center">
 					@if ($row->location)
 						<span class="badge badge-success">
-							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+							<span class="icon-check" aria-hidden="true"></span><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
 						<span class="badge badge-secondary">
-							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
+							<span class="icon-minus" aria-hidden="true"></span><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4 text-center">
 					@if ($row->future)
 						<span class="badge badge-success">
-							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+							<span class="icon-check" aria-hidden="true"></span><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
 						<span class="badge badge-secondary">
-							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
+							<span class="icon-minus" aria-hidden="true"></span><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4 text-center">
 					@if ($row->ongoing)
 						<span class="badge badge-success">
-							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+							<span class="icon-check" aria-hidden="true"></span><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
 						<span class="badge badge-secondary">
-							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
+							<span class="icon-minus" aria-hidden="true"></span><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4 text-center">
 					@if ($row->tagresources)
 						<span class="badge badge-success">
-							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+							<span class="icon-check" aria-hidden="true"></span><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
 						<span class="badge badge-secondary">
-							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
+							<span class="icon-minus" aria-hidden="true"></span><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4 text-center">
 					@if ($row->tagusers)
 						<span class="badge badge-success">
-							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+							<span class="icon-check" aria-hidden="true"></span><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
 						<span class="badge badge-secondary">
-							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
+							<span class="icon-minus" aria-hidden="true"></span><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>
 				<td class="priority-4 text-center">
 					@if ($row->url)
 						<span class="badge badge-success">
-							<i class="icon-check" aria-hidden="true"></i><span class="sr-only">{{ trans('global.yes') }}</span>
+							<span class="icon-check" aria-hidden="true"></span><span class="sr-only">{{ trans('global.yes') }}</span>
 						</span>
 					@else
 						<span class="badge badge-secondary">
-							<i class="icon-minus" aria-hidden="true"></i><span class="sr-only">{{ trans('global.no') }}</span>
+							<span class="icon-minus" aria-hidden="true"></span><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
 					@endif
 				</td>

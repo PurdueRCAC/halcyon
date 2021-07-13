@@ -137,7 +137,7 @@ app('pathway')
 								<label class="form-check-label" for="todo{{ $todo->id }}"><span class="sr-only">Mark as complete</span></label>
 								<span class="badge badge-{{ $badge }} mr-1">{{ $todo->timeperiod->name }}</span> {{ $todo->name }}
 							</div>
-							<span class="issue-todo-alert tip"><i class="fa" aria-hidden="true"></i></span>
+							<span class="issue-todo-alert tip"><span class="fa" aria-hidden="true"></span></span>
 						</div>
 						@if ($todo->description)
 							<div class="ml-4 form-text text-muted">{!! $todo->formattedDescription !!}</div>

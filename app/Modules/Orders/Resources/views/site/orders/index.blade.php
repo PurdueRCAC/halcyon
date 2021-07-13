@@ -307,11 +307,11 @@ app('pathway')
 		@if (auth()->user()->can('manage orders'))
 			<p class="text-right">
 				<button class="btn btn-primary btn-export">
-					<i class="fa fa-table" aria-hidden="true"></i> Export
+					<span class="fa fa-table" aria-hidden="true"></span> Export
 				</button>
 
 				<a href="#import-orders" class="btn btn-secondary btn-import">
-					<i class="fa fa-upload" aria-hidden="true"></i> Import
+					<span class="fa fa-upload" aria-hidden="true"></span> Import
 				</a>
 			</p>
 			<div id="export-orders" class="dialog" title="{{ trans('orders::orders.export') }}">

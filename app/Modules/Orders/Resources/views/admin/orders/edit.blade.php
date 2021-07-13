@@ -599,7 +599,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									<button class="btn btn-sm btn-danger" id="cancelorder" data-confirm="Are you sure you wish to cancel this order?">Cancel Order</button>
 								<?php else: ?>
 									<button class="btn btn-sm tip" id="printorder" title="Print Order">
-										<i class="fa fa-print" aria-hidden="true"></i>
+										<span class="fa fa-print" aria-hidden="true"></span>
 										<span class="sr-only">Print Order</span>
 									</button>
 									@if ($order->status == 'canceled' && auth()->user()->can('manage orders'))
@@ -648,7 +648,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											</span>
 
 											<a href="#edit_user" id="order_user_save" class="order-edit" title="{{ trans('global.button.edit') }}" data-txt-save="Save Change">
-												<i id="user_save" class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>
+												<span id="user_save" class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
 											</a>
 										</p>
 										@if ($order->user)
@@ -691,7 +691,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											<input type="text" name="search_group" id="search_group" class="form-control form-groups hide" data-groupid="{{ $order->groupid }}" value="{{ $order->group ? $order->group->name : '' }}" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
 
 											<a href="#edit_group" id="order_group_save" class="order-edit" title="{{ trans('global.button.edit') }}" data-txt-save="Save Change">
-												<i id="group_save" class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }}</span>
+												<span id="group_save" class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
 											</a>
 										</p>
 									@else
@@ -849,7 +849,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											<span class="item-edit-hide">{{ config('orders.currency', '$') }} <span name="itemtotal">{{ $item->formattedTotal }}</span></span>
 											@if ($item->origorderitemid)
 												<a href="{{ route('site.orders.recurring.read', ['id' => $order->id]) }}" class="text-success tip" title="This is a recurring item.">
-													<i class="fa fa-undo" aria-hidden="true"></i><span class="sr-only">This is a recurring item.</span>
+													<span class="fa fa-undo" aria-hidden="true"></span><span class="sr-only">This is a recurring item.</span>
 												</a>
 											@endif
 											@if (auth()->user()->can('manage orders'))
@@ -979,7 +979,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									<th scope="col" class="text-right text-nowrap">
 										@if (count($order->accounts) == 0 && $canEdit)
 											<button title="Divide total evenly." class="balance-divide btn btn-link tip">
-												<i class="fa fa-arrow-down" aria-hidde="true"></i><span class="sr-only">Divide total evenly.</span>
+												<span class="fa fa-arrow-down" aria-hidde="true"></span><span class="sr-only">Divide total evenly.</span>
 											</button>
 										@endif
 										{{ trans('orders::orders.amount') }}
@@ -1122,7 +1122,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										</td>
 										<td class="text-right text-nowrap">
 											<a href="#help2" class="help help-dialog" data-tip="Help">
-												<span class="amount_error hide"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span class="sr-only">Required field is missing or invalid format</span></span>
+												<span class="amount_error hide"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only">Required field is missing or invalid format</span></span>
 											</a>
 											<span class="account-edit-hide">{{ config('orders.currency', '$') }} <span class="account_amount_span">{{ $account->formattedAmount }}</span></span>
 											<input type="text" class="account-edit-show hide form-control balance-update" size="8" name="account_amount" value="{{ $account->formattedAmount }}" />
@@ -1197,7 +1197,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								<tr>
 									<td class="text-right" colspan="{{ count($order->accounts) == 0 ? 2 : 3 }}">
 										<a href="#help2" class="help help-dialog icn" data-tip="Balance should be $0.00 before saving changes."><!--
-											--><i id="balance_error" aria-hidden="true" class="fa fa-exclamation-triangle text-warning hide"></i><span class="sr-only">Balance should be $0.00 before saving changes.</span><!--
+											--><span id="balance_error" aria-hidden="true" class="fa fa-exclamation-triangle text-warning hide"></span><span class="sr-only">Balance should be $0.00 before saving changes.</span><!--
 										--></a>
 										<strong>{{ trans('orders::orders.balance remaining') }}</strong>
 									</td>
@@ -1248,10 +1248,10 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								<div class="col-md-6 text-right">
 									@if ($order->status != 'canceled')
 									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property btn" data-tip="Edit" data-prop="usernotes" data-value="{{ $order->id }}">
-										<i class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_usernotes"></i><span class="sr-only">Edit</span>
+										<span class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_usernotes"></span><span class="sr-only">Edit</span>
 									</a>
 									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_usernotes" class="hide cancel-edit-property btn" title="Cancel" data-prop="usernotes" data-value="{{ $order->id }}">
-										<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">Cancel</span>
+										<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">Cancel</span>
 									</a>
 									@endif
 								</div>
@@ -1291,10 +1291,10 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								<div class="col-md-6 text-right">
 								@if ($order->status != 'canceled')
 									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property btn" data-tip="Edit" data-prop="staffnotes" data-value="{{ $order->id }}">
-										<i class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_staffnotes"></i><span class="sr-only">Edit</span>
+										<span class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_staffnotes"></span><span class="sr-only">Edit</span>
 									</a>
 									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_staffnotes" class="hide btn cancel-edit-property" data-tip="Cancel" data-prop="staffnotes" data-value="{{ $order->id }}">
-										<i class="fa fa-ban" aria-hidden="true"></i><span class="sr-only">Cancel</span>
+										<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">Cancel</span>
 									</a>
 								@endif
 								</div>

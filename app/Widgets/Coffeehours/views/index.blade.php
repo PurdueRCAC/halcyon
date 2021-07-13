@@ -107,7 +107,7 @@ foreach ($rows as $event)
 			@endif
 		</p>
 		<p class="newsheader">
-			<i class="fa fa-fw fa-clock-o" aria-hidden="true"></i> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
+			<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
 			<?php
 			if ($event->isToday())
 			{
@@ -127,12 +127,12 @@ foreach ($rows as $event)
 
 			if ($event->location != '')
 			{
-				echo '<br /><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> ' . $event->location;
+				echo '<br /><span class="fa fa-fw fa-map-marker" aria-hidden="true"></span> ' . $event->location;
 			}
 
 			if ($event->url && auth()->user())
 			{
-				echo '<br /><i class="fa fa-fw fa-link" aria-hidden="true"></i> <a href="' . $event->url . '">' . $event->url . '</a>';
+				echo '<br /><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="' . $event->url . '">' . $event->url . '</a>';
 			}
 
 			$resourceArray;
@@ -143,7 +143,7 @@ foreach ($rows as $event)
 				{
 					$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->resource->name)]) . '">' . $resource->resource->name . '</a>';
 				}
-				echo '<br /><i class="fa fa-fw fa-tags" aria-hidden="true"></i> ' .  implode(', ', $resourceArray);
+				echo '<br /><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray);
 			}
 
 			if (auth()->user() && auth()->user()->can('manage news') && !empty($event->associations))
@@ -158,7 +158,7 @@ foreach ($rows as $event)
 				}
 				if (!empty($users))
 				{
-					echo '<br /><i class="fa fa-fw fa-user" aria-hidden="true"></i> ' . implode(', ', $users);
+					echo '<br /><span class="fa fa-fw fa-user" aria-hidden="true"></span> ' . implode(', ', $users);
 				}
 			}
 
@@ -170,12 +170,12 @@ foreach ($rows as $event)
 				{
 					?>
 					<br />
-					<i class="fa fa-fw fa-calendar" aria-hidden="true"></i>
+					<span class="fa fa-fw fa-calendar" aria-hidden="true"></span>
 					<a target="_blank" class="calendar calendar-subscribe" href="<?php echo request()->getHttpHost(); ?><?php echo str_replace(['http:', 'https:'], 'webcal:', route('site.news.calendar', ['name' => $event->id])); ?>"><!--
 						-->Subscribe<span class="sr-only"> to event #{{ $event->id }} at {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}</span><!--
 					--></a>
 					&nbsp;|&nbsp;
-					<i class="fa fa-fw fa-download" aria-hidden="true"></i>
+					<span class="fa fa-fw fa-download" aria-hidden="true"></span>
 					<a target="_blank" class="calendar calendar-download" href="<?php echo route('site.news.calendar', ['name' => $event->id]); ?>"><!--
 						-->Download<span class="sr-only"> event #{{ $event->id }} at {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}</span><!--
 					--></a>

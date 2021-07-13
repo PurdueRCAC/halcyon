@@ -381,7 +381,7 @@ Style guide
 								<div class="dropdown-content">
 									<a href="#" class="dropdown-item is-media">
 										<div class="icon">
-											<i class="lnil lnil-eye"></i>
+											<span class="lnil lnil-eye"></span>
 										</div>
 										<div class="meta">
 											<span>View</span>
@@ -390,7 +390,7 @@ Style guide
 									</a>
 									<a href="#" class="dropdown-item is-media">
 										<div class="icon">
-											<i class="lnil lnil-briefcase"></i>
+											<span class="lnil lnil-briefcase"></span>
 										</div>
 										<div class="meta">
 											<span>Projects</span>
@@ -399,7 +399,7 @@ Style guide
 									</a>
 									<a href="#" class="dropdown-item is-media">
 										<div class="icon">
-											<i class="lnil lnil-calendar"></i>
+											<span class="lnil lnil-calendar"></span>
 										</div>
 										<div class="meta">
 											<span>Schedule</span>
@@ -409,7 +409,7 @@ Style guide
 									<hr class="dropdown-divider">
 									<a href="#" class="dropdown-item is-media">
 										<div class="icon">
-											<i class="lnil lnil-trash-can-alt"></i>
+											<span class="lnil lnil-trash-can-alt"></span>
 										</div>
 										<div class="meta">
 											<span>Remove</span>
@@ -467,7 +467,7 @@ Style guide
 								<div class="dropdown-content">
 									<a href="#" class="dropdown-item is-media">
 										<div class="icon">
-											<i class="lnil lnil-eye"></i>
+											<span class="lnil lnil-eye"></span>
 										</div>
 										<div class="meta">
 											<span>View</span>
@@ -476,7 +476,7 @@ Style guide
 									</a>
 									<a href="#" class="dropdown-item is-media">
 										<div class="icon">
-											<i class="lnil lnil-briefcase"></i>
+											<span class="lnil lnil-briefcase"></span>
 										</div>
 										<div class="meta">
 											<span>Projects</span>
@@ -485,7 +485,7 @@ Style guide
 									</a>
 									<a href="#" class="dropdown-item is-media">
 										<div class="icon">
-											<i class="lnil lnil-calendar"></i>
+											<span class="lnil lnil-calendar"></span>
 										</div>
 										<div class="meta">
 											<span>Schedule</span>
@@ -495,7 +495,7 @@ Style guide
 									<hr class="dropdown-divider">
 									<a href="#" class="dropdown-item is-media">
 										<div class="icon">
-											<i class="lnil lnil-trash-can-alt"></i>
+											<span class="lnil lnil-trash-can-alt"></span>
 										</div>
 										<div class="meta">
 											<span>Remove</span>

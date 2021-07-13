@@ -1,5 +1,5 @@
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js') }}"></script>
+<script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js?v=' . filemtime(public_path() . '/modules/core/vendor/handlebars/handlebars.min-v4.7.6.js')) }}"></script>
 <script src="{{ asset('modules/courses/js/site.js?v=' . filemtime(public_path() . '/modules/courses/js/site.js')) }}"></script>
 @endpush
 
@@ -10,8 +10,8 @@
 			<h2>{{ trans('courses::courses.my courses') }}</h2>
 		</div>
 		<div class="col-md-3 text-right">
-			<a href="#add-account" data-hide=".table" data-icon="fa-times" data-text="<i class='fa fa-times' aria-hidden='true'></i> {{ trans('global.cancel') }}" class="btn btn-secondary add-account">
-				<i class="fa fa-plus" aria-hidden="true"></i>
+			<a href="#add-account" data-hide=".table" data-icon="fa-times" data-text="<span class='fa fa-times' aria-hidden='true'></span> {{ trans('global.cancel') }}" class="btn btn-secondary add-account">
+				<span class="fa fa-plus" aria-hidden="true"></span>
 				{{ trans('courses::courses.add account') }}
 			</a>
 		</div>
@@ -43,7 +43,7 @@
 					<th scope="col" class="text-center">
 						Accounts / Enrolled
 						<a href="#counthelp" class="help icn tip" title="Help">
-							<i class="fa fa-question-circle" aria-hidden="true"></i> Help
+							<span class="fa fa-question-circle" aria-hidden="true"></span> Help
 						</a>
 					<th scope="col"></th>
 				</th>
@@ -137,7 +137,7 @@
 							</td>
 							<td>
 								<a href="#class_dialog_{{ $class->crn }}" class="edit help tip" title="{{ trans('global.edit') }}">
-									<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.edit') }}</span>
+									<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.edit') }}</span>
 								</a>
 								<input type="hidden" id="HIDDEN_{{ $class->crn }}" value="{{ $class->id }}" />
 							</td>
@@ -209,7 +209,7 @@
 									?>
 									<li id="USER_{{ $usr->id }}_{{ $class->crn }}">
 										<a href="#USER_{{ $usr->id }}_{{ $class->crn }}" class="user-delete delete" data-api="{{ route('api.courses.members.delete', ['id' => $user->id]) }}" data-confirm="Are you sure you wish to remove this user?" data-user="{{ $user->id }}" data-crn="{{ $class->crn }}">
-											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">Delete</span>
+											<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Delete</span>
 										</a>
 										{{ $usr->user ? $usr->user->name . ' (' . $usr->user->username . ')' : $usr->userid . ' ' . trans('global.unknown') }}
 										<input type="hidden" id="HIDDEN_{{ $usr->id }}_{{ $class->crn }}" value="{{ $usr->id }}" />
@@ -243,7 +243,7 @@
 									?>
 									<li id="USER_{{ $usr->id }}_{{ $class->crn }}">
 										<a href="#USER_{{ $usr->id }}_{{ $class->crn }}" class="user-delete delete" data-api="{{ route('api.courses.members.delete', ['id' => $user->id]) }}" data-confirm="Are you sure you wish to remove this user?" data-user="{{ $user->id }}" data-crn="{{ $class->crn }}">
-											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">Delete</span>
+											<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Delete</span>
 										</a>
 										{{ $usr->user ? $usr->user->name . ' (' . $usr->user->username . ')' : $usr->userid . ' ' . trans('global.unknown') }}
 										<input type="hidden" id="HIDDEN_{{ $usr->id }}_{{ $class->crn }}" value="{{ $usr->id }}" />
@@ -277,7 +277,7 @@
 				</table>
 				<div class="form-group text-right">
 					<button class="btn btn-danger account-delete" data-confirm="Are you sure you wish to delete this class account?" data-id="{{ $class->id }}">
-						<i class="fa fa-trash" aria-hidden="true"></i> Delete
+						<span class="fa fa-trash" aria-hidden="true"></span> Delete
 					</button>
 				</div>
 			</div>
@@ -353,7 +353,7 @@
 		<fieldset class="type-course type-dependant">
 			<legend>
 				Create New Accounts for Classes
-				<a href="#createhelp" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i> Help</a>
+				<a href="#createhelp" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span> Help</a>
 			</legend>
 
 			<div id="createhelp" class="dialog dialog-help" title="Create Class">
@@ -445,7 +445,7 @@
 						<div class="form-group">
 							<label for="estNum">
 								Expected number of students:
-								<a href="#createhelp1" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i> Help</a>
+								<a href="#createhelp1" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span> Help</a>
 							</label>
 							<input type="text" class="form-control" size="30" id="estNum" value="" />
 							<!-- <span class="form-text text-muted">Please provide the number of students you expect to enroll in this course. This is especially helpful when creating the class account prior to the semester when no enrollment data is available yet.</span> -->
@@ -458,7 +458,7 @@
 						<div class="form-group">
 							<label for="classMeetings">
 								Class meeting times (and size if multiple sections):
-								<a href="#createhelp2" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+								<a href="#createhelp2" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span></a>
 							</label>
 							<textarea class="form-control" cols="60" rows="3" id="classMeetings"></textarea>
 							<!-- <span class="form-text text-muted">Providing your class schedule, and how many students per class (if you have multiple labs/lectures),  gives us an idea of how classes will be connecting throughout the school day. This is especially helpful if you have large meetings so we can anticipate large bursts of activity. Enter in any convenient format.</span> -->
@@ -471,7 +471,7 @@
 						<div class="form-group">
 							<label for="courseResources">
 								Specific applications, tools and resources required:
-								<a href="#createhelp3" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+								<a href="#createhelp3" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span></a>
 							</label>
 							(e.g. Matlab or R Studio Server)<br/>
 							<textarea class="form-control" cols="60" rows="3" id="courseResources"></textarea>
@@ -484,7 +484,7 @@
 						<div class="form-group">
 							<label for="dueDates">
 								Anticipated assignment due dates:
-								<a href="#createhelp4" class="help icn tip" title="Help"><i class="fa fa-question-circle" aria-hidden="true"></i> Help</a>
+								<a href="#createhelp4" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span> Help</a>
 							</label>
 							<textarea class="form-control" cols="60" rows="3" id="dueDates"></textarea>
 

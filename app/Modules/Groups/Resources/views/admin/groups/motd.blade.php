@@ -78,7 +78,7 @@
 										</td> -->
 									</tr>
 								<!-- <li class="list-group-item">
-										<a href="{{ route('site.users.account.section', ['section' => 'groups', 'group' => $group->id, 'deletemotd' => $motd->id]) }}" class="delete motd-delete"><i class="fa fa-trash"></i><span class="sr-only">Delete</span></a>
+										<a href="{{ route('site.users.account.section', ['section' => 'groups', 'group' => $group->id, 'deletemotd' => $motd->id]) }}" class="delete motd-delete"><span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Delete</span></a>
 										<p class="text-muted">
 											{{ $motd->datetimecreated }} to
 											@if ($motd->datetimeremoved && $motd->datetimeremoved != '0000-00-00 00:00:00')

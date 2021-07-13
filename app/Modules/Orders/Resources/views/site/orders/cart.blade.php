@@ -178,7 +178,7 @@
 			<h2 class="mt-0">{{ trans('orders::orders.cart') }}</h2>
 		</div>
 		<div class="col-md-6 text-right">
-			<a class="btn btn-link" href="{{ route('site.orders.products') }}"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Products</a>
+			<a class="btn btn-link" href="{{ route('site.orders.products') }}"><span class="fa fa-arrow-left" aria-hidden="true"></span> Back to Products</a>
 		</div>
 	</div>
 
@@ -292,7 +292,7 @@
 			<p>
 				Are you placing this order on behalf of a faculty member?
 				<a href="#help1" class="help icn tip" title="Help">
-					<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span>
+					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 				</a>
 			</p>
 
@@ -327,7 +327,7 @@
 			<p>
 				Please use the search box below to select the faculty member this order is for:
 				<a href="#help2" class="help icn tip" title="Help">
-					<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Help</span>
+					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 				</a>
 			</p>
 
@@ -339,7 +339,7 @@
 				<span class="input-group">
 					<input type="text" name="search" id="search_user" class="form-control" data-api-create="{{ route('api.users.create') }}" data-api="{{ route('api.users.index') }}?search=%s" placeholder="Search users..." value="" />
 					<span class="input-group-append">
-						<span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
+						<span class="input-group-text"><span class="fa fa-user" aria-hidden="true"></span></span>
 					</span>
 				</span>
 			</div>
@@ -366,7 +366,7 @@
 								<a href="{{ $product->mou }}" target="_blank">{{ $product->name }} - <abbr title="Memorandum of Understanding">MOU</abbr> Agreement</a>
 
 								<a href="#help3" class="help icn tip" title="Help">
-									<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Please click checkbox after reading and consenting to MOU Agreement.</span>
+									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Please click checkbox after reading and consenting to MOU Agreement.</span>
 								</a>
 							</p>
 						</div>

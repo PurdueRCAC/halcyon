@@ -26,7 +26,7 @@ if (!empty($current) && $current[0] == $node->page->alias)
 @endphp
 <li<?php if ($cls) { echo ' class="' . trim($cls) . '"'; } ?>>
 	@if ($node->page->access > 1)
-		<i class="fa fa-lock" aria-hidden="true"></i>
+		<span class="fa fa-lock" aria-hidden="true"></span>
 	@endif
 	@if ($isActive)
 		<span>{{ $node->page->headline }}</span>

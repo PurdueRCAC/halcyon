@@ -158,7 +158,7 @@
 												<td>{{ $log->targetuserid ? ($log->targetuser ? $log->targetuser->name : trans('global.unknown')) : '--' }}</td>
 												<td>
 													@if (substr($log->status, 0, 1) != '2')
-														<i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{ trans('groups::groups.history.error') }}
+														<span class="fa fa-exclamation-circle" aria-hidden="true"></span> {{ trans('groups::groups.history.error') }}
 													@endif
 													{{ $log->action }}
 												</td>

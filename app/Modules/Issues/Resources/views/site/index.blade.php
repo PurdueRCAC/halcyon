@@ -87,7 +87,7 @@ app('pathway')->append(
 									<div class="form-text text-muted">{{ $todo->formattedDescription }}</div>
 								@endif
 							</div>
-							<span class="issue-todo-alert tip"><i class="fa" aria-hidden="true"></i></span>
+							<span class="issue-todo-alert tip"><span class="fa" aria-hidden="true"></span></span>
 						</div>
 					</li>
 				@endforeach

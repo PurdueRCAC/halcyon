@@ -176,7 +176,7 @@ $(document).ready(function() {
 			@if (auth()->user() && auth()->user()->can('manage orders'))
 			<p>
 				<a href="{{ route('site.orders.products.create') }}" class="btn btn-info">
-					<i class="fa fa-plus"></i> {{ trans('orders::orders.create product') }}
+					<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('orders::orders.create product') }}
 				</a>
 			</p>
 			@endif
@@ -196,7 +196,7 @@ $(document).ready(function() {
 					<span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('orders::orders.search products') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append">
-							<span class="input-group-text"><i class="fa fa-search"></i></span>
+							<span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span>
 						</span>
 					</span>
 				</div>
@@ -266,7 +266,7 @@ $(document).ready(function() {
 			else:
 				?>
 				<li class="list-group-item cart-item cart-empty">
-					<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+					<span class="fa fa-shopping-cart" aria-hidden="true"></span>
 					Your cart is empty.
 				</li>
 				<?php
@@ -399,14 +399,14 @@ $(document).ready(function() {
 						@if (auth()->user()->can('edit orders'))
 					<td class="text-nowrap">
 						<a href="{{ route('site.orders.products.edit', ['id' => $product->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }} '{{ $product->name }}' product">
-							<i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.edit') }} '{{ $product->name }}' product</span>
+							<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }} '{{ $product->name }}' product</span>
 						</a>
 					</td>
 						@endif
 						@if (auth()->user()->can('delete orders'))
 					<td class="text-nowrap">
 						<a href="{{ route('site.orders.products.delete', ['id' => $product->id]) }}" class="btn btn-sm btn-delete text-danger tip" title="{{ trans('global.button.delete') }} '{{ $product->name }}' product" data-confirm="{{ trans('global.confirm delete') }}">
-							<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.delete') }} '{{ $product->name }}' product</span>
+							<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }} '{{ $product->name }}' product</span>
 						</a>
 					</td>
 						@endif

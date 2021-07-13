@@ -15,7 +15,7 @@
 			<caption>
 				Eligible Software
 				<a href="#eligible" class="tip text-info help" title="Eligible Departments">
-					<i class="fa fa-question-circle" aria-hidden="true"></i><span class="sr-only">Eligible Departments</span>
+					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Eligible Departments</span>
 				</a>
 			</caption>
 			<thead>

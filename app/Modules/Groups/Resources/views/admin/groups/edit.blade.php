@@ -940,7 +940,7 @@ app('pathway')
 											<a href="#unixgroup-{{ $u->id }}" class="btn text-danger remove-unixgroup"
 												data-api="{{ route('api.unixgroups.delete', ['id' => $u->id]) }}"
 												data-confirm="{{ trans('groups::groups.confirm delete') }}">
-												<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
+												<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
 											</a>
 										</td>
 									</tr>
@@ -954,7 +954,7 @@ app('pathway')
 										<a href="#unixgroup-{id}" class="btn text-danger remove-unixgroup"
 											data-api="{{ route('api.unixgroups.create') }}/{id}"
 											data-confirm="{{ trans('groups::groups.confirm delete') }}">
-											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
+											<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -972,7 +972,7 @@ app('pathway')
 										<a href="#longname" class="btn text-success add-unixgroup"
 											data-group="{{ $row->id }}"
 											data-api="{{ route('api.unixgroups.create') }}">
-											<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.add') }}</span>
+											<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('global.add') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -1022,7 +1022,7 @@ app('pathway')
 										<a href="#department-{{ $dept->id }}" class="btn text-danger remove-category"
 											data-api="{{ route('api.groups.groupdepartments.delete', ['group' => $row->id, 'id' => $dept->id]) }}"
 											data-confirm="{{ trans('groups::groups.confirm delete') }}">
-											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
+											<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -1033,7 +1033,7 @@ app('pathway')
 										<a href="#department-{id}" class="btn text-danger remove-category"
 											data-api="{{ route('api.groups.groupdepartments.create', ['group' => $row->id]) }}/{id}"
 											data-confirm="{{ trans('groups::groups.confirm delete') }}">
-											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
+											<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -1069,7 +1069,7 @@ app('pathway')
 											class="btn text-success add-category"
 											data-group="{{ $row->id }}"
 											data-api="{{ route('api.groups.groupdepartments.create', ['group' => $row->id]) }}">
-											<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.add') }}</span>
+											<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('global.add') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -1101,7 +1101,7 @@ app('pathway')
 										<a href="#fieldofscience-{{ $field->id }}" class="btn text-danger remove-category"
 											data-api="{{ route('api.groups.groupfieldsofscience.delete', ['group' => $row->id, 'id' => $field->id]) }}"
 											data-confirm="{{ trans('groups::groups.confirm delete') }}">
-											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
+											<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -1112,7 +1112,7 @@ app('pathway')
 										<a href="#fieldofscience-{id}" class="btn text-danger remove-category"
 											data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $row->id]) }}/{id}"
 											data-confirm="{{ trans('groups::groups.confirm delete') }}">
-											<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.trash') }}</span>
+											<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -1148,7 +1148,7 @@ app('pathway')
 											class="btn text-success add-category"
 											data-group="{{ $row->id }}"
 											data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $row->id]) }}">
-											<i class="fa fa-plus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('global.add') }}</span>
+											<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('global.add') }}</span>
 										</a>
 									</td>
 								</tr>

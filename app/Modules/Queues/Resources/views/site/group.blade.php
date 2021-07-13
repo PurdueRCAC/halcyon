@@ -63,20 +63,20 @@
 						@if ($q->enabled && $q->started && $q->active)
 							@if ($q->reservation)
 								<span class="text-info tip" title="{{ trans('Queue has dedicated reservation.') }}">
-									<i class="fa fa-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('Queue has dedicated reservation.') }}</span>
+									<span class="fa fa-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('Queue has dedicated reservation.') }}</span>
 								</span>
 							@else
 								<span class="text-success tip" title="{{ trans('Queue is running.') }}">
-									<i class="fa fa-check" aria-hidden="true"></i><span class="sr-only">{{ trans('Queue is running.') }}</span>
+									<span class="fa fa-check" aria-hidden="true"></span><span class="sr-only">{{ trans('Queue is running.') }}</span>
 								</span>
 							@endif
 						@elseif ($q->active)
 							<span class="text-danger tip" title="{{ trans('Queue is stopped or disabled.') }}">
-								<i class="fa fa-minus-circle" aria-hidden="true"></i><span class="sr-only">{{ trans('Queue is stopped or disabled.') }}</span>
+								<span class="fa fa-minus-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('Queue is stopped or disabled.') }}</span>
 							</span>
 						@elseif (!$q->active)
 							<span class="text-warning tip" title="{{ trans('Queue has no active resources. Remove queue or sell/loan nodes.') }}">
-								<i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span class="sr-only">{{ trans('Queue has no active resources. Remove queue or sell/loan nodes.') }}</span>
+								<span class="fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only">{{ trans('Queue has no active resources. Remove queue or sell/loan nodes.') }}</span>
 							</span>
 						@endif
 					</td>
@@ -138,7 +138,7 @@
 								data-queue="{{ $q->id }}"
 								data-status="0"
 								title="{{ trans('queues::queues.stop scheduling') }}">
-								<i class="fa fa-ban" aria-hidden="true"></i> {{ trans('queues::queues.stop scheduling') }}
+								<span class="fa fa-ban" aria-hidden="true"></span> {{ trans('queues::queues.stop scheduling') }}
 							</a>
 						@else
 							<a class="set-queue-status btn-disable"
@@ -147,7 +147,7 @@
 								data-queue="{{ $q->id }}"
 								data-status="1"
 								title="{{ trans('queues::queues.start scheduling') }}">
-								<i class="fa fa-check" aria-hidden="true"></i> {{ trans('queues::queues.start scheduling') }}
+								<span class="fa fa-check" aria-hidden="true"></span> {{ trans('queues::queues.start scheduling') }}
 							</a>
 						@endif
 					</td>
@@ -160,7 +160,7 @@
 							data-queue="{{ $q->id }}"
 							data-confirm="Are you sure you want to delete this queue?"
 							title="{{ trans('global.button.delete') }}">
-							<i class="fa fa-trash" aria-hidden="true"></i><span class="sr-only">{{ trans('global.button.delete') }}</span>
+							<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
 						</a>
 					</td>
 					@endif

@@ -84,7 +84,7 @@
 						@if (Auth::check())
 							<li><a href="{{ route('site.users.account') }}">{{ Auth::user()->name }}</a> &nbsp;|&nbsp; <a href="{{ route('logout') }}">{{ trans('theme::site.logout') }}</a></li>
 						@else
-							<li><a href="{{ route('login') }}" class="btn btn-secondary btn-inverse"><i class="fa fa-lock" aria-hidden="true"></i> {{ trans('theme::site.login') }}</a></li>
+							<li><a href="{{ route('login') }}" class="btn btn-secondary btn-inverse"><span class="fa fa-lock" aria-hidden="true"></span> {{ trans('theme::site.login') }}</a></li>
 						@endif
 					</ul>
 				</div>
