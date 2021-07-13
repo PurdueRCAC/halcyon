@@ -31,6 +31,7 @@
 			<field name="layout" type="radio" default="0" label="widget.banner::banner.params.layout" description="widget.banner::banner.params.layout desc">
 				<option value="index">front page columns</option>
 				<option value="notice">notice banner</option>
+				<option value="single">single category</option>
 			</field>
 			<field name="limit" type="text" default="1" label="widget.banner::banner.params.number of items" description="widget.banner::banner.params.number of items desc" />
 		</fieldset>

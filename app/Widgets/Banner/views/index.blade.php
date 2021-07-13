@@ -102,9 +102,11 @@
 					<p>There are no outages at this time.</p>
 				@endif
 
+				@if ($params->get('readmore'))
 				<div class="more">
 					<a href="{{ route('site.news.type', ['name' => $type->alias]) }}">previous…</a>
 				</div>
+				@endif
 			</div>
 		</div><!-- /.tileRow -->
 	</div><!-- /.audienceTiles -->
@@ -137,9 +139,11 @@
 					<p>There is no upcoming maintenance scheduled at this time.</p>
 				@endif
 
+				@if ($params->get('readmore'))
 				<div class="more">
 					<a href="{{ route('site.news.type', ['name' => $type2->alias]) }}">previous…</a>
 				</div>
+				@endif
 			</div>
 		</div><!-- /.tileRow -->
 	</div><!-- /.audienceTiles -->

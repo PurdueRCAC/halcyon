@@ -45,5 +45,7 @@ return [
 		'direction old to new' => 'Oldest to Newest',
 		'location' => 'Filter by location',
 		'location desc' => 'Filter news articles by location.',
+		'layout' => 'Layout',
+		'layout desc' => 'Select the layout for display.',
 	],
 ];
