@@ -76,7 +76,7 @@ $(document).ready(function() {
 			@if (app()->has('impersonate'))
 				</div>
 				<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 text-right">
-					@if ($user->id == auth()->user()->id || (app()->has('impersonate') && app('impersonate')->isImpersonating()))
+					@if ($user->id == auth()->user()->id || ($user->can('admin') && !auth()->user()->can('admin')) || (app()->has('impersonate') && app('impersonate')->isImpersonating()))
 						<a href="#" class="btn btn-secondary impersonate" disabled>Impersonate</a>
 					@else
 						<a href="{{ route('impersonate', ['id' => $user->id]) }}" class="btn btn-secondary impersonate">Impersonate</a>
