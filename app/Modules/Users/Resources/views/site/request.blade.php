@@ -207,6 +207,8 @@ $active = $sections->firstWhere('active', '=', true);
 			</div><!-- / #confirmation -->
 
 			<div id="errors"></div>
+
+			@csrf
 		</form>
 	</div>
 </div>
