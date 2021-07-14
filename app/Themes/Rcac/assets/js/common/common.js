@@ -568,4 +568,10 @@ $(document).ready(function() {
 	$('.navbar .dropdown > a').on('click', function (e) {
 		location.href = this.href;
 	});
+
+	var banner = $('.notice-banner');
+	if (banner.length) {
+		banner.css('height', banner.height());
+		banner.find('.alert-warning').addClass('sticky');
+	}
 });
