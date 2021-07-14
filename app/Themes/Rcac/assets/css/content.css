@@ -80,23 +80,23 @@ figcaption {
 	content: "\f05a";
 }
 
-.banner .alert-warning {
+.notice-banner .alert-warning {
 	background-color: #ffc107;
 	color: #7C4A03;
 }
-.banner .alert-warning a,
-.banner .alert-warning a:link {
+.notice-banner .alert-warning a,
+.notice-banner .alert-warning a:link {
 	color: #7C4A03;
 }
-.banner .alert-info {
+.notice-banner .alert-info {
 	background-color: #20809D;
 	color: #E3F3F7;
 }
-.banner .alert-info a,
-.banner .alert-info a:link {
+.notice-banner .alert-info a,
+.notice-banner .alert-info a:link {
 	color: #E3F3F7;
 }
-.banner .sticky {
+.notice-banner .sticky {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -884,6 +884,10 @@ a.card-content:hover {
 	min-height: 1px;
 	padding: 1.25rem;
 }
+.card-admin {
+	background-color: #f0fafb;
+	border-color: #f0fafb;
+}
 
 ul.purchase li {
 	background: #dddddd;
@@ -1470,12 +1474,12 @@ img.newsdeleteresource {
 }
 
 .panel-default > .panel-heading .badge-published {
-	color:#fff;
-	background-color:#3A833A;
+	color: #fff;
+	background-color: #218739;
 }
 .panel-default > .panel-heading .badge-unpublished {
-	color:#fff;
-	background-color:#721c24;
+	color: #fff;
+	background-color: #dc3545; /*721c24;*/
 }
 
 .crm-item .panel-footer,
@@ -2189,9 +2193,9 @@ img.align-right {
     -ms-flex: 1 1 0%;
     flex: 1 1 0%;
 }
-.contentPage .input-group > .select2-container--default:not(:last-child) .select2-selection--multiple {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+/*.contentPage .input-group > .select2-container--default:not(:last-child) .select2-selection--multiple {*/
+.contentPage .select2-container--default .select2-selection--multiple {
+    border-radius: 0;
 }
 
 .contentInner .select2-container .select2-selection--single {
