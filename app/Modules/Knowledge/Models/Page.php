@@ -193,6 +193,34 @@ class Page extends Model
 		$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
 		$text = preg_replace('/href="\/(.*?)"/i', 'href="' . url("$1") . '"', $text);
 
+		$text = preg_replace_callback( '/(\<h[1-6](.*?))\>(.*)(<\/h[1-6]>)/i', function($matches)
+		{
+			if (!stripos($matches[0], 'id='))
+			{
+				$title = $matches[3];
+				$title = preg_replace('/<.*?>/', '', $title);
+				$title = trim($title);
+				$title = strtolower($title);
+				$title = str_replace(' ', '_', $title);
+				$title = preg_replace('/[^a-z0-9\-_]+/', '', $title);
+
+				$anchor = '<a href="#' . $title . '" class="heading-anchor" title="Permalink"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only">Permalink</span></a> ';
+
+				$matches[0] = $matches[1] . $matches[2] . ' id="' . $title . '">' . $anchor . $matches[3] . $matches[4];
+			}
+			else
+			{
+				$matches[0] = preg_match('/id="(.*?)"/i', $matches[0], $matcs);
+
+				$title = $matcs[1];
+
+				$anchor = '<a href="#' . $title . '" class="heading-anchor" title="Permalink"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only">Permalink</span></a> ';
+
+				$matches[0] = $matches[1] . '>' . $anchor . $matches[3] . $matches[4];
+			}
+			return $matches[0];
+		}, $text);
+
 		return $text;
 	}
 
