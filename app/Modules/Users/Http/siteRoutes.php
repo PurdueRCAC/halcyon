@@ -58,6 +58,17 @@ $router->group(['prefix' => 'account', 'middleware' => 'auth.admin'], function (
 	])->where('section', '[a-zA-Z0-9]+')->where('id', '[0-9]+')->where('subsection', '[a-zA-Z0-9]+');
 });
 
+$router->get('impersonate/take/{id}/{guardName?}', [
+	'as' => 'impersonate',
+	'uses' => '\Lab404\Impersonate\Controllers\ImpersonateController@take',
+	'middleware' => ['auth.admin', 'can:manage users']
+]);
+$router->get('impersonate/leave', [
+	'as' => 'impersonate.leave',
+	'uses' => '\Lab404\Impersonate\Controllers\ImpersonateController@leave',
+	'middleware' => ['auth.admin']
+]);
+
 $router->get('reset', [
 	'as' => 'reset',
 	'uses' => 'AuthController@reset'

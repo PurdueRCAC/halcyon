@@ -1,7 +1,7 @@
 #adminmenu {
 	margin: 0;
 	padding: 0;
-	background-color: #000;
+	background-color: #292930; /*#000;*/
 	color: #999;
 	font-family: "Source Sans Pro", "Lucida Grande", Verdana, sans-serif;
 	font-size: 0.8125rem;
@@ -23,7 +23,7 @@
 	text-decoration: none;
 	color: #aaa;
 	font-weight: normal;
-	background-color: #000;
+	/*background-color: #292930; #000;*/
 }
 #adminmenu a:hover,
 #adminmenu a:active,
@@ -51,7 +51,7 @@
   overflow: hidden;
   display: block;
   width: auto;
-  background: #000;
+  background: #292930; /*#000;*/
   width: 15em;
   z-index: 99999;
 }

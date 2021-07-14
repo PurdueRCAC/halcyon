@@ -50,24 +50,42 @@ $(document).ready(function() {
 </script>
 @endpush
 
-<div class="card panel panel-default panel-info card-admin">
-	<div class="card-header panel-heading">
-		<form method="get" action="{{ route('site.users.account') }}">
-			<label for="newuser" class="sr-only">Show data for user:</label>
-			<div class="input-group">
-				<select name="u" id="newuser" class="form-control searchuser" multiple="multiple" data-placeholder="Select user..." data-api="{{ route('api.users.index') }}" data-url="{{ request()->url() }}">
-					@if ($user->id != auth()->user()->id)
-						<option value="{{ $user->id }}" selected="selected">{{ $user->name }}</option>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<div class="card card-admin">
+		<div class="card-body">
+			<form method="get" action="{{ route('site.users.account') }}" class="row">
+			@if (app()->has('impersonate'))
+				<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+			@else
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			@endif
+					<label for="newuser" class="sr-only">Show data for user:</label>
+					<div class="input-group">
+						<select name="u" id="newuser" class="form-control searchuser" multiple="multiple" data-placeholder="Select user..." data-api="{{ route('api.users.index') }}" data-url="{{ request()->url() }}">
+							@if ($user->id != auth()->user()->id)
+								<option value="{{ $user->id }}" selected="selected">{{ $user->name }}</option>
+							@endif
+						</select>
+						<span class="input-group-append">
+							<button type="submit" class="btn input-group-text">
+								<span class="fa fa-search" id="add_button_a" aria-hidden="true"></span>
+								<span class="sr-only">Search</span>
+							</button>
+						</span>
+					</div>
+			@if (app()->has('impersonate'))
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 text-right">
+					@if ($user->id == auth()->user()->id || (app()->has('impersonate') && app('impersonate')->isImpersonating()))
+						<a href="#" class="btn btn-secondary impersonate" disabled>Impersonate</a>
+					@else
+						<a href="{{ route('impersonate', ['id' => $user->id]) }}" class="btn btn-secondary impersonate">Impersonate</a>
 					@endif
-				</select>
-				<span class="input-group-append">
-					<button type="submit" class="btn input-group-text">
-						<span class="fa fa-search" id="add_button_a" aria-hidden="true"></span>
-						<span class="sr-only">Search</span>
-					</button>
-				</span>
-			</div>
-		</form>
+			@endif
+				</div>
+				@csrf
+			</form>
+		</div>
 	</div>
 </div>
 @endif

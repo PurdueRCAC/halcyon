@@ -19,6 +19,7 @@ use App\Modules\Users\Events\UserUpdating;
 use App\Modules\Users\Events\UserUpdated;
 use App\Modules\Users\Events\UserDeleted;
 use App\Modules\Users\Events\UserLookup;
+use Lab404\Impersonate\Models\Impersonate;
 use Carbon\Carbon;
 
 /**
@@ -28,7 +29,7 @@ class User extends Model implements
 	AuthenticatableContract,
 	AuthorizableContract
 {
-	use Authenticatable, Notifiable;
+	use Authenticatable, Notifiable, Impersonate;
 
 	/**
 	 * Indicates if the model should be timestamped.

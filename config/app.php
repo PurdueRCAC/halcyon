@@ -181,7 +181,7 @@ return [
         App\Halcyon\Html\BuilderServiceProvider::class,
         App\Halcyon\Html\ToolbarServiceProvider::class,
         App\Providers\PathwayServiceProvider::class,
-
+        Lab404\Impersonate\ImpersonateServiceProvider::class,
     ],
 
     /*

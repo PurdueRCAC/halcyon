@@ -670,6 +670,7 @@ a.news-cancel:active {
 	margin-right: 0;
 }
 
+/*
 tr.floatingBoxHidden {
 	display: none;
 }
@@ -692,7 +693,6 @@ tr.floatingBoxHidden {
 	margin: 0 10px 20px;
 	line-height: 1.3em;
 }
-
 .faqBoxHidden {
 	display: none;
 }
@@ -703,7 +703,7 @@ tr.floatingBoxHidden {
 	padding: 3px 10px;
 	margin: 3px 10px 20px;
 	line-height: 1.3em;
-}
+}*/
 
 /* Staff */
 .profiles {
@@ -2324,6 +2324,7 @@ body table.dataTable tr:first-child td {
 	border-top: none;
 }
 
+/* Cookie policy
 .cookiepolicy {
 	margin: 0;
 	padding: 1em 5em 1em 2em;
@@ -2366,7 +2367,7 @@ body table.dataTable tr:first-child td {
 .cookiepolicy-close span:before {
 	content: "\2715";
 	padding: 0.2em;
-}
+} */
 
 /* [!] Day of Giving */
 .dayofgiving {
