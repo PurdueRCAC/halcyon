@@ -178,30 +178,3 @@
 	background: #eee;
 	border-radius: 0.25em;
 }
-
-h1 a.heading-anchor,
-h2 a.heading-anchor,
-h3 a.heading-anchor,
-h4 a.heading-anchor,
-h5 a.heading-anchor,
-h6 a.heading-anchor {
-	opacity: 0;
-	position: absolute;
-	left: -0.5em;
-	line-height: 1.5rem;
-	font-size: 1rem;
-	color: #656565;
-}
-
-a.heading-anchor:hover {
-	color: #000;
-}
-
-h1:hover a.heading-anchor,
-h2:hover a.heading-anchor,
-h3:hover a.heading-anchor,
-h4:hover a.heading-anchor,
-h5:hover a.heading-anchor,
-h6:hover a.heading-anchor {
-	opacity: 1
-}
