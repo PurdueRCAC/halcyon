@@ -215,7 +215,7 @@ class Item extends Model
 			$this->alias = $this->title;
 		}
 
-		if ($this->type == 'module')
+		if ($this->type == 'module' && $this->page_id)
 		{
 			$page = \App\Modules\Pages\Models\Page::find($this->page_id);
 
@@ -228,7 +228,7 @@ class Item extends Model
 				$module = Extension::findByModule('pages');
 
 				$this->module_id = $module->id;
-				$this->params->page_id = $this->page_id;
+				$this->params->set('page_id', $this->page_id);
 			}
 		}
 		$this->module_id = (int)$this->module_id;
@@ -239,7 +239,6 @@ class Item extends Model
 		{
 			$this->access = (int) config('access', 1);
 		}
-		//$this->params = $this->params->toString();
 
 		$isNew = !$this->id;
 

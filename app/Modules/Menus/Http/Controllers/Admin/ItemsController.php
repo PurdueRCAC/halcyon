@@ -537,6 +537,7 @@ class ItemsController extends Controller
 		{
 			$row->page_id = $request->input('fields.page_id');
 		}
+		$row->params;
 
 		if (!$row->save())
 		{
