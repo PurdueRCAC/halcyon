@@ -71,43 +71,11 @@ foreach ($rows as $event)
 
 	$events[] = $slot;
 	?>
-	<div id="coffee{{ $event->id }}" class="dialog dialog-event" title="{{ $event->headline }}" aria-labelledby="coffee{{ $event->id }}-title">
+	<section id="coffee{{ $event->id }}" class="dialog dialog-event" title="{{ $event->headline }}" aria-labelledby="coffee{{ $event->id }}-title">
 		<h3 id="coffee{{ $event->id }}-title" class="sr-only">{{ $event->headline }}</h3>
-		<p class="newsattend">
-			@if ($event->url)
-				@if (auth()->user() && in_array(config()->get('module.news.ignore_role', 4), auth()->user()->getAuthorisedRoles()))
-					{{ $reserved ? trans('widget.coffeehours::coffeehours.reserved by', ['name' => $reserved]) : trans('widget.coffeehours::coffeehours.not reserved') }}
-				@else
-					@if ($reserved)
-						This time is reserved
-					@elseif ($now->getTimestamp() < $endregistration->getTimestamp())
-						@if (auth()->user())
-							@if (!$attending)
-								<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">Reserve this time</a>
-							@else
-								You reserved this time.<br />
-								<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel</a>
-							@endif
-						@else
-							<a class="btn btn-primary" href="{{ route('login') }}?loginrefer=<?php echo urlencode(route('page', ['uri' => 'coffee', 'attend' => 1])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">Reserve this time</a>
-						@endif
-					@endif
-				@endif
-			@else
-				@if (auth()->user())
-					@if (!$attending)
-						<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">I'm interested in attending</a>
-					@else
-						You expressed interest in attemding.<br />
-						<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel</a>
-					@endif
-				@else
-					<a class="btn btn-primary" href="/login?loginrefer=<?php echo urlencode(route('page', ['uri' => 'coffee', 'attend' => 1])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">I'm interested in attending</a>
-				@endif
-			@endif
-		</p>
+
 		<p class="newsheader">
-			<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
+			<span class="fa fa-fw fa-clock-o text-muted" aria-hidden="true"></span> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
 			<?php
 			if ($event->isToday())
 			{
@@ -122,7 +90,7 @@ foreach ($rows as $event)
 			}
 			elseif ($event->isTomorrow())
 			{
-				echo ' <span class="badge">' . trans('news::news.tomorrow') . '</span>';
+				echo ' <span class="badge badge-secondary">' . trans('news::news.tomorrow') . '</span>';
 			}
 
 			if ($event->location != '')
@@ -132,7 +100,7 @@ foreach ($rows as $event)
 
 			if ($event->url && auth()->user())
 			{
-				echo '<br /><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="' . $event->url . '">' . $event->url . '</a>';
+				echo '<br /><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="' . $event->url . '">' . \Illuminate\Support\Str::limit($event->url, 50) . '</a>';
 			}
 
 			$resourceArray;
@@ -185,7 +153,77 @@ foreach ($rows as $event)
 			?>
 		</p>
 		{!! $event->body !!}
+		<div class="dialog-footer newsattend">
+			@if ($event->url)
+				@if (auth()->user() && in_array(config()->get('module.news.ignore_role', 4), auth()->user()->getAuthorisedRoles()))
+					@if ($reserved)
+						<div class="text-success">{{ trans('widget.coffeehours::coffeehours.reserved by', ['name' => $reserved]) }}</div>
+					@else
+						<div class="text-info">{{ trans('widget.coffeehours::coffeehours.not reserved') }}</div>
+					@endif
+				@else
+					@if ($reserved)
+						<div class="text-success">This time is reserved.</div>
+					@elseif ($now->getTimestamp() < $endregistration->getTimestamp())
+						@if (auth()->user())
+							@if (!$attending)
+							<div class="row">
+								<div class="col-md-6 text-right">
+									<div class="alert hide" data-success="You reserved this time." data-error="An error occurred. We were unable to reserve this time."></div>
+								</div>
+								<div class="col-md-6 text-right">
+									<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">Reserve this time</a>
+								</div>
+							</div>
+							@else
+							<div class="row">
+								<div class="col-md-6">
+									<div class="text-success">You reserved this time.</div>
+								</div>
+								<div class="col-md-6 text-right">
+									<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel reservation</a>
+								</div>
+							</div>
+							@endif
+						@else
+							<div class="row">
+								<div class="col-md-12 text-right">
+									<a class="btn btn-primary" href="{{ route('login') }}?loginrefer=<?php echo urlencode(route('page', ['uri' => 'coffee', 'attend' => 1])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">Reserve this time</a>
+								</div>
+							</div>
+						@endif
+					@else
+						<div class="text-warning">Reservations are closed.</div>
+					@endif
+				@endif
+			@else
+				@if (auth()->user())
+					@if (!$attending)
+						<div class="row">
+							<div class="col-md-12 text-right">
+								<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">I'm interested in attending</a>
+							</div>
+						</div>
+					@else
+						<div class="row">
+							<div class="col-md-6">
+								<div class="text-success">You expressed interest in attending.</div>
+							</div>
+							<div class="col-md-6 text-right">
+								<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel reservation</a>
+							</div>
+						</div>
+					@endif
+				@else
+					<div class="row">
+						<div class="col-md-12 text-right">
+							<a class="btn btn-primary" href="/login?loginrefer=<?php echo urlencode(route('page', ['uri' => 'coffee', 'attend' => 1])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">I'm interested in attending</a>
+						</div>
+					</div>
+				@endif
+			@endif
 		</div>
+	</section>
 	<?php
 }
 ?>

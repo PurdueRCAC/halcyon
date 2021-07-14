@@ -50,11 +50,11 @@ figcaption {
 }
 
 /* Alerts */
-.alert {
-	padding-left: 2.4em;
-}
 .alert a {
 	font-weight: bold;
+}
+.alert {
+	padding-left: 2.4em;
 }
 .alert:before {
 	position: absolute;
@@ -78,6 +78,10 @@ figcaption {
 }
 .alert.alert-info:before {
 	content: "\f05a";
+}
+
+.admin .alert:before {
+	display: none;
 }
 
 .notice-banner .alert-warning {
@@ -534,14 +538,31 @@ div.ui-dialog {
 	background: transparent;
 	color: #333;
 	font-weight: bold;
+	padding: 1em 2em;
+}
+.ui-dialog .ui-dialog-content {
+	padding: 2em;
 }
 .ui-dialog .ui-dialog-titlebar-close {
   background: transparent;
   right: 1em;
   line-height: 1;
 }
+.ui-dialog .ui-dialog-titlebar-close {
+	border: none;
+}
 .ui-dialog .ui-dialog-titlebar-close .ui-icon:before {
   content: "\e8f6";
+}
+.ui-dialog .dialog-footer {
+  padding-top: 1em;
+  margin-top: 2em;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ui-widget-content a.btn-danger,
+.ui-widget-content a.btn-primary {
+	color: #fff;
 }
 
 body .ui-tooltip {
@@ -1124,13 +1145,13 @@ h2.newsheader {
 h3.newsheader {
 	font-size: 1.4em;
 }
-.newsattend {
+/*.newsattend {
 	float: right;
-}
+}*/
 @media only screen and (max-width: 760px) {
-	.newsattend {
+	/*.newsattend {
 		float: none;
-	}
+	}*/
 	.purchase-card .card-footer .text-right {
 		text-align: left;
 	}
