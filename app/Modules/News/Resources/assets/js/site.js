@@ -1132,6 +1132,7 @@ function NEWSPrintRow(news) {
 
 	var article = document.createElement("article");
 	article.id = id;
+	article.setAttribute('aria-labelledby', id + '_headline');
 	article.className = "news-item";
 
 	var panel = document.createElement("div");
