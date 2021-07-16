@@ -1,6 +1,6 @@
 @if (!request()->ajax())
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js" data-mode="{{ auth()->user()->facet('theme.admin.mode', app('themes')->getActiveTheme()->getParams('mode', 'light')) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js" data-mode="{{ auth()->user() ? auth()->user()->facet('theme.admin.mode', app('themes')->getActiveTheme()->getParams('mode', 'light')) : 'light' }}">
 	<head>
 		<!-- Metadata -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
