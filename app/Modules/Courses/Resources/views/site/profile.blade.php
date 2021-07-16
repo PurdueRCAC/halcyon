@@ -68,6 +68,7 @@
 								$class_data = $c;
 								$class_data->accounts = 0;
 
+								$class->classid = $c->courseId;
 								event($e = new App\Modules\Courses\Events\AccountEnrollment($class));
 
 								$class_data->enrollment = $e->enrollments;
