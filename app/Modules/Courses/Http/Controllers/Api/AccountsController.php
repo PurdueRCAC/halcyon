@@ -34,6 +34,7 @@ class AccountsController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /courses
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "userid",
 	 * 		"description":   "Owner user ID",
 	 * 		"required":      false,
@@ -42,6 +43,7 @@ class AccountsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "groupid",
 	 * 		"description":   "Group ID",
 	 * 		"required":      false,
@@ -50,6 +52,7 @@ class AccountsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "resourceid",
 	 * 		"description":   "Resource ID",
 	 * 		"required":      false,
@@ -58,14 +61,50 @@ class AccountsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
+	 * 		"in":            "query",
+	 * 		"name":          "deptartment",
+	 * 		"description":   "Department code",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer"
+	 * 			"type":      "string",
+	 *			"maxLength": 4,
+	 *			"example":   "STAT"
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "notice",
+	 * 		"description":   "Notice state",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   null
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "start",
+	 * 		"description":   "Filter entries scheduled on or after this date",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "stop",
+	 * 		"description":   "Filter entries scheduled to end before this date",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"required":      false,
@@ -74,6 +113,7 @@ class AccountsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
 	 * 		"required":      false,
@@ -83,6 +123,7 @@ class AccountsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"required":      false,
@@ -92,6 +133,7 @@ class AccountsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"required":      false,
@@ -109,6 +151,7 @@ class AccountsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
 	 * 		"type":          "string",
@@ -133,10 +176,13 @@ class AccountsController extends Controller
 			'userid'     => $request->input('userid', 0),
 			'groupid'    => $request->input('groupid', 0),
 			'resourceid' => $request->input('resourceid', 0),
-			'deptnumber' => $request->input('deptnumber', 0),
+			'deptnumber' => $request->input('department'),
+			'notice'     => $request->input('notice'),
+			'starts'     => $request->input('starts'),
+			'stops'      => $request->input('stops'),
 			// Paging
 			'limit'      => $request->input('limit', config('list_limit', 20)),
-			//'start' => $request->input('limitstart', 0),
+			'page'       => $request->input('page', 1),
 			// Sorting
 			'order'      => $request->input('order', Account::$orderBy),
 			'order_dir'  => $request->input('order_dir', Account::$orderDir)
@@ -147,40 +193,59 @@ class AccountsController extends Controller
 			$filters['order_dir'] = Account::$orderDir;
 		}
 
-		$g = (new Account)->getTable();
-
 		$query = Account::query()
-			->select($g . '.*');
+			->withTrashed()
+			->whereIsActive();
 
 		if ($filters['search'])
 		{
 			$filters['search'] = strtolower((string)$filters['search']);
 
-			$query->where($g . '.classname', 'like', '%' . $filters['search'] . '%');
+			$query->where('classname', 'like', '%' . $filters['search'] . '%');
+		}
+
+		if (!is_null($filters['notice']))
+		{
+			$query->where('notice', '=', $filters['notice']);
 		}
 
 		if ($filters['userid'])
 		{
-			$query->where($g . '.userid', '=', $filters['userid']);
+			$query->where('userid', '=', $filters['userid']);
 		}
 
 		if ($filters['groupid'])
 		{
-			$query->where($g . '.groupid', '=', $filters['groupid']);
+			$query->where('groupid', '=', $filters['groupid']);
 		}
 
 		if ($filters['resourceid'])
 		{
-			$query->where($g . '.resourceid', '=', $filters['resourceid']);
+			$query->where('resourceid', '=', $filters['resourceid']);
 		}
 
-		if ($filters['deptnumber'])
+		if ($filters['department'])
 		{
-			$query->where($g . '.deptnumber', '=', $filters['deptnumber']);
+			$query->where('department', '=', $filters['department']);
+		}
+
+		if ($filters['semester'])
+		{
+			$query->where('semester', '=', $filters['semester']);
+		}
+
+		if ($filters['start'])
+		{
+			$query->where('.datetimestart', '>=', $filters['start']);
+		}
+
+		if ($filters['stop'])
+		{
+			$query->where('datetimestop', '<', $filters['stop']);
 		}
 
 		$rows = $query
-			->orderBy($g . '.' . $filters['order'], $filters['order_dir'])
+			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
@@ -194,53 +259,99 @@ class AccountsController extends Controller
 	 * @apiUri    /courses
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "Group name",
+	 * 		"name":          "crn",
+	 * 		"description":   "Course CRN",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 *			"maxLength": 8,
+	 *			"example":   "5d8293ce"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "classname",
+	 * 		"description":   "Class name",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 *			"maxLength": 255,
+	 * 			"example":   "Intro To Statistics"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
+	 * 		"name":          "coursenumber",
+	 * 		"description":   "Course number",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 *			"maxLength": 8,
+	 *			"example":   "39100A"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
+	 * 		"name":          "userid",
+	 * 		"description":   "Owner user ID",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group ID",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
+	 * 		"name":          "resourceid",
+	 * 		"description":   "Resource ID",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "deptartment",
+	 * 		"description":   "Department ID",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 *			"maxLength": 4,
+	 *			"example":   "STAT"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Start date of the entry",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "End date of the entry",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  Response
 	 */
 	public function create(Request $request)
 	{
@@ -407,68 +518,95 @@ class AccountsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "Group name",
+	 * 		"name":          "crn",
+	 * 		"description":   "Course CRN",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "department",
-	 * 		"description":   "Class department",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 *			"maxLength": 8,
+	 *			"example":   "5d8293ce"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "classname",
-	 * 		"description":   "Name of the class",
+	 * 		"description":   "Class name",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 *			"maxLength": 255,
+	 * 			"example":   "Intro To Statistics"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "coursenumber",
+	 * 		"description":   "Course number",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 *			"maxLength": 8,
+	 *			"example":   "39100A"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "userid",
+	 * 		"description":   "Owner user ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "resourceid",
+	 * 		"description":   "Resource ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "deptartment",
+	 * 		"description":   "Department ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 *			"maxLength": 4,
+	 *			"example":   "STAT"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "datetimestart",
-	 * 		"description":   "Datetime (YYYY-MM-DD hh:mm:ss) the class starts",
+	 * 		"description":   "Start date of the entry",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"format":    "date-time"
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "datetimestop",
-	 * 		"description":   "Datetime (YYYY-MM-DD hh:mm:ss) the class stops",
+	 * 		"description":   "End date of the entry",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"format":    "date-time"
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -807,6 +945,26 @@ class AccountsController extends Controller
 	/**
 	 * Lookup enrollments for a class
 	 * 
+	 * @apiMethod GET
+	 * @apiUri    /courses/enrollments
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "crn",
+	 * 		"description":   "Course CRN",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "classid",
+	 * 		"description":   "Course ID",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  Response
 	 */
