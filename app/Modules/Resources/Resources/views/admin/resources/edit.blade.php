@@ -173,7 +173,7 @@ app('pathway')
 							</fieldset>
 					@sliders('end')
 
-					@include('history::admin.history')
+					<?php /*@include('history::admin.history')*/ ?>
 				</div>
 			</div>
 		</div><!-- / #resource-details -->
