@@ -218,17 +218,14 @@
 					<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 						@widget('left')
 					</div><!-- /.sidenav end -->
-
 					<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-				@else
-					<!--<div class="contentInner col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->
 				@endif
 
 						@yield('content')
 
-					@if (app('widget')->count('left'))
+				@if (app('widget')->count('left'))
 					</div><!-- /.contentInner -->
-					@endif
+				@endif
 				</div>
 			</div>
 		</main>
