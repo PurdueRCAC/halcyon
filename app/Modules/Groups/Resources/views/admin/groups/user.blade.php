@@ -52,9 +52,9 @@ function CreateNewGroup() {
 
 			window.location.reload(true); // = input.getAttribute('data-uri') + '/' + results.data.id;
 		} else if (xml.status == 409) {
-			document.getElementById('new_group_action').innerHTML = ERRORS['creategroupduplicate'];
+			document.getElementById('new_group_action').innerHTML = "Unable to create a new group. Group by this name already exists.";
 		} else {
-			document.getElementById('new_group_action').innerHTML = ERRORS['creategroup'];
+			document.getElementById('new_group_action').innerHTML = "Unable to create a new group.";
 		}
 	});
 }

@@ -46,21 +46,21 @@ ERRORS['410'] = "User no longer has an active Career Account.";
 ERRORS['500'] = "There was an error loading your information/processing your request.  Please try again soon or contact rcac-help@purdue .edu if the problem persists.";
 ERRORS['unknown'] = "Unknown error. Reload page and try again. If problem continues contact 'rcac-help@purdue.edu'.";
 ERRORS['reload'] = "Reload page and try again. If problem continues contact 'rcac-help@purdue.edu'.";
-ERRORS['queue'] = "Unable to create queue.";
-ERRORS['queueconflict'] = "A queue by this name for this scheduler already exists.";
-ERRORS['queueformat'] = "A required option is missing or in an incorrect format.";
-ERRORS['deletequeue'] = "An error occurred while deleting queue.";
-ERRORS['purchase'] = "An error occurred while creating purchase.";
-ERRORS['loan'] = "An error occurred while creating loan.";
-ERRORS['queueinvalid'] = "Invalid condition. Invalid date or source does not have enough cores for the duration of the purchase/loan.";
-ERRORS['modifyloan'] = "An error occurred while modifying loan. Reload page and try again.";
-ERRORS['modifypurchase'] = "An error occurred while modifying purchase. Reload page and try again.";
-ERRORS['deletepurchase'] = "An error occurred while deleting purchase.";
-ERRORS['deleteloan'] = "An error occurred while deleting loan.";
-ERRORS['accountingfailed'] = "Failed to maintain proper accounting. Ensure proper accounting before continuing.";
-ERRORS['accountingmissing'] = "Failed to find counter entry. Ensure proper accounting before continuing.";
-ERRORS['createreservation'] = "Unable to create a new reservation.";
-ERRORS['deletereservation'] = "An error occurred while deleting reservation.";
+//ERRORS['queue'] = "Unable to create queue.";
+//ERRORS['queueconflict'] = "A queue by this name for this scheduler already exists.";
+//ERRORS['queueformat'] = "A required option is missing or in an incorrect format.";
+//ERRORS['deletequeue'] = "An error occurred while deleting queue.";
+//ERRORS['purchase'] = "An error occurred while creating purchase.";
+//ERRORS['loan'] = "An error occurred while creating loan.";
+//ERRORS['queueinvalid'] = "Invalid condition. Invalid date or source does not have enough cores for the duration of the purchase/loan.";
+//ERRORS['modifyloan'] = "An error occurred while modifying loan. Reload page and try again.";
+//ERRORS['modifypurchase'] = "An error occurred while modifying purchase. Reload page and try again.";
+//ERRORS['deletepurchase'] = "An error occurred while deleting purchase.";
+//ERRORS['deleteloan'] = "An error occurred while deleting loan.";
+//ERRORS['accountingfailed'] = "Failed to maintain proper accounting. Ensure proper accounting before continuing.";
+//ERRORS['accountingmissing'] = "Failed to find counter entry. Ensure proper accounting before continuing.";
+//ERRORS['createreservation'] = "Unable to create a new reservation.";
+//ERRORS['deletereservation'] = "An error occurred while deleting reservation.";
 
 // this function returns a HttpRequest object
 function GetXmlHttpObject()
@@ -89,7 +89,7 @@ function GetXmlHttpObject()
 }
 
 // event handler from body onload - this kicks everything off
-function BodyLoad(username, group, image_url) {
+/*function BodyLoad(username, group, image_url) {
 	// if this is being served from a "dev" instance,
 	// use the "dev" instance of web services as well
 	url_components = document.location.href.split("/");
@@ -99,7 +99,7 @@ function BodyLoad(username, group, image_url) {
 	PAGE_ROOT_URL = "/" + url_components[3];
 
 	IMAGE_URL = image_url;
-}
+}*/
 
 function WSGetURL(id, result_function, arg1) {
 	if (id.substring(0, 4) != 'http') {

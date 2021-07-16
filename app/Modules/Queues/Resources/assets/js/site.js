@@ -7,6 +7,22 @@
 /* global ERRORS */ // common.js
 /* global GetTab */ // common.js
 
+ERRORS['queue'] = "Unable to create queue.";
+ERRORS['queueconflict'] = "A queue by this name for this scheduler already exists.";
+ERRORS['queueformat'] = "A required option is missing or in an incorrect format.";
+ERRORS['deletequeue'] = "An error occurred while deleting queue.";
+ERRORS['purchase'] = "An error occurred while creating purchase.";
+ERRORS['loan'] = "An error occurred while creating loan.";
+ERRORS['queueinvalid'] = "Invalid condition. Invalid date or source does not have enough cores for the duration of the purchase/loan.";
+ERRORS['modifyloan'] = "An error occurred while modifying loan. Reload page and try again.";
+ERRORS['modifypurchase'] = "An error occurred while modifying purchase. Reload page and try again.";
+ERRORS['deletepurchase'] = "An error occurred while deleting purchase.";
+ERRORS['deleteloan'] = "An error occurred while deleting loan.";
+ERRORS['accountingfailed'] = "Failed to maintain proper accounting. Ensure proper accounting before continuing.";
+ERRORS['accountingmissing'] = "Failed to find counter entry. Ensure proper accounting before continuing.";
+ERRORS['createreservation'] = "Unable to create a new reservation.";
+ERRORS['deletereservation'] = "An error occurred while deleting reservation.";
+
 /**
  * Show queue purchase
  *
