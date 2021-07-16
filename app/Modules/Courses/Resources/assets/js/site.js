@@ -392,12 +392,43 @@ function NewClassSelect() {
 	$('#new_class_count').text('-');
 
 	if (selected_class.val() != 'first') {
+		if (selected_class.data('students') && !selected_class.data('students')['students'].length) {
+			var parent = $($('#new_class_count').parent());
+			parent.addClass('processing');
+
+			WSGetURL(selected_class.data('api'), function (xml) {
+				parent.removeClass('processing');
+
+				if (xml.status < 400) {
+					var response = JSON.parse(xml.responseText);
+
+					selected_class.data('count', response.enrollments.length);
+
+					var emails = [];
+					for (var i = 0; i < response.enrollments.length; i++) {
+						emails.push(response.enrollments[i].email);
+					}
+					function onlyUnique(value, index, self) {
+						return self.indexOf(value) === index;
+					}
+					emails = emails.filter(onlyUnique);
+
+					selected_class.data('students')['students'] = emails;
+					selected_class.data('count', emails.length);
+
+					$('#new_class_count').text(selected_class.data('count'));
+				}
+			});
+		} else {
+			$('#new_class_count').text(selected_class.data('count'));
+		}
+
 		// Populate instructors
 		var instructors = selected_class.data('instructors');
 
 		// Set class name
 		$('#new_class_name').text(selected_class.data('classname'));
-		$('#new_class_count').text(selected_class.data('count'));
+		//$('#new_class_count').text(selected_class.data('count'));
 
 		for (var x = 0; x < instructors.length; x++) {
 			WSGetURL(ROOT_URL + "users/?search=" + instructors[x]['email'], AddUserClass);

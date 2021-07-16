@@ -235,52 +235,55 @@ class UniTime
 						$course->student_list = array();
 						$course->enrollment  = array();
 
-						/*$result2 = $this->request("enrollments?classId=" . $class->classId);
-
-						if ($result2['status'] == 200)
+						if ($event->includeEnrollment())
 						{
-							foreach ($result2['body'] as $student)
+							/*$result2 = $this->request("enrollments?classId=" . $class->classId);
+
+							if ($result2['status'] == 200)
 							{
-								$name = '';
-
-								if (isset($student->firstName))
+								foreach ($result2['body'] as $student)
 								{
-									$name .= $student->firstName . ' ';
-								}
+									$name = '';
 
-								if (isset($student->middleName))
-								{
-									$name .= $student->middleName . ' ';
-								}
-
-								if (isset($student->lastName))
-								{
-									$name .= $student->lastName;
-								}
-
-								array_push($course->students, urlencode($name));
-							}
-						}*/
-
-						$enrollments = $this->request('enrollments?courseId=' . $course->courseId);
-
-						if ($enrollments['status'] == 200)
-						{
-							$course->enrollment = $enrollments['body'];
-
-							if (is_array($course->enrollment))
-							{
-								foreach ($course->enrollment as $student)
-								{
-									if (isset($student->email) && $student->email)
+									if (isset($student->firstName))
 									{
-										array_push($course->student_list, $student->email);
+										$name .= $student->firstName . ' ';
+									}
+
+									if (isset($student->middleName))
+									{
+										$name .= $student->middleName . ' ';
+									}
+
+									if (isset($student->lastName))
+									{
+										$name .= $student->lastName;
+									}
+
+									array_push($course->students, urlencode($name));
+								}
+							}*/
+
+							$enrollments = $this->request('enrollments?courseId=' . $course->courseId);
+
+							if ($enrollments['status'] == 200)
+							{
+								$course->enrollment = $enrollments['body'];
+
+								if (is_array($course->enrollment))
+								{
+									foreach ($course->enrollment as $student)
+									{
+										if (isset($student->email) && $student->email)
+										{
+											array_push($course->student_list, $student->email);
+										}
 									}
 								}
-							}
 
-							$course->student_list = array_unique($course->student_list);
-							sort($course->student_list);
+								$course->student_list = array_unique($course->student_list);
+								sort($course->student_list);
+							}
 						}
 
 						array_push($classes, $course);

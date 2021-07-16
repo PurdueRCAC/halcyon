@@ -58,7 +58,7 @@ class Courses
 					route('site.users.account.section', $r)
 				);
 
-			event($e = new InstructorLookup($user));
+			event($e = new InstructorLookup($user, false));
 
 			$classes = $e->courses;
 			$resources = Asset::query()

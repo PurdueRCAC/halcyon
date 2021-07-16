@@ -56,7 +56,7 @@
 				foreach ($courses as $class)
 				{
 					if ($class->datetimestop > $now
-					|| $class->semester == 'Workshop')
+					 || $class->semester == 'Workshop')
 					{
 						$class_data = null;
 
@@ -68,6 +68,10 @@
 								$class_data = $c;
 								$class_data->accounts = 0;
 
+								event($e = new App\Modules\Courses\Events\AccountEnrollment($class));
+
+								$class_data->enrollment = $e->enrollments;
+
 								if (is_array($class_data->enrollment))
 								{
 									foreach ($class_data->enrollment as $student)
@@ -77,10 +81,10 @@
 
 										if ($u)
 										{
-											$username = $u->username;
+											//$username = $u->username;
 
 											// See if the they have host entry yet
-											event($e = new App\Modules\Users\Events\UserLookup(['username' => $username, 'host' => $class->resource->rolename . '.rcac.purdue.edu']));
+											event($e = new App\Modules\Users\Events\UserLookup(['username' => $u->username, 'host' => $class->resource->rolename . '.rcac.purdue.edu']));
 
 											if (count($e->results) > 0)
 											{
@@ -421,6 +425,7 @@
 					<div class="col-sm-2 col-form-label">Registration Count</div>
 					<div class="col-sm-10">
 						<span id="new_class_count"></span>
+						<span class="spinner-border spinner-border-sm" role="status"></span>
 					</div>
 				</div>
 				<div class="form-group row">
@@ -448,7 +453,6 @@
 								<a href="#createhelp1" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span> Help</a>
 							</label>
 							<input type="text" class="form-control" size="30" id="estNum" value="" />
-							<!-- <span class="form-text text-muted">Please provide the number of students you expect to enroll in this course. This is especially helpful when creating the class account prior to the semester when no enrollment data is available yet.</span> -->
 
 							<div id="createhelp1" class="dialog dialog-help" title="Expected number of students">
 								<p>Please provide the number of students you expect to enroll in this course. This is especially helpful when creating the class prior to the semester when we have no enrollment data.</p>
@@ -461,7 +465,6 @@
 								<a href="#createhelp2" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span></a>
 							</label>
 							<textarea class="form-control" cols="60" rows="3" id="classMeetings"></textarea>
-							<!-- <span class="form-text text-muted">Providing your class schedule, and how many students per class (if you have multiple labs/lectures),  gives us an idea of how classes will be connecting throughout the school day. This is especially helpful if you have large meetings so we can anticipate large bursts of activity. Enter in any convenient format.</span> -->
 
 							<div id="createhelp2" class="dialog dialog-help" title="Class meeting times">
 								<p>Providing your class schedule, and how many students per class (if you have multiple labs/lectures),  gives us an idea of how classes will be connecting throughout the school day. This is especially helpful if you have large meetings so we can anticipate large bursts of activity. Enter in any convenient format.</p>
@@ -477,7 +480,7 @@
 							<textarea class="form-control" cols="60" rows="3" id="courseResources"></textarea>
 
 							<div id="createhelp3" class="dialog dialog-help" title="Software and resources">
-								<p>Please provide a list of applications and software you expect to use. This gives us an idea of what software we should provide. If you do not see software installed you would like us to look at installing please <a href="mailto:rcac-help@purdue.edu">contact us</a>.</p>
+								<p>Please provide a list of applications and software you expect to use. This gives us an idea of what software we should provide. If you do not see software installed you would like us to look at installing please <a href="mailto:{{ config('mail.from.address') }}">contact us</a>.</p>
 							</div>
 						</div>
 
