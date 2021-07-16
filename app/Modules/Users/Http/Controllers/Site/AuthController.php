@@ -147,7 +147,10 @@ class AuthController extends Controller
 						$user->name = $cas->getAttribute('fullname');
 						$user->api_token = Str::random(60);
 
-						$user->newroles = array($newUsertype);
+						if ($newUsertype)
+						{
+							$user->newroles = array($newUsertype);
+						}
 
 						if ($user->save())
 						{
@@ -160,7 +163,7 @@ class AuthController extends Controller
 
 					if ($user && $user->id)
 					{
-						if (!count($user->roles))
+						if (!count($user->roles) && $newUsertype)
 						{
 							$user->newroles = array($newUsertype);
 							$user->save();

@@ -97,4 +97,8 @@ return [
 	'private' => 'Private',
 	'locked' => 'Locked',
 	'sessions' => 'Sessions',
+	'invalid' => [
+		'username' => 'Invalid username.',
+		'name' => 'Invalid name.',
+	],
 ];

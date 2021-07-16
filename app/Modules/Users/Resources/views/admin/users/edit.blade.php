@@ -141,9 +141,9 @@ app('pathway')
 		<ul>
 			<li><a href="#user-account">Account</a></li>
 			@if ($user->id)
-				<li><a href="#user-attributes">Attributes</a></li>
+				<li><a href="#user-attributes">{{ trans('users::users.attributes') }}</a></li>
 				@if (auth()->user()->can('view users.notes'))
-					<li><a href="#user-notes">Notes</a></li>
+					<li><a href="#user-notes">{{ trans('users::users.notes') }}</a></li>
 				@endif
 				<?php /*@foreach ($sections as $section)
 					<li>
@@ -163,13 +163,15 @@ app('pathway')
 						@endif
 
 						<div class="form-group">
-							<label id="field_username-lbl" for="field_username">{{ trans('users::users.username') }} <span class="required star">{{ trans('global.required') }}</span></label>
+							<label for="field_username" id="field_username-lbl">{{ trans('users::users.username') }}: <span class="required star">{{ trans('global.required') }}</span></label>
 							<input type="text" name="ufields[username]" id="field_username" value="{{ $user->username }}" class="form-control<?php if ($user->id) { echo ' readonly" readonly="readonly'; } ?>" required />
+							<span class="invalid-feedback">{{ trans('users::users.invalid.username') }}</span>
 						</div>
 
 						<div class="form-group">
 							<label for="field-name">{{ trans('users::users.name') }}: <span class="required star">{{ trans('global.required') }}</span></label>
 							<input type="text" class="form-control<?php if ($user->sourced) { echo ' readonly" readonly="readonly'; } ?>" required name="fields[name]" id="field-name" value="{{ $user->name }}" />
+							<span class="invalid-feedback">{{ trans('users::users.invalid.name') }}</span>
 						</div>
 
 						<div class="form-group">
@@ -270,7 +272,10 @@ app('pathway')
 					<fieldset class="adminform">
 						<legend>{{ trans('users::users.sessions') }}</legend>
 						<div class="card session">
-							<ul class="list-group list-group-flush">
+						<ul class="list-group list-group-flush">
+						@if (count($user->sessions))
+							
+							
 								@foreach ($user->sessions as $session)
 									<li class="list-group-item">
 
@@ -294,6 +299,12 @@ app('pathway')
 										</div>
 									</li>
 								@endforeach
+								
+							@else
+								<li class="list-group-item text-center">
+									<span class="none">{{ trans('global.none') }}
+								</li>
+							@endif
 							</ul>
 						</div>
 					</fieldset>
@@ -363,7 +374,7 @@ app('pathway')
 									</select>
 								</td>
 								<td class="text-right">
-									<a href="#newfacet" class="btn btn-secondary btn-success add-facet"
+									<a href="#newfacet" class="btn btn-success add-facet"
 										data-userid="{{ $user->id }}"
 										data-api="{{ route('api.users.facets.create') }}">
 										<span class="icon-plus glyph">{{ trans('global.add') }}</span>
@@ -387,7 +398,7 @@ app('pathway')
 							</td>
 							<td class="text-right">
 								<input type="hidden" name="facet[{i}][id]" class="form-control" value="{id}" />
-								<a href="#facet-{id}" class="btn btn-secondary btn-danger remove-facet"
+								<a href="#facet-{id}" class="btn btn-danger remove-facet"
 									data-api="{{ route('api.users.facets.create') }}/{id}"
 									data-confirm="{{ trans('users::users.confirm delete') }}">
 									<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
