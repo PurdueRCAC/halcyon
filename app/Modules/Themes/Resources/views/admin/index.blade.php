@@ -24,7 +24,7 @@ app('pathway')
 @stop
 
 @section('title')
-trans('themes::themes.module name')
+{{ trans('themes::themes.module name') }}
 @stop
 
 @section('content')

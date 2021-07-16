@@ -29,6 +29,10 @@ app('pathway')
 	endif;
 @endphp
 
+@section('title')
+{!! trans('media::media.module name') !!}
+@stop
+
 @section('toolbar')
 	{!! Toolbar::render() !!}
 @stop

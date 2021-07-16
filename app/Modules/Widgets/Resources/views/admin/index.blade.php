@@ -43,7 +43,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! trans('widgets::widgets.widget manager') !!}
+{!! trans('widgets::widgets.module name') !!}
 @stop
 
 @section('content')

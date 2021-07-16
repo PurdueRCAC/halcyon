@@ -59,7 +59,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('pages.name') !!}
+{!! trans('pages::pages.module name') !!}
 @stop
 
 @section('content')

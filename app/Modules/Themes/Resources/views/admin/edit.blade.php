@@ -25,7 +25,7 @@ app('pathway')
 @stop
 
 @section('title')
-trans('themes::themes.module name'): {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('themes::themes.module name') }}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
 @stop
 
 @section('content')
