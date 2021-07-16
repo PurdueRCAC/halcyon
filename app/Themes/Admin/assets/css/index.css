@@ -46,6 +46,7 @@
   --input-back-focus: #f5f5f5;
   --input-border: #ddd;
   --input-border-focus: #5897fb;
+  --input-border-disabled: rgba(0, 0, 0, 0.15);
   --input-color: #444;
   --input-color-disabled: #656565;
   --input-prepend-back: #f1f1f1;
