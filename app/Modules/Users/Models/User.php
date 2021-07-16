@@ -664,7 +664,7 @@ class User extends Model implements
 			$user->name = $user->name ?: $username;
 			$user->api_token = Str::random(60);
 
-			$newUsertype = config('modules.users.new_usertype');
+			$newUsertype = config('module.users.new_usertype');
 
 			if (!$newUsertype)
 			{
