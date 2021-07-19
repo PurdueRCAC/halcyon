@@ -280,8 +280,8 @@ app('pathway')
 	</div>
 
 	<?php /*<div id="app">
-		<news-results></news-results>
+		<news-search></news-search>
 	</div>
-	<script type="text/javascript" src="{{ mix('js/app.js') }}"></script>*/ ?>
+	<script type="text/javascript" src="{{ asset('/modules/news/js/app.js') }}"></script>*/ ?>
 </div>
 @stop
