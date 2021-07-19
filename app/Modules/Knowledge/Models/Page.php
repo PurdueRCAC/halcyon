@@ -203,6 +203,7 @@ class Page extends Model
 				$title = strtolower($title);
 				$title = str_replace(' ', '_', $title);
 				$title = preg_replace('/[^a-z0-9\-_]+/', '', $title);
+				$title = (request('all') ? $this->id . '-' : '') . $title;
 
 				$anchor = '<a href="#' . $title . '" class="heading-anchor" title="Permalink"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only">Permalink</span></a> ';
 
