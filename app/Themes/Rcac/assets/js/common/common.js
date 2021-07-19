@@ -477,36 +477,15 @@ function csvEscapeJSON(s) {
 $(document).ready(function() {
 	$('html').removeClass('no-js').addClass('js');
 
-	/*var tabs = document.querySelectorAll('.tabs a');
-
-	if (tabs.length) {
-		// Get a list of all tabs
-		var tlist = [];
-
-		for (i = 0; i < tabs.length; i++)
-		{
-			tlist.push(tabs[i].getAttribute('href').replace('#DIV_', ''));
+	// Auto-add tokens to AJAX requests
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+			'Authorization': 'Bearer ' + $('meta[name="api-token"]').attr('content'),
 		}
+	});
 
-		tablist = tlist.join(',');
-
-		// Attach event handler
-		for (i = 0; i < tabs.length; i++)
-		{
-			tabs[i].addEventListener('click', function (event) {
-				event.preventDefault();
-
-				ShowTab(this.getAttribute('id'), tablist);
-			});
-		}
-
-		if (window.location.href.match(/\#/)) {
-			var bits = window.location.href.split('#');
-			tab = bits[1];
-			ShowTab(tab, tablist);
-		}
-	}*/
-
+	// UI helpers like dialogs, tooltips, etc.
 	$('.dialog-help').dialog({
 		autoOpen: false,
 		modal: true,
@@ -521,21 +500,6 @@ $(document).ready(function() {
 		}
 	});
 
-	/*$('.editicon').tooltip({
-		position: {
-			my: 'center bottom',
-			at: 'center top'
-		},
-		// When moving between hovering over many elements quickly, the tooltip will jump around
-		// because it can't start animating the fade in of the new tip until the old tip is
-		// done. Solution is to disable one of the animations.
-		hide: false,
-		items: "img[alt]",
-		content: function () {
-			return $(this).attr('alt');
-		}
-	});*/
-
 	$('.tip').tooltip({
 		position: {
 			my: 'center bottom',
@@ -547,15 +511,9 @@ $(document).ready(function() {
 		hide: false
 	});
 
-	$.ajaxSetup({
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-			'Authorization': 'Bearer ' + $('meta[name="api-token"]').attr('content'),
-		}
-	});
-
 	$('.date-pick').datepicker({ dateFormat: 'yy-mm-dd' });
 
+	// Main nav
 	$('.navbar .dropdown').hover(
 		function () {
 			$(this).find('.dropdown-menu').first().stop(true, true).delay(10).slideDown();
@@ -569,9 +527,22 @@ $(document).ready(function() {
 		location.href = this.href;
 	});
 
+	// Force outage banners to be sticky
 	var banner = $('.notice-banner');
 	if (banner.length) {
 		banner.css('height', banner.height());
 		banner.find('.alert-warning').addClass('sticky');
 	}
+
+	// Purdue Search
+	$('input.gsc-input').on('keyup blur focus', function(e){
+		if ($(this).val()) {
+			$(this).closest('.gsc-input-box').addClass('gsc-input-active');
+		} else {
+			$(this).closest('.gsc-input-box').removeClass('gsc-input-active');
+		}
+	});
+	$('.gsst_a').on('click', function(e){
+		$(this).closest('.gsc-input-box').removeClass('gsc-input-active');
+	});
 });

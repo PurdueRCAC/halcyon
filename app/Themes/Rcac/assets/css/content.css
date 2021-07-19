@@ -1840,6 +1840,42 @@ div.launch:after {
 	border-radius: 0;
 }
 
+/* Google search */
+.gsc-search-box {
+	position: relative;
+}
+.gsc-search-box .gsst_a {
+	position: absolute;
+	right: 0.2em;
+	top: 0.2em;
+}
+.gsc-input {
+	background-image: url('https://www.google.com/cse/static/images/1x/en/branding.png');
+	background-color: rgb(255, 255, 255);
+	background-position: 1em center;
+	background-repeat: no-repeat no-repeat;
+}
+.gsc-input:focus,
+.gsc-input-active .gsc-input {
+	background-image: none;
+}
+.gsst_a {
+	display: none;
+	font: 27px/13px arial,sans-serif;
+}
+.gsst_a .gscb_a {
+	color: #a1b9ed;
+	cursor: pointer;
+	line-height: 27px;
+}
+.gsst_a:hover .gscb_a,
+.gsst_a:focus .gscb_a {
+	color: #36c;
+}
+.gsc-input-active .gsst_a {
+	display: inline-block;
+}
+
 @media (min-width: 760px) {
 	.services {
 		margin-left: -15px;
