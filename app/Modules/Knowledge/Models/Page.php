@@ -193,7 +193,9 @@ class Page extends Model
 		$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
 		$text = preg_replace('/href="\/(.*?)"/i', 'href="' . url("$1") . '"', $text);
 
-		$text = preg_replace_callback( '/(\<h[1-6](.*?))\>(.*)(<\/h[1-6]>)/i', function($matches)
+		$headers = array();
+
+		$text = preg_replace_callback( '/(\<h[1-6](.*?))\>(.*)(<\/h[1-6]>)/i', function($matches) use (&$headers)
 		{
 			if (!stripos($matches[0], 'id='))
 			{
@@ -204,6 +206,17 @@ class Page extends Model
 				$title = str_replace(' ', '_', $title);
 				$title = preg_replace('/[^a-z0-9\-_]+/', '', $title);
 				$title = (request('all') ? $this->id . '-' : '') . $title;
+
+				if (!isset($headers[$title]))
+				{
+					$headers[$title] = 0;
+				}
+				$headers[$title]++;
+
+				if ($headers[$title] > 1)
+				{
+					$title = $headers[$title] . '_' . $title;
+				}
 
 				$anchor = '<a href="#' . $title . '" class="heading-anchor" title="Permalink"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only">Permalink</span></a> ';
 
