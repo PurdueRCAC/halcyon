@@ -67,7 +67,13 @@
 	</head>
 	<body>
 		@widget('top')
-
+		@if (app()->has('impersonate') && app('impersonate')->isImpersonating())
+			<div class="notice-banner admin text-center">
+				<div class="alert alert-info">
+					You are impersonating {{ auth()->user()->name }}. <a href="{{ route('impersonate.leave') }}">Exit</a>
+				</div>
+			</div>
+		@endif
 		<header>
 			<div class="container">
 				<div class="row">

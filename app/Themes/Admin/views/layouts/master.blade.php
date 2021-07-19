@@ -1,15 +1,15 @@
 @if (!request()->ajax())
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js" data-mode="{{ auth()->user()->facet('theme.admin.mode', app('themes')->getActiveTheme()->getParams('mode', 'light')) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js" data-mode="{{ auth()->user() ? auth()->user()->facet('theme.admin.mode', app('themes')->getActiveTheme()->getParams('mode', 'light')) : 'light' }}">
 	<head>
 		<!-- Metadata -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<meta name="base-url" content="{{ rtrim(url('/'), '/') }}">
-		<meta name="api-token" content="{{ (Auth::user() ? Auth::user()->api_token : '') }}">
-		<meta name="theme-color" content="#000000">
-		<meta name="color-scheme" content="light dark">
+		<meta name="csrf-token" content="{{ csrf_token() }}" />
+		<meta name="base-url" content="{{ rtrim(url('/'), '/') }}" />
+		<meta name="api-token" content="{{ (auth()->user() ? auth()->user()->api_token : '') }}" />
+		<meta name="theme-color" content="#000000" />
+		<meta name="color-scheme" content="light dark" />
 
 		<title>{{ config('app.name') }} - {{ trans('theme::admin.admin') }}@hasSection('title'): @yield('title')@endif</title>
 
@@ -33,8 +33,8 @@
 			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie9.css') }}" />
 		<![endif]-->
 		<!--[if lt IE 9]>
-			<script src="{{ asset('js/html5.js') }}"></script>
-			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie8.css') }}" />
+			<script src="{{ asset('themes/admin/js/html5.js') }}"></script>
+			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie9.css') }}" />
 		<![endif]-->
 		@yield('styles')
 		@stack('styles')
@@ -59,6 +59,13 @@
 		@stack('scripts')
 	</head>
 	<body{!! (auth()->user()->facet('theme.admin.menu') == 'open' ? ' class="menu-open"' : '') !!}>
+		@if (app()->has('impersonate') && app('impersonate')->isImpersonating())
+			<div class="notice-banner admin text-center">
+				<div class="alert alert-info">
+					You are impersonating {{ auth()->user()->name }}. <a href="{{ route('impersonate.leave') }}">Exit</a>
+				</div>
+			</div>
+		@endif
 		<div id="container-main">
 			<header id="header" role="banner">
 				<h1>
