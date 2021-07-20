@@ -2823,16 +2823,19 @@ function NEWSSendMail(news) {
 		var body = "";
 		if (data['updates'].length > 0) {
 			for (var x = 0; x < data['updates'].length; x++) {
-				body = body + '<span class="newsupdate">UPDATE: ' + data['updates'][x]['formattedcreateddate'] + '</span>' + data['updates'][x]['formattedbody'] + '<br/>';
+				body = body + '<section><h3 class="newsupdate">UPDATE: ' + data['updates'][x]['formattedcreateddate'] + '</h3>' + data['updates'][x]['formattedbody'] + '</section>';
 			}
-			body = body + '<span class="newsupdate">ORIGINAL: ' + data['formattedcreateddate'] + "</span>";
+			body = body + '<section><h3 class="newsupdate">ORIGINAL: ' + data['formattedcreateddate'] + '</h3>';
 		}
 		body = body + data['formattedbody'];
+		if (data['updates'].length > 0) {
+			body += '</section>';
+		}
 
 		if (data['resources'].length > 0) {
 			footer += '<hr /><p>Send to resource mailing lists:</p><div class="row">';
 			for (var x = 0; x < data['resources'].length; x++) {
-				footer += '<div class="col-md-3"><label><input type="checkbox" checked="checked" value="' + data['resources'][x]['resourceid'] + '" class="preview-resource" /> ' + data['resources'][x]['resource']['name'] + '</label></div>';
+				footer += '<div class="col-md-3"><label><input type="checkbox" checked="checked" value="' + data['resources'][x]['resourceid'] + '" class="preview-resource" /> ' + data['resources'][x]['name'] + '</label></div>';
 			}
 			footer += '</div>';
 		}

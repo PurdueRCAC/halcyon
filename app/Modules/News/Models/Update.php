@@ -343,7 +343,7 @@ class Update extends Model
 
 		//$text = preg_replace_callback("/\{\{CODE\}\}/", 'replaceCode', $text);
 
-		$text = '<p>' . $text . '</p>';
+		//$text = '<p>' . $text . '</p>';
 		$text = preg_replace("/<p>(.*)(<table.*?>)(.*<\/table>)/m", "<p>$2 <caption>$1</caption>$3", $text);
 
 		return $text;

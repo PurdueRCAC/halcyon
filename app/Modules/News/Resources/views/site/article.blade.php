@@ -24,7 +24,6 @@ app('pathway')
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-	
 
 	@if (auth()->user() && auth()->user()->can('edit news'))
 	<div class="row">
@@ -117,15 +116,21 @@ app('pathway')
 
 		@if (count($article->updates))
 			@foreach ($article->updates()->orderBy('datetimecreated', 'desc')->get() as $update)
-				<div class="newsupdate">UPDATE: {!! $update->formattedDatetimecreated($update->datetimecreated) !!}</div>
-				{!! $update->formattedBody !!}
-				<br/>
+				<section>
+					<h3 class="newsupdate">UPDATE: {!! $update->formattedDatetimecreated($update->datetimecreated) !!}</h3>
+					{!! $update->formattedBody !!}
+				</section>
 			@endforeach
 
-			<div class="newsupdate">ORIGINAL: {{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}</div>
+			<section>
+				<h3 class="newsupdate">ORIGINAL: {{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}</h3>
 		@endif
 
 		{!! $article->formattedBody !!}
+
+		@if (count($article->updates))
+			</section>
+		@endif
 
 		<p class="newsfooter">
 			Originally posted: {{ $article->formatDate($article->datetimecreated) }}
