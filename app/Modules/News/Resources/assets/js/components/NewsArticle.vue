@@ -1,7 +1,7 @@
 <template>
 	<article v-bind:id="'news-' + id">
-		<div class="panel panel-default">
-			<div class="panel-heading news-admin" v-if="canEdit || canDelete">
+		<div class="card panel panel-default">
+			<div class="card-header panel-heading news-admin" v-if="canEdit || canDelete">
 				<span class="newsid">
 					<a v-bind:href="url">#{{ id }}</a>
 				</span>
@@ -19,7 +19,7 @@
 					Preview mail
 				</a>
 			</div>
-			<div class="panel-heading">
+			<div class="card-header panel-heading">
 				<h3 class="panel-title newsheadline">
 					{{ headline }}
 				</h3>
@@ -44,11 +44,11 @@
 					</li>
 				</ul>
 			</div>
-			<div class="panel-body">
+			<div class="card-body panel-body">
 				<div class="newsposttext" v-html="formattedbody">
 				</div>
 			</div>
-			<div class="panel-footer">
+			<div class="card-footer panel-footer">
 				<div class="newspostedby">
 					<div class="newspostuser">Posted by Person on {{ datetimenews }}</div>
 				</div>

@@ -1,16 +1,16 @@
 <template>
 	<li>
-		<div class="panel panel-default">
-			<div class="panel-heading news-admin">
+		<div class="card panel panel-default">
+			<div class="card-header panel-heading news-admin">
 				<span class="newsid">#{{ id }}</span>
 				<a class="edit news-update-delete" href="/news/manage?delete&amp;update=121" id="121_deleteicon" title="Delete update." v-if="canDelete">
 					<span class="fa fa-x" aria-hidden="true"></span>
 					Delete
 				</a>
 			</div>
-			<div class="panel-body crmcomment crmcommenttext" v-html="formattedbody">
+			<div class="card-body panel-body crmcomment crmcommenttext" v-html="formattedbody">
 			</div>
-			<div class="panel-footer">
+			<div class="card-footer panel-footer">
 				<div class="crmcommentpostedby">Posted by Person on {{ datetimecreated }}</div>
 			</div>
 		</div>

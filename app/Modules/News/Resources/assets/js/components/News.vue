@@ -1,6 +1,6 @@
 <template>
 	<div id="news">
-		<form method="get" action="">
+		<form method="get" action="" class="editform">
 			<fieldset>
 				<legend>Search News</legend>
 
@@ -28,7 +28,6 @@
 					<div class="col-sm-10">
 						<select id="newstype" name="newstype" class="form-control">
 							<option id="OPTION_all" name="all" value="-1">All</option>
-							<option value="<?php echo $type; ?>" data-tagresources="<?php echo $newstype['tagresources']; ?>" data-taglocation=""><?php echo $newstype['name']; ?></option>
 						</select>
 					</div>
 				</div>
@@ -102,6 +101,7 @@
 		},
 		methods: {
 			create() {
+				console.log('Creating article');
 				this.mute = true;
 				window.axios.post(this.ROOT_URL + '/api/news/create').then(({ data }) => {
 					this.articles.push(datum); //new Article(data));
@@ -109,7 +109,7 @@
 				});
 			},
 			read() {
-				console.log('here');
+				console.log('Retrieving articles...');
 				this.mute = true;
 				window.axios.get(this.ROOT_URL + '/api/news', {
 					params: {
@@ -120,11 +120,12 @@
 					data.data.forEach(datum => {
 						this.articles.push(datum); //new Article(datum));
 					});
-					this.total = data.total;
+					this.total = data.meta.total;
 					this.mute = false;
 				});
 			},
 			update(id, color) {
+				console.log('Updating article #' + id);
 				this.mute = true;
 				window.axios.put(`${this.ROOT_URL}/api/news/${id}`, { color }).then(() => {
 					this.articles.find(datum => datum.id === id).color = color;
@@ -132,13 +133,13 @@
 				});
 			},
 			del(id) {
-				console.log('deleting ' + id);
-				/*this.mute = true;
+				console.log('Deleting article #' + id);
+				this.mute = true;
 				window.axios.delete(`${this.ROOT_URL}/api/news/${id}`).then(() => {
 					let index = this.articles.findIndex(datum => datum.id === id);
 					this.articles.splice(index, 1);
 					this.mute = false;
-				});*/
+				});
 			}
 		},
 		watch: {
