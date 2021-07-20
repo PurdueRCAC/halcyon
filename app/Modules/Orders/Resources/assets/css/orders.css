@@ -114,32 +114,26 @@ ol.steps li.notmystep {
 }
 
 /* Applied filters */
- #applied-filters {
+#applied-filters {
 	display: block;
-	border: 1px solid #E9E9E9;
-	padding: 0.5em 1em;
 	margin: 0 0 1em 0;
 }
-#applied-filters ul.filters-list {
-	margin: 0.2em 0 0 0;
+#applied-filters ul {
+	margin: 0;
 	overflow: hidden;
 }
 #applied-filters p {
 	float: left;
 	margin: 0.4em 1em 0.4em 0;
 }
-#applied-filters .filters-list li {
+#applied-filters li {
 	float: left;
 	list-style: none;
 	margin: 0 0.5em 0.3em 0;
 	padding: 0.2em 0.5em;
-	background: #d9d9d9;
-	-webkit-border-radius: 0.25em;
-	-moz-border-radius: 0.25em;
-	-o-border-radius: 0.25em;
-	border-radius: 0.25em;
+	background: #ededed;
 }
-#applied-filters .filters-list li a.filters-x {
+#applied-filters li a.filters-x {
 	margin-left: 0.5em;
 	color: #aaa;
 	border-bottom: none;
@@ -150,10 +144,7 @@ ol.steps li.notmystep {
 	white-space: nowrap;
 	line-height: 1;
 }
-#applied-filters .filters-list li a.filters-x:before {
-
-}
-#applied-filters .filters-list li a.filters-x:hover {
+#applied-filters li a.filters-x:hover {
 	border-bottom: none;
 	color: #222;
 }
