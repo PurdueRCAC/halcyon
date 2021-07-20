@@ -70,6 +70,58 @@ app('pathway')
 			</fieldset>
 		</div>
 		<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+
+			<div id="applied-filters" aria-label="Applied filters">
+				<p class="sr-only">Applied Filters:</p>
+				<ul class="filters-list">
+					<?php
+					$allfilters = collect($filters);
+					$fkeys = ['search', 'product'];
+
+					foreach ($fkeys as $key):
+						if (!isset($filters[$key]) || $filters[$key] == '*'):
+							continue;
+						endif;
+
+						$f = $allfilters
+							->reject(function($v, $k) use ($key)
+							{
+								return (in_array($k, ['userid', 'limit', 'page', 'order', 'order_dir']));
+							})
+							->map(function($v, $k) use ($key)
+							{
+								if ($k == $key)
+								{
+									$v = '*';
+									$v = ($k == 'search' ? '' : $v);
+								}
+								return $v;
+							})
+							->toArray();
+
+						$val = $filters[$key];
+						$val = ($val == '*' ? 'all' : $val);
+						if ($key == 'product'):
+							foreach ($products as $product):
+								if ($val == $product->id):
+									$val = $product->name;
+									break;
+								endif;
+							endforeach;
+						endif;
+						?>
+						<li>
+							<strong>{{ trans('orders::orders.filters.' . $key) }}</strong>: {{ $val }}
+							<a href="{{ route('site.orders.recurring', $f) }}" class="icon-remove filters-x" title="Remove filter">
+								<span class="fa fa-times" aria-hidden="true"><span class="sr-only">Remove filter</span>
+							</a>
+						</li>
+						<?php
+					endforeach;
+					?>
+				</ul>
+			</div>
+
 			@if (count($rows))
 				<table class="table table-hover mt-0">
 					<caption class="sr-only">{{ trans('orders::orders.recurring items') }}</caption>

@@ -26,7 +26,7 @@ class ProductsController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
-			'category'  => 0,
+			'category'  => '*',
 			'public'    => 1,
 			'restricteddata' => '*',
 			// Paging
@@ -103,14 +103,14 @@ class ProductsController extends Controller
 			}
 		}
 
-		if ($filters['category'])
+		if ($filters['category'] != '*')
 		{
-			$query->where($p . '.ordercategoryid', '=', $filters['category']);
+			$query->where($p . '.ordercategoryid', '=', (int)$filters['category']);
 		}
 
 		if ($filters['restricteddata'] != '*')
 		{
-			$query->where($p . '.restricteddata', '=', $filters['restricteddata']);
+			$query->where($p . '.restricteddata', '=', (int)$filters['restricteddata']);
 		}
 
 		$rows = $query

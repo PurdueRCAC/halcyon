@@ -168,20 +168,8 @@ $(document).ready(function() {
 	products
 @endcomponent
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-	<div class="row">
-		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-			<h2 class="sr-only">{{ trans('orders::orders.products') }}</h2>
-		</div>
-		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
-			@if (auth()->user() && auth()->user()->can('manage orders'))
-			<p>
-				<a href="{{ route('site.orders.products.create') }}" class="btn btn-info">
-					<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('orders::orders.create product') }}
-				</a>
-			</p>
-			@endif
-		</div>
-	</div>
+	<h2 class="sr-only">{{ trans('orders::orders.products') }}</h2>
+
 	<div class="row">
 		
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
@@ -204,7 +192,7 @@ $(document).ready(function() {
 				<div class="form-group">
 					<label for="filter_category">{{ trans('orders::orders.category') }}</label>
 					<select name="category" id="filter_category" class="form-control filter filter-submit">
-						<option value="0"<?php if (!$filters['category']): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
+						<option value="*"<?php if ($filters['category'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
 						<?php foreach ($categories as $category) { ?>
 							<?php
 							if ($filters['category'] == $category->id):
@@ -301,6 +289,78 @@ $(document).ready(function() {
 </div>
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	<form action="{{ route('site.orders.products') }}" method="post" name="adminForm" id="adminForm" class="form-iline">
+		@if (auth()->user() && auth()->user()->can('manage orders'))
+			<p class="text-right">
+				<a href="{{ route('site.orders.products.create') }}" class="btn btn-info">
+					<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('orders::orders.create product') }}
+				</a>
+			</p>
+		@endif
+
+		<div id="applied-filters" aria-label="Applied filters">
+			<p class="sr-only">Applied Filters:</p>
+			<ul class="filters-list">
+				<?php
+				$allfilters = collect($filters);
+				$fkeys = ['search', 'category'];
+				if (auth()->user()->can('manage orders')):
+					$fkeys = ['search', 'category', 'restricteddata', 'public'];
+				endif;
+
+				foreach ($fkeys as $key):
+					if (!isset($filters[$key]) || $filters[$key] == '*'):
+						continue;
+					endif;
+
+					$f = $allfilters
+						->reject(function($v, $k) use ($key)
+						{
+							return (in_array($k, ['userid', 'limit', 'page', 'order', 'order_dir']));
+						})
+						->map(function($v, $k) use ($key)
+						{
+							if ($k == $key)
+							{
+								$v = '*';
+								$v = ($k == 'search' ? '' : $v);
+							}
+							return $v;
+						})
+						->toArray();
+
+					$val = $filters[$key];
+					$val = ($val == '*' ? 'all' : $val);
+					if ($key == 'restricteddata'):
+						$val = ($val == '*' ? trans('all restricted data') : $val);
+						$val = ($val == 1 ? trans('global.yes') : $val);
+						$val = (!$val ? trans('global.no') : $val);
+					endif;
+					if ($key == 'category'):
+						foreach ($categories as $category):
+							if ($val == $category->id):
+								$val = $category->name;
+								break;
+							endif;
+						endforeach;
+					endif;
+					if ($key == 'public'):
+						$val = ($val == '*' ? trans('orders::orders.all visibilities') : $val);
+						$val = ($val == 1 ? trans('orders::orders.public') : $val);
+						$val = (!$val ? trans('orders::orders.hidden') : $val);
+					endif;
+					?>
+					<li>
+						<strong>{{ trans('orders::orders.filters.' . $key) }}</strong>: {{ $val }}
+						<a href="{{ route('site.orders.products', $f) }}" class="icon-remove filters-x" title="Remove filter">
+							<span class="fa fa-times" aria-hidden="true"><span class="sr-only">Remove filter</span>
+						</a>
+					</li>
+					<?php
+				endforeach;
+				?>
+			</ul>
+		</div>
+
 		@if ($cat)
 			<h3>{{ $cat->name }}</h3>
 			<p class="mb-5">{{ $cat->description }}</p>

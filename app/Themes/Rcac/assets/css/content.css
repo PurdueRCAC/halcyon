@@ -607,7 +607,9 @@ table.orderproduct th {
 	border-bottom: 3pt #000;
 	border-bottom-style: double;
 }
-
+.wrapper-news section {
+	margin-top: 3em;
+}
 .newsheadline {
 	font-weight: bold;
 }

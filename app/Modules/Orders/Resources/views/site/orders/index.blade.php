@@ -342,6 +342,68 @@ app('pathway')
 				</p>
 			</div>
 		@endif
+
+		<div id="applied-filters" aria-label="Applied filters">
+			<p class="sr-only">Applied Filters:</p>
+			<ul class="filters-list">
+				<?php
+				$allfilters = collect($filters);
+
+				foreach (['search', 'status', 'category', 'product', 'start', 'end'] as $key):
+					if (!isset($filters[$key]) || !$filters[$key] || $filters[$key] == '*'):
+						continue;
+					endif;
+
+					$f = $allfilters
+						->reject(function($v, $k) use ($key)
+						{
+							return (in_array($k, ['export', 'userid', 'limit', 'page', 'order', 'order_dir', 'type']));
+						})
+						->map(function($v, $k) use ($key)
+						{
+							if ($k == $key)
+							{
+								$v = '*';
+								$v = ($k == 'start' || $k == 'end' || $k == 'search' ? '' : $v);
+							}
+							return $v;
+						})
+						->toArray();
+
+					$val = $filters[$key];
+					$val = ($val == '*' ? 'all' : $val);
+					if ($key == 'status'):
+						$val = trans('orders::orders.' . $val);
+					endif;
+					if ($key == 'category'):
+						foreach ($categories as $category):
+							if ($val == $category->id):
+								$val = $category->name;
+								break;
+							endif;
+						endforeach;
+					endif;
+					if ($key == 'product'):
+						foreach ($products as $product):
+							if ($val == $product->id):
+								$val = $product->name;
+								break;
+							endif;
+						endforeach;
+					endif;
+					?>
+					<li>
+						<strong>{{ trans('orders::orders.filters.' . $key) }}</strong>: {{ $val }}
+						<a href="{{ route('site.orders.index', $f) }}" class="icon-remove filters-x" title="Remove filter">
+							<span class="fa fa-times" aria-hidden="true"><span class="sr-only">Remove filter</span>
+						</a>
+					</li>
+					<?php
+				endforeach;
+				?>
+			</ul>
+		</div>
+
 	@if (count($rows))
 		<table class="table table-hover mt-0">
 			<caption class="sr-only">{{ trans('orders::orders.orders placed') }}</caption>
