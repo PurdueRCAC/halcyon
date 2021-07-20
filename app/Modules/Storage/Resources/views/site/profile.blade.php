@@ -715,7 +715,7 @@
 							$sdirs[$not->storagedirid] = $not->directory()->withTrashed()->whereIsActive()->first();
 						}
 
-						if (!$sdirs[$not->storagedirid]->storageResource)
+						if (!$sdirs[$not->storagedirid] || !$sdirs[$not->storagedirid]->storageResource)
 						{
 							continue;
 						}
