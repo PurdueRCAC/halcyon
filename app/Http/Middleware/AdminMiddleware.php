@@ -96,10 +96,23 @@ class AdminMiddleware
 				{
 					$user = \App\Modules\Users\Models\User::findByUsername($cas->user());
 
+					$newUsertype = config('module.users.new_usertype');
+
+					if (!$newUsertype)
+					{
+						$newUsertype = \App\Halcyon\Access\Role::findByTitle('Registered')->id;
+					}
+
 					if ((!$user || !$user->id) && config('module.users.create_on_login', 1))
 					{
 						$user = new \App\Modules\Users\Models\User;
 						$user->name = $cas->getAttribute('fullname');
+						$user->api_token = \Illuminate\Support\Str::random(60);
+
+						if ($newUsertype)
+						{
+							$user->newroles = array($newUsertype);
+						}
 
 						if ($user->save())
 						{
@@ -112,6 +125,12 @@ class AdminMiddleware
 
 					if ($user && $user->id)
 					{
+						if (!count($user->roles) && $newUsertype)
+						{
+							$user->newroles = array($newUsertype);
+							$user->save();
+						}
+
 						if (!$user->api_token)
 						{
 							$user->api_token = \Illuminate\Support\Str::random(60);
