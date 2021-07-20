@@ -3,6 +3,7 @@ namespace App\Widgets\Coffeehours;
 
 use App\Modules\Widgets\Entities\Widget;
 use App\Modules\News\Models\Type;
+use App\Modules\News\Models\Association;
 use Carbon\Carbon;
 
 /**
@@ -62,6 +63,18 @@ class Coffeehours extends Widget
 			->limit($this->params->get('limit', 100))
 			->get();
 
+		$attending = array();
+		foreach ($rows as $event)
+		{
+			foreach ($event->associations()->withTrashed()->whereIsActive()->get() as $assoc)
+			{
+				if (auth()->user() && $assoc->associd == auth()->user()->id)
+				{
+					$attending[$event->datetimenews->format('Y-m-d')] = $assoc->id;
+				}
+			}
+		}
+
 		$layout = $this->params->get('layout');
 		$layout = $layout ?: 'index';
 
@@ -73,6 +86,7 @@ class Coffeehours extends Widget
 			'params' => $this->params,
 			'type'   => $type,
 			'week_start' => $week_start,
+			'attendance' => $attending
 		]);
 	}
 }

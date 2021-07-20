@@ -31,6 +31,7 @@ foreach ($rows as $event)
 
 	$attending = false;
 	$reserved  = false;
+	$canAttend = true;
 
 	foreach ($event->associations()->withTrashed()->whereIsActive()->get() as $assoc)
 	{
@@ -47,6 +48,11 @@ foreach ($rows as $event)
 				$reserved = $u->name;
 			}
 		}
+	}
+
+	if (!$attending && isset($attendance[$event->datetimenews->format('Y-m-d')]))
+	{
+		$canAttend = false;
 	}
 
 	$now = Carbon\Carbon::now();
@@ -166,24 +172,26 @@ foreach ($rows as $event)
 						<div class="text-success">This time is reserved.</div>
 					@elseif ($now->getTimestamp() < $endregistration->getTimestamp())
 						@if (auth()->user())
-							@if (!$attending)
-							<div class="row">
-								<div class="col-md-6 text-right">
-									<div class="alert hide" data-success="You reserved this time." data-error="An error occurred. We were unable to reserve this time."></div>
+							@if (!$attending && $canAttend)
+								<div class="row">
+									<div class="col-md-6 text-right">
+										<div class="alert hide" data-success="You reserved this time." data-error="An error occurred. We were unable to reserve this time."></div>
+									</div>
+									<div class="col-md-6 text-right">
+										<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">Reserve this time</a>
+									</div>
 								</div>
-								<div class="col-md-6 text-right">
-									<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">Reserve this time</a>
-								</div>
-							</div>
+							@elseif (!$attending && !$canAttend)
+								<div class="alert alert-warning">Reservations are limited to one per day. If you need more time, please contact support to schedule a consultation.</div>
 							@else
-							<div class="row">
-								<div class="col-md-6">
-									<div class="text-success">You reserved this time.</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="text-success">You reserved this time.</div>
+									</div>
+									<div class="col-md-6 text-right">
+										<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel reservation</a>
+									</div>
 								</div>
-								<div class="col-md-6 text-right">
-									<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel reservation</a>
-								</div>
-							</div>
 							@endif
 						@else
 							<div class="row">
@@ -193,7 +201,7 @@ foreach ($rows as $event)
 							</div>
 						@endif
 					@else
-						<div class="text-warning">Reservations are closed.</div>
+						<div class="alert alert-warning">Reservations are closed.</div>
 					@endif
 				@endif
 			@else

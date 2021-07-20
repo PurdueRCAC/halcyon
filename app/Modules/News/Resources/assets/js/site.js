@@ -3579,6 +3579,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		WSPostURL(root + "news/associations", post, function (xml) {
 			if (xml.status < 400) {
 				el.parent().html('<span class="alert alert-success">Thank you for your interest!</span>');
+				setTimeout(function () {
+					window.location.reload(true);
+				}, 1000);
 			} else if (xml.status == 403) {
 				el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');
 			} else {
@@ -3595,6 +3598,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		WSDeleteURL(root + "news/associations/" + el.data('id'), function (xml, id) {
 			if (xml.status < 400) {
 				el.parent().html('<span class="alert alert-success">Successfully cancelled.</span>');
+				setTimeout(function () {
+					window.location.reload(true);
+				}, 1000);
 			} else if (xml.status == 403) {
 				el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');
 			} else {
