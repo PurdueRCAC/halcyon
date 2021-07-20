@@ -52,8 +52,10 @@ function CreateNewGroup() {
 
 			window.location.reload(true); // = input.getAttribute('data-uri') + '/' + results.data.id;
 		} else if (xml.status == 409) {
+			document.getElementById('new_group_action').classList.remove('hide');
 			document.getElementById('new_group_action').innerHTML = "Unable to create a new group. Group by this name already exists.";
 		} else {
+			document.getElementById('new_group_action').classList.remove('hide');
 			document.getElementById('new_group_action').innerHTML = "Unable to create a new group.";
 		}
 	});
@@ -78,11 +80,11 @@ function CreateNewGroup() {
 			<form method="post" action="{{ route('site.users.account.section', ['section' => 'groups']) }}">
 				<div class="form-group">
 					<label for="new_group_input">Enter a name for a new group:</label>
-					<input type="text" id="new_group_input" class="form-control" data-userid="{{ $user->id }}" data-api="{{ route('api.groups.create') }}" data-uri="{{ route('site.users.account.section', ['section' => 'groups']) }}" value="" />
+					<input type="text" id="new_group_input" class="form-control" data-userid="{{ $user->id }}" data-api="{{ route('api.groups.create') }}" data-uri="{{ route('site.users.account.section', ['section' => 'groups']) }}" value="" required />
 					<div class="form-text text-muted">{{ $user->name }} will be added as a manager.</div>
 				</div>
 
-				<span id="new_group_action" class="alert alert-warning hide"></span>
+				<div id="new_group_action" class="alert alert-warning hide"></div>
 
 				<div class="dialog-footer">
 					<div class="row">

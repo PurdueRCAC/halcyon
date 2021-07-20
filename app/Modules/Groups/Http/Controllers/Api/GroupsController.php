@@ -360,7 +360,7 @@ class GroupsController extends Controller
 
 		if ($exists)
 		{
-			return response()->json(['message' => trans('groups::groups.name already exists', ['name' => $name])], 415);
+			return response()->json(['message' => trans('groups::groups.error.group name already exists', ['name' => $name])], 409);
 		}
 
 		$row = new Group;
@@ -374,7 +374,7 @@ class GroupsController extends Controller
 
 			if (!preg_match('/^[a-z][a-z0-9\-]{0,8}[a-z0-9]$/', $row->unixgroup))
 			{
-				return response()->json(['message' => trans('Field `unixgroup` not in valid format')], 415);
+				return response()->json(['message' => trans('groups::groups.error.unixgroup invalid format')], 409);
 			}
 
 			$exists = Group::findByUnixgroup($row->unixgroup);
@@ -382,7 +382,7 @@ class GroupsController extends Controller
 			// Check for a duplicate
 			if ($exists)
 			{
-				return response()->json(['message' => trans('`unixgroup` :name already exists', ['name' => $row->unixgroup])], 409);
+				return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $row->unixgroup])], 409);
 			}
 
 			try

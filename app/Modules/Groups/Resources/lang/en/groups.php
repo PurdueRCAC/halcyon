@@ -63,4 +63,9 @@ return [
 		'ownerremoved' => 'Manager Removed',
 	],
 	'group member' => 'group member',
+	'error' => [
+		'group name already exists' => 'Group ":name" already exists.',
+		'unixgroup name already exists' => 'Unix group ":name" already exists',
+		'unixgroup invalid format' => 'Field `unixgroup` not in valid format',
+	],
 ];
