@@ -13,6 +13,7 @@ use App\Modules\News\Events\ArticleUpdating;
 use App\Modules\News\Events\ArticleUpdated;
 use App\Modules\News\Events\ArticleDeleted;
 use App\Modules\News\Events\ArticlePrepareContent;
+use App\Modules\Resources\Models\Asset;
 use Carbon\Carbon;
 
 /**
@@ -177,6 +178,24 @@ class Article extends Model
 	public function resources()
 	{
 		return $this->hasMany(Newsresource::class, 'newsid');
+	}
+	
+	/**
+	 * Resource Assets list ordered by resource type & name
+	 *
+	 * @return  object
+	 */
+	public function resourceList()
+	{
+		$a = (new Asset)->getTable();
+		$r = (new Newsresource)->getTable();
+
+		return $this->resources()
+			->select($r . '.*', $a . '.name')
+			->join($a, $a . '.id', $r . '.resourceid')
+			->orderBy($a . '.resourcetype', 'asc')
+			->orderBy($a . '.name', 'asc');
+		//return $this->hasManyThrough(Asset::class, Newsresource::class, 'newsid', 'id', 'id', 'resourceid');
 	}
 
 	/**

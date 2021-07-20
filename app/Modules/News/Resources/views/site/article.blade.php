@@ -61,12 +61,13 @@ app('pathway')
 
 			<?php
 			$resourceArray = array();
-			if (count($article->resources) > 0)
+			$resources = $article->resourceList()->get();
+			if (count($resources) > 0)
 			{
 				$resourceArray = array();
-				foreach ($article->resources as $resource)
+				foreach ($resources as $resource)
 				{
-					$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->resource->name)]) . '/">' . $resource->resource->name . '</a>';
+					$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->name)]) . '/">' . $resource->name . '</a>';
 				}
 				echo '<br /><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray);
 			}

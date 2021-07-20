@@ -31,10 +31,11 @@ class ArticleResource extends JsonResource
 			$data['updates'][] = new UpdateResource($update);
 		}
 
-		$data['resources'] = $this->resources->each(function ($res, $key)
+		/*$data['resources'] = $this->resources->each(function ($res, $key)
 		{
 			$res->name = $res->resource->name;
-		});
+		});*/
+		$data['resources'] = $this->resourceList()->get();
 
 		$data['associations'] = $this->associations->each(function ($res, $key)
 		{
