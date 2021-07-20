@@ -168,17 +168,8 @@ app('pathway')
 						{
 							$selected = explode(',', $res);
 							$selected = array_map('trim', $selected);
-							/*foreach (explode(',', $res) as $r)
-							{
-								if (trim($r))
-								{
-									$resource = App\Modules\Resources\Models\Asset::findOrFail($r);
-									$selected[] = $resource->name . ':' . $r . '';
-								}
-							}*/
 						}
 						?>
-						<?php /*<input name="resource" id="newsresource" size="45" class="form-control" value="{{ implode(',', $resources) }}" data-uri="{{ route('api.resources.index') }}?search=%s" />*/ ?>
 						<select class="form-control searchable-select-multi" multiple="multiple" name="resource[]" id="newsresource">
 							<?php
 							$resources = App\Modules\Resources\Models\Asset::query()
