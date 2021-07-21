@@ -2,7 +2,12 @@
 	<h2>{{ trans('contactreports::contactreports.contact reports') }}</h2>
 	<div id="reports">
 		@if (!count($reports))
-			<p class="alert alert-info">No Contact Reports found for {{ $user->name }}</p>
+			<div class="card card-help">
+				<div class="card-body">
+					<h3 class="card-title">What is this page?</h3>
+					<p>Here you can find <a href="{{ route('site.contactreports.index') }}">Contact Reports</a> for {{ $user->name }}. Contact Reports are records of interactions with people using {{ config('app.name') }} resources and services. These records help staff gain insight into the needs of customers and how to potentially improve services.</p>
+				</div>
+			</div>
 		@else
 			@foreach ($reports as $row)
 				<article id="{{ $row->id }}" class="crm-item newEntries">

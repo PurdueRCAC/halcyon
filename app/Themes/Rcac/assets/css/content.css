@@ -912,6 +912,18 @@ a.card-content:hover {
 	background-color: #E3F3F7;
 	border-color: #E3F3F7;
 }
+.contentPage .card-help,
+.card-help {
+	max-width: 28em;
+	margin: 2em auto;
+}
+.card-help .card-title {
+	font-size: 1.2em;
+}
+.card-help .fa {
+	font-size: 3em;
+	opacity: 0.5;
+}
 
 h1 a.heading-anchor,
 h2 a.heading-anchor,

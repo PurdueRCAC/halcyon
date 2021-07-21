@@ -3,7 +3,12 @@
 
 	<div id="reports">
 		@if (!count($rows))
-			<p class="alert alert-info">No Events found for {{ $user->name }}</p>
+			<div class="card card-help">
+				<div class="card-body">
+					<h3 class="card-title">What is this page?</h3>
+					<p>If {{ $user->name }} has registered for any events, you'll find them listed here.</p>
+				</div>
+			</div>
 		@else
 			@foreach ($rows as $row)
 				<article id="{{ $row->id }}" class="crm-item newEntries">

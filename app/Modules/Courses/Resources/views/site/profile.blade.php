@@ -10,18 +10,21 @@
 			<h2>{{ trans('courses::courses.my courses') }}</h2>
 		</div>
 		<div class="col-md-3 text-right">
-			<a href="#add-account" data-hide=".table" data-icon="fa-times" data-text="<span class='fa fa-times' aria-hidden='true'></span> {{ trans('global.cancel') }}" class="btn btn-secondary add-account">
+			<a href="#add-account" data-hide="#account-list" data-icon="fa-times" data-text="<span class='fa fa-times' aria-hidden='true'></span> {{ trans('global.cancel') }}" class="btn btn-secondary add-account">
 				<span class="fa fa-plus" aria-hidden="true"></span>
 				{{ trans('courses::courses.add account') }}
 			</a>
 		</div>
 	</div>
 
+	<div id="account-list">
 	@if (count($courses) == 0)
-		<p class="alert alert-info">There are no active accounts for classes.</p>
-
-		<h3>What is this page?</h3>
-		<p>Here you can find courses that you're an instructor for that have been set up with access to <a href="{{ route('site.resources.compute.show', ['name' => 'scholar']) }}">Scholar</a>. When set up, all isntructors and students registered for the course will gain access to Scholar. To begin, click the "Add Class" button and select a course.</p>
+		<div class="card card-help">
+			<div class="card-body">
+				<h3 class="card-title">What is this page?</h3>
+				<p>Here you can find courses that you're an instructor for that have been set up with access to <a href="{{ route('site.resources.compute.show', ['name' => 'scholar']) }}">Scholar</a>. When set up, all isntructors and students registered for the course will gain access to Scholar. To begin, click the "Add Class" button and select a course.</p>
+			</div>
+		</div>
 	@else
 		<div id="counthelp" class="dialog dialog-help" title="Account Counts">
 			<p>This shows a count of all student accounts associated with this course. The numbers are the number of accounts currently active out of the enrolled students.</p>
@@ -288,6 +291,7 @@
 			</div>
 		@endforeach
 	@endif
+	</div>
 
 	<form id="add-account" method="post" class="create-form hide editform" action="{{ route('site.users.account.section', ['section' => 'class']) }}{{ request()->has('u') ? '?u=' . request()->input('u') : '' }}">
 		@if (auth()->user()->can('manage courses'))

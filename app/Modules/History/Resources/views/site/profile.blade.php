@@ -177,6 +177,11 @@
 			</table>
 		@endif
 	@else
-		<p class="alert alert-info">No history found.</p>
+		<div class="card card-help">
+			<div class="card-body">
+				<h3 class="card-title">What is this page?</h3>
+				<p>Here you can find various access history for {{ $user->name }}. This shows when the person was added, given specific roles, or removed from a group, resource queue, or unix group.</p>
+			</div>
+		</div>
 	@endif
 </div>
