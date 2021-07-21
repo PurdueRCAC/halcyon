@@ -2099,7 +2099,7 @@ function UpdatedAccountInfo(xml) {
 		}
 	} else {
 		if (numerrorboxes == 0) {
-			alert("An error occurred while updating account. Please reload page and try again or contact rcac-help@purdue.edu.");
+			alert("An error occurred while updating account. Please reload page and try again or contact help.");
 			numerrorboxes++;
 		}
 	}
@@ -2326,7 +2326,7 @@ function SaveOrderUser() {
 					},
 					error: function(xhr, ajaxOptions, thrownError) {
 						if (numerrorboxes == 0) {
-							alert("An error occurred while updating account. Please reload page and try again or contact rcac-help@purdue.edu.");
+							alert("An error occurred while updating account. Please reload page and try again or contact help.");
 							numerrorboxes++;
 						}
 					}
@@ -2385,7 +2385,7 @@ function Renew(url, sequence) {
 			var results =  JSON.parse(xml.responseText);
 			window.location = results.url;
 		} else {
-			alert("An error occurred while renewing. Please wait a few minutes and try again. If error continues, please contact rcac-help@purdue.edu.");
+			alert("An error occurred while renewing. Please wait a few minutes and try again. If error continues, please contact help.");
 		}
 	});
 }

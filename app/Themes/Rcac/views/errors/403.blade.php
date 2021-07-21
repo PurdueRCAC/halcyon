@@ -10,7 +10,7 @@
 
 			<p>Sorry, but you do not have permission to access this page.</p>
 
-			<p>If you feel this is in error please contact <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a>.</p>
+			<p>If you feel this is in error please contact <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a>.</p>
 		</div>
 		<!-- /.error-content -->
 	</div>

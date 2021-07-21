@@ -422,7 +422,7 @@
 			<input id="continue" class="order btn btn-primary" type="submit" value="Continue" <?php if (!count($rows)) { echo 'disabled'; } ?>
 				data-submit-txt="Place Order"
 				data-api="{{ route('api.orders.create') }}"
-				data-error="There was an error processing your order. Please wait a few minutes and try again or contact rcac-help@purdue.edu for help." />
+				data-error="There was an error processing your order. Please wait a few minutes and try again or contact help." />
 			<input id="cancel" class="order btn btn-secondary hide" type="submit" value="Edit Order" />
 		</div>
 

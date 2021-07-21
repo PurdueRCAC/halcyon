@@ -55,7 +55,7 @@ endif;
 @if ($itar)
 If any of these are incorrect you can make changes at any time on the [Queue Management website]({{ route('site.users.account') }}).
 
-**Access to ITAR systems is only possible by public SSH key authentication. These persons will need to send a public SSH key to rcac-help@purdue.edu if they do not yet have access. Information regarding this was sent to these persons.**
+**Access to ITAR systems is only possible by public SSH key authentication. These persons will need to send a public SSH key to {{ config('mail.from.address') }} if they do not yet have access. Information regarding this was sent to these persons.**
 
 Non-ITAR accounts are generally ready for use the morning of the next day ({{ Carbon\Carbon::now()->modify('+1 day')->format('F jS') }}) if requested by midnight. ITAR accounts are generally ready for use one business day after a public key is received. If a person already had an account on the resources they will be able to access the queue(s) within a few minutes.
 

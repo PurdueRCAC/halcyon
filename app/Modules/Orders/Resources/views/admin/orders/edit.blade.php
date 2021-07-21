@@ -468,9 +468,9 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
 					<li class="step current">Enter payment information</li>
-					<li class="notmystep">Awaiting business office assignment by ITaP</li>
+					<li class="notmystep">Awaiting business office assignment by staff</li>
 					<li class="notmystep">Awaiting approval by your business office</li>
-					<li class="notmystep">Awaiting fulfillment by ITaP</li>
+					<li class="notmystep">Awaiting fulfillment by staff</li>
 					<li class="notmystep">Order completion</li>
 				</ol>
 				@if ($order->status == 'pending_payment' && auth()->user()->can('manage orders'))
@@ -492,9 +492,9 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
 					<li class="text-success complete">Enter payment information</li>
-					<li class="current step">Awaiting business office assignment by ITap</li>
+					<li class="current step">Awaiting business office assignment by staff</li>
 					<li class="notmystep">Awaiting approval by your business office</li>
-					<li class="notmystep">Awaiting fulfillment by ITaP</li>
+					<li class="notmystep">Awaiting fulfillment by staff</li>
 					<li class="notmystep">Order Completion</li> 
 				</ol>
 				<div id="orderheaderpopup" class="hide" title="Payment Information Entered">
@@ -509,9 +509,9 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
 					<li class="text-success complete">Enter payment information</li>
-					<li class="text-success complete">Awaiting business office assignment by ITaP</li>
+					<li class="text-success complete">Awaiting business office assignment by staff</li>
 					<li class="current step">Awaiting approval by your business office</li>
-					<li class="notmystep">Awaiting fulfillment by ITaP</li>
+					<li class="notmystep">Awaiting fulfillment by staff</li>
 					<li class="notmystep">Order completion</li>
 				</ol>
 				<div id="orderheaderpopup" class="hide" title="Awaiting Business Office Approval">
@@ -520,45 +520,45 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				</div>
 			@elseif ($order->status == 'pending_fulfillment')
 				<div class="alert alert-info">
-					<p>This order has been approved by your business office(s). ITaP staff have begun the process of fulfilling this order.</p>
+					<p>This order has been approved by your business office(s). Staff have begun the process of fulfilling this order.</p>
 					<p><a href="#orderheaderpopup" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
 					<li class="text-success complete">Enter payment information</li>
-					<li class="text-success complete">Awaiting business office assignment by ITaP</li>
+					<li class="text-success complete">Awaiting business office assignment by staff</li>
 					<li class="text-success complete">Awaiting approval by your business office</li>
-					<li class="current step">Awaiting fulfillment by ITaP</li>
+					<li class="current step">Awaiting fulfillment by staff</li>
 					<li class="notmystep">Order completion</li>
 				</ol>
 				<div id="orderheaderpopup" class="hide" title="Awaiting Fulfillment">
-					<p>This order has been approved by your business office(s). ITaP staff have begun the process of fulfilling this order.</p>
-					<p> You may be contacted directly by ITaP staff if further information is needed to fulfill the order or with information on how to access your new resources.</p>
+					<p>This order has been approved by your business office(s). Staff have begun the process of fulfilling this order.</p>
+					<p> You may be contacted directly by staff if further information is needed to fulfill the order or with information on how to access your new resources.</p>
 				</div>
 			@elseif ($order->status == 'pending_collection')
 				<div class="alert alert-success">
-					<p>This order has been fulfilled. Please contact <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a> if you have questions on how to use new resources.</p>
+					<p>This order has been fulfilled. Please contact <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> if you have questions on how to use new resources.</p>
 					<p><a href="#orderheaderpopup" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
 					<li class="text-success complete">Enter payment information</li>
-					<li class="text-success complete">Awaiting business office assignment by ITaP</li>
+					<li class="text-success complete">Awaiting business office assignment by staff</li>
 					<li class="text-success complete">Awaiting approval by your business office</li>
-					<li class="text-success complete">Awaiting fulfillment by ITaP</li>
+					<li class="text-success complete">Awaiting fulfillment by staff</li>
 					<li class="current step">Order completion</li>
 				</ol>
 				<div id="orderheaderpopup" class="hide" title="Order Complete">
-					<p>This order has been fulfilled. Please contact <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a> if you have  questions on how to use new resources.</p>
+					<p>This order has been fulfilled. Please contact <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> if you have  questions on how to use new resources.</p>
 					<p>The financial transactions may take several more weeks to process and complete between the business offices by this order is complete and resources are ready for you to use.</p>
 				</div>
 			@elseif ($order->status == 'complete')
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
 					<li class="text-success complete">Enter payment information</li>
-					<li class="text-success complete">Awaiting business office assignment by ITaP</li>
+					<li class="text-success complete">Awaiting business office assignment by staff</li>
 					<li class="text-success complete">Awaiting approval by your business office</li>
-					<li class="text-success complete">Awaiting fulfillment by ITaP</li>
+					<li class="text-success complete">Awaiting fulfillment by staff</li>
 					<li class="text-success complete">Order completion</li>
 				</ol>
 				<div id="orderheaderpopup" class="hide" title="Order Complete">
@@ -569,9 +569,9 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
 					<li class="step"><del>Enter payment information</del></li>
-					<li class="step"><del>Awaiting business office assignment by ITaP</del></li>
+					<li class="step"><del>Awaiting business office assignment by staff</del></li>
 					<li class="step"><del>Awaiting approval by your business office</del></li>
-					<li class="step"><del>Awaiting fulfillment by ITaP</del></li>
+					<li class="step"><del>Awaiting fulfillment by staff</del></li>
 					<li class="step"><del>Order completion</del></li>
 					<li class="text-success complete">Order Canceled</li>
 				</ol>

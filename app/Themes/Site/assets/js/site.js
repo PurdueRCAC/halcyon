@@ -39,13 +39,13 @@ ERRORS['creategroupduplicate'] = "Unable to create a new group. Group by this na
 ERRORS['creategroup'] = "Unable to create a new group.";
 
 ERRORS['0'] = "Your session has expired. Try reloading the page.";
-ERRORS['403'] = "Unable to authenticate. Session may have expired, try refreshing the page and logging back in. Contact rcac-help@purdue.edu if problem persists.";
-ERRORS['403_generic'] = "Unable to authenticate. Session may have expired, try refreshing the page and logging back in. Contact rcac-help@purdue.edu if problem persists.";
+ERRORS['403'] = "Unable to authenticate. Session may have expired, try refreshing the page and logging back in. Contact help if problem persists.";
+ERRORS['403_generic'] = "Unable to authenticate. Session may have expired, try refreshing the page and logging back in. Contact help if problem persists.";
 ERRORS['404_generic'] = "Could not find object. Reload page and try again.";
 ERRORS['410'] = "User no longer has an active Career Account.";
-ERRORS['500'] = "There was an error loading your information/processing your request.  Please try again soon or contact rcac-help@purdue .edu if the problem persists.";
-ERRORS['unknown'] = "Unknown error. Reload page and try again. If problem continues contact 'rcac-help@purdue.edu'.";
-ERRORS['reload'] = "Reload page and try again. If problem continues contact 'rcac-help@purdue.edu'.";
+ERRORS['500'] = "There was an error loading your information/processing your request.  Please try again soon or contact help if the problem persists.";
+ERRORS['unknown'] = "Unknown error. Reload page and try again. If problem continues contact help.";
+ERRORS['reload'] = "Reload page and try again. If problem continues contact help.";
 
 // this function returns a HttpRequest object
 function GetXmlHttpObject()

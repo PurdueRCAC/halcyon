@@ -73,14 +73,14 @@ app('pathway')
 				<label class="sr-only" for="filter_start">{{ trans('contactreports::contactreports.start') }}</label>
 				<span class="input-group">
 					<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="Start date" />
-					<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span>
+					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span>
 				</span>
 			</div>
 			<div class="col col-md-3">
 				<label class="sr-only" for="filter_stop">{{ trans('contactreports::contactreports.stop') }}</label>
 				<span class="input-group">
 					<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="End date" />
-					<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
+					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span></span>
 				</span>
 			</div>
 		</div>

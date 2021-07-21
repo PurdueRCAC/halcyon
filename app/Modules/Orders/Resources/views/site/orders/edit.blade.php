@@ -406,7 +406,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				</div>
 			@elseif ($order->status == 'pending_fulfillment')
 				<div class="alert alert-info">
-					<p>This order has been approved by your business office(s). ITaP staff have begun the process of fulfilling this order.</p>
+					<p>This order has been approved by your business office(s). Staff have begun the process of fulfilling this order.</p>
 					<p><a href="#orderheaderpopup" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
@@ -418,12 +418,12 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 					<li class="notmystep">Order completion</li>
 				</ol>
 				<div id="orderheaderpopup" class="stash" title="Awaiting Fulfillment">
-					<p>This order has been approved by your business office(s). ITaP staff have begun the process of fulfilling this order.</p>
+					<p>This order has been approved by your business office(s). Staff have begun the process of fulfilling this order.</p>
 					<p> You may be contacted directly by ITaP staff if further information is needed to fulfill the order or with information on how to access your new resources.</p>
 				</div>
 			@elseif ($order->status == 'pending_collection')
 				<div class="alert alert-success">
-					<p>This order has been fulfilled. Please contact <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a> if you have questions on how to use new resources.</p>
+					<p>This order has been fulfilled. Please contact <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> if you have questions on how to use new resources.</p>
 					<p><a href="#orderheaderpopup" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
@@ -435,7 +435,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 					<li class="current step">Order completion</li>
 				</ol>
 				<div id="orderheaderpopup" class="stash" title="Order Complete">
-					<p>This order has been fulfilled. Please contact <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a> if you have  questions on how to use new resources.</p>
+					<p>This order has been fulfilled. Please contact <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> if you have  questions on how to use new resources.</p>
 					<p>The financial transactions may take several more weeks to process and complete between the business offices by this order is complete and resources are ready for you to use.</p>
 				</div>
 			@elseif ($order->status == 'complete')

@@ -74,7 +74,7 @@ app('pathway')
 				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 				<span class="input-group">
 					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-					<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
 				</span>
 			</div>
 			<div class="col col-md-9 filter-select text-right">
@@ -125,6 +125,7 @@ app('pathway')
 
 	<div class="card w-100 mb-4">
 	<table class="table table-hover adminlist">
+		<caption class="sr-only">{{ trans('orders::orders.products') }}</caption>
 		<thead>
 			<tr>
 				@if (auth()->user()->can('delete orders.products'))

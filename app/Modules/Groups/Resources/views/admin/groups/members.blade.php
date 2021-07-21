@@ -795,7 +795,7 @@ $members = $members->sortBy('username');
 			<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 		</a>
 		<div class="dialog dialog-help" id="help_disabledmembers_span_{{ $group->id }}" title="Disabled Members">
-			<p>Disabled Members are people that you have granted access to your queues but who no longer have an active account with ITaP Research Computing or have an active Purdue Career Account. Although queues may be enabled for them, they cannot log into Research Computing resources and use your queues without an active account. If the people listed here have left the University and are no longer participating in research, please remove them from your queues. If people listed here have left Purdue but still require access to your queues then you will need to file a Request for Privileges (R4P). If you believe people are listed here in error, please contact rcac-help@purdue.edu.</p>
+			<p>Disabled Members are people that you have granted access to queues but who no longer have an active account. Although queues may be enabled for them, they cannot log into resources and use queues without an active account. If the people listed here have left the University and are no longer participating in research, please remove them from queues.</p>
 		</div>
 	</div>
 	<div class="card-body">

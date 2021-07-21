@@ -411,7 +411,7 @@ function SubmitRequest() {
 	});
 	/*WSPostURL(ROOT_URL + "userrequest", post, function(xml) {
 		if (xml.status != 200) {
-			alert("There was an error processing your request. Please reload page and try request again. If problem persists contact rcac-help@purdue.edu with request.");
+			alert("There was an error processing your request. Please reload page and try request again. If problem persists contact help.");
 		} else {
 			document.getElementById("account").onclick = function() {
 				window.location = "/account/myinfo/";
@@ -467,7 +467,7 @@ function RemoveQueue(id, name, resource) {
 			if (xml.status < 400) {
 				location.reload(true);
 			} else {
-				alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact rcac-help@purdue.edu");
+				alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact help.");
 			}
 		});
 	}
@@ -487,7 +487,7 @@ function CancelQueueRequest(id, name, resource) {
 			if (xml.status < 400) {
 				location.reload(true);
 			} else {
-				alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact rcac-help@purdue.edu");
+				alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact help.");
 			}
 		});
 	}
@@ -518,7 +518,7 @@ function CancelResourceRequest(id, resources) {
 			if (xml.status < 400) {
 				location.reload(true);
 			} else {
-				alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact rcac-help@purdue.edu");
+				alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact help.");
 			}
 		});
 	}

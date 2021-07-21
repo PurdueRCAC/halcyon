@@ -142,10 +142,10 @@ app('pathway')
 						@foreach ($comments as $comment)
 						<li id="comment_{{ $comment->id }}" data-api="{{ route('api.contactreports.comments.update', ['id' => $comment->id]) }}">
 							<a href="#comment_{{ $comment->id }}_comment" class="btn btn-link comment-edit hide-when-editing">
-								<span class="icon-edit"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
+								<span class="fa fa-pencil"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
 							</a>
 							<a href="#comment_{{ $comment->id }}" class="btn btn-link comment-delete" data-confirm="{{ trans('global.confirm delete') }}">
-								<span class="icon-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
+								<span class="fa fa-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
 							</a>
 							<div id="comment_{{ $comment->id }}_text">
 								{!! $comment->formattedComment !!}
@@ -170,10 +170,10 @@ app('pathway')
 					?>
 						<li id="comment_<?php echo '{id}'; ?>" class="d-none" data-api="{{ route('api.contactreports.comments') }}/<?php echo '{id}'; ?>">
 							<a href="#comment_<?php echo '{id}'; ?>_comment" class="btn btn-link comment-edit hide-when-editing">
-								<span class="icon-edit"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
+								<span class="fa fa-pencil"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
 							</a>
 							<a href="#comment_<?php echo '{id}'; ?>" class="btn btn-link comment-delete" data-confirm="{{ trans('global.confirm delete') }}">
-								<span class="icon-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
+								<span class="fa fa-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
 							</a>
 							<div id="comment_<?php echo '{id}'; ?>_text">
 							</div>

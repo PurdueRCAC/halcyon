@@ -395,11 +395,11 @@ $help1c = "Hyperlinks can be made in the following way.
 
 http://www.purdue.edu
 
-[ITaP Research Computing](http://www.rcac.purdue.edu)
+[" . config('app.name') . "](http://www.rcac.purdue.edu)
 
 By using [Title] notation immediately preceding a URL in parentheses, you can give it another title.
 
-Email addresses will automatically be converted into mailto links: rcac-help@purdue.edu";
+Email addresses will automatically be converted into mailto links: " . config('mail.from.address');
 
 $help1d = "You can also mention and link another news article by referencing it's news ID and the title of the article will be automatically retrieved:
 

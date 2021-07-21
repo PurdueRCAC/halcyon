@@ -272,7 +272,7 @@ else
 					</td>
 					<td class="priority-6 text-right">
 						<button class="btn news-mail" data-success="Email sent!" data-article="{{ route('api.news.read', ['id' => $row->id]) }}" data-api="{{ route('api.news.email', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.send email') }}">
-							<span class="icon-mail glyph">Email</span>
+							<span class="fa fa-envelope"><span class="sr-only">Email</span></span>
 						</button>
 					</td>
 				@endif

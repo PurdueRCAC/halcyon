@@ -114,10 +114,12 @@
   --accordian-body-active: #fff;
   --accordian-border-active: rgba(20, 106, 236, 0.5);
   --accordian-header-border: rgba(0, 0, 0, 0.1);
+  --badge-secondary-background: rgba(200, 200, 200, 0.4);
+  --badge-secondary: #656565;
   --badge-danger-background: rgba(218, 52, 71, 1);
   --badge-danger: #fff;
-  --badge-success-background: rgba(48, 166, 73, 1);
-  --badge-success: #fff;
+  --badge-success-background: rgba(48, 166, 73, 0.2);
+  --badge-success: green;
   --badge-primary-background: rgba(30, 163, 183, 1);
   --badge-primary: #fff;
   --badge-warning-background: rgba(255, 191, 39, 1);
@@ -213,9 +215,11 @@
   --accordian-color-active: #fff;
   --accordian-body-active: rgba(255, 255, 255, 0.1);
   --accordian-border-active: rgba(20, 106, 236, 0.5);
+  --badge-secondary-background: rgba(100, 100, 100, 0.5);
+  --badge-secondary: #ccc;
   --badge-danger-background: rgba(218, 52, 71, 0.3); /* rgba(244,106,106,.25) */
   --badge-danger: rgba(218, 52, 71, 1); /* #f46a6a */
-  --badge-success-background: rgba(48, 166, 73, 0.3); /* rgba(52,195,143,.18) */
+  --badge-success-background: rgba(48, 166, 73, 0.2); /* rgba(52,195,143,.18) */
   --badge-success: rgba(48, 166, 73, 1); /* #34c38f */
   --badge-primary-background: rgba(30, 163, 183, 0.3);
   --badge-primary: #fff;
@@ -657,6 +661,7 @@ h4 {
 .icon-camera-off:before {
   content: "\e839";
 }
+.fa-calendar:before,
 .icon-calendar:before {
   content: "\e83a";
 }
@@ -803,6 +808,7 @@ h4 {
 .icon-edit-1:before {
   content: "\e868";
 }
+.fa-external-link:before,
 .icon-external-link:before {
   content: "\e869";
 }
@@ -812,6 +818,7 @@ h4 {
 .icon-feather:before {
   content: "\e86b";
 }
+.fa-facebook:before,
 .icon-facebook:before {
   content: "\e86c";
 }
@@ -836,6 +843,7 @@ h4 {
 .icon-file-plus:before {
   content: "\e873";
 }
+.fa-folder:before,
 .icon-folder:before {
   content: "\e874";
 }
@@ -858,6 +866,7 @@ h4 {
 .icon-home:before {
   content: "\e87a";
 }
+.fa-github:before,
 .icon-github:before {
   content: "\e87b";
 }
@@ -905,6 +914,7 @@ h4 {
 .icon-loader:before {
   content: "\e889";
 }
+.fa-envelope:before,
 .icon-mail:before {
   content: "\e88a";
 }
@@ -1061,6 +1071,7 @@ h4 {
 .icon-save:before {
   content: "\e8bc";
 }
+.fa-search:before,
 .icon-search:before {
   content: "\e8bd";
 }
@@ -4577,6 +4588,10 @@ a.fancybox-next,
 }
 .badge {
   padding: 0.5em 1em;
+}
+.badge-secondary {
+  background-color: var(--badge-secondary-background);
+  color: var(--badge-secondary);
 }
 .badge-danger {
   background-color: var(--badge-danger-background);
