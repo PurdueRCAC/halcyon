@@ -747,6 +747,23 @@ class Directory extends Model
 				return;
 			}
 
+			// Look for other, active top-level dirs for the
+			// same group and resource. If there are any, don't
+			// go any further.
+			$others = self::query()
+				->where('groupid', $model->groupid)
+				->where('resourceid', $model->resourceid)
+				->where('parentstoragedirid', '=', 0)
+				->where('id', '!=', $model->id)
+				->withTrashed()
+				->whereIsActive()
+				->count();
+
+			if ($others)
+			{
+				return;
+			}
+
 			// End any loans or purchases
 			$purchases = Purchase::query()
 				->where('groupid', $model->groupid)
