@@ -56,6 +56,41 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 				</div>
 			</div>
 
+			<?php
+			$managedgroups = $user->groups()
+				->whereIsManager()
+				->withTrashed()
+				->whereIsActive()
+				->get();
+
+			if (count($managedgroups)):
+				$groups = array();
+
+				foreach ($managedgroups as $groupmembership):
+					if ($groupmembership->group->pendingMembersCount > 0):
+						$groups[] = $groupmembership->group;
+					endif;
+				endforeach;
+
+				if (count($groups)):
+					?>
+					<div class="alert alert-warning">
+						<p>
+							The following groups have pending membership requests:
+						</p>
+						<ul>
+							<?php foreach ($groups as $group): ?>
+								<li>
+									<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'members']) }}">{{ $group->name }}</a> <span class="badge badge-warning">{{ $group->pendingMembersCount }}</span>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
+					<?php
+				endif;
+			endif;
+			?>
+
 			@include('users::site.depot', ['user' => $user])
 
 			<div class="card panel panel-default mb-3">
@@ -256,18 +291,86 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 			?>
 
 			<?php
-			$queues = $user->queues()
+			/*$queues = $user->queues()
 				//->where('groupid', '>', 0)
-				//->whereIn('membertype', [1, 4])
+				->whereIn('membertype', [1, 2])
+				->withTrashed()
+				->whereIsActive()
+				->get();
+
+			if (count($queues)):
+				?>
+				<div class="card panel panel-default">
+					<div class="card-header panel-heading">
+						Queues
+					</div>
+					<div class="card-body">
+						<table class="table table-hover">
+							<caption class="sr-only">Queues</caption>
+							<thead>
+								<tr>
+									<th scope="col">Queue</th>
+									<th scope="col">Resource</th>
+									<th scope="col">Group</th>
+									<th scope="col">Added</th>
+								</tr>
+							</thead>
+							<tbody>
+							<?php
+							foreach ($queues as $qu):
+								if ($qu->isMember() && $qu->isTrashed()):
+									continue;
+								endif;
+
+								$queue = $qu->queue;
+
+								if (!$queue || $queue->isTrashed()):
+									continue;
+								endif;
+
+								if (!$queue->scheduler || $queue->scheduler->isTrashed()):
+									continue;
+								endif;
+
+								$group = $queue->group;
+
+								if (!$group || !$group->id):
+									continue;
+								endif;
+								?>
+								<tr>
+									<td>
+										{{ $queue->name }}
+									</td>
+									<td>
+										{{ $queue->resource ? $queue->resource->name : '' }}
+									</td>
+									<td>
+										<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $group->id, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">{{ $group->name }}</a>
+									</td>
+									<td>
+										<time datetime="{{ $qu->datetimecreated->toDateTimeString() }}">{{ $qu->datetimecreated->toDateTimeString() }}</time>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<?php
+			endif;*/
+			?>
+
+			<?php
+			$queues = $user->queues()
 				->whereIsPending()
-				//->whereNotIn('id', $q)
 				->withTrashed()
 				->whereIsActive()
 				->get();
 
 			if (count($queues)):
 			?>
-			<div class="card panel panel-default session">
+			<div class="card panel panel-default">
 				<div class="card-header panel-heading">
 					Requests
 				</div>
@@ -353,12 +456,12 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 									<strong><a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $group->id]) }}">{{ $group->name }}</a></strong>
 								</div>
 								<div class="col-md-6 text-right">
-									@if ($qu->datetimeremoved && $qu->datetimeremoved != '0000-00-00 00:00:00' && $qu->datetimeremoved != '-0001-11-30 00:00:00')
+									@if ($qu->isTrashed())
 										<span class="badge badge-danger">{{ trans('users::users.removed') }}</span>
 									@elseif ($qu->membertype == 4)
 										<span class="badge badge-warning">{{ $qu->type->name }}</span>
 									@else
-										<span class="badge">{{ $qu->type->name }}</span>
+										<span class="badge badge-secondary">{{ $qu->type->name }}</span>
 									@endif
 								</div>
 							</div>
@@ -477,7 +580,6 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 
 								<span id="role_errors" class="alert alert-warning hide"></span>
 							</div>
-
 						</form>
 					</div>
 				</div>
