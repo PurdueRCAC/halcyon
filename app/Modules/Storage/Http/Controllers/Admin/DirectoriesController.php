@@ -185,7 +185,15 @@ class DirectoriesController extends Controller
 	 */
 	public function edit($id)
 	{
-		$row = Directory::findOrFail($id);
+		$row = Directory::query()
+			->withTrashed()
+			->where('id', '=', $id)
+			->first();
+
+		if (!$row)
+		{
+			abort(404);
+		}
 
 		if ($fields = app('request')->old('fields'))
 		{
