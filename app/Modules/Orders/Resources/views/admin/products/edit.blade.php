@@ -92,17 +92,17 @@ app('pathway')
 
 				<div class="form-group{{ $errors->has('fields.ordercategoryid') ? ' has-error' : '' }}">
 					<label for="field-ordercategoryid">{{ trans('orders::orders.parent category') }} <span class="required">{{ trans('global.required') }}</span></label>
-					<select name="fields[ordercategoryid]" id="field-ordercategoryid" class="form-control required">
+					<select name="fields[ordercategoryid]" id="field-ordercategoryid" class="form-control" required>
 						<option value="1"<?php if ($row->ordercategoryid == 1): echo ' selected="selected"'; endif;?>>{{ trans('global.none') }}</option>
-						<?php foreach ($categories as $category) { ?>
+						<?php foreach ($categories as $category): ?>
 							<option value="<?php echo $category->id; ?>"<?php if ($row->ordercategoryid == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
-						<?php } ?>
+						<?php endforeach; ?>
 					</select>
 				</div>
 
 				<div class="form-group{{ $errors->has('fields.name') ? ' has-error' : '' }}">
-					<label for="field-name">{{ trans('orders::orders.name') }} <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control required" maxlength="250" value="{{ $row->name }}" />
+					<label for="field-name">{{ trans('orders::orders.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<input type="text" name="fields[name]" id="field-name" class="form-control" required maxlength="250" value="{{ $row->name }}" />
 				</div>
 
 				<div class="form-group{{ $errors->has('fields.description') ? ' has-error' : '' }}">
@@ -113,24 +113,24 @@ app('pathway')
 				<div class="row">
 					<div class="col col-md-6">
 						<div class="form-group{{ $errors->has('fields.unitprice') ? ' has-error' : '' }}">
-							<label for="field-unitprice">{{ trans('orders::orders.price') }} <span class="required">{{ trans('global.required') }}</span></label>
+							<label for="field-unitprice">{{ trans('orders::orders.price') }}: <span class="required">{{ trans('global.required') }}</span></label>
 							<span class="input-group">
 								<span class="input-group-prepend"><span class="input-group-text">{{ config('module.orders.currency', '$') }}</span></span>
-								<input type="text" name="fields[unitprice]" id="field-unitprice" class="form-control form-currency required" maxlength="250" value="{{ str_replace('$', '', $row->price) }}" />
+								<input type="text" name="fields[unitprice]" id="field-unitprice" class="form-control form-currency" required maxlength="250" value="{{ str_replace('$', '', $row->price) }}" />
 							</span>
 						</div>
 					</div>
 					<div class="col col-md-6">
 						<div class="form-group{{ $errors->has('fields.unit') ? ' has-error' : '' }}">
-							<label for="field-unit">{{ trans('orders::orders.unit') }} <span class="required">{{ trans('global.required') }}</span></label>
-							<input type="text" name="fields[unit]" id="field-unit" class="form-control required" maxlength="16" value="{{ $row->unit }}" />
+							<label for="field-unit">{{ trans('orders::orders.unit') }}: <span class="required">{{ trans('global.required') }}</span></label>
+							<input type="text" name="fields[unit]" id="field-unit" class="form-control" required maxlength="16" value="{{ $row->unit }}" />
 							<span class="form-text text-muted">{{ trans('orders::orders.unit hint') }}</span>
 						</div>
 					</div>
 				</div>
 
 				<div class="form-group{{ $errors->has('resourceid') ? ' has-error' : '' }}">
-					<label for="field-resourceid">{{ trans('orders::orders.resource') }}</label>
+					<label for="field-resourceid">{{ trans('orders::orders.resource') }}:</label>
 					<select class="form-control" name="fields[resourceid]" id="field-resourceid">
 						<option value="0"<?php if (!$row->resourceid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
 						<?php
@@ -142,12 +142,12 @@ app('pathway')
 				</div>
 
 				<div class="form-group{{ $errors->has('mou') ? ' has-error' : '' }}">
-					<label for="field-mou">{{ trans('orders::orders.mou') }}</label>
+					<label for="field-mou">{{ trans('orders::orders.mou') }}:</label>
 					<input type="text" name="fields[mou]" id="field-mou" class="form-control" placeholder="http://" value="{{ $row->mou }}" />
 				</div>
 
 				<div class="form-group{{ $errors->has('recurringtimeperiodid') ? ' has-error' : '' }}">
-					<label for="field-recurringtimeperiodid">{{ trans('orders::orders.recurrence') }}</label>
+					<label for="field-recurringtimeperiodid">{{ trans('orders::orders.recurrence') }}:</label>
 					<select class="form-control" name="fields[recurringtimeperiodid]" id="field-recurringtimeperiodid">
 						<option value="0"<?php if (!$row->recurringtimeperiodid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
 						<?php foreach (App\Halcyon\Models\Timeperiod::all() as $period): ?>
@@ -176,31 +176,17 @@ app('pathway')
 						</div>
 					</div>
 				</div>
-
-				<!-- <div class="form-group{{ $errors->has('terms') ? ' has-error' : '' }}">
-					<label for="field-terms">{{ trans('orders::orders.terms') }}:</label>
-					<textarea name="fields[terms]" id="field-terms" class="form-control" cols="30" rows="5">{{ $row->terms }}</textarea>
-				</div> -->
 			</fieldset>
 		</div>
 		<div class="col col-md-5 span5">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.publishing') }}</legend>
 
-				<!-- <div class="form-group">
-					<label for="field-state">{{ trans('global.state') }}:</label>
-					<select class="form-control" name="fields[state]" id="field-state">
-						<option value="0"<?php if (!$row->isTrashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
-						<option value="1"<?php if ($row->isTrashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
-					</select>
-				</div> -->
-
 				<div class="form-group">
 					<label for="field-access">{{ trans('global.access') }}:</label>
 					<select class="form-control" name="fields[public]" id="field-public">
-						<?php foreach (App\Halcyon\Access\Viewlevel::all() as $access): ?>
-							<option value="<?php echo $access->id; ?>"<?php if ($row->public == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
-						<?php endforeach; ?>
+						<option value="1"<?php if ($row->public == 1) { echo ' selected="selected"'; } ?>>Public</option>
+						<option value="0"<?php if ($row->public == 0) { echo ' selected="selected"'; } ?>>Hidden</option>
 					</select>
 				</div>
 			</fieldset>
