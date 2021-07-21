@@ -212,6 +212,8 @@ class QueuesController extends Controller
 			$row->fill($fields);
 		}
 
+		$row->cluster = $row->cluster ?: '';
+
 		$types = Type::orderBy('name', 'asc')->get();
 		$schedulers = Scheduler::orderBy('hostname', 'asc')->get();
 		$schedulerpolicies = SchedulerPolicy::orderBy('name', 'asc')->get();
