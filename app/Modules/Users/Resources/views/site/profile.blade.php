@@ -67,6 +67,9 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 				$groups = array();
 
 				foreach ($managedgroups as $groupmembership):
+					if (!$groupmembership->group):
+						continue;
+					endif;
 					if ($groupmembership->group->pendingMembersCount > 0):
 						$groups[] = $groupmembership->group;
 					endif;
