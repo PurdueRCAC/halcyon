@@ -165,7 +165,7 @@ else
 					{!! Html::grid('sort', trans('news::news.type'), 'newstypeid', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				@if (!$template)
-					<th scope="col" colspan="2" class="priority-4">
+					<th scope="col" colspan="3" class="text-center priority-4">
 						{!! Html::grid('sort', trans('news::news.publish window'), 'datetimenews', $filters['order_dir'], $filters['order']) !!}
 					</th>
 					<th scope="col" class="priority-5 text-right">{{ trans('news::news.updates') }}</th>
@@ -238,13 +238,18 @@ else
 					{{ $row->type->name }}
 				</td>
 				@if (!$template)
-					<td class="priority-4 text-nowrap">
+					<td class="priority-4 text-right text-nowrap">
 						@if ($row->hasStart())
 							<time datetime="{{ $row->datetimenews->format('Y-m-d\TH:i:s\Z') }}">
 								{{ $row->datetimenews->format('M j, Y g:ia') }}
 							</time>
 						@else
 							<span class="none">{{ trans('global.none') }}</span>
+						@endif
+					</td>
+					<td>
+						@if ($row->hasStart())
+							&rarr;
 						@endif
 					</td>
 					<td class="priority-4 text-nowrap">
@@ -281,7 +286,7 @@ else
 
 	<script id="mailpreview-template" type="text/x-handlebars-template">
 		<div id="mail-recipients">To: <?php echo '{{resourcelist}}'; ?> Users</div>
-		<div id="mail-from">From: YOU via Research Computing</div>
+		<div id="mail-from">From: YOU via <?php echo config('app.name'); ?></div>
 		<div id="mail-subject">Subject: <?php echo '{{subject}} - {{formatteddate}}'; ?></div>
 		<hr />
 		<div id="mail-meta">
@@ -302,7 +307,7 @@ else
 		<hr/>
 		<a href="<?php echo '{{uri}}'; ?>">ITaP Research Computing News</a> from YOU<br/>
 		<br/>
-		Please reply to <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a> with any questions or concerns.<br/>
+		Please reply to <a href="mailto:<?php echo config('mail.from.address'); ?>"><?php echo config('mail.from.address'); ?></a> with any questions or concerns.<br/>
 		<a href="<?php echo '{{uri}}'; ?>">View this article on the web.</a>
 
 		<div class="ui-dialog-pane-highlight">
