@@ -1,7 +1,7 @@
 @component('mail::message')
 Hello {{ $user->name }},
 
-Access to your ITaP Research Computing resources has been **<span style="color:red;">removed</span>** for the following people, resources and queues.
+Access to your {{ config('app.name') }} resources has been **<span style="color:red;">removed</span>** for the following people, resources and queues.
 
 @foreach ($removals as $userid => $data)
 ---

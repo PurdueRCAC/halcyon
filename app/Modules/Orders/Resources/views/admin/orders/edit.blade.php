@@ -499,7 +499,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				</ol>
 				<div id="orderheaderpopup" class="hide" title="Payment Information Entered">
 					<p>Payment information has been entered. No further action is required.</p>
-					<p>ITaP Staff will assign this to your business office for approval. You will be updated on the progress of this order via email. You may return to this page at any time to view the current status.</p>
+					<p>Staff will assign this to your business office for approval. You will be updated on the progress of this order via email. You may return to this page at any time to view the current status.</p>
 				</div>
 			@elseif ($order->status == 'pending_approval')
 				<div class="alert alert-info">
@@ -1267,7 +1267,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 					</div>
 					<div class="card-body">
 						<div id="help1" title="Order Notes" class="dialog dialog-help">
-							<p>Use this section to leave any special instructions, extra contact information, or any other notes for this order. ITaP and your business office staff will be able to view these notes.</p>
+							<p>Use this section to leave any special instructions, extra contact information, or any other notes for this order. {{ config('app.name') }} and your business office staff will be able to view these notes.</p>
 						</div>
 
 						<p class="ordernotes">

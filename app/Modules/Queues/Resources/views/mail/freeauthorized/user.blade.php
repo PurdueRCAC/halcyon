@@ -1,7 +1,7 @@
 @component('mail::message')
 Hello {{ $user->name }},
 
-You have been granted access to ITaP Research Computing resources.
+You have been granted access to {{ config('app.name') }} resources.
 
 @if (count($roles))
 ---

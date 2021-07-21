@@ -44,13 +44,13 @@ $active = $sections->firstWhere('active', '=', true);
 				<p>Once the request is submitted, an email notification will be sent to your faculty advisor requesting approval of your request. Account request approvals are left to the discretion of the faculty or appropriate Community Cluster partners. <strong>Please contact them directly regarding the status of your request.</strong></p>
 
 				<p>
-					To request an ITaP Research Computing account please complete the following steps.
+					To request an {{ config('app.name') }} account please complete the following steps.
 				</p>
 			</div><!-- / #request_header -->
 
 			<div id="searchbox" class="card">
 				<div class="card-header">
-					<strong>1)</strong> Use the search box below to find the research group, faculty, or staff member you will be using ITaP Research Computing resources to conduct research for.
+					<strong>1)</strong> Use the search box below to find the research group, faculty, or staff member you will be using {{ config('app.name') }} resources to conduct research for.
 				</div>
 				<div class="card-body">
 

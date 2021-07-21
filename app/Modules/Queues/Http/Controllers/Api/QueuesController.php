@@ -570,6 +570,8 @@ class QueuesController extends Controller
 		$queue = new Queue;
 		$queue->fill($request->all());
 
+		$queue->cluster = $queue->cluster ?: '';
+
 		$exists = Queue::query()
 			->withTrashed()
 			->whereIsActive()

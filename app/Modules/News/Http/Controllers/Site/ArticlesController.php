@@ -373,8 +373,15 @@ class ArticlesController extends Controller
 		$search = urldecode($search);
 
 		$n = Carbon::now();
-		$org = 'ITaP';
-		$name = 'Research Computing';
+		$org = '';
+		$name = config('app.name');
+		if (strstr($name, ' '))
+		{
+			$parts = explode(' ', $name);
+			$org = array_shift($parts);
+
+			$name = implode(' ', $parts);
+		}
 
 		if (is_numeric($search))
 		{
@@ -416,7 +423,7 @@ class ArticlesController extends Controller
 		// Create output
 		$output  = "BEGIN:VCALENDAR\r\n";
 		$output .= "VERSION:2.0\r\n";
-		$output .= "PRODID:-//$org//$name//EN\r\n";
+		$output .= "PRODID:-//" . ($org ? $org . "//" : "") . "$name//EN\r\n";
 		$output .= "METHOD:PUBLISH\r\n";
 		$output .= "X-WR-CALNAME;VALUE=TEXT:$org $name\r\n";
 		$output .= "X-PUBLISHED-TTL:PT15M\r\n";
