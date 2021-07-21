@@ -279,14 +279,14 @@ class GroupsController extends Controller
 		{
 			$query->withCount('members');
 		}*/
-//echo $query->toSql(); die();
+
 		$rows = $query
 			//->with('motd')
 			->orderBy($g . '.' . $filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
-		return new GroupResourcecollection($rows);
+		return new GroupResourceCollection($rows);
 	}
 
 	/**
