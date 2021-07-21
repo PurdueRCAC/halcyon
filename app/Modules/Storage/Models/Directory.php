@@ -732,4 +732,55 @@ class Directory extends Model
 
 		return $mult;
 	}
+
+	/**
+	 * The "booted" method of the model.
+	 *
+	 * @return void
+	 */
+	protected static function booted()
+	{
+		static::deleted(function ($model)
+		{
+			if ($model->parentstoragedirid)
+			{
+				return;
+			}
+
+			// End any loans or purchases
+			$purchases = Purchase::query()
+				->where('groupid', $model->groupid)
+				->where('resourceid', $model->resourceid)
+				->get();
+
+			foreach ($purchases as $purchase)
+			{
+				$counter = $purchase->counter;
+
+				$purchase->delete();
+
+				if ($purchase->sellergroupid && $counter)
+				{
+					$counter->delete();
+				}
+			}
+
+			$loans = Loan::query()
+				->where('groupid', $model->groupid)
+				->where('resourceid', $model->resourceid)
+				->get();
+
+			foreach ($loans as $loan)
+			{
+				$counter = $loan->counter;
+
+				$loan->delete();
+
+				if ($loan->lendergroupid && $counter)
+				{
+					$counter->delete();
+				}
+			}
+		});
+	}
 }
