@@ -122,6 +122,7 @@ app('pathway')
 							<option value="{{ $batchsystem->id }}"<?php echo $selected; ?>>{{ $batchsystem->name }}</option>
 						<?php endforeach; ?>
 					</select>
+					<span class="form-text text-muted"><strong>Note:</strong> Changing this value to anything other than PBS can have drastic effects for <code>qcontrol</code></span>
 				</div>
 
 				<div class="form-group">
