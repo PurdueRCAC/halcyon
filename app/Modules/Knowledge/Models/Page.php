@@ -218,7 +218,7 @@ class Page extends Model
 					$title = $headers[$title] . '_' . $title;
 				}
 
-				$anchor = '<a href="#' . $title . '" class="heading-anchor" title="Permalink"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only">Permalink</span></a> ';
+				$anchor = '<a href="#' . $title . '" class="heading-anchor" title="Link to section \'' . e($matches[3]) . '\' of \'' . e($this->headline) . '\'"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only">Link to section \'' . $matches[3] . '\' of \'' . $this->headline . '\'</span></a> ';
 
 				$matches[0] = $matches[1] . $matches[2] . ' id="' . $title . '">' . $anchor . $matches[3] . $matches[4];
 			}
@@ -228,7 +228,7 @@ class Page extends Model
 
 				$title = $matcs[1];
 
-				$anchor = '<a href="#' . $title . '" class="heading-anchor" title="Permalink"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only">Permalink</span></a> ';
+				$anchor = '<a href="#' . $title . '" class="heading-anchor" title="Link to section \'' . e($matches[3]) . '\' of \'' . e($this->headline) . '\'"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only">Link to section \'' . $matches[3] . '\' of \'' . $this->headline . '\'</span></a> ';
 
 				$matches[0] = $matches[1] . '>' . $anchor . $matches[3] . $matches[4];
 			}
