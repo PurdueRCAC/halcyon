@@ -237,7 +237,7 @@ app('pathway')
 					@endif
 					<article id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title">
 						<h3 id="article-{{ $article->id }}-title" class="news-title">
-							<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
+							<span class="sr-only">Article #{{ $article->id }}:</span> <a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
 						</h3>
 						<p class="news-metadata text-muted">
 							@if ($article->isToday())
