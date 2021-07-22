@@ -4,7 +4,7 @@
  */
 
  // Filter out ended items
-$outages = $outages->reject(function($value)
+$outages = $outages->reject(function($value, $key)
 {
 	return $value->ended();
 });
