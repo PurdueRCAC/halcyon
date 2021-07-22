@@ -2,6 +2,12 @@
 /**
  * @package  Banner widget
  */
+
+ // Filter out ended items
+$outages = $outages->reject(function($value)
+{
+	return $value->ended();
+});
 ?>
 @if (count($outages) > 0)
 	<div class="notice-banner">
