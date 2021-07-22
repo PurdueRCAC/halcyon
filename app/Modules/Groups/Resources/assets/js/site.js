@@ -141,12 +141,12 @@ document.addEventListener('DOMContentLoaded', function () {
 			async: false,
 			success: function (response) {
 				var c = select.closest('ul');
-				var li = c.find('li.hidden');
+				var li = c.find('li.hide');
 
 				if (typeof (li) !== 'undefined') {
 					var template = $(li)
 						.clone()
-						.removeClass('hidden');
+						.removeClass('hide');
 
 					template
 						.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
