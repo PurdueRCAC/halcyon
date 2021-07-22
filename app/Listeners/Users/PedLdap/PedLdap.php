@@ -222,8 +222,8 @@ class PedLdap
 			return;
 		}
 
-		try
-		{
+		//try
+		//{
 			$ldap = $this->connect($config);
 
 			$user = $event->getUser();
@@ -232,7 +232,7 @@ class PedLdap
 			$results = $ldap->search()
 				->orWhere('uid', '=', $user->username)
 				->select([
-					'title', 'mail', 'roomNumber', 'purdueEduCampus',
+					'cn', 'title', 'mail', 'roomNumber', 'purdueEduCampus',
 					'purdueEduDepartment', 'purdueEduBuilding', 'purdueEduSchool',
 					'purdueEduOfficePhone', 'purdueEduOtherPhone'
 				])
@@ -244,6 +244,16 @@ class PedLdap
 
 				foreach ($results as $data)
 				{
+					if (isset($data['cn']) && strtolower($user->name) != strtolower($data['cn'][0]))
+					{
+						// This is weird and messy. Due to all the extra data
+						// on the `$user` object, an `update()` throws an error.
+						$u = User::find($user->id);
+						$u->update(['name' => Str::properCaseNoun($data['cn'][0])]);
+
+						$user->name = Str::properCaseNoun($data['cn'][0]);
+					}
+
 					if (isset($data['title']))
 					{
 						$user->title = Str::properCaseNoun($data['title'][0]);
@@ -293,12 +303,12 @@ class PedLdap
 
 				$event->setUser($user);
 			}
-		}
+		/*}
 		catch (\Exception $e)
 		{
 			$status = 500;
 			$results = ['error' => $e->getMessage()];
-		}
+		}*/
 
 		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->getUser()->username);
 	}

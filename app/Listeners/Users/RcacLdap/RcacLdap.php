@@ -204,7 +204,7 @@ class RcacLdap
 			// Performing a query.
 			$results = $ldap->search()
 				->where('uid', '=', $user->username)
-				->select(['loginShell', 'homeDirectory'])
+				->select(['cn', 'loginShell', 'homeDirectory'])
 				->get();
 
 			$status = 404;
@@ -215,6 +215,16 @@ class RcacLdap
 
 				foreach ($results as $data)
 				{
+					/*if (isset($data['cn']) && strtolower($user->name) != strtolower($data['cn'][0]))
+					{
+						// This is weird and messy. Due to all the extra data
+						// on the `$user` object, an `update()` throws an error.
+						$u = User::find($user->id);
+						$u->update(['name' => Str::properCaseNoun($data['cn'][0])]);
+
+						$user->name = Str::properCaseNoun($data['cn'][0]);
+					}*/
+
 					if (isset($data['loginShell']))
 					{
 						$user->loginShell = $data['loginShell'][0];
