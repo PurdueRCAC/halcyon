@@ -671,7 +671,7 @@ Additionally these variables are available inside updates and will be filled wit
 			$data->api = route('api.news.update', ['id' => $news->id]);
 			$data->news = $news->body;
 			$data->startdate = $startdate;
-			$data->stopdate = $stopdate;
+			$data->stopdate = ($stopdate == '0000-00-00' ? '' : $stopdate);
 			$data->starttime = $starttime;
 			$data->stoptime = $stoptime;
 			$data->resources = array();

@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Mail\Article as Message;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
@@ -504,7 +505,7 @@ class ArticlesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'newstypeid' => 'required|integer|min:1',
 			'headline' => 'required|string|max:255',
 			'body' => 'required|string|max:15000',
@@ -514,7 +515,14 @@ class ArticlesController extends Controller
 			'datetimenewsend' => 'nullable|date',
 			'location' => 'nullable|string|max:32',
 			'url' => 'nullable|url',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Article();
 
@@ -773,7 +781,7 @@ class ArticlesController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'newstypeid' => 'nullable|integer',
 			'body' => 'nullable|string',
 			'published' => 'nullable|integer|in:0,1',
@@ -783,7 +791,14 @@ class ArticlesController extends Controller
 			'location' => 'nullable|string',
 			'url' => 'nullable|url',
 			'update' => 'nullable|integer'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Article::findOrFail($id);
 		//$row->fill($request->all());

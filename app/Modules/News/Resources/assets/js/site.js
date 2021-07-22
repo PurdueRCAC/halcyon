@@ -454,10 +454,10 @@ function NEWSAddEntry() {
 			newsdateend += " 00:00:00";
 		}
 	} else {
-		newsdateend = "0000-00-00 00:00:00";
+		newsdateend = null; //"0000-00-00 00:00:00";
 	}
 
-	if (newsdateend != "0000-00-00 00:00:00" && newsdateend < newsdate) {
+	if (newsdateend && newsdateend != "0000-00-00 00:00:00" && newsdateend < newsdate) {
 		SetError('End date must come after start date', 'Please enter a valid end date');
 		return;
 	}
@@ -508,9 +508,10 @@ function NEWSAddEntry() {
 			if (newsdateend != newsdate) {
 				post['datetimenewsend'] = newsdateend;
 			} else {
-				post['datetimenewsend'] = '0000-00-00 00:00:00';
+				post['datetimenewsend'] = null; //'0000-00-00 00:00:00';
 			}
 		}
+		post['datetimenewsend'] = post['datetimenewsend'] ? post['datetimenewsend'] : null;
 		if (published == true && original['published'] != '1') {
 			post['published'] = "1";
 		}
