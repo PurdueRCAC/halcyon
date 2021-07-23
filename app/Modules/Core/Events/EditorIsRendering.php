@@ -33,17 +33,25 @@ class EditorIsRendering
 	private $content;
 
 	/**
+	 * The body formatting
+	 *
+	 * @var string
+	 */
+	private $formatting;
+
+	/**
 	 * Constructor
 	 *
 	 * @param  string $editor
 	 * @param  array  $attributes
 	 * @return void
 	 */
-	public function __construct($name, $value, $attributes = array())
+	public function __construct($name, $value, $attributes = array(), $formatting = 'html')
 	{
 		$this->name = $name;
 		$this->value = $value;
 		$this->attributes = $attributes;
+		$this->formatting = $formatting;
 	}
 
 	/**
@@ -75,6 +83,16 @@ class EditorIsRendering
 	public function getValue()
 	{
 		return $this->value;
+	}
+
+	/**
+	 * Get the content format
+	 *
+	 * @return string
+	 */
+	public function getFormatting()
+	{
+		return $this->formatting;
 	}
 
 	/**

@@ -8,14 +8,31 @@ if (!function_exists('editor'))
 	 * @param   string  $name
 	 * @param   string  $value
 	 * @param   array   $atts
+	 * @param   string  $formatting
 	 * @return  Response
 	 */
-	function editor($name, $value, $atts = array())
+	function editor($name, $value, $atts = array(), $formatting = 'html')
 	{
-		event($event = new App\Modules\Core\Events\EditorIsRendering($name, $value, $atts));
+		event($event = new App\Modules\Core\Events\EditorIsRendering($name, $value, $atts, $formatting));
 
 		return $event->render();
 		//return view('core::components.textarea', compact('name', 'value', 'atts'));
+	}
+}
+
+if (!function_exists('markdown_editor'))
+{
+	/**
+	 * Render a markdown editor
+	 * 
+	 * @param   string  $name
+	 * @param   string  $value
+	 * @param   array   $atts
+	 * @return  Response
+	 */
+	function markdown_editor($name, $value, $atts = array())
+	{
+		return editor($name, $value, $atts, 'markdown');
 	}
 }
 

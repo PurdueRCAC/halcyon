@@ -29,6 +29,11 @@ class Ckeditor
 	 */
 	public function handle(EditorIsRendering $editor)
 	{
+		if ($editor->getFormatting() != 'html')
+		{
+			return;
+		}
+
 		$content = $editor->getValue();
 		$name = $editor->getName();
 		$attr = $editor->getAttributes();
