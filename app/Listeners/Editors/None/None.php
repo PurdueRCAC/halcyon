@@ -51,7 +51,7 @@ class None
 		{
 			$attr['class'] = '';
 		}
-		$attr['class'] .= ' form-control ckeditor';
+		$attr['class'] .= ' form-control';
 		$attr['class'] = trim($attr['class']);
 
 		$attributes = '';
