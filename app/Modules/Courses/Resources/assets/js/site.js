@@ -801,7 +801,7 @@ $(document).ready(function () {
 			.replace('{{ start }}', post['datetimestart'])
 			.replace('{{ end }}', post['datetimestop']);
 
-		if (!post['classname'] || !post['start'] || !post['stop']) {
+		if (!post['classname'] || !post['datetimestart'] || !post['datetimestop']) {
 			if (!post['classname']) {
 				$('#new_workshop_name')
 					.addClass('is-invalid');
