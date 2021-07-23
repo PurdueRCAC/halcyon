@@ -1,0 +1,11 @@
+{
+    "name": "Editor - SimpleMDE",
+    "alias": "listener_editors_simplemde",
+    "description": "This loads a SimpleMDE editor when a content editor event is triggered.",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
