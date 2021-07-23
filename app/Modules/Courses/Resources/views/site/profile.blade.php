@@ -319,7 +319,7 @@
 				<div class="form-group row">
 					<label for="new_workshop_resource" class="col-sm-2 col-form-label">{{ trans('courses::courses.resource') }}</label>
 					<div class="col-sm-10">
-						<select class="form-control" id="new_classs_resource">
+						<select class="form-control" id="new_workshop_resource">
 							@foreach ($resources as $resource)
 								<option value="{{ $resource->id }}">{{ $resource->name }}</option>
 							@endforeach

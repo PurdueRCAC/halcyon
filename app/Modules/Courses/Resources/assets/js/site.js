@@ -175,7 +175,7 @@ function AddingManyUsersEmail(xml, post_obj) {
 			'userid': user,
 			'classaccountid': post_obj['classaccountid'],
 		};
-console.log(post);
+		//console.log(post);
 		post = JSON.stringify(post);
 		pending++;
 
@@ -216,7 +216,7 @@ function AddingManyUsers(xml, post_obj) {
 			WSPostURL(ROOT_URL + "users", post, newUser, post_obj);
 			return;
 		}*/
-		console.log(response['data']); return;
+		//console.log(response['data']); return;
 		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
 			var user = response['data'][0]['username'];
 		} else {
@@ -228,7 +228,7 @@ function AddingManyUsers(xml, post_obj) {
 			'userid': user,
 			'classaccountid': post_obj['classaccountid'],
 		};
-	console.log(post);
+		//console.log(post);
 		post = JSON.stringify(post);
 		pending++;
 
@@ -782,6 +782,7 @@ $(document).ready(function () {
 
 		// Fetch input
 		var post = {
+			'type': 'workshop',
 			'crn': $('#new_workshop_crn').val(),
 			'classid': $('#new_workshop_classid').val(),
 			'userid': $('#userid').val(),

@@ -5,6 +5,7 @@ namespace App\Modules\Courses\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Models\Member;
 use App\Modules\Courses\Events\AccountLookup;
@@ -355,7 +356,7 @@ class AccountsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'crn' => 'nullable|max:8',
 			'department' => 'nullable|string|max:4',
 			'coursenumber' => 'nullable|string|max:8',
@@ -365,7 +366,14 @@ class AccountsController extends Controller
 			'userid' => 'nullable|integer|min:1',
 			'datetimestart' => 'required|date',
 			'datetimestop' => 'required|date',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$type = $request->input('type');
 
@@ -393,7 +401,7 @@ class AccountsController extends Controller
 		}
 
 		// Swith for class vs workshop
-		if ($type == 'workshop')
+		if ($type == 'workshop' || strtolower($row->semester) == 'workshop')
 		{
 			if ($row->classname == '')
 			{
@@ -410,6 +418,7 @@ class AccountsController extends Controller
 			$row->datetimestart = Carbon::parse($row->datetimestart)->modify('-86400 seconds')->toDateTimeString();
 			$row->datetimestop  = Carbon::parse($row->datetimestop)->modify('+86400 seconds')->toDateTimeString();
 			$row->crn = uniqid();
+			$row->crn = substr($row->crn, 0, 8); 
 			$row->semester = 'Workshop';
 			$row->reference = $row->semester;
 			$row->department = '';
@@ -450,8 +459,9 @@ class AccountsController extends Controller
 			$row->datetimestart = Carbon::parse($row->datetimestart)->modify('-259200 seconds')->toDateTimeString();
 			$row->datetimestop  = Carbon::parse($row->datetimestop)->modify('+604800 seconds')->toDateTimeString();
 			$row->notice = 1;
-			unset($row->classid);
 		}
+
+		unset($row->classid);
 
 		if (!$row->save())
 		{
