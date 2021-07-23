@@ -123,7 +123,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-report">{{ trans('contactreports::contactreports.report') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<span class="form-text text-muted">{!! trans('contactreports::contactreports.report formatting') !!}</span>
-					<textarea name="fields[report]" id="field-report" class="form-control" required rows="15" cols="40">{{ $row->report }}</textarea>
+					{!! markdown_editor('fields[report]', $row->report, ['rows' => 15, 'class' => ($errors->has('fields.report') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
 					<span class="invalid-feedback">{{ trans('contactreports::contactreports.invalid.report') }}</span>
 				</div>
 			</fieldset>

@@ -66,7 +66,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-body">{{ trans('news::news.body') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<textarea name="fields[body]" id="field-body" class="form-control required" required rows="20" cols="40">{{ $row->body }}</textarea>
+					{!! markdown_editor('fields[body]', $row->body, ['rows' => 15, 'class' => ($errors->has('fields.body') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
 					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
 				</div>
 			</fieldset>

@@ -157,9 +157,8 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-body">{{ trans('news::news.body') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<span class="form-text text-muted">{!! trans('news::news.body formatting') !!} <button class="btn btn-link preview float-right" data-id="{{ $row->id }}" data-api="{{ route('api.news.preview') }}">Preview</button></span>
-					
-					<textarea name="fields[body]" id="field-body" class="form-control required" required rows="35" cols="40">{{ $row->body }}</textarea>
-					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
+					{!! markdown_editor('fields[body]', $row->body, ['rows' => 35, 'class' => ($errors->has('fields.body') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
+					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid body') }}</span>
 				</div>
 			</fieldset>
 		</div>
