@@ -583,6 +583,7 @@ h4 {
 .icon-align-center:before {
   content: "\e81f";
 }
+.fa-arrows-alt:before,
 .icon-airplay:before {
   content: "\e820";
 }
@@ -812,6 +813,7 @@ h4 {
 .icon-external-link:before {
   content: "\e869";
 }
+.fa-eye:before,
 .icon-eye:before {
   content: "\e86a";
 }
@@ -870,6 +872,7 @@ h4 {
 .icon-github:before {
   content: "\e87b";
 }
+.fa-picture-o:before,
 .icon-image:before {
   content: "\e87c";
 }
@@ -895,12 +898,15 @@ h4 {
 .icon-life-buoy:before {
   content: "\e883";
 }
+.fa-link:before,
 .icon-link:before {
   content: "\e884";
 }
 .icon-log-in:before {
   content: "\e885";
 }
+.fa-list-ul:before,
+.fa-list-ol:before,
 .icon-menus:before,
 .icon-list:before {
   content: "\e886";
@@ -952,6 +958,7 @@ h4 {
 .icon-minus-square:before {
   content: "\e896";
 }
+.fa-minus:before,
 .icon-minus:before {
   content: "\e897";
 }
@@ -1099,6 +1106,7 @@ h4 {
 .icon-shuffle:before {
   content: "\e8c5";
 }
+.icon-columns:before,
 .icon-sidebar:before {
   content: "\e8c6";
 }
@@ -1279,9 +1287,11 @@ h4 {
 .icon-underline:before {
   content: "\e8ff";
 }
+.fa-italic:before,
 .icon-italic:before {
   content: "\e900";
 }
+.fa-bold:before,
 .icon-bold:before {
   content: "\e901";
 }
@@ -1348,6 +1358,7 @@ h4 {
 .icon-book-open:before {
   content: "\e914";
 }
+.fa-code:before,
 .icon-code:before {
   content: "\e915";
 }
@@ -1414,6 +1425,12 @@ h4 {
 }
 .icon-youtube:before {
   content: "\e92a";
+}
+.fa-header:before {
+  content: "H";
+}
+.fa-quote-left:before {
+  content: "\201C";
 }
 .toolbar-box .icon-save-close:after {
   font-family: "Feather";
