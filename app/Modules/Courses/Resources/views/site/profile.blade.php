@@ -330,7 +330,7 @@
 				<div class="form-group row">
 					<label for="new_workshop_start" class="col-sm-2 col-form-label">Start Date</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control date-pick" id="new_workshop_start" placeholder="YYYY-MM-DD" />
+						<input type="text" name="start" class="form-control date-pick" id="new_workshop_start" placeholder="YYYY-MM-DD" />
 						<span class="invalid-feedback">{{ trans('courses::courses.invalid.start date') }}</span>
 					</div>
 				</div>
@@ -338,7 +338,7 @@
 				<div class="form-group row">
 					<label for="new_workshop_end" class="col-sm-2 col-form-label">End Date</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control date-pick" id="new_workshop_end" placeholder="YYYY-MM-DD" />
+						<input type="text" name="end" class="form-control date-pick" id="new_workshop_end" placeholder="YYYY-MM-DD" />
 						<span class="invalid-feedback">{{ trans('courses::courses.invalid.end date') }}</span>
 					</div>
 				</div>

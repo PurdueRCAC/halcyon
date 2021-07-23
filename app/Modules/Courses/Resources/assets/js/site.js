@@ -806,11 +806,11 @@ $(document).ready(function () {
 				$('#new_workshop_name')
 					.addClass('is-invalid');
 			}
-			if (!post['start']) {
+			if (!post['datetimestart']) {
 				$('#new_workshop_start')
 					.addClass('is-invalid');
 			}
-			if (!post['stop']) {
+			if (!post['datetimestop']) {
 				$('#new_workshop_end')
 					.addClass('is-invalid');
 			}
