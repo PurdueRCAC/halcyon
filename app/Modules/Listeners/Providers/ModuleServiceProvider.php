@@ -2,12 +2,12 @@
 
 namespace App\Modules\Listeners\Providers;
 
-//use App\Modules\Listeners\Entities\ListenerManager;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use App\Modules\Listeners\Models\Listener;
+use App\Modules\Listeners\Console\PublishCommand;
+use App\Modules\Listeners\Entities\ListenerManager;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -36,117 +36,10 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
-
+		$this->registerConsoleCommands();
 		$this->registerListeners();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-	}
-
-	/**
-	 * Register any events for your application.
-	 *
-	 * @return void
-	 */
-	public function registerListeners()
-	{
-		if (Schema::hasTable('extensions'))
-		{
-			$query = Listener::where('enabled', 1)
-				->where('type', '=', 'listener');
-
-			if ($user = auth()->user())
-			{
-				$query->whereIn('access', $user->getAuthorisedViewLevels());
-			}
-
-			$listeners = $query
-				->orderBy('ordering', 'asc')
-				->get();
-
-			foreach ($listeners as $listener)
-			{
-				$this->subscribeListener($listener);
-			}
-		}
-	}
-
-	/**
-	 * Get by name (real, eg 'Breadcrumbs' or folder, eg 'mod_breadcrumbs')
-	 *
-	 * @param   object  $listener
-	 * @return  void
-	 */
-	protected function subscribeListener($listener)
-	{
-		//try
-		//{
-			//$path = '/Listeners/' . Str::studly($listener->folder) . '/' . Str::studly($listener->element);
-
-			if (!$listener->path)
-			{
-				return;
-			}
-
-			//$cls = 'App' . str_replace('/', '\\', $path) . '\\' . Str::studly($listener->element);
-			//$cls = 'App' . '\\Listeners\\' . Str::studly($listener->folder) . '\\' . Str::studly($listener->element) . '\\' . Str::studly($listener->element);
-			$cls = $listener->className;
-
-			$r = new \ReflectionClass($cls);
-
-			foreach ($r->getMethods(\ReflectionMethod::IS_PUBLIC) as $method)
-			{
-				$name = $method->getName();
-
-				if ($name == 'subscribe')
-				{
-					$this->app['events']->subscribe(new $cls);
-				}
-				elseif (substr(strtolower($name), 0, 6) == 'handle')
-				{
-					$event = lcfirst(substr($name, 6));
-
-					$this->app['events']->listen($event, $cls . '@' . $name);
-				}
-
-				$this->app['config']->set('listeners.' . $listener->folder . '.' . $listener->element, $listener->params->all());
-			}
-		//}
-		//catch (\Exception $e)
-		//{
-			// Listener not found
-		//}
-	}
-
-	protected function old()
-	{
-		$files = $this->app['files']->glob(app_path() . '/Listeners/*/*/*.php');
-
-		foreach ($files as $file)
-		{
-			$cls = substr($file, strlen(app_path()));
-			$cls = str_replace(array('/', '.php'), array('\\', ''), $cls);
-			$cls = 'App' . $cls;
-
-			$r = new \ReflectionClass($cls);
-
-			foreach ($r->getMethods(\ReflectionMethod::IS_PUBLIC) as $method)
-			{
-				$name = $method->getName();
-
-				if ($name == 'subscribe')
-				{
-					$this->app['events']->subscribe(new $cls);
-				}
-				elseif (substr(strtolower($name), 0, 6) == 'handle')
-				{
-					$event = lcfirst(substr($name, 6));
-
-					$this->app['events']->listen($event, $cls . '@' . $name);
-				}
-
-				$this->app['config']->set('listeners.' . $listener->folder . '.' . $listener->element, $listener->params->all());
-			}
-		}
 	}
 
 	/**
@@ -160,6 +53,32 @@ class ModuleServiceProvider extends ServiceProvider
 		{
 			return new ListenerManager($app['events']);
 		});
+	}
+
+	/**
+	 * Register any events for your application.
+	 *
+	 * @return void
+	 */
+	public function registerListeners()
+	{
+		$this->app['listener']->subscribe();
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	protected function registerConsoleCommands()
+	{
+		$this->commands([
+			//InstallCommand::class,
+			//DisableCommand::class,
+			//EnableCommand::class,
+			PublishCommand::class,
+			//SetupCommand::class,
+		]);
 	}
 
 	/**

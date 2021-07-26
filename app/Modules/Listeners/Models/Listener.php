@@ -179,6 +179,46 @@ class Listener extends Model
 	}
 
 	/**
+	 * Get the class name
+	 *
+	 * @return  string
+	 */
+	public function getLowerFolder()
+	{
+		return strtolower($this->folder);
+	}
+
+	/**
+	 * Get the class name
+	 *
+	 * @return  string
+	 */
+	public function getLowerName()
+	{
+		return strtolower($this->element);
+	}
+
+	/**
+	 * Get the asset path
+	 *
+	 * @return  string
+	 */
+	public function getAssetPath()
+	{
+		return $this->path . '/assets';
+	}
+
+	/**
+	 * Get the public asset path
+	 *
+	 * @return  string
+	 */
+	public function getPublicAssetPath()
+	{
+		return public_path() . '/listeners/' . $this->getLowerFolder() . '/' . $this->getLowerName();
+	}
+
+	/**
 	 * Get a form
 	 *
 	 * @return  object

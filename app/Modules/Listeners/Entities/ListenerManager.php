@@ -4,24 +4,24 @@ namespace App\Modules\Listeners\Entities;
 
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Fluent;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Schema;
 use App\Modules\Listeners\Models\Listener;
-//use App\Modules\Listeners\Entities\Listener as BaseListener;
 
 class ListenerManager
 {
 	/**
 	 * Container
 	 *
-	 * @var  object
+	 * @var  object  Dispatcher
 	 */
 	public $dispatcher;
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 *
-	 * @param   Container  $app
+	 * @param   Dispatcher $dispatcher
 	 * @return  void
 	 */
 	public function __construct(Dispatcher $dispatcher)
@@ -30,25 +30,24 @@ class ListenerManager
 	}
 
 	/**
-	 * Run listener
+	 * Subscribe all published listeners
 	 *
-	 * @param   object  $listener
-	 * @return  string
+	 * @return  void
 	 */
 	public function subscribe()
 	{
-		foreach ($this->all() as $listener)
+		foreach ($this->allEnabled() as $listener)
 		{
 			$this->subscribeListener($listener);
 		}
 	}
 
 	/**
-	 * Get by name (real, eg 'Breadcrumbs' or folder, eg 'mod_breadcrumbs')
+	 * Get by folder and element
 	 *
-	 * @param   string  $name   The name of the listener
-	 * @param   string  $title  The title of the listener, optional
-	 * @return  object  The Module object
+	 * @param   string  $folder   Listener type
+	 * @param   string  $element  Listener element
+	 * @return  object  collection
 	 */
 	public function byType($folder, $element = null)
 	{
@@ -67,40 +66,43 @@ class ListenerManager
 	}
 
 	/**
-	 * Get by name (real, eg 'Breadcrumbs' or folder, eg 'mod_breadcrumbs')
+	 * Subscribe the listener
 	 *
-	 * @param   object  $listener
-	 * @return  object  The Listener object
+	 * @param   object  $listener  Listener
+	 * @return  void
 	 */
-	protected function subscribeListener($listener)
+	protected function subscribeListener(Listener $listener)
 	{
-		$cls = 'App\\Listeners\\' . Str::studly($listener->folder) . '\\' . Str::studly($listener->element);
+		if (!$listener->path)
+		{
+			return;
+		}
+
+		$cls = $listener->className;
 
 		$r = new \ReflectionClass($cls);
 
 		foreach ($r->getMethods(\ReflectionMethod::IS_PUBLIC) as $method)
 		{
-			config()->set('listeners.' . $listener->folder . '.' . $listener->element, $listener->params->all());
-
 			$name = $method->getName();
 
 			if ($name == 'subscribe')
 			{
 				$this->dispatcher->subscribe(new $cls);
-				break;
 			}
-
-			if (substr(strtolower($name), 0, 6) == 'handle')
+			elseif (substr(strtolower($name), 0, 6) == 'handle')
 			{
 				$event = lcfirst(substr($name, 6));
 
 				$this->dispatcher->listen($event, $cls . '@' . $name);
 			}
+
+			config()->set('listener.' . $listener->folder . '.' . $listener->element, $listener->params->all());
 		}
 	}
 
 	/**
-	 * Load published listeners.
+	 * Load all listeners.
 	 *
 	 * @return  object  Collection
 	 */
@@ -113,13 +115,65 @@ class ListenerManager
 			return $listeners;
 		}
 
-		/*$files = app('files')->glob(app_path('Listeners') . '/*/*/listener.json');
+		$listeners = Schema::hasTable('extensions') ? $this->allByDatabase() : $this->allByFile();
+
+		return $listeners;
+	}
+
+	/**
+	 * Load published listeners.
+	 *
+	 * @return  object  Collection
+	 */
+	public function allEnabled()
+	{
+		$levels = [];
+
+		if ($user = auth()->user())
+		{
+			$levels = $user->getAuthorisedViewLevels();
+		}
+
+		$listeners = $this->all()
+			->filter(function($value, $key) use ($levels)
+			{
+				if ($value->enabled == 1 && (empty($levels) || in_array($value->access, $levels)))
+				{
+					return true;
+				}
+
+				return false;
+			});
+
+		return $listeners;
+	}
+
+	/**
+	 * Load published listeners by database.
+	 *
+	 * @return  object  Collection
+	 */
+	public function allByDatabase()
+	{
+		$listeners = Listener::query()
+			->where('type', '=', 'listener')
+			->orderBy('ordering', 'asc')
+			->get();
+		
+		return $listeners;
+	}
+
+	/**
+	 * Load published listeners by files.
+	 *
+	 * @return  object  Collection
+	 */
+	public function allByFile()
+	{
+		$files = app('files')->glob(app_path('Listeners') . '/*/*/listener.json');
 
 		foreach ($files as $file)
 		{
-			//$cls = substr($file, strlen(app_path()));
-			//$cls = str_replace(array('/', '.php'), array('\\', ''), $cls);
-			//$cls = 'App' . $cls;
 			$data = json_decode(file_get_contents($file));
 
 			$listener = new Listener;
@@ -129,25 +183,10 @@ class ListenerManager
 			$listener->folder   = strtolower(basename(dirname(dirname($file))));
 			$listener->enabled  = $data->active;
 			$listener->ordering = $data->order;
-			$listener->params   = new Fluent();
 
 			$listeners[] = $listener;
 		}
 
-		return collect($listeners);*/
-
-		$query = Listener::where('enabled', 1)
-			->where('type', '=', 'listener');
-
-		if ($user = auth()->user())
-		{
-			$query->whereIn('access', $user->getAuthorisedViewLevels());
-		}
-
-		$listeners = $query
-			->orderBy('ordering', 'asc')
-			->get();
-
-		return $listeners;
+		return collect($listeners);
 	}
 }
