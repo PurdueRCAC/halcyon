@@ -5,6 +5,7 @@ namespace App\Modules\Queues\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as Member;
 use App\Modules\Queues\Models\GroupUser;
@@ -213,13 +214,20 @@ class UserRequestsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'userid' => 'nullable|integer|min:1',
 			'comment' => 'nullable|string|max:255',
 			'queues' => 'nullable|array',
 			'resources' => 'nullable|array',
 			'group' => 'nullable|integer'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$queues = (array)$request->input('queues');
 		$resources = (array)$request->input('resources');

@@ -5,6 +5,9 @@ namespace App\Modules\Queues\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Users\Models\User;
 use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Queues\Models\Queue;
@@ -14,8 +17,6 @@ use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberStatus;
 use App\Modules\Resources\Events\ResourceMemberDeleted;
 use App\Modules\Resources\Models\Asset;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
 /**
  * Queue Users
@@ -220,12 +221,19 @@ class UsersController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'queueid' => 'required|integer',
 			'userid' => 'required',
 			'userrequestid' => 'nullable|integer',
 			'membertype' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$userid = $request->input('userid');
 
@@ -437,14 +445,21 @@ class UsersController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'queueid' => 'nullable|integer',
 			'userid' => 'nullable|integer',
 			'userrequestid' => 'nullable|integer',
 			'membertype' => 'nullable|integer',
 			'datetimelastseen' => 'nullable|date',
 			'notice' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = QueueUser::findOrFail($id);
 		$row->fill($request->all());

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Widgets\Models\Widget;
 use App\Modules\Widgets\Models\Menu;
 use App\Modules\Users\Models\User;
@@ -493,13 +494,20 @@ class WidgetsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'title'    => 'required|string|max:100',
 			'position' => 'required|string|max:50',
 			'widget'   => 'required|string|max:50',
 			'params'   => 'nullable|array',
 			'menu'     => 'nullable|array',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Widget();
 		$row->fill($request->all());
@@ -732,13 +740,20 @@ class WidgetsController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'title'    => 'nullable|string|max:100',
 			'position' => 'nullable|string|max:50',
 			'widget'   => 'nullable|string|max:50',
 			'params'   => 'nullable|array',
 			'menu'     => 'nullable|array',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Widget::findOrFail($id);
 		$row->fill($request->all());

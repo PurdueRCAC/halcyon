@@ -5,6 +5,7 @@ namespace App\Modules\Knowledge\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Knowledge\Models\Feedback;
@@ -125,7 +126,7 @@ class FeedbackController extends Controller
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"required":      false,
-	* 		"schema": {
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "created_at",
 	 * 			"enum": [
@@ -291,13 +292,20 @@ class FeedbackController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'target_id' => 'required|integer',
 			//'ip'        => 'nullable|string|max:15',
 			'type'      => 'required|string|max:10',
 			'user_id'   => 'nullable|integer',
 			'comments'  => 'nullable|string|max:255',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Feedback;
 		$row->target_id = $request->input('target_id');
@@ -388,10 +396,17 @@ class FeedbackController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'type'      => 'nullable|string|max:10',
 			'comments'  => 'nullable|string|max:255',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Feedback::findOrFail($id);
 		if ($request->has('comments'))

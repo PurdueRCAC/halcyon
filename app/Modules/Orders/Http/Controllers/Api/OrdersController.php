@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Orders\Models\Order;
 use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Models\Product;
@@ -377,14 +378,21 @@ class OrdersController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'userid' => 'nullable',
 			'groupid' => 'nullable|integer',
 			'submitteruserid' => 'nullable|integer',
 			'usernotes' => 'nullable|string',
 			'staffnotes' => 'nullable|string',
 			'notice' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$userid = auth()->user() ? auth()->user()->id : 0;
 
@@ -659,7 +667,7 @@ class OrdersController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'userid' => 'nullable|integer',
 			'groupid' => 'nullable|integer',
 			'submitteruserid' => 'nullable|integer',
@@ -668,7 +676,14 @@ class OrdersController extends Controller
 			'notice' => 'nullable|integer',
 			'accounts' => 'nullable|array',
 			'restore' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		//$row = Order::findOrFail($id);
 		$row = Order::query()

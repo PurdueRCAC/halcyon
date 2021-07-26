@@ -5,6 +5,7 @@ namespace App\Modules\Themes\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Themes\Models\Theme;
 
 /**
@@ -258,10 +259,17 @@ class ThemesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
-			'title' => 'required',
-			'template' => 'required'
-		]);
+		$rules = [
+			'title' => 'required|string',
+			'template' => 'required|string'
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Theme($request->all());
 
@@ -393,10 +401,17 @@ class ThemesController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'title' => 'required',
 			'position' => 'required'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Theme::findOrFail($id);
 		$row->fill($request->all());

@@ -5,6 +5,7 @@ namespace App\Modules\Issues\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Issues\Models\ToDo;
@@ -204,12 +205,19 @@ class ToDosController extends Controller
 	{
 		$now = new Carbon();
 
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|max:255',
 			'description' => 'required|string|max:2000',
 			'userid' => 'nullable|integer',
 			'recurringtimeperiodid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new ToDo();
 		$row->datetimecreated = $request->input('datetimecreated', $now->toDateTimeString());
@@ -309,11 +317,18 @@ class ToDosController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'nullable|string|max:255',
 			'description' => 'nullable|string|max:2000',
 			'recurringtimeperiodid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = ToDo::findOrFail($id);
 		$row->name = $request->input('name', $row->name);

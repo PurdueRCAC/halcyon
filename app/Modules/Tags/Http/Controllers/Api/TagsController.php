@@ -202,11 +202,18 @@ class TagsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|min:3|max:1500',
 			'slug' => 'nullable|string|max:100',
 			'parent_id' => 'nullable|integer'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Tag::findByTag($request->input('slug') ? $request->input('slug') : $request->input('name'));
 

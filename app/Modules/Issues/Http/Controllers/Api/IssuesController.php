@@ -5,6 +5,7 @@ namespace App\Modules\Issues\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Modules\Issues\Models\Issue;
 use App\Modules\Issues\Models\Issueresource;
@@ -244,12 +245,19 @@ class IssuesController extends Controller
 	{
 		$now = new Carbon();
 
-		$request->validate([
+		$rules = [
 			'report' => 'required|string|max:8096',
 			'datetimecreated' => 'nullable|date',
 			'userid' => 'nullable|integer',
 			'issuetodoid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Issue();
 		$row->datetimecreated = $request->input('datetimecreated', $now->toDateTimeString());
@@ -363,11 +371,18 @@ class IssuesController extends Controller
 	{
 		$now = new Carbon();
 
-		$request->validate([
+		$rules = [
 			'report' => 'nullable|string|max:8096',
 			'datetimecreated' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
 			'issuetodoid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Issue::findOrFail($id);
 		//$row->fill($request->all());

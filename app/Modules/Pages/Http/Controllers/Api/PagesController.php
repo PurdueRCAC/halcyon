@@ -4,6 +4,7 @@ namespace App\Modules\Pages\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Pages\Models\Page;
 use App\Modules\Pages\Models\Version;
 use App\Modules\Pages\Http\Resources\PageResource;
@@ -300,11 +301,18 @@ class PagesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'title'   => 'required|max:255',
 			'content' => 'required',
 			'access'  => 'nullable|min:1'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Page;
 		$row->fill($request->all());

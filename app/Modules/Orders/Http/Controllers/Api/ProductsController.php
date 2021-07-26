@@ -5,6 +5,7 @@ namespace App\Modules\Orders\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Http\Resources\ProductResource;
@@ -310,7 +311,7 @@ class ProductsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|max:64',
 			'ordercategoryid' => 'required|integer|min:1',
 			'description' => 'nullable|string|max:2000',
@@ -323,7 +324,14 @@ class ProductsController extends Controller
 			'terms' => 'nullable|string|max:2000',
 			'restricteddata' => 'nullable|integer',
 			'resourceid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Product();
 		$row->fill($request->all());
@@ -516,7 +524,7 @@ class ProductsController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'nullable|string|max:64',
 			'ordercategoryid' => 'nullable|integer|min:1',
 			'description' => 'nullable|string|max:2000',
@@ -529,7 +537,14 @@ class ProductsController extends Controller
 			'terms' => 'nullable|string|max:2000',
 			'restricteddata' => 'nullable|integer',
 			'resourceid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Product::findOrFail($id);
 		$row->fill($request->all());

@@ -5,6 +5,7 @@ namespace App\Modules\Knowledge\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Knowledge\Models\Page;
 use App\Modules\Knowledge\Models\Associations;
 use App\Modules\Knowledge\Http\Resources\PageResource;
@@ -303,14 +304,21 @@ class PagesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'title'     => 'required|string|max:255',
 			'alias'     => 'nullable|string|max:255',
 			'content'   => 'required|string',
 			'access'    => 'nullable|integer|min:1',
 			'state'     => 'nullable|integer',
 			'parent_id' => 'required|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$parent_id = $request->input('parent_id');
 
@@ -506,7 +514,7 @@ class PagesController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'title'     => 'nullable|string|max:255',
 			'alias'     => 'nullable|string|max:255',
 			'content'   => 'nullable|string',
@@ -514,7 +522,14 @@ class PagesController extends Controller
 			'state'     => 'nullable|integer',
 			'parent_id' => 'nullable|integer',
 			'params'    => 'nullable|array',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Associations::findOrFail($id);
 		$orig_parent_id = $row->parent_id;

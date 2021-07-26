@@ -5,6 +5,7 @@ namespace App\Modules\Queues\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Queues\Http\Resources\QueueResourceCollection;
 use App\Modules\Queues\Http\Resources\QueueResource;
 use App\Modules\Queues\Models\Queue;
@@ -536,7 +537,7 @@ class QueuesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'schedulerid'       => 'nullable|integer',
 			'subresourceid'     => 'nullable|integer',
 			'name'              => 'required|string|max:64',
@@ -565,7 +566,14 @@ class QueuesController extends Controller
 			'aclgroups'         => 'nullable|string|max:255',
 			'maxijobfactor'     => 'nullable|integer',
 			'maxijobuserfactor' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$queue = new Queue;
 		$queue->fill($request->all());
@@ -912,7 +920,7 @@ class QueuesController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'schedulerid'       => 'nullable|integer',
 			'subresourceid'     => 'nullable|integer',
 			'name'              => 'nullable|string|max:64',
@@ -941,7 +949,14 @@ class QueuesController extends Controller
 			'aclgroups'         => 'nullable|string|max:255',
 			'maxijobfactor'     => 'nullable|integer',
 			'maxijobuserfactor' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$queue = Queue::findOrFail($id);
 		$queue->update($request->all());

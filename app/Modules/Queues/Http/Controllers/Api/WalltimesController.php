@@ -5,9 +5,10 @@ namespace App\Modules\Queues\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Queues\Models\Walltime;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Queues\Models\Walltime;
 
 /**
  * Queue Walltimes
@@ -200,12 +201,19 @@ class WalltimesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'queueid' => 'required|integer|min:1',
 			'datetimestart' => 'nullable|string',
 			'datetimestop' => 'nullable|string',
 			'walltime' => 'required|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Walltime::create($request->all());
 
@@ -291,11 +299,18 @@ class WalltimesController extends Controller
 	{
 		$row = Walltime::findOrFail($id);
 
-		$request->validate([
+		$rules = [
 			'datetimestart' => 'nullable|string',
 			'datetimestop' => 'nullable|string',
 			'walltime' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row->update($request->all());
 

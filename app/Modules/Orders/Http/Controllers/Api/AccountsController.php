@@ -5,6 +5,7 @@ namespace App\Modules\Orders\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Orders\Models\Account;
@@ -311,7 +312,7 @@ class AccountsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'orderid' => 'required|integer',
 			'amount' => 'required|string',
 			'purchasefund' => 'nullable|string|max:8',
@@ -321,7 +322,14 @@ class AccountsController extends Controller
 			'purchasewbse' => 'nullable|string|max:17',
 			'budgetjustification' => 'nullable|string|max:2000',
 			'approveruserid' => 'nullable',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		if (!$request->has('purchaseio')
 		 && !$request->has('purchasewbse'))
@@ -585,7 +593,7 @@ class AccountsController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			// Fields
 			'amount' => 'nullable|string',
 			'purchasefund' => 'nullable|string|max:8',
@@ -603,7 +611,14 @@ class AccountsController extends Controller
 			'paid' => 'nullable|integer',
 			'denied' => 'nullable|integer',
 			'reset' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Account::findOrFail($id);
 		if ($request->has('purchasefund'))

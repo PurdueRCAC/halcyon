@@ -5,9 +5,10 @@ namespace App\Modules\Queues\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Queues\Models\Type;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Queues\Models\Type;
 
 /**
  * Queue Types
@@ -139,9 +140,16 @@ class TypesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|max:20'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Type::create($request->all());
 
@@ -205,9 +213,16 @@ class TypesController extends Controller
 	{
 		$row = Type::findOrFail($id);
 
-		$request->validate([
+		$rules = [
 			'name' => 'nullable|string|max:20'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row->update($request->all());
 

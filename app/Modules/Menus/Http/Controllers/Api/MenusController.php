@@ -5,11 +5,12 @@ namespace App\Modules\Menus\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Menus\Models\Type;
 use App\Modules\Menus\Models\Item;
 use App\Halcyon\Access\Viewlevel;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
 /**
  * Menus
@@ -173,11 +174,18 @@ class MenusController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'title' => 'required|string|max:48',
 			'menutype' => 'required|string|max:24',
 			'description' => 'nullable|string|max:255',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Type();
 		$row->title = $request->input('title');
@@ -269,11 +277,18 @@ class MenusController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'title' => 'nullable|string|max:48',
 			'menutype' => 'nullable|string|max:24',
 			'description' => 'nullable|string|max:255',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Type::findOrFail($id);
 		$row->title = $request->input('title', $row->title);

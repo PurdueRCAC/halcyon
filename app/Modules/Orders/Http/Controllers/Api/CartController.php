@@ -5,6 +5,7 @@ namespace App\Modules\Orders\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Http\Resources\CartResource;
 use App\Modules\Orders\Http\Resources\CartResourceCollection;
@@ -61,11 +62,18 @@ class CartController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'productid' => 'required|integer|min:1',
 			//'userid' => 'required|integer|min:1',
 			'quantity' => 'required|integer|min:1',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$product = Product::find($request->input('productid'));
 
@@ -153,10 +161,17 @@ class CartController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'quantity' => 'required|integer|min:1',
 			'price'    => 'nullable|integer'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$cart = app('cart');
 		$cart->restore(auth()->user()->username);

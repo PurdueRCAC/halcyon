@@ -4,6 +4,7 @@ namespace App\Modules\Orders\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Http\Resources\CategoryResource;
 use App\Modules\Orders\Http\Resources\CategoryResourceCollection;
@@ -222,12 +223,19 @@ class CategoriesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|max:64',
 			'parentordercategoryid' => 'nullable|integer|min:1',
 			'description' => 'nullable|string|max:2000',
 			'sequence' => 'nullable|integer|min:1',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Category();
 		$row->fill($request->all());
@@ -335,12 +343,19 @@ class CategoriesController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'nullable|string|max:64',
 			'parentordercategoryid' => 'nullable|integer|min:1',
 			'description' => 'nullable|string|max:2000',
 			'sequence' => 'nullable|integer|min:1',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Category::findOrFail($id);
 		$row->fill($request->all());

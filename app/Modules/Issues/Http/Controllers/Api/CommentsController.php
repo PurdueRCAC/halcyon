@@ -4,6 +4,7 @@ namespace App\Modules\Issues\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Issues\Models\Issue;
 use App\Modules\Issues\Models\Comment;
 use App\Modules\Issues\Http\Resources\CommentResource;
@@ -192,11 +193,18 @@ class CommentsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'comment' => 'nullable|string|max:8096',
 			'issueid' => 'required|integer',
 			'resolution' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Comment($request->all());
 		if (!$row->comment)
@@ -293,11 +301,18 @@ class CommentsController extends Controller
 	 */
 	public function update(Request $request, $comment)
 	{
-		$request->validate([
+		$rules = [
 			'comment' => 'nullable|string|max:8096',
 			'issueid' => 'nullable|integer',
 			'resolution' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Comment::findOrFail($comment);
 

@@ -5,6 +5,7 @@ namespace App\Modules\Listeners\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Listeners\Models\Listener;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Access\Viewlevel;
@@ -285,12 +286,25 @@ class ListenersController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
-			'name' => 'required|string',
-			'element' => 'required|string'
-		]);
+		$rules = [
+			'name' => 'required|string|max:100',
+			'element' => 'required|string|max:100',
+			'folder' => 'required|string|max:100',
+			'client_id' => 'nullable|integer',
+			'enabled' => 'nullable|integer',
+			'access' => 'nullable|integer',
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Listener($request->all());
+		$row->client_id = $row->client_id ? 1 : 0;
+		$row->type = 'listener';
 
 		if (!$row->save())
 		{
@@ -399,13 +413,30 @@ class ListenersController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
-			'title' => 'required|string',
-			'position' => 'required|string'
-		]);
+		$rules = [
+			'name' => 'nullable|string|max:100',
+			'element' => 'nullable|string|max:100',
+			'folder' => 'nullable|string|max:100',
+			'client_id' => 'nullable|integer',
+			'enabled' => 'nullable|integer',
+			'access' => 'nullable|integer',
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Listener::findOrFail($id);
-		$row->fill($request->all());
+		foreach (array_keys($rules) as $key)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
 
 		if (!$row->save())
 		{

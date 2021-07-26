@@ -5,9 +5,10 @@ namespace App\Modules\Queues\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Queues\Models\Scheduler;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Queues\Models\Scheduler;
 
 /**
  * Schedulers
@@ -232,7 +233,7 @@ class SchedulersController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'hostname'                => 'required|string|max:64',
 			'queuesubresourceid'      => 'required|integer|min:1',
 			'batchsystem'             => 'nullable|integer|min:1',
@@ -240,7 +241,14 @@ class SchedulersController extends Controller
 			'datetimelastimportstart' => 'nullable|string',
 			'schedulerpolicyid'       => 'required|integer',
 			'defaultmaxwalltime'      => 'required|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Scheduler::findByHostname($request->input('hostname'));
 
@@ -381,7 +389,7 @@ class SchedulersController extends Controller
 	{
 		$row = Scheduler::findOrFail($id);
 
-		$request->validate([
+		$rules = [
 			'hostname'                => 'nullable|string|max:64',
 			'queuesubresourceid'      => 'nullable|integer|min:1',
 			'batchsystem'             => 'nullable|integer|min:1',
@@ -390,7 +398,14 @@ class SchedulersController extends Controller
 			'datetimelastimportstop'  => 'nullable|date',
 			'schedulerpolicyid'       => 'nullable|integer',
 			'defaultmaxwalltime'      => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row->update($request->all());
 
