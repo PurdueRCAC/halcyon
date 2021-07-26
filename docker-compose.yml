@@ -1,16 +1,15 @@
 version: "3.1"
 services:
-
   mysql:
     image: mysql:5.6
     container_name: halcyon-mysql
     restart: unless-stopped
     working_dir: /var/www/html
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD} #${DB_PASSWORD}
       - MYSQL_ROOT_USER=${DB_USERNAME}
-      - MYSQL_DATABASE=${DB_DATABASE}
-      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_DATABASE=${DB_DATABASE} #${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME} #${DB_USERNAME}
     ports:
       - "8082:3306"
     volumes:
@@ -20,7 +19,6 @@ services:
     #env_file: .env
     networks:
       - halcyon
-
   webserver:
     image: nginx:alpine
     container_name: halcyon-webserver
@@ -38,7 +36,6 @@ services:
       - "443:443"
     networks:
       - halcyon
-
   php-fpm:
     build: docker/php-fpm
     container_name: halcyon-php-fpm
@@ -50,7 +47,6 @@ services:
       - ./storage/app/public:/var/www/html/public/files
     networks:
       - halcyon
-
   node:
     build:
       context: ./docker/node
@@ -59,7 +55,6 @@ services:
       - .:/var/www/html
     networks:
       - halcyon
-
 #  redis:
 #    image: redis:alpine
 #    container_name: redis
@@ -68,7 +63,6 @@ services:
 #      - 6379:6379
 #    networks:
 #      - halcyon
-
 #  mailhog:
 #    image: mailhog/mailhog:latest
 #    container_name: mailhog
@@ -77,6 +71,5 @@ services:
 #      - 8025:8025
 #    networks:
 #      - halcyon
-
 networks:
   halcyon:
