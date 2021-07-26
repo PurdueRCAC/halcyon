@@ -20,3 +20,8 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+
+/docker/ssl/incommon-sha2.intermediate.ca.crt
+/docker/ssl/server.crt
+/docker/ssl/server.key
+/storage/dump/rcacdev_2021-05-18.sql
