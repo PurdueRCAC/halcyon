@@ -6,10 +6,10 @@ services:
     restart: unless-stopped
     working_dir: /var/www/html
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD} #${DB_PASSWORD}
-      - MYSQL_ROOT_USER=${DB_USERNAME}
-      - MYSQL_DATABASE=${DB_DATABASE} #${DB_DATABASE}
-      - MYSQL_USER=${DB_USERNAME} #${DB_USERNAME}
+      - MYSQL_ROOT_PASSWORD=halcyon #${DB_PASSWORD}
+      # - MYSQL_ROOT_USER=${DB_USERNAME}
+      - MYSQL_DATABASE=halcyon #${DB_DATABASE}
+      - MYSQL_USER=root #${DB_USERNAME}
     ports:
       - "8082:3306"
     volumes:
