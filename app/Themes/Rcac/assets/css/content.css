@@ -352,7 +352,7 @@ div.sidemenu-news ul.newslist li a {
 	font-weight: normal;
 	display: block;
 	padding: .7rem 1.1rem .7rem .9rem;
-	border-left: .2rem solid #e3e2e2;
+	border-left: .2rem solid #e0e0e0;
 	text-decoration: none;
 }
 div.sidemenu-news ul.newslist li p {
@@ -462,14 +462,13 @@ table {
 table caption,
 table th,
 table td {
-	/*padding: 5px 10px;*/
 	padding: 0.75em;
 	text-align: left;
 	vertical-align: top;
 }
 
 table caption {
-	color: #6B6B6B;
+	color: #656565;
 	background: #ededed;
 	font-weight: bold;
 	border-bottom: 1px solid #e0e0e0;
@@ -478,7 +477,6 @@ table caption {
 thead th {
 	vertical-align: bottom;
 	font-weight: bold;
-	/*background: #ededed;*/
 }
 
 tbody + tbody {
@@ -487,7 +485,6 @@ tbody + tbody {
 tbody th,
 td {
 	border-top: 1px solid #e0e0e0;
-	/*background: #fafafa;*/
 }
 .fc-slats table,
 .fc-slats tbody th,
@@ -544,20 +541,20 @@ div.ui-dialog {
 	padding: 2em;
 }
 .ui-dialog .ui-dialog-titlebar-close {
-  background: transparent;
-  right: 1em;
-  line-height: 1;
+	background: transparent;
+	right: 1em;
+	line-height: 1;
 }
 .ui-dialog .ui-dialog-titlebar-close {
 	border: none;
 }
 .ui-dialog .ui-dialog-titlebar-close .ui-icon:before {
-  content: "\e8f6";
+	content: "\e8f6";
 }
 .ui-dialog .dialog-footer {
-  padding-top: 1em;
-  margin-top: 2em;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+	padding-top: 1em;
+	margin-top: 2em;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .ui-widget-content a.btn-danger,
@@ -570,7 +567,7 @@ body .ui-tooltip {
 	color: #eee;
 	font-size: 0.8em;
 	padding: 0.5em 0.7em;
-	background: #111111;
+	background: #333333;
 	background: rgba(0, 0, 0, 0.8);
 	line-height: 1.2;
 }
@@ -624,7 +621,7 @@ table.orderproduct th {
 .newsfooter {
 	margin-top: 2em;
 	border-top: 1px solid #eee;
-	color: #757575;
+	color: #737373;
 }
 a.action-add,
 a.action-add:visited {
@@ -1222,15 +1219,15 @@ input.crmsearch,
 input.newssearch {
 	width: 14em !important;
 }
-div.resultHover {
+/*div.resultHover {
 	background-color: #ece1cb;
-}
+}*/
 input#search_group {
 	color: #000;
 	text-decoration: none;
 	font-weight: normal;
 }
-form.pendingPopup {
+/*form.pendingPopup {
 	width: 300px;
 	height: 300px;
 	display: none;
@@ -1244,7 +1241,7 @@ form.addManyToQueue {
 	width: 500px;
 	height: 500px;
 	display: none;
-}
+}*/
 
 /* Maint table */
 table.simpleTable th {
@@ -1272,7 +1269,7 @@ table.mainTable th.headTop {
 table.mainTable th.headBottom {
 	border-bottom: 0px !important;
 }
-table.mainTable td.nameColumn1 {
+/*table.mainTable td.nameColumn1 {
 	width: 155px;
 }
 table.mainTable th.nameColumn1 {
@@ -1290,9 +1287,9 @@ table.mainTable td.queueColumn {
 	text-align: center;
 	padding: 5px;
 }
-/*table.mainTable tr:hover td {
+table.mainTable tr:hover td {
 	background-color: rgba(207, 181, 59, 0.6); 
-}*/
+}
 table.mainTable th.queueColumnTop {
 	padding: 5px;
 	text-align: center;
@@ -1332,7 +1329,7 @@ table.mainTable th.hiddenHeader {
 	height: 0;
 	padding: 0;
 	overflow: hidden;
-}
+}*/
 
 table .action-container,
 table .action-container {
@@ -1467,10 +1464,10 @@ table td.crmpostspacer {
 	height: 1px;
 	padding: 0;
 }
-div#DIV_crm table tbody tr:hover,
+/*div#DIV_crm table tbody tr:hover,
 tr:active {
-	background-color: #f0f0f0
-}
+	background-color: #f1f1f1
+}*/
 
 tbody.report {
 	border-bottom: 1px solid #000;
@@ -1547,7 +1544,7 @@ img.newsdeleteresource {
 
 .crm-item .panel-footer,
 .news-item .panel-footer {
-	color: #757575;
+	color: #737373;
 	background-color: #fff;
 	text-align: right;
 }
@@ -1729,7 +1726,7 @@ legend {
 	font-weight: bold;
 }
 .editform fieldset {
-	background-color: #fafafa;
+	background-color: #f9f9f9;
 	padding: 50px 15px 15px 15px;
 	font-size: 0.85em;
 	position: relative;
@@ -1769,8 +1766,8 @@ div.ui-dialog {
 }
 
 .btn.btn-launch {
-	background-color: #b59454;
-	border-color: #b59454;
+	background-color: #cfb991;
+	border-color: #cfb991;
 	color: #000;
 	display: block;
 	margin-top: 1em;
@@ -1779,9 +1776,9 @@ div.ui-dialog {
 .btn.btn-launch:hover,
 .btn.btn-launch:focus,
 .btn.btn-launch:active {
-	background-color: #d0a85a;
-	border-color: #d0a85a;
-	color: #000;
+	background-color: #8e6f3e;
+	border-color: #8e6f3e;
+	color: #fff;
 	text-decoration: none;
 }
 
@@ -1865,7 +1862,7 @@ div.launch:after {
 }
 .gsc-input {
 	background-image: url('https://www.google.com/cse/static/images/1x/en/branding.png');
-	background-color: rgb(255, 255, 255);
+	background-color: #fff;
 	background-position: 1em center;
 	background-repeat: no-repeat no-repeat;
 }
@@ -1878,13 +1875,13 @@ div.launch:after {
 	font: 27px/13px arial,sans-serif;
 }
 .gsst_a .gscb_a {
-	color: #a1b9ed;
+	color: #aaaaaa; /*#a1b9ed;*/
 	cursor: pointer;
 	line-height: 27px;
 }
 .gsst_a:hover .gscb_a,
 .gsst_a:focus .gscb_a {
-	color: #36c;
+	color: #333; /*#36c;*/
 }
 .gsc-input-active .gsst_a {
 	display: inline-block;
@@ -2099,13 +2096,13 @@ textarea.samplebox {
 }
 div.sampleoutput {
 	min-height: 130px;
-	border: 1px solid #a9a9a9;
+	border: 1px solid #aaaaaa;
 	padding: 2px;
 }
 
 div.sampleoutput a,
 div#preview a {
-	color: #9c6700;
+	color: #8e6f3e; /*#9c6700;*/
 }
 
 /*div.staffleader {
@@ -2235,7 +2232,7 @@ h3.downloads {
 	color: red;
 }
 .file-size {
-	color: #757575;
+	color: #737373;
 }
 
 /* Alignment */
@@ -2273,10 +2270,10 @@ img.align-right {
 	white-space: nowrap;
 }
 .enabled {
-	color:#006600;
+	color: green; /*#006600;*/
 }
 .disabled {
-	color:#c00;
+	color: #c00;
 }
 .clearfix:after {
 	visibility: hidden;
@@ -2355,7 +2352,7 @@ html .select2-container--default .select2-results__group button {
 	float: right;
 }
 html .select2-container--default .select2-selection--multiple .select2-selection__choice {
-  background-color: #757575;
+  background-color: #737373;
   color: #fff;
   border-color: transparent;
   position: relative;
@@ -2429,54 +2426,8 @@ body table.dataTable tr:first-child td {
 	border-top: none;
 }
 
-/* Cookie policy
-.cookiepolicy {
-	margin: 0;
-	padding: 1em 5em 1em 2em;
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	background-color: #f8ee7b;
-	z-index: 10000;
-	width: 100%;
-	color: #333;
-}
-.cookiepolicy-close {
-	display: block;
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	background-color: #e4d53f;
-	text-align: left;
-	padding: 0.5em;
-	font-size: 2em;
-	font-weight: 200;
-	text-decoration: none;
-	border: none !important;
-}
-.cookiepolicy-close:hover {
-	border: none !important;
-	text-decoration: none;
-	background-color: #222;
-	color: #e4d53f;
-}
-.cookiepolicy-close span {
-	display: block;
-	width: 1em;
-	height: 1em;
-	overflow: hidden;
-	white-space: nowrap;
-}
-.cookiepolicy-close span:before {
-	content: "\2715";
-	padding: 0.2em;
-} */
-
 /* [!] Day of Giving */
 .dayofgiving {
-	background-color: #daaa00;
 	background-color: #333;
 	position: relative;
 	font-family: acumin-pro-semi-condensed, "Franklin Gothic", sans-serif;
