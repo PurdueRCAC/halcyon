@@ -136,7 +136,7 @@ label .required-field {
 }
 .dropzone.is-dragover {
 	outline-offset: -20px;
-	outline-color: #c8dadf;
+	outline-color: #E3F3F7;
 	background-color: #fff;
 }
 .dropzone.has-advanced-upload input {
@@ -222,7 +222,7 @@ a.btn-info:active {
 	text-decoration: none;
 }
 .login a:not(.btn):hover {
-	color: #9d9d9d;
+	color: #aaaaaa;
 	font-weight: 400;
 	text-decoration: none;
 }
@@ -425,7 +425,7 @@ div.sidemenu-news ul.newslist li:focus {
 	margin: 0;
 	text-transform: uppercase;
 }
-@media (max-width: 768px) {
+@media (max-width: 760px) {
 	.sidenav {
 		display: none;
 	}
@@ -505,7 +505,7 @@ a.fc-event:focus {
 }
 
 th.colGroup {
-	background-color: #e9e9e9;
+	background-color: #ededed; /*#e9e9e9;*/
 }
 td.colGroup {
 	background-color: #f5f5f5;
@@ -564,10 +564,10 @@ div.ui-dialog {
 
 body .ui-tooltip {
 	border: none;
-	color: #eee;
+	color: #ededed;
 	font-size: 0.8em;
 	padding: 0.5em 0.7em;
-	background: #333333;
+	background: #333;
 	background: rgba(0, 0, 0, 0.8);
 	line-height: 1.2;
 }
@@ -620,7 +620,7 @@ table.orderproduct th {
 }
 .newsfooter {
 	margin-top: 2em;
-	border-top: 1px solid #eee;
+	border-top: 1px solid #ededed;
 	color: #737373;
 }
 a.action-add,
@@ -1019,7 +1019,7 @@ ul.purchases li {
 }
 
 .form-block {
-  border: 1px solid #eee;
+  border: 1px solid #ededed;
   padding: 0.5em 1em;
   border-radius: 0.25em;
   margin: 0 0 1em 0;
@@ -1963,7 +1963,7 @@ table a.icn {
 	color: #20809D;
 }
 .icn:hover .fa-question-circle {
-	color: #1E7994;
+	color: #17a2b8;
 }
 .btn,
 .btn:hover,
@@ -1984,7 +1984,7 @@ table a.icn {
 	color: #c00;
 }
 .icn-processing {
-	color: #f2c94c;
+	color: #ffc107;
 }
 
 .btn-icon,
@@ -2223,7 +2223,7 @@ h3.downloads {
 	color: red;
 }
 .fa-file-word-o:before {
-	color: blue;
+	color: #337ab7; /*blue;*/
 }
 .fa-file-excel-o:before {
 	color: green;
@@ -2463,7 +2463,7 @@ body table.dataTable tr:first-child td {
 	padding: 6px 10px;
 	font-family: acumin-pro-condensed, "Franklin Gothic", sans-serif;
 }
-@media (max-width: 767px) {
+@media (max-width: 760px) {
 	.dayofgiving {
 		padding: 1em;
 	}
