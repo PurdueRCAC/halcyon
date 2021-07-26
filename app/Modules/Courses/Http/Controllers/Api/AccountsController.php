@@ -405,18 +405,18 @@ class AccountsController extends Controller
 		{
 			if ($row->classname == '')
 			{
-				return response()->json(['message' => trans('Required field `classname` is empty')], 415);
+				return response()->json(['message' => trans('courses::courses.invalid.name')], 415);
 			}
 			if ($row->datetimestart == '')
 			{
-				return response()->json(['message' => trans('Required field `start` is empty')], 415);
+				return response()->json(['message' => trans('courses::courses.invalid.start date')], 415);
 			}
 			if ($row->datetimestop == '')
 			{
-				return response()->json(['message' => trans('Required field `stop` is empty')], 415);
+				return response()->json(['message' => trans('courses::courses.invalid.end date')], 415);
 			}
-			$row->datetimestart = Carbon::parse($row->datetimestart)->modify('-86400 seconds')->toDateTimeString();
-			$row->datetimestop  = Carbon::parse($row->datetimestop)->modify('+86400 seconds')->toDateTimeString();
+			$row->datetimestart = Carbon::parse($row->datetimestart)->modify('-1 day')->toDateTimeString();
+			$row->datetimestop  = Carbon::parse($row->datetimestop)->modify('+1 day')->toDateTimeString();
 			$row->crn = uniqid();
 			$row->crn = substr($row->crn, 0, 8); 
 			$row->semester = 'Workshop';
@@ -432,11 +432,8 @@ class AccountsController extends Controller
 			$exist = Account::query()
 				->where('crn', '=', $row->crn)
 				->where('semester', '=', $row->semester)
-				->where(function ($where)
-				{
-					$where->whereNull('datetimeremoved')
-						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
+				->withTrashed()
+				->whereIsActive()
 				->get()
 				->first();
 
@@ -456,8 +453,9 @@ class AccountsController extends Controller
 				return response()->json(['message' => trans('Invalid CRN/classID provided')], 500);
 			}
 
-			$row->datetimestart = Carbon::parse($row->datetimestart)->modify('-259200 seconds')->toDateTimeString();
-			$row->datetimestop  = Carbon::parse($row->datetimestop)->modify('+604800 seconds')->toDateTimeString();
+			// If this is a CRN course, add/subtract from time.
+			$row->datetimestart = Carbon::parse($row->datetimestart)->modify('-3 days')->toDateTimeString();
+			$row->datetimestop  = Carbon::parse($row->datetimestop)->modify('+7 days')->toDateTimeString();
 			$row->notice = 1;
 		}
 

@@ -32,5 +32,5 @@ return [
 		'name' => 'Invalid or empty name',
 		'start date' => 'Invalid or empty start date',
 		'end date' => 'Invalid or empty end date',
-	]
+	],
 ];
