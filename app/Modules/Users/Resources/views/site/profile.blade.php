@@ -295,77 +295,6 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 
 			<?php
 			/*$queues = $user->queues()
-				//->where('groupid', '>', 0)
-				->whereIn('membertype', [1, 2])
-				->withTrashed()
-				->whereIsActive()
-				->get();
-
-			if (count($queues)):
-				?>
-				<div class="card panel panel-default">
-					<div class="card-header panel-heading">
-						Queues
-					</div>
-					<div class="card-body">
-						<table class="table table-hover">
-							<caption class="sr-only">Queues</caption>
-							<thead>
-								<tr>
-									<th scope="col">Queue</th>
-									<th scope="col">Resource</th>
-									<th scope="col">Group</th>
-									<th scope="col">Added</th>
-								</tr>
-							</thead>
-							<tbody>
-							<?php
-							foreach ($queues as $qu):
-								if ($qu->isMember() && $qu->isTrashed()):
-									continue;
-								endif;
-
-								$queue = $qu->queue;
-
-								if (!$queue || $queue->isTrashed()):
-									continue;
-								endif;
-
-								if (!$queue->scheduler || $queue->scheduler->isTrashed()):
-									continue;
-								endif;
-
-								$group = $queue->group;
-
-								if (!$group || !$group->id):
-									continue;
-								endif;
-								?>
-								<tr>
-									<td>
-										{{ $queue->name }}
-									</td>
-									<td>
-										{{ $queue->resource ? $queue->resource->name : '' }}
-									</td>
-									<td>
-										<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $group->id, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">{{ $group->name }}</a>
-									</td>
-									<td>
-										<time datetime="{{ $qu->datetimecreated->toDateTimeString() }}">{{ $qu->datetimecreated->toDateTimeString() }}</time>
-									</td>
-								</tr>
-							<?php endforeach; ?>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<?php
-			endif;*/
-			?>
-
-			<?php
-			$queues = $user->queues()
 				->whereIsPending()
 				->withTrashed()
 				->whereIsActive()
@@ -380,7 +309,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 				<ul class="list-group list-group-flush">
 					<?php
 					// Owner groups
-					/*$memberships = $user->groups()
+					$memberships = $user->groups()
 						->where('groupid', '>', 0)
 						->whereIsManager()
 						->get();
@@ -428,7 +357,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 						//->whereNotIn('id', $q)
 						->withTrashed()
 						->whereIsActive()
-						->get();*/
+						->get();
 
 					foreach ($queues as $qu):
 						if ($qu->isMember() && $qu->isTrashed()):
@@ -487,7 +416,126 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 					?>
 				</ul>
 			</div>
-		<?php endif; ?>
+		<?php endif;*/ ?>
+
+		<?php
+		// Owner groups
+		$memberships = $user->groups()
+			->where('groupid', '>', 0)
+			->whereIsManager()
+			->get();
+
+		$ids = array();
+		$allqueues = array();
+		foreach ($memberships as $membership):
+			$group = $membership->group;
+
+			$queues = $group->queues()
+				->withTrashed()
+				->whereIsActive()
+				->get();
+
+			foreach ($queues as $queue):
+				$ids[] = $queue->id;
+
+				if (!$queue || $queue->isTrashed()):
+					continue;
+				endif;
+
+				if (!$queue->scheduler || $queue->scheduler->isTrashed()):
+					continue;
+				endif;
+
+				$queue->status = 'member';
+
+				$allqueues[] = $queue;
+			endforeach;
+		endforeach;
+
+		$queues = $user->queues()
+			->withTrashed()
+			->whereIsActive()
+			->whereNotIn('queueid', $ids)
+			->get();
+
+		foreach ($queues as $qu):
+			if ($qu->isTrashed()):
+				continue;
+			endif;
+
+			$queue = $qu->queue;
+
+			if (!$queue || $queue->isTrashed()):
+				continue;
+			endif;
+
+			if (!$queue->scheduler || $queue->scheduler->isTrashed()):
+				continue;
+			endif;
+
+			$group = $queue->group;
+
+			if (!$group || !$group->id):
+				continue;
+			endif;
+
+			if ($qu->isPending()):
+				$queue->status = 'pending';
+			else:
+				$queue->status = 'member';
+			endif;
+
+			$allqueues[] = $queue;
+		endforeach;
+
+		if (count($allqueues)):
+			?>
+			<div class="card panel panel-default">
+				<div class="card-header panel-heading">
+					Queues
+				</div>
+				<div class="card-body">
+					<table class="table table-hover">
+						<caption class="sr-only">Queues</caption>
+						<thead>
+							<tr>
+								<th scope="col">Queue</th>
+								<th scope="col">Resource</th>
+								<th scope="col">Group</th>
+								<th scope="col">Status</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php
+						foreach ($allqueues as $queue):
+							$group = $queue->group;
+							?>
+							<tr>
+								<td>
+									{{ $queue->name }}
+								</td>
+								<td>
+									{{ $queue->resource ? $queue->resource->name : '' }}
+								</td>
+								<td>
+									<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $group->id, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">{{ $group->name }}</a>
+								</td>
+								<td>
+								@if ($queue->status == 'pending')
+									<span class="badge badge-warning">Pending</span>
+								@else
+									<span class="badge badge-success">Member</span>
+								@endif
+								</td>
+							</tr>
+						<?php endforeach; ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<?php
+		endif;
+		?>
 
 		@if (auth()->user()->can('manage users'))
 			<div class="card panel panel-default session mb-3">
