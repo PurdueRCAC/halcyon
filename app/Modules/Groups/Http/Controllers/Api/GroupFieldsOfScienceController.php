@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Groups\Models\GroupFieldOfScience;
 
 /**
@@ -152,14 +153,21 @@ class GroupFieldsOfScienceController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $group
-	 * @return Response
+	 * @return  JsonResponse
 	 */
 	public function create(Request $request, $group)
 	{
-		$request->validate([
+		$rules = [
 			'fieldofscienceid' => 'required|integer',
 			'percentage' => 'nullable|integer|max:100'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new GroupFieldOfScience;
 		$row->groupid = $group;
@@ -192,7 +200,7 @@ class GroupFieldsOfScienceController extends Controller
 	 * }
 	 * @param   integer  $group
 	 * @param   integer  $id
-	 * @return Response
+	 * @return  JsonResponse
 	 */
 	public function read($group, $id)
 	{
@@ -238,14 +246,21 @@ class GroupFieldsOfScienceController extends Controller
 	 * @param   Request $request
 	 * @param   integer $group
 	 * @param   integer $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function update(Request $request, $group, $id)
 	{
-		$request->validate([
+		$rules = [
 			'fieldofscienceid' => 'required|integer',
 			'percentage' => 'nullable|integer|max:100'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = GroupFieldOfScience::findOrFail($id);
 

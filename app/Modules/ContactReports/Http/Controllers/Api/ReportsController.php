@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Reportresource;
 use App\Modules\ContactReports\Models\User as ContactUser;
@@ -306,7 +307,7 @@ class ReportsController extends Controller
 	{
 		$now = Carbon::now();
 
-		$request->validate([
+		$rules = [
 			'report' => 'required|string',
 			'datetimecontact' => 'required|date|before_or_equal:' . $now->toDateTimeString(),
 			'userid' => 'nullable|integer',
@@ -314,7 +315,14 @@ class ReportsController extends Controller
 			'datetimegroupid' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
 			'notice' => 'nullable|integer',
 			'contactreporttypeid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Report();
 		$row->datetimecontact = $request->input('datetimecontact');
@@ -497,14 +505,21 @@ class ReportsController extends Controller
 	{
 		$now = Carbon::now();
 
-		$request->validate([
+		$rules = [
 			'report' => 'nullable|string',
 			'datetimecontact' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
 			'groupid' => 'nullable|integer',
 			'notice' => 'nullable|integer',
 			'contactreporttypeid' => 'nullable|integer',
 			//'datetimegroupid' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Report::findOrFail($id);
 		$row->datetimecontact = $request->input('datetimecontact', $row->datetimecontact);

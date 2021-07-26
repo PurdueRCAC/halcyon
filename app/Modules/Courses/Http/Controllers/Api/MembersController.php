@@ -5,6 +5,7 @@ namespace App\Modules\Courses\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Courses\Models\Member;
 use App\Modules\Courses\Http\Resources\MemberResource;
 use App\Modules\Courses\Http\Resources\MemberResourceCollection;
@@ -240,11 +241,18 @@ class MembersController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'classaccountid' => 'required|integer',
 			'userid' => 'required',
 			'membertype' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$classaccountid = $request->input('classaccountid');
 		$userid  = $request->input('userid');
@@ -385,14 +393,21 @@ class MembersController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'classaccountid' => 'nullable|integer',
 			'userid' => 'nullable|integer',
 			'membertype' => 'nullable|integer',
 			'notice' => 'nullable|integer',
 			'datetimestart' => 'nullable|date',
 			'datetimestop' => 'nullable|date',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Member::findOrFail($id);
 

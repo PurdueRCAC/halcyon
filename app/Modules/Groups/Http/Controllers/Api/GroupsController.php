@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
 use App\Modules\Groups\Http\Resources\GroupResource;
@@ -343,15 +344,22 @@ class GroupsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  GroupResponse
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|max:255',
 			'unixgroup' => 'nullable|integer|max:10',
 			'userid' => 'nullable|integer'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$name = $request->input('name');
 		$userid = $request->input('userid', auth()->user()->id);
@@ -442,7 +450,7 @@ class GroupsController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return Response
+	 * @return GroupResponse
 	 */
 	public function read($id)
 	{
@@ -517,10 +525,17 @@ class GroupsController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'nullable|max:255',
 			'unixgroup' => 'nullable|max:10',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Group::findOrFail($id);
 		//$row->update($request->all());

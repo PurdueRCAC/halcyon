@@ -4,9 +4,10 @@ namespace App\Modules\ContactReports\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Modules\Groups\Models\Member as GroupUser;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Validator;
+use App\Modules\Groups\Models\Member as GroupUser;
 use Carbon\Carbon;
 
 /**
@@ -161,10 +162,17 @@ class FollowGroupsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'groupid' => 'required|integer|min:1',
 			'userid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Follow();
 		$row->groupid = $request->input('groupid');
@@ -241,13 +249,27 @@ class FollowGroupsController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'groupid' => 'nullable|integer',
 			'userid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = GroupUser::findOrFail($id);
-		$row->fill($data);
+		if ($request->has('groupid'))
+		{
+			$row->groupid = $request->input('groupid');
+		}
+		if ($request->has('userid'))
+		{
+			$row->userid = $request->input('userid');
+		}
 
 		if (!$row->save())
 		{

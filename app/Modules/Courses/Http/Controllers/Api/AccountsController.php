@@ -623,7 +623,7 @@ class AccountsController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'crn' => 'nullable|string|max:8',
 			'department' => 'nullable|string|max:4',
 			'coursenumber' => 'nullable|string|max:8',
@@ -633,7 +633,14 @@ class AccountsController extends Controller
 			'userid' => 'nullable|integer|min:1',
 			'datetimestart' => 'nullable|date',
 			'datetimestop' => 'nullable|date',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Account::findOrFail($id);
 		$row->fill($request->all());

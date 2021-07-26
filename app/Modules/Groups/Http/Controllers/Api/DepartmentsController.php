@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Groups\Models\Department;
 
 /**
@@ -174,14 +175,21 @@ class DepartmentsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  JsonResponse
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'parentid' => 'nullable|integer',
-			'name' => 'required|string',
-		]);
+			'name' => 'required|string|max:255',
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$parentid = $request->input('parentid');
 		$parentid = $parentid ?: 1;
@@ -216,7 +224,7 @@ class DepartmentsController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return Response
+	 * @return JsonResponse
 	 */
 	public function read($id)
 	{
@@ -262,14 +270,21 @@ class DepartmentsController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'parentid' => 'nullable|integer',
-			'name' => 'nullable|string',
-		]);
+			'name' => 'nullable|string|max:255',
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Department::findOrFail($id);
 

@@ -5,6 +5,9 @@ namespace App\Modules\Groups\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
 use App\Modules\Users\Models\User;
@@ -170,7 +173,7 @@ class MembersController extends Controller
 			$item->user;
 		});
 
-		return $rows;
+		return new ResourceCollection($rows);
 	}
 
 	/**
@@ -220,16 +223,23 @@ class MembersController extends Controller
 	 * 		"default":       null
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  Response
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'groupid' => 'required|integer',
 			'userid' => 'required',
 			'membertype' => 'nullable|integer',
 			'userrequestid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$groupid = $request->input('groupid');
 		$userid  = $request->input('userid');
@@ -315,7 +325,7 @@ class MembersController extends Controller
 
 		$row->api = route('api.groups.members.read', ['id' => $row->id]);
 
-		return $row;
+		return new JsonResource($row);
 	}
 
 	/**
@@ -342,7 +352,7 @@ class MembersController extends Controller
 		$row->api = route('api.groups.members.read', ['id' => $row->id]);
 		$row->user;
 
-		return $row;
+		return new JsonResource($row);
 	}
 
 	/**
@@ -406,10 +416,17 @@ class MembersController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'membertype' => 'nullable|integer',
 			'userrequestid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Member::findOrFail($id);
 
@@ -443,7 +460,7 @@ class MembersController extends Controller
 		$row->api = route('api.groups.members.read', ['id' => $row->id]);
 		$row->user;
 
-		return $row;
+		return new JsonResource($row);
 	}
 
 	/**

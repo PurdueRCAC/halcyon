@@ -5,6 +5,7 @@ namespace App\Modules\Groups\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\UnixGroup;
 use App\Modules\Groups\Http\Resources\UnixGroupResource;
@@ -200,12 +201,19 @@ class UnixGroupsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'groupid' => 'required|integer',
 			'longname' => 'nullable|string|max:32',
 			'shortname' => 'nullable|string|max:8',
 			'unixgid' => 'nullable|integer'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		// Check to see if groups.unixgroup (base) is set
 		$group = Group::findOrFail($request->input('groupid'));
@@ -385,12 +393,19 @@ class UnixGroupsController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			//'groupid' => 'nullable|integer',
 			'longname' => 'nullable|string|max:32',
 			'shortname' => 'nullable|string|max:8',
 			'unixgid' => 'nullable|integer'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = UnixGroup::findOrFail($id);
 

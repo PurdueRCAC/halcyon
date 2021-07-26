@@ -4,6 +4,7 @@ namespace App\Modules\News\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Update;
 use App\Modules\News\Http\Resources\UpdateResource;
@@ -190,9 +191,16 @@ class UpdatesController extends Controller
 	 */
 	public function create($news_id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'body' => 'required|string|max:15000',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Update;
 		$row->newsid = $news_id;
@@ -310,9 +318,16 @@ class UpdatesController extends Controller
 	 */
 	public function update($news_id, $id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'body' => 'required|string|max:15000',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Update::findOrFail($id);
 		$row->body = $request->input('body');

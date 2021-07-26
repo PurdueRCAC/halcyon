@@ -5,6 +5,7 @@ namespace App\Modules\ContactReports\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Comment;
 use App\Modules\ContactReports\Http\Resources\CommentResource;
@@ -193,12 +194,21 @@ class CommentsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'comment' => 'nullable|string|max:8096',
 			'contactreportid' => 'required|integer',
-		]);
+		];
 
-		$row = new Comment($request->all());
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
+
+		$row = new Comment();
+		$row->contactreportid = $request->input('contactreportid');
+		$row->comment = $request->input('comment');
 		if (!$row->comment)
 		{
 			$row->comment = '';
@@ -289,12 +299,19 @@ class CommentsController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
-			'comment' => 'nullable|string',
+		$rules = [
+			'comment' => 'nullable|string|max:8096',
 			'contactreportid' => 'nullable|integer',
 			'userid' => 'nullable|integer',
 			'notice' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$data = $request->all();
 

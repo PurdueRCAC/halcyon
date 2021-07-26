@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Models\Type;
 
 /**
@@ -377,7 +378,7 @@ class TypesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|max:32',
 			'tagresources' => 'nullable|boolean',
 			'location' => 'nullable|boolean',
@@ -386,7 +387,14 @@ class TypesController extends Controller
 			'tagusers' => 'nullable|boolean',
 			'calendar' => 'nullable|boolean',
 			'url' => 'nullable|url',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Type($request->all());
 
@@ -581,7 +589,7 @@ class TypesController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'nullable|string|max:32',
 			'tagresources' => 'nullable|boolean',
 			'location' => 'nullable|boolean',
@@ -590,10 +598,23 @@ class TypesController extends Controller
 			'tagusers' => 'nullable|boolean',
 			'calendar' => 'nullable|boolean',
 			'url' => 'nullable|url',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Type::findOrFail($id);
-		$row->fill($request->all());
+		foreach (array_keys($rules) as $key)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
 
 		if (!$row->save())
 		{

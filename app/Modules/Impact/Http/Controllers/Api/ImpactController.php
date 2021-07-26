@@ -5,9 +5,10 @@ namespace App\Modules\Impact\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Impact\Models\Impact;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Validator;
+use App\Modules\Impact\Models\Impact;
 
 /**
  * Impact Data
@@ -164,11 +165,18 @@ class ImpactController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|max:255',
 			'value' => 'required|string|max:255',
 			'impacttableid' => 'required|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Impact();
 		$row->name = $request->input('name');
@@ -261,11 +269,18 @@ class ImpactController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|max:255',
 			'value' => 'required|string|max:255',
 			'impacttableid' => 'required|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Impact::findOrFail($id);
 		if ($request->has('name'))

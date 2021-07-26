@@ -5,13 +5,14 @@ namespace App\Modules\Groups\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\UnixGroup;
 use App\Modules\Groups\Models\UnixGroupMember;
 use App\Modules\Groups\Events\UnixGroupMemberCreating;
 use App\Modules\Groups\Events\UnixGroupMemberCreated;
-use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Users\Models\User;
 
 /**
@@ -228,11 +229,18 @@ class UnixGroupMembersController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'unixgroupid' => 'required|integer',
 			'userid' => 'required',
 			'notice' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$userid = $request->input('userid');
 
@@ -368,9 +376,16 @@ class UnixGroupMembersController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'notice' => 'nullable|integer'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = UnixGroupMember::findOrFail($id);
 

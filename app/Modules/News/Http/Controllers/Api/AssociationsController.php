@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Models\Association;
 
 /**
@@ -365,11 +366,18 @@ class AssociationsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'associd' => 'required|integer',
 			'assoctype' => 'required|string|max:255',
 			'newsid' => 'required|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Association;
 		$row->newsid = $request->input('newsid');
@@ -572,11 +580,18 @@ class AssociationsController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'associd' => 'nullable|integer',
 			'assoctype' => 'nullable|string|max:255',
 			'newsid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Association::findOrFail($id);
 
