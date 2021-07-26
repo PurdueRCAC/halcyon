@@ -4,36 +4,33 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require("./bootstrap");
+require('./bootstrap');
 
 // Add a request interceptor
-window.axios.interceptors.request.use(
-    function(config) {
-        // assume your access token is stored in local storage
-        // (it should really be somewhere more secure but I digress for simplicity)
-        let token = document.head
-            .querySelector('meta[name="api-token"]')
-            .getAttribute("content"); //localStorage.getItem('access_token')
-        if (token) {
-            config.headers["Authorization"] = `Bearer ${token}`;
-        }
-        return config;
-    },
-    function(error) {
-        // Do something with request error
-        return Promise.reject(error);
-    }
-);
+window.axios.interceptors.request.use(function (config) {
+	// assume your access token is stored in local storage 
+	// (it should really be somewhere more secure but I digress for simplicity)
+	let token = document.head.querySelector('meta[name="api-token"]').getAttribute('content');//localStorage.getItem('access_token')
+	if (token) {
+		config.headers['Authorization'] = `Bearer ${token}`
+	}
+	return config;
+},
+function (error) {
+	// Do something with request error
+	return Promise.reject(error);
+});
 
-window.Vue = require("vue");
+window.Vue = require('vue');
 
 let baseurl = document.head.querySelector('meta[name="base-url"]');
 
 if (baseurl) {
-    Vue.prototype.ROOT_URL = baseurl.content;
+	Vue.prototype.ROOT_URL = baseurl.content;
 } else {
-    Vue.prototype.ROOT_URL = "";
+	Vue.prototype.ROOT_URL = '';
 }
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -46,7 +43,7 @@ if (baseurl) {
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component("news-search", require("./components/News.vue").default);
+Vue.component('news-search', require('./components/News.vue').default);
 //import News from './components/News.vue';
 
 /**
@@ -56,9 +53,9 @@ Vue.component("news-search", require("./components/News.vue").default);
  */
 
 const app = new Vue({
-    el: "#app"
-    /*components: {
-         News
-     },
-     render: h => h(News)*/
+	el: '#app',
+	/*components: {
+		News
+	},
+	render: h => h(News)*/
 });

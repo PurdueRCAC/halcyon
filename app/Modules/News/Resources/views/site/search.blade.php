@@ -1,17 +1,21 @@
 @extends('layouts.master')
+
 @section('title') Search News &amp; Events @stop
+
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/jquery-timepicker/jquery.timepicker.css?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker/jquery.timepicker.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css?v=' . filemtime(public_path() . '/modules/news/css/news.css')) }}" />
 @endpush
+
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/jquery-timepicker/jquery.timepicker.js?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker/jquery.timepicker.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
-<!-- <script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script> -->
+<script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script>
 @endpush
+
 @php
 app('pathway')
 	->append(
@@ -23,16 +27,20 @@ app('pathway')
 		route('site.news.search')
 	);
 @endphp
+
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	@include('news::site.menu', ['types' => $types, 'active' => 'search'])
 </div>
+
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	<h2>{{ trans('news::news.search news') }}</h2>
-	<?php /*<div id="everything">
+
+	<div id="everything">
 		<form method="get" action="{{ route('site.news.search') }}" class="editform">
 			<fieldset>
 				<legend>Filters</legend>
+
 				<div class="form-group row tab-search tab-add tab-edit" id="TR_date">
 					<label for="datestartshort" class="col-sm-2 col-form-label">Date from</label>
 					<div class="col-sm-4">
@@ -69,8 +77,10 @@ app('pathway')
 								$starttime = preg_replace('/^0/', '', $starttime);
 							}
 						}
+
 						$stopdate = '';
 						$stoptime = '';
+
 						$value = $filters['stop'];
 						if ($value && $value != '0000-00-00 00:00:00')
 						{
@@ -102,6 +112,7 @@ app('pathway')
 								$stoptime = preg_replace('/^0/', '', $stoptime);
 							}
 						}
+
 						if ($starttime == '12:00 AM' && $stoptime == '12:00 AM')
 						{
 							$starttime = $stoptime;
@@ -117,6 +128,7 @@ app('pathway')
 							<input id="timestartshort" type="text" class="time-pick form-control" name="starttime" placeholder="h:mm AM/PM" value="{{ $starttime }}" />
 						</div>
 					</div>
+
 					<label for="datestopshort" class="col-sm-2 col-form-label align-right">Date to</label>
 					<div class="col-sm-4">
 						<div class="input-group" id="enddate">
@@ -171,6 +183,7 @@ app('pathway')
 								})
 								->orderBy('name')
 								->get();
+
 							$types = array();
 							foreach ($resources as $resource)
 							{
@@ -181,6 +194,7 @@ app('pathway')
 								$types[$resource->resourcetype][] = $resource;
 							}
 							ksort($types);
+
 							foreach ($types as $t => $res)
 							{
 								$type = App\Modules\Resources\Models\Type::find($t);
@@ -226,11 +240,14 @@ app('pathway')
 						<input type="reset" class="btn btn-secondary" value="Clear" id="INPUT_clear" />
 					</div>
 				</div>
+
 				<span id="TAB_search_action"></span>
 				<span id="TAB_add_action"></span>
+
 				<input type="hidden" name="page" id="page" value="{{ $filters['page'] }}" />
 			</fieldset>
 		</form>
+
 		<?php
 		$string = array();
 		foreach ($filters as $key => $val)
@@ -243,16 +260,19 @@ app('pathway')
 		}
 		$string = implode('&', $string);
 		?>
+
 		<p><strong id="matchingnews">Search results:</strong></p>
 		<div id="news" data-query="{{ $string }}">
 			News stories are loading...
 		</div>
+
 		<div id="preview"></div>
 		<div id="mailpreview"></div>
-	</div>*/ ?>
-	<div id="app">
+	</div>
+
+	<?php /*<div id="app">
 		<news-search></news-search>
 	</div>
-	<script type="text/javascript" src="{{ asset('/modules/news/js/app.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('/modules/news/js/app.js') }}"></script>*/ ?>
 </div>
 @stop
