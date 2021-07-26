@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Modules\Themes\Console;
+namespace App\Modules\Listeners\Console;
 
 use Illuminate\Console\Command;
-use Nwidart\Modules\Json;
-use App\Modules\Themes\Process\Installer;
+use App\Modules\Listeners\Process\Installer;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -15,14 +14,14 @@ class InstallCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $name = 'theme:install';
+	protected $name = 'listener:install';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Install the specified theme by given package name (vendor/name).';
+	protected $description = 'Install the specified listener by given package name (vendor/name)';
 
 	/**
 	 * Create a new command instance.
@@ -57,18 +56,18 @@ class InstallCommand extends Command
 	 */
 	protected function installFromFile()
 	{
-		if (!file_exists($path = base_path('themes.json')))
+		if (!file_exists($path = base_path('listeners.json')))
 		{
 			$dirs = $this->laravel['files']->directories($this->laravel['themes']->getPath());
 
 			foreach ($dirs as $dir)
 			{
-				if ($found = $this->laravel['themes']->find(basename($dir)))
+				if ($found = $this->laravel['listener']->find(basename($dir)))
 				{
 					continue;
 				}
 
-				$this->laravel['themes']->registerTheme(new Theme(basename($dir), $dir));
+				$this->laravel['listener']->registerListener(new Listener(basename($dir), $dir));
 			}
 			//$this->error("File 'themes.json' does not exist in your project root.");
 
@@ -140,8 +139,8 @@ class InstallCommand extends Command
 	protected function getArguments()
 	{
 		return [
-			['name', InputArgument::OPTIONAL, 'The name of the theme to be installed.'],
-			['version', InputArgument::OPTIONAL, 'The version of the theme to be installed.'],
+			['name', InputArgument::OPTIONAL, 'The name of the listener to be installed.'],
+			['version', InputArgument::OPTIONAL, 'The version of the listener to be installed.'],
 		];
 	}
 
@@ -154,7 +153,7 @@ class InstallCommand extends Command
 	{
 		return [
 			['timeout', null, InputOption::VALUE_OPTIONAL, 'The process timeout.', null],
-			['path', '/app/Themes', InputOption::VALUE_OPTIONAL, 'The installation path.', null],
+			['path', '/app/Listeners', InputOption::VALUE_OPTIONAL, 'The installation path.', null],
 			['type', null, InputOption::VALUE_OPTIONAL, 'The type of installation.', null],
 			['tree', null, InputOption::VALUE_NONE, 'Install the theme as a git subtree', null],
 			['no-update', null, InputOption::VALUE_NONE, 'Disables the automatic update of the dependencies.', null],

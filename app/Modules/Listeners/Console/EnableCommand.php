@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Themes\Console;
+namespace App\Modules\Listeners\Console;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,31 +12,40 @@ class EnableCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $name = 'theme:enable';
+	protected $name = 'listener:enable';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Enable the specified theme.';
+	protected $description = 'Enable the specified listener';
 
 	/**
 	 * Execute the console command.
 	 */
 	public function handle()
 	{
-		$theme = $this->laravel['themes']->findOrFail($this->argument('theme'));
+		$listener = $this->laravel['listener']->find(
+			$this->argument('folder'),
+			$this->argument('element')
+		);
 
-		if ($theme->disabled())
+		if (!$listener)
 		{
-			$theme->enable();
+			$this->info("Listener not found.");
+			return;
+		}
 
-			$this->info("Theme `{$theme}` successfully enabled.");
+		if (!$listener->enabled)
+		{
+			$listener->update(['enabled' => 1]);
+
+			$this->info("Listener successfully enabled.");
 		}
 		else
 		{
-			$this->comment("Theme `{$theme}` is already enabled.");
+			$this->comment("Listener is already enabled.");
 		}
 	}
 
@@ -48,7 +57,8 @@ class EnableCommand extends Command
 	protected function getArguments()
 	{
 		return [
-			['theme', InputArgument::REQUIRED, 'Theme name.'],
+			['folder', InputArgument::OPTIONAL, 'The type/folder of the listener.'],
+			['element', InputArgument::OPTIONAL, 'The element name of the listener.'],
 		];
 	}
 }

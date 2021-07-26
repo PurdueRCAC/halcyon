@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Themes\Console;
+namespace App\Modules\Listeners\Console;
 
 use Illuminate\Console\Command;
 
@@ -11,21 +11,21 @@ class SetupCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $name = 'theme:setup';
+	protected $name = 'listener:setup';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Setting up themes folders for first use.';
+	protected $description = 'Setting up listeners folders for first use';
 
 	/**
 	 * Execute the console command.
 	 */
 	public function handle()
 	{
-		$this->generateThemesFolder();
+		$this->generateListenersFolder();
 
 		$this->generateAssetsFolder();
 	}
@@ -33,12 +33,12 @@ class SetupCommand extends Command
 	/**
 	 * Generate the themes folder.
 	 */
-	public function generateThemesFolder()
+	public function generateListenersFolder()
 	{
 		$this->generateDirectory(
-			app_path('Themes'),
-			'Themes directory created successfully',
-			'Themes directory already exist'
+			app_path('Listeners'),
+			'Listeners directory created successfully',
+			'Listeners directory already exist'
 		);
 	}
 
@@ -48,7 +48,7 @@ class SetupCommand extends Command
 	public function generateAssetsFolder()
 	{
 		$this->generateDirectory(
-			public_path('themes'),
+			public_path('listeners'),
 			'Assets directory created successfully',
 			'Assets directory already exist'
 		);

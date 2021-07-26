@@ -29,7 +29,7 @@ class PublishCommand extends Command
 	{
 		if ($folder = $this->argument('folder'))
 		{
-			$this->publish($folder, $this->argument('name'));
+			$this->publish($folder, $this->argument('element'));
 
 			return;
 		}
@@ -116,7 +116,7 @@ class PublishCommand extends Command
 	{
 		return [
 			['folder', InputArgument::OPTIONAL, 'The type/folder of the listener.'],
-			['name', InputArgument::OPTIONAL, 'The name of the listener.'],
+			['element', InputArgument::OPTIONAL, 'The element name of the listener.'],
 		];
 	}
 }

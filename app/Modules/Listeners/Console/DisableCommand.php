@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Themes\Console;
+namespace App\Modules\Listeners\Console;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,31 +12,40 @@ class DisableCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $name = 'theme:disable';
+	protected $name = 'listener:disable';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Disable the specified theme.';
+	protected $description = 'Disable the specified listener';
 
 	/**
 	 * Execute the console command.
 	 */
 	public function handle()
 	{
-		$module = $this->laravel['modules']->findOrFail($this->argument('module'));
+		$listener = $this->laravel['listener']->find(
+			$this->argument('folder'),
+			$this->argument('element')
+		);
 
-		if ($module->enabled())
+		if (!$listener)
 		{
-			$module->disable();
+			$this->info("Listener not found.");
+			return;
+		}
 
-			$this->info("Theme [{$theme}] disabled successful.");
+		if ($listener->enabled)
+		{
+			$listener->update(['enabled' => 0]);
+
+			$this->info("Listener successfully disabled.");
 		}
 		else
 		{
-			$this->comment("Theme [{$theme}] has already disabled.");
+			$this->comment("Listener is already disabled.");
 		}
 	}
 
@@ -48,7 +57,8 @@ class DisableCommand extends Command
 	protected function getArguments()
 	{
 		return [
-			['theme', InputArgument::REQUIRED, 'Theme name.'],
+			['folder', InputArgument::OPTIONAL, 'The type/folder of the listener.'],
+			['element', InputArgument::OPTIONAL, 'The element name of the listener.'],
 		];
 	}
 }
