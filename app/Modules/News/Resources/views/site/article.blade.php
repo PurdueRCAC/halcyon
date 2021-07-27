@@ -51,7 +51,7 @@ app('pathway')
 			@endif
 
 			@if ($article->url)
-				<br /><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="' . $article->url . '">{{ $article->url }}</a>
+				<br /><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="{{ $article->url }}">{{ $article->url }}</a>
 			@endif
 
 			@if ($article->type)
