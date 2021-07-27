@@ -220,12 +220,23 @@ class Associations extends Model
 	 */
 	public function isPublished()
 	{
-		return ($this->state == 1);
+		return ($this->state > 0);
+	}
+
+	/**
+	 * Determine if record is retired
+	 * 
+	 * @return  boolean
+	 */
+	public function isRetired()
+	{
+		return ($this->state == 2);
 	}
 
 	/**
 	 * Get all aprents
 	 *
+	 * @param   array  $ancestors
 	 * @return  array
 	 */
 	public function ancestors($ancestors = array())
@@ -248,6 +259,7 @@ class Associations extends Model
 	/**
 	 * Save the record
 	 *
+	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
 	public function save(array $options = array())
@@ -473,6 +485,7 @@ class Associations extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
+	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
 	public function delete(array $options = [])
@@ -683,6 +696,11 @@ class Associations extends Model
 		return true;
 	}
 
+	/**
+	 * Get positive rating
+	 *
+	 * @return  integer
+	 */
 	public function getPositiveRatingAttribute()
 	{
 		$total = $this->feedback()
@@ -700,6 +718,11 @@ class Associations extends Model
 		return ($positive / $total) * 100;
 	}
 
+	/**
+	 * Get negative rating
+	 *
+	 * @return  integer
+	 */
 	public function getNegativeRatingAttribute()
 	{
 		$total = $this->feedback()
@@ -717,6 +740,11 @@ class Associations extends Model
 		return ($negative / $total) * 100;
 	}
 
+	/**
+	 * Get neutral rating
+	 *
+	 * @return  integer
+	 */
 	public function getNeutralRatingAttribute()
 	{
 		$total = $this->feedback()

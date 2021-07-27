@@ -68,4 +68,5 @@ return [
 		'collect feedback' => 'Collect feedback',
 	],
 	'tags' => 'Tags',
+	'retired' => 'Retired',
 ];

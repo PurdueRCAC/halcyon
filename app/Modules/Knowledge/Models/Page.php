@@ -779,6 +779,11 @@ class Page extends Model
 		//return $this->hasManyThrough(self::class, Associations::class, 'parent_id', 'id', 'id', 'page_id');
 	}
 
+	/**
+	 * Get published children
+	 *
+	 * @return  object  collection
+	 */
 	public function publishedChildren()
 	{
 		$a = (new Associations)->getTable();

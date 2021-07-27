@@ -201,6 +201,10 @@ class PagesController extends Controller
 		{
 			$query->where($a . '.state', '=', 1);
 		}
+		elseif ($filters['state'] == 'retired')
+		{
+			$query->where($a . '.state', '=', 2);
+		}
 		elseif ($filters['state'] == 'unpublished')
 		{
 			$query->where($a . '.state', '=', 0);

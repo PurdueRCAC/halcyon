@@ -85,9 +85,13 @@ class PagesController extends Controller
 				continue;
 			}
 
-			if ($prev)
+			if ($prev && $prev->page)
 			{
-				$page->variables->merge($prev->variables);
+				if ($prev->isRetired() && !$node->isRetired())
+				{
+					$node->state = 2;
+				}
+				$page->variables->merge($prev->page->variables);
 			}
 
 			app('pathway')->append(
@@ -100,7 +104,7 @@ class PagesController extends Controller
 				$parent = $node->id;
 			}
 
-			$prev = $page;
+			$prev = $node;
 		}
 
 		$path = explode('/', $path);
