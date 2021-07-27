@@ -57,5 +57,5 @@ $router->group(['prefix' => 'news'], function (Router $router)
 	$router->get('{name}', [
 		'as' => 'site.news.type',
 		'uses' => 'ArticlesController@type',
-	])->where('name', '[a-zA-Z\-_\+\% ]+');
+	])->where('name', '[a-zA-Z0-9\-_\+\% ]+');
 });
