@@ -32,7 +32,9 @@ app('pathway')
 	<h3>{{ trans('news::news.feeds') }}</h3>
 	<ul class="rsscontainer">
 		<li class="form-check">
-			<a class="rss" href="all"><span class="fa fa-rss-square" aria-hidden="true"></span> <strong>{{ trans('news::news.all news') }}</strong></a>
+			<a class="rss" href="{{ route('site.news.feed', ['name' => 'all']) }}">
+				<span class="fa fa-rss-square" aria-hidden="true"></span> <strong>{{ trans('news::news.all news') }}</strong>
+			</a>
 		</li>
 		<?php
 		$resourceNewsTypes = array();
