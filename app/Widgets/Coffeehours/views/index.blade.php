@@ -145,7 +145,7 @@ foreach ($rows as $event)
 					?>
 					<br />
 					<span class="fa fa-fw fa-calendar" aria-hidden="true"></span>
-					<a target="_blank" class="calendar calendar-subscribe" href="<?php echo request()->getHttpHost(); ?><?php echo str_replace(['http:', 'https:'], 'webcal:', route('site.news.calendar', ['name' => $event->id])); ?>"><!--
+					<a target="_blank" class="calendar calendar-subscribe" href="<?php echo str_replace(['http:', 'https:'], 'webcal:', route('site.news.calendar', ['name' => $event->id])); ?>"><!--
 						-->Subscribe<span class="sr-only"> to event #{{ $event->id }} at {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}</span><!--
 					--></a>
 					&nbsp;|&nbsp;
