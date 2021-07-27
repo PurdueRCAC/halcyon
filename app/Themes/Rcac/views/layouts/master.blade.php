@@ -304,9 +304,9 @@
 							<div class="panel-collapse collapse" id="footerthree">
 								<div class="panel-body">
 									<ul>
-										<li><a href="https://exchange.purdue.edu/">Outlook</a></li>
+										<li><a href="https://outlook.office.com/">Outlook</a></li>
 										<li><a href="https://portal.office.com/">Office 365</a></li>
-										<li><a href="http://www.purdue.edu/newsroom/purduetoday/">Purdue Today</a></li>
+										<li><a href="https://www.purdue.edu/newsroom/purduetoday/">Purdue Today</a></li>
 									</ul>
 								</div>
 							</div>

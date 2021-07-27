@@ -13453,7 +13453,7 @@ table.gsc-search-box .gsc-search-button {
 		width: 50%;
 		padding: 0 30px 15px;
 		border: none;
-		font-size: .875em;
+		font-size: 1em; /*.875em;*/
 		line-height:1.6875em
 	}
 	.footer #accordion .panel .panel-heading {
