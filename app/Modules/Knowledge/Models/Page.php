@@ -720,6 +720,16 @@ class Page extends Model
 	}
 
 	/**
+	 * Determine if record is published
+	 * 
+	 * @return  boolean
+	 */
+	public function isArchived()
+	{
+		return ($this->state == 2);
+	}
+
+	/**
 	 * Get the access level
 	 *
 	 * @return  object

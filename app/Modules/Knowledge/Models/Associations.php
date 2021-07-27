@@ -220,7 +220,7 @@ class Associations extends Model
 	 */
 	public function isPublished()
 	{
-		return ($this->state > 0);
+		return ($this->state == 1);
 	}
 
 	/**

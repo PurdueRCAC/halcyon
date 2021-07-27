@@ -102,8 +102,8 @@ $(document).ready(function() {
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('knowledge::knowledge.all states') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
-					<option value="archived"<?php if ($filters['state'] == 'archived'): echo ' selected="selected"'; endif;?>>{{ trans('knowledge::knowledge.archived') }}</option>
-					<option value="unpublished"<?php if ($filters['state'] == 'unpublished'): echo ' selected="selected"'; endif;?>>&nbsp;|_&nbsp;{{ trans('global.unpublished') }}</option>
+					<option value="archived"<?php if ($filters['state'] == 'archived'): echo ' selected="selected"'; endif;?>>&nbsp;|_&nbsp;{{ trans('knowledge::knowledge.archived') }}</option>
+					<option value="unpublished"<?php if ($filters['state'] == 'unpublished'): echo ' selected="selected"'; endif;?>>{{ trans('global.unpublished') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 				</select>
 
@@ -222,7 +222,7 @@ $(document).ready(function() {
 						@endif
 					@elseif ($row->isArchived())
 						@if (auth()->user()->can('edit knowledge'))
-							<a class="badge badge-success btn-state" href="{{ route('admin.knowledge.publish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
+							<a class="badge badge-warning btn-state" href="{{ route('admin.knowledge.publish', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.set state to', ['state' => trans('global.published')]) }}">
 						@endif
 							{{ trans('knowledge::knowledge.archived') }}
 						@if (auth()->user()->can('edit knowledge'))
