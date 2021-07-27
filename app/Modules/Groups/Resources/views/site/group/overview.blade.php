@@ -304,7 +304,8 @@
 
 						<div class="col-md-5">
 							<span id="SPAN_unixgroup_{{ $group->id }}">{{ $group->unixgroup ? $group->unixgroup : trans('global.none') }}</span>
-							<input type="{{ $canManage ? 'text' : 'hidden' }}" class="form-control edit-property-input hide" id="INPUT_unixgroup_{{ $group->id }}" data-prop="unixgroup" data-value="{{ $group->id }}" value="" />
+							<input type="{{ $canManage ? 'text' : 'hidden' }}" class="form-control edit-property-input hide" id="INPUT_unixgroup_{{ $group->id }}" maxlength="10" data-prop="unixgroup" data-value="{{ $group->id }}" value="" />
+							<span class="form-text text-muted edit-property-input hide">Letters, numbers, and dashes only. Max 10 characters.</span>
 						</div>
 						<div class="col-md-4 text-right">
 							@if ($canManage)

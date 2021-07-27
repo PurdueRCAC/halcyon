@@ -559,7 +559,7 @@ class GroupsController extends Controller
 				return response()->json(['message' => trans('`unixgroup` ' . $unixgroup . ' already exists')], 409);
 			}
 
-			try
+			/*try
 			{
 				// Check to make sure this base name doesn't exist elsewhere
 				$config = config('ldap.rcac_group', []);
@@ -580,7 +580,7 @@ class GroupsController extends Controller
 			}
 			catch (\Exception $e)
 			{
-			}
+			}*/
 
 			$row->unixgroup = $unixgroup;
 		}

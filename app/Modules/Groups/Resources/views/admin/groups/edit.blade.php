@@ -900,7 +900,7 @@ app('pathway')
 							<div class="col col-md-6">
 								<div class="form-group">
 									<label for="field-unixgroup">{{ trans('groups::groups.unix group base name') }}:</label>
-									<input type="text" class="form-control input-unixgroup{{ $errors->has('fields.unixgroup') ? ' is-invalid' : '' }}" name="fields[unixgroup]" id="field-unixgroup" maxlength="10" pattern="[a-z0-9]+" value="{{ $row->unixgroup }}" />
+									<input type="text" class="form-control input-unixgroup{{ $errors->has('fields.unixgroup') ? ' is-invalid' : '' }}" name="fields[unixgroup]" id="field-unixgroup" maxlength="10" pattern="[a-z0-9\-]+" value="{{ $row->unixgroup }}" />
 									<span class="form-text text-muted">{{ trans('groups::groups.unix group base name hint') }}</span>
 								</div>
 							</div>
