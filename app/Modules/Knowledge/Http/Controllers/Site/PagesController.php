@@ -87,7 +87,7 @@ class PagesController extends Controller
 
 			if ($prev && $prev->page)
 			{
-				if ($prev->isRetired() && !$node->isRetired())
+				if ($prev->isArchived() && !$node->isArchived())
 				{
 					$node->state = 2;
 				}

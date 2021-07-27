@@ -224,11 +224,11 @@ class Associations extends Model
 	}
 
 	/**
-	 * Determine if record is retired
+	 * Determine if record is archived
 	 * 
 	 * @return  boolean
 	 */
-	public function isRetired()
+	public function isArchived()
 	{
 		return ($this->state == 2);
 	}

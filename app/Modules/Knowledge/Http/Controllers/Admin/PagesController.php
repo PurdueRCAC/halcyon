@@ -102,7 +102,7 @@ class PagesController extends Controller
 			$query->where($a . '.state', '=', 1);
 			$lists->where($a . '.state', '=', 1);
 		}
-		elseif ($filters['state'] == 'retired')
+		elseif ($filters['state'] == 'archived')
 		{
 			$query->where($a . '.state', '=', 2);
 			$lists->where($a . '.state', '=', 2);

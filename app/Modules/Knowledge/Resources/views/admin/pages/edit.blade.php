@@ -129,7 +129,7 @@ app('pathway')
 					<label for="field-state">{{ trans('knowledge::knowledge.state') }}:</label>
 					<select class="form-control" name="fields[state]" id="field-state"<?php if ($row->id && $row->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
 						<option value="1"<?php if ($row->state == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
-						<option value="2"<?php if ($row->state == 2) { echo ' selected="selected"'; } ?>>&nbsp;|_&nbsp;{{ trans('knowledge::knowledge.retired') }}</option>
+						<option value="2"<?php if ($row->state == 2) { echo ' selected="selected"'; } ?>>&nbsp;|_&nbsp;{{ trans('knowledge::knowledge.archived') }}</option>
 						<option value="0"<?php if ($row->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
 					</select>
 				</div>

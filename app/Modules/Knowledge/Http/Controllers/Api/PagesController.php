@@ -54,6 +54,7 @@ class PagesController extends Controller
 	 * 			"default":   "published",
 	 * 			"enum": [
 	 * 				"published",
+	 * 				"archived",
 	 * 				"unpublished",
 	 * 				"trashed"
 	 * 			]
@@ -201,7 +202,7 @@ class PagesController extends Controller
 		{
 			$query->where($a . '.state', '=', 1);
 		}
-		elseif ($filters['state'] == 'retired')
+		elseif ($filters['state'] == 'archived')
 		{
 			$query->where($a . '.state', '=', 2);
 		}

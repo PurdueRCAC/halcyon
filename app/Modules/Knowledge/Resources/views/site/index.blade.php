@@ -61,7 +61,7 @@
 		@endif
 
 		<article>
-			@if ($node->isRetired())
+			@if ($node->isArchived())
 			<div class="alert alert-warning">
 				This content has been archived and is no longer maintained. Information found here may no longer be accurate and links may no longer be available or reliable.
 			</div>
@@ -261,7 +261,7 @@
 								<label for="field-state">{{ trans('knowledge::knowledge.state') }}:</label><br />
 								<select class="form-control" name="state" id="field-state"<?php if ($page->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
 									<option value="0"<?php if ($node->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
-									<option value="2"<?php if ($row->state == 2) { echo ' selected="selected"'; } ?>>&nbsp;|_&nbsp;{{ trans('knowledge::knowledge.retired') }}</option>
+									<option value="2"<?php if ($node->state == 2) { echo ' selected="selected"'; } ?>>&nbsp;|_&nbsp;{{ trans('knowledge::knowledge.archived') }}</option>
 									<option value="1"<?php if ($node->state == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
 								</select>
 							</div>
