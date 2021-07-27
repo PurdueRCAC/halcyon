@@ -172,7 +172,7 @@
             @update="update"
             @delete="del"
         ></news-article>
-        <nav aria-label="Page navigation example">
+        <!-- <nav aria-label="Page navigation example">
             <ul class="pagination">
                 <li class="page-item">
                     <a class="page-link" href="#">Previous</a>
@@ -190,17 +190,15 @@
                     <a class="page-link" href="#">Next</a>
                 </li>
             </ul>
-        </nav>
-        <nav aria-label="Page navigation example">
+        </nav> -->
+        <nav aria-label="navigation">
             <ul class="pagination">
-                <li class="page-item">
-                    <span class="page-link" @click="read">1</span>
-                </li>
-                <li class="page-item">
-                    <span class="page-link" @click="read">2</span>
-                </li>
-                <li class="page-item">
-                    <span class="page-link" @click="read">3</span>
+                <li
+                    v-for="page of paginationList"
+                    :key="page"
+                    class="page-item"
+                >
+                    <span class="page-link" @click="read">{{ page }}</span>
                 </li>
             </ul>
         </nav>
@@ -217,8 +215,24 @@ export default {
     data() {
         return {
             articles: [],
-            paginationList: [],
+            paginationList: [
+                "<<",
+                "<",
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                ">",
+                ">>"
+            ],
             pageRequest: 1,
+            limit: 20,
             working: false,
             total: 0,
             keywords: ""
@@ -237,17 +251,51 @@ export default {
         },
         read(evt) {
             console.log("Retrieving articles...");
-            // Get page number clicked (if any)
-            let pageRequest =
-                typeof evt !== "undefined"
-                    ? parseInt(evt.target.innerHTML)
-                    : pageRequest;
+
+            // React to user action on pagination section
+            if (typeof evt !== "undefined") {
+                if (
+                    parseInt(evt.target.innerHTML) != NaN &&
+                    parseInt(evt.target.innerHTML) >= 1 &&
+                    parseInt(evt.target.innerHTML) <= 10
+                ) {
+                    // Pages 1 - 10
+                    this.pageRequest = parseInt(evt.target.innerHTML);
+                } else {
+                    // Pages for <<, <, >, >>
+                    switch (String(evt.target.innerHTML)) {
+                        case "&lt;&lt;":
+                            this.pageRequest = 1;
+                            break;
+                        case "&gt;&gt;":
+                            this.pageRequest = Math.ceil(
+                                this.total / this.limit
+                            );
+                            break;
+                        case "&lt;":
+                            if (this.pageRequest > 1) {
+                                this.pageRequest -= 1;
+                            }
+                            break;
+                        case "&gt;":
+                            if (
+                                this.pageRequest <
+                                Math.ceil(this.total / this.limit)
+                            ) {
+                                this.pageRequest += 1;
+                            }
+                            break;
+                    }
+                }
+            }
+
             this.mute = true;
             window.axios
                 .get(this.ROOT_URL + "/api/news", {
                     params: {
                         search: this.keywords,
-                        page: pageRequest
+                        page: this.pageRequest,
+                        limit: this.limit
                     }
                 })
                 .then(({ data }) => {
@@ -256,12 +304,6 @@ export default {
                         this.articles.push(datum); //new Article(datum));
                     });
                     this.total = data.meta.total;
-                    // Set the list of pagination numbers
-                    // paginationList = [];
-                    // if (pageRequest >= 21)
-                    //     paginationList.push(pageRequest - 20);
-                    // const tenPageSequenceStart =
-                    // if (pageRequest )
                     this.mute = false;
                 });
         },
