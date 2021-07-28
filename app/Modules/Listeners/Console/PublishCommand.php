@@ -51,6 +51,7 @@ class PublishCommand extends Command
 	/**
 	 * Publish assets from the specified listener.
 	 *
+	 * @param string $folder
 	 * @param string $name
 	 */
 	public function publish($folder, $name = null)
@@ -61,7 +62,7 @@ class PublishCommand extends Command
 		}
 		else
 		{
-			$listener = $this->laravel['listener']->byType($folder, $name);
+			$listener = $this->laravel['listener']->byType($folder, $name)->first();
 		}
 
 		if (!$listener || !$listener->path)
@@ -75,8 +76,8 @@ class PublishCommand extends Command
 			->setConsole($this)
 			->publish();*/
 
-		$sourcePath = $listener->getAssetPath(); //config('module.listeners.paths.listeners', app_path('Listeners'));
-		$destinationPath = $listener->getPublicAssetPath(); //$this->laravel['listener']->getAssetPath($listener->getLowerFolder(), $listener->getLowerName());
+		$sourcePath = $listener->getAssetPath();
+		$destinationPath = $listener->getPublicAssetPath();
 
 		if (!$this->getFilesystem()->isDirectory($sourcePath))
 		{

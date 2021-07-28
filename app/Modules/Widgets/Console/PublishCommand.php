@@ -42,8 +42,15 @@ class PublishCommand extends Command
 	 */
 	public function publishAll()
 	{
-		foreach ($this->laravel['widget']->all() as $widget)
+		$processed = array();
+		foreach ($this->laravel['widget']->find() as $widget)
 		{
+			if (in_array($widget->widget, $processed))
+			{
+				continue;
+			}
+			$processed[] = $widget->widget;
+
 			$this->publish(new Widget($widget));
 		}
 	}
@@ -61,7 +68,8 @@ class PublishCommand extends Command
 		}
 		else
 		{
-			$widgets = $this->laravel['widget']->all()
+			$widgets = $this->laravel['widget']->find($name);
+			/*$widgets = $this->laravel['widget']->all()
 				->filter(function($value, $key) use ($name)
 				{
 					if ($value->name == $name)
@@ -70,7 +78,8 @@ class PublishCommand extends Command
 					}
 
 					return false;
-				});
+				});*/
+
 			foreach ($widgets as $widget)
 			{
 				$widget = new Widget($widget);
@@ -85,7 +94,6 @@ class PublishCommand extends Command
 			if (!$this->getFilesystem()->isDirectory($sourcePath))
 			{
 				//$this->error('[skipping] Widgets source path not found: ' . $sourcePath);
-				//return;
 				continue;
 			}
 

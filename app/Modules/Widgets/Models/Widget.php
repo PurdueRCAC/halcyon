@@ -150,6 +150,26 @@ class Widget extends Model
 	}*/
 
 	/**
+	 * Determine if record is enabled
+	 * 
+	 * @return  boolean
+	 */
+	public function isEnabled()
+	{
+		return ($this->published == 1);
+	}
+
+	/**
+	 * Determine if record is disabled
+	 * 
+	 * @return  boolean
+	 */
+	public function isDisabled()
+	{
+		return !$this->isEnabled();
+	}
+
+	/**
 	 * Determine if record is published
 	 * 
 	 * @return  boolean

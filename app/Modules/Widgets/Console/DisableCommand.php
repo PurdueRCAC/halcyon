@@ -26,11 +26,11 @@ class DisableCommand extends Command
 	 */
 	public function handle()
 	{
-		$widget = $this->laravel['widget']->findOrFail($this->argument('widget'));
+		$widget = $this->laravel['widget']->find($this->argument('widget'))->first();
 
-		if ($widget->enabled())
+		if ($widget->isDisabled())
 		{
-			$widget->disable();
+			$widget->update(['published' => 0]);
 
 			$this->info("Widget [{$widget}] disabled successful.");
 		}

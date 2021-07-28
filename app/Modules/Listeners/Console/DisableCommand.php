@@ -26,14 +26,14 @@ class DisableCommand extends Command
 	 */
 	public function handle()
 	{
-		$listener = $this->laravel['listener']->find(
+		$listener = $this->laravel['listener']->byType(
 			$this->argument('folder'),
 			$this->argument('element')
-		);
+		)->first();
 
 		if (!$listener)
 		{
-			$this->info("Listener not found.");
+			$this->error("Listener not found.");
 			return;
 		}
 

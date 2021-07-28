@@ -72,6 +72,6 @@ class SetupCommand extends Command
 			return;
 		}
 
-		$this->error($error);
+		$this->comment($error);
 	}
 }

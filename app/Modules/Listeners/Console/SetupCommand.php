@@ -57,9 +57,9 @@ class SetupCommand extends Command
 	/**
 	 * Generate the specified directory by given $dir.
 	 *
-	 * @param $dir
-	 * @param $success
-	 * @param $error
+	 * @param string $dir
+	 * @param string $success
+	 * @param string $error
 	 */
 	protected function generateDirectory($dir, $success, $error)
 	{
@@ -72,6 +72,6 @@ class SetupCommand extends Command
 			return;
 		}
 
-		$this->error($error);
+		$this->comment($error);
 	}
 }

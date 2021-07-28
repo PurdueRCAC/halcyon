@@ -371,4 +371,36 @@ class WidgetManager
 
 		return $clean;
 	}
+
+	/**
+	 * Find widgets
+	 *
+	 * @return  object  Collection
+	 */
+	public function find($name = null, $client = null, $state = null)
+	{
+		$query = Widget::query();
+
+		if (!is_null($client))
+		{
+			$query->where('client_id', '=', $client);
+		}
+
+		if (!is_null($state))
+		{
+			$query->where('published', '=', $state);
+		}
+
+		if (!is_null($name))
+		{
+			$query->where('widget', '=', $name);
+		}
+
+		$rows = $query
+			->orderBy('position', 'asc')
+			->orderBy('ordering', 'asc')
+			->get();
+
+		return $rows;
+	}
 }
