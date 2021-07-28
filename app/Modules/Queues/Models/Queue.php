@@ -323,6 +323,56 @@ class Queue extends Model
 	}
 
 	/**
+	 * Get the next upcoming purchase or loan
+	 *
+	 * @return  mixed
+	 */
+	public function getUpcomingLoanOrPurchase()
+	{
+		$now = Carbon::now();
+
+		$purchase = $this->sizes()
+			->where(function($where) use ($now)
+			{
+				$where->whereNull('datetimestop')
+					->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
+					->orWhere('datetimestop', '>', $now->toDateTimeString());
+			})
+			->where('datetimestart', '>', $now->toDateTimeString())
+			->orderBy('datetimestart', 'asc')
+			->first();
+
+		$loan = $this->loans()
+			->where(function($where) use ($now)
+			{
+				$where->whereNull('datetimestop')
+					->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
+					->orWhere('datetimestop', '>', $now->toDateTimeString());
+			})
+			->where('datetimestart', '>', $now->toDateTimeString())
+			->orderBy('datetimestart', 'asc')
+			->first();
+
+		if ($purchase)
+		{
+			if (!$loan || $purchase->datetimestart < $loan->datetimestart)
+			{
+				return $purchase;
+			}
+		}
+
+		if ($loan)
+		{
+			if (!$purchase || $loan->datetimestart < $purchase->datetimestart)
+			{
+				return $loan;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Calculate total cores and nodes
 	 *
 	 * @return  void

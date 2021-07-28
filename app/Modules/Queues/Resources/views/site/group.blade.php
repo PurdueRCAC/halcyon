@@ -92,6 +92,11 @@
 							{{ $q->name }}
 						@endif
 					</td>
+				@if (!$q->active && $upcoming = $q->getUpcomingLoanOrPurchase())
+					<td class="text-right" colspan="2">
+						<span class="text-success">{{ $upcoming->type ? 'loan' : 'purchase' }} starts {{ $upcoming->datetimestart->diffForHumans() }}</span>
+					</div>
+				@else
 					<td class="text-right">
 						{{ $q->totalcores }}
 					</td>
@@ -100,6 +105,7 @@
 							{{ round($q->totalcores/$q->subresource->nodecores, 1) }}
 						@endif
 					</td>
+				@endif
 					<td class="text-right">
 						<?php
 						if (count($q->walltimes) > 0)
