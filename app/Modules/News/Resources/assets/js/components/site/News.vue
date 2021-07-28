@@ -198,22 +198,23 @@ export default {
         return {
             articles: [],
             paginationList: [
-                "<<",
-                "<",
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                ">",
-                ">>"
+                // "<<",
+                // "<",
+                // 1,
+                // 2,
+                // 3,
+                // 4,
+                // 5,
+                // 6,
+                // 7,
+                // 8,
+                // 9,
+                // 10,
+                // ">",
+                // ">>"
             ],
-            pageRequest: 2,
+            pageRequest: 1,
+            farthestPage: 1,
             limit: 20,
             working: false,
             total: 0,
@@ -222,12 +223,39 @@ export default {
     },
     methods: {
         // Helper and event handler methods
+        setPaginationList(curPage) {
+            this.paginationList = [];
+            this.paginationList.push('<');
+            this.paginationList.push(1);
+            if (curPage > 6)
+                this.paginationList.push('...');
+            
+            const startPageList = curPage <= 6
+                ? 2
+                : Math.min(curPage - 4, this.farthestPage - 8);
+            const endPageList = (curPage + 5) >= this.farthestPage
+                ? this.farthestPage - 1
+                : Math.max(curPage + 4, 9);
+            console.log("start page list: " + startPageList);
+            console.log("end page list: " + endPageList);
+            for (let pageNum = startPageList; pageNum <= endPageList; pageNum++)
+                this.paginationList.push(pageNum);
+
+
+            if (curPage < (this.farthestPage - 5))
+                this.paginationList.push('...');
+            if (this.farthestPage !== 1)
+                this.paginationList.push(this.farthestPage);
+            this.paginationList.push('>');
+        },
         handlePaginationEvent(evt) {
+            evt.preventDefault();
+            
             if (typeof evt !== "undefined") {
                 if (
                     parseInt(evt.target.innerHTML) != NaN &&
                     parseInt(evt.target.innerHTML) >= 1 &&
-                    parseInt(evt.target.innerHTML) <= 10
+                    parseInt(evt.target.innerHTML) <= this.farthestPage
                 ) {
                     this.pageRequest = parseInt(evt.target.innerHTML);
                 } else {
@@ -236,9 +264,7 @@ export default {
                             this.pageRequest = 1;
                             break;
                         case "&gt;&gt;":
-                            this.pageRequest = Math.ceil(
-                                this.total / this.limit
-                            );
+                            this.pageRequest = this.farthestPage;
                             break;
                         case "&lt;":
                             if (this.pageRequest > 1) {
@@ -246,10 +272,7 @@ export default {
                             }
                             break;
                         case "&gt;":
-                            if (
-                                this.pageRequest <
-                                Math.ceil(this.total / this.limit)
-                            ) {
+                            if (this.pageRequest < this.farthestPage) {
                                 this.pageRequest += 1;
                             }
                             break;
@@ -272,8 +295,6 @@ export default {
         },
         read(pageRequest = 1) {
             console.log("Retrieving articles...");
-
-            // this.handlePaginationEvent(evt);
             this.pageRequest = pageRequest;
 
             this.mute = true;
@@ -291,6 +312,8 @@ export default {
                         this.articles.push(datum); //new Article(datum));
                     });
                     this.total = data.meta.total;
+                    this.farthestPage = Math.ceil(this.total / this.limit);
+                    this.setPaginationList(this.pageRequest);
                     this.mute = false;
                 });
         },
