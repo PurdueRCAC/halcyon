@@ -167,7 +167,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return ResourceCollection
+	 * @return Response
 	 */
 	public function index(Request $request)
 	{
@@ -374,7 +374,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  JsonResource
+	 * @return  Response
 	 */
 	public function create(Request $request)
 	{
@@ -446,7 +446,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return JsonResource
+	 * @return Response
 	 */
 	public function read($id)
 	{
@@ -585,7 +585,7 @@ class TypesController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
-	 * @return  JsonResource
+	 * @return  Response
 	 */
 	public function update(Request $request, $id)
 	{

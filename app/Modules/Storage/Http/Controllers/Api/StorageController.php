@@ -284,14 +284,14 @@ class StorageController extends Controller
 		// Make sure name is sane
 		if (!preg_match("/^([a-zA-Z0-9]+\.?[\-_ ]*)*[a-zA-Z0-9]$/", $row->name))
 		{
-			return response()->json(['message' => trans('storage::storage.error.invalid name format')], 415);
+			return response()->json(['message' => trans('Field `name` has invalid format')], 415);
 		}
 
 		if ($row->parentresourceid)
 		{
 			if (!$row->resource)
 			{
-				return response()->json(['message' => trans('storage::storage.error.invalid parentresourceid')], 415);
+				return response()->json(['message' => trans('Invalid `parentresourceid`')], 415);
 			}
 		}
 
@@ -299,7 +299,7 @@ class StorageController extends Controller
 		{
 			if (!$row->quotaType)
 			{
-				return response()->json(['message' => trans('storage::storage.error.invalid getquotatypeid')], 415);
+				return response()->json(['message' => trans('Invalid `getquotatypeid`')], 415);
 			}
 		}
 
@@ -307,7 +307,7 @@ class StorageController extends Controller
 		{
 			if (!$row->createType)
 			{
-				return response()->json(['message' => trans('storage::storage.error.invalid createtypeid')], 415);
+				return response()->json(['message' => trans('Invalid `createtypeid`')], 415);
 			}
 		}
 
@@ -486,7 +486,7 @@ class StorageController extends Controller
 		{
 			if (!$row->resource)
 			{
-				return response()->json(['message' => trans('storage::storage.error.invalid parentresourceid')], 415);
+				return response()->json(['message' => trans('Invalid `parentresourceid`')], 415);
 			}
 		}
 
@@ -494,7 +494,7 @@ class StorageController extends Controller
 		{
 			if (!$row->quotaType)
 			{
-				return response()->json(['message' => trans('storage::storage.error.invalid getquotatypeid')], 415);
+				return response()->json(['message' => trans('Invalid `getquotatypeid`')], 415);
 			}
 		}
 
@@ -502,7 +502,7 @@ class StorageController extends Controller
 		{
 			if (!$row->createType)
 			{
-				return response()->json(['message' => trans('storage::storage.error.invalid createtypeid')], 415);
+				return response()->json(['message' => trans('Invalid `createtypeid`')], 415);
 			}
 		}
 
@@ -537,7 +537,7 @@ class StorageController extends Controller
 
 		if ($row->directories()->count() > 0)
 		{
-			return response()->json(['message' => trans('storage::storage.error.storage resource not empty')], 409);
+			return response()->json(['message' => trans('Storage Resource is not empty')], 409);
 		}
 
 		if (!$row->delete())

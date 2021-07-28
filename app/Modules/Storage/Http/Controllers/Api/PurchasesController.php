@@ -688,13 +688,13 @@ class PurchasesController extends Controller
 				// Haven't been sold anything and never will have anything, so don't bother.
 				if (!$first)
 				{
-					return response()->json(['message' => trans('Seller has not been sold anything and never will have anything')], 409);
+					return response()->json(['message' => trans('Have not sold anything and never will have anything')], 409);
 				}
 
 				if ($first->datetimestart->timestamp > $row->datetimestart->timestamp)
 				{
 					// Haven't been sold anything before this would start, so don't bother
-					return response()->json(['message' => trans('Seller has not been sold anything before this would start')], 409);
+					return response()->json(['message' => trans('Have not sold anything before this would start')], 409);
 				}
 
 				/*if ($data->min == null

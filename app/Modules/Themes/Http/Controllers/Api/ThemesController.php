@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Themes\Models\Theme;
 
 /**
@@ -207,7 +205,9 @@ class ThemesController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
-		return new ResourceCollection($rows);
+		//$preview = $this->config->get('template_positions_display');
+
+		return $rows;
 	}
 
 	/**
@@ -217,32 +217,20 @@ class ThemesController extends Controller
 	 * @apiUri    /api/themes
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "Theme title",
+	 * 		"name":          "title",
+	 * 		"description":   "Menu title",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string",
-	 * 			"maxLength": 255
+	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "element",
-	 * 		"description":   "Theme folder name",
-	 * 		"required":      true,
-	 * 		"schema": {
-	 * 			"type":      "string",
-	 * 			"maxLength": 255
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "access",
-	 * 		"description":   "Access level",
+	 * 		"name":          "description",
+	 * 		"description":   "A description of the menu",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   1
+	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -252,7 +240,6 @@ class ThemesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   0,
 	 * 			"enum": [
 	 * 				0,
 	 * 				1
@@ -273,11 +260,8 @@ class ThemesController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'name' => 'required|string|max:255',
-			'element' => 'required|string|max:255',
-			'enabled' => 'nullable|integer',
-			'access' => 'nullable|integer',
-			'client_id' => 'nullable|integer',
+			'title' => 'required|string',
+			'template' => 'required|string'
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -287,48 +271,14 @@ class ThemesController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		$row = new Theme();
-		$row->type = 'theme';
-		$row->name = $request->input('name');
-		$row->protected = 0;
-		if ($request->has('element'))
-		{
-			$row->element = $request->input('element');
-		}
-		if ($request->has('enabled'))
-		{
-			$row->enabled = $request->input('enabled');
-		}
-		if ($request->has('client_id'))
-		{
-			$row->client_id = $request->input('client_id');
-		}
-		if ($request->has('access'))
-		{
-			$row->access = $request->input('access');
-		}
+		$row = new Theme($request->all());
 
 		if (!$row->save())
 		{
 			return response()->json($row->getError(), 500);
 		}
 
-		$row->api = route('api.themes.read', ['id' => $row->id]);
-
-		$can = [
-			'edit'   => false,
-			'delete' => false
-		];
-
-		if (auth()->user())
-		{
-			$can['edit']   = $user->can('edit themes');
-			$can['delete'] = $user->can('delete themes');
-		}
-
-		$row->can = $can;
-
-		return new JsonResource($row);
+		return $row;
 	}
 
 	/**
@@ -363,20 +313,18 @@ class ThemesController extends Controller
 		$row->api = route('api.themes.read', ['id' => $row->id]);
 
 		// Permissions check
-		$can = [
-			'edit'   => false,
-			'delete' => false
-		];
+		//$item->canCreate = false;
+		$row->canEdit   = false;
+		$row->canDelete = false;
 
 		if (auth()->user())
 		{
-			$can['edit']   = $user->can('edit themes');
-			$can['delete'] = $user->can('delete themes');
+			//$item->canCreate = auth()->user()->can('create themes');
+			$row->canEdit   = auth()->user()->can('edit themes');
+			$row->canDelete = auth()->user()->can('delete themes');
 		}
 
-		$row->can = $can;
-
-		return new JsonResource($row);
+		return $row;
 	}
 
 	/**
@@ -454,8 +402,8 @@ class ThemesController extends Controller
 	public function update(Request $request, $id)
 	{
 		$rules = [
-			'name' => 'nullable|string|max:255',
-			'enabled' => 'nullable|integer'
+			'title' => 'required',
+			'position' => 'required'
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -466,36 +414,14 @@ class ThemesController extends Controller
 		}
 
 		$row = Theme::findOrFail($id);
-		if ($request->has('name'))
-		{
-			$row->name = $request->input('name');
-		}
-		if ($request->has('enabled'))
-		{
-			$row->enabled = $request->input('enabled');
-		}
+		$row->fill($request->all());
 
 		if (!$row->save())
 		{
 			return response()->json(['message' => $row->getError()], 500);
 		}
 
-		$row->api = route('api.themes.read', ['id' => $row->id]);
-
-		$can = [
-			'edit'   => false,
-			'delete' => false
-		];
-
-		if (auth()->user())
-		{
-			$can['edit']   = $user->can('edit themes');
-			$can['delete'] = $user->can('delete themes');
-		}
-
-		$row->can = $can;
-
-		return new JsonResource($row);
+		return $row;
 	}
 
 	/**
