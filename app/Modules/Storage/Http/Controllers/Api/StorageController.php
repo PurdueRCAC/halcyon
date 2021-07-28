@@ -5,6 +5,7 @@ namespace App\Modules\Storage\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Storage\Models\StorageResource;
@@ -257,7 +258,7 @@ class StorageController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|max:32',
 			'path' => 'required|string|max:255',
 			'parentresourceid' => 'nullable|integer',
@@ -268,7 +269,14 @@ class StorageController extends Controller
 			'defaultquotafile' => 'nullable|integer',
 			'getquotatypeid' => 'nullable|integer',
 			'createtypeid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new StorageResource;
 		$row->fill($data);
@@ -452,7 +460,7 @@ class StorageController extends Controller
 	{
 		$row = StorageResource::findOrFail($id);
 
-		$request->validate([
+		$rules = [
 			'name' => 'nullable|string|max:32',
 			'path' => 'nullable|string|max:255',
 			'parentresourceid' => 'nullable|integer',
@@ -463,7 +471,14 @@ class StorageController extends Controller
 			'defaultquotafile' => 'nullable|integer',
 			'getquotatypeid' => 'nullable|integer',
 			'createtypeid' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row->fill($request->all());
 

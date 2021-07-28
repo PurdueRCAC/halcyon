@@ -350,14 +350,21 @@ class UsageController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'storagedirid' => 'nullable|integer|min:1',
 			'storagedir' => 'nullable|string',
 			'quota' => 'nullable|integer',
 			'space' => 'nullable|integer',
 			'filequota' => 'nullable|integer',
 			'files' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Usage::findOrFail($id);
 

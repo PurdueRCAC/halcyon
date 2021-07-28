@@ -18,6 +18,8 @@
 		$('#new_group_btn')
 			.on('click', function (e) {
 				e.preventDefault();
+				$($(this).attr('data-indicator')).removeClass('hide');
+				$(this).prop('disabled', true);
 				CreateNewGroup();
 			});
 		$('#new_group_input')
@@ -47,16 +49,30 @@ function CreateNewGroup() {
 	});
 
 	WSPostURL(input.getAttribute('data-api'), post, function(xml) {
+		$($('#new_group_btn').attr('data-indicator')).addClass('hide');
+
 		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 
 			window.location.reload(true); // = input.getAttribute('data-uri') + '/' + results.data.id;
-		} else if (xml.status == 409) {
-			document.getElementById('new_group_action').classList.remove('hide');
-			document.getElementById('new_group_action').innerHTML = "Unable to create a new group. Group by this name already exists.";
 		} else {
-			document.getElementById('new_group_action').classList.remove('hide');
-			document.getElementById('new_group_action').innerHTML = "Unable to create a new group.";
+			var err = document.getElementById('new_group_action');
+			err.classList.remove('hide');
+
+			var msg = 'Unable to create a new group.';
+
+			var response = JSON.parse(xml.responseText);
+			if (response.message) {
+				msg = response.message;
+				if (typeof msg === 'object') {
+					var errors = Object.values(msg);
+					msg = errors.join('<br />');
+				}
+			}
+
+			err.innerHTML = msg;
+
+			$('#new_group_btn').prop('disabled', false);
 		}
 	});
 }
@@ -84,12 +100,13 @@ function CreateNewGroup() {
 					<div class="form-text text-muted">{{ $user->name }} will be added as a manager.</div>
 				</div>
 
-				<div id="new_group_action" class="alert alert-warning hide"></div>
+				<div id="new_group_action" class="alert alert-danger hide"></div>
 
 				<div class="dialog-footer">
 					<div class="row">
 						<div class="col-md-12 text-right">
-							<button type="submit" id="new_group_btn" class="btn btn-success">
+							<span id="#new_group_spinner" class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only">Sending...</span></span>
+							<button type="submit" id="new_group_btn" data-indicator="new_group_spinner" class="btn btn-success">
 								<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('global.button.create') }}
 							</button>
 						</div>

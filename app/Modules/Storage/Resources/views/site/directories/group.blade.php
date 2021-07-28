@@ -14,7 +14,7 @@
 				did = btn.data('id');
 
 			btn.addClass('processing');
-			btn.find('i').addClass('hide');
+			btn.find('.fa').addClass('hide');
 			btn.find('.spinner-border').removeClass('hide');
 
 			$.ajax({
@@ -67,7 +67,7 @@
 						error: function (result) {
 							alert("An error occurred. Please reload the page and try again");
 
-							btn.find('i').removeClass('hide');
+							btn.find('.fa').removeClass('hide');
 							btn.find('.spinner-border').addClass('hide');
 						}
 					});
@@ -75,7 +75,7 @@
 				error: function (result) {
 					alert("An error occurred. Please reload the page and try again");
 
-					btn.find('i').removeClass('hide');
+					btn.find('.fa').removeClass('hide');
 					btn.find('.spinner-border').addClass('hide');
 				}
 			});

@@ -5,6 +5,7 @@ namespace App\Modules\Storage\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Storage\Models\Purchase;
@@ -256,7 +257,7 @@ class PurchasesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'resourceid'    => 'required|integer|min:1',
 			'groupid'       => 'required|integer',
 			//'bytes'         => 'nullable',
@@ -264,7 +265,14 @@ class PurchasesController extends Controller
 			'datetimestart' => 'required|date',
 			'datetimestop'  => 'nullable|date',
 			'comment'       => 'nullable|string|max:2000'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = new Purchase;
 		$row->resourceid = $request->input('resourceid');
@@ -560,7 +568,7 @@ class PurchasesController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'resourceid'    => 'nullable|integer|min:1',
 			'groupid'       => 'nullable|integer',
 			//'bytes' => 'nullable|integer',
@@ -568,7 +576,14 @@ class PurchasesController extends Controller
 			'datetimestart' => 'nullable|date',
 			'datetimestop'  => 'nullable|date',
 			'comment'       => 'nullable|string'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Purchase::query()
 			->withTrashed()

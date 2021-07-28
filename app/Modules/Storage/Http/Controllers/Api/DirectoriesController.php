@@ -5,6 +5,7 @@ namespace App\Modules\Storage\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Utility\Number;
 use App\Modules\Storage\Http\Resources\DirectoryResource;
 use App\Modules\Storage\Http\Resources\DirectoryResourceCollection;

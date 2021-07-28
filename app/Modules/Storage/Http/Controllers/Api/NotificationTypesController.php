@@ -5,9 +5,10 @@ namespace App\Modules\Storage\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Storage\Models\Notification\Type;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Storage\Models\Notification\Type;
 
 /**
  * Notification types
@@ -159,11 +160,18 @@ class NotificationTypesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|max:100',
 			'defaulttimeperiodid' => 'nullable|integer',
 			'valuetype' => 'required|integer|min:1'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		//$row = Type::create($request->all());
 		$row = new Type;
@@ -257,11 +265,18 @@ class NotificationTypesController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'nullable|string|max:100',
 			'defaulttimeperiodid' => 'nullable|integer',
 			'valuetype' => 'nullable|integer|min:1'
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Type::findOrFail($id);
 

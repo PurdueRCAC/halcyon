@@ -57,6 +57,8 @@
 							storagedirid: $('[name=newalertstorage]:selected').val()
 						};
 
+						//$('#newalert_error').addClass('hide').text('');
+
 						$.ajax({
 							url: $('#newalert').data('api'),
 							type: 'POST',
@@ -66,7 +68,16 @@
 								location.reload(true);
 							},
 							error: function (result) {
-								alert("An error occurred. Please reload the page and try again");
+								var response = result.responseJSON;
+								var msg = 'An error occurred. Please reload the page and try again.';
+								if (response.message) {
+									msg = response.message;
+									if (typeof msg === 'object') {
+										var errors = Object.values(msg);
+										msg = errors.join('<br />');
+									}
+								}
+								$('#newalert_error').removeClass('hide').html(msg);
 							}
 						});
 					}
@@ -84,6 +95,7 @@
 		$('#create-newalert').on('click', function(e) {
 			e.preventDefault();
 
+			$('#newalert_error').addClass('hide').text('');
 			$('#newalert').dialog('open');
 		});
 
@@ -96,8 +108,6 @@
 					text: 'Create Report',
 					'class': 'btn btn-success',
 					click: function() {
-						$(this).dialog('close');
-
 						postdata = {};
 						postdata['storagedirquotanotificationtypeid'] = '1';
 						postdata['userid'] = $('#HIDDEN_user').val();
@@ -107,15 +117,27 @@
 						postdata['storagedirid'] = $('[name=newreportstorage]:selected').val();
 						postdata['datetimelastnotify'] = $('#newreportdate').val();
 
+						//$('#newreport_error').addClass('hide').text('');
+
 						$.ajax({
 							url: $('#newreport').data('api'),
 							type: 'POST',
 							data: postdata,
 							success: function(result) {
+								$(this).dialog('close');
 								location.reload(true);
 							},
 							error: function (result) {
-								alert("An error occurred. Please reload the page and try again");
+								var response = result.responseJSON;
+								var msg = 'An error occurred. Please reload the page and try again.';
+								if (response.message) {
+									msg = response.message;
+									if (typeof msg === 'object') {
+										var errors = Object.values(msg);
+										msg = errors.join('<br />');
+									}
+								}
+								$('#newreport_error').removeClass('hide').text(msg);
 							}
 						});
 					}
@@ -124,7 +146,7 @@
 					text: 'Cancel',
 					'class': 'btn btn-link',
 					click: function() {
-						$(this).dialog('close'); 
+						$(this).dialog('close');
 					}
 				}
 			}
@@ -134,14 +156,17 @@
 			e.preventDefault();
 
 			$('#newreport').dialog('open');
+			$('#newreport_error').addClass('hide').text('');
 		});
 
 		$('.updatequota').on('click', function(event) {
 			var btn = $(this),
 				did = btn.data('id');
 
+			$('#' + did + '_dialog_error').addClass('hide').html('');
+
 			btn.addClass('processing');
-			btn.find('i').addClass('hide');
+			btn.find('.fa').addClass('hide');
 			btn.find('.spinner-border').removeClass('hide');
 
 			$.ajax({
@@ -192,25 +217,41 @@
 							check();
 						},
 						error: function (result) {
-							alert("An error occurred. Please reload the page and try again");
+							var response = result.responseJSON;
+							var msg = 'An error occurred. Please reload the page and try again.';
+							if (response.message) {
+								msg = response.message;
+								if (typeof msg === 'object') {
+									var errors = Object.values(msg);
+									msg = errors.join('<br />');
+								}
+							}
 
-							btn.find('i').removeClass('hide');
+							btn.find('.fa').removeClass('hide');
 							btn.find('.spinner-border').addClass('hide');
 						}
 					});
 				},
 				error: function (result) {
-					alert("An error occurred. Please reload the page and try again");
+					var response = result.responseJSON;
+					var msg = 'An error occurred. Please reload the page and try again.';
+					if (response.message) {
+						msg = response.message;
+						if (typeof msg === 'object') {
+							var errors = Object.values(msg);
+							msg = errors.join('<br />');
+						}
+					}
 
-					btn.find('i').removeClass('hide');
+					btn.find('.fa').removeClass('hide');
 					btn.find('.spinner-border').addClass('hide');
 				}
 			});
 		});
 
 		$("input[name='newalert']").on('change', function() {
-			$( "#newalertvalue" ).val($(this).data('value'));
-			$( "#newalertvalueunit" ).html($(this).data('unit'));
+			$("#newalertvalue").val($(this).data('value'));
+			$("#newalertvalueunit").html($(this).data('unit'));
 		});
 
 		// Details dialogs
@@ -224,6 +265,7 @@
 			e.preventDefault();
 
 			if ($($(this).attr('href')).length) {
+				$($(this).attr('href') + '_not_error').addClass('hide').text('');
 				$($(this).attr('href')).dialog('open');
 			}
 		});
@@ -246,7 +288,16 @@
 					location.reload(true);
 				},
 				error: function (result) {
-					alert("An error occurred. Please reload the page and try again");
+					var response = result.responseJSON;
+					var msg = 'An error occurred. Please reload the page and try again.';
+					if (response.message) {
+						msg = response.message;
+						if (typeof msg === 'object') {
+							var errors = Object.values(msg);
+							msg = errors.join('<br />');
+						}
+					}
+					$('#' + btn.data('id') + '_not_error').removeClass('hide').text(msg);
 				}
 			});
 		});
@@ -588,7 +639,9 @@
 						<div class="form-group row">
 							<label for="enabled_{{ $not->id }}" class="col-sm-4">Enabled</label>
 							<div class="col-sm-8">
-								<input type="checkbox" class="form-check-input" id="enabled_{{ $not->id }}" <?php echo ($not->enabled == '0') ? '' : ' checked="true"'; ?> />
+								<div class="form-check">
+									<input type="checkbox" class="form-check-input" id="enabled_{{ $not->id }}" <?php echo ($not->enabled == '0') ? '' : ' checked="true"'; ?> />
+								</div>
 							</div>
 						</div>
 						<div class="form-group row">
@@ -602,6 +655,8 @@
 								<input type="submit" class="btn btn-success details-save" value="{{ trans('global.save') }}" data-api="{{ route('api.storage.notifications.update', ['id' => $not->id]) }}" id="save_{{ $not->id }}" data-id="{{ $not->id }}" />
 							</div>
 						</div>
+
+						<div class="alert alert-danger hide" id="{{ $not->id }}_not_error"></div>
 						</form>
 					</div>
 					<?php
@@ -679,6 +734,8 @@
 					<span class="input-group-append"><span class="input-group-text" id="newalertvalueunit"></span></span>
 				</span>
 			</p>
+
+			<div id="newalert_error" class="alert alert-danger hide"></div>
 		</form>
 	</div><!-- / #newalert -->
 
@@ -861,6 +918,8 @@
 								<input type="submit" class="btn btn-success details-save" value="{{ trans('global.save') }}" data-api="{{ route('api.storage.notifications.update', ['id' => $not->id]) }}" id="save_{{ $not->id }}" data-id="{{ $not->id }}" />
 							</div>
 						</div>
+
+						<div class="alert alert-danger hide" id="{{ $not->id }}_not_error"></div>
 						</form>
 					</div>
 					<?php
@@ -883,7 +942,7 @@
 								<?php
 								foreach ($storagedirs as $storagedir)
 								{
-									echo '<option name="newreportstorage" value="' . $storagedir->id . '"/> ' . $storagedir->resourcepath . '/' . $storagedir->path . '</option>';
+									echo '<option name="newreportstorage" value="' . $storagedir->id . '"/> ' . e($storagedir->resourcepath) . '/' . e($storagedir->path) . '</option>';
 								}
 								?>
 							</select>
@@ -907,12 +966,14 @@
 								<?php
 								foreach (App\Halcyon\Models\Timeperiod::all() as $period)
 								{
-									echo '<option value="' . $period->id . '">' . $period->plural . '</option>';
+									echo '<option value="' . $period->id . '">' . e($period->plural) . '</option>';
 								}
 								?>
 							</select>
 						</div>
 					</div>
+
+					<div class="alert alert-danger hide" id="newreport_error"></div>
 				</form>
 			</div><!-- / #newreport -->
 

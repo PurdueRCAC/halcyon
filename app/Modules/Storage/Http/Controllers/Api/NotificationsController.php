@@ -5,9 +5,10 @@ namespace App\Modules\Storage\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Storage\Models\Notification;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Storage\Models\Notification;
 use Carbon\Carbon;
 
 /**
@@ -225,7 +226,7 @@ class NotificationsController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'storagedirid' => 'required|integer|min:1',
 			'userid' => 'nullable|integer',
 			'storagedirquotanotificationtypeid' => 'required|integer|min:1',
@@ -235,7 +236,14 @@ class NotificationsController extends Controller
 			'notice'  => 'nullable|integer',
 			'enabled' => 'nullable|integer',
 			'datetimelastnotify' => 'nullable|date',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		//$row = Notification::create($request->all());
 		$row = new Notification;
@@ -432,7 +440,7 @@ class NotificationsController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'storagedirid' => 'nullable|integer|min:1',
 			'userid' => 'nullable|integer',
 			'storagedirquotanotificationtypeid' => 'nullable|integer',
@@ -443,7 +451,14 @@ class NotificationsController extends Controller
 			'enabled' => 'nullable|integer',
 			'datetimelastnotify' => 'nullable|date',
 			'nextreport' => 'nullable|date',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Notification::findOrFail($id);
 		$row->fill($request->all());

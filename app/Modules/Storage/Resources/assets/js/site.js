@@ -700,28 +700,35 @@ function CreateDefaultDirs(api, group, name, resource, quota, base, apps, etc, d
 }
 
 /**
- * Set base gorup name
+ * Set base group name
  *
- * @param   {string}  group
+ * @param   {string}  api
  * @return  {void}
  */
 function SetBaseName(api) {
 	var name = document.getElementById("unixgroup").value;
 	var post = JSON.stringify({ "unixgroup": name });
 
-	if (name != "") {
-		WSPutURL(api, post, function (xml) {
-			if (xml.status < 400) {
-				window.location.reload(true);
-			} else if (xml.status == 409) {
-				$('#error_unixgroup').removeClass('hide').text("Base name already exists.");
-			} else if (xml.status == 415) {
-				$('#error_unixgroup').removeClass('hide').text("Invalid format for base name.");
-			} else {
-				$('#error_unixgroup').removeClass('hide').text("An error occurred while setting base name.");
-			}
-		});
+	if (name == "") {
+		$('#error_unixgroup').removeClass('hide').text('Unix group name is required.');
 	}
+
+	WSPutURL(api, post, function (xml) {
+		if (xml.status < 400) {
+			window.location.reload(true);
+		} else {
+			var err = $('#error_unixgroup');
+			err.removeClass('hide');
+
+			if (xml.status == 409) {
+				err.text("Base name already exists.");
+			} else if (xml.status == 415) {
+				err.text("Invalid format for base name.");
+			} else {
+				err.text("An error occurred while setting base name.");
+			}
+		}
+	});
 }
 
 /**
