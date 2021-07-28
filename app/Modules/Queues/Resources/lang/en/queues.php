@@ -105,6 +105,7 @@ return [
 		'invalid subresource' => 'Please select a node type.',
 		'start cannot be after stop' => 'Field `start` cannot be after or equal to stop time',
 		'corecount cannot be modified' => 'Core count cannot be modified on entries already in affect',
+		'invalid corecount' => 'Invalid `corecount` value',
 		'queue is empty' => 'Have not been sold anything and never will have anything',
 		'queue has not started' => 'Have not been sold anything before this would start',
 		'queue already exists' => 'A queue with the provided name and resource already exists',

@@ -244,16 +244,6 @@ class LoansController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		/*$request->validate([
-			'queueid' => 'required|integer',
-			'lenderqueueid' => 'required|integer',
-			'datetimestart' => 'nullable|date',
-			'datetimestop' => 'nullable|date',
-			'nodecount' => 'nullable|numeric',
-			'corecount' => 'nullable|integer',
-			'comment' => 'nullable|string|max:2000',
-		]);*/
-
 		$rules = [
 			'queueid' => 'required|integer',
 			'lenderqueueid' => 'required|integer',
@@ -511,16 +501,6 @@ class LoansController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		/*$request->validate([
-			//'queueid' => 'nullable|integer',
-			//'lenderqueueid' => 'nullable|integer',
-			'datetimestart' => 'nullable|date',
-			'datetimestop' => 'nullable|date',
-			'nodecount' => 'nullable|numeric',
-			'corecount' => 'nullable|integer',
-			'comment' => 'nullable|string|max:2000',
-		]);*/
-
 		$rules = [
 			//'queueid' => 'nullable|integer',
 			//'lenderqueueid' => 'nullable|integer',
@@ -577,20 +557,20 @@ class LoansController extends Controller
 			}
 
 			// Don't allow swapping of sale direction or nullation of sale
-			if ($cores > 0 && $row->corecount <= 0)
+			if ($row->corecount > 0 && $cores <= 0)
 			{
-				return response()->json(['message' => trans('queues::queues.Invalid `corecount` value')], 415);
+				return response()->json(['message' => trans('queues::queues.error.invalid corecount')], 415);
 			}
 
-			if ($cores < 0 && $row->corecount >= 0)
+			if ($row->corecount < 0 && $cores >= 0)
 			{
-				return response()->json(['message' => trans('queues::queues.Invalid `corecount` value')], 415);
+				return response()->json(['message' => trans('queues::queues.error.invalid corecount')], 415);
 			}
 
 			$row->corecount = $cores;
 
 			// if we are adjusting the source of the loan, the lender is itself. make sure we check core counts agains the source
-			if ($row->corecount < 0)
+			if ($cores < 0)
 			{
 				$lenderid = $row->queueid;
 			}
@@ -601,7 +581,7 @@ class LoansController extends Controller
 
 			// Does the queue have any cores yet?
 			$count = Size::query()
-				->where('queueid', '=', (int)$row->lenderqueueid)
+				->where('queueid', '=', (int)$lenderid)
 				->orderBy('datetimestart', 'asc')
 				->get()
 				->first();

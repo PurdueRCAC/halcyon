@@ -221,16 +221,6 @@ class SizesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		/*$request->validate([
-			'queueid' => 'required|integer',
-			'sellerqueueid' => 'nullable|integer',
-			'datetimestart' => 'nullable|date',
-			'datetimestop' => 'nullable|date',
-			'nodecount' => 'nullable|integer',
-			'corecount' => 'required|integer',
-			'comments' => 'nullable|string|max:2000',
-		]);*/
-
 		$rules = [
 			'queueid' => 'required|integer',
 			'sellerqueueid' => 'nullable|integer',
@@ -511,15 +501,6 @@ class SizesController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		/*$request->validate([
-			'queueid' => 'nullable|integer',
-			'sellerqueueid' => 'nullable|integer',
-			'datetimestart' => 'nullable|date',
-			'datetimestop' => 'nullable|date',
-			'nodecount' => 'nullable|integer',
-			'corecount' => 'nullable|integer',
-		]);*/
-
 		$rules = [
 			'queueid' => 'nullable|integer',
 			'sellerqueueid' => 'nullable|integer',
@@ -575,31 +556,31 @@ class SizesController extends Controller
 			}
 
 			// Don't allow swapping of sale direction or nullation of sale
-			if ($cores > 0 && $row->corecount <= 0)
+			if ($row->corecount > 0 && $cores <= 0)
 			{
-				return response()->json(['message' => trans('queues::queues.Invalid `corecount` value')], 415);
+				return response()->json(['message' => trans('queues::queues.error.invalid corecount')], 415);
 			}
 
-			if ($cores < 0 && $row->corecount >= 0)
+			if ($row->corecount < 0 && $cores >= 0)
 			{
-				return response()->json(['message' => trans('queues::queues.Invalid `corecount` value')], 415);
+				return response()->json(['message' => trans('queues::queues.error.invalid corecount')], 415);
 			}
 
 			$row->corecount = $cores;
 
 			// if we are adjusting the source of the loan, the seller is itself. make sure we check core counts agains the source
-			if ($row->corecount < 0)
+			/*if ($cores < 0)
 			{
 				$sellerid = $row->queueid;
 			}
 			else
-			{
+			{*/
 				$sellerid = $row->sellerqueueid;
-			}
+			//}
 
 			// Does the queue have any cores yet?
 			$count = Size::query()
-				->where('queueid', '=', (int)$row->sellerqueueid)
+				->where('queueid', '=', (int)$sellerid)
 				->orderBy('datetimestart', 'asc')
 				->get()
 				->first();
