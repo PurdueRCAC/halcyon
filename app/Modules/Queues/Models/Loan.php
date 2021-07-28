@@ -85,7 +85,7 @@ class Loan extends Model
 		{
 			return true;
 		}
-		return ($this->datetimestart >= Carbon::now());
+		return ($this->datetimestart < Carbon::now());
 	}
 
 	/**
