@@ -180,7 +180,7 @@
                     :key="page"
                     class="page-item"
                 >
-                    <span class="page-link" @click="read">{{ page }}</span>
+                    <span class="page-link" @click="handlePaginationEvent">{{ page }}</span>
                 </li>
             </ul>
         </nav>
@@ -213,7 +213,7 @@ export default {
                 ">",
                 ">>"
             ],
-            pageRequest: 1,
+            pageRequest: 2,
             limit: 20,
             working: false,
             total: 0,
@@ -221,20 +221,8 @@ export default {
         };
     },
     methods: {
-        create() {
-            console.log("Creating article");
-            this.mute = true;
-            window.axios
-                .post(this.ROOT_URL + "/api/news/create")
-                .then(({ data }) => {
-                    this.articles.push(datum); //new Article(data));
-                    this.mute = false;
-                });
-        },
-        read(evt) {
-            console.log("Retrieving articles...");
-
-            // React to user action on pagination section
+        // Helper and event handler methods
+        handlePaginationEvent(evt) {
             if (typeof evt !== "undefined") {
                 if (
                     parseInt(evt.target.innerHTML) != NaN &&
@@ -268,6 +256,25 @@ export default {
                     }
                 }
             }
+            this.read(this.pageRequest);
+        },
+
+        // Request methods
+        create() {
+            console.log("Creating article");
+            this.mute = true;
+            window.axios
+                .post(this.ROOT_URL + "/api/news/create")
+                .then(({ data }) => {
+                    this.articles.push(datum); //new Article(data));
+                    this.mute = false;
+                });
+        },
+        read(pageRequest = 1) {
+            console.log("Retrieving articles...");
+
+            // this.handlePaginationEvent(evt);
+            this.pageRequest = pageRequest;
 
             this.mute = true;
             window.axios
