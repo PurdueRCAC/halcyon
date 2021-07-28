@@ -38,7 +38,7 @@ if (baseurl) {
  */
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
-Vue.component("news-search", require("./components/News.vue").default);
+Vue.component("news-search", require("./components/site/News.vue").default);
 //import News from './components/News.vue';
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -52,7 +52,7 @@ Vue.filter('formatDate', function(value) {
 	}
 });*/
 
-import Admin from './components/Admin.vue';
+import Admin from './components/admin/Admin.vue';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

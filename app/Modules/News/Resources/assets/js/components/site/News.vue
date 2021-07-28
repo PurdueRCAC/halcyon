@@ -241,10 +241,8 @@ export default {
                     parseInt(evt.target.innerHTML) >= 1 &&
                     parseInt(evt.target.innerHTML) <= 10
                 ) {
-                    // Pages 1 - 10
                     this.pageRequest = parseInt(evt.target.innerHTML);
                 } else {
-                    // Pages for <<, <, >, >>
                     switch (String(evt.target.innerHTML)) {
                         case "&lt;&lt;":
                             this.pageRequest = 1;
