@@ -1275,6 +1275,7 @@ function SaveQuantities() {
 		 && originalprice[x].value.replace(/[,\.]/g, "") != priceinputs[x].value.replace(/[,\.]/g, "")
 		 && priceinputs[x].value.replace(/[,\.]/g, "").match(/^[0-9]+$/)) {
 			post['price'] = priceinputs[x].value.replace(/[,\.]/g, "");
+			post['price'] = post['price'] == '000' ? 0 : post['price'];
 		}
 
 		post = JSON.stringify(post);

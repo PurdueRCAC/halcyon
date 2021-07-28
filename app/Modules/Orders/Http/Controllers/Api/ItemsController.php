@@ -470,13 +470,20 @@ class ItemsController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'datetimefulfilled' => 'nullable|date',
 			'quantity' => 'nullable|integer',
 			'price' => 'nullable|integer',
 			'timeperiodcount' => 'nullable|integer',
 			'fulfilled' => 'nullable|integer',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Item::findOrFail($id);
 		//$row->fill($request->all());
