@@ -75,6 +75,7 @@ return [
 		'invalid type' => 'Please select a type.',
 		'invalid headline' => 'Please provide a headline.',
 		'invalid body' => 'Please provide some content',
+		'invalid news id' => 'Invalid news ID',
 	],
 	// Copy
 	'copy' => 'Copy',

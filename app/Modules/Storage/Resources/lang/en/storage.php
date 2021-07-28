@@ -47,6 +47,11 @@ return [
 		'select items' => 'Select an entry to :action',
 		'invalid parent' => 'Please select a parent resource.',
 		'invalid name' => 'Please provide a name.',
+		'invalid name format' => 'Field name has invalid format',
+		'invalid parentresourceid' => 'Invalid parentresourceid',
+		'invalid getquotatypeid' => 'Invalid getquotatypeid',
+		'invalid createtypeid' => 'Invalid createtypeid',
+		'storage resource not empty' => 'Storage Resource is not empty',
 	],
 
 	// Fields

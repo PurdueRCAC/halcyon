@@ -91,7 +91,7 @@ class UpdatesController extends Controller
 	 * }
 	 * @param  integer  $news_id
 	 * @param  Request  $request
-	 * @return Response
+	 * @return UpdateResourceCollection
 	 */
 	public function index($news_id, Request $request)
 	{
@@ -187,7 +187,7 @@ class UpdatesController extends Controller
 	 * }
 	 * @param   integer  $news_id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  UpdateResource
 	 */
 	public function create($news_id, Request $request)
 	{
@@ -256,7 +256,7 @@ class UpdatesController extends Controller
 	 * }
 	 * @param  integer  $news_id
 	 * @param  integer  $id
-	 * @return Response
+	 * @return UpdateResource
 	 */
 	public function read($news_id, $id)
 	{
@@ -314,7 +314,7 @@ class UpdatesController extends Controller
 	 * @param   integer  $news_id
 	 * @param   integer  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  UpdateResource
 	 */
 	public function update($news_id, $id, Request $request)
 	{

@@ -167,7 +167,7 @@ class AssociationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -362,7 +362,7 @@ class AssociationsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -386,7 +386,7 @@ class AssociationsController extends Controller
 
 		if (!$row->article)
 		{
-			return response()->json(['message' => trans('Invalid news ID')], 415);
+			return response()->json(['message' => trans('news::news.error.invalid news id')], 415);
 		}
 
 		if (!$row->save())
@@ -437,7 +437,7 @@ class AssociationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return Response
+	 * @return JsonResource
 	 */
 	public function read($id)
 	{
@@ -576,7 +576,7 @@ class AssociationsController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -601,7 +601,7 @@ class AssociationsController extends Controller
 
 			if (!$row->article)
 			{
-				return response()->json(['message' => trans('Invalid news ID')], 415);
+				return response()->json(['message' => trans('news::news.error.invalid news id')], 415);
 			}
 		}
 		if ($request->has('assoctype'))

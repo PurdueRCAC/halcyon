@@ -34,6 +34,15 @@ class ArticlesController extends Controller
 	 * @apiUri    /api/news
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "id",
+	 * 		"description":   "Filter entries by ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "start",
 	 * 		"description":   "Filter entries scheduled on or after this date",
 	 * 		"required":      false,
@@ -155,7 +164,8 @@ class ArticlesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param  Request  $request
+	 * @return ArticleResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -193,99 +203,11 @@ class ArticlesController extends Controller
 			$filters[$key] = $val;
 		}
 
-		/*$query = null;
-		if ($query)
+		// Only admins can see unpublished things
+		if (!auth()->user() || !auth()->user()->can('manage news'))
 		{
-			// Drop redundant, leading and trailing white space.
-			$search = preg_replace('/ +/', ' ', $query);
-			$search = trim($search);
-
-			// Dissasemble search text
-			$bits = explode(' ', $search);
-
-			foreach ($bits as $bit)
-			{
-				// Is this a keyed term? otherwise make it a keyword
-				if (preg_match('/^[a-z]+\:/', $bit))
-				{
-					$term = explode(':', $bit);
-
-					// Preserve any ':' after the first
-					$key = array_shift($term);
-					$value = implode(':', $term);
-
-					if ($key == "start")
-					{
-						$filters['start'] = preg_replace('/!/', ' ', $value);
-					}
-					elseif ($key == "stop")
-					{
-						$filters['stop'] = preg_replace('/!/', ' ', $value);
-					}
-					elseif ($key == "resource")
-					{
-						$filters['resource'] = explode(',', $value);
-					}
-					elseif ($key == "newstype")
-					{
-						$filters['newstype'] = explode(',', $value);
-					}
-					elseif ($key == "id")
-					{
-						$filters['id'] = $value;
-					}
-					elseif ($key == "published")
-					{
-						$filters['published'] = $value;
-					}
-					elseif ($key == "template")
-					{
-						$filters['template'] = $value;
-					}
-					elseif ($key == "limit")
-					{
-						$filters['limit'] = $value;
-					}
-					elseif ($key == 'ongoing')
-					{
-						$filters['ongoing'] = $value;
-					}
-					elseif ($key == 'upcoming')
-					{
-						$filters['upcoming'] = $value;
-					}
-					elseif ($key == 'formatted')
-					{
-						$filters['formatted'] = $value;
-					}
-					elseif ($key == 'location')
-					{
-						$filters['location'] = $value;
-					}
-					else
-					{
-						// What is this? I don't know.
-						throw new \Exception('Unknown filter `' . $key . '`', 415);
-					}
-				}
-				else
-				{
-					if (!isset($filters['keywords']))
-					{
-						$filters['keywords'] = array();
-					}
-
-					// Trim extra garbage
-					$keyword = preg_replace('/[^A-Za-z0-9]/', ' ', $bit);
-
-					// Calculate stem for the word
-					$stem = $keyword; //PorterStemmer::Stem($keyword);
-					$stem = substr($stem, 0, 1) . $stem;
-
-					array_push($filters['keywords'], $stem);
-				}
-			}
-		}*/
+			$filters['state'] = 'published';
+		}
 
 		if (!in_array($filters['order'], ['id', 'headline', 'datetimecreated']))
 		{
@@ -501,7 +423,7 @@ class ArticlesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  ArticleResource
 	 */
 	public function create(Request $request)
 	{
@@ -622,7 +544,7 @@ class ArticlesController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return Response
+	 * @return ArticleResource
 	 */
 	public function read($id)
 	{
@@ -777,7 +699,7 @@ class ArticlesController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  ArticleResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -801,7 +723,6 @@ class ArticlesController extends Controller
 		}
 
 		$row = Article::findOrFail($id);
-		//$row->fill($request->all());
 
 		if ($request->has('newstypeid'))
 		{
@@ -962,7 +883,7 @@ class ArticlesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  ArticleResource
 	 */
 	public function preview(Request $request)
 	{
@@ -1005,6 +926,26 @@ class ArticlesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "headline",
+	 * 		"description":   "An optional alternate headline to use.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "body",
+	 * 		"description":   "An optional alternate article body to use.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "resources",
 	 * 		"description":   "A list of resource IDs to send the email to mailing lists.",
 	 * 		"required":      false,
@@ -1024,7 +965,7 @@ class ArticlesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  ArticleResource
 	 */
 	public function email($id, Request $request)
 	{
@@ -1053,6 +994,8 @@ class ArticlesController extends Controller
 		// Recipients
 		$emails = array();
 
+		// If a list of specific users are specified, get the email for
+		// each user
 		if ($request->has('associations'))
 		{
 			$associations = $request->has('associations');
@@ -1089,6 +1032,8 @@ class ArticlesController extends Controller
 			}
 		}
 
+		// If a list of resource IDs is specified, get the mailing list
+		// email for each resource
 		if ($request->has('resources'))
 		{
 			$resources = $request->input('resources');
@@ -1107,9 +1052,11 @@ class ArticlesController extends Controller
 			}
 		}
 
+		// Ensure no duplicate addresses
 		$emails = array_filter($emails);
 		$emails = array_unique($emails);
 
+		// Send out the email
 		if (count($emails) > 0)
 		{
 			$message = new Message($row, $name);
