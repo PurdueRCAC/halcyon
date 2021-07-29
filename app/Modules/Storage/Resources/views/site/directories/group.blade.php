@@ -1283,10 +1283,9 @@
 						<?php
 						$purchases = $group->purchases()->withTrashed()->count();
 						$loans = $group->loans()->withTrashed()->count();
-						$resources = App\Modules\Resources\Models\Asset::query()
+						$storageresources = App\Modules\Storage\Models\StorageResource::query()
 							->withTrashed()
 							->whereIsActive()
-							->where('resourcetype', '=', 2)
 							->orderBy('name', 'asc')
 							->get();
 						?>
@@ -1303,9 +1302,10 @@
 									<div class="form-group">
 										<label for="sell-resource">{{ trans('storage::storage.resource') }} <span class="required">*</span></label>
 										<select name="resourceid" id="sell-resource" class="form-control">
-											@foreach ($resources as $resource)
-												<option value="{{ $resource->id }}"<?php if ($resource->id == 64) { echo ' selected="selected"'; } ?>>{{ $resource->name }}</option>
-											@endforeach
+											<?php foreach ($storageresources as $s): ?>
+												<?php $selected = ($s->parentresourceid == 64 ? ' selected="selected"' : ''); ?>
+												<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}"<?php echo $selected; ?>>{{ $s->name }}</option>
+											<?php endforeach; ?>
 										</select>
 									</div>
 
@@ -1371,10 +1371,11 @@
 								<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.loans.create') }}">
 									<div class="form-group">
 										<label for="loan-resource">{{ trans('storage::storage.resource') }} <span class="required">*</span></label>
-										<select name="resourceid" id="loan-resource" class="form-control form-group-storage">
-											@foreach ($resources as $resource)
-												<option value="{{ $resource->id }}"<?php if ($resource->id == 64) { echo ' selected="selected"'; } ?>>{{ $resource->name }}</option>
-											@endforeach
+										<select name="resourceid" id="loan-resource" class="form-control">
+											<?php foreach ($storageresources as $s): ?>
+												<?php $selected = ($s->parentresourceid == 64 ? ' selected="selected"' : ''); ?>
+												<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}"<?php echo $selected; ?>>{{ $s->name }}</option>
+											<?php endforeach; ?>
 										</select>
 									</div>
 
@@ -1463,13 +1464,7 @@
 							<div class="form-group">
 								<label for="new-resourceid">{{ trans('storage::storage.parent') }}: <span class="required">*</span></label>
 								<select name="resourceid" id="new-resourceid" class="form-control required" required>
-									<?php
-									$storageresources = App\Modules\Storage\Models\StorageResource::query()
-										->withTrashed()
-										->orderBy('name', 'asc')
-										->get();
-
-									foreach ($storageresources as $s): ?>
+									<?php foreach ($storageresources as $s): ?>
 										<?php $selected = ($s->parentresourceid == 64 ? ' selected="selected"' : ''); ?>
 										<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}"<?php echo $selected; ?>>{{ $s->name }}</option>
 									<?php endforeach; ?>
