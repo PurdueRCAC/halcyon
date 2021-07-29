@@ -221,6 +221,11 @@ Halcyon.message = function(type, message) {
 	//Halcyon.removeMessages();
 	var container = $('#system-messages');
 
+	if (typeof message === 'object') {
+		var lines = Object.values(message);
+		message = lines.join('<br />');
+	}
+
 	var div = $('<div>')
 				.addClass('alert')
 				.addClass('alert-' + type)
