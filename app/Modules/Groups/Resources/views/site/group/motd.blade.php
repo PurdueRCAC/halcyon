@@ -14,6 +14,8 @@
 					@endif
 				</div>
 
+				<div id="MotdText_error" class="alert alert-danger hide"></div>
+
 				<div class="row">
 					<div class="col-sm-6">
 						<button class="motd-set btn btn-success" data-group="{{ $group->id }}">{{ trans('groups::groups.set notice') }}</button>

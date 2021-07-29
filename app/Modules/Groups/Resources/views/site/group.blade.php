@@ -25,8 +25,15 @@ var motd = {
 	set: function (group) {
 		var message = document.getElementById("MotdText_" + group);
 
+		$("#MotdText_error")
+			.addClass('hide')
+			.html('');
+
 		if (!group) {
-			Halcyon.message('danger', 'No group ID provided.');
+			//Halcyon.message('danger', 'No group ID provided.');
+			$("#MotdText_error")
+				.removeClass('hide')
+				.html('No group ID provided.');
 			return false;
 		}
 
@@ -47,7 +54,19 @@ var motd = {
 				window.location.reload();
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
-				Halcyon.message('danger', xhr.response);
+				//Halcyon.message('danger', xhr.response);
+				var msg = 'Failed to set notice.';
+				if (xhr.responseJSON) {
+					msg = xhr.responseJSON.message;
+					if (typeof msg === 'object') {
+						var lines = Object.values(msg);
+						msg = lines.join('<br />');
+					}
+				}
+
+				$("#MotdText_error")
+					.removeClass('hide')
+					.html(msg);
 			}
 		});
 	},
@@ -59,8 +78,15 @@ var motd = {
 	 * @return  {void}
 	 */
 	delete: function (group) {
+		$("#MotdText_error")
+			.addClass('hide')
+			.html('');
+
 		if (!group) {
-			Halcyon.message('danger', 'No group ID provided.');
+			//Halcyon.message('danger', 'No group ID provided.');
+			$("#MotdText_error")
+				.removeClass('hide')
+				.html('No group ID provided.');
 			return false;
 		}
 
@@ -76,7 +102,18 @@ var motd = {
 				window.location.reload();
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
-				Halcyon.message('danger', xhr.response);
+				//Halcyon.message('danger', xhr.response);
+				var msg = 'Failed to set notice.';
+				if (xhr.responseJSON) {
+					msg = xhr.responseJSON.message;
+					if (typeof msg === 'object') {
+						var lines = Object.values(msg);
+						msg = lines.join('<br />');
+					}
+				}
+				$("#MotdText_error")
+					.removeClass('hide')
+					.html(msg);
 			}
 		});
 	}
@@ -612,6 +649,15 @@ document.addEventListener('DOMContentLoaded', function() {
 			var btn = $(this);
 			var users = $('#addmembers').val();
 
+			$('#addmembers').removeClass('is-invalid');
+			$('#add_member_error').addClass('hide').html('');
+
+			if (!users || !users.length) {
+				$('#addmembers').addClass('is-invalid');
+				$('#add_member_error').removeClass('hide').html('Please specify the person(s) to add.');
+				return;
+			}
+
 			var post = {
 				'groupid': btn.data('group'),
 				'userid': 0,
@@ -631,6 +677,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				queues: queues.length * users.length,
 				unixgroups: unixgroups.length * users.length
 			};
+			var errors = new Array;
 
 			$.each(users, function(i, userid) {
 				post['userid'] = userid;
@@ -663,12 +710,22 @@ document.addEventListener('DOMContentLoaded', function() {
 								},
 								error: function (xhr, ajaxOptions, thrownError) {
 									//Halcyon.message('danger', xhr.response);
-									alert(xhr.responseJSON.message);
+									//alert(xhr.responseJSON.message);
+									if (typeof xhr.responseJSON.message === 'object') {
+										var lines = Object.values(xhr.responseJSON.message);
+										for (var i = 0; i < lines.length; i++)
+										{
+											errors.push(lines[i]);
+										}
+									} else {
+										errors.push(xhr.responseJSON.message);
+									}
+
 									processed['queues']++;
 									checkprocessed(processed, pending);
 								}
 							});
-							console.log(btn.data('api-queueusers'));
+							//console.log(btn.data('api-queueusers'));
 						});
 
 						unixgroups.each(function(k, checkbox){
@@ -688,21 +745,44 @@ document.addEventListener('DOMContentLoaded', function() {
 								},
 								error: function (xhr, ajaxOptions, thrownError) {
 									//Halcyon.message('danger', xhr.response);
-									alert(xhr.responseJSON.message);
+									//alert(xhr.responseJSON.message);
+									if (typeof xhr.responseJSON.message === 'object') {
+										var lines = Object.values(xhr.responseJSON.message);
+										for (var i = 0; i < lines.length; i++)
+										{
+											errors.push(lines[i]);
+										}
+									} else {
+										errors.push(xhr.responseJSON.message);
+									}
+
 									processed['unixgroups']++;
 									checkprocessed(processed, pending);
 								}
 							});
-							console.log(btn.data('api-unixgroupusers'));
+							//console.log(btn.data('api-unixgroupusers'));
 						});
 					},
 					error: function (xhr, ajaxOptions, thrownError) {
 						//Halcyon.message('danger', xhr.response);
-						alert(xhr.responseJSON.message);
+						//alert(xhr.responseJSON.message);
+						if (typeof xhr.responseJSON.message === 'object') {
+							var lines = Object.values(xhr.responseJSON.message);
+							for (var i = 0; i < lines.length; i++)
+							{
+								errors.push(lines[i]);
+							}
+						} else {
+							errors.push(xhr.responseJSON.message);
+						}
 					}
 				});
 			});
 			// Done?
+
+			if (errors.length) {
+				$('#add_member_error').removeClass('hide').html(errors.join('<br />'));
+			}
 		});
 
 		// Remove user
@@ -711,6 +791,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			var row = $($(this).attr('href'));
 			var boxes = row.find('input[type=checkbox]:checked');
+			var errors = new Array;
+
+			var al = $($(this).closest('.card')).find('.alert');
+			if (al.length) {
+				al.addClass('hide').html(errors.join('<br />'));
+			}
 
 			boxes.each(function(i, el) {
 				$.ajax({
@@ -722,9 +808,17 @@ document.addEventListener('DOMContentLoaded', function() {
 					},
 					error: function (xhr, ajaxOptions, thrownError) {
 						if (xhr.status == 416) {
-							SetError("Queue disabled for system/guest account. ACMaint Role removal must be requested manually from accounts@purdue.edu", null);
+							errors.push("Queue disabled for system/guest account. ACMaint Role removal must be requested manually from accounts@purdue.edu");
 						}
-						//alert(xhr.response);
+						if (typeof xhr.responseJSON.message === 'object') {
+							var lines = Object.values(xhr.responseJSON.message);
+							for (var i = 0; i < lines.length; i++)
+							{
+								errors.push(lines[i]);
+							}
+						} else {
+							errors.push(xhr.responseJSON.message);
+						}
 					}
 				});
 			});
@@ -739,9 +833,21 @@ document.addEventListener('DOMContentLoaded', function() {
 						location.reload(true);
 					},
 					error: function (xhr, ajaxOptions, thrownError) {
-						alert(xhr.responseJSON.message);
+						if (typeof xhr.responseJSON.message === 'object') {
+							var lines = Object.values(xhr.responseJSON.message);
+							for (var i = 0; i < lines.length; i++)
+							{
+								errors.push(lines[i]);
+							}
+						} else {
+							errors.push(xhr.responseJSON.message);
+						}
 					}
 				});
+			}
+
+			if (errors.length && al.length) {
+				al.removeClass('hide').html(errors.join('<br />'));
 			}
 		});
 

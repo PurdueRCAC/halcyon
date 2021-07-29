@@ -478,6 +478,8 @@ $i = 0;
 				@endforeach
 			</tbody>
 		</table>
+
+		<div class="alert alert-danger hide" id="managers_error"></div>
 	</div>
 </div>
 
@@ -638,6 +640,8 @@ $i = 0;
 		@else
 			<p class="alert alert-info">No members found.</p>
 		@endif
+
+		<div class="alert alert-danger hide" id="members_error"></div>
 	</div>
 </div>
 
@@ -783,6 +787,8 @@ $i = 0;
 				@endforeach
 			</tbody>
 		</table>
+
+		<div class="alert alert-danger hide" id="viewers_error"></div>
 	</div>
 </div>
 @endif
@@ -921,6 +927,8 @@ $i = 0;
 		@else
 			<p class="alert alert-info">No members found.</p>
 		@endif
+
+		<div class="alert alert-danger hide" id="disabledmembers_error"></div>
 	</div>
 </div>
 @endif
@@ -983,6 +991,8 @@ $i = 0;
 				</div>
 			</fieldset>
 		@endif
+
+		<div class="alert alert-danger hide" id="add_member_error"></div>
 
 		<div class="dialog-footer">
 			<div class="row">
