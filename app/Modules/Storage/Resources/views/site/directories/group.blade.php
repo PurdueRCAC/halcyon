@@ -1049,8 +1049,8 @@
 									class="form-control form-group-storage"
 									data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
 									<option value="0">{{ trans('storage::storage.select group') }}</option>
-									<option value="-1">{{ trans('storage::storage.org owned') }}</option>
-									<option value="{{ $group->id }}" selected="selected">{{ $group->name }}</option>
+									<option value="-1" selected="selected">{{ trans('storage::storage.org owned') }}</option>
+									
 								</select>
 							</div>
 
@@ -1061,12 +1061,13 @@
 									data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
 									<option value="0">{{ trans('storage::storage.select group') }}</option>
 									<option value="-1">{{ trans('storage::storage.org owned') }}</option>
+									<option value="{{ $group->id }}" selected="selected">{{ $group->name }}</option>
 								</select>
 							</div>
 
 							<div class="form-group">
 								<label for="sell-comment">{{ trans('storage::storage.comment') }}</label>
-								<textarea id="sell-comment" name="comment" class="form-control" cols="35" rows="3"></textarea>
+								<textarea id="sell-comment" name="comment" class="form-control" cols="35" rows="2"></textarea>
 							</div>
 
 							<div id="error_purchase" class="alert alert-danger hide"></div>
@@ -1109,8 +1110,7 @@
 									class="form-control form-group-storage"
 									data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
 									<option value="0">{{ trans('storage::storage.select group') }}</option>
-									<option value="-1">{{ trans('storage::storage.org owned') }}</option>
-									<option value="{{ $group->id }}" selected="selected">{{ $group->name }}</option>
+									<option value="-1" selected="selected">{{ trans('storage::storage.org owned') }}</option>
 								</select>
 							</div>
 
@@ -1121,12 +1121,13 @@
 									data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
 									<option value="0">{{ trans('storage::storage.select group') }}</option>
 									<option value="-1">{{ trans('storage::storage.org owned') }}</option>
+									<option value="{{ $group->id }}" selected="selected">{{ $group->name }}</option>
 								</select>
 							</div>
 
 							<div class="form-group">
 								<label for="loan-comment">{{ trans('storage::storage.comment') }}</label>
-								<textarea id="loan-comment" name="comment" class="form-control" rows="3" cols="40"></textarea>
+								<textarea id="loan-comment" name="comment" class="form-control" rows="2" cols="40"></textarea>
 							</div>
 
 							<div id="error_loan" class="alert alert-danger hide"></div>
@@ -1353,7 +1354,7 @@
 
 									<div class="form-group">
 										<label for="sell-comment">{{ trans('storage::storage.comment') }}</label>
-										<textarea id="sell-comment" name="comment" class="form-control" cols="35" rows="3"></textarea>
+										<textarea id="sell-comment" name="comment" class="form-control" cols="35" rows="2"></textarea>
 									</div>
 
 									<div id="error_purchase" class="alert alert-danger hide"></div>
@@ -1423,7 +1424,7 @@
 
 									<div class="form-group">
 										<label for="loan-comment">{{ trans('storage::storage.comment') }}</label>
-										<textarea id="loan-comment" name="comment" class="form-control" rows="3" cols="40"></textarea>
+										<textarea id="loan-comment" name="comment" class="form-control" rows="2" cols="40"></textarea>
 									</div>
 
 									<div id="error_loan" class="alert alert-danger hide"></div>
