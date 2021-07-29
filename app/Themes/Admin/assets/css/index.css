@@ -130,6 +130,7 @@
   --tag-bg: rgb(248, 229, 175);
   --ui-widget-bg: #fff;
   --ui-widget-br: #ddd;
+  --ui-widget-footer-bg: #f5f5f5;
   --required: rgba(200, 0, 0, 0.4);
   /*--page-link-border: #f5f5f5;*/
 }
@@ -232,6 +233,7 @@
   /*--page-link-border: #1c1b21;*/
   --ui-widget-bg: #1c1b21;
   --ui-widget-br: #292930;
+  --ui-widget-footer-bg: rgb(255, 255, 255, 0.05);
   --required: #c00;
 }
 
@@ -2802,6 +2804,9 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 .ui-dialog {
   padding: 0;
 }
+.modal-content {
+  background: var(--ui-widget-bg);
+}
 .ui-dialog.ui-widget-content {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: none;
@@ -2834,7 +2839,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 }
 .ui-dialog .modal .dialog-footer {
   padding: 1.5em;
-  background-color: var(--body-bg);
+  background-color: var(--ui-widget-footer-bg);
   border-top: none;
 }
 /*.ui-datepicker {
