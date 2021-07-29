@@ -1181,7 +1181,42 @@ document.addEventListener('DOMContentLoaded', function () {
 		e.preventDefault();
 
 		var btn = $(this),
-			frm = btn.closest('form');
+			frm = btn.closest('form'),
+			invalid = false;
+
+		if (frm.length) {
+			var elms = frm[0].querySelectorAll('input[required]');
+			elms.forEach(function (el) {
+				if (!el.value || !el.validity.valid) {
+					el.classList.add('is-invalid');
+					invalid = true;
+				} else {
+					el.classList.remove('is-invalid');
+				}
+			});
+			var elms = frm[0].querySelectorAll('select[required]');
+			elms.forEach(function (el) {
+				if (!el.value || el.value <= 0) {
+					el.classList.add('is-invalid');
+					invalid = true;
+				} else {
+					el.classList.remove('is-invalid');
+				}
+			});
+			var elms = frm[0].querySelectorAll('textarea[required]');
+			elms.forEach(function (el) {
+				if (!el.value || !el.validity.valid) {
+					el.classList.add('is-invalid');
+					invalid = true;
+				} else {
+					el.classList.remove('is-invalid');
+				}
+			});
+
+			if (invalid) {
+				return;
+			}
+		}
 
 		$.ajax({
 			url: frm.data('api'),
@@ -1204,7 +1239,6 @@ document.addEventListener('DOMContentLoaded', function () {
 				$('#error_' + btn.attr('data-type') + btn.attr('data-id'))
 					.removeClass('hide')
 					.text(msg);
-				//console.log(xhr.responseText);
 			}
 		});
 	});
@@ -1235,7 +1269,6 @@ document.addEventListener('DOMContentLoaded', function () {
 					$('#' + btn.attr('data-dir') + '_error')
 						.removeClass('hide')
 						.text(msg);
-					console.log(xhr.responseText);
 				}
 			});
 		}
