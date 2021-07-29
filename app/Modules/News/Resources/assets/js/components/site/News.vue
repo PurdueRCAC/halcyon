@@ -232,10 +232,10 @@ export default {
             
             const startPageList = curPage <= 6
                 ? 2
-                : Math.min(curPage - 4, this.farthestPage - 8);
+                : Math.max(Math.min(curPage - 4, this.farthestPage - 8), 2);
             const endPageList = (curPage + 5) >= this.farthestPage
                 ? this.farthestPage - 1
-                : Math.max(curPage + 4, 9);
+                : Math.min(Math.max(curPage + 4, 9), this.farthestPage - 1);
             console.log("start page list: " + startPageList);
             console.log("end page list: " + endPageList);
             for (let pageNum = startPageList; pageNum <= endPageList; pageNum++)
@@ -276,6 +276,7 @@ export default {
                                 this.pageRequest += 1;
                             }
                             break;
+                        default:
                     }
                 }
             }
