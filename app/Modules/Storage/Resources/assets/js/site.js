@@ -1193,11 +1193,13 @@ document.addEventListener('DOMContentLoaded', function () {
 				window.location.reload(true);
 			},
 			error: function (xhr, reason, thrownError) {
-				var msg = '';
+				var msg = 'Failed to process item.';
 				if (xhr.responseJSON) {
 					msg = xhr.responseJSON.message;
-				} else {
-					msg = 'Failed to process item.';
+					if (typeof msg === 'object') {
+						var lines = Object.values(msg);
+						msg = lines.join('<br />');
+					}
 				}
 				$('#error_' + btn.attr('data-type') + btn.attr('data-id'))
 					.removeClass('hide')
@@ -1222,10 +1224,13 @@ document.addEventListener('DOMContentLoaded', function () {
 					window.location.reload(true);
 				},
 				error: function (xhr, reason, thrownError) {
+					var msg = 'Failed to delete item.';
 					if (xhr.responseJSON) {
-						var msg = xhr.responseJSON.message;
-					} else {
-						var msg = 'Failed to delete item.';
+						msg = xhr.responseJSON.message;
+						if (typeof msg === 'object') {
+							var lines = Object.values(msg);
+							msg = lines.join('<br />');
+						}
 					}
 					$('#' + btn.attr('data-dir') + '_error')
 						.removeClass('hide')

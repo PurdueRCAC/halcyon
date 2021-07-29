@@ -1215,7 +1215,7 @@
 
 				<div class="card panel panel-default step{{ ($group->unixgroup ? 'complete' : '') }}">
 					<div class="card-header panel-heading">
-						1) Set base name for group:
+						1) Set base name for group
 					</div>
 					<div class="card-body panel-body">
 						@if (!$group->unixgroup)
@@ -1240,7 +1240,7 @@
 
 				<div class="card panel panel-default step{{ (count($group->unixgroups) > 0 ? 'complete' : '') }}">
 					<div class="card-header panel-heading">
-						2) Create Unix groups:
+						2) Create Unix groups
 					</div>
 					<div class="card-body panel-body">
 					@if (count($group->unixGroups) <= 0)
@@ -1275,6 +1275,171 @@
 					</div>
 				</div>
 
+				<div class="card panel panel-default">
+					<div class="card-header panel-heading">
+						3) Sell or Loan space to the group
+					</div>
+					<div class="card-body panel-body">
+						<?php
+						$purchases = $group->purchases()->withTrashed()->count();
+						$loans = $group->loans()->withTrashed()->count();
+						$resources = App\Modules\Resources\Models\Asset::query()
+							->withTrashed()
+							->whereIsActive()
+							->where('resourcetype', '=', 2)
+							->orderBy('name', 'asc')
+							->get();
+						?>
+						@if (!$group->unixgroup && count($group->unixGroups) > 0)
+							<p class="alert alert-warning">You must create unix groups first.</p>
+						@elseif (!$purchases && !$loans)
+							<p>
+								<a href="#dialog-sell" id="space-sell" class="btn btn-sm btn-secondary dialog-btn icon-dollar-sign">{{ trans('storage::storage.sell space') }}</a>
+								<a href="#dialog-loan" id="space-loan" class="btn btn-sm btn-secondary dialog-btn icon-shuffle">{{ trans('storage::storage.loan space') }}</a>
+							</p>
+
+							<div class="dialog" id="dialog-sell" title="{{ trans('storage::storage.sell space') }}">
+								<form method="post" action="{{ route('admin.storage.store') }}" data-api="{{ route('api.storage.purchases.create') }}">
+									<div class="form-group">
+										<label for="sell-resource">{{ trans('storage::storage.resource') }} <span class="required">*</span></label>
+										<select name="resourceid" id="sell-resource" class="form-control">
+											@foreach ($resources as $resource)
+												<option value="{{ $resource->id }}"<?php if ($resource->id == 64) { echo ' selected="selected"'; } ?>>{{ $resource->name }}</option>
+											@endforeach
+										</select>
+									</div>
+
+									<div class="form-group">
+										<label for="sell-bytes">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
+										<input type="text" class="form-control bytes" size="4" id="sell-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]" value="" />
+										<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
+									</div>
+
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="sell-datetimestart">{{ trans('storage::storage.start') }} <span class="required">*</span></label>
+												<input type="text" class="form-control datetime" id="sell-datetimestart" name="datetimestart" required value="{{ Carbon\Carbon::now()->modify('+10 minutes')->toDateTimeString() }}" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="sell-datetimestop">{{ trans('storage::storage.end') }}</label>
+												<input type="text" class="form-control datetime" id="sell-datetimestop" name="datetimestop" disabled="disabled" placeholder="{{ trans('storage::storage.end of life') }}" value="" />
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="sell-group">{{ trans('storage::storage.seller') }} <span class="required">*</span></label>
+										<select name="sellergroupid" id="sell-sellergroup"
+											class="form-control form-group-storage"
+											data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
+											<option value="0">{{ trans('storage::storage.select group') }}</option>
+											<option value="-1" selected="selected">{{ trans('storage::storage.org owned') }}</option>
+										</select>
+									</div>
+
+									<div class="form-group">
+										<label for="sell-group">{{ trans('storage::storage.sell to') }} <span class="required">*</span></label>
+										<select name="groupid" id="sell-group"
+											class="form-control form-group-storage"
+											data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
+											<option value="0">{{ trans('storage::storage.select group') }}</option>
+											<option value="-1">{{ trans('storage::storage.org owned') }}</option>
+											<option value="{{ $group->id }}" selected="selected">{{ $group->name }}</option>
+										</select>
+									</div>
+
+									<div class="form-group">
+										<label for="sell-comment">{{ trans('storage::storage.comment') }}</label>
+										<textarea id="sell-comment" name="comment" class="form-control" cols="35" rows="3"></textarea>
+									</div>
+
+									<div id="error_purchase" class="alert alert-danger hide"></div>
+
+									<div class="dialog-footer text-right">
+										<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-type="purchase" data-success="{{ trans('storage::storage.item created') }}" />
+									</div>
+
+									<input type="hidden" name="resourceid" value="" />
+									@csrf
+								</form>
+							</div>
+
+							<div class="dialog" id="dialog-loan" title="{{ trans('storage::storage.loan space') }}">
+								<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.loans.create') }}">
+									<div class="form-group">
+										<label for="loan-resource">{{ trans('storage::storage.resource') }} <span class="required">*</span></label>
+										<select name="resourceid" id="loan-resource" class="form-control form-group-storage">
+											@foreach ($resources as $resource)
+												<option value="{{ $resource->id }}"<?php if ($resource->id == 64) { echo ' selected="selected"'; } ?>>{{ $resource->name }}</option>
+											@endforeach
+										</select>
+									</div>
+
+									<div class="form-group">
+										<label for="loan-bytes">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
+										<input type="text" class="form-control bytes" size="4" id="loan-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]" value="" />
+										<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
+									</div>
+
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="loan-datetimestart">{{ trans('queues::queues.start') }} <span class="required">*</span></label>
+												<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart" required value="{{ Carbon\Carbon::now()->modify('+10 minutes')->toDateTimeString() }}" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="loan-datetimestop">{{ trans('queues::queues.end') }}</label>
+												<input type="text" name="datetimestop" class="form-control datetime" id="loan-datetimestop" value="" />
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="loan-lendergroup">{{ trans('storage::storage.lender') }} <span class="required">*</span></label>
+										<select name="lendergroupid" id="loan-lendergroup"
+											class="form-control form-group-storage"
+											data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
+											<option value="0">{{ trans('storage::storage.select group') }}</option>
+											<option value="-1" selected="selected">{{ trans('storage::storage.org owned') }}</option>
+										</select>
+									</div>
+
+									<div class="form-group">
+										<label for="loan-group">{{ trans('storage::storage.loan to') }} <span class="required">*</span></label>
+										<select name="groupid" id="loan-group"
+											class="form-control form-group-storage"
+											data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
+											<option value="0">{{ trans('storage::storage.select group') }}</option>
+											<option value="-1">{{ trans('storage::storage.org owned') }}</option>
+											<option value="{{ $group->id }}" selected="selected">{{ $group->name }}</option>
+										</select>
+									</div>
+
+									<div class="form-group">
+										<label for="loan-comment">{{ trans('storage::storage.comment') }}</label>
+										<textarea id="loan-comment" name="comment" class="form-control" rows="3" cols="40"></textarea>
+									</div>
+
+									<div id="error_loan" class="alert alert-danger hide"></div>
+
+									<div class="dialog-footer text-right">
+										<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-type="loan" data-success="{{ trans('queues::queues.item created') }}" />
+									</div>
+
+									@csrf
+								</form>
+							</div>
+						@else
+							Sell or Loan space to the group <span class="fa fa-check text-success" aria-hidden="true"></span>
+						@endif
+					</div>
+				</div>
+
 				<?php
 				$disabled = '';
 				if (!$group->unixgroup)
@@ -1286,11 +1451,13 @@
 				?>
 				<div class="card panel panel-default">
 					<div class="card-header panel-heading">
-						3) Create Default Directories
+						4) Create Default Directories
 					</div>
 					<div class="card-body panel-body">
 						@if (!$group->unixgroup && count($group->unixGroups) > 0)
 						<p class="alert alert-warning">You must create unix groups first.</p>
+						@elseif (!$purchases && !$loans)
+						<p class="alert alert-warning">You must sell or loan space to the group first.</p>
 						@else
 						<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.directories.create') }}">
 							<div class="form-group">
