@@ -112,6 +112,7 @@ return [
 		'start cannot be after end' => 'Field `start` cannot be after or equal to stop time',
 		'failed to find counter' => 'Failed to retrieve counter entry',
 		'failed to update counter' => 'Failed to update counter entry for #:id',
+		'invalid queue' => 'Unknown or invalid queue',
 	],
 	'number cores' => ':num cores',
 	'number memory' => ':num memory',

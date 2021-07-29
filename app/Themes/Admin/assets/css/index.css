@@ -2807,6 +2807,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   border: none;
   background: var(--ui-widget-bg);
 }
+.modal-body,
 .ui-dialog .ui-dialog-content {
   padding: 1.5em;
 }
@@ -2824,6 +2825,17 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 .ui-dialog-pane-highlight {
   background-color: rgba(0, 0, 0, 0.05);
   padding: 1em;
+}
+.ui-dialog .modal {
+  padding: 0;
+}
+.ui-dialog .modal .dialog-content {
+  border: none;
+}
+.ui-dialog .modal .dialog-footer {
+  padding: 1.5em;
+  background-color: var(--body-bg);
+  border-top: none;
 }
 /*.ui-datepicker {
   background: #111111;

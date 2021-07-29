@@ -1,7 +1,5 @@
 /**
  * @package    halcyon
- * @copyright  Copyright 2019 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
  */
 
 /**
@@ -97,66 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 	}
-
-	/*var autocompleteUsers = function(url) {
-		return function(request, response) {
-			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-				response($.map(data.data, function (el) {
-					return {
-						label: el.name + ' (' + el.username + ')',
-						name: el.name,
-						id: el.id,
-					};
-				}));
-			});
-		};
-	};
-
-	var autocompleteGroups = function(url) {
-		return function(request, response) {
-			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-				response($.map(data.data, function (el) {
-					return {
-						label: el.name,
-						name: el.name,
-						id: el.id,
-					};
-				}));
-			});
-		};
-	};
-
-	var newsuser = $(".form-users");
-	if (newsuser.length) {
-		newsuser.tagsInput({
-			placeholder: 'Select user...',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteUsers(newsuser.attr('data-uri')),
-				dataName: 'data',
-				height: 150,
-				delay: 100,
-				minLength: 1
-			},
-			limit: 1
-		});
-	}
-
-	var newsuser = $(".form-groups");
-	if (newsuser.length) {
-		newsuser.tagsInput({
-			placeholder: 'Select group...',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteGroups(newsuser.attr('data-uri')),
-				dataName: 'data',
-				height: 150,
-				delay: 100,
-				minLength: 1
-			},
-			limit: 1
-		});
-	}*/
 
 	var groups = $(".form-groups");
 	if (groups.length) {
@@ -383,12 +321,11 @@ document.addEventListener('DOMContentLoaded', function() {
 									}
 								},
 								error: function (xhr, reason, thrownError) {
-									if (xhr.responseJSON) {
-										Halcyon.message('danger', xhr.responseJSON.message);
-									} else {
-										Halcyon.message('danger', 'Failed to retrieve queues.');
+									var msg = 'Failed to retrieve queues.';
+									if (xhr.responseJSON && xhr.responseJSON.message) {
+										msg = xhr.responseJSON.message;
 									}
-									console.log(xhr.responseText);
+									Halcyon.message('danger', msg);
 								}
 							});
 							return false;
@@ -428,154 +365,46 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	/*var groups = $(".form-group-queues");
-	if (groups.length) {
-		groups.select2({
-			//placeholder: $(this).data('placeholder')
-		})
-		.on('select2:select', function (e) {
-			e.preventDefault();
-
-			var group = $(this);
-
-			// Set selection
-			//group.val(ui.item.label); // display the selected text
-			//cl.val(ui.item.id); // save selected id to input
-
-			var queue = $('#' + group.data('update'));
-			var dest_queue = document.getElementById("field-id").value;
-			console.log(group.data('queue-api') + '?groupid=' + group.val() + '&subresource=' + group.data('subresource'));
-
-			$.ajax({
-				url: group.data('queue-api'),
-				type: 'get',
-				data: {
-					'group': group.val(),
-					'subresource': group.data('subresource')
-				},
-				dataType: 'json',
-				async: false,
-				success: function (data) {
-					if (data.data.length > 0) {
-						queue.prop('disabled', false);
-						queue.empty();//options.length = 0;
-
-						opt = document.createElement("option");
-						opt.innerHTML = "- Select Queue -";
-						queue.append(opt);
-
-						var x, opt;
-						for (x in data.data) {
-							//if (data.data[x]['name'].match(/^(rcac|workq|debug)/)) {
-							if (data.data[x]['id'] != dest_queue) {
-								opt = document.createElement("option");
-								opt.innerHTML = data.data[x]['name'] + " (" + data.data[x]['subresource']['name'] + ")";
-								opt.value = data.data[x]['id'];
-
-								//queue.appendChild(opt);
-								queue.append(opt);
-							}
-							//}
-						}
-					}
-				},
-				error: function (xhr, reason, thrownError) {
-					if (xhr.responseJSON) {
-						Halcyon.message('danger', xhr.responseJSON.message);
-					} else {
-						Halcyon.message('danger', 'Failed to retrieve queues.');
-					}
-					console.log(xhr.responseText);
-				}
-			});
-			return false;
-		});
-		/*groups.each(function (i, group) {
-			group = $(group);
-			var cl = group.clone()
-				.attr('type', 'hidden')
-				.val(group.val().replace(/([^:]+):/, ''));
-			group
-				.attr('name', 'groupid' + i)
-				.attr('id', group.attr('id') + i)
-				.val(group.val().replace(/(:\d+)$/, ''))
-				.after(cl);
-			group.autocomplete({
-				minLength: 2,
-				source: function (request, response) {
-					return $.getJSON(group.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-						response($.map(data.data, function (el) {
-							return {
-								label: el.name,
-								name: el.name,
-								id: el.id,
-							};
-						}));
-					});
-				},
-				select: function (event, ui) {
-					event.preventDefault();
-					// Set selection
-					group.val(ui.item.label); // display the selected text
-					cl.val(ui.item.id); // save selected id to input
-
-					var queue = $('#' + group.data('update'));
-					var dest_queue = document.getElementById("field-id").value;
-					console.log(group.data('queue-api') + '?groupid=' + ui.item.id + '&subresource=' + group.data('subresource'));
-
-					$.ajax({
-						url: group.data('queue-api'),
-						type: 'get',
-						data: {
-							'group': ui.item.id,
-							'subresource': group.data('subresource')
-						},
-						dataType: 'json',
-						async: false,
-						success: function (data) {
-							if (data.data.length > 0) {
-								queue.prop('disabled', false);
-								queue.empty();//options.length = 0;
-
-								opt = document.createElement("option");
-								opt.innerHTML = "- Select Queue -";
-								queue.append(opt);
-
-								var x, opt;
-								for (x in data.data) {
-									//if (data.data[x]['name'].match(/^(rcac|workq|debug)/)) {
-										if (data.data[x]['id'] != dest_queue) {
-											opt = document.createElement("option");
-											opt.innerHTML = data.data[x]['name'] + " (" + data.data[x]['subresource']['name'] + ")";
-											opt.value = data.data[x]['id'];
-
-											//queue.appendChild(opt);
-											queue.append(opt);
-										}
-									//}
-								}
-							}
-						},
-						error: function (xhr, reason, thrownError) {
-							if (xhr.responseJSON) {
-								Halcyon.message('danger', xhr.responseJSON.message);
-							} else {
-								Halcyon.message('danger', 'Failed to retrieve queues.');
-							}
-							console.log(xhr.responseText);
-						}
-					});
-					return false;
-				}
-			});
-		});
-	}*/
-
 	$('.dialog-submit').on('click', function(e){
 		e.preventDefault();
 
 		var btn = this,
-			frm = $(this).closest('form');
+			frm = $(this).closest('form'),
+			invalid = false;
+
+		if (frm.length) {
+			var elms = frm[0].querySelectorAll('input[required]');
+			elms.forEach(function (el) {
+				if (!el.value || !el.validity.valid) {
+					el.classList.add('is-invalid');
+					invalid = true;
+				} else {
+					el.classList.remove('is-invalid');
+				}
+			});
+			var elms = frm[0].querySelectorAll('select[required]');
+			elms.forEach(function (el) {
+				if (!el.value || el.value <= 0) {
+					el.classList.add('is-invalid');
+					invalid = true;
+				} else {
+					el.classList.remove('is-invalid');
+				}
+			});
+			var elms = frm[0].querySelectorAll('textarea[required]');
+			elms.forEach(function (el) {
+				if (!el.value || !el.validity.valid) {
+					el.classList.add('is-invalid');
+					invalid = true;
+				} else {
+					el.classList.remove('is-invalid');
+				}
+			});
+
+			if (invalid) {
+				return;
+			}
+		}
 
 		$.ajax({
 			url: frm.data('api'),
@@ -588,12 +417,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				window.location.reload(true);
 			},
 			error: function (xhr, reason, thrownError) {
-				if (xhr.responseJSON) {
-					Halcyon.message('danger', xhr.responseJSON.message);
-				} else {
-					Halcyon.message('danger', 'Failed to create item.');
+				var msg = 'Failed to create item.';
+				if (xhr.responseJSON && xhr.responseJSON.message) {
+					msg = xhr.responseJSON.message;
 				}
-				console.log(xhr.responseText);
+				Halcyon.message('danger', msg);
 			}
 		});
 	});
@@ -614,12 +442,11 @@ document.addEventListener('DOMContentLoaded', function() {
 					window.location.reload(true);
 				},
 				error: function (xhr, reason, thrownError) {
-					if (xhr.responseJSON) {
-						Halcyon.message('danger', xhr.responseJSON.message);
-					} else {
-						Halcyon.message('danger', 'Failed to delete item.');
+					var msg = 'Failed to delete item.';
+					if (xhr.responseJSON && xhr.responseJSON.message) {
+						msg = xhr.responseJSON.message;
 					}
-					console.log(xhr.responseText);
+					Halcyon.message('danger', msg);
 				}
 			});
 		}

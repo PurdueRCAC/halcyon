@@ -596,19 +596,20 @@ app('pathway')
 			</table>
 		</div>
 
-		<div class="dialog" id="dialog-sell" title="{{ trans('queues::queues.sell nodes') }}">
-			<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.sizes.create') }}">
+		<div class="modal dialog" id="dialog-sell" title="{{ trans('queues::queues.sell nodes') }}">
+			<form class="modal-content dialog-content" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.sizes.create') }}">
+			<div class="modal-body dialog-body">
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="sell-nodes">{{ trans('queues::queues.nodes') }}</label>
-							<input type="text" class="form-control nodes" size="4" id="sell-nodes" name="nodecount" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="sell-cores" value="" />
+							<input type="text" class="form-control nodes" size="4" id="sell-nodes" name="nodecount" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="sell-cores" value="0" />
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="sell-cores">{{ trans('queues::queues.cores') }}</label>
-							<input type="text" class="form-control cores" size="4" id="sell-cores" name="corecount" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="sell-nodes" value="" />
+							<input type="text" class="form-control cores" size="4" id="sell-cores" name="corecount" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="sell-nodes" value="0" />
 						</div>
 					</div>
 				</div>
@@ -617,27 +618,32 @@ app('pathway')
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="sell-datetimestart">{{ trans('queues::queues.start') }}</label>
-							<input type="text" class="form-control datetime" id="sell-datetimestart" name="datetimestart" value="{{ Carbon\Carbon::now()->modify('+10 minutes')->toDateTimeString() }}" />
+							<span class="input-group input-datetime">
+								<input type="text" class="form-control datetime" id="sell-datetimestart" name="datetimestart" value="{{ Carbon\Carbon::now()->modify('+3 minutes')->toDateTimeString() }}" />
+								<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+							</span>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="sell-datetimestop">{{ trans('queues::queues.end') }}</label>
-							<input type="text" class="form-control datetime" id="sell-datetimestop" name="datetimestop" disabled="disabled" placeholder="{{ trans('queues::queues.end of life') }}" value="" />
+							<span class="input-group input-datetime">
+								<input type="text" class="form-control datetime" id="sell-datetimestop" name="datetimestop" disabled="disabled" placeholder="{{ trans('queues::queues.end of life') }}" value="" />
+								<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+							</span>
 						</div>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="seller-group">{{ trans('queues::queues.seller') }}</label>
-					<select name="sellergroupid" id="seller-group"
+					<label for="seller-group">{{ trans('queues::queues.seller') }} <span class="required">{{ trans('global.required') }}</span></label>
+					<select name="sellergroupid" id="seller-group" required
 						class="form-control form-group-queues"
 						data-update="seller-queue"
 						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
 						data-queue-api="{{ route('api.queues.index') }}"
 						data-subresource="{{ $row->subresourceid }}">
 						<option value="0">{{ trans('queues::queues.select group') }}</option>
-						<!--<option value="-1">{{ trans('queues::queues.org owned') }}</option>-->
 						<?php
 						$groups = array();
 						$first = null;
@@ -674,35 +680,29 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="seller-queue">{{ trans('queues::queues.queue') }}</label>
-					<select id="seller-queue" name="sellerqueueid" class="form-control">
+					<label for="seller-queue">{{ trans('queues::queues.queue') }} <span class="required">{{ trans('global.required') }}</span></label>
+					<select id="seller-queue" name="sellerqueueid" class="form-control" required>
 						<option value="0">{{ trans('queues::queues.select queue') }}</option>
 						@foreach ($groups as $group)
-							<?php
-							if ($group->id == $row->groupid)
-							{
-								foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
-								{
-								?>
-								<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
-								<?php
-								}
-							}
-							?>
+							@if ($group->id == $row->groupid)
+								@foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
+									<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
+								@endforeach
+							@endif
 						@endforeach
 					</select>
+					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid queue') }}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="sell-group">{{ trans('queues::queues.sell to') }}</label>
-					<select name="groupid" id="sell-group"
+					<label for="sell-group">{{ trans('queues::queues.sell to') }} <span class="required">{{ trans('global.required') }}</span></label>
+					<select name="groupid" id="sell-group" required
 						class="form-control form-group-queues"
 						data-update="sell-queue"
 						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
 						data-queue-api="{{ route('api.queues.index') }}"
 						data-subresource="{{ $row->subresourceid }}">
 						<option value="0">{{ trans('queues::queues.select group') }}</option>
-						<!--<option value="-1">{{ trans('queues::queues.org owned') }}</option>-->
 						@foreach ($groups as $group)
 							<option value="{{ $group->id }}">{{ $group->name }}</option>
 						@endforeach
@@ -710,18 +710,20 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="sell-queue">{{ trans('queues::queues.queue') }}</label>
-					<select id="sell-queue" name="queueid" class="form-control" disabled="true">
+					<label for="sell-queue">{{ trans('queues::queues.queue') }} <span class="required">{{ trans('global.required') }}</span></label>
+					<select id="sell-queue" name="queueid" class="form-control" required disabled="true">
 						<option value="0">{{ trans('queues::queues.select queue') }}</option>
 					</select>
+					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid queue') }}</span>
 				</div>
 
 				<div class="form-group">
 					<label for="sell-comment">{{ trans('queues::queues.comment') }}</label>
-					<textarea id="sell-comment" name="comment" class="form-control" cols="35" rows="3"></textarea>
+					<textarea id="sell-comment" name="comment" class="form-control" cols="35" rows="2"></textarea>
+				</div>
 				</div>
 
-				<div class="dialog-footer text-right">
+				<div class="modal-footer dialog-footer text-right">
 					<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-success="{{ trans('queues::queues.item created') }}" />
 				</div>
 
@@ -729,19 +731,20 @@ app('pathway')
 			</form>
 		</div>
 
-		<div class="dialog" id="dialog-loan" title="{{ trans('queues::queues.loan nodes') }}">
-			<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.loans.create') }}">
+		<div class="modal dialog" id="dialog-loan" title="{{ trans('queues::queues.loan nodes') }}">
+			<form class="modal-content dialog-content" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.loans.create') }}">
+			<div class="modal-body dialog-body">
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="loan-nodes">{{ trans('queues::queues.nodes') }}</label>
-							<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes" name="nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores" value="" />
+							<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes" name="nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores" value="0" />
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="loan-cores">{{ trans('queues::queues.cores') }}</label>
-							<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores" name="cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes" value="" />
+							<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores" name="cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes" value="0" />
 						</div>
 					</div>
 				</div>
@@ -750,19 +753,25 @@ app('pathway')
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="loan-datetimestart">{{ trans('queues::queues.start') }}</label>
-							<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart" value="{{ Carbon\Carbon::now()->modify('+10 minutes')->toDateTimeString() }}" />
+							<span class="input-group input-datetime">
+								<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart" value="{{ Carbon\Carbon::now()->modify('+10 minutes')->toDateTimeString() }}" />
+								<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+							</span>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="loan-datetimestop">{{ trans('queues::queues.end') }}</label>
-							<input type="text" name="datetimestop" class="form-control datetime" id="loan-datetimestop" value="" />
+							<span class="input-group input-datetime">
+								<input type="text" name="datetimestop" class="form-control datetime" id="loan-datetimestop" value="" placeholder="{{ trans('global.never') }}" />
+								<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+							</span>
 						</div>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="loan-group">{{ trans('queues::queues.lender') }}</label>
+					<label for="loan-group">{{ trans('queues::queues.lender') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<select name="lendergroupid" id="lender-group"
 						class="form-control form-group-queues"
 						data-update="lender-queue"
@@ -770,7 +779,6 @@ app('pathway')
 						data-queue-api="{{ route('api.queues.index') }}"
 						data-subresource="{{ $row->subresourceid }}">
 						<option value="0">{{ trans('queues::queues.select group') }}</option>
-						<!--<option value="-1">{{ trans('queues::queues.org owned') }}</option>-->
 						@foreach ($groups as $group)
 							<option value="{{ $group->id }}"<?php if ($group->id == $row->groupid) { echo ' selected="selected"'; } ?>>{{ $group->name }}</option>
 						@endforeach
@@ -778,25 +786,19 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="lender-queue">{{ trans('queues::queues.queue') }}</label>
+					<label for="lender-queue">{{ trans('queues::queues.queue') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<select id="lender-queue" name="lenderqueueid" class="form-control">
 						<option value="0">{{ trans('queues::queues.select queue') }}</option>
-						<?php
-						if ($group->id == $row->groupid)
-						{
-							foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
-							{
-							?>
-							<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
-							<?php
-							}
-						}
-						?>
+						@if ($group->id == $row->groupid)
+							@foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
+								<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
+							@endforeach
+						@endif
 					</select>
 				</div>
 
 				<div class="form-group">
-					<label for="loan-group">{{ trans('queues::queues.loan to') }}</label>
+					<label for="loan-group">{{ trans('queues::queues.loan to') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<select name="groupid" id="loan-group"
 						class="form-control form-group-queues"
 						data-update="loan-queue"
@@ -804,25 +806,14 @@ app('pathway')
 						data-queue-api="{{ route('api.queues.index') }}"
 						data-subresource="{{ $row->subresourceid }}">
 						<option value="0">{{ trans('queues::queues.select group') }}</option>
-						<!--<option value="-1">{{ trans('queues::queues.org owned') }}</option>-->
 						@foreach ($groups as $group)
 							<option value="{{ $group->id }}">{{ $group->name }}</option>
 						@endforeach
 					</select>
-					<!-- <span class="input-group">
-						<input type="text" name="groupid" id="loan-group"
-							class="form-control form-group-q"
-							data-update="loan-queue"
-							data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
-							data-queue-api="{{ route('api.queues.index') }}"
-							data-subresource="{{ $row->subresourceid }}"
-							value="" />
-						<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
-					</span> -->
 				</div>
 
 				<div class="form-group">
-					<label for="loan-queue">{{ trans('queues::queues.queue') }}</label>
+					<label for="loan-queue">{{ trans('queues::queues.queue') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<select id="loan-queue" name="queueid" class="form-control" disabled="true">
 						<option value="0">{{ trans('queues::queues.select queue') }}</option>
 					</select>
@@ -830,10 +821,11 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="loan-comment">{{ trans('queues::queues.comment') }}</label>
-					<textarea id="loan-comment" name="comment" class="form-control" rows="3" cols="40"></textarea>
+					<textarea id="loan-comment" name="comment" class="form-control" rows="2" cols="40"></textarea>
+				</div>
 				</div>
 
-				<div class="dialog-footer text-right">
+				<div class="modal-footer dialog-footer text-right">
 					<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-success="{{ trans('queues::queues.item created') }}" />
 				</div>
 
