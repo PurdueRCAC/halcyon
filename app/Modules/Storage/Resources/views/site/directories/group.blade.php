@@ -920,7 +920,7 @@
 												<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.' . ($item->type == 'loan' ? 'loans' : 'purchases'). '.update', ['id' => $item->id]) }}">
 													<div class="form-group">
 														<label for="{{ $t }}-bytes{{ $item->id }}">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
-														<input type="text" class="form-control bytes" size="4" id="{{ $t }}-bytes{{ $item->id }}" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]" value="{{ App\Halcyon\Utility\Number::formatBytes(abs($item->bytes), 1) }}" />
+														<input type="text" class="form-control bytes" size="4" id="{{ $t }}-bytes{{ $item->id }}" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]{1,2}" value="{{ App\Halcyon\Utility\Number::formatBytes(abs($item->bytes), 1) }}" />
 														<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 													</div>
 
@@ -1024,7 +1024,7 @@
 						<form method="post" action="{{ route('admin.storage.store') }}" data-api="{{ route('api.storage.purchases.create') }}">
 							<div class="form-group">
 								<label for="sell-bytes">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
-								<input type="text" class="form-control bytes" size="4" id="sell-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]" value="" />
+								<input type="text" class="form-control bytes" size="4" id="sell-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]{1,2}" value="" />
 								<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 							</div>
 
@@ -1085,7 +1085,7 @@
 						<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.loans.create') }}">
 							<div class="form-group">
 								<label for="loan-bytes">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
-								<input type="text" class="form-control bytes" size="4" id="loan-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]" value="" />
+								<input type="text" class="form-control bytes" size="4" id="loan-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]{1,2}" value="" />
 								<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 							</div>
 
@@ -1312,7 +1312,7 @@
 
 									<div class="form-group">
 										<label for="sell-bytes">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
-										<input type="text" class="form-control bytes" size="4" id="sell-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]" value="" />
+										<input type="text" class="form-control bytes" size="4" id="sell-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]{1,2}" value="" />
 										<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 									</div>
 
@@ -1320,7 +1320,7 @@
 										<div class="col-md-6">
 											<div class="form-group">
 												<label for="sell-datetimestart">{{ trans('storage::storage.start') }} <span class="required">*</span></label>
-												<input type="text" class="form-control datetime" id="sell-datetimestart" name="datetimestart" required value="{{ Carbon\Carbon::now()->modify('+10 minutes')->toDateTimeString() }}" />
+												<input type="text" class="form-control datetime" id="sell-datetimestart" name="datetimestart" required value="{{ Carbon\Carbon::now()->toDateTimeString() }}" />
 											</div>
 										</div>
 										<div class="col-md-6">
@@ -1382,7 +1382,7 @@
 
 									<div class="form-group">
 										<label for="loan-bytes">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
-										<input type="text" class="form-control bytes" size="4" id="loan-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]" value="" />
+										<input type="text" class="form-control bytes" size="4" id="loan-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]{1,2}" value="" />
 										<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 									</div>
 
@@ -1390,7 +1390,7 @@
 										<div class="col-md-6">
 											<div class="form-group">
 												<label for="loan-datetimestart">{{ trans('queues::queues.start') }} <span class="required">*</span></label>
-												<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart" required value="{{ Carbon\Carbon::now()->modify('+10 minutes')->toDateTimeString() }}" />
+												<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart" required value="{{ Carbon\Carbon::now()->toDateTimeString() }}" />
 											</div>
 										</div>
 										<div class="col-md-6">

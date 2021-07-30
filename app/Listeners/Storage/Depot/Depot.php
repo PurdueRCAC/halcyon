@@ -59,18 +59,14 @@ class Depot
 
 		// Get "-data" directory
 		$unixgroups = UnixGroup::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('groupid', '=', $dir->groupid)
 			->where('shortname', 'like', '%1')
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->first();
 
 		if (!$unixgroups)
 		{
-			//$this->addError(__METHOD__ . '(): Failed to retrieve `unixgroups` for groupid ' . $dir->groupid);
 			return;
 		}
 
@@ -80,8 +76,8 @@ class Depot
 		$dir->files       = 0;
 		$dir->groupread   = 1;
 		$dir->groupwrite  = 1;
-		$dir->otherread   = 0;
-		$dir->otherwrite  = 0;
+		$dir->publicread  = 0;
+		$dir->publicwrite = 0;
 		$dir->id          = null;
 		$dir->save();
 
@@ -91,18 +87,14 @@ class Depot
 
 		// Get "base" directory
 		$unixgroups = UnixGroup::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('groupid', '=', $dir->groupid)
 			->where('shortname', 'like', '%0')
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->first();
 
 		if (!$unixgroups)
 		{
-			//$this->addError(__METHOD__ . '(): Failed to retrieve `unixgroups` for groupid ' . $dir->groupid);
 			return;
 		}
 

@@ -464,21 +464,21 @@ class DirectoriesController extends Controller
 					// Group readable
 					$data['groupread']  = 1;
 					$data['groupwrite'] = 0;
-					$data['otherread']  = 0;
+					$data['publicread'] = 0;
 				}
 				elseif ($row->autouser == 2)
 				{
 					// Private
 					$data['groupread']  = 0;
 					$data['groupwrite'] = 0;
-					$data['otherread']  = 0;
+					$data['publicread'] = 0;
 				}
 				elseif ($row->autouser == 3)
 				{
 					// Group readable writable
 					$data['groupread']  = 1;
 					$data['groupwrite'] = 1;
-					$data['otherread']  = 0;
+					$data['publicread'] = 0;
 				}
 
 				$this->store($request, $data, 10);

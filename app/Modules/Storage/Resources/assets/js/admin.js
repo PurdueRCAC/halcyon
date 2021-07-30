@@ -239,19 +239,19 @@ function NewDir(btn) {
 		post['user'] = user;
 	}
 	if (type == "userprivate") {
-		post['groupread'] = "0";
+		post['groupread']  = "0";
 		post['groupwrite'] = "0";
-		post['otherread'] = "0";
+		post['publicread'] = "0";
 	}
 	if (type == "user") {
-		post['groupread'] = "1";
+		post['groupread']  = "1";
 		post['groupwrite'] = "0";
-		post['otherread'] = "0";
+		post['publicread'] = "0";
 	}
 	if (type == "userwrite") {
 		post['groupread'] = "1";
 		post['groupwrite'] = "1";
-		post['otherread'] = "0";
+		post['publicread'] = "0";
 	}
 	if (type == "autouserread") {
 		post['autouser'] = "1";
