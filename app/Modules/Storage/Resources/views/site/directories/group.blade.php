@@ -920,7 +920,7 @@
 												<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.' . ($item->type == 'loan' ? 'loans' : 'purchases'). '.update', ['id' => $item->id]) }}">
 													<div class="form-group">
 														<label for="{{ $t }}-bytes{{ $item->id }}">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
-														<input type="text" class="form-control bytes" size="4" id="{{ $t }}-bytes{{ $item->id }}" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]{1,2}" value="{{ App\Halcyon\Utility\Number::formatBytes(abs($item->bytes), 1) }}" />
+														<input type="text" class="form-control bytes" size="4" id="{{ $t }}-bytes{{ $item->id }}" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]{1,2}" value="{{ App\Halcyon\Utility\Number::formatBytes(abs($item->bytes)) }}" />
 														<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 													</div>
 
