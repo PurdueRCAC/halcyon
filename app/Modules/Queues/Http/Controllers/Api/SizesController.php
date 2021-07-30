@@ -228,7 +228,7 @@ class SizesController extends Controller
 			'datetimestop' => 'nullable|date',
 			'nodecount' => 'nullable|numeric',
 			'corecount' => 'required|integer',
-			'comments' => 'nullable|string|max:2000',
+			'comment' => 'nullable|string|max:2000',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -539,7 +539,7 @@ class SizesController extends Controller
 			$row->datetimestop = $request->input('datetimestop');
 		}
 
-		if ($row->datetimestop && $row->datetimestart > $row->datetimestop)
+		if ($row->hasEnd() && $row->datetimestart > $row->datetimestop)
 		{
 			return response()->json(['message' => trans('queues::queues.error.start cannot be after stop')], 409);
 		}
