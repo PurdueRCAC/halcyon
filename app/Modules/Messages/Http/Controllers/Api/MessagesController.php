@@ -600,6 +600,7 @@ class MessagesController extends Controller
 		}
 
 		$row->fill($fields);
+		$row->pid = $row->pid ?: 0;
 
 		if (!$row->save())
 		{
