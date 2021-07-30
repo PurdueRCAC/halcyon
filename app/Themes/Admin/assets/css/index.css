@@ -149,7 +149,7 @@
   --input-border: transparent; /*rgba(255, 255, 255, 0.1);*/
   --input-border-focus: #5897fb;
   --input-border-disabled: rgba(255, 255, 255, 0.1);
-  --input-color: rgba(255, 255, 255, 0.75);
+  --input-color: rgba(255, 255, 255, 0.5);
   --input-color-disabled: rgba(255, 255, 255, 0.5);
   --input-prepend-back: rgba(255, 255, 255, 0.1);
   --input-prepend: rgba(255, 255, 255, 0.5);
@@ -3904,8 +3904,9 @@ border: 1px solid rgba(0,0,0,.125);
 }
 .alert-success {
   background-color: #a3ca60;
+  background-color: #4bba5b;
   color: #ffffff;
-  border-color: #a3ca60;
+  border-color: #4bba5b;
 }
 .alert-info {
   background-color: #5cb4e4;
@@ -3931,72 +3932,40 @@ border: 1px solid rgba(0,0,0,.125);
   color: #fff;
   font-weight: bold;
 }
-/*.alert {
-  padding-left: 3em;
-}
-.alert:before {
-		position: absolute;
-		top: 1em;
-		width: 1em;
-		height: 1em;
-		font-size: 1.1em;
-		font-weight: 400;
-		line-height: 1;
-		display: block;
-		left: 1em;
-    font-family: "Feather";
-}
-.alert-success:before {
-	content: "\e83f";
-}
-.alert-danger:before {
-	content: "\e81b";
-}
-.alert-warning:before {
-	content: "\e81e";
-}
-.alert-info:before {
-	content: "\e87f";
-}*/
+
 #system-messages {
   display: none;
 }
 .growl {
   position: fixed;
-  top: 30%;
+  /*top: 30%;
   right: 50%;
-  margin: 0 -15em 0 0;
+  margin: 0 -15em 0 0;*/
+  bottom: 20px;
+  right: 20px;
   width: 30em;
   min-width: 20em;
   max-width: 40em;
   text-align: left;
+  z-index: 50000;
 }
-/*.growl .alert {
-  margin: 0;
-  padding: 1.15em 2em 1.05em 5em;
-  font-weight: 500;
-  -webkit-box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.15);
-  -moz-box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.15);
-  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.15);
-  font-size: 1.1em;
-  min-height: 1.6em;
-  margin-bottom: 1em;
+.growl.bottomleft {
+    left: 20px;
+    bottom: 20px;
 }
-.growl .alert li {
-  line-height: 1.3;
+.growl.bottomright {
+    right: 20px;
+    bottom: 20px;
 }
-.growl .alert:before {
-  font-size: 3em;
-  line-height: 1;
-  padding: 0.1em 0.2em;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  height: auto;
-  background: rgba(0, 0, 0, 0.1);
-  text-align: center;
-}*/
-.growl .growl-close {
+.growl.topright {
+    right: 20px;
+    top: 20px;
+}
+.growl.topleft {
+    left: 20px;
+    top: 20px;
+}
+/*.growl .growl-close {
   display: block;
   position: absolute;
   top: 0.25em;
@@ -4022,7 +3991,118 @@ border: 1px solid rgba(0,0,0,.125);
 .growl .growl-close:hover {
   color: #fff;
   text-decoration: none;
+}*/
+
+@keyframes progress-shrink {
+    0% {
+        width:100%;
+    }
+    100% {
+        width:0%;
+    }
 }
+
+@keyframes notify-in {
+    0% {
+        left:-50px;
+        opacity:0;
+    }
+    100% {
+        left:0px;
+        opacity:1;
+    }
+}
+
+@keyframes notify-in-out {
+    0% {
+        left:-50px;
+        opacity:0;
+    }
+    5% {
+        left:0px;
+        opacity:1;
+    }
+    95% {
+        left:0px;
+        opacity:1;
+    }
+    100% {
+        left:-50px;
+        opacity:0;
+    }
+}
+
+.notification {
+    /*float: left;*/
+    position: relative;
+    margin: 3px;
+    border: none;
+    width: 30em;
+    border-radius: 5px;
+    -webkit-box-shadow: 0px 0px 53px -7px rgba(101,101,101,0.3);
+    -moz-box-shadow: 0px 0px 53px -7px rgba(101,101,101,0.3);
+    box-shadow: 0px 0px 53px -7px rgba(101,101,101,0.3);
+}
+.n-animate-in {
+    -webkit-animation-name: notify-in; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 0.5s; /* Safari 4.0 - 8.0 */
+    animation-name: notify-in;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+}
+.n-animate {
+    -webkit-animation-name: notify-in-out; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 6s; /* Safari 4.0 - 8.0 */
+    animation-name: notify-in-out;
+    animation-duration: 6s;
+    animation-timing-function: linear;
+}
+.notification .pad {
+    padding: 1em 2em 1em 1em;
+    position: relative;
+}
+.notification .close {
+    display: block;
+    position: absolute;
+    top: 1em;
+    right: 0;
+}
+.notification .close-btn {
+    height: 10px;
+    width: 10px;
+    background-image: url("data:image/svg+xml;charset=utf8,%3C?xml version='1.0' encoding='iso-8859-1'?%3E%3C!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' id='Capa_1' x='0px' y='0px' width='512px' height='512px' viewBox='0 0 41.756 41.756' style='enable-background:new 0 0 41.756 41.756;' xml:space='preserve'%3E%3Cg%3E%3Cpath d='M27.948,20.878L40.291,8.536c1.953-1.953,1.953-5.119,0-7.071c-1.951-1.952-5.119-1.952-7.07,0L20.878,13.809L8.535,1.465 c-1.951-1.952-5.119-1.952-7.07,0c-1.953,1.953-1.953,5.119,0,7.071l12.342,12.342L1.465,33.22c-1.953,1.953-1.953,5.119,0,7.071 C2.44,41.268,3.721,41.755,5,41.755c1.278,0,2.56-0.487,3.535-1.464l12.343-12.342l12.343,12.343 c0.976,0.977,2.256,1.464,3.535,1.464s2.56-0.487,3.535-1.464c1.953-1.953,1.953-5.119,0-7.071L27.948,20.878z' fill='%23FFFFFF'/%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-size: 10px 10px;
+}
+.notification .progressContainer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align:left;
+}
+.notification .progressContainer .progress {
+    background-color: rgba(0, 0, 0, 0.25);
+    height: 4px;
+    width: 100%;
+    border-radius: 0 0 5px 5px;
+    bottom: 0px;
+}
+.notification .progress-animate {
+    -webkit-animation-name: progress-shrink; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 6s; /* Safari 4.0 - 8.0 */
+    animation-name: progress-shrink;
+    animation-duration: 6s;
+    animation-timing-function: linear;
+}
+.notification.n-animate:hover,
+.notification:hover .progress-animate {
+    -webkit-animation-play-state: paused;
+    -moz-animation-play-state: paused;
+    -o-animation-play-state: paused;
+    animation-play-state: paused;
+}
+
 *[data-hint] {
   position: relative;
   display: block;
