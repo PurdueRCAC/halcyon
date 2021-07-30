@@ -637,7 +637,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="seller-group">{{ trans('queues::queues.seller') }} <span class="required">{{ trans('global.required') }}</span></label>
-					<select name="sellergroupid" id="seller-group" required
+					<select name="sellergroupid" id="seller-group"
 						class="form-control form-group-queues"
 						data-update="seller-queue"
 						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
@@ -674,7 +674,7 @@ app('pathway')
 						}
 						?>
 						@foreach ($groups as $group)
-							<option value="{{ $group->id }}"<?php if ($group->id == $row->groupid) { echo ' selected="selected"'; } ?>>{{ $group->name }}</option>
+							<option value="{{ $group->id }}"<?php if ($group->id == '-1') { echo ' selected="selected"'; } ?>>{{ $group->name }}</option>
 						@endforeach
 					</select>
 				</div>
@@ -684,7 +684,7 @@ app('pathway')
 					<select id="seller-queue" name="sellerqueueid" class="form-control" required>
 						<option value="0">{{ trans('queues::queues.select queue') }}</option>
 						@foreach ($groups as $group)
-							@if ($group->id == $row->groupid)
+							@if ($group->id == -1)
 								@foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
 									<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
 								@endforeach
@@ -696,7 +696,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="sell-group">{{ trans('queues::queues.sell to') }} <span class="required">{{ trans('global.required') }}</span></label>
-					<select name="groupid" id="sell-group" required
+					<select name="groupid" id="sell-group"
 						class="form-control form-group-queues"
 						data-update="sell-queue"
 						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
@@ -704,15 +704,22 @@ app('pathway')
 						data-subresource="{{ $row->subresourceid }}">
 						<option value="0">{{ trans('queues::queues.select group') }}</option>
 						@foreach ($groups as $group)
-							<option value="{{ $group->id }}">{{ $group->name }}</option>
+							<option value="{{ $group->id }}"<?php if ($group->id == $row->groupid) { echo ' selected="selected"'; } ?>>{{ $group->name }}</option>
 						@endforeach
 					</select>
 				</div>
 
 				<div class="form-group">
 					<label for="sell-queue">{{ trans('queues::queues.queue') }} <span class="required">{{ trans('global.required') }}</span></label>
-					<select id="sell-queue" name="queueid" class="form-control" required disabled="true">
+					<select id="sell-queue" name="queueid" class="form-control" required>
 						<option value="0">{{ trans('queues::queues.select queue') }}</option>
+						@foreach ($groups as $group)
+							@if ($group->id == $row->groupid)
+								@foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
+									<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
+								@endforeach
+							@endif
+						@endforeach
 					</select>
 					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid queue') }}</span>
 				</div>
@@ -780,7 +787,7 @@ app('pathway')
 						data-subresource="{{ $row->subresourceid }}">
 						<option value="0">{{ trans('queues::queues.select group') }}</option>
 						@foreach ($groups as $group)
-							<option value="{{ $group->id }}"<?php if ($group->id == $row->groupid) { echo ' selected="selected"'; } ?>>{{ $group->name }}</option>
+							<option value="{{ $group->id }}"<?php if ($group->id == -1) { echo ' selected="selected"'; } ?>>{{ $group->name }}</option>
 						@endforeach
 					</select>
 				</div>
@@ -789,11 +796,13 @@ app('pathway')
 					<label for="lender-queue">{{ trans('queues::queues.queue') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<select id="lender-queue" name="lenderqueueid" class="form-control">
 						<option value="0">{{ trans('queues::queues.select queue') }}</option>
-						@if ($group->id == $row->groupid)
-							@foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
-								<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
-							@endforeach
-						@endif
+						@foreach ($groups as $group)
+							@if ($group->id == -1)
+								@foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
+									<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
+								@endforeach
+							@endif
+						@endforeach
 					</select>
 				</div>
 
@@ -807,15 +816,22 @@ app('pathway')
 						data-subresource="{{ $row->subresourceid }}">
 						<option value="0">{{ trans('queues::queues.select group') }}</option>
 						@foreach ($groups as $group)
-							<option value="{{ $group->id }}">{{ $group->name }}</option>
+							<option value="{{ $group->id }}"<?php if ($group->id == $row->groupid) { echo ' selected="selected"'; } ?>>{{ $group->name }}</option>
 						@endforeach
 					</select>
 				</div>
 
 				<div class="form-group">
 					<label for="loan-queue">{{ trans('queues::queues.queue') }} <span class="required">{{ trans('global.required') }}</span></label>
-					<select id="loan-queue" name="queueid" class="form-control" disabled="true">
+					<select id="loan-queue" name="queueid" class="form-control">
 						<option value="0">{{ trans('queues::queues.select queue') }}</option>
+						@foreach ($groups as $group)
+							@if ($group->id == $row->groupid)
+								@foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
+									<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
+								@endforeach
+							@endif
+						@endforeach
 					</select>
 				</div>
 
