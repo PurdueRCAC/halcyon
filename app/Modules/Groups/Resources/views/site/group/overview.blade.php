@@ -9,7 +9,7 @@
 
 			<div class="col-md-7">
 				<span id="SPAN_name_{{ $group->id }}">{{ $group->name }}</span>
-				<input type="text" class="form-control hide edit-property-input" id="INPUT_name_{{ $group->id }}" data-prop="name" data-value="{{ $group->id }}" value="{{ $group->name }}" />
+				<input type="text" class="form-control hide edit-property-input" id="INPUT_name_{{ $group->id }}" data-prop="name" maxlength="48" data-value="{{ $group->id }}" value="{{ $group->name }}" />
 			</div>
 			<div class="col-md-2 text-right">
 				@if ($canManage)
@@ -304,8 +304,8 @@
 
 						<div class="col-md-5">
 							<span id="SPAN_unixgroup_{{ $group->id }}">{{ $group->unixgroup ? $group->unixgroup : trans('global.none') }}</span>
-							<input type="{{ $canManage ? 'text' : 'hidden' }}" class="form-control edit-property-input hide" id="INPUT_unixgroup_{{ $group->id }}" maxlength="10" data-prop="unixgroup" data-value="{{ $group->id }}" value="" />
-							<span class="form-text text-muted edit-property-input hide">Letters, numbers, and dashes only. Max 10 characters.</span>
+							<input type="{{ $canManage ? 'text' : 'hidden' }}" class="form-control edit-property-input hide" id="INPUT_unixgroup_{{ $group->id }}" maxlength="10" pattern="[a-z0-9\-]+" data-prop="unixgroup" data-value="{{ $group->id }}" value="" />
+							<span class="form-text text-muted edit-property-input hide">Lowercase letters, numbers, and dashes only. Max 10 characters.</span>
 						</div>
 						<div class="col-md-4 text-right">
 							@if ($canManage)
@@ -402,20 +402,20 @@
 						</tr>
 					@endforeach
 					@if ($canManage)
-					<tr class="hidden" id="unixgroup-{id}" data-id="{id}">
-						<td>{longname}</td>
-						<td class="extendedinfo hide">{{ config('modules.groups.unix_prefix', 'rcac-') }}{longname}</td>
-						<td class="extendedinfo hide">{shortname}</td>
-						<td class="extendedinfo hide text-right">0</td>
-						<td class="text-right">
-							<a href="#unixgroup-{id}"
-								class="delete delete-unix-group remove-unixgroup"
-								data-api="{{ route('api.unixgroups.create') }}/{id}"
-								data-confirm="{{ trans('groups::groups.confirm delete') }}"><!--
-								--><span class="fa fa-trash"></span><span class="sr-only">{{ trans('global.delete') }}</span><!--
-							--></a>
-						</td>
-					</tr>
+						<tr class="hidden" id="unixgroup-{id}" data-id="{id}">
+							<td>{longname}</td>
+							<td class="extendedinfo hide">{{ config('modules.groups.unix_prefix', 'rcac-') }}{longname}</td>
+							<td class="extendedinfo hide">{shortname}</td>
+							<td class="extendedinfo hide text-right">0</td>
+							<td class="text-right">
+								<a href="#unixgroup-{id}"
+									class="delete delete-unix-group remove-unixgroup"
+									data-api="{{ route('api.unixgroups.create') }}/{id}"
+									data-confirm="{{ trans('groups::groups.confirm delete') }}"><!--
+									--><span class="fa fa-trash"></span><span class="sr-only">{{ trans('global.delete') }}</span><!--
+								--></a>
+							</td>
+						</tr>
 					@endif
 				</tbody>
 			</table>
@@ -428,8 +428,9 @@
 				<label for="longname" class="sr-only">{{ trans('groups::groups.name') }}</label>
 				<span class="input-group">
 					<span class="input-group-addon input-group-prepend"><span class="input-group-text">{{ $group->unixgroup }}-</span></span>
-					<input type="text" name="longname" id="longname" class="form-control input-unixgroup" placeholder="{{ trans('groups::groups.name') }}" />
+					<input type="text" name="longname" id="longname" class="form-control input-unixgroup" maxlength="{{ (17 - strlen($group->unixgroup . '-')) }}" required pattern="[a-z0-9]+" value="" placeholder="{{ strtolower(trans('groups::groups.name')) }}" />
 				</span>
+				<span class="form-text text-muted">Lowercase letters and numbers only. Max length: {{ (17 - strlen($group->unixgroup . '-')) }} characters.</span>
 			</div>
 			<div class="text-right">
 				<a href="#longname" class="btn btn-secondary btn-success add-unixgroup"

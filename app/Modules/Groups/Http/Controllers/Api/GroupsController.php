@@ -349,7 +349,7 @@ class GroupsController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'name' => 'required|string|max:255',
+			'name' => 'required|string|max:48',
 			'unixgroup' => 'nullable|integer|max:10',
 			'userid' => 'nullable|integer'
 		];
@@ -526,7 +526,7 @@ class GroupsController extends Controller
 	public function update(Request $request, $id)
 	{
 		$rules = [
-			'name' => 'nullable|max:255',
+			'name' => 'nullable|max:48',
 			'unixgroup' => 'nullable|max:10',
 		];
 

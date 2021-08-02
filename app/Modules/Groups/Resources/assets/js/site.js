@@ -200,11 +200,33 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
+	$('#longname').on('change', function (e) {
+		this.classList.remove('is-invalid');
+		this.classList.remove('is-valid');
+
+		if (this.value) {
+			if (this.validity.valid) {
+				this.classList.add('is-valid');
+			} else {
+				this.classList.add('is-invalid');
+			}
+		}
+	});
+
 	$('.add-unixgroup').on('click', function (e) {
 		e.preventDefault();
 
 		var name = $($(this).attr('href'));
 		var btn = $(this);
+
+		name.removeClass('is-invalid').removeClass('is-valid');
+
+		if (name.val() && name[0].validity.valid) {
+			name.addClass('is-valid');
+		} else {
+			name.addClass('is-invalid');
+			return false;
+		}
 
 		// create new relationship
 		$.ajax({
