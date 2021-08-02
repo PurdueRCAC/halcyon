@@ -80,8 +80,8 @@ foreach ($rows as $event)
 	<section id="coffee{{ $event->id }}" class="dialog dialog-event" title="{{ $event->headline }}" aria-labelledby="coffee{{ $event->id }}-title">
 		<h3 id="coffee{{ $event->id }}-title" class="sr-only">{{ $event->headline }}</h3>
 
-		<p class="newsheader">
-			<span class="fa fa-fw fa-clock-o text-muted" aria-hidden="true"></span> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
+		<ul class="news-meta text-muted">
+			<li><span class="fa fa-fw fa-clock-o text-muted" aria-hidden="true"></span> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
 			<?php
 			if ($event->isToday())
 			{
@@ -98,15 +98,16 @@ foreach ($rows as $event)
 			{
 				echo ' <span class="badge badge-secondary">' . trans('news::news.tomorrow') . '</span>';
 			}
+			echo '</li>';
 
 			if ($event->location != '')
 			{
-				echo '<br /><span class="fa fa-fw fa-map-marker" aria-hidden="true"></span> ' . $event->location;
+				echo '<li><span class="fa fa-fw fa-map-marker" aria-hidden="true"></span> ' . $event->location . '</li>';
 			}
 
 			if ($event->url && auth()->user())
 			{
-				echo '<br /><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="' . $event->url . '">' . \Illuminate\Support\Str::limit($event->url, 50) . '</a>';
+				echo '<li><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="' . $event->url . '">' . \Illuminate\Support\Str::limit($event->url, 50) . '</a></li>';
 			}
 
 			$resourceArray;
@@ -117,7 +118,7 @@ foreach ($rows as $event)
 				{
 					$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->resource->name)]) . '">' . $resource->resource->name . '</a>';
 				}
-				echo '<br /><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray);
+				echo '<li><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray) . '</li>';
 			}
 
 			if (auth()->user() && auth()->user()->can('manage news') && !empty($event->associations))
@@ -132,7 +133,7 @@ foreach ($rows as $event)
 				}
 				if (!empty($users))
 				{
-					echo '<br /><span class="fa fa-fw fa-user" aria-hidden="true"></span> ' . implode(', ', $users);
+					echo '<li><span class="fa fa-fw fa-user" aria-hidden="true"></span> ' . implode(', ', $users) . '</li>';
 				}
 			}
 
@@ -143,7 +144,7 @@ foreach ($rows as $event)
 				if ($type->calendar)
 				{
 					?>
-					<br />
+					<li>
 					<span class="fa fa-fw fa-calendar" aria-hidden="true"></span>
 					<a target="_blank" class="calendar calendar-subscribe" href="<?php echo str_replace(['http:', 'https:'], 'webcal:', route('site.news.calendar', ['name' => $event->id])); ?>"><!--
 						-->Subscribe<span class="sr-only"> to event #{{ $event->id }} at {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}</span><!--
@@ -153,11 +154,12 @@ foreach ($rows as $event)
 					<a target="_blank" class="calendar calendar-download" href="<?php echo route('site.news.calendar', ['name' => $event->id]); ?>"><!--
 						-->Download<span class="sr-only"> event #{{ $event->id }} at {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}</span><!--
 					--></a>
+					</li>
 					<?php
 				}
 			}
 			?>
-		</p>
+		</ul>
 		{!! $event->body !!}
 		<div class="dialog-footer newsattend">
 			@if ($event->url)

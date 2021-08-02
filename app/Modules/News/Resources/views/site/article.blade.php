@@ -13,6 +13,10 @@ app('pathway')
 		route('site.news.index')
 	)
 	->append(
+		$article->type->name,
+		route('site.news.type', ['name' => $article->type->alias])
+	)
+	->append(
 		Illuminate\Support\Str::limit($article->headline, 70),
 		route('site.news.show', ['id' => $article->id])
 	);
@@ -25,94 +29,77 @@ app('pathway')
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 
-	@if (auth()->user() && auth()->user()->can('edit news'))
 	<div class="row">
-		<div class="col-sm-12 col-md-10">
-			<h2>{{ $article->headline }}</h2>
-		</div>
-		<div class="col-sm-12 col-md-2">
-			<a class="btn float-right tip" href="{{ route('site.news.manage', ['id' => $article->id, 'edit' => 1]) }}" title="Edit"><!--
-				--><span class="fa fa-fw fa-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span><!--
-			--></a>
-		</div>
+		@if (!$article->template && !$article->ended() && $article->type->calendar)
+			<div class="col-sm-12 col-md-10">
+				<h2>{{ $article->headline }}</h2>
+			</div>
+			<div class="col-sm-12 col-md-2 text-right">
+				<div class="btn-group" role="navigation" aria-label="Calendar options">
+					<a target="_blank" class="btn btn-default calendar calendar-subscribe tip" href="{{ str_replace(['http:', 'https:'], 'webcal:', route('site.news.calendar', ['name' => $article->id])) }}" title="Subscribe to event"><!--
+						--><span class="fa fa-fw fa-calendar" aria-hidden="true"></span><span class="sr-only">Subscribe</span><!--
+					--></a>
+					<a target="_blank" class="btn btn-default calendar calendar-download tip" href="{{ route('site.news.calendar', ['name' => $article->id]) }}" title="Download event"><!--
+						--><span class="fa fa-fw fa-download" aria-hidden="true"></span><span class="sr-only">Download</span><!--
+					--></a>
+				</div>
+			</div>
+		@else
+			<div class="col-sm-12 col-md-12">
+				<h2>{{ $article->headline }}</h2>
+			</div>
+		@endif
 	</div>
-	@else
-		<h2>{{ $article->headline }}</h2>
-	@endif
 
 	<div class="wrapper-news">
-		<p class="newsheader">
+		<ul class="news-meta text-muted">
 			@if (!$article->template)
-				<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span> {{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
+				<li><span class="fa fa-fw fa-clock-o" aria-hidden="true"></span> {{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}</li>
 			@endif
 
 			@if ($article->location)
-				<br /><span class="fa fa-fw fa-map-marker" aria-hidden="true"></span> {{ $article->location }}
+				<li><span class="fa fa-fw fa-map-marker" aria-hidden="true"></span> {{ $article->location }}</li>
 			@endif
 
 			@if ($article->url)
-				<br /><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="{{ $article->url }}">{{ $article->url }}</a>
+				<li><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="{{ $article->url }}">{{ $article->url }}</a></li>
 			@endif
 
 			@if ($article->type)
-				<br /><span class="fa fa-fw fa-folder" aria-hidden="true"></span> {{ $article->type->name }}
+				<li><span class="fa fa-fw fa-folder" aria-hidden="true"></span> {{ $article->type->name }}</li>
 			@endif
 
 			<?php
-			$resourceArray = array();
 			$resources = $article->resourceList()->get();
-			if (count($resources) > 0)
-			{
+			if (count($resources) > 0):
 				$resourceArray = array();
-				foreach ($resources as $resource)
-				{
+				foreach ($resources as $resource):
 					$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->name)]) . '/">' . $resource->name . '</a>';
-				}
-				echo '<br /><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray);
-			}
+				endforeach;
+
+				echo '<li><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray) . '</li>';
+			endif;
 
 			if (auth()->user()
 			 && auth()->user()->can('manage news')
-			 && count($article->associations))
-			{
+			 && count($article->associations)):
 				$users = array();
-				foreach ($article->associations as $i => $assoc)
-				{
-					if ($associated = $assoc->associated)
-					{
+				foreach ($article->associations as $i => $assoc):
+					if ($associated = $assoc->associated):
 						$users[] = $associated->name;
-					}
-				}
+					endif;
+				endforeach;
+
 				asort($users);
 
-				echo '<br /><span class="fa fa-fw fa-user" aria-hidden="true"></span> <span id="attendees">' . implode(', ', array_slice($users, 0, 5)) . '</span>';
-				if (count($users) > 5)
-				{
+				echo '<li><span class="fa fa-fw fa-user" aria-hidden="true"></span> <span id="attendees">' . implode(', ', array_slice($users, 0, 5)) . '</span>';
+				if (count($users) > 5):
 					echo ' <a id="attendees-reveal" href="#attendees-all">... +' . (count($users) - 5) . ' more</a><span id="attendees-all" class="stash">' . implode(', ', $users) . '</span>';
-				}
-			}
-
-			// WILL BE USED LATER FOR ADDING TO CALENDAR
-			if (!$article->template && $article->datetimenewsend > Carbon\Carbon::now()->format('Y-m-d h:i:s'))
-			{
-				if ($article->type->calendar)
-				{
-					?>
-					<br />
-					<span class="fa fa-fw fa-calendar" aria-hidden="true"></span>
-					<a target="_blank" class="calendar calendar-subscribe" href="{{ str_replace(['http:', 'https:'], 'webcal:', route('site.news.calendar', ['name' => $article->id])) }}" title="Subscribe to event"><!--
-						-->Subscribe<!--
-					--></a>
-					&nbsp;|&nbsp;
-					<span class="fa fa-fw fa-download" aria-hidden="true"></span>
-					<a target="_blank" class="calendar calendar-download" href="{{ route('site.news.calendar', ['name' => $article->id]) }}" title="Download event"><!--
-						-->Download<!--
-					--></a>
-					<?php
-				}
-			}
+				endif;
+				echo '</li>';
+			endif;
 			?>
-		</p>
+		</ul>
 
 		@if (count($article->updates))
 			@foreach ($article->updates()->orderBy('datetimecreated', 'desc')->get() as $update)
@@ -151,13 +138,20 @@ app('pathway')
 		</p>
 
 		@if (auth()->user() && auth()->user()->can('manage news'))
-			<p class="alert alert-info" id="articlestats" data-api="{{ route('api.news.views', ['id' => $article->id]) }}">
-				<a href="{{ route('site.news.manage', ['id' => $article->id, 'edit' => 1]) }}">Edit Article</a><br /><br />
-				View Count: <span id="viewcount"><span class="spinner">Loading...</span></span><br />
-				Unique View Count: <span id="uniqueviewcount"><span class="spinner">Loading...</span></span>
-			</p>
+			<div class="card card-admin edit-controls" id="articlestats" data-api="{{ route('api.news.views', ['id' => $article->id]) }}">
+				<div class="card-body">
+					@if (auth()->user() && auth()->user()->can('edit news'))
+						<a class="edit float-right btn tip" href="{{ route('site.news.manage', ['id' => $article->id, 'edit' => 1]) }}" title="Edit">
+							<span class="fa fa-fw fa-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span>
+						</a>
+					@endif
+					<strong>View Count:</strong> <span id="viewcount"><span class="spinner">Loading...</span></span>,
+					<strong>Unique View Count:</strong> <span id="uniqueviewcount"><span class="spinner">Loading...</span></span>
+				</div>
+			</div>
 		@endif
 	</div>
+
 </div>
 
 @stop

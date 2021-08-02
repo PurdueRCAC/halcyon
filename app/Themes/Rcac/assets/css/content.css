@@ -620,6 +620,7 @@ table.orderproduct th {
 }
 .newsfooter {
 	margin-top: 2em;
+	padding-top: 2em;
 	border-top: 1px solid #ededed;
 	color: #737373;
 }
@@ -1483,8 +1484,8 @@ img.newsdeleteresource {
 .contentInner ul.news-meta,
 .news-meta {
 	list-style: none;
-	font-size: 0.85em;
-	margin: 1em 0 0 0;
+	font-size: 0.9em;
+	margin: 0 0 1em 0;
 }
 .contentInner ul.news-meta li,
 .news-meta li {
@@ -1492,7 +1493,7 @@ img.newsdeleteresource {
 	margin: 0;
 	padding: 0;
 }
-.news-meta .fa,
+.news-meta .fa-fw,
 .news-meta li:before {
 	color: #aaaaaa;
 	margin-right: 0.5em;

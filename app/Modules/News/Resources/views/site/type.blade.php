@@ -128,101 +128,6 @@ app('pathway')
 		</fieldset>
 	</form>*/ ?>
 
-	<?php /*if (!$type->future) { ?>
-		<p>Here are <?php echo strtolower($type->name); ?> from this week. Older <?php echo strtolower($type->name); ?> are listed at the bottom.</p>
-	<?php } else { ?>
-		<p>Here are <?php echo strtolower($type->name); ?> coming up this week and beyond. Past <?php echo strtolower($type->name); ?> are listed at the bottom.</p>
-	<?php } ?>
-
-	<?php
-	$day = date('w');
-	$week_start = Carbon\Carbon::now();
-	$week_end   = Carbon\Carbon::now();
-	$start = $week_start->modify('-' . $day . ' days');
-	$stop  = $week_end->modify('+' . (6 - $day) . ' days');
-
-	$recent = $type->articles()
-		->wherePublished()
-		->where('datetimenews', '>', $start->toDateTimeString())
-		->where('datetimenews', '<', $stop->toDateTimeString())
-		->orderBy('datetimenews', 'desc')
-		->limit(config('modules.news.limit', 5))
-		->get();
-	?>
-	<h3>This Week</h3>
-	<?php if ($recent->count() > 0): ?>
-		<ul class="newslist">
-			<?php foreach ($recent as $article): ?>
-				<li>
-					<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
-					<p class="date">
-						<span>{{ $article->datetimenews->format('M d, Y') }}</span>
-						<span>{{ $article->datetimenews->format('h:m') }}</span>
-					</p>
-				</li>
-			<?php endforeach; ?>
-		</ul>
-	<?php else: ?>
-		<p>{{ trans('news::news.no items this week', ['type' => $type->name]) }}</p>
-	<?php endif; ?>
-
-	<?php if ($type->future) { ?>
-		<?php
-		$after = Carbon\Carbon::now();
-		$after->modify('+' . (7 - $day) . ' days');
-
-		$recent = $type->articles()
-			->wherePublished()
-			->where('datetimenews', '>', $after->toDateTimeString())
-			->orderBy('datetimenews', 'desc')
-			->limit(config('modules.news.limit', 5))
-			->get();
-		?>
-		<h3>Upcoming</h3>
-		<?php if ($recent->count() > 0): ?>
-			<ul class="newslist">
-				<?php foreach ($recent as $article): ?>
-					<li>
-						<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
-						<p class="date">
-							<span>{{ $article->datetimenews->format('M d, Y') }}</span>
-							<span>{{ $article->datetimenews->format('h:m') }}</span>
-						</p>
-					</li>
-				<?php endforeach; ?>
-			</ul>
-		<?php else: ?>
-			<p>{{ trans('There are no upcoming :type', ['type' => $type->name]) }}</p>
-		<?php endif; ?>
-	<?php } ?>
-
-	<h3>Past</h3>
-	<?php
-	$dt = Carbon\Carbon::now();
-
-	$past = $type->articles()
-		->wherePublished()
-		->where('datetimenewsend', '<', $dt->toDateTimeString())
-		->orderBy('datetimenews', 'desc')
-		->limit(config('modules.news.limit', 5))
-		->get();
-
-	if ($past->count() > 0): ?>
-		<ul class="newslist">
-			<?php foreach ($past as $article): ?>
-				<li>
-					<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
-					<p class="date">
-						<span>{{ $article->datetimenews->format('M d, Y') }}</span>
-						<span>{{ $article->datetimenews->format('h:m') }}</span>
-					</p>
-				</li>
-			<?php endforeach; ?>
-		</ul>
-	<?php else: ?>
-		<p>{{ trans('There are no past :type', ['type' => $type->name]) }}</p>
-	<?php endif;*/ ?>
-
 	<?php
 	$dt = Carbon\Carbon::now();
 
@@ -239,7 +144,12 @@ app('pathway')
 						<h3 id="article-{{ $article->id }}-title" class="news-title">
 							<a href="{{ route('site.news.show', ['id' => $article->id]) }}"><span class="sr-only">Article #{{ $article->id }}:</span> {{ $article->headline }}</a>
 						</h3>
-						<p class="news-metadata text-muted">
+						<ul class="news-meta text-muted">
+							<li>
+							<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span>
+							<time datetime="{{ $article->datetimenews }}">
+								{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
+							</time>
 							@if ($article->isToday())
 								@if ($article->isNow())
 									<span class="badge badge-success">Happening now</span>
@@ -249,10 +159,6 @@ app('pathway')
 							@elseif ($article->isTomorrow())
 								<span class="badge">Tomorrow</span>
 							@endif
-							<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span>
-							<time datetime="{{ $article->datetimenews }}">
-								{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
-							</time>
 							<?php
 							$lastupdate = $article->updates()
 								->orderBy('datetimecreated', 'desc')
@@ -262,24 +168,22 @@ app('pathway')
 							@if ($lastupdate)
 								<span class="badge badge-warning"><span class="fa fa-exclamation-circle" aria-hidden="true"></span> Updated {{ $lastupdate->datetimecreated->format('M d, Y h:ia') }}</span>
 							@endif
-
+							</li>
 							<?php
 							$resources = $article->resourceList()->get();
-							if (count($resources) > 0)
-							{
+							if (count($resources) > 0):
 								$resourceArray = array();
-								foreach ($resources as $resource)
-								{
-									if (!$resource->resource)
-									{
+								foreach ($resources as $resource):
+									if (!$resource->resource):
 										continue;
-									}
+									endif;
 									$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->name)]) . '">' . $resource->name . '</a>';
-								}
-								echo '<br /><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray);
-							}
+								endforeach;
+
+								echo '<li><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray) . '</li>';
+							endif;
 							?>
-						</p>
+						</ul>
 						<p>
 							{{ Illuminate\Support\Str::limit(strip_tags($article->formattedBody), 150) }}
 						</p>
