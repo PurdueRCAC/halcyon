@@ -78,7 +78,7 @@ foreach ($rows as $event)
 	$events[] = $slot;
 	?>
 	<section id="coffee{{ $event->id }}" class="dialog dialog-event" title="{{ $event->headline }}" aria-labelledby="coffee{{ $event->id }}-title">
-		<h3 id="coffee{{ $event->id }}-title" class="sr-only">{{ $event->headline }}</h3>
+		<h3 id="coffee{{ $event->id }}-title" class="sr-only"><span class="sr-only">Article #{{ $article->id }}:</span> {{ $event->headline }}</h3>
 
 		<ul class="news-meta text-muted">
 			<li><span class="fa fa-fw fa-clock-o text-muted" aria-hidden="true"></span> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
