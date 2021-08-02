@@ -407,17 +407,17 @@ class Article extends Model
 	 */
 	public function isOutage()
 	{
-		if (stristr('outage', $this->headline))
+		if (stristr($this->headline, 'outage'))
 		{
 			return true;
 		}
 
-		if (stristr('failure', $this->headline))
+		if (stristr($this->headline, 'failure'))
 		{
 			return true;
 		}
 
-		if (stristr('problem', $this->headline))
+		if (stristr($this->headline, 'problem'))
 		{
 			return true;
 		}
