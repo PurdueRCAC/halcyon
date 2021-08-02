@@ -891,8 +891,8 @@ app('pathway')
 						<legend>{{ trans('global.details') }}</legend>
 
 						<div class="form-group">
-							<label for="field-name">{{ trans('groups::groups.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-							<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->name }}" />
+							<label for="field-group-name">{{ trans('groups::groups.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+							<input type="text" name="fields[name]" id="field-group-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="48" value="{{ $row->name }}" />
 							<span class="invalid-feedback">{{ trans('groups::groups.invalid.title') }}</span>
 						</div>
 
@@ -965,7 +965,7 @@ app('pathway')
 									<td colspan="3">
 										<span class="input-group">
 											<span class="input-group-prepend"><span class="input-group-text">{{ $row->unixgroup }}-</span></span>
-											<input type="text" name="longname" id="longname" class="form-control input-unixgroup" maxlength="{{ (32 - strlen($row->unixgroup)) }}" pattern="[a-z0-9]+" placeholder="{{ strtolower(trans('groups::groups.name')) }}" />
+											<input type="text" name="longname" id="longname" class="form-control input-unixgroup" maxlength="{{ (17 - strlen($row->unixgroup . '-')) }}" pattern="[a-z0-9]+" placeholder="{{ strtolower(trans('groups::groups.name')) }}" />
 										</span>
 									</td>
 									<td class="text-right">

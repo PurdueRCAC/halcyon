@@ -59,19 +59,19 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-name">{{ trans('storage::storage.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required value="{{ $row->name }}" />
+					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="32" value="{{ $row->name }}" />
 					<span class="invalid-feedback">{{ trans('storage::storage.error.invalid name') }}</span>
 				</div>
 
 				<div class="form-group">
 					<label for="field-path">{{ trans('storage::storage.path') }}:</label>
-					<input type="text" name="fields[path]" id="field-path" class="form-control" value="{{ $row->path }}" />
+					<input type="text" name="fields[path]" id="field-path" class="form-control" maxlength="255" value="{{ $row->path }}" />
 					<span class="form-text text-muted">{{ trans('storage::storage.path desc') }}</span>
 				</div>
 
 				<div class="form-group">
 					<label for="field-importhostname">{{ trans('storage::storage.import hostname') }}:</label>
-					<input type="text" name="fields[importhostname]" id="field-listname" class="form-control" value="{{ $row->importhostname ? $row->importhostname : '' }}" />
+					<input type="text" name="fields[importhostname]" id="field-listname" class="form-control" maxlength="64" value="{{ $row->importhostname ? $row->importhostname : '' }}" />
 				</div>
 			</fieldset>
 

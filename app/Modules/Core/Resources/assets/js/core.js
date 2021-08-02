@@ -1030,4 +1030,19 @@ document.addEventListener('DOMContentLoaded', function() {
 		dateFormat: 'yy-mm-dd',
 		timeFormat: 'HH:mm:00'
 	});*/
+
+	$('[maxlength]').each(function (i, el) {
+		var counter = $('<span class="char-counter"></span>');
+		if ($(this).parent().hasClass('input-group')) {
+			counter.insertBefore($(this).parent());
+		} else {
+			counter.insertBefore($(this));
+		}
+		counter.text($(this).val().length + ' / ' + $(this).attr('maxlength'));
+	});
+	$('[maxlength]').on('keyup', function () {
+		var chars = $(this).val().length;
+		var counter = $(this).parent().find('.char-counter');
+		counter.text(chars + ' / ' + $(this).attr('maxlength'));
+	});
 });

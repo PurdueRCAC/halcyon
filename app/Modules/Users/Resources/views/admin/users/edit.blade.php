@@ -164,19 +164,19 @@ app('pathway')
 
 						<div class="form-group">
 							<label for="field_username" id="field_username-lbl">{{ trans('users::users.username') }}: <span class="required star">{{ trans('global.required') }}</span></label>
-							<input type="text" name="ufields[username]" id="field_username" value="{{ $user->username }}" class="form-control<?php if ($user->id) { echo ' readonly" readonly="readonly'; } ?>" required />
+							<input type="text" name="ufields[username]" id="field_username" value="{{ $user->username }}" maxlength="16" class="form-control<?php if ($user->id) { echo ' readonly" readonly="readonly'; } ?>" required />
 							<span class="invalid-feedback">{{ trans('users::users.invalid.username') }}</span>
 						</div>
 
 						<div class="form-group">
 							<label for="field-name">{{ trans('users::users.name') }}: <span class="required star">{{ trans('global.required') }}</span></label>
-							<input type="text" class="form-control<?php if ($user->sourced) { echo ' readonly" readonly="readonly'; } ?>" required name="fields[name]" id="field-name" value="{{ $user->name }}" />
+							<input type="text" class="form-control<?php if ($user->sourced) { echo ' readonly" readonly="readonly'; } ?>" required maxlength="128" name="fields[name]" id="field-name" value="{{ $user->name }}" />
 							<span class="invalid-feedback">{{ trans('users::users.invalid.name') }}</span>
 						</div>
 
 						<div class="form-group">
 							<label for="field-organization_id">{{ trans('users::users.organization id') }}:</label>
-							<input type="text" class="form-control" name="fields[puid]" id="field-organization_id" value="{{ $user->puid }}" />
+							<input type="text" class="form-control" name="fields[puid]" id="field-organization_id" maxlength="10" value="{{ $user->puid }}" />
 						</div>
 
 						@if ($user->id)
@@ -184,7 +184,7 @@ app('pathway')
 							<label for="field-api_token">{{ trans('users::users.api token') }}:</label>
 							<div class="row">
 								<div class="col col-md-10">
-									<input type="text" class="form-control readonly" readonly="readonly" name="fields[api_token]" id="field-api_token" value="{{ $user->api_token }}" />
+									<input type="text" class="form-control readonly" readonly="readonly" name="fields[api_token]" id="field-api_token" maxlength="100" value="{{ $user->api_token }}" />
 								</div>
 								<div class="col col-md-2">
 									<button class="btn btn-secondary btn-apitoken">{{ trans('users::users.regenerate') }}</button>

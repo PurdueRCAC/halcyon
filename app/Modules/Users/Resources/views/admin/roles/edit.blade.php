@@ -42,12 +42,12 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-title">{{ trans('users::access.title') }}: <span class="required">{{ trans('global.required') }}</span></label><br />
-					<input class="form-control" required type="text" name="fields[title]" id="field-title" value="{{ $row->title }}" />
+					<label for="field-title">{{ trans('users::access.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<input class="form-control" required type="text" name="fields[title]" id="field-title" maxlength="100" value="{{ $row->title }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-parent_id">{{ trans('users::access.parent') }}: <span class="required">{{ trans('global.required') }}</span></label><br />
+					<label for="field-parent_id">{{ trans('users::access.parent') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<select name="fields[parent_id]" id="field-parent_id" class="form-control" required>
 						<?php
 						foreach ($options as $option):

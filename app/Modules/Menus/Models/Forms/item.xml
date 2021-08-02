@@ -16,6 +16,7 @@
 			type="text"
 			label="menus::menus.item.title"
 			description="menus::menus.item.title description"
+			maxlength="255"
 			required="true"/>
 
 		<field
@@ -23,6 +24,7 @@
 			type="hidden"
 			label="menus::menus.item.alias"
 			description="menus::menus.item.alias description"
+			maxlength="255"
 			/>
 
 		<field name="aliastip"
@@ -150,6 +152,7 @@
 			name="class"
 			type="text"
 			label="menus::menus.item.css"
+			maxlength="255"
 			description="menus::menus.item.css description"/>
 
 		<field
