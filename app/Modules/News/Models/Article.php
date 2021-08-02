@@ -463,8 +463,7 @@ class Article extends Model
 
 		$now = Carbon::now()->toDateTimeString();
 
-		if ($this->datetimenewsend
-		 && $this->datetimenewsend != '0000-00-00 00:00:00'
+		if ($this->hasEnd()
 		 && $this->datetimenewsend <= $now)
 		{
 			return true;

@@ -6,12 +6,12 @@
  // Filter out ended items
 $outages = $outages->reject(function($value, $key)
 {
-	return $value->hasEnd() && $value->ended();
+	return $value->ended();
 });
 ?>
 @if (count($outages) > 0)
-	<div class="notice-banner">
-		@foreach ($outages as $item)
+	@foreach ($outages as $item)
+		<div class="notice-banner">
 			<div class="alert alert-{{ $item->isOutage() ? 'warning' : 'info' }} mb-0">
 				<a href="{{ route('site.news.show', ['id' => $item->id]) }}">{{ $item->headline }}</a>
 				&mdash;
@@ -21,6 +21,6 @@ $outages = $outages->reject(function($value, $key)
 					<span class="badge badge-secondary">Updated: {{ $update->datetimecreated->format('M d, Y h:ia') }}</span>
 				@endif
 			</div>
-		@endforeach
-	</div><!-- /.audienceTiles -->
+		</div><!-- /.audienceTiles -->
+	@endforeach
 @endif
