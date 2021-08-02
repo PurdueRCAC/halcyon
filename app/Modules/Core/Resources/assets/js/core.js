@@ -1033,6 +1033,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	$('[maxlength]').each(function (i, el) {
 		var counter = $('<span class="char-counter"></span>');
+		if ($(this).attr('id') != '') {
+			counter.attr('id', $(this).attr('id') + '-counter');
+		}
 		if ($(this).parent().hasClass('input-group')) {
 			counter.insertBefore($(this).parent());
 		} else {
@@ -1042,7 +1045,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 	$('[maxlength]').on('keyup', function () {
 		var chars = $(this).val().length;
-		var counter = $(this).parent().find('.char-counter');
-		counter.text(chars + ' / ' + $(this).attr('maxlength'));
+		var counter = $('#' + $(this).attr('id') + '-counter');/*$(this).parent().find('.char-counter');
+		if (!counter.length) {
+			counter = $(this).parent().parent().find('.char-counter');
+		}*/
+		if (counter.length) {
+			counter.text(chars + ' / ' + $(this).attr('maxlength'));
+		}
 	});
 });
