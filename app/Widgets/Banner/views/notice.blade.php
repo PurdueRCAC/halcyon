@@ -6,7 +6,7 @@
  // Filter out ended items
 $outages = $outages->reject(function($value, $key)
 {
-	return $value->ended();
+	return $value->hasEnd() && $value->ended();
 });
 ?>
 @if (count($outages) > 0)
