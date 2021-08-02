@@ -4,6 +4,7 @@
 _**UPDATE: {{ $update->formatDate($update->datetimecreated) }}**_
 
 {!! $update->formattedBody !!}
+
 @endforeach
 
 _**ORIGINAL: {{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}**_
@@ -16,7 +17,7 @@ _**ORIGINAL: {{ $article->formatDate($article->datetimenews, $article->datetimen
 @endif
 
 @if ($article->isUpdated())
-*_Update: {{ $article->formatDate($article->datetimeupdate) }}*
+_**Update: {{ $article->formatDate($article->datetimeupdate) }}**_
 @endif
 
 {!! $article->formattedBody !!}
