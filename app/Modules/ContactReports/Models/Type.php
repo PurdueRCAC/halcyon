@@ -149,6 +149,16 @@ class Type extends Model
 	}
 
 	/**
+	 * Defines a relationship to wait timeperiod
+	 *
+	 * @return  object
+	 */
+	public function waitperiod()
+	{
+		return $this->belongsTo(Timeperiod::class, 'waitperiodid');
+	}
+
+	/**
 	 * Find a model by its primary key.
 	 *
 	 * @param  mixed  $id

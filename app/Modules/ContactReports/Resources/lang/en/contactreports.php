@@ -56,4 +56,8 @@ return [
 	'timeperiod limit' => 'Number of timeperiods to look back in time to find unprocessed followups',
 	'all types' => '- All Types -',
 	'tags' => 'Tags',
+	'wait period' => 'Mute followups time period',
+	'waitperiod' => 'Time period',
+	'waitperiod count' => 'Number of time periods',
+	'wait period desc' => 'How long to wait before sending any new followups. This is to avoid spamming/over-emailing users.',
 ];

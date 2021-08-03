@@ -205,7 +205,12 @@ class TypesController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'name' => 'required|string|max:32'
+			'name' => 'required|string|max:32',
+			'timeperiodid' => 'nullable|integer',
+			'timeperiodcount' => 'nullable|integer',
+			'timeperiodlimit' => 'nullable|integer',
+			'waitperiodid' => 'nullable|integer',
+			'waitperiodcount' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -326,7 +331,12 @@ class TypesController extends Controller
 	public function update(Request $request, $id)
 	{
 		$rules = [
-			'name' => 'nullable|string|max:32'
+			'name' => 'nullable|string|max:32',
+			'timeperiodid' => 'nullable|integer',
+			'timeperiodcount' => 'nullable|integer',
+			'timeperiodlimit' => 'nullable|integer',
+			'waitperiodid' => 'nullable|integer',
+			'waitperiodcount' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -338,6 +348,26 @@ class TypesController extends Controller
 
 		$row = Type::findOrFail($id);
 		$row->name = $request->input('name');
+		if ($request->has('timeperiodid'))
+		{
+			$row->timeperiodid = $request->input('timeperiodid');
+		}
+		if ($request->has('timeperiodcount'))
+		{
+			$row->timeperiodcount = $request->input('timeperiodcount');
+		}
+		if ($request->has('timeperiodlimit'))
+		{
+			$row->timeperiodlimit = $request->input('timeperiodlimit');
+		}
+		if ($request->has('waitperiodid'))
+		{
+			$row->waitperiodid = $request->input('waitperiodid');
+		}
+		if ($request->has('waitperiodcount'))
+		{
+			$row->waitperiodcount = $request->input('waitperiodcount');
+		}
 
 		if (!$row->save())
 		{

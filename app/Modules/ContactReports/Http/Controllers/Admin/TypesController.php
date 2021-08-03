@@ -72,7 +72,7 @@ class TypesController extends Controller
 	 *
 	 * @return  Response
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Type();
 
@@ -93,7 +93,7 @@ class TypesController extends Controller
 	 * @param   integer   $id
 	 * @return  Response
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Type::findOrFail($id);
 

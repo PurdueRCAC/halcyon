@@ -50,6 +50,7 @@ class EmailFollowupsCommand extends Command
 
 		$users = [];
 		$now = Carbon::now();
+		$total = 0;
 
 		foreach ($types as $type)
 		{
@@ -70,7 +71,7 @@ class EmailFollowupsCommand extends Command
 			$users = CrmUser::query()
 				->join($r, $r . '.id', $cu . '.contactreportid')
 				->select($cu . '.*', $r . '.datetimecontact')
-				->where($r . '.contactreporttypeid', '>=', $type->id)
+				->where($r . '.contactreporttypeid', '=', $type->id)
 				->where($r . '.datetimecontact', '>=', $threshold)
 				->where(function($where) use ($cu)
 				{
@@ -110,6 +111,24 @@ class EmailFollowupsCommand extends Command
 					continue;
 				}
 
+				if ($type->waitperiodcount && $type->waitperiodid)
+				{
+					// Check if they were followed up on any other Contact Reports in the last X time
+					$lastfollowup = CrmUser::query()
+						->join($r, $r . '.id', $cu . '.contactreportid')
+						->where($r . '.contactreporttypeid', '=', $type->id)
+						->where($cu . '.userid', '=', $u->userid)
+						->whereNotNull($cu . '.datetimelastnotify')
+						->where($cu . '.datetimelastnotify', '!=', '0000-00-00 00:00:00')
+						->where($cu . '.datetimelastnotify', '>', Carbon::now()->modify('-' . $type->waitperiodcount . ' ' . $type->waitperiod->plural)->toDateTimeString())
+						->count();
+
+					if ($lastfollowup)
+					{
+						continue;
+					}
+				}
+
 				// Prepare and send actual email
 				$emailed[] = $user->id;
 
@@ -128,7 +147,14 @@ class EmailFollowupsCommand extends Command
 
 				// Update the record
 				$u->update(['datetimelastnotify' => $now->toDateTimeString()]);
+
+				$total++;
 			}
+		}
+
+		if ($debug && !$total)
+		{
+			$this->comment('No followups sent.');
 		}
 	}
 }
