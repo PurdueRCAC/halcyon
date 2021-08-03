@@ -23,6 +23,7 @@
                                 placeholder="YYYY-MM-DD"
                                 data-start=""
                                 value=""
+                                v-model="start"
                             />
                             <input
                                 id="timestartshort"
@@ -54,6 +55,7 @@
                                 placeholder="YYYY-MM-DD"
                                 data-stop=""
                                 value=""
+                                v-model="stop"
                             />
                             <input
                                 id="timestopshort"
@@ -89,7 +91,7 @@
                         <input
                             type="text"
                             v-model="keywords"
-                            v-on:keyup="read"
+                            v-on:keyup="handleFormEvent"
                             name="keyword"
                             id="keywords"
                             size="45"
@@ -140,10 +142,12 @@
                             size="45"
                             class="form-control"
                             value=""
+                            v-model.number="id"
+                            v-on:keyup="handleFormEvent"
                         />
                     </div>
                 </div>
-                <div class="form-group row" id="TR_search">
+                <!-- <div class="form-group row" id="TR_search">
                     <div class="col-sm-2"></div>
                     <div class="col-sm-10 offset-sm-10">
                         <input
@@ -159,7 +163,7 @@
                             id="INPUT_clear"
                         />
                     </div>
-                </div>
+                </div> -->
                 <span id="TAB_search_action"></span>
                 <span id="TAB_add_action"></span>
             </fieldset>
@@ -205,29 +209,15 @@ export default {
     data() {
         return {
             articles: [],
-            paginationList: [
-                // "<<",
-                // "<",
-                // 1,
-                // 2,
-                // 3,
-                // 4,
-                // 5,
-                // 6,
-                // 7,
-                // 8,
-                // 9,
-                // 10,
-                // ">",
-                // ">>"
-            ],
+            paginationList: [],
             pageRequest: 1,
             farthestPage: 1,
             limit: 20,
             working: false,
             total: 0,
             keywords: "",
-            isFetchingData: true
+            isFetchingData: true,
+            id: null
         };
     },
     methods: {
@@ -253,9 +243,14 @@ export default {
 
             if (curPage < (this.farthestPage - 5))
                 this.paginationList.push('...');
-            if (this.farthestPage !== 1)
+            if (this.farthestPage > 1)
                 this.paginationList.push(this.farthestPage);
             this.paginationList.push('>');
+        },
+        handleFormEvent(evt) {
+            evt.preventDefault();
+            this.isFetchingData = true;
+            this.read();
         },
         handlePaginationEvent(evt) {
             evt.preventDefault();
@@ -314,7 +309,8 @@ export default {
                     params: {
                         search: this.keywords,
                         page: this.pageRequest,
-                        limit: this.limit
+                        limit: this.limit,
+                        id: this.id
                     }
                 })
                 .then(({ data }) => {
