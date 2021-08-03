@@ -118,6 +118,11 @@ class TypesController extends Controller
 		//$request->validate([
 		$rules = [
 			'fields.name' => 'required|string|max:32',
+			'fields.timeperiodid' => 'nullable|integer',
+			'fields.timeperiodcount' => 'nullable|integer',
+			'fields.timeperiodlimit' => 'nullable|integer',
+			'fields.waitperiodid' => 'nullable|integer',
+			'fields.waitperiodcount' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -134,7 +139,7 @@ class TypesController extends Controller
 		$row = $id ? Type::findOrFail($id) : new Type();
 		$row->fill($request->input('fields'));
 
-		foreach (['tagusers', 'tagresources', 'future', 'location', 'ongoing', 'calendar', 'url'] as $key)
+		foreach (['timeperiodid', 'timeperiodcount', 'timeperiodlimit', 'waitperiodid', 'waitperiodcount'] as $key)
 		{
 			if (!$request->has('fields.' . $key))
 			{
