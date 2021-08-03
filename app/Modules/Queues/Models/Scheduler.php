@@ -76,6 +76,17 @@ class Scheduler extends Model
 	);
 
 	/**
+	 * The attributes that should be mutated to dates.
+	 *
+	 * @var  array
+	 */
+	protected $dates = [
+		'datetimedraindown',
+		'datetimelastimportstart',
+		'datetimelastimportstop',
+	];
+
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
@@ -83,6 +94,16 @@ class Scheduler extends Model
 	protected $guarded = [
 		'id'
 	];
+
+	/**
+	 * Determine if entry has an end time
+	 *
+	 * @return  bool
+	 */
+	public function hasDraindownTime()
+	{
+		return ($this->datetimedraindown && $this->datetimedraindown != '0000-00-00 00:00:00' && $this->datetimedraindown != '-0001-11-30 00:00:00');
+	}
 
 	/**
 	 * Defines a relationship to queues
