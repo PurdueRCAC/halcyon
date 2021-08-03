@@ -165,28 +165,33 @@
             </fieldset>
         </form>
 
-        <p id="matchingnews">Found {{ total }} matching News Articles</p>
-        <news-article
-            v-for="article in articles"
-            v-bind="article"
-            :key="article.id"
-            @update="update"
-            @delete="del"
-        ></news-article>
+        <template v-if="isFetchingData">
+            <strong>Loading News Articles...</strong>
+        </template>
+        <template v-else>
+            <p id="matchingnews">Found {{ total }} matching News Articles</p>
+            <news-article
+                v-for="article in articles"
+                v-bind="article"
+                :key="article.id"
+                @update="update"
+                @delete="del"
+            ></news-article>
 
-        <nav aria-label="navigation">
-            <ul class="pagination">
-                <li
-                    v-for="page of paginationList"
-                    :key="page"
-                    :class="['page-item', (pageRequest === page ? 'active' : '')]"
-                >
-                    <span class="page-link" @click="handlePaginationEvent">
-                        <strong>{{ page }}</strong>
-                    </span>
-                </li>
-            </ul>
-        </nav>
+            <nav aria-label="navigation">
+                <ul class="pagination">
+                    <li
+                        v-for="page of paginationList"
+                        :key="page"
+                        :class="['page-item', (pageRequest === page ? 'active' : '')]"
+                    >
+                        <span class="page-link" @click="handlePaginationEvent">
+                            <strong>{{ page }}</strong>
+                        </span>
+                    </li>
+                </ul>
+            </nav>
+        </template>
     </div>
 </template>
 <script>
@@ -221,7 +226,8 @@ export default {
             limit: 20,
             working: false,
             total: 0,
-            keywords: ""
+            keywords: "",
+            isFetchingData: true
         };
     },
     methods: {
@@ -253,6 +259,7 @@ export default {
         },
         handlePaginationEvent(evt) {
             evt.preventDefault();
+            this.isFetchingData = true;
             
             if (typeof evt !== "undefined") {
                 if (
@@ -319,6 +326,7 @@ export default {
                     this.farthestPage = Math.ceil(this.total / this.limit);
                     this.setPaginationList(this.pageRequest);
                     this.mute = false;
+                    this.isFetchingData = false;
                 });
         },
         update(id, color) {
