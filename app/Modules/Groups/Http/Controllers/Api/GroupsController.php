@@ -194,9 +194,9 @@ class GroupsController extends Controller
 					$u = (new User)->getTable();
 					$uu = (new UserUsername)->getTable();
 
-					$query->join($gu, $gu . '.groupid', $g . '.id');
-					$query->join($u, $u . '.id', $gu . '.userid');
-					$query->join($uu, $uu . '.userid', $u . '.id');
+					$query->leftJoin($gu, $gu . '.groupid', $g . '.id');
+					$query->leftJoin($u, $u . '.id', $gu . '.userid');
+					$query->leftJoin($uu, $uu . '.userid', $u . '.id');
 
 					//$query->where($gu . '.membertype', '=', 2);
 					$query->where(function($where) use ($g, $gu, $u, $uu, $search)
