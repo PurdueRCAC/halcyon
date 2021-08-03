@@ -164,6 +164,7 @@
                 <span id="TAB_add_action"></span>
             </fieldset>
         </form>
+
         <p id="matchingnews">Found {{ total }} matching News Articles</p>
         <news-article
             v-for="article in articles"
@@ -178,9 +179,11 @@
                 <li
                     v-for="page of paginationList"
                     :key="page"
-                    class="page-item"
+                    :class="['page-item', (pageRequest === page ? 'active' : '')]"
                 >
-                    <span class="page-link" @click="handlePaginationEvent">{{ page }}</span>
+                    <span class="page-link" @click="handlePaginationEvent">
+                        <strong>{{ page }}</strong>
+                    </span>
                 </li>
             </ul>
         </nav>
