@@ -11,7 +11,7 @@ $outages = $outages->reject(function($value, $key)
 ?>
 @if (count($outages) > 0)
 	@foreach ($outages as $item)
-		<div class="notice-banner">
+		<div class="notice-banner" role="banner">
 			<div class="alert alert-{{ $item->isOutage() ? 'warning' : 'info' }} mb-0">
 				<a href="{{ route('site.news.show', ['id' => $item->id]) }}">{{ $item->headline }}</a>
 				&mdash;
