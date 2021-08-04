@@ -44,6 +44,25 @@
         </ul>
         <p class="text-right">
             Results {{ ($paginator->currentPage()-1)*$paginator->perPage()+1 }}-{{ $paginator->total() > $paginator->perPage() ? $paginator->currentPage()*$paginator->perPage() : $paginator->total() }} of {{ $paginator->total() }}
+            @if (app('isAdmin'))
+                <?php
+                $l = rand();
+                $limits = array(
+                    10,
+                    20,
+                    50,
+                    100,
+                    200,
+                    500
+                );
+                ?>
+                <select class="form-control filter-submit ml-4" name="limit" id="limit-{{ $l }}">
+                    @foreach ($limits as $limit)
+                        <option value="{{ $limit }}"<?php if ($paginator->perPage() == $limit) { echo ' selected="slected"'; } ?>>{{ $limit }}</option>
+                    @endforeach
+                </select>
+                <label for="limit-{{ $l }}" class="d-inline">per page</label>
+            @endif
         </p>
     </nav>
 @endif
