@@ -540,6 +540,11 @@ class SizesController extends Controller
 			$row->datetimestop = $request->input('datetimestop');
 		}
 
+		if ($request->has('comment'))
+		{
+			$row->comment = $request->input('comment');
+		}
+
 		if ($row->hasEnd() && $row->datetimestart > $row->datetimestop)
 		{
 			return response()->json(['message' => trans('queues::queues.error.start cannot be after stop')], 409);
