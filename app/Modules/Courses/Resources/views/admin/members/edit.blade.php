@@ -20,53 +20,62 @@
 @section('content')
 <form action="{{ route('admin.groups.members.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
-			<fieldset class="adminform">
-				<legend><span>{{ trans('global.details') }}</span></legend>
+	@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+	@endif
 
-				<div class="form-group" data-hint="{{ trans('groups::groups.name hint') }}">
-					<label for="field-name">{{ trans('groups::groups.name') }}:</label>
-					<input type="text" name="fields[name]" id="field-user" class="form-control disabled" disabled="disabled" readonly="readonly" value="{{ $row->user->name }}" />
-				</div>
-			</fieldset>
+	<fieldset class="adminform">
+		<legend><span>{{ trans('global.details') }}</span></legend>
 
-			<fieldset class="adminform">
-				<legend>{{ trans('groups::groups.unix groups') }}</legend>
+		<div class="form-group" data-hint="{{ trans('courses::courses.name hint') }}">
+			<label for="field-name">{{ trans('courses::courses.name') }}:</label>
+			<input type="text" name="fields[name]" id="field-user" class="form-control disabled" disabled="disabled" readonly="readonly" value="{{ $row->user->name }}" />
+		</div>
+	</fieldset>
 
-				<table>
-					<thead>
-						<tr>
-							<th scope="col">{{ trans('groups::groups.unix group') }}</th>
-							<th scope="col" class="text-center">{{ trans('groups::groups.member') }}</th>
-							<th scope="col" class="text-right">Added</th>
-						</tr>
-					</thead>
-					<tbody>
-					@foreach ($row->group->unixGroups as $u)
-						<tr id="unixgroup-{{ $u->id }}" data-id="{{ $u->id }}">
-							<td>{{ $u->longname }}</td>
-							<td class="text-center">
-								@php
-								$has = $u->members->search(function ($item, $key) use ($u)
-								{
-									return $item->unixgroupid == $u->id;
-								});
-								@endphp
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" id="unixgroup-{{ $u->id }}" name="unixgroups[{{ $u->id }}]" value="1"<?php if ($has !== false) { echo ' checked="checked"'; } ?> />
-									<label class="form-check-label" for="unixgroup-{{ $u->id }}">{{ trans('global.yes') }}</label>
-								</div>
-							</td>
-							<td class="text-right">
-								@if ($has !== false)
-									<time>{{ $u->datetimecreated }}</time>
-								@endif
-							</td>
-						</tr>
-					@endforeach
-					</tbody>
-				</table>
-			</fieldset>
-	</div>
+	<fieldset class="adminform">
+		<legend>{{ trans('courses::courses.unix groups') }}</legend>
+
+		<table>
+			<thead>
+				<tr>
+					<th scope="col">{{ trans('courses::courses.unix group') }}</th>
+					<th scope="col" class="text-center">{{ trans('courses::courses.member') }}</th>
+					<th scope="col" class="text-right">Added</th>
+				</tr>
+			</thead>
+			<tbody>
+			@foreach ($row->group->unixGroups as $u)
+				<tr id="unixgroup-{{ $u->id }}" data-id="{{ $u->id }}">
+					<td>{{ $u->longname }}</td>
+					<td class="text-center">
+						@php
+						$has = $u->members->search(function ($item, $key) use ($u)
+						{
+							return $item->unixgroupid == $u->id;
+						});
+						@endphp
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" id="unixgroup-{{ $u->id }}" name="unixgroups[{{ $u->id }}]" value="1"<?php if ($has !== false) { echo ' checked="checked"'; } ?> />
+							<label class="form-check-label" for="unixgroup-{{ $u->id }}">{{ trans('global.yes') }}</label>
+						</div>
+					</td>
+					<td class="text-right">
+						@if ($has !== false)
+							<time>{{ $u->datetimecreated }}</time>
+						@endif
+					</td>
+				</tr>
+			@endforeach
+			</tbody>
+		</table>
+	</fieldset>
 
 	<input type="hidden" name="userid" value="{{ $row->userid }}" />
 

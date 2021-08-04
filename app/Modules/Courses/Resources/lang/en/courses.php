@@ -33,4 +33,7 @@ return [
 		'start date' => 'Invalid or empty start date',
 		'end date' => 'Invalid or empty end date',
 	],
+	'start' => 'Start',
+	'stop' => 'Stop',
+	'select membership type' => '- All Membership Types -',
 ];

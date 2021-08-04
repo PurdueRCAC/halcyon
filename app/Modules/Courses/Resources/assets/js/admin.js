@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				dataType: 'json',
 				async: false,
 				success: function (data) {
-					Halcyon.message('success', 'Item removed');
+					Halcyon.message('success', $(this).data('success'));
 					field.remove();
 				},
 				error: function (xhr, ajaxOptions, thrownError) {
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			dataType: 'json',
 			async: false,
 			success: function (response) {
-				Halcyon.message('success', 'User added');
+				Halcyon.message('success', btn.data('success'));
 
 				var c = select.closest('table');
 				var li = c.find('tr.d-none');
@@ -134,5 +134,20 @@ document.addEventListener('DOMContentLoaded', function() {
 				Halcyon.message('danger', xhr.responseJSON.message);
 			}
 		});
+	});
+
+	//----
+
+	var dialog = $("#new-account").dialog({
+		autoOpen: false,
+		height: 200,
+		width: 500,
+		modal: true
+	});
+
+	$('#toolbar-plus').on('click', function (e) {
+		e.preventDefault();
+
+		dialog.dialog("open");
 	});
 });

@@ -1,23 +1,7 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ asset('modules/courses/js/admin.js') }}"></script>
-<script>
-$(document).ready(function() {
-	var dialog = $("#new-account").dialog({
-		autoOpen: false,
-		height: 200,
-		width: 500,
-		modal: true
-	});
-
-	$('#toolbar-plus').on('click', function(e){
-		e.preventDefault();
-
-		dialog.dialog("open");
-	});
-});
-</script>
+<script src="{{ asset('modules/courses/js/admin.js?v=' . filemtime(public_path() . '/modules/courses/js/admin.js')) }}"></script>
 @endpush
 
 @php
@@ -200,7 +184,7 @@ app('pathway')
 				</td>
 				<td class="priority-2 text-right">
 					@if (auth()->user()->can('edit courses'))
-						<a href="{{ route('admin.courses.members', ['id' => $row->id]) }}">
+						<a href="{{ route('admin.courses.members', ['account' => $row->id]) }}">
 							{{ $row->studentcount ? $row->studentcount : $row->members()->withTrashed()->whereIsActive()->count() }}
 						</a>
 					@else

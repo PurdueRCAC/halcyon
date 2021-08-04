@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Models\Member;
-use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\UserUsername;
 
 class MembersController extends Controller
 {
@@ -58,13 +58,12 @@ class MembersController extends Controller
 
 		$account = Account::findOrFail($filters['account']);
 
-		$u = (new User)->getTable();
+		$u = (new UserUsername)->getTable();
 		$m = (new Member)->getTable();
 
 		$query = Member::query()
-			->join($u, $u . '.id', $m . '.userid')
-			->select($m . '.*', $u . '.name')
-			->with('type')
+			->join($u, $u . '.userid', $m . '.userid')
+			->select($m . '.*')
 			->where($m . '.classaccountid', '=', $account->id);
 
 		if ($filters['search'])
@@ -98,13 +97,13 @@ class MembersController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		$types = Type::query()->whereIn('id', [1, 2, 3])->orderBy('name', 'asc')->get();
+		//$types = Type::query()->whereIn('id', [1, 2, 3])->orderBy('name', 'asc')->get();
 
-		return view('groups::admin.members.index', [
+		return view('courses::admin.members.index', [
 			'rows'    => $rows,
 			'filters' => $filters,
-			'account'   => $account,
-			'types'   => $types,
+			'account' => $account,
+			//'types'   => $types,
 		]);
 	}
 

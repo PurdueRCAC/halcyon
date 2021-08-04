@@ -182,7 +182,7 @@ app('pathway')
 								{{ $member->user ? $member->user->name : trans('global.unknown') }}
 							</td>
 							<td class="text-right">
-								<a href="#member-{{ $member->id }}" class="btn btn-danger remove-member" data-id="{{ $member->id }}" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.courses.members.delete', ['id' => $row->id]) }}">
+								<a href="#member-{{ $member->id }}" class="btn btn-danger remove-member" data-id="{{ $member->id }}" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.courses.members.delete', ['id' => $row->id]) }}" data-success="Item removed">
 									<span class="icon-trash"></span><span class="sr-only">{{ trans('global.delete') }}</span>
 								</a>
 							</td>
@@ -196,7 +196,7 @@ app('pathway')
 								<?php echo '{name}'; ?>
 							</td>
 							<td class="text-right">
-								<a href="#member-<?php echo '{id}'; ?>" class="btn btn-danger remove-member" data-id="<?php echo '{id}'; ?>" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.courses.members') }}<?php echo '{id}'; ?>">
+								<a href="#member-<?php echo '{id}'; ?>" class="btn btn-danger remove-member" data-id="<?php echo '{id}'; ?>" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.courses.members') }}<?php echo '{id}'; ?>" data-success="Item removed">
 									<span class="icon-trash"></span><span class="sr-only">{{ trans('global.delete') }}</span>
 								</a>
 							</td>
@@ -214,7 +214,7 @@ app('pathway')
 								</div>
 							</td>
 							<td class="text-right">
-								<button class="btn btn-success add-member" data-api="{{ route('api.courses.members.create') }}" data-account="{{ $row->id }}" data-field="#member-userid">
+								<button class="btn btn-success add-member" data-api="{{ route('api.courses.members.create') }}" data-account="{{ $row->id }}" data-field="#member-userid" data-success="User added">
 									<span class="icon-plus"></span><span class="sr-only">{{ trans('global.create') }}</span>
 								</button>
 							</td>
