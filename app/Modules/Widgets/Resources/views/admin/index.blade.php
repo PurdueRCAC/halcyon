@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@push('scripts')
+<script src="{{ asset('modules/widgets/js/admin.js?v=' . filemtime(public_path() . '/modules/widgets/js/admin.js')) }}"></script>
+@endpush
+
 @php
 app('pathway')
 	->append(
@@ -306,97 +310,4 @@ app('pathway')
 
 	@csrf
 </form>
-
-@stop
-
-@section('scripts')
-<script>
-function validate(){
-	var value = $('#menu_assignment').val(),
-		list  = $('#menu-assignment');
-
-	if (value == '-' || value == '0') {
-		$('.btn-assignments').each(function(i, el) {
-			$(el).prop('disabled', true);
-		});
-		list.find('input').each(function(i, el){
-			$(el).prop('disabled', true);
-			if (value == '-'){
-				$(el).prop('checked', false);
-			} else {
-				$(el).prop('checked', true);
-			}
-		});
-	} else {
-		$('.btn-assignments').each(function(i, el) {
-			$(el).prop('disabled', false);
-		});
-		list.find('input').each(function(i, el){
-			$(el).prop('disabled', false);
-		});
-	}
-}
-
-$(document).ready(function() {
-	var dialog = $("#new-widget").dialog({
-		autoOpen: false,
-		height: 400,
-		width: 500,
-		modal: true
-	});
-
-	$('#toolbar-plus').on('click', function(e){
-		e.preventDefault();
-
-		dialog.dialog("open");
-	});
-
-	if ($('#moduleorder').length) {
-		data = $('#moduleorder');
-
-		if (data.length) {
-			modorders = JSON.parse(data.html());
-
-			var html = '\n	<select class="form-control" id="' + modorders.name.replace('[', '-').replace(']', '') + '" name="' + modorders.name + '" id="' + modorders.id + '"' + modorders.attr + '>';
-			var i = 0,
-				key = modorders.originalPos,
-				orig_key = modorders.originalPos,
-				orig_val = modorders.originalOrder;
-			for (x in modorders.orders) {
-				if (modorders.orders[x][0] == key) {
-					var selected = '';
-					if ((orig_key == key && orig_val == modorders.orders[x][1])
-					 || (i == 0 && orig_key != key)) {
-						selected = 'selected="selected"';
-					}
-					html += '\n		<option value="' + modorders.orders[x][1] + '" ' + selected + '>' + modorders.orders[x][2] + '</option>';
-				}
-				i++;
-			}
-			html += '\n	</select>';
-
-			$('#moduleorder').after(html);
-		}
-	}
-
-	$('#menu_assignment-dependent').hide();
-	if ($('#menu_assignment').val() != '0'
-	 && $('#menu_assignment').val() != '-')
-	{
-		$('#menu_assignment-dependent').show();
-	}
-
-	$('#menu_assignment').on('change', function(){
-		if ($(this).val() != '0'
-		 && $(this).val() != '-')
-		{
-			$('#menu_assignment-dependent').show();
-		}
-		else
-		{
-			$('#menu_assignment-dependent').hide();
-		}
-	});
-});
-</script>
 @stop
