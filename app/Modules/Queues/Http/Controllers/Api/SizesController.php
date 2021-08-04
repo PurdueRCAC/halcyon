@@ -508,6 +508,7 @@ class SizesController extends Controller
 			'datetimestop' => 'nullable|date',
 			'nodecount' => 'nullable|numeric',
 			'corecount' => 'nullable|integer',
+			'comment' => 'nullable|string|max:2000',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
