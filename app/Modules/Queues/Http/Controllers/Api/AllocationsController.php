@@ -6,12 +6,18 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Modules\Queues\Http\Resources\AllocationResourceCollection;
+use App\Modules\Queues\Models\Queue;
+use App\Modules\Queues\Models\Scheduler;
+use App\Modules\Queues\Models\SchedulerPolicy;
+use App\Modules\Resources\Models\Subresource;
 use App\Modules\Queues\Events\AllocationCreate;
 use App\Modules\Queues\Events\AllocationUpdate;
 use App\Modules\Queues\Events\AllocationDelete;
+use Carbon\Carbon;
 
 /**
- * Queues
+ * Queue Allocations
  *
  * @apiUri    /api/allocations
  */
@@ -140,129 +146,174 @@ class AllocationsController extends Controller
 	 * @param   Request  $request
 	 * @return  Response
 	 */
-	public function index(Request $request)
+	public function index(Request $request, $hostname = null)
 	{
-		$filters = array(
-			'search'   => $request->input('search', ''),
-			'state'    => $request->input('state', 'enabled'),
-			'type'     => $request->input('type', 0),
-			'scheduler' => $request->input('scheduler', 0),
-			'resource' => $request->input('resource', 0),
-			'subresource' => $request->input('subresource', 0),
-			'group' => $request->input('group', 0),
-			'class' => $request->input('class'),
-			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
-			'page'     => $request->input('page', 1),
-			// Sorting
-			'order'     => $request->input('order', Queue::$orderBy),
-			'order_dir' => $request->input('order_dir', Queue::$orderDir)
-		);
+		/*
+		"SELECT
+			queues.name AS queuename,
+			queues.enabled,
+			queues.started,
+			queues.cluster,
+			queues.priority,
+			queues.defaultwalltime,
+			queues.maxjobsqueued,
+			queues.maxjobsqueueduser,
+			queues.maxjobsrun,
+			queues.maxjobsrunuser,
+			queues.maxjobcores,
+			queues.nodecoresmin,
+			queues.nodecoresmax,
+			queues.nodememmin,
+			queues.nodememmax,
+			queues.aclgroups,
+			SUM(queuecores.corecount) AS corecount,
+			MAX(queuewalltimes.walltime) AS walltime,
+			IF(schedulers.datetimedraindown IS NULL OR schedulers.datetimedraindown = '0000-00-00 00:00:00', '0', '1') AS draindown,
+			IF((UNIX_TIMESTAMP(schedulers.datetimedraindown) - UNIX_TIMESTAMP(NOW())) > '0', (UNIX_TIMESTAMP(schedulers.datetimedraindown) - UNIX_TIMESTAMP(NOW())), '0') AS draindown_timeremaining,
+			queues.aclusersenabled,
+			uniqaclusers.username,
+			nodeaccesspolicy.code AS nodeaccesspolicy,
+			defaultnodeaccesspolicy.code AS defaultnodeaccesspolicy,
+			subresources.nodecores,
+			queues.reservation,
+			queues.maxijobfactor,
+			queues.maxijobuserfactor,
+			queues.groupid,
+			subresources.nodegpus
+		FROM
+			schedulers
+			INNER JOIN queues ON schedulers.id = queues.schedulerid
+				AND  queues.datetimecreated       < NOW()
+				AND (queues.datetimeremoved       > NOW() OR queues.datetimeremoved IS NULL OR queues.datetimeremoved = '0000-00-00 00:00:00')
+			INNER JOIN schedulerpolicies AS nodeaccesspolicy ON nodeaccesspolicy.id = queues.schedulerpolicyid
+			INNER JOIN schedulerpolicies AS defaultnodeaccesspolicy ON defaultnodeaccesspolicy.id = schedulers.schedulerpolicyid
+			INNER JOIN subresources ON subresources.id = queues.subresourceid
+			LEFT OUTER JOIN groups ON queues.groupid = groups.id
+			LEFT OUTER JOIN (
+				SELECT queueid, datetimestart, datetimestop, corecount FROM queuesizes
+				UNION
+				SELECT queueid, datetimestart, datetimestop, corecount FROM queueloans
+				) AS queuecores ON queues.id = queuecores.queueid
+					AND  queuecores.datetimestart     < NOW()
+					AND (queuecores.datetimestop      > NOW() OR queuecores.datetimestop IS NULL OR queuecores.datetimestop = '0000-00-00 00:00:00')
+			LEFT OUTER JOIN queuewalltimes ON queues.id = queuewalltimes.queueid
+				AND  queuewalltimes.datetimestart < NOW()
+				AND (queuewalltimes.datetimestop  > NOW() OR queuewalltimes.datetimestop IS NULL OR queuewalltimes.datetimestop = '0000-00-00 00:00:00')
+			LEFT OUTER JOIN (
+				SELECT DISTINCT
+					queueid,
+					username
+				FROM
+				(
+					SELECT DISTINCT
+						queues.id AS queueid,
+						userusernames.username
+					FROM schedulers
+					INNER JOIN queues ON schedulers.id = queues.schedulerid
+					INNER JOIN queueusers ON queues.id = queueusers.queueid
+						AND  queueusers.membertype = '1'
+						AND  queueusers.datetimecreated < NOW()
+						AND (queueusers.datetimeremoved > NOW() OR queueusers.datetimeremoved IS NULL OR queueusers.datetimeremoved = '0000-00-00 00:00:00')
+					INNER JOIN userusernames ON queueusers.userid = userusernames.userid
+						AND  userusernames.datecreated  < NOW()
+						AND (userusernames.dateremoved  > NOW() OR userusernames.dateremoved IS NULL OR userusernames.dateremoved = '0000-00-00 00:00:00')
+					WHERE
+						schedulers.hostname = 'bell-adm.rcac.purdue.edu'
+				UNION
+					SELECT DISTINCT
+						queues.id AS queueid,
+						userusernames.username
+					FROM schedulers
+					INNER JOIN queues ON schedulers.id = queues.schedulerid
+					INNER JOIN groupusers ON queues.groupid = groupusers.groupid
+						AND  groupusers.membertype = '2'
+						AND  groupusers.datecreated     < NOW()
+						AND (groupusers.dateremoved     > NOW() OR groupusers.dateremoved IS NULL OR groupusers.dateremoved = '0000-00-00 00:00:00')
+					INNER JOIN userusernames ON groupusers.userid = userusernames.userid
+						AND  userusernames.datecreated  < NOW()
+						AND (userusernames.dateremoved  > NOW() OR userusernames.dateremoved IS NULL OR userusernames.dateremoved = '0000-00-00 00:00:00')
+					WHERE
+						schedulers.hostname = 'bell-adm.rcac.purdue.edu'
+				) AS aclusers
+			) AS uniqaclusers ON (queues.id = uniqaclusers.queueid OR uniqaclusers.queueid = '0')
+		WHERE
+			schedulers.hostname = 'bell-adm.rcac.purdue.edu'
+			AND schedulers.batchsystem = '1'
+		GROUP BY
+			queuename,
+			username,
+			enabled,
+			started,
+			cluster,
+			priority,
+			defaultwalltime,
+			maxjobsqueued,
+			maxjobsqueueduser,
+			maxjobsrun,
+			maxjobsrunuser,
+			maxjobcores,
+			nodecoresmin,
+			nodecoresmax,
+			nodememmin,
+			nodememmax,
+			aclgroups,
+			draindown,
+			draindown_timeremaining,
+			aclusersenabled,
+			username,
+			nodeaccesspolicy,
+			defaultnodeaccesspolicy,
+			nodecores,
+			reservation,
+			maxijobfactor,
+			maxijobuserfactor,
+			groupid,
+			nodegpus";
+		*/
 
-		if (!in_array($filters['order'], ['id', 'name', 'state', 'type', 'parent']))
-		{
-			$filters['order'] = Queue::$orderBy;
-		}
-
-		if (!in_array($filters['order_dir'], ['asc', 'desc']))
-		{
-			$filters['order_dir'] = Queue::$orderDir;
-		}
-
-		// Build query
 		$q = (new Queue)->getTable();
-		$c = (new Child)->getTable();
-		$r = (new Asset)->getTable();
+		$s = (new Scheduler)->getTable();
+		$r = (new Subresource)->getTable();
+		$p = (new SchedulerPolicy)->getTable();
+
+		$now = Carbon::now();
 
 		$query = Queue::query()
-			->select($q . '.*')
-			->join($c, $c . '.subresourceid', $q . '.subresourceid')
-			->join($r, $r . '.id', $c . '.resourceid')
+			->select(
+				$q . '.*',
+				$p . '.code AS nodeaccesspolicy',
+				$r . '.nodecores',
+				$r . '.nodegpus'
+			)
+			->join($s, $s . '.id', $q . '.schedulerid')
+			->join($r, $r . '.id', $q . '.subresourceid')
+			->join($p, $p . '.id', $q . '.schedulerpolicyid')
+			->withTrashed()
+			->whereIsActive()
+			->where($q . '.datetimecreated', '<', $now->toDateTimeString())
+			->where(function($where) use ($s)
+			{
+				$where->whereNull($s . '.datetimeremoved')
+					->orWhere($s . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
 			->where(function($where) use ($r)
 			{
 				$where->whereNull($r . '.datetimeremoved')
 					->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
-			->withTrashed();
-
-		if ($filters['state'] == 'trashed')
-		{
-			$query->where(function($where) use ($q)
-			{
-				$where->whereNotNull($q . '.datetimeremoved')
-					->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
 			});
-		}
-		elseif ($filters['state'] == 'enabled')
+			//->where($s . '.batchsystem', '=', 1)
+
+		if ($hostname)
 		{
-			$query
-				->where(function($where) use ($q)
-				{
-					$where->whereNull($q . '.datetimeremoved')
-						->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-				->where($q . '.enabled', '=', 1);
-		}
-		elseif ($filters['state'] == 'disabled')
-		{
-			$query
-				->where(function($where) use ($q)
-				{
-					$where->whereNull($q . '.datetimeremoved')
-						->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-				->where($q . '.enabled', '=', 0);
-		}
-		else
-		{
-			$query
-				->where(function($where) use ($q)
-				{
-					$where->whereNull($q . '.datetimeremoved')
-						->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				});
+			$query->where($s . '.hostname', '=', $hostname);
 		}
 
-		if ($filters['type'] > 0)
-		{
-			$query->where($q . '.queuetype', '=', (int)$filters['type']);
-		}
+		$queues = $query
+			->orderBy($r . '.name', 'asc')
+			->orderBy($q . '.name', 'asc')
+			->get();
 
-		if ($filters['scheduler'])
-		{
-			$query->where($q . '.schedulerid', '=', (int)$filters['scheduler']);
-		}
-
-		if ($filters['resource'])
-		{
-			$query->where($r . '.id', '=', (int)$filters['resource']);
-		}
-
-		if ($filters['subresource'])
-		{
-			$query->where($q . '.subresourceid', '=', (int)$filters['subresource']);
-		}
-
-		if ($filters['group'])
-		{
-			$query->where($q . '.groupid', '=', (int)$filters['group']);
-		}
-
-		if ($filters['class'] == 'system')
-		{
-			$query->where($q . '.groupid', '<=', 0);
-		}
-		elseif ($filters['class'] == 'owner')
-		{
-			$query->where($q . '.groupid', '>', 0);
-		}
-
-		$rows = $query
-			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
-			->appends(array_filter($filters));
-
-		return new QueueResourceCollection($rows);
+		return new AllocationResourceCollection($queues);
 	}
 
 	/**
@@ -290,30 +341,6 @@ class AllocationsController extends Controller
 		event($event = new AllocationCreate($data));
 
 		return new JsonResource($event->response);
-	}
-
-	/**
-	 * Read a queue
-	 *
-	 * @apiMethod GET
-	 * @apiUri    /api/allocations/{id}
-	 * @apiParameter {
-	 * 		"in":            "path",
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"required":      true,
-	 * 		"schema": {
-	 * 			"type":      "integer"
-	 * 		}
-	 * }
-	 * @param   integer  $id
-	 * @return  Response
-	 */
-	public function read($id)
-	{
-		$queue = Queue::findOrFail($id);
-
-		return new QueueResource($queue);
 	}
 
 	/**

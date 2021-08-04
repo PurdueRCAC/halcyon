@@ -106,6 +106,26 @@ class Scheduler extends Model
 	}
 
 	/**
+	 * Determine if entry has an end time
+	 *
+	 * @return  bool
+	 */
+	public function hasLastImportStartTime()
+	{
+		return ($this->datetimelastimportstart && $this->datetimelastimportstart != '0000-00-00 00:00:00' && $this->datetimelastimportstart != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * Determine if entry has an end time
+	 *
+	 * @return  bool
+	 */
+	public function hasLastImportStopTime()
+	{
+		return ($this->datetimelastimportstop && $this->datetimelastimportstop != '0000-00-00 00:00:00' && $this->datetimelastimportstop != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Defines a relationship to queues
 	 *
 	 * @return  object

@@ -114,6 +114,16 @@ class Queue extends Model
 	];
 
 	/**
+	 * Determine if entry has an end time
+	 *
+	 * @return  bool
+	 */
+	public function hasLastSeenTime()
+	{
+		return ($this->datetimelastseen && $this->datetimelastseen != '0000-00-00 00:00:00' && $this->datetimelastseen != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Set defaultwalltime. Incoming value is expected to be # hours.
 	 *
 	 * @param   integer  $value

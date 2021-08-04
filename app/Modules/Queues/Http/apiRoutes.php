@@ -248,18 +248,14 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 
 $router->group(['prefix' => 'allocations', 'middleware' => 'auth.ip'], function (Router $router)
 {
-	$router->get('/', [
-		'as' => 'api.allocations',
+	$router->get('/{hostname?}', [
+		'as' => 'api.allocations.index',
 		'uses' => 'AllocationsController@index',
-	]);
+	])->where('hostname', '[a-z0-9\-\.]+');
 	$router->post('/', [
 		'as' => 'api.allocations.create',
 		'uses' => 'AllocationsController@create',
 		'middleware' => 'can:create queues',
-	]);
-	$router->get('{id}', [
-		'as' => 'api.allocations.read',
-		'uses' => 'AllocationsController@read',
 	]);
 	$router->put('{id}', [
 		'as' => 'api.allocations.update',
