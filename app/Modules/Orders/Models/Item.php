@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Core\Traits\LegacyTrash;
+use App\Modules\Orders\Events\ItemUpdated;
 use Carbon\Carbon;
 
 /**
@@ -60,6 +61,15 @@ class Item extends Model
 	 */
 	protected $guarded = [
 		'id'
+	];
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var  array
+	 */
+	protected $dispatchesEvents = [
+		'updated'  => ItemUpdated::class,
 	];
 
 	/**

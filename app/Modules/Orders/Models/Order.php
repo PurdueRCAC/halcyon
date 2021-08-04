@@ -7,6 +7,8 @@ use App\Modules\History\Traits\Historable;
 use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Users\Models\User;
+use App\Modules\Orders\Events\OrderCreated;
+use App\Modules\Orders\Events\OrderDeleted;
 use Carbon\Carbon;
 
 /**
@@ -63,6 +65,16 @@ class Order extends Model
 		'id',
 		'datetimecreated',
 		'datetimeremoved'
+	];
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var  array
+	 */
+	protected $dispatchesEvents = [
+		'created'  => OrderCreated::class,
+		'deleted'  => OrderDeleted::class,
 	];
 
 	/**
