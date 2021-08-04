@@ -5,24 +5,6 @@
 @endpush
 
 @push('scripts')
-<script>
-var Drupal = {};
-var drupalSettings = {
-    "path":{
-        "baseUrl":"<?php echo str_replace('/', '\\/', rtrim(asset('/'), '/')); ?>",
-        "scriptPath":null,
-        "pathPrefix":"",
-        "currentPath":"finder",
-        "currentPathIsAdmin":false,
-        "isFront":true,
-        "currentLanguage":"en"
-    },
-    "pluralDelimiter":"\u0003",
-    "user":{
-        "uid": <?php echo (auth()->user() ? auth()->user()->id : 0); ?>
-    }
-}
-</script>
 <script src="{{ asset('modules/finder/js/contrib/jquery.ba-throttle-debounce.min.js?v=' . filemtime(public_path() . '/modules/finder/js/contrib/jquery.ba-throttle-debounce.min.js')) }}"></script>
 <script src="{{ asset('modules/finder/js/contrib/jquery.detect_swipe.js?v=' . filemtime(public_path() . '/modules/finder/js/contrib/jquery.detect_swipe.js')) }}"></script>
 <script src="{{ asset('modules/finder/js/cwd_popups.js?v=' . filemtime(public_path() . '/modules/finder/js/cwd_popups.js')) }}"></script>

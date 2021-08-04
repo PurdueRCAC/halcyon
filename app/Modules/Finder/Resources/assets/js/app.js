@@ -1,3 +1,20 @@
+var Drupal = {};
+var drupalSettings = {
+    "path": {
+        "baseUrl": document.querySelector('meta[name="base-url"]').getAttribute('content'),
+        "scriptPath": null,
+        "pathPrefix": "",
+        "currentPath": "finder",
+        "currentPathIsAdmin": false,
+        "isFront": true,
+        "currentLanguage": "en"
+    },
+    "pluralDelimiter": "\u0003",
+    "user": {
+        "uid": 0
+    }
+};
+
 (function ($, Drupal, drupalSettings) {
 
     function findGetParameter(parameterName) {
