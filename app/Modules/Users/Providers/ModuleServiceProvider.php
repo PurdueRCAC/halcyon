@@ -4,6 +4,7 @@ namespace App\Modules\Users\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use App\Modules\Users\Console\SyncCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -32,6 +33,7 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 	}
@@ -44,6 +46,18 @@ class ModuleServiceProvider extends ServiceProvider
 	public function register()
 	{
 		//
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	protected function registerConsoleCommands()
+	{
+		$this->commands([
+			SyncCommand::class,
+		]);
 	}
 
 	/**
