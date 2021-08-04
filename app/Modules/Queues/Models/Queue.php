@@ -18,6 +18,7 @@ use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Events\ResourceMemberDeleted;
 use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Groups\Models\Group;
+use App\Modules\Users\Models\UserUsername;
 use Carbon\Carbon;
 
 /**
@@ -298,6 +299,32 @@ class Queue extends Model
 	}
 
 	/**
+	 * Defines a relationship to users
+	 *
+	 * @return  object
+	 */
+	public function getActiveUsersAttribute()
+	{
+		$now = Carbon::now();
+		$u = (new UserUsername)->getTable();
+		$qu = (new User)->getTable();
+
+		return $this->users()
+			->withTrashed()
+			->whereIsActive()
+			->select($qu . '.*')
+			->join($u, $u . '.userid', $qu . '.userid')
+			->where(function($where) use ($u)
+			{
+				$where->whereNull($u . '.dateremoved')
+					->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where($qu . '.datetimecreated', '<', $now->toDateTimeString())
+			->orderBy($qu . '.datetimecreated', 'desc')
+			->get();
+	}
+
+	/**
 	 * Defines a relationship to walltimes
 	 *
 	 * @return  object
@@ -566,10 +593,27 @@ class Queue extends Model
 	public function getWalltimeAttribute()
 	{
 		$walltime = 0;
+		$now = Carbon::now();
 
-		foreach ($this->walltimes as $w)
+		/*foreach ($this->walltimes as $w)
 		{
 			$walltime += $w->walltime;
+		}*/
+		
+		$w = $this->walltimes()
+			->where('datetimestart', '<', $now->toDateTimeString())
+			->where(function($where) use ($now)
+			{
+				$where->whereNull('datetimestop')
+					->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
+					->orWhere('datetimestop', '>', $now->toDateTimeString());
+			})
+			->orderBy('walltime', 'desc')
+			->first();
+
+		if ($w)
+		{
+			$walltime = $w->walltime;
 		}
 
 		return $walltime;
