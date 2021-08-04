@@ -147,6 +147,12 @@ class AuthController extends Controller
 						$user->name = $cas->getAttribute('fullname');
 						$user->api_token = Str::random(60);
 
+						$attrs = $cas->getAttributes();
+						if (isset($attrs['puid']))
+						{
+							$user->puid = intval($attrs['puid']);
+						}
+
 						if ($newUsertype)
 						{
 							$user->newroles = array($newUsertype);
@@ -173,6 +179,15 @@ class AuthController extends Controller
 						{
 							$user->api_token = Str::random(60);
 							$user->save();
+						}
+
+						if (!$user->puid)
+						{
+							$attrs = $cas->getAttributes();
+							if (isset($attrs['puid']))
+							{
+								$user->update(['puid' => intval($attrs['puid'])]);
+							}
 						}
 
 						Auth::loginUsingId($user->id);

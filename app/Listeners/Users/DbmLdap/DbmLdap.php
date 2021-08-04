@@ -139,6 +139,10 @@ class DbmLdap
 						$user->username = $result['uid'][0];
 						$user->puid = $result['employeeNumber'][0];
 					}
+					elseif (!$user->puid && $result['employeeNumber'][0])
+					{
+						$user->update(['puid' => $result['employeeNumber'][0]]);
+					}
 
 					$usernames[] = $user->username;
 

@@ -109,6 +109,12 @@ class AdminMiddleware
 						$user->name = $cas->getAttribute('fullname');
 						$user->api_token = \Illuminate\Support\Str::random(60);
 
+						$attrs = $cas->getAttributes();
+						if (isset($attrs['puid']))
+						{
+							$user->puid = intval($attrs['puid']);
+						}
+
 						if ($newUsertype)
 						{
 							$user->newroles = array($newUsertype);
@@ -135,6 +141,16 @@ class AdminMiddleware
 						{
 							$user->api_token = \Illuminate\Support\Str::random(60);
 							$user->save();
+						}
+
+						if (!$user->puid)
+						{
+							
+							$attrs = $cas->getAttributes();
+							if (isset($attrs['puid']))
+							{
+								$user->update(['puid' => intval($attrs['puid'])]);
+							}
 						}
 
 						\Illuminate\Support\Facades\Auth::loginUsingId($user->id);
