@@ -133,6 +133,8 @@
   --ui-widget-footer-bg: #f5f5f5;
   --required: rgba(200, 0, 0, 0.4);
   /*--page-link-border: #f5f5f5;*/
+  --meta-bg: rgba(0, 0, 0, 0.1);
+  --meta-br: rgba(255, 255, 255, 0.5);
 }
 [data-mode=dark] {
   --panel: rgba(255, 255, 255, 0.05);
@@ -235,6 +237,8 @@
   --ui-widget-br: #292930;
   --ui-widget-footer-bg: rgb(255, 255, 255, 0.05);
   --required: #c00;
+  --meta-bg: rgba(0, 0, 0, 0.2);
+  --meta-br: rgba(0, 0, 0, 0.2);
 }
 
 html,
@@ -2457,6 +2461,12 @@ fieldset.adminform legend {
   left: 0;
   right: 0;
 }
+.card-title {
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: var(--legend-text);
+}
 fieldset.adminform legend span {
   background: transparent;
   padding: 0;
@@ -4304,27 +4314,28 @@ tr.trashed {
   border-color: #f7eabc;
 }
 table.meta {
-  color: #eee;
-  font-weight: 700;
   padding: 0;
-  -webkit-border-radius: 0.27em;
-  -moz-border-radius: 0.27em;
-  border-radius: 0.27em;
+  -webkit-border-radius: 0.25em;
+  -moz-border-radius: 0.25em;
+  border-radius: 0.25em;
   overflow: hidden;
   zoom: 1;
-  margin: 0 0 1.61803399em 0;
+  margin: 0 0 2em 0;
   -webkit-transition: all ease-in-out 0.2s;
   -moz-transition: all ease-in-out 0.2s;
   -o-transition: all ease-in-out 0.2s;
   transition: all ease-in-out 0.2s;
-  background: #888;
+  background: var(--meta-bg);
   border: none;
+}
+table.meta th {
+  font-weight: 700;
 }
 table.meta tbody th,
 table.meta tbody td {
   padding: 0.61803399em;
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid var(--meta-br);
 }
 table.meta tbody tr:first-child,
 table.meta tbody tr:first-child th,

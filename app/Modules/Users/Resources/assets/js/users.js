@@ -97,4 +97,91 @@ jQuery(document).ready(function($){
 	$('#permissions-rules .stop-propagation').on('click', function(e) {
 		e.stopPropagation();
 	});
+
+	$('.add-facet').on('click', function (e) {
+		e.preventDefault();
+
+		var btn = $(this);
+		var key = $(btn.attr('href') + '-key'),
+			value = $(btn.attr('href') + '-value'),
+			access = $(btn.attr('href') + '-access');
+
+		// create new relationship
+		$.ajax({
+			url: btn.data('api'),
+			type: 'post',
+			data: {
+				'user_id': btn.data('userid'),
+				'key': key.val(),
+				'value': value.val(),
+				'access': access.val()
+			},
+			dataType: 'json',
+			async: false,
+			success: function (response) {
+				Halcyon.message('success', 'Item added');
+
+				var c = btn.closest('table');
+				var li = '#facet-template';//c.find('tr.hidden');
+
+				if (typeof (li) !== 'undefined') {
+					var template = $(li);
+					//.clone()
+					//.removeClass('hidden');
+
+					//template
+					//	.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
+					//	.data('id', response.id);
+
+					template.find('a').each(function (i, el) {
+						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
+					});
+
+					var content = template
+						.html()
+						.replace(/\{i\}/g, c.find('tbody>tr').length + 2)
+						.replace(/\{id\}/g, response.id)
+						.replace(/\{key\}/g, response.key)
+						.replace(/\{value\}/g, response.value)
+						.replace(/\{access\}/g, response.access);
+
+					//template.html(content).insertBefore(li);
+					//template.html(content);
+					$(c.find('tbody')[0]).append(content);
+				}
+
+				key.val(''),
+					value.val(''),
+					access.val(0);
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				//console.log(xhr);
+				Halcyon.message('danger', xhr.responseJSON.message);
+			}
+		});
+	});
+
+	$('#main').on('click', '.remove-facet', function (e) {
+		e.preventDefault();
+
+		var result = confirm($(this).data('confirm'));
+
+		if (result) {
+			var field = $($(this).attr('href'));
+
+			$.ajax({
+				url: $(this).data('api'),
+				type: 'delete',
+				dataType: 'json',
+				async: false,
+				success: function (data) {
+					Halcyon.message('success', 'Item removed');
+					field.remove();
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					Halcyon.message('danger', xhr.responseJSON.message);
+				}
+			});
+		}
+	});
 });

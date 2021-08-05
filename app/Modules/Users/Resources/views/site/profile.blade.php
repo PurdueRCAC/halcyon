@@ -542,7 +542,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 				<div class="card-header panel-heading">
 					<div class="row">
 						<div class="col-md-9">
-							Roles
+							Resources
 						</div>
 						<div class="col-md-3 text-right">
 							<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm">
@@ -582,9 +582,9 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 						@foreach ($resources as $resource)
 							<tr>
 								<td>{{ $resource->name }}</td>
-								<td id="resource{{ $resource->id }}_group">-</td>
-								<td id="resource{{ $resource->id }}_shell">-</td>
-								<td id="resource{{ $resource->id }}_pi">-</td>
+								<td id="resource{{ $resource->id }}_group"></td>
+								<td id="resource{{ $resource->id }}_shell"></td>
+								<td id="resource{{ $resource->id }}_pi"></td>
 								<td id="resource{{ $resource->id }}" data-api="{{ route('api.resources.members') }}">
 									<span class="fa fa-exclamation-triangle" aria-hidde="true"></span>
 									<span class="sr-only">Loading...</span>
@@ -594,12 +594,12 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 						</tbody>
 					</table>
 
-					<div id="manage_roles_dialog" data-id="{{ $user->id }}" title="Manage Roles" class="roles-dialog">
+					<div id="manage_roles_dialog" data-id="{{ $user->id }}" title="Manage Access" class="roles-dialog">
 						<form method="post" action="{{ route('site.users.account') }}">
 							<div class="form-group">
-								<label for="role" class="sr-only">New Role</label>
+								<label for="role">Resource</label>
 								<select id="role" class="form-control" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
-									<option value="">(Select Role)</option>
+									<option value="">(Select Resource)</option>
 									@foreach ($resources as $resource)
 										<option value="{{ $resource->id }}" data-api="{{ route('api.resources.members.read', ['id' => $resource->id . '.' . $user->id]) }}">{{ $resource->name }}</option>
 									@endforeach

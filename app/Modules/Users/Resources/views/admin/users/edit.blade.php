@@ -2,96 +2,7 @@
 
 @push('scripts')
 <script src="{{ asset('modules/users/js/users.js?v=' . filemtime(public_path() . '/modules/users/js/users.js')) }}"></script>
-<script>
-jQuery(document).ready(function ($) {
-	$('.add-facet').on('click', function(e){
-		e.preventDefault();
-
-		var btn = $(this);
-		var key = $(btn.attr('href') + '-key'),
-			value = $(btn.attr('href') + '-value'),
-			access = $(btn.attr('href') + '-access');
-
-		// create new relationship
-		$.ajax({
-			url: btn.data('api'),
-			type: 'post',
-			data: {
-				'user_id' : btn.data('userid'),
-				'key' : key.val(),
-				'value' : value.val(),
-				'access' : access.val()
-			},
-			dataType: 'json',
-			async: false,
-			success: function(response) {
-				Halcyon.message('success', 'Item added');
-
-				var c = btn.closest('table');
-				var li = '#facet-template';//c.find('tr.hidden');
-
-				if (typeof(li) !== 'undefined') {
-					var template = $(li);
-						//.clone()
-						//.removeClass('hidden');
-
-					//template
-					//	.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
-					//	.data('id', response.id);
-
-					template.find('a').each(function(i, el){
-						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
-					});
-
-					var content = template
-						.html()
-						.replace(/\{i\}/g, c.find('tbody>tr').length + 2)
-						.replace(/\{id\}/g, response.id)
-						.replace(/\{key\}/g, response.key)
-						.replace(/\{value\}/g, response.value)
-						.replace(/\{access\}/g, response.access);
-
-					//template.html(content).insertBefore(li);
-					//template.html(content);
-					$(c.find('tbody')[0]).append(content);
-				}
-
-				key.val(''),
-				value.val(''),
-				access.val(0);
-			},
-			error: function(xhr, ajaxOptions, thrownError) {
-				//console.log(xhr);
-				Halcyon.message('danger', xhr.responseJSON.message);
-			}
-		});
-	});
-
-	$('#main').on('click', '.remove-facet', function(e){
-		e.preventDefault();
-
-		var result = confirm($(this).data('confirm'));
-
-		if (result) {
-			var field = $($(this).attr('href'));
-
-			$.ajax({
-				url: $(this).data('api'),
-				type: 'delete',
-				dataType: 'json',
-				async: false,
-				success: function(data) {
-					Halcyon.message('success', 'Item removed');
-					field.remove();
-				},
-				error: function(xhr, ajaxOptions, thrownError) {
-					Halcyon.message('danger', xhr.responseJSON.message);
-				}
-			});
-		}
-	});
-});
-</script>
+<script src="{{ asset('modules/resources/js/roles.js?v=' . filemtime(public_path() . '/modules/resources/js/roles.js')) }}"></script>
 @endpush
 
 @php
@@ -154,7 +65,7 @@ app('pathway')
 		</ul>
 		<div id="user-account">
 			<div class="row">
-				<div class="col col-md-7">
+				<div class="col col-md-6">
 					<fieldset class="adminform">
 						<legend>{{ trans('global.details') }}</legend>
 
@@ -182,34 +93,17 @@ app('pathway')
 						@if ($user->id)
 						<div class="form-group">
 							<label for="field-api_token">{{ trans('users::users.api token') }}:</label>
-							<div class="row">
-								<div class="col col-md-10">
-									<input type="text" class="form-control readonly" readonly="readonly" name="fields[api_token]" id="field-api_token" maxlength="100" value="{{ $user->api_token }}" />
-								</div>
-								<div class="col col-md-2">
-									<button class="btn btn-secondary btn-apitoken">{{ trans('users::users.regenerate') }}</button>
-								</div>
-							</div>
+							<span class="input-group">
+								<input type="text" class="form-control readonly" readonly="readonly" name="fields[api_token]" id="field-api_token" maxlength="100" value="{{ $user->api_token }}" />
+								<span class="input-group-append">
+									<button class="input-group-text btn btn-secondary btn-apitoken">{{ trans('users::users.regenerate') }}</button>
+								</span>
+							</span>
 							<span class="form-text text-muted">{{ trans('users::users.api token hint') }}</span>
 						</div>
 						@endif
-					</fieldset>
 
-					<fieldset id="user-groups" class="adminform">
-						<legend>{{ trans('users::users.assigned roles') }}</legend>
-
-						<div class="form-group">
-							<?php
-							$roles = $user->roles
-								->pluck('role_id')
-								->all();
-
-							echo App\Halcyon\Html\Builder\Access::roles('fields[newroles]', $roles, true); ?>
-						</div>
-					</fieldset>
-				</div>
-				<div class="col col-md-5">
-					<table class="meta">
+						<table class="meta">
 						<caption class="sr-only">{{ trans('global.metadata') }}</caption>
 						<tbody>
 							<tr>
@@ -268,17 +162,128 @@ app('pathway')
 						@endif
 						</tbody>
 					</table>
+					</fieldset>
 
+					<fieldset id="user-groups" class="adminform">
+						<legend>{{ trans('users::users.assigned roles') }}</legend>
+
+						<div class="form-group">
+							<?php
+							$roles = $user->roles
+								->pluck('role_id')
+								->all();
+
+							echo App\Halcyon\Html\Builder\Access::roles('fields[newroles]', $roles, true); ?>
+						</div>
+					</fieldset>
+				</div>
+				<div class="col col-md-6">
+					<div class="card panel panel-default session mb-3">
+						<div class="card-header panel-heading">
+							<div class="row">
+								<div class="col-md-9">
+									<div class="card-title">Resources</div>
+								</div>
+								<div class="col-md-3 text-right">
+									<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm">
+										<span class="fa fa-pencil" aria-hidden="true"></span> Manage
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="card-body panel-body">
+							<?php
+							// Gather roles
+							$resources = App\Modules\Resources\Models\Asset::query()
+								->where('rolename', '!=', '')
+								//->where('retired', '=', 0)
+								->where('listname', '!=', '')
+								->where(function($where)
+								{
+									$where->whereNull('datetimeremoved')
+										->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
+								})
+								->orderBy('display', 'desc')
+								->get();
+							?>
+
+							<table class="table table-hover" id="roles" data-api="{{ route('api.resources.index', ['limit' => 100]) }}">
+								<caption class="sr-only">Roles</caption>
+								<thead>
+									<tr>
+										<th scope="col">Resource</th>
+										<th scope="col">Group</th>
+										<th scope="col">Shell</th>
+										<th scope="col">PI</th>
+										<th scope="col">Status</th>
+									</tr>
+								</thead>
+								<tbody>
+								@foreach ($resources as $resource)
+									<tr>
+										<td>{{ $resource->name }}</td>
+										<td id="resource{{ $resource->id }}_group"></td>
+										<td id="resource{{ $resource->id }}_shell"></td>
+										<td id="resource{{ $resource->id }}_pi"></td>
+										<td id="resource{{ $resource->id }}" data-api="{{ route('api.resources.members') }}">
+											<span class="fa fa-exclamation-triangle text-warning" aria-hidde="true"></span>
+											<span class="sr-only">Loading...</span>
+										</td>
+									</tr>
+								@endforeach
+								</tbody>
+							</table>
+
+							<div id="manage_roles_dialog" data-id="{{ $user->id }}" title="Manage Access" class="dialog roles-dialog">
+								<form method="post" action="{{ route('site.users.account') }}">
+									<div class="form-group">
+										<label for="role">Resource</label>
+										<select id="role" class="form-control" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
+											<option value="">(Select Resource)</option>
+											@foreach ($resources as $resource)
+												<option value="{{ $resource->id }}" data-api="{{ route('api.resources.members.read', ['id' => $resource->id . '.' . $user->id]) }}">{{ $resource->name }}</option>
+											@endforeach
+										</select>
+									</div>
+
+									<div class="hide" id="role_table">
+										<div class="form-group">
+											<label for="role_status">Status</label>
+											<input type="text" disabled="disabled" class="form-control" id="role_status" />
+										</div>
+										<div class="form-group">
+											<label for="role_group">Group</label>
+											<input id="role_group" type="text" class="form-control" />
+										</div>
+										<div class="form-group">
+											<label for="role_shell">Shell</label>
+											<input id="role_shell" type="text" class="form-control" />
+										</div>
+										<div class="form-group">
+											<label for="role_pi">PI</label>
+											<input id="role_pi" type="text" class="form-control" />
+										</div>
+										<div class="form-group">
+											<button id="role_add" class="btn btn-success role-add hide" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">Add Role</button>
+											<button id="role_modify" class="btn btn-success role-add hide" data-id="{{ $user->id }}">Modify Role</button>
+											<button id="role_delete" class="btn btn-danger role-delete hide" data-id="{{ $user->id }}">Delete Role</button>
+										</div>
+
+										<span id="role_errors" class="alert alert-warning hide"></span>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+
+					<?php /*
 					<fieldset class="adminform">
 						<legend>{{ trans('users::users.sessions') }}</legend>
 						<div class="card session">
 						<ul class="list-group list-group-flush">
-						@if (count($user->sessions))
-							
-							
+							@if (count($user->sessions))
 								@foreach ($user->sessions as $session)
 									<li class="list-group-item">
-
 										<div class="session-ip card-title">
 											<div class="row">
 												<div class="col-md-4">
@@ -299,7 +304,6 @@ app('pathway')
 										</div>
 									</li>
 								@endforeach
-								
 							@else
 								<li class="list-group-item text-center">
 									<span class="none">{{ trans('global.none') }}
@@ -308,7 +312,7 @@ app('pathway')
 							</ul>
 						</div>
 					</fieldset>
-			
+					*/ ?>
 				</div><!-- / .col -->
 			</div><!-- / .grid -->
 		</div><!-- / #user-account -->
@@ -415,10 +419,8 @@ app('pathway')
 						<div class="col-md-6">
 							<?php
 							$notes = $user->notes()->orderBy('created_at', 'desc')->get();
-							if (count($notes))
-							{
-								foreach ($notes as $note)
-								{
+							if (count($notes)):
+								foreach ($notes as $note):
 									?>
 									<div class="card">
 										<div class="card-body">
@@ -455,14 +457,12 @@ app('pathway')
 										</div>
 									</div>
 									<?php
-								}
-							}
-							else
-							{
+								endforeach;
+							else:
 								?>
 								<p>No notes found.</p>
 								<?php
-							}
+							endif;
 							?>
 						</div>
 						<div class="col-md-6">
@@ -501,6 +501,7 @@ app('pathway')
 		@endif
 	</div><!-- / .tabs -->
 	<input type="hidden" name="id" value="{{ $user->id }}" />
+	<input type="hidden" name="userid" id="userid" value="{{ $user->id }}" />
 
 	@csrf
 </form>
