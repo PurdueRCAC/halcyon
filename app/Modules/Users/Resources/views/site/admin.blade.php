@@ -28,6 +28,7 @@ $(document).ready(function() {
 					processResults: function (data) {
 						for (var i = 0; i < data.data.length; i++) {
 							data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+							data.data[i].id = data.data[i].id ? data.data[i].id : data.data[i].username;
 						}
 
 						return {

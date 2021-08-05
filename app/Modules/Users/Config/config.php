@@ -19,4 +19,5 @@ return [
 	'redirect_route_after_login' => 'home',
 	'redirect_route_after_logout' => 'home',
 	'create_on_login' => 1,
+	'create_on_search' => 1,
 ];

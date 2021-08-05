@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Users\Events\UserDisplay;
+use App\Modules\Users\Events\UserLookup;
 /*use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Storage\Models\Notification;
@@ -30,7 +31,29 @@ class UsersController extends Controller
 		{
 			if ($id = $request->input('u'))
 			{
-				$user = User::findOrFail($id);
+				if (is_numeric($id))
+				{
+					$user = User::findOrFail($id);
+				}
+				else
+				{
+					$user = User::findByUsername($id);
+
+					if ((!$user || !$user->id) && config('module.users.create_on_search'))
+					{
+						event($event = new UserLookup(['username' => $id]));
+
+						if (count($event->results))
+						{
+							$user = User::createFromUsername($id);
+						}
+					}
+				}
+
+				if (!$user || !$user->id)
+				{
+					abort(404);
+				}
 			}
 		}
 
