@@ -36,7 +36,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.users.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+<form action="{{ route('admin.users.store') }}" method="post" name="adminForm" id="item-form" class="editform">
 
 	@if ($errors->any())
 		<div class="alert alert-error">
@@ -66,6 +66,7 @@ app('pathway')
 		<div id="user-account">
 			<div class="row">
 				<div class="col col-md-6">
+					
 					<fieldset class="adminform">
 						<legend>{{ trans('global.details') }}</legend>
 
@@ -176,6 +177,7 @@ app('pathway')
 							echo App\Halcyon\Html\Builder\Access::roles('fields[newroles]', $roles, true); ?>
 						</div>
 					</fieldset>
+						
 				</div>
 				<div class="col col-md-6">
 					<div class="card panel panel-default session mb-3">
@@ -234,45 +236,7 @@ app('pathway')
 								</tbody>
 							</table>
 
-							<div id="manage_roles_dialog" data-id="{{ $user->id }}" title="Manage Access" class="dialog roles-dialog">
-								<form method="post" action="{{ route('site.users.account') }}">
-									<div class="form-group">
-										<label for="role">Resource</label>
-										<select id="role" class="form-control" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
-											<option value="">(Select Resource)</option>
-											@foreach ($resources as $resource)
-												<option value="{{ $resource->id }}" data-api="{{ route('api.resources.members.read', ['id' => $resource->id . '.' . $user->id]) }}">{{ $resource->name }}</option>
-											@endforeach
-										</select>
-									</div>
-
-									<div class="hide" id="role_table">
-										<div class="form-group">
-											<label for="role_status">Status</label>
-											<input type="text" disabled="disabled" class="form-control" id="role_status" />
-										</div>
-										<div class="form-group">
-											<label for="role_group">Group</label>
-											<input id="role_group" type="text" class="form-control" />
-										</div>
-										<div class="form-group">
-											<label for="role_shell">Shell</label>
-											<input id="role_shell" type="text" class="form-control" />
-										</div>
-										<div class="form-group">
-											<label for="role_pi">PI</label>
-											<input id="role_pi" type="text" class="form-control" />
-										</div>
-										<div class="form-group">
-											<button id="role_add" class="btn btn-success role-add hide" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">Add Role</button>
-											<button id="role_modify" class="btn btn-success role-add hide" data-id="{{ $user->id }}">Modify Role</button>
-											<button id="role_delete" class="btn btn-danger role-delete hide" data-id="{{ $user->id }}">Delete Role</button>
-										</div>
-
-										<span id="role_errors" class="alert alert-warning hide"></span>
-									</div>
-								</form>
-							</div>
+							
 						</div>
 					</div>
 
@@ -500,9 +464,49 @@ app('pathway')
 			@endforeach*/ ?>
 		@endif
 	</div><!-- / .tabs -->
-	<input type="hidden" name="id" value="{{ $user->id }}" />
-	<input type="hidden" name="userid" id="userid" value="{{ $user->id }}" />
 
+	<input type="hidden" name="userid" id="userid" value="{{ $user->id }}" />
 	@csrf
+	<input type="hidden" name="id" value="{{ $user->id }}" />
 </form>
+
+<div id="manage_roles_dialog" data-id="{{ $user->id }}" title="Manage Access" class="dialog roles-dialog">
+								<form method="post" action="{{ route('site.users.account') }}">
+									<div class="form-group">
+										<label for="role">Resource</label>
+										<select id="role" class="form-control" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
+											<option value="">(Select Resource)</option>
+											@foreach ($resources as $resource)
+												<option value="{{ $resource->id }}" data-api="{{ route('api.resources.members.read', ['id' => $resource->id . '.' . $user->id]) }}">{{ $resource->name }}</option>
+											@endforeach
+										</select>
+									</div>
+
+									<div class="hide" id="role_table">
+										<div class="form-group">
+											<label for="role_status">Status</label>
+											<input type="text" disabled="disabled" class="form-control" id="role_status" />
+										</div>
+										<div class="form-group">
+											<label for="role_group">Group</label>
+											<input id="role_group" type="text" class="form-control" />
+										</div>
+										<div class="form-group">
+											<label for="role_shell">Shell</label>
+											<input id="role_shell" type="text" class="form-control" />
+										</div>
+										<div class="form-group">
+											<label for="role_pi">PI</label>
+											<input id="role_pi" type="text" class="form-control" />
+										</div>
+										<div class="form-group">
+											<button id="role_add" class="btn btn-success role-add hide" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">Add Role</button>
+											<button id="role_modify" class="btn btn-success role-add hide" data-id="{{ $user->id }}">Modify Role</button>
+											<button id="role_delete" class="btn btn-danger role-delete hide" data-id="{{ $user->id }}">Delete Role</button>
+										</div>
+
+										<span id="role_errors" class="alert alert-warning hide"></span>
+									</div>
+								</form>
+							</div>
 @stop
