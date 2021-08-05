@@ -154,7 +154,6 @@ jQuery(document).ready(function ($) {
 				window.location.reload();
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
-				console.log(xhr);
 				btn.removeClass('processing');
 				frm.prepend('<div class="alert alert-danger">' + xhr.responseJSON.message + '</div>');
 			}

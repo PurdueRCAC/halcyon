@@ -1,28 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/knowledge/js/admin.js?v=' . filemtime(public_path() . '/modules/knowledge/js/admin.js')) }}"></script>
-<script>
-$(document).ready(function() {
-	var dialog = $("#new-page").dialog({
-		autoOpen: false,
-		height: 250,
-		width: 500,
-		modal: true
-	});
-
-	$('#toolbar-plus').on('click', function(e){
-		e.preventDefault();
-
-		dialog.dialog("open");
-	});
-});
-</script>
 @endpush
 
 @php
@@ -291,24 +275,19 @@ $(document).ready(function() {
 
 		<div class="row">
 			<div class="col-md-6">
-
-					<a href="{{ route('admin.knowledge.create') }}" class="form-group form-block">
-						<span class="icon-edit"></span>
-						{{ trans('knowledge::knowledge.new page') }}
-					</a>
-
+				<a href="{{ route('admin.knowledge.create') }}" class="form-group form-block">
+					<span class="icon-edit"></span>
+					{{ trans('knowledge::knowledge.new page') }}
+				</a>
 			</div>
 			<div class="col-md-6">
-
-					<a href="{{ route('admin.knowledge.select') }}" class="form-group form-block">
-						<span class="icon-repeat"></span>
-						{{ trans('knowledge::knowledge.snippet') }}
-					</a>
-
+				<a href="{{ route('admin.knowledge.select') }}" class="form-group form-block">
+					<span class="icon-repeat"></span>
+					{{ trans('knowledge::knowledge.snippet') }}
+				</a>
 			</div>
 		</div>
 	</div>
 	@csrf
 </form>
-
 @stop

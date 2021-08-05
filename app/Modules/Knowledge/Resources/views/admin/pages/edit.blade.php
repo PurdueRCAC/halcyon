@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 @endpush
 
 @push('scripts')
@@ -237,8 +237,7 @@ app('pathway')
 							<tbody>
 							<?php
 							$i = 0;
-							foreach ($page->params->get('variables', []) as $key => $val)
-							{
+							foreach ($page->params->get('variables', []) as $key => $val):
 								?>
 								<tr id="params-variables-{{ $i }}">
 									<td>
@@ -258,7 +257,7 @@ app('pathway')
 								</tr>
 								<?php
 								$i++;
-							}
+							endforeach;
 							?>
 								<tr id="params-variables-{{ $i }}" class="d-none">
 									<td>
@@ -298,8 +297,7 @@ app('pathway')
 							<tbody>
 							<?php
 							$i = 0;
-							foreach ($page->params->get('tags', []) as $val)
-							{
+							foreach ($page->params->get('tags', []) as $val):
 								?>
 								<tr id="params-tags-{{ $i }}">
 									<td>
@@ -311,7 +309,7 @@ app('pathway')
 								</tr>
 								<?php
 								$i++;
-							}
+							endforeach;
 							?>
 								<tr id="params-tags-{{ $i }}" class="d-none">
 									<td>
@@ -342,19 +340,16 @@ app('pathway')
 							</thead>
 							<tbody>
 						<?php
-						foreach ($row->ancestors() as $ancestor)
-						{
-
-							foreach ($ancestor->page->params->get('variables', []) as $key => $val)
-							{
-							?>
-							<tr>
-								<th scope="row">${resource.{{ $key }}}</th>
-								<td>{{ $val }}</td>
-							</tr>
-							<?php
-							}
-						}
+						foreach ($row->ancestors() as $ancestor):
+							foreach ($ancestor->page->params->get('variables', []) as $key => $val):
+								?>
+								<tr>
+									<th scope="row">${resource.{{ $key }}}</th>
+									<td>{{ $val }}</td>
+								</tr>
+								<?php
+							endforeach;
+						endforeach;
 						?>
 							</tbody>
 						</table>

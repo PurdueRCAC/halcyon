@@ -1,37 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/knowledge/js/admin.js?v=' . filemtime(public_path() . '/modules/knowledge/js/admin.js')) }}"></script>
-<script>
-jQuery(document).ready(function ($) {
-	$('.snippet-checkbox').on('change', function(e){
-		if ($(this).is(':checked')) {
-			$('tr[data-parent=' + $(this).data('id') + ']')
-				.find('.snippet-checkbox')
-				.each(function(i, el){
-					$(el).prop('checked', true).trigger('change');
-				});
-		} else {
-			$('tr[data-parent=' + $(this).data('id') + ']')
-				.find('.snippet-checkbox')
-				.each(function(i, el){
-					$(el).prop('checked', false).trigger('change');
-				});
-		}
-	});
-	$('.toggle-tree').on('click', function(e){
-		e.preventDefault();
-
-		$('tr[data-parent=' + $(this).data('id') + ']')
-				.toggleClass('d-none');
-	});
-});
-</script>
 @endpush
 
 @php

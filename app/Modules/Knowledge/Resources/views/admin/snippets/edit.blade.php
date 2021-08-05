@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 @endpush
 
 @push('scripts')
@@ -136,6 +136,7 @@ app('pathway')
 					</select>
 				</div>
 
+				<!--
 				<div class="form-group">
 					<label for="field-publish_up">{{ trans('knowledge::knowledge.publish up') }}:</label><br />
 					{!! Html::input('calendar', 'fields[publish_up]', Carbon\Carbon::parse($row->publish_up ? $row->publish_up : $page->created_at)) !!}
@@ -148,6 +149,7 @@ app('pathway')
 						<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
 					</span>
 				</div>
+				-->
 			</fieldset>
 
 			<fieldset class="adminform">
@@ -192,22 +194,6 @@ app('pathway')
 						</div>
 					</div>
 				</fieldset>
-
-				<!-- <div class="form-group">
-					<label for="params-show_title">{{ trans('knowledge::knowledge.show title') }}:</label><br />
-					<select class="form-control" name="params[show_title]" id="params-show_title">
-						<option value="0"<?php if (!$page->params->get('show_title')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
-						<option value="1"<?php if ($page->params->get('show_title')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
-					</select>
-				</div>
-
-				<div class="form-group">
-					<label for="params-show_toc">{{ trans('knowledge::knowledge.show toc') }}:</label><br />
-					<select class="form-control" name="params[show_toc]" id="params-show_toc">
-						<option value="0"<?php if (!$page->params->get('show_toc')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
-						<option value="1"<?php if ($page->params->get('show_toc')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
-					</select>
-				</div> -->
 			</fieldset>
 
 			@sliders('start', 'module-sliders')
@@ -223,8 +209,7 @@ app('pathway')
 							<tbody>
 							<?php
 							$i = 0;
-							foreach ($page->params->get('variables', []) as $key => $val)
-							{
+							foreach ($page->params->get('variables', []) as $key => $val):
 								?>
 								<tr id="params-variables-{{ $i }}">
 									<td>
@@ -244,7 +229,7 @@ app('pathway')
 								</tr>
 								<?php
 								$i++;
-							}
+							endforeach;
 							?>
 								<tr id="params-variables-{{ $i }}" class="d-none">
 									<td>
@@ -283,19 +268,16 @@ app('pathway')
 							</thead>
 							<tbody>
 						<?php
-						foreach ($row->ancestors() as $ancestor)
-						{
-
-							foreach ($ancestor->page->params->get('variables', []) as $key => $val)
-							{
-							?>
-							<tr>
-								<th scope="row">${resource.{{ $key }}}</th>
-								<td>{{ $val }}</td>
-							</tr>
-							<?php
-							}
-						}
+						foreach ($row->ancestors() as $ancestor):
+							foreach ($ancestor->page->params->get('variables', []) as $key => $val):
+								?>
+								<tr>
+									<th scope="row">${resource.{{ $key }}}</th>
+									<td>{{ $val }}</td>
+								</tr>
+								<?php
+							endforeach;
+						endforeach;
 						?>
 							</tbody>
 						</table>

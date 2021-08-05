@@ -10,10 +10,9 @@ $children = App\Modules\Knowledge\Models\Page::query()
 	->get();
 
 $cls = '';
-if (count($children))
-{
+if (count($children)):
 	$cls .= 'parent';
-}
+endif;
 @endphp
 <li<?php if ($cls) { echo ' class="' . trim($cls) . '"'; } ?>>
 	<span class="form-check">

@@ -180,34 +180,4 @@ app('pathway')
 
 	@csrf
 </form>
-<?php /*
-<form action="{{ route('admin.knowledge.snippets.attach') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="form-group">
-				<label for="field-parent_id">{{ trans('knowledge::knowledge.parent') }}:</label>
-				<select name="parent_id" id="field-parent_id" class="form-control searchable-select">
-					<option value="1">{{ trans('global.none') }}</option>
-					<?php foreach ($tree as $pa): ?>
-						<option value="{{ $pa->id }}" data-path="/{{ $pa->path }}"><?php echo str_repeat('|&mdash; ', $pa->level) . e(Illuminate\Support\Str::limit($pa->title, 70)); ?> (/{{ $pa->path }})</option>
-					<?php endforeach; ?>
-				</select>
-			</div>
-
-			<div class="form-group">
-				<label for="field-parent_id">{{ trans('knowledge::knowledge.parent') }}:</label>
-				<select name="page_id" id="field-parent_id" class="form-control searchable-select">
-					<!--<option value="0">{{ trans('global.none') }}</option>-->
-					<?php foreach ($pages as $pa): ?>
-						<option value="{{ $pa->id }}" data-path="/{{ $pa->path }}">{{ $pa->alias }}: ({{ $pa->id }}) <?php echo str_repeat('|&mdash; ', $pa->level) . e(Illuminate\Support\Str::limit($pa->title, 70)); ?></option>
-					<?php endforeach; ?>
-				</select>
-			</div>
-		</div>
-	</div>
-
-	<input type="submit" class="btn btn-success" value="{{ trans('global.save') }}" />
-
-	@csrf
-</form>*/ ?>
 @stop

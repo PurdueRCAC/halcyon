@@ -40,20 +40,6 @@ jQuery(document).ready(function ($) {
 	$('.add-row').on('click', function (e) {
 		e.preventDefault();
 
-		/*var row   = $('#' + $(this).data('container')).find('.param-item:last');
-
-		var clone = row.clone(true);
-		var cindex = $('#' + $(this).data('container')).find('.param-item').length;
-		var inputs = clone.find('input,select');
-
-		inputs.val('');
-		inputs.each(function(i, el){
-			$(el).attr('name', $(el).attr('name').replace(/\[\d+\]/, '[' + cindex + ']'));
-			$(el).attr('id', $(el).attr('id').replace(/\[\d+\]/, '[' + cindex + ']'));
-		});
-		console.log(row);
-		console.log(clone);
-		row.after(clone);*/
 		var tr = $('#' + $(this).data('container')).find('tbody tr:last');
 
 		var clone = tr.clone(true);
@@ -75,8 +61,45 @@ jQuery(document).ready(function ($) {
 			$(el).attr('href', $(el).attr('href').replace(/\-\d+/, '-' + cindex));
 		});
 
-		//clone.find('.btn').removeClass('disabled');
-
 		tr.after(clone);
+	});
+
+	//----
+
+	var dialog = $("#new-page").dialog({
+		autoOpen: false,
+		height: 250,
+		width: 500,
+		modal: true
+	});
+
+	$('#toolbar-plus').on('click', function (e) {
+		e.preventDefault();
+
+		dialog.dialog("open");
+	});
+
+	//----
+
+	$('.snippet-checkbox').on('change', function (e) {
+		if ($(this).is(':checked')) {
+			$('tr[data-parent=' + $(this).data('id') + ']')
+				.find('.snippet-checkbox')
+				.each(function (i, el) {
+					$(el).prop('checked', true).trigger('change');
+				});
+		} else {
+			$('tr[data-parent=' + $(this).data('id') + ']')
+				.find('.snippet-checkbox')
+				.each(function (i, el) {
+					$(el).prop('checked', false).trigger('change');
+				});
+		}
+	});
+	$('.toggle-tree').on('click', function (e) {
+		e.preventDefault();
+
+		$('tr[data-parent=' + $(this).data('id') + ']')
+			.toggleClass('d-none');
 	});
 });
