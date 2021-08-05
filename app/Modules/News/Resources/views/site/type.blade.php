@@ -79,7 +79,7 @@ app('pathway')
 			</h2>
 		</div>
 		<div class="col-md-4 text-right">
-			<nav class="btn-group" aria-label="Calendar options">
+			<nav class="btn-group" aria-label="Calendar options for {{ $type->name }}">
 				<a class="btn btn-default tip" href="{{ route('site.news.feed', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}">
 					<span class="fa fa-rss-square" aria-hidden="true"></span><span class="sr-only">{{ trans('news::news.rss feed') }}</span>
 				</a>
