@@ -64,7 +64,7 @@ class MedialistController extends Controller
 
 			if (!is_file($file))
 			{
-				abort(404, trans('Specified file "%s" does not exist', $file));
+				abort(404, trans('media::media.error.file not found', ['file' => $file]));
 			}
 		}
 		elseif ($folder)
@@ -74,7 +74,7 @@ class MedialistController extends Controller
 
 			if (!is_dir($folder))
 			{
-				abort(404, trans('Specified folder "%s" does not exist', $folder));
+				abort(404, trans('media::media.error.directory not found', ['directory' => $folder]));
 			}
 		}
 
@@ -107,7 +107,7 @@ class MedialistController extends Controller
 			}
 			catch (\Exception $e)
 			{
-				$request->session()->flash('error', trans('There was a problem reading the image dimensions.'));
+				$request->session()->flash('error', trans('media::media.error.cannot read image dimensions'));
 			}
 		}
 

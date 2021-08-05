@@ -72,11 +72,11 @@ app('pathway')
 					<div class="media-header-buttons">
 						<a class="media-files-view thumbs-view hasTip <?php if (!$layout || $layout == 'thumbs') { echo 'active'; } ?>" data-view="thumbs" href="<?php echo route('admin.media.index', ['layout' => 'thumbs']); ?>" data-tip="{{ trans('media::media.thumbnail view') }}" title="{{ trans('media::media.thumbnail view') }}">
 							<span class="icon-grid"></span>
-							{{ trans('media::media.THUMBNAIL_VIEW') }}
+							{{ trans('media::media.thumbnail view') }}
 						</a>
 						<a class="media-files-view hasTip listing-view <?php if ($layout == 'list') { echo 'active'; } ?>" data-view="list" href="<?php echo route('admin.media.index', ['layout' => 'list']); ?>" data-tip="{{ trans('media::media.detail view') }}" title="{{ trans('media::media.detail view') }}">
 							<span class="icon-list"></span>
-							{{ trans('media::media.DETAIL_VIEW') }}
+							{{ trans('media::media.detail view') }}
 						</a>
 					</div>
 				</div>
@@ -103,7 +103,7 @@ app('pathway')
 
 			<?php if (auth()->user()->can('create media')): ?>
 				<div class="dialog dialog-upload" id="media-upload" title="{{ trans('media::media.upload') }}">
-					<form action="{{ route('api.media.upload', ['api_token' => auth()->user()->api_token]) }}" id="uploader" class="dropzone">
+					<form action="{{ route('api.media.upload', ['api_token' => auth()->user()->api_token]) }}" id="uploader" class="dropzone" data-instructions="{{ trans('media::media.upload instructions') }}">
 						<div class="fallback">
 							<input type="file" name="files" multiple />
 						</div>

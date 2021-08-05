@@ -83,13 +83,15 @@ class FolderController extends Controller
 			return redirect($redirect);
 		}
 
+		$errors = array();
+
 		// Initialise variables.
 		$ret = true;
 		foreach ($rm as $path)
 		{
 			$path = urldecode($path);
 
-			$fullPath = Filesystem::cleanPath(implode(DIRECTORY_SEPARATOR, array(COM_MEDIA_BASE, $folder, $path)));
+			$fullPath = Filesystem::cleanPath(implode(DIRECTORY_SEPARATOR, array(storage_path(), $folder, $path)));
 			//$object_file = new \App\Halcyon\Base\Obj(array('filepath' => $fullPath));
 			if (is_dir($fullPath))
 			{
@@ -102,7 +104,7 @@ class FolderController extends Controller
 					if (in_array(false, $result, true))
 					{
 						// There are some errors in the plugins
-						Notify::warning(transs('media::media.error.before delete', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
+						$errors[] = transs('media::media.error.before delete', count($errors = $object_file->getErrors()), implode('<br />', $errors));
 						continue;
 					}
 
@@ -110,16 +112,16 @@ class FolderController extends Controller
 
 					// Trigger the onContentAfterDelete event.
 					Event::trigger('content.onContentAfterDelete', array('com_media.folder', &$object_file));
-					$this->setMessage(trans('media::media.delete complete', substr($fullPath, strlen(COM_MEDIA_BASE))));
+					$errors[] = trans('media::media.delete complete', substr($fullPath, strlen(storage_path())));
 				}
 				else
 				{
 					// This makes no sense...
-					Notify::warning(trans('media::media.error.unable to delete folder not empty', substr($fullPath, strlen(COM_MEDIA_BASE))));
+					$errors[] = trans('media::media.error.unable to delete folder not empty', substr($fullPath, strlen(storage_path())));
 				}
 			}
 		}
 
-		return redirect(route('admin.media.index', ['folder' => $folder]);
+		return redirect(route('admin.media.index', ['folder' => $folder]))->withError($errors);
 	}
 }

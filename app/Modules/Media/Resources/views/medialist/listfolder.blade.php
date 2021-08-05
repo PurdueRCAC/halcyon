@@ -32,7 +32,7 @@ $path = ltrim($file->getRelativePath(), '/');
 						</li>
 						@if (auth()->user()->can('edit media'))
 							<li>
-								<a class="icon-edit media-opt-rename" href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}" data-prompt="New name">{{ trans('media::media.rename') }}</a>
+								<a class="icon-edit media-opt-rename" href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}" data-prompt="{{ trans('media::media.new name') }}">{{ trans('media::media.rename') }}</a>
 							</li>
 						@endif
 						@if (auth()->user()->can('delete media'))
