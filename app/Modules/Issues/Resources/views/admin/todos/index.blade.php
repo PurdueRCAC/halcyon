@@ -116,7 +116,35 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-4">
-					{{ $row->timeperiod->name }}
+					<?php
+					// Check for completed todos in the recurring time period
+					switch ($row->timeperiod->name):
+						case 'hourly':
+							$badge = 'danger';
+						break;
+
+						case 'daily':
+							$badge = 'warning';
+						break;
+
+						case 'weekly':
+							$badge = 'info';
+						break;
+
+						case 'monthly':
+							$period = $now->format('Y-m-01') . ' 00:00:00';
+						break;
+
+						case 'annual':
+							$period = $now->format('Y-01-01') . ' 00:00:00';
+						break;
+
+						default:
+							$badge = 'secondary';
+						break;
+					endswitch;
+					?>
+					<span class="badge badge-{{ $badge }}">{{ $row->timeperiod->name }}</span>
 				</td>
 			</tr>
 		@endforeach

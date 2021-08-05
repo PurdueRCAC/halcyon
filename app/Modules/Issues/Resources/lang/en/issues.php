@@ -33,7 +33,7 @@ return [
 	'no comments found' => 'No comments found.',
 	'posted by' => 'Posted by :who on :when',
 	'all recurrence' => '- All Timeperiods -',
-	'formatting help' => 'Reports and comments support MarkDown for formatting.',
+	'formatting help' => 'MarkDown is supported for formatting.',
 	// Front-end
 	'add report' => 'Add Report',
 	'add new' => 'Add New',

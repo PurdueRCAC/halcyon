@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
 @section('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 @stop
 
 @section('scripts')
@@ -63,12 +63,13 @@ Toolbar::cancel(route('admin.issues.todos.cancel'));
 
 				<div class="form-group{{ $errors->has('fields.name') ? ' has-error' : '' }}">
 					<label for="field-name">{{ trans('issues::issues.name') }} <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control required" maxlength="250" value="{{ $row->name }}" />
+					<input type="text" name="fields[name]" id="field-name" class="form-control" required maxlength="250" value="{{ $row->name }}" />
 				</div>
 
 				<div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
 					<label for="field-description">{{ trans('issues::issues.description') }}:</label>
-					<textarea name="fields[description]" id="field-description" class="form-control" cols="30" rows="5">{{ $row->description }}</textarea>
+					{!! markdown_editor('fields[description]', $row->description, ['rows' => 5]) !!}
+					<span class="form-text text-muted">{{ trans('issues::issues.formatting help') }}</span>
 				</div>
 
 				<div class="form-group{{ $errors->has('recurringtimeperiodid') ? ' has-error' : '' }}">
@@ -84,8 +85,6 @@ Toolbar::cancel(route('admin.issues.todos.cancel'));
 		</div>
 		<div class="col-md-5">
 			<div class="help">
-				<p>{{ trans('issues::issues.formatting help') }}</p>
-
 				<table class="table table-bordered">
 					<caption>MarkDown Quick Guide</caption>
 					<thead>

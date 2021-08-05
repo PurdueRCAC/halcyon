@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
 @section('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 @stop
 
 @section('scripts')
@@ -66,38 +66,33 @@ Toolbar::cancel(route('admin.issues.cancel'));
 				<div class="form-group">
 					<?php
 					$resources = array();
-					foreach ($row->resources as $resource)
-					{
+					foreach ($row->resources as $resource):
 						$resources[] = ($resource->resource ? $resource->resource->name : trans('global.unknown')) . ':' . $resource->resourceid;
-					}
+					endforeach;
 					?>
 					<label for="field-resources">{{ trans('issues::issues.resources') }}:</label>
 					<select class="form-control basic-multiple" name="resources[]" multiple="multiple" data-placeholder="">
 						<?php
 						$r = $row->resources->pluck('resourceid')->toArray();
 						$resources = App\Modules\Resources\Models\Asset::orderBy('name', 'asc')->get();
-						foreach ($resources as $resource)
-						{
+						foreach ($resources as $resource):
 							?>
 							<option value="{{ $resource->id }}"<?php if (in_array($resource->id, $r)) { echo ' selected="selected"'; } ?>>{{ $resource->name }}</option>
 							<?php
-						}
+						endforeach;
 						?>
 					</select>
 				</div>
 
 				<div class="form-group">
 					<label for="field-report">{{ trans('issues::issues.report') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<textarea name="fields[report]" id="field-report" class="form-control" required rows="15" cols="40">{{ $row->report }}</textarea>
+					{!! markdown_editor('fields[report]', $row->report, ['rows' => 15, 'required' => 'required']) !!}
 					<span class="invalid-feedback">{{ trans('issues::issues.invalid.report') }}</span>
+					<span class="form-text">{{ trans('issues::issues.formatting help') }}</span>
 				</div>
 			</fieldset>
 		</div>
 		<div class="col-md-5">
-			<div class="help">
-				<p>{{ trans('issues::issues.formatting help') }}</p>
-			</div>
-
 			@if ($row->id)
 				<fieldset class="adminform">
 					<legend>{{ trans('issues::issues.comments') }}</legend>
@@ -106,8 +101,8 @@ Toolbar::cancel(route('admin.issues.cancel'));
 					<?php
 					$comments = $row->comments()->whereIsActive()->orderBy('datetimecreated', 'asc')->get();
 
-					if (count($comments) > 0) {
-					?>
+					if (count($comments) > 0):
+						?>
 						@foreach ($comments as $comment)
 						<li id="comment_{{ $comment->id }}" data-api="{{ route('api.issues.comments.update', ['comment' => $comment->id]) }}">
 							<div class="row">
@@ -130,6 +125,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 								<div class="form-group">
 									<label for="comment_{{ $comment->id }}_comment" class="sr-only">{{ trans('issues::issues.comment') }}</label>
 									<textarea name="comment" id="comment_{{ $comment->id }}_comment" class="form-control" cols="45" rows="3">{{ $comment->comment }}</textarea>
+									<span class="form-text text-muted">{{ trans('issues::issues.formatting help') }}</span>
 								</div>
 								<div class="row">
 									<div class="col-md-6">
@@ -151,8 +147,8 @@ Toolbar::cancel(route('admin.issues.cancel'));
 							<p class="text-muted">{{ trans('issues::issues.posted by', ['who' => ($comment->creator ? $comment->creator->name : trans('global.unknown')), 'when' => $comment->datetimecreated->toDateTimeString()]) }}</p>
 						</li>
 						@endforeach
-					<?php
-					}
+						<?php
+					endif;
 					?>
 						<li id="comment_<?php echo '{id}'; ?>" class="d-none" data-api="{{ route('api.issues.comments') }}/<?php echo '{id}'; ?>">
 							<div class="row">
@@ -174,6 +170,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 								<div class="form-group">
 									<label for="comment_<?php echo '{id}'; ?>_comment" class="sr-only">{{ trans('issues::issues.comment') }}</label>
 									<textarea name="comment" id="comment_<?php echo '{id}'; ?>_comment" class="form-control" cols="45" rows="3"></textarea>
+									<span class="form-text text-muted">{{ trans('issues::issues.formatting help') }}</span>
 								</div>
 								<div class="row">
 									<div class="col-md-6">
@@ -198,6 +195,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 							<div class="form-group">
 								<label for="comment_new_comment" class="sr-only">{{ trans('issues::issues.comment') }}</label>
 								<textarea name="comment" id="comment_new_comment" class="form-control" cols="45" rows="3"></textarea>
+								<span class="form-text text-muted">{{ trans('issues::issues.formatting help') }}</span>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
