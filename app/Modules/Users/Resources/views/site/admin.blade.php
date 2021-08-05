@@ -27,14 +27,24 @@ $(document).ready(function() {
 					},
 					processResults: function (data) {
 						for (var i = 0; i < data.data.length; i++) {
-							data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
-							data.data[i].id = data.data[i].id ? data.data[i].id : data.data[i].username;
+							if (data.data[i].id) {
+								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+							} else {
+								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+								data.data[i].id = data.data[i].username;
+							}
 						}
 
 						return {
 							results: data.data
 						};
 					}
+				},
+				templateResult: function (state) {
+					if (isNaN(state.id) && typeof state.name != 'undefined') {
+						return $('<span>' + state.text + ' <span class="text-warning ml-1"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> No local account</span></span>');
+					}
+					return state.text;
 				}
 			});
 		});
