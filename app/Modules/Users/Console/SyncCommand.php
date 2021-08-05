@@ -80,7 +80,7 @@ class SyncCommand extends Command
 
 			$user = $e->results[0];
 
-			if (!$user->api_token)
+			/*if (!$user->api_token)
 			{
 				$user->api_token = Str::random(60);
 
@@ -90,7 +90,7 @@ class SyncCommand extends Command
 				{
 					$this->info('Updating api_token for #' . $user->id . ' (' . $user->username . ')');
 				}
-			}
+			}*/
 
 			if ($user->puid && !$user->getOriginal('puid'))
 			{
@@ -99,6 +99,13 @@ class SyncCommand extends Command
 				if ($debug)
 				{
 					$this->info('Updating puid for #' . $user->id . ' (' . $user->username . ')');
+				}
+			}
+			else
+			{
+				if ($debug)
+				{
+					$this->info('No change in puid for #' . $user->id . ' (' . $user->username . ')');
 				}
 			}
 
