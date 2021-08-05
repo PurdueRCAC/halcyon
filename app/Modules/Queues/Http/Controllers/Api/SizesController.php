@@ -267,7 +267,7 @@ class SizesController extends Controller
 		}
 		if ($request->has('comment'))
 		{
-			$request->input('comment');
+			$row->comment = $request->input('comment');
 		}
 
 		if (!$row->sellerqueueid && $row->corecount < 0)
@@ -521,6 +521,8 @@ class SizesController extends Controller
 		$row = Size::findOrFail($id);
 
 		// Find counter entry to update as well
+		$updatecounter = false;
+
 		$counter = Size::query()
 			->where('queueid', '=', $row->sellerqueueid)
 			->where('sellerqueueid', '=', (int)$row->queueid)
@@ -538,6 +540,7 @@ class SizesController extends Controller
 		if ($request->has('datetimestop'))
 		{
 			$row->datetimestop = $request->input('datetimestop');
+			$updatecounter = true;
 		}
 
 		if ($request->has('comment'))
@@ -551,9 +554,11 @@ class SizesController extends Controller
 		}
 
 		// Sanity checks if we are changing coreecount
-		if ($request->has('corecount'))
+		$cores = $request->input('corecount');
+
+		if ($request->has('corecount') && $cores != $row->corecount)
 		{
-			$cores = $request->input('corecount');
+			$updatecounter = true;
 
 			// Can't change corecount of a entry that has already started
 			if ($row->hasStarted())
@@ -654,19 +659,22 @@ class SizesController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
-		if ($counter)
+		if ($updatecounter)
 		{
-			$counter->corecount = -$row->corecount;
-			$counter->datetimestop = $row->datetimestop;
-
-			if (!$counter->save())
+			if ($counter)
 			{
-				return response()->json(['message' => trans('queues::queues.error.failed to update counter', ['id' => $counter->id])], 500);
+				$counter->corecount = -$row->corecount;
+				$counter->datetimestop = $row->datetimestop;
+
+				if (!$counter->save())
+				{
+					return response()->json(['message' => trans('queues::queues.error.failed to update counter', ['id' => $counter->id])], 500);
+				}
 			}
-		}
-		else
-		{
-			return response()->json(['message' => trans('queues::queues.error.failed to find counter')], 506);
+			else
+			{
+				return response()->json(['message' => trans('queues::queues.error.failed to find counter')], 506);
+			}
 		}
 
 		$row->api = route('api.queues.sizes.read', ['id' => $row->id]);
