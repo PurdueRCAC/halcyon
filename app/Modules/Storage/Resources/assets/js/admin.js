@@ -753,4 +753,11 @@ document.addEventListener('DOMContentLoaded', function() {
 			$('#' + id + '_save_button').prop('disabled', false);
 		});*/
 	});
+
+	if ($('#storageresourceid_path').length) {
+		$('#storageresourceid')
+			.on('change', function () {
+				$('#storageresourceid_path').html($(this).children("option:selected").data('path'));
+			});
+	}
 });

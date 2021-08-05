@@ -196,7 +196,7 @@ if ($parent)
 		@endforeach
 		</tbody>
 	</table>
-</div>
+	</div>
 
 	{{ $rows->render() }}
 

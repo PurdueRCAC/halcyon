@@ -111,11 +111,7 @@ app('pathway')
 								@endif
 							</td>
 							<td class="priority-4 text-right">
-								@if ($row->notifications_count)
-									{{ number_format($row->notifications_count) }}
-								@else
-									{{ number_format($row->notifications_count) }}
-								@endif
+								{{ number_format($row->notifications_count) }}
 							</td>
 						</tr>
 					@endforeach

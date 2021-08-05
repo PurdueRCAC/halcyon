@@ -35,7 +35,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.storage.types.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+<form action="{{ route('admin.storage.types.store') }}" method="post" name="adminForm" id="item-form" class="editform">
 	<div class="row">
 		<div class="col col-md-7">
 			<fieldset class="adminform">
@@ -70,7 +70,15 @@ app('pathway')
 			</fieldset>
 		</div>
 		<div class="col col-md-5">
-			@include('history::admin.history')
+			<table class="meta">
+				<caption class="sr-only">{{ trans('global.metadata') }}</caption>
+				<tbody>
+					<tr>
+						<th scope="row">{{ trans('storage::storage.notifications') }}</th>
+						<td>{{ number_format($row->notifications_count) }}</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 
