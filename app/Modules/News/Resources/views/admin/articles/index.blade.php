@@ -6,31 +6,6 @@
 @endpush
 
 @push('scripts')
-<script>
-$(document).ready(function() {
-	var cdialog = $("#copy-article").dialog({
-		autoOpen: false,
-		height: 250,
-		width: 500,
-		modal: true
-	});
-
-	$('#toolbar-copy>.btn-copy').removeClass('toolbar-submit').off('click').on('click', function(e){
-		e.preventDefault();
-
-		//$('#adminForm').addClass('frozen');
-
-		cdialog.dialog("open");
-	});
-	$("#copy-article").find('.btn').on('click', function(e){
-		e.preventDefault();
-		console.log('foo');
-		console.log($(this).closest('form'));
-		console.log($('#adminForm').find('input:checked'));
-		$(this).closest('form').append($('#adminForm').find('input:checked')).submit();
-	})
-});
-</script>
 <script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js?v=' . filemtime(public_path() . '/modules/core/vendor/handlebars/handlebars.min-v4.7.6.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>

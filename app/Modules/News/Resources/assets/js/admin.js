@@ -47,7 +47,7 @@ function NEWSSendMail(btn) {
 			}
 		});
 		to.clearTags();
-
+		console.log(data.associations);
 		var x;
 		for (x = 0; x < data.associations.length; x++) {
 			if ($('.tagsinput').length) {
@@ -96,8 +96,8 @@ function NEWSSendMail(btn) {
 					}
 
 					//if ($('.preview-resource').length != resources.length) {
-						post.resources = resources;
-						post.associations = associations;
+					post.resources = resources;
+					post.associations = associations;
 					//}
 
 					$.ajax({
@@ -107,6 +107,7 @@ function NEWSSendMail(btn) {
 						dataType: 'json',
 						async: false,
 						success: function (response) {
+							console.log(response);
 							//document.getElementById("datetimemail_" + data.id).innerHTML = response.datetimemail;
 							Halcyon.message('success', btn.data('success'));
 						},
@@ -326,7 +327,7 @@ function autocompleteResources(url) {
 /**
  * Initiate event hooks
  */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 	var newsuser = $(".form-users");
 	if (newsuser.length) {
 		newsuser.tagsInput({
@@ -358,12 +359,19 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 	}*/
+	$('#field-template').on('change', function (e) {
+		if ($(this).is(':checked')) {
+			$('.template-hide').addClass('hide');
+		} else {
+			$('.template-hide').removeClass('hide');
+		}
+	});
 
 	$('.basic-multiple').select2({
 		placeholder: $(this).data('placeholder')
 	});
 
-	$('#field-newstypeid').on('change', function(){
+	$('#field-newstypeid').on('change', function () {
 		var selected = $($(this).children('option:selected'));
 
 		$('.type-option').addClass('d-none');
@@ -396,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		NEWSSendMail($(this));
 	});
 
-	$('#template_select').on('change', function(e){
+	$('#template_select').on('change', function (e) {
 		var template = this.options[this.selectedIndex].value;
 
 		if (template == "0") {
@@ -443,9 +451,29 @@ document.addEventListener('DOMContentLoaded', function() {
 					.trigger('change');
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
-				console.log(xhr);
 				Halcyon.message('danger', xhr.responseJSON.message);
 			}
 		});
 	});
+
+	if ($("#copy-article").length) {
+		var cdialog = $("#copy-article").dialog({
+			autoOpen: false,
+			height: 250,
+			width: 500,
+			modal: true
+		});
+
+		$('#toolbar-copy>.btn-copy').removeClass('toolbar-submit')
+			.off('click')
+			.on('click', function (e) {
+				e.preventDefault();
+				cdialog.dialog("open");
+			});
+
+		$("#copy-article").find('.btn').on('click', function (e) {
+			e.preventDefault();
+			$(this).closest('form').append($('#adminForm').find('input:checked')).submit();
+		});
+	}
 });
