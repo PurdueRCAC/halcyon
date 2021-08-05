@@ -5,7 +5,7 @@
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/orders/js/orders.js') }}"></script>
+<script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
 function formatCurrency(number, decPlaces, decSep, thouSep) {
 	decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,

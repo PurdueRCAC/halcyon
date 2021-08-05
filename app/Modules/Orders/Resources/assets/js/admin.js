@@ -1,31 +1,6 @@
 /**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
+ * @package  Orders
  */
-
-/*Halcyon.submitbutton = function(task) {
-	var frm = document.getElementById('item-form'),
-		invalid = false;
-
-	if (frm) {
-		var elms = frm.querySelectorAll('input[required]');
-		elms.forEach(function (el) {
-			if (!el.value || !el.validity.valid) {
-				el.classList.add('is-invalid');
-				invalid = true;
-				return;
-			}
-			//patternMismatch || el.validity.tooLong || el.validity.tooShort
-		});
-
-		if (task == 'cancel' || task.match(/cancel$/) || !invalid) {
-			Halcyon.submitform(task, frm);
-		} else {
-			alert('Invalid data');
-		}
-	}
-}*/
 
 /**
  * Format number as currency
