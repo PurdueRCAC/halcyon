@@ -17,11 +17,9 @@
                             ></span>
                             <input
                                 id="datestartshort"
-                                type="text"
-                                class="date-pick form-control"
+                                type="date"
+                                class="form-control"
                                 name="start"
-                                placeholder="YYYY-MM-DD"
-                                data-start=""
                                 value=""
                                 v-model="start"
                             />
@@ -49,11 +47,9 @@
                             ></span>
                             <input
                                 id="datestopshort"
-                                type="text"
-                                class="date-pick form-control"
+                                type="date"
+                                class="form-control"
                                 name="stop"
-                                placeholder="YYYY-MM-DD"
-                                data-stop=""
                                 value=""
                                 v-model="stop"
                             />
@@ -91,7 +87,7 @@
                         <input
                             type="text"
                             v-model="keywords"
-                            v-on:keyup="handleFormEvent"
+                            @keyup="handleFormEvent"
                             name="keyword"
                             id="keywords"
                             size="45"
@@ -143,7 +139,7 @@
                             class="form-control"
                             value=""
                             v-model.number="id"
-                            v-on:keyup="handleFormEvent"
+                            @keyup="handleFormEvent"
                         />
                     </div>
                 </div>
@@ -217,7 +213,9 @@ export default {
             total: 0,
             keywords: "",
             isFetchingData: true,
-            id: null
+            id: null,
+            start: "",
+            stop: ""
         };
     },
     methods: {
@@ -288,7 +286,7 @@ export default {
             this.read(this.pageRequest);
         },
 
-        // Request methods
+        // HTTP Request methods
         create() {
             console.log("Creating article");
             this.mute = true;
@@ -310,7 +308,9 @@ export default {
                         search: this.keywords,
                         page: this.pageRequest,
                         limit: this.limit,
-                        id: this.id
+                        id: this.id,
+                        start: this.start,
+                        stop: this.stop
                     }
                 })
                 .then(({ data }) => {
@@ -348,6 +348,12 @@ export default {
     watch: {
         mute(val) {
             document.getElementById("mute").className = val ? "on" : "";
+        },
+        start(date) {
+            console.log("startDate: " + date);
+        },
+        stop(date) {
+            console.log("stopDate: " + date);
         }
     },
     components: {
