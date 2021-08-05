@@ -87,6 +87,7 @@ return [
 	// Forms
 	'required' => 'Required',
 	'details' => 'Details',
+	'metadata' => 'Metadata',
 	'publishing' => 'Publishing',
 	'validation failed' => 'Something went wrong while trying to process the page.',
 	// States
@@ -165,6 +166,6 @@ return [
 		'upload' => 'Upload',
 		'trash' => 'Trash',
 		'rebuild success' => 'Successfully rebuilt',
-		'PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' => 'Please first make a selection from the list',
+		'please first make a selection from the list' => 'Please first make a selection from the list',
 	),
 ];

@@ -91,7 +91,7 @@ class Confirm extends Button
 	{
 		//Behavior::framework();
 
-		$message = trans('global.toolbar.PLEASE_MAKE_A_SELECTION_FROM_THE_LIST');
+		$message = trans('global.toolbar.please first make a selection from the list');
 		//$message = str_replace('"', '&quot;', $message);
 
 		return $message;
