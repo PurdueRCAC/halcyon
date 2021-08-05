@@ -153,6 +153,16 @@ class User extends Model implements
 	}
 
 	/**
+	 * If user if the created timestamp is set
+	 *
+	 * @return  bool
+	 **/
+	public function isCreated()
+	{
+		return ($this->getUserUsername()->datecreated && $this->getUserUsername()->datecreated != '0000-00-00 00:00:00' && $this->getUserUsername()->datecreated != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Get the active UserUsername instance
 	 *
 	 * @return  object  UserUsername

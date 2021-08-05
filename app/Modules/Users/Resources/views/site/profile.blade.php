@@ -110,7 +110,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 							<div class="col-md-6">
 								<p>
 									<strong>Created</strong><br />
-									<span class="text-muted">{{ $user->datecreated && $user->datecreated != '-0001-11-30 00:00:00' ? $user->datecreated : trans('global.unknown') }}</span>
+									<span class="text-muted">{{ $user->isCreated() ? $user->getUserUsername()->datecreated : trans('global.unknown') }}</span>
 								</p>
 							</div>
 							<div class="col-md-6">
