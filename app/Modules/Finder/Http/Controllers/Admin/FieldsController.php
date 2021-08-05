@@ -30,11 +30,19 @@ class FieldsController extends Controller
 			'order_dir' => Field::$orderDir,
 		);
 
+		$reset = false;
+		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('finder.fields.filter_' . $key)
+			 && $request->input($key) != session()->get('finder.fields.filter_' . $key))
+			{
+				$reset = true;
+			}
 			$filters[$key] = $request->state('finder.fields.filter_' . $key, $key, $default);
 		}
-		$filters['start'] = ($filters['limit'] * $filters['page']) - $filters['limit'];
+		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], array('id', 'name')))
 		{

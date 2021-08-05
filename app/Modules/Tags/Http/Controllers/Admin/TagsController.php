@@ -34,7 +34,9 @@ class TagsController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('tags.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('tags.filter_' . $key)
+			 && $request->input($key) != session()->get('tags.filter_' . $key))
 			{
 				$reset = true;
 			}

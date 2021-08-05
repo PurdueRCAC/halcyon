@@ -31,7 +31,9 @@ class TypesController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('messages.types.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('messages.types.filter_' . $key)
+			 && $request->input($key) != session()->get('messages.types.filter_' . $key))
 			{
 				$reset = true;
 			}

@@ -45,7 +45,9 @@ class ReportsController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('crm.reports.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('crm.reports.filter_' . $key)
+			 && $request->input($key) != session()->get('crm.reports.filter_' . $key))
 			{
 				$reset = true;
 			}

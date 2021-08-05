@@ -42,19 +42,26 @@ class UsersController extends Controller
 			'approved'   => '*',
 			'role_id'    => 0,
 			// Paging
-			//'limit'     => config('list_limit', 20),
+			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			// Sorting
 			'order'     => 'name',
 			'order_dir' => 'asc',
 		);
 
+		$reset = false;
+		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('users.filter_' . $key)
+			 && $request->input($key) != session()->get('users.filter_' . $key))
+			{
+				$reset = true;
+			}
 			$filters[$key] = $request->state('users.filter_' . $key, $key, $default);
 		}
-
-		$filters['limit'] = $request->state('users.limit', 'limit', config('list_limit', 20));
-		$filters['page'] = $request->state('users.page', 'page', 1);
+		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], ['id', 'name', 'username', 'email', 'access', 'datecreated', 'datelastseen']))
 		{

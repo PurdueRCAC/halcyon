@@ -36,7 +36,9 @@ class NotesController extends Controller
 		$reset = false;
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && session()->get('users.notes.filter_' . $key) != $request->mergeWithBase()->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('users.notes.filter_' . $key)
+			 && $request->input($key) != session()->get('users.notes.filter_' . $key))
 			{
 				$reset = true;
 			}

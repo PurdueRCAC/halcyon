@@ -36,7 +36,9 @@ class UpdatesController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('news.updates.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('news.updates.filter_' . $key)
+			 && $request->input($key) != session()->get('news.updates.filter_' . $key))
 			{
 				$reset = true;
 			}

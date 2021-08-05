@@ -34,7 +34,9 @@ class TaggedController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('tagged.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('tagged.filter_' . $key)
+			 && $request->input($key) != session()->get('tagged.filter_' . $key))
 			{
 				$reset = true;
 			}

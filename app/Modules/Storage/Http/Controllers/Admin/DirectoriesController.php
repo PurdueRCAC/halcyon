@@ -42,7 +42,9 @@ class DirectoriesController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('storage.dirs.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('storage.dirs.filter_' . $key)
+			 && $request->input($key) != session()->get('storage.dirs.filter_' . $key))
 			{
 				$reset = true;
 			}

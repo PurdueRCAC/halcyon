@@ -41,7 +41,9 @@ class ResourcesController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('resources.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('resources.filter_' . $key)
+			 && $request->input($key) != session()->get('resources.filter_' . $key))
 			{
 				$reset = true;
 			}

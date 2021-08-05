@@ -33,7 +33,9 @@ class ActivityController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('history.activity.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('history.activity.filter_' . $key)
+			 && $request->input($key) != session()->get('history.activity.filter_' . $key))
 			{
 				$reset = true;
 			}

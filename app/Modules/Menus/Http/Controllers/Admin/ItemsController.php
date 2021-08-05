@@ -45,7 +45,9 @@ class ItemsController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('menus.items.' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('menus.items.filter_' . $key)
+			 && $request->input($key) != session()->get('menus.items.filter_' . $key))
 			{
 				$reset = true;
 			}

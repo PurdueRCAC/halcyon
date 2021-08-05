@@ -40,7 +40,9 @@ class MembersController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('groups.members.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('groups.members.filter_' . $key)
+			 && $request->input($key) != session()->get('groups.members.filter_' . $key))
 			{
 				$reset = true;
 			}

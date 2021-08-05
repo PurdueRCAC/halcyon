@@ -54,7 +54,9 @@ class ArticlesController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('news.' . $action . '.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('news.' . $action . '.filter_' . $key)
+			 && $request->input($key) != session()->get('news.' . $action . '.filter_' . $key))
 			{
 				$reset = true;
 			}

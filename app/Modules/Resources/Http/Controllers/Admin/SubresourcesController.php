@@ -40,7 +40,9 @@ class SubresourcesController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('subresources.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('subresources.filter_' . $key)
+			 && $request->input($key) != session()->get('subresources.filter_' . $key))
 			{
 				$reset = true;
 			}

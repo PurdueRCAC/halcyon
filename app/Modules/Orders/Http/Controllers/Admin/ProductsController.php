@@ -43,7 +43,9 @@ class ProductsController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('orders.products.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('orders.products.filter_' . $key)
+			 && $request->input($key) != session()->get('orders.products.filter_' . $key))
 			{
 				$reset = true;
 			}

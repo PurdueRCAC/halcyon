@@ -47,7 +47,9 @@ class QueuesController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('queues.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('queues.filter_' . $key)
+			 && $request->input($key) != session()->get('queues.filter_' . $key))
 			{
 				$reset = true;
 			}

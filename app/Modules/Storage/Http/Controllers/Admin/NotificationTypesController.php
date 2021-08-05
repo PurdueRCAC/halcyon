@@ -35,7 +35,9 @@ class NotificationTypesController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('storage.notifytypes.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('storage.notifytypes.filter_' . $key)
+			 && $request->input($key) != session()->get('storage.notifytypes.filter_' . $key))
 			{
 				$reset = true;
 			}

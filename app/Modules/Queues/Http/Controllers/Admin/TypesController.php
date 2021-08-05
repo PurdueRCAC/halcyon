@@ -35,7 +35,9 @@ class TypesController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('queues.types.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('queues.types.filter_' . $key)
+			 && $request->input($key) != session()->get('queues.types.filter_' . $key))
 			{
 				$reset = true;
 			}

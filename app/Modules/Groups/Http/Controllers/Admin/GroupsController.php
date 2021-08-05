@@ -41,7 +41,9 @@ class GroupsController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('groups.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('groups.filter_' . $key)
+			 && $request->input($key) != session()->get('groups.filter_' . $key))
 			{
 				$reset = true;
 			}

@@ -35,7 +35,9 @@ class ThemesController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('themes.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('themes.filter_' . $key)
+			 && $request->input($key) != session()->get('themes.filter_' . $key))
 			{
 				$reset = true;
 			}
