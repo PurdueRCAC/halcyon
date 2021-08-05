@@ -2101,6 +2101,9 @@ table tbody th,
 table tbody td {
   border-top: 1px solid #e8e8e8;
 }
+.table-bordered {
+  border-color: var(--table-br);
+}
 /*table tfoot tr th:first-child,
 table tfoot tr td:first-child,
 table thead tr th:first-child,
@@ -3768,6 +3771,46 @@ border: 1px solid rgba(0,0,0,.125);
   /*visibility: hidden;*/
   display: none;
 }
+.toolbar-box .btn.submitting {
+  opacity: 0.75;
+}
+.toolbar-box .btn.submitting span:before {
+  content: '';
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid #fff;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  border-radius: 50%;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
 .toolbar-box .btn-publish,
 .toolbar-box .btn-save {
   color: #fff;

@@ -49,12 +49,20 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-description">{{ trans('resources::assets.description') }}:</label>
-					<textarea name="fields[description]" id="field-description" rows="5" cols="45" class="form-control">{{ $row->description }}</textarea>
+					{!! editor('fields[description]', $row->description, ['rows' => 5]) !!}
 				</div>
 			</fieldset>
 		</div>
-		<div class="col col-md-5 span5">
-			@include('history::admin.history')
+		<div class="col col-md-5">
+			<table class="meta">
+				<caption class="sr-only">{{ trans('global.metadata') }}</caption>
+				<tbody>
+					<tr>
+						<th scope="row">{{ trans('resources::assets.resources') }}</th>
+						<td class="text-right">{{ $row->resources->count() }}</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 

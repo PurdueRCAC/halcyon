@@ -35,8 +35,8 @@ app('pathway')
 
 @section('content')
 <form action="{{ route('admin.tags.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
-	<div class="row grid">
-		<div class="col col-md-7 span7">
+	<div class="row">
+		<div class="col col-md-7">
 			<fieldset class="adminform">
 				<legend><span>{{ trans('global.details') }}</span></legend>
 
@@ -63,8 +63,9 @@ app('pathway')
 				</div>
 			</fieldset>
 		</div>
-		<div class="col col-md-5 span5">
+		<div class="col col-md-5">
 			<table class="meta">
+				<caption class="sr-only">Metadata</caption>
 				<tbody>
 					<tr>
 						<th scope="row">{{ trans('tags::tags.id') }}:</th>
