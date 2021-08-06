@@ -554,7 +554,7 @@ class ItemsController extends Controller
 		// Set this to redirects work correctly.
 		$request->merge(['menutype' => $row->menutype]);
 
-		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
+		return $this->cancel($row->menutype)->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**
@@ -724,9 +724,6 @@ class ItemsController extends Controller
 	 */
 	public function reorder($id, Request $request)
 	{
-		// Incoming
-		//$id = $request->input('id');
-
 		// Get the element being moved
 		$row = Item::findOrFail($id);
 		$move = ($request->segment(4) == 'orderup') ? -1 : +1;
@@ -737,17 +734,18 @@ class ItemsController extends Controller
 		}
 
 		// Redirect
-		return $this->cancel();
+		return $this->cancel($row->menutype);
 	}
 
 	/**
 	 * Return to default page
 	 *
+	 * @param   string  $menutype
 	 * @return  Response
 	 */
-	public function cancel()
+	public function cancel($menutype = null)
 	{
-		return redirect(route('admin.menus.items', ['menutype' => request()->input('menutype', request()->input('fields.menutype'))]));
+		return redirect(route('admin.menus.items', ['menutype' => $menutype ? $menutype : request()->input('menutype', request()->input('fields.menutype'))]));
 	}
 
 	/**
