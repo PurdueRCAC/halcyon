@@ -2869,6 +2869,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   background-color: var(--ui-widget-footer-bg);
   border-top: none;
 }
+.ui-datepicker{z-index: 104 !important};
 /*.ui-datepicker {
   background: #111111;
   background: rgba(0, 0, 0, 0.8);
