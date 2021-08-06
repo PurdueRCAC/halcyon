@@ -1,7 +1,6 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ asset('modules/core/js/validate.js?v=' . filemtime(public_path() . '/modules/core/js/validate.js')) }}"></script>
 <script src="{{ asset('modules/pages/js/pages.js?v=' . filemtime(public_path() . '/modules/pages/js/pages.js')) }}"></script>
 @endpush
 
