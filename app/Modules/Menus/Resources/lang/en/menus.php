@@ -62,6 +62,7 @@ return [
 	'parent' => 'Parent',
 	'root' => '[ Root ]',
 	'type separator' => '[ separator ]',
+	'menutype hint' => 'Lowercase alpha-numeric characters, dashes, underscores. If left blank, one will be auto-generated from the title. Ex: "My Title" -> my_title',
 	// Item
 	'item' => [
 		'alias hint' => 'The alias is used in the URL when SEF is on',

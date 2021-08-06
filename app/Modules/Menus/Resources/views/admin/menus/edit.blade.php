@@ -49,6 +49,7 @@ app('pathway')
 					<input type="text" name="fields[menutype]" id="field-menutype" class="form-control{{ $errors->has('fields.menutype') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->menutype }}" />
 					<span class="invalid-feedback">{{ trans('menus::menus.invalid.type') }}</span>
 					{!! $errors->first('menutype', '<span class="form-text text-danger">:message</span>') !!}
+					<span class="form-text text-muted">{{ trans('menus::menus.menutype hint') }}</span>
 				</div>
 
 				<div class="form-group">
