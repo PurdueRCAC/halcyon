@@ -2628,9 +2628,11 @@ fieldset.adminform fieldset {
 }
 .ui-widget-header {
   border: none;
-border-bottom: 1px solid var(--tabs-border);
-background: transparent;
-color: var(--tab-active);
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom: 1px solid var(--tabs-border);
+  background: transparent;
+  color: var(--tab-active);
 }
 .ui-state-default,
 .ui-widget-content .ui-state-default,
@@ -2869,7 +2871,9 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   background-color: var(--ui-widget-footer-bg);
   border-top: none;
 }
-.ui-datepicker{z-index: 104 !important};
+.ui-datepicker {
+  z-index: 104 !important
+};
 /*.ui-datepicker {
   background: #111111;
   background: rgba(0, 0, 0, 0.8);

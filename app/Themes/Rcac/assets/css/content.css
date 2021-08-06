@@ -521,10 +521,44 @@ table.contact th {
 	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
-table.ui-datepicker-calendar,
-table.ui-datepicker-calendar thead th {
+
+.ui-datepicker-calendar thead th:first-child,
+.ui-datepicker-calendar thead th:last-child,
+.ui-datepicker-calendar thead th {
+	border-color: transparent;
 	background-color: transparent;
 }
+.ui-datepicker-calendar .ui-datepicker-unselectable,
+.ui-datepicker-calendar .ui-datepicker-unselectable:hover,
+.ui-datepicker-calendar tbody tr td:first-child,
+.ui-datepicker-calendar tbody td {
+	border-color: transparent;
+	background-color: transparent;
+}
+.ui-datepicker .ui-state-default,
+.ui-datepicker .ui-widget-content .ui-state-default,
+.ui-datepicker .ui-widget-header .ui-state-default,
+.ui-datepicker .ui-button,
+html .ui-datepicker .ui-button.ui-state-disabled:hover,
+html .ui-datepicker .ui-button.ui-state-disabled:active {
+	border-color: transparent;
+	background-color: transparent;
+}
+.ui-datepicker-calendar tbody tr td:hover,
+.ui-datepicker-calendar tbody tr:nth-child(even) td:hover {
+	
+	color: #fff;
+}
+.ui-datepicker-calendar .ui-state-default:hover {
+	background: #000;
+	color: #fff;
+}
+.ui-datepicker .ui-widget-header {
+	border: none;
+	border-bottom: 1px solid #dddddd;
+	background: transparent;
+}
+
 div.ui-dialog {
 	padding: 0;
 }
