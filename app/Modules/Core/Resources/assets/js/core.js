@@ -881,7 +881,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		dateFormat: 'yy-mm-dd',
 		controlType: 'select',
 		oneLine: true,
-		timeFormat: 'HH:mm:00'
+		timeFormat: 'hh:mm:ss'
 	});
 
 	$('.tabs').tabs();
