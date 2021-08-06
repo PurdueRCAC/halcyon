@@ -82,6 +82,9 @@ app('pathway')
 				<th scope="col">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('contactreports::contactreports.followup'), 'timeperiodid', $filters['order_dir'], $filters['order']); ?>
 				</th>
+				<th scope="col">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('contactreports::contactreports.pause followups'), 'waitperiodid', $filters['order_dir'], $filters['order']); ?>
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -113,7 +116,14 @@ app('pathway')
 				</td>
 				<td>
 					@if ($row->timeperiodid)
-						{{ $row->timeperiodcount }} {{ $row->timeperiod->plural }}
+						{{ $row->timeperiodcount }} {{ $row->timeperiod->plural }} after
+					@else
+						<span class="none">{{ trans('global.none') }}</span>
+					@endif
+				</td>
+				<td>
+					@if ($row->waitperiodid)
+						{{ $row->waitperiodcount }} {{ $row->waitperiod->plural }}
 					@else
 						<span class="none">{{ trans('global.none') }}</span>
 					@endif

@@ -1,7 +1,6 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ asset('js/validate.js?v=' . filemtime(public_path() . '/js/validate.js')) }}"></script>
 <script src="{{ asset('modules/contactreports/js/admin.js?v=' . filemtime(public_path() . '/modules/contactreports/js/admin.js')) }}"></script>
 @endpush
 
@@ -82,34 +81,6 @@ app('request')->merge(['hidemainmenu' => 1]);
 					<?php endif; ?>
 				</tbody>
 			</table>
-
-			<?php if ($row->id): ?>
-				<div class="data-wrap">
-					<h4><?php echo trans('contactreports::contactreports.history'); ?></h4>
-					<ul class="entry-log">
-						<?php
-						$prev = 0;
-						foreach ($row->history()->orderBy('id', 'desc')->get() as $history):
-							$actor = trans('global.unknown');
-
-							if ($history->user):
-								$actor = e($history->user->name);
-							endif;
-
-							$created = $history->created_at && $history->created_at != '0000-00-00 00:00:00'
-								? $history->created_at
-								: trans('global.unknown');
-							?>
-							<li>
-								<span class="entry-log-data">{{ trans('contactreports::contactreports.history edited', ['user' => $actor, 'timestamp' => $created]) }}</span>
-								<span class="entry-diff"></span>
-							</li>
-							<?php
-						endforeach;
-						?>
-					</ul>
-				</div>
-			<?php endif; ?>
 		</div>
 	</div>
 
