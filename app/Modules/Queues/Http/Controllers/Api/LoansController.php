@@ -289,6 +289,7 @@ class LoansController extends Controller
 		{
 			$row->comment = $request->input('comment');
 		}
+		$row->comment = $row->comment ?: '';
 
 		if ($row->datetimestop && $row->datetimestart > $row->datetimestop)
 		{

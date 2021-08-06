@@ -269,6 +269,7 @@ class SizesController extends Controller
 		{
 			$row->comment = $request->input('comment');
 		}
+		$row->comment = $row->comment ?: '';
 
 		if (!$row->sellerqueueid && $row->corecount < 0)
 		{
