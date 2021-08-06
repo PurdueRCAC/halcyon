@@ -872,16 +872,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 	$('input.datetime').datetimepicker({
 		duration: '',
-		//showTime: true,
 		constrainInput: false,
-		//stepMinutes: 1,
-		//stepHours: 1,
-		//altTimeField: '',
-		//time24h: true,
 		dateFormat: 'yy-mm-dd',
 		controlType: 'select',
 		oneLine: true,
-		timeFormat: 'hh:mm:ss'
+		timeFormat: 'hh:mm:00'
 	});
 
 	$('.tabs').tabs();
