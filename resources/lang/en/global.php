@@ -37,6 +37,7 @@ return [
 	'edit' => 'Edit',
 	'show' => 'Show',
 	'hide' => 'Hide',
+	'select' => 'Select',
 	'warn javascript required' => 'Warning! JavaScript must be enabled for proper operation of the Administrator backend.',
 	'admin' => [
 		'record id' => 'Record #:id',

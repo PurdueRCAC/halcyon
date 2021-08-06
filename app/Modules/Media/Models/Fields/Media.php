@@ -109,7 +109,7 @@ class Media extends Field
 
 		// The text field.
 		$html[] = '<div class="input-group">';
-		$html[] = '	<input type="text" class="form-control" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . ' readonly="readonly"' . $attr . ' />';
+		$html[] = '	<input type="text" class="form-control" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . e($this->value) . '"' . ' readonly="readonly"' . $attr . ' />';
 
 		$directory = (string) $this->element['directory'];
 		if ($this->value && file_exists(storage_path() . '/' . $this->value))
@@ -171,7 +171,7 @@ class Media extends Field
 				break;
 		}
 
-		if ($showPreview)
+		/*if ($showPreview)
 		{
 			if ($this->value && file_exists(storage_path() . '/' . $this->value))
 			{
@@ -189,18 +189,18 @@ class Media extends Field
 			);
 			$img = '';
 			$previewImg = '<div id="' . $this->id . '_preview_img"' . ($src ? '' : ' style="display:none"') . '>' . $img . '</div>';
-			$previewImgEmpty = '<div id="' . $this->id . '_preview_empty"' . ($src ? ' style="display:none"' : '') . '>' . trans('global.MEDIA_PREVIEW_EMPTY') . '</div>';
+			$previewImgEmpty = '<div id="' . $this->id . '_preview_empty"' . ($src ? ' style="display:none"' : '') . '>' . trans('global.none') . '</div>';
 
 			//$html[] = '<div class="media-preview fltlft">';
 			if ($showAsTooltip)
 			{
 				$tooltip = $previewImgEmpty . $previewImg;
 				$options = array(
-					'title' => htmlspecialchars(trans('global.MEDIA_PREVIEW_SELECTED_IMAGE'), ENT_COMPAT, 'UTF-8'),
-					'text'  => htmlspecialchars(trans('global.MEDIA_PREVIEW_TIP_TITLE'), ENT_COMPAT, 'UTF-8'),
+					'title' => e(trans('media::media.preview selected image')),
+					'text'  => e(trans('media::media.preview tip title')),
 					'class' => 'form-text hasTip'
 				);
-				$html[] = '<span class="' . $options['class'] . '" title="' . $options['title'] . '::' . htmlspecialchars($tooltip, ENT_COMPAT, 'UTF-8') . '">' . $options['text'] . '</span>';
+				$html[] = '<span class="' . $options['class'] . '" title="' . e($options['title']) . '::' . e($tooltip) . '">' . $options['text'] . '</span>';
 
 				//Behavior::tooltip('.hasTipPreview', $options);
 			}
@@ -210,7 +210,7 @@ class Media extends Field
 				$html[] = ' ' . $previewImg;
 			}
 			//$html[] = '</div>';
-		}
+		}*/
 
 		return implode("\n", $html);
 	}
