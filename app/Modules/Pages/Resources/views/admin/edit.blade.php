@@ -72,9 +72,9 @@ app('pathway')
 						<div class="input-group-prepend">
 							<div class="input-group-text">{{ url('/') }}<span id="parent-path">{{ ($row->parent && trim($row->parent->path, '/') ? '/' . $row->parent->path : '') }}</span>/</div>
 						</div>
-						<input type="text" name="fields[alias]" id="field-alias" class="form-control{{ $errors->has('fields.alias') ? ' is-invalid' : '' }}" maxlength="250"<?php if ($row->alias == 'home'): ?> disabled="disabled"<?php endif; ?> value="{{ $row->alias }}" />
+						<input type="text" name="fields[alias]" id="field-alias" aria-describedby="field-alias-hint" class="form-control{{ $errors->has('fields.alias') ? ' is-invalid' : '' }}" maxlength="250"<?php if ($row->alias == 'home'): ?> disabled="disabled"<?php endif; ?> value="{{ $row->alias }}" />
 					</div>
-					<span class="form-text text-muted">{{ trans('pages::pages.path hint') }}</span>
+					<span class="form-text text-muted" id="field-alias-hint">{{ trans('pages::pages.path hint') }}</span>
 				</div>
 
 				<div class="form-group{{ $errors->has('content') ? ' is-invalid' : '' }}">
@@ -123,47 +123,47 @@ app('pathway')
 					<fieldset class="panelform">
 						<div class="form-group">
 							<label for="params-show_title">{{ trans('pages::pages.params.show title') }}:</label>
-							<select class="form-control" name="params[show_title]" id="params-show_title">
+							<select class="form-control" aria-describedby="params-show_title" name="params[show_title]" id="params-show_title">
 								<option value="0"<?php if (!$row->params->get('show_title', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_title', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 							</select>
-							<span class="form-text text-muted">{{ trans('pages::pages.params.show title desc') }}</span>
+							<span class="form-text text-muted" id="params-show_title">{{ trans('pages::pages.params.show title desc') }}</span>
 						</div>
 
 						<div class="form-group">
 							<label for="params-show_author">{{ trans('pages::pages.params.show author') }}:</label>
-							<select class="form-control" name="params[show_author]" id="params-show_author">
+							<select class="form-control" aria-describedby="params-show_author" name="params[show_author]" id="params-show_author">
 								<option value="0"<?php if (!$row->params->get('show_author')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_author')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 							</select>
-							<span class="form-text text-muted">{{ trans('pages::pages.params.show author desc') }}</span>
+							<span class="form-text text-muted" id="params-show_author">{{ trans('pages::pages.params.show author desc') }}</span>
 						</div>
 
 						<div class="form-group">
 							<label for="params-show_create_date">{{ trans('pages::pages.params.show create date') }}:</label>
-							<select class="form-control" name="params[show_create_date]" id="params-show_create_date">
+							<select class="form-control" aria-describedby="params-show_create_date-hint" name="params[show_create_date]" id="params-show_create_date">
 								<option value="0"<?php if (!$row->params->get('show_create_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_create_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 							</select>
-							<span class="form-text text-muted">{{ trans('pages::pages.params.show create date desc') }}</span>
+							<span class="form-text text-muted" id="params-show_create_date-hint">{{ trans('pages::pages.params.show create date desc') }}</span>
 						</div>
 
 						<div class="form-group">
 							<label for="params-show_modify_date">{{ trans('pages::pages.params.show modify date') }}:</label>
-							<select class="form-control" name="params[show_modify_date]" id="params-show_modify_date">
+							<select class="form-control" aria-describedby="params-show_modify_date-hint" name="params[show_modify_date]" id="params-show_modify_date">
 								<option value="0"<?php if (!$row->params->get('show_modify_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_modify_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 							</select>
-							<span class="form-text text-muted">{{ trans('pages::pages.params.show modify date desc') }}</span>
+							<span class="form-text text-muted" id="params-show_modify_date-hint">{{ trans('pages::pages.params.show modify date desc') }}</span>
 						</div>
 
 						<div class="form-group">
 							<label for="params-show_publish_date">{{ trans('pages::pages.params.show publish date') }}:</label>
-							<select class="form-control" name="params[show_publish_date]" id="params-show_publish_date">
+							<select class="form-control" aria-describedby="params-show_publish_date" name="params[show_publish_date]" id="params-show_publish_date">
 								<option value="0"<?php if (!$row->params->get('show_publish_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_publish_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 							</select>
-							<span class="form-text text-muted">{{ trans('pages::pages.params.show publish date desc') }}</span>
+							<span class="form-text text-muted" id="params-show_publish_date">{{ trans('pages::pages.params.show publish date desc') }}</span>
 						</div>
 
 						<fieldset id="param-styles">
@@ -250,9 +250,11 @@ app('pathway')
 					</div>
 				</fieldset>
 			@sliders('end')
-
-			@include('history::admin.history')
 		</div>
+	</div>
+
+	<div class="dialog">
+		@include('history::admin.history')
 	</div>
 
 	@csrf
