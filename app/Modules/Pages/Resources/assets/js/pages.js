@@ -2,36 +2,6 @@
  * @package  Pages manager
  */
 
-/*Halcyon.submitbutton = function(task) {
-	var frm = document.getElementById('adminForm');
-
-	if (frm) {
-		return Halcyon.submitform(task, frm);
-	}
-
-	$(document).trigger('editorSave');
-
-	var frm = document.getElementById('item-form'),
-		invalid = false;
-
-	if (frm) {
-		var elms = frm.querySelectorAll('input[required]');
-		elms.forEach(function (el) {
-			if (!el.value || !el.validity.valid) {
-				el.classList.add('is-invalid');
-				invalid = true;
-				return;
-			} else {
-				el.classList.remove('is-invalid');
-			}
-		});
-
-		if (task == 'cancel' || task.match(/cancel$/) || !invalid) {
-			Halcyon.submitform(task, frm);
-		}
-	}
-}*/
-
 jQuery(document).ready(function ($) {
 	var alias = $('#field-alias');
 	if (alias.length && !alias.val()) {
@@ -62,27 +32,13 @@ jQuery(document).ready(function ($) {
 	$('.add-row').on('click', function(e){
 		e.preventDefault();
 
-		/*var row   = $('#' + $(this).data('container')).find('.param-item:last');
-
-		var clone = row.clone(true);
-		var cindex = $('#' + $(this).data('container')).find('.param-item').length;
-		var inputs = clone.find('input,select');
-
-		inputs.val('');
-		inputs.each(function(i, el){
-			$(el).attr('name', $(el).attr('name').replace(/\[\d+\]/, '[' + cindex + ']'));
-			$(el).attr('id', $(el).attr('id').replace(/\[\d+\]/, '[' + cindex + ']'));
-		});
-		console.log(row);
-		console.log(clone);
-		row.after(clone);*/
-		var tr = $('#' + $(this).data('container')).find('.input-group:last');//find('tbody tr:last');
+		var tr = $('#' + $(this).data('container')).find('.input-group:last');
 
 		var clone  = tr.clone(true);
 			clone.removeClass('d-none');
 			clone.find('.btn').removeClass('disabled');
 
-		var cindex = $('#' + $(this).data('container')).find('.input-group').length;//find('tbody tr').length;
+		var cindex = $('#' + $(this).data('container')).find('.input-group').length;
 		var inputs = clone.find('input,select');
 
 		clone.attr('id', clone.attr('id').replace(/\-\d+/, '-' + cindex));
@@ -96,8 +52,6 @@ jQuery(document).ready(function ($) {
 		clone.find('a').each(function (i, el) {
 			$(el).attr('href', $(el).attr('href').replace(/\-\d+/, '-' + cindex));
 		});
-
-		//clone.find('.btn').removeClass('disabled');
 
 		tr.after(clone);
 	});
