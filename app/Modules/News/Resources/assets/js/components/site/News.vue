@@ -142,13 +142,13 @@
         </template>
         <template v-else>
             <p id="matchingnews">Found {{ total }} matching News Articles</p>
-            <news-article
+            <news-article-list-component
                 v-for="article in articles"
                 v-bind="article"
                 :key="article.id"
                 @update="update"
                 @delete="del"
-            ></news-article>
+            ></news-article-list-component>
 
             <nav aria-label="navigation">
                 <ul class="pagination">
@@ -173,7 +173,7 @@
 		this.color = color;
 		this.name = name;
 	}*/
-import NewsArticle from "./NewsArticle.vue";
+import NewsArticleListComponent from "./NewsArticleListComponent.vue";
 export default {
     data() {
         return {
@@ -234,7 +234,6 @@ export default {
         handlePaginationEvent(evt) {
             evt.preventDefault();
             this.isFetchingData = true;
-            console.log("Inner HTML: " + evt.target.innerHTML);
             
             if (typeof evt !== "undefined") {
                 if (
@@ -263,7 +262,6 @@ export default {
                             break;
                     }
                 }
-                console.log("Page Request: " + this.pageRequest);
                 this.read(this.pageRequest);
             }
         },
@@ -361,7 +359,7 @@ export default {
         }
     },
     components: {
-        NewsArticle
+        'news-article-list-component': NewsArticleListComponent
     },
     created() {
         this.read();
