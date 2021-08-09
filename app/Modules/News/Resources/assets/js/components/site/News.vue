@@ -131,23 +131,6 @@
                         />
                     </div>
                 </div>
-                <!-- <div class="form-group row" id="TR_search">
-                    <div class="col-sm-2"></div>
-                    <div class="col-sm-10 offset-sm-10">
-                        <input
-                            type="submit"
-                            class="btn btn-primary"
-                            value="Search"
-                            id="INPUT_search"
-                        />
-                        <input
-                            type="reset"
-                            class="btn btn-default"
-                            value="Clear"
-                            id="INPUT_clear"
-                        />
-                    </div>
-                </div> -->
                 <span id="TAB_search_action"></span>
                 <span id="TAB_add_action"></span>
             </fieldset>
