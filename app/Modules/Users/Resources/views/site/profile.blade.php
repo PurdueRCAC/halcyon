@@ -549,8 +549,8 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 					<div id="manage_roles_dialog" data-id="{{ $user->id }}" title="Manage Access" class="roles-dialog">
 						<form method="post" action="{{ route('site.users.account') }}">
 							<div class="form-group">
-								<label for="role">Resource</label>
-								<select id="role" class="form-control" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
+								<label for="role">Resource <span class="required">*</span></label>
+								<select id="role" class="form-control" data-id="{{ $user->id }}" required data-api="{{ route('api.resources.members.create') }}">
 									<option value="">(Select Resource)</option>
 									@foreach ($resources as $resource)
 										<option value="{{ $resource->id }}" data-api="{{ route('api.resources.members.read', ['id' => $resource->id . '.' . $user->id]) }}">{{ $resource->name }}</option>
@@ -569,7 +569,34 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 								</div>
 								<div class="form-group">
 									<label for="role_shell">Shell</label>
-									<input id="role_shell" type="text" class="form-control" />
+									<!-- <input id="role_shell" type="text" class="form-control" /> -->
+									<select class="form-control" id="role_shell">
+										<option value="">{{ trans('global.none') }}</option>
+										<?php
+										$selected = '';
+										if (preg_match("/bash$/", $user->loginShell))
+										{
+											$selected = ' selected="selected"';
+										}
+										?>
+										<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
+										<?php
+										$selected = '';
+										if (preg_match("/csh$/", $user->loginShell))
+										{
+											$selected = ' selected="selected"';
+										}
+										?>
+										<option value="/bin/tcsh"<?php echo $selected; ?>>tcsh</option>
+										<?php
+										$selected = '';
+										if (preg_match("/zsh$/", $user->loginShell))
+										{
+											$selected = ' selected="selected"';
+										}
+										?>
+										<option value="/bin/zsh"<?php echo $selected; ?>>zsh</option>
+									</select>
 								</div>
 								<div class="form-group">
 									<label for="role_pi">PI</label>
@@ -581,7 +608,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 									<button id="role_delete" class="btn btn-danger role-delete hide" data-id="{{ $user->id }}">Delete Role</button>
 								</div>
 
-								<span id="role_errors" class="alert alert-warning hide"></span>
+								<div id="role_errors" class="alert alert-danger hide"></div>
 							</div>
 						</form>
 					</div>

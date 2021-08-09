@@ -128,7 +128,7 @@ class MembersController extends Controller
 		}
 
 		// Is the shell valid?
-		if (!file_exists($loginShell) && $loginShell != 'nologin')
+		if ($loginShell && !file_exists($loginShell))
 		{
 			return response()->json(['message' => trans('Invalid loginShell')], 409);
 		}
@@ -145,7 +145,7 @@ class MembersController extends Controller
 		{
 			$pi = User::findByUsername($pilogin);
 
-			if (!$pi)
+			if (!$pi || !$pi->id)
 			{
 				return response()->json(['message' => trans('Invalid pilogin')], 409);
 			}

@@ -174,7 +174,8 @@ var Roles = {
 			//stat.classList.remove('hide');
 			stat.value = "Unknown - Error";
 		}
-		document.getElementById("role_errors").innerHTML = "";
+		document.getElementById("role_errors").innerHTML = ""
+		document.getElementById("role_errors").classList.add('hide');
 	},
 
 	/**
@@ -184,6 +185,10 @@ var Roles = {
 	 * @return  {void}
 	 */
 	Add: function (userid) {
+		var err = document.getElementById("role_errors");
+		err.classList.add('hide');
+		err.innerHTML = '';
+
 		var resource = document.getElementById("role");
 
 		var post = {
@@ -196,16 +201,26 @@ var Roles = {
 
 		WSPostURL(resource.getAttribute('data-api'), JSON.stringify(post), function (xml) {
 			if (xml.status < 400) {
-				Roles.GotUserRoleStatus(xml);
+				Roles.GotUserStatus(xml);
 			} else {
-				var err = document.getElementById("role_errors");
 				err.classList.remove('hide');
 
 				if (xml.status == 409) {
-					err.innerHTML = "One of the arguments is not valid.";
+					var msg = "One of the arguments is not valid.";
 				} else {
-					err.innerHTML = "There was an error while processing the request.";
+					var msg = "There was an error while processing the request.";
 				}
+
+				if (xml.responseText) {
+					var j = JSON.parse(xml.responseText);
+					msg = j.message;
+					if (typeof msg === 'object') {
+						var lines = Object.values(msg);
+						msg = lines.join('<br />');
+					}
+				}
+
+				err.innerHTML = msg;
 			}
 		});
 	},
