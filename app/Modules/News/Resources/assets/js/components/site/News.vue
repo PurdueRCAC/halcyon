@@ -9,12 +9,6 @@
                     >
                     <div class="col-sm-4">
                         <div class="input-group">
-                            <span class="input-group-addon"
-                                ><span
-                                    class="input-group-text fa fa-calendar"
-                                    aria-hidden="true"
-                                ></span
-                            ></span>
                             <input
                                 id="datestartshort"
                                 type="date"
@@ -39,12 +33,6 @@
                     >
                     <div class="col-sm-4">
                         <div class="input-group" id="enddate">
-                            <span class="input-group-addon"
-                                ><span
-                                    class="input-group-text fa fa-calendar"
-                                    aria-hidden="true"
-                                ></span
-                            ></span>
                             <input
                                 id="datestopshort"
                                 type="date"
@@ -237,16 +225,15 @@ export default {
             console.log("end page list: " + endPageList);
             for (let pageNum = startPageList; pageNum <= endPageList; pageNum++)
                 this.paginationList.push(pageNum);
-
-
             if (curPage < (this.farthestPage - 5))
                 this.paginationList.push('...');
             if (this.farthestPage > 1)
                 this.paginationList.push(this.farthestPage);
             this.paginationList.push('>');
         },
-        handleFormEvent(evt) {
-            evt.preventDefault();
+        handleFormEvent(evt = undefined) {
+            if (evt !== undefined)
+                evt.preventDefault();
             this.isFetchingData = true;
             this.read();
         },
@@ -285,7 +272,6 @@ export default {
             }
             this.read(this.pageRequest);
         },
-
         // HTTP Request methods
         create() {
             console.log("Creating article");
@@ -300,7 +286,6 @@ export default {
         read(pageRequest = 1) {
             console.log("Retrieving articles...");
             this.pageRequest = pageRequest;
-
             this.mute = true;
             window.axios
                 .get(this.ROOT_URL + "/api/news", {
