@@ -38,7 +38,7 @@ class RoleProvision
 	}
 
 	/**
-	 * Search for users
+	 * Create role for user
 	 *
 	 * @param   ResourceMemberCreated  $event
 	 * @return  void
@@ -82,12 +82,10 @@ class RoleProvision
 					$config['user'],
 					$config['password']
 				],
-				//'form_params' => $body,
-				'json' => $body //['body' => $body]
+				'json' => $body
 			]);
 
 			$status = $res->getStatusCode();
-			//$body   = json_decode($res->getBody()->getContents());
 
 			if ($status < 400)
 			{
@@ -143,9 +141,7 @@ class RoleProvision
 				'auth' => [
 					$config['user'],
 					$config['password']
-				]//,
-				//'form_params' => $body,
-				//'json' => $body //['body' => $body]
+				]
 			]);
 
 			$status = $res->getStatusCode();
@@ -172,7 +168,7 @@ class RoleProvision
 	}
 
 	/**
-	 * Get status for a user
+	 * Check the status of a given role for a user
 	 *
 	 * @param   ResourceMemberStatus   $event
 	 * @return  void
@@ -217,12 +213,12 @@ class RoleProvision
 			{
 				if (preg_match('/no record/', $results))
 				{
-					// catch error message for invalid user
+					// Catch error message for invalid user
 					$status = 0;
 				}
 				else
 				{
-					// couldn't connect or something equally bad
+					// Couldn't connect or something equally bad
 					$status = -1;
 				}
 			}
@@ -258,8 +254,6 @@ class RoleProvision
 		}
 		catch (\Exception $e)
 		{
-			//$event->status = -1;
-
 			$status  = 500;
 			$results = ['error' => $e->getMessage()];
 
@@ -275,7 +269,7 @@ class RoleProvision
 	 * @param   QueueCreated   $event
 	 * @return  void
 	 */
-	public function handleQueueCreated(QueueCreated $event)
+	/*public function handleQueueCreated(QueueCreated $event)
 	{
 		$config = $this->config();
 
@@ -350,7 +344,7 @@ class RoleProvision
 				$this->log('roleprovision', __METHOD__, 'POST', $status, $res, 'createOrUpdateRole', $user->id);
 			}
 		}
-	}
+	}*/
 
 	/**
 	 * Get config values for listener

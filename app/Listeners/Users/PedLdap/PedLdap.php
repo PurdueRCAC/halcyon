@@ -8,7 +8,7 @@ use App\Modules\History\Traits\Loggable;
 use App\Halcyon\Utility\Str;
 
 /**
- * User listener for Purdue Ldap
+ * User listener for Purdue Employee Directory Ldap
  */
 class PedLdap
 {
@@ -222,8 +222,8 @@ class PedLdap
 			return;
 		}
 
-		//try
-		//{
+		try
+		{
 			$ldap = $this->connect($config);
 
 			$user = $event->getUser();
@@ -303,12 +303,12 @@ class PedLdap
 
 				$event->setUser($user);
 			}
-		/*}
+		}
 		catch (\Exception $e)
 		{
 			$status = 500;
 			$results = ['error' => $e->getMessage()];
-		}*/
+		}
 
 		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->getUser()->username);
 	}

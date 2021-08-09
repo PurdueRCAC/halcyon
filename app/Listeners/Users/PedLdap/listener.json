@@ -1,7 +1,7 @@
 {
     "name": "Users - PED LDAP",
     "alias": "listener_users_pedldap",
-    "description": "This connects to the PED Ldap to retrieve user info.",
+    "description": "This connects to the Purdue Employee Directory (PED) Ldap to retrieve user info.",
     "keywords": [],
     "active": 1,
     "order": 0,
