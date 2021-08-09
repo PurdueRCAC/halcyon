@@ -60,10 +60,11 @@
                             id="newstype"
                             name="newstype"
                             class="form-control"
+                            v-model="selectedNewsType"
                         >
-                            <option id="OPTION_all" name="all" value="-1"
-                                >All</option
-                            >
+                            <option v-for="newsType in newsTypeOptions" :key="newsType">
+                                {{ newsType }}
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -152,13 +153,13 @@
             <nav aria-label="navigation">
                 <ul class="pagination">
                     <li
-                        v-for="page of paginationList"
-                        :key="page"
+                        v-for="(page, index) of paginationList"
+                        :key="index"
                         :class="['page-item', (pageRequest === page ? 'active' : '')]"
                     >
-                        <span class="page-link" @click="handlePaginationEvent">
-                            <strong>{{ page }}</strong>
-                        </span>
+                        <strong>
+                            <span class="page-link" @click="handlePaginationEvent">{{ page }}</span>
+                        </strong>
                     </li>
                 </ul>
             </nav>
@@ -177,6 +178,15 @@ export default {
         return {
             articles: [],
             paginationList: [],
+            newsTypeOptions: [
+                "All",
+                "Announcements",
+                "Events",
+                "Outages and Maintenance",
+                "Science Highlights"
+            ],
+            selectedNewsType: "All",
+            selectedNewsType_id: null,
             pageRequest: 1,
             farthestPage: 1,
             limit: 20,
@@ -223,6 +233,7 @@ export default {
         handlePaginationEvent(evt) {
             evt.preventDefault();
             this.isFetchingData = true;
+            console.log("Inner HTML: " + evt.target.innerHTML);
             
             if (typeof evt !== "undefined") {
                 if (
@@ -249,11 +260,11 @@ export default {
                                 this.pageRequest += 1;
                             }
                             break;
-                        default:
                     }
                 }
+                console.log("Page Request: " + this.pageRequest);
+                this.read(this.pageRequest);
             }
-            this.read(this.pageRequest);
         },
         // HTTP Request methods
         create() {
@@ -278,7 +289,8 @@ export default {
                         limit: this.limit,
                         id: this.id,
                         start: this.start,
-                        stop: this.stop
+                        stop: this.stop,
+                        type: this.selectedNewsType_id
                     }
                 })
                 .then(({ data }) => {
@@ -291,6 +303,7 @@ export default {
                     this.setPaginationList(this.pageRequest);
                     this.mute = false;
                     this.isFetchingData = false;
+                    console.log("Current Page: " + this.pageRequest);
                 });
         },
         update(id, color) {
@@ -322,6 +335,28 @@ export default {
         },
         stop(date) {
             console.log("stopDate: " + date);
+        },
+        selectedNewsType(newValue, previousValue) {
+            if (newValue !== previousValue) {
+                switch (newValue) {
+                    case "All":
+                        this.selectedNewsType_id = -1;
+                        break;
+                    case "Announcements":
+                        this.selectedNewsType_id = 2;
+                        break;
+                    case "Events":
+                        this.selectedNewsType_id = 4;
+                        break;
+                    case "Outages and Maintenance":
+                        this.selectedNewsType_id = 1;
+                        break;
+                    case "Science Highlights":
+                        this.selectedNewsType_id = 3;
+                        break;
+                }
+                this.handleFormEvent();
+            }
         }
     },
     components: {
