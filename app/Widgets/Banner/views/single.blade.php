@@ -2,6 +2,12 @@
 /**
  * @package  Banner widget
  */
+
+ // Filter out outages
+$maintenance = $maintenance->reject(function($value, $key)
+{
+	return $value->isOutage();
+});
 ?>
 @if (count($maintenance) > 0)
 	<div class="tile">

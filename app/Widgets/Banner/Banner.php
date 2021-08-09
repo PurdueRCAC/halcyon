@@ -72,7 +72,7 @@ class Banner extends Widget
 			$maintenance = Article::query()
 				->wherePublished()
 				->where('template', '=', 0)
-				->where('datetimenews', '>=', $now->toDateTimeString())
+				/*->where('datetimenews', '>=', $now->toDateTimeString())
 				->where(function($where) use ($now)
 				{
 					$where->whereNull('datetimenewsend')
@@ -81,6 +81,20 @@ class Banner extends Widget
 						{
 							$w->where('datetimenewsend', '!=', '0000-00-00 00:00:00')
 								->where('datetimenewsend', '>', $now);
+						});
+				})*/
+				->where(function($where) use ($today, $plus12, $minus12, $tomorrow, $now)
+				{
+					$where->where('datetimenews', '>=', $now)
+						->orWhere(function($w) use ($now)
+						{
+							$w->where('datetimenews', '<', $now)
+								->where(function($wh) use ($now)
+								{
+									$wh->whereNull('datetimenewsend')
+										->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00')
+										->orWhere('datetimenewsend', '>=', $now);
+								});
 						});
 				})
 				->where('newstypeid', '=', $id)
