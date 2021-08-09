@@ -269,6 +269,44 @@ class Article extends Model
 	}
 
 	/**
+	 * Get the end ttime before any changes or updates
+	 *
+	 * @return  Carbon
+	 */
+	public function getOriginalDatetimenewsendAttribute()
+	{
+		$dt = $this->datetimenewsend;
+
+		if ($this->hasEnd() && $this->isModified())
+		{
+			// Find the first update datetime
+			$first = $this->updates()->orderBy('datetimecreated', 'asc')->first();
+
+			if ($first)
+			{
+				$before = $this->history()
+					->where('created_at', '<', $first->datetimecreated->toDateTimeString())
+					->orderBy('created_at', 'desc')
+					->get();
+
+				foreach ($before as $item)
+				{
+					if (isset($item->old->datetimenewsend)
+					 && isset($item->new->datetimenewsend)
+					 && $item->old->datetimenewsend != $item->new->datetimenewsend)
+					{
+						$dt = $item->old->datetimenewsend;
+						break;
+					}
+				}
+			}
+		}
+
+		return $dt;
+	}
+
+
+	/**
 	 * Determine if entry was edited
 	 *
 	 * @return  bool

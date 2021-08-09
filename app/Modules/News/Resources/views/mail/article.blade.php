@@ -7,7 +7,7 @@ _**UPDATE: {{ $update->formatDate($update->datetimecreated) }}**_
 
 @endforeach
 
-_**ORIGINAL: {{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}**_
+_**ORIGINAL: {{ $article->formatDate($article->datetimenews, $article->originalDatetimenewsend) }}**_
 @endif
 
 **{{ $article->headline }}**

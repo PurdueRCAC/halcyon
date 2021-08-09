@@ -110,7 +110,7 @@ app('pathway')
 			@endforeach
 
 			<section>
-				<h3 class="newsupdate">ORIGINAL: {{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}</h3>
+				<h3 class="newsupdate">ORIGINAL: {{ $article->formatDate($article->datetimenews, $article->originalDatetimenewsend) }}</h3>
 		@endif
 
 		{!! $article->formattedBody !!}

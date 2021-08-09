@@ -66,7 +66,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-body">{{ trans('news::news.body') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					{!! markdown_editor('fields[body]', $row->body, ['rows' => 15, 'class' => ($errors->has('fields.body') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
-					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
+					<span class="invalid-feedback">{{ trans('news::news.error.invalid body') }}</span>
 				</div>
 			</fieldset>
 		</div>
