@@ -293,9 +293,10 @@ class Article extends Model
 				{
 					if (isset($item->old->datetimenewsend)
 					 && isset($item->new->datetimenewsend)
-					 && $item->old->datetimenewsend != $item->new->datetimenewsend)
+					 && $item->old->datetimenewsend != $item->new->datetimenewsend
+					 && $item->old->datetimenewsend != '0000-00-00 00:00:00')
 					{
-						$dt = $item->old->datetimenewsend;
+						$dt = Carbon::parse($item->old->datetimenewsend);
 						break;
 					}
 				}
