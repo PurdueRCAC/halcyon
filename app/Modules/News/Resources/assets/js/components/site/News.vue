@@ -156,6 +156,7 @@
                         v-for="(page, index) of paginationList"
                         :key="index"
                         :class="['page-item', (pageRequest === page ? 'active' : '')]"
+                        style="cursor: pointer"
                     >
                         <strong>
                             <span class="page-link" @click="handlePaginationEvent">{{ page }}</span>
