@@ -1,7 +1,7 @@
 {
     "name": "Users - Sessions",
     "alias": "lst_users_sessions",
-    "description": "This lists the sessions associated with a specific user.",
+    "description": "This handles the display of and some maintenance of user/session data.",
     "keywords": [],
     "active": 1,
     "order": 0,
