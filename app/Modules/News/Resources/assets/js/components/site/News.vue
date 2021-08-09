@@ -341,7 +341,7 @@ export default {
             if (newValue !== previousValue) {
                 switch (newValue) {
                     case "All":
-                        this.selectedNewsType_id = -1;
+                        this.selectedNewsType_id = null;
                         break;
                     case "Announcements":
                         this.selectedNewsType_id = 2;
