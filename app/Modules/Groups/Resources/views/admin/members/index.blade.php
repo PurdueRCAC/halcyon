@@ -216,6 +216,7 @@ app('pathway')
 		<input type="hidden" name="group" id="group" value="{{ $group->id }}" autocomplete="off" />
 	</fieldset>
 
+	@if (count($rows))
 	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ $group->name }} &rsaquo; trans('groups::groups.members')</caption>
@@ -341,6 +342,12 @@ app('pathway')
 		</tbody>
 	</table>
 </div>
+	{{ $rows->render() }}
+	@else
+		<div class="card mb-4">
+			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
+		</div>
+	@endif
 
 	<script id="new-fieldofscience-row" type="text/x-handlebars-template">
 		<tr class="list-group-item" <?php echo '{{ row.id }}'; ?>>
@@ -378,8 +385,6 @@ app('pathway')
 			</td>
 		</tr>
 	</script>
-
-	{{ $rows->render() }}
 
 	<div class="dialog ui-front hide" title="{{ trans('groups::groups.add member') }}">
 		<h3 class="sr-only">{{ trans('groups::groups.add member') }}</h3>

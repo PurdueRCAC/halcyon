@@ -72,7 +72,7 @@ else
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -106,8 +106,6 @@ else
 
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
-
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	<!-- Experimental Vue rendering
@@ -117,6 +115,8 @@ else
 	<script src="{{ asset('modules/news/js/app-admin.js?v=3') }}"></script>
 	-->
 
+	
+	@if (count($rows))
 	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ $template ? trans('news::news.articles') : trans('news::news.templates') }}</caption>
@@ -258,6 +258,11 @@ else
 	</div>
 
 	{{ $rows->render() }}
+	@else
+		<div class="card mb-4">
+			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
+		</div>
+	@endif
 
 	<script id="mailpreview-template" type="text/x-handlebars-template">
 		<div id="mail-recipients">To: <?php echo '{{resourcelist}}'; ?> Users</div>

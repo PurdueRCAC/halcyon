@@ -169,4 +169,5 @@ return [
 		'rebuild success' => 'Successfully rebuilt',
 		'please first make a selection from the list' => 'Please first make a selection from the list',
 	),
+	'no results' => 'No results found.',
 ];

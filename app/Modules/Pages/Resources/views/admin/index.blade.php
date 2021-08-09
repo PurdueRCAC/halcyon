@@ -72,7 +72,7 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -97,10 +97,9 @@ app('pathway')
 
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
-
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	@if (count($rows))
 	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<thead>
@@ -251,6 +250,11 @@ app('pathway')
 	</div>
 
 	{{ $rows->render() }}
+	@else
+		<div class="card mb-4">
+			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
+		</div>
+	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
 

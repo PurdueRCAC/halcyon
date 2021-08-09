@@ -306,8 +306,8 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 
 	{{ $rows->render() }}
 	@else
-		<div class="container">
-			<p class="text-muted text-center">No results found.</p>
+		<div class="card mb-4">
+			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
 		</div>
 	@endif
 

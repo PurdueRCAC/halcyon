@@ -89,6 +89,7 @@ app('pathway')
 		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	@if (count($rows))
 	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('resources::resources.resources') }}</caption>
@@ -163,14 +164,12 @@ app('pathway')
 			$disabled = false;
 			$trashed = $row->isTrashed();
 			$cls = $trashed ? 'trashed' : 'active';
-			if ($filters['state'] == 'trashed')
-			{
+			if ($filters['state'] == 'trashed'):
 				//$cls = '';
-				if (!$trashed)
-				{
+				if (!$trashed):
 					$disabled = true;
-				}
-			}
+				endif;
+			endif;
 			?>
 			<tr class="{{ $cls }}">
 				@if (!$disabled && auth()->user()->can('delete resources'))
@@ -245,6 +244,11 @@ app('pathway')
 	</div>
 
 	{{ $paginator->render() }}
+	@else
+		<div class="card mb-4">
+			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
+		</div>
+	@endif
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />

@@ -41,6 +41,8 @@
 		<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	@if (count($rows))
+	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<caption>#{{ $report->id }} - {{ Illuminate\Support\Str::limit($report->report, 70) }}</caption>
 		<thead>
@@ -102,8 +104,14 @@
 		@endforeach
 		</tbody>
 	</table>
+		</div>
 
 	{{ $rows->render() }}
+	@else
+		<div class="card mb-4">
+			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
+		</div>
+	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
 

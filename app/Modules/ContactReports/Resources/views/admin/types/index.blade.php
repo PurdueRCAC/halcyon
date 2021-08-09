@@ -61,6 +61,7 @@ app('pathway')
 		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	@if (count($rows))
 	<div class="card mb-4">
 	<table class="table table-hover adminlist">
 		<thead>
@@ -135,6 +136,11 @@ app('pathway')
 	</div>
 
 	{{ $rows->render() }}
+	@else
+		<div class="card mb-4">
+			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
+		</div>
+	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
 
