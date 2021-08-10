@@ -136,7 +136,7 @@ app('pathway')
 							<div class="col-md-6">
 								<div class="form-group type-course type-dependant">
 									<label for="field-coursenumber">{{ trans('courses::courses.course number') }}:</label>
-									<input type="text" name="fields[coursenumber]" id="field-coursenumber" class="form-control{{ $errors->has('fields.coursenumber') ? ' is-invalid' : '' }}" maxlength="255" value="{{ $row->coursenumber }}" />
+									<input type="text" name="fields[coursenumber]" id="field-coursenumber" class="form-control{{ $errors->has('fields.coursenumber') ? ' is-invalid' : '' }}" maxlength="8" value="{{ $row->coursenumber }}" />
 								</div>
 							</div>
 						</div>
