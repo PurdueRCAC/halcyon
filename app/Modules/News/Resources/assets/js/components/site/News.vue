@@ -15,7 +15,7 @@
                                 class="form-control"
                                 name="start"
                                 value=""
-                                v-model="start"
+                                v-model="startDate"
                             />
                             <input
                                 id="timestartshort"
@@ -39,7 +39,7 @@
                                 class="form-control"
                                 name="stop"
                                 value=""
-                                v-model="stop"
+                                v-model="stopDate"
                             />
                             <input
                                 id="timestopshort"
@@ -196,8 +196,10 @@ export default {
             keywords: "",
             isFetchingData: true,
             id: null,
-            start: "",
-            stop: ""
+            startDate: "",
+            stopDate: "",
+            start: null,
+            stop: null
         };
     },
     methods: {
@@ -329,11 +331,15 @@ export default {
         mute(val) {
             document.getElementById("mute").className = val ? "on" : "";
         },
-        start(date) {
+        startDate(date) {
             console.log("startDate: " + date);
+            this.start = date + "T";
+            this.handleFormEvent();
         },
-        stop(date) {
+        stopDate(date) {
             console.log("stopDate: " + date);
+            this.stop = date + "T";
+            this.handleFormEvent();
         },
         selectedNewsType(newValue, previousValue) {
             if (newValue !== previousValue) {
