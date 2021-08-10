@@ -146,13 +146,9 @@ abstract class Admin
 
 		foreach ($widgets as $widget)
 		{
-			$extension = $widget->element;
-			/*if (substr($extension, 0, 4) == 'mod_')
-			{
-				$extension = substr($extension, 4);
-			}*/
+			$extension = strtolower($widget->element);
 
-			app('translator')->addNamespace('widget.' . $extension, app_path() . '/Widgets/' . ucfirst($extension) . '/lang');
+			app('translator')->addNamespace('widget.' . $extension, app_path() . '/Widgets/' . ucfirst($widget->element) . '/lang');
 
 			$widget->name = trans('widget.' . $extension . '::' . $extension . '.widget name');
 			$widget->desc = trans('widget.' . $extension . '::' . $extension . '.widget desc');

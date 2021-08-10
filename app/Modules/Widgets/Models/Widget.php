@@ -369,11 +369,7 @@ class Widget extends Model
 	 */
 	public function registerLanguage()
 	{
-		$name = $this->widget;
-		if (substr($name, 0, 4) == 'mod_')
-		{
-			$name = substr($name, 4);
-		}
+		$name = strtolower($this->widget);
 
 		app('translator')->addNamespace('widget.' . $name, $this->path() . '/lang');
 	}
