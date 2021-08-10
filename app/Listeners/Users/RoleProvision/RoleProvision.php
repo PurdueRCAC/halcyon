@@ -69,7 +69,7 @@ class RoleProvision
 				'primaryGroup'   => $event->user->primarygroup ? $event->user->primarygroup : 'student',
 				'loginShell'     => $event->user->loginShell ? $event->user->loginShell : '/bin/bash',
 				'quota'          => '1',
-				'piLogin'        => $event->user->pilogin ? $event->user->pilogin : $event->user->username
+				'piLogin'        => $event->user->pilogin && $event->user->pilogin != 'UNSET' ? $event->user->pilogin : $event->user->username
 			)
 		);
 
