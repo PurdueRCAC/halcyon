@@ -53,7 +53,7 @@ var Roles = {
 	 * @return  {void}
 	 */
 	PopulateRole: function (xml, id) {
-		if (xml.status == 200) {
+		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
 			var cell = document.getElementById('resource' + results['resource']['id']);
 
@@ -237,7 +237,7 @@ var Roles = {
 
 		if (resource) {
 			WSDeleteURL(resource.getAttribute('data-api') + "/" + resource + "." + userid, function (xml, target) {
-				if (xml.status == 200) {
+				if (xml.status < 400) {
 					WSGetURL(resource.getAttribute('data-api') + "/" + target, Roles.GotUserStatus);
 				} else {
 					var err = document.getElementById("role_errors");
