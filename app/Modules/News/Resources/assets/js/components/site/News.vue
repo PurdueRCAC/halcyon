@@ -217,8 +217,6 @@ export default {
             const endPageList = (curPage + 5) >= this.farthestPage
                 ? this.farthestPage - 1
                 : Math.min(Math.max(curPage + 4, 9), this.farthestPage - 1);
-            console.log("start page list: " + startPageList);
-            console.log("end page list: " + endPageList);
             for (let pageNum = startPageList; pageNum <= endPageList; pageNum++)
                 this.paginationList.push(pageNum);
             if (curPage < (this.farthestPage - 5))
@@ -304,7 +302,6 @@ export default {
                     this.setPaginationList(this.pageRequest);
                     this.mute = false;
                     this.isFetchingData = false;
-                    console.log("Current Page: " + this.pageRequest);
                 });
         },
         update(id, color) {
@@ -332,12 +329,10 @@ export default {
             document.getElementById("mute").className = val ? "on" : "";
         },
         startDate(date) {
-            console.log("startDate: " + date);
             this.start = date + "T";
             this.handleFormEvent();
         },
         stopDate(date) {
-            console.log("stopDate: " + date);
             this.stop = date + "T";
             this.handleFormEvent();
         },
