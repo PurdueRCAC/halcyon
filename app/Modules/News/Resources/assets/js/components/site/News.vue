@@ -112,6 +112,8 @@
                             size="45"
                             maxlength="32"
                             class="form-control"
+                            v-model="location"
+                            @keyup="handleFormEvent"
                         />
                     </div>
                 </div>
@@ -193,13 +195,14 @@ export default {
             limit: 20,
             working: false,
             total: 0,
-            keywords: "",
+            keywords: null,
             isFetchingData: true,
             id: null,
             startDate: "",
             stopDate: "",
             start: null,
-            stop: null
+            stop: null,
+            location: null
         };
     },
     methods: {
@@ -289,7 +292,8 @@ export default {
                         id: this.id,
                         start: this.start,
                         stop: this.stop,
-                        type: this.selectedNewsType_id
+                        type: this.selectedNewsType_id,
+                        location: this.location
                     }
                 })
                 .then(({ data }) => {
