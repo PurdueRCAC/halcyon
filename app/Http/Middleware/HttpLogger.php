@@ -22,7 +22,7 @@ class HttpLogger
 
 		if (app()->has('isAdmin') && app()->get('isAdmin'))
 		{
-			return $response;
+			//return $response;
 		}
 
 		$app = 'ui';
