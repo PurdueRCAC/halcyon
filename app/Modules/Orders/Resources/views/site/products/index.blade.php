@@ -351,8 +351,8 @@ $(document).ready(function() {
 					?>
 					<li>
 						<strong>{{ trans('orders::orders.filters.' . $key) }}</strong>: {{ $val }}
-						<a href="{{ route('site.orders.products', $f) }}" class="icon-remove filters-x" title="Remove filter">
-							<span class="fa fa-times" aria-hidden="true"><span class="sr-only">Remove filter</span>
+						<a href="{{ route('site.orders.products', $f) }}" class="icon-remove filters-x" title="{{ trans('orders::orders.remove filter') }}">
+							<span class="fa fa-times" aria-hidden="true"><span class="sr-only">{{ trans('orders::orders.remove filter') }}</span>
 						</a>
 					</li>
 					<?php
@@ -365,6 +365,8 @@ $(document).ready(function() {
 			<h3>{{ $cat->name }}</h3>
 			<p class="mb-5">{{ $cat->description }}</p>
 		@endif
+
+		@if (count($rows))
 		<table class="table order-products">
 			<caption class="sr-only">{{ trans('orders::orders.products') }}</caption>
 			<thead>
@@ -485,6 +487,14 @@ $(document).ready(function() {
 				</tr>
 			</tfoot>
 		</table>
+		@else
+			<div class="placeholder card text-center">
+				<div class="placeholder-body card-body">
+					<span class="fa fa-ban" aria-hidden="true"></span>
+					<p>{{ trans('global.no results') }}</p>
+				</div>
+			</div>
+		@endif
 
 		<input type="hidden" id="userid" value="<?php echo auth()->user() ? auth()->user()->id : 0; ?>" />
 

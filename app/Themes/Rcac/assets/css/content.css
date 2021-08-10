@@ -957,6 +957,16 @@ a.card-content:hover {
 	opacity: 0.5;
 }
 
+.placeholder.card {
+	border: none;
+	color: #656565;
+}
+.placeholder.card .fa {
+	font-size: 2em;
+	display: block;
+	margin-bottom: 0.5em;
+}
+
 h1 a.heading-anchor,
 h2 a.heading-anchor,
 h3 a.heading-anchor,

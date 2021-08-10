@@ -112,8 +112,8 @@ app('pathway')
 						?>
 						<li>
 							<strong>{{ trans('orders::orders.filters.' . $key) }}</strong>: {{ $val }}
-							<a href="{{ route('site.orders.recurring', $f) }}" class="icon-remove filters-x" title="Remove filter">
-								<span class="fa fa-times" aria-hidden="true"><span class="sr-only">Remove filter</span>
+							<a href="{{ route('site.orders.recurring', $f) }}" class="icon-remove filters-x" title="{{ trans('orders::orders.remove filter') }}">
+								<span class="fa fa-times" aria-hidden="true"><span class="sr-only">{{ trans('orders::orders.remove filter') }}</span>
 							</a>
 						</li>
 						<?php
@@ -206,7 +206,12 @@ app('pathway')
 
 				{{ $rows->render() }}
 			@else
-				<p class="alert alert-info">No orders found.</p>
+				<div class="placeholder card text-center">
+					<div class="placeholder-body card-body">
+						<span class="fa fa-ban" aria-hidden="true"></span>
+						<p>{{ trans('global.no results') }}</p>
+					</div>
+				</div>
 			@endif
 		</div>
 		@csrf

@@ -8,45 +8,7 @@
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/datatables/datatables.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/datatables.min.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/dataTables.bootstrap4.min.js')) }}"></script>
-<script>
-	// Force update of totals in case browswer is caching values
-	$(document).ready(function() { 
-		if ($('.datatable').length) {
-			$.fn.dataTable.render.ellipsis = function ( cutoff ) {
-				return function ( data, type, row ) {
-					console.log(data);
-					return type === 'display' && data.length > cutoff ?
-						data.substr( 0, cutoff ) +'…' :
-						data;
-				}
-			};
-
-			$('.datatable').DataTable({
-				pageLength: 20,
-				pagingType: 'numbers',
-				info: false,
-				ordering: false,
-				lengthChange: false,
-				scrollX: true,
-				//autoWidth: false,
-				language: {
-					searchPlaceholder: "Filter rows...",
-					search: "_INPUT_",
-				},
-				fixedColumns: {
-					leftColumns: 1
-				},
-				columnDefs: [{
-					targets: [-1, -2],
-					render: $.fn.dataTable.render.ellipsis(14)
-				}],
-				initComplete: function () {
-					$($.fn.dataTable.tables(true)).css('width', '100%');
-				}
-			});
-		}
-	});
-</script>
+<script src="{{ asset('modules/orders/js/import.js?v=' . filemtime(public_path() . '/modules/orders/js/import.js')) }}"></script>
 @endpush
 
 @section('title'){{ trans('orders::orders.import') }}@stop

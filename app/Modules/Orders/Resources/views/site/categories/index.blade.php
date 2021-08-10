@@ -5,7 +5,6 @@
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
 jQuery(document).ready(function($){
 	$('.filter-submit').on('change', function(e){
@@ -78,7 +77,6 @@ jQuery(document).ready(function($){
 					dataType: 'json',
 					async: false,
 					success: function (response) {
-						
 					},
 					error: function (xhr, ajaxOptions, thrownError) {
 						console.log(xhr.responseJSON.message);
@@ -114,20 +112,7 @@ app('pathway')
 @endcomponent
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-	<div class="row">
-		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-			<h2 class="sr-only">{{ trans('orders::orders.categories') }}</h2>
-		</div>
-		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
-			@if (auth()->user()->can('create orders.categories'))
-			<p>
-				<a href="{{ route('site.orders.categories.create') }}" class="btn btn-info">
-					<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('orders::orders.create category') }}
-				</a>
-			</p>
-			@endif
-		</div>
-	</div>
+	<h2 class="sr-only">{{ trans('orders::orders.categories') }}</h2>
 
 	<form action="{{ route('site.orders.categories') }}" method="post" name="adminForm" id="adminForm" class="row">
 		<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
@@ -136,24 +121,83 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="filter_search">{{ trans('search.label') }}</label>
-					<input type="text" name="filter_search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 				</div>
+
 				<div class="form-group">
 					<label for="filter_state">{{ trans('global.state') }}</label>
-					<select name="filter_state" id="filter_state" class="form-control filter filter-submit">
+					<select name="state" id="filter_state" class="form-control filter filter-submit">
 						<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
 						<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
 						<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 					</select>
 				</div>
 
-				<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
-				<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
+				<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+				<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
 				<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 			</fieldset>
 		</div>
 		<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+			@if (auth()->user()->can('create orders.categories'))
+			<p class="text-right">
+				<a href="{{ route('site.orders.categories.create') }}" class="btn btn-info">
+					<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('orders::orders.create category') }}
+				</a>
+			</p>
+			@endif
+
+			<div id="applied-filters" aria-label="Applied filters">
+				<p class="sr-only">Applied Filters:</p>
+				<ul class="filters-list">
+					<?php
+					$allfilters = collect($filters);
+					$fkeys = ['search', 'state'];
+
+					foreach ($fkeys as $key):
+						if (!isset($filters[$key]) || $filters[$key] == '*'):
+							continue;
+						endif;
+
+						$f = $allfilters
+							->reject(function($v, $k) use ($key)
+							{
+								return (in_array($k, ['userid', 'limit', 'page', 'order', 'order_dir']));
+							})
+							->map(function($v, $k) use ($key)
+							{
+								if ($k == $key)
+								{
+									$v = '*';
+									$v = ($k == 'search' ? '' : $v);
+								}
+								return $v;
+							})
+							->toArray();
+
+						$val = $filters[$key];
+						$val = ($val == '*' ? 'all' : $val);
+
+						if ($key == 'state'):
+							$val = ($val == '*' ? trans('global.option.all states') : $val);
+							$val = ($val == 'published' ? trans('global.published') : $val);
+							$val = ($val == 'trashed' ? trans('global.trashed') : $val);
+						endif;
+						?>
+						<li>
+							<strong>{{ trans('orders::orders.filters.' . $key) }}</strong>: {{ $val }}
+							<a href="{{ route('site.orders.products', $f) }}" class="icon-remove filters-x" title="{{ trans('orders::orders.remove filter') }}">
+								<span class="fa fa-times" aria-hidden="true"><span class="sr-only">{{ trans('orders::orders.remove filter') }}</span>
+							</a>
+						</li>
+						<?php
+					endforeach;
+					?>
+				</ul>
+			</div>
+
+			@if (count($rows))
 			<table class="table table-hover mt-0">
 				<caption class="sr-only">{{ trans('orders::orders.categories') }}</caption>
 				<thead>
@@ -181,8 +225,8 @@ app('pathway')
 				@foreach ($rows as $i => $row)
 					<tr data-id="{{ $row->id }}" data-api="{{ route('api.orders.categories.update', ['id' => $row->id]) }}">
 						<td>
-							@if (auth()->user()->can('delete orders.categories'))
-								<a class="btn text-danger btn-sm category-delete" href="{{ route('site.orders.categories.delete', ['id' => $row->id]) }}" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.orders.categories.delete', ['id' => $row->id]) }}">
+							@if (auth()->user()->can('delete orders.categories') && !$row->isTrashed())
+								<a class="btn text-danger btn-sm category-delete" href="{{ route('site.orders.categories.delete', ['id' => $row->id]) }}" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.orders.categories.delete', ['id' => $row->id]) }}" title="{{ trans('global.button.delete') }}">
 									<span class="fa fa-trash" aria-hidden="true"></span>
 									<span class="sr-only">{{ trans('global.button.delete') }}</span>
 								</a>
@@ -192,6 +236,9 @@ app('pathway')
 							{{ $row->id }}
 						</td>
 						<td>
+							@if ($row->isTrashed())
+								<span class="fa fa-trash text-muted" aria-hidden="true"></span>
+							@endif
 							@if (auth()->user()->can('edit orders.categories'))
 								<a href="{{ route('site.orders.categories.edit', ['id' => $row->id]) }}">
 									{{ $row->name }}
@@ -219,6 +266,14 @@ app('pathway')
 			</table>
 
 			{{ $rows->render() }}
+			@else
+				<div class="placeholder card text-center">
+					<div class="placeholder-body card-body">
+						<span class="fa fa-ban" aria-hidden="true"></span>
+						<p>{{ trans('global.no results') }}</p>
+					</div>
+				</div>
+			@endif
 
 			@csrf
 		</div>

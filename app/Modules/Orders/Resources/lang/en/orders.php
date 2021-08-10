@@ -120,6 +120,7 @@ return [
 		'stop' => 'Created before',
 		'public' => 'Visibility',
 		'restricteddata' => 'Restricted Data Prompt',
+		'state' => 'State',
 	],
 	'export summary' => 'Order Summary',
 	'export items' => 'Order Summary and Items',
@@ -130,4 +131,5 @@ return [
 	'purchase' => 'Purchase',
 	'import' => 'Import',
 	'accounts updated' => ':count order account(s) updated.',
+	'remove filter' => 'Remove filter',
 ];

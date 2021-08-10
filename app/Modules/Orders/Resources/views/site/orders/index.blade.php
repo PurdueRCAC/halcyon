@@ -8,205 +8,11 @@
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
+<script src="{{ asset('modules/orders/js/import.js?v=' . filemtime(public_path() . '/modules/orders/js/import.js')) }}"></script>
 <script>
 $(document).ready(function() { 
 	$('.filter-submit').on('change', function(e){
 		$(this).closest('form').submit();
-	});
-
-	var users = $(".form-users");
-	/*if (users.length) {
-		users.each(function (i, user) {
-			user = $(user);
-			var cl = user.clone()
-				.attr('type', 'hidden')
-				.val(user.val().replace(/([^:]+):/, ''));
-			user
-				.attr('name', user.attr('id') + i)
-				.attr('id', user.attr('id') + i)
-				.val(user.val().replace(/(:\d+)$/, ''))
-				.after(cl);
-			user.autocomplete({
-				minLength: 2,
-				source: function (request, response) {
-					return $.getJSON(user.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-						response($.map(data.data, function (el) {
-							return {
-								label: el.name + ' (' + el.username + ')',
-								name: el.name,
-								id: el.id,
-							};
-						}));
-					});
-				},
-				select: function (event, ui) {
-					event.preventDefault();
-					// Set selection
-					user.val(ui.item.label); // display the selected text
-					cl.val(ui.item.id); // save selected id to input
-					user.closest('form').submit();
-					return true;
-				}
-			});
-		});
-	}*/
-	if (users.length) {
-		users.each(function(i, el){
-			$(el).select2({
-				placeholder: $(el).attr('placeholder'),
-				ajax: {
-					url: $(el).data('api') + '&api_token=' + $('meta[name="api-token"]').attr('content'),
-					dataType: 'json',
-					maximumSelectionLength: 1,
-					data: function (params) {
-						var query = {
-							search: params.term,
-							order: 'name',
-							order_dir: 'asc'
-						}
-
-						return query;
-					},
-					processResults: function (data) {
-						for (var i = 0; i < data.data.length; i++) {
-							data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
-						}
-
-						return {
-							results: data.data
-						};
-					}
-				}
-			});
-		});
-		users.on('select2:select', function (e) {
-			var data = e.params.data;
-			window.location = $(this).data('url') + "?u=" + data.id;
-		});
-		users.on('select2:unselect', function (e) {
-			var data = e.params.data;
-			window.location = $(this).data('url') + "?u=";
-		});
-	}
-
-	var dialoge = $("#export-orders").dialog({
-		autoOpen: false,
-		height: 'auto',
-		width: 250,
-		modal: true
-	});
-
-	$('.btn-export').off('click').on('click', function(e){
-		e.preventDefault();
-
-		dialoge.dialog("open");
-	});
-
-	var dialogi = $("#import-orders").dialog({
-		autoOpen: false,
-		height: 'auto',
-		width: 500,
-		modal: true
-	});
-
-	$('.btn-import').off('click').on('click', function(e){
-		e.preventDefault();
-
-		dialogi.dialog("open");
-	});
-
-	// feature detection for drag&drop upload
-	var isAdvancedUpload = function()
-		{
-			var div = document.createElement('div');
-			return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
-		}();
-
-	// applying the effect for every form
-	var forms = document.querySelectorAll('.dropzone');
-	Array.prototype.forEach.call(forms, function(form)
-	{
-		var input    = form.querySelector('input[type="file"]'),
-			label    = form.querySelector('label'),
-			filelist = form.querySelector('.file-list'),
-			droppedFiles = false,
-			// output information
-			output = function(msg)
-			{
-				filelist.innerHTML = msg + filelist.innerHTML;
-			},
-			showFiles = function(files)
-			{
-				// process all File objects
-				for (var i = 0, f; f = files[i]; i++) {
-					//parseFile(f);
-					output(
-						"<p>File information: <strong>" + f.name + "</strong> (" + f.size + " bytes)</p>"
-					);
-				}
-				//label.textContent = files.length > 1
-				//	? (input.getAttribute('data-multiple-caption') || '').replace('{count}', files.length)
-				//	: files[0].name;
-			},
-			triggerFormSubmit = function()
-			{
-				var event = document.createEvent( 'HTMLEvents' );
-				event.initEvent( 'submit', true, false );
-				form.dispatchEvent( event );
-			};
-
-		// automatically submit the form on file select
-		input.addEventListener('change', function(e)
-		{
-			showFiles(e.target.files);
-		});
-
-		// drag&drop files if the feature is available
-		if (isAdvancedUpload)
-		{
-			form.classList.add('has-advanced-upload'); // letting the CSS part to know drag&drop is supported by the browser
-
-			['drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'].forEach(function(event)
-			{
-				form.addEventListener(event, function(e)
-				{
-					// preventing the unwanted behaviours
-					e.preventDefault();
-					e.stopPropagation();
-				});
-			});
-
-			['dragover', 'dragenter'].forEach(function(event)
-			{
-				form.addEventListener(event, function()
-				{
-					form.classList.add( 'is-dragover' );
-				});
-			});
-
-			['dragleave', 'dragend', 'drop'].forEach(function(event)
-			{
-				form.addEventListener( event, function()
-				{
-					form.classList.remove( 'is-dragover' );
-				});
-			});
-
-			form.addEventListener('drop', function(e)
-			{
-				droppedFiles = e.target.files || e.dataTransfer.files; // the files that were dropped
-				input.files = droppedFiles;
-				//showFiles(droppedFiles);
-			});
-		}
-
-		// Firefox focus bug fix for file input
-		input.addEventListener('focus', function(){
-			input.classList.add('has-focus');
-		});
-		input.addEventListener('blur', function(){
-			input.classList.remove('has-focus');
-		});
 	});
 });
 </script>
@@ -244,12 +50,55 @@ app('pathway')
 				<div class="form-group">
 					<label for="filter_userid">{{ trans('orders::orders.submitter') }}</label>
 					<!-- <input type="text" name="userid" id="filter_userid" class="form-control form-users filter-submit" data-uri="{{ route('api.users.index') }}?search=%s" placeholder="Find by user or group" value="{{ $user ? $user->name . ':' . $user->id : '' }}" /> -->
-					<select name="userid" id="filter_userid" class="form-control form-users filter-submit" multiple="multiple" placeholder="Find by submitter" data-url="{{ route('site.orders.index') }}" data-api="{{ route('api.users.index') }}?search=%s">
+					<select name="userid" id="filter_userid" class="form-control form-users filter-submit" multiple="multiple" placeholder="Find by user" data-url="{{ route('site.orders.index') }}" data-api="{{ route('api.users.index') }}?search=%s">
 						@if ($user)
 						<option value="{{ $user->id }}" selected="selected">{{ $user->name }}</option>
 						@endif
 					</select>
 				</div>
+				<script>
+				$(document).ready(function() { 
+					var users = $(".form-users");
+					if (users.length) {
+						users.each(function(i, el){
+							$(el).select2({
+								placeholder: $(el).attr('placeholder'),
+								ajax: {
+									url: $(el).data('api') + '&api_token=' + $('meta[name="api-token"]').attr('content'),
+									dataType: 'json',
+									maximumSelectionLength: 1,
+									data: function (params) {
+										var query = {
+											search: params.term,
+											order: 'name',
+											order_dir: 'asc'
+										}
+
+										return query;
+									},
+									processResults: function (data) {
+										for (var i = 0; i < data.data.length; i++) {
+											data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+										}
+
+										return {
+											results: data.data
+										};
+									}
+								}
+							});
+						});
+						users.on('select2:select', function (e) {
+							var data = e.params.data;
+							window.location = $(this).data('url') + "?userid=" + data.id;
+						});
+						users.on('select2:unselect', function (e) {
+							var data = e.params.data;
+							window.location = $(this).data('url') + "?userid=";
+						});
+					}
+				});
+				</script>
 			@endif*/ ?>
 			<div class="form-group">
 				<label for="filter_search">{{ trans('search.label') }}</label>
@@ -394,8 +243,8 @@ app('pathway')
 					?>
 					<li>
 						<strong>{{ trans('orders::orders.filters.' . $key) }}</strong>: {{ $val }}
-						<a href="{{ route('site.orders.index', $f) }}" class="icon-remove filters-x" title="Remove filter">
-							<span class="fa fa-times" aria-hidden="true"><span class="sr-only">Remove filter</span>
+						<a href="{{ route('site.orders.index', $f) }}" class="icon-remove filters-x" title="{{ trans('orders::orders.remove filter') }}">
+							<span class="fa fa-times" aria-hidden="true"><span class="sr-only">{{ trans('orders::orders.remove filter') }}</span>
 						</a>
 					</li>
 					<?php
@@ -489,7 +338,12 @@ app('pathway')
 
 		{{ $rows->render() }}
 	@else
-		<p class="alert alert-info">No orders found.</p>
+		<div class="placeholder card text-center">
+			<div class="placeholder-body card-body">
+				<span class="fa fa-ban" aria-hidden="true"></span>
+				<p>{{ trans('global.no results') }}</p>
+			</div>
+		</div>
 	@endif
 
 	@csrf
@@ -499,18 +353,14 @@ app('pathway')
 <div id="import-orders" class="dialog" title="{{ trans('orders::orders.import') }}">
 	<form action="{{ route('site.orders.import') }}" method="post" enctype="multipart/form-data">
 		<p>Currently, only CSV files are accepted. Required columns are order <code>ID</code>, <code>purchaseio</code> or <code>purchasewbse</code>, and <code>paymentdocid</code>.</p>
-		<?php
-		$tmp = ('-' . time());
-		?>
+
 		<div class="form-group dropzone">
 			<div id="uploader" class="fallback" data-instructions="Click or Drop files" data-list="#uploader-list">
-				<!-- <noscript> -->
 				<label for="upload">Choose a file<span class="dropzone__dragndrop"> or drag it here</span></label>
 				<input type="file" name="file" id="upload" class="form-control-file" multiple="multiple" />
-				<!-- </noscript> -->
 			</div>
 			<div class="file-list" id="uploader-list"></div>
-			<input type="hidden" name="tmp_dir" id="ticket-tmp_dir" value="{{ $tmp }}" />
+			<input type="hidden" name="tmp_dir" id="ticket-tmp_dir" value="{{ ('-' . time()) }}" />
 		</div>
 
 		<div class="text-center">
