@@ -54,7 +54,7 @@ function CreateNewClassAccount(btn) {
 	post['users'] = users;
 
 	WSPostURL(btn.data('api'), JSON.stringify(post), function (xml) {
-		if (xml.status == 200) {
+		if (xml.status < 400) {
 			document.location.reload(true);
 		} else if (xml.status == 403) {
 			alert("Your session may have expired. Click OK to reload page.");
@@ -280,7 +280,7 @@ function PrintErrors() {
  */
 function newUser(xml, post_obj) {
 	pending--;
-	if (xml.status == 200) {
+	if (xml.status < 400) {
 		//var response = JSON.parse(xml.responseText);
 		//var post = JSON.stringify(post_obj);
 		pending++;
@@ -364,7 +364,7 @@ function AddedManyUsers(xml, post_obj) {
 	}
 
 	WSPostURL(ROOT_URL + "classaccount", JSON.stringify(post), function (xml) {
-		if (xml.status == 200) {
+		if (xml.status < 400) {
 			document.location.reload(true);
 		} else if (xml.status == 403) {
 			alert("Your session may have expired. Click OK to reload page.");
@@ -628,7 +628,7 @@ function RemoveUser(btn) {//user, crn) {
 /*function DeleteClassAccount(id) {
 	if (confirm("Are you sure you wish to delete this class account?")) {
 		WSDeleteURL(id, function (xml) {
-			if (xml.status == 200) {
+			if (xml.status < 400) {
 				document.location.reload(true);
 			} else if (xml.status == 403) {
 				alert("Your session may have expired. Click OK to reload page.");
@@ -869,7 +869,7 @@ $(document).ready(function () {
 		//DeleteClassAccount($(this).data('id'));
 		if (confirm($(this).data('confirm'))) {
 			WSDeleteURL($(this).data('api'), function (xml) {
-				if (xml.status == 200) {
+				if (xml.status < 400) {
 					document.location.reload(true);
 				} else if (xml.status == 403) {
 					alert("Your session may have expired. Click OK to reload page.");
