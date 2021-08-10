@@ -178,6 +178,16 @@ jQuery(document).ready(function($){
 		$(this).parent().toggleClass('active');
 	});
 
+	$('.node>ul').each(function(i, el){
+		var node = $(el);
+		var t = node.offset().top + node.height(),
+			h = $(window).height();
+		if (t > h) {
+			node.addClass('drop-up');
+		}
+	});
+
+	// Light/dark mode
 	$('#mode').on('click', function(e){
 		e.preventDefault();
 

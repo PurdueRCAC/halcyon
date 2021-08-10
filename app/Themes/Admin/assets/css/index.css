@@ -3043,7 +3043,6 @@ div.current li {
   z-index: 999;
   display: flex;
   flex-direction: column;
-  /*overflow-x: scroll;*/
   top: 5px;
   left: 5px;
   bottom: 5px;
@@ -3345,6 +3344,14 @@ div.current li {
   border: 10px solid transparent;
   border-color: transparent var(--menu-bg) transparent transparent;
 }
+.main-navigation ul#adminmenu>li>ul.drop-up {
+  top: auto;
+  bottom: 0.5em;
+}
+.main-navigation ul#adminmenu>li>ul.drop-up:after {
+  top: auto;
+  bottom: 1em;
+}
 .main-navigation ul#adminmenu ul li {
   padding: 0.5em 1em;
 }
@@ -3460,6 +3467,19 @@ div.current li {
   top: 0.2em;
   right: 0.2em;
   padding: 0.125em 0.3em;
+}
+@media (max-height: 800px) {
+  .main-navigation {
+    font-size: 1em;
+  }
+  #header .user-options li a,
+  .main-navigation ul#adminmenu > li > a {
+    font-size: 1em;
+    padding: 0.5em 1.1em;
+  }
+  .main-navigation ul#adminmenu > li.node:after {
+    top: 1em;
+  }
 }
 
 .sub-navigation {
@@ -5001,6 +5021,77 @@ background-color: rgba(0, 0, 0, 0.025);
     color: #333;
   }
 }*/
+
+
+.flex-table.is-compact .flex-table-item {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+.flex-table.is-compact .flex-table-item:not(:last-child) {
+    border-bottom: none;
+}
+.flex-table.is-compact .flex-table-item:nth-child(2) {
+    border-radius: 8px 8px 0 0;
+}
+.flex-table.is-compact .flex-table-item:last-child {
+    margin-bottom: 6px;
+    border-radius: 0 0 8px 8px;
+}
+.flex-table-wrapper {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 20px;
+}
+.is-dark .flex-table-wrapper {
+  background: #323236;
+  border-color: #404046;
+}
+.flex-table .flex-table-header {
+  display: flex;
+  align-items: center;
+  padding: 0 1em;
+}
+.flex-table .flex-table-header span {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  font-size: .8rem;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  padding: 0 1em 1em 1em;
+}
+.flex-table .flex-table-item {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-height: 60px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  padding: 8px;
+  margin-bottom: 6px;
+}
+.flex-table .flex-table-item .flex-table-cell {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  padding: 0 1em;
+}
+.flex-table .flex-table-item.is-row {
+    border: none;
+    background:0 0
+}
+.flex-table .flex-table-item .flex-table-cell.is-grow {
+    flex-grow:2
+}
+.flex-table .flex-table-item .flex-table-cell.cell-center {
+    justify-content:center
+}
+.flex-table .flex-table-item .flex-table-cell.cell-end {
+    justify-content:flex-end
+}
 
 @media (prefers-contrast: high) {
 }
