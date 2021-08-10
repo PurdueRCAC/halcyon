@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Core\Traits\LegacyTrash;
+use App\Modules\Resources\Models\Asset;
 use Carbon\Carbon;
 
 /**
@@ -116,7 +117,7 @@ class Product extends Model
 	 */
 	public function resource()
 	{
-		return $this->hasOne('\\App\\Modules\\Resources\\Entities\\Asset', 'resourceid');
+		return $this->hasOne(Asset::class, 'id', 'resourceid');
 	}
 
 	/**

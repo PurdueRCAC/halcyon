@@ -187,6 +187,9 @@ app('pathway')
 					@else
 						{{ $row->name }}
 					@endif
+					@if ($row->resource)
+						<br /><span class="text-muted"><span class="fa fa-link" aria-hidden="true"></span> {{ $row->resource->name }}</span>
+					@endif
 				</td>
 				<td class="priority-2">
 					{!! $row->category_name ? $row->category_name : '<span class="unknown">' . trans('global.unknown') . '</span>' !!}

@@ -67,7 +67,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-9 filter-select text-rght">
+			<div class="col col-md-9 filter-select text-right">
 				<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
 				<select name="category" id="filter_category" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
