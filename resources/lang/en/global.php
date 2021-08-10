@@ -56,6 +56,7 @@ return [
 		'items reordered' => ':count Item(s) successfully reordered.',
 		'items reordering failed' => 'Error occurred reordering items - :error',
 		'checkin failed' => 'Checkin failed.',
+		'checked out' => 'Item is currently checked out by another user.',
 	],
 	'time' => [
 		'seconds' => 'second|seconds',

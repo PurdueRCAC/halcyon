@@ -795,6 +795,7 @@ h4 {
 .icon-delete:before {
   content: "\e862";
 }
+.icon-export:before,
 .icon-download-cloud:before {
   content: "\e863";
 }

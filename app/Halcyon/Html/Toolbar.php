@@ -554,4 +554,17 @@ class Toolbar
 	{
 		$this->append('Link', $name, $alt, $url, $list);
 	}
+
+	/**
+	 * Writes a button that prompts for confirmation before executing a task
+	 *
+	 * @param   string   $name  Name to be used as apart of the id
+	 * @param   string   $alt   An override for the alt text.
+	 * @param   array    $items
+	 * @return  void
+	 */
+	public function dropdown($name='', $alt = 'global.toolbar.link', $items = array())
+	{
+		$this->append('Dropdown', $name, $alt, $items);
+	}
 }

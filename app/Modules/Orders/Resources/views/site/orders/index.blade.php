@@ -154,46 +154,40 @@ app('pathway')
 	</div>
 	<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 		@if (auth()->user()->can('manage orders'))
-			<p class="text-right">
-				<button class="btn btn-primary btn-export">
-					<span class="fa fa-table" aria-hidden="true"></span> Export
-				</button>
-
+			<div class="text-right">
+				<div class="dropdown btn-group">
+					<button class="btn btn-primary dropdown-toggle" type="button" id="exportbutton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span class="fa fa-table" aria-hidden="true"></span> {{ trans('orders::orders.export') }}
+					</button>
+					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="exportbutton">
+						<?php
+						$filters['export'] = 'only_main';
+						?>
+						<a href="{{ route('site.orders.index', $filters) }}" class="dropdown-item">
+							{{ trans('orders::orders.export summary') }}
+						</a>
+						<?php
+						$filters['export'] = 'items';
+						?>
+						<a href="{{ route('site.orders.index', $filters) }}" class="dropdown-item">
+							{{ trans('orders::orders.export items') }}
+						</a>
+						<?php
+						$filters['export'] = 'accounts';
+						?>
+						<a href="{{ route('site.orders.index', $filters) }}" class="dropdown-item">
+							{{ trans('orders::orders.export accounts') }}
+						</a>
+					</div>
+				</div>
 				<a href="#import-orders" class="btn btn-secondary btn-import">
-					<span class="fa fa-upload" aria-hidden="true"></span> Import
+					<span class="fa fa-upload" aria-hidden="true"></span> {{ trans('orders::orders.import') }}
 				</a>
-			</p>
-			<div id="export-orders" class="dialog" title="{{ trans('orders::orders.export') }}">
-				<h2 class="modal-title sr-only">{{ trans('knowledge::knowledge.choose type') }}</h2>
-				<?php
-				$filters['export'] = 'only_main';
-				?>
-				<p>
-					<a href="{{ route('site.orders.index', $filters) }}" class="btn btn-outline-primary d-block">
-						{{ trans('orders::orders.export summary') }}
-					</a>
-				</p>
-				<?php
-				$filters['export'] = 'items';
-				?>
-				<p>
-					<a href="{{ route('site.orders.index', $filters) }}" class="btn btn-outline-secondary d-block">
-						{{ trans('orders::orders.export items') }}
-					</a>
-				</p>
-				<?php
-				$filters['export'] = 'accounts';
-				?>
-				<p>
-					<a href="{{ route('site.orders.index', $filters) }}" class="btn btn-outline-secondary d-block">
-						{{ trans('orders::orders.export accounts') }}
-					</a>
-				</p>
 			</div>
 		@endif
 
-		<div id="applied-filters" aria-label="Applied filters">
-			<p class="sr-only">Applied Filters:</p>
+		<div id="applied-filters" aria-label="{{ trans('orders::orders.applied filters') }}">
+			<p class="sr-only">{{ trans('orders::orders.applied filters') }}:</p>
 			<ul class="filters-list">
 				<?php
 				$allfilters = collect($filters);

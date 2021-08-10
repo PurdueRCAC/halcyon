@@ -148,8 +148,8 @@ app('pathway')
 			</p>
 			@endif
 
-			<div id="applied-filters" aria-label="Applied filters">
-				<p class="sr-only">Applied Filters:</p>
+			<div id="applied-filters" aria-label="{{ trans('orders::orders.applied filters') }}">
+				<p class="sr-only">{{ trans('orders::orders.applied filters') }}:</p>
 				<ul class="filters-list">
 					<?php
 					$allfilters = collect($filters);

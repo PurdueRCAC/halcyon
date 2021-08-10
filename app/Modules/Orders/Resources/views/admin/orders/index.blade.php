@@ -1,27 +1,11 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css?v=' . filemtime(public_path() . '/modules/orders/css/orders.css')) }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
-<script>
-$(document).ready(function() {
-	var dialog = $("#export-orders").dialog({
-		autoOpen: false,
-		height: 'auto',
-		width: 250,
-		modal: true
-	});
-
-	$('#toolbar-export>.btn-export').off('click').on('click', function(e){
-		e.preventDefault();
-
-		dialog.dialog("open");
-	});
-});
-</script>
 @endpush
 
 @php
@@ -38,7 +22,11 @@ app('pathway')
 	@endif
 
 	{!!
-		Toolbar::link('export', trans('orders::orders.export'), route('admin.orders.index'));
+		Toolbar::dropdown('export', trans('orders::orders.export'), [
+			route('admin.orders.index', ['export' => 'only_main']) => trans('orders::orders.export summary'),
+			route('admin.orders.index', ['export' => 'items']) => trans('orders::orders.export items'),
+			route('admin.orders.index', ['export' => 'accounts']) => trans('orders::orders.export accounts')
+		]);
 		Toolbar::spacer();
 	!!}
 
@@ -66,7 +54,7 @@ app('pathway')
 	orders
 @endcomponent
 
-<form action="{{ route('admin.orders.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.orders.index') }}" method="post" name="adminForm" id="adminForm" class="form-inlie">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -79,13 +67,13 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-9 filter-select text-right">
+			<div class="col col-md-9 filter-select text-rght">
 				<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
 				<select name="category" id="filter_category" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
-					<?php foreach ($categories as $category) { ?>
+					<?php foreach ($categories as $category): ?>
 						<option value="<?php echo $category->id; ?>"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
-					<?php } ?>
+					<?php endforeach; ?>
 				</select>
 
 				<label class="sr-only" for="filter_status">{{ trans('orders::orders.status') }}</label>
@@ -107,6 +95,52 @@ app('pathway')
 				<label class="sr-only" for="filter_end">{{ trans('orders::orders.end date') }}</label>
 				<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
 			</div>
+		</div>
+
+		<div class="row">
+				<div class="form-group col">
+					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+				</div>
+
+			<div class="form-group col">
+				<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
+				<select name="category" id="filter_category" class="form-control filter filter-submit">
+					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
+					<?php foreach ($categories as $category) { ?>
+						<option value="<?php echo $category->id; ?>"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
+					<?php } ?>
+				</select>
+					</div>
+
+					<div class="form-group col">
+				<label class="sr-only" for="filter_status">{{ trans('orders::orders.status') }}</label>
+				<select name="status" id="filter_status" class="form-control filter filter-submit">
+					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all statuses') }}</option>
+					<option value="active"<?php if ($filters['status'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.active') }}</option>
+					<option value="pending_payment"<?php if ($filters['status'] == 'pending_payment'): echo ' selected="selected"'; endif;?>>&nbsp; &nbsp; {{ trans('orders::orders.pending_payment') }}</option>
+					<option value="pending_boassignment"<?php if ($filters['status'] == 'pending_boassignment'): echo ' selected="selected"'; endif;?>>&nbsp; &nbsp; {{ trans('orders::orders.pending_boassignment') }}</option>
+					<option value="pending_approval"<?php if ($filters['status'] == 'pending_approval'): echo ' selected="selected"'; endif;?>>&nbsp; &nbsp; {{ trans('orders::orders.pending_approval') }}</option>
+					<option value="pending_fulfillment"<?php if ($filters['status'] == 'pending_fulfillment'): echo ' selected="selected"'; endif;?>>&nbsp; &nbsp; {{ trans('orders::orders.pending_fulfillment') }}</option>
+					<option value="pending_collection"<?php if ($filters['status'] == 'pending_collection'): echo ' selected="selected"'; endif;?>>&nbsp; &nbsp; {{ trans('orders::orders.pending_collection') }}</option>
+					<option value="complete"<?php if ($filters['status'] == 'complete'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.complete') }}</option>
+					<option value="canceled"<?php if ($filters['status'] == 'canceled'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.canceled') }}</option>
+				</select>
+					</div>
+
+					<div class="form-group col">
+				<label class="sr-only" for="filter_start">{{ trans('orders::orders.start date') }}</label>
+				<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
+					</div>
+
+					<div class="form-group col">
+				<label class="sr-only" for="filter_end">{{ trans('orders::orders.end date') }}</label>
+				<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
+			</div>
+			
+					<div class="col text-right">
+						<button type="submit" class="btn btn-secondary"><span class="icon-search" aria-hidden="true"></span> Filter</button>
+						</div>
 		</div>
 
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
@@ -237,26 +271,6 @@ app('pathway')
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
-
-	<div id="export-orders" class="hide" title="{{ trans('orders::orders.export') }}">
-		<h2 class="modal-title sr-only">{{ trans('knowledge::knowledge.choose type') }}</h2>
-
-		<p>
-			<a href="{{ route('admin.orders.index', ['export' => 'only_main']) }}" class="btn btn-outline-primary d-block">
-				{{ trans('orders::orders.export summary') }}
-			</a>
-		</p>
-		<p>
-			<a href="{{ route('admin.orders.index', ['export' => 'items']) }}" class="btn btn-outline-secondary d-block">
-				{{ trans('orders::orders.export items') }}
-			</a>
-		</p>
-		<p>
-			<a href="{{ route('admin.orders.index', ['export' => 'accounts']) }}" class="btn btn-outline-secondary d-block">
-				{{ trans('orders::orders.export accounts') }}
-			</a>
-		</p>
-	</div>
 
 	@csrf
 </form>
