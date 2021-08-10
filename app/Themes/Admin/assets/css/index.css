@@ -4617,7 +4617,9 @@ body table.dataTable tr:first-child td {
 th.col-queue, td.col-queue {
 background-color: rgba(0, 0, 0, 0.025);
 }
-
+.pagination + p {
+  margin: 0;
+}
 /*@media (prefers-color-scheme: dark) {
   :root {
     --panel: #1c1b21;
