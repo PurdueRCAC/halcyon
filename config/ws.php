@@ -64,5 +64,11 @@ return [
         '128.210.189.73',  // odin.rcac.purdue.edu
         '172.31.96.30',    // tools.itap.purdue.edu
         '172.18.64.182',   // storagetools.rcac.purdue.edu 
+        '172.18.15.11',    // bell-adm.rcac.purdue.edu
+        '128.211.133.11',  // gilbreth-adm.rcac.purdue.edu
+        '128.211.149.166', // scholar-adm.rcac.purdue.edu
+        '128.211.149.106', // brown-adm.rcac.purdue.edu
+        '128.211.148.10',  // halstead-adm.rcac.purdue.edu
+        '128.211.158.41',  // hammer-adm.rcac.purdue.edu
     ],
 ];
