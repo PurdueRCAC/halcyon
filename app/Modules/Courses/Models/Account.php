@@ -122,6 +122,19 @@ class Account extends Model
 	public $report = null;
 
 	/**
+	 * Set value for coursenumber
+	 *
+	 * @param   mixed  $value
+	 * @return  void
+	 */
+	public function setCoursenumberAttribute($value)
+	{
+		$value = substr($value, 0, 8);
+
+		$this->attributes['coursenumber'] = $value;
+	}
+
+	/**
 	 * Get a list of users
 	 *
 	 * @return  object
