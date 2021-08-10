@@ -360,7 +360,7 @@ export default {
         }
     },
     components: {
-        'news-article-list-component': NewsArticleListComponent
+        NewsArticleListComponent
     },
     created() {
         this.read();
