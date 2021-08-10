@@ -54,7 +54,7 @@ app('pathway')
 	orders
 @endcomponent
 
-<form action="{{ route('admin.orders.index') }}" method="post" name="adminForm" id="adminForm" class="form-inlie">
+<form action="{{ route('admin.orders.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -95,52 +95,6 @@ app('pathway')
 				<label class="sr-only" for="filter_end">{{ trans('orders::orders.end date') }}</label>
 				<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
 			</div>
-		</div>
-
-		<div class="row">
-				<div class="form-group col">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-				</div>
-
-			<div class="form-group col">
-				<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
-				<select name="category" id="filter_category" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
-					<?php foreach ($categories as $category) { ?>
-						<option value="<?php echo $category->id; ?>"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
-					<?php } ?>
-				</select>
-					</div>
-
-					<div class="form-group col">
-				<label class="sr-only" for="filter_status">{{ trans('orders::orders.status') }}</label>
-				<select name="status" id="filter_status" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all statuses') }}</option>
-					<option value="active"<?php if ($filters['status'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.active') }}</option>
-					<option value="pending_payment"<?php if ($filters['status'] == 'pending_payment'): echo ' selected="selected"'; endif;?>>&nbsp; &nbsp; {{ trans('orders::orders.pending_payment') }}</option>
-					<option value="pending_boassignment"<?php if ($filters['status'] == 'pending_boassignment'): echo ' selected="selected"'; endif;?>>&nbsp; &nbsp; {{ trans('orders::orders.pending_boassignment') }}</option>
-					<option value="pending_approval"<?php if ($filters['status'] == 'pending_approval'): echo ' selected="selected"'; endif;?>>&nbsp; &nbsp; {{ trans('orders::orders.pending_approval') }}</option>
-					<option value="pending_fulfillment"<?php if ($filters['status'] == 'pending_fulfillment'): echo ' selected="selected"'; endif;?>>&nbsp; &nbsp; {{ trans('orders::orders.pending_fulfillment') }}</option>
-					<option value="pending_collection"<?php if ($filters['status'] == 'pending_collection'): echo ' selected="selected"'; endif;?>>&nbsp; &nbsp; {{ trans('orders::orders.pending_collection') }}</option>
-					<option value="complete"<?php if ($filters['status'] == 'complete'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.complete') }}</option>
-					<option value="canceled"<?php if ($filters['status'] == 'canceled'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.canceled') }}</option>
-				</select>
-					</div>
-
-					<div class="form-group col">
-				<label class="sr-only" for="filter_start">{{ trans('orders::orders.start date') }}</label>
-				<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
-					</div>
-
-					<div class="form-group col">
-				<label class="sr-only" for="filter_end">{{ trans('orders::orders.end date') }}</label>
-				<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
-			</div>
-			
-					<div class="col text-right">
-						<button type="submit" class="btn btn-secondary"><span class="icon-search" aria-hidden="true"></span> Filter</button>
-						</div>
 		</div>
 
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
