@@ -36,5 +36,5 @@ return [
 	'start' => 'Start',
 	'stop' => 'Stop',
 	'select membership type' => '- All Membership Types -',
-	'enrolled' => 'Accounts / Enrolled',
+	'enrolled' => 'Enrolled',
 ];

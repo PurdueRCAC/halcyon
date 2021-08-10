@@ -128,31 +128,34 @@ app('pathway')
 			<?php
 			$row->accounts = 0;
 
-			event($e = new App\Modules\Courses\Events\AccountEnrollment($row));
-
-			$row->enrollment = $e->enrollments;
-
-			if (is_array($row->enrollment))
+			/*if ($row->semester != 'Workshop')
 			{
-				foreach ($row->enrollment as $student)
+				event($e = new App\Modules\Courses\Events\AccountEnrollment($row));
+
+				$row->enrollment = $e->enrollments;
+
+				if (is_array($row->enrollment))
 				{
-					// Attempt to look up student in our records
-					$u = App\Modules\Users\Models\User::findByOrganizationId($student->externalId);
-
-					if ($u)
+					foreach ($row->enrollment as $student)
 					{
-						//$username = $u->username;
+						// Attempt to look up student in our records
+						$u = App\Modules\Users\Models\User::findByOrganizationId($student->externalId);
 
-						// See if the they have host entry yet
-						event($e = new App\Modules\Users\Events\UserLookup(['username' => $u->username, 'host' => $row->resource->rolename . '.rcac.purdue.edu']));
-
-						if (count($e->results) > 0)
+						if ($u)
 						{
-							$row->accounts++;
+							//$username = $u->username;
+
+							// See if the they have host entry yet
+							event($e = new App\Modules\Users\Events\UserLookup(['username' => $u->username, 'host' => $row->resource->rolename . '.rcac.purdue.edu']));
+
+							if (count($e->results) > 0)
+							{
+								$row->accounts++;
+							}
 						}
 					}
 				}
-			}
+			}*/
 			?>
 			<tr>
 				@if (auth()->user()->can('delete courses'))
@@ -213,7 +216,6 @@ app('pathway')
 					</span>
 				</td>
 				<td class="priority-2 text-right">
-					{{ $row->accounts }} /
 					@if (auth()->user()->can('edit courses'))
 						<a href="{{ route('admin.courses.members', ['account' => $row->id]) }}">
 							{{ $row->studentcount ? $row->studentcount : $row->members()->withTrashed()->whereIsActive()->count() }}
