@@ -1,74 +1,57 @@
-/*Halcyon.submitbutton = function(task, type = '') {
-	var afrm = document.getElementById('adminForm');
 
-	if (afrm) {
-		Halcyon.submitform(task, afrm);
-		return;
-	}
-
-	var frm = document.getElementById('item-form');
-
-	if (frm) {
-		$(document).trigger('editorSave');
-		if (task == 'cancel' || document.formvalidator.isValid(frm)) {
-			Halcyon.submitform(task, frm);
-		} else {
-			alert(frm.getAttribute('data-invalid-msg'));
-		}
-	}
-}*/
 
 jQuery(document).ready(function($){
-	/*$('#btn-batch-submit')
-		.on('click', function (e){
-			Halcyon.submitbutton('user.batch');
-		});
+	var searchusers = $('#filter_search');
+	if (searchusers.length) {
+		searchusers.each(function (i, el) {
+			$(el).select2({
+				ajax: {
+					url: $(el).data('api'),
+					dataType: 'json',
+					maximumSelectionLength: 1,
+					data: function (params) {
+						var query = {
+							search: params.term,
+							order: 'name',
+							order_dir: 'asc'
+						}
 
-	$('#btn-batch-clear')
-		.on('click', function (e){
-			e.preventDefault();
-			$('#batch-group-id').val('');
-		});
+						return query;
+					},
+					processResults: function (data) {
+						for (var i = 0; i < data.data.length; i++) {
+							if (data.data[i].id) {
+								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+							} else {
+								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+								data.data[i].id = data.data[i].username;
+							}
+						}
 
-	var password = $('#newpass'),
-		passrule = $('#passrules');
-
-	if (password.length > 0 && passrule.length > 0) {
-		password.on('keyup', function(){
-			// Create an ajax call to check the potential password
-			$.ajax({
-				url: password.attr('data-href'), //"/api/members/checkpass",
-				type: "POST",
-				data: "password1=" + password.val() + "&" + password.attr('data-values'),
-				dataType: "json",
-				cache: false,
-				success: function(json) {
-					if (json.html.length > 0 && password.val() !== '') {
-						passrule.html(json.html);
-					} else {
-						// Probably deleted password, so reset classes
-						passrule.find('li').switchClass('error passed', 'empty', 200);
+						return {
+							results: data.data
+						};
 					}
+				},
+				templateResult: function (state) {
+					if (isNaN(state.id) && typeof state.name != 'undefined') {
+						return $('<span>' + state.text + ' <span class="text-warning ml-1"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> No local account</span></span>');
+					}
+					return state.text;
 				}
 			});
+		});
+		searchusers.on('select2:select', function (e) {
+			var data = e.params.data;
+			window.location = $(this).data('url') + "?search=" + data.id;
+		});
+		searchusers.on('select2:unselect', function (e) {
+			var data = e.params.data;
+			window.location = $(this).data('url') + "?search=";
 		});
 	}
 
-	$('#class_id').on('change', function (e) {
-		//e.preventDefault();
-		$.getJSON($(this).attr('data-href') + $(this).val(), {}, function (data) {
-			$.each(data, function (key, val) {
-				var item = $('#field-'+key);
-				item.val(val);
-
-				if (e.target.options[e.target.selectedIndex].text == 'custom') {
-					item.prop("readonly", false);
-				} else {
-					item.prop("readonly", true);
-				}
-			});
-		});
-	});*/
+	// API token generation
 	$('.btn-apitoken').on('click', function(e){
 		e.preventDefault();
 
@@ -76,7 +59,6 @@ jQuery(document).ready(function($){
 			$('#field-api_token').val(token(60)).prop('readonly', false);
 		}
 	});
-
 
 	function token(length) {
 		var result = '';
@@ -88,7 +70,7 @@ jQuery(document).ready(function($){
 		return result;
 	}
 
-
+	// Roles
 	$('#permissions-rules').accordion({
 		heightStyle: 'content',
 		collapsible: true,
@@ -98,6 +80,7 @@ jQuery(document).ready(function($){
 		e.stopPropagation();
 	});
 
+	// User Facets
 	$('.add-facet').on('click', function (e) {
 		e.preventDefault();
 

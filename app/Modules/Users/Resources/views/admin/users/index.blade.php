@@ -1,7 +1,66 @@
 @extends('layouts.master')
 
 @push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/users/css/users.css?v=' . filemtime(public_path() . '/modules/users/css/users.css')) }}" />
+@endpush
+
+@push('scripts')
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/users/js/users.js?v=' . filemtime(public_path() . '/modules/users/js/users.js')) }}"></script>
+<script>
+$(document).ready(function() {
+	var searchusers = $('#filter_search');
+	if (searchusers.length) {
+		searchusers.each(function(i, el){
+			$(el).select2({
+				ajax: {
+					url: $(el).data('api'),
+					dataType: 'json',
+					maximumSelectionLength: 1,
+					data: function (params) {
+						var query = {
+							search: params.term,
+							order: 'name',
+							order_dir: 'asc'
+						}
+
+						return query;
+					},
+					processResults: function (data) {
+						for (var i = 0; i < data.data.length; i++) {
+							if (data.data[i].id) {
+								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+							} else {
+								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+								data.data[i].id = data.data[i].username;
+							}
+						}
+
+						return {
+							results: data.data
+						};
+					}
+				},
+				templateResult: function (state) {
+					if (isNaN(state.id) && typeof state.name != 'undefined') {
+						return $('<span>' + state.text + ' <span class="text-warning ml-1"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> No local account</span></span>');
+					}
+					return state.text;
+				}
+			});
+		});
+		searchusers.on('select2:select', function (e) {
+			var data = e.params.data;
+			window.location = $(this).data('url') + "?search=" + data.id;
+		});
+		searchusers.on('select2:unselect', function (e) {
+			var data = e.params.data;
+			window.location = $(this).data('url') + "?search=";
+		});
+	}
+});
+</script>
 @endpush
 
 @php
@@ -51,10 +110,16 @@ app('pathway')
 			<div class="col col-xs-12 col-sm-3 filter-search">
 				<div class="form-group">
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-					<span class="input-group">
+					
+						<select name="search" id="filter_search" class="form-control filter" multiple="multiple" data-placeholder="Select users..." data-api="{{ route('api.users.index') }}" data-url="{{ request()->url() }}">
+							@if ($filters['search'])
+								<option value="{{ $filters['search'] }}" selected="selected">{{ $filters['search'] }}</option>
+							@endif
+						</select>
+					<!-- <span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
-					</span>
+					</span> -->
 				</div>
 			</div>
 			<div class="col col-xs-12 col-sm-9 text-right filter-select">
