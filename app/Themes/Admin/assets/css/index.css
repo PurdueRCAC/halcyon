@@ -123,10 +123,12 @@
   --badge-success: green;
   --badge-primary-background: rgba(30, 163, 183, 1);
   --badge-primary: #fff;
-  --badge-warning-background: rgba(255, 191, 39, 1);
-  --badge-warning: #212529;
-  --badge-info-background: rgba(30, 163, 163, 1);
-  --badge-info: blue;
+  /*--badge-warning-background: rgba(255, 191, 39, 1);
+  --badge-warning: #212529;*/
+  --badge-warning-background: rgba(255, 191, 39, 0.2); /* rgba(241,180,76,.18) */
+  --badge-warning: rgb(212, 149, 1); /* #f1b44c */
+  --badge-info-background: rgba(30, 163, 163, 0.15);
+  --badge-info: rgba(30, 163, 163, 1);
   --none: #ccc;
   --tag-bg: rgb(248, 229, 175);
   --ui-widget-bg: #fff;

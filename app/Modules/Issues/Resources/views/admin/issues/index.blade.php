@@ -43,111 +43,109 @@ app('pathway')
 @stop
 
 @section('panel')
-			<div class="row mb-4">
-				<div class="col-md-6">
-					<div class="card-title">{{ trans('issues::issues.checklist') }}</div>
-				</div>
-				<div class="col-md-6 text-right">
-					<label for="checklist_status" class="sr-only">Show</label>
-					<select name="checklist_status" id="checklist_status" class="form-control form-control-sm">
-						<option value="all">{{ trans('issues::issues.all') }}</option>
-						<option value="incomplete" selected="selected">{{ trans('issues::issues.incomplete') }}</option>
-						<option value="complete">{{ trans('issues::issues.complete') }}</option>
-					</select>
-				</div>
-			</div>
+	<div class="row mb-4">
+		<div class="col-md-6">
+			<div class="card-title">{{ trans('issues::issues.checklist') }}</div>
+		</div>
+		<div class="col-md-6 text-right">
+			<label for="checklist_status" class="sr-only">Show</label>
+			<select name="checklist_status" id="checklist_status" class="form-control form-control-sm">
+				<option value="all">{{ trans('issues::issues.all') }}</option>
+				<option value="incomplete" selected="selected">{{ trans('issues::issues.incomplete') }}</option>
+				<option value="complete">{{ trans('issues::issues.complete') }}</option>
+			</select>
+		</div>
+	</div>
 
-		<?php
-		foreach ($todos as $i => $todo)
-		{
-			$now = new DateTime('now');
+	<?php
+	foreach ($todos as $i => $todo):
+		$now = new DateTime('now');
 
-			// Check for completed todos in the recurring time period
-			switch ($todo->timeperiod->name)
-			{
-				case 'hourly':
-					$period = $now->format('Y-m-d h') . ':00:00';
-					$badge = 'danger';
-				break;
+		// Check for completed todos in the recurring time period
+		switch ($todo->timeperiod->name):
+			case 'hourly':
+				$period = $now->format('Y-m-d h') . ':00:00';
+				$badge = 'danger';
+			break;
 
-				case 'daily':
-					$period = $now->format('Y-m-d') . ' 00:00:00';
-					$badge = 'warning';
-				break;
+			case 'daily':
+				$period = $now->format('Y-m-d') . ' 00:00:00';
+				$badge = 'warning';
+			break;
 
-				case 'weekly':
-					$day = date('w');
-					$period = $now->modify('-' . $day . ' days')->format('Y-m-d') . ' 00:00:00';
-					$badge = 'info';
-				break;
+			case 'weekly':
+				$day = date('w');
+				$period = $now->modify('-' . $day . ' days')->format('Y-m-d') . ' 00:00:00';
+				$badge = 'info';
+			break;
 
-				case 'monthly':
-					$period = $now->format('Y-m-01') . ' 00:00:00';
-				break;
+			case 'monthly':
+				$period = $now->format('Y-m-01') . ' 00:00:00';
+			break;
 
-				case 'annual':
-					$period = $now->format('Y-01-01') . ' 00:00:00';
-				break;
+			case 'annual':
+				$period = $now->format('Y-01-01') . ' 00:00:00';
+			break;
 
-				default:
-					$badge = 'secondary';
-				break;
-			}
+			default:
+				$badge = 'secondary';
+			break;
+		endswitch;
 
-			$issues = $todo->issues()
-				->withTrashed()
-				->whereIsActive()
-				->where('datetimecreated', '>=', $period)
-				->first();
+		$issues = $todo->issues()
+			->withTrashed()
+			->whereIsActive()
+			->where('datetimecreated', '>=', $period)
+			->first();
 
-			$todos[$i]->status = 'incomplete';
-			// We found an item for this time period
-			if ($issues)
-			{
-				$todos[$i]->status = 'complete';
-				$todos[$i]->issue = $issues->id;
-				//unset($todos[$i]);
-			}
-		}
-		?>
-		@if (count($todos))
-			<ul class="list-group list-group-flush checklist">
-				@foreach ($todos as $todo)
-					<li class="list-group-item pl-0 pr-0 {{ $todo->status == 'complete' ? 'hide complete' : 'incomplete' }}">
-						<div class="d-flex w-100 justify-content-between">
-						<div class="form-group float-lef">
-							<div class="form-check">
-								<input type="checkbox"
-									class="form-check-input issue-todo"
-									data-name="{{ $todo->name }}"
-									data-id="{{ $todo->id }}"
-									data-api="{{ route('api.issues.create') }}"
-									data-issue="{{ $todo->issue }}"
-									name="todo{{ $todo->id }}"
-									id="todo{{ $todo->id }}"
-									value="1"
-									{{ $todo->status == 'complete' ? 'checked="checked"' : '' }} />
-								<label class="form-check-label" for="todo{{ $todo->id }}"><span class="sr-only">Mark as complete</span></label>
-							</div>
+		$todos[$i]->status = 'incomplete';
+
+		// We found an item for this time period
+		if ($issues):
+			$todos[$i]->status = 'complete';
+			$todos[$i]->issue = $issues->id;
+		endif;
+	endforeach;
+	?>
+	@if (count($todos))
+		<ul class="list-group list-group-flush checklist">
+			@foreach ($todos as $todo)
+				<li class="list-group-item pl-0 pr-0 {{ $todo->status == 'complete' ? 'hide complete' : 'incomplete' }}">
+					<div class="d-flex w-100 justify-content-between">
+					<div class="form-group float-lef">
+						<div class="form-check">
+							<input type="checkbox"
+								class="form-check-input issue-todo"
+								data-name="{{ $todo->name }}"
+								data-id="{{ $todo->id }}"
+								data-api="{{ route('api.issues.create') }}"
+								data-issue="{{ $todo->issue }}"
+								name="todo{{ $todo->id }}"
+								id="todo{{ $todo->id }}"
+								value="1"
+								{{ $todo->status == 'complete' ? 'checked="checked"' : '' }} />
+							<label class="form-check-label" for="todo{{ $todo->id }}"><span class="sr-only">Mark as complete</span></label>
 						</div>
-						<div>
-							{{ $todo->name }}
-							<span class="issue-todo-alert tip"><span class="fa" aria-hidden="true"></span></span>
-							@if ($todo->description)
-								<div class="text-muted">{!! $todo->formattedDescription !!}</div>
-							@endif
-						</div>
-						<span class="float-righ text-{{ $badge }}">{{ $todo->timeperiod->name }}</span>
-						</div>
-					</li>
-				@endforeach
-			</ul>
-		@else
-			<ul class="list-group checklist">
-				<li class="list-group-item text-center">All caught up!</li>
-			</ul>
-		@endif
-
+					</div>
+					<div>
+						{{ $todo->name }}
+						<span class="issue-todo-alert tip"><span class="fa" aria-hidden="true"></span></span>
+						@if ($todo->description)
+							<div class="text-muted">{!! $todo->formattedDescription !!}</div>
+						@endif
+					</div>
+					<div>
+						<span class="badge badge-{{ $badge }}">{{ $todo->timeperiod->name }}</span>
+					</div>
+					</div>
+				</li>
+			@endforeach
+		</ul>
+	@else
+		<ul class="list-group checklist">
+			<li class="list-group-item text-center">All caught up!</li>
+		</ul>
+	@endif
 @stop
 
 @section('content')
@@ -160,109 +158,6 @@ app('pathway')
 	issues
 @endcomponent
 <form action="{{ route('admin.issues.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
-
-	<?php /*<div class="card mb-3 tab-search">
-		<div class="card-header">
-			<div class="row">
-				<div class="col-md-6">
-					<div class="card-title">{{ trans('issues::issues.checklist') }}</div>
-				</div>
-				<div class="col-md-6 text-right">
-					<label for="checklist_status" class="sr-only">Show</label>
-					<select name="checklist_status" id="checklist_status" class="form-control">
-						<option value="all">{{ trans('issues::issues.all') }}</option>
-						<option value="incomplete" selected="selected">{{ trans('issues::issues.incomplete') }}</option>
-						<option value="complete">{{ trans('issues::issues.complete') }}</option>
-					</select>
-				</div>
-			</div>
-		</div>
-		<?php
-		foreach ($todos as $i => $todo)
-		{
-			$now = new DateTime('now');
-
-			// Check for completed todos in the recurring time period
-			switch ($todo->timeperiod->name)
-			{
-				case 'hourly':
-					$period = $now->format('Y-m-d h') . ':00:00';
-					$badge = 'danger';
-				break;
-
-				case 'daily':
-					$period = $now->format('Y-m-d') . ' 00:00:00';
-					$badge = 'warning';
-				break;
-
-				case 'weekly':
-					$day = date('w');
-					$period = $now->modify('-' . $day . ' days')->format('Y-m-d') . ' 00:00:00';
-					$badge = 'info';
-				break;
-
-				case 'monthly':
-					$period = $now->format('Y-m-01') . ' 00:00:00';
-				break;
-
-				case 'annual':
-					$period = $now->format('Y-01-01') . ' 00:00:00';
-				break;
-
-				default:
-					$badge = 'secondary';
-				break;
-			}
-
-			$issues = $todo->issues()
-				->withTrashed()
-				->whereIsActive()
-				->where('datetimecreated', '>=', $period)
-				->first();
-
-			$todos[$i]->status = 'incomplete';
-			// We found an item for this time period
-			if ($issues)
-			{
-				$todos[$i]->status = 'complete';
-				$todos[$i]->issue = $issues->id;
-				//unset($todos[$i]);
-			}
-		}
-		?>
-		@if (count($todos))
-			<ul class="list-group checklist">
-				@foreach ($todos as $todo)
-					<li class="list-group-item {{ $todo->status == 'complete' ? 'hide complete' : 'incomplete' }}">
-						<div class="form-group">
-							<div class="form-check">
-								<input type="checkbox"
-									class="form-check-input issue-todo"
-									data-name="{{ $todo->name }}"
-									data-id="{{ $todo->id }}"
-									data-api="{{ route('api.issues.create') }}"
-									data-issue="{{ $todo->issue }}"
-									name="todo{{ $todo->id }}"
-									id="todo{{ $todo->id }}"
-									value="1"
-									{{ $todo->status == 'complete' ? 'checked="checked"' : '' }} />
-								<label class="form-check-label" for="todo{{ $todo->id }}"><span class="sr-only">Mark as complete</span></label>
-								<span class="badge badge-{{ $badge }} mr-1">{{ $todo->timeperiod->name }}</span> {{ $todo->name }}
-							</div>
-							<span class="issue-todo-alert tip"><span class="fa" aria-hidden="true"></span></span>
-						</div>
-						@if ($todo->description)
-							<div class="ml-4 form-text text-muted">{!! $todo->formattedDescription !!}</div>
-						@endif
-					</li>
-				@endforeach
-			</ul>
-		@else
-			<ul class="list-group checklist">
-				<li class="list-group-item text-center">All caught up!</li>
-			</ul>
-		@endif
-	</div>*/ ?>
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -366,10 +261,35 @@ app('pathway')
 
 					<div class="d-flex mt-4 text-muted">
 						<div class="flex-fill">
+							<!--
 							@if ($r = $row->resourcesString)
 								<span class="fa fa-tag" aria-hidden="true"></span>
 								{{ $r }}
 							@endif
+	-->
+							<?php
+							$names = array();
+
+							foreach ($row->resources as $res)
+							{
+								if ($res->resource)
+								{
+									$names[] = '<span class="badge badge-info">' . $res->resource->name . '</span>';
+								}
+								else
+								{
+									$names[] = $res->resourceid;
+								}
+							}
+
+							asort($names);
+
+							if (count($names))
+							{
+								//echo '<span class="fa fa-tag" aria-hidden="true"></span> ';
+								echo implode(' ', $names);
+							}
+							?>
 						</div>
 						<div class="flex-fill text-right">
 							<span class="fa fa-comment" aria-hidden="true"></span>
