@@ -1363,7 +1363,6 @@
 										<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-type="purchase" data-success="{{ trans('storage::storage.item created') }}" />
 									</div>
 
-									<input type="hidden" name="resourceid" value="" />
 									@csrf
 								</form>
 							</div>
