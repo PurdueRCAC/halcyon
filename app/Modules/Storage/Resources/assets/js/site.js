@@ -520,12 +520,18 @@ function EditUnixGroup(dir, api) {
 	if (input_type != null) {
 		var type = input_type.options[input_type.selectedIndex].value;
 		if (type == "user") {
+			post['ownerread'] = "1";
+			post['ownerwrite'] = "1";
 			post['groupread'] = "1";
 			post['groupwrite'] = "0";
 		} else if (type == "userwrite") {
+			post['ownerread'] = "1";
+			post['ownerwrite'] = "1";
 			post['groupread'] = "1";
 			post['groupwrite'] = "1";
 		} else if (type == "userprivate") {
+			post['ownerread'] = "1";
+			post['ownerwrite'] = "1";
 			post['groupread'] = "0";
 			post['groupwrite'] = "0";
 		} else if (type == "autouser") {
