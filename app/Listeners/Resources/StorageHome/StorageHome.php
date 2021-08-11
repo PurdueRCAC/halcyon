@@ -35,14 +35,14 @@ class StorageHome
 		if ($event->resource->home != 'shared')
 		{
 			$home = Asset::query()
-				->where('name', '=', 'Home')
+				->whereLike('name', '=', 'Home')
 				->where('parentid', '=', $event->resource->id)
 				->first();
 		}
 		else
 		{
 			$home = Asset::query()
-				->where('name', '=', 'Home')
+				->where('listname', '=', 'home')
 				->first();
 		}
 
