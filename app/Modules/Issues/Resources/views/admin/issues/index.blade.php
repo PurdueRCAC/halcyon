@@ -374,7 +374,7 @@ app('pathway')
 						<div class="flex-fill text-right">
 							<span class="fa fa-comment" aria-hidden="true"></span>
 							@if ($row->comments_count)
-								{{ $row->comments_count }}
+								<a href="#comments_{{ $row->id }}" class="comments-show">{{ $row->comments_count }}</a>
 							@else
 								<span class="none">{{ $row->comments_count }}</span>
 							@endif
@@ -382,100 +382,45 @@ app('pathway')
 					</div>
 				</div>
 			</div>
-		@endforeach
 
-	<?php /*
-	<div class="card mb-4">
-	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('issues::issues.issues') }}</caption>
-		<thead>
-			<tr>
-				@if (auth()->user()->can('delete issues'))
-					<th>
-						{!! Html::grid('checkall') !!}
-					</th>
-				@endif
-				<th scope="col" class="priority-5">
-					{!! Html::grid('sort', trans('issues::issues.id'), 'id', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col">
-					{!! Html::grid('sort', trans('issues::issues.report'), 'report', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{{ trans('issues::issues.resources') }}
-				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('issues::issues.created'), 'datetimecreated', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-3 text-right">
-					{{ trans('issues::issues.comments') }}
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-		@foreach ($rows as $i => $row)
-			<tr>
-				@if (auth()->user()->can('delete issues'))
-					<td>
-						{!! Html::grid('id', $i, $row->id) !!}
-					</td>
-				@endif
-				<td class="priority-5">
-					{{ $row->id }}
-				</td>
-				<td>
-					@if (auth()->user()->can('edit issues'))
-						<a href="{{ route('admin.issues.edit', ['id' => $row->id]) }}">
-							{{ Illuminate\Support\Str::limit($row->report, 70) }}
-						</a>
-					@else
-						<span>
-							{{ Illuminate\Support\Str::limit($row->report, 70) }}
-						</span>
-					@endif
-					@if (count($row->tags))
-						<br />
-						@foreach ($row->tags as $tag)
-							<a class="tag badge badge-sm badge-secondary" href="{{ route('admin.issues.index', ['tag' => $tag->slug]) }}">{{ $tag->name }}</a>
+			<?php
+			$comments = $row->comments()->whereIsActive()->orderBy('datetimecreated', 'asc')->get();
+
+			if (count($comments) > 0):
+				?>
+				<div class="card ml-4 hide" id="comments_{{ $row->id }}">
+					<ul class="list-group w-100">
+						@foreach ($comments as $comment)
+							<li id="comment_{{ $comment->id }}" class="list-group-item" data-api="{{ route('api.issues.comments.update', ['comment' => $comment->id]) }}">
+								{!! $comment->formattedComment !!}
+
+								<div class="d-flex text-muted">
+									<div class="mr-4">
+										<span class="fa fa-calendar" aria-hidden="true"></span>
+										<time datetime="{{ $comment->datetimecreated }}">
+											{{ $comment->datetimecreated->format('M d, Y') }} @ {{ $comment->datetimecreated->format('h:i a') }}
+										</time>
+									</div>
+									<div class="mr-4">
+										@if ($comment->creator)
+											<span class="fa fa-user" aria-hidden="true"></span>
+											{{ $comment->creator->name }}
+										@endif
+									</div>
+									<div class="flex-fill text-right">
+										<span class="badge badge-success<?php if (!$comment->resolution) { echo ' hide'; } ?>">{{ trans('issues::issues.resolution') }}</span>
+									</div>
+								</div>
+							</li>
 						@endforeach
-					@endif
-				</td>
-				<td class="priority-4">
-					@if ($r = $row->resourcesString)
-						{{ $r }}
-					@else
-						<span class="none">{{ trans('global.none') }}</span>
-					@endif
-				</td>
-				<td class="priority-4">
-					<span class="datetime">
-						@if ($row->datetimecreated)
-							<time datetime="{{ $row->datetimecreated }}">
-								@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
-									{{ $row->datetimecreated->diffForHumans() }}
-								@else
-									{{ $row->datetimecreated->format('Y-m-d') }}
-								@endif
-							</time>
-						@else
-							<span class="never">{{ trans('global.unknown') }}</span>
-						@endif
-					</span>
-				</td>
-				<td class="priority-3 text-right">
-					@if ($row->comments_count)
-						{{ $row->comments_count }}
-					@else
-						<span class="none">{{ $row->comments_count }}</span>
-					@endif
-				</td>
-			</tr>
+					</ul>
+				</div>
+				<?php
+			endif;
+			?>
 		@endforeach
-		</tbody>
-	</table>
-	</div>*/ ?>
 
-	{{ $rows->render() }}
+		{{ $rows->render() }}
 	@else
 		<div class="card-body text-center">
 			<div>{{ trans('global.no results') }}</div>

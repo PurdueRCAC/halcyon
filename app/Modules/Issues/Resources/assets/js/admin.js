@@ -20,11 +20,13 @@ document.addEventListener('DOMContentLoaded', function() {
 				dataType: 'json',
 				async: false,
 				success: function (data) {
-					$(that.closest('li')).addClass('hide'); //fadeOut();
-					$(that.closest('li')).addClass('complete');
-					$(that.closest('li')).removeClass('incomplete');
-					that.data('issue', data.id);
-					$('#checklist_status').trigger('change');
+					$(that.closest('li')).fadeOut(400, function () {
+						$(this).addClass('hide').removeAttr('style');
+						$(that.closest('li')).addClass('complete');
+						$(that.closest('li')).removeClass('incomplete');
+						that.data('issue', data.id);
+						$('#checklist_status').trigger('change');
+					});
 				},
 				error: function (xhr, ajaxOptions, thrownError) {
 					var img = $(that.closest('li')).find('.fa')[0];
@@ -41,11 +43,13 @@ document.addEventListener('DOMContentLoaded', function() {
 				dataType: 'json',
 				async: false,
 				success: function (data) {
-					$(that.closest('li')).removeClass('hide'); //fadeOut();
-					$(that.closest('li')).removeClass('complete');
-					$(that.closest('li')).addClass('incomplete');
-					that.data('issue', '');
-					$('#checklist_status').trigger('change');
+					$(that.closest('li')).fadeOut(400, function () {
+						$(this).addClass('hide').removeAttr('style');
+						$(that.closest('li')).removeClass('complete');
+						$(that.closest('li')).addClass('incomplete');
+						that.data('issue', '');
+						$('#checklist_status').trigger('change');
+					});
 				},
 				error: function (xhr, ajaxOptions, thrownError) {
 					var img = $(that.closest('li')).find('.fa')[0];
@@ -73,6 +77,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	$('.searchable-select').select2();
+
+	$('.comments-show').on('click', function (e) {
+		e.preventDefault();
+		$($(this).attr('href')).toggleClass('hide');
+	});
 
 	$('.comment-add').on('click', function (e) {
 		e.preventDefault();
