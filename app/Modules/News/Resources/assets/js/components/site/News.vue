@@ -90,14 +90,15 @@
                         >Resource</label
                     >
                     <div class="col-sm-10">
-                        <input
+                        <!-- <input
                             name="resource"
                             id="newsresource"
                             size="45"
                             class="form-control"
                             value=""
                             data-uri="resource/%s"
-                        />
+                        /> -->
+                        <v-select multiple v-model="selectedResources" :options="resourceOptions" />
                     </div>
                 </div>
                 <div class="form-group row" id="TR_location">
@@ -176,6 +177,15 @@
 		this.name = name;
 	}*/
 import NewsArticleListComponent from "./NewsArticleListComponent.vue";
+import Vue from "vue";
+import vSelect from "vue-select";
+
+Vue.component("v-select", vSelect);
+
+// import MultiSelect from "primevue/multiselect";
+// import Vue from "vue";
+// Vue.component('multi-select', MultiSelect);
+
 export default {
     data() {
         return {
@@ -202,7 +212,29 @@ export default {
             stopDate: "",
             start: null,
             stop: null,
-            location: null
+            location: null,
+            resourceOptions: [
+                "Anvil",
+                "Bell",
+                "Brown",
+                "Geddes",
+                "Gilbreth",
+                "Halstead",
+                "Hammer",
+                "Scholar",
+                "Weber",
+                "Workbench",
+                "Box Research Lab Folder",
+                "Data Depot",
+                "Fortress",
+                "Globus",
+                "Home Directories",
+                "Purdue Data Resources",
+                "REED Folder",
+                "Scratch Storage"
+            ],
+            selectedResources: [],
+            selectedResources_id: null
         };
     },
     methods: {
@@ -293,7 +325,8 @@ export default {
                         start: this.start,
                         stop: this.stop,
                         type: this.selectedNewsType_id,
-                        location: this.location
+                        location: this.location,
+                        resource: this.selectedResources_id
                     }
                 })
                 .then(({ data }) => {
@@ -361,10 +394,78 @@ export default {
                 }
                 this.handleFormEvent();
             }
+        },
+        selectedResources(newArray) {
+            if (newArray.length <= 0) {
+                this.selectedResources_id = null;
+            } else {
+                let newArray_id = [];
+                for (let idx = 0; idx < newArray.length; idx++) {
+                    switch (newArray[idx]) {
+                        case "Anvil":
+                            newArray_id.push("99");
+                            break;
+                        case "Bell":
+                            newArray_id.push("97");
+                            break;
+                        case "Brown":
+                            newArray_id.push("88");
+                            break;
+                        case "Geddes":
+                            newArray_id.push("105");
+                            break;
+                        case "Gilbreth":
+                            newArray_id.push("92");
+                            break;
+                        case "Halstead":
+                            newArray_id.push("83");
+                            break;
+                        case "Hammer":
+                            newArray_id.push("69");
+                            break;
+                        case "Scholar":
+                            newArray_id.push("91");
+                            break;
+                        case "Weber":
+                            newArray_id.push("94");
+                            break;
+                        case "Workbench":
+                            newArray_id.push("87");
+                            break;
+                        case "Box Research Lab Folder":
+                            newArray_id.push("93");
+                            break;
+                        case "Data Depot":
+                            newArray_id.push("64");
+                            break;
+                        case "Fortress":
+                            newArray_id.push("48");
+                            break;
+                        case "Globus":
+                            newArray_id.push("101");
+                            break;
+                        case "Home Directories":
+                            newArray_id.push("81");
+                            break;
+                        case "Purdue Data Resources":
+                            newArray_id.push("104");
+                            break;
+                        case "REED Folder":
+                            newArray_id.push("100");
+                            break;
+                        case "Scratch Storage":
+                            newArray_id.push("98");
+                            break;
+                    }
+                }
+                this.selectedResources_id = newArray_id.join();
+            }
+            this.handleFormEvent();
         }
     },
     components: {
-        NewsArticleListComponent
+        NewsArticleListComponent,
+        'vue-select': vSelect
     },
     created() {
         this.read();
