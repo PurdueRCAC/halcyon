@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Issues\Models\Issue;
 use App\Modules\Issues\Models\Issueresource;
@@ -77,8 +78,8 @@ class IssuesController extends Controller
 				$from_sql[] = "+" . $stem;
 			}
 
-			$query->select('*', DB::raw("(MATCH(stemmedtext) AGAINST ('" . implode(' ', $from_sql) . "') * 10 + 2 * (1 / (ABS(DATEDIFF(NOW(), $n.datetimecreated)) + 1))) AS score"));
-			$query->whereRaw("MATCH(stemmedtext) AGAINST ('" . implode(' ', $from_sql) . "' IN BOOLEAN MODE)");
+			$query->select('*', DB::raw("(MATCH(stemmedreport) AGAINST ('" . implode(' ', $from_sql) . "') * 10 + 2 * (1 / (ABS(DATEDIFF(NOW(), datetimecreated)) + 1))) AS score"));
+			$query->whereRaw("MATCH(stemmedreport) AGAINST ('" . implode(' ', $from_sql) . "' IN BOOLEAN MODE)");
 			$query->orderBy('score', 'desc');
 		}
 

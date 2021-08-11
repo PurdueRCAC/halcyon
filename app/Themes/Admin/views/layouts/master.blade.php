@@ -120,8 +120,13 @@
 					@endif
 				</ul>
 			</header><!-- / #header -->
-
+			@hasSection('panel')
+				<div id="pane">
+					@yield('panel')
+				</div>
+			@endif
 			<div id="container-module">
+
 				<main id="module-content">
 					<div id="toolbar-box" class="toolbar-box">
 						<div class="pagetitle">
@@ -156,6 +161,7 @@
 
 				@include('partials.footer')
 			</div><!-- / #container-module -->
+			
 		</div><!-- / #container-main -->
 	</body>
 </html>
