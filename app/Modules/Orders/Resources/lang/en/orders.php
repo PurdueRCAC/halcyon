@@ -123,6 +123,7 @@ return [
 		'public' => 'Visibility',
 		'restricteddata' => 'Restricted Data Prompt',
 		'state' => 'State',
+		'userid' => 'User',
 	],
 	'export summary' => 'Order Summary',
 	'export items' => 'Order Summary and Items',

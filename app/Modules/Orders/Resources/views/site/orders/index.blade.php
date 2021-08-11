@@ -192,7 +192,13 @@ app('pathway')
 				<?php
 				$allfilters = collect($filters);
 
-				foreach (['search', 'status', 'category', 'product', 'start', 'end'] as $key):
+				$keys = ['search', 'status', 'category', 'product', 'start', 'end'];
+				if (auth()->user()->can('manage users'))
+				{
+					$keys[] = 'userid';
+				}
+
+				foreach ($keys as $key):
 					if (!isset($filters[$key]) || !$filters[$key] || $filters[$key] == '*'):
 						continue;
 					endif;
@@ -200,14 +206,19 @@ app('pathway')
 					$f = $allfilters
 						->reject(function($v, $k) use ($key)
 						{
-							return (in_array($k, ['export', 'userid', 'limit', 'page', 'order', 'order_dir', 'type']));
+							$ks = ['export', 'limit', 'page', 'order', 'order_dir', 'type'];
+							if (auth()->user()->can('manage users'))
+							{
+								$ks[] = 'userid';
+							}
+							return (in_array($k, $ks));
 						})
 						->map(function($v, $k) use ($key)
 						{
 							if ($k == $key)
 							{
 								$v = '*';
-								$v = ($k == 'start' || $k == 'end' || $k == 'search' ? '' : $v);
+								$v = (in_array($k, ['start', 'end', 'search', 'userid']) ? '' : $v);
 							}
 							return $v;
 						})
@@ -233,6 +244,10 @@ app('pathway')
 								break;
 							endif;
 						endforeach;
+					endif;
+					if ($key == 'userid'):
+						$u = App\Modules\Users\Models\User::find($val);
+						$val = $u ? $u->name : $val;
 					endif;
 					?>
 					<li>
