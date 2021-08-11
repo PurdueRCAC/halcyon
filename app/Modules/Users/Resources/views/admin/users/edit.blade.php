@@ -205,7 +205,7 @@ app('pathway')
 									$where->whereNull('datetimeremoved')
 										->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
 								})
-								->orderBy('display', 'desc')
+								->orderBy('name', 'asc')
 								->get();
 							?>
 
