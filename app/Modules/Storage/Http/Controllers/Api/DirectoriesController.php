@@ -378,6 +378,14 @@ class DirectoriesController extends Controller
 			$data = $request->all();
 		}
 
+		foreach (['ownerread', 'ownerwrite', 'groupread', 'groupwrite'] as $p)
+		{
+			if (!isset($data[$p]) || is_null($data[$p]))
+			{
+				$data[$p] = 1;
+			}
+		}
+
 		$bytesource = null;
 		if (array_key_exists('bytesource', $data))
 		{
