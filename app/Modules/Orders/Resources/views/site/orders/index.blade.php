@@ -207,7 +207,7 @@ app('pathway')
 						->reject(function($v, $k) use ($key)
 						{
 							$ks = ['export', 'limit', 'page', 'order', 'order_dir', 'type'];
-							if (auth()->user()->can('manage users'))
+							if (!auth()->user()->can('manage users'))
 							{
 								$ks[] = 'userid';
 							}
