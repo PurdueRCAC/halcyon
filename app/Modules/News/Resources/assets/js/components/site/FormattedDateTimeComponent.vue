@@ -1,5 +1,5 @@
 <template>
-    <div class="newspostuser">Posted by Person on {{ formattedDateTime }}</div>
+    <span>Posted by Person on {{ formattedDateTime }}</span>
 </template>
 
 <script>

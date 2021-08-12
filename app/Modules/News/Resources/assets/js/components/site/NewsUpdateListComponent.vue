@@ -11,13 +11,17 @@
 			<div class="card-body panel-body crmcomment crmcommenttext" v-html="formattedbody">
 			</div>
 			<div class="card-footer panel-footer">
-				<div class="crmcommentpostedby">Posted by Person on {{ datetimecreated }}</div>
+				<div class="crmcommentpostedby">
+					<formatted-date-time :rawDateTime="datetimecreated"></formatted-date-time>
+				</div>
 			</div>
 		</div>
 	</li>
 </template>
 
 <script>
+	import FormattedDateTime from './FormattedDateTimeComponent.vue';
+
 	export default {
 		mounted() {
 			console.log('Component mounted.')
@@ -30,5 +34,8 @@
 			'canEdit',
 			'canDelete'
 		],
+		components: {
+			FormattedDateTime
+		}
 	}
 </script>
