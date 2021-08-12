@@ -145,15 +145,15 @@
 					<?php
 					foreach ($found as $dir)
 					{
-						$status = '<span class="badge badge-secondary">Not migrated</span>';
+						$status = '<span class="badge badge-success">Migrated</span>';
 
 						if (is_link($dir->fullPath))
 						{
 							$path = realpath($dir->fullPath);
 
-							if (preg_match('/depot-?new/i', $path))
+							if (preg_match('/depot-?old/i', $path))
 							{
-								$status = '<span class="badge badge-success">Migrated</span>';
+								$status = '<span class="badge badge-secondary">Not migrated</span>';
 							}
 						}
 						?>
