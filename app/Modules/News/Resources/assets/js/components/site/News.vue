@@ -339,12 +339,6 @@ export default {
                     this.setPaginationList(this.pageRequest);
                     this.mute = false;
                     this.isFetchingData = false;
-                    console.log("Article #1: ");
-                    console.log(this.articles[0]);
-                    console.log("Article #2: ");
-                    console.log(this.articles[1]);
-                    console.log("Article #3: ");
-                    console.log(this.articles[2]);
                 });
         },
         update(id, color) {

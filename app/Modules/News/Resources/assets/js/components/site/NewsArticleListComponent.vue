@@ -33,14 +33,22 @@
 							Edit
 						</a>
 					</li>
+					<li v-if="resources.length > 0">
+						<span>
+							<i class="fa fa-tags fa-1x"></i>
+						</span>
+						<span>
+							{{ formattedResources }}
+						</span>
+					</li>
 					<li class="news-type">
 						<span class="newstype">
 							{{ type.name }}
-							<a v-bind:href="this.ROOT_URL + '/news/manage?edit&amp;id=' + id" v-if="canEdit">
-								<span class="fa fa-pencil" aria-hidden="true"></span>
-								Edit
-							</a>
 						</span>
+						<a v-bind:href="this.ROOT_URL + '/news/manage?edit&amp;id=' + id" v-if="canEdit">
+							<span class="fa fa-pencil" aria-hidden="true"></span>
+							Edit
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -94,6 +102,14 @@
 			del(event) {
 				event.preventDefault();
 				this.$emit('delete', this.id);
+			}
+		},
+		computed: {
+			formattedResources() {
+				let resourcesList = [];
+				for (let idx = 0; idx < this.resources.length; idx++)
+					resourcesList.push(this.resources[idx].name);
+				return resourcesList.join(", ");
 			}
 		},
 		components: {
