@@ -145,13 +145,13 @@
         </template>
         <template v-else>
             <p id="matchingnews">Found {{ total }} matching News Articles</p>
-            <news-article-list-component
+            <news-article
                 v-for="article in articles"
                 v-bind="article"
                 :key="article.id"
                 @update="update"
                 @delete="del"
-            ></news-article-list-component>
+            ></news-article>
 
             <nav aria-label="navigation">
                 <ul class="pagination">
@@ -176,7 +176,7 @@
 		this.color = color;
 		this.name = name;
 	}*/
-import NewsArticleListComponent from "./NewsArticleListComponent.vue";
+import NewsArticle from "./NewsArticleListComponent.vue";
 import Vue from "vue";
 import vSelect from "vue-select";
 
@@ -464,7 +464,7 @@ export default {
         }
     },
     components: {
-        NewsArticleListComponent,
+        NewsArticle,
         'vue-select': vSelect
     },
     created() {

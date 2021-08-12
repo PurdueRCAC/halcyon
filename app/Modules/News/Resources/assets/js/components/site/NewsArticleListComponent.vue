@@ -66,7 +66,7 @@
 </template>
 
 <script>
-	import NewsUpdate from './NewsUpdate.vue';
+	import NewsUpdate from './NewsUpdateListComponent.vue';
 	import FormattedDateTime from './FormattedDateTimeComponent.vue'
 
 	export default {
