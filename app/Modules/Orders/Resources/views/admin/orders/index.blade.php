@@ -6,6 +6,14 @@
 
 @push('scripts')
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
+<script>
+$(document).ready(function () {
+	$('.items-toggle').on('click', function(e){
+		e.preventDefault();
+		$($(this).attr('href')).toggle('collapse');
+	});
+});
+</script>
 @endpush
 
 @php
@@ -127,6 +135,8 @@ app('pathway')
 				<th scope="col" class="priority-2 numeric">
 					{!! Html::grid('sort', trans('orders::orders.total'), 'ordertotal', $filters['order_dir'], $filters['order']) !!}
 				</th>
+				<th scope="col" class="priority-2 numeric">
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -207,8 +217,98 @@ app('pathway')
 						@endif
 					@endif
 				</td>
-				<td class="priority-2 numeric">
+				<td class="priority-2 numeric text-nowrap">
 					{{ config('orders.currency', '$') }} {{ $row->formatNumber($row->ordertotal) }}
+				</td>
+				<td class="priority-2 numeric">
+					<a class="items-toggle" data-toggle="collapse" data-parent="#queues" href="#row{{ $row->id }}" title="Items in this order">
+						<span class="icon-list" aria-hidden="true"></span><span class="sr-only">Items</span>
+					</a>
+				</td>
+			</tr>
+			<tr class="details-row collapse" id="row{{ $row->id }}">
+				<td colspan="<?php echo (auth()->user()->can('delete orders') ? 8 : 7); ?>">
+					<table class="table">
+						<caption class="sr-only">{{ trans('orders::orders.items') }}</caption>
+						<thead>
+							<tr>
+								<th scope="col">{{ trans('orders::orders.status') }}</th>
+								<th scope="col">{{ trans('orders::orders.item') }}</th>
+								<th scope="col" class="text-right">{{ trans('orders::orders.quantity') }}</th>
+								<th scope="col" class="text-right">{{ trans('orders::orders.price') }}</th>
+								<th scope="col" class="text-right">{{ trans('orders::orders.total') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach ($row->items as $item)
+								<tr>
+									@if (!$item->isFulfilled())
+										@if ($row->status != 'canceled' && $row->status == 'pending_fulfillment')
+											<td>
+												<div class="badge order-status {{ str_replace(' ', '-', $row->status) }}" id="status_{{ $item->id }}">{{ trans('orders::orders.pending_fulfillment') }}</div>
+											</td>
+										@else
+											<td>
+												<div class="badge order-status {{ str_replace(' ', '-', $row->status) }}">
+													@if ($row->status == 'pending_fulfillment' || $row->status == 'canceled')
+														{{ trans('orders::orders.' . $row->status) }}
+													@else
+														{{ trans('orders::orders.pending_approval') }}
+													@endif
+												</div>
+											</td>
+										@endif
+									@else
+										<td>
+											<div class="badge order-status fulfilled">{{ trans('orders::orders.fulfilled') }}</div>
+											<time datetime="{{ $item->fulfilled }}">{{ Carbon\Carbon::parse($item->fulfilled)->format('M j, Y') }}</time>
+										</td>
+									@endif
+									<td>
+										<strong>{{ $item->product->name }}</strong>
+										<p class="form-text text-muted">
+											@if ($item->origorderitemid)
+												@if ($item->start() && $item->end())
+													@if ($item->id == $item->origorderitemid)
+														{{ trans('orders::orders.new service', ['start' => $item->start()->format('M j, Y'), 'end' => $item->end()->format('M j, Y')]) }}
+													@else
+														{{ trans('orders::orders.service renewal', ['start' => $item->start()->format('M j, Y'), 'end' => $item->end()->format('M j, Y')]) }}
+													@endif
+												@else
+													{{ 'Service for ' . $item->timeperiodcount . ' ' }}
+													@if ($item->timeperiodcount > 1)
+														{{ $item->product->timeperiod->plural }}
+														{{ trans('orders::orders.service for', ['count' => $item->timeperiodcount, 'timeperiod' => $item->product->timeperiod->plural]) }}
+													@else
+														{{ trans('orders::orders.service for', ['count' => $item->timeperiodcount, 'timeperiod' => $item->product->timeperiod->singular]) }}
+													@endif
+												@endif
+											@endif
+										</p>
+									</td>
+									<td class="text-right">
+										<span class="item-edit-hide quantity_span">{{ $item->quantity }}</span>
+										@if ($item->origorderitemid)
+											for<br/>
+											<span class="item-edit-hide periods_span">{{ $item->timeperiodcount }}</span>
+											@if ($item->timeperiodcount > 1)
+												{{ $item->product->timeperiod->plural }}
+											@else
+												{{ $item->product->timeperiod->singular }}
+											@endif
+										@endif
+									</td>
+									<td class="text-right">
+										{{ config('orders.currency', '$') }} <span name="price">{{ $item->formattedPrice }}</span><br/>
+										<span class="text-nowrap">per {{ $item->product->unit }}</span>
+									</td>
+									<td class="text-right text-nowrap">
+										<span class="item-edit-hide">{{ config('orders.currency', '$') }} <span name="itemtotal">{{ $item->formattedTotal }}</span></span>
+									</td>
+								</tr>
+							@endforeach
+						</tbody>
+					</table>
 				</td>
 			</tr>
 		@endforeach
