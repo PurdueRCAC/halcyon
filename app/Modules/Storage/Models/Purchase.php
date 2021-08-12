@@ -77,7 +77,7 @@ class Purchase extends Model
 	 *
 	 * @return  object
 	 */
-	public function hasStarted()
+	public function hasStart()
 	{
 		return ($this->datetimestart && $this->datetimestart != '0000-00-00 00:00:00' && $this->datetimestart != '-0001-11-30 00:00:00');
 	}
