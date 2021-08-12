@@ -222,6 +222,11 @@ app('pathway')
 						@endif
 					</span>
 				</td>
+				<td class="priority-4">
+					<a href="{{ route('admin.pages.history', ['id' => $row->id]) }}" data-href="#history{{ $row->id }}">
+						<span class="fa fa-clock-o" aria-hidden="true"></span><span class="sr-only">Change history</span>
+					</a>
+				</td>
 				<?php /*<td class="priority-6">
 					<?php
 					$now = Carbon\Carbon::now();

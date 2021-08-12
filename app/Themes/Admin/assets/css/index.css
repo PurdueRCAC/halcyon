@@ -633,6 +633,7 @@ h4 {
 .icon-aperture:before {
   content: "\e827";
 }
+.icon-back:before,
 .icon-arrow-left:before {
   content: "\e828";
 }
@@ -748,6 +749,7 @@ h4 {
 .icon-chrome:before {
   content: "\e84c";
 }
+.fa-clock-o:before,
 .icon-clock:before {
   content: "\e84d";
 }

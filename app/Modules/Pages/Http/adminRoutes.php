@@ -49,4 +49,9 @@ $router->group(['prefix' => 'pages'], function (Router $router)
 		'uses' => 'PagesController@delete',
 		'middleware' => 'can:delete pages',
 	]);
+	$router->match(['get', 'post'], '/history/{id}', [
+		'as'   => 'admin.pages.history',
+		'uses' => 'PagesController@history',
+		'middleware' => 'can:edit pages',
+	])->where('id', '[0-9]+');
 });

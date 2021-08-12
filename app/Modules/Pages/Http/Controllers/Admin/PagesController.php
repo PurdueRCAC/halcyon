@@ -185,6 +185,26 @@ class PagesController extends Controller
 	}
 
 	/**
+	 * Show history for the page
+	 * 
+	 * @param  integer  $id
+	 * @return Response
+	 */
+	public function history($id)
+	{
+		$row = Page::findOrFail($id);
+
+		$history = $row->history()
+			->orderBy('created_at', 'desc')
+			->get();
+
+		return view('pages::admin.history', [
+			'row' => $row,
+			'history' => $history,
+		]);
+	}
+
+	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param   Request $request

@@ -66,4 +66,10 @@ return [
 	'error' => [
 		'path rebuild failed' => 'Path rebuild failed',
 	],
+	// History
+	'actor' => 'Actor',
+	'action' => 'Action',
+	'fields' => 'Fields',
+	'datetime' => 'Date',
+	'back' => 'Back',
 ];
