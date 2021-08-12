@@ -11,7 +11,7 @@
 			<div class="card-body panel-body crmcomment crmcommenttext" v-html="formattedbody">
 			</div>
 			<div class="card-footer panel-footer">
-				<div class="crmcommentpostedby">
+				<div class="crmcommentpostedby text-right">
 					<formatted-date-time :rawDateTime="datetimecreated"></formatted-date-time>
 				</div>
 			</div>
