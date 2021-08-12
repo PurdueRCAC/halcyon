@@ -1,9 +1,9 @@
 <template>
 	<li>
 		<div class="card panel panel-default">
-			<div class="card-header panel-heading news-admin">
-				<span class="newsid">#{{ id }}</span>
-				<a class="edit news-update-delete" href="/news/manage?delete&amp;update=121" id="121_deleteicon" title="Delete update." v-if="canDelete">
+			<div class="card-header panel-heading news-admin" v-if="canDelete">
+				<!-- <span class="newsid">#{{ id }}</span> -->
+				<a class="edit news-update-delete" href="/news/manage?delete&amp;update=121" id="121_deleteicon" title="Delete update.">
 					<span class="fa fa-x" aria-hidden="true"></span>
 					Delete
 				</a>
