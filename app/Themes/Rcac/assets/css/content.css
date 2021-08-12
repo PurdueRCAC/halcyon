@@ -1721,10 +1721,10 @@ div.dialog ol {
 	/*margin: 1em 0 1em 1em;*/
 	padding: 10px 0 10px 35px;
 }
-div.dialog ul li {
+div.dialog ul>li {
 	list-style: circle;
 }
-div.dialog ol li {
+div.dialog ol>li {
 	list-style: decimal;
 }
 
