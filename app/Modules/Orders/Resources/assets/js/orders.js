@@ -98,12 +98,13 @@ function UnformatText(text) {
  * @return  {void}
  */
 function UpdateOrderTotal(input, override) {
-	if (typeof(override) == 'undefined') {
+	if (typeof (override) == 'undefined') {
 		override = false;
 	}
 
-	/* If the number of items has a decimal, round it to an integer. If it's not valid, show "ERR" in the input. */
-	if (input != 'undefined') {
+	// If the number of items has a decimal, round it to an integer.
+	// If it's not valid, show "ERR" in the input.
+	if (typeof input != 'undefined') {
 		var regex = /^[0-9]+$/;
 		var result = regex.exec(input.value);
 		if (!result) {
@@ -123,9 +124,9 @@ function UpdateOrderTotal(input, override) {
 	// reset totals
 	//var spans = document.getElementsByTagName("span");
 	var spans = document.getElementsByClassName("category-total");
-	for (x=0;x<spans.length;x++) {
+	for (x = 0; x < spans.length; x++) {
 		//if (spans[x].id.match("total$")) {
-			spans[x].innerHTML = "0.00";
+		spans[x].innerHTML = "0.00";
 		//}
 	}
 
@@ -134,32 +135,27 @@ function UpdateOrderTotal(input, override) {
 	//var inputs = document.getElementsByTagName("input");
 	var inputs = document.getElementsByClassName("quantity-input");
 
-	for (x=0;x<inputs.length;x++) {
+	for (x = 0; x < inputs.length; x++) {
 		//if (inputs[x].id.match("_quantity$")) {
-			var product = inputs[x].getAttribute('data-id');//.id;
-			//product = product.substr(0,product.lastIndexOf("_"));
+		var product = inputs[x].getAttribute('data-id');//.id;
+		//product = product.substr(0,product.lastIndexOf("_"));
 
-			var quantity = inputs[x].value; //document.getElementById(product +"_quantity").value;
-			var quantity_in = document.getElementById(product +"_quantity");
-			// Sanity check
-			if (!quantity.match(/^[0-9]+$/)) {
-				quantity = 0;
-			}
-			var price = document.getElementById(product + "_price").value;
-			var category = document.getElementById(product + "_category").value;
+		var quantity = inputs[x].value; //document.getElementById(product +"_quantity").value;
+		var quantity_in = document.getElementById(product + "_quantity");
+		// Sanity check
+		if (!quantity.match(/^[0-9]+$/)) {
+			quantity = 0;
+		}
+		var price = document.getElementById(product + "_price").value;
+		var category = document.getElementById(product + "_category").value;
 
-			var t = document.getElementById(product + "_linetotal");
+		var t = document.getElementById(product + "_linetotal");
 
-			/*if (parseInt(quantity) > 0) {
-				$('#' + product + "_product").addClass('selected');
-			} else {
-				$('#' + product + "_product").removeClass('selected');
-			}*/
-
+		if (t) {
 			if (!override) {
 				if (t.tagName == "INPUT") {
 					if (quantity_in == input) {
-						t.value = FormatNumber(parseInt(price) * parseInt(quantity)).replace(/[,]/g,"");
+						t.value = FormatNumber(parseInt(price) * parseInt(quantity)).replace(/[,]/g, "");
 					}
 				} else {
 					t.innerHTML = FormatNumber(parseInt(price) * parseInt(quantity));
@@ -176,19 +172,20 @@ function UpdateOrderTotal(input, override) {
 						t.value = "0";
 					}
 					t.value = t.value.replace(/[,\.]/g, "");
-					t.value = FormatNumber(t.value).replace(/[,]/g,"");
+					t.value = FormatNumber(t.value).replace(/[,]/g, "");
 				}
 			}
+		}
 
-			//var cattotal = document.getElementById(category + "_total");
-			//var cattotal = document.getElementById("total");
-			if (override || t.tagName == "INPUT") {
-				//cattotal.innerHTML = FormatNumber(parseInt(cattotal.innerHTML.replace(/[,\.]/g, "")) + parseInt(t.value.replace(/[,\.]/g, "")));
-				ordertotal.innerHTML = FormatNumber(parseInt(ordertotal.innerHTML.replace(/[,\.]/g, "")) + parseInt(t.value.replace(/[,\.]/g, "")));
-			} else {
-				//cattotal.innerHTML = FormatNumber(parseInt(cattotal.innerHTML.replace(/[,\.]/g, "")) + parseInt(price) * parseInt(quantity));
-				ordertotal.innerHTML = FormatNumber(parseInt(ordertotal.innerHTML.replace(/[,\.]/g, "")) + parseInt(price) * parseInt(quantity));
-			}
+		//var cattotal = document.getElementById(category + "_total");
+		//var cattotal = document.getElementById("total");
+		if (override || (t && t.tagName == "INPUT")) {
+			//cattotal.innerHTML = FormatNumber(parseInt(cattotal.innerHTML.replace(/[,\.]/g, "")) + parseInt(t.value.replace(/[,\.]/g, "")));
+			ordertotal.innerHTML = FormatNumber(parseInt(ordertotal.innerHTML.replace(/[,\.]/g, "")) + parseInt(t.value.replace(/[,\.]/g, "")));
+		} else {
+			//cattotal.innerHTML = FormatNumber(parseInt(cattotal.innerHTML.replace(/[,\.]/g, "")) + parseInt(price) * parseInt(quantity));
+			ordertotal.innerHTML = FormatNumber(parseInt(ordertotal.innerHTML.replace(/[,\.]/g, "")) + parseInt(price) * parseInt(quantity));
+		}
 		//}
 	}
 }
