@@ -735,7 +735,7 @@ function IssuesPrintRow(report, userid, cls) {
 	span = document.createElement("a");
 	span.href = path + "?id=" + id + '&edit';
 	span.className = "issuespostdate";
-	span.innerHTML = d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear() + " @ " + hr + ":" + min + ampm;
+	span.innerHTML = d.getMonth() + " " + d.getDate() + ", " + d.getFullYear() + " @ " + hr + ":" + min + ampm;
 
 	var t = document.createTextNode(" by " + report['username']);
 
@@ -1003,7 +1003,7 @@ function IssuesPrintComment(issueid, comment, userid) {
 
 	span = document.createElement("span");
 	span.className = "issuescommentpostedby";
-	span.innerHTML = d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear() + " @ " + hr + ":" + min + ampm + " by " + comment['username'];
+	span.innerHTML = d.getMonth() + " " + d.getDate() + ", " + d.getFullYear() + " @ " + hr + ":" + min + ampm + " by " + comment['username'];
 
 	tr.appendChild(span);
 

@@ -48,7 +48,7 @@ class IssueResource extends JsonResource
 		$data['resources'] = $this->resources->each(function ($res, $key)
 		{
 			$res->api = route('api.resources.read', ['id' => $res->id]);
-			$res->name = $res->resource->name;
+			$res->name = $res->resource ? $res->resource->name : $res->resourceid;
 		});
 		$data['age'] = Carbon::now()->timestamp - $this->datetimecreated->timestamp;
 

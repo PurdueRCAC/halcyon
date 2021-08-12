@@ -57,86 +57,53 @@ app('pathway')
 		</div>
 	</div>
 
-	<?php
-	foreach ($todos as $i => $todo):
-		$now = new DateTime('now');
-
-		// Check for completed todos in the recurring time period
-		switch ($todo->timeperiod->name):
-			case 'hourly':
-				$period = $now->format('Y-m-d h') . ':00:00';
-				$badge = 'danger';
-			break;
-
-			case 'daily':
-				$period = $now->format('Y-m-d') . ' 00:00:00';
-				$badge = 'warning';
-			break;
-
-			case 'weekly':
-				$day = date('w');
-				$period = $now->modify('-' . $day . ' days')->format('Y-m-d') . ' 00:00:00';
-				$badge = 'info';
-			break;
-
-			case 'monthly':
-				$period = $now->format('Y-m-01') . ' 00:00:00';
-			break;
-
-			case 'annual':
-				$period = $now->format('Y-01-01') . ' 00:00:00';
-			break;
-
-			default:
-				$badge = 'secondary';
-			break;
-		endswitch;
-
-		$issues = $todo->issues()
-			->withTrashed()
-			->whereIsActive()
-			->where('datetimecreated', '>=', $period)
-			->first();
-
-		$todos[$i]->status = 'incomplete';
-
-		// We found an item for this time period
-		if ($issues):
-			$todos[$i]->status = 'complete';
-			$todos[$i]->issue = $issues->id;
-		endif;
-	endforeach;
-	?>
 	@if (count($todos))
 		<ul class="list-group list-group-flush checklist">
 			@foreach ($todos as $todo)
 				<li class="list-group-item pl-0 pr-0 {{ $todo->status == 'complete' ? 'hide complete' : 'incomplete' }}">
 					<div class="d-flex w-100 justify-content-between">
-					<div class="form-group float-lef">
-						<div class="form-check">
-							<input type="checkbox"
-								class="form-check-input issue-todo"
-								data-name="{{ $todo->name }}"
-								data-id="{{ $todo->id }}"
-								data-api="{{ route('api.issues.create') }}"
-								data-issue="{{ $todo->issue }}"
-								name="todo{{ $todo->id }}"
-								id="todo{{ $todo->id }}"
-								value="1"
-								{{ $todo->status == 'complete' ? 'checked="checked"' : '' }} />
-							<label class="form-check-label" for="todo{{ $todo->id }}"><span class="sr-only">Mark as complete</span></label>
+						<div class="form-group float-lef">
+							<div class="form-check">
+								<input type="checkbox"
+									class="form-check-input issue-todo"
+									data-name="{{ $todo->name }}"
+									data-id="{{ $todo->id }}"
+									data-api="{{ route('api.issues.create') }}"
+									data-issue="{{ $todo->issue }}"
+									name="todo{{ $todo->id }}"
+									id="todo{{ $todo->id }}"
+									value="1"
+									{{ $todo->status == 'complete' ? 'checked="checked"' : '' }} />
+								<label class="form-check-label" for="todo{{ $todo->id }}"><span class="sr-only">Mark as complete</span></label>
+							</div>
 						</div>
-					</div>
-					<div>
-						{{ $todo->name }}
-						<span class="issue-todo-alert tip"><span class="fa" aria-hidden="true"></span></span>
-						@if ($todo->description)
-							<div class="text-muted">{!! $todo->formattedDescription !!}</div>
-						@endif
-					</div>
-					<div>
-						<span class="badge badge-{{ $badge }}">{{ $todo->timeperiod->name }}</span>
-					</div>
+						<div>
+							{{ $todo->name }}
+							<span class="issue-todo-alert tip"><span class="fa" aria-hidden="true"></span></span>
+							@if ($todo->description)
+								<div class="text-muted">{!! $todo->formattedDescription !!}</div>
+							@endif
+						</div>
+						<div>
+							@php
+							$badge = 'secondary';
+
+							switch ($todo->timeperiod->name):
+								case 'hourly':
+									$badge = 'danger';
+								break;
+
+								case 'daily':
+									$badge = 'warning';
+								break;
+
+								case 'weekly':
+									$badge = 'info';
+								break;
+							endswitch;
+							@endphp
+							<span class="badge badge-{{ $badge }}">{{ $todo->timeperiod->name }}</span>
+						</div>
 					</div>
 				</li>
 			@endforeach
@@ -149,11 +116,6 @@ app('pathway')
 @stop
 
 @section('content')
-<!-- <div class="panes d-flex">
-	<div class="pane">
-		dewe
-	</div>
-	<div class="pane flex-grow-1"> -->
 @component('issues::admin.submenu')
 	issues
 @endcomponent
@@ -261,34 +223,22 @@ app('pathway')
 
 					<div class="d-flex mt-4 text-muted">
 						<div class="flex-fill">
-							<!--
-							@if ($r = $row->resourcesString)
-								<span class="fa fa-tag" aria-hidden="true"></span>
-								{{ $r }}
-							@endif
-	-->
 							<?php
 							$names = array();
 
-							foreach ($row->resources as $res)
-							{
-								if ($res->resource)
-								{
+							foreach ($row->resources as $res):
+								if ($res->resource):
 									$names[] = '<span class="badge badge-info">' . $res->resource->name . '</span>';
-								}
-								else
-								{
+								else:
 									$names[] = $res->resourceid;
-								}
-							}
+								endif;
+							endforeach;
 
 							asort($names);
 
-							if (count($names))
-							{
-								//echo '<span class="fa fa-tag" aria-hidden="true"></span> ';
+							if (count($names)):
 								echo implode(' ', $names);
-							}
+							endif;
 							?>
 						</div>
 						<div class="flex-fill text-right">
@@ -351,6 +301,4 @@ app('pathway')
 
 	@csrf
 </form>
-<!--	</div>
-</div> -->
 @stop

@@ -2,10 +2,12 @@
 
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/jquery-timepicker/jquery.timepicker.css?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker/jquery.timepicker.css')) }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/jquery-timepicker/jquery.timepicker.js?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker/jquery.timepicker.js')) }}"></script>
 <script src="{{ asset('modules/issues/js/site.js') }}"></script>
 @endpush
 
@@ -17,7 +19,7 @@ app('pathway')->append(
 @endphp
 
 @section('content')
-<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
+<div class="sidenav col-lg-4 col-md-4 col-sm-12 col-xs-12">
 	<h3 class="card-title panel-title">Checklist</h3>
 	<div class="card panel panel-default panel-issuetodos tab-search">
 		@if (auth()->user()->can('manage issues'))
@@ -84,7 +86,7 @@ app('pathway')->append(
 								<input type="checkbox" class="form-check-input issue-todo" data-name="{{ $todo->name }}" data-id="{{ $todo->id }}" data-api="{{ route('api.issues.create') }}" name="todo{{ $todo->id }}" id="todo{{ $todo->id }}" value="1" />
 								<label class="form-check-label" for="todo{{ $todo->id }}"><span class="badge badge-{{ $badge }}">{{ $todo->timeperiod->name }}</span> {{ $todo->name }}</label>
 								@if ($todo->description)
-									<div class="form-text text-muted">{{ $todo->formattedDescription }}</div>
+									<div class="form-text text-muted">{!! $todo->formattedDescription !!}</div>
 								@endif
 							</div>
 							<span class="issue-todo-alert tip"><span class="fa" aria-hidden="true"></span></span>
@@ -99,7 +101,7 @@ app('pathway')->append(
 		@endif
 	</div>
 </div>
-<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+<div class="contentInner col-lg-8 col-md-8 col-sm-12 col-xs-12">
 
 <div id="everything">
 	<ul class="nav nav-tabs issues-tabs">
@@ -108,7 +110,7 @@ app('pathway')->append(
 	</ul>
 	<div class="tabMain" id="tabMain">
 		<div id="DIV_search">
-			<form method="get" action="{{ route('site.issues.index') }}">
+			<form method="get" action="{{ route('site.issues.index') }}" class="editform">
 				<fieldset>
 					<legend><span id="SPAN_header" data-search="Search Reports" data-add="Add New Reports" data-edit="Edit Reports">Search Reports</span></legend>
 

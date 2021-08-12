@@ -12,9 +12,10 @@ use App\Modules\History\Traits\Historable;
 use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Issues\Events\ReportPrepareContent;
 use App\Modules\Users\Models\User;
+use Carbon\Carbon;
 
 /**
- * Issue model
+ * To-Do model
  */
 class ToDo extends Model
 {
@@ -105,7 +106,7 @@ class ToDo extends Model
 	);
 
 	/**
-	 * Defines a relationship to resources map
+	 * Defines a relationship to issues
 	 *
 	 * @return  object
 	 */
@@ -115,7 +116,7 @@ class ToDo extends Model
 	}
 
 	/**
-	 * Defines a relationship to resources map
+	 * Defines a relationship to timeperiod
 	 *
 	 * @return  object
 	 */
@@ -137,6 +138,7 @@ class ToDo extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
+	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
 	public function delete(array $options = [])
@@ -155,7 +157,67 @@ class ToDo extends Model
 	}
 
 	/**
-	 * Defines a relationship to type
+	 * Get the status (complete/incomplete) of the current item
+	 *
+	 * @return string
+	 */
+	public function getStatusAttribute()
+	{
+		if (!isset($this->attributes['state']))
+		{
+			$status = 'incomplete';
+
+			if ($this->timeperiod)
+			{
+				$now = Carbon::now();
+
+				// Check for completed todos in the recurring time period
+				switch ($this->timeperiod->name)
+				{
+					case 'hourly':
+						$period = $now->format('Y-m-d h') . ':00:00';
+					break;
+
+					case 'daily':
+						$period = $now->format('Y-m-d') . ' 00:00:00';
+					break;
+
+					case 'weekly':
+						$day = date('w');
+						$period = $now->modify('-' . $day . ' days')->format('Y-m-d') . ' 00:00:00';
+					break;
+
+					case 'monthly':
+						$period = $now->format('Y-m-01') . ' 00:00:00';
+					break;
+
+					case 'annual':
+						$period = $now->format('Y-01-01') . ' 00:00:00';
+					break;
+				}
+
+				$issue = $this->issues()
+					->withTrashed()
+					->whereIsActive()
+					->where('datetimecreated', '>=', $period)
+					->first();
+
+				// We found an item for this time period
+				if ($issue)
+				{
+					$status = 'complete';
+					$this->attributes['issueid'] = $issue->id;
+				}
+			}
+
+			$this->attributes['state'] = $status;
+		}
+
+		return $this->attributes['state'];
+	}
+
+	/**
+	 * Get the description formatted as HTML
 	 *
 	 * @return string
 	 */
