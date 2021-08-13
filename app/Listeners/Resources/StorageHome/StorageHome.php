@@ -32,16 +32,20 @@ class StorageHome
 	{
 		// Need to check for Home dir and create if necessary
 		// First check if we have a storage dir already
-		if ($event->resource->home != 'shared')
+		if ($event->resource->home && $event->resource->home != 'shared')
 		{
 			$home = Asset::query()
-				->whereLike('name', '=', 'Home')
+				->withTrashed()
+				->whereIsActive()
+				->whereLike('name', 'Home')
 				->where('parentid', '=', $event->resource->id)
 				->first();
 		}
 		else
 		{
 			$home = Asset::query()
+				->withTrashed()
+				->whereIsActive()
 				->where('listname', '=', 'home')
 				->first();
 		}
