@@ -56,7 +56,7 @@
 				<div class="newsposttext" v-html="formattedbody">
 				</div>
 			</div>
-			<div class="card-footer panel-footer">
+			<div class="card-footer panel-footer bg-white">
 				<div class="newspostedby">
 					<div class="newspostuser">
 						<formatted-date-time :rawDateTime="datetimecreated" :isNewsOriginalPost="true" :username="''"></formatted-date-time>
