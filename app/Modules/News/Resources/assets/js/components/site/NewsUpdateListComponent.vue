@@ -12,7 +12,7 @@
 			</div>
 			<div class="card-footer panel-footer">
 				<div class="crmcommentpostedby text-right">
-					<formatted-date-time :rawDateTime="datetimecreated"></formatted-date-time>
+					<formatted-date-time :rawDateTime="datetimecreated" :isNewsOriginalPost="false" :username="username"></formatted-date-time>
 				</div>
 			</div>
 		</div>
@@ -32,7 +32,8 @@
 			'datetimecreated',
 			'datetimeremoved',
 			'canEdit',
-			'canDelete'
+			'canDelete',
+			'username'
 		],
 		components: {
 			FormattedDateTime

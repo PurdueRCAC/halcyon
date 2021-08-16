@@ -59,7 +59,7 @@
 			<div class="card-footer panel-footer">
 				<div class="newspostedby">
 					<div class="newspostuser">
-						<formatted-date-time :rawDateTime="datetimecreated"></formatted-date-time>
+						<formatted-date-time :rawDateTime="datetimecreated" :isNewsOriginalPost="true" :username="''"></formatted-date-time>
 					</div>
 				</div>
 			</div>

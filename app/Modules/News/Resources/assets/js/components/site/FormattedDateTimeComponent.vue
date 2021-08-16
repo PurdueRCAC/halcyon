@@ -1,10 +1,15 @@
 <template>
-    <span>Posted by Person on {{ formattedDateTime }}</span>
+    <span v-if="isNewsOriginalPost">Posted on {{ formattedDateTime }}</span>
+	<span v-else>Posted by {{ username }} on {{ formattedDateTime }}</span>
 </template>
 
 <script>
     export default {
-        props: ['rawDateTime'],
+        props: [
+			'rawDateTime',
+			'isNewsOriginalPost',
+			'username'
+		],
         computed: {
             formattedDateTime() {
                 const rawDate = this.rawDateTime.substring(0, this.rawDateTime.indexOf("T"));
@@ -56,8 +61,10 @@
 				const amOrPm = (parseInt(time_list[0]) / 12) < 1 ? "am" : "pm"
 				const hour = (parseInt(time_list[0]) % 12) > 0 ? (parseInt(time_list[0]) % 12) : 12;
 				const minute_str = time_list[1];
-				const formattedTime = hour.toString() + ":" + minute_str + amOrPm + " EDT";
+				const formattedTime = hour.toString() + ":" + minute_str + amOrPm;
 
+				if (this.isNewsOriginalPost)
+					return formattedDate + " " + formattedTime + " EST";
 				return formattedDate + " " + formattedTime;
             }
         }
