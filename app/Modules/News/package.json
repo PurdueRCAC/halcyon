@@ -21,6 +21,7 @@
         "vue": "^2.5.17",
         "vue-template-compiler": "^2.6.11",
         "vue-select": "^3.12.2",
-        "@fortawesome/fontawesome-free": "^5.15.0"
+        "@fortawesome/fontawesome-free": "^5.15.0",
+        "vue-router": "^3.5.2"
     }
 }
