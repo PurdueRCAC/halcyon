@@ -254,11 +254,11 @@ class UnixGroupsController extends Controller
 
 			$rows = $event->results;
 
-			/*if (count($rows) > 0)
+			if (count($rows) == 0)
 			{
-				// group name exists in LDAP
-				return response()->json(['message' => trans('groups::groups.LDAP entry already exists for unix group')], 409);
-			}*/
+				// Base Group does not exists in other service
+				//return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $row->unixgroup])], 409);
+			}
 
 			// Set the base for groups and add a '-' if the name is empty 
 			if (!preg_match('/^$/', $name))
@@ -275,8 +275,7 @@ class UnixGroupsController extends Controller
 
 			if (count($rows) > 0)
 			{
-				// group name exists in LDAP
-				return response()->json(['message' => trans('groups::groups.LDAP entry already exists for unix group')], 409);
+				return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $name])], 409);
 			}
 		}
 
@@ -291,13 +290,10 @@ class UnixGroupsController extends Controller
 
 		// Look for this entry, duplicate name, etc.
 		$exist = UnixGroup::query()
+			->withTrashed()
+			->whereIsActive()
 			->where('groupid', '=', $group->id)
 			->where('longname', '=', $base . $name)
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->get()
 			->first();
 

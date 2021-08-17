@@ -12,6 +12,7 @@ use App\Modules\Groups\Models\Department;
 use App\Modules\Groups\Models\GroupDepartment;
 use App\Modules\Groups\Models\GroupFieldOfScience;
 use App\Modules\Groups\Events\GroupDisplay;
+use App\Modules\Groups\Events\UnixGroupFetch;
 
 class GroupsController extends Controller
 {
@@ -180,6 +181,16 @@ class GroupsController extends Controller
 			if ($exists)
 			{
 				return redirect()->back()->withError(trans('`unixgroup` ' . $row->unixgroup . ' already exists'));
+			}
+
+			// Check to make sure this base name doesn't exist elsewhere
+			event($event = new UnixGroupFetch($row->unixgroup));
+
+			$rows = $event->results;
+
+			if (count($rows) > 0)
+			{
+				return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $row->unixgroup])], 409);
 			}
 		}
 

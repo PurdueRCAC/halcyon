@@ -11,6 +11,7 @@ use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
 use App\Modules\Groups\Http\Resources\GroupResource;
 use App\Modules\Groups\Http\Resources\GroupResourceCollection;
+use App\Modules\Groups\Events\UnixGroupFetch;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use Carbon\Carbon;
@@ -393,27 +394,14 @@ class GroupsController extends Controller
 				return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $row->unixgroup])], 409);
 			}
 
-			try
+			// Check to make sure this base name doesn't exist elsewhere
+			event($event = new UnixGroupFetch($row->unixgroup));
+
+			$rows = $event->results;
+
+			if (count($rows) > 0)
 			{
-				// Check to make sure this base name doesn't exist elsewhere
-				$config = config('ldap.rcac_group', []);
-
-				$ldap = app('ldap')
-					->addProvider($config, 'rcac_group')
-					->connect('rcac_group');
-
-				// Performing a query.
-				$rows = $ldap->search()
-					->where('cn', '=', $row->unixgroup)
-					->get();
-
-				if ($rows > 0)
-				{
-					//return 409;
-				}
-			}
-			catch (\Exception $e)
-			{
+				return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $row->unixgroup])], 409);
 			}
 		}
 
@@ -559,28 +547,15 @@ class GroupsController extends Controller
 				return response()->json(['message' => trans('`unixgroup` ' . $unixgroup . ' already exists')], 409);
 			}
 
-			/*try
+			// Check to make sure this base name doesn't exist elsewhere
+			event($event = new UnixGroupFetch($unixgroup));
+
+			$rows = $event->results;
+
+			if (count($rows) > 0)
 			{
-				// Check to make sure this base name doesn't exist elsewhere
-				$config = config('ldap.rcac_group', []);
-
-				$ldap = app('ldap')
-					->addProvider($config, 'rcac_group')
-					->connect('rcac_group');
-
-				// Performing a query.
-				$rows = $ldap->search()
-					->where('cn', '=', $unixgroup)
-					->get();
-
-				if ($rows > 0)
-				{
-					//return 409;
-				}
+				return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $unixgroup])], 409);
 			}
-			catch (\Exception $e)
-			{
-			}*/
 
 			$row->unixgroup = $unixgroup;
 		}
