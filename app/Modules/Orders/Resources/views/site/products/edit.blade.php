@@ -28,6 +28,8 @@ jQuery(document).ready(function ($) {
 		.on('blur', function (e){
 			var val = $(this).val();
 
+			val = val.replace(/[^0-9.]+/g, '');
+
 			// Create our number formatter.
 			var formatter = new Intl.NumberFormat('en-US', {
 				style: 'currency',

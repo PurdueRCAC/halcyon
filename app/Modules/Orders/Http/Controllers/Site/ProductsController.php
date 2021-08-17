@@ -341,6 +341,7 @@ class ProductsController extends Controller
 		$row->fill($request->input('fields'));
 		$row->terms = $row->terms ?: '';
 		$row->description = $row->description ?: '';
+		$row->mou = $row->mou ?: '';
 
 		if (!$row->save())
 		{
