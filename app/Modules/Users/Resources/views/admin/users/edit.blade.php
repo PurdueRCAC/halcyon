@@ -80,6 +80,30 @@ app('pathway')
 							<span class="invalid-feedback">{{ trans('users::users.invalid.username') }}</span>
 						</div>
 
+						<table class="table table-bordered mb-3">
+							<caption class="sr-only">Usernames</caption>
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">Username</th>
+									<th scope="col">Created</th>
+									<th scope="col">Removed</th>
+									<th scope="col">Last Visited</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach ($user->usernames()->withTrashed()->orderBy('id', 'asc')->get() as $username)
+								<tr>
+									<td>{{ $username->id }}</td>
+									<td>{{ $username->username }}</td>
+									<td><time>{{ $username->isCreated() ? $username->datecreated : trans('global.unknown')  }}</time></td>
+									<td><time>{{ $username->isTrashed() ? $username->dateremoved : '' }}</time></td>
+									<td><time>{{ $username->hasVisited() ? $username->datelastseen : trans('global.never') }}</time></td>
+								</td>
+								@endforeach
+							</tbody>
+						</table>
+
 						<div class="form-group">
 							<label for="field-name">{{ trans('users::users.name') }}: <span class="required star">{{ trans('global.required') }}</span></label>
 							<input type="text" class="form-control<?php if ($user->sourced) { echo ' readonly" readonly="readonly'; } ?>" required maxlength="128" name="fields[name]" id="field-name" value="{{ $user->name }}" />

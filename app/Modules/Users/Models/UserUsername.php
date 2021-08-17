@@ -95,4 +95,28 @@ class UserUsername extends Model
 	{
 		return $this->belongsTo(User::class, 'userid');
 	}
+
+	/**
+	 * If user if the created timestamp is set
+	 *
+	 * @return  bool
+	 **/
+	public function isCreated()
+	{
+		return ($this->datecreated
+			&& $this->datecreated != '0000-00-00 00:00:00'
+			&& $this->datecreated != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * If user has logged in before
+	 *
+	 * @return  bool
+	 **/
+	public function hasVisited()
+	{
+		return ($this->datelastseen
+			&& $this->datelastseen != '0000-00-00 00:00:00'
+			&& $this->datelastseen != '-0001-11-30 00:00:00');
+	}
 }
