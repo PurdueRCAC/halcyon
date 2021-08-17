@@ -113,6 +113,7 @@ return [
 		'failed to find counter' => 'Failed to retrieve counter entry',
 		'failed to update counter' => 'Failed to update counter entry for #:id',
 		'invalid queue' => 'Unknown or invalid queue',
+		'entry already exists for hostname' => 'Entry already exists for `:hostname`',
 	],
 	'number cores' => ':num cores',
 	'number memory' => ':num memory',

@@ -92,6 +92,64 @@ class Size extends Model
 	}
 
 	/**
+	 * Get when this will start in human readable format
+	 *
+	 * @return  string
+	 */
+	public function willStart()
+	{
+		if (!$this->hasStart())
+		{
+			return trans('global.immediately');
+		}
+		if ($this->hasStarted())
+		{
+			return $this->datetimestart->toDateTimeString();
+		}
+
+		$inputSeconds = $this->datetimestart->timestamp - Carbon::now()->timestamp;
+
+		$secondsInAMinute = 60;
+		$secondsInAnHour = 60 * $secondsInAMinute;
+		$secondsInADay = 24 * $secondsInAnHour;
+
+		// Extract days
+		$days = floor($inputSeconds / $secondsInADay);
+
+		// Extract hours
+		$hourSeconds = $inputSeconds % $secondsInADay;
+		$hours = floor($hourSeconds / $secondsInAnHour);
+
+		// Extract minutes
+		$minuteSeconds = $hourSeconds % $secondsInAnHour;
+		$minutes = floor($minuteSeconds / $secondsInAMinute);
+
+		// Extract the remaining seconds
+		$remainingSeconds = $minuteSeconds % $secondsInAMinute;
+		$seconds = ceil($remainingSeconds);
+
+		// Format and return
+		$timeParts = [];
+		$sections = [
+			'days'    => (int)$days,
+			'hours'   => (int)$hours,
+			'minutes' => (int)$minutes,
+			'seconds' => (int)$seconds,
+		];
+
+		foreach ($sections as $name => $value)
+		{
+			if ($value > 0)
+			{
+				$timeParts[] = $value . ' ' . trans_choice('global.time.' . $name, $value);
+				break;
+			}
+		}
+
+		return implode(', ', $timeParts);
+	}
+
+	/**
 	 * Determine if in a trashed state
 	 *
 	 * @return  bool
@@ -113,7 +171,7 @@ class Size extends Model
 		{
 			return true;
 		}
-		return ($this->datetimestart >= Carbon::now());
+		return ($this->datetimestart->timestamp < Carbon::now()->timestamp);
 	}
 
 	/**
@@ -123,7 +181,7 @@ class Size extends Model
 	 */
 	public function hasEnded()
 	{
-		return ($this->hasEnd() && $this->datetimestop < Carbon::now());
+		return ($this->hasEnd() && $this->datetimestop->timestamp < Carbon::now()->timestamp);
 	}
 
 	/**

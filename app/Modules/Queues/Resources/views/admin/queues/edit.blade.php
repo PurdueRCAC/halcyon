@@ -443,12 +443,24 @@ app('pathway')
 					<tr<?php if ($item->hasEnd() && $item->hasEnded()) { echo ' class="trashed"'; } ?>>
 						<td>
 							@if ($item->hasStart())
-								<time datetime="{{ $item->datetimestop }}">{{ $item->datetimestart->format('Y-m-d') }}</time>
+								@if (!$item->hasStarted())
+									<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
+									in <time datetime="{{ $item->datetimestart }}">{{ $item->willStart() }}</time>
+								@else
+									<time datetime="{{ $item->datetimestart }}">{{ $item->datetimestart->format('Y-m-d') }}</time>
+								@endif
+							@else
+								<span class="never">{{ trans('global.immediately') }}</span>
 							@endif
 						</td>
 						<td>
 							@if ($item->hasEnd())
-								<time datetime="{{ $item->datetimestop }}">{{ $item->datetimestop->format('Y-m-d') }}</time>
+								@if (!$item->hasEnded())
+									<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
+									in <time datetime="{{ $item->datetimestop }}">{{ $item->willEnd() }}</time>
+								@else
+									<time datetime="{{ $item->datetimestop }}">{{ $item->datetimestop->format('Y-m-d') }}</time>
+								@endif
 							@else
 								<span class="never">{{ trans('global.never') }}</span>
 							@endif
