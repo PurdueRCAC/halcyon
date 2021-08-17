@@ -576,7 +576,14 @@ class QueuesController extends Controller
 		}
 
 		$queue = new Queue;
-		$queue->fill($request->all());
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$queue->{$key} = $request->input($key);
+			}
+		}
+		//$queue->fill($request->all());
 
 		$queue->cluster = $queue->cluster ?: '';
 
@@ -959,11 +966,15 @@ class QueuesController extends Controller
 		}
 
 		$queue = Queue::findOrFail($id);
-		$queue->update($request->all());
-
-		/*$queue = Queue::findOrFail($id);
-
-		$queue->save();*/
+		//$queue->update($request->all());
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$queue->{$key} = $request->input($key);
+			}
+		}
+		$queue->save();
 
 		return new QueuesQueue($queue);
 	}

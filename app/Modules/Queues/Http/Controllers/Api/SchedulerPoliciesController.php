@@ -140,6 +140,7 @@ class SchedulerPoliciesController extends Controller
 	{
 		$rules = [
 			'name' => 'required|string|max:64',
+			'code' => 'required|string|max:16',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -149,7 +150,16 @@ class SchedulerPoliciesController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		$row = SchedulerPolicy::create($request->all());
+		//$row = SchedulerPolicy::create($request->all());
+		$row = new SchedulerPolicy;
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
+		$row->save();
 
 		return new JsonResource($row);
 	}
@@ -213,6 +223,7 @@ class SchedulerPoliciesController extends Controller
 
 		$rules = [
 			'name' => 'nullable|string|max:64',
+			'code' => 'nullable|string|max:16',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -222,7 +233,15 @@ class SchedulerPoliciesController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		$row->update($request->all());
+		//$row->update($request->all());
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
+		$row->save();
 
 		return new JsonResource($row);
 	}

@@ -254,10 +254,19 @@ class SchedulersController extends Controller
 
 		if ($row && $row->id)
 		{
-			return response()->json(['message' => trans('Entry already exists for `:hostname`', ['hostname' => $request->input('hostname')])], 415);
+			return response()->json(['message' => trans('queues::queues.error.entry already exists for hostname', ['hostname' => $request->input('hostname')])], 415);
 		}
 
-		$row = Scheduler::create($request->all());
+		//$row = Scheduler::create($request->all());
+		$row = new Scheduler;
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
+		$row->save();
 
 		return new JsonResource($row);
 	}
@@ -407,7 +416,15 @@ class SchedulersController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		$row->update($request->all());
+		//$row->update($request->all());
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
+		$row->save();
 
 		return new JsonResource($row);
 	}

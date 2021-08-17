@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Modules\Queues\Models\SchedulerPolicy;
+use App\Modules\Queues\Models\SchedulerReservation;
 
 /**
  * Scheduler Reservations
@@ -79,7 +79,7 @@ class SchedulerReservationsController extends Controller
 			$filters['order_dir'] = 'asc';
 		}
 
-		$query = SchedulerPolicy::query();
+		$query = SchedulerReservation::query();
 
 		if ($filters['search'])
 		{
@@ -162,7 +162,16 @@ class SchedulerReservationsController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		$row = SchedulerPolicy::create($request->all());
+		//$row = SchedulerReservation::create($request->all());
+		$row = new SchedulerReservation;
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
+		$row->save();
 
 		return new JsonResource($row);
 	}
@@ -186,7 +195,7 @@ class SchedulerReservationsController extends Controller
 	 */
 	public function read($id)
 	{
-		$row = SchedulerPolicy::findOrFail($id);
+		$row = SchedulerReservation::findOrFail($id);
 
 		return new JsonResource($row);
 	}
@@ -254,8 +263,6 @@ class SchedulerReservationsController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$row = SchedulerPolicy::findOrFail($id);
-
 		$rules = [
 			'schedulerid' => 'nullable|integer',
 			'name' => 'nullable|string|max:64',
@@ -271,7 +278,17 @@ class SchedulerReservationsController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		$row->update($request->all());
+		$row = SchedulerReservation::findOrFail($id);
+
+		//$row->update($request->all());
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
+		$row->save();
 
 		return new JsonResource($row);
 	}
@@ -296,7 +313,7 @@ class SchedulerReservationsController extends Controller
 	 */
 	public function delete($id)
 	{
-		$row = SchedulerPolicy::findOrFail($id);
+		$row = SchedulerReservation::findOrFail($id);
 
 		if (!$row->delete())
 		{

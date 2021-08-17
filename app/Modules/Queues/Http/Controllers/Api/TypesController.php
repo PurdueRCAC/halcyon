@@ -151,7 +151,16 @@ class TypesController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		$row = Type::create($request->all());
+		//$row = Type::create($request->all());
+		$row = new Type;
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
+		$row->save();
 
 		return new JsonResource($row);
 	}
@@ -224,7 +233,15 @@ class TypesController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		$row->update($request->all());
+		//$row->update($request->all());
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
+		$row->save();
 
 		return new JsonResource($row);
 	}
