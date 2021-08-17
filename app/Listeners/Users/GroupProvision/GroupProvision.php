@@ -84,7 +84,7 @@ class GroupProvision
 					}
 				}
 
-				error_log('GroupProvision: Created AIMO ACMaint group ' . $event->unixgroup->shortname . ': ' . $res->getBody()->getContents());
+				error_log('GroupProvision: Created AIMO ACMaint group ' . $event->unixgroup->shortname . ' (' . $event->unixgroup->longname . ')');
 			}
 			elseif ($status == 400 && stristr('already exists', $res->getBody()->getContents()))
 			{
@@ -153,7 +153,7 @@ class GroupProvision
 
 			if ($status < 400)
 			{
-				error_log('GroupProvision: Removed AIMO ACMaint group ' . $event->unixgroup->shortname);
+				error_log('GroupProvision: Removed AIMO ACMaint group ' . $event->unixgroup->shortname . ' (' . $event->unixgroup->longname . ')');
 			}
 			else
 			{
@@ -247,7 +247,7 @@ class GroupProvision
 
 			if ($status < 400)
 			{
-				error_log('GroupProvision: Added AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $res->getBody()->getContents());
+				error_log('GroupProvision: Added AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username);
 			}
 			else
 			{
@@ -301,7 +301,7 @@ class GroupProvision
 
 			if ($status < 400)
 			{
-				error_log('GroupProvision: Removed AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $res->getBody()->getContents());
+				error_log('GroupProvision: Removed AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username);
 			}
 			else
 			{

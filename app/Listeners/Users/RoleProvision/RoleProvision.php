@@ -89,7 +89,7 @@ class RoleProvision
 
 			if ($status < 400)
 			{
-				error_log('RoleProvision: Created AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
+				error_log('RoleProvision: Created AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username);
 			}
 			else
 			{
