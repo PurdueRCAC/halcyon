@@ -65,11 +65,17 @@ trait LegacyTrash
 	/**
 	 * Forcefully reset a timestamp
 	 *
+	 * @param   array  $fields
 	 * @return  void
 	 */
-	public function forceRestore($fields = array('datetimeremoved'))
+	public function forceRestore($fields = array())
 	{
 		$fields = (array)$fields;
+
+		if (empty($fields))
+		{
+			$fields[] = $this->getDeletedAtColumn();
+		}
 
 		// [!] Hackish workaround for resetting date fields
 		//     that don't have a `null` default value.
@@ -88,6 +94,17 @@ trait LegacyTrash
 				config('database.connections.mysql.database')
 			);
 
+			// [!] Horrible workaround for strict datetime mode
+			// Get the SQL mode
+			$res = mysqli_query($db, "SELECT @@sql_mode");
+			$sqlmode = mysqli_fetch_assoc($res);
+
+			if ($sqlmode['@@sql_mode'])
+			{
+				mysqli_query($db, "SET sql_mode=''");
+			}
+
+			// Update the field(s)
 			foreach ($fields as $k => $field)
 			{
 				$fields[$k] = "`$field`='0000-00-00 00:00:00'";
@@ -96,7 +113,18 @@ trait LegacyTrash
 
 			$sql = "UPDATE " . $this->getTable() . " SET $fields WHERE `id`=" . $this->id;
 
-			mysqli_query($db, $sql);
+			if (!mysqli_query($db, $sql))
+			{
+				throw new \Exception('MySQLi error code: ' . mysqli_errno($db));
+			}
+
+			// Reset the SQL mode
+			if ($sqlmode['@@sql_mode'])
+			{
+				mysqli_query($db, "SET sql_mode='" . $sqlmode['@@sql_mode'] . "'");
+			}
+
+			mysqli_close($db);
 		}
 		catch (\Exception $e)
 		{
