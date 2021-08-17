@@ -75,7 +75,7 @@ class HttpLogger
 				}
 			}
 			$log->payload = json_encode($all);
-			$log->uri = $request->fullUrl();
+			$log->uri = str_replace($request->root(), '', $request->fullUrl());
 		}
 		$log->payload = $log->payload ?: '';
 		if ($request->has('groupid'))
@@ -107,7 +107,7 @@ class HttpLogger
 		}
 		catch (\Exception $e)
 		{
-			// Don't break everything if this fails:wq
+			// Don't break everything if this fails
 		}
 
 		return $response;
