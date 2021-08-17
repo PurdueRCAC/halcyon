@@ -132,7 +132,7 @@ class AuthController extends Controller
 				//session()->put('cas_user', $cas->user());
 				if (!auth()->user())
 				{
-					$user = User::findByUsername($cas->user(), true);
+					$user = User::findByUsername($cas->user(), config('module.users.restore_on_login', 0));
 
 					$newUsertype = config('module.users.new_usertype');
 
@@ -173,7 +173,7 @@ class AuthController extends Controller
 						// Restore "trashed" accounts on login?
 						if ($user->isTrashed())
 						{
-							if (config('module.users.restore_on_login', 1))
+							if (config('module.users.restore_on_login', 0))
 							{
 								$user->getUserUsername()->forceRestore();
 							}
