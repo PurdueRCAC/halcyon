@@ -3,6 +3,7 @@ namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\Core\Traits\LegacyTrash;
 //use App\Modules\Users\Events\UserUsernameCreating;
 //use App\Modules\Users\Events\UserUsernameCreated;
 //use App\Modules\Users\Events\UserUsernameDeleted;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class UserUsername extends Model
 {
-	use SoftDeletes;
+	use SoftDeletes, LegacyTrash;
 
 	/**
 	 * The name of the "created at" column.

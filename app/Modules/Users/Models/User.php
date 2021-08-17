@@ -149,7 +149,10 @@ class User extends Model implements
 	 **/
 	public function isTrashed()
 	{
-		return ($this->dateremoved && $this->dateremoved != '0000-00-00 00:00:00' && $this->dateremoved != '-0001-11-30 00:00:00');
+		return $this->getUserUsername()->isTrashed();
+		/*return ($this->getUserUsername()->dateremoved
+			&& $this->getUserUsername()->dateremoved != '0000-00-00 00:00:00'
+			&& $this->getUserUsername()->dateremoved != '-0001-11-30 00:00:00');*/
 	}
 
 	/**
@@ -159,7 +162,9 @@ class User extends Model implements
 	 **/
 	public function isCreated()
 	{
-		return ($this->getUserUsername()->datecreated && $this->getUserUsername()->datecreated != '0000-00-00 00:00:00' && $this->getUserUsername()->datecreated != '-0001-11-30 00:00:00');
+		return ($this->getUserUsername()->datecreated
+			&& $this->getUserUsername()->datecreated != '0000-00-00 00:00:00'
+			&& $this->getUserUsername()->datecreated != '-0001-11-30 00:00:00');
 	}
 
 	/**
@@ -171,12 +176,8 @@ class User extends Model implements
 	{
 		if (is_null($this->userusername))
 		{
-			$this->userusername = $this->usernames()->withTrashed()
-				/*->where(function($where)
-				{
-					$where->whereNull('dateremoved')
-						->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
-				})*/
+			$this->userusername = $this->usernames()
+				->withTrashed()
 				->orderBy('dateremoved', 'asc')
 				->orderBy('datecreated', 'desc')
 				->first();
@@ -516,16 +517,20 @@ class User extends Model implements
 	 * Finds a user by username
 	 *
 	 * @param   string  $username
+	 * @param   bool    $includeTrashed
 	 * @return  object
 	 */
-	public static function findByUsername($username)
+	public static function findByUsername($username, $includeTrashed = false)
 	{
-		$username = UserUsername::query()
-			->where(function($where)
-			{
-				$where->whereNull('dateremoved')
-					->orWhere('dateremoved', '=', '0000-00-00 00:00:00');
-			})
+		$query = UserUsername::query()
+			->withTrashed();
+
+		if (!$includeTrashed)
+		{
+			$query->whereIsActive();
+		}
+
+		$username = $query
 			->where('username', '=', $username)
 			->orderBy('datecreated', 'asc')
 			->first();
