@@ -495,6 +495,18 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 					<div class="row">
 						<div class="col-md-9">
 							Resources
+							<a href="#roles_help" class="help icn tip" title="Roles Help">
+								<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+							</a>
+							<div id="roles_help" class="dialog-help" title="Roles">
+								<p>Role status may be compiled from various external sources. Available statuses are:</p>
+								<ul>
+									<li><span style="color:#B20000;">No Role</span></li>
+									<li><span style="color:#A06020;">Role Pending</span></li>
+									<li><span style="color:#006600;">Role Ready</span></li>
+									<li><span style="color:#A06020;">Removal Pending</span></li>
+								</ul>
+							</div>
 						</div>
 						<div class="col-md-3 text-right">
 							<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm">

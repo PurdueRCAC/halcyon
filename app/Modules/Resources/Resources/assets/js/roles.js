@@ -201,6 +201,7 @@ var Roles = {
 
 		WSPostURL(resource.getAttribute('data-api'), JSON.stringify(post), function (xml) {
 			if (xml.status < 400) {
+				$(".roles-dialog").dialog('close');
 				Roles.GotUserStatus(xml);
 			} else {
 				err.classList.remove('hide');
