@@ -94,7 +94,7 @@ class AdminMiddleware
 				}
 				else
 				{
-					$user = \App\Modules\Users\Models\User::findByUsername($cas->user());
+					$user = \App\Modules\Users\Models\User::findByUsername($cas->user(), true);
 
 					$newUsertype = config('module.users.new_usertype');
 
@@ -131,6 +131,19 @@ class AdminMiddleware
 
 					if ($user && $user->id)
 					{
+						// Restore "trashed" accounts on login?
+						if ($user->isTrashed())
+						{
+							if (config('module.users.restore_on_login', 1))
+							{
+								$user->getUserUsername()->forceRestore();
+							}
+							else
+							{
+								return response('Unauthorized.', 401);
+							}
+						}
+
 						if (!count($user->roles) && $newUsertype)
 						{
 							$user->newroles = array($newUsertype);

@@ -132,7 +132,7 @@ class AuthController extends Controller
 				//session()->put('cas_user', $cas->user());
 				if (!auth()->user())
 				{
-					$user = User::findByUsername($cas->user());
+					$user = User::findByUsername($cas->user(), true);
 
 					$newUsertype = config('module.users.new_usertype');
 
@@ -141,6 +141,7 @@ class AuthController extends Controller
 						$newUsertype = Role::findByTitle('Registered')->id;
 					}
 
+					// Create accounts on login?
 					if ((!$user || !$user->id) && config('module.users.create_on_login', 1))
 					{
 						$user = new User;
@@ -169,6 +170,19 @@ class AuthController extends Controller
 
 					if ($user && $user->id)
 					{
+						// Restore "trashed" accounts on login?
+						if ($user->isTrashed())
+						{
+							if (config('module.users.restore_on_login', 1))
+							{
+								$user->getUserUsername()->forceRestore();
+							}
+							else
+							{
+								return response('Unauthorized.', 401);
+							}
+						}
+
 						if (!count($user->roles) && $newUsertype)
 						{
 							$user->newroles = array($newUsertype);
