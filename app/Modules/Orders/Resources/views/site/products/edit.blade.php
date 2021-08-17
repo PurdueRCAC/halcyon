@@ -17,6 +17,50 @@ function formatCurrency(number, decPlaces, decSep, thouSep) {
 }
 
 jQuery(document).ready(function ($) {
+	$('.btn-success').on('click', function (e) {
+		//e.preventDefault();
+
+		var btn = this,
+			frm = $(this).closest('form'),
+			invalid = false;
+
+		if (frm.length) {
+			var elms = frm[0].querySelectorAll('input[required]');
+			elms.forEach(function (el) {
+				if (!el.value || !el.validity.valid) {
+					el.classList.add('is-invalid');
+					invalid = true;
+				} else {
+					el.classList.remove('is-invalid');
+				}
+			});
+			var elms = frm[0].querySelectorAll('select[required]');
+			elms.forEach(function (el) {
+				if (!el.value || el.value <= 0) {
+					el.classList.add('is-invalid');
+					invalid = true;
+				} else {
+					el.classList.remove('is-invalid');
+				}
+			});
+			var elms = frm[0].querySelectorAll('textarea[required]');
+			elms.forEach(function (el) {
+				if (!el.value || !el.validity.valid) {
+					el.classList.add('is-invalid');
+					invalid = true;
+				} else {
+					el.classList.remove('is-invalid');
+				}
+			});
+
+			if (invalid) {
+				return false;
+			}
+		}
+
+		return true;
+	});
+
 	$('.form-currency')
 		.on('keyup', function (e){
 			var val = $(this).val();
@@ -77,7 +121,7 @@ jQuery(document).ready(function ($) {
 
 				<div class="form-group">
 					<label for="field-ordercategoryid">{{ trans('orders::orders.parent category') }}: <span class="required" title="{{ trans('global.required') }}">*</span></label>
-					<select name="fields[ordercategoryid]" id="field-ordercategoryid" class="form-control filter filter-submit">
+					<select name="fields[ordercategoryid]" id="field-ordercategoryid" class="form-control filter filter-submit" required>
 						<option value="1"<?php if ($row->parentordercategoryid == 1): echo ' selected="selected"'; endif;?>>{{ trans('global.none') }}</option>
 						<?php foreach ($categories as $category) { ?>
 							<option value="<?php echo $category->id; ?>"<?php if ($row->ordercategoryid == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
