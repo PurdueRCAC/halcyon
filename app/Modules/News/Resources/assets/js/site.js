@@ -103,6 +103,7 @@ function NEWSToggle(on, refresh) {
 		document.getElementById("INPUT_preview").style.display = "inline";
 		document.getElementById("INPUT_preview").onclick = function () { NEWSPreview('new'); };
 
+		document.getElementById("Headline").value = "";
 		document.getElementById("location").value = "";
 		document.getElementById("NotesText").value = "";
 		document.getElementById("published").checked = false;
@@ -794,6 +795,7 @@ function NEWSSearch() {
 	var in_edit = false;
 	if (window.location.href.match(/[&?]edit/)) {
 		document.getElementById("INPUT_add").disabled = false;
+		querystring += "&edit";
 		in_edit = true;
 	} else {
 		NEWSToggleAddButton();
@@ -885,7 +887,7 @@ function NEWSSearch() {
 		querystring += '&page=' + page.value;
 	}
 	querystring += '&api_token=' + $('meta[name="api-token"]').attr('content');
-	console.log(root + "news/" + encodeURI(querystring));
+	//console.log(root + "news/" + encodeURI(querystring));
 
 	WSGetURL(root + "news/" + encodeURI(querystring), NEWSSearched);
 }
