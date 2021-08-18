@@ -370,6 +370,7 @@ class RcacLdap
 				->get();
 
 			$status = 404;
+			$found = false;
 
 			if (!empty($results) && count($results) > 0)
 			{
@@ -399,8 +400,8 @@ class RcacLdap
 					}
 				}
 
-				$found = false;
-				if (isset($results[0]['host']))
+				
+				if (isset($results[0]['host']) && !in_array($event->resource->rolename, ['anvil', 'geddes']))
 				{
 					foreach ($results[0]['host'] as $host)
 					{
@@ -415,13 +416,6 @@ class RcacLdap
 							break;
 						}
 					}
-				}
-
-				// Some other service thinks this is ready but it's not in the RCAC LDAP
-				if ($event->status == 3 && !$found)
-				{
-					$event->status = 2; // = pending, -1 == error;
-					$event->errors[] = 'Role not found in RCAC LDAP.';
 				}
 
 				// Resolve group name
@@ -451,6 +445,13 @@ class RcacLdap
 						$event->user->primarygroup = $data[0]['cn'][0];
 					}
 				}
+			}
+
+			// Some other service thinks this is ready but it's not in the RCAC LDAP
+			if ($event->status == 3 && !$found)
+			{
+				$event->status = 2; // = pending, -1 == error;
+				$event->errors[] = 'Role not found in RCAC LDAP.';
 			}
 		}
 		catch (\Exception $e)
