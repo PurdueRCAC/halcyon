@@ -52,6 +52,9 @@ popup_fadein_speed = popup_fadein_speed * 1000; // convert to milliseconds
 jQuery(document).ready(function($) {
 
 	function popups() {
+		if (!$('#popup-anchor').length) {
+			return;
+		}
 		// Create #popup node and background dimmer
 		$('body').append('<div id="popup-background" class="aria-target" tabindex="-1" aria-label="Loading..." role="progressbar" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0"><span class="spinner"></span></div><div id="popup-wrapper"><div class="vertical-align"><div id="popup" role="dialog" aria-labelledby="popup-anchor"></div></div></div>');
 		// Background space is clickable to close the popup
@@ -336,13 +339,13 @@ jQuery(document).ready(function($) {
 	//popups(); // process the page
 
 	/* Data Storage Tool: Delay popups init until the table is rendered by app.js */
-  var popup_ran_once = false;
-  $('#comparisonchart').on('DOMSubtreeModified', function(){
-    if (!popup_ran_once) {
-      popups();
-      popup_ran_once = true;
-    }
-  });
+	var popup_ran_once = false;
+	$('#comparisonchart').on('DOMSubtreeModified', function(){
+		if (!popup_ran_once) {
+			popups();
+			popup_ran_once = true;
+		}
+	});
 
 	/* -----------------------------------------------------------------------------------------
 		Generate Popup Controls
@@ -429,6 +432,7 @@ jQuery(document).ready(function($) {
 	//psw58 added additional WA functionality to hold focus on pop up, and aria-hide main content
 	//taken from  WACG2.0 https://www.w3.org/WAI/GL/wiki/Using_ARIA_role%3Ddialog_to_implement_a_modal_dialog_box
 	var dialogOpen = false, lastFocus, dialog, pagebackground;
+
 	//hooked into popup on click event line 262
 	function pswShow(el){
 		//add tabindex to popup @todo this could be changed to line 56
