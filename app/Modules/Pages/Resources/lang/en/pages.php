@@ -59,6 +59,11 @@ return [
 		'show modify date' => 'Show Modify Date',
 		'show publish date desc' => 'If set to Show, the date and time an Article was published will be displayed.',
 		'show publish date' => 'Show Publish Date',
+		'layout' => 'Layout',
+		'layout desc' => 'Select a theme layout to use.',
+		'default layout' => 'Default (current theme)',
+		'no layout' => 'No theme',
+		'raw layout' => 'Raw (page contents only)',
 	],
 	'invalid' => [
 		'title' => 'Please provide a valid title',

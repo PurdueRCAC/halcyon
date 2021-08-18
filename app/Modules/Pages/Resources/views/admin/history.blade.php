@@ -64,22 +64,28 @@ app('pathway')
 
 				$created = $action->created_at && $action->created_at != '0000-00-00 00:00:00' ? $action->created_at : trans('global.unknown');
 
-				if (is_object($action->new))
-				{
+				if (is_object($action->new)):
 					$f = get_object_vars($action->new);
-				}
-				elseif (is_array($action->new))
-				{
+				elseif (is_array($action->new)):
 					$f = $action->new;
-				}
+				endif;
+
 				$fields = array_keys($f);
-				foreach ($fields as $i => $k)
-				{
-					if (in_array($k, ['created_at', 'updated_at', 'deleted_at']))
-					{
+
+				foreach ($fields as $i => $k):
+					if (in_array($k, ['created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at'])):
 						unset($fields[$i]);
-					}
-				}
+					endif;
+				endforeach;
+
+				$badge = 'info';
+				if ($action->action == 'created'):
+					$badge = 'success';
+				endif;
+				if ($action->action == 'deleted'):
+					$badge = 'danger';
+				endif;
+
 				$old = Carbon\Carbon::now()->subDays(2);
 				?>
 				<tr>
@@ -87,11 +93,11 @@ app('pathway')
 						{{ $actor }}
 					</td>
 					<td class="priority-2">
-						<span class="entry-action">{{ $action->action }}</span>
+						<span class="badge badge-{{ $badge }} entry-action">{{ $action->action }}</span>
 					</td>
 					<td class="priority-3">
 						@if ($action->action == 'updated')
-							<span class="entry-diff">Changed fields: <code><?php echo implode('</code>, <code>', $fields); ?></code></span>
+							<span class="entry-diff"><code><?php echo implode('</code>, <code>', $fields); ?></code></span>
 						@endif
 					</td>
 					<td class="priority-4">
@@ -111,7 +117,7 @@ app('pathway')
 						{{ $row->creator ? $row->creator->name : trans('global.unknown') }}
 					</td>
 					<td class="priority-2">
-						<span class="entry-action">created</span>
+						<span class="badge badge-success entry-action">created</span>
 					</td>
 					<td class="priority-3">
 					</td>

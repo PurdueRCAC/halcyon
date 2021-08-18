@@ -72,13 +72,6 @@ class PagesController extends Controller
 			}
 		}
 
-		/*$page->styles = array();
-		if ($page->isRoot())
-		{
-			$page->styles = array(asset('themes/Rcac/css/homepage.css'));
-		}
-		$page->scripts = array();*/
-
 		//event($event = new PageContentIsRendering($page->content));
 		//$page->content = $event->getBody();
 
@@ -87,8 +80,6 @@ class PagesController extends Controller
 
 		$page->event = new \stdClass();
 
-		//$results = event('onContentAfterTitle', array('pages.article', &$page));
-		//$page->event->afterDisplayTitle = trim(implode("\n", $results));
 		event($event = new PageTitleAfterDisplay($page));
 		$page->event->afterDisplayTitle = $event->getContent();
 
@@ -114,7 +105,9 @@ class PagesController extends Controller
 				->get();
 		}
 
-		return view('pages::site.index', [
+		$layout = $page->params->get('layout');
+
+		return view('pages::site.' . ($layout ? $layout : 'index'), [
 			'page' => $page,
 			'parents' => $parents,
 		]);

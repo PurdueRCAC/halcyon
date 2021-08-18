@@ -165,6 +165,16 @@ app('pathway')
 							<span class="form-text text-muted" id="params-show_publish_date">{{ trans('pages::pages.params.show publish date desc') }}</span>
 						</div>
 
+						<div class="form-group">
+							<label for="params-layout">{{ trans('pages::pages.params.layout') }}:</label>
+							<select class="form-control" aria-describedby="params-layout" name="params[layout]" id="params-layout">
+								<option value=""<?php if (!$row->params->get('layout')) { echo ' selected="selected"'; } ?>>{{ trans('pages::pages.params.default layout') }}</option>
+								<option value="none"<?php if ($row->params->get('layout') == 'none') { echo ' selected="selected"'; } ?>>{{ trans('pages::pages.params.no layout') }}</option>
+								<option value="raw"<?php if ($row->params->get('layout') == 'raw') { echo ' selected="selected"'; } ?>>{{ trans('pages::pages.params.raw layout') }}</option>
+							</select>
+							<span class="form-text text-muted" id="params-layout">{{ trans('pages::pages.params.layout desc') }}</span>
+						</div>
+
 						<fieldset id="param-styles">
 							<legend>{{ trans('pages::pages.params.styles') }}</legend>
 							<div class="px-3 py-3">
