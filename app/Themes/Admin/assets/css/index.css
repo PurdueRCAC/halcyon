@@ -1901,9 +1901,13 @@ label .required:before {
 /*.form-group:hover label .required:after {
   border-color: rgba(200, 0, 0, 0.7) transparent transparent transparent;
 }*/
+input .spinner-border,
+button .spinner-border,
 .form-group .spinner-border {
   display: none;
 }
+input.loading .spinner-border,
+button.loading .spinner-border,
 .form-group.loading .spinner-border {
   display: inline-block;
 }
@@ -3144,8 +3148,10 @@ div.current li {
   margin: 0;
   padding: 0.5em 1em;
 }
-#header .user-options li:before,
-#header .user-options li:after {
+/*#header .user-options li:before,
+#header .user-options li:after */
+#header [data-title]:before,
+#header [data-title]:after {
   position: absolute;
   /*-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
@@ -3179,7 +3185,8 @@ div.current li {
   margin-bottom: -1.2em;
   visibility: hidden\9;
 }
-#header .user-options li:before {
+/*#header .user-options li:before*/
+#header [data-title]:before {
   content: "";
   padding: 0;
   margin-left: -10px;
@@ -3191,8 +3198,10 @@ div.current li {
   display: block;
   width: 0;
 }
-#header .user-options li:hover:before,
-#header .user-options li:hover:after {
+/*#header .user-options li:hover:before,
+#header .user-options li:hover:after*/
+#header [data-title]:hover:before,
+#header [data-title]:hover:after {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   filter: alpha(opacity=100);
   -webkit-opacity: 1;

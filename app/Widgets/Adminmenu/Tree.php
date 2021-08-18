@@ -162,7 +162,7 @@ class Tree
 		}
 
 		// Print the item
-		echo str_repeat("\t", $depth) . '<li' . $class . '>';// . "\n";
+		echo str_repeat("\t", $depth) . '<li' . $class . ($this->_current->hasChildren() || $depth > 2 ? '' : ' data-title="' . strip_tags($this->_current->title) . '"') . '>';// . "\n";
 
 		// Print a link if it exists
 		$linkClass = $this->getIconClass($iconClass);
