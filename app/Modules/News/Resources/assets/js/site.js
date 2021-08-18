@@ -795,7 +795,7 @@ function NEWSSearch() {
 	var in_edit = false;
 	if (window.location.href.match(/[&?]edit/)) {
 		document.getElementById("INPUT_add").disabled = false;
-		querystring += "&edit";
+		//querystring += "&edit";
 		in_edit = true;
 	} else {
 		NEWSToggleAddButton();

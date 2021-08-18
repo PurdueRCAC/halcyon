@@ -136,7 +136,7 @@ app('pathway')
 			@foreach ($articles as $article)
 				<li>
 					@if (auth()->user() && auth()->user()->can('edit news'))
-						<a class="btn float-right tip" href="{{ route('site.news.manage', ['id' => $article->id, 'edit' => 1]) }}" title="Edit"><!--
+						<a class="btn float-right tip" href="{{ route('site.news.manage', ['id' => $article->id]) }}&edit" title="Edit"><!--
 							--><span class="fa fa-fw fa-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span><!--
 						--></a>
 					@endif

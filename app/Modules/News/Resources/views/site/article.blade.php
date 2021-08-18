@@ -141,7 +141,7 @@ app('pathway')
 			<div class="card card-admin edit-controls" id="articlestats" data-api="{{ route('api.news.views', ['id' => $article->id]) }}">
 				<div class="card-body">
 					@if (auth()->user() && auth()->user()->can('edit news'))
-						<a class="edit float-right btn tip" href="{{ route('site.news.manage', ['id' => $article->id, 'edit' => 1]) }}" title="Edit">
+						<a class="edit float-right btn tip" href="{{ route('site.news.manage', ['id' => $article->id]) }}&edit" title="Edit">
 							<span class="fa fa-fw fa-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span>
 						</a>
 					@endif
