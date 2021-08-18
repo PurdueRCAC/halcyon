@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		var cores = document.getElementById(this.getAttribute('data-cores-field'));
 		var nodes = this.value.replace(/(^\s+|\s+$)/g, "");
 
-		if (nodes.match(RegExp("^[\-]?[0-9]+$"))) {
+		if (nodes.match(RegExp("^[\-]?[0-9]+(\.[0-9]{1,2})?$"))) {
 			cores.value = (nodes * nodecores);
 		} else {
 			cores.value = "";
@@ -406,6 +406,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		}
 
+		btn.classList.add('loading');
+
 		$.ajax({
 			url: frm.data('api'),
 			type: btn.getAttribute('data-action') == 'update' ? 'put' : 'post',
@@ -413,10 +415,13 @@ document.addEventListener('DOMContentLoaded', function() {
 			dataType: 'json',
 			async: false,
 			success: function (data) {
+				btn.classList.remove('loading');
 				Halcyon.message('success', btn.getAttribute('data-success'));
 				window.location.reload(true);
 			},
 			error: function (xhr, reason, thrownError) {
+				btn.classList.remove('loading');
+
 				var msg = 'Failed to create item.';
 				if (xhr.responseJSON && xhr.responseJSON.message) {
 					msg = xhr.responseJSON.message;

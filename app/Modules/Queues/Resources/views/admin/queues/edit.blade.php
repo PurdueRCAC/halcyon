@@ -551,18 +551,19 @@ app('pathway')
 							</button>
 							@endif
 
-							<div class="dialog" id="dialog-edit{{ $item->id }}" title="{{ trans('queues::queues.edit ' . ($item->type == 1 ? 'loan' : 'size')) }}">
-								<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes') . '.update', ['id' => $item->id]) }}">
+							<div class="modal dialog" id="dialog-edit{{ $item->id }}" title="{{ trans('queues::queues.edit ' . ($item->type == 1 ? 'loan' : 'size')) }}">
+								<form class="modal-content dialog-content" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes') . '.update', ['id' => $item->id]) }}">
+								<div class="modal-body dialog-body">
 									<div class="row">
 										<div class="col-md-6">
 											<div class="form-group">
 												<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.nodes') }}</label>
-												<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" name="nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $amt }}" />
+												<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" name="nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $amt }}" step="0.5" />
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group">
-												<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }}</label>
+												<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ $row->subresource->nodecores }} per node)</span></label>
 												<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" name="cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
 											</div>
 										</div>
@@ -583,7 +584,7 @@ app('pathway')
 												@else
 													<input type="text" name="datetimestop" class="form-control datetime" id="sell-datetimestop{{ $item->id }}" disabled="disabled" placeholder="{{ trans('queues::queues.end of life') }}" value="" />
 												@endif
-												</div>
+											</div>
 										</div>
 									</div>
 
@@ -592,12 +593,17 @@ app('pathway')
 										<textarea id="loan-comment{{ $item->id }}" name="comment" class="form-control" rows="3" cols="40">{{ $item->comment }}</textarea>
 									</div>
 
-									<div class="dialog-footer text-right">
-										<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.update') }}" data-action="update" data-success="{{ trans('queues::queues.item updated') }}" />
+									</div>
+									<div class="modal-footer dialog-footer text-right">
+										<button type="submit" class="btn btn-success dialog-submit" data-action="update" data-success="{{ trans('queues::queues.item updated') }}">
+											<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Saving...</span></span>
+											{{ trans('global.button.update') }}
+										</button>
 									</div>
 
 									<input type="hidden" name="id" value="{{ $item->id }}" />
 									@csrf
+									
 								</form>
 							</div>
 						</td>
@@ -615,13 +621,13 @@ app('pathway')
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="sell-nodes">{{ trans('queues::queues.nodes') }}</label>
-							<input type="text" class="form-control nodes" size="4" id="sell-nodes" name="nodecount" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="sell-cores" value="0" />
+							<input type="number" class="form-control nodes" size="4" id="sell-nodes" name="nodecount" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="sell-cores" value="0" step="0.5" />
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
-							<label for="sell-cores">{{ trans('queues::queues.cores') }}</label>
-							<input type="text" class="form-control cores" size="4" id="sell-cores" name="corecount" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="sell-nodes" value="0" />
+							<label for="sell-cores">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ $row->subresource->nodecores }} per node)</span></label>
+							<input type="number" class="form-control cores" size="4" id="sell-cores" name="corecount" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="sell-nodes" value="0" />
 						</div>
 					</div>
 				</div>
@@ -743,7 +749,10 @@ app('pathway')
 				</div>
 
 				<div class="modal-footer dialog-footer text-right">
-					<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-success="{{ trans('queues::queues.item created') }}" />
+					<button type="submit" class="btn btn-success dialog-submit" data-success="{{ trans('queues::queues.item created') }}">
+						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Saving...</span></span>
+						{{ trans('global.button.create') }}
+					</button>
 				</div>
 
 				@csrf
@@ -757,12 +766,12 @@ app('pathway')
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="loan-nodes">{{ trans('queues::queues.nodes') }}</label>
-							<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes" name="nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores" value="0" />
+							<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes" name="nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores" value="0" step="0.5" />
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
-							<label for="loan-cores">{{ trans('queues::queues.cores') }}</label>
+							<label for="loan-cores">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ $row->subresource->nodecores }} per node)</span></label>
 							<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores" name="cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes" value="0" />
 						</div>
 					</div>
@@ -854,7 +863,10 @@ app('pathway')
 				</div>
 
 				<div class="modal-footer dialog-footer text-right">
-					<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-success="{{ trans('queues::queues.item created') }}" />
+					<button type="submit" class="btn btn-success dialog-submit" data-success="{{ trans('queues::queues.item created') }}">
+						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Saving...</span></span>
+						{{ trans('global.button.create') }}
+					</button>
 				</div>
 
 				@csrf
