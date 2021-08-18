@@ -370,7 +370,7 @@ class RcacLdap
 				->get();
 
 			$status = 404;
-			$found = false;
+			$found = in_array($event->resource->rolename, ['anvil', 'geddes']) ? true : false;
 
 			if (!empty($results) && count($results) > 0)
 			{
@@ -401,7 +401,7 @@ class RcacLdap
 				}
 
 				
-				if (isset($results[0]['host']) && !in_array($event->resource->rolename, ['anvil', 'geddes']))
+				if (isset($results[0]['host']))
 				{
 					foreach ($results[0]['host'] as $host)
 					{
