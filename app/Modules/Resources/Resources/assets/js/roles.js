@@ -78,6 +78,7 @@ var Roles = {
 			}
 
 			cell.setAttribute('data-api', results['api']);
+			cell.removeAttribute('data-loading');
 
 			if (typeof results['loginshell'] != 'undefined') {
 				document.getElementById('resource' + results['resource']['id'] + '_shell').innerHTML = results['loginshell'];
@@ -91,7 +92,7 @@ var Roles = {
 		} else {
 			var img = document.getElementById('IMG_' + id);
 			if (img) {
-				img.className = 'fa fa-exclamation-circle';
+				img.className = 'fa fa-exclamation-circle text-danger';
 				img.alt = "Error fetching roles. May be invalid Career Account.";
 			}
 		}

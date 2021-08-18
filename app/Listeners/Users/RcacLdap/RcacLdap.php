@@ -404,7 +404,12 @@ class RcacLdap
 				{
 					foreach ($results[0]['host'] as $host)
 					{
-						if ($host == $event->resource->rolename . '.rcac.purdue.edu')
+						$role = $event->resource->rolename . '.rcac.purdue.edu';
+						if ($event->resource->rolename == 'HPSSUSER')
+						{
+							$role = 'data.rcac.purdue.edu';
+						}
+						if ($host == $role)
 						{
 							$found = true;
 							break;
