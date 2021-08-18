@@ -366,7 +366,7 @@ class RcacLdap
 			// Performing a query.
 			$results = $ldap->search()
 				->where('uid', '=', $event->user->username)
-				->select(['loginShell', 'authorizedBy', 'gidNumber', 'uidNumber'])
+				->select(['loginShell', 'authorizedBy', 'gidNumber', 'uidNumber', 'host'])
 				->get();
 
 			$status = 404;
@@ -397,6 +397,26 @@ class RcacLdap
 					{
 						$event->user->addFacet('uidNumber', $event->user->uidNumber, 0, 1);
 					}
+				}
+
+				$found = false;
+				if (isset($results[0]['host']))
+				{
+					foreach ($results[0]['host'] as $host)
+					{
+						if ($host == $event->resource->rolename . '.rcac.purdue.edu')
+						{
+							$found = true;
+							break;
+						}
+					}
+				}
+
+				// Some other service thinks this is ready but it's not in the RCAC LDAP
+				if ($event->status == 3 && !$found)
+				{
+					$event->status = 2; // = pending, -1 == error;
+					$event->errors[] = 'Role not found in RCAC LDAP.';
 				}
 
 				// Resolve group name

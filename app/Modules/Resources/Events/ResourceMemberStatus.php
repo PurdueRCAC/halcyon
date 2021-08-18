@@ -23,6 +23,11 @@ class ResourceMemberStatus
 	public $status = 1;
 
 	/**
+	 * @var array
+	 */
+	public $errors = array();
+
+	/**
 	 * Constructor
 	 *
 	 * @param Subresource $subresource

@@ -233,6 +233,10 @@ class RoleProvision
 			elseif ($results->roleStatus == 'ROLE_ACCOUNTS_READY')
 			{
 				$status = 3;
+				if ($event->status == 2 && !empty($event->errors))
+				{
+					$status = 2;
+				}
 			}
 			elseif ($results->roleStatus == 'ROLE_REMOVAL_PENDING')
 			{

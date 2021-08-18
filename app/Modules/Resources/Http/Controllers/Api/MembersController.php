@@ -247,6 +247,7 @@ class MembersController extends Controller
 				'name' => $user->name
 			),
 			'status'       => $event->status,
+			'errors'       => $event->errors,
 			'loginShell'   => $event->user->loginShell,
 			'primarygroup' => $event->user->primarygroup,
 			'pilogin'      => $event->user->pilogin,
