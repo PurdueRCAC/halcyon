@@ -172,11 +172,7 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('users::users.username'), 'username', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				@if (auth()->user()->can('admin'))
-				<th scope="col" colspan="2" class="priority-3 nowrap">
-				@else
-				<th scope="col" class="priority-3 nowrap">
-				@endif
+				<th scope="col" class="priority-3 nowrap"<?php /*if (auth()->user()->can('admin')) { echo ' colspan="2"'; }*/ ?>>
 					{{ trans('users::users.roles') }}
 				</th>
 				<th scope="col" class="priority-3">{{ trans('users::users.status') }}</th>
@@ -261,13 +257,13 @@ app('pathway')
 						</a>
 					@endif
 				</td>
-				@if ($canChange)
+				<?php /*@if ($canChange)
 				<td class="text-center priority-3">
 						<a class="permissions glyph icon-settings tip" href="{{ route('admin.users.debug', ['id' => $row->id]) }}" data-tip="{{ trans('users::users.debug user') }}">
 							{{ trans('users::users.debug user') }}
 						</a>
 				</div>
-				@endif
+				@endif*/ ?>
 				<td class="priority-3">
 					@if (substr_count($row->role_names, "\n") > 1)
 						<span class="hasTip" title="{{ trans('users::users.roles') . '::' . $row->role_names }}">{{ trans('users::users.roles') }}</span>
