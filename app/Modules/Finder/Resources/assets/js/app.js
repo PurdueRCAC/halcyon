@@ -684,7 +684,7 @@ var drupalSettings = {
         //see if scrolling outer exists and scroll to see more element exists
         if (($so.length == 1) && ($som.length == 0)) {
             //build scroll to see more notification
-            $(".scrolling-outer").after('<div id="scroll-to-see-more" role="alert" aria-label="Scroll to see more" class="my-hidden" >' +
+            $(".scrolling-outer").after('<div id="scroll-to-see-more" role="alert" aria-atomic="true" aria-label="Scroll to see more" class="my-hidden" >' +
                 '<ul class="notifications"><li><span class="material-icons" aria-hidden="true">' + htmlTxt +
                 '</span><span class="fa fa-arrow-right"></span></li></ul></div>');
 
