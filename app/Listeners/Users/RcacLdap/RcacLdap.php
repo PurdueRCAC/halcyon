@@ -450,7 +450,7 @@ class RcacLdap
 			// Some other service thinks this is ready but it's not in the RCAC LDAP
 			if ($event->status == 3 && !$found)
 			{
-				$event->status = 2; // = pending, -1 == error;
+				//$event->status = 2; // = pending, -1 == error;
 				$event->errors[] = 'Role not found in RCAC LDAP.';
 			}
 		}

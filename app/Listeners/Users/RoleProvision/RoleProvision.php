@@ -235,7 +235,7 @@ class RoleProvision
 				$status = 3;
 				if ($event->status == 2 && !empty($event->errors))
 				{
-					$status = 2;
+					//$status = 2;
 				}
 			}
 			elseif ($results->roleStatus == 'ROLE_REMOVAL_PENDING')
