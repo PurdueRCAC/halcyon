@@ -7,6 +7,9 @@
 /* global ERRORS */ // common.js
 /* global GetTab */ // common.js
 
+if (ERRORS === undefined) {
+	var ERRORS = Object();
+}
 ERRORS['queue'] = "Unable to create queue.";
 ERRORS['queueconflict'] = "A queue by this name for this scheduler already exists.";
 ERRORS['queueformat'] = "A required option is missing or in an incorrect format.";
