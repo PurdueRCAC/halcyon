@@ -603,7 +603,7 @@ class UsersController extends Controller
 				foreach ($subresources as $sub)
 				{
 					$queues = $sub->queues()
-						->whereIn('groupid', $owned)
+						//->whereIn('groupid', $owned)
 						->withTrashed()
 						->whereIsActive()
 						->get();
@@ -613,14 +613,21 @@ class UsersController extends Controller
 					foreach ($queues as $queue)
 					{
 						$rows += $queue->users()
+							->withTrashed()
+							->whereIsActive()
 							->whereIsMember()
-							->where('userid', '=', $user->id)
+							->where('userid', '=', $row->userid)
 							->count();
 
-						$rows += $queue->group->members()
-							->whereIsManager()
-							->where('userid', '=', $user->id)
-							->count();
+						if ($queue->group)
+						{
+							$rows += $queue->group->members()
+								->withTrashed()
+								->whereIsActive()
+								->whereIsManager()
+								->where('userid', '=', $row->userid)
+								->count();
+						}
 					}
 				}
 			}
