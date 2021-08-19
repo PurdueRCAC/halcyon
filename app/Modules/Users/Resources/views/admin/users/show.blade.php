@@ -334,7 +334,13 @@ app('pathway')
 										?>
 										<tr>
 											<td>
+												@if (auth()->user()->can('manage queues'))
+													<a href="{{ route('admin.queues.edit', ['id' => $queue->id]) }}">
+												@endif
 												{{ $queue->name }}
+												@if (auth()->user()->can('manage queues'))
+													</a>
+												@endif
 											</td>
 											<td>
 												{{ $queue->resource ? $queue->resource->name : '' }}
