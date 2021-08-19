@@ -20,9 +20,11 @@
 				</a>
 			</div>
 			<div class="card-header panel-heading">
-				<h3 class="panel-title newsheadline">
-					{{ headline }}
-				</h3>
+				<a :href="uri">
+					<h3 class="panel-title newsheadline">
+						{{ headline }}
+					</h3>
+				</a>
 				<ul class="panel-meta news-meta">
 					<li class="news-date">
 						<span class="newsdate">
@@ -89,6 +91,7 @@
 			'datetimenewsend',
 			'formatteddate',
 			'type',
+			'uri',
 			'url',
 			'canEdit',
 			'canDelete',
