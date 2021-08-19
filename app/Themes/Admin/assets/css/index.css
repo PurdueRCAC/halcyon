@@ -1092,6 +1092,7 @@ h4 {
 .icon-rewind:before {
   content: "\e8b8";
 }
+.fa-undo:before,
 .icon-rotate-ccw:before {
   content: "\e8b9";
 }
@@ -2195,7 +2196,7 @@ box-shadow: 0px 2px 4px 0 rgba(31,30,47,0.1);
 }
 .card-body>*:last-child {
   margin-bottom: 0;
-  padding-bottom: 0;
+  /*padding-bottom: 0;*/
 }
 /*table.adminlist {
   margin: 0 0 1em 0;
@@ -2625,7 +2626,10 @@ fieldset.adminform fieldset {
   top: 1em;
   right: 1em;
 }
+.btn-default {
+  background-color: rgba(0, 0, 0, 0.05);
 
+}
 /*.btn-danger {
   color: #dc3545;
   background-color: #ffebeb;
