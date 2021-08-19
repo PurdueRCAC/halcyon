@@ -649,6 +649,10 @@ class AccountsController extends Controller
 				{
 					$approveruserid = $user->id;
 				}
+				else
+				{
+					return response()->json(['message' => trans('orders::orders.errors.invalid approver')], 412);
+				}
 			}
 
 			$row->approveruserid = $approveruserid;
@@ -677,7 +681,8 @@ class AccountsController extends Controller
 			->toArray();
 
 		// Ensure the client is authenticated
-		if (auth()->user()->id != $row->approveruserid
+		if (!in_array(auth()->user()->id, $approvers)
+		 && auth()->user()->id != $row->approveruserid
 		 && auth()->user()->id != $row->order->userid
 		 && auth()->user()->id != $row->order->submitteruserid
 		 && !auth()->user()->can('manage orders'))
@@ -700,9 +705,13 @@ class AccountsController extends Controller
 			}
 		}
 
-		if ($request->has('approveruserid'))
+		if ($row->approveruserid)
 		{
-			$row->approveruserid = $request->input('approveruserid');
+			if (!$row->approver)
+			{
+				return response()->json(['message' => trans('orders::orders.errors.invalid approverid')], 415);
+			}
+
 			$row->notice = 3;
 		}
 
