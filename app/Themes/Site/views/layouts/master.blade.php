@@ -67,6 +67,7 @@
 	</head>
 	<body>
 		@widget('top')
+
 		@if (app()->has('impersonate') && app('impersonate')->isImpersonating())
 			<div class="notice-banner admin text-center">
 				<div class="alert alert-info">
@@ -74,6 +75,7 @@
 				</div>
 			</div>
 		@endif
+
 		<header>
 			<div class="container">
 				<div class="row">
@@ -95,12 +97,37 @@
 					</ul>
 				</div>
 			</div>
+
+			@widget('header')
+
+			<nav class="navbar navbar-light navbar-expand-lg blackbar" aria-label="Main Menu">
+				@widget('mainmenu')
+			</nav><!-- / .blackbar -->
+
+			@if (!Request::is('/'))
+				@widget('breadcrumbs')
+			@endif
 		</header>
 
 		<main id="content">
 			@include('partials.notifications')
 
-			@yield('content')
+			<div class="container">
+				<div class="row">
+				@if (app('widget')->count('left'))
+					<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+						@widget('left')
+					</div><!-- /.sidenav end -->
+					<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+				@else
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				@endif
+
+						@yield('content')
+
+					</div><!-- /.contentInner -->
+				</div>
+			</div>
 		</main>
 
 		<footer id="footer">
