@@ -509,13 +509,38 @@ class UsersController extends Controller
 			$user->fill($fields);
 		}
 
+		return view('users::admin.users.edit', [
+			'user' => $user,
+		]);
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
+	 * @return Response
+	 */
+	public function show($id)
+	{
+		$user = User::findOrFail($id);
+
+		if ($user->puid)
+		{
+			$user->sourced = 1;
+		}
+
+		if ($fields = app('request')->old('fields'))
+		{
+			$user->fill($fields);
+		}
+
 		event($event = new UserBeforeDisplay($user));
 		$user = $event->getUser();
 
 		event($event = new UserDisplay($user, ''));
 		$sections = collect($event->getSections());
 
-		return view('users::admin.users.edit', [
+		return view('users::admin.users.show', [
 			'user' => $user,
 			'sections' => $sections
 		]);

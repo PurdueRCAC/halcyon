@@ -83,11 +83,14 @@ class News
 
 			if ($event->getActive() == $type->alias)
 			{
-				app('pathway')
-					->append(
-						$type->name,
-						route('site.users.account.section', $r)
-					);
+				if (!app('isAdmin'))
+				{
+					app('pathway')
+						->append(
+							$type->name,
+							route('site.users.account.section', $r)
+						);
+				}
 
 				$rows = Article::query()
 					->select($a . '.*')

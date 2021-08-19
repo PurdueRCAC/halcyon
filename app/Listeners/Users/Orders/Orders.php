@@ -257,11 +257,17 @@ class Orders
 				'filters' => $filters,
 				'categories' => $categories,
 			]);
+
+			$total = ' (' . $total . ')';
+		}
+		else
+		{
+			$total = ' <span class="badge pull-right">' . $total . '</span>';
 		}
 
 		$event->addSection(
 			$route, //route('site.users.account.section', $r),
-			trans('orders::orders.my orders') . ' <span class="badge pull-right">' . $total . '</span>',
+			trans('orders::orders.my orders') . $total,
 			($event->getActive() == 'orders'),
 			$content
 		);

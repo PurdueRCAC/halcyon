@@ -52,11 +52,14 @@ class History
 
 		if ($event->getActive() == 'history' || app('isAdmin'))
 		{
-			app('pathway')
-				->append(
-					trans('history::history.history'),
-					route('site.users.account.section', $r)
-				);
+			if (!app('isAdmin'))
+			{
+				app('pathway')
+					->append(
+						trans('history::history.history'),
+						route('site.users.account.section', $r)
+					);
+			}
 
 			/*$history = Log::query()
 				->where('userid', '=', $user->id)

@@ -194,6 +194,12 @@ $router->group(['prefix' => 'users'], function (Router $router)
 	});*/
 
 	$router->get('{id}', [
+		'as' => 'admin.users.show',
+		'uses' => 'UsersController@show',
+		'middleware' => 'can:edit users',
+	])->where('id', '[0-9]+');
+
+	$router->get('edit/{id}', [
 		'as' => 'admin.users.edit',
 		'uses' => 'UsersController@edit',
 		'middleware' => 'can:edit users',

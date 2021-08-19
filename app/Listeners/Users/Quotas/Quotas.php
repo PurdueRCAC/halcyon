@@ -146,13 +146,16 @@ class Quotas
 				->where('userid', '=', $user->id)
 				->get();
 
-			app('pathway')
-				->append(
-					trans('storage::storage.my quotas'),
-					route('site.users.account.section', $rt)
-				);
+			if (!app('isAdmin'))
+			{
+				app('pathway')
+					->append(
+						trans('storage::storage.my quotas'),
+						route('site.users.account.section', $rt)
+					);
+			}
 
-			$content = view('storage::site.profile', [
+			$content = view('storage::' . (app('isAdmin') ? 'admin.user' : 'site.profile'), [
 				'user' => $user,
 				'storagedirs' => $storagedirs,
 				'storagedirquota' => $storagedirquota,

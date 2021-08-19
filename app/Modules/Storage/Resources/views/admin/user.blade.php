@@ -311,15 +311,15 @@
 @endpush
 
 <div class="contentInner">
-	<h2>{{ trans('users::users.quotas') }}</h2>
+	<h2 class="sr-only">{{ trans('users::users.quotas') }}</h2>
 
 	<input type="hidden" id="HIDDEN_user" value="{{ $user->id }}" />
 
-	<div class="card panel panel-default">
-		<div class="card-header panel-heading">
+	<div class="card">
+		<div class="card-header">
 			<div class="card-title">
 				Storage Spaces
-				<a href="#storagespacehelp" class="help icn tip" title="Help">
+				<a href="#storagespacehelp" class="help-dialog text-info tip" title="Help">
 					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 				</a>
 			</div>
@@ -441,14 +441,16 @@
 		</div>
 	</div><!-- / .card -->
 
-	<div class="card panel panel-default">
-		<div class="card-header panel-heading">
+	<div class="card">
+		<div class="card-header">
 			<div class="row">
-				<div class="col col-md-6 card-title">
-					Storage Alerts
-					<a href="#storagealerthelp" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a>
+				<div class="col col-md-6">
+					<div class="card-title">
+						Storage Alerts
+						<a href="#storagealerthelp" class="help-dialog text-info tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a>
+					</div>
 				</div>
-				<div class="col col-md-6 align-right">
+				<div class="col col-md-6 text-right">
 					<button class="btn btn-default btn-sm accountsbtn" id="create-newalert"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Alert</button>
 				</div>
 			</div>
@@ -497,19 +499,20 @@
 						<?php
 						foreach ($als as $not)
 						{
-							/*if (!isset($sdirs[$not->storagedirid]))
+							$dir = null;
+							if (isset($sdirs[$not->storagedirid]))
 							{
-								continue;
+								$dir = $sdirs[$not->storagedirid];
 							}
 
 							$dir = $sdirs[$not->storagedirid];
 
-							if ($dir->resourceid == 64)
-							{*/
 								?>
 								<tr>
 									<td>
-										<?php //echo ($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path; ?>
+										@if ($dir)
+											{{ ($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path }}
+										@endif
 									</td>
 									<td>
 										<?php echo $not->type->name; ?>
@@ -555,7 +558,7 @@
 										</td>
 										<td class="text-right">
 											<a href="#dialog-confirm-delete"
-												class="confirm-delete delete tip"
+												class="confirm-delete delete text-danger tip"
 												title="{{ trans('global.button.delete') }}"
 												data-id="{{ $not->id }}"
 												data-api="{{ route('api.storage.notifications.delete', ['id' => $not->id]) }}"
@@ -566,7 +569,6 @@
 									<?php } ?>
 								</tr>
 								<?php
-							//}
 						}
 						?>
 					</tbody>
@@ -575,20 +577,11 @@
 				<?php
 				foreach ($als as $not)
 				{
-					/*if (!isset($sdirs[$not->storagedirid]))
+					$dir = null;
+					if (isset($sdirs[$not->storagedirid]))
 					{
-						continue;
+						$dir = $sdirs[$not->storagedirid];
 					}
-
-					$dir = $sdirs[$not->storagedirid];
-
-					if ($dir->resourceid == 64)
-					{*/
-						if (!$dir)
-						{
-							continue;
-						}
-					print_r($dir);
 					?>
 					<div id="{{ $not->id }}_not_dialog" title="Storage Alert Detail" class="dialog dialog-details">
 						<form method="post" action="{{ route('api.storage.notifications.update', ['id' => $not->id]) }}">
@@ -597,7 +590,7 @@
 						<div class="form-group row">
 							<label for="path_{{ $not->id }}" class="col-sm-4">Path</label>
 							<div class="col-sm-8">
-								<input type="text" id="path_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ /*($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path*/ }}" />
+								<input type="text" id="path_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ ($dir ? ($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path : '') }}" />
 							</div>
 						</div>
 						<div class="form-group row">
@@ -665,7 +658,6 @@
 						</form>
 					</div>
 					<?php
-					//}
 				}
 			}
 			else
@@ -747,13 +739,15 @@
 	<div class="card panel panel-default">
 		<div class="card-header panel-heading">
 			<div class="row">
-				<div class="col col-md-6 card-title">
-					Storage Usage Reports
-					<a href="#storageusagehelp" class="help icn tip" title="Help">
-						<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
-					</a>
+				<div class="col col-md-6">
+					<div class="card-title">
+						Storage Usage Reports
+						<a href="#storageusagehelp" class="help-dialog text-info tip" title="Help">
+							<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+						</a>
+					</div>
 				</div>
-				<div class="col col-md-6 align-right">
+				<div class="col col-md-6 text-right">
 					<button class="btn btn-default btn-sm accountsbtn" id="create-newreport"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Usage Report</button>
 				</div>
 			</div>
@@ -774,7 +768,10 @@
 					{
 						if (!isset($sdirs[$not->storagedirid]))
 						{
-							$sdirs[$not->storagedirid] = $not->directory()->withTrashed()->whereIsActive()->first();
+							$sdirs[$not->storagedirid] = $not->directory()
+								->withTrashed()
+								->whereIsActive()
+								->first();
 						}
 
 						if (!$sdirs[$not->storagedirid] || !$sdirs[$not->storagedirid]->storageResource)
@@ -789,7 +786,7 @@
 
 			if (count($storagedirquotanotifications) > 0)
 			{
-				$dir = $sdirs[$not->storagedirid];
+				//$dir = $sdirs[$not->storagedirid];
 				?>
 				<table class="table table-hover storage">
 					<caption class="sr-only">
@@ -811,14 +808,18 @@
 						<?php
 						foreach ($storagedirquotanotifications as $not)
 						{
-							if (!$dir)
+							$dir = null;
+
+							if (isset($sdirs[$not->storagedirid]))
 							{
-								continue;
+								$dir = $sdirs[$not->storagedirid];
 							}
 							?>
 							<tr>
 								<td>
-									{{ ($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path }}
+									@if ($dir)
+										{{ ($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path }}
+									@endif
 								</td>
 								<td>
 									{{ $not->type->name }}
@@ -854,7 +855,7 @@
 									</td>
 									<td class="text-right">
 										<a href="#dialog-confirm-delete"
-											class="confirm-delete delete tip"
+											class="confirm-delete delete text-danger tip"
 											title="{{ trans('global.button.delete') }}"
 											data-id="<?php echo $not->id; ?>"
 											data-api="{{ route('api.storage.notifications.delete', ['id' => $not->id]) }}"

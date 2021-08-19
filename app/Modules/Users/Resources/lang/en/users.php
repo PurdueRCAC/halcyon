@@ -19,6 +19,7 @@ return [
 	'last visit' => 'Last Visit',
 	'registered' => 'Registered',
 	'assigned roles' => 'Assigned Roles',
+	'back' => 'Back',
 	// Status
 	'status' => 'Status',
 	'status trashed' => 'Trashed',

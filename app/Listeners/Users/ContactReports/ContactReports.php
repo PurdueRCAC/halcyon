@@ -62,11 +62,14 @@ class ContactReports
 
 		if ($event->getActive() == 'contactreports' || app('isAdmin'))
 		{
-			app('pathway')
-				->append(
-					trans('contactreports::contactreports.contact reports'),
-					route('site.users.account.section', $r)
-				);
+			if (!app('isAdmin'))
+			{
+				app('pathway')
+					->append(
+						trans('contactreports::contactreports.contact reports'),
+						route('site.users.account.section', $r)
+					);
+			}
 
 			$reports = Report::query()
 				->select($p . '.*')

@@ -83,7 +83,7 @@ $(document).ready(function() {
 							@endif
 						@else
 							@if (auth()->user()->can('manage users'))
-								<a href="{{ route('admin.users.edit', ['u' => $row->userid]) }}">
+								<a href="{{ route('admin.users.show', ['id' => $row->userid]) }}">
 									{!! $row->name ? $row->name : ' <span class="unknown">' . trans('global.unknown') . '</span>' !!}
 								</a>
 							@else

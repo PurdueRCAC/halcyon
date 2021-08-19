@@ -237,7 +237,7 @@ app('pathway')
 				</td>
 				<td>
 					@if ($canEdit)
-						<a href="{{ route('admin.users.edit', ['id' => $row->id]) }}">
+						<a href="{{ route('admin.users.show', ['id' => $row->id]) }}">
 							{{ $row->name }}
 						</a>
 					@else
