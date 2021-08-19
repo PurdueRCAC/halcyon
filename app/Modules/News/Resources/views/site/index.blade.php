@@ -36,14 +36,14 @@ app('pathway')->append(
 					<div class="col-md-4 text-right">
 						<nav class="btn-group" aria-label="Calendar options for {{ $type->name }}">
 							<a class="btn btn-default tip" href="{{ route('site.news.feed', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}">
-								<span class="fa fa-rss-square" aria-hidden="true"></span><span class="sr-only">{{ trans('news::news.rss feed') }}</span>
+								<span class="fa fa-rss-square" aria-hidden="true"></span><span class="sr-only">{{ trans('news::news.rss feed') }} for {{ $type->name }}</span>
 							</a>
 						@if ($type->calendar)
 							<a target="_blank" class="btn btn-default calendar calendar-subscribe tip" href="{{ preg_replace('/^https?:\/\//', 'webcal://', route('site.news.calendar', ['name' => strtolower($type->name)])) }}" title="Subscribe to calendar"><!--
-								--><span class="fa fa-fw fa-calendar" aria-hidden="true"></span><span class="sr-only">Subscribe</span><!--
+								--><span class="fa fa-fw fa-calendar" aria-hidden="true"></span><span class="sr-only">Subscribe to calendar for {{ $type->name }}</span><!--
 							--></a>
 							<a target="_blank" class="btn btn-default calendar calendar-download tip" href="{{ route('site.news.calendar', ['name' => strtolower($type->name)]) }}" title="Download calendar"><!--
-								--><span class="fa fa-fw fa-download" aria-hidden="true"></span><span class="sr-only">Download</span><!--
+								--><span class="fa fa-fw fa-download" aria-hidden="true"></span><span class="sr-only">Download calendar for {{ $type->name }}</span><!--
 							--></a>
 						@endif
 						</nav>
