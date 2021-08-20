@@ -137,6 +137,10 @@ class MessagesController extends Controller
 			})
 			->where('returnstatus', '>', 0)
 			->groupBy($m . '.messagequeuetypeid')
+			->groupBy($t . '.id')
+			->groupBy($t . '.name')
+			->groupBy($t . '.resourceid')
+			->groupBy($t . '.classname')
 			->orderBy($t . '.name')
 			->get();
 	
@@ -161,6 +165,10 @@ class MessagesController extends Controller
 			})
 			->where('returnstatus', '=', 0)
 			->groupBy($m . '.messagequeuetypeid')
+			->groupBy($t . '.id')
+			->groupBy($t . '.name')
+			->groupBy($t . '.resourceid')
+			->groupBy($t . '.classname')
 			->orderBy($t . '.name')
 			->get();
 
@@ -173,6 +181,10 @@ class MessagesController extends Controller
 			->join($m, $m . '.messagequeuetypeid', $t . '.id')
 			->where($m . '.datetimecompleted', '=', '0000-00-00 00:00:00')
 			->groupBy($m . '.messagequeuetypeid')
+			->groupBy($t . '.id')
+			->groupBy($t . '.name')
+			->groupBy($t . '.resourceid')
+			->groupBy($t . '.classname')
 			->orderBy($t . '.name')
 			->get();
 
