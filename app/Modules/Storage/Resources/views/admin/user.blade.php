@@ -451,7 +451,7 @@
 					</div>
 				</div>
 				<div class="col col-md-6 text-right">
-					<button class="btn btn-default btn-sm accountsbtn" id="create-newalert"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Alert</button>
+					<button class="btn btn-secondary btn-sm accountsbtn" id="create-newalert"><span class="fa fa-plus" aria-hidden="true"></span> Create New Alert</button>
 				</div>
 			</div>
 		</div>
@@ -748,7 +748,7 @@
 					</div>
 				</div>
 				<div class="col col-md-6 text-right">
-					<button class="btn btn-default btn-sm accountsbtn" id="create-newreport"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Usage Report</button>
+					<button class="btn btn-secondary btn-sm accountsbtn" id="create-newreport"><span class="fa fa-plus" aria-hidden="true"></span> Create New Usage Report</button>
 				</div>
 			</div>
 		</div>
