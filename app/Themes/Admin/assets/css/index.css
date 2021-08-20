@@ -704,6 +704,7 @@ h4 {
 .icon-check-circle:before {
   content: "\e83e";
 }
+.fa-check:before,
 .icon-true:before,
 .icon-publish:before,
 .icon-check:before {

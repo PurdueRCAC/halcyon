@@ -43,6 +43,77 @@ app('pathway')
 	{{ trans('messages::messages.module name') }}
 @stop
 
+@section('panel')
+	<div class="card">
+		<div class="card-body">
+			<div class="stat-block text-danger">
+				<span class="icon-alert-triangle display-4 float-left" aria-hidden="true"></span>
+				<span class="value">{{ number_format($stats->failed) }}</span><br />
+				<span class="key">Failed</span>
+			</div>
+		</div>
+		@if (count($stats->failedtypes))
+			<table class="table">
+				<caption class="sr-only">Message types</caption>
+				<tbody>
+					@foreach ($stats->failedtypes as $t)
+						<tr>
+							<th scope="row">{{ $t->name }}</th>
+							<td class="text-right">{{ number_format($t->total) }}</td>
+						</tr>
+					@endforeach
+				</tbody>
+			</table>
+		@endif
+	</div>
+
+	<div class="card">
+		<div class="card-body">
+			<div class="stat-block text-success">
+				<span class="icon-check display-4 float-left" aria-hidden="true"></span>
+				<span class="value">{{ number_format($stats->succeeded) }}</span><br />
+				<span class="key">Successful</span>
+			</div>
+		</div>
+		@if (count($stats->succeededtypes))
+			<table class="table">
+				<caption class="sr-only">Message types</caption>
+				<tbody>
+					@foreach ($stats->succeededtypes as $t)
+						<tr>
+							<th scope="row">{{ $t->name }}</th>
+							<td class="text-right">{{ number_format($t->total) }}</td>
+						</tr>
+					@endforeach
+				</tbody>
+			</table>
+		@endif
+	</div>
+
+	<div class="card">
+		<div class="card-body">
+			<div class="stat-block text-info">
+				<span class="icon-more-horizontal display-4 float-left" aria-hidden="true"></span>
+				<span class="value">{{ number_format($stats->pending) }}</span><br />
+				<span class="key">Pending</span>
+			</div>
+		</div>
+		@if (count($stats->pendingtypes))
+			<table class="table">
+				<caption class="sr-only">Message types</caption>
+				<tbody>
+					@foreach ($stats->pendingtypes as $t)
+						<tr>
+							<th scope="row">{{ $t->name }}</th>
+							<td class="text-right">{{ $t->total }}</td>
+						</tr>
+					@endforeach
+				</tbody>
+			</table>
+		@endif
+	</div>
+@stop
+
 @section('content')
 
 @component('messages::admin.submenu')
@@ -53,79 +124,36 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col-md-6">
-				<div class="row">
-					<div class="col-md-4">
-						<div class="stat-block text-danger">
-							<span class="icon-alert-triangle display-4 float-left" aria-hidden="true"></span>
-							<span class="value">{{ number_format($stats->failed) }}</span><br />
-							<span class="key">Failed</span>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="stat-block text-success">
-							<span class="icon-check display-4 float-left" aria-hidden="true"></span>
-							<span class="value">{{ number_format($stats->succeeded) }}</span><br />
-							<span class="key">Successful</span>
-						</div>
-					</div>
-					<div class="col-md-4 text-info">
-						<div class="stat-block text-info">
-							<span class="icon-more-horizontal display-4 float-left" aria-hidden="true"></span>
-							<span class="value">{{ number_format($stats->pending) }}</span><br />
-							<span class="key">Pending</span>
-						</div>
-					</div>
-				</div>
+			<div class="col-md-5 filter-select">
+				<label class="sr-only" for="filter_start">{{ trans('messages::messages.start') }}</label>
+				<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="Submitted from" />
+				to
+				<label class="sr-only" for="filter_stop">{{ trans('messages::messages.stop') }}</label>
+				<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="now" />
 			</div>
-			<div class="col-md-6 text-right filter-select">
-				<div class="form-row align-items-center justify-content-end">
-					<div class="col-auto">
-						<span class="form-group">
-							<label class="sr-only" for="filter_start">{{ trans('messages::messages.start') }}</label>
-							<span class="input-group">
-								<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="Submitted from" />
-								<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
-							</span>
-						</span>
-					</div>
-					<div class="col-auto">
-						to
-					</div>
-					<div class="col-auto">
-						<span class="form-group">
-							<label class="sr-only" for="filter_stop">{{ trans('messages::messages.stop') }}</label>
-							<span class="input-group">
-								<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="now" />
-								<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
-							</span>
-						</span>
-					</div>
-				</div>
-				<div class="mt-1">
-					<label class="sr-only" for="filter_state">{{ trans('messages::messages.state') }}</label>
-					<select name="state" id="filter_state" class="form-control filter filter-submit">
-						<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all states') }}</option>
-						<option value="pending"<?php if ($filters['state'] == 'pending'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.pending') }}</option>
-						<option value="incomplete"<?php if ($filters['state'] == 'incomplete'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.incomplete') }}</option>
-						<option value="complete"<?php if ($filters['state'] == 'complete'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.complete') }}</option>
-					</select>
+			<div class="col-md-7 text-right">
+				<label class="sr-only" for="filter_state">{{ trans('messages::messages.state') }}</label>
+				<select name="state" id="filter_state" class="form-control filter filter-submit">
+					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all states') }}</option>
+					<option value="pending"<?php if ($filters['state'] == 'pending'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.pending') }}</option>
+					<option value="incomplete"<?php if ($filters['state'] == 'incomplete'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.incomplete') }}</option>
+					<option value="complete"<?php if ($filters['state'] == 'complete'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.complete') }}</option>
+				</select>
 
-					<label class="sr-only" for="filter_type">{{ trans('messages::messages.types') }}</label>
-					<select name="type" id="filter_type" class="form-control filter filter-submit">
-						<option value=""<?php if ($filters['type'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all types') }}</option>
-						@foreach ($types as $type)
-							<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id): echo ' selected="selected"'; endif;?>>{{ $type->name }}</option>
-						@endforeach
-					</select>
+				<label class="sr-only" for="filter_type">{{ trans('messages::messages.types') }}</label>
+				<select name="type" id="filter_type" class="form-control filter filter-submit">
+					<option value=""<?php if ($filters['type'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all types') }}</option>
+					@foreach ($types as $type)
+						<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id): echo ' selected="selected"'; endif;?>>{{ $type->name }}</option>
+					@endforeach
+				</select>
 
-					<label class="sr-only" for="filter_status">{{ trans('messages::messages.status') }}</label>
-					<select name="status" id="filter_status" class="form-control filter filter-submit">
-						<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all statuses') }}</option>
-						<option value="success"<?php if ($filters['status'] == 'success'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.success') }}</option>
-						<option value="failure"<?php if ($filters['status'] == 'failure'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.failure') }}</option>
-					</select>
-				</div>
+				<label class="sr-only" for="filter_status">{{ trans('messages::messages.status') }}</label>
+				<select name="status" id="filter_status" class="form-control filter filter-submit">
+					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all statuses') }}</option>
+					<option value="success"<?php if ($filters['status'] == 'success'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.success') }}</option>
+					<option value="failure"<?php if ($filters['status'] == 'failure'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.failure') }}</option>
+				</select>
 			</div>
 		</div>
 
@@ -167,10 +195,10 @@ app('pathway')
 						</th> -->
 						<th scope="col" class="priority-4">
 							{{ trans('messages::messages.processed') }}
-						</th>
+						<!-- </th>
 						<th scope="col" class="text-right">
 							{!! Html::grid('sort', trans('messages::messages.pid'), 'pid', $filters['order_dir'], $filters['order']) !!}
-						</th>
+						</th> -->
 						<th scope="col" class="priority-4 text-right">
 							{!! Html::grid('sort', trans('messages::messages.return status'), 'returnstatus', $filters['order_dir'], $filters['order']) !!}
 						</th>
@@ -286,7 +314,7 @@ app('pathway')
 								<span class="badge badge-info has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-more-horizontal"></span> {{ trans('messages::messages.pending') }}</span>
 							@endif
 						</td>
-						<td class="text-right">
+						<!-- <td class="text-right">
 							@if (auth()->user()->can('edit messages'))
 								<a href="{{ route('admin.messages.edit', ['id' => $row->id]) }}">
 									{{ $row->pid }}
@@ -294,14 +322,16 @@ app('pathway')
 							@else
 								{{ $row->pid }}
 							@endif
-						</td>
+						</td> -->
 						<td class="priority-4 text-right">
-							<?php /*@if ($row->completed())
+							@if ($row->completed())
 								@if ($row->returnstatus)
 									<span class="text-danger icon-alert-octagon" aria-hidden="true"></span>
+								@else
+									<span class="text-success fa fa-check" aria-hidden="true"></span>
 								@endif
-							@endif*/ ?>
-							{{ $row->returnstatus }}
+								{{ $row->returnstatus }}
+							@endif
 						</td>
 					</tr>
 				@endforeach

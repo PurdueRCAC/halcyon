@@ -5,6 +5,7 @@ namespace App\Modules\Messages\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Messages\Models\Message;
 use App\Modules\Messages\Models\Type;
 use App\Halcyon\Http\StatefulRequest;
@@ -111,22 +112,69 @@ class MessagesController extends Controller
 			->orderBy('name', 'asc')
 			->get();
 
+		$t = (new Type)->getTable();
+		$m = (new Message)->getTable();
+
 		$stats = new \stdClass;
 		$stats->failed = Message::query()
 			->whereStarted()
 			->whereCompleted($filters['start'])
 			->whereNotSuccessful()
 			->count();
+		$stats->failedtypes = Type::query()
+			->select($t . '.*', DB::raw('COUNT(' . $m . '.id) AS total'))
+			->join($m, $m . '.messagequeuetypeid', $t . '.id')
+			->where(function($where) use ($m)
+			{
+				$where->whereNotNull($m . '.datetimestarted')
+					->where($m . '.datetimestarted', '!=', '0000-00-00 00:00:00');
+			})
+			->where(function($where) use ($m, $filters)
+			{
+				$where->whereNotNull($m . '.datetimecompleted')
+					->where($m . '.datetimecompleted', '!=', '0000-00-00 00:00:00')
+					->where($m . '.datetimecompleted', '>', $filters['start']);
+			})
+			->where('returnstatus', '>', 0)
+			->groupBy($m . '.messagequeuetypeid')
+			->orderBy($t . '.name')
+			->get();
 	
 		$stats->succeeded = Message::query()
 			->whereStarted()
 			->whereCompleted($filters['start'])
 			->whereSuccessful()
 			->count();
+		$stats->succeededtypes = Type::query()
+			->select($t . '.*', DB::raw('COUNT(' . $m . '.id) AS total'))
+			->join($m, $m . '.messagequeuetypeid', $t . '.id')
+			->where(function($where) use ($m)
+			{
+				$where->whereNotNull($m . '.datetimestarted')
+					->where($m . '.datetimestarted', '!=', '0000-00-00 00:00:00');
+			})
+			->where(function($where) use ($m, $filters)
+			{
+				$where->whereNotNull($m . '.datetimecompleted')
+					->where($m . '.datetimecompleted', '!=', '0000-00-00 00:00:00')
+					->where($m . '.datetimecompleted', '>', $filters['start']);
+			})
+			->where('returnstatus', '=', 0)
+			->groupBy($m . '.messagequeuetypeid')
+			->orderBy($t . '.name')
+			->get();
 
 		$stats->pending = Message::query()
 			->where('datetimecompleted', '=', '0000-00-00 00:00:00')
 			->count();
+
+		$stats->pendingtypes = Type::query()
+			->select($t . '.*', DB::raw('COUNT(' . $m . '.id) AS total'))
+			->join($m, $m . '.messagequeuetypeid', $t . '.id')
+			->where($m . '.datetimecompleted', '=', '0000-00-00 00:00:00')
+			->groupBy($m . '.messagequeuetypeid')
+			->orderBy($t . '.name')
+			->get();
 
 		return view('messages::admin.messages.index', [
 			'filters' => $filters,
