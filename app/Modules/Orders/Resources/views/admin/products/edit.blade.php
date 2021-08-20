@@ -116,7 +116,7 @@ app('pathway')
 							<label for="field-unitprice">{{ trans('orders::orders.price') }}: <span class="required">{{ trans('global.required') }}</span></label>
 							<span class="input-group">
 								<span class="input-group-prepend"><span class="input-group-text">{{ config('module.orders.currency', '$') }}</span></span>
-								<input type="text" name="fields[unitprice]" id="field-unitprice" class="form-control form-currency" required maxlength="250" value="{{ str_replace('$', '', $row->price) }}" />
+								<input type="text" name="fields[unitprice]" id="field-unitprice" class="form-control form-currency" required maxlength="12" value="{{ str_replace('$', '', $row->price) }}" />
 							</span>
 						</div>
 					</div>
