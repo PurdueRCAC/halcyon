@@ -57,127 +57,127 @@ app('pathway')
 		<div id="user-account">
 			<div class="row">
 				<div class="col col-md-6">
-					
-					<!-- <fieldset class="adminform">
-						<legend>{{ trans('global.details') }}</legend> -->
 
 					<div class="card">
 						<div class="card-header">
-							<a class="btn btn-sm float-right" href="{{ route('admin.users.edit', ['id' => $user->id]) }}">
+							<a class="btn btn-sm float-right" href="{{ route('admin.users.edit', ['id' => $user->id]) }}" data-tip="Edit User Info">
 								<span class="fa fa-pencil" aria-hidden="true"></span>
-								Edit
+								<span class="sr-only">Edit</span>
 							</a>
 							<div class="card-title">{{ trans('global.details') }}</div>
 						</div>
 						<div class="card-body">
+							<table class="table mb-3">
+								<caption class="sr-only">{{ trans('global.metadata') }}</caption>
+								<tbody>
+									<tr>
+										<th scope="row">{{ trans('users::users.id') }}</th>
+										<td>{{ $user->id }}</td>
+									</tr>
+									<tr>
+										<th scope="row">{{ trans('users::users.name') }}</th>
+										<td>{{ $user->name }}</td>
+									</tr>
+									<tr>
+										<th scope="row">Title</th>
+										<td>{!! $user->title ? e($user->title) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
+									</tr>
+									<tr>
+										<th scope="row">Campus</th>
+										<td>{!! $user->campus ? e($user->campus) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
+									</tr>
+									<tr>
+										<th scope="row">Phone</th>
+										<td>{!! $user->phone ? e($user->phone) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
+									</tr>
+									<tr>
+										<th scope="row">Building</th>
+										<td>{!! $user->building ? e($user->building) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
+									</tr>
+									<tr>
+										<th scope="row">Email</th>
+										<td>{{ $user->email }}</td>
+									</tr>
+									<tr>
+										<th scope="row">Room</th>
+										<td>{!! $user->roomnumber ? e($user->roomnumber) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
+									</tr>
+									<tr>
+										<th scope="row">{{ trans('users::users.organization id') }}</th>
+										<td>{{ $user->puid }}</td>
+									</tr>
+								</tbody>
+							</table>
 
-						<table class="table mb-3">
-							<caption class="sr-only">{{ trans('global.metadata') }}</caption>
-							<tbody>
-								<tr>
-									<th scope="row">{{ trans('users::users.id') }}</th>
-									<td>{{ $user->id }}</td>
-								</tr>
-								<tr>
-									<th scope="row">{{ trans('users::users.name') }}</th>
-									<td>{{ $user->name }}</td>
-								</tr>
-								<tr>
-									<th scope="row">{{ trans('users::users.register date') }}</th>
-									<td>
-										@if ($user->datecreated && $user->datecreated != '0000-00-00 00:00:00' && $user->datecreated != '-0001-11-30 00:00:00')
-											<time datetime="{{ $user->datecreated }}">{{ $user->datecreated }}</time>
-										@else
-											<span class="unknown">{{ trans('global.unknown') }}</span>
-										@endif
+							<table class="table table-bordered mb-3">
+								<caption class="sr-only">Usernames</caption>
+								<thead>
+									<tr>
+										<th scope="col">ID</th>
+										<th scope="col">Username</th>
+										<th scope="col">Created</th>
+										<th scope="col">Removed</th>
+										<th scope="col">Last Visited</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach ($user->usernames()->withTrashed()->orderBy('id', 'asc')->get() as $username)
+									<tr<?php if ($username->isTrashed()) { echo ' class="trashed"'; } ?>>
+										<td>
+											{{ $username->id }}
+										</td>
+										<td>
+											{{ $username->username }}
+										</td>
+										<td>
+											@if ($username->isCreated())
+												<time datetime="{{ $username->datecreated->format('Y-m-d\TH:i:s\Z') }}">
+													@if ($username->datecreated->toDateTimeString() > Carbon\Carbon::now()->toDateTimeString())
+														{{ $username->datecreated->diffForHumans() }}
+													@else
+														{{ $username->datecreated->format('Y-m-d') }}
+													@endif
+												</time>
+											@else
+												{{ trans('global.unknown') }}
+											@endif
+										</td>
+										<td>
+											@if ($username->isTrashed())
+												<time datetime="{{ $username->dateremoved->format('Y-m-d\TH:i:s\Z') }}">
+													@if ($username->dateremoved->toDateTimeString() > Carbon\Carbon::now()->toDateTimeString())
+														{{ $username->dateremoved->diffForHumans() }}
+													@else
+														{{ $username->dateremoved->format('Y-m-d') }}
+													@endif
+												</time>
+											@endif
+										</td>
+										<td>
+											@if ($username->hasVisited())
+												<time datetime="{{ $username->datelastseen->format('Y-m-d\TH:i:s\Z') }}">
+													@if ($username->datelastseen->toDateTimeString() > Carbon\Carbon::now()->toDateTimeString())
+														{{ $username->datelastseen->diffForHumans() }}
+													@else
+														{{ $username->datelastseen->format('Y-m-d') }}
+													@endif
+												</time>
+											@else
+												{{ trans('global.never') }}
+											@endif
+										</td>
 									</td>
-								</tr>
-							@if ($user->id)
-								<tr>
-									<th scope="row">{{ trans('users::users.last visit date') }}</th>
-									<td>
-										@if ($user->hasVisited())
-											<time datetime="{{ $user->last_visit }}">{{ $user->last_visit }}</time>
-										@else
-											{{ trans('global.never') }}
-										@endif
-									</td>
-								</tr>
-								@if ($user->isTrashed())
-								<tr>
-									<th scope="row">{{ trans('users::users.removed date') }}</th>
-									<td>
-										<time datetime="{{ $user->dateremoved }}">{{ $user->dateremoved }}</time>
-									</td>
-								</tr>
-								@endif
-								<tr>
-									<th scope="row">Title</th>
-									<td>{!! $user->title ? e($user->title) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
-								</tr>
-								<tr>
-									<th scope="row">Campus</th>
-									<td>{!! $user->campus ? e($user->campus) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
-								</tr>
-								<tr>
-									<th scope="row">Phone</th>
-									<td>{!! $user->phone ? e($user->phone) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
-								</tr>
-								<tr>
-									<th scope="row">Building</th>
-									<td>{!! $user->building ? e($user->building) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
-								</tr>
-								<tr>
-									<th scope="row">Email</th>
-									<td>{{ $user->email }}</td>
-								</tr>
-								<tr>
-									<th scope="row">Room</th>
-									<td>{!! $user->roomnumber ? e($user->roomnumber) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
-								</tr>
-								<tr>
-									<th scope="row">{{ trans('users::users.organization id') }}</th>
-									<td>{{ $user->puid }}</td>
-								</tr>
-							@endif
-							</tbody>
-						</table>
-
-						<table class="table table-bordered mb-3">
-							<caption class="sr-only">Usernames</caption>
-							<thead>
-								<tr>
-									<th scope="col">ID</th>
-									<th scope="col">Username</th>
-									<th scope="col">Created</th>
-									<th scope="col">Removed</th>
-									<th scope="col">Last Visited</th>
-								</tr>
-							</thead>
-							<tbody>
-								@foreach ($user->usernames()->withTrashed()->orderBy('id', 'asc')->get() as $username)
-								<tr<?php if ($username->isTrashed()) { echo ' class="trashed"'; } ?>>
-									<td>{{ $username->id }}</td>
-									<td>{{ $username->username }}</td>
-									<td><time>{{ $username->isCreated() ? $username->datecreated : trans('global.unknown')  }}</time></td>
-									<td><time>{{ $username->isTrashed() ? $username->dateremoved : '' }}</time></td>
-									<td><time>{{ $username->hasVisited() ? $username->datelastseen : trans('global.never') }}</time></td>
-								</td>
-								@endforeach
-							</tbody>
-						</table>
-
+									@endforeach
+								</tbody>
+							</table>
 						</div>
 					</div>
-					<!-- </fieldset>
-					<fieldset id="user-groups" class="adminform">
-						<legend>{{ trans('users::users.assigned roles') }}</legend> -->
 
 					<div class="card">
 						<div class="card-header">
-							<a class="btn btn-sm float-right" href="{{ route('admin.users.edit', ['id' => $user->id]) }}">
+							<a class="btn btn-sm float-right" href="{{ route('admin.users.edit', ['id' => $user->id]) }}" data-tip="Edit User Roles">
 								<span class="fa fa-pencil" aria-hidden="true"></span>
-								Edit
+								<span class="sr-only">Edit</span>
 							</a>
 							<div class="card-title">{{ trans('users::users.assigned roles') }}</div>
 						</div>
@@ -314,7 +314,7 @@ app('pathway')
 						?>
 						<div class="card mb-3">
 							<div class="card-header">
-								Queues
+								<div class="card-title">Queues</div>
 							</div>
 							<div class="card-body">
 								<table class="table table-hover">
@@ -372,8 +372,8 @@ app('pathway')
 									<div class="card-title">Resources</div>
 								</div>
 								<div class="col-md-3 text-right">
-									<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm">
-										<span class="fa fa-pencil" aria-hidden="true"></span> Manage
+									<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm" data-tip="Manage Resource Access">
+										<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only"> Manage</span>
 									</a>
 								</div>
 							</div>

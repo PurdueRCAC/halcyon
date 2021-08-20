@@ -124,7 +124,7 @@ app('pathway')
 				<th scope="col" class="priority-3">
 					{!! Html::grid('sort', trans('pages::pages.access'), 'access', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-4" colspan="2">
 					{!! Html::grid('sort', trans('pages::pages.updated'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<?php /*<th scope="col" class="priority-6">
