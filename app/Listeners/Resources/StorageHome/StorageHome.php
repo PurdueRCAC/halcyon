@@ -30,6 +30,11 @@ class StorageHome
 	 */
 	public function handleResourceMemberCreated(ResourceMemberCreated $event)
 	{
+		if (!$event->user || !$event->user->id)
+		{
+			return;
+		}
+
 		// Need to check for Home dir and create if necessary
 		// First check if we have a storage dir already
 		if ($event->resource->home && $event->resource->home != 'shared')
