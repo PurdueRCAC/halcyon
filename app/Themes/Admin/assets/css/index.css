@@ -459,6 +459,7 @@ p {
   -webkit-hyphenate-limit-after: 1;
   -webkit-hyphenate-limit-before: 3;
   -moz-hyphens: auto;
+  hyphens: auto;
   orphans: 3;
   widows: 3;
   margin: 1em 0;
@@ -586,7 +587,6 @@ h4 {
 *[class*=" icon-"]:before {
   font-family: "Feather";
   margin-right: 0.2em;
-  speak: none;
 }
 .fa {
   font-style: normal;
