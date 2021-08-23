@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Messages\Models\Message;
 use App\Modules\Messages\Models\Type;
 use App\Halcyon\Http\StatefulRequest;
@@ -212,6 +213,7 @@ class MessagesController extends Controller
 			if ($type->id == config('modules.news.default_type', 0))
 			{
 				$row->newstypeid = $type->id;
+				break;
 			}
 		}
 
@@ -229,19 +231,44 @@ class MessagesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
-			'fields.headline' => 'required',
-			'fields.body' => 'required'
-		]);
+		$rules = [
+			'fields.messagequeuetypeid' => 'required|integer|min:1',
+			'fields.targetobjectid' => 'required|integer|min:1',
+			'fields.userid' => 'nullable|integer',
+			'fields.messagequeueoptionsid' => 'nullable|integer',
+		];
 
-		$row = new Message($request->input('fields'));
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
+
+		$id = $request->input('id');
+
+		$row = $id ? Message::findOrFail($id) : new Message();
+		$row->messagequeuetypeid = $request->input('messagequeuetypeid');
+		$row->targetobjectid = $request->input('targetobjectid');
+		if ($request->has('userid'))
+		{
+			$row->userid = $request->input('userid');
+		}
+		if ($request->has('messagequeueoptionsid'))
+		{
+			$row->messagequeueoptionsid = $request->input('messagequeueoptionsid');
+		}
 
 		if (!$row->save())
 		{
-			return redirect()->back()->with('error', 'Failed to create item.');
+			return redirect()->back()
+				->withInput($request->input())
+				->with('error', trans('global.messages.creation failed'));
 		}
 
-		return $this->cancel()->withSuccess('Item created!');
+		return $this->cancel()->withSuccess(trans('global.messages.item created'));
 	}
 
 	/**
@@ -265,95 +292,6 @@ class MessagesController extends Controller
 			'row'   => $row,
 			'types' => $types
 		]);
-	}
-
-	/**
-	 * Update the specified entry
-	 *
-	 * @param   Request $request
-	 * @param   integer $id
-	 * @return  Response
-	 */
-	public function update(Request $request, $id)
-	{
-		$request->validate([
-			'fields.headline' => 'required'
-		]);
-
-		$fields = $request->input('fields');
-		$fields['location'] = (string)$fields['location'];
-
-		$row = Message::findOrFail($id);
-		$row->fill($fields);
-
-		if (!$row->save())
-		{
-			return redirect()->back()->withError(trans('global.messages.update failed'));
-		}
-
-		return $this->cancel()->withSuccess(trans('global.messages.update success'));
-	}
-
-	/**
-	 * Sets the state of one or more entries
-	 * 
-	 * @param  Request  $request
-	 * @param  integer  $id
-	 * @return Response
-	 */
-	public function state(Request $request, $id)
-	{
-		$action = $request->segment(count($request->segments()) - 1);
-		$state  = $action == 'publish' ? 1 : 0;
-
-		// Incoming
-		$ids = $request->input('id', array($id));
-		$ids = (!is_array($ids) ? array($ids) : $ids);
-
-		// Check for an ID
-		if (count($ids) < 1)
-		{
-			$request->session()->flash('warning', trans('news::news.select to ' . ($state ? 'publish' : 'unpublish')));
-			return $this->cancel();
-		}
-
-		$success = 0;
-
-		// Update record(s)
-		foreach ($ids as $id)
-		{
-			$row = Message::findOrFail(intval($id));
-
-			if ($row->published == $state)
-			{
-				continue;
-			}
-
-			// Don't update last modified timestamp for state changes
-			$row->timestamps = false;
-
-			$row->published = $state;
-
-			if (!$row->save())
-			{
-				$request->session()->flash('error', $row->getError());
-				continue;
-			}
-
-			$success++;
-		}
-
-		// Set message
-		if ($success)
-		{
-			$msg = $state
-				? 'news::news.items published'
-				: 'news::news.items unpublished';
-
-			$request->session()->flash('success', trans($msg, ['count' => $success]));
-		}
-
-		return $this->cancel();
 	}
 
 	/**
@@ -418,9 +356,12 @@ class MessagesController extends Controller
 				continue;
 			}
 
+			$row->forceRestore([
+				'datetimestarted',
+				'datetimecompleted'
+			]);
+
 			if (!$row->update([
-				'datetimestarted' => null,
-				'datetimecompleted' => null,
 				'pid' => 0,
 				'returnstatus' => 0
 			]))
