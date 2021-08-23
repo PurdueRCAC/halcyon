@@ -83,11 +83,18 @@ class History
 				->orderBy('datetimecreated', 'desc')
 				->get();
 
+			$courses = \App\Modules\Courses\Models\Member::query()
+				->withTrashed()
+				->where('userid', '=', $user->id)
+				->orderBy('datetimecreated', 'desc')
+				->get();
+
 			$content = view('history::site.profile', [
 				'user'    => $user,
 				'groups'  => $groups,
 				'unixgroups'  => $unixgroups,
 				'queues'  => $queues,
+				'courses' => $courses,
 				//'history' => $history,
 			]);
 		}

@@ -2,7 +2,7 @@
 <div class="contentInner">
 	<h2>{{ trans('history::history.history') }}</h2>
 
-	@if (count($groups) || count($unixgroups) || count($queues))
+	@if (count($groups) || count($unixgroups) || count($queues) || count($courses))
 		@if (count($groups) > 0)
 			<table class="table table-hover">
 				<caption>Group History</caption>
@@ -165,6 +165,69 @@
 											-
 										@endif
 									@endif
+								@else
+									-
+								@endif
+							</td>
+						</tr>
+						<?php
+					endforeach;
+					?>
+				</tbody>
+			</table>
+		@endif
+
+		@if (count($courses) > 0)
+			<table class="table table-hover">
+				<caption>Class Account History</caption>
+				<thead>
+					<tr>
+						<th scope="col">Resource</th>
+						<th scope="col">Class</th>
+						<th scope="col">Semester</th>
+						<th scope="col">Added</th>
+						<th scope="col">Removed</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					foreach ($courses as $member):
+						$class = $member->account()
+							->withTrashed()
+							->first();
+						?>
+						<tr id="classuser{{ $member->id }}">
+							<td>
+								{{ $class->resource ? $class->resource->name : trans('global.unknown') }}
+							</td>
+							<td>
+								@if ($class->semester == 'Workshop')
+									{{ $class->classname }}
+								@else
+									{{ $class->department . ' ' . $class->coursenumber . ' (' . $class->crn . ')' }}
+								@endif
+							</td>
+							<td>
+								{{ $class->semester }}
+							</td>
+							<td>
+								<time datetime="{{ $member->datetimecreated->toDateTimeString() }}">
+									@if ($member->datetimecreated->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
+										{{ $member->datetimecreated->diffForHumans() }}
+									@else
+										{{ $member->datetimecreated->format('M d, Y') }}
+									@endif
+								</time>
+							</td>
+							<td>
+								@if ($member->isTrashed())
+									<time datetime="{{ $member->datetimeremoved->toDateTimeString() }}">
+										@if ($member->datetimeremoved->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
+											{{ $member->datetimeremoved->diffForHumans() }}
+										@else
+											{{ $member->datetimeremoved->format('M d, Y') }}
+										@endif
+									</time>
 								@else
 									-
 								@endif
