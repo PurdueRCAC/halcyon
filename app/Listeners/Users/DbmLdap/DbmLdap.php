@@ -81,6 +81,8 @@ class DbmLdap
 			$usernames[] = $user->username;
 		}
 
+		$results = array();
+
 		try
 		{
 			$ldap = $this->connect($config);
@@ -91,8 +93,6 @@ class DbmLdap
 			// We already found a match, so kip this lookup
 			if (!in_array($search, $usernames))
 			{
-				$results = array();
-
 				// Try finding by email address
 				if (preg_match("/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/", $search))
 				{
@@ -156,43 +156,6 @@ class DbmLdap
 		}
 
 		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->search);
-
-		/*try
-		{
-			$ldap = $this->connect($config);
-
-			// Performing a query.
-			$results = $ldap->search()
-				->where(
-					['cn', '=', $search],
-					['cn', 'contains', $search]
-				)
-				->select(['cn', 'uid', 'title', 'purdueEduCampus', 'employeeNumber'])
-				->get();
-
-			if (!empty($results))
-			{
-				$status = 200;
-
-				foreach ($results as $result)
-				{
-					$user = new User;
-					$user->name = $result['cn'][0];
-					$user->username = $result['uid'][0];
-					$user->puid = $result['employeeNumber'][0];
-					$user->email = $user->username . '@purdue.edu';
-
-					$event->results->add($user);
-				}
-			}
-		}
-		catch (\Exception $e)
-		{
-			$status = 500;
-			$results = ['error' => $e->getMessage()];
-		}
-
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, implode('', $query));*/
 	}
 
 	/**
