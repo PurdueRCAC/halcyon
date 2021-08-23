@@ -49,6 +49,7 @@ return [
         '128.211.133.54',  // gateway.bell
         '128.211.149.117', // warden.brown.rcac.purdue.edu
         '128.211.149.118', // gateway.brown
+        '128.211.148.144', // ondemand.brown
         '128.211.148.212', // warden.snyder.rcac.purdue.edu
         '128.211.148.213', // gateway.snyder
         '128.211.148.151', // warden.rice.rcac.purdue.edu
