@@ -68,7 +68,6 @@ class DbmLdap
 	 */
 	public function handleUserSearching(UserSearching $event)
 	{
-		return;
 		$config = $this->config();
 
 		if (empty($config))
@@ -102,17 +101,17 @@ class DbmLdap
 						->select(['cn', 'uid', 'employeeNumber'])
 						->get();
 
-					if (empty($results))
+					if (empty($results) || count($results) == 0)
 					{
 						$search = strstr($search, '@', true);
 					}
 				}
 
-				if (empty($results))
+				if (empty($results) || count($results) == 0)
 				{
 					// Look for a currently active username in I2A2 matching the request.
 					$results = $ldap->search()
-						->where('uid', '=', $search . '*')
+						->where('uid', '=', $search)
 						->select(['cn', 'uid', 'employeeNumber'])
 						->get();
 				}

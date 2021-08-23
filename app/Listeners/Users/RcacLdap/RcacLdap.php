@@ -107,14 +107,14 @@ class RcacLdap
 					->select(['cn', 'uid'])
 					->get();
 
-				if (empty($results))
+				if (empty($results) || count($results) == 0)
 				{
 					$search = strstr($search, '@', true);
 				}
 			}
 
 			// Performing a query.
-			if (empty($results))
+			if (empty($results) || count($results) == 0)
 			{
 				$results = $ldap->search()
 					->where('uid', 'contains', $search)
