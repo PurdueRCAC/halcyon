@@ -89,6 +89,29 @@ class History
 				->orderBy('datetimecreated', 'desc')
 				->get();
 
+			$classes = \App\Modules\Courses\Models\Account::query()
+				->withTrashed()
+				->where('userid', '=', $user->id)
+				->whereNotIn('id', $courses->pluck('classaccountid')->toArray())
+				->orderBy('datetimecreated', 'desc')
+				->get();
+
+			foreach ($classes as $class)
+			{
+				$member = new \App\Modules\Courses\Models\Member;
+				$member->classaccountid = $class->id;
+				$member->userid = $class->userid;
+				$member->datetimecreated = $class->datetimecreated;
+				$member->datetimeremoved = $class->datetimeremoved;
+				$member->datetimestart = $class->datetimestart;
+				$member->datetimestop = $class->datetimestop;
+				$member->membertype = 2;
+
+				$courses->push($member);
+			}
+
+			$courses = $courses->sortByDesc('datetimecreated');
+
 			$content = view('history::site.profile', [
 				'user'    => $user,
 				'groups'  => $groups,
