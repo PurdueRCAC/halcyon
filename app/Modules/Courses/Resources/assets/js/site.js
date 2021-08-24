@@ -463,8 +463,8 @@ function ClassUserSearchEventHandler(event, ui, crn) {
 			"name": name,
 			"username": username
 		});
-		console.log(post);
-		//WSPostURL(ROOT_URL + "users", post, AddUserClass, crn);
+
+		WSPostURL(ROOT_URL + "users", post, AddUserClass, crn);
 	} else {
 		WSGetURL(ROOT_URL + "users/" + id, AddUserClass, crn);
 	}
