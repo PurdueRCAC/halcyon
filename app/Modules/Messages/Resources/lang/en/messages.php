@@ -50,4 +50,5 @@ return [
 	'success' => 'Successful',
 	'failure' => 'Failed',
 	'rerun' => 'Re-submit',
+	'message types' => 'Message types',
 ];

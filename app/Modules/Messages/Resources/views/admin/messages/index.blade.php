@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ asset('modules/messages/js/admin.js') }}"></script>
+<script src="{{ asset('modules/messages/js/admin.js?v=' . filemtime(public_path() . '/modules/messages/js/admin.js')) }}"></script>
 @endpush
 
 @php
@@ -49,12 +49,12 @@ app('pathway')
 			<div class="stat-block text-danger">
 				<span class="icon-alert-triangle display-4 float-left" aria-hidden="true"></span>
 				<span class="value">{{ number_format($stats->failed) }}</span><br />
-				<span class="key">Failed</span>
+				<span class="key">{{ trans('messages::messages.failure') }}</span>
 			</div>
 		</div>
 		@if (count($stats->failedtypes))
 			<table class="table">
-				<caption class="sr-only">Message types</caption>
+				<caption class="sr-only">{{ trans('messages::messages.message types') }}</caption>
 				<tbody>
 					@foreach ($stats->failedtypes as $t)
 						<tr>
@@ -72,12 +72,12 @@ app('pathway')
 			<div class="stat-block text-success">
 				<span class="icon-check display-4 float-left" aria-hidden="true"></span>
 				<span class="value">{{ number_format($stats->succeeded) }}</span><br />
-				<span class="key">Successful</span>
+				<span class="key">{{ trans('messages::messages.success') }}</span>
 			</div>
 		</div>
 		@if (count($stats->succeededtypes))
 			<table class="table">
-				<caption class="sr-only">Message types</caption>
+				<caption class="sr-only">{{ trans('messages::messages.message types') }}</caption>
 				<tbody>
 					@foreach ($stats->succeededtypes as $t)
 						<tr>
@@ -95,12 +95,12 @@ app('pathway')
 			<div class="stat-block text-info">
 				<span class="icon-more-horizontal display-4 float-left" aria-hidden="true"></span>
 				<span class="value">{{ number_format($stats->pending) }}</span><br />
-				<span class="key">Pending</span>
+				<span class="key">{{ trans('messages::messages.pending') }}</span>
 			</div>
 		</div>
 		@if (count($stats->pendingtypes))
 			<table class="table">
-				<caption class="sr-only">Message types</caption>
+				<caption class="sr-only">{{ trans('messages::messages.message types') }}</caption>
 				<tbody>
 					@foreach ($stats->pendingtypes as $t)
 						<tr>
