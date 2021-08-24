@@ -53,10 +53,6 @@ class Depot
 			return;
 		}
 
-		$dir->resourceid = 48;
-		$dir->storageresourceid = 1;
-		$dir->parentstoragedirid = 0;
-
 		// Get "-data" directory
 		$unixgroups = UnixGroup::query()
 			->withTrashed()
@@ -70,20 +66,29 @@ class Depot
 			return;
 		}
 
-		$dir->unixgroupid = $unixgroups->id;
-		$dir->owneruserid = 0;
-		$dir->bytes       = 0;
-		$dir->files       = 0;
-		$dir->groupread   = 1;
-		$dir->groupwrite  = 1;
-		$dir->publicread  = 0;
-		$dir->publicwrite = 0;
-		$dir->id          = null;
-		$dir->save();
+		$data = $dir->toArray();
+		foreach (['id', 'datetimecreated', 'datetimeremoved', 'datetimeconfigured'] as $key)
+		{
+			if (isset($data[$key]))
+			{
+				unset($data[$key]);
+			}
+		}
 
-		$dir->resourceid = 93;
-		$dir->storageresourceid = 21;
-		$dir->parentstoragedirid = 0;
+		$dr = new Directory;
+		$dr->fill($data);
+		$dr->resourceid = 48; // Fortress
+		$dr->storageresourceid = 1;
+		$dr->parentstoragedirid = 0;
+		$dr->unixgroupid = $unixgroups->id;
+		$dr->owneruserid = 0;
+		$dr->bytes       = 0;
+		$dr->files       = 0;
+		$dr->groupread   = 1;
+		$dr->groupwrite  = 1;
+		$dr->publicread  = 0;
+		$dr->publicwrite = 0;
+		$dr->save();
 
 		// Get "base" directory
 		$unixgroups = UnixGroup::query()
@@ -98,14 +103,18 @@ class Depot
 			return;
 		}
 
-		$dir->unixgroup   = $unixgroups->id;
-		$dir->owneruserid = 0;
-		$dir->bytes       = 0;
-		$dir->files       = 0;
-		$dir->path        = '[L1FR] ' . $dir->path;
-		$dir->name        = '[L1FR] ' . $dir->name;
-		$dir->id          = null;
-		$dir->save();
+		$dr = new Directory;
+		$dr->fill($data);
+		$dr->resourceid = 93; // Box Research Lab Folder
+		$dr->storageresourceid = 21;
+		$dr->parentstoragedirid = 0;
+		$dr->unixgroupid = $unixgroups->id;
+		$dr->owneruserid = 0;
+		$dr->bytes       = 0;
+		$dr->files       = 0;
+		$dr->path        = '[L1FR] ' . $dir->path;
+		$dr->name        = '[L1FR] ' . $dir->name;
+		$dr->save();
 	}
 
 	/**

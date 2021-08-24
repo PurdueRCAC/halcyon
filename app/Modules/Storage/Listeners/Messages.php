@@ -22,7 +22,7 @@ class Messages
 	public function subscribe($events)
 	{
 		$events->listen(MessageReading::class, self::class . '@handleMessageReading');
-		$events->listen(DirectoryCreated::class, self::class . '@handleDirectoryCreated');
+		//$events->listen(DirectoryCreated::class, self::class . '@handleDirectoryCreated');
 	}
 
 	/**
@@ -84,7 +84,6 @@ class Messages
 			}
 		}
 
-		//if ($row->resourceid == 64 && $row->bytes)
 		if ($row->bytes)
 		{
 			// Submit filset create/sync

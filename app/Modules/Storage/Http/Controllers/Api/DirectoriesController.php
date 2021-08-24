@@ -440,6 +440,11 @@ class DirectoriesController extends Controller
 			return response()->json(['message' => trans('Field `path` cannot be longer than 255 characters')], 415);
 		}
 
+		if (!$row->group)
+		{
+			return response()->json(['message' => trans('Specified group not found')], 415);
+		}
+
 		// Find appropriate bucket
 		$bucket = null;
 		foreach ($row->group->storagebuckets as $b)
