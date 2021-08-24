@@ -124,6 +124,9 @@ app('pathway')
 			</tr>
 		</thead>
 		<tbody>
+		<?php
+		$now = Carbon\Carbon::now()->toDateTimeString();
+		?>
 		@foreach ($rows as $i => $row)
 			<?php
 			$row->accounts = 0;
@@ -218,10 +221,10 @@ app('pathway')
 				<td class="priority-2 text-right">
 					@if (auth()->user()->can('edit courses'))
 						<a href="{{ route('admin.courses.members', ['account' => $row->id]) }}">
-							{{ $row->studentcount ? $row->studentcount : $row->members()->withTrashed()->whereIsActive()->count() }}
+							{{ $row->studentcount ? $row->studentcount : $row->members()->withTrashed()->whereIsActive()->where('datetimestop', '>', $now)->count() }}
 						</a>
 					@else
-						{{ $row->studentcount ? $row->studentcount : $row->members()->withTrashed()->whereIsActive()->count() }}
+						{{ $row->studentcount ? $row->studentcount : $row->members()->withTrashed()->whereIsActive()->where('datetimestop', '>', $now)->count() }}
 					@endif
 				</td>
 			</tr>
@@ -249,6 +252,19 @@ app('pathway')
 				<input type="text" name="userid" id="field-userid" class="form-control form-users redirect" data-uri="{{ route('api.users.index') }}?search=%s" data-location="{{ route('admin.courses.create') }}?userid=%s" value="" />
 				<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
 			</span>
+		</div>
+	</div>
+
+	<div id="sync" class="hide" title="{{ trans('courses::courses.sync') }}">
+		<h2 class="modal-title sr-only">{{ trans('courses::courses.sync') }}</h2>
+
+		<div class="row">
+			<div class="col-md-12">
+				<a href="{{ route('admin.knowledge.create') }}" class="btn bt-primary">
+					<span class="fa fa-undo" aria-hidden="true"></span>
+					{{ trans('courses::courses.sync') }}
+				</a>
+			</div>
 		</div>
 	</div>
 

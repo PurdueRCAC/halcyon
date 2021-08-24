@@ -64,9 +64,9 @@ app('pathway')
 					<div class="form-group">
 						<label for="field-type">{{ trans('courses::courses.type') }}:</label>
 						<select name="type" id="field-type" class="form-control">
-							<?php if ($row->id || count($classes)) { ?>
+							@if ($row->id || count($classes))
 								<option value="course">{{ trans('courses::courses.course') }}</option>
-							<?php } ?>
+							@endif
 							<option value="workshop">{{ trans('courses::courses.workshop') }}</option>
 						</select>
 					</div>
@@ -90,19 +90,19 @@ app('pathway')
 						<input type="text" name="fields[classname]" id="field-classname" class="form-control" maxlength="255" value="{{ $row->classname }}" />
 					</div>
 
-					<?php if (!$row->id && count($classes) == 0) { ?>
+					@if (!$row->id && count($classes) == 0)
 						<p class="alert alert-warning">The selected user is not instructing any upcoming classes. Accounts for classes can only be created by instructors.</p>
 						<input type="hidden" name="fields[semester]" id="field-semester" value="{{ $row->semester }}" />
 						<input type="hidden" name="fields[crn]" id="field-crn" value="{{ $row->crn }}" />
 						<input type="hidden" name="fields[coursenumber]" id="field-coursenumber"  value="{{ $row->coursenumber }}" />
 						<input type="hidden" name="fields[department]" id="field-department" value="{{ $row->department }}" />
 						<input type="hidden" name="fields[reference]" id="field-reference" value="{{ $row->reference }}" />
-					<?php } else { ?>
+					@else
 						<div class="form-group type-course type-dependant">
 							<label for="new_class_select">Class</label>
 							<select class="form-control" id="new_class_select">
 								<option value="first">(Select Class)</option>
-								<?php foreach ($classes as $class) { ?>
+								@foreach ($classes as $class)
 									<option id="option_class_{{ $class->classExternalId }}"
 										data-crn="{{ $class->classExternalId }}"
 										data-classid="{{ $class->classId }}"
@@ -111,13 +111,13 @@ app('pathway')
 										data-start="{{ $class->start }}"
 										data-stop="{{ $class->stop }}"
 										data-classname="{{ $class->courseTitle }}"
-										data-count="<?php echo $class->enrollment ? count($class->enrollment) : 0; ?>"
-										data-reference="<?php echo $class->reference; ?>"
+										data-count="{{ $class->enrollment ? count($class->enrollment) : 0 }}"
+										data-reference="{{ $class->reference }}"
 										data-instructors="<?php echo e(json_encode($class->instructors)); ?>"
 										data-students="<?php echo e('{ "students": ' . json_encode($class->student_list) . '}'); ?>">
-										<?php echo $class->subjectArea . ' ' . $class->courseNumber . ' (' . $class->classExternalId . ') - ' . $class->semester; ?>
+										{{ $class->subjectArea . ' ' . $class->courseNumber . ' (' . $class->classExternalId . ') - ' . $class->semester }}
 									</option>
-								<?php } ?>
+								@endforeach
 							</select>
 						</div>
 
@@ -155,10 +155,10 @@ app('pathway')
 								</div>
 							</div>
 						</div>
-					<?php } ?>
+					@endif
 				</div>
 			</fieldset>
-
+		<?php /*
 		@if ($row->id)
 			<fieldset class="adminform">
 				<legend>{{ trans('courses::courses.members') }}</legend>
@@ -222,7 +222,7 @@ app('pathway')
 					</tfoot>
 				</table>
 			</fieldset>
-		@endif
+		@endif*/ ?>
 		</div>
 		<div class="col-md-5">
 			<fieldset class="adminform">

@@ -1,10 +1,18 @@
 @extends('layouts.master')
 
+@push('scripts')
+<script src="{{ asset('modules/courses/js/admin.js?v=' . filemtime(public_path() . '/modules/courses/js/admin.js')) }}"></script>
+@endpush
+
 @php
 app('pathway')
 	->append(
 		trans('courses::courses.module name'),
 		route('admin.courses.index')
+	)
+	->append(
+		$account->classname . ' ' . $account->coursenumber . ' (' . $account->crn . ')',
+		route('admin.courses.edit', ['id' => $account->id])
 	)
 	->append(
 		trans('courses::courses.members'),
@@ -13,11 +21,11 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('delete courses'))
+	@if (auth()->user()->can('edit courses'))
 		{!! Toolbar::deleteList('', route('admin.courses.members.delete')) !!}
 	@endif
 
-	@if (auth()->user()->can('create courses'))
+	@if (auth()->user()->can('edit courses'))
 		{!! Toolbar::addNew(route('admin.courses.members.create')) !!}
 	@endif
 
@@ -79,7 +87,7 @@ app('pathway')
 	@if (count($rows))
 	<div class="card mb-4">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('courses::courses.courses') }}</caption>
+		<caption>{{ $account->classname . ' ' . $account->coursenumber . ' (' . $account->crn . ')' }}</caption>
 		<thead>
 			<tr>
 				<th>
@@ -138,12 +146,17 @@ app('pathway')
 					<time datetime="{{ $row->datetimestop->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestop->toDateTimeString() }}</time>
 				</td>
 				<td>
-					<select name="membertype[{{ $row->id }}]" class="form-control"<?php if ($row->user && $row->user->isTrashed()) { echo ' disabled'; } ?>>
-						<option valie="1"<?php if ($row->membertype != 2) { echo ' selected="selected"'; } ?>>Student</option>
-						<option valie="2"<?php if ($row->membertype == 2) { echo ' selected="selected"'; } ?>>Instructor</option>
+					@if ($row->membertype == 2)
+						<span class="badge badge-success">TA / Instructor</span>
+					@else
+						<span class="badge badge-info">Student</span>
+					@endif
+					<?php
+						/*<select name="membertype[{{ $row->id }}]" class="form-control"<?php if ($row->user && $row->user->isTrashed()) { echo ' disabled'; } ?>>
+						<option value="1"<?php if ($row->membertype != 2) { echo ' selected="selected"'; } ?>>Student</option>
+						<option value="2"<?php if ($row->membertype == 2) { echo ' selected="selected"'; } ?>>Instructor</option>
 					</select>
-						<?php
-						/*$cls = ($row->membertype == 1) ? 'btn-success' : 'btn-warning';
+						$cls = ($row->membertype == 1) ? 'btn-success' : 'btn-warning';
 						$cls = ($row->membertype != 3) ? $cls : 'btn-danger';
 						?>
 					<div class="btn-group btn-group-sm dropdown" role="group" aria-label="Course membership type">
@@ -183,7 +196,40 @@ app('pathway')
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
-
 	@csrf
 </form>
+
+<div id="new-account" class="modal dialog hide" title="{{ trans('courses::courses.choose member') }}">
+	<form action="{{ route('admin.courses.members', ['account' => $account->id]) }}" method="post">
+		<div class="modal-body">
+			<h2 class="modal-title sr-only">{{ trans('courses::courses.add member') }}</h2>
+
+			<div class="form-group">
+				<label for="field-userid">{{ trans('courses::courses.member') }}: <span class="required">{{ trans('global.required') }}</span></label>
+				<span class="input-group">
+					<input type="text" name="userid" id="field-userid" data-classaccountid="{{ $account->id }}" class="form-control form-users" data-uri="{{ route('api.users.index') }}?search=%s" required value="" />
+					<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
+				</span>
+			</div>
+
+			<div class="form-group">
+				<label for="field-membertype">{{ trans('courses::courses.type') }}:</label>
+				<select name="membertype" id="field-membertype" class="form-control">
+					<option value="1">Student</option>
+					<option value="2">TA/Instructor</option>
+				</select>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="submit" class="btn btn-success add-member" data-api="{{ route('api.courses.members.create') }}" data-account="{{ $account->id }}" data-field="#field-userid" data-type="#field-membertype" data-success="User added">
+				<span class="icon-plus" aria-hidden="true"></span> {{ trans('global.button.add') }}
+			</button>
+		</div>
+
+		<input type="hidden" name="classaccountid" value="{{ $account->id }}" autocomplete="off" />
+
+		@csrf
+	</form>
+</div>
+
 @stop

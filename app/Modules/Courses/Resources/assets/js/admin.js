@@ -1,10 +1,10 @@
 /**
  * Initiate event hooks
  */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 	var users = $(".form-users");
 	if (users.length) {
-		users.each(function(i, user){
+		users.each(function (i, user) {
 			user = $(user);
 			var cl = user.clone()
 				.attr('type', 'hidden')
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				.after(cl);
 			user.autocomplete({
 				minLength: 2,
-				source: function( request, response ) {
+				source: function (request, response) {
 					return $.getJSON(user.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
 						response($.map(data.data, function (el) {
 							return {
@@ -88,21 +88,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		var select = $($(this).data('field'));
 		var btn = $(this);
+		var post = {
+			'userid': select.val(),
+			'classaccountid': btn.data('account'),
+			'membertype': $($(this).data('type')).val()
+		};
 
 		// create new relationship
 		$.ajax({
 			url: btn.data('api'),
 			type: 'post',
-			data: {
-				'userid': select.val(),
-				'classaccountid': btn.data('account')
-			},
+			data: post,
 			dataType: 'json',
 			async: false,
 			success: function (response) {
 				Halcyon.message('success', btn.data('success'));
+				window.location.reload(true);
 
-				var c = select.closest('table');
+				/*var c = select.closest('table');
 				var li = c.find('tr.d-none');
 
 				if (typeof (li) !== 'undefined') {
@@ -127,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					template.html(content).insertBefore(li);
 				}
 
-				select.val();
+				select.val();*/
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
 				//console.log(xhr);
@@ -140,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var dialog = $("#new-account").dialog({
 		autoOpen: false,
-		height: 200,
+		height: 'auto',//200,
 		width: 500,
 		modal: true
 	});

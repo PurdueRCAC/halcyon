@@ -37,4 +37,6 @@ return [
 	'stop' => 'Stop',
 	'select membership type' => '- All Membership Types -',
 	'enrolled' => 'Enrolled',
+	'choose member' => 'Choose member',
+	'member' => 'Member',
 ];

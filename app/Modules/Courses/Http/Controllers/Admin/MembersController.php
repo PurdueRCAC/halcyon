@@ -9,6 +9,7 @@ use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Models\Member;
 use App\Modules\Users\Models\UserUsername;
+use Carbon\Carbon;
 
 class MembersController extends Controller
 {
@@ -82,9 +83,16 @@ class MembersController extends Controller
 
 		if ($filters['state'] == 'active')
 		{
+			$now = Carbon::now();
+
 			$query->withTrashed()
 				->where($u . '.dateremoved', '=', '0000-00-00 00:00:00')
-				->where($m . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				->where(function($where) use ($m, $now)
+				{
+					$where->where($m . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+						->orWhere($m . '.datetimeremoved', '>', $now->toDateTimeString());
+				})
+				->where($m . '.datetimestop', '>', $now->toDateTimeString());
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
@@ -125,7 +133,7 @@ class MembersController extends Controller
 			$row->fill($fields);
 		}
 
-		return view('courses::admin.edit', [
+		return view('courses::admin.members.edit', [
 			'row' => $row
 		]);
 	}
@@ -214,7 +222,7 @@ class MembersController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Account::findOrFail($id);
+			$row = Member::findOrFail($id);
 
 			if (!$row->delete())
 			{
