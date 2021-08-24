@@ -3,6 +3,7 @@ namespace App\Listeners\Users\Courses;
 
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\Courses\Models\Account;
+use App\Modules\Courses\Models\Member;
 use App\Modules\Courses\Events\InstructorLookup;
 use App\Modules\Resources\Models\Asset;
 use Carbon\Carbon;
@@ -31,11 +32,6 @@ class Courses
 	 */
 	public function handleUserDisplay(UserDisplay $event)
 	{
-		if (app('isAdmin'))
-		{
-			return;
-		}
-
 		$content = null;
 		$user = $event->getUser();
 
@@ -50,33 +46,67 @@ class Courses
 			->where('datetimestop', '>', Carbon::now()->toDateTimeString())
 			->count();
 
-		if ($event->getActive() == 'class')
+		if (app('isAdmin'))
 		{
-			app('pathway')
-				->append(
-					trans('courses::courses.my courses'),
-					route('site.users.account.section', $r)
-				);
+			$now = Carbon::now();
 
-			event($e = new InstructorLookup($user, false));
-
-			$classes = $e->courses;
-			$resources = Asset::query()
-				->where('listname', '=', 'scholar')
-				->orderBy('name')
-				->get();
-
-			$courses = Account::query()
+			$instructing = Account::query()
 				->where('userid', '=', $user->id)
+				->where('datetimestop', '>', $now->toDateTimeString())
 				->orderBy('datetimestart', 'desc')
 				->get();
 
-			$content = view('courses::site.profile', [
+			$query = Member::query()
+				->where('userid', '=', $user->id);
+
+			if (count($instructing))
+			{
+				$query->whereNotIn('classaccountid', $instructing->pluck('id')->toArray());
+			}
+
+			$student = $query
+				->where('datetimestop', '>', $now->toDateTimeString())
+				->orderBy('datetimestart', 'desc')
+				->get();
+
+			$total += count($student);
+
+			$content = view('courses::admin.profile', [
 				'user'    => $user,
-				'courses' => $courses,
-				'classes' => $classes,
-				'resources' => $resources,
+				'instructing' => $instructing,
+				'student' => $student,
 			]);
+		}
+		else
+		{
+			if ($event->getActive() == 'class')
+			{
+				app('pathway')
+					->append(
+						trans('courses::courses.my courses'),
+						route('site.users.account.section', $r)
+					);
+
+				event($e = new InstructorLookup($user, false));
+
+				$classes = $e->courses;
+				$resources = Asset::query()
+					->where('listname', '=', 'scholar')
+					->orderBy('name')
+					->get();
+
+				$courses = Account::query()
+					->where('userid', '=', $user->id)
+					->orderBy('datetimestart', 'desc')
+					->get();
+
+				$content = view('courses::site.profile', [
+					'user'    => $user,
+					'courses' => $courses,
+					'classes' => $classes,
+					'resources' => $resources,
+				]);
+			}
 		}
 
 		$event->addSection(

@@ -48,6 +48,7 @@
 						<a href="#counthelp" class="help icn tip" title="Help">
 							<span class="fa fa-question-circle" aria-hidden="true"></span> Help
 						</a>
+					</th>
 					<th scope="col"></th>
 				</th>
 			</thead>
