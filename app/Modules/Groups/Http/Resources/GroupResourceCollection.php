@@ -14,6 +14,8 @@ class GroupResourceCollection extends ResourceCollection
 	 */
 	public function toArray($request)
 	{
+		$request->merge(['minimal' => 1]);
+
 		return parent::toArray($request);
 	}
 }
