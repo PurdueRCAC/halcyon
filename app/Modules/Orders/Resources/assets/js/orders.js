@@ -1598,8 +1598,8 @@ function RemindOrder(url, button) {
 function DenyAccount(url, button) {
 	var post = JSON.stringify({ "denied": 1 });
 
-	/*WSPutURL(url, post, function (xml, button) {
-		if (xml.status == 200) {*/
+	WSPutURL(url, post, function (xml, button) {
+		if (xml.status < 400) {
 			var id = button.getAttribute('data-id');
 
 			button.classList.add('hide');
@@ -1623,10 +1623,10 @@ function DenyAccount(url, button) {
 					accountstatus[x].value = "DENIED";
 				}
 			}
-		/*} else {
+		} else {
 			alert("An error occurred while denying account.");
 		}
-	}, button);*/
+	}, button);
 }
 
 /**
