@@ -54,6 +54,8 @@ return [
 	'new page' => 'New Page',
 	'snippet' => 'Existing Snippet',
 	'attach' => 'Attach',
+	'attach child page' => 'Attach Child Page',
+	'create child page' => 'Create Child Page',
 	'options' => 'Options',
 	'ordering' => 'Ordering',
 	'all levels' => '- All Levels -',

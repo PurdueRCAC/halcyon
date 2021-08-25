@@ -1,4 +1,5 @@
 
+
 jQuery(document).ready(function ($) {
 	// Feedback
 	$('.btn-feedback').on('click', function (e) {
@@ -43,6 +44,8 @@ jQuery(document).ready(function ($) {
 		});
 	});
 
+	//----
+
 	$('[data-max-length]').on('keyup', function () {
 		var chars = $(this).val().length,
 			max = parseInt($(this).data('max-length')),
@@ -60,6 +63,24 @@ jQuery(document).ready(function ($) {
 			$(this).val(trimmed);
 		}
 	});
+
+	var alias = $('#field-alias');
+	if (alias.length) {
+		$('#field-title').on('keyup', function (e) {
+			var val = $(this).val();
+
+			val = val.toLowerCase()
+				.replace(/\s+/g, '_')
+				.replace(/[^a-z0-9\-_]+/g, '');
+
+			alias.val(val);
+		});
+	}
+
+	$('#field-parent_id')
+		.on('change', function () {
+			$('#parent-path').html($(this).children("option:selected").data('path'));
+		});
 
 	// Page editing
 	$('#content')
@@ -146,17 +167,62 @@ jQuery(document).ready(function ($) {
 
 		$.ajax({
 			url: frm.data('api'),
-			type: 'put',
+			type: (post['id'] ? 'put' : 'post'),
 			data: post,
 			dataType: 'json',
 			async: false,
 			success: function (response) {
-				window.location.reload();
+				if (response.url) {
+					window.location.href = response.url;
+				} else {
+					window.location.reload();
+				}
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
 				btn.removeClass('processing');
 				frm.prepend('<div class="alert alert-danger">' + xhr.responseJSON.message + '</div>');
 			}
 		});
+	});
+
+	//----
+
+	var dialog = $("#new-page").dialog({
+		autoOpen: false,
+		height: 250,
+		width: 500,
+		modal: true
+	});
+
+	$('#add-page').on('click', function (e) {
+		e.preventDefault();
+
+		dialog.dialog("open");
+	});
+
+	//----
+
+	$('.snippet-checkbox').on('change', function (e) {
+		if ($(this).is(':checked')) {
+			$('tr[data-parent=' + $(this).data('id') + ']')
+				.find('.snippet-checkbox')
+				.each(function (i, el) {
+					$(el).prop('checked', true).trigger('change');
+				});
+		} else {
+			$('tr[data-parent=' + $(this).data('id') + ']')
+				.find('.snippet-checkbox')
+				.each(function (i, el) {
+					$(el).prop('checked', false).trigger('change');
+				});
+		}
+	});
+	$('.toggle-tree').on('click', function (e) {
+		e.preventDefault();
+
+		$(this).closest('tr').toggleClass('open');
+
+		$('tr[data-parent=' + $(this).data('id') + ']')
+			.toggleClass('d-none');
 	});
 });

@@ -178,3 +178,21 @@
 	background: #eee;
 	border-radius: 0.25em;
 }
+
+.toggle-tree:before {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  text-indent: 0;
+  content: "";
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+}
+.toggle-tree:before {
+  border-color: transparent transparent transparent #333;
+}
+.open .toggle-tree:before {
+  border-color: #333 transparent transparent transparent;
+}

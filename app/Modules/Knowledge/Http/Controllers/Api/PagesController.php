@@ -390,7 +390,7 @@ class PagesController extends Controller
 			return response()->json(['message' => trans('global.messages.save failed')], 409);
 		}
 
-		if ($id && $parent_id != $orig_parent_id)
+		if ($row->id && $row->parent_id)// != $orig_parent_id)
 		{
 			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{

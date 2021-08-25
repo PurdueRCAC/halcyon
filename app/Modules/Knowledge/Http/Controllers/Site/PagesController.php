@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Knowledge\Models\Page;
+use App\Modules\Knowledge\Models\SnippetAssociation;
 use App\Modules\Knowledge\Models\Associations;
 
 class PagesController extends Controller
@@ -264,5 +265,160 @@ class PagesController extends Controller
 			'rows' => $rows,
 			'path' => $path,
 		]);
+	}
+
+	/**
+	 * Show the form for creating a new resource.
+	 * 
+	 * @return Response
+	 */
+	public function create(Request $request)
+	{
+		$root = Associations::rootNode();
+
+		$parent_id = $request->input('parent');
+		$node = Associations::find($parent_id);
+
+		$row = new Associations();
+		$row->state = 1;
+		$row->parent_id = $parent_id;
+
+		$page = new Page;
+		$page->state = 1;
+
+		$parents = Page::tree();
+
+		return view('knowledge::site.edit', [
+			'root' => $root,
+			'node' => $node,
+			'row'  => $row,
+			'tree' => $parents,
+			'page' => $page
+		]);
+	}
+
+	/**
+	 * Show the form for creating a new resource.
+	 * 
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function select(Request $request)
+	{
+		$root = Associations::rootNode();
+
+		$parent_id = $request->input('parent');
+		$node = Associations::find($parent_id);
+
+		$parents = Page::tree();
+
+		$p = (new Page)->getTable();
+		$a = (new SnippetAssociation)->getTable();
+
+		$snippets = Page::query()
+			->join($a, $a . '.page_id', $p . '.id')
+			->select($p . '.title', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id', $a . '.path', $a . '.parent_id', $a . '.page_id')
+			->where($p . '.snippet', '=', 1)
+			->orderBy('lft', 'asc')
+			->get();
+
+		return view('knowledge::site.select', [
+			'root' => $root,
+			'node' => $node,
+			//'parent_id' => $parent_id,
+			'parents'   => $parents,
+			'snippets'  => $snippets,
+		]);
+	}
+
+	/**
+	 * Comment the specified entry
+	 *
+	 * @param   Request $request
+	 * @return  Response
+	 */
+	public function attach(Request $request)
+	{
+		$request->validate([
+			'parent_id' => 'required|integer',
+			'snippets' => 'required|array'
+		]);
+
+		$parent_id = $request->input('parent_id');
+		$snippets = $request->input('snippets');
+		$parents = array();
+
+		$page = Associations::findOrFail($parent_id);
+
+		foreach ($snippets as $parent => $snips)
+		{
+			foreach ($snips as $id => $snippet)
+			{
+				if (!isset($snippet['page_id']))
+				{
+					continue;
+				}
+
+				$row = new Associations;
+				$row->access    = $snippet['access'];
+				$row->state     = $snippet['state'];
+				$row->page_id   = $snippet['page_id'];
+				$row->parent_id = $parent_id;
+				if (isset($parents[$parent]))
+				{
+					$row->parent_id = $parents[$parent];
+				}
+
+				if (!$row->save())
+				{
+					return redirect()->back()->withError(trans('knowledge::knowledge.error.failed to attach snippets'));
+				}
+
+				$parents[$id] = $row->id;
+			}
+		}
+
+		return redirect(route('site.knowledge.page', ['uri' => $page->path]));//->withSuccess(trans('knowledge::knowledge.snippets attached'));
+	}
+
+	/**
+	 * Remove the specified entry
+	 *
+	 * @param   Request $request
+	 * @return  Response
+	 */
+	public function delete(Request $request, $id = null)
+	{
+		// Incoming
+		$ids = $request->input('id', array());
+		$ids = (!is_array($ids) ? array($ids) : $ids);
+		if ($id)
+		{
+			$ids[] = $id;
+		}
+
+		$success = 0;
+
+		foreach ($ids as $id)
+		{
+			// Delete the entry
+			// Note: This is recursive and will also remove all descendents
+			$row = Associations::findOrFail($id);
+
+			if (!$row->delete())
+			{
+				$request->session()->flash('error', $row->getError());
+				continue;
+			}
+
+			$success++;
+		}
+
+		if ($success)
+		{
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
+		}
+
+		return redirect(route('site.knowledge.index'));
 	}
 }

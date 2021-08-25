@@ -99,6 +99,8 @@ jQuery(document).ready(function ($) {
 	$('.toggle-tree').on('click', function (e) {
 		e.preventDefault();
 
+		$(this).closest('tr').toggleClass('open');
+
 		$('tr[data-parent=' + $(this).data('id') + ']')
 			.toggleClass('d-none');
 	});

@@ -1075,6 +1075,12 @@ ul.purchases li {
 .form-block.checked {
 	box-shadow: 0 0 2px 2px rgba(102, 175, 233, 0.6);
 }
+.form-block span.fa {
+  font-size: 3em;
+  display: block;
+  margin: 0;
+  padding: 0.5em;
+}
 
 /* News */
 .newsleft,

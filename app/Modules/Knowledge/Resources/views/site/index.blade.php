@@ -52,11 +52,30 @@
 
 	<div class="warticle-wrap" id="page-content{{ $page->id }}">
 
-		@if (auth()->user() && auth()->user()->can('edit knowledge'))
+		@if (auth()->user() && (auth()->user()->can('create knowledge') || auth()->user()->can('edit knowledge')))
 		<div class="edit-controls">
-			<a href="#page-form{{ $page->id }}" data-id="{{ $page->id }}" class="edit btn tip" title="{{ trans('global.button.edit') }}">
-				<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
-			</a>
+			<div class="dropdown btn-group">
+				<button class="btn ropdown-toggle" type="button" id="optionsbutton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<span class="fa fa-ellipsis-v" aria-hidden="true"></span><span class="sr-only"> {{ trans('knowledge::knowledge.options') }}</span>
+				</button>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="optionsbutton">
+					@if (auth()->user()->can('create knowledge'))
+						<a href="#new-page" data-id="{{ $page->id }}" id="add-page" class="dropdown-item tip" title="{{ trans('knowledge::knowledge.add child page') }}">
+							<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('global.button.add') }}
+						</a>
+					@endif
+					@if (auth()->user()->can('edit knowledge'))
+						<a href="#page-form{{ $page->id }}" data-id="{{ $page->id }}" class="edit dropdown-item tip" title="{{ trans('global.button.edit') }}">
+							<span class="fa fa-pencil" aria-hidden="true"></span> {{ trans('global.button.edit') }}
+						</a>
+					@endif
+					@if (auth()->user()->can('delete knowledge'))
+						<a href="{{ route('site.knowledge.delete', ['id' => $node->id]) }}" data-id="{{ $page->id }}" class="delete dropdown-item tip" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.knowledge.delete', ['id' => $node->id]) }}" title="{{ trans('global.button.delete') }}">
+							<span class="fa fa-trash" aria-hidden="true"></span> {{ trans('global.button.delete') }}
+						</a>
+					@endif
+				</div>
+			</div>
 		</div>
 		@endif
 
@@ -194,7 +213,8 @@
 		@endif
 	</div>
 
-	@if (auth()->user() && auth()->user()->can('edit knowledge'))
+	@if (auth()->user())
+		@if (auth()->user()->can('edit knowledge'))
 		<div class="hide" id="page-form{{ $page->id }}">
 			<form action="{{ route('site.knowledge.page', ['uri' => ($p ? $p : '/')]) }}" data-api="{{ route('api.knowledge.update', ['id' => $node->id]) }}" method="post" name="pageform" id="pageform" class="editform">
 				@if (auth()->user()->can('edit pages'))
@@ -308,6 +328,27 @@
 				</p>
 			</form>
 		</div>
+		@endif
+		@if (auth()->user()->can('create knowledge'))
+		<div id="new-page" class="dialog" title="{{ trans('knowledge::knowledge.choose type') }}">
+			<h2 class="modal-title sr-only">{{ trans('knowledge::knowledge.choose type') }}</h2>
+
+			<div class="row">
+				<div class="col-md-6">
+					<a href="{{ route('site.knowledge.create', ['parent' => $node->id]) }}" class="form-group form-block text-center">
+						<span class="fa fa-edit" aria-hidden="true"></span>
+						{{ trans('knowledge::knowledge.new page') }}
+					</a>
+				</div>
+				<div class="col-md-6">
+					<a href="{{ route('site.knowledge.select', ['parent' => $node->id]) }}" class="form-group form-block text-center">
+						<span class="fa fa-repeat" aria-hidden="true"></span>
+						{{ trans('knowledge::knowledge.snippet') }}
+					</a>
+				</div>
+			</div>
+		</div>
+		@endif
 	@endif
 </div>
 @stop

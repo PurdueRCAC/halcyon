@@ -2,67 +2,70 @@
 
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/knowledge/css/knowledge.css') }}?v={{ filemtime(public_path('modules/knowledge/css/knowledge.css')) }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
-<script src="{{ asset('modules/knowledge/js/admin.js?v=' . filemtime(public_path() . '/modules/knowledge/js/admin.js')) }}"></script>
+<script src="{{ asset('modules/knowledge/js/site.js?v=' . filemtime(public_path() . '/modules/knowledge/js/site.js')) }}"></script>
 @endpush
 
 @php
-app('request')->merge(['hidemainmenu' => 1]);
-
 app('pathway')
 	->append(
 		trans('knowledge::knowledge.module name'),
-		route('admin.knowledge.index')
+		route('site.knowledge.index')
+	)
+	->append(
+		$node->page->headline,
+		route('site.knowledge.page', ['uri' => $node->path])
 	)
 	->append(
 		trans('knowledge::knowledge.attach')
 	);
 @endphp
 
-@section('toolbar')
-	@if (auth()->user()->can('edit knowledge'))
-		{!! Toolbar::save(route('admin.knowledge.attach')) !!}
-	@endif
-
-	{!!
-		Toolbar::spacer();
-		Toolbar::cancel(route('admin.knowledge.cancel'));
-	!!}
-
-	{!! Toolbar::render() !!}
-@stop
-
 @section('title')
 {!! config('knowledge.name') !!}: {{ trans('knowledge::knowledge.attach') }}
 @stop
 
 @section('content')
-<form action="{{ route('admin.knowledge.attach') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
+	@php
+	$children = $root->publishedChildren();
+	$path = explode('/', $node->path);
+	@endphp
+	@include('knowledge::site.list', ['nodes' => $children, 'path' => '', 'current' => $path, 'variables' => $root->page->variables])
+</div>
 
-	@if ($errors->any())
-		<div class="alert alert-danger">
-			<ul>
-				@foreach ($errors->all() as $error)
-					<li>{{ $error }}</li>
-				@endforeach
-			</ul>
-		</div>
-	@endif
-
+<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	<div class="row">
-		<div class="col col-md-12">
+		<h2>{{ $node->page->headline }}</h2>
+
+		<form action="{{ route('site.knowledge.attach') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+
+			@if ($errors->any())
+				<div class="alert alert-danger">
+					<ul>
+						@foreach ($errors->all() as $error)
+							<li>{{ $error }}</li>
+						@endforeach
+					</ul>
+				</div>
+			@endif
+
 			<fieldset class="adminform">
-				<legend>{{ trans('global.details') }}</legend>
+				<legend>{{ trans('knowledge::knowledge.attach child page') }}</legend>
 
 				<div class="form-group">
 					<label for="field-parent_id">{{ trans('knowledge::knowledge.parent') }}:</label>
 					<select name="parent_id" id="field-parent_id" class="form-control searchable-select">
-						<!--<option value="0">{{ trans('global.none') }}</option>-->
-						<?php foreach ($parents as $pa): ?>
-							<?php $selected = ($pa->id == $parent_id ? ' selected="selected"' : ''); ?>
+						<?php
+						$page = null;
+						foreach ($parents as $pa): ?>
+							<?php
+							$selected = ($pa->id == $node->id ? ' selected="selected"' : '');
+							?>
 							<option value="{{ $pa->id }}"<?php echo $selected; ?> data-path="/{{ $pa->path }}"><?php echo '/' . ltrim($pa->path, '/')  . ' &mdash; ' . e(Illuminate\Support\Str::limit($pa->title, 70)); ?></option>
 						<?php endforeach; ?>
 					</select>
@@ -78,11 +81,9 @@ app('pathway')
 									</a>
 								</td>
 								<td>
-									{!! str_repeat('<span class="gi">|&mdash;</span>', $snippet->level - 1) !!}
-									<span class="form-check">
-										<input type="checkbox" name="snippets[{{ $snippet->parent_id }}][{{ $snippet->id }}][page_id]" id="snippet{{ $snippet->id }}" data-id="{{ $snippet->id }}" value="{{ $snippet->page_id }}" class="form-check-input snippet-checkbox" />
-										<label for="snippet{{ $snippet->id }}" class="form-check-label">{{ Illuminate\Support\Str::limit($snippet->title, 70) }}</label>
-									</span>
+									{!! str_repeat('<span class="gi text-muted">|&mdash;</span>', $snippet->level - 1) !!}
+									<input type="checkbox" name="snippets[{{ $snippet->parent_id }}][{{ $snippet->id }}][page_id]" id="snippet{{ $snippet->id }}" data-id="{{ $snippet->id }}" value="{{ $snippet->page_id }}" class="snippet-checkbox" />
+									<label for="snippet{{ $snippet->id }}">{{ Illuminate\Support\Str::limit($snippet->title, 70) }}</label>
 								</td>
 								<td>
 									<span class="form-text text-muted">{{ $snippet->path }}</span>
@@ -107,9 +108,16 @@ app('pathway')
 					</tbody>
 				</table>
 			</fieldset>
-		</div>
-	</div>
 
-	@csrf
-</form>
+			<p class="text-center">
+				<button type="submit" class="btn btn-primary">
+					{{ trans('knowledge::knowledge.attach') }}
+				</button>
+
+				<a href="{{ $node ? route('site.knowledge.page', ['uri' => $node->path]) : route('site.knowledge.index') }}" class="btn">Cancel</a>
+			</p>
+			@csrf
+		</form>
+	</div>
+</div>
 @stop
