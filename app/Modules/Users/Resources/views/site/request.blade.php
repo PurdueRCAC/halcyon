@@ -14,9 +14,9 @@ $active = $sections->firstWhere('active', '=', true);
 @endpush
 
 @section('content')
-<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-	@include('users::site.admin', ['user' => $user])
+@include('users::site.admin', ['user' => $user])
 
+<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	<h2>{{ $user->name }}</h2>
 
 	<div class="qlinks">
@@ -39,9 +39,17 @@ $active = $sections->firstWhere('active', '=', true);
 
 		<form method="get" action="{{ route('site.users.account.request') }}">
 			<div id="request_header">
-				<p>Purdue researchers collaborating with faculty, staff, or departments who have purchased access to cluster nodes or research storage through the <a href="{{ url('/services/communityclusters/') }}">Community Cluster Program</a> will be able to select one of the Community Clusters or storage resources on the request form.</p> 
+				<p>
+					Purdue researchers collaborating with faculty, staff, or departments who have purchased access to cluster
+					nodes or research storage through the <a href="{{ url('/services/communityclusters/') }}">Community Cluster Program</a>
+					will be able to select one of the Community Clusters or storage resources on the request form.
+				</p>
 
-				<p>Once the request is submitted, an email notification will be sent to your faculty advisor requesting approval of your request. Account request approvals are left to the discretion of the faculty or appropriate Community Cluster partners. <strong>Please contact them directly regarding the status of your request.</strong></p>
+				<p>
+					Once the request is submitted, an email notification will be sent to your faculty advisor requesting approval
+					of your request. Account request approvals are left to the discretion of the faculty or appropriate Community
+					Cluster partners. <strong>Please contact them directly regarding the status of your request.</strong>
+				</p>
 
 				<p>
 					To request an {{ config('app.name') }} account please complete the following steps.
@@ -57,7 +65,7 @@ $active = $sections->firstWhere('active', '=', true);
 						<div class="form-group">
 							<label for="newuser">Search faculty or research group name:</label><br/>
 							<div class="input-group">
-								<input type="text" name="newuser" id="newuser" class="form-control searchgroups" data-source="{{ route('api.groups.index', ['api_token' => auth()->user()->api_token, 'searchuser' => '']) }}" autocorrect="off" autocapitalize="off" />
+								<input type="text" name="newuser" id="newuser" class="form-control searchgroups" data-source="{{ route('api.groups.index', ['api_token' => auth()->user()->api_token, 'search' => '']) }}" autocorrect="off" autocapitalize="off" />
 								<!-- <div id="user_results" class="searchMain usersearch_results"></div>
 								<select name="newuser" id="newuser" class="form-control searchuser"></select> -->
 								<span class="input-group-append">
@@ -149,7 +157,10 @@ $active = $sections->firstWhere('active', '=', true);
 				<div class="card-body">
 					<p>An email notification will be sent to the managers of the research group or faculty member for approval.</p>
 
-					<p class="alert alert-warning">NOTE: Your request will need to be approved by the research group or faculty you have entered. Please direct any questions regarding approval status to those people.</p>
+					<p class="alert alert-warning">
+						NOTE: Your request will need to be approved by the research group or faculty you have entered.
+						Please direct any questions regarding approval status to those people.
+					</p>
 
 					<p>
 						<input type="button" value="Submit Request" class="request-submit btn btn-primary" />
@@ -160,11 +171,23 @@ $active = $sections->firstWhere('active', '=', true);
 
 			<div id="confirmation">
 				<div id="cluster_confirmation" style="display: none">
-					<p>Your request has been submitted. An email notification has been sent to the managers of this group to approve your request. You will be notified once your request is approved. You may view the status of your request from the "My Accounts" tab. <strong>Your request will need to be approved by the research group or faculty you have entered. Please direct any questions regarding approval status to those people.</strong> Below is a summary of your request.</p>
+					<p>
+						Your request has been submitted. An email notification has been sent to the managers of this group
+						to approve your request. You will be notified once your request is approved. You may view the status
+						of your request from the "My Accounts" tab. <strong>Your request will need to be approved by the
+						research group or faculty you have entered. Please direct any questions regarding approval status to
+						those people.</strong> Below is a summary of your request.
+					</p>
 				</div>
 
 				<div id="free_confirmation" style="display: none">
-					<p>Your request has been submitted. An email notification has been sent to the faculty or staff member or managers of this group to approve your request. You will be notified once your request is approved. You may view the status of your request from the "My Accounts" tab. <strong>Your request will need to be approved by the research group or faculty you have entered. Please direct any questions regarding approval status to those people.</strong> Below is a summary of your request.</p>
+					<p>
+						Your request has been submitted. An email notification has been sent to the faculty or staff member or
+						managers of this group to approve your request. You will be notified once your request is approved. You
+						may view the status of your request from the "My Accounts" tab. <strong>Your request will need to be
+						approved by the research group or faculty you have entered. Please direct any questions regarding
+						approval status to those people.</strong> Below is a summary of your request.
+					</p>
 				</div>
 
 				<div id="person_confirmation" class="card" style="display: none">
