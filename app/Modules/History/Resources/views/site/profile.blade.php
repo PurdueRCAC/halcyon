@@ -21,7 +21,9 @@
 								{{ $group->type ? $group->type->name : trans('global.unknown') }}
 							</td>
 							<td>
-								{{ $group->group ? $group->group->name : trans('global.unknown') }}
+								<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->groupid, 'subsection' => 'members', 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">
+									{{ $group->group ? $group->group->name : trans('global.unknown') }}
+								</a>
 							</td>
 							<td>
 								<time datetime="{{ $group->datecreated->toDateTimeString() }}">
@@ -65,10 +67,14 @@
 						?>
 						<tr id="unixgroup{{ $group->id }}">
 							<td>
-								{{ $ug->group ? $ug->group->name : trans('global.unknown') }}
+								<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $ug->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">
+									{{ $ug->group ? $ug->group->name : trans('global.unknown') }}
+								</a>
 							</td>
 							<td>
-								{{ $ug ? $ug->longname : trans('global.unknown') }}
+								<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $ug->groupid, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">
+									{{ $ug ? $ug->longname : trans('global.unknown') }}
+								</a>
 							</td>
 							<td>
 								<time datetime="{{ $group->datetimecreated->toDateTimeString() }}">
@@ -123,7 +129,9 @@
 								@endif
 							</td>
 							<td>
+								<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $q->groupid, 'subsection' => 'queues', 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">
 								{{ $q ? $q->name : trans('global.unknown') }}
+								</a>
 							</td>
 							<td>
 								<time datetime="{{ $queue->datetimecreated->toDateTimeString() }}">
@@ -201,11 +209,13 @@
 								{{ $class->resource ? $class->resource->name : trans('global.unknown') }}
 							</td>
 							<td>
+								<a href="{{ route('site.users.account.section', ['section' => 'class', 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">
 								@if ($class->semester == 'Workshop')
 									{{ $class->classname }}
 								@else
 									{{ $class->department . ' ' . $class->coursenumber . ' (' . $class->crn . ')' }}
 								@endif
+								</a>
 							</td>
 							<td>
 								{{ $class->semester }}
