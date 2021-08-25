@@ -107,7 +107,7 @@ app('pathway')
 
 				<div class="form-group{{ $errors->has('fields.description') ? ' has-error' : '' }}">
 					<label for="field-description">{{ trans('orders::orders.description') }}:</label>
-					<textarea name="fields[description]" id="field-description" class="form-control" cols="30" rows="5">{{ $row->description }}</textarea>
+					<textarea name="fields[description]" id="field-description" class="form-control" maxlength="2000" cols="30" rows="5">{{ $row->description }}</textarea>
 				</div>
 
 				<div class="row">
@@ -143,7 +143,7 @@ app('pathway')
 
 				<div class="form-group{{ $errors->has('mou') ? ' has-error' : '' }}">
 					<label for="field-mou">{{ trans('orders::orders.mou') }}:</label>
-					<input type="text" name="fields[mou]" id="field-mou" class="form-control" placeholder="http://" value="{{ $row->mou }}" />
+					<input type="text" name="fields[mou]" id="field-mou" class="form-control" maxlength="255" placeholder="http://" value="{{ $row->mou }}" />
 				</div>
 
 				<div class="form-group{{ $errors->has('recurringtimeperiodid') ? ' has-error' : '' }}">
@@ -175,6 +175,11 @@ app('pathway')
 							</div>
 						</div>
 					</div>
+				</div>
+
+				<div class="form-group{{ $errors->has('fields.terms') ? ' has-error' : '' }}">
+					<label for="field-terms">{{ trans('orders::orders.terms') }}:</label>
+					<textarea name="fields[terms]" id="field-terms" class="form-control" maxlength="2000" cols="30" rows="5">{{ $row->terms }}</textarea>
 				</div>
 			</fieldset>
 		</div>

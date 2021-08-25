@@ -985,7 +985,7 @@
 
 													<div class="form-group">
 														<label for="{{ $t }}-comment">{{ trans('storage::storage.comment') }}</label>
-														<textarea id="{{ $t }}-comment" name="comment" class="form-control" rows="3" cols="40">{{ $item->comment }}</textarea>
+														<textarea id="{{ $t }}-comment" name="comment" class="form-control" maxlength="2000" rows="3" cols="40">{{ $item->comment }}</textarea>
 													</div>
 
 													<div id="error_{{ $t }}" class="alert alert-danger hide"></div>
@@ -1067,7 +1067,7 @@
 
 							<div class="form-group">
 								<label for="sell-comment">{{ trans('storage::storage.comment') }}</label>
-								<textarea id="sell-comment" name="comment" class="form-control" cols="35" rows="2"></textarea>
+								<textarea id="sell-comment" name="comment" class="form-control" maxlength="2000" cols="35" rows="2"></textarea>
 							</div>
 
 							<div id="error_purchase" class="alert alert-danger hide"></div>
@@ -1127,7 +1127,7 @@
 
 							<div class="form-group">
 								<label for="loan-comment">{{ trans('storage::storage.comment') }}</label>
-								<textarea id="loan-comment" name="comment" class="form-control" rows="2" cols="40"></textarea>
+								<textarea id="loan-comment" name="comment" class="form-control" maxlength="2000" rows="2" cols="40"></textarea>
 							</div>
 
 							<div id="error_loan" class="alert alert-danger hide"></div>
@@ -1354,7 +1354,7 @@
 
 									<div class="form-group">
 										<label for="sell-comment">{{ trans('storage::storage.comment') }}</label>
-										<textarea id="sell-comment" name="comment" class="form-control" cols="35" rows="2"></textarea>
+										<textarea id="sell-comment" name="comment" class="form-control" maxlength="2000" cols="35" rows="2"></textarea>
 									</div>
 
 									<div id="error_purchase" class="alert alert-danger hide"></div>
@@ -1423,7 +1423,7 @@
 
 									<div class="form-group">
 										<label for="loan-comment">{{ trans('storage::storage.comment') }}</label>
-										<textarea id="loan-comment" name="comment" class="form-control" rows="2" cols="40"></textarea>
+										<textarea id="loan-comment" name="comment" class="form-control" maxlength="2000" rows="2" cols="40"></textarea>
 									</div>
 
 									<div id="error_loan" class="alert alert-danger hide"></div>

@@ -85,6 +85,46 @@ jQuery(document).ready(function ($) {
 
 			$(this).val(formatter.format(val).replace('$', '')); /* $2,500.00 */
 		});
+
+	$('[maxlength]').each(function (i, el) {
+		var container = $('<span class="char-counter-wrap"></span>');
+		var counter = $('<span class="char-counter"></span>');
+		var input = $(this);
+
+		if (input.attr('id') != '') {
+			counter.attr('id', input.attr('id') + '-counter');
+		}
+		
+		if (input.parent().hasClass('input-group')) {
+			input.parent().wrap(container);
+			counter.insertAfter(input.parent());
+		} else {
+			input.wrap(container);
+			counter.insertAfter(input);
+		}
+		counter.text(input.val().length + ' / ' + input.attr('maxlength'));
+
+		input
+			.on('focus', function () {
+				var container = $(this).closest('.char-counter-wrap');
+				if (container.length) {
+					container.addClass('char-counter-focus');
+				}
+			})
+			.on('blur', function () {
+				var container = $(this).closest('.char-counter-wrap');
+				if (container.length) {
+					container.removeClass('char-counter-focus');
+				}
+			})
+			.on('keyup', function () {
+				var chars = $(this).val().length;
+				var counter = $('#' + $(this).attr('id') + '-counter');
+				if (counter.length) {
+					counter.text(chars + ' / ' + $(this).attr('maxlength'));
+				}
+			});
+	});
 });
 </script>
 @endpush
@@ -136,7 +176,7 @@ jQuery(document).ready(function ($) {
 
 				<div class="form-group{{ $errors->has('fields.description') ? ' has-error' : '' }}">
 					<label for="field-description">{{ trans('orders::orders.description') }}:</label>
-					<textarea name="fields[description]" id="field-description" class="form-control" cols="30" rows="5">{{ $row->description }}</textarea>
+					<textarea name="fields[description]" id="field-description" class="form-control" maxlength="2000" cols="30" rows="5">{{ $row->description }}</textarea>
 				</div>
 
 				<div class="row">
@@ -170,7 +210,7 @@ jQuery(document).ready(function ($) {
 
 				<div class="form-group{{ $errors->has('fields.mou') ? ' has-error' : '' }}">
 					<label for="field-mou">{{ trans('orders::orders.mou') }}:</label>
-					<input type="text" name="fields[mou]" id="field-mou" class="form-control" placeholder="http://" value="{{ $row->mou }}" />
+					<input type="text" name="fields[mou]" id="field-mou" class="form-control" maxlength="255" placeholder="http://" value="{{ $row->mou }}" />
 				</div>
 
 				<div class="row">
@@ -196,7 +236,7 @@ jQuery(document).ready(function ($) {
 
 				<div class="form-group{{ $errors->has('fields.terms') ? ' has-error' : '' }}">
 					<label for="field-terms">{{ trans('orders::orders.terms') }}:</label>
-					<textarea name="fields[terms]" id="field-terms" class="form-control" cols="30" rows="5">{{ $row->terms }}</textarea>
+					<textarea name="fields[terms]" id="field-terms" class="form-control" maxlength="2000" cols="30" rows="5">{{ $row->terms }}</textarea>
 				</div>
 			</fieldset>
 		</div>

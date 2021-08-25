@@ -59,7 +59,7 @@ app('pathway')
 
 				<div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
 					<label for="field-description">{{ trans('orders::orders.description') }}:</label>
-					<textarea name="fields[description]" id="field-description" class="form-control" cols="30" rows="5">{{ $row->description }}</textarea>
+					<textarea name="fields[description]" id="field-description" class="form-control" maxlength="2000" cols="30" rows="5">{{ $row->description }}</textarea>
 				</div>
 			</fieldset>
 		</div>

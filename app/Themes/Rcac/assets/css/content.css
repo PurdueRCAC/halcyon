@@ -902,7 +902,9 @@ a.card-content,
 	font-weight: normal;
 	height: 100%;
 }
-
+.services h4 {
+	text-transform: none;
+}
 .resources .card-header {
 	padding: 1.5em;
 	background-color: #f5f5f5;
@@ -1111,6 +1113,32 @@ ul.purchases li {
 	font-weight: bold;
 	font-style: italic;
 	font-size: 0.95em;
+}
+
+/* Character counter */
+.char-counter-wrap {
+  position: relative;
+  display: block;
+}
+.form-inline .char-counter-wrap {
+	display: inline-block;
+}
+.char-counter {
+  display: none;
+  padding: 0.2em 0.3em;
+  margin: 0;
+  font-size: 0.75em;
+  line-height: 1;
+  border-radius: 0 0 0.25em 0.25em;
+  background-color: rgba(150, 150, 150, 0.2);
+  margin: 0.75em 0 0 0;
+  color: #656565;
+  position: absolute;
+  top: 100%;
+  right: 0;
+}
+.char-counter-focus .char-counter {
+	display: block;
 }
 
 /* Software modules 
