@@ -375,7 +375,7 @@
 										$cls = $val > 70 ? 'bg-warning' : $cls;
 										$cls = $val > 90 ? 'bg-danger' : $cls;
 
-										echo App\Halcyon\Utility\Number::formatBytes($usage->space); ?> / <?php echo App\Halcyon\Utility\Number::formatBytes($usage->quota);
+										echo App\Halcyon\Utility\Number::formatBytes($usage->space, 1); ?> / <?php echo App\Halcyon\Utility\Number::formatBytes($usage->quota, 1);
 										?>
 										<div class="progress" style="height: 3px">
 											<div class="progress-bar <?php echo $cls; ?>" role="progressbar" style="width: <?php echo $val; ?>%;" aria-valuenow="<?php echo $val; ?>" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo $val; ?>% space used">
