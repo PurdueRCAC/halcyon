@@ -226,8 +226,8 @@ class RenewCommand extends Command
 				$row->submitteruserid = $order->submitteruserid;
 			}
 			$row->groupid = $order->groupid;
-			$row->usernotes = $order->usernotes ? 'Order #' . $order->id . " (" . $order->datetimecreated->format('Y-m-d') . "):\n\n" . $order->usernotes : '';
-			$row->staffnotes = $order->staffnotes ? 'Order #' . $order->id . " (" . $order->datetimecreated->format('Y-m-d') . "):\n\n" . $order->staffnotes : '';
+			$row->usernotes = '';//$order->usernotes ? 'Order #' . $order->id . " (" . $order->datetimecreated->format('Y-m-d') . "):\n\n" . $order->usernotes : '';
+			$row->staffnotes = ''; //$order->staffnotes ? 'Order #' . $order->id . " (" . $order->datetimecreated->format('Y-m-d') . "):\n\n" . $order->staffnotes : '';
 			$row->notice = 1;
 
 			if ($debug)
