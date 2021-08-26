@@ -23,10 +23,9 @@ class Queues
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Auto-add group managers to any of the group's queues/resources
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   QueueCreated $event
 	 * @return  void
 	 */
 	public function handleQueueCreated(QueueCreated $event)
@@ -50,8 +49,11 @@ class Queues
 				if ($resourcemember->status <= 0)
 				{
 					throw new \Exception(__METHOD__ . '(): Bad status for `resourcemember` ' . $user->userid . '.' . $queue->scheduler->resource->id);
+					continue;
 				}
-				elseif ($resourcemember->status == 1 || $resourcemember->status == 4)
+
+				if ($resourcemember->status == 1  // no role exists
+				 || $resourcemember->status == 4) // removed
 				{
 					event($resourcemember = new ResourceMemberCreated($queue->scheduler->resource, $user->user));
 				}

@@ -26,10 +26,9 @@ class Groups
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Auto-add group managers to any of the group's queues/resources
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   MemberCreated $event
 	 * @return  void
 	 */
 	public function handleMemberCreated(MemberCreated $event)
@@ -88,8 +87,8 @@ class Groups
 				continue;
 			}
 
-			if ($resourcemember->status == 1
-			 || $resourcemember->status == 4)
+			if ($resourcemember->status == 1   // no role exists
+			 || $resourcemember->status == 4)  // removed
 			{
 				// Make call to resourcemember to generate role
 				event($event = new ResourceMemberCreated($asset, $member->user));
