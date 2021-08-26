@@ -403,9 +403,14 @@ class OrdersController extends Controller
 			if (!is_numeric($userid))
 			{
 				$user = User::findByUsername($userid);
-				if (!$user)
+				if (!$user || !$user->id)
 				{
-					return response()->json(['message' => 'Invalid userid'], 415);
+					$user = User::createFromUsername($userid);
+
+					if (!$user || !$user->id)
+					{
+						return response()->json(['message' => 'Invalid userid'], 415);
+					}
 				}
 				$userid = $user->id;
 			}
@@ -668,7 +673,7 @@ class OrdersController extends Controller
 	public function update($id, Request $request)
 	{
 		$rules = [
-			'userid' => 'nullable|integer',
+			'userid' => 'nullable',
 			'groupid' => 'nullable|integer',
 			'submitteruserid' => 'nullable|integer',
 			'usernotes' => 'nullable|string|max:2000',
@@ -696,7 +701,29 @@ class OrdersController extends Controller
 			return response()->json(['message' => trans('global.error.not found')], 404);
 		}
 
-		$row->userid = $request->input('userid', $row->userid);
+		$userid = $row->userid;
+
+		if ($request->has('userid'))
+		{
+			$userid = $request->input('userid');
+			// Allow passing a username as $userid
+			if (!is_numeric($userid))
+			{
+				$user = User::findByUsername($userid);
+				if (!$user || !$user->id)
+				{
+					$user = User::createFromUsername($userid);
+
+					if (!$user || !$user->id)
+					{
+						return response()->json(['message' => 'Invalid userid'], 415);
+					}
+				}
+				$userid = $user->id;
+			}
+		}
+
+		$row->userid = $userid;
 		$row->groupid = $request->input('groupid', $row->groupid);
 		$row->submitteruserid = $request->input('submitteruserid', $row->submitteruserid);
 		$row->usernotes = $request->input('usernotes', $row->usernotes);
