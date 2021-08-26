@@ -497,19 +497,24 @@
 						<?php
 						foreach ($als as $not)
 						{
-							/*if (!isset($sdirs[$not->storagedirid]))
+							if (!isset($sdirs[$not->storagedirid]))
 							{
 								continue;
 							}
 
 							$dir = $sdirs[$not->storagedirid];
 
-							if ($dir->resourceid == 64)
+							if (!$dir)
+							{
+								continue;
+							}
+
+							/*if ($dir->resourceid == 64)
 							{*/
 								?>
 								<tr>
 									<td>
-										<?php //echo ($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path; ?>
+										<?php echo ($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path; ?>
 									</td>
 									<td>
 										<?php echo $not->type->name; ?>
@@ -575,20 +580,19 @@
 				<?php
 				foreach ($als as $not)
 				{
-					/*if (!isset($sdirs[$not->storagedirid]))
+					if (!isset($sdirs[$not->storagedirid]))
 					{
 						continue;
 					}
 
 					$dir = $sdirs[$not->storagedirid];
 
-					if ($dir->resourceid == 64)
+					/*if ($dir->resourceid == 64)
 					{*/
-						if (!$dir)
-						{
-							continue;
-						}
-					print_r($dir);
+					if (!$dir)
+					{
+						continue;
+					}
 					?>
 					<div id="{{ $not->id }}_not_dialog" title="Storage Alert Detail" class="dialog dialog-details">
 						<form method="post" action="{{ route('api.storage.notifications.update', ['id' => $not->id]) }}">
@@ -597,7 +601,7 @@
 						<div class="form-group row">
 							<label for="path_{{ $not->id }}" class="col-sm-4">Path</label>
 							<div class="col-sm-8">
-								<input type="text" id="path_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ /*($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path*/ }}" />
+								<input type="text" id="path_{{ $not->id }}" class="form-control form-control-plaintext" readonly="readonly" value="{{ ($dir->storageResource ? $dir->storageResource->path . '/' : '') . $dir->path }}" />
 							</div>
 						</div>
 						<div class="form-group row">
@@ -789,7 +793,7 @@
 
 			if (count($storagedirquotanotifications) > 0)
 			{
-				$dir = $sdirs[$not->storagedirid];
+				//$dir = $sdirs[$not->storagedirid];
 				?>
 				<table class="table table-hover storage">
 					<caption class="sr-only">
@@ -811,6 +815,13 @@
 						<?php
 						foreach ($storagedirquotanotifications as $not)
 						{
+							if (!isset($sdirs[$not->storagedirid]))
+							{
+								continue;
+							}
+
+							$dir = $sdirs[$not->storagedirid];
+
 							if (!$dir)
 							{
 								continue;
@@ -872,6 +883,13 @@
 				<?php
 				foreach ($storagedirquotanotifications as $not)
 				{
+					if (!isset($sdirs[$not->storagedirid]))
+					{
+						continue;
+					}
+
+					$dir = $sdirs[$not->storagedirid];
+
 					if (!$dir)
 					{
 						continue;
