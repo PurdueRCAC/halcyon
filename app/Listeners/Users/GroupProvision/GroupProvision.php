@@ -105,15 +105,16 @@ class GroupProvision
 			}
 			else
 			{
-				error_log('GroupProvision: Failed to create AIMO ACMaint group ' . $event->unixgroup->shortname . ': ' . $res->getBody()->getContents());
+				throw new \Exception('GroupProvision: Failed to create AIMO ACMaint group ' . $event->unixgroup->shortname . ': ' . $res->getBody()->getContents(), $status);
 			}
 		}
 		catch (\Exception $e)
 		{
-			$status = 500;
+			$status = $e->getCode();
+			$status = $status ?: 500;
 			$body   = ['error' => $e->getMessage()];
 
-			error_log('GroupProvision: Failed to create AIMO ACMaint group ' . $event->unixgroup->shortname . ': ' . $e->getMessage());
+			error_log($e->getMessage());
 		}
 
 		$this->log('groupprovision', __METHOD__, 'POST', $status, $body, 'createGroup/rcs');
@@ -157,15 +158,16 @@ class GroupProvision
 			}
 			else
 			{
-				error_log('GroupProvision: Failed to remove AIMO ACMaint group ' . $event->unixgroup->shortname);
+				throw new \Exception('GroupProvision: Failed to remove AIMO ACMaint group ' . $event->unixgroup->shortname, $status);
 			}
 		}
 		catch (\Exception $e)
 		{
-			$status = 500;
+			$status = $e->getCode();
+			$status = $status ?: 500;
 			$body   = ['error' => $e->getMessage()];
 
-			error_log('GroupProvision: Failed to remove AIMO ACMaint group ' . $event->unixgroup->shortname . ': ' . $e->getMessage());
+			error_log($e->getMessage());
 		}
 
 		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, 'deleteGroup/rcs/' . $event->unixgroup->shortname);
@@ -251,15 +253,16 @@ class GroupProvision
 			}
 			else
 			{
-				error_log('GroupProvision: Failed to add AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $res->getBody()->getContents());
+				throw new \Exception('GroupProvision: Failed to add AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $res->getBody()->getContents(), $status);
 			}
 		}
 		catch (\Exception $e)
 		{
-			$status = 500;
+			$status = $e->getCode();
+			$status = $status ?: 500;
 			$body   = ['error' => $e->getMessage()];
 
-			error_log('GroupProvision: Failed to add AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $e->getMessage());
+			error_log($e->getMessage());
 		}
 
 		$this->log('groupprovision', __METHOD__, 'PUT', $status, $body, 'addGroupMember/rcs/pucc_rcd/' . $member->unixgroup->shortname . '/' . $member->user->username);
@@ -305,15 +308,16 @@ class GroupProvision
 			}
 			else
 			{
-				error_log('GroupProvision: Failed to remove AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $res->getBody()->getContents());
+				throw new \Exception('GroupProvision: Failed to remove AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $res->getBody()->getContents(), $status);
 			}
 		}
 		catch (\Exception $e)
 		{
-			$status = 500;
+			$status = $e->getCode();
+			$status = $status ?: 500;
 			$body   = ['error' => $e->getMessage()];
 
-			error_log('GroupProvision: Failed to remove AIMO ACMaint member for ' . $member->unixgroup->shortname . '/' . $member->user->username . ': ' . $e->getMessage());
+			error_log($e->getMessage());
 		}
 
 		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, 'removeGroupMember/rcs/pucc_rcd/' . $member->unixgroup->shortname . '/' . $member->user->username);
@@ -378,15 +382,16 @@ class GroupProvision
 			}
 			else
 			{
-				error_log('GroupProvision: Failed to change login shell in AIMO ACMaint for ' . $user->username);
+				throw new \Exception('GroupProvision: Failed to change login shell in AIMO ACMaint for ' . $user->username, $status);
 			}
 		}
 		catch (\Exception $e)
 		{
-			$status = 500;
+			$status = $e->getCode();
+			$status = $status ?: 500;
 			$body   = ['error' => $e->getMessage()];
 
-			error_log('GroupProvision: Failed to change login shell in AIMO ACMaint for ' . $user->username . ': ' . $e->getMessage());
+			error_log($e->getMessage());
 		}
 
 		$this->log('groupprovision', __METHOD__, 'GET', $status, $body, 'changeShell/rcs/pucc_misc/' . $user->username . '?loginShell=' . $user->loginShell);

@@ -93,12 +93,15 @@ class RoleProvision
 			}
 			else
 			{
-				error_log('RoleProvision: Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
+				throw new \Exception('RoleProvision: Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username, $status);
+
+				//error_log('RoleProvision: Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
 			}
 		}
 		catch (\Exception $e)
 		{
-			$status = 500;
+			$status = $e->getCode();
+			$status = $status ?: 500;
 			$body   = ['error' => $e->getMessage()];
 
 			error_log('RoleProvision: Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
@@ -106,7 +109,7 @@ class RoleProvision
 
 		$event->status = $status;
 
-		$this->log('roleprovision', __METHOD__, 'POST', $status, $body, 'createOrUpdateRole');
+		$this->log('roleprovision', __METHOD__, 'POST', $status, $body, 'createOrUpdateRole/rcs/' . $event->resource->rolename . '/' . $event->user->username, $event->user->id);
 	}
 
 	/**
@@ -153,12 +156,15 @@ class RoleProvision
 			}
 			else
 			{
-				error_log('RoleProvision: Could not delete AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
+				throw new \Exception('RoleProvision: Could not delete AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username, $status);
+	
+				//error_log('RoleProvision: Could not delete AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
 			}
 		}
 		catch (\Exception $e)
 		{
-			$status = 500;
+			$status = $e->getCode();
+			$status = $status ?: 500;
 			$body   = ['error' => $e->getMessage()];
 
 			error_log('RoleProvision: Could not delete AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
@@ -258,7 +264,8 @@ class RoleProvision
 		}
 		catch (\Exception $e)
 		{
-			$status  = 500;
+			$status  = $e->getCode();
+			$status  = $status ?: 500;
 			$results = ['error' => $e->getMessage()];
 			$event->status = -1;
 
