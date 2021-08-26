@@ -260,6 +260,7 @@ class RoleProvision
 		{
 			$status  = 500;
 			$results = ['error' => $e->getMessage()];
+			$event->status = -1;
 
 			error_log('RoleProvision: Could not retrieve AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
 		}
