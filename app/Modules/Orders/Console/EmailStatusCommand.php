@@ -639,6 +639,7 @@ class EmailStatusCommand extends Command
 			'classmethod'     => Str::limit('handle', 16, ''),
 			'targetuserid'    => $targetuserid,
 			'targetobjectid'  => $targetobjectid,
+			'objectid'        => $targetobjectid,
 		]);
 	}
 }

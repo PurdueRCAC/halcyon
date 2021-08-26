@@ -1312,19 +1312,32 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						</div>
 						<ul class="list-group list-group-flush">
 							<?php
+							$emailed = \App\Modules\History\Models\Log::query()
+								->where('app', '=', 'email')
+								->where('classname', '=', 'orders:emailstatus')
+								->where('targetobjectid', '=', $order->id)
+								->get();
+
+							foreach ($emailed as $email)
+							{
+								$history->push($email->toHistory());
+							}
+
 							if (count($history)):
-								$sorted = $history->sortByDesc('id');
+								$sorted = $history->sortByDesc('created_at');
 
 								foreach ($sorted as $action):
 									$actor = trans('global.unknown');
 
-									if ($action->user):
-										$actor = e($action->user->name);
-									endif;
-
 									if (!$action->user_id):
 										$actor = '[system]';
-										continue;
+										if ($action->historable_type != 'orders:emailstatus'):
+											continue;
+										endif;
+									endif;
+
+									if ($action->user):
+										$actor = e($action->user->name);
 									endif;
 
 									if ($action->action == 'created'):
@@ -1332,7 +1345,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									elseif ($action->action == 'updated'):
 										$dt = $action->updated_at;
 									elseif ($action->action == 'deleted'):
-										$dt = $action->deleted_at;
+										$dt = $action->updated_at;
 									endif;
 
 									$fields = is_object($action->new) ? array_keys(get_object_vars($action->new)) : array_keys($action->new);
@@ -1446,6 +1459,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										if ($action->action == 'updated')
 										{
 											$did = '<span class="text-info">edited</span> an item';
+											$did .= ', changed: ' . implode(', ', $fields);
 
 											if (in_array('datetimefulfilled', $fields))
 											{
@@ -1487,15 +1501,39 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											{
 												$did = '<span class="text-info">edited</span> user notes';
 											}
-											if (in_array('stffnotes', $fields))
+											if (in_array('staffnotes', $fields))
 											{
 												$did = '<span class="text-info">edited</span> staff notes';
 											}
+											// Only updated notice state
+											if (isset($action->new->notice) && count($fields) == 1)
+											{
+												continue;
+											}
+										}
+										if ($action->action == 'deleted')
+										{
+											$did = '<span class="text-danger">canceled</span> this order';
 										}
 										if (!$action->user_id && isset($action->new->notice))
 										{
 											$did = '<span class="text-info">emailed</span> order status';
 										}
+									}
+									if ($entity == 'orders:emailstatus')
+									{
+										//if (!$action->user_id && isset($action->new->notice))
+										//{
+											if (isset($action->new->targetuserid) && $action->new->targetuserid)
+											{
+												$person = \App\Modules\Users\Models\User::find($action->new->targetuserid);
+											}
+											elseif (isset($action->new->uri))
+											{
+												$person = \App\Modules\Users\Models\User::findByEmail($action->new->uri);
+											}
+											$did = '<span class="text-info">emailed</span> order status to ' . ($person ? $person->name : $action->new->uri);
+										//}
 									}
 									?>
 									<li class="list-group-item" id="action_{{ $action->id }}">
