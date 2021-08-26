@@ -3,6 +3,7 @@ namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+//use Illuminate\Support\Facades\DB;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Orders\Events\ItemUpdated;
@@ -448,5 +449,42 @@ class Item extends Model
 		}
 
 		return $neg . $number;
+	}
+
+	/**
+	 * Get sequence
+	 *
+	 * @return  object
+	 */
+	public function sequence()
+	{
+		if (!$this->origorderitemid)
+		{
+			return collect([]);
+		}
+
+		$i = (new self)->getTable();
+		$o = (new Order)->getTable();
+
+		$sequences = self::query()
+			->select($i . '.*')//DB::raw('DISTINCT(' . $i . '.origorderitemid)'))
+			->join($o, $o . '.id', '=', $i . '.orderid')
+			->where(function($where) use ($i)
+			{
+				$where->whereNull($i . '.datetimeremoved')
+					->orWhere($i . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where(function($where) use ($o)
+			{
+				$where->whereNull($o . '.datetimeremoved')
+					->orWhere($o . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			})
+			->where($i . '.origorderitemid', '=', $this->origorderitemid)
+			//->where($i . '.recurringtimeperiodid', '>', 0)
+			//->groupBy($i . '.origorderitemid')
+			->orderBy($i . '.id', 'desc')
+			->get();
+
+		return $sequences;
 	}
 }

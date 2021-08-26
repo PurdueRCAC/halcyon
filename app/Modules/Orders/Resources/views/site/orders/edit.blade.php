@@ -1185,7 +1185,52 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							@endif
 						</p>
 					</div>
+					<div class="card-footer">
+						@foreach ($order->items as $item)
+							@if ($item->origorderitemid)
+								<a href="#recurringusernotes" class="help tip" title="Recurring item notes">
+									<span class="fa fa-sticky-note" aria-hidden="true"></span> Past Notes on recurring orders
+								</a>
+								@php
+								break;
+								@endphp
+							@endif
+						@endforeach
+					</div>
 				</div><!-- / .card -->
+
+				<div id="recurringusernotes" class="dialog dialog-help" title="Past User Notes">
+					@foreach ($order->items as $item)
+						@if ($item->origorderitemid)
+							<p>
+								User Notes for recurring item:
+								<br /><strong>{{ $item->product->name }}</strong>
+							</p>
+							<div class="card">
+								<ul class="list-group list-group-flush p-0">
+									<?php
+									foreach ($item->sequence() as $usernote):
+										if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
+											continue;
+										endif;
+										?>
+										<li class="list-group-item">
+											<div class="mb-1">
+												<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
+												<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
+											</div>
+											<blockquote>
+												<p>{!! $usernote->order->usernotes ? nl2br($usernote->order->usernotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
+											</blockquote>
+										</li>
+										<?php
+									endforeach;
+									?>
+								</ul>
+							</div>
+						@endif
+					@endforeach
+				</div>
 
 				@if (auth()->user()->can('manage orders'))
 					<div class="card">
@@ -1214,10 +1259,53 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								<textarea name="fields[staffnotes]" maxlength="2000" cols="80" rows="10" class="form-control stash" id="INPUT_{{ $order->id }}_staffnotes">{{ $order->staffnotes }}</textarea>
 							</p>
 						</div>
+						<div class="card-footer">
+							@foreach ($order->items as $item)
+								@if ($item->origorderitemid)
+									<a href="#recurringstaffnotes" class="help tip" title="Recurring item notes">
+										<span class="fa fa-sticky-note" aria-hidden="true"></span> Past Notes on recurring orders
+									</a>
+									@php
+									break;
+									@endphp
+								@endif
+							@endforeach
+						</div>
 					</div><!-- / .card -->
-				@endif
 
-				@if (auth()->user()->can('manage orders'))
+					<div id="recurringstaffnotes" class="dialog dialog-help" title="Past Staff Notes">
+						@foreach ($order->items as $item)
+							@if ($item->origorderitemid)
+								<p>
+									Staff Notes for recurring item:
+									<br /><strong>{{ $item->product->name }}</strong>
+								</p>
+								<div class="card">
+									<ul class="list-group list-group-flush p-0">
+										<?php
+										foreach ($item->sequence() as $usernote):
+											if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
+												continue;
+											endif;
+											?>
+											<li class="list-group-item">
+												<div class="mb-1">
+													<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
+													<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
+												</div>
+												<blockquote>
+													<p>{!! $usernote->order->staffnotes ? nl2br($usernote->order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
+												</blockquote>
+											</li>
+											<?php
+										endforeach;
+										?>
+									</ul>
+								</div>
+							@endif
+						@endforeach
+					</div>
+
 					<div id="order-history" class="card">
 						<div class="card-header">
 							<h3 class="card-title">{{ trans('history::history.history') }}</h3>
