@@ -128,4 +128,30 @@ class Log extends Model
 
 		return $payload;
 	}
+
+	public function toHistory()
+	{
+		$item = new History;
+		$item->created_at = $this->datetime;
+		if ($this->transportmethod == 'POST')
+		{
+			$item->action = 'created';
+		}
+		if ($this->transportmethod == 'PUT')
+		{
+			$item->action = 'updated';
+		}
+		if ($this->transportmethod == 'DELETE')
+		{
+			$item->action = 'deleted';
+		}
+		$item->user_id = $this->userid;
+		$item->historable_id = $this->targetobjectid;
+		$item->historable_type = $this->classname;
+
+		$item->old = [];
+		$item->new = $this->toArray();
+
+		return $item;
+	}
 }
