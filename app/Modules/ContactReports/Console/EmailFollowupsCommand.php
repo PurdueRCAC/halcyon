@@ -2,13 +2,15 @@
 
 namespace App\Modules\ContactReports\Console;
 
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Modules\History\Models\Log;
 use App\Modules\ContactReports\Mail\Followup;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Type;
 use App\Modules\ContactReports\Models\User as CrmUser;
 use App\Modules\Users\Models\User;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 
 class EmailFollowupsCommand extends Command
@@ -143,7 +145,7 @@ class EmailFollowupsCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				//$this->info("Emailed {$type->name} followup to {$user->email}.");
+				$this->log($user->id, $type->id, $user->email, "Emailed {$type->name} followup.");
 
 				// Update the record
 				$u->update(['datetimelastnotify' => $now->toDateTimeString()]);
@@ -156,5 +158,32 @@ class EmailFollowupsCommand extends Command
 		{
 			$this->comment('No followups sent.');
 		}
+	}
+
+	/**
+	 * Log email
+	 *
+	 * @param   integer $targetuserid
+	 * @param   integer $targetobjectid
+	 * @param   string  $uri
+	 * @param   mixed   $payload
+	 * @return  null
+	 */
+	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
+	{
+		Log::create([
+			'ip'              => request()->ip(),
+			'userid'          => (auth()->user() ? auth()->user()->id : 0),
+			'status'          => 200,
+			'transportmethod' => 'POST',
+			'servername'      => request()->getHttpHost(),
+			'uri'             => Str::limit($uri, 128, ''),
+			'app'             => Str::limit('email', 20, ''),
+			'payload'         => Str::limit($payload, 2000, ''),
+			'classname'       => Str::limit('crm:emailfollowups', 32, ''),
+			'classmethod'     => Str::limit('handle', 16, ''),
+			'targetuserid'    => $targetuserid,
+			'targetobjectid'  => $targetobjectid,
+		]);
 	}
 }

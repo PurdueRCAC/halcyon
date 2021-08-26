@@ -64,7 +64,7 @@ class EmailSchedulingCommand extends Command
 			{
 				Mail::to($email)->send($message);
 
-				//$this->info("Emailed stopped scheduling to {$email}.");
+				$this->log($email, "Emailed stopped scheduling.");
 
 				foreach ($stopped as $subresource)
 				{
@@ -119,7 +119,7 @@ class EmailSchedulingCommand extends Command
 			{
 				Mail::to($email)->send($message);
 
-				//$this->info("Emailed started scheduling to {$email}.");
+				$this->log($email, "Emailed started scheduling.");
 
 				foreach ($started as $subresource)
 				{
@@ -131,5 +131,30 @@ class EmailSchedulingCommand extends Command
 		{
 			$this->info('No newly started queues found.');
 		}
+	}
+
+	/**
+	 * Log email
+	 *
+	 * @param   integer $targetuserid
+	 * @param   integer $targetobjectid
+	 * @param   string  $uri
+	 * @param   mixed   $payload
+	 * @return  null
+	 */
+	protected function log($uri = '', $payload = '')
+	{
+		Log::create([
+			'ip'              => request()->ip(),
+			'userid'          => (auth()->user() ? auth()->user()->id : 0),
+			'status'          => 200,
+			'transportmethod' => 'POST',
+			'servername'      => request()->getHttpHost(),
+			'uri'             => Str::limit($uri, 128, ''),
+			'app'             => Str::limit('email', 20, ''),
+			'payload'         => Str::limit($payload, 2000, ''),
+			'classname'       => Str::limit('resources:emailscheduling', 32, ''),
+			'classmethod'     => Str::limit('handle', 16, ''),
+		]);
 	}
 }

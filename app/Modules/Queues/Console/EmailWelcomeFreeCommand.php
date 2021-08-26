@@ -4,7 +4,8 @@ namespace App\Modules\Queues\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-//use Illuminate\Support\Fluent;
+use Illuminate\Support\Str;
+use App\Modules\History\Models\Log;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User;
 use App\Modules\Queues\Models\GroupUser;
@@ -168,6 +169,8 @@ class EmailWelcomeFreeCommand extends Command
 
 			Mail::to($u->email)->send($message);
 
+			$this->log($u->id, $u->email, "Emailed welcome (free).");
+
 			foreach ($userqueues as $userqueue)
 			{
 				$userqueue->update(['notice' => 0]);
@@ -175,5 +178,31 @@ class EmailWelcomeFreeCommand extends Command
 
 			//$this->info("Emailed welcome (free) to {$u->email}.");
 		}
+	}
+
+	/**
+	 * Log email
+	 *
+	 * @param   integer $targetuserid
+	 * @param   integer $targetobjectid
+	 * @param   string  $uri
+	 * @param   mixed   $payload
+	 * @return  null
+	 */
+	protected function log($targetuserid, $uri = '', $payload = '')
+	{
+		Log::create([
+			'ip'              => request()->ip(),
+			'userid'          => (auth()->user() ? auth()->user()->id : 0),
+			'status'          => 200,
+			'transportmethod' => 'POST',
+			'servername'      => request()->getHttpHost(),
+			'uri'             => Str::limit($uri, 128, ''),
+			'app'             => Str::limit('email', 20, ''),
+			'payload'         => Str::limit($payload, 2000, ''),
+			'classname'       => Str::limit('queues:emailwelcomefree', 32, ''),
+			'classmethod'     => Str::limit('handle', 16, ''),
+			'targetuserid'    => $targetuserid,
+		]);
 	}
 }

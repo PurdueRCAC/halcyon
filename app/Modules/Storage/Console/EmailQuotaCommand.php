@@ -6,6 +6,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use App\Modules\History\Models\Log;
 use App\Modules\Storage\Models\Notification;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\Usage;
@@ -222,6 +224,8 @@ class EmailQuotaCommand extends Command
 						}
 
 						Mail::to($user->email)->send($message);
+
+						$this->log($user->id, $user->email, 'Emailed exceed quota.');
 					}
 
 					// Attempt to prevent weird situations of resetting report date.
@@ -253,7 +257,9 @@ class EmailQuotaCommand extends Command
 							continue;
 						}
 
-						Mail::to($user->email)->send($message);*/
+						Mail::to($user->email)->send($message);
+						
+						$this->log($user->id, $user->email, 'Emailed below quota.');*/
 					}
 
 					// Attempt to prevent weird situations of resetting report date.
@@ -304,6 +310,8 @@ class EmailQuotaCommand extends Command
 							}
 
 							Mail::to($user->email)->send($message);
+
+							$this->log($user->id, $user->email, 'Emailed report quota, next report:' . $not->nextnotify);
 						}
 
 						unset($not->status);
@@ -329,5 +337,31 @@ class EmailQuotaCommand extends Command
 				}
 			}
 		}
+	}
+
+	/**
+	 * Log email
+	 *
+	 * @param   integer $targetuserid
+	 * @param   integer $targetobjectid
+	 * @param   string  $uri
+	 * @param   mixed   $payload
+	 * @return  null
+	 */
+	protected function log($targetuserid, $uri = '', $payload = '')
+	{
+		Log::create([
+			'ip'              => request()->ip(),
+			'userid'          => (auth()->user() ? auth()->user()->id : 0),
+			'status'          => 200,
+			'transportmethod' => 'POST',
+			'servername'      => request()->getHttpHost(),
+			'uri'             => Str::limit($uri, 128, ''),
+			'app'             => Str::limit('email', 20, ''),
+			'payload'         => Str::limit($payload, 2000, ''),
+			'classname'       => Str::limit('storage:emailquota', 32, ''),
+			'classmethod'     => Str::limit('handle', 16, ''),
+			'targetuserid'    => $targetuserid,
+		]);
 	}
 }

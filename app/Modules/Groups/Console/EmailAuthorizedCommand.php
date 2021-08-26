@@ -4,11 +4,13 @@ namespace App\Modules\Groups\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Modules\History\Models\Log;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
-use App\Modules\Users\Models\User;
 use App\Modules\Groups\Mail\OwnerAuthorized;
 use App\Modules\Groups\Mail\OwnerAuthorizedManager;
+use App\Modules\Users\Models\User;
 use Carbon\Carbon;
 
 class EmailAuthorizedCommand extends Command
@@ -120,7 +122,7 @@ class EmailAuthorizedCommand extends Command
 
 				$groupuser->update(['notice' => 0]);
 
-				//$this->info("Emailed ownerauthorized to {$user->email}.");
+				$this->log($user->id, $group->id, $user->email, "Emailed ownerauthorized.");
 			}
 
 			// Email managers
@@ -144,8 +146,35 @@ class EmailAuthorizedCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				//$this->info("Emailed ownerauthorized to manager {$user->email}.");
+				$this->log($user->id, $group->id, $user->email, "Emailed ownerauthorized to manager.");
 			}
 		}
+	}
+
+	/**
+	 * Log email
+	 *
+	 * @param   integer $targetuserid
+	 * @param   integer $targetobjectid
+	 * @param   string  $uri
+	 * @param   mixed   $payload
+	 * @return  null
+	 */
+	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
+	{
+		Log::create([
+			'ip'              => request()->ip(),
+			'userid'          => (auth()->user() ? auth()->user()->id : 0),
+			'status'          => 200,
+			'transportmethod' => 'POST',
+			'servername'      => request()->getHttpHost(),
+			'uri'             => Str::limit($uri, 128, ''),
+			'app'             => Str::limit('email', 20, ''),
+			'payload'         => Str::limit($payload, 2000, ''),
+			'classname'       => Str::limit('groups:emailauthorized', 32, ''),
+			'classmethod'     => Str::limit('handle', 16, ''),
+			'targetuserid'    => $targetuserid,
+			'targetobjectid'  => $targetobjectid,
+		]);
 	}
 }

@@ -5,6 +5,8 @@ namespace App\Modules\Queues\Console;
 //use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Modules\History\Models\Log;
 use App\Modules\Queues\Mail\FreeAuthorized;
 use App\Modules\Queues\Mail\FreeAuthorizedManager;
 use App\Modules\Queues\Models\Queue;
@@ -198,7 +200,7 @@ class EmailFreeAuthorizedCommand extends Command
 
 					Mail::to($user->email)->send($message);
 
-					//$this->info("Emailed freeauthorized to {$user->email}.");
+					$this->log($user->id, $user->email, "Emailed freeauthorized to manager.");
 
 					$r = collect($roles[$userid])->pluck('rolename')->toArray();
 
@@ -240,9 +242,35 @@ class EmailFreeAuthorizedCommand extends Command
 
 					Mail::to($manager->user->email)->send($message);
 
-					//$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
+					$this->log($manager->user->id, $manager->user->email, "Emailed freeauthorized to manager.");
 				}
 			}
 		}
+	}
+
+	/**
+	 * Log email
+	 *
+	 * @param   integer $targetuserid
+	 * @param   integer $targetobjectid
+	 * @param   string  $uri
+	 * @param   mixed   $payload
+	 * @return  null
+	 */
+	protected function log($targetuserid, $uri = '', $payload = '')
+	{
+		Log::create([
+			'ip'              => request()->ip(),
+			'userid'          => (auth()->user() ? auth()->user()->id : 0),
+			'status'          => 200,
+			'transportmethod' => 'POST',
+			'servername'      => request()->getHttpHost(),
+			'uri'             => Str::limit($uri, 128, ''),
+			'app'             => Str::limit('email', 20, ''),
+			'payload'         => Str::limit($payload, 2000, ''),
+			'classname'       => Str::limit('queues:emailfreeauthorized', 32, ''),
+			'classmethod'     => Str::limit('handle', 16, ''),
+			'targetuserid'    => $targetuserid,
+		]);
 	}
 }

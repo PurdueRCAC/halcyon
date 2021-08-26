@@ -5,6 +5,8 @@ namespace App\Modules\Queues\Console;
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Modules\History\Models\Log;
 use App\Modules\Queues\Mail\QueueRemoved;
 use App\Modules\Queues\Mail\QueueRemovedManager;
 use App\Modules\Queues\Models\Queue;
@@ -229,7 +231,7 @@ class EmailQueueRemovedCommand extends Command
 
 					Mail::to($user->email)->send($message);
 
-					//$this->info("Emailed queueremoved to {$user->email}.");
+					$this->log($user->id, $user->email, "Emailed queueremoved.");
 
 					// Change states
 					foreach ($queuestudents as $queueuser)
@@ -258,9 +260,35 @@ class EmailQueueRemovedCommand extends Command
 
 					Mail::to($manager->user->email)->send($message);
 
-					//$this->info("Emailed queueremoved to manager {$manager->user->email}.");
+					$this->log($manager->user->id, $manager->user->email, "Emailed queueremoved to manager.");
 				}
 			}
 		}
+	}
+
+	/**
+	 * Log email
+	 *
+	 * @param   integer $targetuserid
+	 * @param   integer $targetobjectid
+	 * @param   string  $uri
+	 * @param   mixed   $payload
+	 * @return  null
+	 */
+	protected function log($targetuserid, $uri = '', $payload = '')
+	{
+		Log::create([
+			'ip'              => request()->ip(),
+			'userid'          => (auth()->user() ? auth()->user()->id : 0),
+			'status'          => 200,
+			'transportmethod' => 'POST',
+			'servername'      => request()->getHttpHost(),
+			'uri'             => Str::limit($uri, 128, ''),
+			'app'             => Str::limit('email', 20, ''),
+			'payload'         => Str::limit($payload, 2000, ''),
+			'classname'       => Str::limit('queues:emailqueueremoved', 32, ''),
+			'classmethod'     => Str::limit('handle', 16, ''),
+			'targetuserid'    => $targetuserid,
+		]);
 	}
 }
