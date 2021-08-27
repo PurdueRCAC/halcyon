@@ -222,10 +222,30 @@ class GroupsController extends Controller
 		$departments = Department::tree();
 		$fields = FieldOfScience::tree();
 
+		return view('groups::admin.groups.edit', [
+			'row' => $row,
+			'departments' => $departments,
+			'fields' => $fields,
+		]);
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  integer  $id
+	 * @return Response
+	 */
+	public function show($id)
+	{
+		$row = Group::findOrFail($id);
+
+		$departments = Department::tree();
+		$fields = FieldOfScience::tree();
+
 		event($event = new GroupDisplay($row, 'details'));
 		$sections = collect($event->getSections());
 
-		return view('groups::admin.groups.edit', [
+		return view('groups::admin.groups.show', [
 			'row' => $row,
 			'departments' => $departments,
 			'fields' => $fields,

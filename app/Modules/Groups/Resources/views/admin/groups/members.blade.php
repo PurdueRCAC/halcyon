@@ -232,12 +232,12 @@ $members = $members->sortBy('username');
 ?>
 <div class="row mb-3">
 	<div class="col-md-6">
-		<button id="export_to_csv" data-id="{{ $group->id }}" class="btn btn-info btn-sm">
+		<button id="export_to_csv" data-id="{{ $group->id }}" class="btn btn-link btn-sm">
 			<span class="fa fa-download" ara-hidden="true"></span> Export to CSV
 		</button>
 	</div>
 	<div class="col-md-6 text-right">
-		<a href="#add_member_dialog" class="add_member btn btn-secondary btn-sm" data-membertype="1">
+		<a href="#add_member_dialog" class="add_member btn btn-info btn-sm" data-membertype="1">
 			<span class="fa fa-plus-circle" ara-hidden="true"></span> Add Member
 		</a>
 	</div>
@@ -269,14 +269,12 @@ $members = $members->sortBy('username');
 								<?php
 								$approves = array();
 								$denies = array();
-								if (isset($user_requests[$req->userid]))
-								{
-									foreach ($user_requests[$req->userid] as $reqid)
-									{
+								if (isset($user_requests[$req->userid])):
+									foreach ($user_requests[$req->userid] as $reqid):
 										$approves[] = route('api.queues.requests.update', ['id' => $reqid]);
 										$denies[] = route('api.queues.requests.delete', ['id' => $reqid]);
-									}
-								}
+									endforeach;
+								endif;
 								?>
 								<input type="radio" name="approve{{ $i }}" class="approve-request approve-value0" data-api="{{ implode(',', $approves) }}" value="{{ $req->userid }},0" />
 							</td>
@@ -307,10 +305,12 @@ $members = $members->sortBy('username');
 
 <div class="card">
 	<div class="card-header">
-		Managers
-		<a href="#help_managers_span_{{ $group->id }}" class="help help-dialog btn text-info" data-tip="Help">
-			<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
-		</a>
+		<h4 class="m-0 p-0">
+			Managers
+			<a href="#help_managers_span_{{ $group->id }}" class="help help-dialog btn text-info" data-tip="Help">
+				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+			</a>
+		</h4>
 		<div class="dialog dialog-help" id="help_managers_span_{{ $group->id }}" title="Managers">
 			<p>Managers are the owners or <abbr title="Principle Investigators">PIs</abbr> of this group and any others they may choose to delegate to manage access to this group. Only Managers can access this interface and are able to grant queue access for other people in the group. Managers can also grant and remove Group Management privileges to and from others, although you cannot remove your own Group Management privileges.</p>
 		</div>
@@ -481,10 +481,12 @@ $members = $members->sortBy('username');
 
 <div class="card mb-3">
 	<div class="card-header">
-		Members
-		<a href="#help_members_span_{{ $group->id }}" class="help help-dialog btn text-info" data-tip="Help">
-			<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
-		</a>
+		<h4 class="m-0 p-0">
+			Members
+			<a href="#help_members_span_{{ $group->id }}" class="help help-dialog btn text-info" data-tip="Help">
+				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+			</a>
+		</h4>
 		<div class="dialog dialog-help" id="help_members_span_{{ $group->id }}" title="Members">
 			<p>Members are people that have access to some or all of this group's queues but have no other special privileges such as Group Usage Reporting privileges or Group Managment privileges. Enabling a queue for someone will also create an account for them on the appropriate resource if they do not already have one. New accounts on a cluster will be processed overnight and be ready use the next morning. The person will receive an email notification once their account is ready.</p>
 		</div>
@@ -643,10 +645,12 @@ $members = $members->sortBy('username');
 @if (count($viewers))
 <div class="card mb-3">
 	<div class="card-header">
-		Usage Reporting Viewers
-		<a href="#help_viewers_span_{{ $group->id }}" class="help help-dialog text-info" data-tip="Help">
-			<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
-		</a>
+		<h4 class="m-0 p-0">
+			Usage Reporting Viewers
+			<a href="#help_viewers_span_{{ $group->id }}" class="help help-dialog btn text-info" data-tip="Help">
+				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+			</a>
+		</h4>
 		<div class="dialog dialog-help" id="help_viewers_span_{{ $group->id }}" title="Usage Reporting Viewers">
 			<p>Members are people that have access to some or all of this group's queues but have no other special privileges such as Group Usage Reporting privileges or Group Managment privileges. Enabling a queue for someone will also create an account for them on the appropriate resource if they do not already have one. New accounts on a cluster will be processed overnight and be ready use the next morning. The person will receive an email notification once their account is ready.</p>
 		</div>
@@ -790,10 +794,12 @@ $members = $members->sortBy('username');
 @if (count($disabled))
 <div class="card mb-3">
 	<div class="card-header">
-		Disabled Members
-		<a href="#help_disabledmembers_span_{{ $group->id }}" class="help help-dialog text-info" data-tip="Help">
-			<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
-		</a>
+		<h4 class="m-0 p-0">
+			Disabled Members
+			<a href="#help_disabledmembers_span_{{ $group->id }}" class="help help-dialog text-info" data-tip="Help">
+				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+			</a>
+		</h4>
 		<div class="dialog dialog-help" id="help_disabledmembers_span_{{ $group->id }}" title="Disabled Members">
 			<p>Disabled Members are people that you have granted access to queues but who no longer have an active account. Although queues may be enabled for them, they cannot log into resources and use queues without an active account. If the people listed here have left the University and are no longer participating in research, please remove them from queues.</p>
 		</div>
@@ -952,10 +958,12 @@ $members = $members->sortBy('username');
 								<th scope="row" class="rowHead">{{ $name }}</th>
 								<td class="rowData">
 								@foreach ($queues as $queue)
+								<div>
 									<div class="form-check">
 										<input type="checkbox" class="form-check-input add-queue-member" name="queue[]" id="queue{{ $queue->id }}" value="{{ $queue->id }}" />
 										<label class="form-check-label" for="queue{{ $queue->id }}">{{ $queue->name }}</label>
 									</div>
+								</div>
 								@endforeach
 								</td>
 							</tr>
@@ -972,9 +980,11 @@ $members = $members->sortBy('username');
 				<div id="unix-group-selection" class="row groupSelect">
 					@foreach ($unixgroups as $name)
 						<div class="col-sm-4 unixData">
+							<div class="form-group">
 							<div class="form-check">
 								<input type="checkbox" class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup{{ $name->id }}" value="{{ $name->id }}" />
 								<label class="form-check-label" for="unixgroup{{ $name->id }}">{{ $name->longname }}</label>
+							</div>
 							</div>
 						</div>
 					@endforeach

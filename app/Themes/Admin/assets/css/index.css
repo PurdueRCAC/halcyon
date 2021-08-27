@@ -642,6 +642,7 @@ h4 {
 .icon-arrow-right:before {
   content: "\e829";
 }
+.fa-arrow-down:before,
 .icon-arrow-down:before {
   content: "\e82a";
 }
@@ -651,12 +652,14 @@ h4 {
 .icon-arrow-up-right:before {
   content: "\e82c";
 }
+.fa-arrow-up:before,
 .icon-arrow-up:before {
   content: "\e82d";
 }
 .icon-award:before {
   content: "\e82e";
 }
+.fa-bar-chart:before,
 .icon-bar-chart:before {
   content: "\e82f";
 }
@@ -712,6 +715,7 @@ h4 {
 .icon-check:before {
   content: "\e83f";
 }
+.fa-check-square:before,
 .icon-checkin:before,
 .icon-check-square:before {
   content: "\e840";
@@ -936,6 +940,7 @@ h4 {
 .icon-log-in:before {
   content: "\e885";
 }
+.fa-list:before,
 .fa-list-ul:before,
 .fa-list-ol:before,
 .icon-menus:before,

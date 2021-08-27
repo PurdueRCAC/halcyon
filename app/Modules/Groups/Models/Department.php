@@ -102,13 +102,19 @@ class Department extends Model
 			foreach ($rows as $k)
 			{
 				$pt = $k->parentid;
-				$list = @$children[$pt] ? $children[$pt] : array();
-				array_push($list, $k);
-				$children[$pt] = $list;
+				//$list = @$children[$pt] ? $children[$pt] : array();
+				//array_push($list, $k);
+				//$children[$pt] = $list;
+
+				if (!isset($children[$pt]))
+				{
+					$children[$pt] = array();
+				}
+				$children[$pt][] = $k;
 			}
 
 			// Second pass - get an indent list of the items
-			$list = self::treeRecurse(0, array(), $children, max(0, $levellimit-1));
+			$list = self::treeRecurse(0, $list, $children, max(0, $levellimit-1));
 		}
 
 		return $list;
@@ -130,26 +136,28 @@ class Department extends Model
 	{
 		if (@$children[$id] && $level <= $maxlevel)
 		{
-			foreach ($children[$id] as $v)
+			foreach ($children[$id] as $z => $v)
 			{
-				$id = $v->id;
+				$vid = $v->id;
 				$pt = $v->parentid;
 
-				$list[$id] = $v;
-				$list[$id]->prefix = ($prfx ? $prfx . ' › ' : '');
-				$list[$id]->name = $list[$id]->name;
-				$list[$id]->level = $level;
-				$list[$id]->children = isset($children[$id]) ? count(@$children[$id]) : 0;
+				$list[$vid] = $v;
+				$list[$vid]->prefix = ($prfx ? $prfx . ' › ' : '');
+				$list[$vid]->name = $list[$vid]->name;
+				$list[$vid]->level = $level;
+				$list[$vid]->children_count = isset($children[$vid]) ? count(@$children[$vid]) : 0;
 
 				$p = '';
 				if ($v->parentid)
 				{
-					$p = $list[$id]->prefix . $list[$id]->name;
+					$p = $list[$vid]->prefix . $list[$vid]->name;
 				}
-				//$prfx = $list[$id]->name;
 
-				$list = self::treeRecurse($id, $list, $children, $maxlevel, $level+1, $type, $p);
+				unset($children[$id][$z]);
+
+				$list = self::treeRecurse($vid, $list, $children, $maxlevel, $level+1, $type, $p);
 			}
+			unset($children[$id]);
 		}
 		return $list;
 	}

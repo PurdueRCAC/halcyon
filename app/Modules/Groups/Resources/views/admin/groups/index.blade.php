@@ -188,7 +188,7 @@ app('pathway')
 				</td>
 				<td>
 					@if (auth()->user()->can('edit groups'))
-						<a href="{{ route('admin.groups.edit', ['id' => $row->id]) }}">
+						<a href="{{ route('admin.groups.show', ['id' => $row->id]) }}">
 					@endif
 						{{ $row->name }}
 					@if (auth()->user()->can('edit groups'))
@@ -197,7 +197,7 @@ app('pathway')
 				</td>
 				<td>
 					@if (auth()->user()->can('edit groups'))
-						<a href="{{ route('admin.groups.edit', ['id' => $row->id]) }}">
+						<a href="{{ route('admin.groups.show', ['id' => $row->id]) }}">
 					@endif
 						<?php echo $row->unixgroup ? e($row->unixgroup) : '<span class="unknown">' . trans('global.none') . '</span>'; ?>
 					@if (auth()->user()->can('edit groups'))

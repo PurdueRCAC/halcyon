@@ -580,7 +580,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	//$('a.tab').on('shown.bs.tab', function(e){
 	var inited = false;
-	$('.tabs').on("tabsactivate", function (event, ui) {
+	//$('.tabs').on("tabsactivate", function (event, ui) {
 		if ($('.datatable').length && !inited) {
 			$('.datatable').DataTable({
 				pageLength: 20,
@@ -660,7 +660,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			inited = true;
 		}
-	});
+	//});
 
 	$('.membership-edit').on('click', function (e) {
 		e.preventDefault();

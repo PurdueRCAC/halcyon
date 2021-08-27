@@ -19,6 +19,11 @@ $router->group(['prefix' => 'groups', 'middleware' => 'can:manage groups'], func
 		'uses' => 'GroupsController@store',
 		'middleware' => 'can:create groups|edit groups',
 	]);
+	$router->get('{id}', [
+		'as' => 'admin.groups.show',
+		'uses' => 'GroupsController@show',
+		'middleware' => 'can:edit groups',
+	])->where('id', '[0-9]+');
 	$router->get('edit/{id}', [
 		'as' => 'admin.groups.edit',
 		'uses' => 'GroupsController@edit',

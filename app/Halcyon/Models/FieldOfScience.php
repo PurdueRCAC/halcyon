@@ -114,9 +114,15 @@ class FieldOfScience extends Model
 			foreach ($rows as $k)
 			{
 				$pt = $k->parentid;
-				$list = @$children[$pt] ? $children[$pt] : array();
-				array_push($list, $k);
-				$children[$pt] = $list;
+				//$list = isset($children[$pt]) ? $children[$pt] : array();
+				//array_push($list, $k);
+				//$children[$pt] = $list;
+
+				if (!isset($children[$pt]))
+				{
+					$children[$pt] = array();
+				}
+				$children[$pt][] = $k;
 			}
 
 			// Second pass - get an indent list of the items
@@ -141,17 +147,21 @@ class FieldOfScience extends Model
 	{
 		if (@$children[$id] && $level <= $maxlevel)
 		{
-			foreach ($children[$id] as $v)
+			foreach ($children[$id] as $z => $v)
 			{
-				$id = $v->id;
-				$pt = $v->parentid;
+				$vid = $v->id;
 
-				$list[$id] = $v;
-				$list[$id]->level = $level;
-				$list[$id]->children = isset($children[$id]) ? count(@$children[$id]) : 0;
+				$v->level = $level;
+				$v->children_count = isset($children[$vid]) ? count($children[$vid]) : 0;
 
-				$list = self::treeRecurse($id, $list, $children, $maxlevel, $level+1, $type);
+				$list[$vid] = $v;
+				//$list[$vid]->level = $level;
+				//$list[$vid]->children_count = isset($children[$vid]) ? count($children[$vid]) : 0;
+				unset($children[$id][$z]);
+
+				$list = self::treeRecurse($vid, $list, $children, $maxlevel, $level+1, $type);
 			}
+			unset($children[$id]);
 		}
 		return $list;
 	}
@@ -159,6 +169,7 @@ class FieldOfScience extends Model
 	/**
 	 * Get all parents
 	 *
+	 * @param   array  $ancestors
 	 * @return  array
 	 */
 	public function ancestors($ancestors = array())

@@ -1,5 +1,6 @@
-
-							<p>{{ trans('groups::groups.history.description') }}</p>
+<div class="card">
+	<div class="card-body">
+<p>{{ trans('groups::groups.history.description') }}</p>
 
 							<?php
 							// Get manager adds
@@ -179,3 +180,5 @@
 								<?php
 							}
 							?>
+</div>
+						</div>

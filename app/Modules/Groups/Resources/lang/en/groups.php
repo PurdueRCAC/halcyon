@@ -47,6 +47,7 @@ return [
 	'from' => 'From',
 	'until' => 'Until',
 	'message' => 'Message',
+	'back' => 'Back',
 	'history' => [
 		'title' => 'History',
 		'date' => 'Date',
