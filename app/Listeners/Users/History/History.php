@@ -199,13 +199,13 @@ class History
 				$item->id = $class->id;
 				$item->route = route('site.users.account.section', ['section' => 'class', 'u' => $user->id != auth()->user()->id ? $user->id : null]);
 				$item->type = 'class';
-				if ($class->account->semester == 'Workshop')
+				if ($class->semester == 'Workshop')
 				{
-					$item->description = $class->account->classname;
+					$item->description = $class->classname;
 				}
 				else
 				{
-					$item->description = $class->account->department . ' ' . $class->account->coursenumber . ' (' . $class->account->crn . ')';
+					$item->description = $class->department . ' ' . $class->coursenumber . ' (' . $class->crn . ')';
 				}
 				$item->created = $class->datetimestart;
 				$item->removed = $class->datetimestop;
