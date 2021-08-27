@@ -1,17 +1,21 @@
 @extends('layouts.master')
+
 @section('title') Search News &amp; Events @stop
+
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/jquery-timepicker/jquery.timepicker.css?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker/jquery.timepicker.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css?v=' . filemtime(public_path() . '/modules/news/css/news.css')) }}" />
 @endpush
+
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/jquery-timepicker/jquery.timepicker.js?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker/jquery.timepicker.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
-<!-- <script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script> -->
+<script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script>
 @endpush
+
 @php
 app('pathway')
 	->append(
@@ -23,13 +27,15 @@ app('pathway')
 		route('site.news.search')
 	);
 @endphp
+
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	@include('news::site.menu', ['types' => $types, 'active' => 'search'])
 </div>
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	<h2>{{ trans('news::news.search news') }}</h2>
-	<?php /*<div id="everything">
+
+	<div id="everything">
 		<form method="get" action="{{ route('site.news.search') }}" class="editform">
 			<fieldset>
 				<legend>Filters</legend>
@@ -231,6 +237,7 @@ app('pathway')
 				<input type="hidden" name="page" id="page" value="{{ $filters['page'] }}" />
 			</fieldset>
 		</form>
+
 		<?php
 		$string = array();
 		foreach ($filters as $key => $val)
@@ -247,12 +254,14 @@ app('pathway')
 		<div id="news" data-query="{{ $string }}">
 			News stories are loading...
 		</div>
+
 		<div id="preview"></div>
 		<div id="mailpreview"></div>
-	</div>*/ ?>
-	<div id="app">
+	</div>
+
+	<?php /*<div id="app">
 		<news-search></news-search>
 	</div>
-	<script type="text/javascript" src="{{ asset('/modules/news/js/app.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('/modules/news/js/app.js') }}"></script>*/ ?>
 </div>
 @stop
