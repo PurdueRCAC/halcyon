@@ -20,9 +20,11 @@
 				</a>
 			</div>
 			<div class="card-header panel-heading">
-				<h3 class="panel-title newsheadline">
-					{{ headline }}
-				</h3>
+				<a :href="uri">
+					<h3 class="panel-title newsheadline">
+						{{ headline }}
+					</h3>
+				</a>
 				<ul class="panel-meta news-meta">
 					<li class="news-date">
 						<span class="newsdate">
@@ -33,14 +35,22 @@
 							Edit
 						</a>
 					</li>
+					<li v-if="resources.length > 0">
+						<span>
+							<i class="fa fa-tags fa-1x"></i>
+						</span>
+						<span>
+							{{ formattedResources }}
+						</span>
+					</li>
 					<li class="news-type">
 						<span class="newstype">
 							{{ type.name }}
-							<a v-bind:href="this.ROOT_URL + '/news/manage?edit&amp;id=' + id" v-if="canEdit">
-								<span class="fa fa-pencil" aria-hidden="true"></span>
-								Edit
-							</a>
 						</span>
+						<a v-bind:href="this.ROOT_URL + '/news/manage?edit&amp;id=' + id" v-if="canEdit">
+							<span class="fa fa-pencil" aria-hidden="true"></span>
+							Edit
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -48,9 +58,11 @@
 				<div class="newsposttext" v-html="formattedbody">
 				</div>
 			</div>
-			<div class="card-footer panel-footer">
+			<div class="card-footer panel-footer bg-white">
 				<div class="newspostedby">
-					<div class="newspostuser">Posted by Person on {{ datetimenews }}</div>
+					<div class="newspostuser">
+						<formatted-date-time :rawDateTime="datetimecreated" :isNewsOriginalPost="true" :username="''"></formatted-date-time>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -65,9 +77,27 @@
 </template>
 
 <script>
-	import NewsUpdate from './NewsUpdate.vue';
+	import NewsUpdate from './NewsUpdateListComponent.vue';
+	import FormattedDateTime from './FormattedDateTimeComponent.vue'
 
 	export default {
+		props: [
+			'id',
+			'headline',
+			'published',
+			'formattedbody',
+			'datetimecreated',
+			'datetimenews',
+			'datetimenewsend',
+			'formatteddate',
+			'type',
+			'uri',
+			'url',
+			'canEdit',
+			'canDelete',
+			'resources',
+			'updates'
+		],
 		methods: {
 			update(val) {
 				this.$emit('update', this.id, val.target.selectedOptions[0].value);
@@ -77,23 +107,17 @@
 				this.$emit('delete', this.id);
 			}
 		},
-		props: [
-			'id',
-			'headline',
-			'published',
-			'formattedbody',
-			'datetimenews',
-			'datetimenewsend',
-			'formatteddate',
-			'type',
-			'url',
-			'canEdit',
-			'canDelete',
-			'resources',
-			'updates'
-		],
+		computed: {
+			formattedResources() {
+				let resourcesList = [];
+				for (let idx = 0; idx < this.resources.length; idx++)
+					resourcesList.push(this.resources[idx].name);
+				return resourcesList.join(", ");
+			}
+		},
 		components: {
-			NewsUpdate
+			NewsUpdate,
+			FormattedDateTime
 		},
 		filters: {
 			properCase(string) {
