@@ -133,7 +133,7 @@ class EmailFreeAuthorizedCommand extends Command
 				{
 					$user = User::find($userid);
 
-					if (!$user)
+					if (!$user || !$user->id || $user->isTrashed())
 					{
 						if ($debug)
 						{
@@ -200,7 +200,7 @@ class EmailFreeAuthorizedCommand extends Command
 
 					Mail::to($user->email)->send($message);
 
-					$this->log($user->id, $user->email, "Emailed freeauthorized to manager.");
+					$this->log($user->id, $groupid, $user->email, 'Emailed freeauthorized.');
 
 					$r = collect($roles[$userid])->pluck('rolename')->toArray();
 
@@ -240,9 +240,16 @@ class EmailFreeAuthorizedCommand extends Command
 						continue;
 					}
 
-					Mail::to($manager->user->email)->send($message);
+					$user = $manager->user;
 
-					$this->log($manager->user->id, $manager->user->email, "Emailed freeauthorized to manager.");
+					if (!$user || !$user->id || $user->isTrashed())
+					{
+						continue;
+					}
+
+					Mail::to($user->email)->send($message);
+
+					$this->log($user->id, $groupid, $user->email, 'Emailed freeauthorized to manager.');
 				}
 			}
 		}
@@ -257,7 +264,7 @@ class EmailFreeAuthorizedCommand extends Command
 	 * @param   mixed   $payload
 	 * @return  null
 	 */
-	protected function log($targetuserid, $uri = '', $payload = '')
+	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
 	{
 		Log::create([
 			'ip'              => request()->ip(),
@@ -270,7 +277,9 @@ class EmailFreeAuthorizedCommand extends Command
 			'payload'         => Str::limit($payload, 2000, ''),
 			'classname'       => Str::limit('queues:emailfreeauthorized', 32, ''),
 			'classmethod'     => Str::limit('handle', 16, ''),
-			'targetuserid'    => $targetuserid,
+			'targetuserid'    => (int)$targetuserid,
+			'targetobjectid'  => (int)$targetobjectid,
+			'objectid'        => (int)$targetobjectid,
 		]);
 	}
 }

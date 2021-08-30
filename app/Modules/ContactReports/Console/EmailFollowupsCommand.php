@@ -99,7 +99,7 @@ class EmailFollowupsCommand extends Command
 				// Did we find an active account?
 				$user = $u->user;
 
-				if (!$user || $user->isTrashed())
+				if (!$user || !$user->id || $user->isTrashed())
 				{
 					continue;
 				}
@@ -182,8 +182,9 @@ class EmailFollowupsCommand extends Command
 			'payload'         => Str::limit($payload, 2000, ''),
 			'classname'       => Str::limit('crm:emailfollowups', 32, ''),
 			'classmethod'     => Str::limit('handle', 16, ''),
-			'targetuserid'    => $targetuserid,
-			'targetobjectid'  => $targetobjectid,
+			'targetuserid'    => (int)$targetuserid,
+			'targetobjectid'  => (int)$targetobjectid,
+			'objectid'        => (int)$targetobjectid,
 		]);
 	}
 }

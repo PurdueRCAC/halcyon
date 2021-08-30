@@ -192,9 +192,16 @@ class EmailExpiredCommand extends Command
 					continue;
 				}
 
-				Mail::to($manager->user->email)->send($message);
+				$user = $manager->user;
 
-				$this->log($manager->user->id, $manager->user->email, "Emailed expired to manager.");
+				if (!$user || !$user->id || $user->isTrashed())
+				{
+					continue;
+				}
+
+				Mail::to($user->email)->send($message);
+
+				$this->log($user->id, $groupid, $user->email, "Emailed expired to manager.");
 			}
 		}
 	}
@@ -208,7 +215,7 @@ class EmailExpiredCommand extends Command
 	 * @param   mixed   $payload
 	 * @return  null
 	 */
-	protected function log($targetuserid, $uri = '', $payload = '')
+	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
 	{
 		Log::create([
 			'ip'              => request()->ip(),
@@ -221,7 +228,9 @@ class EmailExpiredCommand extends Command
 			'payload'         => Str::limit($payload, 2000, ''),
 			'classname'       => Str::limit('queues:emailexpired', 32, ''),
 			'classmethod'     => Str::limit('handle', 16, ''),
-			'targetuserid'    => $targetuserid,
+			'targetuserid'    => (int)$targetuserid,
+			'targetobjectid'  => (int)$targetobjectid,
+			'objectid'        => (int)$targetobjectid,
 		]);
 	}
 }

@@ -72,7 +72,7 @@ class EmailReportsCommand extends Command
 
 				$user = User::find($subscriber);
 
-				if (!$user)
+				if (!$user || !$user->id || $user->isTrashed())
 				{
 					continue;
 				}
@@ -127,8 +127,9 @@ class EmailReportsCommand extends Command
 			'payload'         => Str::limit($payload, 2000, ''),
 			'classname'       => Str::limit('crm:emailreports', 32, ''),
 			'classmethod'     => Str::limit('handle', 16, ''),
-			'targetuserid'    => $targetuserid,
-			'targetobjectid'  => $targetobjectid,
+			'targetuserid'    => (int)$targetuserid,
+			'targetobjectid'  => (int)$targetobjectid,
+			'objectid'        => (int)$targetobjectid,
 		]);
 	}
 }

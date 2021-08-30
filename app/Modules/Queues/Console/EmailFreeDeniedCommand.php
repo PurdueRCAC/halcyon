@@ -125,7 +125,7 @@ class EmailFreeDeniedCommand extends Command
 				{
 					$user = User::find($userid);
 
-					if (!$user)
+					if (!$user || !$user->id || $user->isTrashed())
 					{
 						if ($debug)
 						{
@@ -150,7 +150,7 @@ class EmailFreeDeniedCommand extends Command
 
 					Mail::to($user->email)->send($message);
 
-					$this->log($user->id, $user->email, "Emailed freedenied.");
+					$this->log($user->id, $groupid, $user->email, 'Emailed freedenied.');
 
 					// Change states
 					foreach ($queueusers as $queueuser)
@@ -162,19 +162,30 @@ class EmailFreeDeniedCommand extends Command
 				// Assemble list of managers to email
 				foreach ($group->managers as $manager)
 				{
+					$user = $manager->user;
+
+					if (!$user || !$user->id || $user->isTrashed())
+					{
+						if ($debug)
+						{
+							$this->error('Could not find account for user #' . $manager->userid);
+						}
+						continue;
+					}
+
 					// Prepare and send actual email
-					$message = new FreeDeniedManager($manager->user, $data);
+					$message = new FreeDeniedManager($user, $data);
 
 					if ($debug)
 					{
 						echo $message->render();
-						$this->info("Emailed freedenied to manager {$manager->user->email}.");
+						$this->info("Emailed freedenied to manager {$user->email}.");
 						continue;
 					}
 
-					Mail::to($manager->user->email)->send($message);
+					Mail::to($user->email)->send($message);
 
-					$this->log($manager->user->id, $manager->user->email, "Emailed freedenied to manager.");
+					$this->log($user->id, $groupid, $user->email, 'Emailed freedenied to manager.');
 				}
 			}
 		}
@@ -189,7 +200,7 @@ class EmailFreeDeniedCommand extends Command
 	 * @param   mixed   $payload
 	 * @return  null
 	 */
-	protected function log($targetuserid, $uri = '', $payload = '')
+	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
 	{
 		Log::create([
 			'ip'              => request()->ip(),
@@ -202,7 +213,9 @@ class EmailFreeDeniedCommand extends Command
 			'payload'         => Str::limit($payload, 2000, ''),
 			'classname'       => Str::limit('queues:emailfreedenied', 32, ''),
 			'classmethod'     => Str::limit('handle', 16, ''),
-			'targetuserid'    => $targetuserid,
+			'targetuserid'    => (int)$targetuserid,
+			'targetobjectid'  => (int)$targetobjectid,
+			'objectid'        => (int)$targetobjectid,
 		]);
 	}
 }
