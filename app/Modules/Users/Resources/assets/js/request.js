@@ -578,18 +578,29 @@ $(document).ready(function () {
 		select: function (event, ui) {
 			var data = results[ui.item.id];
 
-			document.getElementById("person").style.display = "none";
-			document.getElementById("group").style.display = "block";
-			document.getElementById("groupname").innerHTML = data['name'];
-			document.getElementById("selected-group").value = data['id'];
+			$.ajax({
+				url: data['api'],
+				type: 'get',
+				dataType: 'json',
+				async: false,
+				success: function (response) {
+					document.getElementById("person").style.display = "none";
+					document.getElementById("group").style.display = "block";
+					document.getElementById("groupname").innerHTML = response['name'];
+					document.getElementById("selected-group").value = response['id'];
 
-			var names = [];
-			for (x = 0; x < data['department'].length; x++) {
-				names.push(data['department'][x]['name']);
-			}
-			document.getElementById("dept").innerHTML = names.join(', ');
+					var names = [];
+					for (x = 0; x < response['department'].length; x++) {
+						names.push(response['department'][x]['name']);
+					}
+					document.getElementById("dept").innerHTML = names.join(', ');
 
-			PrintAccountResources(data);
+					PrintAccountResources(response);
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact rcac-help@purdue.edu");
+				}
+			});
 		}
 	});
 
