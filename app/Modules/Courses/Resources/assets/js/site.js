@@ -901,7 +901,9 @@ $(document).ready(function () {
 	// Account users
 	$('.user-delete').on('click', function (e) {
 		e.preventDefault();
-		RemoveUser(this); //.data('user'), $(this).data('crn'));
+		if (confirm($(this).attr('data-confirm'))) {
+			RemoveUser(this); //.data('user'), $(this).data('crn'));
+		}
 	});
 
 	$('.show-students').on('click', function (e) {
