@@ -553,6 +553,32 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			});
 		}
+
+		// [!] Fix dropdowns in datatables getting cut off if there is only one row
+		$(document).on('shown.bs.dropdown', '.datatable', function (e) {
+			// The .dropdown container
+			var $container = $(e.target);
+
+			// Find the actual .dropdown-menu
+			var $dropdown = $container.find('.dropdown-menu');
+			if ($dropdown.length) {
+				// Save a reference to it, so we can find it after we've attached it to the body
+				$container.data('dropdown-menu', $dropdown);
+			} else {
+				$dropdown = $container.data('dropdown-menu');
+			}
+
+			$dropdown.css('top', ($container.offset().top + $container.outerHeight()) + 'px');
+			$dropdown.css('left', $container.offset().left + 'px');
+			$dropdown.css('position', 'absolute');
+			$dropdown.css('display', 'block');
+			$dropdown.appendTo('body');
+		});
+
+		$(document).on('hide.bs.dropdown', '.datatable', function (e) {
+			// Hide the dropdown menu bound to this button
+			$(e.target).data('dropdown-menu').css('display', 'none');
+		});
 		/*var dts = false;
 		$('a.tab').on('shown.bs.tab', function(e){
 			//$($.fn.dataTable.tables(true)).DataTable().columns.adjust();//.draw();
