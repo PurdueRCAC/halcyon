@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
+use App\Modules\Groups\Models\UnixGroup;
 use App\Modules\Groups\Http\Resources\GroupResource;
 use App\Modules\Groups\Http\Resources\GroupResourceCollection;
 use App\Modules\Groups\Events\UnixGroupFetch;
@@ -388,6 +389,11 @@ class GroupsController extends Controller
 
 			$exists = Group::findByUnixgroup($row->unixgroup);
 
+			if (!$exists)
+			{
+				$exists = UnixGroup::findByLongname($row->unixgroup);
+			}
+
 			// Check for a duplicate
 			if ($exists)
 			{
@@ -528,36 +534,44 @@ class GroupsController extends Controller
 		$row = Group::findOrFail($id);
 		//$row->update($request->all());
 
-		// Verify UNIX group is sane - this is just a first pass,
-		// would still need to make sure this is not a duplicate anywhere, etc
-		$unixgroup = $request->input('unixgroup');
-
-		if ($unixgroup)
+		if ($request->has('unixgroup'))
 		{
-			if (!preg_match('/^[a-z][a-z0-9\-]{0,8}[a-z0-9]$/', $unixgroup))
+			// Verify UNIX group is sane - this is just a first pass,
+			// would still need to make sure this is not a duplicate anywhere, etc
+			$unixgroup = $request->input('unixgroup');
+
+			if ($unixgroup && $unixgroup != $row->unixgroup)
 			{
-				return response()->json(['message' => trans('Field `unixgroup` not in valid format')], 415);
+				if (!preg_match('/^[a-z][a-z0-9\-]{0,8}[a-z0-9]$/', $unixgroup))
+				{
+					return response()->json(['message' => trans('groups::groups.error.name is incorrectly formatted')], 415);
+				}
+
+				$exists = Group::findByUnixgroup($unixgroup);
+
+				if (!$exists)
+				{
+					$exists = UnixGroup::findByLongname($unixgroup);
+				}
+
+				// Check for a duplicate
+				if ($exists && $exists->id != $row->id)
+				{
+					return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $unixgroup])], 409);
+				}
+
+				// Check to make sure this base name doesn't exist elsewhere
+				event($event = new UnixGroupFetch($unixgroup));
+
+				$rows = $event->results;
+
+				if (count($rows) > 0)
+				{
+					return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $unixgroup])], 409);
+				}
+
+				$row->unixgroup = $unixgroup;
 			}
-
-			$exists = Group::findByUnixgroup($unixgroup);
-
-			// Check for a duplicate
-			if ($exists && $exists->id != $row->id)
-			{
-				return response()->json(['message' => trans('`unixgroup` ' . $unixgroup . ' already exists')], 409);
-			}
-
-			// Check to make sure this base name doesn't exist elsewhere
-			event($event = new UnixGroupFetch($unixgroup));
-
-			$rows = $event->results;
-
-			if (count($rows) > 0)
-			{
-				return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $unixgroup])], 409);
-			}
-
-			$row->unixgroup = $unixgroup;
 		}
 
 		if ($request->has('name'))
@@ -568,7 +582,7 @@ class GroupsController extends Controller
 
 			if ($exists)
 			{
-				return response()->json(['message' => trans('groups::groups.name already exists', ['name' => $name])], 415);
+				return response()->json(['message' => trans('groups::groups.error.name already exists', ['name' => $name])], 415);
 			}
 
 			$row->name = $name;

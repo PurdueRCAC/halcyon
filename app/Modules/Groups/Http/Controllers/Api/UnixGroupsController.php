@@ -242,7 +242,7 @@ class UnixGroupsController extends Controller
 			if (!preg_match('/^$/', $name)
 			 && !preg_match('/^[a-z0-9][a-z0-9\-]*[a-z0-9]+$/', $name))
 			{
-				return response()->json(['message' => trans('groups::groups.name is incorrectly formatted')], 415);
+				return response()->json(['message' => trans('groups::groups.error.name is incorrectly formatted')], 415);
 			}
 
 			/*if ($group->unixgroup == $name)
@@ -275,7 +275,7 @@ class UnixGroupsController extends Controller
 
 			if (count($rows) > 0)
 			{
-				return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $name])], 409);
+				return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $base . $name])], 409);
 			}
 		}
 
@@ -285,7 +285,7 @@ class UnixGroupsController extends Controller
 		//              lgroupName: ^rcac-.{1,17}$
 		if ((strlen($base) + strlen($name) > 17))
 		{
-			return response()->json(['message' => trans('groups::groups.name is too long')], 415);
+			return response()->json(['message' => trans('groups::groups.error.name is too long')], 415);
 		}
 
 		// Look for this entry, duplicate name, etc.
@@ -299,7 +299,7 @@ class UnixGroupsController extends Controller
 
 		if ($exist && $exist->id)
 		{
-			return response()->json(['message' => trans('groups::groups.entry already exists for :longname', ['longname' => $name])], 409);
+			return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $base . $name])], 409);
 		}
 
 		$row = new UnixGroup;
@@ -407,7 +407,90 @@ class UnixGroupsController extends Controller
 
 		if ($request->has('longname'))
 		{
-			$row->longname = $request->input('longname');
+			// Check to see if groups.unixgroup (base) is set
+			$group = $row->group;
+
+			$base = '';
+			$name = $request->input('longname');
+
+			if ($group->id != 1)
+			{
+				if (!$group->unixgroup)
+				{
+					return response()->json(['message' => trans('groups::groups.base unixgroup is not set')], 400);
+				}
+
+				$base = $group->unixgroup;
+
+				// Check if the name has base as prefix already
+				// If it does, filter it out
+				if (preg_match('/^'. $base . '-/', $name))
+				{
+					$name = preg_replace('/^' . $base . '-/', '', $name);
+				}
+
+				// Now check format for group name entered
+				// Only allow lowercase and numeric
+				if (!preg_match('/^$/', $name)
+				&& !preg_match('/^[a-z0-9][a-z0-9\-]*[a-z0-9]+$/', $name))
+				{
+					return response()->json(['message' => trans('groups::groups.error.name is incorrectly formatted')], 415);
+				}
+
+				event($event = new UnixGroupFetch($base));
+
+				$rows = $event->results;
+
+				if (count($rows) == 0)
+				{
+					// Base Group does not exists in other service
+					//return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $row->unixgroup])], 409);
+				}
+
+				// Set the base for groups and add a '-' if the name is empty 
+				if (!preg_match('/^$/', $name))
+				{
+					$base = $base . '-';
+				}
+			}
+			else
+			{
+				// This is a special group without a base name, so check to make sure the requested group name doesn't exist (without base)
+				event($event = new UnixGroupFetch($name));
+
+				$rows = $event->results;
+
+				if (count($rows) > 0)
+				{
+					//return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $name])], 409);
+				}
+			}
+
+			// If base is longer than 10 or fewer than 2 chars, do not proceed
+			// If base+name > 17, do not proceed
+			// WS allows    groupName: ^rcs\d{1,5}$
+			//              lgroupName: ^rcac-.{1,17}$
+			if ((strlen($base) + strlen($name) > 17))
+			{
+				return response()->json(['message' => trans('groups::groups.error.name is too long')], 415);
+			}
+
+			$row->longname = $base . $name;
+
+			// Look for this entry, duplicate name, etc.
+			$exist = UnixGroup::query()
+				->withTrashed()
+				->whereIsActive()
+				->where('groupid', '=', $group->id)
+				->where('longname', '=', $row->longname)
+				->where('id', '!=', $row->id)
+				->get()
+				->first();
+
+			if ($exist && $exist->id)
+			{
+				return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $name])], 409);
+			}
 		}
 
 		if ($request->has('shortname'))

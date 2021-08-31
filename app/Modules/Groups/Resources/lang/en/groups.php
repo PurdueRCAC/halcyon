@@ -66,7 +66,9 @@ return [
 	'group member' => 'group member',
 	'error' => [
 		'group name already exists' => 'Group ":name" already exists.',
-		'unixgroup name already exists' => 'Unix group ":name" already exists',
-		'unixgroup invalid format' => 'Field `unixgroup` not in valid format',
+		'name is too long' => 'Name exceeds allowable max length.',
+		'name is incorrectly formatted' => 'Name is incorrectly formatted.',
+		'unixgroup name already exists' => 'Unix group ":name" already exists.',
+		'unixgroup invalid format' => 'Field `unixgroup` not in valid format.',
 	],
 ];

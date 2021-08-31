@@ -270,10 +270,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				//SetAction('Item added', null);
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
-				//console.log(xhr);
-				$('.help').dalog('close');
-				alert(xhr.responseJSON.message);
-				//SetError(xhr.responseJSON.message);
+				name.addClass('is-invalid');
+
+				$(btn.attr('data-error')).removeClass('hide').html(xhr.responseJSON.message);
 			}
 		});
 	});

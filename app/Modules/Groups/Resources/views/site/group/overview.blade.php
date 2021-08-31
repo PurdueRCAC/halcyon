@@ -432,10 +432,12 @@
 				</span>
 				<span class="form-text text-muted">Lowercase letters and numbers only. Max length: {{ (17 - strlen($group->unixgroup . '-')) }} characters.</span>
 			</div>
+			<div class="alert alert-danger hide" id="new-unixgroup_{{ $group->id }}_error"></div>
 			<div class="text-right">
 				<a href="#longname" class="btn btn-secondary btn-success add-unixgroup"
 					data-group="{{ $group->id }}"
 					data-container="#actmaint_info"
+					data-error="#new-unixgroup_{{ $group->id }}_error"
 					data-api="{{ route('api.unixgroups.create') }}">
 					<span class="icon-plus glyph">{{ trans('global.create') }}</span>
 				</a>
