@@ -30,8 +30,8 @@ class MemberResource extends JsonResource
 
 		$data['user'] = array(
 			'id' => $this->userid,
-			'name' => $this->user->name,
-			'username' => $this->user->username,
+			'name' => $this->user ? $this->user->name : trans('global.unknown'),
+			'username' => $this->user ? $this->user->username : trans('global.unknown'),
 		);
 
 		$user = auth()->user();

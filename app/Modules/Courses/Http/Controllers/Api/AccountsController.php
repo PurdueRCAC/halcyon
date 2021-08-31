@@ -644,7 +644,14 @@ class AccountsController extends Controller
 		}
 
 		$row = Account::findOrFail($id);
-		$row->fill($request->all());
+
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
 
 		if ($row->datetimestart >= $row->datetimestop)
 		{
@@ -686,7 +693,7 @@ class AccountsController extends Controller
 			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 403);
 		}
 
-		if (!$row->trashed())
+		if (!$row->isTrashed())
 		{
 			if (!$row->delete())
 			{

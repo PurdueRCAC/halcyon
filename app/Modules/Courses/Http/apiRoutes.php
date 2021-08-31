@@ -62,11 +62,11 @@ $router->group(['prefix' => 'courses'], function (Router $router)
 	$router->put('{id}', [
 		'as' => 'api.courses.update',
 		'uses' => 'AccountsController@update',
-		'middleware' => 'auth:api|can:edit courses',
+		'middleware' => ['auth:api', 'can:edit courses'],
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
 		'as' => 'api.courses.delete',
 		'uses' => 'AccountsController@delete',
-		'middleware' => 'auth:api|can:delete courses',
+		'middleware' => ['auth:api', 'can:delete courses|edit.own courses'],
 	])->where('id', '[0-9]+');
 });
