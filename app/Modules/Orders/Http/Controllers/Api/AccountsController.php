@@ -655,6 +655,12 @@ class AccountsController extends Controller
 				}
 			}
 
+			if ($row->approveruserid && $row->approveruserid != $approveruserid)
+			{
+				// New approver. Reset dates.
+				$row->forceRestore(['datetimeapproved', 'datetimedenied']);
+			}
+
 			$row->approveruserid = $approveruserid;
 		}
 		if ($request->has('datetimepaymentdoc'))
