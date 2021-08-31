@@ -117,7 +117,7 @@ class GroupProvision
 			error_log($e->getMessage());
 		}
 
-		$this->log('groupprovision', __METHOD__, 'POST', $status, $body, 'createGroup/rcs');
+		$this->log('groupprovision', __METHOD__, 'POST', $status, $body, 'createGroup/rcs', 0, $event->unixgroup->groupid);
 	}
 
 	/**
@@ -170,7 +170,7 @@ class GroupProvision
 			error_log($e->getMessage());
 		}
 
-		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, 'deleteGroup/rcs/' . $event->unixgroup->shortname);
+		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, 'deleteGroup/rcs/' . $event->unixgroup->shortname, 0, $event->unixgroup->groupid);
 	}
 
 	/**
@@ -265,7 +265,7 @@ class GroupProvision
 			error_log($e->getMessage());
 		}
 
-		$this->log('groupprovision', __METHOD__, 'PUT', $status, $body, 'addGroupMember/rcs/pucc_rcd/' . $member->unixgroup->shortname . '/' . $member->user->username);
+		$this->log('groupprovision', __METHOD__, 'PUT', $status, $body, 'addGroupMember/rcs/pucc_rcd/' . $member->unixgroup->shortname . '/' . $member->user->username, $member->user->id, $member->unixgroup->groupid);
 	}
 
 	/**
@@ -320,7 +320,7 @@ class GroupProvision
 			error_log($e->getMessage());
 		}
 
-		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, 'removeGroupMember/rcs/pucc_rcd/' . $member->unixgroup->shortname . '/' . $member->user->username);
+		$this->log('groupprovision', __METHOD__, 'DELETE', $status, $body, 'removeGroupMember/rcs/pucc_rcd/' . $member->unixgroup->shortname . '/' . $member->user->username, $member->user->id, $member->unixgroup->groupid);
 	}
 
 	/**
@@ -394,7 +394,7 @@ class GroupProvision
 			error_log($e->getMessage());
 		}
 
-		$this->log('groupprovision', __METHOD__, 'GET', $status, $body, 'changeShell/rcs/pucc_misc/' . $user->username . '?loginShell=' . $user->loginShell);
+		$this->log('groupprovision', __METHOD__, 'GET', $status, $body, 'changeShell/rcs/pucc_misc/' . $user->username . '?loginShell=' . $user->loginShell, $user->id);
 	}
 
 	/**

@@ -20,7 +20,7 @@ trait Loggable
 	 * @param   integer $targetuserid
 	 * @return  null
 	 */
-	protected function log($app, $func, $method = 'GET', $status = 200, $payload = array(), $uri = '', $targetuserid = 0)
+	protected function log($app, $func, $method = 'GET', $status = 200, $payload = array(), $uri = '', $targetuserid = 0, $groupid = 0)
 	{
 		$method = strtoupper($method);
 		$targetuserid = $targetuserid ?: 0;
@@ -54,6 +54,7 @@ trait Loggable
 			'classname'       => Str::limit($cls, 32, ''),
 			'classmethod'     => Str::limit($fnc, 16, ''),
 			'targetuserid'    => $targetuserid,
+			'groupid'         => $groupid,
 		]);
 	}
 }
