@@ -480,9 +480,10 @@ document.addEventListener('DOMContentLoaded', function() {
 			$('.datatable').DataTable({
 				pageLength: 20,
 				pagingType: 'numbers',
-				info: false,
+				//info: false,
 				ordering: false,
 				lengthChange: false,
+				dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'p><'col-sm-12 col-md-7'i>>",
 				scrollX: true,
 				//autoWidth: false,
 				language: {
