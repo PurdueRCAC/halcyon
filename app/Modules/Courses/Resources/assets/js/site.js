@@ -41,7 +41,7 @@ function CreateNewClassAccount(btn) {
 			'dueDates': $('#dueDates').val(),
 			'additional': $('#additional').val()
 		};
-		post['report'] = template(context);
+	post['report'] = template(context);
 
 	var users = [];
 	$("li[id^=USER_]").each(function () {
@@ -62,7 +62,7 @@ function CreateNewClassAccount(btn) {
 		} else if (xml.status == 415) {
 			alert("Class already has accounts.");
 		} else {
-			alert("An error occurred. Reload the page and try again. If problem persists contact help.");
+			alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
 		}
 	});
 }
@@ -175,7 +175,7 @@ function AddingManyUsersEmail(xml, post_obj) {
 			'userid': user,
 			'classaccountid': post_obj['classaccountid'],
 		};
-		//console.log(post);
+		console.log(post);
 		post = JSON.stringify(post);
 		pending++;
 
@@ -216,7 +216,7 @@ function AddingManyUsers(xml, post_obj) {
 			WSPostURL(ROOT_URL + "users", post, newUser, post_obj);
 			return;
 		}*/
-		//console.log(response['data']); return;
+
 		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
 			var user = response['data'][0]['username'];
 		} else {
@@ -228,7 +228,7 @@ function AddingManyUsers(xml, post_obj) {
 			'userid': user,
 			'classaccountid': post_obj['classaccountid'],
 		};
-		//console.log(post);
+		console.log(post);
 		post = JSON.stringify(post);
 		pending++;
 
@@ -280,7 +280,7 @@ function PrintErrors() {
  */
 function newUser(xml, post_obj) {
 	pending--;
-	if (xml.status < 400) {
+	if (xml.status == 200) {
 		//var response = JSON.parse(xml.responseText);
 		//var post = JSON.stringify(post_obj);
 		pending++;
@@ -364,7 +364,7 @@ function AddedManyUsers(xml, post_obj) {
 	}
 
 	WSPostURL(ROOT_URL + "classaccount", JSON.stringify(post), function (xml) {
-		if (xml.status < 400) {
+		if (xml.status == 200) {
 			document.location.reload(true);
 		} else if (xml.status == 403) {
 			alert("Your session may have expired. Click OK to reload page.");
@@ -372,7 +372,7 @@ function AddedManyUsers(xml, post_obj) {
 		} else if (xml.status == 415) {
 			alert("Class already has accounts.");
 		} else {
-			alert("An error occurred. Reload the page and try again. If problem persists contact help.");
+			alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
 		}
 	});
 }*/
@@ -392,43 +392,12 @@ function NewClassSelect() {
 	$('#new_class_count').text('-');
 
 	if (selected_class.val() != 'first') {
-		if (selected_class.data('students') && !selected_class.data('students')['students'].length) {
-			var parent = $($('#new_class_count').parent());
-			parent.addClass('processing');
-
-			WSGetURL(selected_class.data('api'), function (xml) {
-				parent.removeClass('processing');
-
-				if (xml.status < 400) {
-					var response = JSON.parse(xml.responseText);
-
-					selected_class.data('count', response.enrollments.length);
-
-					var emails = [];
-					for (var i = 0; i < response.enrollments.length; i++) {
-						emails.push(response.enrollments[i].email);
-					}
-					function onlyUnique(value, index, self) {
-						return self.indexOf(value) === index;
-					}
-					emails = emails.filter(onlyUnique);
-
-					selected_class.data('students')['students'] = emails;
-					selected_class.data('count', emails.length);
-
-					$('#new_class_count').text(selected_class.data('count'));
-				}
-			});
-		} else {
-			$('#new_class_count').text(selected_class.data('count'));
-		}
-
 		// Populate instructors
 		var instructors = selected_class.data('instructors');
 
 		// Set class name
 		$('#new_class_name').text(selected_class.data('classname'));
-		//$('#new_class_count').text(selected_class.data('count'));
+		$('#new_class_count').text(selected_class.data('count'));
 
 		for (var x = 0; x < instructors.length; x++) {
 			WSGetURL(ROOT_URL + "users/?search=" + instructors[x]['email'], AddUserClass);
@@ -463,8 +432,8 @@ function ClassUserSearchEventHandler(event, ui, crn) {
 			"name": name,
 			"username": username
 		});
-
-		WSPostURL(ROOT_URL + "users", post, AddUserClass, crn);
+		console.log(post);
+		//WSPostURL(ROOT_URL + "users", post, AddUserClass, crn);
 	} else {
 		WSGetURL(ROOT_URL + "users/" + id, AddUserClass, crn);
 	}
@@ -507,27 +476,27 @@ function AddUserClass(xml, crn) {
 		}
 
 		var span = document.createElement("li");
-			span.id = "USER_" + results['id'] + s_crn;
+		span.id = "USER_" + results['id'] + s_crn;
 
 		// make red X button image
 		var img = document.createElement("i");
-			img.setAttribute('aria-hidden', true);
-			img.className = "fa fa-trash text-danger crmdeleteuser";
+		img.setAttribute('aria-hidden', true);
+		img.className = "fa fa-trash text-danger crmdeleteuser";
 
 		// create link for button
 		var a = document.createElement("a");
-			a.href = "#USER_" + results['id'] + s_crn;
-			a.setAttribute('data-api', results['api']);
-			a.onclick = function (e) {
-				e.preventDefault();
-				RemoveUser(this);//results['id'], crn);
-			};
+		a.href = "#USER_" + results['id'] + s_crn;
+		a.setAttribute('data-api', results['api']);
+		a.onclick = function (e) {
+			e.preventDefault();
+			RemoveUser(this);//results['id'], crn);
+		};
 
 		// create hidden thing
 		var hidden = document.createElement("input");
-			hidden.type = "hidden";
-			hidden.id = "HIDDEN_" + results['id'] + s_crn;
-			hidden.value = "";
+		hidden.type = "hidden";
+		hidden.id = "HIDDEN_" + results['id'] + s_crn;
+		hidden.value = "";
 
 		// assemble the objects
 		a.appendChild(img);
@@ -594,27 +563,16 @@ function AddUserClass(xml, crn) {
 /**
  * Remove a user from a class
  *
- * @param   {string}  user
- * @param   {string}  crn
+ * @param   {object}  btn
  * @return  {void}
  */
-function RemoveUser(btn) {//user, crn) {
-	/*var s_crn = "";
-	if (crn != '0') {
-		s_crn = "_" + crn;
-	}
-	var list = document.getElementById("class_people" + s_crn);
-	// find and remove person div
-	var user_div = document.getElementById("USER_" + user + s_crn);
-	list.removeChild(user_div);
-
-	var user_div_id = document.getElementById("HIDDEN_" + user + s_crn).value;*/
-
+function RemoveUser(btn) {
 	WSDeleteURL(btn.getAttribute('data-api'), function (xml) {
-		if (xml.status < 400) {
-			alert("An error occurred. Reload the page and try again. If problem persists contact help.");
+		if (xml.status > 400) {
+			alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
 		} else {
-			$(btn.getAttribute('href')).remove();
+			//$(btn.getAttribute('href')).remove();
+			window.location.reload(true);
 		}
 	});
 }
@@ -628,13 +586,13 @@ function RemoveUser(btn) {//user, crn) {
 /*function DeleteClassAccount(id) {
 	if (confirm("Are you sure you wish to delete this class account?")) {
 		WSDeleteURL(id, function (xml) {
-			if (xml.status < 400) {
+			if (xml.status == 200) {
 				document.location.reload(true);
 			} else if (xml.status == 403) {
 				alert("Your session may have expired. Click OK to reload page.");
 				window.location.reload(true);
 			} else {
-				alert("An error occurred. Reload the page and try again. If problem persists contact help.");
+				alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
 			}
 		});
 	}
@@ -683,7 +641,7 @@ var autocompleteName = function (url) {
 					label: el.name,
 					name: el.name,
 					id: el.id,
-					usernames: [{'name':el.username}]//,
+					usernames: [{ 'name': el.username }]//,
 					//priorusernames: el.priorusernames
 				};
 			}));
@@ -762,27 +720,15 @@ $(document).ready(function () {
 			$('.type-' + $(el).val()).show();
 		});
 
-	/*$('#semester_select').on('change', function (e) {
-		SemesterSelect();
-	});
-
-	$('.create-form').on('submit', function (e) {
-		e.preventDefault();
-		$(this).find('input[type=button]').trigger('click');
-	});*/
-
 	$('.btn-create-workshop').on('click', function (e) {
 		e.preventDefault();
 
 		var btn = $(this);
 
-		//CreateNewWorkshop();
-		//$('.create-form .alert').remove();
 		$('.create-form input').removeClass('is-invalid');
 
 		// Fetch input
 		var post = {
-			'type': 'workshop',
 			'crn': $('#new_workshop_crn').val(),
 			'classid': $('#new_workshop_classid').val(),
 			'userid': $('#userid').val(),
@@ -802,16 +748,16 @@ $(document).ready(function () {
 			.replace('{{ start }}', post['datetimestart'])
 			.replace('{{ end }}', post['datetimestop']);
 
-		if (!post['classname'] || !post['datetimestart'] || !post['datetimestop']) {
+		if (!post['classname'] || !post['start'] || !post['stop']) {
 			if (!post['classname']) {
 				$('#new_workshop_name')
 					.addClass('is-invalid');
 			}
-			if (!post['datetimestart']) {
+			if (!post['start']) {
 				$('#new_workshop_start')
 					.addClass('is-invalid');
 			}
-			if (!post['datetimestop']) {
+			if (!post['stop']) {
 				$('#new_workshop_end')
 					.addClass('is-invalid');
 			}
@@ -827,7 +773,7 @@ $(document).ready(function () {
 			} else if (xml.status == 415) {
 				alert("Class already has accounts.");
 			} else {
-				alert("An error occurred. Reload the page and try again. If problem persists contact help.");
+				alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
 			}
 		});
 	});
@@ -836,37 +782,10 @@ $(document).ready(function () {
 		NewClassSelect();
 	});
 
-	/*
-	Experimental lazy load student list
-	$('#new_class_select option').each(function(i, el){
-		var selected_class = $(el);
-
-		if (!selected_class.data('students')) {
-			return;
-		}
-
-		if (!selected_class.data('students')['students'].length) {
-			WSGetURL(selected_class.data('api'), function (xml) {
-				if (xml.status < 400) {
-					var response = JSON.parse(xml.responseText);
-
-					selected_class.data('count', response.enrollments.length);
-
-					var emails = [];
-					for (var i = 0; i < response.enrollments.length; i++) {
-						emails.push(response.enrollments[i].email);
-					}
-					selected_class.data('students')['students'] = emails;
-				}
-			});
-		}
-	});
-	*/
-
 	// Account
 	$('.account-delete').on('click', function (e) {
 		e.preventDefault();
-		//DeleteClassAccount($(this).data('id'));
+
 		if (confirm($(this).data('confirm'))) {
 			WSDeleteURL($(this).data('api'), function (xml) {
 				if (xml.status < 400) {
@@ -875,13 +794,41 @@ $(document).ready(function () {
 					alert("Your session may have expired. Click OK to reload page.");
 					window.location.reload(true);
 				} else {
-					alert("An error occurred. Reload the page and try again. If problem persists contact help.");
+					alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
 				}
 			});
 		}
 	});
+
+	$('.account-save').on('click', function (e) {
+		e.preventDefault();
+
+		var btn = $(this),
+			crn = btn.attr('data-crn');
+
+		btn.attr('data-loading', true);
+
+		var post = {
+			'classname': $('#classname-' + crn).val(),
+			'datetimestart': $('#datetimestart-' + crn).val(),
+			'datetimestop': $('#datetimestop-' + crn).val(),
+			'resourceid': $('#resourceid-' + crn).val()
+		};
+
+		WSPutURL(btn.data('api'), JSON.stringify(post), function (xml) {
+			if (xml.status < 400) {
+				document.location.reload(true);
+			} else {
+				var results = JSON.parse(xml.responseText);
+
+				$('#error-' + crn).removeClass('hide').html(results.message);
+			}
+		});
+	});
+
 	$('.account-add').on('click', function (e) {
 		e.preventDefault();
+		$(this).attr('data-loading', true);
 		BulkAddAccounts($(this).data('crn'), $(this).data('id'));
 	});
 	$('.account-create').on('click', function (e) {
@@ -933,5 +880,24 @@ $(document).ready(function () {
 		}
 
 		$('<p>These students will automatically have an account created. Do not explicitly add each student.<br /><br />' + decodeURIComponent(students.replace(/\+/g, ' ')) + '</p>').dialog();
+	});
+
+	$('.collapse').on('shown.bs.collapse', function () {
+		if (!this.getAttribute('data-table')) {
+			$('#' + this.getAttribute('id') + ' .datatable').DataTable({
+				pageLength: 20,
+				pagingType: 'numbers',
+				//info: false,
+				ordering: false,
+				dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'p><'col-sm-12 col-md-7'i>>",
+				lengthChange: false,
+				language: {
+					searchPlaceholder: "Filter users...",
+					search: "_INPUT_",
+				}
+			});
+			// Record this so it doesn't get re-initialized on multiple open/closings of the list
+			this.setAttribute('data-table', 1);
+		}
 	});
 });
