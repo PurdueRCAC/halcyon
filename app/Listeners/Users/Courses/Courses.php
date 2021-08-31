@@ -97,6 +97,7 @@ class Courses
 
 				$courses = Account::query()
 					->where('userid', '=', $user->id)
+					->where('datetimestop', '>', Carbon::now()->toDateTimeString())
 					->orderBy('datetimestart', 'desc')
 					->get();
 
