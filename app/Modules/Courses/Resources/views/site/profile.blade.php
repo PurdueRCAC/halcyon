@@ -194,11 +194,17 @@
 									</thead>
 									<tbody>
 										<?php
+										$m = (new App\Modules\Courses\Models\Member)->getTable();
+										$u = (new App\Modules\Users\Models\UserUsername)->getTable();
+
 										$members = $class->members()
+											->select($m . '.*')
+											->leftJoin($u, $u . '.userid', $m . '.userid')
 											->withTrashed()
 											->whereIsActive()
 											->where('membertype', '>=', 0)
-											->orderBy('datetimecreated', 'asc')
+											->orderBy($m . '.membertype', 'desc')
+											->orderBy($u . '.username', 'asc')
 											->get();
 
 										if (count($members)):

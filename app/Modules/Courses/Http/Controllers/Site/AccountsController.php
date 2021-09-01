@@ -6,6 +6,8 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Modules\Courses\Models\Account;
+use App\Modules\Courses\Models\Member;
+use App\Modules\Users\Models\UserUsername;
 
 class AccountsController extends Controller
 {
@@ -47,11 +49,17 @@ class AccountsController extends Controller
 			);
 			$class = Account::findOrFail($request->input('id'));
 
+			$m = (new Member)->getTable();
+			$u = (new UserUsername)->getTable();
+
 			$members = $class->members()
+				->select($m . '.*')
+				->leftJoin($u, $u . '.userid', $m . '.userid')
 				->withTrashed()
 				->whereIsActive()
 				->where('membertype', '>=', 0)
-				->orderBy('datetimecreated', 'asc')
+				->orderBy($m . '.membertype', 'desc')
+				->orderBy($u . '.username', 'asc')
 				->get();
 
 			if (count($members))
