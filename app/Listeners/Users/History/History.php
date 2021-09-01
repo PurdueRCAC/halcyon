@@ -75,12 +75,14 @@ class History
 
 			foreach ($groups as $g)
 			{
+				$group = $g->group;
+
 				$item = new Fluent;
 				$item->id = $g->id;
 				$item->route = route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $g->groupid, 'subsection' => 'members', 'u' => $user->id != auth()->user()->id ? $user->id : null]);
 				$item->type = 'group';
 				$item->subtype = ($g->type ? $g->type->name : trans('global.unknown'));
-				$item->description = $g->group->name;
+				$item->description = ($group ? $group->name : trans('global.unknown'));
 				$item->created = $g->datecreated;
 				$item->removed = $g->dateremoved;
 				$item->isTrashed = $g->isTrashed();
