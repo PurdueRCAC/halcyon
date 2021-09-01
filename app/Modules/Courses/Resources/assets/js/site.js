@@ -62,7 +62,7 @@ function CreateNewClassAccount(btn) {
 		} else if (xml.status == 415) {
 			alert("Class already has accounts.");
 		} else {
-			alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
+			alert("An error occurred. Reload the page and try again. If problem persists contact help.");
 		}
 	});
 }
@@ -175,7 +175,7 @@ function AddingManyUsersEmail(xml, post_obj) {
 			'userid': user,
 			'classaccountid': post_obj['classaccountid'],
 		};
-		console.log(post);
+
 		post = JSON.stringify(post);
 		pending++;
 
@@ -228,7 +228,7 @@ function AddingManyUsers(xml, post_obj) {
 			'userid': user,
 			'classaccountid': post_obj['classaccountid'],
 		};
-		console.log(post);
+
 		post = JSON.stringify(post);
 		pending++;
 
@@ -280,9 +280,7 @@ function PrintErrors() {
  */
 function newUser(xml, post_obj) {
 	pending--;
-	if (xml.status == 200) {
-		//var response = JSON.parse(xml.responseText);
-		//var post = JSON.stringify(post_obj);
+	if (xml.status < 400) {
 		pending++;
 		WSGetURL(ROOT_URL + 'users/?search=' + post_obj['user'], AddingManyUsers, post_obj);
 	} else {
@@ -364,7 +362,7 @@ function AddedManyUsers(xml, post_obj) {
 	}
 
 	WSPostURL(ROOT_URL + "classaccount", JSON.stringify(post), function (xml) {
-		if (xml.status == 200) {
+		if (xml.status < 400) {
 			document.location.reload(true);
 		} else if (xml.status == 403) {
 			alert("Your session may have expired. Click OK to reload page.");
@@ -372,7 +370,7 @@ function AddedManyUsers(xml, post_obj) {
 		} else if (xml.status == 415) {
 			alert("Class already has accounts.");
 		} else {
-			alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
+			alert("An error occurred. Reload the page and try again. If problem persists contact help.");
 		}
 	});
 }*/
@@ -392,12 +390,43 @@ function NewClassSelect() {
 	$('#new_class_count').text('-');
 
 	if (selected_class.val() != 'first') {
+		if (selected_class.data('students') && !selected_class.data('students')['students'].length) {
+			var parent = $($('#new_class_count').parent());
+			parent.addClass('processing');
+
+			WSGetURL(selected_class.data('api'), function (xml) {
+				parent.removeClass('processing');
+
+				if (xml.status < 400) {
+					var response = JSON.parse(xml.responseText);
+
+					selected_class.data('count', response.enrollments.length);
+
+					var emails = [];
+					for (var i = 0; i < response.enrollments.length; i++) {
+						emails.push(response.enrollments[i].email);
+					}
+					function onlyUnique(value, index, self) {
+						return self.indexOf(value) === index;
+					}
+					emails = emails.filter(onlyUnique);
+
+					selected_class.data('students')['students'] = emails;
+					selected_class.data('count', emails.length);
+
+					$('#new_class_count').text(selected_class.data('count'));
+				}
+			});
+		} else {
+			$('#new_class_count').text(selected_class.data('count'));
+		}
+
 		// Populate instructors
 		var instructors = selected_class.data('instructors');
 
 		// Set class name
 		$('#new_class_name').text(selected_class.data('classname'));
-		$('#new_class_count').text(selected_class.data('count'));
+		//$('#new_class_count').text(selected_class.data('count'));
 
 		for (var x = 0; x < instructors.length; x++) {
 			WSGetURL(ROOT_URL + "users/?search=" + instructors[x]['email'], AddUserClass);
@@ -432,8 +461,8 @@ function ClassUserSearchEventHandler(event, ui, crn) {
 			"name": name,
 			"username": username
 		});
-		console.log(post);
-		//WSPostURL(ROOT_URL + "users", post, AddUserClass, crn);
+
+		WSPostURL(ROOT_URL + "users", post, AddUserClass, crn);
 	} else {
 		WSGetURL(ROOT_URL + "users/" + id, AddUserClass, crn);
 	}
@@ -569,7 +598,7 @@ function AddUserClass(xml, crn) {
 function RemoveUser(btn) {
 	WSDeleteURL(btn.getAttribute('data-api'), function (xml) {
 		if (xml.status > 400) {
-			alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
+			alert("An error occurred. Reload the page and try again. If problem persists contact help.");
 		} else {
 			//$(btn.getAttribute('href')).remove();
 			window.location.reload(true);
@@ -586,13 +615,13 @@ function RemoveUser(btn) {
 /*function DeleteClassAccount(id) {
 	if (confirm("Are you sure you wish to delete this class account?")) {
 		WSDeleteURL(id, function (xml) {
-			if (xml.status == 200) {
+			if (xml.status < 400) {
 				document.location.reload(true);
 			} else if (xml.status == 403) {
 				alert("Your session may have expired. Click OK to reload page.");
 				window.location.reload(true);
 			} else {
-				alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
+				alert("An error occurred. Reload the page and try again. If problem persists contact help.");
 			}
 		});
 	}
@@ -729,6 +758,7 @@ $(document).ready(function () {
 
 		// Fetch input
 		var post = {
+			'type': 'workshop',
 			'crn': $('#new_workshop_crn').val(),
 			'classid': $('#new_workshop_classid').val(),
 			'userid': $('#userid').val(),
@@ -748,16 +778,16 @@ $(document).ready(function () {
 			.replace('{{ start }}', post['datetimestart'])
 			.replace('{{ end }}', post['datetimestop']);
 
-		if (!post['classname'] || !post['start'] || !post['stop']) {
+		if (!post['classname'] || !post['datetimestart'] || !post['datetimestop']) {
 			if (!post['classname']) {
 				$('#new_workshop_name')
 					.addClass('is-invalid');
 			}
-			if (!post['start']) {
+			if (!post['datetimestart']) {
 				$('#new_workshop_start')
 					.addClass('is-invalid');
 			}
-			if (!post['stop']) {
+			if (!post['datetimestop']) {
 				$('#new_workshop_end')
 					.addClass('is-invalid');
 			}
@@ -773,7 +803,7 @@ $(document).ready(function () {
 			} else if (xml.status == 415) {
 				alert("Class already has accounts.");
 			} else {
-				alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
+				alert("An error occurred. Reload the page and try again. If problem persists contact help.");
 			}
 		});
 	});
@@ -794,7 +824,7 @@ $(document).ready(function () {
 					alert("Your session may have expired. Click OK to reload page.");
 					window.location.reload(true);
 				} else {
-					alert("An error occurred. Reload the page and try again. If problem persists contact rcac-help@purdue.edu");
+					alert("An error occurred. Reload the page and try again. If problem persists contact help.");
 				}
 			});
 		}
