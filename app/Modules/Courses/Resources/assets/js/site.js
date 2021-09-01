@@ -936,4 +936,13 @@ $(document).ready(function () {
 			this.setAttribute('data-table', 1);
 		}
 	});
+
+	$('.export').on('click', function (e) {
+		e.preventDefault();
+		// Get the form unique to the current tab group using its id
+		var form_id = "#export_form_" + $(this).data('id');
+		var form = $(form_id);
+
+		form.submit();
+	});
 });

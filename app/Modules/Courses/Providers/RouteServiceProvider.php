@@ -17,7 +17,7 @@ class RouteServiceProvider extends CoreRoutingServiceProvider
 	 */
 	protected function getSiteRoute()
 	{
-		return '';
+		return dirname(__DIR__) . '/Http/siteRoutes.php';
 	}
 
 	/**

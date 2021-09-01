@@ -161,12 +161,29 @@
 						<tr class="collapse" id="collapse{{ $class->id }}">
 							<td colspan="7">
 
-								<div class="float-right">
-									<a href="#class_dialog_{{ $class->crn }}_add" class="btn btn-info help">
-										<span class="fa fa-plus" aria-hidden="true"></span>
-										Add users
-									</a>
+							<div class="row">
+								@if (auth()->user()->can('manage courses'))
+									<div class="col-md-6">
+										<form id="export_form_{{ $class->id }}" class="export-form" method="post" action="{{ route('site.courses.export') }}">
+											<button type="submit" data-id="{{ $class->id }}" class="export btn btn-info btn-sm">
+												<span class="fa fa-table" ara-hidden="true"></span> Export to CSV
+											</button>
+											<input type="hidden" name="id" value="{{ $class->id }}" />
+											<input type="hidden" name="filename" value="class_{{ $class->crn }}_members" />
+											@csrf
+										</form>
+									</div>
+									<div class="col-md-6 text-right">
+								@else
+									<div class="col-md-12 text-right">
+								@endif
+										<a href="#class_dialog_{{ $class->crn }}_add" class="btn btn-secondary help">
+											<span class="fa fa-plus" aria-hidden="true"></span>
+											Add users
+										</a>
+									</div>
 								</div>
+
 								<table class="table table-hover datatable">
 									<caption class="sr-only">Account Users</caption>
 									<thead>
