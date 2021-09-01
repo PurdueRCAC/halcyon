@@ -155,31 +155,6 @@
 								<a href="#class_dialog_{{ $class->crn }}_edit" class="text-danger account-delete" data-confirm="Are you sure you wish to delete this class account?" data-id="{{ $class->id }}" data-api="{{ route('api.courses.delete', ['id' => $class->id]) }}">
 									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Delete</span>
 								</a>
-								<?php /*<div class="dropdown dropleft">
-									<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<span class="sr-only">Options</span>
-									</button>
-									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
-										@if (count($queues))
-										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-allqueues allqueues" title="Enable all queues for this user">
-											<span class="fa fa-fw fa-check-square" aria-hidden="true"></span> Enable all queues
-										</a>
-										@endif
-										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move change" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="3" title="Grant usage viewer privleges">
-											<span class="fa fa-fw fa-bar-chart" aria-hidden="true"></span> Grant usage viewer privleges
-										</a>
-										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move promote" data-api="{{ route('api.groups.members.create') }}" data-target="2" data-userid="{{ $member->userid }}" title="Grant manager privleges">
-											<span class="fa fa-fw fa-arrow-up" aria-hidden="true"></span> Grant manager privleges
-										</a>
-										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-remove delete" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
-											<span class="fa fa-fw fa-trash" aria-hidden="true"></span> Remove from group
-										</a>
-										<a href="#USER_{{ $usr->id }}_{{ $class->crn }}" class="dropdown-item btn user-delete delete" data-api="{{ route('api.courses.members.delete', ['id' => $usr->id]) }}" data-confirm="Are you sure you wish to remove this user?" data-user="{{ $usr->id }}" data-crn="{{ $class->crn }}">
-											<span class="fa fa-fw fa-trash" aria-hidden="true"></span><span class="sr-only">Delete</span>
-										</a>
-									</div>
-								</div>*/ ?>
-
 								<input type="hidden" id="HIDDEN_{{ $class->crn }}" value="{{ $class->id }}" />
 							</td>
 						</tr>
@@ -197,7 +172,7 @@
 									<thead>
 										<th scope="col">Name</th>
 										<th scope="col">Username</th>
-										<!-- <th scope="col">Type</th> -->
+										<th scope="col">Type</th>
 										<th scope="col" class="text-right">Options</th>
 									</thead>
 									<tbody>
@@ -231,7 +206,7 @@
 															</a>
 														@endif
 													</td>
-													<!-- <td>
+													<td>
 														@if ($class->semester == 'Workshop')
 															@if ($usr->membertype > 0)
 																<span class="badge badge-success">Manual addition</span>
@@ -245,7 +220,7 @@
 																<span class="badge badge-secondary">Student</span>
 															@endif
 														@endif
-													</td> -->
+													</td>
 													<td class="text-right">
 														<input type="hidden" id="HIDDEN_{{ $usr->id }}_{{ $class->crn }}" value="{{ $usr->id }}" />
 														<a href="#USER_{{ $usr->id }}_{{ $class->crn }}" class="user-delete delete" data-api="{{ route('api.courses.members.delete', ['id' => $usr->id]) }}" data-confirm="Are you sure you wish to remove this user?" data-user="{{ $usr->id }}" data-crn="{{ $class->crn }}">
@@ -489,19 +464,13 @@
 
 			<div id="class_dialog_{{ $class->crn }}_add" title="Add Users to Class Account" class="dialog dialog-class">
 				<form action="{{ route('site.users.account.section', ['section' => 'class']) }}{{ request()->has('u') ? '?u=' . request()->input('u') : '' }}" method="post">
-					<!-- <div class="form-group">
-						<label for="searchuser_{{ $class->crn }}">Add instructors, TAs, or others:</label>
-						<input id="searchuser_{{ $class->crn }}" class="form-control search-user" data-id="{{ $class->crn }}" data-api="{{ route('api.users.index') }}?search=%s" value="" />
-						<div class="alert hide" id="searchuser_alert_{{ $class->crn }}" data-success="Successfully added person."></div>
-					</div> -->
-
 					<div class="form-group">
 						<label for="bulkadd_{{ $class->crn }}">Bulk add users:</label>
 						<textarea class="bulkAdd form-control" id="bulkadd_{{ $class->crn }}" rows="5" cols="40"></textarea>
 						<span class="form-text text-muted">Username or email, comma or line seperated.</span>
 					</div>
 
-					<div class="form-group text-center">
+					<div class="dialog-footer text-right">
 						<button class="btn btn-secondary account-add" data-crn="{{ $class->crn }}" data-id="{{ $class->id }}">
 							<span class="spinner-border spinner-border-sm" role="status"></span>
 							Add
@@ -523,7 +492,7 @@
 						<input type="hidden" name="tmp_dir" id="ticket-tmp_dir" value="{{ ('-' . time()) }}" />
 					</div>
 
-					<div class="text-center">
+					<div class="dialog-footer text-right">
 						<button class="order btn btn-primary" type="submit">
 							Import
 						</button>

@@ -478,12 +478,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		if ($('.datatable').length) {
 			$('.datatable').DataTable({
-				pageLength: 20,
-				pagingType: 'numbers',
-				//info: false,
+				//pageLength: 20,
+				//pagingType: 'numbers',
+				paging: false,
+				scrollY: '50vh',
+				scrollCollapse: true,
+				headers: true,
+				info: true,
 				ordering: false,
 				lengthChange: false,
-				dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'p><'col-sm-12 col-md-7'i>>",
+				dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'i>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'p><'col-sm-12 col-md-7'l>>",
 				scrollX: true,
 				//autoWidth: false,
 				language: {
