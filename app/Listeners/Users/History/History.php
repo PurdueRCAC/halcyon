@@ -77,6 +77,12 @@ class History
 			{
 				$group = $g->group;
 
+				if (!$group)
+				{
+					// Record doesn't exist?
+					continue;
+				}
+
 				$item = new Fluent;
 				$item->id = $g->id;
 				$item->route = route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $g->groupid, 'subsection' => 'members', 'u' => $user->id != auth()->user()->id ? $user->id : null]);
@@ -124,6 +130,12 @@ class History
 					->withTrashed()
 					->first();
 
+				if (!$q)
+				{
+					// Record doesn't exist?
+					continue;
+				}
+
 				$item = new Fluent;
 				$item->id = $g->id;
 				$item->route = route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $q->groupid, 'subsection' => 'queues', 'u' => $user->id != auth()->user()->id ? $user->id : null]);
@@ -168,6 +180,12 @@ class History
 				$class = $g->account()
 					->withTrashed()
 					->first();
+
+				if (!$class)
+				{
+					// Record doesn't exist?
+					continue;
+				}
 
 				$item = new Fluent;
 				$item->id = $g->id;
