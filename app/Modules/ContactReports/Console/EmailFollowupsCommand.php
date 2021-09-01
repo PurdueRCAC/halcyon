@@ -11,6 +11,7 @@ use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Type;
 use App\Modules\ContactReports\Models\User as CrmUser;
 use App\Modules\Users\Models\User;
+use App\Halcyon\Access\Map;
 use Carbon\Carbon;
 
 class EmailFollowupsCommand extends Command
@@ -48,6 +49,20 @@ class EmailFollowupsCommand extends Command
 				$this->comment('No contact report types are configured for followups.');
 			}
 			return;
+		}
+
+		$role = config('module.contactreports.staff');
+		$admins = array();
+
+		// Get admins
+		if (!empty($role))
+		{
+			$admins = Map::query()
+				->where('role_id', '=', $role)
+				->get()
+				->pluck('user_id')
+				->toArray();
+			$admins = array_unique($admins);
 		}
 
 		$users = [];
@@ -92,6 +107,11 @@ class EmailFollowupsCommand extends Command
 			foreach ($users as $u)
 			{
 				if (in_array($u->userid, $emailed))
+				{
+					continue;
+				}
+
+				if (in_array($u->userid, $admins))
 				{
 					continue;
 				}
