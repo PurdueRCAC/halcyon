@@ -159,9 +159,9 @@
 							</td>
 						</tr>
 						<tr class="collapse" id="collapse{{ $class->id }}">
-							<td colspan="7">
+							<td colspan="{{ (auth()->user()->can('manage courses') ? 8 : 7) }}">
 
-							<div class="row">
+							<div class="row mb-3">
 								@if (auth()->user()->can('manage courses'))
 									<div class="col-md-6">
 										<form id="export_form_{{ $class->id }}" class="export-form" method="post" action="{{ route('site.courses.export') }}">
