@@ -122,6 +122,14 @@ label .required-field {
 	color: #666F75 !important;
 }
 
+form.dropzone {
+	background: rgba(0, 0, 0, 0.05);
+	border: 2px dashed rgba(0, 0, 0, 0.1);
+	padding: 0;
+	text-align: center;
+	color: #bbb;
+	font-size: 1.2em;
+}
 .dropzone.has-advanced-upload {
 	background-color: #f1f1f1;
 	position: relative;
