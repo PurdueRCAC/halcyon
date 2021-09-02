@@ -9,4 +9,9 @@ $router->group(['prefix' => 'courses'], function (Router $router)
 		'as' => 'site.courses.export',
 		'uses' => 'AccountsController@export',
 	]);
+
+	$router->post('/import', [
+		'as' => 'site.courses.import',
+		'uses' => 'AccountsController@import',
+	]);
 });

@@ -32,6 +32,12 @@ $router->group(['prefix' => 'courses'], function (Router $router)
 			'uses' => 'MembersController@delete',
 			'middleware' => ['auth:api', 'can:edit courses|edit.own courses'],
 		])->where('id', '[0-9]+');
+
+		$router->post('/import', [
+			'as' => 'api.courses.members.import',
+			'uses' => 'MembersController@import',
+			'middleware' => ['auth:api', 'can:edit courses|edit.own courses'],
+		]);
 	});
 
 	$router->get('/', [

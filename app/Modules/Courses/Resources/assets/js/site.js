@@ -678,6 +678,10 @@ var autocompleteName = function (url) {
 	};
 };
 
+if (typeof(Dropzone) != undefined) {
+	Dropzone.autoDiscover = false;
+}
+
 $(document).ready(function () {
 	// Help dialogs
 	$('.dialog').dialog({
@@ -945,4 +949,30 @@ $(document).ready(function () {
 
 		form.submit();
 	});
+
+	if (typeof (Dropzone) != undefined) {
+		$('.dropzone').each(function (i, el) {
+			$(el).dropzone({
+				url: $(el).attr('data-api'),
+				uploadMultiple: false,
+				acceptedFiles: $(el).attr('data-acceptedfiles'),
+				init: function () {
+					this.on("success", function (file, responseText) {
+						if (responseText.error.length) {
+							$('#import-error-' + $(el).attr('data-id')).removeClass('hide').html(responseText.error.join('<br />'));
+							return;
+						}
+
+						window.location.reload(true);
+					});
+				},
+				queuecomplete: function () {
+					Dropzone.forElement('.dropzone').removeAllFiles();
+				},
+				error: function (errorMessage) {
+					$('#import-error-' + $(e).attr('data-id')).removeClass('hide').html(errorMessage);
+				}
+			});
+		});
+	}
 });

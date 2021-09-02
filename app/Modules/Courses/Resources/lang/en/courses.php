@@ -39,4 +39,9 @@ return [
 	'enrolled' => 'Enrolled',
 	'choose member' => 'Choose member',
 	'member' => 'Member',
+	'upload instructions' => 'Click or drop files here to upload',
+	'error' => [
+		'entry failed for user' => 'Failed to create user entry for :name',
+		'no files' => 'No files submitted',
+	],
 ];
