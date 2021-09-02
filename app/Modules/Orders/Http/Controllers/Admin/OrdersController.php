@@ -33,6 +33,7 @@ class OrdersController extends Controller
 			'start'     => null,
 			'end'       => null,
 			'type'      => 0,
+			'timeframe' => 7,
 			// Paging
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -180,7 +181,6 @@ class OrdersController extends Controller
 					DB::raw("SUM(CASE WHEN (" . $a .".datetimedenied IS NULL) THEN 0 WHEN (" . $a .".datetimedenied = '0000-00-00 00:00:00') THEN 0 WHEN (" . $a .".datetimedenied <> '0000-00-00 00:00:00') THEN 1 END) AS accountsdenied")
 				)
 				->from($o)
-				//->leftJoin($a, $a . '.orderid', $o . '.id')
 				->leftJoin($a, function ($join) use ($a, $o)
 				{
 					$join->on($a . '.orderid', $o . '.id')
@@ -190,14 +190,6 @@ class OrdersController extends Controller
 								->orWhereNull($a . '.datetimeremoved');
 						});
 				})
-				//->leftJoin($i, $i . '.orderid', $o . '.id')
-				//->where($i . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-				//->where($i . '.quantity', '>', 0)
-				/*->where(function($where) use ($a)
-				{
-					$where->where($a . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-						->orWhereNull($a . '.datetimeremoved');
-				})*/
 				->groupBy($o . '.id')
 				->groupBy($o . '.userid')
 				->groupBy($o . '.datetimecreated')
@@ -215,8 +207,6 @@ class OrdersController extends Controller
 						$query->where($a . '.purchaseio', '=', $filters['search'])
 							->orWhere($o . '.id', '=', $filters['search'])
 							->orWhere($a . '.purchasewbse', '=', $filters['search']);
-						//$query->where($o . '.usernotes', 'like', '%' . $filters['search'] . '%')
-						//	->orWhere($u . '.name', 'like', '%' . $filters['search'] . '%');
 					});
 				}
 
@@ -233,7 +223,6 @@ class OrdersController extends Controller
 				if ($filters['category'] != '*')
 				{
 					$p = (new Product())->getTable();
-					//$i = (new Item())->getTable();
 
 					$sub->join($i, $i . '.orderid', $o . '.id');
 					$sub->join($p, $p . '.id', $i . '.orderproductid')
@@ -244,23 +233,10 @@ class OrdersController extends Controller
 				$join->on('tbaccounts.id', '=', 'tbitems.id');
 			})
 			->leftJoin($u, $u . '.id', 'tbaccounts.userid');
-			/*->leftJoin($a, $a . '.orderid', $o . '.id')
-			->leftJoin($i, $i . '.orderid', $o . '.id')
-			
-			->where(function($where) use ($a)
-				{
-					$where->where($a . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-						->orWhereNull($a . '.datetimeremoved');
-				});*/
 
 		if ($filters['search'])
 		{
-			/*if (is_numeric($filters['search']))
-			{
-				$query->where('tbaccounts.id', '=', $filters['search']);
-			}
 			// We search by WSBE accounts above, so ignore them here
-			else*/
 			if (!is_numeric($filters['search']) && !preg_match('/^[a-z]\d+$/', $filters['search']))
 			{
 				$g = (new \App\Modules\Groups\Models\Group())->getTable();
@@ -269,8 +245,6 @@ class OrdersController extends Controller
 					->where(function($query) use ($filters, $g, $u)
 					{
 						
-						/*$query->where($o . '.usernotes', 'like', '%' . $filters['search'] . '%')
-							->orWhere($u . '.name', 'like', '%' . $filters['search'] . '%');*/
 						$query->where($g . '.name', 'like', '%' . $filters['search'] . '%')
 							->orWhere($u . '.name', 'like', '%' . $filters['search'] . '%');
 					});
@@ -314,20 +288,10 @@ class OrdersController extends Controller
 			}
 			elseif ($filters['status'] == 'active')
 			{
-				//$query->whereIn('state', [1, 2, 3, 4, 5]);
 				$query->where(DB::raw($state), '<', 6);
 			}
 		}
 
-		/*if ($filters['category'] != '*')
-		{
-			$p = (new Product())->getTable();
-			//$i = (new Item())->getTable();
-
-			$query->join($i, $i . '.orderid', $o . '.id')
-				->join($p, $p . '.id', $i . '.orderproductid')
-				->where($p . '.ordercategoryid', '=', $filters['category']);
-		}*/
 		if ($filters['order'] == 'userid')
 		{
 			$query->orderBy('name', $filters['order_dir']);

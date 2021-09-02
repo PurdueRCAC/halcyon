@@ -1,16 +1,136 @@
 @extends('layouts.master')
 
 @push('styles')
+<link rel="stylesheet" type="text/css" href="{{ Module::asset('core:vendor/chartjs/Chart.css') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css?v=' . filemtime(public_path() . '/modules/orders/css/orders.css')) }}" />
+<style>
+	.order-process {
+		padding: 0 1em;
+	}
+	.order-process ol:before,
+	.order-process .avg-total:before {
+		content: '';
+		display: block;
+		position: absolute;
+		top: 0;
+		bottom: 0.75em;
+		right: -1em;
+		width: 4px;
+		background: rgba(82, 157, 35, 0.5);
+	}
+	.order-process ol:after,
+	.order-process .avg-total:after {
+		content: '';
+		display: block;
+		position: absolute;
+		bottom: 0.75em;
+		right: -1em;
+		height: 4px;
+		width: 4px;
+		margin-right: 4px;
+		background: rgba(82, 157, 35, 0.5);
+	}
+	.order-process ol {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		position: relative;
+	}
+	.order-process li {
+		margin: 0;
+		padding: 1em 0 0 0;
+		position: relative;
+	}
+	.order-process li:before {
+		content: '';
+		display: block;
+		position: absolute;
+		top: 0;
+		bottom: 0.75em;
+		left: -1em;
+		width: 4px;
+		background: rgba(25, 132, 184, 0.5);
+	}
+	.order-process li:after {
+		content: '';
+		display: block;
+		position: absolute;
+		bottom: 0.75em;
+		left: -1em;
+		height: 4px;
+		width: 4px;
+		margin-left: 4px;
+		background: rgba(25, 132, 184, 0.5);
+	}
+	/*.order-process li:nth-child(2):before,
+	.order-process li:nth-child(2):after {
+		background: rgba(211, 112, 79, 0.5);
+	}*/
+	.order-process li:nth-child(2):before,
+	.order-process li:nth-child(2):after {
+		background: rgba(189, 126, 1, 0.5);
+	}
+	.order-process li:nth-child(3):before,
+	.order-process li:nth-child(3):after {
+		background: rgba(82, 157, 35, 0.5);
+	}
+</style>
 @endpush
 
 @push('scripts')
+<script src="{{ Module::asset('core:vendor/chartjs/Chart.min.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
 $(document).ready(function () {
 	$('.items-toggle').on('click', function(e){
 		e.preventDefault();
 		$($(this).attr('href')).toggle('collapse');
+	});
+
+	$('.sparkline-chart').each(function (i, el) {
+		const ctx = el.getContext('2d');
+		const chart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: JSON.parse($(el).attr('data-labels')),
+				datasets: [
+					{
+						fill: false,
+						data: JSON.parse($(el).attr('data-values'))
+					}
+				]
+			},
+			options: {
+				responsive: false,
+				animation: {
+					duration: 0
+				},
+				legend: {
+					display: false
+				},
+				elements: {
+					line: {
+						borderColor: '#0091EB',
+						borderWidth: 1
+					},
+					point: {
+						borderColor: '#0091EB'
+					}
+				},
+				scales: {
+					/*yAxes: [
+						{
+							display: false
+						}
+					],*/
+					xAxes: [
+						{
+							display: false
+						}
+					]
+				}
+			}
+		});
 	});
 });
 </script>
@@ -56,6 +176,88 @@ app('pathway')
 {!! config('orders.name') !!}
 @stop
 
+@section('panel')
+	<h2 class="sr-only">Order Stats</h2>
+
+	<div class="car mb-3">
+		<form action="{{ route('admin.orders.index') }}" method="post" name="statsForm">
+			<label for="timeframe" class="sr-only">Stats for</label>
+			<select name="timeframe" id="timeframe" class="form-control filter-submit">
+				<option value="7"<?php if ($filters['timeframe'] == 7) { echo ' selected="slected"'; } ?>>Past 7 days</option>
+				<option value="14"<?php if ($filters['timeframe'] == 14) { echo ' selected="slected"'; } ?>>Past 14 days</option>
+				<option value="30"<?php if ($filters['timeframe'] == 30) { echo ' selected="slected"'; } ?>>Past 30 days</option>
+			</select>
+
+			@csrf
+		</form>
+	</div>
+
+	<?php
+	$stats = App\Modules\Orders\Models\Order::stats($filters['timeframe']);
+	?>
+	<h3 class="sr-only">Overview</h3>
+
+	<div class="card">
+		<div class="card-body">
+			<div class="stat-block text-info">
+				<span class="fa fa-shopping-cart display-4 float-left" aria-hidden="true"></span>
+				<span class="value">{{ number_format($stats['submitted']) }}</span><br />
+				<span class="key">{{ trans('orders::orders.submitted') }}</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="card">
+		<div class="card-body">
+			<div class="stat-block text-danger">
+				<span class="icon-alert-triangle display-4 float-left" aria-hidden="true"></span>
+				<span class="value">{{ number_format($stats['canceled']) }}</span><br />
+				<span class="key">{{ trans('orders::orders.canceled') }}</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="card">
+		<div class="card-body">
+			<div class="stat-block text-success">
+				<span class="fa fa-check display-4 float-left" aria-hidden="true"></span>
+				<span class="value">{{ number_format($stats['fulfilled']) }}</span><br />
+				<span class="key">{{ trans('orders::orders.fulfilled') }}</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="car mb-3">
+		<h4>New orders</h4>
+		<canvas id="sparkline" class="sparkline-chart" width="275" height="150" data-labels="{{ json_encode(array_keys($stats['daily'])) }}" data-values="{{ json_encode(array_values($stats['daily'])) }}">
+			@foreach ($stats['daily'] as $day => $val)
+				{{ $day }}: $val<br />
+			@endforeach
+		</canvas>
+	</div>
+
+	<div class="car mb-3">
+		<h4>Avg. Time From Order Submission</h4>
+		<div class="order-process">
+			<ol>
+				<li>
+					<strong>Payment information</strong><br />
+					<span class="text-muted">{{ $stats['steps']['payment']['average'] }}</span>
+				</li>
+				<li>
+					<strong>Approval by business office</strong><br />
+					<span class="text-muted">{{ $stats['steps']['approval']['average'] }}</span>
+				</li>
+				<li>
+					<strong>Fulfillment</strong><br />
+					<span class="text-muted">{{ $stats['steps']['fulfilled']['average'] }}</span>
+					<span class="text-muted float-right">{{ $stats['steps']['completed']['average'] }}</span>
+				</li>
+			</ol>
+		</div>
+	</div>
+@stop
+
 @section('content')
 
 @component('orders::admin.submenu')
@@ -75,15 +277,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-9 filter-select text-right">
-				<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
-				<select name="category" id="filter_category" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
-					<?php foreach ($categories as $category): ?>
-						<option value="<?php echo $category->id; ?>"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
-					<?php endforeach; ?>
-				</select>
-
+			<div class="col col-md-9 text-right">
 				<label class="sr-only" for="filter_status">{{ trans('orders::orders.status') }}</label>
 				<select name="status" id="filter_status" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all statuses') }}</option>
@@ -97,11 +291,40 @@ app('pathway')
 					<option value="canceled"<?php if ($filters['status'] == 'canceled'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.canceled') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_start">{{ trans('orders::orders.start date') }}</label>
-				<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
+				<div class="btn-group">
+					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span class="fa fa-filter" aria-hidden="true"></span><span class="sr-only">Filters</span>
+					</button>
+					<div class="dropdown-menu dropdown-menu-right">
+						<div class="px-4 py-3">
+							<div class="form-group mb-3">
+								<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
+								<select name="category" id="filter_category" class="form-control filter filter-submit">
+									<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
+									<?php foreach ($categories as $category): ?>
+										<option value="<?php echo $category->id; ?>"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
+									<?php endforeach; ?>
+								</select>
+							</div>
 
-				<label class="sr-only" for="filter_end">{{ trans('orders::orders.end date') }}</label>
-				<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
+							<div class="form-group mb-3">
+								<label class="sr-only" for="filter_start">{{ trans('orders::orders.start date') }}</label>
+								<span class="input-group">
+									<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
+									<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
+								</span>
+							</div>
+
+							<div class="form-group">
+								<label class="sr-only" for="filter_end">{{ trans('orders::orders.end date') }}</label>
+								<span class="input-group">
+									<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
+									<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -124,9 +347,6 @@ app('pathway')
 				</th>
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('orders::orders.created'), 'datetimecreated', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col">
-					{!! Html::grid('sort', trans('orders::orders.notes'), 'usernotes', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">{{ trans('orders::orders.status') }}</th>
 				<th scope="col" class="priority-4">
@@ -176,24 +396,6 @@ app('pathway')
 					@endif
 				</td>
 				<td>
-					@if (auth()->user()->can('edit orders'))
-						<a href="{{ route('admin.orders.edit', ['id' => $row->id]) }}">
-							{{ $row->usernotes ? Illuminate\Support\Str::limit($row->usernotes, 50) : '' }}
-						</a>
-					@else
-						{{ $row->usernotes ? Illuminate\Support\Str::limit($row->usernotes, 50) : '' }}
-					@endif
-					<!-- <br />
-					accounts: {{ $row->accounts }}<br />
-					assigned: {{ $row->accountsassigned }}<br />
-					approved: {{ $row->accountsapproved }}<br />
-					denied: {{ $row->accountsdenied }}<br />
-					paid: {{ $row->accountspaid }}<br />
-					items: {{ $row->items_count }}<br />
-					fulfilled {{ $row->itemsfulfilled }}<br />
-					-->
-				</td>
-				<td>
 					<span class="badge badge-sm order-status {{ str_replace(' ', '-', $row->status) }}" data-tip="Accounts: {{ $row->accounts }}<br />Assigned: {{ $row->accountsassigned }}<br />Approved: {{ $row->accountsapproved }}<br />Denied: {{ $row->accountsdenied }}<br />Paid: {{ $row->accountspaid }}<br />---<br />Items: {{ $row->items_count }}<br />Fulfilled: {{ $row->itemsfulfilled }}">
 						{{ trans('orders::orders.' . $row->status) }}
 					</span>
@@ -202,18 +404,18 @@ app('pathway')
 					@if ($row->groupid)
 						@if (auth()->user()->can('manage groups'))
 							<a href="{{ route('admin.groups.edit', ['id' => $row->groupid]) }}">
-								<?php echo $row->group ? $row->group->name : 'Group ID #' . $row->groupid; ?>
+								{{ $row->group ? $row->group->name : 'Group ID #' . $row->groupid }}
 							</a>
 						@else
-							<?php echo $row->group ? $row->group->name : 'Group ID #' . $row->groupid; ?>
+							{{ $row->group ? $row->group->name : 'Group ID #' . $row->groupid }}
 						@endif
 					@else
 						@if (auth()->user()->can('manage users'))
 							<a href="{{ route('admin.users.edit', ['id' => $row->userid]) }}">
-								<?php echo $row->name ? $row->name : 'User ID #' . $row->userid; ?>
+								{{ $row->name ? $row->name : 'User ID #' . $row->userid }}
 							</a>
 						@else
-							<?php echo $row->name ? $row->name : 'User ID #' . $row->userid; ?>
+							{{ $row->name ? $row->name : 'User ID #' . $row->userid }}
 						@endif
 					@endif
 				</td>

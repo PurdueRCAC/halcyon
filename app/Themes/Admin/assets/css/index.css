@@ -884,6 +884,7 @@ h4 {
 .icon-folder:before {
   content: "\e874";
 }
+.fa-filter:before,
 .icon-filter:before {
   content: "\e875";
 }
@@ -1348,6 +1349,7 @@ h4 {
 .icon-paperclip:before {
   content: "\e904";
 }
+.fa-shopping-cart:before,
 .icon-shopping-cart:before {
   content: "\e905";
 }
@@ -1977,14 +1979,14 @@ button.loading .spinner-border,
   padding: 0;
   margin: 0;
 }
-
+/*
 fieldset#filter-bar button,
 fieldset#filter-bar input,
 fieldset#filter-bar select {
   width: auto;
   max-width: 30em;
   margin-bottom: 0;
-}
+}*/
 fieldset#filter-bar .text-right .select2-container {
   text-align: left;
 }

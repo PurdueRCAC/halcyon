@@ -215,6 +215,11 @@ class Order extends Model
 		return $neg . $number;
 	}
 
+	/**
+	 * Is the order canceled?
+	 *
+	 * @return  bool
+	 */
 	public function isCanceled()
 	{
 		return $this->isTrashed();
@@ -413,5 +418,174 @@ class Order extends Model
 		}
 
 		return $neg . $number;
+	}
+
+	public static function stats($timeframe = 7)
+	{
+		$now = Carbon::now();
+		$placed = array();
+		for ($d = $timeframe; $d >= 0; $d--)
+		{
+			$yesterday = Carbon::now()->modify('- ' . $d . ' days');
+			$tomorrow  = Carbon::now()->modify(($d ? '- ' . ($d - 1) : '+ 1') . ' days');
+
+			$placed[$yesterday->format('Y-m-d')] = self::query()
+				->withTrashed()
+				->whereIsActive()
+				->where('datetimecreated', '>', $yesterday->format('Y-m-d') . ' 00:00:00')
+				->where('datetimecreated', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
+				->count();
+		}
+
+		$yesterday = Carbon::now()->modify('- ' . $timeframe . ' days');
+		$tomorrow  = Carbon::now()->modify('+ 1 days');
+
+		$past = self::query()
+			->withTrashed()
+			->whereIsActive()
+			->where('datetimecreated', '>', $yesterday->format('Y-m-d') . ' 00:00:00')
+			->where('datetimecreated', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
+			->get();
+
+		$total = count($past);
+		$canceled = self::query()
+			->withTrashed()
+			->whereIsTrashed()
+			->where('datetimecreated', '>', $yesterday->format('Y-m-d') . ' 00:00:00')
+			->where('datetimecreated', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
+			->count();
+		$fulfilled = 0;
+
+		$step = array(
+			'payment' => array(
+				'value' => 0,
+				'total' => 0
+			),
+			'approval' => array(
+				'value' => 0,
+				'total' => 0
+			),
+			'fulfilled' => array(
+				'value' => 0,
+				'total' => 0
+			),
+			'completed' => array(
+				'value' => 0,
+				'total' => 0
+			),
+		);
+
+		foreach ($past as $order)
+		{
+			$accounts = $order->accounts()->orderBy('datetimecreated', 'asc')->get();
+
+			if (!count($accounts))
+			{
+				continue;
+			}
+
+			$step['payment']['value'] += $accounts->first()->datetimecreated->timestamp - $order->datetimecreated->timestamp;
+			$step['payment']['total']++;
+
+			$lastapproved = $order->datetimecreated->timestamp;
+			foreach ($accounts as $account)
+			{
+				if (!$account->isApproved())
+				{
+					continue;
+				}
+
+				$step['approval']['value'] += $account->datetimeapproved->timestamp - $account->datetimecreated->timestamp;
+				$step['approval']['total']++;
+				$lastapproved = $account->datetimeapproved->timestamp > $lastapproved ? $account->datetimeapproved->timestamp : $lastapproved;
+			}
+
+			$items = $order->items()->orderBy('datetimecreated', 'asc')->get();
+
+			if (!count($items))
+			{
+				continue;
+			}
+
+			foreach ($items as $item)
+			{
+				if ($item->isFulfilled())
+				{
+					$fulfilled++;
+
+					$step['fulfilled']['value'] += $item->datetimefulfilled->timestamp - $lastapproved;
+					$step['fulfilled']['total']++;
+
+					$step['completed']['value'] += $item->datetimefulfilled->timestamp - $order->datetimecreated->timestamp;
+					$step['completed']['total']++;
+				}
+			}
+		}
+
+		$avg = $step['payment']['value'] ? $step['payment']['value'] / $step['payment']['total'] : 0;
+		if ($avg)
+		{
+			$avg = self::toHumanReadable($avg);
+		}
+		$step['payment']['average'] = $avg;
+
+		$avg = $step['approval']['value'] ? $step['approval']['value'] / $step['approval']['total'] : null;
+		if ($avg)
+		{
+			$avg = self::toHumanReadable($avg);
+		}
+		$step['approval']['average'] = $avg;
+
+		$avg = $step['fulfilled']['value'] ? $step['fulfilled']['value'] / $step['fulfilled']['total'] : null;
+		if ($avg)
+		{
+			$avg = self::toHumanReadable($avg);
+		}
+		$step['fulfilled']['average'] = $avg;
+
+		$avg = $step['completed']['value'] ? $step['completed']['value'] / $step['completed']['total'] : null;
+		if ($avg)
+		{
+			$avg = self::toHumanReadable($avg);
+		}
+		$step['completed']['average'] = $avg;
+
+		$stats = array(
+			'timeframe' => $timeframe,
+			'submitted' => $total,
+			'canceled'  => $canceled,
+			'fulfilled' => $fulfilled,
+			'steps'     => $step,
+			'daily'     => $placed,
+		);
+
+		return $stats;
+	}
+
+	public static function toHumanReadable($avg)
+	{
+		$unit = '';
+
+		if ($avg < 60)
+		{
+			$unit = 'sec';
+		}
+		else if ($avg < 3600)
+		{
+			$avg /= 60;
+			$unit = 'min';
+		}
+		else if ($avg < 86400)
+		{
+			$avg /= 3600;
+			$unit = 'hrs';
+		}
+		else
+		{
+			$avg /= 86400;
+			$unit = 'days';
+		}
+
+		return round($avg, 2) . ' ' . $unit;
 	}
 }
