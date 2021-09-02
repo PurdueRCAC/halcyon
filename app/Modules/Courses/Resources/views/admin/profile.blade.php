@@ -10,6 +10,9 @@
 			</div>
 		</div>
 	@else
+		<?php
+		$now = Carbon\Carbon::now();
+		?>
 		@if (count($instructing))
 			<div class="card">
 				<table class="table">
@@ -27,7 +30,6 @@
 					</thead>
 					<tbody>
 						<?php
-						$now = Carbon\Carbon::now();
 						$total = 0;
 
 						foreach ($instructing as $class):
