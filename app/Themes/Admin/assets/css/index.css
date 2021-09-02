@@ -51,7 +51,7 @@
   --input-color: #444;
   --input-color-disabled: #656565;
   --input-prepend-back: #f1f1f1;
-  --input-prepend: #495057;
+  --input-prepend: #656565;
   --check-back: #f5f5f5;
   --check-back-disabled: #eee;
   --check-border: #cdcdcd;
@@ -167,7 +167,7 @@
   --input-color: rgba(255, 255, 255, 0.5);
   --input-color-disabled: rgba(255, 255, 255, 0.5);
   --input-prepend-back: rgba(255, 255, 255, 0.1);
-  --input-prepend: rgba(255, 255, 255, 0.5);
+  --input-prepend: rgba(255, 255, 255, 0.3);
   --check-back: rgba(255, 255, 255, 0.1);
   --check-back-disabled: #eee;
   --check-border: transparent;
@@ -1946,10 +1946,13 @@ button.loading .spinner-border,
   border-color: transparent;
   background-color: transparent;
 }
-.input-group .input-group-prepend {
+/*.input-group .input-group-prepend {
   background-color: var(--input-prepend-back);
 }
 .input-group .input-group-prepend .input-group-text {
+  color: var(--input-prepend);
+}*/
+.input-group-text {
   color: var(--input-prepend);
 }
 .input-group .form-control.is-invalid,
