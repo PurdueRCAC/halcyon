@@ -144,8 +144,15 @@ class Associations extends Model
 	{
 		$path = trim($path, '/');
 
+		$a = (new self)->getTable();
+		$p = (new Page)->getTable();
+
 		return self::query()
-			->where('path', '=', $path)
+			->select($a . '.*')
+			->join($p, $p . '.id', $a . '.page_id')
+			->where($a . '.path', '=', $path)
+			->whereNull($p . '.deleted_at')
+			->orderBy($a . '.state', 'desc') // We want published first
 			->limit(1)
 			->first();
 	}
