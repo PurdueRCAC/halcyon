@@ -32,7 +32,7 @@
 					<span class="input-group">
 						<input type="search" name="search" id="knowledge_search" class="form-control" placeholder="{{ trans('knowledge::knowledge.search placeholder') }}" value="" />
 						<span class="input-group-append">
-							<input type="submit" class="input-group-text" value="Submit" />
+							<input type="submit" class="input-group-text" value="{{ trans('global.submit') }}" />
 						</span>
 					</span>
 					<input type="hidden" name="parent" value="{{ $parent }}" />
@@ -81,9 +81,9 @@
 
 		<article>
 			@if ($node->isArchived())
-			<div class="alert alert-warning">
-				This content has been archived and is no longer maintained. Information found here may no longer be accurate and links may no longer be available or reliable.
-			</div>
+				<div class="alert alert-warning">
+					{{ trans('knowledhe::knowledge.page is archived') }}
+				</div>
 			@endif
 
 			@if ($page->params->get('show_title', 1))
@@ -141,7 +141,7 @@
 						<fieldset>
 							<legend>
 								<span id="okapi-a">
-									<span>Helpful?</span>
+									<span>{{ trans('knowledge::knowledge.helpful') }}</span>
 								</span>
 							</legend>
 							<div class="helpful-btn-grp">
@@ -149,15 +149,15 @@
 									data-feedback-type="positive"
 									data-feedback-text="yes"
 									data-feedback-event="btn.click"
-									title="Solved my problem">
-									Yes
+									title="{{ trans('knowledge::knowledge.answered my questions') }}">
+									{{ trans('global.yes') }}
 								</button>
 								<button class="btn btn-feedback btn-outline-secondary" id="no-button"
 									data-feedback-type="negative"
 									data-feedback-text="no"
 									data-feedback-event="btn.click"
-									title="Not helpful">
-									No
+									title="{{ trans('knowledge::knowledge.not helpful') }}">
+									{{ trans('global.no') }}
 								</button>
 							</div>
 						</fieldset>
@@ -166,28 +166,28 @@
 					<div id="feedback-state" class="hide">
 						<form autocomplete="off" method="post" action="{{ route('site.knowledge.page', ['uri' => ($p ? $p : '/')]) }}" data-api="{{ route('api.knowledge.feedback.create') }}">
 							<p id="feedback-response"
-								data-no-label="Thanks for letting us know."
-								data-yes-label="We’re glad this article helped.">
-								Thanks for letting us know.
+								data-no-label="{{ trans('knowledge::knowledge.thanks for letting us know') }}"
+								data-yes-label="{{ trans('knowledge::knowledge.we are glad it helped') }}">
+								{{ trans('knowledge::knowledge.thanks for letting us know') }}
 							</p>
 
 							<div class="form-group">
-								<label id="feedback-label" for="feedback-text" data-no-label="Thanks for letting us know." data-yes-label="We’re glad this article helped.">How can we make this article more helpful? (Optional)</label>
+								<label id="feedback-label" for="feedback-text" data-no-label="{{ trans('knowledge::knowledge.thanks for letting us know') }}" data-yes-label="{{ trans('knowledge::knowledge.we are glad it helped') }}">{{ trans('knowledge::knowledge.how to make more helpful') }}</label>
 								<textarea id="feedback-text" name="comments" rows="2" cols="45"
 									class="form-control form-counter-textarea"
-									data-no-label="How can we make this article more helpful? (Optional)"
-									data-yes-label="Anything else you’d like us to know? (Optional)"
+									data-no-label="{{ trans('knowledge::knowledge.how to make more helpful') }}"
+									data-yes-label="{{ trans('knowledge::knowledge.anything else to add') }}"
 									data-max-length="250"
 									aria-describedby="char_limit_counter"></textarea>
-								<span class="form-text text-muted">Please don’t include any personal information in your comment. Maximum character limit is 250.</span>
+								<span class="form-text text-muted">{{ trans('knowledge::knowledge.feedback desc') }}</span>
 								<div class="form-textbox-counter" id="char_limit_counter">
-									<span class="sr-only" id="char-limit-message">Characters left:</span>
+									<span class="sr-only" id="char-limit-message">{{ trans('knowledge::knowledge.characters left') }}:</span>
 									<span class="char-count text-muted hide">250</span>
 								</div>
 							</div>
 
 							<div class="form-group hide">
-								<label for="feedback-hpt">Leave this field blank</label>
+								<label for="feedback-hpt">{{ trans('knowledge::knowledge.honeypot label') }}</label>
 								<input type="text" name="hpt" id="feedback-hpt" value="" />
 							</div>
 
@@ -197,7 +197,7 @@
 
 							<div class="form-group">
 								<button type="submit" class="btn btn-primary" id="submit-feedback">
-									Submit
+									{{ trans('global.submit') }}
 								</button>
 							</div>
 
@@ -206,7 +206,7 @@
 					</div>
 
 					<div id="rating-done" class="alert alert-success hide">
-						Thanks for your feedback.
+						{{ trans('knowledge::knowledge.thank you for feedback') }}
 					</div>
 				</div>
 			</div>
@@ -322,9 +322,9 @@
 				<p class="text-center">
 					<button class="btn btn-success" id="save-page" type="submit">
 						{{ trans('global.save') }}
-						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Saving...</span></span>
+						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.saving') }}</span></span>
 					</button>
-					<a href="{{ route('site.knowledge.page', ['uri' => ($p ? $p : '/')]) }}" data-id="{{ $page->id }}" class="cancel btn btn-link">Cancel</a>
+					<a href="{{ route('site.knowledge.page', ['uri' => ($p ? $p : '/')]) }}" data-id="{{ $page->id }}" class="cancel btn btn-link">{{ trans('global.button.cancel') }}</a>
 				</p>
 			</form>
 		</div>

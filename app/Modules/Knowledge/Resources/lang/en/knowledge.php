@@ -71,4 +71,18 @@ return [
 	],
 	'tags' => 'Tags',
 	'archived' => 'Archived',
+	'toggle open close' => 'Toggle copn/close',
+	'page is archived' => 'This content has been archived and is no longer maintained. Information found here may no longer be accurate and links may no longer be available or reliable.',
+	// Helpful
+	'answered my questions' => 'Answered my question(s)',
+	'not helpful' => 'Not helpful',
+	'helpful' => 'Helpful?',
+	'thank you for feedback' => 'Thanks for your feedback.',
+	'thanks for letting us know' => 'Thanks for letting us know.',
+	'how to make more helpful' => 'How can we make this article more helpful? (Optional)',
+	'anything else to add' => 'Anything else you’d like us to know? (Optional)',
+	'we are glad it helped' => 'We’re glad this article helped.',
+	'feedback desc' => 'Please don’t include any personal information in your comment. Maximum character limit is 250.',
+	'characters left' => 'Characters left',
+	'honeypot label' => 'Leave this field blank',
 ];

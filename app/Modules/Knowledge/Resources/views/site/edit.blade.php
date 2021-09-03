@@ -132,9 +132,9 @@ app('pathway')
 			<p class="text-center">
 				<button class="btn btn-success" id="save-page" type="submit">
 					{{ trans('global.save') }}
-					<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Saving...</span></span>
+					<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.saving') }}</span></span>
 				</button>
-				<a href="{{ route('site.knowledge.page', ['uri' => ($node->path ? $node->path : '/')]) }}" data-id="{{ $page->id }}" class="cancel btn btn-link">Cancel</a>
+				<a href="{{ route('site.knowledge.page', ['uri' => ($node->path ? $node->path : '/')]) }}" data-id="{{ $page->id }}" class="cancel btn btn-link">{{ trans('global.button.cancel') }}</a>
 			</p>
 		</form>
 	</div>

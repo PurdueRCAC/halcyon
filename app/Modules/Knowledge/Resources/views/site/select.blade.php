@@ -73,11 +73,11 @@ app('pathway')
 
 				<table class="table table-hover">
 					<tbody>
-						<?php foreach ($snippets as $snippet): ?>
-							<tr<?php if ($snippet->level > 1) { echo ' class="d-none"'; } ?> data-parent="{{ $snippet->parent_id }}">
+						@foreach ($snippets as $snippet)
+							<tr<?php if ($snippet->level > 1) { echo ' class="d-none"'; } ?> id="snippet{{ $snippet->id }}" data-parent="{{ $snippet->parent_id }}">
 								<td>
-									<a href="#" class="toggle-tree" data-id="{{ $snippet->id }}">
-										<span class="sr-only">Toggle copn/close</span>
+									<a href="#snippet{{ $snippet->id }}" class="toggle-tree" data-id="{{ $snippet->id }}">
+										<span class="sr-only">{{ trans('knowledge::knowledge.toggle open close') }}</span>
 									</a>
 								</td>
 								<td>
@@ -91,9 +91,9 @@ app('pathway')
 								<td>
 									<label for="field-{{ $snippet->id }}-access" class="sr-only">{{ trans('knowledge::knowledge.access') }}:</label>
 									<select class="form-control" name="snippets[{{ $snippet->parent_id }}][{{ $snippet->id }}][access]" id="field-{{ $snippet->id }}-access">
-										<?php foreach (App\Halcyon\Access\Viewlevel::all() as $access): ?>
+										@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
 											<option value="{{ $access->id }}">{{ $access->title }}</option>
-										<?php endforeach; ?>
+										@endforeach
 									</select>
 								</td>
 								<td>
@@ -104,7 +104,7 @@ app('pathway')
 									</select>
 								</td>
 							</tr>
-						<?php endforeach; ?>
+						@endforeach
 					</tbody>
 				</table>
 			</fieldset>
@@ -114,7 +114,7 @@ app('pathway')
 					{{ trans('knowledge::knowledge.attach') }}
 				</button>
 
-				<a href="{{ $node ? route('site.knowledge.page', ['uri' => $node->path]) : route('site.knowledge.index') }}" class="btn">Cancel</a>
+				<a href="{{ $node ? route('site.knowledge.page', ['uri' => $node->path]) : route('site.knowledge.index') }}" class="btn">{{ trans('global.button.cancel') }}</a>
 			</p>
 			@csrf
 		</form>

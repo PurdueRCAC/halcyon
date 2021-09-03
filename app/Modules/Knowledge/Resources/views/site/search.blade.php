@@ -23,7 +23,7 @@
 					<span class="input-group">
 						<input type="search" name="search" id="knowledge_search" class="form-control" placeholder="{{ trans('knowledge::knowledge.search placeholder') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append">
-							<input type="submit" class="input-group-text" value="Submit" />
+							<input type="submit" class="input-group-text" value="{{ trans('global.submit') }}" />
 						</span>
 					</span>
 					<input type="hidden" name="parent" value="{{ $filters['parent'] }}" />

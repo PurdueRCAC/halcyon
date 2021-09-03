@@ -38,6 +38,7 @@ return [
 	'show' => 'Show',
 	'hide' => 'Hide',
 	'select' => 'Select',
+	'submit' => 'Submit',
 	'warn javascript required' => 'Warning! JavaScript must be enabled for proper operation of the Administrator backend.',
 	'admin' => [
 		'record id' => 'Record #:id',
@@ -112,6 +113,7 @@ return [
 	'list alias' => '(<span>Alias</span>: :alias)',
 	'list alias note' => '(<span>Alias</span>: :alias, <span>Note</span>: :note)',
 	'loading' => 'Loading...',
+	'saving' => 'Saving...',
 	'state' => 'State',
 	'access' => 'Access',
 	'option' => array(
