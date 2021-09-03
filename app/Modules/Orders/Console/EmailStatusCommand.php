@@ -388,7 +388,7 @@ class EmailStatusCommand extends Command
 			{
 				$product = $item->product;
 
-				if ($product->ticket && (!$item->sequence || $item->isOriginal()))
+				if ($product->ticket && (!count($item->sequence()) || $item->isOriginal()))
 				{
 					$ticket = true;
 				}
