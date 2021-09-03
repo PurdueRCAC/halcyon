@@ -1004,7 +1004,7 @@ class OrdersController extends Controller
 					continue;
 				}
 
-				foreach ($order->accounts as $account)
+				foreach ($order->accounts()->withTrashed()->whereIsActive()->get() as $account)
 				{
 					if (($account->purchaseio == $item->purchaseio || $account->purchasewbse == $item->purchasewbse)
 					&& $item->paymentdocid != $account->paymentdocid)
@@ -1020,6 +1020,11 @@ class OrdersController extends Controller
 
 						$updated++;
 					}
+				}
+
+				if ($order->status == 'complete')
+				{
+					$order->update(['notice' => 7]); // Complete
 				}
 			}
 
