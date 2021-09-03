@@ -361,6 +361,10 @@ class ReportsController extends Controller
 
 		if ($people = $request->input('people'))
 		{
+			if (strstr($people, ','))
+			{
+				$people = explode(',', $people);
+			}
 			$people = (array)$people;
 
 			// Fetch current list of users
