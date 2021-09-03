@@ -262,6 +262,8 @@ class GroupProvision
 			$status = $status ?: 500;
 			$body   = ['error' => $e->getMessage()];
 
+			$event->member->error = $e->getMessage();
+
 			error_log($e->getMessage());
 		}
 

@@ -334,6 +334,11 @@ class UsersController extends Controller
 		if ($resourcemember->status == 1 || $resourcemember->status == 4)
 		{
 			event($resourcemember = new ResourceMemberCreated($row->queue->scheduler->resource, $row->user));
+
+			if ($resourcemember->status >= 400)
+			{
+				$row->error = implode("\n", $resourcemember->errors);
+			}
 		}
 
 		$row->api = route('api.queues.users.read', ['id' => $row->id]);

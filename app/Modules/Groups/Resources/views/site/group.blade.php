@@ -918,6 +918,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			e.preventDefault();
 
 			var bx = $(this);
+			bx.parent().find('.fa').remove();
 
 			if (bx.is(':checked')) {
 				if (bx.attr('data-base') && bx.attr('data-base') != bx.attr('id')) {
@@ -946,6 +947,10 @@ document.addEventListener('DOMContentLoaded', function() {
 					async: false,
 					success: function (data) {
 						bx.data('api', data.api);
+						if (typeof data.error != undefined) {
+							bx.after($('<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" title="' + data.error + '"><span class="sr-only">' + data.error + '</span></span>'));
+							alert('An error occurred. Try toggling the checkbox. If issues persist, please contact help.');
+						}
 					},
 					error: function (xhr, ajaxOptions, thrownError) {
 						if (xhr.status == 416) {
@@ -962,6 +967,10 @@ document.addEventListener('DOMContentLoaded', function() {
 					dataType: 'json',
 					async: false,
 					success: function (data) {
+						if (typeof data.error != undefined) {
+							bx.after($('<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" title="' + data.error + '"><span class="sr-only">' + data.error + '</span></span>'));
+							alert('An error occurred. Try toggling the checkbox. If issues persist, please contact help.');
+						}
 						//bx.data('api', bx.data('api-create'));
 					},
 					error: function (xhr, ajaxOptions, thrownError) {

@@ -23,6 +23,11 @@ class ResourceMemberCreated
 	public $status;
 
 	/**
+	 * @var array
+	 */
+	public $errors = array();
+
+	/**
 	 * Constructor
 	 *
 	 * @param Subresource $subresource

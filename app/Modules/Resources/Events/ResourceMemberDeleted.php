@@ -18,6 +18,11 @@ class ResourceMemberDeleted
 	public $user;
 
 	/**
+	 * @var array
+	 */
+	public $errors = array();
+
+	/**
 	 * Constructor
 	 *
 	 * @param Subresource $subresource

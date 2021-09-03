@@ -94,8 +94,6 @@ class RoleProvision
 			else
 			{
 				throw new \Exception('RoleProvision: Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username, $status);
-
-				//error_log('RoleProvision: Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
 			}
 		}
 		catch (\Exception $e)
@@ -103,6 +101,8 @@ class RoleProvision
 			$status = $e->getCode();
 			$status = $status ?: 500;
 			$body   = ['error' => $e->getMessage()];
+
+			$event->errors[] = $e->getMessage();
 
 			error_log('RoleProvision: Could not create AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
 		}
@@ -157,8 +157,6 @@ class RoleProvision
 			else
 			{
 				throw new \Exception('RoleProvision: Could not delete AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username, $status);
-	
-				//error_log('RoleProvision: Could not delete AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $res->getBody()->getContents());
 			}
 		}
 		catch (\Exception $e)
@@ -166,6 +164,8 @@ class RoleProvision
 			$status = $e->getCode();
 			$status = $status ?: 500;
 			$body   = ['error' => $e->getMessage()];
+
+			$event->errors[] = $e->getMessage();
 
 			error_log('RoleProvision: Could not delete AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
 		}
@@ -268,6 +268,7 @@ class RoleProvision
 			$status  = $status ?: 500;
 			$results = ['error' => $e->getMessage()];
 			$event->status = -1;
+			$event->errors[] = $e->getMessage();
 
 			error_log('RoleProvision: Could not retrieve AIMO ACMaint role for ' . $event->resource->rolename . '/' . $event->user->username . ': ' . $e->getMessage());
 		}
