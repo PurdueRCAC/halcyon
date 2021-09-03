@@ -176,12 +176,14 @@ class PagesController extends Controller
 			? auth()->user()->getAuthorisedViewLevels()
 			: array(1);
 
-		$query = Page::query();
+		//$query = Page::query();
 
 		$p = (new Page)->getTable();
 		$a = (new Associations)->getTable();
 
-		$query->join($a, $a . '.page_id', $p . '.id')
+		//$query->join($a, $a . '.page_id', $p . '.id')
+		$query = Associations::query()
+			->join($p, $a . '.page_id', $p . '.id')
 			->select($p . '.title', $p . '.content', $p . '.params', $p . '.snippet', $p . '.updated_at', $a . '.*');
 
 		if ($filters['search'])
