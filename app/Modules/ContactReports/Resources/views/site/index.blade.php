@@ -19,6 +19,8 @@ app('pathway')->append(
 );
 @endphp
 
+@section('title'){{ trans('contactreports::contactreports.contact reports') }}@stop
+
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	<h2>Quick Filters</h2>

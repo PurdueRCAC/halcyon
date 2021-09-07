@@ -151,4 +151,19 @@ class ReportsController extends Controller
 			'followinggroups' => $followinggroups,
 		]);
 	}
+
+	/**
+	 * Display a single entry
+	 * 
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function show(Request $request, $id)
+	{
+		$row = Report::findOrFail($id);
+
+		return view('contactreports::site.show', [
+			'row' => $row,
+		]);
+	}
 }
