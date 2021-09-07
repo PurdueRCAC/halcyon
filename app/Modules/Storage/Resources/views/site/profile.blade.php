@@ -342,7 +342,7 @@
 					</caption>
 					<thead>
 						<tr>
-							<th scope="col">Resource</th>
+							<th scope="col">Location</th>
 							<th scope="col" class="text-center">Space<br />Used / Limit</th>
 							<th scope="col" class="text-center">Files<br />Used / Limit</th>
 							<th scope="col" class="text-center">Last Check</th>
@@ -483,7 +483,7 @@
 					<caption class="sr-only">Current Storage Alerts</caption>
 					<thead>
 						<tr>
-							<th scope="col">Filesystem</th>
+							<th scope="col">Location</th>
 							<th scope="col">Alert Type</th>
 							<th scope="col" class="text-center">Threshold</th>
 							<th scope="col" class="text-center">Enabled</th>
@@ -801,7 +801,7 @@
 					</caption>
 					<thead>
 						<tr>
-							<th scope="col">Filesystem</th>
+							<th scope="col">Location</th>
 							<th scope="col">Alert Type</th>
 							<th scope="col">Frequency</th>
 							<th scope="col" class="text-center">Enabled</th>
