@@ -20,6 +20,7 @@
 
 <?php
 $events = array();
+$attend = array();
 
 foreach ($rows as $event)
 {
@@ -38,6 +39,8 @@ foreach ($rows as $event)
 		if (auth()->user() && $assoc->associd == auth()->user()->id)
 		{
 			$attending = $assoc->id;
+			$event->attending = $assoc->id;
+			$attend[] = $event;
 		}
 		elseif ($event->url && $assoc->assoctype == 'user')
 		{
@@ -234,6 +237,44 @@ foreach ($rows as $event)
 			@endif
 		</div>
 	</section>
+	<?php
+}
+
+if (count($attend))
+{
+	?>
+
+	<?php
+	foreach ($attend as $event)
+	{
+		?>
+
+		<div class="alert alert-success">
+			<a class="btn-notattend float-right btn btn-sm btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $event->attending }}" title="Cancel reservation">Cancel</a>
+
+			You have the following time slot reserved.<br />
+			{!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
+			<?php
+			if ($event->isToday())
+			{
+				if ($event->isNow())
+				{
+					echo ' <span class="badge badge-success">' . trans('news::news.happening now') . '</span>';
+				}
+				else
+				{
+					echo ' <span class="badge badge-info">' . trans('news::news.today') . '</span>';
+				}
+			}
+			elseif ($event->isTomorrow())
+			{
+				echo ' <span class="badge badge-secondary">' . trans('news::news.tomorrow') . '</span>';
+			}
+			?>
+		</div>
+		<?php
+	}
+	?>
 	<?php
 }
 ?>
