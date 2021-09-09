@@ -208,6 +208,7 @@ class QueuesController extends Controller
 		$row->priority = 1000;
 		$row->defaultwalltime = 0.5;
 		$row->enabled = 1;
+		$row->started = 1;
 
 		if ($fields = app('request')->old('fields'))
 		{
