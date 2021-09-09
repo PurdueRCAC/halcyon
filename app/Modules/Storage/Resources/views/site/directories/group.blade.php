@@ -1050,7 +1050,6 @@
 									data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
 									<option value="0">{{ trans('storage::storage.select group') }}</option>
 									<option value="-1" selected="selected">{{ trans('storage::storage.org owned') }}</option>
-									
 								</select>
 							</div>
 

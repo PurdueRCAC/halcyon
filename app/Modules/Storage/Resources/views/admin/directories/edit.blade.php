@@ -118,63 +118,102 @@ app('pathway')
 				<div class="col-md-5">
 					<fieldset class="adminform">
 						<legend>{{ trans('storage::storage.permissions') }}</legend>
-							<table class="table table-hover table-bordered mb-3">
-								<caption class="sr-only">{{ trans('storage::storage.permissions') }}</caption>
-								<thead>
-									<tr>
-										<th scope="col">{{ trans('storage::storage.permission.level') }}</th>
-										<th scope="col" class="text-center">{{ trans('storage::storage.permission.read') }}</th>
-										<th scope="col" class="text-center">{{ trans('storage::storage.permission.write') }}</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<th scope="row">{{ trans('storage::storage.permission.owner') }}</th>
-										<td class="text-center">
-											<div class="form-check">
-												<input type="checkbox" name="fields[ownerread]" id="field-ownerread" <?php if ($row->ownerread) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-												<label for="field-ownerread" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.read') }}</span></label>
-											</div>
-										</td>
-										<td class="text-center">
-											<div class="form-check">
-												<input type="checkbox" name="fields[ownerwrite]" id="field-ownerwrite" <?php if ($row->ownerwrite) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-												<label for="field-ownerwrite" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.write') }}</span></label>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<th scope="row">{{ trans('storage::storage.permission.group') }}</th>
-										<td class="text-center">
-											<div class="form-check">
-												<input type="checkbox" name="fields[groupread]" id="field-groupread" <?php if ($row->groupread) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-												<label for="field-groupread" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.read') }}</span></label>
-											</div>
-										</td>
-										<td class="text-center">
-											<div class="form-check">
-												<input type="checkbox" name="fields[groupwrite]" id="field-groupwrite" <?php if ($row->groupwrite) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-												<label for="field-groupwrite" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.write') }}</span></label>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<th scope="row">{{ trans('storage::storage.permission.public') }}</th>
-										<td class="text-center">
-											<div class="form-check">
-												<input type="checkbox" name="fields[publicread]" id="field-publicread" <?php if ($row->publicread) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-												<label for="field-publicread" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.read') }}</span></label>
-											</div>
-										</td>
-										<td class="text-center">
-											<div class="form-check">
-												<input type="checkbox" name="fields[publicwrite]" id="field-publicwrite" <?php if ($row->publicwrite) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-												<label for="field-publicwrite" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.write') }}</span></label>
-											</div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
+
+						<div class="form-group">
+							<label for="field-unixgroupid">Access Unix Group:</label>
+							<select id="field-unixgroupid" name="fields[unixgroupid]" class="form-control">
+								<option value="">(Select Unix Group)</option>
+								@if ($row->group)
+									@foreach ($row->group->unixgroups as $unixgroup)
+										<option value="{{ $unixgroup->id }}" <?php if ($row->unixgroupid == $unixgroup->id) { echo ' selected="selected"'; } ?> data-api="{{ route('api.unixgroups.read', ['id' => $unixgroup->id]) }}">{{ $unixgroup->longname }}</option>
+									@endforeach
+								@endif
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label for="field-autouser">Type:</label>
+							<select id="field-autouser" name="fields[autouser]" data-update="#autouserunixgroupid" class="form-control">
+								<option value="0">Group Shared</option>
+								<option value="1" data-read="1" data-write="0"<?php if ($row->autouser == 1) { echo ' selected="selected"'; } ?>>Auto User - Group Readable</option>
+								<option value="3" data-read="1" data-write="1"<?php if ($row->autouser == 3) { echo ' selected="selected"'; } ?>>Auto User - Group Readable & Writeable</option>
+								<option value="2" data-read="0" data-write="0"<?php if ($row->autouser == 2) { echo ' selected="selected"'; } ?>>Auto User - Private</option>
+								<option value="0" data-read="1" data-write="0"<?php if (!$row->autouser && $row->groupread && !$row->groupwrite) { echo ' selected="selected"'; } ?>>User Owned - Group Readable</option>
+								<option value="0" data-read="1" data-write="1"<?php if (!$row->autouser && $row->groupread && $row->groupwrite) { echo ' selected="selected"'; } ?>>User Owned - Group Writeable</option>
+								<option value="0" data-read="0" data-write="0"<?php if (!$row->autouser && !$row->groupread && !$row->groupwrite) { echo ' selected="selected"'; } ?>>User Owned - Private</option>
+							</select>
+							<span class="form-text text-muted">"Auto User" values will auto-create directories for anyone assigned to a "Populating Unix Group".</span>
+						</div>
+
+						<div id="autouserunixgroupid" class="form-group<?php if (!$row->autouser) { echo ' hidden'; } ?>">
+							<label for="field-autouserunixgroupid">Populating Unix Group</label>
+							<select id="field-autouserunixgroupid" name="fields[autouserunixgroupid]" class="form-control">
+								<option value="">(Select Unix Group)</option>
+								@if ($row->group)
+									@foreach ($row->group->unixgroups as $unixgroup)
+										<option value="{{ $unixgroup->id }}"<?php if ($row->autouserunixgroupid == $unixgroup->id) { echo ' selected="selected"'; } ?>>{{ $unixgroup->longname }}</option>
+									@endforeach
+								@endif
+							</select>
+						</div>
+
+						<table class="table table-hover table-bordered mb-3">
+							<caption class="sr-only">{{ trans('storage::storage.permissions') }}</caption>
+							<thead>
+								<tr>
+									<th scope="col">{{ trans('storage::storage.permission.level') }}</th>
+									<th scope="col" class="text-center">{{ trans('storage::storage.permission.read') }}</th>
+									<th scope="col" class="text-center">{{ trans('storage::storage.permission.write') }}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th scope="row">{{ trans('storage::storage.permission.owner') }}</th>
+									<td class="text-center">
+										<div class="form-check">
+											<input type="checkbox" name="fields[ownerread]" id="field-ownerread" <?php if ($row->ownerread) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
+											<label for="field-ownerread" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.read') }}</span></label>
+										</div>
+									</td>
+									<td class="text-center">
+										<div class="form-check">
+											<input type="checkbox" name="fields[ownerwrite]" id="field-ownerwrite" <?php if ($row->ownerwrite) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
+											<label for="field-ownerwrite" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.write') }}</span></label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{ trans('storage::storage.permission.group') }}</th>
+									<td class="text-center">
+										<div class="form-check">
+											<input type="checkbox" name="fields[groupread]" id="field-groupread" <?php if ($row->groupread) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
+											<label for="field-groupread" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.read') }}</span></label>
+										</div>
+									</td>
+									<td class="text-center">
+										<div class="form-check">
+											<input type="checkbox" name="fields[groupwrite]" id="field-groupwrite" <?php if ($row->groupwrite) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
+											<label for="field-groupwrite" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.write') }}</span></label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{ trans('storage::storage.permission.public') }}</th>
+									<td class="text-center">
+										<div class="form-check">
+											<input type="checkbox" name="fields[publicread]" id="field-publicread" <?php if ($row->publicread) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
+											<label for="field-publicread" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.read') }}</span></label>
+										</div>
+									</td>
+									<td class="text-center">
+										<div class="form-check">
+											<input type="checkbox" name="fields[publicwrite]" id="field-publicwrite" <?php if ($row->publicwrite) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
+											<label for="field-publicwrite" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.write') }}</span></label>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 
 					</fieldset>
 				</div>

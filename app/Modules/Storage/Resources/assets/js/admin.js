@@ -550,7 +550,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var groups = $(".form-groups");
 	if (groups.length) {
-		groups.each(function(i, group){
+		groups.each(function (i, group) {
 			group = $(group);
 			var cl = group.clone()
 				.attr('type', 'hidden')
@@ -562,13 +562,14 @@ document.addEventListener('DOMContentLoaded', function() {
 				.after(cl);
 			group.autocomplete({
 				minLength: 2,
-				source: function( request, response ) {
+				source: function (request, response) {
 					return $.getJSON(group.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
 						response($.map(data.data, function (el) {
 							return {
 								label: el.name,
 								name: el.name,
 								id: el.id,
+								api: el.api
 							};
 						}));
 					});
@@ -578,13 +579,47 @@ document.addEventListener('DOMContentLoaded', function() {
 					// Set selection
 					group.val(ui.item.label); // display the selected text
 					cl.val(ui.item.id); // save selected id to input
+
+					if ($('#field-unixgroupid').length) {
+						$.ajax({
+							url: ui.item.api,
+							type: 'get',
+							dataType: 'json',
+							async: false,
+							success: function (data) {
+								var i = 0;
+								$('#field-unixgroupid')
+									.empty()
+									.append($('<option value="">(Select Unix Group)</option>'));
+								$('#field-autouserunixgroupid')
+									.empty()
+									.append($('<option value="">(Select Unix Group)</option>'));
+								for (var i = 0; i < data.unixgroups.length; i++) {
+									$('#field-unixgroupid')
+										.append($('<option value="' + data.unixgroups[i].id + '">' + data.unixgroups[i].longname + '</option>'));
+
+									$('#field-autouserunixgroupid')
+										.append($('<option value="' + data.unixgroups[i].id + '">' + data.unixgroups[i].longname + '</option>'));
+								}
+							},
+							error: function (xhr, reason, thrownError) {
+								if (xhr.responseJSON) {
+									Halcyon.message('danger', xhr.responseJSON.message);
+								} else {
+									Halcyon.message('danger', 'Failed to delete directory.');
+								}
+								console.log(xhr.responseText);
+							}
+						});
+					}
+
 					return false;
 				}
 			});
 		});
 	}
 
-	$('#field-name').on('keyup', function (e){
+	$('#field-name').on('keyup', function (e) {
 		var val = $(this).val();
 
 		val = val.toLowerCase()
@@ -592,6 +627,36 @@ document.addEventListener('DOMContentLoaded', function() {
 			.replace(/[^a-z0-9\-_]+/g, '');
 
 		$(this).val(val);
+	});
+
+	$('#field-autouser').on('change', function (e) {
+		var opt = $($(this).find('option:selected')[0]);
+
+		var read = opt.attr('data-read');
+		var write = opt.attr('data-write');
+
+		if ($(this).val() != '0') {
+			$($(this).attr('data-update')).removeClass('hidden');
+		} else {
+			$($(this).attr('data-update')).addClass('hidden');
+		}
+
+		$('#field-ownerread').prop('checked', true);
+		$('#field-ownerwrite').prop('checked', true);
+		$('#field-publicread').prop('checked', false);
+		$('#field-publicwrite').prop('checked', false);
+
+		if (read == '1') {
+			$('#field-groupread').prop('checked', true);
+		} else {
+			$('#field-groupread').prop('checked', false);
+		}
+
+		if (write == '1') {
+			$('#field-groupwrite').prop('checked', true);
+		} else {
+			$('#field-groupwrite').prop('checked', false);
+		}
 	});
 
 	$(".tree").each(function(i, el){
