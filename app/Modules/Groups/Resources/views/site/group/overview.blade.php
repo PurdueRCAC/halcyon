@@ -185,7 +185,11 @@
 					<div class="row">
 						<div class="col-md-11">
 							@foreach ($field->field->ancestors() as $ancestor)
-								<?php if (!$ancestor->parentid) { continue; } ?>
+								@php
+								if (!$ancestor->parentid):
+									continue;
+								endif;
+								@endphp
 								{{ $ancestor->name }} <span class="text-muted">&rsaquo;</span>
 							@endforeach
 							{{ $field->field->name }}
@@ -287,9 +291,13 @@
 			<div class="col col-md-6 text-right">
 				@if ($canManage)
 					@if (count($group->unixgroups) > 0)
-						<a href="#new-unixgroup_{{ $group->id }}" class="btn btn-default btn-sm add-unix-group help">
-							<span class="fa fa-plus-circle" aria-hidden="true"></span> Add New Unix Group
-						</a>
+						@if (count($group->unixgroups) == 29)
+							<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span> Max number of custom unix groups reached
+						@else
+							<a href="#new-unixgroup_{{ $group->id }}" class="btn btn-default btn-sm add-unix-group help">
+								<span class="fa fa-plus-circle" aria-hidden="true"></span> Add New Unix Group
+							</a>
+						@endif
 					@endif
 				@endif
 			</div>
@@ -374,7 +382,10 @@
 				</thead>
 				<tfoot>
 					<tr>
-						<td colspan="5" class="text-right">
+						<td>
+							<span class="text-muted">Up to 26 custom unix groups allowed.</span>
+						</td>
+						<td colspan="4" class="text-right">
 							<button class="btn btn-sm reveal" data-toggle=".extendedinfo" data-text="<span class='fa fa-eye-slash'></span> Hide Extended Info</button>"><span class="fa fa-eye"></span> Show Extended Info</button>
 						</td>
 					</tr>
