@@ -292,7 +292,10 @@
 				@if ($canManage)
 					@if (count($group->unixgroups) > 0)
 						@if (count($group->unixgroups) == 29)
-							<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span> Max number of custom unix groups reached
+							<span class="fa fa-exclamation-triangle text-warning tip" aria-hidden="true" title="Max number of custom unix groups reached"></span><span class="sr-only">Max number of custom unix groups reached</span>
+							<button class="btn btn-default btn-sm" disabled="disabled">
+								<span class="fa fa-plus-circle" aria-hidden="true"></span> Add New Unix Group
+							</button>
 						@else
 							<a href="#new-unixgroup_{{ $group->id }}" class="btn btn-default btn-sm add-unix-group help">
 								<span class="fa fa-plus-circle" aria-hidden="true"></span> Add New Unix Group
@@ -306,17 +309,16 @@
 	<div class="card-body panel-body">
 		<div class="card panel panel-default">
 			<div class="card-body panel-body">
-				<?php //if ($group->unixgroup) { ?>
-					<div class="form-inline row">
-						<label class="col-md-3" for="INPUT_unixgroup_{{ $group->id }}">Base Name: <a href="#box1_{{ $group->id }}" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a></label>
+				<div class="form-inline row">
+					<label class="col-md-3" for="INPUT_unixgroup_{{ $group->id }}">Base Name: <a href="#box1_{{ $group->id }}" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a></label>
 
-						<div class="col-md-5">
-							<span id="SPAN_unixgroup_{{ $group->id }}">{{ $group->unixgroup ? $group->unixgroup : trans('global.none') }}</span>
-							<input type="{{ $canManage ? 'text' : 'hidden' }}" class="form-control edit-property-input hide" id="INPUT_unixgroup_{{ $group->id }}" maxlength="10" pattern="[a-z0-9\-]+" data-prop="unixgroup" data-value="{{ $group->id }}" value="" />
-							<span class="form-text text-muted edit-property-input hide">Lowercase letters, numbers, and dashes only. Max 10 characters.</span>
-						</div>
-						<div class="col-md-4 text-right">
-							@if ($canManage)
+					<div class="col-md-5">
+						<span id="SPAN_unixgroup_{{ $group->id }}">{{ $group->unixgroup ? $group->unixgroup : trans('global.none') }}</span>
+						<input type="{{ $canManage ? 'text' : 'hidden' }}" class="form-control edit-property-input hide" id="INPUT_unixgroup_{{ $group->id }}" maxlength="10" pattern="[a-z0-9\-]+" data-prop="unixgroup" data-value="{{ $group->id }}" value="" />
+						<span class="form-text text-muted edit-property-input hide">Lowercase letters, numbers, and dashes only. Max 10 characters.</span>
+					</div>
+					<div class="col-md-4 text-right">
+						@if ($canManage)
 							<a href="{{ route('site.users.account.section', ['section' => 'groups']) }}#edit-property" id="EDIT_unixgroup_{{ $group->id }}" class="btn edit-property tip" data-prop="unixgroup" data-value="{{ $group->id }}" title="{{ trans('global.edit') }}"><!--
 								--><span class="fa fa-pencil" id="IMG_unixgroup_{{ $group->id }}"></span><span class="sr-only">{{ trans('global.edit') }}</span><!--
 							--></a>
@@ -328,17 +330,9 @@
 							<a href="{{ route('site.users.account.section', ['section' => 'groups']) }}#cancel-property" id="CANCEL_unixgroup_{{ $group->id }}" class="btn cancel-edit-property tip hide" data-prop="unixgroup" data-value="{{ $group->id }}" title="{{ trans('global.cancel') }}"><!--
 								--><span class="fa fa-ban"></span><span class="sr-only">{{ trans('global.cancel') }}</span><!--
 							--></a>
-							@endif
-						</div>
+						@endif
 					</div>
-				<?php /*} else { ?>
-					<div class="form-inline row">
-						<label class="col-md-3" for="INPUT_unixgroup_{{ $group->id }}">Base Name: <a href="#box1_{{ $group->id }}" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a></label>
-						<div class="col-md-9">
-							<?php echo $group->unixgroup ? $group->unixgroup : '<span class="text-muted">' . trans('global.none') . '</span>'; ?>
-						</div>
-					</div>
-				<?php }*/ ?>
+				</div>
 			</div>
 		</div>
 
