@@ -4,6 +4,7 @@ namespace App\Listeners\Users\DbmLdap;
 use App\Modules\Users\Events\UserCreated;
 use App\Modules\Users\Events\UserSearching;
 use App\Modules\Users\Events\UserLookup;
+use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Halcyon\Utility\Str;
@@ -27,6 +28,7 @@ class DbmLdap
 		$events->listen(UserSearching::class, self::class . '@handleUserSearching');
 		$events->listen(UserCreated::class, self::class . '@handleUserCreated');
 		$events->listen(UserLookup::class, self::class . '@handleUserLookup');
+		//$events->listen(UserBeforeDisplay::class, self::class . '@handleUserBeforeDisplay');
 	}
 
 	/**
@@ -315,5 +317,100 @@ class DbmLdap
 		}
 
 		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'cn=' . $event->user->username);
+	}
+
+	/**
+	 * Display user profile info
+	 *
+	 * @param   UserBeforeDisplay  $event
+	 * @return  void
+	 */
+	public function handleUserBeforeDisplay(UserBeforeDisplay $event)
+	{
+		$config = $this->config();
+
+		if (empty($config))
+		{
+			return;
+		}
+
+		$user = $event->getUser();
+
+		try
+		{
+			$ldap = $this->connect($config);
+
+			$status = 404;
+
+			// Performing a query.
+			$data = $ldap->search()
+				->where('uid', '=', $user->username)
+				->select(['cn', 'uid', 'employeeNumber', 'employeeType'])
+				->get();
+
+			if (!empty($data))
+			{
+				$status = 200;
+
+				foreach ($data as $key => $result)
+				{
+					$types = array();
+
+					foreach ($result['employeeType'] as $type)
+					{
+						if ($type == 13101)
+						{
+							$types[] = 'Admin/Professional';
+						}
+
+						if ($type == 13103)
+						{
+							$types[] = 'Clinical/Research';
+						}
+
+						if ($type == 13104)
+						{
+							$types[] = 'Continuing Lecturer';
+						}
+
+						if ($type == 13105)
+						{
+							$types[] = 'Faculty';
+						}
+
+						if ($type == 13111)
+						{
+							$types[] = 'Limited Term Lecturer';
+						}
+
+						if ($type == 13112)
+						{
+							$types[] = 'Mgmt/Professional';
+						}
+
+						if ($type == 13114)
+						{
+							$types[] = 'Non-Pay (professor emerita or emeritus | graduate teaching assistant)';
+						}
+
+						if ($type == 13124)
+						{
+							$types[] = 'Visiting Faculty/Emeritus Faculty';
+						}
+					}
+
+					$user->employeeType = $types;
+				}
+			}
+		}
+		catch (\Exception $e)
+		{
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
+		}
+
+		$event->setUser($user);
+
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, json_encode($query));
 	}
 }
