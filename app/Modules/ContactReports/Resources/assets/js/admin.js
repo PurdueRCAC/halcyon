@@ -1,40 +1,7 @@
 /**
- * @package    halcyon
- * @copyright  Copyright 2019 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
+ * @package  Contact Reports
  */
-/*
-Halcyon.submitbutton = function(task) {
-	var frm = document.getElementById('item-form');
 
-	if (frm) {
-		$(document).trigger('editorSave');
-
-		if (task == 'cancel' || document.formvalidator.isValid(frm)) {
-			Halcyon.submitform(task, frm);
-		} else {
-			alert(frm.getAttribute('data-invalid-msg'));
-		}
-	}
-}
-
-function filterRecords() {
-	$.ajax({
-		url: my_url,
-		type: 'get',
-		dataType: 'json',
-		async: false,
-		success: function(data) {
-			if (data !== null) {
-				result = parseDirectoryListing(data);
-			}
-		},
-		error: function() {
-			console.log('error loading history');
-		}
-	});
-}
-*/
 /**
  * Initiate event hooks
  */
