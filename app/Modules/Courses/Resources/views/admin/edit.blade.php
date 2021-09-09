@@ -65,9 +65,9 @@ app('pathway')
 						<label for="field-type">{{ trans('courses::courses.type') }}:</label>
 						<select name="type" id="field-type" class="form-control">
 							@if ($row->id || count($classes))
-								<option value="course">{{ trans('courses::courses.course') }}</option>
+								<option value="course"<?php if ($row->semester != 'Workshop') { echo ' selected="selected"'; } ?>>{{ trans('courses::courses.course') }}</option>
 							@endif
-							<option value="workshop">{{ trans('courses::courses.workshop') }}</option>
+							<option value="workshop"<?php if ($row->semester == 'Workshop') { echo ' selected="selected"'; } ?>>{{ trans('courses::courses.workshop') }}</option>
 						</select>
 					</div>
 

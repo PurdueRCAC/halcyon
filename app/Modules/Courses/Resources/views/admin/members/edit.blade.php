@@ -1,5 +1,22 @@
 @extends('layouts.master')
 
+@php
+app('request')->merge(['hidemainmenu' => 1]);
+
+app('pathway')
+	->append(
+		trans('courses::courses.module name'),
+		route('admin.courses.index')
+	)
+	->append(
+		trans('courses::courses.members'),
+		route('admin.courses.members')
+	)
+	->append(
+		($row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create'))
+	);
+@endphp
+
 @section('toolbar')
 	@if (auth()->user()->can('edit groups'))
 		{!! Toolbar::save(route('admin.courses.members.store')) !!}
@@ -35,13 +52,13 @@
 
 		<div class="form-group" data-hint="{{ trans('courses::courses.name hint') }}">
 			<label for="field-name">{{ trans('courses::courses.name') }}:</label>
-			<input type="text" name="fields[name]" id="field-user" class="form-control disabled" disabled="disabled" readonly="readonly" value="{{ $row->user ? $row->user->username : '' }}" />
+			<input type="text" name="name" id="field-user" class="form-control disabled" disabled="disabled" readonly="readonly" value="{{ $row->user ? $row->user->username : '' }}" />
 		</div>
 
 		<div class="form-group">
-			<select name="membertype[{{ $row->id }}]" class="form-control"<?php if ($row->user && $row->user->isTrashed()) { echo ' disabled'; } ?>>
-				<option valie="1"<?php if ($row->membertype != 2) { echo ' selected="selected"'; } ?>>Student</option>
-				<option valie="2"<?php if ($row->membertype == 2) { echo ' selected="selected"'; } ?>>Instructor</option>
+			<select name="membertype" class="form-control"<?php if ($row->user && $row->user->isTrashed()) { echo ' disabled'; } ?>>
+				<option valie="1"<?php if ($row->membertype != 2) { echo ' selected="selected"'; } ?>>{{ trans('courses::courses.student') }}</option>
+				<option valie="2"<?php if ($row->membertype == 2) { echo ' selected="selected"'; } ?>>{{ trans('courses::courses.instructor') }}</option>
 			</select>
 		</div>
 	</fieldset>

@@ -440,7 +440,7 @@ class AccountsController extends Controller
 
 			if ($exist)
 			{
-				return response()->json(['message' => trans('Record with provided `crn` already exists')], 415);
+				return response()->json(['message' => trans('courses::courses.error.duplicate crn')], 415);
 			}
 
 			// Fetch information about class from input.
@@ -451,7 +451,7 @@ class AccountsController extends Controller
 			if (!$row->crn)
 			{
 				// Invalid CRN/classID provided
-				return response()->json(['message' => trans('Invalid CRN/classID provided')], 500);
+				return response()->json(['message' => trans('courses::courses.error.invalid class')], 500);
 			}
 
 			// If this is a CRN course, add/subtract from time.
@@ -472,14 +472,14 @@ class AccountsController extends Controller
 			foreach ($users as $user)
 			{
 				$member = new Member;
-				$member->userud = $user;
+				$member->userid = $user;
 				$member->classaccountid = $row->id;
 				$member->datetimestart = $row->start;
 				$member->datetimestop = $row->stop;
 
 				if (!$member->save())
 				{
-					return response()->json(['message' => trans('Failed to create classuser record')], 500);
+					return response()->json(['message' => trans('courses::courses.error.entry failed for user', ['name' => 'ID #' . $user])], 500);
 				}
 			}
 		}
@@ -655,7 +655,7 @@ class AccountsController extends Controller
 
 		if ($row->datetimestart >= $row->datetimestop)
 		{
-			return response()->json(['message' => trans('Invalid start and stop times')], 415);
+			return response()->json(['message' => trans('courses::courses.error.invalid dates')], 415);
 		}
 
 		if (!$row->save())

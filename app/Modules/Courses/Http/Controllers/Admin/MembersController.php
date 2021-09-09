@@ -120,15 +120,14 @@ class MembersController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
+	 * @param  Request  $request
 	 * @return Response
 	 */
-	public function create()
+	public function create(Request $request)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = new Account();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -139,7 +138,7 @@ class MembersController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Store member info
 	 *
 	 * @param  Request $request
 	 * @return Response
@@ -147,7 +146,8 @@ class MembersController extends Controller
 	public function store(Request $request)
 	{
 		$rules = [
-			'fields.name' => 'required'
+			'userid' => 'required|integer',
+			'membertype' => 'required|integer'
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -161,19 +161,9 @@ class MembersController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Account::findOrFail($id) : new Account();
-		$row->fill($request->input('fields'));
-		$row->slug = $row->normalize($row->name);
-
-		if (!$row->created_by)
-		{
-			$row->created_by = auth()->user()->id;
-		}
-
-		if (!$row->updated_by)
-		{
-			$row->updated_by = auth()->user()->id;
-		}
+		$row = $id ? Member::findOrFail($id) : new Member();
+		$row->userid = $request->input('userid');
+		$row->membertype = $request->input('membertype');
 
 		if (!$row->save())
 		{
@@ -191,13 +181,11 @@ class MembersController extends Controller
 	 * @param  integer  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
-
 		$row = Member::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}

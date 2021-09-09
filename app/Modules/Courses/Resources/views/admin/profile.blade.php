@@ -16,16 +16,16 @@
 		@if (count($instructing))
 			<div class="card">
 				<table class="table">
-					<caption class="sr-only">Class accounts for {{ $user->name }}</caption>
+					<caption class="sr-only">{{ trans('courses::courses.class accounts for user', ['name' => $user->name]) }}</caption>
 					<thead>
 						<tr>
-							<th scope="col">Resource</th>
-							<th scope="col">Class</th>
-							<th scope="col">Semester</th>
-							<th scope="col">Starts</th>
-							<th scope="col">Ends</th>
-							<th scope="col">Added</th>
-							<th scope="col">Removed</th>
+							<th scope="col">{{ trans('courses::courses.resource') }}</th>
+							<th scope="col">{{ trans('courses::courses.class') }}</th>
+							<th scope="col">{{ trans('courses::courses.semester') }}</th>
+							<th scope="col">{{ trans('courses::courses.date start') }}</th>
+							<th scope="col">{{ trans('courses::courses.date stop') }}</th>
+							<th scope="col">{{ trans('courses::courses.added') }}</th>
+							<th scope="col">{{ trans('courses::courses.removed') }}</th>
 						</th>
 					</thead>
 					<tbody>
@@ -110,16 +110,16 @@
 		@if (count($student))
 			<div class="card">
 				<table class="table">
-					<caption class="sr-only">Class accounts for {{ $user->name }}</caption>
+					<caption class="sr-only">{{ trans('courses::courses.class accounts for user', ['name' => $user->name]) }}</caption>
 					<thead>
 						<tr>
-							<th scope="col">Resource</th>
-							<th scope="col">Class</th>
-							<th scope="col">Semester</th>
-							<th scope="col">Starts</th>
-							<th scope="col">Ends</th>
-							<th scope="col">Added</th>
-							<th scope="col">Removed</th>
+							<th scope="col">{{ trans('courses::courses.resource') }}</th>
+							<th scope="col">{{ trans('courses::courses.class') }}</th>
+							<th scope="col">{{ trans('courses::courses.semester') }}</th>
+							<th scope="col">{{ trans('courses::courses.date start') }}</th>
+							<th scope="col">{{ trans('courses::courses.date stop') }}</th>
+							<th scope="col">{{ trans('courses::courses.added') }}</th>
+							<th scope="col">{{ trans('courses::courses.removed') }}</th>
 						</th>
 					</thead>
 					<tbody>

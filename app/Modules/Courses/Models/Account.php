@@ -135,6 +135,20 @@ class Account extends Model
 	}
 
 	/**
+	 * Set value for semester
+	 *
+	 * @param   mixed  $value
+	 * @return  void
+	 */
+	public function setSemesterAttribute($value)
+	{
+		$value = strtolower($value);
+		$value = ucfirst($value);
+
+		$this->attributes['semester'] = $value;
+	}
+
+	/**
 	 * Get a list of users
 	 *
 	 * @return  object

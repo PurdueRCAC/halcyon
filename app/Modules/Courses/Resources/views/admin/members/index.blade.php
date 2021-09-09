@@ -5,6 +5,8 @@
 @endpush
 
 @php
+app('request')->merge(['hidemainmenu' => 1]);
+
 app('pathway')
 	->append(
 		trans('courses::courses.module name'),
@@ -68,11 +70,8 @@ app('pathway')
 				<label class="sr-only" for="filter-type">{{ trans('courses::courses.membership type') }}</label>
 				<select name="type" id="filter-type" class="form-control filter filter-submit">
 					<option value="0">{{ trans('courses::courses.select membership type') }}</option>
-					<option value="1"<?php if ($filters['type'] == 1) { echo ' selected="selected"'; } ?>>Student</option>
-					<option value="2"<?php if ($filters['type'] == 2) { echo ' selected="selected"'; } ?>>Instructor</option>
-					<?php /*foreach ($types as $type): ?>
-						<option value="<?php echo $type->id; ?>"<?php if ($filters['type'] == $type->id) { echo ' selected="selected"'; } ?>>{{ $type->name }}</option>
-					<?php endforeach;*/ ?>
+					<option value="1"<?php if ($filters['type'] == 1) { echo ' selected="selected"'; } ?>>{{ trans('courses::courses.student') }}</option>
+					<option value="2"<?php if ($filters['type'] == 2) { echo ' selected="selected"'; } ?>>{{ trans('courses::courses.instructor') }}</option>
 				</select>
 			</div>
 		</div>
@@ -85,109 +84,80 @@ app('pathway')
 	</fieldset>
 
 	@if (count($rows))
-	<div class="card mb-4">
-	<table class="table table-hover adminlist">
-		<caption>{{ $account->classname . ' ' . $account->coursenumber . ' (' . $account->crn . ')' }}</caption>
-		<thead>
-			<tr>
-				<th>
-					{!! Html::grid('checkall') !!}
-				</th>
-				<th scope="col" class="priority-5">
-					{!! Html::grid('sort', trans('courses::courses.id'), 'id', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col">
-					{!! Html::grid('sort', trans('courses::courses.name'), 'name', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('courses::courses.start'), 'datetimestart', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('courses::courses.stop'), 'datetimestop', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('courses::courses.type'), 'membertype', $filters['order_dir'], $filters['order']) !!}
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-		@foreach ($rows as $i => $row)
-			<tr<?php if ($row->user && $row->user->isTrashed()) { echo ' class="trashed"'; } ?>>
-				<td>
-					@if (auth()->user()->can('edit courses'))
-						{!! Html::grid('id', $i, $row->id) !!}
-					@endif
-				</td>
-				<td class="priority-5">
-					@if (auth()->user()->can('edit courses'))
-						<a href="{{ route('admin.courses.members.edit', ['id' => $row->id]) }}">
-					@endif
-							{{ $row->id }}
-					@if (auth()->user()->can('edit courses'))
-						</a>
-					@endif
-				</td>
-				<td>
-					@if ($row->user && $row->user->isTrashed())
-						<span class="icon-alert-triangle glyph warning has-tip" title="{{ trans('courses::courses.user account removed') }}">{{ trans('courses::courses.user account removed') }}</span>
-					@endif
-					@if (auth()->user()->can('edit users'))
-						<a href="{{ route('admin.users.edit', ['id' => $row->userid]) }}">
-					@endif
-							{{ $row->user ? $row->user->name : trans('global.unknown') . ': ' . $row->userid }}
-					@if (auth()->user()->can('edit users'))
-						</a>
-					@endif
-				</td>
-				<td class="priority-4">
-					<time datetime="{{ $row->datetimestart->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestart->toDateTimeString() }}</time>
-				</td>
-				<td class="priority-4">
-					<time datetime="{{ $row->datetimestop->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestop->toDateTimeString() }}</time>
-				</td>
-				<td>
-					@if ($row->membertype == 2)
-						<span class="badge badge-success">TA / Instructor</span>
-					@else
-						<span class="badge badge-info">Student</span>
-					@endif
-					<?php
-						/*<select name="membertype[{{ $row->id }}]" class="form-control"<?php if ($row->user && $row->user->isTrashed()) { echo ' disabled'; } ?>>
-						<option value="1"<?php if ($row->membertype != 2) { echo ' selected="selected"'; } ?>>Student</option>
-						<option value="2"<?php if ($row->membertype == 2) { echo ' selected="selected"'; } ?>>Instructor</option>
-					</select>
-						$cls = ($row->membertype == 1) ? 'btn-success' : 'btn-warning';
-						$cls = ($row->membertype != 3) ? $cls : 'btn-danger';
-						?>
-					<div class="btn-group btn-group-sm dropdown" role="group" aria-label="Course membership type">
-						<button type="button" class="btn btn-secondary {{ $cls }} dropdown-toggle" id="btnCourseDrop{{ $row->id }}" title="{{ trans('courses::courses.membership type') }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							{{ $row->membertype == 1 ? 'Instructor' : 'Student' }}
-						</button>
-						@if (auth()->user()->can('edit courses'))
-							<ul class="dropdown-menu" aria-labelledby="btnGroupDrop{{ $row->id }}">
+		<div class="card mb-4">
+			<table class="table table-hover adminlist">
+				<caption>{{ $account->classname . ' ' . $account->coursenumber . ' (' . $account->crn . ')' }}</caption>
+				<thead>
+					<tr>
+						<th>
+							{!! Html::grid('checkall') !!}
+						</th>
+						<th scope="col" class="priority-5">
+							{!! Html::grid('sort', trans('courses::courses.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+						</th>
+						<th scope="col">
+							{!! Html::grid('sort', trans('courses::courses.name'), 'name', $filters['order_dir'], $filters['order']) !!}
+						</th>
+						<th scope="col" class="priority-4">
+							{!! Html::grid('sort', trans('courses::courses.start'), 'datetimestart', $filters['order_dir'], $filters['order']) !!}
+						</th>
+						<th scope="col" class="priority-4">
+							{!! Html::grid('sort', trans('courses::courses.stop'), 'datetimestop', $filters['order_dir'], $filters['order']) !!}
+						</th>
+						<th scope="col" class="priority-4">
+							{!! Html::grid('sort', trans('courses::courses.type'), 'membertype', $filters['order_dir'], $filters['order']) !!}
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+				@foreach ($rows as $i => $row)
+					<tr<?php if ($row->user && $row->user->isTrashed()) { echo ' class="trashed"'; } ?>>
+						<td>
+							@if (auth()->user()->can('edit courses'))
+								{!! Html::grid('id', $i, $row->id) !!}
+							@endif
+						</td>
+						<td class="priority-5">
+							@if (auth()->user()->can('edit courses'))
+								<a href="{{ route('admin.courses.members.edit', ['id' => $row->id]) }}">
+							@endif
+									{{ $row->id }}
+							@if (auth()->user()->can('edit courses'))
+								</a>
+							@endif
+						</td>
+						<td>
+							@if ($row->user && $row->user->isTrashed())
+								<span class="icon-alert-triangle glyph warning has-tip" title="{{ trans('courses::courses.user account removed') }}">{{ trans('courses::courses.user account removed') }}</span>
+							@endif
+							@if (auth()->user()->can('edit users'))
+								<a href="{{ route('admin.users.edit', ['id' => $row->userid]) }}">
+							@endif
+									{{ $row->user ? $row->user->name : trans('global.unknown') . ': ' . $row->userid }}
+							@if (auth()->user()->can('edit users'))
+								</a>
+							@endif
+						</td>
+						<td class="priority-4">
+							<time datetime="{{ $row->datetimestart->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestart->toDateTimeString() }}</time>
+						</td>
+						<td class="priority-4">
+							<time datetime="{{ $row->datetimestop->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestop->toDateTimeString() }}</time>
+						</td>
+						<td>
+							@if ($row->membertype == 2)
+								<span class="badge badge-success">{{ trans('courses::courses.instructor') }}</span>
+							@else
+								<span class="badge badge-info">{{ trans('courses::courses.student') }}</span>
+							@endif
+						</td>
+					</tr>
+				@endforeach
+				</tbody>
+			</table>
+		</div>
 
-									@if ($row->membertype == 1)
-										<li class="dropdown-item">
-											<a class="grid-action" data-id="cb{{ $i }}" href="{{ route('admin.courses.members', ['course' => $row->classaccountid]) }}">Instructor</a>
-										</li>
-									@endif
-									@if ($row->membertype = 2)
-										<li class="dropdown-item">
-											<a class="grid-action" data-id="cb{{ $i }}" href="{{ route('admin.courses.members', ['course' => $row->classaccountid]) }}">Student</a>
-										</li>
-									@endif
-
-							</ul>
-						@endif
-					</div>*/ ?>
-				</td>
-			</tr>
-		@endforeach
-		</tbody>
-	</table>
-	</div>
-
-	{{ $rows->render() }}
+		{{ $rows->render() }}
 	@else
 		<div class="card mb-4">
 			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
@@ -215,13 +185,13 @@ app('pathway')
 			<div class="form-group">
 				<label for="field-membertype">{{ trans('courses::courses.type') }}:</label>
 				<select name="membertype" id="field-membertype" class="form-control">
-					<option value="1">Student</option>
-					<option value="2">TA/Instructor</option>
+					<option value="1">{{ trans('courses::courses.student') }}</option>
+					<option value="2">{{ trans('courses::courses.instructor') }}</option>
 				</select>
 			</div>
 		</div>
 		<div class="modal-footer">
-			<button type="submit" class="btn btn-success add-member" data-api="{{ route('api.courses.members.create') }}" data-account="{{ $account->id }}" data-field="#field-userid" data-type="#field-membertype" data-success="User added">
+			<button type="submit" class="btn btn-success add-member" data-api="{{ route('api.courses.members.create') }}" data-account="{{ $account->id }}" data-field="#field-userid" data-type="#field-membertype" data-success="{{ trans('courses::courses.user added') }}">
 				<span class="icon-plus" aria-hidden="true"></span> {{ trans('global.button.add') }}
 			</button>
 		</div>

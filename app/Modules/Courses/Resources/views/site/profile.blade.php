@@ -367,7 +367,7 @@
 
 						<div class="dialog-footer text-right">
 							<button class="btn btn-success account-save" data-crn="{{ $class->crn }}" data-api="{{ route('api.courses.update', ['id' => $class->id]) }}">
-								<span class="spinner-border spinner-border-sm" role="status"></span> Save
+								<span class="spinner-border spinner-border-sm" role="status"></span> {{ trans('global.button.save') }}
 							</button>
 						</div>
 					</form>
