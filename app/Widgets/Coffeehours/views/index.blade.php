@@ -39,8 +39,11 @@ foreach ($rows as $event)
 		if (auth()->user() && $assoc->associd == auth()->user()->id)
 		{
 			$attending = $assoc->id;
-			$event->attending = $assoc->id;
-			$attend[] = $event;
+			if (!$event->ended())
+			{
+				$event->attending = $assoc->id;
+				$attend[] = $event;
+			}
 		}
 		elseif ($event->url && $assoc->assoctype == 'user')
 		{

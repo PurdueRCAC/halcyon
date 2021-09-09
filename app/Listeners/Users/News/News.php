@@ -77,6 +77,11 @@ class News
 				->join($u, $u . '.newsid', $a . '.id')
 				->where($u . '.associd', '=', $user->id)
 				->where($u . '.assoctype', '=', 'user')
+				->where(function($where) use ($u)
+				{
+					$where->whereNull($u . '.datetimeremoved')
+						->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
 				->where($a . '.newstypeid', '=', $type->id)
 				->whereIn($a . '.published', $states)
 				->count();
@@ -93,13 +98,18 @@ class News
 				}
 
 				$rows = Article::query()
-					->select($a . '.*')
+					->select($a . '.*', $u . '.id AS attending')
 					->join($u, $u . '.newsid', $a . '.id')
 					->where($u . '.associd', '=', $user->id)
 					->where($u . '.assoctype', '=', 'user')
+					->where(function($where) use ($u)
+					{
+						$where->whereNull($u . '.datetimeremoved')
+							->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+					})
 					->where($a . '.newstypeid', '=', $type->id)
 					->whereIn($a . '.published', $states)
-					->orderBy($a . '.datetimecreated', 'desc')
+					->orderBy($a . '.datetimenews', 'desc')
 					->paginate(config('list_limit', 20));
 
 				$content = view('news::site.profile', [
