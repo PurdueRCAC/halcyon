@@ -211,7 +211,8 @@
 					<div class="login">
 						<ul>
 							@if (Auth::check())
-								<li><a href="{{ route('site.users.account') }}">{{ Auth::user()->name }}</a> &nbsp;|&nbsp; <a href="{{ route('logout') }}">{{ trans('theme::rcac.logout') }}</a></li>
+								<li><a href="{{ route('site.users.account') }}">{{ Auth::user()->name }}</a></li>
+								<li><a href="{{ route('logout') }}">{{ trans('theme::rcac.logout') }}</a></li>
 							@else
 								<li><a href="{{ route('login') }}" class="btn btn-secondary btn-inverse"><span class="fa fa-lock" aria-hidden="true"></span> {{ trans('theme::rcac.login') }}</a></li>
 							@endif

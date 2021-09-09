@@ -217,12 +217,13 @@ a.btn-info:active {
 	padding: 0 0 10px 0;
 }
 .login li {
-	display: inline;
+	display: inline-block;
 	margin-left: 15px;
 }
 .login a.btn {
 	font-size: 0.85rem;
 }
+.login .btn,
 .login a:link,
 .login a:visited {
 	color: #fff;
@@ -242,6 +243,20 @@ a.btn-info:active {
 		top: auto;
 		right: auto;
 	}
+}
+.has-notices {
+	position: relative;
+}
+.has-notices:after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0.5em;
+	right: 0.5em;
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background-color: #dc3545;
 }
 
 .contentPage {
