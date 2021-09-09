@@ -43,5 +43,10 @@ return [
 	'error' => [
 		'entry failed for user' => 'Failed to create user entry for :name',
 		'no files' => 'No files submitted',
+		'invalid class' => 'Invalid CRN/classID provided',
+		'duplicate crn' => 'Record with provided `crn` already exists',
+		'empty classname' => 'Required field `classname` is empty',
+		'empty start' => 'Required field `start` is empty',
+		'empty stop' => 'Required field `stop` is empty',
 	],
 ];

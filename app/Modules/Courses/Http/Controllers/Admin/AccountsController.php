@@ -119,7 +119,7 @@ class AccountsController extends Controller
 	 * Show the form for creating a new resource.
 	 * 
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  Response
 	 */
 	public function create(Request $request)
 	{
@@ -128,19 +128,19 @@ class AccountsController extends Controller
 		$row->datetimestart = Carbon::now();
 		$row->datetimestop = Carbon::now()->modify('+5 months');
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
 
-		event($event = new InstructorLookup($row->user));
+		event($event = new InstructorLookup($row->user, false));
 
 		$courses = $event->courses;
 		$resources = (new Asset)->tree();
 
 		return view('courses::admin.edit', [
-			'row'     => $row,
-			'classes' => $courses,
+			'row'       => $row,
+			'classes'   => $courses,
 			'resources' => $resources,
 		]);
 	}
@@ -148,26 +148,27 @@ class AccountsController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 * 
-	 * @param  integer  $id
-	 * @return Response
+	 * @param   Request  $request
+	 * @param   integer  $id
+	 * @return  Response
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Account::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
 
-		event($event = new InstructorLookup($row->user));
+		event($event = new InstructorLookup($row->user, false));
 
 		$courses = $event->courses;
 		$resources = (new Asset)->tree();
 
 		return view('courses::admin.edit', [
-			'row'     => $row,
-			'classes' => $courses,
+			'row'       => $row,
+			'classes'   => $courses,
 			'resources' => $resources,
 		]);
 	}
@@ -220,15 +221,15 @@ class AccountsController extends Controller
 		{
 			if ($row->classname == '')
 			{
-				return redirect()->back()->withInput($request->input())->withError(trans('Required field `classname` is empty'));
+				return redirect()->back()->withInput($request->input())->withError(trans('courses::courses.error.empty classname'));
 			}
 			if ($row->datetimestart == '')
 			{
-				return redirect()->back()->withInput($request->input())->withError(trans('Required field `start` is empty'));
+				return redirect()->back()->withInput($request->input())->withError(trans('courses::courses.error.empty start'));
 			}
 			if ($row->datetimestop == '')
 			{
-				return redirect()->back()->withInput($request->input())->withError(trans('Required field `stop` is empty'));
+				return redirect()->back()->withInput($request->input())->withError(trans('courses::courses.error.empty stop'));
 			}
 			$row->datetimestart = Carbon::parse($row->datetimestart)->modify('-86400 seconds')->toDateTimeString();
 			$row->datetimestop  = Carbon::parse($row->datetimestop)->modify('+86400 seconds')->toDateTimeString();
@@ -256,7 +257,7 @@ class AccountsController extends Controller
 
 			if ($exist)
 			{
-				return redirect()->back()->withError(trans('Record with provided `crn` already exists'));
+				return redirect()->back()->withError(trans('courses::courses.error.duplicate crn'));
 			}
 
 			// Fetch information about class from input.
@@ -267,7 +268,7 @@ class AccountsController extends Controller
 			if (!$row->crn)
 			{
 				// Invalid CRN/classID provided
-				return redirect()->back()->withError(trans('Invalid CRN/classID provided'));
+				return redirect()->back()->withError(trans('courses::courses.error.invalid class'));
 			}
 
 			$row->datetimestart = Carbon::parse($row->datetimestart)->modify('-259200 seconds')->toDateTimeString();
@@ -318,6 +319,7 @@ class AccountsController extends Controller
 
 		return $this->cancel();
 	}
+
 	/**
 	 * Return to default page
 	 *
