@@ -80,7 +80,7 @@ class News
 				->where(function($where) use ($u)
 				{
 					$where->whereNull($u . '.datetimeremoved')
-						->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+						->orWhere($u . '.datetimeremoved', '=', '0000-00-00 00:00:00');
 				})
 				->where($a . '.newstypeid', '=', $type->id)
 				->whereIn($a . '.published', $states)
@@ -105,7 +105,7 @@ class News
 					->where(function($where) use ($u)
 					{
 						$where->whereNull($u . '.datetimeremoved')
-							->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+							->orWhere($u . '.datetimeremoved', '=', '0000-00-00 00:00:00');
 					})
 					->where($a . '.newstypeid', '=', $type->id)
 					->whereIn($a . '.published', $states)
