@@ -1,7 +1,65 @@
 @extends('layouts.master')
 
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
+@endpush
+
 @push('scripts')
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/courses/js/admin.js?v=' . filemtime(public_path() . '/modules/courses/js/admin.js')) }}"></script>
+<script>
+$(document).ready(function() {
+	var searchusers = $('#filter_userid');
+	if (searchusers.length) {
+		searchusers.each(function(i, el){
+			$(el).select2({
+				ajax: {
+					url: $(el).data('api'),
+					dataType: 'json',
+					maximumSelectionLength: 1,
+					data: function (params) {
+						var query = {
+							search: params.term,
+							order: 'name',
+							order_dir: 'asc'
+						}
+
+						return query;
+					},
+					processResults: function (data) {
+						for (var i = 0; i < data.data.length; i++) {
+							if (data.data[i].id) {
+								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+							} else {
+								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+								data.data[i].id = data.data[i].username;
+							}
+						}
+
+						return {
+							results: data.data
+						};
+					}
+				},
+				templateResult: function (state) {
+					if (isNaN(state.id) && typeof state.name != 'undefined') {
+						return $('<span>' + state.text + ' <span class="text-warning ml-1"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> No local account</span></span>');
+					}
+					return state.text;
+				}
+			});
+		});
+		searchusers.on('select2:select', function (e) {
+			var data = e.params.data;
+			window.location = $(this).data('url') + "?userid=" + data.id;
+		});
+		searchusers.on('select2:unselect', function (e) {
+			var data = e.params.data;
+			window.location = $(this).data('url') + "?userid=";
+		});
+	}
+});
+</script>
 @endpush
 
 @php
@@ -40,7 +98,7 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-6 filter-search">
+			<div class="col col-md-3 filter-search">
 				<div class="form-group">
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
@@ -50,15 +108,37 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col col-md-3 text-right">
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<label for="member-userid" class="sr-only">{{ trans('courses::courses.member') }}:</label>
 					<span class="input-group">
 						<input type="text" name="userid" id="filter-userid" class="form-control form-users submit" data-uri="{{ route('api.users.index') }}?search=%s" placeholder="{{ trans('courses::courses.filter by user') }}" value="{{ $filters['userid'] ? App\Modules\Users\Models\User::find($filters['userid'])->name . ':' . $filters['userid'] : '' }}" />
 						<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
 					</span>
+				</div> -->
+				<div class="form-group">
+					<label class="sr-only" for="filter_userid">{{ trans('courses::courses.member') }}</label>
+					<select name="userid" id="filter_userid" class="form-control filter_search filter" multiple="multiple" data-placeholder="Select users..." data-api="{{ route('api.users.index') }}" data-url="{{ request()->url() }}">
+						<option value="">Select users...</option>
+						@if ($filters['userid'])
+							@php
+							$s = $filters['userid'];
+							if (is_numeric($filters['userid'])):
+								$u = App\Modules\Users\Models\User::find($filters['userid']);
+								if ($u && $u->id):
+									$s = $u->name . ' (' . $u->username . ')';
+								endif;
+							endif;
+							@endphp
+							<option value="{{ $filters['userid'] }}" selected="selected">{{ $s }}</option>
+						@endif
+					</select>
+					<!-- <span class="input-group">
+						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					</span> -->
 				</div>
 			</div>
-			<div class="col col-md-3 text-right filter-select">
+			<div class="col col-md-6 text-right filter-select">
 				<label class="sr-only" for="filter_semester">{{ trans('courses::courses.semester') }}</label>
 				<select name="semester" id="filter_semester" class="form-control filter filter-submit">
 					<option value=""<?php if (!$filters['semester']): echo ' selected="selected"'; endif;?>>{{ trans('courses::courses.all semesters') }}</option>
@@ -101,7 +181,7 @@ app('pathway')
 					{!! Html::grid('sort', trans('courses::courses.course name'), 'classname', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('courses::courses.department'), 'department', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('courses::courses.owner'), 'userid', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('courses::courses.course number'), 'coursenumber', $filters['order_dir'], $filters['order']) !!}
@@ -185,11 +265,14 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-4">
-					@if ($row->department)
-						{{ $row->department }}
+					@if ($row->user)
+						{{ $row->user->name }}
 					@endif
 				</td>
 				<td class="priority-5">
+					@if ($row->department)
+						{{ $row->department }}
+					@endif
 					@if ($row->coursenumber)
 						{{ $row->coursenumber }}
 					@endif

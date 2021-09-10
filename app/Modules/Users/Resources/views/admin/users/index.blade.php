@@ -110,12 +110,20 @@ app('pathway')
 			<div class="col col-xs-12 col-sm-3 filter-search">
 				<div class="form-group">
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-					
-						<select name="search" id="filter_search" class="form-control filter" multiple="multiple" data-placeholder="Select users..." data-api="{{ route('api.users.index') }}" data-url="{{ request()->url() }}">
-							@if ($filters['search'])
-								<option value="{{ $filters['search'] }}" selected="selected">{{ $filters['search'] }}</option>
-							@endif
-						</select>
+					<select name="search" id="filter_search" class="form-control filter" multiple="multiple" data-placeholder="Select users..." data-api="{{ route('api.users.index') }}" data-url="{{ request()->url() }}">
+						@if ($filters['search'])
+							@php
+							$s = $filters['search'];
+							if (is_numeric($filters['search'])):
+								$u = App\Modules\Users\Models\User::find($filters['search']);
+								if ($u && $u->id):
+									$s = $u->name . ' (' . $u->username . ')';
+								endif;
+							endif;
+							@endphp
+							<option value="{{ $filters['search'] }}" selected="selected">{{ $s }}</option>
+						@endif
+					</select>
 					<!-- <span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
