@@ -198,7 +198,7 @@
 							<h1 class="sr-only">Purdue University</h1>
 							<a class="svgLinkContainer" href="https://www.purdue.edu" title="Purdue University">
 								<object class="svgContainer" data="{{ asset('themes/rcac/images/PU-H.svg') }}" type="image/svg+xml" aria-label="Purdue University" title="Purdue University" role="img">
-									<img alt="Purdue University" src="{{ asset('themes/rcac/images/PU-H.svg') }}" height="45" width="243" />
+									<img alt="Purdue University" src="{{ asset('themes/rcac/images/PU_SIG_Logo_RGB__PU-H-Full-RGB_Black_white.png') }}" height="45" width="243" />
 								</object>
 							</a>
 						</div>
