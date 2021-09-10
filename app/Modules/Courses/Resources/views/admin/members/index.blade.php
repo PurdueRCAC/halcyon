@@ -5,8 +5,6 @@
 @endpush
 
 @php
-app('request')->merge(['hidemainmenu' => 1]);
-
 app('pathway')
 	->append(
 		trans('courses::courses.module name'),

@@ -108,17 +108,14 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col col-md-3 text-right">
-				<!-- <div class="form-group">
-					<label for="member-userid" class="sr-only">{{ trans('courses::courses.member') }}:</label>
-					<span class="input-group">
+				<!-- <span class="input-group">
 						<input type="text" name="userid" id="filter-userid" class="form-control form-users submit" data-uri="{{ route('api.users.index') }}?search=%s" placeholder="{{ trans('courses::courses.filter by user') }}" value="{{ $filters['userid'] ? App\Modules\Users\Models\User::find($filters['userid'])->name . ':' . $filters['userid'] : '' }}" />
 						<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
-					</span>
-				</div> -->
+					</span> -->
 				<div class="form-group">
-					<label class="sr-only" for="filter_userid">{{ trans('courses::courses.member') }}</label>
-					<select name="userid" id="filter_userid" class="form-control filter_search filter" multiple="multiple" data-placeholder="Select users..." data-api="{{ route('api.users.index') }}" data-url="{{ request()->url() }}">
-						<option value="">Select users...</option>
+					<label class="sr-only" for="filter_userid">{{ trans('courses::courses.owner') }}</label>
+					<select name="userid" id="filter_userid" class="form-control filter_search filter" multiple="multiple" data-placeholder="Select owner..." data-api="{{ route('api.users.index') }}" data-url="{{ request()->url() }}">
+						<option value="">Select owner...</option>
 						@if ($filters['userid'])
 							@php
 							$s = $filters['userid'];
@@ -132,10 +129,6 @@ app('pathway')
 							<option value="{{ $filters['userid'] }}" selected="selected">{{ $s }}</option>
 						@endif
 					</select>
-					<!-- <span class="input-group">
-						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
-					</span> -->
 				</div>
 			</div>
 			<div class="col col-md-6 text-right filter-select">
@@ -208,38 +201,6 @@ app('pathway')
 		$now = Carbon\Carbon::now()->toDateTimeString();
 		?>
 		@foreach ($rows as $i => $row)
-			<?php
-			$row->accounts = 0;
-
-			/*if ($row->semester != 'Workshop')
-			{
-				event($e = new App\Modules\Courses\Events\AccountEnrollment($row));
-
-				$row->enrollment = $e->enrollments;
-
-				if (is_array($row->enrollment))
-				{
-					foreach ($row->enrollment as $student)
-					{
-						// Attempt to look up student in our records
-						$u = App\Modules\Users\Models\User::findByOrganizationId($student->externalId);
-
-						if ($u)
-						{
-							//$username = $u->username;
-
-							// See if the they have host entry yet
-							event($e = new App\Modules\Users\Events\UserLookup(['username' => $u->username, 'host' => $row->resource->rolename . '.rcac.purdue.edu']));
-
-							if (count($e->results) > 0)
-							{
-								$row->accounts++;
-							}
-						}
-					}
-				}
-			}*/
-			?>
 			<tr>
 				@if (auth()->user()->can('delete courses'))
 					<td>
@@ -353,5 +314,4 @@ app('pathway')
 
 	@csrf
 </form>
-
 @stop
