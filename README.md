@@ -119,6 +119,35 @@ This will perform the Composer install and initial database migration (found und
 docker-compose up
 ```
 
+Install needed libraries
+
+```
+docker exec -it halcyon-php-fpm php /var/www/html/bin/composer install --prefer-dist
+```
+
+Modify the database configuration in `config/database.php` or `.env`.
+
+Run migrations to install tables and base data.
+
+```
+docker exec -it halcyon-php-fpm php artisan migrate
+docker exec -it halcyon-php-fpm php artisan module:migrate
+```
+
+Create a symlink from the file storage to a publicly accessible spot. This will create a symlink for `./public/files` to `./storage/app/public`.
+
+```
+docker exec -it halcyon-php-fpm php artisan storage:link
+```
+
+Publish assets.
+
+```
+docker exec -it halcyon-php-fpm php artisan module:publish
+docker exec -it halcyon-php-fpm php artisan theme:publish
+docker exec -it halcyon-php-fpm php artisan listener:publish
+```
+
 #### Manual
 
 Run Composer to install dependencies.
@@ -134,6 +163,20 @@ Run migrations to install tables and base data.
 ```
 php artisan migrate
 php artisan module:migrate
+```
+
+Create a symlink from the file storage to a publicly accessible spot. This will create a symlink for `./public/files` to `./storage/app/public`.
+
+```
+php artisan storage:link
+```
+
+Publish assets.
+
+```
+php artisan module:publish
+php artisan theme:publish
+php artisan listener:publish
 ```
 
 #### Git Hooks
