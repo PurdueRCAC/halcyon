@@ -642,7 +642,7 @@
 						<select class="form-control" id="new_class_select" required>
 							<option value="">(Select Class)</option>
 							@foreach ($classes as $class)
-								<option id="option_class_{{ $class->classExternalId }}"
+								<option id="option_class_{{ $class->classId }}"
 									data-api="{{ route('api.courses.enrollments', ['crn' => $class->classExternalId, 'classid' => $class->courseId]) }}"
 									data-crn="{{ $class->classExternalId }}"
 									data-classid="{{ $class->classId }}"
