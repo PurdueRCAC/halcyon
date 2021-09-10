@@ -16,18 +16,18 @@ services:
       - ./storage/dump:/docker-entrypoint-initdb.d
       - ./storage/mysql:/var/lib/mysql
       - .:/var/www/html
-    #env_file: .env
     networks:
       - halcyon
+
   webserver:
-    image: nginx:alpine
+    build:
+      context: ./docker/nginx
+    image: halcyon/webserver:latest
     container_name: halcyon-webserver
     restart: unless-stopped
     working_dir: /var/www/html
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./docker/ssl/server.crt:/etc/ssl/certs/server.crt
-      - ./docker/ssl/server.key:/etc/ssl/private/server.key
       - ./storage/logs:/var/log/nginx
       - .:/var/www/html
       - ./storage/app/public:/var/www/html/public/files
@@ -36,8 +36,11 @@ services:
       - "443:443"
     networks:
       - halcyon
+
   php-fpm:
-    build: docker/php-fpm
+    build:
+      context: ./docker/php-fpm
+    image: halcyon/phpfpm:latest
     container_name: halcyon-php-fpm
     restart: unless-stopped
     working_dir: /var/www/html
@@ -47,6 +50,7 @@ services:
       - ./storage/app/public:/var/www/html/public/files
     networks:
       - halcyon
+
   node:
     build:
       context: ./docker/node
@@ -55,6 +59,7 @@ services:
       - .:/var/www/html
     networks:
       - halcyon
+
 #  redis:
 #    image: redis:alpine
 #    container_name: redis
@@ -63,6 +68,7 @@ services:
 #      - 6379:6379
 #    networks:
 #      - halcyon
+
 #  mailhog:
 #    image: mailhog/mailhog:latest
 #    container_name: mailhog
@@ -71,5 +77,6 @@ services:
 #      - 8025:8025
 #    networks:
 #      - halcyon
+
 networks:
   halcyon:
