@@ -14,6 +14,7 @@ use App\Modules\Queues\Console\EmailQueueRequestedCommand;
 use App\Modules\Queues\Console\EmailWelcomeClusterCommand;
 use App\Modules\Queues\Console\EmailWelcomeFreeCommand;
 use App\Modules\Queues\Console\EmailExpiredCommand;
+use App\Modules\Queues\Console\FixStatusCommand;
 use App\Modules\Queues\Listeners\GetUserQueues;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -72,6 +73,7 @@ class ModuleServiceProvider extends ServiceProvider
 			EmailWelcomeClusterCommand::class,
 			EmailWelcomeFreeCommand::class,
 			EmailExpiredCommand::class,
+			FixStatusCommand::class,
 		]);
 	}
 
