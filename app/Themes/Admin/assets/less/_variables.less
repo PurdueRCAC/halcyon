@@ -1,11 +1,3 @@
-//
-// @package     halcyon-cms
-// @file        templates/kameleon/less/variables.less
-// @copyright   Copyright 2005-2015 Halcyon Foundation, LLC.
-// @license     http://opensource.org/licenses/MIT MIT
-//
-
-//
 // Variables
 // --------------------------------------------------
 
@@ -38,15 +30,8 @@
 
 // Scaffolding
 // -------------------------
-// System assets paths
-// -------------------------
-@pathSystemCss:         "/core/assets/css";
-@pathSystemImg:         "/core/assets/images";
-@pathSystemJs:          "/core/assets/js";
-
-@pathTemplate:          "/core/templates/kameleon";
-@bodyBackground:        #ececec url("@{pathTemplate}/images/layout/noise-lite.png");
-@contentBackground:     #f9f9f9 url("@{pathTemplate}/images/layout/noise-lite.png");
+@bodyBackground:        #ececec;
+@contentBackground:     #f9f9f9;
 @contentPadding:        0;
 @contentMargin:         0 30px;
 @textColor:             @grayDark;
@@ -145,26 +130,3 @@
 @infoText:                #fff;
 @infoBackground:          #5cb4e4; //#6cc4dc; #6fb6ff;
 @infoBorder:              #5cb4e4; //#6cc4dc; #6fb6ff;
-
-
-// GRID
-// --------------------------------------------------
-
-// Default 940px grid
-@gridColumns:             12;
-@gridColumnWidth:         50px; //50px
-@gridGutterWidth:         30px; //30px
-@gridRowWidth:            (@gridColumns * @gridColumnWidth) + (@gridGutterWidth * (@gridColumns - 1));
-
-// Fluid grid
-@fluidGridColumnWidth:    percentage(@gridColumnWidth/@gridRowWidth);
-@fluidGridGutterWidth:    percentage(@gridGutterWidth/@gridRowWidth);
-
-// Breaking the grid
-@gridColCollapseMargin: 2em;
-
-// Media query breaking points
-@break6: 1023px;
-@break4: 1000px;
-@break3: 900px;
-@break2: 500px;

@@ -366,7 +366,7 @@ a {
   margin: 0;
   padding: 0;
 }
-ins {
+/*ins {
   background-color: #ff9;
   color: #000;
   text-decoration: none;
@@ -376,7 +376,7 @@ mark {
   color: #000;
   font-style: italic;
   font-weight: bold;
-}
+}*/
 del {
   text-decoration: line-through;
 }
@@ -388,28 +388,22 @@ dfn[title] {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+  font-size: inherit;
+  font: 100%;
 }
 hr {
   display: block;
   height: 1px;
   border: 0;
   border-top: 1px solid var(--hr);
-  margin: 1.61803399em 0;
+  margin: 1.5em 0;
   padding: 0;
 }
 input,
 select {
   vertical-align: middle;
 }
-table {
-  font-size: inherit;
-  font: 100%;
-}
-/*input,
-textarea,
-button {
-  font-family: "OpenSans", "Cabin", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}*/
+
 pre,
 code,
 kbd,
@@ -417,12 +411,12 @@ samp {
   font-size: 87.5%;
   font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
 }
-body,
+/*body,
 select,
 input,
 textarea {
   color: #7c7c7c;
-}
+}*/
 b,
 strong,
 th {
@@ -446,7 +440,7 @@ sup {
 }
 small,
 .small {
-  font-size: 0.8034441847541164em;
+  font-size: 0.8em;
   line-height: 2;
 }
 pre {
@@ -487,20 +481,20 @@ article,
 article,
 footer,
 nav {
-  margin: 0 0 1.61803399em 0;
+  margin: 0 0 1.5em 0;
   margin: 0 0 2em 0;
-  line-height: 1.61803399em;
+  line-height: 1.5em;
 }
 article ul {
-  margin: 0 0 1.61803399em 0;
+  margin: 0 0 1.5em 0;
   list-style: disc outside;
 }
 article ol {
-  margin: 0 0 1.61803399em 0;
+  margin: 0 0 1.5em 0;
   list-style: decimal outside;
 }
 dd {
-  margin: 0 0 0.61803399em 1.61803399em;
+  margin: 0 0 0.5em 1.5em;
 }
 dt {
   font-weight: bold;
@@ -519,7 +513,7 @@ button {
   cursor: pointer;
   vertical-align: baseline;
 }
-::-moz-selection {
+/*::-moz-selection {
   background: #FF5E99;
   color: #fff;
   text-shadow: none;
@@ -528,14 +522,13 @@ button {
   background: #FF5E99;
   color: #fff;
   text-shadow: none;
-}
+}*/
 button {
   width: auto;
   overflow: visible;
 }
 html {
   font-size: 85%;
-  /*font-family: "OpenSans", "Cabin", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
   text-align: center;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -549,7 +542,7 @@ body {
   height: 100%;
   text-align: left;
   font-size: 1rem;
-  line-height: 1.61803399em;
+  line-height: 1.5em;
 }
 h1,
 h2,
@@ -1858,7 +1851,7 @@ fieldset fieldset legend {
   font-weight: bold;
   width: auto;
   margin: 0;
-  padding: 0 0.61803399em;
+  padding: 0 0.5em;
   text-indent: 0;
   letter-spacing: 0;
   font-weight: 400;
@@ -1959,29 +1952,7 @@ button.loading .spinner-border,
 .was-validated .input-group .form-control:invalid {
   border-color: #dc3545;
 }
-.batch {
-  margin: 0;
-  padding: 0 0.618em;
-  border-top: 1px solid #dddddd;
-  background-color: #eee;
-}
-.batch legend {
-  float: left;
-  width: 100%;
-  padding: 1em 0.618em;
-  margin-left: -0.618em;
-  margin-right: -0.618em;
-  text-transform: uppercase;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  background: transparent;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-.batch legend span {
-  background: transparent;
-  padding: 0;
-  margin: 0;
-}
+
 /*
 fieldset#filter-bar button,
 fieldset#filter-bar input,
@@ -2383,7 +2354,7 @@ table.adminlist td.order input[type=number] {
   min-height: 100%;
 }
 #footer {
-  padding: 1.61803399em 2.33606798em 0.61803399em 2.33606798em;
+  padding: 1.5em 2.25em 0.5em 2.25em;
   margin: 0;
   font-size: 0.95em;
   border-top: 1px solid var(--footer-border);
@@ -2505,12 +2476,12 @@ fieldset.adminform fieldset {
 .data-wrap h4,
 .data-wrap h5 {
   font-size: 1em;
-  line-height: 1.61803399em;
+  line-height: 1.5em;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   font-weight: 500;
-  margin: 0 0 0.61803399em 0;
-  padding: 0.61803399em 1.61803399em;
+  margin: 0 0 0.5em 0;
+  padding: 0.5em 1.5em;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 .timeline {
@@ -3357,7 +3328,7 @@ select.filter_search {
   border: 1px solid transparent;
   border-bottom: none;
   margin: 0;
-  padding: 0.61803399em 1em;
+  padding: 0.5em 1em;
   -webkit-border-radius: 0.25em 0.25em 0 0;
   -moz-border-radius: 0.25em 0.25em 0 0;
   border-radius: 0.25em 0.25em 0 0;
@@ -3963,7 +3934,7 @@ table.meta th {
 }
 table.meta tbody th,
 table.meta tbody td {
-  padding: 0.61803399em;
+  padding: 0.5em;
   border: none;
   border-top: 1px solid var(--meta-br);
 }

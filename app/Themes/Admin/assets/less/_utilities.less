@@ -1,220 +1,167 @@
-//
-// @package     halcyon-cms
-// @file        templates/kameleon/less/utilities.less
-// @copyright   Copyright 2005-2015 Halcyon Foundation, LLC.
-// @license     http://opensource.org/licenses/MIT MIT
-//
+// States
+.state {
+	text-decoration: none;
+	border: none;
+	white-space: nowrap;
+	margin: 0;
+	padding: 0.5em;
+	display: inline-block;
+	font-size: 0.85em;
+	line-height: 1;
+	.border-radius(0.25em);
+	color: #999;
+	background-color: rgba(0, 0, 0, 0.1);
 
-	// States
-	//.saveorder,
-	//a.state,
-	//a.state:link,
-	//a.state:active,
-	//a.state:visited,
-	.state {
+	&:hover {
 		text-decoration: none;
-		border: none;
-		white-space: nowrap;
-		margin: 0;
-		padding: 0.5em;
-		display: inline-block;
-		font-size: 0.85em;
-		line-height: 1;
-		.border-radius(0.25em);
-		color: #999;
-		background-color: rgba(0, 0, 0, 0.1);
+	}
+}
 
-		&:hover {
-			text-decoration: none;
-		}
-	}
-	/*.saveorder {
-		&:before {
-			content: "\f063";
-		}
-	}*/
+// Publish
+.on,
+.yes,
+.true,
+.publish,
+.published {
+	background-color: #a3ca60;
+	background-color: #e2f3e6;
+	color: #3db557;
 
-	// Publish
-	//.enabled,
-	.on,
-	.yes,
-	.true,
-	.publish,
-	.published {
-		background-color: #a3ca60;
-		background-color: #e2f3e6;
-		color: #3db557;
+	&:hover {
+		color: #e2f3e6;
+		background-color: #3db557;
+	}
+}
 
-		&:hover {
-			color: #e2f3e6;
-			background-color: #3db557;
-		}
-	}
-	// Unpublish
-	//.disabled,
-	.off,
-	.no,
-	.false,
-	.unpublish,
-	.unpublished {
-		color: #999;
-		background-color: rgba(0, 0, 0, 0.1);
+// Unpublish
+.off,
+.no,
+.false,
+.unpublish,
+.unpublished {
+	color: #999;
+	background-color: rgba(0, 0, 0, 0.1);
 
-		&:hover {
-			color: rgba(0, 0, 0, 0.1);
-			background-color: #999;
-		}
+	&:hover {
+		color: rgba(0, 0, 0, 0.1);
+		background-color: #999;
 	}
-	// Pending
-	.pending {
-		background-color: #ffdcc8;
-		color: #f0765f;
+}
+// Pending
+.pending {
+	background-color: #ffdcc8;
+	color: #f0765f;
 
-		&:hover {
-			color: #ffdcc8;
-			background-color: #f0765f;
-		}
+	&:hover {
+		color: #ffdcc8;
+		background-color: #f0765f;
 	}
-	.warn {
-		background-color: #fbe3e3;
-		color: #ed5c5c;
-	}
+}
+.warn {
+	background-color: #fbe3e3;
+	color: #ed5c5c;
+}
 
-	/* Checked out */
-	.checkedout:before {
-		content: "\f023";
-		color: #ff7800;
-		font-size: 1.2em;
-		line-height: 1;
-		font-family: 'Fontcons';
-	}
-	.checkedout:hover:before {
-		color: #333;
-	}
-	/* Default */
-	.default {
-		color: #F8D201;
-		background-color: #fff6eb;
-		color: #c18564;
-	}
-	.notdefault {
-		background-color: transparent;
-		color: transparent;
-	}
+/* Default */
+.default {
+	color: #F8D201;
+	background-color: #fff6eb;
+	color: #c18564;
+}
+.notdefault {
+	background-color: transparent;
+	color: transparent;
+}
 
-	a.menulist:hover:before {
-		color: #000;
-	}
+a.menulist:hover:before {
+	color: #000;
+}
 
-	.uparrow:hover:before,
-	.downarrow:hover:before {
-		color: #333;
-	}
-	.nopreview:before {
-		color: #ccc;
-	}
+.uparrow:hover:before,
+.downarrow:hover:before {
+	color: #333;
+}
+.nopreview:before {
+	color: #ccc;
+}
 
-	.level,
-	.gi,
-	.gtr {
-		margin-right: 0.2em;
-		color: #ddd;
-	}
-	.level,
-	.gtr {
-		visibility: hidden;
-	}
-	.smallsub {
-		margin: 0;
-		padding: 0;
-		font-size: 0.85em;
-		color: #999;
-	}
-	.smallsub a {
-		color: #777;
-		white-space: nowrap;
-	}
+.level,
+.gi,
+.gtr {
+	margin-right: 0.2em;
+	color: #ddd;
+}
+.level,
+.gtr {
+	visibility: hidden;
+}
+.smallsub {
+	margin: 0;
+	padding: 0;
+	font-size: 0.85em;
+	color: #999;
+}
+.smallsub a {
+	color: #777;
+	white-space: nowrap;
+}
 
-	.grid-boolean,
-	.glyph {
-		text-decoration: none;
-		border: none;
-		white-space: nowrap;
-		margin: 0;
-		padding: 0;
-		width: 1em;
-		overflow: hidden;
-		display: inline-block;
-		line-height: 1;
-		background-color: transparent;
-	}
+.grid-boolean,
+.glyph {
+	text-decoration: none;
+	border: none;
+	white-space: nowrap;
+	margin: 0;
+	padding: 0;
+	width: 1em;
+	overflow: hidden;
+	display: inline-block;
+	line-height: 1;
+	background-color: transparent;
+}
 
 // Core classes
-	.width-auto {
-		width: auto;
-	}
-	.width-full {
-		width: 100%;
-	}
-	.unknown,
-	.never {
-		color: #ccc;
-	}
-	.block,
-	.show {
-		display: block;
-	}
-	.none,
-	.hide {
-		display: none;
-	}
-	.hidden {
-		display: none;
-		visibility: hidden;
-	}
-	.invisible {
-		visibility: hidden;
-	}
-	.visible {
-		overflow: visible !important;
-	}
-	.clear,
-	.clr {
-		clear: both;
-		display: block;
-		overflow: hidden;
-		visibility: hidden;
-		width: 0;
-		height: 0;
-	}
-	.clearfix {
-		display: block;
-	}
-	.clearfix:after {
-		content: ".";
-		display: block;
-		height: 0;
-		font-size: 0;
-		line-height: 0;
-		clear: both;
-		visibility: hidden;
-	}
-	* html .clearfix {
-		height: 1%;
-	}
+.width-auto {
+	width: auto;
+}
+.width-full {
+	width: 100%;
+}
+.unknown,
+.never {
+	color: #ccc;
+}
+.block,
+.show {
+	display: block;
+}
+.none,
+.hide {
+	display: none;
+}
+.hidden {
+	display: none;
+	visibility: hidden;
+}
+.invisible {
+	visibility: hidden;
+}
+.visible {
+	overflow: visible !important;
+}
 
-	/*.fltrt {
-		float: right;
-	}
-	.fltlft {
-		float: left;
-	}*/
+/*.fltrt {
+	float: right;
+}
+.fltlft {
+	float: left;
+}*/
 
-	.important {
-		font-size: 1.30769em;
-	}
-	.ampersand{
-		font-family: Baskerville,"Goudy Old Style","Palatino","Book Antiqua",serif;
-		font-size: 110%;
-		font-style: italic;
-	}
+.important {
+	font-size: 1.30769em;
+}
+.ampersand{
+	font-family: Baskerville,"Goudy Old Style","Palatino","Book Antiqua",serif;
+	font-size: 110%;
+	font-style: italic;
+}
