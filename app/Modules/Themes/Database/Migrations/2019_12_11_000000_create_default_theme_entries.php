@@ -42,7 +42,7 @@ class CreateDefaultThemeEntries extends Migration
 
 			foreach ($themes as $theme)
 			{
-				DB::table('extensions')->insert($type);
+				DB::table('extensions')->insert($theme);
 			}
 		}
 	}
