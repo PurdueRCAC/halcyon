@@ -247,12 +247,17 @@ class Page extends Model
 	{
 		$vars = array();
 		$vars['myusername'] = 'myusername';
-		$vars['user'] = ['username' => 'myusername'];
-		$vars['user']['staff'] = 0;
+		$vars['user'] = [
+			'username' => 'myusername',
+			'usernameletter' => 'm',
+			'staff' => 0,
+		];
+
 		if (auth()->user())
 		{
 			$vars['myusername'] = auth()->user()->username;
 			$vars['user']['username'] = auth()->user()->username;
+			$vars['user']['usernameletter'] = substr(auth()->user()->username, 0, 1);
 			$vars['user']['staff'] = (auth()->user()->can('manage knowledge') ? 1 : 0);
 		}
 		$vars['resource'] = (array)$this->params->get('variables', []); //$this->variables->toArray(); //
@@ -429,11 +434,31 @@ class Page extends Model
 
 				if ($operator == '==')
 				{
-					$result = ($left == $right ? true : false);
+					if ($right === 'true'
+					 || $right === 'false'
+					 || $right === '1'
+					 || $right === '0')
+					{
+						$result = ($left ? true : false);
+					}
+					else
+					{
+						$result = ($left == $right ? true : false);
+					}
 				}
 				elseif ($operator == '!=')
 				{
-					$result = ($left != $right ? true : false);
+					if ($right === 'true'
+					 || $right === 'false'
+					 || $right === '1'
+					 || $right === '0')
+					{
+						$result = (!$left ? true : false);
+					}
+					else
+					{
+						$result = ($left != $right ? true : false);
+					}
 				}
 				elseif ($operator == '>')
 				{
