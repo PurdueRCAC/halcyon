@@ -23,11 +23,18 @@ class User extends Model
 	protected $table = 'contactreportusers';
 
 	/**
-	 * Indicates if the model should be timestamped.
+	 * The name of the "created at" column.
 	 *
-	 * @var bool
+	 * @var string
 	 */
-	public $timestamps = false;
+	const CREATED_AT = 'datetimecreated';
+
+	/**
+	 * The name of the "updated at" column.
+	 *
+	 * @var  string
+	 */
+	const UPDATED_AT = null;
 
 	/**
 	 * Default order by for model

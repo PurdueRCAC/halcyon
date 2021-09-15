@@ -50,6 +50,10 @@ class ReportResource extends JsonResource
 				$res->user->api = route('api.users.read', ['id' => $res->id]);
 			}
 			$res->name = $res->user ? $res->user->name : trans('global.unknown');
+			if (!$res->notified())
+			{
+				$res->datetimelastnotify = null;
+			}
 		});
 		$data['groupname'] = $this->group ? $this->group->name : null;
 		$data['resources'] = $this->resources->each(function ($res, $key)
@@ -62,6 +66,13 @@ class ReportResource extends JsonResource
 		});
 		$data['tags'] = $this->tags;
 		$data['age'] = Carbon::now()->timestamp - $this->datetimecreated->timestamp;
+
+		if (!($this->datetimegroupid
+		 && $this->datetimegroupid != '0000-00-00 00:00:00'
+		 && $this->datetimegroupid != '-0001-11-30 00:00:00'))
+		{
+			$data['datetimegroupid'] = null;
+		}
 
 		$data['api'] = route('api.contactreports.read', ['id' => $this->id]);
 		$data['url'] = route('site.contactreports.show', ['id' => $this->id]);
