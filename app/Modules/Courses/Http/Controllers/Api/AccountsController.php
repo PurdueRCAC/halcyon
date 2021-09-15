@@ -178,7 +178,9 @@ class AccountsController extends Controller
 			'userid'     => $request->input('userid', 0),
 			'groupid'    => $request->input('groupid', 0),
 			'resourceid' => $request->input('resourceid', 0),
-			'deptnumber' => $request->input('department'),
+			'department' => $request->input('department'),
+			'crn'        => $request->input('crn'),
+			'semester'   => $request->input('semester'),
 			'notice'     => $request->input('notice'),
 			'starts'     => $request->input('starts'),
 			'stops'      => $request->input('stops'),
@@ -231,19 +233,24 @@ class AccountsController extends Controller
 			$query->where('department', '=', $filters['department']);
 		}
 
+		if ($filters['crn'])
+		{
+			$query->where('crn', '=', $filters['crn']);
+		}
+
 		if ($filters['semester'])
 		{
 			$query->where('semester', '=', $filters['semester']);
 		}
 
-		if ($filters['start'])
+		if ($filters['starts'])
 		{
-			$query->where('.datetimestart', '>=', $filters['start']);
+			$query->where('datetimestart', '>=', $filters['starts']);
 		}
 
-		if ($filters['stop'])
+		if ($filters['stops'])
 		{
-			$query->where('datetimestop', '<', $filters['stop']);
+			$query->where('datetimestop', '<', $filters['stops']);
 		}
 
 		$rows = $query
