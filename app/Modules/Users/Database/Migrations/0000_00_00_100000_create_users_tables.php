@@ -19,7 +19,7 @@ class CreateUsersTables extends Migration
 			{
 				$table->increments('id');
 				$table->string('name', 255);
-				$table->tinyInteger('puid')->unsigned()->default(0);
+				$table->integer('puid')->unsigned()->default(0);
 				$table->index('name');
 				$table->index('puid');
 			});
