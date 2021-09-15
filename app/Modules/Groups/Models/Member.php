@@ -95,6 +95,18 @@ class Member extends Model
 	];
 
 	/**
+	 * Determine if datelastseen time is set
+	 *
+	 * @return  bool
+	 */
+	public function hasVisited()
+	{
+		return ($this->datelastseen
+			&& $this->datelastseen != '0000-00-00 00:00:00'
+			&& $this->datelastseen != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Get parent group
 	 *
 	 * @return  object

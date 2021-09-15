@@ -169,6 +169,14 @@ class MembersController extends Controller
 
 		$rows->each(function ($item, $key)
 		{
+			if (!$item->isTrashed())
+			{
+				$item->dateremoved = null;
+			}
+			if (!$item->hasVisited())
+			{
+				$item->datelastseen = null;
+			}
 			$item->api = route('api.groups.members.read', ['id' => $item->id]);
 			$item->user;
 		});

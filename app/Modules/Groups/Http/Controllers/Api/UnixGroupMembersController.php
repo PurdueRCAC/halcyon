@@ -18,7 +18,7 @@ use App\Modules\Users\Models\User;
 /**
  * Unix group members
  *
- * @apiUri    /api/unixgroups
+ * @apiUri    /api/unixgroups/members
  */
 class UnixGroupMembersController extends Controller
 {
@@ -165,6 +165,10 @@ class UnixGroupMembersController extends Controller
 
 		$rows->map(function($row, $key)
 		{
+			if (!$row->isTrashed())
+			{
+				$row->datetimeremoved = null;
+			}
 			$row->api = route('api.unixgroups.members.read', ['id' => $row->id]);
 		});
 
