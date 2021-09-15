@@ -131,15 +131,14 @@ class FieldsController extends Controller
 		}
 
 		$rows = $query
-			->withCount('finder')
+			->withCount('services')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
 		$rows->each(function ($row, $key)
 		{
-			$row->api = route('api.finder.departments.read', ['id' => $row->id]);
-			$row->finder_count = $row->finder()->count();
+			$row->api = route('api.finder.fields.read', ['id' => $row->id]);
 		});
 
 		return new ResourceCollection($rows);
