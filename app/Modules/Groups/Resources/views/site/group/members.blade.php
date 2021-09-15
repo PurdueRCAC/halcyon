@@ -100,7 +100,7 @@ foreach ($queues as $queue)
 
 	foreach ($users as $me)
 	{
-		if (in_array($me->userid, $processed))
+		if (in_array($queue->id . '_' . $me->userid, $processed))
 		{
 			continue;
 		}
@@ -154,7 +154,7 @@ foreach ($queues as $queue)
 			}
 		}
 
-		$processed[] = $me->userid;
+		$processed[] = $queue->id . '_' . $me->userid;
 	}
 }
 
@@ -256,6 +256,7 @@ $i = 0;
 				<thead>
 					<tr>
 						<th scope="col">Name(s)</th>
+						<?php /*<th scope="col">Queue</th>*/ ?>
 						<th scope="col" class="text-center">Accept</th>
 						<th scope="col" class="text-center">Deny</th>
 					</tr>
@@ -265,7 +266,13 @@ $i = 0;
 						<tr id="entry{{ $i }}" data-id="{{ $req->id }}">
 							<td>
 								{{ $req->user->name }}
+								@if ($req->request && $req->request->comment)
+									<div class="text-muted">{{ $req->request->comment }}</div>
+								@endif
 							</td>
+							<?php /*<td>
+								{{ $req->queue->name }} ({{ $queue->resource->name }})
+							</td>*/ ?>
 							<td class="text-center">
 								<?php
 								$approves = array();
@@ -286,6 +293,7 @@ $i = 0;
 					@endforeach
 					<tr id="selectAll">
 						<td><strong>Select All</strong></td>
+						<?php /*<td></td>*/ ?>
 						<td class="text-center"><input type="radio" id="acceptAll" class="radio-toggle" value="0" /></td>
 						<td class="text-center"><input type="radio" id="denyAll" class="radio-toggle" value="1" /></td>
 					</tr>
@@ -293,6 +301,7 @@ $i = 0;
 				<tfoot>
 					<tr>
 						<td></td>
+						<?php /*<td></td>*/ ?>
 						<td colspan="2" class="text-center">
 							<button id="submit-requests" data-groupid="{{ $group->id }}" class="btn btn-success" disabled>{{ trans('global.button.save') }}</button>
 						</td>
@@ -572,11 +581,16 @@ $i = 0;
 								foreach ($queue->users as $m):
 									//if ($m->userid == $member->userid):
 									if ($member->userid == $m->userid):
+										if ($m->isPending()):
+											$checked = ' disabled';
+										else:
 									//if (in_array($member->userid, $qu[$queue->id])):
 										//$in[] = $queue->name;
-										$checked = ' checked="checked"';
+											$checked = ' checked="checked"';
+										endif;
 										break;
 									endif;
+
 								endforeach;
 								$csv[] = $checked ? 'yes' : 'no';
 								?>
