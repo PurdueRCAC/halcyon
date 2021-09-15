@@ -947,7 +947,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					async: false,
 					success: function (data) {
 						bx.data('api', data.api);
-						if (typeof data.error != undefined) {
+						if (typeof data.error != 'undefined') {
 							bx.after($('<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" title="' + data.error + '"><span class="sr-only">' + data.error + '</span></span>'));
 							alert('An error occurred. Try toggling the checkbox. If issues persist, please contact help.');
 						}
@@ -967,7 +967,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					dataType: 'json',
 					async: false,
 					success: function (data) {
-						if (typeof data.error != undefined) {
+						if (typeof data.error != 'undefined') {
 							bx.after($('<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" title="' + data.error + '"><span class="sr-only">' + data.error + '</span></span>'));
 							alert('An error occurred. Try toggling the checkbox. If issues persist, please contact help.');
 						}

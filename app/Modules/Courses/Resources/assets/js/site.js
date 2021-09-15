@@ -530,7 +530,7 @@ function AddUserClass(xml, crn) {
 		// assemble the objects
 		a.appendChild(img);
 		span.appendChild(a);
-		/*if (results['fullname'] != undefined) {
+		/*if (results['fullname'] != 'undefined') {
 			span.appendChild(document.createTextNode(results['fullname']));
 		} else {*/
 		span.appendChild(document.createTextNode(' ' + results['name'] + ' (' + results['username'] + ')'));
@@ -678,7 +678,7 @@ var autocompleteName = function (url) {
 	};
 };
 
-if (typeof(Dropzone) != undefined) {
+if (typeof(Dropzone) != 'undefined') {
 	Dropzone.autoDiscover = false;
 }
 
@@ -950,7 +950,7 @@ $(document).ready(function () {
 		form.submit();
 	});
 
-	if (typeof (Dropzone) != undefined) {
+	if (typeof (Dropzone) != 'undefined') {
 		$('.dropzone').each(function (i, el) {
 			$(el).dropzone({
 				url: $(el).attr('data-api'),
