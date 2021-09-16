@@ -20,9 +20,7 @@ services:
       - halcyon
 
   webserver:
-    build:
-      context: ./docker/nginx
-    image: halcyon/webserver:latest
+    image: nginx:alpine
     container_name: halcyon-webserver
     restart: unless-stopped
     working_dir: /var/www/html
@@ -33,7 +31,6 @@ services:
       - ./storage/app/public:/var/www/html/public/files
     ports:
       - "80:80"
-      - "443:443"
     networks:
       - halcyon
 
