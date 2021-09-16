@@ -24,19 +24,23 @@ class FollowGroupsController extends Controller
 	 * @apiUri    /api/contactreports/followgroups
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "contactreportid",
-	 * 		"description":   "ID of contact report",
-	 * 		"type":          "integer",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group ID",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "search",
-	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -136,26 +140,28 @@ class FollowGroupsController extends Controller
 	}
 
 	/**
-	 * Create a contact report comment
+	 * Create a group following
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/contactreports/followusers
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "comment",
-	 * 		"description":   "The comment being made",
-	 * 		"type":          "string",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group ID",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "contactreportid",
-	 * 		"description":   "ID of the contact report",
-	 * 		"type":          "integer",
-	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return  Response
@@ -189,7 +195,7 @@ class FollowGroupsController extends Controller
 	}
 
 	/**
-	 * Retrieve a contact report comment
+	 * Retrieve a group following record
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/contactreports/followusers/{id}
@@ -213,7 +219,7 @@ class FollowGroupsController extends Controller
 	}
 
 	/**
-	 * Update a contact report comment
+	 * Update a group following
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/contactreports/followusers/{id}
@@ -229,19 +235,21 @@ class FollowGroupsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "comment",
-	 * 		"description":   "The comment being made",
-	 * 		"type":          "string",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group ID",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "contactreportid",
-	 * 		"description":   "ID of the contact report",
-	 * 		"type":          "integer",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
@@ -251,7 +259,7 @@ class FollowGroupsController extends Controller
 	{
 		$rules = [
 			'groupid' => 'nullable|integer',
-			'userid' => 'nullable|integer',
+			'userid'  => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -280,7 +288,7 @@ class FollowGroupsController extends Controller
 	}
 
 	/**
-	 * Delete a contact report comment
+	 * Delete a group following
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/contactreports/followusers/{id}
@@ -292,6 +300,14 @@ class FollowGroupsController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $id
