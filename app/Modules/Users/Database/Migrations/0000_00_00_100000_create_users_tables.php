@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class CreateUsersTables extends Migration
 {
@@ -23,7 +24,13 @@ class CreateUsersTables extends Migration
 				$table->index('name');
 				$table->index('puid');
 			});
+
+			DB::table('users')->insert([
+				'name' => 'Administrator',
+			]);
 		}
+
+		$admin = DB::table('users')->where('name', '=', 'Administrator')->first();
 
 		if (!Schema::hasTable('userusernames'))
 		{
@@ -41,6 +48,15 @@ class CreateUsersTables extends Migration
 				$table->index('userid');
 				$table->index('datelastseen');
 			});
+
+			if ($admin)
+			{
+				DB::table('userusernames')->insert([
+					'userid' => $admin->id,
+					'username' => 'admin',
+					'datecreated' => Carbon::now()->toDateTimeString()
+				]);
+			}
 		}
 
 		if (!Schema::hasTable('user_notes'))
@@ -97,6 +113,42 @@ class CreateUsersTables extends Migration
 				$table->index('title');
 				$table->index(['lft', 'rgt']);
 			});
+
+			$roles = array(
+				array(
+					'id' => 1,
+					'parent_id' => 0,
+					'lft' => 0,
+					'rgt' => 8,
+					'title' => 'Public'
+				),
+				array(
+					'id' => 2,
+					'parent_id' => 1,
+					'lft' => 2,
+					'rgt' => 5,
+					'title' => 'Registered'
+				),
+				array(
+					'id' => 3,
+					'parent_id' => 2,
+					'lft' => 3,
+					'rgt' => 4,
+					'title' => 'Staff'
+				),
+				array(
+					'id' => 4,
+					'parent_id' => 1,
+					'lft' => 6,
+					'rgt' => 7,
+					'title' => 'Super Users'
+				)
+			);
+
+			foreach ($roles as $role)
+			{
+				DB::table('user_roles')->insert($role);
+			}
 		}
 
 		if (!Schema::hasTable('user_role_map'))
@@ -110,6 +162,19 @@ class CreateUsersTables extends Migration
 
 				$table->foreign('user_id')->references('id')->on('users');
 			});
+
+			if ($admin)
+			{
+				$super = DB::table('user_roles')->where('title', '=', 'Super Users')->first();
+
+				if ($super)
+				{
+					DB::table('user_role_map')->insert([
+						'user_id' => $admin->id,
+						'role_id' => $super->id
+					]);
+				}
+			}
 		}
 
 		if (!Schema::hasTable('permissions'))
@@ -128,6 +193,16 @@ class CreateUsersTables extends Migration
 				$table->index(['lft', 'rgt']);
 				$table->index('parent_id');
 			});
+
+			DB::table('permissions')->insert([
+				'parent_id' => 0,
+				'lft' => 0,
+				'rgt' => 1,
+				'level' => 0,
+				'name' => 'root.1',
+				'title' => 'Root Asset',
+				'rules' => '{"login.site":{"1":1,"2":1},"admin":{"4":1},"manage":{"3":1},"create":{"3":1},"delete":{"3":1},"edit":{"3":1},"edit.state":{"3":1},"edit.own":{"2":1,"3":1}}'
+			]);
 		}
 
 		if (!Schema::hasTable('viewlevels'))
@@ -140,6 +215,38 @@ class CreateUsersTables extends Migration
 				$table->string('rules', 5120)->comment('JSON encoded access control.');
 				$table->unique('title');
 			});
+
+			$levels = array(
+				array(
+					'id' => 1,
+					'title' => 'Public',
+					'ordering' => 0,
+					'rules' => '[1]'
+				),
+				array(
+					'id' => 2,
+					'title' => 'Registered',
+					'ordering' => 1,
+					'rules' => '[2,4]'
+				),
+				array(
+					'id' => 3,
+					'title' => 'Staff',
+					'ordering' => 2,
+					'rules' => '[3,4]'
+				),
+				array(
+					'id' => 4,
+					'title' => 'Administrators',
+					'ordering' => 3,
+					'rules' => '[4]'
+				)
+			);
+
+			foreach ($levels as $level)
+			{
+				DB::table('viewlevels')->insert($level);
+			}
 		}
 	}
 

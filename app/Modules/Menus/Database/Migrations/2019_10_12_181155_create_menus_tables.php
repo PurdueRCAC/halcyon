@@ -3,6 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use App\Modules\Menus\Models\Menu;
+use Carbon\Carbon;
 
 class CreateMenusTables extends Migration
 {
@@ -13,6 +16,38 @@ class CreateMenusTables extends Migration
 	 */
 	public function up()
 	{
+		if (!Schema::hasTable('menus'))
+		{
+			Schema::create('menus', function (Blueprint $table)
+			{
+				$table->increments('id');
+				$table->string('menutype', 24);
+				$table->string('title', 48);
+				$table->string('description', 255);
+				$table->tinyInteger('client_id')->unsigned()->default(0);
+				$table->dateTime('created_at')->nullable();
+				$table->dateTime('updated_at')->nullable();
+				$table->dateTime('deleted_at')->nullable();
+				$table->index('menutype');
+			});
+
+			/*DB::table('pages')->insert([
+				'menutype' => 'mainmenu',
+				'title' => 'Main Menu',
+				'description' => 'The main menu for the site',
+				'client_id' => 0,
+				'created_at' => Carbon::now()->toDateTimeString()
+			]);*/
+
+			// Create the default menu
+			Menu::create([
+				'menutype' => 'mainmenu',
+				'title' => 'Main Menu',
+				'description' => 'The main menu for the site',
+				'client_id' => 0,
+			]);
+		}
+
 		if (!Schema::hasTable('menu_items'))
 		{
 			Schema::create('menu_items', function (Blueprint $table)
@@ -52,22 +87,21 @@ class CreateMenusTables extends Migration
 				$table->index('language');
 				$table->index(['client_id', 'parent_id', 'alias', 'language'], 'client');
 			});
-		}
 
-		if (!Schema::hasTable('menus'))
-		{
-			Schema::create('menus', function (Blueprint $table)
-			{
-				$table->increments('id');
-				$table->string('menutype', 24);
-				$table->string('title', 48);
-				$table->string('description', 255);
-				$table->tinyInteger('client_id')->unsigned()->default(0);
-				$table->dateTime('created_at')->nullable();
-				$table->dateTime('updated_at')->nullable();
-				$table->dateTime('deleted_at')->nullable();
-				$table->index('menutype');
-			});
+			// Create the root node
+			DB::table('menu_items')->insert([
+				'menutype' => '',
+				'title' => 'Menu_Item_Root',
+				'alias' => 'root',
+				'path' => '',
+				'published' => 1,
+				'parent_id' => 0,
+				'level' => 0,
+				'lft' => 0,
+				'rgt' => 1,
+				'language' => '*',
+				'created_at' => Carbon::now()->toDateTimeString(),
+			]);
 		}
 	}
 
