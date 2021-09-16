@@ -21,7 +21,12 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 @include('users::site.admin', ['user' => $user])
 
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-	<h2>{{ $user->name }}</h2>
+	<h2>
+		{{ $user->name }}
+		@if (auth()->user()->can('manage users') && $user->isOnline())
+			<span class="badge badge-success">Online</span>
+		@endif
+	</h2>
 
 	<div class="qlinks">
 		<ul class="dropdown-menu">

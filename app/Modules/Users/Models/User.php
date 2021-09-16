@@ -150,13 +150,10 @@ class User extends Model implements
 	public function isTrashed()
 	{
 		return $this->getUserUsername()->isTrashed();
-		/*return ($this->getUserUsername()->dateremoved
-			&& $this->getUserUsername()->dateremoved != '0000-00-00 00:00:00'
-			&& $this->getUserUsername()->dateremoved != '-0001-11-30 00:00:00');*/
 	}
 
 	/**
-	 * If user if the created timestamp is set
+	 * If user created timestamp is set
 	 *
 	 * @return  bool
 	 **/
@@ -165,6 +162,26 @@ class User extends Model implements
 		return ($this->getUserUsername()->datecreated
 			&& $this->getUserUsername()->datecreated != '0000-00-00 00:00:00'
 			&& $this->getUserUsername()->datecreated != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * If user has an active session
+	 *
+	 * @return  bool
+	 **/
+	public function isOnline()
+	{
+		$lifetime = Carbon::now()->modify('- ' . config('session.lifetime', 120) . ' minutes')->timestamp;
+
+		foreach ($this->sessions as $session)
+		{
+			if ($session->last_activity->timestamp > $lifetime)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

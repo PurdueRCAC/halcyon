@@ -302,6 +302,9 @@ app('pathway')
 							@endif
 						</time>
 					@endif
+					@if (auth()->user()->can('manage users') && $row->isOnline())
+						<span class="badge badge-success">Online</span>
+					@endif
 				</td>
 			</tr>
 		@endforeach
