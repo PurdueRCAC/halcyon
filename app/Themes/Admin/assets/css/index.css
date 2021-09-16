@@ -57,14 +57,14 @@
   --check-border: #cdcdcd;
   --check-back-checked: #222;
   --check-border-checked: #222;
-  --btn-secondary-bg: #f1f1f1;
-  --btn-secondary-br: #f1f1f1;
+  --btn-secondary-bg: #fff;
+  --btn-secondary-br: #dbdbdb;
   --btn-secondary-cl: #333;
-  --btn-secondary-bg-focus: #eee;
-  --btn-secondary-br-focus: #eee;
+  --btn-secondary-bg-focus: #fff;
+  --btn-secondary-br-focus: #ccc;
   --btn-secondary-cl-focus: #222;
-  --btn-secondary-bg-active: #e1e1e1;
-  --btn-secondary-br-active: #e1e1e1;
+  --btn-secondary-bg-active: #fff;
+  --btn-secondary-br-active: #bbb;
   --btn-secondary-cl-active: #111;
   --footer-border: rgba(0, 0, 0, 0.1);
   --fieldset-bg: #fff;
@@ -2528,12 +2528,24 @@ fieldset.adminform fieldset {
   top: 1em;
   right: 1em;
 }
-/*
+
 .btn-secondary {
-  background-color: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.05);
-  color: inherit;
+  background-color: var(--btn-secondary-bg);
+  border-color: var(--btn-secondary-br);
+  color: var(--btn-secondary-cl);
 }
+.btn-secondary:focus {
+  background-color: var(--btn-secondary-bg-focus);
+  border-color: var(--btn-secondary-br-focus);
+  color: var(--btn-secondary-cl-focus);
+}
+.btn-secondary:hover,
+.btn-secondary:active {
+  background-color: var(--btn-secondary-bg-active);
+  border-color: var(--btn-secondary-br-active);
+  color: var(--btn-secondary-cl-active);
+}
+/*
 .btn-danger {
   color: #dc3545;
   background-color: #ffebeb;
