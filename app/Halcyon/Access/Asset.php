@@ -108,7 +108,7 @@ class Asset extends Nested
 			if (!$result || !$result->id)
 			{
 				$result = self::query()
-					->where('alias', '=', 'root.1')
+					->where('name', '=', 'root.1')
 					->first();
 			}
 		}
