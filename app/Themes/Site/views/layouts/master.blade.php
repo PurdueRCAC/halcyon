@@ -27,7 +27,7 @@
 		$styles = array(
 			'modules/core/vendor/bootstrap/bootstrap.min.css' => 'rel="stylesheet" type="text/css"',
 			'modules/core/vendor/jquery-ui/jquery-ui.min.css' => 'rel="stylesheet" type="text/css"',
-			//'themes/site/css/font-awesome-css.min.css' => 'rel="stylesheet" type="text/css"',
+			'themes/site/css/font-awesome-css.min.css' => 'rel="stylesheet" type="text/css"',
 			'themes/site/css/site.css' => 'rel="stylesheet" type="text/css"',
 		);
 		if (!app('isAdmin') && Auth::check()):
@@ -79,30 +79,31 @@
 		<header>
 			<div class="container">
 				<div class="row">
-					<div class="logo">
+					<div class="logo col">
 						<h1>
 							<a href="{{ route('home') }}">
 								{{ config('app.name') }}
 							</a>
 						</h1>
 					</div>
-				</div>
-				<div class="login">
-					<ul>
-						@if (Auth::check())
-							<li><a href="{{ route('site.users.account') }}">{{ Auth::user()->name }}</a> &nbsp;|&nbsp; <a href="{{ route('logout') }}">{{ trans('theme::site.logout') }}</a></li>
-						@else
-							<li><a href="{{ route('login') }}" class="btn btn-secondary btn-inverse"><span class="fa fa-lock" aria-hidden="true"></span> {{ trans('theme::site.login') }}</a></li>
-						@endif
-					</ul>
+
+					<div class="login col">
+						<ul>
+							@if (Auth::check())
+								<li><a href="{{ route('site.users.account') }}">{{ Auth::user()->name }}</a> &nbsp;|&nbsp; <a href="{{ route('logout') }}">{{ trans('theme::site.logout') }}</a></li>
+							@else
+								<li><a href="{{ route('login') }}" class="btn btn-secondary btn-inverse"><span class="fa fa-lock" aria-hidden="true"></span> {{ trans('theme::site.login') }}</a></li>
+							@endif
+						</ul>
+					</div>
 				</div>
 			</div>
 
 			@widget('header')
 
-			<nav class="navbar navbar-light navbar-expand-lg blackbar" aria-label="Main Menu">
+			<nav class="navbar navbar-light navbar-expand-lg" aria-label="Main Menu">
 				@widget('mainmenu')
-			</nav><!-- / .blackbar -->
+			</nav>
 
 			@if (!Request::is('/'))
 				@widget('breadcrumbs')
