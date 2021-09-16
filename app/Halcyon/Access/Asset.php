@@ -113,6 +113,11 @@ class Asset extends Nested
 			}
 		}
 
+		if (!$result || !$result->id)
+		{
+			throw new \Exception('No base permissions found.');
+		}
+
 		return $result;
 	}
 
