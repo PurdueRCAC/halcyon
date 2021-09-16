@@ -20,7 +20,7 @@ class CreatePagesTables extends Migration
 				$table->increments('id');
 				$table->string('title', 255);
 				$table->string('alias', 255);
-				$table->text('content');
+				$table->longText('content');
 				$table->integer('state')->default(0);
 				$table->integer('access')->unsigned()->default(0)->comment('FK to viewlevels.id');
 				$table->dateTime('created_at')->nullable();
@@ -41,10 +41,10 @@ class CreatePagesTables extends Migration
 				$table->string('path', 255);
 				$table->string('language', 7);
 				$table->integer('asset_id')->unsigned()->default(0);
-				$table->text('params')->nullable();
-				$table->text('metakey')->nullable();
-				$table->text('metadesc')->nullable();
-				$table->text('metadata')->nullable();
+				$table->mediumText('params')->nullable();
+				$table->tinyText('metakey')->nullable();
+				$table->tinyText('metadesc')->nullable();
+				$table->tinyText('metadata')->nullable();
 				$table->index('access');
 				$table->index('state');
 				$table->index('parent_id');

@@ -20,9 +20,10 @@ class CreateIssuesTables extends Migration
 			{
 				$table->increments('id');
 				$table->integer('userid')->unsigned()->default(0);
-				$table->text('report');
-				$table->text('stemmedreport');
+				$table->string('report', 8096);
+				$table->string('stemmedreport', 8096);
 				$table->dateTime('datetimecreated')->nullable();
+				$table->dateTime('datetimeremoved')->nullable();
 				$table->integer('issuetodoid')->unsigned()->default(0);
 				$table->index(['userid', 'datetimecreated']);
 				//$table->index('stemmedreport');
@@ -38,8 +39,8 @@ class CreateIssuesTables extends Migration
 				$table->increments('id');
 				$table->integer('issueid')->unsigned()->default(0);
 				$table->integer('userid')->unsigned()->default(0);
-				$table->text('comment');
-				$table->text('stemmedcomment');
+				$table->string('comment', 8096);
+				$table->string('stemmedcomment', 8096);
 				$table->dateTime('datetimecreated')->nullable();
 				$table->dateTime('datetimeremoved')->nullable();
 				$table->tinyInteger('resolution')->unsigned()->default(0);
@@ -70,7 +71,7 @@ class CreateIssuesTables extends Migration
 				$table->increments('id');
 				$table->integer('userid')->unsigned()->default(0);
 				$table->string('name');
-				$table->text('description');
+				$table->string('description', 2000);
 				$table->integer('recurringtimeperiodid')->unsigned()->default(0);
 				$table->dateTime('datetimecreated')->nullable();
 				$table->dateTime('datetimeremoved')->nullable();

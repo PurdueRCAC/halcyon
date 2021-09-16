@@ -24,12 +24,12 @@ class CreateKnowledgeTables extends Migration
 				$table->dateTime('created_at')->nullable();
 				$table->dateTime('updated_at')->nullable();
 				$table->dateTime('deleted_at')->nullable();
-				$table->integer('state')->unsigned()->default(0);
-				$table->integer('access')->unsigned()->default(0);
+				$table->tinyInteger('state')->unsigned()->default(0);
+				$table->tinyInteger('access')->unsigned()->default(0);
 				$table->text('content');
 				$table->text('params')->nullable();
-				$table->integer('main')->unsigned()->default(0);
-				$table->integer('snippet')->unsigned()->default(0);
+				$table->tinyInteger('main')->unsigned()->default(0);
+				$table->tinyInteger('snippet')->unsigned()->default(0);
 				$table->index('state');
 				$table->index('access');
 				$table->index('snippet');
@@ -47,8 +47,8 @@ class CreateKnowledgeTables extends Migration
 				$table->integer('rgt')->unsigned()->default(0);
 				$table->integer('level')->unsigned()->default(0);
 				$table->string('path');
-				$table->integer('state')->unsigned()->default(0);
-				$table->integer('access')->unsigned()->default(0);
+				$table->tinyInteger('state')->unsigned()->default(0);
+				$table->tunyInteger('access')->unsigned()->default(0);
 				$table->index(['parent_id', 'page_id']);
 				$table->index('state');
 				$table->index('access');
@@ -66,8 +66,8 @@ class CreateKnowledgeTables extends Migration
 				$table->integer('rgt')->unsigned()->default(0);
 				$table->integer('level')->unsigned()->default(0);
 				$table->string('path');
-				$table->integer('state')->unsigned()->default(0);
-				$table->integer('access')->unsigned()->default(0);
+				$table->tinyInteger('state')->unsigned()->default(0);
+				$table->tinyInteger('access')->unsigned()->default(0);
 				$table->index(['parent_id', 'page_id']);
 				$table->index('state');
 				$table->index('access');

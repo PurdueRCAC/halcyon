@@ -28,7 +28,7 @@ class CreateMessagequeueTables extends Migration
 				$table->dateTime('datetimestarted')->nullable();
 				$table->dateTime('datetimecompleted')->nullable();
 				$table->integer('pid')->unsigned()->default(0);
-				$table->integer('returnstatus')->unsigned()->default(0);
+				$table->smallInteger('returnstatus')->unsigned()->default(0);
 				$table->string('output', 150);
 				$table->index('datetimecompleted');
 				$table->index(['targetobjectid', 'userid'], 'targetobject');

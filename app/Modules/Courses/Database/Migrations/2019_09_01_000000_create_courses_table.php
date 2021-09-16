@@ -5,9 +5,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Migration script for installing cron tables
+ * Migration script for installing courses tables
  **/
-class CreateCronJobsTable extends Migration
+class CreateCoursesTable extends Migration
 {
 	/**
 	 * Up
@@ -24,7 +24,7 @@ class CreateCronJobsTable extends Migration
 				$table->string('coursenumber', 8);
 				$table->string('classname', 255);
 				$table->integer('resourceid')->unsigned()->default(0)->comment('FK to resources.id');
-				$table->integer('notice')->unsigned()->default(0);
+				$table->tinyInteger('notice')->unsigned()->default(0);
 				$table->dateTime('datetimestart')->nullable();
 				$table->dateTime('datetimestop')->nullable();
 				$table->string('semester', 16);
@@ -49,7 +49,7 @@ class CreateCronJobsTable extends Migration
 				$table->integer('membertype')->unsigned()->default(0)->comment('FK to membertypes.id');
 				$table->dateTime('datetimestart')->nullable();
 				$table->dateTime('datetimestop')->nullable();
-				$table->integer('notice')->unsigned()->default(0);
+				$table->tinyInteger('notice')->unsigned()->default(0);
 				$table->dateTime('datetimecreated')->nullable();
 				$table->dateTime('datetimeremoved')->nullable();
 				$table->index('classaccountid');

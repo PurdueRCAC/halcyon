@@ -29,7 +29,7 @@ class AddDescriptions extends Migration
 				//ALTER TABLE `resources` ADD COLUMN `params` VARCHAR(2000);
 				Schema::table('resources', function (Blueprint $table)
 				{
-					$table->string('status', 2000)->nullable();
+					$table->string('params', 2000)->nullable();
 				});
 			}
 

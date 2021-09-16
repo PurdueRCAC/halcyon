@@ -79,7 +79,7 @@ class CreateGroupsTables extends Migration
 			{
 				$table->increments('id');
 				$table->integer('groupid')->unsigned()->default(0)->comment('FK to groups.id');
-				$table->text('motd');
+				$table->string('motd', 8096);
 				$table->dateTime('datetimecreated')->nullable();
 				$table->dateTime('datetimeremoved')->nullable();
 				$table->index('groupid');
@@ -124,7 +124,7 @@ class CreateGroupsTables extends Migration
 				$table->integer('membertype')->unsigned()->default(0)->comment('FK to membertypes.id');
 				$table->dateTime('datetimecreated')->nullable();
 				$table->dateTime('datetimeremoved')->nullable();
-				$table->integer('notice')->unsigned()->default(0);
+				$table->tinyInteger('notice')->unsigned()->default(0);
 				$table->index(['groupid', 'datetimecreated', 'datetimeremoved'], 'groupid');
 				$table->index(['queueuserid', 'datetimecreated', 'datetimeremoved'], 'queueuserid');
 				$table->index(['notice', 'groupid'], 'notice');
@@ -163,12 +163,24 @@ class CreateGroupsTables extends Migration
 			});
 		}
 
+		if (!Schema::hasTable('userrequests'))
+		{
+			Schema::create('userrequests', function (Blueprint $table)
+			{
+				$table->increments('id');
+				$table->integer('userid')->unsigned()->default(0)->comment('FK to users.id');
+				$table->string('comment', 2048);
+				$table->dateTime('datetimecreated')->nullable();
+				$table->index(['userid', 'datetimecreated'], 'userid');
+			});
+		}
+
 		if (!Schema::hasTable('membertypes'))
 		{
 			Schema::create('membertypes', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->string('name');
+				$table->string('name', 20);
 			});
 
 			// Populate defaults
@@ -219,6 +231,7 @@ class CreateGroupsTables extends Migration
 			'unixgroups',
 			'unixgroupusers',
 			'membertypes',
+			'userrequests'
 		);
 
 		foreach ($tables as $table)
