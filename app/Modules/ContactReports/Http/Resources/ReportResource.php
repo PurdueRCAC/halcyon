@@ -43,7 +43,7 @@ class ReportResource extends JsonResource
 		$data['type'] = $this->type;
 		//$data['type']->api = route('api.contactreports.types.read', ['id' => $this->contactreporttypeid]);
 		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
-		$data['users'] = $this->users->each(function ($res, $key)
+		/*$data['users'] = $this->users->each(function ($res, $key)
 		{
 			if ($res->user)
 			{
@@ -54,16 +54,48 @@ class ReportResource extends JsonResource
 			{
 				$res->datetimelastnotify = null;
 			}
-		});
+		});*/
+		$data['users'] = array();
+		foreach ($this->users as $res)
+		{
+			$item = $res->toArray();
+
+			$item['name'] = trans('global.unknown');
+			if ($res->user)
+			{
+				$item['name'] = $res->user->name;
+			}
+			if (!$res->notified())
+			{
+				$item['datetimelastnotify'] = null;
+			}
+
+			$data['users'][] = $item;
+		};
+
 		$data['groupname'] = $this->group ? $this->group->name : null;
-		$data['resources'] = $this->resources->each(function ($res, $key)
+		/*$data['resources'] = $this->resources->each(function ($res, $key)
 		{
 			if ($res->resource)
 			{
 				$res->resource->api = route('api.resources.read', ['id' => $res->resourceid]);
 				$res->name = $res->resource->name;
 			}
-		});
+		});*/
+		$data['resources'] = array();
+		foreach ($this->resources as $res)
+		{
+			$item = $res->toArray();
+
+			$item['name'] = trans('global.unknown');
+			if ($res->resource)
+			{
+				$item['name'] = $res->resource->name;
+			}
+
+			$data['resources'][] = $item;
+		};
+
 		$data['tags'] = $this->tags;
 		$data['age'] = Carbon::now()->timestamp - $this->datetimecreated->timestamp;
 

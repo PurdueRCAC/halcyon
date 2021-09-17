@@ -136,6 +136,11 @@ class FollowGroupsController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
+		$rows->each(function($item, $key)
+		{
+			$item->api = route('api.contactreports.followgroups.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -161,6 +166,31 @@ class FollowGroupsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"groupid": 20,
+	 * 						"userid": 1234,
+	 * 						"userrequestid": 0,
+	 * 						"membertype": 10,
+	 * 						"owner": 0,
+	 * 						"datecreated": "2021-09-03T05:44:38.000000Z",
+	 * 						"dateremoved": null,
+	 * 						"datelastseen": null,
+	 * 						"notice": 0,
+	 * 						"api": "https://example.org/api/contactreports/followgroups/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request  $request
@@ -191,6 +221,8 @@ class FollowGroupsController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
+		$row->api = route('api.contactreports.followgroups.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
@@ -208,14 +240,41 @@ class FollowGroupsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"groupid": 20,
+	 * 						"userid": 1234,
+	 * 						"userrequestid": 0,
+	 * 						"membertype": 10,
+	 * 						"owner": 0,
+	 * 						"datecreated": "2021-09-03T05:44:38.000000Z",
+	 * 						"dateremoved": null,
+	 * 						"datelastseen": null,
+	 * 						"notice": 0,
+	 * 						"api": "https://example.org/api/contactreports/followgroups/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function read($id)
 	{
-		$item = GroupUser::findOrFail((int)$id);
+		$row = GroupUser::findOrFail((int)$id);
 
-		return new JsonResource($item);
+		$row->api = route('api.contactreports.followgroups.read', ['id' => $row->id]);
+
+		return new JsonResource($row);
 	}
 
 	/**
@@ -251,6 +310,34 @@ class FollowGroupsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"groupid": 20,
+	 * 						"userid": 1234,
+	 * 						"userrequestid": 0,
+	 * 						"membertype": 10,
+	 * 						"owner": 0,
+	 * 						"datecreated": "2021-09-03T05:44:38.000000Z",
+	 * 						"dateremoved": null,
+	 * 						"datelastseen": null,
+	 * 						"notice": 0,
+	 * 						"api": "https://example.org/api/contactreports/followgroups/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
 	 * @return  Response
@@ -283,6 +370,8 @@ class FollowGroupsController extends Controller
 		{
 			return response()->json(['message' => trans('global.messages.update failed')], 500);
 		}
+
+		$row->api = route('api.contactreports.followgroups.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}

@@ -239,6 +239,38 @@ class MembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"classaccountid": 1,
+	 * 						"userid": 1234,
+	 * 						"membertype": 1,
+	 * 						"datetimestart": "2016-08-22T04:00:00.000000Z",
+	 * 						"datetimestop": "2016-12-17T05:00:00.000000Z",
+	 * 						"notice": 0,
+	 * 						"datetimecreated": "2016-08-19T04:02:01.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"api": "https://example.org/api/courses/members/1",
+	 * 						"user": {
+	 * 							"id": 2,
+	 * 							"name": "Jane Doe",
+	 * 							"username": "jdoe"
+	 * 						}
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param  Request  $request
 	 * @return JsonResource
 	 */
@@ -305,6 +337,35 @@ class MembersController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"classaccountid": 1,
+	 * 						"userid": 1234,
+	 * 						"membertype": 1,
+	 * 						"datetimestart": "2016-08-22T04:00:00.000000Z",
+	 * 						"datetimestop": "2016-12-17T05:00:00.000000Z",
+	 * 						"notice": 0,
+	 * 						"datetimecreated": "2016-08-19T04:02:01.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"api": "https://example.org/api/courses/members/1",
+	 * 						"user": {
+	 * 							"id": 2,
+	 * 							"name": "Jane Doe",
+	 * 							"username": "jdoe"
+	 * 						}
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $id
@@ -390,6 +451,38 @@ class MembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"classaccountid": 1,
+	 * 						"userid": 1234,
+	 * 						"membertype": 1,
+	 * 						"datetimestart": "2016-08-22T04:00:00.000000Z",
+	 * 						"datetimestop": "2016-12-17T05:00:00.000000Z",
+	 * 						"notice": 0,
+	 * 						"datetimecreated": "2016-08-19T04:02:01.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"api": "https://example.org/api/courses/members/1",
+	 * 						"user": {
+	 * 							"id": 2,
+	 * 							"name": "Jane Doe",
+	 * 							"username": "jdoe"
+	 * 						}
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request $request
 	 * @param   integer  $id
 	 * @return  JsonResource
@@ -466,6 +559,14 @@ class MembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   integer  $id
 	 * @return  Response
 	 */
@@ -487,8 +588,10 @@ class MembersController extends Controller
 	/**
 	 * Import
 	 *
+	 * @apiMethod POST
 	 * @apiUri    /api/courses/members/import
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "id",
 	 * 		"description":   "Class account ID",
 	 * 		"required":      true,
@@ -497,6 +600,7 @@ class MembersController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "file",
 	 * 		"description":   "File to be uploaded",
 	 * 		"required":      true,

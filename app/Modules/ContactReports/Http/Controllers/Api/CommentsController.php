@@ -206,13 +206,17 @@ class CommentsController extends Controller
 	 * 			"content": {
 	 * 				"application/json": {
 	 * 					"example": {
-	 * 						"id":            1,
-	 * 						"userid":        1234,
+	 * 						"id": 1,
 	 * 						"contactreportid": 1,
-	 * 						"comment":       "Example comment",
+	 * 						"userid": 1234,
+	 * 						"comment": "Example comment",
+	 * 						"stemmedcomment": "example comment",
+	 * 						"notice": 0,
 	 * 						"datetimecreated": "2021-09-14 13:01:55",
-	 * 						"datetimeremoved": null,
-	 * 						"api":           "https://example.com/api/contactreports/comments/1"
+	 * 						"formatteddate": "Sep 14, 2021&nbsp; 1:01pm",
+	 * 						"formattedcomment": "<p>Example comment</p>",
+	 * 						"username": "John Doe",
+	 * 						"api": "https://example.org/api/contactreports/comments/1"
 	 * 					}
 	 * 				}
 	 * 			}
@@ -287,6 +291,31 @@ class CommentsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"contactreportid": 1,
+	 * 						"userid": 1234,
+	 * 						"comment": "Example comment",
+	 * 						"stemmedcomment": "example comment",
+	 * 						"notice": 0,
+	 * 						"datetimecreated": "2021-09-14 13:01:55",
+	 * 						"formatteddate": "Sep 14, 2021&nbsp; 1:01pm",
+	 * 						"formattedcomment": "<p>Example comment</p>",
+	 * 						"username": "John Doe",
+	 * 						"api": "https://example.org/api/contactreports/comments/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return Response
 	 */
@@ -336,13 +365,17 @@ class CommentsController extends Controller
 	 * 			"content": {
 	 * 				"application/json": {
 	 * 					"example": {
-	 * 						"id":            1,
-	 * 						"userid":        1234,
+	 * 						"id": 1,
 	 * 						"contactreportid": 1,
-	 * 						"comment":       "Example comment",
+	 * 						"userid": 1234,
+	 * 						"comment": "Example comment",
+	 * 						"stemmedcomment": "example comment",
+	 * 						"notice": 0,
 	 * 						"datetimecreated": "2021-09-14 13:01:55",
-	 * 						"datetimeremoved": null,
-	 * 						"api":           "https://example.com/api/contactreports/comments/1"
+	 * 						"formatteddate": "Sep 14, 2021&nbsp; 1:01pm",
+	 * 						"formattedcomment": "<p>Example comment</p>",
+	 * 						"username": "John Doe",
+	 * 						"api": "https://example.org/api/contactreports/comments/1"
 	 * 					}
 	 * 				}
 	 * 			}

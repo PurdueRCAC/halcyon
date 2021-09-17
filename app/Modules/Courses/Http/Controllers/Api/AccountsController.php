@@ -359,6 +359,41 @@ class AccountsController extends Controller
 	 * 			"example":   "2021-01-30T08:30:00Z"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"crn": "10023",
+	 * 						"department": "AAE",
+	 * 						"coursenumber": "33400",
+	 * 						"classname": "Aerodynamics",
+	 * 						"resourceid": 70,
+	 * 						"notice": 0,
+	 * 						"datetimestart": "2017-08-21T04:00:00.000000Z",
+	 * 						"datetimestop": "2017-12-16T05:00:00.000000Z",
+	 * 						"semester": "Fall 2017",
+	 * 						"groupid": 0,
+	 * 						"userid": 1234,
+	 * 						"datetimeremoved": null,
+	 * 						"datetimecreated": "2017-07-21T17:01:39.000000Z",
+	 * 						"studentcount": 0,
+	 * 						"reference": "",
+	 * 						"api": "https://example.org/api/courses/56",
+	 * 						"members": []
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  Response
 	 */
@@ -508,6 +543,76 @@ class AccountsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"crn": "10023",
+	 * 						"department": "AAE",
+	 * 						"coursenumber": "33400",
+	 * 						"classname": "Aerodynamics",
+	 * 						"resourceid": 70,
+	 * 						"notice": 0,
+	 * 						"datetimestart": "2017-08-21T04:00:00.000000Z",
+	 * 						"datetimestop": "2017-12-16T05:00:00.000000Z",
+	 * 						"semester": "Fall 2017",
+	 * 						"groupid": 0,
+	 * 						"userid": 1234,
+	 * 						"datetimeremoved": null,
+	 * 						"datetimecreated": "2017-07-21T17:01:39.000000Z",
+	 * 						"studentcount": 0,
+	 * 						"reference": "",
+	 * 						"api": "https://example.org/api/courses/56",
+	 * 						"members": [
+	 * 							{
+	 * 								"id": 87,
+	 * 								"classaccountid": 56,
+	 * 								"userid": 12346,
+	 * 								"membertype": 1,
+	 * 								"datetimestart": "2017-08-21T04:00:00.000000Z",
+	 * 								"datetimestop": "2017-12-16T05:00:00.000000Z",
+	 * 								"notice": 0,
+	 * 								"datetimecreated": "2017-07-21T17:01:40.000000Z",
+	 * 								"datetimeremoved": null,
+	 * 								"api": "https://example.org/api/courses/members/87",
+	 * 								"user": {
+	 * 									"id": 12346,
+	 * 									"name": "Fu Bar",
+	 * 									"username": "fubar"
+	 * 								}
+	 * 							},
+	 * 							{
+	 * 								"id": 87,
+	 * 								"classaccountid": 56,
+	 * 								"userid": 12347,
+	 * 								"membertype": 1,
+	 * 								"datetimestart": "2017-08-21T04:00:00.000000Z",
+	 * 								"datetimestop": "2017-12-16T05:00:00.000000Z",
+	 * 								"notice": 0,
+	 * 								"datetimecreated": "2017-07-21T17:01:40.000000Z",
+	 * 								"datetimeremoved": null,
+	 * 								"api": "https://example.org/api/courses/members/88",
+	 * 								"user": {
+	 * 									"id": 12347,
+	 * 									"name": "Lorrie Ipsum",
+	 * 									"username": "ipsuml"
+	 * 								}
+	 * 							}
+	 * 						]
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   integer $id
 	 * @return AccountResource
 	 */
@@ -625,6 +730,76 @@ class AccountsController extends Controller
 	 * 			"example":   "2021-01-30T08:30:00Z"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"crn": "10023",
+	 * 						"department": "AAE",
+	 * 						"coursenumber": "33400",
+	 * 						"classname": "Aerodynamics",
+	 * 						"resourceid": 70,
+	 * 						"notice": 0,
+	 * 						"datetimestart": "2017-08-21T04:00:00.000000Z",
+	 * 						"datetimestop": "2017-12-16T05:00:00.000000Z",
+	 * 						"semester": "Fall 2017",
+	 * 						"groupid": 0,
+	 * 						"userid": 1234,
+	 * 						"datetimeremoved": null,
+	 * 						"datetimecreated": "2017-07-21T17:01:39.000000Z",
+	 * 						"studentcount": 0,
+	 * 						"reference": "",
+	 * 						"api": "https://example.org/api/courses/56",
+	 * 						"members": [
+	 * 							{
+	 * 								"id": 87,
+	 * 								"classaccountid": 56,
+	 * 								"userid": 12346,
+	 * 								"membertype": 1,
+	 * 								"datetimestart": "2017-08-21T04:00:00.000000Z",
+	 * 								"datetimestop": "2017-12-16T05:00:00.000000Z",
+	 * 								"notice": 0,
+	 * 								"datetimecreated": "2017-07-21T17:01:40.000000Z",
+	 * 								"datetimeremoved": null,
+	 * 								"api": "https://example.org/api/courses/members/87",
+	 * 								"user": {
+	 * 									"id": 12346,
+	 * 									"name": "Fu Bar",
+	 * 									"username": "fubar"
+	 * 								}
+	 * 							},
+	 * 							{
+	 * 								"id": 87,
+	 * 								"classaccountid": 56,
+	 * 								"userid": 12347,
+	 * 								"membertype": 1,
+	 * 								"datetimestart": "2017-08-21T04:00:00.000000Z",
+	 * 								"datetimestop": "2017-12-16T05:00:00.000000Z",
+	 * 								"notice": 0,
+	 * 								"datetimecreated": "2017-07-21T17:01:40.000000Z",
+	 * 								"datetimeremoved": null,
+	 * 								"api": "https://example.org/api/courses/members/88",
+	 * 								"user": {
+	 * 									"id": 12347,
+	 * 									"name": "Lorrie Ipsum",
+	 * 									"username": "ipsuml"
+	 * 								}
+	 * 							}
+	 * 						]
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request $request
 	 * @param   integer $id
 	 * @return  AccountResource
@@ -685,6 +860,14 @@ class AccountsController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer $id

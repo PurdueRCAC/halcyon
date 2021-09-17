@@ -18,7 +18,7 @@ use Carbon\Carbon;
 class FollowUsersController extends Controller
 {
 	/**
-	 * Display a listing of contact reports comments
+	 * Display a listing of contact reports user followings
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/contactreports/followusers
@@ -141,11 +141,16 @@ class FollowUsersController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
+		$rows->each(function($item, $key)
+		{
+			$item->api = route('api.contactreports.followusers.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
 	/**
-	 * Create a contact report comment
+	 * Create a contact report user following
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/contactreports/followusers
@@ -166,6 +171,28 @@ class FollowUsersController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"userid": 1,
+	 * 						"targetuserid": 2,
+	 * 						"membertype": 10,
+	 * 						"datecreated": "2021-09-01 09:12:01",
+	 * 						"dateremoved": "0000-00-00 00:00:00",
+	 * 						"datelastseen": "0000-00-00 00:00:00",
+	 * 						"api": "https://example.org/api/contactreports/followusers/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request  $request
@@ -196,11 +223,13 @@ class FollowUsersController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
+		$row->api = route('api.contactreports.followusers.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
 	/**
-	 * Retrieve a contact report comment
+	 * Retrieve a contact report user following
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/contactreports/followusers/{id}
@@ -213,18 +242,42 @@ class FollowUsersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"userid": 1,
+	 * 						"targetuserid": 2,
+	 * 						"membertype": 10,
+	 * 						"datecreated": "2021-09-01 09:12:01",
+	 * 						"dateremoved": "0000-00-00 00:00:00",
+	 * 						"datelastseen": "0000-00-00 00:00:00",
+	 * 						"api": "https://example.org/api/contactreports/followusers/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function read($id)
 	{
-		$item = Follow::findOrFail((int)$id);
+		$row = Follow::findOrFail((int)$id);
 
-		return new JsonResource($item);
+		$row->api = route('api.contactreports.followusers.read', ['id' => $row->id]);
+
+		return new JsonResource($row);
 	}
 
 	/**
-	 * Update a contact report comment
+	 * Update a contact report user following
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/contactreports/followusers/{id}
@@ -253,6 +306,31 @@ class FollowUsersController extends Controller
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       null
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"userid": 1,
+	 * 						"targetuserid": 2,
+	 * 						"membertype": 10,
+	 * 						"datecreated": "2021-09-01 09:12:01",
+	 * 						"dateremoved": "0000-00-00 00:00:00",
+	 * 						"datelastseen": "0000-00-00 00:00:00",
+	 * 						"api": "https://example.org/api/contactreports/followusers/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
@@ -287,11 +365,13 @@ class FollowUsersController extends Controller
 			return response()->json(['message' => trans('global.messages.update failed')], 500);
 		}
 
+		$row->api = route('api.contactreports.followusers.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
 	/**
-	 * Delete a contact report comment
+	 * Delete a contact report user following
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/contactreports/followusers/{id}

@@ -183,19 +183,25 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @apiResponse {
-	 * 		"200": {
+	 * 		"201": {
 	 * 			"description": "Successful entry creation",
 	 * 			"content": {
 	 * 				"application/json": {
 	 * 					"example": {
-	 * 						"id":            "1",
-	 * 						"name":          "Examples",
-	 * 						"url":           "https://example.com"
+	 * 						"id": 1,
+	 * 						"name": "Examples",
+	 * 						"timeperiodid": 0,
+	 * 						"timeperiodcount": 0,
+	 * 						"timeperiodlimit": 0,
+	 * 						"waitperiodid": 0,
+	 * 						"waitperiodcount": 0,
+	 * 						"reports_count": 442,
+	 * 						"api": "https://example.org/api/contactreports/types/1"
 	 * 					}
 	 * 				}
 	 * 			}
 	 * 		},
-	 * 		"415": {
+	 * 		"409": {
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
@@ -253,7 +259,15 @@ class TypesController extends Controller
 	 * 			"content": {
 	 * 				"application/json": {
 	 * 					"example": {
-	 * 						"id":            "1"
+	 * 						"id": 1,
+	 * 						"name": "Examples",
+	 * 						"timeperiodid": 0,
+	 * 						"timeperiodcount": 0,
+	 * 						"timeperiodlimit": 0,
+	 * 						"waitperiodid": 0,
+	 * 						"waitperiodcount": 0,
+	 * 						"reports_count": 442,
+	 * 						"api": "https://example.org/api/contactreports/types/1"
 	 * 					}
 	 * 				}
 	 * 			}
@@ -309,19 +323,29 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @apiResponse {
-	 * 		"200": {
+	 * 		"204": {
 	 * 			"description": "Successful entry modification",
 	 * 			"content": {
 	 * 				"application/json": {
 	 * 					"example": {
-	 * 						"id":            "1",
-	 * 						"name":          "Examples"
+	 * 						"id": 1,
+	 * 						"name": "Examples",
+	 * 						"timeperiodid": 0,
+	 * 						"timeperiodcount": 0,
+	 * 						"timeperiodlimit": 0,
+	 * 						"waitperiodid": 0,
+	 * 						"waitperiodcount": 0,
+	 * 						"reports_count": 442,
+	 * 						"api": "https://example.org/api/contactreports/types/1"
 	 * 					}
 	 * 				}
 	 * 			}
 	 * 		},
 	 * 		"404": {
 	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request  $request

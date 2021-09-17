@@ -305,6 +305,85 @@ class ReportsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 5830,
+	 * 						"groupid": 142,
+	 * 						"userid": 61344,
+	 * 						"report": "Example text",
+	 * 						"stemmedreport": "eexample ttext",
+	 * 						"datetimecontact": "2021-09-03T04:00:00.000000Z",
+	 * 						"datetimecreated": "2021-09-03T20:01:44.000000Z",
+	 * 						"notice": 23,
+	 * 						"datetimegroupid": null,
+	 * 						"contactreporttypeid": 3,
+	 * 						"formatteddate": "September 3, 2021 4:01pm",
+	 * 						"formattedreport": "<p>Example text.</p>",
+	 * 						"comments": [],
+	 * 						"subscribed": 1,
+	 * 						"subscribedcommentid": 0,
+	 * 						"type": {
+	 * 							"id": 3,
+	 * 							"name": "Personal Meeting",
+	 * 							"timeperiodid": 1,
+	 * 							"timeperiodcount": 7,
+	 * 							"timeperiodlimit": 14,
+	 * 							"waitperiodid": 0,
+	 * 							"waitperiodcount": 0
+	 * 						},
+	 * 						"username": "John Doe",
+	 * 						"users": [
+	 * 							{
+	 * 								"id": 9342,
+	 * 								"contactreportid": 5830,
+	 * 								"userid": 56907,
+	 * 								"datetimecreated": "2021-09-03T20:01:44.000000Z",
+	 * 								"datetimelastnotify": null,
+	 * 								"name": "Gerhard Klimeck"
+	 * 							},
+	 * 							{
+	 * 								"id": 9343,
+	 * 								"contactreportid": 5830,
+	 * 								"userid": 81163,
+	 * 								"datetimecreated": "2021-09-03T20:01:44.000000Z",
+	 * 								"datetimelastnotify": null,
+	 * 								"name": "Erik S Gough"
+	 * 							}
+	 * 						],
+	 * 						"groupname": "Lorem Ipsum",
+	 * 						"resources": [
+	 * 							{
+	 * 								"id": 106819,
+	 * 								"contactreportid": 5830,
+	 * 								"resourceid": 110,
+	 * 								"name": "Geddes"
+	 * 							},
+	 * 							{
+	 * 								"id": 106820,
+	 * 								"contactreportid": 5830,
+	 * 								"resourceid": 92,
+	 * 								"name": "Gilbreth"
+	 * 							}
+	 * 						],
+	 * 						"tags": [],
+	 * 						"age": 1200675,
+	 * 						"api": "https://example.org/api/contactreports/5830",
+	 * 						"url": "https://example.org/contactreports/5830"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  Response
 	 */
@@ -462,6 +541,82 @@ class ReportsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 5830,
+	 * 						"groupid": 142,
+	 * 						"userid": 61344,
+	 * 						"report": "Example text",
+	 * 						"stemmedreport": "eexample ttext",
+	 * 						"datetimecontact": "2021-09-03T04:00:00.000000Z",
+	 * 						"datetimecreated": "2021-09-03T20:01:44.000000Z",
+	 * 						"notice": 23,
+	 * 						"datetimegroupid": null,
+	 * 						"contactreporttypeid": 3,
+	 * 						"formatteddate": "September 3, 2021 4:01pm",
+	 * 						"formattedreport": "<p>Example text.</p>",
+	 * 						"comments": [],
+	 * 						"subscribed": 1,
+	 * 						"subscribedcommentid": 0,
+	 * 						"type": {
+	 * 							"id": 3,
+	 * 							"name": "Personal Meeting",
+	 * 							"timeperiodid": 1,
+	 * 							"timeperiodcount": 7,
+	 * 							"timeperiodlimit": 14,
+	 * 							"waitperiodid": 0,
+	 * 							"waitperiodcount": 0
+	 * 						},
+	 * 						"username": "John Doe",
+	 * 						"users": [
+	 * 							{
+	 * 								"id": 9342,
+	 * 								"contactreportid": 5830,
+	 * 								"userid": 56907,
+	 * 								"datetimecreated": "2021-09-03T20:01:44.000000Z",
+	 * 								"datetimelastnotify": null,
+	 * 								"name": "Gerhard Klimeck"
+	 * 							},
+	 * 							{
+	 * 								"id": 9343,
+	 * 								"contactreportid": 5830,
+	 * 								"userid": 81163,
+	 * 								"datetimecreated": "2021-09-03T20:01:44.000000Z",
+	 * 								"datetimelastnotify": null,
+	 * 								"name": "Erik S Gough"
+	 * 							}
+	 * 						],
+	 * 						"groupname": "Lorem Ipsum",
+	 * 						"resources": [
+	 * 							{
+	 * 								"id": 106819,
+	 * 								"contactreportid": 5830,
+	 * 								"resourceid": 110,
+	 * 								"name": "Geddes"
+	 * 							},
+	 * 							{
+	 * 								"id": 106820,
+	 * 								"contactreportid": 5830,
+	 * 								"resourceid": 92,
+	 * 								"name": "Gilbreth"
+	 * 							}
+	 * 						],
+	 * 						"tags": [],
+	 * 						"age": 1200675,
+	 * 						"api": "https://example.org/api/contactreports/5830",
+	 * 						"url": "https://example.org/contactreports/5830"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return Response
 	 */
@@ -505,6 +660,85 @@ class ReportsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 5830,
+	 * 						"groupid": 142,
+	 * 						"userid": 61344,
+	 * 						"report": "Example text",
+	 * 						"stemmedreport": "eexample ttext",
+	 * 						"datetimecontact": "2021-09-03T04:00:00.000000Z",
+	 * 						"datetimecreated": "2021-09-03T20:01:44.000000Z",
+	 * 						"notice": 23,
+	 * 						"datetimegroupid": null,
+	 * 						"contactreporttypeid": 3,
+	 * 						"formatteddate": "September 3, 2021 4:01pm",
+	 * 						"formattedreport": "<p>Example text.</p>",
+	 * 						"comments": [],
+	 * 						"subscribed": 1,
+	 * 						"subscribedcommentid": 0,
+	 * 						"type": {
+	 * 							"id": 3,
+	 * 							"name": "Personal Meeting",
+	 * 							"timeperiodid": 1,
+	 * 							"timeperiodcount": 7,
+	 * 							"timeperiodlimit": 14,
+	 * 							"waitperiodid": 0,
+	 * 							"waitperiodcount": 0
+	 * 						},
+	 * 						"username": "John Doe",
+	 * 						"users": [
+	 * 							{
+	 * 								"id": 9342,
+	 * 								"contactreportid": 5830,
+	 * 								"userid": 56907,
+	 * 								"datetimecreated": "2021-09-03T20:01:44.000000Z",
+	 * 								"datetimelastnotify": null,
+	 * 								"name": "Gerhard Klimeck"
+	 * 							},
+	 * 							{
+	 * 								"id": 9343,
+	 * 								"contactreportid": 5830,
+	 * 								"userid": 81163,
+	 * 								"datetimecreated": "2021-09-03T20:01:44.000000Z",
+	 * 								"datetimelastnotify": null,
+	 * 								"name": "Erik S Gough"
+	 * 							}
+	 * 						],
+	 * 						"groupname": "Lorem Ipsum",
+	 * 						"resources": [
+	 * 							{
+	 * 								"id": 106819,
+	 * 								"contactreportid": 5830,
+	 * 								"resourceid": 110,
+	 * 								"name": "Geddes"
+	 * 							},
+	 * 							{
+	 * 								"id": 106820,
+	 * 								"contactreportid": 5830,
+	 * 								"resourceid": 92,
+	 * 								"name": "Gilbreth"
+	 * 							}
+	 * 						],
+	 * 						"tags": [],
+	 * 						"age": 1200675,
+	 * 						"api": "https://example.org/api/contactreports/5830",
+	 * 						"url": "https://example.org/contactreports/5830"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request  $request
