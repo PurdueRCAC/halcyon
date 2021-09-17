@@ -124,6 +124,10 @@ class QueueResource extends JsonResource
 		{
 			$data['datetimeremoved'] = null;
 		}
+		if (!$this->hasLastSeenTime())
+		{
+			$data['datetimelastseen'] = null;
+		}
 
 		$data['api'] = route('api.queues.read', ['id' => $this->id]);
 

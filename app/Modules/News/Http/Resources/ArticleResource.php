@@ -46,7 +46,19 @@ class ArticleResource extends JsonResource
 			}
 		});
 
-		//$this->username = $this->creator ? $this->creator->name : trans('global.unknown');
+		if (!$this->isUpdated())
+		{
+			$data['datetimeupdate'] = null;
+		}
+		if (!$this->isModified())
+		{
+			$data['datetimeedited'] = null;
+		}
+		if (!$this->isMailed())
+		{
+			$data['datetimemailed'] = null;
+		}
+
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
 

@@ -25,24 +25,7 @@ class IssueResource extends JsonResource
 
 		foreach ($this->comments as $comment)
 		{
-			$c = $comment->toArray();
-
-			$c['formatteddate'] = $comment->formattedDate;
-			$c['formattedcomment'] = $comment->formattedComment;
-			$c['username'] = $comment->creator ? $comment->creator->name : trans('global.unknown');
-
-			$c['api'] = route('api.issues.comments.read', ['comment' => $comment->id]);
-
-			$c['can']['edit']   = false;
-			$c['can']['delete'] = false;
-
-			if ($user)
-			{
-				$c['can']['edit']   = ($user->can('edit issues') || ($user->can('edit.own issues') && $comment->userid == $user->id));
-				$c['can']['delete'] = $user->can('delete issues');
-			}
-
-			$data['comments'][] = $c;
+			$data['comments'][] = new CommentResource($comment);
 		}
 		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
 		$data['resources'] = $this->resources->each(function ($res, $key)
@@ -51,6 +34,11 @@ class IssueResource extends JsonResource
 			$res->name = $res->resource ? $res->resource->name : $res->resourceid;
 		});
 		$data['age'] = Carbon::now()->timestamp - $this->datetimecreated->timestamp;
+
+		if (!$this->isTrashed())
+		{
+			$data['datetimeremoved'] = null;
+		}
 
 		$data['api'] = route('api.issues.read', ['id' => $this->id]);
 		$data['url'] = route('site.issues.show', ['id' => $this->id]);

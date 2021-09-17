@@ -66,11 +66,21 @@ class AssetResource extends JsonResource
 			$data['scheduler'] = $scheduler;
 		}
 
+		if (!$this->isTrashed())
+		{
+			$data['datetimeremoved'] = null;
+		}
+
 		// [!] Legacy compatibility
 		if ($request->segment(1) == 'ws')
 		{
 			$data['id'] = '/ws/resource/' . $data['id'];
 			$data['schedulerid'] = '/ws/scheduler/' . $data['schedulerid'];
+
+			if (!$this->isTrashed())
+			{
+				$data['datetimeremoved'] = '0000-00-00 00:00:00';
+			}
 		}
 
 		return $data;

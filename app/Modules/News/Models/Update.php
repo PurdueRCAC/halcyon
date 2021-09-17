@@ -129,6 +129,16 @@ class Update extends Model
 	}
 
 	/**
+	 * Determine if entry was edited
+	 *
+	 * @return  bool
+	 */
+	public function isModified()
+	{
+		return ($this->datetimeedited && $this->datetimeedited != '0000-00-00 00:00:00' && $this->datetimeedited != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Defines a relationship to type
 	 *
 	 * @return  string

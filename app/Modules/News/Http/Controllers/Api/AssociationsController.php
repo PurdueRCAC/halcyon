@@ -223,6 +223,10 @@ class AssociationsController extends Controller
 
 		$rows->each(function ($item, $key)
 		{
+			if (!$item->isTrashed())
+			{
+				$item->datetimeremoved = null;
+			}
 			$item->api = route('api.news.associations.read', ['id' => $item->id]);
 		});
 
@@ -395,6 +399,10 @@ class AssociationsController extends Controller
 		}
 
 		$row->api = route('api.news.associations.read', ['id' => $row->id]);
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -444,6 +452,10 @@ class AssociationsController extends Controller
 		$row = Association::findOrFail((int)$id);
 
 		$row->api = route('api.news.associations.read', ['id' => $row->id]);
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -619,6 +631,10 @@ class AssociationsController extends Controller
 		}
 
 		$row->api = route('api.news.associations.read', ['id' => $row->id]);
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
 
 		return new JsonResource($row);
 	}

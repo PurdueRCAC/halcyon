@@ -101,6 +101,7 @@ class FacetsController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
+			'state' => $request->input('state', 'published'),
 			'search'   => $request->input('search', ''),
 			'parent' => $request->input('parent', 0),
 			// Paging

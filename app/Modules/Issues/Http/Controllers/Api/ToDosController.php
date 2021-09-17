@@ -20,7 +20,7 @@ use App\Modules\Issues\Models\ToDo;
 class ToDosController extends Controller
 {
 	/**
-	 * Display a listing of issues
+	 * Display a listing of to-dos
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/issues/todos
@@ -94,12 +94,7 @@ class ToDosController extends Controller
 		$filters = array(
 			'search'    => null,
 			'id'        => null,
-			'group'     => null,
-			'start'     => null,
-			'stop'      => null,
-			'people'    => null,
-			'resource'  => null,
-			'notice'    => '*',
+			'recurringtimeperiodid' => null,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			'order'     => ToDo::$orderBy,
@@ -151,11 +146,20 @@ class ToDosController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
+		$rows->each(function($item, $key)
+		{
+			if (!$item->isTrashed())
+			{
+				$item->datetimeremoved = null;
+			}
+			$item->api = route('api.issues.todos.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
 	/**
-	 * Create a new issue
+	 * Create a new to-do
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /api/issues/todos
@@ -237,12 +241,13 @@ class ToDosController extends Controller
 		}
 
 		$row->api = route('api.issues.todos.read', ['id' => $row->id]);
+		$row->datetimeremoved = null;
 
 		return new JsonResource($row);
 	}
 
 	/**
-	 * Retrieve an issue
+	 * Retrieve a to-do
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api/issues/todos/{id}
@@ -264,11 +269,16 @@ class ToDosController extends Controller
 
 		$row->api = route('api.issues.todos.read', ['id' => $row->id]);
 
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
+
 		return new JsonResource($row);
 	}
 
 	/**
-	 * Update an issue
+	 * Update a to-do
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /api/issues/todos/{id}
@@ -352,11 +362,16 @@ class ToDosController extends Controller
 
 		$row->api = route('api.issues.todos.read', ['id' => $row->id]);
 
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
+
 		return new JsonResource($row);
 	}
 
 	/**
-	 * Delete an issue
+	 * Delete a to-do
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/issues/todos/{id}

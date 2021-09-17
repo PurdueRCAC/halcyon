@@ -31,11 +31,21 @@ class SubresourceResource extends JsonResource
 
 		$data['api'] = route('api.resources.subresources.read', ['id' => $this->id]);
 
+		if (!$this->isTrashed())
+		{
+			$data['datetimeremoved'] = null;
+		}
+
 		// [!] Legacy compatibility
 		if ($request->segment(1) == 'ws')
 		{
 			$data['id'] = '/ws/subresource/' . $data['id'];
 			$data['resource'] = '/ws/resource/' . $data['resourceid'];
+
+			if (!$this->isTrashed())
+			{
+				$data['datetimeremoved'] = '0000-00-00 00:00:00';
+			}
 		}
 
 		return $data;

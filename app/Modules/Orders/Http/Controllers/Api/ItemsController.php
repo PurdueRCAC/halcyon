@@ -235,6 +235,20 @@ class ItemsController extends Controller
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
 
+		$rows->each(function($item, $key)
+		{
+			if (!$item->isTrashed())
+			{
+				$item->datetimeremoved = null;
+			}
+			if (!$item->isFulfilled())
+			{
+				$item->datetimefulfilled = null;
+			}
+
+			$item->api = route('api.orders.items.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -381,6 +395,14 @@ class ItemsController extends Controller
 
 		$row->recurrence = $row->recurrenceRange();
 		$row->api = route('api.orders.items.read', ['id' => $row->id]);
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
+		if (!$row->isFulfilled())
+		{
+			$row->datetimefulfilled = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -408,6 +430,14 @@ class ItemsController extends Controller
 		$row->recurrence = $row->recurrenceRange();
 
 		$row->api = route('api.orders.items.read', ['id' => $row->id]);
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
+		if (!$row->isFulfilled())
+		{
+			$row->datetimefulfilled = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -538,6 +568,14 @@ class ItemsController extends Controller
 
 		$row->recurrence = $row->recurrenceRange();
 		$row->api = route('api.orders.items.read', ['id' => $row->id]);
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
+		if (!$row->isFulfilled())
+		{
+			$row->datetimefulfilled = null;
+		}
 
 		return new JsonResource($row);
 	}

@@ -306,7 +306,6 @@ class Article extends Model
 		return $dt;
 	}
 
-
 	/**
 	 * Determine if entry was edited
 	 *
