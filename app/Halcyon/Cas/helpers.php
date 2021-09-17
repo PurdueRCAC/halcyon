@@ -5,7 +5,7 @@ if (!function_exists('cas'))
     /**
      * Initiate CAS hook.
      *
-     * @return \Subfission\Cas\CasManager
+     * @return App\Halcyon\Cas\CasManager
      */
     function cas()
     {
