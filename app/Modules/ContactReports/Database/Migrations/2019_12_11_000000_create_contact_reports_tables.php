@@ -43,7 +43,7 @@ class CreateContactReportsTables extends Migration
 			Schema::create('contactreportstems', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->string('stemmedtext', 21843); //12000);
+				$table->string('stemmedtext', 12000);
 			});
 
 			DB::statement('ALTER TABLE contactreportstems ADD FULLTEXT (stemmedtext)');
