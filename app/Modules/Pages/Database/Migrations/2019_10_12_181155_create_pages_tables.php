@@ -42,9 +42,9 @@ class CreatePagesTables extends Migration
 				$table->string('language', 7);
 				$table->integer('asset_id')->unsigned()->default(0);
 				$table->mediumText('params')->nullable();
-				$table->tinyText('metakey')->nullable();
-				$table->tinyText('metadesc')->nullable();
-				$table->tinyText('metadata')->nullable();
+				$table->text('metakey')->nullable();
+				$table->text('metadesc')->nullable();
+				$table->text('metadata')->nullable();
 				$table->index('access');
 				$table->index('state');
 				$table->index('parent_id');
