@@ -242,7 +242,15 @@ class QueuesController extends Controller
 	 */
 	public function edit(Request $request, $id)
 	{
-		$row = Queue::find($id);
+		$row = Queue::query()
+			->withTrashed()
+			->where('id', '=', $id)
+			->first();
+
+		if (!$row)
+		{
+			abort(404);
+		}
 
 		if ($fields = app('request')->old('fields'))
 		{

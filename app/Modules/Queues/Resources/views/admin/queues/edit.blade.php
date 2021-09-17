@@ -56,7 +56,11 @@ app('pathway')
 		<div id="queue-details">
 	@endif
 
-<form action="{{ route('admin.queues.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+	@if ($row->isTrashed())
+		<div class="alert alert-warning">This entry is marked as trashed.</div>
+	@endif
+
+	<form action="{{ route('admin.queues.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 	<div class="row">
 		<div class="col-md-7">
 			<fieldset class="adminform">
