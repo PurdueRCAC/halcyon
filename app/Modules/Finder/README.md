@@ -11,15 +11,16 @@ If you chose to re-use the code, please cite the original creators as: Cornell U
 The purpose of the Finder module is to help users choose among a number of similar related alternatives.
 
 In our initial use case, we had 18-20 computer data storage alternatives available for researchers. Our Help Desk created a list of questions to guide the researchers to specify their requirements. The Finder module allowed the researchers to enter requirements and interactively narrow the field of 18-20 to perhaps 2-3 alternatives.
+
 After the users clicks checkboxes to enter their criteria, ineligible results are greyed out. The user can click on remaining eligible results; these are highlighted and detailed characteristics of this smallest group are presented in a table to allow the researchers to make their final choice.
 
 Implementing this application in Drupal allows the service managers to easily edit the available services and supporting data without additional programming.
 
-We believe other groups will have a similar need for a self-service product to guide end-users to narrow down a choice within a set of moderately complex alternatives.  
+We believe other groups will have a similar need for a self-service product to guide end-users to narrow down a choice within a set of moderately complex alternatives.
 
 ## Planning
 
-When using this module to help end-users choose between a number of complex alternatives, based on a number of criteria and the evaluation of information in several categories, expect that gathering the supporting information and designing useful questions will take a significant amount of planning and time. Changing questions or answers or adding or deleting categories of information after services have been entered requires editing each of the services.  
+When using this module to help end-users choose between a number of complex alternatives, based on a number of criteria and the evaluation of information in several categories, expect that gathering the supporting information and designing useful questions will take a significant amount of planning and time. Changing questions or answers or adding or deleting categories of information after services have been entered requires editing each of the services.
 
 We recommend starting with a simple example like that presented below to familiarize yourself with the data layout and editing workflow before beginning a “real” project.
 
@@ -35,16 +36,15 @@ We recommend starting with a simple example like that presented below to familia
 
 Note: If you aren’t using composer to manage your Drupal 8 site, you can clone the module from: https://github.com/CU-CommunityApps/CD-finder
 
-From the Extend administrative page (/admin/modules), install the Finder module and its dependencies. 
+From the Extend administrative page (/admin/modules), install the Finder module and its dependencies.
 
 ## Setup of the Finder Module
 
-* In the Control Type taxonomy (/admin/structure/taxonomy/manage/control_type/overview)  add two terms: "checkbox" and "radio.".
+* In the Control Type taxonomy (/admin/finder)  add two terms: "checkbox" and "radio.".
 * In the Facets taxonomy create a two-level hierarchy of terms representing criteria/questions and choices. For each of the criteria (top level facets), specify a control type: either “checkbox” (used when any, all or none of the choices may be selected) or “radio” (used when only one of the choices may be selected).
 * Drag the Facet taxonomy terms into a two level hierarchy, representing the relationship between criteria/questions and choices.
 
-Services (the things being chosen) can contain a lot of data, and so require a bit of planning. Once the end-user has narrowed down their choices, they will be presented with a comparison table containing data in several fields. These fields are represented by a  Drupal Paragraph called “Service Paragraphs”. Service Paragraphs should be edited before you start entering Service data at 
-/admin/structure/paragraphs_type/service_paragraphs/fields 
+Services (the things being chosen) can contain a lot of data, and so require a bit of planning. Once the end-user has narrowed down their choices, they will be presented with a comparison table containing data in several fields. These fields are represented by a  Drupal Paragraph called “Service Paragraphs”. Service Paragraphs should be edited before you start entering Service data at /admin/finder/fields.
 
 When delivered, the Finder module comes with two fields in Service Paragraphs: “First Category” and “Second Category.” You can rename or replace these, and add as many fields as you wish. We have found that Text (formatted, long) fields work best.
 
@@ -59,7 +59,7 @@ Required:  Add an additional Service with the title “Help” and put text in e
 
 * You may wish to remove all sidebar blocks from this page, so that the Finder can use the full width of the page.
 * The Finder module is displayed at the URL path /finder.
-* There is a configuration page to edit titles and other data on the Finder page at /admin/config/content/finder
+* There is a configuration page to edit titles and other data on the Finder page at /admin/config/finder
 * Check out our production implementation at https://finder.research.cornell.edu
 * You will need to configure the SMTP module to allow the Finder module to send mail.
 * Installation works only at a root site, not if installed in a subdirectory.
