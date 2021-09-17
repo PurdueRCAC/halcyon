@@ -204,7 +204,7 @@ foreach ($rows as $event)
 						@else
 							<div class="row">
 								<div class="col-md-12 text-right">
-									<a class="btn btn-primary" href="{{ route('login') }}?loginrefer=<?php echo urlencode(route('page', ['uri' => 'coffee', 'attend' => 1])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">Reserve this time</a>
+									<a href="{{ route('login') }}?return=<?php echo base64_encode(route('page', ['uri' => 'coffee', 'attend' => 1, 'event' => $event->id])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">Login</a> is required to reserve times.
 								</div>
 							</div>
 						@endif
@@ -217,7 +217,7 @@ foreach ($rows as $event)
 					@if (!$attending)
 						<div class="row">
 							<div class="col-md-12 text-right">
-								<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">I'm interested in attending</a>
+								<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1, 'event' => $event->id]) }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">I'm interested in attending</a>
 							</div>
 						</div>
 					@else
@@ -226,14 +226,15 @@ foreach ($rows as $event)
 								<div class="text-success">You expressed interest in attending.</div>
 							</div>
 							<div class="col-md-6 text-right">
-								<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel reservation</a>
+								<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0, 'event' => $event->id]) }}" data-id="{{ $attending }}">Cancel reservation</a>
 							</div>
 						</div>
 					@endif
 				@else
 					<div class="row">
 						<div class="col-md-12 text-right">
-							<a class="btn btn-primary" href="/login?loginrefer=<?php echo urlencode(route('page', ['uri' => 'coffee', 'attend' => 1])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">I'm interested in attending</a>
+							
+							<a href="/login?return=<?php echo base64_encode(route('page', ['uri' => 'coffee', 'attend' => 1, 'event' => $event->id])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">Login</a> is required to reserve times.
 						</div>
 					</div>
 				@endif
