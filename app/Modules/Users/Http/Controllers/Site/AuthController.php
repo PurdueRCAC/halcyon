@@ -22,6 +22,19 @@ class AuthController extends Controller
 	 */
 	public function login(Request $request)
 	{
+		$return = $request->input('return');
+
+		if ($return && $this->isBase64($return))
+		{
+			$return = base64_decode($return);
+
+			// Assume redirect URLs are internal
+			if ($return && $this->isInternal($return))
+			{
+				session()->put('url.intended', $return);
+			}
+		}
+
 		if (Auth::check())
 		{
 			return redirect()->intended($this->authenticatedRoute());
@@ -29,24 +42,49 @@ class AuthController extends Controller
 
 		if (app()->has('cas'))
 		{
-			$cas = app('cas');
+			return $this->callback($request);
+			/*$cas = app('cas');
 
 			if (!$cas->checkAuthentication())
 			{
-				//return $this->callback();
 				return $cas->authenticate();
 			}
 			else
 			{
 				return redirect()->intended($this->authenticatedRoute());
-			}
+			}*/
 		}
-
-		$return = $request->input('return');
 
 		return view('users::site.login', [
 			'return' => $return
 		]);
+	}
+
+	/**
+	 * Is the provided string base64 encoded?
+	 *
+	 * @param   string  $str
+	 * @return  bool
+	 **/
+	protected function isBase64($str)
+	{
+		if (preg_match('/[^A-Za-z0-9\+\/\=]/', $str))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Is the provided url internal to the site?
+	 *
+	 * @param   string  $str
+	 * @return  bool
+	 **/
+	protected function isInternal($str)
+	{
+		return (stripos($str, request()->root()) !== false);
 	}
 
 	/**
@@ -224,11 +262,6 @@ class AuthController extends Controller
 
 		$route = $this->authenticatedRoute();
 
-		if ($url = session('url.intended'))
-		{
-			$route = $url;
-		}
-
 		return redirect()
 			->intended($route);
 	}
@@ -287,6 +320,20 @@ class AuthController extends Controller
 	 */
 	private function authenticatedRoute()
 	{
-		return route(config('module.users.redirect_route_after_login', 'home'));
+		$route = route(config('module.users.redirect_route_after_login', 'home'));
+
+		if ($url = session('url.intended'))
+		{
+			$route = $url;
+		}
+		elseif ($url = session()->previousUrl())
+		{
+			if (substr($url, -6) != 'login' && $this->isInternal($url))
+			{
+				$route = $url;
+			}
+		}
+
+		return $route;
 	}
 }
