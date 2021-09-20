@@ -125,6 +125,14 @@ class NotificationsController extends Controller
 
 		$rows->each(function($item, $key)
 		{
+			if (!$item->wasNotified())
+			{
+				$item->datetimelastnotify = null;
+			}
+			if (!$item->isTrashed())
+			{
+				$item->datetimeremoved = null;
+			}
 			$item->api = route('api.storage.notifications.read', ['id' => $item->id]);
 		});
 
@@ -303,6 +311,14 @@ class NotificationsController extends Controller
 
 		$row->save();
 		$row->api = route('api.storage.notifications.read', ['id' => $row->id]);
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
+		if (!$row->wasNotified())
+		{
+			$row->datetimelastnotify = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -329,6 +345,14 @@ class NotificationsController extends Controller
 	{
 		$row = Notification::findOrFail($id);
 		$row->api = route('api.storage.notifications.read', ['id' => $row->id]);
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
+		if (!$row->wasNotified())
+		{
+			$row->datetimelastnotify = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -486,6 +510,14 @@ class NotificationsController extends Controller
 
 		$row->save();
 		$row->api = route('api.storage.notifications.read', ['id' => $row->id]);
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
+		if (!$row->wasNotified())
+		{
+			$row->datetimelastnotify = null;
+		}
 
 		return new JsonResource($row);
 	}

@@ -277,6 +277,14 @@ class UsersController extends Controller
 			$rows = $event->getResults();
 		}
 
+		$rows->each(function($item, $key)
+		{
+			if (!$item->getUserUsername()->isTrashed())
+			{
+				$item->getUserUsername()->dateremoved = null;
+			}
+		});
+
 		return $rows; //new UserResourceCollection($rows);
 	}
 

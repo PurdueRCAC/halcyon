@@ -119,6 +119,7 @@ class PurchasesController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
+			'search' => $request->input('search'),
 			'resourceid' => $request->input('resourceid'),
 			'groupid'    => $request->input('groupid'),
 			'sellergroupid' => $request->input('sellergroupid'),
@@ -172,6 +173,10 @@ class PurchasesController extends Controller
 
 		$rows->each(function($item, $key)
 		{
+			if (!$item->hasEnd())
+			{
+				$item->datetimestop = null;
+			}
 			$item->api = route('api.storage.purchases.read', ['id' => $item->id]);
 		});
 
@@ -426,6 +431,10 @@ class PurchasesController extends Controller
 		}
 
 		$row->api = route('api.storage.purchases.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -474,6 +483,10 @@ class PurchasesController extends Controller
 		$row->counter;
 
 		$row->api = route('api.storage.purchases.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -737,6 +750,10 @@ class PurchasesController extends Controller
 		}
 
 		$row->api = route('api.storage.purchases.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}

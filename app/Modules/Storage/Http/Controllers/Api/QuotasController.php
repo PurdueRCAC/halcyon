@@ -129,6 +129,14 @@ class QuotasController extends Controller
 			$row->file_limit        = 1;
 			$row->timestamp         = 0;
 			$row->user              = $username;
+			if (!$row->isTrashed())
+			{
+				$row->datetimeremoved = null;
+			}
+			if (!$row->isConfigured())
+			{
+				$row->datetimeconfigured = null;
+			}
 
 			$row->api = route('api.storage.read', ['id' => $row->id]);
 

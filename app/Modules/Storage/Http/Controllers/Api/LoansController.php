@@ -87,6 +87,7 @@ class LoansController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
+			'search' => $request->input('search'),
 			'resourceid' => $request->input('resourceid'),
 			'groupid'    => $request->input('groupid'),
 			'lendergroupid' => $request->input('lendergroupid'),
@@ -121,6 +122,18 @@ class LoansController extends Controller
 			$query->where('lendergroupid', '=', $filters['lendergroupid']);
 		}
 
+		if ($filters['search'])
+		{
+			if (is_numeric($filters['search']))
+			{
+				$query->where('id', '=', $filters['search']);
+			}
+			else
+			{
+				$query->where('comment', 'like', '%' . $filters['search'] . '%');
+			}
+		}
+
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
@@ -128,6 +141,10 @@ class LoansController extends Controller
 
 		$rows->each(function($item, $key)
 		{
+			if (!$item->hasEnd())
+			{
+				$item->datetimestop = null;
+			}
 			$item->api = route('api.storage.loans.read', ['id' => $item->id]);
 		});
 
@@ -362,6 +379,10 @@ class LoansController extends Controller
 		}
 
 		$row->api = route('api.storage.loans.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -410,6 +431,10 @@ class LoansController extends Controller
 		$row->counter;
 
 		$row->api = route('api.storage.loans.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -652,6 +677,10 @@ class LoansController extends Controller
 		}
 
 		$row->api = route('api.storage.loans.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}

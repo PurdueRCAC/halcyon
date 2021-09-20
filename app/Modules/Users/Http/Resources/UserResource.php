@@ -27,8 +27,8 @@ class UserResource extends JsonResource
 		//$data['uri'] = route('site.users.account', ['id' => $this->id]);
 
 		$data['datecreated'] = $this->datecreated;
-		$data['datelastseen'] = $this->hasVisited() ? $this->datelastseen : null;
-		$data['dateremoved'] = $this->isTrashed() ? $this->dateremoved : null;
+		$data['datelastseen'] = $this->getUserUsername()->hasVisited() ? $this->datelastseen : null;
+		$data['dateremoved'] = $this->getUserUsername()->isTrashed() ? $this->dateremoved : null;
 		$data['unixid'] = $this->unixid;
 		$data['username'] = $this->username;
 
