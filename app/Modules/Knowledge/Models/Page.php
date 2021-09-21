@@ -435,11 +435,16 @@ class Page extends Model
 				if ($operator == '==')
 				{
 					if ($right === 'true'
-					 || $right === 'false'
-					 || $right === '1'
+					 || $right === 'TRUE'
+					 || $right === '1')
+					{
+						$result = ($left === 'true' || $left === 'TRUE' || $left === 1 || $left === '1' ? true : false);
+					}
+					elseif ($right === 'false'
+					 || $right === 'FALSE'
 					 || $right === '0')
 					{
-						$result = ($left ? true : false);
+						$result = ($left === 'false' || $left === 'FALSE' || $left === 0 || $left === '0' ? true : false);
 					}
 					else
 					{
