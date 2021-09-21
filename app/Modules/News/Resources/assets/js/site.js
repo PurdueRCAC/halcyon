@@ -1643,7 +1643,7 @@ function NEWSPrintRow(news) {
 	}
 
 	// Users list
-	if (users.length > 0) {
+	if (edit && users.length > 0) {
 		li = document.createElement("li");
 		li.className = 'news-users';
 
