@@ -88,6 +88,7 @@ class MembersController extends Controller
 		$userid = $request->input('user');
 		$resourceid = $request->input('resource');
 		$loginShell = $request->input('loginshell');
+		$primarygroup = $request->input('primarygroup');
 
 		// Look up the current username of the user
 		$user = User::findOrFail($userid);
@@ -149,6 +150,15 @@ class MembersController extends Controller
 			{
 				return response()->json(['message' => trans('Invalid pilogin')], 409);
 			}
+		}
+
+		if ($loginShell)
+		{
+			$user->loginShell = $loginShell;
+		}
+		if ($primarygroup)
+		{
+			$user->primarygroup = $primarygroup;
 		}
 
 		event($event = new ResourceMemberCreated($asset, $user));
