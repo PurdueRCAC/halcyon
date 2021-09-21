@@ -313,7 +313,7 @@ class AllocationsController extends Controller
 			->orderBy($q . '.name', 'asc')
 			->get();
 
-		$queues->reject(function ($queue, $key)
+		/*$queues->reject(function ($queue, $key)
 		{
 			// Count loans
 			$allocations = $queue->loans()
@@ -349,7 +349,7 @@ class AllocationsController extends Controller
 				->count();
 
 			return $allocations <= 0;
-		});
+		});*/
 
 		return new AllocationResourceCollection($queues);
 	}
