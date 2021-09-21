@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
+use Carbon\Carbon;
 
 /**
  * Model for a queue/user association
@@ -44,6 +45,36 @@ class Walltime extends Model
 	protected $guarded = [
 		'id'
 	];
+
+	/**
+	 * Determine if in a trashed state
+	 *
+	 * @return  bool
+	 */
+	public function hasStart()
+	{
+		return ($this->datetimestart && $this->datetimestart != '0000-00-00 00:00:00' && $this->datetimestart != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * Determine if in a trashed state
+	 *
+	 * @return  bool
+	 */
+	public function hasEnd()
+	{
+		return ($this->datetimestop && $this->datetimestop != '0000-00-00 00:00:00' && $this->datetimestop != '-0001-11-30 00:00:00');
+	}
+
+	/**
+	 * Determine if in a trashed state
+	 *
+	 * @return  bool
+	 */
+	public function hasEnded()
+	{
+		return ($this->hasEnd() && $this->datetimestop->timestamp < Carbon::now()->timestamp);
+	}
 
 	/**
 	 * Defines a relationship to notification type

@@ -82,6 +82,16 @@ class User extends Model
 	];
 
 	/**
+	 * Determine if user was last seen
+	 *
+	 * @return  bool
+	 */
+	public function wasLastseen()
+	{
+		return ($this->datetimelastseen && $this->datetimelastseen != '0000-00-00 00:00:00' && $this->datetimelastseen != '-0001-11-30 00:00:00');
+	}
+
+	/**
 	 * Defines a relationship to notification type
 	 *
 	 * @return  object

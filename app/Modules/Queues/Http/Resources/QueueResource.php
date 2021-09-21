@@ -20,9 +20,17 @@ class QueueResource extends JsonResource
 		$now = Carbon::now();
 
 		$data['resource'] = $this->resource()->get()->first();
+		if (!$this->subresource->isTrashed())
+		{
+			$data['resource']['datetimeremoved'] = null;
+		}
 		$data['resource']['api'] = route('api.resources.read', ['id' => $data['resource']['id']]);
 
 		$data['subresource'] = $this->subresource;
+		if (!$this->subresource->isTrashed())
+		{
+			$data['subresource']['datetimeremoved'] = null;
+		}
 		$data['subresource']['api'] = route('api.resources.subresources.read', ['id' => $data['subresource']['id']]);
 
 		$data['schedulerpolicy'] = $this->schedulerPolicy;
@@ -31,6 +39,22 @@ class QueueResource extends JsonResource
 		$data['scheduler'] = $this->scheduler;
 		if ($this->scheduler)
 		{
+			if (!$this->scheduler->hasDraindownTime())
+			{
+				$data['scheduler']['datetimedraindown'] = null;
+			}
+			if (!$this->scheduler->isTrashed())
+			{
+				$data['scheduler']['datetimeremoved'] = null;
+			}
+			if (!$this->scheduler->hasLastImportStartTime())
+			{
+				$data['scheduler']['datetimelastimportstart'] = null;
+			}
+			if (!$this->scheduler->hasLastImportStopTime())
+			{
+				$data['scheduler']['datetimelastimportstop'] = null;
+			}
 			$data['scheduler']['api'] = route('api.queues.schedulers.read', ['id' => $data['scheduler']['id']]);
 		}
 
@@ -44,6 +68,10 @@ class QueueResource extends JsonResource
 			->get()
 			->each(function($item, $key)
 			{
+				if (!$item->hasEnd())
+				{
+					$item->datetimestop = null;
+				}
 				$item->api = route('api.queues.sizes.read', ['id' => $item->id]);
 			});
 
@@ -57,6 +85,10 @@ class QueueResource extends JsonResource
 			->get()
 			->each(function($item, $key)
 			{
+				if (!$item->hasEnd())
+				{
+					$item->datetimestop = null;
+				}
 				$item->api = route('api.queues.sizes.read', ['id' => $item->id]);
 			});
 
@@ -70,6 +102,10 @@ class QueueResource extends JsonResource
 			->get()
 			->each(function($item, $key)
 			{
+				if (!$item->hasEnd())
+				{
+					$item->datetimestop = null;
+				}
 				$item->api = route('api.queues.loans.read', ['id' => $item->id]);
 			});
 
@@ -83,6 +119,10 @@ class QueueResource extends JsonResource
 			->get()
 			->each(function($item, $key)
 			{
+				if (!$item->hasEnd())
+				{
+					$item->datetimestop = null;
+				}
 				$item->api = route('api.queues.loans.read', ['id' => $item->id]);
 			});
 
@@ -93,6 +133,14 @@ class QueueResource extends JsonResource
 			->get()
 			->each(function($item, $key)
 			{
+				if (!$item->isTrashed())
+				{
+					$item->datetimeremoved = null;
+				}
+				if (!$item->wasLastseen())
+				{
+					$item->datetimelastseen = null;
+				}
 				$item->api = route('api.queues.users.read', ['id' => $item->id]);
 			});
 
@@ -109,6 +157,10 @@ class QueueResource extends JsonResource
 		$data['walltimes'] = $this->walltimes
 			->each(function($item, $key)
 			{
+				if (!$item->hasEnd())
+				{
+					$item->datetimestop = null;
+				}
 				$item->api = route('api.queues.walltimes.read', ['id' => $item->id]);
 			});
 
