@@ -21,6 +21,7 @@ return [
 	'export' => 'Export',
 	'import' => 'Import',
 	'applied filters' => 'Applied Filters',
+	'back' => 'Back',
 	// Status
 	'active' => 'All Active',
 	'pending' => 'Pending',

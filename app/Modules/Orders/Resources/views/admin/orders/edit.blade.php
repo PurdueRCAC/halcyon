@@ -426,10 +426,7 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	{!!
-		Toolbar::spacer();
-		Toolbar::cancel(route('admin.orders.cancel'));
-	!!}
+	{!! Toolbar::link('back', trans('orders::orders.back'), route('admin.orders.index'), false) !!}
 
 	{!! Toolbar::render() !!}
 @stop
