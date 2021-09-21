@@ -345,18 +345,14 @@ class RcacLdap
 			return;
 		}
 
-		$event->user->pilogin = '';
-		$event->user->loginShell = '/bin/bash';
-
-		if ($event->resource->rolename != 'peregrn1')
+		if (!$event->user->pilogin)
 		{
-			$event->user->primarygroup = 'student';
+			$event->user->pilogin = '';
 		}
-		else
+
+		if (!$event->user->loginShell)
 		{
-			// DO NOT use "Calumet" even though this is how it shows up in our LDAP
-			// "Calumet" is a different group in ACMaint, we want "calumet", gid 5882
-			$event->user->primarygroup = 'calumet';
+			$event->user->loginShell = '/bin/bash';
 		}
 
 		try
@@ -400,7 +396,6 @@ class RcacLdap
 					}
 				}
 
-				
 				if (isset($results[0]['host']))
 				{
 					foreach ($results[0]['host'] as $host)
@@ -432,17 +427,20 @@ class RcacLdap
 						$event->user->addFacet('gidNumber', $event->user->gidNumber, 0, 1);
 					}
 
-					$ldap_group = $this->connect($config);
-
-					$data = array();
-					$data = $ldap_group->search()
-						->where('gidNumber', '=', $gid)
-						->select(['cn', 'gidNumber'])
-						->get();
-
-					if (!empty($data))
+					if (!$event->user->primarygroup)
 					{
-						$event->user->primarygroup = $data[0]['cn'][0];
+						$ldap_group = $this->connect($config);
+
+						$data = array();
+						$data = $ldap_group->search()
+							->where('gidNumber', '=', $gid)
+							->select(['cn', 'gidNumber'])
+							->get();
+
+						if (!empty($data))
+						{
+							$event->user->primarygroup = $data[0]['cn'][0];
+						}
 					}
 				}
 			}
@@ -460,6 +458,20 @@ class RcacLdap
 
 			$status = 500;
 			$results = ['error' => $e->getMessage()];
+		}
+
+		if (!$event->user->primarygroup)
+		{
+			if ($event->resource->rolename != 'peregrn1')
+			{
+				$event->user->primarygroup = 'student';
+			}
+			else
+			{
+				// DO NOT use "Calumet" even though this is how it shows up in our LDAP
+				// "Calumet" is a different group in ACMaint, we want "calumet", gid 5882
+				$event->user->primarygroup = 'calumet';
+			}
 		}
 
 		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->user->username);
