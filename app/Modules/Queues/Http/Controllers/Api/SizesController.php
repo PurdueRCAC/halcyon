@@ -140,6 +140,15 @@ class SizesController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
+		$rows->each(function($item, $key)
+		{
+			if (!$item->hasEnd())
+			{
+				$item->datetimestop = null;
+			}
+			$item->api = route('api.queues.sizes.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -397,6 +406,10 @@ class SizesController extends Controller
 		}
 
 		$row->api = route('api.queues.sizes.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -424,6 +437,10 @@ class SizesController extends Controller
 		$row = Size::findOrFail($id);
 
 		$row->api = route('api.queues.sizes.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -708,6 +725,10 @@ class SizesController extends Controller
 		}
 
 		$row->api = route('api.queues.sizes.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}

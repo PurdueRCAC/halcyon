@@ -167,6 +167,14 @@ class UsersController extends Controller
 
 		$rows->map(function($row, $key)
 		{
+			if (!$row->isTrashed())
+			{
+				$row->datetimeremoved = null;
+			}
+			if (!$row->wasLastseen())
+			{
+				$row->datetimelastseen = null;
+			}
 			$row->api = route('api.queues.users.read', ['id' => $row->id]);
 		});
 
@@ -342,6 +350,14 @@ class UsersController extends Controller
 		}
 
 		$row->api = route('api.queues.users.read', ['id' => $row->id]);
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
+		if (!$row->wasLastseen())
+		{
+			$row->datetimelastseen = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -368,6 +384,14 @@ class UsersController extends Controller
 	{
 		$row = QueueUser::findOrFail($id);
 		$row->api = route('api.queues.users.read', ['id' => $row->id]);
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
+		if (!$row->wasLastseen())
+		{
+			$row->datetimelastseen = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -495,6 +519,14 @@ class UsersController extends Controller
 
 		$row->save();
 		$row->api = route('api.queues.users.read', ['id' => $row->id]);
+		if (!$row->isTrashed())
+		{
+			$row->datetimeremoved = null;
+		}
+		if (!$row->wasLastseen())
+		{
+			$row->datetimelastseen = null;
+		}
 
 		return new JsonResource($row);
 	}

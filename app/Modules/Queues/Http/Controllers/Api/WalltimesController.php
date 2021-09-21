@@ -146,6 +146,15 @@ class WalltimesController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
+		$rows->each(function($row, $key)
+		{
+			$row->api = route('api.queues.walltimes.read', ['id' => $row->id]);
+			if (!$row->hasEnd())
+			{
+				$row->datetimestop = null;
+			}
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -226,6 +235,12 @@ class WalltimesController extends Controller
 		}
 		$row->save();
 
+		$row->api = route('api.queues.walltimes.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
+
 		return new JsonResource($row);
 	}
 
@@ -250,6 +265,12 @@ class WalltimesController extends Controller
 	public function read($id)
 	{
 		$row = Walltime::findOrFail($id);
+
+		$row->api = route('api.queues.walltimes.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -330,6 +351,12 @@ class WalltimesController extends Controller
 			}
 		}
 		$row->save();
+
+		$row->api = route('api.queues.walltimes.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}

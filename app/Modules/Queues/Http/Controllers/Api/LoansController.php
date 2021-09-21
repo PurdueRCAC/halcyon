@@ -172,6 +172,15 @@ class LoansController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
+		$rows->each(function($item, $key)
+		{
+			if (!$item->hasEnd())
+			{
+				$item->datetimestop = null;
+			}
+			$item->api = route('api.queues.loans.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -406,6 +415,10 @@ class LoansController extends Controller
 		}
 
 		$row->api = route('api.queues.loans.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -433,6 +446,10 @@ class LoansController extends Controller
 		$row = Loan::findOrFail($id);
 
 		$row->api = route('api.queues.loans.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}
@@ -708,6 +725,10 @@ class LoansController extends Controller
 		}
 
 		$row->api = route('api.queues.loans.read', ['id' => $row->id]);
+		if (!$row->hasEnd())
+		{
+			$row->datetimestop = null;
+		}
 
 		return new JsonResource($row);
 	}
