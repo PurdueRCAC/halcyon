@@ -313,6 +313,44 @@ class AllocationsController extends Controller
 			->orderBy($q . '.name', 'asc')
 			->get();
 
+		$queues->reject(function ($queue, $key)
+		{
+			// Count loans
+			$allocations = $queue->loans()
+				->where('datetimestart', '<', Carbon::now()->toDateTimeString())
+				->where(function($where)
+				{
+					$where->whereNull('datetimestop')
+						->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
+						->orWhere('datetimestop', '>', Carbon::now()->toDateTimeString());
+				})
+				->count();
+
+			// Count purchases
+			$allocations += $queue->sizes()
+				->where('datetimestart', '<', Carbon::now()->toDateTimeString())
+				->where(function($where)
+				{
+					$where->whereNull('datetimestop')
+						->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
+						->orWhere('datetimestop', '>', Carbon::now()->toDateTimeString());
+				})
+				->count();
+
+			// Count walltimes
+			$allocations += $queue->walltimes()
+				->where('datetimestart', '<', Carbon::now()->toDateTimeString())
+				->where(function($where)
+				{
+					$where->whereNull('datetimestop')
+						->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
+						->orWhere('datetimestop', '>', Carbon::now()->toDateTimeString());
+				})
+				->count();
+
+			return $allocations <= 0;
+		});
+
 		return new AllocationResourceCollection($queues);
 	}
 

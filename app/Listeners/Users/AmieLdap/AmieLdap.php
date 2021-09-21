@@ -586,10 +586,10 @@ class AmieLdap
 
 						if ($lenderqueue)
 						{
-							$nodecount = (int)$serviceUnits;
-							$corecount = $subresource->nodecores * $nodecount;
+							$nodecount = 0; //(int)$serviceUnits;
+							$corecount = 0; //$subresource->nodecores * $nodecount;
 
-							$queue->addLoan($lenderqueue->id, $start, $stop, $nodecount, $corecount);
+							$queue->addLoan($lenderqueue->id, $start, $stop, $nodecount, $corecount, $serviceUnits, 'x-xsede-pid: ' . $pid);
 						}
 					}
 

@@ -425,6 +425,7 @@ class Queue extends Model
 		$soldnodes   = 0;
 		$loanedcores = 0;
 		$loanednodes = 0;
+		$serviceunits = 0.00;
 
 		$now = Carbon::now();
 
@@ -440,6 +441,8 @@ class Queue extends Model
 
 		foreach ($purchases as $size)
 		{
+			$serviceunits += (float)$size->serviceunits;
+
 			$soldcores += (int) $size->corecount;
 
 			if ($nodecores != 0)
@@ -469,6 +472,8 @@ class Queue extends Model
 
 		foreach ($loans as $loan)
 		{
+			$serviceunits += (float)$loan->serviceunits;
+
 			$loanedcores += (int) $loan->corecount;
 
 			if ($nodecores != 0)
@@ -503,6 +508,7 @@ class Queue extends Model
 		$this->setAttribute('soldnodes', $soldnodes);
 		$this->setAttribute('loanedcores', $loanedcores);
 		$this->setAttribute('loanednodes', $loanednodes);
+		$this->setAttribute('serviceunits', $serviceunits);
 	}
 
 	/**
@@ -593,6 +599,21 @@ class Queue extends Model
 		}
 
 		return $this->attributes['loanednodes'];
+	}
+
+	/**
+	 * Get loaned nodes
+	 *
+	 * @return  integer
+	 */
+	public function getTotalserviceunitsAttribute()
+	{
+		if (!array_key_exists('serviceunits', $this->attributes))
+		{
+			$this->sumCoresAndNodes();
+		}
+
+		return $this->attributes['serviceunits'];
 	}
 
 	/**
@@ -702,7 +723,7 @@ class Queue extends Model
 	 *
 	 * @return  bool
 	 */
-	public function addLoan($lenderqueueid, $start, $stop, $nodecount, $corecount, $comment = null)
+	public function addLoan($lenderqueueid, $start, $stop = null, $nodecount = 0, $corecount = 0, $serviceunits = 0, $comment = null)
 	{
 		$row = new Loan;
 		$row->queueid = $this->id;
@@ -721,6 +742,7 @@ class Queue extends Model
 
 		$row->nodecount = $nodecount;
 		$row->corecount = $corecount;
+		$row->serviceunits = (float)$serviceunits;
 
 		if ($comment)
 		{
@@ -735,7 +757,7 @@ class Queue extends Model
 	 *
 	 * @return  bool
 	 */
-	public function addPurchase($lenderqueueid, $start, $stop, $nodecount, $corecount, $comment = null)
+	public function addPurchase($lenderqueueid, $start, $stop = null, $nodecount = 0, $corecount = 0, $serviceunits = 0, $comment = null)
 	{
 		$row = new Size;
 		$row->queueid = $this->id;
@@ -754,6 +776,7 @@ class Queue extends Model
 
 		$row->nodecount = $nodecount;
 		$row->corecount = $corecount;
+		$row->serviceunits = (float)$serviceunits;
 
 		if ($comment)
 		{

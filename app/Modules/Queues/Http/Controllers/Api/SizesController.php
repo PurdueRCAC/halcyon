@@ -216,6 +216,15 @@ class SizesController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "serviceunits",
+	 * 		"description":   "Service units",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "float"
+	 * 		}
+	 * }
 	 * @param  Request  $request
 	 * @return Response
 	 */
@@ -229,6 +238,7 @@ class SizesController extends Controller
 			'nodecount' => 'nullable|numeric',
 			'corecount' => 'required|integer',
 			'comment' => 'nullable|string|max:2000',
+			'serviceunits' => 'nullable|numeric|between:-9999.99,9999.99',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -270,6 +280,10 @@ class SizesController extends Controller
 			$row->comment = $request->input('comment');
 		}
 		$row->comment = $row->comment ?: '';
+		if ($request->has('serviceunits'))
+		{
+			$row->serviceunits = (float)$request->input('serviceunits');
+		}
 
 		if (!$row->sellerqueueid && $row->corecount < 0)
 		{
@@ -496,6 +510,15 @@ class SizesController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "serviceunits",
+	 * 		"description":   "Service units",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "float"
+	 * 		}
+	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
 	 * @return  Response
@@ -510,6 +533,7 @@ class SizesController extends Controller
 			'nodecount' => 'nullable|numeric',
 			'corecount' => 'nullable|integer',
 			'comment' => 'nullable|string|max:2000',
+			'serviceunits' => 'nullable|numeric|between:-9999.99,9999.99',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -547,6 +571,11 @@ class SizesController extends Controller
 		if ($request->has('comment'))
 		{
 			$row->comment = $request->input('comment');
+		}
+
+		if ($request->has('serviceunits'))
+		{
+			$row->serviceunits = (float)$request->input('serviceunits');
 		}
 
 		if ($row->hasEnd() && $row->datetimestart > $row->datetimestop)

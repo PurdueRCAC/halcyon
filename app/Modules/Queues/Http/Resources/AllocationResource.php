@@ -43,6 +43,10 @@ class AllocationResource extends JsonResource
 			->get()
 			->each(function($item, $key)
 			{
+				if (!$item->hasEnd())
+				{
+					$item->datetimestop = null;
+				}
 				$item->api = route('api.queues.sizes.read', ['id' => $item->id]);
 			});
 
@@ -69,6 +73,10 @@ class AllocationResource extends JsonResource
 			->get()
 			->each(function($item, $key)
 			{
+				if (!$item->hasEnd())
+				{
+					$item->datetimestop = null;
+				}
 				$item->api = route('api.queues.loans.read', ['id' => $item->id]);
 			});
 
@@ -109,15 +117,18 @@ class AllocationResource extends JsonResource
 			->each(function($item, $key)
 			{
 				$item->api = route('api.queues.walltimes.read', ['id' => $item->id]);
-			});*/
+			});
 
 		$data['totalcores']  = $this->totalcores;
 		$data['totalnodes']  = $this->totalnodes;
 		$data['soldcores']   = $this->soldcores;
 		$data['soldnodes']   = $this->soldnodes;
 		$data['loanedcores'] = $this->loanedcores;
-		$data['loanednodes'] = $this->loanednodes;
-		$data['active']      = $this->active;
+		$data['loanednodes'] = $this->loanednodes;*/
+		$data['corecount']    = $this->totalcores;
+		$data['nodecount']    = $this->totalnodes;
+		$data['active']       = $this->active;
+		$data['serviceunits'] = $this->totalserviceunits;
 
 		if (!$this->isTrashed())
 		{
@@ -195,7 +206,7 @@ class AllocationResource extends JsonResource
 
 		$data['usernames'] = $members->map(function($member)
 			{
-				$member->username = $member->user->username;
+				$member->username = $member->user ? $member->user->username : '';
 				return $member;
 			})
 			->pluck('username')
