@@ -432,19 +432,23 @@ class Page extends Model
 			{
 				$left = trim($vars[$clause['tag']][$clause['var']]);
 
+				$left = (is_integer($left) ? (int)$left : $left);
+				$left = (strtolower($left) === 'true' ? true : $left);
+				$left = (strtolower($left) === 'false' ? false : $left);
+
+				$right = (is_integer($right) ? (int)$right : $right);
+				$right = (strtolower($right) === 'true' ? true : $right);
+				$right = (strtolower($right) === 'false' ? false : $right);
+
 				if ($operator == '==')
 				{
-					if ($right === 'true'
-					 || $right === 'TRUE'
-					 || $right === '1')
+					if ($right === true)
 					{
-						$result = ($left === 'true' || $left === 'TRUE' || $left === 1 || $left === '1' ? true : false);
+						$result = ($left ? true : false);
 					}
-					elseif ($right === 'false'
-					 || $right === 'FALSE'
-					 || $right === '0')
+					elseif ($right === false)
 					{
-						$result = ($left === 'false' || $left === 'FALSE' || $left === 0 || $left === '0' ? true : false);
+						$result = (!$left ? true : false);
 					}
 					else
 					{
@@ -453,12 +457,13 @@ class Page extends Model
 				}
 				elseif ($operator == '!=')
 				{
-					if ($right === 'true'
-					 || $right === 'false'
-					 || $right === '1'
-					 || $right === '0')
+					if ($right === true)
 					{
 						$result = (!$left ? true : false);
+					}
+					elseif ($right === false)
+					{
+						$result = ($left ? true : false);
 					}
 					else
 					{
