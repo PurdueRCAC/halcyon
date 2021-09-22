@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		val = val.toLowerCase()
 			.replace(/\s+/g, '_')
-			.replace(/[^a-z0-9_]+/g, '');
+			.replace(/[^a-z0-9_\-]+/g, '');
 
 		$(this).val(val);
 	});
@@ -286,6 +286,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 							var queue = $('#' + group.data('update'));
 							var dest_queue = document.getElementById("field-id").value;
+
+							if (group.val() == 0) {
+								queue.val(0);
+								queue.parent().addClass('d-none');
+								return;
+							} else {
+								queue.parent().removeClass('d-none');
+							}
 
 							$.ajax({
 								url: group.data('queue-api'),

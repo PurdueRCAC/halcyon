@@ -658,14 +658,14 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="seller-group">{{ trans('queues::queues.seller') }} <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="seller-group">{{ trans('queues::queues.seller') }}</label>
 					<select name="sellergroupid" id="seller-group"
 						class="form-control form-group-queues"
 						data-update="seller-queue"
 						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
 						data-queue-api="{{ route('api.queues.index') }}"
 						data-subresource="{{ $row->subresourceid }}">
-						<option value="0">{{ trans('queues::queues.select group') }}</option>
+						<option value="0" data-hide="#seller-queue">{{ trans('queues::queues.new hardware') }}</option>
 						<?php
 						$groups = array();
 						$first = null;
@@ -702,8 +702,8 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="seller-queue">{{ trans('queues::queues.queue') }} <span class="required">{{ trans('global.required') }}</span></label>
-					<select id="seller-queue" name="sellerqueueid" class="form-control" required>
+					<label for="seller-queue">{{ trans('queues::queues.queue') }}</label>
+					<select id="seller-queue" name="sellerqueueid" class="form-control">
 						<option value="0">{{ trans('queues::queues.select queue') }}</option>
 						@foreach ($groups as $group)
 							@if ($group->id == -1)
@@ -732,7 +732,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="sell-queue">{{ trans('queues::queues.queue') }} <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="sell-queue">{{ trans('queues::queues.queue') }}  <span class="required">{{ trans('global.required') }}</span></label>
 					<select id="sell-queue" name="queueid" class="form-control" required>
 						<option value="0">{{ trans('queues::queues.select queue') }}</option>
 						@foreach ($groups as $group)
