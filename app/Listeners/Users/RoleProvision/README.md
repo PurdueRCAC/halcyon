@@ -6,7 +6,7 @@ Service connector for Purdue University's Central Accounts, used for managing ro
 
 This listens for the following events:
 
-* `ResourceMemberCreated` - Set up a resource role (ex: "sholar") for a given user.
+* `ResourceMemberCreated` - Set up a resource role (ex: "scholar") for a given user.
 * `ResourceMemberStatus` - Check the status of a given role for a user. The service will respond with one of the given roles:
   * `NO_ROLE_EXISTS`
   * `ROLE_ACCOUNT_CREATION_PENDING`
