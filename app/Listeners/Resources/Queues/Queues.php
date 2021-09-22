@@ -41,7 +41,7 @@ class Queues
 		$child = $event->asset->children->first();
 
 		$scheduler = new Scheduler;
-		$scheduler->hostname = $asset->rolename . '.rcac.purdue.edu';
+		$scheduler->hostname = $asset->rolename . '-adm.' . request()->getHost();
 		if ($child)
 		{
 			$scheduler->queuesubresourceid = $child->subresourceid;
@@ -87,7 +87,7 @@ class Queues
 
 		$queue = new Queue;
 
-		$queue->name          = config()->get('queues.prefix', 'rcac-') . $subresource->cluster;
+		$queue->name          = config()->get('module.queues.prefix', 'rcac-') . $subresource->cluster;
 		$queue->cluster       = $subresource->cluster;
 		$queue->groupid       = '-1';
 		$queue->subresourceid = $subresource->id;
@@ -112,8 +112,8 @@ class Queues
 			$walltime = $scheduler->defaultmaxwalltime;
 		}
 
-		$queue->maxjobsqueued     = config()->get('queues.maxjobsqueued', 12000);
-		$queue->maxjobsqueueduser = config()->get('queues.maxjobsqueueduser', 5000);
+		$queue->maxjobsqueued     = config()->get('module.queues.maxjobsqueued', 12000);
+		$queue->maxjobsqueueduser = config()->get('module.queues.maxjobsqueueduser', 5000);
 		$queue->nodecoresmin = $subresource->nodecores;
 		$queue->nodecoresmax = $subresource->nodecores;
 		$queue->nodememmin   = $subresource->nodemem;
