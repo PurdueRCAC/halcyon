@@ -11209,14 +11209,17 @@ table.gsc-search-box .gsc-search-button {
 		visibility: visible;
 		transform:scaleX(1)
 	}
-	.blackbar li:hover,
+	/*.blackbar li:hover,
 	.blackbar li a:hover,
 	.blackbar li a:focus {
 		outline:none !important
 	}
 	.blackbar li:hover li a:after,
 	.blackbar li a:hover li a:after,
-	.blackbar li a:focus li a:after {
+	.blackbar li a:focus li a:after {*/
+  .blackbar .black > ul > li:hover > a:after,
+	.blackbar .black > ul > li > a:hover:after,
+	.blackbar .black > ul > li > a:focus:after {
 		visibility: visible;
 		transform:scaleX(1)
 	}
