@@ -40,5 +40,7 @@ return [
 		'direction old to new' => 'Oldest to Newest',
 		'location' => 'Filter by location',
 		'location desc' => 'Filter news articles by location.',
+		'ignore role' => 'Ignore Users With Role',
+		'ignore role desc' => 'Ignore users with the applied role when checking if an associated user is the one who reserved the coffee hour. This is used for ignoring staff who are assigned to a coffee hour.',
 	],
 ];

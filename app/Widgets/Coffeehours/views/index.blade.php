@@ -19,6 +19,8 @@
 @endpush
 
 <?php
+$ignore = $params->get('ignore_role');
+
 $events = array();
 $attend = array();
 
@@ -49,7 +51,7 @@ foreach ($rows as $event)
 		{
 			$u = App\Modules\Users\Models\User::find($assoc->associd);
 
-			if ($u && !in_array(config()->get('module.news.ignore_role', 4), $u->getAuthorisedRoles()))
+			if ($u && (!$ignore || !in_array($ignore, $u->getAuthorisedRoles())))
 			{
 				$reserved = $u->name;
 			}

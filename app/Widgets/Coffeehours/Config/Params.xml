@@ -22,6 +22,9 @@
 				<option value="DESC">widget.coffeehours::coffeehours.params.direction new to old</option>
 				<option value="ASC">widget.coffeehours::coffeehours.params.direction old to new</option>
 			</field>
+			<field name="ignore_role" type="App\Modules\Users\Models\Fields\Roles" extension="users" default="" size="10" label="widget.coffeehours::coffeehours.params.ignore role" description="widget.coffeehours::coffeehours.params.ignore role desc" >
+				<option value="">global.none</option>
+			</field>
 		</fieldset>
 		<fieldset name="advanced">
 			<field name="class" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.class name description" />
