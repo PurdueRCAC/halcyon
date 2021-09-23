@@ -34,7 +34,7 @@ class Roles extends Select
 					$join->on('a.lft', '>', 'b.lft')
 						->on('a.rgt', '<', 'b.rgt');
 				})
-			->groupBy(['a.id', 'a.title', 'a.lft', 'a.rgt'])
+			->groupBy(['a.id', 'a.title', 'a.lft', 'a.rgt', 'a.parent_id'])
 			->orderBy('a.lft', 'asc')
 			->get();
 
