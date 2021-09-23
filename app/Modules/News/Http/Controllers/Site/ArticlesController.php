@@ -578,36 +578,6 @@ class ArticlesController extends Controller
 	/**
 	 * Show the specified entry
 	 *
-	 * @param   string  $name
-	 * @return  Response
-	 */
-	public function coffee()
-	{
-		$row = Type::findByName('coffee');
-
-		if (!$row)
-		{
-			abort(404);
-		}
-
-		app('pathway')
-			->append(
-				config('news.name'),
-				route('site.news.index')
-			)
-			->append(
-				$row->name,
-				route('site.news.type', ['name' => 'coffee'])
-			);
-
-		return view('news::site.coffee', [
-			'type' => $row
-		]);
-	}
-
-	/**
-	 * Show the specified entry
-	 *
 	 * @param   integer  $id
 	 * @return  Response
 	 */
