@@ -33,7 +33,7 @@ class Grid
 		$toggle = (!$task) ? false : true;
 
 		// Build the title.
-		$txt   = ($value) ? trans('JYES') : trans('JNO');
+		$txt   = ($value) ? trans('global.yes') : trans('global.no');
 		$title = $txt;
 
 		if ($toggle)

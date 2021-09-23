@@ -40,7 +40,7 @@ class Select
 	 * @param   string  $id        The id for the field
 	 * @return  string  HTML for the radio list
 	 */
-	public static function booleanlist($name, $attribs = null, $selected = null, $yes = 'JYES', $no = 'JNO', $id = false)
+	public static function booleanlist($name, $attribs = null, $selected = null, $yes = 'globa.yes', $no = 'global.no', $id = false)
 	{
 		$arr = array(
 			self::option('0', trans($no)),
@@ -731,20 +731,20 @@ class Select
 
 		if (empty($neworder))
 		{
-			$db = \App::get('db');
+			$db = app('db');
 			$db->setQuery($query);
 
 			$items = $db->loadObjectList();
 
 			if (empty($items))
 			{
-				$options[] = self::option(1, trans('JOPTION_ORDER_FIRST'));
+				$options[] = self::option(1, trans('global.order first'));
 			}
 			else
 			{
 				$chop = '30';
 
-				$options[] = self::option(0, '0 ' . trans('JOPTION_ORDER_FIRST'));
+				$options[] = self::option(0, '0 ' . trans('global.order first'));
 				for ($i = 0, $n = count($items); $i < $n; $i++)
 				{
 					$items[$i]->text = trans($items[$i]->text);
@@ -760,7 +760,7 @@ class Select
 
 					$options[] = self::option($items[$i]->value, $items[$i]->value . '. ' . $text);
 				}
-				$options[] = self::option($items[$i - 1]->value + 1, ($items[$i - 1]->value + 1) . ' ' . trans('JOPTION_ORDER_LAST'));
+				$options[] = self::option($items[$i - 1]->value + 1, ($items[$i - 1]->value + 1) . ' ' . trans('global.order last'));
 			}
 
 			$html = self::genericlist($options, $name, array('list.attr' => $attribs, 'list.select' => (int) $selected));
@@ -769,11 +769,11 @@ class Select
 		{
 			if ($neworder > 0)
 			{
-				$text = trans('JGLOBAL_NEWITEMSLAST_DESC');
+				$text = trans('global.new items last');
 			}
 			elseif ($neworder <= 0)
 			{
-				$text = trans('JGLOBAL_NEWITEMSFIRST_DESC');
+				$text = trans('global.new items first');
 			}
 			$html = '<input type="hidden" name="' . $name . '" value="' . (int) $selected . '" />' . '<span class="readonly">' . $text . '</span>';
 		}

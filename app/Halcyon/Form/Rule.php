@@ -54,7 +54,7 @@ class Rule
 		}
 
 		// Add unicode property support if available.
-		if (JCOMPAT_UNICODE_PROPERTIES)
+		if (COMPAT_UNICODE_PROPERTIES)
 		{
 			$this->modifiers = (strpos($this->modifiers, 'u') !== false) ? $this->modifiers : $this->modifiers . 'u';
 		}

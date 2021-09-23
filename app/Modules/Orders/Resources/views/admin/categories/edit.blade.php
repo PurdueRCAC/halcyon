@@ -35,7 +35,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.orders.categories.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('JGLOBAL_VALIDATION_FORM_FAILED') }}">
+<form action="{{ route('admin.orders.categories.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 	<div class="grid row">
 		<div class="col col-md-7 span7">

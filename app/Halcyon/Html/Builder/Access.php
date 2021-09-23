@@ -68,7 +68,7 @@ class Access
 		// If all levels is allowed, push it into the array.
 		elseif ($params)
 		{
-			array_unshift($options, Select::option('', trans('JOPTION_ACCESS_SHOW_ALL_LEVELS')));
+			array_unshift($options, Select::option('', trans('access.show all levels')));
 		}
 
 		if (!$attribs)
@@ -147,8 +147,8 @@ class Access
 		// If all usergroups is allowed, push it into the array.
 		if ($allowAll)
 		{
-			//array_unshift($options, Select::option('', trans('JOPTION_ACCESS_SHOW_ALL_GROUPS')));
-			$options->prepend(Select::option('', trans('JOPTION_ACCESS_SHOW_ALL_GROUPS')));
+			//array_unshift($options, Select::option('', trans('access.show all groups')));
+			$options->prepend(Select::option('', trans('access.show all groups')));
 		}
 
 		return Select::genericlist($options, $name, array(

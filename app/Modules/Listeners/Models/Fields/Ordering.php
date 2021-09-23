@@ -76,11 +76,11 @@ class Ordering extends Field
 
 		if (empty($items))
 		{
-			$options[] = Select::option(1, trans('JOPTION_ORDER_FIRST'));
+			$options[] = Select::option(1, trans('global.option.order first'));
 			return $options;
 		}
 
-		$options[] = Select::option(0, '0 ' . trans('JOPTION_ORDER_FIRST'));
+		$options[] = Select::option(0, '0 ' . trans('global.option.order first'));
 		foreach ($items as $i => $item)
 		{
 			$item->text = trans($item->text);
@@ -95,7 +95,7 @@ class Ordering extends Field
 
 			$options[] = Select::option($items[$i]->value, $items[$i]->value . '. ' . $text);
 		}
-		$options[] = Select::option($items[$i - 1]->value + 1, ($items[$i - 1]->value + 1) . ' ' . trans('global.option.ORDER_LAST'));
+		$options[] = Select::option($items[$i - 1]->value + 1, ($items[$i - 1]->value + 1) . ' ' . trans('global.option.order last'));
 
 		return $options;
 	}
@@ -127,11 +127,11 @@ class Ordering extends Field
 		{
 			if ($neworder > 0)
 			{
-				$text = trans('global.NEWITEMSLAST_DESC');
+				$text = trans('global.new items last');
 			}
 			elseif ($neworder <= 0)
 			{
-				$text = trans('global.NEWITEMSFIRST_DESC');
+				$text = trans('global.new items first');
 			}
 			$html = '<input type="hidden" name="' . $name . '" value="' . (int) $selected . '" />' . '<span class="readonly">' . $text . '</span>';
 		}

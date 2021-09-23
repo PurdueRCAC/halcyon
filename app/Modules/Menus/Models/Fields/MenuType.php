@@ -78,7 +78,7 @@ class MenuType extends Select
 				$html[] = '<input type="text" id="'.$this->id.'" readonly="readonly" disabled="disabled" value="'.$value.'"'.$size.$class.' />';
 			//$html[] = '</span>';
 			$html[] = '<div class="input-group-append">';
-				$html[] = '<input type="button" class="btn btn-outline-secondary" value="'.trans('JSELECT').'" />';
+				$html[] = '<input type="button" class="btn btn-outline-secondary" value="'.trans('global.select').'" />';
 				$html[] = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'" />';
 			$html[] = '</div>';
 		$html[] = '</div>';

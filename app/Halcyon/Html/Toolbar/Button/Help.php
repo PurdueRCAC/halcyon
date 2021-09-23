@@ -75,7 +75,7 @@ class Help extends Button
 		// Get Help URL
 		$url = self::createURL($ref, $com, $override, $component);
 		$url = htmlspecialchars($url, ENT_QUOTES);
-		//$cmd = "Halcyon.popupWindow('$url', '" . \trans('JHELP', true) . "', 700, 500, 1)";
+		//$cmd = "Halcyon.popupWindow('$url', '" . \trans('global.help', true) . "', 700, 500, 1)";
 
 		return $url; //$cmd;
 	}

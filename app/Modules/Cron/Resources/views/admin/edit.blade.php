@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.cron.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('JGLOBAL_VALIDATION_FORM_FAILED') }}">
+<form action="{{ route('admin.cron.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 	<div class="row">
 		<div class="col-md-7">
 			<fieldset class="adminform">

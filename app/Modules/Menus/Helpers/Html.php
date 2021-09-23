@@ -237,15 +237,15 @@ class Html
 		$mitems = array();
 		if ($all | $unassigned)
 		{
-			$mitems[] = Select::option('<OPTGROUP>', trans('JOPTION_MENUS'));
+			$mitems[] = Select::option('<OPTGROUP>', trans('global.option.menu'));
 
 			if ($all)
 			{
-				$mitems[] = Select::option(0, trans('JALL'));
+				$mitems[] = Select::option(0, trans('global.all'));
 			}
 			if ($unassigned)
 			{
-				$mitems[] = Select::option(-1, trans('JOPTION_UNASSIGNED'));
+				$mitems[] = Select::option(-1, trans('global.option.unassigned'));
 			}
 
 			$mitems[] = Select::option('</OPTGROUP>');
