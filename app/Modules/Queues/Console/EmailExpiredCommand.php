@@ -100,7 +100,7 @@ class EmailExpiredCommand extends Command
 
 		if (!count($queueusers))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->comment('No records to email.');
 			}
@@ -114,7 +114,7 @@ class EmailExpiredCommand extends Command
 		{
 			if (!$queueuser->queue)
 			{
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->error("Could not find queue for #{$queueuser->queueid}.");
 				}
@@ -125,7 +125,7 @@ class EmailExpiredCommand extends Command
 
 			if (!$resource)
 			{
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->error("Could not find resource for #{$queueuser->id}.");
 				}
@@ -139,7 +139,7 @@ class EmailExpiredCommand extends Command
 			//  1 = NO_ROLE_EXISTS
 			if ($event->status <= 1)
 			{
-				if ($event->status < 0 && $debug)
+				if ($event->status < 0 && ($debug || $this->output->isVerbose()))
 				{
 					$this->error("Something bad happened looking up resource member status for " . $resource->id . '.' . $queueuser->userid);
 				}
@@ -159,7 +159,7 @@ class EmailExpiredCommand extends Command
 
 		if (!count($group_activity))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->comment('No records to email.');
 			}
@@ -182,21 +182,29 @@ class EmailExpiredCommand extends Command
 
 			foreach ($group->managers as $manager)
 			{
-				// Prepare and send actual email
-				$message = new Expired($manager->user, $queueusers);
-
-				if ($debug)
-				{
-					echo $message->render();
-					$this->info("Emailed expired to manager {$manager->user->email}.");
-					continue;
-				}
-
 				$user = $manager->user;
 
 				if (!$user || !$user->id || $user->isTrashed())
 				{
 					continue;
+				}
+
+				// Prepare and send actual email
+				$message = new Expired($manager->user, $queueusers);
+
+				if ($this->output->isDebug())
+				{
+					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->info("Emailed expired to manager {$manager->user->email}.");
+
+					if ($debug)
+					{
+						continue;
+					}
 				}
 
 				Mail::to($user->email)->send($message);

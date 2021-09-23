@@ -53,7 +53,7 @@ class EmailWelcomeFreeCommand extends Command
 
 		if (!count($users))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->comment('No records to email.');
 			}
@@ -78,7 +78,7 @@ class EmailWelcomeFreeCommand extends Command
 
 			if (!$u)
 			{
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->error('Could not find account for user ID #' . $userid);
 				}
@@ -94,7 +94,7 @@ class EmailWelcomeFreeCommand extends Command
 			{
 				if (!file_exists($u->loginShell))
 				{
-					if ($debug)
+					if ($debug || $this->output->isVerbose())
 					{
 						$this->error('Login Shell ' . $u->loginShell . ' is invalid.');
 					}
@@ -103,7 +103,7 @@ class EmailWelcomeFreeCommand extends Command
 			}
 			else
 			{
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->error('Login Shell is not set for user ID #' . $userid);
 				}
@@ -160,11 +160,19 @@ class EmailWelcomeFreeCommand extends Command
 			// Prepare and send actual email
 			$message = new WelcomeFree($u, $activity);
 
-			if ($debug)
+			if ($this->output->isDebug())
 			{
 				echo $message->render();
+			}
+
+			if ($debug || $this->output->isVerbose())
+			{
 				$this->info("Emailed welcome (free) to {$u->email}.");
-				continue;
+
+				if ($debug)
+				{
+					continue;
+				}
 			}
 
 			Mail::to($u->email)->send($message);
@@ -175,8 +183,6 @@ class EmailWelcomeFreeCommand extends Command
 			{
 				$userqueue->update(['notice' => 0]);
 			}
-
-			//$this->info("Emailed welcome (free) to {$u->email}.");
 		}
 	}
 

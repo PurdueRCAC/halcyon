@@ -52,7 +52,7 @@ class EmailQueueRemovedCommand extends Command
 
 		if (!count($users))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->comment('No records to email.');
 			}
@@ -93,7 +93,7 @@ class EmailQueueRemovedCommand extends Command
 
 				if (!$group)
 				{
-					if ($debug)
+					if ($debug || $this->output->isVerbose())
 					{
 						$this->error('Could not find group #' . $groupid);
 					}
@@ -123,7 +123,7 @@ class EmailQueueRemovedCommand extends Command
 
 					if (!$user)
 					{
-						if ($debug)
+						if ($debug || $this->output->isVerbose())
 						{
 							$this->error('Could not find account for user #' . $userid);
 						}
@@ -222,11 +222,19 @@ class EmailQueueRemovedCommand extends Command
 					// Prepare and send actual email
 					$message = new QueueRemoved($user, $removing, $keeping, $removals[$userid]);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
 						echo $message->render();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
 						$this->info("Emailed queueremoved to {$user->email}.");
-						continue;
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($user->email)->send($message);
@@ -251,11 +259,19 @@ class EmailQueueRemovedCommand extends Command
 					// Prepare and send actual email
 					$message = new QueueRemovedManager($manager->user, $data);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
 						echo $message->render();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
 						$this->info("Emailed queueremoved to manager {$manager->user->email}.");
-						continue;
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($manager->user->email)->send($message);

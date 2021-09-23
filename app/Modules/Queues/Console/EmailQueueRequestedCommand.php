@@ -48,7 +48,7 @@ class EmailQueueRequestedCommand extends Command
 
 		if (!count($users))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->comment('No records to email.');
 			}
@@ -77,7 +77,7 @@ class EmailQueueRequestedCommand extends Command
 
 			if (!$group)
 			{
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->error('Could not find group #' . $groupid);
 				}
@@ -86,7 +86,7 @@ class EmailQueueRequestedCommand extends Command
 
 			if (!count($group->managers))
 			{
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->error('No active managers found for group #' . $groupid);
 				}
@@ -122,7 +122,7 @@ class EmailQueueRequestedCommand extends Command
 					if (!$user)
 					{
 						unset($user_activity[$userid]);
-						if ($debug)
+						if ($debug || $this->output->isVerbose())
 						{
 							$this->error('Could not find account for user #' . $userid);
 						}
@@ -141,11 +141,19 @@ class EmailQueueRequestedCommand extends Command
 					// Prepare and send actual email
 					$message = new QueueRequested($manager->user, $user_activity);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
-						//$this->info("Emailed queuerequested to {$manager->user->email}.");
 						echo $message->render();
-						continue;
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->info("Emailed queuerequested to {$manager->user->email}.");
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($manager->user->email)->send($message);

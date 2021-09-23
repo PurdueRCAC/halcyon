@@ -82,10 +82,18 @@ class EmailReportsCommand extends Command
 
 				$message = new NewReport($report);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
 					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed report #{$report->id} to {$user->email}.");
+				}
+
+				if ($debug)
+				{
 					continue;
 				}
 

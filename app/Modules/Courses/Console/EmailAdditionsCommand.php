@@ -16,7 +16,7 @@ class EmailAdditionsCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'courses:emailadditions {--debug : Output emails rather than sending}';
+	protected $signature = 'courses:emailadditions {--debug : Output actions that would be taken without making them}';
 
 	/**
 	 * The console command description.
@@ -43,7 +43,7 @@ class EmailAdditionsCommand extends Command
 
 		if (!count($members))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->comment('No new additions to email.');
 			}
@@ -86,7 +86,10 @@ class EmailAdditionsCommand extends Command
 
 			if (!$course)
 			{
-				$this->error('Could not find course account #' . $courseid);
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->error('Could not find course account #' . $courseid);
+				}
 				continue;
 			}
 
@@ -94,22 +97,32 @@ class EmailAdditionsCommand extends Command
 
 			if (!$user)
 			{
-				$this->error('Could not find instructor for course account #' . $courseid);
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->error('Could not find instructor for course account #' . $courseid);
+				}
 				continue;
 			}
 
 			// Prepare and send actual email
 			$message = new Added($user, $course, $accounts);
 
-			if ($debug)
+			if ($this->output->isDebug())
 			{
 				echo $message->render();
+			}
+
+			if ($debug || $this->output->isVerbose())
+			{
+				$this->info("Emailed course additions to {$user->email}.");
+			}
+
+			if ($debug)
+			{
 				continue;
 			}
 
 			Mail::to($user->email)->send($message);
-
-			//$this->info("Emailed course additions to {$user->email}.");
 
 			// Change states
 			$course->update(['notice' => 0]);

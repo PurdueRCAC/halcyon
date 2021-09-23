@@ -55,14 +55,23 @@ class EmailSchedulingCommand extends Command
 		{
 			$message = new Scheduling('stopped', array(), $stopped);
 
-			if ($debug)
+			if ($this->output->isDebug())
 			{
 				echo $message->render();
+			}
+
+			if ($debug)
+			{
 				$this->info("Emailed stopped scheduling to {$email}.");
 			}
 			else
 			{
 				Mail::to($email)->send($message);
+
+				if ($this->output->isVerbose())
+				{
+					$this->info("Emailed stopped scheduling to {$email}.");
+				}
 
 				$this->log($email, "Emailed stopped scheduling.");
 
@@ -72,9 +81,8 @@ class EmailSchedulingCommand extends Command
 				}
 			}
 		}
-		elseif ($debug)
+		elseif ($debug || $this->output->isVerbose())
 		{
-			
 			$this->info('No stopped queues found.');
 		}
 
@@ -110,24 +118,29 @@ class EmailSchedulingCommand extends Command
 		{
 			$message = new Scheduling('started', $started, $stopped);
 
-			if ($debug)
+			if ($this->output->isDebug())
 			{
 				echo $message->render();
-				$this->info("Emailed started scheduling to {$email}.");
 			}
-			else
+
+			if ($debug || $this->output->isVerbose())
 			{
-				Mail::to($email)->send($message);
+				$this->info("Emailed started scheduling to {$email}.");
 
-				$this->log($email, "Emailed started scheduling.");
-
-				foreach ($started as $subresource)
+				if ($debug)
 				{
-					$subresource->update(['notice' => 0]);
+					return;
 				}
 			}
+
+			Mail::to($email)->send($message);
+
+			foreach ($started as $subresource)
+			{
+				$subresource->update(['notice' => 0]);
+			}
 		}
-		elseif ($debug)
+		elseif ($debug || $this->output->isVerbose())
 		{
 			$this->info('No newly started queues found.');
 		}

@@ -14,7 +14,7 @@ class CopyCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'news:copy {id} {start} {days=4} {--debug : Output log statements}';
+	protected $signature = 'news:copy {id} {start} {days=4} {--debug : Output actions that would be taken without making them}';
 
 	/**
 	 * The console command description.
@@ -40,7 +40,7 @@ class CopyCommand extends Command
 			return;
 		}
 
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->line('Copying ID #' . $id . ' ...');
 		}
@@ -100,9 +100,13 @@ class CopyCommand extends Command
 				$payload->newstypeid = $news->newstypeid;
 				$payload->url = $news->url;
 
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->info('Adding copy of #' . $id . ' for `' . $payload->datetimenews . '`');
+				}
+
+				if ($debug)
+				{
 					continue;
 				}
 

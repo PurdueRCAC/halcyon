@@ -78,7 +78,7 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP 1: Order Entered
 		//--------------------------------------------------------------------------
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info('Process new orders pending payment info...');
 		}
@@ -125,11 +125,19 @@ class EmailStatusCommand extends Command
 				// Prepare and send actual email
 				$message = new PendingPayment($order, $user);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
-					//echo $message->render();
+					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed new order #{$order->id} to {$user->email}.");
-					continue;
+
+					if ($debug)
+					{
+						continue;
+					}
 				}
 
 				Mail::to($user->email)->send($message);
@@ -151,7 +159,7 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP 2: Payment information entered
 		//--------------------------------------------------------------------------
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info('Process new orders pending business office assignment...');
 		}
@@ -168,7 +176,7 @@ class EmailStatusCommand extends Command
 		{
 			if (constant(self::class . '::' . strtoupper($order->status)) < self::PENDING_BOASSIGNMENT)
 			{
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->line('skipping ' . $order->id . ' - ' . $order->status);
 				}
@@ -188,11 +196,19 @@ class EmailStatusCommand extends Command
 				// Prepare and send actual email
 				$message = new PendingAssignment($order, $user);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
-					//echo $message->render();
+					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed pending payment info order #{$order->id} to {$user->email}.");
-					continue;
+
+					if ($debug)
+					{
+						continue;
+					}
 				}
 
 				Mail::to($user->email)->send($message);
@@ -213,7 +229,7 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP 3: Business office approvers assigned
 		//--------------------------------------------------------------------------
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info('Process new orders pending approval, fulfillment, collection, complete...');
 		}
@@ -262,11 +278,19 @@ class EmailStatusCommand extends Command
 				// Prepare and send actual email
 				$message = new PendingApproval($order, $user);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
-					//echo $message->render();
+					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed pending payment approval order #{$order->id} to {$user->email}.");
-					continue;
+
+					if ($debug)
+					{
+						continue;
+					}
 				}
 
 				Mail::to($user->email)->send($message);
@@ -294,11 +318,19 @@ class EmailStatusCommand extends Command
 					// Prepare and send actual email
 					$message = new PaymentDenied($order, $user);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
-						//echo $message->render();
+						echo $message->render();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
 						$this->info("Emailed payment denied for order #{$order->id} to {$user->email}.");
-						continue;
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($user->email)->send($message);
@@ -328,7 +360,7 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP 4: Payment approved, pending fulfillment
 		//--------------------------------------------------------------------------
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info('Process payment approved, pending fulfillment...');
 		}
@@ -369,11 +401,19 @@ class EmailStatusCommand extends Command
 				// Prepare and send actual email
 				$message = new PaymentApproved($order, $user);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
-					//echo $message->render();
+					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed pending fulfillment order #{$order->id} to {$user->email}.");
-					continue;
+
+					if ($debug)
+					{
+						continue;
+					}
 				}
 
 				Mail::to($user->email)->send($message);
@@ -403,12 +443,17 @@ class EmailStatusCommand extends Command
 				// Prepare and send actual email
 				$message = new Ticket($order, $user);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
-					//echo $message->render();
+					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed order #{$order->id} to {$user->email}.");
 				}
-				else
+
+				if (!$debug)
 				{
 					Mail::to($user->email)->send($message);
 				}
@@ -426,7 +471,7 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP 5: Order fulfilled, pending collection
 		//--------------------------------------------------------------------------
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info('Process order fulfilled, pending collection...');
 		}
@@ -442,7 +487,7 @@ class EmailStatusCommand extends Command
 		{
 			if (constant(self::class . '::' . strtoupper($order->status)) < self::PENDING_COLLECTION)
 			{
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->line('skipping ' . $order->id . ' - ' . $order->status);
 				}
@@ -467,11 +512,19 @@ class EmailStatusCommand extends Command
 				// Prepare and send actual email
 				$message = new Fulfilled($order, $user);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
-					//echo $message->render();
+					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed pending collection order #{$order->id} to {$user->email}.");
-					continue;
+
+					if ($debug)
+					{
+						continue;
+					}
 				}
 
 				Mail::to($user->email)->send($message);
@@ -491,7 +544,7 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP 6: Order collected and complete
 		//--------------------------------------------------------------------------
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info('Process order collected and complete...');
 		}
@@ -507,7 +560,7 @@ class EmailStatusCommand extends Command
 		{
 			if (constant(self::class . '::' . strtoupper($order->status)) < self::COMPLETE)
 			{
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->line('skipping ' . $order->id . ' - ' . $order->status);
 				}
@@ -527,11 +580,19 @@ class EmailStatusCommand extends Command
 				// Prepare and send actual email
 				$message = new Complete($order, $user);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
-					//echo $message->render();
+					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed completed order #{$order->id} to {$user->email}.");
-					continue;
+
+					if ($debug)
+					{
+						continue;
+					}
 				}
 
 				Mail::to($user->email)->send($message);
@@ -551,9 +612,9 @@ class EmailStatusCommand extends Command
 		//--------------------------------------------------------------------------
 		// STEP CANCELED: Order canceled
 		//--------------------------------------------------------------------------
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
-			$this->info('Process canceled...');
+			$this->info('Process canceled orders...');
 		}
 
 		$orders = Order::query()
@@ -568,7 +629,7 @@ class EmailStatusCommand extends Command
 		{
 			if (constant(self::class . '::' . strtoupper($order->status)) > self::CANCELED_NOTICE)
 			{
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->line('skipping ' . $order->id . ' - ' . $order->status);
 				}
@@ -593,11 +654,19 @@ class EmailStatusCommand extends Command
 				// Prepare and send actual email
 				$message = new Canceled($order, $user);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
-					//echo $message->render();
+					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed canceled order #{$order->id} to {$user->email}.");
-					continue;
+
+					if ($debug)
+					{
+						continue;
+					}
 				}
 
 				Mail::to($user->email)->send($message);

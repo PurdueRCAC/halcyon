@@ -127,11 +127,19 @@ class EmailRemovedCommand extends Command
 
 				$message = new OwnerRemoved($user, $group);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
 					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed ownerremoved to {$user->email}.");
-					continue;
+
+					if ($debug)
+					{
+						continue;
+					}
 				}
 
 				Mail::to($user->email)->send($message);
@@ -153,11 +161,19 @@ class EmailRemovedCommand extends Command
 
 				$message = new OwnerRemovedManager($user, $group, $people);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
 					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed ownerremoved to manager {$user->email}.");
-					continue;
+
+					if ($debug)
+					{
+						continue;
+					}
 				}
 
 				Mail::to($user->email)->send($message);

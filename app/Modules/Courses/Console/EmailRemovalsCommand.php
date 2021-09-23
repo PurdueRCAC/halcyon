@@ -16,7 +16,7 @@ class EmailRemovalsCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'courses:emailremovals {--debug : Output emails rather than sending}';
+	protected $signature = 'courses:emailremovals {--debug : Output actions that would be taken without making them}';
 
 	/**
 	 * The console command description.
@@ -42,7 +42,7 @@ class EmailRemovalsCommand extends Command
 
 		if (!count($members))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->comment('No new removals to email.');
 			}
@@ -85,7 +85,10 @@ class EmailRemovalsCommand extends Command
 
 			if (!$course)
 			{
-				$this->error('Could not find course account #' . $courseid);
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->error('Could not find course account #' . $courseid);
+				}
 				continue;
 			}
 
@@ -93,22 +96,32 @@ class EmailRemovalsCommand extends Command
 
 			if (!$user)
 			{
-				$this->error('Could not find instructor for course account #' . $courseid);
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->error('Could not find instructor for course account #' . $courseid);
+				}
 				continue;
 			}
 
 			// Prepare and send actual email
 			$message = new Removed($user, $course, $accounts);
 
-			if ($debug)
+			if ($this->output->isDebug())
 			{
 				echo $message->render();
+			}
+
+			if ($debug || $this->output->isVerbose())
+			{
+				$this->info("Emailed course removals to {$user->email}.");
+			}
+
+			if ($debug)
+			{
 				continue;
 			}
 
 			Mail::to($user->email)->send($message);
-
-			//$this->info("Emailed course removals to {$user->email}.");
 
 			// Change states
 			$course->update(['notice' => 0]);

@@ -34,7 +34,7 @@ class RenewCommand extends Command
 	{
 		$debug = $this->option('debug') ? true : false;
 
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info('Renewing orders...');
 		}
@@ -156,7 +156,7 @@ class RenewCommand extends Command
 
 		if (!count($renews))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->info('No renewals found.');
 			}
@@ -187,7 +187,10 @@ class RenewCommand extends Command
 
 				if (!$item)
 				{
-					$this->error('Failed to find order information for orderitemid #' . $sequence);
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->error('Failed to find order information for orderitemid #' . $sequence);
+					}
 					continue;
 				}
 
@@ -211,7 +214,10 @@ class RenewCommand extends Command
 			$order = Order::find($orderid);
 			if (!$order)
 			{
-				$this->error('Could not find order #' . $orderid);
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->error('Could not find order #' . $orderid);
+				}
 				continue;
 			}
 
@@ -274,7 +280,10 @@ class RenewCommand extends Command
 
 				if ($debug)
 				{
-					$this->info('Copying order #' . $orderid . ' item #' . $i['id']);
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->info('Copying order #' . $orderid . ' item #' . $i['id']);
+					}
 					continue;
 				}
 
@@ -296,7 +305,7 @@ class RenewCommand extends Command
 					//$account->approveruserid      = $a['approveruserid'];
 					$account->orderid = $row->id;
 
-					if ($debug)
+					if ($debug || $this->output->isVerbose())
 					{
 						$this->info('Copying order #' . $orderid . ' account #' . $a['id']);
 						continue;

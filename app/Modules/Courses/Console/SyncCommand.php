@@ -25,7 +25,7 @@ class SyncCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'courses:sync {--debug : Output actions it would take} {--log : Output is logged to the PHP error log}';
+	protected $signature = 'courses:sync {--debug : Output actions that would be taken without making them} {--log : Output is logged to the PHP error log}';
 
 	/**
 	 * The console command description.
@@ -43,7 +43,7 @@ class SyncCommand extends Command
 		$log   = $this->option('log') ? true : false;
 
 		$msg = 'Starting class sync.';
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info($msg);
 		}
@@ -63,13 +63,27 @@ class SyncCommand extends Command
 			->where('userid', '>', 0)
 			->get();
 
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info('Looking up instructor class info ...');
 		}
 
 		foreach ($classdata as $row)
 		{
+			if (!$row->user)
+			{
+				$msg = 'Failed to retrieve instructor for class #' . $row->id;
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->error($msg);
+				}
+				if ($log)
+				{
+					error_log($msg);
+				}
+				continue;
+			}
+
 			// Fetch registerants
 			event($event = new AccountInstructorLookup($row, $row->user));
 
@@ -81,7 +95,7 @@ class SyncCommand extends Command
 			}
 		}
 
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info('Looking up enrollment info for each class ...');
 		}
@@ -112,8 +126,10 @@ class SyncCommand extends Command
 					if (!$user)
 					{
 						$msg = 'Failed to retrieve user ID for puid ' . $student->externalId;
-
-						$this->error($msg);
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error($msg);
+						}
 						if ($log)
 						{
 							error_log($msg);
@@ -155,8 +171,10 @@ class SyncCommand extends Command
 					if (!$member->save())
 					{
 						$msg = 'Failed to create `classusers` entry for user #' . $user->id . ', class #' . $course->id;
-
-						$this->error($msg);
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error($msg);
+						}
 						if ($log)
 						{
 							error_log($msg);
@@ -234,7 +252,10 @@ class SyncCommand extends Command
 			{
 				$msg = 'Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
 
-				$this->error($msg);
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->error($msg);
+				}
 				if ($log)
 				{
 					error_log($msg);
@@ -253,8 +274,10 @@ class SyncCommand extends Command
 				if ($event->status >= 400)
 				{
 					$msg = 'Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
-
-					$this->error($msg);
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->error($msg);
+					}
 					if ($log)
 					{
 						error_log($msg);
@@ -271,8 +294,10 @@ class SyncCommand extends Command
 				if ($event->status >= 400)
 				{
 					$msg = 'Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
-
-					$this->error($msg);
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->error($msg);
+					}
 					if ($log)
 					{
 						error_log($msg);
@@ -285,13 +310,21 @@ class SyncCommand extends Command
 				 && $event->status != 3)
 				{
 					// Create account
+					if ($debug)
+					{
+						$this->info('Would create AIMO ACMaint account for ' . $user);
+						continue;
+					}
+
 					event($event = new ResourceMemberCreated($fortress, $u));
 
 					if ($event->status >= 400)
 					{
 						$msg = 'Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
-
-						$this->error($msg);
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error($msg);
+						}
 						if ($log)
 						{
 							error_log($msg);
@@ -303,7 +336,7 @@ class SyncCommand extends Command
 				{
 					$msg = 'AIMO ACMaint account already exists for ' . $user . ': ' . $event->status;
 
-					if ($debug)
+					if ($debug || $this->output->isVerbose())
 					{
 						$this->info($msg);
 					}
@@ -327,7 +360,7 @@ class SyncCommand extends Command
 		);
 		$msg = implode(', ', $data);
 
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info('Class sync - ' . $msg);
 		}
@@ -342,8 +375,10 @@ class SyncCommand extends Command
 		{
 			// TODO: how can we detect and allow normal wipeage during semester turnover?
 			$msg = 'Deleting more users than we will have left. This seems wrong! Removing ' . count($remove_users) . ' of ' . count($users) . ' total.';
-
-			$this->error($msg);
+			if ($debug || $this->output->isVerbose())
+			{
+				$this->error($msg);
+			}
 			if ($log)
 			{
 				error_log($msg);
@@ -354,16 +389,20 @@ class SyncCommand extends Command
 		$removed = array();
 		foreach ($remove_users as $user)
 		{
+			$msg = 'Would delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
+
+			if ($debug || $this->output->isVerbose())
+			{
+				$this->info($msg);
+			}
+
+			if ($log)
+			{
+				error_log($msg);
+			}
+
 			if ($debug)
 			{
-				$msg = 'Would delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
-
-				$this->info($msg);
-
-				if ($log)
-				{
-					error_log($msg);
-				}
 				continue;
 			}
 
@@ -373,8 +412,10 @@ class SyncCommand extends Command
 			if ($event->status >= 400)
 			{
 				$msg = 'Could not delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
-
-				$this->error($msg);
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->error($msg);
+				}
 				if ($log)
 				{
 					error_log($msg);
@@ -387,8 +428,7 @@ class SyncCommand extends Command
 				$removed[] = $user;
 
 				$msg = 'Deleted AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
-
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->success($msg);
 				}
@@ -401,7 +441,7 @@ class SyncCommand extends Command
 
 		$msg = 'Finished class sync.';
 
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info($msg);
 		}

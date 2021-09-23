@@ -50,7 +50,7 @@ class EmailWelcomeClusterCommand extends Command
 
 		if (!count($users))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->comment('No records to email.');
 			}
@@ -75,7 +75,7 @@ class EmailWelcomeClusterCommand extends Command
 
 			if (!$u)
 			{
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->error('Could not find account for user ID #' . $userid);
 				}
@@ -121,11 +121,19 @@ class EmailWelcomeClusterCommand extends Command
 			// Prepare and send actual email
 			$message = new WelcomeCluster($u, $activity);
 
-			if ($debug)
+			if ($this->output->isDebug())
 			{
 				echo $message->render();
+			}
+
+			if ($debug || $this->output->isVerbose())
+			{
 				$this->info("Emailed welcome (cluster) to {$u->email}.");
-				continue;
+
+				if ($debug)
+				{
+					continue;
+				}
 			}
 
 			Mail::to($u->email)->send($message);
@@ -136,8 +144,6 @@ class EmailWelcomeClusterCommand extends Command
 			{
 				$userqueue->update(['notice' => 0]);
 			}
-
-			//$this->info("Emailed welcome (cluster) to {$u->email}.");
 		}
 	}
 

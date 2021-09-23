@@ -49,7 +49,7 @@ class EmailQueueAuthorizedCommand extends Command
 
 		if (!count($users))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->comment('No records to email.');
 			}
@@ -74,7 +74,7 @@ class EmailQueueAuthorizedCommand extends Command
 
 		foreach ($group_activity as $groupid => $groupqueueusers)
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->info("Starting processing group ID #{$groupid}.");
 			}
@@ -121,7 +121,10 @@ class EmailQueueAuthorizedCommand extends Command
 
 					if (!$user)
 					{
-						$this->error('Could not find account for user #' . $userid);
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error('Could not find account for user #' . $userid);
+						}
 						continue;
 					}
 
@@ -157,11 +160,19 @@ class EmailQueueAuthorizedCommand extends Command
 					// Prepare and send actual email
 					$message = new QueueAuthorized($user, $queueusers, $roles[$userid]);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
 						echo $message->render();
-						$this->info("Emailed freeauthorized to {$manager->user->email}.");
-						continue;
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->info("Emailed freeauthorized to {$user->email}.");
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($user->email)->send($message);
@@ -192,11 +203,19 @@ class EmailQueueAuthorizedCommand extends Command
 					// Prepare and send actual email
 					$message = new QueueAuthorizedManager($manager->user, $data);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
 						echo $message->render();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
 						$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
-						continue;
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($manager->user->email)->send($message);

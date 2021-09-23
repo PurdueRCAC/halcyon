@@ -20,7 +20,7 @@ class EmailAuthorizedCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'groups:emailauthorized {--debug : Output emails rather than sending}';
+	protected $signature = 'groups:emailauthorized {--debug : Output actions that would be taken without making them}';
 
 	/**
 	 * The console command description.
@@ -111,11 +111,19 @@ class EmailAuthorizedCommand extends Command
 
 				$message = new OwnerAuthorized($user, $group);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
 					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed ownerauthorized to {$user->email}.");
-					continue;
+
+					if ($debug)
+					{
+						continue;
+					}
 				}
 
 				Mail::to($user->email)->send($message);
@@ -137,11 +145,19 @@ class EmailAuthorizedCommand extends Command
 
 				$message = new OwnerAuthorizedManager($user, $group, $people);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
 					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed ownerauthorized to manager {$user->email}.");
-					continue;
+
+					if ($debug)
+					{
+						continue;
+					}
 				}
 
 				Mail::to($user->email)->send($message);

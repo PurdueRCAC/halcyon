@@ -52,7 +52,7 @@ class EmailQueueDeniedCommand extends Command
 
 		if (!count($users))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->comment('No records to email.');
 			}
@@ -77,7 +77,7 @@ class EmailQueueDeniedCommand extends Command
 
 		foreach ($group_activity as $groupid => $users)
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->info("Starting processing group ID #{$groupid}.");
 			}
@@ -98,7 +98,7 @@ class EmailQueueDeniedCommand extends Command
 
 				if (!$group)
 				{
-					if ($debug)
+					if ($debug || $this->output->isVerbose())
 					{
 						$this->error('Could not find group #' . $groupid);
 					}
@@ -126,7 +126,7 @@ class EmailQueueDeniedCommand extends Command
 
 					if (!$user)
 					{
-						if ($debug)
+						if ($debug || $this->output->isVerbose())
 						{
 							$this->error('Could not find account for user #' . $userid);
 						}
@@ -140,11 +140,19 @@ class EmailQueueDeniedCommand extends Command
 
 					$message = new QueueDenied($user, $queueusers);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
 						echo $message->render();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
 						$this->info("Emailed queuedenied to {$user->email}.");
-						continue;
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($user->email)->send($message);
@@ -164,11 +172,19 @@ class EmailQueueDeniedCommand extends Command
 					// Prepare and send actual email
 					$message = new QueueDeniedManager($manager->user, $data);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
 						echo $message->render();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
 						$this->info("Emailed queuedenied to manager {$manager->user->email}.");
-						continue;
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($manager->user->email)->send($message);

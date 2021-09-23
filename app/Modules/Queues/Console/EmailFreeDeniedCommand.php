@@ -57,7 +57,7 @@ class EmailFreeDeniedCommand extends Command
 
 		if (!count($groupqueueusers))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->comment('No records to email.');
 			}
@@ -98,7 +98,7 @@ class EmailFreeDeniedCommand extends Command
 
 				if (!$group)
 				{
-					if ($debug)
+					if ($debug || $this->output->isVerbose())
 					{
 						$this->error('Could not find group #' . $groupid);
 					}
@@ -127,7 +127,7 @@ class EmailFreeDeniedCommand extends Command
 
 					if (!$user || !$user->id || $user->isTrashed())
 					{
-						if ($debug)
+						if ($debug || $this->output->isVerbose())
 						{
 							$this->error('Could not find account for user #' . $userid);
 						}
@@ -141,11 +141,19 @@ class EmailFreeDeniedCommand extends Command
 
 					$message = new FreeDenied($user, $queueusers);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
 						echo $message->render();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
 						$this->info("Emailed freedenied to {$user->email}.");
-						continue;
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($user->email)->send($message);
@@ -166,7 +174,7 @@ class EmailFreeDeniedCommand extends Command
 
 					if (!$user || !$user->id || $user->isTrashed())
 					{
-						if ($debug)
+						if ($debug || $this->output->isVerbose())
 						{
 							$this->error('Could not find account for user #' . $manager->userid);
 						}
@@ -176,11 +184,19 @@ class EmailFreeDeniedCommand extends Command
 					// Prepare and send actual email
 					$message = new FreeDeniedManager($user, $data);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
 						echo $message->render();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
 						$this->info("Emailed freedenied to manager {$user->email}.");
-						continue;
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($user->email)->send($message);

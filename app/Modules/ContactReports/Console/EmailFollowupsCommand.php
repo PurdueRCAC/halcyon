@@ -21,7 +21,7 @@ class EmailFollowupsCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'crm:emailfollowups {--debug : Output emails rather than sending}';
+	protected $signature = 'crm:emailfollowups {--debug : Output actions that would be taken without making them}';
 
 	/**
 	 * The console command description.
@@ -156,10 +156,18 @@ class EmailFollowupsCommand extends Command
 
 				$message = new Followup($type, $u);
 
-				if ($debug)
+				if ($this->output->isDebug())
 				{
 					echo $message->render();
+				}
+
+				if ($debug || $this->output->isVerbose())
+				{
 					$this->info("Emailed {$type->name} followup to {$user->email}.");
+				}
+
+				if ($debug)
+				{
 					continue;
 				}
 

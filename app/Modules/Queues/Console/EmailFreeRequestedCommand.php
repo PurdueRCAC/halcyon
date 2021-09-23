@@ -95,7 +95,7 @@ class EmailFreeRequestedCommand extends Command
 
 				if (!$group)
 				{
-					if ($debug)
+					if ($debug || $this->output->isVerbose())
 					{
 						$this->error('Could not find group #' . $groupid);
 					}
@@ -130,11 +130,19 @@ class EmailFreeRequestedCommand extends Command
 					// Prepare and send actual email
 					$message = new FreeRequested($manager->user, $user_activity);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
 						echo $message->render();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
 						$this->info("Emailed freerequested to manager {$manager->user->email}.");
-						continue;
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($manager->user->email)->send($message);

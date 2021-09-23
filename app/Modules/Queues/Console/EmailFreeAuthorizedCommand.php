@@ -92,7 +92,7 @@ class EmailFreeAuthorizedCommand extends Command
 
 		foreach ($group_activity as $groupid => $groupqueueusers)
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->info("Processing group ID #{$groupid}...");
 			}
@@ -135,7 +135,7 @@ class EmailFreeAuthorizedCommand extends Command
 
 					if (!$user || !$user->id || $user->isTrashed())
 					{
-						if ($debug)
+						if ($debug || $this->output->isVerbose())
 						{
 							$this->error('Could not find account for user #' . $userid);
 						}
@@ -191,11 +191,19 @@ class EmailFreeAuthorizedCommand extends Command
 					// Prepare and send actual email
 					$message = new FreeAuthorized($user, $queueusers, $roles[$userid]);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
 						echo $message->render();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
 						$this->info("Emailed freeauthorized to {$user->email}.");
-						continue;
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($user->email)->send($message);
@@ -230,21 +238,29 @@ class EmailFreeAuthorizedCommand extends Command
 
 				foreach ($group->managers as $manager)
 				{
-					// Prepare and send actual email
-					$message = new FreeAuthorizedManager($manager->user, $data);
-
-					if ($debug)
-					{
-						echo $message->render();
-						$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
-						continue;
-					}
-
 					$user = $manager->user;
 
 					if (!$user || !$user->id || $user->isTrashed())
 					{
 						continue;
+					}
+
+					// Prepare and send actual email
+					$message = new FreeAuthorizedManager($manager->user, $data);
+
+					if ($this->output->isDebug())
+					{
+						echo $message->render();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($user->email)->send($message);

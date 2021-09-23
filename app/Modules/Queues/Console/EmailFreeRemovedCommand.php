@@ -59,7 +59,7 @@ class EmailFreeRemovedCommand extends Command
 
 		if (!count($users))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->comment('No records to email.');
 			}
@@ -100,7 +100,7 @@ class EmailFreeRemovedCommand extends Command
 
 				if (!$group)
 				{
-					if ($debug)
+					if ($debug || $this->output->isVerbose())
 					{
 						$this->error('Could not find group #' . $groupid);
 					}
@@ -132,7 +132,7 @@ class EmailFreeRemovedCommand extends Command
 
 					if (!$user)
 					{
-						if ($debug)
+						if ($debug || $this->output->isVerbose())
 						{
 							$this->error('Could not find account for user #' . $userid);
 						}
@@ -241,11 +241,19 @@ class EmailFreeRemovedCommand extends Command
 					// Prepare and send actual email
 					$message = new FreeRemoved($user, $removing, $keeping, $removals[$userid]);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
 						echo $message->render();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
 						$this->info("Emailed freeremoved to {$user->email}.");
-						continue;
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($user->email)->send($message);
@@ -291,11 +299,19 @@ class EmailFreeRemovedCommand extends Command
 					// Prepare and send actual email
 					$message = new FreeRemovedManager($manager->user, $data);
 
-					if ($debug)
+					if ($this->output->isDebug())
 					{
 						echo $message->render();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
 						$this->info("Emailed freeremoved to manager {$manager->user->email}.");
-						continue;
+
+						if ($debug)
+						{
+							continue;
+						}
 					}
 
 					Mail::to($manager->user->email)->send($message);
