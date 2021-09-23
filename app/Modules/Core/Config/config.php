@@ -1,5 +1,7 @@
 <?php
 
 return [
-	'name' => 'Configuration Manager'
+	'name' => 'Configuration Manager',
+
+	'doc_expiration' => 720,
 ];
