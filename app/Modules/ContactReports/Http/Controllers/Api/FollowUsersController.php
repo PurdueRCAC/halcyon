@@ -184,8 +184,8 @@ class FollowUsersController extends Controller
 	 * 						"targetuserid": 2,
 	 * 						"membertype": 10,
 	 * 						"datecreated": "2021-09-01 09:12:01",
-	 * 						"dateremoved": "0000-00-00 00:00:00",
-	 * 						"datelastseen": "0000-00-00 00:00:00",
+	 * 						"dateremoved": null,
+	 * 						"datelastseen": null,
 	 * 						"api": "https://example.org/api/contactreports/followusers/1"
 	 * 					}
 	 * 				}
@@ -253,8 +253,8 @@ class FollowUsersController extends Controller
 	 * 						"targetuserid": 2,
 	 * 						"membertype": 10,
 	 * 						"datecreated": "2021-09-01 09:12:01",
-	 * 						"dateremoved": "0000-00-00 00:00:00",
-	 * 						"datelastseen": "0000-00-00 00:00:00",
+	 * 						"dateremoved": null,
+	 * 						"datelastseen": null,
 	 * 						"api": "https://example.org/api/contactreports/followusers/1"
 	 * 					}
 	 * 				}
@@ -318,8 +318,8 @@ class FollowUsersController extends Controller
 	 * 						"targetuserid": 2,
 	 * 						"membertype": 10,
 	 * 						"datecreated": "2021-09-01 09:12:01",
-	 * 						"dateremoved": "0000-00-00 00:00:00",
-	 * 						"datelastseen": "0000-00-00 00:00:00",
+	 * 						"dateremoved": null,
+	 * 						"datelastseen": null,
 	 * 						"api": "https://example.org/api/contactreports/followusers/1"
 	 * 					}
 	 * 				}

@@ -186,7 +186,7 @@ app('pathway')
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->datetimecontact && $row->datetimecontact != '0000-00-00 00:00:00' && $row->datetimecontact != '-0001-11-30 00:00:00')
+						@if ($row->datetimecontact)
 							<time datetime="{{ $row->datetimecontact->format('Y-m-d\TH:i:s\Z') }}">
 								@if ($row->datetimecontact->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
 									{{ $row->datetimecontact->diffForHumans() }}

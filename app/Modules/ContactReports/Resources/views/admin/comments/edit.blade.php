@@ -60,7 +60,7 @@ app('request')->merge(['hidemainmenu' => 1]);
 							<input type="hidden" name="fields[contactreportid]" id="field-contactreportid" value="{{ $row->contactreportid }}" />
 						</td>
 					</tr>
-					<?php if ($row->id): ?>
+					@if ($row->id)
 						<tr>
 							<th scope="row">{{ trans('contactreports::contactreports.id') }}:</th>
 							<td>
@@ -71,14 +71,14 @@ app('request')->merge(['hidemainmenu' => 1]);
 						<tr>
 							<th scope="row">{{ trans('contactreports::contactreports.created') }}:</th>
 							<td>
-								<?php if ($row->getOriginal('datetimecreated') && $row->getOriginal('datetimecreated') != '0000-00-00 00:00:00'): ?>
+								@if ($row->datetimecreated)
 									{{ $row->datetimecreated }}
-								<?php else: ?>
+								@else
 									{{ trans('global.unknown') }}
-								<?php endif; ?>
+								@endif
 							</td>
 						</tr>
-					<?php endif; ?>
+					@endif
 				</tbody>
 			</table>
 		</div>

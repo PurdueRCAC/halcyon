@@ -90,7 +90,7 @@
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->datetimecreated && $row->datetimecreated != '0000-00-00 00:00:00')
+						@if ($row->datetimecreated)
 							<time datetime="{{ $row->datetimecreated }}">{{ $row->datetimecreated }}</time>
 						@else
 							<span class="never">{{ trans('global.unknown') }}</span>

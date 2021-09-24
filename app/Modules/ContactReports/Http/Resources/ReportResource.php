@@ -43,18 +43,7 @@ class ReportResource extends JsonResource
 		$data['type'] = $this->type;
 		//$data['type']->api = route('api.contactreports.types.read', ['id' => $this->contactreporttypeid]);
 		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
-		/*$data['users'] = $this->users->each(function ($res, $key)
-		{
-			if ($res->user)
-			{
-				$res->user->api = route('api.users.read', ['id' => $res->id]);
-			}
-			$res->name = $res->user ? $res->user->name : trans('global.unknown');
-			if (!$res->notified())
-			{
-				$res->datetimelastnotify = null;
-			}
-		});*/
+
 		$data['users'] = array();
 		foreach ($this->users as $res)
 		{
@@ -64,10 +53,6 @@ class ReportResource extends JsonResource
 			if ($res->user)
 			{
 				$item['name'] = $res->user->name;
-			}
-			if (!$res->notified())
-			{
-				$item['datetimelastnotify'] = null;
 			}
 
 			$data['users'][] = $item;
@@ -98,13 +83,6 @@ class ReportResource extends JsonResource
 
 		$data['tags'] = $this->tags;
 		$data['age'] = Carbon::now()->timestamp - $this->datetimecreated->timestamp;
-
-		if (!($this->datetimegroupid
-		 && $this->datetimegroupid != '0000-00-00 00:00:00'
-		 && $this->datetimegroupid != '-0001-11-30 00:00:00'))
-		{
-			$data['datetimegroupid'] = null;
-		}
 
 		$data['api'] = route('api.contactreports.read', ['id' => $this->id]);
 		$data['url'] = route('site.contactreports.show', ['id' => $this->id]);

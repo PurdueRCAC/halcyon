@@ -5,13 +5,13 @@ namespace App\Modules\ContactReports\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
+use App\Halcyon\Utility\PorterStemmer;
+use App\Halcyon\Access\Map;
 use App\Modules\Tags\Traits\Taggable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\ContactReports\Events\ReportPrepareContent;
-use Carbon\Carbon;
-use App\Halcyon\Utility\PorterStemmer;
 use App\Modules\Users\Models\User as SystemUser;
-use App\Halcyon\Access\Map;
+use Carbon\Carbon;
 
 /**
  * Contact report
@@ -190,16 +190,6 @@ class Report extends Model
 	public function users()
 	{
 		return $this->hasMany(__NAMESPACE__ . '\\User', 'contactreportid');
-	}
-
-	/**
-	 * Defines a relationship to stemmedtext
-	 *
-	 * @return  object
-	 */
-	public function stemmedtext()
-	{
-		return $this->hasOne(Stem::class, 'contactreportid');
 	}
 
 	/**
@@ -400,7 +390,6 @@ class Report extends Model
 		{
 			if (!$comment->delete($options))
 			{
-				$this->addError($comment->getError());
 				return false;
 			}
 		}
@@ -409,7 +398,6 @@ class Report extends Model
 		{
 			if (!$resource->delete($options))
 			{
-				$this->addError($resource->getError());
 				return false;
 			}
 		}
@@ -418,16 +406,6 @@ class Report extends Model
 		{
 			if (!$user->delete($options))
 			{
-				$this->addError($user->getError());
-				return false;
-			}
-		}
-
-		if ($stemmedtext = $this->stemmedtext)
-		{
-			if (!$this->stemmedtext->delete($options))
-			{
-				$this->addError($stemmedtext->getError());
 				return false;
 			}
 		}
@@ -440,7 +418,6 @@ class Report extends Model
 	 * Format news date
 	 *
 	 * @param   string  $startdate
-	 * @param   string  $enddate
 	 * @return  string
 	 */
 	public function formatDate($startdate)
@@ -498,7 +475,7 @@ class Report extends Model
 			{
 				if ($var == 'datetime' || $var == 'date')
 				{
-					if ($this->datetimecreated != '0000-00-00 00:00:00')
+					if ($this->datetimecreated)
 					{
 						$vars[$var] = preg_replace("/&nbsp;/", ' at ', $this->formatDate($this->datetimecreated->format('Y-m-d') . ' 00:00:00'));
 					}
@@ -506,7 +483,7 @@ class Report extends Model
 
 				if ($var == 'time')
 				{
-					if ($this->datetimecreated != '0000-00-00 00:00:00')
+					if ($this->datetimecreated)
 					{
 						$vars[$var] = $this->datetimecreated->format('g:ia');
 					}
@@ -747,25 +724,20 @@ class Report extends Model
 		return implode(',', $clean_arr);
 	}*/
 
+	/**
+	 * Taggable namespace
+	 */
 	static $entityNamespace = 'crm';
 
+	/**
+	 * Find all hashtags in the report
+	 *
+	 * @return  array
+	 */
 	public function getHashtagsAttribute()
 	{
 		$str = $this->report;
 
-		/*$expression = "/(^|[^a-z0-9_])#([a-z0-9_]+)/";
-		$str = preg_replace_callback($expression, function($matches)
-		{
-			$tag = \App\Modules\Tags\Models\Tag::findByTag($matches[1]);
-
-			if (!$tag)
-			{
-				$tag = new \App\Modules\Tags\Models\Tag;
-				$tag->tag = $matches[1];
-				$tag->save();
-			}
-
-		}, $str);*/
 		preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $str, $matches);
 
 		$hashtag = [];

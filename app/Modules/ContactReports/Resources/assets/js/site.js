@@ -1522,8 +1522,9 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 			a.href = "admin/users/" + report.users[x]['userid'];
 			a.innerHTML = report.users[x]['name'];
 
-			if (report.users[x]['datetimelastnotify'] != '0000-00-00 00:00:00'
-				&& report.users[x]['datetimelastnotify'] != '-000001-11-30T05:00:00.000000Z') {
+			if (report.users[x]['datetimelastnotify']
+			 && report.users[x]['datetimelastnotify'] != '0000-00-00 00:00:00'
+			 && report.users[x]['datetimelastnotify'] != '-000001-11-30T05:00:00.000000Z') {
 				a.innerHTML = a.innerHTML + ' <span class="fa fa-envelope" aria-hidden="true" title="Follow up email sent ' + report.users[x]['datetimelastnotify'] + '"></span>';
 			}
 
