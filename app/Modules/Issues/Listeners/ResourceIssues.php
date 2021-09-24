@@ -43,8 +43,6 @@ class ResourceIssues
 			->select($i . '.*')
 			->withCount('comments')
 			->join($r, $r . '.issueid', $i . '.id')
-			->withTrashed()
-			->whereIsActive()
 			->where($r . '.resourceid', '=', $event->getAsset()->id)
 			->orderBy('id', 'desc')
 			->paginate();

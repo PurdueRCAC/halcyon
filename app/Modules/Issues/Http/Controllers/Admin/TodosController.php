@@ -48,9 +48,7 @@ class TodosController extends Controller
 			$filters['order_dir'] = ToDo::$orderDir;
 		}
 
-		$query = ToDo::query()
-			->withTrashed()
-			->whereIsActive();
+		$query = ToDo::query();
 
 		if ($filters['search'])
 		{

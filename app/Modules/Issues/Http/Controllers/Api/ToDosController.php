@@ -119,9 +119,7 @@ class ToDosController extends Controller
 			$filters['order_dir'] = ToDo::$orderDir;
 		}
 
-		$query = ToDo::query()
-			->withTrashed()
-			->whereIsActive();
+		$query = ToDo::query();
 
 		if ($filters['search'])
 		{
@@ -148,10 +146,6 @@ class ToDosController extends Controller
 
 		$rows->each(function($item, $key)
 		{
-			if (!$item->isTrashed())
-			{
-				$item->datetimeremoved = null;
-			}
 			$item->api = route('api.issues.todos.read', ['id' => $item->id]);
 		});
 
@@ -241,7 +235,6 @@ class ToDosController extends Controller
 		}
 
 		$row->api = route('api.issues.todos.read', ['id' => $row->id]);
-		$row->datetimeremoved = null;
 
 		return new JsonResource($row);
 	}
@@ -268,11 +261,6 @@ class ToDosController extends Controller
 		$row = ToDo::findOrFail((int)$id);
 
 		$row->api = route('api.issues.todos.read', ['id' => $row->id]);
-
-		if (!$row->isTrashed())
-		{
-			$row->datetimeremoved = null;
-		}
 
 		return new JsonResource($row);
 	}
@@ -361,11 +349,6 @@ class ToDosController extends Controller
 		}
 
 		$row->api = route('api.issues.todos.read', ['id' => $row->id]);
-
-		if (!$row->isTrashed())
-		{
-			$row->datetimeremoved = null;
-		}
 
 		return new JsonResource($row);
 	}

@@ -131,9 +131,7 @@ class CommentsController extends Controller
 			$filters['order_dir'] = Comment::$orderDir;
 		}
 
-		$query = Comment::query()
-			->withTrashed()
-			->whereIsActive();
+		$query = Comment::query();
 
 		if ($filters['issueid'])
 		{

@@ -35,11 +35,6 @@ class IssueResource extends JsonResource
 		});
 		$data['age'] = Carbon::now()->timestamp - $this->datetimecreated->timestamp;
 
-		if (!$this->isTrashed())
-		{
-			$data['datetimeremoved'] = null;
-		}
-
 		$data['api'] = route('api.issues.read', ['id' => $this->id]);
 		$data['url'] = route('site.issues.show', ['id' => $this->id]);
 

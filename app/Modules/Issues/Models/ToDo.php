@@ -9,7 +9,7 @@ use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Halcyon\Models\Timeperiod;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
+//use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Issues\Events\ReportPrepareContent;
 use App\Modules\Users\Models\User;
 use Carbon\Carbon;
@@ -19,7 +19,7 @@ use Carbon\Carbon;
  */
 class ToDo extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
+	use ErrorBag, Validatable, Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -197,8 +197,6 @@ class ToDo extends Model
 				}
 
 				$issue = $this->issues()
-					->withTrashed()
-					->whereIsActive()
 					->where('datetimecreated', '>=', $period)
 					->first();
 

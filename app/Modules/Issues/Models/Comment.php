@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
+//use App\Modules\Core\Traits\LegacyTrash;
 use App\Halcyon\Utility\PorterStemmer;
 
 /**
@@ -15,7 +15,7 @@ use App\Halcyon\Utility\PorterStemmer;
  */
 class Comment extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
+	use ErrorBag, Validatable, Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -123,67 +123,15 @@ class Comment extends Model
 	 */
 	public function getFormattedDateAttribute()
 	{
-		$startdate = $this->getOriginal('datetimecreated');
-		$enddate = '0000-00-00 00:00:00';
-
-		$datestring = '';
+		$startdate = $this->datetimecreated->format('Y-m-d h:i:s');
 
 		$starttime = explode(' ', $startdate);
 		$starttime = $starttime[1];
 
-		$endtime = explode(' ', $enddate);
-		$endtime = $endtime[1];
-
-		$startyear  = date("Y", strtotime($startdate));
-		$startmonth = date("F", strtotime($startdate));
-		$startday   = date("j", strtotime($startdate));
-
-		$endyear    = date("Y", strtotime($enddate));
-		$endmonth   = date("F", strtotime($enddate));
-		$endday     = date("j", strtotime($enddate));
-
-		if ($enddate == '0000-00-00 00:00:00' || $startdate == $enddate)
+		$datestring = $this->datetimecreated->format('F j, Y');
+		if ($starttime != '00:00:00')
 		{
-			$datestring = date("F j, Y", strtotime($startdate));
-			if ($starttime != '00:00:00')
-			{
-				$datestring .= '&nbsp; ' . date("g:ia", strtotime($startdate));
-			}
-		}
-		else
-		{
-			if ($starttime == '00:00:00' && $endtime == '00:00:00')
-			{
-				$endtime   = '';
-				$starttime = '';
-			}
-			else
-			{
-				$starttime = date("g:ia", strtotime($startdate));
-				$endtime   = date("g:ia", strtotime($enddate));
-			}
-
-			if ($startmonth == $endmonth && $startyear == $endyear && $starttime == '' && $endtime == '')
-			{
-				$datestring = $startmonth . ' ' . $startday . ' - ' . $endday . ', ' . $endyear;
-			}
-			elseif ($startmonth == $endmonth && $startyear == $endyear && $startday == $endday && $starttime != $endtime)
-			{
-				$datestring = $startmonth . ' ' . $startday . ', ' . $startyear . ' ' . $starttime . ' - ' . $endtime;
-			}
-			else
-			{
-				if ($starttime != '')
-				{
-					$starttime = ' ' . $starttime;
-				}
-				if ($endtime != '')
-				{
-					$endtime = ' ' . $endtime;
-				}
-				$datestring  = $startmonth . ' ' . $startday . ', ' . $startyear . ' ' . $starttime . ' - ';
-				$datestring .= $endmonth . ' ' . $endday . ', ' . $endyear . ' ' . $endtime;
-			}
+			$datestring .= ' ' . $this->datetimecreated->format('g:ia');
 		}
 
 		return $datestring;

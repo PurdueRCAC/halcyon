@@ -124,9 +124,7 @@ class IssuesController extends Controller
 			$filters['order_dir'] = Issue::$orderDir;
 		}
 
-		$query = Issue::query()
-			->withTrashed()
-			->whereIsActive();
+		$query = Issue::query();
 
 		$cr = (new Issue)->getTable();
 

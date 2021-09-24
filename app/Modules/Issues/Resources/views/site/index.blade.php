@@ -368,7 +368,6 @@ if ($issue)
 		}
 	</script>
 	<?php
-
 }
 ?>
 </div>

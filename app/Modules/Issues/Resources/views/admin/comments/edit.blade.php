@@ -73,7 +73,7 @@ app('pathway')
 							<input type="hidden" name="fields[contactreportid]" id="field-contactreportid" value="{{ $row->contactreportid }}" />
 						</td>
 					</tr>
-					<?php if ($row->id): ?>
+					@if ($row->id)
 						<tr>
 							<th scope="row">{{ trans('issues::issues.id') }}:</th>
 							<td>
@@ -84,14 +84,14 @@ app('pathway')
 						<tr>
 							<th scope="row">{{ trans('issues::issues.created') }}:</th>
 							<td>
-								<?php if ($row->getOriginal('datetimecreated') && $row->getOriginal('datetimecreated') != '0000-00-00 00:00:00'): ?>
-									{{ $row->datetimecreated }}
-								<?php else: ?>
+								@if ($row->datetimecreated)
+									{{ $row->datetimecreated->format('Y-m-d h:i:s') }}
+								@else
 									{{ trans('global.unknown') }}
-								<?php endif; ?>
+								@endif
 							</td>
 						</tr>
-					<?php endif; ?>
+					@endif
 				</tbody>
 			</table>
 
@@ -108,7 +108,7 @@ app('pathway')
 								$actor = e($history->user->name);
 							endif;
 
-							$created = $history->created_at && $history->created_at != '0000-00-00 00:00:00'
+							$created = $history->created_at
 								? $history->created_at
 								: trans('global.unknown');
 							?>

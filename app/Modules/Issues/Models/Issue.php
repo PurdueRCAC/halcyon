@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
+//use App\Modules\Core\Traits\LegacyTrash;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Modules\Issues\Events\IssuePrepareContent;
 use App\Modules\Users\Models\User;
@@ -18,7 +18,7 @@ use App\Modules\Tags\Traits\Taggable;
  */
 class Issue extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash, Taggable;
+	use ErrorBag, Validatable, Historable, SoftDeletes, Taggable;
 
 	/**
 	 * The name of the "created at" column.
@@ -380,10 +380,6 @@ class Issue extends Model
 		$starttime = explode(' ', $startdate);
 		$starttime = $starttime[1];
 
-		$startyear  = date("Y", strtotime($startdate));
-		$startmonth = date("F", strtotime($startdate));
-		$startday   = date("j", strtotime($startdate));
-
 		$datestring = date("F j, Y", strtotime($startdate));
 		if ($starttime != '00:00:00')
 		{
@@ -417,7 +413,7 @@ class Issue extends Model
 		{
 			if ($var == 'datetime' || $var == 'date')
 			{
-				if ($this->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
+				if ($this->datetimecreated)
 				{
 					$vars[$var] = preg_replace("/&nbsp;/", ' at ', $this->formatDate($this->datetimecreated->format('Y-m-d') . ' 00:00:00'));
 				}
@@ -425,7 +421,7 @@ class Issue extends Model
 
 			if ($var == 'time')
 			{
-				if ($this->getOriginal('datetimecreated') != '0000-00-00 00:00:00')
+				if ($this->datetimecreated)
 				{
 					$vars[$var] = $this->datetimecreated->format('g:ia');
 				}

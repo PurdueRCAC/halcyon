@@ -24,11 +24,6 @@ class CommentResource extends JsonResource
 
 		unset($data['report']);
 
-		if (!$this->isTrashed())
-		{
-			$data['datetimeremoved'] = null;
-		}
-
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
 

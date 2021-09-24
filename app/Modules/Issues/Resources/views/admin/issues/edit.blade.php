@@ -99,7 +99,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 
 					<ul id="comments" class="comments">
 					<?php
-					$comments = $row->comments()->whereIsActive()->orderBy('datetimecreated', 'asc')->get();
+					$comments = $row->comments()->orderBy('datetimecreated', 'asc')->get();
 
 					if (count($comments) > 0):
 						?>

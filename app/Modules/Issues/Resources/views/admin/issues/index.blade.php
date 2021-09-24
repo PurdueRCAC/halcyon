@@ -183,7 +183,7 @@ app('pathway')
 						<div class="text-muted ml-4">
 							<span class="fa fa-calendar" aria-hidden="true"></span>
 							@if ($row->datetimecreated)
-								<time datetime="{{ $row->datetimecreated }}">
+								<time datetime="{{ $row->datetimecreated->format('Y-m-dTh:i:s') }}">
 									@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
 										{{ $row->datetimecreated->diffForHumans() }}
 									@else
@@ -254,7 +254,7 @@ app('pathway')
 			</div>
 
 			<?php
-			$comments = $row->comments()->whereIsActive()->orderBy('datetimecreated', 'asc')->get();
+			$comments = $row->comments()->orderBy('datetimecreated', 'asc')->get();
 
 			if (count($comments) > 0):
 				?>
@@ -267,7 +267,7 @@ app('pathway')
 								<div class="d-flex text-muted">
 									<div class="mr-4">
 										<span class="fa fa-calendar" aria-hidden="true"></span>
-										<time datetime="{{ $comment->datetimecreated }}">
+										<time datetime="{{ $comment->datetimecreated->format('Y-m-dTh:i:s') }}">
 											{{ $comment->datetimecreated->format('M d, Y') }} @ {{ $comment->datetimecreated->format('h:i a') }}
 										</time>
 									</div>

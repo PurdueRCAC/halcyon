@@ -83,8 +83,6 @@ class IssuesController extends Controller
 		}
 
 		$todos = ToDo::query()
-			->withTrashed()
-			->whereIsActive()
 			->get();
 
 		return view('issues::site.index', [
