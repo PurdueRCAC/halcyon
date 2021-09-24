@@ -38,17 +38,6 @@ class CreateContactReportsTables extends Migration
 			DB::statement('ALTER TABLE contactreports ADD FULLTEXT (stemmedreport)');
 		}
 
-		if (!Schema::hasTable('contactreportstems'))
-		{
-			Schema::create('contactreportstems', function (Blueprint $table)
-			{
-				$table->increments('id');
-				$table->string('stemmedtext', 12000);
-			});
-
-			DB::statement('ALTER TABLE contactreportstems ADD FULLTEXT (stemmedtext)');
-		}
-
 		if (!Schema::hasTable('contactreportusers'))
 		{
 			Schema::create('contactreportusers', function (Blueprint $table)
@@ -145,7 +134,6 @@ class CreateContactReportsTables extends Migration
 	{
 		$tables = array(
 			'contactreports',
-			'contactreportstems',
 			'contactreportusers',
 			'contactreportcomments',
 			'contactreportresources',
