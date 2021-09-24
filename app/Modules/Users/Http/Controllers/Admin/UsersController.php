@@ -408,8 +408,11 @@ class UsersController extends Controller
 			}
 
 			$user->newroles = array($newUsertype);
-
-			$user->created_at = Carbon::now()->toDateTimeString();
+			$user->api_token = Str::random(60);
+		}
+		if (!$user->puid)
+		{
+			$user->puid = 0;
 		}
 
 		// Can't block yourself
@@ -455,6 +458,10 @@ class UsersController extends Controller
 		$username = $id ? $user->getUserUsername() : new UserUsername();
 		$username->userid = $user->id;
 		$username->fill($ufields);
+		if (!$id)
+		{
+			$username->datecreated = Carbon::now()->toDateTimeString();
+		}
 		$username->save();
 
 		if ($request->has('facet'))
