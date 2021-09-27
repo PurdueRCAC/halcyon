@@ -211,7 +211,7 @@ class RenewCommand extends Command
 			}
 
 			// Create record
-			$order = Order::find($orderid);
+			$order = Order::find($recentaccounts); //$orderid);
 			if (!$order)
 			{
 				if ($debug || $this->output->isVerbose())
@@ -301,7 +301,7 @@ class RenewCommand extends Command
 					$account->purchaseorder       = $a['purchaseorder'];
 					$account->purchaseio          = $a['purchaseio'];
 					$account->purchasewbse        = $a['purchasewbse'];
-					$account->budgetjustification = '';
+					$account->budgetjustification = $a['budgetjustification'];
 					//$account->approveruserid      = $a['approveruserid'];
 					$account->orderid = $row->id;
 
