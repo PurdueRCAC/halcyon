@@ -57,8 +57,6 @@ class SyncCommand extends Command
 		$errors = array();
 
 		$classdata = Account::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('datetimestop', '>', Carbon::now()->toDateTimeString())
 			->where('userid', '>', 0)
 			->get();
@@ -152,8 +150,6 @@ class SyncCommand extends Command
 
 				// Create a local entry, if one doesn't already exist
 				$member = Member::query()
-					->withTrashed()
-					->whereIsActive()
 					->where('classaccountid', '=', $course->id)
 					->where('userid', '=', $user->id)
 					->first();
@@ -214,7 +210,7 @@ class SyncCommand extends Command
 			// Add instructor starting now
 			$users[] = $row->user ? $row->user->username : $row->userid;
 
-			foreach ($row->members()->withTrashed()->whereIsActive()->get() as $extra)
+			foreach ($row->members as $extra)
 			{
 				$users[] = $extra->user ? $extra->user->username : $extra->userid;
 			}

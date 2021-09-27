@@ -265,10 +265,10 @@ app('pathway')
 				<td class="priority-2 text-right">
 					@if (auth()->user()->can('edit courses'))
 						<a href="{{ route('admin.courses.members', ['account' => $row->id]) }}">
-							{{ $row->studentcount ? $row->studentcount : $row->members()->withTrashed()->whereIsActive()->where('datetimestop', '>', $now)->count() }}
+							{{ $row->studentcount ? $row->studentcount : $row->members()->where('datetimestop', '>', $now)->count() }}
 						</a>
 					@else
-						{{ $row->studentcount ? $row->studentcount : $row->members()->withTrashed()->whereIsActive()->where('datetimestop', '>', $now)->count() }}
+						{{ $row->studentcount ? $row->studentcount : $row->members()->where('datetimestop', '>', $now)->count() }}
 					@endif
 				</td>
 			</tr>

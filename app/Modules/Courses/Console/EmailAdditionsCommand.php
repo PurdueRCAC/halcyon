@@ -35,8 +35,6 @@ class EmailAdditionsCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 
 		$members = Member::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('notice', '=', 1)
 			->orderBy('id', 'asc')
 			->get();

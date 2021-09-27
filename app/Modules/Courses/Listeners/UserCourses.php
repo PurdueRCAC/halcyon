@@ -33,9 +33,7 @@ class UserCourses
 		$user = $event->getUser();
 
 		$accounts = Account::query()
-			->withTrashed()
 			->where('userid', '=', $user->id)
-			->whereIsActive()
 			->where('datetimestop', '>', Carbon::now()->toDateTimeString())
 			->orderBy('classname', 'asc')
 			->get();
@@ -44,8 +42,6 @@ class UserCourses
 		{
 			$account->api = route('api.courses.read', ['id' => $account->id]);
 			$account->users = $account->members()
-				->withTrashed()
-				->whereIsActive()
 				->get();
 		}
 

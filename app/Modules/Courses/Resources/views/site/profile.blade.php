@@ -142,7 +142,7 @@
 										{{ ' / --' }}
 									@endif
 								@else
-									{{ ($class->studentcount ? $class->studentcount : $class->members()->withTrashed()->whereIsActive()->count()) . ' / --' }}
+									{{ ($class->studentcount ? $class->studentcount : $class->members()->count()) . ' / --' }}
 								@endif
 								</a>
 							</td>
@@ -202,8 +202,6 @@
 										$members = $class->members()
 											->select($m . '.*')
 											->leftJoin($u, $u . '.userid', $m . '.userid')
-											->withTrashed()
-											->whereIsActive()
 											->where('membertype', '>=', 0)
 											->orderBy($m . '.membertype', 'desc')
 											->orderBy($u . '.username', 'asc')
@@ -403,8 +401,6 @@
 
 								<?php
 								$members = $class->members()
-									->withTrashed()
-									->whereIsActive()
 									->where('membertype', '>', 0)
 									->get();
 
@@ -442,8 +438,6 @@
 								<ul id="class_students_{{ $class->crn }}" class="student-list hide">
 									<?php
 									$members = $class->members()
-										->withTrashed()
-										->whereIsActive()
 										->where('membertype', '=', 0)
 										->get();
 

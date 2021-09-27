@@ -78,17 +78,12 @@ class AccountsController extends Controller
 			$query->where(function ($where)
 				{
 					$where->whereNull('datetimestop')
-						->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
 						->orWhere('datetimestop', '>', Carbon::now()->toDateTimeString());
 				});
 		}
 		elseif ($filters['state'] == 'inactive')
 		{
-			$query->where(function ($where)
-				{
-					$where->whereNotNull('datetimestop')
-						->where('datetimestop', '!=', '0000-00-00 00:00:00');
-				});
+			$query->whereNotNull('datetimestop');
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
@@ -247,11 +242,6 @@ class AccountsController extends Controller
 			$exist = Account::query()
 				->where('crn', '=', $row->crn)
 				->where('semester', '=', $row->semester)
-				->where(function ($where)
-				{
-					$where->whereNull('datetimeremoved')
-						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
 				->get()
 				->first();
 

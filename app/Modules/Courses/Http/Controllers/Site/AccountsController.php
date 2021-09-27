@@ -58,8 +58,6 @@ class AccountsController extends Controller
 			$members = $class->members()
 				->select($m . '.*')
 				->leftJoin($u, $u . '.userid', $m . '.userid')
-				->withTrashed()
-				->whereIsActive()
 				->where('membertype', '>=', 0)
 				->orderBy($m . '.membertype', 'desc')
 				->orderBy($u . '.username', 'asc')

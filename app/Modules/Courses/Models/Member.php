@@ -5,7 +5,6 @@ namespace App\Modules\Courses\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Courses\Events\MemberCreating;
 use App\Modules\Courses\Events\MemberCreated;
 use App\Modules\Courses\Events\MemberUpdating;
@@ -18,7 +17,7 @@ use Carbon\Carbon;
  */
 class Member extends Model
 {
-	use SoftDeletes, LegacyTrash, Historable;
+	use SoftDeletes, Historable;
 
 	/**
 	 * The name of the "created at" column.
@@ -179,14 +178,8 @@ class Member extends Model
 	public static function findByAccountAndUser($classaccountid, $userid)
 	{
 		return self::query()
-			->withTrashed()
 			->where('classaccountid', '=', $classaccountid)
 			->where('userid', '=', $userid)
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->first();
 	}
 }

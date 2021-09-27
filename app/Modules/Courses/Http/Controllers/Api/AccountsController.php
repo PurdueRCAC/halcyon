@@ -197,9 +197,7 @@ class AccountsController extends Controller
 			$filters['order_dir'] = Account::$orderDir;
 		}
 
-		$query = Account::query()
-			->withTrashed()
-			->whereIsActive();
+		$query = Account::query();
 
 		if ($filters['search'])
 		{
@@ -475,8 +473,6 @@ class AccountsController extends Controller
 			$exist = Account::query()
 				->where('crn', '=', $row->crn)
 				->where('semester', '=', $row->semester)
-				->withTrashed()
-				->whereIsActive()
 				->get()
 				->first();
 

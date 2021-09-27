@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Resources\Models\Asset;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Courses\Events\AccountCreating;
 use App\Modules\Courses\Events\AccountCreated;
 use App\Modules\Courses\Events\AccountUpdating;
@@ -19,7 +18,7 @@ use Carbon\Carbon;
  */
 class Account extends Model
 {
-	use SoftDeletes, LegacyTrash, Historable;
+	use SoftDeletes, Historable;
 
 	/**
 	 * The name of the "created at" column.
