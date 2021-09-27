@@ -397,10 +397,10 @@ class SyncCommand extends Command
 				error_log($msg);
 			}
 
-			if ($debug)
-			{
+			//if ($debug)
+			//{
 				continue;
-			}
+			//}
 
 			$u = User::findByUsername($user);
 
