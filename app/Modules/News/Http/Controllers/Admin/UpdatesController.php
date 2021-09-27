@@ -69,19 +69,11 @@ class UpdatesController extends Controller
 
 		if ($filters['state'] == 'published')
 		{
-			$query->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			});
+			$query->whereNull('datetimeremoved');
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->where(function($where)
-			{
-				$where->whereNotNull('datetimeremoved')
-					->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
-			});
+			$query->whereNotNull('datetimeremoved');
 		}
 
 		$rows = $query

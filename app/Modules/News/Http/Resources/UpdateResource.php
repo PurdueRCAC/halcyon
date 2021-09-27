@@ -24,15 +24,6 @@ class UpdateResource extends JsonResource
 
 		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
 
-		if (!$this->isTrashed())
-		{
-			$data['datetimeremoved'] = null;
-		}
-		if (!$this->isModified())
-		{
-			$data['datetimeedited'] = null;
-		}
-
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
 

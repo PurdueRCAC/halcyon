@@ -294,6 +294,7 @@ class Article extends Model
 					if (isset($item->old->datetimenewsend)
 					 && isset($item->new->datetimenewsend)
 					 && $item->old->datetimenewsend != $item->new->datetimenewsend
+					 && $item->old->datetimenewsend != null
 					 && $item->old->datetimenewsend != '0000-00-00 00:00:00')
 					{
 						$dt = Carbon::parse($item->old->datetimenewsend);
@@ -853,7 +854,7 @@ class Article extends Model
 			}
 		}
 
-		//if ($this->isTrashed())
+		//if ($this->trashed())
 		//{
 			foreach ($this->resources as $resource)
 			{
@@ -880,7 +881,7 @@ class Article extends Model
 	 * @param   string  $enddate
 	 * @return  string
 	 */
-	public function formatDate($startdate, $enddate='0000-00-00 00:00:00')
+	public function formatDate($startdate, $enddate=null)
 	{
 		if (!$startdate || $startdate == '0000-00-00 00:00:00')
 		{
@@ -888,7 +889,7 @@ class Article extends Model
 		}
 		if (!$enddate)
 		{
-			$enddate = $startdate; //'0000-00-00 00:00:00';
+			$enddate = $startdate;
 		}
 		$datestring = '';
 
@@ -901,13 +902,13 @@ class Article extends Model
 		$startdate = Carbon::parse($startdate);
 		$enddate = Carbon::parse($enddate);
 
-		$startyear  = $startdate->format('Y'); //date("Y", strtotime($startdate));
-		$startmonth = $startdate->format('F'); //date("F", strtotime($startdate));
-		$startday   = $startdate->format('j'); //date("j", strtotime($startdate));
+		$startyear  = $startdate->format('Y');
+		$startmonth = $startdate->format('F');
+		$startday   = $startdate->format('j');
 
-		$endyear    = $enddate->format('Y'); //date("Y", strtotime($enddate));
-		$endmonth   = $enddate->format('F'); //date("F", strtotime($enddate));
-		$endday     = $enddate->format('j'); //date("j", strtotime($enddate));
+		$endyear    = $enddate->format('Y');
+		$endmonth   = $enddate->format('F');
+		$endday     = $enddate->format('j');
 
 		if ($enddate == '-0001-11-30 00:00:00'
 		 || $enddate == '0000-00-00 00:00:00'
@@ -915,10 +916,10 @@ class Article extends Model
 		{
 			//$startdate = Carbon::parse($startdate);
 
-			$datestring = $startdate->format('F j, Y'); //date("F j, Y", strtotime($startdate));
+			$datestring = $startdate->format('F j, Y');
 			if ($starttime != '00:00:00')
 			{
-				$datestring .= ' ' . $startdate->format('g:ia') . ' ' . $startdate->format('T'); //date("g:ia", strtotime($startdate));
+				$datestring .= ' ' . $startdate->format('g:ia') . ' ' . $startdate->format('T');
 			}
 		}
 		else
@@ -933,8 +934,8 @@ class Article extends Model
 			}
 			else
 			{
-				$starttime = $startdate->format('g:ia'); //date("g:ia", strtotime($startdate));
-				$endtime   = $enddate->format('g:ia') . ' ' . $enddate->format('T'); //date("g:ia", strtotime($enddate));
+				$starttime = $startdate->format('g:ia');
+				$endtime   = $enddate->format('g:ia') . ' ' . $enddate->format('T');
 			}
 
 			if ($startmonth == $endmonth && $startyear == $endyear && !$starttime && !$endtime)

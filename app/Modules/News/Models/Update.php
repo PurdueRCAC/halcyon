@@ -143,69 +143,15 @@ class Update extends Model
 	 *
 	 * @return  string
 	 */
-	public function formattedDatetimecreated($datetimecreated)
+	public function formattedDatetimecreated($startdate)
 	{
-		$startdate = $datetimecreated;
-		$enddate = '0000-00-00 00:00:00';
-
-		$datestring = '';
-
 		$starttime = explode(' ', $startdate);
 		$starttime = $starttime[1];
 
-		$endtime = explode(' ', $enddate);
-		$endtime = $endtime[1];
-
-		$startyear  = date("Y", strtotime($startdate));
-		$startmonth = date("F", strtotime($startdate));
-		$startday   = date("j", strtotime($startdate));
-
-		$endyear    = date("Y", strtotime($enddate));
-		$endmonth   = date("F", strtotime($enddate));
-		$endday     = date("j", strtotime($enddate));
-
-		if ($enddate == '0000-00-00 00:00:00' || $startdate == $enddate)
+		$datestring = date("F j, Y", strtotime($startdate));
+		if ($starttime != '00:00:00')
 		{
-			$datestring = date("F j, Y", strtotime($startdate));
-			if ($starttime != '00:00:00')
-			{
-				$datestring .= '&nbsp; ' . date("g:ia", strtotime($startdate));
-			}
-		}
-		else
-		{
-			if ($starttime == '00:00:00' && $endtime == '00:00:00')
-			{
-				$endtime   = '';
-				$starttime = '';
-			}
-			else
-			{
-				$starttime = date("g:ia", strtotime($startdate));
-				$endtime   = date("g:ia", strtotime($enddate));
-			}
-
-			if ($startmonth == $endmonth && $startyear == $endyear && $starttime == '' && $endtime == '')
-			{
-				$datestring = $startmonth . ' ' . $startday . ' - ' . $endday . ', ' . $endyear;
-			}
-			elseif ($startmonth == $endmonth && $startyear == $endyear && $startday == $endday && $starttime != $endtime)
-			{
-				$datestring = $startmonth . ' ' . $startday . ', ' . $startyear . ' ' . $starttime . ' - ' . $endtime;
-			}
-			else
-			{
-				if ($starttime != '')
-				{
-					$starttime = ' ' . $starttime;
-				}
-				if ($endtime != '')
-				{
-					$endtime = ' ' . $endtime;
-				}
-				$datestring  = $startmonth . ' ' . $startday . ', ' . $startyear . ' ' . $starttime . ' - ';
-				$datestring .= $endmonth . ' ' . $endday . ', ' . $endyear . ' ' . $endtime;
-			}
+			$datestring .= '&nbsp; ' . date("g:ia", strtotime($startdate));
 		}
 
 		return $datestring;
@@ -388,102 +334,17 @@ class Update extends Model
 	 * @param   string  $enddate
 	 * @return  string
 	 */
-	public function formatDate($startdate, $enddate='0000-00-00 00:00:00')
+	public function formatDate($startdate)
 	{
-		$datestring = '';
-
 		$starttime = explode(' ', $startdate);
 		$starttime = $starttime[1];
 
-		$endtime = explode(' ', $enddate);
-		$endtime = $endtime[1];
-
-		$startyear  = date("Y", strtotime($startdate));
-		$startmonth = date("F", strtotime($startdate));
-		$startday   = date("j", strtotime($startdate));
-
-		$endyear    = date("Y", strtotime($enddate));
-		$endmonth   = date("F", strtotime($enddate));
-		$endday     = date("j", strtotime($enddate));
-
-		if ($enddate == '0000-00-00 00:00:00' || $startdate == $enddate)
+		$datestring = date("F j, Y", strtotime($startdate));
+		if ($starttime != '00:00:00')
 		{
-			$datestring = date("F j, Y", strtotime($startdate));
-			if ($starttime != '00:00:00')
-			{
-				$datestring .= ' ' . date("g:ia", strtotime($startdate));
-			}
-		}
-		else
-		{
-			if ($starttime == '00:00:00' && $endtime == '00:00:00')
-			{
-				$endtime   = '';
-				$starttime = '';
-			}
-			else
-			{
-				$starttime = date("g:ia", strtotime($startdate));
-				$endtime   = date("g:ia", strtotime($enddate));
-			}
-
-			if ($startmonth == $endmonth && $startyear == $endyear && $starttime == '' && $endtime == '')
-			{
-				$datestring = $startmonth . ' ' . $startday . ' - ' . $endday . ', ' . $endyear;
-			}
-			elseif ($startmonth == $endmonth && $startyear == $endyear && $startday == $endday && $starttime != $endtime)
-			{
-				$datestring = $startmonth . ' ' . $startday . ', ' . $startyear . ' ' . $starttime . ' - ' . $endtime;
-			}
-			else
-			{
-				if ($starttime != '')
-				{
-					$starttime = ' ' . $starttime;
-				}
-				if ($endtime != '')
-				{
-					$endtime = ' ' . $endtime;
-				}
-				$datestring  = $startmonth . ' ' . $startday . ', ' . $startyear . ' ' . $starttime . ' - ';
-				$datestring .= $endmonth . ' ' . $endday . ', ' . $endyear . ' ' . $endtime;
-			}
+			$datestring .= ' ' . date("g:ia", strtotime($startdate));
 		}
 
 		return $datestring;
-	}
-
-	/**
-	 * Query scope where record isn't trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsActive($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNull($t . '.datetimeremoved')
-					->orWhere($t . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-		});
-	}
-
-	/**
-	 * Query scope where record is trashed
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhereIsTrashed($query)
-	{
-		$t = $this->getTable();
-
-		return $query->where(function($where) use ($t)
-		{
-			$where->whereNotNull($t . '.datetimeremoved')
-				->where($t . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-		});
 	}
 }

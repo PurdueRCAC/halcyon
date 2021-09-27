@@ -74,8 +74,6 @@ app('pathway')
 		<ul class="rsscontainer">
 			<?php
 			$resources = App\Modules\Resources\Models\Asset::query()
-				->withTrashed()
-				->whereIsActive()
 				->where('listname', '!=', '')
 				->orderBy('name', 'asc')
 				->get();

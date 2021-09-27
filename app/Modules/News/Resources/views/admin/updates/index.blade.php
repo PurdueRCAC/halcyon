@@ -133,7 +133,7 @@ app('pathway')
 				</td>
 				<?php /*<td>
 					@if (auth()->user()->can('edit.state news'))
-						@if (!$row->isTrashed())
+						@if (!$row->trashed())
 							<span class="state published">
 								<span>{{ trans('global.published') }}</span>
 							</span>

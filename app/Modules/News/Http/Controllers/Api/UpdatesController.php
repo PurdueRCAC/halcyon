@@ -173,8 +173,8 @@ class UpdatesController extends Controller
 	 * 						"userid": 12344,
 	 * 						"edituserid": 12345,
 	 * 						"datetimecreated": "2021-01-27 20:03:51",
-	 * 						"datetimeedited": "0000-00-00 00:00:00",
-	 * 						"datetimeremoved": "0000-00-00 00:00:00",
+	 * 						"datetimeedited": null,
+	 * 						"datetimeremoved": null,
 	 * 						"body": "Example text",
 	 * 						"newsid": 1
 	 * 					}
@@ -242,8 +242,8 @@ class UpdatesController extends Controller
 	 * 						"userid": 12344,
 	 * 						"edituserid": 12345,
 	 * 						"datetimecreated": "2021-01-27 20:03:51",
-	 * 						"datetimeedited": "0000-00-00 00:00:00",
-	 * 						"datetimeremoved": "0000-00-00 00:00:00",
+	 * 						"datetimeedited": null,
+	 * 						"datetimeremoved": null,
 	 * 						"body": "Example text",
 	 * 						"newsid": 1
 	 * 					}
@@ -300,7 +300,7 @@ class UpdatesController extends Controller
 	 * 						"edituserid": 12345,
 	 * 						"datetimecreated": "2021-01-27 20:03:51",
 	 * 						"datetimeedited": "2021-01-28 13:40:01",
-	 * 						"datetimeremoved": "0000-00-00 00:00:00",
+	 * 						"datetimeremoved": null,
 	 * 						"body": "Example text that was edited",
 	 * 						"newsid": 1
 	 * 					}

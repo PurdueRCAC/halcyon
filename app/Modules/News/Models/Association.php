@@ -4,7 +4,6 @@ namespace App\Modules\News\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Users\Models\User;
 
 /**
@@ -12,7 +11,7 @@ use App\Modules\Users\Models\User;
  */
 class Association extends Model
 {
-	use SoftDeletes, LegacyTrash;
+	use SoftDeletes;
 
 	/**
 	 * The table to which the class pertains

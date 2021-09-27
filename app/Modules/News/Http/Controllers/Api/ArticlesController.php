@@ -297,6 +297,18 @@ class ArticlesController extends Controller
 			$filters['order_dir'] = 'desc';
 		}
 
+		if ($filters['start'] == '0000-00-00'
+		 || $filters['start'] == '0000-00-00 00:00:00')
+		{
+			$filters['start'] = null;
+		}
+
+		if ($filters['stop'] == '0000-00-00'
+		 || $filters['stop'] == '0000-00-00 00:00:00')
+		{
+			$filters['stop'] = null;
+		}
+
 		$n = (new Article)->getTable();
 
 		$query = Article::query()
@@ -348,7 +360,6 @@ class ArticlesController extends Controller
 			{
 				$stop = Carbon::parse($filters['stop']);
 				$where->whereNull($n . '.datetimenewsend')
-					->orWhere($n . '.datetimenewsend', '=', '0000-00-00 00:00:00')
 					->orWhere($n . '.datetimenewsend', '<=', $stop->toDateTimeString());
 			});
 		}
@@ -869,8 +880,8 @@ class ArticlesController extends Controller
 
 			/*if ($row->template)
 			{
-				$row->datetimenews = '0000-00-00 00:00:00';
-				$row->datetimenewsend = '0000-00-00 00:00:00';
+				$row->datetimenews = null;
+				$row->datetimenewsend = null;
 			}*/
 		}
 

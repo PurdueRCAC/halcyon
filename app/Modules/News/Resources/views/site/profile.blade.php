@@ -78,8 +78,6 @@
 								@if (auth()->user()->can('manage news'))
 									@php
 									$users = $row->associations()
-										->withTrashed()
-										->whereIsActive()
 										->where('assoctype', '=', 'user')
 										->get();
 									@endphp

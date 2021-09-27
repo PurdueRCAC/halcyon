@@ -77,8 +77,8 @@ app('pathway')
 				<div class="input-wrap form-group">
 					<label for="field-published">{{ trans('pages::pages.state') }}:</label>
 					<select name="published" id="field-published" class="form-control">
-						<option value="published"<?php if (!$row->isTrashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
-						<option value="trashed"<?php if ($row->isTrashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
+						<option value="published"<?php if (!$row->trashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
+						<option value="trashed"<?php if ($row->trashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
 					</select>
 				</div>
 			</fieldset>*/ ?>

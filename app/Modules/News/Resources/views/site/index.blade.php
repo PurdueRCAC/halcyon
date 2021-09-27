@@ -67,7 +67,7 @@ app('pathway')->append(
 									<ul class="news-meta text-muted">
 										<li>
 											<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span>
-											<time>{{ $article->formatDate($article->datetimenews->toDateTimeString(), $article->datetimenewsend->toDateTimeString()) }}</time>
+											<time>{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}</time>
 											@if ($article->isToday())
 												@if ($article->isNow())
 													<span class="badge badge-success">{{ trans('news::news.happening now') }}</span>

@@ -283,7 +283,6 @@ class ArticlesController extends Controller
 			{
 				$stop = Carbon::parse($stop);
 				$where->whereNull('datetimenewsend')
-					->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00')
 					->orWhere('datetimenewsend', '<=', $stop->toDateTimeString());
 			});
 		}

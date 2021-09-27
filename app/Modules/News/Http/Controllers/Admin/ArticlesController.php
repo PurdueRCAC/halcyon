@@ -296,8 +296,8 @@ class ArticlesController extends Controller
 		// Templates shouldn't have datetimes set
 		if ($row->template)
 		{
-			//$row->datetimenews = '0000-00-00 00:00:00';
-			//$row->datetimenewsend = '0000-00-00 00:00:00';
+			//$row->datetimenews = null;
+			//$row->datetimenewsend = null;
 		}
 		else
 		{
