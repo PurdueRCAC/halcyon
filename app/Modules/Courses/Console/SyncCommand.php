@@ -402,8 +402,10 @@ class SyncCommand extends Command
 				continue;
 			}
 
+			$u = User::findByUsername($user);
+
 			// Remove scholar
-			event($event = new ResourceMemberDeleted($row->resource, $user));
+			event($event = new ResourceMemberDeleted($row->resource, $u));
 
 			if ($event->status >= 400)
 			{
