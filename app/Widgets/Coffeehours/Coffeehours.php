@@ -66,7 +66,7 @@ class Coffeehours extends Widget
 		$attending = array();
 		foreach ($rows as $event)
 		{
-			foreach ($event->associations()->withTrashed()->whereIsActive()->get() as $assoc)
+			foreach ($event->associations()->get() as $assoc)
 			{
 				if (auth()->user() && $assoc->associd == auth()->user()->id)
 				{

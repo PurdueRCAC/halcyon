@@ -36,7 +36,7 @@ foreach ($rows as $event)
 	$reserved  = false;
 	$canAttend = true;
 
-	foreach ($event->associations()->withTrashed()->whereIsActive()->get() as $assoc)
+	foreach ($event->associations()->get() as $assoc)
 	{
 		if (auth()->user() && $assoc->associd == auth()->user()->id)
 		{
