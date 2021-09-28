@@ -686,7 +686,8 @@ class AccountsController extends Controller
 			if ($row->approveruserid && $row->approveruserid != $approveruserid)
 			{
 				// New approver. Reset dates.
-				$row->forceRestore(['datetimeapproved', 'datetimedenied']);
+				$row->datetimeapproved = null;
+				$row->datetimedenied = null;
 			}
 
 			$row->approveruserid = $approveruserid;
