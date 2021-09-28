@@ -26,7 +26,7 @@ class Productlist extends Widget
 
 		foreach ($categories as $category)
 		{
-			$query = $category->products;
+			$query = $category->products();
 
 			if (!auth()->user() || !auth()->user()->can('manage orders'))
 			{
