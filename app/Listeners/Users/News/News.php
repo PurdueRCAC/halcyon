@@ -77,11 +77,7 @@ class News
 				->join($u, $u . '.newsid', $a . '.id')
 				->where($u . '.associd', '=', $user->id)
 				->where($u . '.assoctype', '=', 'user')
-				->where(function($where) use ($u)
-				{
-					$where->whereNull($u . '.datetimeremoved')
-						->orWhere($u . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
+				->whereNull($u . '.datetimeremoved')
 				->where($a . '.newstypeid', '=', $type->id)
 				->whereIn($a . '.published', $states)
 				->count();
@@ -102,11 +98,7 @@ class News
 					->join($u, $u . '.newsid', $a . '.id')
 					->where($u . '.associd', '=', $user->id)
 					->where($u . '.assoctype', '=', 'user')
-					->where(function($where) use ($u)
-					{
-						$where->whereNull($u . '.datetimeremoved')
-							->orWhere($u . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-					})
+					->whereNull($u . '.datetimeremoved')
 					->where($a . '.newstypeid', '=', $type->id)
 					->whereIn($a . '.published', $states)
 					->orderBy($a . '.datetimenews', 'desc')

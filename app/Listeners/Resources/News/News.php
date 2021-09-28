@@ -55,7 +55,6 @@ class News
 			->where(function($where) use ($now, $a)
 			{
 				$where->whereNull($a . '.datetimenewsend')
-					->orWhere($a . '.datetimenewsend', '=', '0000-00-00 00:00:00')
 					->orWhere($a . '.datetimenewsend', '>', $now);
 			})
 			->where($r . '.resourceid', '=', $event->getAsset()->id)
@@ -113,7 +112,6 @@ class News
 			->where(function($where) use ($now, $a)
 			{
 				$where->whereNull($a . '.datetimenewsend')
-					->orWhere($a . '.datetimenewsend', '=', '0000-00-00 00:00:00')
 					->orWhere($a . '.datetimenewsend', '>', $now);
 			})
 			->where($r . '.resourceid', '=', $resource->id)
