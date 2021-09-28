@@ -47,7 +47,7 @@
 				endforeach;
 
 				foreach ($software as $s):
-					if (!$s['access'] && in_array($user->department, $s['dept_lower'])):
+					if (!$s['access'] && in_array(strtolower($user->department), $s['dept_lower'])):
 						?>
 						<tr>
 							<td>{{ $s['name'] }}</td>
