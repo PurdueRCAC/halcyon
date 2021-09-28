@@ -4,7 +4,6 @@ namespace App\Modules\Orders\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Resources\Models\Asset;
 use Carbon\Carbon;
 
@@ -13,7 +12,7 @@ use Carbon\Carbon;
  */
 class Product extends Model
 {
-	use SoftDeletes, LegacyTrash, Historable;
+	use SoftDeletes, Historable;
 
 	/**
 	 * The name of the "created at" column.

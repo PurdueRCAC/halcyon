@@ -49,7 +49,7 @@ app('pathway')
 							<h3 class="card-title">Recurring Item #{{ $item->id }}</h3>
 						</div>
 						<div class="col-md-4 text-right">
-							@if ($item->paiduntil == $item->billeduntil && $item->paiduntil && $item->paiduntil != '0000-00-00 00:00:00' && $item->paiduntil != '-0001-11-30 00:00:00')
+							@if ($item->paiduntil && $item->paiduntil == $item->billeduntil)
 								<button class="btn btn-sm btn-secondary recur-renew tip" title="Generate an order to extend service for this recurring item" data-api="{{ route('api.orders.create') }}" data-item="{{ $item->id }}">Renew Now</button>
 							@endif
 						</div>

@@ -102,7 +102,7 @@ app('pathway')
 		<tbody class="sortable">
 		@foreach ($rows as $i => $row)
 			<?php
-			$trashed = ($row->datetimeremoved && $row->datetimeremoved != '0000-00-00 00:00:00' && $row->datetimeremoved != '-0001-11-30 00:00:00');
+			$trashed = ($row->datetimeremoved);
 			?>
 			<tr<?php if ($trashed) { echo ' class="trashed"'; } ?>>
 				@if (auth()->user()->can('delete orders.categories'))

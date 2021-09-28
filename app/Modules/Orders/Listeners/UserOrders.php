@@ -32,13 +32,11 @@ class UserOrders
 		$user = $event->getUser();
 
 		$orders = Order::query()
-			->withTrashed()
 			->where(function($where) use ($user)
 			{
 				$where->where('userid', '=', $user->id)
 					->orWhere('submitteruserid', '=', $user->id);
 			})
-			->whereIsActive()
 			->orderBy('datetimecreated', 'asc')
 			->get();
 

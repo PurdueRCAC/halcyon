@@ -4,7 +4,6 @@ namespace App\Modules\Orders\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
 use Carbon\Carbon;
 
 /**
@@ -12,7 +11,7 @@ use Carbon\Carbon;
  */
 class Account extends Model
 {
-	use Historable, SoftDeletes, LegacyTrash;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The table to which the class pertains
@@ -86,9 +85,7 @@ class Account extends Model
 	 **/
 	public function isApproved()
 	{
-		return ($this->datetimeapproved
-			&& $this->datetimeapproved != '0000-00-00 00:00:00'
-			&& $this->datetimeapproved != '-0001-11-30 00:00:00');
+		return (!is_null($this->datetimeapproved));
 	}
 
 	/**
@@ -98,9 +95,7 @@ class Account extends Model
 	 **/
 	public function isPaid()
 	{
-		return ($this->datetimepaid
-			&& $this->datetimepaid != '0000-00-00 00:00:00'
-			&& $this->datetimepaid != '-0001-11-30 00:00:00');
+		return (!is_null($this->datetimepaid));
 	}
 
 	/**
@@ -110,9 +105,7 @@ class Account extends Model
 	 **/
 	public function isDenied()
 	{
-		return ($this->datetimedenied
-			&& $this->datetimedenied != '0000-00-00 00:00:00'
-			&& $this->datetimedenied != '-0001-11-30 00:00:00');
+		return (!is_null($this->datetimedenied));
 	}
 
 	/**
@@ -122,9 +115,7 @@ class Account extends Model
 	 **/
 	public function isCollected()
 	{
-		return ($this->datetimepaymentdoc
-			&& $this->datetimepaymentdoc != '0000-00-00 00:00:00'
-			&& $this->datetimepaymentdoc != '-0001-11-30 00:00:00');
+		return (!is_null($this->datetimepaymentdoc));
 	}
 
 	/**
@@ -204,7 +195,7 @@ class Account extends Model
 	 */
 	public function getStatusAttribute()
 	{
-		if ($this->isTrashed())
+		if ($this->trashed())
 		{
 			$status = 'deleted';
 		}

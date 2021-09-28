@@ -169,21 +169,9 @@ class ItemsController extends Controller
 			->join($o, $o . '.id', $i . '.orderid')
 			->join($p, $p . '.id', $i . '.orderproductid')
 			->withTrashed()
-			->where(function($where) use ($i)
-				{
-					$where->whereNull($i . '.datetimeremoved')
-						->orWhere($i . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-			->where(function($where) use ($o)
-				{
-					$where->whereNull($o . '.datetimeremoved')
-						->orWhere($o . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-			->where(function($where) use ($p)
-				{
-					$where->whereNull($p . '.datetimeremoved')
-						->orWhere($p . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				});
+			->whereNull($i . '.datetimeremoved')
+			->whereNull($o . '.datetimeremoved')
+			->whereNull($p . '.datetimeremoved');
 
 		if ($filters['recurring'])
 		{
@@ -237,15 +225,6 @@ class ItemsController extends Controller
 
 		$rows->each(function($item, $key)
 		{
-			if (!$item->isTrashed())
-			{
-				$item->datetimeremoved = null;
-			}
-			if (!$item->isFulfilled())
-			{
-				$item->datetimefulfilled = null;
-			}
-
 			$item->api = route('api.orders.items.read', ['id' => $item->id]);
 		});
 
@@ -406,14 +385,6 @@ class ItemsController extends Controller
 
 		$row->recurrence = $row->recurrenceRange();
 		$row->api = route('api.orders.items.read', ['id' => $row->id]);
-		if (!$row->isTrashed())
-		{
-			$row->datetimeremoved = null;
-		}
-		if (!$row->isFulfilled())
-		{
-			$row->datetimefulfilled = null;
-		}
 
 		return new JsonResource($row);
 	}
@@ -449,7 +420,7 @@ class ItemsController extends Controller
 		$row->recurrence = $row->recurrenceRange();
 
 		$row->api = route('api.orders.items.read', ['id' => $row->id]);
-		if (!$row->isTrashed())
+		if (!$row->trashed())
 		{
 			$row->datetimeremoved = null;
 		}
@@ -598,14 +569,6 @@ class ItemsController extends Controller
 
 		$row->recurrence = $row->recurrenceRange();
 		$row->api = route('api.orders.items.read', ['id' => $row->id]);
-		if (!$row->isTrashed())
-		{
-			$row->datetimeremoved = null;
-		}
-		if (!$row->isFulfilled())
-		{
-			$row->datetimefulfilled = null;
-		}
 
 		return new JsonResource($row);
 	}
@@ -654,7 +617,7 @@ class ItemsController extends Controller
 			return response()->json(['message' => trans('global.error.not authorized')], 403);
 		}
 
-		if (!$row->isTrashed())
+		if (!$row->trashed())
 		{
 			if (!$row->delete())
 			{
@@ -707,8 +670,6 @@ class ItemsController extends Controller
 			->select($i . '.*', $o . '.userid', $o . '.groupid', $o . '.submitteruserid', $o . '.datetimeremoved AS ordercanceled')
 			->join($o, $o . '.id', $i . '.orderid')
 			->where($i . '.origorderitemid', '=', $id)
-			->withTrashed()
-			->whereIsActive()
 			->orderBy($i . '.datetimecreated', 'asc')
 			->get();
 
@@ -740,7 +701,7 @@ class ItemsController extends Controller
 				$paidperiods += $row->timeperiodcount;
 			}
 
-			if (!$row->isTrashed() && (!$row->ordercanceled || $row->ordercanceled == '0000-00-00 00:00:00'))
+			if (!$row->trashed() && !$row->ordercanceled)
 			{
 				$billedperiods += $row->timeperiodcount;
 			}
@@ -779,8 +740,6 @@ class ItemsController extends Controller
 			->select($a . '.approveruserid')
 			->join($i, $i . '.orderid', $a . '.orderid')
 			->where($i . '.origorderitemid', '=', $id)
-			->withTrashed()
-			->whereIsActive()
 			->get()
 			->pluck('approveruserid')
 			->toArray();
@@ -819,7 +778,7 @@ class ItemsController extends Controller
 		$months_paid    = $paidperiods * $recur_months;
 		$seconds_paid   = $paidperiods * $recur_seconds;
 
-		if ($datestart && $datestart != '0000-00-00 00:00:00')
+		if ($datestart)
 		{
 			// Calculate billed time
 			$datebilleduntil = Carbon::parse($datestart)
@@ -843,7 +802,7 @@ class ItemsController extends Controller
 
 			foreach ($this->orderitems as &$item)
 			{
-				if ($item['ordercanceled'] == '0000-00-00 00:00:00')
+				if (!$item['ordercanceled'])
 				{
 					$item['start'] = $start;
 
@@ -863,20 +822,20 @@ class ItemsController extends Controller
 				}
 				else
 				{
-					$item['start'] = '0000-00-00 00:00:00';
-					$item['end']   = '0000-00-00 00:00:00';
+					$item['start'] = null;
+					$item['end']   = null;
 				}
 			}
 		}
 		else
 		{
-			$this->datebilleduntil = '0000-00-00 00:00:00';
-			$this->datepaiduntil   = '0000-00-00 00:00:00';
+			$this->datebilleduntil = null;
+			$this->datepaiduntil   = null;
 
 			foreach ($this->orderitems as &$item)
 			{
-				$item['start'] = '0000-00-00 00:00:00';
-				$item['end']   = '0000-00-00 00:00:00';
+				$item['start'] = null;
+				$item['end']   = null;
 			}
 		}
 

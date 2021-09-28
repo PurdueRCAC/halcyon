@@ -138,7 +138,7 @@ app('pathway')
 							?>
 							<tr>
 								<td>
-									@if (!$item->fulfilled || $item->fulfilled == '0000-00-00 00:00:00')
+									@if (!$item->fulfilled)
 										@if ($row->status == 'pending_fulfillment')
 											<input type="button" value="Fulfill" class="btn btn-sm btn-secondary order-fulfill" id="button_<?php echo $item->id; ?>" data-id="<?php echo $item->id; ?>" />
 										</td>
@@ -204,7 +204,7 @@ app('pathway')
 											{{ trans('orders::orders.quantity for', ['quantity' => $item->quantity, 'count' => $item->timeperiodcount, 'timeperiod' => $item->product->timeperiod->singular]) }}
 										@endif
 									@else
-										@if (!$item->fulfilled || $item->fulfilled == '0000-00-00 00:00:00')
+										@if (!$item->fulfilled)
 											<input type="number" class="form-control quantity-control" data-unitprice="{{ $item->price }}" name="quantity{{ $item->id }}" size="5" min="1" max="999" value="{{ $item->quantity }}" />
 										@else
 											{{ $item->quantity }}
@@ -402,14 +402,14 @@ app('pathway')
 					<tr>
 						<th scope="row"><?php echo trans('orders::orders.created'); ?>:</th>
 						<td>
-							<?php if ($row->getOriginal('datetimecreated') && $row->getOriginal('datetimecreated') != '0000-00-00 00:00:00'): ?>
+							<?php if ($row->datetimecreated): ?>
 								<?php echo e($row->datetimecreated); ?>
 							<?php else: ?>
 								<?php echo trans('global.unknown'); ?>
 							<?php endif; ?>
 						</td>
 					</tr>
-					@if ($row->isTrashed())
+					@if ($row->trashed())
 						<tr>
 							<th scope="row">{{ trans('orders::orders.canceled') }}:</th>
 							<td>
@@ -439,7 +439,7 @@ app('pathway')
 									$actor = e($action->user->name);
 								endif;
 
-								$created = $action->created_at && $action->created_at != '0000-00-00 00:00:00' ? $action->created_at : trans('global.unknown');
+								$created = $action->created_at ? $action->created_at : trans('global.unknown');
 
 								$fields = array_keys(get_object_vars($action->new));
 								foreach ($fields as $i => $k)

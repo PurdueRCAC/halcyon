@@ -84,7 +84,7 @@ class OrdersController extends Controller
 		$i = (new Item())->getTable();
 
 		$state = "CASE
-					WHEN (tbaccounts.datetimeremoved > '0000-000-00 00:00:00') THEN 7
+					WHEN (tbaccounts.datetimeremoved IS NOT NULL) THEN 7
 					WHEN (
 							(accounts = 0 AND ordertotal > 0) OR
 							amountassigned < ordertotal OR
@@ -105,17 +105,12 @@ class OrdersController extends Controller
 				DB::raw("COUNT(" . $i . ".id) AS items_count"),
 				DB::raw("SUM(CASE 
 					WHEN (" . $i . ".datetimefulfilled IS NULL) THEN 0 
-					WHEN (" . $i . ".datetimefulfilled = '0000-00-00 00:00:00') THEN 0 
-					WHEN (" . $i . ".datetimefulfilled <> '0000-00-00 00:00:00') THEN 1
+					WHEN (" . $i . ".datetimefulfilled IS NOT NULL) THEN 1
 				END) AS itemsfulfilled")
 			)
 			->leftJoin($i, $i . '.orderid', $o . '.id')
 			//->join($p, $p . '.id', $i . '.orderproductid')
-			->where(function($where) use ($i)
-			{
-				$where->where($i . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-					->orWhereNull($i . '.datetimeremoved');
-			})
+			->whereNull($i . '.datetimeremoved')
 			->where($i . '.quantity', '>', 0)
 			->groupBy($o . '.id')
 			->groupBy($o . '.userid')
@@ -167,12 +162,12 @@ class OrdersController extends Controller
 				DB::raw('SUM(' . $i . '.price) AS ordertotal'),
 				DB::raw("SUM(" . $i . ".id) AS accounts"),
 				DB::raw("COUNT(orderitems.id) AS items"),
-				DB::raw("SUM(CASE WHEN (" . $i . ".datetimefulfilled IS NULL) THEN 0 WHEN (" . $i . ".datetimefulfilled = '0000-00-00 00:00:00') THEN 0 WHEN (" . $i . ".datetimefulfilled <> '0000-00-00 00:00:00') THEN 1 END) AS itemsfulfilled"),
+				DB::raw("SUM(CASE WHEN (" . $i . ".datetimefulfilled IS NULL) THEN 0 WHEN (" . $i . ".datetimefulfilled IS NULL) THEN 0 WHEN (" . $i . ".datetimefulfilled IS NOT NULL) THEN 1 END) AS itemsfulfilled"),
 				DB::raw('SUM(CASE WHEN (' . $a .'.approveruserid IS NULL) THEN 0 WHEN (' . $a .'.approveruserid = 0) THEN 0 WHEN (' . $a .'.approveruserid > 0) THEN 1 END) AS accountsassigned'),
 				DB::raw('SUM(' . $a .'.amount) AS amountassigned'),
-				DB::raw("SUM(CASE WHEN (" . $a .".datetimeapproved IS NULL) THEN 0 WHEN (" . $a .".datetimeapproved = '0000-00-00 00:00:00') THEN 0 WHEN (" . $a .".datetimeapproved <> '0000-00-00 00:00:00') THEN 1 END) AS accountsapproved"),
-				DB::raw("SUM(CASE WHEN (" . $a .".datetimepaid IS NULL) THEN 0 WHEN (" . $a .".datetimepaid = '0000-00-00 00:00:00') THEN 0 WHEN (" . $a .".datetimepaid <> '0000-00-00 00:00:00') THEN 1 END) AS accountspaid"),
-				DB::raw("SUM(CASE WHEN (" . $a .".datetimedenied IS NULL) THEN 0 WHEN (" . $a .".datetimedenied = '0000-00-00 00:00:00') THEN 0 WHEN (" . $a .".datetimedenied <> '0000-00-00 00:00:00') THEN 1 END) AS accountsdenied"),*/
+				DB::raw("SUM(CASE WHEN (" . $a .".datetimeapproved IS NULL) THEN 0 WHEN (" . $a .".datetimeapproved IS NULL) THEN 0 WHEN (" . $a .".datetimeapproved IS NOT NULL) THEN 1 END) AS accountsapproved"),
+				DB::raw("SUM(CASE WHEN (" . $a .".datetimepaid IS NULL) THEN 0 WHEN (" . $a .".datetimepaid IS NULL) THEN 0 WHEN (" . $a .".datetimepaid IS NOT NULL) THEN 1 END) AS accountspaid"),
+				DB::raw("SUM(CASE WHEN (" . $a .".datetimedenied IS NULL) THEN 0 WHEN (" . $a .".datetimedenied IS NULL) THEN 0 WHEN (" . $a .".datetimedenied IS NOT NULL) THEN 1 END) AS accountsdenied"),*/
 				DB::raw($state . ' AS state')
 			])
 			->fromSub(function($sub) use ($o, $a, $i, $filters)
@@ -183,12 +178,12 @@ class OrdersController extends Controller
 					//DB::raw('SUM(' . $i . '.price) AS ordertotal'),
 					DB::raw("COUNT(" . $a . ".id) AS accounts"),
 					//DB::raw("COUNT(" . $i . ".id) AS items_count"),
-					//DB::raw("SUM(CASE WHEN (" . $i . ".datetimefulfilled IS NULL) THEN 0 WHEN (" . $i . ".datetimefulfilled = '0000-00-00 00:00:00') THEN 0 WHEN (" . $i . ".datetimefulfilled <> '0000-00-00 00:00:00') THEN 1 END) AS itemsfulfilled"),
+					//DB::raw("SUM(CASE WHEN (" . $i . ".datetimefulfilled IS NULL) THEN 0 WHEN (" . $i . ".datetimefulfilled IS NULL) THEN 0 WHEN (" . $i . ".datetimefulfilled IS NOT NULL) THEN 1 END) AS itemsfulfilled"),
 					DB::raw('SUM(CASE WHEN (' . $a .'.approveruserid IS NULL) THEN 0 WHEN (' . $a .'.approveruserid = 0) THEN 0 WHEN (' . $a .'.approveruserid > 0) THEN 1 END) AS accountsassigned'),
 					DB::raw('SUM(' . $a .'.amount) AS amountassigned'),
-					DB::raw("SUM(CASE WHEN (" . $a .".datetimeapproved IS NULL) THEN 0 WHEN (" . $a .".datetimeapproved = '0000-00-00 00:00:00') THEN 0 WHEN (" . $a .".datetimeapproved <> '0000-00-00 00:00:00') THEN 1 END) AS accountsapproved"),
-					DB::raw("SUM(CASE WHEN (" . $a .".datetimepaid IS NULL) THEN 0 WHEN (" . $a .".datetimepaid = '0000-00-00 00:00:00') THEN 0 WHEN (" . $a .".datetimepaid <> '0000-00-00 00:00:00') THEN 1 END) AS accountspaid"),
-					DB::raw("SUM(CASE WHEN (" . $a .".datetimedenied IS NULL) THEN 0 WHEN (" . $a .".datetimedenied = '0000-00-00 00:00:00') THEN 0 WHEN (" . $a .".datetimedenied <> '0000-00-00 00:00:00') THEN 1 END) AS accountsdenied")
+					DB::raw("SUM(CASE WHEN (" . $a .".datetimeapproved IS NULL) THEN 0 WHEN (" . $a .".datetimeapproved IS NULL) THEN 0 WHEN (" . $a .".datetimeapproved IS NOT NULL) THEN 1 END) AS accountsapproved"),
+					DB::raw("SUM(CASE WHEN (" . $a .".datetimepaid IS NULL) THEN 0 WHEN (" . $a .".datetimepaid IS NULL) THEN 0 WHEN (" . $a .".datetimepaid IS NOT NULL) THEN 1 END) AS accountspaid"),
+					DB::raw("SUM(CASE WHEN (" . $a .".datetimedenied IS NULL) THEN 0 WHEN (" . $a .".datetimedenied IS NULL) THEN 0 WHEN (" . $a .".datetimedenied IS NOT NULL) THEN 1 END) AS accountsdenied")
 				)
 				->from($o)
 				//->leftJoin($a, $a . '.orderid', $o . '.id')
@@ -202,13 +197,9 @@ class OrdersController extends Controller
 						});
 				})
 				//->leftJoin($i, $i . '.orderid', $o . '.id')
-				//->where($i . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				//->whereNull($i . '.datetimeremoved')
 				//->where($i . '.quantity', '>', 0)
-				/*->where(function($where) use ($a)
-				{
-					$where->where($a . '.datetimeremoved', '=', '0000-00 -00 00:00:00')
-						->orWhereNull($a . '.datetimeremoved');
-				})*/
+				/*->whereNull($a . '.datetimeremoved')*/
 				->groupBy($o . '.id')
 				->groupBy($o . '.userid')
 				->groupBy($o . '.datetimecreated')
@@ -277,11 +268,7 @@ class OrdersController extends Controller
 			//->leftJoin($a, $a . '.orderid', $o . '.id');
 			/*->leftJoin($i, $i . '.orderid', $o . '.id')
 
-			->where(function($where) use ($a)
-				{
-					$where->where($a . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-						->orWhereNull($a . '.datetimeremoved');
-				});*/
+			->whereNull($a . '.datetimeremoved');*/
 
 		if ($filters['search'])
 		{
@@ -376,15 +363,11 @@ class OrdersController extends Controller
 			->appends(array_filter($filters));
 
 		$categories = Category::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
 
-		$query = Product::query()
-			->withTrashed()
-			->whereIsActive();
+		$query = Product::query();
 
 		if (!auth()->user() || !auth()->user()->can('manage orders'))
 		{
@@ -479,7 +462,7 @@ class OrdersController extends Controller
 			if ($export != 'items')
 			{
 				$products = array();
-				foreach ($row->items()->withTrashed()->whereIsActive()->get() as $item)
+				foreach ($row->items as $item)
 				{
 					$products[] = $item->product ? $item->product->name : 'product #' . $item->orderproductid;
 				}
@@ -510,7 +493,7 @@ class OrdersController extends Controller
 
 			if ($export == 'items')
 			{
-				foreach ($row->items()->withTrashed()->whereIsActive()->get() as $item)
+				foreach ($row->items as $item)
 				{
 					$data[] = array(
 						//'item',
@@ -535,7 +518,7 @@ class OrdersController extends Controller
 
 			if ($export == 'accounts')
 			{
-				foreach ($row->accounts()->withTrashed()->whereIsActive()->get() as $account)
+				foreach ($row->accounts as $account)
 				{
 					$data[] = array(
 						//'account',
@@ -660,21 +643,9 @@ class OrdersController extends Controller
 			->join($o, $o . '.id', $i . '.orderid')
 			->join($p, $p . '.id', $i . '.orderproductid')
 			->withTrashed()
-			->where(function($where) use ($i)
-				{
-					$where->whereNull($i . '.datetimeremoved')
-						->orWhere($i . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-			->where(function($where) use ($o)
-				{
-					$where->whereNull($o . '.datetimeremoved')
-						->orWhere($o . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-			->where(function($where) use ($p)
-				{
-					$where->whereNull($p . '.datetimeremoved')
-						->orWhere($p . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				});
+			->whereNull($i . '.datetimeremoved')
+			->whereNull($o . '.datetimeremoved')
+			->whereNull($p . '.datetimeremoved');
 
 		if (!auth()->user()->can('manage orders'))
 		{
@@ -727,8 +698,6 @@ class OrdersController extends Controller
 			->appends(array_filter($filters));
 
 		$products = Product::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('recurringtimeperiodid', '>', 0)
 			->orderBy('recurringtimeperiodid', 'asc')
 			->orderBy('name', 'asc')
@@ -817,8 +786,6 @@ class OrdersController extends Controller
 			);
 
 		$products = Product::query()
-			->withTrashed()
-			->whereIsActive()
 			->orderBy('name', 'asc')
 			->get();
 
@@ -1004,7 +971,7 @@ class OrdersController extends Controller
 					continue;
 				}
 
-				foreach ($order->accounts()->withTrashed()->whereIsActive()->get() as $account)
+				foreach ($order->accounts as $account)
 				{
 					if (($account->purchaseio == $item->purchaseio || $account->purchasewbse == $item->purchasewbse)
 					&& $item->paymentdocid != $account->paymentdocid)

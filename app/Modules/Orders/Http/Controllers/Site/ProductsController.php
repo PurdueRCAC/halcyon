@@ -65,15 +65,9 @@ class ProductsController extends Controller
 		$c = (new Category)->getTable();
 
 		$query = Product::query()
-			->withTrashed()
-			->whereIsActive()
 			->select($p . '.*', $c . '.name AS category_name')
 			->join($c, $c . '.id', $p . '.ordercategoryid')
-			->where(function($where) use ($c)
-			{
-				$where->whereNull($c . '.datetimeremoved')
-					->orWhere($c . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			});
+			->whereNull($c . '.datetimeremoved');
 
 		if ($filters['search'])
 		{
@@ -122,8 +116,6 @@ class ProductsController extends Controller
 			//->appends(array_filter($filters));
 
 		$categories = Category::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
@@ -199,7 +191,7 @@ class ProductsController extends Controller
 		$query = Product::query()
 			->select($p . '.*', $c . '.name AS category_name')
 			->join($c, $c . '.id', $p . '.ordercategoryid')
-			->where($c . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			->whereNull($c . '.datetimeremoved');
 
 		if ($filters['search'])
 		{
@@ -215,12 +207,11 @@ class ProductsController extends Controller
 
 		if ($filters['state'] == 'published')
 		{
-			$query->where($p . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+			// Nothing here
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->withTrashed()->where($p . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-			//$query->onlyTrashed();
+			$query->onlyTrashed();
 		}
 		else
 		{
@@ -243,8 +234,6 @@ class ProductsController extends Controller
 			->appends(array_filter($filters));
 
 		$categories = Category::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
@@ -267,8 +256,6 @@ class ProductsController extends Controller
 		$row->public = 1;
 
 		$categories = Category::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
@@ -295,8 +282,6 @@ class ProductsController extends Controller
 		}
 
 		$categories = Category::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();

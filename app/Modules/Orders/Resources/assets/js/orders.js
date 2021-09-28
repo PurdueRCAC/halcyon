@@ -339,7 +339,7 @@ function EditProperty(field, item) {
 			//dataType: 'json',
 			async: false,
 			success: function(response) {
-				EditedProperty(response.data, item + "_" + field);
+				EditedProperty(response, item + "_" + field);
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				EditedProperty({id:0}, item + "_" + field);
@@ -380,8 +380,7 @@ function EditedProperty(xml, field) {
 	var img = document.getElementById("IMG_" + field);
 	var cancelimg = document.getElementById("CANCEL_" + field);
 
-	//if (xml.status != 200) {
-	if (xml.id) {
+	if (!xml.id) {
 		img.className = "fa fa-exclamation-triangle";
 		if (xml.status == 409) {
 			img.title = "Value is in use. Enter another value and try again.";

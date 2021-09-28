@@ -1327,7 +1327,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									endif;
 
 									if ($action->action == 'created'):
-										$dt = $action->created_at;// && $action->created_at != '0000-00-00 00:00:00' ? $action->created_at : trans('global.unknown');
+										$dt = $action->created_at;
 									elseif ($action->action == 'updated'):
 										$dt = $action->updated_at;
 									endif;

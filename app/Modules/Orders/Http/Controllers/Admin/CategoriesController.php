@@ -71,20 +71,12 @@ class CategoriesController extends Controller
 
 		if ($filters['state'] == 'published')
 		{
-			$query->where(function($where)
-			{
-				$where->where('datetimeremoved', '=', '0000-00-00 00:00:00')
-					->orWhereNull('datetimeremoved');
-			});
+			$query->whereNull('datetimeremoved');
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
 			//$query->onlyTrashed();
-			$query->where(function($where)
-			{
-				$where->whereNotNull('datetimeremoved')
-					->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
-			});
+			$query->whereNotNull('datetimeremoved');
 		}
 
 		$rows = $query
@@ -110,11 +102,6 @@ class CategoriesController extends Controller
 
 		$categories = Category::query()
 			->where('id', '!=', 1)
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->orderBy('name', 'asc')
 			->get();
 
@@ -153,8 +140,7 @@ class CategoriesController extends Controller
 		{
 			if ($row->trashed())
 			{
-				$row->datetimeremoved = '0000-00-00 00:00:00';
-				//$row->restore();
+				$row->restore();
 			}
 
 			//$row->state = $request->input('state') == 'published' ? 1 : 0;
@@ -183,11 +169,6 @@ class CategoriesController extends Controller
 		$categories = Category::query()
 			->where('id', '!=', $id)
 			->where('id', '!=', 1)
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->orderBy('name', 'asc')
 			->get();
 

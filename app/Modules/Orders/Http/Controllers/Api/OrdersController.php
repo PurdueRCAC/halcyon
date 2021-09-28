@@ -186,7 +186,7 @@ class OrdersController extends Controller
 		$i = (new Item())->getTable();
 
 		$state = "CASE 
-					WHEN (tbaccounts.datetimeremoved > '0000-000-00 00:00:00') THEN 7
+					WHEN (tbaccounts.datetimeremoved IS NOT NULL) THEN 7
 					WHEN (
 							(accounts = 0 AND ordertotal > 0) OR
 							amountassigned < ordertotal OR
@@ -212,23 +212,19 @@ class OrdersController extends Controller
 					DB::raw('SUM(' . $i . '.price) AS ordertotal'),
 					DB::raw("COUNT(" . $a . ".id) AS accounts"),
 					DB::raw("COUNT(" . $i . ".id) AS items"),
-					DB::raw("SUM(CASE WHEN (" . $i . ".datetimefulfilled IS NULL) THEN 0 WHEN (" . $i . ".datetimefulfilled = '0000-00-00 00:00:00') THEN 0 WHEN (" . $i . ".datetimefulfilled <> '0000-00-00 00:00:00') THEN 1 END) AS itemsfulfilled"),
+					DB::raw("SUM(CASE WHEN (" . $i . ".datetimefulfilled IS NULL) THEN 0 WHEN (" . $i . ".datetimefulfilled IS NULL) THEN 0 WHEN (" . $i . ".datetimefulfilled IS NOT NULL) THEN 1 END) AS itemsfulfilled"),
 					DB::raw('SUM(CASE WHEN (' . $a .'.approveruserid IS NULL) THEN 0 WHEN (' . $a .'.approveruserid = 0) THEN 0 WHEN (' . $a .'.approveruserid > 0) THEN 1 END) AS accountsassigned'),
 					DB::raw('SUM(' . $a .'.amount) AS amountassigned'),
-					DB::raw("SUM(CASE WHEN (" . $a .".datetimeapproved IS NULL) THEN 0 WHEN (" . $a .".datetimeapproved = '0000-00-00 00:00:00') THEN 0 WHEN (" . $a .".datetimeapproved <> '0000-00-00 00:00:00') THEN 1 END) AS accountsapproved"),
-					DB::raw("SUM(CASE WHEN (" . $a .".datetimepaid IS NULL) THEN 0 WHEN (" . $a .".datetimepaid = '0000-00-00 00:00:00') THEN 0 WHEN (" . $a .".datetimepaid <> '0000-00-00 00:00:00') THEN 1 END) AS accountspaid"),
-					DB::raw("SUM(CASE WHEN (" . $a .".datetimedenied IS NULL) THEN 0 WHEN (" . $a .".datetimedenied = '0000-00-00 00:00:00') THEN 0 WHEN (" . $a .".datetimedenied <> '0000-00-00 00:00:00') THEN 1 END) AS accountsdenied")
+					DB::raw("SUM(CASE WHEN (" . $a .".datetimeapproved IS NULL) THEN 0 WHEN (" . $a .".datetimeapproved IS NULL) THEN 0 WHEN (" . $a .".datetimeapproved IS NOT NULL) THEN 1 END) AS accountsapproved"),
+					DB::raw("SUM(CASE WHEN (" . $a .".datetimepaid IS NULL) THEN 0 WHEN (" . $a .".datetimepaid IS NULL) THEN 0 WHEN (" . $a .".datetimepaid IS NOT NULL) THEN 1 END) AS accountspaid"),
+					DB::raw("SUM(CASE WHEN (" . $a .".datetimedenied IS NULL) THEN 0 WHEN (" . $a .".datetimedenied IS NULL) THEN 0 WHEN (" . $a .".datetimedenied IS NOT NULL) THEN 1 END) AS accountsdenied")
 				)
 				->from($o)
 				->leftJoin($a, $a . '.orderid', $o . '.id')
 				->leftJoin($i, $i . '.orderid', $o . '.id')
-				->where($i . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->whereNull($i . '.datetimeremoved')
 				->where($i . '.quantity', '>', 0)
-				->where(function($where) use ($a)
-				{
-					$where->where($a . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-						->orWhereNull($a . '.datetimeremoved');
-				})
+				->whereNull($a . '.datetimeremoved')
 				->groupBy($o . '.id')
 				->groupBy($o . '.userid')
 				->groupBy($o . '.datetimecreated')
@@ -450,8 +446,6 @@ class OrdersController extends Controller
 			{
 				// Fetch order information
 				$item = Item::query()
-					->withTrashed()
-					->whereIsActive()
 					->where('origorderitemid', $sequence)
 					->orderBy('datetimecreated', 'desc')
 					->limit(1)
@@ -475,8 +469,6 @@ class OrdersController extends Controller
 
 			// Fetch accounts information
 			$accs = Account::query()
-				->withTrashed()
-				->whereIsActive()
 				->where('orderid', '=', $orderid)
 				->get();
 
@@ -775,16 +767,7 @@ class OrdersController extends Controller
 
 		if ($request->input('restore') && auth()->user()->can('manage orders'))
 		{
-			// [!] Hackish workaround for resetting date fields
-			//     that don't have a `null` default value.
-			//     TODO: Change the table schema!
-			/*$db = app('db');
-			$db->table($row->getTable())
-				->update([
-					'datetimeremoved' => '0000-00-00 00:00:00'
-				]);*/
-
-			$row->forceRestore(['datetimeremoved']);
+			$row->datetimeremoved = null;
 		}
 
 		// Check if we need to actually do anything
@@ -878,7 +861,7 @@ class OrdersController extends Controller
 			return response()->json(['message' => trans('global.error.not authorized')], 403);
 		}
 
-		if (!$row->isTrashed())
+		if (!$row->trashed())
 		{
 			if (!$row->delete())
 			{

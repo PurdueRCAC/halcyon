@@ -164,7 +164,7 @@ app('pathway')
 								{{ $row->product->name }}
 							</td>
 							<td class="priority-4">
-								@if (!$row->start() || $row->start() == '0000-00-00 00:00:00')
+								@if (!$row->start())
 									{{ trans('Order Pending') }}
 								@else
 									{{ $row->paiduntil ? $row->paiduntil->format("F j, Y") : trans('global.never') }}

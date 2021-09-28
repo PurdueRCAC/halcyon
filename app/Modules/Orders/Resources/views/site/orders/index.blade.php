@@ -293,7 +293,7 @@ app('pathway')
 						</a>
 					</td>
 					<td class="priority-4">
-						@if ($row->datetimecreated && $row->datetimecreated != '0000-00-00 00:00:00' && $row->datetimecreated != '-0001-11-30 00:00:00')
+						@if ($row->datetimecreated)
 							<time datetime="{{ $row->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">
 								@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
 									{{ $row->datetimecreated->diffForHumans() }}

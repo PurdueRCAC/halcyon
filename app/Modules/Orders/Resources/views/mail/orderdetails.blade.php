@@ -41,7 +41,7 @@ $remaining = $order->total;
 | Item               |    Amount | Notes |
 | -------------------|----------:|-------|
 | Order Total        | ${{ $order->formattedTotal }} |       |
-@foreach ($order->accounts()->withTrashed()->whereIsActive()->get() as $account)
+@foreach ($order->accounts as $account)
 | Account {{ $account->account }} | ${{ $account->formattedAmount }} | {{ $account->budgetjustification }} |
 @php
 $remaining -= $account->amount;

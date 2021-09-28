@@ -5,7 +5,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 //use Illuminate\Support\Facades\DB;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Orders\Events\ItemUpdated;
 use Carbon\Carbon;
 
@@ -14,7 +13,7 @@ use Carbon\Carbon;
  */
 class Item extends Model
 {
-	use SoftDeletes, LegacyTrash, Historable;
+	use SoftDeletes, Historable;
 
 	/**
 	 * The name of the "created at" column.
@@ -114,7 +113,7 @@ class Item extends Model
 	 **/
 	public function isFulfilled()
 	{
-		return ($this->datetimefulfilled && $this->datetimefulfilled != '0000-00-00 00:00:00' && $this->datetimefulfilled != '-0001-11-30 00:00:00');
+		return (!is_null($this->datetimefulfilled));
 	}
 
 	/**
@@ -144,16 +143,14 @@ class Item extends Model
 	 **/
 	public function until()
 	{
-		$datebilleduntil = null; //'0000-00-00 00:00:00';
-		$datepaiduntil   = null; //'0000-00-00 00:00:00';
+		$datebilleduntil = null;
+		$datepaiduntil   = null;
 		$paidperiods   = 0;
 		$billedperiods = 0;
 
 		$datestart = $this->datetimefulfilled;
 
 		$data = self::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('origorderitemid', '=', $this->origorderitemid)
 			->orderBy('datetimecreated', 'asc')
 			->get();
@@ -165,13 +162,13 @@ class Item extends Model
 				$paidperiods += $row->timeperiodcount;
 			}
 
-			if (!$row->isTrashed() && ($row->order && !$row->order->isTrashed()))
+			if (!$row->trashed() && ($row->order && !$row->order->trashed()))
 			{
 				$billedperiods += $row->timeperiodcount;
 			}
 		}
 
-		if ($datestart && $datestart != '0000-00-00 00:00:00' && $datestart != '-0001-11-30 00:00:00')
+		if ($datestart)
 		{
 			// Get the timeperiod
 			$timeperiod = $this->product->timeperiod;
@@ -239,11 +236,9 @@ class Item extends Model
 		$recur_months  = $this->product->timeperiod ? $this->product->timeperiod->months : 0;
 		$recur_seconds = $this->product->timeperiod ? $this->product->timeperiod->unixtime : 0;
 
-		$datestart = '0000-00-00 00:00:00';
+		$datestart = null;
 
 		$data = self::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('origorderitemid', '=', $this->origorderitemid)
 			->orderBy('datetimecreated', 'asc')
 			->get();
@@ -268,7 +263,7 @@ class Item extends Model
 			$users[] = $row->order->submitteruserid;
 			$groups[] = $row->order->groupid;
 
-			/*if (!$row->isTrashed())
+			/*if (!$row->trashed())
 			{
 				//$item['start'] = $datestart;
 				$item->start = $datestart;
@@ -289,12 +284,12 @@ class Item extends Model
 			}
 			else
 			{
-				$item['start'] = '0000-00-00 00:00:00';
-				$item['end']   = '0000-00-00 00:00:00';
+				$item['start'] = null;
+				$item['end']   = null;
 			}
 			
 			$items[] = $item;*/
-			if (!$row->isTrashed())
+			if (!$row->trashed())
 			{
 				$row->start = $datestart;
 
@@ -312,8 +307,8 @@ class Item extends Model
 			}
 			else
 			{
-				$row->start = Carbon::parse('0000-00-00 00:00:00');
-				$row->end = Carbon::parse('0000-00-00 00:00:00');
+				$row->start = null;
+				$row->end = null;
 			}
 
 			$items[] = $row;
@@ -340,7 +335,7 @@ class Item extends Model
 			{
 				/*if ($item['id'] == $this->id)
 				{
-					if ($item['start'] && $item['start'] != '0000-00-00 00:00:00')
+					if ($item['start'])
 					{
 						$this->setAttribute('start_at', Carbon::parse($item['start']));
 						$this->setAttribute('end_at', Carbon::parse($item['end']));
@@ -348,7 +343,7 @@ class Item extends Model
 				}*/
 				if ($item->id == $this->id)
 				{
-					if ($item->start && $item->start != '0000-00-00 00:00:00' && $item->start != '-0001-11-30 00:00:00')
+					if ($item->start)
 					{
 						$this->setAttribute('start_at', $item->start);
 						$this->setAttribute('end_at', $item->end);
@@ -375,7 +370,7 @@ class Item extends Model
 			{
 				/*if ($item['id'] == $this->id)
 				{
-					if ($item['end'] && $item['end'] != '0000-00-00 00:00:00')
+					if ($item['end'])
 					{
 						$this->setAttribute('start_at', Carbon::parse($item['start']));
 						$this->setAttribute('end_at', Carbon::parse($item['end']));
@@ -383,7 +378,7 @@ class Item extends Model
 				}*/
 				if ($item->id == $this->id)
 				{
-					if ($item->end && $item->end != '0000-00-00 00:00:00' && $item->end != '-0001-11-30 00:00:00')
+					if ($item->end)
 					{
 						$this->setAttribute('start_at', $item->start);
 						$this->setAttribute('end_at', $item->end);
@@ -467,18 +462,11 @@ class Item extends Model
 		$o = (new Order)->getTable();
 
 		$sequences = self::query()
+			->withTrashed()
 			->select($i . '.*')//DB::raw('DISTINCT(' . $i . '.origorderitemid)'))
 			->join($o, $o . '.id', '=', $i . '.orderid')
-			->where(function($where) use ($i)
-			{
-				$where->whereNull($i . '.datetimeremoved')
-					->orWhere($i . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
-			->where(function($where) use ($o)
-			{
-				$where->whereNull($o . '.datetimeremoved')
-					->orWhere($o . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($i . '.datetimeremoved')
+			->whereNull($o . '.datetimeremoved')
 			->where($i . '.origorderitemid', '=', $this->origorderitemid)
 			//->where($i . '.recurringtimeperiodid', '>', 0)
 			//->groupBy($i . '.origorderitemid')

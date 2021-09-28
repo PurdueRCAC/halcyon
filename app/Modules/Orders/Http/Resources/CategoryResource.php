@@ -24,11 +24,6 @@ class CategoryResource extends JsonResource
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
 
-		if (!$this->isTrashed())
-		{
-			$data['datetimeremoved'] = null;
-		}
-
 		$user = auth()->user();
 
 		if ($user)

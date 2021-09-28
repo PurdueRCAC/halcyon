@@ -160,7 +160,7 @@ app('pathway')
 		</thead>
 		<tbody class="sortable">
 		@foreach ($rows as $i => $row)
-			<tr<?php if ($row->istrashed()) { echo ' class="trashed"'; } ?>>
+			<tr<?php if ($row->trashed()) { echo ' class="trashed"'; } ?>>
 				@if (auth()->user()->can('delete orders.products'))
 					<td>
 						{!! Html::grid('id', $i, $row->id) !!}
@@ -170,7 +170,7 @@ app('pathway')
 					{{ $row->id }}
 				</td>
 				<td>
-					@if ($row->istrashed())
+					@if ($row->trashed())
 						<span class="glyph icon-trash text-danger" aria-hidden="true" data-tip="{{ trans('global.trashed') }}">
 							<span class="sr-only">{{ trans('global.trashed') }}</span>
 						</span>

@@ -47,16 +47,8 @@ class RenewCommand extends Command
 		$sequences = $query
 			->select(DB::raw('DISTINCT(' . $i . '.origorderitemid)'))
 			->join($o, $o . '.id', '=', $i . '.orderid')
-			->where(function($where) use ($i)
-			{
-				$where->whereNull($i . '.datetimeremoved')
-					->orWhere($i . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
-			->where(function($where) use ($o)
-			{
-				$where->whereNull($o . '.datetimeremoved')
-					->orWhere($o . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($i . '.datetimeremoved')
+			->whereNull($o . '.datetimeremoved')
 			->where($i . '.origorderitemid', '>', 0)
 			//->where($i . '.recurringtimeperiodid', '>', 0)
 			->groupBy($i . '.origorderitemid')
@@ -78,7 +70,7 @@ class RenewCommand extends Command
 			$until = $sequence->until();
 
 			// Skip orders that haven't even been paid for once
-			if (!$until['paid'] || $until['paid'] == '0000-00-00 00:00:00')
+			if (!$until['paid'])
 			{
 				continue;
 			}
@@ -118,8 +110,6 @@ class RenewCommand extends Command
 			}
 
 			$orderitems = Item::query()
-				->withTrashed()
-				->whereIsActive()
 				->where('origorderitemid', '=', $sequence->origorderitemid)
 				->orderBy('datetimecreated', 'asc')
 				->get();
@@ -137,7 +127,7 @@ class RenewCommand extends Command
 			}
 
 			// don't renew if product is removed
-			if ($renew && $sequence->product->isTrashed())
+			if ($renew && $sequence->product->trashed())
 			{
 				$renew = false;
 			}
@@ -178,8 +168,6 @@ class RenewCommand extends Command
 				// and, thus, get the most recent account info, which is likely to
 				// change over time
 				$item = Item::query()
-					->withTrashed()
-					->whereIsActive()
 					->where('origorderitemid', $sequence)
 					->orderBy('datetimecreated', 'desc')
 					->limit(1)
@@ -200,8 +188,6 @@ class RenewCommand extends Command
 
 			// Fetch accounts information
 			$accs = Account::query()
-				->withTrashed()
-				->whereIsActive()
 				->where('orderid', '=', $recentaccounts)
 				->get();
 

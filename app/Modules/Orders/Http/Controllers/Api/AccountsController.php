@@ -376,8 +376,6 @@ class AccountsController extends Controller
 		// Select approvers of this order
 		$approvers = Account::query()
 			->where('orderid', '=', $row->orderid)
-			->withTrashed()
-			->whereIsActive()
 			->get()
 			->pluck('approveruserid')
 			->toArray();
@@ -710,8 +708,6 @@ class AccountsController extends Controller
 		// Select approvers of this order
 		$approvers = Account::query()
 			->where('orderid', '=', $row->orderid)
-			->withTrashed()
-			->whereIsActive()
 			->get()
 			->pluck('approveruserid')
 			->toArray();
@@ -779,21 +775,9 @@ class AccountsController extends Controller
 
 		if ($request->input('reset') && auth()->user()->can('manage orders'))
 		{
-			// [!] Hackish workaround for resetting date fields
-			//     that don't have a `null` default value.
-			//     TODO: Change the table schema!
-			/*$db = app('db');
-			$db->table($row->getTable())
-				->where('id', '=', $id)
-				->update([
-					'datetimepaid' => '0000-00-00 00:00:00',
-					'datetimeapproved' => '0000-00-00 00:00:00',
-					'datetimedenied' => '0000-00-00 00:00:00'
-				]);
-
-			DB::statement(DB::raw());*/
-
-			$row->forceRestore(['datetimepaid', 'datetimeapproved', 'datetimedenied']);
+			$row->datetimepaid = null;
+			$row->datetimeapproved = null;
+			$row->datetimedenied = null;
 
 			if ($row->approveruserid)
 			{
@@ -866,7 +850,7 @@ class AccountsController extends Controller
 			return response()->json(['message' => trans('global.not authorized')], 403);
 		}
 
-		if (!$row->isTrashed())
+		if (!$row->trashed())
 		{
 			if (!$row->delete())
 			{

@@ -50,7 +50,7 @@ class CategoriesController extends Controller
 			$filters['order_dir'] = Category::$orderDir;
 		}
 
-		$query = Category::query()->withTrashed();
+		$query = Category::query();
 
 		if ($filters['parent'] > 1)
 		{
@@ -68,11 +68,15 @@ class CategoriesController extends Controller
 
 		if ($filters['state'] == 'published')
 		{
-			$query->whereIsActive();
+			// Do nothing -- defaults to published
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->whereIsTrashed();
+			$query->onlyTrashed();
+		}
+		else
+		{
+			$query->withTrashed();
 		}
 
 		$rows = $query
@@ -98,7 +102,6 @@ class CategoriesController extends Controller
 
 		$categories = Category::query()
 			->where('id', '!=', 1)
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
 			->orderBy('name', 'asc')
 			->get();
 
@@ -134,7 +137,7 @@ class CategoriesController extends Controller
 		}
 		elseif ($request->input('state') != 'trashed' && $row->trashed())
 		{
-			$row->datetimeremoved = '0000-00-00 00:00:00';
+			$row->datetimeremoved = null;
 		}
 
 		if (!$row->save())
@@ -160,8 +163,6 @@ class CategoriesController extends Controller
 		$categories = Category::query()
 			->where('id', '!=', $id)
 			->where('id', '!=', 1)
-			->withTrashed()
-			->whereIsActive()
 			->orderBy('name', 'asc')
 			->get();
 

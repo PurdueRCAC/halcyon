@@ -84,8 +84,6 @@ class EmailStatusCommand extends Command
 		}
 
 		$orders = Order::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('notice', '=', self::PENDING_PAYMENT)
 			->orderBy('id', 'asc')
 			->get();
@@ -165,8 +163,6 @@ class EmailStatusCommand extends Command
 		}
 
 		$orders = Order::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('notice', '=', self::PENDING_BOASSIGNMENT)
 			->whereNotIn('id', $processed)
 			->orderBy('id', 'asc')
@@ -235,8 +231,6 @@ class EmailStatusCommand extends Command
 		}
 
 		$orders = Order::query()
-			->withTrashed()
-			->whereIsActive()
 			->whereIn('notice', [self::PENDING_APPROVAL, self::PENDING_FULFILLMENT, self::PENDING_COLLECTION, self::COMPLETE])
 			->whereNotIn('id', $processed)
 			->orderBy('id', 'asc')
@@ -246,7 +240,7 @@ class EmailStatusCommand extends Command
 		{
 			$approvers = array();
 			$denied = false;
-			foreach ($order->accounts()->withTrashed()->whereIsActive()->get() as $account)
+			foreach ($order->accounts as $account)
 			{
 				if ($account->approveruserid
 				 && !in_array($account->approveruserid, $approvers)
@@ -366,8 +360,6 @@ class EmailStatusCommand extends Command
 		}
 
 		$orders = Order::query()
-			->withTrashed()
-			->whereIsActive()
 			->whereIn('notice', [self::PENDING_FULFILLMENT])
 			->orderBy('id', 'asc')
 			->get();
@@ -477,8 +469,6 @@ class EmailStatusCommand extends Command
 		}
 
 		$orders = Order::query()
-			->withTrashed()
-			->whereIsActive()
 			->whereIn('notice', [self::PENDING_COLLECTION])
 			->orderBy('id', 'asc')
 			->get();
@@ -550,8 +540,6 @@ class EmailStatusCommand extends Command
 		}
 
 		$orders = Order::query()
-			->withTrashed()
-			->whereIsActive()
 			->whereIn('notice', [self::COMPLETE])
 			->orderBy('id', 'asc')
 			->get();
@@ -618,8 +606,7 @@ class EmailStatusCommand extends Command
 		}
 
 		$orders = Order::query()
-			->withTrashed()
-			->whereIsTrashed()
+			->onlyTrashed()
 			//->where('notice', '>', 0)
 			->whereIn('notice', [self::CANCELED_NOTICE])
 			->orderBy('id', 'asc')

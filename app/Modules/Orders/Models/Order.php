@@ -4,7 +4,6 @@ namespace App\Modules\Orders\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Users\Models\User;
 use App\Modules\Orders\Events\OrderCreated;
@@ -16,7 +15,7 @@ use Carbon\Carbon;
  */
 class Order extends Model
 {
-	use SoftDeletes, LegacyTrash, Historable;
+	use SoftDeletes, Historable;
 
 	/**
 	 * The name of the "created at" column.
@@ -222,7 +221,7 @@ class Order extends Model
 	 */
 	public function isCanceled()
 	{
-		return $this->isTrashed();
+		return $this->trashed();
 	}
 
 	/**
@@ -261,7 +260,7 @@ class Order extends Model
 		}
 
 		//if ($this->trashed())
-		if ($this->isTrashed())
+		if ($this->trashed())
 		{
 			$status = 'canceled';
 		}
@@ -283,7 +282,7 @@ class Order extends Model
 				$ordertotal += $item->price;
 			}
 
-			$acc = $this->accounts()->withTrashed()->whereIsActive()->get();
+			$acc = $this->accounts;
 
 			$accounts = 0;
 			$accountspaid     = 0;
@@ -420,6 +419,12 @@ class Order extends Model
 		return $neg . $number;
 	}
 
+	/**
+	 * Generate basic stats for a given number of days
+	 *
+	 * @param   integer  $timeframe
+	 * @return  array
+	 */
 	public static function stats($timeframe = 7)
 	{
 		$now = Carbon::now();
@@ -430,8 +435,6 @@ class Order extends Model
 			$tomorrow  = Carbon::now()->modify(($d ? '- ' . ($d - 1) : '+ 1') . ' days');
 
 			$placed[$yesterday->format('Y-m-d')] = self::query()
-				->withTrashed()
-				->whereIsActive()
 				->where('datetimecreated', '>', $yesterday->format('Y-m-d') . ' 00:00:00')
 				->where('datetimecreated', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
 				->count();
@@ -441,16 +444,13 @@ class Order extends Model
 		$tomorrow  = Carbon::now()->modify('+ 1 days');
 
 		$past = self::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('datetimecreated', '>', $yesterday->format('Y-m-d') . ' 00:00:00')
 			->where('datetimecreated', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
 			->get();
 
 		$total = count($past);
 		$canceled = self::query()
-			->withTrashed()
-			->whereIsTrashed()
+			->onlyTrashed()
 			->where('datetimecreated', '>', $yesterday->format('Y-m-d') . ' 00:00:00')
 			->where('datetimecreated', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
 			->count();
@@ -562,6 +562,12 @@ class Order extends Model
 		return $stats;
 	}
 
+	/**
+	 * Generate human readable time
+	 *
+	 * @param   integer  $avg
+	 * @return  string
+	 */
 	public static function toHumanReadable($avg)
 	{
 		$unit = '';

@@ -225,7 +225,7 @@ app('pathway')
 				@foreach ($rows as $i => $row)
 					<tr data-id="{{ $row->id }}" data-api="{{ route('api.orders.categories.update', ['id' => $row->id]) }}">
 						<td>
-							@if (auth()->user()->can('delete orders.categories') && !$row->isTrashed())
+							@if (auth()->user()->can('delete orders.categories') && !$row->trashed())
 								<a class="btn text-danger btn-sm category-delete" href="{{ route('site.orders.categories.delete', ['id' => $row->id]) }}" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.orders.categories.delete', ['id' => $row->id]) }}" title="{{ trans('global.button.delete') }}">
 									<span class="fa fa-trash" aria-hidden="true"></span>
 									<span class="sr-only">{{ trans('global.button.delete') }}</span>
@@ -236,7 +236,7 @@ app('pathway')
 							{{ $row->id }}
 						</td>
 						<td>
-							@if ($row->isTrashed())
+							@if ($row->trashed())
 								<span class="fa fa-trash text-muted" aria-hidden="true"></span>
 							@endif
 							@if (auth()->user()->can('edit orders.categories'))

@@ -69,11 +69,7 @@ class ProductsController extends Controller
 		$query = Product::query()
 			->select($p . '.*', $c . '.name AS category_name')
 			->join($c, $c . '.id', $p . '.ordercategoryid')
-			->where(function($where) use ($c)
-			{
-				$where->whereNull($c . '.datetimeremoved')
-					->orWhere($c . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($c . '.datetimeremoved')
 			->withTrashed();
 
 		if ($filters['search'])
@@ -90,19 +86,11 @@ class ProductsController extends Controller
 
 		if ($filters['state'] == 'published')
 		{
-			$query->where(function($where) use ($p)
-			{
-				$where->whereNull($p . '.datetimeremoved')
-					->orWhere($p . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			});
+			$query->whereNull($p . '.datetimeremoved');
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->where(function($where) use ($p)
-			{
-				$where->whereNotNull($p . '.datetimeremoved')
-					->where($p . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-			});
+			$query->whereNotNull($p . '.datetimeremoved');
 		}
 
 		if ($filters['category'])
@@ -131,8 +119,6 @@ class ProductsController extends Controller
 			->appends(array_filter($filters));
 
 		$categories = Category::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
@@ -159,8 +145,6 @@ class ProductsController extends Controller
 		}
 
 		$categories = Category::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
@@ -187,8 +171,6 @@ class ProductsController extends Controller
 		}
 
 		$categories = Category::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')
 			->get();
