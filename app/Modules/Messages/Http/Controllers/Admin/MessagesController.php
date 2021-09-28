@@ -67,18 +67,33 @@ class MessagesController extends Controller
 
 		if ($filters['state'] == 'complete')
 		{
-			$query->where('datetimestarted', '!=', '0000-00-00 00:00:00')
+			$query->whereNotNull('datetimestarted')
+				->where('datetimestarted', '!=', '0000-00-00 00:00:00')
+				->whereNotNull('datetimecompleted')
 				->where('datetimecompleted', '!=', '0000-00-00 00:00:00');
 		}
 		elseif ($filters['state'] == 'incomplete')
 		{
-			$query->where('datetimestarted', '!=', '0000-00-00 00:00:00')
-				->where('datetimecompleted', '=', '0000-00-00 00:00:00');
+			$query->whereNotNull('datetimestarted')
+				->where('datetimestarted', '!=', '0000-00-00 00:00:00')
+				->where(function($where)
+				{
+					$where->whereNull('datetimecompleted')
+						->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
+				});
 		}
 		elseif ($filters['state'] == 'pending')
 		{
-			$query->where('datetimestarted', '=', '0000-00-00 00:00:00')
-				->where('datetimecompleted', '=', '0000-00-00 00:00:00');
+			$query->where(function($where)
+				{
+					$where->whereNull('datetimestarted')
+						->orWhere('datetimestarted', '=', '0000-00-00 00:00:00');
+				})
+				->where(function($where)
+				{
+					$where->whereNull('datetimecompleted')
+						->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
+				});
 		}
 
 		if ($filters['start'])
@@ -174,13 +189,21 @@ class MessagesController extends Controller
 			->get();
 
 		$stats->pending = Message::query()
-			->where('datetimecompleted', '=', '0000-00-00 00:00:00')
+			->where(function($where)
+			{
+				$where->whereNull('datetimecompleted')
+					->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
+			})
 			->count();
 
 		$stats->pendingtypes = Type::query()
 			->select($t . '.*', DB::raw('COUNT(' . $m . '.id) AS total'))
 			->join($m, $m . '.messagequeuetypeid', $t . '.id')
-			->where($m . '.datetimecompleted', '=', '0000-00-00 00:00:00')
+			->where(function($where) use ($m)
+			{
+				$where->whereNull($m . '.datetimecompleted')
+					->orWhere($m . '.datetimecompleted', '=', '0000-00-00 00:00:00');
+			})
 			->groupBy($m . '.messagequeuetypeid')
 			->groupBy($t . '.id')
 			->groupBy($t . '.name')
