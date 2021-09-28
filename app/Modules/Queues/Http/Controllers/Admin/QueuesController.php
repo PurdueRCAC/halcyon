@@ -173,7 +173,7 @@ class QueuesController extends Controller
 			->withTrashed()
 			->whereIsActive()
 			->where('batchsystem', '>', 0)
-			->where('listname', '!=', '')
+			//->where('listname', '!=', '')
 			->orderBy('name', 'asc')
 			->get();
 
