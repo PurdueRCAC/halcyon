@@ -79,7 +79,7 @@ class DirectoriesController extends Controller
 		{
 			if ($filters['state'] == 'active')
 			{
-				$query->where(function($where)
+				$query->where(function($where) use ($d)
 				{
 					$where->whereNull($d . '.datetimeremoved')
 						->orWhere($d . '.datetimeremoved', '=', '0000-00-00 00:00:00');
