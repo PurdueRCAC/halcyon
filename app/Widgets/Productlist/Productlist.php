@@ -18,8 +18,6 @@ class Productlist extends Widget
 	public function run()
 	{
 		$categories = Category::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('sequence', 'asc')
 			->get();
@@ -28,9 +26,7 @@ class Productlist extends Widget
 
 		foreach ($categories as $category)
 		{
-			$query = $category->products()
-				->withTrashed()
-				->whereIsActive();
+			$query = $category->products;
 
 			if (!auth()->user() || !auth()->user()->can('manage orders'))
 			{
