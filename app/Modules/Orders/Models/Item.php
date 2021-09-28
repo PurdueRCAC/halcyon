@@ -462,10 +462,10 @@ class Item extends Model
 		$o = (new Order)->getTable();
 
 		$sequences = self::query()
-			->withTrashed()
+			//->withTrashed()
 			->select($i . '.*')//DB::raw('DISTINCT(' . $i . '.origorderitemid)'))
 			->join($o, $o . '.id', '=', $i . '.orderid')
-			->whereNull($i . '.datetimeremoved')
+			//->whereNull($i . '.datetimeremoved')
 			->whereNull($o . '.datetimeremoved')
 			->where($i . '.origorderitemid', '=', $this->origorderitemid)
 			//->where($i . '.recurringtimeperiodid', '>', 0)

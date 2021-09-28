@@ -1230,6 +1230,10 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 		</div><!-- / .row -->
 		</div>
 		<div id="order-notes">
+			@if (auth()->user()->can('manage orders'))
+			<div class="row">
+				<div class="col-md-6">
+			@endif
 				<div class="card">
 					<div class="card-header">
 						@if ($canEdit)
@@ -1277,8 +1281,40 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						</p>
 					</div>
 				</div><!-- / .card -->
+				<div class="card">
+					@foreach ($order->items as $item)
+						@if ($item->origorderitemid)
+							<div class="card-header">
+								User Notes for recurring item:
+								<br /><strong>{{ $item->product->name }}</strong>
+							</div>
+							<ul class="list-group list-group-flush p-0">
+								<?php
+								foreach ($item->sequence() as $usernote):
+									if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
+										continue;
+									endif;
+									?>
+									<li class="list-group-item">
+										<div class="mb-1">
+											<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
+											<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
+										</div>
+										<blockquote>
+											<p>{!! $usernote->order->usernotes ? nl2br($usernote->order->usernotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
+										</blockquote>
+									</li>
+									<?php
+								endforeach;
+								?>
+							</ul>
+						@endif
+					@endforeach
+				</div>
 
 				@if (auth()->user()->can('manage orders'))
+				</div>
+				<div class="col-md-6">
 					<div class="card">
 						<div class="card-header">
 							<div class="row">
@@ -1306,6 +1342,39 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							</p>
 						</div>
 					</div><!-- / .card -->
+
+					<div class="card">
+						@foreach ($order->items as $item)
+							@if ($item->origorderitemid)
+								<div class="card-header">
+									Staff Notes for recurring item:
+									<br /><strong>{{ $item->product->name }}</strong>
+								</div>
+								<ul class="list-group list-group-flush p-0">
+									<?php
+									foreach ($item->sequence() as $usernote):
+										if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
+											continue;
+										endif;
+										?>
+										<li class="list-group-item">
+											<div class="mb-1">
+												<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
+												<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
+											</div>
+											<blockquote>
+												<p>{!! $usernote->order->staffnotes ? nl2br($usernote->order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
+											</blockquote>
+										</li>
+										<?php
+									endforeach;
+									?>
+								</ul>
+							@endif
+						@endforeach
+					</div>
+					</div>
+				</div>
 				@endif
 @if ($order->id)
 		</div>
