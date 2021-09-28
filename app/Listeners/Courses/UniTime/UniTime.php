@@ -1,8 +1,6 @@
 <?php
 /**
  * @package    halcyon
- * @copyright  Copyright 2005-2020 Purdue University
- * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace App\Listeners\Courses\UniTime;
@@ -12,10 +10,8 @@ use App\Modules\Courses\Events\AccountInstructorLookup;
 use App\Modules\Courses\Events\InstructorLookup;
 use App\Modules\Courses\Events\AccountEnrollment;
 use App\Modules\Courses\Models\Account;
-//use App\Modules\History\Models\Log;
 use App\Modules\History\Traits\Loggable;
 use GuzzleHttp\Client;
-//use GuzzleHttp\Stream\PhpStreamRequestFactory;
 
 /**
  * Course listener
