@@ -42,7 +42,7 @@ class Banner extends Widget
 						->where(function($wh) use ($minus12)
 						{
 							$wh->whereNull('datetimenewsend')
-								->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00')
+								//->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00')
 								->orWhere('datetimenewsend', '>=', $minus12);
 						});
 					});
@@ -92,7 +92,7 @@ class Banner extends Widget
 								->where(function($wh) use ($now)
 								{
 									$wh->whereNull('datetimenewsend')
-										->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00')
+										//->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00')
 										->orWhere('datetimenewsend', '>=', $now);
 								});
 						});
