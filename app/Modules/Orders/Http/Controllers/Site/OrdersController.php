@@ -493,7 +493,7 @@ class OrdersController extends Controller
 
 			if ($export == 'items')
 			{
-				foreach ($row->items as $item)
+				foreach ($row->items()->get() as $item)
 				{
 					$data[] = array(
 						//'item',
@@ -518,7 +518,7 @@ class OrdersController extends Controller
 
 			if ($export == 'accounts')
 			{
-				foreach ($row->accounts as $account)
+				foreach ($row->accounts()->get() as $account)
 				{
 					$data[] = array(
 						//'account',
