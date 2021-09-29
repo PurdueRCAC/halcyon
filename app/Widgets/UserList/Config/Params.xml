@@ -5,16 +5,25 @@
 			<field name="role_id" type="App\Modules\Users\Models\Fields\Roles" extension="users" multiple="true" default="" size="10" label="widget.userlist::userlist.params.category" description="widget.userlist::userlist.params.category desc" >
 				<option value="">widget.userlist::userlist.params.all roles</option>
 			</field>
-			<field name="item_title" type="radio" default="0" label="widget.userlist::userlist.params.show title" description="widget.userlist::userlist.params.show title desc">
+			<field name="show_phone" type="radio" default="0" label="widget.userlist::userlist.params.show phone" description="widget.userlist::userlist.params.show phone desc">
 				<option value="1">global.yes</option>
 				<option value="0">global.no</option>
 			</field>
-			<field name="item_heading" type="list" default="h4" label="widget.userlist::userlist.params.header level" description="widget.userlist::userlist.params.header level desc">
-				<option value="h1">H1</option>
-				<option value="h2">H2</option>
-				<option value="h3">H3</option>
-				<option value="h4">H4</option>
-				<option value="h5">H5</option>
+			<field name="show_specialty" type="radio" default="1" label="widget.userlist::userlist.params.show specialty" description="widget.userlist::userlist.params.show specialty desc">
+				<option value="1">global.yes</option>
+				<option value="0">global.no</option>
+			</field>
+			<field name="show_email" type="radio" default="1" label="widget.userlist::userlist.params.show email" description="widget.userlist::userlist.params.show email desc">
+				<option value="1">global.yes</option>
+				<option value="0">global.no</option>
+			</field>
+			<field name="show_office" type="radio" default="0" label="widget.userlist::userlist.params.show office" description="widget.userlist::userlist.params.show office desc">
+				<option value="1">global.yes</option>
+				<option value="0">global.no</option>
+			</field>
+			<field name="show_title" type="radio" default="1" label="widget.userlist::userlist.params.show title" description="widget.userlist::userlist.params.show title desc">
+				<option value="1">global.yes</option>
+				<option value="0">global.no</option>
 			</field>
 			<field name="limit" type="text" default="5" label="widget.userlist::userlist.params.number of items" description="widget.userlist::userlist.params.number of items desc" />
 			<field name="order" type="list" default="name" label="widget.userlist::userlist.params.ordering" description="widget.userlist::userlist.params.ordering desc">

@@ -6,6 +6,7 @@ use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Widgets\Entities\Widget;
 use Carbon\Carbon;
+use App\Modules\Users\Events\UserBeforeDisplay;
 
 /**
  * Widget for displaying a list of users
@@ -120,6 +121,22 @@ class UserList extends Widget
 			->orderBy($a . '.' . $this->params->get('order', 'name'), $this->params->get('order_dir', 'asc'))
 			->limit($this->params->get('limit', 5))
 			->get();
+
+		$users->each(function($user, $key)
+		{
+			//event($e = new UserBeforeDisplay($user));
+
+			$user->title = $user->facet('title');
+			$user->specialty = $user->facet('specialty');
+			$user->office = $user->facet('office');
+			$user->phone = $user->facet('phone');
+			$user->thumb = asset('files/staff_thumb.png');
+
+			if (file_exists(storage_path('app/public/users/' . $user->username . '/photo.jpg')))
+			{
+				$user->thumb = asset('files/users/' . $user->username . '/photo.jpg');
+			}
+		});
 
 		$layout = $this->params->get('layout');
 		$layout = $layout ?: 'index';
