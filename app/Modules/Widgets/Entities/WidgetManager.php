@@ -54,26 +54,16 @@ class WidgetManager
 
 		$name = strtolower($widget->name);
 
-		//$args = func_get_args();
-		//$this->instantiateWidget($args);
-		//$this->app->get('view')->addLocation(app_path() . '/Widgets/' . $widget->name . '/views', 'widgets.' . strtolower($widget->name));
-
 		$this->app->get('translator')->addNamespace(
 			'widget.' . $name,
-			app_path() . '/Widgets/' . Str::studly($name) . '/lang'
+			app_path() . '/Widgets/' . Str::studly($widget->name) . '/lang'
 		);
 		$this->app->get('view')->addNamespace(
 			'widget.' . $name,
-			app_path() . '/Widgets/' . Str::studly($name) . '/views'
+			app_path() . '/Widgets/' . Str::studly($widget->name) . '/views'
 		);
 
 		$content = $this->getContentFromCache($widget);
-
-		/*if ($timeout = (float) $this->getReloadTimeout())
-		{
-			$content .= $this->javascriptFactory->getReloader($timeout, $this->widget->encryptParams);
-			$content = $this->wrapContentInContainer($content);
-		}*/
 
 		return $content;
 	}
@@ -99,14 +89,10 @@ class WidgetManager
 					return strtolower($value->position) == $position;
 				});
 
-			//$words[$i] = count($widgets);
 			$total += count($widgets);
 		}
 
-		//$str = 'return ' . implode(' ', $words) . ';';
-
 		return $total;
-		//return eval($str);
 	}
 
 	/**
@@ -199,10 +185,6 @@ class WidgetManager
 
 		// Get just the file name
 		$name = $widget->widget;
-		/*if (substr($name, 0, 4) == 'mod_')
-		{
-			$name = substr($name, 4);
-		}*/
 		$name = Str::studly($name);
 
 		// Derive the class name from the type
