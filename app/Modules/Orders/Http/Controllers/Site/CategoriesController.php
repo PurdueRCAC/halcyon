@@ -130,6 +130,10 @@ class CategoriesController extends Controller
 		$row = $id ? Category::findOrFail($id) : new Category();
 
 		$row->fill($request->input('fields'));
+		if (!$row->description)
+		{
+			$row->description = '';
+		}
 
 		if ($request->input('state') == 'trashed' && !$row->trashed())
 		{

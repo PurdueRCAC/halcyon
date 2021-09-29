@@ -7,7 +7,7 @@
 	<div id="{{ $category->alias }}">
 		<h3>{{ $category->name }}</h3>
 		@if ($category->description)
-			<p>{{ $category->description }}</p>
+			<p>{!! $category->description !!}</p>
 		@endif
 		<ul class="purchases">
 			@foreach ($category->resources as $resourceid => $data)
@@ -24,7 +24,7 @@
 										<p class="card-title"><a class="purchase-resource" href="{{ route('site.orders.products', ['category' => $category->id]) }}">{{ $resource->name }}</a></p>
 									</div>
 									<div class="col-md-4 text-right">
-										<p><a class="btn btn-default btn-sm btn-purchase" href="{{ route('site.orders.products', ['category' => $category->id]) }}">Purchase Now</a></p>
+										<p><a class="btn btn-default btn-sm btn-purchase" href="{{ route('site.orders.products', ['category' => $category->id]) }}">Purchase <span class="sr-only">{{ $resource->name }} </span>Now</a></p>
 									</div>
 								</div>
 

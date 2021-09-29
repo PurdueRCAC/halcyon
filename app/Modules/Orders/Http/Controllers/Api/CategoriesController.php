@@ -246,6 +246,10 @@ class CategoriesController extends Controller
 
 		$row = new Category();
 		$row->fill($request->all());
+		if (!$row->description)
+		{
+			$row->description = '';
+		}
 
 		if ($row->parentordercategoryid)
 		{
@@ -385,6 +389,10 @@ class CategoriesController extends Controller
 
 		$row = Category::findOrFail($id);
 		$row->fill($request->all());
+		if (!$row->description)
+		{
+			$row->description = '';
+		}
 
 		if ($row->parentordercategoryid != $row->getOriginal('parentordercategoryid'))
 		{
