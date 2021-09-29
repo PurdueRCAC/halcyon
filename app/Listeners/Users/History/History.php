@@ -229,7 +229,7 @@ class History
 				}
 				$item->created = $class->datetimestart;
 				$item->removed = $class->datetimestop;
-				$item->isTrashed = $class->isTrashed();
+				$item->isTrashed = $class->trashed();
 
 				$items->push($item);
 			}
