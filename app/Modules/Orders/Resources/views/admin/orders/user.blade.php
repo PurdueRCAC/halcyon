@@ -51,7 +51,7 @@ $(document).ready(function() {
 						@endif
 					</td>
 					<td class="priority-4">
-						@if ($row-datetimecreated)
+						@if ($row->datetimecreated)
 							<time datetime="{{ $row->datetimecreated->toDateTimeString() }}">
 								@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
 									{{ $row->datetimecreated->diffForHumans() }}
