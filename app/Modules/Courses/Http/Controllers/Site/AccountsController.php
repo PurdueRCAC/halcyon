@@ -80,7 +80,7 @@ class AccountsController extends Controller
 						$usr->datetimecreated,
 						$usr->datetimestart,
 						$usr->datetimestop,
-						($usr->isTrashed() ? $usr->datetimeremoved : '')
+						($usr->trashed() ? $usr->datetimeremoved : '')
 					);
 				}
 			}
@@ -228,10 +228,10 @@ class AccountsController extends Controller
 					if ($member)
 					{
 						// Was apart of the class but membership was removed?
-						if ($member->isTrashed())
+						if ($member->trashed())
 						{
 							// Restore membership
-							$member->forceRestore();
+							$member->restore();
 						}
 
 						// Already apart of the class

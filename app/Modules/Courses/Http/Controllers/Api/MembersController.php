@@ -574,7 +574,7 @@ class MembersController extends Controller
 	{
 		$row = Member::findOrFail($id);
 
-		if (!$row->isTrashed())
+		if (!$row->trashed())
 		{
 			if (!$row->delete())
 			{
@@ -730,10 +730,10 @@ class MembersController extends Controller
 					if ($member && $member->id)
 					{
 						// Was apart of the class but membership was removed?
-						if ($member->isTrashed())
+						if ($member->trashed())
 						{
 							// Restore membership
-							$member->forceRestore();
+							$member->restore();
 						}
 
 						// Already apart of the class

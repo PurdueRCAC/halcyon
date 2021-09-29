@@ -75,7 +75,7 @@
 									</time>
 								</td>
 								<td>
-									@if ($class->isTrashed())
+									@if ($class->trashed())
 										<time datetime="{{ $class->datetimeremoved->toDateTimeString() }}">
 											@if ($class->datetimeremoved->getTimestamp() > $now->getTimestamp())
 												{{ $class->datetimeremoved->diffForHumans() }}
@@ -171,7 +171,7 @@
 									</time>
 								</td>
 								<td>
-									@if ($s->isTrashed())
+									@if ($s->trashed())
 										<time datetime="{{ $s->datetimeremoved->toDateTimeString() }}">
 											@if ($s->datetimeremoved->getTimestamp() > $now->getTimestamp())
 												{{ $s->datetimeremoved->diffForHumans() }}

@@ -879,7 +879,7 @@ class AccountsController extends Controller
 			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 403);
 		}
 
-		if (!$row->isTrashed())
+		if (!$row->trashed())
 		{
 			if (!$row->delete())
 			{
