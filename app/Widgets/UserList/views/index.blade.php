@@ -39,7 +39,7 @@
 									@endif
 								</ul>
 
-								<p><a class="profile-full" href="/about/staff/{{ $user->username }}">Full profile <span class="sr-only">for {{ $user->name }}</span> ›</a></p>
+								<p><a class="profile-full" href="{{ $user->page }}">Full profile <span class="sr-only">for {{ $user->name }}</span> ›</a></p>
 							</div>
 						</div>
 					</div>

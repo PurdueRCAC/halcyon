@@ -136,6 +136,8 @@ class UserList extends Widget
 			{
 				$user->thumb = asset('files/users/' . $user->username . '/photo.jpg');
 			}
+
+			$user->page = route('page', ['uri' => 'about/staff/' . $user->username]);
 		});
 
 		$layout = $this->params->get('layout');
