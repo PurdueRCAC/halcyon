@@ -188,7 +188,7 @@ app('pathway')
 								</td>
 								<td class="text-right">
 									<input type="hidden" name="facet[{{ $i }}][id]" class="form-control" value="{{ $facet->id }}" />
-									<a href="#facet-{{ $facet->id }}" class="btn btn-secondary btn-danger remove-facet"
+									<a href="#facet-{{ $facet->id }}" class="btn text-danger remove-facet"
 										data-api="{{ route('api.users.facets.delete', ['id' => $facet->id]) }}"
 										data-confirm="{{ trans('users::users.confirm delete') }}">
 										<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
@@ -238,7 +238,7 @@ app('pathway')
 							</td>
 							<td class="text-right">
 								<input type="hidden" name="facet[{i}][id]" class="form-control" value="{id}" />
-								<a href="#facet-{id}" class="btn btn-danger remove-facet"
+								<a href="#facet-{id}" class="btn text-danger remove-facet"
 									data-api="{{ route('api.users.facets.create') }}/{id}"
 									data-confirm="{{ trans('users::users.confirm delete') }}">
 									<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
