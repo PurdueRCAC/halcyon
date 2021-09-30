@@ -175,24 +175,6 @@ a.card {
 	transition: all 0.3s ease;
 	border: 2px solid transparent;
 }
-.col-sm-4 .card,
-.col-sm-4 a.card,
-.col-sm-4 a.card:link {
-	background-color: transparent;
-	border-color: #f1f1f1;
-}
-.col-sm-4 a.card:hover,
-.col-sm-4 a.card:focus,
-a.card:hover,
-a.card:focus {
-	-webkit-transform: translateY(-7px);
-	transform: translateY(-7px);
-	border-color: #cfb991;
-	font-weight: inherit;
-}
-.card-header {
-	font-size: 2em;
-}
 
 @media (min-width: 700px) {
 	.hero {
@@ -239,9 +221,5 @@ a.card:focus {
 @media (min-width: 1200px) {
 	.hero {
 		background-size: auto 80%;
-	}
-
-	.coming-soon .card-header {
-		text-align: right;
 	}
 }

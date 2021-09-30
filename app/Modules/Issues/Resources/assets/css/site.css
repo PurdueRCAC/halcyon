@@ -3,3 +3,28 @@
 .unknown {
 	color: #ccc;
 }
+
+.contentInner ul.checklist>li {
+	list-style: none;
+	margin-left: 0;
+}
+.contentInner ul.checklist>li .form-text {
+	margin-left: 1.25em;
+}
+
+.panel-issuetodos {
+	border-color: #fc654a;
+}
+.panel-issuetodos .badge,
+.panel-issuetodos .issue-todo-alert {
+	position: absolute;
+	top: 1em;
+	right: 1em;
+}
+.panel-issuetodos .row .badge,
+.panel-issuetodos .row .issue-todo-alert {
+	top: 0.25em;
+}
+.panel-issuetodos .issue-todo-alert {
+	right: 5em;
+}

@@ -2207,9 +2207,6 @@ div#preview a {
 	color: #8e6f3e; /*#9c6700;*/
 }
 
-/*div.staffleader {
-	min-height: 300px;
-}*/
 .staffleader {
 	display: flex;
 	flex-wrap: wrap;
@@ -2292,25 +2289,6 @@ h3.downloads {
 	padding-top: 0.5em;
 }
 
-/* Notifications
-.motd_text {
-	padding: 1em;
-	margin: 0 0 2em 0;
-	background-color: #f3ebc7;
-	border: 2px solid #dcc65e;
-	color: #705e12;
-	-webkit-border-radius: 0.25em;
-	-moz-border-radius: 0.25em;
-	border-radius: 0.25em;
-}
-.motd_message {
-	margin: 1em 0 0 0;
-}
-.motd_header {
-	font-weight: bold;
-	color: #b29219;
-} */
-
 #add_errors {
 	color: red;
 }
@@ -2325,7 +2303,7 @@ h3.downloads {
 	color: red;
 }
 .fa-file-word-o:before {
-	color: #337ab7; /*blue;*/
+	color: #337ab7;
 }
 .fa-file-excel-o:before {
 	color: green;
@@ -2418,6 +2396,7 @@ img.align-right {
 	fill: currentColor;
 }
 
+/* Select2 overrides*/
 html .select2-container {
     width: 100% !important;
 }
@@ -2425,11 +2404,9 @@ html .input-group > .select2-container {
     -ms-flex: 1 1 0%;
     flex: 1 1 0%;
 }
-/*.contentPage .input-group > .select2-container--default:not(:last-child) .select2-selection--multiple {*/
 html .select2-container--default .select2-selection--multiple {
     border-radius: 0;
 }
-
 html .select2-container .select2-selection--single {
 	height: 34px;
 }
@@ -2491,43 +2468,17 @@ html .select2-container--default.select2-container--focus .select2-selection--mu
 	outline: 0;
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
-/*html .select2-container--default .select2-results__group:hover {
-	background-color: #555555;
-	color: #fff;
-}*/
-.contentInner ul.checklist>li {
-	list-style: none;
-	margin-left: 0;
-}
-.contentInner ul.checklist>li .form-text {
-	margin-left: 1.25em;
-}
-.panel-issuetodos {
-	border-color: #fc654a;
-}
-.panel-issuetodos .badge,
-.panel-issuetodos .issue-todo-alert {
-	position: absolute;
-	top: 1em;
-	right: 1em;
-}
-.panel-issuetodos .row .badge,
-.panel-issuetodos .row .issue-todo-alert {
-	top: 0.25em;
-}
-.panel-issuetodos .issue-todo-alert {
-	right: 5em;
-}
-body table.dataTable {
+
+/* Datatable overrides */
+html table.dataTable {
 	margin: 0 !important;
 }
-body table.dataTable tr {
+html table.dataTable tr {
 	background-color: #fff;
 }
-body table.dataTable tr:first-child td {
+html table.dataTable tr:first-child td {
 	border-top: none;
 }
-
 html div.dataTables_wrapper div.dataTables_filter {
 	text-align: left;
 }
@@ -2623,13 +2574,6 @@ div.dialog ul.student-list li,
 img:not([alt]) {
 	outline: 2px solid red;
 }
-
-/* Remove list styles on ul, ol elements with a list role,
-which suggests default styling will be removed
-ul[role="list"],
-ol[role="list"] {
-	list-style: none;
-}*/
 
 @media print {
 	.department a:after,
