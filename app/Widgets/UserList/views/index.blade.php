@@ -11,7 +11,7 @@
 					<div class="profile-inner">
 						<div class="profile-front">
 							<div class="profile-wrap">
-								<div class="avatar mx-auto"><img alt="{{ $user->name }}'s Profile Photo" class="profile_teaser_photo vertical" src="{{ $user->thumb }}" /></div>
+								<div class="avatar mx-auto"><img alt="{{ $user->name }}'s Profile Photo" class="profile_teaser_photo vertical" src="{{ $user->thumb }}" width="100" /></div>
 
 								<p class="card-title profile_name">{{ $user->name }}</p>
 
