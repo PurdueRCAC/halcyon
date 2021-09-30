@@ -67,7 +67,7 @@ class EmailFreeAuthorizedCommand extends Command
 
 		if (!count($groupqueueusers))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->comment('No records to email.');
 			}
