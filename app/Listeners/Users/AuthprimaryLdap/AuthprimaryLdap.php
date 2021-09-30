@@ -444,17 +444,22 @@ class AuthprimaryLdap
 				*/
 				// Create user record in ou=People
 				$data = [
-					'uid'           => $user->username,
-					'uidNumber'     => $user->uidNumber,
-					'gidNumber'     => $user->gidNumber,
-					'cn'            => $user->name,
-					'givenName'     => $user->givenName,
-					'sn'            => $user->surname,
-					'loginShell'    => $user->loginShell,
-					'homeDirectory' => '/home/' . $user->username,
-					'gecos'         => $user->name,
+					'uid'            => $user->username,
+					'uidNumber'      => $user->uidNumber,
+					'gidNumber'      => $user->gidNumber,
+					'cn'             => $user->name,
+					'givenName'      => $user->givenName,
+					'sn'             => $user->surname,
+					'loginShell'     => $user->loginShell,
+					'homeDirectory'  => '/home/' . $user->username,
+					'gecos'          => $user->name,
 					'x-xsede-userDn' => $userDns,
 				];
+
+				if (empty($data['x-xsede-userDn']))
+				{
+					unset($data['x-xsede-userDn']);
+				}
 
 				if ($user->telephoneNumber)
 				{
