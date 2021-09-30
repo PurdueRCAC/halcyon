@@ -72,5 +72,6 @@ return [
         '128.211.148.10',  // halstead-adm.rcac.purdue.edu
         '128.211.158.41',  // hammer-adm.rcac.purdue.edu
         '172.18.8.27',     // mack-adm.rcac.purdue.edu
+        '172.18.95.224',   // adm.anvil.rcac.purdue.edu
     ],
 ];
