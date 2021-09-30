@@ -90,11 +90,7 @@ class EmailFollowupsCommand extends Command
 				->select($cu . '.*', $r . '.datetimecontact')
 				->where($r . '.contactreporttypeid', '=', $type->id)
 				->where($r . '.datetimecontact', '>=', $threshold)
-				->where(function($where) use ($cu)
-				{
-					$where->whereNull($cu . '.datetimelastnotify')
-						->orWhere($cu . '.datetimelastnotify', '=', '0000-00-00 00:00:00');
-				})
+				->whereNull($cu . '.datetimelastnotify')
 				->get();
 
 			// Any records found?
@@ -141,7 +137,6 @@ class EmailFollowupsCommand extends Command
 						->where($r . '.contactreporttypeid', '=', $type->id)
 						->where($cu . '.userid', '=', $u->userid)
 						->whereNotNull($cu . '.datetimelastnotify')
-						->where($cu . '.datetimelastnotify', '!=', '0000-00-00 00:00:00')
 						->where($cu . '.datetimelastnotify', '>', Carbon::now()->modify('-' . $type->waitperiodcount . ' ' . $type->waitperiod->plural)->toDateTimeString())
 						->count();
 
