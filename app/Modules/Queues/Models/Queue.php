@@ -220,7 +220,7 @@ class Queue extends Model
 	}
 
 	/**
-	 * Defines a relationship to subqueues
+	 * Defines a relationship to group
 	 *
 	 * @return  object
 	 */
@@ -230,7 +230,7 @@ class Queue extends Model
 	}
 
 	/**
-	 * Defines a relationship to subqueues
+	 * Defines a relationship to schedulers
 	 *
 	 * @return  object
 	 */
@@ -269,7 +269,7 @@ class Queue extends Model
 	}
 
 	/**
-	 * Defines a relationship to sizes
+	 * Defines a relationship to sizes (purchases)
 	 *
 	 * @return  object
 	 */
