@@ -4,14 +4,8 @@ namespace App\Modules\Storage\Console;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\DB;
-use App\Modules\Storage\Models\Notification;
 use App\Modules\Storage\Models\Directory;
-use App\Modules\Storage\Models\Usage;
-use App\Modules\Storage\Mail\Quota;
-use App\Modules\Users\Models\User;
-use App\Halcyon\Utility\Number;
+use App\Modules\Storage\Models\StorageResource;
 
 class QuotaCheckCommand extends Command
 {
@@ -36,251 +30,174 @@ class QuotaCheckCommand extends Command
 	{
 		$debug = $this->option('debug') ? true : false;
 
-		$messages = Message::query()
-			->whereNotStarted()
-			->whereNotCompleted()
-			->where('messagequeuetypeid', '=', 1)
-			->orderBy('id', 'asc')
-			->limit(500)
-			->get();
-
-		$users = Notification::query()
-			->select(DB::raw('DISTINCT(userid) AS userid'))
-			->withTrashed()
-			->whereIsActive()
-			->get()
-			->pluck('userid')
-			->toArray();
-
-		if (!count($users))
-		{
-			if ($debug)
-			{
-				$this->info('No quotas found');
-			}
-			return;
-		}
-
-		$n = (new Notification)->getTable();
 		$d = (new Directory)->getTable();
+		$r = (new StorageResource)->getTable();
 
-		foreach ($users as $userid)
-		{
-			$user = User::find($userid);
-
-			if (!$user)
-			{
-				$this->error('Could not find account for user #' . $userid);
-				continue;
-			}
-
-			$notifications = Notification::query()
-				->join($d, $d . '.id', $n . '.storagedirid')
-				->where($n . '.userid', '=', $userid)
-				->where(function($where) use ($n)
+		$dirs = Directory::query()
+			->select($d . '.*', $r . '.getquotatypeid')
+			->join($r, $r . '.id', $d . '.storageresourceid')
+			->where($r . '.parentresourceid', '=', 64)
+			->where(function($where) use ($r, $d)
 				{
-					$where->whereNull($n . '.datetimeremoved')
-						->orWhere($n . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+					$where->where($d . '.bytes', '<>', 0)
+						->orWhere($r . '.defaultquotaspace', '<>', 0);
 				})
-				->where(function($where) use ($d)
+			->where(function($where) use ($d)
 				{
 					$where->whereNull($d . '.datetimeremoved')
 						->orWhere($d . '.datetimeremoved', '=', '0000-00-00 00:00:00');
 				})
-				->get();
-
-			foreach ($notifications as $not)
-			{
-				if (!$not->wasNotified())
+			->where(function($where) use ($r)
 				{
-					$not->datetimelastnotify = $not->datetimecreated;
+					$where->whereNull($r . '.datetimeremoved')
+						->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
+				})
+			->get();
+
+		if (!count($dirs))
+		{
+			if ($debug || $this->output->isVerbose())
+			{
+				$this->info('No storage directories found');
+			}
+			return;
+		}
+
+		$param = array(
+			'target'  => 0.2,
+			'min'     => 0.25,
+			'max'     => 12,
+			'start'   => 2,
+			'rampup'  => 2,
+			'backoff' => 1.5,
+		);
+		$started = array();
+		$skipped = array();
+		$now = date("U");
+
+		foreach ($dirs as $dir)
+		{
+			$type = $dir->getquotatypeid;
+
+			if (!isset($started[$type]))
+			{
+				$started[$type] = 0;
+			}
+
+			if (!isset($skipped[$type]))
+			{
+				$skipped[$type] = 0;
+			}
+
+			$usage = $dir->usage()
+				->orderBy('datetimerecorded', 'desc')
+				->limit(1)
+				->get()
+				->first();
+
+			// Force refresh?
+			if (!$usage)
+			{
+				if ($dir->getquotatypeid)
+				{
+					// Check for pending requests
+					$message = $dir->messages()
+						->where('messagequeuetypeid', '=', $dir->getquotatypeid)
+						->where(function($where)
+						{
+							$where->whereNull('datetimecompleted')
+								->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
+						})
+						->get()
+						->first();
+
+					if (!$message)
+					{
+						$dir->addMessageToQueue($dir->getquotatypeid, auth()->user() ? auth()->user()->id : 0);
+
+						$started[$type]++;
+					}
+					else
+					{
+						$skipped[$type]++;
+					}
 				}
 
-				$last = $not->directory->usage()
-					->orderby('datetimerecorded', 'desc')
-					->limit(1)
+				continue;
+			}
+
+			// Grab paramaters
+			$target_var = $param['target'];
+
+			// Grab starting values
+			$var = $usage->normalvariability;
+			$last_interval = $usage->lastinterval;
+			$last_check = strtotime($usage->datetimerecorded);
+
+			$this_interval = $param['start'] * 60 * 60;
+
+			if (!$last_interval)
+			{
+				// Only have one data point, let's use the starting interval
+				$this_interval = $param['start'] * 60 * 60;
+			}
+			else
+			{
+				if ($var > $target_var)
+				{
+					// Ramp up
+					$this_interval = round(max($param['min'] * 60 * 60, $last_interval / $param['rampup']));
+				}
+				else if ($var < $target_var)
+				{
+					// Back off
+					$this_interval = round(min($param['max'] * 60 * 60, $last_interval * $param['backoff']));
+				}
+				else
+				{
+					// Just right!
+					$this_interval = $last_interval;
+				}
+			}
+
+			// OK, check if it's time to get this check going
+			if ($now - $last_check >= $this_interval)
+			{
+				$message = $dir->messages()
+					->where('messagequeuetypeid', '=', $dir->getquotatypeid)
+					->where(function($where)
+					{
+						$where->whereNull('datetimecompleted')
+							->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
+					})
+					->get()
 					->first();
 
-				$not->status = '?';
-
-				if ($last)
+				if (!$message)
 				{
-					switch ($not->type->id)
-					{
-						case 1:
-							$not->nextreport = $not->nextnotify;
-						break;
+					$dir->addMessageToQueue($dir->getquotatypeid, auth()->user() ? auth()->user()->id : 0);
 
-						case 2:
-							if (!$last->quota)
-							{
-								$not->status = '?';
-							}
-							else if ($last->space > $not->value)
-							{
-								$not->status = 0;
-							}
-							else
-							{
-								$not->status = 1;
-							}
-						break;
-
-						case 3:
-							if (!$last->quota)
-							{
-								$not->status = '?';
-							}
-							else if (($last->space / $last->quota) * 100 > $not->value)
-							{
-								$not->status = 0;
-							}
-							else
-							{
-								$not->status = 1;
-							}
-						break;
-
-						case 4:
-							if (!$last->quota)
-							{
-								$not->status = '?';
-							}
-							else if ($last->files > $not->value)
-							{
-								$not->status = 0;
-							}
-							else
-							{
-								$not->status = 1;
-							}
-						break;
-
-						case 5:
-							if (!$last->quota)
-							{
-								$not->status = '?';
-							}
-							else if (($last->files / $last->filequota) * 100 > $not->value)
-							{
-								$not->status = 0;
-							}
-							else
-							{
-								$not->status = 1;
-							}
-						break;
-
-						default:
-							// Nothing to do here
-						break;
-					}
+					$started[$type]++;
 				}
 				else
 				{
-					$last = new Usage;
+					$skipped[$type]++;
 				}
+			}
+		}
 
-				if ($not->type->id == 2)
-				{
-					$not->threshold = Number::formatBytes($not->value);
-				}
-				else if ($not->type->id == 3)
-				{
-					$not->threshold = $not->value . '%';
-				}
-				else if ($not->type->id == 4)
-				{
-					$not->threshold = $not->value . ' files';
-				}
-				else if ($not->type->id == 5)
-				{
-					$not->threshold = $not->value . '%';
-				}
+		if ($debug || $this->output->isVerbose())
+		{
+			$this->info('Started:');
+			foreach ($started as $key => $value)
+			{
+				$this->line("\tmessagequeuetypeid: " . $key . ", count: " . $value);
+			}
 
-				if ($not->status == 0 && $not->notice == 0)
-				{
-					$message = new Quota('exceed', $user, $not, $last);
-
-					if ($debug)
-					{
-						echo $message->render();
-						continue;
-					}
-
-					Mail::to($user->email)->send($message);
-
-					//$this->info('Emailed exceed quota to ' . $user->email);
-				}
-				// Over threshold, have already notified. Nothing to do.
-				else if ($not->status == 0 && $not->notice == 1)
-				{
-				}
-				// Under threshold, haven't notified
-				else if ($not->status == 1 && $not->notice == 1)
-				{
-					$message = new Quota('below', $user, $not, $last);
-
-					if ($debug)
-					{
-						echo $message->render();
-						continue;
-					}
-
-					Mail::to($user->email)->send($message);
-
-					//$this->info('Emailed below quota to ' . $user->email);
-				}
-				// Under threshold, never notified or have notified. Nothing to do.
-				else if ($not->status == 1 && $not->notice == 0)
-				{
-				}
-				else
-				{
-					if ($not->type->id != 1)
-					{
-						continue;
-					}
-
-					if (date("U") <= strtotime($not->nextreport))
-					{
-						continue;
-					}
-
-					$storagedir = $not->directory;
-
-					// Set notice
-					if (strtotime($last->datetimerecorded) != 0
-					 && $last->space != 0)
-					{
-						// Only mail if enabled
-						if ($not->enabled)
-						{
-							$message = new Quota('report', $user, $not, $last);
-
-							if ($debug)
-							{
-								echo $message->render();
-								continue;
-							}
-
-							Mail::to($user->email)->send($message);
-
-							//$this->info('Emailed report quota to ' . $user->email);
-						}
-
-						// Attempt to prevent weird situations of resetting report date.
-						if (strtotime($not->nextreport) > strtotime($not->datetimelastnotify))
-						{
-							$not->datetimelastnotify = $not->nextreport;
-							$not->save();
-						}
-						else
-						{
-							$this->error('An error occurred: Tried to go backwards in time with quota report.');
-						}
-					}
-				}
+			$this->info('Skipped:');
+			foreach ($skipped as $key => $value)
+			{
+				$this->line("\tmessagequeuetypeid: " . $key . ", count: " . $value);
 			}
 		}
 	}

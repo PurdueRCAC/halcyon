@@ -51,7 +51,7 @@ class EmailQuotaCommand extends Command
 
 		if (!count($users))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->info('No quotas found');
 			}
@@ -69,7 +69,10 @@ class EmailQuotaCommand extends Command
 
 			if (!$user)
 			{
-				$this->error('Could not find account for user #' . $userid);
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->error('Could not find account for user #' . $userid);
+				}
 				continue;
 			}
 
@@ -216,11 +219,19 @@ class EmailQuotaCommand extends Command
 					{
 						$message = new Quota('exceed', $user, $not, $last);
 
-						if ($debug)
+						if ($this->output->isDebug())
 						{
-							//echo $message->render();
+							echo $message->render();
+						}
+
+						if ($debug || $this->output->isVerbose())
+						{
 							$this->info('Emailed exceed quota to ' . $user->email);
-							continue;
+
+							if ($debug)
+							{
+								continue;
+							}
 						}
 
 						Mail::to($user->email)->send($message);
@@ -302,11 +313,19 @@ class EmailQuotaCommand extends Command
 						{
 							$message = new Quota('report', $user, $not, $last);
 
-							if ($debug)
+							if ($this->output->isDebug())
 							{
-								//echo $message->render();
+								echo $message->render();
+							}
+
+							if ($debug || $this->output->isVerbose())
+							{
 								$this->info('Emailed report quota to ' . $user->email . ', next report:' . $not->nextnotify);
-								continue;
+
+								if ($debug)
+								{
+									continue;
+								}
 							}
 
 							Mail::to($user->email)->send($message);

@@ -11,6 +11,7 @@ use App\Modules\Storage\Listeners\UnixGroupMembers;
 use App\Modules\Storage\Listeners\Notifications;
 use App\Modules\Storage\Listeners\UserStorage;
 use App\Modules\Storage\Console\EmailQuotaCommand;
+use App\Modules\Storage\Console\QuotaCheckCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -86,6 +87,7 @@ class ModuleServiceProvider extends ServiceProvider
 	{
 		$this->commands([
 			EmailQuotaCommand::class,
+			QuotaCheckCommand::class,
 		]);
 	}
 

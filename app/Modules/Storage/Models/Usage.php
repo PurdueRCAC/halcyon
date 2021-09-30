@@ -3,7 +3,9 @@
 namespace App\Modules\Storage\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use App\Modules\History\Traits\Historable;
+use Carbon\Carbon;
 
 /**
  * Storage usage
@@ -63,6 +65,74 @@ class Usage extends Model
 	public function getBlockLimitAttribute()
 	{
 		return ($this->quota / 1024);
+	}
+
+	/**
+	 * Get normal variability
+	 *
+	 * @return  integer
+	 */
+	public function getNormalvariabilityAttribute()
+	{
+		/*
+		SELECT resourceid, 
+				storagedirid, 
+				quota AS lastquota, 
+				space AS lastspace, 
+				lastcheck, 
+				lastinterval,
+				LEAST(1, (SUM(tb1.var) / SUM(tb1.max)) * GREATEST(1, 5 * POW((space / quota) , 28))) AS normalvariability FROM 
+					(SELECT storagedirusage.id, 
+						storagedirs.resourceid, 
+						storagedirusage.storagedirid, 
+						storagedirusage.quota, 
+						storagedirusage.space, 
+						storagedirusage.lastinterval, 
+						MAX(storagedirusage.datetimerecorded) AS lastcheck,
+						LEFT(storagedirusage.datetimerecorded, 10) AS day,
+						(((COUNT(DISTINCT storagedirusage.space)-1) / COUNT(storagedirusage.space)) * EXP(-(((UNIX_TIMESTAMP(LEFT(NOW(), 10)) - UNIX_TIMESTAMP(LEFT(storagedirusage.datetimerecorded, 10)))/86400)+1)*0.25)) as var,
+							(EXP(-(((UNIX_TIMESTAMP(LEFT(NOW(), 10)) - UNIX_TIMESTAMP(LEFT(storagedirusage.datetimerecorded, 10)))/86400)+1)*0.25)) AS max 
+					FROM storagedirusage, 
+						storagedirs 
+					WHERE storagedirusage.datetimerecorded >= DATE_SUB(NOW(), INTERVAL 10 DAY) AND 
+						storagedirusage.storagedirid <> 0 
+						AND (storagedirusage.quota <> 0 OR storagedirusage.space <> 0) 
+						AND storagedirs.id = storagedirusage.storagedirid 
+					GROUP BY storagedirusage.storagedirid, 
+						day 
+					ORDER BY storagedirusage.storagedirid, 
+						storagedirusage.datetimerecorded DESC) AS tb1 
+			GROUP BY tb1.storagedirid
+		*/
+
+		$d = $this->getTable();
+
+		$row = self::query()
+			->select(
+				$d . '.*',
+				DB::raw('(((COUNT(DISTINCT ' . $d . '.space)-1) / COUNT(' . $d . '.space)) * EXP(-(((UNIX_TIMESTAMP(LEFT(NOW(), 10)) - UNIX_TIMESTAMP(LEFT(' . $d . '.datetimerecorded, 10)))/86400)+1)*0.25)) AS var'),
+				DB::raw('(EXP(-(((UNIX_TIMESTAMP(LEFT(NOW(), 10)) - UNIX_TIMESTAMP(LEFT(' . $d . '.datetimerecorded, 10)))/86400)+1)*0.25)) AS max')
+			)
+			->where('storagedirid', '=', $this->storagedirid)
+			->where('datetimerecorded', '>=', Carbon::now()->modify('-10 days')->toDateTimeString())
+			->where(function($where)
+			{
+				$where->where('quota', '<>', 0)
+					->orWhere('space', '<>', 0);
+			})
+			->orderBy('datetimerecorded', 'desc')
+			->groupBy('id')
+			->groupBy('storagedirid')
+			->limit(1)
+			->get()
+			->first();
+
+		if (!$row)
+		{
+			return 0;
+		}
+
+		return min(1, ($row->var / $row->max) * max(1, 5 * pow(($row->space / $row->quota) , 28)));
 	}
 
 	/**
