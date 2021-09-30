@@ -4,8 +4,10 @@ namespace App\Modules\Storage\Console;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\StorageResource;
+use App\Modules\Storage\Models\Usage;
 
 class QuotaCheckCommand extends Command
 {
@@ -54,6 +56,43 @@ class QuotaCheckCommand extends Command
 				})
 			->get();
 
+		$u = (new Usage)->getTable();
+
+		$usages = DB::select(DB::raw("SELECT resourceid, 
+				storagedirid, 
+				quota AS lastquota, 
+				space AS lastspace, 
+				lastcheck, 
+				lastinterval,
+				LEAST(1, (SUM(tb1.var) / SUM(tb1.max)) * GREATEST(1, 5 * POW((space / quota) , 28))) AS normalvariability FROM 
+					(SELECT $u.id, 
+						$d.resourceid, 
+						$u.storagedirid, 
+						$u.quota, 
+						$u.space, 
+						$u.lastinterval, 
+						MAX($u.datetimerecorded) AS lastcheck,
+						LEFT($u.datetimerecorded, 10) AS day,
+						(((COUNT(DISTINCT $u.space)-1) / COUNT($u.space)) * EXP(-(((UNIX_TIMESTAMP(LEFT(NOW(), 10)) - UNIX_TIMESTAMP(LEFT($u.datetimerecorded, 10)))/86400)+1)*0.25)) as var,
+							(EXP(-(((UNIX_TIMESTAMP(LEFT(NOW(), 10)) - UNIX_TIMESTAMP(LEFT($u.datetimerecorded, 10)))/86400)+1)*0.25)) AS max 
+					FROM $u, 
+						$d 
+					WHERE $u.datetimerecorded >= DATE_SUB(NOW(), INTERVAL 10 DAY) AND 
+						$u.storagedirid <> 0 
+						AND ($u.quota <> 0 OR $u.space <> 0) 
+						AND $d.id = $u.storagedirid 
+					GROUP BY $u.storagedirid, 
+						day, $u.id
+					ORDER BY $u.storagedirid, 
+						$u.datetimerecorded DESC) AS tb1 
+			GROUP BY tb1.storagedirid, tb1.quota, tb1.space, tb1.lastcheck, tb1.lastinterval"));
+
+		$usag = array();
+		foreach ($usages as $u)
+		{
+			$usag[$u->storagedirid] = $u;
+		}
+
 		if (!count($dirs))
 		{
 			if ($debug || $this->output->isVerbose())
@@ -96,7 +135,7 @@ class QuotaCheckCommand extends Command
 				->first();
 
 			// Force refresh?
-			if (!$usage)
+			if (!$usage || !$usage->id || !isset($usag[$dir->id]))
 			{
 				if ($dir->getquotatypeid)
 				{
@@ -130,7 +169,8 @@ class QuotaCheckCommand extends Command
 			$target_var = $param['target'];
 
 			// Grab starting values
-			$var = $usage->normalvariability;
+			//$var = $usage->normalvariability;
+			$var = $usag[$dir->id]->normalvariability;
 			$last_interval = $usage->lastinterval;
 			$last_check = strtotime($usage->datetimerecorded);
 
