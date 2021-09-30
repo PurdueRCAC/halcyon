@@ -3,6 +3,7 @@
 namespace App\Modules\Queues\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Modules\Queues\Events\QueueReading;
 use Carbon\Carbon;
 
 class QueueResource extends JsonResource
@@ -15,6 +16,10 @@ class QueueResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
+		event($event = new QueueReading($this->resource));
+
+		$this->resource = $event->queue;
+
 		$data = parent::toArray($request);
 
 		$now = Carbon::now();

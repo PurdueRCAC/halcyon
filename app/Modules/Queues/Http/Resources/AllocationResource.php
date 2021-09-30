@@ -3,6 +3,7 @@
 namespace App\Modules\Queues\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Modules\Queues\Events\QueueReading;
 use Carbon\Carbon;
 
 class AllocationResource extends JsonResource
@@ -15,6 +16,10 @@ class AllocationResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
+		event($event = new QueueReading($this->resource));
+
+		$this->resource = $event->queue;
+
 		$data = parent::toArray($request);
 
 		$now = Carbon::now();
@@ -128,14 +133,15 @@ class AllocationResource extends JsonResource
 		$data['corecount']    = $this->totalcores;
 		$data['nodecount']    = $this->totalnodes;
 		$data['active']       = $this->active;
-		$data['serviceunits'] = $this->totalserviceunits;
+		if (!isset($data['serviceunits']))
+		{
+			$data['serviceunits'] = $this->totalserviceunits;
+		}
 
 		if (!$this->isTrashed())
 		{
 			$data['datetimeremoved'] = null;
 		}
-
-		//$data['api'] = route('api.queues.read', ['id' => $this->id]);
 
 		if (!$this->hasLastSeenTime())
 		{
