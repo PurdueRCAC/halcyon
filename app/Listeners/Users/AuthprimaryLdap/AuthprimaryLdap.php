@@ -25,7 +25,8 @@ class AuthprimaryLdap
 	 * @var  array
 	 */
 	private $whitelist = [
-		'anvil'
+		'anvil',
+		'internal',
 	];
 
 	/**
@@ -320,6 +321,12 @@ class AuthprimaryLdap
 			return;
 		}
 
+		if ($event->resource->rolename == 'internal')
+		{
+			$configall['base_dn'] = str_replace(',dc=anvil', '', $configall['base_dn']);
+			$config['base_dn'] = str_replace(',dc=anvil', '', $config['base_dn']);
+		}
+
 		$user = $event->user;
 
 		$user->pilogin = $user->pilogin ?: '';
@@ -511,6 +518,11 @@ class AuthprimaryLdap
 			return;
 		}
 
+		if ($event->resource->rolename == 'internal')
+		{
+			$config['base_dn'] = str_replace(',dc=anvil', '', $config['base_dn']);
+		}
+
 		$results = array();
 
 		try
@@ -565,6 +577,12 @@ class AuthprimaryLdap
 		if (!in_array($event->resource->rolename, $this->whitelist))
 		{
 			return;
+		}
+
+		if ($event->resource->rolename == 'internal')
+		{
+			$configall['base_dn'] = str_replace(',dc=anvil', '', $configall['base_dn']);
+			$config['base_dn'] = str_replace(',dc=anvil', '', $config['base_dn']);
 		}
 
 		$results = array();
