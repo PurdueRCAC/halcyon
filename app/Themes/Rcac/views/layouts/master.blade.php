@@ -213,6 +213,34 @@
 							@if (Auth::check())
 								<li><a href="{{ route('site.users.account') }}">{{ Auth::user()->name }}</a></li>
 								<li><a href="{{ route('logout') }}">{{ trans('theme::rcac.logout') }}</a></li>
+								<li>
+									<?php
+									event($event = new App\Modules\Users\Events\UserNotifying(Auth::user()));
+									?>
+									<div class="notifications-dropdown dropdown<?php if (count($event->notifications)) { echo ' has-notices'; } ?>">
+										<button class="btn dropdown-togle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<span class="fa fa-bell" aria-hidden="true"></span>
+										</button>
+										<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+											@if (count($event->notifications))
+												@foreach ($event->notifications as $item)
+													<div class="dropdown-item">
+														<div class="dropdown-item-content">
+														@if ($item->title)
+															<small class="dropdown-item-title">{{ $item->title }}</small>
+														@endif
+														{!! $item->content !!}
+														</div>
+													</div>
+												@endforeach
+											@else
+												<div class="dropdown-item text-center text-muted">
+													You have no notifications.
+												</div>
+											@endif
+										</div>
+									</div>
+								</li>
 							@else
 								<li><a href="{{ route('login') }}" class="btn btn-secondary btn-inverse"><span class="fa fa-lock" aria-hidden="true"></span> {{ trans('theme::rcac.login') }}</a></li>
 							@endif

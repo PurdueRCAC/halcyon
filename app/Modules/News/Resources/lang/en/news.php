@@ -76,6 +76,7 @@ return [
 		'invalid headline' => 'Please provide a headline.',
 		'invalid body' => 'Please provide some content',
 	],
+	'upcoming event at' => 'You have an upcoming :type at :time',
 	// Copy
 	'copy' => 'Copy',
 	'copy to' => 'Copy to',

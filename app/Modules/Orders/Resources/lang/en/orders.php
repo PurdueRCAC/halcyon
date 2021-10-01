@@ -126,6 +126,7 @@ return [
 		'state' => 'State',
 		'userid' => 'User',
 	],
+	'purchase account waiting approval' => 'Purchase account :account on order #:order is waiting for approval.',
 	'export summary' => 'Order Summary',
 	'export items' => 'Order Summary and Items',
 	'export accounts' => 'Order Summary and Accounts',

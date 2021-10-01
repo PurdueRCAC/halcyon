@@ -2570,6 +2570,34 @@ div.dialog ul.student-list li,
 	list-style: none;
 }
 
+/* [!] Notifications */
+.notifications-dropdown .dropdown-menu {
+	padding-top: 0;
+	padding-bottom: 0;
+	overflow: hidden;
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+.notifications-dropdown .dropdown-item {
+	padding: 1em;
+	min-width: 350px;
+	white-space: inherit;
+	border-bottom: 1px solid rgba(0,0,0,.15);
+}
+.notifications-dropdown .dropdown-item:last-child {
+	border-bottom: none;
+}
+.notifications-dropdown .dropdown-item small {
+	color: #656565;
+}
+.login .notifications-dropdown a,
+.login .notifications-dropdown a:link,
+.login .notifications-dropdown a:visited {
+	color: #333;
+	text-decoration: none;
+	display: block;
+	width: 100%;
+}
+
 /* [!] Catch accessibility violations */
 img:not([alt]) {
 	outline: 2px solid red;

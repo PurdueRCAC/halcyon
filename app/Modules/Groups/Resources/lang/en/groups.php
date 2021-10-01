@@ -48,6 +48,7 @@ return [
 	'until' => 'Until',
 	'message' => 'Message',
 	'back' => 'Back',
+	'group has pending requests' => ':group has pending membership requests.',
 	'history' => [
 		'title' => 'History',
 		'date' => 'Date',

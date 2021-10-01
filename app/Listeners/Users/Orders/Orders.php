@@ -9,6 +9,8 @@ use App\Modules\Orders\Models\Item;
 use App\Modules\Orders\Models\Account;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Events\UserDisplay;
+use App\Modules\Users\Events\UserNotifying;
+use App\Modules\Users\Entities\Notification;
 
 /**
  * User listener for Orders
@@ -24,6 +26,7 @@ class Orders
 	public function subscribe($events)
 	{
 		$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
+		$events->listen(UserNotifying::class, self::class . '@handleUserNotifying');
 	}
 
 	/**
@@ -266,5 +269,44 @@ class Orders
 			($event->getActive() == 'orders'),
 			$content
 		);
+	}
+
+	/**
+	 * Display data for a user
+	 *
+	 * @param   UserNotifying  $event
+	 * @return  void
+	 */
+	public function handleUserNotifying(UserNotifying $event)
+	{
+		$user = $event->user;
+
+		$a = (new Account)->getTable();
+		$o = (new Order)->getTable();
+
+		$rows = Account::query()
+			->select($a . '.*')
+			->join($o, $o . '.id', $a . '.orderid')
+			->where($a . '.approveruserid', '=', $user->id)
+			->whereNull($a . '.datetimeremoved')
+			->whereNull($a . '.datetimeapproved')
+			->whereNull($a . '.datetimedenied')
+			->whereNull($a . '.datetimepaid')
+			->whereNull($o . '.datetimeremoved')
+			->orderBy($o . '.datetimecreated', 'asc')
+			->orderBy($a . '.id', 'asc')
+			->get();
+
+		foreach ($rows as $row)
+		{
+			$title = trans('orders::orders.orders');
+
+			$account = $row->purchasewbse;
+			$account = $account ?: $row->purchaseio;
+
+			$content = '<a href="' . route('site.orders.read', ['id' => $row->orderid]) . '">' . trans('orders::orders.purchase account waiting approval', ['order' => $row->orderid, 'account' => $account]) . '</a>';
+
+			$event->addNotification(new Notification($title, $content));
+		}
 	}
 }
