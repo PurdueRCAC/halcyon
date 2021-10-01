@@ -208,11 +208,60 @@ class UsageController extends Controller
 	 * @apiUri    /storage/usage
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "storagedirid",
+	 * 		"description":   "Storage directory ID",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "quota",
+	 * 		"description":   "Quota value",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "space",
+	 * 		"description":   "Space value",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "filequota",
+	 * 		"description":   "File quota value",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "files",
+	 * 		"description":   "Files value",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation"
+	 * 		},
+	 * 		"401": {
+	 * 			"description": "Unauthorized"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
 	 * }
 	 * @param  Request  $request
 	 * @return Response
@@ -313,6 +362,14 @@ class UsageController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   integer  $id
 	 * @return  Response
 	 */
@@ -338,11 +395,60 @@ class UsageController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       ""
+	 * 		"in":            "body",
+	 * 		"name":          "storagedirid",
+	 * 		"description":   "Storage directory ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "quota",
+	 * 		"description":   "Quota value",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "space",
+	 * 		"description":   "Space value",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "filequota",
+	 * 		"description":   "File quota value",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "files",
+	 * 		"description":   "Files value",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
@@ -412,6 +518,14 @@ class UsageController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $id

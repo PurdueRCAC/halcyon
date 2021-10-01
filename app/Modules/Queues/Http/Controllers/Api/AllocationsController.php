@@ -369,6 +369,17 @@ class AllocationsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation"
+	 * 		},
+	 * 		"401": {
+	 * 			"description": "Unauthorized"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return Response
 	 */

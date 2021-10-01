@@ -155,6 +155,17 @@ class NotificationTypesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation"
+	 * 		},
+	 * 		"401": {
+	 * 			"description": "Unauthorized"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param  Request  $request
 	 * @return Response
 	 */
@@ -197,6 +208,14 @@ class NotificationTypesController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param  integer  $id
@@ -259,6 +278,17 @@ class NotificationTypesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
 	 * @return  Response
@@ -315,6 +345,14 @@ class NotificationTypesController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param  integer  $id

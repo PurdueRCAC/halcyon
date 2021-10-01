@@ -39,17 +39,20 @@ class QuotasController extends Controller
 	 * 			"default":   "Current user's username"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry deletion"
+	 * 		}
+	 * }
+	 * @param  Request $request
+	 * @param  string  $username
 	 * @return Response
 	 */
 	public function index(Request $request, $username = null)
 	{
-		/*$filters = array(
-			'username'  => $request->input('username', auth()->user()->username)
-		);*/
-
 		if ($username)
 		{
-			$user = User::findByUsername($username); //$filters['username']);
+			$user = User::findByUsername($username);
 		}
 		else
 		{
@@ -193,7 +196,6 @@ class QuotasController extends Controller
 			$data->quotas[] = $row->toArray();
 		}
 
-		//return new JsonResource($data); //ResourceCollection($rows);
 		return response()->json($data, 200);
 	}
 }
