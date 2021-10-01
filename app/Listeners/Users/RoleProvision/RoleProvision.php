@@ -21,7 +21,8 @@ class RoleProvision
 	 * @var  array
 	 */
 	private $blacklist = [
-		'anvil'
+		'anvil',
+		'internal',
 	];
 
 	/**
