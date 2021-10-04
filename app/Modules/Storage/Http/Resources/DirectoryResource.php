@@ -83,7 +83,11 @@ class DirectoryResource extends JsonResource
 				'name' => ($this->storageResource && $this->storageResource->resource ? $this->storageResource->resource->name : '')
 			);
 
-			$data['user']['uid'] = $data['user']['id'];
+			$data['user']['uid'] = 0;
+			if ($this->owner)
+			{
+				$data['user']['uid'] = $this->owner->getUserUsername()->unixid;
+			}
 			unset($data['user']['id']);
 
 			if (!empty($data['unixgroup']))
