@@ -434,23 +434,26 @@ class UnixGroupMembersController extends Controller
 	 */
 	public function delete($id)
 	{
-		$row = UnixGroupMember::findOrFail($id);
+		$row = UnixGroupMember::find($id);
 
-		// Determine notice level
-		if ($row->notice == 2)
+		if ($row)
 		{
-			$row->notice = 0;
-		}
-		else
-		{
-			$row->notice = 3;
-		}
+			// Determine notice level
+			if ($row->notice == 2)
+			{
+				$row->notice = 0;
+			}
+			else
+			{
+				$row->notice = 3;
+			}
 
-		$row->save();
+			$row->save();
 
-		if (!$row->delete())
-		{
-			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			if (!$row->delete())
+			{
+				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			}
 		}
 
 		return response()->json(null, 204);
