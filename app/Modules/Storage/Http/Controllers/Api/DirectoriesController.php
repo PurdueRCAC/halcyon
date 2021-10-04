@@ -992,6 +992,7 @@ class DirectoriesController extends Controller
 				}
 
 				$row->bytes = $bytes;
+				$bytes = $row->bytes;
 
 				// Top level dirs are required to have a quota
 				if ($row->bytes == 0 && !$row->parent)
