@@ -235,6 +235,14 @@ class SubresourcesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param  Request  $request
 	 * @return Response
 	 */
@@ -282,6 +290,14 @@ class SubresourcesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   integer  $id
 	 * @return  Response
 	 */
@@ -311,73 +327,93 @@ class SubresourcesController extends Controller
 	 * 		"in":            "body",
 	 *      "name":          "name",
 	 *      "description":   "The name of the sub-resource",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "cluster",
 	 *      "description":   "Cluster name",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "nodecores",
 	 *      "description":   "Number of node cores",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "nodemem",
 	 *      "description":   "Memory per node",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "nodegpus",
 	 *      "description":   "Number of GPUs per node",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "nodeattributes",
 	 *      "description":   "Node attributes",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "description",
 	 *      "description":   "Short description of the sub-resource",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "notice",
 	 *      "description":   "Notification status",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "queuestatus",
 	 *      "description":   "Queue status",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry modification"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
@@ -439,6 +475,14 @@ class SubresourcesController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $id

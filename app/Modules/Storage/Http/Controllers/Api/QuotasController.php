@@ -41,7 +41,7 @@ class QuotasController extends Controller
 	 * }
 	 * @apiResponse {
 	 * 		"200": {
-	 * 			"description": "Successful entry deletion"
+	 * 			"description": "Successful entry list"
 	 * 		}
 	 * }
 	 * @param  Request $request

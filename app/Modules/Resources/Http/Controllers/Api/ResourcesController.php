@@ -140,51 +140,80 @@ class ResourcesController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
-	 *      "type":          "string",
-	 *      "required":      true,
-	 *      "default":       null
+	 *		"name":          "name",
+	 * 		"description":   "The name of the resource type",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "parentid",
 	 *      "description":   "Parent resource ID",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       0
+	 *      "schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "resourcetype",
 	 *      "description":   "Resource type ID",
-	 *      "type":          "integer",
 	 *      "required":      true,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "producttype",
 	 *      "description":   "Product type ID",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "rolename",
 	 *      "description":   "An alias containing only alpha-numeric characters, dashes, and underscores",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "listname",
 	 *      "description":   "An alias containing only alpha-numeric characters, dashes, and underscores",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "description",
+	 *      "description":   "A short description of the resource",
+	 *      "required":      false,
+	 *      "schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
 	 * }
 	 * @param  Request  $request
 	 * @return Response
@@ -227,6 +256,14 @@ class ResourcesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   integer  $id
 	 * @return  Response
 	 */
@@ -256,49 +293,79 @@ class ResourcesController extends Controller
 	 * 		"in":            "body",
 	 *      "name":          "name",
 	 *      "description":   "The name of the resource type",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "parentid",
 	 *      "description":   "Parent resource ID",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "resourcetype",
 	 *      "description":   "Resource type ID",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "producttype",
 	 *      "description":   "Product type ID",
-	 *      "type":          "integer",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "rolename",
 	 *      "description":   "An alias containing only alpha-numeric characters, dashes, and underscores",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 *      "name":          "listname",
 	 *      "description":   "An alias containing only alpha-numeric characters, dashes, and underscores",
-	 *      "type":          "string",
 	 *      "required":      false,
-	 *      "default":       null
+	 *      "schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 *      "name":          "description",
+	 *      "description":   "A short description of the resource",
+	 *      "required":      false,
+	 *      "schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry modification"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
@@ -348,6 +415,14 @@ class ResourcesController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @return  Response
