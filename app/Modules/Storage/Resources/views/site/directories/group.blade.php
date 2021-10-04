@@ -188,7 +188,7 @@
 										<input <?php echo $disabled; ?> type="radio" name="usequota" value="unalloc" id="unalloc_radio" class="form-check-input" />
 										<label class="form-check-label" for="unalloc_radio">
 											<span style="<?php echo $style; ?>" id="unalloc_span">
-												Deduct from unallocated space (<span name="unallocated"><?php echo $bucket['unallocatedbytes']; ?></span>):
+												Deduct from unallocated space (<span name="unallocated"><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['unallocatedbytes'], 1); ?></span>):
 											</span>
 										</label>
 										<input <?php echo $disabled; ?> type="text" id="new_dir_quota_unalloc" class="form-control" size="3" />
