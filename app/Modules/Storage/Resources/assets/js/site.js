@@ -25,9 +25,9 @@ function NewDirType() {
 	var parent_unixgroup = document.getElementById("selected_dir_unixgroup");
 	var x;
 
-	unixgroup_select.addEventListener('change', function () {
+	/*unixgroup_select.addEventListener('change', function () {
 		WSGetURL(this.options[this.selectedIndex].getAttribute('data-api'), NewDirUserPopulate);
-	});
+	});*/
 
 	if (selected == "user") {
 		user_row.classList.remove('hidden');//.style.display = "table-row";
@@ -36,12 +36,14 @@ function NewDirType() {
 		unixgroup_select.classList.remove('hidden');//.style.display = "inline";
 		autouserunixgroup_row.classList.add('hidden');//.style.display = "none";
 
-		input.value = "(Select User)";
+		if (!input.value) {
+			input.value = "(Select User)";
+		}
 
 		for (x = 0; x < unixgroup_select.options.length; x++) {
 			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
 				unixgroup_select.options[x].selected = true;
-				$.get(unixgroup_select.options[x].getAttribute('data-api'), NewDirUserPopulate);
+				//WSGetURL(unixgroup_select.options[x].getAttribute('data-api'), NewDirUserPopulate);
 			}
 		}
 	}
@@ -53,18 +55,23 @@ function NewDirType() {
 		unixgroup_select.classList.remove('hidden');//.style.display = "inline";
 		autouserunixgroup_row.classList.add('hidden');//.style.display = "none";
 
-		input.value = "(Select User)";
+		if (!input.value) {
+			input.value = "(Select User)";
+		}
 
 		for (x = 0; x < unixgroup_select.options.length; x++) {
 			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
 				unixgroup_select.options[x].selected = true;
-				WSGetURL(unixgroup_select.options[x].getAttribute('data-api'), NewDirUserPopulate);
+				//WSGetURL(unixgroup_select.options[x].getAttribute('data-api'), NewDirUserPopulate);
 			}
 		}
 	} else if (selected == "userprivate") {
 		user_row.classList.remove('hidden'); //.style.display = "table-row";
 		user_select.options[0].selected = true;
-		input.value = "(Select User)";
+
+		if (!input.value) {
+			input.value = "(Select User)";
+		}
 
 		var opt = document.createElement("option");
 		opt.innerHTML = parent_unixgroup.value;
@@ -72,7 +79,7 @@ function NewDirType() {
 		for (x = 0; x < unixgroup_select.options.length; x++) {
 			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
 				opt.value = unixgroup_select.options[x].value;
-				WSGetURL(unixgroup_select.options[x].getAttribute('data-api'), NewDirUserPopulate);
+				//WSGetURL(unixgroup_select.options[x].getAttribute('data-api'), NewDirUserPopulate);
 			}
 		}
 
