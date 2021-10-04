@@ -204,7 +204,7 @@ class RcacLdap
 			// Performing a query.
 			$results = $ldap->search()
 				->where('uid', '=', $user->username)
-				->select(['cn', 'loginShell', 'homeDirectory'])
+				->select(['cn', 'loginShell', 'homeDirectory', 'uidNumber'])
 				->get();
 
 			$status = 404;
@@ -224,6 +224,10 @@ class RcacLdap
 
 						$user->name = Str::properCaseNoun($data['cn'][0]);
 					}*/
+					if (!$user->getUserUsername()->unixid && isset($data['uidNumber']))
+					{
+						$user->getUserUsername()->update(['unixid' => $data['uidNumber'][0]]);
+					}
 
 					if (isset($data['loginShell']))
 					{
@@ -769,7 +773,7 @@ class RcacLdap
 			// Performing a query.
 			$data = $ldap->search()
 				->where($query)
-				->select(['cn', 'uid', 'employeeNumber'])
+				->select(['cn', 'uid', 'uidNumber']) //'employeeNumber', 
 				->get();
 
 			if (!empty($data))
@@ -785,7 +789,8 @@ class RcacLdap
 					}
 					$user->name = $result['cn'][0];
 					$user->getUserUsername()->username = $result['uid'][0];
-					$user->puid = $result['employeeNumber'][0];
+					$user->getUserUsername()->unixid = $result['uidNumber'][0];
+					//$user->puid = $result['employeeNumber'][0];
 
 					//$event->user = $user;
 					//break;
