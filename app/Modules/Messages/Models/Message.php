@@ -375,11 +375,13 @@ class Message extends Model
 		if (!$this->completed())
 		{
 			// Get now
-			$end = Carbon::now();
-			$end = $end->format('Y-m-d H:i:s');
+			$end = Carbon::now()->timestamp;
+		}
+		else
+		{
+			$end = strtotime($this->datetimecompleted);
 		}
 
-		$end = strtotime($this->datetimecompleted);
 		$start = strtotime($this->datetimestarted);
 
 		// Get the difference in seconds between now and the time
