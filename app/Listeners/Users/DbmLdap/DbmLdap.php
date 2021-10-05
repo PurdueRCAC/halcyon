@@ -228,7 +228,7 @@ class DbmLdap
 			// Performing a query.
 			$data = $ldap->search()
 				->where($query)
-				->select(['cn', 'uid', 'employeeNumber'])
+				->select(['cn', 'uid', 'employeeNumber', 'employeeType'])
 				->get();
 
 			if (!empty($data))
@@ -341,6 +341,7 @@ class DbmLdap
 			$ldap = $this->connect($config);
 
 			$status = 404;
+			$results = array();
 
 			// Performing a query.
 			$data = $ldap->search()
@@ -355,6 +356,7 @@ class DbmLdap
 				foreach ($data as $key => $result)
 				{
 					$types = array();
+					$results[] = $result;
 
 					foreach ($result['employeeType'] as $type)
 					{
@@ -411,6 +413,6 @@ class DbmLdap
 
 		$event->setUser($user);
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, json_encode($query));
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $user->username);
 	}
 }
