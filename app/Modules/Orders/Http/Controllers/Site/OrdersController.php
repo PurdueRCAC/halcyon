@@ -15,6 +15,7 @@ use App\Modules\Orders\Models\Item;
 use App\Modules\Orders\Models\Account;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Http\StatefulRequest;
+use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 use Carbon\Carbon;
 
 class OrdersController extends Controller
@@ -132,8 +133,7 @@ class OrdersController extends Controller
 					$join->on($a . '.orderid', $o . '.id')
 						->on(function($where) use ($a)
 						{
-							$where->where($a . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-								->orWhereNull($a . '.datetimeremoved');
+							$where->whereNull($a . '.datetimeremoved');
 						});
 				});
 			$subitems->where(function($query) use ($filters, $o, $a)
@@ -192,8 +192,7 @@ class OrdersController extends Controller
 					$join->on($a . '.orderid', $o . '.id')
 						->on(function($where) use ($a)
 						{
-							$where->where($a . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-								->orWhereNull($a . '.datetimeremoved');
+							$where->whereNull($a . '.datetimeremoved');
 						});
 				})
 				//->leftJoin($i, $i . '.orderid', $o . '.id')
@@ -830,7 +829,7 @@ class OrdersController extends Controller
 		$extension = end($parts);
 		$extension = strtolower($extension);
 
-		if (!in_array($extension, ['csv']))
+		if (!in_array($extension, ['csv', 'xlsx', 'ods']))
 		{
 			return redirect()->route('site.orders.index')->withError(trans('orders::orders.errors.invalid file type'));
 		}
@@ -838,40 +837,9 @@ class OrdersController extends Controller
 		$file = $request->file('file')->store('temp');
 		$path = storage_path('app/' . $file);
 
-		$row = 0;
-		$headers = array();
-		$data = array();
-
 		try
 		{
-			$handle = fopen($path, 'r');
-
-			if ($handle !== false)
-			{
-				while (!feof($handle))
-				{
-					$line = fgetcsv($handle, 0, ',');
-
-					if ($row == 0)
-					{
-						$headers = $line;
-						$row++;
-						continue;
-					}
-
-					$item = new Fluent;
-					foreach ($headers as $k => $v)
-					{
-						$v = strtolower($v);
-						$item->{$v} = $line[$k];
-					}
-
-					$data[] = $item;
-
-					$row++;
-				}
-				fclose($handle);
-			}
+			$data = $this->getSpreadsheetData($path);
 		}
 		catch (\Exception $e)
 		{
@@ -880,12 +848,10 @@ class OrdersController extends Controller
 			return redirect()->route('site.orders.index')->withError($e->getMessage());
 		}
 
-		$data = collect($data);
-
 		return view('orders::site.orders.import', [
 			'file' => $file,
-			'headers' => $headers,
-			'data' => $data
+			'headers' => $data->headers,
+			'data' => $data->cells
 		]);
 	}
 
@@ -910,41 +876,13 @@ class OrdersController extends Controller
 			return redirect()->route('site.orders.index')->withError(trans('orders::orders.errors.file not found'));
 		}
 
-		$row = 0;
-		$headers = array();
 		$updated = 0;
 
 		try
 		{
-			$handle = fopen($path, 'r');
-			if ($handle !== false)
-			{
-				while (!feof($handle))
-				{
-					$line = fgetcsv($handle, 0, ',');
+			$data = $this->getSpreadsheetData($path);
 
-					if ($row == 0)
-					{
-						$headers = $line;
-						$row++;
-						continue;
-					}
-
-					$item = new Fluent;
-					foreach ($headers as $k => $v)
-					{
-						$v = strtolower($v);
-						$item->{$v} = $line[$k];
-					}
-
-					$data[] = $item;
-
-					$row++;
-				}
-				fclose($handle);
-			}
-
-			foreach ($data as $item)
+			foreach ($data->cells as $item)
 			{
 				if (!$item->id)
 				{
@@ -960,7 +898,7 @@ class OrdersController extends Controller
 
 				// Do we have any account info?
 				if (!$item->purchaseio
-				&& !$item->purchasewbse)
+				 && !$item->purchasewbse)
 				{
 					continue;
 				}
@@ -974,7 +912,7 @@ class OrdersController extends Controller
 				foreach ($order->accounts as $account)
 				{
 					if (($account->purchaseio == $item->purchaseio || $account->purchasewbse == $item->purchasewbse)
-					&& $item->paymentdocid != $account->paymentdocid)
+					 && $item->paymentdocid != $account->paymentdocid)
 					{
 						$account->paymentdocid = $item->paymentdocid;
 						$account->datetimepaymentdoc = Carbon::now()->toDateTimeString();
@@ -1000,6 +938,7 @@ class OrdersController extends Controller
 		}
 		catch (\Exception $e)
 		{
+			// Clean up
 			Storage::disk('local')->delete($file);
 
 			return redirect()->route('site.orders.index')->withError($e->getMessage());
@@ -1011,5 +950,96 @@ class OrdersController extends Controller
 		}
 
 		return redirect()->route('site.orders.index');
+	}
+
+	/**
+	 * Read the data from the spreadsheet
+	 * 
+	 * @param  string  $path
+	 * @return object
+	 */
+	private function getSpreadsheetData($path)
+	{
+		$parts = explode('.', $path);
+		$extension = end($parts);
+		$extension = strtolower($extension);
+
+		/*$handle = fopen($path, 'r');
+
+		if ($handle !== false)
+		{
+			while (!feof($handle))
+			{
+				$line = fgetcsv($handle, 0, ',');
+
+				if ($row == 0)
+				{
+					$headers = $line;
+					$row++;
+					continue;
+				}
+
+				$item = new Fluent;
+				foreach ($headers as $k => $v)
+				{
+					$v = strtolower($v);
+					$item->{$v} = $line[$k];
+				}
+
+				$data[] = $item;
+
+				$row++;
+			}
+			fclose($handle);
+		}*/
+
+		if ($extension == 'csv' || $extension == 'txt')
+		{
+			// CSV files get read as plain text and throw:
+			//     Box\Spout\Common\Exception\UnsupportedTypeException
+			//     No readers supporting the given type: txt
+			$reader = ReaderEntityFactory::createCSVReader();
+		}
+		else
+		{
+			$reader = ReaderEntityFactory::createReaderFromFile($path);
+		}
+		$reader->open($path);
+
+		foreach ($reader->getSheetIterator() as $sheet)
+		{
+			foreach ($sheet->getRowIterator() as $i => $row)
+			{
+				// do stuff with the row
+				$cells = $row->getCells();
+
+				if (empty($headers))
+				{
+					foreach ($cells as $j => $cell)
+					{
+						$headers[] = trim($cell->getValue());
+					}
+
+					continue;
+				}
+
+				$item = new Fluent;
+				foreach ($headers as $k => $v)
+				{
+					$v = strtolower($v);
+					$item->{$v} = $cells[$k]->getValue();
+				}
+
+				$data[] = $item;
+			}
+		}
+
+		$reader->close();
+
+		$info = new Fluent;
+		$info->headers = $headers;
+		$info->cells = collect($data);
+
+		return $info;
 	}
 }
