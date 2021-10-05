@@ -7,9 +7,9 @@ services:
     working_dir: /var/www/html
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_ROOT_USER=${DB_USERNAME}
       - MYSQL_DATABASE=${DB_DATABASE}
       - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     ports:
       - "8082:3306"
     volumes:
@@ -43,7 +43,7 @@ services:
     working_dir: /var/www/html
     volumes:
       - .:/var/www/html
-      - ./docker/php-fpm/php-ini-overrides.ini:/etc/php7.2/fpm/conf.d/99-overrides.ini
+      - ./docker/php-fpm/php-ini-overrides.ini:/etc/php7.3/fpm/conf.d/99-overrides.ini
       - ./storage/app/public:/var/www/html/public/files
     networks:
       - halcyon

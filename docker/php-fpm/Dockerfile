@@ -1,24 +1,25 @@
-FROM phpdockerio/php72-fpm:latest
+FROM phpdockerio/php73-fpm:latest
 WORKDIR "/var/www/html"
 
 # Fix debconf warnings upon build
-ARG DEBIAN_FRONTEND=noninteractive
+#ARG DEBIAN_FRONTEND=noninteractive
 #ARG user
 #ARG uid
 
 # Install selected extensions and other stuff
-RUN apt-get update \
-    && apt-get -y --no-install-recommends install \
-        php7.2-mysql \
-        php7.2-sqlite3 \
-        php7.2-bcmath \
-        php7.2-gd \
-        php7.2-ldap \
-        php-imagick \
-        php-redis \
-        php-xdebug \
-        php-ssh2 \
-    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+RUN apt-get update; \
+    apt-get -y --no-install-recommends install \
+    php7.3-bcmath \ 
+    php7.3-gd \ 
+    php7.3-imagick \ 
+    php7.3-ldap \ 
+    php7.3-mysql \ 
+    php7.3-redis \ 
+    php7.3-sqlite3 \ 
+    php7.3-ssh2 \ 
+    php7.3-xdebug; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
