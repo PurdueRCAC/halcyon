@@ -20,7 +20,8 @@
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "nwidart/laravel-modules": "^6.0",
-        "lab404/laravel-impersonate": "^1.7"
+        "lab404/laravel-impersonate": "^1.7",
+        "box/spout": "3.2.0"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
