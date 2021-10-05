@@ -11,6 +11,7 @@ use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Models\Member;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Users\Models\User;
+use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 
 class AccountsController extends Controller
 {
@@ -128,13 +129,13 @@ class AccountsController extends Controller
 			'error' => array()
 		];
 
-		$row = 0;
-		$headers = array();
-		$data = array();
+		//$row = 0;
+		//$headers = array();
+		//$data = array();
 
 		$fileNotUploaded = false;
 		$maxSize = config('module.courses.max-file-size', 0);
-		$allowedTypes = config('module.courses.allowed-extensions', ['csv']);
+		$allowedTypes = config('module.courses.allowed-extensions', ['csv', 'xlsx', 'ods']);
 
 		foreach ($files as $file)
 		{
@@ -146,11 +147,13 @@ class AccountsController extends Controller
 				continue;
 			}
 
+			$extension = $file->getClientOriginalExtension();
+
 			// Check allowed file type
 			// Doing this by file extension is iffy at best but
 			// detection by contents produces `txt`
 			if (!empty($allowedTypes)
-			 && !in_array($file->getClientOriginalExtension(), $allowedTypes))
+			 && !in_array($extension, $allowedTypes))
 			{
 				$fileNotUploaded = true;
 				continue;
@@ -162,7 +165,7 @@ class AccountsController extends Controller
 			try
 			{
 				// Get file data and process into a collection of objects
-				$handle = fopen(storage_path('app/' . $path), 'r');
+				/*$handle = fopen(storage_path('app/' . $path), 'r');
 
 				if ($handle !== false)
 				{
@@ -181,7 +184,6 @@ class AccountsController extends Controller
 						foreach ($headers as $k => $v)
 						{
 							$v = strtolower($v);
-							//$v = preg_replace('/[^a-z0-9]/', '', $v);
 
 							$item->{$v} = $line[$k];
 						}
@@ -191,7 +193,51 @@ class AccountsController extends Controller
 						$row++;
 					}
 					fclose($handle);
+				}*/
+				$path = storage_path('app/' . $path);
+
+				if ($extension == 'csv' || $extension == 'txt')
+				{
+					// CSV files get read as plain text and throw:
+					//     Box\Spout\Common\Exception\UnsupportedTypeException
+					//     No readers supporting the given type: txt
+					$reader = ReaderEntityFactory::createCSVReader();
 				}
+				else
+				{
+					$reader = ReaderEntityFactory::createReaderFromFile($path);
+				}
+				$reader->open($path);
+
+				foreach ($reader->getSheetIterator() as $sheet)
+				{
+					foreach ($sheet->getRowIterator() as $i => $row)
+					{
+						// do stuff with the row
+						$cells = $row->getCells();
+
+						if (empty($headers))
+						{
+							foreach ($cells as $j => $cell)
+							{
+								$headers[] = trim($cell->getValue());
+							}
+
+							continue;
+						}
+
+						$item = new Fluent;
+						foreach ($headers as $k => $v)
+						{
+							$v = strtolower($v);
+							$item->{$v} = $cells[$k]->getValue();
+						}
+
+						$data[] = $item;
+					}
+				}
+
+				$reader->close();
 
 				$data = collect($data);
 

@@ -508,12 +508,12 @@
 
 				<div><strong>Import from spreadsheet:</strong></div>
 
-				<p class="form-text">Currently, only CSV files are accepted. Must contain one of the following columns: <code>username</code> or <code>email</code>.</p>
+				<p class="form-text">CSV, XLSX (Excel), and ODS files are accepted. The first row must be headers and contain one of the following columns: <code>username</code> or <code>email</code>.</p>
 
 				<form action="{{ route('site.courses.import') }}" method="post" enctype="multipart/form-data" class="dropzone"
 					data-api="{{ route('api.courses.members.import', ['api_token' => auth()->user()->api_token]) }}"
 					data-id="{{ $class->id }}"
-					data-acceptedfiles=".csv"
+					data-acceptedfiles=".csv,.xlsx,.ods"
 					data-instructions="{{ trans('courses::courses.upload instructions') }}">
 					<div class="fallback">
 						<div class="form-group">

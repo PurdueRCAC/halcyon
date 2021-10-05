@@ -459,7 +459,7 @@ class AccountsController extends Controller
 			$row->datetimestart = Carbon::parse($row->datetimestart)->modify('-1 day')->toDateTimeString();
 			$row->datetimestop  = Carbon::parse($row->datetimestop)->modify('+1 day')->toDateTimeString();
 			$row->crn = uniqid();
-			$row->crn = substr($row->crn, 0, 8); 
+			$row->crn = substr($row->crn, 0, 8);
 			$row->semester = 'Workshop';
 			$row->reference = $row->semester;
 			$row->department = '';
