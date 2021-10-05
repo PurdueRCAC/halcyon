@@ -19,8 +19,8 @@ class UpdateResource extends JsonResource
 		$data['api'] = route('api.news.updates.read', ['news_id' => $this->newsid, 'id' => $this->id]);
 
 		$data['formattedbody'] = $this->formattedBody;
-		$data['formattededitdate']    = $this->formatDate($this->datetimeedited->toDateTimeString());
-		$data['formattedcreateddate'] = $this->formatDate($this->datetimecreated->toDateTimeString());
+		$data['formattededitdate'] = $this->datetimeedited ? $this->formatDate($this->datetimeedited->toDateTimeString()) : null;
+		$data['formattedcreateddate'] = $this->datetimecreated ? $this->formatDate($this->datetimecreated->toDateTimeString()) : null;
 
 		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
 
