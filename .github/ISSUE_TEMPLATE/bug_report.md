@@ -18,6 +18,7 @@ What did you expect to happen? What actually happened?
 For bugs with fixers: How was the code fixed?
 
 ## Environment
+<!-- Check /admin/info for this information -->
 
 | Question               | Answer
 | ------------------------| -------
