@@ -344,6 +344,15 @@ class MessagesController extends Controller
 
 		$row->datetimesubmitted = Carbon::now()->toDateTimeString();
 
+		if ($row->datetimestarted == '0000-00-00 00:00:00' || $row->datetimestarted == '-0001-11-30 00:00:00')
+		{
+			$row->datetimestarted = null;
+		}
+		if ($row->datetimecompleted == '0000-00-00 00:00:00' || $row->datetimecompleted == '-0001-11-30 00:00:00')
+		{
+			$row->datetimecompleted = null;
+		}
+
 		if (!$row->save())
 		{
 			return response()->json(['message' => $row->getError()], 409);
@@ -589,6 +598,15 @@ class MessagesController extends Controller
 
 		$row->fill($fields);
 		$row->pid = $row->pid ?: 0;
+
+		if ($row->datetimestarted == '0000-00-00 00:00:00' || $row->datetimestarted == '-0001-11-30 00:00:00')
+		{
+			$row->datetimestarted = null;
+		}
+		if ($row->datetimecompleted == '0000-00-00 00:00:00' || $row->datetimecompleted == '-0001-11-30 00:00:00')
+		{
+			$row->datetimecompleted = null;
+		}
 
 		if (!$row->save())
 		{
