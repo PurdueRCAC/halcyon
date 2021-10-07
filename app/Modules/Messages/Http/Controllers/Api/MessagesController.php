@@ -171,31 +171,16 @@ class MessagesController extends Controller
 		if ($filters['state'] == 'complete')
 		{
 			$query->whereNotNull('datetimestarted')
-				->where('datetimestarted', '!=', '0000-00-00 00:00:00')
-				->whereNotNull('datetimecompleted')
-				->where('datetimecompleted', '!=', '0000-00-00 00:00:00');
+				->whereNotNull('datetimecompleted');
 		}
 		elseif ($filters['state'] == 'incomplete')
 		{
-			$query->where(function($where)
-			{
-				$where->whereNull('datetimecompleted')
-					->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
-			});
+			$query->whereNull('datetimecompleted');
 		}
 		elseif ($filters['state'] == 'pending')
 		{
-			$query
-				->where(function($where)
-				{
-					$where->whereNull('datetimestarted')
-						->orWhere('datetimestarted', '=', '0000-00-00 00:00:00');
-				})
-				->where(function($where)
-				{
-					$where->whereNull('datetimecompleted')
-						->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
-				});
+			$query->whereNull('datetimestarted')
+				->whereNull('datetimecompleted');
 		}
 
 		if ($filters['start'])
@@ -573,7 +558,10 @@ class MessagesController extends Controller
 		if (isset($fields['retry']))
 		{
 			$row->datetimesubmitted = Carbon::now()->modify('+' . $fields['retry'] * 60)->toDateTimeString();
-			$row->forceRestore(['datetimestarted']);
+			$row->datetimestarted = null;
+			$row->datetimecompleted = null;
+			$row->pid = 0;
+			$row->returnstatus = 0;
 
 			unset($fields['retry']);
 		}

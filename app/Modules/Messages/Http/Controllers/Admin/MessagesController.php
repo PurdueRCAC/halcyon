@@ -68,32 +68,17 @@ class MessagesController extends Controller
 		if ($filters['state'] == 'complete')
 		{
 			$query->whereNotNull('datetimestarted')
-				->where('datetimestarted', '!=', '0000-00-00 00:00:00')
-				->whereNotNull('datetimecompleted')
-				->where('datetimecompleted', '!=', '0000-00-00 00:00:00');
+				->whereNotNull('datetimecompleted');
 		}
 		elseif ($filters['state'] == 'incomplete')
 		{
 			$query->whereNotNull('datetimestarted')
-				->where('datetimestarted', '!=', '0000-00-00 00:00:00')
-				->where(function($where)
-				{
-					$where->whereNull('datetimecompleted')
-						->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
-				});
+				->whereNull('datetimecompleted');
 		}
 		elseif ($filters['state'] == 'pending')
 		{
-			$query->where(function($where)
-				{
-					$where->whereNull('datetimestarted')
-						->orWhere('datetimestarted', '=', '0000-00-00 00:00:00');
-				})
-				->where(function($where)
-				{
-					$where->whereNull('datetimecompleted')
-						->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
-				});
+			$query->whereNull('datetimestarted')
+				->whereNull('datetimecompleted');
 		}
 
 		if ($filters['start'])
@@ -140,15 +125,10 @@ class MessagesController extends Controller
 		$stats->failedtypes = Type::query()
 			->select($t . '.*', DB::raw('COUNT(' . $m . '.id) AS total'))
 			->join($m, $m . '.messagequeuetypeid', $t . '.id')
-			->where(function($where) use ($m)
-			{
-				$where->whereNotNull($m . '.datetimestarted')
-					->where($m . '.datetimestarted', '!=', '0000-00-00 00:00:00');
-			})
+			->whereNotNull($m . '.datetimestarted')
 			->where(function($where) use ($m, $filters)
 			{
 				$where->whereNotNull($m . '.datetimecompleted')
-					->where($m . '.datetimecompleted', '!=', '0000-00-00 00:00:00')
 					->where($m . '.datetimecompleted', '>', $filters['start']);
 			})
 			->where('returnstatus', '>', 0)
@@ -168,15 +148,10 @@ class MessagesController extends Controller
 		$stats->succeededtypes = Type::query()
 			->select($t . '.*', DB::raw('COUNT(' . $m . '.id) AS total'))
 			->join($m, $m . '.messagequeuetypeid', $t . '.id')
-			->where(function($where) use ($m)
-			{
-				$where->whereNotNull($m . '.datetimestarted')
-					->where($m . '.datetimestarted', '!=', '0000-00-00 00:00:00');
-			})
+			->whereNotNull($m . '.datetimestarted')
 			->where(function($where) use ($m, $filters)
 			{
 				$where->whereNotNull($m . '.datetimecompleted')
-					->where($m . '.datetimecompleted', '!=', '0000-00-00 00:00:00')
 					->where($m . '.datetimecompleted', '>', $filters['start']);
 			})
 			->where('returnstatus', '=', 0)
@@ -189,21 +164,13 @@ class MessagesController extends Controller
 			->get();
 
 		$stats->pending = Message::query()
-			->where(function($where)
-			{
-				$where->whereNull('datetimecompleted')
-					->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull('datetimecompleted')
 			->count();
 
 		$stats->pendingtypes = Type::query()
 			->select($t . '.*', DB::raw('COUNT(' . $m . '.id) AS total'))
 			->join($m, $m . '.messagequeuetypeid', $t . '.id')
-			->where(function($where) use ($m)
-			{
-				$where->whereNull($m . '.datetimecompleted')
-					->orWhere($m . '.datetimecompleted', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($m . '.datetimecompleted')
 			->groupBy($m . '.messagequeuetypeid')
 			->groupBy($t . '.id')
 			->groupBy($t . '.name')
@@ -379,12 +346,9 @@ class MessagesController extends Controller
 				continue;
 			}
 
-			$row->forceRestore([
-				'datetimestarted',
-				'datetimecompleted'
-			]);
-
 			if (!$row->update([
+				'datetimestarted' => null,
+				'datetimecompleted' => null,
 				'pid' => 0,
 				'returnstatus' => 0
 			]))

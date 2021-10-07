@@ -164,7 +164,7 @@ class Message extends Model
 	 */
 	public function started()
 	{
-		return ($this->datetimestarted && $this->datetimestarted != '0000-00-00 00:00:00' && $this->datetimestarted != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimestarted);
 	}
 
 	/**
@@ -174,7 +174,7 @@ class Message extends Model
 	 */
 	public function completed()
 	{
-		return ($this->datetimecompleted && $this->datetimecompleted != '0000-00-00 00:00:00' && $this->datetimecompleted != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimecompleted);
 	}
 
 	/**
@@ -237,12 +237,12 @@ class Message extends Model
 	 */
 	private function diffForHumans($start, $end = null, $unit = null)
 	{
-		if (!$start || $start == '0000-00-00 00:00:00' || $start == '-0001-11-30 00:00:00')
+		if (!$start)
 		{
 			return trans('messages::messages.na');
 		}
 
-		if (!$end || $end == '0000-00-00 00:00:00' || $end == '-0001-11-30 00:00:00')
+		if (!$end)
 		{
 			// Get now
 			$end = Carbon::now();
@@ -450,8 +450,7 @@ class Message extends Model
 	{
 		return $query->where(function($where) use ($since)
 		{
-			$where->whereNotNull('datetimestarted')
-				->where('datetimestarted', '!=', '0000-00-00 00:00:00');
+			$where->whereNotNull('datetimestarted');
 
 			if ($since)
 			{
@@ -468,11 +467,7 @@ class Message extends Model
 	 */
 	public function scopeWhereNotStarted($query)
 	{
-		return $query->where(function($where) use ($since)
-		{
-			$where->whereNull('datetimestarted')
-				->orWhere('datetimestarted', '=', '0000-00-00 00:00:00');
-		});
+		return $query->whereNull('datetimestarted');
 	}
 
 	/**
@@ -486,8 +481,7 @@ class Message extends Model
 	{
 		return $query->where(function($where) use ($since)
 		{
-			$where->whereNotNull('datetimecompleted')
-				->where('datetimecompleted', '!=', '0000-00-00 00:00:00');
+			$where->whereNotNull('datetimecompleted');
 
 			if ($since)
 			{
@@ -504,11 +498,7 @@ class Message extends Model
 	 */
 	public function scopeWhereNotCompleted($query)
 	{
-		return $query->where(function($where) use ($since)
-		{
-			$where->whereNull('datetimecompleted')
-				->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
-		});
+		return $query->whereNull('datetimecompleted');
 	}
 
 	/**
@@ -531,48 +521,5 @@ class Message extends Model
 	public function scopeWhereNotSuccessful($query)
 	{
 		return $query->where('returnstatus', '>', 0);
-	}
-
-	/**
-	 * Forcefully reset a timestamp
-	 *
-	 * @param   array  $fields
-	 * @return  void
-	 */
-	public function forceRestore($fields = array('datetimesubmitted'))
-	{
-		$fields = (array)$fields;
-
-		// [!] Hackish workaround for resetting date fields
-		//     that don't have a `null` default value.
-		//     TODO: Change the table schema!
-		try
-		{
-			ini_set('mysql.connect_timeout', '3');
-			ini_set('output_buffering', '8192');
-
-			$db = mysqli_init();
-			$db->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5);
-			$db->real_connect(
-				config('database.connections.mysql.host'),
-				config('database.connections.mysql.username'),
-				config('database.connections.mysql.password'),
-				config('database.connections.mysql.database')
-			);
-
-			foreach ($fields as $k => $field)
-			{
-				$fields[$k] = "`$field`='0000-00-00 00:00:00'";
-			}
-			$fields = implode(', ', $fields);
-
-			$sql = "UPDATE " . $this->getTable() . " SET $fields WHERE `id`=" . $this->id;
-
-			mysqli_query($db, $sql);
-		}
-		catch (\Exception $e)
-		{
-			// Do nothing
-		}
 	}
 }
