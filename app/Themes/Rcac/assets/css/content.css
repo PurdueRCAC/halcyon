@@ -569,9 +569,12 @@ html .ui-datepicker .ui-button.ui-state-disabled:active {
 }
 .ui-datepicker-calendar tbody tr td:hover,
 .ui-datepicker-calendar tbody tr:nth-child(even) td:hover {
-	
 	color: #fff;
 }
+.ui-datepicker-calendar tbody td.ui-datepicker-today {
+	background: #fffa90;
+}
+.ui-datepicker-calendar tbody td.ui-datepicker-current-day,
 .ui-datepicker-calendar .ui-state-default:hover {
 	background: #000;
 	color: #fff;
