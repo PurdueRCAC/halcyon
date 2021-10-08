@@ -2566,6 +2566,9 @@ fieldset.adminform fieldset {
   border-color: #e4973d;
   color: #fff7f0;
 }*/
+.ui-widget {
+  font-family: inherit !important;
+}
 .ui-widget-content a.btn-secondary {
   color: #fff;
 }
