@@ -126,7 +126,7 @@ app('pathway')
 								<option value="0"<?php if (!$row->params->get('show_title', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_title', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 							</select>
-							<span class="form-text text-muted" id="params-show_title">{{ trans('pages::pages.params.show title desc') }}</span>
+							<span class="form-text text-muted" id="params-show_title-hint">{{ trans('pages::pages.params.show title desc') }}</span>
 						</div>
 
 						<div class="form-group">
@@ -135,7 +135,7 @@ app('pathway')
 								<option value="0"<?php if (!$row->params->get('show_author')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_author')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 							</select>
-							<span class="form-text text-muted" id="params-show_author">{{ trans('pages::pages.params.show author desc') }}</span>
+							<span class="form-text text-muted" id="params-show_author-hint">{{ trans('pages::pages.params.show author desc') }}</span>
 						</div>
 
 						<div class="form-group">
@@ -162,7 +162,7 @@ app('pathway')
 								<option value="0"<?php if (!$row->params->get('show_publish_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_publish_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 							</select>
-							<span class="form-text text-muted" id="params-show_publish_date">{{ trans('pages::pages.params.show publish date desc') }}</span>
+							<span class="form-text text-muted" id="params-show_publish_date-hint">{{ trans('pages::pages.params.show publish date desc') }}</span>
 						</div>
 
 						<div class="form-group">
@@ -172,7 +172,7 @@ app('pathway')
 								<option value="none"<?php if ($row->params->get('layout') == 'none') { echo ' selected="selected"'; } ?>>{{ trans('pages::pages.params.no layout') }}</option>
 								<option value="raw"<?php if ($row->params->get('layout') == 'raw') { echo ' selected="selected"'; } ?>>{{ trans('pages::pages.params.raw layout') }}</option>
 							</select>
-							<span class="form-text text-muted" id="params-layout">{{ trans('pages::pages.params.layout desc') }}</span>
+							<span class="form-text text-muted" id="params-layout-hint">{{ trans('pages::pages.params.layout desc') }}</span>
 						</div>
 
 						<fieldset id="param-styles">

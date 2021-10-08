@@ -5,7 +5,7 @@ if (!empty($active)):
 endif;
 ?>
 <div class="media-files media-list{{ $cls }}" id="media-list">
-	<form action="{{ route('admin.media.medialist', ['folder' => $folder]) }}" method="post" id="media-form-list" name="media-form-list">
+	<div action="{{ route('admin.media.medialist', ['folder' => $folder]) }}" method="post" id="media-form-list" name="media-form-list">
 		<div class="manager">
 			<table>
 				<caption class="sr-only">{{ trans('media::media.files') }}</caption>
@@ -50,8 +50,8 @@ endif;
 				</tbody>
 			</table>
 
-			<input type="hidden" name="task" value="" />
-			<input type="hidden" name="folder" value="{{ $folder }}" />
+			<!-- <input type="hidden" name="task" value="" />
+			<input type="hidden" name="folder" value="{{ $folder }}" /> -->
 		</div>
-	</form>
+	</div>
 </div>

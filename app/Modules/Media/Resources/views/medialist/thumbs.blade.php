@@ -5,7 +5,7 @@ if (!empty($active)):
 endif;
 ?>
 <div class="media-files media-thumbs<?php echo $cls; ?>" id="media-thumbs">
-	<form action="{{ route('admin.media.medialist', ['folder' => $folder]) }}" method="post" id="media-form-thumbs" name="media-form-thumbs">
+	<div action="{{ route('admin.media.medialist', ['folder' => $folder]) }}" method="post" id="media-form-thumbs" name="media-form-thumbs">
 		<div class="manager">
 			<?php
 			$folders = array();
@@ -41,8 +41,8 @@ endif;
 			endforeach;
 			?>
 
-			<input type="hidden" name="task" value="" />
-			<input type="hidden" name="folder" value="{{ $folder }}" />
+			<!-- <input type="hidden" name="task" value="" />
+			<input type="hidden" name="folder" value="{{ $folder }}" /> -->
 		</div>
-	</form>
+	</div>
 </div>
