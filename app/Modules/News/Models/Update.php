@@ -125,7 +125,7 @@ class Update extends Model
 	 **/
 	public function isTrashed()
 	{
-		return ($this->datetimeremoved && $this->datetimeremoved != '0000-00-00 00:00:00' && $this->datetimeremoved != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimeremoved);
 	}
 
 	/**
@@ -135,7 +135,7 @@ class Update extends Model
 	 */
 	public function isModified()
 	{
-		return ($this->datetimeedited && $this->datetimeedited != '0000-00-00 00:00:00' && $this->datetimeedited != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimeedited);
 	}
 
 	/**
