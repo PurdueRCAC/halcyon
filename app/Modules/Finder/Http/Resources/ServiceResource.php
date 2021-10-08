@@ -16,29 +16,7 @@ class ServiceResource extends JsonResource
 	{
 		$data = parent::toArray($request);
 
-		$data['api'] = route('api.unixgroups.read', ['id' => $this->id]);
-
-		if (auth()->user() && auth()->user()->can('manage groups'))
-		{
-			$data['members'] = array();
-			$data['priormembers'] = array();
-
-			foreach ($this->members()->withTrashed()->get() as $m)
-			{
-				$ma = $m->toArray();
-				$ma['username'] = $m->user->name;
-
-				if ($m->isTrashed())
-				{
-					$data['priormembers'][] = $m;
-				}
-				else
-				{
-					$data['members'][] = $ma;
-				}
-			}
-			//$data['members'] = $this->members;
-		}
+		$data['api'] = route('api.finder.services.read', ['id' => $this->id]);
 
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
@@ -47,8 +25,8 @@ class ServiceResource extends JsonResource
 
 		if ($user)
 		{
-			$data['can']['edit']   = ($user->can('edit groups') || ($user->can('edit.own groups') && $this->group->owneruserid == $user->id));
-			$data['can']['delete'] = $user->can('delete groups');
+			$data['can']['edit']   = $user->can('edit finder');
+			$data['can']['delete'] = $user->can('delete finder');
 		}
 
 		return $data;
