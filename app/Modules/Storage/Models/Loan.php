@@ -109,7 +109,7 @@ class Loan extends Model
 	 */
 	public function hasStart()
 	{
-		return ($this->datetimestart && $this->datetimestart != '0000-00-00 00:00:00' && $this->datetimestart != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimestart);
 	}
 
 	/**
@@ -119,7 +119,7 @@ class Loan extends Model
 	 */
 	public function hasEnd()
 	{
-		return ($this->datetimestop && $this->datetimestop != '0000-00-00 00:00:00' && $this->datetimestop != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimestop);
 	}
 
 	/**
@@ -203,12 +203,12 @@ class Loan extends Model
 		return $query->withTrashed()
 			->where(function($where) use ($now)
 			{
-				$where->where('datetimestart', '=', '0000-00-00 00:00:00')
+				$where->whereNull('datetimestart')
 					->orWhere('datetimestart', '<=', $now);
 			})
 			->where(function($where) use ($now)
 			{
-				$where->where('datetimestop', '=', '0000-00-00 00:00:00')
+				$where->whereNull('datetimestop')
 					->orWhere('datetimestop', '>', $now);
 			});
 	}
@@ -225,7 +225,6 @@ class Loan extends Model
 
 		return $query->withTrashed()
 			->whereNotNull('datetimestop')
-			->where('datetimestop', '!=', '0000-00-00 00:00:00')
 			->where('datetimestop', '<=', $now);
 	}
 
@@ -311,7 +310,7 @@ class Loan extends Model
 	{
 		return self::query()
 			->where('datetimestart', '=', $this->datetimestart)
-			->where('datetimestop', '=', ($this->hasEnd() ? $this->datetimestop : '0000-00-00 00:00:00'))
+			->where('datetimestop', '=', ($this->hasEnd() ? $this->datetimestop : null))
 			->where('groupid', '=', $this->lendergroupid)
 			->where('lendergroupid', '=', $this->groupid)
 			->get()

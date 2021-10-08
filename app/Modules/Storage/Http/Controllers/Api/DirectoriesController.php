@@ -117,12 +117,16 @@ class DirectoriesController extends Controller
 		{
 			if ($filters['state'] == 'active')
 			{
-				$query->where('datetimeremoved', '=', '0000-00-00 00:00:00');
+				// Default behavior
 			}
 			elseif ($filters['state'] == 'inactive')
 			{
-				$query->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+				$query->onlyTrashed();
 			}
+		}
+		else
+		{
+			$query->withTrashed();
 		}
 
 		// Filter by resource ID
@@ -558,11 +562,6 @@ class DirectoriesController extends Controller
 			->where('parentstoragedirid', '=', $row->parentstoragedirid)
 			->where('name', '=', $row->name)
 			->where('datetimecreated', '<=', Carbon::now()->toDateTimeString())
-			->where(function ($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->where('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->get()
 			->first();
 
@@ -1080,11 +1079,6 @@ class DirectoriesController extends Controller
 					$exist = Directory::query()
 						->where('parentstoragedirid', '=', $row->id)
 						->where('name', '=', $member->user->username)
-						->where(function ($where)
-						{
-							$where->whereNull('datetimeremoved')
-								->where('datetimeremoved', '=', '0000-00-00 00:00:00');
-						})
 						->get()
 						->first();
 

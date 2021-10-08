@@ -47,8 +47,6 @@ class Messages
 					if (!$sr)
 					{
 						$sr = StorageResource::query()
-							->withTrashed()
-							->whereIsActive()
 							->where('parentresourceid', '=', $item->resourceid)
 							->first();
 					}

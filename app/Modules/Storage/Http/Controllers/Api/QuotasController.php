@@ -69,6 +69,7 @@ class QuotasController extends Controller
 		$r = (new StorageResource)->getTable();
 
 		$rows = Directory::query()
+			->withTrashed()
 			->select($d . '.*', $r . '.getquotatypeid')
 			->join($r, $r . '.id', $d . '.storageresourceid')
 			->where($d . '.owneruserid', '=', $user->id)
@@ -77,21 +78,14 @@ class QuotasController extends Controller
 					$where->where($d . '.bytes', '<>', 0)
 						->orWhere($r . '.defaultquotaspace', '<>', 0);
 				})
-			->where(function($where) use ($d)
-				{
-					$where->whereNull($d . '.datetimeremoved')
-						->orWhere($d . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-			->where(function($where) use ($r)
-				{
-					$where->whereNull($r . '.datetimeremoved')
-						->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
+			->whereNull($d . '.datetimeremoved')
+			->whereNull($r . '.datetimeremoved')
 			->get();
 
 		$g = (new UnixGroup)->getTable();
 
 		$rows2 = Directory::query()
+			->withTrashed()
 			->select($d . '.*', $r . '.getquotatypeid')
 			->join($r, $r . '.id', $d . '.storageresourceid')
 			->join($g, $g . '.id', $d . '.unixgroupid')
@@ -101,16 +95,8 @@ class QuotasController extends Controller
 					$where->where($d . '.bytes', '<>', 0)
 						->orWhere($r . '.defaultquotaspace', '<>', 0);
 				})
-			->where(function($where) use ($d)
-				{
-					$where->whereNull($d . '.datetimeremoved')
-						->orWhere($d . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-			->where(function($where) use ($r)
-				{
-					$where->whereNull($r . '.datetimeremoved')
-						->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
+			->whereNull($d . '.datetimeremoved')
+			->whereNull($r . '.datetimeremoved')
 			->get();
 
 		$rows = $rows->merge($rows2);
@@ -132,14 +118,6 @@ class QuotasController extends Controller
 			$row->file_limit        = 1;
 			$row->timestamp         = 0;
 			$row->user              = $username;
-			if (!$row->isTrashed())
-			{
-				$row->datetimeremoved = null;
-			}
-			if (!$row->isConfigured())
-			{
-				$row->datetimeconfigured = null;
-			}
 
 			$row->api = route('api.storage.read', ['id' => $row->id]);
 
@@ -171,11 +149,7 @@ class QuotasController extends Controller
 					// Assuming no pending requests
 					$message = $row->messages()
 						->where('messagequeuetypeid', '=', $row->getquotatypeid)
-						->where(function($where)
-						{
-							$where->whereNull('datetimecompleted')
-								->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
-						})
+						->whereNull('datetimecompleted')
 						->get()
 						->first();
 
@@ -187,13 +161,26 @@ class QuotasController extends Controller
 			}
 		});
 
+		$ws = ($request->segment(1) == 'ws');
+
 		$data = new \stdClass;
 		$data->version = 1;
 		$data->timestamp = date("U");
 		$data->quotas = array();
 		foreach ($rows as $row)
 		{
-			$data->quotas[] = $row->toArray();
+			$item = $row->toArray();
+
+			if ($ws)
+			{
+				$item['datetimecreated'] = $row->datetimecreated ? $row->datetimecreated->toDateTimeString() : '0000-00-00 00:00:00';
+				$item['datetimeremoved'] = $row->trashed() ? $row->datetimeremoved->toDateTimeString() : '0000-00-00 00:00:00';
+				$item['datetimeconfigured'] = $row->trashed() ? $row->datetimeconfigured->toDateTimeString() : '0000-00-00 00:00:00';
+
+				$item['storage_resource']['datetimeremoved'] = $item['storage_resource']['datetimeremoved'] ?: '0000-00-00 00:00:00';
+			}
+
+			$data->quotas[] = $item;
 		}
 
 		return response()->json($data, 200);

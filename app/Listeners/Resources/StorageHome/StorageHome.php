@@ -61,8 +61,6 @@ class StorageHome
 		}
 
 		$dir = Directory::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('name', '=', $event->user->username)
 			->where('resourceid', '=', $home->id)
 			->first();
@@ -75,8 +73,6 @@ class StorageHome
 		// Get values
 		$storage = StorageResource::query()
 			->where('parentresourceid', '=', $home->id)
-			->withTrashed()
-			->whereIsActive()
 			->first();
 
 		// Prepare storagedir entry

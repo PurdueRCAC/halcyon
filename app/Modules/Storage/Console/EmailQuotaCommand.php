@@ -44,7 +44,6 @@ class EmailQuotaCommand extends Command
 		$users = Notification::query()
 			->select(DB::raw('DISTINCT(userid) AS userid'))
 			->withTrashed()
-			->whereIsActive()
 			->get()
 			->pluck('userid')
 			->toArray();
@@ -77,30 +76,15 @@ class EmailQuotaCommand extends Command
 			}
 
 			$notifications = Notification::query()
+				->withTrashed()
 				->join($d, $d . '.id', $n . '.storagedirid')
 				->join($r, $r . '.id', $d . '.resourceid')
 				->join($s, $s . '.id', $d . '.storageresourceid')
 				->where($n . '.userid', '=', $userid)
-				->where(function($where) use ($n)
-				{
-					$where->whereNull($n . '.datetimeremoved')
-						->orWhere($n . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-				->where(function($where) use ($d)
-				{
-					$where->whereNull($d . '.datetimeremoved')
-						->orWhere($d . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-				->where(function($where) use ($r)
-				{
-					$where->whereNull($r . '.datetimeremoved')
-						->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-				->where(function($where) use ($s)
-				{
-					$where->whereNull($s . '.datetimeremoved')
-						->orWhere($s . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
+				->whereNull($n . '.datetimeremoved')
+				->whereNull($d . '.datetimeremoved')
+				->whereNull($r . '.datetimeremoved')
+				->whereNull($s . '.datetimeremoved')
 				->get();
 
 			foreach ($notifications as $not)
@@ -226,7 +210,7 @@ class EmailQuotaCommand extends Command
 
 						if ($debug || $this->output->isVerbose())
 						{
-							$this->info('Emailed exceed quota to ' . $user->email);
+							$this->comment('Emailed exceed quota for ' . $not->directory->fullPath . ' to ' . $user->email);
 
 							if ($debug)
 							{
@@ -320,7 +304,7 @@ class EmailQuotaCommand extends Command
 
 							if ($debug || $this->output->isVerbose())
 							{
-								$this->info('Emailed report quota to ' . $user->email . ', next report:' . $not->nextnotify);
+								$this->info('Emailed report quota for ' . $not->directory->fullPath . ' to ' . $user->email . ', next report:' . $not->nextnotify);
 
 								if ($debug)
 								{

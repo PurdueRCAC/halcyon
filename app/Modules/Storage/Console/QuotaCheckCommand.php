@@ -36,6 +36,7 @@ class QuotaCheckCommand extends Command
 		$r = (new StorageResource)->getTable();
 
 		$dirs = Directory::query()
+			->withTrashed()
 			->select($d . '.*', $r . '.getquotatypeid')
 			->join($r, $r . '.id', $d . '.storageresourceid')
 			->where($r . '.parentresourceid', '=', 64)
@@ -44,16 +45,8 @@ class QuotaCheckCommand extends Command
 					$where->where($d . '.bytes', '<>', 0)
 						->orWhere($r . '.defaultquotaspace', '<>', 0);
 				})
-			->where(function($where) use ($d)
-				{
-					$where->whereNull($d . '.datetimeremoved')
-						->orWhere($d . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-			->where(function($where) use ($r)
-				{
-					$where->whereNull($r . '.datetimeremoved')
-						->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
+			->whereNull($d . '.datetimeremoved')
+			->whereNull($r . '.datetimeremoved')
 			->get();
 
 		$u = (new Usage)->getTable();
@@ -142,11 +135,7 @@ class QuotaCheckCommand extends Command
 					// Check for pending requests
 					$message = $dir->messages()
 						->where('messagequeuetypeid', '=', $dir->getquotatypeid)
-						->where(function($where)
-						{
-							$where->whereNull('datetimecompleted')
-								->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
-						})
+						->whereNull('datetimecompleted')
 						->get()
 						->first();
 
@@ -205,11 +194,7 @@ class QuotaCheckCommand extends Command
 			{
 				$message = $dir->messages()
 					->where('messagequeuetypeid', '=', $dir->getquotatypeid)
-					->where(function($where)
-					{
-						$where->whereNull('datetimecompleted')
-							->orWhere('datetimecompleted', '=', '0000-00-00 00:00:00');
-					})
+					->whereNull('datetimecompleted')
 					->get()
 					->first();
 

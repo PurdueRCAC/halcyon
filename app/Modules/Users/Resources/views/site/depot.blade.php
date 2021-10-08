@@ -13,8 +13,6 @@
 			}
 
 			$directories = $group->directories()
-				->withTrashed()
-				->whereIsActive()
 				->where('parentstoragedirid', '=', 0)
 				->where('resourceid', '=', 64)
 				->get();
@@ -43,8 +41,6 @@
 			}
 
 			$directories = $group->directories()
-				->withTrashed()
-				->whereIsActive()
 				->where('parentstoragedirid', '=', 0)
 				->where('resourceid', '=', 64)
 				->get();
@@ -73,8 +69,6 @@
 			}
 
 			$directories = $group->directories()
-				->withTrashed()
-				->whereIsActive()
 				->where('parentstoragedirid', '=', 0)
 				->where('resourceid', '=', 64)
 				->get();
@@ -108,8 +102,6 @@
 			}
 
 			$directories = $group->directories()
-				->withTrashed()
-				->whereIsActive()
 				->where('parentstoragedirid', '=', 0)
 				->where('resourceid', '=', 64)
 				->get();

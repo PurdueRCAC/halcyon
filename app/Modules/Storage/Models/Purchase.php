@@ -79,7 +79,7 @@ class Purchase extends Model
 	 */
 	public function hasStart()
 	{
-		return ($this->datetimestart && $this->datetimestart != '0000-00-00 00:00:00' && $this->datetimestart != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimestart);
 	}
 
 	/**
@@ -89,7 +89,7 @@ class Purchase extends Model
 	 */
 	public function hasEnd()
 	{
-		return ($this->datetimestop && $this->datetimestop != '0000-00-00 00:00:00' && $this->datetimestop != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimestop);
 	}
 
 	/**
@@ -203,13 +203,11 @@ class Purchase extends Model
 		return $query->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimestop')
-					->orWhere('datetimestart', '=', '0000-00-00 00:00:00')
 					->orWhere('datetimestart', '<', $now);
 			})
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimestop')
-					->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
 					->orWhere('datetimestop', '>', $now);
 			});
 	}
@@ -225,7 +223,6 @@ class Purchase extends Model
 		$now = Carbon::now()->toDateTimeString();
 
 		return $query->whereNotNull('datetimestop')
-			->where('datetimestop', '!=', '0000-00-00 00:00:00')
 			->where('datetimestop', '<=', $now);
 	}
 
@@ -309,7 +306,7 @@ class Purchase extends Model
 	{
 		return self::query()
 			->where('datetimestart', '=', $this->datetimestart)
-			->where('datetimestop', '=', ($this->hasEnd() ? $this->datetimestop : '0000-00-00 00:00:00'))
+			->where('datetimestop', '=', ($this->hasEnd() ? $this->datetimestop : null))
 			->where('groupid', '=', $this->sellergroupid)
 			->where('sellergroupid', '=', $this->groupid)
 			->get()

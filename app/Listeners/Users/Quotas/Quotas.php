@@ -54,8 +54,8 @@ class Quotas
 				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
 				->join($r, $r . '.id', $d . '.storageresourceid')
 				->where($d . '.owneruserid', '=', $user->id)
-				->where($d . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-				->where($r . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->whereNull($d . '.datetimeremoved')
+				->whereNull($r . '.datetimeremoved')
 				->where(function($where) use ($d, $r)
 				{
 					$where->where($d . '.bytes', '<>', 0)
@@ -70,8 +70,8 @@ class Quotas
 				->join($r, $r . '.id', $d . '.storageresourceid')
 				->join($u, $u . '.unixgroupid', $d . '.unixgroupid')
 				->where($u . '.userid', '=', $user->id)
-				->where($d . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-				->where($r . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->whereNull($d . '.datetimeremoved')
+				->whereNull($r . '.datetimeremoved')
 				->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00')
 				->where(function($where) use ($d, $r)
 				{
@@ -87,7 +87,7 @@ class Quotas
 				->join($r, $r . '.id', $d . '.storageresourceid')
 				->join($g, $g . '.groupid', $d . '.groupid')
 				->where($g . '.userid', '=', $user->id)
-				->where($d . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->whereNull($d . '.datetimeremoved')
 				->where($r . '.datetimeremoved', '=', '0000-00-00 00:00:00')
 				->where(function($where) use ($d, $r)
 				{
@@ -106,8 +106,8 @@ class Quotas
 				->select($d . '.*', $r . '.path AS resourcepath', $r . '.id AS storageresourceid', $r . '.getquotatypeid')
 				->join($r, $r . '.id', $d . '.storageresourceid')
 				->where($d . '.owneruserid', '=', $user->id)
-				->where($d . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-				->where($r . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->whereNull($d . '.datetimeremoved')
+				->whereNull($r . '.datetimeremoved')
 				->where($d . '.bytes', '<>', 0)
 				->get();
 
@@ -118,8 +118,8 @@ class Quotas
 				->join($r, $r . '.id', $d . '.storageresourceid')
 				->join($u, $u . '.unixgroupid', $d . '.unixgroupid')
 				->where($u . '.userid', '=', $user->id)
-				->where($d . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-				->where($r . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->whereNull($d . '.datetimeremoved')
+				->whereNull($r . '.datetimeremoved')
 				->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00')
 				->where($d . '.bytes', '<>', 0)
 				->get();
@@ -131,8 +131,8 @@ class Quotas
 				->join($r, $r . '.id', $d . '.storageresourceid')
 				->join($g, $g . '.groupid', $d . '.groupid')
 				->where($g . '.userid', '=', $user->id)
-				->where($d . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-				->where($r . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->whereNull($d . '.datetimeremoved')
+				->whereNull($r . '.datetimeremoved')
 				->where($d . '.bytes', '<>', 0)
 				->where($g . '.membertype', '=', 2)
 				->where($g . '.groupid', '<>', 0)
@@ -141,8 +141,6 @@ class Quotas
 			$storagedirs = $dirs3->merge($dirs->merge($dirs2));
 
 			$storagenotifications = Notification::query()
-				->withTrashed()
-				->whereIsActive()
 				->where('userid', '=', $user->id)
 				->get();
 

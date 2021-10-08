@@ -122,7 +122,7 @@ if ($parent)
 			<?php
 			$sr = $row->storageResource()->withTrashed()->first();
 			?>
-			<tr<?php if ($row->isTrashed() || $sr->isTrashed()) { echo ' class="trashed"'; } ?>>
+			<tr<?php if ($row->trashed() || $sr->trashed()) { echo ' class="trashed"'; } ?>>
 				@if (auth()->user()->can('delete storage'))
 					<td>
 						{!! Html::grid('id', $i, $row->id) !!}
@@ -132,7 +132,7 @@ if ($parent)
 					{{ $row->id }}
 				</td>
 				<td>
-					@if ($row->isTrashed() || $sr->isTrashed())
+					@if ($row->trashed() || $sr->trashed())
 						<span class="glyph icon-trash text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
 							{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time>
 						</span>

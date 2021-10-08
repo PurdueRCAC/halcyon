@@ -151,8 +151,6 @@ class Depot
 		}
 
 		$dir = Directory::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('parentstoragedirid', '=', 0)
 			->where('groupid', '=', $loan->groupid)
 			->where('resourceid', '=', 64)
@@ -205,8 +203,6 @@ class Depot
 		}
 
 		$dir = Directory::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('parentstoragedirid', '=', 0)
 			->where('groupid', '=', $purchase->groupid)
 			->where('resourceid', '=', 64)

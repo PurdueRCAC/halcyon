@@ -79,16 +79,11 @@ class DirectoriesController extends Controller
 		{
 			if ($filters['state'] == 'active')
 			{
-				$query->where(function($where) use ($d)
-				{
-					$where->whereNull($d . '.datetimeremoved')
-						->orWhere($d . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				});
+				$query->whereNull($d . '.datetimeremoved');
 			}
 			elseif ($filters['state'] == 'inactive')
 			{
-				$query->whereNotNull($d . '.datetimeremoved')
-					->where($d . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
+				$query->whereNotNull($d . '.datetimeremoved');
 			}
 		}
 
@@ -122,21 +117,26 @@ class DirectoriesController extends Controller
 			->orderBy($d . '.' . $filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		$query = StorageResource::query()->withTrashed();
+		$query = StorageResource::query();
 
-		if ($filters['state'] != '*')
+		/*if ($filters['state'] != '*')
 		{
 			if ($filters['state'] == 'active')
 			{
-				$query->whereIsActive();
+				// Default behavior
 			}
 			elseif ($filters['state'] == 'inactive')
 			{
-				//$query->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+				$query->onlyTrashed();
 			}
 		}
+		else
+		{
+			$query->withTrashed();
+		}*/
 
 		$storages = $query
+			//->orderBy('datetimeremoved', 'asc')
 			->orderBy('name', 'asc')
 			->get();
 

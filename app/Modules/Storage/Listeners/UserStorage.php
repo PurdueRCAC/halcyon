@@ -40,8 +40,6 @@ class UserStorage
 		$dirs = Directory::query()
 			->where('owneruserid', '=', $user->id)
 			->where('parentstoragedirid', '=', 0)
-			->withTrashed()
-			->whereIsActive()
 			->get();
 
 		foreach ($dirs as $dir)
@@ -85,12 +83,8 @@ class UserStorage
 			->where($ug . '.userid', '=', $user->id)
 			->where($d . '.bytes', '<>', 0)
 			->withTrashed()
-			->whereIsActive()
-			->where(function($where) use ($ug)
-			{
-				$where->whereNull($ug . '.datetimeremoved')
-					->orWhere($ug . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($d . '.datetimeremoved')
+			->whereNull($ug . '.datetimeremoved')
 			->get();
 
 		foreach ($dirs as $dir)
@@ -140,12 +134,8 @@ class UserStorage
 			->where($gu . '.groupid', '<>', 0)
 			->where($d . '.bytes', '<>', 0)
 			->withTrashed()
-			->whereIsActive()
-			->where(function($where) use ($gu)
-			{
-				$where->whereNull($gu . '.dateremoved')
-					->orWhere($gu . '.dateremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($d . '.datetimeremoved')
+			->whereNull($gu . '.dateremoved')
 			->get();
 
 		foreach ($dirs as $dir)
@@ -192,13 +182,9 @@ class UserStorage
 			->join($d, $d . '.id', $n . '.storagedirid')
 			->select($n . '.*')
 			->withTrashed()
-			->whereIsActive()
+			->whereNull($n . '.datetimeremoved')
+			->whereNull($d . '.datetimeremoved')
 			->where($n . '.userid', '=', $user->id)
-			->where(function($where) use ($d)
-			{
-				$where->whereNull($d . '.datetimeremoved')
-					->orWhere($d . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->get();
 
 		foreach ($nots as $not)

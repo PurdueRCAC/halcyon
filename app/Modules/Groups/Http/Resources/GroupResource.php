@@ -211,7 +211,6 @@ class GroupResource extends JsonResource
 
 			$data['priordirectories'] = $this->directories()
 				->onlyTrashed()
-				->where('datetimeremoved', '!=', '0000-00-00 00:00:00')
 				->get()
 				->each(function ($item, $key)
 				{

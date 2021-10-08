@@ -118,7 +118,7 @@ app('pathway')
 			</thead>
 			<tbody>
 				@foreach ($rows as $i => $row)
-					<tr<?php if ($row->isTrashed()) { echo ' class="trashed"'; } ?>>
+					<tr<?php if ($row->trashed()) { echo ' class="trashed"'; } ?>>
 						@if (auth()->user()->can('delete storage'))
 							<td>
 								{!! Html::grid('id', $i, $row->id) !!}
@@ -128,7 +128,7 @@ app('pathway')
 							{{ $row->id }}
 						</td>
 						<td>
-							@if ($row->isTrashed())
+							@if ($row->trashed())
 								<span class="glyph icon-trash text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
 									{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time>
 								</span>
@@ -163,7 +163,7 @@ app('pathway')
 						<td class="priority-4">
 							@if ($row->parentresourceid)
 								@if ($row->resource)
-									@if ($row->resource->isTrashed())
+									@if ($row->resource->trashed())
 										<span class="icon-trash text-danger" aria-hidden="true"></span>
 									@endif
 									<a href="{{ route('admin.resources.edit', ['id' => $row->parentresourceid]) }}">

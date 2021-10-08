@@ -263,7 +263,7 @@ class Group extends Model
 			$buckets[$dir->resourceid]['totalbytes'] += $dir->bytes;
 		}
 
-		foreach ($this->directories()->withTrashed()->whereIsActive()->get() as $dir)
+		foreach ($this->directories as $dir)
 		{
 			if (!isset($buckets[$dir->resourceid]))
 			{

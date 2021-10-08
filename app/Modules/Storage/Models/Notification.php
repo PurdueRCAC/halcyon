@@ -5,7 +5,6 @@ namespace App\Modules\Storage\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Halcyon\Models\Timeperiod;
 use App\Modules\Storage\Models\Notification\Type;
 use Carbon\Carbon;
@@ -15,7 +14,7 @@ use Carbon\Carbon;
  */
 class Notification extends Model
 {
-	use Historable, SoftDeletes, LegacyTrash;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -199,8 +198,6 @@ class Notification extends Model
 	 */
 	public function wasNotified()
 	{
-		return ($this->datetimelastnotify
-			&& $this->datetimelastnotify != '0000-00-00 00:00:00'
-			&& $this->datetimelastnotify != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimelastnotify);
 	}
 }

@@ -593,14 +593,6 @@ class LoansController extends Controller
 					return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 				}
 			}
-			/*elseif ($row->getOriginal('datetimestop') && $row->getOriginal('datetimestop') != '0000-00-00 00:00:00')
-			{
-				// Compare to existing value
-				if (strtotime($row->getOriginal('datetimestop')) <= $row->datetimestart->timestamp)
-				{
-					return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
-				}
-			}*/
 		}
 
 		if ($request->has('datetimestop') && $row->datetimestop->toDateTimeString() != $request->input('datetimestop'))

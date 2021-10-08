@@ -40,8 +40,6 @@ class GroupMembers
 		$dirs = Directory::query()
 			->where('groupid', '=', $event->member->groupid)
 			->where('bytes', '<>', 0)
-			->withTrashed()
-			->whereIsActive()
 			->get();
 
 		if (!count($dirs))
@@ -89,8 +87,6 @@ class GroupMembers
 		$dirs = Directory::query()
 			->where('groupid', '=', $event->member->groupid)
 			->where('bytes', '<>', 0)
-			->withTrashed()
-			->whereIsActive()
 			->get();
 
 		if (!count($dirs))

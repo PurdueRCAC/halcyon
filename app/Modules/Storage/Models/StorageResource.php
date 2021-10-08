@@ -4,7 +4,6 @@ namespace App\Modules\Storage\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\History\Traits\Historable;
 
 /**
@@ -12,7 +11,7 @@ use App\Modules\History\Traits\Historable;
  */
 class StorageResource extends Model
 {
-	use Historable, SoftDeletes, LegacyTrash;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.

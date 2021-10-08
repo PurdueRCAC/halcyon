@@ -33,19 +33,12 @@ class StorageScratch
 		$storages = StorageResource::query()
 			->where('parentresourceid', '=', $event->resource->id)
 			->where('autouserdir', '=', 1)
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->get();
 
 		foreach ($storages as $storage)
 		{
 			// First check if we have a storage dir already
 			$dir = $storage->directories()
-				->withTrashed()
-				->whereIsActive()
 				->where('name', '=', $event->user->username)
 				->first();
 

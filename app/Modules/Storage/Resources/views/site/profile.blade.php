@@ -465,7 +465,7 @@
 			{
 				if (!isset($sdirs[$not->storagedirid]))
 				{
-					$sdirs[$not->storagedirid] = $not->directory()->withTrashed()->whereIsActive()->first();
+					$sdirs[$not->storagedirid] = $not->directory;
 				}
 
 				$dir = $sdirs[$not->storagedirid];
@@ -778,7 +778,7 @@
 					{
 						if (!isset($sdirs[$not->storagedirid]))
 						{
-							$sdirs[$not->storagedirid] = $not->directory()->withTrashed()->whereIsActive()->first();
+							$sdirs[$not->storagedirid] = $not->directory;
 						}
 
 						if (!$sdirs[$not->storagedirid] || !$sdirs[$not->storagedirid]->storageResource)

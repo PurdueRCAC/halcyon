@@ -54,16 +54,11 @@ class StorageController extends Controller
 		{
 			if ($filters['state'] == 'active')
 			{
-				$query->where(function($where)
-				{
-					$where->whereNull('datetimeremoved')
-						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-				});
+				$query->whereNull('datetimeremoved');
 			}
 			elseif ($filters['state'] == 'inactive')
 			{
-				$query->whereNotNull('datetimeremoved')
-					->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
+				$query->whereNotNull('datetimeremoved');
 			}
 		}
 
@@ -217,7 +212,7 @@ class StorageController extends Controller
 				continue;
 			}
 
-			if ($row->isTrashed())
+			if ($row->trashed())
 			{
 				if (!$row->forceDelete())
 				{

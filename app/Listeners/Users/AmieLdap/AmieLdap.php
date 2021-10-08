@@ -595,8 +595,6 @@ class AmieLdap
 
 					// Storage
 					$storage = StorageResource::query()
-						->withTrashed()
-						->whereIsActive()
 						->where('path', '=', '/depot')
 						->get()
 						->first();
@@ -652,8 +650,6 @@ class AmieLdap
 
 						// Do we have a directory?
 						$dir = $group->directories()
-							->withTrashed()
-							->whereIsActive()
 							->where('storageresourceid', '=', $storage->id)
 							->get()
 							->first();

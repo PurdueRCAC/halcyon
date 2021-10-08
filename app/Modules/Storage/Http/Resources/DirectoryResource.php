@@ -51,15 +51,6 @@ class DirectoryResource extends JsonResource
 			);
 		}
 
-		if (!$this->isTrashed())
-		{
-			$data['datetimeremoved'] = null;
-		}
-		if (!$this->isConfigured())
-		{
-			$data['datetimeconfigured'] = null;
-		}
-
 		// [!] Legacy compatibility
 		if (request()->segment(1) == 'ws')
 		{
@@ -69,7 +60,7 @@ class DirectoryResource extends JsonResource
 			$data['group']['id'] = '/ws/group/' . $this->id;
 			$data['parent'] = '/ws/storagedir/' . $this->parentstoragedirid;
 			$data['created'] = $this->datetimecreated->toDateTimeString();
-			if ($this->isTrashed())
+			if ($this->trashed())
 			{
 				$data['removed'] = $this->datetimeremoved->toDateTimeString();
 			}

@@ -10,7 +10,6 @@ use App\Modules\Groups\Models\UnixGroup;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Halcyon\Utility\Number;
 use App\Modules\Storage\Events\DirectoryCreated;
 use App\Modules\Storage\Events\DirectoryUpdated;
@@ -22,7 +21,7 @@ use Carbon\Carbon;
  */
 class Directory extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
+	use ErrorBag, Validatable, Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -92,9 +91,7 @@ class Directory extends Model
 	 */
 	public function isConfigured()
 	{
-		return ($this->datetimeconfigured
-			&& $this->datetimeconfigured != '0000-00-00 00:00:00'
-			&& $this->datetimeconfigured != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimeconfigured);
 	}
 
 	/**
@@ -520,7 +517,7 @@ class Directory extends Model
 
 		foreach ($items as $purchase)
 		{
-			if ($purchase->start && $purchase->start != '0000-00-00 00:00:00' && $purchase->start != '-0001-11-30 00:00:00')
+			if ($purchase->start)
 			{
 				if (!isset($increments[strtotime($purchase->start)]))
 				{
@@ -530,7 +527,7 @@ class Directory extends Model
 				$increments[strtotime($purchase->start)] += $purchase->bytes;
 			}
 
-			if ($purchase->stop && $purchase->stop != '0000-00-00 00:00:00' && $purchase->stop != '-0001-11-30 00:00:00')
+			if ($purchase->stop)
 			{
 				if (!isset($increments[strtotime($purchase->stop)]))
 				{
@@ -615,7 +612,7 @@ class Directory extends Model
 		$item['quota'] = $this->quota;
 
 		$children = array();
-		foreach ($this->children()->withTrashed()->whereIsActive()->orderBy('name', 'asc')->get() as $child)
+		foreach ($this->children()->orderBy('name', 'asc')->get() as $child)
 		{
 			$children[] = $child->tree(false);
 		}
@@ -654,7 +651,7 @@ class Directory extends Model
 	{
 		$items[] = $this;
 
-		foreach ($this->children()->withTrashed()->whereIsActive()->orderBy('name', 'asc')->get() as $child)
+		foreach ($this->children()->orderBy('name', 'asc')->get() as $child)
 		{
 			$items = $child->nested($items);
 		}
@@ -755,8 +752,6 @@ class Directory extends Model
 				->where('resourceid', $model->resourceid)
 				->where('parentstoragedirid', '=', 0)
 				->where('id', '!=', $model->id)
-				->withTrashed()
-				->whereIsActive()
 				->count();
 
 			if ($others)

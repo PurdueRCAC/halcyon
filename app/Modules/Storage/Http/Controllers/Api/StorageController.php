@@ -114,18 +114,22 @@ class StorageController extends Controller
 		);
 
 		// Get records
-		$query = StorageResource::query()->withTrashed();
+		$query = StorageResource::query();
 
 		if ($filters['state'] != 'all')
 		{
 			if ($filters['state'] == 'active')
 			{
-				$query->whereIsActive();
+				// Default behavior
 			}
 			elseif ($filters['state'] == 'inactive')
 			{
-				$query->whereIsTrashed();
+				$query->onlyTrashed();
 			}
+		}
+		else
+		{
+			$query->withTrashed();
 		}
 
 		if ($filters['search'])
@@ -148,10 +152,6 @@ class StorageController extends Controller
 
 		$rows->each(function($item, $key)
 		{
-			if (!$item->isTrashed())
-			{
-				$item->datetimeremoved = null;
-			}
 			$item->api = route('api.storage.read', ['id' => $item->id]);
 		});
 
@@ -329,10 +329,6 @@ class StorageController extends Controller
 		$row->save();
 		$row->directories_count = $row->directories()->count();
 		$row->api = route('api.storage.read', ['id' => $row->id]);
-		if (!$row->isTrashed())
-		{
-			$row->datetimeremoved = null;
-		}
 
 		return new JsonResource($row);
 	}
@@ -367,10 +363,6 @@ class StorageController extends Controller
 		$row = StorageResource::findOrFail($id);
 		$row->directories_count = $row->directories()->count();
 		$row->api = route('api.storage.read', ['id' => $row->id]);
-		if (!$row->isTrashed())
-		{
-			$row->datetimeremoved = null;
-		}
 
 		return new JsonResource($row);
 	}
@@ -551,10 +543,6 @@ class StorageController extends Controller
 		$row->save();
 		$row->directories_count = $row->directories()->count();
 		$row->api = route('api.storage.read', ['id' => $row->id]);
-		if (!$row->isTrashed())
-		{
-			$row->datetimeremoved = null;
-		}
 
 		return new JsonResource($row);
 	}

@@ -1285,8 +1285,6 @@
 						$purchases = $group->purchases()->withTrashed()->count();
 						$loans = $group->loans()->withTrashed()->count();
 						$storageresources = App\Modules\Storage\Models\StorageResource::query()
-							->withTrashed()
-							->whereIsActive()
 							->orderBy('name', 'asc')
 							->get();
 						?>
