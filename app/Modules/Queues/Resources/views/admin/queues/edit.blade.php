@@ -60,7 +60,7 @@ app('pathway')
 		<div class="alert alert-warning">This entry is marked as trashed.</div>
 	@endif
 
-	<form action="{{ route('admin.queues.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+	<form action="{{ route('admin.queues.store') }}" method="post" name="adminForm" id="adminForm" class="editform form-validate">
 	<div class="row">
 		<div class="col-md-7">
 			<fieldset class="adminform">
@@ -94,7 +94,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-groupid">{{ trans('queues::queues.group') }}:</label>
 					<span class="input-group">
-						<input type="text" name="fields[groupid]" id="field-groupid" class="form-control form-groups" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" data-multiple="false" placeholder="Search for group..." value="{{ ($row->group ? $row->group->name . ':' . $row->groupid : '') }}" />
+						<input type="text" name="fields[groupid]" id="field-groupid" class="form-control form-groups" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&amp;search=%s" data-multiple="false" placeholder="Search for group..." value="{{ ($row->group ? $row->group->name . ':' . $row->groupid : '') }}" />
 						<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
 					</span>
 				</div>
@@ -562,13 +562,13 @@ app('pathway')
 										<div class="col-md-6">
 											<div class="form-group">
 												<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.nodes') }}</label>
-												<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" name="nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $amt }}" step="0.5" />
+												<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $amt }}" step="0.5" />
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group">
 												<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ $row->subresource->nodecores }} per node)</span></label>
-												<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" name="cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
+												<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
 											</div>
 										</div>
 									</div>
@@ -577,7 +577,7 @@ app('pathway')
 										<div class="col-md-6">
 											<div class="form-group">
 												<label for="loan-datetimestart{{ $item->id }}">{{ trans('queues::queues.start') }}</label>
-												<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart{{ $item->id }}" name="datetimestart" value="{{ $item->datetimestart->toDateTimeString() }}" />
+												<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart{{ $item->id }}" value="{{ $item->datetimestart->toDateTimeString() }}" />
 											</div>
 										</div>
 										<div class="col-md-6">
@@ -662,7 +662,7 @@ app('pathway')
 					<select name="sellergroupid" id="seller-group"
 						class="form-control form-group-queues"
 						data-update="seller-queue"
-						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
+						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&amp;search=%s"
 						data-queue-api="{{ route('api.queues.index') }}"
 						data-subresource="{{ $row->subresourceid }}">
 						<option value="0" data-hide="#seller-queue">{{ trans('queues::queues.new hardware') }}</option>
@@ -721,7 +721,7 @@ app('pathway')
 					<select name="groupid" id="sell-group"
 						class="form-control form-group-queues"
 						data-update="sell-queue"
-						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
+						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&amp;search=%s"
 						data-queue-api="{{ route('api.queues.index') }}"
 						data-subresource="{{ $row->subresourceid }}">
 						<option value="0">{{ trans('queues::queues.select group') }}</option>
@@ -770,13 +770,13 @@ app('pathway')
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="loan-nodes">{{ trans('queues::queues.nodes') }}</label>
-							<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes" name="nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores" value="0" step="0.5" />
+							<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores" value="0" step="0.5" />
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="loan-cores">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ $row->subresource->nodecores }} per node)</span></label>
-							<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores" name="cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes" value="0" />
+							<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes" value="0" />
 						</div>
 					</div>
 				</div>
@@ -807,7 +807,7 @@ app('pathway')
 					<select name="lendergroupid" id="lender-group"
 						class="form-control form-group-queues"
 						data-update="lender-queue"
-						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
+						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&amp;search=%s"
 						data-queue-api="{{ route('api.queues.index') }}"
 						data-subresource="{{ $row->subresourceid }}">
 						<option value="0">{{ trans('queues::queues.select group') }}</option>
@@ -836,7 +836,7 @@ app('pathway')
 					<select name="groupid" id="loan-group"
 						class="form-control form-group-queues"
 						data-update="loan-queue"
-						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s"
+						data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&amp;search=%s"
 						data-queue-api="{{ route('api.queues.index') }}"
 						data-subresource="{{ $row->subresourceid }}">
 						<option value="0">{{ trans('queues::queues.select group') }}</option>
