@@ -22,18 +22,18 @@ $content = '';
 		@endif
 	@endforeach
 
-	<ul class="dropdown-menu">
+	<ul class="nav">
 		@foreach ($sections as $section)
 			<?php
 			$active = '';
 			if ($section['active'])
 			{
-				$active = ' class="active"';
+				$active = ' active';
 				$content = $section['content'];
 			}
 			?>
-			<li{!! $active !!}>
-				<a href="{{ $section['route'] }}">{!! $section['name'] !!}</a>
+			<li class="nav-item{!! $active !!}">
+				<a class="nav-link{!! $active !!}" href="{{ $section['route'] }}">{!! $section['name'] !!}</a>
 			</li>
 		@endforeach
 	</ul>
