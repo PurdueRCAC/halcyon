@@ -77,7 +77,41 @@
 		@endif
 
 		<header>
-			<div class="container">
+			<div class="mb-3 bg-white border-bottom shadow-sm">
+				<div class="container">
+					<div class="d-flex flex-column flex-md-row align-items-center py-3">
+						<h1 class="my-0 mr-md-auto font-weight-normal">
+							<a href="{{ route('home') }}">
+								{{ config('app.name') }}
+							</a>
+						</h1>
+
+						<nav class="my-2 my-md-0 mr-md-3" aria-label="Main Menu">
+							@widget('mainmenu')
+							<!--<a class="p-2 text-dark" href="#">Features</a>
+							<a class="p-2 text-dark" href="#">Enterprise</a>
+							<a class="p-2 text-dark" href="#">Support</a>
+							<a class="p-2 text-dark" href="#">Pricing</a>-->
+						</nav>
+
+						@if (Auth::check())
+							<div class="user-dropdown dropdown">
+								<button class="btn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									{{ Auth::user()->name }}
+								</button>
+								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+									<a class="dropdown-item" href="{{ route('site.users.account') }}">Account</a>
+									<a class="dropdown-item" href="{{ route('logout') }}">{{ trans('theme::site.logout') }}</a>
+								</div>
+							</div>
+						@else
+							<a href="{{ route('login') }}" class="btn btn-outline-primary"><span class="fa fa-lock" aria-hidden="true"></span> {{ trans('theme::site.login') }}</a>
+						@endif
+					</div>
+				</div>
+			</div>
+
+			<!-- <div class="container">
 				<div class="row">
 					<div class="logo col">
 						<h1>
@@ -87,23 +121,21 @@
 						</h1>
 					</div>
 
-					<div class="login col">
-						<ul>
-							@if (Auth::check())
-								<li><a href="{{ route('site.users.account') }}">{{ Auth::user()->name }}</a> &nbsp;|&nbsp; <a href="{{ route('logout') }}">{{ trans('theme::site.logout') }}</a></li>
-							@else
-								<li><a href="{{ route('login') }}" class="btn btn-secondary btn-inverse"><span class="fa fa-lock" aria-hidden="true"></span> {{ trans('theme::site.login') }}</a></li>
-							@endif
-						</ul>
+					<div class="login col text-right">
+						@if (Auth::check())
+							<a href="{{ route('site.users.account') }}">{{ Auth::user()->name }}</a> &nbsp;|&nbsp; <a href="{{ route('logout') }}">{{ trans('theme::site.logout') }}</a>
+						@else
+							<a href="{{ route('login') }}" class="btn btn-secondary btn-inverse"><span class="fa fa-lock" aria-hidden="true"></span> {{ trans('theme::site.login') }}</a>
+						@endif
 					</div>
 				</div>
-			</div>
+			</div> -->
 
 			@widget('header')
 
-			<nav class="navbar navbar-light navbar-expand-lg" aria-label="Main Menu">
+			<!-- <nav class="navbar navbar-light navbar-expand-lg" aria-label="Main Menu">
 				@widget('mainmenu')
-			</nav>
+			</nav> -->
 
 			@if (!Request::is('/'))
 				@widget('breadcrumbs')
@@ -114,20 +146,18 @@
 			@include('partials.notifications')
 
 			<div class="container">
-				<div class="row">
 				@if (app('widget')->count('left'))
+				<div class="row">
 					<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
 						@widget('left')
-					</div><!-- /.sidenav end -->
+					</div>
 					<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-				@else
-					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-				@endif
-
 						@yield('content')
-
-					</div><!-- /.contentInner -->
+					</div>
 				</div>
+				@else
+					@yield('content')
+				@endif
 			</div>
 		</main>
 

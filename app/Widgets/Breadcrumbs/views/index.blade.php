@@ -3,11 +3,11 @@
  * @package  Breadcrumbs widget
  */
 ?>
-<nav class="breadcrumb{{ $class_sfx }} pathway{{ $class_sfx }}" aria-label="{{ trans('widget.breadcrumbs::breadcrumbs.widget name') }}">
+<nav class="breadcrumbs{{ $class_sfx }} pathway{{ $class_sfx }}" aria-label="{{ trans('widget.breadcrumbs::breadcrumbs.widget name') }}">
 	<div class="container<?php echo (app()->has('isAdmin') && app('isAdmin') ? '-fluid' : ''); ?>">
 		<div class="row">
-			<div id="breadcrumbs">
-				<ol class="col-lg-12 col-md-12 col-sm-12">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<ol class="breadcrumb">
 					@if ($params->get('showHere', 1))
 						<li class="breadcrumb-item showHere">{{ trans('widget.breadcrumbs::breadcrumbs.here') }}</li>
 					@endif

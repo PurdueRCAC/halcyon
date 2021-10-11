@@ -159,6 +159,19 @@ class ListenerManager
 			->where('type', '=', 'listener')
 			->orderBy('ordering', 'asc')
 			->get();
+
+		if (!count($listeners))
+		{
+			$listeners = $this->allByFile();
+
+			if (count($listeners))
+			{
+				foreach ($listeners as $listener)
+				{
+					$listener->save();
+				}
+			}
+		}
 		
 		return $listeners;
 	}
@@ -172,19 +185,31 @@ class ListenerManager
 	{
 		$files = app('files')->glob(app_path('Listeners') . '/*/*/listener.json');
 
-		foreach ($files as $file)
+		$orders = array();
+
+		foreach ($files as $i => $file)
 		{
 			$data = json_decode(file_get_contents($file));
 
 			$listener = new Listener;
-			$listener->type     = 'listener';
-			$listener->name     = $data->name;
-			$listener->element  = strtolower(basename(dirname($file)));
-			$listener->folder   = strtolower(basename(dirname(dirname($file))));
-			$listener->enabled  = $data->active;
-			$listener->ordering = $data->order;
+			$listener->type      = 'listener';
+			$listener->name      = $data->name;
+			$listener->element   = strtolower(basename(dirname($file)));
+			$listener->folder    = strtolower(basename(dirname(dirname($file))));
+
+			if (!isset($orders[$listener->folder]))
+			{
+				$orders[$listener->folder] = 1;
+			}
+
+			$listener->enabled   = $data->active;
+			$listener->ordering  = (isset($data->order) && $data->order ? $data->order : $orders[$listener->folder]);
+			$listener->access    = (isset($data->access) ? $data->access : 1);
+			$listener->protected = 1;
 
 			$listeners[] = $listener;
+
+			$orders[$listener->folder]++;
 		}
 
 		return collect($listeners);

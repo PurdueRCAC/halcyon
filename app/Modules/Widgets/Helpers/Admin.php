@@ -86,10 +86,10 @@ abstract class Admin
 			->orderBy('position', 'asc')
 			->get();
 
-		if (!count($positions))
+		/*if (!count($positions))
 		{
 			$positions = array(':: ' . trans('global.none') . ' ::');
-		}
+		}*/
 
 		return $positions;
 	}

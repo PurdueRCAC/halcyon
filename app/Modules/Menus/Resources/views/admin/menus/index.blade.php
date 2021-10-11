@@ -143,7 +143,7 @@ app('pathway')
 							@endforeach
 						</ul>
 					@else
-						<a class="btn btn-secondary btn-sm" href="{{ route('admin.widgets.create') }}?eid={{ $menuwidget->id }}&params[menutype]={{ $row->menutype }}">
+						<a class="btn btn-secondary btn-sm" href="{{ route('admin.widgets.create') }}?eid={{ $menuwidget ? $menuwidget->id : '' }}&amp;params[menutype]={{ $row->menutype }}">
 							<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('menus::menus.add menu widget') }}
 						</a>
 					@endif

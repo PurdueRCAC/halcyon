@@ -4,7 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
-use App\Modules\Menus\Models\Menu;
 use Carbon\Carbon;
 
 class CreateMenusTables extends Migration
@@ -40,7 +39,7 @@ class CreateMenusTables extends Migration
 			]);*/
 
 			// Create the default menu
-			Menu::create([
+			DB::table('menus')->insert([
 				'menutype' => 'mainmenu',
 				'title' => 'Main Menu',
 				'description' => 'The main menu for the site',
@@ -56,7 +55,7 @@ class CreateMenusTables extends Migration
 				$table->string('menutype', 24)->comment('The type of menu this item belongs to. FK to menus.menutype.');
 				$table->string('title', 255);
 				$table->string('alias', 255)->comment('The SEF alias of the menu item.');
-				$table->string('note', 255);
+				$table->string('note', 255)->nullable();
 				$table->string('path', 1024)->comment('The computed path of the menu item based on the alias field.');
 				$table->string('link', 1024)->comment('The actually link the menu item refers to.');
 				$table->string('type', 16)->comment('The type of link: Page, URL, Separator');
@@ -69,7 +68,7 @@ class CreateMenusTables extends Migration
 				$table->dateTime('checked_out_time')->nullable();
 				$table->tinyInteger('target')->unsigned()->default(0)->comment('The click behaviour of the link.');
 				$table->integer('access')->unsigned()->default(0)->comment('The access level required to view the menu item.');
-				$table->string('class', 255);
+				$table->string('class', 255)->nullable();
 				$table->text('params')->nullable()->comment('JSON encoded data for the menu item.');
 				$table->integer('lft')->unsigned()->default(0)->comment('Nested set lft.');
 				$table->integer('rgt')->unsigned()->default(0)->comment('Nested set rgt.');
@@ -94,13 +93,32 @@ class CreateMenusTables extends Migration
 				'title' => 'Menu_Item_Root',
 				'alias' => 'root',
 				'path' => '',
+				'link' => '',
+				'type' => '',
 				'published' => 1,
 				'parent_id' => 0,
 				'level' => 0,
 				'lft' => 0,
-				'rgt' => 1,
+				'rgt' => 3,
 				'language' => '*',
 				'created_at' => Carbon::now()->toDateTimeString(),
+			]);
+
+			DB::table('menu_items')->insert([
+				'menutype' => 'mainmenu',
+				'title' => 'Home',
+				'alias' => 'home',
+				'path' => 'home',
+				'link' => '/home',
+				'type' => 'module',
+				'published' => 1,
+				'parent_id' => 1,
+				'level' => 1,
+				'lft' => 1,
+				'rgt' => 2,
+				'language' => '*',
+				'created_at' => Carbon::now()->toDateTimeString(),
+				'params' => '{"page_id":1}',
 			]);
 		}
 	}

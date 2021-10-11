@@ -1,8 +1,8 @@
 // Common Javascript functions for all web app pages
 
 // define a couple global variables
-if (base_url === undefined) {
-	base_url = '';
+if (typeof(base_url) === 'undefined') {
+	base_url = document.querySelector('meta[name="base-url"]').getAttribute('content');
 }
 var ROOT_URL = base_url + "/api/";
 var tablist = '';

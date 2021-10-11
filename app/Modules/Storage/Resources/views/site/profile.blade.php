@@ -315,8 +315,8 @@
 
 	<input type="hidden" id="HIDDEN_user" value="{{ $user->id }}" />
 
-	<div class="card panel panel-default">
-		<div class="card-header panel-heading">
+	<div class="card mb-3">
+		<div class="card-header">
 			<div class="card-title">
 				Storage Spaces
 				<a href="#storagespacehelp" class="help icn tip" title="Help">
@@ -324,7 +324,7 @@
 				</a>
 			</div>
 		</div>
-		<div class="card-body panel-body">
+		<div class="card-body">
 			<div id="storagespacehelp" class="dialog dialog-help" title="Storage Spaces">
 				<p>This table shows the storage spaces you have access to and your usage of these spaces. The data shown may not be immediately up to date but is updated periodically when you load this page.</p>
 				<p>Wait a few minutes and refresh this page to see the updated numbers.</p>
@@ -441,19 +441,19 @@
 		</div>
 	</div><!-- / .card -->
 
-	<div class="card panel panel-default">
-		<div class="card-header panel-heading">
+	<div class="card mb-3">
+		<div class="card-header">
 			<div class="row">
 				<div class="col col-md-6 card-title">
 					Storage Alerts
 					<a href="#storagealerthelp" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a>
 				</div>
-				<div class="col col-md-6 align-right">
+				<div class="col col-md-6 text-right">
 					<button class="btn btn-default btn-sm accountsbtn" id="create-newalert"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Alert</button>
 				</div>
 			</div>
 		</div>
-		<div class="card-body panel-body">
+		<div class="card-body">
 			<div id="storagealerthelp" class="dialog dialog-help" title="Storage Spaces">
 				<p>You may define email alerts for your storage spaces. These alerts will send you email when your storage usage crosses the defined threshold. They may be set on an absolute value or on a percentage of your allocated space.</p>
 			</div>
@@ -748,8 +748,8 @@
 		</form>
 	</div><!-- / #newalert -->
 
-	<div class="card panel panel-default">
-		<div class="card-header panel-heading">
+	<div class="card mb-3">
+		<div class="card-header">
 			<div class="row">
 				<div class="col col-md-6 card-title">
 					Storage Usage Reports
@@ -757,12 +757,12 @@
 						<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 					</a>
 				</div>
-				<div class="col col-md-6 align-right">
+				<div class="col col-md-6 text-right">
 					<button class="btn btn-default btn-sm accountsbtn" id="create-newreport"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Usage Report</button>
 				</div>
 			</div>
 		</div>
-		<div class="card-body panel-body">
+		<div class="card-body">
 			<div id="storageusagehelp" class="dialog dialog-help" title="Storage Spaces">
 				<p>You may request usage reports for a storage space be sent to you on regular basis. You may specify which space, when the first report be sent, and how often after that the report should be sent. For example, you may request a usage report be sent starting on Monday at 8am and then every Monday after that.</p>
 			</div>

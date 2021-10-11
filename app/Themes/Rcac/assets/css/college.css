@@ -5070,11 +5070,16 @@ select.form-control,
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  padding: 0.75rem 1rem;
+  /*padding: 0.75rem 1rem;*/
   margin-bottom: 1rem;
   list-style: none;
-  background-color: #e9ecef;
-  border-radius: 0.25rem;
+  /*background-color: #e9ecef;
+  border-radius: 0.25rem;*/
+  padding: 0;
+}
+.breadcrumbs {
+  background-color: #f5f5f5;
+  padding: 0.7rem 0;
 }
 
 .breadcrumb-item + .breadcrumb-item {
@@ -11611,7 +11616,7 @@ table.gsc-search-box .gsc-search-button {
 	margin-bottom: 0;
 	padding-top: 0;
 	padding-bottom: 0;
-	background-color: #f5f5f5;
+	/*background-color: #f5f5f5;*/
 	color: #444;
 	font-size: .75em;
 	font-family: acumin-pro, "Franklin Gothic", sans-serif
@@ -11653,7 +11658,7 @@ table.gsc-search-box .gsc-search-button {
 		height:1.6875rem
 	}
 }*/
-.breadcrumb ol li:last-child {
+.breadcrumb li:last-child {
 	font-weight: 700;
 }
 
