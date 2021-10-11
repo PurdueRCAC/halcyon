@@ -323,17 +323,13 @@ li.resource_list {
 	font-family: acumin-pro-semi-condensed,"Franklin Gothic",sans-serif
 }
 
-.sidenav ul.dropdown-menu,
 .sidenav ul.nav,
 div.sidemenu-news ul.newslist {
 	list-style: none;
 	padding: 0;
 	margin-bottom: 0;
 }
-.sidenav ul.nav a,
-.sidenav ul.dropdown-menu a {
-	/*color: #000;
-	font-weight: normal;*/
+.sidenav ul.nav a {
 	display: block;
 	position: relative;
 	padding: 0.775rem 0;
@@ -342,30 +338,20 @@ div.sidemenu-news ul.newslist {
 	color: #555555;
 	font-size: 1.05em;
 }
-/*.sidenav ul.dropdown-menu a {
-	position: relative;
-	display: block;
-	padding: 12px 0;
-}*/
-.sidenav ul.nav a:link,
-.sidenav ul.dropdown-menu a:link {
+.sidenav ul.nav a:link {
 	color: #555960;
 	text-decoration: none;
 }
-.sidenav ul.nav a:visited,
-.sidenav ul.dropdown-menu a:visited {
+.sidenav ul.nav a:visited{
 	color: #555960;
 	text-decoration: none;
 }
 .sidenav ul.nav a:hover,
-.sidenav ul.nav a:focus,
-.sidenav ul.dropdown-menu a:hover,
-.sidenav ul.dropdown-menu a:focus {
+.sidenav ul.nav a:focus {
 	color: #000;
 	text-decoration: underline;
 }
-.sidenav ul.nav a:active,
-.sidenav u.dropdown-menul a:active {
+.sidenav ul.nav a:active {
 	color: #000;
 	text-decoration: underline;
 }
@@ -378,7 +364,7 @@ div.sidemenu-news ul.newslist li a {
 	text-decoration: none;
 }
 
-.sidenav ul.dropdown-menu li p {
+.sidenav ul.nav li p {
 	color: #000;
 	font-weight: normal;
 	display: block;
@@ -398,7 +384,6 @@ div.sidemenu-news ul.newslist li {
 	padding: .7rem 0;
 }
 .sidenav ul.nav,
-.sidenav ul.dropdown-menu,
 div.sidemenu-news ul.newslist {
 	display: block;
 	position: static;
@@ -413,12 +398,11 @@ div.sidemenu-news ul.newslist {
 	border: none;
 	border-bottom: solid 1px #ccc;
 }
-.sidenav ul.nav li,
-.sidenav ul.dropdown-menu li {
+.sidenav ul.nav li {
 	border-top: solid 1px #ccc;
 }
 
-.sidenav .dropdown-menu li a,
+.sidenav ul.nav li a,
 div.sidemenu-news ul.newslist li a {
 	white-space: normal;
 }
@@ -430,28 +414,21 @@ div.sidemenu-news ul.newslist li a {
 .sidenav ul.nav>li>a:hover,
 .sidenav ul.nav>li>a:focus,
 .sidenav ul.nav li:hover,
-.sidenav ul.dropdown-menu>li.active>a,
-.sidenav ul.dropdown-menu>li.active>a:hover,
-.sidenav ul.dropdown-menu>li.active>a:focus,
-.sidenav ul.dropdown-menu>li>a:hover,
-.sidenav ul.dropdown-menu>li>a:focus,
-.sidenav ul.dropdown-menu li:hover,
 div.sidemenu-news ul.newslist li:hover {
 	background-color: transparent;
 	color: #000;
 	text-decoration: underline;
 }
 .sidenav ul.nav li:focus,
-.sidenav ul.dropdown-menu li:focus,
 div.sidemenu-news ul.newslist li:focus {
 	background-color: #d3d3d3;
 }
-.sidenav ul.dropdown-menu li p {
+.sidenav ul.nav li p {
 	background-color: #d3d3d3;
 	font-weight: bold;
 	margin: 5px;
 }
-.sidenav ul.dropdown-menu .separator {
+.sidenav ul.nav .separator {
 	height: 0.2em;
 }
 .sidenav h2,

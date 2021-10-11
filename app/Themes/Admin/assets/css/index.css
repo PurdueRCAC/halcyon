@@ -3532,13 +3532,17 @@ select.filter_search {
   }
 }
 
-.breadcrumb {
+.breadcrumbs {
   flex: 1 0 auto;
   margin: 0;
   padding: 1.5em 0;
   background-color: transparent;
   font-size: 0.85em;
   font-weight: bold;
+}
+.breadcrumbs .breadcrumb {
+  background: transparent;
+  padding: 0;
 }
 .breadcrumb-item+.breadcrumb-item::before {
   color: rgba(200, 200, 200, 0.75);

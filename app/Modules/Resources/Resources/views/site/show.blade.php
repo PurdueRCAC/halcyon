@@ -39,7 +39,7 @@ $content = '';
 	</ul>
 
 	<h2>{{ $type->name }} Resources</h2>
-	<ul class="dropdown-menu">
+	<ul class="nav">
 		@foreach ($rows as $i => $row)
 			@php
 			if (!$row->listname)
@@ -49,11 +49,11 @@ $content = '';
 			$active = '';
 			if ($row->listname == $resource->listname)
 			{
-				$active = ' class="active"';
+				$active = ' active';
 			}
 			@endphp
-			<li{!! $active !!}>
-				<a href="{{ route('site.resources.' . $type->alias . '.show', ['name' => $row->listname]) }}">{{ $row->name }}</a>
+			<li class="nav-item{!! $active !!}">
+				<a class="nav-link{!! $active !!}" href="{{ route('site.resources.' . $type->alias . '.show', ['name' => $row->listname]) }}">{{ $row->name }}</a>
 				<?php /*if ($active)
 					<ul>
 						@foreach ($sections as $section)
@@ -73,8 +73,10 @@ $content = '';
 				@endif*/ ?>
 			</li>
 		@endforeach
-		<li><div class="separator"></div></li>
-		<li<?php if ($resource->isTrashed()) { echo ' class="active"'; } ?>><a href="{{ route('site.resources.' . $type->alias . '.retired') }}">{{ trans('resources::resources.retired') }}</a></li>
+		<li class="nav-item"><div class="separator"></div></li>
+		<li class="nav-item<?php if ($resource->isTrashed()) { echo ' active'; } ?>">
+			<a class="nav-link<?php if ($resource->isTrashed()) { echo ' active'; } ?>" href="{{ route('site.resources.' . $type->alias . '.retired') }}">{{ trans('resources::resources.retired') }}</a>
+		</li>
 	</ul>
 </div>
 

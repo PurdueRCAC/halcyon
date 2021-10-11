@@ -19,20 +19,22 @@ app('pathway')
 
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-	<ul class="dropdown-menu">
+	<ul class="nav">
 		@foreach ($items as $i => $row)
-			<li>
+			<li class="nav-item">
 				@php
 				$url = route('site.resources.' . $type->alias . '.show', ['name' => ($row->listname ? $row->listname : $row->rolename)]);
 				if ($row->params->get('url')):
 					$url = $row->params->get('url');
 				endif;
 				@endphp
-				<a href="{{ $url }}">{{ $row->name }}</a>
+				<a class="nav-link" href="{{ $url }}">{{ $row->name }}</a>
 			</li>
 		@endforeach
-		<li><div class="separator"></div></li>
-		<li<?php if ($retired) { echo ' class="active"'; } ?>><a href="{{ route('site.resources.' . $type->alias . '.retired') }}">{{ trans('resources::resources.retired') }}</a></li>
+		<li class="nav-item"><div class="separator"></div></li>
+		<li class="nav-item<?php if ($retired) { echo ' active'; } ?>">
+			<a class="nav-link<?php if ($retired) { echo ' active'; } ?>" href="{{ route('site.resources.' . $type->alias . '.retired') }}">{{ trans('resources::resources.retired') }}</a>
+		</li>
 	</ul>
 </div>
 

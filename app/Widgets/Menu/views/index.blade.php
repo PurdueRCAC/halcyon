@@ -3,7 +3,7 @@
  * @package  Menu widget
  */
 ?>
-<ul class="menu<?php echo $class_sfx ? ' ' . $class_sfx : ''; ?>"<?php
+<ul class="nav<?php echo $class_sfx ? ' ' . $class_sfx : ''; ?>"<?php
 	$tag = '';
 	if ($params->get('tag_id') != null):
 		$tag = $params->get('tag_id').'';
