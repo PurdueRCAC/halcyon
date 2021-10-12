@@ -74,14 +74,14 @@ $content = '';
 			</li>
 		@endforeach
 		<li class="nav-item"><div class="separator"></div></li>
-		<li class="nav-item<?php if ($resource->isTrashed()) { echo ' active'; } ?>">
-			<a class="nav-link<?php if ($resource->isTrashed()) { echo ' active'; } ?>" href="{{ route('site.resources.' . $type->alias . '.retired') }}">{{ trans('resources::resources.retired') }}</a>
+		<li class="nav-item<?php if ($resource->trashed()) { echo ' active'; } ?>">
+			<a class="nav-link<?php if ($resource->trashed()) { echo ' active'; } ?>" href="{{ route('site.resources.' . $type->alias . '.retired') }}">{{ trans('resources::resources.retired') }}</a>
 		</li>
 	</ul>
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-	@if (!$resource->isTrashed())
+	@if (!$resource->trashed())
 		@if ($resource->params->get('gateway') || $resource->params->get('desktop') || $resource->params->get('notebook') || $resource->params->get('rstudio'))
 			<div class="launch">
 				@if ($gateway = $resource->params->get('gateway'))
@@ -126,7 +126,7 @@ $content = '';
 		<p>{{ $resource->description }}</p>
 	@endif
 
-	@if ($resource->isTrashed())
+	@if ($resource->trashed())
 		<h3>Lifetime Service</h3>
 
 		<table class="table table-bordered">

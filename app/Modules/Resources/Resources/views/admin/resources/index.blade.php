@@ -162,7 +162,7 @@ app('pathway')
 		@foreach ($rows as $i => $row)
 			<?php
 			$disabled = false;
-			$trashed = $row->isTrashed();
+			$trashed = $row->trashed();
 			$cls = $trashed ? 'trashed' : 'active';
 			if ($filters['state'] == 'trashed'):
 				//$cls = '';

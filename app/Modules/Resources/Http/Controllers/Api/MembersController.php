@@ -108,7 +108,7 @@ class MembersController extends Controller
 
 		$asset = Asset::findOrFail($resourceid);
 
-		if (!$asset || $asset->isTrashed())
+		if (!$asset || $asset->trashed())
 		{
 			return response()->json(['message' => trans('Failed to find resource for ID :id', ['id' => $resourceid])], 404);
 		}
@@ -249,7 +249,7 @@ class MembersController extends Controller
 		// Look up the current resource
 		$asset = Asset::findOrFail($resource);
 
-		if (!$asset || $asset->isTrashed())
+		if (!$asset || $asset->trashed())
 		{
 			return response()->json(['message' => trans('Failed to find resource for ID :id', ['id' => $resource])], 404);
 		}
@@ -341,10 +341,8 @@ class MembersController extends Controller
 			$owned = auth()->user()->groups->pluck('id')->toArray();
 
 			$queues = array();
-			$subresources = $resource->subresources()
-				->withTrashed()
-				->whereIsActive()
-				->get();
+			$subresources = $resource->subresources;
+
 			foreach ($subresources as $sub)
 			{
 				$queues += $sub->queues()
@@ -371,18 +369,13 @@ class MembersController extends Controller
 		$rows = 0;
 
 		$resources = Asset::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('rolename', '!=', '')
 			->where('listname', '!=', '')
 			->get();
 
 		foreach ($resources as $res)
 		{
-			$subresources = $res->subresources()
-				->withTrashed()
-				->whereIsActive()
-				->get();
+			$subresources = $res->subresources;
 
 			foreach ($subresources as $sub)
 			{

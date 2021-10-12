@@ -38,8 +38,6 @@ class StorageFortress
 		}
 
 		$resource = Asset::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('rolename', '=', 'HPSSUSER')
 			->first();
 
@@ -93,8 +91,6 @@ class StorageFortress
 	public function handleUnixGroupMemberCreated(UnixGroupMemberCreated $event)
 	{
 		$resource = Asset::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('rolename', '=', 'HPSSUSER')
 			->first();
 

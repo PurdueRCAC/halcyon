@@ -36,7 +36,6 @@ class FetchCommand extends Command
 		foreach ($restypes as $restype)
 		{
 			$resources = $restype->resources()
-				->whereIsActive()
 				->where('listname', '!=', '')
 				->where('display', '>', 0)
 				->orderBy('name', 'asc')

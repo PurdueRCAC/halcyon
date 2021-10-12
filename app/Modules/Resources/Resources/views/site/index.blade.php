@@ -84,7 +84,7 @@
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->isTrashed())
+						@if ($row->trashed())
 							<time datetime="{{ $row->datetimeremoved }}">{{ $row->datetimeremoved }}</time>
 						@else
 							<span class="never">{{ trans('global.never') }}</span>

@@ -58,7 +58,6 @@ app('pathway')->append(
 		$end = $now->modify('-1 day')->format('Y-m-d h:i:s');
 
 		$resources = $restype->resources()
-			->whereIsActive()
 			->where('listname', '!=', '')
 			->where('display', '>', 0)
 			->orderBy('name', 'asc')

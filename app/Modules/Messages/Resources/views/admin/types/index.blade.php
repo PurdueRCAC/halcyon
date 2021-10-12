@@ -119,11 +119,11 @@ app('pathway')
 				</td>
 				<td class="priority-4">
 					@if ($row->resource)
-						@if ($row->resource->isTrashed())
+						@if ($row->resource->trashed())
 							<del class="icon-trash text-danger">
 						@endif
 						{{ $row->resource->name }}
-						@if ($row->resource->isTrashed())
+						@if ($row->resource->trashed())
 							</del>
 						@endif
 					@else

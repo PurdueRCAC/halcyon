@@ -499,7 +499,7 @@ class Group extends Model
 				continue;
 			}
 
-			if ($queue->resource->isTrashed())
+			if ($queue->resource->trashed())
 			{
 				continue;
 			}
@@ -529,7 +529,7 @@ class Group extends Model
 				continue;
 			}
 
-			if (!$queue->resource->isTrashed())
+			if (!$queue->resource->trashed())
 			{
 				continue;
 			}

@@ -63,15 +63,19 @@ class ResourcesController extends Controller
 		}
 
 		// Build query
-		$query = Asset::query()->withTrashed();
+		$query = Asset::query();
 
 		if ($filters['state'] == 'active')
 		{
-			$query->whereIsActive();
+			// Default behavior
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->whereIsTrashed();
+			$query->onlyTrashed();
+		}
+		else
+		{
+			$query->withTrashed();
 		}
 
 		if ($filters['type'] > 0)
@@ -340,7 +344,7 @@ class ResourcesController extends Controller
 		{
 			$row = Asset::findOrFail($id);
 
-			if (!$row->isTrashed())
+			if (!$row-trashed())
 			{
 				if (!$row->delete())
 				{
@@ -385,9 +389,9 @@ class ResourcesController extends Controller
 		{
 			$row = Asset::query()->withTrashed()->where('id', '=', $id)->first();
 
-			if ($row && $row->isTrashed())
+			if ($row && $row->trashed())
 			{
-				if (!$row->update(['datetimeremoved' => '0000-00-00 00:00:00']))
+				if (!$row->restore())
 				{
 					$request->session()->flash('error', $row->getError());
 					continue;

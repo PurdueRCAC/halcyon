@@ -110,12 +110,10 @@ class ResourcesController extends Controller
 			if ($filters['state'] == 'all')
 			{
 				$query->withTrashed();
-				//$query->where('datetimeremoved', '=', '0000-00-00 00:00:00');
 			}
 			elseif ($filters['state'] == 'inactive')
 			{
 				$query->onlyTrashed();
-				//$query->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
 			}
 		}
 
@@ -463,13 +461,7 @@ class ResourcesController extends Controller
 	{
 		$resource = Asset::findOrFail($id);
 
-		$subresources = $resource->subresources()
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
-			->get();
+		$subresources = $resource->subresources;
 
 		$userids = array();
 
@@ -483,8 +475,6 @@ class ResourcesController extends Controller
 						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
 				})
 				->get();
-				//->pluck('queuid')
-				//->toArray();
 
 			foreach ($queues as $queue)
 			{

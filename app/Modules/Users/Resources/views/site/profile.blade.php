@@ -527,11 +527,6 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 						->where('rolename', '!=', '')
 						//->where('retired', '=', 0)
 						->where('listname', '!=', '')
-						->where(function($where)
-						{
-							$where->whereNull('datetimeremoved')
-								->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-						})
 						->orderBy('name', 'asc')
 						->get();
 					?>

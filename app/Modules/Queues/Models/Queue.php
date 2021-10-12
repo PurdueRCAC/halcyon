@@ -848,10 +848,7 @@ class Queue extends Model
 				$owned = auth()->user()->groups->pluck('id')->toArray();
 
 				$queues = array();
-				$subresources = $resource->subresources()
-					->withTrashed()
-					->whereIsActive()
-					->get();
+				$subresources = $resource->subresources;
 				foreach ($subresources as $sub)
 				{
 					$queues += $sub->queues()
@@ -878,18 +875,13 @@ class Queue extends Model
 			$rows = 0;
 
 			$resources = Asset::query()
-				->withTrashed()
-				->whereIsActive()
 				->where('rolename', '!=', '')
 				->where('listname', '!=', '')
 				->get();
 
 			foreach ($resources as $res)
 			{
-				$subresources = $res->subresources()
-					->withTrashed()
-					->whereIsActive()
-					->get();
+				$subresources = $res->subresources;
 
 				foreach ($subresources as $sub)
 				{

@@ -26,8 +26,6 @@ class ResourceEntry extends Select
 	{
 		$rows = Asset::query()
 			->select('id', 'name')
-			->withTrashed()
-			->whereIsActive()
 			->orderBy('name', 'asc')
 			->get();
 

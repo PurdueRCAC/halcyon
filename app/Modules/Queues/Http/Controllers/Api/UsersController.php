@@ -659,18 +659,13 @@ class UsersController extends Controller
 			$owned = $row->user->groups->pluck('id')->toArray();
 
 			$resources = Asset::query()
-				->withTrashed()
-				->whereIsActive()
 				->where('rolename', '!=', '')
 				->where('listname', '!=', '')
 				->get();
 
 			foreach ($resources as $res)
 			{
-				$subresources = $res->subresources()
-					->withTrashed()
-					->whereIsActive()
-					->get();
+				$subresources = $res->subresources;
 
 				foreach ($subresources as $sub)
 				{

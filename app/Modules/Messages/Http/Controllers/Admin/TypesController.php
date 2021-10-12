@@ -97,7 +97,6 @@ class TypesController extends Controller
 		$row = Type::findOrFail($id);
 
 		/*$resources = Asset::query()
-			->where('datetimeremoved', '=', '0000-00-00 00:00:00')
 			->orderBy('name', 'asc')
 			->get();*/
 		$resources = (new Asset)->tree();

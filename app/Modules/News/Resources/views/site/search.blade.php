@@ -167,14 +167,8 @@ app('pathway')
 						<select class="form-control searchable-select-multi" multiple="multiple" name="resource[]" id="newsresource">
 							<?php
 							$resources = App\Modules\Resources\Models\Asset::query()
-								->withTrashed()
 								->where('listname', '!=', '')
 								->where('display', '>', 0)
-								->where(function($where)
-								{
-									$where->whereNull('datetimeremoved')
-										->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-								})
 								->orderBy('name')
 								->get();
 							$types = array();

@@ -25,14 +25,14 @@ class QueueResource extends JsonResource
 		$now = Carbon::now();
 
 		$data['resource'] = $this->resource()->get()->first();
-		if (!$this->subresource->isTrashed())
+		if (!$this->subresource->trashed())
 		{
 			$data['resource']['datetimeremoved'] = null;
 		}
 		$data['resource']['api'] = route('api.resources.read', ['id' => $data['resource']['id']]);
 
 		$data['subresource'] = $this->subresource;
-		if (!$this->subresource->isTrashed())
+		if (!$this->subresource->trashed())
 		{
 			$data['subresource']['datetimeremoved'] = null;
 		}

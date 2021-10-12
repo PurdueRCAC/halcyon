@@ -49,7 +49,7 @@ class Productlist extends Widget
 				{
 					$resource = Asset::find($product->resourceid);
 
-					if (!$resource || $resource->isTrashed())
+					if (!$resource || $resource->trashed())
 					{
 						continue;
 					}

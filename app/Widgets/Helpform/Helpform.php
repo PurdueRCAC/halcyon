@@ -131,8 +131,6 @@ class Helpform extends Widget
 		}
 
 		$resources = Asset::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('listname', '!=', '')
 			->orderBy('name', 'asc')
 			->get();

@@ -66,7 +66,7 @@ class FixStatusCommand extends Command
 
 			$resource = array_pop($parts);
 
-			$asset = \App\Modules\Resources\Models\Asset::query()->withTrashed()->whereIsActive()->where('rolename', '=', $resource)->first();
+			$asset = \App\Modules\Resources\Models\Asset::query()->where('rolename', '=', $resource)->first();
 
 			 if (!$asset || !$asset->id)
 			{
@@ -88,16 +88,8 @@ class FixStatusCommand extends Command
 				->join($a, $a . '.id', $c . '.resourceid')
 				->withTrashed()
 				->whereIsActive()
-				->where(function($where) use ($s)
-				{
-					$where->whereNull($s . '.datetimeremoved')
-						->orWhere($s . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-				->where(function($where) use ($a)
-				{
-					$where->whereNull($a . '.datetimeremoved')
-						->orWhere($a . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
+				->whereNull($s . '.datetimeremoved')
+				->whereNull($a . '.datetimeremoved')
 				->where($a . '.id', '=', $asset->id)
 				->where($qu . '.userid', '=', $user->id)
 				->count();

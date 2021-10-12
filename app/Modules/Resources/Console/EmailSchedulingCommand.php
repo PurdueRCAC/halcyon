@@ -41,13 +41,7 @@ class EmailSchedulingCommand extends Command
 			->select($s . '.*')
 			->join($c, $c . '.subresourceid', $s . '.id')
 			->join($a, $a . '.id', $c . '.resourceid')
-			->withTrashed()
-			->whereIsActive()
-			->where(function($where) use ($a)
-			{
-				$where->whereNull($a . '.datetimeremoved')
-					->orWhere($a . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($a . '.datetimeremoved')
 			->where($s . '.notice', '=', 2)
 			->get();
 
@@ -90,13 +84,7 @@ class EmailSchedulingCommand extends Command
 			->select($s . '.*')
 			->join($c, $c . '.subresourceid', $s . '.id')
 			->join($a, $a . '.id', $c . '.resourceid')
-			->withTrashed()
-			->whereIsActive()
-			->where(function($where) use ($a)
-			{
-				$where->whereNull($a . '.datetimeremoved')
-					->orWhere($a . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($a . '.datetimeremoved')
 			->where($s . '.notice', '=', 1)
 			->get();
 
@@ -104,13 +92,7 @@ class EmailSchedulingCommand extends Command
 			->select($s . '.*')
 			->join($c, $c . '.subresourceid', $s . '.id')
 			->join($a, $a . '.id', $c . '.resourceid')
-			->withTrashed()
-			->whereIsActive()
-			->where(function($where) use ($a)
-			{
-				$where->whereNull($a . '.datetimeremoved')
-					->orWhere($a . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($a . '.datetimeremoved')
 			->where($s . '.notice', '=', 3)
 			->get();
 

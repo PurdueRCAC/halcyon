@@ -40,8 +40,6 @@ class StorageHome
 		if ($event->resource->home && $event->resource->home != 'shared')
 		{
 			$home = Asset::query()
-				->withTrashed()
-				->whereIsActive()
 				->whereLike('name', 'Home')
 				->where('parentid', '=', $event->resource->id)
 				->first();
@@ -49,8 +47,6 @@ class StorageHome
 		else
 		{
 			$home = Asset::query()
-				->withTrashed()
-				->whereIsActive()
 				->where('listname', '=', 'home')
 				->first();
 		}

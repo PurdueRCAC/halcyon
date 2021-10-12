@@ -158,9 +158,9 @@ class History
 					}
 					else
 					{
-						if ($q->resource && $q->resource->isTrashed())
+						if ($q->resource && $q->resource->trashed())
 						{
-							$item->isTrashed = $q->resource->isTrashed();
+							$item->isTrashed = $q->resource->trashed();
 							$item->removed = $q->resource->datetimeremoved;
 						}
 					}

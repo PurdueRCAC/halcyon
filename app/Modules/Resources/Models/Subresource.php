@@ -10,7 +10,6 @@ use App\Modules\Resources\Events\SubresourceUpdating;
 use App\Modules\Resources\Events\SubresourceUpdated;
 use App\Modules\Resources\Events\SubresourceDeleted;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Queues\Models\Queue;
 use Carbon\Carbon;
 
@@ -19,7 +18,7 @@ use Carbon\Carbon;
  */
 class Subresource extends Model
 {
-	use SoftDeletes, LegacyTrash, Historable;
+	use SoftDeletes, Historable;
 
 	/**
 	 * The name of the "created at" column.

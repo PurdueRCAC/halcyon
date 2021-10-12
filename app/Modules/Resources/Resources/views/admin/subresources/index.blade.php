@@ -128,7 +128,7 @@ app('pathway')
 		<tbody>
 		@foreach ($rows as $i => $row)
 			<?php
-			$cls = $row->isTrashed() ? 'trashed' : 'active';
+			$cls = $row->trashed() ? 'trashed' : 'active';
 			?>
 			<tr class="{{ $cls }}">
 				@if (auth()->user()->can('edit.state resources') || auth()->user()->can('delete resources'))
@@ -141,7 +141,7 @@ app('pathway')
 				</td>
 				<td>
 					{!! $row->treename !!}
-					@if ($row->isTrashed())
+					@if ($row->trashed())
 						<span class="fa fa-trash unknown" aria-hidden="true"></span>
 					@endif
 					@if (auth()->user()->can('edit resources') || auth()->user()->can('delete resources'))

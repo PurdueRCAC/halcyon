@@ -112,8 +112,6 @@ class Software
 				else
 				{
 					$asset = Asset::query()
-						->withTrashed()
-						->whereIsActive()
 						->where('rolename', '=', 'HPSSUSER')
 						->first();
 

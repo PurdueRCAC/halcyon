@@ -69,8 +69,6 @@ class ResourcesController extends Controller
 		}
 
 		$rows = $type->resources()
-			->withTrashed()
-			->whereIsActive()
 			//->where('display', '>', 0)
 			->where(function($where)
 			{
@@ -105,8 +103,6 @@ class ResourcesController extends Controller
 		}
 
 		$items = $type->resources()
-			->withTrashed()
-			->whereIsActive()
 			//->where('display', '>', 0)
 			->where(function($where)
 			{
@@ -118,8 +114,6 @@ class ResourcesController extends Controller
 			->get();
 
 		$rows = $type->resources()
-			->withTrashed()
-			->whereIsTrashed()
 			//->where('display', '>', 0)
 			->where(function($where)
 			{
@@ -180,12 +174,6 @@ class ResourcesController extends Controller
 			);
 
 		$rows = $type->resources()
-			->withTrashed()
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->where('display', '>', 0)
 			->orderBy('display', 'desc')
 			->get();

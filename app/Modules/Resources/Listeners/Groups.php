@@ -67,7 +67,7 @@ class Groups
 			// Look up the current resource
 			$asset = Asset::findOrFail($row->resourceid);
 
-			if (!$asset || $asset->isTrashed())
+			if (!$asset || $asset->trashed())
 			{
 				continue;
 			}

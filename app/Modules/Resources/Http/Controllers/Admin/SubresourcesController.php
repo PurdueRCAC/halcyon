@@ -65,16 +65,19 @@ class SubresourcesController extends Controller
 		$c = (new Child)->getTable();
 
 		$query = Subresource::query()
-			->select($s . '.*', $c . '.resourceid')
-			->withTrashed();
+			->select($s . '.*', $c . '.resourceid');
 
 		if ($filters['state'] == 'trashed')
 		{
-			$query->whereIsTrashed();
+			$query->onlyTrashed();
 		}
 		elseif ($filters['state'] == 'published')
 		{
-			$query->whereIsActive();
+			// Default behavior
+		}
+		else
+		{
+			$query->withTrashed();
 		}
 
 		if ($filters['search'])

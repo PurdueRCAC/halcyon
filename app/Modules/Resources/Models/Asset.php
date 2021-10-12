@@ -12,7 +12,6 @@ use App\Modules\Resources\Events\AssetUpdating;
 use App\Modules\Resources\Events\AssetUpdated;
 use App\Modules\Resources\Events\AssetDeleted;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Halcyon\Models\Casts\Params;
 
 /**
@@ -20,7 +19,7 @@ use App\Halcyon\Models\Casts\Params;
  */
 class Asset extends Model
 {
-	use SoftDeletes, LegacyTrash, Historable;
+	use SoftDeletes, Historable;
 
 	/**
 	 * The name of the "created at" column.
@@ -264,7 +263,7 @@ class Asset extends Model
 	public function tree($order = 'name', $dir = 'asc')
 	{
 		$query = self::query();
-			//->where('datetimeremoved', '=', '0000-00-00 00:00:00');
+
 		if ($this->id)
 		{
 			$query->where('id', '!=', $this->id);
