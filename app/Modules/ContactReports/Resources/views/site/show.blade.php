@@ -17,25 +17,25 @@ app('pathway')
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	<h2>Quick Filters</h2>
-	<ul class="dropdown-menu">
-		<li>
-			<a href="{{ route('site.contactreports.index') }}?people={{ auth()->user()->id }}">
+	<ul class="nav">
+		<li class="nav-item">
+			<a class="nav-link" href="{{ route('site.contactreports.index') }}?people={{ auth()->user()->id }}">
 				{{ trans('contactreports::contactreports.my reports') }}
 			</a>
 		</li>
-		<li>
+		<li class="nav-item">
 			<?php
 			$start = Carbon\Carbon::now()->modify('-1 week')->format('Y-m-d');
 			?>
-			<a href="{{ route('site.contactreports.index') }}?start={{ $start }}">
+			<a class="nav-link" href="{{ route('site.contactreports.index') }}?start={{ $start }}">
 				{{ trans('contactreports::contactreports.past week') }}
 			</a>
 		</li>
-		<li>
+		<li class="nav-item">
 			<?php
 			$start = Carbon\Carbon::now()->modify('-1 month')->format('Y-m-d');
 			?>
-			<a href="{{ route('site.contactreports.index') }}?start={{ $start }}">
+			<a class="nav-link" href="{{ route('site.contactreports.index') }}?start={{ $start }}">
 				{{ trans('contactreports::contactreports.past month') }}
 			</a>
 		</li>

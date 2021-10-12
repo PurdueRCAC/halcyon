@@ -6,13 +6,13 @@
 
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-	<ul class="dropdown-menu">
-		<li><a href="{{ route('site.news.search') }}">Search ContactReports</a></li>
-		<li><a href="{{ route('site.news.rss') }}">RSS Feeds</a></li>
-		<li><div class="separator"></div></li>
+	<ul class="nav">
+		<li class="nav-item"><a class="nav-link" href="{{ route('site.news.search') }}">Search ContactReports</a></li>
+		<li class="nav-item"><a class="nav-link" href="{{ route('site.news.rss') }}">RSS Feeds</a></li>
+		<li class="nav-item"><div class="separator"></div></li>
 		<?php foreach ($types as $type): ?>
-			<li>
-				<a href="{{ route('site.news.type', ['name' => $type->name]) }}">
+			<li class="nav-item">
+				<a class="nav-link" href="{{ route('site.news.type', ['name' => $type->name]) }}">
 					{{ $type->name }}
 				</a>
 			</li>

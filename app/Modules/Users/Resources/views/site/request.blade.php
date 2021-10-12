@@ -20,13 +20,13 @@ $active = $sections->firstWhere('active', '=', true);
 	<h2>{{ $user->name }}</h2>
 
 	<div class="qlinks">
-		<ul class="dropdown-menu">
-			<li<?php if (!$active) { echo ' class="active"'; } ?>>
-				<a href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}">{{ trans('users::users.my accounts') }}</a>
+		<ul class="nav">
+			<li class="nav-item<?php if (!$active) { echo ' active'; } ?>">
+				<a class="nav-link<?php if (!$active) { echo ' active'; } ?>" href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}">{{ trans('users::users.my accounts') }}</a>
 			</li>
 			@foreach ($sections as $section)
-				<li<?php if ($section['active']) { echo ' class="active"'; } ?>>
-					<a href="{{ $section['route'] }}">{!! $section['name'] !!}</a>
+				<li class="nav-item<?php if ($section['active']) { echo ' active'; } ?>">
+					<a class="nav-link<?php if ($section['active']) { echo ' active'; } ?>" href="{{ $section['route'] }}">{!! $section['name'] !!}</a>
 				</li>
 			@endforeach
 		</ul>
