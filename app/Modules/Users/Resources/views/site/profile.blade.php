@@ -64,8 +64,6 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 			<?php
 			$managedgroups = $user->groups()
 				->whereIsManager()
-				->withTrashed()
-				->whereIsActive()
 				->get();
 
 			if (count($managedgroups)):

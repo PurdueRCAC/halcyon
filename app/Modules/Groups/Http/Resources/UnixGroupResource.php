@@ -30,19 +30,23 @@ class UnixGroupResource extends JsonResource
 				$ma['username'] = ($m->user ? $m->user->username : trans('global.unknown'));
 				$ma['name'] = ($m->user ? $m->user->name : trans('global.unknown'));
 
-				if (!$m->isTrashed() && ($m->user && $m->user->isTrashed()))
+				if (!$m->trashed() && ($m->user && $m->user->isTrashed()))
 				{
 					$ma['datetimeremoved'] = $m->user->dateremoved;
 				}
 
-				if (!$m->isTrashed())
+				if (!$m->trashed())
 				{
 					$ma['datetimeremoved'] = null;
 				}
 
-				if ($m->isTrashed())
+				$ma['api'] = route('api.unixgroups.members.read', ['id' => $m->id]);
+
+				unset($ma['user']['api_token']);
+
+				if ($m->trashed())
 				{
-					$data['priormembers'][] = $m;
+					$data['priormembers'][] = $ma;
 				}
 				else
 				{
@@ -52,7 +56,7 @@ class UnixGroupResource extends JsonResource
 			//$data['members'] = $this->members;
 		}
 
-		if (!$this->isTrashed())
+		if (!$this->trashed())
 		{
 			$data['datetimeremoved'] = null;
 		}
@@ -74,7 +78,7 @@ class UnixGroupResource extends JsonResource
 			$data['id'] = '/ws/unixgroup/' . $data['id'];
 
 			$data['created'] = $this->datetimecreated->toDateTimeString();
-			$data['removed'] = $this->isTrashed() ? $this->datetimeremoved->toDateTimeString() : '0000-00-00 00:00:00';
+			$data['removed'] = $this->trashed() ? $this->datetimeremoved->toDateTimeString() : '0000-00-00 00:00:00';
 
 			unset($data['datetimecreated']);
 			unset($data['datetimeremoved']);

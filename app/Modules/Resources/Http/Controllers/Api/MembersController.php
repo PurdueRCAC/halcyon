@@ -399,8 +399,6 @@ class MembersController extends Controller
 					if ($queue->group)
 					{
 						$rows += $queue->group->members()
-							->withTrashed()
-							->whereIsActive()
 							->whereIsManager()
 							->where('userid', '=', $user->id)
 							->count();

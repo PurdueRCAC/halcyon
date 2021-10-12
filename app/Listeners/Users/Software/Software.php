@@ -62,8 +62,6 @@ class Software
 				);
 
 			$unixgroups = UnixGroupMember::query()
-				->withTrashed()
-				->whereIsActive()
 				->where('userid', '=', $user->id)
 				->get();
 

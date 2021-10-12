@@ -37,8 +37,6 @@ class EmailAuthorizedCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 
 		$users = Member::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('notice', '=', 21)
 			->get();
 

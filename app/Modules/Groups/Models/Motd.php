@@ -6,14 +6,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
 
 /**
  * Group motd model
  */
 class Motd extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
+	use ErrorBag, Validatable, Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.

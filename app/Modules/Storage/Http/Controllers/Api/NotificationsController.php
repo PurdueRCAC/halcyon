@@ -283,8 +283,6 @@ class NotificationsController extends Controller
 		// Ensure the client is authorized to create storagedirs.
 		$groupid = $row->directory->groupid;
 		$ownedgroups = auth()->user()->groups()
-			->withTrashed()
-			->whereIsActive()
 			->whereIsManager()
 			->get()
 			->pluck('groupid')

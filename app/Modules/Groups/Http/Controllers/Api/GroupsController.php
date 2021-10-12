@@ -628,12 +628,9 @@ class GroupsController extends Controller
 	{
 		$row = Group::findOrFail($id);
 
-		if (!$row->isTrashed())
+		if (!$row->delete())
 		{
-			if (!$row->delete())
-			{
-				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
-			}
+			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
 		}
 
 		return response()->json(null, 204);

@@ -135,10 +135,6 @@ class MotdController extends Controller
 
 		$rows->each(function ($item, $key)
 		{
-			if (!$item->isTrashed())
-			{
-				$item->datetimeremoved = null;
-			}
 			$item->api = route('api.groups.motd.read', ['id' => $item->id]);
 		});
 
@@ -236,10 +232,6 @@ class MotdController extends Controller
 	{
 		$row = Motd::findOrFail($id);
 		$row->api = route('api.groups.motd.read', ['id' => $row->id]);
-		if (!$row->isTrashed())
-		{
-			$row->datetimeremoved = null;
-		}
 
 		return new JsonResource($row);
 	}
@@ -312,10 +304,6 @@ class MotdController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
-		if (!$row->isTrashed())
-		{
-			$row->datetimeremoved = null;
-		}
 		$row->api = route('api.groups.motd.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
@@ -343,7 +331,7 @@ class MotdController extends Controller
 	{
 		$row = Motd::findOrFail($id);
 
-		if (!$row->isTrashed())
+		if (!$row->trashed())
 		{
 			if (!$row->delete())
 			{

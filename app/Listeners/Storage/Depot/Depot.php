@@ -55,8 +55,6 @@ class Depot
 
 		// Get "-data" directory
 		$unixgroups = UnixGroup::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('groupid', '=', $dir->groupid)
 			->where('shortname', 'like', '%1')
 			->first();
@@ -92,8 +90,6 @@ class Depot
 
 		// Get "base" directory
 		$unixgroups = UnixGroup::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('groupid', '=', $dir->groupid)
 			->where('shortname', 'like', '%0')
 			->first();

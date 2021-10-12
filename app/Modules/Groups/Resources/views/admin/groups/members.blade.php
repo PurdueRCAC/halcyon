@@ -15,8 +15,6 @@ $disabled = collect([]);
 $processed = array();
 
 $users = $group->members()
-	->withTrashed()
-	->whereIsActive()
 	->orderBy('datecreated', 'desc')
 	->get();
 
@@ -77,11 +75,7 @@ $queues = $group->queues()
 		$wher->whereNull($q . '.datetimeremoved')
 			->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
 	})
-	->where(function($wher) use ($r)
-	{
-		$wher->whereNull($r . '.datetimeremoved')
-			->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-	})
+	->whereNull($r . '.datetimeremoved')
 	->get();
 
 foreach ($queues as $queue)
@@ -159,8 +153,6 @@ foreach ($queues as $queue)
 }
 
 $unixgroups = $group->unixgroups()
-	->withTrashed()
-	->whereIsActive()
 	->orderBy('longname', 'asc')
 	->get();
 
@@ -175,8 +167,6 @@ foreach ($unixgroups as $unixgroup)
 	}
 
 	$users = $unixgroup->members()
-		->withTrashed()
-		->whereIsActive()
 		->get();
 
 	$unixgroup->activemembers = $users;

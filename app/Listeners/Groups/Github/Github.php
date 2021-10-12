@@ -88,11 +88,6 @@ class Github
 		$unix = UnixGroup::query()
 			->where('groupid', '=', $group->id)
 			->where('shortname', 'like', 'rcs%0')
-			->where(function($where)
-			{
-				$where->whereNull()
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->get()
 			->first();
 

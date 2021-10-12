@@ -40,10 +40,8 @@ class Groups
 
 		// Owner
 		$memberships = Member::query()
-			->withTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsManager()
-			->whereIsActive()
 			->orderBy('datecreated', 'asc')
 			->get();
 
@@ -55,10 +53,9 @@ class Groups
 		$user->ownerofgroups = $memberships;
 
 		$memberships = Member::query()
-			->withTrashed()
+			->onlyTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsManager()
-			->whereIsTrashed()
 			->orderBy('datecreated', 'asc')
 			->get();
 
@@ -71,10 +68,8 @@ class Groups
 
 		// Members
 		$memberships = Member::query()
-			->withTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsMember()
-			->whereIsActive()
 			->orderBy('datecreated', 'asc')
 			->get();
 
@@ -86,10 +81,9 @@ class Groups
 		$user->memberofgroups = $memberships;
 
 		$memberships = Member::query()
-			->withTrashed()
+			->onlyTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsMember()
-			->whereIsTrashed()
 			->orderBy('datecreated', 'asc')
 			->get();
 
@@ -102,10 +96,8 @@ class Groups
 
 		// Viewers
 		$memberships = Member::query()
-			->withTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsViewer()
-			->whereIsActive()
 			->orderBy('datecreated', 'asc')
 			->get();
 
@@ -117,10 +109,9 @@ class Groups
 		$user->viewerofgroups = $memberships;
 
 		$memberships = Member::query()
-			->withTrashed()
+			->onlyTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsViewer()
-			->whereIsTrashed()
 			->orderBy('datecreated', 'asc')
 			->get();
 
@@ -132,8 +123,6 @@ class Groups
 		$user->priorviewerofgroups = $memberships;
 
 		$memberships = UnixGroupMember::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('userid', '=', $user->id)
 			->orderBy('datetimecreated', 'asc')
 			->get();
@@ -146,8 +135,7 @@ class Groups
 		$user->memberofunixgroups = $memberships;
 
 		$memberships = UnixGroupMember::query()
-			->withTrashed()
-			->whereIsTrashed()
+			->onlyTrashed()
 			->where('userid', '=', $user->id)
 			->orderBy('datetimecreated', 'asc')
 			->get();
@@ -236,22 +224,20 @@ class Groups
 		}
 
 		$unixusers = UnixGroupMember::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('userid', '=', $user->id)
 			->orderBy('datetimecreated', 'asc')
 			->get();
 
 		foreach ($unixusers as $uu)
 		{
-			if ($uu->isTrashed())
+			if ($uu->trashed())
 			{
 				continue;
 			}
 
 			$unixgroup = $uu->unixgroup;
 
-			if (!$unixgroup || $unixgroup->isTrashed())
+			if (!$unixgroup || $unixgroup->trashed())
 			{
 				continue;
 			}
@@ -284,8 +270,6 @@ class Groups
 				$group = Group::findOrFail($id);
 
 				$membership = $group->members()
-					->withTrashed()
-					->whereIsActive()
 					->where('userid', '=', $user->id)
 					->orderBy('membertype', 'desc')
 					->get()
@@ -317,14 +301,14 @@ class Groups
 					{
 						foreach ($unixusers as $membership)
 						{
-							if ($membership->isTrashed())
+							if ($membership->trashed())
 							{
 								continue;
 							}
 
 							$unixgroup = $membership->unixgroup;
 
-							if (!$unixgroup || $unixgroup->isTrashed())
+							if (!$unixgroup || $unixgroup->trashed())
 							{
 								continue;
 							}
@@ -372,8 +356,6 @@ class Groups
 			else
 			{
 				$rows = $user->groups()
-					->withTrashed()
-					->whereIsActive()
 					->where('groupid', '>', 0)
 					->orderBy('membertype', 'desc')
 					->get();
@@ -411,14 +393,14 @@ class Groups
 
 				foreach ($unixusers as $uu)
 				{
-					if ($uu->isTrashed())
+					if ($uu->trashed())
 					{
 						continue;
 					}
 
 					$unixgroup = $uu->unixgroup;
 
-					if (!$unixgroup || $unixgroup->isTrashed())
+					if (!$unixgroup || $unixgroup->trashed())
 					{
 						continue;
 					}
@@ -480,10 +462,8 @@ class Groups
 
 		// Owner
 		$memberships = Member::query()
-			->withTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsManager()
-			->whereIsActive()
 			->orderBy('datecreated', 'asc')
 			->get();
 

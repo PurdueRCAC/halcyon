@@ -60,7 +60,7 @@ if (count($past)):
 				<li class="list-group-item">
 					<p class="text-muted">
 						<time datimetime="{{ $motd->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ $motd->datetimecreated->format('F j, Y') }}</time> to
-						@if ($motd->isTrashed())
+						@if ($motd->trashed())
 							<time datimetime="{{ $motd->datetimeremoved->format('Y-m-d\TH:i:s\Z') }}">{{ $motd->datetimeremoved->format('F j, Y') }}</time>
 						@else
 							trans('global.never')

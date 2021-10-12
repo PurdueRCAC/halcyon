@@ -33,10 +33,8 @@ class GetUserGroups
 
 		// Owner
 		$memberships = Member::query()
-			->withTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsManager()
-			->whereIsActive()
 			->orderBy('datecreated', 'asc')
 			->get();
 
@@ -48,10 +46,9 @@ class GetUserGroups
 		$user->ownerofgroups = $memberships;
 
 		$memberships = Member::query()
-			->withTrashed()
+			->onlyTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsManager()
-			->whereIsTrashed()
 			->orderBy('datecreated', 'asc')
 			->get();
 
@@ -64,10 +61,8 @@ class GetUserGroups
 
 		// Members
 		$memberships = Member::query()
-			->withTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsMember()
-			->whereIsActive()
 			->orderBy('datecreated', 'asc')
 			->get();
 
@@ -79,10 +74,9 @@ class GetUserGroups
 		$user->memberofgroups = $memberships;
 
 		$memberships = Member::query()
-			->withTrashed()
+			->onlyTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsMember()
-			->whereIsTrashed()
 			->orderBy('datecreated', 'asc')
 			->get();
 
@@ -95,10 +89,8 @@ class GetUserGroups
 
 		// Viewers
 		$memberships = Member::query()
-			->withTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsViewer()
-			->whereIsActive()
 			->orderBy('datecreated', 'asc')
 			->get();
 
@@ -110,10 +102,9 @@ class GetUserGroups
 		$user->viewerofgroups = $memberships;
 
 		$memberships = Member::query()
-			->withTrashed()
+			->onlyTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsViewer()
-			->whereIsTrashed()
 			->orderBy('datecreated', 'asc')
 			->get();
 

@@ -1038,7 +1038,7 @@ $pending = $group->pendingMembersCount;
 			</div>
 			<div class="col-md-3 text-right">
 				@if ($membership)
-					@if ($membership->isTrashed())
+					@if ($membership->trashed())
 						<span class="badge badge-danger">{{ trans('users::users.removed') }}</span>
 					@elseif ($membership->membertype == 4)
 						<span class="badge badge-warning">{{ $membership->type->name }}</span>

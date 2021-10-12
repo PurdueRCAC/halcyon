@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Groups\Events\MemberCreating;
 use App\Modules\Groups\Events\MemberCreated;
 use App\Modules\Groups\Events\MemberUpdating;
@@ -18,7 +17,7 @@ use App\Modules\Groups\Events\MemberDeleted;
  */
 class Member extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
+	use ErrorBag, Validatable, Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -101,9 +100,7 @@ class Member extends Model
 	 */
 	public function hasVisited()
 	{
-		return ($this->datelastseen
-			&& $this->datelastseen != '0000-00-00 00:00:00'
-			&& $this->datelastseen != '-0001-11-30 00:00:00');
+		return !is_null($this->datelastseen);
 	}
 
 	/**

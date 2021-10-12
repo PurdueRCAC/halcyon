@@ -91,11 +91,7 @@ class MembersController extends Controller
 					$where->whereNull($u . '.dateremoved')
 						->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
 				})
-				->where(function($where) use ($m, $now)
-				{
-					$where->whereNull($m . '.datetimeremoved')
-						->orWhere($m . '.datetimeremoved', '>', $now->toDateTimeString());
-				})
+				->whereNull($m . '.datetimeremoved')
 				->where($m . '.datetimestop', '>', $now->toDateTimeString());
 		}
 		elseif ($filters['state'] == 'trashed')

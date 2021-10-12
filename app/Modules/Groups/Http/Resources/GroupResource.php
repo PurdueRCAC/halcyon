@@ -49,19 +49,19 @@ class GroupResource extends JsonResource
 
 					$ma = $m->toArray();
 
-					if (!$m->isTrashed() && ($m->user && $m->user->isTrashed()))
+					if (!$m->trashed() && ($m->user && $m->user->isTrashed()))
 					{
 						$ma['dateremoved'] = $m->user->dateremoved;
 					}
 
-					if (!$m->isTrashed())
+					if (!$m->trashed())
 					{
 						$ma['dateremoved'] = null;
 					}
 
 					if ($m->isManager())
 					{
-						if ($m->isTrashed() || ($m->user && $m->user->isTrashed()))
+						if ($m->trashed() || ($m->user && $m->user->isTrashed()))
 						{
 							$data['priormanagers'][] = $ma;
 						}
@@ -74,7 +74,7 @@ class GroupResource extends JsonResource
 
 					if ($m->isViewer())
 					{
-						if ($m->isTrashed() || ($m->user && $m->user->isTrashed()))
+						if ($m->trashed() || ($m->user && $m->user->isTrashed()))
 						{
 							$data['priorviewers'][] = $ma;
 						}
@@ -85,7 +85,7 @@ class GroupResource extends JsonResource
 						continue;
 					}
 
-					if ($m->isTrashed() || ($m->user && $m->user->isTrashed()))
+					if ($m->trashed() || ($m->user && $m->user->isTrashed()))
 					{
 						$data['priormembers'][] = $ma;
 					}
@@ -236,7 +236,6 @@ class GroupResource extends JsonResource
 
 			$data['priorunixgroups'] = $this->unixgroups()
 				->onlyTrashed()
-				->where('datetimeremoved', '!=', '0000-00-00 00:00:00')
 				->get()
 				->each(function ($item, $key)
 				{

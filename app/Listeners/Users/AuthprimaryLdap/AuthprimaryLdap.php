@@ -832,10 +832,7 @@ class AuthprimaryLdap
 
 			if ($result && $result->exists)
 			{
-				$members = $unixgroup->members()
-					->withTrashed()
-					->whereIsActive()
-					->get();
+				$members = $unixgroup->members;
 
 				$usernames = array();
 				foreach ($members as $member)

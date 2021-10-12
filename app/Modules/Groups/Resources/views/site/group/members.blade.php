@@ -15,8 +15,6 @@ $disabled = collect([]);
 $processed = array();
 
 $users = $group->members()
-	->withTrashed()
-	->whereIsActive()
 	->orderBy('datecreated', 'desc')
 	->get();
 
@@ -48,14 +46,14 @@ foreach ($users as $me)
 		}
 		elseif ($me->isMember())
 		{
-			if (!($found = $members->firstWhere('userid', $me->userid)))
+			if (!($found = $members->firstWhere('userid', $me->userid)) && !($found = $managers->firstWhere('userid', $me->userid)))
 			{
 				$members->push($me);
 			}
 		}
 		elseif ($me->isViewer())
 		{
-			if (!($found = $viewers->firstWhere('userid', $me->userid)))
+			if (!($found = $viewers->firstWhere('userid', $me->userid)) && !($found = $members->firstWhere('userid', $me->userid)) && !($found = $managers->firstWhere('userid', $me->userid)))
 			{
 				$viewers->push($me);
 			}
@@ -77,11 +75,7 @@ $queues = $group->queues()
 		$wher->whereNull($q . '.datetimeremoved')
 			->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
 	})
-	->where(function($wher) use ($r)
-	{
-		$wher->whereNull($r . '.datetimeremoved')
-			->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-	})
+	->whereNull($r . '.datetimeremoved')
 	->get();
 
 foreach ($queues as $queue)
@@ -140,14 +134,14 @@ foreach ($queues as $queue)
 			}
 			elseif ($me->isMember())
 			{
-				if (!($found = $members->firstWhere('userid', $me->userid)))
+				if (!($found = $members->firstWhere('userid', $me->userid)) && !($found = $managers->firstWhere('userid', $me->userid)))
 				{
 					$members->push($me);
 				}
 			}
 			elseif ($me->isViewer())
 			{
-				if (!($found = $viewers->firstWhere('userid', $me->userid)))
+				if (!($found = $viewers->firstWhere('userid', $me->userid)) && !($found = $members->firstWhere('userid', $me->userid)) && !($found = $managers->firstWhere('userid', $me->userid)))
 				{
 					$viewers->push($me);
 				}
@@ -159,8 +153,6 @@ foreach ($queues as $queue)
 }
 
 $unixgroups = $group->unixgroups()
-	->withTrashed()
-	->whereIsActive()
 	->orderBy('longname', 'asc')
 	->get();
 
@@ -175,8 +167,6 @@ foreach ($unixgroups as $unixgroup)
 	}
 
 	$users = $unixgroup->members()
-		->withTrashed()
-		->whereIsActive()
 		->get();
 
 	$unixgroup->activemembers = $users;

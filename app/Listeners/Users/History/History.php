@@ -91,7 +91,7 @@ class History
 				$item->description = ($group ? $group->name : trans('global.unknown'));
 				$item->created = $g->datecreated;
 				$item->removed = $g->dateremoved;
-				$item->isTrashed = $g->isTrashed();
+				$item->isTrashed = $g->trashed();
 
 				$items->push($item);
 			}
@@ -113,7 +113,7 @@ class History
 				$item->description = $ug->longname . ' ' . ($ug && $ug->group ? '(' . $ug->group->name . ')' : trans('global.unknown'));
 				$item->created = $g->datetimecreated;
 				$item->removed = $g->datetimeremoved;
-				$item->isTrashed = $g->isTrashed();
+				$item->isTrashed = $g->trashed();
 
 				$items->push($item);
 			}

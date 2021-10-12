@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Groups\Events\UnixGroupCreating;
 use App\Modules\Groups\Events\UnixGroupDeleted;
 
@@ -15,7 +14,7 @@ use App\Modules\Groups\Events\UnixGroupDeleted;
  */
 class UnixGroup extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
+	use ErrorBag, Validatable, Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -155,8 +154,6 @@ class UnixGroup extends Model
 		else
 		{
 			$data = self::query()
-				->withTrashed()
-				->whereIsActive()
 				->where('groupid', '=', $this->groupid)
 				->orderBy('shortname', 'asc')
 				->get();
@@ -210,8 +207,6 @@ class UnixGroup extends Model
 	{
 		return self::query()
 			->where('longname', '=', $name)
-			->withTrashed()
-			->whereIsActive()
 			->first();
 	}
 
@@ -225,8 +220,6 @@ class UnixGroup extends Model
 	{
 		return self::query()
 			->where('shortname', '=', $name)
-			->withTrashed()
-			->whereIsActive()
 			->first();
 	}
 }

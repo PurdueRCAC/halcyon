@@ -76,8 +76,8 @@ class MembersController extends Controller
 		if ($filters['state'] == 'active')
 		{
 			$query->withTrashed()
-				->whereNull($u . '.deleted_at') //, '=', '0000-00-00 00:00:00')
-				->where($m . '.dateremoved', '=', '0000-00-00 00:00:00');
+				->whereNull($u . '.deleted_at')
+				->whereNull($m . '.dateremoved');
 		}
 		elseif ($filters['state'] == 'trashed')
 		{

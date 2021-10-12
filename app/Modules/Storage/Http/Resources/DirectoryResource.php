@@ -86,7 +86,7 @@ class DirectoryResource extends JsonResource
 				$data['unixgroup']['id'] = '/ws/unixgroup/' . $data['unixgroup']['id'];
 				$data['unixgroup']['gid'] = $data['unixgroup']['groupid'];
 				$data['unixgroup']['created'] = $this->unixgroup->datetimecreated->toDateTimeString();
-				$data['unixgroup']['removed'] = $this->unixgroup->isTrashed() ? $this->unixgroup->datetimeremoved->toDateTimeString() : '0000-00-00 00:00:00';
+				$data['unixgroup']['removed'] = $this->unixgroup->trashed() ? $this->unixgroup->datetimeremoved->toDateTimeString() : '0000-00-00 00:00:00';
 				unset($data['unixgroup']['groupid']);
 				unset($data['unixgroup']['datetimecreated']);
 				unset($data['unixgroup']['datetimeremoved']);
@@ -107,7 +107,7 @@ class DirectoryResource extends JsonResource
 				$data['autouserunixgroup']['id'] = '/ws/unixgroup/' . $data['autouserunixgroup']['id'];
 				$data['autouserunixgroup']['gid'] = $data['autouserunixgroup']['groupid'];
 				$data['autouserunixgroup']['created'] = $this->autounixgroup->datetimecreated->toDateTimeString();
-				$data['autouserunixgroup']['removed'] = $this->autounixgroup->isTrashed() ? $this->autounixgroup->datetimeremoved->toDateTimeString() : '0000-00-00 00:00:00';
+				$data['autouserunixgroup']['removed'] = $this->autounixgroup->trashed() ? $this->autounixgroup->datetimeremoved->toDateTimeString() : '0000-00-00 00:00:00';
 				unset($data['autouserunixgroup']['groupid']);
 				unset($data['autouserunixgroup']['datetimecreated']);
 				unset($data['autouserunixgroup']['datetimeremoved']);

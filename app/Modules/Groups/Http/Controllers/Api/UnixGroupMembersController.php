@@ -165,10 +165,6 @@ class UnixGroupMembersController extends Controller
 
 		$rows->map(function($row, $key)
 		{
-			if (!$row->isTrashed())
-			{
-				$row->datetimeremoved = null;
-			}
 			$row->api = route('api.unixgroups.members.read', ['id' => $row->id]);
 		});
 
@@ -272,9 +268,9 @@ class UnixGroupMembersController extends Controller
 		$restore = false;
 		if ($row)
 		{
-			if ($row->isTrashed())
+			if ($row->trashed())
 			{
-				$row->forceRestore(['datetimeremoved']);
+				$row->restore();
 			}
 			// Nothing to do, we are cancelling a removal
 			$row->notice = 0;

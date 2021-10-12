@@ -249,14 +249,14 @@ app('pathway')
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr<?php if (($row->user && $row->user->isTrashed()) || $row->isTrashed()) { echo ' class="trashed"'; } ?>>
+			<tr<?php if (($row->user && $row->user->isTrashed()) || $row->trashed()) { echo ' class="trashed"'; } ?>>
 				@if (auth()->user()->can('edit groups'))
 					<td>
 						{!! Html::grid('id', $i, $row->id) !!}
 					</td>
 				@endif
 				<td class="priority-5">
-					@if (($row->user && $row->user->isTrashed()) || $row->isTrashed())
+					@if (($row->user && $row->user->isTrashed()) || $row->trashed())
 						<span class="icon-trash" aria-hidden="true"></span>
 					@endif
 					{{ $row->id }}
@@ -284,7 +284,7 @@ app('pathway')
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->datecreated && $row->datecreated != '0000-00-00 00:00:00' && $row->datecreated != '-0001-11-30 00:00:00')
+						@if ($row->datecreated)
 							<time datetime="{{ $row->datecreated }}">{{ $row->datecreated }}</time>
 						@else
 							<span class="never">{{ trans('global.never') }}</span>
@@ -293,7 +293,7 @@ app('pathway')
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->datelastseen && $row->datelastseen != '0000-00-00 00:00:00' && $row->datelastseen != '-0001-11-30 00:00:00')
+						@if ($row->datelastseen)
 							<time datetime="{{ $row->datelastseen }}">{{ $row->datelastseen }}</time>
 						@else
 							<span class="never">{{ trans('global.never') }}</span>
@@ -301,7 +301,7 @@ app('pathway')
 					</span>
 				</td>
 				<td>
-					@if (($row->user && $row->user->isTrashed()) || $row->isTrashed())
+					@if (($row->user && $row->user->isTrashed()) || $row->trashed())
 						{{ $row->type->name }}
 					@else
 						<?php

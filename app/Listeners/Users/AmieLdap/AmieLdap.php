@@ -430,10 +430,7 @@ class AmieLdap
 							->where('cn', '=', $group->unixgroup)
 							->first();
 
-					$unixgroup = $group->unixgroups()
-						->withTrashed()
-						->whereIsActive()
-						->first();
+					$unixgroup = $group->unixgroups->first();
 
 					if ($ugs && $ugs->exists)
 					{
@@ -451,10 +448,7 @@ class AmieLdap
 						// Sync membership
 						if ($vals = $ugs->getAttribute('memberUid'))
 						{
-							$ugusers = $unixgroup->members()
-								->withTrashed()
-								->whereIsActive()
-								->get();
+							$ugusers = $unixgroup->members;
 
 							$current = $ugusers->pluck('userid')->toArray();
 							$added = array();
@@ -711,11 +705,7 @@ class AmieLdap
 					$response->queue = $q;
 
 					$g = $group->toArray();
-					$g['members'] = $group->members()
-						->withTrashed()
-						->whereIsActive()
-						->get()
-						->toArray();
+					$g['members'] = $group->members->toArray();
 					foreach ($g['members'] as $k => $member)
 					{
 						if (isset($member['dateremoved'])
@@ -735,11 +725,7 @@ class AmieLdap
 					$response->group = $g;
 
 					$u = $unixgroup->toArray();
-					$u['members'] = $unixgroup->members()
-						->withTrashed()
-						->whereIsActive()
-						->get()
-						->toArray();
+					$u['members'] = $unixgroup->members->toArray();
 					foreach ($u['members'] as $k => $member)
 					{
 						if (isset($member['datetimeremoved'])

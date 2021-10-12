@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Groups\Events\UnixGroupMemberCreated;
 use App\Modules\Groups\Events\UnixGroupMemberDeleted;
 
@@ -15,7 +14,7 @@ use App\Modules\Groups\Events\UnixGroupMemberDeleted;
  */
 class UnixGroupMember extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
+	use ErrorBag, Validatable, Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.

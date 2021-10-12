@@ -175,11 +175,7 @@ class Group extends Model
 				$where->whereNull($u . '.dateremoved')
 					->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
 			})
-			->where(function($where) use ($m)
-			{
-				$where->whereNull($m . '.dateremoved')
-					->orWhere($m . '.dateremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($m . '.dateremoved')
 			->where($m . '.membertype', '=', 2)
 			->orderBy($m . '.datecreated', 'desc')
 			->get();
@@ -477,8 +473,6 @@ class Group extends Model
 	public function getMotdAttribute()
 	{
 		return $this->motds()
-			->withTrashed()
-			->whereIsActive()
 			->orderBy('datetimecreated', 'desc')
 			->first();
 	}
@@ -564,11 +558,7 @@ class Group extends Model
 				$wher->whereNull($q . '.datetimeremoved')
 					->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
 			})
-			->where(function($wher) use ($r)
-			{
-				$wher->whereNull($r . '.datetimeremoved')
-					->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($r . '.datetimeremoved')
 			->get();
 
 		$processed = array();

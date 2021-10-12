@@ -169,14 +169,6 @@ class MembersController extends Controller
 
 		$rows->each(function ($item, $key)
 		{
-			if (!$item->isTrashed())
-			{
-				$item->dateremoved = null;
-			}
-			if (!$item->hasVisited())
-			{
-				$item->datelastseen = null;
-			}
 			$item->api = route('api.groups.members.read', ['id' => $item->id]);
 			$item->user;
 		});
@@ -278,9 +270,9 @@ class MembersController extends Controller
 		{
 			$row = new Member;
 		}
-		elseif ($row->isTrashed())
+		elseif ($row->trashed())
 		{
-			$row->forceRestore(['dateremoved']);
+			$row->restore();
 		}
 
 		$row->groupid = $groupid;
@@ -493,7 +485,7 @@ class MembersController extends Controller
 	{
 		$row = Member::findOrFail($id);
 
-		if (!$row->isTrashed())
+		if (!$row->trashed())
 		{
 			if (!$row->delete())
 			{

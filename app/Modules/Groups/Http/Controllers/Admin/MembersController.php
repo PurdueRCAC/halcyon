@@ -89,11 +89,7 @@ class MembersController extends Controller
 		{
 			$query->withTrashed()
 				->whereNull($uu . '.dateremoved')
-				->where(function($where) use ($m)
-				{
-					$where->whereNull($m . '.dateremoved') //, '=', '0000-00-00 00:00:00')
-						->orWhere($m . '.dateremoved', '=', '0000-00-00 00:00:00');
-				});
+				->whereNull($m . '.dateremoved');
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
@@ -102,11 +98,7 @@ class MembersController extends Controller
 				->where(function($where) use ($uu, $m)
 				{
 					$where->whereNotNull($uu . '.dateremoved')
-						->orWhere(function($w) use ($m)
-						{
-							$w->whereNotNull($m . '.dateremoved')
-								->where($m . '.dateremoved', '!=', '0000-00-00 00:00:00');
-						});
+						->orWhereNotNull($m . '.dateremoved');
 				});
 		}
 		else

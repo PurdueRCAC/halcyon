@@ -290,8 +290,6 @@ class UnixGroupsController extends Controller
 
 		// Look for this entry, duplicate name, etc.
 		$exist = UnixGroup::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('groupid', '=', $group->id)
 			->where('longname', '=', $base . $name)
 			->get()
@@ -479,8 +477,6 @@ class UnixGroupsController extends Controller
 
 			// Look for this entry, duplicate name, etc.
 			$exist = UnixGroup::query()
-				->withTrashed()
-				->whereIsActive()
 				->where('groupid', '=', $group->id)
 				->where('longname', '=', $row->longname)
 				->where('id', '!=', $row->id)

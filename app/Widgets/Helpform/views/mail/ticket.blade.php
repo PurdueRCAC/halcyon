@@ -55,10 +55,7 @@ foreach ($memberships as $membership)
     $unixgroups = array();
     foreach ($group->unixGroups as $unixgroup)
     {
-      $userids = $unixgroup->members()->withTrashed()
-        ->whereIsActive()
-        ->get()
-        ->pluck('userid')
+      $userids = $unixgroup->members->pluck('userid')
         ->toArray();
 
       if (!in_array($data['user']->id, $userids))
@@ -132,10 +129,7 @@ foreach ($queues as $qu)
     //$unixgroups = array();
     foreach ($group->unixGroups as $unixgroup)
     {
-      $userids = $unixgroup->members()->withTrashed()
-        ->whereIsActive()
-        ->get()
-        ->pluck('userid')
+      $userids = $unixgroup->members->pluck('userid')
         ->toArray();
 
       if (!in_array($data['user']->id, $userids))
@@ -163,8 +157,6 @@ foreach ($gs as $groupname => $gdata)
 
 // Get cases where the user is only apart of a unix group
 $unixgroups = \App\Modules\Groups\Models\UnixGroupMember::query()
-    ->withTrashed()
-    ->whereIsActive()
     ->where('userid', '=', $data['user']->id)
     ->get();
 
@@ -173,7 +165,7 @@ foreach ($unixgroups as $ug)
 {
     $unixgroup = $ug->unixgroup;
 
-    if (!$unixgroup || $unixgroup->isTrashed())
+    if (!$unixgroup || $unixgroup->trashed())
     {
         continue;
     }

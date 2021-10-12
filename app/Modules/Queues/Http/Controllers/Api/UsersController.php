@@ -638,11 +638,6 @@ class UsersController extends Controller
 		/*$gqusers = GroupUser::query()
 			->where('queueuserid', '=', $row->id)
 			->whereIsMember()
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
 			->get();*/
 
 		if (!$row->delete())
@@ -689,8 +684,6 @@ class UsersController extends Controller
 						if ($queue->group)
 						{
 							$rows += $queue->group->members()
-								->withTrashed()
-								->whereIsActive()
 								->whereIsManager()
 								->where('userid', '=', $row->userid)
 								->count();
