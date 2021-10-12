@@ -115,6 +115,7 @@ class ResourcesController extends Controller
 
 		$rows = $type->resources()
 			//->where('display', '>', 0)
+			->onlyTrashed()
 			->where(function($where)
 			{
 				$where->whereNotNull('listname')
