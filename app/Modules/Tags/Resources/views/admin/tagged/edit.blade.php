@@ -81,7 +81,7 @@ app('pathway')
 					<tr>
 						<th scope="row">{{ trans('tags::tags.created') }}:</th>
 						<td>
-							<?php if ($row->getOriginal('created') && $row->getOriginal('created') != '0000-00-00 00:00:00'): ?>
+							<?php if ($row->created): ?>
 								{{ $row->created }}
 							<?php else: ?>
 								{{ trans('global.unknown') }}

@@ -412,11 +412,7 @@ class DirectoriesController extends Controller
 			->where('parentstoragedirid', '=', $row->parentstoragedirid)
 			->where('name', '=', $row->name)
 			->where('datetimecreated', '<=', Carbon::now()->toDateTimeString())
-			->where(function ($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->where('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull('datetimeremoved')
 			->get()
 			->first();
 

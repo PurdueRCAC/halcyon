@@ -180,8 +180,7 @@ class OrdersController extends Controller
 					$join->on($a . '.orderid', $o . '.id')
 						->on(function($where) use ($a)
 						{
-							$where->where($a . '.datetimeremoved', '=', '0000-00-00 00:00:00')
-								->orWhereNull($a . '.datetimeremoved');
+							$where->whereNull($a . '.datetimeremoved');
 						});
 				})
 				->groupBy($o . '.id')

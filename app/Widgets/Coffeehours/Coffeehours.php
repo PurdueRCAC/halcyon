@@ -39,25 +39,25 @@ class Coffeehours extends Widget
 			{
 				$where->where('datetimenews', '<=', $start)
 					->orWhere('datetimenews', '<=', $stop)
-					->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00');
+					->orWhereNull('datetimenewsend');
 			})
 			->where(function($where) use ($start, $stop)
 			{
 				$where->where('datetimenewsend', '>=', $start)
 					->orWhere('datetimenewsend', '>=', $stop)
-					->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00');
+					->orWhereNull('datetimenewsend');
 			})
 			->where(function($where) use ($start, $stop)
 			{
 				$where->where('datetimenews', '<=', $start)
 					->orWhere('datetimenews', '<=', $stop)
-					->orWhere('datetimenewsend', '!=', '0000-00-00 00:00:00');
+					->orWhereNotNull('datetimenewsend');
 			})
 			->where(function($where) use ($start, $stop)
 			{
 				$where->where('datetimenews', '>=', $start)
 					->orWhere('datetimenews', '>=', $stop)
-					->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00');
+					->orWhereNull('datetimenewsend');
 			})
 			->orderBy('datetimenews', 'asc')
 			->limit($this->params->get('limit', 100))

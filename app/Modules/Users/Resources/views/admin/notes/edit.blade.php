@@ -82,7 +82,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-review_time">{{ trans('users::notes.reviewed') }}:</label>
-					<?php echo Html::input('calendar', 'fields[review_time]', ($row->review_time && $row->review_time != '0000-00-00 00:00:00' ? $row->review_time : ''), array('id' => 'field-review_time')); ?>
+					<?php echo Html::input('calendar', 'fields[review_time]', ($row->review_time ? $row->review_time : ''), array('id' => 'field-review_time')); ?>
 					<span class="form-text text-muted">{{ trans('users::notes.reviewed desc') }}</span>
 				</div>
 			</fieldset>

@@ -112,7 +112,7 @@ class Member extends Model
 	 **/
 	public function hasStarted()
 	{
-		return ($this->datetimestart && $this->datetimestart != '0000-00-00 00:00:00' && $this->datetimestart != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimestart);
 	}
 
 	/**
@@ -122,7 +122,7 @@ class Member extends Model
 	 **/
 	public function hasStopped()
 	{
-		return ($this->datetimestop && $this->datetimestop != '0000-00-00 00:00:00' && $this->datetimestop != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimestop);
 	}
 
 	/**

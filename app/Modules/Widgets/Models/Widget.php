@@ -182,14 +182,12 @@ class Widget extends Model
 		}
 
 		if ($this->publish_up
-		 && $this->publish_up != '0000-00-00 00:00:00'
 		 && $this->publish_up > Carbon::now()->toDateTimeString())
 		{
 			return false;
 		}
 
 		if ($this->publish_down
-		 && $this->publish_down != '0000-00-00 00:00:00'
 		 && $this->publish_down <= Carbon::now()->toDateTimeString())
 		{
 			return false;

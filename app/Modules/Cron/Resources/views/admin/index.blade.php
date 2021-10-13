@@ -181,7 +181,7 @@ app('pathway')
 				<td class="priority-2">
 					<span class="datetime">
 						<?php $nxt = $row->nextRun(); ?>
-						<?php if ($nxt && $nxt != '0000-00-00 00:00:00') { ?>
+						<?php if ($nxt) { ?>
 							<time datetime="<?php echo $nxt; ?>"><?php echo $nxt; ?></time>
 						<?php } else { ?>
 							<?php echo $nxt; ?>

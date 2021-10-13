@@ -142,7 +142,7 @@ app('pathway')
 									$actor = e($action->user->name);
 								endif;
 
-								$created = $action->created_at && $action->created_at != '0000-00-00 00:00:00' ? $action->created_at : trans('global.unknown');
+								$created = $action->created_at ? $action->created_at : trans('global.unknown');
 
 								$fields = array_keys(get_object_vars($action->new));
 								foreach ($fields as $i => $k)

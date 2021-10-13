@@ -741,7 +741,7 @@ class Page extends Model
 	 */
 	public function isModified()
 	{
-		return ($this->updated_at && $this->updated_at != '0000-00-00 00:00:00');
+		return !is_null($this->updated_at);
 	}
 
 	/**

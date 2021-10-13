@@ -180,7 +180,7 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-4">
-					@if ($row->datetime && $row->datetime != '0000-00-00 00:00:00' && $row->datetime != '-0001-11-30 00:00:00')
+					@if ($row->datetime)
 						<time datetime="{{ $row->datetime->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetime }}</time>
 					@else
 						<span class="never">{{ trans('global.unknown') }}</span>

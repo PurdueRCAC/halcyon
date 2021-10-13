@@ -30,21 +30,6 @@ class AccountResource extends JsonResource
 			}
 		}
 
-		if (!$this->hasStart())
-		{
-			$data['datetimestart'] = null;
-		}
-
-		if (!$this->hasEnd())
-		{
-			$data['datetimestop'] = null;
-		}
-
-		if (!$this->trashed())
-		{
-			$data['datetimeremoved'] = null;
-		}
-
 		$data['can'] = array(
 			'edit'   => false,
 			'delete' => false,

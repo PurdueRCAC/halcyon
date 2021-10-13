@@ -101,9 +101,11 @@ $(document).ready(function() {
 							@endif
 						</td>
 						<td>
+							@if ($item->created)
 							<time datetime="{{ $item->created->toDateTimeString() }}">
 								{{ $item->created->format('M d, Y') }}
 							</time>
+							@endif
 						</td>
 						<td>
 							@if ($item->isTrashed)

@@ -136,10 +136,10 @@ app('pathway')
 				</td>
 				<td class="priority-4">
 					<span class="datetime">
-						@if ($row->updated_at && $row->updated_at != '0000-00-00 00:00:00' && $row->updated_at != '-0001-11-30 00:00:00')
+						@if ($row->updated_at)
 							<time datetime="{{ $row->updated_at->format('Y-m-d\TH:i:s\Z') }}">{{ $row->updated_at }}</time>
 						@else
-							@if ($row->getOriginal('created_at') && $row->getOriginal('created_at') != '0000-00-00 00:00:00')
+							@if ($row->created_at)
 								<time datetime="{{ $row->created_at->format('Y-m-d\TH:i:s\Z') }}">{{ $row->created_at }}</time>
 							@else
 								<span class="never">{{ trans('global.unknown') }}</span>

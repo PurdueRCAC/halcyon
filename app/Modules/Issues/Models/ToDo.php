@@ -9,7 +9,6 @@ use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Halcyon\Models\Timeperiod;
 use App\Modules\History\Traits\Historable;
-//use App\Modules\Core\Traits\LegacyTrash;
 use App\Modules\Issues\Events\ReportPrepareContent;
 use App\Modules\Users\Models\User;
 use Carbon\Carbon;

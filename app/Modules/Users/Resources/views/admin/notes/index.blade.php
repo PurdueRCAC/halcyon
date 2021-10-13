@@ -117,7 +117,7 @@ app('pathway')
 					@endif
 				</td>
 				<td>
-					@if ($row->getOriginal('review_time') && $row->getOriginal('review_time') != '0000-00-00 00:00:00')
+					@if ($row->review_time)
 						<time datetime="{{ $row->review_time->toDateTimeString() }}">
 							@if ($row->review_time->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
 								{{ $row->review_time->diffForHumans() }}

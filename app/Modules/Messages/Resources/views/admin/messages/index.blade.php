@@ -291,14 +291,14 @@ app('pathway')
 							<?php
 							$timetable  = '<table><tbody>';
 							$timetable .= '<tr><th scope=\'row\'>' . trans('messages::messages.started') . '</th><td>';
-							if ($row->datetimestarted && $row->datetimestarted != '0000-00-00 00:00:00' && $row->datetimestarted != '-0001-11-30 00:00:00'):
+							if ($row->datetimestarted):
 								$timetable .= '<time datetime=\''. $row->datetimestarted .'\'>' . $row->datetimestarted . '</time>';
 							else:
 								$timetable .= trans('messages::messages.not started');
 							endif;
 							$timetable .= '</td></tr>';
 							$timetable .= '<tr><th scope=\'row\'>' . trans('messages::messages.completed') . '</th><td>';
-							if ($row->datetimecompleted && $row->datetimecompleted != '0000-00-00 00:00:00' && $row->datetimecompleted != '-0001-11-30 00:00:00'):
+							if ($row->datetimecompleted):
 								$timetable .= '<time datetime=\''. $row->datetimecompleted .'\'>' . $row->datetimecompleted . '</time>';
 							else:
 								$timetable .= trans('messages::messages.not completed');

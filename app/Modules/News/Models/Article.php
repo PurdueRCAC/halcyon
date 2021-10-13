@@ -294,8 +294,7 @@ class Article extends Model
 					if (isset($item->old->datetimenewsend)
 					 && isset($item->new->datetimenewsend)
 					 && $item->old->datetimenewsend != $item->new->datetimenewsend
-					 && $item->old->datetimenewsend != null
-					 && $item->old->datetimenewsend != '0000-00-00 00:00:00')
+					 && $item->old->datetimenewsend != null)
 					{
 						$dt = Carbon::parse($item->old->datetimenewsend);
 						break;
@@ -314,7 +313,7 @@ class Article extends Model
 	 */
 	public function isModified()
 	{
-		return ($this->datetimeedited && $this->datetimeedited != '0000-00-00 00:00:00' && $this->datetimeedited != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimeedited);
 	}
 
 	/**
@@ -324,7 +323,7 @@ class Article extends Model
 	 */
 	public function isUpdated()
 	{
-		return ($this->datetimeupdate && $this->datetimeupdate != '0000-00-00 00:00:00' && $this->datetimeupdate != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimeupdate);
 	}
 
 	/**
@@ -334,7 +333,7 @@ class Article extends Model
 	 */
 	public function isMailed()
 	{
-		return ($this->datetimemailed && $this->datetimemailed != '0000-00-00 00:00:00' && $this->datetimemailed != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimemailed);
 	}
 
 	/**
@@ -344,7 +343,7 @@ class Article extends Model
 	 */
 	public function hasStart()
 	{
-		return ($this->datetimenews && $this->datetimenews != '0000-00-00 00:00:00' && $this->datetimenews != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimenews);
 	}
 
 	/**
@@ -354,7 +353,7 @@ class Article extends Model
 	 */
 	public function hasEnd()
 	{
-		return ($this->datetimenewsend && $this->datetimenewsend != '0000-00-00 00:00:00' && $this->datetimenewsend != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimenewsend);
 	}
 
 	/**
@@ -479,7 +478,6 @@ class Article extends Model
 		$now = Carbon::now()->toDateTimeString();
 
 		if ($this->datetimenews
-		 && $this->datetimenews != '0000-00-00 00:00:00'
 		 && $this->datetimenews > $now)
 		{
 			return false;
@@ -541,10 +539,9 @@ class Article extends Model
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimenewsend')
-					->orWhere('datetimenewsend', '=', '0000-00-00 00:00:00')
 					->orWhere(function($w) use ($now)
 					{
-						$w->where('datetimenewsend', '!=', '0000-00-00 00:00:00')
+						$w->whereNotNull('datetimenewsend')
 							->where('datetimenewsend', '>', $now);
 					});
 			});*/
@@ -1099,9 +1096,7 @@ class Article extends Model
 				}
 				else
 				{
-					if ($this->datetimecreated
-					 && $this->datetimecreated != '0000-00-00 00:00:00'
-					 && $this->datetimecreated != '-0001-11-30 00:00:00')
+					if ($this->datetimecreated)
 					{
 						$vars[$var] = $this->formatDate($this->datetimecreated);
 					}

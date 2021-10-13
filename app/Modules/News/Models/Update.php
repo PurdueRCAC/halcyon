@@ -119,16 +119,6 @@ class Update extends Model
 	}
 
 	/**
-	 * If item is removed
-	 *
-	 * @return  bool
-	 **/
-	public function isTrashed()
-	{
-		return !is_null($this->datetimeremoved);
-	}
-
-	/**
 	 * Determine if entry was edited
 	 *
 	 * @return  bool

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-//use App\Modules\Core\Traits\LegacyTrash;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Modules\Issues\Events\IssuePrepareContent;
 use App\Modules\Users\Models\User;

@@ -116,6 +116,6 @@ class User extends Model
 	 */
 	public function notified()
 	{
-		return ($this->datetimelastnotify && $this->datetimelastnotify != '0000-00-00 00:00:00' && $this->datetimelastnotify != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimelastnotify);
 	}
 }
