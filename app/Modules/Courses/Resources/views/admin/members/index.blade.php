@@ -109,7 +109,7 @@ app('pathway')
 				</thead>
 				<tbody>
 				@foreach ($rows as $i => $row)
-					<tr<?php if ($row->user && $row->user->isTrashed()) { echo ' class="trashed"'; } ?>>
+					<tr<?php if ($row->user && $row->user->trashed()) { echo ' class="trashed"'; } ?>>
 						<td>
 							@if (auth()->user()->can('edit courses'))
 								{!! Html::grid('id', $i, $row->id) !!}
@@ -125,7 +125,7 @@ app('pathway')
 							@endif
 						</td>
 						<td>
-							@if ($row->user && $row->user->isTrashed())
+							@if ($row->user && $row->user->trashed())
 								<span class="icon-alert-triangle glyph warning has-tip" title="{{ trans('courses::courses.user account removed') }}">{{ trans('courses::courses.user account removed') }}</span>
 							@endif
 							@if (auth()->user()->can('edit users'))

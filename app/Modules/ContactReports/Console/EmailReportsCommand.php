@@ -72,7 +72,7 @@ class EmailReportsCommand extends Command
 
 				$user = User::find($subscriber);
 
-				if (!$user || !$user->id || $user->isTrashed())
+				if (!$user || !$user->id || $user->trashed())
 				{
 					continue;
 				}

@@ -321,11 +321,7 @@ class Queue extends Model
 		return $this->users()
 			->select($qu . '.*')
 			->join($u, $u . '.userid', $qu . '.userid')
-			->where(function($where) use ($u)
-			{
-				$where->whereNull($u . '.dateremoved')
-					->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($u . '.dateremoved')
 			->where($qu . '.datetimecreated', '<', $now->toDateTimeString())
 			->orderBy($qu . '.datetimecreated', 'desc')
 			->get();

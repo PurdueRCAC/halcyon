@@ -37,9 +37,7 @@ foreach ($memberships as $membership)
     $queues = array();
     foreach ($group->queues as $queue)
     {
-      $userids = $queue->users()->withTrashed()
-        ->whereIsActive()
-        ->get()
+      $userids = $queue->users
         ->pluck('userid')
         ->toArray();
 

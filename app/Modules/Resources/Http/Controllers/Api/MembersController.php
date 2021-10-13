@@ -101,7 +101,7 @@ class MembersController extends Controller
 		// Look up the current username of the user
 		$user = User::findOrFail($userid);
 
-		if (!$user || $user->isTrashed())
+		if (!$user || $user->trashed())
 		{
 			return response()->json(['message' => trans('Failed to find user for ID :id', ['id' => $userid])], 404);
 		}
@@ -241,7 +241,7 @@ class MembersController extends Controller
 		// Look up the current user
 		$user = User::findOrFail($userid);
 
-		if (!$user || $user->isTrashed())
+		if (!$user || $user->trashed())
 		{
 			return response()->json(['message' => trans('Failed to find user for ID :id', ['id' => $userid])], 404);
 		}

@@ -123,11 +123,7 @@ class UsersController extends Controller
 		$query = User::query()
 			->select($a . '.id', $a . '.name', $a . '.puid')
 			->join($u, $u . '.userid', $a . '.id')
-			->where(function($where) use ($u)
-			{
-				$where->whereNull($u . '.dateremoved')
-					->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-			});
+			->whereNull($u . '.dateremoved');
 			//->with('accessgroups');
 			/*->including(['notes', function ($note){
 				$note
@@ -279,7 +275,7 @@ class UsersController extends Controller
 
 		$rows->each(function($item, $key)
 		{
-			if (!$item->getUserUsername()->isTrashed())
+			if (!$item->getUserUsername()->trashed())
 			{
 				$item->getUserUsername()->dateremoved = null;
 			}

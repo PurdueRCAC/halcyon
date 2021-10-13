@@ -205,11 +205,7 @@
 											->where('membertype', '>=', 0)
 											->orderBy($m . '.membertype', 'desc')
 											->orderBy($u . '.username', 'asc')
-											->where(function($where) use ($u)
-											{
-												$where->whereNull($u . '.dateremoved')
-													->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-											})
+											->whereNull($u . '.dateremoved')
 											->get();
 
 										if (count($members)):

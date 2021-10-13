@@ -209,7 +209,7 @@ class AuthController extends Controller
 					if ($user && $user->id)
 					{
 						// Restore "trashed" accounts on login?
-						if ($user->isTrashed())
+						if ($user->trashed())
 						{
 							if (config('module.users.restore_on_login', 0))
 							{

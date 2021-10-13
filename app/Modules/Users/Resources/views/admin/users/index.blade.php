@@ -234,7 +234,7 @@ app('pathway')
 				$incomplete = true;
 			endif;*/
 			?>
-			<tr<?php if ($row->isTrashed()) { echo ' class="trashed"'; } ?>>
+			<tr<?php if ($row->trashed()) { echo ' class="trashed"'; } ?>>
 				<td>
 					@if ($canEdit)
 						{!! Html::grid('id', $i, $row->id) !!}
@@ -280,7 +280,7 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-3">
-					@if ($row->isTrashed())
+					@if ($row->trashed())
 						<span class="badge badge-danger">
 							{{ trans('users::users.status trashed') }}
 						</span>

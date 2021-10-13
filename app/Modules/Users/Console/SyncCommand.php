@@ -38,11 +38,7 @@ class SyncCommand extends Command
 		$users = $query = User::query()
 			->select($a . '.id', $u . '.username')
 			->join($u, $u . '.userid', $a . '.id')
-			->where(function($where) use ($u)
-			{
-				$where->whereNull($u . '.dateremoved')
-					->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($u . '.dateremoved')
 			/*->where(function($where) use ($a)
 			{
 				$where->where($a . '.puid', '=', 0)

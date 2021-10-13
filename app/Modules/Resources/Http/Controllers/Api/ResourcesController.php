@@ -486,11 +486,7 @@ class ResourcesController extends Controller
 		$rows = User::query()
 			->select($u . '.*')
 			->join($uu, $uu . '.userid', $u . '.id')
-			->where(function($where) use ($uu)
-			{
-				$where->whereNull($uu . '.dateremoved')
-					->orWhere($uu . '.dateremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($uu . '.dateremoved')
 			->whereIn($u . '.id', $userids)
 			->get();
 

@@ -126,7 +126,7 @@ class UsersController extends Controller
 			->where($u . '.userid', '=', $user->id)
 			->whereNull($d . '.datetimeremoved')
 			->whereNull($r . '.datetimeremoved')
-			->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+			->whereNull($u . '.datetimeremoved')
 			->where(function($where) use ($d, $r)
 			{
 				$where->where($d . '.bytes', '<>', 0)
@@ -152,7 +152,7 @@ class UsersController extends Controller
 			->where($u . '.userid', '=', $user->id)
 			->whereNull($d . '.datetimeremoved')
 			->whereNull($r . '.datetimeremoved')
-			->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+			->whereNull($u . '.datetimeremoved')
 			->where($d . '.bytes', '<>', 0)
 			->get();
 

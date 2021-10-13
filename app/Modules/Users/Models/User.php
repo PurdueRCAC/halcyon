@@ -147,9 +147,9 @@ class User extends Model implements
 	 *
 	 * @return  bool
 	 **/
-	public function isTrashed()
+	public function trashed()
 	{
-		return $this->getUserUsername()->isTrashed();
+		return $this->getUserUsername()->trashed();
 	}
 
 	/**
@@ -159,9 +159,7 @@ class User extends Model implements
 	 **/
 	public function isCreated()
 	{
-		return ($this->getUserUsername()->datecreated
-			&& $this->getUserUsername()->datecreated != '0000-00-00 00:00:00'
-			&& $this->getUserUsername()->datecreated != '-0001-11-30 00:00:00');
+		return !is_null($this->getUserUsername()->datecreated);
 	}
 
 	/**
@@ -216,8 +214,7 @@ class User extends Model implements
 	 **/
 	public function hasVisited()
 	{
-		$last = $this->lastVisit;
-		return ($last && $last != '0000-00-00 00:00:00' && $last != '-0001-11-30 00:00:00');
+		return !is_null($this->getUserUsername()->datelastseen);
 	}
 
 	/**
@@ -539,12 +536,11 @@ class User extends Model implements
 	 */
 	public static function findByUsername($username, $includeTrashed = false)
 	{
-		$query = UserUsername::query()
-			->withTrashed();
+		$query = UserUsername::query();
 
-		if (!$includeTrashed)
+		if ($includeTrashed)
 		{
-			$query->whereIsActive();
+			$query->withTrashed();
 		}
 
 		$username = $query

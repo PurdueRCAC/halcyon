@@ -125,7 +125,7 @@ class EmailFreeDeniedCommand extends Command
 				{
 					$user = User::find($userid);
 
-					if (!$user || !$user->id || $user->isTrashed())
+					if (!$user || !$user->id || $user->trashed())
 					{
 						if ($debug || $this->output->isVerbose())
 						{
@@ -172,7 +172,7 @@ class EmailFreeDeniedCommand extends Command
 				{
 					$user = $manager->user;
 
-					if (!$user || !$user->id || $user->isTrashed())
+					if (!$user || !$user->id || $user->trashed())
 					{
 						if ($debug || $this->output->isVerbose())
 						{

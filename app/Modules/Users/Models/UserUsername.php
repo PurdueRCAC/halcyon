@@ -3,7 +3,6 @@ namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Modules\Core\Traits\LegacyTrash;
 //use App\Modules\Users\Events\UserUsernameCreating;
 //use App\Modules\Users\Events\UserUsernameCreated;
 //use App\Modules\Users\Events\UserUsernameDeleted;
@@ -13,7 +12,7 @@ use App\Modules\Core\Traits\LegacyTrash;
  */
 class UserUsername extends Model
 {
-	use SoftDeletes, LegacyTrash;
+	use SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -103,9 +102,7 @@ class UserUsername extends Model
 	 **/
 	public function isCreated()
 	{
-		return ($this->datecreated
-			&& $this->datecreated != '0000-00-00 00:00:00'
-			&& $this->datecreated != '-0001-11-30 00:00:00');
+		return !is_null($this->datecreated);
 	}
 
 	/**
@@ -115,8 +112,6 @@ class UserUsername extends Model
 	 **/
 	public function hasVisited()
 	{
-		return ($this->datelastseen
-			&& $this->datelastseen != '0000-00-00 00:00:00'
-			&& $this->datelastseen != '-0001-11-30 00:00:00');
+		return !is_null($this->datelastseen);
 	}
 }

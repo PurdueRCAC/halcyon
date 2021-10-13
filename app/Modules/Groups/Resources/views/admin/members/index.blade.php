@@ -249,20 +249,20 @@ app('pathway')
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr<?php if (($row->user && $row->user->isTrashed()) || $row->trashed()) { echo ' class="trashed"'; } ?>>
+			<tr<?php if (($row->user && $row->user->trashed()) || $row->trashed()) { echo ' class="trashed"'; } ?>>
 				@if (auth()->user()->can('edit groups'))
 					<td>
 						{!! Html::grid('id', $i, $row->id) !!}
 					</td>
 				@endif
 				<td class="priority-5">
-					@if (($row->user && $row->user->isTrashed()) || $row->trashed())
+					@if (($row->user && $row->user->trashed()) || $row->trashed())
 						<span class="icon-trash" aria-hidden="true"></span>
 					@endif
 					{{ $row->id }}
 				</td>
 				<td>
-					@if ($row->user && $row->user->isTrashed())
+					@if ($row->user && $row->user->trashed())
 						<span class="icon-alert-triangle glyph warning has-tip" title="{{ trans('groups::groups.user account removed') }}">{{ trans('groups::groups.user account removed') }}</span>
 					@endif
 					@if (auth()->user()->can('edit users'))
@@ -301,7 +301,7 @@ app('pathway')
 					</span>
 				</td>
 				<td>
-					@if (($row->user && $row->user->isTrashed()) || $row->trashed())
+					@if (($row->user && $row->user->trashed()) || $row->trashed())
 						{{ $row->type->name }}
 					@else
 						<?php

@@ -27,7 +27,7 @@ foreach ($users as $me)
 
 	$me->membershiptype = 'groupuser';
 
-	if (!$me->user || $me->user->isTrashed())
+	if (!$me->user || $me->user->trashed())
 	{
 		if (!($found = $disabled->firstWhere('userid', $me->userid)))
 		{
@@ -95,7 +95,7 @@ foreach ($queues as $queue)
 
 		$me->membershiptype = 'queueuser';
 
-		if (!$me->user || $me->user->isTrashed())
+		if (!$me->user || $me->user->trashed())
 		{
 			if (!($found = $disabled->firstWhere('userid', $me->userid)))
 			{
@@ -174,7 +174,7 @@ foreach ($unixgroups as $unixgroup)
 
 		$me->membershiptype = 'unixgroupuser';
 
-		if (!$me->user || $me->user->isTrashed())
+		if (!$me->user || $me->user->trashed())
 		{
 			if (!($found = $disabled->firstWhere('userid', $me->userid)))
 			{

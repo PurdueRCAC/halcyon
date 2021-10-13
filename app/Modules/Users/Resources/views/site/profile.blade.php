@@ -105,7 +105,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 				</div>
 				<div class="card-body panel-body">
 					@if (auth()->user()->can('manage users'))
-						@if ($user->isTrashed())
+						@if ($user->trashed())
 							<p class="alert alert-warning">This account was removed on {{ $user->dateremoved }}.</p>
 						@endif
 

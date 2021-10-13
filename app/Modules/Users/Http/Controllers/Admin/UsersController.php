@@ -136,19 +136,11 @@ class UsersController extends Controller
 
 		if ($filters['state'] == 'enabled')
 		{
-			$query->where(function($where) use ($u)
-			{
-				$where->whereNull($u . '.dateremoved')
-					->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-			});
+			$query->whereNull($u . '.dateremoved');
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
-			$query->where(function($where) use ($u)
-			{
-				$where->whereNotNull($u . '.dateremoved')
-					->where($u . '.dateremoved', '!=', '0000-00-00 00:00:00');
-			});
+			$query->whereNotNull($u . '.dateremoved');
 		}
 
 		// Apply the range filter.
@@ -310,19 +302,19 @@ class UsersController extends Controller
 				$u->username = $username->username;
 				$u->email = $username->username . '@purdue.edu';
 				$u->created_at = $now->toDateTimeString();
-				if ($username->datecreated && $username->datecreated != '0000-00-00 00:00:00')
+				if ($username->datecreated)
 				{
 					$u->created_at = $username->datecreated;
 				}
-				elseif ($username->datelastseen && $username->datelastseen != '0000-00-00 00:00:00')
+				elseif ($username->datelastseen)
 				{
 					$u->created_at = $username->datelastseen;
 				}
 
 				$u->email_verified_at = $u->created_at;
 				//$u->deleted_at = $username->dateremoved;
-				$u->block = ($username->dateremoved && $username->dateremoved != '0000-00-00 00:00:00') ? 1 : 0;
-				$u->last_visit = ($username->datelastseen && $username->datelastseen != '0000-00-00 00:00:00') ? $username->datelastseen : null;
+				$u->block = ($username->dateremoved) ? 1 : 0;
+				$u->last_visit = ($username->datelastseen) ? $username->datelastseen : null;
 			}
 			$u->name = $user->name;
 			$u->organization_id = $u->puid ? $u->puid : 0;

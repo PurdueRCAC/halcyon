@@ -170,11 +170,7 @@ class Group extends Model
 			->withTrashed()
 			->select($m . '.*')
 			->join($u, $u . '.userid', $m . '.userid')
-			->where(function($where) use ($u)
-			{
-				$where->whereNull($u . '.dateremoved')
-					->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($u . '.dateremoved')
 			->whereNull($m . '.dateremoved')
 			->where($m . '.membertype', '=', 2)
 			->orderBy($m . '.datecreated', 'desc')
@@ -587,7 +583,7 @@ class Group extends Model
 					continue;
 				}
 
-				if ($me->user && !$me->user->isTrashed())
+				if ($me->user && !$me->user->trashed())
 				{
 					// If the user is already a group manager, then they're approved
 					if (in_array($me->userid, $managers))

@@ -28,7 +28,7 @@ class UserResource extends JsonResource
 
 		$data['datecreated'] = $this->datecreated;
 		$data['datelastseen'] = $this->getUserUsername()->hasVisited() ? $this->datelastseen : null;
-		$data['dateremoved'] = $this->getUserUsername()->isTrashed() ? $this->dateremoved : null;
+		$data['dateremoved'] = $this->getUserUsername()->trashed() ? $this->dateremoved : null;
 		$data['unixid'] = $this->unixid;
 		$data['username'] = $this->username;
 

@@ -56,7 +56,7 @@ app('pathway')
 		</div>
 
 		<div class="form-group">
-			<select name="membertype" class="form-control"<?php if ($row->user && $row->user->isTrashed()) { echo ' disabled'; } ?>>
+			<select name="membertype" class="form-control"<?php if ($row->user && $row->user->trashed()) { echo ' disabled'; } ?>>
 				<option valie="1"<?php if ($row->membertype != 2) { echo ' selected="selected"'; } ?>>{{ trans('courses::courses.student') }}</option>
 				<option valie="2"<?php if ($row->membertype == 2) { echo ' selected="selected"'; } ?>>{{ trans('courses::courses.instructor') }}</option>
 			</select>

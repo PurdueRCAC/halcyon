@@ -30,7 +30,7 @@ class UnixGroupResource extends JsonResource
 				$ma['username'] = ($m->user ? $m->user->username : trans('global.unknown'));
 				$ma['name'] = ($m->user ? $m->user->name : trans('global.unknown'));
 
-				if (!$m->trashed() && ($m->user && $m->user->isTrashed()))
+				if (!$m->trashed() && ($m->user && $m->user->trashed()))
 				{
 					$ma['datetimeremoved'] = $m->user->dateremoved;
 				}

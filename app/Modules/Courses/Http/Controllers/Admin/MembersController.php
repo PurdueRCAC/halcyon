@@ -86,11 +86,7 @@ class MembersController extends Controller
 			$now = Carbon::now();
 
 			$query->withTrashed()
-				->where(function($where) use ($u)
-				{
-					$where->whereNull($u . '.dateremoved')
-						->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-				})
+				->whereNull($u . '.dateremoved')
 				->whereNull($m . '.datetimeremoved')
 				->where($m . '.datetimestop', '>', $now->toDateTimeString());
 		}

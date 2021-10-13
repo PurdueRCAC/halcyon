@@ -122,7 +122,7 @@ app('pathway')
 								</thead>
 								<tbody>
 									@foreach ($user->usernames()->withTrashed()->orderBy('id', 'asc')->get() as $username)
-									<tr<?php if ($username->isTrashed()) { echo ' class="trashed"'; } ?>>
+									<tr<?php if ($username->trashed()) { echo ' class="trashed"'; } ?>>
 										<td>
 											{{ $username->id }}
 										</td>
@@ -143,7 +143,7 @@ app('pathway')
 											@endif
 										</td>
 										<td>
-											@if ($username->isTrashed())
+											@if ($username->trashed())
 												<time datetime="{{ $username->dateremoved->format('Y-m-d\TH:i:s\Z') }}">
 													@if ($username->dateremoved->toDateTimeString() > Carbon\Carbon::now()->toDateTimeString())
 														{{ $username->dateremoved->diffForHumans() }}

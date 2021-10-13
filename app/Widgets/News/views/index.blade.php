@@ -18,7 +18,7 @@
 			<?php foreach ($articles as $article): ?>
 				<li>
 					<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
-					<p class="date">{{ $article->formatDate($article->datetimenews->toDateTimeString(), $article->hasEnd() ? $article->datetimenewsend->toDateTimeString() : '0000-00-00 00:00:00') }}</p>
+					<p class="date">{{ $article->formatDate($article->datetimenews->toDateTimeString(), $article->hasEnd() ? $article->datetimenewsend->toDateTimeString() : null) }}</p>
 					@if ($article->location)
 						<p class="date">{{ $article->location }}</p>
 					@endif

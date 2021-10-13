@@ -55,19 +55,11 @@ class UserList extends Widget
 
 		if ($state == 'enabled')
 		{
-			$query->where(function($where) use ($u)
-			{
-				$where->whereNull($u . '.dateremoved')
-					->orWhere($u . '.dateremoved', '=', '0000-00-00 00:00:00');
-			});
+			$query->whereNull($u . '.dateremoved');
 		}
 		elseif ($state == 'disabled')
 		{
-			$query->where(function($where) use ($u)
-			{
-				$where->whereNotNull($u . '.dateremoved')
-					->where($u . '.dateremoved', '!', '0000-00-00 00:00:00');
-			});
+			$query->whereNotNull($u . '.dateremoved');
 		}
 
 		// Apply the range filter.

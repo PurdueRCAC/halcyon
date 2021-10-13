@@ -55,18 +55,13 @@ class EmailExpiredCommand extends Command
 			->join($s, $s . '.id', $q . '.subresourceid')
 			->whereNull($q . '.datetimeremoved')
 			->whereNull($qu . '.datetimeremoved')
-			->where(function($where) use ($uu)
-			{
-				$where->whereNull($uu . '.dateremoved')
-					->orWhere($uu . '.dateremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($uu . '.dateremoved')
 			->whereNull($s . '.datetimeremoved')
 			->where(function($where) use ($uu)
 			{
 				$now = Carbon::now()->modify('-1 day');
 
 				$where->whereNotNull($uu . '.datelastseen')
-					->where($uu . '.datelastseen', '!=', '0000-00-00 00:00:00')
 					->where($uu . '.datelastseen', '<', $now->toDateTimeString());
 			})
 			->groupBy($qu . '.id')
@@ -172,7 +167,7 @@ class EmailExpiredCommand extends Command
 			{
 				$user = $manager->user;
 
-				if (!$user || !$user->id || $user->isTrashed())
+				if (!$user || !$user->id || $user->trashed())
 				{
 					continue;
 				}

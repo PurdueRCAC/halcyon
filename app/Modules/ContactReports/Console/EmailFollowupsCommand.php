@@ -115,7 +115,7 @@ class EmailFollowupsCommand extends Command
 				// Did we find an active account?
 				$user = $u->user;
 
-				if (!$user || !$user->id || $user->isTrashed())
+				if (!$user || !$user->id || $user->trashed())
 				{
 					continue;
 				}
