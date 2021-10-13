@@ -136,7 +136,7 @@ class AdminMiddleware
 						{
 							if (config('module.users.restore_on_login', 0))
 							{
-								$user->getUserUsername()->forceRestore();
+								$user->getUserUsername()->restore();
 							}
 							else
 							{
