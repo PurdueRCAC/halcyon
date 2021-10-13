@@ -53,26 +53,14 @@ class EmailExpiredCommand extends Command
 			->join($uu, $uu . '.userid', $qu . '.userid')
 			->join($q, $q . '.id', $qu . '.queueid')
 			->join($s, $s . '.id', $q . '.subresourceid')
-			->where(function($where) use ($q)
-			{
-				$where->whereNull($q . '.datetimeremoved')
-					->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
-			->where(function($where) use ($qu)
-			{
-				$where->whereNull($qu . '.datetimeremoved')
-					->orWhere($qu . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($q . '.datetimeremoved')
+			->whereNull($qu . '.datetimeremoved')
 			->where(function($where) use ($uu)
 			{
 				$where->whereNull($uu . '.dateremoved')
 					->orWhere($uu . '.dateremoved', '=', '0000-00-00 00:00:00');
 			})
-			->where(function($where) use ($s)
-			{
-				$where->whereNull($s . '.datetimeremoved')
-					->orWhere($s . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($s . '.datetimeremoved')
 			->where(function($where) use ($uu)
 			{
 				$now = Carbon::now()->modify('-1 day');

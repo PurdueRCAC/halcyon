@@ -88,7 +88,7 @@ class Size extends Model
 	 */
 	public function hasStart()
 	{
-		return ($this->datetimestart && $this->datetimestart != '0000-00-00 00:00:00' && $this->datetimestart != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimestart);
 	}
 
 	/**
@@ -156,7 +156,7 @@ class Size extends Model
 	 */
 	public function hasEnd()
 	{
-		return ($this->datetimestop && $this->datetimestop != '0000-00-00 00:00:00' && $this->datetimestop != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimestop);
 	}
 
 	/**

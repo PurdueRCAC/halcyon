@@ -467,20 +467,11 @@ class ResourcesController extends Controller
 
 		foreach ($subresources as $sub)
 		{
-			$queues = $sub->queues()
-				->withTrashed()
-				->where(function($where)
-				{
-					$where->whereNull('datetimeremoved')
-						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
-				->get();
+			$queues = $sub->queues;
 
 			foreach ($queues as $queue)
 			{
 				$userids += $queue->users()
-					->withTrashed()
-					->whereIsActive()
 					->get()
 					->pluck('userid')
 					->toArray();

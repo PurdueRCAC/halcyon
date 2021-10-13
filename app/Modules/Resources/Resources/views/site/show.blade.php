@@ -152,11 +152,7 @@ $content = '';
 							->select(Illuminate\Support\Facades\DB::raw('DISTINCT(' . $g . '.id)'))
 							->join($q, $q . '.groupid', $g . '.id')
 							->join($c, $c . '.subresourceid', $q . '.subresourceid')
-							->where(function($where) use ($q)
-							{
-								$where->whereNull($q . '.datetimeremoved')
-									->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-							})
+							->whereNull($q . '.datetimeremoved')
 							->where($c . '.resourceid', '=', $resource->id)
 							->count();
 

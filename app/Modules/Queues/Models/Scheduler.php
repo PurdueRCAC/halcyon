@@ -10,7 +10,6 @@ use App\Modules\Resources\Models\Batchsystem;
 use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Models\Child;
-use App\Modules\Core\Traits\LegacyTrash;
 use Carbon\Carbon;
 
 /**
@@ -18,7 +17,7 @@ use Carbon\Carbon;
  */
 class Scheduler extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
+	use ErrorBag, Validatable, Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -102,7 +101,7 @@ class Scheduler extends Model
 	 */
 	public function hasDraindownTime()
 	{
-		return ($this->datetimedraindown && $this->datetimedraindown != '0000-00-00 00:00:00' && $this->datetimedraindown != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimedraindown);
 	}
 
 	/**
@@ -112,7 +111,7 @@ class Scheduler extends Model
 	 */
 	public function hasLastImportStartTime()
 	{
-		return ($this->datetimelastimportstart && $this->datetimelastimportstart != '0000-00-00 00:00:00' && $this->datetimelastimportstart != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimelastimportstart);
 	}
 
 	/**
@@ -122,7 +121,7 @@ class Scheduler extends Model
 	 */
 	public function hasLastImportStopTime()
 	{
-		return ($this->datetimelastimportstop && $this->datetimelastimportstop != '0000-00-00 00:00:00' && $this->datetimelastimportstop != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimelastimportstop);
 	}
 
 	/**

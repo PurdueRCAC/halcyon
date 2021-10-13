@@ -97,8 +97,6 @@ class Queues
 
 		//if ($assoc = $subresource->association)
 		$scheduler = Scheduler::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('queuesubresourceid', '=', $subresource->id)
 			->first();
 

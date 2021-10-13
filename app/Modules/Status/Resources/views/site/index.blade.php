@@ -417,7 +417,7 @@ app('pathway')->append(
 						{
 							$where->where(function($wher) use ($start)
 							{
-								$wher->where('datetimenewsend', '=', '0000-00-00 00:00:00')
+								$wher->whereNotNull('datetimenewsend')
 									->where('datetimenews', '<', $start);
 							})
 							->orWhere('datetimenewsend', '<', $start);

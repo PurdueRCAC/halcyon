@@ -285,13 +285,11 @@ class Group extends Model
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimecreated')
-					->orWhere('datetimecreated', '=', '0000-00-00 00:00:00')
 					->orWhere('datetimecreated', '<', $now->toDateTimeString());
 			})
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00')
 					->orWhere('datetimeremoved', '>', $now->toDateTimeString());
 			})
 			->get();
@@ -310,13 +308,11 @@ class Group extends Model
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimestop')
-					->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
 					->orWhere('datetimestop', '>', $now->toDateTimeString());
 			})
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimestart')
-					->orWhere('datetimestart', '=', '0000-00-00 00:00:00')
 					->orWhere('datetimestart', '<', $now->toDateTimeString());
 			})
 			->groupBy('resourceid')
@@ -341,13 +337,11 @@ class Group extends Model
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimestop')
-					->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
 					->orWhere('datetimestop', '>', $now->toDateTimeString());
 			})
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimestart')
-					->orWhere('datetimestart', '=', '0000-00-00 00:00:00')
 					->orWhere('datetimestart', '<', $now->toDateTimeString());
 			})
 			->groupBy('resourceid')
@@ -391,11 +385,7 @@ class Group extends Model
 				->select(DB::raw('SUM(bytes)'))
 				->where('groupid', '=', $this->id)
 				->where('resourceid', '=', $bucket['resourceid'])
-				->where(function($where)
-				{
-					$where->whereNull('datetimeremoved')
-						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
+				->whereNull('datetimeremoved')
 				->get()
 				->first();
 
@@ -553,11 +543,7 @@ class Group extends Model
 			->select($q . '.*')
 			->join($s, $s . '.subresourceid', $q . '.subresourceid')
 			->join($r, $r . '.id', $s . '.resourceid')
-			->where(function($wher) use ($q)
-			{
-				$wher->whereNull($q . '.datetimeremoved')
-					->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($q . '.datetimeremoved')
 			->whereNull($r . '.datetimeremoved')
 			->get();
 
@@ -571,8 +557,6 @@ class Group extends Model
 			$active = array();
 
 			$queueids = $queue->users()
-				->withTrashed()
-				->whereIsActive()
 				->orderBy('membertype', 'asc')
 				->get();
 
@@ -593,8 +577,6 @@ class Group extends Model
 			}
 
 			$users = $queue->users()
-				->withTrashed()
-				->whereIsActive()
 				->whereIsPending()
 				->get();
 

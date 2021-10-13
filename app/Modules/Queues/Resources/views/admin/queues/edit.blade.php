@@ -56,7 +56,7 @@ app('pathway')
 		<div id="queue-details">
 	@endif
 
-	@if ($row->isTrashed())
+	@if ($row->trashed())
 		<div class="alert alert-warning">This entry is marked as trashed.</div>
 	@endif
 

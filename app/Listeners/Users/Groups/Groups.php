@@ -192,26 +192,24 @@ class Groups
 			}
 		}*/
 		$queueusers = $user->queues()
-			->withTrashed()
-			->whereIsActive()
 			->whereIn('membertype', [1, 4])
 			->get();
 
 		foreach ($queueusers as $qu)
 		{
-			if ($qu->isMember() && $qu->isTrashed())
+			if ($qu->isMember() && $qu->trashed())
 			{
 				continue;
 			}
 
 			$queue = $qu->queue;
 
-			if (!$queue || $queue->isTrashed())
+			if (!$queue || $queue->trashed())
 			{
 				continue;
 			}
 
-			if (!$queue->scheduler || $queue->scheduler->isTrashed())
+			if (!$queue->scheduler || $queue->scheduler->trashed())
 			{
 				continue;
 			}
@@ -279,8 +277,6 @@ class Groups
 				{
 					$found = false;
 					$queues = $group->queues()
-						->withTrashed()
-						->whereIsActive()
 						->get();
 
 					foreach ($queues as $queue)
@@ -364,19 +360,19 @@ class Groups
 
 				foreach ($queueusers as $qu)
 				{
-					if ($qu->isMember() && $qu->isTrashed())
+					if ($qu->isMember() && $qu->trashed())
 					{
 						continue;
 					}
 
 					$queue = $qu->queue;
 
-					if (!$queue || $queue->isTrashed())
+					if (!$queue || $queue->trashed())
 					{
 						continue;
 					}
 
-					if (!$queue->scheduler || $queue->scheduler->isTrashed())
+					if (!$queue->scheduler || $queue->scheduler->trashed())
 					{
 						continue;
 					}

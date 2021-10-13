@@ -119,7 +119,7 @@ app('pathway')
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr{!! ($row->isTrashed() ? ' class="trashed"' : '') !!}>
+			<tr{!! ($row->trashed() ? ' class="trashed"' : '') !!}>
 				@if (auth()->user()->can('delete queues.schedulers'))
 					<td>
 						{!! Html::grid('id', $i, $row->id) !!}
@@ -129,7 +129,7 @@ app('pathway')
 					{{ $row->id }}
 				</td>
 				<td>
-					@if ($row->isTrashed())
+					@if ($row->trashed())
 						<span class="glyph icon-trash text-danger">Trashed</span>
 					@endif
 					@if (auth()->user()->can('edit queues.schedulers'))

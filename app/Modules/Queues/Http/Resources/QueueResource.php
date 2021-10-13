@@ -25,17 +25,9 @@ class QueueResource extends JsonResource
 		$now = Carbon::now();
 
 		$data['resource'] = $this->resource()->get()->first();
-		if (!$this->subresource->trashed())
-		{
-			$data['resource']['datetimeremoved'] = null;
-		}
 		$data['resource']['api'] = route('api.resources.read', ['id' => $data['resource']['id']]);
 
 		$data['subresource'] = $this->subresource;
-		if (!$this->subresource->trashed())
-		{
-			$data['subresource']['datetimeremoved'] = null;
-		}
 		$data['subresource']['api'] = route('api.resources.subresources.read', ['id' => $data['subresource']['id']]);
 
 		$data['schedulerpolicy'] = $this->schedulerPolicy;
@@ -44,22 +36,6 @@ class QueueResource extends JsonResource
 		$data['scheduler'] = $this->scheduler;
 		if ($this->scheduler)
 		{
-			if (!$this->scheduler->hasDraindownTime())
-			{
-				$data['scheduler']['datetimedraindown'] = null;
-			}
-			if (!$this->scheduler->isTrashed())
-			{
-				$data['scheduler']['datetimeremoved'] = null;
-			}
-			if (!$this->scheduler->hasLastImportStartTime())
-			{
-				$data['scheduler']['datetimelastimportstart'] = null;
-			}
-			if (!$this->scheduler->hasLastImportStopTime())
-			{
-				$data['scheduler']['datetimelastimportstop'] = null;
-			}
 			$data['scheduler']['api'] = route('api.queues.schedulers.read', ['id' => $data['scheduler']['id']]);
 		}
 
@@ -67,16 +43,11 @@ class QueueResource extends JsonResource
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimestop')
-					->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
 					->orWhere('datetimestop', '>', $now->toDateTimeString());
 			})
 			->get()
 			->each(function($item, $key)
 			{
-				if (!$item->hasEnd())
-				{
-					$item->datetimestop = null;
-				}
 				$item->api = route('api.queues.sizes.read', ['id' => $item->id]);
 			});
 
@@ -84,16 +55,11 @@ class QueueResource extends JsonResource
 			->where(function($where) use ($now)
 			{
 				$where->whereNotNull('datetimestop')
-					->where('datetimestop', '!=', '0000-00-00 00:00:00')
 					->where('datetimestop', '<=', $now->toDateTimeString());
 			})
 			->get()
 			->each(function($item, $key)
 			{
-				if (!$item->hasEnd())
-				{
-					$item->datetimestop = null;
-				}
 				$item->api = route('api.queues.sizes.read', ['id' => $item->id]);
 			});
 
@@ -101,16 +67,11 @@ class QueueResource extends JsonResource
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimestop')
-					->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
 					->orWhere('datetimestop', '>', $now->toDateTimeString());
 			})
 			->get()
 			->each(function($item, $key)
 			{
-				if (!$item->hasEnd())
-				{
-					$item->datetimestop = null;
-				}
 				$item->api = route('api.queues.loans.read', ['id' => $item->id]);
 			});
 
@@ -118,40 +79,24 @@ class QueueResource extends JsonResource
 			->where(function($where) use ($now)
 			{
 				$where->whereNotNull('datetimestop')
-					->where('datetimestop', '!=', '0000-00-00 00:00:00')
 					->where('datetimestop', '<=', $now->toDateTimeString());
 			})
 			->get()
 			->each(function($item, $key)
 			{
-				if (!$item->hasEnd())
-				{
-					$item->datetimestop = null;
-				}
 				$item->api = route('api.queues.loans.read', ['id' => $item->id]);
 			});
 
 		$data['users'] = $this->users()
-			->withTrashed()
-			->whereIsActive()
 			->orderBy('id', 'asc')
 			->get()
 			->each(function($item, $key)
 			{
-				if (!$item->isTrashed())
-				{
-					$item->datetimeremoved = null;
-				}
-				if (!$item->wasLastseen())
-				{
-					$item->datetimelastseen = null;
-				}
 				$item->api = route('api.queues.users.read', ['id' => $item->id]);
 			});
 
 		$data['priorusers'] = $this->users()
 			->onlyTrashed()
-			->where('datetimeremoved', '!=', '0000-00-00 00:00:00')
 			->orderBy('id', 'asc')
 			->get()
 			->each(function($item, $key)
@@ -162,10 +107,6 @@ class QueueResource extends JsonResource
 		$data['walltimes'] = $this->walltimes
 			->each(function($item, $key)
 			{
-				if (!$item->hasEnd())
-				{
-					$item->datetimestop = null;
-				}
 				$item->api = route('api.queues.walltimes.read', ['id' => $item->id]);
 			});
 
@@ -176,15 +117,6 @@ class QueueResource extends JsonResource
 		$data['loanedcores'] = $this->loanedcores;
 		$data['loanednodes'] = $this->loanednodes;
 		$data['active']      = $this->active;
-
-		if (!$this->isTrashed())
-		{
-			$data['datetimeremoved'] = null;
-		}
-		if (!$this->hasLastSeenTime())
-		{
-			$data['datetimelastseen'] = null;
-		}
 
 		$data['api'] = route('api.queues.read', ['id' => $this->id]);
 

@@ -72,7 +72,7 @@ class Quotas
 				->where($u . '.userid', '=', $user->id)
 				->whereNull($d . '.datetimeremoved')
 				->whereNull($r . '.datetimeremoved')
-				->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->whereNull($u . '.datetimeremoved')
 				->where(function($where) use ($d, $r)
 				{
 					$where->where($d . '.bytes', '<>', 0)
@@ -88,7 +88,7 @@ class Quotas
 				->join($g, $g . '.groupid', $d . '.groupid')
 				->where($g . '.userid', '=', $user->id)
 				->whereNull($d . '.datetimeremoved')
-				->where($r . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->whereNull($r . '.datetimeremoved')
 				->where(function($where) use ($d, $r)
 				{
 					$where->where($d . '.bytes', '<>', 0)
@@ -120,7 +120,7 @@ class Quotas
 				->where($u . '.userid', '=', $user->id)
 				->whereNull($d . '.datetimeremoved')
 				->whereNull($r . '.datetimeremoved')
-				->where($u . '.datetimeremoved', '=', '0000-00-00 00:00:00')
+				->whereNull($u . '.datetimeremoved')
 				->where($d . '.bytes', '<>', 0)
 				->get();
 

@@ -143,8 +143,6 @@ class Subresource extends Model
 		$name = $this->name;
 
 		$queues = Queue::query()
-			->withTrashed()
-			->whereIsActive()
 			->where('subresourceid', '=', $this->id)
 			->orWhereIn('subresourceid', function($in) use ($tbl, $name)
 			{
@@ -182,10 +180,7 @@ class Subresource extends Model
 	 */
 	public function startQueues()
 	{
-		$queues = $this->queues()
-			->withTrashed()
-			->whereIsActive()
-			->get();
+		$queues = $this->queues;
 
 		foreach ($queues as $queue)
 		{
@@ -221,9 +216,7 @@ class Subresource extends Model
 
 		$now = Carbon::now();
 
-		$query = $this->queues()
-			->withTrashed()
-			->whereIsActive();
+		$query = $this->queues;
 
 		if (!$this->nodecores)
 		{
@@ -231,13 +224,13 @@ class Subresource extends Model
 		}
 
 		/*
-		$sql = "SELECT if (SUM(queueloans.corecount) IS NULL, 0, SUM(queueloans.corecount)) AS loanedcores
+		"SELECT if (SUM(queueloans.corecount) IS NULL, 0, SUM(queueloans.corecount)) AS loanedcores
 		FROM queues, queueloans, subresources
 		WHERE queues.subresourceid = subresources.id
 		AND queueloans.queueid = queues.id
-		AND (queueloans.datetimestop = '0000-00-00 00:00:00' OR queueloans.datetimestop > NOW())
-		AND (queueloans.datetimestart = '0000-00-00 00:00:00' OR queueloans.datetimestart <= NOW())
-		AND queues.datetimeremoved = '0000-00-00 00:00:00' AND queues.subresourceid = '" . $this->db->escape_string($id) . "'
+		AND (queueloans.datetimestop IS NULL OR queueloans.datetimestop > NOW())
+		AND (queueloans.datetimestart IS NULL OR queueloans.datetimestart <= NOW())
+		AND queues.datetimeremoved IS NULL AND queues.subresourceid = '" . $id . "'
 		AND (subresources.nodecores <> 0 OR queues.cluster LIKE 'standby%')
 		AND queues.groupid > '0'";
 		*/
@@ -250,13 +243,11 @@ class Subresource extends Model
 				->where(function($where) use ($now)
 				{
 					$where->whereNull('datetimestop')
-						->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
 						->orWhere('datetimestop', '>', $now->toDateTimeString());
 				})
 				->where(function($where) use ($now)
 				{
 					$where->whereNull('datetimestart')
-						->orWhere('datetimestart', '=', '0000-00-00 00:00:00')
 						->orWhere('datetimestop', '<=', $now->toDateTimeString());
 				})
 				->get();
@@ -279,13 +270,11 @@ class Subresource extends Model
 					->where(function($where) use ($now)
 					{
 						$where->whereNull('datetimestop')
-							->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
 							->orWhere('datetimestop', '>', $now->toDateTimeString());
 					})
 					->where(function($where) use ($now)
 					{
 						$where->whereNull('datetimestart')
-							->orWhere('datetimestart', '=', '0000-00-00 00:00:00')
 							->orWhere('datetimestart', '<=', $now->toDateTimeString());
 					})
 					//->where('groupid', '>', 0)
@@ -353,7 +342,7 @@ class Subresource extends Model
 	{
 		$queuestatus = 1;
 
-		foreach ($this->queues()->withTrashed()->whereIsActive()->get() as $queue)
+		foreach ($this->queues as $queue)
 		{
 			if ($queue->started)
 			{

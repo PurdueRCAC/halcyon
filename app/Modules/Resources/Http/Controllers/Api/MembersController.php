@@ -347,8 +347,6 @@ class MembersController extends Controller
 			{
 				$queues += $sub->queues()
 					->whereIn('groupid', $owned)
-					->withTrashed()
-					->whereIsActive()
 					->pluck('queuid')
 					->toArray();
 			}
@@ -381,8 +379,6 @@ class MembersController extends Controller
 			{
 				$queues = $sub->queues()
 					//->whereIn('groupid', $owned)
-					->withTrashed()
-					->whereIsActive()
 					->get();
 					//->pluck('queuid')
 					//->toArray();
@@ -390,8 +386,6 @@ class MembersController extends Controller
 				foreach ($queues as $queue)
 				{
 					$rows += $queue->users()
-						->withTrashed()
-						->whereIsActive()
 						->whereIsMember()
 						->where('userid', '=', $user->id)
 						->count();

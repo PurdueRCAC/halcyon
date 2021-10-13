@@ -86,8 +86,6 @@ class FixStatusCommand extends Command
 				->join($s, $s . '.id', $q . '.subresourceid')
 				->join($c, $c . '.subresourceid', $s . '.id')
 				->join($a, $a . '.id', $c . '.resourceid')
-				->withTrashed()
-				->whereIsActive()
 				->whereNull($s . '.datetimeremoved')
 				->whereNull($a . '.datetimeremoved')
 				->where($a . '.id', '=', $asset->id)

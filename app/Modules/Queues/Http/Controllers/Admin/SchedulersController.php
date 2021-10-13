@@ -78,7 +78,6 @@ class SchedulersController extends Controller
 		if ($filters['state'] == 'trashed')
 		{
 			$query->onlyTrashed();
-			$query->where('datetimeremoved', '!=', '0000-00-00 00:00:00');
 		}
 		elseif ($filters['state'] == '*')
 		{

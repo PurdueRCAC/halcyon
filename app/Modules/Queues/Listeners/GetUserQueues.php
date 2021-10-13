@@ -42,7 +42,6 @@ class GetUserQueues
 			->withTrashed()
 			->where('userid', '=', $user->id)
 			//->whereIsMember()
-			//->whereIsActive()
 			->orderBy('datetimecreated', 'asc')
 			->get();
 
@@ -70,9 +69,9 @@ class GetUserQueues
 					$membership->datetimecreated = $groupqueueuser->datetimecreated;
 					$membership->datetimeremoved = $groupqueueuser->datetimeremoved;
 
-					if (!$membership->isTrashed()
-					&& !$queue->isTrashed()
-					&& !$scheduler->isTrashed())
+					if (!$membership->trashed()
+					&& !$queue->trashed()
+					&& !$scheduler->trashed())
 					{
 						if ($membership->isMember() || $membership->isManager())
 						{
@@ -85,13 +84,13 @@ class GetUserQueues
 					}
 					else
 					{
-						if (!$membership->isTrashed())
+						if (!$membership->trashed())
 						{
-							if ($queue->isTrashed())
+							if ($queue->trashed())
 							{
 								$membership->datetimeremoved = $queue->datetimeremoved;
 							}
-							elseif ($scheduler->isTrashed())
+							elseif ($scheduler->trashed())
 							{
 								$membership->datetimeremoved = $scheduler->datetimeremoved;
 							}
@@ -111,9 +110,9 @@ class GetUserQueues
 				continue;
 			}
 
-			if (!$membership->isTrashed()
-			 && !$queue->isTrashed()
-			 && !$scheduler->isTrashed())
+			if (!$membership->trashed()
+			 && !$queue->trashed()
+			 && !$scheduler->trashed())
 			{
 				if ($membership->isMember() || $membership->isManager())
 				{
@@ -126,13 +125,13 @@ class GetUserQueues
 			}
 			else
 			{
-				if (!$membership->isTrashed())
+				if (!$membership->trashed())
 				{
-					if ($queue->isTrashed())
+					if ($queue->trashed())
 					{
 						$membership->datetimeremoved = $queue->datetimeremoved;
 					}
-					elseif ($scheduler->isTrashed())
+					elseif ($scheduler->trashed())
 					{
 						$membership->datetimeremoved = $scheduler->datetimeremoved;
 					}
@@ -163,10 +162,8 @@ class GetUserQueues
 
 		// Viewers
 		/*$memberships = QueueUser::query()
-			->withTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsViewer()
-			->whereIsActive()
 			->orderBy('datetimecreated', 'asc')
 			->get();
 
@@ -178,10 +175,9 @@ class GetUserQueues
 		$user->viewerofgroups = $memberships;
 
 		$memberships = QueueUser::query()
-			->withTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsViewer()
-			->whereIsTrashed()
+			->onlyTrashed()
 			->orderBy('datetimecreated', 'asc')
 			->get();
 
@@ -204,9 +200,7 @@ class GetUserQueues
 	public function handleUserDeleted(UserDeleted $event)
 	{
 		$memberships = QueueUser::query()
-			->withTrashed()
 			->where('userid', '=', $event->user->id)
-			->whereIsActive()
 			->get();
 
 		foreach ($memberships as $membership)

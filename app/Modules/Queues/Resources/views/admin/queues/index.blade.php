@@ -172,7 +172,7 @@ app('pathway')
 			</thead>
 			<tbody>
 				@foreach ($rows as $i => $row)
-					<tr<?php if ($row->isTrashed()) { echo ' class="trashed"'; } ?>>
+					<tr<?php if ($row->trashed()) { echo ' class="trashed"'; } ?>>
 						<td>
 							@if (auth()->user()->can('edit.state queues') || auth()->user()->can('delete queues'))
 								{!! Html::grid('id', $i, $row->id) !!}
@@ -191,7 +191,7 @@ app('pathway')
 							@endif
 						</td>
 						<td class="priority-4">
-							@if ($row->isTrashed())
+							@if ($row->trashed())
 								@if (auth()->user()->can('edit queues'))
 									<a class="badge badge-danger" href="{{ route('admin.queues.restore', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.set state to', ['state' => trans('global.enabled')]) }}">
 										{{ trans('global.trashed') }}
@@ -224,7 +224,7 @@ app('pathway')
 							@endif
 						</td>
 						<td class="text-center">
-							@if ($row->isTrashed())
+							@if ($row->trashed())
 								@if (auth()->user()->can('edit queues'))
 									<a class="glyph icon-trash text-danger" href="{{ route('admin.queues.restore', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.set state to', ['state' => trans('global.enabled')]) }}">
 										{{ trans('global.trashed') }}

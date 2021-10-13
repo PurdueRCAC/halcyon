@@ -493,8 +493,6 @@ class AmieLdap
 
 					// Queues
 					$queue = $group->queues()
-						->withTrashed()
-						->whereIsActive()
 						->where('name', '=', $pid)
 						->first();
 
@@ -538,8 +536,6 @@ class AmieLdap
 					}
 
 					$queuemembers = $queue->users()
-						->withTrashed()
-						->whereIsActive()
 						->count();
 
 					if (!$queuemembers)
@@ -571,8 +567,6 @@ class AmieLdap
 						//$stop = $stop ?: null;
 
 						$lenderqueue = $subresource->queues()
-							->withTrashed()
-							->whereIsActive()
 							->where('groupid', '=', '-1')
 							->where('cluster', '=', '')
 							->orderBy('id', 'asc')
@@ -672,32 +666,11 @@ class AmieLdap
 					// Output
 					$q = $queue->toArray();
 					$q['members'] = $queue->users()
-						->withTrashed()
-						->whereIsActive()
 						->get()
 						->toArray();
-					if (isset($q['datetimeremoved'])
-					 && ($q['datetimeremoved'] == '0000-00-00 00:00:00' || $q['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z'))
-					{
-						$q['datetimeremoved'] = null;
-					}
-					if (isset($q['datetimelastseen'])
-					 && ($q['datetimelastseen'] == '0000-00-00 00:00:00' || $q['datetimelastseen'] == '-000001-11-30T06:00:00.000000Z'))
-					{
-						$q['datetimelastseen'] = null;
-					}
+
 					foreach ($q['members'] as $k => $member)
 					{
-						if (isset($member['datetimeremoved'])
-						 && ($member['datetimeremoved'] == '0000-00-00 00:00:00' || $member['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z'))
-						{
-							$member['datetimeremoved'] = null;
-						}
-						if (isset($member['datetimelastseen'])
-						 && ($member['datetimelastseen'] == '0000-00-00 00:00:00' || $member['datetimelastseen'] == '-000001-11-30T06:00:00.000000Z'))
-						{
-							$member['datetimelastseen'] = null;
-						}
 						$member['api'] = route('api.queues.users.read', ['id' => $member['id']]);
 						$q['members'][$k] = $member;
 					}
@@ -708,16 +681,6 @@ class AmieLdap
 					$g['members'] = $group->members->toArray();
 					foreach ($g['members'] as $k => $member)
 					{
-						if (isset($member['dateremoved'])
-						 && ($member['dateremoved'] == '0000-00-00 00:00:00' || $member['dateremoved'] == '-000001-11-30T06:00:00.000000Z'))
-						{
-							$member['dateremoved'] = null;
-						}
-						if (isset($member['datelastseen'])
-						 && ($member['datelastseen'] == '0000-00-00 00:00:00' || $member['datelastseen'] == '-000001-11-30T06:00:00.000000Z'))
-						{
-							$member['datelastseen'] = null;
-						}
 						$member['api'] = route('api.groups.members.read', ['id' => $member['id']]);
 						$g['members'][$k] = $member;
 					}
@@ -728,33 +691,14 @@ class AmieLdap
 					$u['members'] = $unixgroup->members->toArray();
 					foreach ($u['members'] as $k => $member)
 					{
-						if (isset($member['datetimeremoved'])
-						 && ($member['datetimeremoved'] == '0000-00-00 00:00:00' || $member['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z'))
-						{
-							$member['datetimeremoved'] = null;
-						}
 						$member['api'] = route('api.unixgroups.members.read', ['id' => $member['id']]);
 						$u['members'][$k] = $member;
 					}
-					if (isset($u['datetimeremoved'])
-					 && ($u['datetimeremoved'] == '0000-00-00 00:00:00' || $u['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z'))
-					{
-						$u['datetimeremoved'] = null;
-					}
+
 					$u['api'] = route('api.unixgroups.read', ['id' => $u['id']]);
 					$response->unixgroup = $u;
 
 					$d = $dir->toArray();
-					if (isset($d['datetimeremoved'])
-					 && ($d['datetimeremoved'] == '0000-00-00 00:00:00' || $d['datetimeremoved'] == '-000001-11-30T06:00:00.000000Z'))
-					{
-						$d['datetimeremoved'] = null;
-					}
-					if (isset($d['datetimeconfigured'])
-					 && ($d['datetimeconfigured'] == '0000-00-00 00:00:00' || $d['datetimeconfigured'] == '-000001-11-30T06:00:00.000000Z'))
-					{
-						$d['datetimeconfigured'] = null;
-					}
 					$d['api'] = route('api.storage.directories.read', ['id' => $d['id']]);
 					$response->directory = $d;
 				}

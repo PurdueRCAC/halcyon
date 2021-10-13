@@ -167,14 +167,6 @@ class UsersController extends Controller
 
 		$rows->map(function($row, $key)
 		{
-			if (!$row->isTrashed())
-			{
-				$row->datetimeremoved = null;
-			}
-			if (!$row->wasLastseen())
-			{
-				$row->datetimelastseen = null;
-			}
 			$row->api = route('api.queues.users.read', ['id' => $row->id]);
 		});
 
@@ -275,9 +267,9 @@ class UsersController extends Controller
 		// Set notice state
 		if ($row)
 		{
-			if ($row->isTrashed())
+			if ($row->trashed())
 			{
-				$row->forceRestore(['datetimeremoved']);
+				$row->restore();
 			}
 			// Nothing to do, we are cancelling a removal
 			$row->notice = 0;
@@ -358,14 +350,6 @@ class UsersController extends Controller
 		}
 
 		$row->api = route('api.queues.users.read', ['id' => $row->id]);
-		if (!$row->isTrashed())
-		{
-			$row->datetimeremoved = null;
-		}
-		if (!$row->wasLastseen())
-		{
-			$row->datetimelastseen = null;
-		}
 
 		return new JsonResource($row);
 	}
@@ -400,14 +384,6 @@ class UsersController extends Controller
 	{
 		$row = QueueUser::findOrFail($id);
 		$row->api = route('api.queues.users.read', ['id' => $row->id]);
-		if (!$row->isTrashed())
-		{
-			$row->datetimeremoved = null;
-		}
-		if (!$row->wasLastseen())
-		{
-			$row->datetimelastseen = null;
-		}
 
 		return new JsonResource($row);
 	}
@@ -546,14 +522,6 @@ class UsersController extends Controller
 
 		$row->save();
 		$row->api = route('api.queues.users.read', ['id' => $row->id]);
-		if (!$row->isTrashed())
-		{
-			$row->datetimeremoved = null;
-		}
-		if (!$row->wasLastseen())
-		{
-			$row->datetimelastseen = null;
-		}
 
 		return new JsonResource($row);
 	}
@@ -608,11 +576,6 @@ class UsersController extends Controller
 			$gqusers = GroupUser::query()
 				->where('queueuserid', '=', $row->id)
 				->whereIsMember()
-				->where(function($where)
-				{
-					$where->whereNull('datetimeremoved')
-						->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
 				->get();
 
 			if (count($gqusers) && auth()->user()->id != $row->userid)
@@ -666,8 +629,6 @@ class UsersController extends Controller
 				{
 					$queues = $sub->queues()
 						//->whereIn('groupid', $owned)
-						->withTrashed()
-						->whereIsActive()
 						->get();
 						//->pluck('queuid')
 						//->toArray();
@@ -675,8 +636,6 @@ class UsersController extends Controller
 					foreach ($queues as $queue)
 					{
 						$rows += $queue->users()
-							->withTrashed()
-							->whereIsActive()
 							->whereIsMember()
 							->where('userid', '=', $row->userid)
 							->count();

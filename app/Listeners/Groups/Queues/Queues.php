@@ -40,21 +40,11 @@ class Queues
 		$c = (new Child)->getTable();
 
 		$queues = Queue::query()
-			->withTrashed()
-			->whereIsActive()
 			->join($s, $s . '.id', $q . '.subresourceid')
 			->join($c, $c . '.subresourceid', $q . '.subresourceid')
 			->join($r, $r . '.id', $c . '.resourceid')
-			->where(function($where) use ($q)
-			{
-				$where->whereNull($q . '.datetimeremoved')
-					->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
-			->where(function($where) use ($r)
-			{
-				$where->whereNull($r . '.datetimeremoved')
-					->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($q . '.datetimeremoved')
+			->whereNull($r . '.datetimeremoved')
 			->where('groupid', '=', $event->group->id)
 			->get();
 

@@ -53,16 +53,8 @@ class EmailFreeAuthorizedCommand extends Command
 			->join($q, $q . '.id', $qu . '.queueid')
 			->whereIn($qu . '.membertype', [1, 4])
 			->where($qu . '.notice', '=', 2)
-			->where(function($where) use ($qu)
-			{
-				$where->whereNull($qu . '.datetimeremoved')
-					->orWhere($qu . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
-			->where(function($where) use ($gu)
-			{
-				$where->whereNull($gu . '.datetimeremoved')
-					->orWhere($gu . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($qu . '.datetimeremoved')
+			->whereNull($gu . '.datetimeremoved')
 			->get();
 
 		if (!count($groupqueueusers))

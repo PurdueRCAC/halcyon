@@ -50,16 +50,8 @@ class Groups
 			->select($s . '.resourceid')
 			->join($s, $s . '.subresourceid', $q . '.subresourceid')
 			->join($r, $r . '.id', $s . '.resourceid')
-			->where(function($wher) use ($q)
-			{
-				$wher->whereNull($q . '.datetimeremoved')
-					->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
-			->where(function($wher) use ($r)
-			{
-				$wher->whereNull($r . '.datetimeremoved')
-					->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($q . '.datetimeremoved')
+			->whereNull($r . '.datetimeremoved')
 			->get();
 
 		foreach ($data as $row)

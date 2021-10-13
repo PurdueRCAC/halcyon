@@ -70,11 +70,7 @@ $queues = $group->queues()
 	->select($q . '.*')
 	->join($s, $s . '.subresourceid', $q . '.subresourceid')
 	->join($r, $r . '.id', $s . '.resourceid')
-	->where(function($wher) use ($q)
-	{
-		$wher->whereNull($q . '.datetimeremoved')
-			->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-	})
+	->whereNull($q . '.datetimeremoved')
 	->whereNull($r . '.datetimeremoved')
 	->get();
 
@@ -87,8 +83,6 @@ foreach ($queues as $queue)
 	$resources[$queue->resource->name][] = $queue;
 
 	$users = $queue->users()
-		->withTrashed()
-		->whereIsActive()
 		->orderBy('datetimecreated', 'desc')
 		->get();
 

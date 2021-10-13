@@ -148,13 +148,11 @@ class LoansController extends Controller
 
 		if ($filters['state'] == 'ended')
 		{
-			$query->whereNotNull('datetimestop')
-				->where('datetimestop', '!=', '0000-00-00 00:00:00');
+			$query->whereNotNull('datetimestop');
 		}
 		elseif ($filters['state'] == 'ongoing')
 		{
-			$query->where('datetimestop', '=', '0000-00-00 00:00:00')
-				->orWhereNull('datetimestop');
+			$query->whereNull('datetimestop');
 		}
 
 		if ($filters['queueid'] > 0)
@@ -354,11 +352,21 @@ class LoansController extends Controller
 		}
 
 		// Look for an existing entry in the same time frame and same queues to update instead
-		$exist = Loan::query()
+		$cquery = Loan::query()
 			->where('queueid', '=', (int)$row->queueid)
 			->where('lenderqueueid', '=', $row->lenderqueueid)
-			->where('datetimestart', '=', $row->datetimestart)
-			->where('datetimestop', '=', $row->datetimestop)
+			->where('datetimestart', '=', $row->datetimestart);
+
+		if ($row->hasEnd())
+		{
+			$cquery->where('datetimestop', '=', $row->datetimestop);
+		}
+		else
+		{
+			$cquery->whereNull('datetimestop');
+		}
+
+		$exist = $cquery
 			->orderBy('datetimestart', 'asc')
 			->get()
 			->first();
@@ -374,11 +382,21 @@ class LoansController extends Controller
 			}
 
 			// Find counter entry to update as well
-			$counter = Loan::query()
+			$cquery = Loan::query()
 				->where('queueid', '=', $row->lenderqueueid)
 				->where('lenderqueueid', '=', (int)$row->queueid)
-				->where('datetimestart', '=', $row->datetimestart)
-				->where('datetimestop', '=', $row->datetimestop)
+				->where('datetimestart', '=', $row->datetimestart);
+
+			if ($row->hasEnd())
+			{
+				$cquery->where('datetimestop', '=', $row->datetimestop);
+			}
+			else
+			{
+				$cquery->whereNull('datetimestop');
+			}
+
+			$counter = $cquery
 				->orderBy('datetimestart', 'asc')
 				->get()
 				->first();
@@ -423,10 +441,6 @@ class LoansController extends Controller
 		}
 
 		$row->api = route('api.queues.loans.read', ['id' => $row->id]);
-		if (!$row->hasEnd())
-		{
-			$row->datetimestop = null;
-		}
 
 		return new JsonResource($row);
 	}
@@ -462,10 +476,6 @@ class LoansController extends Controller
 		$row = Loan::findOrFail($id);
 
 		$row->api = route('api.queues.loans.read', ['id' => $row->id]);
-		if (!$row->hasEnd())
-		{
-			$row->datetimestop = null;
-		}
 
 		return new JsonResource($row);
 	}
@@ -592,11 +602,21 @@ class LoansController extends Controller
 		// Find counter entry to update as well
 		$updatecounter = false;
 
-		$counter = Loan::query()
+		$cquery = Loan::query()
 			->where('queueid', '=', $row->lenderqueueid)
 			->where('lenderqueueid', '=', (int)$row->queueid)
-			->where('datetimestart', '=', $row->datetimestart)
-			->where('datetimestop', '=', ($row->hasEnd() ? $row->datetimestop : '0000-00-00 00:00:00'))
+			->where('datetimestart', '=', $row->datetimestart);
+
+		if ($row->hasEnd())
+		{
+			$cquery->where('datetimestop', '=', $row->datetimestop);
+		}
+		else
+		{
+			$cquery->whereNull('datetimestop');
+		}
+
+		$counter = $cquery
 			->orderBy('datetimestart', 'asc')
 			->get()
 			->first();
@@ -674,7 +694,7 @@ class LoansController extends Controller
 			$this->db->execute($sql, RCACDB_CACHE);
 
 			$stop_sql = "";
-			if (isset($copyobj->stop) && $copyobj->stop != '0000-00-00 00:00:00')
+			if (isset($copyobj->stop) && $copyobj->stop)
 			{
 				$stop_sql = " AND date < '" . $this->db->escape_string($copyobj->stop) . "'";
 			}
@@ -752,10 +772,6 @@ class LoansController extends Controller
 		}
 
 		$row->api = route('api.queues.loans.read', ['id' => $row->id]);
-		if (!$row->hasEnd())
-		{
-			$row->datetimestop = null;
-		}
 
 		return new JsonResource($row);
 	}
@@ -789,11 +805,21 @@ class LoansController extends Controller
 	{
 		$row = Loan::findOrFail($id);
 
-		$counter = Loan::query()
+		$cquery = Loan::query()
 			->where('queueid', '=', $row->lenderqueueid)
 			->where('lenderqueueid', '=', (int)$row->queueid)
-			->where('datetimestart', '=', $row->datetimestart)
-			->where('datetimestop', '=', $row->datetimestop)
+			->where('datetimestart', '=', $row->datetimestart);
+
+		if ($row->hasEnd())
+		{
+			$cquery->where('datetimestop', '=', $row->datetimestop);
+		}
+		else
+		{
+			$cquery->whereNull('datetimestop');
+		}
+
+		$counter = $cquery
 			->orderBy('datetimestart', 'asc')
 			->get()
 			->first();

@@ -85,19 +85,6 @@ class GroupUser extends Model
 	];
 
 	/**
-	 * If entry is trashed
-	 *
-	 * @return  bool
-	 **/
-	public function isTrashed()
-	{
-		return ($this->datetimeremoved
-			&& $this->datetimeremoved != '0000-00-00 00:00:00'
-			&& $this->datetimeremoved != '-0001-11-30 00:00:00'
-			&& $this->datetimeremoved < Carbon::now()->toDateTimeString());
-	}
-
-	/**
 	 * Defines a relationship to notification type
 	 *
 	 * @return  object

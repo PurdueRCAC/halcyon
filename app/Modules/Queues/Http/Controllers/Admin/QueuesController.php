@@ -76,11 +76,7 @@ class QueuesController extends Controller
 			->select($q . '.*')
 			->join($c, $c . '.subresourceid', $q . '.subresourceid')
 			->join($r, $r . '.id', $c . '.resourceid')
-			->where(function($where) use ($r)
-			{
-				$where->whereNull($r . '.datetimeremoved')
-					->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull($r . '.datetimeremoved')
 			->withTrashed();
 
 		if ($filters['search'])
@@ -97,40 +93,24 @@ class QueuesController extends Controller
 
 		if ($filters['state'] == 'trashed')
 		{
-			$query->where(function($where) use ($q)
-			{
-				$where->whereNotNull($q . '.datetimeremoved')
-					->where($q . '.datetimeremoved', '!=', '0000-00-00 00:00:00');
-			});
+			$query->whereNotNull($q . '.datetimeremoved');
 		}
 		elseif ($filters['state'] == 'enabled')
 		{
 			$query
-				->where(function($where) use ($q)
-				{
-					$where->whereNull($q . '.datetimeremoved')
-						->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
+				->whereNull($q . '.datetimeremoved')
 				->where($q . '.enabled', '=', 1);
 		}
 		elseif ($filters['state'] == 'disabled')
 		{
 			$query
-				->where(function($where) use ($q)
-				{
-					$where->whereNull($q . '.datetimeremoved')
-						->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				})
+				->whereNull($q . '.datetimeremoved')
 				->where($q . '.enabled', '=', 0);
 		}
 		else
 		{
 			$query
-				->where(function($where) use ($q)
-				{
-					$where->whereNull($q . '.datetimeremoved')
-						->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-				});
+				->whereNull($q . '.datetimeremoved');
 		}
 
 		if ($filters['type'] > 0)
@@ -310,8 +290,6 @@ class QueuesController extends Controller
 		if (!$id)
 		{
 			$exists = Queue::query()
-				->withTrashed()
-				->whereIsActive()
 				->where('name', '=', $row->name)
 				->where('schedulerid', '=', $row->schedulerid)
 				->first();

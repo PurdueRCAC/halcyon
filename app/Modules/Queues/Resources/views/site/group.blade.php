@@ -33,18 +33,8 @@
 			->select($q . '.*')
 			->join($s, $s . '.id', $q . '.schedulerid')
 			->join($r, $r . '.id', $q . '.subresourceid')
-			->where(function($where) use ($s)
-			{
-				$where->whereNull($s . '.datetimeremoved')
-					->orWhere($s . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
-			->where(function($where) use ($r)
-			{
-				$where->whereNull($r . '.datetimeremoved')
-					->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
-			->withTrashed()
-			->whereIsActive()
+			->whereNull($s . '.datetimeremoved')
+			->whereNull($r . '.datetimeremoved')
 			->orderBy($r . '.name', 'asc')
 			->orderBy($q . '.name', 'asc')
 			->get();

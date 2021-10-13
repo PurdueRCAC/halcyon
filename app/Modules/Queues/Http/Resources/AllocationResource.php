@@ -42,7 +42,6 @@ class AllocationResource extends JsonResource
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimestop')
-					->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
 					->orWhere('datetimestop', '>', $now->toDateTimeString());
 			})
 			->get()
@@ -59,7 +58,6 @@ class AllocationResource extends JsonResource
 			->where(function($where) use ($now)
 			{
 				$where->whereNotNull('datetimestop')
-					->where('datetimestop', '!=', '0000-00-00 00:00:00')
 					->where('datetimestop', '<=', $now->toDateTimeString());
 			})
 			->get()
@@ -72,7 +70,6 @@ class AllocationResource extends JsonResource
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimestop')
-					->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
 					->orWhere('datetimestop', '>', $now->toDateTimeString());
 			})
 			->get()
@@ -89,7 +86,6 @@ class AllocationResource extends JsonResource
 			->where(function($where) use ($now)
 			{
 				$where->whereNotNull('datetimestop')
-					->where('datetimestop', '!=', '0000-00-00 00:00:00')
 					->where('datetimestop', '<=', $now->toDateTimeString());
 			})
 			->get()
@@ -99,8 +95,6 @@ class AllocationResource extends JsonResource
 			});
 
 		$data['users'] = $this->users()
-			->withTrashed()
-			->whereIsActive()
 			->orderBy('id', 'asc')
 			->get()
 			->each(function($item, $key)
@@ -110,7 +104,6 @@ class AllocationResource extends JsonResource
 
 		$data['priorusers'] = $this->users()
 			->onlyTrashed()
-			->where('datetimeremoved', '!=', '0000-00-00 00:00:00')
 			->orderBy('id', 'asc')
 			->get()
 			->each(function($item, $key)
@@ -138,16 +131,6 @@ class AllocationResource extends JsonResource
 			$data['serviceunits'] = $this->totalserviceunits;
 		}
 
-		if (!$this->isTrashed())
-		{
-			$data['datetimeremoved'] = null;
-		}
-
-		if (!$this->hasLastSeenTime())
-		{
-			$data['datetimelastseen'] = null;
-		}
-
 		$data['draindown'] = 0;
 		if ($this->scheduler->hasDraindownTime())
 		{
@@ -157,33 +140,13 @@ class AllocationResource extends JsonResource
 		$data['nodeaccesspolicy'] = $this->schedulerPolicy->code;
 
 		$data['draindown_timeremaining'] = 0;
-		$timeremaining = $this->scheduler->datetimedraindown->timestamp - $now->timestamp;
+		$timeremaining = ($this->scheduler->datetimedraindown ? $this->scheduler->datetimedraindown->timestamp - $now->timestamp : 0);
 		if ($timeremaining > 0)
 		{
 			$data['draindown_timeremaining'] = $timeremaining;
 		}
 
 		$data['scheduler'] = $this->scheduler;
-
-		if (!$this->scheduler->isTrashed())
-		{
-			$data['scheduler']['datetimeremoved'] = null;
-		}
-
-		if (!$this->scheduler->hasDraindownTime())
-		{
-			$data['scheduler']['datetimedraindown'] = null;
-		}
-
-		if (!$this->scheduler->hasLastImportStartTime())
-		{
-			$data['scheduler']['datetimelastimportstart'] = null;
-		}
-
-		if (!$this->scheduler->hasLastImportStopTime())
-		{
-			$data['scheduler']['datetimelastimportstop'] = null;
-		}
 
 		$data['walltime'] = $this->walltime;
 

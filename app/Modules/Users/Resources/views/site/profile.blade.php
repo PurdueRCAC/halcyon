@@ -251,8 +251,6 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 			<?php
 			/*$queues = $user->queues()
 				->whereIsPending()
-				->withTrashed()
-				->whereIsActive()
 				->get();
 
 			if (count($queues)):
@@ -310,22 +308,20 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 						//->whereIn('membertype', [1, 4])
 						->whereIsPending()
 						//->whereNotIn('id', $q)
-						->withTrashed()
-						->whereIsActive()
 						->get();
 
 					foreach ($queues as $qu):
-						if ($qu->isMember() && $qu->isTrashed()):
+						if ($qu->isMember() && $qu->trashed()):
 							continue;
 						endif;
 
 						$queue = $qu->queue;
 
-						if (!$queue || $queue->isTrashed()):
+						if (!$queue || $queue->trashed()):
 							continue;
 						endif;
 
-						if (!$queue->scheduler || $queue->scheduler->isTrashed()):
+						if (!$queue->scheduler || $queue->scheduler->trashed()):
 							continue;
 						endif;
 
@@ -343,7 +339,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 									<strong><a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $group->id]) }}">{{ $group->name }}</a></strong>
 								</div>
 								<div class="col-md-6 text-right">
-									@if ($qu->isTrashed())
+									@if ($qu->trashed())
 										<span class="badge badge-danger">{{ trans('users::users.removed') }}</span>
 									@elseif ($qu->membertype == 4)
 										<span class="badge badge-warning">{{ $qu->type->name }}</span>
@@ -385,19 +381,16 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 		foreach ($memberships as $membership):
 			$group = $membership->group;
 
-			$queues = $group->queues()
-				->withTrashed()
-				->whereIsActive()
-				->get();
+			$queues = $group->queues;
 
 			foreach ($queues as $queue):
 				$ids[] = $queue->id;
 
-				if (!$queue || $queue->isTrashed()):
+				if (!$queue || $queue->trashed()):
 					continue;
 				endif;
 
-				if (!$queue->scheduler || $queue->scheduler->isTrashed()):
+				if (!$queue->scheduler || $queue->scheduler->trashed()):
 					continue;
 				endif;
 
@@ -408,23 +401,21 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 		endforeach;
 
 		$queues = $user->queues()
-			->withTrashed()
-			->whereIsActive()
 			->whereNotIn('queueid', $ids)
 			->get();
 
 		foreach ($queues as $qu):
-			if ($qu->isTrashed()):
+			if ($qu->trashed()):
 				continue;
 			endif;
 
 			$queue = $qu->queue;
 
-			if (!$queue || $queue->isTrashed()):
+			if (!$queue || $queue->trashed()):
 				continue;
 			endif;
 
-			if (!$queue->scheduler || $queue->scheduler->isTrashed()):
+			if (!$queue->scheduler || $queue->scheduler->trashed()):
 				continue;
 			endif;
 

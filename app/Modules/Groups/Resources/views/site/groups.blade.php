@@ -163,7 +163,7 @@ function CreateNewGroup() {
 					</span>
 				</td>
 				<td>
-					@if ($g->datecreated && $g->datecreated != '0000-00-00 00:00:00' && $g->datecreated != '-0001-11-30 00:00:00')
+					@if ($g->datecreated)
 						<time datetime="{{ $g->datecreated->format('Y-m-d\TH:i:s\Z') }}">
 							@if ($g->datecreated->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
 								{{ $g->datecreated->diffForHumans() }}
@@ -171,7 +171,7 @@ function CreateNewGroup() {
 								{{ $g->datecreated->format('F j, Y') }}
 							@endif
 						</time>
-					@elseif ($g->datetimecreated && $g->datetimecreated != '0000-00-00 00:00:00' && $g->datetimecreated != '-0001-11-30 00:00:00')
+					@elseif ($g->datetimecreated)
 						<time datetime="{{ $g->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">
 							@if ($g->datetimecreated->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
 								{{ $g->datetimecreated->diffForHumans() }}

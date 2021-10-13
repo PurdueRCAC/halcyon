@@ -82,27 +82,25 @@ $queues = $data['user']->queues()
     //->where('groupid', '>', 0)
     ->whereIn('membertype', [1, 4])
     ->whereNotIn('id', $q)
-    ->withTrashed()
-    ->whereIsActive()
     ->get();
 
 $gs = array();
 foreach ($queues as $qu)
 {
     if ($qu->isMember()
-    && $qu->isTrashed())
+    && $qu->trashed())
     {
         continue;
     }
 
     $queue = $qu->queue;
 
-    if (!$queue || $queue->isTrashed())
+    if (!$queue || $queue->trashed())
     {
         continue;
     }
 
-    if (!$queue->scheduler || $queue->scheduler->isTrashed())
+    if (!$queue->scheduler || $queue->scheduler->trashed())
     {
         continue;
     }

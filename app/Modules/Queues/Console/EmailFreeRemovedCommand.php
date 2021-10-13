@@ -146,21 +146,9 @@ class EmailFreeRemovedCommand extends Command
 						->where($qu . '.membertype', '=', 1)
 						->where($qu . '.userid', '=', $userid)
 						->where($qu . '.notice', '<>', 6)
-						->where(function($where) use ($qu)
-						{
-							$where->whereNull($qu . '.datetimeremoved')
-								->orWhere($qu . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-						})
-						->where(function($where) use ($q)
-						{
-							$where->whereNull($q . '.datetimeremoved')
-								->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-						})
-						->where(function($where) use ($s)
-						{
-							$where->whereNull($s . '.datetimeremoved')
-								->orWhere($s . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-						})
+						->whereNull($qu . '.datetimeremoved')
+						->whereNull($q . '.datetimeremoved')
+						->whereNull($s . '.datetimeremoved')
 						->get()
 						->pluck('queueid')
 						->toArray();
@@ -221,21 +209,9 @@ class EmailFreeRemovedCommand extends Command
 						->where($qu . '.userid', '=', $userid)
 						->where($qu . '.notice', '<>', 6)
 						->whereNotIn($qu . '.queueid', $removing->pluck('queueid')->toArray())
-						->where(function($where) use ($qu)
-						{
-							$where->whereNull($qu . '.datetimeremoved')
-								->orWhere($qu . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-						})
-						->where(function($where) use ($q)
-						{
-							$where->whereNull($q . '.datetimeremoved')
-								->orWhere($q . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-						})
-						->where(function($where) use ($s)
-						{
-							$where->whereNull($s . '.datetimeremoved')
-								->orWhere($s . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-						})
+						->whereNull($qu . '.datetimeremoved')
+						->whereNull($q . '.datetimeremoved')
+						->whereNull($s . '.datetimeremoved')
 						->get();
 
 					// Prepare and send actual email

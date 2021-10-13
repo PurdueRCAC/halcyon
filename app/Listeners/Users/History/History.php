@@ -143,17 +143,17 @@ class History
 				$item->description = $q->name . ' ' . ($q->resource ? '(' . $q->resource->name . ')' : trans('global.unknown'));
 				$item->created = $g->datetimecreated;
 				$item->removed = $g->datetimeremoved;
-				$item->isTrashed = $g->isTrashed();
+				$item->isTrashed = $g->trashed();
 
-				if ($g->isTrashed())
+				if ($g->trashed())
 				{
-					$item->isTrashed = $g->isTrashed();
+					$item->isTrashed = $g->trashed();
 				}
 				elseif ($q)
 				{
-					if ($q->isTrashed())
+					if ($q->trashed())
 					{
-						$item->isTrashed = $q->isTrashed();
+						$item->isTrashed = $q->trashed();
 						$item->removed = $q->datetimeremoved;
 					}
 					else

@@ -116,13 +116,11 @@ class SizesController extends Controller
 
 		if ($filters['state'] == 'ended')
 		{
-			$query->whereNotNull('datetimestop')
-				->where('datetimestop', '!=', '0000-00-00 00:00:00');
+			$query->whereNotNull('datetimestop');
 		}
 		elseif ($filters['state'] == 'ongoing')
 		{
-			$query->where('datetimestop', '=', '0000-00-00 00:00:00')
-				->orWhereNull('datetimestop');
+			$query->whereNull('datetimestop');
 		}
 
 		if ($filters['queueid'] > 0)
@@ -142,10 +140,6 @@ class SizesController extends Controller
 
 		$rows->each(function($item, $key)
 		{
-			if (!$item->hasEnd())
-			{
-				$item->datetimestop = null;
-			}
 			$item->api = route('api.queues.sizes.read', ['id' => $item->id]);
 		});
 
@@ -342,11 +336,21 @@ class SizesController extends Controller
 		}
 
 		// Look for an existing entry in the same time frame and same queues to update instead
-		$exist = Size::query()
+		$cquery = Size::query()
 			->where('queueid', '=', (int)$row->queueid)
 			->where('sellerqueueid', '=', $row->sellerqueueid)
-			->where('datetimestart', '=', $row->datetimestart)
-			->where('datetimestop', '=', $row->datetimestop)
+			->where('datetimestart', '=', $row->datetimestart);
+
+		if ($row->hasEnd())
+		{
+			$cquery->where('datetimestop', '=', $row->datetimestop);
+		}
+		else
+		{
+			$cquery->whereNull('datetimestop');
+		}
+
+		$exist = $cquery
 			->orderBy('datetimestart', 'asc')
 			->get()
 			->first();
@@ -365,8 +369,18 @@ class SizesController extends Controller
 			$counter = Size::query()
 				->where('queueid', '=', $row->sellerqueueid)
 				->where('sellerqueueid', '=', (int)$row->queueid)
-				->where('datetimestart', '=', $row->datetimestart)
-				->where('datetimestop', '=', $row->datetimestop)
+				->where('datetimestart', '=', $row->datetimestart);
+
+			if ($row->hasEnd())
+			{
+				$cquery->where('datetimestop', '=', $row->datetimestop);
+			}
+			else
+			{
+				$cquery->whereNull('datetimestop');
+			}
+
+			$counter = $cquery
 				->orderBy('datetimestart', 'asc')
 				->get()
 				->first();
@@ -592,11 +606,21 @@ class SizesController extends Controller
 		// Find counter entry to update as well
 		$updatecounter = false;
 
-		$counter = Size::query()
+		$cquery = Size::query()
 			->where('queueid', '=', $row->sellerqueueid)
 			->where('sellerqueueid', '=', (int)$row->queueid)
-			->where('datetimestart', '=', $row->datetimestart)
-			->where('datetimestop', '=', ($row->hasEnd() ? $row->datetimestop : '0000-00-00 00:00:00'))
+			->where('datetimestart', '=', $row->datetimestart);
+
+		if ($row->hasEnd())
+		{
+			$cquery->where('datetimestop', '=', $row->datetimestop);
+		}
+		else
+		{
+			$cquery->whereNull('datetimestop');
+		}
+
+		$counter = $cquery
 			->orderBy('datetimestart', 'asc')
 			->get()
 			->first();
@@ -790,11 +814,21 @@ class SizesController extends Controller
 	{
 		$row = Size::findOrFail($id);
 
-		$counter = Size::query()
+		$cquery = Size::query()
 			->where('queueid', '=', $row->sellerqueueid)
 			->where('sellerqueueid', '=', (int)$row->queueid)
-			->where('datetimestart', '=', $row->datetimestart)
-			->where('datetimestop', '=', $row->datetimestop)
+			->where('datetimestart', '=', $row->datetimestart);
+
+		if ($row->hasEnd())
+		{
+			$cquery->where('datetimestop', '=', $row->datetimestop);
+		}
+		else
+		{
+			$cquery->whereNull('datetimestop');
+		}
+
+		$counter = $cquery
 			->orderBy('datetimestart', 'asc')
 			->get()
 			->first();

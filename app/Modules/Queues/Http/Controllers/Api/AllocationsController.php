@@ -288,19 +288,9 @@ class AllocationsController extends Controller
 			->join($s, $s . '.id', $q . '.schedulerid')
 			->join($r, $r . '.id', $q . '.subresourceid')
 			->join($p, $p . '.id', $q . '.schedulerpolicyid')
-			->withTrashed()
-			->whereIsActive()
 			->where($q . '.datetimecreated', '<', $now->toDateTimeString())
-			->where(function($where) use ($s)
-			{
-				$where->whereNull($s . '.datetimeremoved')
-					->orWhere($s . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
-			->where(function($where) use ($r)
-			{
-				$where->whereNull($r . '.datetimeremoved')
-					->orWhere($r . '.datetimeremoved', '=', '0000-00-00 00:00:00');
-			});
+			->whereNull($s . '.datetimeremoved')
+			->whereNull($r . '.datetimeremoved');
 			//->where($s . '.batchsystem', '=', 1)
 
 		if ($hostname)
@@ -321,7 +311,6 @@ class AllocationsController extends Controller
 				->where(function($where)
 				{
 					$where->whereNull('datetimestop')
-						->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
 						->orWhere('datetimestop', '>', Carbon::now()->toDateTimeString());
 				})
 				->count();
@@ -332,7 +321,6 @@ class AllocationsController extends Controller
 				->where(function($where)
 				{
 					$where->whereNull('datetimestop')
-						->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
 						->orWhere('datetimestop', '>', Carbon::now()->toDateTimeString());
 				})
 				->count();
@@ -343,7 +331,6 @@ class AllocationsController extends Controller
 				->where(function($where)
 				{
 					$where->whereNull('datetimestop')
-						->orWhere('datetimestop', '=', '0000-00-00 00:00:00')
 						->orWhere('datetimestop', '>', Carbon::now()->toDateTimeString());
 				})
 				->count();

@@ -12,7 +12,6 @@ use App\Modules\Queues\Events\UserUpdating;
 use App\Modules\Queues\Events\UserUpdated;
 use App\Modules\Queues\Events\UserDeleted;
 use App\Modules\Groups\Models\Group;
-use App\Modules\Core\Traits\LegacyTrash;
 use Carbon\Carbon;
 
 /**
@@ -20,7 +19,7 @@ use Carbon\Carbon;
  */
 class User extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes, LegacyTrash;
+	use ErrorBag, Validatable, Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -88,7 +87,7 @@ class User extends Model
 	 */
 	public function wasLastseen()
 	{
-		return ($this->datetimelastseen && $this->datetimelastseen != '0000-00-00 00:00:00' && $this->datetimelastseen != '-0001-11-30 00:00:00');
+		return !is_null($this->datetimelastseen);
 	}
 
 	/**

@@ -64,11 +64,7 @@ class StorageFortress
 		$qu = QueueUser::query()
 			->where('queueid', '=', $queueid)
 			->where('userid', '=', $event->user->id)
-			->where(function($where)
-			{
-				$where->whereNull('datetimeremoved')
-					->orWhere('datetimeremoved', '=', '0000-00-00 00:00:00');
-			})
+			->whereNull('datetimeremoved')
 			->first();
 
 		if (!$qu)
