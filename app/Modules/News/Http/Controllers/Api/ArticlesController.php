@@ -1176,13 +1176,29 @@ class ArticlesController extends Controller
 		{
 			$message = new Message($row, $name);
 
-			Mail::to($emails)->send($message);
-		}
+			foreach ($emails as $email)
+			{
+				Mail::to($email)->send($message);
 
-		$row->update([
-			'datetimemailed' => Carbon::now()->toDateTimeString(),
-			'lastmailuserid' => auth()->user()->id
-		]);
+				Log::create([
+					'ip'              => request()->ip(),
+					'userid'          => (auth()->user() ? auth()->user()->id : 0),
+					'status'          => 200,
+					'transportmethod' => 'POST',
+					'servername'      => request()->getHttpHost(),
+					'uri'             => $email,
+					'app'             => 'email',
+					'payload'         => 'Emailed article #' . $row->id,
+					'classname'       => 'NewsArticlesController',
+					'classmethod'     => 'email',
+				]);
+			}
+
+			$row->update([
+				'datetimemailed' => Carbon::now()->toDateTimeString(),
+				'lastmailuserid' => auth()->user()->id
+			]);
+		}
 
 		return new ArticleResource($row);
 	}
