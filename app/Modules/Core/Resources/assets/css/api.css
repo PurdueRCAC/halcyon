@@ -1,3 +1,34 @@
+:root {
+	color-scheme: light dark;
+	--panel-bg: #f9f9f9;
+	--panel-br: rgba(148,151,155,0.2);
+	--body-bg: #fff;
+	--body-text: #212529;
+	--opblock-bg: #f5f5f5;
+	--menu-br: #d1d1d1;
+	--bg-get: #36beaa;
+	--bg-post: #5fbd35;
+	--bg-patch: #0785bf;
+	--bg-delete: #f45b5e;
+	--bg-put: #fcd03b;
+	--table-br: rgba(0, 0, 0, 0.2);
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--panel-bg: #252529;
+		--panel-br: rgba(255,255,255,0.2);
+		--body-bg: #1a1a1c;
+		--body-text: #ccc;
+		--opblock-bg: #2d2d32;
+		--menu-br: #d1d1d1;
+		--bg-get: #36beaa;
+		--bg-post: #5fbd35;
+		--bg-patch: #0785bf;
+		--bg-delete: #f45b5e;
+		--bg-put: #fcd03b;
+		--table-br: #353539;
+	}
+}
 
 * {
 	margin: 0;
@@ -14,14 +45,13 @@ html {
 }
 
 body {
-	color: #000;
-	/*background-color: #f5f5f5;*/
 	font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
 	font-size: 0.8rem;
 	font-weight: 400;
 	line-height: 1.5;
-	color: #212529;
+	color: var(--body-text);
 	height: 100%;
+	background-color: var(--body-bg);
 }
 a {
 	color: #0071EB;
@@ -81,13 +111,9 @@ footer section > *:last-child {
 	visibility: hidden;
 }
 .docs-sidebar {
-	background: #f9f9f9;
-	border-bottom: 1px solid rgba(148,151,155,0.2);
+	background: var(--panel-bg);
+	border-bottom: 1px solid var(--panel-br);
 }
-/*.docs-sidebar+.docs-main {
-	position: relative;
-	overflow: hidden;
-}*/
 .docs-content {
 	padding: 0 1rem 1rem 1rem;
 }
@@ -158,6 +184,12 @@ footer section > *:last-child {
 .docs-sidebar-header h2 {
 	font-size: 1em;
 	margin: 0;
+}
+
+.table thead th,
+.table td,
+.table th {
+	border-color: var(--table-br);
 }
 
 .swagger-ui .opblock {
@@ -238,7 +270,7 @@ footer section > *:last-child {
 	/*flex-direction: column;
 	padding: 5px;*/
 	cursor:pointer;
-	background-color: #f5f5f5;
+	background-color: var(--opblock-bg);
 	position: relative;
 }
 .swagger-ui .opblock .opblock-summary-method {
@@ -251,7 +283,7 @@ footer section > *:last-child {
 	background: #000;
 	text-shadow: 0 1px 0 rgba(0, 0, 0, .1);
 	font-family: sans-serif;
-	color:#fff
+	color:#111;
 }
 .swagger-ui .opblock .opblock-summary-path {
 	flex-shrink: 0;
@@ -273,7 +305,7 @@ footer section > *:last-child {
 	flex: 0 0 100%;
 	word-break: break-word;
 	font-family: sans-serif;
-	color:#3b4151;
+	/*color:#3b4151;*/
 	padding: 6px;
 	background-color: rgba(0, 0, 0, 0.05);
 }
@@ -301,7 +333,7 @@ footer section > *:last-child {
 	padding: 0 10px;
 	font-family: monospace;
 	font-weight: 600;
-	color:#3b4151
+	/*color:#3b4151;*/
 }
 
 .swagger-ui .opblock .opblock-section {
@@ -322,22 +354,19 @@ footer section > *:last-child {
 }
 
 .swagger-ui .opblock.opblock-get .opblock-summary-method {
-	background: #0071EB; /*#61affe*/
+	background: var(--bg-get);
 }
 .swagger-ui .opblock.opblock-patch .opblock-summary-method {
-	background:#50e3c2
+	background: var(--bg-patch);
 }
 .swagger-ui .opblock.opblock-delete .opblock-summary-method {
-	background: #ED0707; /*#f93e3e*/
+	background: var(--bg-delete);
 }
 .swagger-ui .opblock.opblock-put .opblock-summary-method {
-	background: #C15401; /*#fca130;*/
+	background: var(--bg-put);
 }
 .swagger-ui .opblock.opblock-post .opblock-summary-method {
-	background: #218739; /*#49cc90;*/
-	/*background: #fff;
-	color: #49cc90;
-	border: 2px solid #49cc90;*/
+	background: var(--bg-post);
 }
 
 .swagger-ui .opblock .opblock-body {
@@ -367,7 +396,9 @@ footer section > *:last-child {
 .docs-api-param-body {
 	color: blue;
 }
-
+.table {
+	color: var(--body-text);
+}
 pre {
 	padding: 1em;
 	background-color: #152748;
