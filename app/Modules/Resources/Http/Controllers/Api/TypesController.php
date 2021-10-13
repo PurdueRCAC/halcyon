@@ -251,17 +251,17 @@ class TypesController extends Controller
 	 * }
 	 * @apiResponse {
 	 * 		"202": {
-	 * 			"description": "Successful entry modification"
-	 * 			"content": {
-	 * 				"application/json": {
-	 * 					"example": {
-	 * 						"id": 1,
-	 * 						"name": "Updated type",
-	 * 						"resources_count": 34,
-	 * 						"api": "https://yourhost/api/resources/types/1"
-	 * 					}
-	 * 				}
-	 * 			}
+	 * 			"description": "Successful entry modification",
+	* 			"content": {
+	* 				"application/json": {
+	* 					"example": {
+	* 						"id": 1,
+	* 						"name": "Updated type",
+	* 						"resources_count": 34,
+	* 						"api": "https://yourhost/api/resources/types/1"
+	* 					}
+	* 				}
+	* 			}
 	 * 		},
 	 * 		"404": {
 	 * 			"description": "Record not found"
