@@ -57,6 +57,7 @@ return [
 	'ticket' => 'Ticket',
 	'ticket explanation' => 'Product requires an associated ticket.',
 	'mou' => 'Memorandum of Understanding (MOU)',
+	'mou hint' => 'This is a URL to a file such as a PDF.',
 	'recurrence' => 'Recurrence',
 	'resource' => 'Resource',
 	'terms' => 'Terms',
