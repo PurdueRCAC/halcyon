@@ -210,7 +210,8 @@ jQuery(document).ready(function ($) {
 
 				<div class="form-group{{ $errors->has('fields.mou') ? ' has-error' : '' }}">
 					<label for="field-mou">{{ trans('orders::orders.mou') }}:</label>
-					<input type="text" name="fields[mou]" id="field-mou" class="form-control" maxlength="255" placeholder="http://" value="{{ $row->mou }}" />
+					<input type="url" name="fields[mou]" id="field-mou" class="form-control" maxlength="255" placeholder="https://" value="{{ $row->mou }}" />
+					<span class="form-text text-muted">{{ trans('orders::orders.mou hint') }}</span>
 				</div>
 
 				<div class="row">
