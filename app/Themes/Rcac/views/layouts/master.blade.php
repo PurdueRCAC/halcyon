@@ -18,10 +18,10 @@
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<meta name="base-url" content="{{ rtrim(asset('/'), '/') }}">
-		<meta name="api-token" content="{{ (Auth::user() ? Auth::user()->api_token : '') }}">
-		<meta name="theme-color" content="#000000">
+		<meta name="csrf-token" content="{{ csrf_token() }}" />
+		<meta name="base-url" content="{{ rtrim(asset('/'), '/') }}" />
+		<meta name="api-token" content="{{ (Auth::user() ? Auth::user()->api_token : '') }}" />
+		<meta name="theme-color" content="#000000" />
 
 		<title>{{ config('app.name') }}@hasSection('title') - @yield('title')@endif</title>
 
@@ -32,6 +32,13 @@
 			<meta name="keywords" content="Purdue University, RCAC, Research Computing, Information Technology at Purdue, ITaP" />
 		@endif
 		@stack('meta')
+
+		<!-- Apple touch icons -->
+		<link rel="apple-touch-icon" href="{{ asset('themes/rcac/images/icon-iphone.png') }}">
+		<link rel="apple-touch-icon" href="{{ asset('themes/rcac/images/icon-iphone.png') }}" sizes="76x76" />
+		<link rel="apple-touch-icon" href="{{ asset('themes/rcac/images/icon-ipad.png') }}" sizes="76x76" />
+		<link rel="apple-touch-icon" href="{{ asset('themes/rcac/images/icon-iphone-retina.png') }}" sizes="120x120" />
+		<link rel="apple-touch-icon" href="{{ asset('themes/rcac/images/icon-ipad-retina.png') }}" sizes="152x152" />
 
 		<!-- Styles -->
 		<link rel="preload" as="style" href="https://use.typekit.net/ghc8hdz.css" />
