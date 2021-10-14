@@ -116,6 +116,13 @@ label .required-field {
 	color: #c00;
 }
 
+.edit-controls {
+	/*position: absolute;
+	right: 15px;*/
+	background: #eee;
+	border-radius: 0.25em;
+}
+
 .none,
 .never,
 .unknown {
@@ -271,6 +278,7 @@ a.btn-info:active {
 .contentInner {
 	padding-bottom: 30px;
 }
+article *:first-child + h2,
 .contentInner *:first-child {
 	margin-top: 0;
 }

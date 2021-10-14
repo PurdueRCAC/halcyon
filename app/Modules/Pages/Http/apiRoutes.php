@@ -12,7 +12,7 @@ $router->group(['prefix' => 'pages'], function (Router $router)
 	$router->post('/', [
 		'as' => 'api.pages.create',
 		'uses' => 'PagesController@create',
-		'middleware' => 'can:create pages'
+		'middleware' => ['auth:api', 'can:create pages']
 	]);
 	$router->get('{id}', [
 		'as'   => 'api.pages.read',
@@ -21,11 +21,11 @@ $router->group(['prefix' => 'pages'], function (Router $router)
 	$router->put('{id}', [
 		'as'   => 'api.pages.update',
 		'uses' => 'PagesController@update',
-		'middleware' => 'can:edit pages'
+		'middleware' => ['auth:api', 'can:edit pages']
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
 		'as' => 'api.pages.delete',
 		'uses' => 'PagesController@delete',
-		'middleware' => 'can:delete pages'
+		'middleware' => ['auth:api', 'can:delete pages']
 	])->where('id', '[0-9]+');
 });

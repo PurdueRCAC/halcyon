@@ -490,7 +490,7 @@ class PagesController extends Controller
 			'publish_down' => 'nullable|date',
 		]);
 
-		if ($validator->fails()) //!$request->validated())
+		if ($validator->fails())
 		{
 			return response()->json(['message' => $validator->messages()->first()], 409);
 		}
@@ -509,7 +509,7 @@ class PagesController extends Controller
 			return response()->json(['message' => trans('pages::messages.page failed')], 500);
 		}
 
-		return new PageResource($page);
+		return new PageResource($row);
 	}
 
 	/**
