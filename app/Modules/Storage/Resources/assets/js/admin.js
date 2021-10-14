@@ -1,3 +1,7 @@
+/* global $ */ // jquery.js
+/* global Halcyon */ // core.js
+/* global WSGetURL */ // common.js
+
 /**
  * New directory type
  *
@@ -280,26 +284,14 @@ function NewDir(btn) {
 		data: post,
 		dataType: 'json',
 		async: false,
-		success: function(data) {
+		success: function() {
 			Halcyon.message('success', 'Directory created!');
 			window.location.reload(true);
 		},
-		error: function(xhr, reason, thrownError) {
+		error: function (xhr) { //xhr, reason, thrownError
 			/*var error = document.getElementById("new_dir_error");
 			var img = document.getElementById("new_dir_img");
-bytes: "-"
 
-bytesource: ""
-
-groupid: "1166"
-
-name: "foo"
-
-parentstoragedirid: "23771"
-
-resourceid: "64"
-
-unixgroupid: "1233"
 			if (xml.status == 200) {
 				window.location.reload(true);
 			} else if (xml.status == 409) {
@@ -378,12 +370,12 @@ function DeleteDir(btn) {
 			type: 'delete',
 			dataType: 'json',
 			async: false,
-			success: function(data) {
+			success: function() {
 				Halcyon.message('success', 'Directory removed!');
 				window.location.reload(true);
 			},
-			error: function(xhr, reason, thrownError) {
-				if (xhr.responseJSON) {
+			error: function(xhr) {
+					if (xhr.responseJSON) {
 						Halcyon.message('danger', xhr.responseJSON.message);
 					} else {
 						Halcyon.message('danger', 'Failed to delete directory.');
@@ -425,10 +417,10 @@ function ResetPermissions(btn) {
 			data: post,
 			dataType: 'json',
 			async: false,
-			success: function(data) {
+			success: function() {
 				window.location.reload(true);
 			},
-			error: function(xhr, reason, thrownError) {
+			error: function(xhr) {
 				if (xhr.responseJSON) {
 					Halcyon.message('danger', xhr.responseJSON.message);
 				} else {
@@ -446,7 +438,7 @@ function ResetPermissions(btn) {
 document.addEventListener('DOMContentLoaded', function() {
 	if ($('.searchable-select').length) {
 		$('.searchable-select').select2()
-			.on('select2:select', function (e) {
+			.on('select2:select', function () {
 				if ($(this).hasClass('filter-submit')) {
 					$(this).closest('form').submit();
 				}
@@ -594,7 +586,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								$('#field-autouserunixgroupid')
 									.empty()
 									.append($('<option value="">(Select Unix Group)</option>'));
-								for (var i = 0; i < data.unixgroups.length; i++) {
+								for (i = 0; i < data.unixgroups.length; i++) {
 									$('#field-unixgroupid')
 										.append($('<option value="' + data.unixgroups[i].id + '">' + data.unixgroups[i].longname + '</option>'));
 
@@ -602,7 +594,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										.append($('<option value="' + data.unixgroups[i].id + '">' + data.unixgroups[i].longname + '</option>'));
 								}
 							},
-							error: function (xhr, reason, thrownError) {
+							error: function (xhr) {
 								if (xhr.responseJSON) {
 									Halcyon.message('danger', xhr.responseJSON.message);
 								} else {
@@ -619,7 +611,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
-	$('#field-name').on('keyup', function (e) {
+	$('#field-name').on('keyup', function () {
 		var val = $(this).val();
 
 		val = val.toLowerCase()
@@ -629,7 +621,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		$(this).val(val);
 	});
 
-	$('#field-autouser').on('change', function (e) {
+	$('#field-autouser').on('change', function () {
 		var opt = $($(this).find('option:selected')[0]);
 
 		var read = opt.attr('data-read');
@@ -671,8 +663,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					modal: true,
 					width: '550px',
 					//position: { my: "left top", at: "left top", of: $( "#tree" ) },
-					close: function(event) {
-						var node = $("#tree").fancytree("getActiveNode").setActive(false);
+					close: function() {
+						$("#tree").fancytree("getActiveNode").setActive(false);
 					}
 				});
 				$("#" + did + "_dialog").dialog('open');
@@ -717,26 +709,26 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	$('#new_dir_input').on('change', function (e){
+	$('#new_dir_input').on('change', function (){
 		GuessDirUnixGroup();
 	});
-	$('#new_dir_type').on('change', function (e){
+	$('#new_dir_type').on('change', function (){
 		NewDirType();
 	});
-	/*$('#new_dir_user_select').on('change', function (e){
+	/*$('#new_dir_user_select').on('change', function (){
 		NewDirUserSelected();
 	});
-	$('#new_dir_unixgroup_select').on('change', function (e){
+	$('#new_dir_unixgroup_select').on('change', function (){
 		NewDirUser();
 	});
-	$('#new_dir_autouserunixgroup_select').on('change', function (e){
+	$('#new_dir_autouserunixgroup_select').on('change', function (){
 		NewDirUser();
 	});
 
-	$('#group').on('change', function (e){
+	$('#group').on('change', function (){
 		NewDirGroup($(this).data('resource'));
 	});
-	$('#new_top_dir_input').on('change', function (e){
+	$('#new_top_dir_input').on('change', function (){
 		GuessTopDirUnixGroup();
 	});
 	$('#new_top_dir').on('click', function(e) {
@@ -749,17 +741,17 @@ document.addEventListener('DOMContentLoaded', function() {
 		NewDir(this);
 	});
 
-	$('#deduct_radio').on('click', function(e) {
+	$('#deduct_radio').on('click', function() {
 		document.getElementById('new_dir_quota_deduct').focus();
 	});
-	$('#new_dir_quota_deduct').on('focus', function(e) {
+	$('#new_dir_quota_deduct').on('focus', function() {
 		document.getElementById('deduct_radio').checked = true;
 	});
 
-	$('#unalloc_radio').on('click', function(e) {
+	$('#unalloc_radio').on('click', function() {
 		document.getElementById('new_dir_quota_unalloc').focus();
 	});
-	$('#new_dir_quota_unalloc').on('focus', function(e) {
+	$('#new_dir_quota_unalloc').on('focus', function() {
 		document.getElementById('unalloc_radio').checked = true;
 	});
 
@@ -807,13 +799,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	$('body').on('change', '.form-control', function(el){
-		var dialog = $(this).closest('.dialog');
+		var dialog = $(el).closest('.dialog');
 		if (dialog.length) {
 			$('#' + $(dialog).data('id') + '_save_button').prop('disabled', false);
 		}
-		/*var id = $(this).data('id');
-		console.log($(this).find('.form-control'));
-		$(this).find('.form-control').on('change', function(e){
+		/*var id = $(el).data('id');
+		console.log($(el).find('.form-control'));
+		$(el).find('.form-control').on('change', function(e){
 			console.log('this');
 			$('#' + id + '_save_button').prop('disabled', false);
 		});*/

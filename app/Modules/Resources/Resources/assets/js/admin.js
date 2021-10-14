@@ -1,67 +1,31 @@
+/* global $ */ // jquery.js
+/* global jQuery */ // jquery.js
 
-/*Halcyon.submitbutton = function(task) {
-	var frm = document.getElementById('adminForm');
+jQuery(document).ready(function () {
 
-	if (frm) {
-		return Halcyon.submitform(task, frm);
-	}
-
-	$(document).trigger('editorSave');
-
-	var frm = document.getElementById('item-form'),
-		invalid = false;
-
-	if (frm) {
-		var elms = frm.querySelectorAll('input[required]');
-		elms.forEach(function (el) {
-			if (!el.value || !el.validity.valid) {
-				el.classList.add('is-invalid');
-				invalid = true;
-			} else {
-				el.classList.remove('is-invalid');
-			}
-		});
-		var elms = frm.querySelectorAll('select[required]');
-		elms.forEach(function (el) {
-			if (!el.value || el.value <= 0) {
-				el.classList.add('is-invalid');
-				invalid = true;
-			} else {
-				el.classList.remove('is-invalid');
-			}
-		});
-
-		if (task == 'cancel' || task.match(/cancel$/) || !invalid) {
-			Halcyon.submitform(task, frm);
-		}
-	}
-}*/
-
-jQuery(document).ready(function ($) {
-
-	$('#field-name').on('keyup', function (e){
+	$('#field-name').on('keyup', function (){
 		var val = $(this).val();
 
 		val = val.toLowerCase()
 			.replace(/\s+/g, '_')
-			.replace(/[^a-z0-9\-_]+/g, '');
+			.replace(/[^a-z0-9-_]+/g, '');
 
 		var rolename = $('#field-rolename');
-		if (rolename.length) {// && !rolename.val()) {
+		if (rolename.length) {
 			rolename.val(val);
 		}
 		var listname = $('#field-listname');
-		if (listname.length) {// && !listname.val()) {
+		if (listname.length) {
 			listname.val(val);
 		}
 	});
 
-	$('#field-rolename,#field-listname').on('keyup', function (e){
+	$('#field-rolename,#field-listname').on('keyup', function (){
 		var val = $(this).val();
 
 		val = val.toLowerCase()
 			.replace(/\s+/g, '_')
-			.replace(/[^a-z0-9\-_]+/g, '');
+			.replace(/[^a-z0-9-_]+/g, '');
 
 		$(this).val(val);
 	});
@@ -76,12 +40,12 @@ jQuery(document).ready(function ($) {
 
 	// Autocomplete the fields related to resource name
 	$('#assoc-resourceid,#field-cluster').on('change', function() {
-		var resource = $('#assoc-resourceid option:selected').text().replace(/(\- )+/, '');
+		var resource = $('#assoc-resourceid option:selected').text().replace(/(- )+/, '');
 		var cluster = $('#field-cluster').val();
 		$('#field-name').val(resource + "-" + cluster);
 	});
 
-	$('#field-nodemem').on('keyup', function (e){
+	$('#field-nodemem').on('keyup', function (){
 		var val = $(this).val();
 
 		val = val.toUpperCase().replace(/[^0-9]{1,4}[^PTGMKB]/g, '');

@@ -1,11 +1,6 @@
 /* global $ */ // jquery.js
-/* global ROOT_URL */ // common.js
-/* global WSGetURL */ // common.js
 /* global WSPostURL */ // common.js
-/* global WSDeleteURL */ // common.js
-/* global SetError */ // common.js
-/* global PrepareText */ // common.js
-/* global HighlightMatches */ // text.js
+/* global WSPutURL */ // common.js
 
 /**
  * New directory type
@@ -121,7 +116,7 @@ function NewDirType() {
  * @param   {object}  xml
  * @return  {void}
  */
-function NewDirUserPopulate(xml) {
+/*function NewDirUserPopulate(xml) {
 	var user_select = document.getElementById("new_dir_user_select");
 	var opt = document.createElement("option");
 	opt.innerHTML = "(Select User)";
@@ -142,7 +137,7 @@ function NewDirUserPopulate(xml) {
 
 		}
 	}
-}
+}*/
 
 /**
  * Guess the directory's unix group
@@ -327,10 +322,10 @@ function NewDir(btn) {
 		data: post,
 		dataType: 'json',
 		async: false,
-		success: function (data) {
+		success: function () {
 			window.location.reload(true);
 		},
-		error: function (xhr, reason, thrownError) {
+		error: function (xhr) { // xhr, reason, thrownError
 			/*var error = document.getElementById("new_dir_error");
 			var img = document.getElementById("new_dir_img");
 
@@ -384,7 +379,7 @@ function DeleteDir(btn) {
 			type: 'delete',
 			dataType: 'json',
 			async: false,
-			success: function (data) {
+			success: function () {
 				$('#' + btn.getAttribute('data-dir') + '_error')
 					.removeClass('alert-danger')
 					.addClass('alert-success')
@@ -392,7 +387,7 @@ function DeleteDir(btn) {
 					.text('Directory removed!');
 				window.location.reload(true);
 			},
-			error: function (xhr, reason, thrownError) {
+			error: function (xhr) {
 				$('#' + btn.getAttribute('data-dir') + '_error')
 					.removeClass('hide')
 					.text('Failed to delete directory.');
@@ -434,19 +429,18 @@ function ResetPermissions(btn) {
 			data: post,
 			dataType: 'json',
 			async: false,
-			success: function (data) {
+			success: function () {
 				window.location.reload(true);
 			},
-			error: function (xhr, reason, thrownError) {
+			error: function (xhr) {
+				var msg = 'Failed to reset permissions.';
 				if (xhr.responseJSON) {
-					var msg = xhr.responseJSON.message;
-				} else {
-					var msg = 'Failed to reset permissions.';
+					msg = xhr.responseJSON.message;
 				}
 				$('#' + btn.attr('data-dir') + '_error')
 					.removeClass('hide')
 					.text(msg);
-				console.log(xhr.responseText);
+				//console.log(xhr.responseText);
 			}
 		});
 	}
@@ -760,8 +754,8 @@ var BASEGROUPS = Array('', 'data', 'apps');
  * @return  {void}
  */
 function CreateNewGroupVal(num, btn, all) {
-	var base = btn.data('value'),
-		group = btn.data('group');
+	var group = btn.data('group');
+	//var = base = btn.data('value');
 
 	if (typeof (all) == 'undefined') {
 		all = true;
@@ -776,7 +770,7 @@ function CreateNewGroupVal(num, btn, all) {
 		},
 		dataType: 'json',
 		async: false,
-		success: function (response) {
+		success: function () {
 			num++;
 			if (all && num < BASEGROUPS.length) {
 				setTimeout(function () {
@@ -786,7 +780,7 @@ function CreateNewGroupVal(num, btn, all) {
 				window.location.reload(true);
 			}
 		},
-		error: function (xhr, ajaxOptions, thrownError) {
+		error: function (xhr) {
 			btn.removeClass('processing');
 			$('#error_unixgroups').removeClass('hide').text(xhr.responseJSON.message);
 		}
@@ -929,7 +923,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	$('#field-name').on('keyup', function (e) {
+	$('#field-name').on('keyup', function () {
 		var val = $(this).val();
 
 		val = val.toLowerCase()
@@ -951,8 +945,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					modal: true,
 					width: '550px',
 					//position: { my: "left top", at: "left top", of: $( "#tree" ) },
-					close: function (event) {
-						var node = $(".tree").fancytree("getActiveNode").setActive(false);
+					close: function () {
+						$(".tree").fancytree("getActiveNode").setActive(false);
 					}
 				});
 				//$("#" + did + "_dialog").dialog('open');
@@ -997,30 +991,30 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
-	$('#new_dir_input').on('change', function (e) {
+	$('#new_dir_input').on('change', function () {
 		GuessDirUnixGroup();
 	});
-	$('#new_dir_type').on('change', function (e) {
+	$('#new_dir_type').on('change', function () {
 		NewDirType();
 	});
-	$('#new_dir_user_select').on('change', function (e) {
+	$('#new_dir_user_select').on('change', function () {
 		//NewDirUserSelected();
 		var input = document.getElementById("new_dir_input");
 		var selected = document.getElementById("new_dir_user_select");
 		selected = selected.options[selected.selectedIndex].innerHTML;
 		input.value = selected;
 	});
-	/*$('#new_dir_unixgroup_select').on('change', function (e){
+	/*$('#new_dir_unixgroup_select').on('change', function (){
 		NewDirUser();
 	});
-	$('#new_dir_autouserunixgroup_select').on('change', function (e){
+	$('#new_dir_autouserunixgroup_select').on('change', function (){
 		NewDirUser();
 	});
 
-	$('#group').on('change', function (e){
+	$('#group').on('change', function (){
 		NewDirGroup($(this).data('resource'));
 	});
-	$('#new_top_dir_input').on('change', function (e){
+	$('#new_top_dir_input').on('change', function (){
 		GuessTopDirUnixGroup();
 	});
 	$('#new_top_dir').on('click', function(e) {
@@ -1033,17 +1027,17 @@ document.addEventListener('DOMContentLoaded', function () {
 		NewDir(this);
 	});
 
-	$('#deduct_radio').on('click', function (e) {
+	$('#deduct_radio').on('click', function () {
 		document.getElementById('new_dir_quota_deduct').focus();
 	});
-	$('#new_dir_quota_deduct').on('focus', function (e) {
+	$('#new_dir_quota_deduct').on('focus', function () {
 		document.getElementById('deduct_radio').checked = true;
 	});
 
-	$('#unalloc_radio').on('click', function (e) {
+	$('#unalloc_radio').on('click', function () {
 		document.getElementById('new_dir_quota_unalloc').focus();
 	});
-	$('#new_dir_quota_unalloc').on('focus', function (e) {
+	$('#new_dir_quota_unalloc').on('focus', function () {
 		document.getElementById('unalloc_radio').checked = true;
 	});
 
@@ -1098,7 +1092,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		ResetPermissions(this);
 	});
 
-	$('body').on('change', '.form-control,.form-check-input', function (el) {
+	$('body').on('change', '.form-control,.form-check-input', function () {
 		var dialog = $(this).closest('.dialog');
 		if (dialog.length) {
 			$('#' + $(dialog).data('id') + '_save_button').prop('disabled', false);
@@ -1207,7 +1201,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					el.classList.remove('is-invalid');
 				}
 			});
-			var elms = frm[0].querySelectorAll('select[required]');
+			elms = frm[0].querySelectorAll('select[required]');
 			elms.forEach(function (el) {
 				if (!el.value || el.value <= 0) {
 					el.classList.add('is-invalid');
@@ -1216,7 +1210,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					el.classList.remove('is-invalid');
 				}
 			});
-			var elms = frm[0].querySelectorAll('textarea[required]');
+			elms = frm[0].querySelectorAll('textarea[required]');
 			elms.forEach(function (el) {
 				if (!el.value || !el.validity.valid) {
 					el.classList.add('is-invalid');
@@ -1237,10 +1231,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			data: frm.serialize(),
 			dataType: 'json',
 			async: false,
-			success: function (data) {
+			success: function () {
 				window.location.reload(true);
 			},
-			error: function (xhr, reason, thrownError) {
+			error: function (xhr) {
 				var msg = 'Failed to process item.';
 				if (xhr.responseJSON) {
 					msg = xhr.responseJSON.message;
@@ -1267,10 +1261,10 @@ document.addEventListener('DOMContentLoaded', function () {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					window.location.reload(true);
 				},
-				error: function (xhr, reason, thrownError) {
+				error: function (xhr) {
 					var msg = 'Failed to delete item.';
 					if (xhr.responseJSON) {
 						msg = xhr.responseJSON.message;

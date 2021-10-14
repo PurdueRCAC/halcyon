@@ -1,6 +1,7 @@
+/* global $ */ // jquery.js
+/* global jQuery */ // jquery.js
 
-
-jQuery(document).ready(function ($) {
+jQuery(document).ready(function () {
 	// Feedback
 	$('.btn-feedback').on('click', function (e) {
 		e.preventDefault();
@@ -35,10 +36,10 @@ jQuery(document).ready(function ($) {
 			data: frm.serialize(),
 			dataType: 'json',
 			async: false,
-			success: function (response) {
+			success: function () {
 				$('#rating-done').removeClass('hide');
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function () { // xhr, ajaxOptions, thrownError
 				$('#rating-error').removeClass('hide');
 			}
 		});
@@ -66,7 +67,7 @@ jQuery(document).ready(function ($) {
 
 	var alias = $('#field-alias');
 	if (alias.length) {
-		$('#field-title').on('keyup', function (e) {
+		$('#field-title').on('keyup', function () {
 			var val = $(this).val();
 
 			val = val.toLowerCase()
@@ -116,7 +117,7 @@ jQuery(document).ready(function ($) {
 				el.classList.remove('is-invalid');
 			}
 		});
-		var elms = frm.find('select[required]');
+		elms = frm.find('select[required]');
 		elms.each(function (i, el) {
 			if (!el.value || el.value <= 0) {
 				el.classList.add('is-invalid');
@@ -125,7 +126,7 @@ jQuery(document).ready(function ($) {
 				el.classList.remove('is-invalid');
 			}
 		});
-		var elms = frm.find('textarea[required]');
+		elms = frm.find('textarea[required]');
 		elms.each(function (i, el) {
 			if (!el.value || !el.validity.valid) {
 				el.classList.add('is-invalid');
@@ -178,7 +179,7 @@ jQuery(document).ready(function ($) {
 					window.location.reload();
 				}
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr) {
 				btn.removeClass('processing');
 				frm.prepend('<div class="alert alert-danger">' + xhr.responseJSON.message + '</div>');
 			}
@@ -202,7 +203,7 @@ jQuery(document).ready(function ($) {
 
 	//----
 
-	$('.snippet-checkbox').on('change', function (e) {
+	$('.snippet-checkbox').on('change', function () {
 		if ($(this).is(':checked')) {
 			$('tr[data-parent=' + $(this).data('id') + ']')
 				.find('.snippet-checkbox')

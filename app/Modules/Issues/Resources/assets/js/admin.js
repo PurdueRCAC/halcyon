@@ -1,12 +1,11 @@
-/**
- * @package    Issues tracker
- */
+/* global $ */ // jquery.js
+/* global Halcyon */ // core.js
 
 /**
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function() {
-	$('.issue-todo').on('change', function (e) {
+	$('.issue-todo').on('change', function () {
 		var that = $(this);
 
 		if (that.is(':checked')) {
@@ -28,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						$('#checklist_status').trigger('change');
 					});
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) { //xhr, ajaxOptions, thrownError
 					var img = $(that.closest('li')).find('.fa')[0];
 					img.className = "fa fa-exclamation-triangle";
 					img.parentNode.title = "Unable to save changes, reload the page and try again.";
@@ -42,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					$(that.closest('li')).fadeOut(400, function () {
 						$(this).addClass('hide').removeAttr('style');
 						$(that.closest('li')).removeClass('complete');
@@ -51,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						$('#checklist_status').trigger('change');
 					});
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					var img = $(that.closest('li')).find('.fa')[0];
 					img.className = "fa fa-exclamation-triangle";
 					img.parentNode.title = "Unable to save changes, reload the page and try again.";
@@ -99,11 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		$.ajax({
 			url: container.data('api'),
 			type: 'post',
-			data: {
-				'issueid': $('#field-id').val(),
-				'comment': comment.val(),
-				'resolution': resolution.is(':checked') ? 1 : 0
-			},
+			data: post,
 			dataType: 'json',
 			async: false,
 			success: function (response) {
@@ -168,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				comment.val('');
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr) {
 				//console.log(xhr);
 				Halcyon.message('danger', xhr.responseJSON.message);
 			}
@@ -197,11 +192,11 @@ document.addEventListener('DOMContentLoaded', function() {
 					type: 'delete',
 					dataType: 'json',
 					async: false,
-					success: function (data) {
+					success: function () {
 						Halcyon.message('success', 'Item removed');
 						field.remove();
 					},
-					error: function (xhr, ajaxOptions, thrownError) {
+					error: function (xhr) {
 						Halcyon.message('danger', xhr.responseJSON.message);
 					}
 				});
@@ -239,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 					$('#comment_' + response.id + '_text').html(response.formattedcomment);
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					//console.log(xhr);
 					Halcyon.message('danger', xhr.responseJSON.message);
 				}

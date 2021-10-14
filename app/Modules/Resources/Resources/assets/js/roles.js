@@ -1,3 +1,8 @@
+/* global $ */ // jquery.js
+/* global WSGetURL */ // common.js
+/* global WSPostURL */ // common.js
+/* global WSDeleteURL */ // common.js
+
 var Roles = {
 	/**
 	 * Populate roles
@@ -104,15 +109,21 @@ var Roles = {
 	 * @param   {string}  userid
 	 * @return  {void}
 	 */
-	GetUserStatus: function (userid) {
+	GetUserStatus: function () {
 		var resource = document.getElementById("role");
-		resource = resource[resource.selectedIndex];//.value;
+		resource = resource[resource.selectedIndex];
 
 		if (resource) {
-			WSGetURL(resource.getAttribute('data-api'), Roles.GotUserStatus); // + "/" + resource + "." + userid
+			WSGetURL(resource.getAttribute('data-api'), Roles.GotUserStatus);
 		}
 	},
 
+	/**
+	 * Callback after getting user status
+	 *
+	 * @param   {object}  xml
+	 * @return  {void}
+	 */
 	GotUserStatus: function (xml) {
 		var stat = document.getElementById("role_status");
 
@@ -211,10 +222,9 @@ var Roles = {
 			} else {
 				err.classList.remove('hide');
 
+				var msg = "There was an error while processing the request.";
 				if (xml.status == 409) {
-					var msg = "One of the arguments is not valid.";
-				} else {
-					var msg = "There was an error while processing the request.";
+					msg = "One of the arguments is not valid.";
 				}
 
 				if (xml.responseText) {
@@ -265,7 +275,7 @@ var Roles = {
 $(document).ready(function () {
 	Roles.Populate();
 
-	$('#role').on('change', function (e) {
+	$('#role').on('change', function () {
 		Roles.GetUserStatus($(this).data('id'));
 	});
 	$('.role-add').on('click', function (e) {
@@ -274,7 +284,7 @@ $(document).ready(function () {
 	});
 	$('.role-delete').on('click', function (e) {
 		e.preventDefault();
-		Role.Delete($(this).data('id'));
+		Roles.Delete($(this).data('id'));
 	});
 
 	$(".roles-dialog").dialog({

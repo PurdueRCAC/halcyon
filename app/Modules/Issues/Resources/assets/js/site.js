@@ -2,13 +2,14 @@
 /* global ROOT_URL */ // common.js
 /* global WSGetURL */ // common.js
 /* global WSPostURL */ // common.js
+/* global WSPutURL */ // common.js
 /* global WSDeleteURL */ // common.js
 /* global ERRORS */ // common.js
 /* global SetError */ // common.js
 /* global HighlightMatches */ // text.js
 
 var keywords_pending = 0;
-var path = base_url + '/issues';
+var path = window.location.href; //base_url + '/issues';
 
 /**
  * Toggle UI tabs
@@ -1530,7 +1531,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		WSGetURL(ROOT_URL + "issues" + (q ? '?' + q : ''), IssuesSearched);
 	}
 
-	$('.issue-todo').on('change', function (e) {
+	$('.issue-todo').on('change', function () {
 		var myuserid = document.getElementById("myuserid").value;
 
 		var post = {
@@ -1563,7 +1564,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		var vals = document.getElementById($(this).attr('href').replace('#', '').replace('-form', '-values'));
 		vals.style.display = 'none';
 
-		var frm = document.getElementById($(this).attr('href').replace('#', '').replace('-form', '-cancel'));
+		frm = document.getElementById($(this).attr('href').replace('#', '').replace('-form', '-cancel'));
 		frm.style.display = 'inline-block';
 
 		document.getElementById('issuetodo-new').style.display = 'none';
@@ -1580,7 +1581,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		var vals = document.getElementById($(this).attr('href').replace('#', '') + '-values');
 		vals.style.display = 'block';
 
-		var frm = document.getElementById($(this).attr('href').replace('#', '') + '-edit');
+		frm = document.getElementById($(this).attr('href').replace('#', '') + '-edit');
 		frm.style.display = 'inline-block';
 
 		document.getElementById('issuetodo-new').style.display = 'block';
@@ -1612,7 +1613,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		e.preventDefault();
 
 		var id = $(this).data('id');
-		var frm = document.getElementById('issuetodo' + id + '-form');
+		//var frm = document.getElementById('issuetodo' + id + '-form');
 		//var id = original['id'].substr(original['id'].lastIndexOf("/")+1);
 
 		var post = {

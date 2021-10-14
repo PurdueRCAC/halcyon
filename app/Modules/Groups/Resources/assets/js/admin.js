@@ -1,3 +1,10 @@
+/* global $ */ // jquery.js
+/* global Halcyon */ // core.js
+/* global WSPutURL */ // core.js
+/* global WSDeleteURL */ // core.js
+/* global SetError */ // common.js
+/* global ERRORS */ // common.js
+
 /**
  * Unix base groups
  *
@@ -14,16 +21,12 @@ var BASEGROUPS = Array('', 'data', 'apps');
  * @return  {void}
  */
 function CreateNewGroupVal(num, btn, all) {
-	var base = btn.data('value'),
-		group = btn.data('group');
+	var group = btn.data('group');
+	//var base = btn.data('value');
 
 	if (typeof (all) == 'undefined') {
 		all = true;
 	}
-
-	// The callback only accepts one argument, so we
-	// need to compact this
-	var args = [num, group];
 
 	$.ajax({
 		url: btn.data('api'),
@@ -34,7 +37,7 @@ function CreateNewGroupVal(num, btn, all) {
 		},
 		dataType: 'json',
 		async: false,
-		success: function (response) {
+		success: function () {
 			num++;
 			if (all && num < BASEGROUPS.length) {
 				setTimeout(function () {
@@ -45,8 +48,7 @@ function CreateNewGroupVal(num, btn, all) {
 				window.location.reload(true);
 			}
 		},
-		error: function (xhr, ajaxOptions, thrownError) {
-			//console.log(xhr);
+		error: function (xhr) { //xhr, ajaxOptions, thrownError
 			btn.find('.spinner-border').addClass('d-none');
 			Halcyon.message('danger', xhr.responseJSON.message);
 		}
@@ -85,10 +87,10 @@ var motd = {
 			data: post,
 			dataType: 'json',
 			async: false,
-			success: function (data) {
+			success: function () {
 				window.location.reload();
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr) {
 				Halcyon.message('danger', xhr.response);
 			}
 		});
@@ -114,10 +116,10 @@ var motd = {
 			url: btn.getAttribute('data-api'),
 			type: 'delete',
 			async: false,
-			success: function (data) {
+			success: function () {
 				window.location.reload();
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr) {
 				Halcyon.message('danger', xhr.response);
 			}
 		});
@@ -223,11 +225,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('.searchable-select').select2();
 	}
 
-	$('.reveal').on('click', function (e) {
+	$('.reveal').on('click', function () {
 		$($(this).data('toggle')).toggleClass('hide');
 
 		var text = $(this).data('text');
-		$(this).data('text', $(this).html()); //.replace(/"/, /'/));
+		$(this).data('text', $(this).html());
 		$(this).html(text);
 	});
 
@@ -248,21 +250,21 @@ document.addEventListener('DOMContentLoaded', function() {
 			data: {membertype: $(this).val()},
 			dataType: 'json',
 			async: false,
-			success: function(data) {
+			success: function () {
 				Halcyon.message('success', 'Member type updated!');
 			},
-			error: function(xhr, ajaxOptions, thrownError) {
+			error: function () { //xhr, ajaxOptions, thrownError
 				Halcyon.message('danger', 'Failed to update member type.');
 			}
 		});
 	});
 
-	$('.input-unixgroup').on('keyup', function (e){
+	$('.input-unixgroup').on('keyup', function (){
 		var val = $(this).val();
 
 		val = val.toLowerCase()
 			.replace(/\s+/g, '-')
-			.replace(/[^a-z0-9\-]+/g, '');
+			.replace(/[^a-z0-9-]+/g, '');
 
 		$(this).val(val);
 	});
@@ -320,8 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				select.val(0);
 			},
-			error: function(xhr, ajaxOptions, thrownError) {
-				//console.log(xhr);
+			error: function(xhr) {
 				Halcyon.message('danger', xhr.responseJSON.message);
 			}
 		});
@@ -341,11 +342,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function(data) {
+				success: function() {
 					Halcyon.message('success', 'Item removed');
 					field.remove();
 				},
-				error: function(xhr, ajaxOptions, thrownError) {
+				error: function(xhr) {
 					Halcyon.message('danger', xhr.responseJSON.message);
 				}
 			});
@@ -398,8 +399,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				name.val('');
 			},
-			error: function(xhr, ajaxOptions, thrownError) {
-				//console.log(xhr);
+			error: function(xhr) {
 				Halcyon.message('danger', xhr.responseJSON.message);
 			}
 		});
@@ -419,11 +419,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function(data) {
+				success: function() {
 					Halcyon.message('success', 'Item removed');
 					field.remove();
 				},
-				error: function(xhr, ajaxOptions, thrownError) {
+				error: function(xhr) {
 					Halcyon.message('danger', xhr.responseJSON.message);
 				}
 			});
@@ -431,11 +431,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	// Pending user requests
-	$('.radio-toggle').on('change', function (e) {
+	$('.radio-toggle').on('change', function () {
 		ToggleAllRadio(parseInt($(this).val()));
 		$('#submit-requests').prop('disabled', false);
 	});
-	$('.approve-request').on('change', function (e) {
+	$('.approve-request').on('change', function () {
 		$('#submit-requests').prop('disabled', false);
 	});
 	$('#submit-requests').on('click', function (e) {
@@ -452,7 +452,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		// Loop through list and approve users. -2 so it doesnt hit the approve/deny all buttons
 		for (var i = 0; i < inputs.length; i++) {
-			var user = inputs[i].value.split(",")[0];
+			//var user = inputs[i].value.split(",")[0];
 			var approve = inputs[i].value.split(",")[1];
 
 			if (approve == 0 && inputs[i].checked == true) {
@@ -480,7 +480,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	$('.edit-property').on('click', function (e) {
+	/*$('.edit-property').on('click', function (e) {
 		e.preventDefault();
 
 		var items = ['SPAN', 'INPUT', 'CANCEL', 'SAVE', 'EDIT'], item;
@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					edit.toggleClass('hide');
 				}
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr) {
 				//Halcyon.message('danger', xhr.response);
 				//btn.find('spinner-border').toggleClass('hide');
 				//btn.find('fa').toggleClass('hide');
@@ -567,14 +567,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	/*$('.create-default-unix-groups').on('click', function(e){
+	$('.create-default-unix-groups').on('click', function(e){
 		e.preventDefault();
 		CreateDefaultUnixGroups($(this).data('value'), $(this).data('group'));
-	});*/
+	});
 	$('.delete-unix-group').on('click', function (e) {
 		e.preventDefault();
 		DeleteUnixGroup($(this).data('unixgroup'), $(this).data('value'));
-	});
+	});*/
 
 	$('.searchable-select').select2();
 
@@ -606,16 +606,16 @@ document.addEventListener('DOMContentLoaded', function() {
 							return;
 						}
 						var column = this;
-						var select = $('<select class="data-col-filter" data-index="' + i + '"><option value="all">- All -</option><option value="selected">Selected</option><option value="not-selected">Not selected</option></select><br />')
-							.prependTo($(column.header()));
+						var select = $('<select class="data-col-filter" data-index="' + i + '"><option value="all">- All -</option><option value="selected">Selected</option><option value="not-selected">Not selected</option></select><br />');
+							select.prependTo($(column.header()));
 					});
 
 					$('.data-col-filter').on('change', function () {
 						$.fn.dataTable.ext.search = [];//.pop();
 
 						$('.data-col-filter').each(function (k, el) {
-							var val = $(this).val(),
-								index = $(this).data('index');
+							var val = $(el).val(),
+								index = $(el).data('index');
 
 							// If all records should be displayed
 							if (val === 'all') {
@@ -661,6 +661,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			inited = true;
 		}
 	//});
+
 	// [!] Fix dropdowns in datatables getting cut off if there is only one row
 	$(document).on('shown.bs.dropdown', '.datatable', function (e) {
 		// The .dropdown container
@@ -693,7 +694,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		$($(this).attr('href')).toggleClass('hidden');
 	});
 
-	var dialog = $(".membership-dialog").dialog({
+	$(".membership-dialog").dialog({
 		autoOpen: false,
 		height: 'auto',
 		width: 500,
@@ -732,7 +733,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			}
 		});
-		$('#addmembers').on('select2:select', function (e) {
+		$('#addmembers').on('select2:select', function () {
 			$('#add_member_save').prop('disabled', false);
 		});
 	});
@@ -772,7 +773,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				data: post,
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					processed['users']++;
 
 					queues.each(function (k, checkbox) {
@@ -781,16 +782,15 @@ document.addEventListener('DOMContentLoaded', function() {
 							type: 'post',
 							data: {
 								'userid': userid,
-								//'groupid': btn.data('group'),
 								'queueid': checkbox.value,
 							},
 							dataType: 'json',
 							async: false,
-							success: function (data) {
+							success: function () {
 								processed['queues']++;
 								checkprocessed(processed, pending);
 							},
-							error: function (xhr, ajaxOptions, thrownError) {
+							error: function (xhr) {
 								//Halcyon.message('danger', xhr.response);
 								alert(xhr.responseJSON.message);
 								processed['queues']++;
@@ -811,11 +811,11 @@ document.addEventListener('DOMContentLoaded', function() {
 							},
 							dataType: 'json',
 							async: false,
-							success: function (data) {
+							success: function () {
 								processed['unixgroups']++;
 								checkprocessed(processed, pending);
 							},
-							error: function (xhr, ajaxOptions, thrownError) {
+							error: function (xhr) {
 								//Halcyon.message('danger', xhr.response);
 								alert(xhr.responseJSON.message);
 								processed['unixgroups']++;
@@ -825,7 +825,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						console.log(btn.data('api-unixgroupusers'));
 					});
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					//Halcyon.message('danger', xhr.response);
 					alert(xhr.responseJSON.message);
 				}
@@ -847,13 +847,12 @@ document.addEventListener('DOMContentLoaded', function() {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					if (xhr.status == 416) {
 						SetError("Queue disabled for system/guest account. ACMaint Role removal must be requested manually from accounts@purdue.edu", null);
 					}
-					//alert(xhr.response);
 				}
 			});
 		});
@@ -864,10 +863,10 @@ document.addEventListener('DOMContentLoaded', function() {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					location.reload(true);
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					alert(xhr.responseJSON.message);
 				}
 			});
@@ -896,10 +895,10 @@ document.addEventListener('DOMContentLoaded', function() {
 				},
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					location.reload(true);
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					alert(xhr.responseJSON.message);
 				}
 			});
@@ -926,9 +925,9 @@ document.addEventListener('DOMContentLoaded', function() {
 				data: post,
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					if (xhr.status == 416) {
 						alert("Queue enabled for system/guest account. ACMaint Role addition must be requested manually from accounts@purdue.edu", null);
 					} else {
@@ -942,9 +941,9 @@ document.addEventListener('DOMContentLoaded', function() {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					if (xhr.status == 416) {
 						alert("Queue disabled for system/guest account. ACMaint Role removal must be requested manually from accounts@purdue.edu", null);
 					} else {

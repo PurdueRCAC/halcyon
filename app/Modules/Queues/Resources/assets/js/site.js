@@ -1,11 +1,6 @@
 /* global $ */ // jquery.js
-/* global ROOT_URL */ // common.js
-/* global WSGetURL */ // common.js
 /* global WSPostURL */ // common.js
 /* global WSDeleteURL */ // common.js
-/* global SetError */ // common.js
-/* global ERRORS */ // common.js
-/* global GetTab */ // common.js
 
 if (ERRORS === undefined) {
 	var ERRORS = Object();
@@ -31,7 +26,7 @@ ERRORS['deletereservation'] = "An error occurred while deleting reservation.";
  *
  * @return  {void}
  */
-function ShowQueuePurchase() {
+/*function ShowQueuePurchase() {
 	document.getElementById("new_queuesizeloan").style.display = "block";
 	document.getElementById("enddate").style.display = "none";
 	document.getElementById("enddatealt").style.display = "block";
@@ -41,14 +36,14 @@ function ShowQueuePurchase() {
 	document.getElementById("submitpurchase").style.display = "inline";
 	document.getElementById("targetloan").style.display = "none";
 	document.getElementById("targetsale").style.display = "block";
-}
+}*/
 
 /**
  * Show queue loan
  *
  * @return  {void}
  */
-function ShowQueueLoan() {
+/*function ShowQueueLoan() {
 	document.getElementById("new_queuesizeloan").style.display = "block";
 	document.getElementById("enddate").style.display = "block";
 	document.getElementById("enddatealt").style.display = "none";
@@ -58,14 +53,14 @@ function ShowQueueLoan() {
 	document.getElementById("submitpurchase").style.display = "none";
 	document.getElementById("targetloan").style.display = "block";
 	document.getElementById("targetsale").style.display = "none";
-}
+}*/
 
 /**
  * Create a purchase
  *
  * @return  {void}
  */
-function CreatePurchase() {
+/*function CreatePurchase() {
 	// get input
 	var cores = document.getElementById("cores").value.replace(/(^\s+|\s+$)/g, "");
 	var startdate = document.getElementById("datestart").value.replace(/(^\s+|\s+$)/g, "");
@@ -148,7 +143,7 @@ function CreatePurchase() {
 	document.getElementById("cancel").disabled = "true";
 
 	WSPostURL(ROOT_URL + "queuesize", post, CreatedPurchase);
-}
+}*/
 
 /**
  * Callback after creating a purchase
@@ -156,7 +151,7 @@ function CreatePurchase() {
  * @param   {object}  xml
  * @return  {void}
  */
-function CreatedPurchase(xml) {
+/*function CreatedPurchase(xml) {
 	if (xml.status == 200) {
 		var results = JSON.parse(xml.responseText);
 		if (results['seller'] == ROOT_URL + "queue/0") {
@@ -197,14 +192,14 @@ function CreatedPurchase(xml) {
 
 		SetError(ERRORS['purchase'], null);
 	}
-}
+}*/
 
 /**
  * Create a loan
  *
  * @return  {void}
  */
-function CreateLoan() {
+/*function CreateLoan() {
 	// get input
 	var cores = document.getElementById("cores").value.replace(/(^\s+|\s+$)/g, "");
 	var startdate = document.getElementById("datestart").value.replace(/(^\s+|\s+$)/g, "");
@@ -311,7 +306,7 @@ function CreateLoan() {
 	document.getElementById("cancel").disabled = "true";
 
 	WSPostURL(ROOT_URL + "queueloan", post, CreatedLoan);
-}
+}*/
 
 /**
  * Callback after creating a loan
@@ -319,7 +314,7 @@ function CreateLoan() {
  * @param   {object}  xml
  * @return  {void}
  */
-function CreatedLoan(xml) {
+/*function CreatedLoan(xml) {
 	if (xml.status == 200) {
 		var results = JSON.parse(xml.responseText);
 		var queue = results['queue'].split("/");
@@ -356,7 +351,7 @@ function CreatedLoan(xml) {
 
 		SetError(ERRORS['loan'], null);
 	}
-}
+}*/
 
 /**
  * Modify a loan
@@ -364,7 +359,7 @@ function CreatedLoan(xml) {
  * @param   {string}  id
  * @return  {void}
  */
-function ModifyLoan(id) {
+/*function ModifyLoan(id) {
 	// get input
 	var cores = document.getElementById("cores").value.replace(/(^\s+|\s+$)/g, "");
 	var changedate = document.getElementById("datechange");
@@ -544,7 +539,7 @@ function ModifyLoan(id) {
 
 		WSPostURL(id, JSON.stringify(update_post), ModifiedLoanA, null);
 	}
-}
+}*/
 
 /**
  * Callback after modifying a loan
@@ -553,7 +548,7 @@ function ModifyLoan(id) {
  * @param   {object}  post
  * @return  {void}
  */
-function ModifiedLoanA(xml, post) {
+/*function ModifiedLoanA(xml, post) {
 	if (xml.status == 200) {
 		if (post == null) {
 			window.location.reload(true);
@@ -579,9 +574,9 @@ function ModifiedLoanA(xml, post) {
 
 		SetError(ERRORS['modifypurchase'], null);
 	}
-}
+}*/
 
-function ModifiedLoanB(xml) {
+/*function ModifiedLoanB(xml) {
 	if (xml.status == 200) {
 		window.location.reload(true);
 	} else if (xml.status == 409) {
@@ -591,7 +586,7 @@ function ModifiedLoanB(xml) {
 	} else {
 		SetError(ERRORS['modifyloan'], null);
 	}
-}
+}*/
 
 /**
  * Modify a purchase
@@ -599,7 +594,7 @@ function ModifiedLoanB(xml) {
  * @param   {string}  id
  * @return  {void}
  */
-function ModifyPurchase(id) {
+/*function ModifyPurchase(id) {
 	// get input
 	var cores = document.getElementById("cores").value.replace(/(^\s+|\s+$)/g, "");
 	var startdate = document.getElementById("datestart").value.replace(/(^\s+|\s+$)/g, "");
@@ -662,7 +657,7 @@ function ModifyPurchase(id) {
 
 		WSPostURL(id, JSON.stringify(update_post), ModifiedPurchase);
 	}
-}
+}*/
 
 /**
  * Callback after modifying a purchase
@@ -670,7 +665,7 @@ function ModifyPurchase(id) {
  * @param   {object}  xml
  * @return  {void}
  */
-function ModifiedPurchase(xml) {
+/*function ModifiedPurchase(xml) {
 	if (xml.status == 200) {
 		window.location.reload(true);
 	} else if (xml.status == 409) {
@@ -692,7 +687,7 @@ function ModifiedPurchase(xml) {
 
 		SetError(ERRORS['modifypurchase'], null);
 	}
-}
+}*/
 
 /**
  * Delete a purchase
@@ -700,11 +695,11 @@ function ModifiedPurchase(xml) {
  * @param   {strong}  id
  * @return  {void}
  */
-function DeletePurchase(id) {
+/*function DeletePurchase(id) {
 	if (confirm("Are you sre you want to delete this sale?")) {
 		WSDeleteURL(id, DeletedPurchase);
 	}
-}
+}*/
 
 /**
  * Callback after deleting a purchase
@@ -712,7 +707,7 @@ function DeletePurchase(id) {
  * @param   {object}  xml
  * @return  {void}
  */
-function DeletedPurchase(xml) {
+/*function DeletedPurchase(xml) {
 	if (xml.status == 200) {
 		var queue = document.getElementById("queueid").value;
 		queue = queue.split("/");
@@ -721,7 +716,7 @@ function DeletedPurchase(xml) {
 	} else {
 		SetError(ERRORS['deletepurchase'], null);
 	}
-}
+}*/
 
 /**
  * Delete a loan
@@ -729,11 +724,11 @@ function DeletedPurchase(xml) {
  * @param   {string}  id
  * @return  {void}
  */
-function DeleteLoan(id) {
+/*function DeleteLoan(id) {
 	if (confirm("Are you sre you want to delete this loan?")) {
 		WSDeleteURL(id, DeletedLoan);
 	}
-}
+}*/
 
 /**
  * Callback after deleting a loan
@@ -741,7 +736,7 @@ function DeleteLoan(id) {
  * @param   {object}  xml
  * @return  {void}
  */
-function DeletedLoan(xml) {
+/*function DeletedLoan(xml) {
 	if (xml.status == 200) {
 		var queue = document.getElementById("queueid").value;
 		queue = queue.split("/");
@@ -750,7 +745,7 @@ function DeletedLoan(xml) {
 	} else {
 		SetError(ERRORS['deleteloan'], null);
 	}
-}
+}*/
 
 /**
  * Pending items count
@@ -973,7 +968,7 @@ function setStatusIndicator(id, status) {
  *
  * @return  {void}
  */
-function UpdateNodeType() {
+/*function UpdateNodeType() {
 	var select = document.getElementById("SELECT_scheduler");
 
 	document.getElementById("SPAN_nodecores").innerHTML = "--";
@@ -988,7 +983,7 @@ function UpdateNodeType() {
 		}
 		WSGetURL(schedid, UpdateNodeTypeScheduler);
 	}
-}
+}*/
 
 /**
  * Update node type scheduler
@@ -996,7 +991,7 @@ function UpdateNodeType() {
  * @param   {object}  xml
  * @return  {void}
  */
-function UpdateNodeTypeScheduler(xml) {
+/*function UpdateNodeTypeScheduler(xml) {
 	if (xml.status == 200) {
 		var results = JSON.parse(xml.responseText);
 		document.getElementById("INPUT_maxwalltime").value = results['defaultmaxwalltime'] / 60 / 60;
@@ -1016,7 +1011,7 @@ function UpdateNodeTypeScheduler(xml) {
 			img.src = "/include/images/error.png";
 		}
 	}
-}
+}*/
 
 /**
  * Update node type select
@@ -1024,7 +1019,7 @@ function UpdateNodeTypeScheduler(xml) {
  * @param   {object}  xml
  * @return  {void}
  */
-function UpdateNodeTypeSelect(xml) {
+/*function UpdateNodeTypeSelect(xml) {
 	var img = document.getElementById("IMG_scheduler");
 
 	if (xml.status == 200) {
@@ -1052,14 +1047,14 @@ function UpdateNodeTypeSelect(xml) {
 			img.src = "/include/images/error.png";
 		}
 	}
-}
+}*/
 
 /**
  * Change node type
  *
  * @return  {void}
  */
-function ChangeNodeType() {
+/*function ChangeNodeType() {
 	document.getElementById("SPAN_nodecores").innerHTML = "--";
 	document.getElementById("SPAN_nodemem").innerHTML = "--";
 	var select = document.getElementById("SELECT_nodetype");
@@ -1073,7 +1068,7 @@ function ChangeNodeType() {
 		var subresourceid = select.options[select.selectedIndex].value;
 		WSGetURL(subresourceid, ChangeNodeTypeText);
 	}
-}
+}*/
 
 /**
  * Change node type text
@@ -1081,7 +1076,7 @@ function ChangeNodeType() {
  * @param   {object}  xml
  * @return  {void}
  */
-function ChangeNodeTypeText(xml) {
+/*function ChangeNodeTypeText(xml) {
 	var img = document.getElementById("IMG_nodetype");
 
 	if (xml.status == 200) {
@@ -1108,14 +1103,14 @@ function ChangeNodeTypeText(xml) {
 		img.style.visibility = "visible";
 		img.src = "/include/images/error.png";
 	}
-}
+}*/
 
 /**
  * Create a queue
  *
  * @return  {void}
  */
-function CreateQueue() {
+/*function CreateQueue() {
 	var btn = document.getElementById('create_queue_btn');
 
 	if (btn) {
@@ -1229,7 +1224,7 @@ function CreateQueue() {
 	post = JSON.stringify(post);
 
 	WSPostURL(ROOT_URL + "queue", post, CreatedQueue);
-}
+}*/
 
 /**
  * Callback after creating a queue
@@ -1237,7 +1232,7 @@ function CreateQueue() {
  * @param   {object}  xml
  * @return  {void}
  */
-function CreatedQueue(xml) {
+/*function CreatedQueue(xml) {
 	if (xml.status == 200) {
 		var results = JSON.parse(xml.responseText);
 		var maxwalltime = document.getElementById("INPUT_maxwalltime").value * 60 * 60;
@@ -1272,7 +1267,7 @@ function CreatedQueue(xml) {
 			SetError(ERRORS['queue'], ERRORS['unknown']);
 		}
 	}
-}
+}*/
 
 /**
  * Callback after creating walltime
@@ -1281,7 +1276,7 @@ function CreatedQueue(xml) {
  * @param   {string}  queue
  * @return  {void}
  */
-function CreatedWalltime(xml, queue) {
+/*function CreatedWalltime(xml, queue) {
 	if (xml.status == 200) {
 		var results = JSON.parse(xml.responseText);
 		queue = results['queue'].split("/");
@@ -1300,7 +1295,7 @@ function CreatedWalltime(xml, queue) {
 			SetError(ERRORS['queue'], ERRORS['unknown']);
 		}
 	}
-}
+}*/
 
 /**
  * Delete queue link
@@ -1308,11 +1303,11 @@ function CreatedWalltime(xml, queue) {
  * @param   {string}  queue
  * @return  {void}
  */
-function DeleteQueueLink(queue) {
+/*function DeleteQueueLink(queue) {
 	if (confirm("Are you sure you want to delete this queue?")) {
 		WSDeleteURL(queue, DeletedQueueLink);
 	}
-}
+}*/
 
 /**
  * Callback after deleting queue link
@@ -1320,13 +1315,13 @@ function DeleteQueueLink(queue) {
  * @param   {object}  xml
  * @return  {void}
  */
-function DeletedQueueLink(xml) {
+/*function DeletedQueueLink(xml) {
 	if (xml.status == 200) {
 		window.location = "/admin/queue/";
 	} else {
 		SetError(ERRORS['deletequeue'], null);
 	}
-}
+}*/
 
 /**
  * New queue core
@@ -1334,7 +1329,7 @@ function DeletedQueueLink(xml) {
  * @param   {number}  nodecores
  * @return  {void}
  */
-function NewQueueCore(nodecores) {
+/*function NewQueueCore(nodecores) {
 	if (nodecores == 0) {
 		return;
 	}
@@ -1347,7 +1342,7 @@ function NewQueueCore(nodecores) {
 	} else {
 		nodes.value = "";
 	}
-}
+}*/
 
 /**
  * New queue node
@@ -1355,7 +1350,7 @@ function NewQueueCore(nodecores) {
  * @param   {number}  nodecores
  * @return  {void}
  */
-function NewQueueNode(nodecores) {
+/*function NewQueueNode(nodecores) {
 	var cores = document.getElementById("cores");
 	var nodes = document.getElementById("nodes").value.replace(/(^\s+|\s+$)/g, "");
 
@@ -1364,7 +1359,7 @@ function NewQueueNode(nodecores) {
 	} else {
 		cores.value = "";
 	}
-}
+}*/
 
 /**
  * New queue group
@@ -1372,7 +1367,7 @@ function NewQueueNode(nodecores) {
  * @param   {string}  subresource
  * @return  {void}
  */
-function NewQueueGroup(subresource) {
+/*function NewQueueGroup(subresource) {
 	var group = document.getElementById("group");
 	var queue = document.getElementById("queue");
 	var opt = document.createElement("option");
@@ -1390,7 +1385,7 @@ function NewQueueGroup(subresource) {
 	} else {
 		queue.disabled = true;
 	}
-}
+}*/
 
 /**
  * New queue populate queue
@@ -1399,7 +1394,7 @@ function NewQueueGroup(subresource) {
  * @param   {string}  subresource
  * @return  {void}
  */
-function NewQueuePopulateQueue(xml, subresource) {
+/*function NewQueuePopulateQueue(xml, subresource) {
 	if (xml.status == 200) {
 		var group = JSON.parse(xml.responseText);
 		var queue = document.getElementById("queue");
@@ -1435,7 +1430,7 @@ function NewQueuePopulateQueue(xml, subresource) {
 	} else {
 		SetError(ERRORS['unknown'], null);
 	}
-}
+}*/
 
 /**
  * Update walltime
@@ -1443,7 +1438,7 @@ function NewQueuePopulateQueue(xml, subresource) {
  * @param   {string}  queue
  * @return  {void}
  */
-function UpdateWalltime(queue) {
+/*function UpdateWalltime(queue) {
 	var img = document.getElementById("IMG_maxwalltime");
 	var span = document.getElementById("SPAN_maxwalltime");
 	var input = document.getElementById("INPUT_maxwalltime");
@@ -1484,7 +1479,7 @@ function UpdateWalltime(queue) {
 			WSPostURL(ROOT_URL + "queuewalltime", post, UpdatedWalltime);
 		}
 	}
-}
+}*/
 
 /**
  * Callback after deleting walltime
@@ -1493,7 +1488,7 @@ function UpdateWalltime(queue) {
  * @param   {string}  queue
  * @return  {void}
  */
-function DeletedWalltime(xml, queue) {
+/*function DeletedWalltime(xml, queue) {
 	if (xml.status == 200) {
 		var input = document.getElementById("INPUT_maxwalltime");
 		var post = JSON.stringify({
@@ -1508,7 +1503,7 @@ function DeletedWalltime(xml, queue) {
 			img.title = "An error has occurred. Please try again.";
 		}
 	}
-}
+}*/
 
 /**
  * Callback after updating walltime
@@ -1516,7 +1511,7 @@ function DeletedWalltime(xml, queue) {
  * @param   {object}  xml
  * @return  {void}
  */
-function UpdatedWalltime(xml) {
+/*function UpdatedWalltime(xml) {
 	var img = document.getElementById("IMG_maxwalltime");
 	var input = document.getElementById("INPUT_maxwalltime");
 	var span = document.getElementById("SPAN_maxwalltime");
@@ -1533,7 +1528,7 @@ function UpdatedWalltime(xml) {
 		span.innerHTML = "0";
 		input.value = "0";
 	}
-}
+}*/
 
 /**
  * Reservation edit
@@ -1541,7 +1536,7 @@ function UpdatedWalltime(xml) {
  * @param   {string}  r_id
  * @return  {void}
  */
-function ReservationEdit(r_id) {
+/*function ReservationEdit(r_id) {
 	var edit_div = document.getElementById("stoptime_" + r_id);
 	var endtime = edit_div.innerHTML;
 
@@ -1549,7 +1544,7 @@ function ReservationEdit(r_id) {
 
 	var edit_field = document.getElementById("stoptime_edit_" + r_id);
 	edit_field.focus();
-}
+}*/
 
 /**
  * Reservation update
@@ -1558,7 +1553,7 @@ function ReservationEdit(r_id) {
  * @param   {string}  old_time
  * @return  {void}
  */
-function ReservationUpdate(r_id, old_time) {
+/*function ReservationUpdate(r_id, old_time) {
 	var tab_id = GetTab();
 	var new_time = document.getElementById("stoptime_edit_" + r_id).value;
 	var edit_div = document.getElementById("stoptime_" + r_id);
@@ -1581,7 +1576,7 @@ function ReservationUpdate(r_id, old_time) {
 		edit_div.innerHTML = old_time;
 		error.style.display = "none";
 	}
-}
+}*/
 
 /**
  * Callback after updating reservation
@@ -1590,7 +1585,7 @@ function ReservationUpdate(r_id, old_time) {
  * @param   {string}  r_id
  * @return  {void}
  */
-function ReservationUpdated(xml, r_id) {
+/*function ReservationUpdated(xml, r_id) {
 	var tab_id = GetTab();
 	var edit_div = document.getElementById("stoptime_" + r_id);
 	var time = document.getElementById("stoptime_edit_" + r_id).value;
@@ -1611,7 +1606,7 @@ function ReservationUpdated(xml, r_id) {
 		error.innerHTML = "Error updating reservation.";
 		error.style.display = "block";
 	}
-}
+}*/
 
 /**
  * Create a reservation
@@ -1619,7 +1614,7 @@ function ReservationUpdated(xml, r_id) {
  * @param   {string}  tab_id
  * @return  {void}
  */
-function ReservationCreate(tab_id) {
+/*function ReservationCreate(tab_id) {
 	var name = document.getElementById("ReservationName_" + tab_id).value;
 	var scheduler = document.getElementById("ReservationScheduler_" + tab_id).innerHTML;
 	var nodes = document.getElementById("ReservationNodes_" + tab_id).value;
@@ -1654,7 +1649,7 @@ function ReservationCreate(tab_id) {
 	} else {
 		error.innerHTML = "Ensure all form fields are filled in before submitting."
 	}
-}
+}*/
 
 /**
  * Callback after creating a reservation
@@ -1662,7 +1657,7 @@ function ReservationCreate(tab_id) {
  * @param   {object}  xml
  * @return  {void}
  */
-function ReservationCreated(xml) {
+/*function ReservationCreated(xml) {
 	if (xml.status == 412) {
 		SetError("Error creating reservation. Ensure all form fields are filled in.", null);
 	} else if (xml.status == 413) {
@@ -1678,7 +1673,7 @@ function ReservationCreated(xml) {
 	} else {
 		SetError("Error creating reservation.", null);
 	}
-}
+}*/
 
 /**
  * Delete a reservation
@@ -1686,13 +1681,13 @@ function ReservationCreated(xml) {
  * @param   {string}  r_id
  * @return  {void}
  */
-function ReservationDelete(r_id) {
+/*function ReservationDelete(r_id) {
 	//var reservation = document.getElementById("RESERVATION_" + r_id);
 
 	setStatusIndicator(r_id, 'loading');
 
 	WSDeleteURL(ROOT_URL + "reservation/" + /\d+$/.exec(r_id), ReservationDeleted, r_id);
-}
+}*/
 
 /**
  * Callback after deleting a reservation
@@ -1701,7 +1696,7 @@ function ReservationDelete(r_id) {
  * @param   {string}  r_id
  * @return  {void}
  */
-function ReservationDeleted(xml, r_id) {
+/*function ReservationDeleted(xml, r_id) {
 	if (xml.status == 200) {
 		// success. remove the reservation row from the table
 		var reservation = document.getElementById("RESERVATION_" + r_id);
@@ -1709,7 +1704,7 @@ function ReservationDeleted(xml, r_id) {
 	} else if (xml.status == 404) {
 		SetError(ERRORS['deletereservation'], null);
 	}
-}
+}*/
 
 /**
  * Change date
@@ -1717,7 +1712,7 @@ function ReservationDeleted(xml, r_id) {
  * @param   {string}  field
  * @return  {void}
  */
-function ChangeDate(field) {
+/*function ChangeDate(field) {
 	var d = document.getElementById("date" + field);
 	var time = document.getElementById("time" + field + "short");
 
@@ -1760,14 +1755,14 @@ function ChangeDate(field) {
 			time.value = "12:00 AM";
 		}
 	}
-}
+}*/
 
 /**
  * Update queue type
  *
  * @return  {void}
  */
-function UpdateQueueType() {
+/*function UpdateQueueType() {
 	var type = $('#SELECT_queuetype').val();
 
 	var name = "";
@@ -1846,14 +1841,14 @@ function UpdateQueueType() {
 	$('#INPUT_maxjobsqueueduser').val(maxjobsqueueduser);
 	$('#INPUT_maxjobsrun').val(maxjobsrunning);
 	$('#INPUT_maxjobsrunuser').val(maxjobsrunninguser);
-}
+}*/
 
 /**
  * Display retired
  *
  * @return  {void}
  */
-function DisplayRetired() {
+/*function DisplayRetired() {
 	var elem = document.getElementById('drop');
 
 	if (elem.style.display === "none") {
@@ -1862,7 +1857,7 @@ function DisplayRetired() {
 	else {
 		elem.style.display = "none";
 	}
-}
+}*/
 
 /**
  * Initiate event hooks
@@ -1931,7 +1926,7 @@ $(document).ready(function () {
 			modal: true,
 			width: '550px',
 			open: function () {
-				var d = $(this);
+				//var d = $(this);
 
 				var groups = $(".form-group-queues");
 				if (groups.length) {
@@ -1943,7 +1938,7 @@ $(document).ready(function () {
 							var group = $(this);
 
 							var queue = $('#' + group.data('update'));
-							var dest_queue = group.attr('data-queueid'); //document.getElementById("field-id").value;
+							//var dest_queue = group.attr('data-queueid');
 
 							$.ajax({
 								url: group.data('queue-api'),
@@ -1978,12 +1973,12 @@ $(document).ready(function () {
 										}
 									}
 								},
-								error: function (xhr, reason, thrownError) {
+								error: function (xhr) {
 									var msg = 'Failed to retrieve queues.';
 									if (xhr.responseJSON && xhr.responseJSON.message) {
 										msg = xhr.responseJSON.message;
 									}
-									Halcyon.message('danger', msg);
+									alert(msg);
 
 									console.log(xhr.responseText);
 								}
@@ -1995,20 +1990,20 @@ $(document).ready(function () {
 		});
 	});
 
-	$('.nodes').on('change', function (e) {
+	$('.nodes').on('change', function () {
 		var nodecores = $(this).data('nodes');
 
 		var cores = document.getElementById(this.getAttribute('data-cores-field'));
 		var nodes = this.value.replace(/(^\s+|\s+$)/g, "");
 
-		if (nodes.match(RegExp("^[\-]?[0-9]+$"))) {
+		if (nodes.match(RegExp("^[-]?[0-9]+$"))) {
 			cores.value = (nodes * nodecores);
 		} else {
 			cores.value = "";
 		}
 	});
 
-	$('.cores').on('change', function (e) {
+	$('.cores').on('change', function () {
 		var nodecores = $(this).data('cores');
 
 		if (nodecores == 0) {
@@ -2018,7 +2013,7 @@ $(document).ready(function () {
 		var cores = this.value.replace(/(^\s+|\s+$)/g, "");
 		var nodes = document.getElementById(this.getAttribute('data-nodes-field'));
 
-		if (cores.match(RegExp("^[\-]?[0-9]+$"))) {
+		if (cores.match(RegExp("^[-]?[0-9]+$"))) {
 			nodes.value = (cores / nodecores);
 		} else {
 			nodes.value = "";
@@ -2042,7 +2037,7 @@ $(document).ready(function () {
 					el.classList.remove('is-invalid');
 				}
 			});
-			var elms = frm[0].querySelectorAll('select[required]');
+			elms = frm[0].querySelectorAll('select[required]');
 			elms.forEach(function (el) {
 				if (!el.value || el.value <= 0) {
 					el.classList.add('is-invalid');
@@ -2051,7 +2046,7 @@ $(document).ready(function () {
 					el.classList.remove('is-invalid');
 				}
 			});
-			var elms = frm[0].querySelectorAll('textarea[required]');
+			elms = frm[0].querySelectorAll('textarea[required]');
 			elms.forEach(function (el) {
 				if (!el.value || !el.validity.valid) {
 					el.classList.add('is-invalid');
@@ -2072,16 +2067,15 @@ $(document).ready(function () {
 			data: frm.serialize(),
 			dataType: 'json',
 			async: false,
-			success: function (data) {
-				//Halcyon.message('success', btn.getAttribute('data-success'));
+			success: function () {
 				window.location.reload(true);
 			},
-			error: function (xhr, reason, thrownError) {
+			error: function (xhr) { //xhr, reason, thrownError
 				var msg = 'Failed to create item.';
 				if (xhr.responseJSON && xhr.responseJSON.message) {
 					msg = xhr.responseJSON.message;
 				}
-				//Halcyon.message('danger', msg);
+
 				alert(msg);
 			}
 		});
@@ -2098,10 +2092,10 @@ $(document).ready(function () {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					window.location.reload(true);
 				},
-				error: function (xhr, reason, thrownError) {
+				error: function (xhr) {
 					var msg = 'Failed to delete item.';
 					if (xhr.responseJSON && xhr.responseJSON.message) {
 						msg = xhr.responseJSON.message;

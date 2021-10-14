@@ -1,11 +1,5 @@
 /* global $ */ // jquery.js
-/* global ROOT_URL */ // common.js
-/* global WSGetURL */ // common.js
-/* global WSPostURL */ // common.js
-/* global WSDeleteURL */ // common.js
 /* global SetError */ // common.js
-/* global PrepareText */ // common.js
-/* global HighlightMatches */ // text.js
 
 /**
  * Unix base groups
@@ -23,8 +17,8 @@ var BASEGROUPS = Array('', 'data', 'apps');
  * @return  {void}
  */
 function CreateNewGroupVal(num, btn, all) {
-	var base = btn.data('value'),
-		group = btn.data('group');
+	var group = btn.data('group');
+	//var base = btn.data('value');
 
 	if (typeof (all) == 'undefined') {
 		all = true;
@@ -41,25 +35,20 @@ function CreateNewGroupVal(num, btn, all) {
 	$.ajax({
 		url: btn.data('api'),
 		type: 'post',
-		data: {
-			'longname': BASEGROUPS[num],
-			'groupid': group
-		},
+		data: post,
 		dataType: 'json',
 		async: false,
-		success: function (response) {
+		success: function () {
 			num++;
 			if (all && num < BASEGROUPS.length) {
 				setTimeout(function () {
 					CreateNewGroupVal(num, btn, all);
 				}, 5000);
 			} else {
-				//Halcyon.message('success', 'Item added');
 				window.location.reload(true);
 			}
 		},
-		error: function (xhr, ajaxOptions, thrownError) {
-			//console.log(xhr);
+		error: function (xhr) {
 			btn.find('.spinner-border').addClass('d-none');
 			alert(xhr.responseJSON.message);
 		}
@@ -74,28 +63,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		$('.searchable-select').select2();
 	}
 
-	/*$('#main').on('change', '.membertype', function () {
-		$.ajax({
-			url: $(this).data('api'),
-			type: 'put',
-			data: { membertype: $(this).val() },
-			dataType: 'json',
-			async: false,
-			success: function (data) {
-				Halcyon.message('success', 'Member type updated!');
-			},
-			error: function (xhr, ajaxOptions, thrownError) {
-				Halcyon.message('danger', 'Failed to update member type.');
-			}
-		});
-	});*/
-
-	$('.input-unixgroup').on('keyup', function (e) {
+	$('.input-unixgroup').on('keyup', function () {
 		var val = $(this).val();
 
 		val = val.toLowerCase()
 			.replace(/\s+/g, '-')
-			.replace(/[^a-z0-9\-]+/g, '');
+			.replace(/[^a-z0-9-]+/g, '');
 
 		$(this).val(val);
 	});
@@ -165,11 +138,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 
 				select.val(0);
-
-				//SetAction('Item added', null);
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
-				//console.log(xhr);
+			error: function (xhr) {
 				SetError(xhr.responseJSON.message);
 			}
 		});
@@ -189,18 +159,17 @@ document.addEventListener('DOMContentLoaded', function () {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					field.remove();
-					//SetAction('Item removed', null);
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					SetError(xhr.responseJSON.message);
 				}
 			});
 		}
 	});
 
-	$('#longname').on('change', function (e) {
+	$('#longname').on('change', function () {
 		this.classList.remove('is-invalid');
 		this.classList.remove('is-valid');
 
@@ -266,10 +235,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 
 				name.val('');
-
-				//SetAction('Item added', null);
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr) {
 				name.addClass('is-invalid');
 
 				$(btn.attr('data-error')).removeClass('hide').html(xhr.responseJSON.message);
@@ -294,13 +261,10 @@ document.addEventListener('DOMContentLoaded', function () {
 				data: obj,
 				dataType: 'json',
 				async: false,
-				success: function (data) {
-					//field.remove();
-					//SetAction('Item removed');
+				success: function () {
 					window.location.reload(true);
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
-					//alert(xhr.responseJSON.message);
+				error: function () { //xhr, ajaxOptions, thrownError
 					var notice = $("#deletegroup_" + obj['groupid']);
 
 					if (notice.length) {
@@ -316,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('[maxlength]').each(function (i, el) {
 		var container = $('<span class="char-counter-wrap"></span>');
 		var counter = $('<span class="char-counter"></span>');
-		var input = $(this);
+		var input = $(el);
 
 		if (input.attr('id') != '') {
 			counter.attr('id', input.attr('id') + '-counter');

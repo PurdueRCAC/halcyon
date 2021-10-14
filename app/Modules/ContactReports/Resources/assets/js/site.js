@@ -2,20 +2,21 @@
 /* global ROOT_URL */ // common.js
 /* global WSGetURL */ // common.js
 /* global WSPostURL */ // common.js
+/* global WSPutURL */ // common.js
 /* global WSDeleteURL */ // common.js
 /* global ClearSearch */ // search.js
 /* global ERRORS */ // common.js
 /* global SetError */ // common.js
-/* global search_path */ // crmsearch.js
 /* global ChangeSearch */ // search.js
 /* global HighlightMatches */ // text.js
 
 // date.js - used for month names
 
+//var search_path = 'name';
 var keywords_pending = 0;
 var multi_group = false;
-var groupsearch = false;
-var usersearch = false;
+//var groupsearch = false;
+//var usersearch = false;
 var activetab = null;
 
 /**
@@ -427,9 +428,9 @@ function CRMToggleSearch(on) {
 		ClearSearch();
 
 		// flip the flags so it acts a group search box
-		groupsearch = true;
-		usersearch = false;
-		search_path = "groupname";
+		//groupsearch = true;
+		//usersearch = false;
+		//search_path = "groupname";
 
 		document.getElementById("newuser").focus();
 	} else if (on == 'people') {
@@ -438,9 +439,9 @@ function CRMToggleSearch(on) {
 		ClearSearch();
 
 		// flip the flags so it acts a person search box
-		groupsearch = false;
-		usersearch = true;
-		search_path = "name";
+		//groupsearch = false;
+		//usersearch = true;
+		//search_path = "name";
 
 		document.getElementById("newuser").focus();
 	} else if (on == 'none') {
@@ -572,7 +573,7 @@ function CRMAddEntry() {
 	resourcedata = Array.prototype.slice.call(document.querySelectorAll('#crmresource option:checked'), 0).map(function (v) {
 		return v.value;
 	});
-	for (var i = 0; i < resourcedata.length; i++) {
+	for (i = 0; i < resourcedata.length; i++) {
 		if (resourcedata[i] != "") {
 			if (resourcedata[i].indexOf('/') !== -1) {
 				var resource = resourcedata[i].split('/');
@@ -597,8 +598,8 @@ function CRMAddEntry() {
 	if (window.location.href.match(/edit/)) {
 		var data = $('#crm-data');
 		var original = {};
-		var originalusers = [];
-		var originalcontactusers = [];
+		//var originalusers = [];
+		//var originalcontactusers = [];
 		if (data.length) {
 			var orig = JSON.parse(data.html());
 			original = orig.original;
@@ -879,7 +880,7 @@ function CRMUpdatedFollowGroup(xml) {
  * @param   {array}   people
  * @return  {void}
  */
-function CRMNewReport(xml, people) {
+function CRMNewReport(xml) { //people
 	document.getElementById("INPUT_add").disabled = false;
 
 	if (xml.status < 400) {
@@ -916,11 +917,11 @@ function CRMNewReport(xml, people) {
  * @param   {object}  xml
  * @return  {void}
  */
-function CRMNewPeopleTag(xml) {
+/*function CRMNewPeopleTag(xml) {
 	if (xml.status != 200) {
 		SetError('Unable to create report.', 'An error occurred during processing of new report.');
 	}
-}
+}*/
 
 /**
  * Search reports
@@ -1029,10 +1030,10 @@ function CRMSearch() {
 	var resourcedata = Array.prototype.slice.call(document.querySelectorAll('#crmresource option:checked'), 0).map(function (v) {
 		return v.value;
 	});
-	for (var i = 0; i < resourcedata.length; i++) {
+	for (i = 0; i < resourcedata.length; i++) {
 		if (resourcedata[i] != "") {
 			if (resourcedata[i].indexOf('/') !== -1) {
-				var resource = resourcedata[i].split('/');
+				resource = resourcedata[i].split('/');
 				resources.push(resource[resource.length - 1]);
 			} else {
 				resources.push(resourcedata[i]);
@@ -1063,55 +1064,55 @@ function CRMSearch() {
 	}
 
 	// start assembling string
-	var searchstring = "";
+	//var searchstring = "";
 	var querystring = "&";
 
 	// if not add new
 	if (!document.getElementById("TAB_add").className.match(/active/)) {
 		if (start != "") {
-			searchstring += " start:" + start;
+			//searchstring += " start:" + start;
 			querystring += "&start=" + start;
 		}
 		if (stop != "") {
-			searchstring += " stop:" + stop;
+			//searchstring += " stop:" + stop;
 			querystring += "&stop=" + stop;
 		}
 	}
 	if (groups.length > 0) {
-		searchstring += " group:" + groups[0];
+		//searchstring += " group:" + groups[0];
 		querystring += "&group=" + groups[0];
 		for (x = 1; x < groups.length; x++) {
-			searchstring += "," + groups[x];
+			//searchstring += "," + groups[x];
 			querystring += "," + groups[x];
 		}
 	}
 	if (people.length > 0) {
-		searchstring += " people:" + people[0];
+		//searchstring += " people:" + people[0];
 		querystring += "&people=" + people[0];
 		for (x = 1; x < people.length; x++) {
-			searchstring += "," + people[x];
+			//searchstring += "," + people[x];
 			querystring += "," + people[x];
 		}
 	}
 	if (tags.length > 0) {
-		searchstring += " tag:" + tags[0];
+		//searchstring += " tag:" + tags[0];
 		querystring += "&tag=" + tags[0];
 		for (x = 1; x < tags.length; x++) {
-			searchstring += "," + tags[x];
+			//searchstring += "," + tags[x];
 			querystring += "," + tags[x];
 		}
 	}
 	// Construct resource query
 	if (resources.length > 0) {
-		searchstring += " resource:" + resources[0];
+		//searchstring += " resource:" + resources[0];
 		querystring += "&resource=" + resources[0];
 		for (x = 1; x < resources.length; x++) {
-			searchstring += "," + resources[x];
+			//searchstring += "," + resources[x];
 			querystring += "," + resources[x];
 		}
 	}
 	if (typeid != '-1') {
-		searchstring += " type:" + typeid;
+		//searchstring += " type:" + typeid;
 		querystring += "&type=" + typeid;
 	}
 	// if not add new
@@ -1122,14 +1123,14 @@ function CRMSearch() {
 
 			// filter out potentially dangerous garbage
 			keywords = keywords.replace(/[^a-zA-Z0-9_ ]/g, '');
-			searchstring += " " + keywords;
+			//searchstring += " " + keywords;
 			querystring += "&search=" + keywords;
 		}
 	}
 	// if not add new
 	if (!document.getElementById("TAB_add").className.match(/active/)) {
 		if (id.match(/(\d)+/)) {
-			searchstring += " id:" + id;
+			//searchstring += " id:" + id;
 			querystring += "&id=" + id;
 		}
 	}
@@ -1154,7 +1155,8 @@ function CRMSearch() {
 	//	searchstring = "start:0000-00-00";
 	//}
 
-	console.log('Searching... ' + $("#reports").data('api') + encodeURI(querystring));
+	//console.log('Searching... ' + $("#reports").data('api') + encodeURI(querystring));
+
 	$("#reports").data('query', querystring.replace('?', ''));
 
 	WSGetURL($("#reports").data('api') + encodeURI(querystring), CRMSearched);
@@ -1187,7 +1189,7 @@ function CRMToggleAddButton() {
  * @return  {void}
  */
 function CRMSearched(xml) {
-	const DEFAULT_ENTRIES = 20;
+	//const DEFAULT_ENTRIES = 20;
 
 	if (xml.status == 200) {
 		var reports = $("#reports");
@@ -1522,9 +1524,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 			a.href = "admin/users/" + report.users[x]['userid'];
 			a.innerHTML = report.users[x]['name'];
 
-			if (report.users[x]['datetimelastnotify']
-			 && report.users[x]['datetimelastnotify'] != '0000-00-00 00:00:00'
-			 && report.users[x]['datetimelastnotify'] != '-000001-11-30T05:00:00.000000Z') {
+			if (report.users[x]['datetimelastnotify']) {
 				a.innerHTML = a.innerHTML + ' <span class="fa fa-envelope" aria-hidden="true" title="Follow up email sent ' + report.users[x]['datetimelastnotify'] + '"></span>';
 			}
 
@@ -1583,7 +1583,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		li = document.createElement("li");
 		li.className = 'item-resources';
 
-		icon = document.createElement("i");
+		var icon = document.createElement("i");
 		icon.className = "fa fa-server";
 		icon.setAttribute('aria-hidden', true);
 		li.appendChild(icon);
@@ -1630,8 +1630,8 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 		span = document.createElement("span");
 		span.className = "crmposttags";
-		console.log(report.tags);
-		var r = Array();
+
+		r = Array();
 		for (x = 0; x < report.tags.length; x++) {
 			r.push('<a href="contactreports?search&tag=' + report.tags[x].slug + '">' + report.tags[x].name + '</a>');
 		}
@@ -1820,7 +1820,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	textarea.className = "form-control crmcommentbox";
 	textarea.placeholder = "Write a comment...";
 	textarea.id = report['id'] + "_newcommentbox";
-	textarea.setAttribute('data-api', reports.getAttribute('data-comments'));
+	textarea.setAttribute('data-api', document.getElementById('reports').getAttribute('data-comments'));
 	textarea.rows = 1;
 	textarea.cols = 45;
 	textarea.onfocus = function () {
@@ -2174,9 +2174,10 @@ function CRMSubscribeComment(reportid) {
 	});
 
 	WSPostURL(document.getElementById('reports').getAttribute('data-comments'), post, function (xml, reportid) {
+		var results = JSON.parse(xml.responseText);
+
 		if (xml.status < 400) {
 			var div = document.getElementById(reportid + "_subscribed");
-			var results = JSON.parse(xml.responseText);
 			var a = div.getElementsByTagName("a")[0];
 			a.onclick = function (e) {
 				e.preventDefault();
@@ -2184,7 +2185,6 @@ function CRMSubscribeComment(reportid) {
 			};
 			a.innerHTML = "Unsubscribe";
 		} else {
-			var results = JSON.parse(xml.responseText);
 			alert(results.message);
 		}
 	}, reportid);
@@ -2524,7 +2524,7 @@ function CRMClearSearch() {
  *
  * @return  {array}
  */
-var autocompleteList = function (url, key) {
+var autocompleteList = function (url) {
 	return function (request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
 			response($.map(data.data, function (el) {
@@ -2554,7 +2554,7 @@ var autocompleteList = function (url, key) {
  *
  * @return  {array}
  */
-var autocompleteResource = function (url) {
+/*var autocompleteResource = function (url) {
 	return function (request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
 			response($.map(data.data, function (el) {
@@ -2566,7 +2566,7 @@ var autocompleteResource = function (url) {
 			}));
 		});
 	};
-};
+};*/
 
 /**
  * Initiate event hooks
@@ -2574,8 +2574,8 @@ var autocompleteResource = function (url) {
 document.addEventListener('DOMContentLoaded', function () {
 	var frm = document.getElementById('DIV_crm');
 	if (frm) {
-		usersearch = false;
-		groupsearch = true;
+		//usersearch = false;
+		//groupsearch = true;
 		multi_group = true;
 
 		$('.date-pick').on('change', function () {
@@ -2644,7 +2644,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					height: 150,
 					delay: 100,
 					minLength: 1,
-					open: function (e, ui) {
+					open: function () { //e, ui
 						var acData = $(this).data('ui-autocomplete');
 
 						acData
@@ -2679,7 +2679,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					height: 150,
 					delay: 100,
 					minLength: 1,
-					open: function (e, ui) {
+					open: function () { //e, ui
 						var acData = $(this).data('ui-autocomplete');
 
 						acData
@@ -2729,7 +2729,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				closeOnSelect: false,
 				templateResult: function (item) {
 					if (typeof item.children != 'undefined') {
-						var s = $(item.element).find('option').length - $(item.element).find('option:selected').length;
+						//var s = $(item.element).find('option').length - $(item.element).find('option:selected').length;
 						var el = $('<button class="btn btn-sm btn_select2_optgroup" data-group="' + item.text + '">Select All</span>');
 
 						// Click event
@@ -2744,7 +2744,7 @@ document.addEventListener('DOMContentLoaded', function () {
 							// Trigger change event + close dropdown
 							rselects.trigger('change.select2');
 							rselects.select2('close');
-							NEWSSearch();
+							CRMSearch();
 						});
 
 						var elp = $('<span class="my_select2_optgroup">' + item.text + '</span>');
@@ -2755,12 +2755,12 @@ document.addEventListener('DOMContentLoaded', function () {
 					return item.text;
 				}
 			})
-				.on('select2:select', function () {
-					CRMSearch();
-				})
-				.on('select2:unselect', function () {
-					CRMSearch();
-				});
+			.on('select2:select', function () {
+				CRMSearch();
+			})
+			.on('select2:unselect', function () {
+				CRMSearch();
+			});
 		}
 
 		var data = $('#crm-search-data');

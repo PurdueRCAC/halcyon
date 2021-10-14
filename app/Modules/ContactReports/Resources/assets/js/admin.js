@@ -1,6 +1,5 @@
-/**
- * @package  Contact Reports
- */
+/* global $ */ // jquery.js
+/* global Halcyon */ // core.js
 
 /**
  * Initiate event hooks
@@ -31,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				height: 150,
 				delay: 100,
 				minLength: 1,
-				open: function (e, ui) {
+				open: function () {//e, ui
 					var acData = $(this).data('ui-autocomplete');
 
 					acData
@@ -134,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				comment.val('');
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr) { //xhr, ajaxOptions, thrownError
 				//console.log(xhr);
 				Halcyon.message('danger', xhr.responseJSON.message);
 			}
@@ -163,11 +162,11 @@ document.addEventListener('DOMContentLoaded', function() {
 					type: 'delete',
 					dataType: 'json',
 					async: false,
-					success: function (data) {
+					success: function () {
 						Halcyon.message('success', 'Item removed');
 						field.remove();
 					},
-					error: function (xhr, ajaxOptions, thrownError) {
+					error: function (xhr) {
 						Halcyon.message('danger', xhr.responseJSON.message);
 					}
 				});
@@ -193,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					container.toggleClass('is-editing');
 					$('#comment_' + response.data.id + '_text').html(response.data.formattedcomment);
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					//console.log(xhr);
 					Halcyon.message('danger', xhr.responseJSON.message);
 				}

@@ -1,8 +1,10 @@
+/* global $ */ // jquery.js
+/* global jQuery */ // jquery.js
 
-jQuery(document).ready(function ($) {
+jQuery(document).ready(function () {
 	var alias = $('#field-alias');
 	if (alias.length) {
-		$('#field-title').on('keyup', function (e){
+		$('#field-title').on('keyup', function (){
 			//if (alias.val() == '') {
 				var val = $(this).val();
 
@@ -23,7 +25,7 @@ jQuery(document).ready(function ($) {
 	$('.searchable-select').select2({
 		//placeholder: $(this).data('placeholder')
 		})
-		.on('select2:select', function (e) {
+		.on('select2:select', function () {
 			if ($(this).hasClass('filter-submit')) {
 				$(this).closest('form').submit();
 			}
@@ -81,7 +83,7 @@ jQuery(document).ready(function ($) {
 
 	//----
 
-	$('.snippet-checkbox').on('change', function (e) {
+	$('.snippet-checkbox').on('change', function () {
 		if ($(this).is(':checked')) {
 			$('tr[data-parent=' + $(this).data('id') + ']')
 				.find('.snippet-checkbox')

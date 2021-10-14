@@ -1,6 +1,5 @@
-/**
- * @package    halcyon
- */
+/* global $ */ // jquery.js
+/* global Halcyon */ // core.js
 
 /**
  * New queue group
@@ -8,7 +7,7 @@
  * @param   {string}  subresource
  * @return  {void}
  */
-function NewQueueGroup(subresource) {
+/*function NewQueueGroup(subresource) {
 	var group = document.getElementById("group");
 	var queue = document.getElementById("queue");
 	var opt = document.createElement("option");
@@ -26,7 +25,7 @@ function NewQueueGroup(subresource) {
 	} else {
 		queue.disabled = true;
 	}
-}
+}*/
 
 /**
  * New queue populate queue
@@ -35,7 +34,7 @@ function NewQueueGroup(subresource) {
  * @param   {string}  subresource
  * @return  {void}
  */
-function NewQueuePopulateQueue(xml, subresource) {
+/*function NewQueuePopulateQueue(xml, subresource) {
 	if (xml.status == 200) {
 		var group = JSON.parse(xml.responseText);
 		var queue = document.getElementById("queue");
@@ -69,9 +68,9 @@ function NewQueuePopulateQueue(xml, subresource) {
 			}
 		}
 	} else {
-		SetError(ERRORS['unknown'], null);
+		Halcyon.message('danger', 'An error occurred.');
 	}
-}
+}*/
 
 /**
  * Initiate event hooks
@@ -80,8 +79,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var elms = document.querySelectorAll('input[required]');
 
-	for (i = 0; i < elms.length; i++) {
-		elms[i].addEventListener('change', function(e) {
+	for (var i = 0; i < elms.length; i++) {
+		elms[i].addEventListener('change', function() {
 			if (this.classList.contains('is-invalid')) {
 				this.classList.remove('is-invalid');
 			}
@@ -89,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				this.classList.add('is-invalid');
 			}*/
 		});
-		elms[i].addEventListener('blur', function (e) {
+		elms[i].addEventListener('blur', function () {
 			if (!this.value || !this.validity.valid) {
 				this.classList.add('is-invalid');
 			}
@@ -132,17 +131,17 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
-	$('#field-name').on('keyup', function (e) {
+	$('#field-name').on('keyup', function () {
 		var val = $(this).val();
 
 		val = val.toLowerCase()
 			.replace(/\s+/g, '_')
-			.replace(/[^a-z0-9_\-]+/g, '');
+			.replace(/[^a-z0-9_-]+/g, '');
 
 		$(this).val(val);
 	});
 
-	$('#field-queueclass').on('change', function (e) {
+	$('#field-queueclass').on('change', function () {
 		var val = $(this).val();
 
 		if (val == 'debug') {
@@ -150,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	$('#field-subresourceid').on('change', function (event) {
+	$('#field-subresourceid').on('change', function () {
 		//ChangeNodeType();
 		//document.getElementById("SPAN_nodecores").innerHTML = '';
 		//document.getElementById("SPAN_nodemem").innerHTML = '';
@@ -195,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		cluster.value = opt.getAttribute('data-cluster');
 	});
 
-	/*$('#SELECT_queuetype').on('change', function (event) {
+	/*$('#SELECT_queuetype').on('change', function () {
 		UpdateQueueType();
 	});*/
 
@@ -203,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	var select = document.getElementById("field-subresourceid");
 	var sclone = $(select).clone().attr('id', $(select).attr('id') + '-clone');
 
-	$('#field-schedulerid').on('change', function (event) {
+	$('#field-schedulerid').on('change', function () {
 		if (this.selectedIndex == 0) {
 			return;
 		}
@@ -285,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							var group = $(this);
 
 							var queue = $('#' + group.data('update'));
-							var dest_queue = document.getElementById("field-id").value;
+							//var dest_queue = document.getElementById("field-id").value;
 
 							if (group.val() == 0) {
 								queue.val(0);
@@ -328,7 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										}
 									}
 								},
-								error: function (xhr, reason, thrownError) {
+								error: function (xhr) { //xhr, reason, thrownError
 									var msg = 'Failed to retrieve queues.';
 									if (xhr.responseJSON && xhr.responseJSON.message) {
 										msg = xhr.responseJSON.message;
@@ -343,20 +342,20 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	$('.nodes').on('change', function (e) {
+	$('.nodes').on('change', function () {
 		var nodecores = $(this).data('nodes');
 
 		var cores = document.getElementById(this.getAttribute('data-cores-field'));
 		var nodes = this.value.replace(/(^\s+|\s+$)/g, "");
 
-		if (nodes.match(RegExp("^[\-]?[0-9]+(\.[0-9]{1,2})?$"))) {
+		if (nodes.match(RegExp("^[-]?[0-9]+(.[0-9]{1,2})?$"))) {
 			cores.value = (nodes * nodecores);
 		} else {
 			cores.value = "";
 		}
 	});
 
-	$('.cores').on('change', function (e) {
+	$('.cores').on('change', function () {
 		var nodecores = $(this).data('cores');
 
 		if (nodecores == 0) {
@@ -366,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		var cores = this.value.replace(/(^\s+|\s+$)/g, "");
 		var nodes = document.getElementById(this.getAttribute('data-nodes-field'));
 
-		if (cores.match(RegExp("^[\-]?[0-9]+$"))) {
+		if (cores.match(RegExp("^[-]?[0-9]+$"))) {
 			nodes.value = (cores / nodecores);
 		} else {
 			nodes.value = "";
@@ -390,7 +389,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					el.classList.remove('is-invalid');
 				}
 			});
-			var elms = frm[0].querySelectorAll('select[required]');
+			elms = frm[0].querySelectorAll('select[required]');
 			elms.forEach(function (el) {
 				if (!el.value || el.value <= 0) {
 					el.classList.add('is-invalid');
@@ -399,7 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					el.classList.remove('is-invalid');
 				}
 			});
-			var elms = frm[0].querySelectorAll('textarea[required]');
+			elms = frm[0].querySelectorAll('textarea[required]');
 			elms.forEach(function (el) {
 				if (!el.value || !el.validity.valid) {
 					el.classList.add('is-invalid');
@@ -422,12 +421,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			data: frm.serialize(),
 			dataType: 'json',
 			async: false,
-			success: function (data) {
+			success: function () {
 				btn.classList.remove('loading');
 				Halcyon.message('success', btn.getAttribute('data-success'));
 				window.location.reload(true);
 			},
-			error: function (xhr, reason, thrownError) {
+			error: function (xhr) {
 				btn.classList.remove('loading');
 
 				var msg = 'Failed to create item.';
@@ -450,11 +449,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					Halcyon.message('success', btn.getAttribute('data-success'));
 					window.location.reload(true);
 				},
-				error: function (xhr, reason, thrownError) {
+				error: function (xhr) {
 					var msg = 'Failed to delete item.';
 					if (xhr.responseJSON && xhr.responseJSON.message) {
 						msg = xhr.responseJSON.message;
@@ -474,7 +473,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	$('#field-aclusersenabled').on('change', function(e){
+	$('#field-aclusersenabled').on('change', function(){
 		$('#field-aclgroups').parent().toggleClass('hide');
 	});
 });
