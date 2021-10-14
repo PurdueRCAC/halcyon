@@ -1,8 +1,8 @@
-/**
- * @package  Tags
- */
+/* global $ */ // jquery.js
+/* global jQuery */ // jquery.js
+/* global Halcyon */ // core.js
 
-jQuery(document).ready(function ($) {
+jQuery(document).ready(function () {
 	/*var alias = $('#field-slug');
 	if (alias.length && !alias.val()) {
 		$('#field-tag').on('keyup', function (e){
@@ -15,7 +15,7 @@ jQuery(document).ready(function ($) {
 			alias.val(val);
 		});
 	}*/
-	$('.sluggable').on('keyup', function (e) {
+	$('.sluggable').on('keyup', function () {
 		if ($(this).attr('data-rel')) {
 			var alias = $($(this).attr('data-rel'));
 
@@ -77,7 +77,7 @@ jQuery(document).ready(function ($) {
 
 				name.val('');
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr) { //xhr, ajaxOptions, thrownError
 				Halcyon.message('danger', xhr.responseJSON.message);
 			}
 		});
@@ -97,11 +97,11 @@ jQuery(document).ready(function ($) {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					Halcyon.message('success', 'Item removed');
 					field.remove();
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					Halcyon.message('danger', xhr.responseJSON.message);
 				}
 			});

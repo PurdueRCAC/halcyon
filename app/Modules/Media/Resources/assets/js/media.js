@@ -1,3 +1,6 @@
+/* global $ */ // jquery.js
+/* global jQuery */ // jquery.js
+/* global Dropzone */ // dropzone.js
 
 var _DEBUG = 0;
 
@@ -31,7 +34,7 @@ function bindContextModals() {
 	});
 }
 
-jQuery(document).ready(function ($) {
+jQuery(document).ready(function () {
 	var contents = $('#media-items'),
 		layout = $('#layout'),
 		folder = $('#folder');
@@ -190,7 +193,7 @@ jQuery(document).ready(function ($) {
 			}
 			item.toggleClass('ui-activated');
 		})
-		.on('click', '.media-opt-download', function (e) {
+		.on('click', '.media-opt-download', function () {
 			$('.media-item').removeClass('ui-activated');
 		})
 		.on('click', '.media-opt-rename', function (e) {

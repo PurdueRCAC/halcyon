@@ -2,9 +2,12 @@
 /* global ROOT_URL */ // common.js
 /* global WSGetURL */ // common.js
 /* global WSPostURL */ // common.js
+/* global WSPutURL */ // common.js
 /* global WSDeleteURL */ // common.js
 /* global ERRORS */ // common.js
 /* global SetError */ // common.js
+/* global Dropzone */ // dropzone.js
+/* global Handlebars */ // handlebars.js
 
 /**
  * Create a new class account
@@ -164,10 +167,11 @@ function AddingManyUsersEmail(xml, post_obj) {
 			pending++;
 			WSPostURL(ROOT_URL + "users", post, newUser, post_obj);
 		}*/
+		var user = 0;
 		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
-			var user = response['data'][0]['username'];
+			user = response['data'][0]['username'];
 		} else {
-			var user = response['data'][0]['id'];
+			user = response['data'][0]['id'];
 		}
 
 		//var user = response['data'][0]['id'];
@@ -217,10 +221,11 @@ function AddingManyUsers(xml, post_obj) {
 			return;
 		}*/
 
+		var user = 0;
 		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
-			var user = response['data'][0]['username'];
+			user = response['data'][0]['username'];
 		} else {
-			var user = response['data'][0]['id'];
+			user = response['data'][0]['id'];
 		}
 
 		//var user = response['data'][0]['id'];
@@ -375,6 +380,10 @@ function AddedManyUsers(xml, post_obj) {
 	});
 }*/
 
+function onlyUnique(value, index, self) {
+	return self.indexOf(value) === index;
+}
+
 /**
  * Event handler for new_class_select onChange event
  *
@@ -406,9 +415,7 @@ function NewClassSelect() {
 					for (var i = 0; i < response.enrollments.length; i++) {
 						emails.push(response.enrollments[i].email);
 					}
-					function onlyUnique(value, index, self) {
-						return self.indexOf(value) === index;
-					}
+
 					emails = emails.filter(onlyUnique);
 
 					selected_class.data('students')['students'] = emails;
@@ -812,7 +819,7 @@ $(document).ready(function () {
 		});
 	});
 
-	$('#new_class_select').on('change', function (e) {
+	$('#new_class_select').on('change', function () {
 		NewClassSelect();
 	});
 
@@ -930,7 +937,6 @@ $(document).ready(function () {
 				lengthChange: false,
 				dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'i>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'p><'col-sm-12 col-md-7'l>>",
 				//scrollX: true,
-				lengthChange: false,
 				language: {
 					searchPlaceholder: "Filter users...",
 					search: "_INPUT_",
@@ -970,7 +976,7 @@ $(document).ready(function () {
 					Dropzone.forElement('.dropzone').removeAllFiles();
 				},
 				error: function (errorMessage) {
-					$('#import-error-' + $(e).attr('data-id')).removeClass('hide').html(errorMessage);
+					$('#import-error-' + $(el).attr('data-id')).removeClass('hide').html(errorMessage);
 				}
 			});
 		});

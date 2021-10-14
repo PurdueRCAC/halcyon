@@ -1,6 +1,5 @@
-/**
- * Initiate event hooks
- */
+/* global $ */ // jquery.js
+
 document.addEventListener('DOMContentLoaded', function () {
 	var users = $(".form-users");
 	if (users.length) {

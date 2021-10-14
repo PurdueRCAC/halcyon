@@ -1,8 +1,10 @@
+/* global $ */ // jquery.js
+/* global jQuery */ // jquery.js
 
-jQuery(document).ready(function ($) {
+jQuery(document).ready(function () {
 	var alias = $('#field-alias');
 	if (alias.length && !alias.val()) {
-		$('#field-title,#field-alias').on('keyup', function (e){
+		$('#field-title,#field-alias').on('keyup', function (){
 			var val = $(this).val();
 
 			val = val.toLowerCase()
@@ -13,9 +15,9 @@ jQuery(document).ready(function ($) {
 		});
 	}
 
-	var alias = $('#field-menutype');
+	alias = $('#field-menutype');
 	if (alias.length && !alias.val()) {
-		$('#field-title,#field-menutype').on('keyup', function (e) {
+		$('#field-title,#field-menutype').on('keyup', function () {
 			var val = $(this).val();
 
 			val = val.toLowerCase()
@@ -45,7 +47,7 @@ jQuery(document).ready(function ($) {
 			}
 		});
 
-	$('#fields_page_id').on('change', function (e) {
+	$('#fields_page_id').on('change', function () {
 		if ($('#fields_title').val() == '') {
 			$('#fields_title').val($(this).children("option:selected").text().replace(/\|\— /g, ''));
 		}
@@ -53,9 +55,9 @@ jQuery(document).ready(function ($) {
 
 	var data = $('#menutypes');
 	if (data.length) {
-		menus = JSON.parse(data.html());
+		var menus = JSON.parse(data.html());
 
-		$('#' + data.data('field')).on('change', function (e) {
+		$('#' + data.data('field')).on('change', function () {
 			var val = $(this).val();
 
 			if (typeof (menus[val]) !== 'undefined') {

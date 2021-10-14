@@ -1,13 +1,11 @@
 /* global $ */ // jquery.js
 /* global ROOT_URL */ // common.js
 /* global WSPostURL */ // common.js
-/* global WSDeleteURL */ // common.js
-/* global SEARCH */ // search.js
 
-var min_search_length = 2; // 0 for group
-var add_button = "accept" // add
-var search_path = "groupusername"; // groupname
-var SELECTED = null;
+//var min_search_length = 2; // 0 for group
+//var add_button = "accept" // add
+//var search_path = "groupusername"; // groupname
+//var SELECTED = null;
 
 /**
  * Perform search
@@ -74,7 +72,7 @@ function PrintAccountResources(user) {
 	var memberofqueues = Array();
 	var pendingmemberofqueues = Array();
 	var fortress = false;
-	var x, div;
+	var x, div, span;
 
 	if (typeof (user['resources']) != 'undefined') {
 		document.getElementById("resources").style.display = "block";
@@ -272,7 +270,7 @@ function PrintAccountResources(user) {
 		div.appendChild(document.createTextNode("These resources are available to anyone on campus with the approval of a faculty or staff member. An email notification will be sent to this person to review this request."));
 	}
 
-	if (resources.length == 0 && queues.length == 0 && pendingmemberofqueues.length == 0 && pendingresources.length == 0) {
+	if (queues.length == 0 && pendingmemberofqueues.length == 0 && pendingresources.length == 0 && resources.length == 0) {
 		var text = document.createElement("p");
 		text.innerHTML = 'The faculty or group you select does not participate in any current <a href="/services/communityclusters/">Community Clusters</a>.<br/><br/><strong>NOTE:</strong> This request form does not support requesting Data Depot at this time. You will need to ask your faculty member/advisor directly to add you to the appropriate groups from the <a href="/account/user/">Manage Users</a> page (they should have access to this link).<br/><br/>You may try searching by your Department as some have queues they may grant you access to. If you are collaborating with another faculty member, try searching their name instead.<br/><br/>Otherwise, your faculty may purchase access to the <a href="/services/communityclusters/">Community Cluster Program</a>.';
 		text.className = 'alert alert-warning';
@@ -328,13 +326,13 @@ function SubmitRequest() {
 		return;
 	}
 
-	/*if (free) {
+	if (free) {
 		document.getElementById("free_confirmation").style.display = "block";
 		document.getElementById("cluster_confirmation").style.display = "none";
-	} else {*/
-	document.getElementById("cluster_confirmation").style.display = "block";
-	document.getElementById("free_confirmation").style.display = "none";
-	//}
+	} else {
+		document.getElementById("cluster_confirmation").style.display = "block";
+		document.getElementById("free_confirmation").style.display = "none";
+	}
 
 	if (document.getElementById("person").style.display != "none") {
 		document.getElementById("person_confirmation").style.display = "block";
@@ -405,7 +403,7 @@ function SubmitRequest() {
 		$.post(ROOT_URL + 'queues/requests', post).fail(function () {
 			$('#errors').addClass('alert').addClass('alert-danger').text("There was an error processing your request.");
 		})
-	).done(function (request) {
+	).done(function () {
 		//window.location = url;
 		$('#errors').addClass('alert').addClass('alert-success').text("Your request has been submitted.");
 	});
@@ -461,7 +459,7 @@ function CheckFortress(id) {
  * @param   {string}  resource
  * @return  {void}
  */
-function RemoveQueue(id, name, resource) {
+/*function RemoveQueue(id, name, resource) {
 	if (confirm("Are you sure you wish to remove access to the queue '" + name + "' (" + resource + ")? \n\nIf this is your last queue on this cluster your account will be removed. Please make an off-site backup of all important data before removing access.")) {
 		WSDeleteURL(id, function (xml) {
 			if (xml.status < 400) {
@@ -471,7 +469,7 @@ function RemoveQueue(id, name, resource) {
 			}
 		});
 	}
-}
+}*/
 
 /**
  * Cancel a queue request
@@ -481,7 +479,7 @@ function RemoveQueue(id, name, resource) {
  * @param   {string}  resource
  * @return  {void}
  */
-function CancelQueueRequest(id, name, resource) {
+/*function CancelQueueRequest(id, name, resource) {
 	if (confirm("Are you sure you wish to cancel this request for access to the queue '" + name + "' (" + resource + ")? ")) {
 		WSDeleteURL(id, function (xml) {
 			if (xml.status < 400) {
@@ -491,7 +489,7 @@ function CancelQueueRequest(id, name, resource) {
 			}
 		});
 	}
-}
+}*/
 
 /**
  * Cancel a resource request
@@ -500,7 +498,7 @@ function CancelQueueRequest(id, name, resource) {
  * @param   {array}   resources
  * @return  {void}
  */
-function CancelResourceRequest(id, resources) {
+/*function CancelResourceRequest(id, resources) {
 	var del = false;
 
 	if (resources.length > 0) {
@@ -522,7 +520,7 @@ function CancelResourceRequest(id, resources) {
 			}
 		});
 	}
-}
+}*/
 
 /**
  * Request group
@@ -590,14 +588,14 @@ $(document).ready(function () {
 					document.getElementById("selected-group").value = response['id'];
 
 					var names = [];
-					for (x = 0; x < response['department'].length; x++) {
+					for (var x = 0; x < response['department'].length; x++) {
 						names.push(response['department'][x]['name']);
 					}
 					document.getElementById("dept").innerHTML = names.join(', ');
 
 					PrintAccountResources(response);
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function () { // xhr, ajaxOptions, thrownError
 					alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact rcac-help@purdue.edu");
 				}
 			});
@@ -609,7 +607,7 @@ $(document).ready(function () {
 
 		var els = document.querySelectorAll('.request-selection');
 
-		for (x = 0; x < els.length; x++) {
+		for (var x = 0; x < els.length; x++) {
 			els[x].style.display = 'none';
 		}
 

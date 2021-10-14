@@ -1,4 +1,7 @@
-jQuery(document).ready(function ($) {
+/* global $ */ // jquery.js
+/* global jQuery */ // jquery.js
+
+jQuery(document).ready(function () {
 	$('.property-edit').on('click', function (e) {
 		e.preventDefault();
 
@@ -26,17 +29,16 @@ jQuery(document).ready(function ($) {
 			},
 			dataType: 'json',
 			async: false,
-			success: function (data) {
+			success: function () {
 				window.location.reload(true);
 			},
-			error: function (xhr, reason, thrownError) {
+			error: function (xhr) { // xhr, reason, thrownError
 				$('#loginshell_error').removeClass('hide');
 				if (xhr.responseJSON) {
 					$('#loginshell_error').text(xhr.responseJSON.message);
 				} else {
 					$('#loginshell_error').text('Failed to update login shell.');
 				}
-				console.log(xhr.responseText);
 			}
 		});
 	});

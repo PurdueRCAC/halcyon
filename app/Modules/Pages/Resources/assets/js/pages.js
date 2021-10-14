@@ -1,11 +1,11 @@
-/**
- * @package  Pages manager
- */
+/* global $ */ // jquery.js
+/* global jQuery */ // jquery.js
+/* global Chart */ // vendor/chartjs/Chart.min.js
 
-jQuery(document).ready(function ($) {
+jQuery(document).ready(function () {
 	var alias = $('#field-alias');
 	if (alias.length && !alias.val()) {
-		$('#field-title').on('keyup', function (e){
+		$('#field-title').on('keyup', function (){
 			var val = $(this).val();
 
 			val = val.toLowerCase()
@@ -24,7 +24,7 @@ jQuery(document).ready(function ($) {
 	$('body').on('click', '.delete-row', function (e) {
 		e.preventDefault();
 
-		console.log($(this).attr('href'));
+		//console.log($(this).attr('href'));
 
 		$($(this).attr('href')).remove();
 	});

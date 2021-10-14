@@ -1,3 +1,6 @@
+/* global $ */ // jquery.js
+/* global Halcyon */ // core.js
+
 /**
  * Initiate event hooks
  */
@@ -72,11 +75,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					Halcyon.message('success', $(this).data('success'));
 					field.remove();
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					Halcyon.message('danger', xhr.responseJSON.message);
 				}
 			});
@@ -101,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			data: post,
 			dataType: 'json',
 			async: false,
-			success: function (response) {
+			success: function () { //response
 				Halcyon.message('success', btn.data('success'));
 				window.location.reload(true);
 
@@ -132,8 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				select.val();*/
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
-				//console.log(xhr);
+			error: function (xhr) {
 				Halcyon.message('danger', xhr.responseJSON.message);
 			}
 		});

@@ -1,6 +1,4 @@
-/**
- * @package  Widgets
- */
+/* global $ */ // jquery.js
 
 function validate() {
 	var value = $('#menu_assignment').val(),
@@ -166,7 +164,7 @@ function validate() {
 $(document).ready(function () {
 	if ($('#item-form').length) {
 		validate();
-		$('select').on('change', function (e) {
+		$('select').on('change', function () {
 			validate();
 		});
 	}
@@ -186,16 +184,17 @@ $(document).ready(function () {
 	}
 
 	if ($('#widgetorder').length) {
-		data = $('#widgetorder');
+		var data = $('#widgetorder');
 
 		if (data.length) {
-			modorders = JSON.parse(data.html());
+			var modorders = JSON.parse(data.html());
 
 			var html = '\n	<select class="form-control" id="' + modorders.name.replace('[', '-').replace(']', '') + '" name="' + modorders.name + '" id="' + modorders.id + '"' + modorders.attr + '>';
 			var i = 0,
 				key = modorders.originalPos,
 				orig_key = modorders.originalPos,
-				orig_val = modorders.originalOrder;
+				orig_val = modorders.originalOrder,
+				x = 0;
 			for (x in modorders.orders) {
 				if (modorders.orders[x][0] == key) {
 					var selected = '';

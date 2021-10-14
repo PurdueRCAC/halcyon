@@ -1,3 +1,6 @@
+/* global $ */ // jquery.js
+/* global jQuery */ // jquery.js
+
 // Only define the Halcyon namespace if not defined.
 if (typeof(Halcyon) === 'undefined') {
 	var Halcyon = {};
@@ -71,8 +74,8 @@ Halcyon.submitbutton = function(task) {
 
 	$(document).trigger('editorSave');
 
-	var frm = document.getElementById('item-form'),
-		invalid = false;
+	frm = document.getElementById('item-form');
+	var invalid = false;
 
 	if (frm) {
 		if (task == 'cancel' || task.match(/cancel$/)) {
@@ -88,7 +91,7 @@ Halcyon.submitbutton = function(task) {
 				el.classList.remove('is-invalid');
 			}
 		});
-		var elms = frm.querySelectorAll('select[required]');
+		elms = frm.querySelectorAll('select[required]');
 		elms.forEach(function (el) {
 			if (!el.value || el.value <= 0) {
 				el.classList.add('is-invalid');
@@ -97,7 +100,7 @@ Halcyon.submitbutton = function(task) {
 				el.classList.remove('is-invalid');
 			}
 		});
-		var elms = frm.querySelectorAll('textarea[required]');
+		elms = frm.querySelectorAll('textarea[required]');
 		elms.forEach(function (el) {
 			if (!el.value || !el.validity.valid) {
 				el.classList.add('is-invalid');
@@ -194,7 +197,7 @@ Halcyon.checkAll = function(checkbox, stub) {
 
 Halcyon.enableDisableBtn = function(num) {
 	var toolbarbuttons = document.getElementsByClassName('toolbar-btn');
-	for (i = 0; i < toolbarbuttons.length; i++) {
+	for (var i = 0; i < toolbarbuttons.length; i++) {
 		if (Halcyon.hasClass(toolbarbuttons[i], 'toolbar-list')) {
 			if (!num) {
 				Halcyon.addClass(toolbarbuttons[i], 'disabled');
@@ -351,7 +354,8 @@ Halcyon.listItemTask = function(id, task) {
 	var cb = f[id];
 	if (cb) {
 		// Uncheck all other checkboxes
-		for (var i = 0; true; i++) {
+		var total = document.querySelectorAll('input[type=checkbox]').length;
+		for (var i = 0; i < total; i++) {
 			var cbx = f['cb'+i];
 			if (!cbx) {
 				break;
@@ -512,7 +516,7 @@ Halcyon.toolbarAction = function(event) {
  * @param   event
  * @return  void
  */
-Halcyon.filterSubmit = function(event)
+Halcyon.filterSubmit = function()
 {
 	this.form.submit();
 }
@@ -523,7 +527,7 @@ Halcyon.filterSubmit = function(event)
  * @param   event
  * @return  void
  */
-Halcyon.filterClear = function(event)
+Halcyon.filterClear = function()
 {
 	var k,
 		filters = this.form.getElementsByClassName('filter');
@@ -547,7 +551,7 @@ Halcyon.filterClear = function(event)
  * @param   event
  * @return  void
  */
-Halcyon.gridCheckboxToggle = function(event)
+Halcyon.gridCheckboxToggle = function()
 {
 	if (Halcyon.hasClass(this, 'toggle-all')) {
 		Halcyon.checkAll(this);
@@ -638,7 +642,7 @@ Halcyon.paginate = function()
 	var limits = document.querySelectorAll('.pagination select');
 	for (i = 0; i < limits.length; i++)
 	{
-		limits[i].addEventListener('change', function(event){
+		limits[i].addEventListener('change', function(){
 			Halcyon.submitform();
 		});
 	}
@@ -825,17 +829,17 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	// Add event listener for table sorting
-	var clearfilters = document.getElementsByClassName('grid-order');
-	for (i = 0; i < clearfilters.length; i++)
+	var ordering = document.getElementsByClassName('grid-order');
+	for (i = 0; i < ordering.length; i++)
 	{
-		clearfilters[i].addEventListener('click', Halcyon.gridOrder);
+		ordering[i].addEventListener('click', Halcyon.gridOrder);
 	}
 
 	// Add event listener for saving table sorting
-	var ordering = document.getElementsByClassName('grid-order-save');
-	for (i = 0; i < ordering.length; i++)
+	var orderingsave = document.getElementsByClassName('grid-order-save');
+	for (i = 0; i < orderingsave.length; i++)
 	{
-		ordering[i].addEventListener('click', Halcyon.gridOrderSave);
+		orderingsave[i].addEventListener('click', Halcyon.gridOrderSave);
 	}
 
 	// Add event listener for action items
@@ -920,7 +924,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		content: function() {
 			return $(this).data('tip');
 		},
-		create: function(event, ui) {
+		create: function () { //event, ui
 			var tip = $(this),
 				tipText = tip.data('tip');
 
@@ -977,20 +981,18 @@ document.addEventListener('DOMContentLoaded', function() {
 				e.preventDefault();
 
 				var frm = $(this).closest('form');
-				//console.log($(this).attr('href'));
+
 				$.ajax({
 					url: $(this).attr('href'),
 					type: 'post',
 					data: frm.serialize(),
 					//dataType: 'json',
 					async: false,
-					success: function(data) {
-						console.log(data);
-						//Halcyon.message('success', 'Settings updated.');
+					success: function() {
 						$('#panel').hide("slide", { direction: "right" }, 500);
 						$('.ui-widget-overlay').remove();
 					},
-					error: function(xhr, reason, thrownError) {
+					error: function (xhr) { //xhr, reason, thrownError
 						if (xhr.responseJSON) {
 							Halcyon.message('danger', xhr.responseJSON.message);
 						} else {
@@ -1027,17 +1029,19 @@ document.addEventListener('DOMContentLoaded', function() {
 	});*/
 
 	$('[maxlength]').each(function (i, el) {
-		var counter = $('<span class="char-counter"></span>');
-		if ($(this).attr('id') != '') {
-			counter.attr('id', $(this).attr('id') + '-counter');
+		var counter = $('<span class="char-counter"></span>'),
+			item = $(el);
+		if (item.attr('id') != '') {
+			counter.attr('id', item.attr('id') + '-counter');
 		}
-		if ($(this).parent().hasClass('input-group')) {
-			counter.insertBefore($(this).parent());
+		if (item.parent().hasClass('input-group')) {
+			counter.insertBefore(item.parent());
 		} else {
-			counter.insertBefore($(this));
+			counter.insertBefore(item);
 		}
-		counter.text($(this).val().length + ' / ' + $(this).attr('maxlength'));
+		counter.text(item.val().length + ' / ' + item.attr('maxlength'));
 	});
+
 	$('[maxlength]').on('keyup', function () {
 		var chars = $(this).val().length;
 		var counter = $('#' + $(this).attr('id') + '-counter');/*$(this).parent().find('.char-counter');

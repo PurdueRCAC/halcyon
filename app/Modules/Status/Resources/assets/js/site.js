@@ -1,13 +1,4 @@
-/* global $ */ // jquery.js
-/* global ROOT_URL */ // common.js
-/* global WSGetURL */ // common.js
-/* global WSPostURL */ // common.js
-/* global WSDeleteURL */ // common.js
-/* global ERRORS */ // common.js
-/* global SetError */ // common.js
-/* global HighlightMatches */ // text.js
-
-var keywords_pending = 0;
+/* global WSPutURL */ // common.js
 
 /**
  * Save edited comment text
@@ -30,11 +21,7 @@ function StatusSave(url, id, option) {
 	post = JSON.stringify(post);
 
 	WSPutURL(url, post, function (xml, option) {
-		//var img = document.getElementById(comment + "_commenttextsaveiconimg");
-
 		if (xml.status < 400) {
-			var results = JSON.parse(xml.responseText);
-
 			/*if (option.value == 1) {
 				img.className = option.getAttribute('data-class'); //"fa fa-check";
 				img.parentNode.title = option.text;
@@ -51,7 +38,6 @@ function StatusSave(url, id, option) {
 			img.className = option.getAttribute('data-class'); //"fa fa-wrench";
 			img.parentNode.title = option.text;
 			img.parentNode.className = option.getAttribute('data-status');
-			//}
 		} else if (xml.status == 403) {
 			img.className = "fa fa-exclamation-circle";
 			img.parentNode.title = "Unable to save changes, grace editing window has passed.";
