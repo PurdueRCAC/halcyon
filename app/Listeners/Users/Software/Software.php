@@ -151,6 +151,7 @@ class Software
 			'Mechanical Engineering',
 			'Network for Computational Nanotechnology',
 			'Nuclear Engineering',
+			'Women In Engineering',
 		);
 
 		$software = array(
