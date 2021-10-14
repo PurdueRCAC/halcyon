@@ -1,16 +1,15 @@
 /* global $ */ // jquery.js
-/* global root */ // common.js
 /* global WSGetURL */ // common.js
 /* global WSPostURL */ // common.js
+/* global WSPutURL */ // common.js
 /* global WSDeleteURL */ // common.js
 /* global SetError */ // common.js
-/* global PrepareText */ // common.js
 /* global HighlightMatches */ // text.js
 
 var keywords_pending = 0;
 //var img_url = "/include/images/";
 var LASTEDIT = new Array();
-var root = base_url + "/api/";
+var root = document.querySelector('meta[name="api-token"]').getAttribute('content') + "/api/";
 
 /**
  * Functions common to the user (queue management page)
@@ -180,7 +179,7 @@ function NEWSTabURL(tab) {
  * @param   {array}  resource
  * @return  {void}
  */
-function NEWSAddResource(resource) {
+/*function NEWSAddResource(resource) {
 	var results;
 	if (typeof resource == 'string') {
 		results = JSON.parse(resource);
@@ -191,7 +190,7 @@ function NEWSAddResource(resource) {
 	$('#newsresource')
 		.val(results['resourceid'])
 		.trigger('change');
-}
+}*/
 
 /**
  * Add an association to the list of associations
@@ -416,12 +415,13 @@ function NEWSAddEntry() {
 		return;
 	}
 
+	var hour = null;
 	if (!newsdate) {
 		newsdate = '0000-00-00';
 	}
 	match = newstime.match(/^(\d{1,2}):(\d{2}) ?(AM|PM)$/);
 	if (match) {
-		var hour = parseInt(match[1]);
+		hour = parseInt(match[1]);
 		if (hour != 12 && match[3] == "PM") {
 			hour = hour + 12;
 		}
@@ -440,7 +440,7 @@ function NEWSAddEntry() {
 	if (newsdateend.match(/^\d{4}-\d{2}-\d{2}$/)) {
 		match = newstimeend.match(/^(\d{1,2}):(\d{2}) ?(AM|PM)$/);
 		if (match) {
-			var hour = parseInt(match[1]);
+			hour = parseInt(match[1]);
 			if (hour != 12 && match[3] == "PM") {
 				hour = hour + 12;
 			}
@@ -551,8 +551,8 @@ function NEWSAddEntry() {
 			post['datetimenews'] = newsdate;
 		}
 		if (newsdateend
-		 && newsdateend != '0000-00-00 00:00:00'
-		 && newsdateend != newsdate) {
+		&& newsdateend != '0000-00-00 00:00:00'
+		&& newsdateend != newsdate) {
 			post['datetimenewsend'] = newsdateend;
 		}
 
@@ -783,7 +783,7 @@ function NEWSSearch() {
 	}
 
 	// start assembling string
-	var searchstring = "";
+	//var searchstring = "";
 	var querystring = "&";
 
 	if (published) {
@@ -810,32 +810,32 @@ function NEWSSearch() {
 	// if not add new
 	if (!in_add) {
 		if (start != "") {
-			searchstring += " start:"  + start;
+			//searchstring += " start:"  + start;
 			querystring += "&start="  + start;
 		}
 		if (stop != "") {
-			searchstring += " stop:" + stop;
+			//searchstring += " stop:" + stop;
 			querystring += "&stop=" + stop;
 		}
 	}
 
 	// Construct resource query
 	if (!in_edit && resources.length > 0) {
-		searchstring += " resource:" + resources[0];
+		//searchstring += " resource:" + resources[0];
 		querystring += "&resource=" + resources[0];
 		for (var x=1;x<resources.length;x++) {
-			searchstring += "," + resources[x];
+			//searchstring += "," + resources[x];
 			querystring += "," + resources[x];
 		}
 	}
 
 	if (!in_edit && newstypeid != "" && newstypeid != '-1') {
-		searchstring += " type:" + newstypeid;
+		//searchstring += " type:" + newstypeid;
 		querystring += "&type=" + newstypeid;
 	}
 
 	if (window.location.href.match(/[&?]all/)) {
-		searchstring += " limit:0";
+		//searchstring += " limit:0";
 		querystring += "&limit=0";
 	}
 
@@ -847,25 +847,25 @@ function NEWSSearch() {
 
 			// filter out potentially dangerous garbage
 			keywords = keywords.replace(/[^a-zA-Z0-9_ ]/g, '');
-			searchstring += " " + keywords;
+			//searchstring += " " + keywords;
 			querystring += "&keywords=" + keywords;
 		}
 	}
 	if (!in_add) {
 		if (locale != "") {
-			searchstring += " location:" + locale;
+			//searchstring += " location:" + locale;
 			querystring += "&location=" + locale;
 		}
 	}
 	if (template) {
-		searchstring += " template:1";
+		//searchstring += " template:1";
 		querystring += "&template=1";
 	}
 
 	// if not add new
 	if (!in_add || in_edit) {
 		if (id.match(/(\d)+/)) {
-			searchstring += " id:" + id;
+			//searchstring += " id:" + id;
 			querystring += "&id=" + id;
 		}
 	}
@@ -1893,8 +1893,8 @@ function NEWSPrintRow(news) {
 
 	// Edited by
 	if (news['editdate']
-	 && news['editdate'] != '0000-00-00 00:00:00'
-	 && news['editdate'] != news['createdate']) {
+	&& news['editdate'] != '0000-00-00 00:00:00'
+	&& news['editdate'] != news['createdate']) {
 		div = document.createElement("div");
 		div.className = "newspostedby newspostuser";
 
@@ -2007,7 +2007,7 @@ function NEWSPrintRow(news) {
 
 	container.appendChild(article);
 
-	var c = Array();
+	//var c = Array();
 	for (x = 0; x < news.updates.length; x++) {
 		//if (root + "news/" + news.updates[x]['newsid'] == news['id']) {
 			//c.push(news.updates[x]);
@@ -2757,7 +2757,7 @@ function NEWSPreview(news, edit) {
  *
  * @return  {void}
  */
-function NEWSToggleMoreNews() {
+/*function NEWSToggleMoreNews() {
 	var more = document.getElementById("morenews");
 	var moretext = document.getElementById("morenewstext");
 	if (more.style.display == "none") {
@@ -2767,7 +2767,7 @@ function NEWSToggleMoreNews() {
 		$( "#morenews" ).toggle( "blind", {'direction': 'up', 'easing': 'swing', 'duration': 1000} );
 		moretext.innerHTML = "More";
 	}
-}
+}*/
 
 /**
  * Send an email
@@ -2807,6 +2807,8 @@ function NEWSSendMail(news) {
 			return;
 		}
 
+		var x = 0;
+
 		// Gather some  variables from DOM
 		var formatteddate = $('#' + news).find(".newsdate").first().html().replace(/<a href.*/, '');
 		var subject = $('#' + news + "_headline").text();
@@ -2825,7 +2827,7 @@ function NEWSSendMail(news) {
 
 		var body = "";
 		if (data['updates'].length > 0) {
-			for (var x = 0; x < data['updates'].length; x++) {
+			for (x = 0; x < data['updates'].length; x++) {
 				body = body + '<section><h3 class="newsupdate">UPDATE: ' + data['updates'][x]['formattedcreateddate'] + '</h3>' + data['updates'][x]['formattedbody'] + '</section>';
 			}
 			body = body + '<section><h3 class="newsupdate">ORIGINAL: ' + data['formattedcreateddate'] + '</h3>';
@@ -2837,7 +2839,7 @@ function NEWSSendMail(news) {
 
 		if (data['resources'].length > 0) {
 			footer += '<hr /><p>Send to resource mailing lists:</p><div class="row">';
-			for (var x = 0; x < data['resources'].length; x++) {
+			for (x = 0; x < data['resources'].length; x++) {
 				footer += '<div class="col-md-3"><label><input type="checkbox" checked="checked" value="' + data['resources'][x]['resourceid'] + '" class="preview-resource" /> ' + data['resources'][x]['name'] + '</label></div>';
 			}
 			footer += '</div>';
@@ -2872,7 +2874,7 @@ function NEWSSendMail(news) {
 
 					post = JSON.stringify(post);
 
-					WSPutURL(ROOT_URL + "news/" + news + "/email", post, NEWSSentMail, news);
+					WSPutURL(root + "news/" + news + "/email", post, NEWSSentMail, news);
 				}
 			}
 		});
@@ -2890,7 +2892,7 @@ function NEWSSendMail(news) {
  * @return  {void}
  */
 function NEWSWriteMail(news) {
-	$.getJSON(ROOT_URL + "news/" + news, function (data) {
+	$.getJSON(root + "news/" + news, function (data) {
 		$('#mail-subject').val(data.headline);
 
 		var body = '**Date:** ' + data.formatteddate.replace(/(<([^>]+)>)/ig, '').replace(/&nbsp;/g, ' ').replace('&#8211;', '-') + "\n";
@@ -2958,7 +2960,7 @@ function NEWSWriteMail(news) {
 						'body': $('#mail-body').val(),
 						'associations': associations
 					});
-					WSPutURL(ROOT_URL + "news/" + news + "/email", post, NEWSSentMail, news);
+					WSPutURL(root + "news/" + news + "/email", post, NEWSSentMail, news);
 				}
 			}
 		});
@@ -3509,7 +3511,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			closeOnSelect: false,
 			templateResult: function (item) {
 				if (typeof item.children != 'undefined') {
-					var s = $(item.element).find('option').length - $(item.element).find('option:selected').length;
+					//var s = $(item.element).find('option').length - $(item.element).find('option:selected').length;
 					var el = $('<button class="btn btn-sm btn_select2_optgroup" data-group="' + item.text + '">Select All</span>');
 
 					// Click event
@@ -3601,7 +3603,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		var el = $(this);
 
-		WSDeleteURL(root + "news/associations/" + el.data('id'), function (xml, id) {
+		WSDeleteURL(root + "news/associations/" + el.data('id'), function (xml) {
 			if (xml.status < 400) {
 				el.parent().html('<span class="alert alert-success">Successfully cancelled.</span>');
 				setTimeout(function () {

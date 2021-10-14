@@ -1,3 +1,5 @@
+/* global jQuery */ // jquery.js
+
 var Drupal = {};
 var drupalSettings = {
     "path": {
@@ -82,15 +84,15 @@ var drupalSettings = {
         {{/services}}"
     );
 
-    var errors = [];
-    var facets = [];
+    //var errors = [];
+    //var facets = [];
 
     // The list of services which could be visible in the grid.
     // Only 3 of them are going to actually be visible.
     var visible_classes = []; // items like ".service-23"
-    var first_visible = 0;
+    //var first_visible = 0;
 
-    var jump_delay = false;
+    //var jump_delay = false;
 
     var questionlist = [
         {
@@ -133,31 +135,31 @@ var drupalSettings = {
         $('.clear-button').html(response.button_clear_selections);
     });
 
+    var facetsselected = [];
+    var questionlist = [];
 
     $.getJSON(drupalSettings.path.baseUrl + "/api/finder/facettree", function (response) {
 
         // JSON responses are automatically parsed.
 
         // here, see if there are selected facets in the URL
-        facetsselected = [];
-        inputparameters = findGetParameter("facets");
+        var inputparameters = findGetParameter("facets");
         if (inputparameters.length > 0) {
             facetsselected = inputparameters.split(",");
         }
 
-        questionlist = [];
-
-        readfacets = response;
+        var readfacets = response;
+        var i, j, choicein;
         for (i = 0; i < readfacets.length; i++) {
 
-            question = new Object();
+            var question = new Object();
             question.id = readfacets[i].id;
             question.question = readfacets[i].name;
             question.control_type = readfacets[i].control_type;
             question.description = readfacets[i].description;
             question.choices = [];
             // get all choice_ids to aid computing turnoff array
-            choice_ids = readfacets[i].choices.map(function (a) { return a.id; });
+            var choice_ids = readfacets[i].choices.map(function (a) { return a.id; });
             for (j = 0; j < readfacets[i].choices.length; j++) {
                 choicein = readfacets[i].choices[j];
                 var facet = new Object();
@@ -186,7 +188,7 @@ var drupalSettings = {
 
         $("#questionlist").append($.Mustache.render('question-checkbox-template', { questions: questionlist }));
 
-        $(".facet").on("change", function (thefacet) {
+        $(".facet").on("change", function () { //thefacet
             var a = find_facet($(this).attr("facetid"));
 
             $('.jump-to-chart').hide();
@@ -200,11 +202,11 @@ var drupalSettings = {
             // buttons as necessary
             if (a.selected) {
                 for (var k = 0; k < a.turnoff.length; k++) {
-                    off = a.turnoff[k];
+                    var off = a.turnoff[k];
                     for (var i = 0; i < questionlist.length; i++) {
                         question = questionlist[i];
                         for (var j = 0; j < question.choices.length; j++) {
-                            choice = question.choices[j];
+                            var choice = question.choices[j];
                             //alert(choice.id+" vs "+off);
                             if (choice.id * 1 == off * 1) {  // force to numbers
                                 choice.selected = false;
@@ -212,7 +214,7 @@ var drupalSettings = {
                             }
                         }
                     }
-                };
+                }
             }
             // need to turn off the card checkboxes.
             // or maybe not -- leave selected services selelcted when clicking facets
@@ -223,14 +225,14 @@ var drupalSettings = {
         });
     });
 
+    var servicesselected = [];
 
     // load the services
     $.getJSON(drupalSettings.path.baseUrl + "/api/finder/servicelist", function (responseb) {
-        services = responseb;
+        //var services = responseb;
         //servicelist = responseb.data;
 
         // here, see if there are selected services in the URL
-        var servicesselected = [];
         var inputServiceParameters = findGetParameter("services");
         if (inputServiceParameters.length > 0) {
             servicesselected = inputServiceParameters.split(",");
@@ -247,7 +249,7 @@ var drupalSettings = {
                     visible_classes.push(service);
                     visible_classes.sort();
                     $(".service").hide();
-                    first_visible = 0;
+                    //first_visible = 0;
                     $.each(visible_classes, function (index, service) { $(service).show(); });
                 }
                 else {
@@ -267,8 +269,8 @@ var drupalSettings = {
 
         // instead of labels, we have field_data[field]["label"]
 
-        help_text_counter = 0;
-        chart = '<caption class="sr-only">Comparison of services</caption><thead><tr><td></td>';
+        var help_text_counter = 0;
+        var chart = '<caption class="sr-only">Comparison of services</caption><thead><tr><td></td>';
         for (i = 0; i < servicelist.length; i++) {
             chart = chart + "<th class='service service-" + servicelist[i].id + "' scope='col'>" + servicelist[i]["title"] + "</th>";
         }
@@ -276,14 +278,15 @@ var drupalSettings = {
         //alert(chart);
 
         // we need the order of the rows, get this in sortedfields
-        fieldweight = {};
+        var fieldweight = {};
+        var field;
         for (field in servicelist[0].field_data) {
 
             //alert ("field is "+field+" weight is "+servicelist[0].field_data[field].weight);
             fieldweight[field] = servicelist[0].field_data[field].weight;
         }
 
-        sortedfields = Object.keys(fieldweight).sort(function (a, b) { return fieldweight[a] - fieldweight[b] })
+        var sortedfields = Object.keys(fieldweight).sort(function (a, b) { return fieldweight[a] - fieldweight[b] })
         // every other row
         for (var i = 0; i < sortedfields.length; i++) {
             field = sortedfields[i];
@@ -291,7 +294,7 @@ var drupalSettings = {
             chart = chart + "<tr>";
             chart = chart + "<th scope='row'>" + servicelist[0].field_data[field].label;
             help_text_counter++;
-            help = servicehelp.field_data[field].value ? "<a class='popup' aria-haspop='true' href='#help-" + help_text_counter + "'><span class='sr-only'>More information about " + servicelist[0].field_data[field].label + "</span><span class='fa fa-info-circle'></span></a><div class='help' id='help-" + help_text_counter + "'><h3>" + servicelist[0].field_data[field].label + "</h3>" + servicehelp.field_data[field].value + "</div>" : "";
+            var help = servicehelp.field_data[field].value ? "<a class='popup' aria-haspop='true' href='#help-" + help_text_counter + "'><span class='sr-only'>More information about " + servicelist[0].field_data[field].label + "</span><span class='fa fa-info-circle'></span></a><div class='help' id='help-" + help_text_counter + "'><h3>" + servicelist[0].field_data[field].label + "</h3>" + servicehelp.field_data[field].value + "</div>" : "";
             chart = chart + help;
             chart = chart + "</th>"; // row title
             for (var j = 0; j < servicelist.length; j++) {
@@ -323,7 +326,7 @@ var drupalSettings = {
     function evaluate_services() {
         // get a list of selected facet ids
         $(".service-panel").removeClass("mismatch").find(".cardcheckbox").removeAttr("disabled");
-        selected = [];
+        var selected = [];
         questionlist.forEach(function (question) {
             question.choices.forEach(function (choice) {
                 if (choice.selected == true) {
@@ -332,12 +335,13 @@ var drupalSettings = {
             });
         })
         // now set the visibility of each service. These are in the manual checkbox list
-        visible_classes = [];
-        visible_services = []; // list of ids for the url parameter
-        number_visible = 0;
-        comparisonlist = "";
+        var visible_classes = [];
+        //var visible_services = []; // list of ids for the url parameter
+        var number_visible = 0;
+        var comparisonlist = "";
 
-        for (i = 0; i < servicelist.length; i++) {
+        var service;
+        for (var i = 0; i < servicelist.length; i++) {
             service = servicelist[i];
             var hidden = "no";
             for (var j = 0; j < selected.length; j++) {
@@ -351,7 +355,7 @@ var drupalSettings = {
                     servicelist[i]["hidden"] = "yes";
                     hidden = "yes";
                 }
-            };
+            }
 
             // look at the card checkbox. if not checked, this service is hidden from the chart
             if ($("#service-" + service.id).find('.cardcheckbox').prop('checked') == false) { // card
@@ -375,7 +379,7 @@ var drupalSettings = {
 
             var service_count = $('.cardcheckbox:checked').length;
             $('#selection-number').text(service_count);
-        };
+        }
 
         $(".comparisonlist-wrapper").html(comparisonlist);
 
@@ -412,9 +416,9 @@ var drupalSettings = {
             });
             visible_classes.sort();
             $(".service").hide();
-            first_visible = 0;
-            //show = visible_classes.slice(first_visible,first_visible+columns_to_show);
-            show = visible_classes;  // use all of them when scrolling the table.
+            //first_visible = 0;
+            //var show = visible_classes.slice(first_visible,first_visible+columns_to_show);
+            var show = visible_classes;  // use all of them when scrolling the table.
             $.each(show, function (index, service) { $(service).show(); });
         });
 
@@ -426,7 +430,7 @@ var drupalSettings = {
         //psw STSM events
         addEvents();
 
-        facetlist = selected.join(","); // list of facets which are "on"
+        var facetlist = selected.join(","); // list of facets which are "on"
         $("#return").html("<a href='" + document.location.protocol + "//" + document.location.host + "/finder?facets=" + facetlist + "'>Return</a>");
     }
 
@@ -533,10 +537,11 @@ var drupalSettings = {
 
     // find the facet with the given id
     function find_facet(facetid) {
-        for (i = 0; i < questionlist.length; i++) {
-            question = questionlist[i];
+        var j;
+        for (var i = 0; i < questionlist.length; i++) {
+            var question = questionlist[i];
             for (j = 0; j < question.choices.length; j++) {
-                facet = question.choices[j];
+                var facet = question.choices[j];
                 if (facet.id == facetid) {
                     return facet;
                 }
@@ -553,8 +558,8 @@ var drupalSettings = {
     }
 
     $("#send_email").click(function () {
-        name = $("#name").val();
-        email = $("#emailaddr").val();
+        var name = $("#name").val();
+        var email = $("#emailaddr").val();
 
         if (name == "") {
             alert("You must provide your name to send email.");
@@ -567,7 +572,7 @@ var drupalSettings = {
         }
 
 
-        qdata = [];
+        var qdata = [];
 
         questionlist.forEach(function (question) {
             question.choices.forEach(function (choice) {
@@ -577,25 +582,25 @@ var drupalSettings = {
             });
         })
 
-        sdata = [];
+        var sdata = [];
 
 
-        for (i = 0; i < servicelist.length; i++) {
+        for (var i = 0; i < servicelist.length; i++) {
             if (servicelist[i]["hidden"] == "no") {
                 sdata.push(servicelist[i].id);
             }
         }
 
-        var comments = '';
+        /*var comments = '';
         if ($('textarea#comments').val()) {
             comments = $('textarea#comments').val();
-        }
+        }*/
 
         $("#name").val(""); // clear the input fields
         $("#emailaddr").val("");
         $("#comments").val("");
 
-        emailaddresses = [];
+        var emailaddresses = [];
         if ($("#emailtoself").prop("checked")) {
             emailaddresses.push(email);
         }
@@ -608,7 +613,7 @@ var drupalSettings = {
                 csrf_token = response.data;
             });
 
-            emaildata = {
+            var emaildata = {
                 name: name,
                 email: emailaddresses.join(","),
                 qdata: qdata,
@@ -644,9 +649,9 @@ var drupalSettings = {
     $(document).on("mouseover", ".service-panel",
         function (event) {
             if (event.ctrlKey) {
-                serviceid = $(this).attr("service");
+                var serviceid = $(this).attr("service");
                 //alert("enter "+serviceid);
-                for (i = 0; i < servicelist.length; i++) {
+                for (var i = 0; i < servicelist.length; i++) {
                     if (servicelist[i].id == serviceid) {
                         var facetlist = servicelist[i].facet_matches; //arr of strings
                         $('.checkbox').each(function () {
@@ -660,7 +665,7 @@ var drupalSettings = {
         });
 
     $(document).on("mouseleave", ".service-panel",
-        function (event) {
+        function () {
             //alert("leave");
             $('.checkbox').removeClass('blocker');
         });
@@ -773,8 +778,7 @@ var drupalSettings = {
                 tabindex: '-1',
                 "data-hidden": "true"
             });
-
-        };
+        }
     }
 
 })(jQuery, Drupal, drupalSettings);

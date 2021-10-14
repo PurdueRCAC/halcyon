@@ -1,6 +1,7 @@
-/**
- * Initiate event hooks
- */
+/* global $ */ // jquery.js
+/* global Halcyon */ // core.js
+/* global Handlebars */ // handlebars.js
+
 document.addEventListener('DOMContentLoaded', function () {
 	$('body').on('click', '.remove-choice', function (e) {
 		e.preventDefault();
@@ -16,11 +17,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					Halcyon.message('success', 'Item removed');
 					field.remove();
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					Halcyon.message('danger', xhr.responseJSON.message);
 				}
 			});
