@@ -461,17 +461,17 @@ class AmieLdap
 							{
 								$member = User::findByUsername($val);
 
+								$mem = $pldap->search()
+									->where('uid', '=', $val)
+									->first();
+
+								if (!$mem && !$mem->exists)
+								{
+									continue;
+								}
+
 								if (!$member || !$member->id)
 								{
-									$mem = $pldap->search()
-										->where('uid', '=', $val)
-										->first();
-
-									if (!$mem && !$mem->exists)
-									{
-										continue;
-									}
-
 									$member = new User;
 									$member->name = $mem->getAttribute('cn', 0);
 									$member->save();
@@ -480,8 +480,27 @@ class AmieLdap
 									$musername->userid = $member->id;
 									$musername->username = $val;
 									$musername->save();
+								}
+								$member->username = $val;
+								if ($uidNumber = $mem->getAttribute('uidNumber', 0))
+								{
+									$member->uidNumber = $uidNumber;
+								}
+								if ($gidNumber = $mem->getAttribute('gidNumber', 0))
+								{
+									$member->gidNumber = $gidNumber;
+								}
+								if ($dns = $mem->getAttribute('x-xsede-userDn'))
+								{
+									foreach ($dns as $dn)
+									{
+										$meta = $member->facets->firstWhere('value', '=', $dn);
 
-									$member->username = $val;
+										if (!$meta)
+										{
+											$member->addFacet('x-xsede-userDn', $dn, 0, 1);
+										}
+									}
 								}
 
 								event(new UserSync($member, true));
@@ -731,7 +750,7 @@ class AmieLdap
 					$response->queue = $q;
 
 					$g = $group->toArray();
-					$g['members'] = $group->members()>get()->toArray();
+					$g['members'] = $group->members()->get()->toArray();
 					foreach ($g['members'] as $k => $member)
 					{
 						$member['api'] = route('api.groups.members.read', ['id' => $member['id']]);
@@ -756,7 +775,7 @@ class AmieLdap
 					$response->directory = $d;
 				}
 
-				event(new UserSync($user, true));
+				//event(new UserSync($user, true));
 			}
 		}
 		catch (\Exception $e)

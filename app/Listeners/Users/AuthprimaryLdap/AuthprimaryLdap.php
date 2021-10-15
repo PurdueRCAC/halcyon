@@ -263,6 +263,11 @@ class AuthprimaryLdap
 						'x-xsede-userDn' => $userDns,
 					];
 
+					if (empty($data['x-xsede-userDn']))
+					{
+						unset($data['x-xsede-userDn']);
+					}
+
 					if ($user->telephoneNumber)
 					{
 						$data['telephoneNumber'] = $user->telephoneNumber;
