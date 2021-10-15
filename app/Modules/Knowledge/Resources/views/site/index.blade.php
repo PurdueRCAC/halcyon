@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title'){{ trans('knowledge::knowledge.module name') }}: {{ $node->page->headline }}@stop
+@section('title'){{ trans('knowledge::knowledge.module name') }}: {{ ($node->guide ? $node->guide . ': ' : '') . $node->page->headline }}@stop
 
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/prism/prism.css') }}?v={{ filemtime(public_path('modules/core/vendor/prism/prism.css')) }}" />

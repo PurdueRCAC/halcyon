@@ -54,6 +54,7 @@ class PagesController extends Controller
 		$root = Associations::rootNode();
 
 		$uri = '';
+		$guide = '';
 		$prev = null;
 		$parent = $root->id;
 		foreach ($pages as $i => $node)
@@ -102,6 +103,7 @@ class PagesController extends Controller
 
 			if ($i == 1)
 			{
+				$guide = $page->headline;
 				$parent = $node->id;
 			}
 
@@ -110,6 +112,7 @@ class PagesController extends Controller
 
 		$path = explode('/', $path);
 		array_shift($path);
+		$node->guide = $guide;
 
 		return view('knowledge::site.index', [
 			'node' => $node,
