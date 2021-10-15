@@ -415,6 +415,8 @@ class AmieLdap
 						$group->save();
 					}
 
+					$allmembers = array();
+
 					// Unix groups
 					/*
 					# x-peb216887, Groups, anvil.rcac.purdue.edu
@@ -451,7 +453,9 @@ class AmieLdap
 							$ugusers = $unixgroup->members;
 
 							$current = $ugusers->pluck('userid')->toArray();
-							$added = array();
+							//$added = array();
+
+							$pldap = $this->connect($this->config('People'));
 
 							foreach ($vals as $val)
 							{
@@ -459,8 +463,28 @@ class AmieLdap
 
 								if (!$member || !$member->id)
 								{
-									continue;
+									$mem = $pldap->search()
+										->where('uid', '=', $val)
+										->first();
+
+									if (!$mem && !$mem->exists)
+									{
+										continue;
+									}
+
+									$member = new User;
+									$member->name = $mem->getAttribute('cn', 0);
+									$member->save();
+
+									$musername = new UserUsername;
+									$musername->userid = $member->id;
+									$musername->username = $val;
+									$musername->save();
+
+									$member->username = $val;
 								}
+
+								event(new UserSync($member, true));
 
 								// Create user if needed
 								if (!in_array($member->id, $current))
@@ -471,11 +495,12 @@ class AmieLdap
 									$ugu->save();
 								}
 
-								$added[] = $member->id;
+								//$added[] = $member->id;
+								$allmembers[] = $member->id;
 							}
 
 							// Remove any users not found in the list from LDAP
-							$remove = array_diff($current, $added);
+							$remove = array_diff($current, $allmembers);
 
 							foreach ($remove as $userid)
 							{
@@ -540,16 +565,39 @@ class AmieLdap
 						$queue->save();
 					}
 
-					$queuemembers = $queue->users()
-						->count();
+					// Sync queue membership
+					$queueusers = $queue->users()
+						->get();
 
-					if (!$queuemembers)
+					$queueuserids = $queueusers
+						->pluck('userid')
+						->toArray();
+
+					foreach ($allmembers as $userid)
 					{
+						if (in_array($userid, $queueuserids))
+						{
+							continue;
+						}
 						$qm = new QueueUser;
 						$qm->queueid = $queue->id;
-						$qm->userid = $user->id;
+						$qm->userid = $userid;
 						$qm->membertype = 1;
 						$qm->save();
+					}
+
+					$remove = array_diff($queueuserids, $allmembers);
+
+					foreach ($remove as $userid)
+					{
+						foreach ($queueusers as $quser)
+						{
+							if ($quser->userid == $userid)
+							{
+								$quser->delete();
+								continue;
+							}
+						}
 					}
 
 					$sizes = $queue->sizes()->orderBy('id', 'asc')->get();
@@ -683,7 +731,7 @@ class AmieLdap
 					$response->queue = $q;
 
 					$g = $group->toArray();
-					$g['members'] = $group->members->toArray();
+					$g['members'] = $group->members()>get()->toArray();
 					foreach ($g['members'] as $k => $member)
 					{
 						$member['api'] = route('api.groups.members.read', ['id' => $member['id']]);
@@ -693,7 +741,7 @@ class AmieLdap
 					$response->group = $g;
 
 					$u = $unixgroup->toArray();
-					$u['members'] = $unixgroup->members->toArray();
+					$u['members'] = $unixgroup->members()->get()->toArray();
 					foreach ($u['members'] as $k => $member)
 					{
 						$member['api'] = route('api.unixgroups.members.read', ['id' => $member['id']]);
