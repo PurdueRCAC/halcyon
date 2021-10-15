@@ -9,7 +9,7 @@
 var keywords_pending = 0;
 //var img_url = "/include/images/";
 var LASTEDIT = new Array();
-var root = document.querySelector('meta[name="api-token"]').getAttribute('content') + "/api/";
+var root = document.querySelector('meta[name="base-url"]').getAttribute('content') + "/api/";
 
 /**
  * Functions common to the user (queue management page)
