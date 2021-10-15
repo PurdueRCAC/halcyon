@@ -509,7 +509,11 @@ class AmieLdap
 					if (!$queue || !$queue->id)
 					{
 						$scheduler = Scheduler::query()
-							->where('hostname', '=', $rolename . '-adm.rcac.purdue.edu')
+							->where(function($where) use ($rolename)
+							{
+								$where->where('hostname', '=', $rolename . '-adm.rcac.purdue.edu')
+										->orWhere('hostname', '=', $rolename . '.adm.rcac.purdue.edu');
+							})
 							->get()
 							->first();
 
@@ -519,6 +523,7 @@ class AmieLdap
 						$queue->queuetype = 1;
 						$queue->enabled = 1;
 						$queue->started = 1;
+						$queue->cluster = '';
 
 						if ($subresource && $scheduler)
 						{
