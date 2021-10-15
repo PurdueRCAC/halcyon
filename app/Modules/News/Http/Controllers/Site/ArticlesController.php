@@ -239,6 +239,22 @@ class ArticlesController extends Controller
 	 */
 	public function type($name, Request $request)
 	{
+		// Get filters
+		$filters = array(
+			'search'    => null,
+			'resource'  => null,
+			'keyword'   => null,
+			'start'     => null,
+			'stop'      => null,
+			'limit'     => config('list_limit', 20),
+			'page'      => 1,
+		);
+
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->input($key, $default);
+		}
+
 		$row = Type::findByName($name);
 
 		if (!$row)
@@ -270,29 +286,29 @@ class ArticlesController extends Controller
 				->where('template', '=', 0);
 		}
 
-		if ($request->has('start'))
+		if ($filters['start'])
 		{
-			$start = Carbon::parse($request->input('start'));
+			$start = Carbon::parse($filters['start']);
 			$query->where('datetimenews', '>', $start->toDateTimeString());
 		}
 
-		if ($request->has('stop'))
+		if ($filters['stop'])
 		{
-			$stop = $request->input('stop');
-			$query->where(function($where) use ($stop)
+			$stop = $filters['stop'];
+			$query->where(function($where) use ($filters)
 			{
-				$stop = Carbon::parse($stop);
+				$stop = Carbon::parse($filters['stop']);
 				$where->whereNull('datetimenewsend')
 					->orWhere('datetimenewsend', '<=', $stop->toDateTimeString());
 			});
 		}
 
-		if ($request->has('resource'))
+		if ($filters['resource'])
 		{
 			$r = (new Newsresource)->getTable();
 			$n = (new Article)->getTable();
 
-			$resource = explode(',', $request->input('resource'));
+			$resource = explode(',', $filters['resource']);
 			$resource = array_map('trim', $resource);
 
 			$query->join($r, $r . '.newsid', $n . '.id')
@@ -312,7 +328,8 @@ class ArticlesController extends Controller
 		return view('news::site.type', [
 			'type' => $row,
 			'types' => $types,
-			'articles' => $articles
+			'articles' => $articles,
+			'filters' => $filters,
 		]);
 	}
 

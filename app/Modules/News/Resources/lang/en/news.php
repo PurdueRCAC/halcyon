@@ -3,6 +3,7 @@ return [
 	'module name' => 'News Manager',
 	'module sections' => 'Module section',
 	'configuration' => 'Pages Configuration',
+	'news' => 'News',
 	// Sub-menu
 	'articles' => 'Articles',
 	'article' => 'Article',
