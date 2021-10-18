@@ -250,6 +250,52 @@ class AmieLdap
 
 		$data = $event->data;
 
+		// Try to determine the primary resource being used
+		//    Ex: dc=foo,dc=rcac,dc=purdue,dc=edu
+		$rolename = stristr(',', $config['base_dn'], true);
+		$rolename = str_replace('dc=', '', $rolename);
+		$cluster = 'cpu';
+
+		$resource = $rolename ? Asset::findByName($rolename) : null;
+
+		if (!$resource)
+		{
+			// No resource found? Can't really do anything without it.
+			return;
+		}
+
+		if (isset($data['dn']))
+		{
+			// dn: x-xsede-pid=PEB215459,ou=Projects,dc=anvil,dc=rcac,dc=purdue,dc=edu
+			$dn = explode(',', $data['dn']);
+
+			if (isset($dn[0]))
+			{
+				$data['x-xsede-pid'] = str_replace('x-xsede-pid=', '', $dn[0]);
+			}
+
+			if (isset($dn[2]))
+			{
+				$rolen = str_replace('dc=', '', $dn[2]);
+
+				// Is this a different LDAP tree?
+				// If so, we need to change the base dn in the config
+				if ($rolename && $rolename != $resource->rolename)
+				{
+					$basedn = stristr(',', $config['base_dn'], true);
+
+					// Try to figure out the cluster name
+					// This will be used for the proper subresource lookup later
+					if (substr($rolename, 0, strlen($resource->rolename)) == $resource->rolename)
+					{
+						$cluster = substr($rolename, strlen($resource->rolename));
+					}
+
+					$config['base_dn'] = str_replace($basedn, 'dc=' . $rolename, $config['base_dn']);
+				}
+			}
+		}
+
 		if (empty($data['x-xsede-pid']))
 		{
 			return;
@@ -537,32 +583,46 @@ class AmieLdap
 
 					// Queues
 					$queue = $group->queues()
-						->where('name', '=', $pid)
+						->where('name', '=', $pid . ($cluster != 'cpu' ? '-' . $cluster : ''))
 						->first();
 
-					$dn = explode(',', $results->getAttribute('distinguishedname', 0));
+					/*$dn = explode(',', $results->getAttribute('distinguishedname', 0));
 					if (isset($dn[2]))
 					{
 						$rolename = str_replace('dc=', '', $dn[2]);
+					}*/
+
+					// Try to find an appropriate sub resource
+					$subresource = null;
+
+					// Is a specific cluster specified?
+					if ($cluster)
+					{
+						$subresource = $resource->subresources()
+							->where('cluster', '=', $cluster)
+							->first();
+					}
+					else
+					{
+						$subresource = $resource->subresources->first();
 					}
 
-					$resource = Asset::findByName($rolename);
-
-					$subresource = $resource ? $resource->subresources->first() : null;
+					//$subresource = $resource ? $resource->subresources->first() : null;
 
 					if (!$queue || !$queue->id)
 					{
 						$scheduler = Scheduler::query()
-							->where(function($where) use ($rolename)
+							->where(function($where) use ($resource)
 							{
-								$where->where('hostname', '=', $rolename . '-adm.rcac.purdue.edu')
-										->orWhere('hostname', '=', $rolename . '.adm.rcac.purdue.edu');
+								$where->where('hostname', '=', $resource->rolename . '-adm.rcac.purdue.edu')
+									->orWhere('hostname', '=', $resource->rolename . '.adm.rcac.purdue.edu')
+									->orWhere('hostname', '=', 'adm.' . $resource->rolename . '.rcac.purdue.edu');
 							})
 							->get()
 							->first();
 
 						$queue = new Queue;
-						$queue->name = $pid;
+						$queue->name = $pid . ($cluster != 'cpu' ? '-' . $cluster : '');
 						$queue->groupid = $group->id;
 						$queue->queuetype = 1;
 						$queue->enabled = 1;
