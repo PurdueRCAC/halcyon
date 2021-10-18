@@ -58,9 +58,9 @@ class AmieLdap
 
 		if ($dc && isset($config['base_dn']))
 		{
-			$basedn = stristr($config['base_dn'], ',', true);
+			$basedn = stristr($config['base_dn'], ',');
 
-			$config['base_dn'] = 'dc=' . $dc . ',' . $basedn;
+			$config['base_dn'] = 'dc=' . $dc . $basedn;
 		}
 
 		if ($ou && isset($config['base_dn']))
@@ -475,13 +475,13 @@ class AmieLdap
 					$now = Carbon::now();
 
 					// Is this a future allocation?
-					if ($start && $start->timestamp > $now->timstamp)
+					if ($start && $start->timestamp > $now->timestamp)
 					{
 						$authorized = false;
 					}
 
 					// Did the allocation expire?
-					if ($stop && $stop->timestamp < $now->timstamp)
+					if ($stop && $stop->timestamp < $now->timestamp)
 					{
 						$authorized = false;
 					}
