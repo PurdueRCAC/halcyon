@@ -20,6 +20,33 @@ class UserList extends Widget
 	 */
 	public function run()
 	{
+		$segments = request()->segments();
+		$last = end($segments);
+
+		if ($last)
+		{
+			$user = User::findByUsername($last);
+
+			if ($user && $user->id)
+			{
+				$user->title = $user->facet('title');
+				$user->specialty = $user->facet('specialty');
+				$user->office = $user->facet('office');
+				$user->phone = $user->facet('phone');
+				$user->thumb = asset('files/staff_thumb.png');
+
+				if (file_exists(storage_path('app/public/users/' . $user->username . '/photo.jpg')))
+				{
+					$user->thumb = asset('files/users/' . $user->username . '/photo.jpg');
+				}
+
+				return view($this->getViewName('profile'), [
+					'user'  => $user,
+					'params' => $this->params,
+				]);
+			}
+		}
+
 		$a = (new User)->getTable();
 		$u = (new UserUsername)->getTable();
 		$b = (new Map)->getTable();
@@ -114,7 +141,7 @@ class UserList extends Widget
 			->limit($this->params->get('limit', 5))
 			->get();
 
-		$users->each(function($user, $key)
+		$users->each(function($user, $key) use ($segments)
 		{
 			//event($e = new UserBeforeDisplay($user));
 
@@ -129,7 +156,7 @@ class UserList extends Widget
 				$user->thumb = asset('files/users/' . $user->username . '/photo.jpg');
 			}
 
-			$user->page = route('page', ['uri' => 'about/staff/' . $user->username]);
+			$user->page = route('page', ['uri' => implode('/', $segments) . '/' . $user->username]);
 		});
 
 		$layout = $this->params->get('layout');
