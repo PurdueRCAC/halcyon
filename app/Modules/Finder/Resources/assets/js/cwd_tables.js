@@ -1,3 +1,5 @@
+/* global jQuery */ // jquery.js
+
 /* !! CUSTOMIZED for Data Storage Tool (ama39, 10/18/17) */
 
 /* CWD Scrolling Tables (ama39, last update: 10/18/17)
@@ -11,47 +13,27 @@
    ------------------------------------------------------------------------- */
 
 // defaults (Not Yet Implemented)
-var max_height = 'auto'; // Sets a maximum height for the table. If table data extends beyond this height, the table will scroll vertically, independently of the page.
+/*var max_height = 'auto'; // Sets a maximum height for the table. If table data extends beyond this height, the table will scroll vertically, independently of the page.
 var cell_width = 200; // Sets a minimum width (in pixels) to be reserved for each table cell.
 var sticky_col = true; // If a table scrolls vertically, its header row will "stick" to the top as data cells slide underneath.
 var sticky_row = true; // If a table scrolls horizontally, its header column will "stick" to the left as data cells slide underneath.
-
+*/
 // globals
-var table_count = 0;
-/* !! CUSTOMIZED for Data Storage Tool (ama39, 10/18/17) */
-
-/* CWD Scrolling Tables (ama39, last update: 10/18/17)
-   -
-
-   - Accessibility Notes:
-   - --
-
-   - Future Plans:
-   - --
-   ------------------------------------------------------------------------- */
-
-// defaults (Not Yet Implemented)
-var max_height = 'auto'; // Sets a maximum height for the table. If table data extends beyond this height, the table will scroll vertically, independently of the page.
-var cell_width = 200; // Sets a minimum width (in pixels) to be reserved for each table cell.
-var sticky_col = true; // If a table scrolls vertically, its header row will "stick" to the top as data cells slide underneath.
-var sticky_row = true; // If a table scrolls horizontally, its header column will "stick" to the left as data cells slide underneath.
-
-// globals
-var table_count = 0;
+//var table_count = 0;
 
 
 jQuery(document).ready(function($) {
 
   function tables(refresh) {
     // refresh mode
-    var refresh = false || refresh;
+    refresh = false || refresh;
 
     // Set-up markup
     $('table.scrolling').each(function() {
 
       // add wrappers
       if ( !refresh ) {
-        table_count++;
+        //table_count++;
         $(this).wrap('<div class="cwd-scrolling-table"><div class="scrolling-outer"></div></div>');
         $('#container34').show(); // needed for height calculations
       }
@@ -177,14 +159,14 @@ jQuery(document).ready(function($) {
 
   function tables(refresh) {
     // refresh mode
-    var refresh = false || refresh;
+    refresh = false || refresh;
 
     // Set-up markup
     $('table.scrolling').each(function() {
 
       // add wrappers
       if ( !refresh ) {
-        table_count++;
+        //table_count++;
         $(this).wrap('<div class="cwd-scrolling-table"><div class="scrolling-outer"></div></div>');
         $('#container34').show(); // needed for height calculations
       }

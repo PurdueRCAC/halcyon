@@ -112,7 +112,7 @@ Date.fullYearStart = '20';
 		if( !Date.prototype[name] ) {
 			Date.prototype[name] = method;
 		}
-	};
+	}
 	
 	/**
 	 * Checks if the year is a leap year.
@@ -439,12 +439,12 @@ Date.fullYearStart = '20';
 		var f = format || Date.format;
 		var d = new Date('01/01/1977');
 		
-		var mLength = 0;
+		var mLength = 0, mStr = '01', i = 0;
 
 		var iM = f.indexOf('mmmm');
 		if (iM > -1) {
-			for (var i=0; i<Date.monthNames.length; i++) {
-				var mStr = s.substr(iM, Date.monthNames[i].length);
+			for (i=0; i<Date.monthNames.length; i++) {
+				mStr = s.substr(iM, Date.monthNames[i].length);
 				if (Date.monthNames[i] == mStr) {
 					mLength = Date.monthNames[i].length - 4;
 					break;
@@ -454,8 +454,8 @@ Date.fullYearStart = '20';
 		} else {
 			iM = f.indexOf('mmm');
 			if (iM > -1) {
-				var mStr = s.substr(iM, 3);
-				for (var i=0; i<Date.abbrMonthNames.length; i++) {
+				mStr = s.substr(iM, 3);
+				for (i=0; i<Date.abbrMonthNames.length; i++) {
 					if (Date.abbrMonthNames[i] == mStr) break;
 				}
 				d.setMonth(i);

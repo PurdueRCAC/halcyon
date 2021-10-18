@@ -1,3 +1,5 @@
+/* global jQuery */ // jquery.js
+
 /* !! CUSTOMIZED for Data Storage Tool (ama39, 10/16/17) */
 
 /* CWD Modal Popups (ama39, last update: 8/10/17)
@@ -49,29 +51,30 @@ popup_fadein_speed = popup_fadein_speed * 1000; // convert to milliseconds
    - -- Optionally accepts link attribute "data-gallery" to associate sets of images and allow forward/back navigation by button or arrow keys
 -------------------------------------------------------------------------------------------- */
 
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
 
 	function popups() {
 		if (!$('#popup-anchor').length) {
 			return;
 		}
+
 		// Create #popup node and background dimmer
 		$('body').append('<div id="popup-background" class="aria-target" tabindex="-1" aria-label="Loading..." role="progressbar" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0"><span class="spinner"></span></div><div id="popup-wrapper"><div class="vertical-align"><div id="popup" role="dialog" aria-labelledby="popup-anchor"></div></div></div>');
 		// Background space is clickable to close the popup
-		$('#popup-wrapper').click(function(e) {
+		$('#popup-wrapper').click(function () {
 			$('#popup-close').trigger('click');
 		});
 		// Close key shortcut
-		$(document).keyup(function(e) {
+		$(document).keyup(function (e) {
 			if (e.keyCode == 27) { // escape key
-				if ( $('#popup-wrapper:visible') ) {
+				if ($('#popup-wrapper:visible')) {
 					$('#popup-close').trigger('click');
 				}
 			}
 		});
 		// Gallery functionality (next/prev key shortcuts)
-		$(document).keydown(function(e) {
-			if ( $('#popup').hasClass('image-gallery') ) {
+		$(document).keydown(function (e) {
+			if ($('#popup').hasClass('image-gallery')) {
 				if (e.keyCode == 37) { // left key
 					e.preventDefault();
 					$('#popup .next-prev .prev').trigger('click');
@@ -84,14 +87,14 @@ jQuery(document).ready(function($) {
 		});
 		// Gallery swipe left/right functionality (for touch devices, utilizes jquery.detectSwipe plugin)
 		$.detectSwipe.preventDefault = false; // it's important to allow default touchmove events, so that scrolling continues to work when needed
-		$('#popup').on('swipeleft', function() {
-			if ( $('#popup').hasClass('image-gallery') ) {
+		$('#popup').on('swipeleft', function () {
+			if ($('#popup').hasClass('image-gallery')) {
 				$('#popup').addClass('swipe-left');
 				$('#popup .next-prev .prev').trigger('click');
 			}
 		});
-		$('#popup').on('swiperight', function() {
-			if ( $('#popup').hasClass('image-gallery') ) {
+		$('#popup').on('swiperight', function () {
+			if ($('#popup').hasClass('image-gallery')) {
 				$('#popup').addClass('swipe-right');
 				$('#popup .next-prev .next').trigger('click');
 			}
@@ -103,9 +106,9 @@ jQuery(document).ready(function($) {
 		}
 
 		// Setup click events to launch popups
-		$('.popup').each(function(n) {
+		$('.popup').each(function () {
 			popup_count++;
-			$(this).data('popupID',popup_count);
+			$(this).data('popupID', popup_count);
 
 			var popup_content = $(this).attr('href');
 			var popup_caption = $(this).attr('data-title');
@@ -115,7 +118,7 @@ jQuery(document).ready(function($) {
 			var popup_gallery = $(this).attr('data-gallery');
 			var popup_fullscreen = $(this).hasClass('popup-fullscreen');
 
-			$(this).click(function(e) {
+			$(this).click(function (e) {
 
 				e.preventDefault();
 
@@ -136,7 +139,7 @@ jQuery(document).ready(function($) {
 					}
 
 					// If the popup is already visible (gallery mode), reset size and position to accept new content
-					if ( !$('#popup-wrapper:visible') ) {
+					if (!$('#popup-wrapper:visible')) {
 						$('#popup').removeClass('custom-width custom-height').removeAttr('style').empty();
 					}
 
@@ -153,7 +156,7 @@ jQuery(document).ready(function($) {
 						}
 
 						var img = new Image();
-						img.onload = function() {
+						img.onload = function () {
 							$('#popup').removeClass('custom-width custom-height').removeAttr('style');
 							$('#popup-wrapper').show(); // parent container must be visible for height calculations
 
@@ -161,10 +164,10 @@ jQuery(document).ready(function($) {
 							if (popup_custom_width) {
 								this_width = popup_custom_width;
 							}
-							$('#popup').removeClass('scroll').width(this_width).html('<div class="relative"><img id="popup-image" tabindex="-1" class="aria-target" width="'+img.width+'" height="'+img.height+'" src="'+popup_content+'" alt="'+popup_alt+'"></div>');
+							$('#popup').removeClass('scroll').width(this_width).html('<div class="relative"><img id="popup-image" tabindex="-1" class="aria-target" width="' + img.width + '" height="' + img.height + '" src="' + popup_content + '" alt="' + popup_alt + '"></div>');
 
 							if (popup_caption != '' && popup_caption != undefined) {
-								$('#popup').append('<p class="caption">'+popup_caption+'</p>');
+								$('#popup').append('<p class="caption">' + popup_caption + '</p>');
 							}
 
 							// Detect scaled images
@@ -173,11 +176,11 @@ jQuery(document).ready(function($) {
 								scaled_height = parseInt(scaled_height * ($('#popup-image').width() / img.width));
 							}
 							$('#popup-image').css({
-								'width': $('#popup-image').width()+'px',
-								'height': scaled_height+'px'
+								'width': $('#popup-image').width() + 'px',
+								'height': scaled_height + 'px'
 							});
 
-							$('#popup').click(function(e) {
+							$('#popup').click(function (e) {
 								e.stopPropagation(); // propagation must be stopped to prevent a click from passing through to #popup-background (which closes the popup)
 							});
 
@@ -189,7 +192,7 @@ jQuery(document).ready(function($) {
 							$('#popup-wrapper').hide();
 							popupControls();
 
-							$('#popup-wrapper').fadeIn(popup_fadein_speed, function() {
+							$('#popup-wrapper').fadeIn(popup_fadein_speed, function () {
 								if (gallery_running) {
 									$('#popup-image').focus();
 								}
@@ -200,21 +203,21 @@ jQuery(document).ready(function($) {
 								gallery_running = true;
 							});
 						}
-						img.onerror = function() {
+						img.onerror = function () {
 
 							// Oh no! Error loading image!
 							$('#popup-wrapper').show();
 							$('#popup').addClass('error').removeClass('scroll').width(300).html('<div class="relative clearfix"><div id="popup-panel" class="panel dialog no-border" role="alert"><h3 id="popup-error" class="aria-target" tabindex="-1">Error</h3><p><span class="fa fa-image fa-3x fa-pull-left fade" aria-hidden="true"></span> The requested image could not be loaded.</p></div></div>');
 							$('#popup-background .spinner').addClass('off');
 							popupControls();
-							$('#popup-wrapper').hide().fadeIn(popup_fadein_speed, function() {
+							$('#popup-wrapper').hide().fadeIn(popup_fadein_speed, function () {
 								$('#popup-error').focus();
 							});
 
 						}
 						// If the popup is already visible (gallery mode), fade out before fading back in
-						if ( $('#popup-wrapper:visible') ) {
-							$('#popup-wrapper').fadeOut(popup_fadein_speed, function() {
+						if ($('#popup-wrapper:visible')) {
+							$('#popup-wrapper').fadeOut(popup_fadein_speed, function () {
 								$('#popup, #popup-background').removeClass('error swipe-left swipe-right custom-width custom-height');
 								img.src = popup_content;
 							});
@@ -230,13 +233,15 @@ jQuery(document).ready(function($) {
 						$('#popup').removeClass('custom-width custom-height').removeAttr('style').empty();
 
 						// DOM ELEMENT Mode
+						var this_width = 0;
+						var this_height = 0;
 						if (popup_content.indexOf('#') == 0) {
 							popup_type = 'id';
 
 							$(popup_content).after('<div id="id-marker" />');
 
 							// Store original display state
-							if ($(popup_content+':visible').length > 0) {
+							if ($(popup_content + ':visible').length > 0) {
 								was_visible = true;
 							}
 							else {
@@ -245,12 +250,12 @@ jQuery(document).ready(function($) {
 
 							if (!popup_fullscreen) {
 								var contain_height = popup_max_height;
-								if ($(window).height()*popup_proportion < contain_height) {
-									contain_height = $(window).height()*popup_proportion;
+								if ($(window).height() * popup_proportion < contain_height) {
+									contain_height = $(window).height() * popup_proportion;
 								}
 
-								var this_width = parseInt($(window).width()*popup_proportion);
-								var this_height = contain_height;
+								this_width = parseInt($(window).width() * popup_proportion);
+								this_height = contain_height;
 								if (popup_custom_width) {
 									$('#popup').addClass('custom-width');
 									this_width = popup_custom_width;
@@ -259,11 +264,11 @@ jQuery(document).ready(function($) {
 									$('#popup').addClass('custom-height');
 									this_height = popup_custom_height;
 								}
-								$('#popup').addClass('scroll').css('max-width',popup_max_width+'px').outerWidth(this_width).outerHeight(this_height).removeClass('fullscreen');
+								$('#popup').addClass('scroll').css('max-width', popup_max_width + 'px').outerWidth(this_width).outerHeight(this_height).removeClass('fullscreen');
 
 							}
-							$('#popup').click(function(e){e.stopPropagation()}).append($(popup_content).show(pswShow()));//popup is shown
-							$('#popup-wrapper').fadeIn(popup_fadein_speed, function() {
+							$('#popup').click(function (e) { e.stopPropagation() }).append($(popup_content).show(pswShow()));//popup is shown
+							$('#popup-wrapper').fadeIn(popup_fadein_speed, function () {
 								$('#popup-anchor').focus();
 							});
 							$('#popup-background').show();
@@ -275,10 +280,10 @@ jQuery(document).ready(function($) {
 							popup_type = 'iframe';
 
 							$('#popup').removeClass('scroll').html('<iframe src="' + popup_content + '" frameborder="0" scrolling="auto" />');
-							$('#popup iframe').attr('src',$('#popup iframe').attr('src')); // clears IE iframe caching bug
+							$('#popup iframe').attr('src', $('#popup iframe').attr('src')); // clears IE iframe caching bug
 
-							var this_width = parseInt($(window).width()*popup_proportion);
-							var this_height = parseInt($(window).height()*popup_proportion);
+							this_width = parseInt($(window).width() * popup_proportion);
+							this_height = parseInt($(window).height() * popup_proportion);
 							if (popup_custom_width) {
 								$('#popup').addClass('custom-width');
 								this_width = popup_custom_width;
@@ -289,7 +294,7 @@ jQuery(document).ready(function($) {
 							}
 							$('#popup').outerWidth(this_width).outerHeight(this_height);
 
-							$('#popup-wrapper').fadeIn(popup_fadein_speed, function() {
+							$('#popup-wrapper').fadeIn(popup_fadein_speed, function () {
 								$('#popup-anchor').focus();
 							});
 							$('#popup-background').show();
@@ -300,7 +305,7 @@ jQuery(document).ready(function($) {
 
 					// Refresh positioning and scale on resize
 					if (!popup_fullscreen) {
-						$(window).on('resize.popup',function() {
+						$(window).on('resize.popup', function () {
 							if (popup_resize_response > 0) {
 								clearTimeout(resize_popup);
 								resize_popup = setTimeout(resizeDone, popup_resize_response);
@@ -309,38 +314,39 @@ jQuery(document).ready(function($) {
 								resizeDone();
 							}
 						});
-						function resizeDone() {
-							if (popup_type == 'id') {
-								var contain_height = popup_max_height;
-								if ($(window).height()*popup_proportion < contain_height) {
-									contain_height = $(window).height()*0.94;
-								}
-								if ( !$('#popup').hasClass('custom-width') ) {
-									$('#popup').outerWidth(parseInt($(window).width()*popup_proportion));
-								}
-								if ( !$('#popup').hasClass('custom-height') ) {
-									$('#popup').outerHeight(contain_height);
-								}
-							}
-							else if (popup_type == 'iframe') {
-								if ( !$('#popup').hasClass('custom-width') ) {
-									$('#popup').outerWidth(parseInt($(window).width()*popup_proportion));
-								}
-								if ( !$('#popup').hasClass('custom-height') ) {
-									$('#popup').outerHeight(parseInt($(window).height()*popup_proportion));
-								}
-							}
-						}
 					}
 				}
 			});
 		});
+
+		function resizeDone() {
+			if (popup_type == 'id') {
+				var contain_height = popup_max_height;
+				if ($(window).height() * popup_proportion < contain_height) {
+					contain_height = $(window).height() * 0.94;
+				}
+				if (!$('#popup').hasClass('custom-width')) {
+					$('#popup').outerWidth(parseInt($(window).width() * popup_proportion));
+				}
+				if (!$('#popup').hasClass('custom-height')) {
+					$('#popup').outerHeight(contain_height);
+				}
+			}
+			else if (popup_type == 'iframe') {
+				if (!$('#popup').hasClass('custom-width')) {
+					$('#popup').outerWidth(parseInt($(window).width() * popup_proportion));
+				}
+				if (!$('#popup').hasClass('custom-height')) {
+					$('#popup').outerHeight(parseInt($(window).height() * popup_proportion));
+				}
+			}
+		}
 	}
 	//popups(); // process the page
 
 	/* Data Storage Tool: Delay popups init until the table is rendered by app.js */
 	var popup_ran_once = false;
-	$('#comparisonchart').on('DOMSubtreeModified', function(){
+	$('#comparisonchart').on('DOMSubtreeModified', function () {
 		if (!popup_ran_once) {
 			popups();
 			popup_ran_once = true;
@@ -374,7 +380,7 @@ jQuery(document).ready(function($) {
 		}
 
 		// Add title and a Close button with all the necessary attributes for focus control
-		$('#popup').prepend('<h2 id="popup-anchor" class="hidden" tabindex="-1">'+popup_window_message+'</h2><a href="#" id="popup-close" tabindex="0" aria-label="Close Button"></a>');
+		$('#popup').prepend('<h2 id="popup-anchor" class="hidden" tabindex="-1">' + popup_window_message + '</h2><a href="#" id="popup-close" tabindex="0" aria-label="Close Button"></a>');
 
 		// Add image gallery buttons if applicable (Next and Previous)
 		if ($('#popup').hasClass('image-gallery')) {
@@ -382,38 +388,39 @@ jQuery(document).ready(function($) {
 
 			// The calculations below determine which image in a gallery set is active and active the next or previous one
 			// (associated keycode events are defined in the popups() function above)
-			$('#popup .next-prev a').click(function(e) {
+			$('#popup .next-prev a').click(function (e) {
 				e.preventDefault();
 				e.stopPropagation();
 				var gallery_id = $('.popup-active').attr('data-gallery');
-				var gallery_length = $('.popup[data-gallery='+gallery_id+']').length;
-				var gallery_current_image = $('.popup-active').index('.popup[data-gallery='+gallery_id+']');
+				var gallery_length = $('.popup[data-gallery=' + gallery_id + ']').length;
+				var gallery_current_image = $('.popup-active').index('.popup[data-gallery=' + gallery_id + ']');
+				var next_image = 0;
 				$('#popup-background').focus();
 				if ($(this).hasClass('prev')) { // left button
-					var next_image = gallery_current_image - 1;
+					next_image = gallery_current_image - 1;
 					if (next_image < 0) {
 						next_image = gallery_length - 1;
 					}
-					$('.popup[data-gallery='+gallery_id+']').eq(next_image).trigger('click');
+					$('.popup[data-gallery=' + gallery_id + ']').eq(next_image).trigger('click');
 				}
 				else { // right button
-					var next_image = gallery_current_image + 1;
-					if (next_image > gallery_length-1) {
+					next_image = gallery_current_image + 1;
+					if (next_image > gallery_length - 1) {
 						next_image = 0;
 					}
-					$('.popup[data-gallery='+gallery_id+']').eq(next_image).trigger('click');
+					$('.popup[data-gallery=' + gallery_id + ']').eq(next_image).trigger('click');
 				}
 			});
 		}
 
 		// Close button event
-		$('#popup-close').click(function(e) {
+		$('#popup-close').click(function (e) {
 			e.preventDefault();
 			e.stopPropagation();
 			$(window).unbind('resize.popup');
 			$('#popup-wrapper, #popup-background').hide();
 			if (popup_type == 'id') { // return page element to its native DOM position
-				$('#id-marker').after( $(popup_content) );
+				$('#id-marker').after($(popup_content));
 				$('#id-marker').remove();
 				if (!was_visible) {
 					$(popup_content).hide();
@@ -431,68 +438,62 @@ jQuery(document).ready(function($) {
 
 	//psw58 added additional WA functionality to hold focus on pop up, and aria-hide main content
 	//taken from  WACG2.0 https://www.w3.org/WAI/GL/wiki/Using_ARIA_role%3Ddialog_to_implement_a_modal_dialog_box
-	var dialogOpen = false, lastFocus, dialog, pagebackground;
-
+	var dialogOpen = false, lastFocus, pagebackground; //dialog, 
 	//hooked into popup on click event line 262
-	function pswShow(el){
+	function pswShow(el) {
 		//add tabindex to popup @todo this could be changed to line 56
 		$("#popup").attr("tabindex", "-1");
 
 		lastFocus = el || document.activeElement;
 		//set focus after 1 second --give the popup time to fade in
 		setTimeout(
-		    function(){   	
-		        $("#popup-close").attr('tabindex', 1);
-		        //$(".help").attr('tabindex', 2);
-		        toggleDialog('show');
-		    }
-		 , 1000);	
-	      
+			function () {
+				$("#popup-close").attr('tabindex', 1);
+				//$(".help").attr('tabindex', 2);
+				toggleDialog('show');
+			}
+			, 1000);
+
 		//dialog is shown in main popup function
 		function toggleDialog(sh) {
-			pagebackground = $("div[role='main']").get(0)	
+			pagebackground = $("div[role='main']").get(0);
 			if (sh == "show") {
 				dialogOpen = true;
 				// after displaying the dialog, focus an element inside it
-				$("#popup").focus();  
+				$("#popup").focus();
 				// only hide the background *after* you've moved focus out of the content that will be "hidden"
-				pagebackground.setAttribute("aria-hidden","true");
-				
+				pagebackground.setAttribute("aria-hidden", "true");
+
 			} else {//hide dialog
 				dialogOpen = false;
-				pagebackground.setAttribute("aria-hidden","false");
+				pagebackground.setAttribute("aria-hidden", "false");
 				//if last focus is overlay 
 				var my_attr = $(lastFocus).attr('data-hidden');
-				if ( !my_attr ){
+				if (!my_attr) {
 					$(".floating-row-header").hide();
 				}
-				lastFocus.focus(); 
+				lastFocus.focus();
 			}
 		}
 
-		document.addEventListener("focus", function(event) {
-		    d = document.getElementById("popup");
-		    if (dialogOpen && !d.contains(event.target)) {
-		        event.stopPropagation();
-		        d.focus();
-		    }
+		document.addEventListener("focus", function (event) {
+			var d = document.getElementById("popup");
+			if (dialogOpen && !d.contains(event.target)) {
+				event.stopPropagation();
+				d.focus();
+			}
 
 		}, true);
 
-		document.addEventListener("keydown", function(event) {
-		    if (dialogOpen && (event.keyCode == 27 )){
-		        toggleDialog('hide');
-		    }
-		}, true);	
+		document.addEventListener("keydown", function (event) {
+			if (dialogOpen && (event.keyCode == 27)) {
+				toggleDialog('hide');
+			}
+		}, true);
 
 		pswShow.toggleDialog = toggleDialog;
 
 	}//end of pswdialog focus
 
-// End jQuery(document).ready
+	// End jQuery(document).ready
 });
-
-
-
-
-

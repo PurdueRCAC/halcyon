@@ -1,3 +1,6 @@
+/* global $ */ // jquery.js
+/* global jQuery */ // jquery.js
+
 /**
  * Cron scripts
  */
@@ -119,6 +122,6 @@ var Fields = {
 	}
 }
 
-jQuery(document).ready(function($){
+jQuery(document).ready(function(){
 	Fields.initialise();
 });

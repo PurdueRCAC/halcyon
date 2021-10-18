@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('scripts')
-<script src="{{ asset('modules/cron/js/admin.js') }}"></script>
+<script src="{{ asset('modules/cron/js/cron.js') }}"></script>
 @stop
 
 @php

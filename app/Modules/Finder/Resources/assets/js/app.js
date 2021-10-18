@@ -94,7 +94,7 @@ var drupalSettings = {
 
     //var jump_delay = false;
 
-    var questionlist = [
+    /*var questionlist = [
         {
             id: "security",
             question: 'What is the security risk associated with your data?',
@@ -115,7 +115,7 @@ var drupalSettings = {
                 { id: 7, text: "backup / snapshots", selected: false, turnoff: [] }
             ]
         }
-    ];
+    ];*/
 
     // read the data from JSON endpoints
 

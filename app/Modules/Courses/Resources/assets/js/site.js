@@ -283,7 +283,7 @@ function PrintErrors() {
  * @param   {object}  post_obj
  * @return  {void}
  */
-function newUser(xml, post_obj) {
+/*function newUser(xml, post_obj) {
 	pending--;
 	if (xml.status < 400) {
 		pending++;
@@ -293,7 +293,7 @@ function newUser(xml, post_obj) {
 		problem_users.push(post_obj['user']);
 		PrintErrors();
 	}
-}
+}*/
 
 /**
  * Callback after adding multiple users

@@ -1,6 +1,4 @@
-/**
- * @package  Orders
- */
+/* global $ */ // jquery.js
 
 /**
  * Format number as currency
@@ -124,13 +122,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		//placeholder: $(this).data('placeholder')
 	});
 
-	$('body').on('change', 'input[name=quantity]', function(e){
+	$('body').on('change', 'input[name=quantity]', function(){
 		var row = $(this).closest('tr');
 
 		row.find('.order-total').text(FormatNumber($(this).data('unitprice') * $(this).val()));
 	});
 
-	$('.basic-single').on('select2:select', function (e) {
+	$('.basic-single').on('select2:select', function () {
 		var opt = $($(this).find('option:selected')[0]);
 
 		var row = $(this).closest('tr');

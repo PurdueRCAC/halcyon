@@ -1,4 +1,4 @@
-/*global jQuery, window */
+/*global jQuery */
 (function ($, window) {
     'use strict';
 

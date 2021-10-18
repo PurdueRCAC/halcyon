@@ -41,7 +41,7 @@ $(document).ready(function () {
 		var forms = document.querySelectorAll('.dropzone');
 		Array.prototype.forEach.call(forms, function (form) {
 			var input = form.querySelector('input[type="file"]'),
-				label = form.querySelector('label'),
+				//label = form.querySelector('label'),
 				filelist = form.querySelector('.file-list'),
 				droppedFiles = false,
 				// output information
@@ -50,7 +50,9 @@ $(document).ready(function () {
 				},
 				showFiles = function (files) {
 					// process all File objects
-					for (var i = 0, f; f = files[i]; i++) {
+					var i, f;
+					for (i = 0; i < files.length; i++) {
+						f = files[i];
 						//parseFile(f);
 						output(
 							"<p>File information: <strong>" + f.name + "</strong> (" + f.size + " bytes)</p>"
@@ -59,12 +61,12 @@ $(document).ready(function () {
 					//label.textContent = files.length > 1
 					//	? (input.getAttribute('data-multiple-caption') || '').replace('{count}', files.length)
 					//	: files[0].name;
-				},
+				}/*,
 				triggerFormSubmit = function () {
 					var event = document.createEvent('HTMLEvents');
 					event.initEvent('submit', true, false);
 					form.dispatchEvent(event);
-				};
+				}*/;
 
 			// automatically submit the form on file select
 			input.addEventListener('change', function (e) {
@@ -114,7 +116,7 @@ $(document).ready(function () {
 
 	if ($('.datatable').length) {
 		$.fn.dataTable.render.ellipsis = function (cutoff) {
-			return function (data, type, row) {
+			return function (data, type) { //data, type, row
 				return type === 'display' && data.length > cutoff ? data.substr(0, cutoff) + '…' : data;
 			}
 		};

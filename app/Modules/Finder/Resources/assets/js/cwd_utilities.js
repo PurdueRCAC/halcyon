@@ -1,3 +1,6 @@
+/* global $ */ // jquery.js
+/* global jQuery */ // jquery.js
+
 /* CWD Utilities (ama39, last update: 1/23/18)
    - 1. Main Navigation (script support for dropdown menus and mobile)
    - 2. Empty Sidebar Helper (clears whitespace from empty sidebar regions to allow use of the :empty pseudo class in CSS)
@@ -8,7 +11,7 @@ var mobile_expander_breakpoint = 767; // viewport pixel width at which mobile ex
 if (!Date.now){Date.now = function now(){return new Date().getTime();};} // legacy Date method shim
 var msie = document.documentMode;
 
-(function ($, root, undefined) { $(function () { 'use strict';
+(function () { $(function () { 'use strict';
 
 
 	// Window Size Tracking
@@ -54,7 +57,7 @@ var msie = document.documentMode;
 		});
 		$('.more-links-button').click(function(e) {
 			e.preventDefault();
-		}).mousedown(function(e) {
+		}).mousedown(function() {
 			mousedown = true;
 			$(this).find('.fa').trigger('mousedown');
 		});
@@ -133,7 +136,7 @@ var msie = document.documentMode;
 		});
 	});
 	$('#main-navigation').before('<div id="mobile-nav-dimmer"></div>');
-	$('#mobile-nav-dimmer').click(function(e) {
+	$('#mobile-nav-dimmer').click(function() {
 		$('#mobile-close').trigger('click');
 	});
 
@@ -175,15 +178,5 @@ var msie = document.documentMode;
 	$('.table-scroller').append('<div class="table-fader" />').bind('scroll touchmove', function() {
 		$(this).find('.table-fader').remove(); // hide fader DIV on user interaction
 	});
-
-
-
-
-
-
-
-
-
-
 
 });})(jQuery, this);

@@ -1,5 +1,7 @@
+/* global $ */ // jquery.js
+/* global jQuery */ // jquery.js
 
-jQuery(document).ready(function($){
+jQuery(document).ready(function(){
 	$('#permissions-rules').accordion({
 		heightStyle: 'content',
 		collapsible: true,

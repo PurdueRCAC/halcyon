@@ -147,7 +147,7 @@ function UpdateOrderTotal(input, override) {
 			quantity = 0;
 		}
 		var price = document.getElementById(product + "_price").value;
-		var category = document.getElementById(product + "_category").value;
+		//var category = document.getElementById(product + "_category").value;
 
 		var t = document.getElementById(product + "_linetotal");
 
@@ -341,7 +341,7 @@ function EditProperty(field, item) {
 			success: function(response) {
 				EditedProperty(response, item + "_" + field);
 			},
-			error: function(xhr, ajaxOptions, thrownError) {
+			error: function () { //xhr, ajaxOptions, thrownError
 				EditedProperty({id:0}, item + "_" + field);
 			}
 		});
@@ -581,10 +581,10 @@ function ForMe() {
 	if (document.getElementById("cancel").style.display == "none") {
 		var inputs = document.getElementsByTagName("input");
 		var count = 0;
-		var x;
+		var x, quantity, product, price;
 		for (x=0;x<inputs.length;x++) {
 			if (inputs[x].id.match("_quantity$")) {
-				var quantity = inputs[x].value;
+				quantity = inputs[x].value;
 				if (quantity.match(/^[0-9]+$/) && quantity > 0) {
 					count++;
 				} else {
@@ -599,11 +599,11 @@ function ForMe() {
 
 		for (x=0;x<inputs.length;x++) {
 			if (inputs[x].id.match("_quantity$")) {
-				var quantity = inputs[x];
+				quantity = inputs[x];
 
-				var product = inputs[x].id;
+				product = inputs[x].id;
 				product = product.substr(0,product.lastIndexOf("_"));
-				var price = document.getElementById(product +"_price").value;
+				price = document.getElementById(product +"_price").value;
 
 				// disable input
 				quantity.disabled = true;
@@ -619,7 +619,7 @@ function ForMe() {
 			}
 		}
 		document.getElementById("cancel").style.display = "inline";
-		$( "#forme" ).toggle( "blind", {'direction': 'up'} );
+		$("#forme").toggle("blind", {'direction': 'up'});
 		//document.getElementById("forme_error").style.display = "none";
 
 		document.getElementById("formeyes").checked = false;
@@ -684,15 +684,17 @@ function MouAgree() {
 	var count = 0;
 	var inputs = document.getElementsByClassName("quantity-input");
 
+	var quantity, product, mou, box;
+
 	for (x=0; x<inputs.length; x++) {
 		//if (inputs[x].id.match("_quantity$")) {
-			var quantity = inputs[x].value;
-			var product  = inputs[x].getAttribute('data-id'); //id;
+			quantity = inputs[x].value;
+			product  = inputs[x].getAttribute('data-id'); //id;
 
 			//product = product.substr(0, product.lastIndexOf("_"));
 
 			// did we select this?
-			var mou = document.getElementById(product + "_mou");
+			mou = document.getElementById(product + "_mou");
 			if (quantity > 0) {
 				if (mou) {
 					mou.style.display = "block";
@@ -732,13 +734,13 @@ function MouAgree() {
 	}
 
 	inputs = document.getElementsByClassName('mou-agree');
-	for (x=0;x<inputs.length;x++) {
-		var product = inputs[x].getAttribute('data-id');
-		var mou = document.getElementById(product + "_mou");
-		if (mou.style.display != 'none') {
 
+	for (x=0;x<inputs.length;x++) {
+		product = inputs[x].getAttribute('data-id');
+		mou = document.getElementById(product + "_mou");
+		if (mou.style.display != 'none') {
 			// Check checkbox
-			var box = inputs[x];
+			box = inputs[x];
 			if (box.checked == true) {
 				checked++;
 			}
@@ -861,14 +863,17 @@ function TotalOrder() {
 		order['userid'] = name[1];
 	}
 
-	var count = 0;
-	var x;
+	var count = 0,
+		x,
+		product,
+		quantity,
+		linetotal;
 	var inputs = document.getElementsByClassName("quantity-input");
 	for (x=0;x<inputs.length;x++) {
-		var product = inputs[x].getAttribute('data-id');
-		var quantity = document.getElementById(product +"_quantity").value;
+		product = inputs[x].getAttribute('data-id');
+		quantity = document.getElementById(product +"_quantity").value;
 
-		var linetotal = document.getElementById(product + "_linetotal");
+		linetotal = document.getElementById(product + "_linetotal");
 		if (linetotal.tagName == "INPUT") {
 			linetotal = linetotal.value.replace(/[,\.]/g, "");
 		} else {
@@ -892,16 +897,18 @@ function TotalOrder() {
 		}
 	}
 
-	var notes = "";
-	var yescount = 0;
-	var inputs = document.getElementsByClassName("restrict-agree");
+	var notes = "",
+		yescount = 0,
+		restrict,
+		box;
+	inputs = document.getElementsByClassName("restrict-agree");
 	for (x=0;x<inputs.length;x++) {
-		var product = inputs[x].getAttribute('data-id');
-		var restrict = document.getElementById(product + "_restrict");
+		product = inputs[x].getAttribute('data-id');
+		restrict = document.getElementById(product + "_restrict");
 
 		if (restrict.style.display != 'none') {
 			// Check checkbox
-			var box = inputs[x];
+			box = inputs[x];
 
 			if (box.checked == true) {
 				notes = notes + document.getElementById(product + "_productname").innerHTML + ":\n\r";
@@ -941,7 +948,7 @@ function TotalOrder() {
 		success: function(response) {
 			window.location = response.url;
 		},
-		error: function(xhr, ajaxOptions, thrownError) {
+		error: function() {
 			alert("There was an error processing your order. Please wait a few minutes and try again or contact help.");
 		}
 	});
@@ -1268,8 +1275,8 @@ function SaveQuantities() {
 			post['timeperiodcount'] = periodsinputs[x].value;
 		}
 		if (originalprice.length == quantityinputs.length
-		 && originalprice[x].value.replace(/[,\.]/g, "") != priceinputs[x].value.replace(/[,\.]/g, "")
-		 && priceinputs[x].value.replace(/[,\.]/g, "").match(/^[0-9]+$/)) {
+		&& originalprice[x].value.replace(/[,\.]/g, "") != priceinputs[x].value.replace(/[,\.]/g, "")
+		&& priceinputs[x].value.replace(/[,\.]/g, "").match(/^[0-9]+$/)) {
 			post['price'] = priceinputs[x].value.replace(/[,\.]/g, "");
 			post['price'] = post['price'] == '000' ? 0 : post['price'];
 		}
@@ -1312,7 +1319,7 @@ function SaveQuantities() {
 			periods = container.find('.item-periods')[0],
 			opt = $(products[x]).find('option:selected');
 
-		var post = {
+		post = {
 			'orderid': order.value,
 			'orderproductid': opt.attr('value'),
 			'quantity': quantity.value,
@@ -1470,7 +1477,7 @@ function CanceledOrder(xml) {
  *
  * @return  {void}
  */
-function RestoreOrder(button) {
+function RestoreOrder() {
 	var url = document.getElementById("order").getAttribute('data-api');
 
 	var post = JSON.stringify({ "restore": 1 });
@@ -1487,11 +1494,10 @@ function RestoreOrder(button) {
 /**
  * Reset an account
  *
- * @param   {string}  id
- * @param   {string}  button
+ * @param   {string}  url
  * @return  {void}
  */
-function ResetAccount(url, button) {
+function ResetAccount(url) {
 	var post = JSON.stringify({ "reset": 1 });
 
 	WSPutURL(url, post, function (xml) {
@@ -1506,7 +1512,7 @@ function ResetAccount(url, button) {
 /**
  * Approve an account
  *
- * @param   {string}  id
+ * @param   {string}  url
  * @param   {string}  button
  * @return  {void}
  */
@@ -1772,11 +1778,11 @@ function EditAccounts() {
 		var num_changes = 0;
 
 		// Check accounts for edits
-		var spans = $('.account_span');
+		var spans = $('.account_span'), id, post;
 		for (x=0;x<spans.length;x++) {
 			// Check the old value (in HTML) against the input
 			if (spans[x].innerHTML != accountinputs[x].value) {
-				var id = accountstatus[x].getAttribute('data-api');
+				id = accountstatus[x].getAttribute('data-api');
 				account = accountinputs[x].value;
 				if (account.match(/^[A-Za-z]\.\d{8}\.\d{2}\.\d{3}$/)) {
 					// WBSE - f.90000000.02.001
@@ -1784,9 +1790,9 @@ function EditAccounts() {
 					account = account.charAt(0).toLowerCase() + account.substr(1);
 					// Strip periods
 					account = account.replace(/\./g,'');
-					var post = {'purchasewbse': account};
+					post = {'purchasewbse': account};
 				} else if (account.match(/^\d{10}$/)) {
-					var post = {'purchaseio': account};
+					post = {'purchaseio': account};
 				} else {
 					// Really shouldn't be here
 					alert("Format error");
@@ -1800,14 +1806,14 @@ function EditAccounts() {
 		}
 
 		// Check budget justifications
-		var spans = $('.justification_span');
+		spans = $('.justification_span');
 		for (x=0;x<spans.length;x++) {
 			// Check the old value (in HTML) against the input
 			if (spans[x].innerHTML != justificationinputs[x].value
-			 && spans[x].innerHTML != "null"
-			 && justificationinputs[x].value != "null") {
-				var id = accountstatus[x].getAttribute('data-api');
-				var post = {'budgetjustification': justificationinputs[x].value}; //JSON.stringify({'justification': justificationinputs[x].value});
+			&& spans[x].innerHTML != "null"
+			&& justificationinputs[x].value != "null") {
+				id = accountstatus[x].getAttribute('data-api');
+				post = {'budgetjustification': justificationinputs[x].value}; //JSON.stringify({'justification': justificationinputs[x].value});
 				post = JSON.stringify(post);
 				pendingupdates++;
 				num_changes++;
@@ -1816,7 +1822,7 @@ function EditAccounts() {
 		}
 
 		// Check approvers
-		var spans = $('.approver_span');
+		spans = $('.approver_span');
 		for (x=0;x<approverinputs.length;x++) {
 			if (typeof (accountstatus[x]) == 'undefined') {
 				continue;
@@ -1824,10 +1830,10 @@ function EditAccounts() {
 			//if ((spans[x].getElementsByTagName("a").length == 0 && approverinputs[x].value.match(/.*?\(([a-z0-9]+)\)/))
 			// || (spans[x].getElementsByTagName("a").length != 0 && spans[x].getElementsByTagName("a")[0].innerHTML != approverinputs[x].value && approverinputs[x].value.match(/.*?\(([a-z0-9]+)\)/))) {
 			if (spans[x].getAttribute('data-approverid') != approverinputs[x].getAttribute('data-id')) {
-				var id = accountstatus[x].getAttribute('data-api');
+				id = accountstatus[x].getAttribute('data-api');
 				//var name = approverinputs[x].value.match(/.*?\(([a-z0-9]+)\)/);
 				//	name = name[1];
-				var post = { 'approveruserid': approverinputs[x].getAttribute('data-id') }//(approverinputs[x].value ? approverinputs[x].value : 0)};
+				post = { 'approveruserid': approverinputs[x].getAttribute('data-id') }//(approverinputs[x].value ? approverinputs[x].value : 0)};
 
 				if (accountstatus[x].value == "PENDING_COLLECTION") {
 					post['approved'] = "0";
@@ -1840,13 +1846,14 @@ function EditAccounts() {
 		}
 
 		// Check if amounts changed
-		var spans = $('.account_amount_span');
+		spans = $('.account_amount_span');
+		var amount;
 		for (x=0;x<spans.length;x++) {
-			var amount = amountinputs[x].value;
+			amount = amountinputs[x].value;
 			if (spans[x].innerHTML.replace(/[,.]/g, "") != amount.replace(/[,.]/g, "")) {
 				if (amountinputs[x].value.match(/^-?[0-9]+\.[0-9]{2}$/)) {
-					var id = accountstatus[x].getAttribute('data-api');
-					var post = {'amount': amount.replace(/[,.]/g, "")};
+					id = accountstatus[x].getAttribute('data-api');
+					post = {'amount': amount.replace(/[,.]/g, "")};
 
 					if (accountstatus[x].value == "PENDING_COLLECTION") {
 						if (spans[x].innerHTML.replace(/[,.]/g, "") < amount.replace(/[,.]/g, "")) {
@@ -1898,13 +1905,14 @@ function EditAccounts() {
 		}
 
 		// Check for new accounts
+		var account;
 		for (x=0;x<accountinputs.length;x++) {
 			if (typeof(accountstatus[x]) == 'undefined') {
-				var amount = amountinputs[x].value;
+				amount = amountinputs[x].value;
 				if (accountinputs[x].value != "" && amount.match(/^-?[0-9]+\.[0-9]{2}$/)) {
-					var account = accountinputs[x].value
+					account = accountinputs[x].value
 
-					var post = {
+					post = {
 						'orderid': document.getElementById("order").value,
 						'amount': amount.replace(/[,.]/g, ""),
 						'budgetjustification': justificationinputs[x].value
@@ -1958,7 +1966,7 @@ function EditAccounts() {
 		$('.account-edit-hide').addClass('hide');
 		$('.account-edit-show').removeClass('hide');
 
-		var accountstatus = $('[name=accountid]');
+		//var accountstatus = $('[name=accountid]');
 
 		// enable delete buttons
 		/*var buttons = $('[name=editremove]');
@@ -2045,7 +2053,7 @@ function CancelEditAccounts() {
  * @param   {object}  e
  * @return  {void}
  */
-function EditRemoveAccount(btn, e) {
+function EditRemoveAccount(btn) {
 	var row = $(btn.attr('href'));
 
 	if (btn.attr('data-api')) {
@@ -2063,7 +2071,7 @@ function EditRemoveAccount(btn, e) {
  * @param   {object}  e
  * @return  {void}
  */
-function EditRemoveProduct(btn, e) {
+function EditRemoveProduct(btn) {
 	var row = $(btn.attr('href'));
 
 	if (btn.attr('data-api')) {
@@ -2162,7 +2170,7 @@ function UpdateTotal(tot_override) {
 
 	document.getElementById("ordertotal").innerHTML = FormatNumber(total);
 
-	var allow = true;
+	/*var allow = true;
 	if ($('[name=accountid]').length == 0) {
 		// No accounts saved yet... check to see if anything is entered
 		var accounts = $('[name=account]');
@@ -2194,7 +2202,7 @@ function UpdateTotal(tot_override) {
 		allow = false;
 	}
 
-	/*if (!allow) {
+	if (!allow) {
 		UpdateBalance();
 		//EditAccounts();
 	} else {*/
@@ -2213,7 +2221,7 @@ function UpdateTotal(tot_override) {
 function EditQuantities() {
 	var b = document.getElementById("save_quantities");
 	//var c = document.getElementById("cancel_quantities");
-	var b2 = document.getElementById("save_accounts");
+	//var b2 = document.getElementById("save_accounts");
 	//var c2 = document.getElementById("cancel_accounts");
 	//var itemstatus = $('[name=itemid]');
 	var x;
@@ -2315,13 +2323,13 @@ function SaveOrderUser() {
 					},
 					dataType: 'json',
 					async: false,
-					success: function(response) {
+					success: function() {
 						pendingupdates--;
 						if (pendingupdates == 0) {
 							window.location.reload(true);
 						}
 					},
-					error: function(xhr, ajaxOptions, thrownError) {
+					error: function() {
 						if (numerrorboxes == 0) {
 							alert("An error occurred while updating account. Please reload page and try again or contact help.");
 							numerrorboxes++;
@@ -2441,24 +2449,24 @@ function Filter(page, field) {
  */
 function SearchEventHandler(event, ui) {
 	var id = ui['item']['id'];
-	var username = ui['item']['username'];
+	//var username = ui['item']['username'];
 
 	if (typeof(id) == 'undefined') {
-		var post = JSON.stringify({ "name" : username });
+		var post = {
+			'name': ui['item']['name'],
+			'username': ui['item']['username']
+		};
 
 		$.ajax({
 			url: $('#search_user').data('api-create'),
 			type: 'post',
-			data: {
-				'name' : ui['item']['name'],
-				'username' : ui['item']['username']
-			},
+			data: post,
 			dataType: 'json',
 			async: false,
-			success: function(response) {
+			success: function() {
 				// Don't really need to do anything here, we are just ensuring the selected user has a database entry
 			},
-			error: function(xhr, ajaxOptions, thrownError) {
+			error: function(xhr) {
 				alert(xhr.responseJSON.message);
 			}
 		});

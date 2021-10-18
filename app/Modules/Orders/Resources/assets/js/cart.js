@@ -68,20 +68,20 @@ $(document).ready(function () {
 			};
 		}
 	});
-	$("#search_user").on("autocompleteselect", SearchEventHandler);
+	//$("#search_user").on("autocompleteselect", SearchEventHandler);
 
-	$('#formeyes,#formno').on('click', function (e) {
+	$('#formeyes,#formno').on('click', function () {
 		OpenUserSearch();
 	});
 
-	$('.quantity-input').on('change', function (e) {
+	$('.quantity-input').on('change', function () {
 		UpdateOrderTotal(this);
 	});
-	$('.total-input').on('change', function (e) {
+	$('.total-input').on('change', function () {
 		UpdateOrderTotal(this, true);
 	});
 
-	$('.form-block-radio').on('click', function (e) {
+	$('.form-block-radio').on('click', function () {
 		$(this).find('input[type="radio"]').not(':checked').prop("checked", true);
 
 		var c = $(this).find('input[type="checkbox"]');
@@ -100,7 +100,7 @@ $(document).ready(function () {
 			$(this).addClass('checked');
 		}
 	});
-	$('.form-block-check input[type="checkbox"]').on('change', function (e) {
+	$('.form-block-check input[type="checkbox"]').on('change', function () {
 		if ($(this).is(':checked')) {
 			$(this).closest('.form-block').addClass('checked');
 		} else {
@@ -128,7 +128,7 @@ $(document).ready(function () {
 					$('#continue').prop('disabled', true);
 				}
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function () { //xhr, ajaxOptions, thrownError
 				console.log('Failed to update member type.');
 			}
 		});
@@ -138,14 +138,14 @@ $(document).ready(function () {
 
 	// Add event listener for filters
 	var filters = document.getElementsByClassName('filter-submit');
-	for (i = 0; i < filters.length; i++) {
-		filters[i].addEventListener('change', function (e) {
+	for (var i = 0; i < filters.length; i++) {
+		filters[i].addEventListener('change', function () {
 			this.form.submit();
 		});
 	}
 
 	// Enable/disable button when quantity changes
-	$('.quantity-input').on('change', function (e) {
+	$('.quantity-input').on('change', function () {
 		var inp = $(this);
 		if (inp.val() > 0) {
 			$(inp.closest('tr')).find('.btn-secondary').prop('disabled', false);
@@ -188,7 +188,7 @@ $(document).ready(function () {
 				updateCart(response);
 				btn.removeClass('processing');
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr) {
 				alert(xhr.responseJSON.message);
 				btn.removeClass('processing');
 			}
@@ -233,7 +233,7 @@ $(document).ready(function () {
 
 				$('#' + btn.data('product') + "_product").addClass('selected');
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr) {
 				alert(xhr.responseJSON.message);
 				btn.removeClass('processing');
 			}
