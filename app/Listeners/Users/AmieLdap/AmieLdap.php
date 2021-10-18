@@ -43,9 +43,11 @@ class AmieLdap
 	/**
 	 * Get LDAP config
 	 *
+	 * @param   string  $ou
+	 * @param   string  $dc
 	 * @return  array
 	 */
-	private function config($ou = null)
+	private function config($ou = null, $dc = null)
 	{
 		if (!app()->has('ldap'))
 		{
@@ -53,6 +55,13 @@ class AmieLdap
 		}
 
 		$config = config('listener.amieldap', []);
+
+		if ($dc && isset($config['base_dn']))
+		{
+			$basedn = stristr($config['base_dn'], ',', true);
+
+			$config['base_dn'] = 'dc=' . $dc . ',' . $basedn;
+		}
 
 		if ($ou && isset($config['base_dn']))
 		{
@@ -233,7 +242,7 @@ class AmieLdap
 	/**
 	 * Handle a AllocationCreate event
 	 * 
-	 * This will look up information in the Amie  LDAP
+	 * This will look up information in the Amie LDAP
 	 * for the specific user.
 	 *
 	 * @param   AllocationCreate  $event
@@ -241,7 +250,7 @@ class AmieLdap
 	 */
 	public function handleAllocationCreate(AllocationCreate $event)
 	{
-		$config = $this->config('Projects');
+		$config = $this->config(); //'Projects');
 
 		if (empty($config))
 		{
@@ -252,7 +261,7 @@ class AmieLdap
 
 		// Try to determine the primary resource being used
 		//    Ex: dc=foo,dc=rcac,dc=purdue,dc=edu
-		$rolename = stristr(',', $config['base_dn'], true);
+		$rolename = stristr($config['base_dn'], ',', true);
 		$rolename = str_replace('dc=', '', $rolename);
 		$cluster = 'cpu';
 
@@ -276,13 +285,13 @@ class AmieLdap
 
 			if (isset($dn[2]))
 			{
-				$rolen = str_replace('dc=', '', $dn[2]);
+				$rolename = str_replace('dc=', '', $dn[2]);
 
 				// Is this a different LDAP tree?
 				// If so, we need to change the base dn in the config
 				if ($rolename && $rolename != $resource->rolename)
 				{
-					$basedn = stristr(',', $config['base_dn'], true);
+					//$basedn = stristr($config['base_dn'], ',', true);
 
 					// Try to figure out the cluster name
 					// This will be used for the proper subresource lookup later
@@ -291,10 +300,12 @@ class AmieLdap
 						$cluster = substr($rolename, strlen($resource->rolename));
 					}
 
-					$config['base_dn'] = str_replace($basedn, 'dc=' . $rolename, $config['base_dn']);
+					//$config['base_dn'] = str_replace($basedn, 'dc=' . $rolename, $config['base_dn']);
 				}
 			}
 		}
+		//$config['base_dn'] = 'ou=Projects,' . $config['base_dn'];
+		$config = $this->config('Projects', $rolename);
 
 		if (empty($data['x-xsede-pid']))
 		{
@@ -442,6 +453,42 @@ class AmieLdap
 
 				if ($pid)
 				{
+					//
+					// Check to see if the project is active
+					//
+
+					// Any service units?
+					$serviceUnits = $results->getAttribute('x-xsede-serviceUnits', 0);
+
+					$authorized = true;
+					if (!$serviceUnits)
+					{
+						$authorized = false;
+					}
+
+					$start = $results->getAttribute('x-xsede-startTime', 0);
+					$start = $start ? Carbon::parse($start) : null;
+
+					$stop  = $results->getAttribute('x-xsede-endTime', 0);
+					$stop  = $stop ? Carbon::parse($stop) : null;
+
+					$now = Carbon::now();
+
+					// Is this a future allocation?
+					if ($start && $start->timestamp > $now->timstamp)
+					{
+						$authorized = false;
+					}
+
+					// Did the allocation expire?
+					if ($stop && $stop->timestamp < $now->timstamp)
+					{
+						$authorized = false;
+					}
+
+					//
+					// Check for an associated group (a.k.a. project)
+					//
 					$group = Group::findByName($pid);
 
 					if (!$group || !$group->id)
@@ -463,7 +510,9 @@ class AmieLdap
 
 					$allmembers = array();
 
+					//
 					// Unix groups
+					//
 					/*
 					# x-peb216887, Groups, anvil.rcac.purdue.edu
 					dn: cn=x-peb216887,ou=Groups,dc=anvil,dc=rcac,dc=purdue,dc=edu
@@ -473,7 +522,7 @@ class AmieLdap
 					objectClass: posixGroup
 					objectClass: top
 					*/
-					$gldap = $this->connect($this->config('Groups'));
+					$gldap = $this->connect($this->config('Groups', $rolename));
 					$ugs = $gldap->search()
 							->where('cn', '=', $group->unixgroup)
 							->first();
@@ -501,7 +550,7 @@ class AmieLdap
 							$current = $ugusers->pluck('userid')->toArray();
 							//$added = array();
 
-							$pldap = $this->connect($this->config('People'));
+							$pldap = $this->connect($this->config('People', $rolename));
 
 							foreach ($vals as $val)
 							{
@@ -549,7 +598,7 @@ class AmieLdap
 									}
 								}
 
-								event(new UserSync($member, true));
+								event(new UserSync($member, $authorized, $rolename));
 
 								// Create user if needed
 								if (!in_array($member->id, $current))
@@ -627,7 +676,7 @@ class AmieLdap
 						$queue->queuetype = 1;
 						$queue->enabled = 1;
 						$queue->started = 1;
-						$queue->cluster = '';
+						$queue->cluster = $cluster;
 
 						if ($subresource && $scheduler)
 						{
@@ -679,8 +728,8 @@ class AmieLdap
 						}
 					}
 
-					$sizes = $queue->sizes()->orderBy('id', 'asc')->get();
-					$serviceUnits = $results->getAttribute('x-xsede-serviceUnits', 0);
+					$loans = $queue->loans()->orderBy('id', 'asc')->get();
+					/*$serviceUnits = $results->getAttribute('x-xsede-serviceUnits', 0);
 
 					$start = $results->getAttribute('x-xsede-startTime', 0);
 					$start = $start ? Carbon::parse($start) : null;
@@ -688,19 +737,13 @@ class AmieLdap
 					$stop  = $results->getAttribute('x-xsede-endTime', 0);
 					$stop  = $stop ? Carbon::parse($stop) : null;
 
-					$now = Carbon::now();
+					$now = Carbon::now();*/
 
-					if (!count($sizes) && $serviceUnits && $subresource)// && $start && $start >= $now)
+					if (!count($loans) && $serviceUnits && $subresource)// && $start && $start >= $now)
 					{
-						//$start = $results->getAttribute('x-xsede-startTime', 0);
-						//$start = $start ?: null;
-
-						//$stop = $results->getAttribute('x-xsede-endTime', 0);
-						//$stop = $stop ?: null;
-
 						$lenderqueue = $subresource->queues()
 							->where('groupid', '=', '-1')
-							->where('cluster', '=', '')
+							->where('cluster', '=', $cluster)
 							->orderBy('id', 'asc')
 							->first();
 
@@ -801,6 +844,10 @@ class AmieLdap
 						->get()
 						->toArray();
 
+					$q['loans'] = $queue->loans()
+						->get()
+						->toArray();
+
 					foreach ($q['members'] as $k => $member)
 					{
 						$member['api'] = route('api.queues.users.read', ['id' => $member['id']]);
@@ -835,7 +882,7 @@ class AmieLdap
 					$response->directory = $d;
 				}
 
-				//event(new UserSync($user, true));
+				//event(new UserSync($user, true, $rolename));
 			}
 		}
 		catch (\Exception $e)
