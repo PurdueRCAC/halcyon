@@ -496,7 +496,7 @@ class AmieLdap
 						$group = new Group;
 						$group->name = $pid;
 						$group->owneruserid = $user->id;
-						$group->unixgroup = $group->name;
+						$group->unixgroup = 'x-' . strtolower($group->name);
 						$group->save();
 
 						$group->addManager($user->id, 1);
