@@ -448,7 +448,7 @@ class AmieLdap
 				$pid = $results->getAttribute('x-xsede-gid', 0);
 				if (!$pid && $results->getAttribute('x-xsede-pid', 0))
 				{
-					$pid = 'x-' . strtolower($results->getAttribute('x-xsede-pid', 0));
+					$pid = $results->getAttribute('x-xsede-pid', 0);
 				}
 
 				if ($pid)
@@ -831,7 +831,7 @@ class AmieLdap
 							$dir->autouserunixgroupid = $unixgroup->id;
 							$dir->storageresourceid = $storage->id;
 							$dir->resourceid = $storage->parentresourceid;
-							$dir->name = $group->name;
+							$dir->name = 'x-' . strtolower($pid);
 							$dir->path = $dir->name;
 							$dir->bytes = $space;
 							$dir->save();
