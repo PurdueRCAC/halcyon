@@ -361,7 +361,7 @@
 		@endif
 
 		@if (count($group->unixgroups) > 0)
-			<table id="actmaint_info" class="table table-hover {{ (!$group->unixgroup ? 'hide' : '') }}">
+			<table id="actmaint_info" class="table table-hover {{ ($group->id > 1 && !$group->unixgroup ? 'hide' : '') }}">
 				<caption class="sr-only">Unix Groups</caption>
 				<thead>
 					<tr>
