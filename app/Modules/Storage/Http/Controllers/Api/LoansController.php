@@ -580,6 +580,14 @@ class LoansController extends Controller
 		{
 			$row->lendergroupid = $request->input('lendergroupid');
 		}
+		if ($request->has('datetimestart'))
+		{
+			$row->datetimestart = $request->input('datetimestart');
+		}
+		if ($request->has('datetimestop'))
+		{
+			$row->datetimestop = $request->input('datetimestop');
+		}
 
 		// Sanity checks if we are changing start time
 		if ($request->has('datetimestart')
