@@ -41,16 +41,16 @@ jQuery(document).ready(function () {
 		var cindex = $('#' + $(this).data('container')).find('.input-group').length;
 		var inputs = clone.find('input,select');
 
-		clone.attr('id', clone.attr('id').replace(/\-\d+/, '-' + cindex));
+		clone.attr('id', clone.attr('id').replace(/-\d+/, '-' + cindex));
 
 		inputs.val('');
 		inputs.each(function(i, el){
 			$(el).attr('name', $(el).attr('name').replace(/\[\d+\]/, '[' + cindex + ']'));
-			$(el).attr('id', $(el).attr('id').replace(/\-\d+/, '-' + cindex));
+			$(el).attr('id', $(el).attr('id').replace(/-\d+/, '-' + cindex));
 		});
 
 		clone.find('a').each(function (i, el) {
-			$(el).attr('href', $(el).attr('href').replace(/\-\d+/, '-' + cindex));
+			$(el).attr('href', $(el).attr('href').replace(/-\d+/, '-' + cindex));
 		});
 
 		tr.after(clone);

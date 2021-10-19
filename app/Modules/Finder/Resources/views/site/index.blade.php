@@ -10,7 +10,7 @@
 <script src="{{ asset('modules/finder/js/cwd_popups.js?v=' . filemtime(public_path() . '/modules/finder/js/cwd_popups.js')) }}"></script>
 <script src="{{ asset('modules/finder/js/cwd_tables.js?v=' . filemtime(public_path() . '/modules/finder/js/cwd_tables.js')) }}"></script>
 <script src="{{ asset('modules/finder/js/jquery.mustache.js?v=' . filemtime(public_path() . '/modules/finder/js/jquery.mustache.js')) }}"></script>
-<script src="{{ asset('modules/finder/js/mustache.js?v=' . filemtime(public_path() . '/modules/finder/js/mustache.js')) }}"></script>
+<script src="{{ asset('modules/finder/vendor/mustache/mustache.js?v=' . filemtime(public_path() . '/modules/finder/vendor/mustache/mustache.js')) }}"></script>
 <script src="{{ asset('modules/finder/js/app.js?v=' . filemtime(public_path() . '/modules/finder/js/app.js')) }}"></script>
 @endpush
 

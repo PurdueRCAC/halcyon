@@ -72,7 +72,7 @@ function FormatText(text) {
  * @param   {string}  text
  * @return  {string}
  */
-function UnformatText(text) {
+/*function UnformatText(text) {
 	// br2nl
 	text = text.replace(/<br>/g, "\n");
 	text = text.replace(/<\/p><p>/g, "\n\n");
@@ -88,7 +88,7 @@ function UnformatText(text) {
 	text = text.replace(/<em>(.*?)<\/em>/g, "_$1_");
 
 	return text;
-}
+}*/
 
 /**
  * Update order total
@@ -97,6 +97,7 @@ function UnformatText(text) {
  * @param   {bool}    override
  * @return  {void}
  */
+/* exported UpdateOrderTotal */
 function UpdateOrderTotal(input, override) {
 	if (typeof (override) == 'undefined') {
 		override = false;
@@ -162,7 +163,7 @@ function UpdateOrderTotal(input, override) {
 				}
 			} else {
 				if (t.value != "0.00") {
-					t.value = t.value.replace(/[\$,]/g, "");
+					t.value = t.value.replace(/[$,]/g, "");
 					if (t.value.match(/^[0-9]+$/)) {
 						t.value = t.value + ".00";
 					}
@@ -171,7 +172,7 @@ function UpdateOrderTotal(input, override) {
 					if (!t.value.match(/^[0-9]*\.[0-9]{2}$/)) {
 						t.value = "0";
 					}
-					t.value = t.value.replace(/[,\.]/g, "");
+					t.value = t.value.replace(/[,.]/g, "");
 					t.value = FormatNumber(t.value).replace(/[,]/g, "");
 				}
 			}
@@ -180,11 +181,11 @@ function UpdateOrderTotal(input, override) {
 		//var cattotal = document.getElementById(category + "_total");
 		//var cattotal = document.getElementById("total");
 		if (override || (t && t.tagName == "INPUT")) {
-			//cattotal.innerHTML = FormatNumber(parseInt(cattotal.innerHTML.replace(/[,\.]/g, "")) + parseInt(t.value.replace(/[,\.]/g, "")));
-			ordertotal.innerHTML = FormatNumber(parseInt(ordertotal.innerHTML.replace(/[,\.]/g, "")) + parseInt(t.value.replace(/[,\.]/g, "")));
+			//cattotal.innerHTML = FormatNumber(parseInt(cattotal.innerHTML.replace(/[,.]/g, "")) + parseInt(t.value.replace(/[,\.]/g, "")));
+			ordertotal.innerHTML = FormatNumber(parseInt(ordertotal.innerHTML.replace(/[,.]/g, "")) + parseInt(t.value.replace(/[,.]/g, "")));
 		} else {
-			//cattotal.innerHTML = FormatNumber(parseInt(cattotal.innerHTML.replace(/[,\.]/g, "")) + parseInt(price) * parseInt(quantity));
-			ordertotal.innerHTML = FormatNumber(parseInt(ordertotal.innerHTML.replace(/[,\.]/g, "")) + parseInt(price) * parseInt(quantity));
+			//cattotal.innerHTML = FormatNumber(parseInt(cattotal.innerHTML.replace(/[,.]/g, "")) + parseInt(price) * parseInt(quantity));
+			ordertotal.innerHTML = FormatNumber(parseInt(ordertotal.innerHTML.replace(/[,.]/g, "")) + parseInt(price) * parseInt(quantity));
 		}
 		//}
 	}
@@ -197,6 +198,7 @@ function UpdateOrderTotal(input, override) {
  * @param   {string}  item
  * @return  {void}
  */
+/* exported EditProperty */
 function EditProperty(field, item) {
 	var img = document.getElementById("IMG_" + item + "_" + field);
 	var cancelimg = document.getElementById("CANCEL_" + item + "_" + field);
@@ -261,7 +263,7 @@ function EditProperty(field, item) {
 		} 
 
 		if (field.match(/price/)) {
-			val = val.replace(/[\$, ]/g, "");
+			val = val.replace(/[$, ]/g, "");
 			// strip leading zeros
 			if (val.match(/^-?[0-9]+$/)) {
 				val = val + ".00";
@@ -355,6 +357,7 @@ function EditProperty(field, item) {
  * @param   {string}  item
  * @return  {void}
  */
+/* exported CancelEditProperty */
 function CancelEditProperty(field, item) {
 	var span = document.getElementById("SPAN_" + item + "_" + field);
 	var input = document.getElementById("INPUT_" + item + "_" + field);
@@ -421,6 +424,7 @@ function EditedProperty(xml, field) {
  * @param   {string}  category
  * @return  {void}
  */
+/* exported AddNewProduct */
 function AddNewProduct(category) {
 	// Insert blank new entry and refresh page
 	var post = {};
@@ -448,6 +452,7 @@ function AddNewProduct(category) {
  *
  * @return  {void}
  */
+/* exported AddNewCategory */
 function AddNewCategory() {
 	// Insert blank new entry and refresh page
 	var post = {};
@@ -472,6 +477,7 @@ function AddNewCategory() {
  * @param   {string}  product
  * @return  {void}
  */
+/* exported DeleteProduct */
 function DeleteProduct(product) {
 	if (confirm("Are you sure you want to delete '" + document.getElementById("SPAN_" + product + "_name").innerHTML + "'?")) {
 		WSDeleteURL(product, function(xml) {
@@ -491,6 +497,7 @@ function DeleteProduct(product) {
  * @param   {string}  category
  * @return  {void}
  */
+/* exported DeleteCategory */
 function DeleteCategory(category) {
 	if (confirm("Are you sure you want to delete '" + document.getElementById("SPAN_" + category + "_name").innerHTML + "' and all its products?")) {
 		WSDeleteURL(category, function(xml) {
@@ -511,13 +518,13 @@ function DeleteCategory(category) {
  * @param   {string}  change
  * @return  {void}
  */
-function Sequence(item, change) {
+/*function Sequence(item, change) {
 	var post = {};
 	post['sequence'] = change;
 	post = JSON.stringify(post);
 
 	WSPutURL(item, post, Sequenced, change);
-}
+}*/
 
 /**
  * Callback after sequencing
@@ -526,7 +533,7 @@ function Sequence(item, change) {
  * @param   {string}  change
  * @return  {void}
  */
-function Sequenced(xml, change) {
+/*function Sequenced(xml, change) {
 	if (xml.status != 200) {
 		// Error handling
 		if (xml.status == 409) {
@@ -570,13 +577,14 @@ function Sequenced(xml, change) {
 			document.getElementById("DOWN_" + results['swapped']).style.visibility = "hidden";
 		}
 	}
-}
+}*/
 
 /**
  * For me
  *
  * @return  {void}
  */
+/* exported ForMe */
 function ForMe() {
 	if (document.getElementById("cancel").style.display == "none") {
 		var inputs = document.getElementsByTagName("input");
@@ -645,19 +653,19 @@ function ForMe() {
  *
  * @return  {void}
  */
-function ValidateForMe() {
+/*function ValidateForMe() {
 	if (document.getElementById("search_user").value.match(/^.*?\(([a-z0-9]+)\)$/)) {
-		//document.getElementById("forme_search_error").style.display = "none";
+		// Nothing here
 	}
-}
+}*/
 
 /**
  * Callback after updating account info
  *
  * @return  {void}
  */
+/* exported OpenUserSearch */
 function OpenUserSearch() {
-	//document.getElementById("forme_error").style.display = "none";
 	if (document.getElementById("formeyes").checked == true) {
 		if (document.getElementById("usersearch").style.display == "none") {
 			$( "#usersearch" ).toggle( "blind", {'direction': 'up'} );
@@ -674,6 +682,7 @@ function OpenUserSearch() {
  *
  * @return  {void}
  */
+/* exported MouAgree */
 function MouAgree() {
 	//var inputs = document.getElementsByTagName("input");
 	//var count = 0;
@@ -817,6 +826,7 @@ function RestrictAgree() {
  *
  * @return  {void}
  */
+/* exported CancelMou */
 function CancelMou() {
 	//$( "#forme" ).toggle( "blind", {'direction': 'up'} );
 
@@ -858,8 +868,8 @@ function TotalOrder() {
 	order['submitteruserid'] = document.getElementById("userid").value;
 	order['userid'] = document.getElementById("userid").value;
 
-	var name;
-	if (name = document.getElementById("search_user").value.match(/^.*?\(([a-z0-9]+)\)$/)) {
+	var name = document.getElementById("search_user").value.match(/^.*?\(([a-z0-9]+)\)$/);
+	if (name) {
 		order['userid'] = name[1];
 	}
 
@@ -875,9 +885,9 @@ function TotalOrder() {
 
 		linetotal = document.getElementById(product + "_linetotal");
 		if (linetotal.tagName == "INPUT") {
-			linetotal = linetotal.value.replace(/[,\.]/g, "");
+			linetotal = linetotal.value.replace(/[,.]/g, "");
 		} else {
-			linetotal = linetotal.innerHTML.replace(/[,\.]/g, "");
+			linetotal = linetotal.innerHTML.replace(/[,.]/g, "");
 		}
 
 		// Sanity check
@@ -959,6 +969,7 @@ function TotalOrder() {
  *
  * @return  {void}
  */
+/* exported AddNewAccountRow */
 function AddNewAccountRow() {
 	var row = document.getElementById("account_new_row");
 	//var row2 = document.getElementById("account_new_row2");
@@ -999,7 +1010,7 @@ function AddNewAccountRow() {
 		delay: 100,
 		minLength: 0,
 		prefix: 'fund:',
-		filter: /^[a-zA-Z]?[0-9\.]*$/i,
+		filter: /^[a-zA-Z]?[0-9.]*$/i,
 		noResultsText: '',
 		autoText: false
 	});
@@ -1064,6 +1075,7 @@ function AccountApproverSearch() {
 	}
 }
 
+/* exported AddNewProductRow */
 function AddNewProductRow() {
 	var row = document.getElementById("item_new_row");
 
@@ -1111,7 +1123,7 @@ function UpdateBalance(quick) {
 	//var errors = $('.account_error');
 	var balance = document.getElementById("balance");
 	//var justifications = $('[name=justification]');
-	var total = document.getElementById("ordertotal").innerHTML.replace(/[,\.]/g, "");
+	var total = document.getElementById("ordertotal").innerHTML.replace(/[,.]/g, "");
 
 	var error_count = 0;
 	var ok = true;
@@ -1124,7 +1136,7 @@ function UpdateBalance(quick) {
 			// If we are starting with letter, assume we are inputting WBSE
 			if (account.match(/^[A-Za-z]/)) {
 				// If we have something random in between ,error
-				if (account.match(/^[A-Za-z].*[^\d\.].*/)) {
+				if (account.match(/^[A-Za-z].*[^\d.].*/)) {
 					ok = false;
 				} else {
 					// So far so good
@@ -1164,14 +1176,14 @@ function UpdateBalance(quick) {
 		}
 
 		var amt = amounts[x].value;
-		amt = amt.replace(/[\$,]/g, "");
+		amt = amt.replace(/[$,]/g, "");
 		if (amt.match(/^-?[0-9]+$/)) {
 			amt = amt + ".00";
 		}
 		// strip leading zeros
 		amt = amt.replace(/^0+/, "");
 		if (amt.match(/^-?[0-9]*\.[0-9]{2}$/)) {
-			amt = amt.replace(/[,\.]/g, "");
+			amt = amt.replace(/[,.]/g, "");
 			amt = amt.replace(/^0+/, "");
 			if (!quick) {
 				amounts[x].value = FormatNumber(amt).replace(/[,]/g, "");
@@ -1217,6 +1229,7 @@ function UpdateBalance(quick) {
  *
  * @return  {void}
  */
+/* exported DivideBalance */
 function DivideBalance() {
 	// Get elements
 	var accounts = $('[name=account]');
@@ -1229,7 +1242,7 @@ function DivideBalance() {
 		ways++;
 	}
 
-	var balance = document.getElementById("ordertotal").innerHTML.replace(/[,\.]/g, "");
+	var balance = document.getElementById("ordertotal").innerHTML.replace(/[,.]/g, "");
 	var total = balance;
 
 	var count = 0;
@@ -1275,9 +1288,9 @@ function SaveQuantities() {
 			post['timeperiodcount'] = periodsinputs[x].value;
 		}
 		if (originalprice.length == quantityinputs.length
-		&& originalprice[x].value.replace(/[,\.]/g, "") != priceinputs[x].value.replace(/[,\.]/g, "")
-		&& priceinputs[x].value.replace(/[,\.]/g, "").match(/^[0-9]+$/)) {
-			post['price'] = priceinputs[x].value.replace(/[,\.]/g, "");
+		&& originalprice[x].value.replace(/[,.]/g, "") != priceinputs[x].value.replace(/[,.]/g, "")
+		&& priceinputs[x].value.replace(/[,.]/g, "").match(/^[0-9]+$/)) {
+			post['price'] = priceinputs[x].value.replace(/[,.]/g, "");
 			post['price'] = post['price'] == '000' ? 0 : post['price'];
 		}
 
@@ -1323,8 +1336,8 @@ function SaveQuantities() {
 			'orderid': order.value,
 			'orderproductid': opt.attr('value'),
 			'quantity': quantity.value,
-			'price': parseInt(total.value.replace(/[,\.]/g, "")),
-			'origunitprice': parseInt(opt.attr('data-price').replace(/[,\.]/g, "")),
+			'price': parseInt(total.value.replace(/[,.]/g, "")),
+			'origunitprice': parseInt(opt.attr('data-price').replace(/[,.]/g, "")),
 			'recurringtimeperiodid': opt.attr('data-recurringtimeperiodid'),
 			'timeperiodcount': periods.value
 		};
@@ -1347,13 +1360,14 @@ function SaveQuantities() {
  *
  * @return  {void}
  */
+/* exported SaveAccounts */
 function SaveAccounts() {
 	var accounts = $('[name=account]');
 	var amounts = $('[name=account_amount]');
 	var justifications = $('[name=justification]');
 	var approverinputs = $('[name=approver]');
 	//var account_errors = $('[name=amount_error]');
-	var total = document.getElementById("ordertotal").innerHTML.replace(/[,\.]/g, "");
+	var total = document.getElementById("ordertotal").innerHTML.replace(/[,.]/g, "");
 	var order = document.getElementById("order").value;
 	var posts = Array();
 	var count = 0;
@@ -1363,7 +1377,7 @@ function SaveAccounts() {
 		if (accounts[x].value != "" && amounts[x].value.match(/^-?[0-9]+\.[0-9]{2}$/)) {
 			var account = accounts[x].value;
 			var amt = amounts[x].value;
-			amt = amt.replace(/[,\.]/g, "");
+			amt = amt.replace(/[,.]/g, "");
 
 			// Determine if we are WBSE or IO
 			if (account.match(/^[A-Za-z]\.\d{8}\.\d{2}\.\d{3}$/)) {
@@ -1450,6 +1464,7 @@ function SaveAccounts() {
  *
  * @return  {void}
  */
+/* exported CancelOrder */
 function CancelOrder(button) {
 	var url = document.getElementById("order").getAttribute('data-api');
 
@@ -1477,6 +1492,7 @@ function CanceledOrder(xml) {
  *
  * @return  {void}
  */
+/* exported RestoreOrder */
 function RestoreOrder() {
 	var url = document.getElementById("order").getAttribute('data-api');
 
@@ -1497,6 +1513,7 @@ function RestoreOrder() {
  * @param   {string}  url
  * @return  {void}
  */
+/* exported ResetAccount */
 function ResetAccount(url) {
 	var post = JSON.stringify({ "reset": 1 });
 
@@ -1516,6 +1533,7 @@ function ResetAccount(url) {
  * @param   {string}  button
  * @return  {void}
  */
+/* exported ApproveAccount */
 function ApproveAccount(url, button) {
 	var post = JSON.stringify({"approved": 1});
 
@@ -1557,6 +1575,7 @@ function ApproveAccount(url, button) {
  * @param   {string}  button
  * @return  {void}
  */
+/* exported RemindAccount */
 function RemindAccount(url, button) {
 	var post = JSON.stringify({ "notice": 3 });
 
@@ -1578,6 +1597,7 @@ function RemindAccount(url, button) {
  * @param   {string}  id
  * @return  {void}
  */
+/* exported RemindOrder */
 function RemindOrder(url, button) {
 	var post = JSON.stringify({ "notice": 1 });
 
@@ -1600,6 +1620,7 @@ function RemindOrder(url, button) {
  * @param   {string}  button
  * @return  {void}
  */
+/* exported DenyAccount */
 function DenyAccount(url, button) {
 	var post = JSON.stringify({ "denied": 1 });
 
@@ -1641,6 +1662,7 @@ function DenyAccount(url, button) {
  * @param   {string}  button
  * @return  {void}
  */
+/* exported CollectAccount */
 function CollectAccount(url, button) {
 	var id = button.getAttribute('data-id');
 
@@ -1669,6 +1691,7 @@ function CollectAccount(url, button) {
  * @param   {object}  input
  * @return  {void}
  */
+/* exported CopyDoc */
 function CopyDoc(input) {
 	var docs = $('[name=docid]');
 	for (var x=0;x<docs.length;x++) {
@@ -1684,6 +1707,7 @@ function CopyDoc(input) {
  * @param   {object}  input
  * @return  {void}
  */
+/* exported CopyDocDate */
 function CopyDocDate(input) {
 	var docs = $('[name=docdate]');
 	for (var x=0;x<docs.length;x++) {
@@ -1700,6 +1724,7 @@ function CopyDocDate(input) {
  * @param   {string}  button
  * @return  {void}
  */
+/* exported FulfillItem */
 function FulfillItem(url, button) {
 	var post = JSON.stringify({"fulfilled": 1});
 
@@ -1732,10 +1757,11 @@ var pendingupdates = 0;
  *
  * @return  {void}
  */
+/* exported EditAccounts */
 function EditAccounts() {
 	var b = document.getElementById("save_accounts");
 	var c = document.getElementById("cancel_accounts");
-	var new_row = document.getElementById("account_new_row");
+	//var new_row = document.getElementById("account_new_row");
 	var x;
 
 	if (b.innerHTML == b.getAttribute('data-save-txt')) {
@@ -1774,7 +1800,7 @@ function EditAccounts() {
 			return;
 		}
 
-		var items = $('[name=item]');
+		//var items = $('[name=item]');
 		var num_changes = 0;
 
 		// Check accounts for edits
@@ -2053,6 +2079,7 @@ function CancelEditAccounts() {
  * @param   {object}  e
  * @return  {void}
  */
+/* exported EditRemoveAccount */
 function EditRemoveAccount(btn) {
 	var row = $(btn.attr('href'));
 
@@ -2071,6 +2098,7 @@ function EditRemoveAccount(btn) {
  * @param   {object}  e
  * @return  {void}
  */
+/* exported EditRemoveProduct */
 function EditRemoveProduct(btn) {
 	var row = $(btn.attr('href'));
 
@@ -2131,13 +2159,13 @@ function UpdateTotal(tot_override) {
 
 	// sannity checks
 	for (x=0;x<totalinputs.length;x++) {
-		totalinputs[x].value = totalinputs[x].value.replace(/[\$,]/g, "");
+		totalinputs[x].value = totalinputs[x].value.replace(/[$,]/g, "");
 		if (totalinputs[x].value.match(/^[0-9]+$/)) {
 			totalinputs[x].value = totalinputs[x].value + ".00";
 		}
-		totalinputs[x].value = totalinputs[x].value.replace(/[,\.]/g, "").replace(/^0+/, "");
+		totalinputs[x].value = totalinputs[x].value.replace(/[,.]/g, "").replace(/^0+/, "");
 		totalinputs[x].value = FormatNumber(totalinputs[x].value).replace(/[,]/g,"");
-		if (!totalinputs[x].value.replace(/[,\.]/g, "").match(/^[0-9]+$/)) {
+		if (!totalinputs[x].value.replace(/[,.]/g, "").match(/^[0-9]+$/)) {
 			return;
 		}
 		if (!inputs[x].value.match(/^[0-9]+$/)) {
@@ -2150,18 +2178,18 @@ function UpdateTotal(tot_override) {
 
 	var total = 0;
 	for (x=0;x<inputs.length;x++) {
-		if (prices[x].innerHTML.replace(/[,\.]/g,"") * qspans[x].innerHTML * periods_spans[x].innerHTML == spans[x].innerHTML.replace(/[,\.]/g,"") && !tot_override) {
-			spans[x].innerHTML = FormatNumber(prices[x].innerHTML.replace(/[,\.]/g,"") * inputs[x].value * periods[x].value);
-			total += prices[x].innerHTML.replace(/[,\.]/g,"") * inputs[x].value * periods[x].value;
+		if (prices[x].innerHTML.replace(/[,.]/g,"") * qspans[x].innerHTML * periods_spans[x].innerHTML == spans[x].innerHTML.replace(/[,.]/g,"") && !tot_override) {
+			spans[x].innerHTML = FormatNumber(prices[x].innerHTML.replace(/[,.]/g,"") * inputs[x].value * periods[x].value);
+			total += prices[x].innerHTML.replace(/[,.]/g,"") * inputs[x].value * periods[x].value;
 			if (totalinputs.length == inputs.length) {
-				totalinputs[x].value = FormatNumber(prices[x].innerHTML.replace(/[,\.]/g, "") * inputs[x].value * periods[x].value); //.replace(/,/g,"");
+				totalinputs[x].value = FormatNumber(prices[x].innerHTML.replace(/[,.]/g, "") * inputs[x].value * periods[x].value); //.replace(/,/g,"");
 			}
 		} else {
 			if (totalinputs.length == inputs.length) {
-				total += parseInt(totalinputs[x].value.replace(/[,\.]/g,""));
+				total += parseInt(totalinputs[x].value.replace(/[,.]/g,""));
 				spans[x].innerHTML = totalinputs[x].value.replace(/,/g,"");
 			} else {
-				total += parseInt(spans[x].innerHTML.replace(/[,\.]/g,""));
+				total += parseInt(spans[x].innerHTML.replace(/[,.]/g,""));
 			}
 		}
 		qspans[x].innerHTML = inputs[x].value;
@@ -2218,6 +2246,7 @@ function UpdateTotal(tot_override) {
  *
  * @return  {void}
  */
+/* exported EditQuantities */
 function EditQuantities() {
 	var b = document.getElementById("save_quantities");
 	//var c = document.getElementById("cancel_quantities");
@@ -2300,6 +2329,7 @@ function EditQuantities() {
  *
  * @return  {void}
  */
+/* exported SaveOrderUser */
 function SaveOrderUser() {
 	var button = document.getElementById("user_save");
 
@@ -2350,6 +2380,7 @@ function SaveOrderUser() {
  *
  * @return  {void}
  */
+/* exported SaveOrderGroup */
 function SaveOrderGroup() {
 	var button = document.getElementById("group_save");
 
@@ -2380,6 +2411,7 @@ function SaveOrderGroup() {
  * @param   {number}  sequence
  * @return  {void}
  */
+/* exported Renew */
 function Renew(url, sequence) {
 	var post = {};
 	post['orderitemsequence'] = sequence;
@@ -2402,6 +2434,7 @@ function Renew(url, sequence) {
  * @param   {string}  field
  * @return  {void}
  */
+/* exported Filter */
 function Filter(page, field) {
 	var filter = document.getElementById("filter" + field);
 	var value = "";
@@ -2428,7 +2461,7 @@ function Filter(page, field) {
 		}
 		if (url.match("" + field + "=")) {
 			var r = new RegExp("(" + field + "=)[^&]*");
-			url = url.replace(r, "\$1" + value);
+			url = url.replace(r, "$1" + value);
 		} else {
 			url = url + "&" + field + "=" + value;
 		}
@@ -2447,6 +2480,7 @@ function Filter(page, field) {
  * @param   {object}  ui
  * @return  {void}
  */
+/* exported SearchEventHandler */
 function SearchEventHandler(event, ui) {
 	var id = ui['item']['id'];
 	//var username = ui['item']['username'];
@@ -2478,6 +2512,7 @@ function SearchEventHandler(event, ui) {
  *
  * @return  {void}
  */
+/* exported PrintOrder */
 function PrintOrder() {
 	// Hide text boxes if they're empty
 	$(".ordernotes").each(function( index ) {

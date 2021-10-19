@@ -49,7 +49,7 @@ jQuery(document).ready(function () {
 
 	$('#fields_page_id').on('change', function () {
 		if ($('#fields_title').val() == '') {
-			$('#fields_title').val($(this).children("option:selected").text().replace(/\|\— /g, ''));
+			$('#fields_title').val($(this).children("option:selected").text().replace(/\|— /g, ''));
 		}
 	});
 

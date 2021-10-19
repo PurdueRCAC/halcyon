@@ -2657,7 +2657,7 @@ function PreviewExample(example) {
  * @param   {string}  news
  * @return  {void}
  */
-function NEWSPreviewVars(news) {
+function NEWSPreviewVars() { // news
 	var preview_vars = {};
 	var startDate;
 	var endDate;

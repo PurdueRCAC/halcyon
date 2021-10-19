@@ -158,7 +158,7 @@ Halcyon.replaceTokens = function(n) {
  * @return  boolean
  */
 Halcyon.isEmail = function(text) {
-	var regex = new RegExp("^[\\w-_\.]*[\\w-_\.]\@[\\w]\.+[\\w]+[\\w]$");
+	var regex = new RegExp("^[\\w-_.]*[\\w-_.]@[\\w]\.+[\\w]+[\\w]$");
 	return regex.test(text);
 };
 
@@ -648,6 +648,7 @@ Halcyon.paginate = function()
 	}
 }
 
+/* exported ROOT_URL */
 var ROOT_URL = '/api/';
 
 // this function returns a HttpRequest object
@@ -659,6 +660,7 @@ function GetXmlHttpObject() {
 		xmlHttp = new XMLHttpRequest();
 	}
 	catch (e) {
+		/* eslint-disable */
 		//Internet Explorer
 		try {
 			xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
@@ -666,6 +668,7 @@ function GetXmlHttpObject() {
 		catch (e) {
 			xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
 		}
+		/* eslint-enable */
 	}
 
 	return xmlHttp;
@@ -674,6 +677,7 @@ function GetXmlHttpObject() {
 /**
  * Legacy AJAX
  */
+/* exported WSGetURL */
 function WSGetURL(id, result_function, arg1) {
 	if (id.substring(0, 4) != 'http') {
 		if (id.substring(0, 1) != '/') {
@@ -703,6 +707,7 @@ function WSGetURL(id, result_function, arg1) {
 	xml.send(null);
 }
 
+/* exported WSPostURL */
 function WSPostURL(id, json, result_function, arg1) {
 	if (id.substring(0, 4) != 'http') {
 		if (id.substring(0, 1) != '/') {
@@ -732,6 +737,7 @@ function WSPostURL(id, json, result_function, arg1) {
 	xml.send(json);
 }
 
+/* exported WSPutURL */
 function WSPutURL(id, json, result_function, arg1) {
 	if (id.substring(0, 4) != 'http') {
 		if (id.substring(0, 1) != '/') {
@@ -761,6 +767,7 @@ function WSPutURL(id, json, result_function, arg1) {
 	xml.send(json);
 }
 
+/* exported WSDeleteURL */
 function WSDeleteURL(id, result_function, arg1) {
 	if (id.substring(0, 4) != 'http') {
 		if (id.substring(0, 1) != '/') {

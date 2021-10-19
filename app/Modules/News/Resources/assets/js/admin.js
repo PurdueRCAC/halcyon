@@ -1,4 +1,6 @@
 /* global $ */ // jquery.js
+/* global Handlebars */ // handlebars.js
+/* global Halcyon */ // core.js
 
 /**
  * Send an email
@@ -10,9 +12,9 @@ function NEWSSendMail(btn) {
 	// Get text and updates
 	$.getJSON(btn.data('article'), function (data) {
 		// Gather some  variables from DOM
-		var resources = [];
+		var resources = [], x;
 		if (data['resources'].length > 0) {
-			for (var x = 0; x < data['resources'].length; x++) {
+			for (x = 0; x < data['resources'].length; x++) {
 				resources.push(data['resources'][x]['resource']['name']);
 			}
 		}
@@ -47,8 +49,7 @@ function NEWSSendMail(btn) {
 			}
 		});
 		to.clearTags();
-		console.log(data.associations);
-		var x;
+
 		for (x = 0; x < data.associations.length; x++) {
 			if ($('.tagsinput').length) {
 				if (!to.tagExist(data.associations[x]['id'])) {
@@ -106,13 +107,11 @@ function NEWSSendMail(btn) {
 						data: post,
 						dataType: 'json',
 						async: false,
-						success: function (response) {
-							console.log(response);
+						success: function () {
 							//document.getElementById("datetimemail_" + data.id).innerHTML = response.datetimemail;
 							Halcyon.message('success', btn.data('success'));
 						},
-						error: function (xhr, ajaxOptions, thrownError) {
-							console.log(xhr);
+						error: function (xhr) {
 							Halcyon.message('danger', xhr.responseJSON.message);
 						}
 					});
@@ -132,7 +131,7 @@ function NEWSSendMail(btn) {
  * @param   {string}  news
  * @return  {void}
  */
-function NEWSWriteMail(news) {
+/*function NEWSWriteMail(news) {
 	$.getJSON(ROOT_URL + "news/" + news, function (data) {
 		$('#mail-subject').val(data.headline);
 
@@ -201,7 +200,7 @@ function NEWSWriteMail(news) {
 						'news': $('#mail-body').val(),
 						'associations': associations
 					});
-					WSPostURL(ROOT_URL + "news/" + news, post, NEWSSentMail, news);
+					WSPostURL(ROOT_URL + "news/" + news, post, NEWSSentMail);
 				}
 			}
 		});
@@ -210,7 +209,22 @@ function NEWSWriteMail(news) {
 		}
 		$('#mailwrite').dialog('open');
 	});
-}
+}*/
+
+/**
+ * Callback after an email has been sent
+ *
+ * @param   {object}  xml
+ * @param   {string}  news
+ * @return  {void}
+ */
+/*function NEWSSentMail(xml) {
+	if (xml.status >= 400) {
+		var results = JSON.parse(xml.responseText);
+
+		Halcyon.message('danger', results.message);
+	}
+}*/
 
 /**
  * Build vars for news preview
@@ -260,9 +274,9 @@ function NEWSPreviewVars() {
  * @return  {void}
  */
 function NEWSPreview(btn) {
-	if (typeof (edit) == 'undefined') {
+	/*if (typeof (edit) == 'undefined') {
 		edit = false;
-	}
+	}*/
 
 	var text = document.getElementById("field-body").value;
 
@@ -289,8 +303,7 @@ function NEWSPreview(btn) {
 			$('#preview').dialog({ modal: true, width: '691px' });
 			$('#preview').dialog('open');
 		},
-		error: function (xhr, ajaxOptions, thrownError) {
-			console.log(xhr);
+		error: function (xhr) {
 			Halcyon.message('danger', xhr.responseJSON.message);
 		}
 	});
@@ -308,8 +321,8 @@ function autocompleteUsers(url) {
 			}));
 		});
 	};
-};
-
+}
+/*
 function autocompleteResources(url) {
 	return function (request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
@@ -322,7 +335,7 @@ function autocompleteResources(url) {
 			}));
 		});
 	};
-};
+}*/
 
 /**
  * Initiate event hooks
@@ -359,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 	}*/
-	$('#field-template').on('change', function (e) {
+	$('#field-template').on('change', function () {
 		if ($(this).is(':checked')) {
 			$('.template-hide').addClass('hide');
 		} else {
@@ -404,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		NEWSSendMail($(this));
 	});
 
-	$('#template_select').on('change', function (e) {
+	$('#template_select').on('change', function () {
 		var template = this.options[this.selectedIndex].value;
 
 		if (template == "0") {
@@ -437,7 +450,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				$('#field-location').val(response.location);
 				$('#field-url').val(response.url);
 
-				var resources = [];
+				var resources = [], x;
 				for (x = 0; x < response.resources.length; x++) {
 					resources.push(response.resources[x]['resourceid']);
 				}
@@ -450,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					.val(response.newstypeid)
 					.trigger('change');
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr) {
 				Halcyon.message('danger', xhr.responseJSON.message);
 			}
 		});
