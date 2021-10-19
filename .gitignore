@@ -1,12 +1,11 @@
 /node_modules
 /public/hot
 /public/storage
+/public/files
 /public/modules
 /public/themes
 /public/listeners
 /public/widgets
-/public/storage
-/public/files
 /public/mix-manifest.json
 /storage/*.key
 /storage/mysql/*
@@ -22,3 +21,5 @@ npm-debug.log
 yarn-error.log
 /docker/ssl/*
 /storage/dump/*
+/.idea
+/.vscode
