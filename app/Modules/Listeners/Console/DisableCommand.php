@@ -33,7 +33,7 @@ class DisableCommand extends Command
 
 		if (!$listener)
 		{
-			$this->error("Listener not found.");
+			$this->error('Listener not found.');
 			return;
 		}
 
@@ -41,11 +41,11 @@ class DisableCommand extends Command
 		{
 			$listener->update(['enabled' => 0]);
 
-			$this->info("Listener successfully disabled.");
+			$this->info('Listener successfully disabled.');
 		}
 		else
 		{
-			$this->comment("Listener is already disabled.");
+			$this->comment('Listener is already disabled.');
 		}
 	}
 

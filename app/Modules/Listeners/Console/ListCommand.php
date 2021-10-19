@@ -26,7 +26,7 @@ class ListCommand extends Command
 	 */
 	public function handle()
 	{
-		$enabled = $this->option('enabled') ? true : false;
+		$enabled  = $this->option('enabled')  ? true : false;
 		$disabled = $this->option('disabled') ? true : false;
 
 		$listeners = $this->laravel['listener']->all()->sortBy('folder');
@@ -35,43 +35,30 @@ class ListCommand extends Command
 		{
 			$listeners = $listeners->filter(function($value, $key)
 			{
-				if ($value->enabled)
-				{
-					return true;
-				}
-
-				return false;
+				return ($value->enabled ? true : false);
 			});
 		}
 		elseif ($disabled)
 		{
 			$listeners = $listeners->filter(function($value, $key)
 			{
-				if (!$value->enabled)
-				{
-					return true;
-				}
-
-				return false;
+				return (!$value->enabled ? true : false);
 			});
 		}
 
 		if (!count($listeners))
 		{
-			$this->error("No listeners found.");
+			$this->error('No listeners found.');
 			return;
 		}
 
+		$rows = array();
+
 		foreach ($listeners as $listener)
 		{
-			if ($listener->enabled)
-			{
-				$this->info('[enabled]  ' . $listener->name . ' (folder: ' . $listener->folder . ', element: ' . $listener->element . ')');
-			}
-			else
-			{
-				$this->comment('[disabled] ' . $listener->name . ' (folder: ' . $listener->folder . ', element: ' . $listener->element . ')');
-			}
+			$rows[] = [$listener->name, ($listener->enabled ? 'Enabled' : 'Disabled'), $listener->folder, $listener->element, $listener->path];
 		}
+
+		$this->table(['Name', 'Status', 'Folder', 'Element', 'Path'], $rows);
 	}
 }

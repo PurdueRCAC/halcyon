@@ -41,11 +41,11 @@ class EnableCommand extends Command
 		{
 			$listener->update(['enabled' => 1]);
 
-			$this->info("Listener successfully enabled.");
+			$this->info('Listener successfully enabled.');
 		}
 		else
 		{
-			$this->comment("Listener is already enabled.");
+			$this->comment('Listener is already enabled.');
 		}
 	}
 
