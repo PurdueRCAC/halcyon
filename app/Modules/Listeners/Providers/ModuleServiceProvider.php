@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use App\Modules\Listeners\Models\Listener;
+use App\Modules\Listeners\Console\ListCommand;
 use App\Modules\Listeners\Console\DisableCommand;
 use App\Modules\Listeners\Console\EnableCommand;
 use App\Modules\Listeners\Console\PublishCommand;
@@ -77,6 +78,7 @@ class ModuleServiceProvider extends ServiceProvider
 	{
 		$this->commands([
 			//InstallCommand::class,
+			ListCommand::class,
 			DisableCommand::class,
 			EnableCommand::class,
 			PublishCommand::class,

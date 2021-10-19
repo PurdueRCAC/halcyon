@@ -149,6 +149,34 @@ class ListenerManager
 	}
 
 	/**
+	 * Load unpublished listeners.
+	 *
+	 * @return  object  Collection
+	 */
+	public function allDisabled()
+	{
+		$levels = [];
+
+		if ($user = auth()->user())
+		{
+			$levels = $user->getAuthorisedViewLevels();
+		}
+
+		$listeners = $this->all()
+			->filter(function($value, $key) use ($levels)
+			{
+				if (!$value->enabled && (empty($levels) || in_array($value->access, $levels)))
+				{
+					return true;
+				}
+
+				return false;
+			});
+
+		return $listeners;
+	}
+
+	/**
 	 * Load published listeners by database.
 	 *
 	 * @return  object  Collection
