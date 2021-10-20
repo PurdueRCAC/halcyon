@@ -3433,6 +3433,10 @@ document.addEventListener('DOMContentLoaded', function() {
 			change: function() {
 				$(this).trigger('change');
 			}
+		}).keyup(function (e) {
+			if (e.keyCode == 8 || e.keyCode == 46) {
+				$(this).val('');
+			}
 		});
 	}
 

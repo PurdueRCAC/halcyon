@@ -880,6 +880,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		duration: '',
 		constrainInput: false,
 		dateFormat: 'yy-mm-dd'
+	}).keyup(function (e) {
+		if (e.keyCode == 8 || e.keyCode == 46) {
+			$(this).val('').datepicker("refresh");
+		}
 	});
 	$('input.datetime').datetimepicker({
 		duration: '',
@@ -888,6 +892,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		controlType: 'select',
 		oneLine: true,
 		timeFormat: 'HH:mm:00'
+	}).keyup(function (e) {
+		if (e.keyCode == 8 || e.keyCode == 46) {
+			$(this).val('').datetimepicker("refresh");
+		}
 	});
 
 	$('.tabs').tabs();

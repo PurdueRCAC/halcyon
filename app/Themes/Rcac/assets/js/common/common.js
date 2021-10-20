@@ -511,7 +511,11 @@ $(document).ready(function() {
 		hide: false
 	});
 
-	$('.date-pick').datepicker({ dateFormat: 'yy-mm-dd' });
+	$('.date-pick').datepicker({ dateFormat: 'yy-mm-dd' }).keyup(function (e) {
+		if (e.keyCode == 8 || e.keyCode == 46) {
+			$(this).val('').datepicker("refresh");
+		}
+	});
 
 	// Main nav
 	$('.navbar .dropdown').hover(

@@ -893,11 +893,15 @@ class ArticlesController extends Controller
 		if ($request->has('datetimenewsend'))
 		{
 			$datetimenewsend = $request->input('datetimenewsend');
-
-			if ($datetimenewsend && $datetimenewsend != '0000-00-00 00:00:00')
+			if ($datetimenewsend == '0000-00-00 00:00:00')
 			{
-				$row->datetimenewsend = $datetimenewsend;
+				$datetimenewsend = null;
+			}
 
+			$row->datetimenewsend = $datetimenewsend;
+
+			if ($datetimenewsend)
+			{
 				if ($row->datetimenews > $row->datetimenewsend)
 				{
 					return response()->json(['message' => trans('news::news.error.invalid time range')], 415);
