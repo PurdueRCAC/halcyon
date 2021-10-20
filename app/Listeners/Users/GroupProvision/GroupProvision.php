@@ -33,6 +33,22 @@ class GroupProvision
 	}
 
 	/**
+	 * Should this plugin handle this unix group?
+	 *
+	 * @param   object  $unixgroup
+	 * @return  bool
+	 */
+	private function shouldHandleUnixgroup($unixgroup)
+	{
+		if (substr($unixgroup->longname, 0, 2) == 'x-')
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Handle a unix group being created
 	 *
 	 * @param   UnixGroupCreated  $event
@@ -43,6 +59,11 @@ class GroupProvision
 		$config = $this->config();
 
 		if (empty($config))
+		{
+			return;
+		}
+
+		if (!$this->shouldHandleUnixgroup($event->unixgroup))
 		{
 			return;
 		}
@@ -131,6 +152,11 @@ class GroupProvision
 		$config = $this->config();
 
 		if (empty($config))
+		{
+			return;
+		}
+
+		if (!$this->shouldHandleUnixgroup($event->unixgroup))
 		{
 			return;
 		}
@@ -228,6 +254,11 @@ class GroupProvision
 			return;
 		}
 
+		if (!$this->shouldHandleUnixgroup($member->unixgroup))
+		{
+			return;
+		}
+
 		$member = $event->member;
 
 		try
@@ -281,6 +312,11 @@ class GroupProvision
 		$config = $this->config();
 
 		if (empty($config))
+		{
+			return;
+		}
+
+		if (!$this->shouldHandleUnixgroup($member->unixgroup))
 		{
 			return;
 		}
