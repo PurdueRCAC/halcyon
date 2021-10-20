@@ -78,7 +78,7 @@ class GroupProvision
 				{
 					$results = $body->provisionGroupServiceCreateGroupResponse;
 
-					if (isset($results->groupId) && is_numeric($results->groupId))
+					if (!$event->unixgroup->unixgid && isset($results->groupId) && is_numeric($results->groupId))
 					{
 						$event->unixgroup->unixgid = $results->groupId;
 					}
@@ -91,7 +91,7 @@ class GroupProvision
 				// See if this information is provided elsewhere
 				event($e = new UnixGroupFetch($event->unixgroup->shortname));
 
-				if (!empty($e->results))
+				if (!$event->unixgroup->unixgid && !empty($e->results))
 				{
 					if (isset($e->results[0]['gidNumber']))
 					{
