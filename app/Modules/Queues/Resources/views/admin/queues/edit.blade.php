@@ -503,7 +503,11 @@ app('pathway')
 
 							//$title  = $item->nodecount . " nodes / ";
 							//$title .= $item->corecount . " cores; ".$what.": ";
-							$amt = $nodecores ? round($item->corecount / $nodecores, 1) : 0;
+							$amt = $item->nodecount;
+							if ($item->corecount)
+							{
+								$amt = $nodecores ? round($item->corecount / $nodecores, 1) : 0;
+							}
 
 							echo '<a href="#dialog-edit' . $item->id . '" class="dialog-btn">' . $what . '</a>';
 							?>
