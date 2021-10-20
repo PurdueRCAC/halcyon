@@ -2,15 +2,15 @@
 
 @section('title'){{ $page->title }}@stop
 
-@if ($page->metadesc)
-	@push('meta')
+@if ($page->metadesc || $page->metakey)
+@section('meta')
+	@if ($page->metadesc)
 		<meta name="description" content="{{ $page->metadesc }}" />
-@endpush
-@endif
-@if ($page->metakey)
-	@push('meta')
+	@endif
+	@if ($page->metakey)
 		<meta name="keywords" content="{{ $page->metakey }}" />
-@endpush
+	@endif
+@stop
 @endif
 
 @if ($page->metadata)
