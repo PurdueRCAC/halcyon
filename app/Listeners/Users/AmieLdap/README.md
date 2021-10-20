@@ -17,7 +17,7 @@ This connects to the RCAC Amie LDAP to retrieve user info.
     * Check if an associated group exists. If not, creates one.
     * Checks if the XSEDE project has a (unix) group. If so, creates a unix group in the portal. For every user in the group:
         * Checks if the user has an account in the portal. If not creates one.
-        * Adds the user to the unix group if nto already a member.
+        * Adds the user to the unix group if not already a member.
         * Triggers the `App\Modules\Users\Events\UserSync` event that the Authprimary plugin responds to.
     * Checks if a queue exists. If not, creates one.
         * If the XSEDE project has any `serviceUnits`, it adds those to the portal as loans to the queue.
