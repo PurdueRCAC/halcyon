@@ -26,7 +26,7 @@ class RouteServiceProvider extends CoreRoutingServiceProvider
 	 */
 	protected function getAdminRoute()
 	{
-		return dirname(__DIR__) . '/Http/adminRoutes.php';
+		return dirname(__DIR__) . '/Routes/admin.php';
 	}
 
 	/**
@@ -34,6 +34,6 @@ class RouteServiceProvider extends CoreRoutingServiceProvider
 	 */
 	protected function getApiRoute()
 	{
-		return dirname(__DIR__) . '/Http/apiRoutes.php';
+		return dirname(__DIR__) . '/Routes/api.php';
 	}
 }
