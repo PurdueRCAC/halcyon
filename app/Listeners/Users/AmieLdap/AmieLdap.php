@@ -445,11 +445,11 @@ class AmieLdap
 
 				// Check for a gid
 				// If not found, fallback to a pid
-				$pid = $results->getAttribute('x-xsede-gid', 0);
-				if (!$pid && $results->getAttribute('x-xsede-pid', 0))
-				{
+				//$pid = $results->getAttribute('x-xsede-gid', 0);
+				//if (!$pid && $results->getAttribute('x-xsede-pid', 0))
+				//{
 					$pid = $results->getAttribute('x-xsede-pid', 0);
-				}
+				//}
 
 				if ($pid)
 				{
@@ -496,7 +496,7 @@ class AmieLdap
 						$group = new Group;
 						$group->name = $pid;
 						$group->owneruserid = $user->id;
-						$group->unixgroup = 'x-' . strtolower($group->name);
+						$group->unixgroup = $results->getAttribute('x-xsede-gid', 0);
 						$group->save();
 
 						$group->addManager($user->id, 1);
@@ -757,6 +757,7 @@ class AmieLdap
 					}
 
 					// Storage
+					$dir = null;
 					$storage = StorageResource::query()
 						->where('path', '=', '/depot')
 						->get()
@@ -827,8 +828,11 @@ class AmieLdap
 							$dir->publicread  = 0;
 							$dir->publicwrite = 0;
 							$dir->groupid = $group->id;
-							$dir->unixgroupid = $unixgroup->id;
-							$dir->autouserunixgroupid = $unixgroup->id;
+							if ($unixgroup)
+							{
+								$dir->unixgroupid = $unixgroup->id;
+								$dir->autouserunixgroupid = $unixgroup->id;
+							}
 							$dir->storageresourceid = $storage->id;
 							$dir->resourceid = $storage->parentresourceid;
 							$dir->name = 'x-' . strtolower($pid);
@@ -866,20 +870,26 @@ class AmieLdap
 					$g['api'] = route('api.groups.read', ['id' => $g['id']]);
 					$response->group = $g;
 
-					$u = $unixgroup->toArray();
-					$u['members'] = $unixgroup->members()->get()->toArray();
-					foreach ($u['members'] as $k => $member)
+					if ($unixgroup)
 					{
-						$member['api'] = route('api.unixgroups.members.read', ['id' => $member['id']]);
-						$u['members'][$k] = $member;
+						$u = $unixgroup->toArray();
+						$u['members'] = $unixgroup->members()->get()->toArray();
+						foreach ($u['members'] as $k => $member)
+						{
+							$member['api'] = route('api.unixgroups.members.read', ['id' => $member['id']]);
+							$u['members'][$k] = $member;
+						}
+
+						$u['api'] = route('api.unixgroups.read', ['id' => $u['id']]);
+						$response->unixgroup = $u;
 					}
 
-					$u['api'] = route('api.unixgroups.read', ['id' => $u['id']]);
-					$response->unixgroup = $u;
-
-					$d = $dir->toArray();
-					$d['api'] = route('api.storage.directories.read', ['id' => $d['id']]);
-					$response->directory = $d;
+					if ($dir)
+					{
+						$d = $dir->toArray();
+						$d['api'] = route('api.storage.directories.read', ['id' => $d['id']]);
+						$response->directory = $d;
+					}
 				}
 
 				//event(new UserSync($user, true, $rolename));
