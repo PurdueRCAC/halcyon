@@ -3,20 +3,15 @@ return [
 	'widget name' => 'Administrator Menu',
 	'widget desc' => 'This module shows the main admin navigation module',
 
-	// Site
+	// System
+	'system' => 'System',
 	'configuration' => 'Configuration',
 	'dashboard' => 'Dashboard',
 	'clear cache' => 'Clear Cache',
 	'modules' => 'Modules',
 	'global checkin' => 'Global Check-in',
-	'home default' => 'Home',
-	'home multiple' => 'Warning! Multiple homes!',
 	'logout' => 'Logout',
-	//'mass mail users' => 'Mass Mail Users',
-
-	//'new private message' => 'New Private Message',
-	'PURGE_EXPIRED_CACHE' => 'Purge Expired Cache',
-	'READ_PRIVATE_MESSAGES' => 'Read Private Messages',
+	'messages' => 'Message Queue',
 	'site' => 'Site',
 	'maintenance' => 'Maintenance',
 	'system info' => 'System Information',
@@ -54,7 +49,6 @@ return [
 	'order manager' => 'Orders',
 
 	// Extensions
-	'messages' => 'Message Queue',
 	'extensions' => 'Extensions',
 	'extensions manager' => 'Extensions',
 	'language manager' => 'Translations',
@@ -78,12 +72,6 @@ return [
 	'links' => 'Useful links',
 	'resources' => 'Resources',
 	'security' => 'Security Center',
-
-	// the string below will be used if the localized sample data contains an URL for the desired community forum or if the 'Custom Support Forum' field parameter in the Admin Menu module contains an url
-	'support forum' => 'Support Forum',
-	// the string below will be used if 	'HELP_SUPPORT_OFFICIAL_LANGUAGE_FORUM_VALUE has a value, i.e the # of the specific language forum in help.halcyon.org 
-	'HELP_SUPPORT_OFFICIAL_LANGUAGE_FORUM' => 'Official [language] forum',
-	'HELP_SUPPORT_OFFICIAL_LANGUAGE_FORUM_VALUE' => '',
 	'translations' => 'Translations',
 
 	// Menus
@@ -91,4 +79,6 @@ return [
 	'menu manager' => 'Menus',
 	'menu manager new menu' => 'Add New Menu',
 	'menu manager new menu item' => 'Add New Menu Item',
+	'home default' => 'Home',
+	'home multiple' => 'Warning! Multiple homes!',
 ];

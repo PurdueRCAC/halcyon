@@ -31,7 +31,7 @@ $badge = '';
 	}
 }*/
 $menu->addChild(
-	new Node(trans('widget.adminmenu::adminmenu.configuration') . $badge, route('admin.core.sysinfo'), 'class:settings', in_array($active, ['info', 'core', 'config', 'checkin', 'cache', 'redirect', 'history'])), true
+	new Node(trans('widget.adminmenu::adminmenu.system') . $badge, route('admin.core.sysinfo'), 'class:settings', in_array($active, ['info', 'core', 'config', 'checkin', 'cache', 'redirect', 'history'])), true
 );
 
 if ($chm || $cam || $cst)
