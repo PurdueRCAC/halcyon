@@ -5,11 +5,11 @@
 		<!-- Metadata -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<meta name="base-url" content="{{ rtrim(url('/'), '/') }}">
-		<meta name="api-token" content="{{ (Auth::user() ? Auth::user()->api_token : '') }}">
-		<meta name="theme-color" content="#000000">
-		<meta name="color-scheme" content="light dark">
+		<meta name="csrf-token" content="{{ csrf_token() }}" />
+		<meta name="base-url" content="{{ rtrim(url('/'), '/') }}" />
+		<meta name="api-token" content="{{ (Auth::user() ? Auth::user()->api_token : '') }}" />
+		<meta name="theme-color" content="#000000" />
+		<meta name="color-scheme" content="light dark" />
 
 		<title>{{ config('app.name') }} - {{ trans('theme::admin.error') }}@hasSection('title'): @yield('title')@endif</title>
 
@@ -20,7 +20,7 @@
 			'modules/core/vendor/bootstrap/bootstrap.min.css',
 			'modules/core/vendor/jquery-ui/jquery-ui.min.css',
 			'modules/core/vendor/jquery-datepicker/jquery.datepicker.css',
-			'modules/core/vendor/jquery-timepicker/jquery.timepicker.css',
+			'modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.css',
 			'themes/admin/css/index.css',
 		);
 		foreach ($styles as $css):
@@ -29,21 +29,20 @@
 			<?php
 		endforeach;
 		?>
-		<!--[if IE 9]>
-			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie9.css') }}" />
-		<![endif]-->
 		<!--[if lt IE 9]>
-			<script src="{{ asset('js/html5.js') }}"></script>
-			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie8.css') }}" />
+			<script src="{{ asset('themes/admin/js/html5.js') }}"></script>
+		<![endif]-->
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie.css') }}" />
 		<![endif]-->
 
 		<!-- Scripts -->
 		<?php
 		$scripts = array(
 			'modules/core/vendor/jquery/jquery.min.js',
-			//'modules/core/vendor/bootstrap/bootstrap.bundle.min.js',
+			'modules/core/vendor/bootstrap/bootstrap.bundle.min.js',
 			'modules/core/vendor/jquery-ui/jquery-ui.min.js',
-			'modules/core/vendor/jquery-timepicker/jquery.timepicker.js',
+			'modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.js',
 			'modules/core/js/core.js',
 			'themes/admin/js/index.js',
 		);
@@ -89,9 +88,6 @@
 
 				<ul class="user-options">
 					@if (Auth::check())
-						<!-- <li data-title="{{ trans('theme::admin.toggle theme') }}">
-							<a class="icon-sun" href="{{ request()->url() }}?theme=dark">{{ trans('theme::admin.toggle theme') }}</a>
-						</li> -->
 						<li data-title="{{ trans('theme::admin.logout') }}">
 							<a class="icon-power logout" href="{{ route('logout') }}">{{ trans('theme::admin.logout') }}</a>
 						</li>

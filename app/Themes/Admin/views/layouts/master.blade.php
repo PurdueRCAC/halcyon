@@ -29,12 +29,11 @@
 			<?php
 		endforeach;
 		?>
-		<!--[if IE 9]>
-			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie9.css') }}" />
-		<![endif]-->
 		<!--[if lt IE 9]>
 			<script src="{{ asset('themes/admin/js/html5.js') }}"></script>
-			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie9.css') }}" />
+		<![endif]-->
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie.css') }}" />
 		<![endif]-->
 		@yield('styles')
 		@stack('styles')
@@ -66,7 +65,9 @@
 				</div>
 			</div>
 		@endif
+
 		<div id="container-main">
+
 			<header id="header" role="banner">
 				<h1>
 					<a href="{{ url()->to('/') }}">

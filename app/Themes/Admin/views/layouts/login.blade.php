@@ -8,12 +8,11 @@
 
 		<!-- Styles -->
 		<link rel="stylesheet" type="text/css" media="all" href="{{ asset('themes/admin/css/login.css?v=' . filemtime(public_path() . '/themes/admin/css/login.css')) }}" />
-		<!--[if IE 9]>
-			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/browser/ie9.css') }}" />
-		<![endif]-->
 		<!--[if lt IE 9]>
-			<script type="text/javascript" src="{{ asset('js/html5.js') }}"></script>
-			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/browser/ie8.css') }}" />
+			<script src="{{ asset('themes/admin/js/html5.js') }}"></script>
+		<![endif]-->
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie.css') }}" />
 		<![endif]-->
 		@yield('styles')
 
@@ -40,7 +39,7 @@
 			<div id="wrap">
 				<section id="component-content">
 					<div id="toolbar-box">
-						<h2><?php echo trans('theme::admin.admin login'); ?></h2>
+						<h2>{{ trans('theme::admin.admin login') }}</h2>
 					</div>
 
 					<section id="main">
@@ -53,7 +52,7 @@
 						<!-- Content ends -->
 
 						<noscript>
-							<?php echo trans('global.warn javascript required') ?>
+							{{ trans('global.warn javascript required') }}
 						</noscript>
 					</section><!-- / #main -->
 				</section><!-- / #component-content -->
