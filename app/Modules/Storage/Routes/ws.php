@@ -18,7 +18,7 @@ $router->group(['prefix' => 'storagedirusage', 'middleware' => 'auth.ip'], funct
 		'uses' => 'UsageController@read',
 	])->where('id', '[0-9]+');
 	$router->get('{search}', [
-		'as' => 'ws.storage.usage',
+		'as' => 'ws.storage.usage.search',
 		'uses' => 'UsageController@index',
 	])->where('id', '[a-zA-Z_]+');
 	$router->match(['put', 'post'], '{id}', [

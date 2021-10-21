@@ -47,12 +47,13 @@ $router->group(['prefix' => 'pages'], function (Router $router)
 	]);
 });
 
+// This rule will catch anything else. Due to this
+// it needs to be last which, in turn, means the
+// module must be loaded last. This is controlled by
+// the "priority" option in the `module.json` file.
+//
+// TODO: Move to `$router->fallback()`?
 $router->match(['get', 'post'],'{uri}', [
 	'uses' => 'PagesController@index',
 	'as' => 'page',
 ])->where('uri', '(.*)');
-/*$router->post('{uri}', [
-	'uses' => 'PagesController@store',
-	'as' => 'site.pages.store',
-	'middleware' => 'can:edit pages,edit.state pages',
-])->where('uri', '(.*)');*/

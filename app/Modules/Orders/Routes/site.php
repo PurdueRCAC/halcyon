@@ -166,7 +166,7 @@ $router->group(['prefix' => 'order', 'middleware' => 'auth.admin'], function (Ro
 		'uses' => 'OrdersController@index',
 	]);
 	$router->get('/view', [
-		'as' => 'site.order.index',
+		'as' => 'site.order.view',
 		'uses' => 'OrdersController@index',
 	]);
 	$router->get('create', [
@@ -180,7 +180,7 @@ $router->group(['prefix' => 'order', 'middleware' => 'auth.admin'], function (Ro
 		'middleware' => 'can:create orders|edit orders',
 	]);
 	$router->get('{id}', [
-		'as' => 'site.order.read',
+		'as' => 'site.order.quickread',
 		'uses' => 'OrdersController@edit',
 		//'middleware' => 'can:tag.tags.edit',
 	])->where('id', '[0-9]+');
@@ -259,7 +259,7 @@ $router->group(['prefix' => 'order', 'middleware' => 'auth.admin'], function (Ro
 			'middleware' => 'can:manage orders',
 		]);
 		$router->get('/create', [
-			'as' => 'site.orders.products.create',
+			'as' => 'site.order.products.create',
 			'uses' => 'ProductsController@create',
 			'middleware' => 'can:create orders',
 		]);

@@ -42,7 +42,7 @@ $router->group(['prefix' => 'history'], function (Router $router)
 		])->where('id', '[0-9]+');
 		$router->match(['get', 'post'], '/delete/{id?}', [
 			'as'   => 'admin.history.activity.delete',
-			'uses' => 'RolesController@delete',
+			'uses' => 'ActivityController@delete',
 		]);
 		$router->match(['get', 'post'], 'cancel', [
 			'as' => 'admin.history.activity.cancel',

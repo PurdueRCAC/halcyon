@@ -10,40 +10,6 @@ $router->group(['prefix' => 'issues', 'middleware' => ['auth.admin', 'can:manage
 		'uses' => 'IssuesController@index',
 	]);
 
-	// To Dos
-	$router->group(['prefix' => 'todos'], function (Router $router)
-	{
-		$router->match(['get', 'post'], '/', [
-			'as'   => 'site.issues.todos',
-			'uses' => 'ToDosController@index',
-			//'middleware' => 'can:manage issues',
-		]);
-		$router->get('/create', [
-			'as' => 'site.issues.todos.create',
-			'uses' => 'ToDosController@create',
-			'middleware' => 'can:create issues',
-		]);
-		$router->post('/store', [
-			'as' => 'site.issues.todos.store',
-			'uses' => 'ToDosController@store',
-			'middleware' => 'can:create issues|edit issues',
-		]);
-		$router->get('/edit/{id}', [
-			'as' => 'site.issues.todos.edit',
-			'uses' => 'ToDosController@edit',
-			'middleware' => 'can:edit issues',
-		]);
-		$router->match(['get', 'post'], '/delete/{id?}', [
-			'as'   => 'site.issues.todos.delete',
-			'uses' => 'ToDosController@delete',
-			'middleware' => 'can:delete issues',
-		]);
-		$router->match(['get', 'post'], '/cancel', [
-			'as' => 'site.issues.todos.cancel',
-			'uses' => 'ToDosController@cancel',
-		]);
-	});
-
 	$router->get('create', [
 		'as' => 'site.issues.create',
 		'uses' => 'IssuesController@create',

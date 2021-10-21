@@ -98,17 +98,17 @@ $router->group(['prefix' => 'finder'], function (Router $router)
 	]);
 
 	$router->get('/servicelist', [
-		'as'   => 'api.finder.index',
+		'as'   => 'api.finder.servicelist',
 		'uses' => 'FinderController@servicelist',
 	]);
 
 	$router->get('/facettree', [
-		'as'   => 'api.finder.index',
+		'as'   => 'api.finder.facettree',
 		'uses' => 'FinderController@facettree',
 	]);
 
 	$router->get('/settings', [
-		'as'   => 'api.finder.index',
+		'as'   => 'api.finder.settings',
 		'uses' => 'FinderController@settings',
 	]);
 });

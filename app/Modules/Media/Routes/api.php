@@ -44,7 +44,7 @@ $router->group(['prefix' => 'media', 'middleware' => 'auth:api'], function (Rout
 		'uses' => 'MediaController@layout',
 	]);
 	$router->get('/download', [
-		'as' => 'admin.media.download',
+		'as' => 'api.media.download',
 		'uses' => 'MediaController@download',
 	]);
 	$router->put('/rename', [
