@@ -952,7 +952,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							alert('An error occurred. Try toggling the checkbox. If issues persist, please contact help.');
 						}
 					},
-					error: function (xhr, ajaxOptions, thrownError) {
+					error: function (xhr) {
 						if (xhr.status == 416) {
 							alert("Queue enabled for system/guest account. ACMaint Role addition must be requested manually from accounts@purdue.edu", null);
 						} else {
@@ -967,13 +967,13 @@ document.addEventListener('DOMContentLoaded', function() {
 					dataType: 'json',
 					async: false,
 					success: function (data) {
-						if (typeof data.error != 'undefined') {
+						if (data && typeof data.error != 'undefined') {
 							bx.after($('<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" title="' + data.error + '"><span class="sr-only">' + data.error + '</span></span>'));
 							alert('An error occurred. Try toggling the checkbox. If issues persist, please contact help.');
 						}
 						//bx.data('api', bx.data('api-create'));
 					},
-					error: function (xhr, ajaxOptions, thrownError) {
+					error: function (xhr) { //xhr, ajaxOptions, thrownError
 						if (xhr.status == 416) {
 							alert("Queue disabled for system/guest account. ACMaint Role removal must be requested manually from accounts@purdue.edu", null);
 						} else {
