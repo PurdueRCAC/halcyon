@@ -5,8 +5,8 @@
 **Submitted:** {{ $order->datetimecreated->format('M d, Y H:i a') }}
 
 @component('mail::table')
-| Product | Quantity | Price | Notes |
-|---------|---------:|------:|-------|
+| Product         | Quantity | Price |
+|-----------------|---------:|------:|
 @foreach ($order->items as $item)
 <?php
 $renew = '';
@@ -29,8 +29,9 @@ if ($item->isRecurring())
 	}
 }
 ?>
-| {{ $item->product->name }} | {{ $item->quantity }} | ${{ $item->formattedPrice }} | {{ $renew }} |
+| {{ $item->product->name }}{!! $renew ? '<br />' . '_' . e($renew) . '_' : '' !!} | {{ $item->quantity }} | ${{ $item->formattedPrice }}{!! $item->product->unit ? '<br />_per ' . $item->product->unit . '_' : '' !!} |
 @endforeach
+| **Order Total** |          | ${{ $order->formattedTotal }} |
 @endcomponent
 
 @if (count($order->accounts))
@@ -38,16 +39,15 @@ if ($item->isRecurring())
 $remaining = $order->total;
 @endphp
 @component('mail::table')
-| Item               |    Amount | Notes |
-| -------------------|----------:|-------|
-| Order Total        | ${{ $order->formattedTotal }} |       |
+| Payment               |    Amount |
+| ----------------------|----------:|
 @foreach ($order->accounts as $account)
-| Account {{ $account->account }} | ${{ $account->formattedAmount }} | {{ $account->budgetjustification }} |
+| Account {{ $account->account }}{!! $account->budgetjustification ? '<br />' . '_' . e($account->budgetjustification) . '_' : '' !!} | ${{ $account->formattedAmount }} |
 @php
 $remaining -= $account->amount;
 @endphp
 @endforeach
-| Balance Remaining  | ${{ $order->formatNumber($remaining) }} |   |
+| **Balance Remaining** | ${{ $order->formatNumber($remaining) }} |
 @endcomponent
 @endif
 
