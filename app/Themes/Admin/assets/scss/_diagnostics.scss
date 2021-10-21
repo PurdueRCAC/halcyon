@@ -1,0 +1,102 @@
+/*!
+ * Diangostics
+ */
+
+/* Empty Elements
+div:empty,
+span:empty, */
+li:empty,
+p:empty,
+td:empty,
+th:empty {
+	padding: 5px;
+	outline: 5px dotted yellow !important;
+}
+
+/* Missing Attributes
+table:not([summary]), */
+img:not([alt]) {
+	outline: 5px solid orange !important;
+}
+
+/* Empty Attributes */
+*[alt=""],
+*[title=""],
+*[class=""],
+*[id=""],
+a[href=""],
+a[href="#"] {
+	outline: 5px solid yellow !important;
+}
+
+/* Deprecated Elements */
+applet,
+basefont,
+center,
+dir,
+font,
+isindex,
+menu,
+s,
+strike,
+u {
+	outline: 5px dotted red !important;
+}
+
+/* Deprecated Attributes */
+/*
+*[height],
+*[width],
+*[size],
+*/
+table[summary],
+*[background],
+*[bgcolor],
+*[clear],
+*[color],
+*[compact],
+*[noshade],
+*[nowrap],
+*[start],
+*[bottommargin],
+*[leftmargin],
+*[rightmargin],
+*[topmargin],
+*[marginheight],
+*[marginwidth],
+*[alink],
+*[link],
+*[text],
+*[vlink],
+*[align],
+*[valign],
+*[hspace],
+*[vspace],
+ul[type],
+ol[type],
+li[type] {
+	outline: 5px solid red !important;
+}
+
+/* Proposed Deprecated Elements */
+input[type="button"],
+big,
+tt {
+	outline: 5px dotted #33FF00 !important;
+}
+
+/* Proposed Deprecated Attributes */
+/*a[target],*/
+*[border],
+table[cellpadding],
+table[cellspacing],
+*[name] {
+	outline: 5px solid #33FF00 !important;
+}
+/* Undo the above as these elements are allowed to hane the `name` attribute */
+form[name],
+input[name],
+select[name],
+textarea[name] {
+	outline: none !important;
+}
