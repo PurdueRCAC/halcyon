@@ -150,7 +150,15 @@ class EmailStatusCommand extends Command
 
 			// Change states
 			$order->offsetUnset('type');
-			$order->update(['notice' => self::PENDING_BOASSIGNMENT]);
+			if ($order->total > 0)
+			{
+				$order->update(['notice' => self::PENDING_BOASSIGNMENT]);
+			}
+			else
+			{
+				// If the order total is zero, skip "pending payment info" and "pending approval"
+				$order->update(['notice' => self::PENDING_COLLECTION]);
+			}
 			$processed[] = $order->id;
 		}
 
