@@ -3,7 +3,7 @@
     "alias": "config",
     "description": "",
     "keywords": [],
-    "order": 0,
+    "priority": 0,
     "providers": [
         "App\\Modules\\Config\\Providers\\ModuleServiceProvider",
         "App\\Modules\\Config\\Providers\\RouteServiceProvider"

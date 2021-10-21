@@ -3,7 +3,7 @@
     "alias": "finder",
     "description": "Finder is port of a Drupal 8 module to help users find services which meet their criteria",
     "keywords": [],
-    "order": 30,
+    "priority": 30,
     "providers": [
         "App\\Modules\\Finder\\Providers\\ModuleServiceProvider",
         "App\\Modules\\Finder\\Providers\\RouteServiceProvider"

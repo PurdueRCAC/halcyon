@@ -3,6 +3,7 @@
     "alias": "pages",
     "description": "",
     "keywords": [],
+    "priority": 9999,
     "order": 9999,
     "providers": [
         "App\\Modules\\Pages\\Providers\\ModuleServiceProvider",

@@ -3,7 +3,7 @@
     "alias": "users",
     "description": "",
     "keywords": [],
-    "order": 1,
+    "priority": 1,
     "providers": [
         "App\\Modules\\Users\\Providers\\ModuleServiceProvider",
         "App\\Modules\\Users\\Providers\\RouteServiceProvider"

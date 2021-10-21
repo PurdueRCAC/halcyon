@@ -4,7 +4,7 @@
     "description": "This displays news articles related to a specific user.",
     "keywords": [],
     "active": 1,
-    "order": 0,
+    "priority": 0,
     "aliases": {},
     "files": [],
     "requires": []

@@ -2,7 +2,7 @@
 namespace App\Modules\Messages\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -45,7 +45,7 @@ class ModuleServiceProvider extends ServiceProvider
 	{
 		if (! app()->environment('production') && $this->app->runningInConsole())
 		{
-			app(Factory::class)->load(dirname(__DIR__) . '/Database/Factories');
+			//app(Factory::class)->load(dirname(__DIR__) . '/Database/Factories');
 		}
 	}
 

@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
         'App' => [
             //'permissions'           => 'PermissionMiddleware',
             'auth.admin'            => 'AdminMiddleware',
-            'auth.ip'            => 'IpWhitelistMiddleware',
+            'auth.ip'               => 'IpWhitelistMiddleware',
             //'public.checkLocale'    => 'PublicMiddleware',
             //'localizationRedirect'  => 'LocalizationMiddleware',
             //'can'                   => 'Authorization',

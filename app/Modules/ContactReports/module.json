@@ -3,7 +3,7 @@
     "alias": "contactreports",
     "description": "Manage interactions (contact reports) with clients and potential clients.",
     "keywords": [],
-    "order": 0,
+    "priority": 0,
     "providers": [
         "App\\Modules\\ContactReports\\Providers\\ModuleServiceProvider",
         "App\\Modules\\ContactReports\\Providers\\RouteServiceProvider",

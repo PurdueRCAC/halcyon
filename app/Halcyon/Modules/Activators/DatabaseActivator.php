@@ -141,15 +141,14 @@ class DatabaseActivator implements ActivatorInterface
 	{
 		foreach ($this->modulesStatuses as $element => $enabled)
 		{
-			$this->db->getQuery()
-				->table('extensions')
+			$this->db->table('extensions')
 				->update(['enabled' => $enabled])
 				->where('element', $element);
 		}
 	}
 
 	/**
-	 * Reads the json file that contains the activation statuses.
+	 * Reads the database table that contains the activation statuses.
 	 *
 	 * @return  array
 	 */
@@ -172,6 +171,7 @@ class DatabaseActivator implements ActivatorInterface
 		$rows = $this->db->table('extensions')
 			->select(['element', 'enabled'])
 			->where('type', '=', 'module')
+			->orderBy('ordering', 'asc')
 			->get();
 
 		foreach ($rows as $row)
@@ -184,7 +184,7 @@ class DatabaseActivator implements ActivatorInterface
 
 	/**
 	 * Get modules statuses, either from the cache or from
-	 * the json statuses file if the cache is disabled.
+	 * the database if the cache is disabled.
 	 *
 	 * @return  array
 	 */

@@ -4,7 +4,7 @@
     "description": "This performs various actions on Queues when an action is performed on a related resource.",
     "keywords": [],
     "active": 1,
-    "order": 0,
+    "priority": 0,
     "aliases": {},
     "files": [],
     "requires": []

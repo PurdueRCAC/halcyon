@@ -4,7 +4,7 @@
     "description": "Syntax highlihter for code blocks.",
     "keywords": [],
     "active": 1,
-    "order": 0,
+    "priority": 0,
     "aliases": {},
     "files": [],
     "requires": []

@@ -3,7 +3,7 @@
     "alias": "widgets",
     "description": "",
     "keywords": [],
-    "order": 4,
+    "priority": 4,
     "providers": [
         "App\\Modules\\Widgets\\Providers\\ModuleServiceProvider",
         "App\\Modules\\Widgets\\Providers\\RouteServiceProvider"

@@ -1,6 +1,6 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/** @var \Illuminate\Database\Eloquent\Factories\Factory $factory */
 
 use App\Modules\Messages\Models\Message;
 use Faker\Generator as Faker;
