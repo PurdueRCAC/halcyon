@@ -1,4 +1,4 @@
-.contentInner ol li {
+.contentInner ol>li {
 	list-style: decimal;
 	margin-left: 1em;
 }
