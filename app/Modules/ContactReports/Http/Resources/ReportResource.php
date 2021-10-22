@@ -87,8 +87,11 @@ class ReportResource extends JsonResource
 		$data['api'] = route('api.contactreports.read', ['id' => $this->id]);
 		$data['url'] = route('site.contactreports.show', ['id' => $this->id]);
 
+		$data['can']['create'] = false;
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
+		$data['can']['manage'] = false;
+		$data['can']['admin']  = false;
 
 		if ($user)
 		{
@@ -97,8 +100,11 @@ class ReportResource extends JsonResource
 				$data['subscribed'] = 1;
 			}
 
+			$data['can']['create'] = $user->can('create contactreports');
 			$data['can']['edit']   = ($user->can('edit contactreports') || ($user->can('edit.own contactreports') && $this->userid == $user->id));
 			$data['can']['delete'] = $user->can('delete contactreports');
+			$data['can']['manage'] = $user->can('manage contactreports');
+			$data['can']['admin']  = $user->can('admin contactreports');
 		}
 
 		return $data;

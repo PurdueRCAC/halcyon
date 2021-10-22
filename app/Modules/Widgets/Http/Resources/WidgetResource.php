@@ -20,19 +20,25 @@ class WidgetResource extends JsonResource
 		$data['menu_assignment'] = $this->menuAssignment();
 
 		// Permissions check
-		//$item->canCreate = false;
 		$data['can'] = array(
-			'edit' => false,
+			'create' => false,
+			'edit'   => false,
 			'delete' => false,
+			'manage' => false,
+			'admin'  => false,
 		);
 
 		$data['params'] = $this->params->all();
 
-		if (auth()->user())
+		$user = auth()->user();
+
+		if ($user)
 		{
-			//$item->can['create'] = auth()->user()->can('create widgets');
-			$data['can']['edit']   = auth()->user()->can('edit widgets');
-			$data['can']['delete'] = auth()->user()->can('delete widgets');
+			$data['can']['create'] = $user->can('create widgets');
+			$data['can']['edit']   = $user->can('edit widgets');
+			$data['can']['delete'] = $user->can('delete widgets');
+			$data['can']['manage'] = $user->can('manage widgets');
+			$data['can']['admin']  = $user->can('admin widgets');
 		}
 
 		return $data;

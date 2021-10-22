@@ -247,15 +247,24 @@ class GroupResource extends JsonResource
 				});
 		}
 
+		$data['can']['create'] = false;
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
+		$data['can']['manage'] = false;
+		$data['can']['admin']  = false;
 
 		$user = auth()->user();
 
 		if ($user)
 		{
-			$data['can']['edit']   = ($user->can('edit groups') || ($user->can('edit.own groups') && $this->owneruserid == $user->id));
+			$managerids = $this->managers->pluck('userid')->toArray();
+			$managerids[] = $this->owneruserid;
+
+			$data['can']['create'] = $user->can('create groups');
+			$data['can']['edit']   = ($user->can('edit groups') || ($user->can('edit.own groups') && in_array($user->id, $managerids)));
 			$data['can']['delete'] = $user->can('delete groups');
+			$data['can']['manage'] = $user->can('manage groups');
+			$data['can']['admin']  = $user->can('admin groups');
 		}
 
 		return $data;

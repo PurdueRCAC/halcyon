@@ -19,8 +19,11 @@ class MemberResource extends JsonResource
 		$data['api'] = route('api.courses.members.read', ['id' => $this->id]);
 
 		$data['can'] = array(
+			'create' => false,
 			'edit'   => false,
 			'delete' => false,
+			'manage' => false,
+			'admin'  => false,
 		);
 
 		$data['user'] = array(
@@ -33,8 +36,10 @@ class MemberResource extends JsonResource
 
 		if ($user)
 		{
-			$data['can']['edit']   = ($user->can('edit groups') || ($user->can('edit.own groups') && $this->owneruserid == $user->id));
-			$data['can']['delete'] = $user->can('delete groups');
+			$data['can']['edit']   = ($user->can('edit courses') || ($user->can('edit.own courses') && $this->account->userid == $user->id));
+			$data['can']['delete'] = $user->can('delete courses');
+			$data['can']['manage'] = $user->can('manage courses');
+			$data['can']['admin']  = $user->can('admin courses');
 		}
 
 		// [!] Legacy compatibility

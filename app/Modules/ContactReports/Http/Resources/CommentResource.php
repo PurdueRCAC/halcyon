@@ -24,15 +24,21 @@ class CommentResource extends JsonResource
 
 		unset($data['report']);
 
+		$data['can']['create'] = false;
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
+		$data['can']['manage'] = false;
+		$data['can']['admin']  = false;
 
 		$user = auth()->user();
 
 		if ($user)
 		{
+			$data['can']['create'] = $user->can('create contactreports');
 			$data['can']['edit']   = ($user->can('edit contactreports') || ($user->can('edit.own contactreports') && $this->userid == $user->id));
 			$data['can']['delete'] = $user->can('delete contactreports');
+			$data['can']['manage'] = $user->can('manage contactreports');
+			$data['can']['admin']  = $user->can('admin contactreports');
 		}
 
 		return $data;

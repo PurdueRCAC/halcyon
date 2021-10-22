@@ -28,15 +28,21 @@ class PageResource extends JsonResource
 			$data['url'] = route('site.knowledge.page', ['uri' => $this->path]);
 		}
 
+		$data['can']['create'] = false;
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
+		$data['can']['manage'] = false;
+		$data['can']['admin']  = false;
 
 		$user = auth()->user();
 
 		if ($user)
 		{
-			$data['can']['edit']   = ($user->can('edit knowledge') || ($user->can('edit.own knowledge') && $this->userid == $user->id));
+			$data['can']['create'] = $user->can('create knowledge');
+			$data['can']['edit']   = $user->can('edit knowledge');
 			$data['can']['delete'] = $user->can('delete knowledge');
+			$data['can']['manage'] = $user->can('manage knowledge');
+			$data['can']['admin']  = $user->can('admin knowledge');
 		}
 
 		return $data;

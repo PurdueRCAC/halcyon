@@ -22,15 +22,21 @@ class OrderResource extends JsonResource
 		$data['api'] = route('api.orders.read', ['id' => $this->id]);
 		$data['url'] = route('site.orders.read', ['id' => $this->id]);
 
+		$data['can']['create'] = false;
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
+		$data['can']['manage'] = false;
+		$data['can']['admin']  = false;
 
 		$user = auth()->user();
 
 		if ($user)
 		{
-			$data['can']['edit']   = ($user->can('edit orders') || ($user->can('edit.own orders') && $item->userid == $user->id));
+			$data['can']['create'] = $user->can('create orders');
+			$data['can']['edit']   = ($user->can('edit orders') || ($user->can('edit.own orders') && ($this->userid == $user->id || $this->submitteruserid == $user->id)));
 			$data['can']['delete'] = $user->can('delete orders');
+			$data['can']['manage'] = $user->can('manage orders');
+			$data['can']['admin']  = $user->can('admin orders');
 		}
 
 		return $data; //parent::toArray($request);

@@ -23,14 +23,22 @@ class PageResource extends JsonResource
 
 		// Permissions check
 		$can = [
+			'create' => false,
 			'edit'   => false,
-			'delete' => false
+			'delete' => false,
+			'manage' => false,
+			'admin'  => false,
 		];
 
-		if (auth()->user())
+		$user = auth()->user();
+
+		if ($user)
 		{
-			$can['edit']   = (auth()->user()->can('edit pages') || (auth()->user()->can('edit.own pages') && $this->created_by == auth()->user()->id));
-			$can['delete'] = auth()->user()->can('delete pages');
+			$can['create'] = $user->can('create pages');
+			$can['edit']   = ($user->can('edit pages') || ($user->can('edit.own pages') && $this->created_by == $user->id));
+			$can['delete'] = $user->can('delete pages');
+			$can['manage'] = $user->can('manage pages');
+			$can['admin']  = $user->can('admin pages');
 		}
 
 		$this->setAttribute('can', $can);

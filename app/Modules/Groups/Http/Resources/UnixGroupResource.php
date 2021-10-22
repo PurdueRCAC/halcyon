@@ -61,15 +61,23 @@ class UnixGroupResource extends JsonResource
 			$data['datetimeremoved'] = null;
 		}
 
+		$data['can']['create'] = false;
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
+		$data['can']['manage'] = false;
+		$data['can']['admin']  = false;
 
 		$user = auth()->user();
 
 		if ($user)
 		{
-			$data['can']['edit']   = ($user->can('edit groups') || ($user->can('edit.own groups') && $this->group->owneruserid == $user->id));
-			$data['can']['delete'] = $user->can('delete groups');
+			$managerids = $this->group->managers->pluck('userid')->toArray();
+
+			$data['can']['create'] = ($user->can('manage groups') || in_array($user->id, $managerids));
+			$data['can']['edit']   = ($user->can('edit groups') || ($user->can('edit.own groups') && in_array($user->id, $managerids)));
+			$data['can']['delete'] = ($user->can('delete groups') || in_array($user->id, $managerids));
+			$data['can']['manage'] = $user->can('manage groups');
+			$data['can']['admin']  = $user->can('admin groups');
 		}
 
 		// [!] Legacy compatibility

@@ -31,16 +31,22 @@ class AccountResource extends JsonResource
 		}
 
 		$data['can'] = array(
+			'create' => false,
 			'edit'   => false,
 			'delete' => false,
+			'manage' => false,
+			'admin'  => false,
 		);
 
 		$user = auth()->user();
 
 		if ($user)
 		{
-			$data['can']['edit']   = ($user->can('edit groups') || ($user->can('edit.own groups') && $this->owneruserid == $user->id));
-			$data['can']['delete'] = $user->can('delete groups');
+			$data['can']['create'] = $user->can('create courses');
+			$data['can']['edit']   = ($user->can('edit courses') || ($user->can('edit.own courses') && $this->userid == $user->id));
+			$data['can']['delete'] = $user->can('delete courses');
+			$data['can']['manage'] = $user->can('manage courses');
+			$data['can']['admin']  = $user->can('admin courses');
 		}
 
 		// [!] Legacy compatibility

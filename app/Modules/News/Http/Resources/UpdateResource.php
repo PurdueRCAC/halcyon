@@ -24,8 +24,11 @@ class UpdateResource extends JsonResource
 
 		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
 
+		$data['can']['create'] = false;
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
+		$data['can']['manage'] = false;
+		$data['can']['admin']  = false;
 
 		$user = auth()->user();
 		if (!$user)
@@ -38,8 +41,11 @@ class UpdateResource extends JsonResource
 
 		if ($user)
 		{
+			$data['can']['create'] = $user->can('create news');
 			$data['can']['edit']   = ($user->can('edit news') || ($user->can('edit.own news') && $this->userid == $user->id));
 			$data['can']['delete'] = $user->can('delete news');
+			$data['can']['manage'] = $user->can('manage news');
+			$data['can']['admin']  = $user->can('admin news');
 		}
 
 		return $data;

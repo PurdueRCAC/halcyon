@@ -31,10 +31,6 @@ class ArticleResource extends JsonResource
 			$data['updates'][] = new UpdateResource($update);
 		}
 
-		/*$data['resources'] = $this->resources->each(function ($res, $key)
-		{
-			$res->name = $res->resource->name;
-		});*/
 		$data['resources'] = $this->resourceList()->get();
 
 		$data['associations'] = $this->associations->each(function ($res, $key)
@@ -46,21 +42,11 @@ class ArticleResource extends JsonResource
 			}
 		});
 
-		if (!$this->isUpdated())
-		{
-			$data['datetimeupdate'] = null;
-		}
-		if (!$this->isModified())
-		{
-			$data['datetimeedited'] = null;
-		}
-		if (!$this->isMailed())
-		{
-			$data['datetimemailed'] = null;
-		}
-
+		$data['can']['create'] = false;
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
+		$data['can']['manage'] = false;
+		$data['can']['admin']  = false;
 
 		$user = auth()->user();
 		if (!$user)
@@ -73,8 +59,11 @@ class ArticleResource extends JsonResource
 
 		if ($user)
 		{
+			$data['can']['create'] = $user->can('create news');
 			$data['can']['edit']   = ($user->can('edit news') || ($user->can('edit.own news') && $this->userid == $user->id));
 			$data['can']['delete'] = $user->can('delete news');
+			$data['can']['manage'] = $user->can('manage news');
+			$data['can']['admin']  = $user->can('admin news');
 		}
 
 		return $data;

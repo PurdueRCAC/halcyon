@@ -21,15 +21,21 @@ class CategoryResource extends JsonResource
 		$data['api'] = route('api.orders.categories.read', ['id' => $this->id]);
 		$data['url'] = route('site.orders.categories.edit', ['id' => $this->id]);
 
+		$data['can']['create'] = false;
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
+		$data['can']['manage'] = false;
+		$data['can']['admin']  = false;
 
 		$user = auth()->user();
 
 		if ($user)
 		{
+			$data['can']['create'] = $user->can('create orders.categories');
 			$data['can']['edit']   = $user->can('edit orders.categories');
 			$data['can']['delete'] = $user->can('delete orders.categories');
+			$data['can']['manage'] = $user->can('manage orders');
+			$data['can']['admin']  = $user->can('admin orders');
 		}
 
 		return $data; //parent::toArray($request);
