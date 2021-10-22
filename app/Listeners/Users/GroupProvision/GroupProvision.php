@@ -254,12 +254,12 @@ class GroupProvision
 			return;
 		}
 
+		$member = $event->member;
+
 		if (!$this->shouldHandleUnixgroup($member->unixgroup))
 		{
 			return;
 		}
-
-		$member = $event->member;
 
 		try
 		{
@@ -316,12 +316,12 @@ class GroupProvision
 			return;
 		}
 
+		$member = $event->member;
+
 		if (!$this->shouldHandleUnixgroup($member->unixgroup))
 		{
 			return;
 		}
-
-		$member = $event->member;
 
 		try
 		{
