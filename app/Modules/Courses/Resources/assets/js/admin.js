@@ -56,6 +56,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		.on('change', function () {
 			$('.type-dependant').hide();
 			$('.type-' + $(this).val()).show();
+			if ($(this).val() == 'workshop') {
+				$('#field-semester').val('Workshop');
+			}
 		})
 		.each(function (i, el) {
 			$('.type-' + $(el).val()).show();
