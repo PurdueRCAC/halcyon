@@ -75,12 +75,12 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-timeperiodcount">{{ trans('contactreports::contactreports.timeperiod count') }}:</label>
-					<input type="number" name="fields[timeperiodcount]" id="field-timeperiodcount" class="form-control" value="{{ $row->timeperiodcount }}" />
+					<input type="number" name="fields[timeperiodcount]" id="field-timeperiodcount" class="form-control" value="{{ $row->timeperiodcount ? $row->timeperiodcount : 0 }}" />
 				</div>
 
 				<div class="form-group">
 					<label for="field-timeperiodlimit">{{ trans('contactreports::contactreports.timeperiod limit') }}:</label>
-					<input type="number" name="fields[timeperiodlimit]" id="field-timeperiodlimit" class="form-control" value="{{ $row->timeperiodlimit }}" />
+					<input type="number" name="fields[timeperiodlimit]" id="field-timeperiodlimit" class="form-control" value="{{ $row->timeperiodlimit ? $row->timeperiodlimit : 0 }}" />
 				</div>
 			</fieldset>
 			<fieldset class="adminform">
@@ -103,7 +103,7 @@ app('pathway')
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="field-waitperiodcount">{{ trans('contactreports::contactreports.waitperiod count') }}:</label>
-							<input type="number" name="fields[waitperiodcount]" id="field-waitperiodcount" class="form-control" value="{{ $row->waitperiodcount }}" />
+							<input type="number" name="fields[waitperiodcount]" id="field-waitperiodcount" class="form-control" value="{{ $row->waitperiodcount ? $row->waitperiodcount : 0 }}" />
 						</div>
 					</div>
 			</fieldset>
