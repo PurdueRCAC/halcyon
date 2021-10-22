@@ -48,7 +48,7 @@ app('pathway')
 	@endif
 
 	<div class="row">
-		<div class="col-md-7">
+		<div class="col-md-6">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
@@ -58,10 +58,12 @@ app('pathway')
 					<span class="invalid-feedback">{{ trans('contactreports::contactreports.error.invalid name') }}</span>
 				</div>
 			</fieldset>
+		</div>
+		<div class="col col-md-6">
 			<fieldset class="adminform">
 				<legend>{{ trans('contactreports::contactreports.followup') }}</legend>
 
-				<p flass="form-text">{{ trans('contactreports::contactreports.followup desc') }}</p>
+				<p class="form-text">{{ trans('contactreports::contactreports.followup desc') }}</p>
 
 				<div class="form-group">
 					<label for="field-timeperiodid">{{ trans('contactreports::contactreports.timeperiod') }}</label>
@@ -74,42 +76,41 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-timeperiodcount">{{ trans('contactreports::contactreports.timeperiod count') }}:</label>
+					<label for="field-timeperiodcount">{{ trans('contactreports::contactreports.timeperiod count') }}</label>
 					<input type="number" name="fields[timeperiodcount]" id="field-timeperiodcount" class="form-control" value="{{ $row->timeperiodcount ? $row->timeperiodcount : 0 }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-timeperiodlimit">{{ trans('contactreports::contactreports.timeperiod limit') }}:</label>
+					<label for="field-timeperiodlimit">{{ trans('contactreports::contactreports.timeperiod limit') }}</label>
 					<input type="number" name="fields[timeperiodlimit]" id="field-timeperiodlimit" class="form-control" value="{{ $row->timeperiodlimit ? $row->timeperiodlimit : 0 }}" />
 				</div>
 			</fieldset>
+
 			<fieldset class="adminform">
 				<legend>{{ trans('contactreports::contactreports.wait period') }}</legend>
 
-				<p flass="form-text">{{ trans('contactreports::contactreports.wait period desc') }}</p>
+				<p class="form-text">{{ trans('contactreports::contactreports.wait period desc') }}</p>
 
 				<div class="row">
 					<div class="col-md-6">
-						<div class="form-group">
-							<label for="field-waitperiodid">{{ trans('contactreports::contactreports.waitperiod') }}:</label>
+						<div class="form-group mb-0">
+							<label for="field-waitperiodid">{{ trans('contactreports::contactreports.waitperiod') }}</label>
 							<select class="form-control" name="fields[waitperiodid]" id="field-waitperiodid">
 								<option value="0"<?php if (!$row->waitperiodid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
 								<?php foreach (App\Halcyon\Models\Timeperiod::all() as $period): ?>
-									<option value="{{ $period->id }}"<?php if ($row->waitperiodid == $period->id) { echo ' selected="selected"'; } ?>>{{ $period->name }}</option>
+									<option value="{{ $period->id }}"<?php if ($row->waitperiodid == $period->id) { echo ' selected="selected"'; } ?>>{{ $period->plural }}</option>
 								<?php endforeach; ?>
 							</select>
 						</div>
 					</div>
 					<div class="col-md-6">
-						<div class="form-group">
-							<label for="field-waitperiodcount">{{ trans('contactreports::contactreports.waitperiod count') }}:</label>
+						<div class="form-group mb-0">
+							<label for="field-waitperiodcount">{{ trans('contactreports::contactreports.waitperiod count') }}</label>
 							<input type="number" name="fields[waitperiodcount]" id="field-waitperiodcount" class="form-control" value="{{ $row->waitperiodcount ? $row->waitperiodcount : 0 }}" />
 						</div>
 					</div>
+				</div>
 			</fieldset>
-		</div>
-		<div class="col col-md-5">
-			@include('history::admin.history')
 		</div>
 	</div>
 

@@ -224,7 +224,7 @@ app('pathway')
 
 				<div class="row">
 					<div class="col-md-6">
-						<div class="form-group form-block">
+						<div class="form-group form-block mb-0">
 							<div class="form-check">
 								<input type="checkbox" name="fields[reservation]" id="field-reservation" class="form-check-input" value="1"<?php if ($row->reservation) { echo ' checked="checked"'; } ?> />
 								<label for="field-reservation" class="form-check-label">{{ trans('queues::queues.reservation') }}</label>
@@ -233,7 +233,7 @@ app('pathway')
 						</div>
 					</div>
 					<div class="col-md-6">
-						<div class="form-group form-block">
+						<div class="form-group form-block mb-0">
 							<div class="form-check">
 								<input type="checkbox" name="fields[free]" id="field-free" class="form-check-input" value="1"<?php if ($row->free) { echo ' checked="checked"'; } ?> />
 								<label for="field-free" class="form-check-label">{{ trans('queues::queues.free') }}</label>
@@ -284,13 +284,13 @@ app('pathway')
 
 				<div class="row">
 					<div class="col-sm-6">
-						<div class="form-group">
+						<div class="form-group mb-0">
 							<label for="field-maxijobfactor">{{ trans('queues::queues.max ijob factor') }}:</label>
 							<input type="number" name="fields[maxijobfactor]" id="field-maxijobfactor" class="form-control" min="0" value="{{ $row->maxijobfactor }}" />
 						</div>
 					</div>
 					<div class="col-sm-6">
-						<div class="form-group">
+						<div class="form-group mb-0">
 							<label for="field-maxijobuserfactor">{{ trans('queues::queues.max ijob user factor') }}:</label>
 							<input type="number" name="fields[maxijobuserfactor]" id="field-maxijobuserfactor" class="form-control" min="0" value="{{ $row->maxijobuserfactor }}" />
 						</div>
@@ -323,13 +323,13 @@ app('pathway')
 
 				<div class="row">
 					<div class="col-sm-6">
-						<div class="form-group">
+						<div class="form-group mb-0">
 							<label for="field-nodememmin">{{ trans('queues::queues.node mem min') }}:</label>
 							<input type="text" name="fields[nodememmin]" id="field-nodememmin" class="form-control" maxlength="250" value="{{ $row->nodememmin }}" />
 						</div>
 					</div>
 					<div class="col-sm-6">
-						<div class="form-group">
+						<div class="form-group mb-0">
 							<label for="field-nodememmax">{{ trans('queues::queues.node mem max') }}:</label>
 							<input type="text" name="fields[nodememmax]" id="field-nodememmax" class="form-control" maxlength="250" value="{{ $row->nodememmax }}" />
 						</div>
@@ -350,7 +350,7 @@ app('pathway')
 					</div>
 				</div>
 
-				<div class="form-group<?php if ($row->aclusersenabled) { echo ' hide'; } ?>">
+				<div class="form-group<?php if ($row->aclusersenabled) { echo ' d-none'; } ?> mb-0">
 					<label for="field-aclgroups">{{ trans('queues::queues.acl groups') }}:</label>
 					<input type="text" name="fields[aclgroups]" id="field-aclgroups" class="form-control" value="{{ $row->aclgroups }}" />
 					<span class="form-text text-muted">{{ trans('queues::queues.acl groups desc') }}</span>

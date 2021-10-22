@@ -1857,6 +1857,9 @@ fieldset fieldset legend {
   font-weight: 400;
   color: var(--legend-text);
 }
+fieldset>.form-group:last-child {
+  margin-bottom: 0;
+}
 .form-group > fieldset.radio {
   margin: 0;
   padding: 0.5em 1em;
@@ -2413,7 +2416,7 @@ fieldset:after {
   line-height: 0;
 }
 fieldset.adminform {
-  padding: 4rem 1.25rem .75rem 1.25rem;
+  padding: 4rem 1.25rem 1.25rem 1.25rem;
   background-color: var(--fieldset-bg);
   border: 1px solid var(--fieldset-br);
   -webkit-border-radius: 0.5rem;
