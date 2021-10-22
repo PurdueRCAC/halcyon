@@ -1491,6 +1491,12 @@ label {
   cursor: default;
   color: var(--label);
 }
+.form-group {
+  margin-bottom: 1.5rem;
+}
+fieldset>*:last-child {
+  margin-bottom: 0;
+}
 
 .form-group .select2-container--default .select2-selection--single {
   display: block;
@@ -1679,7 +1685,8 @@ table td .fltrt {
   line-height: 1;
   border-radius: 0.25em;
   margin: -2em 0.5em 0 0;
-  background-color: rgba(153, 74, 248, 0.2);
+  /*background-color: rgba(153, 74, 248, 0.2);*/
+  color: rgba(153, 74, 248, 1);
   margin: 0.75em 0 0 0;
 }
 .input-group + .char-counter {
@@ -1875,6 +1882,7 @@ label .required {
   font-weight: 400;
   color: var(--required);
   display: inline-block;
+  vertical-align: middle;
   background: transparent;
   padding: 0.25em 0.45em 0.25em 0.45em;
   line-height: 1;
@@ -2171,9 +2179,9 @@ table tbody td {
   margin: 0;
   padding: 0;
 }
-/*.card-body {
-  padding: 1.5rem;
-}*/
+.card-body {
+  padding: 2rem;
+}
 .card-body>*:first-child {
   margin-top: 0;
   padding-top: 0;
@@ -2416,7 +2424,7 @@ fieldset:after {
   line-height: 0;
 }
 fieldset.adminform {
-  padding: 4rem 1.25rem 1.25rem 1.25rem;
+  padding: 5rem 2rem 2rem 2rem;
   background-color: var(--fieldset-bg);
   border: 1px solid var(--fieldset-br);
   -webkit-border-radius: 0.5rem;
@@ -2428,7 +2436,7 @@ fieldset.adminform {
   border-color: var(--fieldset-hover);
 }*/
 fieldset.adminform>legend {
-  padding: .75rem 1.25rem;
+  padding: 1rem 2rem;
   text-indent: 0;
   color: var(--legend-text);
   font-weight: 700;

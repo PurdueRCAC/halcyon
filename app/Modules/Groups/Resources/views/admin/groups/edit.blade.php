@@ -58,14 +58,14 @@ app('pathway')
 
 				<div class="row">
 					<div class="col col-md-6">
-						<div class="form-group">
+						<div class="form-group mb-0">
 							<label for="field-unixgroup">{{ trans('groups::groups.unix group base name') }}:</label>
 							<input type="text" class="form-control input-unixgroup{{ $errors->has('fields.unixgroup') ? ' is-invalid' : '' }}" name="fields[unixgroup]" id="field-unixgroup" maxlength="10" pattern="[a-z0-9\-]+" value="{{ $row->unixgroup }}" />
 							<span class="form-text text-muted">{{ trans('groups::groups.unix group base name hint') }}</span>
 						</div>
 					</div>
 					<div class="col col-md-6">
-						<div class="form-group">
+						<div class="form-group mb-0">
 							<label for="field-unixid">{{ trans('groups::groups.unix id') }}:</label>
 							<input type="text" class="form-control" name="fields[unixid]" id="field-unixid" value="{{ $row->unixid }}" />
 							<span class="form-text text-muted">{{ trans('groups::groups.unix group id') }}</span>
@@ -201,7 +201,6 @@ app('pathway')
 					<tfoot>
 						<tr>
 							<td>
-								<div class="form-group">
 								<select name="department" id="department" data-category="collegedeptid" class="form-control searchable-select">
 									<option value="0">{{ trans('groups::groups.select department') }}</option>
 									@foreach ($departments as $d)
@@ -222,7 +221,6 @@ app('pathway')
 										<option value="{{ $d->id }}">{{ $prf . $d->name }}</option>
 									@endforeach
 								</select>
-								</div>
 							</td>
 							<td class="text-right">
 								<a href="#department"
@@ -280,7 +278,6 @@ app('pathway')
 					<tfoot>
 						<tr>
 							<td>
-								<div class="form-group">
 								<select name="fieldofscience" id="fieldofscience" data-category="fieldofscienceid" class="form-control searchable-select">
 									<option value="0">{{ trans('groups::groups.select field of science') }}</option>
 									@foreach ($fields as $f)
@@ -301,7 +298,6 @@ app('pathway')
 										<option value="{{ $f->id }}">{{ $prf . $f->name }}</option>
 									@endforeach
 								</select>
-								</div>
 							</td>
 							<td class="text-right">
 								<a href="#fieldofscience"
