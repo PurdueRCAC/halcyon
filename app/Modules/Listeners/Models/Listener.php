@@ -253,7 +253,7 @@ class Listener extends Model
 		}
 
 		$data = $this->toArray();
-		$data['params'] = $this->params->all(); //$this->options->toArray();
+		$data['params'] = $this->params->all();
 
 		$form->bind($data);
 

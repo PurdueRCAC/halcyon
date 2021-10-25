@@ -6,7 +6,6 @@ use App\Modules\ContactReports\Events\CommentPrepareContent;
 use App\Modules\News\Events\ArticlePrepareContent;
 use App\Modules\News\Events\UpdatePrepareContent;
 use App\Modules\Pages\Events\PageContentIsRendering;
-//use App\Halcyon\Config\Registry;
 use Illuminate\Support\Fluent;
 
 /**
