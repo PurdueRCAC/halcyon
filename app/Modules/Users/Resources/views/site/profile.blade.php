@@ -97,8 +97,6 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 			endif;
 			?>
 
-			@include('users::site.depot', ['user' => $user])
-
 			<div class="card panel panel-default mb-3">
 				<div class="card-header panel-heading">
 					Profile
