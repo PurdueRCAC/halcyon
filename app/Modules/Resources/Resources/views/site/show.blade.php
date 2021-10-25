@@ -134,11 +134,11 @@ $content = '';
 			<tbody>
 				<tr>
 					<th scope="row">Installed</th>
-					<td>{{ $resource->datetimecreated->format('Y-m-d') }}</td>
+					<td>{{ $resource->datetimecreated ? $resource->datetimecreated->format('Y-m-d') : trans('global.unknown') }}</td>
 				</tr>
 				<tr>
 					<th scope="row">Retired</th>
-					<td>{{ $resource->datetimeremoved->format('Y-m-d') }}</td>
+					<td>{{ $resource->datetimeremoved ? $resource->datetimeremoved->format('Y-m-d') : trans('global.unknown') }}</td>
 				</tr>
 				<?php /*<tr>
 					<th scope="row">Groups</th>
