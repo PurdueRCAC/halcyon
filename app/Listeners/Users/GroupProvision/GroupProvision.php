@@ -49,6 +49,22 @@ class GroupProvision
 	}
 
 	/**
+	 * Should this plugin handle this member?
+	 *
+	 * @param   object  $member
+	 * @return  bool
+	 */
+	private function shouldHandleMember($member)
+	{
+		if (substr($member->username, 0, 2) == 'x-')
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Handle a unix group being created
 	 *
 	 * @param   UnixGroupCreated  $event
@@ -256,7 +272,7 @@ class GroupProvision
 
 		$member = $event->member;
 
-		if (!$this->shouldHandleUnixgroup($member->unixgroup))
+		if (!$this->shouldHandleUnixgroup($member->unixgroup) || !$this->shouldHandleMember($member))
 		{
 			return;
 		}
@@ -318,7 +334,7 @@ class GroupProvision
 
 		$member = $event->member;
 
-		if (!$this->shouldHandleUnixgroup($member->unixgroup))
+		if (!$this->shouldHandleUnixgroup($member->unixgroup) || !$this->shouldHandleMember($member))
 		{
 			return;
 		}
