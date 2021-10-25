@@ -4,7 +4,7 @@ namespace App\Modules\Config\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Nwidart\Modules\Facades\Module;
-use App\Halcyon\Config\Registry;
+use App\Halcyon\Models\Casts\Params;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
@@ -53,11 +53,24 @@ class Extension extends Model
 	public $orderDir = 'asc';
 
 	/**
-	 * Configuration registry
+	 * The attributes that are mass assignable.
 	 *
-	 * @var  object
+	 * @var array
 	 */
-	protected $paramsRegistry = null;
+	protected $guarded = [
+		'id'
+	];
+
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'published' => 'integer',
+		'access' => 'integer',
+		'params' => Params::class,
+	];
 
 	/**
 	 * The path to the installed files
@@ -219,20 +232,6 @@ class Extension extends Model
 	}
 
 	/**
-	 * Get params as a Registry object
-	 *
-	 * @return  object
-	 */
-	public function params()
-	{
-		if (!($this->paramsRegistry instanceof Registry))
-		{
-			$this->paramsRegistry = new Registry($this->params);
-		}
-		return $this->paramsRegistry;
-	}
-
-	/**
 	 * Get a form
 	 *
 	 * @return  object
@@ -256,8 +255,8 @@ class Extension extends Model
 		}
 
 		//$data = $this->toArray();
-		//$data['params'] = $this->params()->toArray();
-		$data = $this->params()->toArray();
+		//$data['params'] = $this->params->all();
+		$data = $this->params->all();
 
 		$form->bind($data);
 
@@ -298,27 +297,5 @@ class Extension extends Model
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Save data
-	 *
-	 * @return  bool
-	 */
-	public function save(array $options = [])
-	{
-		if (is_array($this->params))
-		{
-			$params = new Registry($this->params);
-
-			$this->params = $params;
-		}
-
-		if ($this->params instanceof Registry)
-		{
-			$this->params = (string) $params->toString();
-		}
-
-		return parent::save($options);
 	}
 }

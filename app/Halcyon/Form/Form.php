@@ -4,10 +4,10 @@ namespace App\Halcyon\Form;
 
 use App\Halcyon\Form\Exception\InvalidData;
 use App\Halcyon\Form\Exception\MissingData;
-use App\Halcyon\Config\Registry;
 use App\Halcyon\Utility\Date;
 use App\Halcyon\Utility\Arr;
 use App\Halcyon\Utility\Sanitize;
+use Illuminate\Config\Repository;
 use Illuminate\Support\Fluent;
 use SimpleXMLElement;
 use Exception;
@@ -24,7 +24,7 @@ use Exception;
 class Form
 {
 	/**
-	 * The Registry data store for form fields during display.
+	 * The Repository data store for form fields during display.
 	 *
 	 * @var  object
 	 */
@@ -77,8 +77,8 @@ class Form
 		// Set the name for the form.
 		$this->name = $name;
 
-		// Initialise the Registry data.
-		$this->data = new Registry;
+		// Initialise the Repository data.
+		$this->data = new Repository;
 
 		// Set the options if specified.
 		$this->options['control'] = isset($options['control']) ? $options['control'] : false;
@@ -107,10 +107,10 @@ class Form
 		// Convert the input to an array.
 		if (is_object($data))
 		{
-			if ($data instanceof Registry)
+			if ($data instanceof Repository)
 			{
-				// Handle a Registry.
-				$data = $data->toArray();
+				// Handle a Repository.
+				$data = $data->all();
 			}
 			elseif ($data instanceof Fluent)
 			{
@@ -186,8 +186,8 @@ class Form
 		}
 
 		// Initialise variables.
-		$input  = new Registry($data);
-		$output = new Registry;
+		$input  = new Repository($data);
+		$output = new Repository;
 
 		// Get the fields for which to filter the data.
 		$fields = $this->findFieldsByGroup($group);
@@ -774,7 +774,7 @@ class Form
 	public function reset($xml = false)
 	{
 		unset($this->data);
-		$this->data = new Registry;
+		$this->data = new Repository;
 
 		if ($xml)
 		{
@@ -986,8 +986,8 @@ class Form
 		// Initialise variables.
 		$return = true;
 
-		// Create an input registry object from the data to validate.
-		$input = new Registry($data);
+		// Create an input repository object from the data to validate.
+		$input = new Repository($data);
 
 		// Get the fields for which to validate the data.
 		$fields = $this->findFieldsByGroup($group);
@@ -1708,7 +1708,7 @@ class Form
 	 * @param   string  $element  The XML element object representation of the form field.
 	 * @param   string  $group    The optional dot-separated form group path on which to find the field.
 	 * @param   mixed   $value    The optional value to use as the default for the field.
-	 * @param   object  $input    An optional Registry object with the entire data set to validate against the entire form.
+	 * @param   object  $input    An optional Repository object with the entire data set to validate against the entire form.
 	 * @return  mixed   Boolean true if field value is valid, Exception on failure.
 	 */
 	protected function validateField($element, $group = null, $value = null, $input = null)

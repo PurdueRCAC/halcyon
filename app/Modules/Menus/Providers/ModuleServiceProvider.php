@@ -4,9 +4,9 @@ namespace App\Modules\Menus\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Config\Repository;
 use App\Modules\Menus\Entities\Menu;
 use App\Modules\Menus\Listeners\InstallModule;
-use App\Halcyon\Config\Registry;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -59,7 +59,7 @@ class ModuleServiceProvider extends ServiceProvider
 
 		$this->app->singleton('menu.params', function($app)
 		{
-			$params = new Registry();
+			$params = new Repository();
 
 			$menu = $app['menu']->getActive();
 

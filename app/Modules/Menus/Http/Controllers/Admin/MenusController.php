@@ -78,7 +78,7 @@ class MenusController extends Controller
 
 		foreach ($results as $result)
 		{
-			$params = new \App\Halcyon\Config\Registry($result->params);
+			$params = new \Illuminate\Config\Repository(json_decode($result->params, true));
 
 			$menuType = $params->get('menutype');
 			if (!isset($widgets[$menuType]))

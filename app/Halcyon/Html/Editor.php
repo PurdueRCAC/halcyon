@@ -2,8 +2,6 @@
 
 namespace App\Halcyon\Html;
 
-use App\Halcyon\Config\Registry;
-
 /**
  * Editor class to handle WYSIWYG editors
  */
@@ -337,8 +335,8 @@ class Editor
 		// Get the plugin
 		$plugin = Listener::findByType('editors', $this->name);
 
-		$params = new Registry($plugin->params);
-		$params->merge($config);
+		$params = $plugin->params->all();
+		$params = array_merge($params, $config);
 
 		$plugin->params = $params;
 

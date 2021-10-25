@@ -161,11 +161,11 @@ class ModulesController extends Controller
 			unset($data['rules']);
 		}
 
-		$module->params = json_encode($data);
-		/*foreach ($data as $k => $v)
+		//$module->params = json_encode($data);
+		foreach ($data as $k => $v)
 		{
-			$module->params()->set($k, $v);
-		}*/
+			$module->params->set($k, $v);
+		}
 
 		// Attempt to save the configuration.
 		if (!$module->save())

@@ -2,19 +2,19 @@
 
 namespace App\Modules\Knowledge\Models;
 
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
-use App\Halcyon\Config\Registry;
-use App\Modules\History\Traits\Historable;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
+use App\Halcyon\Traits\ErrorBag;
+use App\Halcyon\Traits\Validatable;
+use App\Modules\History\Traits\Historable;
 use App\Modules\Knowledge\Events\PageCreating;
 use App\Modules\Knowledge\Events\PageCreated;
 use App\Modules\Knowledge\Events\PageUpdating;
 use App\Modules\Knowledge\Events\PageUpdated;
 use App\Modules\Knowledge\Events\PageDeleted;
 use App\Halcyon\Models\Casts\Params;
+use Carbon\Carbon;
 
 /**
  * Model class for a page
@@ -106,11 +106,11 @@ class Page extends Model
 	public static $orderDir = 'asc';
 
 	/**
-	 * Registry
+	 * Page variables
 	 *
 	 * @var  object
 	 */
-	protected $varsRegistry = null;
+	protected $varsRepository = null;
 
 	/**
 	 * Does the Doc exist?
@@ -143,18 +143,18 @@ class Page extends Model
 	}
 
 	/**
-	 * Get a params Registry object
+	 * Get a params Repository object
 	 *
 	 * @return  object
 	 */
 	public function getVariablesAttribute()
 	{
-		if (!($this->varsRegistry instanceof Registry))
+		if (!($this->varsRepository instanceof Collection))
 		{
-			$this->varsRegistry = new Registry($this->getVars());
+			$this->varsRepository = new Collection($this->getVars());
 		}
 
-		return $this->varsRegistry;
+		return $this->varsRepository;
 	}
 
 	/**
@@ -260,7 +260,7 @@ class Page extends Model
 			$vars['user']['usernameletter'] = substr(auth()->user()->username, 0, 1);
 			$vars['user']['staff'] = (auth()->user()->can('manage knowledge') ? 1 : 0);
 		}
-		$vars['resource'] = (array)$this->params->get('variables', []); //$this->variables->toArray(); //
+		$vars['resource'] = (array)$this->params->get('variables', []);
 		foreach ((array)$this->params->get('tags', []) as $tag)
 		{
 			if (in_array($tag, ['communitycluster', 'general', 'paidbutnonpbs', 'selfhome']))
@@ -270,6 +270,18 @@ class Page extends Model
 		}
 
 		return $vars;
+	}
+
+	/**
+	 * Merge variables
+	 *
+	 * @param   mixed   $collection
+	 * @return  void
+	 */
+	public function mergeVariables($collection)
+	{
+		$merged = $this->variables->merge($collection);
+		$this->varsRepository = $merged;
 	}
 
 	/**
@@ -363,7 +375,7 @@ class Page extends Model
 	 */
 	protected function replaceIfStatement($matches)
 	{
-		$vars = $this->variables->toArray(); //getVars();
+		$vars = $this->variables->toArray();
 
 		$clauses = array();
 
@@ -625,7 +637,7 @@ class Page extends Model
 				return false;
 			}
 
-			$child->variables->merge($parent->variables);
+			$child->mergeVariables($parent->variables);
 
 			$stack[] = $child;
 

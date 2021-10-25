@@ -23,9 +23,9 @@ class Widget
 	protected $model;
 
 	/**
-	 * Params registry
+	 * Params repository
 	 *
-	 * @var  App\Halcyon\Config\Registry
+	 * @var  Illuminate\Config\Repository
 	 */
 	protected $params;
 
@@ -49,7 +49,7 @@ class Widget
 
 		$this->name   = $name;
 		$this->model  = $model;
-		$this->params = $model->params;//();
+		$this->params = $model->params;
 	}
 
 	/**

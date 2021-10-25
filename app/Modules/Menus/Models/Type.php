@@ -282,7 +282,7 @@ class Type extends Model
 
 		foreach ($widgets as $widget)
 		{
-			$params = new \App\Halcyon\Config\Registry($widget->params);
+			$params = new \Illuminate\Config\Repository(json_decode($widget->params, true));
 
 			$menuType = $params->get('menutype');
 			if (!isset($result[$menuType]))

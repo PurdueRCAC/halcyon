@@ -5,10 +5,10 @@ use App\Halcyon\Utility\Arr;
 use App\Halcyon\Access\Asset;
 use App\Halcyon\Access\Gate;
 use App\Halcyon\Access\Rules;
-use App\Halcyon\Config\Registry;
 use App\Halcyon\Form\Form;
 use App\Modules\Users\Models\User;
 use Illuminate\Support\Fluent;
+use Illuminate\Config\Repository;
 
 /**
  * Permissions model
@@ -80,7 +80,7 @@ class Permissions extends Fluent
 		}
 
 		// Check for data in the session.
-		$temp = User::getState('com_config.config.global.data');
+		$temp = User::getState('module.config.global.data');
 
 		// Merge in the session data.
 		if (!empty($temp))
@@ -172,13 +172,13 @@ class Permissions extends Fluent
 		// Save the text filters
 		if (isset($data['filters']))
 		{
-			$registry = new Registry(array('filters' => $data['filters']));
+			//$registry = new Repository(array('filters' => $data['filters']));
 
 			$extension = Extension::findByElement('config');
 
 			if (!$extension->isNew())
 			{
-				$extension->set('params', (string) $registry);
+				$extension->params->set('filters', $data['filters']);
 				if (!$extension->save())
 				{
 					Notify::error('SOME_ERROR_CODE', $extension->getError());
@@ -193,9 +193,9 @@ class Permissions extends Fluent
 		}
 
 		// Get the previous configuration.
-		$config = new \App\Halcyon\Config\Repository('site');
+		$config = new Repository();
 
-		$prev = $config->toArray();
+		$prev = $config->all();
 
 		// We do this to preserve values that were not in the form.
 		// Note: We can't use array_merge() as we're trying to preserve
@@ -318,62 +318,5 @@ class Permissions extends Fluent
 		event('onApplicationAfterSave', array($data));
 
 		return $result;
-	}
-
-	/**
-	 * Method to unset the root_user value from configuration data.
-	 *
-	 * This method will load the global configuration data straight from
-	 * Config and remove the root_user value for security, then save the configuration.
-	 *
-	 * @return  boolean
-	 * @since   1.6
-	 */
-	public function removeroot()
-	{
-		// Get the previous configuration.
-		$prev = config()->all();
-
-		// Create the new configuration object, and unset the root_user property
-		unset($prev['root_user']);
-
-		$config = new Registry($prev);
-
-		// Write the configuration file.
-		return $this->writeConfigFile($config);
-	}
-
-	/**
-	 * Method to write the configuration to a file.
-	 *
-	 * @param   object  $config  A Registry object containing all global config data.
-	 * @return  bool    True on success, false on failure.
-	 * @since   2.5.4
-	 */
-	private function writeConfigFile($data)
-	{
-		if ($data instanceof \App\Halcyon\Config\Repository)
-		{
-			$data = $data->toArray();
-		}
-
-		// Attempt to write the configuration files
-		$writer = new \App\Halcyon\Config\FileWriter(
-			'php',
-			base_path('config')
-		);
-
-		$client = null;
-
-		foreach ($data as $group => $values)
-		{
-			if (!$writer->write($values, $group, $client))
-			{
-				$this->setError(trans('config::config.error.write failed'));
-				return false;
-			}
-		}
-
-		return true;
 	}
 }

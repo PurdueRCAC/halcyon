@@ -238,7 +238,7 @@ class Menu extends Fluent
 	 * Gets the parameter object for a certain menu item
 	 *
 	 * @param   integer  $id  The item id
-	 * @return  object   A Registry object
+	 * @return  object   A Repository object
 	 */
 	public function getParams($id)
 	{

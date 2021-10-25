@@ -102,7 +102,7 @@
 					@if (request('all'))
 						@foreach ($childs as $n)
 							@php
-								$n->page->variables->merge($page->variables);
+								$n->page->mergeVariables($page->variables);
 								$pa = $p ? $p . '/' . $n->page->alias : $n->page->alias;
 							@endphp
 							<section id="{{ str_replace('/', '_', $pa) }}">
@@ -118,7 +118,7 @@
 						<ul class="kb-toc">
 						@foreach ($childs as $n)
 							@php
-								$n->page->variables->merge($page->variables);
+								$n->page->mergeVariables($page->variables);
 								$pa = $p ? $p . '/' . $n->page->alias : $n->page->alias;
 							@endphp
 							<li>

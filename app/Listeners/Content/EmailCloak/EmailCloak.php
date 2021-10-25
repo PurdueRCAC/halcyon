@@ -7,7 +7,7 @@ use App\Modules\News\Events\ArticlePrepareContent;
 use App\Modules\News\Events\UpdatePrepareContent;
 use App\Modules\Pages\Events\PageContentIsRendering;
 use App\Halcyon\Utility\Str;
-use App\Halcyon\Config\Registry;
+use Illuminate\Config\Repository;
 
 /**
  * Email cloak listener
@@ -55,9 +55,9 @@ class EmailCloak
 			return;
 		}
 
-		$params = new Registry(config()->get('listeners.content.externalhref', []));
+		$params = new Repository(config()->get('listeners.content.externalhref', []));
 
-		$mode = $params->def('mode', 1);
+		$mode = $params->get('mode', 1);
 
 		// any@email.address.com
 		$searchEmail = '([\w\.\-\+]+\@(?:[a-z0-9\.\-]+\.)+(?:[a-zA-Z0-9\-]{2,10}))';

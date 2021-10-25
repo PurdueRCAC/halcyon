@@ -93,7 +93,8 @@ class PagesController extends Controller
 				{
 					$node->state = 2;
 				}
-				$page->variables->merge($prev->page->variables);
+
+				$page->mergeVariables($prev->page->variables);
 			}
 
 			app('pathway')->append(

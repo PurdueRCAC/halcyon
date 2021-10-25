@@ -44,7 +44,7 @@ class Menu extends Widget
 	/**
 	 * Get a list of the menu items.
 	 *
-	 * @param   object  $params  Registry The module options.
+	 * @param   object  $params  The widget options.
 	 * @return  array
 	 */
 	protected static function getList($menu, &$params)

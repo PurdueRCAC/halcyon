@@ -23,7 +23,7 @@ class Listener
 	/**
 	 * Params registry
 	 *
-	 * @var  App\Halcyon\Config\Registry
+	 * @var  Illuminate\Config\Repository
 	 */
 	protected $params;
 
@@ -51,7 +51,7 @@ class Listener
 
 		$this->name   = $name;
 		$this->model  = $model;
-		$this->params = $model->params();
+		$this->params = $model->params;
 	}
 
 	/**

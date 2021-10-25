@@ -4,7 +4,6 @@ namespace App\Modules\Core\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Nwidart\Modules\Facades\Module;
-use App\Halcyon\Core\Registry;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
@@ -64,13 +63,6 @@ class Extension extends Model
 		'access' => 'integer',
 		'params' => Params::class,
 	];
-
-	/**
-	 * Coreuration registry
-	 *
-	 * @var  object
-	 */
-	//protected $paramsRegistry = null;
 
 	/**
 	 * The path to the installed files
@@ -242,20 +234,6 @@ class Extension extends Model
 	}
 
 	/**
-	 * Get params as a Registry object
-	 *
-	 * @return  object
-	 */
-	/*public function params()
-	{
-		if (!($this->paramsRegistry instanceof Registry))
-		{
-			$this->paramsRegistry = new Registry($this->params);
-		}
-		return $this->paramsRegistry;
-	}*/
-
-	/**
 	 * Get a form
 	 *
 	 * @return  object
@@ -322,26 +300,4 @@ class Extension extends Model
 
 		return $data;
 	}
-
-	/**
-	 * Save data
-	 *
-	 * @return  bool
-	 */
-	/*public function save(array $options = [])
-	{
-		if (is_array($this->params))
-		{
-			$params = new Registry($this->params);
-
-			$this->params = $params;
-		}
-
-		if ($this->params instanceof Registry)
-		{
-			$this->params = (string) $params->toString();
-		}
-
-		return parent::save($options);
-	}*/
 }

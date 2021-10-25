@@ -2,7 +2,6 @@
 namespace App\Modules\Users\Models;
 
 use Illuminate\Notifications\Notifiable;
-use App\Halcyon\Config\Registry;
 use App\Halcyon\Access\Gate;
 use App\Halcyon\Access\Map;
 use App\Halcyon\Access\Role;

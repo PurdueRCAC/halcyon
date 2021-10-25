@@ -3,7 +3,7 @@
 namespace App\Modules\Themes\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Halcyon\Config\Registry;
+use App\Halcyon\Models\Casts\Params;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Form\Form;
@@ -64,7 +64,7 @@ class Theme extends Model
 		'enabled' => 'integer',
 		'access' => 'integer',
 		'protected' => 'integer',
-		//'params' => 'object',
+		'params' => Params::class,
 	];
 
 	/**
@@ -84,13 +84,6 @@ class Theme extends Model
 	protected $dates = [
 		'checked_out_time',
 	];
-
-	/**
-	 * Configuration registry
-	 *
-	 * @var  object
-	 */
-	protected $paramsRegistry = null;
 
 	/**
 	 * The path to the installed files
@@ -172,22 +165,9 @@ class Theme extends Model
 	}
 
 	/**
-	 * Get params as a Registry object
+	 * Where the extension is a theme
 	 *
-	 * @return  object
-	 */
-	public function getOptionsAttribute()
-	{
-		if (!($this->paramsRegistry instanceof Registry))
-		{
-			$this->paramsRegistry = new Registry($this->getOriginal('params'));
-		}
-		return $this->paramsRegistry;
-	}
-
-	/**
-	 * Get params as a Registry object
-	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereIsTheme($query)
@@ -224,7 +204,7 @@ class Theme extends Model
 		}
 
 		$data = $this->toArray();
-		$data['params'] = $this->options->toArray();
+		$data['params'] = $this->params->all();
 
 		$form->bind($data);
 

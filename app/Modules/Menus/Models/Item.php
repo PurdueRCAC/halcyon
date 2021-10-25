@@ -102,27 +102,6 @@ class Item extends Model
 	];
 
 	/**
-	 * Configuration registry
-	 *
-	 * @var  object
-	 */
-	//protected $paramsRegistry = null;
-
-	/**
-	 * Get params as a Registry object
-	 *
-	 * @return  object
-	 */
-	/*public function params()
-	{
-		if (!($this->paramsRegistry instanceof Registry))
-		{
-			$this->paramsRegistry = new Registry($this->getOriginal('params'));
-		}
-		return $this->paramsRegistry;
-	}*/
-
-	/**
 	 * Set alias field value
 	 *
 	 * @param   string  $alias

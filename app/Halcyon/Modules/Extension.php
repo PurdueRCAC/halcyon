@@ -3,7 +3,7 @@
 namespace App\Halcyon\Modules;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Halcyon\Config\Registry;
+use App\Halcyon\Models\Casts\Params;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Traits\Checkable;
@@ -75,7 +75,7 @@ class Extension extends Model
 	protected $casts = [
 		'published' => 'integer',
 		'access' => 'integer',
-		'params' => 'object',
+		'params' => Params::class,
 	];
 
 	/**
@@ -89,33 +89,11 @@ class Extension extends Model
 	];
 
 	/**
-	 * Configuration registry
-	 *
-	 * @var  object
-	 */
-	protected $paramsRegistry = null;
-
-	/**
 	 * The path to the installed files
 	 *
 	 * @var  string
 	 */
 	protected $path = null;
-
-	/**
-	 * Get params as a Registry object
-	 *
-	 * @return  object
-	 */
-	//public function getParamsAttribute()
-	public function params()
-	{
-		if (!($this->paramsRegistry instanceof Registry))
-		{
-			$this->paramsRegistry = new Registry($this->getOriginal('params'));
-		}
-		return $this->paramsRegistry;
-	}
 
 	/**
 	 * Determine if record is published
@@ -305,7 +283,7 @@ class Extension extends Model
 		}
 
 		$data = $this->toArray();
-		$data['params'] = $this->params()->toArray();
+		$data['params'] = $this->params->all();
 
 		$form->bind($data);
 

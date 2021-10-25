@@ -4,11 +4,11 @@ namespace App\Modules\Widgets\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\Halcyon\Config\Registry;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Traits\Checkable;
 use App\Halcyon\Form\Form;
+use App\Halcyon\Models\Casts\Params;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Widgets\Events\WidgetCreating;
 use App\Modules\Widgets\Events\WidgetCreated;
@@ -16,7 +16,6 @@ use App\Modules\Widgets\Events\WidgetUpdating;
 use App\Modules\Widgets\Events\WidgetUpdated;
 use App\Modules\Widgets\Events\WidgetDeleted;
 use Carbon\Carbon;
-use App\Halcyon\Models\Casts\Params;
 
 /**
  * Module extension model
@@ -133,21 +132,6 @@ class Widget extends Model
 			$model->setAttribute('ordering', (int)$result);
 		});
 	}
-
-	/**
-	 * Get params as a Registry object
-	 *
-	 * @return  object
-	 */
-	//public function getParamsAttribute()
-	/*public function params()
-	{
-		if (!($this->paramsRegistry instanceof Registry))
-		{
-			$this->paramsRegistry = new Registry($this->getOriginal('params'));
-		}
-		return $this->paramsRegistry;
-	}*/
 
 	/**
 	 * Determine if record is enabled

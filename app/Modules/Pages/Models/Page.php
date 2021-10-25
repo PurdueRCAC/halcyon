@@ -1,15 +1,9 @@
 <?php
-/**
- * @package   halcyon-cms
- * @copyright Copyright 2005-2015 Halcyon Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Modules\Pages\Models;
 
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
-use App\Halcyon\Config\Registry;
 use App\Modules\History\Traits\Historable;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -118,20 +112,6 @@ class Page extends Model
 	 * @var  string
 	 */
 	public static $orderDir = 'asc';
-
-	/**
-	 * Registry
-	 *
-	 * @var  object
-	 */
-	//protected $paramsRegistry = null;
-
-	/**
-	 * Registry params object 
-	 *
-	 * @var  object
-	 */
-	//protected $metadataRegistry = null;
 
 	/**
 	 * Generates automatic alias field value
@@ -247,21 +227,6 @@ class Page extends Model
 			$rgt = $lft + 1;
 		}
 		return $rgt;
-	}*/
-
-	/**
-	 * Get a params Registry object
-	 *
-	 * @return  object
-	 */
-	/*public function getOptionsAttribute()
-	{
-		if (!($this->paramsRegistry instanceof Registry))
-		{
-			$this->paramsRegistry = new Registry($this->getOriginal('params'));
-		}
-
-		return $this->paramsRegistry;
 	}*/
 
 	/**
@@ -412,21 +377,6 @@ class Page extends Model
 	/*public function getMetakeyAttribute()
 	{
 		return $this->current->metakey;
-	}*/
-
-	/**
-	 * Get metadata from current version
-	 *
-	 * @return  object
-	 */
-	/*public function getMetadataAttribute()
-	{
-		if (!($this->metadataRegistry instanceof Registry))
-		{
-			$this->metadataRegistry = new Registry($this->current->metadata);
-		}
-
-		return $this->metadataRegistry;
 	}*/
 
 	/**

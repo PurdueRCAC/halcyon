@@ -4,7 +4,6 @@ namespace App\Modules\Listeners\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use App\Halcyon\Config\Registry;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Traits\Checkable;
@@ -102,13 +101,6 @@ class Listener extends Model
 	];*/
 
 	/**
-	 * Configuration registry
-	 *
-	 * @var  object
-	 */
-	protected $paramsRegistry = null;
-
-	/**
 	 * The path to the installed files
 	 *
 	 * @var  string
@@ -127,21 +119,6 @@ class Listener extends Model
 			->where('type', '=', 'listener')
 			->get(is_array($columns) ? $columns : func_get_args());
 	}
-
-	/**
-	 * Get params as a Registry object
-	 *
-	 * @return  object
-	 */
-	//public function getParamsAttribute()
-	/*public function getOptionsAttribute()
-	{
-		if (!($this->paramsRegistry instanceof Registry))
-		{
-			$this->paramsRegistry = new Registry($this->params, 'json');
-		}
-		return $this->paramsRegistry;
-	}*/
 
 	/**
 	 * Get the installed path

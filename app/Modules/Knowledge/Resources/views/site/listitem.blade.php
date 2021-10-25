@@ -1,7 +1,7 @@
 @php
 $path .= $path ? '/' . $node->page->alias : $node->page->alias;
 
-$node->page->variables->merge($variables, true);
+$node->page->mergeVariables($variables);
 
 $isActive = (count($current) == 1 && $current[0] == $node->page->alias);
 $children = $node->publishedChildren();

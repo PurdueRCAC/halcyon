@@ -2,7 +2,7 @@
 
 namespace App\Modules\Themes\Entities;
 
-use App\Halcyon\Config\Registry;
+use Illuminate\Config\Repository;
 //use Illuminate\Container\Container;
 use Illuminate\Support\Str;
 
@@ -54,7 +54,11 @@ class Theme
 		//$this->app = $app;
 		$this->name = $name;
 		$this->path = realpath($path);
-		$this->params = new Registry($params);
+		if (is_string($params))
+		{
+			$params = json_decode($params, true);
+		}
+		$this->params = new Repository($params);
 	}
 
 	/**
@@ -200,7 +204,7 @@ class Theme
 	 *
 	 * @return Json
 	 */
-	public function json($file = null): Registry
+	public function json($file = null): Repository
 	{
 		if ($file === null)
 		{
@@ -209,7 +213,7 @@ class Theme
 
 		return Arr::get($this->themeJson, $file, function () use ($file)
 		{
-			return $this->themeJson[$file] = new Registry($this->getPath() . '/' . $file);
+			return $this->themeJson[$file] = new Repository(json_decode(file_get_contents($this->getPath() . '/' . $file), true));
 		});
 	}
 

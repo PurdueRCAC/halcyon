@@ -25,7 +25,7 @@ class AuthController extends Controller
 
 		foreach ($plugins as $p)
 		{
-			$pparams = new Registry($p->params);
+			$pparams = $p->params;
 
 			// Make sure it supports admin login
 			if (!$pparams->get('admin_login', false))
