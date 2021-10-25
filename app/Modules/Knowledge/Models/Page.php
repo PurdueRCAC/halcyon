@@ -442,6 +442,10 @@ class Page extends Model
 
 			if (isset($vars[$clause['tag']][$clause['var']]))
 			{
+				if (!is_string($vars[$clause['tag']][$clause['var']]))
+				{
+					$vars[$clause['tag']][$clause['var']] = array_unshift($vars[$clause['tag']][$clause['var']]);
+				}
 				$left = trim($vars[$clause['tag']][$clause['var']]);
 
 				$left = (is_integer($left) ? (int)$left : $left);
