@@ -280,7 +280,7 @@ class Page extends Model
 	 */
 	public function mergeVariables($collection)
 	{
-		$merged = $this->variables->merge($collection);
+		$merged = $this->variables->mergeRecursive($collection);
 		$this->varsRepository = $merged;
 	}
 
