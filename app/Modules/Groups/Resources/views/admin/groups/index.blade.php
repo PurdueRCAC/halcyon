@@ -196,28 +196,21 @@ app('pathway')
 					@endif
 				</td>
 				<td>
-					@if (auth()->user()->can('edit groups'))
-						<a href="{{ route('admin.groups.show', ['id' => $row->id]) }}">
-					@endif
-						<?php echo $row->unixgroup ? e($row->unixgroup) : '<span class="unknown">' . trans('global.none') . '</span>'; ?>
-					@if (auth()->user()->can('edit groups'))
-						</a>
+					@if ($row->unixgroup)
+						@if (auth()->user()->can('edit groups'))
+							<a href="{{ route('admin.groups.show', ['id' => $row->id]) }}">
+						@endif
+								{{ $row->unixgroup }}
+						@if (auth()->user()->can('edit groups'))
+							</a>
+						@endif
 					@endif
 				</td>
 				<td class="priority-4 text-right">
-					<a href="{{ route('admin.groups.members', ['group' => $row->id]) }}">
-						{{ $row->members_count }}
-					</a>
+					{{ $row->members_count }}
 				</td>
 				<td class="priority-4">
-					<?php
-					$departments = array();
-					foreach ($row->departmentList as $d)
-					{
-						$departments[] = $d->name;
-					}
-					echo !empty($departments) ? e(implode(', ', $departments)) : '<span class="unknown">' . trans('global.none') . '</span>';
-					?>
+					{{ implode(', ', $row->departmentList->pluck('name')->toArray()) }}
 				</td>
 			</tr>
 		@endforeach
@@ -237,11 +230,13 @@ app('pathway')
 
 		<div class="form-group">
 			<label for="field-name">{{ trans('groups::groups.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-			<input type="text" name="fields[name]" id="field-name" class="form-control required" maxlength="250" value="" />
+			<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="250" value="" />
 		</div>
 
-		<div class="form-group text-center">
-			<button class="btn btn-primary" id="add-group" data-api="{{ route('api.groups.create') }}" data-route="{{ route('admin.groups.edit', ['id' => '-id-']) }}"><span class="icon-plus"></span> Add</button>
+		<div class="form-group text-right">
+			<button class="btn btn-success" id="add-group" data-api="{{ route('api.groups.create') }}" data-route="{{ route('admin.groups.edit', ['id' => '-id-']) }}">
+				<span class="icon-plus"></span> Add
+			</button>
 		</div>
 	</div>
 

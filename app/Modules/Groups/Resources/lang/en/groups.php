@@ -8,6 +8,7 @@ return [
 	'username' => 'Username',
 	'members' => 'Members',
 	'slug' => 'Slug',
+	'create group' => 'Create Group',
 	'created' => 'Created',
 	'creator' => 'Creator',
 	'modifier' => 'Modifier',
