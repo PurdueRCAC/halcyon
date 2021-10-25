@@ -4,11 +4,10 @@ namespace App\Halcyon\Form;
 
 use App\Halcyon\Form\Exception\InvalidData;
 use App\Halcyon\Form\Exception\MissingData;
-use App\Halcyon\Utility\Date;
-use App\Halcyon\Utility\Arr;
 use App\Halcyon\Utility\Sanitize;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Fluent;
+use Carbon\Carbon;
 use SimpleXMLElement;
 use Exception;
 
@@ -132,7 +131,7 @@ class Form
 				// If the field exists set the value.
 				$this->data->set($k, $v);
 			}
-			elseif (is_object($v) || Arr::isAssociative($v))
+			elseif (is_object($v) || self::isAssociative($v))
 			{
 				// If the value is an object or an associative array hand it off to the recursive bind level method.
 				$this->bindLevel($k, $v);
@@ -140,6 +139,28 @@ class Form
 		}
 
 		return true;
+	}
+
+	/**
+	 * Method to determine if an array is an associative array.
+	 *
+	 * @param   array    $array  An array to test.
+	 * @return  boolean  True if the array is an associative array.
+	 */
+	private static function isAssociative($array)
+	{
+		if (is_array($array))
+		{
+			foreach (array_keys($array) as $k => $v)
+			{
+				if ($k !== $v)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -162,7 +183,7 @@ class Form
 				// If the field exists set the value.
 				$this->data->set($group . '.' . $k, $v);
 			}
-			elseif (is_object($v) || Arr::isAssociative($v))
+			elseif (is_object($v) || self::isAssociative($v))
 			{
 				// If the value is an object or an associative array, hand it off to the recursive bind level method
 				$this->bindLevel($group . '.' . $k, $v);
@@ -1098,8 +1119,8 @@ class Form
 					$value = get_object_vars($value);
 				}
 				$value = is_array($value) ? $value : array($value);
+				$value = array_map('intval', $value);
 
-				Arr::toInteger($value);
 				$return = $value;
 				break;
 
@@ -1116,7 +1137,7 @@ class Form
 					$offset = app('config')->get('offset');
 
 					// Return an SQL formatted datetime string in UTC.
-					$return = with(new Date($value, $offset))->toSql();
+					$return = Carbon::parse($value)->setTimezone('UTC')->toDateTimeString();
 				}
 				else
 				{
@@ -1129,10 +1150,10 @@ class Form
 				if (intval($value) > 0)
 				{
 					// Get the user timezone setting defaulting to the server timezone setting.
-					$offset = app('user')->getParam('timezone', app('config')->get('offset'));
+					$offset = app('user')->getParam('timezone');
 
 					// Return a MySQL formatted datetime string in UTC.
-					$return = with(new Date($value, $offset))->toSql();
+					$return = Carbon::parse($value, $offset)->setTimezone('UTC')->toDateTimeString();
 				}
 				else
 				{

@@ -11,19 +11,19 @@ $hide = Illuminate\Support\Facades\Request::input('hidemainmenu');
 			<?php
 			if ($hide):
 				if (isset ($item[2]) && $item[2] == 1):
-					?><span class="nolink active"><?php echo $item[0]; ?></span><?php
+					?><span class="nolink active"><?php echo e($item[0]); ?></span><?php
 				else:
-					?><span class="nolink"><?php echo $item[0]; ?></span><?php
+					?><span class="nolink"><?php echo e($item[0]); ?></span><?php
 				endif;
 			else:
 				if (strlen($item[1])):
 					if (isset ($item[2]) && $item[2] == 1):
-						?><a class="active" href="<?php echo App\Halcyon\Utility\Str::ampReplace($item[1]); ?>"><?php echo $item[0]; ?></a><?php
+						?><a class="active" href="<?php echo App\Halcyon\Utility\Str::ampReplace($item[1]); ?>"><?php echo e($item[0]); ?></a><?php
 					else:
-						?><a href="<?php echo App\Halcyon\Utility\Str::ampReplace($item[1]); ?>"><?php echo $item[0]; ?></a><?php
+						?><a href="<?php echo App\Halcyon\Utility\Str::ampReplace($item[1]); ?>"><?php echo e($item[0]); ?></a><?php
 					endif;
 				else:
-					?><?php echo $item[0]; ?><?php
+					?><?php echo e($item[0]); ?><?php
 				endif;
 			endif;
 			?>
@@ -31,17 +31,13 @@ $hide = Illuminate\Support\Facades\Request::input('hidemainmenu');
 	<?php endforeach; ?>
 </ul>
 <?php
-if (app()->has('subsubmenu'))
-{
-	$list = app('subsubmenu')->getItems();
-}
-else
-{
-	$list = array();
-}
+$list = array();
 
-if (is_array($list) && count($list))
-{
+if (app()->has('subsubmenu')):
+	$list = app('subsubmenu')->getItems();
+endif;
+
+if (is_array($list) && count($list)):
 	?>
 	<nav role="navigation" class="sub sub-navigation">
 		<ul>
@@ -50,19 +46,19 @@ if (is_array($list) && count($list))
 					<?php
 					if ($hide):
 						if (isset ($item[2]) && $item[2] == 1):
-							?><span class="nolink active"><?php echo $item[0]; ?></span><?php
+							?><span class="nolink active"><?php echo e($item[0]); ?></span><?php
 						else:
-							?><span class="nolink"><?php echo $item[0]; ?></span><?php
+							?><span class="nolink"><?php echo e($item[0]); ?></span><?php
 						endif;
 					else:
 						if (strlen($item[1])):
 							if (isset ($item[2]) && $item[2] == 1):
-								?><a class="active" href="<?php echo App\Halcyon\Utility\Str::ampReplace($item[1]); ?>"><?php echo $item[0]; ?></a><?php
+								?><a class="active" href="<?php echo App\Halcyon\Utility\Str::ampReplace($item[1]); ?>"><?php echo e($item[0]); ?></a><?php
 							else:
-								?><a href="<?php echo App\Halcyon\Utility\Str::ampReplace($item[1]); ?>"><?php echo $item[0]; ?></a><?php
+								?><a href="<?php echo App\Halcyon\Utility\Str::ampReplace($item[1]); ?>"><?php echo e($item[0]); ?></a><?php
 							endif;
 						else:
-							?><?php echo $item[0]; ?><?php
+							?><?php echo e($item[0]); ?><?php
 						endif;
 					endif;
 					?>
@@ -71,4 +67,4 @@ if (is_array($list) && count($list))
 		</ul>
 	</nav>
 	<?php
-}
+endif;

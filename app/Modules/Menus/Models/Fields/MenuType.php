@@ -52,7 +52,11 @@ class MenuType extends Select
 			default:
 				$link = $this->form->getValue('link');
 				// Clean the link back to the option, view and layout
-				$value = \App\Halcyon\Utility\Arr::getValue($rlu, $link); //MenusHelper::getLinkKey($link));
+				$value = null;
+				if (isset($rlu[$link]))
+				{
+					$value = $rlu[$link];
+				}
 				break;
 		}
 		// Load the javascript and css

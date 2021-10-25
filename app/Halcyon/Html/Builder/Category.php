@@ -2,8 +2,6 @@
 
 namespace App\Halcyon\Html\Builder;
 
-use App\Halcyon\Utility\Arr;
-
 /**
  * Utility class for categories
  */
@@ -104,7 +102,7 @@ class Category
 				}
 				elseif (is_array($config['filter.published']))
 				{
-					Arr::toInteger($config['filter.published']);
+					$config['filter.published'] = array_map('intval', $config['filter.published']);
 					$query->whereIn('a.published', $config['filter.published']);
 				}
 			}

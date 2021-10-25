@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Halcyon\Database;
+namespace App\Halcyon\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

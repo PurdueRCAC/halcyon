@@ -225,14 +225,6 @@ app('pathway')
 
 			$incomplete = false;
 			$authenticator = 'database';
-			/*if (substr($row->email, -8) == '@invalid'):
-				$authenticator = trans('global.unknown');
-				if ($lnk = App\Halcyon\Auth\Link::find_by_id(abs($row->username))):
-					$domain = App\Halcyon\Auth\Domain::find_by_id($lnk->auth_domain_id);
-					$authenticator = $domain->authenticator;
-				endif;
-				$incomplete = true;
-			endif;*/
 			?>
 			<tr<?php if ($row->trashed()) { echo ' class="trashed"'; } ?>>
 				<td>

@@ -37,14 +37,17 @@ class Url extends Rule
 		// Use the full list or optionally specify a list of permitted schemes.
 		if ($element['schemes'] == '')
 		{
-			$scheme = array('http', 'https', 'ftp', 'ftps', 'gopher', 'mailto', 'news', 'prospero', 'telnet', 'rlogin', 'tn3270', 'wais', 'url',
-				'mid', 'cid', 'nntp', 'tel', 'urn', 'ldap', 'file', 'fax', 'modem', 'git');
+			$scheme = array(
+				'http', 'https', 'ftp', 'ftps', 'gopher', 'mailto', 'news', 'prospero',
+				'telnet', 'rlogin', 'tn3270', 'wais', 'url', 'mid', 'cid', 'nntp',
+				'tel', 'urn', 'ldap', 'file', 'fax', 'modem', 'git'
+			);
 		}
 		else
 		{
 			$scheme = explode(',', $element['schemes']);
-
 		}
+
 		// This rule is only for full URLs with schemes because  parse_url does not parse
 		// accurately without a scheme.
 		// @see http://php.net/manual/en/function.parse-url.php
@@ -52,6 +55,7 @@ class Url extends Rule
 		{
 			return false;
 		}
+
 		$urlScheme = (string) $urlParts['scheme'];
 		$urlScheme = strtolower($urlScheme);
 		if (in_array($urlScheme, $scheme) == false)
@@ -60,9 +64,8 @@ class Url extends Rule
 		}
 
 		// For some schemes here must be two slashes.
-		if (($urlScheme == 'http' || $urlScheme == 'https' || $urlScheme == 'ftp' || $urlScheme == 'sftp' || $urlScheme == 'gopher'
-			|| $urlScheme == 'wais' || $urlScheme == 'gopher' || $urlScheme == 'prospero' || $urlScheme == 'telnet' || $urlScheme == 'git')
-			&& ((substr($value, strlen($urlScheme), 3)) !== '://'))
+		if (in_array($urlScheme, ['http', 'https', 'ftp', 'sftp', 'gopher', 'wais', 'gopher', 'prospero', 'telnet', 'git'])
+			&& substr($value, strlen($urlScheme), 3) !== '://')
 		{
 			return false;
 		}

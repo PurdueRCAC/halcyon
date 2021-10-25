@@ -2,7 +2,6 @@
 
 namespace App\Halcyon\Html\Builder;
 
-use App\Halcyon\Utility\Arr;
 use stdClass;
 
 /**
@@ -98,7 +97,7 @@ class Select
 		{
 			if (is_array($options['list.attr']))
 			{
-				$attribs = Arr::toString($options['list.attr']);
+				$attribs = self::toString($options['list.attr']);
 			}
 			else
 			{
@@ -172,7 +171,7 @@ class Select
 		{
 			if (is_array($options['list.attr']))
 			{
-				$attribs = Arr::toString($options['list.attr']);
+				$attribs = self::toString($options['list.attr']);
 			}
 			else
 			{
@@ -600,7 +599,7 @@ class Select
 				}
 				if (is_array($attr))
 				{
-					$attr = Arr::toString($attr);
+					$attr = self::toString($attr);
 				}
 				else
 				{
@@ -662,7 +661,7 @@ class Select
 
 		if (is_array($attribs))
 		{
-			$attribs = Arr::toString($attribs);
+			$attribs = self::toString($attribs);
 		}
 
 		$id_text = $idtag ? $idtag : $name;
@@ -778,5 +777,41 @@ class Select
 			$html = '<input type="hidden" name="' . $name . '" value="' . (int) $selected . '" />' . '<span class="readonly">' . $text . '</span>';
 		}
 		return $html;
+	}
+
+	/**
+	 * Utility function to map an array to a string.
+	 *
+	 * @param   array    $array         The array to map.
+	 * @param   string   $inner_glue    The glue (optional, defaults to '=') between the key and the value.
+	 * @param   string   $outer_glue    The glue (optional, defaults to ' ') between array elements.
+	 * @param   boolean  $keepOuterKey  True if final key should be kept.
+	 * @return  string   The string mapped from the given array
+	 */
+	public static function toString($array = null, $inner_glue = '=', $outer_glue = ' ', $keepOuterKey = false)
+	{
+		$output = array();
+
+		if (is_array($array))
+		{
+			foreach ($array as $key => $item)
+			{
+				if (is_array($item))
+				{
+					if ($keepOuterKey)
+					{
+						$output[] = $key;
+					}
+					// This is value is an array, go and do it again!
+					$output[] = self::toString($item, $inner_glue, $outer_glue, $keepOuterKey);
+				}
+				else
+				{
+					$output[] = $key . $inner_glue . '"' . $item . '"';
+				}
+			}
+		}
+
+		return implode($outer_glue, $output);
 	}
 }

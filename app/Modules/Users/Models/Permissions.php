@@ -1,7 +1,6 @@
 <?php
 namespace App\Modules\Users\Models;
 
-use App\Halcyon\Utility\Arr;
 use App\Halcyon\Access\Asset;
 use App\Halcyon\Access\Gate;
 use App\Halcyon\Access\Rules;
@@ -239,11 +238,6 @@ class Permissions extends Fluent
 		ksort($data);
 
 		// Perform miscellaneous options based on configuration settings/changes.
-		// Escape the offline message if present.
-		if (isset($data['offline']['offline_message']))
-		{
-			$data['offline']['offline_message'] = \App\Halcyon\Utility\Str::ampReplace($data['offline']['offline_message']);
-		}
 
 		// Purge the database session table if we are changing to the database handler.
 		if ($prev['session']['session_handler'] != 'database'

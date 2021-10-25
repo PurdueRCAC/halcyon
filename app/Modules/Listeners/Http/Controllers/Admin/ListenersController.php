@@ -411,8 +411,8 @@ class ListenersController extends Controller
 		$order = $request->input('order');
 
 		// Sanitize the input
-		\App\Halcyon\Utility\Arr::toInteger($pks);
-		\App\Halcyon\Utility\Arr::toInteger($order);
+		$pks = array_map('intval', $pks);
+		$order = array_map('intval', $order);
 
 		// Save the ordering
 		$return = Listener::saveOrder($pks, $order);

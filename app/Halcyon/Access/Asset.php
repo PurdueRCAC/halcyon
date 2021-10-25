@@ -2,7 +2,7 @@
 
 namespace App\Halcyon\Access;
 
-use App\Halcyon\Database\Nested;
+use App\Halcyon\Models\Nested;
 
 /**
  * Access asset

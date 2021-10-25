@@ -3,7 +3,6 @@
 namespace App\Halcyon\Html\Builder;
 
 use Carbon\Carbon;
-use App\Halcyon\Utility\Arr;
 use App\Halcyon\Traits\Checkable;
 
 /**
@@ -411,7 +410,11 @@ class Grid
 			$prefix    = array_key_exists('prefix', $options) ? $options['prefix'] : '';
 		}
 
-		$state = Arr::getValue($states, (int) $value, $states[0]);
+		$state = $states[0];
+		if (isset($states[(int) $value]))
+		{
+			$state = $states[(int) $value];
+		}
 
 		$task           = array_key_exists('task', $state) ? $state['task'] : $state[0];
 		$text           = array_key_exists('text', $state) ? $state['text'] : (array_key_exists(1, $state) ? $state[1] : '');
