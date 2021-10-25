@@ -326,7 +326,7 @@ class WidgetsController extends Controller
 
 		// Join over the extensions
 		$query
-			->leftJoin($e, $e . '.element', $p . '.module')
+			->leftJoin($e, $e . '.element', $p . '.widget')
 			->where($e . '.type', '=', 'widget')
 			->groupBy(
 				$p . '.id',
@@ -387,7 +387,7 @@ class WidgetsController extends Controller
 		// Filter by module.
 		if ($filters['widget'])
 		{
-			$query->where($p . '.module', '=', $filters['widget']);
+			$query->where($p . '.widget', '=', $filters['widget']);
 		}
 
 		// Filter by search
