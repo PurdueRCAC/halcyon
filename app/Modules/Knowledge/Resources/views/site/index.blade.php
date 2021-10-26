@@ -83,7 +83,7 @@
 		<article>
 			@if ($node->isArchived())
 				<div class="alert alert-warning">
-					{{ trans('knowledhe::knowledge.page is archived') }}
+					{{ trans('knowledge::knowledge.page is archived') }}
 				</div>
 			@endif
 
