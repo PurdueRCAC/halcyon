@@ -2,7 +2,6 @@
 <p>Any actions taken by managers of this group are listed below. There may be a short delay in actions showing up in the log.</p>
 
 <?php
-// Get manager adds
 $l = App\Modules\History\Models\Log::query()
 	->where('groupid', '=', $group->id)
 	->whereIn('classname', ['groupowner', 'groupviewer', 'queuemember', 'groupqueuemember', 'unixgroupmember', 'unixgroup', 'userrequest', 'UsersController', 'UserRequestsController', 'UnixGroupsController', 'UnixGroupMembersController', 'MembersController', 'OrdersController'])
@@ -175,6 +174,22 @@ if (count($l))
 
 					case 'UnixGroupMembersController':
 					case 'unixgroupmember':
+						// Some fiddling here. Delete events are only to a URL /api/unixgroups/members/####
+						// So we need to parse out the record's ID to look up its unix group and user.
+						if ($log->targetobjectid <= 0 && $log->classmethod == 'delete')
+						{
+							$parts = explode('/', $log->uri);
+							$mid = end($parts);
+							$mid = intval($mid);
+
+							if ($mid)
+							{
+								$m = App\Modules\Groups\Models\UnixGroupMember::query()->withTrashed()->where('id', '=', $mid)->first();
+								$log->targetobjectid = $m ? $m->unixgroupid : $log->targetobjectid;
+								$log->targetuserid = $m ? $m->userid : $log->targetuserid;
+							}
+						}
+
 						$g = App\Modules\Groups\Models\UnixGroup::find($log->targetobjectid);
 						$groupname = '#' . $log->targetobjectid;
 						if ($g)

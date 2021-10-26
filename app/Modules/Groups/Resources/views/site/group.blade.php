@@ -932,8 +932,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				var post = {
 					userid: $(this).data('userid')
 				};
+				post['groupid'] = $('#groupid').val();
 				if ($(this).hasClass('queue-toggle')) {
-					post['groupid'] = $('#groupid').val();
 					post['queueid'] = bx.data('objectid');
 				} else {
 					post['unixgroupid'] = bx.data('objectid');
@@ -962,7 +962,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				});
 			} else {
 				$.ajax({
-					url: bx.data('api'),
+					url: bx.data('api') + '?groupid=' + $('#groupid').val(),
 					type: 'delete',
 					dataType: 'json',
 					async: false,
