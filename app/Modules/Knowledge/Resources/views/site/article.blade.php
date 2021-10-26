@@ -1,7 +1,7 @@
 @php
 $path .= $path ? '/' . $node->page->alias : $node->page->alias;
 
-$node->page->variables->merge($variables);
+$node->page->mergeVariables($variables);
 
 $children = $node->publishedChildren();
 $hasChildren = count($children);
@@ -14,4 +14,4 @@ $hasChildren = count($children);
 
 	{!! $node->page->body !!}
 </section>
-@include('knowledge::site.articles', ['nodes' => $node->publishedChildren(), 'path' => $path, 'variables' => $node->page->variables])
+@include('knowledge::site.articles', ['nodes' => $node->publishedChildren(), 'path' => $path, 'variables' => $node->page->variables->all()])

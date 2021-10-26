@@ -103,7 +103,7 @@
 					@if (request('all'))
 						@foreach ($childs as $n)
 							@php
-								$n->page->mergeVariables($page->variables);
+								$n->page->mergeVariables($page->variables->all());
 								$pa = $p ? $p . '/' . $n->page->alias : $n->page->alias;
 							@endphp
 							<section id="{{ str_replace('/', '_', $pa) }}">
@@ -113,7 +113,7 @@
 
 								{!! $n->page->body !!}
 							</section>
-							@include('knowledge::site.articles', ['nodes' => $n->publishedChildren(), 'path' => $pa, 'variables' => $n->page->variables])
+							@include('knowledge::site.articles', ['nodes' => $n->publishedChildren(), 'path' => $pa, 'variables' => $n->page->variables->all()])
 						@endforeach
 					@else
 						<ul class="kb-toc">
@@ -125,7 +125,7 @@
 							<li>
 								<a href="{{ route('site.knowledge.page', ['uri' => $pa]) }}">{{ $n->page->headline }}</a>
 								@if ($n->page->params->get('expandtoc'))
-									@include('knowledge::site.list', ['nodes' => $n->publishedChildren(), 'path' => $pa, 'current' => ['__all__'], 'variables' => $n->page->variables])
+									@include('knowledge::site.list', ['nodes' => $n->publishedChildren(), 'path' => $pa, 'current' => ['__all__'], 'variables' => $n->page->variables->all()])
 								@endif
 							</li>
 						@endforeach
