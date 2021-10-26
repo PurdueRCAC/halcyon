@@ -108,7 +108,7 @@ class Knowledge
 
 		if ($overview && $event->getActive() != 'guide')
 		{
-			$overview->variables->merge($page->variables);
+			$overview->mergeVariables($page->variables->all());
 
 			$event->addSection(
 				route('site.knowledge.page', ['uri' => $page->alias]),
@@ -130,7 +130,7 @@ class Knowledge
 					$page->content .= '<ul class="kb-toc">';
 					foreach ($childs as $n)
 					{
-						$n->page->variables->merge($page->variables);
+						$n->page->mergeVariables($page->variables->all());
 						//$pa = $p ? $p . '/' . $n->page->alias : $n->page->alias;
 
 						$page->content .= '<li>';
@@ -159,7 +159,7 @@ class Knowledge
 
 		if ($faq)
 		{
-			$faq->variables->merge($page->variables);
+			$faq->mergeVariables($page->variables->all());
 
 			$event->addSection(
 				route('site.knowledge.page', ['uri' => $page->alias . '/' . $faq->alias]),
@@ -177,7 +177,7 @@ class Knowledge
 
 		if ($bio)
 		{
-			$bio->variables->merge($page->variables);
+			$bio->mergeVariables($page->variables->all());
 
 			$event->addSection(
 				route('site.knowledge.page', ['uri' => $page->alias . '/' . $bio->alias]),
