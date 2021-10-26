@@ -178,6 +178,7 @@ class Page extends Model
 	public function getBodyAttribute()
 	{
 		$text = $this->content;
+
 		$text = preg_replace_callback(self::REGEXP_VARIABLE, array($this, 'replaceVariables'), $text);
 		$text = preg_replace_callback(self::REGEXP_IF_STATEMENT, array($this, 'replaceIfStatement'), $text);
 		//$text = preg_replace_callback(self::REGEXP_LINK, array($this, 'replaceLink'), $text);
@@ -297,6 +298,10 @@ class Page extends Model
 		if (isset($vars[$matches[1]][$matches[2]]))
 		{
 			$val = $vars[$matches[1]][$matches[2]];
+			if (is_array($val))
+			{
+				$val = array_shift($val);
+			}
 
 			if (isset($matches[5]) && is_numeric($val) && is_numeric($matches[5]))
 			{
@@ -318,7 +323,7 @@ class Page extends Model
 				}
 			}
 
-			return $vars[$matches[1]][$matches[2]];
+			return $val;
 		}
 
 		return $matches[0];
@@ -442,9 +447,9 @@ class Page extends Model
 
 			if (isset($vars[$clause['tag']][$clause['var']]))
 			{
-				if (!is_string($vars[$clause['tag']][$clause['var']]))
+				if (is_array($vars[$clause['tag']][$clause['var']]))
 				{
-					$vars[$clause['tag']][$clause['var']] = array_unshift($vars[$clause['tag']][$clause['var']]);
+					$vars[$clause['tag']][$clause['var']] = array_shift($vars[$clause['tag']][$clause['var']]);
 				}
 				$left = trim($vars[$clause['tag']][$clause['var']]);
 
