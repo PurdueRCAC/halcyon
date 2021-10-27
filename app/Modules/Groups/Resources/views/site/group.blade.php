@@ -477,10 +477,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('.searchable-select').select2();
 
 		if ($('.datatable').length) {
-			$('.datatable').DataTable({
-				//pageLength: 20,
-				//pagingType: 'numbers',
-				paging: false,
+			$('.datatable').each(function(i, el){
+			$(el).DataTable({
+				pageLength: 200,
+				pagingType: 'numbers',
+				paging: ($(el).attr('data-length') && parseInt($(el).attr('data-length')) > 200 ? true : false),
 				scrollY: '50vh',
 				scrollCollapse: true,
 				headers: true,
@@ -556,6 +557,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						table.api().draw();
 					});
 				}
+			});
 			});
 		}
 

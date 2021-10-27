@@ -85,9 +85,12 @@ foreach ($queues as $queue)
 	$users = $queue->users()
 		->orderBy('datetimecreated', 'desc')
 		->get();
+	$qu = array();
 
 	foreach ($users as $me)
 	{
+		$qu[$me->userid] = ($me->isPending() ? 'p' : '') . $me->id;
+
 		if (in_array($queue->id . '_' . $me->userid, $processed))
 		{
 			continue;
@@ -144,6 +147,8 @@ foreach ($queues as $queue)
 
 		$processed[] = $queue->id . '_' . $me->userid;
 	}
+
+	$queue->qu = $qu;
 }
 
 $unixgroups = $group->unixgroups()
@@ -160,13 +165,12 @@ foreach ($unixgroups as $unixgroup)
 		$group_boxes++;
 	}
 
-	$users = $unixgroup->members()
-		->get();
+	$uu = array();
 
-	$unixgroup->activemembers = $users;
-
-	foreach ($users as $me)
+	foreach ($unixgroup->members as $me)
 	{
+		$uu[$me->userid] = $me->id;
+
 		if (in_array($me->userid, $processed))
 		{
 			continue;
@@ -183,32 +187,20 @@ foreach ($unixgroups as $unixgroup)
 		}
 		else
 		{
+			$uu[$me->userid] = $me->id;
+
 			$me->username = $me->user->username;
-			/*if ($me->isManager())
+
+			if (!($found = $members->firstWhere('userid', $me->userid)))
 			{
-				if (!($found = $managers->firstWhere('userid', $me->userid)))
-				{
-					$managers->push($me);
-				}
+				$members->push($me);
 			}
-			elseif ($me->isMember())
-			{*/
-				if (!($found = $members->firstWhere('userid', $me->userid)))
-				{
-					$members->push($me);
-				}
-			/*}
-			elseif ($me->isViewer())
-			{
-				if (!($found = $viewers->firstWhere('userid', $me->userid)))
-				{
-					$viewers->push($me);
-				}
-			}*/
 		}
 
 		$processed[] = $me->userid;
 	}
+
+	$unixgroup->uu = $uu;
 }
 
 $managers = $managers->sortBy('username');
@@ -310,7 +302,7 @@ $i = 0;
 		</div>
 	</div>
 	<div class="card-body">
-		<table class="table datatable">
+		<table class="table datatable" data-length="{{ count($managers) }}">
 			<caption class="sr-only">Managers</caption>
 			<thead>
 				<tr>
@@ -401,14 +393,14 @@ $i = 0;
 								$disable = true;
 								$checked = ' checked="checked" disabled="disabled"';
 							else:
-								foreach ($queue->users as $m):
-								//if (in_array($member->userid, $qu[$queue->id])):
-									if ($member->userid == $m->userid):
-										//$in[] = $queue->name;
+								//foreach ($queue->users as $m):
+									if (isset($queue->qu[$member->userid])):
+										$m = $queue->qu[$member->userid];
+									//if ($member->userid == $m->userid):
 										$checked = ' checked="checked"';
-										break;
+										//break;
 									endif;
-								endforeach;
+								//endforeach;
 							endif;
 							$csv[] = $checked ? 'yes' : 'no';
 							?>
@@ -419,7 +411,7 @@ $i = 0;
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
 									data-api-create="{{ route('api.queues.users.create') }}"
-									data-api="{{ $checked && !$disable ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
+									data-api="{{ $checked && !$disable ? route('api.queues.users.delete', ['id' => $m]) : route('api.queues.users.create') }}"
 									value="1" />
 							</td>
 							<?php
@@ -434,14 +426,16 @@ $i = 0;
 							if ($group->unixgroup == $unix->longname):
 								$base = $unix->id;
 							endif;
-							foreach ($unix->activemembers as $m):
+								if (isset($unix->uu[$member->userid])):
+									$m = $unix->uu[$member->userid];
+							//foreach ($unix->members as $m):
 								//if (in_array($member->userid, $uu[$unix->id])):
-								if ($member->userid == $m->userid):
+								//if ($member->userid == $m->userid):
 									//$in[] = $unix->longname;
 									$checked = ' checked="checked"';
-									break;
+									//break;
 								endif;
-							endforeach;
+							//endforeach;
 							$csv[] = $checked ? 'yes' : 'no';
 
 							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
@@ -459,7 +453,7 @@ $i = 0;
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $unix->id }}"
 									data-api-create="{{ route('api.unixgroups.members.create') }}"
-									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
+									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m]) : route('api.unixgroups.members.create') }}"
 									value="1" />
 							</td>
 							<?php
@@ -488,7 +482,7 @@ $i = 0;
 	</div>
 	<div class="card-body">
 		@if (count($members) > 0)
-			<table class="table datatable">
+			<table class="table datatable" data-length="{{ count($members) }}">
 				<caption class="sr-only">Members</caption>
 				<thead>
 					<tr>
@@ -562,20 +556,24 @@ $i = 0;
 								$checked = '';
 								$m = null;
 
-								foreach ($queue->users as $m):
-									//if ($m->userid == $member->userid):
-									if ($member->userid == $m->userid):
-										if ($m->isPending()):
+								// We check queues a little differently because it's possible
+								// to be a pending member of one queue but full member of another
+								//foreach ($queue->users as $m):
+									if (isset($queue->qu[$member->userid])):
+										$m = $queue->qu[$member->userid];
+									//if ($member->userid == $m->userid):
+										//if ($m->isPending()):
+										if (substr($m, 0, 1) == 'p'):
+											$m = substr($m, 1);
 											$checked = ' disabled';
 										else:
-									//if (in_array($member->userid, $qu[$queue->id])):
-										//$in[] = $queue->name;
 											$checked = ' checked="checked"';
 										endif;
-										break;
-									endif;
 
-								endforeach;
+									//	break;
+									endif;
+								//endforeach;
+
 								$csv[] = $checked ? 'yes' : 'no';
 								?>
 								<td class="text-center col-queue">
@@ -585,7 +583,7 @@ $i = 0;
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $queue->id }}"
 										data-api-create="{{ route('api.queues.users.create') }}"
-										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
+										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m]) : route('api.queues.users.create') }}"
 										value="1" />
 								</td>
 								<?php
@@ -598,14 +596,15 @@ $i = 0;
 								if ($group->unixgroup == $unix->longname):
 									$base = $unix->id;
 								endif;
-								foreach ($unix->activemembers as $m):
-									//if (in_array($member->userid, $uu[$unix->id])):
-									if ($member->userid == $m->userid):
+								//foreach ($unix->members as $m):
+									if (isset($unix->uu[$member->userid])):
+										$m = $unix->uu[$member->userid];
+									//if ($member->userid == $m->userid):
 										//$in[] = $unix->longname;
 										$checked = ' checked="checked"';
-										break;
+										//break;
 									endif;
-								endforeach;
+								//endforeach;
 								$csv[] = $checked ? 'yes' : 'no';
 
 								if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
@@ -623,7 +622,7 @@ $i = 0;
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $unix->id }}"
 										data-api-create="{{ route('api.unixgroups.members.create') }}"
-										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
+										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m]) : route('api.unixgroups.members.create') }}"
 										value="1" />
 								</td>
 								<?php
@@ -651,12 +650,12 @@ $i = 0;
 			<span class="fa fa-question-circle" aria-hidden="true"></span> Help
 		</a>
 		<div class="dialog dialog-help" id="help_viewers_span_{{ $group->id }}" title="Usage Reporting Viewers">
-			<p>Members are people that have access to some or all of this group's queues but have no other special privileges such as Group Usage Reporting privileges or Group Managment privileges. Enabling a queue for someone will also create an account for them on the appropriate resource if they do not already have one. New accounts on a cluster will be processed overnight and be ready use the next morning. The person will receive an email notification once their account is ready.</p>
+			<p>Group Usage Reporting Viewers are people who have been given permission to view all usage data for the entire group. You may also grant queue submission privileges individually for these people if desired. Group Usage Reporting Viewers may not access this interface or grant or remove privileges to or from others.</p>
 		</div>
 	</div>
 	<div class="card-body">
-		<table class="table datatable">
-			<caption class="sr-only">Members</caption>
+		<table class="table datatable" data-length="{{ count($viewers) }}">
+			<caption class="sr-only">Viewers</caption>
 			<thead>
 				<tr>
 					<th scope="col" colspan="3">User Info</th>
@@ -722,12 +721,14 @@ $i = 0;
 							$checked = '';
 							$m = null;
 
-							foreach ($queue->users as $m):
-								if ($member->userid == $m->userid):
+							//foreach ($queue->users as $m):
+								//if ($member->userid == $m->userid):
+								if (isset($queue->qu[$member->userid])):
+									$m = $queue->qu[$member->userid];
 									$checked = ' checked="checked"';
-									break;
+									//break;
 								endif;
-							endforeach;
+							//endforeach;
 							$csv[] = $checked ? 'yes' : 'no';
 							?>
 							<td class="text-center col-queue">
@@ -737,7 +738,7 @@ $i = 0;
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
 									data-api-create="{{ route('api.queues.users.create') }}"
-									data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
+									data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m]) : route('api.queues.users.create') }}"
 									value="1" />
 							</td>
 							<?php
@@ -750,12 +751,14 @@ $i = 0;
 							if ($group->unixgroup == $unix->longname):
 								$base = $unix->id;
 							endif;
-							foreach ($unix->activemembers as $m):
-								if ($member->userid == $m->userid):
+							//foreach ($unix->members as $m):
+								//if ($member->userid == $m->userid):
+								if (isset($unix->uu[$member->userid])):
+									$m = $unix->uu[$member->userid];
 									$checked = ' checked="checked"';
-									break;
+									//break;
 								endif;
-							endforeach;
+							//endforeach;
 							$csv[] = $checked ? 'yes' : 'no';
 
 							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
@@ -773,7 +776,7 @@ $i = 0;
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $unix->id }}"
 									data-api-create="{{ route('api.unixgroups.members.create') }}"
-									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
+									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m]) : route('api.unixgroups.members.create') }}"
 									value="1" />
 							</td>
 							<?php
@@ -804,7 +807,7 @@ $i = 0;
 	</div>
 	<div class="card-body">
 		@if (count($disabled) > 0)
-			<table class="table table-hover hover datatable">
+			<table class="table table-hover hover datatable" data-length="{{ count($disabled) }}">
 				<caption class="sr-only">Disabled Members</caption>
 				<thead>
 					<tr>
@@ -859,10 +862,7 @@ $i = 0;
 								$m = null;
 
 								foreach ($queue->users()->withTrashed()->get() as $m):
-									//if ($m->userid == $member->userid):
 									if ($member->userid == $m->userid):
-									//if (in_array($member->userid, $qu[$queue->id])):
-										//$in[] = $queue->name;
 										$checked = ' checked="checked"';
 										break;
 									endif;
@@ -890,14 +890,14 @@ $i = 0;
 								if ($group->unixgroup == $unix->longname):
 									$base = $unix->id;
 								endif;
-								foreach ($unix->members()->withTrashed()->get() as $m):
-									//if (in_array($member->userid, $uu[$unix->id])):
-									if ($member->userid == $m->userid):
-										//$in[] = $unix->longname;
+								//foreach ($unix->members()->withTrashed()->get() as $m):
+									//if ($member->userid == $m->userid):
+									if (isset($unix->uu[$member->userid])):
+										$m = $unix->uu[$member->userid];
 										$checked = ' checked="checked"';
-										break;
+										//break;
 									endif;
-								endforeach;
+								//endforeach;
 								$csv[] = $checked ? 'yes' : 'no';
 								?>
 								<td class="text-center col-unixgroup">
@@ -909,7 +909,7 @@ $i = 0;
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $unix->groupid }}"
 										data-api-create="{{ route('api.unixgroups.members.create') }}"
-										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
+										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m]) : route('api.unixgroups.members.create') }}"
 										disabled="disabled"
 										value="1" />
 								</td>
