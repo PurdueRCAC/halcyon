@@ -742,6 +742,7 @@ class LoansController extends Controller
 		{
 			$row->comment = $request->input('comment');
 		}
+		$row->comment = $row->comment ?: '';
 
 		if ($request->has('serviceunits'))
 		{
