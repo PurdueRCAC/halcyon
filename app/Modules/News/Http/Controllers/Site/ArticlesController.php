@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
 use App\Modules\News\Models\Newsresource;
+use App\Modules\News\Events\ArticleMetadata;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Users\Models\User;
 use Carbon\Carbon;
@@ -600,6 +601,10 @@ class ArticlesController extends Controller
 	public function show($id)
 	{
 		$row = Article::findOrFail($id);
+
+		event($event = new ArticleMetadata($row));
+
+		$row = $event->page;
 
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')

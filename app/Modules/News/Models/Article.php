@@ -3,6 +3,7 @@
 namespace App\Modules\News\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Config\Repository;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
@@ -111,6 +112,13 @@ class Article extends Model
 		'deleted'  => ArticleDeleted::class,
 		//'restored' => PageRestored::class,
 	];
+
+	/**
+	 * Page metadata
+	 *
+	 * @var  object
+	 */
+	protected $metadataRepository = null;
 
 	/**
 	 * Set body value
@@ -561,6 +569,21 @@ class Article extends Model
 
 		return $query->join($r, $r . '.newsid', $n . '.id')
 			->whereIn($r . '.resourceid', $ids);
+	}
+
+	/**
+	 * Get a metadata Repository object
+	 *
+	 * @return  object
+	 */
+	public function getMetadataAttribute()
+	{
+		if (!($this->metadataRepository instanceof Repository))
+		{
+			$this->metadataRepository = new Repository();
+		}
+
+		return $this->metadataRepository;
 	}
 
 	/**

@@ -1,5 +1,32 @@
 @extends('layouts.master')
 
+@if ($article->metadesc || $article->metakey)
+@section('meta')
+	@if ($article->metadesc)
+		<meta name="description" content="{{ $article->metadesc }}" />
+	@endif
+	@if ($article->metakey)
+		<meta name="keywords" content="{{ $article->metakey }}" />
+	@endif
+@stop
+@endif
+
+@if ($article->metadata)
+	@foreach ($article->metadata->all() as $k => $v)
+		@if ($v)
+			@if ($v == '__comment__')
+				@push('meta')
+		{!! $k !!}
+@endpush
+			@else
+			@push('meta')
+		<meta name="{{ $k }}" content="{{ $v }}" />
+@endpush
+			@endif
+		@endif
+	@endforeach
+@endif
+
 @section('title'){{ $article->headline }}@stop
 
 @push('scripts')

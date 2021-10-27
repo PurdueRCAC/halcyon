@@ -3,6 +3,7 @@ namespace App\Listeners\Content\Twitter;
 
 use App\Modules\Pages\Events\PageMetadata;
 use App\Modules\Knowledge\Events\PageMetadata as KnowledgeMetadata;
+use App\Modules\News\Events\ArticleMetadata;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Str;
 
@@ -21,6 +22,7 @@ class Twitter
 	{
 		$events->listen(PageMetadata::class, self::class . '@handlePageMetadata');
 		$events->listen(KnowledgeMetadata::class, self::class . '@handlePageMetadata');
+		$events->listen(ArticleMetadata::class, self::class . '@handlePageMetadata');
 	}
 
 	/**
