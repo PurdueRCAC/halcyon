@@ -2,6 +2,7 @@
 namespace App\Listeners\Content\Twitter;
 
 use App\Modules\Pages\Events\PageMetadata;
+use App\Modules\Knowledge\Events\PageMetadata as KnowledgeMetadata;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Str;
 
@@ -19,6 +20,7 @@ class Twitter
 	public function subscribe($events)
 	{
 		$events->listen(PageMetadata::class, self::class . '@handlePageMetadata');
+		$events->listen(KnowledgeMetadata::class, self::class . '@handlePageMetadata');
 	}
 
 	/**
@@ -27,7 +29,7 @@ class Twitter
 	 * @param   PageMetadata  $event
 	 * @return  string
 	 */
-	public function handlePageMetadata(PageMetadata $event)
+	public function handlePageMetadata($event)
 	{
 		if (!app()->has('isAdmin')
 		 || app()->get('isAdmin'))
@@ -121,9 +123,17 @@ class Twitter
 		}
 		else
 		{
-			$content = Str::limit(strip_tags($page->content), 140);
+			// Clean up cases where content may be just encoded whitespace
+			$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], $page->content);
+			$content = strip_tags($content);
 			$content = str_replace(array("\n", "\t", "\r"), ' ', $content);
+			$content = Str::limit($content, 140);
 			$content = trim($content);
+			if (!$content)
+			{
+				$content = $page->title;
+			}
+			$content = htmlspecialchars($content);
 		}
 
 		$tags['twitter:description'] = htmlspecialchars($content);

@@ -2,6 +2,7 @@
 namespace App\Listeners\Content\OpenGraph;
 
 use App\Modules\Pages\Events\PageMetadata;
+use App\Modules\Knowledge\Events\PageMetadata as KnowledgeMetadata;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Str;
 
@@ -19,6 +20,7 @@ class OpenGraph
 	public function subscribe($events)
 	{
 		$events->listen(PageMetadata::class, self::class . '@handlePageMetadata');
+		$events->listen(KnowledgeMetadata::class, self::class . '@handlePageMetadata');
 	}
 
 	/**
@@ -27,7 +29,7 @@ class OpenGraph
 	 * @param   PageMetadata  $event
 	 * @return  string
 	 */
-	public function handlePageMetadata(PageMetadata $event)
+	public function handlePageMetadata($event)
 	{
 		if (!app()->has('isAdmin')
 		 || app()->get('isAdmin'))
@@ -124,9 +126,17 @@ class OpenGraph
 		}
 		else
 		{
-			$content = Str::limit(strip_tags($page->content), 140);
+			// Clean up cases where content may be just encoded whitespace
+			$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], $page->content);
+			$content = strip_tags($content);
 			$content = str_replace(array("\n", "\t", "\r"), ' ', $content);
-			$tags['og:description'] = trim($content);
+			$content = Str::limit($content, 140);
+			$content = trim($content);
+			if (!$content)
+			{
+				$content = $page->title;
+			}
+			$tags['og:description'] = htmlspecialchars($content);
 		}
 
 		// FB App ID - COMMON

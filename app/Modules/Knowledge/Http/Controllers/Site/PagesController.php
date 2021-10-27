@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Modules\Knowledge\Models\Page;
 use App\Modules\Knowledge\Models\SnippetAssociation;
 use App\Modules\Knowledge\Models\Associations;
+use App\Modules\Knowledge\Events\PageMetadata;
 
 class PagesController extends Controller
 {
@@ -110,6 +111,10 @@ class PagesController extends Controller
 
 			$prev = $node;
 		}
+
+		event($event = new PageMetadata($node->page));
+
+		$node->page = $event->page;
 
 		$path = explode('/', $path);
 		array_shift($path);

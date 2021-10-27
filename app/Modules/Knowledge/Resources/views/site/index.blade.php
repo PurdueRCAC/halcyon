@@ -1,5 +1,32 @@
 @extends('layouts.master')
 
+@if ($node->page->metadesc || $node->page->metakey)
+@section('meta')
+	@if ($node->page->metadesc)
+		<meta name="description" content="{{ $node->page->metadesc }}" />
+	@endif
+	@if ($node->page->metakey)
+		<meta name="keywords" content="{{ $node->page->metakey }}" />
+	@endif
+@stop
+@endif
+
+@if ($node->page->metadata)
+	@foreach ($node->page->metadata->all() as $k => $v)
+		@if ($v)
+			@if ($v == '__comment__')
+				@push('meta')
+		{!! $k !!}
+@endpush
+			@else
+			@push('meta')
+		<meta name="{{ $k }}" content="{{ $v }}" />
+@endpush
+			@endif
+		@endif
+	@endforeach
+@endif
+
 @section('title'){{ trans('knowledge::knowledge.module name') }}: {{ ($node->guide ? $node->guide . ': ' : '') . $node->page->headline }}@stop
 
 @push('styles')

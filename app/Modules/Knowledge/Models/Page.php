@@ -5,6 +5,7 @@ namespace App\Modules\Knowledge\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Illuminate\Config\Repository;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
@@ -113,6 +114,13 @@ class Page extends Model
 	protected $varsRepository = null;
 
 	/**
+	 * Page metadata
+	 *
+	 * @var  object
+	 */
+	protected $metadataRepository = null;
+
+	/**
 	 * Does the Doc exist?
 	 *
 	 * @return  boolean
@@ -143,7 +151,7 @@ class Page extends Model
 	}
 
 	/**
-	 * Get a params Repository object
+	 * Get a variables Repository object
 	 *
 	 * @return  object
 	 */
@@ -155,6 +163,21 @@ class Page extends Model
 		}
 
 		return $this->varsRepository;
+	}
+
+	/**
+	 * Get a metadata Repository object
+	 *
+	 * @return  object
+	 */
+	public function getMetadataAttribute()
+	{
+		if (!($this->metadataRepository instanceof Repository))
+		{
+			$this->metadataRepository = new Repository();
+		}
+
+		return $this->metadataRepository;
 	}
 
 	/**
