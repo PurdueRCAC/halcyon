@@ -620,7 +620,7 @@ app('pathway')
 				<label for="role_pi">PI</label>
 				<input id="role_pi" type="text" class="form-control" />
 			</div>
-			<div class="form-group">
+			<div class="form-group mb-0">
 				<button id="role_add" class="btn btn-success role-add hide" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">Add Role</button>
 				<button id="role_modify" class="btn btn-success role-add hide" data-id="{{ $user->id }}">Modify Role</button>
 				<button id="role_delete" class="btn btn-danger role-delete hide" data-id="{{ $user->id }}">Delete Role</button>
