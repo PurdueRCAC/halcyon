@@ -63,19 +63,15 @@ var Roles = {
 			var cell = document.getElementById('resource' + results['resource']['id']);
 
 			if (results['status'] == '1') {
-				cell.innerHTML = "No Role";
-				cell.style.color = "#B20000";
+				cell.innerHTML = '<span class="badge badge-secondary">No Role</span>';
 			} else if (results['status'] == '2') {
-				cell.innerHTML = "Role Pending";
-				cell.style.color = "#A06020";
+				cell.innerHTML = '<span class="badge badge-info">Role Pending</span>';
 			} else if (results['status'] == '3') {
-				cell.innerHTML = "Role Ready";
-				cell.style.color = "#006600";
+				cell.innerHTML = '<span class="badge badge-success">Role Ready</span>';
 			} else if (results['status'] == '4') {
-				cell.innerHTML = "Removal Pending";
-				cell.style.color = "#A06020";
+				cell.innerHTML = '<span class="badge badge-warning">Removal Pending</span>';
 			} else {
-				cell.innerHTML = "Error";
+				cell.innerHTML = '<span class="badge badge-danger">Error</span>';
 			}
 
 			if (results.errors.length) {
