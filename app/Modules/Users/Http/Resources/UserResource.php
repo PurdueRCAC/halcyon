@@ -41,6 +41,13 @@ class UserResource extends JsonResource
 		$data['can']['delete'] = false;
 
 		$user = auth()->user();
+		if (!$user)
+		{
+			if (auth()->guard('api')->check())
+			{
+				$user = auth()->guard('api')->user();
+			}
+		}
 
 		if ($user)
 		{
