@@ -335,20 +335,23 @@ class LoansController extends Controller
 			return response()->json(['message' => trans('queues::queues.invalid lender queue id')], 415);
 		}
 
-		// Does the queue have any cores yet?
-		$count = Size::query()
-			->where('queueid', '=', (int)$row->lenderqueueid)
-			->orderBy('datetimestart', 'asc')
-			->get()
-			->first();
+		if ($row->lender)
+		{
+			// Does the queue have any cores yet?
+			$count = Size::query()
+				->where('queueid', '=', (int)$row->lenderqueueid)
+				->orderBy('datetimestart', 'asc')
+				->get()
+				->first();
 
-		if (!$count)
-		{
-			return response()->json(['message' => trans('queues::queues.error.queue is empty')], 409);
-		}
-		elseif ($count->datetimestart > $row->datetimestart)
-		{
-			return response()->json(['message' => trans('queues::queues.queue has not started')], 409);
+			if (!$count)
+			{
+				return response()->json(['message' => trans('queues::queues.error.queue is empty')], 409);
+			}
+			elseif ($count->datetimestart > $row->datetimestart)
+			{
+				return response()->json(['message' => trans('queues::queues.queue has not started')], 409);
+			}
 		}
 
 		// Look for an existing entry in the same time frame and same queues to update instead

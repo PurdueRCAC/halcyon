@@ -3,6 +3,23 @@
 <script src="{{ asset('modules/queues/js/site.js?v=' . filemtime(public_path() . '/modules/queues/js/site.js')) }}"></script>
 @endpush
 
+<?php
+$canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own groups') && $group->ownerid == auth()->user()->id);
+
+$q = (new App\Modules\Queues\Models\Queue)->getTable();
+$s = (new App\Modules\Queues\Models\Scheduler)->getTable();
+$r = (new App\Modules\Resources\Models\Subresource)->getTable();
+
+$queues = $group->queues()
+	->select($q . '.*')
+	->join($s, $s . '.id', $q . '.schedulerid')
+	->join($r, $r . '.id', $q . '.subresourceid')
+	->whereNull($s . '.datetimeremoved')
+	->whereNull($r . '.datetimeremoved')
+	->orderBy($r . '.name', 'asc')
+	->orderBy($q . '.name', 'asc')
+	->get();
+?>
 <table class="table">
 	<caption class="sr-only">Below is a list of all queues:</caption>
 	<thead>
@@ -10,8 +27,7 @@
 			<th scope="col" class="text-center">{{ trans('queues::queues.state') }}</th>
 			<th scope="col">{{ trans('queues::queues.resource') }}</th>
 			<th scope="col">{{ trans('queues::queues.name') }}</th>
-			<th scope="col" class="text-right">{{ trans('queues::queues.cores') }}</th>
-			<th scope="col" class="text-right">{{ trans('queues::queues.nodes') }}</th>
+			<th scope="col" class="text-right" colspan="2">{{ trans('queues::queues.total') }}</th>
 			<th scope="col" class="text-right">{{ trans('queues::queues.walltime') }}</th>
 			@if (auth()->user()->can('edit.state queues'))
 			<th scope="col">{{ trans('queues::queues.options') }}</th>
@@ -23,22 +39,6 @@
 	</thead>
 	<tbody id="queues">
 		<?php
-		$canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.own groups') && $group->ownerid == auth()->user()->id);
-
-		$q = (new App\Modules\Queues\Models\Queue)->getTable();
-		$s = (new App\Modules\Queues\Models\Scheduler)->getTable();
-		$r = (new App\Modules\Resources\Models\Subresource)->getTable();
-
-		$queues = $group->queues()
-			->select($q . '.*')
-			->join($s, $s . '.id', $q . '.schedulerid')
-			->join($r, $r . '.id', $q . '.subresourceid')
-			->whereNull($s . '.datetimeremoved')
-			->whereNull($r . '.datetimeremoved')
-			->orderBy($r . '.name', 'asc')
-			->orderBy($q . '.name', 'asc')
-			->get();
-
 		if (count($queues) > 0)
 		{
 			foreach ($queues as $q)
@@ -87,14 +87,20 @@
 						<span class="text-success">{{ $upcoming->type ? 'loan' : 'purchase' }} starts {{ $upcoming->datetimestart->diffForHumans() }}</span>
 					</div>
 				@else
-					<td class="text-right">
-						{{ $q->totalcores }}
-					</td>
-					<td class="text-right">
-						@if ($q->subresource && $q->subresource->nodecores > 0)
-							{{ round($q->totalcores/$q->subresource->nodecores, 1) }}
-						@endif
-					</td>
+					@if ($q->serviceunits > 0)
+						<td class="text-right" colspan="2">
+							{{ $q->serviceunits }} <span class="text-muted">SUs</span>
+						</div>
+					@else
+						<td class="text-right">
+							{{ $q->totalcores }} <span class="text-muted">cores</span>
+						</td>
+						<td class="text-right">
+							@if ($q->subresource && $q->subresource->nodecores > 0)
+								{{ round($q->totalcores/$q->subresource->nodecores, 1) }} <span class="text-muted">nodes</span>
+							@endif
+						</td>
+					@endif
 				@endif
 					<td class="text-right">
 						<?php
@@ -179,12 +185,22 @@
 										Purchases &amp; Loans
 									</div>
 									<div class="col-md-6 text-right">
-										<a href="#dialog-sell{{ $q->id }}" id="node-sell{{ $q->id }}" class="btn btn-secondary btn-sm dialog-pl-btn">{{ trans('queues::queues.sell nodes') }}</a>
-										<a href="#dialog-loan{{ $q->id }}" id="node-loan{{ $q->id }}" class="btn btn-secondary btn-sm dialog-pl-btn">{{ trans('queues::queues.loan nodes') }}</a>
+										<a href="#dialog-sell{{ $q->id }}" id="node-sell{{ $q->id }}" class="btn btn-secondary btn-sm dialog-pl-btn">{{ trans('queues::queues.sell') }}</a>
+										<a href="#dialog-loan{{ $q->id }}" id="node-loan{{ $q->id }}" class="btn btn-secondary btn-sm dialog-pl-btn">{{ trans('queues::queues.loan') }}</a>
 									</div>
 								</div>
 							</div>
 							<div class="card-body">
+								<?php
+								$purchases = $q->sizes;
+								//$sold  = $q->sold;
+								$loans = $q->loans;
+								$nodecores = $q->subresource->nodecores;
+								$total = 0;
+
+								$items = $purchases;//$purchases->merge($sold);
+								$items = $items->merge($loans)->sortBy('datetimestart');
+								?>
 								<table class="table table-hover">
 									<caption class="sr-only">{{ trans('queues::queues.purchases and loans') }}</caption>
 									<thead>
@@ -195,22 +211,13 @@
 											<th scope="col">{{ trans('queues::queues.source') }}</th>
 											<th scope="col">{{ trans('queues::queues.resource') }}</th>
 											<th scope="col">{{ trans('queues::queues.queue') }}</th>
-											<th scope="col" class="text-right">{{ trans('queues::queues.nodes') }}</th>
+											<th scope="col" class="text-right">{{ trans('queues::queues.amount') }}</th>
 											<th scope="col" class="text-right">{{ trans('queues::queues.total') }}</th>
 											<th scope="col" class="text-right" colspan="2">{{ trans('queues::queues.options') }}</th>
 										</tr>
 									</thead>
 									<tbody>
 										<?php
-										$purchases = $q->sizes;
-										//$sold  = $q->sold;
-										$loans = $q->loans;
-										$nodecores = $q->subresource->nodecores;
-										$total = 0;
-
-										$items = $purchases;//$purchases->merge($sold);
-										$items = $items->merge($loans)->sortBy('datetimestart');
-
 										foreach ($items as $item)
 										{
 											if ($item->hasEnded())
@@ -230,7 +237,14 @@
 											{
 												$total += $nodecores ? round($item->corecount / $nodecores, 1) : 0;
 											}*/
-											$total += $nodecores ? round($item->corecount / $nodecores, 1) : 0;
+											if ($item->serviceunits > 0)
+											{
+												$total += $item->serviceunits;
+											}
+											else
+											{
+												$total += $nodecores ? round($item->corecount / $nodecores, 1) : 0;
+											}
 
 											$item->total = $total;
 										}
@@ -297,7 +311,18 @@
 
 												//$title  = $item->nodecount . " nodes / ";
 												//$title .= $item->corecount . " cores; ".$what.": ";
-												$amt = $nodecores ? round($item->corecount / $nodecores, 1) : 0;
+												if ($item->serviceunits > 0)
+												{
+													$amt = $item->serviceunits;
+												}
+												else
+												{
+													$amt = $item->nodecount;
+													if ($item->corecount)
+													{
+														$amt = $nodecores ? round($item->corecount / $nodecores, 1) : 0;
+													}
+												}
 
 												echo $what;
 												?>
@@ -352,16 +377,22 @@
 												<div class="dialog" id="dialog-edit{{ $item->id }}" title="{{ trans('queues::queues.edit ' . ($item->type == 1 ? 'loan' : 'size')) }} #{{ $item->id }}">
 													<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes') . '.update', ['id' => $item->id]) }}">
 														<div class="row">
-															<div class="col-md-6">
+															<div class="col-md-4">
 																<div class="form-group">
 																	<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.nodes') }}</label>
-																	<input type="text" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" name="nodes" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $amt }}" />
+																	<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
 																</div>
 															</div>
-															<div class="col-md-6">
+															<div class="col-md-4">
 																<div class="form-group">
 																	<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }}</label>
-																	<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" name="cores" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
+																	<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
+																</div>
+															</div>
+															<div class="col-md-4">
+																<div class="form-group">
+																	<label for="loan-serviceunits{{ $item->id }}">{{ trans('queues::queues.service units') }}</label>
+																	<input type="number" class="form-control serviceunits" size="4" id="loan-serviceunits{{ $item->id }}" name="serviceunits" value="{{ $item->serviceunits }}" step="0.25" />
 																</div>
 															</div>
 														</div>
@@ -411,16 +442,22 @@
 							<form class="modl-content dialog-content" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.sizes.create') }}">
 								<div class="modl-body dialog-body">
 									<div class="row">
-										<div class="col-md-6">
+										<div class="col-md-4">
 											<div class="form-group">
 												<label for="sell-nodes{{ $q->id }}">{{ trans('queues::queues.nodes') }}</label>
-												<input type="text" class="form-control nodes" size="4" id="sell-nodes{{ $q->id }}" name="nodecount" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="sell-cores{{ $q->id }}" value="0" />
+												<input type="number" class="form-control nodes" size="4" id="sell-nodes{{ $q->id }}" name="nodecount" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="sell-cores{{ $q->id }}" value="0" step="0.5" />
 											</div>
 										</div>
-										<div class="col-md-6">
+										<div class="col-md-4">
 											<div class="form-group">
 												<label for="sell-cores{{ $q->id }}">{{ trans('queues::queues.cores') }}</label>
 												<input type="number" class="form-control cores" size="4" id="sell-cores{{ $q->id }}" name="corecount" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="sell-nodes{{ $q->id }}" value="0" />
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label for="sell-serviceunits{{ $q->id }}">{{ trans('queues::queues.service units') }}</label>
+												<input type="number" class="form-control serviceunits" size="4" id="sell-serviceunits{{ $q->id }}" name="serviceunits" value="0.00" step="0.25" />
 											</div>
 										</div>
 									</div>
@@ -555,16 +592,22 @@
 							<form class="modl-content dialog-content" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.loans.create') }}">
 								<div class="modl-body dialog-body">
 									<div class="row">
-										<div class="col-md-6">
+										<div class="col-md-4">
 											<div class="form-group">
 												<label for="loan-nodes{{ $q->id }}">{{ trans('queues::queues.nodes') }}</label>
-												<input type="text" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $q->id }}" name="nodes" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $q->id }}" value="0" />
+												<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $q->id }}" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $q->id }}" value="0" step="0.5" />
 											</div>
 										</div>
-										<div class="col-md-6">
+										<div class="col-md-4">
 											<div class="form-group">
 												<label for="loan-cores{{ $q->id }}">{{ trans('queues::queues.cores') }}</label>
-												<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $q->id }}" name="cores" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $q->id }}" value="0" />
+												<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $q->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $q->id }}" value="0" />
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label for="loan-serviceunits{{ $q->id }}">{{ trans('queues::queues.service units') }}</label>
+												<input type="number" name="serviceunits" class="form-control serviceunits" size="4" id="loan-serviceunits{{ $q->id }}" value="0.00" step="0.25" />
 											</div>
 										</div>
 									</div>

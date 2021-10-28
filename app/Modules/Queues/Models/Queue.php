@@ -595,7 +595,7 @@ class Queue extends Model
 	 *
 	 * @return  integer
 	 */
-	public function getTotalserviceunitsAttribute()
+	public function getServiceunitsAttribute()
 	{
 		if (!array_key_exists('serviceunits', $this->attributes))
 		{
