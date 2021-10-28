@@ -729,15 +729,6 @@ class AmieLdap
 					}
 
 					$loans = $queue->loans()->orderBy('id', 'asc')->get();
-					/*$serviceUnits = $results->getAttribute('x-xsede-serviceUnits', 0);
-
-					$start = $results->getAttribute('x-xsede-startTime', 0);
-					$start = $start ? Carbon::parse($start) : null;
-
-					$stop  = $results->getAttribute('x-xsede-endTime', 0);
-					$stop  = $stop ? Carbon::parse($stop) : null;
-
-					$now = Carbon::now();*/
 
 					if (!count($loans) && $serviceUnits && $subresource)// && $start && $start >= $now)
 					{
@@ -753,6 +744,14 @@ class AmieLdap
 							$corecount = 0; //$subresource->nodecores * $nodecount;
 
 							$queue->addLoan($lenderqueue->id, $start, $stop, $nodecount, $corecount, $serviceUnits, 'x-xsede-pid: ' . $pid);
+						}
+					}
+					elseif (count($loans) && $serviceUnits)
+					{
+						$loan = $loans->first();
+						if ($loan->serviceunits != $serviceUnits);
+						{
+							$loan->update(['serviceunits' => $serviceUnits]);
 						}
 					}
 
