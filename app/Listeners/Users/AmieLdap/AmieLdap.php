@@ -753,6 +753,14 @@ class AmieLdap
 						{
 							$loan->update(['serviceunits' => $serviceUnits]);
 						}
+						if ($loan->datetimestart->toDateTimeString() != $start->toDateTimeString());
+						{
+							$loan->update(['datetimestart' => $start->toDateTimeString()]);
+						}
+						if ($loan->datetimestop->toDateTimeString() != $stop->toDateTimeString());
+						{
+							$loan->update(['datetimestop' => $stop->toDateTimeString()]);
+						}
 					}
 
 					// Storage
