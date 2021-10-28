@@ -4443,11 +4443,11 @@ background-color: rgba(0, 0, 0, 0.025);
   .ui-tabs .ui-widget-header {
     border-color: var(--tabs-border);
   }
-  /*.ui-tabs a,
+  .ui-tabs a,
   .ui-tabs a:link,
   .ui-tabs a:visited {
     color: var(--tab-color);
-  }*/
+  }
   .ui-tabs .ui-state-active a,
   .ui-tabs .ui-state-active a:link,
   .ui-tabs .ui-state-active a:visited {
