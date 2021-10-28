@@ -276,7 +276,7 @@ class LoansController extends Controller
 			'nodecount' => 'nullable|numeric',
 			'corecount' => 'nullable|integer',
 			'comment' => 'nullable|string|max:2000',
-			'serviceunits' => 'nullable|numeric|between:-9999.99,9999.99',
+			'serviceunits' => 'nullable|numeric|between:-999999999.99,999999999.99',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -590,7 +590,7 @@ class LoansController extends Controller
 			'nodecount' => 'nullable|numeric',
 			'corecount' => 'nullable|integer',
 			'comment' => 'nullable|string|max:2000',
-			'serviceunits' => 'nullable|numeric|between:-9999.99,9999.99',
+			'serviceunits' => 'nullable|numeric|between:-999999999.99,999999999.99',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
