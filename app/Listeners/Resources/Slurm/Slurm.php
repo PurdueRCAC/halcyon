@@ -39,7 +39,7 @@ class Slurm
 			return;
 		}
 
-		$queue->serviceunits = $queue->totalserviceunits * 60;
+		$queue->serviceunits = $queue->serviceunits * 60;
 
 		$event->queue = $queue;
 	}

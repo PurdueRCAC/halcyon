@@ -128,7 +128,7 @@ class AllocationResource extends JsonResource
 		$data['active']       = $this->active;
 		if (!isset($data['serviceunits']))
 		{
-			$data['serviceunits'] = $this->totalserviceunits;
+			$data['serviceunits'] = $this->serviceunits;
 		}
 
 		$data['draindown'] = 0;
