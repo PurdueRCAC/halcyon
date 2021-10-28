@@ -550,7 +550,7 @@ class AmieLdap
 							$current = $ugusers->pluck('userid')->toArray();
 							//$added = array();
 
-							$pldap = $this->connect($this->config('People', $rolename));
+							$pldap = $this->connect($this->config('People')); //, $rolename));
 
 							foreach ($vals as $val)
 							{
@@ -560,7 +560,7 @@ class AmieLdap
 									->where('uid', '=', $val)
 									->first();
 
-								if (!$mem && !$mem->exists)
+								if (!$mem || !$mem->exists)
 								{
 									continue;
 								}
