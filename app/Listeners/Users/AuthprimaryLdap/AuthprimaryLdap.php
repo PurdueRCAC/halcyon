@@ -57,7 +57,7 @@ class AuthprimaryLdap
 	 * @param   string  $ou
 	 * @return  array
 	 */
-	private function config($ou = 'People')
+	private function config($ou = 'People', $dc = null)
 	{
 		if (!app()->has('ldap'))
 		{
@@ -65,6 +65,24 @@ class AuthprimaryLdap
 		}
 
 		$config = config('listener.authprimaryldap', []);
+
+		if (isset($config['base_dn']))
+		{
+			$basedn = stristr($config['base_dn'], ',');
+			$basedn = trim($basedn, ',');
+
+			if ($dc)
+			{
+				$config['base_dn'] = 'dc=' . $dc . ',' . $basedn;
+			}
+		}
+
+		if ($dc && isset($config['base_dn']))
+		{
+			$basedn = stristr($config['base_dn'], ',');
+
+			$config['base_dn'] = 'dc=' . $dc . $basedn;
+		}
 
 		if ($ou && isset($config['base_dn']))
 		{
@@ -97,29 +115,45 @@ class AuthprimaryLdap
 	 */
 	public function handleUserSync(UserSync $event)
 	{
-		// Make sure config is set
-		$configall = $this->config('allPeople');
-		$config = $this->config('People');
+		$auth = $event->authorized;
+		$user = $event->user;
 
-		if (empty($configall) || empty($config))
+		// There are multiple ou=allPeople trees
+		// We need to add to:
+		//     ou=allPeople,dc=rcac,dc=purdue,dc=edu
+		//     ou=allPeople,dc=anvil,dc=rcac,dc=purdue,dc=edu
+		$configall = array(
+			[
+				'name' => 'authprimaryall',
+				'ldap' => $this->config('allPeople'),
+				'auth' => false
+			]
+		);
+		if ($event->rolename)
+		{
+			$all[] = [
+				'name' => 'authprimaryall' . $event->rolename,
+				'ldap' => $this->config('allPeople', $event->rolename),
+				'auth' => $auth
+			];
+		}
+
+		$config = $this->config('People', $event->rolename);
+
+		// Make sure config is set
+		if (empty($config))
 		{
 			return;
 		}
 
-		$auth = $event->authorized;
-		$user = $event->user;
-		$results = array();
+		$results = array(
+			'created' => array(),
+			'updated' => array()
+		);
 		$status = 200;
 
 		try
 		{
-			$ldap = $this->connect($configall, 'authprimaryall');
-
-			// Check for an existing record
-			$result = $ldap->search()
-				->where('uid', '=', $user->username)
-				->first();
-
 			if (!$user->loginShell)
 			{
 				$user->loginShell = '/bin/bash';
@@ -155,67 +189,77 @@ class AuthprimaryLdap
 				$userDns[] = $facet->value;
 			}
 
-			if (!$result || !$result->exists)
+			foreach ($all as $conf)
 			{
-				/*
-				Sample LDAP entry
+				$ldap = $this->connect($conf['ldap'], $conf['name']);
 
-				# example, AllPeople, anvil.rcac.purdue.edu
-				dn: uid=example,ou=AllPeople,dc=anvil,dc=rcac,dc=purdue,dc=edu
-				objectClass: posixAccount
-				objectClass: inetOrgPerson
-				objectClass: top
-				uid: example
-				uidNumber: 20972
-				gidNumber: 6751
-				homeDirectory: /home/example
-				loginShell: /bin/tcsh
-				cn: Ex A Mple
-				sn: Ex
-				*/
+				// Check for an existing record
+				$result = $ldap->search()
+					->where('uid', '=', $user->username)
+					->first();
 
-				// Create user record in ou=allPeople
-				$data = [
-					'uid'           => $user->username,
-					'uidNumber'     => $user->uidNumber,
-					'gidNumber'     => $user->gidNumber,
-					'cn'            => $auth ? $user->name : '-',
-					'sn'            => $auth ? $user->surname : '-',
-					'loginShell'    => $auth ? $user->loginShell : '/bin/false',
-					'homeDirectory' => $auth ? '/home/' . $user->username : '/dev/null',
-				];
-
-				$entry = $ldap->make()->user($data);
-				$entry->setAttribute('objectclass', ['x-xsede-xsedePerson', 'posixAccount', 'inetOrgPerson', 'top']);
-				$entry->setDn('uid=' . $data['uid'] . ',' . $entry->getDnBuilder()->get());
-
-				if (!$entry->save())
+				if (!$result || !$result->exists)
 				{
-					throw new Exception('Failed to make AuthPrimary ou=allPeople record', 500);
+					/*
+					Sample LDAP entry
+
+					# example, AllPeople, anvil.rcac.purdue.edu
+					dn: uid=example,ou=AllPeople,dc=anvil,dc=rcac,dc=purdue,dc=edu
+					objectClass: posixAccount
+					objectClass: inetOrgPerson
+					objectClass: top
+					uid: example
+					uidNumber: 20972
+					gidNumber: 6751
+					homeDirectory: /home/example
+					loginShell: /bin/tcsh
+					cn: Ex A Mple
+					sn: Ex
+					*/
+
+					// Create user record in ou=allPeople
+					$data = [
+						'uid'           => $user->username,
+						'uidNumber'     => $user->uidNumber,
+						'gidNumber'     => $user->gidNumber,
+						'cn'            => $conf['auth'] ? $user->name : '-',
+						'sn'            => $conf['auth'] ? $user->surname : '-',
+						'loginShell'    => $conf['auth'] ? $user->loginShell : '/bin/false',
+						'homeDirectory' => $conf['auth'] ? '/home/' . $user->username : '/dev/null',
+					];
+
+					$entry = $ldap->make()->user($data);
+					$entry->setAttribute('objectclass', ['x-xsede-xsedePerson', 'posixAccount', 'inetOrgPerson', 'top']);
+					$entry->setDn('uid=' . $data['uid'] . ',' . $entry->getDnBuilder()->get());
+
+					if (!$entry->save())
+					{
+						throw new Exception('Failed to make AuthPrimary ou=allPeople record', 500);
+					}
+
+					$results['created'][] = $data;
+					$status = 201;
 				}
-
-				$results['created'] = $data;
-				$status = 201;
-			}
-			elseif ($auth)
-			{
-				// Update user record in ou=allPeople
-				$result->setAttribute('cn', $user->name);
-				$result->setAttribute('sn', $user->surname);
-				$result->setAttribute('loginShell', $user->loginShell);
-				$result->setAttribute('homeDirectory', '/home/' . $user->username);
-
-				if (!$result->save())
+				elseif ($conf['auth'])
 				{
-					throw new Exception('Failed to update AuthPrimary ou=allPeople record', 500);
-				}
+					// Update user record in ou=allPeople
+					$result->setAttribute('cn', $user->name);
+					$result->setAttribute('sn', $user->surname);
+					$result->setAttribute('loginShell', $user->loginShell);
+					$result->setAttribute('homeDirectory', '/home/' . $user->username);
 
-				$results['updated'] = [
-					'cn' => $user->name,
-					'sn' => $user->surname,
-					'loginShell' => $user->loginShell,
-					'homeDirectory' => '/home/' . $user->username
-				];
+					if (!$result->save())
+					{
+						throw new Exception('Failed to update AuthPrimary ou=allPeople record', 500);
+					}
+
+					$results['updated'][] = [
+						'cn' => $user->name,
+						'sn' => $user->surname,
+						'loginShell' => $user->loginShell,
+						'homeDirectory' => '/home/' . $user->username
+					];
+				}
 			}
 
 			$ldap = $this->connect($config);
@@ -282,7 +326,7 @@ class AuthprimaryLdap
 						throw new Exception('Failed to make AuthPrimary ou=People record', 500);
 					}
 
-					$results['created_auth'] = $data;
+					$results['created'][] = $data;
 					$status = 201;
 				}
 			}
