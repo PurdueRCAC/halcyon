@@ -66,22 +66,17 @@ class AuthprimaryLdap
 
 		$config = config('listener.authprimaryldap', []);
 
-		if (isset($config['base_dn']))
+		if ($dc && isset($config['base_dn']))
 		{
 			$basedn = stristr($config['base_dn'], ',');
 			$basedn = trim($basedn, ',');
 
-			if ($dc)
+			if ($dc != 'internal')
 			{
-				$config['base_dn'] = 'dc=' . $dc . ',' . $basedn;
+				$basedn = 'dc=' . $dc . ',' . $basedn;
 			}
-		}
 
-		if ($dc && isset($config['base_dn']))
-		{
-			$basedn = stristr($config['base_dn'], ',');
-
-			$config['base_dn'] = 'dc=' . $dc . $basedn;
+			$config['base_dn'] = $basedn;
 		}
 
 		if ($ou && isset($config['base_dn']))
@@ -125,7 +120,7 @@ class AuthprimaryLdap
 		$configall = array(
 			[
 				'name' => 'authprimaryall',
-				'ldap' => $this->config('allPeople'),
+				'ldap' => $this->config('allPeople', 'internal'),
 				'auth' => false
 			]
 		);
@@ -189,7 +184,7 @@ class AuthprimaryLdap
 				$userDns[] = $facet->value;
 			}
 
-			foreach ($all as $conf)
+			foreach ($configall as $conf)
 			{
 				$ldap = $this->connect($conf['ldap'], $conf['name']);
 
@@ -357,8 +352,8 @@ class AuthprimaryLdap
 	public function handleResourceMemberCreated(ResourceMemberCreated $event)
 	{
 		// Make sure config is set
-		$configall = $this->config('allPeople');
-		$config = $this->config('People');
+		$configall = $this->config('allPeople', $event->resource->rolename);
+		$config = $this->config('People', $event->resource->rolename);
 
 		if (empty($configall) || empty($config))
 		{
@@ -368,12 +363,6 @@ class AuthprimaryLdap
 		if (!in_array($event->resource->rolename, $this->whitelist))
 		{
 			return;
-		}
-
-		if ($event->resource->rolename == 'internal')
-		{
-			$configall['base_dn'] = str_replace(',dc=anvil', '', $configall['base_dn']);
-			$config['base_dn'] = str_replace(',dc=anvil', '', $config['base_dn']);
 		}
 
 		$user = $event->user;
@@ -555,7 +544,7 @@ class AuthprimaryLdap
 	public function handleResourceMemberStatus(ResourceMemberStatus $event)
 	{
 		// Make sure config is set
-		$config = $this->config('People');
+		$config = $this->config('People', $event->resource->rolename);
 
 		if (empty($config))
 		{
@@ -565,11 +554,6 @@ class AuthprimaryLdap
 		if (!in_array($event->resource->rolename, $this->whitelist))
 		{
 			return;
-		}
-
-		if ($event->resource->rolename == 'internal')
-		{
-			$config['base_dn'] = str_replace(',dc=anvil', '', $config['base_dn']);
 		}
 
 		$results = array();
@@ -615,8 +599,8 @@ class AuthprimaryLdap
 	public function handleResourceMemberDeleted(ResourceMemberDeleted $event)
 	{
 		// Make sure config is set
-		$configall = $this->config('allPeople');
-		$config = $this->config('People');
+		$configall = $this->config('allPeople', $event->resource->rolename);
+		$config = $this->config('People', $event->resource->rolename);
 
 		if (empty($configall) || empty($config))
 		{
@@ -626,12 +610,6 @@ class AuthprimaryLdap
 		if (!in_array($event->resource->rolename, $this->whitelist))
 		{
 			return;
-		}
-
-		if ($event->resource->rolename == 'internal')
-		{
-			$configall['base_dn'] = str_replace(',dc=anvil', '', $configall['base_dn']);
-			$config['base_dn'] = str_replace(',dc=anvil', '', $config['base_dn']);
 		}
 
 		$results = array();
