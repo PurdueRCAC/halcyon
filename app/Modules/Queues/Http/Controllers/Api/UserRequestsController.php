@@ -565,7 +565,7 @@ class UserRequestsController extends Controller
 			->select($q . '.groupid')
 			->join($u, $u . '.queueid', $q . '.id')
 			->where($u . '.userrequestid', '=', $id)
-			->wherePendingRequest()
+			->where($u . '.membertype', '=', 4)
 			->where($u . '.userid', '=', $row->userid)
 			->get();
 
