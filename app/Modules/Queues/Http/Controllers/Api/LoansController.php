@@ -335,7 +335,7 @@ class LoansController extends Controller
 			return response()->json(['message' => trans('queues::queues.invalid lender queue id')], 415);
 		}
 
-		if ($row->lender)
+		if ($row->lender && ($row->nodecount || $row->corecount))
 		{
 			// Does the queue have any cores yet?
 			$count = Size::query()

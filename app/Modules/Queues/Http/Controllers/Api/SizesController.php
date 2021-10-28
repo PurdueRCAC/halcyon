@@ -316,7 +316,7 @@ class SizesController extends Controller
 			return response()->json(['message' => trans('queues::queues.invalid seller queue id')], 415);
 		}*/
 
-		if ($row->seller)
+		if ($row->seller && ($row->nodecount || $row->corecount))
 		{
 			// Does the queue have any cores yet?
 			$count = Size::query()
