@@ -1,8 +1,10 @@
+/* global $ */  // jquery.js
+
 // Common Javascript functions for all web app pages
 
 // define a couple global variables
 if (base_url === undefined) {
-	base_url = '';
+	var base_url = '';
 }
 var ROOT_URL = base_url + "/api/";
 var tablist = '';
@@ -267,7 +269,7 @@ function HideTab(tabname)
 
 function HideAll(tablist)
 {
-	tabs = tablist.split(",");
+	var tabs = tablist.split(",");
 	for (var i=0; i<tabs.length; i++)
 	{
 		HideTab(tabs[i]);
@@ -339,13 +341,13 @@ function GetTab() {
 	//var bits = tablist.split(",");
 	var t = tabs.getElementsByTagName("div");
 
-	var i = 0;
+	//var i = 0;
 	for (var x=0; x<t.length; x++) {
 		if (t[x].id.substring(0,3) == "DIV") {
 			if (t[x].style.display != "none") {
 				return t[x].id.substring(4); //bits[i];
 			}
-			i++;
+			//i++;
 		}
 	}
 }
@@ -425,7 +427,7 @@ function SetError(message, small) {
 	}
 }
 
-function ShowHideFAQ(box_name, a) { 
+function ShowHideFAQ(box_name) {
 	var box = document.getElementById(box_name);
 	var img = document.getElementById(box_name + "_img");
 	if (box.className == "faqBox") {
@@ -527,7 +529,7 @@ $(document).ready(function() {
 		}
 	);
 
-	$('.navbar .dropdown > a').on('click', function (e) {
+	$('.navbar .dropdown > a').on('click', function () {
 		location.href = this.href;
 	});
 
@@ -539,14 +541,14 @@ $(document).ready(function() {
 	}
 
 	// Purdue Search
-	$('input.gsc-input').on('keyup blur focus', function(e){
+	$('input.gsc-input').on('keyup blur focus', function(){
 		if ($(this).val()) {
 			$(this).closest('.gsc-input-box').addClass('gsc-input-active');
 		} else {
 			$(this).closest('.gsc-input-box').removeClass('gsc-input-active');
 		}
 	});
-	$('.gsst_a').on('click', function(e){
+	$('.gsst_a').on('click', function(){
 		$(this).closest('.gsc-input-box').removeClass('gsc-input-active');
 	});
 });

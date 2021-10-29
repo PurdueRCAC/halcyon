@@ -44,7 +44,6 @@
 		<link rel="preload" as="style" href="https://use.typekit.net/ghc8hdz.css" />
 <?php
 		$styles = array(
-			//'themes/rcac/css/jquerytimepicker_min.css',
 			//'https://use.typekit.net/ghc8hdz.css' => 'rel="preload" as="style"',
 			'https://use.typekit.net/ghc8hdz.css' => 'rel="stylesheet" type="text/css"',
 			//'themes/rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.min.css' => 'rel="stylesheet" type="text/css"',

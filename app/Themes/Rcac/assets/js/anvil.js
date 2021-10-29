@@ -1,3 +1,5 @@
+/* global $ */  // jquery.js
+
 $(document).ready(function() {
     // Cache selectors
     /*var lastId,
@@ -62,7 +64,7 @@ $(document).ready(function() {
             });
     }*/
 
-    $('.form-check-input').on('change', function (e) {
+    $('.form-check-input').on('change', function () {
         if ($(this).is(':checked') && $(this).data('show')) {
             $($(this).data('show')).removeClass('hide');
             if ($(this).data('hide')) {
@@ -96,7 +98,7 @@ $(document).ready(function() {
     var inputs = $('input[required],textarea[required]');
     var needed = inputs.length, validated = 0;
 
-    inputs.on('blur', function (e) {
+    inputs.on('blur', function () {
         if (this.value) {
             if (this.validity.valid) {
                 this.classList.remove('is-invalid');
@@ -115,7 +117,7 @@ $(document).ready(function() {
         }
     });
 
-    inputs.on('change', function (e) {
+    inputs.on('change', function () {
         if (this.value) {
             if (this.validity.valid) {
                 this.classList.add('is-valid');
@@ -141,7 +143,7 @@ $(document).ready(function() {
                 el.classList.remove('is-invalid');
             }
         });
-        var elms = frm.querySelectorAll('select[required]');
+        elms = frm.querySelectorAll('select[required]');
         elms.forEach(function (el) {
             if (!el.value || el.value <= 0) {
                 el.classList.add('is-invalid');
@@ -150,7 +152,7 @@ $(document).ready(function() {
                 el.classList.remove('is-invalid');
             }
         });
-        var elms = frm.querySelectorAll('textarea[required]');
+        elms = frm.querySelectorAll('textarea[required]');
         elms.forEach(function (el) {
             if (!el.value || !el.validity.valid) {
                 el.classList.add('is-invalid');

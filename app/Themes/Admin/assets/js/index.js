@@ -1,3 +1,7 @@
+/* global $ */ // jquery.js
+/* global jQuery */ // jquery.js
+/* global Halcyon */ // core.js
+
 /*
 USAGE:
 
@@ -29,14 +33,7 @@ OPTIONS:
 		}
 
 		return instance;
-	};
-
-	function r(text, expr, val) {
-		while (expr.test(text)) {
-			text = text.replace(expr, val);
-		}
-		return text;
-	};
+	}
 
 	function notify(type, message, animate, autoRemove) {
 		var container = create();
@@ -78,7 +75,7 @@ OPTIONS:
 			.addClass('close-btn');
 
 		// add close-notification click functionality
-		close.off('click').on('click', function(e) {
+		close.off('click').on('click', function() {
 			// animate when closing; then remove the DOM element entirely
 			var n = $(this).parent().parent();
 			n.animate({left: '-=50px', opacity: "0"}, "fast", function() { n.remove(); });
@@ -110,12 +107,12 @@ OPTIONS:
 				//...and the progress bar
 				p.addClass('progress-animate');
 				//ensure the node removes itself after the animation finishes
-				node.bind('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function(e) { $(this).remove(); });
+				node.bind('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function() { $(this).remove(); });
 			} else {
 				//...and the progress bar
 				p.addClass('progress-animate');
 				//ensure the node removes itself after the progress-bar animation finishes
-				node.bind('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function(e) { $(this).remove(); });
+				node.bind('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function() { $(this).remove(); });
 			}
 		}
 
@@ -128,7 +125,7 @@ OPTIONS:
 		node.append(pC);
 
 		container.append(node);
-	};
+	}
 
 	// default settings
 	$.growl.settings = {
@@ -142,8 +139,11 @@ OPTIONS:
 	};
 })(jQuery);
 
-jQuery(document).ready(function($){
+jQuery(document).ready(function(){
 	$('html').removeClass('no-js');
+	/*document.getElementsByName('html').forEach(function (el) {
+		el.classList.remove('no-js');
+	});*/
 
 	$('.hamburger').on('click', function (e){
 		e.preventDefault();
@@ -152,6 +152,34 @@ jQuery(document).ready(function($){
 			mode = $('body').hasClass('menu-open') ? 'closed' : 'open';
 
 		$('body').toggleClass('menu-open');
+		/*
+		body = document.getElementsByName('body')[0];
+		mode = body.classList.has('menu-open') ? 'closed' : 'open';
+
+		document.getElementsByName('body').forEach(function (body) {
+			body.classList.toggle('menu-open');
+		});
+
+		fetch(btn.getAttribute('data-api'), {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					facets: {
+						'theme.admin.menu': mode
+					}
+				})
+			})
+			.then(function (response) {
+				return response.json();
+			})
+			.then(function (myJson) {
+				console.log(myJson);
+			})
+			.catch(function (error) {
+				console.error('Error:', error);
+			});*/
 
 		$.ajax({
 			url: btn.attr('data-api'),
@@ -163,18 +191,18 @@ jQuery(document).ready(function($){
 			},
 			dataType: 'json',
 			async: false,
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr) { //xhr, ajaxOptions, thrownError
 				console.log(xhr);
 			}
 		});
 	});
 
 	// Mobile device fix
-	$('#toolbar ul').on('click', function(e){
+	$('#toolbar ul').on('click', function(){
 		$(this).toggleClass('active');
 	});
 
-	$('.main-navigation li.node>a').on('click', function(e){
+	$('.main-navigation li.node>a').on('click', function(){
 		$(this).parent().toggleClass('active');
 	});
 
@@ -204,12 +232,13 @@ jQuery(document).ready(function($){
 			},
 			dataType: 'json',
 			async: false,
-			success: function (response) {
+			success: function () {
 				$('html').attr('data-mode', mode);
 
 				btn.attr('data-mode', mode == 'dark' ? 'light' : 'dark');
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr) {
+				Halcyon.error('An error occurred trying to set light/dark mode.');
 				console.log(xhr);
 			}
 		});
@@ -233,4 +262,24 @@ jQuery(document).ready(function($){
 	});
 
 	$(document).trigger('renderMessages');
+
+	/*
+	document.addEventListener('renderMessages', function() {
+		var msg = document.getElementById('system-messages');
+		if (msg && msg.innerHtml.replace(/\s+/, '') != '') {
+			msg.querySelectorAll('.alert').forEach(function (el) {
+				var type = '';
+				type = el.classList.has('alert-warning') ? 'warning' : type;
+				type = el.classList.has('alert-danger') ? 'danger' : type;
+				type = el.classList.has('alert-info') ? 'info' : type;
+				type = el.classList.has('alert-success') ? 'success' : type;
+
+				$.growl(type, el.innerHtml);
+			});
+			msg.empty();
+		}
+	});
+	
+	document.dispatchEvent(new Event('renderMessages'));
+	*/
 });

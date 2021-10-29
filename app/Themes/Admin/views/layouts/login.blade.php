@@ -18,7 +18,6 @@
 
 		<!-- Scripts -->
 		<script type="text/javascript" src="{{ asset('themes/admin/js/jquery.min.js?v=' . filemtime(public_path() . '/themes/admin/js/jquery.min.js')) }}"></script>
-		<script type="text/javascript" src="{{ asset('themes/admin/js/login.js?v=' . filemtime(public_path() . '/themes/admin/js/login.js')) }}"></script>
 		@yield('scripts')
 	</head>
 	<body id="login-body" class="dark">
