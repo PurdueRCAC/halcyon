@@ -1,10 +1,13 @@
-/* global $ */  // jquery.js
+/*
+Scripts for the home page
+*/
 
-$(document).ready(function() {
-	$(window).on('scroll', function(){
-		// what the y position of the scroll is
-		var y = $(window).scrollTop();
-		//$('.hero').css('background-position', 'right ' + ((y / $(window).height()) * 100) + 'px top 0');
-		$('.hero').css('background-position', 'right -' + (y / 3) + 'px')
+document.addEventListener('DOMContentLoaded', function () {
+	window.addEventListener('scroll', function () {
+		var y = window.pageYOffset;
+
+		document.querySelectorAll('.hero').forEach(function(el){
+			el.style.backgroundPosition = 'right -' + (y / 3) + 'px';
+		});
 	});
 });

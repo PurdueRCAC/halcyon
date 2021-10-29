@@ -46,12 +46,10 @@
 		$styles = array(
 			//'https://use.typekit.net/ghc8hdz.css' => 'rel="preload" as="style"',
 			'https://use.typekit.net/ghc8hdz.css' => 'rel="stylesheet" type="text/css"',
-			//'themes/rcac/js/common/jquery-ui-1.12.1/themes/base/jquery-ui.min.css' => 'rel="stylesheet" type="text/css"',
 			'modules/core/vendor/jquery-ui/jquery-ui.min.css' => 'rel="stylesheet" type="text/css"',
-			'themes/rcac/css/font-awesome-css.min.css' => 'rel="stylesheet" type="text/css"',
+			'themes/rcac/vendor/fontawesome/css/font-awesome-css.min.css' => 'rel="stylesheet" type="text/css"',
 			'themes/rcac/css/college.css' => 'rel="stylesheet" type="text/css"',
 			'themes/rcac/css/content.css' => 'rel="stylesheet" type="text/css"'
-			//'themes/rcac/css/site.css' => 'rel="stylesheet" type="text/css"',
 		);
 		if (!app('isAdmin') && Auth::check()):
 			$styles['themes/rcac/css/admin.css'] = 'rel="stylesheet" type="text/css"';
@@ -78,7 +76,7 @@
 			'modules/core/vendor/bootstrap/bootstrap.bundle.min.js', // Ths needs to be included before jquery-ui
 			'modules/core/vendor/jquery-ui/jquery-ui.min.js',
 			'themes/rcac/js/common/common.js',
-			'themes/rcac/js/google_jquery_link_tracking.js',
+			'themes/rcac/js/google_link_tracking.js',
 		);
 		foreach ($scripts as $script):
 			?>

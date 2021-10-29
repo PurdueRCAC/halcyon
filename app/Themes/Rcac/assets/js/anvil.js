@@ -1,6 +1,10 @@
 /* global $ */  // jquery.js
 
-$(document).ready(function() {
+/*
+Scripts for the Anvil pages
+*/
+
+document.addEventListener('DOMContentLoaded', function () {
     // Cache selectors
     /*var lastId,
     topMenu = $("#sidenav");
