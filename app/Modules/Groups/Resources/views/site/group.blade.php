@@ -898,7 +898,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			if ($(this).data('api')) {
 				$.ajax({
 					url: $(this).data('api'),
-					type: 'post',
+					type: 'put',
 					data: {
 						userid: $(this).data('userid'),
 						membertype: $(this).data('target'),
