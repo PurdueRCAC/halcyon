@@ -141,9 +141,7 @@ OPTIONS:
 
 jQuery(document).ready(function(){
 	$('html').removeClass('no-js');
-	/*document.getElementsByName('html').forEach(function (el) {
-		el.classList.remove('no-js');
-	});*/
+	/*document.querySelector('html').classList.remove('no-js');*/
 
 	$('.hamburger').on('click', function (e){
 		e.preventDefault();
