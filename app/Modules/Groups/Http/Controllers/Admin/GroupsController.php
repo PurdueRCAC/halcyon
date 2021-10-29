@@ -178,9 +178,9 @@ class GroupsController extends Controller
 			$exists = Group::findByUnixgroup($row->unixgroup);
 
 			// Check for a duplicate
-			if ($exists)
+			if ($exists && $exists->id != $row->id)
 			{
-				return redirect()->back()->withError(trans('`unixgroup` ' . $row->unixgroup . ' already exists'));
+				return redirect()->back()->withError(trans('`unixgroup` "' . $row->unixgroup . '" already exists'));
 			}
 
 			// Check to make sure this base name doesn't exist elsewhere
