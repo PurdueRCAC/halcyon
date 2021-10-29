@@ -194,6 +194,12 @@ class RoleProvision
 			return;
 		}
 
+		// Ignore XSEDE usernames
+		if (!$event->user->username || substr($event->user->username, 0, 2) == 'x-')
+		{
+			return;
+		}
+
 		$url = $config['url'] . 'getRoleStatus/rcs/' . $event->resource->rolename . '/' . $event->user->username;
 
 		try
