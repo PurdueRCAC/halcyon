@@ -151,16 +151,15 @@ app('pathway')
 								<?php foreach ($resources as $resource): ?>
 									<?php
 									$children = $resource->children()->get();
-									if (count($children)) { ?>
+									if (count($children)): ?>
 										<optgroup data-resourceid="{{ $resource->id }}" label="{{ $resource->name }}">
 											<?php foreach ($children as $child):
 												$selected = '';
-												if ($row->subresourceid == $child->subresourceid)
-												{
+												if ($row->subresourceid == $child->subresourceid):
 													$cores = $child->subresource ? $child->subresource->nodecores : 0;
 													$mem = $child->subresource ? $child->subresource->nodemem : 0;
 													$selected = ' selected="selected"';
-												}
+												endif;
 												?>
 												<option value="{{ $child->subresourceid }}"<?php echo $selected; ?>
 													data-nodecores="{{ $child->subresource ? $child->subresource->nodecores : 0 }}"
@@ -168,7 +167,7 @@ app('pathway')
 													data-cluster="{{ $child->subresource ? $child->subresource->cluster : '' }}">{{ $child->subresource ? $child->subresource->name : '(unknown)' }}</option>
 											<?php endforeach; ?>
 										</optgroup>
-									<?php } ?>
+									<?php endif; ?>
 								<?php endforeach; ?>
 							</select>
 							<span class="invalid-feedback">{{ trans('queues::queues.error.invalid subresource') }}</span>
@@ -202,11 +201,10 @@ app('pathway')
 							$val = 336;
 							$wid = '';
 							$walltime = $row->walltimes()->orderBy('id', 'desc')->first();
-							if ($walltime)
-							{
+							if ($walltime):
 								$val = ($walltime->walltime/60/60);
 								$wid = $walltime->id;
-							}
+							endif;
 							?>
 							<label for="field-maxwalltime">{{ trans('queues::queues.max walltime') }}:</label>
 							<span class="input-group">
@@ -418,13 +416,11 @@ app('pathway')
 				</thead>
 				<tbody>
 					<?php
-					foreach ($items as $item)
-					{
-						if ($item->hasEnded())
-						{
+					foreach ($items as $item):
+						if ($item->hasEnded()):
 							$item->total = $total;
 							continue;
-						}
+						endif;
 
 						/*if (($item->sellerqueueid == $row->id && $item->corecount > 0)
 						|| ($item->corecount < 0 && $item->type == 0)
@@ -437,17 +433,14 @@ app('pathway')
 						{
 							$total += $nodecores ? round($item->corecount / $nodecores, 1) : 0;
 						}*/
-						if ($item->serviceunits > 0)
-						{
+						if ($item->serviceunits > 0):
 							$total += $item->serviceunits;
-						}
-						else
-						{
+						else:
 							$total += $nodecores ? round($item->corecount / $nodecores, 1) : 0;
-						}
+						endif;
 
 						$item->total = $total;
-					}
+					endforeach;
 
 					$items = $items->sortByDesc('datetimestart')->slice(0, 20);
 
@@ -586,7 +579,7 @@ app('pathway')
 										</div>
 										<div class="col-md-4">
 											<div class="form-group">
-												<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ $row->subresource->nodecores }} per node)</span></label>
+												<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ trans('queues::queues.cores per node', ['cores' => $row->subresource->nodecores]) }})</span></label>
 												<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
 											</div>
 										</div>
@@ -619,20 +612,19 @@ app('pathway')
 
 									<div class="form-group">
 										<label for="loan-comment{{ $item->id }}">{{ trans('queues::queues.comment') }}</label>
-										<textarea id="loan-comment{{ $item->id }}" name="comment" class="form-control" rows="3" cols="40">{{ $item->comment }}</textarea>
+										<textarea id="loan-comment{{ $item->id }}" name="comment" class="form-control" rows="3" cols="40" maxlength="2000">{{ $item->comment }}</textarea>
 									</div>
 
 									</div>
 									<div class="modal-footer dialog-footer text-right">
 										<button type="submit" class="btn btn-success dialog-submit" data-action="update" data-success="{{ trans('queues::queues.item updated') }}">
-											<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Saving...</span></span>
+											<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('queues::queues.saving') }}</span></span>
 											{{ trans('global.button.update') }}
 										</button>
 									</div>
 
 									<input type="hidden" name="id" value="{{ $item->id }}" />
 									@csrf
-									
 								</form>
 							</div>
 						</td>
@@ -643,7 +635,7 @@ app('pathway')
 			</table>
 		</div>
 
-		<div class="modal dialog" id="dialog-sell" title="{{ trans('queues::queues.sell nodes') }}">
+		<div class="modal dialog" id="dialog-sell" title="{{ trans('queues::queues.sell') }}">
 			<form class="modal-content dialog-content" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.sizes.create') }}">
 			<div class="modal-body dialog-body">
 				<div class="row">
@@ -655,7 +647,7 @@ app('pathway')
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
-							<label for="sell-cores">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ $row->subresource->nodecores }} per node)</span></label>
+							<label for="sell-cores">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ trans('queues::queues.cores per node', ['cores' => $row->subresource->nodecores]) }})</span></label>
 							<input type="number" class="form-control cores" size="4" id="sell-cores" name="corecount" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="sell-nodes" value="0" />
 						</div>
 					</div>
@@ -700,31 +692,27 @@ app('pathway')
 						<?php
 						$groups = array();
 						$first = null;
-						foreach ($row->subresource->queues as $queue)
-						{
-							if (isset($groups[$queue->groupid]))// || $queue->groupid == $row->groupid)
-							{
+						foreach ($row->subresource->queues as $queue):
+							if (isset($groups[$queue->groupid])):
 								continue;
-							}
+							endif;
 
-							if ($queue->groupid < 0 && !$first)
-							{
+							if ($queue->groupid < 0 && !$first):
 								$first = App\Modules\Groups\Models\Group::find(1);
 								$first->id = -1;
-							}
+							endif;
 
-							if (!$queue->group)
-							{
+							if (!$queue->group):
 								continue;
-							}
+							endif;
 
 							$groups[$queue->groupid] = $queue->group;
-						}
+						endforeach;
+
 						$groups = collect($groups)->sortBy('name');
-						if ($first)
-						{
+						if ($first):
 							$groups->prepend($first);
-						}
+						endif;
 						?>
 						@foreach ($groups as $group)
 							<option value="{{ $group->id }}"<?php if ($group->id == '-1') { echo ' selected="selected"'; } ?>>{{ $group->name }}</option>
@@ -779,13 +767,13 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="sell-comment">{{ trans('queues::queues.comment') }}</label>
-					<textarea id="sell-comment" name="comment" class="form-control" cols="35" rows="2"></textarea>
+					<textarea id="sell-comment" name="comment" class="form-control" cols="35" rows="2" maxlength="2000"></textarea>
 				</div>
 				</div>
 
 				<div class="modal-footer dialog-footer text-right">
 					<button type="submit" class="btn btn-success dialog-submit" data-success="{{ trans('queues::queues.item created') }}">
-						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Saving...</span></span>
+						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('queues::queues.saving') }}</span></span>
 						{{ trans('global.button.create') }}
 					</button>
 				</div>
@@ -794,7 +782,7 @@ app('pathway')
 			</form>
 		</div>
 
-		<div class="modal dialog" id="dialog-loan" title="{{ trans('queues::queues.loan nodes') }}">
+		<div class="modal dialog" id="dialog-loan" title="{{ trans('queues::queues.loan') }}">
 			<form class="modal-content dialog-content" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.loans.create') }}">
 			<div class="modal-body dialog-body">
 				<div class="row">
@@ -806,7 +794,7 @@ app('pathway')
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
-							<label for="loan-cores">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ $row->subresource->nodecores }} per node)</span></label>
+							<label for="loan-cores">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ trans('queues::queues.cores per node', ['cores' => $row->subresource->nodecores]) }})</span></label>
 							<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes" value="0" />
 						</div>
 					</div>
@@ -899,13 +887,13 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="loan-comment">{{ trans('queues::queues.comment') }}</label>
-					<textarea id="loan-comment" name="comment" class="form-control" rows="2" cols="40"></textarea>
+					<textarea id="loan-comment" name="comment" class="form-control" rows="2" cols="40" maxlength="2000"></textarea>
 				</div>
 				</div>
 
 				<div class="modal-footer dialog-footer text-right">
 					<button type="submit" class="btn btn-success dialog-submit" data-success="{{ trans('queues::queues.item created') }}">
-						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Saving...</span></span>
+						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('queues::queues.saving') }}</span></span>
 						{{ trans('global.button.create') }}
 					</button>
 				</div>

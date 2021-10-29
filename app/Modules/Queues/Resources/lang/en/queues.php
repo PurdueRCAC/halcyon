@@ -131,4 +131,6 @@ return [
 	'edit loan' => 'Edit loan',
 	'edit size' => 'Edit purchase',
 	'new hardware' => 'New hardware',
+	'cores per node' => ':cores per node',
+	'saving' => 'Saving...',
 ];

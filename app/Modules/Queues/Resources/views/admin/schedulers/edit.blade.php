@@ -75,26 +75,19 @@ app('pathway')
 					$hour = 60 * 60;
 					$min = 60;
 
-					if ($row->defaultmaxwalltime > $day)
-					{
+					if ($row->defaultmaxwalltime > $day):
 						$sel = 'days';
 						$val = $row->defaultmaxwalltime / 60 / 60 / 24;
-					}
-					elseif ($row->defaultmaxwalltime > $hour)
-					{
+					elseif ($row->defaultmaxwalltime > $hour):
 						$sel = 'hours';
 						$val = $row->defaultmaxwalltime / 60 / 60;
-					}
-					elseif ($row->defaultmaxwalltime > $min)
-					{
+					elseif ($row->defaultmaxwalltime > $min):
 						$sel = 'minutes';
 						$val = $row->defaultmaxwalltime / 60;
-					}
-					else
-					{
+					else:
 						$sel = 'seconds';
 						$val = $row->defaultmaxwalltime;
-					}
+					endif;
 					?>
 					<label for="field-defaultmaxwalltime">{{ trans('queues::queues.default max walltime') }}:</label>
 					<div class="row">

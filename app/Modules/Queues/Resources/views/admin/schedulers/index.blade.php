@@ -130,7 +130,7 @@ app('pathway')
 				</td>
 				<td>
 					@if ($row->trashed())
-						<span class="glyph icon-trash text-danger">Trashed</span>
+						<span class="glyph icon-trash text-danger">{{ trans('global.trashed') }}</span>
 					@endif
 					@if (auth()->user()->can('edit queues.schedulers'))
 						<a href="{{ route('admin.queues.schedulers.edit', ['id' => $row->id]) }}">

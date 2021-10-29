@@ -88,12 +88,11 @@ app('pathway')
 						<?php
 						$r = $row->resources->pluck('resourceid')->toArray();
 						$resources = App\Modules\Resources\Models\Asset::orderBy('name', 'asc')->get();
-						foreach ($resources as $resource)
-						{
+						foreach ($resources as $resource):
 							?>
 							<option value="{{ $resource->id }}"<?php if (in_array($resource->id, $r)) { echo ' selected="selected"'; } ?>>{{ $resource->name }}</option>
 							<?php
-						}
+						endforeach;
 						?>
 					</select>
 				</div>
@@ -101,10 +100,9 @@ app('pathway')
 				<div class="form-group">
 					<?php
 					$users = array();
-					foreach ($row->users as $user)
-					{
+					foreach ($row->users as $user):
 						$users[] = ($user->user ? $user->user->name : trans('global.unknown')) . ':' . $user->userid;
-					}
+					endforeach;
 					?>
 					<label for="field-people">{{ trans('contactreports::contactreports.users') }}:</label>
 					<input type="text" name="people" id="field-people" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" size="30" maxlength="250" value="{{ implode(',', $users) }}" />
@@ -137,7 +135,7 @@ app('pathway')
 					<?php
 					$comments = $row->comments()->orderBy('datetimecreated', 'asc')->get();
 
-					if (count($comments) > 0) {
+					if (count($comments) > 0):
 					?>
 						@foreach ($comments as $comment)
 						<li id="comment_{{ $comment->id }}" data-api="{{ route('api.contactreports.comments.update', ['id' => $comment->id]) }}">
@@ -166,7 +164,7 @@ app('pathway')
 						</li>
 						@endforeach
 					<?php
-					}
+					endif;
 					?>
 						<li id="comment_<?php echo '{id}'; ?>" class="d-none" data-api="{{ route('api.contactreports.comments') }}/<?php echo '{id}'; ?>">
 							<a href="#comment_<?php echo '{id}'; ?>_comment" class="btn btn-link comment-edit hide-when-editing">
@@ -283,10 +281,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1a]);
 			?>
 			<div class="form-group">
-				<label for="help1ainput">Input text:</label>
+				<label for="help1ainput">{{ trans('contactreports::contactreports.input text') }}:</label>
 				<textarea id="help1ainput" class="form-control samplebox" rows="5" data-sample="a"><?php echo $help1a; ?></textarea>
 			</div>
-			<p>Output text:<p>
+			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
 			<div id="help1aoutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
 		</div>
 		<div id="help1b">
@@ -294,10 +292,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1b]);
 			?>
 			<div class="form-group">
-				<label for="help1binput">Input text:</label>
+				<label for="help1binput">{{ trans('contactreports::contactreports.input text') }}:</label>
 				<textarea id="help1binput" class="form-control samplebox" rows="5" data-sample="b"><?php echo $help1b; ?></textarea>
 			</div>
-			<p>Output text:</p>
+			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
 			<div id="help1boutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
 		</div>
 		<div id="help1c">
@@ -305,10 +303,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1c]);
 			?>
 			<div class="form-group">
-				<label for="help1cinput">Input text:</label>
+				<label for="help1cinput">{{ trans('contactreports::contactreports.input text') }}:</label>
 				<textarea id="help1cinput" class="form-control samplebox" rows="5" data-sample="c"><?php echo $help1c; ?></textarea>
 			</div>
-			<p>Output text:</p>
+			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
 			<div id="help1coutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
 		</div>
 		<div id="help1d">
@@ -316,10 +314,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1d]);
 			?>
 			<div class="form-group">
-				<label for="help1dinput">Input text:</label>
+				<label for="help1dinput">{{ trans('contactreports::contactreports.input text') }}:</label>
 				<textarea id="help1dinput" class="form-control samplebox" rows="5" data-sample="d"><?php echo $help1d; ?></textarea>
 			</div>
-			<p>Output text:</p>
+			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
 			<div id="help1doutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
 		</div>
 		<div id="help1e">
@@ -327,10 +325,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1e]);
 			?>
 			<div class="form-group">
-				<label for="help1einput">Input text:</label>
+				<label for="help1einput">{{ trans('contactreports::contactreports.input text') }}:</label>
 				<textarea id="help1einput" class="form-control samplebox" rows="5" data-sample="e"><?php echo $help1e; ?></textarea>
 			</div>
-			<p>Output text:</p>
+			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
 			<div id="help1eoutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
 		</div>
 		<div id="help1f">
@@ -338,10 +336,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1f]);
 			?>
 			<div class="form-group">
-				<label for="help1finput">Input text:</label>
+				<label for="help1finput">{{ trans('contactreports::contactreports.input text') }}:</label>
 				<textarea id="help1finput" class="form-control samplebox" rows="5" data-sample="f"><?php echo $help1f; ?></textarea>
 			</div>
-			<p>Output text:</p>
+			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
 			<div id="help1foutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
 		</div>
 		<div id="help1g">
@@ -349,10 +347,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1g]);
 			?>
 			<div class="form-group">
-				<label for="help1ginput">Input text:</label>
+				<label for="help1ginput">{{ trans('contactreports::contactreports.input text') }}:</label>
 				<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1g; ?></textarea>
 			</div>
-			<p>Output text:</p>
+			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
 			<div id="help1goutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
 		</div>
 	</div>

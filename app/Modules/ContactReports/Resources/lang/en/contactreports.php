@@ -61,4 +61,6 @@ return [
 	'waitperiod count' => 'Number of time periods',
 	'wait period desc' => 'How long to wait before sending any new followups. This is to avoid spamming/over-emailing users.',
 	'pause followups' => 'Mute For',
+	'input text' => 'Input text',
+	'output text' => 'Output text',
 ];

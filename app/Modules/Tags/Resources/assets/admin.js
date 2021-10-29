@@ -2,84 +2,74 @@
 /* global jQuery */ // jquery.js
 /* global Halcyon */ // core.js
 
-jQuery(document).ready(function () {
-	/*var alias = $('#field-slug');
-	if (alias.length && !alias.val()) {
-		$('#field-tag').on('keyup', function (e){
-			var val = $(this).val();
+document.addEventListener('DOMContentLoaded', function () {
 
-			val = val.toLowerCase()
-				.replace(/\s+/g, '_')
-				.replace(/[^a-z0-9\-_]+/g, '');
+	document.querySelectorAll('.sluggable').forEach(function(el){
+		el.addEventListener('keyup', function () {
+			if (this.getAttribute('data-rel')) {
+				var alias = document.querySelector(this.getAttribute('data-rel'));
 
-			alias.val(val);
+				var val = this.value;
+				val = val.toLowerCase()
+					.replace(/\s+/g, '_')
+					.replace(/[^a-z0-9_]+/g, '');
+
+				alias.value = val;
+			}
 		});
-	}*/
-	$('.sluggable').on('keyup', function () {
-		if ($(this).attr('data-rel')) {
-			var alias = $($(this).attr('data-rel'));
-
-			//if (alias.length && !alias.val()) {
-			var val = $(this).val();
-
-			val = val.toLowerCase()
-				.replace(/\s+/g, '_')
-				.replace(/[^a-z0-9_]+/g, '');
-
-			alias.val(val);
-			//}
-		}
 	});
 
-	$('.alias-add').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.alias-add').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		var name = $($(this).attr('href'));
-		var btn = $(this);
+			var name = document.querySelector(this.getAttribute('href'));
+			var btn = this;
 
-		// create new relationship
-		$.ajax({
-			url: btn.data('api'),
-			type: 'post',
-			data: {
-				'parent_id': btn.data('id'),
-				'name': name.val()
-			},
-			dataType: 'json',
-			async: false,
-			success: function (response) {
-				Halcyon.message('success', 'Item added');
+			// create new relationship
+			$.ajax({
+				url: btn.getAttribute('data-api'),
+				type: 'post',
+				data: {
+					'parent_id': btn.getAttribute('data-id'),
+					'name': name.value
+				},
+				dataType: 'json',
+				async: false,
+				success: function (response) {
+					Halcyon.message('success', 'Item added');
 
-				var c = name.closest('table');
-				var li = c.find('tr.hidden');
+					var c = $(name).closest('table');
+					var li = c.find('tr.hidden');
 
-				if (typeof (li) !== 'undefined') {
-					var template = $(li)
-						.clone()
-						.removeClass('hidden');
+					if (typeof (li) !== 'undefined') {
+						var template = $(li)
+							.clone()
+							.removeClass('hidden');
 
-					template
-						.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
-						.data('id', response.id);
+						template
+							.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
+							.data('id', response.id);
 
-					template.find('a').each(function (i, el) {
-						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
-					});
+						template.find('a').each(function (i, el) {
+							$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
+						});
 
-					var content = template
-						.html()
-						.replace(/\{id\}/g, response.id)
-						.replace(/\{name\}/g, response.name)
-						.replace(/\{slug\}/g, response.slug);
+						var content = template
+							.html()
+							.replace(/\{id\}/g, response.id)
+							.replace(/\{name\}/g, response.name)
+							.replace(/\{slug\}/g, response.slug);
 
-					template.html(content).insertBefore(li);
+						template.html(content).insertBefore(li);
+					}
+
+					name.value = '';
+				},
+				error: function (xhr) { //xhr, ajaxOptions, thrownError
+					Halcyon.message('danger', xhr.responseJSON.message);
 				}
-
-				name.val('');
-			},
-			error: function (xhr) { //xhr, ajaxOptions, thrownError
-				Halcyon.message('danger', xhr.responseJSON.message);
-			}
+			});
 		});
 	});
 
