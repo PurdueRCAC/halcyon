@@ -26,12 +26,7 @@ return [
         '::1', // localhost
         '127.0.0.1', // localhost
 
-        // rices machines (for dev & testing)
-        '69.174.157.170',
-        '10.195.55.39',
-        '10.195.49.76',
-
-        '128.211.157.39', // amie.anvil.rcac.purdue.edu
+        '128.211.157.39',  // amie.anvil.rcac.purdue.edu
 
         '172.18.8.33',     // gateway.mack
         '172.18.66.17',    // ondemand.mack
@@ -74,4 +69,17 @@ return [
         '172.18.8.27',     // mack-adm.rcac.purdue.edu
         '172.18.95.224',   // adm.anvil.rcac.purdue.edu
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Whitelisted IP ranges
+    |--------------------------------------------------------------------------
+    |
+    | A list of allowed ranges [lower, higher]
+    |
+    */
+
+    'ranges' => [
+        ['127.0.0.0', '127.0.0.100'],
+    ]
 ];
