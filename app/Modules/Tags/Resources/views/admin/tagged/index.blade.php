@@ -50,13 +50,23 @@ app('pathway')
 		<thead>
 			<tr>
 				<th>
-					<span class="form-check"><input type="checkbox" name="toggle" value="" id="toggle-all" class="form-check-input checkbox-toggle toggle-all" /><label for="toggle-all"></label></span>
+					{!! Html::grid('checkall') !!}
 				</th>
-				<th scope="col" class="priority-5">{{ trans('tags::tags.id') }}</th>
-				<th scope="col">{{ trans('tags::tags.type') }}</th>
-				<th scope="col">{{ trans('tags::tags.type id') }}</th>
-				<th scope="col" class="priority-4">{{ trans('tags::tags.created') }}</th>
-				<th scope="col" class="priority-4">{{ trans('tags::tags.created by') }}</th>
+				<th scope="col" class="priority-5">
+					{!! Html::grid('sort', trans('tags::tags.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<th scope="col">
+					{!! Html::grid('sort', trans('tags::tags.type'), 'taggable_type', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<th scope="col">
+					{!! Html::grid('sort', trans('tags::tags.type id'), 'taggable_id', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<th scope="col" class="priority-4">
+					{!! Html::grid('sort', trans('tags::tags.created'), 'created_at', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<th scope="col" class="priority-4">
+					{{ trans('tags::tags.created by') }}
+				</th>
 			</tr>
 		</thead>
 		<tbody>

@@ -89,13 +89,6 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 					</div>
 				</div>
 
-				<!--
-				<div class="form-group">
-					<?php echo $form->getLabel('language'); ?>
-					<?php echo $form->getInput('language'); ?>
-				</div>
-				-->
-
 				<div class="form-group">
 					<?php echo $form->getLabel('note'); ?>
 					<?php echo $form->getInput('note'); ?>
@@ -131,20 +124,6 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 					<div id="menu_assignment-dependent">
 						<div class="form-group">
 							<label id="field_menuselect-lbl" for="field_menuselect">{{ trans('widgets::widgets.menu selection') }}</label>
-
-							<!--
-							<button class="btn-assignments btn btn-default" onclick="$('.chkbox').each(function(i, el) { el.checked = !el.checked; });">
-								<?php echo trans('global.select toggle'); ?>
-							</button>
-
-							<button class="btn-assignments btn btn-default" onclick="$('.chkbox').each(function(i, el) { el.checked = false; });">
-								<?php echo trans('global.select none'); ?>
-							</button>
-
-							<button class="btn-assignments btn btn-default" onclick="$('.chkbox').each(function(i, el) { el.checked = true; });">
-								<?php echo trans('global.select all'); ?>
-							</button>
-							-->
 
 							<div id="menu-assignment" class="accordian">
 								<?php $menuTypes = App\Modules\Menus\Helpers\Menus::getMenuLinks(); ?>

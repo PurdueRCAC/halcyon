@@ -44,7 +44,7 @@ Toolbar::cancel(route('admin.issues.todos.cancel'));
 @stop
 
 @section('content')
-<form action="{{ route('admin.issues.todos.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+<form action="{{ route('admin.issues.todos.store') }}" method="post" name="adminForm" id="item-form" class="editform">
 
 	@if ($errors->any())
 		<div class="alert alert-danger">

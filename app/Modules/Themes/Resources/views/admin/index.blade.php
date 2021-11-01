@@ -80,14 +80,10 @@ app('pathway')
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('themes::themes.home'), 'home', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<!-- <th scope="col" class="priority-3">
-					{{ trans('themes::themes.assigned') }}
-				</th> -->
 			</tr>
 		</thead>
 		<tbody>
 		<?php
-		//$canCreate = auth()->user()->can('create themes');
 		$canEdit = auth()->user()->can('edit themes') || auth()->user()->can('edit.state themes');
 		$canDelete = auth()->user()->can('delete themes');
 		?>
@@ -133,15 +129,6 @@ app('pathway')
 						</span>
 					@endif
 				</td>
-				<!-- <td class="priority-4">
-					@if ($row->assigned > 0)
-						<span class="badge yes" title="{{ trans('themes::themes.ASSIGNED', ['count' => $item->assigned]) }}">
-							<span class="text">{{ trans('themes::themes.ASSIGNED', ['count' => $item->assigned]) }}</span>
-						</span>
-					@else
-						&#160;
-					@endif
-				</td> -->
 			</tr>
 		@endforeach
 		</tbody>

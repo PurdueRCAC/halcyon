@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('groups.name') !!}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{!! config('groups.name') !!}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

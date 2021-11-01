@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{{ trans('history::history.history manager') }}: {{ trans('history::history.activity') }}: View: #{{ $row->id }}
+{{ trans('history::history.history manager') }}: {{ trans('history::history.activity') }}: {{ trans('history::history.view') }}: #{{ $row->id }}
 @stop
 
 @section('content')

@@ -49,9 +49,9 @@ app('pathway')
 				<label class="sr-only" for="filter_action">{{ trans('history::history.action') }}</label>
 				<select name="action" class="form-control filter filter-submit">
 					<option value=""<?php if ($filters['action'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('history::history.all actions') }}</option>
-					<option value="created"<?php if ($filters['action'] == 'created'): echo ' selected="selected"'; endif;?>>created</option>
-					<option value="updated"<?php if ($filters['action'] == 'updated'): echo ' selected="selected"'; endif;?>>updated</option>
-					<option value="deleted"<?php if ($filters['action'] == 'deleted'): echo ' selected="selected"'; endif;?>>deleted</option>
+					<option value="created"<?php if ($filters['action'] == 'created'): echo ' selected="selected"'; endif;?>>{{ trans('history::history.created') }}</option>
+					<option value="updated"<?php if ($filters['action'] == 'updated'): echo ' selected="selected"'; endif;?>>{{ trans('history::history.updated') }}</option>
+					<option value="deleted"<?php if ($filters['action'] == 'deleted'): echo ' selected="selected"'; endif;?>>{{ trans('history::history.deleted') }}</option>
 				</select>
 
 				<label class="sr-only" for="filter_type">{{ trans('history::history.type') }}</label>

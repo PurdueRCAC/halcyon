@@ -23,4 +23,6 @@ return [
 	'aliases' => 'Aliases',
 	'history' => 'History',
 	'record id' => 'Tag #:id',
+	'item removed' => 'Item removed.',
+	'item added' => 'Item added.',
 ];

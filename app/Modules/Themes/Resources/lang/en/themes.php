@@ -15,4 +15,5 @@ return [
 	'advanced fieldset' => 'advanced fieldset',
 	'menu selection' => 'Menu Selection:',
 	'menu assignment' => 'Menu Assignment',
+	'no options' => 'No options found for this template.',
 ];

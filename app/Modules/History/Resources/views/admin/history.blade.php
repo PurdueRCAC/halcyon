@@ -15,22 +15,19 @@
 
 					$created = $action->created_at ? $action->created_at : trans('global.unknown');
 
-					if (is_object($action->new))
-					{
+					if (is_object($action->new)):
 						$f = get_object_vars($action->new);
-					}
-					elseif (is_array($action->new))
-					{
+					elseif (is_array($action->new)):
 						$f = $action->new;
-					}
+					endif;
+
 					$fields = array_keys($f);
-					foreach ($fields as $i => $k)
-					{
-						if (in_array($k, ['created_at', 'updated_at', 'deleted_at']))
-						{
+					foreach ($fields as $i => $k):
+						if (in_array($k, ['created_at', 'updated_at', 'deleted_at'])):
 							unset($fields[$i]);
-						}
-					}
+						endif;
+					endforeach;
+
 					$old = Carbon\Carbon::now()->subDays(2); //->toDateTimeString();
 					?>
 					<li class="{{ $action->action }}">
@@ -45,7 +42,7 @@
 							</time>
 						</span>
 						@if ($action->action == 'updated')
-							<span class="entry-diff">Changed fields: <code><?php echo implode('</code>, <code>', $fields); ?></code></span>
+							<span class="entry-diff">{{ trans('history::history.changed fields') }}: <code><?php echo implode('</code>, <code>', $fields); ?></code></span>
 						@endif
 					</li>
 					<?php

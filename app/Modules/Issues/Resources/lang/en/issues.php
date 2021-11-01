@@ -52,4 +52,10 @@ return [
 	'all' => 'All Statuses',
 	'resolution' => 'Resolution',
 	'mark as resolution' => 'Mark as resolution',
+	'mark as complete' => 'Mark as complete',
+	'start' => 'Start date',
+	'stop' => 'End date',
+	'show' => 'Show',
+	'tags' => 'Tags',
+	'no todos found' => 'All caught up!',
 ];

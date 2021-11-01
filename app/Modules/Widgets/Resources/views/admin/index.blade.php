@@ -146,9 +146,6 @@ app('pathway')
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('widgets::widgets.access'), 'access', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<?php /*<th scope="col">
-					{{ trans('widgets::widgets.language') }}
-				</th>*/ ?>
 			</tr>
 		</thead>
 		<tbody>
@@ -240,37 +237,21 @@ app('pathway')
 				<td class="priority-4">
 					<?php
 					$pages = $row->pages;
-					if (is_null($row->pages))
-					{
+					if (is_null($row->pages)):
 						$pages = trans('global.none');
-					}
-					elseif ($row->pages < 0)
-					{
+					elseif ($row->pages < 0):
 						$pages = trans('widgets::widgets.all except selected');
-					}
-					elseif ($row->pages > 0)
-					{
+					elseif ($row->pages > 0):
 						$pages = trans('widgets::widgets.selected only');
-					}
-					else
-					{
+					else:
 						$pages = trans('global.all');
-					}
+					endif;
 					echo $pages;
 					?>
 				</td>
 				<td class="priority-4">
 					<span class="badge access {{ str_replace(' ', '', strtolower($row->access_level)) }}">{{ $row->access_level }}</span>
 				</td>
-				<?php /*<td class="priority-5 center">
-					<?php if ($row->language == ''): ?>
-						{{ trans('global.default') }}
-					<?php elseif ($row->language == '*'): ?>
-						{{ trans('global.all') }}
-					<?php else: ?>
-						<?php echo $row->language_title ? e($row->language_title) : trans('global.undefined'); ?>
-					<?php endif; ?>
-				</td>*/ ?>
 			</tr>
 		@endforeach
 		</tbody>

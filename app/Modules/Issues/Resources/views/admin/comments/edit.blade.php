@@ -35,7 +35,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('issues.name') !!} Comment: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{!! config('issues.name') !!} Comment: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

@@ -11,6 +11,8 @@ return [
 	'action' => 'Action',
 	'actor' => 'Actor',
 	'created' => 'Created',
+	'updated' => 'Updated',
+	'deleted' => 'Deleted',
 	'creator' => 'Creator',
 	'modified' => 'Last Modified',
 	'modifier' => 'Modifier',
@@ -19,6 +21,7 @@ return [
 	'old' => 'Old',
 	'new' => 'New',
 	'changes' => 'Changes',
+	'changed fields' => 'Changed fields',
 	'history' => 'History',
 	'none found' => 'No history found.',
 	'action by' => ':user on :datetime',
@@ -35,4 +38,5 @@ return [
 	'all transports' => '- All Transport Methods -',
 	'status' => 'Status',
 	'all status' => '- All Statuses -',
+	'view' => 'View',
 ];

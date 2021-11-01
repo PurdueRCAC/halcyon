@@ -385,7 +385,7 @@ class SyncCommand extends Command
 		$removed = array();
 		foreach ($remove_users as $user)
 		{
-			$msg = 'Would delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
+			$msg = 'Would delete AIMO ACMaint ' . $row->resource->name . ' role for ' . $user . ': ' . $event->status;
 
 			if ($debug || $this->output->isVerbose())
 			{
@@ -409,7 +409,7 @@ class SyncCommand extends Command
 
 			if ($event->status >= 400)
 			{
-				$msg = 'Could not delete AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
+				$msg = 'Could not delete AIMO ACMaint ' . $row->resource->name . ' role for ' . $user . ': ' . $event->status;
 				if ($debug || $this->output->isVerbose())
 				{
 					$this->error($msg);
@@ -425,7 +425,7 @@ class SyncCommand extends Command
 			{
 				$removed[] = $user;
 
-				$msg = 'Deleted AIMO ACMaint scholar role for ' . $user . ': ' . $event->status;
+				$msg = 'Deleted AIMO ACMaint ' . $row->resource->name . ' role for ' . $user . ': ' . $event->status;
 				if ($debug || $this->output->isVerbose())
 				{
 					$this->success($msg);

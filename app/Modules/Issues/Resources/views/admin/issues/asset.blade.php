@@ -32,16 +32,14 @@
 							{{ Illuminate\Support\Str::limit($row->report, 70) }}
 						</a>
 					@else
-						<span>
-							{{ Illuminate\Support\Str::limit($row->report, 70) }}
-						</span>
+						{{ Illuminate\Support\Str::limit($row->report, 70) }}
 					@endif
 				</td>
 				<td class="priority-4">
 					@if ($r = $row->resourcesString)
 						{{ $r }}
 					@else
-						<span class="none">{{ trans('global.none') }}</span>
+						<span class="text-muted">{{ trans('global.none') }}</span>
 					@endif
 				</td>
 				<td class="priority-4">
@@ -55,7 +53,7 @@
 								@endif
 							</time>
 						@else
-							<span class="never">{{ trans('global.unknown') }}</span>
+							<span class="text-muted">{{ trans('global.unknown') }}</span>
 						@endif
 					</span>
 				</td>
@@ -63,7 +61,7 @@
 					@if ($row->comments_count)
 						{{ $row->comments_count }}
 					@else
-						<span class="none">{{ $row->comments_count }}</span>
+						<span class="text-muted">{{ $row->comments_count }}</span>
 					@endif
 				</td>
 			</tr>

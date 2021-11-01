@@ -27,7 +27,7 @@ app('pathway')
 @stop
 
 @section('title')
-{{ trans('history::history.history manager') }}: View: #{{ $row->id }}
+{{ trans('history::history.history manager') }}: {{ trans('history::history.view') }}: #{{ $row->id }}
 @stop
 
 @section('content')

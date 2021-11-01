@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				dataType: 'json',
 				async: false,
 				success: function (response) {
-					Halcyon.message('success', 'Item added');
+					Halcyon.message('success', btn.getAttribute('data-success'));
 
 					var c = $(name).closest('table');
 					var li = c.find('tr.hidden');
@@ -76,19 +76,20 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#main').on('click', '.remove-alias', function (e) {
 		e.preventDefault();
 
-		var result = confirm($(this).data('confirm'));
+		var btn = $(this);
+		var result = confirm(btn.attr('data-confirm'));
 
 		if (result) {
-			var field = $($(this).attr('href'));
+			var field = $(btn.attr('href'));
 
 			// delete relationship
 			$.ajax({
-				url: $(this).data('api'),
+				url: btn.attr('data-api'),
 				type: 'delete',
 				dataType: 'json',
 				async: false,
 				success: function () {
-					Halcyon.message('success', 'Item removed');
+					Halcyon.message('success', btn.attr('data-success'));
 					field.remove();
 				},
 				error: function (xhr) {

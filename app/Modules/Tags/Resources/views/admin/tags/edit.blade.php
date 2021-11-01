@@ -79,7 +79,8 @@ app('pathway')
 									<td class="text-right">
 										<a href="#alias-{{ $u->id }}" class="btn btn-secondary btn-danger remove-alias"
 											data-api="{{ route('api.tags.delete', ['id' => $u->id]) }}"
-											data-confirm="{{ trans('tags::tags.confirm delete') }}">
+											data-confirm="{{ trans('tags::tags.confirm delete') }}"
+											data-success="{{ trans('tags::tags.item removed') }}">
 											<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
 										</a>
 									</td>
@@ -92,7 +93,8 @@ app('pathway')
 								<td class="text-right">
 									<a href="#alias-{id}" class="btn btn-secondary btn-danger remove-alias"
 										data-api="{{ route('api.tags.create') }}/{id}"
-										data-confirm="{{ trans('tags::tags.confirm delete') }}">
+										data-confirm="{{ trans('tags::tags.confirm delete') }}"
+										data-success="{{ trans('tags::tags.item removed') }}">
 										<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
 									</a>
 								</td>
@@ -107,7 +109,8 @@ app('pathway')
 								<td class="text-right">
 									<a href="#name" class="btn btn-secondary btn-success alias-add"
 										data-id="{{ $row->id }}"
-										data-api="{{ route('api.tags.create') }}">
+										data-api="{{ route('api.tags.create') }}"
+										data-success="{{ trans('tags::tags.item added') }}">
 										<span class="icon-plus glyph">{{ trans('global.add') }}</span>
 									</a>
 								</td>
