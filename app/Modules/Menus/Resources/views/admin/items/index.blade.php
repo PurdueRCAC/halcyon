@@ -247,7 +247,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 				<td class="text-center priority-3">
 					@if ($row->trashed())
 						@if ($canChange)
-							<a class="badge badge-danger" href="{{ route('admin.menus.items.restore', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.restore" data-tip="Restore menu item">
+							<a class="badge badge-danger" href="{{ route('admin.menus.items.restore', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.restore" data-tip="{{ trans('menus::menus.restore menu item') }}">
 								{{ trans('global.trashed') }}
 							</a>
 						@else
@@ -257,7 +257,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 						@endif
 					@elseif ($row->state)
 						@if ($canChange)
-							<a class="badge badge-success" href="{{ route('admin.menus.items.unpublish', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.unpublish" data-tip="Unpublish menu item">
+							<a class="badge badge-success" href="{{ route('admin.menus.items.unpublish', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.unpublish" data-tip="{{ trans('menus::menus.unpublish menu item') }}">
 								{{ trans('global.published') }}
 							</a>
 						@else
@@ -267,7 +267,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 						@endif
 					@else
 						@if ($canChange)
-							<a class="badge badge-success" href="{{ route('admin.menus.items.publish', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.publish" data-tip="Publish menu item">
+							<a class="badge badge-success" href="{{ route('admin.menus.items.publish', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.publish" data-tip="{{ trans('menus::menus.publish menu item') }}">
 								{{ trans('global.unpublished') }}
 							</a>
 						@else

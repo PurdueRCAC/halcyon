@@ -24,6 +24,7 @@ return [
 	'detail view' => 'List View',
 	'new name' => 'New name',
 	'use helper in content' => 'Or use <code>:helper</code> in content',
+	'rename prompt' => 'New name',
 
 	// Error messages
 	'error' => [

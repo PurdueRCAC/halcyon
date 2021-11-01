@@ -63,7 +63,7 @@ app('pathway')
 						<legend>{{ trans('global.details') }}</legend>
 
 						<div class="form-group">
-							<label for="storageresourceid">{{ trans('storage::storage.parent') }}: <span class="required">{{ trans('global.required') }}</span></label>
+							<label for="storageresourceid">{{ trans('storage::storage.parent') }} <span class="required">{{ trans('global.required') }}</span></label>
 							<select name="fields[storageresourceid]" id="storageresourceid" class="form-control required" required>
 								<option value="0" data-path="">{{ trans('global.none') }}</option>
 								<?php foreach ($storageresources as $s): ?>
@@ -75,7 +75,7 @@ app('pathway')
 						</div>
 
 						<div class="form-group">
-							<label for="field-name">{{ trans('storage::storage.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+							<label for="field-name">{{ trans('storage::storage.name') }} <span class="required">{{ trans('global.required') }}</span></label>
 							@if ($row->storageResource && $row->storageResource->path)
 							<span class="input-group">
 								<span class="input-group-prepend"><span class="input-group-text"><span id="storageresourceid_path">{{ $row->storageResource ? rtrim($row->storageResource->path, '/') : '' }}</span>{{ $row->parent ? '/' . trim($row->parent->path, '/') : '' }}/<span id="new_dir_path"></span></span></span>
@@ -90,26 +90,26 @@ app('pathway')
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="groupid">{{ trans('storage::storage.group') }}:</label>
+									<label for="groupid">{{ trans('storage::storage.group') }}</label>
 									<span class="input-group">
 										<input type="text" name="fields[groupid]" id="groupid" class="form-control form-groups" data-uri="{{ url('/') }}/api/groups/?api_token={{ auth()->user()->api_token }}&search=%s" value="{{ ($row->group ? $row->group->name . ':' . $row->groupid : '') }}" />
-										<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
+										<span class="input-group-append"><span class="input-group-text icon-users" aria-hidden="true"></span></span>
 									</span>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="field-owneruserid">{{ trans('storage::storage.owner') }}:</label>
+									<label for="field-owneruserid">{{ trans('storage::storage.owner') }}</label>
 									<span class="input-group">
 										<input type="text" name="fields[owneruserid]" id="field-owneruserid" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="{{ ($row->owner ? $row->owner->name . ':' . $row->owneruserid : '') }}" />
-										<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
+										<span class="input-group-append"><span class="input-group-text icon-user" aria-hidden="true"></span></span>
 									</span>
 								</div>
 							</div>
 						</div>
 
 						<div class="form-group">
-							<label for="field-bytes">{{ trans('storage::storage.quota') }}:</label>
+							<label for="field-bytes">{{ trans('storage::storage.quota') }}</label>
 							<input type="text" name="fields[bytes]" id="field-bytes" class="form-control" value="{{ App\Halcyon\Utility\Number::formatBytes($row->bytes) }}" />
 							<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 						</div>
@@ -120,9 +120,9 @@ app('pathway')
 						<legend>{{ trans('storage::storage.permissions') }}</legend>
 
 						<div class="form-group">
-							<label for="field-unixgroupid">Access Unix Group:</label>
+							<label for="field-unixgroupid">{{ trans('storage::storage.access unix group') }}</label>
 							<select id="field-unixgroupid" name="fields[unixgroupid]" class="form-control">
-								<option value="">(Select Unix Group)</option>
+								<option value="">{{ trans('storage::storage.select unix group') }}</option>
 								@if ($row->group)
 									@foreach ($row->group->unixgroups as $unixgroup)
 										<option value="{{ $unixgroup->id }}" <?php if ($row->unixgroupid == $unixgroup->id) { echo ' selected="selected"'; } ?> data-api="{{ route('api.unixgroups.read', ['id' => $unixgroup->id]) }}">{{ $unixgroup->longname }}</option>
@@ -132,23 +132,23 @@ app('pathway')
 						</div>
 
 						<div class="form-group">
-							<label for="field-autouser">Type:</label>
+							<label for="field-autouser">{{ trans('storage::storage.type') }}</label>
 							<select id="field-autouser" name="fields[autouser]" data-update="#autouserunixgroupid" class="form-control">
-								<option value="0">Group Shared</option>
-								<option value="1" data-read="1" data-write="0"<?php if ($row->autouser == 1) { echo ' selected="selected"'; } ?>>Auto User - Group Readable</option>
-								<option value="3" data-read="1" data-write="1"<?php if ($row->autouser == 3) { echo ' selected="selected"'; } ?>>Auto User - Group Readable & Writeable</option>
-								<option value="2" data-read="0" data-write="0"<?php if ($row->autouser == 2) { echo ' selected="selected"'; } ?>>Auto User - Private</option>
-								<option value="0" data-read="1" data-write="0"<?php if (!$row->autouser && $row->groupread && !$row->groupwrite) { echo ' selected="selected"'; } ?>>User Owned - Group Readable</option>
-								<option value="0" data-read="1" data-write="1"<?php if (!$row->autouser && $row->groupread && $row->groupwrite) { echo ' selected="selected"'; } ?>>User Owned - Group Writeable</option>
-								<option value="0" data-read="0" data-write="0"<?php if (!$row->autouser && !$row->groupread && !$row->groupwrite) { echo ' selected="selected"'; } ?>>User Owned - Private</option>
+								<option value="0">{{ trans('storage::storage.permissions type.group shared') }}</option>
+								<option value="1" data-read="1" data-write="0"<?php if ($row->autouser == 1) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.auto user group readable') }}</option>
+								<option value="3" data-read="1" data-write="1"<?php if ($row->autouser == 3) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.auto user group writeable') }}</option>
+								<option value="2" data-read="0" data-write="0"<?php if ($row->autouser == 2) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.auto user private') }}</option>
+								<option value="0" data-read="1" data-write="0"<?php if (!$row->autouser && $row->groupread && !$row->groupwrite) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.user owned readable') }}</option>
+								<option value="0" data-read="1" data-write="1"<?php if (!$row->autouser && $row->groupread && $row->groupwrite) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.user owned writeable') }}</option>
+								<option value="0" data-read="0" data-write="0"<?php if (!$row->autouser && !$row->groupread && !$row->groupwrite) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.user owned private') }}</option>
 							</select>
-							<span class="form-text text-muted">"Auto User" values will auto-create directories for anyone assigned to a "Populating Unix Group".</span>
+							<span class="form-text text-muted">{{ trans('storage::storage.permissions type desc') }}</span>
 						</div>
 
 						<div id="autouserunixgroupid" class="form-group<?php if (!$row->autouser) { echo ' hidden'; } ?>">
-							<label for="field-autouserunixgroupid">Populating Unix Group</label>
+							<label for="field-autouserunixgroupid">{{ trans('storage::storage.populating unix group') }}</label>
 							<select id="field-autouserunixgroupid" name="fields[autouserunixgroupid]" class="form-control">
-								<option value="">(Select Unix Group)</option>
+								<option value="">{{ trans('storage::storage.select unix group') }}</option>
 								@if ($row->group)
 									@foreach ($row->group->unixgroups as $unixgroup)
 										<option value="{{ $unixgroup->id }}"<?php if ($row->autouserunixgroupid == $unixgroup->id) { echo ' selected="selected"'; } ?>>{{ $unixgroup->longname }}</option>

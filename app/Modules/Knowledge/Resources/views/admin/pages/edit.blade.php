@@ -200,21 +200,21 @@ app('pathway')
 
 					<div class="row">
 						<div class="col-md-4">
-							<span class="text-success">Positive</span>
+							<span class="text-success">{{ trans('knowledge::knowledge.positive feedback') }}</span>
 							<span class="text-lg">{{ $row->positiveRating }}%</span>
 							<div class="progress" style="height: 2px;">
 								<div class="progress-bar bg-success" role="progressbar" style="width: {{ $row->positiveRating }}%" aria-valuenow="{{ $row->positiveRating }}" aria-valuemin="0" aria-valuemax="100"></div>
 							</div>
 						</div>
 						<div class="col-md-4">
-							<span class="text-neutral">Neutral</span>
+							<span class="text-neutral">{{ trans('knowledge::knowledge.neutral feedback') }}</span>
 							<span class="text-lg">{{ $row->neutralRating }}%</span>
 							<div class="progress" style="height: 2px;">
 								<div class="progress-bar" role="progressbar" style="width: {{ $row->neutralRating }}%" aria-valuenow="{{ $row->neutralRating }}" aria-valuemin="0" aria-valuemax="100"></div>
 							</div>
 						</div>
 						<div class="col-md-4">
-							<span class="text-danger">Negative</span>
+							<span class="text-danger">{{ trans('knowledge::knowledge.negative feedback') }}</span>
 							<span class="text-lg">{{ $row->negativeRating }}%</span>
 							<div class="progress" style="height: 2px;">
 								<div class="progress-bar bg-danger" role="progressbar" style="width: {{ $row->negativeRating }}%" aria-valuenow="{{ $row->negativeRating }}" aria-valuemin="0" aria-valuemax="100"></div>

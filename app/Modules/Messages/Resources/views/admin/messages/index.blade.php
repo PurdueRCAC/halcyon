@@ -126,10 +126,10 @@ app('pathway')
 		<div class="row">
 			<div class="col-md-5 filter-select">
 				<label class="sr-only" for="filter_start">{{ trans('messages::messages.start') }}</label>
-				<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="Submitted from" />
+				<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="{{ trans('messages::messages.start placeholder') }}" />
 				to
 				<label class="sr-only" for="filter_stop">{{ trans('messages::messages.stop') }}</label>
-				<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="now" />
+				<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="{{ trans('messages::messages.stop placeholder') }}" />
 			</div>
 			<div class="col-md-7 text-right">
 				<label class="sr-only" for="filter_state">{{ trans('messages::messages.state') }}</label>
@@ -140,7 +140,7 @@ app('pathway')
 					<option value="complete"<?php if ($filters['state'] == 'complete'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.complete') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_type">{{ trans('messages::messages.types') }}</label>
+				<label class="sr-only" for="filter_type">{{ trans('messages::messages.type') }}</label>
 				<select name="type" id="filter_type" class="form-control filter filter-submit">
 					<option value=""<?php if ($filters['type'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all types') }}</option>
 					@foreach ($types as $type)
@@ -244,7 +244,7 @@ app('pathway')
 							@if ($target = $row->target)
 								<span data-id="{{ $row->targetobjectid }}">{{ $target }}</span>
 							@else
-								<span data-id="{{ $row->targetobjectid }}" class="unknown">{{ trans('global.unknown') }}</span>
+								<span data-id="{{ $row->targetobjectid }}" class="text-muted">{{ trans('global.unknown') }}</span>
 							@endif
 						</td>
 						<td>
@@ -273,14 +273,14 @@ app('pathway')
 							@if ($row->started())
 								<time datetime="{{ $row->datetimestarted->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestarted }}</time>
 							@else
-								<span class="none">{{ trans('messages::messages.not started') }}</span>
+								<span class="text-muted">{{ trans('messages::messages.not started') }}</span>
 							@endif
 						</td>
 						<td class="priority-4">
 							@if ($row->completed())
 								<time datetime="{{ $row->datetimecompleted->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimecompleted }}</time>
 							@else
-								<span class="none">{{ trans('messages::messages.not completed') }}</span>
+								<span class="text-muted">{{ trans('messages::messages.not completed') }}</span>
 							@endif
 						</td>
 						<td>
@@ -307,11 +307,11 @@ app('pathway')
 							$timetable .= '</tbody></table>';
 							?>
 							@if ($row->completed())
-								<span class="badge badge-success has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-check"></span> {{ $row->elapsed }}</span>
+								<span class="badge badge-success has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-check" aria-hidden="true"></span> {{ $row->elapsed }}</span>
 							@elseif ($row->started())
-								<span class="badge badge-warning has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-rotate-ccw"></span> {{ trans('messages::messages.processing') }}</span>
+								<span class="badge badge-warning has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-rotate-ccw" aria-hidden="true"></span> {{ trans('messages::messages.processing') }}</span>
 							@else
-								<span class="badge badge-info has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-more-horizontal"></span> {{ trans('messages::messages.pending') }}</span>
+								<span class="badge badge-info has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-more-horizontal" aria-hidden="true"></span> {{ trans('messages::messages.pending') }}</span>
 							@endif
 						</td>
 						<!-- <td class="text-right">
@@ -339,7 +339,7 @@ app('pathway')
 			</table>
 		@else
 			<div class="card-body text-center">
-				<div>No records found.</div>
+				<div>{{ trans('global.no records found') }}</div>
 			</div>
 		@endif
 	</div>

@@ -85,6 +85,7 @@ class Node
 		$this->id = null;
 		if (!empty($link) && $link !== '#')
 		{
+			$link = str_replace(array('https://', 'http://'), '', $link);
 			$this->id = str_replace(array('.', '/'), '-', $link);
 		}
 

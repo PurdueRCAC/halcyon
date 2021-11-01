@@ -237,21 +237,21 @@ app('pathway')
 							@else
 								@if ($row->enabled && $row->started && $row->active)
 									@if ($row->reservation)
-										<a class="glyph icon-circle" href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="Queue has dedicated reservation.">
-											{{ trans('Queue has dedicated reservation.') }}
+										<a class="glyph icon-circle" href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue has dedicated reservation') }}">
+											{{ trans('queues::queues.queue has dedicated reservation') }}
 										</a>
 									@else
-										<a class="glyph icon-check-circle text-success" href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="Queue is running.">
-											{{ trans('Queue is running.') }}
+										<a class="glyph icon-check-circle text-success" href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue is running') }}">
+											{{ trans('queues::queues.queue is running') }}
 										</a>
 									@endif
 								@elseif ($row->active)
-									<a class="glyph icon-minus-circle text-danger" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('Queue is stopped or disabled.') }}">
-										{{ trans('Queue is stopped or disabled.') }}
+									<a class="glyph icon-minus-circle text-danger" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue is stopped') }}">
+										{{ trans('queues::queues.queue is stopped') }}
 									</a>
 								@elseif (!$row->active)
-									<a class="glyph icon-alert-triangle text-warning" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('Queue has no active resources. Remove queue or sell/loan nodes.') }}">
-										{{ trans('Queue has no active resources. Remove queue or sell/loan nodes.') }}
+									<a class="glyph icon-alert-triangle text-warning" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue has not active resources') }}">
+										{{ trans('queues::queues.queue has not active resources') }}
 									</a>
 								@endif
 							@endif

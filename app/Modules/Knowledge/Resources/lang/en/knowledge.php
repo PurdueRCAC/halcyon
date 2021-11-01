@@ -59,7 +59,6 @@ return [
 	'options' => 'Options',
 	'ordering' => 'Ordering',
 	'all levels' => '- All Levels -',
-	'feedback' => 'Feedback',
 	'snippets attached' => 'Snippet(s) attached',
 	'error' => [
 		'failed to attach snippets' =>'Failed to attach snippets.',
@@ -74,6 +73,10 @@ return [
 	'toggle open close' => 'Toggle copn/close',
 	'page is archived' => 'This content has been archived and is no longer maintained. Information found here may no longer be accurate and links may no longer be available or reliable.',
 	// Helpful
+	'feedback' => 'Feedback',
+	'positive feedback' => 'Positive',
+	'neutral feedback' => 'Neutral',
+	'negative feedback' => 'Negative',
 	'answered my questions' => 'Answered my question(s)',
 	'not helpful' => 'Not helpful',
 	'helpful' => 'Helpful?',

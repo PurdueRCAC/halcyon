@@ -57,7 +57,7 @@ app('pathway')
 	@endif
 
 	@if ($row->trashed())
-		<div class="alert alert-warning">This entry is marked as trashed.</div>
+		<div class="alert alert-warning">{{ trans('queues::queues.entry marked as trashed') }}</div>
 	@endif
 
 	<form action="{{ route('admin.queues.store') }}" method="post" name="adminForm" id="adminForm" class="editform form-validate">
@@ -94,14 +94,14 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-groupid">{{ trans('queues::queues.group') }}:</label>
 					<span class="input-group">
-						<input type="text" name="fields[groupid]" id="field-groupid" class="form-control form-groups" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&amp;search=%s" data-multiple="false" placeholder="Search for group..." value="{{ ($row->group ? $row->group->name . ':' . $row->groupid : '') }}" />
+						<input type="text" name="fields[groupid]" id="field-groupid" class="form-control form-groups" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&amp;search=%s" data-multiple="false" placeholder="{{ trans('queues::queues.search for group') }}" value="{{ ($row->group ? $row->group->name . ':' . $row->groupid : '') }}" />
 						<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
 					</span>
 				</div>
 
 				<div class="form-group">
 					<label for="field-name">{{ trans('queues::queues.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required pattern="[a-zA-Z0-9_\-]{1,64}" maxlength="64" value="{{ $row->name }}" data-invalid-msg="The field 'Queue Name' is required." />
+					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required pattern="[a-zA-Z0-9_\-]{1,64}" maxlength="64" value="{{ $row->name }}" data-invalid-msg="{{ trans('queues::queues.name error') }}" />
 					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
 				</div>
 
@@ -164,7 +164,7 @@ app('pathway')
 												<option value="{{ $child->subresourceid }}"<?php echo $selected; ?>
 													data-nodecores="{{ $child->subresource ? $child->subresource->nodecores : 0 }}"
 													data-nodemem="{{ $child->subresource ? $child->subresource->nodemem : 0 }}"
-													data-cluster="{{ $child->subresource ? $child->subresource->cluster : '' }}">{{ $child->subresource ? $child->subresource->name : '(unknown)' }}</option>
+													data-cluster="{{ $child->subresource ? $child->subresource->cluster : '' }}">{{ $child->subresource ? $child->subresource->name : trans('global.unknown') }}</option>
 											<?php endforeach; ?>
 										</optgroup>
 									<?php endif; ?>
@@ -344,7 +344,7 @@ app('pathway')
 					<div class="form-check">
 						<input type="checkbox" name="fields[aclusersenabled]" id="field-aclusersenabled" class="form-check-input" value="1"<?php if ($row->aclusersenabled) { echo ' checked="checked"'; } ?> />
 						<label for="field-aclusersenabled" class="form-check-label">{{ trans('queues::queues.acl users enabled') }}</label>
-						<span class="form-text text-muted">acl users enabled</span>
+						<span class="form-text text-muted">{{ trans('queues::queues.acl users enabled desc') }}</span>
 					</div>
 				</div>
 

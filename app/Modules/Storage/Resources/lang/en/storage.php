@@ -76,10 +76,23 @@ return [
 		'write' => 'Write',
 		'execute' => 'Execute',
 	],
+	'permissions type' => [
+		'group shared' => 'Group Shared',
+		'auto user group readable' => 'Auto User - Group Readable',
+		'auto user group writeable' => 'Auto User - Group Readable & Writeable',
+		'auto user private' => 'Auto User - Private',
+		'user owned readable' => 'User Owned - Group Readable',
+		'user owned writeable' => 'User Owned - Group Writeable',
+		'user owned private' => 'User Owned - Private',
+	],
+	'permissions type desc' => '"Auto User" values will auto-create directories for anyone assigned to a "Populating Unix Group".',
 	'future quota' => 'Future Quota Changes',
 	'unallocated space' => 'Unallocated space',
 	'remove overallocated' => 'Remove over-allocated space from this directory',
 	'distribute remaining' => 'Distribute remaining space',
+	'access unix group' => 'Access Unix Group',
+	'populating unix group' => 'Populating Unix Group',
+	'select unix group' => '(Select Unix Group)',
 
 	// Purchases/Loans
 	'type' => 'Type',

@@ -60,9 +60,9 @@ app('pathway')
 					<label for="field-resourceid">{{ trans('messages::messages.resource') }}:</label>
 					<select name="fields[resourceid]" id="field-resourceid" class="form-control">
 						<option value="0">{{ trans('global.none') }}</option>
-						<?php foreach ($resources as $res) { ?>
-							<option value="<?php echo $res->id; ?>"<?php if ($row->resourceid == $res->id): echo ' selected="selected"'; endif;?>>{{ str_repeat('- ', $res->level) . $res->name }}</option>
-						<?php } ?>
+						@foreach ($resources as $res)
+							<option value="{{ $res->id }}"<?php if ($row->resourceid == $res->id): echo ' selected="selected"'; endif;?>>{{ str_repeat('- ', $res->level) . $res->name }}</option>
+						@endforeach
 					</select>
 				</div>
 			</fieldset>

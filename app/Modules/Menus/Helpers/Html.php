@@ -343,7 +343,7 @@ class Html
 			7 => array(
 				'unpublish',
 				'global.published',
-				'menus::menus.HTML_UNPUBLISH_SEPARATOR',
+				'menus::menus.unpublish separator',
 				'',
 				false,
 				'publish',
@@ -352,7 +352,7 @@ class Html
 			6 => array(
 				'publish',
 				'global.unpublished',
-				'menus::menus.HTML_PUBLISH_SEPARATOR',
+				'menus::menus.publish separator',
 				'',
 				false,
 				'unpublish',
@@ -361,7 +361,7 @@ class Html
 			5 => array(
 				'unpublish',
 				'global.published',
-				'menus::menus.HTML_UNPUBLISH_ALIAS',
+				'menus::menus.unpublish alias',
 				'',
 				false,
 				'publish',
@@ -370,7 +370,7 @@ class Html
 			4 => array(
 				'publish',
 				'global.unpublished',
-				'menus::menus.HTML_PUBLISH_ALIAS',
+				'menus::menus.publish alias',
 				'',
 				false,
 				'unpublish',
@@ -379,7 +379,7 @@ class Html
 			3 => array(
 				'unpublish',
 				'global.published',
-				'menus::menus.HTML_UNPUBLISH_URL',
+				'menus::menus.unpublish url',
 				'',
 				false,
 				'publish',
@@ -388,7 +388,7 @@ class Html
 			2 => array(
 				'publish',
 				'',
-				'menus::menus.HTML_PUBLISH_URL',
+				'menus::menus.publish url',
 				'',
 				false,
 				'unpublish',
@@ -398,8 +398,8 @@ class Html
 				'unpublish',
 
 				'global.published',
-				'menus::menus.HTML_UNPUBLISH_ENABLED',
-				'menus::menus.EXTENSION_PUBLISHED_ENABLED',
+				'menus::menus.unpublish enabled',
+				'menus::menus.publish enabled',
 				true,
 				'publish',
 				'publish'
@@ -407,26 +407,26 @@ class Html
 			0 => array(
 				'publish',
 				'global.unpublished',
-				'menus::menus.HTML_PUBLISH_ENABLED',
-				'menus::menus.EXTENSION_UNPUBLISHED_ENABLED',
+				'menus::menus.publish enabled',
+				'menus::menus.extension unpublished enabled',
 				true,
 				'unpublish',
 				'unpublish'
 			),
 			-1 => array(
 				'unpublish',
-				'menus::menus.EXTENSION_PUBLISHED_DISABLED',
-				'menus::menus.HTML_UNPUBLISH_DISABLED',
-				'menus::menus.EXTENSION_PUBLISHED_DISABLED',
+				'menus::menus.extension published disabled',
+				'menus::menus.unpublish disabled',
+				'menus::menus.extension published disabled',
 				true,
 				'warning',
 				'warning'
 			),
 			-2 => array(
 				'publish',
-				'menus::menus.EXTENSION_UNPUBLISHED_DISABLED',
-				'menus::menus.HTML_PUBLISH_DISABLED',
-				'menus::menus.EXTENSION_UNPUBLISHED_DISABLED',
+				'menus::menus.extension unpublished disabled',
+				'menus::menus.publish disabled',
+				'menus::menus.extension unpublished disabled',
 				true,
 				'unpublish',
 				'unpublish'

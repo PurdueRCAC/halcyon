@@ -175,14 +175,14 @@
 							<div class="helpful-btn-grp">
 								<button class="btn btn-feedback btn-outline-secondary" id="yes-button"
 									data-feedback-type="positive"
-									data-feedback-text="yes"
+									data-feedback-text="{{ trans('global.yes') }}"
 									data-feedback-event="btn.click"
 									title="{{ trans('knowledge::knowledge.answered my questions') }}">
 									{{ trans('global.yes') }}
 								</button>
 								<button class="btn btn-feedback btn-outline-secondary" id="no-button"
 									data-feedback-type="negative"
-									data-feedback-text="no"
+									data-feedback-text="{{ trans('global.no') }}"
 									data-feedback-event="btn.click"
 									title="{{ trans('knowledge::knowledge.not helpful') }}">
 									{{ trans('global.no') }}

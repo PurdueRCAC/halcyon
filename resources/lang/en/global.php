@@ -40,6 +40,7 @@ return [
 	'select' => 'Select',
 	'submit' => 'Submit',
 	'warn javascript required' => 'Warning! JavaScript must be enabled for proper operation of the Administrator backend.',
+	'no records found' => 'No records found.',
 	'admin' => [
 		'record id' => 'Record #:id',
 	],

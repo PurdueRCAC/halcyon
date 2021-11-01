@@ -137,15 +137,15 @@
 								</span>
 							</div>
 							<div class="form-group">
-								<label for="new_dir_type">Type:</label>
+								<label for="new_dir_type">{{ trans('storage::storage.type') }}:</label>
 								<select id="new_dir_type" class="form-control">
-									<option value="normal">Group Shared</option>
-									<option value="autouserread">Auto User - Group Readable</option>
-									<option value="autouserreadwrite">Auto User - Group Readable & Writeable</option>
-									<option value="autouserprivate">Auto User - Private</option>
-									<option value="user">User Owned - Group Readable</option>
-									<option value="userwrite">User Owned - Group Writeable</option>
-									<option value="userprivate">User Owned - Private</option>
+									<option value="normal">{{ trans('storage::storage.permissions type.group shared') }}</option>
+									<option value="autouserread">{{ trans('storage::storage.permissions type.auto user group readable') }}</option>
+									<option value="autouserreadwrite">{{ trans('storage::storage.permissions type.auto user group writeable') }}</option>
+									<option value="autouserprivate">{{ trans('storage::storage.permissions type.auto user private') }}</option>
+									<option value="user">{{ trans('storage::storage.permissions type.user owned readable') }}</option>
+									<option value="userwrite">{{ trans('storage::storage.permissions type.user owned writeable') }}</option>
+									<option value="userprivate">{{ trans('storage::storage.permissions type.user owned private') }}</option>
 								</select>
 							</div>
 							<fieldset>
@@ -196,9 +196,9 @@
 								</div>
 							</fieldset>
 							<div class="form-group">
-								<label for="new_dir_unixgroup_select">Access Unix Group:</label>
+								<label for="new_dir_unixgroup_select">{{ trans('storage::storage.access unix group') }}</label>
 								<select id="new_dir_unixgroup_select" class="form-control">
-									<option value="">(Select Unix Group)</option>
+									<option value="">{{ trans('storage::storage.select unix group') }}</option>
 									<?php foreach ($group->unixgroups as $unixgroup) { ?>
 										<option value="<?php echo $unixgroup->id; ?>" data-api="{{ route('api.unixgroups.read', ['id' => $unixgroup->id]) }}"><?php echo $unixgroup->longname; ?></option>
 									<?php } ?>
@@ -207,9 +207,9 @@
 								</select>
 							</div>
 							<div id="new_dir_autouserunixgroup_row" class="form-group hidden">
-								<label for="new_dir_autouserunixgroup_select">Populating Unix Group</label>
+								<label for="new_dir_autouserunixgroup_select">{{ trans('storage::storage.populating unix group') }}</label>
 								<select id="new_dir_autouserunixgroup_select" class="form-control">
-									<option value="">(Select Unix Group)</option>
+									<option value="">{{ trans('storage::storage.select unix group') }}</option>
 									<?php foreach ($group->unixgroups as $unixgroup) { ?>
 										<option value="<?php echo $unixgroup->id; ?>"><?php echo $unixgroup->longname; ?></option>
 									<?php } ?>
