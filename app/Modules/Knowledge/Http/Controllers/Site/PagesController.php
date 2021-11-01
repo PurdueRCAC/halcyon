@@ -77,7 +77,7 @@ class PagesController extends Controller
 			// Can non-managers view this article?
 			if (!auth()->user() || !auth()->user()->can('manage knowledge'))
 			{
-				if (!$node->isPublished())
+				if (!$node->isPublished() && !$node->isArchived())
 				{
 					abort(404, trans('knowledge::knowledge.article not found'));
 				}
