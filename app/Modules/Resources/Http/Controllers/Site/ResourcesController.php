@@ -69,7 +69,7 @@ class ResourcesController extends Controller
 		}
 
 		$rows = $type->resources()
-			//->where('display', '>', 0)
+			->where('display', '>', 0)
 			->where(function($where)
 			{
 				$where->whereNotNull('listname')
@@ -103,7 +103,7 @@ class ResourcesController extends Controller
 		}
 
 		$items = $type->resources()
-			//->where('display', '>', 0)
+			->where('display', '>', 0)
 			->where(function($where)
 			{
 				$where->whereNotNull('listname')
@@ -114,7 +114,7 @@ class ResourcesController extends Controller
 			->get();
 
 		$rows = $type->resources()
-			//->where('display', '>', 0)
+			->where('display', '>', 0)
 			->onlyTrashed()
 			->where(function($where)
 			{
@@ -156,7 +156,7 @@ class ResourcesController extends Controller
 
 		$resource = Asset::findByName($name);
 
-		if (!$resource || !$resource->listname)
+		if (!$resource || !$resource->listname || !$resource->display)
 		{
 			abort(404);
 		}
