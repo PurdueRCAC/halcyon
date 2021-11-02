@@ -513,6 +513,8 @@ class AmieLdap
 					# x-peb216887, Groups, anvil.rcac.purdue.edu
 					dn: cn=x-peb216887,ou=Groups,dc=anvil,dc=rcac,dc=purdue,dc=edu
 					memberUid: x-yinzhang
+					memberUid: x-foo
+					memberUid: x-bar
 					cn: x-peb216887
 					gidNumber: 7000167
 					objectClass: posixGroup
@@ -544,9 +546,8 @@ class AmieLdap
 							$ugusers = $unixgroup->members;
 
 							$current = $ugusers->pluck('userid')->toArray();
-							//$added = array();
 
-							$pldap = $this->connect($this->config('People')); //, $rolename));
+							$pldap = $this->connect($this->config('People', $rolename));
 
 							foreach ($vals as $val)
 							{
@@ -605,7 +606,6 @@ class AmieLdap
 									$ugu->save();
 								}
 
-								//$added[] = $member->id;
 								$allmembers[] = $member->id;
 							}
 
@@ -631,12 +631,6 @@ class AmieLdap
 						->where('name', '=', $pid . ($cluster != 'cpu' ? '-' . $cluster : ''))
 						->first();
 
-					/*$dn = explode(',', $results->getAttribute('distinguishedname', 0));
-					if (isset($dn[2]))
-					{
-						$rolename = str_replace('dc=', '', $dn[2]);
-					}*/
-
 					// Try to find an appropriate sub resource
 					$subresource = null;
 
@@ -651,8 +645,6 @@ class AmieLdap
 					{
 						$subresource = $resource->subresources->first();
 					}
-
-					//$subresource = $resource ? $resource->subresources->first() : null;
 
 					if (!$queue || !$queue->id)
 					{
@@ -791,7 +783,6 @@ class AmieLdap
 							if ($loan->lendergroupid)
 							{
 								// Convert to string to add negative or PHP will lose precision on large values
-								//$group = $row->groupid;
 								$data = $loan->toArray();
 								unset($data['id']);
 								if (isset($data['group']))
@@ -847,28 +838,33 @@ class AmieLdap
 
 					// Output
 					$q = $queue->toArray();
-					$q['members'] = $queue->users()
-						->get()
-						->toArray();
+					$q['members'] = array();
+
+					foreach ($queue->users()->get() as $mem)
+					{
+						$member = $mem->toArray();
+						$member['api'] = route('api.queues.users.read', ['id' => $member['id']]);
+						$member['username'] = $mem->user ? $mem->user->username : null;
+
+						$q['members'][] = $member;
+					}
+					$q['api'] = route('api.queues.read', ['id' => $q['id']]);
 
 					$q['loans'] = $queue->loans()
 						->get()
 						->toArray();
 
-					foreach ($q['members'] as $k => $member)
-					{
-						$member['api'] = route('api.queues.users.read', ['id' => $member['id']]);
-						$q['members'][$k] = $member;
-					}
-					$q['api'] = route('api.queues.read', ['id' => $q['id']]);
 					$response->queue = $q;
 
 					$g = $group->toArray();
-					$g['members'] = $group->members()->get()->toArray();
-					foreach ($g['members'] as $k => $member)
+					$g['members'] = array(); //$group->members()->get()->toArray();
+					foreach ($group->members()->get() as $mem)
 					{
+						$member = $mem->toArray();
 						$member['api'] = route('api.groups.members.read', ['id' => $member['id']]);
-						$g['members'][$k] = $member;
+						$member['username'] = $mem->user ? $mem->user->username : null;
+
+						$g['members'][] = $member;
 					}
 					$g['api'] = route('api.groups.read', ['id' => $g['id']]);
 					$response->group = $g;
@@ -876,11 +872,14 @@ class AmieLdap
 					if ($unixgroup)
 					{
 						$u = $unixgroup->toArray();
-						$u['members'] = $unixgroup->members()->get()->toArray();
-						foreach ($u['members'] as $k => $member)
+						$u['members'] = array(); //$unixgroup->members()->get()->toArray();
+						foreach ($unixgroup->members()->get() as $mem)
 						{
+							$member = $mem->toArray();
 							$member['api'] = route('api.unixgroups.members.read', ['id' => $member['id']]);
-							$u['members'][$k] = $member;
+							$member['username'] = $mem->user ? $mem->user->username : null;
+
+							$u['members'][] = $member;
 						}
 
 						$u['api'] = route('api.unixgroups.read', ['id' => $u['id']]);
@@ -894,8 +893,6 @@ class AmieLdap
 						$response->directory = $d;
 					}
 				}
-
-				//event(new UserSync($user, true, $rolename));
 			}
 		}
 		catch (\Exception $e)
