@@ -1,53 +1,7 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script>
-jQuery(document).ready(function($){
-	var sortableHelper = function (e, ui) {
-		ui.children().each(function () {
-			$(this).width($(this).width());
-		});
-		return ui;
-	};
-	//var corresponding;
-	$('.sortable').sortable({
-		handle: '.draghandle',
-		cursor: 'move',
-		helper: sortableHelper,
-		containment: 'parent',
-		start: function (e, ui) {
-			//corresponding = [];
-			var height = ui.helper.outerHeight();
-			$(this).find('> tr[data-parent=' + $(ui.item).data('id') + ']').each(function (idx, row) {
-
-				height += $(row).outerHeight();
-				// corresponding.push(row);
-				//row.detach();
-				/*var corresponding = $('tr[data-parent=' + $(ui.item).data('id') + ']');
-				corresponding.detach();
-
-				corresponding.each(function (idx, row) {
-				});*/
-				//row.insertAfter($(ui.item));
-
-			});
-			ui.placeholder.height(height);
-		},
-		update: function (e, ui) {
-			//var tableHasUnsortableRows = $(this).find('> tbody > tr:not(.sortable)').length;
-
-			$(this).find('> tr').each(function (idx, row) {
-				var uniqID = $(row).attr('data-id'),
-					correspondingFixedRow = $('tr[data-parent=' + uniqID + ']');
-				correspondingFixedRow.detach().insertAfter($(this));
-			});
-		}/*,
-		stop: function (e, ui) {
-			corresponding.detach().insertAfter($(ui.item));
-		}*/
-	}).disableSelection();
-});
-</script>
+<script src="{{ asset('modules/menus/js/menus.js?v=' . filemtime(public_path() . '/modules/menus/js/menus.js')) }}"></script>
 @endpush
 
 @php

@@ -43,68 +43,10 @@ app('pathway')
 	<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 
 		<fieldset class="filters mt-0">
-			<?php /*@if (auth()->user()->can('manage orders'))
-				<?php
-				$user = App\Modules\Users\Models\User::find($filters['userid']);
-				?>
-				<div class="form-group">
-					<label for="filter_userid">{{ trans('orders::orders.submitter') }}</label>
-					<!-- <input type="text" name="userid" id="filter_userid" class="form-control form-users filter-submit" data-uri="{{ route('api.users.index') }}?search=%s" placeholder="Find by user or group" value="{{ $user ? $user->name . ':' . $user->id : '' }}" /> -->
-					<select name="userid" id="filter_userid" class="form-control form-users filter-submit" multiple="multiple" placeholder="Find by user" data-url="{{ route('site.orders.index') }}" data-api="{{ route('api.users.index') }}?search=%s">
-						@if ($user)
-						<option value="{{ $user->id }}" selected="selected">{{ $user->name }}</option>
-						@endif
-					</select>
-				</div>
-				<script>
-				$(document).ready(function() { 
-					var users = $(".form-users");
-					if (users.length) {
-						users.each(function(i, el){
-							$(el).select2({
-								placeholder: $(el).attr('placeholder'),
-								ajax: {
-									url: $(el).data('api') + '&api_token=' + $('meta[name="api-token"]').attr('content'),
-									dataType: 'json',
-									maximumSelectionLength: 1,
-									data: function (params) {
-										var query = {
-											search: params.term,
-											order: 'name',
-											order_dir: 'asc'
-										}
-
-										return query;
-									},
-									processResults: function (data) {
-										for (var i = 0; i < data.data.length; i++) {
-											data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
-										}
-
-										return {
-											results: data.data
-										};
-									}
-								}
-							});
-						});
-						users.on('select2:select', function (e) {
-							var data = e.params.data;
-							window.location = $(this).data('url') + "?userid=" + data.id;
-						});
-						users.on('select2:unselect', function (e) {
-							var data = e.params.data;
-							window.location = $(this).data('url') + "?userid=";
-						});
-					}
-				});
-				</script>
-			@endif*/ ?>
 			<div class="form-group">
 				<label for="filter_search">{{ trans('search.label') }}</label>
 				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="Find by account, user, or group" value="{{ $filters['search'] }}" />
 			</div>
-
 			<div class="form-group">
 				<label for="filter_status">{{ trans('orders::orders.status') }}</label>
 				<select name="status" id="filter_status" class="form-control filter filter-submit">

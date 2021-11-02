@@ -1,23 +1,10 @@
 @extends('layouts.master')
 
 @push('scripts')
+<script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
-function formatCurrency(number, decPlaces, decSep, thouSep) {
-	decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-	decSep = typeof decSep === "undefined" ? "." : decSep;
-	thouSep = typeof thouSep === "undefined" ? "," : thouSep;
-	var sign = number < 0 ? "-" : "";
-	var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
-	var j = (j = i.length) > 3 ? j % 3 : 0;
-
-	return sign +
-		(j ? i.substr(0, j) + thouSep : "") +
-		i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
-		(decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
-}
-
 jQuery(document).ready(function ($) {
-	$('.btn-success').on('click', function (e) {
+	$('.btn-success').on('click', function () {
 		//e.preventDefault();
 
 		var btn = this,
@@ -34,7 +21,7 @@ jQuery(document).ready(function ($) {
 					el.classList.remove('is-invalid');
 				}
 			});
-			var elms = frm[0].querySelectorAll('select[required]');
+			elms = frm[0].querySelectorAll('select[required]');
 			elms.forEach(function (el) {
 				if (!el.value || el.value <= 0) {
 					el.classList.add('is-invalid');
@@ -43,7 +30,7 @@ jQuery(document).ready(function ($) {
 					el.classList.remove('is-invalid');
 				}
 			});
-			var elms = frm[0].querySelectorAll('textarea[required]');
+			elms = frm[0].querySelectorAll('textarea[required]');
 			elms.forEach(function (el) {
 				if (!el.value || !el.validity.valid) {
 					el.classList.add('is-invalid');
@@ -60,31 +47,6 @@ jQuery(document).ready(function ($) {
 
 		return true;
 	});
-
-	$('.form-currency')
-		.on('keyup', function (e){
-			var val = $(this).val();
-
-			val = val.replace(/[^0-9.,]+/g, '');
-
-			$(this).val(val);
-		})
-		.on('blur', function (e){
-			var val = $(this).val();
-
-			val = val.replace(/[^0-9.]+/g, '');
-
-			// Create our number formatter.
-			var formatter = new Intl.NumberFormat('en-US', {
-				style: 'currency',
-				currency: 'USD',
-				// These options are needed to round to whole numbers if that's what you want.
-				//minimumFractionDigits: 0,
-				//maximumFractionDigits: 0,
-			});
-
-			$(this).val(formatter.format(val).replace('$', '')); /* $2,500.00 */
-		});
 
 	$('[maxlength]').each(function (i, el) {
 		var container = $('<span class="char-counter-wrap"></span>');

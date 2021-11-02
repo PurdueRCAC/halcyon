@@ -1,21 +1,13 @@
 /* global $ */ // jquery.js
 /* global jQuery */ // jquery.js
 
+function setmenutype(type) {
+	window.parent.Halcyon.submitbutton('items.setType', type);
+	window.parent.$.dialog.close();
+}
+
 jQuery(document).ready(function () {
-	var alias = $('#field-alias');
-	if (alias.length && !alias.val()) {
-		$('#field-title,#field-alias').on('keyup', function (){
-			var val = $(this).val();
-
-			val = val.toLowerCase()
-				.replace(/\s+/g, '_')
-				.replace(/[^a-z0-9\-_]+/g, '');
-
-			alias.val(val);
-		});
-	}
-
-	alias = $('#field-menutype');
+	var alias = $('#field-menutype');
 	if (alias.length && !alias.val()) {
 		$('#field-title,#field-menutype').on('keyup', function () {
 			var val = $(this).val();
@@ -29,17 +21,11 @@ jQuery(document).ready(function () {
 	}
 
 	$('.menutype-dependant').hide();
-	//$('.menu-page').fadeIn();
+
 	$('[name="fields[type]"]')
 		.on('change', function () {
 			$('.menutype-dependant').hide();
 			$('.menutype-' + $(this).val()).show();
-
-			/*if ($(this).val() == 'separator') {
-				if (!$('#fields_title').val()) {
-					$('#fields_title').val('[ separator ]');
-				}
-			}*/
 		})
 		.each(function (i, el) {
 			if ($(el).prop('checked')) {
@@ -91,4 +77,48 @@ jQuery(document).ready(function () {
 
 		$('#moduleorder').after(html);*/
 	}
+
+	var sortableHelper = function (e, ui) {
+		ui.children().each(function () {
+			$(this).width($(this).width());
+		});
+		return ui;
+	};
+	//var corresponding;
+	$('.sortable').sortable({
+		handle: '.draghandle',
+		cursor: 'move',
+		helper: sortableHelper,
+		containment: 'parent',
+		start: function (e, ui) {
+			//corresponding = [];
+			var height = ui.helper.outerHeight();
+			$(this).find('> tr[data-parent=' + $(ui.item).data('id') + ']').each(function (idx, row) {
+
+				height += $(row).outerHeight();
+				// corresponding.push(row);
+				//row.detach();
+				/*var corresponding = $('tr[data-parent=' + $(ui.item).data('id') + ']');
+				corresponding.detach();
+
+				corresponding.each(function (idx, row) {
+				});*/
+				//row.insertAfter($(ui.item));
+
+			});
+			ui.placeholder.height(height);
+		},
+		update: function (e, ui) {
+			//var tableHasUnsortableRows = $(this).find('> tbody > tr:not(.sortable)').length;
+
+			$(this).find('> tr').each(function (idx, row) {
+				var uniqID = $(row).attr('data-id'),
+					correspondingFixedRow = $('tr[data-parent=' + uniqID + ']');
+				correspondingFixedRow.detach().insertAfter($(this));
+			});
+		}/*,
+		stop: function (e, ui) {
+			corresponding.detach().insertAfter($(ui.item));
+		}*/
+	}).disableSelection();
 });

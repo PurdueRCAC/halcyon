@@ -1,16 +1,10 @@
 @push('scripts')
-<script type="text/javascript">
-	setmenutype = function(type)
-	{
-		window.parent.Halcyon.submitbutton('items.setType', type);
-		window.parent.$.fancybox.close();
-	}
-</script>
+<script src="{{ asset('modules/menus/js/menus.js?v=' . filemtime(public_path() . '/modules/menus/js/menus.js')) }}"></script>
 @endpush
 
-<h2 class="modal-title">{{ trans('menus::menus.TYPE_CHOOSE') }}</h2>
+<h2 class="modal-title">{{ trans('menus::menus.type choose') }}</h2>
 <ul class="menu_types">
-	@foreach ($this->types as $name => $list)
+	@foreach ($types as $name => $list)
 		<li>
 			<dl class="menu_type">
 				<dt>{{ trans($name) }}</dt>
@@ -19,7 +13,7 @@
 						@foreach ($list as $item)
 						<li>
 							<a class="choose_type" href="#" title="{{ trans($item->description) }}"
-								onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $this->recordId, 'title' => $item->title, 'request' => $item->request))); ?>')">
+								onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $id, 'title' => $item->title, 'request' => $item->request))); ?>')">
 								{{ trans($item->title) }}
 							</a>
 						</li>
@@ -31,25 +25,25 @@
 	@endforeach
 	<li>
 		<dl class="menu_type">
-			<dt>{{ trans('menus::menus.TYPE_SYSTEM') }}</dt>
+			<dt>{{ trans('menus::menus.type system') }}</dt>
 			<dd>
 				<ul>
 					<li>
-						<a class="choose_type" href="#" title="{{ trans('menus::menus.TYPE_EXTERNAL_URL_DESC') }}"
-							onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $this->recordId, 'title'=>'url'))); ?>')">
-							{{ trans('menus::menus.TYPE_EXTERNAL_URL') }}
+						<a class="choose_type" href="#" title="{{ trans('menus::menus.type external url desc') }}"
+							onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $id, 'title' => 'url'))); ?>')">
+							{{ trans('menus::menus.type external url') }}
 						</a>
 					</li>
 					<li>
-						<a class="choose_type" href="#" title="{{ trans('menus::menus.TYPE_ALIAS_DESC') }}"
-							onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $this->recordId, 'title'=>'alias'))); ?>')">
-							{{ trans('menus::menus.TYPE_ALIAS') }}
+						<a class="choose_type" href="#" title="{{ trans('menus::menus.type alias desc') }}"
+							onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $id, 'title' => 'alias'))); ?>')">
+							{{ trans('menus::menus.type alias') }}
 						</a>
 					</li>
 					<li>
-						<a class="choose_type" href="#" title="{{ trans('menus::menus.TYPE_SEPARATOR_DESC') }}"
-							onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $this->recordId, 'title'=>'separator'))); ?>')">
-							{{ trans('menus::menus.TYPE_SEPARATOR') }}
+						<a class="choose_type" href="#" title="{{ trans('menus::menus.type separator desc') }}"
+							onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $id, 'title' => 'separator'))); ?>')">
+							{{ trans('menus::menus.type separator') }}
 						</a>
 					</li>
 				</ul>

@@ -19,7 +19,7 @@ $(document).ready(function() {
 					el.classList.remove('is-invalid');
 				}
 			});
-			var elms = frm.querySelectorAll('select[required]');
+			elms = frm.querySelectorAll('select[required]');
 			elms.forEach(function (el) {
 				if (!el.value || el.value <= 0) {
 					el.classList.add('is-invalid');
@@ -28,7 +28,7 @@ $(document).ready(function() {
 					el.classList.remove('is-invalid');
 				}
 			});
-			var elms = frm.querySelectorAll('textarea[required]');
+			elms = frm.querySelectorAll('textarea[required]');
 			elms.forEach(function (el) {
 				if (!el.value || !el.validity.valid) {
 					el.classList.add('is-invalid');

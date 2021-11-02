@@ -2543,7 +2543,32 @@ function PrintOrder() {
 				break;
 		}
 	});
+}
 
+/**
+ * Prepares the page to be printed.
+ *
+ * @param   {number}  number
+ * @param   {number}  decPlaces
+ * @param   {string}  decSep
+ * @param   {string}  thouSep
+ * @return  {void}
+ */
+function formatCurrency(number, decPlaces, decSep, thouSep) {
+	decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+		decSep = typeof decSep === "undefined" ? "." : decSep;
+	thouSep = typeof thouSep === "undefined" ? "," : thouSep;
+	var sign = number < 0 ? "-" : "";
+	var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
+	var j = (j = i.length) > 3 ? j % 3 : 0;
+
+	return sign +
+		(j ? i.substr(0, j) + thouSep : "") +
+		i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
+		(decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
+}
+
+$(document).ready(function () {
 	$('.recur-renew').on('click', function (e) {
 		e.preventDefault();
 		Renew($(this).data('api'), $(this).data('item'));
@@ -2563,4 +2588,29 @@ function PrintOrder() {
 			$("form").submit();
 		}*/
 	});
-}
+
+	$('.form-currency')
+		.on('keyup', function (e) {
+			var val = $(this).val();
+
+			val = val.replace(/[^0-9.,]+/g, '');
+
+			$(this).val(val);
+		})
+		.on('blur', function (e) {
+			var val = $(this).val();
+
+			val = val.replace(/[^0-9.]+/g, '');
+
+			// Create our number formatter.
+			var formatter = new Intl.NumberFormat('en-US', {
+				style: 'currency',
+				currency: 'USD',
+				// These options are needed to round to whole numbers if that's what you want.
+				//minimumFractionDigits: 0,
+				//maximumFractionDigits: 0,
+			});
+
+			$(this).val(formatter.format(val).replace('$', '')); /* $2,500.00 */
+		});
+});

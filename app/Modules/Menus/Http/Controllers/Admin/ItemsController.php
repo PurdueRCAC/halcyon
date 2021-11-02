@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Modules\Menus\Helpers\ItemType;
 use App\Modules\Menus\Models\Type;
 use App\Modules\Menus\Models\Item;
 use App\Halcyon\Html\Builder\Select;
@@ -749,7 +750,7 @@ class ItemsController extends Controller
 	}
 
 	/**
-	 * Temporary method. This should go into the 1.5 to 1.6 upgrade routines.
+	 * Temporary method
 	 *
 	 * @param   Request $request
 	 * @return  Response
