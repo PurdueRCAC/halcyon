@@ -113,7 +113,7 @@
 						<!-- Content ends -->
 
 						<noscript>
-							{{ trans('global.warnjavascript') }}
+							{{ trans('global.warn javascript required') }}
 						</noscript>
 				</main>
 				@include('partials.footer')

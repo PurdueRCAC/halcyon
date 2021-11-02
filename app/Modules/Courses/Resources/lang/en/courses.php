@@ -23,6 +23,7 @@ return [
 	'my courses' => 'Accounts for Classes',
 	'all states' => '- All States -',
 	'owner' => 'Owner',
+	'select owner' => 'Select owner...',
 	'type' => 'Type',
 	'choose user' => 'Choose owner',
 	'user id' => 'User ID',

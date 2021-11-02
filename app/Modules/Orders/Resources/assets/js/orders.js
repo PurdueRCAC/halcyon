@@ -2543,4 +2543,24 @@ function PrintOrder() {
 				break;
 		}
 	});
+
+	$('.recur-renew').on('click', function (e) {
+		e.preventDefault();
+		Renew($(this).data('api'), $(this).data('item'));
+	});
+
+	$(".sortable").sortable({
+		handle: '.drag-handle'/*,
+		stop: function( event, ui ) {
+			var data = "";
+
+			$("#sortable li").each(function(i, el){
+				var p = $(el).text().toLowerCase().replace(" ", "_");
+				data += p+"="+$(el).index()+",";
+			});
+
+			$("form > [name='new_order']").val(data.slice(0, -1));
+			$("form").submit();
+		}*/
+	});
 }

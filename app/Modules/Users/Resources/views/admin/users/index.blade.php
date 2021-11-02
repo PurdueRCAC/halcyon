@@ -8,59 +8,7 @@
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/users/js/users.js?v=' . filemtime(public_path() . '/modules/users/js/users.js')) }}"></script>
-<script>
-$(document).ready(function() {
-	var searchusers = $('#filter_search');
-	if (searchusers.length) {
-		searchusers.each(function(i, el){
-			$(el).select2({
-				ajax: {
-					url: $(el).data('api'),
-					dataType: 'json',
-					maximumSelectionLength: 1,
-					data: function (params) {
-						var query = {
-							search: params.term,
-							order: 'name',
-							order_dir: 'asc'
-						}
-
-						return query;
-					},
-					processResults: function (data) {
-						for (var i = 0; i < data.data.length; i++) {
-							if (data.data[i].id) {
-								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
-							} else {
-								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
-								data.data[i].id = data.data[i].username;
-							}
-						}
-
-						return {
-							results: data.data
-						};
-					}
-				},
-				templateResult: function (state) {
-					if (isNaN(state.id) && typeof state.name != 'undefined') {
-						return $('<span>' + state.text + ' <span class="text-warning ml-1"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> No local account</span></span>');
-					}
-					return state.text;
-				}
-			});
-		});
-		searchusers.on('select2:select', function (e) {
-			var data = e.params.data;
-			window.location = $(this).data('url') + "?search=" + data.id;
-		});
-		searchusers.on('select2:unselect', function (e) {
-			var data = e.params.data;
-			window.location = $(this).data('url') + "?search=";
-		});
-	}
-});
-</script>
+<script src="{{ asset('modules/users/js/admin.js?v=' . filemtime(public_path() . '/modules/users/js/admin.js')) }}"></script>
 @endpush
 
 @php
@@ -201,6 +149,7 @@ app('pathway')
 				$canChange = false;
 			endif;
 
+			/*
 			if (!$row->surname && !$row->given_name):
 				$bits = explode(' ', $row->name);
 
@@ -216,6 +165,7 @@ app('pathway')
 			endif;
 
 			$row->name = $row->given_name . ($row->middle_name ? ' ' . $row->middle_name : '') . ' ' . $row->surname;
+			*/
 
 			$groups = array();
 			foreach ($row->roles as $role):
@@ -251,7 +201,7 @@ app('pathway')
 						@if ($row->username)
 							{{ $row->username }}
 						@else
-							<span class="unknown">{{ trans('global.none') }}</span>
+							<span class="text-muted unknown">{{ trans('global.none') }}</span>
 						@endif
 					@if ($canChange)
 						</a>
@@ -284,7 +234,7 @@ app('pathway')
 				</td>
 				<td class="priority-6">
 					@if (!$row->hasVisited())
-						<span class="never">{{ trans('global.never') }}</span>
+						<span class="text-muted never">{{ trans('global.never') }}</span>
 					@else
 						<time datetime="{{ $row->last_visit->format('Y-m-dTh:i:s') }}">
 							@if ($row->last_visit->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
@@ -295,7 +245,7 @@ app('pathway')
 						</time>
 					@endif
 					@if (auth()->user()->can('manage users') && $row->isOnline())
-						<span class="badge badge-success">Online</span>
+						<span class="badge badge-success">{{ trans('global.online') }}</span>
 					@endif
 				</td>
 			</tr>

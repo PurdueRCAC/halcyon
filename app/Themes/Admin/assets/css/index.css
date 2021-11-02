@@ -2775,6 +2775,10 @@ html .select2-container--default .select2-selection--multiple {
 html .select2-container--default .select2-selection--multiple {
   cursor: text;
 }
+html .select2-container--default .select2-selection--single input,
+html .select2-container--default .select2-selection--multiple input {
+  color: var(--input-color);
+}
 html .select2-container--default .select2-selection--single,
 html .select2-container--default .select2-selection--single .select2-selection__rendered,
 html .select2-container--default .select2-selection--single .select2-selection__arrow {

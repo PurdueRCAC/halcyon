@@ -39,6 +39,7 @@ return [
 	'hide' => 'Hide',
 	'select' => 'Select',
 	'submit' => 'Submit',
+	'online' => 'Online',
 	'warn javascript required' => 'Warning! JavaScript must be enabled for proper operation of the Administrator backend.',
 	'no records found' => 'No records found.',
 	'admin' => [

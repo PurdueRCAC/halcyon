@@ -7,59 +7,6 @@
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/courses/js/admin.js?v=' . filemtime(public_path() . '/modules/courses/js/admin.js')) }}"></script>
-<script>
-$(document).ready(function() {
-	var searchusers = $('#filter_userid');
-	if (searchusers.length) {
-		searchusers.each(function(i, el){
-			$(el).select2({
-				ajax: {
-					url: $(el).data('api'),
-					dataType: 'json',
-					maximumSelectionLength: 1,
-					data: function (params) {
-						var query = {
-							search: params.term,
-							order: 'name',
-							order_dir: 'asc'
-						}
-
-						return query;
-					},
-					processResults: function (data) {
-						for (var i = 0; i < data.data.length; i++) {
-							if (data.data[i].id) {
-								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
-							} else {
-								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
-								data.data[i].id = data.data[i].username;
-							}
-						}
-
-						return {
-							results: data.data
-						};
-					}
-				},
-				templateResult: function (state) {
-					if (isNaN(state.id) && typeof state.name != 'undefined') {
-						return $('<span>' + state.text + ' <span class="text-warning ml-1"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> No local account</span></span>');
-					}
-					return state.text;
-				}
-			});
-		});
-		searchusers.on('select2:select', function (e) {
-			var data = e.params.data;
-			window.location = $(this).data('url') + "?userid=" + data.id;
-		});
-		searchusers.on('select2:unselect', function (e) {
-			var data = e.params.data;
-			window.location = $(this).data('url') + "?userid=";
-		});
-	}
-});
-</script>
 @endpush
 
 @php
@@ -114,8 +61,8 @@ app('pathway')
 					</span> -->
 				<div class="form-group">
 					<label class="sr-only" for="filter_userid">{{ trans('courses::courses.owner') }}</label>
-					<select name="userid" id="filter_userid" class="form-control filter_search filter" multiple="multiple" data-placeholder="Select owner..." data-api="{{ route('api.users.index') }}" data-url="{{ request()->url() }}">
-						<option value="">Select owner...</option>
+					<select name="userid" id="filter_userid" class="form-control filter_search filter" multiple="multiple" data-placeholder="{{ trans('courses::courses.select owner') }}" data-api="{{ route('api.users.index') }}" data-url="{{ request()->url() }}">
+						<option value="">{{ trans('courses::courses.select owner') }}</option>
 						@if ($filters['userid'])
 							@php
 							$s = $filters['userid'];

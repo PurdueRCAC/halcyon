@@ -69,4 +69,22 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
+	document.querySelectorAll('.card-header').forEach(function(el) {
+		el.addEventListener('click', function (event) {
+			event.preventDefault();
+
+			this.parentNode.querySelectorAll('.list-group').forEach(function (ell) {
+				ell.classList.toggle('hidden');
+			});
+		});
+	});
+
+	document.querySelectorAll('.section-header a').forEach(function (el) {
+		el.addEventListener('click', function (event) {
+			event.preventDefault();
+
+			document.getElementById(this.getAttribute('href').replace('#', '')).classList.toggle('open');
+		});
+	});
+
 });

@@ -98,13 +98,14 @@ class Articles extends Select
 
 		$html[] = '<div><button class="btn btn-success" id="topic-add">Add Topic</button></div>';
 		$html[] = '<script>
-		$(document).ready(function() {
-			$("#topic-add").on("click", function(e) {
+		document.addEventListener("DOMContentLoaded", function () {
+			document.getElementById("topic-add").addEventListener("click", function(e) {
 				e.preventDefault();
-				var tmpl = $("#topic-template").html();
-				console.log(tmpl);
-				tmpl = tmpl.replace(/##/g, $(".topic-group").length - 1);
-				$(tmpl).insertBefore($("#topic-template"));
+
+				var template = document.getElementById("topic-template"),
+					tmpl = template.innerHTML;
+				tmpl = tmpl.replace(/##/g, document.querySelectorAll(".topic-group").length - 1);
+				template.insertAdjacentHTML("beforebegin", tmpl);
 			});
 		});
 		</script>';

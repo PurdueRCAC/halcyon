@@ -1,30 +1,11 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/status/css/site.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/status/css/site.css?v=' . filemtime(public_path() . '/modules/status/css/site.css')) }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/status/js/site.js') }}"></script>
-<script>
-	$(document).ready(function() {
-		$('.card-header').on('click', function (event) {
-			event.preventDefault();
-
-			//$('.list-group').addClass('hidden');
-
-			$(this).parent().find('.list-group').toggleClass('hidden');
-		});
-
-		$('.section-header a').on('click', function (event) {
-			event.preventDefault();
-
-			//$('.list-group').addClass('hidden');
-
-			$($(this).attr('href')).toggleClass('open');
-		});
-	});
-</script>
+<script src="{{ asset('modules/status/js/site.js?v=' . filemtime(public_path() . '/modules/status/js/site.js')) }}"></script>
 @endpush
 
 @section('title'){{ trans('status::status.status') }}@stop
@@ -63,8 +44,7 @@ app('pathway')->append(
 			->orderBy('name', 'asc')
 			->get();
 
-		foreach ($resources as $resource)
-		{
+		foreach ($resources as $resource):
 			$resource->statusUpdate = Carbon\Carbon::now();
 
 			event($event = new App\Modules\Status\Events\StatusRetrieval($resource));
@@ -126,22 +106,18 @@ app('pathway')->append(
 						</div>
 
 						<?php
-						if (!($resource->hasNews == 'maintenance' && $resource->isNow) && $resource->data)
-						{
+						if (!($resource->hasNews == 'maintenance' && $resource->isNow) && $resource->data):
 							?>
 							<ul class="list-group list-group-flush">
 								<?php
-							foreach ($resource->data as $section => $items)
-							{
+							foreach ($resource->data as $section => $items):
 								$status = 'success';
-								foreach ($items as $item)
-								{
-									if ($item->value[1] == 1)
-									{
+								foreach ($items as $item):
+									if ($item->value[1] == 1):
 										$status = 'danger';
 										break;
-									}
-								}
+									endif;
+								endforeach;
 								?>
 								<li class="list-group-item section-{{ $section }}" id="section-{{ $k . '-' . $section }}">
 									<div class="card-text">
@@ -170,20 +146,17 @@ app('pathway')->append(
 									</div>
 									<ul class="list-unstyled pl-0 mt-4 section-details" id="section-{{ $k . '-' . $section }}-details">
 										<?php
-										foreach ($items as $item)
-										{
+										foreach ($items as $item):
 											$stts = 0;
 											$hasSub = false;
-											foreach ((array)$item->metric as $key => $val)
-											{
-												if (is_numeric($val))
-												{
+											foreach ((array)$item->metric as $key => $val):
+												if (is_numeric($val)):
 													$hasSub = true;
 													$stts = $val <= $stts ?: $val;
-												}
-											}
-											if ($hasSub)
-											{
+												endif;
+											endforeach;
+
+											if ($hasSub):
 											?>
 											<li class="mt-2 d-flex align-items-center justify-content-between">
 												<span class="name text-secondary text-nowrap text-truncate">{{ isset($item->metric->frontend) ? $item->metric->frontend : 'unknown' }}</span>
@@ -202,101 +175,92 @@ app('pathway')->append(
 												</span>
 											</li>
 											<?php
-											}
-										}
+											endif;
+										endforeach;
 										?>
 									</ul>
 								</li>
 								<?php
-							}
+							endforeach;
 							?>
 							</ul>
 							<?php
-						}
+						endif;
 						?>
 					@endif
 
-						<?php
-						if (count($resource->news) && $resource->isNow)
-						{
-							?>
-							<ul class="list-group list-group-flush">
-								<?php
-							foreach ($resource->news as $ns)
-							{
-								$typ = 'maintenance';
-								if (stristr($ns->headline, 'issue')
-								|| stristr($ns->headline, 'unavailable')
-								|| stristr($ns->headline, 'outage'))
-								{
-									$typ = 'outage';
-								}
-								?>
-								<li class="list-group-item section-news open" id="section-{{ $k }}-news">
-									<ul class="list-unstyled pl-0" id="section-{{ $k }}-news-details">
-										@if ($typ == 'outage')
-											<li><!-- class="mt-2 d-flex align-items-center justify-content-between">-->
-												<span class="fa fa-link" aria-hidden="true"></span> <a href="#news{{ $ns->id }}">{!! $ns->headline !!}</a>
-											</li>
-										@else
-											<?php
-											$st = $ns->datetimenews;
-											$ed = $ns->datetimenewsend;
-
-											/*if ($st->format('Y-m-d') == $ed->format('Y-m-d'))
-											{
-												$nw = new DateTime();
-												for ($i = 1; $i <= 24; $i++)
-												{
-													//$dt = new DateTime($st->format('Y-m-d') . $i . ':00:00')
-													echo $i . ':00';
-													if ($st->format('H') == $i)
-													{
-														echo ' - start';
-													}
-													if ($nw->format('H') == $i)
-													{
-														echo ' - now';
-													}
-													if ($ed->format('H') == $i)
-													{
-														echo ' - end';
-													}
-													echo '<br />';
-												}
-											}*/
-											?>
-											<li class="mt-2 d-flex align-items-center justify-content-between">
-												<span class="name text-secondary text-nowrap text-truncate">{{ trans('status::status.starts') }}</span>
-												<span class="value text-nowrap">{{ $st->format('M d, h:i a') }}</span>
-											</li>
-											<li class="mt-2 d-flex align-items-center justify-content-between">
-												<span class="name text-secondary text-nowrap text-truncate">{{ trans('status::status.ends') }}</span>
-												<span class="value text-nowrap">{{ $ed->format('M d, h:i a') }}</span>
-											</li>
-										@endif
-									</ul>
-								</li>
-								<?php
-							}
-							?>
-							</ul>
-							<?php
-						}
+					<?php
+					if (count($resource->news) && $resource->isNow):
 						?>
-					
+						<ul class="list-group list-group-flush">
+							<?php
+						foreach ($resource->news as $ns):
+							$typ = 'maintenance';
+							if (stristr($ns->headline, 'issue')
+							|| stristr($ns->headline, 'unavailable')
+							|| stristr($ns->headline, 'outage')):
+								$typ = 'outage';
+							endif;
+							?>
+							<li class="list-group-item section-news open" id="section-{{ $k }}-news">
+								<ul class="list-unstyled pl-0" id="section-{{ $k }}-news-details">
+									@if ($typ == 'outage')
+										<li><!-- class="mt-2 d-flex align-items-center justify-content-between">-->
+											<span class="fa fa-link" aria-hidden="true"></span> <a href="#news{{ $ns->id }}">{!! $ns->headline !!}</a>
+										</li>
+									@else
+										<?php
+										$st = $ns->datetimenews;
+										$ed = $ns->datetimenewsend;
+
+										/*if ($st->format('Y-m-d') == $ed->format('Y-m-d')):
+											$nw = new DateTime();
+											for ($i = 1; $i <= 24; $i++)
+											{
+												//$dt = new DateTime($st->format('Y-m-d') . $i . ':00:00')
+												echo $i . ':00';
+												if ($st->format('H') == $i):
+													echo ' - start';
+												endif;
+												if ($nw->format('H') == $i):
+													echo ' - now';
+												endif;
+												if ($ed->format('H') == $i):
+													echo ' - end';
+												endif;
+												echo '<br />';
+											}
+										endif;*/
+										?>
+										<li class="mt-2 d-flex align-items-center justify-content-between">
+											<span class="name text-secondary text-nowrap text-truncate">{{ trans('status::status.starts') }}</span>
+											<span class="value text-nowrap">{{ $st->format('M d, h:i a') }}</span>
+										</li>
+										<li class="mt-2 d-flex align-items-center justify-content-between">
+											<span class="name text-secondary text-nowrap text-truncate">{{ trans('status::status.ends') }}</span>
+											<span class="value text-nowrap">{{ $ed->format('M d, h:i a') }}</span>
+										</li>
+									@endif
+								</ul>
+							</li>
+							<?php
+						endforeach;
+						?>
+						</ul>
+						<?php
+					endif;
+					?>
 				</div>
 			</div>
 			<?php
 			$k++;
-			if ($k%3 == 0)
-			{
+			if ($k%3 == 0):
 				?>
 				</div>
 				<div class="row">
 				<?php
-			}
-		}
+			endif;
+		endforeach;
 		?>
 	</div><!-- / .row -->
 </div><!-- / .resource-statuses -->
@@ -358,19 +322,17 @@ app('pathway')->append(
 									@endif
 
 									<?php
-									if (count($article->resources) > 0)
-									{
+									if (count($article->resources) > 0):
 										$resourceArray = array();
-										foreach ($article->resources as $resource)
-										{
-											if (!$resource->resource)
-											{
+										foreach ($article->resources as $resource):
+											if (!$resource->resource):
 												continue;
-											}
+											endif;
 											$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->resource->name)]) . '">' . $resource->resource->name . '</a>';
-										}
+										endforeach;
+
 										echo '<br /><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray);
-									}
+									endif;
 									?>
 								</p>
 								<p>
@@ -426,15 +388,13 @@ app('pathway')->append(
 						->limit(10)
 						->get();
 
-					foreach ($past as $news)
-					{
+					foreach ($past as $news):
 						$typ = 'maintenance';
 						if (stristr($news->headline, 'issue')
-							|| stristr($news->headline, 'unavailable')
-							|| stristr($news->headline, 'outage'))
-						{
+						|| stristr($news->headline, 'unavailable')
+						|| stristr($news->headline, 'outage')):
 							$typ = 'outage';
-						}
+						endif;
 						?>
 						<li>
 							<article id="news{{ $news->id }}" class="card">
@@ -479,7 +439,7 @@ app('pathway')->append(
 							</article>
 						</li>
 						<?php
-					}
+					endforeach;
 					?>
 				</ul>
 				<p><a href="{{ route('site.news.type', ['name' => $type->name]) }}">Show More {{ $type->name }}</a></p>

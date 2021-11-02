@@ -6,13 +6,6 @@
 
 @push('scripts')
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
-<script>
-$(document).ready(function() { 
-	$('.filter-submit').on('change', function(e){
-		$(this).closest('form').submit();
-	});
-});
-</script>
 @endpush
 
 @php

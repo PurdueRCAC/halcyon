@@ -6,24 +6,6 @@
 
 @push('scripts')
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
-<script>
-jQuery(document).ready(function($){
-	$(".sortable").sortable({
-		handle: '.drag-handle'/*,
-		stop: function( event, ui ) {
-			var data = "";
-
-			$("#sortable li").each(function(i, el){
-				var p = $(el).text().toLowerCase().replace(" ", "_");
-				data += p+"="+$(el).index()+",";
-			});
-
-			$("form > [name='new_order']").val(data.slice(0, -1));
-			$("form").submit();
-		}*/
-	});
-});
-</script>
 @endpush
 
 @section('title')

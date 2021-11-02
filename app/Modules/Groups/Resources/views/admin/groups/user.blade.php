@@ -1,64 +1,6 @@
 
 @push('scripts')
 <script src="{{ asset('modules/groups/js/site.js?v=' . filemtime(public_path() . '/modules/groups/js/site.js')) }}"></script>
-<script>
-	$(document).ready(function() {
-		var dialog = $(".new-group-dialog").dialog({
-			autoOpen: false,
-			height: 'auto',
-			width: 500,
-			modal: true
-		});
-
-		$('.add-group').on('click', function (e) {
-			e.preventDefault();
-			$(".new-group-dialog").dialog('open');
-		});
-
-		$('#new_group_btn')
-			.on('click', function (e) {
-				e.preventDefault();
-				CreateNewGroup();
-			});
-		$('#new_group_input')
-			.on('keyup', function (e) {
-				if (e.keyCode == 13) {
-					CreateNewGroup();
-				}
-			});
-	});
-/**
- * Create new group
- *
- * @return  {void}
- */
-function CreateNewGroup() {
-	var input = document.getElementById("new_group_input"),
-		name = input.value;
-
-	if (!name) {
-		document.getElementById('new_group_action').innerHTML = 'Please enter a group name';
-		return;
-	}
-
-	var post = JSON.stringify({
-		'name': name,
-		'userid': input.getAttribute('data-userid')
-	});
-
-	WSPostURL(input.getAttribute('data-api'), post, function(xml) {
-		if (xml.status < 400) {
-			var results = JSON.parse(xml.responseText);
-
-			window.location.reload(true); // = input.getAttribute('data-uri') + '/' + results.data.id;
-		} else if (xml.status == 409) {
-			document.getElementById('new_group_action').innerHTML = "Unable to create a new group. Group by this name already exists.";
-		} else {
-			document.getElementById('new_group_action').innerHTML = "Unable to create a new group.";
-		}
-	});
-}
-</script>
 @endpush
 
 <div class="card">
