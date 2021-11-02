@@ -133,7 +133,23 @@ class AuthprimaryLdap
 			];
 		}
 
-		$config = $this->config('People', $event->rolename);
+		$config = array(
+			[
+				'name' => 'authprimary',
+				'ldap' => $this->config('People', 'internal'),
+				'auth' => $auth
+			]
+		);
+		if ($event->rolename)
+		{
+			$config[] = [
+				'name' => 'authprimary' . $event->rolename,
+				'ldap' => $this->config('People', $event->rolename),
+				'auth' => $auth
+			];
+		}
+
+		//$config = $this->config('People', $event->rolename);
 
 		// Make sure config is set
 		if (empty($config))
@@ -257,87 +273,91 @@ class AuthprimaryLdap
 				}
 			}
 
-			$ldap = $this->connect($config);
-
-			// Check for an existing record
-			$result = $ldap->search()
-				->where('uid', '=', $user->username)
-				->first();
-
-			if ($auth)
+			foreach ($config as $conf)
 			{
-				if (!$result || !$result->exists)
+				$ldap = $this->connect($conf['ldap'], $conf['name']);
+				//$ldap = $this->connect($config);
+
+				// Check for an existing record
+				$result = $ldap->search()
+					->where('uid', '=', $user->username)
+					->first();
+
+				if ($auth)
 				{
-					/*
-					Sample LDAP entry
-
-					# example, People, anvil.rcac.purdue.edu
-					dn: uid=example,ou=People,dc=anvil,dc=rcac,dc=purdue,dc=edu
-					objectClass: posixAccount
-					objectClass: inetOrgPerson
-					objectClass: top
-					uid: example
-					uidNumber: 20972
-					gidNumber: 6751
-					homeDirectory: /home/example
-					loginShell: /bin/tcsh
-					cn: Ex A Mple
-					givenName: Ex A
-					sn: Mple
-					gecos: Ex A Mple
-					telephoneNumber: 49-61741
-					*/
-
-					// Create user record in ou=People
-					$data = [
-						'uid'           => $user->username,
-						'uidNumber'     => $user->uidNumber,
-						'gidNumber'     => $user->gidNumber,
-						'cn'            => $user->name,
-						'givenName'     => $user->givenName,
-						'sn'            => $user->surname,
-						'loginShell'    => $user->loginShell,
-						'homeDirectory' => '/home/' . $user->username,
-						'gecos'         => $user->name,
-						'x-xsede-userDn' => $userDns,
-					];
-
-					if (empty($data['x-xsede-userDn']))
+					if (!$result || !$result->exists)
 					{
-						unset($data['x-xsede-userDn']);
+						/*
+						Sample LDAP entry
+
+						# example, People, anvil.rcac.purdue.edu
+						dn: uid=example,ou=People,dc=anvil,dc=rcac,dc=purdue,dc=edu
+						objectClass: posixAccount
+						objectClass: inetOrgPerson
+						objectClass: top
+						uid: example
+						uidNumber: 20972
+						gidNumber: 6751
+						homeDirectory: /home/example
+						loginShell: /bin/tcsh
+						cn: Ex A Mple
+						givenName: Ex A
+						sn: Mple
+						gecos: Ex A Mple
+						telephoneNumber: 49-61741
+						*/
+
+						// Create user record in ou=People
+						$data = [
+							'uid'           => $user->username,
+							'uidNumber'     => $user->uidNumber,
+							'gidNumber'     => $user->gidNumber,
+							'cn'            => $user->name,
+							'givenName'     => $user->givenName,
+							'sn'            => $user->surname,
+							'loginShell'    => $user->loginShell,
+							'homeDirectory' => '/home/' . $user->username,
+							'gecos'         => $user->name,
+							'x-xsede-userDn' => $userDns,
+						];
+
+						if (empty($data['x-xsede-userDn']))
+						{
+							unset($data['x-xsede-userDn']);
+						}
+
+						if ($user->telephoneNumber)
+						{
+							$data['telephoneNumber'] = $user->telephoneNumber;
+						}
+
+						$entry = $ldap->make()->user($data);
+						$entry->setAttribute('objectclass', ['x-xsede-xsedePerson', 'posixAccount', 'inetOrgPerson', 'top']);
+
+						$dn = $entry->getDnBuilder()->get();
+						$uid = 'uid=' . $data['uid'];
+						if (substr($dn, 0, strlen($uid)) != $uid)
+						{
+							$dn = $uid . ',' . $dn;
+						}
+						$entry->setDn($dn);
+
+						if (!$entry->save())
+						{
+							throw new Exception('Failed to make AuthPrimary ou=People record', 500);
+						}
+
+						$results['created'][] = $data;
+						$status = 201;
 					}
-
-					if ($user->telephoneNumber)
-					{
-						$data['telephoneNumber'] = $user->telephoneNumber;
-					}
-
-					$entry = $ldap->make()->user($data);
-					$entry->setAttribute('objectclass', ['x-xsede-xsedePerson', 'posixAccount', 'inetOrgPerson', 'top']);
-
-					$dn = $entry->getDnBuilder()->get();
-					$uid = 'uid=' . $data['uid'];
-					if (substr($dn, 0, strlen($uid)) != $uid)
-					{
-						$dn = $uid . ',' . $dn;
-					}
-					$entry->setDn($dn);
-
-					if (!$entry->save())
-					{
-						throw new Exception('Failed to make AuthPrimary ou=People record', 500);
-					}
-
-					$results['created'][] = $data;
-					$status = 201;
 				}
-			}
-			else
-			{
-				// Remove unauthorized records
-				if ($result && $result->exists)
+				else
 				{
-					$result->delete();
+					// Remove unauthorized records
+					if ($result && $result->exists)
+					{
+						$result->delete();
+					}
 				}
 			}
 		}
