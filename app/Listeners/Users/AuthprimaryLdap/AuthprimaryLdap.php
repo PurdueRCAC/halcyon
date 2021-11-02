@@ -367,7 +367,7 @@ class AuthprimaryLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('authprimaryldap', __METHOD__, 'GET', $status, $results, $config['base_dn'] . '; uid=' . $event->user->username);
+		$this->log('authprimaryldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->user->username);
 	}
 
 	/**
