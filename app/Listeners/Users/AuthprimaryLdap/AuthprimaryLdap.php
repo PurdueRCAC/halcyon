@@ -126,7 +126,7 @@ class AuthprimaryLdap
 		);
 		if ($event->rolename)
 		{
-			$all[] = [
+			$configall[] = [
 				'name' => 'authprimaryall' . $event->rolename,
 				'ldap' => $this->config('allPeople', $event->rolename),
 				'auth' => $auth
