@@ -267,7 +267,7 @@ class AmieLdap
 
 		$resource = $rolename ? Asset::findByName($rolename) : null;
 
-		if (!$resource)
+		if (!$resource || !$resource->id)
 		{
 			// No resource found? Can't really do anything without it.
 			return;
@@ -291,20 +291,16 @@ class AmieLdap
 				// If so, we need to change the base dn in the config
 				if ($rolename && $rolename != $resource->rolename)
 				{
-					//$basedn = stristr($config['base_dn'], ',', true);
-
 					// Try to figure out the cluster name
 					// This will be used for the proper subresource lookup later
 					if (substr($rolename, 0, strlen($resource->rolename)) == $resource->rolename)
 					{
 						$cluster = substr($rolename, strlen($resource->rolename));
 					}
-
-					//$config['base_dn'] = str_replace($basedn, 'dc=' . $rolename, $config['base_dn']);
 				}
 			}
 		}
-		//$config['base_dn'] = 'ou=Projects,' . $config['base_dn'];
+
 		$config = $this->config('Projects', $rolename);
 
 		if (empty($data['x-xsede-pid']))
@@ -598,7 +594,7 @@ class AmieLdap
 									}
 								}
 
-								event(new UserSync($member, $authorized, $rolename));
+								event(new UserSync($member, $authorized, $resource->rolename));
 
 								// Create user if needed
 								if (!in_array($member->id, $current))

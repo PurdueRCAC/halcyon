@@ -314,7 +314,14 @@ class AuthprimaryLdap
 
 					$entry = $ldap->make()->user($data);
 					$entry->setAttribute('objectclass', ['x-xsede-xsedePerson', 'posixAccount', 'inetOrgPerson', 'top']);
-					$entry->setDn('uid=' . $data['uid'] . ',' . $entry->getDnBuilder()->get());
+
+					$dn = $entry->getDnBuilder()->get();
+					$uid = 'uid=' . $data['uid'];
+					if (substr($dn, 0, strlen($uid)) != $uid)
+					{
+						$dn = $uid . ',' . $dn;
+					}
+					$entry->setDn($dn);
 
 					if (!$entry->save())
 					{
@@ -340,7 +347,7 @@ class AuthprimaryLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('authprimaryldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->user->username);
+		$this->log('authprimaryldap', __METHOD__, 'GET', $status, $results, $config['base_dn'] . '; uid=' . $event->user->username);
 	}
 
 	/**
