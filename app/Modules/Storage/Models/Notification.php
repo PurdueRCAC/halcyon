@@ -178,7 +178,15 @@ class Notification extends Model
 		$months  = $this->periods * $this->timeperiod->months;
 		$seconds = $this->periods * $this->timeperiod->unixtime;
 
-		$dt = Carbon::parse($this->datetimelastnotify);
+		if ($this->wasNotified())
+		{
+			$dt = Carbon::parse($this->datetimelastnotify);
+		}
+		else
+		{
+			$dt = Carbon::parse($this->datetimecreated);
+		}
+		
 		if ($months)
 		{
 			$dt->modify('+ ' . $months . ' months');

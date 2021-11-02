@@ -76,6 +76,7 @@ class EmailQuotaCommand extends Command
 			}
 
 			$notifications = Notification::query()
+				->select($n . '.*')
 				->withTrashed()
 				->join($d, $d . '.id', $n . '.storagedirid')
 				->join($r, $r . '.id', $d . '.resourceid')
@@ -279,7 +280,7 @@ class EmailQuotaCommand extends Command
 						continue;
 					}
 
-					if (date("U") <= strtotime($not->nextreport))
+					if (!$not->nextreport || date("U") <= strtotime($not->nextreport))
 					{
 						continue;
 					}
