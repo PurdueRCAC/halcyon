@@ -117,26 +117,26 @@ app('pathway')
 				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('courses::courses.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
+				<th scope="col" class="priority-5">
+					{!! Html::grid('sort', trans('courses::courses.course number'), 'coursenumber', $filters['order_dir'], $filters['order']) !!}
+				</th>
 				<th scope="col">
 					{!! Html::grid('sort', trans('courses::courses.course name'), 'classname', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('courses::courses.owner'), 'userid', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-5">
-					{!! Html::grid('sort', trans('courses::courses.course number'), 'coursenumber', $filters['order_dir'], $filters['order']) !!}
-				</th>
 				<th scope="col" class="priority-2">
 					{!! Html::grid('sort', trans('courses::courses.semester'), 'semester', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{{ trans('courses::courses.resource') }}
 				</th>
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('courses::courses.date start'), 'datetimestart', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-2">
 					{!! Html::grid('sort', trans('courses::courses.date stop'), 'datetimestop', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<th scope="col" class="priority-4">
+					{{ trans('courses::courses.resource') }}
 				</th>
 				<th scope="col" class="priority-2 text-right">
 					{{ trans('courses::courses.enrolled') }}
@@ -156,6 +156,14 @@ app('pathway')
 				@endif
 				<td class="priority-5">
 					{{ $row->id }}
+				</td>
+				<td class="priority-5">
+					@if ($row->department)
+						{{ $row->department }}
+					@endif
+					@if ($row->coursenumber)
+						{{ $row->coursenumber }}
+					@endif
 				</td>
 				<td>
 					@if (auth()->user()->can('edit courses'))
@@ -177,22 +185,9 @@ app('pathway')
 						{{ $row->user->name }}
 					@endif
 				</td>
-				<td class="priority-5">
-					@if ($row->department)
-						{{ $row->department }}
-					@endif
-					@if ($row->coursenumber)
-						{{ $row->coursenumber }}
-					@endif
-				</td>
 				<td class="priority-2">
 					@if ($row->semester)
 						{{ $row->semester }}
-					@endif
-				</td>
-				<td class="priority-4">
-					@if ($row->resource)
-						{{ $row->resource->name }}
 					@endif
 				</td>
 				<td class="priority-4">
@@ -208,6 +203,11 @@ app('pathway')
 							<time datetime="{{ $row->datetimestop->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestop->format('Y-m-d') }}</time>
 						@endif
 					</span>
+				</td>
+				<td class="priority-4">
+					@if ($row->resource)
+						{{ $row->resource->name }}
+					@endif
 				</td>
 				<td class="priority-2 text-right">
 					@if (auth()->user()->can('edit courses'))
