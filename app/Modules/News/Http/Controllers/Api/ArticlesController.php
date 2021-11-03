@@ -366,14 +366,14 @@ class ArticlesController extends Controller
 
 		if ($filters['resource'])
 		{
-			$r = (new Newsresource)->getTable();
 			$filters['resource'] = explode(',', $filters['resource']);
 			$filters['resource'] = array_map('trim', $filters['resource']);
-
-			$query->join($r, $r . '.newsid', $n . '.id')
-				->whereIn($r . '.resourceid', $filters['resource'])
-				->groupBy($n . '.id');
-				//->having(DB::raw('count(' . $r . '.id)'), '=', count($filters['resource']));
+			$r = (new Newsresource)->getTable();
+			$query->whereIn('id', function($innerQuery) use ($r, $filters){
+				$innerQuery->select('newsid')
+					->from($r)
+					->whereIn('resourceid', $filters['resource']);
+			});
 		}
 
 		if ($filters['state'] == 'published')
