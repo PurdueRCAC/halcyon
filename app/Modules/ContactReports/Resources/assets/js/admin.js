@@ -198,4 +198,41 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			});
 		});
+
+	$('.comments-show').on('click', function (e) {
+		e.preventDefault();
+		$($(this).attr('href')).toggleClass('hide');
+	});
+
+	$('.pie-chart').each(function (i, el) {
+		const ctx = el.getContext('2d');
+		const chart = new Chart(ctx, {
+			type: 'doughnut',
+			data: {
+				labels: JSON.parse($(el).attr('data-labels')),
+				datasets: [
+					{
+						data: JSON.parse($(el).attr('data-values')),
+						backgroundColor: [
+							'rgb(255, 99, 132)',
+							'rgb(54, 162, 235)',
+							'rgb(255, 205, 86)',
+							'rgb(201, 203, 207)',
+							'rgba(75, 192, 192)',
+							'rgba(255, 159, 64)',
+							'rgba(153, 102, 255)'
+						]
+					}
+				]
+			},
+			options: {
+				animation: {
+					duration: 0
+				}/*,
+				legend: {
+					display: false
+				}*/
+			}
+		});
+	});
 });

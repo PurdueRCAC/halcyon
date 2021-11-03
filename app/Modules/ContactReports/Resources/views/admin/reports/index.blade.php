@@ -5,11 +5,12 @@
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 @stop
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ Module::asset('core:vendor/chartjs/Chart.min.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
 <script src="{{ asset('modules/contactreports/js/admin.js?v=' . filemtime(public_path() . '/modules/contactreports/js/admin.js')) }}"></script>
-@stop
+@endpush
 
 @php
 app('pathway')
@@ -40,6 +41,78 @@ app('pathway')
 
 @section('title')
 {!! config('contactreports.name') !!}
+@stop
+
+@section('panel')
+	<h2 class="sr-only">Contact Reports Stats</h2>
+
+	<div class="car mb-3">
+		<form action="{{ route('admin.contactreports.index') }}" method="post" name="statsForm">
+			<label for="timeframe" class="sr-only">Stats for</label>
+			<select name="timeframe" id="timeframe" class="form-control filter-submit">
+				<option value="1"<?php if ($filters['timeframe'] == 1) { echo ' selected="slected"'; } ?>>Past month</option>
+				<option value="6"<?php if ($filters['timeframe'] == 6) { echo ' selected="slected"'; } ?>>Past 6 months</option>
+				<option value="12"<?php if ($filters['timeframe'] == 12) { echo ' selected="slected"'; } ?>>Past year</option>
+				<option value="*"<?php if ($filters['timeframe'] == '*') { echo ' selected="slected"'; } ?>>All time</option>
+			</select>
+
+			@csrf
+		</form>
+	</div>
+
+	<div class="card mb-3">
+		<div class="card-body">
+			<h4 class="mt-0 card-title">By Type</h4>
+			<?php
+			$stats = array();
+			foreach ($types as $type):
+				if ($filters['timeframe'] == '*'):
+					$val = $type->reports()->count();
+				else:
+					$val = $type->reports()->where('datetimecreated', '>=', Carbon\Carbon::now()->modify('-' . $filters['timeframe'] . ' months')->toDateTimeString())->count();
+				endif;
+
+				if ($val):
+					$stats[$type->name] = $val;
+				endif;
+			endforeach;
+			?>
+			<div>
+				<canvas id="breakdown-types" class="pie-chart" width="275" height="500" data-labels="{{ json_encode(array_keys($stats)) }}" data-values="{{ json_encode(array_values($stats)) }}">
+					@foreach ($stats as $name => $val)
+						{{ $name }}: $val<br />
+					@endforeach
+				</canvas>
+			</div>
+		</div>
+	</div>
+
+	<?php
+	$r = (new App\Modules\ContactReports\Models\Reportresource)->getTable();
+	$c = (new App\Modules\ContactReports\Models\Report)->getTable();
+
+	$resources = App\Modules\ContactReports\Models\Reportresource::query()
+		->select($r . '.resourceid', DB::raw('COUNT(*) as total'))
+		->join($c, $c . '.id', $r . '.contactreportid')
+		->where($c . '.datetimecreated', '>=', Carbon\Carbon::now()->modify('-' . $filters['timeframe'] . ' months')->toDateTimeString())
+		->groupBy($r . '.resourceid')
+		->orderBy('total', 'desc')
+		->limit(5)
+		->get();
+	?>
+	<div class="card mb-3">
+		<table class="table">
+			<caption>Top Resources</caption>
+			<tbody>
+				@foreach ($resources as $res)
+					<tr>
+						<th scope="row"><span class="badge badge-info">{{ $res->resource->name }}</span></th>
+						<td class="text-right">{{ $res->total }}</td>
+					</tr>
+				@endforeach
+			</tbody>
+		</table>
+	</div>
 @stop
 
 @section('content')
@@ -92,125 +165,152 @@ app('pathway')
 	</fieldset>
 
 	@if (count($rows))
-	<div class="card mb-4">
-	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('contactreports::contactreports.contact reports') }}</caption>
-		<thead>
-			<tr>
-				@if (auth()->user()->can('delete contactreports'))
-					<th>
-						{!! Html::grid('checkall') !!}
-					</th>
-				@endif
-				<th scope="col" class="priority-5">
-					{!! Html::grid('sort', trans('contactreports::contactreports.id'), 'id', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col">
-					{!! Html::grid('sort', trans('contactreports::contactreports.report'), 'report', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('contactreports::contactreports.group'), 'groupid', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{{ trans('contactreports::contactreports.users') }}
-				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('contactreports::contactreports.contacted'), 'datetimecontact', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-2 text-right">
-					{{ trans('contactreports::contactreports.comments') }}
-				</th>
-			</tr>
-		</thead>
-		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr>
-				@if (auth()->user()->can('delete contactreports'))
-					<td>
-						{!! Html::grid('id', $i, $row->id) !!}
-					</td>
-				@endif
-				<td class="priority-5">
-					{{ $row->id }}
-				</td>
-				<td>
-					@if (auth()->user()->can('edit contactreports'))
-						<a href="{{ route('admin.contactreports.edit', ['id' => $row->id]) }}">
-							{{ Illuminate\Support\Str::limit($row->report, 70) }}
-						</a>
-					@else
-						<span>
-							{{ Illuminate\Support\Str::limit($row->report, 70) }}
-						</span>
-					@endif
-					@if (count($row->tags))
-						<br />
-						@foreach ($row->tags as $tag)
-							<a class="badge badge-sm badge-secondary" href="{{ route('admin.contactreports.index', ['tag' => $tag->slug]) }}">{{ $tag->name }}</a>
-						@endforeach
-					@endif
-				</td>
-				<td class="priority-4">
-					@if ($row->group && $row->group->id)
-						{{ $row->group->name }}
-					@else
-						<span class="none">{{ trans('global.none') }}</span>
-					@endif
-				</td>
-				<td class="priority-4">
-					<?php
-					$uids = $row->users->pluck('userid')->toArray();
-
-					$users = array();
-					if ($row->userid && !in_array($row->userid, $uids))
-					{
-						$users[] = ($row->creator ? $row->creator->name : $row->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
-					}
-
-					foreach ($row->users as $user)
-					{
-						$u = ($user->user ? $user->user->name : $user->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
-						
-						if ($user->notified()):
-							$u .= ' <span class="icon-mail glyph" data-tip="Followup email sent on ' . $user->datetimelastnotify->toDateTimeString() . '"><time datetime="' . $user->datetimelastnotify->toDateTimeString() . '">' . $user->datetimelastnotify->format('Y-m-d') . '</time></span>';
-						endif;
-
-						$users[] = $u;
-					}
-					?>
-					@if (count($users))
-						{!! implode('<br />', $users) !!}
-					@else
-						<span class="none">{{ trans('global.none') }}</span>
-					@endif
-				</td>
-				<td class="priority-4">
-					<span class="datetime">
-						@if ($row->datetimecontact)
-							<time datetime="{{ $row->datetimecontact->format('Y-m-d\TH:i:s\Z') }}">
-								@if ($row->datetimecontact->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
-									{{ $row->datetimecontact->diffForHumans() }}
-								@else
-									{{ $row->datetimecontact->format('Y-m-d') }}
-								@endif
-							</time>
-						@else
-							<span class="unknown">{{ trans('global.unknown') }}</span>
+			<div class="card mb-3">
+				<div class="card-header">
+					<div class="d-flex">
+						@if (auth()->user()->can('delete issues'))
+							<div>
+								{!! Html::grid('id', $i, $row->id) !!}
+							</div>
 						@endif
-					</span>
-				</td>
-				<td class="priority-4 text-right">
-					<?php /*<a href="{{ route('admin.contactreports.comments', ['report' => $row->id]) }}">*/?>
-						{{ $row->comments_count }}
-					<?php /*</a>*/ ?>
-				</td>
-			</tr>
-		@endforeach
-		</tbody>
-	</table>
-	</div>
+						<div class="text-muted ml-4">
+							<span class="fa fa-calendar" aria-hidden="true"></span>
+							@if ($row->datetimecreated)
+								<time datetime="{{ $row->datetimecreated->format('Y-m-dTh:i:s') }}">
+									@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
+										{{ $row->datetimecreated->diffForHumans() }}
+									@else
+										{{ $row->datetimecreated->format('M d, Y') }}
+									@endif
+								</time>
+							@else
+								<span class="never">{{ trans('global.unknown') }}</span>
+							@endif
+						</div>
+						<div class="text-muted ml-4">
+							<?php
+							$uids = $row->users->pluck('userid')->toArray();
 
-	{{ $rows->render() }}
+							$users = array();
+							if ($row->userid && !in_array($row->userid, $uids)):
+								$users[] = ($row->creator ? '<a href="' . route('admin.users.show', ['id' => $row->userid]) . '"class="badg badg-primary">' . $row->creator->name . '</a>' : $row->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
+							endif;
+
+							foreach ($row->users as $user):
+								$u  = '<a href="' . route('admin.users.show', ['id' => $user->userid]) . '" class="badg badg-primary">';
+								$u .= ($user->user ? $user->user->name : $user->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
+								
+								if ($user->notified()):
+									$u .= ' <span class="fa fa-envelope" data-tip="Followup email sent on ' . $user->datetimelastnotify->toDateTimeString() . '"><time class="sr-only" datetime="' . $user->datetimelastnotify->toDateTimeString() . '">' . $user->datetimelastnotify->format('Y-m-d') . '</time></span>';
+								endif;
+								$u .= '</a>';
+
+								$users[] = $u;
+							endforeach;
+							?>
+							@if (count($users))
+								<span class="fa fa-user" aria-hidden="true"></span>
+								{!! implode(', ', $users) !!}
+							@endif
+						</div>
+						<div class="flex-fill text-right">
+							@if (auth()->user()->can('edit contactreports'))
+								<a href="{{ route('admin.contactreports.edit', ['id' => $row->id]) }}">
+									<span class="fa fa-pencil" aria-hidden="true"></span>
+									<span class="sr-only"># {{ $row->id }}</span>
+								</a>
+							@else
+								# {{ $row->id }}
+							@endif
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					{!! $row->formattedReport !!}
+					@if (count($row->tags))
+						<p>
+						@foreach ($row->tags as $tag)
+							<a class="tag badge badge-sm badge-secondary" href="{{ route('admin.issues.index', ['tag' => $tag->slug]) }}">{{ $tag->name }}</a>
+						@endforeach
+						</p>
+					@endif
+					@if (count($row->resources))
+						<?php
+						$names = array();
+
+						foreach ($row->resources as $res):
+							if ($res->resource):
+								$names[] = '<span class="badge badge-info">' . e($res->resource->name) . '</span>';
+							else:
+								$names[] = $res->resourceid;
+							endif;
+						endforeach;
+
+						asort($names);
+
+						if (count($names)):
+							echo '<p>';
+							echo implode(' ', $names) . '</p>';
+						endif;
+						?>
+					@endif
+				</div>
+				<div class="card-footer">
+					<div class="d-flex text-muted">
+						<div class="flex-fill">
+							<span class="fa fa-folder" aria-hidden="true"></span>
+							{{ $row->type ? $row->type->name : '' }}
+						</div>
+						<div class="flex-fill text-right">
+							<span class="fa fa-comment" aria-hidden="true"></span>
+							@if ($row->comments_count)
+								<a href="#comments_{{ $row->id }}" class="comments-show">{{ $row->comments_count }}</a>
+							@else
+								<span class="none">{{ $row->comments_count }}</span>
+							@endif
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php
+			$comments = $row->comments()->orderBy('datetimecreated', 'asc')->get();
+
+			if (count($comments) > 0):
+				?>
+				<div class="card ml-4 mb-3 hide" id="comments_{{ $row->id }}">
+					<ul class="list-group w-100">
+						@foreach ($comments as $comment)
+							<li id="comment_{{ $comment->id }}" class="list-group-item" data-api="{{ route('api.contactreports.comments.update', ['id' => $comment->id]) }}">
+								{!! $comment->formattedComment !!}
+
+								<div class="d-flex text-muted">
+									<div class="mr-4">
+										<span class="fa fa-calendar" aria-hidden="true"></span>
+										<time datetime="{{ $comment->datetimecreated->format('Y-m-dTh:i:s') }}">
+											{{ $comment->datetimecreated->format('M d, Y') }} @ {{ $comment->datetimecreated->format('h:i a') }}
+										</time>
+									</div>
+									<div class="mr-4">
+										@if ($comment->creator)
+											<span class="fa fa-user" aria-hidden="true"></span>
+											{{ $comment->creator->name }}
+										@endif
+									</div>
+									<div class="flex-fill text-right">
+										<span class="badge badge-success<?php if (!$comment->resolution) { echo ' hide'; } ?>">{{ trans('issues::issues.resolution') }}</span>
+									</div>
+								</div>
+							</li>
+						@endforeach
+					</ul>
+				</div>
+				<?php
+			endif;
+			?>
+		@endforeach
+
+		{{ $rows->render() }}
 	@else
 		<div class="card mb-4">
 			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>

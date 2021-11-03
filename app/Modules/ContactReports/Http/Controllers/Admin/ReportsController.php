@@ -28,6 +28,7 @@ class ReportsController extends Controller
 	{
 		// Get filters
 		$filters = array(
+			'timeframe' => 1,
 			'search'    => null,
 			'tag'       => '',
 			'group'    => null,
