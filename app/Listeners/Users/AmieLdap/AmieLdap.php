@@ -573,6 +573,11 @@ class AmieLdap
 									$musername->username = $val;
 									$musername->save();
 								}
+								if ($member->name != $mem->getAttribute('cn', 0))
+								{
+									$member->name = $mem->getAttribute('cn', 0);
+									$member->save();
+								}
 								$member->username = $val;
 								if ($uidNumber = $mem->getAttribute('uidNumber', 0))
 								{
