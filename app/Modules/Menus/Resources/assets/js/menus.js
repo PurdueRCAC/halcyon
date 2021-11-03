@@ -108,7 +108,7 @@ jQuery(document).ready(function () {
 			});
 			ui.placeholder.height(height);
 		},
-		update: function (e, ui) {
+		update: function () { //e, ui
 			//var tableHasUnsortableRows = $(this).find('> tbody > tr:not(.sortable)').length;
 
 			$(this).find('> tr').each(function (idx, row) {
@@ -121,4 +121,10 @@ jQuery(document).ready(function () {
 			corresponding.detach().insertAfter($(ui.item));
 		}*/
 	}).disableSelection();
+
+	$('.choose_type').on('click', function(e){
+		e.preventDefault();
+
+		setmenutype($(this).attr('data-type'));
+	});
 });

@@ -2554,7 +2554,7 @@ function PrintOrder() {
  * @param   {string}  thouSep
  * @return  {void}
  */
-function formatCurrency(number, decPlaces, decSep, thouSep) {
+/*function formatCurrency(number, decPlaces, decSep, thouSep) {
 	decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
 		decSep = typeof decSep === "undefined" ? "." : decSep;
 	thouSep = typeof thouSep === "undefined" ? "," : thouSep;
@@ -2566,7 +2566,7 @@ function formatCurrency(number, decPlaces, decSep, thouSep) {
 		(j ? i.substr(0, j) + thouSep : "") +
 		i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
 		(decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
-}
+}*/
 
 $(document).ready(function () {
 	$('.recur-renew').on('click', function (e) {
@@ -2590,14 +2590,14 @@ $(document).ready(function () {
 	});
 
 	$('.form-currency')
-		.on('keyup', function (e) {
+		.on('keyup', function () {
 			var val = $(this).val();
 
 			val = val.replace(/[^0-9.,]+/g, '');
 
 			$(this).val(val);
 		})
-		.on('blur', function (e) {
+		.on('blur', function () {
 			var val = $(this).val();
 
 			val = val.replace(/[^0-9.]+/g, '');

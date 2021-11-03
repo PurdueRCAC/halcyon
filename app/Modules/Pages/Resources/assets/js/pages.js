@@ -56,6 +56,7 @@ jQuery(document).ready(function () {
 		tr.after(clone);
 	});
 
+	var charts = new Array;
 	$('.sparkline-chart').each(function (i, el) {
 		const ctx = el.getContext('2d');
 		const chart = new Chart(ctx, {
@@ -100,5 +101,6 @@ jQuery(document).ready(function () {
 				}
 			}
 		});
+		charts.push(chart);
 	});
 });

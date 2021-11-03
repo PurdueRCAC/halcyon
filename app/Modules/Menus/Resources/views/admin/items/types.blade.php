@@ -13,7 +13,7 @@
 						@foreach ($list as $item)
 						<li>
 							<a class="choose_type" href="#" title="{{ trans($item->description) }}"
-								onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $id, 'title' => $item->title, 'request' => $item->request))); ?>')">
+								data-type="<?php echo base64_encode(json_encode(array('id' => $id, 'title' => $item->title, 'request' => $item->request))); ?>">
 								{{ trans($item->title) }}
 							</a>
 						</li>

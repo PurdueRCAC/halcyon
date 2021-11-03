@@ -1,5 +1,6 @@
 /* global $ */ // jquery.js
 /* global Halcyon */ // core.js
+/* global Chart */ // vendor/chartjs/Chart.min.js
 
 /**
  * Initiate event hooks
@@ -204,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		$($(this).attr('href')).toggleClass('hide');
 	});
 
+	var charts = new Array;
 	$('.pie-chart').each(function (i, el) {
 		const ctx = el.getContext('2d');
 		const chart = new Chart(ctx, {
@@ -234,5 +236,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				}*/
 			}
 		});
+		charts.push(chart);
 	});
 });

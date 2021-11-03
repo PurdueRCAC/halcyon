@@ -25,7 +25,7 @@ function CreateNewGroup() {
 		$($('#new_group_btn').attr('data-indicator')).addClass('hide');
 
 		if (xml.status < 400) {
-			var results = JSON.parse(xml.responseText);
+			//var results = JSON.parse(xml.responseText);
 
 			window.location.reload(true); // = input.getAttribute('data-uri') + '/' + results.data.id;
 		} else {

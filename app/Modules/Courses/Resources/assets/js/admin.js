@@ -203,8 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			var data = e.params.data;
 			window.location = $(this).data('url') + "?userid=" + data.id;
 		});
-		searchusers.on('select2:unselect', function (e) {
-			var data = e.params.data;
+		searchusers.on('select2:unselect', function () {
 			window.location = $(this).data('url') + "?userid=";
 		});
 	}

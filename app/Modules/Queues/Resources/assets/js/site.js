@@ -826,7 +826,8 @@ function SetQueueAndSubresourceStatus(queue, subresource, state, tab_id) {
 		subresource = td.id;
 		for (var x = 0; x < td.children.length; x++) {
 			if (isImage(td.children[x])) {
-				if (total.hasOwnProperty(subresource)) {
+				if (Object.prototype.hasOwnProperty.call(total, subresource)) {
+				//if (total.hasOwnProperty(subresource)) {
 					total[subresource] += 1;
 					if ((td.children[x].id.match(regex) && state == 1) || td.children[x].src.match(/green/)) {
 						total_active[subresource] += 1;
