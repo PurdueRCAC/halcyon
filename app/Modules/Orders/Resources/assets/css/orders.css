@@ -149,6 +149,73 @@ ol.steps li.notmystep {
 	color: #222;
 }
 
+.order-process {
+	padding: 0 1em;
+}
+.order-process ol:before,
+.order-process .avg-total:before {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0;
+	bottom: 0.75em;
+	right: -1em;
+	width: 4px;
+	background: rgba(82, 157, 35, 0.5);
+}
+.order-process ol:after,
+.order-process .avg-total:after {
+	content: '';
+	display: block;
+	position: absolute;
+	bottom: 0.75em;
+	right: -1em;
+	height: 4px;
+	width: 4px;
+	margin-right: 4px;
+	background: rgba(82, 157, 35, 0.5);
+}
+.order-process ol {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+.order-process li {
+	margin: 0;
+	padding: 1em 0 0 0;
+	position: relative;
+}
+.order-process li:before {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0;
+	bottom: 0.75em;
+	left: -1em;
+	width: 4px;
+	background: rgba(25, 132, 184, 0.5);
+}
+.order-process li:after {
+	content: '';
+	display: block;
+	position: absolute;
+	bottom: 0.75em;
+	left: -1em;
+	height: 4px;
+	width: 4px;
+	margin-left: 4px;
+	background: rgba(25, 132, 184, 0.5);
+}
+.order-process li:nth-child(2):before,
+.order-process li:nth-child(2):after {
+	background: rgba(189, 126, 1, 0.5);
+}
+.order-process li:nth-child(3):before,
+.order-process li:nth-child(3):after {
+	background: rgba(82, 157, 35, 0.5);
+}
+
 @media print {
 	.container {
 		width: 100% !important;
