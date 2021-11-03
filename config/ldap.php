@@ -35,7 +35,7 @@ return [
 	],*/
 
 	'rcac' => [
-		'hosts'            => ['animus.rcac.purdue.edu'],
+		'hosts'            => ['centralservices.rcac.purdue.edu'],
 		'base_dn'          => 'ou=People,dc=rcac,dc=purdue,dc=edu',
 		'use_ssl'          => true,
 		'username'         => env('LDAP_RCAC_USERNAME', conf('ldap_rcac', 'rdn', '')),
@@ -43,7 +43,7 @@ return [
 	],
 
 	'rcac_group' => [
-		'hosts'            => ['animus.rcac.purdue.edu'],
+		'hosts'            => ['centralservices.rcac.purdue.edu'],
 		'base_dn'          => 'ou=Group,dc=rcac,dc=purdue,dc=edu',
 		'use_ssl'          => true,
 		'username'         => env('LDAP_RCACGROUP_USERNAME', conf('ldap_rcac_group', 'rdn', '')),
