@@ -371,7 +371,9 @@ class ArticlesController extends Controller
 			$filters['resource'] = array_map('trim', $filters['resource']);
 
 			$query->join($r, $r . '.newsid', $n . '.id')
-				->whereIn($r . '.resourceid', $filters['resource']);
+				->whereIn($r . '.resourceid', $filters['resource'])
+				->groupBy($n . '.id');
+				//->having(DB::raw('count(' . $r . '.id)'), '=', count($filters['resource']));
 		}
 
 		if ($filters['state'] == 'published')
