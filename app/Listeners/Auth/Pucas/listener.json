@@ -1,5 +1,5 @@
 {
-    "name": "Authentication - Pucas",
+    "name": "Authentication - Purdue CAS",
     "alias": "pucas",
     "description": "Handles user authentication against Purdue's CAS",
     "keywords": [],

@@ -1,6 +1,6 @@
 {
-	"name": "halcyon/lst_authentication_pucas",
-	"description": "Purdue University CAS authentication plugin for the Halcyon CMS",
+	"name": "halcyon/listener_auth_pucas",
+	"description": "Purdue University CAS authentication plugin for the Halcyon",
 	"type": "halcyon-plugin",
 	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
 	"homepage": "https://www.rcac.purdue.edu",
@@ -20,6 +20,6 @@
 		"jasig/phpcas": "1.3.5"
 	},
 	"extra": {
-		"install-directory": "/Listeners/Authentication/Pucas/"
+		"install-directory": "/Listeners/Auth/Pucas/"
 	}
 }

@@ -23,7 +23,7 @@ class Pucas
 		);
 
 		$events->listen(
-			'App\Modules\Login\Events\LoginOptions',
+			'App\Modules\Users\Events\LoginOptions',
 			__CLASS__ . '@handleUserLogout'
 		);
 	}*/
