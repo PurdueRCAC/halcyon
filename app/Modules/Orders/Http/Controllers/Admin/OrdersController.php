@@ -13,6 +13,7 @@ use App\Modules\Orders\Models\Item;
 use App\Modules\Orders\Models\Account;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Http\StatefulRequest;
+use Carbon\Carbon;
 
 class OrdersController extends Controller
 {
@@ -606,5 +607,40 @@ class OrdersController extends Controller
 	public function cancel()
 	{
 		return redirect(route('admin.orders.index'));
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 * 
+	 * @return Response
+	 */
+	public function stats(Request $request)
+	{
+		$start = Carbon::now()->modify('-7 days');
+		$today = Carbon::now()->modify('+1 day');
+
+		// Get filters
+		$filters = array(
+			'start' => $start->format('Y-m-d'),
+			'end' => $today->format('Y-m-d'),
+		);
+
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->input($key, $default);
+		}
+
+		$categories = Category::query()
+			->where('parentordercategoryid', '>', 0)
+			->orderBy('name', 'asc')
+			->get();
+
+		$stats = Order::stats($filters['start'], $filters['end']);
+
+		return view('orders::admin.orders.stats', [
+			'categories' => $categories,
+			'filters' => $filters,
+			'stats' => $stats,
+		]);
 	}
 }

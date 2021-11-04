@@ -83,6 +83,10 @@ $router->group(['prefix' => 'orders', 'middleware' => 'can:manage orders'], func
 		'as'   => 'admin.orders.cancel',
 		'uses' => 'OrdersController@cancel',
 	]);
+	$router->match(['get', 'post'], '/stats', [
+		'as'   => 'admin.orders.stats',
+		'uses' => 'OrdersController@stats',
+	]);
 	$router->get('create', [
 		'as' => 'admin.orders.create',
 		'uses' => 'OrdersController@create',

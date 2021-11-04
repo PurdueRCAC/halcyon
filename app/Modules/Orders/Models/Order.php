@@ -3,6 +3,7 @@ namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Users\Models\User;
@@ -390,7 +391,18 @@ class Order extends Model
 	 */
 	public function getFormattedTotalAttribute()
 	{
-		$number = preg_replace('/[^0-9\-]/', '', $this->total);
+		return self::formatCurrency($this->total);
+	}
+
+	/**
+	 * Format currency
+	 *
+	 * @param   integer  $value
+	 * @return  string
+	 */
+	public static function formatCurrency($value)
+	{
+		$number = preg_replace('/[^0-9\-]/', '', $value);
 
 		$neg = '';
 		if ($number < 0)
@@ -425,8 +437,12 @@ class Order extends Model
 	 * @param   integer  $timeframe
 	 * @return  array
 	 */
-	public static function stats($timeframe = 7)
+	public static function stats($start, $stop)
 	{
+		$start = Carbon::parse($start);
+		$stop  = Carbon::parse($stop);
+		$timeframe = round(($stop->timestamp - $start->timestamp) / (60 * 60 * 24));
+
 		$now = Carbon::now();
 		$placed = array();
 		for ($d = $timeframe; $d >= 0; $d--)
@@ -440,21 +456,45 @@ class Order extends Model
 				->count();
 		}
 
-		$yesterday = Carbon::now()->modify('- ' . $timeframe . ' days');
-		$tomorrow  = Carbon::now()->modify('+ 1 days');
+		//$yesterday = Carbon::now()->modify('- ' . $timeframe . ' days');
+		//$tomorrow  = Carbon::now()->modify('+ 1 days');
+		$prevyesterday = Carbon::now()->modify('- ' . ($timeframe * 2) . ' days');
 
 		$past = self::query()
-			->where('datetimecreated', '>', $yesterday->format('Y-m-d') . ' 00:00:00')
-			->where('datetimecreated', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
+			->withTrashed()
+			->where('datetimecreated', '>', $start->format('Y-m-d') . ' 00:00:00')
+			->where('datetimecreated', '<', $stop->format('Y-m-d') . ' 00:00:00')
 			->get();
 
 		$total = count($past);
-		$canceled = self::query()
+
+		$past_prev = self::query()
+			->withTrashed()
+			->where('datetimecreated', '>', $prevyesterday->format('Y-m-d') . ' 00:00:00')
+			->where('datetimecreated', '<', $start->format('Y-m-d') . ' 00:00:00')
+			->get();
+
+		$total_prev = count($past_prev);
+
+		$canc = self::query()
 			->onlyTrashed()
-			->where('datetimecreated', '>', $yesterday->format('Y-m-d') . ' 00:00:00')
-			->where('datetimecreated', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
+			->where('datetimecreated', '>', $start->format('Y-m-d') . ' 00:00:00')
+			->where('datetimecreated', '<', $stop->format('Y-m-d') . ' 00:00:00')
+			->get();
+		$canceled = count($canc);
+		$uncharged = 0;
+		foreach ($canc as $c)
+		{
+			$uncharged += $c->total;
+		}
+		$canceled_prev = self::query()
+			->onlyTrashed()
+			->where('datetimecreated', '>', $prevyesterday->format('Y-m-d') . ' 00:00:00')
+			->where('datetimecreated', '<', $start->format('Y-m-d') . ' 00:00:00')
 			->count();
+
 		$fulfilled = 0;
+		$fulfilled_prev = 0;
 
 		$step = array(
 			'payment' => array(
@@ -475,29 +515,33 @@ class Order extends Model
 			),
 		);
 
+		$sold = 0;
+		$collected = 0;
 		foreach ($past as $order)
 		{
 			$accounts = $order->accounts()->orderBy('datetimecreated', 'asc')->get();
 
-			if (!count($accounts))
-			{
-				continue;
-			}
-
-			$step['payment']['value'] += $accounts->first()->datetimecreated->timestamp - $order->datetimecreated->timestamp;
-			$step['payment']['total']++;
-
 			$lastapproved = $order->datetimecreated->timestamp;
-			foreach ($accounts as $account)
+			if (count($accounts))
 			{
-				if (!$account->isApproved())
-				{
-					continue;
-				}
+				//continue;
+			//}
 
-				$step['approval']['value'] += $account->datetimeapproved->timestamp - $account->datetimecreated->timestamp;
-				$step['approval']['total']++;
-				$lastapproved = $account->datetimeapproved->timestamp > $lastapproved ? $account->datetimeapproved->timestamp : $lastapproved;
+				$step['payment']['value'] += $accounts->first()->datetimecreated->timestamp - $order->datetimecreated->timestamp;
+				$step['payment']['total']++;
+
+				
+				foreach ($accounts as $account)
+				{
+					if (!$account->isApproved())
+					{
+						continue;
+					}
+
+					$step['approval']['value'] += $account->datetimeapproved->timestamp - $account->datetimecreated->timestamp;
+					$step['approval']['total']++;
+					$lastapproved = $account->datetimeapproved->timestamp > $lastapproved ? $account->datetimeapproved->timestamp : $lastapproved;
+				}
 			}
 
 			$items = $order->items()->orderBy('datetimecreated', 'asc')->get();
@@ -518,8 +562,26 @@ class Order extends Model
 
 					$step['completed']['value'] += $item->datetimefulfilled->timestamp - $order->datetimecreated->timestamp;
 					$step['completed']['total']++;
+
+					$collected += $item->price;
 				}
 			}
+
+			$sold += $order->total;
+		}
+
+		$sold_prev = 0;
+		foreach ($past_prev as $order)
+		{
+			foreach ($order->items as $item)
+			{
+				if ($item->isFulfilled())
+				{
+					$fulfilled_prev++;
+				}
+			}
+
+			$sold_prev += $order->total;
 		}
 
 		$avg = $step['payment']['value'] ? $step['payment']['value'] / $step['payment']['total'] : 0;
@@ -550,13 +612,44 @@ class Order extends Model
 		}
 		$step['completed']['average'] = $avg;
 
+		// Top products
+		$p = (new Product)->getTable();
+		$i = (new Item)->getTable();
+		$o = (new self)->getTable();
+
+		$products = Product::query()
+			->select($p . '.*', DB::raw('COUNT(*) AS total'))
+			->join($i, $i . '.orderproductid', $p . '.id')
+			->join($o, $o . '.id', $i . '.orderid')
+			->whereNull($p . '.datetimeremoved')
+			->whereNull($i . '.datetimeremoved')
+			->whereNull($o . '.datetimeremoved')
+			->where($i . '.datetimecreated', '>=', $start->toDateTimeString())
+			->groupBy($i . '.orderproductid')
+			->orderBy('total', 'desc')
+			->limit(5)
+			->get();
+		$topprods = array();
+		foreach ($products as $prod)
+		{
+			$topprods[$prod->name] = $prod->total;
+		}
+
 		$stats = array(
 			'timeframe' => $timeframe,
 			'submitted' => $total,
+			'submitted_prev' => $total_prev,
+			'sold' => self::formatCurrency($sold),
+			'sold_prev' => self::formatCurrency($sold_prev),
 			'canceled'  => $canceled,
+			'canceled_prev'  => $canceled_prev,
+			'uncharged' => self::formatCurrency($uncharged),
 			'fulfilled' => $fulfilled,
+			'fulfilled_prev' => $fulfilled_prev,
+			'collected' => self::formatCurrency($collected),
 			'steps'     => $step,
 			'daily'     => $placed,
+			'products'  => $topprods,
 		);
 
 		return $stats;

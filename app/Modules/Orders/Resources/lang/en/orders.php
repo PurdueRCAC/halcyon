@@ -138,4 +138,5 @@ return [
 	'import' => 'Import',
 	'accounts updated' => ':count order account(s) updated.',
 	'remove filter' => 'Remove filter',
+	'stats' => 'Stats',
 ];

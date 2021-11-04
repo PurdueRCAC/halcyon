@@ -121,7 +121,9 @@ app('pathway')
 	</div>
 
 	<?php
-	$stats = App\Modules\Orders\Models\Order::stats($filters['timeframe']);
+	$start = Carbon\Carbon::now()->modify('-' . $filters['timeframe'] . ' days');
+	$stop  = Carbon\Carbon::now()->modify('+1 day');
+	$stats = App\Modules\Orders\Models\Order::stats($start, $stop);
 	?>
 	<h3 class="sr-only">Overview</h3>
 
