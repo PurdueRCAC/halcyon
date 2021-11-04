@@ -140,9 +140,10 @@ app('pathway')
 						@if ($stats['submitted_prev'] > $stats['submitted'])
 							<div><span class="text-danger" aria-hidden="true">&darr; {{ number_format(abs(100 - (($stats['submitted'] / $stats['submitted_prev']) * 100))) }}%</span> Down from previous period</div>
 						@elseif ($stats['submitted_prev'] == $stats['submitted'])
-							<div><span class="text-info" aria-hidden="true">&rarr; {{ number_format(abs(100 - (($stats['submitted'] / $stats['submitted_prev']) * 100))) }}%</span> Same as previous period</div>
+							<div><span class="text-info" aria-hidden="true">&rarr;</span> Same as previous period</div>
 						@else
-							<div><span class="text-success" aria-hidden="true">&uarr; {{ number_format(abs(100 - (($stats['submitted'] / $stats['submitted_prev']) * 100))) }}%</span> Up from previous period</div>
+						{{ $stats['submitted_prev'] }}
+							<div><span class="text-success" aria-hidden="true">&uarr; {{ $stats['submitted_prev'] ? number_format(abs(100 - (($stats['submitted'] / $stats['submitted_prev']) * 100))) : 100 }}%</span> Up from previous period</div>
 						@endif
 					</div>
 				</div>
@@ -161,9 +162,9 @@ app('pathway')
 						@if ($stats['canceled_prev'] > $stats['canceled'])
 							<div><span class="text-success" aria-hidden="true">&darr; {{ number_format(abs(100 - (($stats['canceled'] / $stats['canceled_prev']) * 100))) }}%</span> Down from previous period</div>
 						@elseif ($stats['canceled_prev'] == $stats['canceled'])
-							<div><span class="text-info" aria-hidden="true">&rarr; {{ number_format(abs(100 - (($stats['canceled'] / $stats['canceled_prev']) * 100))) }}%</span> Same as previous period</div>
+							<div><span class="text-info" aria-hidden="true">&rarr;</span> Same as previous period</div>
 						@else
-							<div><span class="text-danger" aria-hidden="true">&uarr; {{ number_format(abs(100 - (($stats['canceled'] / $stats['canceled_prev']) * 100))) }}%</span> Up from previous period</div>
+							<div><span class="text-danger" aria-hidden="true">&uarr; {{ $stats['canceled_prev'] ? number_format(abs(100 - (($stats['canceled'] / $stats['canceled_prev']) * 100))) : 100 }}%</span> Up from previous period</div>
 						@endif
 					</div>
 				</div>
@@ -182,9 +183,9 @@ app('pathway')
 						@if ($stats['fulfilled_prev'] > $stats['fulfilled'])
 							<div><span class="text-danger" aria-hidden="true">&darr; {{ number_format(abs(100 - (($stats['fulfilled'] / $stats['fulfilled_prev']) * 100))) }}%</span> Down from previous period</div>
 						@elseif ($stats['fulfilled_prev'] == $stats['fulfilled'])
-							<div><span class="text-info" aria-hidden="true">&rarr; {{ number_format(abs(100 - (($stats['fulfilled'] / $stats['fulfilled_prev']) * 100))) }}%</span> Same as previous period</div>
+							<div><span class="text-info" aria-hidden="true">&rarr;</span> Same as previous period</div>
 						@else
-							<div><span class="text-success" aria-hidden="true">&uarr; {{ number_format(abs(100 - (($stats['fulfilled'] / $stats['fulfilled_prev']) * 100))) }}%</span> Up from previous period</div>
+							<div><span class="text-success" aria-hidden="true">&uarr; {{ $stats['fulfilled_prev'] ? number_format(abs(100 - (($stats['fulfilled'] / $stats['fulfilled_prev']) * 100))) : 100 }}%</span> Up from previous period</div>
 						@endif
 					</div>
 				</div>

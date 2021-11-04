@@ -458,7 +458,8 @@ class Order extends Model
 
 		//$yesterday = Carbon::now()->modify('- ' . $timeframe . ' days');
 		//$tomorrow  = Carbon::now()->modify('+ 1 days');
-		$prevyesterday = Carbon::now()->modify('- ' . ($timeframe * 2) . ' days');
+
+		$prevyesterday = Carbon::parse($start->format('Y-m-d'))->modify('- ' . $timeframe . ' days');
 
 		$past = self::query()
 			->withTrashed()
