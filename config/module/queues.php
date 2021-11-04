@@ -36,14 +36,14 @@ return [
 	| Stop all queues command
 	|--------------------------------------------------------------------------
 	*/
-	//'stop_all_cmd' => 'sudo apache ssh $HOST qpanic -d',
-	'stop_all_cmd' => 'sudo apache ssh $HOST hostname',
+	//'stop_all_cmd' => 'sudo rcacdata ssh $HOST qpanic -d',
+	'stop_all_cmd' => 'sudo rcacdata ssh $HOST hostname',
 
 	/*
 	|--------------------------------------------------------------------------
 	| Start all queues command
 	|--------------------------------------------------------------------------
 	*/
-	//'start_all_cmd' => 'sudo apache ssh $HOST qpanic -u',
-	'start_all_cmd' => 'sudo apache ssh $HOST hostname',
+	//'start_all_cmd' => 'sudo rcacdata ssh $HOST qpanic -u',
+	'start_all_cmd' => 'sudo rcacdata ssh $HOST hostname',
 ];
