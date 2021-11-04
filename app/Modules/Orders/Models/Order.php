@@ -618,7 +618,7 @@ class Order extends Model
 		$o = (new self)->getTable();
 
 		$products = Product::query()
-			->select($p . '.*', DB::raw('COUNT(*) AS total'))
+			->select($p . '.name', DB::raw('COUNT(*) AS total'))
 			->join($i, $i . '.orderproductid', $p . '.id')
 			->join($o, $o . '.id', $i . '.orderid')
 			->whereNull($p . '.datetimeremoved')
@@ -626,6 +626,7 @@ class Order extends Model
 			->whereNull($o . '.datetimeremoved')
 			->where($i . '.datetimecreated', '>=', $start->toDateTimeString())
 			->groupBy($i . '.orderproductid')
+			->groupBy($p . '.name')
 			->orderBy('total', 'desc')
 			->limit(5)
 			->get();
