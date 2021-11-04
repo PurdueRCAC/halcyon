@@ -714,15 +714,19 @@ h4 {
 .icon-cast:before {
   content: "\e841";
 }
+.fa-chevron-down:before,
 .icon-chevron-down:before {
   content: "\e842";
 }
+.fa-chevron-left:before,
 .icon-chevron-left:before {
   content: "\e843";
 }
+.fa-chevron-right:before,
 .icon-chevron-right:before {
   content: "\e844";
 }
+.fa-chevron-up:before,
 .icon-chevron-up:before {
   content: "\e845";
 }
