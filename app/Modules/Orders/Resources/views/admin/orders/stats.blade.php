@@ -15,6 +15,7 @@ $(document).ready(function () {
 		$($(this).attr('href')).toggle('collapse');
 	});
 
+	var charts = new Array;
 	$('.sparkline-chart').each(function (i, el) {
 		const ctx = el.getContext('2d');
 		const chart = new Chart(ctx, {
@@ -23,13 +24,14 @@ $(document).ready(function () {
 				labels: JSON.parse($(el).attr('data-labels')),
 				datasets: [
 					{
-						fill: false,
+						fill: true,
 						data: JSON.parse($(el).attr('data-values'))
 					}
 				]
 			},
 			options: {
 				//responsive: false,
+				bezierCurve: false,
 				animation: {
 					duration: 0
 				},
@@ -38,11 +40,13 @@ $(document).ready(function () {
 				},
 				elements: {
 					line: {
-						borderColor: '#0091EB',
-						borderWidth: 1
+						borderColor: 'rgb(54, 162, 235)', //'#0091EB',
+						backgroundColor: 'rgb(54, 162, 235)',
+						borderWidth: 1,
+						tension: 0
 					},
 					point: {
-						borderColor: '#0091EB'
+						borderColor: 'rgb(54, 162, 235)'//'#0091EB'
 					}
 				},
 				scales: {
@@ -59,6 +63,40 @@ $(document).ready(function () {
 				}
 			}
 		});
+		charts.push(chart);
+	});
+
+	$('.pie-chart').each(function (i, el) {
+		const ctx = el.getContext('2d');
+		const pchart = new Chart(ctx, {
+			type: 'doughnut',
+			data: {
+				labels: JSON.parse($(el).attr('data-labels')),
+				datasets: [
+					{
+						data: JSON.parse($(el).attr('data-values')),
+						backgroundColor: [
+							'rgb(255, 99, 132)', // red
+							'rgb(54, 162, 235)', // blue
+							'rgb(255, 205, 86)', // yellow
+							'rgb(201, 203, 207)', // grey
+							'rgb(75, 192, 192)', // blue green
+							'rgb(255, 159, 64)', // orange
+							'rgb(153, 102, 255)' // purple
+						]
+					}
+				]
+			},
+			options: {
+				animation: {
+					duration: 0
+				}/*,
+				legend: {
+					display: false
+				}*/
+			}
+		});
+		charts.push(pchart);
 	});
 });
 </script>
@@ -195,21 +233,6 @@ app('pathway')
 		<div class="col-md-4">
 			<div class="card mb-3">
 				<div class="card-body">
-					<h4>New orders</h4>
-					<div>
-					<canvas id="sparkline" class="sparkline-chart" width="275" height="150" data-labels="{{ json_encode(array_keys($stats['daily'])) }}" data-values="{{ json_encode(array_values($stats['daily'])) }}">
-						@foreach ($stats['daily'] as $day => $val)
-							{{ $day }}: $val<br />
-						@endforeach
-					</canvas>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-md-4">
-			<div class="card mb-3">
-				<div class="card-body">
 					<h4>Avg. Time From Order Submission</h4>
 					<div class="order-process">
 						<ol>
@@ -232,12 +255,27 @@ app('pathway')
 			</div>
 		</div>
 
+		<div class="col-md-8">
+			<div class="card mb-3">
+				<div class="card-body">
+					<h4>New orders</h4>
+					<div>
+					<canvas id="sparkline" class="sparkline-chart" width="500" height="110" data-labels="{{ json_encode(array_keys($stats['daily'])) }}" data-values="{{ json_encode(array_values($stats['daily'])) }}">
+						@foreach ($stats['daily'] as $day => $val)
+							{{ $day }}: $val<br />
+						@endforeach
+					</canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="col-md-4">
 			<div class="card mb-3">
 				<div class="card-body">
-					<h4>Top Ordered Products</h4>
+					<h4>Most Ordered Products</h4>
 					<table class="table">
-						<caption class="sr-only">Top Ordered Products</caption>
+						<caption class="sr-only">Most Ordered Products</caption>
 						<thead>
 							<tr>
 								<th scope="col">Product</th>
@@ -257,6 +295,119 @@ app('pathway')
 							@endforeach
 						</tbody>
 					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="card mb-3">
+				<div class="card-body">
+					<h4>Orders By Category</h4>
+					<?php
+					$p = (new App\Modules\Orders\Models\Product)->getTable();
+					$i = (new App\Modules\Orders\Models\Item)->getTable();
+					$o = (new App\Modules\Orders\Models\Order)->getTable();
+
+					$cats = array();
+					foreach ($categories as $category):
+						$val = App\Modules\Orders\Models\Order::query()
+							->join($i, $i . '.orderid', $o . '.id')
+							->join($p, $p . '.id', $i . '.orderproductid')
+							->whereNull($p . '.datetimeremoved')
+							->whereNull($i . '.datetimeremoved')
+							->whereNull($o . '.datetimeremoved')
+							->where($p . '.ordercategoryid', '=', $category->id)
+							->where($o . '.datetimecreated', '>=', $filters['start'] . ' 00:00:00')
+							->where($o . '.datetimecreated', '<', $filters['end'] . ' 00:00:00')
+							->count();
+
+						$cats[$category->name] = $val;
+					endforeach;
+
+					$cats = array_filter($cats);
+					?>
+					<div>
+						<canvas id="orders-categories" class="pie-chart" width="275" height="275" data-labels="{{ json_encode(array_keys($cats)) }}" data-values="{{ json_encode(array_values($cats)) }}">
+							<table class="table">
+								<caption class="sr-only">Orders By Category</caption>
+								<thead>
+									<tr>
+										<th scope="col">Category</th>
+										<th scope="col" class="text-right">Total</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach ($cats as $name => $val)
+									<tr>
+										<td>
+											<span class="legend-key"></span> {{ $name }}
+										</td>
+										<td class="text-right">
+											{{ number_format($val) }}
+										</td>
+									</tr>
+									@endforeach
+								</tbody>
+							</table>
+						</canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="card mb-3">
+				<div class="card-body">
+					<h4>Revenue By Category</h4>
+					<?php
+					$cats = array();
+					foreach ($categories as $category):
+						$val = App\Modules\Orders\Models\Order::query()
+							->select(Illuminate\Support\Facades\DB::raw('SUM(' . $i . '.price) AS revenue'))
+							->join($i, $i . '.orderid', $o . '.id')
+							->join($p, $p . '.id', $i . '.orderproductid')
+							->whereNull($p . '.datetimeremoved')
+							->whereNull($i . '.datetimeremoved')
+							->whereNull($o . '.datetimeremoved')
+							->where($p . '.ordercategoryid', '=', $category->id)
+							->where($o . '.datetimecreated', '>=', $filters['start'] . ' 00:00:00')
+							->where($o . '.datetimecreated', '<', $filters['end'] . ' 00:00:00')
+							->get()
+							->first()->revenue;
+
+						$cats[$category->name] = $val;
+					endforeach;
+
+					$cats = array_filter($cats);
+					foreach ($cats as $key => $val):
+						$cats[$key] = ($val / 100);
+					endforeach;
+					?>
+					<div>
+						<canvas id="revenue-categories" class="pie-chart" width="275" height="275" data-labels="{{ json_encode(array_keys($cats)) }}" data-values="{{ json_encode(array_values($cats)) }}">
+							<table class="table">
+								<caption class="sr-only">Revenue By Category</caption>
+								<thead>
+									<tr>
+										<th scope="col">Category</th>
+										<th scope="col" class="text-right">Total</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach ($cats as $name => $val)
+									<tr>
+										<td>
+											<span class="legend-key"></span> {{ $name }}
+										</td>
+										<td class="text-right">
+											{{ config('orders.currency', '$') }} {{ App\Modules\Orders\Models\Order::formatCurrency($val) }}
+										</td>
+									</tr>
+									@endforeach
+								</tbody>
+							</table>
+						</canvas>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -616,7 +616,7 @@ class OrdersController extends Controller
 	 */
 	public function stats(Request $request)
 	{
-		$start = Carbon::now()->modify('-7 days');
+		$start = Carbon::now()->modify('-30 days');
 		$today = Carbon::now()->modify('+1 day');
 
 		// Get filters
