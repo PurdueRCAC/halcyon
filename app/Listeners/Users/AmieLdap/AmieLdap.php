@@ -460,7 +460,7 @@ class AmieLdap
 					if (!$serviceUnits)
 					{
 						$authorized = false;
-					}
+					}*/
 
 					$start = $results->getAttribute('x-xsede-startTime', 0);
 					$start = $start ? Carbon::parse($start) : null;
@@ -471,7 +471,7 @@ class AmieLdap
 					$now = Carbon::now();
 
 					// Is this a future allocation?
-					if ($start && $start->timestamp > $now->timestamp)
+					/*if ($start && $start->timestamp > $now->timestamp)
 					{
 						$authorized = false;
 					}
