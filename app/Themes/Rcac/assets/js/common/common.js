@@ -1,10 +1,25 @@
 /* global $ */  // jquery.js
 
+if (typeof (Halcyon) === 'undefined') {
+	var Halcyon = {
+		config: {}
+	};
+}
+
 // Common Javascript functions for all web app pages
+function config(key, def) {
+	var result = key.split('.').reduce(function (obj, i, def) {
+		return obj[i];
+	}, Halcyon.config);
+	if (typeof (result) === 'undefined') {
+		result = def;
+	}
+	return result;
+}
 
 // define a couple global variables
-if (base_url === undefined) {
-	var base_url = '';
+if (typeof (base_url) === 'undefined') {
+	base_url = document.querySelector('meta[name="base-url"]').getAttribute('content');
 }
 var ROOT_URL = base_url + "/api/";
 var tablist = '';

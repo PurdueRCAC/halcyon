@@ -46,6 +46,7 @@
 		@yield('styles')
 
 		<!-- Scripts: Global -->
+		@include('partials.globals')
 <?php
 		$scripts = array(
 			'modules/core/vendor/jquery/jquery.min.js',

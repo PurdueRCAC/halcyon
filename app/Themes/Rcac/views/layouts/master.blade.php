@@ -67,9 +67,7 @@
 		@yield('styles')
 
 		<!-- Scripts: Global -->
-		<script type="text/javascript">
-			var base_url = '{!! request()->getBaseUrl() !!}';
-		</script>
+		@include('partials.globals')
 <?php
 		$scripts = array(
 			'modules/core/vendor/jquery/jquery.min.js',

@@ -39,6 +39,7 @@
 		@stack('styles')
 
 		<!-- Scripts -->
+		@include('partials.globals')
 		<?php
 		$scripts = array(
 			'modules/core/vendor/jquery/jquery.min.js',

@@ -1,5 +1,21 @@
 // Common Javascript functions for all web app pages
 
+if (typeof (Halcyon) === 'undefined') {
+	var Halcyon = {
+		config: {}
+	};
+}
+
+function config(key, def) {
+	var result = key.split('.').reduce(function (obj, i, def) {
+		return obj[i];
+	}, Halcyon.config);
+	if (typeof (result) === 'undefined') {
+		result = def;
+	}
+	return result;
+}
+
 // define a couple global variables
 if (typeof(base_url) === 'undefined') {
 	base_url = document.querySelector('meta[name="base-url"]').getAttribute('content');
