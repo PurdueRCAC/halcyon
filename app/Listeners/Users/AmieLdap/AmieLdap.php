@@ -456,7 +456,7 @@ class AmieLdap
 					// Any service units?
 					$serviceUnits = $results->getAttribute('x-xsede-serviceUnits', 0);
 
-					$authorized = true;
+					/*$authorized = true;
 					if (!$serviceUnits)
 					{
 						$authorized = false;
@@ -480,7 +480,7 @@ class AmieLdap
 					if ($stop && $stop->timestamp < $now->timestamp)
 					{
 						$authorized = false;
-					}
+					}*/
 
 					//
 					// Check for an associated group (a.k.a. project)
@@ -504,6 +504,7 @@ class AmieLdap
 						$group->save();
 					}
 
+					$members = array();
 					$allmembers = array();
 
 					//
@@ -600,7 +601,7 @@ class AmieLdap
 									}
 								}
 
-								event(new UserSync($member, $authorized, $resource->rolename));
+								//event(new UserSync($member, $authorized, $resource->rolename));
 
 								// Create user if needed
 								if (!in_array($member->id, $current))
@@ -611,6 +612,7 @@ class AmieLdap
 									$ugu->save();
 								}
 
+								$members[] = $member;
 								$allmembers[] = $member->id;
 							}
 
@@ -631,7 +633,9 @@ class AmieLdap
 						}
 					}
 
+					//
 					// Queues
+					//
 					$queue = $group->queues()
 						->where('name', '=', $pid . ($cluster != 'cpu' ? '-' . $cluster : ''))
 						->first();
@@ -756,7 +760,45 @@ class AmieLdap
 						}
 					}
 
+					//
+					// Members
+					//
+					$authorized = true;
+					// This is total available service units and 
+					// takes into account start and stop times.
+					if (!$queue->serviceunits)
+					{
+						$authorized = false;
+					}
+
+					/*$start = $results->getAttribute('x-xsede-startTime', 0);
+					$start = $start ? Carbon::parse($start) : null;
+
+					$stop  = $results->getAttribute('x-xsede-endTime', 0);
+					$stop  = $stop ? Carbon::parse($stop) : null;
+
+					$now = Carbon::now();
+
+					// Is this a future allocation?
+					if ($start && $start->timestamp > $now->timestamp)
+					{
+						$authorized = false;
+					}
+
+					// Did the allocation expire?
+					if ($stop && $stop->timestamp < $now->timestamp)
+					{
+						$authorized = false;
+					}*/
+
+					foreach ($members as $member)
+					{
+						event(new UserSync($member, $authorized, $resource->rolename));
+					}
+
+					//
 					// Storage
+					//
 					$dir = null;
 					$storage = StorageResource::query()
 						->where('path', '=', '/depot')
