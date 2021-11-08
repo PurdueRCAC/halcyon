@@ -22,6 +22,11 @@ app('pathway')
 		{!! Toolbar::deleteList('', route('admin.courses.delete')) !!}
 	@endif
 
+	<?php /*
+	@if (auth()->user()->can('manage courses'))
+		{!! Toolbar::link('refresh', 'Sync', '#sync', false) !!}
+	@endif */ ?>
+
 	@if (auth()->user()->can('create courses'))
 		{!! Toolbar::addNew(route('admin.courses.create')) !!}
 	@endif
@@ -250,11 +255,14 @@ app('pathway')
 		<h2 class="modal-title sr-only">{{ trans('courses::courses.sync') }}</h2>
 
 		<div class="row">
-			<div class="col-md-12">
-				<a href="{{ route('admin.knowledge.create') }}" class="btn bt-primary">
-					<span class="fa fa-undo" aria-hidden="true"></span>
+			<div class="col-md-12 text-center">
+				<a href="{{ route('admin.courses.sync') }}" data-api="{{ route('api.courses.sync') }}" class="btn btn-sync bt-primary">
+					<span class="spinner-border spinner-border-sm d-none" role="status"><span class="hide">{{ trans('global.loading') }}</span></span>
 					{{ trans('courses::courses.sync') }}
 				</a>
+
+				<div id="sync-output">
+				</div>
 			</div>
 		</div>
 	</div>

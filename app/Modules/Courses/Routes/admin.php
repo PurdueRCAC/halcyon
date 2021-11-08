@@ -62,6 +62,10 @@ $router->group(['prefix' => 'courses', 'middleware' => 'can:manage courses'], fu
 		'uses' => 'AccountsController@delete',
 		'middleware' => 'can:delete courses',
 	]);
+	$router->get('/sync', [
+		'as'   => 'admin.courses.sync',
+		'uses' => 'AccountsController@sync',
+	]);
 	$router->match(['get', 'post'], '/cancel', [
 		'as'   => 'admin.courses.cancel',
 		'uses' => 'AccountsController@cancel',

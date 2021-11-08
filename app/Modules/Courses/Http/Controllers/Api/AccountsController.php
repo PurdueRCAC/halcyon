@@ -907,7 +907,10 @@ class AccountsController extends Controller
 
 		$data = explode("\n", $output);
 
-		return response()->json($data);
+		$response = new \stdClass;
+		$response->output = $data;
+
+		return response()->json($response);
 	}
 
 	/**

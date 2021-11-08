@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Artisan;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Events\InstructorLookup;
@@ -318,5 +319,26 @@ class AccountsController extends Controller
 	public function cancel()
 	{
 		return redirect(route('admin.courses.index'));
+	}
+
+	/**
+	 * Sync users with account info
+	 *
+	 * @return  Response
+	 */
+	public function sync()
+	{
+		Artisan::call('courses:sync', [
+			'-v' => 1
+		]);
+
+		$output = Artisan::output();
+
+		$data = explode("\n", $output);
+
+		$response = new \stdClass;
+		$response->output = $data;
+
+		return response()->json($response);
 	}
 }

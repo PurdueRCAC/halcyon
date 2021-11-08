@@ -207,4 +207,49 @@ document.addEventListener('DOMContentLoaded', function () {
 			window.location = $(this).data('url') + "?userid=";
 		});
 	}
+
+	var dialog = $("#sync").dialog({
+		autoOpen: false,
+		height: 400,
+		width: 500,
+		modal: true
+	});
+
+	document.getElementById('toolbar-refresh').addEventListener('click', function (e) {
+		e.preventDefault();
+
+		dialog.dialog("open");
+	});
+	document.querySelectorAll('.btn-sync').forEach(function (btn) {
+		btn.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			var spinners = btn.querySelectorAll('.spinner-border');
+			spinners.forEach(function (sp) {
+				sp.classList.remove('d-none');
+			});
+
+			// create new relationship
+			$.ajax({
+				url: btn.getAttribute('data-api'),
+				type: 'get',
+				dataType: 'json',
+				async: false,
+				success: function (response) { //response
+					spinners.forEach(function (sp) {
+						sp.classList.add('d-none');
+					});
+					document.getElementById('sync-output').innerHTML = response.responseText;
+					//Halcyon.message('success', btn.data('success'));
+					//window.location.reload(true);
+				},
+				error: function (xhr) {
+					spinners.forEach(function (sp) {
+						sp.classList.add('d-none');
+					});
+					Halcyon.message('danger', xhr.responseJSON.message);
+				}
+			});
+		});
+	});
 });
