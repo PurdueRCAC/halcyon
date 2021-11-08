@@ -293,7 +293,7 @@ app('pathway')->append(
 				<ul class="news-list">
 					@foreach ($upcoming as $article)
 						<li>
-							<article id="article-{{ $article->id }}"aria-labelledby="article-{{ $article->id }}-title">
+							<article id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title">
 								<h3 id="article-{{ $article->id }}-title" class="news-title">
 									<a href="{{ route('site.news.show', ['id' => $article->id]) }}"><span class="sr-only">Article #{{ $article->id }}: </span>{{ $article->headline }}</a>
 								</h3>
@@ -397,9 +397,9 @@ app('pathway')->append(
 						endif;
 						?>
 						<li>
-							<article id="news{{ $news->id }}" class="card">
+							<article id="news{{ $news->id }}" aria-labelledby="article-{{ $article->id }}-title" class="card">
 								<div class="card-header news-header">
-									<h4 class="card-title">
+									<h4 id="article-{{ $article->id }}-title" class="card-title">
 										{{ $news->headline }}
 										<!-- <span class="badge badge-{{ $typ == 'outage' ? 'danger' : 'info' }}">{{ $typ }}</span> -->
 									</h4>
