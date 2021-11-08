@@ -42,7 +42,7 @@ $remaining = $order->total;
 | Payment               |    Amount |
 | ----------------------|----------:|
 @foreach ($order->accounts as $account)
-| Account {{ $account->account }}{!! $account->budgetjustification ? '<br />' . '_' . e($account->budgetjustification) . '_' : '' !!} | ${{ $account->formattedAmount }} |
+| Account {{ $account->account }}{!! $account->budgetjustification ? '<br />' . '_' . e(trim($account->budgetjustification)) . '_' : '' !!} | ${{ $account->formattedAmount }} |
 @php
 $remaining -= $account->amount;
 @endphp
