@@ -279,6 +279,10 @@ class UsersController extends Controller
 			{
 				$item->getUserUsername()->dateremoved = null;
 			}
+			if ($item->id)
+			{
+				$item->api = route('api.users.read', ['id' => $item->id]);
+			}
 		});
 
 		return $rows; //new UserResourceCollection($rows);
@@ -310,6 +314,17 @@ class UsersController extends Controller
 	 * 			"format":    "email"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation"
+	 * 		},
+	 * 		"401": {
+	 * 			"description": "Unauthorized"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -317,6 +332,8 @@ class UsersController extends Controller
 	{
 		$request->validate(array(
 			'name' => 'required|string|max:128',
+			'puid' => 'nullable|integer',
+			'username' => 'nullable|string|max:16',
 		));
 
 		$user = new User;
@@ -351,6 +368,14 @@ class UsersController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param  integer  $id
@@ -443,6 +468,17 @@ class UsersController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "array"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -591,6 +627,14 @@ class UsersController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $id
