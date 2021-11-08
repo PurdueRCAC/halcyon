@@ -931,6 +931,8 @@ class ArticlesController extends Controller
 			$row->datetimeupdate = Carbon::now()->toDateTimeString();
 		}
 
+		$row->edituserid = auth()->user()->id;
+
 		if (!$row->save())
 		{
 			return response()->json(['message' => $row->getError()], 500);

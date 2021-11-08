@@ -25,49 +25,6 @@ app('pathway')
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	@include('news::site.menu', ['types' => $types, 'active' => $type->id])
-
-	<!--
-	<form method="get" action="{{ route('site.news.type', ['name' => $type->name]) }}">
-	<fieldset class="filters">
-		<legend class="sr-only">Filter</legend>
-
-		<fieldset>
-			<legend>Category</legend>
-
-			@foreach ($types as $t)
-				<div class="form-check">
-					<input type="checkbox" name="typeid[]" id="typeid-{{ $t->id }}" class="form-check-input" value="{{ $t->id }}" <?php if ($type->id == $t->id) { echo ' checked="checked"'; } ?> />
-					<label for="typeid-{{ $t->id }}" class="form-check-label">{{ $t->name }}</label>
-				</div>
-			@endforeach
-		</fieldset>
-
-		<div class="form-group">
-			<label for="keywords">Search</label>
-			<input type="search" name="keyword" id="keywords" class="form-control" value="" />
-		</div>
-		<div class="form-group">
-			<label for="resource">Resource</label>
-			<input type="text" name="resource" id="resource" class="form-control" value="" />
-		</div>
-		<div class="form-group">
-			<label for="datetimenews">Date from</label>
-			<span class="input-group">
-				<span class="input-group-addon"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
-				<input type="text" class="date-pick form-control" name="start" id="datetimenews" placeholder="YYYY-MM-DD" value="" />
-			</span>
-		</div>
-		<div class="form-group">
-			<label for="datetimenewsend">Date to</label>
-			<span class="input-group">
-				<span class="input-group-addon"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
-				<input type="text" class="date-pick form-control" name="stop" id="datetimenewsend" placeholder="YYYY-MM-DD" value="" />
-			</span>
-		</div>
-		@csrf
-	</fieldset>
-	</form>
--->
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
@@ -80,53 +37,20 @@ app('pathway')
 		</div>
 		<div class="col-md-4 text-right">
 			<nav class="btn-group" aria-label="Calendar options for {{ $type->name }}">
-				<a class="btn btn-default tip" href="{{ route('site.news.feed', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}">
+				<a class="btn btn-default tip" href="{{ $type->rssLink }}" title="{{ trans('news::news.rss feed') }}">
 					<span class="fa fa-rss-square" aria-hidden="true"></span><span class="sr-only">{{ trans('news::news.rss feed') }}</span>
 				</a>
 			@if ($type->calendar)
-				<a target="_blank" class="btn btn-default calendar calendar-subscribe tip" href="{{ preg_replace('/^https?:\/\//', 'webcal://', route('site.news.calendar', ['name' => strtolower($type->name)])) }}" title="Subscribe to calendar"><!--
-					--><span class="fa fa-fw fa-calendar" aria-hidden="true"></span><span class="sr-only">Subscribe</span><!--
+				<a target="_blank" class="btn btn-default calendar calendar-subscribe tip" href="{{ $type->subscribeCalendarLink }}" title="{{ trans('news::news.subscribe calendar', ['name' => $type->name]) }}"><!--
+					--><span class="fa fa-fw fa-calendar" aria-hidden="true"></span><span class="sr-only">{{ trans('news::news.subscribe') }}</span><!--
 				--></a>
-				<a target="_blank" class="btn btn-default calendar calendar-download tip" href="{{ route('site.news.calendar', ['name' => strtolower($type->name)]) }}" title="Download calendar"><!--
-					--><span class="fa fa-fw fa-download" aria-hidden="true"></span><span class="sr-only">Download</span><!--
+				<a target="_blank" class="btn btn-default calendar calendar-download tip" href="{{ $type->downloadCalendarLink }}" title="{{ trans('news::news.download calendar', ['name' => $type->name]) }}"><!--
+					--><span class="fa fa-fw fa-download" aria-hidden="true"></span><span class="sr-only">{{ trans('news::news.download') }}</span><!--
 				--></a>
 			@endif
 			</nav>
 		</div>
 	</div>
-
-	<?php /*<form method="get" action="{{ route('site.news.type', ['name' => $type->name]) }}">
-		<fieldset class="filters">
-			<legend class="sr-only">Filter</legend>
-
-			<div class="form-group">
-				<label for="keywords">Search</label>
-				<input type="search" name="keyword" id="keywords" class="form-control" value="{{ $filters['keyword'] }}" />
-			</div>
-
-			<div class="form-group">
-				<label for="resource">Resource</label>
-				<input type="text" name="resource" id="resource" class="form-control" value="{{ $filters['resource'] }}" />
-			</div>
-
-			<div class="form-group">
-				<label for="datetimenews">Date from</label>
-				<span class="input-group">
-					<input type="text" class="date-pick form-control" name="start" id="datetimenews" placeholder="YYYY-MM-DD" value="{{ $filters['start'] }}" />
-					<span class="input-group-append"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
-				</span>
-			</div>
-
-			<div class="form-group">
-				<label for="datetimenewsend">Date to</label>
-				<span class="input-group">
-					<input type="text" class="date-pick form-control" name="stop" id="datetimenewsend" placeholder="YYYY-MM-DD" value="{{ $filters['end'] }}" />
-					<span class="input-group-append"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
-				</span>
-			</div>
-			@csrf
-		</fieldset>
-	</form>*/ ?>
 
 	<?php
 	$dt = Carbon\Carbon::now();
@@ -136,13 +60,13 @@ app('pathway')
 			@foreach ($articles as $article)
 				<li>
 					@if (auth()->user() && auth()->user()->can('edit news'))
-						<a class="btn float-right tip" href="{{ route('site.news.manage', ['id' => $article->id]) }}&edit" title="Edit"><!--
-							--><span class="fa fa-fw fa-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span><!--
+						<a class="btn float-right tip" href="{{ route('site.news.manage', ['id' => $article->id]) }}&edit" title="{{ trans('global.edit') }}"><!--
+							--><span class="fa fa-fw fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.edit') }}</span><!--
 						--></a>
 					@endif
 					<article id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title">
 						<h3 id="article-{{ $article->id }}-title" class="news-title">
-							<a href="{{ route('site.news.show', ['id' => $article->id]) }}"><span class="sr-only">Article #{{ $article->id }}:</span> {{ $article->headline }}</a>
+							<a href="{{ route('site.news.show', ['id' => $article->id]) }}"><span class="sr-only">{{ trans('news::news.article id', ['id' => $article->id]) }}:</span> {{ $article->headline }}</a>
 						</h3>
 						<ul class="news-meta text-muted">
 							<li>
@@ -152,12 +76,12 @@ app('pathway')
 							</time>
 							@if ($article->isToday())
 								@if ($article->isNow())
-									<span class="badge badge-success">Happening now</span>
+									<span class="badge badge-success">{{ trans('news::news.happening now') }}</span>
 								@else
-									<span class="badge badge-info">Today</span>
+									<span class="badge badge-info">{{ trans('news::news.today') }}</span>
 								@endif
 							@elseif ($article->isTomorrow())
-								<span class="badge">Tomorrow</span>
+								<span class="badge">{{ trans('news::news.tomorrow') }}</span>
 							@endif
 							<?php
 							$lastupdate = $article->updates()
@@ -166,7 +90,7 @@ app('pathway')
 								->first();
 							?>
 							@if ($lastupdate)
-								<span class="badge badge-warning"><span class="fa fa-exclamation-circle" aria-hidden="true"></span> Updated {{ $lastupdate->datetimecreated->format('M d, Y h:ia') }}</span>
+								<span class="badge badge-warning"><span class="fa fa-exclamation-circle" aria-hidden="true"></span> {{ trans('news::news.updated at', ['time' => $lastupdate->datetimecreated->format('M d, Y h:ia')]) }}</span>
 							@endif
 							</li>
 							<?php
@@ -193,7 +117,7 @@ app('pathway')
 		</ul>
 		<?php echo $articles->render(); ?>
 	<?php else: ?>
-		<p>{{ trans('There are no :type articles.', ['type' => $type->name]) }}</p>
+		<p>{{ trans('news::news.no type articles', ['type' => $type->name]) }}</p>
 	<?php endif; ?>
 </div>
 

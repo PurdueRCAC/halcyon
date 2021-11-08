@@ -181,6 +181,7 @@ class Type extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
+	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
 	public function delete(array $options = [])
@@ -197,5 +198,35 @@ class Type extends Model
 
 		// Attempt to delete the record
 		return parent::delete($options);
+	}
+
+	/**
+	 * Generate subscribe calendar link
+	 *
+	 * @return  string
+	 */
+	public function getRssLinkAttribute()
+	{
+		return route('site.news.feed', ['name' => $this->name]);
+	}
+
+	/**
+	 * Generate subscribe calendar link
+	 *
+	 * @return  string
+	 */
+	public function getSubscribeCalendarLinkAttribute()
+	{
+		return preg_replace('/^https?:\/\//', 'webcal://', route('site.news.calendar', ['name' => strtolower($this->name)]));
+	}
+
+	/**
+	 * Generate download calendar link
+	 *
+	 * @return  string
+	 */
+	public function getDownloadCalendarLinkAttribute()
+	{
+		return route('site.news.calendar', ['name' => strtolower($this->name)]);
 	}
 }

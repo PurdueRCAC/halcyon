@@ -18,7 +18,7 @@ use App\Modules\Resources\Models\Asset;
 use Carbon\Carbon;
 
 /**
- * NEws article
+ * News article
  */
 class Article extends Model
 {
@@ -223,7 +223,7 @@ class Article extends Model
 	 */
 	public function creator()
 	{
-		return $this->belongsTo('App\Modules\Users\Models\User', 'userid')->withDefault();
+		return $this->belongsTo('App\Modules\Users\Models\User', 'userid'); //->withDefault();
 	}
 
 	/**
@@ -233,7 +233,7 @@ class Article extends Model
 	 */
 	public function modifier()
 	{
-		return $this->belongsTo('App\Modules\Users\Models\User', 'edituserid')->withDefault();
+		return $this->belongsTo('App\Modules\Users\Models\User', 'edituserid'); //->withDefault();
 	}
 
 	/**
@@ -530,6 +530,26 @@ class Article extends Model
 		}
 
 		return route('site.news.show', ['id' => $this->id]);
+	}
+
+	/**
+	 * Generate a download link to item
+	 *
+	 * @return  string
+	 */
+	public function getDownloadCalendarLinkAttribute()
+	{
+		return route('site.news.calendar', ['name' => $this->id]);
+	}
+
+	/**
+	 * Generate a subscribe link to item
+	 *
+	 * @return  string
+	 */
+	public function getSubscribeCalendarLinkAttribute()
+	{
+		return str_replace(['http:', 'https:'], 'webcal:', route('site.news.calendar', ['name' => $this->id]));
 	}
 
 	/**

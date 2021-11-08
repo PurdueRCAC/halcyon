@@ -11,13 +11,13 @@
 
 		<!-- Basic options. -->
 		<fieldset name="basic"
-			label="COM_CONTENT_ATTRIBS_ARTICLE_SETTINGS_LABEL">
+			label="global.settings">
 
 		<field
 			name="keyword"
 			type="text"
 			label="keyword"
-			description="JGLOBAL_SHOW_TITLE_DESC" />
+			description="global.show title desc" />
 		</fieldset>
 	</fields>
 </metadata>

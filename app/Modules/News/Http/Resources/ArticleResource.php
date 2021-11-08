@@ -19,6 +19,13 @@ class ArticleResource extends JsonResource
 		$data['api'] = route('api.news.read', ['id' => $this->id]);
 
 		$data['uri'] = route('site.news.show', ['id' => $this->id]);
+
+		if (!$this->template && !$this->ended() && $this->type->calendar)
+		{
+			$data['uri_subscribe'] = $this->subscribeCalendarLink;
+			$data['uri_download'] = $this->downloadCalendarLink;
+		}
+
 		$data['formatteddate'] = $this->formatDate($this->getOriginal('datetimenews'), $this->getOriginal('datetimenewsend'));
 		$data['formattedbody'] = $this->formattedBody;
 		$data['formattededitdate']    = $this->formatDate($this->getOriginal('datetimeedited'));

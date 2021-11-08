@@ -14,6 +14,9 @@
 				<guid isPermaLink="true">{{ route('site.news.show', ['id' => $post->id]) }}</guid>
 				<description><![CDATA[{!! $post->formattedBody !!}]]></description>
 				<pubDate>{{ $post->datetimenews->format(DateTime::RSS) }}</pubDate>
+				@if ($post->type)
+					<category>{{ $post->type->name }}</category>
+				@endif
 			</item>
 		@endforeach
 	</channel>

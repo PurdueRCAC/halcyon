@@ -44,7 +44,7 @@ app('pathway')
 			foreach ($types as $n):
 				$info = '';
 				if ($n->tagresources == 0):
-					$info = '<span class="rssCheckbox"><span class="alert alert-warning">Warning: will not filter based on the resources selected.</span></span>';
+					$info = '<span class="rssCheckbox"><span class="alert alert-warning">' . trans('news::news.error.selection will not filter') . '</span></span>';
 				else:
 					// Keep track of all the resources that do require resources so that we know what 
 					// news to get when only grabbing a resources RSS.
