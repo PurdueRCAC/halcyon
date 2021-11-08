@@ -400,7 +400,7 @@ app('pathway')->append(
 							<article id="news{{ $news->id }}" aria-labelledby="article-{{ $news->id }}-title" class="card">
 								<div class="card-header news-header">
 									<h4 id="article-{{ $news->id }}-title" class="card-title">
-										{{ $news->headline }}
+										<span class="sr-only">Article #{{ $news->id }}:</span> {{ $news->headline }}
 										<!-- <span class="badge badge-{{ $typ == 'outage' ? 'danger' : 'info' }}">{{ $typ }}</span> -->
 									</h4>
 								</div>
