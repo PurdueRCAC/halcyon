@@ -293,9 +293,9 @@ app('pathway')->append(
 				<ul class="news-list">
 					@foreach ($upcoming as $article)
 						<li>
-							<article id="article-{{ $article->id }}">
-								<h3 class="news-title">
-									<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
+							<article id="article-{{ $article->id }}"aria-labelledby="article-{{ $article->id }}-title">
+								<h3 id="article-{{ $article->id }}-title" class="news-title">
+									<a href="{{ route('site.news.show', ['id' => $article->id]) }}"><span class="sr-only">Article #{{ $article->id }}: </span>{{ $article->headline }}</a>
 								</h3>
 								<p class="news-metadata text-muted">
 									@if ($article->isToday())
@@ -358,10 +358,10 @@ app('pathway')->append(
 					<div class="btn-group" role="group" aria-label="Options">
 						<a target="_blank" class="btn" href="{{ route('site.news.feed', ['name' => $type->name]) }}" title="{{ trans('news::news.rss feed') }}"><span class="fa fa-rss-square" aria-hidden="true"></span><span class="sr-only">RSS Feed</span></a>
 						@if ($type->calendar)
-							<a target="_blank" class="btn calendar calendar-subscribe" href="{{ preg_replace('/^https?:\/\//', 'webcal://', route('site.news.calendar', ['name' => strtolower($type->name)])) }}" title="Subscribe to calendar"><!--
+							<a target="_blank" class="btn calendar calendar-subscribe" href="{{ $type->subscribeCalendarLink }}" title="Subscribe to calendar"><!--
 								--><span class="fa fa-fw fa-calendar" aria-hidden="true"></span><span class="sr-only">Subscribe</span><!--
 							--></a>
-							<a target="_blank" class="btn calendar calendar-download" href="{{ route('site.news.calendar', ['name' => strtolower($type->name)]) }}" title="Download calendar"><!--
+							<a target="_blank" class="btn calendar calendar-download" href="{{ $type->downloadCalendarLink }}" title="Download calendar"><!--
 								--><span class="fa fa-fw fa-download" aria-hidden="true"></span><span class="sr-only">Download</span><!--
 							--></a>
 						@endif
