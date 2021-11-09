@@ -244,9 +244,9 @@ class SyncCommand extends Command
 			// Get current status
 			event($event = new ResourceMemberStatus($row->resource, $u));
 
-			if ($event->status >= 400)
+			if ($event->status < 0 || $event->status >= 400)
 			{
-				$msg = 'Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
+				$msg = 'Error getting resource account status info for ' . $user . ': ' . $event->status;
 
 				if ($debug || $this->output->isVerbose())
 				{
@@ -261,15 +261,16 @@ class SyncCommand extends Command
 
 			// Is status is pending or ready
 			// If $event->status == 1, then no role currently exists
-			if ($event->status != 2
-			 && $event->status != 3)
+			if ($event->status != -1 // error
+			 && $event->status != 2  // pending
+			 && $event->status != 3) // ready
 			{
 				// Create account
 				event($event = new ResourceMemberCreated($row->resource, $u));
 
 				if ($event->status >= 400)
 				{
-					$msg = 'Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
+					$msg = 'Could not create resource account for ' . $user . ': ' . $event->status;
 					if ($debug || $this->output->isVerbose())
 					{
 						$this->error($msg);
@@ -287,9 +288,9 @@ class SyncCommand extends Command
 			{
 				event($event = new ResourceMemberStatus($fortress, $u));
 
-				if ($event->status >= 400)
+				if ($event->status < 0 || $event->status >= 400)
 				{
-					$msg = 'Error getting AIMO ACMaint role info for ' . $user . ': ' . $event->status;
+					$msg = 'Error getting resource role info for ' . $user . ': ' . $event->status;
 					if ($debug || $this->output->isVerbose())
 					{
 						$this->error($msg);
@@ -302,13 +303,14 @@ class SyncCommand extends Command
 				}
 
 				// Is status is pending or ready
-				if ($event->status != 2
-				 && $event->status != 3)
+				if ($event->status != -1 // error
+				 && $event->status != 2  // pending
+				 && $event->status != 3) // ready
 				{
 					// Create account
 					if ($debug)
 					{
-						$this->info('Would create AIMO ACMaint account for ' . $user);
+						$this->info('Would create resource account for ' . $user);
 						continue;
 					}
 
@@ -316,7 +318,7 @@ class SyncCommand extends Command
 
 					if ($event->status >= 400)
 					{
-						$msg = 'Could not create AIMO ACMaint account for ' . $user . ': ' . $event->status;
+						$msg = 'Could not create resource account for ' . $user . ': ' . $event->status;
 						if ($debug || $this->output->isVerbose())
 						{
 							$this->error($msg);
@@ -330,7 +332,7 @@ class SyncCommand extends Command
 				}
 				else
 				{
-					$msg = 'AIMO ACMaint account already exists for ' . $user . ': ' . $event->status;
+					$msg = 'Resource account already exists for ' . $user . ': ' . $event->status;
 
 					if ($debug || $this->output->isVerbose())
 					{
@@ -385,7 +387,7 @@ class SyncCommand extends Command
 		$removed = array();
 		foreach ($remove_users as $user)
 		{
-			$msg = 'Would delete AIMO ACMaint ' . $row->resource->name . ' role for ' . $user . ': ' . $event->status;
+			$msg = 'Will delete resource ' . $row->resource->name . ' role for ' . $user . ': ' . $event->status;
 
 			if ($debug || $this->output->isVerbose())
 			{
@@ -409,7 +411,7 @@ class SyncCommand extends Command
 
 			if ($event->status >= 400)
 			{
-				$msg = 'Could not delete AIMO ACMaint ' . $row->resource->name . ' role for ' . $user . ': ' . $event->status;
+				$msg = 'Could not delete resource ' . $row->resource->name . ' role for ' . $user . ': ' . $event->status;
 				if ($debug || $this->output->isVerbose())
 				{
 					$this->error($msg);
@@ -425,7 +427,7 @@ class SyncCommand extends Command
 			{
 				$removed[] = $user;
 
-				$msg = 'Deleted AIMO ACMaint ' . $row->resource->name . ' role for ' . $user . ': ' . $event->status;
+				$msg = 'Deleted resource ' . $row->resource->name . ' role for ' . $user . ': ' . $event->status;
 				if ($debug || $this->output->isVerbose())
 				{
 					$this->success($msg);
