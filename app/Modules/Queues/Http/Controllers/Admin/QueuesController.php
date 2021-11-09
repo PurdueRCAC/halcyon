@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Artisan;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\Type;
@@ -426,6 +427,49 @@ class QueuesController extends Controller
 		$ids = $request->input('id', $id);
 		$ids = (!is_array($ids) ? array($ids) : $ids);
 
+		if ($request->has('resource'))
+		{
+			$rids = array();
+			$rid = $request->input('resource');
+
+			// Is this a specific subresource
+			if (substr($rid, 0, 1) == 's')
+			{
+				$rids[] = substr($rid, 1);
+			}
+			else
+			{
+				$resource = Asset::find($rid);
+
+				if ($resource)
+				{
+					$rids = $resource->subresources->pluck('id')->toArray();
+				}
+			}
+print_r($rids); die();
+			foreach ($rids as $rid)
+			{
+				$subresource = Subresource::find($rid);
+
+				if ($subresource)
+				{
+					$ids += $subresource->queues()
+						->select('id')
+						->get()
+						->pluck('id')
+						->toArray();
+				}
+			}
+		}
+
+		/*Artisan::call($state ? 'queues:start' : 'queues:stop', [
+			'--debug' => 1
+		]);
+
+		$output = Artisan::output();
+
+		$data = explode("\n", $output);*/
+
 		// Check for an ID
 		if (count($ids) < 1)
 		{
@@ -461,6 +505,40 @@ class QueuesController extends Controller
 
 			$request->session()->flash('success', trans($msg, ['count' => $success]));
 		}
+
+		return $this->cancel();
+	}
+
+	/**
+	 * Sets the state of one or more entries
+	 * 
+	 * @param  Request $request
+	 * @param  integer $id
+	 * @return Response
+	 */
+	public function allscheduling(Request $request, $id = 0)
+	{
+		$action = $request->segment(3);
+		$state  = $action == 'startall' ? 1 : 0;
+
+		$resource = Asset::find($id);
+
+		if (!$resource)
+		{
+			$request->session()->flash('danger', trans('queues::queues.resource not found'));
+			return $this->cancel();
+		}
+
+		Artisan::call($state ? 'queues:start' : 'queues:stop', [
+			'-v' => 1,
+			'-r' => $id,
+			//'--debug' => 1,
+		]);
+
+		$output = Artisan::output();
+		//$output = str_replace("\n", '<br />', $output);
+
+		$request->session()->flash('success', $output);
 
 		return $this->cancel();
 	}

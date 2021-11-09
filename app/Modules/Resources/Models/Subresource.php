@@ -180,7 +180,20 @@ class Subresource extends Model
 	 */
 	public function startQueues()
 	{
-		$queues = $this->queues;
+		$tbl = $this->getTable();
+		$name = $this->name;
+
+		$queues = Queue::query()
+			->where('subresourceid', '=', $this->id)
+			->orWhereIn('subresourceid', function($in) use ($tbl, $name)
+			{
+				$name = substr($name, 0, strrpos($name, '-'));
+
+				$in->select('id')
+					->from($tbl)
+					->where('name', '=', $name . '-Nonspecific');
+			})
+			->get();
 
 		foreach ($queues as $queue)
 		{

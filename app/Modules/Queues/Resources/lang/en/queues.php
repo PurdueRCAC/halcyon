@@ -134,6 +134,8 @@ return [
 	'source' => 'Source',
 	'start scheduling' => 'Start scheduling',
 	'stop scheduling' => 'Stop scheduling',
+	'start all scheduling' => 'Start all scheduling',
+	'stop all scheduling' => 'Stop all scheduling',
 	'options' => 'Options',
 	'all states' => '- All States -',
 	'edit loan' => 'Edit loan',

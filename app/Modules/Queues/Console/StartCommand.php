@@ -136,7 +136,7 @@ class StartCommand extends Command
 						}
 					}
 
-					$subresource->stopQueues();
+					$subresource->startQueues();
 				}
 
 				$scheduler = Scheduler::query()

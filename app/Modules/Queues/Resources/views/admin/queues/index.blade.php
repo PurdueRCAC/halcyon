@@ -20,6 +20,11 @@ app('pathway')
 		!!}
 	@endif
 
+	@if ($filters['resource'] && substr($filters['resource'], 0, 1) != 's')
+		{!! Toolbar::link('publish', trans('queues::queues.start all scheduling'), route('admin.queues.startall', ['id' => $filters['resource']]), false) !!}
+		{!! Toolbar::link('unpublish', trans('queues::queues.stop all scheduling'), route('admin.queues.stopall', ['id' => $filters['resource']]), false) !!}
+	@endif
+
 	@if (auth()->user()->can('delete queues'))
 		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.queues.delete')) !!}
 	@endif

@@ -148,6 +148,18 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		'uses' => 'QueuesController@scheduling',
 		'middleware' => 'can:edit.state queues',
 	])->where('id', '[0-9]+');
+
+	$router->match(['get', 'post'], '/startall/{id}', [
+		'as'   => 'admin.queues.startall',
+		'uses' => 'QueuesController@allscheduling',
+		'middleware' => 'can:edit.state queues',
+	])->where('id', '[0-9]+');
+	$router->match(['get', 'post'], '/stopall/{id}', [
+		'as'   => 'admin.queues.stopall',
+		'uses' => 'QueuesController@allscheduling',
+		'middleware' => 'can:edit.state queues',
+	])->where('id', '[0-9]+');
+
 	$router->match(['get', 'post'], '/restore/{id?}', [
 		'as'   => 'admin.queues.restore',
 		'uses' => 'QueuesController@restore',
