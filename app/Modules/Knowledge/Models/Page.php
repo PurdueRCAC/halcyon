@@ -27,7 +27,7 @@ class Page extends Model
 	const REGEXP_VARIABLE = "/\\\$\{([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)(([\*\/\-\+])(\d+(\.\d+)?))?\}/";
 	const REGEXP_IF_STATEMENT = "/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}(.+?)\{::\/\}/s";
 	const REGEXP_IF_ELSE = "/\{::elseif\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}(.+?)(?=\{::)/s";
-	const REGEXP_IF = "/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}(.+?)(?=\{::)/s";
+	const REGEXP_IF = "/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}_\d(.+?)(?=\{::)/s";
 	const REGEXP_ELSE = "/\{::else\}(.+?)(?=\{::)/s";
 	const REGEXP_LINK = "/\[(.+?)\]\((.+?)\)/";
 
@@ -203,7 +203,13 @@ class Page extends Model
 		$text = $this->content;
 
 		$text = preg_replace_callback(self::REGEXP_VARIABLE, array($this, 'replaceVariables'), $text);
-		$text = preg_replace_callback(self::REGEXP_IF_STATEMENT, array($this, 'replaceIfStatement'), $text);
+		$text = preg_replace_callback('/(\{::if\s+.*?\})(.*?{::\/\})/s', array($this, 'tokenizeIf'), $text);
+		for (self::$matches; self::$matches > 0; self::$matches--)
+		{
+			$m = self::$matches;
+			$text = preg_replace_callback("/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}_$m(.+?)\{::\/\}/s", array($this, 'replaceIfStatement'), $text);
+		}
+		//$text = preg_replace_callback(self::REGEXP_IF_STATEMENT, array($this, 'replaceIfStatement'), $text);
 		//$text = preg_replace_callback(self::REGEXP_LINK, array($this, 'replaceLink'), $text);
 
 		$text = preg_replace("/<p>(.*)<\/p>\n<(table.*)\n/m", "<$2 <caption>$1</caption>\n", $text);
@@ -260,6 +266,31 @@ class Page extends Model
 		}, $text);
 
 		return $text;
+	}
+
+	/**
+	 * Nesting counter
+	 * 
+	 * @var  integer
+	 */
+	private static $matches = 0;
+
+	/**
+	 * Add a token to IF statements to determine proper nesting
+	 *
+	 * @param   array  $matches
+	 * @return  string
+	 */
+	private function tokenizeIf($matches)
+	{
+		self::$matches++;
+
+		if (count($matches) == 1)
+		{
+			return $matches[0] . '_' . self::$matches;
+		}
+
+		return $matches[1] . '_' . self::$matches . preg_replace_callback("/\{::if\s+.*?\}/", array($this, 'tokenize'), $matches[2]);
 	}
 
 	/**
