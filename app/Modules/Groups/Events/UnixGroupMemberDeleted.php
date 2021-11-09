@@ -2,10 +2,15 @@
 
 namespace App\Modules\Groups\Events;
 
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Queue\SerializesModels;
 use App\Modules\Groups\Models\UnixGroupMember;
 
-class UnixGroupMemberDeleted
+class UnixGroupMemberDeleted implements ShouldBroadcast
 {
+	use SerializesModels;
+
 	/**
 	 * @var UnixGroupMember
 	 */
@@ -20,5 +25,15 @@ class UnixGroupMemberDeleted
 	public function __construct(UnixGroupMember $member)
 	{
 		$this->member = $member;
+	}
+
+	/**
+	 * Get the channels the event should broadcast on.
+	 *
+	 * @return Channel|array
+	 */
+	public function broadcastOn()
+	{
+		return new PrivateChannel('users.' . $this->member->userid);
 	}
 }

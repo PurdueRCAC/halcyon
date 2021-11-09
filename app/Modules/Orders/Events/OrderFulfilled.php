@@ -1,30 +1,30 @@
 <?php
 
-namespace App\Modules\Queues\Events;
+namespace App\Modules\Orders\Events;
 
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
-use App\Modules\Queues\Models\User;
+use App\Modules\Orders\Models\Order;
 
-class UserDeleted implements ShouldBroadcast
+class OrderFulfilled implements ShouldBroadcast
 {
 	use SerializesModels;
 
 	/**
-	 * @var User
+	 * @var Order
 	 */
-	public $user;
+	public $order;
 
 	/**
 	 * Constructor
 	 *
-	 * @param  User $user
+	 * @param  Order $order
 	 * @return void
 	 */
-	public function __construct(User $user)
+	public function __construct(Order $order)
 	{
-		$this->user = $user;
+		$this->order = $order;
 	}
 
 	/**
@@ -34,6 +34,6 @@ class UserDeleted implements ShouldBroadcast
 	 */
 	public function broadcastOn()
 	{
-		return new PrivateChannel('users.' . $this->user->userid);
+		return new PrivateChannel('users.' . $this->order->userid);
 	}
 }

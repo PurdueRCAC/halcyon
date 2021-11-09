@@ -2,10 +2,15 @@
 
 namespace App\Modules\Orders\Events;
 
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Queue\SerializesModels;
 use App\Modules\Orders\Models\Order;
 
-class OrderCreated
+class OrderCreated implements ShouldBroadcast
 {
+	use SerializesModels;
+
 	/**
 	 * @var Order
 	 */
@@ -20,5 +25,15 @@ class OrderCreated
 	public function __construct(Order $order)
 	{
 		$this->order = $order;
+	}
+
+	/**
+	 * Get the channels the event should broadcast on.
+	 *
+	 * @return Channel|array
+	 */
+	public function broadcastOn()
+	{
+		return new PrivateChannel('users.' . $this->order->userid);
 	}
 }

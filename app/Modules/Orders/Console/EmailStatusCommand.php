@@ -15,6 +15,7 @@ use App\Modules\Orders\Mail\Ticket;
 use App\Modules\Orders\Mail\Fulfilled;
 use App\Modules\Orders\Mail\Complete;
 use App\Modules\Orders\Mail\Canceled;
+use App\Modules\Orders\Events\OrderFulfilled;
 use App\Modules\Users\Models\User;
 use App\Modules\History\Models\Log;
 use App\Halcyon\Access\Map;
@@ -537,6 +538,12 @@ class EmailStatusCommand extends Command
 
 			// Change states
 			$order->update(['notice' => self::COMPLETE]);
+
+			// Trigger order Fulfilled event
+			//
+			// Theoretically, this might be backwards. This event
+			// should probably be what triggers the email.
+			OrderFulfilled::dispatch($order);
 		}
 
 		//--------------------------------------------------------------------------
