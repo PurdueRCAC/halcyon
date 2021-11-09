@@ -290,7 +290,7 @@ class Page extends Model
 			return $matches[0] . '_' . self::$matches;
 		}
 
-		return $matches[1] . '_' . self::$matches . preg_replace_callback("/\{::if\s+.*?\}/", array($this, 'tokenize'), $matches[2]);
+		return $matches[1] . '_' . self::$matches . preg_replace_callback("/\{::if\s+.*?\}/", array($this, 'tokenizeIf'), $matches[2]);
 	}
 
 	/**
