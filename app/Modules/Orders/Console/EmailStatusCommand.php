@@ -543,7 +543,7 @@ class EmailStatusCommand extends Command
 			//
 			// Theoretically, this might be backwards. This event
 			// should probably be what triggers the email.
-			OrderFulfilled::dispatch($order);
+			event(new OrderFulfilled($order));
 		}
 
 		//--------------------------------------------------------------------------
