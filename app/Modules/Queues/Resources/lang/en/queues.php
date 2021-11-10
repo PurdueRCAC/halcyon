@@ -73,7 +73,7 @@ return [
 	'queue has dedicated reservation' => 'Queue has dedicated reservation.',
 	'queue is running' => 'Queue is running.',
 	'queue is stopped' => 'Queue is stopped or disabled.',
-	'queue has not active resources' => 'Queue has no active resources. Remove queue or sell/loan nodes.',
+	'queue has not active resources' => 'Queue has no active resources. Remove queue or sell/loan nodes or service units.',
 	'max ijob factor' => 'Max Jobs per Iteration Factor',
 	'max ijob user factor' => 'Max Jobs per User Iteration Factor',
 	'cluster' => 'Subcluster(s)',
@@ -144,4 +144,6 @@ return [
 	'cores per node' => ':cores per node',
 	'saving' => 'Saving...',
 	'entry marked as trashed' => 'This entry is marked as trashed.',
+	'list of queues' => 'Below is a list of all queues',
+	'confirm delete queue' => 'Are you sure you want to delete this queue?',
 ];

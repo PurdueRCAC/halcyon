@@ -606,7 +606,7 @@ class Queue extends Model
 	}
 
 	/**
-	 * Get total cores
+	 * Get walltime
 	 *
 	 * @return  integer
 	 */
