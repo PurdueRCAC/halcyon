@@ -9,43 +9,7 @@ $l = App\Modules\History\Models\Log::query()
 	->orderBy('datetime', 'desc')
 	->limit(20)
 	->paginate();
-/*
-$history = $group->history()->orderBy('created_at', 'desc')->get();
-$ids = array();
-foreach ($group->members as $member)
-{
-	$ids[] = 'groupusers' . $member->id;
-	$history = $history->merge($member->history()->orderBy('created_at', 'desc')->get());
-}
 
-foreach ($group->unixgroups as $unixgroup)
-{
-	$ids[] = 'unixgroups' . $unixgroup->id;
-	$history = $history->merge($unixgroup->history()->orderBy('created_at', 'desc')->get());
-
-	foreach ($unixgroup->members as $u)
-	{
-		$ids[] = 'unixgroupusers' . $u->id;
-		$history = $history->merge($u->history()->orderBy('created_at', 'desc')->get());
-	}
-}
-
-foreach ($group->queues as $queue)
-{
-	$ids[] = 'queues' . $queue->id;
-	$history = $history->merge($queue->history()->orderBy('created_at', 'desc')->get());
-
-	foreach ($queue->users as $u)
-	{
-		$ids[] = 'queueusers' . $u->id;
-		$history = $history->merge($u->history()->orderBy('created_at', 'desc')->get());
-	}
-}
-$sorted = $history->sortByDesc('id');
-echo '<pre>';
-print_r($ids);
-echo '</pre>';
-*/
 if (count($l))
 {
 	?>

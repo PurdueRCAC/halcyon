@@ -23,7 +23,7 @@ class CreateGroupsTables extends Migration
 				$table->string('unixgroup', 48);
 				$table->integer('unixid')->unsigned()->default(0);
 				$table->integer('deptnumber')->unsigned()->default(0)->comment('FK to collegedept.id');
-				$table->integer('onepurdue')->unsigned()->default(0);
+				//$table->integer('onepurdue')->unsigned()->default(0);
 				$table->string('githuborgname', 39);
 				$table->index('unixgroup');
 				$table->index('unixid');

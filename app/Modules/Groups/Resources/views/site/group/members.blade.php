@@ -29,7 +29,7 @@ foreach ($users as $me)
 
 	if (!$me->user || $me->user->trashed())
 	{
-		if (!($found = $disabled->firstWhere('userid', $me->userid)))
+		if (!$disabled->contains('userid', $me->userid))
 		{
 			$disabled->push($me);
 		}
@@ -39,21 +39,24 @@ foreach ($users as $me)
 		$me->username = $me->user->username;
 		if ($me->isManager())
 		{
-			if (!($found = $managers->firstWhere('userid', $me->userid)))
+			if (!$managers->contains('userid', $me->userid))
 			{
 				$managers->push($me);
 			}
 		}
 		elseif ($me->isMember())
 		{
-			if (!($found = $members->firstWhere('userid', $me->userid)) && !($found = $managers->firstWhere('userid', $me->userid)))
+			if (!$managers->contains('userid', $me->userid)
+			 && !$members->contains('userid', $me->userid))
 			{
 				$members->push($me);
 			}
 		}
 		elseif ($me->isViewer())
 		{
-			if (!($found = $viewers->firstWhere('userid', $me->userid)) && !($found = $members->firstWhere('userid', $me->userid)) && !($found = $managers->firstWhere('userid', $me->userid)))
+			if (!$managers->contains('userid', $me->userid)
+			 && !$members->contains('userid', $me->userid)
+			 && !$viewers->contains('userid', $me->userid))
 			{
 				$viewers->push($me);
 			}
@@ -117,28 +120,31 @@ foreach ($queues as $queue)
 				}
 				$user_requests[$me->userid][] = $me->userrequestid;
 
-				if (!($found = $pending->firstWhere('userid', $me->userid)))
+				if (!$pending->contains('userid', $me->userid))
 				{
 					$pending->push($me);
 				}
 			}
 			elseif ($me->isManager())
 			{
-				if (!($found = $managers->firstWhere('userid', $me->userid)))
+				if (!$managers->contains('userid', $me->userid))
 				{
 					$managers->push($me);
 				}
 			}
 			elseif ($me->isMember())
 			{
-				if (!($found = $members->firstWhere('userid', $me->userid)) && !($found = $managers->firstWhere('userid', $me->userid)))
+				if (!$managers->contains('userid', $me->userid)
+				 && !$members->contains('userid', $me->userid))
 				{
 					$members->push($me);
 				}
 			}
 			elseif ($me->isViewer())
 			{
-				if (!($found = $viewers->firstWhere('userid', $me->userid)) && !($found = $members->firstWhere('userid', $me->userid)) && !($found = $managers->firstWhere('userid', $me->userid)))
+				if (!$managers->contains('userid', $me->userid)
+				 && !$members->contains('userid', $me->userid)
+				 && !$viewers->contains('userid', $me->userid))
 				{
 					$viewers->push($me);
 				}
@@ -180,7 +186,7 @@ foreach ($unixgroups as $unixgroup)
 
 		if (!$me->user || $me->user->trashed())
 		{
-			if (!($found = $disabled->firstWhere('userid', $me->userid)))
+			if (!$disabled->contains('userid', $me->userid))
 			{
 				$disabled->push($me);
 			}
@@ -191,7 +197,7 @@ foreach ($unixgroups as $unixgroup)
 
 			$me->username = $me->user->username;
 
-			if (!($found = $members->firstWhere('userid', $me->userid)))
+			if (!$members->contains('userid', $me->userid))
 			{
 				$members->push($me);
 			}
