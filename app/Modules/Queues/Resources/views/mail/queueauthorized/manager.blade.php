@@ -63,7 +63,7 @@ Please note that accounts on the Fortress (HPSS) Archival system have also been 
 
 Persons being granted access will receive a similar notification and will also receive a notification once their accounts are ready for use.
 @else
-Check the [Group History](https://www.rcac.purdue.edu/account/history/) to see who made this change.
+Check the [Group History]({{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $groupqueue->groupid, 'subsection' => 'history']) }}) to see who made this change.
 
 If any of these are incorrect you can make changes at any time on the [Queue Management website]({{ route('site.users.account') }}). New accounts are generally ready for use the morning of the next day ({{ Carbon\Carbon::now()->modify('+1 day')->format('F jS') }}) if requested by midnight. If a person already had an account on the resources they will be able to access the queue(s) within a few minutes.
 

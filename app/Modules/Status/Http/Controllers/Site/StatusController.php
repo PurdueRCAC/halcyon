@@ -5,10 +5,8 @@ namespace App\Modules\Status\Http\Controllers\Site;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
 use App\Modules\Resources\Models\Type as AssetType;
 use App\Modules\News\Models\Type as NewsType;
-use GuzzleHttp\Client;
 
 class StatusController extends Controller
 {
@@ -23,34 +21,14 @@ class StatusController extends Controller
 		$restypes = AssetType::query()
 			->get();
 
-		/*$resources = $restype->resources()
-			->where('listname', '!=', '')
-			->where('display', '>', 0)
-			->orderBy('name', 'asc')
-			->get();
-
-		foreach ($resources as $resource)
-		{
-			$resource->status = $resource->status ?: 'operational';
-
-			if ($url = $resource->params->get('monitor'))
-			{
-				$url = $resource->rolename == 'hammer' ? 'https://grafana.hammer.rcac.purdue.edu:3000/api/dashboards/uid/QRO3OoiGz/' : $url;
-
-				$client = new Client();
-				$res = $client->request('GET', $url);
-
-				$status = $res->getStatusCode();
-				if ($res->getStatusCode() >= 400)
-				{
-					continue;
-				}
-
-				$resource->data = json_decode($res->getBody()->getContents());
-			}
-		}*/
-
 		$type = NewsType::find(1);
+
+		if (!$type)
+		{
+			$type = NewsType::query()
+				->whereLike('name', 'outage')
+				->first();
+		}
 
 		return view('status::site.index', [
 			'restypes' => $restypes,

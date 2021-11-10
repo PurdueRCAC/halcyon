@@ -596,7 +596,7 @@ $(document).ready(function () {
 					PrintAccountResources(response);
 				},
 				error: function () { // xhr, ajaxOptions, thrownError
-					alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact rcac-help@purdue.edu");
+					alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact help");
 				}
 			});
 		}

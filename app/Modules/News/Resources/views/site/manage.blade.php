@@ -387,9 +387,9 @@ $help1b = "Unordered lists can be made using '-' or '*' to denote list items. Or
 
 $help1c = "Hyperlinks can be made in the following way.
 
-http://www.purdue.edu
+http://www.example.com
 
-[" . config('app.name') . "](http://www.rcac.purdue.edu)
+[" . config('app.name') . "](http://www.example.com)
 
 By using [Title] notation immediately preceding a URL in parentheses, you can give it another title.
 
