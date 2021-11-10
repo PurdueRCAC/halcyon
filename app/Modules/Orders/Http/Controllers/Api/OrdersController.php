@@ -806,6 +806,10 @@ class OrdersController extends Controller
 				$account->fill($a);
 				$account->budgetjustification = $account->budgetjustification ?: '';
 				$account->orderid = $id;
+				if ($account->approveruserid)
+				{
+					$account->notice = 3;
+				}
 				$account->save();
 			}
 		}
