@@ -4,6 +4,7 @@ namespace App\Modules\History\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\History\Models\Log;
 
@@ -20,6 +21,7 @@ class ActivityController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
+			'app'       => null,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			'order'     => Log::$orderBy,
@@ -75,6 +77,11 @@ class ActivityController extends Controller
 			$query->where('status', '=', $filters['status']);
 		}
 
+		if ($filters['app'])
+		{
+			$query->where('app', '=', $filters['app']);
+		}
+
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
@@ -85,10 +92,15 @@ class ActivityController extends Controller
 			->orderBy('classname', 'asc')
 			->get();
 
+		$apps = Log::query()
+			->select(DB::raw('DISTINCT(app)'))
+			->get();
+
 		return view('history::admin.activity.index', [
 			'filters' => $filters,
 			'rows'    => $rows,
-			'types'   => $types
+			'types'   => $types,
+			'apps'    => $apps,
 		]);
 	}
 

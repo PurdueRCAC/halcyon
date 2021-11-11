@@ -18,6 +18,7 @@ return [
 	'modifier' => 'Modifier',
 	'all actions' => '- All Actions -',
 	'all types' => '- All Types -',
+	'all apps' => '- All Apps -',
 	'old' => 'Old',
 	'new' => 'New',
 	'changes' => 'Changes',

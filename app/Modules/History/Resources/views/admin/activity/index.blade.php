@@ -50,6 +50,14 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col filter-select col-md-8 text-right">
+				<label class="sr-only" for="filter_app">{{ trans('history::history.app') }}</label>
+				<select name="transport" id="filter_app" class="form-control filter filter-submit">
+					<option value=""<?php if ($filters['transport'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('history::history.all apps') }}</option>
+					@foreach ($apps as $app)
+						<option value="{{ $app->app }}"<?php if ($filters['app'] == $app->app): echo ' selected="selected"'; endif;?>>{{ $app->app }}</option>
+					@endforeach
+				</select>
+
 				<label class="sr-only" for="filter_status">{{ trans('history::history.status') }}</label>
 				<select name="status" id="filter_status" class="form-control filter filter-submit">
 					<option value=""<?php if ($filters['status'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('history::history.all status') }}</option>
@@ -91,7 +99,7 @@ app('pathway')
 					{!! Html::grid('sort', trans('history::history.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
-					{!! Html::grid('sort', trans('history::history.method'), 'classname', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('history::history.app'), 'app', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
 					{!! Html::grid('sort', trans('history::history.ip'), 'ip', $filters['order_dir'], $filters['order']) !!}
@@ -117,14 +125,12 @@ app('pathway')
 		@foreach ($rows as $i => $row)
 			<?php
 			$cls = '';
-			if ($row->status >= 400)
-			{
+			if ($row->status >= 400):
 				$cls = ' class="error-warning"';
-			}
-			if ($row->status >= 500)
-			{
+			endif;
+			if ($row->status >= 500):
 				$cls = ' class="error-danger"';
-			}
+			endif;
 			?>
 			<tr{!! $cls !!}>
 				<td class="priority-5">
@@ -133,17 +139,14 @@ app('pathway')
 				<td>
 					<a href="{{ route('admin.history.activity.show', ['id' => $row->id]) }}">
 					@if ($row->app == 'ws' || $row->app == 'api')
-						<span class="icon-code" data-tip="API"></span>
+						<span class="icon-code">
 					@elseif ($row->app == 'ui')
-						<span class="icon-layout" data-tip="Portal"></span>
+						<span class="icon-layout">
 					@else
-						<span class="icon-activity" data-tip="{{ $row->app }}"></span>
+						<span class="icon-activity">
 					@endif
-					@if ($row->classname || $row->classmethod)
-						{{ $row->classname . '::' . $row->classmethod }}
-					@else
-						<span class="unknown">{{ trans('global.unknown') }}</span>
-					@endif
+						{{ $row->app }}
+						</span>
 					</a>
 				</td>
 				<td>
@@ -165,6 +168,8 @@ app('pathway')
 						<span class="badge badge-info">{{ $row->transportmethod }}</span>
 					@elseif ($row->transportmethod == 'GET')
 						<span class="badge badge-info">{{ $row->transportmethod }}</span>
+					@else
+						<span class="badge badge-secondary">{{ $row->transportmethod }}</span>
 					@endif
 				</td>
 				<td class="priority-4">
