@@ -88,7 +88,7 @@ Long-term archival space is also offered via the Fortress HPSS Archival system. 
 
 ----
 
-Please also review the [acceptable use]({{ route('page', ['uri' => 'policies/resourceuse']) }}), [data]({{ route('page', ['uri' => 'policies/dataaccess']) }}), [quota]({{ route('page', ['uri' => 'policies/defaultquotas']) }}), [scratch purge policies]({{ route('page', ['uri' => 'policies/scratchpurge']) }}), and [other policies]({{ route('page', ['uri' => 'policies']) }}).
+Please also review the [acceptable use]({{ route('page', ['uri' => 'policies/resourceuse']) }}), [data]({{ route('page', ['uri' => 'policies/dataaccess']) }}), [scratch purge policies]({{ route('page', ['uri' => 'policies/scratchpurge']) }}), and [other policies]({{ route('page', ['uri' => 'policies']) }}).
 
 <div class="alert alert-info">
 <h3>Need Help?</h3>
