@@ -98,6 +98,7 @@ app('pathway')
 							<div class="form-group">
 								<label for="field-nodemem">{{ trans('resources::assets.node mem') }}: <span class="required">{{ trans('global.required') }}</span></label>
 								<input type="text" name="fields[nodemem]" id="field-nodemem" class="form-control" pattern="[0-9]{1,4}[PTGMKB]" value="{{ $row->nodemem }}" />
+								<span class="form-text text-muted">{{ trans('resources::assets.node mem desc') }}</span>
 							</div>
 						</div>
 					</div>

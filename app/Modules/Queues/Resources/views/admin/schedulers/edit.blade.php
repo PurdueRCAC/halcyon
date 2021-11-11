@@ -47,7 +47,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-hostname">{{ trans('queues::queues.hostname') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[hostname]" id="field-hostname" class="form-control{{ $errors->has('fields.hostname') ? ' is-invalid' : '' }}" required value="{{ $row->hostname }}" />
+					<input type="text" name="fields[hostname]" id="field-hostname" class="form-control{{ $errors->has('fields.hostname') ? ' is-invalid' : '' }}" maxlength="64" required value="{{ $row->hostname }}" />
 					<span class="invalid-feedback">{{ $errors->first('fields.hostname') }}</span>
 				</div>
 

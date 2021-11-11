@@ -74,20 +74,22 @@ document.addEventListener('DOMContentLoaded', function () {
 		data.insertAdjacentHTML('afterend', html);
 	}
 
-	var menuad = document.getElementById('menu_assignment-dependent');
-	menuad.classList.add('d-none');
-	if (document.getElementById('menu_assignment').value != '0'
-		&& document.getElementById('menu_assignment').value != '-') {
-		menuad.classList.remove('d-none');
-	}
+	var menuassign = document.getElementById('menu_assignment');
+	if (menuassign) {
+		var menuad = document.getElementById('menu_assignment-dependent');
 
-	document.getElementById('menu_assignment').addEventListener('change', function () {
-		if (this.value != '0' && this.value != '-') {
-			menuad.classList.remove('d-none');
-		} else {
+		if (menuassign.value == '0' || menuassign.value == '-') {
 			menuad.classList.add('d-none');
 		}
-	});
+
+		document.getElementById('menu_assignment').addEventListener('change', function () {
+			if (this.value != '0' && this.value != '-') {
+				menuad.classList.remove('d-none');
+			} else {
+				menuad.classList.add('d-none');
+			}
+		});
+	}
 
 	document.querySelectorAll('.btn-selectinvert').forEach(function (btn) {
 		btn.addEventListener('click', function (e) {
@@ -105,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 		});
 	});
-	document.querySelectorAll('.btn-selectall').forEach(function(btn){
+	document.querySelectorAll('.btn-selectall').forEach(function (btn) {
 		btn.addEventListener('click', function (e) {
 			e.preventDefault();
 			document.querySelectorAll(this.getAttribute('data-name')).forEach(function (el) {
@@ -114,16 +116,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
-	var dialog = $("#new-widget").dialog({
-		autoOpen: false,
-		height: 400,
-		width: 500,
-		modal: true
-	});
+	var btnnew = document.getElementById('toolbar-plus');
+	if (btnnew) {
+		btnnew.setAttribute('data-toggle', 'modal');
+		btnnew.setAttribute('data-target', '#new-widget');
 
-	document.getElementById('toolbar-plus').addEventListener('click', function (e) {
-		e.preventDefault();
-
-		dialog.dialog("open");
-	});
+		btnnew.addEventListener('click', function (e) {
+			e.preventDefault();
+		});
+	}
 });

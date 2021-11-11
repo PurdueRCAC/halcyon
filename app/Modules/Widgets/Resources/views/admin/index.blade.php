@@ -267,31 +267,41 @@ app('pathway')
 
 	<input type="hidden" name="boxchecked" value="0" />
 
-	<div id="new-widget" class="hide" title="{{ trans('widgets::widgets.choose type') }}">
-		<h2 class="modal-title sr-only">{{ trans('widgets::widgets.choose type') }}</h2>
+	<div id="new-widget" class="modal fade" tabindex="-1" aria-labelledby="new-widget-title" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title" id="new-widget-title">{{ trans('widgets::widgets.choose type') }}</h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				 <div class="modal-body">
 
-		<div class="card">
-			<table id="new-modules-list" class="table table-hover adminlist">
-				<caption class="sr-only">{{ trans('widgets::widgets.available widgets') }}</caption>
-				<thead>
-					<tr>
-						<th scope="col">{{ trans('widgets::widgets.title') }}</th>
-						<th scope="col">{{ trans('widgets::widgets.widget') }}</th>
-					</tr>
-				</thead>
-				<tbody>
-				@foreach ($widgets as $item)
-					<tr>
-						<td>
-							<span class="editlinktip hasTip" title="{{ $item->name }} :: {{ $item->desc }}"><a href="{{ route('admin.widgets.create', ['eid' => $item->id]) }}">{{ $item->name }}</a></span>
-						</td>
-						<td>
-							{{ $item->element }}
-						</td>
-					</tr>
-				@endforeach
-				</tbody>
-			</table>
+					<table id="new-modules-list" class="table table-hover adminlist">
+						<caption class="sr-only">{{ trans('widgets::widgets.available widgets') }}</caption>
+						<thead>
+							<tr>
+								<th scope="col">{{ trans('widgets::widgets.title') }}</th>
+								<th scope="col">{{ trans('widgets::widgets.widget') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+						@foreach ($widgets as $item)
+							<tr>
+								<td>
+									<span class="editlinktip hasTip" title="{{ $item->name }} :: {{ $item->desc }}"><a href="{{ route('admin.widgets.create', ['eid' => $item->id]) }}">{{ $item->name }}</a></span>
+								</td>
+								<td>
+									{{ $item->element }}
+								</td>
+							</tr>
+						@endforeach
+						</tbody>
+					</table>
+
+				</div>
+			</div>
 		</div>
 	</div>
 

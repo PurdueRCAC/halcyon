@@ -138,42 +138,39 @@ app('pathway')
 					</fieldset>
 				</div>
 				<div class="col-sm-12 col-md-5">
-					@sliders('start', 'asset-sliders')
-						@sliders('panel', trans('resources::assets.options'), 'params-options')
-							<fieldset class="panelform">
-								<div class="form-group">
-									<label for="params-desktop">{{ trans('resources::assets.params.desktop') }}:</label>
-									<input type="text" class="form-control" name="params[desktop]" id="params-desktop" value="{{ $row->params->get('desktop') }}" />
-									<span class="form-text text-muted">{{ trans('resources::assets.params.desktop desc') }}</span>
-								</div>
+					<fieldset class="adminform">
+						<legend>{{ trans('resources::assets.options') }}</legend>
 
-								<div class="form-group">
-									<label for="params-gateway">{{ trans('resources::assets.params.gateway') }}:</label>
-									<input type="text" class="form-control" name="params[gateway]" id="params-gateway" value="{{ $row->params->get('gateway') }}" />
-									<span class="form-text text-muted">{{ trans('resources::assets.params.gateway desc') }}</span>
-								</div>
+						<div class="form-group">
+							<label for="params-desktop">{{ trans('resources::assets.params.desktop') }}:</label>
+							<input type="text" class="form-control" name="params[desktop]" id="params-desktop" value="{{ $row->params->get('desktop') }}" />
+							<span class="form-text text-muted">{{ trans('resources::assets.params.desktop desc') }}</span>
+						</div>
 
-								<div class="form-group">
-									<label for="params-notebook">{{ trans('resources::assets.params.notebook') }}:</label>
-									<input type="text" class="form-control" name="params[notebook]" id="params-notebook" value="{{ $row->params->get('notebook') }}" />
-									<span class="form-text text-muted">{{ trans('resources::assets.params.notebook desc') }}</span>
-								</div>
+						<div class="form-group">
+							<label for="params-gateway">{{ trans('resources::assets.params.gateway') }}:</label>
+							<input type="text" class="form-control" name="params[gateway]" id="params-gateway" value="{{ $row->params->get('gateway') }}" />
+							<span class="form-text text-muted">{{ trans('resources::assets.params.gateway desc') }}</span>
+						</div>
 
-								<div class="form-group">
-									<label for="params-rstudio">{{ trans('resources::assets.params.rstudio') }}:</label>
-									<input type="text" class="form-control" name="params[rstudio]" id="params-rstudio" value="{{ $row->params->get('rstudio') }}" />
-									<span class="form-text text-muted">{{ trans('resources::assets.params.rstudio desc') }}</span>
-								</div>
+						<div class="form-group">
+							<label for="params-notebook">{{ trans('resources::assets.params.notebook') }}:</label>
+							<input type="text" class="form-control" name="params[notebook]" id="params-notebook" value="{{ $row->params->get('notebook') }}" />
+							<span class="form-text text-muted">{{ trans('resources::assets.params.notebook desc') }}</span>
+						</div>
 
-								<div class="form-group">
-									<label for="params-url">{{ trans('resources::assets.params.url') }}:</label>
-									<input type="text" class="form-control" name="params[url]" id="params-url" value="{{ $row->params->get('url') }}" />
-									<span class="form-text text-muted">{{ trans('resources::assets.params.url desc') }}</span>
-								</div>
-							</fieldset>
-					@sliders('end')
+						<div class="form-group">
+							<label for="params-rstudio">{{ trans('resources::assets.params.rstudio') }}:</label>
+							<input type="text" class="form-control" name="params[rstudio]" id="params-rstudio" value="{{ $row->params->get('rstudio') }}" />
+							<span class="form-text text-muted">{{ trans('resources::assets.params.rstudio desc') }}</span>
+						</div>
 
-					<?php /*@include('history::admin.history')*/ ?>
+						<div class="form-group">
+							<label for="params-url">{{ trans('resources::assets.params.url') }}:</label>
+							<input type="text" class="form-control" name="params[url]" id="params-url" value="{{ $row->params->get('url') }}" />
+							<span class="form-text text-muted">{{ trans('resources::assets.params.url desc') }}</span>
+						</div>
+					</fieldset>
 				</div>
 			</div>
 		</div><!-- / #resource-details -->

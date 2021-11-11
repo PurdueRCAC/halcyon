@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	var dialog = $("#sync").dialog({
+	var sdialog = $("#sync").dialog({
 		autoOpen: false,
 		height: 400,
 		width: 500,
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('toolbar-refresh').addEventListener('click', function (e) {
 		e.preventDefault();
 
-		dialog.dialog("open");
+		sdialog.dialog("open");
 	});
 	document.querySelectorAll('.btn-sync').forEach(function (btn) {
 		btn.addEventListener('click', function (e) {

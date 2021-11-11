@@ -46,17 +46,19 @@ app('pathway')
 @section('content')
 <form action="{{ route('admin.storage.directories.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
-	<div class="tabs">
-		<ul>
-			<li>
-				<a href="#dir-details">{{ trans('global.details') }}</a>
+	<nav class="container-fluid">
+		<ul id="dir-tabs" class="nav nav-tabs" role="tablist">
+			<li class="nav-item" role="presentation">
+				<a class="nav-link active" href="#dir-details" data-toggle="tab" role="tab" id="dir-details-tab" aria-controls="dir-details" aria-selected="true">{{ trans('global.details') }}</a>
 			</li>
-			<li>
-				<a href="#dir-messages">{{ trans('storage::storage.messages') }}</a>
+			<li class="nav-item" role="presentation">
+				<a class="nav-link" href="#dir-messages" data-toggle="tab" role="tab" id="dir-messages-tab" aria-controls="dir-messages" aria-selected="false">{{ trans('storage::storage.messages') }}</a>
 			</li>
 		</ul>
+	</nav>
 
-		<div id="dir-details">
+	<div class="tab-content">
+		<div class="tab-pane show active" role="tabpanel" aria-labelledby="dir-details-tab" id="dir-details">
 			<div class="row">
 				<div class="col-md-7">
 					<fieldset class="adminform">
@@ -219,7 +221,7 @@ app('pathway')
 				</div>
 			</div>
 		</div><!-- / #dir-details -->
-		<div id="dir-messages">
+		<div class="tab-pane" role="tabpanel" aria-labelledby="dir-details-tab"  id="dir-messages">
 			<fieldset class="adminform">
 				<legend>{{ trans('storage::storage.messages') }}</legend>
 

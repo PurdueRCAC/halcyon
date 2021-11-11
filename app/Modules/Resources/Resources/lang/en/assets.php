@@ -65,6 +65,7 @@ return [
 	//'CONFIG_WHITELIST_LABEL' => "IP Whitelist",
 	//'CONFIG_WHITELIST_DESC' => "A comma-separated list of white-listed IP addresses",
 	'node mem' => 'Node Memory',
+	'node mem desc' => '[0-9]{1,4}[PTGMKB]',
 	'node cores' => 'Node Cores',
 	'node gpus' => 'Node GPUs',
 	'node attributes' => 'Node Attr.',

@@ -37,8 +37,8 @@ app('pathway')
 
 				@if (auth()->user()->can('edit themes'))
 					<div class="form-group">
-						<label for="field-name">{{ trans('themes::themes.title') }}: <span class="required">{{ trans('global.required') }}</span></label><br />
-						<input type="text" name="fields[name]" id="field-name" class="form-control required" maxlength="250" value="{{ $row->name }}" />
+						<label for="field-name">{{ trans('themes::themes.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
+						<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="250" value="{{ $row->name }}" />
 					</div>
 				@endif
 
@@ -66,36 +66,69 @@ app('pathway')
 			</fieldset>
 		</div>
 		<div class="col span5 col-xs-12 col-sm-5">
-			@sliders('start', 'template-sliders')
-				<?php
-				$fieldSets = $form->getFieldsets('params');
+			<?php
+			$fieldSets = $form->getFieldsets('params');
 
-				$k = 0;
-				foreach ($fieldSets as $name => $fieldSet) :
-					$label = !empty($fieldSet->label) ? $fieldSet->label : 'themes::themes.' . $name . ' fieldset';
+			if (count($fieldSets)):
+				?>
+				<div class="accordion" id="parameters">
+					<?php
+					$i = 0;
 
-					echo app('html.builder')->sliders('panel', trans($label), $name . '-options');
-
-					if (isset($fieldSet->description) && trim($fieldSet->description)) :
-						echo '<p class="tip">' . trans($fieldSet->description) . '</p>';
-					endif;
-					$k++;
-					?>
-					<fieldset class="panelform">
-						<?php foreach ($form->getFieldset($name) as $field) : ?>
-							<div class="form-group">
-								<?php if (!$field->hidden) : ?>
-									<?php echo $field->label; ?>
-								<?php endif; ?>
-								<?php echo $field->input; ?>
+					foreach ($fieldSets as $name => $fieldSet):
+						$i++;
+						$label = !empty($fieldSet->label) ? $fieldSet->label : 'widgets::widgets.' . $name . ' fieldset';
+						?>
+						<div class="card">
+							<div class="card-header" id="{{ $name }}-heading">
+								<h3 class="my-0 py-0">
+									<a href="#{{ $name }}-options" class="btn btn-link btn-block text-left" data-toggle="collapse" data-target="#{{ $name }}-options" aria-expanded="true" aria-controls="{{ $name }}-options">
+										<span class="fa fa-chevron-right" aria-hidden="true"></span>
+										{{ trans($label) }}
+									</a>
+								</h3>
 							</div>
-						<?php endforeach; ?>
-					</fieldset>
-				<?php endforeach; ?>
-				<?php if (!$k) { ?>
-					<p class="alert alert-warning">{{ trans('themes::themes.no options') }}</p>
-				<?php } ?>
-			@sliders('end')
+							<div id="{{ $name }}-options" class="collapse{{ ($i == 1 ? ' show' : '') }}" aria-labelledby="{{ $name }}-heading" data-parent="#parameters">
+								<fieldset class="card-body mb-0">
+									@if (isset($fieldSet->description) && trim($fieldSet->description))
+										<p class="tip">{{ trans($fieldSet->description) }}</p>
+									@endif
+
+									<?php
+									$hidden_fields = '';
+
+									foreach ($form->getFieldset($name) as $field):
+										if (!$field->hidden):
+											?>
+											<div class="form-group">
+												<?php echo $field->label; ?><br />
+												<?php echo $field->input; ?>
+												@if ($field->description)
+													<span class="form-text text-muted">{{ trans($field->description) }}</span>
+												@endif
+											</div>
+											<?php
+										else:
+											$hidden_fields .= $field->input;
+										endif;
+									endforeach;
+
+									echo $hidden_fields;
+									?>
+								</fieldset>
+							</div>
+						</div>
+						<?php
+					endforeach;
+					?>
+				</div>
+				<?php
+			else:
+				?>
+				<p class="alert alert-info">{{ trans('themes::themes.no options') }}</p>
+				<?php
+			endif;
+			?>
 		</div>
 	</div>
 

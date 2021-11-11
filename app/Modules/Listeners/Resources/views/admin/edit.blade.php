@@ -38,27 +38,25 @@ app('pathway')
 				<div class="row">
 					<div class="col col-xs-12 col-sm-6">
 						<div class="form-group">
-							<?php echo $form->getLabel('folder'); ?><br />
+							<?php echo $form->getLabel('folder'); ?>
 							<?php echo $form->getInput('folder'); ?>
 						</div>
 					</div>
 					<div class="col col-xs-12 col-sm-6">
 						<div class="form-group">
-							<?php echo $form->getLabel('element'); ?><br />
+							<?php echo $form->getLabel('element'); ?>
 							<?php echo $form->getInput('element'); ?>
 						</div>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<?php echo $form->getLabel('name'); ?><br />
+					<?php echo $form->getLabel('name'); ?>
 					<?php echo $form->getInput('name'); ?>
-					<!-- <input type="text" readonly="readonly" disabled="disabled" class="form-control-plaintext" value="{{ trans('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener name') }}" />
-					<span class="readonly plg-name"><?php echo $row->name; ?></span> -->
 				</div>
 
 				<div class="form-group">
-					<label>{{ trans('listeners::listeners.description') }}</label><br />
+					<label>{{ trans('listeners::listeners.description') }}</label>
 					<p>
 					{!! trans(strtolower('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener desc')) !!}</p>
 				</div>
@@ -70,29 +68,29 @@ app('pathway')
 				<div class="row">
 					<div class="col col-xs-12 col-sm-6">
 						<div class="form-group">
-							<?php echo $form->getLabel('enabled'); ?><br />
+							<?php echo $form->getLabel('enabled'); ?>
 							<?php echo $form->getInput('enabled'); ?>
 						</div>
 					</div>
 					<div class="col col-xs-12 col-sm-6">
 						<div class="form-group">
-							<?php echo $form->getLabel('access'); ?><br />
+							<?php echo $form->getLabel('access'); ?>
 							<?php echo $form->getInput('access'); ?>
 						</div>
 					</div>
 				</div>
 
-				<!-- <div class="form-group">
+				<?php /*<div class="form-group">
 					<?php echo $form->getLabel('ordering'); ?><br />
 					<?php echo $form->getInput('ordering'); ?>
-				</div> -->
+				</div>
 
-				<?php /*if ($row->extension_id) : ?>
+				@if ($row->extension_id)
 					<div class="form-group">
 						<?php echo $form->getLabel('id'); ?><br />
 						<?php echo $form->getInput('id'); ?>
 					</div>
-				<?php endif;*/ ?>
+				@endif */ ?>
 			</fieldset>
 		</div>
 		<div class="col col-xs-12 col-sm-5">
@@ -101,36 +99,58 @@ app('pathway')
 
 			if (count($fieldSets)):
 				?>
-				@sliders('start', 'module-sliders')
-				<?php
-				foreach ($fieldSets as $name => $fieldSet) :
-					$label = !empty($fieldSet->label) ? $fieldSet->label : 'listeners::listeners.' . $name . ' fieldset';
-					echo app('html.builder')->sliders('panel', trans($label), $name . '-options');
-						if (isset($fieldSet->description) && trim($fieldSet->description)) :
-							echo '<p class="tip">' . trans($fieldSet->description) . '</p>';
-						endif;
+				<div class="accordion" id="parameters">
+					<?php
+					$i = 0;
+
+					foreach ($fieldSets as $name => $fieldSet):
+						$i++;
+						$label = !empty($fieldSet->label) ? $fieldSet->label : 'widgets::widgets.' . $name . ' fieldset';
 						?>
-					<fieldset class="panelform">
-						<?php $hidden_fields = ''; ?>
+						<div class="card">
+							<div class="card-header" id="{{ $name }}-heading">
+								<h3 class="my-0 py-0">
+									<a href="#{{ $name }}-options" class="btn btn-link btn-block text-left" data-toggle="collapse" data-target="#{{ $name }}-options" aria-expanded="true" aria-controls="{{ $name }}-options">
+										<span class="fa fa-chevron-right" aria-hidden="true"></span>
+										{{ trans($label) }}
+									</a>
+								</h3>
+							</div>
+							<div id="{{ $name }}-options" class="collapse{{ ($i == 1 ? ' show' : '') }}" aria-labelledby="{{ $name }}-heading" data-parent="#parameters">
+								<fieldset class="card-body mb-0">
+									@if (isset($fieldSet->description) && trim($fieldSet->description))
+										<p class="tip">{{ trans($fieldSet->description) }}</p>
+									@endif
 
-						<?php foreach ($form->getFieldset($name) as $field) : ?>
-							<?php if (!$field->hidden) : ?>
-								<div class="form-group">
-									<?php echo $field->label; ?>
-									<?php echo $field->input; ?>
-									<?php if ($field->description) { ?>
-										<span class="form-text text-muted"><?php echo trans($field->description); ?></span>
-									<?php } ?>
-								</div>
-							<?php else : $hidden_fields .= $field->input; ?>
-							<?php endif; ?>
-						<?php endforeach; ?>
+									<?php
+									$hidden_fields = '';
 
-						<?php echo $hidden_fields; ?>
-					</fieldset>
-				<?php endforeach; ?>
-				@sliders('end')
-			<?php
+									foreach ($form->getFieldset($name) as $field):
+										if (!$field->hidden):
+											?>
+											<div class="form-group">
+												<?php echo $field->label; ?><br />
+												<?php echo $field->input; ?>
+												@if ($field->description)
+													<span class="form-text text-muted">{{ trans($field->description) }}</span>
+												@endif
+											</div>
+											<?php
+										else:
+											$hidden_fields .= $field->input;
+										endif;
+									endforeach;
+
+									echo $hidden_fields;
+									?>
+								</fieldset>
+							</div>
+						</div>
+						<?php
+					endforeach;
+					?>
+				</div>
+				<?php
 			else:
 				?>
 				<p class="alert alert-info">{{ trans('listeners::listeners.no params') }}</p>

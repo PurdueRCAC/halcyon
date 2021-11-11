@@ -190,37 +190,58 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 			<?php endif; ?>
 		</div>
 		<div class="col col-xs-12 col-sm-5">
-			@sliders('start', 'widget-sliders')
-			<?php
-			$fieldSets = $form->getFieldsets('params');
+			<div class="accordion" id="parameters">
+				<?php
+				$fieldSets = $form->getFieldsets('params');
+				$i = 0;
 
-			foreach ($fieldSets as $name => $fieldSet) :
-				$label = !empty($fieldSet->label) ? $fieldSet->label : 'widgets::widgets.' . $name . ' fieldset';
-				echo app('html.builder')->sliders('panel', trans($label), $name . '-options');
-					if (isset($fieldSet->description) && trim($fieldSet->description)) :
-						echo '<p class="tip">' . trans($fieldSet->description) . '</p>';
-					endif;
+				foreach ($fieldSets as $name => $fieldSet):
+					$i++;
+					$label = !empty($fieldSet->label) ? $fieldSet->label : 'widgets::widgets.' . $name . ' fieldset';
 					?>
-				<fieldset class="panelform">
-					<?php $hidden_fields = ''; ?>
+				<div class="card">
+					<div class="card-header" id="{{ $name }}-heading">
+						<h3 class="my-0 py-0">
+							<a href="#{{ $name }}-options" class="btn btn-link btn-block text-left" data-toggle="collapse" data-target="#{{ $name }}-options" aria-expanded="true" aria-controls="{{ $name }}-options">
+								<span class="fa fa-chevron-right" aria-hidden="true"></span>
+								{{ trans($label) }}
+							</a>
+						</h3>
+					</div>
+					<div id="{{ $name }}-options" class="collapse{{ ($i == 1 ? ' show' : '') }}" aria-labelledby="{{ $name }}-heading" data-parent="#parameters">
+						<fieldset class="card-body">
+							@if (isset($fieldSet->description) && trim($fieldSet->description))
+								<p class="tip">{{ trans($fieldSet->description) }}</p>
+							@endif
 
-					<?php foreach ($form->getFieldset($name) as $field) : ?>
-						<?php if (!$field->hidden) : ?>
-							<div class="form-group">
-								<?php echo $field->label; ?><br />
-								<?php echo $field->input; ?>
-								@if ($field->description)
-									<span class="form-text text-muted">{{ trans($field->description) }}</span>
-								@endif
-							</div>
-						<?php else : $hidden_fields .= $field->input; ?>
-						<?php endif; ?>
-					<?php endforeach; ?>
+							<?php
+							$hidden_fields = '';
 
-					<?php echo $hidden_fields; ?>
-				</fieldset>
-			<?php endforeach; ?>
-			@sliders('end')
+							foreach ($form->getFieldset($name) as $field):
+								if (!$field->hidden):
+									?>
+									<div class="form-group">
+										<?php echo $field->label; ?><br />
+										<?php echo $field->input; ?>
+										@if ($field->description)
+											<span class="form-text text-muted">{{ trans($field->description) }}</span>
+										@endif
+									</div>
+									<?php
+								else:
+									$hidden_fields .= $field->input;
+								endif;
+							endforeach;
+
+							echo $hidden_fields;
+							?>
+						</fieldset>
+					</div>
+				</div>
+					<?php
+				endforeach;
+				?>
+			</div>
 		</div>
 	</div>
 

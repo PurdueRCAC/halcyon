@@ -2829,6 +2829,26 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 .ui-dialog {
   padding: 0;
 }
+.modal-backdrop {
+   background-color: #aaa;
+}
+.modal-title {
+  font-size: 1.2em;
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+}
+.modal-header {
+  padding: 1rem 2rem;
+  border-color: var(--ui-widget-br);
+}
+.modal-header .close {
+  text-shadow: none;
+  color: var(--link);
+}
+.modal-header .close:hover {
+  color: var(--link-hover);
+}
 .modal-content {
   background: var(--ui-widget-bg);
 }
@@ -2874,7 +2894,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   border-top: none;
 }
 .ui-datepicker {
-  z-index: 104 !important
+  z-index: 100000 !important
 }
 
 .ui-datepicker .ui-datepicker-calendar thead tr th,
@@ -4409,6 +4429,9 @@ background-color: rgba(0, 0, 0, 0.025);
     color: var(--link-hover);
   }
 
+  .accordion>.card {
+    margin-bottom: 0;
+  }
   .ui-tabs .ui-accordion .ui-state-default.ui-accordion-header,
   .ui-tabs .ui-widget-content .ui-accordion .ui-state-default.ui-accordion-header,
   .ui-accordion .ui-accordion-header {
