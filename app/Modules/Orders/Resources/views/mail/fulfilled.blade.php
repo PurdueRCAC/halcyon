@@ -2,9 +2,9 @@
 Hello {{ $user->name }},
 
 @if ($user->can('manage orders'))
-This is an automated message notifying that Order #{{ $order->id }} has been **fulfilled**. Payment for this order may now be collected.
+This is an automated message notifying that Order #{{ $order->id }} has been **<span style="color:green">fulfilled</span>**. Payment for this order may now be collected.
 @else
-This is an automated message notifying that Order #{{ $order->id }} has been **fulfilled** and is now complete.
+This is an automated message notifying that Order #{{ $order->id }} has been **<span style="color:green">fulfilled</span>** and is now complete.
 @endif
 
 ---

@@ -10,24 +10,15 @@
 @foreach ($order->items as $item)
 <?php
 $renew = '';
-if ($item->isRecurring())
-{
+if ($item->isRecurring()):
 	$timeperiod = $item->product->timeperiod;
 
-	if ($item->timeperiodcount == 1)
-	{
-		$renew = 'Service for ' . $item->timeperiodcount . ' ' . $timeperiod->singular . ', then will renew at the ' . $timeperiod->name . ' rate';
-	}
-	else
-	{
-		$renew = 'Service for ' . $item->timeperiodcount . ' ' . $timeperiod->plural . ', then will renew at the ' . $timeperiod->name . ' rate';
-	}
+	$renew = 'Service for ' . $item->timeperiodcount . ' ' . ($item->timeperiodcount > 1 ? $timeperiod->plural : $timeperiod->singular) . ', then will renew at the ' . $timeperiod->name . ' rate';
 
-	if (!$item->isOriginal())
-	{
+	if (!$item->isOriginal()):
 		$renew = ucfirst($timeperiod->name) . ' renewal of a previous order';
-	}
-}
+	endif;
+endif;
 ?>
 | {{ $item->product->name }}{!! $renew ? '<br />' . '_' . e($renew) . '_' : '' !!} | {{ $item->quantity }} | ${{ $item->formattedPrice }}{!! $item->product->unit ? '<br />_per ' . $item->product->unit . '_' : '' !!} |
 @endforeach

@@ -1,7 +1,7 @@
 @component('mail::message')
 Hello {{ $user->name }},
 
-This is an automated message notifying that Order #{{ $order->id }} has been **canceled**.
+This is an automated message notifying that Order #{{ $order->id }} has been **<span style="color:red;">canceled</span>**.
 
 ---
 
