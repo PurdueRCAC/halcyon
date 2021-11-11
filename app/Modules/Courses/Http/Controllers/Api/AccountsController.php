@@ -7,6 +7,8 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Process\Process as Process;
 use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Models\Member;
 use App\Modules\Courses\Events\AccountLookup;
@@ -899,13 +901,24 @@ class AccountsController extends Controller
 	 */
 	public function sync()
 	{
-		Artisan::call('courses:sync', [
+		$path = storage_path('app/courses_sync.log');
+
+		if (is_file($path))
+		{
+			Storage::disk('local')->delete('app/courses_sync.log');
+		}
+
+		$process = new Process(['php', base_path() . '/artisan', 'courses:sync', '-v', '>', $path]);
+		$process->start();
+
+		$data = 'Process started';
+		/*Artisan::call('courses:sync', [
 			'--debug' => 1
 		]);
 
 		$output = Artisan::output();
 
-		$data = explode("\n", $output);
+		$data = explode("\n", $output);*/
 
 		$response = new \stdClass;
 		$response->output = $data;
