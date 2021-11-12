@@ -26,11 +26,25 @@ class Group extends Model
 	use ErrorBag, Validatable, Historable;
 
 	/**
-	 * Timestamps
+	 * The name of the "created at" column.
 	 *
-	 * @var  bool
-	 **/
-	public $timestamps = false;
+	 * @var string
+	 */
+	const CREATED_AT = 'datetimecreated';
+
+	/**
+	 * The name of the "updated at" column.
+	 *
+	 * @var  string
+	 */
+	const UPDATED_AT = null;
+
+	/**
+	 * The name of the "deleted at" column.
+	 *
+	 * @var  string
+	 */
+	const DELETED_AT = 'datetimeremoved';
 
 	/**
 	 * The table to which the class pertains
@@ -743,5 +757,37 @@ class Group extends Model
 		$member->owner = 0;
 
 		return $member->save();
+	}
+
+	/**
+	 * Add a department
+	 *
+	 * @param   integer  $depid
+	 * @return  bool
+	 */
+	public function addDepartment($depid)
+	{
+		$row = new GroupDepartment;
+		$row->groupid = $this->id;
+		$row->collegedeptid = $depid;
+		$row->percentage = 100;
+
+		return $row->save();
+	}
+
+	/**
+	 * Add field of science
+	 *
+	 * @param   integer  $fid
+	 * @return  bool
+	 */
+	public function addFieldOfScience($fid)
+	{
+		$row = new GroupFieldOfScience;
+		$row->groupid = $this->id;
+		$row->fieldofscienceid = $fid;
+		$row->percentage = 100;
+
+		return $row->save();
 	}
 }

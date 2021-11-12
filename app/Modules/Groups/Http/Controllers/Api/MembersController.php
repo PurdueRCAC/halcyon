@@ -70,14 +70,6 @@ class MembersController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"type":          "string",
@@ -91,7 +83,7 @@ class MembersController extends Controller
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       "name",
-	 * 		"allowedValues": "id, name, owneruserid, unixgroup, unixid, deptnumber"
+	 * 		"allowedValues": "id, name, owneruserid, unixgroup, unixid"
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -184,43 +176,35 @@ class MembersController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "Group name",
-	 * 		"type":          "string",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group ID",
+	 * 		"type":          "integer",
 	 * 		"required":      true,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
-	 * 		"type":          "string",
-	 * 		"required":      false,
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
+	 * 		"type":          "integer",
+	 * 		"required":      true,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
+	 * 		"name":          "membertype",
+	 * 		"description":   "Member type",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       0
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
+	 * 		"name":          "userrequestid",
+	 * 		"description":   "User request ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
 	 * }
 	 * @param   Request  $request
 	 * @return  Response
@@ -372,41 +356,17 @@ class MembersController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "Group name",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
+	 * 		"name":          "membertype",
+	 * 		"description":   "Member type",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
+	 * 		"name":          "userrequestid",
+	 * 		"description":   "User request ID",
 	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
-	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       null
 	 * }

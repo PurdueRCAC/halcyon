@@ -60,12 +60,12 @@ class GroupsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
+	 * 		"name":          "datetimecreated",
+	 * 		"description":   "Created on or after the given timestamp",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
+	 * 			"type":      "date",
+	 * 			"default":   null
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -113,7 +113,7 @@ class GroupsController extends Controller
 	 * 				"owneruserid",
 	 * 				"unixgroup",
 	 * 				"unixid",
-	 * 				"deptnumber"
+	 * 				"datetimecreated"
 	 * 			]
 	 * 		}
 	 * }
@@ -144,7 +144,7 @@ class GroupsController extends Controller
 			'owneruserid'   => $request->input('owneruserid', 0),
 			'unixgroup'   => $request->input('unixgroup', ''),
 			'unixid'   => $request->input('unixid', 0),
-			'deptnumber'   => $request->input('deptnumber', 0),
+			'datetimecreated'   => $request->input('datetimecreated'),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
 			//'start' => $request->input('limitstart', 0),
@@ -161,7 +161,7 @@ class GroupsController extends Controller
 		$g = (new Group)->getTable();
 
 		$query = Group::query()
-			->select(DB::raw('DISTINCT ' . $g . '.id, ' . $g . '.name, ' . $g . '.owneruserid, ' . $g . '.unixgroup, ' . $g . '.unixid, ' . $g . '.deptnumber, ' . $g . '.onepurdue, ' . $g . '.githuborgname'));
+			->select(DB::raw('DISTINCT ' . $g . '.id, ' . $g . '.name, ' . $g . '.owneruserid, ' . $g . '.unixgroup, ' . $g . '.unixid, ' . $g . '.githuborgname, ' . $g . '.datetimecreated, ' . $g . '.datetimeremoved'));
 
 		if ($filters['search'])
 		{
@@ -273,9 +273,9 @@ class GroupsController extends Controller
 			$query->where($g . '.unixid', '=', $filters['unixid']);
 		}
 
-		if ($filters['deptnumber'])
+		if ($filters['datetimecreated'])
 		{
-			$query->where($g . '.deptnumber', '=', $filters['deptnumber']);
+			$query->where($g . '.datetimecreated', '>=', $filters['datetimecreated']);
 		}
 
 		/*if (auth()->user() && auth()->user()->can('manage groups'))
@@ -424,6 +424,11 @@ class GroupsController extends Controller
 		if (!$member->save())
 		{
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
+		}
+
+		if ($request->has('deptnumber'))
+		{
+			$row->addDepartment($request->input('deptnumber'));
 		}
 
 		return new GroupResource($row);
@@ -588,11 +593,6 @@ class GroupsController extends Controller
 			$row->name = $name;
 		}
 
-		if ($request->has('deptnumber'))
-		{
-			$row->deptnumber = $request->input('deptnumber');
-		}
-
 		if ($request->has('githuborgname'))
 		{
 			$row->githuborgname = $request->input('githuborgname');
@@ -601,6 +601,11 @@ class GroupsController extends Controller
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
+		}
+
+		if ($request->has('deptnumber'))
+		{
+			$row->addDepartment($request->input('deptnumber'));
 		}
 
 		return new GroupResource($row);
