@@ -69,16 +69,6 @@ class JobsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"required":      false,
@@ -100,8 +90,7 @@ class JobsController extends Controller
 	 * 				"name",
 	 * 				"owneruserid",
 	 * 				"unixgroup",
-	 * 				"unixid",
-	 * 				"deptnumber"
+	 * 				"unixid"
 	 * 			]
 	 * 		}
 	 * }
@@ -212,8 +201,8 @@ class JobsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
+	 * 		"name":          "dont_overlap",
+	 * 		"description":   "Disallow overlapping runs",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -222,8 +211,8 @@ class JobsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
+	 * 		"name":          "recurrence",
+	 * 		"description":   "Recurrence",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
@@ -324,17 +313,18 @@ class JobsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
+	 * 		"name":          "dont_overlap",
+	 * 		"description":   "Disallow overlapping runs",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer"
+	 * 			"type":      "integer",
+	 * 			"default":   0
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
+	 * 		"name":          "recurrence",
+	 * 		"description":   "Recurrence",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"

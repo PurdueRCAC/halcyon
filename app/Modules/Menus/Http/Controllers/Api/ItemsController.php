@@ -388,46 +388,25 @@ class ItemsController extends Controller
 	 * @apiUri    /api/menus/items
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"type":          "integer",
-	 * 		"required":      true,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "name",
-	 * 		"description":   "Group name",
+	 * 		"name":          "title",
+	 * 		"description":   "GMenu item text",
 	 * 		"type":          "string",
 	 * 		"required":      true,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
+	 * 		"name":          "type",
+	 * 		"description":   "Menu type",
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
+	 * 		"name":          "parent_id",
+	 * 		"description":   "Parent menu item ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
 	 * }
 	 * @return Response
 	 */
@@ -518,38 +497,24 @@ class ItemsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "title",
-	 * 		"description":   "Listener title",
+	 * 		"description":   "GMenu item text",
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
+	 * 		"name":          "type",
+	 * 		"description":   "Menu type",
 	 * 		"type":          "string",
 	 * 		"required":      false,
 	 * 		"default":       null
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
+	 * 		"name":          "parent_id",
+	 * 		"description":   "Parent menu item ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"default":       0
 	 * }
 	 * @param   Request $request
 	 * @return  Response

@@ -150,7 +150,7 @@ class AccountsController extends Controller
 	 * 				"owneruserid",
 	 * 				"unixgroup",
 	 * 				"unixid",
-	 * 				"deptnumber"
+	 * 				"deptartment"
 	 * 			]
 	 * 		}
 	 * }

@@ -60,15 +60,6 @@ class UserRequestsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"required":      false,
@@ -109,8 +100,7 @@ class UserRequestsController extends Controller
 	 * 				"name",
 	 * 				"owneruserid",
 	 * 				"unixgroup",
-	 * 				"unixid",
-	 * 				"deptnumber"
+	 * 				"unixid"
 	 * 			]
 	 * 		}
 	 * }

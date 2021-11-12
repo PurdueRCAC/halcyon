@@ -111,8 +111,7 @@ class MembersController extends Controller
 	 * 				"name",
 	 * 				"owneruserid",
 	 * 				"unixgroup",
-	 * 				"unixid",
-	 * 				"deptnumber"
+	 * 				"unixid"
 	 * 			]
 	 * 		}
 	 * }
