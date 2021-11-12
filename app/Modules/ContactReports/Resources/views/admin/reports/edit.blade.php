@@ -105,7 +105,7 @@ app('pathway')
 					endforeach;
 					?>
 					<label for="field-people">{{ trans('contactreports::contactreports.users') }}:</label>
-					<input type="text" name="people" id="field-people" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" size="30" maxlength="250" value="{{ implode(',', $users) }}" />
+					<input type="text" name="people" id="field-people" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="{{ implode(',', $users) }}" />
 				</div>
 
 				<div class="form-group">
