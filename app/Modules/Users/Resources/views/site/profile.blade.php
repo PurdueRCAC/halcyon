@@ -107,90 +107,74 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 							<p class="alert alert-warning">This account was removed on {{ $user->dateremoved }}.</p>
 						@endif
 
-						<div class="row">
-							<div class="col-md-6">
-								<p>
-									<strong>Created</strong><br />
-									<span class="text-muted">
-										@if ($user->isCreated())
-											<time datetime="{{ $user->getUserUsername()->datecreated }}">{{ $user->getUserUsername()->datecreated->format('M d, Y') }}</time>
-										@else
-											{{ trans('global.unknown') }}
-										@endif
-									</span>
-								</p>
-							</div>
-							<div class="col-md-6">
-								<p>
-									<strong>Last Visit</strong><br />
-									<span class="text-muted">
-										@if ($user->hasVisited())
-											<time datetime="{{ $user->datelastseen }}">{{ $user->datelastseen->format('M d, Y @ h:i a') }}</time>
-										@else
-											{{ trans('global.unknown') }}
-										@endif
-									</span>
-								</p>
-							</div>
+					<dl class="row">
+						<div class="col-md-6 mb-2">
+							<dt>Created</dt>
+							<dd>
+								<span class="text-muted">
+									@if ($user->isCreated())
+										<time datetime="{{ $user->getUserUsername()->datecreated }}">{{ $user->getUserUsername()->datecreated->format('M d, Y') }}</time>
+									@else
+										{{ trans('global.unknown') }}
+									@endif
+								</span>
+							</dd>
 						</div>
+						<div class="col-md-6 mb-2">
+							<dt>Last Visit</dt>
+							<dd>
+								<span class="text-muted">
+									@if ($user->hasVisited())
+										<time datetime="{{ $user->datelastseen }}">{{ $user->datelastseen->format('M d, Y @ h:i a') }}</time>
+									@else
+										{{ trans('global.unknown') }}
+									@endif
+								</span>
+							</dd>
+						</div>
+					@else
+					<dl class="row">
 					@endif
-
-					<div class="row">
-						<div class="col-md-6">
-							<p>
-								<strong>Username</strong><br />
-								<span class="text-muted">{{ $user->username }}</span>
-							</p>
+						<div class="col-md-6 mb-2">
+							<dt>Username</dt>
+							<dd><span class="text-muted">{{ $user->username }}</span></dd>
 						</div>
-						<div class="col-md-6">
-							<p>
-								<strong>Department</strong><br />
-								<span class="text-muted">{!! $user->department ? e($user->department) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
-							</p>
+						<div class="col-md-6 mb-2">
+							<dt>Department</dt>
+							<dd><span class="text-muted">{!! $user->department ? e($user->department) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span></dd>
 						</div>
-						<div class="col-md-6">
-							<p>
-								<strong>Title</strong><br />
-								<span class="text-muted">{!! $user->title ? e($user->title) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
-							</p>
+						<div class="col-md-6 mb-2">
+							<dt>Title</dt>
+							<dd><span class="text-muted">{!! $user->title ? e($user->title) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span></dd>
 						</div>
-						<div class="col-md-6">
-							<p>
-								<strong>Campus</strong><br />
-								<span class="text-muted">{!! $user->campus ? e($user->campus) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
-							</p>
+						<div class="col-md-6 mb-2">
+							<dt>Campus</dt>
+							<dd><span class="text-muted">{!! $user->campus ? e($user->campus) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span></dd>
 						</div>
-						<div class="col-md-6">
-							<p>
-								<strong>Phone</strong><br />
-								<span class="text-muted">{!! $user->phone ? e($user->phone) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
-							</p>
+						<div class="col-md-6 mb-2">
+							<dt>Phone</dt>
+							<dd><span class="text-muted">{!! $user->phone ? e($user->phone) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span></dd>
 						</div>
-						<div class="col-md-6">
-							<p>
-								<strong>Building</strong><br />
-								<span class="text-muted">{!! $user->building ? e($user->building) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
-							</p>
+						<div class="col-md-6 mb-2">
+							<dt>Building</dt>
+							<dd><span class="text-muted">{!! $user->building ? e($user->building) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span></dd>
 						</div>
-						<div class="col-md-6">
-							<p>
-								<strong>Email</strong><br />
-								<span class="text-muted">{{ $user->email }}</span>
-							</p>
+						<div class="col-md-6 mb-2">
+							<dt>Email</dt>
+							<dd><span class="text-muted">{{ $user->email }}</span></dd>
 						</div>
-						<div class="col-md-6">
-							<p>
-								<strong>Room</strong><br />
-								<span class="text-muted">{!! $user->roomnumber ? e($user->roomnumber) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span>
-							</p>
+						<div class="col-md-6 mb-2">
+							<dt>Room</dt>
+							<dd><span class="text-muted">{!! $user->roomnumber ? e($user->roomnumber) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span></dd>
 						</div>
-						<div class="col-md-6">
-							<p>
-								<strong>Login Shell</strong>
+						<div class="col-md-6 mb-2">
+							<dt>
+								Login Shell
 								<a href="#box1_account" class="help icn tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span> Help
 								</a>
-								<br />
+							</dt>
+							<dd>
 								@if ($user->loginShell === false)
 									<span class="alert alert-error">Failed to retrieve shell information</span>
 								@else
@@ -206,26 +190,23 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 													<select class="form-control property-edit" id="INPUT_loginshell" data-prop="loginshell">
 														<?php
 														$selected = '';
-														if (preg_match("/bash$/", $user->loginShell))
-														{
+														if (preg_match("/bash$/", $user->loginShell)):
 															$selected = ' selected="selected"';
-														}
+														endif;
 														?>
 														<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
 														<?php
 														$selected = '';
-														if (preg_match("/csh$/", $user->loginShell))
-														{
+														if (preg_match("/csh$/", $user->loginShell)):
 															$selected = ' selected="selected"';
-														}
+														endif;
 														?>
 														<option value="/bin/tcsh"<?php echo $selected; ?>>tcsh</option>
 														<?php
 														$selected = '';
-														if (preg_match("/zsh$/", $user->loginShell))
-														{
+														if (preg_match("/zsh$/", $user->loginShell)):
 															$selected = ' selected="selected"';
-														}
+														endif;
 														?>
 														<option value="/bin/zsh"<?php echo $selected; ?>>zsh</option>
 													</select>
@@ -244,12 +225,12 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 										</div>
 									@endif
 								@endif
-							</p>
-							<div id="box1_account" class="dialog-help" title="Login Shell">
-								<p>This is the interactive shell you are started with when logging into {{ config('app.name') }} resources. The default for new accounts is bash however you may use this to change it if desired. Supported options are <code>bash</code>, <code>tcsh</code>, and <code>zsh</code>. Once changed, it will take one to two hours for the changes to propagate to all systems.</p>
-							</div>
+								<div id="box1_account" class="dialog-help" title="Login Shell">
+									<p>This is the interactive shell you are started with when logging into {{ config('app.name') }} resources. The default for new accounts is bash however you may use this to change it if desired. Supported options are <code>bash</code>, <code>tcsh</code>, and <code>zsh</code>. Once changed, it will take one to two hours for the changes to propagate to all systems.</p>
+								</div>
+							</dd>
 						</div>
-					</div>
+					</dl>
 				</div>
 			</div>
 
@@ -500,10 +481,10 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 							<div id="roles_help" class="dialog-help" title="Roles">
 								<p>Role status may be compiled from various external sources. Available statuses are:</p>
 								<ul>
-									<li><span style="color:#B20000;">No Role</span></li>
-									<li><span style="color:#A06020;">Role Pending</span></li>
-									<li><span style="color:#006600;">Role Ready</span></li>
-									<li><span style="color:#A06020;">Removal Pending</span></li>
+									<li><span class="badge badge-secondary">No Role</span></li>
+									<li><span class="badge badge-info">Role Pending</span></li>
+									<li><span class="badge badge-success">Role Ready</span></li>
+									<li><span class="badge badge-danger">Removal Pending</span></li>
 								</ul>
 							</div>
 						</div>
@@ -580,26 +561,23 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 										<option value="">{{ trans('global.none') }}</option>
 										<?php
 										$selected = '';
-										if (preg_match("/bash$/", $user->loginShell))
-										{
+										if (preg_match("/bash$/", $user->loginShell)):
 											$selected = ' selected="selected"';
-										}
+										endif;
 										?>
 										<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
 										<?php
 										$selected = '';
-										if (preg_match("/csh$/", $user->loginShell))
-										{
+										if (preg_match("/csh$/", $user->loginShell)):
 											$selected = ' selected="selected"';
-										}
+										endif;
 										?>
 										<option value="/bin/tcsh"<?php echo $selected; ?>>tcsh</option>
 										<?php
 										$selected = '';
-										if (preg_match("/zsh$/", $user->loginShell))
-										{
+										if (preg_match("/zsh$/", $user->loginShell)):
 											$selected = ' selected="selected"';
-										}
+										endif;
 										?>
 										<option value="/bin/zsh"<?php echo $selected; ?>>zsh</option>
 									</select>
@@ -626,5 +604,4 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 	endif;
 	?>
 </div>
-
 @stop

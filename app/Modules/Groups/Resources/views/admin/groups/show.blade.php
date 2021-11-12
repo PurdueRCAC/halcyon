@@ -46,63 +46,69 @@ app('pathway')
 		<h3 class="card-title pt-0">{{ trans('global.details') }}</h3>
 	</div>
 	<div class="card-body">
-		<div class="form-group">
-			<strong>{{ trans('groups::groups.name') }}</strong>:
-			<div>{{ $row->name }}</div>
-		</div>
+		<dl>
+			<div class="form-group">
+				<dt>{{ trans('groups::groups.name') }}:</dt>
+				<dd class="mx-0">{{ $row->name }}</dd>
+			</div>
 
-		<div class="form-group">
-			<strong>{{ trans('groups::groups.unix group base name') }}</strong>:
-			<div>{{ $row->unixgroup ? $row->unixgroup : trans('global.none') }}</div>
-		</div>
+			<div class="form-group">
+				<dt>{{ trans('groups::groups.unix group base name') }}:</dt>
+				<dd class="mx-0">{{ $row->unixgroup ? $row->unixgroup : trans('global.none') }}</dd>
+			</div>
 
-		<div class="form-group">
-			<div><strong>{{ trans('groups::groups.department') }}</strong>:</div>
-			@if (count($row->departments))
-				<ul>
-					@foreach ($row->departments as $dept)
-						<li id="department-{{ $dept->id }}" class="mb-2" data-id="{{ $dept->id }}">
-							<?php
-							$prf = '';
-							foreach ($dept->department->ancestors() as $ancestor):
-								if (!$ancestor->parentid):
-									continue;
-								endif;
+			<div class="form-group">
+				<dt>{{ trans('groups::groups.department') }}:</dt>
+				<dd class="mx-0">
+					@if (count($row->departments))
+						<ul>
+							@foreach ($row->departments as $dept)
+								<li id="department-{{ $dept->id }}" class="mb-2" data-id="{{ $dept->id }}">
+									<?php
+									$prf = '';
+									foreach ($dept->department->ancestors() as $ancestor):
+										if (!$ancestor->parentid):
+											continue;
+										endif;
 
-								$prf .= $ancestor->name . ' > ';
-							endforeach;
-							?>{{ $prf . $dept->department->name }}
-						</li>
-					@endforeach
-				</ul>
-			@else
-				<div class="text-muted">{{ trans('global.none') }}</div>
-			@endif
-		</div>
+										$prf .= $ancestor->name . ' > ';
+									endforeach;
+									?>{{ $prf . $dept->department->name }}
+								</li>
+							@endforeach
+						</ul>
+					@else
+						<span class="text-muted">{{ trans('global.none') }}</span>
+					@endif
+				</dd>
+			</div>
 
-		<div class="form-group">
-			<div><strong>{{ trans('groups::groups.field of science') }}</strong>:</div>
-			@if (count($row->fieldsOfScience))
-				<ul>
-					@foreach ($row->fieldsOfScience as $field)
-						<li id="fieldofscience-{{ $field->id }}" class="mb-2" data-id="{{ $field->id }}">
-							<?php
-							$prf = '';
-							foreach ($field->field->ancestors() as $ancestor):
-								if (!$ancestor->parentid):
-									continue;
-								endif;
+			<div class="form-group">
+				<dt>{{ trans('groups::groups.field of science') }}:</dt>
+				<dd class="mx-0">
+					@if (count($row->fieldsOfScience))
+						<ul>
+							@foreach ($row->fieldsOfScience as $field)
+								<li id="fieldofscience-{{ $field->id }}" class="mb-2" data-id="{{ $field->id }}">
+									<?php
+									$prf = '';
+									foreach ($field->field->ancestors() as $ancestor):
+										if (!$ancestor->parentid):
+											continue;
+										endif;
 
-								$prf .= $ancestor->name . ' > ';
-							endforeach;
-							?>{{ $prf . $field->field->name }}
-						</li>
-					@endforeach
-				</ul>
-			@else
-				<div class="text-muted">{{ trans('global.none') }}</div>
-			@endif
-		</div>
+										$prf .= $ancestor->name . ' > ';
+									endforeach;
+									?>{{ $prf . $field->field->name }}
+								</li>
+							@endforeach
+						</ul>
+					@else
+						<span class="text-muted">{{ trans('global.none') }}</span>
+					@endif
+				</dd>
+			</div>
+		</dl>
 	</div>
 </div>
 
