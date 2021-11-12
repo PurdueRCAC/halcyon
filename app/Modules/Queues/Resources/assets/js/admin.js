@@ -267,78 +267,83 @@ document.addEventListener('DOMContentLoaded', function() {
 		});*/
 	});
 
-	$('.dialog-btn').on('click', function(e){
+	$('.dialog-btn').on('click', function (e) {
 		e.preventDefault();
 
-		$($(this).attr('href')).dialog({
-			modal: true,
-			width: '550px',
-			open: function() {
-				var groups = $(".form-group-queues");
-				if (groups.length) {
-					$(".form-group-queues")
-						.select2({})
-						.on('select2:select', function (e) {
-							e.preventDefault();
+		$($(this).attr('href')).on('shown.bs.modal', function (event) {
+			/*$($(this).attr('href')).dialog({
+				modal: true,
+				width: '550px',
+				open: function() {
+					var d = $(this);*/
 
-							var group = $(this);
+			var groups = $(".form-group-queues");
+			if (groups.length) {
+				$(".form-group-queues")
+					.select2({})
+					.on('select2:select', function (e) {
+						e.preventDefault();
 
-							var queue = $('#' + group.data('update'));
-							//var dest_queue = document.getElementById("field-id").value;
+						var group = $(this);
 
-							if (group.val() == 0) {
-								queue.val(0);
-								queue.parent().addClass('d-none');
-								return;
-							} else {
-								queue.parent().removeClass('d-none');
-							}
+						var queue = $('#' + group.data('update'));
+						var dest_queue = document.getElementById("field-id").value;
 
-							$.ajax({
-								url: group.data('queue-api'),
-								type: 'get',
-								data: {
-									'group': group.val(),
-									'subresource': $('#field-subresourceid').val()//group.data('subresource')
-								},
-								dataType: 'json',
-								async: false,
-								success: function (data) {
-									if (data.data.length > 0) {
-										queue.prop('disabled', false);
-										queue.empty();//options.length = 0;
+						if (group.val() == 0) {
+							queue.val(0);
+							queue.parent().addClass('d-none');
+							return;
+						} else {
+							queue.parent().removeClass('d-none');
+						}
 
+						$.ajax({
+							url: group.data('queue-api'),
+							type: 'get',
+							data: {
+								'group': group.val(),
+								'subresource': $('#field-subresourceid').val()//group.data('subresource')
+							},
+							dataType: 'json',
+							async: false,
+							success: function (data) {
+								if (data.data.length > 0) {
+									queue.prop('disabled', false);
+									queue.empty();//options.length = 0;
+
+									opt = document.createElement("option");
+									opt.value = 0;
+									opt.innerHTML = "(Select Queue)";
+									queue.append(opt);
+
+									var x, opt;
+									for (x in data.data) {
+										//if (data.data[x]['name'].match(/^(rcac|workq|debug)/)) {
+										//if (data.data[x]['id'] != dest_queue) {
 										opt = document.createElement("option");
-										opt.value = 0;
-										opt.innerHTML = "(Select Queue)";
+										opt.innerHTML = data.data[x]['name'] + " (" + data.data[x]['subresource']['name'] + ")";
+										opt.value = data.data[x]['id'];
+
 										queue.append(opt);
-
-										var x, opt;
-										for (x in data.data) {
-											//if (data.data[x]['name'].match(/^(rcac|workq|debug)/)) {
-											//if (data.data[x]['id'] != dest_queue) {
-												opt = document.createElement("option");
-												opt.innerHTML = data.data[x]['name'] + " (" + data.data[x]['subresource']['name'] + ")";
-												opt.value = data.data[x]['id'];
-
-												queue.append(opt);
-											//}
-											//}
-										}
+										//}
+										//}
 									}
-								},
-								error: function (xhr) { //xhr, reason, thrownError
-									var msg = 'Failed to retrieve queues.';
-									if (xhr.responseJSON && xhr.responseJSON.message) {
-										msg = xhr.responseJSON.message;
-									}
-									Halcyon.message('danger', msg);
 								}
-							});
-							return false;
+							},
+							error: function (xhr, reason, thrownError) {
+								var msg = 'Failed to retrieve queues.';
+								if (xhr.responseJSON && xhr.responseJSON.message) {
+									msg = xhr.responseJSON.message;
+								}
+								Halcyon.message('danger', msg);
+
+								console.log(xhr.responseText);
+							}
 						});
-				}
+						return false;
+					});
 			}
+			/*}*/
 		});
 	});
 
@@ -464,14 +469,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	$('.edit').on('click', function (e) {
+	/*$('.edit').on('click', function (e) {
 		e.preventDefault();
 
 		$($(this).attr('href')).dialog({
 			modal: true,
 			width: '550px'
 		});
-	});
+	});*/
 
 	$('#field-aclusersenabled').on('change', function(){
 		$('#field-aclgroups').parent().toggleClass('hide');
