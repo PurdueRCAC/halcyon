@@ -53,9 +53,9 @@ app('pathway')
 			<li class="nav-item" role="presentation"><a class="nav-link active" href="#queue-details" data-toggle="tab" role="tab" id="queue-details-tab" aria-controls="queue-details" aria-selected="true">{{ trans('queues::queues.queue') }}</a></li>
 			<li class="nav-item" role="presentation"><a class="nav-link" href="#queue-allocations" data-toggle="tab" role="tab" id="queue-allocation-tab" aria-controls="queue-allocations" aria-selected="false">{{ trans('queues::queues.purchases and loans') }}</a></li>
 		</ul>
-		</nav>
-		<div class="tab-content" id="queue-tabs-contant">
-			<div class="tab-pane show active" id="queue-details" role="tabpanel" aria-labelledby="queue-details-tab">
+	</nav>
+	<div class="tab-content" id="queue-tabs-contant">
+		<div class="tab-pane show active" id="queue-details" role="tabpanel" aria-labelledby="queue-details-tab">
 @endif
 
 	@if ($row->trashed())

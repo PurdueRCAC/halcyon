@@ -15,6 +15,20 @@ class Sliders
 	public static $open = false;
 
 	/**
+	 * Flag for if a pane is currently open or not
+	 *
+	 * @var  boolean
+	 */
+	public static $group = 'sliders';
+
+	/**
+	 * Flag for if a pane is currently open or not
+	 *
+	 * @var  boolean
+	 */
+	private static $first = true;
+
+	/**
 	 * Creates a panes and loads the javascript behavior for it.
 	 *
 	 * @param   string  $group   The pane identifier.
@@ -25,8 +39,9 @@ class Sliders
 	{
 		self::behavior($group, $params);
 		self::$open = false;
+		self::$group = $group;
 
-		return '<div id="' . $group . '" class="accordian pane-sliders">';
+		return '<div id="' . $group . '" class="accordion">';
 	}
 
 	/**
@@ -39,10 +54,11 @@ class Sliders
 		$content = '';
 		if (self::$open)
 		{
-			$content .= '</div></div>';
+			$content .= '</div><!-- / .collapse -->';
+			$content .= '</div><!-- / .card -->';
 		}
 		self::$open = false;
-		$content .= '</div>';
+		$content .= '</div><!-- / .accordion -->';
 		return $content;
 	}
 
@@ -58,13 +74,26 @@ class Sliders
 		$content = '';
 		if (self::$open)
 		{
-			$content .= '</div></div>';
+			$content .= '</div><!-- / .collapse -->';
+			$content .= '</div><!-- / .card -->';
+			self::$first = false;
 		}
 		else
 		{
 			self::$open = true;
 		}
-		$content .= '<h3 class="pane-toggler title" id="' . $id . '"><a href="#' . $id . '"><span>' . $text . '</span></a></h3><div class="panel"><div class="pane-slider content">';
+		$content .= '<div class="card">';
+		$content .= '	<div class="card-header" id="' . $id . '-heading">';
+		$content .= '		<h3 class="my-0 py-0">';
+		$content .= '			<a href="#' . $id . '-content" class="btn btn-link btn-block text-left" data-toggle="collapse" data-target="#' . $id . '-content" aria-expanded="true" aria-controls="' . $id . '-content">';
+		$content .= '				<span class="fa fa-chevron-right" aria-hidden="true"></span>';
+		$content .= '				' . $text;
+		$content .= '			</a>';
+		$content .= '		</h3>';
+		$content .= '	</div>';
+		$content .= '	<div id="' . $id . '-content" class="collapse' . (self::$first ? ' show' : '') . '" aria-labelledby="' . $id . '-heading" data-parent="#' . self::$group . '">';
+
+		//$content .= '<h3 class="pane-toggler title" id="' . $id . '"><a href="#' . $id . '"><span>' . $text . '</span></a></h3><div class="panel"><div class="pane-slider content">';
 
 		return $content;
 	}

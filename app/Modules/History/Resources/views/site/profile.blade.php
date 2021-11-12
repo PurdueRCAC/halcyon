@@ -52,8 +52,6 @@ $(document).ready(function() {
 			}
 		});
 	}
-
-	//$(".tabs").tabs();
 });
 </script>
 @endpush
@@ -61,16 +59,6 @@ $(document).ready(function() {
 <div class="contentInner">
 	<h2>{{ trans('history::history.history') }}</h2>
 
-	<?php /*<div class="tabs">
-		<ul>
-			<li>
-				<a href="#memberships">Memberships</a>
-			</li>
-			<li>
-				<a href="#activity">Activity</a>
-			</li>
-		</ul>
-		<div id="memberships"> */ ?>
 	@if (count($history) > 0)
 		<table class="table table-hover datatable">
 			<caption>Memberships</caption>
@@ -130,9 +118,4 @@ $(document).ready(function() {
 			</div>
 		</div>
 	@endif
-		<?php /* </div>
-		<div id="activity">
-			More here.
-		</div>
-	</div> */ ?>
 </div>

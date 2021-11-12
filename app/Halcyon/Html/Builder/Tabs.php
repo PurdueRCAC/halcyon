@@ -26,7 +26,7 @@ class Tabs
 		//self::behavior($group, $params);
 		self::$open = false;
 
-		return '<div class="tabs" id="' . $group . '">';
+		return '<div class="tab-content" id="' . $group . '">';
 	}
 
 	/**
@@ -60,54 +60,8 @@ class Tabs
 		{
 			self::$open = true;
 		}
-		$content .= '<div id="tab' . $id . '"><a href="#tab' . $id . '">' . $text . '</a></dt><div>';
+		$content .= '<div class="tab-pane" role="tabpanel" id="tab' . $id . '" aria-labelledby="' . $id . '-tab"><a href="#tab' . $id . '">' . $text . '</a>';
 
 		return $content;
-	}
-
-	/**
-	 * Load the JavaScript behavior.
-	 *
-	 * @param   string  $group   The pane identifier.
-	 * @param   array   $params  Array of options.
-	 * @return  void
-	 */
-	protected static function behavior($group, $params = array())
-	{
-		static $loaded = array();
-
-		if (!array_key_exists((string) $group, $loaded))
-		{
-			$options = array();
-
-			$opt['onActive']            = (isset($params['onActive'])) ? $params['onActive'] : null;
-			$opt['onBackground']        = (isset($params['onBackground'])) ? $params['onBackground'] : null;
-			$opt['display']             = (isset($params['startOffset'])) ? (int) $params['startOffset'] : null;
-			$opt['useStorage']          = (isset($params['useCookie']) && $params['useCookie']) ? 'true' : 'false';
-			$opt['titleSelector']       = "'dt.tabs'";
-			$opt['descriptionSelector'] = "'dd.tabs'";
-
-			foreach ($opt as $k => $v)
-			{
-				if ($v)
-				{
-					$options[] = $k . ': ' . $v;
-				}
-			}
-
-			$options = '{' . implode(',', $options) . '}';
-
-			/*Behavior::framework(true);
-
-			\App::get('document')->addScriptDeclaration(
-				'jQuery(document).ready(function($){
-					$("dl#' . $group . '.tabs").tabs();
-				});'
-			);
-
-			Asset::script('system/jquery.tabs.js', false, true);*/
-
-			$loaded[(string) $group] = true;
-		}
 	}
 }

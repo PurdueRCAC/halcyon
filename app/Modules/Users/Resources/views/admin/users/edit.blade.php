@@ -48,14 +48,16 @@ app('pathway')
 		</div>
 	@endif
 
-	<div class="tabs">
-		<ul>
-			<li><a href="#user-account">Account</a></li>
+	<nav class="container-fluid">
+		<ul id="user-tabs" class="nav nav-tabs" role="tablist">
+			<li class="nav-item" role="presentation"><a class="nav-link active" href="#user-account" data-toggle="tab" role="tab" id="user-account-tab" aria-controls="user-account" aria-selected="true">Account</a></li>
 			@if ($user->id)
-				<li><a href="#user-attributes">{{ trans('users::users.attributes') }}</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link" href="#user-attributes" data-toggle="tab" role="tab" id="user-attributes-tab" aria-controls="user-attributes" aria-selected="false">{{ trans('users::users.attributes') }}</a></li>
 			@endif
 		</ul>
-		<div id="user-account">
+	</nav>
+	<div class="tab-content" id="user-tabs-content">
+		<div class="tab-pane show active" id="user-account" role="tabpanel" aria-labelledby="user-account-tab">
 			<div class="row">
 				<div class="col col-md-6">
 					
@@ -154,9 +156,10 @@ app('pathway')
 		</div><!-- / #user-account -->
 
 		@if ($user->id)
-			<div id="user-attributes">
+			<div class="tab-pane" id="user-attributes" role="tabpanel" aria-labelledby="user-attributes-tab">
 				<div class="card">
 					<table class="table table-hover">
+						<caption class="sr-only">{{ trans('users::users.attributes') }}</caption>
 						<thead>
 							<tr>
 								<th scope="col" width="25">{{ trans('users::users.locked') }}</th>
@@ -249,7 +252,7 @@ app('pathway')
 				</div>
 			</div>
 		@endif
-	</div><!-- / .tabs -->
+	</div><!-- / .tab-content -->
 
 	@csrf
 	<input type="hidden" name="id" value="{{ $user->id }}" />

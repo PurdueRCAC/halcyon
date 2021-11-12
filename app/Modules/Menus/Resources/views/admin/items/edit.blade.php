@@ -186,7 +186,7 @@ app('pathway')
 							echo '<p class="tip">' . trans($fieldSet->description) . '</p>';
 						endif;
 						?>
-					<fieldset class="panelform">
+					<fieldset class="card-body panelform">
 						<?php $hidden_fields = ''; ?>
 
 						<?php foreach ($form->getFieldset($name) as $field) : ?>
@@ -213,34 +213,7 @@ app('pathway')
 							echo '<p class="tip">' . trans($fieldSet->description) . '</p>';
 						endif;
 						?>
-					<fieldset class="panelform">
-						<?php $hidden_fields = ''; ?>
-
-						<?php foreach ($form->getFieldset($name) as $field) : ?>
-							<?php if (!$field->hidden) : ?>
-								<div class="form-group">
-									<?php echo $field->label; ?><br />
-									<?php echo $field->input; ?>
-								</div>
-							<?php else : $hidden_fields .= $field->input; ?>
-							<?php endif; ?>
-						<?php endforeach; ?>
-
-						<?php echo $hidden_fields; ?>
-					</fieldset>
-				<?php endforeach; ?>
-
-				<?php
-				$fieldSets = $form->getFieldsets('associations');
-
-				foreach ($fieldSets as $name => $fieldSet) :
-					$label = !empty($fieldSet->label) ? $fieldSet->label : 'menus::menus.' . $name . ' fieldset';
-					echo app('html.builder')->sliders('panel', trans($label), $name . '-options');
-						if (isset($fieldSet->description) && trim($fieldSet->description)) :
-							echo '<p class="tip">' . trans($fieldSet->description) . '</p>';
-						endif;
-						?>
-					<fieldset class="panelform">
+					<fieldset class="card-body panelform">
 						<?php $hidden_fields = ''; ?>
 
 						<?php foreach ($form->getFieldset($name) as $field) : ?>

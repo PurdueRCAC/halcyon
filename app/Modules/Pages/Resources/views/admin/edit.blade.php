@@ -117,9 +117,18 @@ app('pathway')
 				</div>
 			</fieldset>
 
-			@sliders('start', 'module-sliders')
-				@sliders('panel', trans('pages::pages.options'), 'params-options')
-					<fieldset class="panelform">
+			<div class="accordion" id="parameters">
+				<div class="card">
+					<div class="card-header" id="options-heading">
+						<h3 class="my-0 py-0">
+							<a href="#options-options" class="btn btn-link btn-block text-left" data-toggle="collapse" data-target="#options-options" aria-expanded="true" aria-controls="options-options">
+								<span class="fa fa-chevron-right" aria-hidden="true"></span>
+								{{ trans('pages::pages.options') }}
+							</a>
+						</h3>
+					</div>
+					<div id="options-options" class="collapse show" aria-labelledby="options-heading" data-parent="#parameters">
+					<fieldset class="card-body mb-0">
 						<div class="form-group">
 							<label for="params-show_title">{{ trans('pages::pages.params.show title') }}:</label>
 							<select class="form-control" aria-describedby="params-show_title" name="params[show_title]" id="params-show_title">
@@ -241,24 +250,39 @@ app('pathway')
 							</div>
 						</fieldset>
 					</fieldset>
-			@sliders('panel', trans('pages::pages.metadata'), 'params-metadata')
-				<fieldset class="panelform">
-					<div class="form-group">
-						<label for="field-metakey">{{ trans('pages::pages.metakey') }}:</label>
-						<textarea class="form-control" name="fields[metakey]" id="field-metakey" rows="3" cols="40">{{ $row->metakey }}</textarea>
 					</div>
+				</div>
 
-					<div class="form-group">
-						<label for="field-metadesc">{{ trans('pages::pages.metadesc') }}:</label>
-						<textarea class="form-control" name="fields[metadesc]" id="field-metadesc" rows="3" cols="40">{{ $row->metadesc }}</textarea>
+				<div class="card">
+					<div class="card-header" id="meta-heading">
+						<h3 class="my-0 py-0">
+							<a href="#meta-options" class="btn btn-link btn-block text-left" data-toggle="collapse" data-target="#meta-options" aria-expanded="true" aria-controls="meta-options">
+								<span class="fa fa-chevron-right" aria-hidden="true"></span>
+								{{ trans('pages::pages.metadata') }}
+							</a>
+						</h3>
 					</div>
+					<div id="meta-options" class="collapse" aria-labelledby="meta-heading" data-parent="#parameters">
+						<fieldset class="card-body mb-0">
+							<div class="form-group">
+								<label for="field-metakey">{{ trans('pages::pages.metakey') }}:</label>
+								<textarea class="form-control" name="fields[metakey]" id="field-metakey" rows="3" cols="40">{{ $row->metakey }}</textarea>
+							</div>
 
-					<div class="form-group">
-						<label for="field-metadata">{{ trans('pages::pages.metadata') }}:</label>
-						<textarea class="form-control" name="fields[metadata]" id="field-metadata" rows="3" cols="40">{{ json_encode($row->metadata->all()) }}</textarea>
+							<div class="form-group">
+								<label for="field-metadesc">{{ trans('pages::pages.metadesc') }}:</label>
+								<textarea class="form-control" name="fields[metadesc]" id="field-metadesc" rows="3" cols="40">{{ $row->metadesc }}</textarea>
+							</div>
+
+							<div class="form-group">
+								<label for="field-metadata">{{ trans('pages::pages.metadata') }}:</label>
+								<textarea class="form-control" name="fields[metadata]" id="field-metadata" rows="3" cols="40">{{ json_encode($row->metadata->all()) }}</textarea>
+							</div>
+						</fieldset>
 					</div>
-				</fieldset>
-			@sliders('end')
+				</div>
+			</div><!-- / .accordion -->
+
 		</div>
 	</div>
 

@@ -39,22 +39,28 @@ app('pathway')
 		</div>
 	@endif
 
-	<div class="tabs">
-		<ul>
-			<li><a href="#user-account">Account</a></li>
+	<nav class="container-fluid">
+		<ul id="useer-tabs" class="nav nav-tabs" role="tablist">
+			<li class="nav-item" role="presentation"><a class="nav-link active" href="#user-account" data-toggle="tab" role="tab" id="user-account-tab" aria-controls="user-account" aria-selected="true">Account</a></li>
 			@if ($user->id)
-				<li><a href="#user-attributes">{{ trans('users::users.attributes') }}</a></li>
+				<li class="nav-item" role="presentation">
+					<a href="#user-attributes" class="nav-link" data-toggle="tab" role="tab" id="user-attributes-tab" aria-controls="user-attributes" aria-selected="false">{{ trans('users::users.attributes') }}</a>
+				</li>
 				@if (auth()->user()->can('view users.notes'))
-					<li><a href="#user-notes">{{ trans('users::users.notes') }}</a></li>
+					<li class="nav-item" role="presentation">
+						<a href="#user-notes" class="nav-link" data-toggle="tab" role="tab" id="user-notes-tab" aria-controls="user-notes" aria-selected="false">{{ trans('users::users.notes') }}</a>
+					</li>
 				@endif
-				@foreach ($sections as $section)
-					<li>
-						<a href="#user-{{ $section['route'] }}">{!! $section['name'] !!}</a>
+				@foreach ($sections as $k => $section)
+					<li class="nav-item" role="presentation">
+						<a href="#user-{{ $k }}" class="nav-link" data-toggle="tab" role="tab" id="user-{{ $k }}-tab" aria-controls="user-{{ $k }}" aria-selected="false">{!! $section['name'] !!}</a>
 					</li>
 				@endforeach
 			@endif
 		</ul>
-		<div id="user-account">
+	</nav>
+	<div class="tab-content" id="user-tabs-content">
+		<div class="tab-pane show active" id="user-account" role="tabpanel" aria-labelledby="user-account-tab">
 			<div class="row">
 				<div class="col col-md-6">
 
@@ -457,7 +463,7 @@ app('pathway')
 		</div><!-- / #user-account -->
 
 		@if ($user->id)
-			<div id="user-attributes">
+			<div class="tab-pane" id="user-attributes" role="tabpanel" aria-labelledby="user-attributes-tab">
 				<div class="card">
 					<table class="table table-hover">
 						<thead>
@@ -499,7 +505,7 @@ app('pathway')
 			</div>
 
 			@if (auth()->user()->can('view users.notes'))
-				<div id="user-notes">
+				<div class="tab-pane" id="user-notes" role="tabpanel" aria-labelledby="user-notes-tab">
 					<div class="row">
 						<div class="col-md-6">
 							<?php
@@ -578,13 +584,13 @@ app('pathway')
 				</div><!-- / #user-notes -->
 			@endif
 
-			@foreach ($sections as $section)
-				<div id="user-{{ $section['route'] }}">
+			@foreach ($sections as $k => $section)
+				<div class="tab-pane" id="user-{{ $k }}" role="tabpanel" aria-labelledby="user-{{ $k }}-tab">
 					{!! $section['content'] !!}
 				</div>
 			@endforeach
 		@endif
-	</div><!-- / .tabs -->
+	</div><!-- / .tab-content -->
 
 	<input type="hidden" name="userid" id="userid" value="{{ $user->id }}" />
 	@csrf

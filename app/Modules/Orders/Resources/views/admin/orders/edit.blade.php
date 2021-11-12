@@ -445,13 +445,15 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 
 <form action="{{ route('admin.orders.store') }}" method="post" name="adminForm" id="item-form" class="editform order">
 @if ($order->id)
-	<div class="tabs">
-		<ul>
-			<li><a href="#order-info">Order</a></li>
-			<li><a href="#order-notes">Notes</a></li>
-			<li><a href="#order-history">History</a></li>
+	<nav class="container-fluid">
+		<ul id="queue-tabs" class="nav nav-tabs" role="tablist">
+			<li class="nav-item" role="presentation"><a class="nav-link active" href="#order-info" data-toggle="tab" role="tab" id="order-info-tab" aria-controls="order-info" aria-selected="true">{{ trans('orders::orders.order') }}</a></li>
+			<li class="nav-item" role="presentation"><a class="nav-link" href="#order-notes" data-toggle="tab" role="tab" id="order-notes-tab" aria-controls="order-notes" aria-selected="false">{{ trans('orders::orders.notes') }}</a></li>
+			<li class="nav-item" role="presentation"><a class="nav-link" href="#order-history" data-toggle="tab" role="tab" id="order-history-tab" aria-controls="order-history" aria-selected="false">{{ trans('orders::orders.history') }}</a></li>
 		</ul>
-		<div id="order-info">
+	</nav>
+	<div class="tab-content" id="order-tabs-content">
+		<div class="tab-pane show active" id="order-info" role="tabpanel" aria-labelledby="order-info-tab">
 @endif
 <div class="row">
 		<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
@@ -1229,7 +1231,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 			</div><!-- / .contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
 		</div><!-- / .row -->
 		</div>
-		<div id="order-notes">
+		<div class="tab-pane" id="order-notes" role="tabpanel" aria-labelledby="order-notes-tab">
 			@if (auth()->user()->can('manage orders'))
 			<div class="row">
 				<div class="col-md-6">
@@ -1378,8 +1380,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				@endif
 @if ($order->id)
 		</div>
-		<div id="order-history">
-			<div id="order-history" class="card">
+		<div class="tab-pane" id="order-history" role="tabpanel" aria-labelledby="order-history-tab">
+			<div class="card">
 						<div class="card-header">
 							<h3 class="card-title">{{ trans('history::history.history') }}</h3>
 						</div>
@@ -1495,8 +1497,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							?>
 						</ul>
 					</div><!-- / #order-history -->
-		</div>
-	</div><!-- / .tabs -->
+			</div><!-- / .tab-pane -->
+		</div><!-- / .tab-content -->
 	@endif
 
 	<input type="hidden" name="id" id="field-id" value="{{ $order->id }}" />

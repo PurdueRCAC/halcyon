@@ -4432,6 +4432,10 @@ background-color: rgba(0, 0, 0, 0.025);
   .accordion>.card {
     margin-bottom: 0;
   }
+  .accordion>.card [data-toggle] {
+    margin: 0;
+    padding: 0;
+  }
   .ui-tabs .ui-accordion .ui-state-default.ui-accordion-header,
   .ui-tabs .ui-widget-content .ui-accordion .ui-state-default.ui-accordion-header,
   .ui-accordion .ui-accordion-header {

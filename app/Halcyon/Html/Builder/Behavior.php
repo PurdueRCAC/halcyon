@@ -319,32 +319,6 @@ class Behavior
 	}
 
 	/**
-	 * Add unobtrusive javascript support for submenu switcher support in
-	 * Global Configuration and System Information.
-	 *
-	 * @return  void
-	 */
-	public static function switcher($toggler='tabs')
-	{
-		if (isset(self::$loaded[__METHOD__]))
-		{
-			return;
-		}
-
-		self::framework(true);
-
-		Asset::script('assets/switcher.js', false, true);
-
-		App::get('document')->addScriptDeclaration(
-			"jQuery(document).ready(function($){
-				$('#" . $toggler . "').switcher();
-			});"
-		);
-
-		self::$loaded[__METHOD__] = true;
-	}
-
-	/**
 	 * Add unobtrusive javascript support for a combobox effect.
 	 *
 	 * Note that this control is only reliable in absolutely positioned elements.

@@ -38,49 +38,60 @@ app('pathway')
 	@if (request()->ajax())
 		<div class="toolbar-box">
 			<div class="pagetitle text-right">
-			{!! Toolbar::render() !!}
+				{!! Toolbar::render() !!}
 			</div>
 		</div>
 	@endif
 
 	<?php
-	echo Html::tabs('start', 'config-tabs-' . $module->element . '_configuration', array('useCookie' => 1));
-
 	if ($form) :
 		$fieldSets = $form->getFieldsets();
 
 		if (count($fieldSets)):
 			?>
-			<ul class="config-option-list">
-				<?php foreach ($fieldSets as $name => $fieldSet) :
-					$label = empty($fieldSet->label) ? 'config::modules.' . $name . ' fieldset label' : $fieldSet->label;
-					?>
-					<li><a href="#tab-{{ $name }}">{{ trans($label) }}</a></li>
-				<?php endforeach; ?>
-			</ul>
+			<nav class="container-fluid">
+				<ul id="config-tabs" class="nav nav-tabs config-option-list" role="tablist">
+					@php
+					$i = 0;
+					@endphp
+					@foreach ($fieldSets as $name => $fieldSet)
+						<li class="nav-item" role="presentation">
+							<a class="nav-link{{ $i == 0 ? ' active' : '' }}" href="#config-tab-{{ $name }}" data-toggle="tab" role="tab" id="config-tab-{{ $name }}-tab" aria-controls="config-tab-{{ $name }}" aria-selected="true">
+								{{ trans(empty($fieldSet->label) ? 'config::modules.' . $name . ' fieldset label' : $fieldSet->label) }}
+							</a>
+						</li>
+						@php
+						$i++;
+						@endphp
+					@endforeach
+				</ul>
+			</nav>
+			<div class="tab-content" id="config-tabs-content">
+			@php
+			$i = 0;
+			@endphp
+			@foreach ($fieldSets as $name => $fieldSet)
+				<div class="tab-pane{{ $i == 0 ? ' show active' : '' }}" id="config-tab-{{ $name }}" role="tabpanel" aria-labelledby="config-tab-{{ $name }}-tab">
+					<fieldset>
+						@if (isset($fieldSet->description) && !empty($fieldSet->description))
+							<p class="tab-description">{{ trans($fieldSet->description) }}</p>
+						@endif
+						@foreach ($form->getFieldset($name) as $field)
+							<div class="form-group">
+								@if (!$field->hidden)
+									<?php echo $field->label; ?>
+								@endif
+								<?php echo $field->input; ?>
+							</div>
+						@endforeach
+					</fieldset>
+				</div>
+				@php
+				$i++;
+				@endphp
+			@endforeach
+			</div>
 			<?php
-			foreach ($fieldSets as $name => $fieldSet) :
-				//$label = empty($fieldSet->label) ? 'config::modules.' . $name . ' fieldset label' : $fieldSet->label;
-
-				//echo Html::tabs('panel', trans($label), 'publishing-details');
-				echo '<div id="tab-' . $name . '"><fieldset>';//<div class="card"><div class="card-body">';
-				if (isset($fieldSet->description) && !empty($fieldSet->description)) :
-					echo '<p class="tab-description">' . trans($fieldSet->description) . '</p>';
-				endif;
-				?>
-
-					<?php foreach ($form->getFieldset($name) as $field): ?>
-						<div class="form-group">
-							<?php if (!$field->hidden) : ?>
-								<?php echo $field->label; ?>
-							<?php endif; ?>
-							<?php echo $field->input; ?>
-						</div>
-					<?php endforeach; ?>
-
-				<?php
-				echo '</div>';//</div></div>';
-			endforeach;
 		else:
 			?>
 			<p class="alert alert-warning">No configuration options found.</p>
@@ -89,8 +100,6 @@ app('pathway')
 	else :
 		echo '<p class="alert alert-warning">' . trans('config::modules.not found', ['module' => $module->element]) . '</p>';
 	endif;
-
-	echo Html::tabs('end');
 	?>
 
 	<input type="hidden" name="id" value="{{ $module->id }}" />

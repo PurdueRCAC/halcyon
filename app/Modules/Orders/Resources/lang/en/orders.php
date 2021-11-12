@@ -22,6 +22,7 @@ return [
 	'import' => 'Import',
 	'applied filters' => 'Applied Filters',
 	'back' => 'Back',
+	'history' => 'History',
 	// Status
 	'active' => 'All Active',
 	'pending' => 'Pending',

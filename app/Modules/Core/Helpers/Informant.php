@@ -14,7 +14,7 @@ class Informant
 	 */
 	public static function boolean($val)
 	{
-		return ($val ? '<span class="state on"><span>' . trans('global.on') : '<span class="state off"><span>' . trans('global.off')) . '</span></span>';
+		return '<span class="badge badge-' . ($val ? 'success">' . trans('global.on') : 'danger">' . trans('global.off')) . '</span>';
 	}
 
 	/**
@@ -25,7 +25,7 @@ class Informant
 	 */
 	public static function set($val)
 	{
-		return ($val ? '<span class="state yes"><span>' . trans('global.yes') : '<span class="state no"><span>' . trans('global.no')) . '</span></span>';
+		return '<span class="badge badge-' . ($val ? 'success">' . trans('global.yes') : 'danger">' . trans('global.no')) . '</span>';
 	}
 
 	/**
@@ -71,10 +71,10 @@ class Informant
 	{
 		if ($writable)
 		{
-			return '<span class="writable">' . trans('core::info.writable') . '</span>';
+			return '<span class="badge badge-success writable">' . trans('core::info.writable') . '</span>';
 		}
 
-		return '<span class="unwritable">' . trans('core::info.unwritable') . '</span>';
+		return '<span class="badge badge-danger unwritable">' . trans('core::info.unwritable') . '</span>';
 	}
 
 	/**
@@ -87,20 +87,13 @@ class Informant
 	 */
 	public static function message($dir, $message, $visible=true)
 	{
+		$output ='';
+
 		if ($visible)
 		{
 			$output = $dir;
 		}
-		else
-		{
-			$output ='';
-		}
 
-		if (empty($message))
-		{
-			return $output;
-		}
-
-		return $output . ' <strong>' . trans($message) . '</strong>';
+		return $output . ($message ? ' <strong>' . trans($message) . '</strong>' : '');
 	}
 }

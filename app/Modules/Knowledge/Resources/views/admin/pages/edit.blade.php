@@ -226,7 +226,7 @@ app('pathway')
 
 			@sliders('start', 'module-sliders')
 				@sliders('panel', trans('knowledge::knowledge.variables'), 'params-variables')
-					<fieldset class="panelform" id="param-variables">
+					<fieldset class="car-body" id="param-variables">
 						<table>
 							<thead>
 								<tr>

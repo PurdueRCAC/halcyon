@@ -42,20 +42,22 @@ app('pathway')
 <form action="{{ route('admin.resources.store') }}" method="post" name="adminForm" id="item-form" class="editform">
 
 	@if ($row->id && count($sections))
-	<div class="tabs">
-		<ul>
-			<li>
-				<a href="#resource-details">{{ trans('global.details') }}</a>
+	<nav class="container-fluid">
+		<ul id="user-tabs" class="nav nav-tabs" role="tablist">
+			<li class="nav-item" role="presentation">
+				<a class="nav-link active" href="#resource-details" data-toggle="tab" role="tab" id="resource-details-tab" aria-controls="resource-details" aria-selected="true">{{ trans('global.details') }}</a>
 			</li>
-			@foreach ($sections as $section)
-				<li>
-					<a href="#resource-{{ $section['route'] }}">{{ $section['name'] }}</a>
+			@foreach ($sections as $k => $section)
+				<li class="nav-item" role="presentation">
+					<a class="nav-link" href="#resource-{{ $k }}" data-toggle="tab" role="tab" id="resource-{{ $k }}-tab" aria-controls="resource-{{ $k }}" aria-selected="false">{{ $section['name'] }}</a>
 				</li>
 			@endforeach
 		</ul>
+	</nav>
+	<div class="tab-content" id="user-tabs-content">
 	@endif
 
-		<div id="resource-details">
+		<div class="tab-pane show active" id="resource-details" role="tabpanel" aria-labelledby="resource-details-tab">
 			<div class="row">
 				<div class="col-sm-12 col-md-7">
 					<fieldset class="adminform">
@@ -176,11 +178,11 @@ app('pathway')
 		</div><!-- / #resource-details -->
 	@if ($row->id && count($sections))
 		@foreach ($sections as $section)
-			<div id="resource-{{ $section['route'] }}">
+			<div class="tab-pane" id="resource-{{ $k }}" role="tabpanel" aria-labelledby="resource-{{ $k }}-tab">
 				{!! $section['content'] !!}
-			</div><!-- / resource-{{ $section['route'] }} -->
+			</div><!-- / resource-{{ $k }} -->
 		@endforeach
-	</div><!-- / .tabs -->
+	</div><!-- / .tab-content -->
 	@endif
 
 	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
