@@ -87,7 +87,7 @@
 				<ul class="user-options">
 					<li data-title="{{ trans('theme::admin.open-close menu') }}"><!-- 
 						--><a href="#nav" class="hamburger ico-menu" data-api="{{ route('api.users.update', ['id' => auth()->user()->id]) }}"><!-- 
-							--><span class="hamburger-box"><span class="hamburger-inner"></span></span>{{ trans('theme::admin.menu') }}<!-- 
+							--><span class="hamburger-box" aria-hidden="true"><span class="hamburger-inner"></span></span>{{ trans('theme::admin.menu') }}<!-- 
 						--></a><!-- 
 					--></li>
 				</ul>
