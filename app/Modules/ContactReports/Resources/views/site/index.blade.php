@@ -52,6 +52,11 @@ app('pathway')->append(
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	<h2>{{ trans('contactreports::contactreports.contact reports') }}</h2>
 
+	<?php /*<div id="contactreports">
+		<reports></reports>
+	</div>
+	<script type="text/javascript" src="{{ asset('/modules/contactreports/js/app.js') }}"></script>*/ ?>
+
 	<div id="everything">
 		<ul class="nav nav-tabs crm-tabs">
 			<li class="nav-item">
