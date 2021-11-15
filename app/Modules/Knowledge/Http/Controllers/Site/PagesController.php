@@ -120,12 +120,15 @@ class PagesController extends Controller
 		array_shift($path);
 		$node->guide = $guide;
 
+		$all = $request->input('all');
+
 		return view('knowledge::site.index', [
 			'node' => $node,
 			'pages' => $pages,
 			'path' => $path,
 			'root' => $root,
 			'parent' => $parent,
+			'all' => $all,
 		]);
 	}
 

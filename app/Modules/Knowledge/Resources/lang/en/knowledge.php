@@ -88,4 +88,5 @@ return [
 	'feedback desc' => 'Please don’t include any personal information in your comment. Maximum character limit is 250.',
 	'characters left' => 'Characters left',
 	'honeypot label' => 'Leave this field blank',
+	'all topics' => 'All topics',
 ];

@@ -27,7 +27,7 @@
 	@endforeach
 @endif
 
-@section('title'){{ trans('knowledge::knowledge.module name') }}: {{ ($node->guide ? $node->guide . ': ' : '') . $node->page->headline }}@stop
+@section('title'){{ trans('knowledge::knowledge.module name') }}: {{ ($node->guide ? $node->guide . ': ' : '') . $node->page->headline . ($all ? ': ' . trans('knowledge::knowledge.all topics') : '') }}@stop
 
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/prism/prism.css') }}?v={{ filemtime(public_path('modules/core/vendor/prism/prism.css')) }}" />
@@ -69,7 +69,7 @@
 		</div>
 		<div class="col-md-3 text-right">
 		@if ($p)
-			@if (request('all'))
+			@if ($all)
 				<a class="btn btn-secondary" href="<?php if ($p) { echo route('site.knowledge.page', ['uri' => $p]); } else { echo route('site.knowledge.index'); } ?>">{{ trans('knowledge::knowledge.collapse topics') }}</a>
 			@else
 				<a class="btn btn-secondary" href="<?php if ($p) { echo route('site.knowledge.page', ['uri' => $p, 'all' => 'true']); } else { echo route('site.knowledge.index', ['all' => 'true']); } ?>">{{ trans('knowledge::knowledge.expand topics') }}</a>
@@ -122,12 +122,12 @@
 				{!! $page->body !!}
 			@endif
 
-			@if (!$page->content || $page->params->get('show_toc', 1) || request('all'))
+			@if (!$page->content || $page->params->get('show_toc', 1) || $all)
 				@php
 				$childs = $node->publishedChildren();
 				@endphp
 				@if (count($childs))
-					@if (request('all'))
+					@if ($all)
 						@foreach ($childs as $n)
 							@php
 								$n->page->mergeVariables($page->variables->all());
