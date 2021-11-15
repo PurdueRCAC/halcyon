@@ -120,8 +120,8 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-report">{{ trans('contactreports::contactreports.report') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<span class="form-text text-muted">{!! trans('contactreports::contactreports.report formatting') !!}</span>
 					{!! markdown_editor('fields[report]', $row->report, ['rows' => 15, 'class' => ($errors->has('fields.report') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
+					<span class="form-text text-muted">{!! trans('contactreports::contactreports.report formatting') !!}</span>
 					<span class="invalid-feedback">{{ trans('contactreports::contactreports.invalid.report') }}</span>
 				</div>
 			</fieldset>
@@ -204,7 +204,7 @@ app('pathway')
 		</div>
 	</div>
 
-	<?php
+<?php
 $help1a = "The news interface supports basic font formatting:
 
 **Bold** _example_, or you can have **_both_**.
@@ -266,94 +266,126 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 | Carter-B |      16 |     64GB |
 ";
 ?>
-	<div id="markdown" class="dialog dialog-help tabs" title="MarkDown Help">
-		<ul>
-			<li><a href="#help1a">Fonts</a></li>
-			<li><a href="#help1b">Lists</a></li>
-			<li><a href="#help1c">Links</a></li>
-			<li><a href="#help1d">Other Reports</a></li>
-			<li><a href="#help1e">Line Breaks</a></li>
-			<li><a href="#help1f">Code</a></li>
-			<li><a href="#help1g">Tables</a></li>
-		</ul>
-		<div id="help1a">
-			<?php
-			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1a]);
-			?>
-			<div class="form-group">
-				<label for="help1ainput">{{ trans('contactreports::contactreports.input text') }}:</label>
-				<textarea id="help1ainput" class="form-control samplebox" rows="5" data-sample="a"><?php echo $help1a; ?></textarea>
-			</div>
-			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-			<div id="help1aoutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
-		</div>
-		<div id="help1b">
-			<?php
-			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1b]);
-			?>
-			<div class="form-group">
-				<label for="help1binput">{{ trans('contactreports::contactreports.input text') }}:</label>
-				<textarea id="help1binput" class="form-control samplebox" rows="5" data-sample="b"><?php echo $help1b; ?></textarea>
-			</div>
-			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-			<div id="help1boutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
-		</div>
-		<div id="help1c">
-			<?php
-			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1c]);
-			?>
-			<div class="form-group">
-				<label for="help1cinput">{{ trans('contactreports::contactreports.input text') }}:</label>
-				<textarea id="help1cinput" class="form-control samplebox" rows="5" data-sample="c"><?php echo $help1c; ?></textarea>
-			</div>
-			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-			<div id="help1coutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
-		</div>
-		<div id="help1d">
-			<?php
-			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1d]);
-			?>
-			<div class="form-group">
-				<label for="help1dinput">{{ trans('contactreports::contactreports.input text') }}:</label>
-				<textarea id="help1dinput" class="form-control samplebox" rows="5" data-sample="d"><?php echo $help1d; ?></textarea>
-			</div>
-			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-			<div id="help1doutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
-		</div>
-		<div id="help1e">
-			<?php
-			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1e]);
-			?>
-			<div class="form-group">
-				<label for="help1einput">{{ trans('contactreports::contactreports.input text') }}:</label>
-				<textarea id="help1einput" class="form-control samplebox" rows="5" data-sample="e"><?php echo $help1e; ?></textarea>
-			</div>
-			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-			<div id="help1eoutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
-		</div>
-		<div id="help1f">
-			<?php
-			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1f]);
-			?>
-			<div class="form-group">
-				<label for="help1finput">{{ trans('contactreports::contactreports.input text') }}:</label>
-				<textarea id="help1finput" class="form-control samplebox" rows="5" data-sample="f"><?php echo $help1f; ?></textarea>
-			</div>
-			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-			<div id="help1foutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
-		</div>
-		<div id="help1g">
-			<?php
-			$article = new App\Modules\ContactReports\Models\Report(['report' => $help1g]);
-			?>
-			<div class="form-group">
-				<label for="help1ginput">{{ trans('contactreports::contactreports.input text') }}:</label>
-				<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1g; ?></textarea>
-			</div>
-			<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-			<div id="help1goutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
-		</div>
-	</div>
+	<div class="modal dialog" id="markdown" tabindex="-1" aria-labelledby="markdown-title" aria-hidden="true" title="MarkDown Help">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content dialog-content shadow-sm">
+				<div class="modal-header">
+					<div class="modal-title" id="markdown-title">MarkDown Help</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body dialog-body">
+
+					<nav class="container-fluid">
+						<ul id="help-tabs" class="nav nav-tabs" role="tablist">
+							<li class="nav-item" role="presentation">
+								<a href="#help1a" id="help1a-tab" class="nav-link active" data-toggle="tab" role="tab" aria-controls="help1a" aria-selected="true">Fonts</a>
+							</li>
+							<li class="nav-item" role="presentation">
+								<a href="#help1b" id="help1b-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="help1b" aria-selected="false">Lists</a>
+							</li>
+							<li class="nav-item" role="presentation">
+								<a href="#help1c" id="help1c-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="help1c" aria-selected="false">Links</a>
+							</li>
+							<li class="nav-item" role="presentation">
+								<a href="#help1d" id="help1d-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="help1d" aria-selected="false">Other Reports</a>
+							</li>
+							<li class="nav-item" role="presentation">
+								<a href="#help1e" id="help1e-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="help1e" aria-selected="false">Line Breaks</a>
+							</li>
+							<li class="nav-item" role="presentation">
+								<a href="#help1f" id="help1f-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="help1f" aria-selected="false">Code</a>
+							</li>
+							<li class="nav-item" role="presentation">
+								<a href="#help1g" id="help1g-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="help1g" aria-selected="false">Tables</a>
+							</li>
+						</ul>
+					</nav>
+					<div class="tab-content" id="help-tabs-contant">
+						<div class="tab-pane show active" id="help1a" role="tabpanel" aria-labelledby="help1a-tab">
+							<?php
+							$article = new App\Modules\ContactReports\Models\Report(['report' => $help1a]);
+							?>
+							<div class="form-group">
+								<label for="help1ainput">{{ trans('contactreports::contactreports.input text') }}:</label>
+								<textarea id="help1ainput" class="form-control samplebox" rows="5" data-sample="a"><?php echo $help1a; ?></textarea>
+							</div>
+							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
+							<div id="help1aoutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+						</div>
+						<div class="tab-pane" id="help1b" role="tabpanel" aria-labelledby="help1b-tab">
+							<?php
+							$article = new App\Modules\ContactReports\Models\Report(['report' => $help1b]);
+							?>
+							<div class="form-group">
+								<label for="help1binput">{{ trans('contactreports::contactreports.input text') }}:</label>
+								<textarea id="help1binput" class="form-control samplebox" rows="5" data-sample="b"><?php echo $help1b; ?></textarea>
+							</div>
+							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
+							<div id="help1boutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+						</div>
+						<div class="tab-pane" id="help1c" role="tabpanel" aria-labelledby="help1c-tab">
+							<?php
+							$article = new App\Modules\ContactReports\Models\Report(['report' => $help1c]);
+							?>
+							<div class="form-group">
+								<label for="help1cinput">{{ trans('contactreports::contactreports.input text') }}:</label>
+								<textarea id="help1cinput" class="form-control samplebox" rows="5" data-sample="c"><?php echo $help1c; ?></textarea>
+							</div>
+							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
+							<div id="help1coutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+						</div>
+						<div class="tab-pane" id="help1d" role="tabpanel" aria-labelledby="help1d-tab">
+							<?php
+							$article = new App\Modules\ContactReports\Models\Report(['report' => $help1d]);
+							?>
+							<div class="form-group">
+								<label for="help1dinput">{{ trans('contactreports::contactreports.input text') }}:</label>
+								<textarea id="help1dinput" class="form-control samplebox" rows="5" data-sample="d"><?php echo $help1d; ?></textarea>
+							</div>
+							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
+							<div id="help1doutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+						</div>
+						<div class="tab-pane" id="help1e" role="tabpanel" aria-labelledby="help1e-tab">
+							<?php
+							$article = new App\Modules\ContactReports\Models\Report(['report' => $help1e]);
+							?>
+							<div class="form-group">
+								<label for="help1einput">{{ trans('contactreports::contactreports.input text') }}:</label>
+								<textarea id="help1einput" class="form-control samplebox" rows="5" data-sample="e"><?php echo $help1e; ?></textarea>
+							</div>
+							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
+							<div id="help1eoutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+						</div>
+						<div class="tab-pane" id="help1f" role="tabpanel" aria-labelledby="help1f-tab">
+							<?php
+							$article = new App\Modules\ContactReports\Models\Report(['report' => $help1f]);
+							?>
+							<div class="form-group">
+								<label for="help1finput">{{ trans('contactreports::contactreports.input text') }}:</label>
+								<textarea id="help1finput" class="form-control samplebox" rows="5" data-sample="f"><?php echo $help1f; ?></textarea>
+							</div>
+							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
+							<div id="help1foutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+						</div>
+						<div class="tab-pane" id="help1g" role="tabpanel" aria-labelledby="help1g-tab">
+							<?php
+							$article = new App\Modules\ContactReports\Models\Report(['report' => $help1g]);
+							?>
+							<div class="form-group">
+								<label for="help1ginput">{{ trans('contactreports::contactreports.input text') }}:</label>
+								<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1g; ?></textarea>
+							</div>
+							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
+							<div id="help1goutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+						</div>
+					</div>
+
+				</div><!-- / .modal-body -->
+			</div><!-- / .modal-content -->
+		</div><!-- / .modal-dialog -->
+	</div><!-- / .modal -->
 
 	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 

@@ -228,6 +228,7 @@ app('pathway')
 				</div>
 				<div class="card-body">
 					{!! $row->formattedReport !!}
+					<?php $row->hashTags; ?>
 					@if (count($row->tags))
 						<p>
 						@foreach ($row->tags as $tag)
@@ -250,8 +251,7 @@ app('pathway')
 						asort($names);
 
 						if (count($names)):
-							echo '<p>';
-							echo implode(' ', $names) . '</p>';
+							echo '<p>' . implode(' ', $names) . '</p>';
 						endif;
 						?>
 					@endif
@@ -260,7 +260,7 @@ app('pathway')
 					<div class="d-flex text-muted">
 						<div class="flex-fill">
 							<span class="fa fa-folder" aria-hidden="true"></span>
-							{{ $row->type ? $row->type->name : '' }}
+							{{ $row->type ? $row->type->name : trans('global.none') }}
 						</div>
 						<div class="flex-fill text-right">
 							<span class="fa fa-comment" aria-hidden="true"></span>
