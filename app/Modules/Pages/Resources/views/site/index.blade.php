@@ -21,8 +21,8 @@
 		{!! $k !!}
 @endpush
 			@else
-			@push('meta')
-		<meta name="{{ $k }}" content="{{ $v }}" />
+				@push('meta')
+		{!! $v !!}
 @endpush
 			@endif
 		@endif
