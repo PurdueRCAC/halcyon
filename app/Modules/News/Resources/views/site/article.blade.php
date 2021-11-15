@@ -27,7 +27,7 @@
 	@endforeach
 @endif
 
-@section('title'){{ $article->headline }}@stop
+@section('title'){{ $article->headline }} ({{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }})@stop
 
 @push('scripts')
 <script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script>
