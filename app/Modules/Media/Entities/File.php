@@ -92,7 +92,18 @@ class File extends \SplFileInfo
 	 */
 	public function getFormattedSize(): string
 	{
-		return MediaHelper::parseSize($this->getSize());
+		$size = $this->getSize();
+
+		if ($size < 1024)
+		{
+			return trans('media::media.filesize bytes', ['size' => $size]);
+		}
+		elseif ($size < 1024 * 1024)
+		{
+			return trans('media::media.filesize kilobytes', ['size' => sprintf('%01.2f', $size / 1024.0)]);
+		}
+
+		return trans('media::media.filesize megabytes', ['size' => sprintf('%01.2f', $size / (1024.0 * 1024))]);
 	}
 
 	/**

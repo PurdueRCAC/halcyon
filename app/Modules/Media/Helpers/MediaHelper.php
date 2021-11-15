@@ -3,6 +3,7 @@
 namespace App\Modules\Media\Helpers;
 
 use App\Modules\Media\Entities\File;
+use App\Modules\Media\Entities\Folder;
 
 /**
  * Media helper
@@ -211,28 +212,6 @@ class MediaHelper
 	}
 
 	/**
-	 * Returns a quantifier based on the argument
-	 *
-	 * @param   integer  $size  Numeric size of a file
-	 * @return  string
-	 */
-	public static function parseSize($size)
-	{
-		if ($size < 1024)
-		{
-			return trans('media::media.filesize bytes', ['size' => $size]);
-		}
-		elseif ($size < 1024 * 1024)
-		{
-			return trans('media::media.filesize kilobytes', ['size' => sprintf('%01.2f', $size / 1024.0)]);
-		}
-		else
-		{
-			return trans('media::media.filesize megabytes', ['size' => sprintf('%01.2f', $size / (1024.0 * 1024))]);
-		}
-	}
-
-	/**
 	 * Find new sizes for an image
 	 *
 	 * @param   integer  $width   Original width
@@ -323,33 +302,12 @@ class MediaHelper
 
 		foreach (app('files')->files($directory . $folder) as $child)
 		{
-			/*$file = array();
-			$file['name'] = $child->getFilename();
-			$file['path'] = $child->getPathname();
-			$file['type'] = 'file';
-			$file['ext']  = $child->getExtension();
-			$file['size'] = $child->getSize();
-			$file['rel']  = str_replace(storage_path() . '/app/public/', '', $file['path']);
-
-			if (preg_match("/\.(bmp|gif|jpg|jpe|jpeg|png)$/i", $file['name']))
-			{
-				$file['type'] = 'img';
-			}*/
-
-			$files[] = new File($child->getPathname()); //$file;
+			$files[] = new File($child->getPathname());
 		}
 
 		foreach (app('files')->directories($directory . $folder) as $child)
 		{
-			/*$file = array();
-			$file['name'] = basename($child);
-			$file['path'] = $child;
-			$file['type'] = 'dir';
-			$file['ext']  = ''; //$child->getExtension();
-			$file['size'] = 0; //$child->getSize();
-			$file['rel']  = trim(str_replace(storage_path() . '/app', '', $file['path']), '/');*/
-
-			$files[] = new File($child); //$file;
+			$files[] = new Folder($child);
 		}
 
 		return $files;
