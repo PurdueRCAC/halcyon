@@ -129,7 +129,7 @@ class OpenGraph
 		else
 		{
 			// Clean up cases where content may be just encoded whitespace
-			$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], $page->content);
+			$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], $page->body);
 			$content = strip_tags($content);
 			$content = str_replace(array("\n", "\t", "\r"), ' ', $content);
 			$content = Str::limit($content, 140);
@@ -170,10 +170,10 @@ class OpenGraph
 			}
 		}
 
-		$page->metadata->set('<!-- OpenGraph -->', '__comment__');
+		$page->metadata->set('og_comment', '<!-- OpenGraph -->');
 		foreach ($tags as $key => $val)
 		{
-			$page->metadata->set($key, $val);
+			$page->metadata->set($key, '<meta property="' . e($key) . '" content="' . e($val) . '" />');
 		}
 
 		$event->page = $page;

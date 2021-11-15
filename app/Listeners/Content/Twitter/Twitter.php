@@ -126,7 +126,7 @@ class Twitter
 		else
 		{
 			// Clean up cases where content may be just encoded whitespace
-			$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], $page->content);
+			$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], $page->body);
 			$content = strip_tags($content);
 			$content = str_replace(array("\n", "\t", "\r"), ' ', $content);
 			$content = Str::limit($content, 140);
@@ -163,10 +163,10 @@ class Twitter
 			}
 		}
 
-		$page->metadata->set('<!-- Twitter -->', '__comment__');
+		$page->metadata->set('twitter_comment', '<!-- Twitter -->');
 		foreach ($tags as $key => $val)
 		{
-			$page->metadata->set($key, $val);
+			$page->metadata->set($key, '<meta name="' . e($key) . '" content="' . e($val) . '" />');
 		}
 
 		$event->page = $page;
