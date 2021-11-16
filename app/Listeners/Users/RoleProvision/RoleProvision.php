@@ -58,7 +58,7 @@ class RoleProvision
 			return;
 		}
 
-		if (!$event->user->username || !$this->canProcessUser($event->user));
+		if (!$event->user->username || !$this->canProcessUser($event->user))
 		{
 			return;
 		}
@@ -138,7 +138,7 @@ class RoleProvision
 			return;
 		}
 
-		if (!$event->user->username || !$this->canProcessUser($event->user));
+		if (!$event->user->username || !$this->canProcessUser($event->user))
 		{
 			return;
 		}
@@ -204,7 +204,7 @@ class RoleProvision
 			return;
 		}
 
-		if (!$event->user->username || !$this->canProcessUser($event->user));
+		if (!$event->user->username || !$this->canProcessUser($event->user))
 		{
 			return;
 		}
