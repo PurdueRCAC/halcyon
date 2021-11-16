@@ -2613,4 +2613,8 @@ $(document).ready(function () {
 
 			$(this).val(formatter.format(val).replace('$', '')); /* $2,500.00 */
 		});
+
+	$('.filter-submit').on('change', function (e) {
+		$(this).closest('form').submit();
+	});
 });
