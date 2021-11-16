@@ -17,17 +17,10 @@ $(document).ready(function() {
 			}
 		});
 
-	var dialog = $(".dialog").dialog({
-		autoOpen: false,
-		height: 'auto',
-		width: 500,
-		modal: true
-	});
-
 	$('#toolbar-plus').on('click', function(e){
 		e.preventDefault();
 
-		dialog.dialog("open");
+		$('#new-group').modal();
 	});
 
 	$('#add-group').on('click', function(e){
@@ -225,23 +218,34 @@ app('pathway')
 		</div>
 	@endif
 
-	<div class="dialog ui-front hide" title="{{ trans('groups::groups.create group') }}">
-		<h3 class="sr-only">{{ trans('groups::groups.create group') }}</h3>
-
-		<div class="form-group">
-			<label for="field-name">{{ trans('groups::groups.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-			<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="250" value="" />
-		</div>
-
-		<div class="form-group text-right">
-			<button class="btn btn-success" id="add-group" data-api="{{ route('api.groups.create') }}" data-route="{{ route('admin.groups.edit', ['id' => '-id-']) }}">
-				<span class="icon-plus"></span> Add
-			</button>
-		</div>
-	</div>
-
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
+
+	@csrf
+</form>
+
+<form id="new-group" class="modal fade" tabindex="-1" aria-labelledby="new-group-title" aria-hidden="true" method="get" action="{{ route('admin.groups.create') }}">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="new-group-title">{{ trans('groups::groups.create group') }}</h3>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="field-name">{{ trans('groups::groups.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="250" value="" />
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-success" id="add-group" data-api="{{ route('api.groups.create') }}" data-route="{{ route('admin.groups.edit', ['id' => '-id-']) }}">
+					<span class="icon-plus"></span> Add
+				</button>
+			</div>
+		</div>
+	</div>
 
 	@csrf
 </form>

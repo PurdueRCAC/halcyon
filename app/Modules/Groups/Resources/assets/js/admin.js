@@ -576,7 +576,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		DeleteUnixGroup($(this).data('unixgroup'), $(this).data('value'));
 	});*/
 
-	$('.searchable-select').select2();
+	//$('.searchable-select').select2();
 
 	//$('a.tab').on('shown.bs.tab', function(e){
 	var inited = false;

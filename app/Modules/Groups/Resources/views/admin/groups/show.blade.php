@@ -154,7 +154,7 @@ app('pathway')
 		<ul id="group-tabs" class="nav nav-tabs" role="tablist">
 			<li class="nav-item" role="presentation">
 				<a href="#group-members" id="group-members-tab" class="nav-link active" data-toggle="tab" role="tab" aria-controls="group-members" aria-selected="true">
-					{{ trans('queues::queues.queue') }}
+					{{ trans('groups::groups.members') }}
 				</a>
 			</li>
 			@foreach ($sections as $section)
@@ -166,7 +166,7 @@ app('pathway')
 			@endforeach
 			<li class="nav-item" role="presentation">
 				<a href="#group-motd" id="group-motd-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="group-motd" aria-selected="false">
-					{{ trans('queues::queues.purchases and loans') }}
+					{{ trans('groups::groups.motd') }}
 				</a>
 			</li>
 		</ul>
