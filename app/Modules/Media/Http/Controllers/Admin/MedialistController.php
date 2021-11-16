@@ -21,12 +21,12 @@ class MedialistController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$base = storage_path('app');
+		$base = storage_path('app/public');
 		$folder = $request->input('folder', '');
 
-		$state = ''; //$request->session()->get('folder')
-		$folders = MediaHelper::getTree(app('files')->directories($base));
-		$folderTree = MediaHelper::_buildFolderTree($folders);
+		//$state = ''; //$request->session()->get('folder')
+		//$folders = MediaHelper::getTree(app('files')->directories($base));
+		//$folderTree = MediaHelper::_buildFolderTree($folders);
 
 		$children = MediaHelper::getChildren($base, $folder);
 		$parent = MediaHelper::getParent($folder);
@@ -34,8 +34,8 @@ class MedialistController extends Controller
 		$style = $request->input('layout', 'thumbs');
 
 		return view('media::medialist.index', [
-			'folderTree' => $folderTree,
-			'folders' => $folders,
+			//'folderTree' => $folderTree,
+			//'folders' => $folders,
 			'folder' => $folder,
 			'children' => $children,
 			'parent' => $parent,

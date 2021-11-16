@@ -84,7 +84,7 @@ class MediaController extends Controller
 			],
 			'data' => array_values($dirs) //MediaHelper::_buildFolderTree($folders, -1),
 		];*/
-		$base = storage_path('app');
+		$base = storage_path('app/public');
 
 		$folder = $request->input('folder', '');
 		$folders = MediaHelper::getTree($base);
@@ -92,7 +92,7 @@ class MediaController extends Controller
 		$fold = array(
 			'id'       => 0,
 			'parent'   => -1,
-			'name'     => basename($base),
+			'name'     => '', //basename($base),
 			'fullname' => $base,
 			'relname'  => substr($base, strlen(storage_path()))
 		);
@@ -167,7 +167,7 @@ class MediaController extends Controller
 	{
 		event(new FilesUploading($request));
 
-		$disk = $request->input('disk');
+		$disk = $request->input('disk', 'public');
 		$path = $request->input('path');
 		$files = $request->file();
 		$overwrite = $request->input('overwrite', true);
@@ -280,7 +280,7 @@ class MediaController extends Controller
 		$path = $request->input('path');
 		$name = $request->input('name');
 
-		$name = $this->sanitize($name);
+		$name = MediaHelper::sanitize($name);
 
 		$source = $path;
 		$dest   = dirname($path) . '/' . $name;
@@ -311,8 +311,8 @@ class MediaController extends Controller
 			return response()->json(['message' => trans('media::media.error.missing name')], 415);
 		}
 
-		$before = $this->sanitize($before);
-		$after  = $this->sanitize($after);
+		$before = MediaHelper::sanitize($before);
+		$after  = MediaHelper::sanitize($after);
 
 		if (!$before || !$after)
 		{
@@ -367,7 +367,7 @@ class MediaController extends Controller
 	{
 		event(new Deleting($request));
 
-		$disk  = $request->input('disk');
+		$disk  = $request->input('disk', 'public');
 		$items = $request->input('items');
 
 		$deletedItems = [];
@@ -428,7 +428,7 @@ class MediaController extends Controller
 	{
 		event(new Download($request));
 
-		$disk = $request->input('disk');
+		$disk = $request->input('disk', 'public');
 		$path = $request->input('path');
 
 		// If file name not in ASCII format
@@ -471,7 +471,7 @@ class MediaController extends Controller
 	 */
 	public function url(Request $request)
 	{
-		$disk = $request->input('disk');
+		$disk = $request->input('disk', 'public');
 		$path = $request->input('path');
 
 		return response()->json([
@@ -489,25 +489,16 @@ class MediaController extends Controller
 	 * @param   string  $path
 	 * @return  string
 	 */
-	private function sanitize($path)
+	/*private function sanitize($path)
 	{
-		/*$paths = explode('/', $path);
+		$path = str_replace(' ', '_', $path);
+		$path = preg_replace('/[^a-zA-Z0-9\-_\/\.]+/', '', $path);
 
-		foreach ($paths as $i => $path)
-		{*/
-			$path = str_replace(' ', '_', $path);
-			$path = preg_replace('/[^a-zA-Z0-9\-_\/\.]+/', '', $path);
-
-			if (!preg_match('/^[\x20-\x7e]*$/', $path))
-			{
-				$path = \Illuminate\Support\Facades\Str::ascii($path);
-			}
-
-			/*$paths[$i] = $path;
+		if (!preg_match('/^[\x20-\x7e]*$/', $path))
+		{
+			$path = \Illuminate\Support\Facades\Str::ascii($path);
 		}
 
-		$path = implode('/', $path);*/
-
 		return $path;
-	}
+	}*/
 }

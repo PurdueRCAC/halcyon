@@ -81,7 +81,7 @@ class FolderController extends Controller
 		}
 
 		$path = ($parent ? $parent . '/' : '') . $folder;
-		$path = $this->sanitize($path);
+		$path = MediaHelper::sanitize($path);
 
 		if (!$path)
 		{
@@ -123,8 +123,8 @@ class FolderController extends Controller
 			return response()->json(['message' => trans('media::media.error.missing directory name')], 415);
 		}
 
-		$before = $this->sanitize($before);
-		$after  = $this->sanitize($after);
+		$before = MediaHelper::sanitize($before);
+		$after  = MediaHelper::sanitize($after);
 
 		if (!$before || !$after)
 		{
@@ -179,7 +179,7 @@ class FolderController extends Controller
 		$path = trim($event->path(), '/');
 
 		//$path = ($parent ? $parent . '/' : '') . $folder;
-		$path = $this->sanitize($path);
+		$path = MediaHelper::sanitize($path);
 
 		// Nothing to delete
 		if (empty($path))
@@ -218,7 +218,7 @@ class FolderController extends Controller
 	 * @param   string  $path
 	 * @return  string
 	 */
-	private function sanitize($path)
+	/*private function sanitize($path)
 	{
 		$path = str_replace(' ', '_', $path);
 		$path = preg_replace('/[^a-zA-Z0-9\-_\/]+/', '', $path);
@@ -229,5 +229,5 @@ class FolderController extends Controller
 		}
 
 		return $path;
-	}
+	}*/
 }

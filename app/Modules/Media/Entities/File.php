@@ -43,7 +43,7 @@ class File extends \SplFileInfo
 	 */
 	public function getRelativePath(): string
 	{
-		return str_replace(storage_path() . '/app/', '', $this->getPathname());
+		return str_replace(storage_path('app/public'), '', $this->getPathname());
 	}
 
 	/**
@@ -176,13 +176,13 @@ class File extends \SplFileInfo
 	 */
 	public function getUrl(): string
 	{
-		$path = '/' . $this->getRelativePath();
+		$path = '/' . trim($this->getRelativePath(), '/');
 		if (Str::contains($path, '/public/'))
 		{
 			$path = Str::replaceFirst('/public/', '/', $path);
 		}
-		return config('filesystems.disks.public.url') . $path;
-		//return url('/') . Storage::url($this->getRelativePath());
+		$path = preg_replace('/\/{2,}/', '/', $path);
+		return rtrim(config('filesystems.disks.public.url'), '/') . $path;
 	}
 
 	/**
@@ -192,7 +192,9 @@ class File extends \SplFileInfo
 	 */
 	public function getPublicPath(): string
 	{
-		$base = config('filesystems.disks.public.url'); //url('/') . '/storage';
-		return str_replace($base, '', $this->getUrl());
+		$base = config('filesystems.disks.public.url');
+		$path = str_replace($base, '', $this->getUrl());
+		$path = preg_replace('/\/{2,}/', '/', $path);
+		return $path;
 	}
 }

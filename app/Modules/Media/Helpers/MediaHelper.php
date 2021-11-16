@@ -395,7 +395,7 @@ class MediaHelper
 					'parent'   => $parent,
 					'name'     => ltrim($short, '\\/'),
 					'fullname' => $fullName,
-					'relname'  => str_replace(storage_path() . '/app', '', $fullName)
+					'relname'  => str_replace(storage_path() . '/app/public', '', $fullName)
 				);
 
 				$dirs2 = self::getTree($fullName, $filter, $maxLevel, $level + 1, self::$index);
