@@ -16,10 +16,10 @@ if ($item->isRecurring()):
 	$renew = 'Service for ' . $item->timeperiodcount;
 	if ($timeperiod):
 		$renew .= ' ' . ($item->timeperiodcount > 1 ? $timeperiod->plural : $timeperiod->singular) . ', then will renew at the ' . $timeperiod->name . ' rate';
-	endif;
 
-	if (!$item->isOriginal()):
-		$renew = ucfirst($timeperiod->name) . ' renewal of a previous order';
+		if (!$item->isOriginal()):
+			$renew = ucfirst($timeperiod->name) . ' renewal of a previous order';
+		endif;
 	endif;
 endif;
 ?>
