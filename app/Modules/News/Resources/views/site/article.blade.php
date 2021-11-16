@@ -79,6 +79,28 @@ app('pathway')
 	</div>
 
 	<div class="wrapper-news">
+		@if ($article->url && !$article->ended())
+			<div class="float-right">
+				@if (auth()->user())
+					<?php
+					$attending = false;
+					foreach ($article->associations as $i => $assoc):
+						if (auth()->user()->id = $assoc->associd):
+							$attending = $assoc->id;
+							break;
+						endif;
+					endforeach;
+					?>
+					@if (!$attending)
+						<a class="btn-attend btn btn-primary" href="{{ route('site.news.show', ['attend' => 1, 'id' => $article->id]) }}" data-newsid="{{ $article->id }}" data-assoc="{{ auth()->user()->id }}">I'm interested in attending</a>
+					@else
+						<a class="btn-notattend btn btn-danger" href="{{ route('site.news.show', ['attend' => 0, 'id' => $article->id]) }}" data-id="{{ $attending }}">Cancel attendance</a>
+					@endif
+				@else
+					<a href="{{ route('login', ['return' => base64_encode(route('site.news.show', ['attend' => 1, 'id' => $article->id]))]) }}" data-newsid="{{ $article->id }}" data-assoc="0">Login</a> is required to reserve times.
+				@endif
+			</div>
+		@endif
 		<ul class="news-meta text-muted">
 			@if (!$article->template)
 				<li><span class="fa fa-fw fa-clock-o" aria-hidden="true"></span> {{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}</li>
@@ -89,7 +111,10 @@ app('pathway')
 			@endif
 
 			@if ($article->url)
-				<li><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="{{ $article->url }}">{{ $article->url }}</a></li>
+				<?php
+				$url = parse_url($article->url);
+				?>
+				<li><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="{{ $article->url }}">{{ Illuminate\Support\Str::limit($url['host'], 70) . ($url['path'] || $url['query'] ? ' ...' : '') }}</a></li>
 			@endif
 
 			@if ($article->type)
