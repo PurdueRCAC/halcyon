@@ -58,6 +58,11 @@ class RoleProvision
 			return;
 		}
 
+		if (!$event->user->username || !$this->canProcessUser($event->user));
+		{
+			return;
+		}
+
 		$url = $config['url'] . 'createOrUpdateRole';
 
 		// Make call to resourcemember to generate role
@@ -133,6 +138,11 @@ class RoleProvision
 			return;
 		}
 
+		if (!$event->user->username || !$this->canProcessUser($event->user));
+		{
+			return;
+		}
+
 		$url = $config['url'] . 'removeRole/rcs/' . $event->resource->rolename . '/' . auth()->user()->username . '/' . $event->user->username;
 
 		try
@@ -194,8 +204,7 @@ class RoleProvision
 			return;
 		}
 
-		// Ignore XSEDE usernames
-		if (!$event->user->username || substr($event->user->username, 0, 2) == 'x-')
+		if (!$event->user->username || !$this->canProcessUser($event->user));
 		{
 			return;
 		}
@@ -365,6 +374,23 @@ class RoleProvision
 			}
 		}
 	}*/
+
+	/**
+	 * Can this user be processed?
+	 *
+	 * @param  User  $user
+	 * @return bool
+	 */
+	private function canProcessUser($user)
+	{
+		// Ignore XSEDE usernames
+		if (substr($user->username, 0, 2) == 'x-')
+		{
+			return false;
+		}
+
+		return true;
+	}
 
 	/**
 	 * Get config values for listener
