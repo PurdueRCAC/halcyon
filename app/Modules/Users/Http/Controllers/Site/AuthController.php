@@ -202,6 +202,10 @@ class AuthController extends Controller
 							$userusername = new UserUsername;
 							$userusername->userid = $user->id;
 							$userusername->username = $cas->user();
+							if (isset($attrs['email']))
+							{
+								$userusername->email = $attrs['email'];
+							}
 							$userusername->save();
 						}
 					}

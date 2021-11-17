@@ -7,6 +7,7 @@ use App\Modules\Users\Events\UserSync;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Halcyon\Utility\Str;
+use App\Halcyon\Access\Role;
 use App\Modules\History\Traits\Loggable;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\UnixGroup;
@@ -54,7 +55,7 @@ class AmieLdap
 			return array();
 		}
 
-		$config = config('listener.amieldap', []);
+		$config = config('listener.amieldap.ldap', []);
 
 		if ($dc && isset($config['base_dn']))
 		{
@@ -544,6 +545,12 @@ class AmieLdap
 						// Sync membership
 						if ($vals = $ugs->getAttribute('memberUid'))
 						{
+							$newUsertype = config('listener.amieldap.new_usertype', config('module.users.new_usertype'));
+							if (!$newUsertype)
+							{
+								$newUsertype = Role::findByTitle('Registered')->id;
+							}
+
 							$ugusers = $unixgroup->members;
 
 							$current = $ugusers->pluck('userid')->toArray();
@@ -567,6 +574,10 @@ class AmieLdap
 								{
 									$member = new User;
 									$member->name = $mem->getAttribute('cn', 0);
+									if ($newUsertype)
+									{
+										$member->newroles = array($newUsertype);
+									}
 									$member->save();
 
 									$musername = new UserUsername;
