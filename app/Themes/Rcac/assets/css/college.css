@@ -6175,6 +6175,7 @@ a.close.disabled {
 .modal-title {
   margin-bottom: 0;
   line-height: 1.5;
+  font-size: 1.2em;
 }
 
 .modal-body {
