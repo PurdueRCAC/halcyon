@@ -700,7 +700,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										<td>
 											<strong>{{ $item->product->name }}</strong>
 											<p class="form-text text-muted">
-												@if ($item->origorderitemid)
+												@if ($item->origorderitemid && $item->product->timeperiod)
 													@if ($item->start() && $item->end())
 														@if ($item->id == $item->origorderitemid)
 															{{ trans('orders::orders.new service', ['start' => $item->start()->format('M j, Y'), 'end' => $item->end()->format('M j, Y')]) }}
@@ -727,7 +727,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 
 											<input type="hidden" name="original_periods" value="{{ $item->timeperiodcount }}" />
 											<input type="number" name="quantity" value="{{ $item->quantity }}" size="4" class="item-edit-show hide form-control total-update" />
-											@if ($item->origorderitemid)
+											@if ($item->origorderitemid && $item->product->timeperiod)
 												for<br/>
 												<span class="item-edit-hide periods_span">{{ $item->timeperiodcount }}</span>
 												<input type="number" max="999" name="periods" value="{{ $item->timeperiodcount }}" class="item-edit-show hide form-control total-update" />
