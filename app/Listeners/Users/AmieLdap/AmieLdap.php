@@ -572,7 +572,15 @@ class AmieLdap
 									$musername = new UserUsername;
 									$musername->userid = $member->id;
 									$musername->username = $val;
+									if ($email = $mem->getAttribute('mail', 0))
+									{
+										$musername->email = $email;
+									}
 									$musername->save();
+								}
+								if ($member->email != $mem->getAttribute('mail', 0))
+								{
+									$member->getUserUsername()->update(['email' => $mem->getAttribute('cn', 0)]);
 								}
 								if ($member->name != $mem->getAttribute('cn', 0))
 								{

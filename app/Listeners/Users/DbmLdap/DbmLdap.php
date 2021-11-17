@@ -306,8 +306,9 @@ class DbmLdap
 				// Set user data
 				$event->user->name = Str::properCaseNoun($results['cn'][0]);
 				$event->user->puid = $results['employeeNumber'][0];
-				//$event->user->email = $results['mail'][0];
 				$event->user->save();
+
+				$event->user->getUserUsername()->update(['email' => $results['mail'][0]]);
 			}
 		}
 		catch (\Exception $e)

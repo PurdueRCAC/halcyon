@@ -168,7 +168,11 @@ class PedLdap
 						$user->name = Str::properCaseNoun($result['cn'][0]);
 						//$user->puid = $result['puid'][0];
 						$user->username = $result['uid'][0];
-						$user->email = $result['mail'][0];
+						if (!$user->email)
+						{
+							$user->getUserUsername()->email = $result['mail'][0];
+						}
+
 						//$user->id = $user->username;
 					}
 
@@ -259,9 +263,9 @@ class PedLdap
 						$user->title = Str::properCaseNoun($data['title'][0]);
 					}
 
-					if (isset($data['mail']))
+					if (!$user->email && isset($data['mail']))
 					{
-						$user->email = $data['mail'][0];
+						$user->getUserUsername()->email = $data['mail'][0];
 					}
 
 					if (isset($data['roomnumber']))

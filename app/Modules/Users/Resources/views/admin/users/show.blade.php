@@ -66,7 +66,7 @@ app('pathway')
 
 					<div class="card">
 						<div class="card-header">
-							<a class="btn btn-sm float-right" href="{{ route('admin.users.edit', ['id' => $user->id]) }}" data-tip="Edit User Info">
+							<a class="btn btn-sm btn-link float-right" href="{{ route('admin.users.edit', ['id' => $user->id]) }}" data-tip="Edit User Info">
 								<span class="fa fa-pencil" aria-hidden="true"></span>
 								<span class="sr-only">Edit</span>
 							</a>
@@ -181,7 +181,7 @@ app('pathway')
 
 					<div class="card">
 						<div class="card-header">
-							<a class="btn btn-sm float-right" href="{{ route('admin.users.edit', ['id' => $user->id]) }}" data-tip="Edit User Roles">
+							<a class="btn btn-sm btn-link float-right" href="{{ route('admin.users.edit', ['id' => $user->id]) }}" data-tip="Edit User Roles">
 								<span class="fa fa-pencil" aria-hidden="true"></span>
 								<span class="sr-only">Edit</span>
 							</a>
@@ -373,7 +373,7 @@ app('pathway')
 									<div class="card-title">Resources</div>
 								</div>
 								<div class="col-md-3 text-right">
-									<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm" data-tip="Manage Resource Access">
+									<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm btn-link" data-tip="Manage Resource Access">
 										<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only"> Manage</span>
 									</a>
 								</div>

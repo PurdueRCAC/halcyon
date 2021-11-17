@@ -305,13 +305,13 @@ class User extends Model implements
 	 */
 	public function getEmailAttribute()
 	{
-		if (!isset($this->attributes['email']))
+		return $this->getUserUsername()->email;
+		/*if (!isset($this->attributes['email']))
 		{
-			//event($event = new UserBeforeDisplay($this));
 			$host = config('mail.from.address');
 			$this->attributes['email'] = $this->username . strstr($host, '@');
 		}
-		return $this->attributes['email'];
+		return $this->attributes['email'];*/
 	}
 
 	/**

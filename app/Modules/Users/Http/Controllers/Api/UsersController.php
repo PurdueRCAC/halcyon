@@ -334,6 +334,7 @@ class UsersController extends Controller
 			'name' => 'required|string|max:128',
 			'puid' => 'nullable|integer',
 			'username' => 'nullable|string|max:16',
+			'email' => 'nullable|string|max:255',
 		));
 
 		$user = new User;
@@ -349,6 +350,10 @@ class UsersController extends Controller
 			$username = new UserUsername;
 			$username->userid = $user->id;
 			$username->username = $request->input('username');
+			if ($request->has('email'))
+			{
+				$username->email = $request->input('email');
+			}
 			$username->save();
 		}
 
@@ -495,7 +500,7 @@ class UsersController extends Controller
 			'datelastseen' => 'nullable',
 			'roles' => 'nullable|array',
 			'facets' => 'nullable|array',
-			//'email' => 'required',
+			'email' => 'nullable|string|max:255',
 		]);
 
 		$user = User::findOrFail($id);
@@ -552,12 +557,14 @@ class UsersController extends Controller
 
 		if ($request->has('unixid')
 		 || $request->has('username')
+		 || $request->has('email')
 		 || $request->has('datelastseen'))
 		{
 			$username = $user->getUserUsername();
 
 			$username->unixid = $request->input('unixid', $username->unixid);
 			$username->username = $request->input('datelastseen', $username->username);
+			$username->email = $request->input('email', $username->email);
 			$username->datelastseen = $request->input('datelastseen', $username->datelastseen);
 
 			if (!$username->save())

@@ -39,6 +39,7 @@ class CreateUsersTables extends Migration
 				$table->increments('id');
 				$table->integer('userid')->unsigned()->default(0)->comment('Foreign Key to users.id');
 				$table->string('username', 16);
+				$table->string('email', 255);
 				$table->integer('unixid')->unsigned()->default(0);
 				$table->dateTime('datecreated')->nullable();
 				$table->dateTime('dateremoved')->nullable();

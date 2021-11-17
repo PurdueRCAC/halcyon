@@ -49,6 +49,7 @@ class UserUsername extends Model
 	 */
 	protected $fillable = [
 		'username',
+		'email',
 		'unixid',
 		'userid'
 	];
@@ -71,6 +72,7 @@ class UserUsername extends Model
 	 */
 	protected $rules = array(
 		'username' => 'required|string|min:1,max:16',
+		'email' => 'nullable|string|max:255',
 		'userid' => 'required|integer'
 	);
 
