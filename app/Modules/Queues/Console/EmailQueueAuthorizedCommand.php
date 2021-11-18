@@ -200,6 +200,15 @@ class EmailQueueAuthorizedCommand extends Command
 				// Assemble list of managers to email
 				foreach ($group->managers as $manager)
 				{
+					if (!$manager->user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for manager {$manager->user->name}.");
+						}
+						continue;
+					}
+
 					// Prepare and send actual email
 					$message = new QueueAuthorizedManager($manager->user, $data);
 
