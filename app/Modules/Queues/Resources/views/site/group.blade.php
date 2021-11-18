@@ -407,7 +407,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 								</div>
 							</div>
 
-							<div class="modal dialog" id="dialog-sell{{ $q->id }}" title="{{ trans('queues::queues.sell nodes') }}">
+							<div class="modal dialog" id="dialog-sell{{ $q->id }}" title="{{ trans('queues::queues.sell') }}">
 								<form class="modl-content dialog-content" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.sizes.create') }}">
 									<div class="modl-body dialog-body">
 										<div class="row">
@@ -557,7 +557,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 								</form>
 							</div>
 
-							<div class="modl dialog" id="dialog-loan{{ $q->id }}" title="{{ trans('queues::queues.loan nodes') }}">
+							<div class="modl dialog" id="dialog-loan{{ $q->id }}" title="{{ trans('queues::queues.loan') }}">
 								<form class="modl-content dialog-content" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.loans.create') }}">
 									<div class="modl-body dialog-body">
 										<div class="row">
