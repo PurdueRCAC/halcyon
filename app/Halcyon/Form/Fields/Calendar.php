@@ -44,6 +44,10 @@ class Calendar extends Field
 		{
 			$attributes['class'] = (string) $this->element['class'];
 		}
+		if ($this->element['placeholder'])
+		{
+			$attributes['placeholder'] = trans((string) $this->element['placeholder']);
+		}
 		if ((string) $this->element['readonly'] == 'true')
 		{
 			$attributes['readonly'] = 'readonly';
