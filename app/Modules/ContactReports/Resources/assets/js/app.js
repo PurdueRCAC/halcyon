@@ -73,7 +73,7 @@ import CrmReports from './components/site/CrmReports.vue';
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const app = new Vue({
+new Vue({
 	el: '#contactreports',
 	render: h => h(CrmReports)
 });

@@ -8,8 +8,12 @@ if (typeof(Halcyon) === 'undefined') {
 	};
 }
 
+/* exported config */
 function config(key, def) {
-	var result = key.split('.').reduce(function (obj, i, def) {
+	if (typeof (def) === 'undefined') {
+		def = null;
+	}
+	var result = key.split('.').reduce(function (obj, i) {
 		return obj[i];
 	}, Halcyon.config);
 	if (typeof (result) === 'undefined') {

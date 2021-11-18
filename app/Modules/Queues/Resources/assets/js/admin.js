@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	$('.dialog-btn').on('click', function (e) {
 		e.preventDefault();
 
-		$($(this).attr('href')).on('shown.bs.modal', function (event) {
+		$($(this).attr('href')).on('shown.bs.modal', function () {
 			/*$($(this).attr('href')).dialog({
 				modal: true,
 				width: '550px',
@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						var group = $(this);
 
 						var queue = $('#' + group.data('update'));
-						var dest_queue = document.getElementById("field-id").value;
+						//var dest_queue = document.getElementById("field-id").value;
 
 						if (group.val() == 0) {
 							queue.val(0);
@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
 									}
 								}
 							},
-							error: function (xhr, reason, thrownError) {
+							error: function (xhr) { //, reason, thrownError
 								var msg = 'Failed to retrieve queues.';
 								if (xhr.responseJSON && xhr.responseJSON.message) {
 									msg = xhr.responseJSON.message;

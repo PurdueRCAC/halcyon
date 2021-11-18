@@ -49,7 +49,7 @@ $(document).ready(function () {
 							url: $('#newalert').data('api'),
 							type: 'POST',
 							data: postdata,
-							success: function (result) {
+							success: function () {
 								//$(this).dialog('close');
 								location.reload(true);
 							},
@@ -101,7 +101,7 @@ $(document).ready(function () {
 					text: 'Create Report',
 					'class': 'btn btn-success',
 					click: function () {
-						postdata = {};
+						var postdata = {};
 						postdata['storagedirquotanotificationtypeid'] = '1';
 						postdata['userid'] = $('#HIDDEN_user').val();
 						postdata['timeperiodid'] = $('#newreportperiod').val();
@@ -116,7 +116,7 @@ $(document).ready(function () {
 							url: $('#newreport').data('api'),
 							type: 'POST',
 							data: postdata,
-							success: function (result) {
+							success: function () {
 								$(this).dialog('close');
 								location.reload(true);
 							},
@@ -183,7 +183,7 @@ $(document).ready(function () {
 				'periods': ($('#periods_' + btn.data('id')).length ? $('#periods_' + btn.data('id')).val() : 0),
 				'timeperiodid': ($('#timeperiod_' + btn.data('id')).length ? $('#timeperiod_' + btn.data('id')).val() : 0)
 			},
-			success: function (result) {
+			success: function () {
 				location.reload(true);
 			},
 			error: function (result) {
@@ -202,7 +202,7 @@ $(document).ready(function () {
 	});
 
 	// Quota checks
-	$('.updatequota').on('click', function (event) {
+	$('.updatequota').on('click', function () {
 		var btn = $(this),
 			did = btn.data('id');
 
